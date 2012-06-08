@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+This is sample xml for generating a code coverage report.
+You have to replace all the tests path as per your machine.
+Files are ordered by used component and classes by the test files.
+If we change the order might be the case some files may not find the required classes.
+So do not change the order of the test files from this XML.
+
+To generate code coverage report from this XML file.
+1. Copy this file to PHP5 folder.
+2. Replace all the tests path as per your machine.
+3. Open command prompt and go to PHP5 folder. e.g. C:\PHP5>
+4. Run this command
+    C:\PHP5>phpunit -*-coverage-html C:\Report -*-configuration phpunit.xml
+    (-*-) its two consecutive hyphens.
+5. It will generate report in Given path, here it is C:\Report.
+6. We can access report from index.html file from generated Report folder.
+-->
+<phpunit>
+  <testsuites>
+<!-- NOT USING ANY RESOURCE -->
+      <testsuite name="Writers-Metadata">
+		<directory>C:\InteropProjects\OData Producer for PHP\OData Producer for PHP\Tests\Writers\Metadata</directory>
+      </testsuite>
+	  <testsuite name="Common">
+  		<directory>C:\InteropProjects\OData Producer for PHP\OData Producer for PHP\Tests\Common</directory>
+	  </testsuite>
+	  <testsuite name="Writers-ATOM">
+		<directory>C:\InteropProjects\OData Producer for PHP\OData Producer for PHP\Tests\Writers\Atom</directory>
+	  </testsuite>
+	  <testsuite name="Writers-JSON">
+		<directory>C:\InteropProjects\OData Producer for PHP\OData Producer for PHP\Tests\Writers\Json</directory>
+	  </testsuite>
+<!-- USING DISPATCHER -->
+      <testsuite name="Misc">
+		<directory>C:\InteropProjects\OData Producer for PHP\OData Producer for PHP\Tests\Misc</directory>
+	  </testsuite>
+	  <testsuite name="ObjectModel">
+		<directory>C:\InteropProjects\OData Producer for PHP\OData Producer for PHP\Tests\ObjectModel</directory>
+	  </testsuite>
+  	  <testsuite name="OperationContext">
+	  	<directory>C:\InteropProjects\OData Producer for PHP\OData Producer for PHP\Tests\OperationContext</directory>
+      </testsuite>
+<!-- USING RESOURCE\NORTHWINDMETADATA.PHP -->
+	  <testsuite name="Config">
+		<directory>C:\InteropProjects\OData Producer for PHP\OData Producer for PHP\Tests\Configuration</directory>
+	  </testsuite>
+	  <testsuite name="Providers">
+		<directory>C:\InteropProjects\OData Producer for PHP\OData Producer for PHP\Tests\Providers\Metadata</directory>
+	  </testsuite>
+	  <testsuite name="ExpandProjection">
+		<directory>C:\InteropProjects\OData Producer for PHP\OData Producer for PHP\Tests\UriProcessor\QueryProcessor\ExpandProjectionParser</directory>
+	  </testsuite>
+	  <testsuite name="OrderByParser">
+		<directory>C:\InteropProjects\OData Producer for PHP\OData Producer for PHP\Tests\UriProcessor\QueryProcessor\OrderByParser</directory>
+	  </testsuite>
+	  <testsuite name="SkipTokenParser">
+		<file>C:\InteropProjects\OData Producer for PHP\OData Producer for PHP\Tests\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenParserTest.php</file>
+	  </testsuite>
+	  <testsuite name="SegmentParser">
+		<directory>C:\InteropProjects\OData Producer for PHP\OData Producer for PHP\Tests\UriProcessor\ResourcePathProcessor\SegmentParser</directory>
+	  </testsuite>
+	  <testsuite name="Other">
+			<file>C:\InteropProjects\OData Producer for PHP\OData Producer for PHP\Tests\UriProcessor\QueryProcessor\ExpressionParser\ExpressionParserTest.php</file>
+			<file>C:\InteropProjects\OData Producer for PHP\OData Producer for PHP\Tests\UriProcessor\QueryProcessor\ExpressionParser\ExpressionParser2Test.php</file>
+			<file>C:\InteropProjects\OData Producer for PHP\OData Producer for PHP\Tests\UriProcessor\QueryProcessor\ExpressionParser\PHPExpressionProviderTest.php</file>
+			<file>C:\InteropProjects\OData Producer for PHP\OData Producer for PHP\Tests\UriProcessor\UriProcessorTest.php</file>
+			<file>C:\InteropProjects\OData Producer for PHP\OData Producer for PHP\Tests\UriProcessor\QueryProcessor\ExpressionParser\ExpressionLexerTest.php</file>			
+	  </testsuite>
+<!-- USING RESOURCE\NORTHWIND2\.. -->
+ 	<testsuite name="Other2">
+		<file>C:\InteropProjects\OData Producer for PHP\OData Producer for PHP\Tests\UriProcessor\UriProcessorExecutionTest.php</file>
+	</testsuite>
+	<testsuite name="SkipTokenParser2">
+		<file>C:\InteropProjects\OData Producer for PHP\OData Producer for PHP\Tests\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenParserTest2.php</file>
+	</testsuite>
+  </testsuites>
+  <filter>
+   <whitelist>
+	<directory suffix=".php">C:\InteropProjects\OData Producer for PHP\OData Producer for PHP\library</directory>
+   </whitelist>
+  </filter>
+</phpunit>
