@@ -1,4 +1,4 @@
-OData Producer Library for PHP
+OData Producer Library for PHP V1.2
 ============
 
 The OData Producer Library for PHP is a server library that allows to exposes data sources by using the OData Protocol. The OData Producer supports all Read-Only operations specified in the Protocol version 2.0:
