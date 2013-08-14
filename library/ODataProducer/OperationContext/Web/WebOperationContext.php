@@ -1,54 +1,22 @@
 <?php
-/**
- * Provide access to the current HTTP context over WebOperationContext::Current()
- * method.  This is a singleton class. Class represents the HTTP methods,headers 
- * and stream associated with a HTTP request and HTTP response
- * 
- * PHP version 5.3
- * 
- * @category  ODataPHPProd
- * @package   ODataProducer_OperationContext_Web
- * @author    Microsoft Open Technologies, Inc. <msopentech@microsoft.com>
- * @copyright Microsoft Open Technologies, Inc.
- * @license   New BSD license, (http://www.opensource.org/licenses/bsd-license.php)
- * @version   GIT: 1.2
- * @link      https://github.com/MSOpenTech/odataphpprod
- * All rights reserved.
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *  Redistributions of source code must retain the above copyright notice, this list
- *  of conditions and the following disclaimer.
- *  Redistributions in binary form must reproduce the above copyright notice, this
- *  list of conditions  and the following disclaimer in the documentation and/or
- *  other materials provided with the distribution.
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A  PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
- * IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
- */
+
 namespace ODataProducer\OperationContext\Web;
+
 use ODataProducer\Common\ODataConstants;
 use ODataProducer\Common\ODataException;
 use ODataProducer\OperationContext\Web\IncomingRequest;
 use ODataProducer\OperationContext\Web\OutgoingResponse;
+
 /**
- * Class which is used to get all the HTTP header detail for a IncomingRequest 
+ * Class WebOperationContext
+ * Class which is used to get all the HTTP header detail for a IncomingRequest
  * and we can set the header also before sending the OutgoingResponse
- * 
- * @category  ODataPHPProd
- * @package   ODataProducer_OperationContext_Web
- * @author    Microsoft Open Technologies, Inc. <msopentech@microsoft.com>
- * @copyright Microsoft Open Technologies, Inc.
- * @license   New BSD license, (http://www.opensource.org/licenses/bsd-license.php)
- * @version   GIT: 1.2
- * @link      https://github.com/MSOpenTech/odataphpprod
+ *
+ * Provide access to the current HTTP context over WebOperationContext::Current()
+ * method.  This is a singleton class. Class represents the HTTP methods,headers
+ * and stream associated with a HTTP request and HTTP response
+ *
+ * @package ODataProducer\OperationContext\Web
  */
 class WebOperationContext
 {
@@ -62,21 +30,21 @@ class WebOperationContext
     /**
      * Object of IncomingRequest which is needed to get all the HTTP headers info
      * 
-     * @var IncomingWebRequestContext
+     * @var IncomingRequest
      */
     private $_incomingRequest;
     
     /**
      * Object of OutgoingResponse which is needed to get all the HTTP headers info
      * 
-     * @var OutgoingWebRequestContext
+     * @var OutgoingResponse
      */
     private $_outgoingResponse;
     
     /**
      * Method which is needed to make this class as singleton class 
      * It always provides the object which is already existed,if it is there 
-     * or create a new object of WebOperationCVontext class if no instance was 
+     * or create a new object of WebOperationContext class if no instance was
      * available of this class 
      * 
      * @return WebOperationContext Current web operation context
@@ -95,8 +63,7 @@ class WebOperationContext
      * 
      * @return void
      * 
-     * $throws Exception if developer try to make a clone of WebOperationContext 
-     *                   class.
+     * $throws ODataException if developer try to make a clone of WebOperationContext class.
      */ 
     public function __clone()
     {
@@ -151,4 +118,3 @@ class WebOperationContext
         self::$_context = null;
     }
 }
-?>

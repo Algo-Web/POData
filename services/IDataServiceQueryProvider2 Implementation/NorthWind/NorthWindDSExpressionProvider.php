@@ -5,7 +5,7 @@
  * PHP version 5.3
  * 
  * @category  ODataProducer
- * @package   ODataProducer_UriProcessor_QueryProcessor_ExpressionParser
+ * @package   ODataProducer
  * @author    Microsoft Open Technologies, Inc. <msopentech@microsoft.com>
  * @copyright Microsoft Open Technologies, Inc.
  * @license   New BSD license, (http://www.opensource.org/licenses/bsd-license.php)
@@ -42,7 +42,7 @@ use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\IExpressionProvid
  * IExpressionProvider implementation for SQLServer NorthWind DB
  *
  * @category  ODataProducer
- * @package   ODataProducer_UriProcessor_QueryProcessor_ExpressionParser
+ * @package   ODataProducer
  * @author    Microsoft Open Technologies, Inc. <msopentech@microsoft.com>
  * @copyright Microsoft Open Technologies, Inc.
  * @license   New BSD license, (http://www.opensource.org/licenses/bsd-license.php)

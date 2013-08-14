@@ -5,7 +5,7 @@
  * PHP version 5.3
  * 
  * @category  ODataProducer
- * @package   ODataProducer_UriProcessor_QueryProcessor_ExpressionParser
+ * @package   ODataProducer
  * @author    Anu T Chandy <odataphpproducer_alias@microsoft.com>
  * @copyright 2011 Microsoft Corp. (http://www.microsoft.com)
  * @license   New BSD license, (http://www.opensource.org/licenses/bsd-license.php)
@@ -24,7 +24,7 @@ require_once 'WordPressMetadata.php';
  * DSExpression provider for MySQL.
  *
  * @category  ODataProducer
- * @package   ODataProducer_UriProcessor_QueryProcessor_ExpressionParser
+ * @package   ODataProducer
  * @author    Anu T Chandy <odataphpproducer_alias@microsoft.com>
  * @copyright 2011 Microsoft Corp. (http://www.microsoft.com)
  * @license   New BSD license, (http://www.opensource.org/licenses/bsd-license.php)
