@@ -1,4 +1,7 @@
 <?php
+
+namespace UnitTests\POData\Facets\NorthWind1;
+
 /**
  * Note: This is a dummy class for making the testing of 
  * DataService and UriProcessor.

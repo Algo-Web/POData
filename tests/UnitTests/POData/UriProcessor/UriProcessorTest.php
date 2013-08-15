@@ -2,6 +2,7 @@
 /**
  * Mainly test UriProcessor, but also do some partial test for DataService class.
  */
+
 use ODataProducer\UriProcessor\QueryProcessor\ExpandProjectionParser\ProjectionNode;
 use ODataProducer\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandedProjectionNode;
 use ODataProducer\UriProcessor\QueryProcessor\ExpandProjectionParser\RootProjectionNode;
@@ -22,11 +23,17 @@ use ODataProducer\Common\Url;
 use ODataProducer\Common\Version;
 use ODataProducer\Common\ODataException;
 
-require_once(dirname(__FILE__) . "/./../Resources/NorthWindMetadata.php");
-require_once(dirname(__FILE__) . "/./../Resources/NorthWindDataServiceV1.php");
-require_once(dirname(__FILE__) . "/./../Resources/NorthWindDataService.php");
-require_once(dirname(__FILE__) . "/./../Resources/NorthWindDataServiceV3.php");
-require_once(dirname(__FILE__) . "/./../Resources/DataServiceHost2.php");
+
+use UnitTests\POData\Facets\NorthWind1\DataServiceHost2;
+use UnitTests\POData\Facets\NorthWind1\NorthWindDataService2;
+use UnitTests\POData\Facets\NorthWind1\NorthWindDataServiceV1;
+use UnitTests\POData\Facets\NorthWind1\NorthWindDataServiceV3;
+
+use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
+//These are in the file loaded by above use statement
+//TODO: move to own class files
+use UnitTests\POData\Facets\NorthWind1\Customer2;
+
 
 class TestUriProcessor extends PHPUnit_Framework_TestCase
 {
@@ -281,11 +288,13 @@ class TestUriProcessor extends PHPUnit_Framework_TestCase
     public function testUriProcessorForCountRequest4()
     {
         try {            
-            $hostInfo = array('AbsoluteRequestUri' => new Url('http://localhost:8083/NorthWindDataService.svc/Customers/$count'), 
-			    	  'AbsoluteServiceUri' => new Url('http://localhost:8083/NorthWindDataService.svc'),
-				      'QueryString' => '$orderby=Country',
-                  	  'DataServiceVersion' => new Version(2, 0),
-                  	  'MaxDataServiceVersion' => new Version(2, 0));
+            $hostInfo = array(
+				'AbsoluteRequestUri' => new Url('http://localhost:8083/NorthWindDataService.svc/Customers/$count'),
+				'AbsoluteServiceUri' => new Url('http://localhost:8083/NorthWindDataService.svc'),
+				'QueryString' => '$orderby=Country',
+				'DataServiceVersion' => new Version(2, 0),
+				'MaxDataServiceVersion' => new Version(2, 0)
+            );
 
             $host = new DataServiceHost2($hostInfo);
             $dataService = new NorthWindDataService2();                   
@@ -2371,11 +2380,13 @@ class TestUriProcessor extends PHPUnit_Framework_TestCase
     public function testRequestDescription()
     {
         try {
-            $hostInfo = array('AbsoluteRequestUri' => new Url('http://localhost:8083/NorthWindDataService.svc/Orders'), 
-			    	  'AbsoluteServiceUri' => new Url('http://localhost:8083/NorthWindDataService.svc'),
-				      'QueryString' => null,
-                  	  'DataServiceVersion' => new Version(1, 0),
-                  	  'MaxDataServiceVersion' => new Version(2, 0));
+            $hostInfo = array(
+				'AbsoluteRequestUri' => new Url('http://localhost:8083/NorthWindDataService.svc/Orders'),
+				'AbsoluteServiceUri' => new Url('http://localhost:8083/NorthWindDataService.svc'),
+				'QueryString' => null,
+				'DataServiceVersion' => new Version(1, 0),
+				'MaxDataServiceVersion' => new Version(2, 0)
+            );
 
             $host = new DataServiceHost2($hostInfo);
             $dataService = new NorthWindDataService2();
@@ -2453,4 +2464,3 @@ class TestUriProcessor extends PHPUnit_Framework_TestCase
     {
     }
 }
-?>

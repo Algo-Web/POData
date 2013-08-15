@@ -13,7 +13,6 @@ use ODataProducer\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenParser;
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 //These are in the file loaded by above use statement
 //TODO: move to own class files
-use UnitTests\POData\Facets\NorthWind1\Address2;
 use UnitTests\POData\Facets\NorthWind1\Address4;
 use UnitTests\POData\Facets\NorthWind1\Customer2;
 use UnitTests\POData\Facets\NorthWind1\Order2;

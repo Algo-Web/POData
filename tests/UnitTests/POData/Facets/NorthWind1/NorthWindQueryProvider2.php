@@ -1,4 +1,7 @@
 <?php
+
+namespace UnitTests\POData\Facets\NorthWind1;
+
 use ODataProducer\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 use ODataProducer\Providers\Metadata\ResourceSet;
 use ODataProducer\Providers\Metadata\ResourceProperty;
@@ -79,4 +82,3 @@ class NorthWindQueryProvider2 implements IDataServiceQueryProvider
     {
     }
 }
-?>

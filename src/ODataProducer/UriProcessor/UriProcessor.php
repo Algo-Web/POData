@@ -87,7 +87,7 @@ class UriProcessor
      * 
      * @param DataService &$dataService Reference to the data service instance.
      * 
-     * @return void
+     * @return URIProcessor
      * 
      * @throws ODataException
      */
