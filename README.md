@@ -11,6 +11,7 @@ POData started as a fork of [The OData Producer Library for PHP](https://github.
 * Full BreezeJS support (we love that library)
 * Availability via Composer
 * Simpler to plug in to common PHP frameworks (Zend, Symphony, Laravel)
+* Offers your provider implementation more control on how to best execute the OData Query
 * Optimized $expand support
 * Support for an Annotation Based Provider Implementation
 
