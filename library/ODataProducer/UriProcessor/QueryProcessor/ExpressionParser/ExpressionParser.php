@@ -1,11 +1,7 @@
 <?php
-/** 
- * Parser to parse Astoria URI $filter option 
- * 
- *
- *
- */
+
 namespace ODataProducer\UriProcessor\QueryProcessor\ExpressionParser;
+
 use ODataProducer\Common\Messages;
 use ODataProducer\Common\ODataConstants;
 use ODataProducer\Common\ODataException;
@@ -35,11 +31,13 @@ use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\Expressions\Funct
 use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\Expressions\UnaryExpression;
 use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ConstantExpression;
 use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ExpressionType;
-use ODataProducer\UriProcessor\QueryProcessor\FunctionDescription\FunctionDescription;;
+use ODataProducer\UriProcessor\QueryProcessor\FunctionDescription\FunctionDescription;
 use ODataProducer\Common\NotImplementedException;
+
+
 /**
- * $filter option parser.
-*
+ * Class ExpressionParser
+ * @package ODataProducer\UriProcessor\QueryProcessor\ExpressionParser
  */
 class ExpressionParser
 {
@@ -827,4 +825,3 @@ class ExpressionParser
     }
 
 }
-?>

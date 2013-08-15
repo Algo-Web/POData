@@ -11,7 +11,7 @@ class ClassAutoLoader
     const FILEEXTENSION = '.php';
 
     /**
-     * @var ODataProducer\Common\ClassAutoLoader
+     * @var ClassAutoLoader
      */
     protected static $classAutoLoader;
 

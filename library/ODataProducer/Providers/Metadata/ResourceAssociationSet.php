@@ -1,15 +1,14 @@
 <?php
-/**
- * Type to represent association (relationship) set. 
- * 
-*/
+
 namespace ODataProducer\Providers\Metadata;
+
 use ODataProducer\Providers\Metadata\ResourceAssociationType;
 use ODataProducer\Common\ODataException;
 use ODataProducer\Common\Messages;
+
 /**
- * Type for association (relationship) set.
-*
+ * Class ResourceAssociationSet
+ * @package ODataProducer\Providers\Metadata
  */
 class ResourceAssociationSet
 {
@@ -168,4 +167,3 @@ class ResourceAssociationSet
         );
     }
 }
-?>

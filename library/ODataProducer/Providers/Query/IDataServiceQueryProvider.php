@@ -1,16 +1,19 @@
 <?php
-/** 
- * The class which implements this interface is responsible responding the queries
- * for entity set, entity instance and related entities
- * 
-*/
+
 namespace ODataProducer\Providers\Query;
+
 use ODataProducer\Providers\Metadata\ResourceProperty;
 use ODataProducer\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 use ODataProducer\Providers\Metadata\ResourceSet;
+
+
 /**
- * Query provider interface.
-*
+ * Class IDataServiceQueryProvider
+ *
+ * The class which implements this interface is responsible responding the queries
+ * for entity set, entity instance and related entities
+ *
+ * @package ODataProducer\Providers\Query
  */
 interface IDataServiceQueryProvider
 {
@@ -97,4 +100,3 @@ interface IDataServiceQueryProvider
         ResourceProperty $targetProperty
     );
 }
-?>

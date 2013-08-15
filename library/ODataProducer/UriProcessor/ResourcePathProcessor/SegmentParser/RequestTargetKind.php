@@ -1,14 +1,10 @@
 <?php
-/** 
- * An enumeration to describe the kind of thing targetted by a client request.
- * 
- *
- *
- */
+
 namespace ODataProducer\UriProcessor\ResourcePathProcessor\SegmentParser;
+
 /**
- * Client request target kind enumeration.
-*
+ * Class RequestTargetKind
+ * @package ODataProducer\UriProcessor\ResourcePathProcessor\SegmentParser
  */
 class RequestTargetKind
 {
@@ -87,4 +83,3 @@ class RequestTargetKind
      */
     const BAG = 12;
 }
-?>

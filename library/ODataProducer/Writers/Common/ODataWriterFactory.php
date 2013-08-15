@@ -1,19 +1,10 @@
 <?php
-/**
- * Contains ODataWriterFactory class for getting correct writer which requested.
- * 
-*/
+
 namespace ODataProducer\Writers\Common;
-/** 
- * Factory for OData Writers for different content types.
- *
- * @category  ODataPHPProd
- * @package   ODataProducer
- * @author    Microsoft Open Technologies, Inc. <msopentech@microsoft.com>
- * @copyright Microsoft Open Technologies, Inc.
- * @license   New BSD license, (http://www.opensource.org/licenses/bsd-license.php)
- * @version   GIT: 1.2
- * @link      https://github.com/MSOpenTech/odataphpprod
+
+/**
+ * Class ODataWriterFactory
+ * @package ODataProducer\Writers\Common
  */
 class ODataWriterFactory
 {
@@ -42,4 +33,3 @@ class ODataWriterFactory
         }
     }
 }
-?>

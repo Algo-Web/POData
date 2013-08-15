@@ -1,20 +1,14 @@
 <?php
-/** 
- * Enumeration for expression language operators, function call and literal 
- * used in $filter option
- * 
-*/
+
 namespace ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\Expressions;
+
 /**
- * Enumeration for operators.
+ * Class ExpressionType
  *
- * @category  ODataPHPProd
- * @package   ODataProducer
- * @author    Microsoft Open Technologies, Inc. <msopentech@microsoft.com>
- * @copyright Microsoft Open Technologies, Inc.
- * @license   New BSD license, (http://www.opensource.org/licenses/bsd-license.php)
- * @version   GIT: 1.2
- * @link      https://github.com/MSOpenTech/odataphpprod
+ * Enumeration for expression language operators, function call and literal
+ * used in $filter option
+ *
+ * @package ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\Expressions
  */
 class ExpressionType
 {
@@ -121,4 +115,3 @@ class ExpressionType
     
     
 }
-?>

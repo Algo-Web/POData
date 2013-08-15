@@ -1,9 +1,7 @@
 <?php
-/**
- * A type to describe an entity type, complex type or primitive type
- * 
-*/
+
 namespace ODataProducer\Providers\Metadata;
+
 use ODataProducer\Providers\Metadata\Type\Binary;
 use ODataProducer\Providers\Metadata\Type\Boolean;
 use ODataProducer\Providers\Metadata\Type\Byte;
@@ -23,9 +21,13 @@ use ODataProducer\Providers\Metadata\Type\IType;
 use ODataProducer\Common\Messages;
 use ODataProducer\Common\InvalidOperationException;
 use ODataProducer\Common;
+
 /**
+ * Class ResourceType
+ *
  * A type to describe an entity type, complex type or primitive type.
-*
+ *
+ * @package ODataProducer\Providers\Metadata
  */
 class ResourceType
 {
@@ -922,5 +924,3 @@ class ResourceType
         }    
     }
 }
-
-?>

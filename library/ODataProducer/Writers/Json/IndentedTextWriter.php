@@ -1,14 +1,10 @@
 <?php
-/**
- * Contains Base class for OData Writers which implements IODataWriter.
- * 
- *
- *
- */
+
 namespace ODataProducer\Writers\Json;
+
 /**
- * Writes the Json text in indented format
-*
+ * Class IndentedTextWriter
+ * @package ODataProducer\Writers\Json
  */
 class IndentedTextWriter
 {
@@ -148,4 +144,3 @@ class IndentedTextWriter
         $this->_tabsPending = true;
     }
 }
-?>

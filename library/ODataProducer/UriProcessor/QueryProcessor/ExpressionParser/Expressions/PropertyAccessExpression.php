@@ -1,11 +1,7 @@
 <?php
-/** 
- * Expression class specialized for a property access.
- * 
- *
- *
- */
+
 namespace ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\Expressions;
+
 use ODataProducer\UriProcessor\QueryProcessor\FunctionDescription\FunctionDescription;
 use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\Expressions\LogicalExpression;
 use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\Expressions\AbstractExpression;
@@ -13,16 +9,10 @@ use ODataProducer\Providers\Metadata\ResourceTypeKind;
 use ODataProducer\Providers\Metadata\ResourceProperty;
 use ODataProducer\Providers\Metadata\Type\Navigation;
 use ODataProducer\Providers\Metadata\Type\Boolean;
+
 /**
- * Expression class for property access.
- *
- * @category  ODataPHPProd
- * @package   ODataProducer
- * @author    Microsoft Open Technologies, Inc. <msopentech@microsoft.com>
- * @copyright Microsoft Open Technologies, Inc.
- * @license   New BSD license, (http://www.opensource.org/licenses/bsd-license.php)
- * @version   GIT: 1.2
- * @link      https://github.com/MSOpenTech/odataphpprod
+ * Class PropertyAccessExpression
+ * @package ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\Expressions
  */
 class PropertyAccessExpression extends AbstractExpression
 {
@@ -273,4 +263,3 @@ class PropertyAccessExpression extends AbstractExpression
         }
     }
 }
-?>

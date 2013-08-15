@@ -1,15 +1,15 @@
 <?php
-/** 
- * A type used to describe a segment (Uri is made up of bunch of segments, 
- * each segment is seperated by '/' character)
- * 
- *
- *
- */
+
 namespace ODataProducer\UriProcessor\ResourcePathProcessor\SegmentParser;
+
+
 /**
- * Type to describe segment in the resource path.
-*
+ * Class SegmentDescriptor
+ *
+ * A type used to describe a segment (Uri is made up of bunch of segments,
+ * each segment is separated by '/' character)
+ *
+ * @package ODataProducer\UriProcessor\ResourcePathProcessor\SegmentParser
  */
 class SegmentDescriptor
 {
@@ -404,4 +404,3 @@ class SegmentDescriptor
         return !is_null($this->_keyDescriptor);
     }
 }
-?>

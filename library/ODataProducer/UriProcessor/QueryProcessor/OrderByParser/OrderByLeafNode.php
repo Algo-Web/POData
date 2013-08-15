@@ -1,22 +1,23 @@
 <?php
-/**
- * Type to represent leaf node of 'OrderBy Tree', a leaf node 
- * in OrderByTree represents last sub path segment of an orderby 
- * path segment.
- * 
- *
- *
- */
+
 namespace ODataProducer\UriProcessor\QueryProcessor\OrderByParser;
+
 use ODataProducer\UriProcessor\QueryProcessor\AnonymousFunction;
 use ODataProducer\Providers\Metadata\Type\Guid;
 use ODataProducer\Providers\Metadata\Type\String;
 use ODataProducer\Providers\Metadata\Type\DateTime;
 use ODataProducer\Providers\Metadata\ResourceProperty;
 use ODataProducer\Common\Messages;
+
+
 /**
- * Type to represent leaf node of 'OrderBy Tree'.
-*
+ * Class OrderByLeafNode
+ *
+ * Type to represent leaf node of 'OrderBy Tree', a leaf node
+ * in OrderByTree represents last sub path segment of an orderby
+ * path segment.
+ *
+ * @package ODataProducer\UriProcessor\QueryProcessor\OrderByParser
  */
 class OrderByLeafNode extends OrderByBaseNode
 {
@@ -160,4 +161,3 @@ class OrderByLeafNode extends OrderByBaseNode
         return $this->_anonymousFunction;
     }
 }
-?>

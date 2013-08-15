@@ -1,25 +1,25 @@
 <?php
-/** 
- * ExpandProjectionParser will create a 'Projection Tree' from the $expand 
- * and/or $select query options, Each path segement in the $expand/$select 
- * will be represented by a node in the proejction tree, A path segment in 
- * $expand option will be represented using this type and a path segment in 
- * $select option (which is not appear in expand option) will be represented 
- * using 'ProjectionNode' (base type of this type). The root of the projection
- * tree will be represented using the type 'RootProjectionNode' which is 
- * derived from this type.
- * 
- *
- *
- */
+
 namespace ODataProducer\UriProcessor\QueryProcessor\ExpandProjectionParser;
+
 use ODataProducer\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
 use ODataProducer\Providers\Metadata\ResourceType;
 use ODataProducer\Providers\Metadata\ResourceSetWrapper;
 use ODataProducer\Common\Messages;
+
 /**
- * Type to represent an expanded node in the projection tree.
-*
+ * Class ExpandedProjectionNode
+ *
+ * ExpandProjectionParser will create a 'Projection Tree' from the $expand
+ * and/or $select query options, Each path segement in the $expand/$select
+ * will be represented by a node in the proejction tree, A path segment in
+ * $expand option will be represented using this type and a path segment in
+ * $select option (which is not appear in expand option) will be represented
+ * using 'ProjectionNode' (base type of this type). The root of the projection
+ * tree will be represented using the type 'RootProjectionNode' which is
+ * derived from this type.
+ *
+ * @package ODataProducer\UriProcessor\QueryProcessor\ExpandProjectionParser
  */
 class ExpandedProjectionNode extends ProjectionNode
 {
@@ -518,4 +518,3 @@ class ExpandedProjectionNode extends ProjectionNode
         }
     }
 }
-?>

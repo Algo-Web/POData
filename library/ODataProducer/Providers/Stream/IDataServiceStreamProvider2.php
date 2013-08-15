@@ -1,17 +1,18 @@
 <?php
+
+namespace ODataProducer\Providers\Stream;
+
+use ODataProducer\Providers\Metadata\ResourceStreamInfo;
+use ODataProducer\Providers\Stream\IDataServiceStreamProvider;
+
 /**
+ * Class IDataServiceStreamProvider2
+ *
  * The IDataServiceStreamProvider2 interface defines the contract between the
  * data services framework server component and a data source's and a data
  * source's named stream implementation (ie. a stream provider).
- * 
-*/
-namespace ODataProducer\Providers\Stream;
-use ODataProducer\Providers\Metadata\ResourceStreamInfo;
-use ODataProducer\Providers\Stream\IDataServiceStreamProvider;
-require_once 'ODataProducer/Providers/Stream/IDataServiceStreamProvider.php';
-/**
- * The IDataServiceStreamProvider2 interface
-*
+ *
+ * @package ODataProducer\Providers\Stream
  */
 interface IDataServiceStreamProvider2 extends IDataServiceStreamProvider
 {
@@ -172,4 +173,3 @@ interface IDataServiceStreamProvider2 extends IDataServiceStreamProvider
      */
     public function getReadStreamUri2($entity, ResourceStreamInfo $resourceStreamInfo, $operationContext);
 }
-?>

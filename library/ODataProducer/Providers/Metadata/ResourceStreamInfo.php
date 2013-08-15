@@ -1,12 +1,10 @@
 <?php
-/** 
- * Contains information about a named stream on an entity type
- * 
-*/
+
 namespace ODataProducer\Providers\Metadata;
+
 /**
- * Type to hold information about named stream on an entity type
-*
+ * Class ResourceStreamInfo Contains information about a named stream on an entity type
+ * @package ODataProducer\Providers\Metadata
  */
 class ResourceStreamInfo
 {
@@ -62,4 +60,3 @@ class ResourceStreamInfo
         $this->_customState = $stateObject;
     }
 }
-?>

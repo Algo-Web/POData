@@ -1,19 +1,7 @@
 <?php
-/**
- * Class to parse $orderby query option and perform syntax validation 
- * and build 'OrderBy Tree' along with next level of validation, the 
- * created tree is used for building sort functions and 'OrderByInfo' structure.
- * 
- * The syntax of orderby clause is:
- * 
- * OrderByClause         : OrderByPathSegment [, OrderByPathSegment]*
- * OrderByPathSegment    : OrderBySubPathSegment[/OrderBySubPathSegment]*[asc|desc]?
- * OrderBySubPathSegment : identifier
- * 
- *
- *
- */
+
 namespace ODataProducer\UriProcessor\QueryProcessor\OrderByParser;
+
 use ODataProducer\UriProcessor\QueryProcessor\AnonymousFunction;
 use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\ExpressionLexer;
 use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\ExpressionTokenId;
@@ -24,9 +12,21 @@ use ODataProducer\Providers\Metadata\ResourceType;
 use ODataProducer\Providers\Metadata\ResourcePropertyKind;
 use ODataProducer\Common\ODataException;
 use ODataProducer\Common\Messages;
+
 /**
- * $orderby parser.
-*
+ * Class OrderByParser
+ *
+ * Class to parse $orderby query option and perform syntax validation
+ * and build 'OrderBy Tree' along with next level of validation, the
+ * created tree is used for building sort functions and 'OrderByInfo' structure.
+ *
+ * The syntax of orderby clause is:
+ *
+ * OrderByClause         : OrderByPathSegment [, OrderByPathSegment]*
+ * OrderByPathSegment    : OrderBySubPathSegment[/OrderBySubPathSegment]*[asc|desc]?
+ * OrderBySubPathSegment : identifier
+ *
+ * @package ODataProducer\UriProcessor\QueryProcessor\OrderByParser
  */
 class OrderByParser
 {
@@ -498,4 +498,3 @@ class OrderByParser
         }
     }
 }
-?>

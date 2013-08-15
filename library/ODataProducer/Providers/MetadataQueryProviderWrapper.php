@@ -1,12 +1,7 @@
 <?php
-/**
- * A wrapper class over IDataServiceMetadataProvider and IDataServiceQueryProvider
- * implementations, All call to implemenation of methods of these interfaces should 
- * go through this wrapper class so that wrapper methods of this class can perform 
- * validations on data returned by IDSMP methods  
- * 
-*/
+
 namespace ODataProducer\Providers;
+
 use ODataProducer\Providers\Metadata\ResourceTypeKind;
 use ODataProducer\Common\NotImplementedException;
 use ODataProducer\Providers\Metadata\ResourceSetWrapper;
@@ -18,10 +13,16 @@ use ODataProducer\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor
 use ODataProducer\Common\ODataException;
 use ODataProducer\Common\Messages;
 use ODataProducer\Providers\Metadata\MetadataMapping;
+
 /**
- * A wrapper class over IDataServiceMetadataProvider and 
- * IDataServiceQueryProvider implementations
-*
+ * Class MetadataQueryProviderWrapper
+ *
+ * A wrapper class over IDataServiceMetadataProvider and IDataServiceQueryProvider
+ * implementations, All call to implemenation of methods of these interfaces should
+ * go through this wrapper class so that wrapper methods of this class can perform
+ * validations on data returned by IDSMP methods
+ *
+ * @package ODataProducer\Providers
  */
 class MetadataQueryProviderWrapper
 {
@@ -1057,7 +1058,7 @@ class MetadataQueryProviderWrapper
      * @param string  $conditionAsString String containing message incase
      *                                   if assertion fails.
      *
-     * @throws InvalidOperationException Incase if assertion failes.
+     * @throws InvalidOperationException Incase if assertion fails.
      *
      * @return void
      */
@@ -1068,4 +1069,3 @@ class MetadataQueryProviderWrapper
     	}
     }
 }
-?>

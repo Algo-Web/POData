@@ -1,11 +1,7 @@
 <?php
-/** 
- * Response writer either in atom or json.
- *
- *
- *
- */
+
 namespace ODataProducer\Writers;
+
 use ODataProducer\Common\HttpStatus;
 use ODataProducer\Common\ODataConstants;
 use ODataProducer\Common\Version;
@@ -15,9 +11,11 @@ use ODataProducer\UriProcessor\RequestDescription;
 use ODataProducer\UriProcessor\ResourcePathProcessor\SegmentParser\RequestTargetKind;
 use ODataProducer\Writers\Metadata\MetadataWriter;
 use ODataProducer\Writers\Common\ODataWriter;
-/** 
- * Response writer class
-*
+
+
+/**
+ * Class ResponseWriter
+ * @package ODataProducer\Writers
  */
 class ResponseWriter
 {
@@ -117,4 +115,3 @@ class ResponseWriter
         $dataService->getHost()->getWebOperationContext()->outgoingResponse()->setStream($responseBody);
     }    
 }
-?>

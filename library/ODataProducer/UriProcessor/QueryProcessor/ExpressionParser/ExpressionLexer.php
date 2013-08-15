@@ -1,6 +1,16 @@
 <?php
-/** 
- * Lexical analyzer for Astoira URI expression parsing  
+
+namespace ODataProducer\UriProcessor\QueryProcessor\ExpressionParser;
+
+use ODataProducer\Common\Messages;
+use ODataProducer\Common\ODataException;
+use ODataProducer\Common\ODataConstants;
+use ODataProducer\Providers\Metadata\Type\Char;
+
+/**
+ * Class ExpressionLexer
+ *
+ * Lexical analyzer for Astoria URI expression parsing
  * Literals        Representation
  * --------------------------------------------------------------------
  * Null            null
@@ -13,19 +23,9 @@
  * String          "'" .* "'"
  * DateTime        datetime"'"dddd-dd-dd[T|' ']dd:mm[ss[.fffffff]]"'"
  * Binary          (binary|X)'digit*'
- * GUID            guid'digit*'
- * 
+ * GUID            guid'digit*
  *
- *
- */
-namespace ODataProducer\UriProcessor\QueryProcessor\ExpressionParser;
-use ODataProducer\Common\Messages;
-use ODataProducer\Common\ODataException;
-use ODataProducer\Common\ODataConstants;
-use ODataProducer\Providers\Metadata\Type\Char;
-/**
- * OData expression lexer.
-*
+ * @package ODataProducer\UriProcessor\QueryProcessor\ExpressionParser
  */
 class ExpressionLexer
 {
@@ -139,7 +139,7 @@ class ExpressionLexer
      * 
      * @param ExpressionTokenId $id Token identifier to check
      * 
-     * @return true if it's a numeric literal; false otherwise
+     * @return bool true if it's a numeric literal; false otherwise
      */
     public static function isNumeric($id)
     {
@@ -417,7 +417,7 @@ class ExpressionLexer
      *  
      * @param string $text Text to look in
      * 
-     * @return true if the substring is equal using an ordinal comparison; 
+     * @return bool true if the substring is equal using an ordinal comparison;
      *         false otherwise
      */
     private static function _isInfinityLiteralSingle($text)
@@ -617,5 +617,3 @@ class ExpressionLexer
         ODataException::createSyntaxError($message);
     }
 }
-
-?>

@@ -1,11 +1,7 @@
 <?php
-/** 
- * Writer for service metdata
- *
- *
- *
- */
+
 namespace ODataProducer\Writers\Metadata;
+
 use ODataProducer\Providers\Metadata\ResourceAssociationSet;
 use ODataProducer\Providers\Metadata\ResourceAssociationTypeEnd;
 use ODataProducer\Providers\Metadata\ResourceAssociationSetEnd;
@@ -20,9 +16,10 @@ use ODataProducer\Common\ODataConstants;
 use ODataProducer\Common\Messages;
 use ODataProducer\Common\ODataException;
 use ODataProducer\Common\InvalidOperationException;
-/** 
- * Writer class for service metadata
-*
+
+/**
+ * Class MetadataWriter
+ * @package ODataProducer\Writers\Metadata
  */
 class MetadataWriter
 {
@@ -558,4 +555,3 @@ class MetadataWriter
         }
     }
 }
-?>

@@ -1,26 +1,21 @@
 <?php
-/**
- * The Accept request-header field can be used to specify certain 
- * media types which are acceptable for the response, this class 
- * is used to hold details of such media type.
- * http://www.w3.org/Protocols/rfc1341/4_Content-Type.html
- * 
 
- */
 namespace ODataProducer;
+
 use ODataProducer\Common\Messages;
 use ODataProducer\Common\HttpHeaderFailure;
 use ODataProducer\Providers\Metadata\Type\Char;
+
+
 /**
- * Class for Media type
- * 
- * @category  ODataPHPProd
- * @package   ODataPHPProd
- * @author    Microsoft Open Technologies, Inc. <msopentech@microsoft.com>
- * @copyright Microsoft Open Technologies, Inc.
- * @license   New BSD license, (http://www.opensource.org/licenses/bsd-license.php)
- * @version   GIT: 1.2
- * @link      https://github.com/MSOpenTech/odataphpprod
+ * Class MediaType
+ *
+ * The Accept request-header field can be used to specify certain
+ * media types which are acceptable for the response, this class
+ * is used to hold details of such media type.
+ * http://www.w3.org/Protocols/rfc1341/4_Content-Type.html
+ *
+ * @package ODataProducer
  */
 class MediaType
 {
@@ -150,15 +145,8 @@ class MediaType
 }
 
 /**
- * Helper methods for processing HTTP headers.
- * 
- * @category  ODataPHPProd
- * @package   ODataPHPProd
- * @author    Microsoft Open Technologies, Inc. <msopentech@microsoft.com>
- * @copyright Microsoft Open Technologies, Inc.
- * @license   New BSD license, (http://www.opensource.org/licenses/bsd-license.php)
- * @version   GIT: 1.2
- * @link      https://github.com/MSOpenTech/odataphpprod
+ * Class HttpProcessUtility
+ * @package ODataProducer
  */
 class HttpProcessUtility
 {
@@ -663,7 +651,7 @@ class HttpProcessUtility
     }
 
     /**
-     * Verfies whether the specified character is a valid separator in
+     * Verifies whether the specified character is a valid separator in
        an HTTP header list of element.
      * 
      * @param char $c Character to verify
@@ -676,4 +664,3 @@ class HttpProcessUtility
         return $c == ',' || $c == ' ' || $c == '\t';
     }
 }
-?>

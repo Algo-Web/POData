@@ -1,14 +1,10 @@
 <?php
-/** 
- * An enumeration to describe the source of result for the client request.
- * 
- *
- *
- */
+
 namespace ODataProducer\UriProcessor\ResourcePathProcessor\SegmentParser;
+
 /**
- * Client request result source enumerations.
-*
+ * Class RequestTargetSource
+ * @package ODataProducer\UriProcessor\ResourcePathProcessor\SegmentParser
  */
 class RequestTargetSource
 {
@@ -49,4 +45,3 @@ class RequestTargetSource
      */
     const PROPERTY = 4;
 }
-?>

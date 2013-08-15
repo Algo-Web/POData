@@ -1,11 +1,7 @@
 <?php
-/** 
- * Processor to process the resource path part of the request uri.
- * 
- *
- *
- */
+
 namespace ODataProducer\UriProcessor\ResourcePathProcessor;
+
 use ODataProducer\UriProcessor\ResourcePathProcessor\SegmentParser\SegmentParser;
 use ODataProducer\UriProcessor\ResourcePathProcessor\SegmentParser\RequestTargetKind;
 use ODataProducer\UriProcessor\RequestDescription;
@@ -15,9 +11,11 @@ use ODataProducer\Common\Url;
 use ODataProducer\Common\ODataConstants;
 use ODataProducer\Common\Messages;
 use ODataProducer\Common\ODataException;
+
+
 /**
- * Processor for resource path part of request uri.
-*
+ * Class ResourcePathProcessor
+ * @package ODataProducer\UriProcessor\ResourcePathProcessor
  */
 class ResourcePathProcessor
 {

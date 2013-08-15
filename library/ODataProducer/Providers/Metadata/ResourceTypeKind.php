@@ -1,13 +1,7 @@
 <?php
-/**
- * Enum for different resource types
- * 
-*/
+
 namespace ODataProducer\Providers\Metadata;
-/**
- * Enum for resource types.
-*
- */
+
 class ResourceTypeKind
 {
     /**
@@ -25,4 +19,3 @@ class ResourceTypeKind
      */
     const PRIMITIVE = 3;
 }
-?>

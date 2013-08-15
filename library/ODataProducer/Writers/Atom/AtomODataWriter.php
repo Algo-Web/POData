@@ -1,9 +1,7 @@
 <?php
-/**
- * Contains AtomODataWriter class is implemantation of Atom Writer
- * 
-*/
+
 namespace ODataProducer\Writers\Atom;
+
 use ODataProducer\ObjectModel\ODataFeed;
 use ODataProducer\ObjectModel\ODataEntry;
 use ODataProducer\ObjectModel\ODataURLCollection;
@@ -19,9 +17,10 @@ use ODataProducer\Common\ODataConstants;
 use ODataProducer\Common\Messages;
 use ODataProducer\Common\ODataException;
 use ODataProducer\Common\InvalidOperationException;
-/** 
- * Atom format OData writer.
-*
+
+/**
+ * Class AtomODataWriter
+ * @package ODataProducer\Writers\Atom
  */
 class AtomODataWriter extends BaseODataWriter
 {
@@ -733,4 +732,3 @@ class AtomODataWriter extends BaseODataWriter
         );
     }
 }
-?>

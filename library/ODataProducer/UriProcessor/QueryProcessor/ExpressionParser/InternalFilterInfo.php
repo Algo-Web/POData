@@ -1,20 +1,11 @@
 <?php
-/**  
- * A type to hold the parsed information about the filter option.
- * 
-*/
+
 namespace ODataProducer\UriProcessor\QueryProcessor\ExpressionParser;
 use ODataProducer\UriProcessor\QueryProcessor\AnonymousFunction;
+
 /**
- * To hold the parsed information about the filter option.
- *
- * @category  ODataPHPProd
- * @package   ODataProducer
- * @author    Microsoft Open Technologies, Inc. <msopentech@microsoft.com>
- * @copyright Microsoft Open Technologies, Inc.
- * @license   New BSD license, (http://www.opensource.org/licenses/bsd-license.php)
- * @version   GIT: 1.2
- * @link      https://github.com/MSOpenTech/odataphpprod
+ * Class InternalFilterInfo
+ * @package ODataProducer\UriProcessor\QueryProcessor\ExpressionParser
  */
 class InternalFilterInfo
 {
@@ -118,4 +109,3 @@ class InternalFilterInfo
     	return $this->_isCustomExpression;
     }
 }
-?>

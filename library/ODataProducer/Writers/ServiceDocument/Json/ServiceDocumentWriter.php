@@ -1,17 +1,14 @@
 <?php
-/** 
- * Writer for service document in JSON format.
- *
- *
- *
- */
+
 namespace ODataProducer\Writers\ServiceDocument\Json;
+
 use ODataProducer\Writers\Json\JsonWriter;
 use ODataProducer\Common\ODataConstants;
 use ODataProducer\Providers\MetadataQueryProviderWrapper;
-/** 
- * Service documenter class for json
-*
+
+/**
+ * Class ServiceDocumentWriter
+ * @package ODataProducer\Writers\ServiceDocument\Json
  */
 class ServiceDocumentWriter
 {
@@ -79,4 +76,3 @@ class ServiceDocumentWriter
         return $serviceDocumentInJson;
     }  
 }
-?>

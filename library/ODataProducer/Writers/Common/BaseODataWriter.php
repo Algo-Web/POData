@@ -1,9 +1,7 @@
 <?php
-/**
- * Contains Base class for OData Writers which implements IODataWriter.
- * 
-*/
+
 namespace ODataProducer\Writers\Common;
+
 use ODataProducer\Providers\Metadata\Type\Boolean;
 use ODataProducer\Providers\Metadata\Type\String;
 use ODataProducer\Common\ODataException;
@@ -16,9 +14,10 @@ use ODataProducer\ObjectModel\ODataPropertyContent;
 use ODataProducer\ObjectModel\ODataBagContent;
 use ODataProducer\ObjectModel\ODataProperty;
 use ODataProducer\ObjectModel\ODataMediaLink;
-/** 
- * Base class for OData writers.
-*
+
+/**
+ * Class BaseODataWriter
+ * @package ODataProducer\Writers\Common
  */
 abstract class BaseODataWriter implements IODataWriter
 {
@@ -426,4 +425,3 @@ abstract class BaseODataWriter implements IODataWriter
         return $this->getOutput();
     }
 }
-?>

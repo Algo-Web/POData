@@ -1,16 +1,14 @@
 <?php
-/**
- * Provides a writer implementaion for Json format 
- * 
- *
- *
- */
+
 namespace ODataProducer\Writers\Json;
+
+
 use ODataProducer\Writers\Json\IndentedTextWriter;
 use ODataProducer\Common\ODataConstants;
+
 /**
- * Json text writer.
-*
+ * Class JsonWriter
+ * @package ODataProducer\Writers\Json
  */
 class JsonWriter
 {
@@ -389,4 +387,3 @@ class Scope
         }
     }
 }
-?>

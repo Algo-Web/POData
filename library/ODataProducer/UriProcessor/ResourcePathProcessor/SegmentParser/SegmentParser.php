@@ -1,9 +1,22 @@
 <?php
-/** 
- * A parser to parse the segments in OData URI, Uri is made up of bunch of segments, 
+
+namespace ODataProducer\UriProcessor\ResourcePathProcessor\SegmentParser;
+
+use ODataProducer\Providers\Metadata\ResourceType;
+use ODataProducer\Providers\Metadata\ResourceTypeKind;
+use ODataProducer\Providers\Metadata\ResourcePropertyKind;
+use ODataProducer\Providers\MetadataQueryProviderWrapper;
+use ODataProducer\Common\ODataConstants;
+use ODataProducer\Common\Messages;
+use ODataProducer\Common\ODataException;
+
+/**
+ * Class SegmentParser
+ *
+ * A parser to parse the segments in OData URI, Uri is made up of bunch of segments,
  * each segment is seperated by '/' character
  * e.g. Customers('ALFKI')/Orders(2134)/Order_Details/Product
- *  
+ *
  * Syntax of an OData segment is:
  * Segment       : identifier[(keyPredicate)]?            : e.g. Customers, Customers('ALFKI'), Order_Details(OrderID=123, ProductID=11)
  * keyPredicate  : keyValue | NamedKeyValue
@@ -12,21 +25,8 @@
  * quotedValue   : "'" nqChar "'"
  * unquotedValue : [.*]                                   : Any character
  * nqChar        : [^\']                                  : Character other than quotes
- * 
  *
- *
- */
-namespace ODataProducer\UriProcessor\ResourcePathProcessor\SegmentParser;
-use ODataProducer\Providers\Metadata\ResourceType;
-use ODataProducer\Providers\Metadata\ResourceTypeKind;
-use ODataProducer\Providers\Metadata\ResourcePropertyKind;
-use ODataProducer\Providers\MetadataQueryProviderWrapper;
-use ODataProducer\Common\ODataConstants;
-use ODataProducer\Common\Messages;
-use ODataProducer\Common\ODataException;
-/**
- * Parser to parse the segments in the resource path.
-*
+ * @package ODataProducer\UriProcessor\ResourcePathProcessor\SegmentParser
  */
 class SegmentParser
 {
@@ -497,4 +497,3 @@ class SegmentParser
         }
     }
 }
-?>

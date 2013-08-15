@@ -1,20 +1,18 @@
 <?php
+
+namespace ODataProducer\UriProcessor\QueryProcessor\OrderByParser;
+
 /**
+ * Class OrderByPathSegment
+ *
  * A type to represent path segment in an order by clause
  * Syntax of orderby clause is:
- * 
+ *
  * OrderByClause         : OrderByPathSegment [, OrderByPathSegment]*
  * OrderByPathSegment    : OrderBySubPathSegment [/OrderBySubPathSegment]*[asc|desc]?
  * OrderBySubPathSegment : identifier
- * 
  *
- *
- */
-namespace ODataProducer\UriProcessor\QueryProcessor\OrderByParser;
-use ODataProducer\Common\Messages;
-/**
- * Type to represent path segment in an $orderby clause
-*
+ * @package ODataProducer\UriProcessor\QueryProcessor\OrderByParser
  */
 class OrderByPathSegment
 {
@@ -83,4 +81,3 @@ class OrderByPathSegment
         return $this->_isAscending;
     }
 }
-?>

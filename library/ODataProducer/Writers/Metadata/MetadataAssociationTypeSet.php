@@ -1,19 +1,7 @@
 <?php
-/** 
- * This class validates all AssociationSet defined for the service and creates
- * AssociationType for each AssociationSet from the given provider.
- * 
- * Iterate over all resource (entity) types belongs to visible resource (entity) sets
- * for each entity type retrieve its derived and base resource types. For each 
- * navigation property in these types (base types, type, derived types) cache the
- * association set and build and group 'ResourceAssociationType' instances based on
- * namespace. 
- * (will use the namespace of the resource type in the assocation type instance)
- * 
- *
- *
- */
+
 namespace ODataProducer\Writers\Metadata;
+
 use ODataProducer\Common\Messages;
 use ODataProducer\Common\InvalidOperationException;
 use ODataProducer\Providers\Metadata\ResourceTypeKind;
@@ -25,18 +13,23 @@ use ODataProducer\Providers\Metadata\ResourceAssociationSetEnd;
 use ODataProducer\Providers\Metadata\ResourceType;
 use ODataProducer\Providers\Metadata\ResourceProperty;
 use ODataProducer\Providers\Metadata\ResourceSetWrapper;
-require_once 'ODataProducer/Writers/Metadata/MetadataBase.php';
-/** 
+use ODataProducer\Writers\Metadata\MetadataBase;
+
+
+/**
+ * Class MetadataAssociationTypeSet
+ *
  * This class validates all AssociationSet defined for the service and creates
  * AssociationType for each AssociationSet from the given provider.
- * 
+ *
  * Iterate over all resource (entity) types belongs to visible resource (entity) sets
- * for each entity type retrieve its derived and base resource types. For each 
+ * for each entity type retrieve its derived and base resource types. For each
  * navigation property in these types (base types, type, derived types) cache the
  * association set and build and group 'ResourceAssociationType' instances based on
- * namespace. 
- * (will use the namespace of the resource type in the assocation type instance)
-*
+ * namespace.
+ * (will use the namespace of the resource type in the association type instance)
+ *
+ * @package ODataProducer\Writers\Metadata
  */
 class MetadataAssociationTypeSet extends MetadataBase
 {
@@ -432,4 +425,3 @@ class MetadataAssociationTypeSet extends MetadataBase
         return $associationTypeName;
     }
 }
-?>

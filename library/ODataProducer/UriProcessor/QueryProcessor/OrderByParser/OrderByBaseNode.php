@@ -1,17 +1,17 @@
 <?php
-/**
- * Base type for nodes in OrderByTree, a node in 'OrderBy Tree' 
- * represents a sub path segment.
- * 
- *
- *
- */
+
 namespace ODataProducer\UriProcessor\QueryProcessor\OrderByParser;
+
 use ODataProducer\Providers\Metadata\ResourceProperty;
 use ODataProducer\Providers\Metadata\ResourceType;
+
 /**
- * Base type for nodes in OrderByTree
-*
+ * Class OrderByBaseNode
+ *
+ * Base type for nodes in OrderByTree, a node in 'OrderBy Tree'
+ * represents a sub path segment.
+ *
+ * @package ODataProducer\UriProcessor\QueryProcessor\OrderByParser
  */
 abstract class OrderByBaseNode
 {
@@ -86,4 +86,3 @@ abstract class OrderByBaseNode
         return $this->resourceProperty;
     }    
 }
-?>

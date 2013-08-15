@@ -1,21 +1,7 @@
 <?php
-/** 
- * A parser to parse the skiptoken option
- * 
- * The syntax of skiptoken clause is:
- * 
- * skiptokenClause       : [literal [, literal]{orderByPathCount}]{orderByFlag} literal [, literal] {keyCount}
- * orderByFlag           : if orderby option is present, this this is 1 else 0
- * orderByPathCount      : if orderby option is present, then this is one less 
- *                         than the orderby path count
- * keyCount              : One less than the number of keys defined for the type
- *                         of the resource set identified by the Resource Path 
- *                         section of the URI
- * 
- *
- *
- */
+
 namespace ODataProducer\UriProcessor\QueryProcessor\SkipTokenParser;
+
 use ODataProducer\Common\ODataException;
 use ODataProducer\Common\Messages;
 use ODataProducer\Providers\Metadata\Type\Null1;
@@ -23,16 +9,23 @@ use ODataProducer\Providers\Metadata\ResourceType;
 use ODataProducer\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 use ODataProducer\UriProcessor\QueryProcessor\OrderByParser\OrderByInfo;
 use ODataProducer\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
+
 /**
- * $skiptoken option parser.
+ * Class SkipTokenParser
  *
- * @category  ODataPHPProd
- * @package   ODataProducer
- * @author    Microsoft Open Technologies, Inc. <msopentech@microsoft.com>
- * @copyright Microsoft Open Technologies, Inc.
- * @license   New BSD license, (http://www.opensource.org/licenses/bsd-license.php)
- * @version   GIT: 1.2
- * @link      https://github.com/MSOpenTech/odataphpprod
+ * A parser to parse the skiptoken option
+ *
+ * The syntax of skiptoken clause is:
+ *
+ * skiptokenClause       : [literal [, literal]{orderByPathCount}]{orderByFlag} literal [, literal] {keyCount}
+ * orderByFlag           : if orderby option is present, this this is 1 else 0
+ * orderByPathCount      : if orderby option is present, then this is one less
+ *                         than the orderby path count
+ * keyCount              : One less than the number of keys defined for the type
+ *                         of the resource set identified by the Resource Path
+ *                         section of the URI
+ *
+ * @package ODataProducer\UriProcessor\QueryProcessor\SkipTokenParser
  */
 class SkipTokenParser
 {
@@ -107,4 +100,3 @@ class SkipTokenParser
         );
     }
 }
-?>

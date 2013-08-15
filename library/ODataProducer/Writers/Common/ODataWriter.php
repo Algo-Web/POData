@@ -1,9 +1,7 @@
 <?php
-/**
- * Contains ODataWriter class for write content in format (Atom or JSON)
- * 
-*/
+
 namespace ODataProducer\Writers\Common;
+
 use ODataProducer\Writers\Atom\AtomODataWriter;
 use ODataProducer\Writers\Json\JsonODataWriter;
 use ODataProducer\Writers\Common\IODataWriter;
@@ -20,9 +18,9 @@ use ODataProducer\ObjectModel\ODataProperty;
 use ODataProducer\ObjectModel\XMLAttribute;
 use ODataProducer\Common\ODataException;
 
-/** 
- * Base class for write the request result to content format (Atom or json).
-*
+/**
+ * Class ODataWriter
+ * @package ODataProducer\Writers\Common
  */
 class ODataWriter
 {
@@ -159,4 +157,3 @@ class ODataWriter
         $this->iODataWriter->writeBeginProperties($propertyContent);
     }
 }
-?>

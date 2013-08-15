@@ -1,13 +1,13 @@
 <?php
-/** 
- * Type to represent resource property
- * 
-*/
+
 namespace ODataProducer\Providers\Metadata;
+
 use ODataProducer\Common\Messages;
+
+
 /**
- * Type to represent resource property
-*
+ * Class ResourceProperty
+ * @package ODataProducer\Providers\Metadata
  */
 class ResourceProperty
 {
@@ -222,4 +222,3 @@ class ResourceProperty
         return true;
     }
 }
-?>

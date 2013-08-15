@@ -1,14 +1,10 @@
 <?php
-/**
- * Enumeration for OData count request options.
- * 
- *
- *
- */
+
 namespace ODataProducer\UriProcessor;
-/** 
- * Enumeration for OData count request options.
-*
+
+/**
+ * Class RequestCountOption
+ * @package ODataProducer\UriProcessor
  */
 class RequestCountOption
 {
@@ -27,4 +23,3 @@ class RequestCountOption
      */
     const INLINE = 2;
 }
-?>

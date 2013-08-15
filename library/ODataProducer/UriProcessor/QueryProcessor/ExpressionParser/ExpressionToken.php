@@ -1,21 +1,14 @@
 <?php
-/** 
- * A type to represent a parsed token.
- * 
-*/
+
 namespace ODataProducer\UriProcessor\QueryProcessor\ExpressionParser;
+
 use ODataProducer\Common\ODataException;
 use ODataProducer\Common\ODataConstants;
+
+
 /**
- * A type to represent a parsed token.
- *
- * @category  ODataPHPProd
- * @package   ODataProducer
- * @author    Microsoft Open Technologies, Inc. <msopentech@microsoft.com>
- * @copyright Microsoft Open Technologies, Inc.
- * @license   New BSD license, (http://www.opensource.org/licenses/bsd-license.php)
- * @version   GIT: 1.2
- * @link      https://github.com/MSOpenTech/odataphpprod
+ * Class ExpressionToken
+ * @package ODataProducer\UriProcessor\QueryProcessor\ExpressionParser
  */
 class ExpressionToken
 {
@@ -104,7 +97,7 @@ class ExpressionToken
      * 
      * @param ExpressionTokenId $id Identifier to check
      * 
-     * @return true if this is an identifier with the specified text
+     * @return bool true if this is an identifier with the specified text
      */
     public function identifierIs($id)
     {
@@ -112,4 +105,3 @@ class ExpressionToken
             && strcmp($this->Text, $id) == 0;
     }
 }
-?>

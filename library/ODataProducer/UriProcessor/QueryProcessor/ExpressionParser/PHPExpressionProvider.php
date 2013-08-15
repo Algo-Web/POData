@@ -1,26 +1,16 @@
 <?php
-/** 
- * The specialized expression provider for PHP
- * 
- *
- *
- */
+
 namespace ODataProducer\UriProcessor\QueryProcessor\ExpressionParser;
+
 use ODataProducer\Providers\Metadata\ResourceType;
 use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ExpressionType;
 use ODataProducer\Providers\Metadata\Type\IType;
 use ODataProducer\Common\NotImplementedException;
 use ODataProducer\Common\ODataConstants;
+
 /**
- * PHP expression provider.
- *
- * @category  ODataPHPProd
- * @package   ODataProducer
- * @author    Microsoft Open Technologies, Inc. <msopentech@microsoft.com>
- * @copyright Microsoft Open Technologies, Inc.
- * @license   New BSD license, (http://www.opensource.org/licenses/bsd-license.php)
- * @version   GIT: 1.2
- * @link      https://github.com/MSOpenTech/odataphpprod
+ * Class PHPExpressionProvider
+ * @package ODataProducer\UriProcessor\QueryProcessor\ExpressionParser
  */
 class PHPExpressionProvider implements IExpressionProvider
 {
@@ -379,4 +369,3 @@ class PHPExpressionProvider implements IExpressionProvider
         return $operator . self::OPEN_BRAKET . $child . self::CLOSE_BRACKET;
     }
 }
-?>

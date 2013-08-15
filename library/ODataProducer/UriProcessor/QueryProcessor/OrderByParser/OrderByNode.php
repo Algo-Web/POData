@@ -1,16 +1,16 @@
 <?php
-/**
- * Type to represent non-leaf node of 'OrderBy Tree' (the root node and 
- * intermediate nodes[complex/navigation]).
- * 
- *
- *
- */
+
 namespace ODataProducer\UriProcessor\QueryProcessor\OrderByParser;
+
 use ODataProducer\Providers\Metadata\ResourceSetWrapper;
+
 /**
- * Type to represent non-leaf node of 'OrderBy Tree'.
-*
+ * Class OrderByNode
+ *
+ * Type to represent non-leaf node of 'OrderBy Tree' (the root node and
+ * intermediate nodes[complex/navigation]).
+ *
+ * @package ODataProducer\UriProcessor\QueryProcessor\OrderByParser
  */
 class OrderByNode extends OrderByBaseNode
 {
@@ -144,4 +144,3 @@ class OrderByNode extends OrderByBaseNode
         $this->_childNodes[$node->getPropertyName()] = $node;
     }
 }
-?>

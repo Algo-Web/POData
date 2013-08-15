@@ -1,19 +1,10 @@
 <?php
-/** 
- * Expression class specialized for unary expression
- * 
-*/
+
 namespace ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\Expressions;
+
 /**
- * Expression class for unary expression
- *
- * @category  ODataPHPProd
- * @package   ODataProducer
- * @author    Microsoft Open Technologies, Inc. <msopentech@microsoft.com>
- * @copyright Microsoft Open Technologies, Inc.
- * @license   New BSD license, (http://www.opensource.org/licenses/bsd-license.php)
- * @version   GIT: 1.2
- * @link      https://github.com/MSOpenTech/odataphpprod
+ * Class UnaryExpression
+ * @package ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\Expressions
  */
 class UnaryExpression extends AbstractExpression
 {
@@ -61,4 +52,3 @@ class UnaryExpression extends AbstractExpression
         unset($this->child);
     }
 }
-?>

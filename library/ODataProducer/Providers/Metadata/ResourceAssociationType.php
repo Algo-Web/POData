@@ -1,12 +1,11 @@
 <?php
-/**
- * Type to represent an association (relationship).
- * 
-*/
+
+
 namespace ODataProducer\Providers\Metadata;
+
 /**
- * Type to represent an association (relationship).
-*
+ * Class ResourceAssociationType
+ * @package ODataProducer\Providers\Metadata
  */
 class ResourceAssociationType
 {
@@ -141,4 +140,3 @@ class ResourceAssociationType
         return null;
     }
 }
-?>

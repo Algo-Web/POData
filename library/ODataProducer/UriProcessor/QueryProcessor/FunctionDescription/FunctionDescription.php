@@ -1,11 +1,7 @@
 <?php
-/** 
- * Class to represent function signature including function-name
- * 
- *
- *
- */
+
 namespace ODataProducer\UriProcessor\QueryProcessor\FunctionDescription;
+
 use ODataProducer\Common\NotImplementedException;
 use ODataProducer\Common\ODataException;
 use ODataProducer\Common\Messages;
@@ -26,9 +22,13 @@ use ODataProducer\Providers\Metadata\Type\Void;
 use ODataProducer\Providers\Metadata\Type\Binary;
 use ODataProducer\Providers\Metadata\Type\IType;
 use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ExpressionType;
+
 /**
- * Function signatures for operations supported in $filter clause.
-*
+ * Class FunctionDescription
+ *
+ * Class to represent function signature including function-name
+ *
+ * @package ODataProducer\UriProcessor\QueryProcessor\FunctionDescription
  */
 class FunctionDescription
 {

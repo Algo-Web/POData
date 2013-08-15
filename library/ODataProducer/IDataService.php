@@ -1,24 +1,19 @@
 <?php
-/** 
- * The base DataService (DataService.php) should implement this interface 
- * to make sure access to all providers and Operation context are available.
- * 
 
- */
 namespace ODataProducer;
+
 use ODataProducer\OperationContext\DataServiceHost;
 use ODataProducer\Providers\MetadataQueryProviderWrapper;
 use ODataProducer\Configuration\DataServiceConfiguration;
+
+
 /**
- * Interface for DataService
- * 
- * @category  ODataPHPProd
- * @package   ODataPHPProd
- * @author    Microsoft Open Technologies, Inc. <msopentech@microsoft.com>
- * @copyright Microsoft Open Technologies, Inc.
- * @license   New BSD license, (http://www.opensource.org/licenses/bsd-license.php)
- * @version   GIT: 1.2
- * @link      https://github.com/MSOpenTech/odataphpprod
+ * Class IDataService
+ *
+ * The base DataService (DataService.php) should implement this interface
+ * to make sure access to all providers and Operation context are available.
+ *
+ * @package ODataProducer
  */
 interface IDataService
 {
@@ -27,12 +22,12 @@ interface IDataService
      * 
      * @param DataServiceConfiguration &$config data service configuration
      * 
-     * @return nothing
+     * @return void
      */
     public function initializeService(DataServiceConfiguration &$config);
 
     /**
-     * Gets refernce to the configuration class to access the
+     * Gets reference to the configuration class to access the
      * configuration set by the developer.
      * 
      * @return IDataServiceConfiguration
@@ -82,4 +77,3 @@ interface IDataService
      */
     public function getOperationContext();
 }
-?>

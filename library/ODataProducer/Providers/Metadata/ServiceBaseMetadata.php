@@ -1,9 +1,7 @@
 <?php
-/** 
- * Implementation of IDataServiceMetadataProvider.
- * 
-*/
+
 namespace ODataProducer\Providers\Metadata;
+
 use ODataProducer\Providers\Metadata\ResourceStreamInfo;
 use ODataProducer\Providers\Metadata\ResourceAssociationSetEnd;
 use ODataProducer\Providers\Metadata\ResourceAssociationSet;
@@ -17,9 +15,10 @@ use ODataProducer\Providers\Metadata\ResourceType;
 use ODataProducer\Common\InvalidOperationException;
 use ODataProducer\Providers\Metadata\IDataServiceMetadataProvider;
 
+
 /**
- * Custom IDataServiceMetadata implementation
-*
+ * Class ServiceBaseMetadata
+ * @package ODataProducer\Providers\Metadata
  */
 class ServiceBaseMetadata implements IDataServiceMetadataProvider
 {

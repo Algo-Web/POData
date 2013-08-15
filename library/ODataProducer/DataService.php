@@ -1,17 +1,7 @@
 <?php
-/** 
- * The base class for all DataService specific classes. This class implements 
- * the following interfaces:
- *  (1) IRequestHandler
- *      Implementing this interface requires defining the function 
- *      'handleRequest' that will be invoked by dispatcher
- *  (2) IDataService
- *      Force DataService class to implement functions for custom 
- *      data service providers  
- * 
 
- */
 namespace ODataProducer;
+
 use ODataProducer\Providers\Metadata\ResourceTypeKind;
 use ODataProducer\ObjectModel\ODataPropertyContent;
 use ODataProducer\Common\ErrorHandler;
@@ -32,16 +22,20 @@ use ODataProducer\Providers\Metadata\ResourceType;
 use ODataProducer\Providers\Metadata\Type\Binary;
 use ODataProducer\ObjectModel\ObjectModelSerializer;
 use ODataProducer\Writers\ResponseWriter;
+
 /**
- * The DataService base class.
- * 
- * @category  ODataPHPProd
- * @package   ODataPHPProd
- * @author    Microsoft Open Technologies, Inc. <msopentech@microsoft.com>
- * @copyright Microsoft Open Technologies, Inc.
- * @license   New BSD license, (http://www.opensource.org/licenses/bsd-license.php)
- * @version   GIT: 1.2
- * @link      https://github.com/MSOpenTech/odataphpprod
+ * Class DataService
+ *
+ * The base class for all DataService specific classes. This class implements
+ * the following interfaces:
+ *  (1) IRequestHandler
+ *      Implementing this interface requires defining the function
+ *      'handleRequest' that will be invoked by dispatcher
+ *  (2) IDataService
+ *      Force DataService class to implement functions for custom
+ *      data service providers
+ *
+ * @package ODataProducer
  */
 abstract class DataService implements IRequestHandler, IDataService
 {
@@ -957,4 +951,3 @@ abstract class DataService implements IRequestHandler, IDataService
         }
     }
 }
-?>

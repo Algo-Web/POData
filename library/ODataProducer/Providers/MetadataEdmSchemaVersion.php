@@ -1,12 +1,10 @@
 <?php
-/**
- * Enum representing Edm Schema version for the metadata  
- * 
-*/
+
 namespace ODataProducer\Providers;
+
 /**
- * Enum representing Edm Schema version for the metadata
-*
+ * Class MetadataEdmSchemaVersion
+ * @package ODataProducer\Providers
  */
 class MetadataEdmSchemaVersion
 {
@@ -35,4 +33,3 @@ class MetadataEdmSchemaVersion
      */
     const VERSION_2_DOT_2 = 2.2;
 }
-?>

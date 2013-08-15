@@ -1,35 +1,7 @@
 <?php
-/** 
- * A type used to represent Key (identifier) for an entity (resource), This class 
- * can parse an Astoria KeyPredicate, KeyPredicate will be in one of the following 
- * two formats:
- *  1) KeyValue                                      : If the Entry has a single key 
- *                                                     Property the predicate may 
- *                                                     include only the value of the
- *                                                     key Property.
- *      e.g. 'ALFKI' in Customers('ALFKI')
- *  2) Property = KeyValue [, Property = KeyValue]*  : If the key is made up of two 
- *                                                     or more Properties, then its 
- *                                                     value must be stated using 
- *                                                     name/value pairs.
- *      e.g. 'ALFKI' in Customers(CustomerID = 'ALFKI'), 
- *          "OrderID=10248,ProductID=11" in Order_Details(OrderID=10248,ProductID=11)
- *       
- * Entity's identifier is a collection of value for key properties. These values 
- * can be named or positional, depending on how they were specified in the URI.
- *  e.g. Named values:      
- *         Customers(CustomerID = 'ALFKI'), Order_Details(OrderID=10248,ProductID=11)
- *       Positional values: 
- *         Customers('ALFKI'), Order_Details(10248, 11)
- * Note: Currenlty WCF Data Service does not support multiple 'Positional values' so 
- *       Order_Details(10248, 11) is not valid, but this class can parse both types. 
- * Note: This type is also used to parse and validate skiptoken value as they are 
- *       comma seperated positional values.
- * 
- *
- *
- */
+
 namespace ODataProducer\UriProcessor\ResourcePathProcessor\SegmentParser;
+
 use ODataProducer\Common\InvalidOperationException;
 use ODataProducer\Common\ODataException;
 use ODataProducer\Providers\Metadata\ResourceType;
@@ -47,9 +19,38 @@ use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\ExpressionTokenId
 use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\ExpressionToken;
 use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\ExpressionLexer;
 use ODataProducer\Common\Messages;
+
+
 /**
- * Type to represent description of key.
-*
+ * Class KeyDescriptor
+ *
+ * A type used to represent Key (identifier) for an entity (resource), This class
+ * can parse an Astoria KeyPredicate, KeyPredicate will be in one of the following
+ * two formats:
+ *  1) KeyValue                                      : If the Entry has a single key
+ *                                                     Property the predicate may
+ *                                                     include only the value of the
+ *                                                     key Property.
+ *      e.g. 'ALFKI' in Customers('ALFKI')
+ *  2) Property = KeyValue [, Property = KeyValue]*  : If the key is made up of two
+ *                                                     or more Properties, then its
+ *                                                     value must be stated using
+ *                                                     name/value pairs.
+ *      e.g. 'ALFKI' in Customers(CustomerID = 'ALFKI'),
+ *          "OrderID=10248,ProductID=11" in Order_Details(OrderID=10248,ProductID=11)
+ *
+ * Entity's identifier is a collection of value for key properties. These values
+ * can be named or positional, depending on how they were specified in the URI.
+ *  e.g. Named values:
+ *         Customers(CustomerID = 'ALFKI'), Order_Details(OrderID=10248,ProductID=11)
+ *       Positional values:
+ *         Customers('ALFKI'), Order_Details(10248, 11)
+ * Note: Currently WCF Data Service does not support multiple 'Positional values' so
+ *       Order_Details(10248, 11) is not valid, but this class can parse both types.
+ * Note: This type is also used to parse and validate skiptoken value as they are
+ *       comma separated positional values.
+ *
+ * @package ODataProducer\UriProcessor\ResourcePathProcessor\SegmentParser
  */
 class KeyDescriptor
 {
@@ -512,4 +513,3 @@ class KeyDescriptor
         return true;
     }
 }
-?>

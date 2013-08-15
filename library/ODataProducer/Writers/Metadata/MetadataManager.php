@@ -1,20 +1,21 @@
 <?php
-/**
- * This class is used by the MetadataSerializer class while building 
- * CSDL document to get information about visible 
- * resource type, resource set, assoication type and association set.
- *
- *
- *
- */
+
 namespace ODataProducer\Writers\Metadata;
+
 use ODataProducer\Common\Version;
 use ODataProducer\Providers\Metadata\ResourceType;
 use ODataProducer\Providers\MetadataEdmSchemaVersion;
 use ODataProducer\Providers\MetadataQueryProviderWrapper;
-/** 
- * Meta data manager class
-*
+
+
+/**
+ * Class MetadataManager
+ *
+ * used by the MetadataSerializer class while building
+ * CSDL document to get information about visible
+ * resource type, resource set, assoication type and association set.
+ *
+ * @package ODataProducer\Writers\Metadata
  */
 class MetadataManager
 {
@@ -235,4 +236,3 @@ class MetadataManager
 
     }
 }
-?>

@@ -1,21 +1,10 @@
 <?php
-/**
- * Enumeration values for expression token kinds.
- * 
- *
- *
- */
+
 namespace ODataProducer\UriProcessor\QueryProcessor\ExpressionParser;
+
 /**
- * Expression token enum.
- *
- * @category  ODataPHPProd
- * @package   ODataProducer
- * @author    Microsoft Open Technologies, Inc. <msopentech@microsoft.com>
- * @copyright Microsoft Open Technologies, Inc.
- * @license   New BSD license, (http://www.opensource.org/licenses/bsd-license.php)
- * @version   GIT: 1.2
- * @link      https://github.com/MSOpenTech/odataphpprod
+ * Class ExpressionTokenId
+ * @package ODataProducer\UriProcessor\QueryProcessor\ExpressionParser
  */
 class ExpressionTokenId
 {
@@ -91,4 +80,3 @@ class ExpressionTokenId
     //Star.
     const STAR = 24;
 }
-?>

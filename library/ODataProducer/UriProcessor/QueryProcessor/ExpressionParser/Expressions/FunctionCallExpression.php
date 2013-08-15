@@ -1,22 +1,12 @@
 <?php
-/** 
- * Expression class specialized for a function call expression
- * 
- *
- *
- */
+
 namespace ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\Expressions;
+
 use ODataProducer\UriProcessor\QueryProcessor\FunctionDescription\FunctionDescription;
+
 /**
- * Expression class for function call.
- *
- * @category  ODataPHPProd
- * @package   ODataProducer
- * @author    Microsoft Open Technologies, Inc. <msopentech@microsoft.com>
- * @copyright Microsoft Open Technologies, Inc.
- * @license   New BSD license, (http://www.opensource.org/licenses/bsd-license.php)
- * @version   GIT: 1.2
- * @link      https://github.com/MSOpenTech/odataphpprod
+ * Class FunctionCallExpression
+ * @package ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\Expressions
  */
 class FunctionCallExpression extends AbstractExpression
 {
@@ -79,4 +69,3 @@ class FunctionCallExpression extends AbstractExpression
         }
     }
 }
-?>

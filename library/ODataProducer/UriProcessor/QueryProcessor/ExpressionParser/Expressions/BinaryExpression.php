@@ -1,21 +1,13 @@
 <?php
-/** 
- * Abstract base class for binary expressions (arithmetic, logical or relational)
- * 
- *
- *
- */
+
 namespace ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\Expressions;
+
 /**
- * Abstract base class for binary expression.
+ * Class BinaryExpression
  *
- * @category  ODataPHPProd
- * @package   ODataProducer
- * @author    Microsoft Open Technologies, Inc. <msopentech@microsoft.com>
- * @copyright Microsoft Open Technologies, Inc.
- * @license   New BSD license, (http://www.opensource.org/licenses/bsd-license.php)
- * @version   GIT: 1.2
- * @link      https://github.com/MSOpenTech/odataphpprod
+ * Abstract base class for binary expressions (arithmetic, logical or relational)
+ *
+ * @package ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\Expressions
  */
 abstract class BinaryExpression extends AbstractExpression
 {
@@ -100,4 +92,3 @@ abstract class BinaryExpression extends AbstractExpression
         unset($this->right);
     }
 }
-?>

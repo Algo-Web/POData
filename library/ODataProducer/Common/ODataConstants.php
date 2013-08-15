@@ -870,4 +870,3 @@ class ODataConstants
     const ODATASERVICEVERSION                    = 'HTTP_DATASERVICEVERSION';
     const ODATAMAXSERVICEVERSION                = 'HTTP_MAXDATASERVICEVERSION';
 }
-?>

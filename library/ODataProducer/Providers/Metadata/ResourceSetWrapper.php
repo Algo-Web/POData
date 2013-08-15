@@ -1,17 +1,21 @@
 <?php
-/**
- * A wrapper class for a resource set and it's configuration (rights and page size)
- * described using DataServiceConfiguration
- * 
-*/
+
+
 namespace ODataProducer\Providers\Metadata;
+
 use ODataProducer\Common\ODataException;
 use ODataProducer\Configuration\DataServiceConfiguration;
 use ODataProducer\Configuration\EntitySetRights;
 use ODataProducer\Providers\MetadataQueryProviderWrapper;
+
+
 /**
- * A wrapper class for a resource set.
-*
+ * Class ResourceSetWrapper
+ *
+ * A wrapper class for a resource set and it's configuration (rights and page size)
+ * described using DataServiceConfiguration
+ *
+ * @package ODataProducer\Providers\Metadata
  */
 class ResourceSetWrapper
 {
@@ -217,4 +221,3 @@ class ResourceSetWrapper
         );
     }
 }
-?>

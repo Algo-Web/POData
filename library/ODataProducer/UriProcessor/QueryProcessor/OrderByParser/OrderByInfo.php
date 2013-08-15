@@ -1,19 +1,17 @@
 <?php
-/**
- * Type to hold information about the navigation properties used 
- * in the orderby clause (if any) and orderby path if IDSQP implementor
- * want to perform sorting.
- * 
- *
- *
- */
+
 namespace ODataProducer\UriProcessor\QueryProcessor\OrderByParser;
 use ODataProducer\Common\Messages;
 use ODataProducer\Common\InvalidOperationException;
+
 /**
- * Type to hold information about the navigation properties used 
- * in the orderby clause.
-*
+ * Class OrderByInfo
+ *
+ * Type to hold information about the navigation properties used
+ * in the orderby clause (if any) and orderby path if IDSQP implementor
+ * want to perform sorting.
+ *
+ * @package ODataProducer\UriProcessor\QueryProcessor\OrderByParser
  */
 class OrderByInfo
 {
@@ -146,4 +144,3 @@ class OrderByInfo
         return !$this->_isSorted;
     }
 }
-?>

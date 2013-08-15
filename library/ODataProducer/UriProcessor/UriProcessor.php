@@ -1,15 +1,7 @@
 <?php
-/** 
- * A type to process client's requets URI
- * The syntax of request URI is: 
- *  Scheme Host Port ServiceRoot ResourcePath ? QueryOption
- * For more details refer:
- * http://www.odata.org/developers/protocols/uri-conventions#UriComponents
- * 
- *
- *
- */
+
 namespace ODataProducer\UriProcessor;
+
 use ODataProducer\Providers\MetadataQueryProviderWrapper;
 use ODataProducer\Providers\Metadata\ResourcePropertyKind;
 use ODataProducer\Providers\Metadata\ResourceTypeKind;
@@ -28,9 +20,17 @@ use ODataProducer\Common\ODataException;
 use ODataProducer\Common\NotImplementedException;
 use ODataProducer\Common\InvalidOperationException;
 use ODataProducer\Common\ODataConstants;
+
 /**
- * OData request uri processor.
-*
+ * Class UriProcessor
+ *
+ * A type to process client's requets URI
+ * The syntax of request URI is:
+ *  Scheme Host Port ServiceRoot ResourcePath ? QueryOption
+ * For more details refer:
+ * http://www.odata.org/developers/protocols/uri-conventions#UriComponents
+ *
+ * @package ODataProducer\UriProcessor
  */
 class UriProcessor
 {
@@ -781,4 +781,3 @@ class UriProcessor
         }
     }
 }
-?>

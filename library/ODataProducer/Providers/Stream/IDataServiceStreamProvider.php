@@ -1,14 +1,15 @@
 <?php
+
+namespace ODataProducer\Providers\Stream;
+
 /**
+ * Class IDataServiceStreamProvider
+ *
  * The IDataServiceStreamProvider interface defines the contract between the
  * data services framework server component and a data source's stream
  * implementation (ie. a stream provider)
- * 
-*/
-namespace ODataProducer\Providers\Stream;
-/**
- * The IDataServiceStreamProvider interface
-*
+ *
+ * @package ODataProducer\Providers\Stream
  */
 interface IDataServiceStreamProvider
 {
@@ -214,4 +215,3 @@ interface IDataServiceStreamProvider
      */
     public function getReadStreamUri($entity, $operationContext);
 }
-?>

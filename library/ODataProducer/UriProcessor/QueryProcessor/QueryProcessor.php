@@ -1,11 +1,7 @@
 <?php
-/** 
- * Processor to process the query options of the request uri.
- * 
- *
- *
- */
+
 namespace ODataProducer\UriProcessor\QueryProcessor;
+
 use ODataProducer\Providers\Metadata\Type\Int32;
 use ODataProducer\Providers\Metadata\ResourceTypeKind;
 use ODataProducer\UriProcessor\RequestCountOption;
@@ -21,9 +17,10 @@ use ODataProducer\Common\Messages;
 use ODataProducer\Common\ODataException;
 use ODataProducer\Common\ODataConstants;
 use ODataProducer\DataService;
+
 /**
- * OData query options processor.
-*
+ * Class QueryProcessor
+ * @package ODataProducer\UriProcessor\QueryProcessor
  */
 class QueryProcessor
 {
@@ -652,4 +649,3 @@ class QueryProcessor
         }
     }
 }
-?>

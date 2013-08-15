@@ -1,11 +1,7 @@
 <?php
-/**
- * JSON format OData writer 
- * 
- *
- *
- */
+
 namespace ODataProducer\Writers\Json;
+
 use ODataProducer\ObjectModel\ODataFeed;
 use ODataProducer\ObjectModel\ODataEntry;
 use ODataProducer\ObjectModel\ODataURLCollection;
@@ -22,9 +18,10 @@ use ODataProducer\Common\ODataConstants;
 use ODataProducer\Common\Messages;
 use ODataProducer\Common\ODataException;
 use ODataProducer\Common\InvalidOperationException;
+
 /**
- * JSON format OData writer.
-*
+ * Class JsonODataWriter
+ * @package ODataProducer\Writers\Json
  */
 class JsonODataWriter extends BaseODataWriter
 {
@@ -665,4 +662,3 @@ class JsonODataWriter extends BaseODataWriter
         return $this->_writer->getJsonOutput();
     }
 }
-?>

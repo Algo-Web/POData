@@ -1,13 +1,11 @@
 <?php
-/**
- * Class which helps to create anonymous functions
- * 
-*/
+
 namespace ODataProducer\UriProcessor\QueryProcessor;
 use ODataProducer\Common\Messages;
+
 /**
- * Type for run-time generated function.
-*
+ * Class AnonymousFunction
+ * @package ODataProducer\UriProcessor\QueryProcessor
  */
 class AnonymousFunction
 {
@@ -19,7 +17,7 @@ class AnonymousFunction
     private $_parameters;
 
     /**
-     * Paramaters as string seperated by comma
+     * Parameters as string separated by comma
      * 
      * @var string
      */
@@ -41,7 +39,7 @@ class AnonymousFunction
     private $_reference = null;
 
     /**
-     * Create newinstance of AnonymousFunction
+     * Create new instance of AnonymousFunction
      * 
      * @param array  $parameters Array of parameters
      * @param string $code       Body of the function
@@ -117,4 +115,3 @@ class AnonymousFunction
         return $this->_reference;
     }
 }
-?>

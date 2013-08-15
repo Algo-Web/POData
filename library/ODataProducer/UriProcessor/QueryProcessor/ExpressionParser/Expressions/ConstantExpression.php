@@ -1,19 +1,10 @@
 <?php
-/** 
- * Expression class specialized for constant expression
- * 
-*/
+
 namespace ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\Expressions;
+
 /**
- * Expression class for constant expression.
- *
- * @category  ODataPHPProd
- * @package   ODataProducer
- * @author    Microsoft Open Technologies, Inc. <msopentech@microsoft.com>
- * @copyright Microsoft Open Technologies, Inc.
- * @license   New BSD license, (http://www.opensource.org/licenses/bsd-license.php)
- * @version   GIT: 1.2
- * @link      https://github.com/MSOpenTech/odataphpprod
+ * Class ConstantExpression
+ * @package ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\Expressions
  */
 class ConstantExpression extends AbstractExpression
 {
@@ -58,4 +49,3 @@ class ConstantExpression extends AbstractExpression
         unset($this->value);
     }
 }
-?>

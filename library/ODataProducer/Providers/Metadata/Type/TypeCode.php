@@ -27,4 +27,3 @@ class TypeCode
     const VOID       = 17;
     const NULL1      = 18;
 }
-?>

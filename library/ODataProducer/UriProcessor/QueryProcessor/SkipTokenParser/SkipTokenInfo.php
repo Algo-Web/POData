@@ -1,25 +1,18 @@
 <?php
-/**
- * Type to hold the parsed skiptoken value. The IDSQP implementor 
- * can use these details if they want to do custom paging.
- * 
- *
- *
- */
+
 namespace ODataProducer\UriProcessor\QueryProcessor\SkipTokenParser;
+
 use ODataProducer\Common\Messages;
 use ODataProducer\Providers\Metadata\ResourceType;
 use ODataProducer\UriProcessor\QueryProcessor\OrderByParser\OrderByInfo;
+
 /**
- * Type to hold the parsed skiptoken value
+ * Class SkipTokenInfo
  *
- * @category  ODataPHPProd
- * @package   ODataProducer
- * @author    Microsoft Open Technologies, Inc. <msopentech@microsoft.com>
- * @copyright Microsoft Open Technologies, Inc.
- * @license   New BSD license, (http://www.opensource.org/licenses/bsd-license.php)
- * @version   GIT: 1.2
- * @link      https://github.com/MSOpenTech/odataphpprod
+ * Type to hold the parsed skiptoken value. The IDSQP implementor
+ * can use these details if they want to do custom paging.
+ *
+ * @package ODataProducer\UriProcessor\QueryProcessor\SkipTokenParser
  */
 class SkipTokenInfo
 {
@@ -75,4 +68,3 @@ class SkipTokenInfo
         return $this->_orderByValuesInSkipToken;
     }
 }
-?>

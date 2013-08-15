@@ -1,12 +1,7 @@
 <?php
-/** 
- * Class to process an expression tree and generate specialized 
- * (e.g. PHP) expression using expression provider
- * 
- *
- *
- */
+
 namespace ODataProducer\UriProcessor\QueryProcessor\ExpressionParser;
+
 use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\Expressions\PropertyNullabilityCheckExpression;
 use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\Expressions\AbstractExpression;
 use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ArithmeticExpression;
@@ -16,9 +11,15 @@ use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\Expressions\Const
 use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\Expressions\PropertyAccessExpression;
 use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\Expressions\FunctionCallExpression;
 use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\Expressions\UnaryExpression;
+
+
 /**
- * Processor to process expression tree.
-*
+ * Class ExpressionProcessor
+ *
+ * Class to process an expression tree and generate specialized
+ * (e.g. PHP) expression using expression provider
+ *
+ * @package ODataProducer\UriProcessor\QueryProcessor\ExpressionParser
  */
 class ExpressionProcessor
 {
@@ -138,4 +139,3 @@ class ExpressionProcessor
         }
     }
 }
-?>

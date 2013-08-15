@@ -1,22 +1,19 @@
 <?php
-/** 
- * Base class for MetadataAssociationTypeSet and MetadataResourceTypeSet classes.
- * 
- *
- *
- */
+
 namespace ODataProducer\Writers\Metadata;
+
 use ODataProducer\Providers\Metadata\ResourceType;
 use ODataProducer\Providers\MetadataQueryProviderWrapper;
-/** 
- * Base class for MetadataAssociationTypeSet and MetadataResourceTypeSet classes.
-*
+
+/**
+ * Class MetadataBase
+ * @package ODataProducer\Writers\Metadata
  */
 class MetadataBase
 {
     /**
      * Holds reference to the wrapper over service metadata and 
-     * query provider implemenations.
+     * query provider implementations.
      * 
      * @var MetadataQueryProviderWrapper
      */
@@ -51,4 +48,3 @@ class MetadataBase
         return $resourceTypeNamespace;
     }
 }
-?>

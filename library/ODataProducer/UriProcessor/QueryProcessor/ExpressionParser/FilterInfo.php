@@ -1,23 +1,15 @@
 <?php
-/**  
- * A type to hold information about the navigation properties
- * used in the filter clause
- * 
- *
- *
- */
+
 namespace ODataProducer\UriProcessor\QueryProcessor\ExpressionParser;
+
 use ODataProducer\Common\Messages;
+
 /**
+ * Class FilterInfo
+ *
  * Type for holding navigation properties in the $filter clause.
  *
- * @category  ODataPHPProd
- * @package   ODataProducer
- * @author    Microsoft Open Technologies, Inc. <msopentech@microsoft.com>
- * @copyright Microsoft Open Technologies, Inc.
- * @license   New BSD license, (http://www.opensource.org/licenses/bsd-license.php)
- * @version   GIT: 1.2
- * @link      https://github.com/MSOpenTech/odataphpprod
+ * @package ODataProducer\UriProcessor\QueryProcessor\ExpressionParser
  */
 class FilterInfo
 {
@@ -70,4 +62,3 @@ class FilterInfo
         return $this->_navigationPropertiesUsedInTheFilterClause;
     }
 }
-?>

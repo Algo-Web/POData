@@ -1,21 +1,21 @@
 <?php
-/** 
- * ExpandProjectParser will create a 'Projection Tree' from the $expand 
+
+namespace ODataProducer\UriProcessor\QueryProcessor\ExpandProjectionParser;
+
+use ODataProducer\Providers\Metadata\ResourceType;
+use ODataProducer\Providers\Metadata\ResourceSetWrapper;
+
+/**
+ * Class RootProjectionNode
+ *
+ * ExpandProjectParser will create a 'Projection Tree' from the $expand
  * and/or $select query options, this type is used to represent root of
  * the 'Projection Tree', the root holds details about the resource set
  * pointed by the resource path uri (ResourceSet, OrderInfo, skip, top,
  * pageSize etc..) and flags indicating whether projection and expansions
- * are specifed.
- * 
+ * are specified.
  *
- *
- */
-namespace ODataProducer\UriProcessor\QueryProcessor\ExpandProjectionParser;
-use ODataProducer\Providers\Metadata\ResourceType;
-use ODataProducer\Providers\Metadata\ResourceSetWrapper;
-/**
- * Type to represent root of projection tree.
-*
+ * @package ODataProducer\UriProcessor\QueryProcessor\ExpandProjectionParser
  */
 class RootProjectionNode extends ExpandedProjectionNode
 {
@@ -169,4 +169,3 @@ class RootProjectionNode extends ExpandedProjectionNode
         return $this->_hasPagedExpandedResult;
     }
 }
-?>

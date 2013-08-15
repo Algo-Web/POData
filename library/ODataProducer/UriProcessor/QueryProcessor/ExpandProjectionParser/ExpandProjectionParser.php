@@ -1,22 +1,7 @@
 <?php
-/** 
- * Class used to parse and validate $expand and $select query options and 
- * create a 'Projection Tree' from these options, Syntax of the clause is:
- * 
- * ExpandOrSelectPath : PathSegment [, PathSegment]     
- * PathSegment        : SubPathSegment [\ SubPathSegment]
- * SubPathSegment     : DottedIdentifier
- * SubPathSegment     : * (Only if the SubPathSegment is last segment and 
- *                      belongs to select path)
- * DottedIdentifier   : Identifier [. Identifier]
- * Identifier         : NavigationProperty
- * Identifier         : NonNavigationProperty (Only if if the SubPathSegment 
- *                      is last segment and belongs to select path)
- * 
- *
- *
- */
+
 namespace ODataProducer\UriProcessor\QueryProcessor\ExpandProjectionParser;
+
 use ODataProducer\Common\ODataException;
 use ODataProducer\Common\Messages;
 use ODataProducer\Providers\Metadata\ResourceTypeKind;
@@ -28,9 +13,24 @@ use ODataProducer\Providers\Metadata\ResourcePropertyKind;
 use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\ExpressionLexer;
 use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\ExpressionTokenId;
 use ODataProducer\UriProcessor\QueryProcessor\OrderByParser\OrderByParser;
+
 /**
- * $expand and $select clause parser.
-*
+ * Class ExpandProjectionParser
+ *
+ * Class used to parse and validate $expand and $select query options and
+ * create a 'Projection Tree' from these options, Syntax of the clause is:
+ *
+ * ExpandOrSelectPath : PathSegment [, PathSegment]
+ * PathSegment        : SubPathSegment [\ SubPathSegment]
+ * SubPathSegment     : DottedIdentifier
+ * SubPathSegment     : * (Only if the SubPathSegment is last segment and
+ *                      belongs to select path)
+ * DottedIdentifier   : Identifier [. Identifier]
+ * Identifier         : NavigationProperty
+ * Identifier         : NonNavigationProperty (Only if if the SubPathSegment
+ *                      is last segment and belongs to select path)
+ *
+ * @package ODataProducer\UriProcessor\QueryProcessor\ExpandProjectionParser
  */
 class ExpandProjectionParser
 {
@@ -434,4 +434,3 @@ class ExpandProjectionParser
         return $pathSegments;
     }
 }
-?>

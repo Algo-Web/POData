@@ -1,12 +1,7 @@
 <?php
-/** 
- * A type to hold description of the OData request that a client
- * has submitted.
- * 
- *
- *
- */
+
 namespace ODataProducer\UriProcessor;
+
 use ODataProducer\Common\Url;
 use ODataProducer\Common\ODataConstants;
 use ODataProducer\Common\Messages;
@@ -23,9 +18,11 @@ use ODataProducer\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
 use ODataProducer\UriProcessor\QueryProcessor\SkipTokenParser\InternalSkipTokenInfo;
 use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\InternalFilterInfo;
 use ODataProducer\UriProcessor\QueryProcessor\ExpandProjectionParser\RootProjectionNode;
+
+
 /**
- * Type to hold clinet submitted request.
-*
+ * Class RequestDescription
+ * @package ODataProducer\UriProcessor
  */
 class RequestDescription
 {
@@ -1053,4 +1050,3 @@ class RequestDescription
         $this->_uriProcessor = $uriProcessor;
     }
 }
-?>

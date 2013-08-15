@@ -1,22 +1,12 @@
 <?php
-/** 
- * Abstract base class for all expressions
- * 
- *
- *
- */
+
 namespace ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\Expressions;
+
 use ODataProducer\Providers\Metadata\Type\IType;
+
 /**
- * Abstract expression class.
- *
- * @category  ODataPHPProd
- * @package   ODataProducer
- * @author    Microsoft Open Technologies, Inc. <msopentech@microsoft.com>
- * @copyright Microsoft Open Technologies, Inc.
- * @license   New BSD license, (http://www.opensource.org/licenses/bsd-license.php)
- * @version   GIT: 1.2
- * @link      https://github.com/MSOpenTech/odataphpprod
+ * Class AbstractExpression
+ * @package ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\Expressions
  */
 abstract class AbstractExpression
 {
@@ -29,7 +19,7 @@ abstract class AbstractExpression
 
     /**
      * The type of expression 
-     * @var ODataProducer\Provider\Metadata\Type\IType
+     * @var IType
      */
     protected $type;
 
@@ -84,4 +74,3 @@ abstract class AbstractExpression
      */
     abstract public function free();
 }
-?>

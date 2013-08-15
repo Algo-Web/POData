@@ -1,13 +1,7 @@
 <?php
-/**
- * Type which holds information about processed skiptoken value, this type
- * also provide method to search the given result set for the skiptoken
- * and to build skiptoken from an entry object. 
- * 
- *
- *
- */
+
 namespace ODataProducer\UriProcessor\QueryProcessor\SkipTokenParser;
+
 use ODataProducer\Providers\Metadata\Type\Guid;
 use ODataProducer\Providers\Metadata\Type\Null1;
 use ODataProducer\Providers\Metadata\Type\DateTime;
@@ -16,16 +10,15 @@ use ODataProducer\Providers\Metadata\ResourceType;
 use ODataProducer\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
 use ODataProducer\Common\Messages;
 use ODataProducer\Common\ODataException;
+
 /**
- * Type to hold information about processed skiptoken value.
+ * Class InternalSkipTokenInfo
  *
- * @category  ODataPHPProd
- * @package   ODataProducer
- * @author    Microsoft Open Technologies, Inc. <msopentech@microsoft.com>
- * @copyright Microsoft Open Technologies, Inc.
- * @license   New BSD license, (http://www.opensource.org/licenses/bsd-license.php)
- * @version   GIT: 1.2
- * @link      https://github.com/MSOpenTech/odataphpprod
+ * Type which holds information about processed skiptoken value, this type
+ * also provide method to search the given result set for the skiptoken
+ * and to build skiptoken from an entry object.
+ *
+ * @package ODataProducer\UriProcessor\QueryProcessor\SkipTokenParser
  */
 class InternalSkipTokenInfo
 {
@@ -306,4 +299,3 @@ class InternalSkipTokenInfo
         return rtrim($nextPageLink, ", ");
     }
 }
-?>

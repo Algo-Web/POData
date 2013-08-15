@@ -1,20 +1,20 @@
 <?php
+
+namespace ODataProducer\UriProcessor\QueryProcessor\OrderByParser;
+
+use ODataProducer\Providers\Metadata\ResourceProperty;
+
 /**
+ * Class OrderBySubPathSegment
+ *
  * A type to represent sub path segment in an order by path segment.
  * Syntax of orderby clause is:
- * 
+ *
  * OrderByClause         : OrderByPathSegment [, OrderByPathSegment]*
  * OrderByPathSegment    : OrderBySubPathSegment [/OrderBySubPathSegment]*[asc|desc]?
  * OrderBySubPathSegment : identifier
- * 
  *
- *
- */
-namespace ODataProducer\UriProcessor\QueryProcessor\OrderByParser;
-use ODataProducer\Providers\Metadata\ResourceProperty;
-/**
- * A type to represent sub path segment.
-*
+ * @package ODataProducer\UriProcessor\QueryProcessor\OrderByParser
  */
 class OrderBySubPathSegment
 {
@@ -70,4 +70,3 @@ class OrderBySubPathSegment
         return $this->_resourceProperty->getInstanceType();
     }
 }
-?>

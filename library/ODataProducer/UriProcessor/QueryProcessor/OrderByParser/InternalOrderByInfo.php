@@ -1,15 +1,12 @@
 <?php
-/** 
- * Class to hold parsed orderby infromation.
- * 
- *
- *
- */
+
 namespace ODataProducer\UriProcessor\QueryProcessor\OrderByParser;
+
 use ODataProducer\UriProcessor\QueryProcessor\AnonymousFunction;
+
 /**
- * Type to hold parsed orderby information.
-*
+ * Class InternalOrderByInfo
+ * @package ODataProducer\UriProcessor\QueryProcessor\OrderByParser
  */
 class InternalOrderByInfo
 {

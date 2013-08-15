@@ -1,22 +1,15 @@
 <?php
-/** 
+
+namespace ODataProducer;
+
+/**
+ * Class IRequestHandler
+ *
  * The base DataService (DataService.php) should implement this interface so
  * that the Dispatcher can invoke handleRequest method upon receiving any
  * Request to a data service.
- * 
-
- */
-namespace ODataProducer;
-/**
- * Interface for Request handling
- * 
- * @category  ODataPHPProd
- * @package   ODataPHPProd
- * @author    Microsoft Open Technologies, Inc. <msopentech@microsoft.com>
- * @copyright Microsoft Open Technologies, Inc.
- * @license   New BSD license, (http://www.opensource.org/licenses/bsd-license.php)
- * @version   GIT: 1.2
- * @link      https://github.com/MSOpenTech/odataphpprod
+ *
+ * @package ODataProducer
  */
 interface IRequestHandler
 {
@@ -29,4 +22,3 @@ interface IRequestHandler
      */
     public function handleRequest();
 }
-?>

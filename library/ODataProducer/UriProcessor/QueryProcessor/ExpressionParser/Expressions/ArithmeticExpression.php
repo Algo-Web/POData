@@ -1,21 +1,13 @@
 <?php
-/** 
- * Binary expression class specialized for an arithmetic expression
- * 
- *
- *
- */
+
 namespace ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\Expressions;
+
 /**
- * Arithmetic expression class.
+ * Class ArithmeticExpression
  *
- * @category  ODataPHPProd
- * @package   ODataProducer
- * @author    Microsoft Open Technologies, Inc. <msopentech@microsoft.com>
- * @copyright Microsoft Open Technologies, Inc.
- * @license   New BSD license, (http://www.opensource.org/licenses/bsd-license.php)
- * @version   GIT: 1.2
- * @link      https://github.com/MSOpenTech/odataphpprod
+ *
+ *
+ * @package ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\Expressions
  */
 class ArithmeticExpression extends BinaryExpression
 {
@@ -34,4 +26,3 @@ class ArithmeticExpression extends BinaryExpression
         parent::__construct($left, $right);
     }
 }
-?>

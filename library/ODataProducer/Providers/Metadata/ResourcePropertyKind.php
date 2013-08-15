@@ -1,12 +1,10 @@
 <?php
-/** 
- * Enum for different kind of properties resource can have.
- * 
-*/
+
 namespace ODataProducer\Providers\Metadata;
+
 /**
- * Enum for different kind of properties resource.
-*
+ * Class ResourcePropertyKind
+ * @package ODataProducer\Providers\Metadata
  */
 class ResourcePropertyKind
 {
@@ -45,4 +43,3 @@ class ResourcePropertyKind
      */
     const RESOURCESET_REFERENCE = 64;
 }
-?>

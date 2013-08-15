@@ -1,16 +1,13 @@
 <?php
-/** 
- * Writer for service document in Atom format.
- *
- *
- *
- */
+
 namespace ODataProducer\Writers\ServiceDocument\Atom;
+
 use ODataProducer\Common\ODataConstants;
 use ODataProducer\Providers\MetadataQueryProviderWrapper;
-/** 
- * Service documenter class for atom
-*
+
+/**
+ * Class ServiceDocumentWriter
+ * @package ODataProducer\Writers\ServiceDocument\Atom
  */
 class ServiceDocumentWriter
 {
@@ -110,4 +107,3 @@ class ServiceDocumentWriter
         return $serviceDocumentInAtom;
     }
 }
-?>

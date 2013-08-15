@@ -1,13 +1,15 @@
 <?php
-/**
- * A type to represent entity set (resource set or container)
- * 
-*/
+
 namespace ODataProducer\Providers\Metadata;
+
 use ODataProducer\Common\Messages;
+
 /**
- * Represents entity set.
-*
+ * Class ResourceSet Represents entity set.
+ *
+ * A type to represent entity set (resource set or container)
+ *
+ * @package ODataProducer\Providers\Metadata
  */
 class ResourceSet
 {
@@ -32,7 +34,7 @@ class ResourceSet
      * @param ResourceType $resourceType ResourceType describing the resource 
      *                                   this entity set holds
      * 
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
     public function __construct($name, ResourceType $resourceType)
     {
@@ -66,4 +68,3 @@ class ResourceSet
         return $this->_resourceType;
     }
 }
-?>

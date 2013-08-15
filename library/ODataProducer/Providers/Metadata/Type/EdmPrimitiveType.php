@@ -23,4 +23,3 @@ class EdmPrimitiveType
     const SINGLE   = TypeCode::SINGLE;
     const STRING   = TypeCode::STRING;
 }
-?>

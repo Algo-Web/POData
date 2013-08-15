@@ -1,12 +1,7 @@
 <?php
-/**
- * Build the basic expression tree for a given expression using base class
- * ExpressionParser, modify the expression tree to have null checks 
- * 
- *
- *
- */
+
 namespace ODataProducer\UriProcessor\QueryProcessor\ExpressionParser;
+
 use ODataProducer\UriProcessor\QueryProcessor\AnonymousFunction;
 use ODataProducer\Common\Messages;
 use ODataProducer\Common\ODataException;
@@ -22,18 +17,15 @@ use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\Expressions\Prope
 use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\Expressions\FunctionCallExpression;
 use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\Expressions\UnaryExpression;
 use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ExpressionType;
-use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\Expressions\PropertyNullabilityCheckExpression;
 use ODataProducer\UriProcessor\QueryProcessor\FunctionDescription\FunctionDescription;
+
 /**
- * Expression parser to take care nullability.
- *  
- * @category  ODataPHPProd
- * @package   ODataProducer
- * @author    Microsoft Open Technologies, Inc. <msopentech@microsoft.com>
- * @copyright Microsoft Open Technologies, Inc.
- * @license   New BSD license, (http://www.opensource.org/licenses/bsd-license.php)
- * @version   GIT: 1.2
- * @link      https://github.com/MSOpenTech/odataphpprod
+ * Class ExpressionParser2
+ *
+ * Build the basic expression tree for a given expression using base class
+ * ExpressionParser, modify the expression tree to have null checks
+ *
+ * @package ODataProducer\UriProcessor\QueryProcessor\ExpressionParser
  */
 class ExpressionParser2 extends ExpressionParser
 {
@@ -580,7 +572,7 @@ class ExpressionParser2 extends ExpressionParser
             $this->_mapTable[$key] = $nullCheckExpTree;
         } else {
             ODataException::createSyntaxError(
-                Messages::expressionParser2UnexpectedExpression(get_class($expTree))
+                Messages::expressionParser2UnexpectedExpression(get_class($nullCheckExpTree))
             );
             
         }

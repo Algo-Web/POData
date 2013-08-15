@@ -1,14 +1,20 @@
 <?php
-/** 
- * ExpandProjectionParser will create a 'Projection Tree' from the $expand 
+
+namespace ODataProducer\UriProcessor\QueryProcessor\ExpandProjectionParser;
+use ODataProducer\Providers\Metadata\ResourceProperty;
+
+/**
+ * Class ProjectionNode
+ *
+ * ExpandProjectionParser will create a 'Projection Tree' from the $expand
  * and/or $select query options, Each path segement in the $expand/$select
  * will be represented by a node in the proejction tree, A path segment in
  * $expand option (which is not appear in expand option) will be represented
- * using a type derived from this type 'ExpandedProjectionNode' and a path 
- * segment in $select option will be represented using 'ProjectionNode'. 
- * The root of the projection tree will be represented using the type 
+ * using a type derived from this type 'ExpandedProjectionNode' and a path
+ * segment in $select option will be represented using 'ProjectionNode'.
+ * The root of the projection tree will be represented using the type
  * 'RootProjectionNode' which is derived from the type 'ExpandedProjectionNode'
- * 
+ *
  *               'ProjectionNode'
  *                       |
  *                       |
@@ -16,18 +22,11 @@
  *                       |
  *                       |
  *              'RootProjectionNode'
- * 
+ *
  * Note: In the context of library we use the term 'Projection' to represent
  * both expansion and selection.
- * 
  *
- *
- */
-namespace ODataProducer\UriProcessor\QueryProcessor\ExpandProjectionParser;
-use ODataProducer\Providers\Metadata\ResourceProperty;
-/**
- * Type to represent a selected property using $select.
-*
+ * @package ODataProducer\UriProcessor\QueryProcessor\ExpandProjectionParser
  */
 class ProjectionNode
 {
@@ -87,4 +86,3 @@ class ProjectionNode
         return $this->resourceProperty;
     }
 }
-?>

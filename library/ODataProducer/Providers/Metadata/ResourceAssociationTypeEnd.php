@@ -1,18 +1,18 @@
 <?php
-/** 
- * Type to represent association (relationship) end. 
- * 
- * Entities (described using ResourceType) can have relationship between them.
- * A relationship (described using ResourceAssociationType) composed of two ends
- * (described using ResourceAssociationTypeEnd). 
- * 
-*/
+
 namespace ODataProducer\Providers\Metadata;
+
 use ODataProducer\Common\ODataConstants;
 use ODataProducer\Common\Messages;
+
 /**
- * Type to represent association (relationship) end.
-*
+ * Class ResourceAssociationTypeEnd represents association (relationship) end.
+ *
+ * Entities (described using ResourceType) can have relationship between them.
+ * A relationship (described using ResourceAssociationType) composed of two ends
+ * (described using ResourceAssociationTypeEnd).
+ * s
+ * @package ODataProducer\Providers\Metadata
  */
 class ResourceAssociationTypeEnd
 {
@@ -168,4 +168,3 @@ class ResourceAssociationTypeEnd
         return ODataConstants::MANY;
     }
 }
-?>

@@ -1,23 +1,7 @@
 <?php
-/** 
- * Finds all visible resource sets and types from the given provider
- * 
- * Iterate over all resource (entity) types belongs to 
- * visible resource (entity) sets,for each entity type
- * retrieve its derived and base resource types, 
- * group these resource types (base types, type, derived types) 
- * based on the namespace in which it falls.
- * Note: DataServiceConfiguration::setEntitySetAccessRule is used to
- * make a resource set visible
- * 
- * Iterate through the properties of each resource (entity) type, 
- * retrieve resource type of complex properties, 
- * group these resource types based on namespace in which it falls.
- *
- *
- *
- */
+
 namespace ODataProducer\Writers\Metadata;
+
 use ODataProducer\Common\Messages;
 use ODataProducer\Common\InvalidOperationException;
 use ODataProducer\Providers\Metadata\ResourcePropertyKind;
@@ -25,9 +9,25 @@ use ODataProducer\Providers\Metadata\ResourceSetWrapper;
 use ODataProducer\Providers\Metadata\ResourceType;
 use ODataProducer\Providers\Metadata\ResourceTypeKind;
 use ODataProducer\Providers\MetadataQueryProviderWrapper;
-/** 
- * Resource type set class for metadata
-*
+
+/**
+ * Class MetadataResourceTypeSet
+ *
+ * Finds all visible resource sets and types from the given provider
+ *
+ * Iterate over all resource (entity) types belongs to
+ * visible resource (entity) sets,for each entity type
+ * retrieve its derived and base resource types,
+ * group these resource types (base types, type, derived types)
+ * based on the namespace in which it falls.
+ * Note: DataServiceConfiguration::setEntitySetAccessRule is used to
+ * make a resource set visible
+ *
+ * Iterate through the properties of each resource (entity) type,
+ * retrieve resource type of complex properties,
+ * group these resource types based on namespace in which it falls.
+ *
+ * @package ODataProducer\Writers\Metadata
  */
 class MetadataResourceTypeSet extends MetadataBase
 {
@@ -298,4 +298,3 @@ class MetadataResourceTypeSet extends MetadataBase
         }
     }
 }
-?>

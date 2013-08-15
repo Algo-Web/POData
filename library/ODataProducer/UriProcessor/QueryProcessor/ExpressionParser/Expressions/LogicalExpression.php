@@ -1,22 +1,12 @@
 <?php
-/** 
- * Binary expression class specialized for an logical expression
- * 
- *
- *
- */
+
 namespace ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\Expressions;
+
 use ODataProducer\Providers\Metadata\Type\Boolean;
+
 /**
- * Expression class for logical expression.
- *
- * @category  ODataPHPProd
- * @package   ODataProducer
- * @author    Microsoft Open Technologies, Inc. <msopentech@microsoft.com>
- * @copyright Microsoft Open Technologies, Inc.
- * @license   New BSD license, (http://www.opensource.org/licenses/bsd-license.php)
- * @version   GIT: 1.2
- * @link      https://github.com/MSOpenTech/odataphpprod
+ * Class LogicalExpression
+ * @package ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\Expressions
  */
 class LogicalExpression extends BinaryExpression
 {
@@ -34,4 +24,3 @@ class LogicalExpression extends BinaryExpression
         parent::__construct($left, $right);
     }
 }
-?>

@@ -1,17 +1,18 @@
 <?php
-/**
- * A type to represent root node of 'OrderBy Tree', the root node includes
- * details of resource set pointed by the request resource path uri.
- * 
- *
- *
- */
+
 namespace ODataProducer\UriProcessor\QueryProcessor\OrderByParser;
+
+
 use ODataProducer\Providers\Metadata\ResourceType;
 use ODataProducer\Providers\Metadata\ResourceSetWrapper;
+
 /**
- * A type to represent root node of 'OrderBy Tree'.
-*
+ * Class OrderByRootNode
+ *
+ * A type to represent root node of 'OrderBy Tree', the root node includes
+ * details of resource set pointed by the request resource path uri.
+ *
+ * @package ODataProducer\UriProcessor\QueryProcessor\OrderByParser
  */
 class OrderByRootNode extends OrderByNode
 {
@@ -52,4 +53,3 @@ class OrderByRootNode extends OrderByNode
         return $this->_baseResourceType;
     }
 }
-?>

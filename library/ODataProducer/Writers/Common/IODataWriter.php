@@ -1,9 +1,7 @@
 <?php
-/**
- * Contains IODataWriter class is interface of OData Writer.
- * 
-*/
+
 namespace ODataProducer\Writers\Common;
+
 use ODataProducer\Common\ODataException;
 use ODataProducer\ObjectModel\ODataURL;
 use ODataProducer\ObjectModel\ODataURLCollection;
@@ -16,18 +14,11 @@ use ODataProducer\ObjectModel\ODataPropertyContent;
 use ODataProducer\ObjectModel\ODataProperty;
 use ODataProducer\ObjectModel\XMLAttribute;
 
-/** 
- * OData writer interface.
- *
- * @category  ODataPHPProd
- * @package   ODataProducer
- * @author    Microsoft Open Technologies, Inc. <msopentech@microsoft.com>
- * @copyright Microsoft Open Technologies, Inc.
- * @license   New BSD license, (http://www.opensource.org/licenses/bsd-license.php)
- * @version   GIT: 1.2
- * @link      https://github.com/MSOpenTech/odataphpprod
- */
 
+/**
+ * Class IODataWriter
+ * @package ODataProducer\Writers\Common
+ */
 interface IODataWriter
 {
     /**
@@ -104,4 +95,3 @@ interface IODataWriter
      */
     public function getResult();
 }
-?>
