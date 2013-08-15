@@ -1,5 +1,7 @@
 <?php
 
+namespace UnitTests\POData\Providers\Metadata;
+
 use ODataProducer\Providers\Metadata\ResourceSet;
 use ODataProducer\Providers\Metadata\ResourceType;
 use ODataProducer\Providers\Metadata\ResourceProperty;
@@ -10,9 +12,9 @@ use ODataProducer\Configuration\EntitySetRights;
 use ODataProducer\Providers\Metadata\IDataServiceMetadataProvider;
 use ODataProducer\Common\ODataException;
 
-require_once(dirname(__FILE__) . "/../../Resources/NorthWindMetadata.php");
+use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 
-class MetadataQueryProviderWrapperTest extends PHPUnit_Framework_TestCase
+class MetadataQueryProviderWrapperTest extends \PHPUnit_Framework_TestCase
 {
     protected function setUp()
     {
@@ -26,7 +28,7 @@ class MetadataQueryProviderWrapperTest extends PHPUnit_Framework_TestCase
             $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
                                         $metadataProvider, //IDataServiceMetadataProvider implementation 
                                         null, //IDataServiceQueryProvider implementation (set to null)
-                                        $configuration, //Service configuuration
+                                        $configuration, //Service configuration
                                         false
                                         );
 
@@ -294,31 +296,31 @@ class MetadataQueryProviderWrapperTest extends PHPUnit_Framework_TestCase
 
     public function testGetResourceSets2()
     {
+
+        //Try to get all resource sets with non of the resouce sets are visible
+        $configuration = null;
+        $metadataProvider = $this->_createMetadataAndConfiguration2($configuration);
+
+	    $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
+            $metadataProvider, //IDataServiceMetadataProvider implementation
+            null, //IDataServiceQueryProvider implementation (set to null)
+            $configuration, //Service configuuration
+            false
+        );
+
+        $exceptionThrown = false;
         try {
-            //Try to get all resource sets with non of the resouce sets are visible
-            $configuration = null;
-            $metadataProvider = $this->_createMetadataAndConfiguration2($configuration);
-            $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                        $metadataProvider, //IDataServiceMetadataProvider implementation 
-                                        null, //IDataServiceQueryProvider implementation (set to null)
-                                        $configuration, //Service configuuration
-                                        false
-                                        );
-            $exceptionThrown = false;
-            try {
-                $metaQueryProverWrapper->getResourceSets();
-            } catch(ODataException $exception) {
-                $exceptionThrown = true;
-                $this->assertEquals($exception->getMessage(), 'More than one entity set with the name \'Customers\' was found. Entity set names must be unique');
-            }
-
-            if (!$exceptionThrown) {
-                $this->fail('An expected ODataException for entity set repetition has not been thrown');
-            }
-
-        } catch (\Exception $exception) {
-            $this->fail('An unexpected Exception has been raised' . $exception->getMessage());    
+            $metaQueryProverWrapper->getResourceSets();
+        } catch(ODataException $exception) {
+            $exceptionThrown = true;
+            $this->assertEquals($exception->getMessage(), 'More than one entity set with the name \'Customers\' was found. Entity set names must be unique');
         }
+
+        if (!$exceptionThrown) {
+            $this->fail('An expected ODataException for entity set repetition has not been thrown');
+        }
+
+
     }
 
     public function testGetTypes2()
@@ -364,7 +366,7 @@ class MetadataQueryProviderWrapperTest extends PHPUnit_Framework_TestCase
      */
     private function _createMetadataAndConfiguration1(&$configuration)
     {
-        $northWindMetadata = CreateNorthWindMetadata3::Create();
+        $northWindMetadata = NorthWindMetadata::Create();
         $configuration = new DataServiceConfiguration($northWindMetadata);
         return $northWindMetadata;
     }
@@ -390,18 +392,22 @@ class NorthWindMetadata2 implements IDataServiceMetadataProvider
     protected $_resourceSets = array();
     protected $_resourceTypes = array();
 	
-    public function NorthWindMetadata2()
+    public function __construct()
     {
-        $customerEntityType = new ResourceType(new ReflectionClass('Customer2'), ResourceTypeKind::ENTITY, 'Customer');
+        $customerEntityType = new ResourceType(new \ReflectionClass('UnitTests\POData\Facets\NorthWind1\Customer2'), ResourceTypeKind::ENTITY, 'Customer');
     	$this->_resourceTypes[] = $customerEntityType;
-        $orderEntityType = new ResourceType(new ReflectionClass('Order2'), ResourceTypeKind::ENTITY, 'Order');
+
+	    //Add the Order resource type twice
+	    $orderEntityType = new ResourceType(new \ReflectionClass('UnitTests\POData\Facets\NorthWind1\Order2'), ResourceTypeKind::ENTITY, 'Order');
     	$this->_resourceTypes[] = $orderEntityType;
     	$this->_resourceTypes[] = $orderEntityType;
     	
     	$customersResourceSet = new ResourceSet('Customers', $customerEntityType);
-    	$ordersResourceSet = new ResourceSet('Orders', $orderEntityType);
+    	//Add the customers resource set twice to the collection
     	$this->_resourceSets[] = $customersResourceSet;
     	$this->_resourceSets[] = $customersResourceSet;
+
+	    $ordersResourceSet = new ResourceSet('Orders', $orderEntityType);
     	$this->_resourceSets[] = $ordersResourceSet;
     }
 
@@ -447,4 +453,3 @@ class NorthWindMetadata2 implements IDataServiceMetadataProvider
     {
     }
 }
-?>

@@ -1,4 +1,7 @@
 <?php
+
+namespace UnitTests\POData\Providers\Metadata;
+
 use ODataProducer\Providers\Metadata\ResourceAssociationSet;
 use ODataProducer\Providers\Metadata\ResourceAssociationSetEnd;
 use ODataProducer\Providers\Metadata\ResourceAssociationType;
@@ -7,9 +10,6 @@ use ODataProducer\Providers\Metadata\ResourceAssociationTypeEnd;
 use ODataProducer\Providers\Metadata\ResourceSet;
 use ODataProducer\Providers\Metadata\Type\TypeCode;
 use ODataProducer\Providers\Metadata\ResourceStreamInfo;
-
-require_once(dirname(__FILE__) . "/../../Resources/NorthWindMetadata.php");
-
 use ODataProducer\Providers\Metadata\ResourceTypeKind;
 use ODataProducer\Providers\Metadata\ResourceType;
 use ODataProducer\Providers\Metadata\ResourcePropertyKind;
@@ -19,11 +19,17 @@ use ODataProducer\Providers\Metadata\Type\Int32;
 use ODataProducer\Providers\Metadata\Type\Int16;
 use ODataProducer\Common\InvalidOperationException;
 
+use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 
-class ResourceClassesTest extends PHPUnit_Framework_TestCase
+
+class ResourceClassesTest extends \PHPUnit_Framework_TestCase
 {
     protected function setUp()
     {
+	    //TODO: move the entity types into their own files
+	    //unit then we need to ensure they are "in scope"
+	    $x = NorthWindMetadata::Create();
+
     }
 
     /**
@@ -94,7 +100,7 @@ class ResourceClassesTest extends PHPUnit_Framework_TestCase
                 $this->fail('An expected InvalidArgumentException for \'ReflectionClass\' has not been raised');
             }
             
-            $customerResType = new ResourceType(new ReflectionClass('Customer2'), ResourceTypeKind::ENTITY, 'Customer', 'Northwind');
+            $customerResType = new ResourceType(new \ReflectionClass('UnitTests\POData\Facets\NorthWind1\Customer2'), ResourceTypeKind::ENTITY, 'Customer', 'Northwind');
             $this->AssertEquals($customerResType->getName(), 'Customer');
             $this->AssertEquals($customerResType->getFullName(), 'Northwind.Customer');
             $this->assertTrue($customerResType->getInstanceType() instanceof \ReflectionClass);
@@ -135,7 +141,7 @@ class ResourceClassesTest extends PHPUnit_Framework_TestCase
             $intResourceType = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::INT32);
             $ratingPrimProperty       = new ResourceProperty('Rating', null, ResourcePropertyKind::PRIMITIVE, $intResourceType);
             
-            $addressResType = new ResourceType(new ReflectionClass('Address2'), ResourceTypeKind::COMPLEX, 'Address', 'Northwind');
+            $addressResType = new ResourceType(new \ReflectionClass('UnitTests\POData\Facets\NorthWind1\Address2'), ResourceTypeKind::COMPLEX, 'Address', 'Northwind');
             $exceptionThrown = false;
             try {
                 $booleanResourceType = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::BOOLEAN);
@@ -209,7 +215,7 @@ class ResourceClassesTest extends PHPUnit_Framework_TestCase
             $this->AssertNotEquals($property, null);
             $this->AssertEquals($property->getName(), 'CustomerName');
             
-            $employeeResType = new ResourceType(new ReflectionClass('Employee2'), ResourceTypeKind::ENTITY, 'Employee', 'Northwind');
+            $employeeResType = new ResourceType(new \ReflectionClass('UnitTests\POData\Facets\NorthWind1\Employee2'), ResourceTypeKind::ENTITY, 'Employee', 'Northwind');
             $stringResourceType = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::STRING);
             $employeeResType->addProperty(new ResourceProperty('EmployeeID', null, ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::KEY, $stringResourceType));
             $employeeResType->addProperty(new ResourceProperty('Emails', null, ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::BAG, $stringResourceType));
@@ -244,7 +250,7 @@ class ResourceClassesTest extends PHPUnit_Framework_TestCase
     public function testResourceProperty()
     {
         try {
-            $addressResType = new ResourceType(new ReflectionClass('Address2'), ResourceTypeKind::COMPLEX, 'Address', 'Northwind');
+            $addressResType = new ResourceType(new \ReflectionClass('UnitTests\POData\Facets\NorthWind1\Address2'), ResourceTypeKind::COMPLEX, 'Address', 'Northwind');
             $booleanResourcetype = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::BOOLEAN);
             $isPrimaryPrimProperty = new ResourceProperty('IsPrimary', null, ResourcePropertyKind::PRIMITIVE, $booleanResourcetype);
             $addressResType->addProperty($isPrimaryPrimProperty);
@@ -273,7 +279,7 @@ class ResourceClassesTest extends PHPUnit_Framework_TestCase
                 $this->fail('An expected InvalidArgumentException for \'Property and ResourceType kind mismatch\' has not been raised');
             }
             
-            $customerResType = new ResourceType(new ReflectionClass('Customer2'), ResourceTypeKind::ENTITY, 'Customer', 'Northwind');
+            $customerResType = new ResourceType(new \ReflectionClass('UnitTests\POData\Facets\NorthWind1\Customer2'), ResourceTypeKind::ENTITY, 'Customer', 'Northwind');
             $stringResourceType = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::STRING);
             $customerIDPrimProperty   = new ResourceProperty('CustomerID', null, ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::KEY, $stringResourceType);
             $customerNamePrimProperty = new ResourceProperty('CustomerName', null, ResourcePropertyKind::PRIMITIVE, $stringResourceType);
@@ -461,7 +467,7 @@ class ResourceClassesTest extends PHPUnit_Framework_TestCase
     
     private function _getCustomerResourceType()
     {
-        $customerResType = new ResourceType(new ReflectionClass('Customer2'), ResourceTypeKind::ENTITY, 'Customer', 'Northwind');
+        $customerResType = new ResourceType(new \ReflectionClass('UnitTests\POData\Facets\NorthWind1\Customer2'), ResourceTypeKind::ENTITY, 'Customer', 'Northwind');
         $stringResourceType = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::STRING);
         $intResourceType = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::INT32);
         $customerIDPrimProperty   = new ResourceProperty('CustomerID', null, ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::KEY, $stringResourceType);
@@ -475,7 +481,7 @@ class ResourceClassesTest extends PHPUnit_Framework_TestCase
 
     private function _getOrderResourceType()
     {
-        $orderResType =  new ResourceType(new ReflectionClass('Order2'), ResourceTypeKind::ENTITY, 'Order', 'Northwind');
+        $orderResType =  new ResourceType(new \ReflectionClass('UnitTests\POData\Facets\NorthWind1\Order2'), ResourceTypeKind::ENTITY, 'Order', 'Northwind');
         $intResourceType = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::INT32);
         $orderIDPrimProperty = new ResourceProperty('OrderID', null, ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::KEY, $intResourceType);
         $dateTimeResourceType = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::DATETIME);

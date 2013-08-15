@@ -14,7 +14,7 @@ use ODataProducer\Common\ODataException;
 use ODataProducer\OperationContext\DataServiceHost;
 use ODataProducer\OperationContext\Web\IncomingRequest;
 use ODataProducer\OperationContext\Web\OutgoingResponse;
-require_once dirname(__FILE__)."/../../Dispatcher.php";
+require_once dirname(__FILE__) . "/../../Dispatcher.php";
 
 
 class TestETag extends PHPUnit_Framework_TestCase
