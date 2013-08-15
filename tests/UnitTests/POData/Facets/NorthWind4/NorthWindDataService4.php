@@ -94,4 +94,3 @@ class NorthWindDataService4 extends DataService implements IServiceProvider
     	}
     }
 }
-?>

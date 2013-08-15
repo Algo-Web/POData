@@ -92,4 +92,3 @@ class DataServiceHost2 extends DataServiceHost
         parent::validateQueryParameters($this->_hostInfo['QueryString']);
     }
 }
-?>

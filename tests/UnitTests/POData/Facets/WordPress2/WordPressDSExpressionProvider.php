@@ -382,4 +382,3 @@ class WordPressDSExpressionProvider implements IExpressionProvider
         return $operator . self::OPEN_BRAKET . $child . self::CLOSE_BRACKET;
     }
 }
-?>

@@ -40,4 +40,3 @@ abstract class DataService1 extends DataService
       return $uriProcessor;
   }
 }
-?>

@@ -321,4 +321,3 @@ class NorthWindStreamProvider4 implements IDataServiceStreamProvider2
     
     //End IDataServiceStreamProvider2 methods implementation    
 }
-?>

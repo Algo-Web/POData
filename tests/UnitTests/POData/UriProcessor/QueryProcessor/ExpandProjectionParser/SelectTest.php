@@ -13,7 +13,7 @@ use ODataProducer\Common\ODataException;
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 use UnitTests\POData\Facets\NorthWind1\NorthWindQueryProvider2;
 
-class TestExpandProjectionParser_Select extends \PHPUnit_Framework_TestCase
+class SelectTest extends \PHPUnit_Framework_TestCase
 {   
     protected function setUp()
     {
@@ -669,4 +669,3 @@ class TestExpandProjectionParser_Select extends \PHPUnit_Framework_TestCase
     {
     }
 }
-?>

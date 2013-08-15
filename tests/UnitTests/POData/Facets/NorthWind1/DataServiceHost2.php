@@ -55,4 +55,3 @@ class DataServiceHost2 extends DataServiceHost
         }
     }
 }
-?>

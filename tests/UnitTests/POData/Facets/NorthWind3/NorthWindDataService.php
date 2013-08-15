@@ -60,4 +60,3 @@ class NorthWindDataService extends DataService2 implements IServiceProvider
         return null;
     }    
 }
-?>

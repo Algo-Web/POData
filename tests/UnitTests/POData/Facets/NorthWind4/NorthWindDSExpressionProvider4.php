@@ -477,4 +477,3 @@ class NorthWindDSExpressionProvider4 implements IExpressionProvider
         return $operator . self::OPEN_BRAKET . $child . self::CLOSE_BRACKET;
     }
 }
-?>

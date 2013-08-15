@@ -867,5 +867,4 @@ try {
 	$this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
 }
 **/
-// 
-?>
+//

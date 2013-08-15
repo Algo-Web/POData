@@ -16,13 +16,13 @@ use ODataProducer\DataService;
 use ODataProducer\Common\ODataException;
 use ODataProducer\UriProcessor\UriProcessor;
 
-class DataService2 extends DataService
+abstract class DataService2 extends DataService
 {
   public function handleRequest()
   {
       try {
           $this->createProviders();   
-          $this->_dataServiceHost->validateQueryParameters();
+          $this->getHost()->validateQueryParameters();
       } catch (\Exception $exception) {
           ErrorHandler::handleException($exception, $this);
           //TODO we are done call HTTPOUTPUT and remove exit
@@ -42,4 +42,3 @@ class DataService2 extends DataService
       }
   }
 }
-?>

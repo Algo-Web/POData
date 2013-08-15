@@ -14,7 +14,7 @@ use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 use UnitTests\POData\Facets\NorthWind1\NorthWindQueryProvider2;
 
 
-class TestExpandProjectionParser_Expand extends \PHPUnit_Framework_TestCase
+class ExpandTest extends \PHPUnit_Framework_TestCase
 {   
     protected function setUp()
     {
@@ -610,4 +610,3 @@ class TestExpandProjectionParser_Expand extends \PHPUnit_Framework_TestCase
     {
     }
 }
-?>

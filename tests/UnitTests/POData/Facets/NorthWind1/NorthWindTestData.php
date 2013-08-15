@@ -102,4 +102,3 @@ function setOrderCustomer($order, $customer)
 {    
     $order->Customer = $customer;
 }
-?>

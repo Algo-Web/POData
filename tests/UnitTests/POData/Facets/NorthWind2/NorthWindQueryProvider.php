@@ -577,4 +577,3 @@ class NorthWindQueryProvider1 implements IDataServiceQueryProvider
         }
     }
 }
-?>
