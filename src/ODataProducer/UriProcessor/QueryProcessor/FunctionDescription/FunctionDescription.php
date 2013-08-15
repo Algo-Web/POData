@@ -22,6 +22,7 @@ use ODataProducer\Providers\Metadata\Type\Void;
 use ODataProducer\Providers\Metadata\Type\Binary;
 use ODataProducer\Providers\Metadata\Type\IType;
 use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ExpressionType;
+use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\Expressions\AbstractExpression;
 
 /**
  * Class FunctionDescription
@@ -43,7 +44,7 @@ class FunctionDescription
     public $returnType;
 
     /**
-     * @var array(IType)
+     * @var IType[]
      */
     public $argumentTypes;
 
@@ -79,8 +80,10 @@ class FunctionDescription
 
     /**      
      * Create function descriptions for supported function-calls in $filter option
-     * 
-     * @return array(string, FunctionDescription)
+     *
+     * TODO: FIGURE OUT WHAT THE HECK THIS IS RETURNING!?!?
+     *
+     * @return array indexed by function name
      */
     public static function filterFunctionDescriptions()
     {
@@ -252,9 +255,9 @@ class FunctionDescription
     /** 
      * Get function description for string comparison
      * 
-     * @return array(string, FunctionDescription)
+     * @return FunctionDescription[]
      */
-    public static function stringComparisionFunctions()
+    public static function stringComparisonFunctions()
     {
         return array(
             new FunctionDescription(
@@ -267,7 +270,7 @@ class FunctionDescription
     /**
      * Get function description for datetime comparison
      * 
-     * @return array(string, FunctionDescription)
+     * @return FunctionDescription[]
      */
     public static function dateTimeComparisonFunctions()
     {
@@ -282,7 +285,7 @@ class FunctionDescription
     /**
      * Get function description for guid equality check
      * 
-     * @return array(string, FunctionDescription)
+     * @return FunctionDescription[]
      */
     public static function guidEqualityFunctions()
     {
@@ -297,7 +300,7 @@ class FunctionDescription
     /**
      * Get function description for binary equality check
      * 
-     * @return array(string, FunctionDescription)
+     * @return FunctionDescription[]
      */
     public static function binaryEqualityFunctions()
     {
@@ -312,7 +315,7 @@ class FunctionDescription
     /**
      * Get function descriptions for arithmetic operations
      * 
-     * @return array(string, FunctionDescription)
+     * @return FunctionDescription[]
      */
     public static function arithmeticOpertionFunctions()
     {      
@@ -347,7 +350,7 @@ class FunctionDescription
     /**      
      * Get function descriptions for arithmetic add operations
      * 
-     * @return array(string, FunctionDescription)
+     * @return FunctionDescription[] indexed by function name
      */
     public static function addOperationFunctions()
     {
@@ -357,9 +360,9 @@ class FunctionDescription
     /**
      * Get function descriptions for arithmetic subtract operations
      * 
-     * @return array(string, FunctionDescription)
+     * @return FunctionDescription[] indexed by function name
      */
-    public static function substractOperationFunctions()
+    public static function subtractOperationFunctions()
     {
         return self::arithmeticOpertionFunctions();
     }
@@ -367,7 +370,7 @@ class FunctionDescription
     /**      
      * Get function descriptions for logical operations
      * 
-     * @return array(string, FunctionDescription)
+     * @return FunctionDescription[]
      */
     public static function logicalOperationFunctions()
     {
@@ -382,7 +385,7 @@ class FunctionDescription
     /**
      * Get function descriptions for relational operations
      * 
-     * @return array(string, FunctionDescription)
+     * @return FunctionDescription[]
      */
     public static function relationalOperationFunctions()
     {
@@ -412,7 +415,7 @@ class FunctionDescription
     /**
      * Get function descriptions for unary not operation
      * 
-     * @return array(string, FunctionDescription)
+     * @return FunctionDescription[]
      */
     public static function notOperationFunctions()
     {
@@ -439,7 +442,7 @@ class FunctionDescription
     /**      
      * Get function description for unary negate operator
      * 
-     * @return array(string, FunctionDescription)
+     * @return FunctionDescription[]
      */
     public static function negateOperationFunctions()
     {
@@ -457,7 +460,7 @@ class FunctionDescription
      * To throw ODataException for incompatible types
      * 
      * @param ExpressionToken           $expressionToken Expression token
-     * @param array(AbstractExpression) $argExpressions  Array of argument expression
+     * @param AbstractExpression[] $argExpressions  Array of argument expression
      * 
      * @throws ODataException
      * @return void
@@ -601,7 +604,7 @@ class FunctionDescription
 
         $functions = array_merge(
             self::relationalOperationFunctions(), 
-            self::stringComparisionFunctions()
+            self::stringComparisonFunctions()
         );
         $function = self::findFunctionWithPromotion(
             $functions, array($leftArgument, $rightArgument), false
@@ -654,7 +657,7 @@ class FunctionDescription
      * 
      * @throws ODataException
      * 
-     * @return array(FunctionDescription) Array of matching functions
+     * @return FunctionDescription[] Array of matching functions
      */
     public static function verifyFunctionExists($expressionToken)
     {
@@ -676,10 +679,8 @@ class FunctionDescription
      * Validate operands (arguments) of a function call operation and return 
      * matching function
      * 
-     * @param array(FunctionDescription) $functions       List of functions to 
-     *                                                    be checked
-     * @param array(AbstractExpression)  $argExpressions  Function argument
-     *                                                    expressions
+     * @param FunctionDescription[] $functions       List of functions to be checked
+     * @param AbstractExpression[]  $argExpressions  Function argument expressions
      * @param ExpressionToken            $expressionToken Expression token
      * 
      * @throws ODataException
@@ -713,12 +714,11 @@ class FunctionDescription
      * Finds a function from the list of functions whose argument types matches 
      * with types of expressions
      * 
-     * @param array(FunctionDescription) $functionDescriptions List of functions
-     * @param array(AbstractExpression)  $argExpressions       Function argument 
-     *                                                         expressions 
+     * @param FunctionDescription[] $functionDescriptions List of functions
+     * @param AbstractExpression[]  $argExpressions       Function argument expressions
      * @param Boolean                    $promoteArguments     Function argument
      * 
-     * @return FunctionDescription/NULL Reference to the matching function if 
+     * @return FunctionDescription|null Reference to the matching function if
      *                                  found else NULL
      */
     public static function findFunctionWithPromotion($functionDescriptions, 

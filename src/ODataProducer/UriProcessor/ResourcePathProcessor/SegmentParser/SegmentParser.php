@@ -41,18 +41,16 @@ class SegmentParser
     /**
      * Array of SegmentDescriptor describing each segment in the request Uri
      * 
-     * @var array(SegmentDescriptor)
+     * @var SegmentDescriptor[]
      */
     private $_segmentDescriptors;
 
     /**
      * Constructs a new instance of SegmentParser
      * 
-     * @param array(string)                $segments        Array of segments in 
-     *                                                      the request Uri
-     * @param MetadataQueryProviderWrapper $providerWrapper Reference to metadata 
-     *                                                      and query provider 
-     *                                                      wrapper
+     * @param string[] $segments Array of segments in the request Uri
+     * @param MetadataQueryProviderWrapper $providerWrapper Reference to metadata and query provider wrapper
+     *
      */
     private function __construct($segments, 
         MetadataQueryProviderWrapper $providerWrapper
@@ -64,15 +62,12 @@ class SegmentParser
     /**
      * Parse the given Uri segments
      * 
-     * @param array(string)                $segments        Array of segments in the
-     *                                                      request Uri
-     * @param MetadataQueryProviderWrapper $providerWrapper Reference to metadata and
-     *                                                      query provider wrapper
-     * @param boolean                      $checkForRights  Whether to check for rights 
-     *                                                      on the resource sets in the 
-     *                                                      segments
-     * 
-     * @return array(SegmentDescriptor)
+     * @param string[] $segments Array of segments in the request Uri
+     *
+     * @param MetadataQueryProviderWrapper $providerWrapper Reference to metadata and query provider wrapper
+     * @param boolean $checkForRights  Whether to check for rights on the resource sets in the segments
+     *
+     * @return SegmentDescriptor[]
      * 
      * @throws ODataException If any error occurs while processing segment
      */
@@ -85,16 +80,12 @@ class SegmentParser
     }
 
     /**
-     * Extract identifer and key predicate from a segment
+     * Extract identifier and key predicate from a segment
      * 
-     * @param array(string) $segment       The segment from which identifier and key 
-     *                                     predicate to be extracted
-     * @param string        &$identifier   On return, this parameter will contain 
-     *                                     identifer part of the segment
-     * @param string        &$keyPredicate On return, this parameter will contain 
-     *                                     key predicate part of the segment, null 
-     *                                     if predicate is absent
-     * 
+     * @param string[] $segment The segment from which identifier and key
+     * @param string &$identifier   On return, this parameter will contain identifier part of the segment
+     * @param string &$keyPredicate On return, this parameter will contain key predicate part of the segment, null if predicate is absent
+     *
      * @return void
      * 
      * @throws ODataException If any error occurs while processing segment
@@ -127,13 +118,12 @@ class SegmentParser
      * Create SegmentDescriptors for a set of given segments, optionally 
      * check for rights.
      * 
-     * @param array(string) $segments    String array of segments to parse
-     * @param boolean       $checkRights Whether to check for rights or not
+     * @param string[] $segments String array of segments to parse
+     * @param boolean $checkRights Whether to check for rights or not
      * 
      * @return void
      * 
-     * @throws ODataException Exception incase of any error found while 
-     *                        precessing segments
+     * @throws ODataException Exception in case of any error found while precessing segments
      */
     private function _createSegmentDescriptors($segments, $checkRights)
     {        

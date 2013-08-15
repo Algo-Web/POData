@@ -48,14 +48,14 @@ class InternalOrderByInfo
      *                                                     navigation properties 
      *                                                     used in the orderby clause
      *                                                     (if any) and orderby path 
-     *                                                     if IDSQP implementor 
-     *                                                     want to perform sorting.
-     * @param array(AnonymousFunction) $subSorterFunctions Collection of sub sorter
-     *                                                     functions corrosponding 
-     *                                                     to each orderby 
-     *                                                     path segment
-     * @param AnonymousFunction        $sorterFunction     The top level anonymous
-     *                                                     sorter function.
+     *                                                     if IDSQP implementation wants to perform sorting.
+     *
+     * @param AnonymousFunction[] $subSorterFunctions Collection of sub sorter functions corresponding to each orderby path segment
+     *
+     *
+     *
+     * @param AnonymousFunction        $sorterFunction     The top level anonymous sorter function.
+     *
      * @param mixed                    $dummyObject        A dummy object of type
      *                                                     of the resource set 
      *                                                     identified by the
@@ -83,7 +83,7 @@ class InternalOrderByInfo
     /**
      * Get reference to the orderby path segment information.
      * 
-     * @return array(OrderByPathSegment)
+     * @return OrderByPathSegment[]
      */
     public function getOrderByPathSegments()
     {

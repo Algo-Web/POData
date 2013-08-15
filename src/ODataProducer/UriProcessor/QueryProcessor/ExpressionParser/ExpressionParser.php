@@ -701,7 +701,7 @@ class ExpressionParser
         $string = new String();
         if ($left->typeIs($string) && $right->typeIs($string)) {
             $strcmpFunctions 
-                = FunctionDescription::stringComparisionFunctions();
+                = FunctionDescription::stringComparisonFunctions();
             $left = new FunctionCallExpression(
                 $strcmpFunctions[0], array($left, $right)
             );

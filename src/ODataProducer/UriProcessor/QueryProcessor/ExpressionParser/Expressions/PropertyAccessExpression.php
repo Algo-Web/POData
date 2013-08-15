@@ -118,9 +118,8 @@ class PropertyAccessExpression extends AbstractExpression
      * Gets collection of navigation (resource set reference or resource set) 
      * properties used in this property access. 
      * 
-     * @return array()/array(ResourceProperty) Returns empty array if no 
-     *                                         navigation property is used else
-     *                                         array of ResourceProperty.
+     * @return ResourceProperty[] Returns empty array if no navigation property is used else array of ResourceProperty.
+     *
      */
     public function getNavigationPropertiesInThePath()
     {

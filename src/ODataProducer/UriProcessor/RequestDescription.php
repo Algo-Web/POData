@@ -18,7 +18,7 @@ use ODataProducer\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
 use ODataProducer\UriProcessor\QueryProcessor\SkipTokenParser\InternalSkipTokenInfo;
 use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\InternalFilterInfo;
 use ODataProducer\UriProcessor\QueryProcessor\ExpandProjectionParser\RootProjectionNode;
-
+use ODataProducer\Providers\Metadata\ResourceType;
 
 /**
  * Class RequestDescription
@@ -74,7 +74,7 @@ class RequestDescription
     /**
      * Collection of known data service versions.
      * 
-     * @var array(Version)
+     * @var Version[]
      */
     private static $_knownDataServiceVersions = null;
 
@@ -89,7 +89,7 @@ class RequestDescription
      * Collection of SegmentDescriptor containing information about 
      * each segment in the resource path part of the request uri.
      * 
-     * @var array(SegmentDescriptor)
+     * @var SegmentDescriptor[]
      */
     private $_segmentDescriptors;
 
@@ -103,7 +103,7 @@ class RequestDescription
     /**
      * The name of the container for results
      * 
-     * @var string/NULL
+     * @var string|null
      */
     private $_containerName;
 
@@ -125,7 +125,7 @@ class RequestDescription
      * Holds the value of $skip query option, if no $skip option
      * found then this parameter will be NULL.
      * 
-     * @var int/NULL
+     * @var int|null
      */
     private $_skipCount;
 
@@ -133,7 +133,7 @@ class RequestDescription
      * Holds the value of take count, this value is depends on
      * presence of $top option and configured page size.
      * 
-     * @var int/NULL
+     * @var int|null
      */
     private $_topCount;
 
@@ -141,7 +141,7 @@ class RequestDescription
      * Holds the value of $top query option, if no $top option
      * found then this parameter will be NULL.
      * 
-     * @var int/NULL
+     * @var int|null
      */
     private $_topOptionCount;
 
@@ -153,7 +153,7 @@ class RequestDescription
      * (3) if server side paging is enabled for the resource 
      *     targetted by the request uri.
      * 
-     * @var InternalOrderByInfo/NULL
+     * @var InternalOrderByInfo|null
      */
     private $_internalOrdeByInfo;
 
@@ -161,7 +161,7 @@ class RequestDescription
      * Holds the parsed details for $skiptoken option, this will
      * be NULL if $skiptoken option is absent.
      * 
-     * @var InternalSkipTokenInfo/NULL
+     * @var InternalSkipTokenInfo|null
      */
     private $_internalSkipTokenInfo;
 
@@ -169,7 +169,7 @@ class RequestDescription
      * Holds the parsed details for $filter option, this will
      * be NULL if $filter option is absent.
      * 
-     * @var InternalFilterInfo/NULL
+     * @var InternalFilterInfo|null
      */
     private $_internalFilterInfo;
 
@@ -178,21 +178,21 @@ class RequestDescription
      * and select information, this field will be NULL if no 
      * $expand or $select specified in the request uri.
      * 
-     * @var RootProjectionNode/NULL
+     * @var RootProjectionNode|null
      */
     private $_rootProjectionNode;
 
     /**
-     * Holds number of entitties in the result set, if either $count or
+     * Holds number of entities in the result set, if either $count or
      * $inlinecount=allpages is specified, otherwise NULL
      * 
      * 
-     * @var int/NULL
+     * @var int|null
      */
     private $_countValue;
 
     /**
-     * Flag indcating status of query execution.
+     * Flag indicating status of query execution.
      * 
      * @var boolean
      */
@@ -208,9 +208,9 @@ class RequestDescription
     /**
      * Constructs a new instance of RequestDescription.
      * 
-     * @param array(SegmentDescriptor) &$segmentDescriptors Description of segments
-     *                                                      in the resource path.
-     * @param Url                      &$requestUri         The request Uri.
+     * @param SegmentDescriptor[] &$segmentDescriptors Description of segments in the resource path.
+     *
+     * @param Url &$requestUri The request Uri.
      */
     public function __construct(&$segmentDescriptors, Url &$requestUri)
     {
@@ -277,7 +277,7 @@ class RequestDescription
      * Gets collection of segment descriptors containing information about
      * each segment in the resource path part of the request uri.
      * 
-     * @return array(SegmentDescriptor)
+     * @return SegmentDescriptor[]
      */
     public function &getSegmentDescriptors()
     {
@@ -285,7 +285,7 @@ class RequestDescription
     }
 
     /**
-     * Gets referece to the descriptor of last segment.
+     * Gets reference to the descriptor of last segment.
      * 
      * @return SegmentDescriptor
      */
@@ -295,7 +295,7 @@ class RequestDescription
     }
 
     /**
-     * Gets kind of resource targetted by the resource path.
+     * Gets kind of resource targeted by the resource path.
      * 
      * @return RequestTargetKind
      */
@@ -305,7 +305,7 @@ class RequestDescription
     }
 
     /**
-     * Gets kind of 'source of data' targetted by the resource path.
+     * Gets kind of 'source of data' targeted by the resource path.
      * 
      * @return RequestTargetSource
      */
@@ -395,7 +395,7 @@ class RequestDescription
      *      (c) $bath
      *          http://server/NW.svc/$batch
      *      
-     * @return ResourceType/NULL
+     * @return ResourceType|null
      */
     public function getTargetResourceType()
     {
@@ -827,7 +827,7 @@ class RequestDescription
     /**
      * Gets collection of known data service versions, currently 1.0, 2.0 and 3.0.
      * 
-     * @return array(Version)
+     * @return Version[]
      */
     public static function getKnownDataServiceVersions()
     {

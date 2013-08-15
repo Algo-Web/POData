@@ -78,16 +78,16 @@ class MediaType
 
     /**
      * Gets the number of parts in this media type that matches with
-     * the given candiate type.
+     * the given candidate type.
      * 
-     * @param string $candidate The candiate mime type.
+     * @param string $candidate The candidate mime type.
      * 
      * @return int Returns -1 if this media type does not match with the
-     *                        candiate media type, 0 if media type's type is '*'
+     *                        candidate media type, 0 if media type's type is '*'
      *                        (accept all types), 1 if media types's type matches
-     *                        with the candiate MIME type's type and media type's
+     *                        with the candidate MIME type's type and media type's
      *                        sub-types is '*' (accept all sub-type), 2 if both
-     *                        type and sub-type atches.
+     *                        type and sub-type matches.
      */
     public function getMatchingParts($candidate)
     {
@@ -156,12 +156,9 @@ class HttpProcessUtility
      * 
      * @param string        $acceptTypesText    Text as it appears in an HTTP
      *                                          Accepts header.
-     * @param array(String) $exactContentTypes  Preferred content type to match
-     *                                          if an exact media type is given
-     *                                          - this is in descending order
-     *                                          of preference.
-     * @param string        $inexactContentType Preferred fallback content type
-     *                                          for inexact matches.
+     * @param string[] $exactContentTypes  Preferred content type to match if an exact media type is given - this is in descending order of preference.
+     *
+     * @param string        $inexactContentType Preferred fallback content type for inexact matches.
      *
      * @return string One of exactContentType or inexactContentType.
      */
@@ -235,10 +232,8 @@ class HttpProcessUtility
     /**
      * Selects an acceptable MIME type that satisfies the Accepts header.
      * 
-     * @param string        $acceptTypesText Text for Accepts header.
-     * @param array(string) $availableTypes  Types that the server is willing
-     *                                       to return, in descending order
-     *                                       of preference.
+     * @param string $acceptTypesText Text for Accepts header.
+     * @param string[] $availableTypes  Types that the server is willing to return, in descending order of preference.
      * 
      * @return string The best MIME type for the client.
      *
@@ -304,9 +299,9 @@ class HttpProcessUtility
      * 
      * @param string $text Text as it appears on an HTTP Accepts header.
      * 
-     * @return array(MediaType) Array of media (MIME) type description.
+     * @return MediaType[] Array of media (MIME) type description.
      *
-     * @throws HttpHeaderFailure If found any sytax error in the given text.
+     * @throws HttpHeaderFailure If found any syntax error in the given text.
      */
     public static function mimeTypesFromAcceptHeaders($text)
     {

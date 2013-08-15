@@ -14,11 +14,15 @@ use ODataProducer\Common\ODataException;
 use ODataProducer\Common\Messages;
 use ODataProducer\Providers\Metadata\MetadataMapping;
 
+use ODataProducer\Providers\Query\IDataServiceQueryProvider;
+use ODataProducer\Providers\Query\IDataServiceQueryProvider2;
+use ODataProducer\Providers\Metadata\IDataServiceMetadataProvider;
+
 /**
  * Class MetadataQueryProviderWrapper
  *
  * A wrapper class over IDataServiceMetadataProvider and IDataServiceQueryProvider
- * implementations, All call to implemenation of methods of these interfaces should
+ * implementations, All call to implementation of methods of these interfaces should
  * go through this wrapper class so that wrapper methods of this class can perform
  * validations on data returned by IDSMP methods
  *
@@ -36,9 +40,8 @@ class MetadataQueryProviderWrapper
     /**
      * Holds reference to IDataServiceQueryProvider or IDataServiceQueryProvider2 implementation
      * 
-     * @var IDataServiceQueryProvider
-     * @var IDataServiceQueryProvider2
-     * 
+     * @var IDataServiceQueryProvider2|IDataServiceQueryProvider
+     *
      */
     private $_queryProvider;
 
@@ -70,14 +73,14 @@ class MetadataQueryProviderWrapper
      * Cache for ResourceSetWrappers. If ResourceSet is invisible value will 
      * be null.
      * 
-     * @var array(string, ResourceSetWrapper/NULL)
+     * @var ResourceSetWrapper[] indexed by resource set name
      */
     private $_resourceSetWrapperCache;
 
     /**
      * Cache for ResourceTypes
      * 
-     * @var array(string, ResourceType)
+     * @var ResourceType[] indexed by resource type name
      */
     private $_resourceTypeCache;
 
@@ -85,7 +88,7 @@ class MetadataQueryProviderWrapper
      * Cache for ResourceAssociationSet. If ResourceAssociationSet is invisible 
      * value will be null. 
      * 
-     * @var array(string, ResourceAssociationSet/NULL)
+     * @var ResourceAssociationSet[] indexed by name
      */
     private $_resourceAssociationSetCache;
 
@@ -119,8 +122,8 @@ class MetadataQueryProviderWrapper
      * 
      * @return string that contains the name of the container
      * 
-     * @throws ODataException Exception if IDSMP implementation returns empty 
-     *                                  container name
+     * @throws ODataException Exception if IDSMP implementation returns empty container name
+     *
      */
     public function getContainerName()
     {
@@ -173,10 +176,10 @@ class MetadataQueryProviderWrapper
      *  Note: Wrapper for IDataServiceMetadataProvider::getResourceSets method 
      *  implementation,
      *  This method returns array of ResourceSetWrapper instances but the 
-     *  corrosponsing IDSMP method returns array of ResourceSet instances
+     *  corresponding IDSMP method returns array of ResourceSet instances
      *  
-     *  @return array(ResourceSetWrapper) Array of ResourceSetWrapper for 
-     *                                    ResourceSets which are visible
+     *  @return ResourceSetWrapper[] Array of ResourceSetWrapper for ResourceSets which are visible
+     *
      */
     public function getResourceSets()
     {
@@ -207,7 +210,7 @@ class MetadataQueryProviderWrapper
      * To get all resource types in the data source,
      * Note: Wrapper for IDataServiceMetadataProvider::getTypes method implementation
      * 
-     * @return array(ResourceType)
+     * @return ResourceType[]
      */
     public function getTypes()
     {
@@ -238,9 +241,8 @@ class MetadataQueryProviderWrapper
      * 
      * @param string $name Name of the resource set
      * 
-     * @return ResourceSetWrapper/NULL Returns resource set with the given name 
-     *                                         if found, NULL if resource set is 
-     *                                         set to invisible or not found
+     * @return ResourceSetWrapper|null Returns resource set with the given name if found, NULL if resource set is set to invisible or not found
+     *
      */
     public function resolveResourceSet($name)
     {
@@ -263,8 +265,8 @@ class MetadataQueryProviderWrapper
      * 
      * @param string $name Name of the resource set
      * 
-     * @return ResourceType/NULL resource type with the given resource set 
-     *                           name if found else NULL
+     * @return ResourceType|null resource type with the given resource set name if found else NULL
+     *
      * 
      * @throws ODataException If the ResourceType is invalid
      */
@@ -289,7 +291,7 @@ class MetadataQueryProviderWrapper
      * 
      * @param ResourceType $resourceType Resource to get derived resource types from
      * 
-     * @return array(ResourceType)/NULL
+     * @return ResourceType[]|null
      */
     public function getDerivedTypes(ResourceType $resourceType)
     {
@@ -458,12 +460,11 @@ class MetadataQueryProviderWrapper
      * Gets the visible resource properties for the given resource type from 
      * the given resource set wrapper.
      * 
-     * @param ResourceSetWrapper &$resourceSetWrapper Resource set wrapper in 
-     *                                                question.
+     * @param ResourceSetWrapper &$resourceSetWrapper Resource set wrapper in question.
+     *
      * @param ResourceType       &$resourceType       Resource type in question.
      * 
-     * @return array(string, ResourceProperty) Collection of visible resource 
-     *     properties from the given resource set wrapper and resource type.
+     * @return ResourceProperty[] Collection of visible resource properties from the given resource set wrapper and resource type.
      */
     public function getResourceProperties(ResourceSetWrapper &$resourceSetWrapper, 
         ResourceType &$resourceType
@@ -518,7 +519,7 @@ class MetadataQueryProviderWrapper
     }
 
     /**
-     * This function perfrom the following operations
+     * This function perform the following operations
      *  (1) If the cache contain an entry [key, value] for the resourceset then 
      *      return the entry-value
      *  (2) If the cache not contain an entry for the resourceset then validate 
@@ -579,8 +580,8 @@ class MetadataQueryProviderWrapper
     /**
      * Gets the resource type on which the resource property is declared on, 
      * If property is not declared in the given resource type, then this 
-     * function drilldown to the inheritance hierarchy of the given resource 
-     * type to find out the baseclass in which the property is declared 
+     * function drill down to the inheritance hierarchy of the given resource
+     * type to find out the base class in which the property is declared
      * 
      * @param ResourceType     $resourceType     The resource type to start looking
      * @param ResourceProperty $resourceProperty The resource property in question
@@ -685,7 +686,7 @@ class MetadataQueryProviderWrapper
      * @param int                $top                The top count
      * @param int                $skip               The skip count
      * 
-     * @return array(Object)/array()
+     * @return object[]
      */
     public function getResourceSet(ResourceSet $resourceSet, $internalFilterInfo, $select, $orderby, $top, $skip)
     {
@@ -806,10 +807,10 @@ class MetadataQueryProviderWrapper
      * 
      * @param ResourceSet        $sourceResourceSet  The source resource set
      * @param mixed              $sourceEntity       The resource
-     * @param ResourceSet        $targetResourceSet  The resource set of the navigation
-     *                                               property
-     * @param ResourceProperty   $targetProperty     The navigation property to be 
-     *                                               retrieved
+     * @param ResourceSet        $targetResourceSet  The resource set of the navigation property
+     *
+     * @param ResourceProperty   $targetProperty     The navigation property to be retrieved
+     *
      * @param InternalFilterInfo $internalFilterInfo An instance of InternalFilterInfo
      *                                               if the $filter option is submitted
      *                                               by the client, NULL if no $filter 
@@ -819,8 +820,8 @@ class MetadataQueryProviderWrapper
      * @param int                $top                The top count
      * @param int                $skip               The skip count
      *                                               
-     * @return array(Objects)/array() Array of related resource if exists, if no 
-     *                                related resources found returns empty array
+     * @return object[] Array of related resource if exists, if no related resources found returns empty array
+     *
      */
     public function getRelatedResourceSet(ResourceSet $sourceResourceSet, 
         $sourceEntity, ResourceSet $targetResourceSet, 

@@ -47,7 +47,7 @@ interface IDataServiceQueryProvider2
      * @param String      $skiptoken   skiptoken value if we want to skip records till 
      *                                 that skiptoken value
      * 
-     * @return array(Object)/array()
+     * @return object[]
      */
     public function getResourceSet(ResourceSet $resourceSet, $filter = null,
         $select = null, 
@@ -83,7 +83,7 @@ interface IDataServiceQueryProvider2
      * @param KeyDescriptor    $keyDescriptor        The key to identify the entity 
      *                                               to be fetched.
      * 
-     * @return Object/NULL Returns entity instance if found else null
+     * @return Object|null Returns entity instance if found else null
      */
     public function getResourceFromRelatedResourceSet(ResourceSet $sourceResourceSet,
         $sourceEntityInstance, 
@@ -108,11 +108,11 @@ interface IDataServiceQueryProvider2
      * @param mixed            $orderby              sort order if we want to get the data in some 
      *                                               specific order
      * @param Number           $top                  number of records which  need to be skip
-     * @param String           $skip                 skiptoken value if we want to skip records till 
-     *                                               that skiptoken value
+     * @param String           $skip                 skiptoken value if we want to skip records till that skiptoken value
+     *
      *                                               
-     * @return array(Objects)/array() Array of related resource if exists, if no 
-     *                                related resources found returns empty array
+     * @return object[] Array of related resource if exists, if no related resources found returns empty array
+     *
      */
     public function  getRelatedResourceSet(ResourceSet $sourceResourceSet, 
         $sourceEntityInstance, 

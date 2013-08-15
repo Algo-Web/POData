@@ -26,7 +26,7 @@ class OrderByPathSegment
     private $_orderBySubPathSegments;
 
     /**
-     * Flag indicates order of sorting, ascending or desending, default is ascending
+     * Flag indicates order of sorting, ascending or descending, default is ascending
      * 
      * @var boolean
      */
@@ -35,10 +35,8 @@ class OrderByPathSegment
     /**
      * Constructs a new instance of OrderByPathSegment
      * 
-     * @param array(OrderBySubPathSegment) $orderBySubPathSegments Collection of 
-     *                                                             orderby sub path 
-     *                                                             segments for
-     *                                                             this path segment.
+     * @param OrderBySubPathSegment[] $orderBySubPathSegments Collection of orderby sub path segments for this path segment.
+     *
      * @param boolean                      $isAscending            sort order, 
      *                                                             True for 
      *                                                             ascending and 

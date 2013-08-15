@@ -182,13 +182,13 @@ class ExpandProjectionParser
     /**
      * Build 'Projection Tree' from the given expand path segments
      * 
-     * @param array(array(string)) $expandPathSegments Collection of expand 
-     *                                                 paths.
+     * @param array(array(string)) $expandPathSegments Collection of expand paths.
+     *
      * 
      * @return void
      * 
-     * @throws ODataException If any error occurs while processing the expand
-     *                        path segments.
+     * @throws ODataException If any error occurs while processing the expand path segments
+     *                        .
      */
     private function _buildProjectionTree($expandPathSegments)
     {

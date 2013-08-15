@@ -45,7 +45,7 @@ class MetadataResourceTypeSet extends MetadataBase
     /**
      * Array of all resource types
      * 
-     * @var array(ResourceType)
+     * @var ResourceType[]
      */
     private $_resourceTypesNoNamespace = null;
 
@@ -124,7 +124,7 @@ class MetadataResourceTypeSet extends MetadataBase
      * @param string $namespace The namespace name to get the 
      * resource types belongs to
      * 
-     * @return array(string, ResourceType)
+     * @return ResourceType[]
      */
     public function &getResourceTypesForNamespace($namespace)
     {
@@ -148,7 +148,7 @@ class MetadataResourceTypeSet extends MetadataBase
     /**
      * Gets collection of all resource type in the service.
      * 
-     * @return array(ResourceType)
+     * @return ResourceType[]
      */
     public function getResourceTypes()
     {
@@ -169,7 +169,7 @@ class MetadataResourceTypeSet extends MetadataBase
      * 
      * @param ResourceType $resourceType The resource type to inspect
      * 
-     * @return array(ResourceProperty)
+     * @return ResourceProperty[]
      */
     public function getAllVisiblePropertiesDeclaredOnThisType(ResourceType $resourceType)
     {

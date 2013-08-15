@@ -36,7 +36,7 @@ class NorthWindQueryProvider1 implements IDataServiceQueryProvider
      * 
      * @param ResourceSet $resourceSet The entity set whose entities needs to be fetched
      * 
-     * @return array(Object)
+     * @return object[]
      */
     public function getResourceSet(ResourceSet $resourceSet)
     {   
@@ -88,7 +88,7 @@ class NorthWindQueryProvider1 implements IDataServiceQueryProvider
      * @param ResourceSet $resourceSet     The entity set from which an entity needs to be fetched
      * @param KeyDescriptor $keyDescriptor The key to identify the entity to be fetched
      * 
-     * @return Object/NULL Returns entity instance if found else null
+     * @return Object|null Returns entity instance if found else null
      */
     public function getResourceFromResourceSet(ResourceSet $resourceSet, KeyDescriptor $keyDescriptor)
     {   
@@ -221,7 +221,7 @@ class NorthWindQueryProvider1 implements IDataServiceQueryProvider
     /**
      * TODO
      * 
-     * @return array(Objects)/array() Array of related resource if exists, if no related resources found returns empty array
+     * @return object[] Array of related resource if exists, if no related resources found returns empty array
      */
     public function  getRelatedResourceSet(ResourceSet $sourceResourceSet, 
         $sourceEntityInstance, 
@@ -384,7 +384,7 @@ class NorthWindQueryProvider1 implements IDataServiceQueryProvider
      * 
      * @param array(array) $result
      * 
-     * @return array(Object)
+     * @return object[]
      */
     private function _serializeCustomers($result)
     {

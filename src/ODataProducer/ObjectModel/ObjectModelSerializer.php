@@ -78,7 +78,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
     /**
      * Write top level feed element.
      * 
-     * @param array(mixed) &$entryObjects Array of entry resources to be written.
+     * @param array &$entryObjects Array of entry resources to be written.
      * 
      * @return ODataFeed.
      */
@@ -128,7 +128,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
      * 
      * @param mixed &$entryObject The entry resource whose url to be written.
      * 
-     * @return ODataRL
+     * @return ODataURL
      */
     public function writeUrlElement(&$entryObject)
     {
@@ -151,7 +151,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
     /**
      * Write top level url collection.
      * 
-     * @param array(mixed) &$entryObjects Array of entry resources 
+     * @param array &$entryObjects Array of entry resources
      * whose url to be written.
      * 
      * @return ODataURLCollection

@@ -34,7 +34,7 @@ class OrderByParser
      * Collection of anonymous sorter function corrosponding to 
      * each orderby path segment.
      * 
-     * @var array(AnonymousFunction)
+     * @var AnonymousFunction[]
      */
     private $_comparisonFunctions = array();
 

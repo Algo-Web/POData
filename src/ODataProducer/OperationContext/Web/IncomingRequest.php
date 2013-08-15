@@ -185,7 +185,7 @@ class IncomingRequest
     /**
      * Split the QueryString and assigns them as array element in KEY=VALUE
      * 
-     * @return array(string/NULL, string)
+     * @return string[]
      */
     public function &getQueryParameters()
     {

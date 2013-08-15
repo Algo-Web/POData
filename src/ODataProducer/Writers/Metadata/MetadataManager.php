@@ -7,6 +7,7 @@ use ODataProducer\Providers\Metadata\ResourceType;
 use ODataProducer\Providers\MetadataEdmSchemaVersion;
 use ODataProducer\Providers\MetadataQueryProviderWrapper;
 
+use ODataProducer\Providers\Metadata\ResourceAssociationType;
 
 /**
  * Class MetadataManager
@@ -54,8 +55,8 @@ class MetadataManager
     /**
      * Creates new instance of MetadataManager
      * 
-     * @param MetadataQueryProviderWrapper $provider Reference to the  
-     * service metadata and query provider wrapper
+     * @param MetadataQueryProviderWrapper $provider Reference to the service metadata and query provider wrapper
+     *
      */
     private function __construct(MetadataQueryProviderWrapper $provider)
     {
@@ -111,7 +112,7 @@ class MetadataManager
     /**
      * Gets resource sets which are visible
      * 
-     * @return array(ResourceSetWrapper)
+     * @return ResourceSetWrapper[]
      */
     public function getResourceSets()
     {
@@ -121,7 +122,7 @@ class MetadataManager
     /**
      * Gets collection of all resource type in the service.
      * 
-     * @return array(ResourceType)
+     * @return ResourceType[]
      */
     public function getResourceTypes()
     {
@@ -134,7 +135,7 @@ class MetadataManager
      * @param string $namespace The namespace name to get the 
      * resource types belongs to
      * 
-     * @return array(string, ResourceType)
+     * @return ResourceType[]
      */
     public function getResourceTypesForNamespace($namespace)
     {
@@ -156,7 +157,7 @@ class MetadataManager
      * 
      * @param ResourceType $resourceType The resource type to inspect
      * 
-     * @return array(ResourceProperty)
+     * @return ResourceProperty[]
      */
     public function getAllVisiblePropertiesDeclaredOnThisType(ResourceType $resourceType)
     {
@@ -166,7 +167,7 @@ class MetadataManager
     /**
      * Gets collection of association set
      * 
-     * @return array(ResourceAssociationSet)
+     * @return ResourceAssociationSet[]
      */
     public function getAssociationSets()
     {
@@ -183,7 +184,7 @@ class MetadataManager
      * @param string $namespace Namespace name to get the 
      * association type belongs to 
      * 
-     * @return array(ResourceAssociationType)
+     * @return ResourceAssociationType[]
      */
     public function getUniqueResourceAssociationTypesForNamespace($namespace)
     {
@@ -201,7 +202,7 @@ class MetadataManager
      * @param string $namespace Namespace name to get the 
      * association type belongs to 
      * 
-     * @return array(string, ResourceAssociationType)
+     * @return ResourceAssociationType[]
      */
     public function getResourceAssociationTypesForNamespace($namespace)
     {

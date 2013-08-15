@@ -53,7 +53,7 @@ class ServiceBaseMetadata implements IDataServiceMetadataProvider
     /**
      * get all entity set information.
      * 
-     * @return array(ResourceSet)
+     * @return ResourceSet[]
      */
     public function getResourceSets()
     {
@@ -63,7 +63,7 @@ class ServiceBaseMetadata implements IDataServiceMetadataProvider
     /**
      * get all resource types in the data source.
      * 
-     * @return array(ResourceType)
+     * @return ResourceType[]
      */
     public function getTypes()
     {
@@ -75,8 +75,8 @@ class ServiceBaseMetadata implements IDataServiceMetadataProvider
      * 
      * @param string $name Name of the resource set
      * 
-     * @return ResourceSet/NULL resource set with the given name if found 
-     *                          else NULL
+     * @return ResourceSet|null resource set with the given name if found else NULL
+     *
      */
     public function resolveResourceSet($name)
     {
@@ -92,8 +92,8 @@ class ServiceBaseMetadata implements IDataServiceMetadataProvider
      * 
      * @param string $name Name of the resource set
      * 
-     * @return ResourceType/NULL resource type with the given resource set
-     *                           name if found else NULL
+     * @return ResourceType|null resource type with the given resource set name if found else NULL
+     *
      */
     public function resolveResourceType($name)
     {
@@ -110,10 +110,10 @@ class ServiceBaseMetadata implements IDataServiceMetadataProvider
      * passed in as a parameter An implementer of the interface should 
      * return null if the type does not have any derived types.
      * 
-     * @param ResourceType $resourceType Resource to get derived resource 
-     *                                   types from
+     * @param ResourceType $resourceType Resource to get derived resource types from
+     *
      * 
-     * @return array(ResourceType)/NULL
+     * @return ResourceType[]|null
      */
     public function getDerivedTypes(ResourceType $resourceType)
     {

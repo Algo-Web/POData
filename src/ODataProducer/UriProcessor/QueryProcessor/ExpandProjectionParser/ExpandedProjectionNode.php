@@ -90,7 +90,7 @@ class ExpandedProjectionNode extends ProjectionNode
      * List of child nodes, array of ExpandedProjectionNode and/or 
      * ProjectionNode.
      * 
-     * @var array(ProjectionNode)
+     * @var ProjectionNode[]
      */
     private $_childNodes = array();
 

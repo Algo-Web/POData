@@ -43,7 +43,7 @@ class ObjectModelSerializerBase
      * Remark: Read 'ObjectModelSerializerNotes.txt' for more
      * details about segment.
      * 
-     * @var array(string)
+     * @var string[]
      */
     private $_segmentNames;
 
@@ -52,7 +52,7 @@ class ObjectModelSerializerBase
      * Remark: Read 'ObjectModelSerializerNotes.txt' for more
      * details about segment.
      * 
-     * @var array(ResourceSetWrapper)
+     * @var ResourceSetWrapper[]
      */
     private $_segmentResourceSetWrappers;
 
@@ -61,14 +61,14 @@ class ObjectModelSerializerBase
      * Remark: Read 'ObjectModelSerializerNotes.txt' for more
      * details about segment.
      * 
-     * @var array(int)
+     * @var int[]
      */
     private $_segmentResultCounts;
 
     /**
      * Collection of complex type instances used for cycle detection.
      * 
-     * @var array(mixed)
+     * @var array
      */
     protected $complexTypeInstanceCollection;
 
@@ -612,13 +612,13 @@ class ObjectModelSerializerBase
     /**
      * Recursive metod to build $expand and $select paths for a specified node.
      * 
-     * @param array(string)          &$parentPathSegments     Array of path 
+     * @param string[]          &$parentPathSegments     Array of path
      *                                                        segments which leads
      *                                                        up to (including) 
      *                                                        the segment 
      *                                                        represented by 
      *                                                        $expandedProjectionNode.
-     * @param array(string)          &$selectionPaths         The string which 
+     * @param string[]          &$selectionPaths         The string which
      *                                                        holds projection
      *                                                        path segment 
      *                                                        seperated by comma,
@@ -627,7 +627,7 @@ class ObjectModelSerializerBase
      *                                                        the selection path
      *                                                        segments under 
      *                                                        this node. 
-     * @param array(string)          &$expansionPaths         The string which holds
+     * @param string[]          &$expansionPaths         The string which holds
      *                                                        expansion path segment
      *                                                        seperated by comma.
      *                                                        On return this argument
@@ -718,10 +718,8 @@ class ObjectModelSerializerBase
     /**
      * Append the given path to $expand or $select path list.
      * 
-     * @param string        &$path               The $expand or $select path list
-     *                                           to which to append the given path.
-     * @param array(string) &$parentPathSegments The list of path upto the 
-     *                                           $segmentToAppend.
+     * @param string        &$path  The $expand or $select path list to which to append the given path.
+     * @param string[] &$parentPathSegments The list of path up to the $segmentToAppend.
      * @param string        $segmentToAppend     The last segment of the path.
      * 
      * @return void

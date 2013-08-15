@@ -35,7 +35,7 @@ class NorthWindQueryProvider implements IDataServiceQueryProvider
      * 
      * @param ResourceSet $resourceSet The entity set whose entities needs to be fetched
      * 
-     * @return array(Object)
+     * @return object[]
      */
     public function getResourceSet(ResourceSet $resourceSet)
     {   

@@ -92,9 +92,7 @@ class OrderByLeafNode extends OrderByBaseNode
     /**
      * Build comparison function for this leaf node. 
      *
-     * @param array(string) $ancestors Array of parent properties e.g. 
-     *                                 array('Orders', 'Customer', 
-     *                                'Customer_Demographics')
+     * @param string[] $ancestors Array of parent properties e.g. array('Orders', 'Customer', 'Customer_Demographics')
      *
      * @return AnonymousFunction
      */

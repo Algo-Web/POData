@@ -65,7 +65,7 @@ class MetadataAssociationTypeSet extends MetadataBase
      * so use the function 'getAssociationSets' to get the unique instance from
      * this array.
      * 
-     * @var array(string, ResourceAssociationSet)
+     * @var ResourceAssociationSet[]
      */
     private $_resourceAssociationSets = array();
 
@@ -73,7 +73,7 @@ class MetadataAssociationTypeSet extends MetadataBase
      * Array of unique 'ResourceAssociationSet'
      * array(association_set_name, ResourceAssociationType)
      * 
-     * @var array(string, ResourceAssociationSet)
+     * @var ResourceAssociationSet[]
      */
     private $_uniqueResourceAssociationSets = null;
 
@@ -96,7 +96,7 @@ class MetadataAssociationTypeSet extends MetadataBase
     /**
      * Gets collection of association set
      * 
-     * @return array(string, ResourceAssociationSet)
+     * @return ResourceAssociationSet[]
      */
     public function getAssociationSets()
     {
@@ -124,7 +124,7 @@ class MetadataAssociationTypeSet extends MetadataBase
      * @param string $namespace The namespace name to get 
      * the association types belongs to
      * 
-     * @return array(string, ResourceAssociationType)
+     * @return ResourceAssociationType[]
      */
     public function &getResourceAssociationTypesForNamespace($namespace)
     {
@@ -144,7 +144,7 @@ class MetadataAssociationTypeSet extends MetadataBase
      * @param string $namespace Namespace name to get 
      * the association type belongs to 
      * 
-     * @return array(ResourceAssociationType)
+     * @return ResourceAssociationType[]
      */
     public function getUniqueResourceAssociationTypesForNamespace($namespace)
     {

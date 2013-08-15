@@ -58,14 +58,14 @@ class UriProcessor
     /**
      * Collection of segment names.
      *
-     * @var array(string)
+     * @var string[]
      */
     private $_segmentNames;
 
     /**
      * Collection of segment ResourceSetWrapper instances.
      *
-     * @var array(ResourceSetWrapper)
+     * @var ResourceSetWrapper[]
      */
     private $_segmentResourceSetWrappers;
 
@@ -445,8 +445,8 @@ class UriProcessor
     /**
      * Execute queries for expansion.
      * 
-     * @param array(mixed)/mixed &$result Resource(s) whose navigation properties
-     *                                    needs to be expanded.
+     * @param array(mixed)/mixed &$result Resource(s) whose navigation properties needs to be expanded.
+     *
      *
      * @return void
      */
@@ -602,7 +602,7 @@ class UriProcessor
      * Pushes a segment for the root of the tree 
      * Note: Calls to this method should be balanced with calls to popSegment.
      *
-     * @return true if the segment was pushed, false otherwise.
+     * @return bool true if the segment was pushed, false otherwise.
      */
     private function _pushSegmentForRoot()
     {
@@ -621,7 +621,7 @@ class UriProcessor
      * @param ResourceProperty &$resourceProperty Current navigation property 
      *                                            being written out
      *
-     * @return true if a segment was pushed, false otherwise
+     * @return bool true if a segment was pushed, false otherwise
      *
      * @throws InvalidOperationException If this function invoked with non-navigation
      *                                   property instance.
@@ -661,8 +661,8 @@ class UriProcessor
     /**
      * Gets collection of expanded projection nodes under the current node.
      *
-     * @return array(ExpandedProjectionNode) List of nodes
-     *    describing expansions for the current segment
+     * @return ExpandedProjectionNode[] List of nodes describing expansions for the current segment
+     *
      */
     private function _getExpandedProjectionNodes()
     {

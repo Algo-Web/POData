@@ -78,7 +78,7 @@ class ResourceType
      * resource described by this class instance (This does not include 
      * base type properties).
      * 
-     * @var array(string, ResourceProperty)
+     * @var ResourceProperty[] indexed by name
      */
     private $_propertiesDeclaredOnThisType = array();
 
@@ -87,7 +87,7 @@ class ResourceType
      * the resource described by this class instance (This does not include 
      * base type properties).
      * 
-     * @var array(string, ResourceStreamInfo)
+     * @var ResourceStreamInfo[] indexed by name
      */
     private $_namedStreamsDeclaredOnThisType = array();
 
@@ -103,7 +103,7 @@ class ResourceType
      * Collection of ResourceProperty for all properties declared on this type.
      * and base types.
      * 
-     * @var array(string, ResourceProperty)
+     * @var ResourceProperty[] indexed by name
      */    
     private $_allProperties = array();
 
@@ -111,25 +111,25 @@ class ResourceType
      * Collection of ResourceStreamInfo for all named streams declared on this type.
      * and base types
      * 
-     * @var array(string, ResourceStreamInfo)
+     * @var ResourceStreamInfo[]
      */
     private $_allNamedStreams = array();
 
     /**      
-     * Collection of properies which has etag defined subeset of $_allProperies
-     * @var array(ResourceProperty)
+     * Collection of properties which has etag defined subset of $_allProperties
+     * @var ResourceProperty[]
      */
     private $_etagProperties = array();
 
     /** 
-     * Collection of key properies subeset of $_allProperies
+     * Collection of key properties subset of $_allProperties
      * 
-     * @var array(ResourceProperty)
+     * @var ResourceProperty[]
      */
     private $_keyProperties = array();
 
     /**      
-     * Whether the resource type described by this class intance is a MLE or not
+     * Whether the resource type described by this class instance is a MLE or not
      * 
      * @var boolean
      */
@@ -137,7 +137,7 @@ class ResourceType
 
     /**
      * Whether the resource type described by this class instance has bag properties
-     * Note: This has been intitialized with null, later in hasBagProperty method, 
+     * Note: This has been initialized with null, later in hasBagProperty method,
      * this flag will be set to boolean value
      * 
      * @var boolean
@@ -157,12 +157,12 @@ class ResourceType
      * ReflectionClass (for complex/Entity) or IType (for Primitive) instance for 
      * the resource (type) described by this class intstance
      * 
-     * @var ReflectionClass/IType
+     * @var \ReflectionClass|IType
      */
     private $_type;
 
     /**
-     * To store any custom information related to this class intstance
+     * To store any custom information related to this class instance
      * 
      * @var Object
      */
@@ -171,7 +171,7 @@ class ResourceType
     /**
      * Array to detect looping in bag's complex type  
      * 
-     * @var array(mixed)
+     * @var array
      */
     private $_arrayToDetectLoopInComplexBag;
 
@@ -184,15 +184,15 @@ class ResourceType
      *                                                be 'ReflectionClass' and for 
      *                                                primitive type this 
      *                                                will be IType
-     * @param ResourceTypeKind      $resourceTypeKind Kind of resource 
-     *                                               (Entity, Complex or Primitive)
+     * @param ResourceTypeKind      $resourceTypeKind Kind of resource (Entity, Complex or Primitive)
+     *
      * @param string                $name             Name of the resource
      * @param string                $namespaceName    Namespace of the resource
-     * @param ResourceType          $baseType         Base type of the 
-     *                                                resource, if exists 
+     * @param ResourceType          $baseType         Base type of the resource, if exists
+     *
      * @param boolean               $isAbstract       Whether resource is abstract
      * 
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
     public function __construct($instanceType, $resourceTypeKind, $name, 
         $namespaceName = null, ResourceType $baseType = null, 
@@ -285,7 +285,7 @@ class ResourceType
      * then this function returns refernece to ReflectionClass instance for the type.
      * If resource type describes a primitive type then this function returns ITYpe.
      * 
-     * @return ReflectionClass/IType
+     * @return \ReflectionClass|IType
      */
     public function getInstanceType()
     {
@@ -437,7 +437,7 @@ class ResourceType
      * properties). This function returns  empty array in case of resource type
      * for primitive types.
      * 
-     * @return array(name, ResourceProperty)
+     * @return ResourceProperty[]
      */
     public function getPropertiesDeclaredOnThisType()
     {
@@ -449,7 +449,7 @@ class ResourceType
      * properties. This function returns  empty array in case of resource type
      * for primitive types.
      * 
-     * @return array(name, ResourceProperty)
+     * @return ResourceProperty[]
      */
     public function getAllProperties()
     {
@@ -471,7 +471,7 @@ class ResourceType
      * function returns non-empty array only for resource type representing 
      * an entity type.
      *  
-     * @return array(name, ResourceProperty)
+     * @return ResourceProperty[]
      */
     public function getKeyProperties()
     {
@@ -496,7 +496,7 @@ class ResourceType
     /**
      * Get collection of e-tag properties belongs to this type.
      * 
-     * @return array(name, ResourceProperty)
+     * @return ResourceProperty[]
      */
     public function getETagProperties()
     {
@@ -530,7 +530,7 @@ class ResourceType
      * 
      * @param string $propertyName The name of the property to resolve.
      * 
-     * @return ResourceProperty or NULL
+     * @return ResourceProperty|null
      */
     public function tryResolvePropertyTypeDeclaredOnThisTypeByName($propertyName)
     {
@@ -547,7 +547,7 @@ class ResourceType
      * 
      * @param string $propertyName The name of the property to resolve.
      * 
-     * @return ResourceProperty or NULL
+     * @return ResourceProperty|null
      */
     public function tryResolvePropertyTypeByName($propertyName)
     {
@@ -561,9 +561,8 @@ class ResourceType
     /**
      * Add a named stream belongs to this resource type instance
      * 
-     * @param ResourceStreamInfo $namedStream ResourceStreamInfo instance describing
-     *                                        the named stream to add.
-     * 
+     * @param ResourceStreamInfo $namedStream ResourceStreamInfo instance describing the named stream to add.
+     *
      * @return void
      * 
      * @throws InvalidOperationException
@@ -591,7 +590,7 @@ class ResourceType
 
         $this->_namedStreamsDeclaredOnThisType[$name] = $namedStream;
         // Set $this->_allNamedStreams to null, the first call to getAllNamedStreams
-        // will initilaize $this->_allNamedStreams, further call to 
+        // will initialize $this->_allNamedStreams, further call to
         // getAllNamedStreams will not reinitialize _allNamedStreams
         // so if addNamedStream is called after calling getAllNamedStreams then the
         // property just added will not be reflected in $this->_allNamedStreams
@@ -603,7 +602,7 @@ class ResourceType
      * Get collection of ResourceStreamInfo describing the named streams belongs 
      * to this resource type (excluding base class properties)
      * 
-     * @return array(name, ResourceStreamInfo)
+     * @return ResourceStreamInfo[]
      */
     public function getNamedStreamsDeclaredOnThisType()
     {
@@ -614,7 +613,7 @@ class ResourceType
      * Get collection of ResourceStreamInfo describing the named streams belongs 
      * to this resource type including base class named streams.
      * 
-     * @return array(name, ResourceStreamInfo)
+     * @return ResourceStreamInfo[]
      */
     public function getAllNamedStreams()
     {
@@ -639,7 +638,7 @@ class ResourceType
      * 
      * @param string $namedStreamName Name of the named stream to resolve.
      * 
-     * @return ResourceStreamInfo or NULL
+     * @return ResourceStreamInfo|null
      */
     public function tryResolveNamedStreamDeclaredOnThisTypeByName($namedStreamName)
     {
@@ -656,7 +655,7 @@ class ResourceType
      * 
      * @param string $namedStreamName Name of the named stream to resolve.
      * 
-     * @return ResourceStreamInfo or NULL
+     * @return ResourceStreamInfo|NULL
      */
     public function tryResolveNamedStreamByName($namedStreamName)
     {
@@ -692,7 +691,7 @@ class ResourceType
      * Check this resource type instance has bag property associated with it
      * Note: This is an internal method used by library. Devs don't use this.
      * 
-     * @param array(mixed) &$arrayToDetectLoopInComplexType array for detecting loop.
+     * @param array &$arrayToDetectLoopInComplexType array for detecting loop.
      * 
      * @return boolean true if resource type instance has bag property else false
      */

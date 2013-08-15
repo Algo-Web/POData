@@ -16,6 +16,7 @@ use ODataProducer\Common\ODataConstants;
 use ODataProducer\Common\Messages;
 use ODataProducer\Common\ODataException;
 use ODataProducer\Common\InvalidOperationException;
+use ODataProducer\Providers\Metadata\ResourceAssociationType;
 
 /**
  * Class MetadataWriter
@@ -26,11 +27,11 @@ class MetadataWriter
     /**
      * Writer to which output (CSDL Document) is sent
      * 
-     * @var XMLWriter
+     * @var \XMLWriter
      */
     private $_xmlWriter;
 
-    /**
+    /**                                     `
      * Hold reference to the MetadataManager instance, 
      * which can be used for retrieving details about all ResourceType, 
      * ResourceSet, AssociationType and AssociationSet defined in the service.
@@ -188,8 +189,8 @@ class MetadataWriter
     /**
      * Write all resource types (entity and complex types)
      * 
-     * @param array $resourceTypes                            resource types array
-     * array(ResourceType)
+     * @param ResourceType[] $resourceTypes resource types array
+
      * @param array $associationTypesInResourceTypesNamespace collection of 
      * association types for the given resource types
      * array(string, AssociationType)
@@ -363,11 +364,8 @@ class MetadataWriter
      * Write a navigation property
      * 
      * @param ResourceType     $resourceType                            Resource type
-     * @param array            $associationTypesInResourceTypeNamespace Collection 
-     * of association types for the given resource types
-     * array(ResourceAssociatedType)
-     * @param ResourceProperty $navigationProperty                      Navigation 
-     * property
+     * @param ResourceAssociationType[] $associationTypesInResourceTypeNamespace Collection of association types for the given resource types
+     * @param ResourceProperty $navigationProperty Navigation property
      * 
      * @throws InvalidOperationException
      * @return nothing
@@ -433,10 +431,9 @@ class MetadataWriter
     /**
      * Write all association type
      * 
-     * @param array(ResourceAssociationType) $resourceAssociationTypes collection of
-     * resource association types
-     * 
-     * @return nothing
+     * @param ResourceAssociationType[] $resourceAssociationTypes collection of resource association types
+     *
+     * @return void
      */
     private function _writeAssociationTypes($resourceAssociationTypes)
     {
@@ -455,7 +452,7 @@ class MetadataWriter
      * @param ResourceAssociationTypeEnd $resourceAssociationTypeEnd Resource 
      * association type end
      * 
-     * @return nothing
+     * @return void
      */
     private function _writeAssociationTypeEnd(ResourceAssociationTypeEnd $resourceAssociationTypeEnd)
     {
@@ -469,7 +466,7 @@ class MetadataWriter
     /**
      * Write entity container 
      * 
-     * @return nothing
+     * @return void
      */
     private function _writeEntityContainer()
     {
@@ -490,7 +487,7 @@ class MetadataWriter
     /**
      * Write all association sets.
      * 
-     * @return nothing
+     * @return void
      */
     private function _writeAssociationSets()
     {
