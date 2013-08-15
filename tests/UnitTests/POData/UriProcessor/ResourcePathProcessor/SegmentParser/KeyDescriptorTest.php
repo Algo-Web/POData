@@ -3,7 +3,8 @@ use ODataProducer\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor
 use ODataProducer\Common\InvalidOperationException;
 use ODataProducer\Common\ODataException;
 
-require_once(dirname(__FILE__) . "/../../../Resources/NorthWindMetadata.php");
+use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
+
 
 class TestKeyDescriptor extends PHPUnit_Framework_TestCase
 {
@@ -147,7 +148,7 @@ class TestKeyDescriptor extends PHPUnit_Framework_TestCase
     public function testKeyDescriptorValidation()
     {
         try {
-            $northWindMetadata = CreateNorthWindMetadata3::Create();
+            $northWindMetadata = NorthWindMetadata::Create();
             $orderDetailsResourceType = $northWindMetadata->resolveResourceType('Order_Details');
             $this->assertFalse(is_null($orderDetailsResourceType));
             

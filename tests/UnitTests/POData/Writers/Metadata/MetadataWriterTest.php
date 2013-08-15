@@ -17,8 +17,6 @@ use ODataProducer\Common\Version;
 
 use UnitTests\POData\Facets\NorthWind2\NorthWindMetadata;
 
-//require_once(dirname(__FILE__) . "/./../../Resources/NorthWind2/NorthWindQueryProvider.php");
-
 
 class TestMetadataWriter extends PHPUnit_Framework_TestCase
 {
