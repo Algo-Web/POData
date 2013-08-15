@@ -3,9 +3,10 @@ use ODataProducer\Common\Url;
 use ODataProducer\Common\ODataException;
 use ODataProducer\OperationContext\DataServiceHost;
 
+use UnitTests\POData\Facets\NorthWind2\DataServiceHost1;
 
-require_once(dirname(__FILE__) . "/./../Resources/NorthWind2/NorthWindDataService.php");
-require_once(dirname(__FILE__) . "/./../Resources/NorthWind2/DataServiceHost2.php");
+//require_once(dirname(__FILE__) . "/./../Resources/NorthWind2/NorthWindDataService.php");
+//require_once(dirname(__FILE__) . "/./../Resources/NorthWind2/DataServiceHost2.php");
 
 
 

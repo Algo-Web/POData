@@ -1,17 +1,15 @@
 <?php
+
+namespace UnitTests\POData\Facets\NorthWind2;
+
 use ODataProducer\Configuration\EntitySetRights;
 use ODataProducer\IDataService;
-use ODataProducer\IRequestHandler;;
+use ODataProducer\IRequestHandler;
 use ODataProducer\Configuration\DataServiceProtocolVersion;
 use ODataProducer\Configuration\DataServiceConfiguration;
 use ODataProducer\IServiceProvider;
 use ODataProducer\DataService;
 
-
-require_once 'NorthWindMetadata2.php';
-require_once 'DataService2.php';
-require_once 'NorthWindQueryProvider.php';
-require_once 'NorthWindStreamProvider.php';
 
 class NorthWindDataService1 extends DataService1 implements IServiceProvider
 {
@@ -42,7 +40,7 @@ class NorthWindDataService1 extends DataService1 implements IServiceProvider
     {
         if ($serviceType === 'IDataServiceMetadataProvider') {
             if (is_null($this->_northWindMetadata)) {
-                $this->_northWindMetadata = CreateNorthWindMetadata1::Create();
+                $this->_northWindMetadata = NorthWindMetadata::Create();
             }
 
             return $this->_northWindMetadata;

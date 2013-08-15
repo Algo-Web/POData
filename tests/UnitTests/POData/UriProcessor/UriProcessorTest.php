@@ -1,4 +1,7 @@
 <?php
+
+namespace ODataProducer\UriProcessor\ResourcePathProcessor;
+
 /**
  * Mainly test UriProcessor, but also do some partial test for DataService class.
  */
@@ -35,7 +38,7 @@ use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 use UnitTests\POData\Facets\NorthWind1\Customer2;
 
 
-class TestUriProcessor extends PHPUnit_Framework_TestCase
+class TestUriProcessor extends \PHPUnit_Framework_TestCase
 {
     protected function setUp()
     {

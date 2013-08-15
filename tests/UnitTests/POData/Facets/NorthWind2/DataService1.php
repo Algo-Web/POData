@@ -1,4 +1,8 @@
 <?php
+
+namespace UnitTests\POData\Facets\NorthWind2;
+
+
 /**
  * A wrapper class over DataService class, this class will be used for
  * testing the DataService and UriProcessor classes.

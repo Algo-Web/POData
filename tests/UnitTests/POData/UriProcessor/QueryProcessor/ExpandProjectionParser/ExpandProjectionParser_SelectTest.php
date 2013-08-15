@@ -1,4 +1,7 @@
 <?php
+
+namespace ODataProducer\UriProcessor\QueryProcessor\ExpandProjectionParser;
+
 use ODataProducer\UriProcessor\QueryProcessor\ExpandProjectionParser\ProjectionNode;
 use ODataProducer\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandedProjectionNode;
 use ODataProducer\Configuration\EntitySetRights;
@@ -7,10 +10,10 @@ use ODataProducer\Configuration\DataServiceConfiguration;
 use ODataProducer\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandProjectionParser;
 use ODataProducer\Common\ODataException;
 
-require_once(dirname(__FILE__) . "/../../../Resources/NorthWindMetadata.php");
-require_once(dirname(__FILE__) . "/../../../Resources/NorthWindQueryProvider.php");
+use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
+use UnitTests\POData\Facets\NorthWind1\NorthWindQueryProvider2;
 
-class TestExpandProjectionParser_Select extends PHPUnit_Framework_TestCase
+class TestExpandProjectionParser_Select extends \PHPUnit_Framework_TestCase
 {   
     protected function setUp()
     {
@@ -22,7 +25,7 @@ class TestExpandProjectionParser_Select extends PHPUnit_Framework_TestCase
     public function testWildCartSelectOnRoot()
     {
         try {
-                $northWindMetadata = CreateNorthWindMetadata3::Create();
+                $northWindMetadata = NorthWindMetadata::Create();
                 $queryProvider = new NorthWindQueryProvider2();
                 $configuration = new DataServiceConfiguration($northWindMetadata);
                 $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
@@ -68,7 +71,7 @@ class TestExpandProjectionParser_Select extends PHPUnit_Framework_TestCase
     public function testWildCardWithExplicitSelectionOnRoot()
     {
         try {
-                $northWindMetadata = CreateNorthWindMetadata3::Create();
+                $northWindMetadata = NorthWindMetadata::Create();
                  $queryProvider = new NorthWindQueryProvider2();
                 $configuration = new DataServiceConfiguration($northWindMetadata);
                 $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
@@ -154,7 +157,7 @@ class TestExpandProjectionParser_Select extends PHPUnit_Framework_TestCase
     public function testTraversalOfNavigationPropertyWhichIsNotExpandedOnRoot()
     {
         try {
-                $northWindMetadata = CreateNorthWindMetadata3::Create();
+                $northWindMetadata = NorthWindMetadata::Create();
                  $queryProvider = new NorthWindQueryProvider2();
                 $configuration = new DataServiceConfiguration($northWindMetadata);
                 $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
@@ -202,7 +205,7 @@ class TestExpandProjectionParser_Select extends PHPUnit_Framework_TestCase
     public function testInclusionOfSubTreeDueToParentInclusion1()
     {
         try {
-                $northWindMetadata = CreateNorthWindMetadata3::Create();
+                $northWindMetadata = NorthWindMetadata::Create();
                  $queryProvider = new NorthWindQueryProvider2();
                 $configuration = new DataServiceConfiguration($northWindMetadata);
                 $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
@@ -275,7 +278,7 @@ class TestExpandProjectionParser_Select extends PHPUnit_Framework_TestCase
     public function testInclusionOfSubTreeDueToParentInclusion2()
     {
         try {
-                $northWindMetadata = CreateNorthWindMetadata3::Create();
+                $northWindMetadata = NorthWindMetadata::Create();
                  $queryProvider = new NorthWindQueryProvider2();
                 $configuration = new DataServiceConfiguration($northWindMetadata);
                 $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
@@ -355,7 +358,7 @@ class TestExpandProjectionParser_Select extends PHPUnit_Framework_TestCase
     public function testRemovalOfSubTreeWhichIsExpandedButNotSelected1()
     {
         try {
-                $northWindMetadata = CreateNorthWindMetadata3::Create();
+                $northWindMetadata = NorthWindMetadata::Create();
                  $queryProvider = new NorthWindQueryProvider2();
                 $configuration = new DataServiceConfiguration($northWindMetadata);
                 $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
@@ -469,7 +472,7 @@ class TestExpandProjectionParser_Select extends PHPUnit_Framework_TestCase
     public function testRemovalOfSubTreeWhichIsExpandedButNotSelected2()
     {
         try {
-                $northWindMetadata = CreateNorthWindMetadata3::Create();
+                $northWindMetadata = NorthWindMetadata::Create();
                  $queryProvider = new NorthWindQueryProvider2();
                 $configuration = new DataServiceConfiguration($northWindMetadata);
                 $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
@@ -526,7 +529,7 @@ class TestExpandProjectionParser_Select extends PHPUnit_Framework_TestCase
     public function testPrimitiveBagComplexAsIntermediateSegments()
     {
         try {
-                $northWindMetadata = CreateNorthWindMetadata3::Create();
+                $northWindMetadata = NorthWindMetadata::Create();
                  $queryProvider = new NorthWindQueryProvider2();
                 $configuration = new DataServiceConfiguration($northWindMetadata);
                 $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
@@ -615,7 +618,7 @@ class TestExpandProjectionParser_Select extends PHPUnit_Framework_TestCase
     public function testPrjectionNodeCreation()
     {
         try {
-                $northWindMetadata = CreateNorthWindMetadata3::Create();
+                $northWindMetadata = NorthWindMetadata::Create();
                  $queryProvider = new NorthWindQueryProvider2();
                 $configuration = new DataServiceConfiguration($northWindMetadata);
                 $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);

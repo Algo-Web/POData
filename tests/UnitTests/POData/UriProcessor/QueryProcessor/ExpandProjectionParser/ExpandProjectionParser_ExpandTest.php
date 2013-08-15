@@ -1,4 +1,8 @@
 <?php
+
+namespace ODataProducer\UriProcessor\QueryProcessor\ExpandProjectionParser;
+
+
 use ODataProducer\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandedProjectionNode;
 use ODataProducer\Configuration\EntitySetRights;
 use ODataProducer\Providers\MetadataQueryProviderWrapper;
@@ -6,10 +10,11 @@ use ODataProducer\Configuration\DataServiceConfiguration;
 use ODataProducer\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandProjectionParser;
 use ODataProducer\Common\ODataException;
 
-require_once(dirname(__FILE__) . "/../../../Resources/NorthWindMetadata.php");
-require_once(dirname(__FILE__) . "/../../../Resources/NorthWindQueryProvider.php");
+use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
+use UnitTests\POData\Facets\NorthWind1\NorthWindQueryProvider2;
 
-class TestExpandProjectionParser_Expand extends PHPUnit_Framework_TestCase
+
+class TestExpandProjectionParser_Expand extends \PHPUnit_Framework_TestCase
 {   
     protected function setUp()
     {
@@ -21,7 +26,7 @@ class TestExpandProjectionParser_Expand extends PHPUnit_Framework_TestCase
     public function testEmptyExpandAndSelect()
     {
         try { 
-                $northWindMetadata = CreateNorthWindMetadata3::Create();
+                $northWindMetadata = NorthWindMetadata::Create();
                 $queryProvider = new NorthWindQueryProvider2();
                 $configuration = new DataServiceConfiguration($northWindMetadata);
                 $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
@@ -72,7 +77,7 @@ class TestExpandProjectionParser_Expand extends PHPUnit_Framework_TestCase
     public function testExpandWithOneLevelNavigationProperty()
     {
             try {
-                $northWindMetadata = CreateNorthWindMetadata3::Create();
+                $northWindMetadata = NorthWindMetadata::Create();
                 $queryProvider = new NorthWindQueryProvider2();
                 $configuration = new DataServiceConfiguration($northWindMetadata);
                 $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
@@ -131,7 +136,7 @@ class TestExpandProjectionParser_Expand extends PHPUnit_Framework_TestCase
     public function testExpandWithOneLevelNavigationPropertyWithDuplication()
     {
             try {
-                $northWindMetadata = CreateNorthWindMetadata3::Create();
+                $northWindMetadata = NorthWindMetadata::Create();
                 $queryProvider = new NorthWindQueryProvider2();
                 $configuration = new DataServiceConfiguration($northWindMetadata);
                 $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
@@ -179,7 +184,7 @@ class TestExpandProjectionParser_Expand extends PHPUnit_Framework_TestCase
     public function testExpandWithNonIdentiferPathSegment()
     {
                 try {
-                $northWindMetadata = CreateNorthWindMetadata3::Create();
+                $northWindMetadata = NorthWindMetadata::Create();
                 $queryProvider = new NorthWindQueryProvider2();
                 $configuration = new DataServiceConfiguration($northWindMetadata);
                 $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
@@ -222,7 +227,7 @@ class TestExpandProjectionParser_Expand extends PHPUnit_Framework_TestCase
     public function testExpandWithStartEndTokenAsComma()
     {
                 try {
-                $northWindMetadata = CreateNorthWindMetadata3::Create();
+                $northWindMetadata = NorthWindMetadata::Create();
                 $queryProvider = new NorthWindQueryProvider2();
                 $configuration = new DataServiceConfiguration($northWindMetadata);
                 $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
@@ -294,7 +299,7 @@ class TestExpandProjectionParser_Expand extends PHPUnit_Framework_TestCase
     public function testExpandWithNonNavigationPropertyInThePath()
     {
                 try {
-                $northWindMetadata = CreateNorthWindMetadata3::Create();
+                $northWindMetadata = NorthWindMetadata::Create();
                 $queryProvider = new NorthWindQueryProvider2();
                 $configuration = new DataServiceConfiguration($northWindMetadata);
                 $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
@@ -358,7 +363,7 @@ class TestExpandProjectionParser_Expand extends PHPUnit_Framework_TestCase
     public function testExpandWithSelectAllTokenInThePath()
     {
                 try {
-                $northWindMetadata = CreateNorthWindMetadata3::Create();
+                $northWindMetadata = NorthWindMetadata::Create();
                 $queryProvider = new NorthWindQueryProvider2();
                 $configuration = new DataServiceConfiguration($northWindMetadata);
                 $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
@@ -401,7 +406,7 @@ class TestExpandProjectionParser_Expand extends PHPUnit_Framework_TestCase
     public function testExpandWithMultilevelNavigationProperty()
     {
                 try {
-                $northWindMetadata = CreateNorthWindMetadata3::Create();
+                $northWindMetadata = NorthWindMetadata::Create();
                 $queryProvider = new NorthWindQueryProvider2();
                 $configuration = new DataServiceConfiguration($northWindMetadata);
                 $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
@@ -499,7 +504,7 @@ class TestExpandProjectionParser_Expand extends PHPUnit_Framework_TestCase
     public function testExpandWithMultipleMultilevelNavigationProperty()
     {
         try {
-                $northWindMetadata = CreateNorthWindMetadata3::Create();
+                $northWindMetadata = NorthWindMetadata::Create();
                 $queryProvider = new NorthWindQueryProvider2();
                 $configuration = new DataServiceConfiguration($northWindMetadata);
                 $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
@@ -559,7 +564,7 @@ class TestExpandProjectionParser_Expand extends PHPUnit_Framework_TestCase
     public function testExpandWithNonVisibleResourceSet()
     {
         try {
-                $northWindMetadata = CreateNorthWindMetadata3::Create();
+                $northWindMetadata = NorthWindMetadata::Create();
                 $queryProvider = new NorthWindQueryProvider2();
                 $configuration = new DataServiceConfiguration($northWindMetadata);
                 //Make 'Customers' and 'Orders' visible, make 'Order_Details' invisible
