@@ -1,7 +1,7 @@
 <?php
 
+namespace ODataProducer\UriProcessor\QueryProcessor\ExpressionParser;
 
-require_once(dirname(__FILE__) . "/../../../Resources/NorthWindMetadata.php");
 use ODataProducer\Providers\Metadata\Type\Int32;
 use ODataProducer\Providers\Metadata\Type\Int64;
 use ODataProducer\Providers\Metadata\Type\Double;
@@ -24,14 +24,15 @@ use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\Expressions\Expre
 use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\ExpressionParser;
 use ODataProducer\Common\ODataException;
 
+use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 
-class ExpressionParserTest extends PHPUnit_Framework_TestCase
+class ExpressionParserTest extends \PHPUnit_Framework_TestCase
 {
     private $_northWindMetadata;
     
     protected function setUp()
     {        
-        $this->_northWindMetadata = CreateNorthWindMetadata3::Create();
+        $this->_northWindMetadata = NorthWindMetadata::Create();
     }
 
     public function testConstantExpression()
@@ -765,4 +766,4 @@ class ExpressionParserTest extends PHPUnit_Framework_TestCase
     {    
     }
 }
-?>
+

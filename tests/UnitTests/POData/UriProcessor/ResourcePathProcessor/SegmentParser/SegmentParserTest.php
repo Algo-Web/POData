@@ -1,4 +1,5 @@
 <?php
+
 use ODataProducer\Providers\Metadata\ResourceTypeKind;
 use ODataProducer\UriProcessor\ResourcePathProcessor\SegmentParser\RequestTargetSource;
 use ODataProducer\UriProcessor\ResourcePathProcessor\SegmentParser\RequestTargetKind;
@@ -8,7 +9,8 @@ use ODataProducer\Configuration\DataServiceConfiguration;
 use ODataProducer\UriProcessor\ResourcePathProcessor\SegmentParser\SegmentParser;
 use ODataProducer\Common\ODataException;
 
-require_once(dirname(__FILE__) . "/../../../Resources/NorthWindMetadata.php");
+use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
+
 
 class TestSegmentParser extends PHPUnit_Framework_TestCase
 {
@@ -19,7 +21,7 @@ class TestSegmentParser extends PHPUnit_Framework_TestCase
     
     protected function setUp()
     {
-        $this->_metadataProvider = CreateNorthWindMetadata3::Create();
+        $this->_metadataProvider = NorthWindMetadata::Create();
         $this->_serviceConfiguration = new DataServiceConfiguration($this->_metadataProvider);
         $this->_serviceConfiguration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $this->_metadataProviderWrapper = new MetadataQueryProviderWrapper($this->_metadataProvider, null, $this->_serviceConfiguration, false);
@@ -198,7 +200,7 @@ class TestSegmentParser extends PHPUnit_Framework_TestCase
             $this->assertEquals(count($segmentDescriptors), 1);
             $this->assertFalse($segmentDescriptors[0]->isSingleResult());
             //test for FORBIDDEN
-            $metadataProvider = CreateNorthWindMetadata3::Create();
+            $metadataProvider = NorthWindMetadata::Create();
             $serviceConfiguration = new DataServiceConfiguration($metadataProvider);
             //HIDING ALL RESOURCE SET
             $serviceConfiguration->setEntitySetAccessRule('*', EntitySetRights::NONE); 
@@ -814,7 +816,7 @@ class TestSegmentParser extends PHPUnit_Framework_TestCase
         
         //Test invisible navigation segment
         //Creates a provider wrapper for NorthWind service with 'Orders' entity set as invisible
-        $metadataProvider = CreateNorthWindMetadata3::Create();
+        $metadataProvider = NorthWindMetadata::Create();
         $serviceConfiguration = new DataServiceConfiguration($this->_metadataProvider);
         $serviceConfiguration->setEntitySetAccessRule('Customers', EntitySetRights::READ_ALL);
         $serviceConfiguration->setEntitySetAccessRule('Orders', EntitySetRights::NONE);

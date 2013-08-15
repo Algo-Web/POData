@@ -1,17 +1,21 @@
 <?php
-use ODataProducer\Providers\Metadata\ResourceProperty;
 
-require_once(dirname(__FILE__) . "/../../../Resources/NorthWindMetadata.php");
+namespace ODataProducer\UriProcessor\QueryProcessor\ExpressionParser;
+
+use ODataProducer\Providers\Metadata\ResourceProperty;
 use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\ExpressionParser2;
 use ODataProducer\Common\ODataException;
 
-class PHPExpressionProviderTest extends PHPUnit_Framework_TestCase
+use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
+
+
+class PHPExpressionProviderTest extends \PHPUnit_Framework_TestCase
 {
     private $_northWindMetadata;
     
     protected function setUp()
     {        
-        $this->_northWindMetadata = CreateNorthWindMetadata3::Create();
+        $this->_northWindMetadata = NorthWindMetadata::Create();
     }
 
     public function testparseExpression2()
@@ -102,4 +106,3 @@ class PHPExpressionProviderTest extends PHPUnit_Framework_TestCase
     {    
     }
 }
-?>

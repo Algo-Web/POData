@@ -1,4 +1,7 @@
 <?php
+
+namespace ODataProducer\UriProcessor\QueryProcessor\SkipTokenParser;
+
 use ODataProducer\Providers\Metadata\ResourceProperty;
 use ODataProducer\Configuration\EntitySetRights;
 use ODataProducer\Providers\MetadataQueryProviderWrapper;
@@ -7,9 +10,15 @@ use ODataProducer\Common\ODataException;
 use ODataProducer\UriProcessor\QueryProcessor\OrderByParser\OrderByParser;
 use ODataProducer\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenParser;
 
-require_once(dirname(__FILE__) . "/../../../Resources/NorthWindMetadata.php");
+use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
+//These are in the file loaded by above use statement
+//TODO: move to own class files
+use UnitTests\POData\Facets\NorthWind1\Address2;
+use UnitTests\POData\Facets\NorthWind1\Address4;
+use UnitTests\POData\Facets\NorthWind1\Customer2;
+use UnitTests\POData\Facets\NorthWind1\Order2;
 
-class TestSkipTokenParser extends PHPUnit_Framework_TestCase
+class TestSkipTokenParser extends \PHPUnit_Framework_TestCase
 {
     protected function setUp()
     {
@@ -21,7 +30,7 @@ class TestSkipTokenParser extends PHPUnit_Framework_TestCase
     public function testNamedValuesInSkipToken()
     {
         try {
-            $northWindMetadata = CreateNorthWindMetadata3::Create();
+            $northWindMetadata = NorthWindMetadata::Create();
             $configuration = new DataServiceConfiguration($northWindMetadata);
             $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
             $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
@@ -62,7 +71,7 @@ class TestSkipTokenParser extends PHPUnit_Framework_TestCase
     public function testSkipTokenWithLeadingAndTrailingCommas()
     {
             try {
-            $northWindMetadata = CreateNorthWindMetadata3::Create();
+            $northWindMetadata = NorthWindMetadata::Create();
             $configuration = new DataServiceConfiguration($northWindMetadata);
             $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
             $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
@@ -135,7 +144,7 @@ class TestSkipTokenParser extends PHPUnit_Framework_TestCase
     public function testSkipTokenHavingCountMismatchWithOrderBy()
     {
         try {
-            $northWindMetadata = CreateNorthWindMetadata3::Create();
+            $northWindMetadata = NorthWindMetadata::Create();
             $configuration = new DataServiceConfiguration($northWindMetadata);
             $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
             $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
@@ -191,7 +200,7 @@ class TestSkipTokenParser extends PHPUnit_Framework_TestCase
     public function testSkipTokenTypeInCompatability()
     {
         try {
-            $northWindMetadata = CreateNorthWindMetadata3::Create();
+            $northWindMetadata = NorthWindMetadata::Create();
             $configuration = new DataServiceConfiguration($northWindMetadata);
             $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
             $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
@@ -255,7 +264,7 @@ class TestSkipTokenParser extends PHPUnit_Framework_TestCase
     public function testInitializationOfKeyObject1()
     {
         try {
-            $northWindMetadata = CreateNorthWindMetadata3::Create();
+            $northWindMetadata = NorthWindMetadata::Create();
             $configuration = new DataServiceConfiguration($northWindMetadata);
             $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
             $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
@@ -310,7 +319,7 @@ class TestSkipTokenParser extends PHPUnit_Framework_TestCase
     public function testInitializationOfKeyObject2()
     {
         try {
-            $northWindMetadata = CreateNorthWindMetadata3::Create();
+            $northWindMetadata = NorthWindMetadata::Create();
             $configuration = new DataServiceConfiguration($northWindMetadata);
             $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
             $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
@@ -360,7 +369,7 @@ class TestSkipTokenParser extends PHPUnit_Framework_TestCase
     public function testInitializationOfKeyObject3()
     {
         try {
-            $northWindMetadata = CreateNorthWindMetadata3::Create();
+            $northWindMetadata = NorthWindMetadata::Create();
             $configuration = new DataServiceConfiguration($northWindMetadata);
             $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
             $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
@@ -400,7 +409,7 @@ class TestSkipTokenParser extends PHPUnit_Framework_TestCase
     public function testCreationOfNextLink1()
     {
         try {
-            $northWindMetadata = CreateNorthWindMetadata3::Create();
+            $northWindMetadata = NorthWindMetadata::Create();
             $configuration = new DataServiceConfiguration($northWindMetadata);
             $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
             $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
@@ -452,7 +461,7 @@ class TestSkipTokenParser extends PHPUnit_Framework_TestCase
     public function testCreationOfNextLink2()
     {
         try {
-            $northWindMetadata = CreateNorthWindMetadata3::Create();
+            $northWindMetadata = NorthWindMetadata::Create();
             $configuration = new DataServiceConfiguration($northWindMetadata);
             $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
             $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
@@ -493,7 +502,7 @@ class TestSkipTokenParser extends PHPUnit_Framework_TestCase
     public function testCreationOfNextLink3()
     {
         try {
-            $northWindMetadata = CreateNorthWindMetadata3::Create();
+            $northWindMetadata = NorthWindMetadata::Create();
             $configuration = new DataServiceConfiguration($northWindMetadata);
             $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
             $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
@@ -530,7 +539,7 @@ class TestSkipTokenParser extends PHPUnit_Framework_TestCase
     public function testCreationOfNextLink4()
     {
         try {
-            $northWindMetadata = CreateNorthWindMetadata3::Create();
+            $northWindMetadata = NorthWindMetadata::Create();
             $configuration = new DataServiceConfiguration($northWindMetadata);
             $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
             $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
@@ -561,4 +570,3 @@ class TestSkipTokenParser extends PHPUnit_Framework_TestCase
     {
     }
 }
-?>

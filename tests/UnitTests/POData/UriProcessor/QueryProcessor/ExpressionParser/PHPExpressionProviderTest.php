@@ -1,7 +1,7 @@
 <?php
 
+namespace ODataProducer\UriProcessor\QueryProcessor\ExpressionParser;
 
-require_once(dirname(__FILE__) . "/../../../Resources/NorthWindMetadata.php");
 use ODataProducer\Providers\Metadata\Type\Int32;
 use ODataProducer\Providers\Metadata\Type\Int64;
 use ODataProducer\Providers\Metadata\Type\Double;
@@ -26,13 +26,21 @@ use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\ExpressionProcess
 use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\PHPExpressionProvider;
 use ODataProducer\Common\ODataException;
 
-class PHPExpressionProviderTest1 extends PHPUnit_Framework_TestCase
+use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
+//These are in the file loaded by above use statement
+//TODO: move to own class files
+use UnitTests\POData\Facets\NorthWind1\Address2;
+use UnitTests\POData\Facets\NorthWind1\Address4;
+use UnitTests\POData\Facets\NorthWind1\Customer2;
+use UnitTests\POData\Facets\NorthWind1\Order2;
+
+class PHPExpressionProviderTest1 extends \PHPUnit_Framework_TestCase
 {
     private $_northWindMetadata;
     
     protected function setUp()
     {        
-         $this->_northWindMetadata = CreateNorthWindMetadata3::Create();
+         $this->_northWindMetadata = NorthWindMetadata::Create();
     }
     
     /**     
@@ -501,7 +509,7 @@ class PHPExpressionProviderTest1 extends PHPUnit_Framework_TestCase
                                                 $this->_northWindMetadata->resolveResourceSet('Orders')->getResourceType(), 
                                                 $data['Orders']);
             foreach($result as $order) {                
-                $this->assertGreaterThanOrEqual(0, ODataProducer\Providers\Metadata\Type\DateTime::dateTimeCmp($order->OrderDate, '2000-11-11'));
+                $this->assertGreaterThanOrEqual(0, DateTime::dateTimeCmp($order->OrderDate, '2000-11-11'));
             }
             
             //Query for Customer using different flavours of guid
@@ -685,4 +693,3 @@ class PHPExpressionProviderTest1 extends PHPUnit_Framework_TestCase
     {
     }
 }
-?>
