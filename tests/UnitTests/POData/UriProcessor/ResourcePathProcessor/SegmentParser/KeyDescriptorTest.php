@@ -1,4 +1,7 @@
 <?php
+
+namespace ODataProducer\UriProcessor\ResourcePathProcessor\SegmentParser;
+
 use ODataProducer\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 use ODataProducer\Common\InvalidOperationException;
 use ODataProducer\Common\ODataException;
@@ -6,7 +9,7 @@ use ODataProducer\Common\ODataException;
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 
 
-class TestKeyDescriptor extends PHPUnit_Framework_TestCase
+class TestKeyDescriptor extends \PHPUnit_Framework_TestCase
 {
     protected function setUp()
     {        

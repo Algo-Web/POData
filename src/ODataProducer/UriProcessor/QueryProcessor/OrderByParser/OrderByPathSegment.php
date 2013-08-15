@@ -2,6 +2,8 @@
 
 namespace ODataProducer\UriProcessor\QueryProcessor\OrderByParser;
 
+use ODataProducer\Common\Messages;
+
 /**
  * Class OrderByPathSegment
  *
@@ -19,7 +21,7 @@ class OrderByPathSegment
     /**
      * Collection of sub path in this path segment
      * 
-     * @var array(OrderBySubPathSegment)
+     * @var OrderBySubPathSegment[]
      */
     private $_orderBySubPathSegments;
 
@@ -64,7 +66,7 @@ class OrderByPathSegment
     /**
      * Gets collection of sub path segments that made up this path segment
      * 
-     * @return array(OrderBySubPathSegment)
+     * @return OrderBySubPathSegment[]
      */
     public function getSubPathSegments()
     {

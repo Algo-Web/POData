@@ -1,5 +1,7 @@
 <?php
 
+namespace ODataProducer\UriProcessor\ResourcePathProcessor\SegmentParser;
+
 use ODataProducer\Providers\Metadata\ResourceTypeKind;
 use ODataProducer\UriProcessor\ResourcePathProcessor\SegmentParser\RequestTargetSource;
 use ODataProducer\UriProcessor\ResourcePathProcessor\SegmentParser\RequestTargetKind;
@@ -12,7 +14,7 @@ use ODataProducer\Common\ODataException;
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 
 
-class TestSegmentParser extends PHPUnit_Framework_TestCase
+class TestSegmentParser extends \PHPUnit_Framework_TestCase
 {
     private $_metadataProvider;
     private $_metadataProviderWrapper;
@@ -942,4 +944,3 @@ class TestSegmentParser extends PHPUnit_Framework_TestCase
     {
     }
 }
-?>

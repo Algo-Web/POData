@@ -18,7 +18,7 @@ class OrderByInfo
     /**
      * Collection of orderby path segments
      * 
-     * @var array(OrderByPathSegment)
+     * @var OrderByPathSegment[]
      */
     private $_orderByPathSegments;
 
@@ -96,7 +96,7 @@ class OrderByInfo
     /**
      * Gets collection of path segments which made up the orderby clause
      * 
-     * @return array(OrderByPathSegment)
+     * @return OrderByPathSegment[]
      */
     public function getOrderByPathSegments()
     {

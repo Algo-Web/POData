@@ -22,7 +22,7 @@ class InternalOrderByInfo
     /**
      * Collection of sub sorter functions corrosponding to each orderby path segment.
      * 
-     * @var array(AnonymousFunction)
+     * @var AnonymousFunction[]
      */
     private $_subSorterFunctions;
 
@@ -103,7 +103,7 @@ class InternalOrderByInfo
     /**
      * Gets collection of sub sorter functions
      * 
-     * @return array(AnonymousFunction)
+     * @return AnonymousFunction[]
      */
     public function getSubSorterFunctions()
     {
