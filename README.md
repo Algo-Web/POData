@@ -8,10 +8,11 @@ POData vs odataphpprod
 POData started as a fork of [The OData Producer Library for PHP](https://github.com/MSOpenTech/odataphpprod) many thanks to that project for making this one possible.  The many goals of this fork are best tracked in the issues list but here are some highlights:
 
 * OData v3 Support
-* Annotation Based Implementation
+* Full BreezeJS support (we love that library)
 * Availability via Composer
 * Simpler to plug in to common PHP frameworks (Zend, Symphony, Laravel)
 * Optimized $expand support
+* Support for an Annotation Based Provider Implementation
 
 Long term goals include:
 
