@@ -1,16 +1,10 @@
 <?php
+
+namespace UnitTests\POData\Facets\WordPress2;
+
+
 /** 
  * Implementation of IDataServiceQueryProvider.
- * 
- * PHP version 5.3
- * 
- * @category  Service
- * @package   WordPress
- * @author    Bibin Kurian <odataphpproducer_alias@microsoft.com>
- * @copyright 2011 Microsoft Corp. (http://www.microsoft.com)
- * @license   New BSD license, (http://www.opensource.org/licenses/bsd-license.php)
- * @version   SVN: 1.0
- * @link      http://odataphpproducer.codeplex.com
  * 
  */
 
@@ -20,7 +14,6 @@ use ODataProducer\Providers\Metadata\ResourceProperty;
 use ODataProducer\Providers\Query\IDataServiceQueryProvider2;
 use ODataProducer\Common\ODataException;
 
-require_once "WordPressMetadata.php";
 
 /** The name of the database for WordPress */
 define('DB_NAME', 'wordpress');
@@ -67,7 +60,11 @@ class WordPressQueryProvider implements IDataServiceQueryProvider2
     public function __construct()
     {
     }
-    
+
+	public function canApplyQueryOptions(){
+		ODataException::createNotImplementedError($this->_message);
+	}
+
     /**
      * (non-PHPdoc)
      * @see ODataProducer\Providers\Query.IDataServiceQueryProvider2::getExpressionProvider()
@@ -185,4 +182,3 @@ class WordPressQueryProvider implements IDataServiceQueryProvider2
     	ODataException::createNotImplementedError($this->_message);
     }
 }
-?>

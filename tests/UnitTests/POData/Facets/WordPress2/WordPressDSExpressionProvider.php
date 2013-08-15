@@ -1,17 +1,10 @@
 <?php
-/** 
+
+namespace UnitTests\POData\Facets\WordPress2;
+
+/**
  * The specialized expression provider for MySQL
- * 
- * PHP version 5.3
- * 
- * @category  ODataProducer
- * @package   ODataProducer
- * @author    Anu T Chandy <odataphpproducer_alias@microsoft.com>
- * @copyright 2011 Microsoft Corp. (http://www.microsoft.com)
- * @license   New BSD license, (http://www.opensource.org/licenses/bsd-license.php)
- * @version   SVN: 1.0
- * @link      http://odataphpproducer.codeplex.com
- * 
+ *
  */
 
 use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ExpressionType;
@@ -22,7 +15,6 @@ use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\IExpressionProvid
 use ODataProducer\Providers\Metadata\ResourceType;
 
 
-require_once 'WordPressMetadata.php';
 /**
  * DSExpression provider for MySQL.
  *
@@ -71,7 +63,7 @@ class WordPressDSExpressionProvider implements IExpressionProvider
      */
     public function __construct()
     {
-    	$this->_entityMapping = CreateWordPressMetadata::getEntityMapping();
+    	$this->_entityMapping = WordPressMetadata::getEntityMapping();
     }
 
     /**

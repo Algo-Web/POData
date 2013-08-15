@@ -1,6 +1,6 @@
 <?php
 
-namespace UnitTests\POData\Facets\NorthWind4;
+namespace UnitTests\POData\Facets\WordPress2;
 
 /**
  * Note: This is a dummy class for making the testing of 
@@ -10,7 +10,7 @@ namespace UnitTests\POData\Facets\NorthWind4;
 use ODataProducer\Common\ODataConstants;
 use ODataProducer\OperationContext\DataServiceHost;
 
-class DataServiceHost4 extends DataServiceHost
+class DataServiceHost5 extends DataServiceHost
 {
     private $_hostInfo;
     

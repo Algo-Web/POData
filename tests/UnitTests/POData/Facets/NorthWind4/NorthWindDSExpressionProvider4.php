@@ -1,4 +1,7 @@
 <?php
+
+namespace UnitTests\POData\Facets\NorthWind4;
+
 use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ExpressionType;
 use ODataProducer\Providers\Metadata\Type\IType;
 use ODataProducer\Common\NotImplementedException;

@@ -1,20 +1,26 @@
 <?php
 
-require_once(dirname(__FILE__) . "/../Resources/NorthWindMetadata.php");
+namespace UnitTests\POData\Configuration;
 
 use ODataProducer\Configuration\DataServiceConfiguration;
 use ODataProducer\Configuration\EntitySetRights;
 use ODataProducer\Configuration\DataServiceProtocolVersion;
 use ODataProducer\Common\InvalidOperationException;
+use ODataProducer\Providers\Metadata\IDataServiceMetadataProvider;
 
-class DataServiceConfigurationTest extends PHPUnit_Framework_TestCase
+use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
+
+class DataServiceConfigurationTest extends \PHPUnit_Framework_TestCase
 {
+	/** @var  IDataServiceMetadataProvider */
     private $_northWindMetadata;
+
+	/** @var  DataServiceConfiguration */
     private $_dataServiceConfiguration;
     
     protected function setUp()
     {
-        $this->_northWindMetadata = CreateNorthWindMetadata3::Create();
+        $this->_northWindMetadata = NorthWindMetadata::Create();
         $this->_dataServiceConfiguration = new DataServiceConfiguration($this->_northWindMetadata);
     }
 
@@ -96,7 +102,7 @@ class DataServiceConfigurationTest extends PHPUnit_Framework_TestCase
             $exceptionThrown = false;
             try {
                 $this->_dataServiceConfiguration->setEntitySetPageSize('NonExistEntitySet', 7);
-            } catch(InvalidArgumentException $exception) {
+            } catch(\InvalidArgumentException $exception) {
                 $exceptionThrown = true;
                 $this->AssertEquals('The given name \'NonExistEntitySet\' was not found in the entity sets', $exception->getMessage());
             }
@@ -131,7 +137,7 @@ class DataServiceConfigurationTest extends PHPUnit_Framework_TestCase
             $exceptionThrown = false;
             try {
                 $this->_dataServiceConfiguration->setEntitySetAccessRule('Customers', EntitySetRights::ALL + 1);
-            } catch (InvalidArgumentException $exception) {
+            } catch (\InvalidArgumentException $exception) {
                 $exceptionThrown = true;
                 $this->AssertEquals('The argument \'$rights\' of \'setEntitySetAccessRule\' should be EntitySetRights enum value', $exception->getMessage());
             }
@@ -146,7 +152,7 @@ class DataServiceConfigurationTest extends PHPUnit_Framework_TestCase
             $exceptionThrown = false;
             try {
                 $this->_dataServiceConfiguration->setEntitySetAccessRule('NonExistEntitySet', EntitySetRights::READ_MULTIPLE);
-            } catch(InvalidArgumentException $exception) {
+            } catch(\InvalidArgumentException $exception) {
                 $exceptionThrown = true;
                 $this->AssertEquals('The given name \'NonExistEntitySet\' was not found in the entity sets', $exception->getMessage());
             }

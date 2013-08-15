@@ -1,18 +1,8 @@
 <?php
-/** 
- * Implementation of IServiceProvider.
- * 
- * PHP version 5.3
- * 
- * @category  Service
- * @package   WordPress
- * @author    Bibin Kurian <odataphpproducer_alias@microsoft.com>
- * @copyright 2011 Microsoft Corp. (http://www.microsoft.com)
- * @license   New BSD license, (http://www.opensource.org/licenses/bsd-license.php)
- * @version   SVN: 1.0
- * @link      http://odataphpproducer.codeplex.com
- * 
- */
+
+namespace UnitTests\POData\Facets\WordPress2;
+
+
 use ODataProducer\Configuration\EntitySetRights;
 use ODataProducer\IDataService;
 use ODataProducer\IRequestHandler;
@@ -26,10 +16,6 @@ use ODataProducer\Common\ODataConstants;
 use ODataProducer\Common\Messages;
 use ODataProducer\UriProcessor\UriProcessor;
 
-
-require_once 'WordPressMetadata.php';
-require_once 'WordPressQueryProvider.php';
-require_once 'WordPressDSExpressionProvider.php';
 
 /**
  * NorthWindDataService that implements IServiceProvider.
@@ -86,7 +72,7 @@ class WordPressDataService extends DataService implements IServiceProvider
     	}
         if ($serviceType === 'IDataServiceMetadataProvider') {
             if (is_null($this->_wordPressMetadata)) {
-                $this->_wordPressMetadata = CreateWordPressMetadata::create();
+                $this->_wordPressMetadata = WordPressMetadata::create();
                 // $this->_wordPressMetadata->mappedDetails = CreateWordPressMetadata::mappingInitialize();
             }
             return $this->_wordPressMetadata;
@@ -126,4 +112,3 @@ class WordPressDataService extends DataService implements IServiceProvider
     	}
     }
 }
-?>

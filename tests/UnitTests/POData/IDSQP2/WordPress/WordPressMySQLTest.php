@@ -1,4 +1,7 @@
 <?php
+
+namespace UnitTests\POData\IDSQP2\WordPress;
+
 use ODataProducer\UriProcessor\QueryProcessor\ExpandProjectionParser\ProjectionNode;
 use ODataProducer\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandedProjectionNode;
 use ODataProducer\UriProcessor\QueryProcessor\ExpandProjectionParser\RootProjectionNode;
@@ -19,42 +22,35 @@ use ODataProducer\Common\Url;
 use ODataProducer\Common\Version;
 use ODataProducer\Common\ODataException;
 use ODataProducer\Common\NotImplementedException;
-require_once 'PHPUnit\Framework\Assert.php';
-require_once 'PHPUnit\Framework\Test.php';
-require_once 'PHPUnit\Framework\SelfDescribing.php';
-require_once 'PHPUnit\Framework\TestCase.php';
-require_once 'PHPUnit\Framework\TestSuite.php';
-require_once 'ODataProducer\Common\ClassAutoLoader.php';
-ODataProducer\Common\ClassAutoLoader::register();
-require_once(dirname(__FILE__) . "\.\..\..\Resources\NorthWind4\NorthWindMetadata4.php");
-require_once(dirname(__FILE__) . "\.\..\..\Resources\NorthWind4\NorthWindDataService4.php");
-require_once(dirname(__FILE__) . "\.\..\..\Resources\NorthWind4\DataServiceHost4.php");
 
-class TestIDSQP2_NorthWind extends PHPUnit_Framework_TestCase
+use UnitTests\POData\Facets\WordPress2\DataServiceHost5;
+use UnitTests\POData\Facets\WordPress2\WordPressDataService;
+
+class WordPressMySQLTest extends \PHPUnit_Framework_testCase
 {
 	protected function setUp()
 	{
 	}
 
 	/**
-	 * Test the generated string comaprsion expression in sql server
+	 * test the generated string comparison expression in mysql
 	 */
-	function testStringCompareSQLServer()
+	function testStringCompareMySQL()
 	{
 		$host = null;
 		try {
 			$exceptionThrown = false;
-			$serviceUri = 'http://localhost:8083/NorthWindDataService.svc/';
-			$resourcePath = 'Customers';
-			$requestUri = $serviceUri . $resourcePath;
-			$hostInfo = array('AbsoluteServiceUri' => new Url($serviceUri),
-					'AbsoluteRequestUri' => new Url($requestUri),
-					'QueryString' => '$filter=CustomerID gt \'ALFKI\'',
-					'DataServiceVersion' => new Version(3, 0),
-					'MaxDataServiceVersion' => new Version(3, 0));
+			$serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
+	        $resourcePath = 'Posts';
+	        $requestUri = $serviceUri . $resourcePath;
+	        $hostInfo = array('AbsoluteServiceUri' => new Url($serviceUri),
+				'AbsoluteRequestUri' => new Url($requestUri),
+				'QueryString' => '$filter=Title eq \'OData PHP Producer\'',
+				'DataServiceVersion' => new Version(3, 0),
+				'MaxDataServiceVersion' => new Version(3, 0));
 		
-			$host = new DataServiceHost4($hostInfo);
-			$dataService = new NorthWindDataService4();
+			$host = new DataServiceHost5($hostInfo);
+			$dataService = new WordPressDataService();
 			$dataService->setHost($host);
 			$uriProcessor = $dataService->handleRequest();
 			$check = !is_null($uriProcessor);
@@ -65,9 +61,9 @@ class TestIDSQP2_NorthWind extends PHPUnit_Framework_TestCase
 			$internalFilterInfo = $requestDescription->getInternalFilterInfo();
 			$check = !is_null($internalFilterInfo);
 			$this->assertTrue($check);
-			$sqlexpression = $internalFilterInfo->getExpressionAsString();
-			// print_r("'" . $sqlexpression . "'");
-			$this->AssertEquals("((CustomerID >  'ALFKI'))", $sqlexpression);
+			$mysqlexpression = $internalFilterInfo->getExpressionAsString();
+			// print_r("'" . $mysqlexpression . "'");
+			$this->AssertEquals("(STRCMP(post_title, 'OData PHP Producer') = 0)", $mysqlexpression);
 			$host->getWebOperationContext()->resetWebContextInternal();
 		} catch (\Exception $exception) {
 			$this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
@@ -76,23 +72,99 @@ class TestIDSQP2_NorthWind extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Test the generated function-call expression in sql server
+	 * test the generated function-call expression in sql server
 	 */
-	function testFunctionCallSQLServer()
+	function testFunctionCallMySQL()
 	{
 		try {
 			$exceptionThrown = false;
-			$serviceUri = 'http://localhost:8083/NorthWindDataService.svc/';
-			$resourcePath = 'Customers';
+			$serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
+	        $resourcePath = 'Posts';
+	        $requestUri = $serviceUri . $resourcePath;
+	        $hostInfo = array('AbsoluteServiceUri' => new Url($serviceUri),
+				'AbsoluteRequestUri' => new Url($requestUri),
+				'QueryString' => '$filter=replace(Title, \'PHP\', \'Java\') eq \'OData Java Producer\'',
+				'DataServiceVersion' => new Version(3, 0),
+				'MaxDataServiceVersion' => new Version(3, 0));
+	
+			$host = new DataServiceHost5($hostInfo);
+			$dataService = new WordPressDataService();
+			$dataService->setHost($host);
+			$uriProcessor = $dataService->handleRequest();
+			$check = !is_null($uriProcessor);
+			$this->assertTrue($check);
+			$requestDescription = $uriProcessor->getRequestDescription();
+			$check = !is_null($requestDescription);
+			$this->assertTrue($check);
+			$internalFilterInfo = $requestDescription->getInternalFilterInfo();
+			$check = !is_null($internalFilterInfo);
+			$this->assertTrue($check);
+			$mysqlexpression = $internalFilterInfo->getExpressionAsString();
+			// print_r("'" . $mysqlexpression . "'");
+			$this->AssertEquals("(STRCMP(REPLACE(post_title,'PHP','Java'), 'OData Java Producer') = 0)", $mysqlexpression);
+			$host->getWebOperationContext()->resetWebContextInternal();
+		} catch (\Exception $exception) {
+			$this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
+			$host->getWebOperationContext()->resetWebContextInternal();
+		}
+	}
+
+	/**
+	 * test the generated expression for nullability check in sql server
+	 */
+	function testNullabilityCheckMySQL()
+	{
+		try {
+			$exceptionThrown = false;
+			$serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
+	        $resourcePath = 'Posts';
+	        $requestUri = $serviceUri . $resourcePath;
+	        $hostInfo = array('AbsoluteServiceUri' => new Url($serviceUri),
+				'AbsoluteRequestUri' => new Url($requestUri),
+				'QueryString' => '$filter=PostID eq  null',
+				'DataServiceVersion' => new Version(3, 0),
+				'MaxDataServiceVersion' => new Version(3, 0));
+	
+			$host = new DataServiceHost5($hostInfo);
+			$dataService = new WordPressDataService();
+			$dataService->setHost($host);
+			$uriProcessor = $dataService->handleRequest();
+			$check = !is_null($uriProcessor);
+			$this->assertTrue($check);
+			$requestDescription = $uriProcessor->getRequestDescription();
+			$check = !is_null($requestDescription);
+			$this->assertTrue($check);
+			$internalFilterInfo = $requestDescription->getInternalFilterInfo();
+			$check = !is_null($internalFilterInfo);
+			$this->assertTrue($check);
+			$mysqlexpression = $internalFilterInfo->getExpressionAsString();
+			// print_r("'" . $mysqlexpression . "'");
+			$this->AssertEquals("(ID = NULL)", $mysqlexpression);
+			$host->getWebOperationContext()->resetWebContextInternal();
+		} catch (\Exception $exception) {
+			$this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
+			$host->getWebOperationContext()->resetWebContextInternal();
+		}
+	}
+	
+	/**
+	 * test the generated expression for negation in sql server
+	 */
+	function testNegationMySQL()
+	{
+		try {
+			$exceptionThrown = false;
+			$serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
+			$resourcePath = 'Posts';
 			$requestUri = $serviceUri . $resourcePath;
 			$hostInfo = array('AbsoluteServiceUri' => new Url($serviceUri),
 			'AbsoluteRequestUri' => new Url($requestUri),
-			'QueryString' => '$filter=replace(CustomerID, \'LFK\', \'RTT\') eq \'ARTTI\'',
+			'QueryString' => '$filter=-PostID eq -1',
 			'DataServiceVersion' => new Version(3, 0),
 			'MaxDataServiceVersion' => new Version(3, 0));
 	
-			$host = new DataServiceHost4($hostInfo);
-			$dataService = new NorthWindDataService4();
+			$host = new DataServiceHost5($hostInfo);
+			$dataService = new WordPressDataService();
 			$dataService->setHost($host);
 			$uriProcessor = $dataService->handleRequest();
 			$check = !is_null($uriProcessor);
@@ -103,34 +175,37 @@ class TestIDSQP2_NorthWind extends PHPUnit_Framework_TestCase
 			$internalFilterInfo = $requestDescription->getInternalFilterInfo();
 			$check = !is_null($internalFilterInfo);
 			$this->assertTrue($check);
-			$sqlexpression = $internalFilterInfo->getExpressionAsString();
-			// print_r("'" . $sqlexpression . "'");
-			$this->AssertEquals("((REPLACE(CustomerID, 'LFK', 'RTT') =  'ARTTI'))", $sqlexpression);
+			$mysqlexpression = $internalFilterInfo->getExpressionAsString();
+			// echo "\n";
+			// print_r("\n\n'" . $mysqlexpression . "'\n\n");
+			// echo "\n";
+			$this->AssertEquals("(-(ID) = -1)", $mysqlexpression);
 			$host->getWebOperationContext()->resetWebContextInternal();
 		} catch (\Exception $exception) {
 			$this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
 			$host->getWebOperationContext()->resetWebContextInternal();
 		}
 	}
-
+	
 	/**
-	 * Test the generated expression for nullability check in sql server
+	 * test the generated expression for datetime comaprsion in sql server
 	 */
-	function testNullabilityCheckSQLServer()
+	function testDateTimeComparisionMySQL()
 	{
 		try {
 			$exceptionThrown = false;
-			$serviceUri = 'http://localhost:8083/NorthWindDataService.svc/';
-			$resourcePath = 'Customers';
-			$requestUri = $serviceUri . $resourcePath;
+			$serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
+	        $resourcePath = 'Posts';
+	        $requestUri = $serviceUri . $resourcePath;
+	        $requestUri = $serviceUri . $resourcePath;
 			$hostInfo = array('AbsoluteServiceUri' => new Url($serviceUri),
 			'AbsoluteRequestUri' => new Url($requestUri),
-			'QueryString' => '$filter=CustomerID eq null',
+			'QueryString' => '$filter=Date eq datetime\'2011-12-24 19:54:00\'',
 			'DataServiceVersion' => new Version(3, 0),
 			'MaxDataServiceVersion' => new Version(3, 0));
 	
-			$host = new DataServiceHost4($hostInfo);
-			$dataService = new NorthWindDataService4();
+			$host = new DataServiceHost5($hostInfo);
+			$dataService = new WordPressDataService();
 			$dataService->setHost($host);
 			$uriProcessor = $dataService->handleRequest();
 			$check = !is_null($uriProcessor);
@@ -141,85 +216,11 @@ class TestIDSQP2_NorthWind extends PHPUnit_Framework_TestCase
 			$internalFilterInfo = $requestDescription->getInternalFilterInfo();
 			$check = !is_null($internalFilterInfo);
 			$this->assertTrue($check);
-			$sqlexpression = $internalFilterInfo->getExpressionAsString();
-			// print_r("'" . $sqlexpression . "'");
-			$this->AssertEquals("(CustomerID = NULL)", $sqlexpression);
-			$host->getWebOperationContext()->resetWebContextInternal();
-		} catch (\Exception $exception) {
-			$this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
-			$host->getWebOperationContext()->resetWebContextInternal();
-		}
-	}
-	
-	/**
-	 * Test the generated expression for negation in sql server
-	 */
-	function testNegationSQLServer()
-	{
-		try {
-			$exceptionThrown = false;
-			$serviceUri = 'http://localhost:8083/NorthWindDataService.svc/';
-			$resourcePath = 'Orders';
-			$requestUri = $serviceUri . $resourcePath;
-			$hostInfo = array('AbsoluteServiceUri' => new Url($serviceUri),
-			'AbsoluteRequestUri' => new Url($requestUri),
-			'QueryString' => '$filter=-OrderID eq -10248',
-			'DataServiceVersion' => new Version(3, 0),
-			'MaxDataServiceVersion' => new Version(3, 0));
-	
-			$host = new DataServiceHost4($hostInfo);
-			$dataService = new NorthWindDataService4();
-			$dataService->setHost($host);
-			$uriProcessor = $dataService->handleRequest();
-			$check = !is_null($uriProcessor);
-			$this->assertTrue($check);
-			$requestDescription = $uriProcessor->getRequestDescription();
-			$check = !is_null($requestDescription);
-			$this->assertTrue($check);
-			$internalFilterInfo = $requestDescription->getInternalFilterInfo();
-			$check = !is_null($internalFilterInfo);
-			$this->assertTrue($check);
-			$sqlexpression = $internalFilterInfo->getExpressionAsString();
-			// print_r("'" . $sqlexpression . "'");
-			$this->AssertEquals("(-(OrderID) = -10248)", $sqlexpression);
-			$host->getWebOperationContext()->resetWebContextInternal();
-		} catch (\Exception $exception) {
-			$this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
-			$host->getWebOperationContext()->resetWebContextInternal();
-		}
-	}
-	
-	/**
-	 * Test the generated expression for datetime comaprsion in sql server
-	 */
-	function testDateTimeComparisionSQLServer()
-	{
-		try {
-			$exceptionThrown = false;
-			$serviceUri = 'http://localhost:8083/NorthWindDataService.svc/';
-	         $resourcePath = 'Orders';
-	         $requestUri = $serviceUri . $resourcePath;
-	        $hostInfo = array('AbsoluteServiceUri' => new Url($serviceUri),
-			'AbsoluteRequestUri' => new Url($requestUri),
-			'QueryString' => '$filter=OrderDate eq datetime\'1996-07-04\'',
-			'DataServiceVersion' => new Version(3, 0),
-			'MaxDataServiceVersion' => new Version(3, 0));
-	
-			$host = new DataServiceHost4($hostInfo);
-			$dataService = new NorthWindDataService4();
-			$dataService->setHost($host);
-			$uriProcessor = $dataService->handleRequest();
-			$check = !is_null($uriProcessor);
-			$this->assertTrue($check);
-			$requestDescription = $uriProcessor->getRequestDescription();
-			$check = !is_null($requestDescription);
-			$this->assertTrue($check);
-			$internalFilterInfo = $requestDescription->getInternalFilterInfo();
-			$check = !is_null($internalFilterInfo);
-			$this->assertTrue($check);
-			$sqlexpression = $internalFilterInfo->getExpressionAsString();
-			// print_r("'" . $sqlexpression . "'");
-			$this->AssertEquals("((OrderDate =  '1996-07-04'))", $sqlexpression);
+			$mysqlexpression = $internalFilterInfo->getExpressionAsString();
+			// echo "\n";
+			// print_r("\n\n'" . $mysqlexpression . "'\n\n");
+			// echo "\n";
+			$this->AssertEquals("((post_date =  '2011-12-24 19:54:00'))", $mysqlexpression);
 			$host->getWebOperationContext()->resetWebContextInternal();
 		} catch (\Exception $exception) {
 			$this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
@@ -228,23 +229,23 @@ class TestIDSQP2_NorthWind extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Test the generated expression for YEAR function call in sql server
+	 * test the generated expression for YEAR function call in sql server
 	 */
-	function testYearFunctionCallSQLServer()
+	function testYearFunctionCallMySQL()
 	{
 		try {
 			$exceptionThrown = false;
-			$serviceUri = 'http://localhost:8083/NorthWindDataService.svc/';
-			$resourcePath = 'Orders';
+			$serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
+			$resourcePath = 'Posts';
 			$requestUri = $serviceUri . $resourcePath;
 	        $hostInfo = array('AbsoluteServiceUri' => new Url($serviceUri),
 			'AbsoluteRequestUri' => new Url($requestUri),
-			'QueryString' => '$filter=year(OrderDate) eq  year(datetime\'1996-07-09\')',
+			'QueryString' => '$filter=year(Date) eq  year(datetime\'1996-07-09\')',
 			'DataServiceVersion' => new Version(3, 0),
 			'MaxDataServiceVersion' => new Version(3, 0));
 	
-			$host = new DataServiceHost4($hostInfo);
-			$dataService = new NorthWindDataService4();
+			$host = new DataServiceHost5($hostInfo);
+			$dataService = new WordPressDataService();
 			$dataService->setHost($host);
 			$uriProcessor = $dataService->handleRequest();
 			$check = !is_null($uriProcessor);
@@ -255,9 +256,11 @@ class TestIDSQP2_NorthWind extends PHPUnit_Framework_TestCase
 			$internalFilterInfo = $requestDescription->getInternalFilterInfo();
 			$check = !is_null($internalFilterInfo);
 			$this->assertTrue($check);
-			$sqlexpression = $internalFilterInfo->getExpressionAsString();
-			// print_r("'" . $sqlexpression . "'");
-			$this->AssertEquals("(YEAR(OrderDate) = YEAR('1996-07-09'))", $sqlexpression);
+			$mysqlexpression = $internalFilterInfo->getExpressionAsString();
+			// echo "\n";
+			// print_r("\n\n'" . $mysqlexpression . "'\n\n");
+			// echo "\n";
+			$this->AssertEquals("(EXTRACT(YEAR from post_date) = EXTRACT(YEAR from '1996-07-09'))", $mysqlexpression);
 			$host->getWebOperationContext()->resetWebContextInternal();
 		} catch (\Exception $exception) {
 			$this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
@@ -266,23 +269,23 @@ class TestIDSQP2_NorthWind extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Test the generated expression for YEAR function call with aritmetic and equality sql server
+	 * test the generated expression for YEAR function call with aritmetic and equality sql server
 	 */
-	function testYearFunctionCallWtihAriRelSQLServer()
+	function testYearFunctionCallWtihAriRelMySQL()
 	{
 		try {
 			$exceptionThrown = false;
-			$serviceUri = 'http://localhost:8083/NorthWindDataService.svc/';
-			$resourcePath = 'Orders';
+			$serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
+			$resourcePath = 'Posts';
 			$requestUri = $serviceUri . $resourcePath;
 	        $hostInfo = array('AbsoluteServiceUri' => new Url($serviceUri),
 			'AbsoluteRequestUri' => new Url($requestUri),
-			'QueryString' => '$filter=year(OrderDate) add 2 eq 1998',
+			'QueryString' => '$filter=year(Date) add 2 eq 2013',
 			'DataServiceVersion' => new Version(3, 0),
 			'MaxDataServiceVersion' => new Version(3, 0));
 	
-			$host = new DataServiceHost4($hostInfo);
-			$dataService = new NorthWindDataService4();
+			$host = new DataServiceHost5($hostInfo);
+			$dataService = new WordPressDataService();
 			$dataService->setHost($host);
 			$uriProcessor = $dataService->handleRequest();
 			$check = !is_null($uriProcessor);
@@ -293,9 +296,11 @@ class TestIDSQP2_NorthWind extends PHPUnit_Framework_TestCase
 			$internalFilterInfo = $requestDescription->getInternalFilterInfo();
 			$check = !is_null($internalFilterInfo);
 			$this->assertTrue($check);
-			$sqlexpression = $internalFilterInfo->getExpressionAsString();
-			// print_r("'" . $sqlexpression . "'");
-			$this->AssertEquals("((YEAR(OrderDate) + 2) = 1998)", $sqlexpression);
+			$mysqlexpression = $internalFilterInfo->getExpressionAsString();
+			// echo "\n";
+			// print_r("\n\n'" . $mysqlexpression . "'\n\n");
+			// echo "\n";
+			$this->AssertEquals("((EXTRACT(YEAR from post_date) + 2) = 2013)", $mysqlexpression);
 			$host->getWebOperationContext()->resetWebContextInternal();
 		} catch (\Exception $exception) {
 			$this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
@@ -304,23 +309,23 @@ class TestIDSQP2_NorthWind extends PHPUnit_Framework_TestCase
 	}
 	
 	/**
-	 * Test the generated expression for ceil and floor sql server
+	 * test the generated expression for ceil and floor sql server
 	 */
-	function testCeilFloorFunctionCallSQLServer()
+	function testCeilFloorFunctionCallMySQL()
 	{
 		try {
 			$exceptionThrown = false;
-			$serviceUri = 'http://localhost:8083/NorthWindDataService.svc/';
-			$resourcePath = 'Orders';
+			$serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
+			$resourcePath = 'Posts';
 			$requestUri = $serviceUri . $resourcePath;
 			$hostInfo = array('AbsoluteServiceUri' => new Url($serviceUri),
 					'AbsoluteRequestUri' => new Url($requestUri),
-					'QueryString' => '$filter=ceiling(floor(Freight)) eq 32',
+					'QueryString' => '$filter=ceiling(floor(PostID)) eq 2',
 					'DataServiceVersion' => new Version(3, 0),
 					'MaxDataServiceVersion' => new Version(3, 0));
 	
-			$host = new DataServiceHost4($hostInfo);
-			$dataService = new NorthWindDataService4();
+			$host = new DataServiceHost5($hostInfo);
+			$dataService = new WordPressDataService();
 			$dataService->setHost($host);
 			$uriProcessor = $dataService->handleRequest();
 			$check = !is_null($uriProcessor);
@@ -331,9 +336,11 @@ class TestIDSQP2_NorthWind extends PHPUnit_Framework_TestCase
 			$internalFilterInfo = $requestDescription->getInternalFilterInfo();
 			$check = !is_null($internalFilterInfo);
 			$this->assertTrue($check);
-			$sqlexpression = $internalFilterInfo->getExpressionAsString();
-			// print_r("'" . $sqlexpression . "'");
-			$this->AssertEquals("(CEILING(FLOOR(Freight)) = 32)", $sqlexpression);
+			$mysqlexpression = $internalFilterInfo->getExpressionAsString();
+			// echo "\n";
+			// print_r("\n\n'" . $mysqlexpression . "'\n\n");
+			// echo "\n";
+			$this->AssertEquals("(CEIL(FLOOR(ID)) = 2)", $mysqlexpression);
 			$host->getWebOperationContext()->resetWebContextInternal();
 		} catch (\Exception $exception) {
 			$this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
@@ -342,23 +349,23 @@ class TestIDSQP2_NorthWind extends PHPUnit_Framework_TestCase
 	}
 	
 	/**
-	 * Test the generated expression for round function-call for sql server
+	 * test the generated expression for round function-call for sql server
 	 */
-	function testRoundFunctionCallSQLServer()
+	function testRoundFunctionCallMySQL()
 	{
 		try {
 			$exceptionThrown = false;
-			$serviceUri = 'http://localhost:8083/NorthWindDataService.svc/';
-			$resourcePath = 'Orders';
+			$serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
+			$resourcePath = 'Posts';
 			$requestUri = $serviceUri . $resourcePath;
 			$hostInfo = array('AbsoluteServiceUri' => new Url($serviceUri),
 					'AbsoluteRequestUri' => new Url($requestUri),
-					'QueryString' => '$filter=round(Freight) eq 34',
+					'QueryString' => '$filter=round(PostID) eq 1',
 					'DataServiceVersion' => new Version(3, 0),
 					'MaxDataServiceVersion' => new Version(3, 0));
 	
-			$host = new DataServiceHost4($hostInfo);
-			$dataService = new NorthWindDataService4();
+			$host = new DataServiceHost5($hostInfo);
+			$dataService = new WordPressDataService();
 			$dataService->setHost($host);
 			$uriProcessor = $dataService->handleRequest();
 			$check = !is_null($uriProcessor);
@@ -369,9 +376,9 @@ class TestIDSQP2_NorthWind extends PHPUnit_Framework_TestCase
 			$internalFilterInfo = $requestDescription->getInternalFilterInfo();
 			$check = !is_null($internalFilterInfo);
 			$this->assertTrue($check);
-			$sqlexpression = $internalFilterInfo->getExpressionAsString();
-			// print_r("'" . $sqlexpression . "'");
-			$this->AssertEquals("(ROUND(Freight, 0) = 34)", $sqlexpression);
+			$mysqlexpression = $internalFilterInfo->getExpressionAsString();
+			// print_r("'" . $mysqlexpression . "'");
+			$this->AssertEquals("(ROUND(ID) = 1)", $mysqlexpression);
 			$host->getWebOperationContext()->resetWebContextInternal();
 		} catch (\Exception $exception) {
 			$this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
@@ -380,23 +387,23 @@ class TestIDSQP2_NorthWind extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Test the generated expression for mod operator sql server
+	 * test the generated expression for mod operator sql server
 	 */
-	function testModOperatorSQLServer()
+	function testModOperatorMySQL()
 	{
 		try {
 			$exceptionThrown = false;
-			$serviceUri = 'http://localhost:8083/NorthWindDataService.svc/';
-			$resourcePath = 'Orders';
+			$serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
+			$resourcePath = 'Posts';
 			$requestUri = $serviceUri . $resourcePath;
 			$hostInfo = array('AbsoluteServiceUri' => new Url($serviceUri),
 					'AbsoluteRequestUri' => new Url($requestUri),
-					'QueryString' => '$filter=Freight mod 10 eq 2.38',
+					'QueryString' => '$filter=PostID mod 5 eq 4',
 					'DataServiceVersion' => new Version(3, 0),
 					'MaxDataServiceVersion' => new Version(3, 0));
 	
-			$host = new DataServiceHost4($hostInfo);
-			$dataService = new NorthWindDataService4();
+			$host = new DataServiceHost5($hostInfo);
+			$dataService = new WordPressDataService();
 			$dataService->setHost($host);
 			$uriProcessor = $dataService->handleRequest();
 			$check = !is_null($uriProcessor);
@@ -407,9 +414,9 @@ class TestIDSQP2_NorthWind extends PHPUnit_Framework_TestCase
 			$internalFilterInfo = $requestDescription->getInternalFilterInfo();
 			$check = !is_null($internalFilterInfo);
 			$this->assertTrue($check);
-			$sqlexpression = $internalFilterInfo->getExpressionAsString();
-			// print_r("'" . $sqlexpression . "'");
-			$this->AssertEquals("((Freight % 10) = 2.38)", $sqlexpression);
+			$mysqlexpression = $internalFilterInfo->getExpressionAsString();
+			// print_r("'" . $mysqlexpression . "'");
+			$this->AssertEquals("((ID % 5) = 4)", $mysqlexpression);
 			$host->getWebOperationContext()->resetWebContextInternal();
 		} catch (\Exception $exception) {
 			$this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
@@ -418,23 +425,23 @@ class TestIDSQP2_NorthWind extends PHPUnit_Framework_TestCase
 	}
 	
 	/**
-	 * Test the generated expression 2 param version of sub-string in sql server
+	 * test the generated expression 2 param version of sub-string in sql server
 	 */
-	function testSubString2ParamSQLServer()
+	function testSubString2ParamMySQL()
 	{
 		try {
 			$exceptionThrown = false;
-			$serviceUri = 'http://localhost:8083/NorthWindDataService.svc/';
-	        $resourcePath = 'Customers';
+			$serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
+	        $resourcePath = 'Posts';
 	        $requestUri = $serviceUri . $resourcePath;
-	        $hostInfo = array('AbsoluteServiceUri' => new Url($serviceUri),
-			'AbsoluteRequestUri' => new Url($requestUri),
-			'QueryString' => '$filter=substring(CompanyName, 1) eq \'lfreds Futterkiste\'',
-			'DataServiceVersion' => new Version(3, 0),
-			'MaxDataServiceVersion' => new Version(3, 0));
+			$hostInfo = array('AbsoluteServiceUri' => new Url($serviceUri),
+					'AbsoluteRequestUri' => new Url($requestUri),
+					'QueryString' => '$filter=substring(Title, 1) eq \'Data PHP Producer\'',
+					'DataServiceVersion' => new Version(3, 0),
+					'MaxDataServiceVersion' => new Version(3, 0));
 	
-			$host = new DataServiceHost4($hostInfo);
-			$dataService = new NorthWindDataService4();
+			$host = new DataServiceHost5($hostInfo);
+			$dataService = new WordPressDataService();
 			$dataService->setHost($host);
 			$uriProcessor = $dataService->handleRequest();
 			$check = !is_null($uriProcessor);
@@ -445,9 +452,11 @@ class TestIDSQP2_NorthWind extends PHPUnit_Framework_TestCase
 			$internalFilterInfo = $requestDescription->getInternalFilterInfo();
 			$check = !is_null($internalFilterInfo);
 			$this->assertTrue($check);
-			$sqlexpression = $internalFilterInfo->getExpressionAsString();
-			// print_r("'" . $sqlexpression . "'");
-			$this->AssertEquals("((SUBSTRING(CompanyName, 1 + 1, LEN(CompanyName)) =  'lfreds Futterkiste'))", $sqlexpression);
+			$mysqlexpression = $internalFilterInfo->getExpressionAsString();
+			// echo "\n";
+			// print_r("\n\n'" . $mysqlexpression . "'\n\n");
+			// echo "\n";
+			$this->AssertEquals("(STRCMP(SUBSTRING(post_title, 1 + 1), 'Data PHP Producer') = 0)", $mysqlexpression);
 			$host->getWebOperationContext()->resetWebContextInternal();
 		} catch (\Exception $exception) {
 			$this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
@@ -456,23 +465,23 @@ class TestIDSQP2_NorthWind extends PHPUnit_Framework_TestCase
 	}
 	
 	/**
-	 * Test the generated expression 3 param version of sub-string in sql server
+	 * test the generated expression 3 param version of sub-string in sql server
 	 */
-	function testSubString3ParamSQLServer()
+	function testSubString3ParamMySQL()
 	{
 		try {
 			$exceptionThrown = false;
-			$serviceUri = 'http://localhost:8083/NorthWindDataService.svc/';
-	        $resourcePath = 'Customers';
+			$serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
+      	    $resourcePath = 'Posts';
 	        $requestUri = $serviceUri . $resourcePath;
-	        $hostInfo = array('AbsoluteServiceUri' => new Url($serviceUri),
-			'AbsoluteRequestUri' => new Url($requestUri),
-			'QueryString' => '$filter=substring(CompanyName, 1, 6) eq \'lfreds\'',
-			'DataServiceVersion' => new Version(3, 0),
-			'MaxDataServiceVersion' => new Version(3, 0));
+			$hostInfo = array('AbsoluteServiceUri' => new Url($serviceUri),
+					'AbsoluteRequestUri' => new Url($requestUri),
+					'QueryString' => '$filter=substring(Title, 1, 6) eq \'Data P\'',
+					'DataServiceVersion' => new Version(3, 0),
+					'MaxDataServiceVersion' => new Version(3, 0));
 	
-			$host = new DataServiceHost4($hostInfo);
-			$dataService = new NorthWindDataService4();
+			$host = new DataServiceHost5($hostInfo);
+			$dataService = new WordPressDataService();
 			$dataService->setHost($host);
 			$uriProcessor = $dataService->handleRequest();
 			$check = !is_null($uriProcessor);
@@ -483,9 +492,9 @@ class TestIDSQP2_NorthWind extends PHPUnit_Framework_TestCase
 			$internalFilterInfo = $requestDescription->getInternalFilterInfo();
 			$check = !is_null($internalFilterInfo);
 			$this->assertTrue($check);
-			$sqlexpression = $internalFilterInfo->getExpressionAsString();
-			// print_r("'" . $sqlexpression . "'");
-			$this->AssertEquals("((SUBSTRING(CompanyName, 1 + 1, 6) =  'lfreds'))", $sqlexpression);
+			$mysqlexpression = $internalFilterInfo->getExpressionAsString();
+			// print_r("'" . $mysqlexpression . "'");
+			$this->AssertEquals("(STRCMP(SUBSTRING(post_title, 1 + 1, 6), 'Data P') = 0)", $mysqlexpression);
 			$host->getWebOperationContext()->resetWebContextInternal();
 		} catch (\Exception $exception) {
 			$this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
@@ -494,23 +503,23 @@ class TestIDSQP2_NorthWind extends PHPUnit_Framework_TestCase
 	}
 	
 	/**
-	 * Test the generated expression trim in sql server
+	 * test the generated expression trim in sql server
 	 */
-	function testSubStringTrimSQLServer()
+	function testSubStringTrimMySQL()
 	{
 		try {
 			$exceptionThrown = false;
-			$serviceUri = 'http://localhost:8083/NorthWindDataService.svc/';
-	        $resourcePath = 'Customers';
+			$serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
+	        $resourcePath = 'Posts';
 	        $requestUri = $serviceUri . $resourcePath;
-	        $hostInfo = array('AbsoluteServiceUri' => new Url($serviceUri),
-			'AbsoluteRequestUri' => new Url($requestUri),
-			'QueryString' => '$filter=trim(\'  ALFKI  \') eq CustomerID',
-			'DataServiceVersion' => new Version(3, 0),
-			'MaxDataServiceVersion' => new Version(3, 0));
+			$hostInfo = array('AbsoluteServiceUri' => new Url($serviceUri),
+					'AbsoluteRequestUri' => new Url($requestUri),
+					'QueryString' => '$filter=trim(\'  OData PHP Producer   \') eq Title',
+					'DataServiceVersion' => new Version(3, 0),
+					'MaxDataServiceVersion' => new Version(3, 0));
 	
-			$host = new DataServiceHost4($hostInfo);
-			$dataService = new NorthWindDataService4();
+			$host = new DataServiceHost5($hostInfo);
+			$dataService = new WordPressDataService();
 			$dataService->setHost($host);
 			$uriProcessor = $dataService->handleRequest();
 			$check = !is_null($uriProcessor);
@@ -521,9 +530,11 @@ class TestIDSQP2_NorthWind extends PHPUnit_Framework_TestCase
 			$internalFilterInfo = $requestDescription->getInternalFilterInfo();
 			$check = !is_null($internalFilterInfo);
 			$this->assertTrue($check);
-			$sqlexpression = $internalFilterInfo->getExpressionAsString();
-			// print_r("'" . $sqlexpression . "'");
-			$this->AssertEquals("((RTRIM(LTRIM('  ALFKI  ')) =  CustomerID))", $sqlexpression);
+			$mysqlexpression = $internalFilterInfo->getExpressionAsString();
+			// echo "\n";
+			// print_r("\n\n'" . $mysqlexpression . "'\n\n");
+			// echo "\n";
+			$this->AssertEquals("(STRCMP(TRIM('  OData PHP Producer   '), post_title) = 0)", $mysqlexpression);
 			$host->getWebOperationContext()->resetWebContextInternal();
 		} catch (\Exception $exception) {
 			$this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
@@ -532,23 +543,23 @@ class TestIDSQP2_NorthWind extends PHPUnit_Framework_TestCase
 	}
 	
 	/**
-	 * Test the generated expression endswith function-call in sql server
+	 * test the generated expression endswith function-call in sql server
 	 */
-	function testEndsWithSQLServer()
+	function testEndsWithMySQL()
 	{
 		try {
 			$exceptionThrown = false;
-			$serviceUri = 'http://localhost:8083/NorthWindDataService.svc/';
-	        $resourcePath = 'Customers';
+			$serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
+	        $resourcePath = 'Posts';
 	        $requestUri = $serviceUri . $resourcePath;
 	        $hostInfo = array('AbsoluteServiceUri' => new Url($serviceUri),
 			'AbsoluteRequestUri' => new Url($requestUri),
-			'QueryString' => '$filter=endswith(CustomerID, \'KI\')',
+			'QueryString' => '$filter=endswith(Title, \'umer\')',
 			'DataServiceVersion' => new Version(3, 0),
 			'MaxDataServiceVersion' => new Version(3, 0));
 	
-			$host = new DataServiceHost4($hostInfo);
-			$dataService = new NorthWindDataService4();
+			$host = new DataServiceHost5($hostInfo);
+			$dataService = new WordPressDataService();
 			$dataService->setHost($host);
 			$uriProcessor = $dataService->handleRequest();
 			$check = !is_null($uriProcessor);
@@ -559,9 +570,9 @@ class TestIDSQP2_NorthWind extends PHPUnit_Framework_TestCase
 			$internalFilterInfo = $requestDescription->getInternalFilterInfo();
 			$check = !is_null($internalFilterInfo);
 			$this->assertTrue($check);
-			$sqlexpression = $internalFilterInfo->getExpressionAsString();
-			// print_r("'" . $sqlexpression . "'");
-			$this->AssertEquals("(('KI') = RIGHT((CustomerID), LEN('KI')))", $sqlexpression);
+			$mysqlexpression = $internalFilterInfo->getExpressionAsString();
+			// print_r("'" . $mysqlexpression . "'");
+			$this->AssertEquals("(STRCMP('umer',RIGHT(post_title,LENGTH('umer'))) = 0)", $mysqlexpression);
 			$host->getWebOperationContext()->resetWebContextInternal();
 		} catch (\Exception $exception) {
 			$this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
@@ -570,23 +581,23 @@ class TestIDSQP2_NorthWind extends PHPUnit_Framework_TestCase
 	}
 	
 	/**
-	 * Test the generated expression startswith function-call in sql server
+	 * test the generated expression startswith function-call in sql server
 	 */
-	function testStartsWithSQLServer()
+	function testStartsWithMySQL()
 	{
 		try {
 			$exceptionThrown = false;
-			$serviceUri = 'http://localhost:8083/NorthWindDataService.svc/';
-	        $resourcePath = 'Customers';
+			$serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
+	        $resourcePath = 'Posts';
 	        $requestUri = $serviceUri . $resourcePath;
 	        $hostInfo = array('AbsoluteServiceUri' => new Url($serviceUri),
 			'AbsoluteRequestUri' => new Url($requestUri),
-			'QueryString' => '$filter=startswith(CustomerID, \'AL\')',
+			'QueryString' => '$filter=startswith(Title, \'OData\')',
 			'DataServiceVersion' => new Version(3, 0),
 			'MaxDataServiceVersion' => new Version(3, 0));
 	
-			$host = new DataServiceHost4($hostInfo);
-			$dataService = new NorthWindDataService4();
+			$host = new DataServiceHost5($hostInfo);
+			$dataService = new WordPressDataService();
 			$dataService->setHost($host);
 			$uriProcessor = $dataService->handleRequest();
 			$check = !is_null($uriProcessor);
@@ -597,9 +608,9 @@ class TestIDSQP2_NorthWind extends PHPUnit_Framework_TestCase
 			$internalFilterInfo = $requestDescription->getInternalFilterInfo();
 			$check = !is_null($internalFilterInfo);
 			$this->assertTrue($check);
-			$sqlexpression = $internalFilterInfo->getExpressionAsString();
-			// print_r("'" . $sqlexpression . "'");
-			$this->AssertEquals("(('AL') = LEFT((CustomerID), LEN('AL')))", $sqlexpression);
+			$mysqlexpression = $internalFilterInfo->getExpressionAsString();
+			// print_r("'" . $mysqlexpression . "'");
+			$this->AssertEquals("(STRCMP('OData',LEFT(post_title,LENGTH('OData'))) = 0)", $mysqlexpression);
 			$host->getWebOperationContext()->resetWebContextInternal();
 		} catch (\Exception $exception) {
 			$this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
@@ -608,23 +619,23 @@ class TestIDSQP2_NorthWind extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Test the generated expression indexof function-call in sql server
+	 * test the generated expression indexof function-call in sql server
 	 */
-	function testIndexOfSQLServer()
+	function testIndexOfMySQL()
 	{
 		try {
 			$exceptionThrown = false;
-			$serviceUri = 'http://localhost:8083/NorthWindDataService.svc/';
-	        $resourcePath = 'Customers';
+			$serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
+	        $resourcePath = 'Posts';
             $requestUri = $serviceUri . $resourcePath;
 	        $hostInfo = array('AbsoluteServiceUri' => new Url($serviceUri),
 			'AbsoluteRequestUri' => new Url($requestUri),
-			'QueryString' => '$filter=indexof(CustomerID, \'FKI\') eq 2',
+			'QueryString' => '$filter=indexof(Title, \'ata\') eq 2',
 			'DataServiceVersion' => new Version(3, 0),
 			'MaxDataServiceVersion' => new Version(3, 0));
 	
-			$host = new DataServiceHost4($hostInfo);
-			$dataService = new NorthWindDataService4();
+			$host = new DataServiceHost5($hostInfo);
+			$dataService = new WordPressDataService();
 			$dataService->setHost($host);
 			$uriProcessor = $dataService->handleRequest();
 			$check = !is_null($uriProcessor);
@@ -635,9 +646,9 @@ class TestIDSQP2_NorthWind extends PHPUnit_Framework_TestCase
 			$internalFilterInfo = $requestDescription->getInternalFilterInfo();
 			$check = !is_null($internalFilterInfo);
 			$this->assertTrue($check);
-			$sqlexpression = $internalFilterInfo->getExpressionAsString();
-			// print_r("'" . $sqlexpression . "'");
-			$this->AssertEquals("((CHARINDEX('FKI', CustomerID) - 1) = 2)", $sqlexpression);
+			$mysqlexpression = $internalFilterInfo->getExpressionAsString();
+			// print_r("'" . $mysqlexpression . "'");
+			$this->AssertEquals("(INSTR(post_title, 'ata') - 1 = 2)", $mysqlexpression);
 			$host->getWebOperationContext()->resetWebContextInternal();
 		} catch (\Exception $exception) {
 			$this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
@@ -646,23 +657,23 @@ class TestIDSQP2_NorthWind extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Test the generated expression replace function-call in sql server
+	 * test the generated expression replace function-call in sql server
 	 */
-	function testReplaceSQLServer()
+	function testReplaceMySQL()
 	{
 		try {
 			$exceptionThrown = false;
-			$serviceUri = 'http://localhost:8083/NorthWindDataService.svc/';
-	        $resourcePath = 'Customers';
+			$serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
+	        $resourcePath = 'Posts';
 	        $requestUri = $serviceUri . $resourcePath;
 	        $hostInfo = array('AbsoluteServiceUri' => new Url($serviceUri),
 			'AbsoluteRequestUri' => new Url($requestUri),
-			'QueryString' => '$filter=replace(CompanyName, \' \', \'\') eq \'AlfredsFutterkiste\'',
+			'QueryString' => '$filter=replace(Title, \' \', \'\') eq \'ODataPHPProducer\'',
 			'DataServiceVersion' => new Version(3, 0),
 			'MaxDataServiceVersion' => new Version(3, 0));
 	
-			$host = new DataServiceHost4($hostInfo);
-			$dataService = new NorthWindDataService4();
+			$host = new DataServiceHost5($hostInfo);
+			$dataService = new WordPressDataService();
 			$dataService->setHost($host);
 			$uriProcessor = $dataService->handleRequest();
 			$check = !is_null($uriProcessor);
@@ -673,9 +684,9 @@ class TestIDSQP2_NorthWind extends PHPUnit_Framework_TestCase
 			$internalFilterInfo = $requestDescription->getInternalFilterInfo();
 			$check = !is_null($internalFilterInfo);
 			$this->assertTrue($check);
-			$sqlexpression = $internalFilterInfo->getExpressionAsString();
-			// print_r("'" . $sqlexpression . "'");
-			$this->AssertEquals("((REPLACE(CompanyName, ' ', '') =  'AlfredsFutterkiste'))", $sqlexpression);
+			$mysqlexpression = $internalFilterInfo->getExpressionAsString();
+			// print_r("'" . $mysqlexpression . "'");
+			$this->AssertEquals("(STRCMP(REPLACE(post_title,' ',''), 'ODataPHPProducer') = 0)", $mysqlexpression);
 			$host->getWebOperationContext()->resetWebContextInternal();
 		} catch (\Exception $exception) {
 			$this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
@@ -684,23 +695,23 @@ class TestIDSQP2_NorthWind extends PHPUnit_Framework_TestCase
 	}
 	
 	/**
-	 * Test the generated expression substringof function-call in sql server
+	 * test the generated expression substringof function-call in sql server
 	 */
-	function testSubStringOfSQLServer()
+	function testSubStringOfMySQL()
 	{
 		try {
 			$exceptionThrown = false;
-			$serviceUri = 'http://localhost:8083/NorthWindDataService.svc/';
-	        $resourcePath = 'Customers';
+			$serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
+	        $resourcePath = 'Posts';
 	        $requestUri = $serviceUri . $resourcePath;
 	        $hostInfo = array('AbsoluteServiceUri' => new Url($serviceUri),
 			'AbsoluteRequestUri' => new Url($requestUri),
-			'QueryString' => '$filter=substringof(\'Alfreds\', CompanyName)',
+			'QueryString' => '$filter=substringof(\'Producer\', Title)',
 			'DataServiceVersion' => new Version(3, 0),
 			'MaxDataServiceVersion' => new Version(3, 0));
 	
-			$host = new DataServiceHost4($hostInfo);
-			$dataService = new NorthWindDataService4();
+			$host = new DataServiceHost5($hostInfo);
+			$dataService = new WordPressDataService();
 			$dataService->setHost($host);
 			$uriProcessor = $dataService->handleRequest();
 			$check = !is_null($uriProcessor);
@@ -711,9 +722,9 @@ class TestIDSQP2_NorthWind extends PHPUnit_Framework_TestCase
 			$internalFilterInfo = $requestDescription->getInternalFilterInfo();
 			$check = !is_null($internalFilterInfo);
 			$this->assertTrue($check);
-			$sqlexpression = $internalFilterInfo->getExpressionAsString();
-			// print_r("'" . $sqlexpression . "'");
-			$this->AssertEquals("(CHARINDEX('Alfreds', CompanyName) != 0)", $sqlexpression);
+			$mysqlexpression = $internalFilterInfo->getExpressionAsString();
+			// print_r("'" . $mysqlexpression . "'");
+			$this->AssertEquals("(LOCATE('Producer', post_title) > 0)", $mysqlexpression);
 			$host->getWebOperationContext()->resetWebContextInternal();
 		} catch (\Exception $exception) {
 			$this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
@@ -722,23 +733,23 @@ class TestIDSQP2_NorthWind extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Test the generated expression substringof and indexof function-call in sql server
+	 * test the generated expression substringof and indexof function-call in sql server
 	 */
-	function testSubStringOfIndexOfSQLServer()
+	function testSubStringOfIndexOfMySQL()
 	{
 		try {
 			$exceptionThrown = false;
-			$serviceUri = 'http://localhost:8083/NorthWindDataService.svc/';
-	        $resourcePath = 'Customers';
+			$serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
+	        $resourcePath = 'Posts';
 	        $requestUri = $serviceUri . $resourcePath;
 	        $hostInfo = array('AbsoluteServiceUri' => new Url($serviceUri),
 			'AbsoluteRequestUri' => new Url($requestUri),
-			'QueryString' => '$filter=substringof(\'Alfreds\', CompanyName) and indexof(CustomerID, \'FKI\') eq 2',
+			'QueryString' => '$filter=substringof(\'Producer\', Title) and indexof(Title, \'Producer\') eq 11',
 			'DataServiceVersion' => new Version(3, 0),
 			'MaxDataServiceVersion' => new Version(3, 0));
 	
-			$host = new DataServiceHost4($hostInfo);
-			$dataService = new NorthWindDataService4();
+			$host = new DataServiceHost5($hostInfo);
+			$dataService = new WordPressDataService();
 			$dataService->setHost($host);
 			$uriProcessor = $dataService->handleRequest();
 			$check = !is_null($uriProcessor);
@@ -749,9 +760,11 @@ class TestIDSQP2_NorthWind extends PHPUnit_Framework_TestCase
 			$internalFilterInfo = $requestDescription->getInternalFilterInfo();
 			$check = !is_null($internalFilterInfo);
 			$this->assertTrue($check);
-			$sqlexpression = $internalFilterInfo->getExpressionAsString();
-			// print_r("'" . $sqlexpression . "'");
-			$this->AssertEquals("((CHARINDEX('Alfreds', CompanyName) != 0) AND ((CHARINDEX('FKI', CustomerID) - 1) = 2))", $sqlexpression);
+			$mysqlexpression = $internalFilterInfo->getExpressionAsString();
+			// echo "\n";
+			// print_r("\n\n'" . $mysqlexpression . "'\n\n");
+			// echo "\n";
+			$this->AssertEquals("((LOCATE('Producer', post_title) > 0) && (INSTR(post_title, 'Producer') - 1 = 11))", $mysqlexpression);
 			$host->getWebOperationContext()->resetWebContextInternal();
 		} catch (\Exception $exception) {
 			$this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
@@ -761,23 +774,23 @@ class TestIDSQP2_NorthWind extends PHPUnit_Framework_TestCase
 
 	
 	/**
-	 * Test the generated expression concat function-call in sql server
+	 * test the generated expression concat function-call in sql server
 	 */
-	function testSubConcatSQLServer()
+	function testSubConcatMySQL()
 	{
 		try {
 			$exceptionThrown = false;
-			$serviceUri = 'http://localhost:8083/NorthWindDataService.svc/';
-	        $resourcePath = 'Customers';
+			$serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
+	        $resourcePath = 'Posts';
 	        $requestUri = $serviceUri . $resourcePath;
 	        $hostInfo = array('AbsoluteServiceUri' => new Url($serviceUri),
 			'AbsoluteRequestUri' => new Url($requestUri),
-			'QueryString' => '$filter=concat(concat(CustomerID, \', \'), ContactName) eq \'ALFKI, Maria Anders\'',
+			'QueryString' => '$filter=concat(concat(Title, \', \'), \'Open source now\') eq \'OData .NET Producer, Open source now\'',
 			'DataServiceVersion' => new Version(3, 0),
 			'MaxDataServiceVersion' => new Version(3, 0));
 	
-			$host = new DataServiceHost4($hostInfo);
-			$dataService = new NorthWindDataService4();
+			$host = new DataServiceHost5($hostInfo);
+			$dataService = new WordPressDataService();
 			$dataService->setHost($host);
 			$uriProcessor = $dataService->handleRequest();
 			$check = !is_null($uriProcessor);
@@ -788,9 +801,11 @@ class TestIDSQP2_NorthWind extends PHPUnit_Framework_TestCase
 			$internalFilterInfo = $requestDescription->getInternalFilterInfo();
 			$check = !is_null($internalFilterInfo);
 			$this->assertTrue($check);
-			$sqlexpression = $internalFilterInfo->getExpressionAsString();
-			// print_r("'" . $sqlexpression . "'");
-			$this->AssertEquals("((CustomerID + ', ' + ContactName =  'ALFKI, Maria Anders'))", $sqlexpression);
+			$mysqlexpression = $internalFilterInfo->getExpressionAsString();
+			// echo "\n";
+			// print_r("'" . $mysqlexpression . "'");
+			// echo "\n";
+			$this->AssertEquals("(STRCMP(CONCAT(CONCAT(post_title,', '),'Open source now'), 'OData .NET Producer, Open source now') = 0)", $mysqlexpression);
 			$host->getWebOperationContext()->resetWebContextInternal();
 		} catch (\Exception $exception) {
 			$this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
@@ -798,73 +813,34 @@ class TestIDSQP2_NorthWind extends PHPUnit_Framework_TestCase
 		}
 	}
 	
-	/**
-	 * Test the generated expression level 2 property access in sql server
-	 */
-	function testLevel2PropertyAccessSQLServer()
-	{
-		try {
-	        $serviceUri = 'http://localhost:8083/NorthWindDataService.svc/';
-	        $resourcePath = 'Customers';
-	        $requestUri = $serviceUri . $resourcePath;
-	        $hostInfo = array('AbsoluteServiceUri' => new Url($serviceUri),
-			'AbsoluteRequestUri' => new Url($requestUri),
-			'QueryString' => '$filter=Address/Country eq \'USA\'',
-			'DataServiceVersion' => new Version(3, 0),
-			'MaxDataServiceVersion' => new Version(3, 0));
-	
-			$host = new DataServiceHost4($hostInfo);
-			$dataService = new NorthWindDataService4();
-			$dataService->setHost($host);
-			$uriProcessor = $dataService->handleRequest();
-			$check = !is_null($uriProcessor);
-			$this->assertTrue($check);
-			$requestDescription = $uriProcessor->getRequestDescription();
-			$check = !is_null($requestDescription);
-			$this->assertTrue($check);
-			$internalFilterInfo = $requestDescription->getInternalFilterInfo();
-			$check = !is_null($internalFilterInfo);
-			$this->assertTrue($check);
-			$sqlexpression = $internalFilterInfo->getExpressionAsString();
-			print_r("'" . $sqlexpression . "'");
-			$this->AssertEquals("((Country =  'USA'))", $sqlexpression);
-			$host->getWebOperationContext()->resetWebContextInternal();
-		} catch (\Exception $exception) {
-			$this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
-			$host->getWebOperationContext()->resetWebContextInternal();
-		}
-	}
-	
+
 	protected function tearDown()
 	{
 	}
 }
 
 /**
+
 try {
-	$exceptionThrown = false;
-	$serviceUri = 'http://localhost:8083/NorthWindDataService.svc/';
-	$resourcePath = 'Customers';
-	$requestUri = $serviceUri . $resourcePath;
-	$hostInfo = array('AbsoluteServiceUri' => new Url($serviceUri),
+    $serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
+	        $resourcePath = 'Posts';
+	        $requestUri = $serviceUri . $resourcePath;
+	        $hostInfo = array('AbsoluteServiceUri' => new Url($serviceUri),
 			'AbsoluteRequestUri' => new Url($requestUri),
-			'QueryString' => '$filter=Address eq null',
+			'QueryString' => '$filter=concat(concat(Title, \', \'), \'Open source now\') eq \'OData .NET Producer, Open source now\'',
 			'DataServiceVersion' => new Version(3, 0),
 			'MaxDataServiceVersion' => new Version(3, 0));
 
-	$host = new DataServiceHost4($hostInfo);
-	$dataService = new NorthWindDataService4();
+	$host = new DataServiceHost5($hostInfo);
+	$dataService = new WordPressDataService();
 	$dataService->setHost($host);
-	$thrownException = false;	
-    try {
-	    $uriProcessor = $dataService->handleRequest();
-    } Catch (NotImplementedException $exception) {
-    	$thrownException = true;
-    }
-
-    if (!$thrownException) {
-    	// TODO Expecting the exception 
-    }
+	$uriProcessor = $dataService->handleRequest();
+	$requestDescription = $uriProcessor->getRequestDescription();
+	$internalFilterInfo = $requestDescription->getInternalFilterInfo();
+	$mysqlexpression = $internalFilterInfo->getExpressionAsString();
+	// TODO Assert that exp is   (STRCMP(REPLACE(post_title,' ',''), 'ODataPHPProducer') = 0)
+	$host->getWebOperationContext()->resetWebContextInternal();
+	echo $mysqlexpression;
 } catch (\Exception $exception) {
 	$this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
 }

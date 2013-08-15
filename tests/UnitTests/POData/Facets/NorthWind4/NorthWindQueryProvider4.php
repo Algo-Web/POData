@@ -1,12 +1,13 @@
 <?php
+
+namespace UnitTests\POData\Facets\NorthWind4;
+
 use ODataProducer\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 use ODataProducer\Providers\Metadata\ResourceSet;
 use ODataProducer\Providers\Metadata\ResourceProperty;
 use ODataProducer\Providers\Query\IDataServiceQueryProvider2;
 use ODataProducer\Common\ODataException;
 
-require_once "NorthWindMetadata4.php";
-require_once 'NorthWindDSExpressionProvider4.php';
 
 // Note: This QP2 implementation is to test IDSQP2::getExpressionProvider functionality 
 // we will not test the actual data, instead the sql query generated.
@@ -17,7 +18,7 @@ class NorthWindQueryProvider4 implements IDataServiceQueryProvider2
 	 * The not implemented error message
 	 * @var string
 	 */
-	private $_message = 'This functionality is nnot implemented as the class is only for testing IExpressionProvider for SQL-Server';
+	private $_message = 'This functionality is not implemented as the class is only for testing IExpressionProvider for SQL-Server';
 
     /**
      * Reference to the custom expression provider
@@ -34,6 +35,10 @@ class NorthWindQueryProvider4 implements IDataServiceQueryProvider2
     {
         $this->_northWindSQLSRVExpressionProvider = null;
     }
+
+	public function canApplyQueryOptions(){
+		ODataException::createNotImplementedError($this->_message);
+	}
 
     /**
      * (non-PHPdoc)
@@ -155,6 +160,8 @@ class NorthWindQueryProvider4 implements IDataServiceQueryProvider2
     	ODataException::createNotImplementedError($this->_message);
     }
 
+
+
     /**
      * The destructor     
      */
@@ -162,4 +169,3 @@ class NorthWindQueryProvider4 implements IDataServiceQueryProvider2
     {
     }
 }
-?>
