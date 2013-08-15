@@ -1,7 +1,7 @@
 POData - OData for the Poor PHP Developer
 ============
 
-POData is an OData service framework for PHP Developers.  PHP Developers are poor because they are not afforded a nice OData toolkit, but POData solves their poverty.
+POData (pronounced like the [sandwich](http://en.wikipedia.org/wiki/Po'_boy)) a is an OData service framework for PHP Developers.  PHP Developers are poor because they are not afforded a nice OData toolkit, but POData solves their poverty.
 
 POData vs odataphpprod
 ===================
