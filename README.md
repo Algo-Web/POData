@@ -18,3 +18,4 @@ Long term goals include:
 * OData v4 Support
 * Create, Update, & Delete support
 * Transaction support
+* Port to Node
