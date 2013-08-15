@@ -1,0 +1,27 @@
+{
+    "name": "balihoo/POData",
+    "type": "library",
+    "description": "OData for Poor PHP Developers",
+    "keywords": [ "rest", "odata" ],
+    "license": "BSD-2-Clause",
+    "authors": [
+        {
+            "name": "Balihoo, Inc.",
+            "email": "github@balihoo.com"
+        },
+
+        {
+            "name": "Microsoft Open Technologies, Inc.",
+            "email": "msopentech@microsoft.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "php": ">=5.3.0"
+    },
+    "autoload": {
+        "psr-0": {
+            "src": "library/"
+        }
+    }
+}
