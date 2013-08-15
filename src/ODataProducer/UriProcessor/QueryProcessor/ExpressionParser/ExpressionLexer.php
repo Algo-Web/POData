@@ -395,7 +395,7 @@ class ExpressionLexer
      * 
      * @param string $tokenText Input token
      * 
-     * @return true if match found, false otherwise
+     * @return bool true if match found, false otherwise
      */
     private static function _isInfinityOrNanSingle($tokenText)
     {

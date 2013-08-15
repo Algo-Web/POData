@@ -264,7 +264,7 @@ class ObjectModelSerializerBase
      * 'Segment Stack' and this method.
      * Note: Calls to this method should be balanced with calls to popSegment.
      * 
-     * @return true if the segment was pushed, false otherwise.
+     * @return bool true if the segment was pushed, false otherwise.
      */
     protected function pushSegmentForRoot()
     {
@@ -282,7 +282,7 @@ class ObjectModelSerializerBase
      * @param ResourceProperty &$resourceProperty The current navigation property
      * being written out.
      * 
-     * @return true if a segment was pushed, false otherwise
+     * @return bool true if a segment was pushed, false otherwise
      * 
      * @throws InvalidOperationException If this function invoked with non-navigation
      *                                   property instance.
@@ -398,7 +398,7 @@ class ObjectModelSerializerBase
      * @param ResourceSetWrapper &$resourceSetWrapper The resource set 
      *                                                wrapper to push.
      * 
-     * @return true if the segment was push, false otherwise
+     * @return bool true if the segment was push, false otherwise
      */
     private function _pushSegment($segmentName, ResourceSetWrapper &$resourceSetWrapper)
     {

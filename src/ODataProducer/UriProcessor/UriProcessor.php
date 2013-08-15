@@ -719,7 +719,7 @@ class UriProcessor
      * @param ResourceSetWrapper &$resourceSetWrapper The resource set wrapper 
      *                                                to push.
      *
-     * @return true if the segment was push, false otherwise
+     * @return bool true if the segment was push, false otherwise
      */
     private function _pushSegment($segmentName, ResourceSetWrapper &$resourceSetWrapper)
     {
