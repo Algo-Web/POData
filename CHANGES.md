@@ -8,7 +8,7 @@
 * Added $inlinecount support (see [#4](https://github.com/balihoo/POData/issues/4) )
 * Added any function query in $filter clause support (see [#1](https://github.com/balihoo/POData/issues/1) ) 
 * Switched names & namespace to POData (see [#27](https://github.com/balihoo/POData/issues/27) )
-* Fixed a ton of PHP Doc problems (see [#45](https://github.com/balihoo/POData/issues/45), [#44](https://github.com/balihoo/POData/issues/44), [#39](https://github.com/balihoo/POData/issues/39) )
+* Fixed a ton of PHP Doc problems (see [#45](https://github.com/balihoo/POData/issues/45), [#44](https://github.com/balihoo/POData/issues/44), [#39](https://github.com/balihoo/POData/issues/39), [#46](https://github.com/balihoo/POData/issues/46) )
 * Remove troublesome ?> from end of php files ( see [#42](https://github.com/balihoo/POData/issues/42) )
 * Huge copyright blocks move out of code base ( see [#20](https://github.com/balihoo/POData/issues/20) )
 
