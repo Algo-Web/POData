@@ -8,7 +8,7 @@ use ODataProducer\Providers\Metadata\ResourceSet;
 use ODataProducer\Providers\Metadata\Type\TypeCode;
 use ODataProducer\Providers\Metadata\ResourceStreamInfo;
 
-require_once (dirname(__FILE__) . "/../../Resources/NorthWindMetadata.php");
+require_once(dirname(__FILE__) . "/../../Resources/NorthWindMetadata.php");
 
 use ODataProducer\Providers\Metadata\ResourceTypeKind;
 use ODataProducer\Providers\Metadata\ResourceType;

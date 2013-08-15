@@ -1,12 +1,13 @@
 <?php
+
 use ODataProducer\ObjectModel\ODataURL;
 use ODataProducer\ObjectModel\ODataURLCollection;
 use ODataProducer\ObjectModel\ODataFeed;
 use ODataProducer\ObjectModel\ODataEntry;
 use ODataProducer\ObjectModel\ODataLink;
 use ODataProducer\ObjectModel\ODataMediaLink;
-use ODataProducer\ObjectModel\OdataPropertyContent;
-use ODataProducer\ObjectModel\OdataProperty;
+use ODataProducer\ObjectModel\ODataPropertyContent;
+use ODataProducer\ObjectModel\ODataProperty;
 use ODataProducer\ObjectModel\ODataBagContent;
 use ODataProducer\Writers\Atom\JsonODataWriter;
 use ODataProducer\Writers\Common\ODataWriter;

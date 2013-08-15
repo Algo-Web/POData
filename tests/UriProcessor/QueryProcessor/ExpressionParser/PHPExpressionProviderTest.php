@@ -1,7 +1,7 @@
 <?php
 
 
-require_once (dirname(__FILE__) . "/../../../Resources/NorthWindMetadata.php");
+require_once(dirname(__FILE__) . "/../../../Resources/NorthWindMetadata.php");
 use ODataProducer\Providers\Metadata\Type\Int32;
 use ODataProducer\Providers\Metadata\Type\Int64;
 use ODataProducer\Providers\Metadata\Type\Double;

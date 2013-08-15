@@ -1,7 +1,7 @@
 <?php
 use ODataProducer\Providers\Metadata\ResourceProperty;
 
-require_once (dirname(__FILE__) . "/../../../Resources/NorthWindMetadata.php");
+require_once(dirname(__FILE__) . "/../../../Resources/NorthWindMetadata.php");
 use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\ExpressionParser2;
 use ODataProducer\Common\ODataException;
 

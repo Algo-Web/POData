@@ -6,15 +6,10 @@ use ODataProducer\Configuration\DataServiceConfiguration;
 use ODataProducer\Common\ODataException;
 use ODataProducer\UriProcessor\QueryProcessor\OrderByParser\OrderByParser;
 use ODataProducer\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenParser;
-require_once 'PHPUnit\Framework\Assert.php';
-require_once 'PHPUnit\Framework\Test.php';
-require_once 'PHPUnit\Framework\SelfDescribing.php';
-require_once 'PHPUnit\Framework\TestCase.php';
-require_once 'PHPUnit\Framework\TestSuite.php';
-require_once 'ODataProducer\Common\ClassAutoLoader.php';
-require_once (dirname(__FILE__) . "\..\..\..\Resources\NorthWind2\NorthWindMetadata2.php");
-require_once (dirname(__FILE__) . "\..\..\..\Resources\NorthWind2\NorthWindQueryProvider.php");
-ODataProducer\Common\ClassAutoLoader::register();
+
+require_once(dirname(__FILE__) . "/../../../Resources/NorthWind2/NorthWindMetadata2.php");
+require_once(dirname(__FILE__) . "/../../../Resources/NorthWind2/NorthWindQueryProvider.php");
+
 class TestSkipTokenParser2 extends PHPUnit_Framework_TestCase
 {
     protected function setUp()

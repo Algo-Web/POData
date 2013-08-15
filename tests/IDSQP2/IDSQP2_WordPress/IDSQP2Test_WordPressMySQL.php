@@ -26,9 +26,9 @@ require_once 'PHPUnit\Framework\testCase.php';
 require_once 'PHPUnit\Framework\testSuite.php';
 require_once 'ODataProducer\Common\ClassAutoLoader.php';
 ODataProducer\Common\ClassAutoLoader::register();
-require_once (dirname(__FILE__) . "\.\..\..\Resources\WordPress2\WordPressMetadata.php");
-require_once (dirname(__FILE__) . "\.\..\..\Resources\WordPress2\WordPressDataService.php");
-require_once (dirname(__FILE__) . "\.\..\..\Resources\WordPress2\DataServiceHost5.php");
+require_once(dirname(__FILE__) . "\.\..\..\Resources\WordPress2\WordPressMetadata.php");
+require_once(dirname(__FILE__) . "\.\..\..\Resources\WordPress2\WordPressDataService.php");
+require_once(dirname(__FILE__) . "\.\..\..\Resources\WordPress2\DataServiceHost5.php");
 
 class testIDSQP2_WordPress extends PHPUnit_Framework_testCase
 {

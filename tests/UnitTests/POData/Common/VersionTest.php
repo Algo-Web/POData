@@ -1,8 +1,10 @@
 <?php
 
+namespace UnitTests\POData\Common;
+
 use ODataProducer\Common\Version;
 
-class VersionTest extends PHPUnit_Framework_TestCase
+class VersionTest extends \PHPUnit_Framework_TestCase
 {
     protected function setUp()
     {
@@ -48,4 +50,3 @@ class VersionTest extends PHPUnit_Framework_TestCase
     {
     }
 }
-?>

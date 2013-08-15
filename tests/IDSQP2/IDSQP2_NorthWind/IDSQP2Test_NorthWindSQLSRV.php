@@ -26,9 +26,9 @@ require_once 'PHPUnit\Framework\TestCase.php';
 require_once 'PHPUnit\Framework\TestSuite.php';
 require_once 'ODataProducer\Common\ClassAutoLoader.php';
 ODataProducer\Common\ClassAutoLoader::register();
-require_once (dirname(__FILE__) . "\.\..\..\Resources\NorthWind4\NorthWindMetadata4.php");
-require_once (dirname(__FILE__) . "\.\..\..\Resources\NorthWind4\NorthWindDataService4.php");
-require_once (dirname(__FILE__) . "\.\..\..\Resources\NorthWind4\DataServiceHost4.php");
+require_once(dirname(__FILE__) . "\.\..\..\Resources\NorthWind4\NorthWindMetadata4.php");
+require_once(dirname(__FILE__) . "\.\..\..\Resources\NorthWind4\NorthWindDataService4.php");
+require_once(dirname(__FILE__) . "\.\..\..\Resources\NorthWind4\DataServiceHost4.php");
 
 class TestIDSQP2_NorthWind extends PHPUnit_Framework_TestCase
 {

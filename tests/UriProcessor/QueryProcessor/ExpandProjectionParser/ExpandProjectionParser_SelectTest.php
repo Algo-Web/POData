@@ -7,8 +7,8 @@ use ODataProducer\Configuration\DataServiceConfiguration;
 use ODataProducer\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandProjectionParser;
 use ODataProducer\Common\ODataException;
 
-require_once (dirname(__FILE__) . "/../../../Resources/NorthWindMetadata.php");
-require_once (dirname(__FILE__) . "/../../../Resources/NorthWindQueryProvider.php");
+require_once(dirname(__FILE__) . "/../../../Resources/NorthWindMetadata.php");
+require_once(dirname(__FILE__) . "/../../../Resources/NorthWindQueryProvider.php");
 
 class TestExpandProjectionParser_Select extends PHPUnit_Framework_TestCase
 {   

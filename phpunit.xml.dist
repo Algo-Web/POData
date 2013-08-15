@@ -14,7 +14,7 @@
 
     <testsuites>
         <testsuite name="POData tests">
-            <directory>./tests/unitTests</directory>
+            <directory>./tests/UnitTests</directory>
             <!--integration tests TBD -->
         </testsuite>
     </testsuites>

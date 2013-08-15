@@ -1,5 +1,5 @@
 <?php
-require_once ("NorthWindMetadata.php");
+require_once("NorthWindMetadata.php");
 
 $customers = array();
 $orders = array();

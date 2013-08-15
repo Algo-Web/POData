@@ -1,5 +1,7 @@
 <?php
 
+namespace UnitTests\POData\Common;
+
 use ODataProducer\Common\Url;
 use ODataProducer\Common\UrlFormatException;
 
@@ -92,4 +94,3 @@ class UrlTest extends \PHPUnit_Framework_TestCase
     {
     }
 }
-?>

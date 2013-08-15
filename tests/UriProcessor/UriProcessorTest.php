@@ -22,11 +22,11 @@ use ODataProducer\Common\Url;
 use ODataProducer\Common\Version;
 use ODataProducer\Common\ODataException;
 
-require_once (dirname(__FILE__) . "/./../Resources/NorthWindMetadata.php");
-require_once (dirname(__FILE__) . "/./../Resources/NorthWindDataServiceV1.php");
-require_once (dirname(__FILE__) . "/./../Resources/NorthWindDataService.php");
-require_once (dirname(__FILE__) . "/./../Resources/NorthWindDataServiceV3.php");
-require_once (dirname(__FILE__) . "/./../Resources/DataServiceHost2.php");
+require_once(dirname(__FILE__) . "/./../Resources/NorthWindMetadata.php");
+require_once(dirname(__FILE__) . "/./../Resources/NorthWindDataServiceV1.php");
+require_once(dirname(__FILE__) . "/./../Resources/NorthWindDataService.php");
+require_once(dirname(__FILE__) . "/./../Resources/NorthWindDataServiceV3.php");
+require_once(dirname(__FILE__) . "/./../Resources/DataServiceHost2.php");
 
 class TestUriProcessor extends PHPUnit_Framework_TestCase
 {

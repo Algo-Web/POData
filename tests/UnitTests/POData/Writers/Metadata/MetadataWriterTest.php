@@ -15,8 +15,9 @@ use ODataProducer\Writers\Metadata\MetadataWriter;
 use ODataProducer\Common\Version;
 
 
-require_once (dirname(__FILE__) . "/./../../Resources/NorthWind2/NorthWindMetadata2.php");
-require_once (dirname(__FILE__) . "/./../../Resources/NorthWind2/NorthWindQueryProvider.php");
+use UnitTests\POData\Facets\NorthWind2\NorthWindMetadata;
+
+//require_once(dirname(__FILE__) . "/./../../Resources/NorthWind2/NorthWindQueryProvider.php");
 
 
 class TestMetadataWriter extends PHPUnit_Framework_TestCase
@@ -27,19 +28,20 @@ class TestMetadataWriter extends PHPUnit_Framework_TestCase
     
     public function testWriteMetadata()
     {
-		$northWindMetadata = CreateNorthWindMetadata1::Create();
+		$northWindMetadata = NorthWindMetadata::Create();
         $configuration = new DataServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule("*", EntitySetRights::ALL);
         $configuration->setMaxDataServiceVersion(DataServiceProtocolVersion::V3);
-        $northWindQuery = new NorthWindQueryProvider1();
+
         $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
             $northWindMetadata, //IDataServiceMetadataProvider implementation 
-            $northWindQuery, //IDataServiceQueryProvider implementation (set to null)
-            $configuration, //Service configuuration
+            null, //This should not be used for meta data writing
+            $configuration, //Service configuration
             false
         );
         $metadataWriter = new MetadataWriter($metaQueryProverWrapper);
         $metadata = $metadataWriter->writeMetadata();
+
         $this->assertNotNull($metadata);
         $this->assertEquals($metaQueryProverWrapper->getContainerName(), 'NorthWindEntities');
         $this->assertEquals($metaQueryProverWrapper->getContainerNamespace(), 'NorthWind');
@@ -54,4 +56,3 @@ class TestMetadataWriter extends PHPUnit_Framework_TestCase
         $this->assertEquals($customerEntityType->getResourceTypeKind(), ResourceTypeKind::ENTITY);
     }
 }
-?>

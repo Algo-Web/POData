@@ -4,8 +4,8 @@ use ODataProducer\Common\ODataException;
 use ODataProducer\OperationContext\DataServiceHost;
 
 
-require_once (dirname(__FILE__) . "/./../Resources/NorthWind2/NorthWindDataService.php");
-require_once (dirname(__FILE__) . "/./../Resources/NorthWind2/DataServiceHost2.php");
+require_once(dirname(__FILE__) . "/./../Resources/NorthWind2/NorthWindDataService.php");
+require_once(dirname(__FILE__) . "/./../Resources/NorthWind2/DataServiceHost2.php");
 
 
 

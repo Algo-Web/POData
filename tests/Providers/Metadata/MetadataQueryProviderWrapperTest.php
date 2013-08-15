@@ -10,7 +10,7 @@ use ODataProducer\Configuration\EntitySetRights;
 use ODataProducer\Providers\Metadata\IDataServiceMetadataProvider;
 use ODataProducer\Common\ODataException;
 
-require_once (dirname(__FILE__) . "/../../Resources/NorthWindMetadata.php");
+require_once(dirname(__FILE__) . "/../../Resources/NorthWindMetadata.php");
 
 class MetadataQueryProviderWrapperTest extends PHPUnit_Framework_TestCase
 {

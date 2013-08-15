@@ -7,7 +7,7 @@ use ODataProducer\Common\ODataException;
 use ODataProducer\UriProcessor\QueryProcessor\OrderByParser\OrderByParser;
 use ODataProducer\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenParser;
 
-require_once (dirname(__FILE__) . "/../../../Resources/NorthWindMetadata.php");
+require_once(dirname(__FILE__) . "/../../../Resources/NorthWindMetadata.php");
 
 class TestSkipTokenParser extends PHPUnit_Framework_TestCase
 {

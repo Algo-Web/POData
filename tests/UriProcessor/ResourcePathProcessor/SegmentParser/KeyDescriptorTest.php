@@ -3,7 +3,7 @@ use ODataProducer\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor
 use ODataProducer\Common\InvalidOperationException;
 use ODataProducer\Common\ODataException;
 
-require_once (dirname(__FILE__) . "/../../../Resources/NorthWindMetadata.php");
+require_once(dirname(__FILE__) . "/../../../Resources/NorthWindMetadata.php");
 
 class TestKeyDescriptor extends PHPUnit_Framework_TestCase
 {

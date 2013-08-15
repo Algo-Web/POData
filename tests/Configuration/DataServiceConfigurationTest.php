@@ -1,6 +1,6 @@
 <?php
 
-require_once (dirname(__FILE__) . "/../Resources/NorthWindMetadata.php");
+require_once(dirname(__FILE__) . "/../Resources/NorthWindMetadata.php");
 
 use ODataProducer\Configuration\DataServiceConfiguration;
 use ODataProducer\Configuration\EntitySetRights;

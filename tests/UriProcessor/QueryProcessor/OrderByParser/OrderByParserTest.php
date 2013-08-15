@@ -6,7 +6,7 @@ use ODataProducer\Configuration\DataServiceConfiguration;
 use ODataProducer\Common\ODataException;
 use ODataProducer\UriProcessor\QueryProcessor\OrderByParser\OrderByParser;
 
-require_once (dirname(__FILE__) . "/../../../Resources/NorthWindMetadata.php");
+require_once(dirname(__FILE__) . "/../../../Resources/NorthWindMetadata.php");
 
 class TestOrderByParser extends PHPUnit_Framework_TestCase
 {
@@ -14,7 +14,7 @@ class TestOrderByParser extends PHPUnit_Framework_TestCase
     {
     }
 
-    public function testOrderByWithSynaxError()
+    public function testOrderByWithSyntaxError()
     {
         //If a path segment contains ( should throw synax error
         

@@ -8,7 +8,7 @@ use ODataProducer\Configuration\DataServiceConfiguration;
 use ODataProducer\UriProcessor\ResourcePathProcessor\SegmentParser\SegmentParser;
 use ODataProducer\Common\ODataException;
 
-require_once (dirname(__FILE__) . "/../../../Resources/NorthWindMetadata.php");
+require_once(dirname(__FILE__) . "/../../../Resources/NorthWindMetadata.php");
 
 class TestSegmentParser extends PHPUnit_Framework_TestCase
 {

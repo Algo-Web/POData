@@ -1,20 +1,23 @@
 <?php
+
+namespace UnitTests\POData\Writers\Atom;
+
 use ODataProducer\ObjectModel\ODataURL;
 use ODataProducer\ObjectModel\ODataURLCollection;
 use ODataProducer\ObjectModel\ODataFeed;
 use ODataProducer\ObjectModel\ODataEntry;
 use ODataProducer\ObjectModel\ODataLink;
 use ODataProducer\ObjectModel\ODataMediaLink;
-use ODataProducer\ObjectModel\OdataPropertyContent;
-use ODataProducer\ObjectModel\OdataProperty;
-use ODataProducer\ObjectModel\OdataBagContent;
+use ODataProducer\ObjectModel\ODataPropertyContent;
+use ODataProducer\ObjectModel\ODataProperty;
+use ODataProducer\ObjectModel\ODataBagContent;
 use ODataProducer\Writers\Atom\AtomODataWriter;
 use ODataProducer\Writers\Common\ODataWriter;
 use ODataProducer\Common\InvalidOperationException;
 use ODataProducer\Common\ODataException;
 
 
-class TestAtomODataWriter extends PHPUnit_Framework_TestCase
+class TestAtomODataWriter extends \PHPUnit_Framework_TestCase
 {
     protected function setUp()
     {        
@@ -134,7 +137,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $link->isExpanded       = false;
         $odataEntryItem1->isMediaLinkEntry = false;
         
-        $bagProp1 = new ODataBagContent ();
+        $bagProp1 = new ODataBagContent();
         
         $propCont1 = new ODataPropertyContent();
         $propCont1_1 = new ODataPropertyContent();
@@ -952,4 +955,3 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
     {
     }
 }
-?>
