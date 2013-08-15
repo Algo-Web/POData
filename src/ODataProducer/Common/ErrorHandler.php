@@ -21,7 +21,7 @@ class ErrorHandler
      * @param Exception   $exception    exception occured
      * @param DataService &$dataService dataservice
      * 
-     * @return nothing
+     * @return void
      */
     public static function handleException($exception, DataService &$dataService)
     {

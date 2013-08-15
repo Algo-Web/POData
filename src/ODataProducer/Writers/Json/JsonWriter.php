@@ -55,7 +55,7 @@ class JsonWriter
     /**
      * End the current scope
      * 
-     * @return nothing
+     * @return void
      */
     public function endScope()
     {
@@ -73,7 +73,7 @@ class JsonWriter
     /**
      * Start the array scope
      * 
-     * @return nothing
+     * @return void
      */
     public function startArrayScope()
     {
@@ -83,7 +83,7 @@ class JsonWriter
     /**
      * Write the "d" wrapper text
      * 
-     * @return nothing
+     * @return void
      */
     public function writeDataWrapper()
     {
@@ -93,7 +93,7 @@ class JsonWriter
     /**
      * Write the "results" header for the data array
      * 
-     * @return nothing
+     * @return void
      */
     public function writeDataArrayName()
     {
@@ -103,7 +103,7 @@ class JsonWriter
     /**
      * Start the object scope
      *
-     * @return nothing
+     * @return void
      */
     public function startObjectScope()
     {
@@ -115,7 +115,7 @@ class JsonWriter
      * 
      * @param string $name name of the object property
      * 
-     * @return nothing
+     * @return void
      */
     public function writeName($name)
     {
@@ -138,7 +138,7 @@ class JsonWriter
      * @param mixed  $value value to be written
      * @param string $type  data type of the value
      * 
-     * @return nothing
+     * @return void
      */
     public function writeValue($value, $type = null)
     {
@@ -251,7 +251,7 @@ class JsonWriter
      * @param string $text   value to be written
      * @param string $quotes put quotes around the value if this value is true
      * 
-     * @return nothing
+     * @return void
      */
     private function _writeCore($text, $quotes)
     {
@@ -281,7 +281,7 @@ class JsonWriter
      * 
      * @param int $type scope type
      * 
-     * @return nothing
+     * @return void
      */
     private function _startScope($type)
     {
@@ -354,7 +354,7 @@ class Scope
      * @param string $name  name of the varriable to be set
      * @param int    $value value of the varriable
      * 
-     * @return nothing
+     * @return void
      */
     public function __set($name, $value)
     {

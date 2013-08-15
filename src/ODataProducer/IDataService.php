@@ -55,7 +55,7 @@ interface IDataService
      * 
      * @param DataServiceHost $dataServiceHost data service host
      * 
-     * @return nothing
+     * @return void
      */
     public function setHost(DataServiceHost $dataServiceHost);
 

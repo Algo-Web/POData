@@ -28,7 +28,7 @@ class ResponseWriter
      * @param String             $responseContentType Content type of the response
      * @param String             $responseFormat      Output format
      * 
-     * @return nothing
+     * @return void
      */
     public static function write(DataService &$dataService, 
         RequestDescription &$requestDescription, 

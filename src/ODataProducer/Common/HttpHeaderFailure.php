@@ -17,7 +17,7 @@ class HttpHeaderFailure extends \Exception
      * @param Int    $statusCode Http status code
      * @param Int    $errorCode  Http error code
      * 
-     * @return nothing
+     * @return void
      */
     public function  __construct($message, $statusCode, $errorCode = null) 
     {

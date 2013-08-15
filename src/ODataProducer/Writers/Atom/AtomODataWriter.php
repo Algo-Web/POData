@@ -54,7 +54,7 @@ class AtomODataWriter extends BaseODataWriter
      * 
      * @param ODataUrl &$oDataUrl Object of ODataUrl to start writing url.
      * 
-     * @return nothing
+     * @return void
      */
     protected function startUrl (ODataURL &$oDataUrl)
     {
@@ -72,7 +72,7 @@ class AtomODataWriter extends BaseODataWriter
      * @param ODataUrlCollection &$odataUrls Object of ODataUrlCollection
      * to start writing collection of url.
      * 
-     * @return nothing
+     * @return void
      */
     protected function startUrlCollection (ODataURLCollection &$odataUrls)
     {
@@ -108,7 +108,7 @@ class AtomODataWriter extends BaseODataWriter
      * 
      * @param ODataFeed &$odataFeed Object of OData feed to start writing feed
      * 
-     * @return nothing
+     * @return void
      */
     protected function startFeed(ODataFeed &$odataFeed)
     {
@@ -123,7 +123,7 @@ class AtomODataWriter extends BaseODataWriter
      *
      * @param ODataFeed &$odataFeed Feed whose metadata to be written
      * 
-     * @return nothing
+     * @return void
      */
     protected function writeFeedMetadata(ODataFeed &$odataFeed)
     {
@@ -154,7 +154,7 @@ class AtomODataWriter extends BaseODataWriter
      * 
      * @param ODataFeed &$odataFeed Feed object to end feed writing.
      * 
-     * @return nothing
+     * @return void
      */
     protected function endFeed(ODataFeed &$odataFeed)
     {
@@ -168,7 +168,7 @@ class AtomODataWriter extends BaseODataWriter
      *
      * @param ODataEntry &$odataEntry Entry to write
      * 
-     * @return nothing
+     * @return void
      */
     protected function startEntry(ODataEntry &$odataEntry)
     {
@@ -193,7 +193,7 @@ class AtomODataWriter extends BaseODataWriter
      *
      * @param ODataEntry &$odataEntry Entry whose metadata to be written
      * 
-     * @return nothing
+     * @return void
      */
     protected function writeEntryMetadata(ODataEntry &$odataEntry)
     {
@@ -288,7 +288,7 @@ class AtomODataWriter extends BaseODataWriter
      *
      * @param ODataEntry &$OdataEntry ODataEntry object to end entry.
      * 
-     * @return nothing
+     * @return void
      */
     protected function endEntry(ODataEntry &$OdataEntry)
     {
@@ -301,7 +301,7 @@ class AtomODataWriter extends BaseODataWriter
      * @param ODataLink &$odatalink Link to write
      * @param Boolean   $isExpanded Is link expanded or not.
      * 
-     * @return nothing
+     * @return void
      */
     protected function startLink(ODataLink &$odatalink, $isExpanded)
     {
@@ -314,7 +314,7 @@ class AtomODataWriter extends BaseODataWriter
      * @param ODataLink &$odatalink Link whose metadata to be written
      * @param Boolean   $isExpanded Is link expanded or not.
      * 
-     * @return nothing
+     * @return void
      */
     protected function writeLinkMetadata(ODataLink &$odatalink, $isExpanded)
     {
@@ -332,7 +332,7 @@ class AtomODataWriter extends BaseODataWriter
      *
      * @param boolean $isExpanded is link expanded or not.
      * 
-     * @return nothing
+     * @return void
      */
     protected function endLink($isExpanded)
     {
@@ -347,7 +347,7 @@ class AtomODataWriter extends BaseODataWriter
      * 
      * @param ODataEntry &$odataEntry ODataEntry object for pre writing properties.
      * 
-     * @return nothing
+     * @return void
      */
     public function preWriteProperties(ODataEntry &$odataEntry)
     {
@@ -395,7 +395,7 @@ class AtomODataWriter extends BaseODataWriter
      * @param ODataProperty &$odataProperty Property to be written
      * @param boolean       $isTopLevel     is link top level or not.
      * 
-     * @return nothing
+     * @return void
      */
     protected function beginWriteProperty(ODataProperty &$odataProperty, $isTopLevel)
     {
@@ -430,7 +430,7 @@ class AtomODataWriter extends BaseODataWriter
      * 
      * @param Object $kind Object of property which want to end.
      * 
-     * @return nothing
+     * @return void
      */
     protected function endWriteProperty($kind)
     {
@@ -442,7 +442,7 @@ class AtomODataWriter extends BaseODataWriter
      * 
      * @param ODataEntry &$odataEntry Entry object to post writing properties.
      *  
-     * @return nothing
+     * @return void
      */
     public function postWriteProperties(ODataEntry &$odataEntry)
     {
@@ -457,7 +457,7 @@ class AtomODataWriter extends BaseODataWriter
      * 
      * @param ODataProperty &$odataProperty whose value hold the complex property
      * 
-     * @return nothing
+     * @return void
      */
     protected function beginComplexProperty(ODataProperty &$odataProperty)
     {
@@ -467,7 +467,7 @@ class AtomODataWriter extends BaseODataWriter
     /**
      * End  complex property
      * 
-     * @return nothing
+     * @return void
      */
     protected function endComplexProperty()
     {
@@ -480,7 +480,7 @@ class AtomODataWriter extends BaseODataWriter
      * @param ODataProperty &$odataBagProperty Bag property object 
      * to begin write property
      * 
-     * @return nothing
+     * @return void
      */
     protected function beginBagPropertyItem(ODataProperty &$odataBagProperty)
     {
@@ -509,7 +509,7 @@ class AtomODataWriter extends BaseODataWriter
     /**
      * End an item in a collection
      * 
-     * @return nothing
+     * @return void
      */
     protected function endBagPropertyItem()
     {
@@ -521,7 +521,7 @@ class AtomODataWriter extends BaseODataWriter
      * 
      * @param ODataURL &$odataUrl ODataUrl object to end top level url.
      * 
-     * @return nothing
+     * @return void
      */
     protected function endUrl(ODataURL &$odataUrl)
     {
@@ -534,7 +534,7 @@ class AtomODataWriter extends BaseODataWriter
      * @param ODataUrlCollection &$odataUrlCollection ODataUrlCollection object 
      * to end url collection.
      * 
-     * @return nothing
+     * @return void
      */
     protected function endUrlCollection(ODataURLCollection &$odataUrlCollection)
     {
@@ -550,7 +550,7 @@ class AtomODataWriter extends BaseODataWriter
      * @param ODataProperty &$odataProperty ODataProperty object to write null value
      * according to property type.
      * 
-     * @return nothing
+     * @return void
      */
     protected function writeNullValue(ODataProperty &$odataProperty)
     {
@@ -571,7 +571,7 @@ class AtomODataWriter extends BaseODataWriter
      *
      * @param ODataProperty &$odataProperty Object of ODataProperty
      * 
-     * @return nothing
+     * @return void
      */
     protected function writePrimitiveValue(ODataProperty &$odataProperty)
     {
@@ -596,7 +596,7 @@ class AtomODataWriter extends BaseODataWriter
      * @param boolean        $serializeInnerException if set to true,
      * serialize the inner exception if $exception is an ODataException.
      * 
-     * @return nothing
+     * @return void
      */
     public static function serializeException(ODataException &$exception, $serializeInnerException)
     {
@@ -636,7 +636,7 @@ class AtomODataWriter extends BaseODataWriter
      * @param String $node  Element name
      * @param String $value Element value
      * 
-     * @return nothing
+     * @return void
      */
     public function writeNodeValue($node, $value)
     {
@@ -653,7 +653,7 @@ class AtomODataWriter extends BaseODataWriter
      * @param string $attributeValue Attribute value
      * @param string $nodeValue      Element value
      *  
-     * @return nothing
+     * @return void
      */
     public function writeNodeAttributeValue(
         $node,
@@ -673,7 +673,7 @@ class AtomODataWriter extends BaseODataWriter
      * @param ODataLink &$link      Link object to make link element
      * @param Boolean   $isExpanded Is link expanded or not.
      * 
-     * @return nothing
+     * @return void
      */
     public function writeLinkNode(ODataLink &$link, $isExpanded)
     {
@@ -706,7 +706,7 @@ class AtomODataWriter extends BaseODataWriter
     /**
      * Function to write base uri and default namespaces for top level elements.
      * 
-     * @return nothing
+     * @return void
      */
     public function writeBaseUriAndDefaultNamespaces()
     {

@@ -369,7 +369,7 @@ class HttpProcessUtility
      *
      * @throws HttpHeaderFailure If failed to read type and sub-type.
      * 
-     * @return nothing
+     * @return void
      */
     public static function readMediaTypeAndSubtype($text, &$textIndex, 
         &$type, &$subType
@@ -463,7 +463,7 @@ class HttpProcessUtility
      * @param array  &$parameters Array with parameters.
      *
      * @throws HttpHeaderFailure If found parameter value missing.
-     * @return nothing
+     * @return void
      */
     public static function readMediaTypeParameter($text, &$textIndex, &$parameters)
     {
@@ -572,7 +572,7 @@ class HttpProcessUtility
      *
      * @throws HttpHeaderFailure If any error occured while reading and processing
      *                           the quality factor.
-     * @return nothing
+     * @return void
      */
     public static function readQualityValue($text, &$textIndex, &$qualityValue)
     {

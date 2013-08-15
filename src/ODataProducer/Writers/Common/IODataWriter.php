@@ -26,7 +26,7 @@ interface IODataWriter
      *
      * @param ODataFeed &$odataFeed Feed to write
      * 
-     * @return nothing
+     * @return void
      */
 
     public function writeBeginFeed(ODataFeed &$odataFeed);
@@ -36,7 +36,7 @@ interface IODataWriter
      *
      * @param ODataEntry &$odataEntry Entry to write
      * 
-     * @return nothing
+     * @return void
      */
     public function writeBeginEntry(ODataEntry &$odataEntry);
 
@@ -46,7 +46,7 @@ interface IODataWriter
      * @param ODataLink &$odataLink Link to write.
      * @param Boolean   $isExpanded If entry type is Expanded or not.
      * 
-     * @return nothing
+     * @return void
      */
     public function writeBeginLink(ODataLink &$odataLink, $isExpanded);
 
@@ -55,7 +55,7 @@ interface IODataWriter
      * 
      * @param ODataPropertyContent &$odataProperties ODataProperty Object to write.
      * 
-     * @return nothing
+     * @return void
      */
     public function writeBeginProperties(ODataPropertyContent &$odataProperties);
     
@@ -64,7 +64,7 @@ interface IODataWriter
      *  
      * @param ODataURL &$odataUrl ODataUrl object to write.
      * 
-     * @return nothing
+     * @return void
      */
     public function writeBeginUrl(ODataURL &$odataUrl);
     
@@ -73,7 +73,7 @@ interface IODataWriter
      * 
      * @param ODataUrlCollection &$odataUrls ODataUrlCollection to Write.
      * 
-     * @return nothing
+     * @return void
      */
     public function writeBeginUrlCollection(ODataURLCollection &$odataUrls); 
 
@@ -82,7 +82,7 @@ interface IODataWriter
      * 
      * @param ObjectType $kind Type of the top level object
      * 
-     * @return nothing
+     * @return void
      */
     public function writeEnd($kind);
 
@@ -91,7 +91,7 @@ interface IODataWriter
      *  
      * @return string Result in requested format i.e. Atom or JSON.
      * 
-     * @return nothing
+     * @return void
      */
     public function getResult();
 }

@@ -159,7 +159,7 @@ class MetadataWriter
      * 
      * @param Version $dataServiceVersion version of the data service
      * 
-     * @return nothing
+     * @return void
      */
     private function _writeToplevelElements($dataServiceVersion)
     {
@@ -176,7 +176,7 @@ class MetadataWriter
      * @param string                   $schemaNamespace  schema namespace
      * @param MetadataEdmSchemaVersion $edmSchemaVersion edm schema version
      * 
-     * @return nothing
+     * @return void
      */
     private function _writeSchemaElement($schemaNamespace, $edmSchemaVersion)
     {
@@ -195,7 +195,7 @@ class MetadataWriter
      * association types for the given resource types
      * array(string, AssociationType)
      * 
-     * @return nothing
+     * @return void
      */
     private function _writeResourceTypes($resourceTypes, $associationTypesInResourceTypesNamespace)
     {
@@ -218,7 +218,7 @@ class MetadataWriter
      * association types for the given resource types
      * array(string, AssociationType)
      * 
-     * @return nothing
+     * @return void
      */
     private function _writeEntityType(ResourceType $resourceType, $associationTypesInResourceTypeNamespace)
     {
@@ -255,7 +255,7 @@ class MetadataWriter
      * 
      * @param ResourceType $complexType resource type
      * 
-     * @return nothing
+     * @return void
      */
     private function _writeComplexType(ResourceType $complexType)
     {
@@ -278,7 +278,7 @@ class MetadataWriter
      * represents a complex type
      * array(string, AssociationType)
      * 
-     * @return nothing
+     * @return void
      */
     private function _writeProperties(ResourceType $resourceType, $associationTypesInResourceTypeNamespace)
     {
@@ -305,7 +305,7 @@ class MetadataWriter
      * 
      * @param ResourceProperty $bagProperty bag property
      * 
-     * @return nothing
+     * @return void
      */
     private function _writeBagProperty(ResourceProperty $bagProperty)
     {
@@ -325,7 +325,7 @@ class MetadataWriter
      * 
      * @param ResourceProperty $primitiveProperty primitive resource property
      * 
-     * @return nothing 
+     * @return void 
      */
     private function _writePrimitiveProperty(ResourceProperty $primitiveProperty)
     {
@@ -349,7 +349,7 @@ class MetadataWriter
      * 
      * @param ResourceProperty $complexProperty complex property
      * 
-     * @return nothing
+     * @return void
      */
     private function _writeComplexProperty(ResourceProperty $complexProperty)
     {
@@ -368,7 +368,7 @@ class MetadataWriter
      * @param ResourceProperty $navigationProperty Navigation property
      * 
      * @throws InvalidOperationException
-     * @return nothing
+     * @return void
      */
     private function _writeNavigationProperty(ResourceType $resourceType, $associationTypesInResourceTypeNamespace, ResourceProperty $navigationProperty)
     {
@@ -394,7 +394,7 @@ class MetadataWriter
      * 
      * @param ResourceProperty $primitveProperty primitive property
      * 
-     * @return nothing
+     * @return void
      */
     private function _writePrimitivePropertyFacets(ResourceProperty $primitveProperty)
     {
@@ -411,7 +411,7 @@ class MetadataWriter
      * 
      * @param ResourceType $resourceType resource type
      * 
-     * @return nothing
+     * @return void
      */
     private function _writeNamedStreams(ResourceType $resourceType)
     {
@@ -505,7 +505,7 @@ class MetadataWriter
      * 
      * @param ResourceAssociationSet $associationSet resource association set
      * 
-     * @return nothing
+     * @return void
      */
     private function _writeAssocationSetEnds(ResourceAssociationSet $associationSet)
     {

@@ -29,7 +29,7 @@ class ODataException extends \Exception
      * @param string $statusCode The status code
      * @param string $errorCode  The error code
      * 
-     * @return nothing
+     * @return void
      */
     public function __construct($message, $statusCode, $errorCode= null)
     {
@@ -55,7 +55,7 @@ class ODataException extends \Exception
      * @param string $message The error message
      * 
      * @throws ODataException
-     * @return nothing
+     * @return void
      */
     public static function createBadRequestError($message)
     {
@@ -69,7 +69,7 @@ class ODataException extends \Exception
      * @param string $message The error message
      * 
      * @throws ODataException
-     * @return nothing
+     * @return void
      */    
     public static function createSyntaxError($message)
     {
@@ -84,7 +84,7 @@ class ODataException extends \Exception
      * resource not present in the data source
      *  
      * @throws ODataException
-     * @return nothing
+     * @return void
      */
     public static function createResourceNotFoundError($segment)
     {
@@ -98,7 +98,7 @@ class ODataException extends \Exception
      * @param string $message The error message
      * 
      * @throws ODataException
-     * @return nothing
+     * @return void
      */
     public static function resourceNotFoundError($message)
     {
@@ -112,7 +112,7 @@ class ODataException extends \Exception
      * @param string $message The detailed internal error message
      * 
      * @throws ODataException
-     * @return nothing
+     * @return void
      */
     public static function createInternalServerError($message)
     {
@@ -124,7 +124,7 @@ class ODataException extends \Exception
      * access a resource which is forbidden
      * 
      * @throws ODataException
-     * @return nothing
+     * @return void
      */
     public static function createForbiddenError()
     {
@@ -137,7 +137,7 @@ class ODataException extends \Exception
      * @param string $message Error message for this exception
      * 
      * @throws ODataException
-     * @return nothing
+     * @return void
      */
     public static function createPreConditionFailedError($message)
     {
@@ -151,7 +151,7 @@ class ODataException extends \Exception
      * @param string $message Error message for this exception
      * 
      * @throws ODataException
-     * @return nothing
+     * @return void
      */
     public static function createNotImplementedError($message)
     {
@@ -165,7 +165,7 @@ class ODataException extends \Exception
      * @param string $message Error message for this exception
      * 
      * @throws ODataException
-     * @return nothing
+     * @return void
      */
     public static function notAcceptableError($message)
     {
