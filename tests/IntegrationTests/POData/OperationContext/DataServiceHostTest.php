@@ -998,4 +998,3 @@ class TestDataServiceHost extends PHPUnit_Framework_TestCase
     	$dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
 	}
 }
-?>

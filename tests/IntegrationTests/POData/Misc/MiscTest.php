@@ -455,4 +455,3 @@ class TestETag extends PHPUnit_Framework_TestCase
 	{
 	}
 }
-?>
