@@ -27,17 +27,7 @@ define('DB_PASSWORD', 'root');
 /** MySQL hostname */
 define('DB_HOST', 'localhost');
 
-/**
- * WordPressQueryProvider implementation of IDataServiceQueryProvider.
- * 
- * @category  Service
- * @package   WordPress
- * @author    Bibin Kurian <odataphpproducer_alias@microsoft.com>
- * @copyright 2011 Microsoft Corp. (http://www.microsoft.com)
- * @license   New BSD license, (http://www.opensource.org/licenses/bsd-license.php)
- * @version   Release: 1.0
- * @link      http://odataphpproducer.codeplex.com
- */
+
 class WordPressQueryProvider implements IDataServiceQueryProvider2
 {
 	/**

@@ -25,17 +25,6 @@ use ODataProducer\Providers\Metadata\MetadataMapping;
 
 //Begin Resource Classes
 
-/**
- * Post entity type.
- * 
- * @category  Service
- * @package   WordPress
- * @author    Bibin Kurian <odataphpproducer_alias@microsoft.com>
- * @copyright 2011 Microsoft Corp. (http://www.microsoft.com)
- * @license   New BSD license, (http://www.opensource.org/licenses/bsd-license.php)
- * @version   Release: 1.0
- * @link      http://odataphpproducer.codeplex.com
- */
 class Post
 {
     //Key Edm.Int32
@@ -94,17 +83,7 @@ class Post
     public $Comments;
 }
 
-/**
- * Tag entity type.
- * 
- * @category  Service
- * @package   WordPress
- * @author    Bibin Kurian <odataphpproducer_alias@microsoft.com>
- * @copyright 2011 Microsoft Corp. (http://www.microsoft.com)
- * @license   New BSD license, (http://www.opensource.org/licenses/bsd-license.php)
- * @version   Release: 1.0
- * @link      http://odataphpproducer.codeplex.com
- */
+
 class Tag
 {
     //Key Edm.Int32
@@ -119,17 +98,7 @@ class Tag
     public $Posts;
 }
 
-/**
- * Category entity type.
- * 
- * @category  Service
- * @package   WordPress
- * @author    Bibin Kurian <odataphpproducer_alias@microsoft.com>
- * @copyright 2011 Microsoft Corp. (http://www.microsoft.com)
- * @license   New BSD license, (http://www.opensource.org/licenses/bsd-license.php)
- * @version   Release: 1.0
- * @link      http://odataphpproducer.codeplex.com
- */
+
 class Category
 {
     //Key Edm.Int32
@@ -144,17 +113,7 @@ class Category
     public $Posts;
 }
 
-/**
- * Comment entity type.
- * 
- * @category  Service
- * @package   WordPress
- * @author    Bibin Kurian <odataphpproducer_alias@microsoft.com>
- * @copyright 2011 Microsoft Corp. (http://www.microsoft.com)
- * @license   New BSD license, (http://www.opensource.org/licenses/bsd-license.php)
- * @version   Release: 1.0
- * @link      http://odataphpproducer.codeplex.com
- */
+
 class Comment
 {
     //Key Edm.Int32
@@ -193,17 +152,7 @@ class Comment
     public $Post;
 }
 
-/**
- * User entity type.
- * 
- * @category  Service
- * @package   WordPress
- * @author    Bibin Kurian <odataphpproducer_alias@microsoft.com>
- * @copyright 2011 Microsoft Corp. (http://www.microsoft.com)
- * @license   New BSD license, (http://www.opensource.org/licenses/bsd-license.php)
- * @version   Release: 1.0
- * @link      http://odataphpproducer.codeplex.com
- */
+
 class User
 {
     //Key Edm.Int32

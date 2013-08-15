@@ -17,17 +17,7 @@ use ODataProducer\Common\Messages;
 use ODataProducer\UriProcessor\UriProcessor;
 
 
-/**
- * NorthWindDataService that implements IServiceProvider.
- * 
- * @category  Service
- * @package   WordPress
- * @author    Bibin Kurian <odataphpproducer_alias@microsoft.com>
- * @copyright 2011 Microsoft Corp. (http://www.microsoft.com)
- * @license   New BSD license, (http://www.opensource.org/licenses/bsd-license.php)
- * @version   Release: 1.0
- * @link      http://odataphpproducer.codeplex.com
- */
+
 class WordPressDataService extends DataService implements IServiceProvider
 {
     private $_wordPressMetadata = null;
