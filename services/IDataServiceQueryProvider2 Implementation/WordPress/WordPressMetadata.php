@@ -466,4 +466,3 @@ class CreateWordPressMetadata
       return self::$_entityMapping;
     }
 }
-?>

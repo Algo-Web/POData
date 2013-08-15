@@ -366,5 +366,3 @@ class CreateNorthWindMetadata
         return $metadata;
     }
 }
-
-

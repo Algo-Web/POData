@@ -371,6 +371,3 @@ class CreateWordPressMetadata
         return $metadata;
     }
 }
-
-
-?>

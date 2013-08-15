@@ -952,4 +952,3 @@ class WordPressQueryProvider implements IDataServiceQueryProvider2
     
     
 }
-?>

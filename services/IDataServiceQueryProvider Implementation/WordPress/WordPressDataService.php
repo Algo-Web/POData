@@ -107,4 +107,3 @@ class WordPressDataService extends DataService implements IServiceProvider
         return null;
     }    
 }
-?>
