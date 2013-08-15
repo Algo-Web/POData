@@ -10,7 +10,7 @@ POData started as a fork of [The OData Producer Library for PHP](https://github.
 * OData v3 Support
 * Annotation Based Implementation
 * Availability via Composer
-* Simpler to plug into common PHP frameworks (Zend, Symphony, Laravel)
+* Simpler to plug in to common PHP frameworks (Zend, Symphony, Laravel)
 * Optimized $expand support
 
 Long term goals include:
