@@ -1,12 +1,7 @@
 <?php
-require_once 'PHPUnit\Framework\Assert.php';
-require_once 'PHPUnit\Framework\Test.php';
-require_once 'PHPUnit\Framework\SelfDescribing.php';
-require_once 'PHPUnit\Framework\TestCase.php';
-require_once 'PHPUnit\Framework\TestSuite.php';
-require_once 'ODataProducer\Common\ClassAutoLoader.php';
+
 use ODataProducer\Common\Version;
-ODataProducer\Common\ClassAutoLoader::register();
+
 class VersionTest extends PHPUnit_Framework_TestCase
 {
     protected function setUp()

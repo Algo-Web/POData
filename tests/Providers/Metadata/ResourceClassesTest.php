@@ -7,14 +7,9 @@ use ODataProducer\Providers\Metadata\ResourceAssociationTypeEnd;
 use ODataProducer\Providers\Metadata\ResourceSet;
 use ODataProducer\Providers\Metadata\Type\TypeCode;
 use ODataProducer\Providers\Metadata\ResourceStreamInfo;
-require_once 'PHPUnit\Framework\Assert.php';
-require_once 'PHPUnit\Framework\Test.php';
-require_once 'PHPUnit\Framework\SelfDescribing.php';
-require_once 'PHPUnit\Framework\TestCase.php';
-require_once 'PHPUnit\Framework\TestSuite.php';
-require_once 'ODataProducer\Common\ClassAutoLoader.php';
-require_once (dirname(__FILE__) . "\..\..\Resources\NorthWindMetadata.php");
-ODataProducer\Common\ClassAutoLoader::register();
+
+require_once (dirname(__FILE__) . "/../../Resources/NorthWindMetadata.php");
+
 use ODataProducer\Providers\Metadata\ResourceTypeKind;
 use ODataProducer\Providers\Metadata\ResourceType;
 use ODataProducer\Providers\Metadata\ResourcePropertyKind;
@@ -23,6 +18,8 @@ use ODataProducer\Providers\Metadata\Type\EdmPrimitiveType;
 use ODataProducer\Providers\Metadata\Type\Int32;
 use ODataProducer\Providers\Metadata\Type\Int16;
 use ODataProducer\Common\InvalidOperationException;
+
+
 class ResourceClassesTest extends PHPUnit_Framework_TestCase
 {
     protected function setUp()

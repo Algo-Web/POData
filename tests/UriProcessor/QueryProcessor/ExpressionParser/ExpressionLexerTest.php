@@ -1,18 +1,14 @@
 <?php
-require_once 'PHPUnit\Framework\Assert.php';
-require_once 'PHPUnit\Framework\Test.php';
-require_once 'PHPUnit\Framework\SelfDescribing.php';
-require_once 'PHPUnit\Framework\TestCase.php';
-require_once 'PHPUnit\Framework\TestSuite.php';
-require_once 'ODataProducer\Common\ClassAutoLoader.php';
+
 use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\ExpressionTokenId;
 use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\ExpressionLexer;
 use ODataProducer\Common\ODataException;
+
 class ExpressionLexerTest extends PHPUnit_Framework_TestCase
 {
     protected function setUp()
     {
-        ODataProducer\Common\ClassAutoLoader::register();
+
     }
     
     public function testStringLiteral()
@@ -836,7 +832,6 @@ class ExpressionLexerTest extends PHPUnit_Framework_TestCase
     
     protected function tearDown()
     {
-    	ODataProducer\Common\ClassAutoLoader::unRegister();
+
     }
 }
-?>

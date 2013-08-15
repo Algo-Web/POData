@@ -4,11 +4,13 @@ use ODataProducer\Providers\Metadata\ResourceSet;
 use ODataProducer\Providers\Metadata\ResourceProperty;
 use ODataProducer\Providers\Query\IDataServiceQueryProvider2;
 use ODataProducer\Common\ODataException;
+
 require_once "NorthWindMetadata4.php";
-require_once "ODataProducer\Providers\Query\IDataServiceQueryProvider2.php";
 require_once 'NorthWindDSExpressionProvider4.php';
+
 // Note: This QP2 implementation is to test IDSQP2::getExpressionProvider functionality 
 // we will not test the actual data, instead the sql query generated.
+
 class NorthWindQueryProvider4 implements IDataServiceQueryProvider2
 {
 	/**

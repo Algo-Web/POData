@@ -1,17 +1,18 @@
 <?php
 use ODataProducer\Configuration\EntitySetRights;
-require_once 'ODataProducer\IDataService.php';
-require_once 'ODataProducer\IRequestHandler.php';
-require_once 'ODataProducer\DataService.php';
-require_once 'ODataProducer\IServiceProvider.php';
+use ODataProducer\IDataService;
+use ODataProducer\IRequestHandler;;
 use ODataProducer\Configuration\DataServiceProtocolVersion;
 use ODataProducer\Configuration\DataServiceConfiguration;
 use ODataProducer\IServiceProvider;
 use ODataProducer\DataService;
+
+
 require_once 'NorthWindMetadata2.php';
 require_once 'DataService2.php';
 require_once 'NorthWindQueryProvider.php';
 require_once 'NorthWindStreamProvider.php';
+
 class NorthWindDataService1 extends DataService1 implements IServiceProvider
 {
     private $_northWindMetadata = null;

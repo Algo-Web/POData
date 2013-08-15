@@ -3,10 +3,10 @@
  * Note: This is a dummy class for making the testing of 
  * DataService and UriProcessor.
  */
+
 use ODataProducer\Common\ODataConstants;
-require_once 'ODataProducer\Common\ClassAutoLoader.php';
-ODataProducer\Common\ClassAutoLoader::register();
 use ODataProducer\OperationContext\DataServiceHost;
+
 class DataServiceHost2 extends DataServiceHost
 {
     private $_hostInfo;

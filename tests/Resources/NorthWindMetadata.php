@@ -11,7 +11,6 @@ use ODataProducer\Providers\Metadata\ResourceTypeKind;
 use ODataProducer\Providers\Metadata\ResourceType;
 use ODataProducer\Common\InvalidOperationException;
 use ODataProducer\Providers\Metadata\IDataServiceMetadataProvider;
-require_once 'ODataProducer\Providers\Metadata\IDataServiceMetadataProvider.php';
 use ODataProducer\Providers\Metadata\ServiceBaseMetadata;
 //Begin Resource Classes
 

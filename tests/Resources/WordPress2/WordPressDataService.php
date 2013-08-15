@@ -14,10 +14,8 @@
  * 
  */
 use ODataProducer\Configuration\EntitySetRights;
-require_once 'ODataProducer\IDataService.php';
-require_once 'ODataProducer\IRequestHandler.php';
-require_once 'ODataProducer\DataService.php';
-require_once 'ODataProducer\IServiceProvider.php';
+use ODataProducer\IDataService;
+use ODataProducer\IRequestHandler;
 use ODataProducer\Configuration\DataServiceProtocolVersion;
 use ODataProducer\Configuration\DataServiceConfiguration;
 use ODataProducer\IServiceProvider;
@@ -27,6 +25,8 @@ use ODataProducer\Common\ODataException;
 use ODataProducer\Common\ODataConstants;
 use ODataProducer\Common\Messages;
 use ODataProducer\UriProcessor\UriProcessor;
+
+
 require_once 'WordPressMetadata.php';
 require_once 'WordPressQueryProvider.php';
 require_once 'WordPressDSExpressionProvider.php';

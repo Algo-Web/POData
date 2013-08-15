@@ -13,13 +13,14 @@
  * @link      http://odataphpproducer.codeplex.com
  * 
  */
+
 use ODataProducer\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 use ODataProducer\Providers\Metadata\ResourceSet;
 use ODataProducer\Providers\Metadata\ResourceProperty;
 use ODataProducer\Providers\Query\IDataServiceQueryProvider2;
 use ODataProducer\Common\ODataException;
+
 require_once "WordPressMetadata.php";
-require_once "ODataProducer\Providers\Query\IDataServiceQueryProvider2.php";
 
 /** The name of the database for WordPress */
 define('DB_NAME', 'wordpress');
@@ -34,7 +35,7 @@ define('DB_PASSWORD', 'root');
 define('DB_HOST', 'localhost');
 
 /**
- * WordPressQueryProvider implemetation of IDataServiceQueryProvider.
+ * WordPressQueryProvider implementation of IDataServiceQueryProvider.
  * 
  * @category  Service
  * @package   WordPress

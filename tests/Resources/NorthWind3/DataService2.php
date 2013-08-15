@@ -11,11 +11,11 @@
  *  successful.
  */
 use ODataProducer\Common\ErrorHandler;
-require_once 'ODataProducer\Common\ClassAutoLoader.php';
-ODataProducer\Common\ClassAutoLoader::register();
+
 use ODataProducer\DataService;
 use ODataProducer\Common\ODataException;
 use ODataProducer\UriProcessor\UriProcessor;
+
 class DataService2 extends DataService
 {
   public function handleRequest()

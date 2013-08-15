@@ -14,14 +14,8 @@ use ODataProducer\Common\ODataException;
 use ODataProducer\OperationContext\DataServiceHost;
 use ODataProducer\OperationContext\Web\IncomingRequest;
 use ODataProducer\OperationContext\Web\OutgoingResponse;
-require_once dirname(__FILE__)."\..\..\Dispatcher.php";
-require_once 'PHPUnit\Framework\Assert.php';
-require_once 'PHPUnit\Framework\Test.php';
-require_once 'PHPUnit\Framework\SelfDescribing.php';
-require_once 'PHPUnit\Framework\TestCase.php';
-require_once 'PHPUnit\Framework\TestSuite.php';
-require_once 'ODataProducer\Common\ClassAutoLoader.php';
-ODataProducer\Common\ClassAutoLoader::register();
+require_once dirname(__FILE__)."/../../Dispatcher.php";
+
 
 class TestETag extends PHPUnit_Framework_TestCase
 {	

@@ -2,14 +2,9 @@
 use ODataProducer\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 use ODataProducer\Common\InvalidOperationException;
 use ODataProducer\Common\ODataException;
-require_once 'PHPUnit\Framework\Assert.php';
-require_once 'PHPUnit\Framework\Test.php';
-require_once 'PHPUnit\Framework\SelfDescribing.php';
-require_once 'PHPUnit\Framework\TestCase.php';
-require_once 'PHPUnit\Framework\TestSuite.php';
-require_once 'ODataProducer\Common\ClassAutoLoader.php';
-require_once (dirname(__FILE__) . "\..\..\..\Resources\NorthWindMetadata.php");
-ODataProducer\Common\ClassAutoLoader::register();
+
+require_once (dirname(__FILE__) . "/../../../Resources/NorthWindMetadata.php");
+
 class TestKeyDescriptor extends PHPUnit_Framework_TestCase
 {
     protected function setUp()

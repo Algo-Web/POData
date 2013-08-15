@@ -1,10 +1,13 @@
 <?php
+
 use ODataProducer\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 use ODataProducer\Providers\Metadata\ResourceSet;
 use ODataProducer\Providers\Metadata\ResourceProperty;
 use ODataProducer\Providers\Query\IDataServiceQueryProvider;
+
+
 require_once ("NorthWindMetadata2.php");
-require_once ("ODataProducer\Providers\Query\IDataServiceQueryProvider.php");
+
 define('DATABASE', 'Northwind');
 define('SERVER', '.\sqlexpress');
 

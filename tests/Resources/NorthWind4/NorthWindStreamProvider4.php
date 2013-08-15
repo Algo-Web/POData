@@ -1,9 +1,9 @@
 <?php
-require_once 'ODataProducer\Providers\Stream\IDataServiceStreamProvider2.php';
+
 /**
  * Stream provider for northwind service.
  */
-require_once 'ODataProducer\Common\ODataException.php';
+
 require_once 'NorthWindMetadata4.php';
 use ODataProducer\Providers\Metadata\ResourceStreamInfo;
 use ODataProducer\Providers\Stream\IDataServiceStreamProvider2;

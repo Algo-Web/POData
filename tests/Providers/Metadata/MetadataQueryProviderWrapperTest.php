@@ -1,4 +1,5 @@
 <?php
+
 use ODataProducer\Providers\Metadata\ResourceSet;
 use ODataProducer\Providers\Metadata\ResourceType;
 use ODataProducer\Providers\Metadata\ResourceProperty;
@@ -8,14 +9,9 @@ use ODataProducer\Configuration\DataServiceConfiguration;
 use ODataProducer\Configuration\EntitySetRights;
 use ODataProducer\Providers\Metadata\IDataServiceMetadataProvider;
 use ODataProducer\Common\ODataException;
-require_once 'PHPUnit\Framework\Assert.php';
-require_once 'PHPUnit\Framework\Test.php';
-require_once 'PHPUnit\Framework\SelfDescribing.php';
-require_once 'PHPUnit\Framework\TestCase.php';
-require_once 'PHPUnit\Framework\TestSuite.php';
-require_once 'ODataProducer\Common\ClassAutoLoader.php';
-require_once (dirname(__FILE__) . "\..\..\Resources\NorthWindMetadata.php");
-ODataProducer\Common\ClassAutoLoader::register();
+
+require_once (dirname(__FILE__) . "/../../Resources/NorthWindMetadata.php");
+
 class MetadataQueryProviderWrapperTest extends PHPUnit_Framework_TestCase
 {
     protected function setUp()

@@ -1,15 +1,10 @@
 <?php
 use ODataProducer\Providers\Metadata\ResourceProperty;
-require_once 'PHPUnit\Framework\Assert.php';
-require_once 'PHPUnit\Framework\Test.php';
-require_once 'PHPUnit\Framework\SelfDescribing.php';
-require_once 'PHPUnit\Framework\TestCase.php';
-require_once 'PHPUnit\Framework\TestSuite.php';
-require_once 'ODataProducer\Common\ClassAutoLoader.php';
-require_once (dirname(__FILE__) . "\..\..\..\Resources\NorthWindMetadata.php");
+
+require_once (dirname(__FILE__) . "/../../../Resources/NorthWindMetadata.php");
 use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\ExpressionParser2;
 use ODataProducer\Common\ODataException;
-ODataProducer\Common\ClassAutoLoader::register();
+
 class PHPExpressionProviderTest extends PHPUnit_Framework_TestCase
 {
     private $_northWindMetadata;

@@ -3,7 +3,6 @@ use ODataProducer\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor
 use ODataProducer\Providers\Metadata\ResourceSet;
 use ODataProducer\Providers\Metadata\ResourceProperty;
 use ODataProducer\Providers\Query\IDataServiceQueryProvider;
-require_once ("ODataProducer\Providers\Query\IDataServiceQueryProvider.php");
 
 class NorthWindQueryProvider2 implements IDataServiceQueryProvider
 {

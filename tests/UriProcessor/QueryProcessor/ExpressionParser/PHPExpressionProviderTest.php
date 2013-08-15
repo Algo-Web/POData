@@ -1,11 +1,7 @@
 <?php
-require_once 'PHPUnit\Framework\Assert.php';
-require_once 'PHPUnit\Framework\Test.php';
-require_once 'PHPUnit\Framework\SelfDescribing.php';
-require_once 'PHPUnit\Framework\TestCase.php';
-require_once 'PHPUnit\Framework\TestSuite.php';
-require_once 'ODataProducer\Common\ClassAutoLoader.php';
-require_once (dirname(__FILE__) . "\..\..\..\Resources\NorthWindMetadata.php");
+
+
+require_once (dirname(__FILE__) . "/../../../Resources/NorthWindMetadata.php");
 use ODataProducer\Providers\Metadata\Type\Int32;
 use ODataProducer\Providers\Metadata\Type\Int64;
 use ODataProducer\Providers\Metadata\Type\Double;
@@ -29,7 +25,7 @@ use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\ExpressionParser2
 use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\ExpressionProcessor;
 use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\PHPExpressionProvider;
 use ODataProducer\Common\ODataException;
-ODataProducer\Common\ClassAutoLoader::register();
+
 class PHPExpressionProviderTest1 extends PHPUnit_Framework_TestCase
 {
     private $_northWindMetadata;

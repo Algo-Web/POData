@@ -21,18 +21,13 @@ use ODataProducer\Providers\Metadata\Type\DateTime;
 use ODataProducer\Common\Url;
 use ODataProducer\Common\Version;
 use ODataProducer\Common\ODataException;
-require_once 'PHPUnit\Framework\Assert.php';
-require_once 'PHPUnit\Framework\Test.php';
-require_once 'PHPUnit\Framework\SelfDescribing.php';
-require_once 'PHPUnit\Framework\TestCase.php';
-require_once 'PHPUnit\Framework\TestSuite.php';
-require_once 'ODataProducer\Common\ClassAutoLoader.php';
-require_once (dirname(__FILE__) . "\.\..\Resources\NorthWindMetadata.php");
-require_once (dirname(__FILE__) . "\.\..\Resources\NorthWindDataServiceV1.php");
-require_once (dirname(__FILE__) . "\.\..\Resources\NorthWindDataService.php");
-require_once (dirname(__FILE__) . "\.\..\Resources\NorthWindDataServiceV3.php");
-require_once (dirname(__FILE__) . "\.\..\Resources\DataServiceHost2.php");
-ODataProducer\Common\ClassAutoLoader::register();
+
+require_once (dirname(__FILE__) . "/./../Resources/NorthWindMetadata.php");
+require_once (dirname(__FILE__) . "/./../Resources/NorthWindDataServiceV1.php");
+require_once (dirname(__FILE__) . "/./../Resources/NorthWindDataService.php");
+require_once (dirname(__FILE__) . "/./../Resources/NorthWindDataServiceV3.php");
+require_once (dirname(__FILE__) . "/./../Resources/DataServiceHost2.php");
+
 class TestUriProcessor extends PHPUnit_Framework_TestCase
 {
     protected function setUp()

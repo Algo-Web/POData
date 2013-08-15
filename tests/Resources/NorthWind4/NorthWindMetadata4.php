@@ -1,4 +1,5 @@
 <?php
+
 use ODataProducer\Providers\Metadata\ResourceStreamInfo;
 use ODataProducer\Providers\Metadata\ResourceAssociationSetEnd;
 use ODataProducer\Providers\Metadata\ResourceAssociationSet;
@@ -12,7 +13,6 @@ use ODataProducer\Providers\Metadata\ResourceType;
 use ODataProducer\Common\InvalidOperationException;
 use ODataProducer\Providers\Metadata\ServiceBaseMetadata;
 use ODataProducer\Providers\Metadata\IDataServiceMetadataProvider;
-require_once 'ODataProducer\Providers\Metadata\IDataServiceMetadataProvider.php';
 
 //Begin Resource Classes
 

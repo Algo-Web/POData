@@ -1,7 +1,9 @@
 <?php
-require_once 'ODataProducer\Providers\Stream\IDataServiceStreamProvider2.php';
-require_once 'ODataProducer\Common\ODataException.php';
+
+
 require_once 'NorthWindMetadata2.php';
+
+
 use ODataProducer\Providers\Metadata\ResourceStreamInfo;
 use ODataProducer\Providers\Stream\IDataServiceStreamProvider2;
 use ODataProducer\Common\ODataException;

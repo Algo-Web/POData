@@ -2,18 +2,13 @@
 use ODataProducer\Common\Url;
 use ODataProducer\Common\ODataException;
 use ODataProducer\OperationContext\DataServiceHost;
-require_once 'ODataProducer\Common\ClassAutoLoader.php';
 
-require_once (dirname(__FILE__) . "\.\..\Resources\NorthWind2\NorthWindDataService.php");
-require_once (dirname(__FILE__) . "\.\..\Resources\NorthWind2\DataServiceHost2.php");
 
-require_once 'PHPUnit\Framework\Assert.php';
-require_once 'PHPUnit\Framework\Test.php';
-require_once 'PHPUnit\Framework\SelfDescribing.php';
-require_once 'PHPUnit\Framework\TestCase.php';
-require_once 'PHPUnit\Framework\TestSuite.php';
-require_once 'ODataProducer\Common\ClassAutoLoader.php';
-ODataProducer\Common\ClassAutoLoader::register();
+require_once (dirname(__FILE__) . "/./../Resources/NorthWind2/NorthWindDataService.php");
+require_once (dirname(__FILE__) . "/./../Resources/NorthWind2/DataServiceHost2.php");
+
+
+
 use ODataProducer\Common\Version;
 class TestUriProcessorExecution extends PHPUnit_Framework_TestCase
 {
