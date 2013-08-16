@@ -694,7 +694,7 @@ abstract class DataService implements IRequestHandler, IDataService
      *                                               True if response needs to be
      *                                               serialized, False otherwise.
      *                                              
-     * @return string/NULL The ETag for the entry object if it has eTag properties 
+     * @return string|null The ETag for the entry object if it has eTag properties 
      *                     NULL otherwise.
      */
     protected function compareETag(&$entryObject, ResourceType &$resourceType, 
@@ -786,7 +786,7 @@ abstract class DataService implements IRequestHandler, IDataService
      *                                    be returned
      * @param ResourceType &$resourceType Resource type of the $entryObject
      * 
-     * @return string/NULL ETag value for the given resource (with values encoded 
+     * @return string|null ETag value for the given resource (with values encoded 
      *                     for use in a URI) there are etag properties, NULL if 
      *                     there is no etag property.
      */
@@ -881,7 +881,7 @@ abstract class DataService implements IRequestHandler, IDataService
      *     In case a, b and c we need to write the result to response body, 
      *     for d, e, f and g no body content.
      * 
-     * @return RequestDescription/null Instance of RequestDescription with 
+     * @return RequestDescription|null Instance of RequestDescription with
      *         result to be write back Null if no result to write.
      */
     protected function delegateRequestProcessing()

@@ -116,7 +116,7 @@ class WordPressQueryProvider implements IDataServiceQueryProvider2
      * @param string           $top                  For future purpose,no need to pass it
      * @param string           $skip                 For future purpose,no need to pass it
      *                                               
-     * @return array(Objects)/array() Array of related resource if exists, if no 
+     * @return object[] Array of related resource if exists, if no 
      *                                related resources found returns empty array
      */
     public function  getRelatedResourceSet(ResourceSet $sourceResourceSet, 

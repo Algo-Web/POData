@@ -63,7 +63,7 @@ class OrderBySubPathSegment
      * this sub path segment If this sub path segment is last segment then 
      * this function returns 'IType' otherwise 'ReflectionClass'.
      * 
-     * @return ReflectionClass/IType
+     * @return ReflectionClass|IType
      */
     public function getInstanceType()
     {

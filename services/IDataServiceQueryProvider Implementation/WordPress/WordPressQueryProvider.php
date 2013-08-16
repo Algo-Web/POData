@@ -224,7 +224,7 @@ class WordPressQueryProvider implements IDataServiceQueryProvider
      * @param ResourceProperty $targetProperty       The navigation property to be 
      *                                               retrieved
      *                                               
-     * @return array(Objects)/array() Array of related resource if exists, if no 
+     * @return object[] Array of related resource if exists, if no 
      *                                related resources found returns empty array
      */
     public function  getRelatedResourceSet(ResourceSet $sourceResourceSet, 

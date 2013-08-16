@@ -683,7 +683,7 @@ class UriProcessor
      * Find a 'ExpandedProjectionNode' instance in the projection tree 
      * which describes the current segment.
      *
-     * @return ExpandedProjectionNode/NULL
+     * @return ExpandedProjectionNode|null
      */
     private function _getCurrentExpandedProjectionNode()
     {

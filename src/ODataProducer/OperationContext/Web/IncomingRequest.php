@@ -155,7 +155,7 @@ class IncomingRequest
      * 
      * @param string $key The header name
      * 
-     * @return string/NULL value of the header, NULL if header is absent.
+     * @return string|null value of the header, NULL if header is absent.
      */
     public function getRequestHeader($key)
     {

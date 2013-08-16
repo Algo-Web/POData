@@ -113,7 +113,7 @@ class OrderByNode extends OrderByBaseNode
      * @param string $propertyName Name of the property to get the 
      *                             corrosponding node
      * 
-     * @return OrderByNode/OrderByLeafNode/NULL
+     * @return OrderByNode|OrderByLeafNode|null
      */
     public function findNode($propertyName)
     {

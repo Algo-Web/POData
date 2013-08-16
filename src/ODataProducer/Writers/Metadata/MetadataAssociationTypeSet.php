@@ -244,7 +244,7 @@ class MetadataAssociationTypeSet extends MetadataBase
      * @param ResourceProperty   $navigationProperty Resource property of the 
      *                                               source association end
      * 
-     * @return ResourceAssociationSet/NULL The association set instance for the 
+     * @return ResourceAssociationSet|null The association set instance for the 
      *                                     given association set end,
      *                                     NULL if the metadata wrapper 
      *                                     returns NULL 

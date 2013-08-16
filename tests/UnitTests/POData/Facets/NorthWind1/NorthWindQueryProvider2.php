@@ -52,7 +52,7 @@ class NorthWindQueryProvider2 implements IDataServiceQueryProvider
     /**
      * TODO
      * 
-     * @return array(Objects)/array() Array of related resource if exists, if no related resources found returns empty array
+     * @return object[] Array of related resource if exists, if no related resources found returns empty array
      */
     public function  getRelatedResourceSet(ResourceSet $sourceResourceSet, 
         $sourceEntityInstance, 

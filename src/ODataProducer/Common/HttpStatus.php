@@ -55,7 +55,7 @@ class HttpStatus
      * 
      * @param int $statusCode status code
      * 
-     * @return string/NULL
+     * @return string|null
      */
     public static function getStatusDescription($statusCode)
     {

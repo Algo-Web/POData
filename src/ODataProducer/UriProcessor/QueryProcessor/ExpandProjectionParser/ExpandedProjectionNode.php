@@ -280,7 +280,7 @@ class ExpandedProjectionNode extends ProjectionNode
      * Gets the sort information associated with the expanded navigation 
      * property or root of 'Projection Tree'.
      * 
-     * @return InternalOrderByInfo/NULL
+     * @return InternalOrderByInfo|null
      */
     public function getInternalOrderByInfo()
     {
@@ -365,7 +365,7 @@ class ExpandedProjectionNode extends ProjectionNode
      * @param string $propertyName Name of the property to get the 
      *                             corrosponding node.
      * 
-     * @return ProjectionNode/ExpandedProjectionNode/NULL
+     * @return ProjectionNode|ExpandedProjectionNode|null
      */
     public function findNode($propertyName)
     {

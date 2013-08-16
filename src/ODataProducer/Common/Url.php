@@ -67,7 +67,7 @@ class Url
     /**
      * Get the scheme part of the Url
      *
-     * @return string/NULL Returns the scheme part of the url, 
+     * @return string|null Returns the scheme part of the url, 
      * if scheme is missing returns NULL
      */
     public function getScheme()
@@ -78,7 +78,7 @@ class Url
     /**
      * Get the host part of the Url
      *
-     * @return string/NULL Returns the host part of the url, 
+     * @return string|null Returns the host part of the url, 
      * if host is missing returns NULL
      */
     public function getHost()
@@ -122,7 +122,7 @@ class Url
     /**
      * Get the query part
      *
-     * @return string/NULL Returns the query part of the url, 
+     * @return string|null Returns the query part of the url, 
      * if query is missing returns NULL
      */
     public function getQuery()
@@ -133,7 +133,7 @@ class Url
     /**
      * Get the fragment part
      *
-     * @return string/NULL Returns the fragment part of the url, 
+     * @return string|null Returns the fragment part of the url, 
      * if fragment is missing returns NULL
      */
     public function getFragment()

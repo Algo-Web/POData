@@ -338,7 +338,7 @@ class MetadataQueryProviderWrapper
      * @param ResourceProperty   $resourceProperty   Resource property of the source 
      *                                               association end
      * 
-     * @return ResourceAssociationSet/NULL Returns ResourceAssociationSet for the source
+     * @return ResourceAssociationSet|null Returns ResourceAssociationSet for the source
      *                                             association end, NULL if no such 
      *                                             association end or resource set in the
      *                                             other end of the association is invisible
@@ -425,7 +425,7 @@ class MetadataQueryProviderWrapper
      * @param ResourceType       $resourceType               Source resource type.
      * @param ResourceProperty   $navigationResourceProperty Navigation property.
      * 
-     * @return ResourceSetWrapper/NULL Returns instance of ResourceSetWrapper 
+     * @return ResourceSetWrapper|null Returns instance of ResourceSetWrapper 
      *     (describes the entity set and associated configuration) for the 
      *     given navigation property. returns NULL if resourceset for the 
      *     navigation property is invisible or if metadata provider returns 
@@ -500,7 +500,7 @@ class MetadataQueryProviderWrapper
      *  
      * @param ResourceSet $resourceSet see the comments of _validateResourceSetAndGetWrapper
      * 
-     * @return ResourceSetWrapper/NULL see the comments of _validateResourceSetAndGetWrapper
+     * @return ResourceSetWrapper|null see the comments of _validateResourceSetAndGetWrapper
      */
     public function validateResourceSetAndGetWrapper(ResourceSet $resourceSet)
     {
@@ -532,7 +532,7 @@ class MetadataQueryProviderWrapper
      * @param ResourceSet $resourceSet The resourceset to validate and get the 
      *                                 wrapper for
      * 
-     * @return ResourceSetWrapper/NULL Returns an instance if ResourceSetWrapper 
+     * @return ResourceSetWrapper|null Returns an instance if ResourceSetWrapper 
      *     if resourceset is visible else NULL
      */
     private function _validateResourceSetAndGetWrapper(ResourceSet $resourceSet)
@@ -586,7 +586,7 @@ class MetadataQueryProviderWrapper
      * @param ResourceType     $resourceType     The resource type to start looking
      * @param ResourceProperty $resourceProperty The resource property in question
      * 
-     * @return ResourceType/NULL Returns reference to the ResourceType on which 
+     * @return ResourceType|null Returns reference to the ResourceType on which 
      *                                   the $resourceProperty is declared, NULL if 
      *                                   $resourceProperty is not declared anywhere 
      *                                   in the inheritance hierarchy
@@ -622,7 +622,7 @@ class MetadataQueryProviderWrapper
      * responsible for implementing IExpressionProvider if he choose for 
      * IDataServiceQueryProvider2.
      * 
-     * @return IExpressionProvider/NULL Instance of IExpressionProvider implementation
+     * @return IExpressionProvider|null Instance of IExpressionProvider implementation
      *                                  in case of IDSQP2, else null in case of IDSQP.
      */
     public function getExpressionProvider()

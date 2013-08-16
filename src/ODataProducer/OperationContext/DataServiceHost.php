@@ -417,7 +417,7 @@ Class DataServiceHost implements IDataServiceHost
      * 
      * @param string $item The query item to get the value of.
      * 
-     * @return string/NULL The value for the specified item in the request 
+     * @return string|null The value for the specified item in the request 
      *                     query string NULL if the query option is absent.
      */
     public function getQueryStringItem($item)
@@ -434,7 +434,7 @@ Class DataServiceHost implements IDataServiceHost
     /**
      * Gets the value for the DataServiceVersion header of the request.
      * 
-     * @return string/NULL
+     * @return string|null
      */
     public function getRequestVersion()
     {
@@ -446,7 +446,7 @@ Class DataServiceHost implements IDataServiceHost
     /**
      * Gets the value of MaxDataServiceVersion header of the request
      * 
-     * @return string/NULL
+     * @return string|null
      */
     public function getRequestMaxVersion()
     {
@@ -630,7 +630,7 @@ Class DataServiceHost implements IDataServiceHost
     /**
      * Gets the value of the ETag header on the response
      * 
-     * @return string/NULL
+     * @return string|null
      */
     public function getResponseETag()
     {

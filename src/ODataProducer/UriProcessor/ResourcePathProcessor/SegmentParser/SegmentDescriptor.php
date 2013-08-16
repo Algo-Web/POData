@@ -351,7 +351,7 @@ class SegmentDescriptor
     /**
      * Gets reference to next descriptor
      * 
-     * @return SegmentDescriptor/NULL Returns reference to next descriptor, 
+     * @return SegmentDescriptor|null Returns reference to next descriptor, 
      *                                NULL if this is the last descriptor
      */
     public function getNext()
@@ -374,7 +374,7 @@ class SegmentDescriptor
     /**
      * Gets reference to previous descriptor
      * 
-     * @return SegmentDescriptor/NULL Returns reference to previous descriptor, 
+     * @return SegmentDescriptor|null Returns reference to previous descriptor, 
      *                                NULL if this is the first descriptor
      */
     public function getPrevious()

@@ -222,7 +222,7 @@ class ExpressionParser2 extends ExpressionParser
      * @param ArithmeticExpression $expression The arithmetic expression node
      *                                         to process.
      *                                          
-     * @return LogicalExpression or NULL
+     * @return LogicalExpression|null
      */
     private function _processArithmeticNode(ArithmeticExpression $expression)
     {
@@ -256,7 +256,7 @@ class ExpressionParser2 extends ExpressionParser
      * @param AbstractExpression     $parentExpression The parent expression of 
      *                                                 expression node to process.
      * 
-     * @return LogicalExpression or NULL
+     * @return LogicalExpression|null
      */
     private function _processFuncationCallNode(FunctionCallExpression $expression, 
         $parentExpression
@@ -307,7 +307,7 @@ class ExpressionParser2 extends ExpressionParser
      * @param AbstractExpression $parentExpression The parent expression of 
      *                                             expression node to process.
      * 
-     * @return LogicalExpression or NULL
+     * @return LogicalExpression|null
      */
     private function _processLogicalNode(
         LogicalExpression $expression, $parentExpression
@@ -378,7 +378,7 @@ class ExpressionParser2 extends ExpressionParser
      * @param boolean                  $checkNullForMostChild Wheter to check null for 
      *                                                        most child node or not.
      * 
-     * @return LogicalExpression, RelationalExpression or NULL
+     * @return LogicalExpression|RelationalExpression|null
      */
     private function _processPropertyAccessNode(
         PropertyAccessExpression $expression, 
@@ -411,7 +411,7 @@ class ExpressionParser2 extends ExpressionParser
      * @param AbstractExpression   $parentExpression The parent expression of 
      *                                               expression node to process.
      * 
-     * @return LogicalExpression or NULL
+     * @return LogicalExpression|null
      */
     private function _processRelationalNode(RelationalExpression $expression, 
         $parentExpression
@@ -458,7 +458,7 @@ class ExpressionParser2 extends ExpressionParser
      * @param AbstractExpression $parentExpression The parent expression of 
      *                                             expression node to process.
      * 
-     * @return LogicalExpression or NULL
+     * @return LogicalExpression|null
      */
     private function _processUnaryNode(UnaryExpression $expression, 
         $parentExpression
@@ -501,7 +501,7 @@ class ExpressionParser2 extends ExpressionParser
      * @param AbstractExpression $nullCheckExpTree1 First expression.
      * @param AbstractExpression $nullCheckExpTree2 Second expression.
      * 
-     * @return UnaryExpression or LogicalExpression
+     * @return UnaryExpression|LogicalExpression
      */
     private function _mergeNullableExpressionTrees($nullCheckExpTree1, 
         $nullCheckExpTree2

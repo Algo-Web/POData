@@ -351,7 +351,7 @@ class RequestDescription
      *      (i) $bath
      *          http://server/NW.svc/$batch
      *       
-     * @return ResourceSetWrapper/NULL
+     * @return ResourceSetWrapper|null
      */
     public function getTargetResourceSetWrapper()
     {
@@ -442,7 +442,7 @@ class RequestDescription
      *      (e) $bath
      *          http://server/NW.svc/$batch
      *      
-     * @return ResourceProperty/NULL
+     * @return ResourceProperty|null
      */
     public function getProjectedProperty()
     {
@@ -452,7 +452,7 @@ class RequestDescription
     /**
      * Gets the name of the container for results.
      * 
-     * @return string/NULL
+     * @return string|null
      */
     public function getContainerName()
     {
@@ -504,7 +504,7 @@ class RequestDescription
     /**
      * Gets the value of $skip query option
      * 
-     * @return int/NULL The value of $skip query option, NULL
+     * @return int|null The value of $skip query option, NULL
      *                  if $skip is absent.
      */
     public function getSkipCount()
@@ -527,7 +527,7 @@ class RequestDescription
     /**
      * Gets the value of take count
      * 
-     * @return int/NULL The value of take, NULL
+     * @return int|null The value of take, NULL
      *                  if no take to be applied.
      */
     public function getTopCount()
@@ -550,7 +550,7 @@ class RequestDescription
     /**
      * Gets the value of $top query option
      * 
-     * @return int/NULL The value of $top query option, NULL
+     * @return int|null The value of $top query option, NULL
      *                  if $top is absent.
      */
     public function getTopOptionCount()
@@ -578,7 +578,7 @@ class RequestDescription
      * (3) if server side paging is enabled for the resource targetted 
      *     by the request uri.
      * 
-     * @return InternalOrderByInfo/NULL
+     * @return InternalOrderByInfo|null
      */
     public function getInternalOrderByInfo()
     {
@@ -600,7 +600,7 @@ class RequestDescription
     /**
      * Gets the parsed details for $skiptoken option.
      * 
-     * @return InternalSkipTokenInfo/NULL Returns parsed details of $skiptoken
+     * @return InternalSkipTokenInfo|null Returns parsed details of $skiptoken
      *                                    option, NULL if $skiptoken is absent.
      */
     public function getInternalSkipTokenInfo()
@@ -624,7 +624,7 @@ class RequestDescription
     /**
      * Gets the parsed details for $filter option.
      * 
-     * @return InternalFilterInfo/NULL Returns parsed details of $filter
+     * @return InternalFilterInfo|null Returns parsed details of $filter
      *                                 option, NULL if $filter is absent.
      */
     public function getInternalFilterInfo()
@@ -659,7 +659,7 @@ class RequestDescription
     /**
      * Gets the root of the tree describing expand and select options,
      * 
-     * @return RootProjectionNode/NULL Returns parsed details of $expand
+     * @return RootProjectionNode|null Returns parsed details of $expand
      *                                 and $select options, NULL if 
      *                                 $both options are absent.
      */
@@ -694,7 +694,7 @@ class RequestDescription
      * Gets the count of result set if $count or $inlinecount=allpages
      * has been applied otherwise NULL
      * 
-     * @return int/NULL
+     * @return int|null
      */
     public function getCountValue()
     {
@@ -771,7 +771,7 @@ class RequestDescription
     /**
      * Get ResourceStreamInfo for the media link entry or named stream request.
      * 
-     * @return ResourceStreamInfo/NULL Instance of ResourceStreamInfo if the
+     * @return ResourceStreamInfo|null Instance of ResourceStreamInfo if the
      *         current request targets named stream, NULL for MLE
      */
     public function getResourceStreamInfo()

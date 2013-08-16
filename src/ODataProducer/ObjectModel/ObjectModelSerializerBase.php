@@ -221,7 +221,7 @@ class ObjectModelSerializerBase
      *                                    needs to be returned
      * @param ResourceType &$resourceType Resource type of the $entryObject
      * 
-     * @return string/NULL ETag value for the given resource 
+     * @return string|null ETag value for the given resource 
      * (with values encoded for use in a URI)
      * if there are etag properties, NULL if there is no etag property.
      */
@@ -334,7 +334,7 @@ class ObjectModelSerializerBase
      * Find a 'ExpandedProjectionNode' instance in the projection tree 
      * which describes the current segment.
      * 
-     * @return ExpandedProjectionNode/NULL
+     * @return ExpandedProjectionNode|null
      */
     protected function getCurrentExpandedProjectionNode()
     {
@@ -462,7 +462,7 @@ class ObjectModelSerializerBase
      * Builds the string corresponding to query parameters for top level results 
      * (result set identified by the resource path) to be put in next page link.
      * 
-     * @return string/NULL string representing the query parameters in the URI 
+     * @return string|null string representing the query parameters in the URI 
      *                     query parameter format, NULL if there 
      *                     is no query parameters
      *                     required for the next link of top level result set.
@@ -507,7 +507,7 @@ class ObjectModelSerializerBase
      * Builds the string corresponding to query parameters for current expanded
      * results to be put in next page link.
      * 
-     * @return string/NULL string representing the $select and $expand parameters 
+     * @return string|null string representing the $select and $expand parameters 
      *                     in the URI query parameter format, NULL if there is no 
      *                     query parameters ($expand and/select) required for the 
      *                     next link of expanded result set.

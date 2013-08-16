@@ -78,7 +78,7 @@ class DataServiceStreamProviderWrapper
      *                                               holding the details of 
      *                                               named stream.
      * 
-     * @return string/NULL
+     * @return string|null
      */
     public function getReadStream($entity, $resourceStreamInfo)
     {
@@ -155,7 +155,7 @@ class DataServiceStreamProviderWrapper
      *                                               holding the details of 
      *                                               named stream.
      * 
-     * @return string/NULL
+     * @return string|null
      */
     public function getStreamContentType($entity, $resourceStreamInfo)
     {
