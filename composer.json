@@ -21,7 +21,7 @@
     },
     "autoload": {
         "psr-0": {
-            "ODataProducer": "src/",
+            "POData": "src/",
 
             "UnitTests" : "tests/"
         }

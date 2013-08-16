@@ -2,8 +2,8 @@
 
 namespace UnitTests\POData\Common;
 
-use ODataProducer\Common\Url;
-use ODataProducer\Common\UrlFormatException;
+use POData\Common\Url;
+use POData\Common\UrlFormatException;
 
 class UrlTest extends \PHPUnit_Framework_TestCase
 {

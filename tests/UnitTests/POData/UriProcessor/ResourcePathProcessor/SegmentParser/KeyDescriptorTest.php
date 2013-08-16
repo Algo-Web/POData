@@ -1,10 +1,10 @@
 <?php
 
-namespace ODataProducer\UriProcessor\ResourcePathProcessor\SegmentParser;
+namespace POData\UriProcessor\ResourcePathProcessor\SegmentParser;
 
-use ODataProducer\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
-use ODataProducer\Common\InvalidOperationException;
-use ODataProducer\Common\ODataException;
+use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
+use POData\Common\InvalidOperationException;
+use POData\Common\ODataException;
 
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 

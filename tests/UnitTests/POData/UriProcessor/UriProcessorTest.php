@@ -1,30 +1,30 @@
 <?php
 
-namespace ODataProducer\UriProcessor\ResourcePathProcessor;
+namespace POData\UriProcessor\ResourcePathProcessor;
 
 /**
  * Mainly test UriProcessor, but also do some partial test for DataService class.
  */
 
-use ODataProducer\UriProcessor\QueryProcessor\ExpandProjectionParser\ProjectionNode;
-use ODataProducer\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandedProjectionNode;
-use ODataProducer\UriProcessor\QueryProcessor\ExpandProjectionParser\RootProjectionNode;
-use ODataProducer\UriProcessor\QueryProcessor\AnonymousFunction;
-use ODataProducer\UriProcessor\QueryProcessor\OrderByParser\OrderBySubPathSegment;
-use ODataProducer\UriProcessor\QueryProcessor\OrderByParser\OrderByPathSegment;
-use ODataProducer\UriProcessor\QueryProcessor\SkipTokenParser\InternalSkipTokenInfo;
-use ODataProducer\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenInfo;
-use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\InternalFilterInfo;
-use ODataProducer\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
-use ODataProducer\UriProcessor\RequestCountOption;
-use ODataProducer\Configuration\DataServiceProtocolVersion;
-use ODataProducer\UriProcessor\ResourcePathProcessor\SegmentParser\RequestTargetKind;
-use ODataProducer\UriProcessor\ResourcePathProcessor\SegmentParser\RequestTargetSource;
-use ODataProducer\Providers\Metadata\Type\Int32;
-use ODataProducer\Providers\Metadata\Type\DateTime;
-use ODataProducer\Common\Url;
-use ODataProducer\Common\Version;
-use ODataProducer\Common\ODataException;
+use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ProjectionNode;
+use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandedProjectionNode;
+use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\RootProjectionNode;
+use POData\UriProcessor\QueryProcessor\AnonymousFunction;
+use POData\UriProcessor\QueryProcessor\OrderByParser\OrderBySubPathSegment;
+use POData\UriProcessor\QueryProcessor\OrderByParser\OrderByPathSegment;
+use POData\UriProcessor\QueryProcessor\SkipTokenParser\InternalSkipTokenInfo;
+use POData\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenInfo;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\InternalFilterInfo;
+use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
+use POData\UriProcessor\RequestCountOption;
+use POData\Configuration\DataServiceProtocolVersion;
+use POData\UriProcessor\ResourcePathProcessor\SegmentParser\RequestTargetKind;
+use POData\UriProcessor\ResourcePathProcessor\SegmentParser\RequestTargetSource;
+use POData\Providers\Metadata\Type\Int32;
+use POData\Providers\Metadata\Type\DateTime;
+use POData\Common\Url;
+use POData\Common\Version;
+use POData\Common\ODataException;
 
 
 use UnitTests\POData\Facets\NorthWind1\DataServiceHost2;
@@ -1130,7 +1130,7 @@ class TestUriProcessor extends \PHPUnit_Framework_TestCase
             $this->assertTrue($filterFunction instanceof AnonymousFunction);
             $code = $filterFunction->getCode();            
             $this->assertEquals($code, 
-            'if(((!(is_null($lt->OrderID)) && !(is_null($lt->OrderDate))) && (($lt->OrderID == 123) && (ODataProducer\Providers\Metadata\Type\DateTime::dateTimeCmp($lt->OrderDate, \'2000-11-11\') <= 0)))) { return true; } else { return false;}');
+            'if(((!(is_null($lt->OrderID)) && !(is_null($lt->OrderDate))) && (($lt->OrderID == 123) && (POData\Providers\Metadata\Type\DateTime::dateTimeCmp($lt->OrderDate, \'2000-11-11\') <= 0)))) { return true; } else { return false;}');
             $host->getWebOperationContext()->resetWebContextInternal();
         } catch (\Exception $exception) {
             if ($host != null) {
@@ -1211,7 +1211,7 @@ class TestUriProcessor extends \PHPUnit_Framework_TestCase
             $this->assertTrue($filterFunction instanceof AnonymousFunction);
             $code = $filterFunction->getCode();            
             $this->assertEquals($code, 
-            'if(((!(is_null($lt->OrderID)) && !(is_null($lt->OrderDate))) && (($lt->OrderID == 123) && (ODataProducer\Providers\Metadata\Type\DateTime::dateTimeCmp($lt->OrderDate, \'2000-11-11\') <= 0)))) { return true; } else { return false;}');
+            'if(((!(is_null($lt->OrderID)) && !(is_null($lt->OrderDate))) && (($lt->OrderID == 123) && (POData\Providers\Metadata\Type\DateTime::dateTimeCmp($lt->OrderDate, \'2000-11-11\') <= 0)))) { return true; } else { return false;}');
             $host->getWebOperationContext()->resetWebContextInternal();
             $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
             $resourcePath = 'Orders(1234)/$links/Customer';

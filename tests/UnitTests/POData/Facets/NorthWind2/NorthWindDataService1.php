@@ -2,13 +2,13 @@
 
 namespace UnitTests\POData\Facets\NorthWind2;
 
-use ODataProducer\Configuration\EntitySetRights;
-use ODataProducer\IDataService;
-use ODataProducer\IRequestHandler;
-use ODataProducer\Configuration\DataServiceProtocolVersion;
-use ODataProducer\Configuration\DataServiceConfiguration;
-use ODataProducer\IServiceProvider;
-use ODataProducer\DataService;
+use POData\Configuration\EntitySetRights;
+use POData\IDataService;
+use POData\IRequestHandler;
+use POData\Configuration\DataServiceProtocolVersion;
+use POData\Configuration\DataServiceConfiguration;
+use POData\IServiceProvider;
+use POData\DataService;
 
 
 class NorthWindDataService1 extends DataService1 implements IServiceProvider
@@ -32,7 +32,7 @@ class NorthWindDataService1 extends DataService1 implements IServiceProvider
 
     /**
      * 
-     * @see library/ODataProducer/ODataProducer.IServiceProvider::getService()
+     * @see library/POData.IServiceProvider::getService()
      * 
      * @return object
      */

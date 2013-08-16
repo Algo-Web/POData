@@ -1,10 +1,10 @@
 <?php
 
-namespace ODataProducer\UriProcessor\QueryProcessor\ExpressionParser;
+namespace POData\UriProcessor\QueryProcessor\ExpressionParser;
 
-use ODataProducer\Providers\Metadata\ResourceProperty;
-use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\ExpressionParser2;
-use ODataProducer\Common\ODataException;
+use POData\Providers\Metadata\ResourceProperty;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionParser2;
+use POData\Common\ODataException;
 
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 

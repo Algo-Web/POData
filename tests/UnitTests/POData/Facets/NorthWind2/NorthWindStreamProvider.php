@@ -4,9 +4,9 @@
 require_once 'NorthWindMetadata2.php';
 
 
-use ODataProducer\Providers\Metadata\ResourceStreamInfo;
-use ODataProducer\Providers\Stream\IDataServiceStreamProvider2;
-use ODataProducer\Common\ODataException;
+use POData\Providers\Metadata\ResourceStreamInfo;
+use POData\Providers\Stream\IDataServiceStreamProvider2;
+use POData\Common\ODataException;
 
 class NorthWindStreamProvider2 implements IDataServiceStreamProvider2
 {

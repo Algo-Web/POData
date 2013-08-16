@@ -7,8 +7,8 @@ namespace UnitTests\POData\Facets\NorthWind2;
  * DataService and UriProcessor.
  */
 
-use ODataProducer\Common\ODataConstants;
-use ODataProducer\OperationContext\DataServiceHost;
+use POData\Common\ODataConstants;
+use POData\OperationContext\DataServiceHost;
 
 class DataServiceHost1 extends DataServiceHost
 {

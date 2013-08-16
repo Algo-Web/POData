@@ -1,12 +1,12 @@
 <?php
 
-use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ExpressionType;
-use ODataProducer\Providers\Metadata\Type\IType;
-use ODataProducer\Common\NotImplementedException;
-use ODataProducer\Common\ODataConstants;
-use ODataProducer\Providers\Metadata\ResourcePropertyKind;
-use ODataProducer\Providers\Metadata\ResourceType;
-use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\IExpressionProvider as IExpressionProvider;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ExpressionType;
+use POData\Providers\Metadata\Type\IType;
+use POData\Common\NotImplementedException;
+use POData\Common\ODataConstants;
+use POData\Providers\Metadata\ResourcePropertyKind;
+use POData\Providers\Metadata\ResourceType;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\IExpressionProvider as IExpressionProvider;
 
 
 class NorthWindDSExpressionProvider implements IExpressionProvider

@@ -1,15 +1,15 @@
 <?php
 
-use ODataProducer\Common\Messages;
-use ODataProducer\Common\HttpStatus;
-use ODataProducer\Common\ODataConstants;
-use ODataProducer\Common\ODataException;
-use ODataProducer\OperationContext\DataServiceHost;
-use ODataProducer\Common\ServiceConfig;
-use ODataProducer\OperationContext\Web\WebOperationContext;
-use ODataProducer\OperationContext\Web\IncomingRequest;
-use ODataProducer\OperationContext\Web\OutgoingResponse;
-use ODataProducer\HttpOutput;
+use POData\Common\Messages;
+use POData\Common\HttpStatus;
+use POData\Common\ODataConstants;
+use POData\Common\ODataException;
+use POData\OperationContext\DataServiceHost;
+use POData\Common\ServiceConfig;
+use POData\OperationContext\Web\WebOperationContext;
+use POData\OperationContext\Web\IncomingRequest;
+use POData\OperationContext\Web\OutgoingResponse;
+use POData\HttpOutput;
 
 
 /**
@@ -117,9 +117,9 @@ class Dispatcher
         }
 
         $interfaces = class_implements($dataService);
-        if (array_key_exists('ODataProducer\IDataService', $interfaces)) {
+        if (array_key_exists('POData\IDataService', $interfaces)) {
             $dataService->setHost($this->_dataServiceHost);
-            if (array_key_exists('ODataProducer\IRequestHandler', $interfaces)) {
+            if (array_key_exists('POData\IRequestHandler', $interfaces)) {
                 // DataService::handleRequest will never throw an error
                 // All exception that can occur while parsing the request and
                 // serializing the result will be handled by 

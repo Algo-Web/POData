@@ -1,13 +1,13 @@
 <?php
 
-namespace ODataProducer\UriProcessor\QueryProcessor\OrderByParser;
+namespace POData\UriProcessor\QueryProcessor\OrderByParser;
 
-use ODataProducer\Providers\Metadata\ResourceProperty;
-use ODataProducer\Configuration\EntitySetRights;
-use ODataProducer\Providers\MetadataQueryProviderWrapper;
-use ODataProducer\Configuration\DataServiceConfiguration;
-use ODataProducer\Common\ODataException;
-use ODataProducer\UriProcessor\QueryProcessor\OrderByParser\OrderByParser;
+use POData\Providers\Metadata\ResourceProperty;
+use POData\Configuration\EntitySetRights;
+use POData\Providers\MetadataQueryProviderWrapper;
+use POData\Configuration\DataServiceConfiguration;
+use POData\Common\ODataException;
+use POData\UriProcessor\QueryProcessor\OrderByParser\OrderByParser;
 
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 //These are in the file loaded by above use statement

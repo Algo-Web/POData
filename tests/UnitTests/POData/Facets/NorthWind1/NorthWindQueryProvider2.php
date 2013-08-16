@@ -2,10 +2,10 @@
 
 namespace UnitTests\POData\Facets\NorthWind1;
 
-use ODataProducer\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
-use ODataProducer\Providers\Metadata\ResourceSet;
-use ODataProducer\Providers\Metadata\ResourceProperty;
-use ODataProducer\Providers\Query\IDataServiceQueryProvider;
+use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
+use POData\Providers\Metadata\ResourceSet;
+use POData\Providers\Metadata\ResourceProperty;
+use POData\Providers\Query\IDataServiceQueryProvider;
 
 class NorthWindQueryProvider2 implements IDataServiceQueryProvider
 {

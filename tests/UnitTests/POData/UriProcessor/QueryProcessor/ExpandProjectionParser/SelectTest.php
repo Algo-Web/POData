@@ -1,14 +1,14 @@
 <?php
 
-namespace ODataProducer\UriProcessor\QueryProcessor\ExpandProjectionParser;
+namespace POData\UriProcessor\QueryProcessor\ExpandProjectionParser;
 
-use ODataProducer\UriProcessor\QueryProcessor\ExpandProjectionParser\ProjectionNode;
-use ODataProducer\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandedProjectionNode;
-use ODataProducer\Configuration\EntitySetRights;
-use ODataProducer\Providers\MetadataQueryProviderWrapper;
-use ODataProducer\Configuration\DataServiceConfiguration;
-use ODataProducer\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandProjectionParser;
-use ODataProducer\Common\ODataException;
+use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ProjectionNode;
+use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandedProjectionNode;
+use POData\Configuration\EntitySetRights;
+use POData\Providers\MetadataQueryProviderWrapper;
+use POData\Configuration\DataServiceConfiguration;
+use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandProjectionParser;
+use POData\Common\ODataException;
 
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 use UnitTests\POData\Facets\NorthWind1\NorthWindQueryProvider2;

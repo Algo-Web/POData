@@ -7,8 +7,8 @@ namespace UnitTests\POData\Facets\WordPress2;
  * DataService and UriProcessor.
  */
 
-use ODataProducer\Common\ODataConstants;
-use ODataProducer\OperationContext\DataServiceHost;
+use POData\Common\ODataConstants;
+use POData\OperationContext\DataServiceHost;
 
 class DataServiceHost5 extends DataServiceHost
 {

@@ -4,16 +4,16 @@
  * 1. This test case requires the service 'NorthWind' to be
  *    accessed using http://localhost:8086/NorthWind.svc 
  */
-use ODataProducer\ObjectModel\ODataBagContent;
-use ODataProducer\Common\ODataConstants;
-use ODataProducer\Common\Messages;
-use ODataProducer\Common\HttpStatus                             ;
-use ODataProducer\Common\Url;
-use ODataProducer\Common\UrlFormatException;
-use ODataProducer\Common\ODataException;
-use ODataProducer\OperationContext\DataServiceHost;
-use ODataProducer\OperationContext\Web\IncomingRequest;
-use ODataProducer\OperationContext\Web\OutgoingResponse;
+use POData\ObjectModel\ODataBagContent;
+use POData\Common\ODataConstants;
+use POData\Common\Messages;
+use POData\Common\HttpStatus                             ;
+use POData\Common\Url;
+use POData\Common\UrlFormatException;
+use POData\Common\ODataException;
+use POData\OperationContext\DataServiceHost;
+use POData\OperationContext\Web\IncomingRequest;
+use POData\OperationContext\Web\OutgoingResponse;
 require_once dirname(__FILE__) . "/../../Dispatcher.php";
 
 

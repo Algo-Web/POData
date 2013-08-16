@@ -1,7 +1,7 @@
 <?php
-use ODataProducer\Common\Url;
-use ODataProducer\Common\ODataException;
-use ODataProducer\OperationContext\DataServiceHost;
+use POData\Common\Url;
+use POData\Common\ODataException;
+use POData\OperationContext\DataServiceHost;
 
 use UnitTests\POData\Facets\NorthWind2\DataServiceHost1;
 
@@ -10,7 +10,7 @@ use UnitTests\POData\Facets\NorthWind2\DataServiceHost1;
 
 
 
-use ODataProducer\Common\Version;
+use POData\Common\Version;
 class TestUriProcessorExecution extends PHPUnit_Framework_TestCase
 {
     protected function setUp()

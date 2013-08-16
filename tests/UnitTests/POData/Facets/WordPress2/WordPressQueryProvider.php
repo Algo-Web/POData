@@ -8,11 +8,11 @@ namespace UnitTests\POData\Facets\WordPress2;
  * 
  */
 
-use ODataProducer\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
-use ODataProducer\Providers\Metadata\ResourceSet;
-use ODataProducer\Providers\Metadata\ResourceProperty;
-use ODataProducer\Providers\Query\IDataServiceQueryProvider2;
-use ODataProducer\Common\ODataException;
+use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
+use POData\Providers\Metadata\ResourceSet;
+use POData\Providers\Metadata\ResourceProperty;
+use POData\Providers\Query\IDataServiceQueryProvider2;
+use POData\Common\ODataException;
 
 
 /** The name of the database for WordPress */
@@ -57,7 +57,7 @@ class WordPressQueryProvider implements IDataServiceQueryProvider2
 
     /**
      * (non-PHPdoc)
-     * @see ODataProducer\Providers\Query.IDataServiceQueryProvider2::getExpressionProvider()
+     * @see POData\Providers\Query.IDataServiceQueryProvider2::getExpressionProvider()
      */
     public function getExpressionProvider()
     {

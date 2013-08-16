@@ -15,9 +15,9 @@ namespace UnitTests\POData\Facets\NorthWind2;
  *  successful.
  */
 
-use ODataProducer\DataService;
-use ODataProducer\Common\ODataException;
-use ODataProducer\UriProcessor\UriProcessor;
+use POData\DataService;
+use POData\Common\ODataException;
+use POData\UriProcessor\UriProcessor;
 
 abstract class DataService1 extends DataService
 {

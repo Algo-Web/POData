@@ -10,11 +10,11 @@
  *  in case of error and return instance of UriProcessor if paring is 
  *  successful.
  */
-use ODataProducer\Common\ErrorHandler;
+use POData\Common\ErrorHandler;
 
-use ODataProducer\DataService;
-use ODataProducer\Common\ODataException;
-use ODataProducer\UriProcessor\UriProcessor;
+use POData\DataService;
+use POData\Common\ODataException;
+use POData\UriProcessor\UriProcessor;
 
 abstract class DataService2 extends DataService
 {

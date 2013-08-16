@@ -2,11 +2,11 @@
 
 namespace UnitTests\POData\Configuration;
 
-use ODataProducer\Configuration\DataServiceConfiguration;
-use ODataProducer\Configuration\EntitySetRights;
-use ODataProducer\Configuration\DataServiceProtocolVersion;
-use ODataProducer\Common\InvalidOperationException;
-use ODataProducer\Providers\Metadata\IDataServiceMetadataProvider;
+use POData\Configuration\DataServiceConfiguration;
+use POData\Configuration\EntitySetRights;
+use POData\Configuration\DataServiceProtocolVersion;
+use POData\Common\InvalidOperationException;
+use POData\Providers\Metadata\IDataServiceMetadataProvider;
 
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 

@@ -1,18 +1,18 @@
 <?php
-use ODataProducer\Common\Url;
-use ODataProducer\OperationContext\DataServiceHost;
-use ODataProducer\Providers\Metadata\ResourceSet;
-use ODataProducer\Providers\Metadata\ResourceType;
-use ODataProducer\Providers\Metadata\ResourceProperty;
-use ODataProducer\Providers\Metadata\ResourceTypeKind;
-use ODataProducer\Providers\MetadataQueryProviderWrapper;
-use ODataProducer\Configuration\DataServiceConfiguration;
-use ODataProducer\Configuration\EntitySetRights;
-use ODataProducer\Configuration\DataServiceProtocolVersion;
-use ODataProducer\Providers\Metadata\IDataServiceMetadataProvider;
-use ODataProducer\Common\ODataException;
-use ODataProducer\Writers\Metadata\MetadataWriter;
-use ODataProducer\Common\Version;
+use POData\Common\Url;
+use POData\OperationContext\DataServiceHost;
+use POData\Providers\Metadata\ResourceSet;
+use POData\Providers\Metadata\ResourceType;
+use POData\Providers\Metadata\ResourceProperty;
+use POData\Providers\Metadata\ResourceTypeKind;
+use POData\Providers\MetadataQueryProviderWrapper;
+use POData\Configuration\DataServiceConfiguration;
+use POData\Configuration\EntitySetRights;
+use POData\Configuration\DataServiceProtocolVersion;
+use POData\Providers\Metadata\IDataServiceMetadataProvider;
+use POData\Common\ODataException;
+use POData\Writers\Metadata\MetadataWriter;
+use POData\Common\Version;
 
 
 use UnitTests\POData\Facets\NorthWind2\NorthWindMetadata;

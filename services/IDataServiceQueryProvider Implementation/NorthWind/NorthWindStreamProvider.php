@@ -1,14 +1,14 @@
 <?php
 
-require_once 'ODataProducer\Providers\Stream\IDataServiceStreamProvider2.php';
+require_once 'POData\Providers\Stream\IDataServiceStreamProvider2.php';
 /**
  * Stream provider for northwind service.
  */
-require_once 'ODataProducer\Common\ODataException.php';
+require_once 'POData\Common\ODataException.php';
 require_once 'NorthWindMetadata.php';
-use ODataProducer\Providers\Metadata\ResourceStreamInfo;
-use ODataProducer\Providers\Stream\IDataServiceStreamProvider2;
-use ODataProducer\Common\ODataException;
+use POData\Providers\Metadata\ResourceStreamInfo;
+use POData\Providers\Stream\IDataServiceStreamProvider2;
+use POData\Common\ODataException;
 
 
 class NorthWindStreamProvider implements IDataServiceStreamProvider2

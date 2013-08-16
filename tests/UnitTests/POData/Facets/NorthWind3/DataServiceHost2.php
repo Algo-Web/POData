@@ -4,7 +4,7 @@
  * DataService and UriProcessor.
  */
 
-use ODataProducer\OperationContext\DataServiceHost;
+use POData\OperationContext\DataServiceHost;
 
 class DataServiceHost2 extends DataServiceHost
 {

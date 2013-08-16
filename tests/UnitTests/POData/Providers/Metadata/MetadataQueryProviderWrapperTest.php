@@ -2,15 +2,15 @@
 
 namespace UnitTests\POData\Providers\Metadata;
 
-use ODataProducer\Providers\Metadata\ResourceSet;
-use ODataProducer\Providers\Metadata\ResourceType;
-use ODataProducer\Providers\Metadata\ResourceProperty;
-use ODataProducer\Providers\Metadata\ResourceTypeKind;
-use ODataProducer\Providers\MetadataQueryProviderWrapper;
-use ODataProducer\Configuration\DataServiceConfiguration;
-use ODataProducer\Configuration\EntitySetRights;
-use ODataProducer\Providers\Metadata\IDataServiceMetadataProvider;
-use ODataProducer\Common\ODataException;
+use POData\Providers\Metadata\ResourceSet;
+use POData\Providers\Metadata\ResourceType;
+use POData\Providers\Metadata\ResourceProperty;
+use POData\Providers\Metadata\ResourceTypeKind;
+use POData\Providers\MetadataQueryProviderWrapper;
+use POData\Configuration\DataServiceConfiguration;
+use POData\Configuration\EntitySetRights;
+use POData\Providers\Metadata\IDataServiceMetadataProvider;
+use POData\Common\ODataException;
 
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 

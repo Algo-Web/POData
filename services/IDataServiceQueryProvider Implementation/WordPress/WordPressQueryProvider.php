@@ -1,12 +1,12 @@
 <?php
 
 
-use ODataProducer\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
-use ODataProducer\Providers\Metadata\ResourceSet;
-use ODataProducer\Providers\Metadata\ResourceProperty;
-use ODataProducer\Providers\Query\IDataServiceQueryProvider;
+use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
+use POData\Providers\Metadata\ResourceSet;
+use POData\Providers\Metadata\ResourceProperty;
+use POData\Providers\Query\IDataServiceQueryProvider;
 require_once "WordPressMetadata.php";
-require_once "ODataProducer\Providers\Query\IDataServiceQueryProvider.php";
+require_once "POData\Providers\Query\IDataServiceQueryProvider.php";
 /** The name of the database for WordPress */
 define('DB_NAME', 'wordpress');
 

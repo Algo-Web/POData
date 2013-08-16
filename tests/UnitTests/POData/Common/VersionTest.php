@@ -2,7 +2,7 @@
 
 namespace UnitTests\POData\Common;
 
-use ODataProducer\Common\Version;
+use POData\Common\Version;
 
 class VersionTest extends \PHPUnit_Framework_TestCase
 {

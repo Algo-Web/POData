@@ -1,19 +1,19 @@
 <?php
 
-use ODataProducer\Providers\Metadata\ResourceStreamInfo;
-use ODataProducer\Providers\Metadata\ResourceAssociationSetEnd;
-use ODataProducer\Providers\Metadata\ResourceAssociationSet;
-use ODataProducer\Common\NotImplementedException;
-use ODataProducer\Providers\Metadata\Type\EdmPrimitiveType;
-use ODataProducer\Providers\Metadata\ResourceSet;
-use ODataProducer\Providers\Metadata\ResourcePropertyKind;
-use ODataProducer\Providers\Metadata\ResourceProperty;
-use ODataProducer\Providers\Metadata\ResourceTypeKind;
-use ODataProducer\Providers\Metadata\ResourceType;
-use ODataProducer\Common\InvalidOperationException;
-use ODataProducer\Providers\Metadata\IDataServiceMetadataProvider;
-require_once 'ODataProducer\Providers\Metadata\IDataServiceMetadataProvider.php';
-use ODataProducer\Providers\Metadata\ServiceBaseMetadata;
+use POData\Providers\Metadata\ResourceStreamInfo;
+use POData\Providers\Metadata\ResourceAssociationSetEnd;
+use POData\Providers\Metadata\ResourceAssociationSet;
+use POData\Common\NotImplementedException;
+use POData\Providers\Metadata\Type\EdmPrimitiveType;
+use POData\Providers\Metadata\ResourceSet;
+use POData\Providers\Metadata\ResourcePropertyKind;
+use POData\Providers\Metadata\ResourceProperty;
+use POData\Providers\Metadata\ResourceTypeKind;
+use POData\Providers\Metadata\ResourceType;
+use POData\Common\InvalidOperationException;
+use POData\Providers\Metadata\IDataServiceMetadataProvider;
+require_once 'POData\Providers\Metadata\IDataServiceMetadataProvider.php';
+use POData\Providers\Metadata\ServiceBaseMetadata;
 
 //Begin Resource Classes
 

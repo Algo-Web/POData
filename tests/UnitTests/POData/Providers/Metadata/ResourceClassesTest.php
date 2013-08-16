@@ -2,22 +2,22 @@
 
 namespace UnitTests\POData\Providers\Metadata;
 
-use ODataProducer\Providers\Metadata\ResourceAssociationSet;
-use ODataProducer\Providers\Metadata\ResourceAssociationSetEnd;
-use ODataProducer\Providers\Metadata\ResourceAssociationType;
-use ODataProducer\Common\ODataConstants;
-use ODataProducer\Providers\Metadata\ResourceAssociationTypeEnd;
-use ODataProducer\Providers\Metadata\ResourceSet;
-use ODataProducer\Providers\Metadata\Type\TypeCode;
-use ODataProducer\Providers\Metadata\ResourceStreamInfo;
-use ODataProducer\Providers\Metadata\ResourceTypeKind;
-use ODataProducer\Providers\Metadata\ResourceType;
-use ODataProducer\Providers\Metadata\ResourcePropertyKind;
-use ODataProducer\Providers\Metadata\ResourceProperty;
-use ODataProducer\Providers\Metadata\Type\EdmPrimitiveType;
-use ODataProducer\Providers\Metadata\Type\Int32;
-use ODataProducer\Providers\Metadata\Type\Int16;
-use ODataProducer\Common\InvalidOperationException;
+use POData\Providers\Metadata\ResourceAssociationSet;
+use POData\Providers\Metadata\ResourceAssociationSetEnd;
+use POData\Providers\Metadata\ResourceAssociationType;
+use POData\Common\ODataConstants;
+use POData\Providers\Metadata\ResourceAssociationTypeEnd;
+use POData\Providers\Metadata\ResourceSet;
+use POData\Providers\Metadata\Type\TypeCode;
+use POData\Providers\Metadata\ResourceStreamInfo;
+use POData\Providers\Metadata\ResourceTypeKind;
+use POData\Providers\Metadata\ResourceType;
+use POData\Providers\Metadata\ResourcePropertyKind;
+use POData\Providers\Metadata\ResourceProperty;
+use POData\Providers\Metadata\Type\EdmPrimitiveType;
+use POData\Providers\Metadata\Type\Int32;
+use POData\Providers\Metadata\Type\Int16;
+use POData\Common\InvalidOperationException;
 
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 

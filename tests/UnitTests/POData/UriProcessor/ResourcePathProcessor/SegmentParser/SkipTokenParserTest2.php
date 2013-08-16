@@ -1,14 +1,14 @@
 <?php
 
-namespace ODataProducer\UriProcessor\ResourcePathProcessor\SegmentParser;
+namespace POData\UriProcessor\ResourcePathProcessor\SegmentParser;
 
-use ODataProducer\Providers\Metadata\ResourceProperty;
-use ODataProducer\Configuration\EntitySetRights;
-use ODataProducer\Providers\MetadataQueryProviderWrapper;
-use ODataProducer\Configuration\DataServiceConfiguration;
-use ODataProducer\Common\ODataException;
-use ODataProducer\UriProcessor\QueryProcessor\OrderByParser\OrderByParser;
-use ODataProducer\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenParser;
+use POData\Providers\Metadata\ResourceProperty;
+use POData\Configuration\EntitySetRights;
+use POData\Providers\MetadataQueryProviderWrapper;
+use POData\Configuration\DataServiceConfiguration;
+use POData\Common\ODataException;
+use POData\UriProcessor\QueryProcessor\OrderByParser\OrderByParser;
+use POData\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenParser;
 
 use UnitTests\POData\Facets\NorthWind2\NorthWindMetadata;
 

@@ -1,30 +1,30 @@
 <?php
 
-namespace ODataProducer\UriProcessor\QueryProcessor\ExpressionParser;
+namespace POData\UriProcessor\QueryProcessor\ExpressionParser;
 
-use ODataProducer\Providers\Metadata\Type\Int32;
-use ODataProducer\Providers\Metadata\Type\Int64;
-use ODataProducer\Providers\Metadata\Type\Double;
-use ODataProducer\Providers\Metadata\Type\Single;
-use ODataProducer\Providers\Metadata\Type\Decimal;
-use ODataProducer\Providers\Metadata\Type\DateTime;
-use ODataProducer\Providers\Metadata\Type\Binary;
-use ODataProducer\Providers\Metadata\Type\String;
-use ODataProducer\Providers\Metadata\Type\Navigation;
-use ODataProducer\Providers\Metadata\Type\Boolean;
-use ODataProducer\Providers\Metadata\Type\Null1;
-use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\Expressions\PropertyAccessExpression;
-use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ConstantExpression;
-use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ArithmeticExpression;
-use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\Expressions\LogicalExpression;
-use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\Expressions\RelationalExpression;
-use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\Expressions\FunctionCallExpression;
-use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\Expressions\UnaryExpression;
-use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ExpressionType;
-use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\ExpressionParser2;
-use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\ExpressionProcessor;
-use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\PHPExpressionProvider;
-use ODataProducer\Common\ODataException;
+use POData\Providers\Metadata\Type\Int32;
+use POData\Providers\Metadata\Type\Int64;
+use POData\Providers\Metadata\Type\Double;
+use POData\Providers\Metadata\Type\Single;
+use POData\Providers\Metadata\Type\Decimal;
+use POData\Providers\Metadata\Type\DateTime;
+use POData\Providers\Metadata\Type\Binary;
+use POData\Providers\Metadata\Type\String;
+use POData\Providers\Metadata\Type\Navigation;
+use POData\Providers\Metadata\Type\Boolean;
+use POData\Providers\Metadata\Type\Null1;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\PropertyAccessExpression;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ConstantExpression;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ArithmeticExpression;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\LogicalExpression;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\RelationalExpression;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\FunctionCallExpression;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\UnaryExpression;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ExpressionType;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionParser2;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionProcessor;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\PHPExpressionProvider;
+use POData\Common\ODataException;
 
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 //These are in the file loaded by above use statement
@@ -326,14 +326,14 @@ class PHPExpressionProviderTest1 extends \PHPUnit_Framework_TestCase
             $expressionTree = $parser->parseFilter();
             $expressionProcessor = new ExpressionProcessor($expressionTree, new PHPExpressionProvider('$lt'));
             $actualPHPExpression = $expressionProcessor->processExpression();            
-            $expectedPHPExpression = '(!(is_null($lt->OrderDate)) && (ODataProducer\Providers\Metadata\Type\DateTime::dateTimeCmp($lt->OrderDate, \'2010-12-08\') == 0))';            
+            $expectedPHPExpression = '(!(is_null($lt->OrderDate)) && (POData\Providers\Metadata\Type\DateTime::dateTimeCmp($lt->OrderDate, \'2010-12-08\') == 0))';            
             $this->AssertEquals($actualPHPExpression, $expectedPHPExpression);
             
             $odataUriExpression = 'OrderDate gt DeliveryDate';
             $parser->resetParser($odataUriExpression);
             $expressionProcessor->setExpression($parser->parseFilter());
             $actualPHPExpression = $expressionProcessor->processExpression();
-            $expectedPHPExpression = '((!(is_null($lt->OrderDate)) && !(is_null($lt->DeliveryDate))) && (ODataProducer\Providers\Metadata\Type\DateTime::dateTimeCmp($lt->OrderDate, $lt->DeliveryDate) > 0))';
+            $expectedPHPExpression = '((!(is_null($lt->OrderDate)) && !(is_null($lt->DeliveryDate))) && (POData\Providers\Metadata\Type\DateTime::dateTimeCmp($lt->OrderDate, $lt->DeliveryDate) > 0))';
             $this->AssertEquals($actualPHPExpression, $expectedPHPExpression);
             
             $odataUriExpression = 'OrderDate eq null';
@@ -354,21 +354,21 @@ class PHPExpressionProviderTest1 extends \PHPUnit_Framework_TestCase
             $parser->resetParser($odataUriExpression);
             $expressionProcessor->setExpression($parser->parseFilter());
             $actualPHPExpression = $expressionProcessor->processExpression();
-            $expectedPHPExpression = '(!(is_null($lt->OrderDate)) && (ODataProducer\Providers\Metadata\Type\DateTime::year($lt->OrderDate) == 2010))';
+            $expectedPHPExpression = '(!(is_null($lt->OrderDate)) && (POData\Providers\Metadata\Type\DateTime::year($lt->OrderDate) == 2010))';
             $this->AssertEquals($actualPHPExpression, $expectedPHPExpression);
             
             $odataUriExpression = 'month(OrderDate) eq month(DeliveryDate)';
             $parser->resetParser($odataUriExpression);
             $expressionProcessor->setExpression($parser->parseFilter());
             $actualPHPExpression = $expressionProcessor->processExpression();
-            $expectedPHPExpression = '((!(is_null($lt->OrderDate)) && !(is_null($lt->DeliveryDate))) && (ODataProducer\Providers\Metadata\Type\DateTime::month($lt->OrderDate) == ODataProducer\Providers\Metadata\Type\DateTime::month($lt->DeliveryDate)))';
+            $expectedPHPExpression = '((!(is_null($lt->OrderDate)) && !(is_null($lt->DeliveryDate))) && (POData\Providers\Metadata\Type\DateTime::month($lt->OrderDate) == POData\Providers\Metadata\Type\DateTime::month($lt->DeliveryDate)))';
             $this->AssertEquals($actualPHPExpression, $expectedPHPExpression);
             
             $odataUriExpression = 'month(OrderDate) eq 12 and day(OrderDate) eq 22';
             $parser->resetParser($odataUriExpression);
             $expressionProcessor->setExpression($parser->parseFilter());
             $actualPHPExpression = $expressionProcessor->processExpression();
-            $expectedPHPExpression = '(!(is_null($lt->OrderDate)) && ((ODataProducer\Providers\Metadata\Type\DateTime::month($lt->OrderDate) == 12) && (ODataProducer\Providers\Metadata\Type\DateTime::day($lt->OrderDate) == 22)))';            
+            $expectedPHPExpression = '(!(is_null($lt->OrderDate)) && ((POData\Providers\Metadata\Type\DateTime::month($lt->OrderDate) == 12) && (POData\Providers\Metadata\Type\DateTime::day($lt->OrderDate) == 22)))';            
             $this->AssertEquals($actualPHPExpression, $expectedPHPExpression);
             
         } catch (ODataException $exception) {
@@ -389,7 +389,7 @@ class PHPExpressionProviderTest1 extends \PHPUnit_Framework_TestCase
             $expressionTree = $parser->parseFilter();
             $expressionProcessor = new ExpressionProcessor($expressionTree, new PHPExpressionProvider('$lt'));
             $actualPHPExpression = $expressionProcessor->processExpression();
-            $expectedPHPExpression = '((!(is_null($lt->Customer)) && !(is_null($lt->Customer->CustomerGuid))) && (ODataProducer\Providers\Metadata\Type\Guid::guidEqual($lt->Customer->CustomerGuid, \'05b242e752eb46bd8f0e6568b72cd9a5\') == true))';           
+            $expectedPHPExpression = '((!(is_null($lt->Customer)) && !(is_null($lt->Customer->CustomerGuid))) && (POData\Providers\Metadata\Type\Guid::guidEqual($lt->Customer->CustomerGuid, \'05b242e752eb46bd8f0e6568b72cd9a5\') == true))';           
             $this->AssertEquals($actualPHPExpression, $expectedPHPExpression);
         } catch (ODataException $exception) {
             $this->fail('An unexpected ODataException has been raised.' . $exception->getMessage());
@@ -547,7 +547,7 @@ class PHPExpressionProviderTest1 extends \PHPUnit_Framework_TestCase
     
     /**
      * Parse the astoria filter expression, generate the same expression as PHP expression,
-     * retrieve only the entries which satisifes this expression.
+     * retrieve only the entries which satisfies this expression.
      * 
      * @param string         $astoriaFilter
      * @param ResourceType    $resourceType
@@ -561,14 +561,14 @@ class PHPExpressionProviderTest1 extends \PHPUnit_Framework_TestCase
             //Parse the Astoria filter query option to expression tree
             $parser = new ExpressionParser2($astoriaFilter, $resourceType, null);
             $expressionTree = $parser->parseFilter();
-            //emit the PHP expression corrosponds to Astoria filter query
+            //emit the PHP expression corresponds to Astoria filter query
             $expressionProcessor = new ExpressionProcessor($expressionTree, new PHPExpressionProvider('$lt'));
             $phpExpression = $expressionProcessor->processExpression();
             //create an anonymous function with the generated PHP expression in if condition
             $fun = create_function('$lt', 'if(' . $phpExpression . ') { return true; } else { return false;}');
             $result = array();
             foreach($entries as $lt) {
-                //Filter out only the entries which satisifies the condition
+                //Filter out only the entries which satisfies the condition
                 if($fun($lt)) {
                    $result[] = $lt;
                 }

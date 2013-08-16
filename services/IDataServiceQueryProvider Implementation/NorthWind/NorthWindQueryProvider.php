@@ -1,12 +1,12 @@
 <?php
 
-use ODataProducer\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
-use ODataProducer\Providers\Metadata\ResourceSet;
-use ODataProducer\Providers\Metadata\ResourceProperty;
-use ODataProducer\Providers\Query\IDataServiceQueryProvider;
-use ODataProducer\Common\ODataException;
+use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
+use POData\Providers\Metadata\ResourceSet;
+use POData\Providers\Metadata\ResourceProperty;
+use POData\Providers\Query\IDataServiceQueryProvider;
+use POData\Common\ODataException;
 require_once "NorthWindMetadata.php";
-require_once "ODataProducer\Providers\Query\IDataServiceQueryProvider.php";
+require_once "POData\Providers\Query\IDataServiceQueryProvider.php";
 define('DATABASE2', 'Northwind');
 // Note: The instance name of your sql server [How to find instance name]
 // Start ->All progrmas->Microsoft SQL Server 2008 -> Configuration Tools -> SQL Server Configuration Manager

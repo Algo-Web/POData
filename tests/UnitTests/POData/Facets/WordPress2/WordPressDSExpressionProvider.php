@@ -7,12 +7,12 @@ namespace UnitTests\POData\Facets\WordPress2;
  *
  */
 
-use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ExpressionType;
-use ODataProducer\Providers\Metadata\Type\IType;
-use ODataProducer\Common\NotImplementedException;
-use ODataProducer\Common\ODataConstants;
-use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\IExpressionProvider;
-use ODataProducer\Providers\Metadata\ResourceType;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ExpressionType;
+use POData\Providers\Metadata\Type\IType;
+use POData\Common\NotImplementedException;
+use POData\Common\ODataConstants;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\IExpressionProvider;
+use POData\Providers\Metadata\ResourceType;
 
 
 class WordPressDSExpressionProvider implements IExpressionProvider

@@ -1,10 +1,10 @@
 <?php
 
-namespace ODataProducer\UriProcessor\QueryProcessor\ExpressionParser;
+namespace POData\UriProcessor\QueryProcessor\ExpressionParser;
 
-use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\ExpressionTokenId;
-use ODataProducer\UriProcessor\QueryProcessor\ExpressionParser\ExpressionLexer;
-use ODataProducer\Common\ODataException;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionTokenId;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionLexer;
+use POData\Common\ODataException;
 
 class ExpressionLexerTest extends \PHPUnit_Framework_TestCase
 {

@@ -1,12 +1,12 @@
 <?php
 
-use ODataProducer\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
-use ODataProducer\Providers\Metadata\ResourceSet;
-use ODataProducer\Providers\Metadata\ResourceProperty;
-use ODataProducer\Providers\Query\IDataServiceQueryProvider2;
-use ODataProducer\Common\ODataException;
+use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
+use POData\Providers\Metadata\ResourceSet;
+use POData\Providers\Metadata\ResourceProperty;
+use POData\Providers\Query\IDataServiceQueryProvider2;
+use POData\Common\ODataException;
 require_once "NorthWindMetadata.php";
-require_once "ODataProducer\Providers\Query\IDataServiceQueryProvider2.php";
+require_once "POData\Providers\Query\IDataServiceQueryProvider2.php";
 require_once 'NorthWindDSExpressionProvider.php';
 define('DATABASE', 'Northwind');
 // Note: The instance name of your sql server [How to find instance name]
@@ -58,7 +58,7 @@ class NorthWindQueryProvider implements IDataServiceQueryProvider2
 
     /**
      * (non-PHPdoc)
-     * @see ODataProducer\Providers\Query.IDataServiceQueryProvider2::canApplyQueryOptions()
+     * @see POData\Providers\Query.IDataServiceQueryProvider2::canApplyQueryOptions()
      */
     public function canApplyQueryOptions()
     {
@@ -67,7 +67,7 @@ class NorthWindQueryProvider implements IDataServiceQueryProvider2
 
     /**
      * (non-PHPdoc)
-     * @see ODataProducer\Providers\Query.IDataServiceQueryProvider2::getExpressionProvider()
+     * @see POData\Providers\Query.IDataServiceQueryProvider2::getExpressionProvider()
      */
     public function getExpressionProvider()
     {

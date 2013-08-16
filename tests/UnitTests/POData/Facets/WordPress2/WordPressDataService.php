@@ -3,18 +3,18 @@
 namespace UnitTests\POData\Facets\WordPress2;
 
 
-use ODataProducer\Configuration\EntitySetRights;
-use ODataProducer\IDataService;
-use ODataProducer\IRequestHandler;
-use ODataProducer\Configuration\DataServiceProtocolVersion;
-use ODataProducer\Configuration\DataServiceConfiguration;
-use ODataProducer\IServiceProvider;
-use ODataProducer\DataService;
-use ODataProducer\OperationContext\DataServiceHost;
-use ODataProducer\Common\ODataException;
-use ODataProducer\Common\ODataConstants;
-use ODataProducer\Common\Messages;
-use ODataProducer\UriProcessor\UriProcessor;
+use POData\Configuration\EntitySetRights;
+use POData\IDataService;
+use POData\IRequestHandler;
+use POData\Configuration\DataServiceProtocolVersion;
+use POData\Configuration\DataServiceConfiguration;
+use POData\IServiceProvider;
+use POData\DataService;
+use POData\OperationContext\DataServiceHost;
+use POData\Common\ODataException;
+use POData\Common\ODataConstants;
+use POData\Common\Messages;
+use POData\UriProcessor\UriProcessor;
 
 
 
@@ -48,7 +48,7 @@ class WordPressDataService extends DataService implements IServiceProvider
      *                            IDataServiceQueryProvider,
      *                            IDataServiceStreamProvider
      * 
-     * @see library/ODataProducer/ODataProducer.IServiceProvider::getService()
+     * @see library/POData.IServiceProvider::getService()
      * @return object
      */
     public function getService($serviceType)

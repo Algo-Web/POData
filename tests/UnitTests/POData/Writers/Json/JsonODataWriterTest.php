@@ -1,18 +1,18 @@
 <?php
 
-use ODataProducer\ObjectModel\ODataURL;
-use ODataProducer\ObjectModel\ODataURLCollection;
-use ODataProducer\ObjectModel\ODataFeed;
-use ODataProducer\ObjectModel\ODataEntry;
-use ODataProducer\ObjectModel\ODataLink;
-use ODataProducer\ObjectModel\ODataMediaLink;
-use ODataProducer\ObjectModel\ODataPropertyContent;
-use ODataProducer\ObjectModel\ODataProperty;
-use ODataProducer\ObjectModel\ODataBagContent;
-use ODataProducer\Writers\Atom\JsonODataWriter;
-use ODataProducer\Writers\Common\ODataWriter;
-use ODataProducer\Common\InvalidOperationException;
-use ODataProducer\Common\ODataException;
+use POData\ObjectModel\ODataURL;
+use POData\ObjectModel\ODataURLCollection;
+use POData\ObjectModel\ODataFeed;
+use POData\ObjectModel\ODataEntry;
+use POData\ObjectModel\ODataLink;
+use POData\ObjectModel\ODataMediaLink;
+use POData\ObjectModel\ODataPropertyContent;
+use POData\ObjectModel\ODataProperty;
+use POData\ObjectModel\ODataBagContent;
+use POData\Writers\Atom\JsonODataWriter;
+use POData\Writers\Common\ODataWriter;
+use POData\Common\InvalidOperationException;
+use POData\Common\ODataException;
 
 class TestJsonODataWriter extends PHPUnit_Framework_TestCase
 {
