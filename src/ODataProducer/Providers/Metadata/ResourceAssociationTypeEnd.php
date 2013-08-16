@@ -47,10 +47,10 @@ class ResourceAssociationTypeEnd
      * @param string                $name             name of the end
      * @param ResourceType          $resourceType     resource type that the end 
      *                                                refers to
-     * @param ResourceProperty/NULL $resourceProperty property of the end, can be 
+     * @param ResourceProperty|null $resourceProperty property of the end, can be 
      *                                                NULL if relationship is 
      *                                                uni-directional
-     * @param ResourceProperty/NULL $fromProperty     Property on the related end 
+     * @param ResourceProperty|null $fromProperty     Property on the related end 
      *                                                that points to this end, can 
      *                                                be NULL if relationship is 
      *                                                uni-directional
@@ -95,7 +95,7 @@ class ResourceAssociationTypeEnd
      * To check this relationship belongs to a specfic entity property
      *  
      * @param ResourceType          $resourceType     The type of the entity
-     * @param ResourceProperty/NULL $resourceProperty The property in the entity
+     * @param ResourceProperty|null $resourceProperty The property in the entity
      * 
      * @return boolean
      */

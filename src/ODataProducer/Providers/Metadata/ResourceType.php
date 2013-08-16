@@ -178,7 +178,7 @@ class ResourceType
     /**
      * Create new instance of ResourceType
      * 
-     * @param ReflectionClass/IType $instanceType     Instance type for the resource,
+     * @param ReflectionClass|IType $instanceType     Instance type for the resource,
      *                                                for entity and 
      *                                                complex this will 
      *                                                be 'ReflectionClass' and for 

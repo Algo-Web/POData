@@ -36,14 +36,14 @@ class DataServiceStreamProviderWrapper
      * Used to check whether interface implementor modified repsonse content
      * type header or not.
      *
-     * @var string/NULL
+     * @var string|null
      */
     private $_responseContentType;
 
     /**
      * Used to check whether interface implementor modified etag header or not.
      *
-     * @var string/NULL
+     * @var string|null
      */
     private $_responseETag;
 
