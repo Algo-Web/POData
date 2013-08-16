@@ -287,7 +287,7 @@ class NorthWindQueryProvider1 implements IDataServiceQueryProvider
     /**
      * TODO
      * 
-     * @return Object/null 
+     * @return Object|null 
      */
     public function getRelatedResourceReference(ResourceSet $sourceResourceSet, 
         $sourceEntityInstance, 

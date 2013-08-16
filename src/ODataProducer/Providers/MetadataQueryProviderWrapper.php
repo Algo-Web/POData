@@ -786,7 +786,7 @@ class MetadataQueryProviderWrapper
      * @param KeyDescriptor $keyDescriptor The key to identify the entity to be 
      *                                     fetched
      * 
-     * @return Object/NULL Returns entity instance if found else null
+     * @return Object|null Returns entity instance if found else null
      */
     public function getResourceFromResourceSet(ResourceSet $resourceSet, KeyDescriptor $keyDescriptor)
     {
@@ -897,7 +897,7 @@ class MetadataQueryProviderWrapper
      * @param KeyDescriptor    $keyDescriptor     The key to identify the entity 
      *                                            to be fetched.
      * 
-     * @return Object/NULL Returns entity instance if found else null
+     * @return Object|null Returns entity instance if found else null
      */
     public function getResourceFromRelatedResourceSet(ResourceSet $sourceResourceSet,
         $sourceEntity, ResourceSet $targetResourceSet, ResourceProperty $targetProperty,
@@ -929,7 +929,7 @@ class MetadataQueryProviderWrapper
      * @param ResourceProperty $targetProperty    The navigation property to be 
      *                                            retrieved
      * 
-     * @return Object/null The related resource if exists else null
+     * @return Object|null The related resource if exists else null
      */
     public function getRelatedResourceReference(ResourceSet $sourceResourceSet, 
         $sourceEntity, ResourceSet $targetResourceSet, 

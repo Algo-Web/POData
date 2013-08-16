@@ -35,7 +35,7 @@ class NorthWindQueryProvider2 implements IDataServiceQueryProvider
      * @param ResourceSet $resourceSet     The entity set from which an entity needs to be fetched
      * @param KeyDescriptor $keyDescriptor The key to identify the entity to be fetched
      * 
-     * @return Object/NULL Returns entity instance if found else null
+     * @return Object|null Returns entity instance if found else null
      */
     public function getResourceFromResourceSet(ResourceSet $resourceSet, KeyDescriptor $keyDescriptor)
     {   
@@ -64,7 +64,7 @@ class NorthWindQueryProvider2 implements IDataServiceQueryProvider
     /**
      * TODO
      * 
-     * @return Object/null 
+     * @return Object|null 
      */
     public function getRelatedResourceReference(ResourceSet $sourceResourceSet, 
         $sourceEntityInstance, 
