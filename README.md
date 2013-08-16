@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/balihoo/POData.png?branch=master)](https://travis-ci.org/balihoo/POData)
+
 POData - OData for the Poor PHP Developer
 ============
 
