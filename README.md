@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/balihoo/POData.png?branch=master)](https://travis-ci.org/balihoo/POData)
+[![Build Status](https://travis-ci.org/balihoo/POData.png?branch=master)](https://travis-ci.org/balihoo/POData) [![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/balihoo/POData/badges/quality-score.png?s=f64c3b87cfa28d109fa394e68dd34c3caa88bedc)](https://scrutinizer-ci.com/g/balihoo/POData/)
 
 POData - OData for the Poor PHP Developer
 ============
