@@ -34,5 +34,5 @@ Contact
 ============
 Need Support? Want to help contribute (but not yet ready to submit a pull request)?  Want to complain about something being too hard?  Doesn't matter why we're interested, contact us at:
 
-* Our [POData google group](https://groups.google.com/forum/#!forum/podata)
+* Our [POData google group](https://groups.google.com/d/forum/podata)
 * Our [POData chat](https://balihoodevs.talkerapp.com/rooms/53540)
