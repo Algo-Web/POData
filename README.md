@@ -10,12 +10,13 @@ POData (pronounced like the [sandwich](http://en.wikipedia.org/wiki/Po'_boy)) a 
 
 POData vs odataphpprod
 ===================
-POData started as a fork of [The OData Producer Library for PHP](https://github.com/MSOpenTech/odataphpprod) many thanks to that project for making this one possible.  The many goals of this fork are best tracked in the issues list but here are some highlights:
+POData started as a fork of [The OData Producer Library for PHP](https://github.com/MSOpenTech/odataphpprod).  Many thanks to that project for making this one possible.  The many goals of this fork are best tracked in the issues list but here are some highlights:
 
-* OData v3 Support
-* Full BreezeJS support (we love that library)
+* OData v3 Compliant
+* Full [BreezeJS](http://www.breezejs.com/) & [JayData](http://jaydata.org/) support (we love those libraries)
 * Availability via Composer
-* Simpler to plug in to common PHP frameworks (Zend, Symphony, Laravel)
+* Simpler to plug in to common PHP frameworks (Zend, [Symphony](https://github.com/symphonycms/symphony-2), [Laravel](https://github.com/laravel/laravel))
+* Produce sample services that pass [OData Validation](http://services.odata.org/validation/)
 * Offers your provider implementation more control on how to best execute the OData Query
 * Optimized $expand support
 * Support for an Annotation Based Provider Implementation
@@ -27,3 +28,11 @@ Long term goals include:
 * Transaction support
 * Port to Node
 * Convince WordPress & MediaWiki to change their entire API to OData
+
+
+Contact 
+============
+Need Support? Want to help contribute (but not yet ready to submit a pull request)?  Want to complain about something being too hard?  Doesn't matter why we're interested, contact us at:
+
+* Our [POData google group](https://groups.google.com/forum/#!forum/podata)
+* Our [POData chat](https://balihoodevs.talkerapp.com/rooms/53540)
