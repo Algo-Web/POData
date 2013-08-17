@@ -30,7 +30,7 @@ Long term goals include:
 * Convince WordPress & MediaWiki to change their entire API to OData
 
 
-Contact 
+Contact
 ============
 Need Support? Want to help contribute (but not yet ready to submit a pull request)?  Want to complain about something being too hard?  Doesn't matter why we're interested, contact us at:
 
