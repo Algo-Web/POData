@@ -113,12 +113,11 @@ class OrderByInfo
     }
 
     /**
-     * DataServiceQueryProvder implementor should use this function to let the
-     * library know that whether implementor will be performing the sorting
+     * DataServiceQueryProvider implementation should use this function to let the
+     * library know that whether implementation will be performing the sorting
      * or not, if not library will perform the sorting.
      * 
-     * @param boolean $isSorted Set the flag so indicate that the result has
-     *                          been sorted.
+     * @param boolean $isSorted Set the flag so indicate that the result has been sorted.
      * 
      * @return void
      */

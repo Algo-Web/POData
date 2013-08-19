@@ -18,285 +18,271 @@ class MetadataQueryProviderWrapperTest extends \PHPUnit_Framework_TestCase
 {
     protected function setUp()
     {
+        //TODO: move the entity types into their own files
+        //unit then we need to ensure they are "in scope"
+        $x = NorthWindMetadata::Create();
+    }
+
+    protected function tearDown()
+    {
     }
 
     public function testContainerNameAndNameSpace1()
     {
-        try {
-            $configuration = null;
-            $metadataProvider = $this->_createMetadataAndConfiguration1($configuration);
-            $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                        $metadataProvider, //IDataServiceMetadataProvider implementation 
-                                        null, //IDataServiceQueryProvider implementation (set to null)
-                                        $configuration, //Service configuration
-                                        false
-                                        );
 
-            $this->assertEquals($metaQueryProverWrapper->getContainerName(), 'NorthWindEntities');
-            $this->assertEquals($metaQueryProverWrapper->getContainerNamespace(), 'NorthWind');
-        } catch (\Exception $exception) {
-            $this->fail('An unexpected Exception has been raised' . $exception->getMessage());
-        }
+        $configuration = null;
+        $metadataProvider = $this->_createMetadataAndConfiguration1($configuration);
+        $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
+                                    $metadataProvider, //IDataServiceMetadataProvider implementation
+                                    null, //IDataServiceQueryProvider implementation (set to null)
+                                    $configuration, //Service configuration
+                                    false
+                                    );
+
+        $this->assertEquals($metaQueryProverWrapper->getContainerName(), 'NorthWindEntities');
+        $this->assertEquals($metaQueryProverWrapper->getContainerNamespace(), 'NorthWind');
+
     }
 
     public function testResolveResourceSet1()
     {
-        try {
-            //Try to resolve invisible resource set
-            $configuration = null;
-            $metadataProvider = $this->_createMetadataAndConfiguration1($configuration);
-            $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                        $metadataProvider, //IDataServiceMetadataProvider implementation 
-                                        null, //IDataServiceQueryProvider implementation (set to null)
-                                        $configuration, //Service configuuration
-                                        false
-                                        );        
-            $customerResourceSet = $metaQueryProverWrapper->resolveResourceSet('Customers');
-            $this->assertNull($customerResourceSet);
 
-            //Try to resolve visible resource set
-            $configuration = null;
-            $metadataProvider = $this->_createMetadataAndConfiguration1($configuration);
-            $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                        $metadataProvider, //IDataServiceMetadataProvider implementation 
-                                        null, //IDataServiceQueryProvider implementation (set to null)
-                                        $configuration, //Service configuuration
-                                        false
-                                        );                                    
-            $configuration->setEntitySetAccessRule('Customers', EntitySetRights::ALL);
-            $customerResourceSet = $metaQueryProverWrapper->resolveResourceSet('Customers');
-            $this->assertNotNull($customerResourceSet);
-            $this->assertEquals($customerResourceSet->getName(), 'Customers');
-            $this->assertEquals($customerResourceSet->getResourceType()->getName(), 'Customer');
-        } catch (\Exception $exception) {
-            $this->fail('An unexpected Exception has been raised' . $exception->getMessage());    
-        }
+        //Try to resolve invisible resource set
+        $configuration = null;
+        $metadataProvider = $this->_createMetadataAndConfiguration1($configuration);
+        $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
+                                    $metadataProvider, //IDataServiceMetadataProvider implementation
+                                    null, //IDataServiceQueryProvider implementation (set to null)
+                                    $configuration, //Service configuuration
+                                    false
+                                    );
+        $customerResourceSet = $metaQueryProverWrapper->resolveResourceSet('Customers');
+        $this->assertNull($customerResourceSet);
+
+        //Try to resolve visible resource set
+        $configuration = null;
+        $metadataProvider = $this->_createMetadataAndConfiguration1($configuration);
+        $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
+                                    $metadataProvider, //IDataServiceMetadataProvider implementation
+                                    null, //IDataServiceQueryProvider implementation (set to null)
+                                    $configuration, //Service configuuration
+                                    false
+                                    );
+        $configuration->setEntitySetAccessRule('Customers', EntitySetRights::ALL);
+        $customerResourceSet = $metaQueryProverWrapper->resolveResourceSet('Customers');
+        $this->assertNotNull($customerResourceSet);
+        $this->assertEquals($customerResourceSet->getName(), 'Customers');
+        $this->assertEquals($customerResourceSet->getResourceType()->getName(), 'Customer');
+
     }
 
     public function testGetResourceSets1()
     {
-        try {
-            //Try to get all resource sets with non of the resouce sets are visible
-            $configuration = null;
-            $metadataProvider = $this->_createMetadataAndConfiguration1($configuration);
-            $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                        $metadataProvider, //IDataServiceMetadataProvider implementation 
-                                        null, //IDataServiceQueryProvider implementation (set to null)
-                                        $configuration, //Service configuuration
-                                        false
-                                        );
-            $resourceSets = $metaQueryProverWrapper->getResourceSets();
-            $this->assertTrue(empty($resourceSets));
 
-            //Try to get all resource sets after setting all resouce sets as visible
-            $configuration = null;
-            $metadataProvider = $this->_createMetadataAndConfiguration1($configuration);
-            $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                        $metadataProvider, //IDataServiceMetadataProvider implementation 
-                                        null, //IDataServiceQueryProvider implementation (set to null)
-                                        $configuration, //Service configuuration
-                                        false
-                                        );
-            $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
-            $resourceSets = $metaQueryProverWrapper->getResourceSets();
-            $this->assertEquals(count($resourceSets), 5);
-            //Try to resolve 'Customers' entity set, we should the resource set for it from cache as the above getResourceSets call caches all resource sets 
-            $customerResourceSet = $metaQueryProverWrapper->resolveResourceSet('Customers');
-            $this->assertNotNull($customerResourceSet);
-        } catch (\Exception $exception) {
-            $this->fail('An unexpected Exception has been raised' . $exception->getMessage());    
-        }
+        //Try to get all resource sets with non of the resouce sets are visible
+        $configuration = null;
+        $metadataProvider = $this->_createMetadataAndConfiguration1($configuration);
+        $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
+                                    $metadataProvider, //IDataServiceMetadataProvider implementation
+                                    null, //IDataServiceQueryProvider implementation (set to null)
+                                    $configuration, //Service configuuration
+                                    false
+                                    );
+        $resourceSets = $metaQueryProverWrapper->getResourceSets();
+        $this->assertTrue(empty($resourceSets));
+
+        //Try to get all resource sets after setting all resouce sets as visible
+        $configuration = null;
+        $metadataProvider = $this->_createMetadataAndConfiguration1($configuration);
+        $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
+                                    $metadataProvider, //IDataServiceMetadataProvider implementation
+                                    null, //IDataServiceQueryProvider implementation (set to null)
+                                    $configuration, //Service configuuration
+                                    false
+                                    );
+        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
+        $resourceSets = $metaQueryProverWrapper->getResourceSets();
+        $this->assertEquals(count($resourceSets), 5);
+        //Try to resolve 'Customers' entity set, we should the resource set for it from cache as the above getResourceSets call caches all resource sets
+        $customerResourceSet = $metaQueryProverWrapper->resolveResourceSet('Customers');
+        $this->assertNotNull($customerResourceSet);
+
     }
 
     public function testResolveResourceType1()
     {
-        try {
-            $configuration = null;
-            $metadataProvider = $this->_createMetadataAndConfiguration1($configuration);
-            $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                        $metadataProvider, //IDataServiceMetadataProvider implementation 
-                                        null, //IDataServiceQueryProvider implementation (set to null)
-                                        $configuration, //Service configuuration
-                                        false
-                                        );
-            //Try to resolve non-existing type
-            $type = $metaQueryProverWrapper->resolveResourceType('Customer1');
-            $this->assertNull($type);
-            $customerEntityType = $metaQueryProverWrapper->resolveResourceType('Customer');
-            $this->assertNotNull($customerEntityType);
-            $this->assertEquals($customerEntityType->getName(), 'Customer');
-            $this->assertEquals($customerEntityType->getResourceTypeKind(), ResourceTypeKind::ENTITY);
 
-            $addressCoomplexType = $metaQueryProverWrapper->resolveResourceType('Address');
-            $this->assertNotNull($addressCoomplexType);
-            $this->assertEquals($addressCoomplexType->getName(), 'Address');
-            $this->assertEquals($addressCoomplexType->getResourceTypeKind(), ResourceTypeKind::COMPLEX);
-        } catch (\Exception $exception) {
-            $this->fail('An unexpected Exception has been raised' . $exception->getMessage());    
-        }
+        $configuration = null;
+        $metadataProvider = $this->_createMetadataAndConfiguration1($configuration);
+        $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
+                                    $metadataProvider, //IDataServiceMetadataProvider implementation
+                                    null, //IDataServiceQueryProvider implementation (set to null)
+                                    $configuration, //Service configuuration
+                                    false
+                                    );
+        //Try to resolve non-existing type
+        $type = $metaQueryProverWrapper->resolveResourceType('Customer1');
+        $this->assertNull($type);
+        $customerEntityType = $metaQueryProverWrapper->resolveResourceType('Customer');
+        $this->assertNotNull($customerEntityType);
+        $this->assertEquals($customerEntityType->getName(), 'Customer');
+        $this->assertEquals($customerEntityType->getResourceTypeKind(), ResourceTypeKind::ENTITY);
+
+        $addressCoomplexType = $metaQueryProverWrapper->resolveResourceType('Address');
+        $this->assertNotNull($addressCoomplexType);
+        $this->assertEquals($addressCoomplexType->getName(), 'Address');
+        $this->assertEquals($addressCoomplexType->getResourceTypeKind(), ResourceTypeKind::COMPLEX);
+
     }
 
     public function testGetTypes1()
     {
-        try {
-            $configuration = null;
-            $metadataProvider = $this->_createMetadataAndConfiguration1($configuration);
-            $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                        $metadataProvider, //IDataServiceMetadataProvider implementation 
-                                        null, //IDataServiceQueryProvider implementation (set to null)
-                                        $configuration, //Service configuuration
-                                        false
-                                        );
-            $resourceTypes = $metaQueryProverWrapper->getTypes();
-            $this->assertEquals(count($resourceTypes), 7);
-            $orderEntityType = $metaQueryProverWrapper->resolveResourceType('Order');
-            $this->assertNotNull($orderEntityType);
-            $this->assertEquals($orderEntityType->getName(), 'Order');
-        } catch (\Exception $exception) {
-            $this->fail('An unexpected Exception has been raised' . $exception->getMessage());    
-        }
+
+        $configuration = null;
+        $metadataProvider = $this->_createMetadataAndConfiguration1($configuration);
+        $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
+                                    $metadataProvider, //IDataServiceMetadataProvider implementation
+                                    null, //IDataServiceQueryProvider implementation (set to null)
+                                    $configuration, //Service configuuration
+                                    false
+                                    );
+        $resourceTypes = $metaQueryProverWrapper->getTypes();
+        $this->assertEquals(count($resourceTypes), 7);
+        $orderEntityType = $metaQueryProverWrapper->resolveResourceType('Order');
+        $this->assertNotNull($orderEntityType);
+        $this->assertEquals($orderEntityType->getName(), 'Order');
+
     }
 
     public function testGetDerivedTypes1()
     {
-        try {
-            $configuration = null;
-            $metadataProvider = $this->_createMetadataAndConfiguration1($configuration);
-            $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                        $metadataProvider, //IDataServiceMetadataProvider implementation 
-                                        null, //IDataServiceQueryProvider implementation (set to null)
-                                        $configuration, //Service configuuration
-                                        false
-                                        );
-            $customerEntityType = $metaQueryProverWrapper->resolveResourceType('Customer');
-            $this->assertNotNull($customerEntityType);
-            $derivedTypes = $metaQueryProverWrapper->getDerivedTypes($customerEntityType);        
-            $this->assertNull($derivedTypes);
-        } catch (\Exception $exception) {
-            $this->fail('An unexpected Exception has been raised' . $exception->getMessage());    
-        }
+
+        $configuration = null;
+        $metadataProvider = $this->_createMetadataAndConfiguration1($configuration);
+        $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
+                                    $metadataProvider, //IDataServiceMetadataProvider implementation
+                                    null, //IDataServiceQueryProvider implementation (set to null)
+                                    $configuration, //Service configuuration
+                                    false
+                                    );
+        $customerEntityType = $metaQueryProverWrapper->resolveResourceType('Customer');
+        $this->assertNotNull($customerEntityType);
+        $derivedTypes = $metaQueryProverWrapper->getDerivedTypes($customerEntityType);
+        $this->assertNull($derivedTypes);
+
     }
 
     public function testHasDerivedTypes1()
     {
-        try {
-            $configuration = null;
-            $metadataProvider = $this->_createMetadataAndConfiguration1($configuration);
-            $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                        $metadataProvider, //IDataServiceMetadataProvider implementation 
-                                        null, //IDataServiceQueryProvider implementation (set to null)
-                                        $configuration, //Service configuuration
-                                        false
-                                        );
-            $orderEntityType = $metaQueryProverWrapper->resolveResourceType('Order');
-            $this->assertNotNull($orderEntityType);
-            $hasDerivedTypes = $metaQueryProverWrapper->hasDerivedTypes($orderEntityType);        
-            $this->assertFalse($hasDerivedTypes);
-        } catch (\Exception $exception) {
-            $this->fail('An unexpected Exception has been raised' . $exception->getMessage());    
-        }
+
+        $configuration = null;
+        $metadataProvider = $this->_createMetadataAndConfiguration1($configuration);
+        $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
+                                    $metadataProvider, //IDataServiceMetadataProvider implementation
+                                    null, //IDataServiceQueryProvider implementation (set to null)
+                                    $configuration, //Service configuuration
+                                    false
+                                    );
+        $orderEntityType = $metaQueryProverWrapper->resolveResourceType('Order');
+        $this->assertNotNull($orderEntityType);
+        $hasDerivedTypes = $metaQueryProverWrapper->hasDerivedTypes($orderEntityType);
+        $this->assertFalse($hasDerivedTypes);
+
     }
 
     public function testGetResourceAssociationSet1()
     {
-        try {
-            //Get the association set where resource set in both ends are visible
-            $configuration = null;
-            $metadataProvider = $this->_createMetadataAndConfiguration1($configuration);
-            $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                        $metadataProvider, //IDataServiceMetadataProvider implementation 
-                                        null, //IDataServiceQueryProvider implementation (set to null)
-                                        $configuration, //Service configuuration
-                                        false
-                                        );
-            $configuration->setEntitySetAccessRule('Customers', EntitySetRights::ALL);
-            $configuration->setEntitySetAccessRule('Orders', EntitySetRights::ALL);
-            $customersEntitySetWrapper = $metaQueryProverWrapper->resolveResourceSet('Customers');
-            $this->assertNotNull($customersEntitySetWrapper);
-            $customerEntityType = $metaQueryProverWrapper->resolveResourceType('Customer');
-            $this->assertNotNull($customerEntityType);
-            $ordersProperty = $customerEntityType->tryResolvePropertyTypeByName('Orders');
-            $this->assertNotNull($ordersProperty);
-            $associationSet = $metaQueryProverWrapper->getResourceAssociationSet($customersEntitySetWrapper, $customerEntityType, $ordersProperty);
-            $this->assertNotNull($associationSet);
-            $associationSetEnd1 = $associationSet->getEnd1();
-            $this->assertNotNull($associationSetEnd1);
-            $associationSetEnd2 = $associationSet->getEnd2();
-            $this->assertNotNull($associationSetEnd2);
-            $this->assertEquals($associationSetEnd1->getResourceSet()->getName(), 'Customers');
-            $this->assertEquals($associationSetEnd2->getResourceSet()->getName(), 'Orders');
-            $this->assertEquals($associationSetEnd1->getResourceType()->getName(), 'Customer');
-            $this->assertEquals($associationSetEnd2->getResourceType()->getName(), 'Order');
 
-            //Try to get the association set where resource set in one end is invisible
-            $configuration = null;
-            $metadataProvider = $this->_createMetadataAndConfiguration1($configuration);
-            $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                        $metadataProvider, //IDataServiceMetadataProvider implementation 
-                                        null, //IDataServiceQueryProvider implementation (set to null)
-                                        $configuration, //Service configuuration
-                                        false
-                                        );
-            $configuration->setEntitySetAccessRule('Customers', EntitySetRights::ALL);
-            //Set orders entity set as invisible
-            $configuration->setEntitySetAccessRule('Orders', EntitySetRights::NONE);
-            $customersEntitySetWrapper = $metaQueryProverWrapper->resolveResourceSet('Customers');
-            $this->assertNotNull($customersEntitySetWrapper);
-            $customerEntityType = $metaQueryProverWrapper->resolveResourceType('Customer');
-            $this->assertNotNull($customerEntityType);
-            $ordersProperty = $customerEntityType->tryResolvePropertyTypeByName('Orders');
-            $this->assertNotNull($ordersProperty);
-            $associationSet = $metaQueryProverWrapper->getResourceAssociationSet($customersEntitySetWrapper, $customerEntityType, $ordersProperty);
-            $this->assertNull($associationSet);
-        } catch (\Exception $exception) {
-            $this->fail('An unexpected Exception has been raised' . $exception->getMessage());    
-        }
+        //Get the association set where resource set in both ends are visible
+        $configuration = null;
+        $metadataProvider = $this->_createMetadataAndConfiguration1($configuration);
+        $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
+                                    $metadataProvider, //IDataServiceMetadataProvider implementation
+                                    null, //IDataServiceQueryProvider implementation (set to null)
+                                    $configuration, //Service configuuration
+                                    false
+                                    );
+        $configuration->setEntitySetAccessRule('Customers', EntitySetRights::ALL);
+        $configuration->setEntitySetAccessRule('Orders', EntitySetRights::ALL);
+        $customersEntitySetWrapper = $metaQueryProverWrapper->resolveResourceSet('Customers');
+        $this->assertNotNull($customersEntitySetWrapper);
+        $customerEntityType = $metaQueryProverWrapper->resolveResourceType('Customer');
+        $this->assertNotNull($customerEntityType);
+
+        $ordersProperty = $customerEntityType->tryResolvePropertyTypeByName('Orders');
+        $this->assertNotNull($ordersProperty);
+
+        $associationSet = $metaQueryProverWrapper->getResourceAssociationSet($customersEntitySetWrapper, $customerEntityType, $ordersProperty);
+        $this->assertNotNull($associationSet);
+
+        $associationSetEnd1 = $associationSet->getEnd1();
+        $this->assertNotNull($associationSetEnd1);
+
+        $associationSetEnd2 = $associationSet->getEnd2();
+        $this->assertNotNull($associationSetEnd2);
+
+        $this->assertEquals($associationSetEnd1->getResourceSet()->getName(), 'Customers');
+        $this->assertEquals($associationSetEnd2->getResourceSet()->getName(), 'Orders');
+        $this->assertEquals($associationSetEnd1->getResourceType()->getName(), 'Customer');
+        $this->assertEquals($associationSetEnd2->getResourceType()->getName(), 'Order');
+
+        //Try to get the association set where resource set in one end is invisible
+        $configuration = null;
+        $metadataProvider = $this->_createMetadataAndConfiguration1($configuration);
+        $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
+                                    $metadataProvider, //IDataServiceMetadataProvider implementation
+                                    null, //IDataServiceQueryProvider implementation (set to null)
+                                    $configuration, //Service configuuration
+                                    false
+                                    );
+        $configuration->setEntitySetAccessRule('Customers', EntitySetRights::ALL);
+        //Set orders entity set as invisible
+        $configuration->setEntitySetAccessRule('Orders', EntitySetRights::NONE);
+        $customersEntitySetWrapper = $metaQueryProverWrapper->resolveResourceSet('Customers');
+        $this->assertNotNull($customersEntitySetWrapper);
+
+        $customerEntityType = $metaQueryProverWrapper->resolveResourceType('Customer');
+        $this->assertNotNull($customerEntityType);
+
+        $ordersProperty = $customerEntityType->tryResolvePropertyTypeByName('Orders');
+        $this->assertNotNull($ordersProperty);
+
+        $associationSet = $metaQueryProverWrapper->getResourceAssociationSet($customersEntitySetWrapper, $customerEntityType, $ordersProperty);
+        $this->assertNull($associationSet);
+
     }
 
     public function testContainerNameAndNameSpace2()
     {
+
+        $configuration = null;
+        $metadataProvider = $this->_createMetadataAndConfiguration2($configuration);
+        $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
+                                    $metadataProvider, //IDataServiceMetadataProvider implementation
+                                    null, //IDataServiceQueryProvider implementation (set to null)
+                                    $configuration, //Service configuuration
+                                    false
+                                    );
+
         try {
-            $configuration = null;
-            $metadataProvider = $this->_createMetadataAndConfiguration2($configuration);
-            $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                        $metadataProvider, //IDataServiceMetadataProvider implementation 
-                                        null, //IDataServiceQueryProvider implementation (set to null)
-                                        $configuration, //Service configuuration
-                                        false
-                                        );
-
-            $exceptionThrown = false;
-            try {
-                $metaQueryProverWrapper->getContainerName();
-            } catch (ODataException $exception) {
-                $exceptionThrown = true;
-                $this->assertEquals($exception->getMessage(), 'The value returned by IDataServiceMetadataProvider::getContainerName method must not be null or empty');
-            }
-
-            if (!$exceptionThrown) {
-                $this->fail('An expected ODataException null container name has not been thrown');
-            }
-
-            $exceptionThrown = false;
-            try {
-                $metaQueryProverWrapper->getContainerNamespace();
-            } catch (ODataException $exception) {
-                $exceptionThrown = true;
-                $this->assertEquals($exception->getMessage(), 'The value returned by IDataServiceMetadataProvider::getContainerNamespace method must not be null or empty');
-            }
-
-            if (!$exceptionThrown) {
-                $this->fail('An expected ODataException null container namespace has not been thrown');
-            }
-            
-        } catch (\Exception $exception) {
-            $this->fail('An unexpected Exception has been raised' . $exception->getMessage());    
+            $metaQueryProverWrapper->getContainerName();
+            $this->fail('An expected ODataException null container name has not been thrown');
+        } catch (ODataException $exception) {
+            $this->assertEquals($exception->getMessage(), 'The value returned by IDataServiceMetadataProvider::getContainerName method must not be null or empty');
         }
+
+
+        try {
+            $metaQueryProverWrapper->getContainerNamespace();
+            $this->fail('An expected ODataException null container namespace has not been thrown');
+        } catch (ODataException $exception) {
+            $this->assertEquals($exception->getMessage(), 'The value returned by IDataServiceMetadataProvider::getContainerNamespace method must not be null or empty');
+        }
+
     }
 
     public function testGetResourceSets2()
     {
-
         //Try to get all resource sets with non of the resouce sets are visible
         $configuration = null;
         $metadataProvider = $this->_createMetadataAndConfiguration2($configuration);
@@ -304,57 +290,41 @@ class MetadataQueryProviderWrapperTest extends \PHPUnit_Framework_TestCase
 	    $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
             $metadataProvider, //IDataServiceMetadataProvider implementation
             null, //IDataServiceQueryProvider implementation (set to null)
-            $configuration, //Service configuuration
+            $configuration, //Service configuration
             false
         );
 
-        $exceptionThrown = false;
         try {
             $metaQueryProverWrapper->getResourceSets();
+            $this->fail('An expected ODataException for entity set repetition has not been thrown');
         } catch(ODataException $exception) {
-            $exceptionThrown = true;
             $this->assertEquals($exception->getMessage(), 'More than one entity set with the name \'Customers\' was found. Entity set names must be unique');
         }
-
-        if (!$exceptionThrown) {
-            $this->fail('An expected ODataException for entity set repetition has not been thrown');
-        }
-
 
     }
 
     public function testGetTypes2()
     {
+
+        //Try to get all resource sets with non of the resource sets are visible
+        $configuration = null;
+        $metadataProvider = $this->_createMetadataAndConfiguration2($configuration);
+        $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
+                                    $metadataProvider, //IDataServiceMetadataProvider implementation
+                                    null, //IDataServiceQueryProvider implementation (set to null)
+                                    $configuration, //Service configuration
+                                    false
+                                    );
         try {
-            //Try to get all resource sets with non of the resouce sets are visible
-            $configuration = null;
-            $metadataProvider = $this->_createMetadataAndConfiguration2($configuration);
-            $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                        $metadataProvider, //IDataServiceMetadataProvider implementation 
-                                        null, //IDataServiceQueryProvider implementation (set to null)
-                                        $configuration, //Service configuuration
-                                        false
-                                        );
-            $exceptionThrown = false;
-            try {
-                $metaQueryProverWrapper->getTypes();
-            } catch(ODataException $exception) {
-                $exceptionThrown = true;                
-                $this->assertEquals($exception->getMessage(), 'More than one entity type with the name \'Order\' was found. Entity type names must be unique.');
-            }
-
-            if (!$exceptionThrown) {
-                $this->fail('An expected ODataException for entity type name repetition has not been thrown');
-            }
-
-        } catch (\Exception $exception) {
-            $this->fail('An unexpected Exception has been raised' . $exception->getMessage());    
+            $metaQueryProverWrapper->getTypes();
+            $this->fail('An expected ODataException for entity type name repetition has not been thrown');
+        } catch(ODataException $exception) {
+            $this->assertEquals($exception->getMessage(), 'More than one entity type with the name \'Order\' was found. Entity type names must be unique.');
         }
+
     }
     
-    protected function tearDown()
-    {
-    }
+
 
     /**
      * Creates a valid IDataServiceMetadataProvider implementation, and associated configuration

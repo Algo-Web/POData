@@ -1,6 +1,6 @@
 <?php
 
-namespace POData\UriProcessor\ResourcePathProcessor\SegmentParser;
+namespace UnitTests\POData\UriProcessor\QueryProcessor\SkipTokenParser;
 
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Configuration\EntitySetRights;
@@ -41,17 +41,13 @@ class TestSkipTokenParser2 extends \PHPUnit_Framework_TestCase
         $internalOrderByInfo = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $metaQueryProverWrapper);
         $skipToken = "10365";
         $internalSkipTokenInfo = SkipTokenParser::parseSkipTokenClause($resourceType, $internalOrderByInfo, $skipToken);
-        $exceptionThrown = false;
+
         try {
             $internalSkipTokenInfo->getIndexOfFirstEntryInTheNextPage($m);
+            $this->fail('An expected ODataException for non-array param type has not been thrown');
         } catch (\InvalidArgumentException $exception) {
             $this->assertStringStartsWith("The argument 'searchArray' should be an array to perfrom binary search", $exception->getMessage());
-            $exceptionThrown = true;
         }
-
-	    if (!$exceptionThrown) {
-	        $this->fail('An expected ODataException for non-array param type has not been thrown');
-	    }
 
     }
 

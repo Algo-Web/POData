@@ -2,26 +2,11 @@
 
 namespace UnitTests\POData\IDSQP2\WordPress;
 
-use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ProjectionNode;
-use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandedProjectionNode;
-use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\RootProjectionNode;
-use POData\UriProcessor\QueryProcessor\AnonymousFunction;
-use POData\UriProcessor\QueryProcessor\OrderByParser\OrderBySubPathSegment;
-use POData\UriProcessor\QueryProcessor\OrderByParser\OrderByPathSegment;
-use POData\UriProcessor\QueryProcessor\SkipTokenParser\InternalSkipTokenInfo;
-use POData\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenInfo;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\InternalFilterInfo;
-use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
-use POData\UriProcessor\RequestCountOption;
-use POData\Configuration\DataServiceProtocolVersion;
-use POData\UriProcessor\ResourcePathProcessor\SegmentParser\RequestTargetKind;
-use POData\UriProcessor\ResourcePathProcessor\SegmentParser\RequestTargetSource;
-use POData\Providers\Metadata\Type\Int32;
 use POData\Providers\Metadata\Type\DateTime;
 use POData\Common\Url;
 use POData\Common\Version;
 use POData\Common\ODataException;
-use POData\Common\NotImplementedException;
+use POData\OperationContext\Web\WebOperationContext;
 
 use UnitTests\POData\Facets\WordPress2\DataServiceHost5;
 use UnitTests\POData\Facets\WordPress2\WordPressDataService;
@@ -32,43 +17,44 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
 	{
 	}
 
+    protected function tearDown()
+    {
+        WebOperationContext::current()->resetWebContextInternal();
+    }
+
 	/**
 	 * test the generated string comparison expression in mysql
 	 */
 	function testStringCompareMySQL()
 	{
-		$host = null;
-		try {
-			$exceptionThrown = false;
-			$serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
-	        $resourcePath = 'Posts';
-	        $requestUri = $serviceUri . $resourcePath;
-	        $hostInfo = array('AbsoluteServiceUri' => new Url($serviceUri),
-				'AbsoluteRequestUri' => new Url($requestUri),
-				'QueryString' => '$filter=Title eq \'OData PHP Producer\'',
-				'DataServiceVersion' => new Version(3, 0),
-				'MaxDataServiceVersion' => new Version(3, 0));
-		
-			$host = new DataServiceHost5($hostInfo);
-			$dataService = new WordPressDataService();
-			$dataService->setHost($host);
-			$uriProcessor = $dataService->handleRequest();
-			$check = !is_null($uriProcessor);
-			$this->assertTrue($check);
-			$requestDescription = $uriProcessor->getRequestDescription();
-			$check = !is_null($requestDescription);
-			$this->assertTrue($check);
-			$internalFilterInfo = $requestDescription->getInternalFilterInfo();
-			$check = !is_null($internalFilterInfo);
-			$this->assertTrue($check);
-			$mysqlexpression = $internalFilterInfo->getExpressionAsString();
-			// print_r("'" . $mysqlexpression . "'");
-			$this->AssertEquals("(STRCMP(post_title, 'OData PHP Producer') = 0)", $mysqlexpression);
-			$host->getWebOperationContext()->resetWebContextInternal();
-		} catch (\Exception $exception) {
-			$this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
-			$host->getWebOperationContext()->resetWebContextInternal();
-		}
+
+        $serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
+        $resourcePath = 'Posts';
+        $requestUri = $serviceUri . $resourcePath;
+        $hostInfo = array(
+            'AbsoluteServiceUri' => new Url($serviceUri),
+            'AbsoluteRequestUri' => new Url($requestUri),
+            'QueryString' => '$filter=Title eq \'OData PHP Producer\'',
+            'DataServiceVersion' => new Version(3, 0),
+            'MaxDataServiceVersion' => new Version(3, 0),
+        );
+    
+        $host = new DataServiceHost5($hostInfo);
+        $dataService = new WordPressDataService();
+        $dataService->setHost($host);
+        
+        $uriProcessor = $dataService->handleRequest();
+        $this->assertNotNull($uriProcessor);
+        
+        $requestDescription = $uriProcessor->getRequestDescription();
+        $this->assertNotNull($requestDescription);
+        
+        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
+        $this->assertNotNull($internalFilterInfo);
+        
+        $mysqlexpression = $internalFilterInfo->getExpressionAsString();
+        $this->AssertEquals("(STRCMP(post_title, 'OData PHP Producer') = 0)", $mysqlexpression);
+
 	}
 
 	/**
@@ -76,37 +62,34 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
 	 */
 	function testFunctionCallMySQL()
 	{
-		try {
-			$exceptionThrown = false;
-			$serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
-	        $resourcePath = 'Posts';
-	        $requestUri = $serviceUri . $resourcePath;
-	        $hostInfo = array('AbsoluteServiceUri' => new Url($serviceUri),
-				'AbsoluteRequestUri' => new Url($requestUri),
-				'QueryString' => '$filter=replace(Title, \'PHP\', \'Java\') eq \'OData Java Producer\'',
-				'DataServiceVersion' => new Version(3, 0),
-				'MaxDataServiceVersion' => new Version(3, 0));
-	
-			$host = new DataServiceHost5($hostInfo);
-			$dataService = new WordPressDataService();
-			$dataService->setHost($host);
-			$uriProcessor = $dataService->handleRequest();
-			$check = !is_null($uriProcessor);
-			$this->assertTrue($check);
-			$requestDescription = $uriProcessor->getRequestDescription();
-			$check = !is_null($requestDescription);
-			$this->assertTrue($check);
-			$internalFilterInfo = $requestDescription->getInternalFilterInfo();
-			$check = !is_null($internalFilterInfo);
-			$this->assertTrue($check);
-			$mysqlexpression = $internalFilterInfo->getExpressionAsString();
-			// print_r("'" . $mysqlexpression . "'");
-			$this->AssertEquals("(STRCMP(REPLACE(post_title,'PHP','Java'), 'OData Java Producer') = 0)", $mysqlexpression);
-			$host->getWebOperationContext()->resetWebContextInternal();
-		} catch (\Exception $exception) {
-			$this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
-			$host->getWebOperationContext()->resetWebContextInternal();
-		}
+
+        $serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
+        $resourcePath = 'Posts';
+        $requestUri = $serviceUri . $resourcePath;
+        $hostInfo = array(
+            'AbsoluteServiceUri' => new Url($serviceUri),
+            'AbsoluteRequestUri' => new Url($requestUri),
+            'QueryString' => '$filter=replace(Title, \'PHP\', \'Java\') eq \'OData Java Producer\'',
+            'DataServiceVersion' => new Version(3, 0),
+            'MaxDataServiceVersion' => new Version(3, 0)
+        );
+
+        $host = new DataServiceHost5($hostInfo);
+        $dataService = new WordPressDataService();
+        $dataService->setHost($host);
+
+        $uriProcessor = $dataService->handleRequest();
+        $this->assertNotNull($uriProcessor);
+
+        $requestDescription = $uriProcessor->getRequestDescription();
+        $this->assertNotNull($requestDescription);
+
+        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
+        $this->assertNotNull($internalFilterInfo);
+
+        $mysqlexpression = $internalFilterInfo->getExpressionAsString();
+        $this->AssertEquals("(STRCMP(REPLACE(post_title,'PHP','Java'), 'OData Java Producer') = 0)", $mysqlexpression);
+
 	}
 
 	/**
@@ -114,37 +97,34 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
 	 */
 	function testNullabilityCheckMySQL()
 	{
-		try {
-			$exceptionThrown = false;
-			$serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
-	        $resourcePath = 'Posts';
-	        $requestUri = $serviceUri . $resourcePath;
-	        $hostInfo = array('AbsoluteServiceUri' => new Url($serviceUri),
-				'AbsoluteRequestUri' => new Url($requestUri),
-				'QueryString' => '$filter=PostID eq  null',
-				'DataServiceVersion' => new Version(3, 0),
-				'MaxDataServiceVersion' => new Version(3, 0));
-	
-			$host = new DataServiceHost5($hostInfo);
-			$dataService = new WordPressDataService();
-			$dataService->setHost($host);
-			$uriProcessor = $dataService->handleRequest();
-			$check = !is_null($uriProcessor);
-			$this->assertTrue($check);
-			$requestDescription = $uriProcessor->getRequestDescription();
-			$check = !is_null($requestDescription);
-			$this->assertTrue($check);
-			$internalFilterInfo = $requestDescription->getInternalFilterInfo();
-			$check = !is_null($internalFilterInfo);
-			$this->assertTrue($check);
-			$mysqlexpression = $internalFilterInfo->getExpressionAsString();
-			// print_r("'" . $mysqlexpression . "'");
-			$this->AssertEquals("(ID = NULL)", $mysqlexpression);
-			$host->getWebOperationContext()->resetWebContextInternal();
-		} catch (\Exception $exception) {
-			$this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
-			$host->getWebOperationContext()->resetWebContextInternal();
-		}
+
+        $serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
+        $resourcePath = 'Posts';
+        $requestUri = $serviceUri . $resourcePath;
+        $hostInfo = array(
+            'AbsoluteServiceUri' => new Url($serviceUri),
+            'AbsoluteRequestUri' => new Url($requestUri),
+            'QueryString' => '$filter=PostID eq  null',
+            'DataServiceVersion' => new Version(3, 0),
+            'MaxDataServiceVersion' => new Version(3, 0)
+        );
+
+        $host = new DataServiceHost5($hostInfo);
+        $dataService = new WordPressDataService();
+        $dataService->setHost($host);
+
+        $uriProcessor = $dataService->handleRequest();
+        $this->assertNotNull($uriProcessor);
+
+        $requestDescription = $uriProcessor->getRequestDescription();
+        $this->assertNotNull($requestDescription);
+
+        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
+        $this->assertNotNull($internalFilterInfo);
+
+        $mysqlexpression = $internalFilterInfo->getExpressionAsString();
+        $this->AssertEquals("(ID = NULL)", $mysqlexpression);
+
 	}
 	
 	/**
@@ -152,39 +132,34 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
 	 */
 	function testNegationMySQL()
 	{
-		try {
-			$exceptionThrown = false;
-			$serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
-			$resourcePath = 'Posts';
-			$requestUri = $serviceUri . $resourcePath;
-			$hostInfo = array('AbsoluteServiceUri' => new Url($serviceUri),
-			'AbsoluteRequestUri' => new Url($requestUri),
-			'QueryString' => '$filter=-PostID eq -1',
-			'DataServiceVersion' => new Version(3, 0),
-			'MaxDataServiceVersion' => new Version(3, 0));
-	
-			$host = new DataServiceHost5($hostInfo);
-			$dataService = new WordPressDataService();
-			$dataService->setHost($host);
-			$uriProcessor = $dataService->handleRequest();
-			$check = !is_null($uriProcessor);
-			$this->assertTrue($check);
-			$requestDescription = $uriProcessor->getRequestDescription();
-			$check = !is_null($requestDescription);
-			$this->assertTrue($check);
-			$internalFilterInfo = $requestDescription->getInternalFilterInfo();
-			$check = !is_null($internalFilterInfo);
-			$this->assertTrue($check);
-			$mysqlexpression = $internalFilterInfo->getExpressionAsString();
-			// echo "\n";
-			// print_r("\n\n'" . $mysqlexpression . "'\n\n");
-			// echo "\n";
-			$this->AssertEquals("(-(ID) = -1)", $mysqlexpression);
-			$host->getWebOperationContext()->resetWebContextInternal();
-		} catch (\Exception $exception) {
-			$this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
-			$host->getWebOperationContext()->resetWebContextInternal();
-		}
+
+        $serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
+        $resourcePath = 'Posts';
+        $requestUri = $serviceUri . $resourcePath;
+        $hostInfo = array(
+            'AbsoluteServiceUri' => new Url($serviceUri),
+            'AbsoluteRequestUri' => new Url($requestUri),
+            'QueryString' => '$filter=-PostID eq -1',
+            'DataServiceVersion' => new Version(3, 0),
+            'MaxDataServiceVersion' => new Version(3, 0)
+        );
+
+        $host = new DataServiceHost5($hostInfo);
+        $dataService = new WordPressDataService();
+        $dataService->setHost($host);
+
+        $uriProcessor = $dataService->handleRequest();
+        $this->assertNotNull($uriProcessor);
+
+        $requestDescription = $uriProcessor->getRequestDescription();
+        $this->assertNotNull($requestDescription);
+
+        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
+        $this->assertNotNull($internalFilterInfo);
+
+        $mysqlexpression = $internalFilterInfo->getExpressionAsString();
+        $this->AssertEquals("(-(ID) = -1)", $mysqlexpression);
+
 	}
 	
 	/**
@@ -192,40 +167,34 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
 	 */
 	function testDateTimeComparisionMySQL()
 	{
-		try {
-			$exceptionThrown = false;
-			$serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
-	        $resourcePath = 'Posts';
-	        $requestUri = $serviceUri . $resourcePath;
-	        $requestUri = $serviceUri . $resourcePath;
-			$hostInfo = array('AbsoluteServiceUri' => new Url($serviceUri),
-			'AbsoluteRequestUri' => new Url($requestUri),
-			'QueryString' => '$filter=Date eq datetime\'2011-12-24 19:54:00\'',
-			'DataServiceVersion' => new Version(3, 0),
-			'MaxDataServiceVersion' => new Version(3, 0));
-	
-			$host = new DataServiceHost5($hostInfo);
-			$dataService = new WordPressDataService();
-			$dataService->setHost($host);
-			$uriProcessor = $dataService->handleRequest();
-			$check = !is_null($uriProcessor);
-			$this->assertTrue($check);
-			$requestDescription = $uriProcessor->getRequestDescription();
-			$check = !is_null($requestDescription);
-			$this->assertTrue($check);
-			$internalFilterInfo = $requestDescription->getInternalFilterInfo();
-			$check = !is_null($internalFilterInfo);
-			$this->assertTrue($check);
-			$mysqlexpression = $internalFilterInfo->getExpressionAsString();
-			// echo "\n";
-			// print_r("\n\n'" . $mysqlexpression . "'\n\n");
-			// echo "\n";
-			$this->AssertEquals("((post_date =  '2011-12-24 19:54:00'))", $mysqlexpression);
-			$host->getWebOperationContext()->resetWebContextInternal();
-		} catch (\Exception $exception) {
-			$this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
-			$host->getWebOperationContext()->resetWebContextInternal();
-		}
+
+        $serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
+        $resourcePath = 'Posts';
+        $requestUri = $serviceUri . $resourcePath;
+        $hostInfo = array(
+            'AbsoluteServiceUri' => new Url($serviceUri),
+            'AbsoluteRequestUri' => new Url($requestUri),
+            'QueryString' => '$filter=Date eq datetime\'2011-12-24 19:54:00\'',
+            'DataServiceVersion' => new Version(3, 0),
+            'MaxDataServiceVersion' => new Version(3, 0)
+        );
+
+        $host = new DataServiceHost5($hostInfo);
+        $dataService = new WordPressDataService();
+        $dataService->setHost($host);
+
+        $uriProcessor = $dataService->handleRequest();
+        $this->assertNotNull($uriProcessor);
+
+        $requestDescription = $uriProcessor->getRequestDescription();
+        $this->assertNotNull($requestDescription);
+
+        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
+        $this->assertNotNull($internalFilterInfo);
+
+        $mysqlexpression = $internalFilterInfo->getExpressionAsString();
+        $this->AssertEquals("((post_date =  '2011-12-24 19:54:00'))", $mysqlexpression);
+
 	}
 
 	/**
@@ -233,39 +202,34 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
 	 */
 	function testYearFunctionCallMySQL()
 	{
-		try {
-			$exceptionThrown = false;
-			$serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
-			$resourcePath = 'Posts';
-			$requestUri = $serviceUri . $resourcePath;
-	        $hostInfo = array('AbsoluteServiceUri' => new Url($serviceUri),
-			'AbsoluteRequestUri' => new Url($requestUri),
-			'QueryString' => '$filter=year(Date) eq  year(datetime\'1996-07-09\')',
-			'DataServiceVersion' => new Version(3, 0),
-			'MaxDataServiceVersion' => new Version(3, 0));
-	
-			$host = new DataServiceHost5($hostInfo);
-			$dataService = new WordPressDataService();
-			$dataService->setHost($host);
-			$uriProcessor = $dataService->handleRequest();
-			$check = !is_null($uriProcessor);
-			$this->assertTrue($check);
-			$requestDescription = $uriProcessor->getRequestDescription();
-			$check = !is_null($requestDescription);
-			$this->assertTrue($check);
-			$internalFilterInfo = $requestDescription->getInternalFilterInfo();
-			$check = !is_null($internalFilterInfo);
-			$this->assertTrue($check);
-			$mysqlexpression = $internalFilterInfo->getExpressionAsString();
-			// echo "\n";
-			// print_r("\n\n'" . $mysqlexpression . "'\n\n");
-			// echo "\n";
-			$this->AssertEquals("(EXTRACT(YEAR from post_date) = EXTRACT(YEAR from '1996-07-09'))", $mysqlexpression);
-			$host->getWebOperationContext()->resetWebContextInternal();
-		} catch (\Exception $exception) {
-			$this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
-			$host->getWebOperationContext()->resetWebContextInternal();
-		}
+
+        $serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
+        $resourcePath = 'Posts';
+        $requestUri = $serviceUri . $resourcePath;
+        $hostInfo = array(
+            'AbsoluteServiceUri' => new Url($serviceUri),
+            'AbsoluteRequestUri' => new Url($requestUri),
+            'QueryString' => '$filter=year(Date) eq  year(datetime\'1996-07-09\')',
+            'DataServiceVersion' => new Version(3, 0),
+            'MaxDataServiceVersion' => new Version(3, 0)
+        );
+
+        $host = new DataServiceHost5($hostInfo);
+        $dataService = new WordPressDataService();
+        $dataService->setHost($host);
+
+        $uriProcessor = $dataService->handleRequest();
+        $this->assertNotNull($uriProcessor);
+
+        $requestDescription = $uriProcessor->getRequestDescription();
+        $this->assertNotNull($requestDescription);
+
+        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
+        $this->assertNotNull($internalFilterInfo);
+
+        $mysqlexpression = $internalFilterInfo->getExpressionAsString();
+        $this->AssertEquals("(EXTRACT(YEAR from post_date) = EXTRACT(YEAR from '1996-07-09'))", $mysqlexpression);
+
 	}
 
 	/**
@@ -273,39 +237,34 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
 	 */
 	function testYearFunctionCallWtihAriRelMySQL()
 	{
-		try {
-			$exceptionThrown = false;
-			$serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
-			$resourcePath = 'Posts';
-			$requestUri = $serviceUri . $resourcePath;
-	        $hostInfo = array('AbsoluteServiceUri' => new Url($serviceUri),
-			'AbsoluteRequestUri' => new Url($requestUri),
-			'QueryString' => '$filter=year(Date) add 2 eq 2013',
-			'DataServiceVersion' => new Version(3, 0),
-			'MaxDataServiceVersion' => new Version(3, 0));
-	
-			$host = new DataServiceHost5($hostInfo);
-			$dataService = new WordPressDataService();
-			$dataService->setHost($host);
-			$uriProcessor = $dataService->handleRequest();
-			$check = !is_null($uriProcessor);
-			$this->assertTrue($check);
-			$requestDescription = $uriProcessor->getRequestDescription();
-			$check = !is_null($requestDescription);
-			$this->assertTrue($check);
-			$internalFilterInfo = $requestDescription->getInternalFilterInfo();
-			$check = !is_null($internalFilterInfo);
-			$this->assertTrue($check);
-			$mysqlexpression = $internalFilterInfo->getExpressionAsString();
-			// echo "\n";
-			// print_r("\n\n'" . $mysqlexpression . "'\n\n");
-			// echo "\n";
-			$this->AssertEquals("((EXTRACT(YEAR from post_date) + 2) = 2013)", $mysqlexpression);
-			$host->getWebOperationContext()->resetWebContextInternal();
-		} catch (\Exception $exception) {
-			$this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
-			$host->getWebOperationContext()->resetWebContextInternal();
-		}
+
+        $serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
+        $resourcePath = 'Posts';
+        $requestUri = $serviceUri . $resourcePath;
+        $hostInfo = array(
+            'AbsoluteServiceUri' => new Url($serviceUri),
+            'AbsoluteRequestUri' => new Url($requestUri),
+            'QueryString' => '$filter=year(Date) add 2 eq 2013',
+            'DataServiceVersion' => new Version(3, 0),
+            'MaxDataServiceVersion' => new Version(3, 0)
+        );
+
+        $host = new DataServiceHost5($hostInfo);
+        $dataService = new WordPressDataService();
+        $dataService->setHost($host);
+
+        $uriProcessor = $dataService->handleRequest();
+        $this->assertNotNull($uriProcessor);
+
+        $requestDescription = $uriProcessor->getRequestDescription();
+        $this->assertNotNull($requestDescription);
+
+        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
+        $this->assertNotNull($internalFilterInfo);
+
+        $mysqlexpression = $internalFilterInfo->getExpressionAsString();
+        $this->AssertEquals("((EXTRACT(YEAR from post_date) + 2) = 2013)", $mysqlexpression);
+
 	}
 	
 	/**
@@ -313,39 +272,33 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
 	 */
 	function testCeilFloorFunctionCallMySQL()
 	{
-		try {
-			$exceptionThrown = false;
-			$serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
-			$resourcePath = 'Posts';
-			$requestUri = $serviceUri . $resourcePath;
-			$hostInfo = array('AbsoluteServiceUri' => new Url($serviceUri),
-					'AbsoluteRequestUri' => new Url($requestUri),
-					'QueryString' => '$filter=ceiling(floor(PostID)) eq 2',
-					'DataServiceVersion' => new Version(3, 0),
-					'MaxDataServiceVersion' => new Version(3, 0));
-	
-			$host = new DataServiceHost5($hostInfo);
-			$dataService = new WordPressDataService();
-			$dataService->setHost($host);
-			$uriProcessor = $dataService->handleRequest();
-			$check = !is_null($uriProcessor);
-			$this->assertTrue($check);
-			$requestDescription = $uriProcessor->getRequestDescription();
-			$check = !is_null($requestDescription);
-			$this->assertTrue($check);
-			$internalFilterInfo = $requestDescription->getInternalFilterInfo();
-			$check = !is_null($internalFilterInfo);
-			$this->assertTrue($check);
-			$mysqlexpression = $internalFilterInfo->getExpressionAsString();
-			// echo "\n";
-			// print_r("\n\n'" . $mysqlexpression . "'\n\n");
-			// echo "\n";
-			$this->AssertEquals("(CEIL(FLOOR(ID)) = 2)", $mysqlexpression);
-			$host->getWebOperationContext()->resetWebContextInternal();
-		} catch (\Exception $exception) {
-			$this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
-			$host->getWebOperationContext()->resetWebContextInternal();
-		}
+        $serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
+        $resourcePath = 'Posts';
+        $requestUri = $serviceUri . $resourcePath;
+        $hostInfo = array(
+            'AbsoluteServiceUri' => new Url($serviceUri),
+            'AbsoluteRequestUri' => new Url($requestUri),
+            'QueryString' => '$filter=ceiling(floor(PostID)) eq 2',
+            'DataServiceVersion' => new Version(3, 0),
+            'MaxDataServiceVersion' => new Version(3, 0)
+        );
+
+        $host = new DataServiceHost5($hostInfo);
+        $dataService = new WordPressDataService();
+        $dataService->setHost($host);
+
+        $uriProcessor = $dataService->handleRequest();
+        $this->assertNotNull($uriProcessor);
+
+        $requestDescription = $uriProcessor->getRequestDescription();
+        $this->assertNotNull($requestDescription);
+
+        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
+        $this->assertNotNull($internalFilterInfo);
+
+        $mysqlexpression = $internalFilterInfo->getExpressionAsString();
+        $this->AssertEquals("(CEIL(FLOOR(ID)) = 2)", $mysqlexpression);
+
 	}
 	
 	/**
@@ -353,37 +306,33 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
 	 */
 	function testRoundFunctionCallMySQL()
 	{
-		try {
-			$exceptionThrown = false;
-			$serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
-			$resourcePath = 'Posts';
-			$requestUri = $serviceUri . $resourcePath;
-			$hostInfo = array('AbsoluteServiceUri' => new Url($serviceUri),
-					'AbsoluteRequestUri' => new Url($requestUri),
-					'QueryString' => '$filter=round(PostID) eq 1',
-					'DataServiceVersion' => new Version(3, 0),
-					'MaxDataServiceVersion' => new Version(3, 0));
+        $serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
+        $resourcePath = 'Posts';
+        $requestUri = $serviceUri . $resourcePath;
+        $hostInfo = array(
+            'AbsoluteServiceUri' => new Url($serviceUri),
+            'AbsoluteRequestUri' => new Url($requestUri),
+            'QueryString' => '$filter=round(PostID) eq 1',
+            'DataServiceVersion' => new Version(3, 0),
+            'MaxDataServiceVersion' => new Version(3, 0)
+        );
+
+        $host = new DataServiceHost5($hostInfo);
+        $dataService = new WordPressDataService();
+        $dataService->setHost($host);
+
+        $uriProcessor = $dataService->handleRequest();
+        $this->assertNotNull($uriProcessor);
+
+        $requestDescription = $uriProcessor->getRequestDescription();
+        $this->assertNotNull($requestDescription);
+
+        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
+        $this->assertNotNull($internalFilterInfo);
+
+        $mysqlexpression = $internalFilterInfo->getExpressionAsString();
+        $this->AssertEquals("(ROUND(ID) = 1)", $mysqlexpression);
 	
-			$host = new DataServiceHost5($hostInfo);
-			$dataService = new WordPressDataService();
-			$dataService->setHost($host);
-			$uriProcessor = $dataService->handleRequest();
-			$check = !is_null($uriProcessor);
-			$this->assertTrue($check);
-			$requestDescription = $uriProcessor->getRequestDescription();
-			$check = !is_null($requestDescription);
-			$this->assertTrue($check);
-			$internalFilterInfo = $requestDescription->getInternalFilterInfo();
-			$check = !is_null($internalFilterInfo);
-			$this->assertTrue($check);
-			$mysqlexpression = $internalFilterInfo->getExpressionAsString();
-			// print_r("'" . $mysqlexpression . "'");
-			$this->AssertEquals("(ROUND(ID) = 1)", $mysqlexpression);
-			$host->getWebOperationContext()->resetWebContextInternal();
-		} catch (\Exception $exception) {
-			$this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
-			$host->getWebOperationContext()->resetWebContextInternal();
-		}
 	}
 
 	/**
@@ -391,37 +340,33 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
 	 */
 	function testModOperatorMySQL()
 	{
-		try {
-			$exceptionThrown = false;
-			$serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
-			$resourcePath = 'Posts';
-			$requestUri = $serviceUri . $resourcePath;
-			$hostInfo = array('AbsoluteServiceUri' => new Url($serviceUri),
-					'AbsoluteRequestUri' => new Url($requestUri),
-					'QueryString' => '$filter=PostID mod 5 eq 4',
-					'DataServiceVersion' => new Version(3, 0),
-					'MaxDataServiceVersion' => new Version(3, 0));
-	
-			$host = new DataServiceHost5($hostInfo);
-			$dataService = new WordPressDataService();
-			$dataService->setHost($host);
-			$uriProcessor = $dataService->handleRequest();
-			$check = !is_null($uriProcessor);
-			$this->assertTrue($check);
-			$requestDescription = $uriProcessor->getRequestDescription();
-			$check = !is_null($requestDescription);
-			$this->assertTrue($check);
-			$internalFilterInfo = $requestDescription->getInternalFilterInfo();
-			$check = !is_null($internalFilterInfo);
-			$this->assertTrue($check);
-			$mysqlexpression = $internalFilterInfo->getExpressionAsString();
-			// print_r("'" . $mysqlexpression . "'");
-			$this->AssertEquals("((ID % 5) = 4)", $mysqlexpression);
-			$host->getWebOperationContext()->resetWebContextInternal();
-		} catch (\Exception $exception) {
-			$this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
-			$host->getWebOperationContext()->resetWebContextInternal();
-		}
+        $serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
+        $resourcePath = 'Posts';
+        $requestUri = $serviceUri . $resourcePath;
+        $hostInfo = array(
+            'AbsoluteServiceUri' => new Url($serviceUri),
+            'AbsoluteRequestUri' => new Url($requestUri),
+            'QueryString' => '$filter=PostID mod 5 eq 4',
+            'DataServiceVersion' => new Version(3, 0),
+            'MaxDataServiceVersion' => new Version(3, 0)
+        );
+
+        $host = new DataServiceHost5($hostInfo);
+        $dataService = new WordPressDataService();
+        $dataService->setHost($host);
+
+        $uriProcessor = $dataService->handleRequest();
+        $this->assertNotNull($uriProcessor);
+
+        $requestDescription = $uriProcessor->getRequestDescription();
+        $this->assertNotNull($requestDescription);
+
+        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
+        $this->assertNotNull($internalFilterInfo);
+
+        $mysqlexpression = $internalFilterInfo->getExpressionAsString();
+        $this->AssertEquals("((ID % 5) = 4)", $mysqlexpression);
+
 	}
 	
 	/**
@@ -429,39 +374,33 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
 	 */
 	function testSubString2ParamMySQL()
 	{
-		try {
-			$exceptionThrown = false;
-			$serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
-	        $resourcePath = 'Posts';
-	        $requestUri = $serviceUri . $resourcePath;
-			$hostInfo = array('AbsoluteServiceUri' => new Url($serviceUri),
-					'AbsoluteRequestUri' => new Url($requestUri),
-					'QueryString' => '$filter=substring(Title, 1) eq \'Data PHP Producer\'',
-					'DataServiceVersion' => new Version(3, 0),
-					'MaxDataServiceVersion' => new Version(3, 0));
-	
-			$host = new DataServiceHost5($hostInfo);
-			$dataService = new WordPressDataService();
-			$dataService->setHost($host);
-			$uriProcessor = $dataService->handleRequest();
-			$check = !is_null($uriProcessor);
-			$this->assertTrue($check);
-			$requestDescription = $uriProcessor->getRequestDescription();
-			$check = !is_null($requestDescription);
-			$this->assertTrue($check);
-			$internalFilterInfo = $requestDescription->getInternalFilterInfo();
-			$check = !is_null($internalFilterInfo);
-			$this->assertTrue($check);
-			$mysqlexpression = $internalFilterInfo->getExpressionAsString();
-			// echo "\n";
-			// print_r("\n\n'" . $mysqlexpression . "'\n\n");
-			// echo "\n";
-			$this->AssertEquals("(STRCMP(SUBSTRING(post_title, 1 + 1), 'Data PHP Producer') = 0)", $mysqlexpression);
-			$host->getWebOperationContext()->resetWebContextInternal();
-		} catch (\Exception $exception) {
-			$this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
-			$host->getWebOperationContext()->resetWebContextInternal();
-		}
+        $serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
+        $resourcePath = 'Posts';
+        $requestUri = $serviceUri . $resourcePath;
+        $hostInfo = array(
+            'AbsoluteServiceUri' => new Url($serviceUri),
+            'AbsoluteRequestUri' => new Url($requestUri),
+            'QueryString' => '$filter=substring(Title, 1) eq \'Data PHP Producer\'',
+            'DataServiceVersion' => new Version(3, 0),
+            'MaxDataServiceVersion' => new Version(3, 0)
+        );
+
+        $host = new DataServiceHost5($hostInfo);
+        $dataService = new WordPressDataService();
+        $dataService->setHost($host);
+
+        $uriProcessor = $dataService->handleRequest();
+        $this->assertNotNull($uriProcessor);
+
+        $requestDescription = $uriProcessor->getRequestDescription();
+        $this->assertNotNull($requestDescription);
+
+        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
+        $this->assertNotNull($internalFilterInfo);
+
+        $mysqlexpression = $internalFilterInfo->getExpressionAsString();
+        $this->AssertEquals("(STRCMP(SUBSTRING(post_title, 1 + 1), 'Data PHP Producer') = 0)", $mysqlexpression);
+
 	}
 	
 	/**
@@ -469,37 +408,34 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
 	 */
 	function testSubString3ParamMySQL()
 	{
-		try {
-			$exceptionThrown = false;
+
 			$serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
       	    $resourcePath = 'Posts';
 	        $requestUri = $serviceUri . $resourcePath;
-			$hostInfo = array('AbsoluteServiceUri' => new Url($serviceUri),
-					'AbsoluteRequestUri' => new Url($requestUri),
-					'QueryString' => '$filter=substring(Title, 1, 6) eq \'Data P\'',
-					'DataServiceVersion' => new Version(3, 0),
-					'MaxDataServiceVersion' => new Version(3, 0));
+			$hostInfo = array(
+                'AbsoluteServiceUri' => new Url($serviceUri),
+                'AbsoluteRequestUri' => new Url($requestUri),
+                'QueryString' => '$filter=substring(Title, 1, 6) eq \'Data P\'',
+                'DataServiceVersion' => new Version(3, 0),
+                'MaxDataServiceVersion' => new Version(3, 0)
+            );
 	
 			$host = new DataServiceHost5($hostInfo);
 			$dataService = new WordPressDataService();
 			$dataService->setHost($host);
-			$uriProcessor = $dataService->handleRequest();
-			$check = !is_null($uriProcessor);
-			$this->assertTrue($check);
-			$requestDescription = $uriProcessor->getRequestDescription();
-			$check = !is_null($requestDescription);
-			$this->assertTrue($check);
-			$internalFilterInfo = $requestDescription->getInternalFilterInfo();
-			$check = !is_null($internalFilterInfo);
-			$this->assertTrue($check);
+
+            $uriProcessor = $dataService->handleRequest();
+            $this->assertNotNull($uriProcessor);
+
+            $requestDescription = $uriProcessor->getRequestDescription();
+            $this->assertNotNull($requestDescription);
+
+            $internalFilterInfo = $requestDescription->getInternalFilterInfo();
+            $this->assertNotNull($internalFilterInfo);
+
 			$mysqlexpression = $internalFilterInfo->getExpressionAsString();
-			// print_r("'" . $mysqlexpression . "'");
 			$this->AssertEquals("(STRCMP(SUBSTRING(post_title, 1 + 1, 6), 'Data P') = 0)", $mysqlexpression);
-			$host->getWebOperationContext()->resetWebContextInternal();
-		} catch (\Exception $exception) {
-			$this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
-			$host->getWebOperationContext()->resetWebContextInternal();
-		}
+
 	}
 	
 	/**
@@ -507,39 +443,34 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
 	 */
 	function testSubStringTrimMySQL()
 	{
-		try {
-			$exceptionThrown = false;
-			$serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
-	        $resourcePath = 'Posts';
-	        $requestUri = $serviceUri . $resourcePath;
-			$hostInfo = array('AbsoluteServiceUri' => new Url($serviceUri),
-					'AbsoluteRequestUri' => new Url($requestUri),
-					'QueryString' => '$filter=trim(\'  OData PHP Producer   \') eq Title',
-					'DataServiceVersion' => new Version(3, 0),
-					'MaxDataServiceVersion' => new Version(3, 0));
-	
-			$host = new DataServiceHost5($hostInfo);
-			$dataService = new WordPressDataService();
-			$dataService->setHost($host);
-			$uriProcessor = $dataService->handleRequest();
-			$check = !is_null($uriProcessor);
-			$this->assertTrue($check);
-			$requestDescription = $uriProcessor->getRequestDescription();
-			$check = !is_null($requestDescription);
-			$this->assertTrue($check);
-			$internalFilterInfo = $requestDescription->getInternalFilterInfo();
-			$check = !is_null($internalFilterInfo);
-			$this->assertTrue($check);
-			$mysqlexpression = $internalFilterInfo->getExpressionAsString();
-			// echo "\n";
-			// print_r("\n\n'" . $mysqlexpression . "'\n\n");
-			// echo "\n";
-			$this->AssertEquals("(STRCMP(TRIM('  OData PHP Producer   '), post_title) = 0)", $mysqlexpression);
-			$host->getWebOperationContext()->resetWebContextInternal();
-		} catch (\Exception $exception) {
-			$this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
-			$host->getWebOperationContext()->resetWebContextInternal();
-		}
+
+        $serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
+        $resourcePath = 'Posts';
+        $requestUri = $serviceUri . $resourcePath;
+        $hostInfo = array(
+            'AbsoluteServiceUri' => new Url($serviceUri),
+            'AbsoluteRequestUri' => new Url($requestUri),
+            'QueryString' => '$filter=trim(\'  OData PHP Producer   \') eq Title',
+            'DataServiceVersion' => new Version(3, 0),
+            'MaxDataServiceVersion' => new Version(3, 0)
+        );
+
+        $host = new DataServiceHost5($hostInfo);
+        $dataService = new WordPressDataService();
+        $dataService->setHost($host);
+
+        $uriProcessor = $dataService->handleRequest();
+        $this->assertNotNull($uriProcessor);
+
+        $requestDescription = $uriProcessor->getRequestDescription();
+        $this->assertNotNull($requestDescription);
+
+        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
+        $this->assertNotNull($internalFilterInfo);
+
+        $mysqlexpression = $internalFilterInfo->getExpressionAsString();
+        $this->AssertEquals("(STRCMP(TRIM('  OData PHP Producer   '), post_title) = 0)", $mysqlexpression);
+
 	}
 	
 	/**
@@ -547,37 +478,34 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
 	 */
 	function testEndsWithMySQL()
 	{
-		try {
-			$exceptionThrown = false;
-			$serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
-	        $resourcePath = 'Posts';
-	        $requestUri = $serviceUri . $resourcePath;
-	        $hostInfo = array('AbsoluteServiceUri' => new Url($serviceUri),
-			'AbsoluteRequestUri' => new Url($requestUri),
-			'QueryString' => '$filter=endswith(Title, \'umer\')',
-			'DataServiceVersion' => new Version(3, 0),
-			'MaxDataServiceVersion' => new Version(3, 0));
-	
-			$host = new DataServiceHost5($hostInfo);
-			$dataService = new WordPressDataService();
-			$dataService->setHost($host);
-			$uriProcessor = $dataService->handleRequest();
-			$check = !is_null($uriProcessor);
-			$this->assertTrue($check);
-			$requestDescription = $uriProcessor->getRequestDescription();
-			$check = !is_null($requestDescription);
-			$this->assertTrue($check);
-			$internalFilterInfo = $requestDescription->getInternalFilterInfo();
-			$check = !is_null($internalFilterInfo);
-			$this->assertTrue($check);
-			$mysqlexpression = $internalFilterInfo->getExpressionAsString();
-			// print_r("'" . $mysqlexpression . "'");
-			$this->AssertEquals("(STRCMP('umer',RIGHT(post_title,LENGTH('umer'))) = 0)", $mysqlexpression);
-			$host->getWebOperationContext()->resetWebContextInternal();
-		} catch (\Exception $exception) {
-			$this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
-			$host->getWebOperationContext()->resetWebContextInternal();
-		}
+
+        $serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
+        $resourcePath = 'Posts';
+        $requestUri = $serviceUri . $resourcePath;
+        $hostInfo = array(
+            'AbsoluteServiceUri' => new Url($serviceUri),
+            'AbsoluteRequestUri' => new Url($requestUri),
+            'QueryString' => '$filter=endswith(Title, \'umer\')',
+            'DataServiceVersion' => new Version(3, 0),
+            'MaxDataServiceVersion' => new Version(3, 0)
+        );
+
+        $host = new DataServiceHost5($hostInfo);
+        $dataService = new WordPressDataService();
+        $dataService->setHost($host);
+
+        $uriProcessor = $dataService->handleRequest();
+        $this->assertNotNull($uriProcessor);
+
+        $requestDescription = $uriProcessor->getRequestDescription();
+        $this->assertNotNull($requestDescription);
+
+        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
+        $this->assertNotNull($internalFilterInfo);
+
+        $mysqlexpression = $internalFilterInfo->getExpressionAsString();
+        $this->AssertEquals("(STRCMP('umer',RIGHT(post_title,LENGTH('umer'))) = 0)", $mysqlexpression);
+
 	}
 	
 	/**
@@ -585,37 +513,34 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
 	 */
 	function testStartsWithMySQL()
 	{
-		try {
-			$exceptionThrown = false;
-			$serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
-	        $resourcePath = 'Posts';
-	        $requestUri = $serviceUri . $resourcePath;
-	        $hostInfo = array('AbsoluteServiceUri' => new Url($serviceUri),
-			'AbsoluteRequestUri' => new Url($requestUri),
-			'QueryString' => '$filter=startswith(Title, \'OData\')',
-			'DataServiceVersion' => new Version(3, 0),
-			'MaxDataServiceVersion' => new Version(3, 0));
-	
-			$host = new DataServiceHost5($hostInfo);
-			$dataService = new WordPressDataService();
-			$dataService->setHost($host);
-			$uriProcessor = $dataService->handleRequest();
-			$check = !is_null($uriProcessor);
-			$this->assertTrue($check);
-			$requestDescription = $uriProcessor->getRequestDescription();
-			$check = !is_null($requestDescription);
-			$this->assertTrue($check);
-			$internalFilterInfo = $requestDescription->getInternalFilterInfo();
-			$check = !is_null($internalFilterInfo);
-			$this->assertTrue($check);
-			$mysqlexpression = $internalFilterInfo->getExpressionAsString();
-			// print_r("'" . $mysqlexpression . "'");
-			$this->AssertEquals("(STRCMP('OData',LEFT(post_title,LENGTH('OData'))) = 0)", $mysqlexpression);
-			$host->getWebOperationContext()->resetWebContextInternal();
-		} catch (\Exception $exception) {
-			$this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
-			$host->getWebOperationContext()->resetWebContextInternal();
-		}
+
+        $serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
+        $resourcePath = 'Posts';
+        $requestUri = $serviceUri . $resourcePath;
+        $hostInfo = array(
+            'AbsoluteServiceUri' => new Url($serviceUri),
+            'AbsoluteRequestUri' => new Url($requestUri),
+            'QueryString' => '$filter=startswith(Title, \'OData\')',
+            'DataServiceVersion' => new Version(3, 0),
+            'MaxDataServiceVersion' => new Version(3, 0)
+        );
+
+        $host = new DataServiceHost5($hostInfo);
+        $dataService = new WordPressDataService();
+        $dataService->setHost($host);
+
+        $uriProcessor = $dataService->handleRequest();
+        $this->assertNotNull($uriProcessor);
+
+        $requestDescription = $uriProcessor->getRequestDescription();
+        $this->assertNotNull($requestDescription);
+
+        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
+        $this->assertNotNull($internalFilterInfo);
+
+        $mysqlexpression = $internalFilterInfo->getExpressionAsString();
+        $this->AssertEquals("(STRCMP('OData',LEFT(post_title,LENGTH('OData'))) = 0)", $mysqlexpression);
+
 	}
 
 	/**
@@ -623,37 +548,34 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
 	 */
 	function testIndexOfMySQL()
 	{
-		try {
-			$exceptionThrown = false;
-			$serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
-	        $resourcePath = 'Posts';
-            $requestUri = $serviceUri . $resourcePath;
-	        $hostInfo = array('AbsoluteServiceUri' => new Url($serviceUri),
-			'AbsoluteRequestUri' => new Url($requestUri),
-			'QueryString' => '$filter=indexof(Title, \'ata\') eq 2',
-			'DataServiceVersion' => new Version(3, 0),
-			'MaxDataServiceVersion' => new Version(3, 0));
-	
-			$host = new DataServiceHost5($hostInfo);
-			$dataService = new WordPressDataService();
-			$dataService->setHost($host);
-			$uriProcessor = $dataService->handleRequest();
-			$check = !is_null($uriProcessor);
-			$this->assertTrue($check);
-			$requestDescription = $uriProcessor->getRequestDescription();
-			$check = !is_null($requestDescription);
-			$this->assertTrue($check);
-			$internalFilterInfo = $requestDescription->getInternalFilterInfo();
-			$check = !is_null($internalFilterInfo);
-			$this->assertTrue($check);
-			$mysqlexpression = $internalFilterInfo->getExpressionAsString();
-			// print_r("'" . $mysqlexpression . "'");
-			$this->AssertEquals("(INSTR(post_title, 'ata') - 1 = 2)", $mysqlexpression);
-			$host->getWebOperationContext()->resetWebContextInternal();
-		} catch (\Exception $exception) {
-			$this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
-			$host->getWebOperationContext()->resetWebContextInternal();
-		}
+
+        $serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
+        $resourcePath = 'Posts';
+        $requestUri = $serviceUri . $resourcePath;
+        $hostInfo = array(
+            'AbsoluteServiceUri' => new Url($serviceUri),
+            'AbsoluteRequestUri' => new Url($requestUri),
+            'QueryString' => '$filter=indexof(Title, \'ata\') eq 2',
+            'DataServiceVersion' => new Version(3, 0),
+            'MaxDataServiceVersion' => new Version(3, 0)
+        );
+
+        $host = new DataServiceHost5($hostInfo);
+        $dataService = new WordPressDataService();
+        $dataService->setHost($host);
+
+        $uriProcessor = $dataService->handleRequest();
+        $this->assertNotNull($uriProcessor);
+
+        $requestDescription = $uriProcessor->getRequestDescription();
+        $this->assertNotNull($requestDescription);
+
+        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
+        $this->assertNotNull($internalFilterInfo);
+
+        $mysqlexpression = $internalFilterInfo->getExpressionAsString();
+        $this->AssertEquals("(INSTR(post_title, 'ata') - 1 = 2)", $mysqlexpression);
+
 	}
 
 	/**
@@ -661,37 +583,34 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
 	 */
 	function testReplaceMySQL()
 	{
-		try {
-			$exceptionThrown = false;
-			$serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
-	        $resourcePath = 'Posts';
-	        $requestUri = $serviceUri . $resourcePath;
-	        $hostInfo = array('AbsoluteServiceUri' => new Url($serviceUri),
-			'AbsoluteRequestUri' => new Url($requestUri),
-			'QueryString' => '$filter=replace(Title, \' \', \'\') eq \'ODataPHPProducer\'',
-			'DataServiceVersion' => new Version(3, 0),
-			'MaxDataServiceVersion' => new Version(3, 0));
-	
-			$host = new DataServiceHost5($hostInfo);
-			$dataService = new WordPressDataService();
-			$dataService->setHost($host);
-			$uriProcessor = $dataService->handleRequest();
-			$check = !is_null($uriProcessor);
-			$this->assertTrue($check);
-			$requestDescription = $uriProcessor->getRequestDescription();
-			$check = !is_null($requestDescription);
-			$this->assertTrue($check);
-			$internalFilterInfo = $requestDescription->getInternalFilterInfo();
-			$check = !is_null($internalFilterInfo);
-			$this->assertTrue($check);
-			$mysqlexpression = $internalFilterInfo->getExpressionAsString();
-			// print_r("'" . $mysqlexpression . "'");
-			$this->AssertEquals("(STRCMP(REPLACE(post_title,' ',''), 'ODataPHPProducer') = 0)", $mysqlexpression);
-			$host->getWebOperationContext()->resetWebContextInternal();
-		} catch (\Exception $exception) {
-			$this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
-			$host->getWebOperationContext()->resetWebContextInternal();
-		}
+
+        $serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
+        $resourcePath = 'Posts';
+        $requestUri = $serviceUri . $resourcePath;
+        $hostInfo = array(
+            'AbsoluteServiceUri' => new Url($serviceUri),
+            'AbsoluteRequestUri' => new Url($requestUri),
+            'QueryString' => '$filter=replace(Title, \' \', \'\') eq \'ODataPHPProducer\'',
+            'DataServiceVersion' => new Version(3, 0),
+            'MaxDataServiceVersion' => new Version(3, 0)
+        );
+
+        $host = new DataServiceHost5($hostInfo);
+        $dataService = new WordPressDataService();
+        $dataService->setHost($host);
+
+        $uriProcessor = $dataService->handleRequest();
+        $this->assertNotNull($uriProcessor);
+
+        $requestDescription = $uriProcessor->getRequestDescription();
+        $this->assertNotNull($requestDescription);
+
+        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
+        $this->assertNotNull($internalFilterInfo);
+
+        $mysqlexpression = $internalFilterInfo->getExpressionAsString();
+        $this->AssertEquals("(STRCMP(REPLACE(post_title,' ',''), 'ODataPHPProducer') = 0)", $mysqlexpression);
+
 	}
 	
 	/**
@@ -699,37 +618,34 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
 	 */
 	function testSubStringOfMySQL()
 	{
-		try {
-			$exceptionThrown = false;
-			$serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
-	        $resourcePath = 'Posts';
-	        $requestUri = $serviceUri . $resourcePath;
-	        $hostInfo = array('AbsoluteServiceUri' => new Url($serviceUri),
-			'AbsoluteRequestUri' => new Url($requestUri),
-			'QueryString' => '$filter=substringof(\'Producer\', Title)',
-			'DataServiceVersion' => new Version(3, 0),
-			'MaxDataServiceVersion' => new Version(3, 0));
-	
-			$host = new DataServiceHost5($hostInfo);
-			$dataService = new WordPressDataService();
-			$dataService->setHost($host);
-			$uriProcessor = $dataService->handleRequest();
-			$check = !is_null($uriProcessor);
-			$this->assertTrue($check);
-			$requestDescription = $uriProcessor->getRequestDescription();
-			$check = !is_null($requestDescription);
-			$this->assertTrue($check);
-			$internalFilterInfo = $requestDescription->getInternalFilterInfo();
-			$check = !is_null($internalFilterInfo);
-			$this->assertTrue($check);
-			$mysqlexpression = $internalFilterInfo->getExpressionAsString();
-			// print_r("'" . $mysqlexpression . "'");
-			$this->AssertEquals("(LOCATE('Producer', post_title) > 0)", $mysqlexpression);
-			$host->getWebOperationContext()->resetWebContextInternal();
-		} catch (\Exception $exception) {
-			$this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
-			$host->getWebOperationContext()->resetWebContextInternal();
-		}
+
+        $serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
+        $resourcePath = 'Posts';
+        $requestUri = $serviceUri . $resourcePath;
+        $hostInfo = array(
+            'AbsoluteServiceUri' => new Url($serviceUri),
+            'AbsoluteRequestUri' => new Url($requestUri),
+            'QueryString' => '$filter=substringof(\'Producer\', Title)',
+            'DataServiceVersion' => new Version(3, 0),
+            'MaxDataServiceVersion' => new Version(3, 0)
+        );
+
+        $host = new DataServiceHost5($hostInfo);
+        $dataService = new WordPressDataService();
+        $dataService->setHost($host);
+
+        $uriProcessor = $dataService->handleRequest();
+        $this->assertNotNull($uriProcessor);
+
+        $requestDescription = $uriProcessor->getRequestDescription();
+        $this->assertNotNull($requestDescription);
+
+        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
+        $this->assertNotNull($internalFilterInfo);
+
+        $mysqlexpression = $internalFilterInfo->getExpressionAsString();
+        $this->AssertEquals("(LOCATE('Producer', post_title) > 0)", $mysqlexpression);
+
 	}
 
 	/**
@@ -737,39 +653,34 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
 	 */
 	function testSubStringOfIndexOfMySQL()
 	{
-		try {
-			$exceptionThrown = false;
-			$serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
-	        $resourcePath = 'Posts';
-	        $requestUri = $serviceUri . $resourcePath;
-	        $hostInfo = array('AbsoluteServiceUri' => new Url($serviceUri),
-			'AbsoluteRequestUri' => new Url($requestUri),
-			'QueryString' => '$filter=substringof(\'Producer\', Title) and indexof(Title, \'Producer\') eq 11',
-			'DataServiceVersion' => new Version(3, 0),
-			'MaxDataServiceVersion' => new Version(3, 0));
-	
-			$host = new DataServiceHost5($hostInfo);
-			$dataService = new WordPressDataService();
-			$dataService->setHost($host);
-			$uriProcessor = $dataService->handleRequest();
-			$check = !is_null($uriProcessor);
-			$this->assertTrue($check);
-			$requestDescription = $uriProcessor->getRequestDescription();
-			$check = !is_null($requestDescription);
-			$this->assertTrue($check);
-			$internalFilterInfo = $requestDescription->getInternalFilterInfo();
-			$check = !is_null($internalFilterInfo);
-			$this->assertTrue($check);
-			$mysqlexpression = $internalFilterInfo->getExpressionAsString();
-			// echo "\n";
-			// print_r("\n\n'" . $mysqlexpression . "'\n\n");
-			// echo "\n";
-			$this->AssertEquals("((LOCATE('Producer', post_title) > 0) && (INSTR(post_title, 'Producer') - 1 = 11))", $mysqlexpression);
-			$host->getWebOperationContext()->resetWebContextInternal();
-		} catch (\Exception $exception) {
-			$this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
-			$host->getWebOperationContext()->resetWebContextInternal();
-		}
+
+        $serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
+        $resourcePath = 'Posts';
+        $requestUri = $serviceUri . $resourcePath;
+        $hostInfo = array(
+            'AbsoluteServiceUri' => new Url($serviceUri),
+            'AbsoluteRequestUri' => new Url($requestUri),
+            'QueryString' => '$filter=substringof(\'Producer\', Title) and indexof(Title, \'Producer\') eq 11',
+            'DataServiceVersion' => new Version(3, 0),
+            'MaxDataServiceVersion' => new Version(3, 0)
+        );
+
+        $host = new DataServiceHost5($hostInfo);
+        $dataService = new WordPressDataService();
+        $dataService->setHost($host);
+
+        $uriProcessor = $dataService->handleRequest();
+        $this->assertNotNull($uriProcessor);
+
+        $requestDescription = $uriProcessor->getRequestDescription();
+        $this->assertNotNull($requestDescription);
+
+        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
+        $this->assertNotNull($internalFilterInfo);
+
+        $mysqlexpression = $internalFilterInfo->getExpressionAsString();
+        $this->AssertEquals("((LOCATE('Producer', post_title) > 0) && (INSTR(post_title, 'Producer') - 1 = 11))", $mysqlexpression);
+
 	}
 
 	
@@ -778,71 +689,37 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
 	 */
 	function testSubConcatMySQL()
 	{
-		try {
-			$exceptionThrown = false;
-			$serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
-	        $resourcePath = 'Posts';
-	        $requestUri = $serviceUri . $resourcePath;
-	        $hostInfo = array('AbsoluteServiceUri' => new Url($serviceUri),
-			'AbsoluteRequestUri' => new Url($requestUri),
-			'QueryString' => '$filter=concat(concat(Title, \', \'), \'Open source now\') eq \'OData .NET Producer, Open source now\'',
-			'DataServiceVersion' => new Version(3, 0),
-			'MaxDataServiceVersion' => new Version(3, 0));
-	
-			$host = new DataServiceHost5($hostInfo);
-			$dataService = new WordPressDataService();
-			$dataService->setHost($host);
-			$uriProcessor = $dataService->handleRequest();
-			$check = !is_null($uriProcessor);
-			$this->assertTrue($check);
-			$requestDescription = $uriProcessor->getRequestDescription();
-			$check = !is_null($requestDescription);
-			$this->assertTrue($check);
-			$internalFilterInfo = $requestDescription->getInternalFilterInfo();
-			$check = !is_null($internalFilterInfo);
-			$this->assertTrue($check);
-			$mysqlexpression = $internalFilterInfo->getExpressionAsString();
-			// echo "\n";
-			// print_r("'" . $mysqlexpression . "'");
-			// echo "\n";
-			$this->AssertEquals("(STRCMP(CONCAT(CONCAT(post_title,', '),'Open source now'), 'OData .NET Producer, Open source now') = 0)", $mysqlexpression);
-			$host->getWebOperationContext()->resetWebContextInternal();
-		} catch (\Exception $exception) {
-			$this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
-			$host->getWebOperationContext()->resetWebContextInternal();
-		}
+
+
+        $serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
+        $resourcePath = 'Posts';
+        $requestUri = $serviceUri . $resourcePath;
+        $hostInfo = array(
+            'AbsoluteServiceUri' => new Url($serviceUri),
+            'AbsoluteRequestUri' => new Url($requestUri),
+            'QueryString' => '$filter=concat(concat(Title, \', \'), \'Open source now\') eq \'OData .NET Producer, Open source now\'',
+            'DataServiceVersion' => new Version(3, 0),
+            'MaxDataServiceVersion' => new Version(3, 0)
+        );
+
+        $host = new DataServiceHost5($hostInfo);
+        $dataService = new WordPressDataService();
+        $dataService->setHost($host);
+        $uriProcessor = $dataService->handleRequest();
+        $check = !is_null($uriProcessor);
+        $this->assertTrue($check);
+        
+        $requestDescription = $uriProcessor->getRequestDescription();
+        $check = !is_null($requestDescription);
+        $this->assertTrue($check);
+        
+        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
+        $check = !is_null($internalFilterInfo);
+        $this->assertTrue($check);
+        
+        $mysqlexpression = $internalFilterInfo->getExpressionAsString();
+        $this->AssertEquals("(STRCMP(CONCAT(CONCAT(post_title,', '),'Open source now'), 'OData .NET Producer, Open source now') = 0)", $mysqlexpression);
+
 	}
 	
-
-	protected function tearDown()
-	{
-	}
 }
-
-/**
-
-try {
-    $serviceUri = 'http://localhost:8083/WordPressDataService.svc/';
-	        $resourcePath = 'Posts';
-	        $requestUri = $serviceUri . $resourcePath;
-	        $hostInfo = array('AbsoluteServiceUri' => new Url($serviceUri),
-			'AbsoluteRequestUri' => new Url($requestUri),
-			'QueryString' => '$filter=concat(concat(Title, \', \'), \'Open source now\') eq \'OData .NET Producer, Open source now\'',
-			'DataServiceVersion' => new Version(3, 0),
-			'MaxDataServiceVersion' => new Version(3, 0));
-
-	$host = new DataServiceHost5($hostInfo);
-	$dataService = new WordPressDataService();
-	$dataService->setHost($host);
-	$uriProcessor = $dataService->handleRequest();
-	$requestDescription = $uriProcessor->getRequestDescription();
-	$internalFilterInfo = $requestDescription->getInternalFilterInfo();
-	$mysqlexpression = $internalFilterInfo->getExpressionAsString();
-	// TODO Assert that exp is   (STRCMP(REPLACE(post_title,' ',''), 'ODataPHPProducer') = 0)
-	$host->getWebOperationContext()->resetWebContextInternal();
-	echo $mysqlexpression;
-} catch (\Exception $exception) {
-	$this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
-}
-**/
-//

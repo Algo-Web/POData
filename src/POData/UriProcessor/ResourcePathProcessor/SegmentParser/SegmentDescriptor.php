@@ -2,6 +2,7 @@
 
 namespace POData\UriProcessor\ResourcePathProcessor\SegmentParser;
 
+use POData\Providers\Metadata\ResourceSetWrapper;
 
 /**
  * Class SegmentDescriptor

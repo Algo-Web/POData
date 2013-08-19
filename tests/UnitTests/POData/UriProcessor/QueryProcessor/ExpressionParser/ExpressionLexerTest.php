@@ -35,21 +35,16 @@ class ExpressionLexerTest extends \PHPUnit_Framework_TestCase
 		$expression = "StringIdentifier eq 'mystring";
     	$lexer = new ExpressionLexer($expression);
     	$lexer->nextToken();
-    	$exceptionThrown = false;
     	try
     	{    	
     		$lexer->nextToken();
+            $this->fail('An expected ODataException has not been raised');
     	}
     	catch(ODataException $ex)
-    	{    		
-    		$exceptionThrown = true;
-    	}    	
-    	
-    	if (!$exceptionThrown)
     	{
-    		$this->fail('An expected ODataException has not been raised');
+            //TODO: some assertion
     	}
-    	
+
     }
     
     public function testTypePreFixedLiteral()
@@ -199,14 +194,13 @@ class ExpressionLexerTest extends \PHPUnit_Framework_TestCase
     	try 
     	{
     		$lexer->nextToken();
+            $this->fail('An expected ODataException has not been raised');
     	}
     	catch(ODataException $ex)
     	{
     		$this->assertStringStartsWith('Unterminated string literal at position 31 in', $ex->getMessage());
-    		return;    		
     	}
     	
-    	$this->fail('An expected ODataException has not been raised');
     }
         
     public function testNumericLiteral()
@@ -422,79 +416,61 @@ class ExpressionLexerTest extends \PHPUnit_Framework_TestCase
     	$lexer->nextToken();    	
     	$lexer->nextToken();    	
     	$lexer->nextToken();    	
-    	$exceptionThrown = false;
-    	try 
+
+    	try
     	{
-    		$lexer->nextToken();    		
+    		$lexer->nextToken();
+            $this->fail('An expected ODataException has not been raised');
     	}
     	catch(ODataException $ex)
     	{
     		$this->assertStringStartsWith('Digit expected at position', $ex->getMessage());
-    		$exceptionThrown = true;    		
     	}
     	
-    	if(!$exceptionThrown)
-    	{
-    		$this->fail('An expected ODataException has not been raised');
-    	}
-    	
+
     	$expression = "ErrNumeric2	 ne 124.3EA2"; 
     	$lexer = new ExpressionLexer($expression);    	
-        $lexer->nextToken();   	
-      	$exceptionThrown = false;
-    	try 
+        $lexer->nextToken();
+    	try
     	{
-    		$lexer->nextToken();    		
+    		$lexer->nextToken();
+            $this->fail('An expected ODataException has not been raised');
     	}
     	catch(ODataException $ex)
     	{
     		$this->assertStringStartsWith('Digit expected at position', $ex->getMessage());
-    		$exceptionThrown = true;    		
     	}
     	
-    	if(!$exceptionThrown)
-    	{
-    		$this->fail('An expected ODataException has not been raised');
-    	}
-    	
+
       	$expression = "ErrNumeric3	ne 126.3e"; 
     	$lexer = new ExpressionLexer($expression);    	 	
         $lexer->nextToken();  	
-    	$exceptionThrown = false;
-    	try 
+
+    	try
     	{
     		$lexer->nextToken();
+            $this->fail('An expected ODataException has not been raised');
     	}
     	catch(ODataException $ex)
     	{
     		$this->assertStringStartsWith('Digit expected at position', $ex->getMessage());
-    		$exceptionThrown = true;    		
     	}
     	
-    	if(!$exceptionThrown)
-    	{
-    		$this->fail('An expected ODataException has not been raised');
-    	}
-    	
+
       	$expression = "ErrNumeric4	ne 127.3e++5"; 
     	$lexer = new ExpressionLexer($expression);    	 	
         $lexer->nextToken();  	
-    	$exceptionThrown = false;
-    	try 
+    	try
     	{
     		$lexer->nextToken();
+            $this->fail('An expected ODataException has not been raised');
     	}
     	catch(ODataException $ex)
     	{
     		$this->assertStringStartsWith('Digit expected at position', $ex->getMessage());
-    		$exceptionThrown = true;    		
     	}
     	
-    	if(!$exceptionThrown)
-    	{
-    		$this->fail('An expected ODataException has not been raised');
-    	}
-    	
+
     }
     
     public function testEndToken()
@@ -595,14 +571,13 @@ class ExpressionLexerTest extends \PHPUnit_Framework_TestCase
     	try 
     	{
     		$lexer->nextToken();
+            $this->fail('An expected ODataException has not been raised');
     	}
     	catch(ODataException $ex)
     	{
     		$this->assertStringStartsWith("Invalid character '@' at position 8", $ex->getMessage());
-    		return;	
     	}
     	
-    	$this->fail('An expected ODataException has not been raised');
     }
     
     public function testValidateToken()
@@ -616,15 +591,14 @@ class ExpressionLexerTest extends \PHPUnit_Framework_TestCase
     	try 
     	{
     		$lexer->validateToken(ExpressionTokenId::INTEGER_LITERAL);
+            $this->fail('An expected ODataException has not been raised');
     	}
     	catch(ODataException $ex)
     	{
     		$this->assertStringStartsWith('Syntax Error at position 16', $ex->getMessage());
-    		return;
     	}
     	
-    	$this->fail('An expected ODataException has not been raised');
-    }  
+    }
    
     public function testInfinityAndNanLiteral()
     {

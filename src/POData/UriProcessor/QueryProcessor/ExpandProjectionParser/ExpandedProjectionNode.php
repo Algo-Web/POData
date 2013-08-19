@@ -11,8 +11,8 @@ use POData\Common\Messages;
  * Class ExpandedProjectionNode
  *
  * ExpandProjectionParser will create a 'Projection Tree' from the $expand
- * and/or $select query options, Each path segement in the $expand/$select
- * will be represented by a node in the proejction tree, A path segment in
+ * and/or $select query options, Each path segment in the $expand/$select
+ * will be represented by a node in the projection tree, A path segment in
  * $expand option will be represented using this type and a path segment in
  * $select option (which is not appear in expand option) will be represented
  * using 'ProjectionNode' (base type of this type). The root of the projection
@@ -28,7 +28,7 @@ class ExpandedProjectionNode extends ProjectionNode
      * property or root of the 'Projection Tree', When the node represents 
      * expanded navigation property this field holds reference to the resource
      * (entity) set pointed by the navigation property, when the node 
-     * represents 'Prjection Tree' root, this fields holds reference to the 
+     * represents 'Projection Tree' root, this fields holds reference to the
      * resource set that the uri resource path points to.
      * 
      * @var ResourceSetWrapper
@@ -38,11 +38,11 @@ class ExpandedProjectionNode extends ProjectionNode
     /**
      * The sort information associated with the expanded navigation property or
      * root of 'Projection Tree', when this node represents root of the 
-     * projection tree then this memebr will be set if $top, $skip is specified
+     * projection tree then this member will be set if $top, $skip is specified
      * in the request uri or server side paging is enabled for the resource 
-     * identifed by the request uri, when this node represents an expanded 
+     * identified by the request uri, when this node represents an expanded
      * navigation property then this member will be set if server side paging
-     * is enabled for the resource set corrosponding to the navigation
+     * is enabled for the resource set corresponding to the navigation
      * property.
      * 
      * @var InternalOrderByInfo
@@ -230,7 +230,7 @@ class ExpandedProjectionNode extends ProjectionNode
     /**
      * Gets array of child nodes
      * 
-     * @return array(ProjectionNode/ExpandedProjectionNode)
+     * @return ProjectionNode[]|ExpandedProjectionNode[]
      */
     public function getChildNodes()
     {

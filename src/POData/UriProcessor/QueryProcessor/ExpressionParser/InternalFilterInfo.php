@@ -1,7 +1,9 @@
 <?php
 
 namespace POData\UriProcessor\QueryProcessor\ExpressionParser;
+
 use POData\UriProcessor\QueryProcessor\AnonymousFunction;
+use POData\UriProcessor\QueryProcessor\OrderByParser\OrderByInfo;
 
 /**
  * Class InternalFilterInfo

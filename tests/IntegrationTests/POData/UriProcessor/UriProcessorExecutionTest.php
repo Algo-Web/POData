@@ -22,31 +22,27 @@ class TestUriProcessorExecution extends PHPUnit_Framework_TestCase
      */
     public function testCombinationWithAllQueryStringOptions()
     {
-    	try {
-        $exceptionThrown = false;
-	    	$serviceUri = 'http://localhost:8083/NorthWindDataService.svc/';
-			$resourcePath = 'Customers(CustomerID=\'ALFKI\', CompanyName=\'Alfreds Futterkiste\')/Orders(10643)/Customer/Orders(10692)/Order_Details(OrderID=10692,ProductID=63)/Product/Order_Details(OrderID=10692,ProductID=63)/Order/Customer/Orders';
-			$requestUri = $serviceUri . $resourcePath;
-			
-			$hostInfo = array('AbsoluteServiceUri' => new Url($serviceUri),
-							  'AbsoluteRequestUri' => new Url($requestUri), 
-			   		    	  'QueryString' => '$filter=OrderID gt 10836 and OrderID le 20000&$orderby=CustomerID&$top=7&$skip=1&$inlinecount=allpages',
-			  				  'DataServiceVersion' => new Version(2, 0),
-			  				  'MaxDataServiceVersion' => new Version(2, 0));
-	
-			$host = new DataServiceHost1($hostInfo);
-			$dataService = new NorthWindDataService1();
-			$dataService->setHost($host);
-			$queryProcessor = $dataService->handleRequest();
-			$queryProcessor->execute();
-			
-			$result = $queryProcessor->getRequestDescription()->getLastSegmentDescriptor()->getResult();
-			$isarray = is_array($result);
-			$this->assertTrue($isarray);
-    	} catch (\Exception $exception) {
-            $this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
-        }
-    	
+
+        $serviceUri = 'http://localhost:8083/NorthWindDataService.svc/';
+        $resourcePath = 'Customers(CustomerID=\'ALFKI\', CompanyName=\'Alfreds Futterkiste\')/Orders(10643)/Customer/Orders(10692)/Order_Details(OrderID=10692,ProductID=63)/Product/Order_Details(OrderID=10692,ProductID=63)/Order/Customer/Orders';
+        $requestUri = $serviceUri . $resourcePath;
+
+        $hostInfo = array('AbsoluteServiceUri' => new Url($serviceUri),
+                          'AbsoluteRequestUri' => new Url($requestUri),
+                          'QueryString' => '$filter=OrderID gt 10836 and OrderID le 20000&$orderby=CustomerID&$top=7&$skip=1&$inlinecount=allpages',
+                          'DataServiceVersion' => new Version(2, 0),
+                          'MaxDataServiceVersion' => new Version(2, 0));
+
+        $host = new DataServiceHost1($hostInfo);
+        $dataService = new NorthWindDataService1();
+        $dataService->setHost($host);
+        $queryProcessor = $dataService->handleRequest();
+        $queryProcessor->execute();
+
+        $result = $queryProcessor->getRequestDescription()->getLastSegmentDescriptor()->getResult();
+        $isarray = is_array($result);
+        $this->assertTrue($isarray);
+
     }
     
     /**
@@ -59,13 +55,13 @@ class TestUriProcessorExecution extends PHPUnit_Framework_TestCase
 	    	$serviceUri = 'http://localhost:8083/NorthWindDataService.svc/';
 			$resourcePath = 'Customers(CustomerID=\'ALFKI\', CompanyName=\'Alfreds Futterkiste\')/Orders(10643)/Customer/Orders(10692)/Order_Details(OrderID=10692,ProductID=63)/Product/Order_Details(OrderID=10692,ProductID=63)/Order/Customer/Orders';
 			$requestUri = $serviceUri . $resourcePath;
-			
+
 			$hostInfo = array('AbsoluteServiceUri' => new Url($serviceUri),
-							  'AbsoluteRequestUri' => new Url($requestUri), 
+							  'AbsoluteRequestUri' => new Url($requestUri),
 			   		    	  'QueryString' => '$filter=OrderID gt 10600 and OrderID le 20000&$orderby=CustomerID&$top=7&$inlinecount=allpages',
 			  				  'DataServiceVersion' => new Version(2, 0),
 			  				  'MaxDataServiceVersion' => new Version(2, 0));
-	
+
 			$host = new DataServiceHost1($hostInfo);
 			$dataService = new NorthWindDataService1();
 			$dataService->setHost($host);

@@ -57,17 +57,14 @@ class TestOrderByParser extends \PHPUnit_Framework_TestCase
         $resourceSetWrapper = $metaQueryProverWrapper->resolveResourceSet('Employees');
         $resourceType = $resourceSetWrapper->getResourceType();
         $orderBy = 'Emails';
-        $exceptionThrown = false;
+
         try {
             $internalOrderInfo = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $metaQueryProverWrapper);
+            $this->fail('An expected ODataException for bag property in the path');
         } catch (ODataException $odataException) {
             $this->assertStringStartsWith('orderby clause does not support Bag property in the path, the property', $odataException->getMessage());
-            $exceptionThrown = true;
         }
 
-        if (!$exceptionThrown) {
-            $this->fail('An expected ODataException for bag property in the path');
-        }
 
     }
 
@@ -90,31 +87,23 @@ class TestOrderByParser extends \PHPUnit_Framework_TestCase
         $resourceSetWrapper = $metaQueryProverWrapper->resolveResourceSet('Customers');
         $resourceType = $resourceSetWrapper->getResourceType();
         $orderBy = 'Address';
-        $exceptionThrown = false;
+
         try {
             $internalOrderInfo = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $metaQueryProverWrapper);
+            $this->fail('An expected ODataException for using complex property as sort key has not been thrown');
         } catch (ODataException $odataException) {
             $this->assertStringStartsWith('Complex property cannot be used as sort key,', $odataException->getMessage());
-            $exceptionThrown = true;
-        }
-
-        if (!$exceptionThrown) {
-            $this->fail('An expected ODataException for using complex property as sort key has not been thrown');
         }
 
         $resourceSetWrapper = $metaQueryProverWrapper->resolveResourceSet('Customers');
         $resourceType = $resourceSetWrapper->getResourceType();
         $orderBy = 'Address/Address2';
-        $exceptionThrown = false;
+
         try {
             $internalOrderInfo = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $metaQueryProverWrapper);
+            $this->fail('An expected ODataException for using complex property as sort key has not been thrown');
         } catch (ODataException $odataException) {
             $this->assertStringStartsWith('Complex property cannot be used as sort key,', $odataException->getMessage());
-            $exceptionThrown = true;
-        }
-
-        if (!$exceptionThrown) {
-            $this->fail('An expected ODataException for using complex property as sort key has not been thrown');
         }
 
     }
@@ -139,18 +128,12 @@ class TestOrderByParser extends \PHPUnit_Framework_TestCase
         $resourceSetWrapper = $metaQueryProverWrapper->resolveResourceSet('Customers');
         $resourceType = $resourceSetWrapper->getResourceType();
         $orderBy = 'Orders/OrderID';
-        $exceptionThrown = false;
         try {
             $internalOrderInfo = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $metaQueryProverWrapper);
+            $this->fail('An expected ODataException for usage of resource reference set has not been thrown');
         } catch (ODataException $odataException) {
             $this->assertStringStartsWith('Navigation property points to a collection cannot be used in orderby clause', $odataException->getMessage());
-            $exceptionThrown = true;
         }
-
-        if (!$exceptionThrown) {
-            $this->fail('An expected ODataException for usage of resource reference set has not been thrown');
-        }
-
     }
 
     /**
@@ -172,31 +155,23 @@ class TestOrderByParser extends \PHPUnit_Framework_TestCase
         $resourceSetWrapper = $metaQueryProverWrapper->resolveResourceSet('Orders');
         $resourceType = $resourceSetWrapper->getResourceType();
         $orderBy = 'Customer';
-        $exceptionThrown = false;
+
         try {
             $internalOrderInfo = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $metaQueryProverWrapper);
+            $this->fail('An expected ODataException for usage of resource reference as sort key has not been thrown');
         } catch (ODataException $odataException) {
             $this->assertStringStartsWith('Navigation property cannot be used as sort key,', $odataException->getMessage());
-            $exceptionThrown = true;
-        }
-
-        if (!$exceptionThrown) {
-            $this->fail('An expected ODataException for usage of resource reference as sort key has not been thrown');
         }
 
         $resourceSetWrapper = $metaQueryProverWrapper->resolveResourceSet('Order_Details');
         $resourceType = $resourceSetWrapper->getResourceType();
         $orderBy = 'Order/Customer';
-        $exceptionThrown = false;
+
         try {
             $internalOrderInfo = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $metaQueryProverWrapper);
+            $this->fail('An expected ODataException for usage of resource reference as sort key has not been thrown');
         } catch (ODataException $odataException) {
             $this->assertStringStartsWith('Navigation property cannot be used as sort key,', $odataException->getMessage());
-            $exceptionThrown = true;
-        }
-
-        if (!$exceptionThrown) {
-            $this->fail('An expected ODataException for usage of resource reference as sort key has not been thrown');
         }
 
     }
@@ -333,16 +308,13 @@ class TestOrderByParser extends \PHPUnit_Framework_TestCase
         $resourceSetWrapper = $metaQueryProverWrapper->resolveResourceSet('Customers');
         $resourceType = $resourceSetWrapper->getResourceType();
         $orderBy = 'Photo';
-        $exceptionThrown = false;
+
         try {
             $internalOrderInfo = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $metaQueryProverWrapper);
+            $this->fail('An expected ODataException for usage of binary property has not been thrown');
         } catch (ODataException $odataException) {
             $this->assertStringStartsWith('Binary property is not allowed in orderby', $odataException->getMessage());
-            $exceptionThrown = true;
-        }
 
-        if (!$exceptionThrown) {
-            $this->fail('An expected ODataException for usage of binary property has not been thrown');
         }
 
     }
@@ -442,16 +414,12 @@ class TestOrderByParser extends \PHPUnit_Framework_TestCase
         $resourceSetWrapper = $metaQueryProverWrapper->resolveResourceSet('Orders');
         $resourceType = $resourceSetWrapper->getResourceType();
         $orderBy = 'Customer/CustomerID';
-        $exceptionThrown = false;
+
         try {
             OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $metaQueryProverWrapper);
+            $this->fail('An expected ODataException for navigation to invisible resource set has not been thrown');
         } catch (ODataException $odataException) {
-                $exceptionThrown = true;
-                $this->assertStringEndsWith("(Check the resource set of the navigation property 'Customer' is visible)", $odataException->getMessage());
-        }
-
-        if (!$exceptionThrown) {
-                $this->fail('An expected ODataException for navigation to invisible resource set has not been thrown');
+            $this->assertStringEndsWith("(Check the resource set of the navigation property 'Customer' is visible)", $odataException->getMessage());
         }
 
     }

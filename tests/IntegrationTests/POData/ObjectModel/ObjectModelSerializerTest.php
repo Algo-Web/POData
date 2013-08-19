@@ -10,7 +10,7 @@ ob_start();
 use POData\ObjectModel\ODataBagContent;
 use POData\Common\ODataConstants;
 use POData\Common\Messages;
-use POData\Common\HttpStatus                             ;
+use POData\Common\HttpStatus;
 use POData\Common\Url;
 use POData\Common\UrlFormatException;
 use POData\Common\ODataException;
@@ -25,6 +25,10 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
     protected function setUp()
     {
         ob_start();
+    }
+
+    public function tearDown(){
+        ob_end_clean();
     }
 
     /**
@@ -42,26 +46,22 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
     	    = "/NorthWind.svc/Customers";
         //$_SERVER[ODataConstants::HTTPREQUEST_HEADER_QUERY_STRING]
     	//    = '$top=1';
-    	try {            
- 	        $dispatcher = new Dispatcher(); 	        
- 	        $dispatcher->dispatch();
- 	        $my_str = ob_get_contents();
- 	        ob_end_clean(); 	        
- 	        $dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
- 	        $this->assertStringStartsWith(
- 	        	'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" . '<feed'
- 	            , $my_str
-            );
 
- 	        $this->assertStringEndsWith(
- 	        	'</feed>' . "\n"
- 	            , $my_str
-            );
-		} catch (\Exception $exception) {
-		    // Should call ob_end_clean
-		    ob_end_clean();
-		    $this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
-		}    	
+        $dispatcher = new Dispatcher();
+        $dispatcher->dispatch();
+        $my_str = ob_get_contents();
+        ob_end_clean();
+        $dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
+        $this->assertStringStartsWith(
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" . '<feed'
+            , $my_str
+        );
+
+        $this->assertStringEndsWith(
+            '</feed>' . "\n"
+            , $my_str
+        );
+
 	}
 
     /**
@@ -79,26 +79,22 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
     	    = "/NorthWind.svc/Customers";
         $_SERVER[ODataConstants::HTTPREQUEST_HEADER_QUERY_STRING]
     	    = '$top=2&$skip=3';
-    	try {            
- 	        $dispatcher = new Dispatcher(); 	        
- 	        $dispatcher->dispatch();
- 	        $my_str = ob_get_contents();
- 	        ob_end_clean(); 	        
- 	        $dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
- 	        $this->assertStringStartsWith(
- 	        	'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" . '<feed'
- 	            , $my_str
-            );
 
- 	        $this->assertStringEndsWith(
- 	        	'</feed>' . "\n"
- 	            , $my_str
-            );
-		} catch (\Exception $exception) {
-		    // Should call ob_end_clean
-		    ob_end_clean();
-		    $this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
-		}    	
+        $dispatcher = new Dispatcher();
+        $dispatcher->dispatch();
+        $my_str = ob_get_contents();
+        ob_end_clean();
+        $dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
+        $this->assertStringStartsWith(
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" . '<feed'
+            , $my_str
+        );
+
+        $this->assertStringEndsWith(
+            '</feed>' . "\n"
+            , $my_str
+        );
+
 	}
 
     /**
@@ -114,26 +110,22 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
     	    = "localhost:8086";
     	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_URI]
     	    = "/NorthWind.svc/Orders(10643)/Customer/Orders";
-    	try {            
- 	        $dispatcher = new Dispatcher(); 	        
- 	        $dispatcher->dispatch();
- 	        $my_str = ob_get_contents();
- 	        ob_end_clean(); 	        
- 	        $dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
- 	        $this->assertStringStartsWith(
- 	        	'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" . '<feed'
- 	            , $my_str
-            );
 
- 	        $this->assertStringEndsWith(
- 	        	'</feed>' . "\n"
- 	            , $my_str
-            );
-		} catch (\Exception $exception) {
-		    // Should call ob_end_clean
-		    ob_end_clean();
-		    $this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
-		}    	
+        $dispatcher = new Dispatcher();
+        $dispatcher->dispatch();
+        $my_str = ob_get_contents();
+        ob_end_clean();
+        $dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
+        $this->assertStringStartsWith(
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" . '<feed'
+            , $my_str
+        );
+
+        $this->assertStringEndsWith(
+            '</feed>' . "\n"
+            , $my_str
+        );
+
 	}
 
 	/**
@@ -151,26 +143,22 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
     	    = "/NorthWind.svc/Customers('ALFKI')";
         //$_SERVER[ODataConstants::HTTPREQUEST_HEADER_QUERY_STRING]
     	//    = '$top=1';
-    	try {            
- 	        $dispatcher = new Dispatcher(); 	        
- 	        $dispatcher->dispatch();
- 	        $my_str = ob_get_contents();
- 	        ob_end_clean(); 	        
- 	        $dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
- 	        $this->assertStringStartsWith(
- 	        	'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" . '<entry'
- 	            , $my_str
-            );
 
- 	        $this->assertStringEndsWith(
- 	        	'</entry>' . "\n"
- 	            , $my_str
-            );
-		} catch (\Exception $exception) {
-		    // Should call ob_end_clean
-		    ob_end_clean();
-		    $this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
-		}   
+        $dispatcher = new Dispatcher();
+        $dispatcher->dispatch();
+        $my_str = ob_get_contents();
+        ob_end_clean();
+        $dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
+        $this->assertStringStartsWith(
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" . '<entry'
+            , $my_str
+        );
+
+        $this->assertStringEndsWith(
+            '</entry>' . "\n"
+            , $my_str
+        );
+
 	}
 
 	/**
@@ -188,26 +176,22 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
     	    = "/NorthWind.svc/Orders(10643)/Customer";
         //$_SERVER[ODataConstants::HTTPREQUEST_HEADER_QUERY_STRING]
     	//    = '$top=1';
-    	try {            
- 	        $dispatcher = new Dispatcher(); 	        
- 	        $dispatcher->dispatch();
- 	        $my_str = ob_get_contents();
- 	        ob_end_clean(); 	        
- 	        $dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
- 	        $this->assertStringStartsWith(
- 	        	'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" . '<entry'
- 	            , $my_str
-            );
 
- 	        $this->assertStringEndsWith(
- 	        	'</entry>' . "\n"
- 	            , $my_str
-            );
-		} catch (\Exception $exception) {
-		    // Should call ob_end_clean
-		    ob_end_clean();
-		    $this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
-		}   
+        $dispatcher = new Dispatcher();
+        $dispatcher->dispatch();
+        $my_str = ob_get_contents();
+        ob_end_clean();
+        $dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
+        $this->assertStringStartsWith(
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" . '<entry'
+            , $my_str
+        );
+
+        $this->assertStringEndsWith(
+            '</entry>' . "\n"
+            , $my_str
+        );
+
 	}
 
 	/**
@@ -225,26 +209,22 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
     	    = "/NorthWind.svc/Customers('ALFKI')/\$links/Orders";
         //$_SERVER[ODataConstants::HTTPREQUEST_HEADER_QUERY_STRING]
     	//    = '$top=1';
-    	try {            
- 	        $dispatcher = new Dispatcher(); 	        
- 	        $dispatcher->dispatch();
- 	        $my_str = ob_get_contents();
- 	        ob_end_clean(); 	        
- 	        $dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
- 	        $this->assertStringStartsWith(
- 	        	'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" . '<links'
- 	            , $my_str
-            );
 
- 	        $this->assertStringEndsWith(
- 	        	'</links>' . "\n"
- 	            , $my_str
-            );
-		} catch (\Exception $exception) {
-		    // Should call ob_end_clean
-		    ob_end_clean();
-		    $this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
-		}   
+        $dispatcher = new Dispatcher();
+        $dispatcher->dispatch();
+        $my_str = ob_get_contents();
+        ob_end_clean();
+        $dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
+        $this->assertStringStartsWith(
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" . '<links'
+            , $my_str
+        );
+
+        $this->assertStringEndsWith(
+            '</links>' . "\n"
+            , $my_str
+        );
+
 	}
 
 	/**
@@ -262,26 +242,22 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
     	    = "/NorthWind.svc/Orders(10643)/\$links/Customer";
         //$_SERVER[ODataConstants::HTTPREQUEST_HEADER_QUERY_STRING]
     	//    = '$top=1';
-    	try {            
- 	        $dispatcher = new Dispatcher(); 	        
- 	        $dispatcher->dispatch();
- 	        $my_str = ob_get_contents();
- 	        ob_end_clean(); 	        
- 	        $dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
- 	        $this->assertStringStartsWith(
- 	        	'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" . '<uri'
- 	            , $my_str
-            );
 
- 	        $this->assertStringEndsWith(
- 	        	'</uri>' . "\n"
- 	            , $my_str
-            );
-		} catch (\Exception $exception) {
-		    // Should call ob_end_clean
-		    ob_end_clean();
-		    $this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
-		}   
+        $dispatcher = new Dispatcher();
+        $dispatcher->dispatch();
+        $my_str = ob_get_contents();
+        ob_end_clean();
+        $dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
+        $this->assertStringStartsWith(
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" . '<uri'
+            , $my_str
+        );
+
+        $this->assertStringEndsWith(
+            '</uri>' . "\n"
+            , $my_str
+        );
+
 	}
 
 	/**
@@ -299,26 +275,22 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
     	    = "/NorthWind.svc/Customers('ALFKI')/Address";
         //$_SERVER[ODataConstants::HTTPREQUEST_HEADER_QUERY_STRING]
     	//    = '$top=1';
-    	try {            
- 	        $dispatcher = new Dispatcher(); 	        
- 	        $dispatcher->dispatch();
- 	        $my_str = ob_get_contents();
- 	        ob_end_clean(); 	        
- 	        $dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
- 	        $this->assertStringStartsWith(
- 	        	'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" . '<d:Address m:type="NorthWind.Address"'
- 	            , $my_str
-            );
 
- 	        $this->assertStringEndsWith(
- 	        	'</d:Address>' . "\n"
- 	            , $my_str
-            );
-		} catch (\Exception $exception) {
-		    // Should call ob_end_clean
-		    ob_end_clean();
-		    $this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
-		}   
+        $dispatcher = new Dispatcher();
+        $dispatcher->dispatch();
+        $my_str = ob_get_contents();
+        ob_end_clean();
+        $dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
+        $this->assertStringStartsWith(
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" . '<d:Address m:type="NorthWind.Address"'
+            , $my_str
+        );
+
+        $this->assertStringEndsWith(
+            '</d:Address>' . "\n"
+            , $my_str
+        );
+
 	}
 
 	/**
@@ -336,26 +308,22 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
     	    = "/NorthWind.svc/Customers('ALFKI')/Address/Country";
         //$_SERVER[ODataConstants::HTTPREQUEST_HEADER_QUERY_STRING]
     	//    = '$top=1';
-    	try {            
- 	        $dispatcher = new Dispatcher(); 	        
- 	        $dispatcher->dispatch();
- 	        $my_str = ob_get_contents();
- 	        ob_end_clean(); 	        
- 	        $dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
- 	        $this->assertStringStartsWith(
- 	        	'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" . '<d:Country m:type="Edm.String"'
- 	            , $my_str
-            );
 
- 	        $this->assertStringEndsWith(
- 	        	'</d:Country>' . "\n"
- 	            , $my_str
-            );
-		} catch (\Exception $exception) {
-		    // Should call ob_end_clean
-		    ob_end_clean();
-		    $this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
-		}   
+        $dispatcher = new Dispatcher();
+        $dispatcher->dispatch();
+        $my_str = ob_get_contents();
+        ob_end_clean();
+        $dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
+        $this->assertStringStartsWith(
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" . '<d:Country m:type="Edm.String"'
+            , $my_str
+        );
+
+        $this->assertStringEndsWith(
+            '</d:Country>' . "\n"
+            , $my_str
+        );
+
 	}
 
 	/**
@@ -373,26 +341,22 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
     	    = "/NorthWind.svc/Customers('ALFKI')/OtherAddresses";
         //$_SERVER[ODataConstants::HTTPREQUEST_HEADER_QUERY_STRING]
     	//    = '$top=1';
-    	try {            
- 	        $dispatcher = new Dispatcher(); 	        
- 	        $dispatcher->dispatch();
- 	        $my_str = ob_get_contents();
- 	        ob_end_clean(); 	        
- 	        $dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
- 	        $this->assertStringStartsWith(
- 	        	'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" . '<d:OtherAddresses m:type="Collection(NorthWind.Address)"'
- 	            , $my_str
-            );
 
- 	        $this->assertStringEndsWith(
- 	        	'</d:OtherAddresses>' . "\n"
- 	            , $my_str
-            );
-		} catch (\Exception $exception) {
-		    // Should call ob_end_clean
-		    ob_end_clean();
-		    $this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
-		}   
+        $dispatcher = new Dispatcher();
+        $dispatcher->dispatch();
+        $my_str = ob_get_contents();
+        ob_end_clean();
+        $dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
+        $this->assertStringStartsWith(
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" . '<d:OtherAddresses m:type="Collection(NorthWind.Address)"'
+            , $my_str
+        );
+
+        $this->assertStringEndsWith(
+            '</d:OtherAddresses>' . "\n"
+            , $my_str
+        );
+
 	}
 
 	/**
@@ -410,26 +374,22 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
     	    = "/NorthWind.svc/Customers('ALFKI')";
         $_SERVER[ODataConstants::HTTPREQUEST_HEADER_QUERY_STRING]
     	    = '$expand=Orders,$select=CustomerID,Orders/OrderID';
-    	try {            
- 	        $dispatcher = new Dispatcher(); 	        
- 	        $dispatcher->dispatch();
- 	        $my_str = ob_get_contents();
- 	        ob_end_clean(); 	        
- 	        $dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
- 	        $this->assertStringStartsWith(
- 	        	'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" . '<entry'
- 	            , $my_str
-            );
 
- 	        $this->assertStringEndsWith(
- 	        	'</entry>' . "\n"
- 	            , $my_str
-            );
-		} catch (\Exception $exception) {
-		    // Should call ob_end_clean
-		    ob_end_clean();
-		    $this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
-		}   
+        $dispatcher = new Dispatcher();
+        $dispatcher->dispatch();
+        $my_str = ob_get_contents();
+        ob_end_clean();
+        $dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
+        $this->assertStringStartsWith(
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" . '<entry'
+            , $my_str
+        );
+
+        $this->assertStringEndsWith(
+            '</entry>' . "\n"
+            , $my_str
+        );
+
 	}
 
     /**
@@ -447,26 +407,22 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
     	    = "/NorthWind.svc/Customers";
         $_SERVER[ODataConstants::HTTPREQUEST_HEADER_QUERY_STRING]
     	    = '$orderby=Address/Country';
-    	try {            
- 	        $dispatcher = new Dispatcher(); 	        
- 	        $dispatcher->dispatch();
- 	        $my_str = ob_get_contents();
- 	        ob_end_clean(); 	        
- 	        $dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
- 	        $this->assertStringStartsWith(
- 	        	'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" . '<feed'
- 	            , $my_str
-            );
 
- 	        $this->assertStringEndsWith(
- 	        	'</feed>' . "\n"
- 	            , $my_str
-            );
-		} catch (\Exception $exception) {
-		    // Should call ob_end_clean
-		    ob_end_clean();
-		    $this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
-		}    	
+        $dispatcher = new Dispatcher();
+        $dispatcher->dispatch();
+        $my_str = ob_get_contents();
+        ob_end_clean();
+        $dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
+        $this->assertStringStartsWith(
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" . '<feed'
+            , $my_str
+        );
+
+        $this->assertStringEndsWith(
+            '</feed>' . "\n"
+            , $my_str
+        );
+
 	}
 
     /**
@@ -484,26 +440,22 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
     	    = "/NorthWind.svc/Customers";
         $_SERVER[ODataConstants::HTTPREQUEST_HEADER_QUERY_STRING]
     	    = '$inlinecount=allpages';
-    	try {            
- 	        $dispatcher = new Dispatcher(); 	        
- 	        $dispatcher->dispatch();
- 	        $my_str = ob_get_contents();
- 	        ob_end_clean(); 	        
- 	        $dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
- 	        $this->assertStringStartsWith(
- 	        	'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" . '<feed'
- 	            , $my_str
-            );
 
- 	        $this->assertStringEndsWith(
- 	        	'</feed>' . "\n"
- 	            , $my_str
-            );
-		} catch (\Exception $exception) {
-		    // Should call ob_end_clean
-		    ob_end_clean();
-		    $this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
-		}    	
+        $dispatcher = new Dispatcher();
+        $dispatcher->dispatch();
+        $my_str = ob_get_contents();
+        ob_end_clean();
+        $dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
+        $this->assertStringStartsWith(
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" . '<feed'
+            , $my_str
+        );
+
+        $this->assertStringEndsWith(
+            '</feed>' . "\n"
+            , $my_str
+        );
+
 	}
 
     /**
@@ -521,25 +473,21 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
     	    = "/NorthWind.svc/Customers";
         $_SERVER[ODataConstants::HTTPREQUEST_HEADER_QUERY_STRING]
     	    = '$inlinecount=none';
-    	try {            
- 	        $dispatcher = new Dispatcher(); 	        
- 	        $dispatcher->dispatch();
- 	        $my_str = ob_get_contents();
- 	        ob_end_clean(); 	        
- 	        $dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
- 	        $this->assertStringStartsWith(
- 	        	'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" . '<feed'
- 	            , $my_str
-            );
 
- 	        $this->assertStringEndsWith(
- 	        	'</feed>' . "\n"
- 	            , $my_str
-            );
-		} catch (\Exception $exception) {
-		    // Should call ob_end_clean
-		    ob_end_clean();
-		    $this->fail('An unexpected Exception has been raised . ' . $exception->getMessage());
-		}    	
+        $dispatcher = new Dispatcher();
+        $dispatcher->dispatch();
+        $my_str = ob_get_contents();
+        ob_end_clean();
+        $dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
+        $this->assertStringStartsWith(
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" . '<feed'
+            , $my_str
+        );
+
+        $this->assertStringEndsWith(
+            '</feed>' . "\n"
+            , $my_str
+        );
+
 	}
 }
