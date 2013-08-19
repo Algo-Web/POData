@@ -1,4 +1,4 @@
-<?
+<?php
 
 namespace UnitTests\POData\IDSQP2\NorthWind;
 
