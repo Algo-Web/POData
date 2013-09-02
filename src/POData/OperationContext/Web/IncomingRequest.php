@@ -89,22 +89,6 @@ class IncomingRequest
     {
         if (is_null($this->_headers)) {
             $this->_headers = array();
-            if (array_key_exists('QUERY_STRING', $_SERVER)) {
-                $this->_headers[ODataConstants::HTTPREQUEST_HEADER_QUERY_STRING] 
-                    = rawurldecode(utf8_decode(trim($_SERVER['QUERY_STRING'])));
-            } else {
-                $this->_headers[ODataConstants::HTTPREQUEST_HEADER_QUERY_STRING] = "";
-            }   
-                /**
-                $hdr = null;
-                foreach ( $_SERVER as $key => $value) {
-                   $hdr .=  $key . '=' . $value . "\r\n";
-                }
-                $handle = fopen("d:\dump\log.txt", "w+");
-                fwrite ($handle , $hdr);
-                fclose($handle);
-                exit;
-                **/
 
             foreach ($_SERVER as $key => $value) {
                 if ((strpos($key, 'HTTP_') === 0) 
@@ -175,11 +159,11 @@ class IncomingRequest
      */
     public function getQueryString()
     {
-        return utf8_decode(
-            urldecode(
-                $this->getRequestHeader(ODataConstants::HTTPREQUEST_HEADER_QUERY_STRING)
-            )
-        );
+        if (array_key_exists('QUERY_STRING', $_SERVER)) {
+            return utf8_decode(trim($_SERVER['QUERY_STRING']));
+        } else {
+            return "";
+        }
     }
     
     /**
@@ -199,11 +183,11 @@ class IncomingRequest
                     $result = explode('=', $queryOptionAsString, 2);
                     $isNamedOptions = count($result) == 2;
                     if ($isNamedOptions) {
-                        $this->_queryOptions[$i] 
-                            = array ($result[0] => trim($result[1]));
+                        $this->_queryOptions[$i]
+                            = array (rawurldecode($result[0]) => trim(rawurldecode($result[1])));
                     } else {
-                        $this->_queryOptions[$i] 
-                            = array(null => trim($result[0]));
+                        $this->_queryOptions[$i]
+                            = array(null => trim(rawurldecode($result[0])));
                     }
                     $i++;
                 }
