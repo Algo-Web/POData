@@ -7,12 +7,12 @@ use POData\UriProcessor\ResourcePathProcessor\SegmentParser\RequestTargetSource;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\RequestTargetKind;
 use POData\Configuration\EntitySetRights;
 use POData\Providers\MetadataQueryProviderWrapper;
-use POData\Configuration\DataServiceConfiguration;
+use POData\Configuration\ServiceConfiguration;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\SegmentParser;
 use POData\Common\ODataException;
 
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
-
+use POData\Providers\Query\IQueryProvider;
 
 class TestSegmentParser extends \PHPUnit_Framework_TestCase
 {
@@ -20,13 +20,19 @@ class TestSegmentParser extends \PHPUnit_Framework_TestCase
     private $_metadataProviderWrapper;
     private $_serviceConfiguration;    
     private $_segmentParser;
-    
+
+	/** @var  IQueryProvider */
+	protected $mockQueryProvider;
+
     protected function setUp()
     {
         $this->_metadataProvider = NorthWindMetadata::Create();
-        $this->_serviceConfiguration = new DataServiceConfiguration($this->_metadataProvider);
+        $this->_serviceConfiguration = new ServiceConfiguration($this->_metadataProvider);
         $this->_serviceConfiguration->setEntitySetAccessRule('*', EntitySetRights::ALL);
-        $this->_metadataProviderWrapper = new MetadataQueryProviderWrapper($this->_metadataProvider, null, $this->_serviceConfiguration, false);
+
+	    $this->mockQueryProvider = \Phockito::mock('POData\Providers\Query\IQueryProvider');
+
+        $this->_metadataProviderWrapper = new MetadataQueryProviderWrapper($this->_metadataProvider, $this->mockQueryProvider, $this->_serviceConfiguration, false);
     }
 
     public function testEmptySegments()
@@ -159,10 +165,10 @@ class TestSegmentParser extends \PHPUnit_Framework_TestCase
         $this->assertFalse($segmentDescriptors[0]->isSingleResult());
         //test for FORBIDDEN
         $metadataProvider = NorthWindMetadata::Create();
-        $serviceConfiguration = new DataServiceConfiguration($metadataProvider);
+        $serviceConfiguration = new ServiceConfiguration($metadataProvider);
         //HIDING ALL RESOURCE SET
         $serviceConfiguration->setEntitySetAccessRule('*', EntitySetRights::NONE);
-        $metadataProviderWrapper = new MetadataQueryProviderWrapper($metadataProvider, null, $serviceConfiguration, false);
+        $metadataProviderWrapper = new MetadataQueryProviderWrapper($metadataProvider, $this->mockQueryProvider , $serviceConfiguration, false);
         $segments = array("Employees('AF123')");
 
         try {
@@ -671,10 +677,10 @@ class TestSegmentParser extends \PHPUnit_Framework_TestCase
         //Test invisible navigation segment
         //Creates a provider wrapper for NorthWind service with 'Orders' entity set as invisible
         $metadataProvider = NorthWindMetadata::Create();
-        $serviceConfiguration = new DataServiceConfiguration($this->_metadataProvider);
+        $serviceConfiguration = new ServiceConfiguration($this->_metadataProvider);
         $serviceConfiguration->setEntitySetAccessRule('Customers', EntitySetRights::READ_ALL);
         $serviceConfiguration->setEntitySetAccessRule('Orders', EntitySetRights::NONE);
-        $metadataProviderWrapper = new MetadataQueryProviderWrapper($metadataProvider, null, $serviceConfiguration, false);
+        $metadataProviderWrapper = new MetadataQueryProviderWrapper($metadataProvider, $this->mockQueryProvider , $serviceConfiguration, false);
 
         $segments = array("Customers(CustomerID='ALFKI', CustomerGuid=guid'15b242e7-52eb-46bd-8f0e-6568b72cd9a6')",
                           'Orders(789)',

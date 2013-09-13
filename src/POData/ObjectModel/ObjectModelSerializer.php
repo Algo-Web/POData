@@ -7,7 +7,7 @@ use POData\Common\InvalidOperationException;
 use POData\UriProcessor\RequestCountOption;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\RequestTargetSource;
 use POData\UriProcessor\RequestDescription;
-use POData\DataService;
+use POData\IService;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\ResourceTypeKind;
 use POData\Providers\Metadata\ResourcePropertyKind;
@@ -28,16 +28,14 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
     /**
      * Creates new instance of ObjectModelSerializer.
      * 
-     * @param DataService        &$dataService        Reference to data service 
-     *                                                instance.
-     * @param RequestDescription &$requestDescription Reference to the 
-     *                                                type describing
-     *                                                request submitted by the 
-     *                                                client. 
+     * @param IService        &$service        Reference to data service instance.
+     *
+     * @param RequestDescription &$requestDescription Reference to the type describing request submitted by the client.
+     *
      */
-    public function __construct(DataService &$dataService, RequestDescription &$requestDescription)
+    public function __construct(IService &$service, RequestDescription &$requestDescription)
     {
-        parent::__construct($dataService, $requestDescription);
+        parent::__construct($service, $requestDescription);
     }
 
     /**
@@ -105,7 +103,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
         $relativeUri = $this->requestDescription->getIdentifier(); 
         $odataFeed = new ODataFeed();
         $odataFeed->isTopLevel = true;
-        if ($this->requestDescription->getRequestCountOption() == RequestCountOption::INLINE) {
+        if ($this->requestDescription->getRequestCountOption() == RequestCountOption::INLINE()) {
             $odataFeed->rowCount = $this->requestDescription->getCountValue();
         }
 
@@ -171,7 +169,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
             }
         }
 
-        if ($this->requestDescription->getRequestCountOption() == RequestCountOption::INLINE) {
+        if ($this->requestDescription->getRequestCountOption() == RequestCountOption::INLINE()) {
             $odataUrlCollection->count = $this->requestDescription->getCountValue();
         }
 
@@ -425,7 +423,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
                 // IDSMP::getResourceProperties will give collection of properties
                 // which are visible.
                 $currentResourceSetWrapper1 = $this->getCurrentResourceSetWrapper();
-                $resourceProperties = $this->dataService
+                $resourceProperties = $this->service
                     ->getMetadataQueryProviderWrapper()
                     ->getResourceProperties(
                         $currentResourceSetWrapper1, 
@@ -508,7 +506,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
                 
                 if ($resourceProperty->getTypeKind() == ResourceTypeKind::ENTITY) {
                     $currentResourceSetWrapper2 = $this->getCurrentResourceSetWrapper();
-                    $resourceProperties = $this->dataService
+                    $resourceProperties = $this->service
                         ->getMetadataQueryProviderWrapper()
                         ->getResourceProperties(
                             $currentResourceSetWrapper2, 
@@ -787,7 +785,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
     ) {
         if ($resourceType->isMediaLinkEntry()) {
             $odataEntry->isMediaLinkEntry = true;
-            $streamProvider = $this->dataService->getStreamProvider();
+            $streamProvider = $this->service->getStreamProvider();
             $eTag = $streamProvider->getStreamETag($entryObject, null);
             $readStreamUri = $streamProvider->getReadStreamUri($entryObject, null, $relativeUri);
             $mediaContentType = $streamProvider->getStreamContentType($entryObject, null);

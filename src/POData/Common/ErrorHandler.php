@@ -6,8 +6,9 @@ namespace POData\Common;
 use POData\Writers\Json\JsonODataWriter;
 
 use POData\Writers\Atom\AtomODataWriter;
-use POData\DataService;
+use POData\BaseService;
 use POData\HttpProcessUtility;
+use POData\IService;
 
 /**
  * Class ErrorHandler
@@ -18,14 +19,14 @@ class ErrorHandler
     /**
      * Common function to handle exceptions in the data service.
      * 
-     * @param Exception   $exception    exception occured
-     * @param DataService &$dataService dataservice
+     * @param \Exception    $exception    exception
+     * @param IService      $service service
      * 
      * @return void
      */
-    public static function handleException($exception, DataService &$dataService)
+    public static function handleException($exception, IService $service)
     {
-        $acceptTypesText = $dataService->getHost()->getRequestAccept();
+        $acceptTypesText = $service->getHost()->getRequestAccept();
         $responseContentType = null;
         try {
             $responseContentType = HttpProcessUtility::selectMimeType(
@@ -51,15 +52,15 @@ class ErrorHandler
             $exception = new ODataException($exception->getMessage(), HttpStatus::CODE_INTERNAL_SERVER_ERROR);
         }
 
-        $dataService->getHost()->setResponseVersion(ODataConstants::DATASERVICEVERSION_1_DOT_0 . ';');
+        $service->getHost()->setResponseVersion(ODataConstants::DATASERVICEVERSION_1_DOT_0 . ';');
 
         // At this point all kind of exceptions will be converted 
         //to 'ODataException' 
         if ($exception->getStatusCode() == HttpStatus::CODE_NOT_MODIFIED) {
-            $dataService->getHost()->setResponseStatusCode(HttpStatus::CODE_NOT_MODIFIED);
+            $service->getHost()->setResponseStatusCode(HttpStatus::CODE_NOT_MODIFIED);
         } else {
-            $dataService->getHost()->setResponseStatusCode($exception->getStatusCode());
-            $dataService->getHost()->setResponseContentType($responseContentType);
+            $service->getHost()->setResponseStatusCode($exception->getStatusCode());
+            $service->getHost()->setResponseContentType($responseContentType);
             $responseBody = null;
             if (strcasecmp($responseContentType, ODataConstants::MIME_APPLICATION_XML) == 0) {
                 $responseBody = AtomODataWriter::serializeException($exception, true);
@@ -67,7 +68,7 @@ class ErrorHandler
                 $responseBody = JsonODataWriter::serializeException($exception, true);
             }
 
-            $dataService->getHost()->getWebOperationContext()->outgoingResponse()->setStream($responseBody);
+            $service->getHost()->getWebOperationContext()->outgoingResponse()->setStream($responseBody);
         }
     }
 }

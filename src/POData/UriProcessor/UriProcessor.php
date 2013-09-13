@@ -13,7 +13,7 @@ use POData\UriProcessor\ResourcePathProcessor\ResourcePathProcessor;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\SegmentDescriptor;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\RequestTargetKind;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\RequestTargetSource;
-use POData\DataService;
+use POData\IService;
 use POData\Common\Url;
 use POData\Common\Messages;
 use POData\Common\ODataException;
@@ -44,9 +44,9 @@ class UriProcessor
     /**
      * Holds reference to the data service instance.
      * 
-     * @var DataService
+     * @var IService
      */
-    private $_dataService;
+    private $service;
 
     /**
      * Holds reference to the wrapper over IDSMP and IDSQP implementation.
@@ -72,12 +72,12 @@ class UriProcessor
     /**
      * Constructs a new instance of UriProcessor
      * 
-     * @param DataService &$dataService Reference to the data service instance.
+     * @param IService $service Reference to the data service instance.
      */
-    private function __construct(DataService &$dataService)
+    private function __construct(IService $service)
     {
-        $this->_dataService = $dataService;
-        $this->_provider = $dataService->getMetadataQueryProviderWrapper();
+        $this->service = $service;
+        $this->_provider = $service->getMetadataQueryProviderWrapper();
         $this->_segmentNames = array();
         $this->_segmentResourceSetWrappers = array();
     }
@@ -85,16 +85,16 @@ class UriProcessor
     /**
      * Process the resource path and query options of client's request uri.
      * 
-     * @param DataService &$dataService Reference to the data service instance.
+     * @param IService $service Reference to the data service instance.
      * 
      * @return URIProcessor
      * 
      * @throws ODataException
      */
-    public static function process(DataService &$dataService)
+    public static function process(IService $service)
     {
-        $absoluteRequestUri = $dataService->getHost()->getAbsoluteRequestUri();
-        $absoluteServiceUri = $dataService->getHost()->getAbsoluteServiceUri();
+        $absoluteRequestUri = $service->getHost()->getAbsoluteRequestUri();
+        $absoluteServiceUri = $service->getHost()->getAbsoluteServiceUri();
         
         if (!$absoluteServiceUri->isBaseOf($absoluteRequestUri)) {
             ODataException::createInternalServerError(
@@ -105,28 +105,18 @@ class UriProcessor
             );
         }
 
-        $uriProcessor = new UriProcessor($dataService);
+        $uriProcessor = new UriProcessor($service);
         //Parse the resource path part of the request Uri.
-        try {
-            $uriProcessor->_requestDescription 
-                = ResourcePathProcessor::process(
-                    $absoluteRequestUri, 
-                    $dataService
-                );
-            $uriProcessor->_requestDescription->setUriProcessor($uriProcessor);
-        } catch (ODataException $odataException) {
-            throw $odataException;
-        }
+		$uriProcessor->_requestDescription = ResourcePathProcessor::process(
+			$absoluteRequestUri,
+			$service
+		);
+
+	    $uriProcessor->_requestDescription->setUriProcessor($uriProcessor);
+
 
         //Parse the query string options of the request Uri.
-        try {
-            QueryProcessor::process(
-                $uriProcessor->_requestDescription, 
-                $dataService
-            );
-        } catch (ODataException $odataException) {
-            throw $odataException;
-        }
+        QueryProcessor::process( $uriProcessor->_requestDescription, $service );
 
         return $uriProcessor;
     }
@@ -142,13 +132,13 @@ class UriProcessor
     }
 
     /**
-     * Execute the client submitted request aganist the data source.
+     * Execute the client submitted request against the data source.
      * 
      * @return void
      */
     public function execute()
     {
-        $segmentDescriptors = &$this->_requestDescription->getSegmentDescriptors();
+        $segmentDescriptors = $this->_requestDescription->getSegmentDescriptors();
         foreach ($segmentDescriptors as $segmentDescriptor) {
             $requestTargetKind = $segmentDescriptor->getTargetKind();
             if ($segmentDescriptor->getTargetSource() == RequestTargetSource::ENTITY_SET) {
@@ -227,15 +217,12 @@ class UriProcessor
     /**
      * Query for a resource set pointed by the given segment descriptor and update
      * the descriptor with the result.
-     * 
-     * @param SegmentDescriptor &$segmentDescriptor Describes the resource set to
-     *                                              query.
-     * 
+     *
+     * @param SegmentDescriptor &$segmentDescriptor Describes the resource set to query
      * @return void
+     *
      */
-    private function _handleSegmentTargetsToResourceSet(
-        SegmentDescriptor &$segmentDescriptor
-    ) {
+    private function _handleSegmentTargetsToResourceSet( SegmentDescriptor $segmentDescriptor ) {
         if ($segmentDescriptor->isSingleResult()) {
             $entityInstance = $this->_provider->getResourceFromResourceSet(
                 $segmentDescriptor->getTargetResourceSetWrapper()->getResourceSet(),
@@ -370,7 +357,7 @@ class UriProcessor
         }
         // $inlinecount=allpages should ignore the query options 
         // $skiptoken, $top and $skip so take count before applying these options
-        if ($this->_requestDescription->getRequestCountOption() != RequestCountOption::NONE && is_array($result)
+        if ($this->_requestDescription->getRequestCountOption() != RequestCountOption::NONE() && is_array($result)
         ) {
             if ($this->_provider->canApplyQueryOptions()) {
                 $this->_requestDescription->setCountValue(count($result));
@@ -413,7 +400,7 @@ class UriProcessor
                 }
 
                 //$skip and $top affects $count so consider here.
-                if ($this->_requestDescription->getRequestCountOption() == RequestCountOption::VALUE_ONLY) {
+                if ($this->_requestDescription->getRequestCountOption() == RequestCountOption::VALUE_ONLY()) {
                     $this->_requestDescription->setCountValue(count($result));
                 }
             }
@@ -635,7 +622,7 @@ class UriProcessor
             );
             $currentResourceSetWrapper = $this->_getCurrentResourceSetWrapper();
             $currentResourceType = $currentResourceSetWrapper->getResourceType();
-            $currentResourceSetWrapper = $this->_dataService
+            $currentResourceSetWrapper = $this->service
                 ->getMetadataQueryProviderWrapper()
                 ->getResourceSetWrapperForNavigationProperty(
                     $currentResourceSetWrapper,

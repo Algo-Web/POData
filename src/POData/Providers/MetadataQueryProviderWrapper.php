@@ -8,57 +8,48 @@ use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceSet;
-use POData\Configuration\IDataServiceConfiguration;
+use POData\Configuration\IServiceConfiguration;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 use POData\Common\ODataException;
 use POData\Common\Messages;
 use POData\Providers\Metadata\MetadataMapping;
 
-use POData\Providers\Query\IDataServiceQueryProvider;
-use POData\Providers\Query\IDataServiceQueryProvider2;
-use POData\Providers\Metadata\IDataServiceMetadataProvider;
+use POData\Providers\Query\IQueryProvider;
+use POData\Providers\Metadata\IMetadataProvider;
 
 /**
  * Class MetadataQueryProviderWrapper
  *
- * A wrapper class over IDataServiceMetadataProvider and IDataServiceQueryProvider
- * implementations, All call to implementation of methods of these interfaces should
- * go through this wrapper class so that wrapper methods of this class can perform
- * validations on data returned by IDSMP methods
+ * A wrapper class over IMetadataProvider and IQueryProvider implementations, All calls to implementation of methods
+ * of these interfaces should go through this wrapper class so that wrapper methods of this class can perform validations
+ * on data returned by IDSMP methods
  *
  * @package POData\Providers
  */
 class MetadataQueryProviderWrapper
 {
     /**
-     * Holds reference to IDataServiceMetadataProvider implementation
+     * Holds reference to IMetadataProvider implementation
      * 
-     * @var IDataServiceMetadataProvider
+     * @var IMetadataProvider
      */
     private $_metadataProvider;
 
     /**
-     * Holds reference to IDataServiceQueryProvider or IDataServiceQueryProvider2 implementation
+     * Holds reference to IQueryProvider implementation
      * 
-     * @var IDataServiceQueryProvider2|IDataServiceQueryProvider
+     * @var IQueryProvider
      *
      */
     private $_queryProvider;
 
     /**
-     * Holds reference to IDataServiceConfiguration implementation
+     * Holds reference to IServiceConfiguration implementation
      * 
-     * @var IDataServiceConfiguration
+     * @var IServiceConfiguration
      */
     private $_configuration;
 
-    /**
-     * Indicate the type of this::$_queryProvider, True if $_queryProvider is an implementation of
-     * IDataServiceQueryProvider2, False if its an implementation of IDataServiceQueryProvider
-     * 
-     * @var bool
-     */
-    private $_isQP2;
 
     /**
      * Cache for ResourceProperties of a resource type that belongs to a 
@@ -95,29 +86,26 @@ class MetadataQueryProviderWrapper
     /**
      * Creates a new instance of MetadataQueryProviderWrapper
      * 
-     * @param IDataServiceMetadataProvider $metadataProvider Reference to IDataServiceMetadataProvider implementation
-     * @param IDataServiceQueryProvider    $queryProvider    Reference to IDataServiceQueryProvider/IDataServiceQueryProvider2 implementation
-     * @param IDataServiceConfiguration    $configuration    Reference to IDataServiceConfiguration implementation
-     * @param bool                         $isQP2            True if $queryProvider is an instance of IDataServiceQueryProvider2
-     *                                                       False if $queryProvider is an instance of IDataServiceQueryProvider
+     * @param IMetadataProvider $metadataProvider Reference to IMetadataProvider implementation
+     * @param IQueryProvider    $queryProvider    Reference to IQueryProvider implementation
+     * @param IServiceConfiguration    $configuration    Reference to IServiceConfiguration implementation
      */
-    public function __construct($metadataProvider, $queryProvider, $configuration, $isQP2)
+    public function __construct(IMetadataProvider $metadataProvider, IQueryProvider $queryProvider, IServiceConfiguration $configuration)
     {
         $this->_metadataProvider = $metadataProvider;
         $this->_queryProvider = $queryProvider;
         $this->_configuration = $configuration;
-        $this->_isQP2 = $isQP2;
         $this->_resourceSetWrapperCache = array();
         $this->_resourceTypeCache = array();
         $this->_resourceAssociationSetCache = array();
         $this->_resourcePropertyCache = array();
     }
 
-    //Wrappers for IDataServiceMetadataProvider methods
+    //Wrappers for IMetadataProvider methods
     
     /**     
      * To get the Container name for the data source,
-     * Note: Wrapper for IDataServiceMetadataProvider::getContainerName method
+     * Note: Wrapper for IMetadataProvider::getContainerName method
      * implementation
      * 
      * @return string that contains the name of the container
@@ -140,7 +128,7 @@ class MetadataQueryProviderWrapper
 
     /**
      * To get Namespace name for the data source,
-     * Note: Wrapper for IDataServiceMetadataProvider::getContainerNamespace method 
+     * Note: Wrapper for IMetadataProvider::getContainerNamespace method
      * implementation
      * 
      * @return string that contains the namespace name.
@@ -164,7 +152,7 @@ class MetadataQueryProviderWrapper
     /**
      * To get the data service configuration
      * 
-     * @return IDataServiceConfiguration
+     * @return IServiceConfiguration
      */
     public function getConfiguration()
     {
@@ -173,7 +161,7 @@ class MetadataQueryProviderWrapper
 
     /**
      *  To get all entity set information, 
-     *  Note: Wrapper for IDataServiceMetadataProvider::getResourceSets method 
+     *  Note: Wrapper for IMetadataProvider::getResourceSets method
      *  implementation,
      *  This method returns array of ResourceSetWrapper instances but the 
      *  corresponding IDSMP method returns array of ResourceSet instances
@@ -208,7 +196,7 @@ class MetadataQueryProviderWrapper
 
     /**
      * To get all resource types in the data source,
-     * Note: Wrapper for IDataServiceMetadataProvider::getTypes method implementation
+     * Note: Wrapper for IMetadataProvider::getTypes method implementation
      * 
      * @return ResourceType[]
      */
@@ -236,7 +224,7 @@ class MetadataQueryProviderWrapper
     /**
      * To get a resource set based on the specified resource set name which is 
      * visible,
-     * Note: Wrapper for IDataServiceMetadataProvider::resolveResourceSet method 
+     * Note: Wrapper for IMetadataProvider::resolveResourceSet method
      * implementation
      * 
      * @param string $name Name of the resource set
@@ -260,7 +248,7 @@ class MetadataQueryProviderWrapper
 
     /**
      * To get a resource type based on the resource set name,
-     * Note: Wrapper for IDataServiceMetadataProvider::resolveResourceType 
+     * Note: Wrapper for IMetadataProvider::resolveResourceType
      * method implementation
      * 
      * @param string $name Name of the resource set
@@ -286,7 +274,7 @@ class MetadataQueryProviderWrapper
      * passed in as a parameter
      * An implementer of the interface should return null if the type does 
      * not have any derived types, 
-     * Note: Wrapper for IDataServiceMetadataProvider::getDerivedTypes 
+     * Note: Wrapper for IMetadataProvider::getDerivedTypes
      * method implementation
      * 
      * @param ResourceType $resourceType Resource to get derived resource types from
@@ -310,7 +298,7 @@ class MetadataQueryProviderWrapper
     /**
      * Returns true if $resourceType represents an Entity Type which has derived 
      * Entity Types, else false.
-     * Note: Wrapper for IDataServiceMetadataProvider::hasDerivedTypes method 
+     * Note: Wrapper for IMetadataProvider::hasDerivedTypes method
      * implementation
      * 
      * @param ResourceType $resourceType Resource to check for derived resource 
@@ -328,7 +316,7 @@ class MetadataQueryProviderWrapper
 
     /**
      * Gets the ResourceAssociationSet instance for the given source association end,
-     * Note: Wrapper for IDataServiceMetadataProvider::getResourceAssociationSet 
+     * Note: Wrapper for IMetadataProvider::getResourceAssociationSet
      * method implementation
      * 
      * @param ResourceSetWrapper $resourceSetWrapper Resource set of the source 
@@ -607,70 +595,45 @@ class MetadataQueryProviderWrapper
     }
 
     /**
-     * To check whether the QueryProvider implements IDSQP or ODSQP2
-     * 
-     * @return boolean True if the QueryProvider implements IDataServiceQueryPorivder2
-     *                 False in-case of IDataServiceQueryProvider.
-     */
-    public function isQP2()
-    {
-    	return $this->_isQP2;
-    }
-
-    /**
      * Gets the underlying custom expression provider, the end developer is 
-     * responsible for implementing IExpressionProvider if he choose for 
-     * IDataServiceQueryProvider2.
+     * responsible for implementing IExpressionProvider if he choose for
      * 
-     * @return IExpressionProvider|null Instance of IExpressionProvider implementation
-     *                                  in case of IDSQP2, else null in case of IDSQP.
+     * @return IExpressionProvider Instance of IExpressionProvider implementation.
+     *
      */
     public function getExpressionProvider()
     {
-    if ($this->_isQP2) {
-      $expressionProvider = $this->_queryProvider->getExpressionProvider();
-      if (is_null($expressionProvider)) {
-        ODataException::createInternalServerError(
-            Messages::metadataQueryProviderExpressionProviderMustNotBeNullOrEmpty()
-        );
-      }
+	    $expressionProvider = $this->_queryProvider->getExpressionProvider();
+        if (is_null($expressionProvider)) {
+            ODataException::createInternalServerError(
+                Messages::metadataQueryProviderExpressionProviderMustNotBeNullOrEmpty()
+            );
+        }
 
-      if (!is_object($expressionProvider)
+        if (!is_object($expressionProvider)
           || array_search('POData\UriProcessor\QueryProcessor\ExpressionParser\IExpressionProvider', class_implements($expressionProvider)) === false
-      ) {
-        ODataException::createInternalServerError(
-            Messages::metadataQueryProviderInvalidExpressionProviderInstance()
-        );
-      }
+        ) {
+            ODataException::createInternalServerError(
+                Messages::metadataQueryProviderInvalidExpressionProviderInstance()
+            );
+        }
 
-      return $expressionProvider;
-    }
-    
-    return null;
+        return $expressionProvider;
     }
 
-  /**
-   * Library will use this function to check whether library has to
-   * apply orderby, skip and top. This function always return true
-   * incase of IDSQP, in case of IDSQP2 it simply 
-   * calls IDSQP2::canApplyQueryOptions
-   * 
-   * @return Boolean True If user want library to apply the query options
-   *                 False If user is going to take care of orderby, skip
-   *                 top options
-   */
-  public function canApplyQueryOptions()
-  {
-      if ($this->_isQP2) {
-          return $this->_queryProvider->canApplyQueryOptions();
-      }
+	//TODO: do i have this definition backwards now?  or was it broken english when i translated it
+	/**
+	* POData uses this function to determine if the provider implementation or POData is responsible for handling orderby, skip and top.
+	*
+	* @return Boolean True if the provider will handle the query options False If POData is responsible
+	*
+	*
+	*/
+	public function canApplyQueryOptions()
+	{
+		return $this->_queryProvider->canApplyQueryOptions();
+	}
 
-      // For IDataServiceQueryProvider library will always take care of 
-      // applying query options
-      return true;
-  }
-
-    //Wrappers for IDataServiceQueryProvider methods
 
     /**
      * Gets collection of entities belongs to an entity set
@@ -690,43 +653,27 @@ class MetadataQueryProviderWrapper
      */
     public function getResourceSet(ResourceSet $resourceSet, $internalFilterInfo, $select, $orderby, $top, $skip)
     {
-      // TODO Remove following string replacement
-      $filterOption = null;
-        if ($filterOption!==null) {
-            if ($this->_metadataProvider->mappedDetails !== null) {
-                $filterOption = $this->updateFilterInfo($resourceSet, $this->_metadataProvider->mappedDetails, $filterOption);
-            }
-        }
+		$customExpressionAsString = null;
+		if (!is_null($internalFilterInfo)) {
+			$this->assert($internalFilterInfo->isCustomExpression(), '$internalFilterInfo->isCustomExpression()');
+			$customExpressionAsString = $internalFilterInfo->getExpressionAsString();
+		}
 
-        $entityInstances = null;
-        if ($this->_isQP2) {
-          $customExpressionAsString = null;
-          if (!is_null($internalFilterInfo)) {
-            $this->assert($internalFilterInfo->isCustomExpression(), '$internalFilterInfo->isCustomExpression()');
-            $customExpressionAsString = $internalFilterInfo->getExpressionAsString();
-          }
 
-          // Library will pass the $select, $roderby, $top, $skip information to IDSQP2
-          // implementation, IDQP2 can make use of these information to perform optimized
-          // query operations. Library will not perform $orderby, $top, $skip operation
-          // on result set if the IDSQP2::canApplyQueryOptions returns false, Lib assumes
-          // IDSQP2 already performed these operations.
-          $entityInstances = $this->_queryProvider->getResourceSet(
-              $resourceSet,
-              $customExpressionAsString,
-              $select,
-              $orderby,
-              $top,
-              $skip
-          );
-        } else {
-            $entityInstances = $this->_queryProvider->getResourceSet($resourceSet);
-        }
+		$entityInstances = $this->_queryProvider->getResourceSet(
+			$resourceSet,
+			$customExpressionAsString,
+			$select,
+			$orderby,
+			$top,
+			$skip
+		);
+
 
         if (!is_array($entityInstances)) {
             ODataException::createInternalServerError(
                 Messages::metadataQueryProviderWrapperIDSQPMethodReturnsNonArray(
-                    'IDataServiceQueryProvider::getResourceSet'
+                    'IQueryProvider::getResourceSet'
                 )
             );
         }
@@ -734,70 +681,24 @@ class MetadataQueryProviderWrapper
         return $entityInstances;
     }
  
-    /**
-      Update filter expression and replace field names present in the expression by their names in DB
-     * 
-     * @param ResourceSet     $resourceSet   The resource set
-     * @param MetadataMapping $mappedDetails Contains all the mappedInfo
-     * @param String          $filterOption  filterExpression Corresponding to underlying DB
-     * 
-     * @return String Modified filterOption
-     */
-    public function updateFilterInfo(ResourceSet $resourceSet, MetadataMapping $mappedDetails, $filterOption)
-    {
-        $metaEntityName = $resourceSet->getName();
-        $tableNameInDB = $mappedDetails->getMappedInfoForEntity($resourceSet->getName());
-        $patterns = array();
-        $replacements = array();
-        foreach (array_keys($mappedDetails->mappingDetail[$metaEntityName]) as $metaPropertyName) {
-            $patterns[0] = "/\s$metaPropertyName\s/";
-            $patterns[1] = "/\(\s*$metaPropertyName\s*\)/";
-            $patterns[2] = "/\(\s*$metaPropertyName\s*\,/";
-            $patterns[3] = "/\s*$metaPropertyName\s*=/";
-            $patterns[4] = "/\s*,$metaPropertyName/";
-            $patterns[5] = "/\s*$metaPropertyName\s*\)/";
-            $propertyName = $mappedDetails->mappingDetail[$metaEntityName][$metaPropertyName];
-            if (preg_match("/\./",$propertyName)) {
-                $replacements[0] = $propertyName;
-                $replacements[1] = "($propertyName)";
-                $replacements[2] = "($propertyName,";
-                $replacements[3]  = "$propertyName=";
-                $replacements[4] = ",$propertyName";
-                $replacements[5] = "$propertyName)";
-            } else {
-                $replacements[0] = $tableNameInDB.".$propertyName";
-                $replacements[1] = "($tableNameInDB."."$propertyName)";
-                $replacements[2] = "($tableNameInDB."."$propertyName,";
-                $replacements[3] = "$tableNameInDB."."$propertyName=";
-                $replacements[4] = ", $tableNameInDB."."$propertyName";
-                $replacements[5] = "$tableNameInDB."."$propertyName)";
-            }
-            $filterOption = preg_replace($patterns, $replacements, $filterOption);
-            unset($replacements);
-        }
-        return $filterOption;
-    }
+
     
     /**
-     * Gets an entity instance from an entity set identifed by a key
+     * Gets an entity instance from an entity set identified by a key
      * 
-     * @param ResourceSet   $resourceSet   The entity set from which an entity
-     *                                     needs to be fetched
-     * @param KeyDescriptor $keyDescriptor The key to identify the entity to be 
-     *                                     fetched
-     * 
+     * @param ResourceSet   $resourceSet   The entity set from which an entity needs to be fetched
+     * @param KeyDescriptor $keyDescriptor The key to identify the entity to be fetched
+     *
      * @return Object|null Returns entity instance if found else null
      */
     public function getResourceFromResourceSet(ResourceSet $resourceSet, KeyDescriptor $keyDescriptor)
     {
-        $entityInstance = $this->_queryProvider->getResourceFromResourceSet(
-            $resourceSet, $keyDescriptor
-        );
+        $entityInstance = $this->_queryProvider->getResourceFromResourceSet( $resourceSet, $keyDescriptor );
         $this->_validateEntityInstance(
             $entityInstance, 
             $resourceSet, 
             $keyDescriptor, 
-            'IDataServiceQueryProvider::getResourceFromResourceSet'
+            'IQueryProvider::getResourceFromResourceSet'
         );
         return $entityInstance;
     }
@@ -823,8 +724,10 @@ class MetadataQueryProviderWrapper
      * @return object[] Array of related resource if exists, if no related resources found returns empty array
      *
      */
-    public function getRelatedResourceSet(ResourceSet $sourceResourceSet, 
-        $sourceEntity, ResourceSet $targetResourceSet, 
+	public function getRelatedResourceSet(
+	    ResourceSet $sourceResourceSet,
+        $sourceEntity,
+        ResourceSet $targetResourceSet,
         ResourceProperty $targetProperty, 
         $internalFilterInfo,
         $select,
@@ -832,51 +735,30 @@ class MetadataQueryProviderWrapper
         $top,
         $skip
     ) {
-      $filterOption = null;
-        if ($filterOption!==null) {
-            if ($this->_metadataProvider->mappedDetails !== null) {
-                $filterOption = $this->updateFilterInfo($targetResourceSet, $this->_metadataProvider->mappedDetails, $filterOption);
-            }
-        }
-        
-        if ($this->_isQP2) {
-          $customExpressionAsString = null;
-          if (!is_null($internalFilterInfo)) {
+
+		$customExpressionAsString = null;
+		if (!is_null($internalFilterInfo)) {
             $this->assert($internalFilterInfo->isCustomExpression(), '$internalFilterInfo->isCustomExpression()');
             $customExpressionAsString = $internalFilterInfo->getExpressionAsString();
-          }
+		}
 
-          // Library will pass the $select, $roderby, $top, $skip information to IDSQP2
-          // implementation, IDQP2 can make use of these information to perform optimized
-          // query operations. Library will not perform $orderby, $top, $skip operation
-          // on result set if the IDSQP2::canApplyQueryOptions returns false, Lib assumes
-          // IDSQP2 already performed these operations.
-          $entityInstances 
-              = $this->_queryProvider->getRelatedResourceSet(
-                  $sourceResourceSet, 
-                  $sourceEntity, 
-                  $targetResourceSet, 
-                  $targetProperty,
-                  $customExpressionAsString,
-                  $select,
-                  $orderby,
-                  $top,
-                  $skip
-              );
-        } else {
-          $entityInstances
-              = $this->_queryProvider->getRelatedResourceSet(
-                  $sourceResourceSet,
-                  $sourceEntity,
-                  $targetResourceSet,
-                  $targetProperty
-              );
-        }
+		$entityInstances = $this->_queryProvider->getRelatedResourceSet(
+		    $sourceResourceSet,
+		    $sourceEntity,
+		    $targetResourceSet,
+		    $targetProperty,
+		    $customExpressionAsString,
+		    $select,
+		    $orderby,
+		    $top,
+		    $skip
+		);
+
 
         if (!is_array($entityInstances)) {
             ODataException::createInternalServerError(
                 Messages::metadataQueryProviderWrapperIDSQPMethodReturnsNonArray(
-                    'IDataServiceQueryProvider::getRelatedResourceSet'
+                    'IQueryProvider::getRelatedResourceSet'
                 )
             );
         }
@@ -885,17 +767,14 @@ class MetadataQueryProviderWrapper
     }
 
     /**
-     * Gets a related entity instance from an entity set identifed by a key
+     * Gets a related entity instance from an entity set identified by a key
      * 
-     * @param ResourceSet      $sourceResourceSet The entity set related to
-     *                                            the entity to be fetched.
+     * @param ResourceSet      $sourceResourceSet The entity set related to the entity to be fetched.
      * @param object           $sourceEntity      The related entity instance.
-     * @param ResourceSet      $targetResourceSet The entity set from which
-     *                                            entity needs to be fetched.
-     * @param ResourceProperty $targetProperty    The metadata of the target 
-     *                                            property.
-     * @param KeyDescriptor    $keyDescriptor     The key to identify the entity 
-     *                                            to be fetched.
+     * @param ResourceSet      $targetResourceSet The entity set from which entity needs to be fetched.
+     * @param ResourceProperty $targetProperty    The metadata of the target property.
+     * @param KeyDescriptor    $keyDescriptor     The key to identify the entity to be fetched.
+     *
      * 
      * @return Object|null Returns entity instance if found else null
      */
@@ -903,18 +782,18 @@ class MetadataQueryProviderWrapper
         $sourceEntity, ResourceSet $targetResourceSet, ResourceProperty $targetProperty,
         KeyDescriptor $keyDescriptor
     ) {
-        $entityInstance 
-            = $this->_queryProvider->getResourceFromRelatedResourceSet(
-                $sourceResourceSet, 
-                $sourceEntity, 
-                $targetResourceSet, 
-                $targetProperty, 
-                $keyDescriptor
-            );
-        $this->_validateEntityInstance(
+        $entityInstance = $this->_queryProvider->getResourceFromRelatedResourceSet(
+			$sourceResourceSet,
+			$sourceEntity,
+			$targetResourceSet,
+			$targetProperty,
+			$keyDescriptor
+		);
+
+	    $this->_validateEntityInstance(
             $entityInstance, $targetResourceSet, 
             $keyDescriptor, 
-            'IDataServiceQueryProvider::getResourceFromRelatedResourceSet'
+            'IQueryProvider::getResourceFromRelatedResourceSet'
         );
         return $entityInstance;
     }
@@ -941,6 +820,7 @@ class MetadataQueryProviderWrapper
             $targetResourceSet, 
             $targetProperty
         );
+
         // we will not throw error if the resource reference is null
         // e.g. Orders(1234)/Customer => Customer can be null, this is 
         // allowed if Customer is last segment. consider the following:
@@ -958,7 +838,7 @@ class MetadataQueryProviderWrapper
                 ODataException::createInternalServerError(
                     Messages::metadataQueryProviderWrapperIDSQPMethodReturnsUnExpectedType(
                         $entityName, 
-                        'IDataServiceQueryProvider::getRelatedResourceReference'
+                        'IQueryProvider::getRelatedResourceReference'
                     )
                 );
             }

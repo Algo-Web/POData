@@ -11,7 +11,7 @@ use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceTypeKind;
 use POData\Providers\Metadata\ResourceType;
 use POData\Common\InvalidOperationException;
-use POData\Providers\Metadata\IDataServiceMetadataProvider;
+use POData\Providers\Metadata\IMetadataProvider;
 require_once 'POData\Providers\Metadata\IDataServiceMetadataProvider.php';
 use POData\Providers\Metadata\ServiceBaseMetadata;
 use POData\Providers\Metadata\MetadataMapping;

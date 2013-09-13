@@ -362,7 +362,7 @@ class Messages
      * 
      * @return string The message
      */
-    public static function dataServiceConfigurationMaxResultAndPageSizeMuctuallyExclusive()
+    public static function configurationMaxResultAndPageSizeMuctuallyExclusive()
     {
         return 'Specification of \'entity set page size\' is mutually exclusive with the specification of \'maximum result per collection\' in configuration';    
     }
@@ -375,7 +375,7 @@ class Messages
      * 
      * @return string The formatted message
      */
-    public static function dataServiceConfigurationResourceSetNameNotFound($name)
+    public static function configurationResourceSetNameNotFound($name)
     {
         return "The given name '$name' was not found in the entity sets";
     }
@@ -389,23 +389,23 @@ class Messages
      * 
      * @return string The formatted message
      */
-    public static function dataServiceConfigurationRightsAreNotInRange($argument, $functionName)
+    public static function configurationRightsAreNotInRange($argument, $functionName)
     {
         return "The argument '$argument' of '$functionName' should be EntitySetRights enum value";
     }
 
     /**
      * Format a message to show error when a function argument expected to 
-     * DataServiceProtocolVersion enum value but it is not
+     * ServiceProtocolVersion enum value but it is not
      * 
      * @param string $argument     The argument name
      * @param string $functionName The function name
      * 
      * @return string The formatted message
      */
-    public static function dataServiceConfigurationInvalidVersion($argument, $functionName)
+    public static function configurationInvalidVersion($argument, $functionName)
     {
-        return "The argument '$argument' of '$functionName' should be DataServiceProtocolVersion enum value";
+        return "The argument '$argument' of '$functionName' should be ServiceProtocolVersion enum value";
     }
 
     /**
@@ -417,7 +417,7 @@ class Messages
      * 
      * @return string The formatted message
      */
-    public static function dataServiceConfigurationFeatureVersionMismatch($feature, $supportedFrom)
+    public static function configurationFeatureVersionMismatch($feature, $supportedFrom)
     {
         return "The feature '$feature' is supported only for OData version '$supportedFrom' or greater";
     }
@@ -428,9 +428,9 @@ class Messages
      * 
      * @return string The message
      */
-    public static function dataServiceConfigurationCountNotAccepted()
+    public static function configurationCountNotAccepted()
     {
-        return 'The ability of the data service to return row count information is disabled. To enable this functionality, set the DataServiceConfiguration.AcceptCountRequests property to true.';        
+        return 'The ability of the data service to return row count information is disabled. To enable this functionality, set the ServiceConfiguration.AcceptCountRequests property to true.';
     }
 
     /**
@@ -623,48 +623,48 @@ class Messages
     }
 
     /**
-     * The error message to show when IDataServiceQueryProvider2::getExpressionProvider
+     * The error message to show when IQueryProvider::getExpressionProvider
      * method returns empty or null
      *
      * @return The message
      */
     public static function metadataQueryProviderExpressionProviderMustNotBeNullOrEmpty()
     {
-        return 'The value returned by IDataServiceQueryProvider2::getExpressionProvider method must not be null or empty';
+        return 'The value returned by IQueryProvider::getExpressionProvider method must not be null or empty';
     }
 
     /**
-     * The error message to show when IDataServiceQueryProvider2::getExpressionProvider
+     * The error message to show when IQueryProvider::getExpressionProvider
      * method returns non-object or an object which does not implement IExpressionProvider
      *
      * @return The message
      */
     public static function metadataQueryProviderInvalidExpressionProviderInstance()
     {
-    	return 'The value returned by IDataServiceQueryProvider2::getExpressionProvider method must be an implementation of IExpressionProvider';
+    	return 'The value returned by IQueryProvider::getExpressionProvider method must be an implementation of IExpressionProvider';
     }
 
     /**
-     * The error message to show when IDataServiceMetadataProvider::getContainerName 
+     * The error message to show when IMetadataProvider::getContainerName
      * method returns empty container name
      * 
      * @return The message
      */
     public static function metadataQueryProviderWrapperContainerNameMustNotBeNullOrEmpty()
     {
-        return 'The value returned by IDataServiceMetadataProvider::getContainerName method must not be null or empty';        
+        return 'The value returned by IMetadataProvider::getContainerName method must not be null or empty';
     }
 
     /**
      * The error message to show when 
-     * IDataServiceMetadataProvider::getContainerNamespace 
+     * IMetadataProvider::getContainerNamespace
      * method returns empty container name 
      * 
      * @return The message
      */
     public static function metadataQueryProviderWrapperContainerNamespaceMustNotBeNullOrEmpty()
     {
-        return 'The value returned by IDataServiceMetadataProvider::getContainerNamespace method must not be null or empty';
+        return 'The value returned by IMetadataProvider::getContainerNamespace method must not be null or empty';
     }
 
     /**
@@ -1041,7 +1041,7 @@ class Messages
 
     /**
      * A message to show error when 
-     * IDataServiceMetadataProvider::GetResourceAssociationSet() returns different
+     * IMetadataProvider::GetResourceAssociationSet() returns different
      * AssociationSet when called with 'ResourceAssociationSetEnd' instances that 
      * are expected to the ends of same association set.
      *   
@@ -1049,7 +1049,7 @@ class Messages
      */
     public static function metadataAssociationTypeSetBidirectionalAssociationMustReturnSameResourceAssociationSetFromBothEnd()
     {
-        return 'When the ResourceAssociationSet is bidirectional, IDataServiceMetadataProvider::getResourceAssociationSet() must return the same ResourceAssociationSet when call from both ends.';
+        return 'When the ResourceAssociationSet is bidirectional, IMetadataProvider::getResourceAssociationSet() must return the same ResourceAssociationSet when call from both ends.';
     }
 
     /**
@@ -1430,7 +1430,7 @@ class Messages
      * 
      * @return string The formatted message
      */
-    public static function dataServiceFailedToAccessProperty($propertyName, $parentObjectName)
+    public static function failedToAccessProperty($propertyName, $parentObjectName)
     {
         return "Data Service failed to access or initialize the property $propertyName of $parentObjectName";
     }
@@ -1592,7 +1592,7 @@ class Messages
      * 
      * @return string The formatted message
      */
-    public static function requestDescriptionDataServiceVersionTooLow($requestedVersion, $requiredVersion)
+    public static function requestVersionTooLow($requestedVersion, $requiredVersion)
     {
         return "Request version '$requestedVersion' is not supported for the request payload. The only supported version is '$requiredVersion'.";
     }
@@ -1606,14 +1606,14 @@ class Messages
      * 
      * @return string The formatted message
      */
-    public static function requestDescriptionResponseVersionIsBiggerThanProtocolVersion($requiredVersion, $configuredVersion)    
+    public static function requestVersionIsBiggerThanProtocolVersion($requiredVersion, $configuredVersion)
     {
         return "The response requires that version $requiredVersion of the protocol be used, but the MaxProtocolVersion of the data service is set to $configuredVersion.";
     }
 
     /**
      * Format a message to show error when value of DataServiceVersion or 
-     * MaxDataServiceVersion is invaild.
+     * MaxDataServiceVersion is invalid.
      * 
      * @param string $versionAsString String value of the version
      * @param string $headerName      Header name
@@ -1627,7 +1627,7 @@ class Messages
 
     /**
      * Format a message to show error when value of DataServiceVersion or
-     * MaxDataServiceVersion is invaild.
+     * MaxDataServiceVersion is invalid.
      * 
      * @param string $requestHeaderName Name of the request header
      * @param string $requestedVersion  Requested version
@@ -1794,93 +1794,81 @@ class Messages
      * 
      * @return string The message
      */
-    public static function dataServiceConfigurationProjectionsNotAccepted()
+    public static function configurationProjectionsNotAccepted()
     {
-        return 'The ability to use the $select query option to define a projection in a data service query is disabled. To enable this functionality, call DataServiceConfiguration::setAcceptProjectionRequests method with argument as true.';
+        return 'The ability to use the $select query option to define a projection in a data service query is disabled. To enable this functionality, call ServiceConfiguration::setAcceptProjectionRequests method with argument as true.';
     }
 
+
     /**
-     * Message to show error when the data service class does not 
-     * implement IServiceProvider 
+     * Message to show error service implementation returns null for IMetadataProvider or IQueryProvider.
      * 
      * @return string The message
      */
-    public static function dataServiceNotImplementsIServiceProvider()
+    public static function metadataQueryProviderNull()
     {
-        return 'The data service class must implement IServiceProvider interface';
+        return 'For custom providers, GetService should not return null for both IMetadataProvider and IQueryProvider types.';
     }
 
     /**
-     * Message to show error when IServiceProvider.GetService return null for 
-     * IDataServiceMetadataProvider and IDataServiceQueryProvider.
+     * Message to show when service implementation does not provide a valid IMetadataProvider.
      * 
      * @return string The message
      */
-    public static function dataServiceMetadataQueryProviderNull()
+    public static function invalidMetadataInstance()
     {
-        return 'For custom providers, GetService should not return null for both IDataServiceMetadataProvider and IDataServiceQueryProvider types.';
+        return 'IService.GetMetdataProvider returns invalid object.';
     }
 
     /**
-     * Message to show error when IServiceProvider.GetService 
-     * return invalid object for IDataServiceMetadataProvider.
+     * Message to show when service implementation does not provide a valid IQueryProvider.
+     *
      * 
      * @return string The message
      */
-    public static function dataServiceInvalidMetadataInstance()
+    public static function invalidQueryInstance()
     {
-        return 'IServiceProvider.GetService for IDataServiceMetadataProvider returns invalid object.';
+        return 'IService.getQueryProvider returns invalid object.';
     }
 
     /**
-     * Message to show error when IServiceProvider.GetService 
-     * return invalid object for IDataServiceQueryProvider.
+     * Message to show error when IStreamProvider.GetStreamETag returns invalid etag value.
      * 
      * @return string The message
      */
-    public static function dataServiceInvalidQueryInstance()
+    public static function streamProviderWrapperGetStreamETagReturnedInvalidETagFormat()
     {
-        return 'IServiceProvider.GetService for IDataServiceQueryProvider returns invalid object.';
+        return 'The method \'IStreamProvider.GetStreamETag\' returned an entity tag with invalid format.';
     }
 
     /**
-     * Message to show error when IDataServiceStreamProvider.GetStreamETag returns invalid etag value.
+     * Message to show error when IStreamProvider.GetStreamContentType returns null or empty string.
      * 
      * @return string The message
      */
-    public static function dataServiceStreamProviderWrapperGetStreamETagReturnedInvalidETagFormat()
+    public static function streamProviderWrapperGetStreamContentTypeReturnsEmptyOrNull()
     {
-        return 'The method \'IDataServiceStreamProvider.GetStreamETag\' returned an entity tag with invalid format.';
+        return 'The method \'IStreamProvider.GetStreamContentType\' must not return a null or empty string.';
     }
 
     /**
-     * Message to show error when IDataServiceStreamProvider.GetStreamContentType returns null or empty string.
+     * Message to show error when IStreamProvider.GetReadStream non stream.
      * 
      * @return string The message
      */
-    public static function dataServiceStreamProviderWrapperGetStreamContentTypeReturnsEmptyOrNull()
+    public static function streamProviderWrapperInvalidStreamFromGetReadStream()
     {
-        return 'The method \'IDataServiceStreamProvider.GetStreamContentType\' must not return a null or empty string.';
+        return 'IStreamProvider.GetReadStream() must return a valid readable stream.';
     }
 
     /**
-     * Message to show error when IDataServiceStreamProvider.GetReadStream non stream.
+     * Message to show error when IStreamProvider.GetReadStreamUri returns relative uri.
      * 
      * @return string The message
      */
-    public static function dataServiceStreamProviderWrapperInvalidStreamFromGetReadStream()
+    public static function streamProviderWrapperGetReadStreamUriMustReturnAbsoluteUriOrNull()
     {
-        return 'IDataServiceStreamProvider.GetReadStream() must return a valid readable stream.';
-    }
-
-    /**
-     * Message to show error when IDataServiceStreamProvider.GetReadStreamUri returns relative uri.
-     * 
-     * @return string The message
-     */
-    public static function dataServiceStreamProviderWrapperGetReadStreamUriMustReturnAbsoluteUriOrNull()
-    {
-        return 'The method IDataServiceStreamProvider.GetReadStreamUri must return an absolute Uri or null.';
+        return 'The method IStreamProvider.GetReadStreamUri must return an absolute Uri or null.';
     }
 
     /**
@@ -1888,9 +1876,9 @@ class Messages
      * 
      * @return string The message
      */
-    public static function dataServiceStreamProviderWrapperMustImplementIDataServiceStreamProviderToSupportStreaming()
+    public static function streamProviderWrapperMustImplementIStreamProviderToSupportStreaming()
     {
-        return 'To support streaming, the data service must implement IServiceProvider::GetService() to return an implementation of IDataServiceStreamProvider or IDataServiceStreamProvider2';
+        return 'To support streaming, the data service must implement IServiceProvider::GetService() to return an implementation of IStreamProvider or IStreamProvider2';
     }
 
     /**
@@ -1898,9 +1886,9 @@ class Messages
      * 
      * @return string The message
      */
-    public static function dataServiceStreamProviderWrapperMaxProtocolVersionMustBeV3OrAboveToSupportNamedStreams()
+    public static function streamProviderWrapperMaxProtocolVersionMustBeV3OrAboveToSupportNamedStreams()
     {
-        return 'To support named streams, the MaxProtocolVersion of the data service must be set to DataServiceProtocolVersion.V3 or above.';
+        return 'To support named streams, the MaxProtocolVersion of the data service must be set to ServiceProtocolVersion.V3 or above.';
     }
 
     /**
@@ -1908,9 +1896,9 @@ class Messages
      * 
      * @return string The message
      */
-    public static function dataServiceStreamProviderWrapperMustImplementDataServiceStreamProvider2ToSupportNamedStreams()
+    public static function streamProviderWrapperMustImplementStreamProvider2ToSupportNamedStreams()
     {
-        return 'To support named streams, the data service must implement IServiceProvider.GetService() to return an implementation of IDataServiceStreamProvider2 or the data source must implement IDataServiceStreamProvider2.';
+        return 'To support named streams, the data service must implement IServiceProvider.GetService() to return an implementation of IStreamProvider2 or the data source must implement IStreamProvider2.';
     }
 
     /**
@@ -1920,31 +1908,31 @@ class Messages
      * 
      * @return string The formatted message
      */
-    public static function dataServiceStreamProviderWrapperMustNotSetContentTypeAndEtag($methodName)
+    public static function streamProviderWrapperMustNotSetContentTypeAndEtag($methodName)
     {
         return "The method $methodName must not set the HTTP response headers 'Content-Type' and 'ETag'";
     }
 
     /**
      * Message to show error when IServiceProvider.GetService implementation returns invaild object when request for 
-     * IDataServiceStreamProvider implementation.
+     * IStreamProvider implementation.
      * 
      * @return string The message
      */
-    public static function dataServiceStreamProviderWrapperInvalidStreamInstance()
+    public static function streamProviderWrapperInvalidStreamInstance()
     {
-        return 'return \'IServiceProvider.GetService for IDataServiceStreamProvider returns invalid object.';
+        return 'return \'IServiceProvider.GetService for IStreamProvider returns invalid object.';
     }
 
     /**
      * Message to show error when IServiceProvider.GetService implementation returns invaild object when request for 
-     * IDataServiceStreamProvider2 implementation.
+     * IStreamProvider2 implementation.
      * 
      * @return string The message
      */
-    public static function dataServiceStreamProviderWrapperInvalidStream2Instance()
+    public static function streamProviderWrapperInvalidStream2Instance()
     {
-        return 'return \'IServiceProvider.GetService for IDataServiceStreamProvider2 returns invalid object.';
+        return 'return \'IServiceProvider.GetService for IStreamProvider2 returns invalid object.';
     }
 
     /**
@@ -2009,7 +1997,7 @@ class Messages
      * 
      * @return string The message
      */
-    public static function dataServiceExceptionUnsupportedMediaType()
+    public static function unsupportedMediaType()
     {
         return 'Unsupported media type requested.';
     }
@@ -2119,7 +2107,7 @@ class Messages
      * 
      * @return The message
      */
-    public static function dataServiceNoETagPropertiesForType()
+    public static function noETagPropertiesForType()
     {
         return 'If-Match or If-None-Match headers cannot be specified if the target type does not have etag properties defined.';        
     }
@@ -2130,7 +2118,7 @@ class Messages
      * 
      * @return string The message
      */
-    public static function dataServiceETagValueDoesNotMatch()
+    public static function eTagValueDoesNotMatch()
     {
         return 'The etag value in the request header does not match with the current etag value of the object.';        
     }
@@ -2143,7 +2131,7 @@ class Messages
      * 
      * @return string The formatted message
      */
-    public static function dataServiceETagCannotBeSpecified($uri)
+    public static function eTagCannotBeSpecified($uri)
     {
         return "If-Match or If-None-Match HTTP headers cannot be specified since the URI '$uri' refers to a collection of resources or has a \$count or \$link segment or has a \$expand as one of the query parameters.";        
     }
@@ -2154,7 +2142,7 @@ class Messages
      * 
      * @return string The message
      */
-    public static function dataServiceBothIfMatchAndIfNoneMatchHeaderSpecified()
+    public static function bothIfMatchAndIfNoneMatchHeaderSpecified()
     {
         return "Both If-Match and If-None-Match HTTP headers cannot be specified at the same time. Please specify either one of the headers or none of them.";        
     }
@@ -2165,9 +2153,9 @@ class Messages
      * 
      * @return string The message
      */
-    public static function dataServiceETagNotAllowedForNonExistingResource()
+    public static function eTagNotAllowedForNonExistingResource()
     {
-        return 'The resource targetted by the request does not exists, eTag header is not allowed for non-existing resource.';
+        return 'The resource targeted by the request does not exists, eTag header is not allowed for non-existing resource.';
     }
 
     /**
@@ -2177,7 +2165,7 @@ class Messages
      * 
      * @return string The formatted message
      */
-    public static function dataServiceOnlyReadSupport($method)
+    public static function onlyReadSupport($method)
     {
         return "This release of library support only GET (read) request, received a request with method $method";
     }
@@ -2203,7 +2191,7 @@ class Messages
      * 
      * @return string The formatted message.
      */
-    public static function dataServiceHostNonODataOptionBeginsWithSystemCharacter($optionName)
+    public static function hostNonODataOptionBeginsWithSystemCharacter($optionName)
     {
         return "The query parameter '$optionName' begins with a system-reserved '$' character but is not recognized.";
     }
@@ -2216,7 +2204,7 @@ class Messages
      * 
      * @return string The formatted message.
      */
-    public static function dataServiceHostODataQueryOptionFoundWithoutValue($optionName)
+    public static function hostODataQueryOptionFoundWithoutValue($optionName)
     {
         return "Query parameter '$optionName' is specified, but it should be specified with value.";
     }
@@ -2229,7 +2217,7 @@ class Messages
      * 
      * @return string The formatted message.
      */
-    public static function dataServiceHostODataQueryOptionCannotBeSpecifiedMoreThanOnce($optionName)
+    public static function hostODataQueryOptionCannotBeSpecifiedMoreThanOnce($optionName)
     {
         return "Query parameter '$optionName' is specified, but it should be specified exactly once.";
     }
@@ -2241,7 +2229,7 @@ class Messages
      * 
      * @return string The message.
      */
-    public static function dataServiceHostMalFormedBaseUriInConfig($notEndWithSvcOrHasQuery = false)
+    public static function hostMalFormedBaseUriInConfig($notEndWithSvcOrHasQuery = false)
     {
         if ($notEndWithSvcOrHasQuery) {
             'Malformed base service uri in the configuration file (should end with .svc, there should not be query or fragment in the base service uri)';
@@ -2259,30 +2247,10 @@ class Messages
      * 
      * @return string The formatted message.
      */
-    public static function dataServiceHostRequestUriIsNotBasedOnRelativeUriInConfig($requestUri, $relativeUri)
+    public static function hostRequestUriIsNotBasedOnRelativeUriInConfig($requestUri, $relativeUri)
     {
         return 'The request uri ' . $requestUri . ' is not valid as it is not based on the configured relative uri ' . $relativeUri;
     }
 
-    /**
-     * Message to show error when the service class mentioned in the 
-     * configuration does not implement IRequestHandler interface.
-     * 
-     * @return string The message
-     */
-    public static function dispatcherServiceClassShouldImplementIRequestHandler()
-    {
-        return 'Service class specified in the configuration does not implements \'POData\IRequestHandler\', the service class should be derived from POData\DataService';
-    }
 
-    /**
-     * Message to show error when the service class mentioned in the 
-     * configuration does not implement IDataService interface.
-     * 
-     * @return string The message
-     */
-    public static function dispatcherServiceClassShouldImplementIDataService()
-    {
-        'Service class specified in the configuration does not implements \'POData\IDataService\', the service class should be derived from POData\DataService';
-    }   
 }

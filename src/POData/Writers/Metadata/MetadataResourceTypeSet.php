@@ -20,7 +20,7 @@ use POData\Providers\MetadataQueryProviderWrapper;
  * retrieve its derived and base resource types,
  * group these resource types (base types, type, derived types)
  * based on the namespace in which it falls.
- * Note: DataServiceConfiguration::setEntitySetAccessRule is used to
+ * Note: ServiceConfiguration::setEntitySetAccessRule is used to
  * make a resource set visible
  *
  * Iterate through the properties of each resource (entity) type,

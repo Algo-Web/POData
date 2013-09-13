@@ -6,12 +6,12 @@ use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ProjectionNode;
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandedProjectionNode;
 use POData\Configuration\EntitySetRights;
 use POData\Providers\MetadataQueryProviderWrapper;
-use POData\Configuration\DataServiceConfiguration;
+use POData\Configuration\ServiceConfiguration;
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandProjectionParser;
 use POData\Common\ODataException;
 
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
-use UnitTests\POData\Facets\NorthWind1\NorthWindQueryProvider2;
+use UnitTests\POData\Facets\NorthWind1\NorthWindQueryProvider;
 
 class SelectTest extends \PHPUnit_Framework_TestCase
 {   
@@ -25,11 +25,11 @@ class SelectTest extends \PHPUnit_Framework_TestCase
     public function testWildCartSelectOnRoot()
     {
         $northWindMetadata = NorthWindMetadata::Create();
-        $queryProvider = new NorthWindQueryProvider2();
-        $configuration = new DataServiceConfiguration($northWindMetadata);
+        $queryProvider = new NorthWindQueryProvider();
+        $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                       $northWindMetadata, //IDataServiceMetadataProvider implementation
+                                       $northWindMetadata, //IMetadataProvider implementation
                                        $queryProvider, //IDataServiceQueryProvider implementation (set to null)
                                        $configuration, //Service configuration
                                        false
@@ -67,11 +67,11 @@ class SelectTest extends \PHPUnit_Framework_TestCase
     public function testWildCardWithExplicitSelectionOnRoot()
     {
         $northWindMetadata = NorthWindMetadata::Create();
-        $queryProvider = new NorthWindQueryProvider2();
-        $configuration = new DataServiceConfiguration($northWindMetadata);
+        $queryProvider = new NorthWindQueryProvider();
+        $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                       $northWindMetadata, //IDataServiceMetadataProvider implementation
+                                       $northWindMetadata, //IMetadataProvider implementation
                                        $queryProvider, //IDataServiceQueryProvider implementation (set to null)
                                        $configuration, //Service configuration
                                        false
@@ -149,11 +149,11 @@ class SelectTest extends \PHPUnit_Framework_TestCase
     public function testTraversalOfNavigationPropertyWhichIsNotExpandedOnRoot()
     {
         $northWindMetadata = NorthWindMetadata::Create();
-        $queryProvider = new NorthWindQueryProvider2();
-        $configuration = new DataServiceConfiguration($northWindMetadata);
+        $queryProvider = new NorthWindQueryProvider();
+        $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                       $northWindMetadata, //IDataServiceMetadataProvider implementation
+                                       $northWindMetadata, //IMetadataProvider implementation
                                        $queryProvider, //IDataServiceQueryProvider implementation (set to null)
                                        $configuration, //Service configuration
                                        false
@@ -188,11 +188,11 @@ class SelectTest extends \PHPUnit_Framework_TestCase
     public function testInclusionOfSubTreeDueToParentInclusion1()
     {
         $northWindMetadata = NorthWindMetadata::Create();
-        $queryProvider = new NorthWindQueryProvider2();
-        $configuration = new DataServiceConfiguration($northWindMetadata);
+        $queryProvider = new NorthWindQueryProvider();
+        $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                       $northWindMetadata, //IDataServiceMetadataProvider implementation
+                                       $northWindMetadata, //IMetadataProvider implementation
                                        $queryProvider, //IDataServiceQueryProvider implementation (set to null)
                                        $configuration, //Service configuration
                                        false
@@ -256,11 +256,11 @@ class SelectTest extends \PHPUnit_Framework_TestCase
     public function testInclusionOfSubTreeDueToParentInclusion2()
     {
         $northWindMetadata = NorthWindMetadata::Create();
-        $queryProvider = new NorthWindQueryProvider2();
-        $configuration = new DataServiceConfiguration($northWindMetadata);
+        $queryProvider = new NorthWindQueryProvider();
+        $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                       $northWindMetadata, //IDataServiceMetadataProvider implementation
+                                       $northWindMetadata, //IMetadataProvider implementation
                                        $queryProvider, //IDataServiceQueryProvider implementation (set to null)
                                        $configuration, //Service configuration
                                        false
@@ -332,11 +332,11 @@ class SelectTest extends \PHPUnit_Framework_TestCase
     public function testRemovalOfSubTreeWhichIsExpandedButNotSelected1()
     {
         $northWindMetadata = NorthWindMetadata::Create();
-        $queryProvider = new NorthWindQueryProvider2();
-        $configuration = new DataServiceConfiguration($northWindMetadata);
+        $queryProvider = new NorthWindQueryProvider();
+        $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                       $northWindMetadata, //IDataServiceMetadataProvider implementation
+                                       $northWindMetadata, //IMetadataProvider implementation
                                        $queryProvider, //IDataServiceQueryProvider implementation (set to null)
                                        $configuration, //Service configuration
                                        false
@@ -442,11 +442,11 @@ class SelectTest extends \PHPUnit_Framework_TestCase
     public function testRemovalOfSubTreeWhichIsExpandedButNotSelected2()
     {
         $northWindMetadata = NorthWindMetadata::Create();
-        $queryProvider = new NorthWindQueryProvider2();
-        $configuration = new DataServiceConfiguration($northWindMetadata);
+        $queryProvider = new NorthWindQueryProvider();
+        $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                       $northWindMetadata, //IDataServiceMetadataProvider implementation
+                                       $northWindMetadata, //IMetadataProvider implementation
                                        $queryProvider, //IDataServiceQueryProvider implementation (set to null)
                                        $configuration, //Service configuration
                                        false
@@ -495,11 +495,11 @@ class SelectTest extends \PHPUnit_Framework_TestCase
     public function testPrimitiveBagComplexAsIntermediateSegments()
     {
         $northWindMetadata = NorthWindMetadata::Create();
-        $queryProvider = new NorthWindQueryProvider2();
-        $configuration = new DataServiceConfiguration($northWindMetadata);
+        $queryProvider = new NorthWindQueryProvider();
+        $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                       $northWindMetadata, //IDataServiceMetadataProvider implementation
+                                       $northWindMetadata, //IMetadataProvider implementation
                                        $queryProvider, //IDataServiceQueryProvider implementation (set to null)
                                        $configuration, //Service configuration
                                        false
@@ -567,11 +567,11 @@ class SelectTest extends \PHPUnit_Framework_TestCase
     public function testProjectionNodeCreation()
     {
         $northWindMetadata = NorthWindMetadata::Create();
-        $queryProvider = new NorthWindQueryProvider2();
-        $configuration = new DataServiceConfiguration($northWindMetadata);
+        $queryProvider = new NorthWindQueryProvider();
+        $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                       $northWindMetadata, //IDataServiceMetadataProvider implementation
+                                       $northWindMetadata, //IMetadataProvider implementation
                                        $queryProvider, //IDataServiceQueryProvider implementation (set to null)
                                        $configuration, //Service configuration
                                        false

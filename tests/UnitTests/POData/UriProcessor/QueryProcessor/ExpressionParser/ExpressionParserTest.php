@@ -23,13 +23,13 @@ use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\UnaryExpress
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ExpressionType;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionParser;
 use POData\Common\ODataException;
-use POData\Providers\Metadata\IDataServiceMetadataProvider;
+use POData\Providers\Metadata\IMetadataProvider;
 
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 
 class ExpressionParserTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var IDataServiceMetadataProvider  */
+    /** @var IMetadataProvider  */
     private $_northWindMetadata;
     
     protected function setUp()

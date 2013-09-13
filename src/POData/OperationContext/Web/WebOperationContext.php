@@ -89,7 +89,7 @@ class WebOperationContext
     /**
      * Gets the Web request context for the request being sent.
      * 
-     * @return reference of OutgoingResponse object
+     * @return OutgoingResponse reference of OutgoingResponse object
      */
     public function &outgoingResponse()
     {
@@ -99,7 +99,7 @@ class WebOperationContext
     /**
      * Gets the Web request context for the request being received.
      * 
-     * @return reference of IncomingRequest object
+     * @return IncomingRequest reference of IncomingRequest object
      */
     public function &incomingRequest()
     {

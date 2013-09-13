@@ -7,7 +7,8 @@ use POData\Common\ODataConstants;
 use POData\Common\Messages;
 use POData\Common\Version;
 use POData\Common\ODataException;
-use POData\DataService;
+use POData\IService;
+use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Metadata\ResourceStreamInfo;
 use POData\UriProcessor\UriProcessor;
@@ -19,6 +20,7 @@ use POData\UriProcessor\QueryProcessor\SkipTokenParser\InternalSkipTokenInfo;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\InternalFilterInfo;
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\RootProjectionNode;
 use POData\Providers\Metadata\ResourceType;
+
 
 /**
  * Class RequestDescription
@@ -217,9 +219,8 @@ class RequestDescription
         $this->_segmentDescriptors = $segmentDescriptors;
         $this->_segmentCount = count($this->_segmentDescriptors);
         $this->_requestUri = $requestUri;        
-        $this->_lastSegmentDescriptor 
-            = $segmentDescriptors[$this->_segmentCount - 1];
-        $this->_requestCountOption = RequestCountOption::NONE;
+        $this->_lastSegmentDescriptor = $segmentDescriptors[$this->_segmentCount - 1];
+        $this->_requestCountOption = RequestCountOption::NONE();
         $this->_responseDataServiceVersion = new Version(1, 0);
         $this->_minimumRequiredClientVersion = new Version(1, 0);
         $this->_containerName = null;
@@ -239,18 +240,15 @@ class RequestDescription
      * 
      * @param int         $major       The major segment of the version
      * @param int         $minor       The minor segment of the version
-     * @param DataService $dataService The data service instance
+     * @param IService $service The data service instance
      * 
      * @return void
      * 
      * @throws ODataException If capability negotiation fails.
      */
-    public function raiseMinimumVersionRequirement($major, 
-        $minor, 
-        DataService $dataService
-    ) {
+    public function raiseMinVersionRequirement($major, $minor,  IService $service) {
         $this->_minimumRequiredClientVersion->raiseVersion($major, $minor);
-        self::checkVersion($this, $dataService);
+        self::checkVersion($this, $service);
     }
 
     /**
@@ -259,18 +257,15 @@ class RequestDescription
      * 
      * @param int         $major       The major segment of the version
      * @param int         $minor       The minor segment of the version
-     * @param DataService $dataService The data service instance
+     * @param IService $service The data service instance
      * 
      * @return void
      * 
      * @throws ODataException If capability negotiation fails.
      */  
-    public function raiseResponseVersion($major, 
-        $minor, 
-        DataService $dataService
-    ) {
+    public function raiseResponseVersion($major, $minor, IService $service ) {
         $this->_responseDataServiceVersion->raiseVersion($major, $minor);
-        self::checkVersion($this, $dataService);
+        self::checkVersion($this, $service);
     }
 
     /**
@@ -279,7 +274,7 @@ class RequestDescription
      * 
      * @return SegmentDescriptor[]
      */
-    public function &getSegmentDescriptors()
+    public function getSegmentDescriptors()
     {
         return $this->_segmentDescriptors;
     }
@@ -289,7 +284,7 @@ class RequestDescription
      * 
      * @return SegmentDescriptor
      */
-    public function &getLastSegmentDescriptor()
+    public function getLastSegmentDescriptor()
     {
         return $this->_lastSegmentDescriptor;
     }
@@ -685,7 +680,7 @@ class RequestDescription
      * 
      * @return void
      */
-    public function setRequestCountOption($countOption)
+    public function setRequestCountOption(RequestCountOption $countOption)
     {
         $this->_requestCountOption = $countOption;
     }
@@ -817,7 +812,7 @@ class RequestDescription
     public function isETagHeaderAllowed()
     {
         return $this->_lastSegmentDescriptor->isSingleResult()
-            && ($this->_requestCountOption != RequestCountOption::VALUE_ONLY) 
+            && ($this->_requestCountOption != RequestCountOption::VALUE_ONLY())
             && !$this->isLinkUri() 
             && (is_null($this->_rootProjectionNode) 
                 || !($this->_rootProjectionNode->isExpansionSpecified())
@@ -856,17 +851,15 @@ class RequestDescription
      *  'MaxDataServiceVersion'.
      *  
      * @param RequestDescription $requestDescription The request description object
-     * @param DataService        $dataService        The Service to check
+     * @param IService        $service        The Service to check
      * 
      * @return void
      * 
      * @throws ODataException If any of the above 3 check fails.
      */
-    public static function checkVersion(RequestDescription $requestDescription, 
-        DataService $dataService
-    ) {
+    public static function checkVersion(RequestDescription $requestDescription, IService $service) {
         if (is_null($requestDescription->_requestDataServiceVersion)) {
-            $version = $dataService->getHost()->getRequestVersion();
+            $version = $service->getHost()->getRequestVersion();
             //'DataServiceVersion' header not present in the request, so use
             //default value as the maximum version number that the server can 
             //interpret.
@@ -883,7 +876,7 @@ class RequestDescription
         }
 
         if (is_null($requestDescription->_requestMaxDataServiceVersion)) {
-            $version = $dataService->getHost()->getRequestMaxVersion();
+            $version = $service->getHost()->getRequestMaxVersion();
             //'MaxDataServiceVersion' header not present in the request, so use
             //default value as the maximum version number that the server can 
             //interpret.
@@ -904,7 +897,7 @@ class RequestDescription
         ) < 0
         ) {
             ODataException::createBadRequestError(
-                Messages::requestDescriptionDataServiceVersionTooLow(
+                Messages::requestVersionTooLow(
                     $requestDescription->_requestDataServiceVersion->toString(),
                     $requestDescription->_minimumRequiredClientVersion->toString()
                 )
@@ -916,21 +909,21 @@ class RequestDescription
         ) < 0
         ) {
             ODataException::createBadRequestError(
-                Messages::requestDescriptionDataServiceVersionTooLow(
+                Messages::requestVersionTooLow(
                     $requestDescription->_requestMaxDataServiceVersion->toString(),
                     $requestDescription->_responseDataServiceVersion->toString()
                 )
             );
         }
 
-        $configuration = $dataService->getServiceConfiguration();
+        $configuration = $service->getServiceConfiguration();
         $maxConfiguredProtocolVersion = $configuration->getMaxDataServiceVersionObject();
         if ($maxConfiguredProtocolVersion->compare(
             $requestDescription->_responseDataServiceVersion
         ) < 0
         ) {
             ODataException::createBadRequestError(
-                Messages::requestDescriptionResponseVersionIsBiggerThanProtocolVersion(
+                Messages::requestVersionIsBiggerThanProtocolVersion(
                     $requestDescription->_responseDataServiceVersion->toString(),
                     $maxConfiguredProtocolVersion->toString()
                 )

@@ -7,16 +7,16 @@ require_once 'POData\Providers\Stream\IDataServiceStreamProvider2.php';
 require_once 'POData\Common\ODataException.php';
 require_once 'NorthWindMetadata.php';
 use POData\Providers\Metadata\ResourceStreamInfo;
-use POData\Providers\Stream\IDataServiceStreamProvider2;
+use POData\Providers\Stream\IStreamProvider2;
 use POData\Common\ODataException;
 
 
-class NorthWindStreamProvider implements IDataServiceStreamProvider2
+class NorthWindStreamProvider implements IStreamProvider2
 {
     // NOTE: update this path as per your configuration
     const IMAGE_PATH_ROOT = 'D:\\Projects\\ODataPHPProducer\\services\\NorthWind\\images\\';
 
-    //Begin IDataServiceStreamProvider methods implementation
+    //Begin IStreamProvider methods implementation
      
     /**
      * Method invoked by the data services framework to retrieve the default 
@@ -188,9 +188,9 @@ class NorthWindStreamProvider implements IDataServiceStreamProvider2
         return null;
     }
 
-    //End IDataServiceStreamProvider methods implementation
+    //End IStreamProvider methods implementation
 
-    //Begin IDataServiceStreamProvider2 methods implementation
+    //Begin IStreamProvider2 methods implementation
     /**
      * This method is invoked by the data services framework to retrieve the named stream
      * associated with the entity instance specified by the entity parameter.
@@ -321,5 +321,5 @@ class NorthWindStreamProvider implements IDataServiceStreamProvider2
         return null;
     }
     
-    //End IDataServiceStreamProvider2 methods implementation    
+    //End IStreamProvider2 methods implementation
 }

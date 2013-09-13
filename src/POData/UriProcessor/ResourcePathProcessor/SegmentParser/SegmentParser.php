@@ -14,7 +14,7 @@ use POData\Common\ODataException;
  * Class SegmentParser
  *
  * A parser to parse the segments in OData URI, Uri is made up of bunch of segments,
- * each segment is seperated by '/' character
+ * each segment is separated by '/' character
  * e.g. Customers('ALFKI')/Orders(2134)/Order_Details/Product
  *
  * Syntax of an OData segment is:
@@ -31,8 +31,8 @@ use POData\Common\ODataException;
 class SegmentParser
 {
     /**
-     * Holds reference to the wrapper class over IDataServiceMetadataProvider 
-     * and IDataServiceQueryProvider 
+     * The wrapper of IMetadataProvider and IQueryProvider
+     *
      * 
      * @var MetadataQueryProviderWrapper
      */
@@ -52,9 +52,7 @@ class SegmentParser
      * @param MetadataQueryProviderWrapper $providerWrapper Reference to metadata and query provider wrapper
      *
      */
-    private function __construct($segments, 
-        MetadataQueryProviderWrapper $providerWrapper
-    ) {
+    private function __construct($segments, MetadataQueryProviderWrapper $providerWrapper ) {
         $this->_segmentDescriptors = array();
         $this->_providerWrapper = $providerWrapper;
     }
@@ -71,9 +69,7 @@ class SegmentParser
      * 
      * @throws ODataException If any error occurs while processing segment
      */
-    public static function parseRequestUriSegements($segments, 
-        MetadataQueryProviderWrapper $providerWrapper, $checkForRights = true
-    ) {
+    public static function parseRequestUriSegements($segments, MetadataQueryProviderWrapper $providerWrapper, $checkForRights = true ) {
         $segmentParser = new SegmentParser($segments, $providerWrapper);
         $segmentParser->_createSegmentDescriptors($segments, $checkForRights);
         return $segmentParser->_segmentDescriptors;

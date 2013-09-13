@@ -2,11 +2,18 @@
 
 namespace POData\UriProcessor;
 
+use MyCLabs\Enum\Enum;
+
 /**
  * Class RequestCountOption
  * @package POData\UriProcessor
+ *
+ *
+ * @method static \POData\UriProcessor\RequestCountOption NONE()
+ * @method static \POData\UriProcessor\RequestCountOption VALUE_ONLY()
+ * @method static \POData\UriProcessor\RequestCountOption INLINE()
  */
-class RequestCountOption
+class RequestCountOption extends Enum
 {
     /**
      * No count option specified

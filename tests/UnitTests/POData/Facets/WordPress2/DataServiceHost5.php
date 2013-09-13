@@ -4,13 +4,13 @@ namespace UnitTests\POData\Facets\WordPress2;
 
 /**
  * Note: This is a dummy class for making the testing of 
- * DataService and UriProcessor.
+ * BaseService and UriProcessor.
  */
 
 use POData\Common\ODataConstants;
-use POData\OperationContext\DataServiceHost;
+use POData\OperationContext\ServiceHost;
 
-class DataServiceHost5 extends DataServiceHost
+class DataServiceHost5 extends ServiceHost
 {
     private $_hostInfo;
     

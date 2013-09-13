@@ -217,7 +217,7 @@ class HttpProcessUtility
 
         if (!$acceptable && !$acceptTypesEmpty) {
             throw new HttpHeaderFailure(
-                Messages::dataServiceExceptionUnsupportedMediaType(), 
+                Messages::unsupportedMediaType(),
                 415
             );
         }

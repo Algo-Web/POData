@@ -9,8 +9,8 @@ use POData\Common\Version;
 use POData\Common\ODataException;
 use POData\OperationContext\Web\WebOperationContext;
 
-use UnitTests\POData\Facets\NorthWind4\DataServiceHost4;
-use UnitTests\POData\Facets\NorthWind4\NorthWindDataService4;
+use UnitTests\POData\Facets\ServiceHostTestFake;
+use UnitTests\POData\Facets\NorthWind4\NorthWindService;
 
 
 class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
@@ -41,8 +41,8 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
             'MaxDataServiceVersion' => new Version(3, 0),
         );
 
-        $host = new DataServiceHost4($hostInfo);
-        $dataService = new NorthWindDataService4();
+        $host = new ServiceHostTestFake($hostInfo);
+        $dataService = new NorthWindService();
         $dataService->setHost($host);
 
         $uriProcessor = $dataService->handleRequest();
@@ -77,8 +77,8 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
             'MaxDataServiceVersion' => new Version(3, 0),
         );
 
-        $host = new DataServiceHost4($hostInfo);
-        $dataService = new NorthWindDataService4();
+        $host = new ServiceHostTestFake($hostInfo);
+        $dataService = new NorthWindService();
         $dataService->setHost($host);
 
         $uriProcessor = $dataService->handleRequest();
@@ -113,8 +113,8 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
             'MaxDataServiceVersion' => new Version(3, 0),
         );
 
-        $host = new DataServiceHost4($hostInfo);
-        $dataService = new NorthWindDataService4();
+        $host = new ServiceHostTestFake($hostInfo);
+        $dataService = new NorthWindService();
         $dataService->setHost($host);
 
         $uriProcessor = $dataService->handleRequest();
@@ -149,8 +149,8 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
             'MaxDataServiceVersion' => new Version(3, 0),
         );
 
-        $host = new DataServiceHost4($hostInfo);
-        $dataService = new NorthWindDataService4();
+        $host = new ServiceHostTestFake($hostInfo);
+        $dataService = new NorthWindService();
         $dataService->setHost($host);
 
         $uriProcessor = $dataService->handleRequest();
@@ -184,8 +184,8 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
             'MaxDataServiceVersion' => new Version(3, 0),
         );
 
-        $host = new DataServiceHost4($hostInfo);
-        $dataService = new NorthWindDataService4();
+        $host = new ServiceHostTestFake($hostInfo);
+        $dataService = new NorthWindService();
         $dataService->setHost($host);
 
         $uriProcessor = $dataService->handleRequest();
@@ -219,8 +219,8 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
             'MaxDataServiceVersion' => new Version(3, 0),
         );
 
-        $host = new DataServiceHost4($hostInfo);
-        $dataService = new NorthWindDataService4();
+        $host = new ServiceHostTestFake($hostInfo);
+        $dataService = new NorthWindService();
         $dataService->setHost($host);
 
         $uriProcessor = $dataService->handleRequest();
@@ -254,8 +254,8 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
             'MaxDataServiceVersion' => new Version(3, 0),
         );
 
-        $host = new DataServiceHost4($hostInfo);
-        $dataService = new NorthWindDataService4();
+        $host = new ServiceHostTestFake($hostInfo);
+        $dataService = new NorthWindService();
         $dataService->setHost($host);
 
         $uriProcessor = $dataService->handleRequest();
@@ -289,8 +289,8 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
             'MaxDataServiceVersion' => new Version(3, 0),
         );
 
-        $host = new DataServiceHost4($hostInfo);
-        $dataService = new NorthWindDataService4();
+        $host = new ServiceHostTestFake($hostInfo);
+        $dataService = new NorthWindService();
         $dataService->setHost($host);
 
         $uriProcessor = $dataService->handleRequest();
@@ -324,8 +324,8 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
             'MaxDataServiceVersion' => new Version(3, 0),
         );
 
-        $host = new DataServiceHost4($hostInfo);
-        $dataService = new NorthWindDataService4();
+        $host = new ServiceHostTestFake($hostInfo);
+        $dataService = new NorthWindService();
         $dataService->setHost($host);
 
         $uriProcessor = $dataService->handleRequest();
@@ -359,8 +359,8 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
             'MaxDataServiceVersion' => new Version(3, 0),
         );
 
-        $host = new DataServiceHost4($hostInfo);
-        $dataService = new NorthWindDataService4();
+        $host = new ServiceHostTestFake($hostInfo);
+        $dataService = new NorthWindService();
         $dataService->setHost($host);
 
         $uriProcessor = $dataService->handleRequest();
@@ -394,8 +394,8 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
             'MaxDataServiceVersion' => new Version(3, 0),
         );
 
-        $host = new DataServiceHost4($hostInfo);
-        $dataService = new NorthWindDataService4();
+        $host = new ServiceHostTestFake($hostInfo);
+        $dataService = new NorthWindService();
         $dataService->setHost($host);
 
         $uriProcessor = $dataService->handleRequest();
@@ -428,8 +428,8 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
             'MaxDataServiceVersion' => new Version(3, 0),
         );
 
-        $host = new DataServiceHost4($hostInfo);
-        $dataService = new NorthWindDataService4();
+        $host = new ServiceHostTestFake($hostInfo);
+        $dataService = new NorthWindService();
         $dataService->setHost($host);
 
         $uriProcessor = $dataService->handleRequest();
@@ -462,8 +462,8 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
             'MaxDataServiceVersion' => new Version(3, 0),
         );
 
-        $host = new DataServiceHost4($hostInfo);
-        $dataService = new NorthWindDataService4();
+        $host = new ServiceHostTestFake($hostInfo);
+        $dataService = new NorthWindService();
         $dataService->setHost($host);
 
         $uriProcessor = $dataService->handleRequest();
@@ -496,8 +496,8 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
             'MaxDataServiceVersion' => new Version(3, 0),
         );
 
-        $host = new DataServiceHost4($hostInfo);
-        $dataService = new NorthWindDataService4();
+        $host = new ServiceHostTestFake($hostInfo);
+        $dataService = new NorthWindService();
         $dataService->setHost($host);
 
         $uriProcessor = $dataService->handleRequest();
@@ -529,8 +529,8 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
             'MaxDataServiceVersion' => new Version(3, 0),
         );
 
-        $host = new DataServiceHost4($hostInfo);
-        $dataService = new NorthWindDataService4();
+        $host = new ServiceHostTestFake($hostInfo);
+        $dataService = new NorthWindService();
         $dataService->setHost($host);
 
         $uriProcessor = $dataService->handleRequest();
@@ -562,8 +562,8 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
             'MaxDataServiceVersion' => new Version(3, 0),
         );
 
-        $host = new DataServiceHost4($hostInfo);
-        $dataService = new NorthWindDataService4();
+        $host = new ServiceHostTestFake($hostInfo);
+        $dataService = new NorthWindService();
         $dataService->setHost($host);
 
         $uriProcessor = $dataService->handleRequest();
@@ -596,8 +596,8 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
             'MaxDataServiceVersion' => new Version(3, 0),
         );
 
-        $host = new DataServiceHost4($hostInfo);
-        $dataService = new NorthWindDataService4();
+        $host = new ServiceHostTestFake($hostInfo);
+        $dataService = new NorthWindService();
         $dataService->setHost($host);
 
         $uriProcessor = $dataService->handleRequest();
@@ -630,8 +630,8 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
             'MaxDataServiceVersion' => new Version(3, 0),
         );
 
-        $host = new DataServiceHost4($hostInfo);
-        $dataService = new NorthWindDataService4();
+        $host = new ServiceHostTestFake($hostInfo);
+        $dataService = new NorthWindService();
         $dataService->setHost($host);
 
         $uriProcessor = $dataService->handleRequest();
@@ -663,8 +663,8 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
             'MaxDataServiceVersion' => new Version(3, 0),
         );
 
-        $host = new DataServiceHost4($hostInfo);
-        $dataService = new NorthWindDataService4();
+        $host = new ServiceHostTestFake($hostInfo);
+        $dataService = new NorthWindService();
         $dataService->setHost($host);
 
         $uriProcessor = $dataService->handleRequest();
@@ -697,8 +697,8 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
             'MaxDataServiceVersion' => new Version(3, 0),
         );
 
-        $host = new DataServiceHost4($hostInfo);
-        $dataService = new NorthWindDataService4();
+        $host = new ServiceHostTestFake($hostInfo);
+        $dataService = new NorthWindService();
         $dataService->setHost($host);
 
         $uriProcessor = $dataService->handleRequest();
@@ -733,8 +733,8 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
             'MaxDataServiceVersion' => new Version(3, 0),
         );
 
-        $host = new DataServiceHost4($hostInfo);
-        $dataService = new NorthWindDataService4();
+        $host = new ServiceHostTestFake($hostInfo);
+        $dataService = new NorthWindService();
         $dataService->setHost($host);
 
         $uriProcessor = $dataService->handleRequest();

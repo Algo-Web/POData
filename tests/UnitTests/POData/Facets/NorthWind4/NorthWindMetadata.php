@@ -14,7 +14,7 @@ use POData\Providers\Metadata\ResourceTypeKind;
 use POData\Providers\Metadata\ResourceType;
 use POData\Common\InvalidOperationException;
 use POData\Providers\Metadata\ServiceBaseMetadata;
-use POData\Providers\Metadata\IDataServiceMetadataProvider;
+use POData\Providers\Metadata\IMetadataProvider;
 
 //Begin Resource Classes
 
@@ -172,7 +172,7 @@ class NorthWindMetadata
      * 
      * @throws InvalidOperationException
      * 
-     * @return IDataServiceMetadataProvider
+     * @return IMetadataProvider
      */
     public static function create()
     {

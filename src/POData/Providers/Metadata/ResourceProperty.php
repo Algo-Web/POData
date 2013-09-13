@@ -3,7 +3,7 @@
 namespace POData\Providers\Metadata;
 
 use POData\Common\Messages;
-
+use POData\Providers\Metadata\Type\IType;
 
 /**
  * Class ResourceProperty
@@ -149,7 +149,7 @@ class ResourceProperty
      * refernece to ReflectionClass instance for the type. If the property of 
      * kind 'Primitive' then this function returns ITYpe instance for the type.
      * 
-     * @return ReflectionClass|IType
+     * @return \ReflectionClass|IType
      */
     public function getInstanceType()
     {

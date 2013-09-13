@@ -79,7 +79,7 @@ class ExpandedProjectionNode extends ProjectionNode
 
     /**
      * The maximum number of results allowed for this node, taken from 
-     * DataServiceConfiguration::_maxResultsPerCollection null means no limit
+     * ServiceConfiguration::_maxResultsPerCollection null means no limit
      * will be applied and thus all results availabe should be returned.
      * 
      * @var int

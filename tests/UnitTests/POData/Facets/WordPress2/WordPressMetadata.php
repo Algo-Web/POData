@@ -3,7 +3,7 @@
 namespace UnitTests\POData\Facets\WordPress2;
 
 /** 
- * Implementation of IDataServiceMetadataProvider.
+ * Implementation of IMetadataProvider.
  *
  * 
  */
@@ -19,7 +19,7 @@ use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceTypeKind;
 use POData\Providers\Metadata\ResourceType;
 use POData\Common\InvalidOperationException;
-use POData\Providers\Metadata\IDataServiceMetadataProvider;
+use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\Metadata\ServiceBaseMetadata;
 use POData\Providers\Metadata\MetadataMapping;
 
@@ -190,7 +190,7 @@ class WordPressMetadata
      * 
      * @throws InvalidOperationException
      * 
-     * @return IDataServiceMetadataProvider
+     * @return IMetadataProvider
      */
     public static function create()
     {

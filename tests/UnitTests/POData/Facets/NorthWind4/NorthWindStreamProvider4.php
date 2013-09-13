@@ -1,20 +1,17 @@
 <?php
 
-/**
- * Stream provider for northwind service.
- */
+namespace UnitTests\POData\Facets\NorthWind4;
 
-require_once 'NorthWindMetadata4.php';
 use POData\Providers\Metadata\ResourceStreamInfo;
-use POData\Providers\Stream\IDataServiceStreamProvider2;
+use POData\Providers\Stream\IStreamProvider2;
 use POData\Common\ODataException;
 
-class NorthWindStreamProvider4 implements IDataServiceStreamProvider2
+class NorthWindStreamProvider4 implements IStreamProvider2
 {
     // NOTE: update this path as per your configuration
     const IMAGE_PATH_ROOT = 'D:\\Projects\\ODataPHPProducer\\services\\NorthWind\\images\\';
 
-    //Begin IDataServiceStreamProvider methods implementation
+    //Begin IStreamProvider methods implementation
      
     /**
      * Method invoked by the data services framework to retrieve the default 
@@ -186,9 +183,9 @@ class NorthWindStreamProvider4 implements IDataServiceStreamProvider2
         return null;
     }
 
-    //End IDataServiceStreamProvider methods implementation
+    //End IStreamProvider methods implementation
 
-    //Begin IDataServiceStreamProvider2 methods implementation
+    //Begin IStreamProvider2 methods implementation
     /**
      * This method is invoked by the data services framework to retrieve the named stream
      * associated with the entity instance specified by the entity parameter.
@@ -319,5 +316,5 @@ class NorthWindStreamProvider4 implements IDataServiceStreamProvider2
         return null;
     }
     
-    //End IDataServiceStreamProvider2 methods implementation    
+    //End IStreamProvider2 methods implementation
 }

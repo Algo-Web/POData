@@ -5,7 +5,7 @@ namespace UnitTests\POData\UriProcessor\QueryProcessor\SkipTokenParser;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Configuration\EntitySetRights;
 use POData\Providers\MetadataQueryProviderWrapper;
-use POData\Configuration\DataServiceConfiguration;
+use POData\Configuration\ServiceConfiguration;
 use POData\Common\ODataException;
 use POData\UriProcessor\QueryProcessor\OrderByParser\OrderByParser;
 use POData\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenParser;
@@ -16,12 +16,22 @@ use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 use UnitTests\POData\Facets\NorthWind1\Address4;
 use UnitTests\POData\Facets\NorthWind1\Customer2;
 use UnitTests\POData\Facets\NorthWind1\Order2;
+use POData\Providers\Query\IQueryProvider;
 
 class TestSkipTokenParser extends \PHPUnit_Framework_TestCase
 {
-    protected function setUp()
-    {
-    }
+	/** @var  IQueryProvider */
+	protected $mockQueryProvider;
+
+	protected function setUp()
+	{
+		$this->mockQueryProvider = \Phockito::mock('POData\Providers\Query\IQueryProvider');
+	}
+
+	protected function tearDown()
+	{
+
+	}
 
     /**
      * Named values are not allowed in skip token     
@@ -29,11 +39,11 @@ class TestSkipTokenParser extends \PHPUnit_Framework_TestCase
     public function testNamedValuesInSkipToken()
     {
         $northWindMetadata = NorthWindMetadata::Create();
-        $configuration = new DataServiceConfiguration($northWindMetadata);
+        $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                    $northWindMetadata, //IDataServiceMetadataProvider implementation
-                                    null, //IDataServiceQueryProvider implementation (set to null)
+                                    $northWindMetadata, //IMetadataProvider implementation
+                                    $this->mockQueryProvider,
                                     $configuration, //Service configuuration
                                     false
                                     );
@@ -63,11 +73,11 @@ class TestSkipTokenParser extends \PHPUnit_Framework_TestCase
     public function testSkipTokenWithLeadingAndTrailingCommas()
     {
         $northWindMetadata = NorthWindMetadata::Create();
-        $configuration = new DataServiceConfiguration($northWindMetadata);
+        $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                    $northWindMetadata, //IDataServiceMetadataProvider implementation
-                                    null, //IDataServiceQueryProvider implementation (set to null)
+                                    $northWindMetadata, //IMetadataProvider implementation
+	                                $this->mockQueryProvider,
                                     $configuration, //Service configuration
                                     false
                                     );
@@ -121,11 +131,11 @@ class TestSkipTokenParser extends \PHPUnit_Framework_TestCase
     public function testSkipTokenHavingCountMismatchWithOrderBy()
     {
         $northWindMetadata = NorthWindMetadata::Create();
-        $configuration = new DataServiceConfiguration($northWindMetadata);
+        $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                    $northWindMetadata, //IDataServiceMetadataProvider implementation
-                                    null, //IDataServiceQueryProvider implementation (set to null)
+                                    $northWindMetadata, //IMetadataProvider implementation
+							        $this->mockQueryProvider,
                                     $configuration, //Service configuuration
                                     false
                                     );
@@ -166,11 +176,11 @@ class TestSkipTokenParser extends \PHPUnit_Framework_TestCase
     public function testSkipTokenTypeInCompatibility()
     {
         $northWindMetadata = NorthWindMetadata::Create();
-        $configuration = new DataServiceConfiguration($northWindMetadata);
+        $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                    $northWindMetadata, //IDataServiceMetadataProvider implementation
-                                    null, //IDataServiceQueryProvider implementation (set to null)
+                                    $northWindMetadata, //IMetadataProvider implementation
+							        $this->mockQueryProvider,
                                     $configuration, //Service configuration
                                     false
                                     );
@@ -218,11 +228,11 @@ class TestSkipTokenParser extends \PHPUnit_Framework_TestCase
     public function testInitializationOfKeyObject1()
     {
         $northWindMetadata = NorthWindMetadata::Create();
-        $configuration = new DataServiceConfiguration($northWindMetadata);
+        $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                    $northWindMetadata, //IDataServiceMetadataProvider implementation
-                                    null, //IDataServiceQueryProvider implementation (set to null)
+                                    $northWindMetadata, //IMetadataProvider implementation
+							        $this->mockQueryProvider,
                                     $configuration, //Service configuuration
                                     false
                                     );
@@ -263,11 +273,11 @@ class TestSkipTokenParser extends \PHPUnit_Framework_TestCase
     public function testInitializationOfKeyObject2()
     {
         $northWindMetadata = NorthWindMetadata::Create();
-        $configuration = new DataServiceConfiguration($northWindMetadata);
+        $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                    $northWindMetadata, //IDataServiceMetadataProvider implementation
-                                    null, //IDataServiceQueryProvider implementation (set to null)
+                                    $northWindMetadata, //IMetadataProvider implementation
+							        $this->mockQueryProvider,
                                     $configuration, //Service configuration
                                     false
                                     );
@@ -306,11 +316,11 @@ class TestSkipTokenParser extends \PHPUnit_Framework_TestCase
     public function testInitializationOfKeyObject3()
     {
         $northWindMetadata = NorthWindMetadata::Create();
-        $configuration = new DataServiceConfiguration($northWindMetadata);
+        $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                $northWindMetadata, //IDataServiceMetadataProvider implementation
-                                null, //IDataServiceQueryProvider implementation (set to null)
+                                $northWindMetadata, //IMetadataProvider implementation
+						        $this->mockQueryProvider,
                                 $configuration, //Service configuuration
                                 false
                                 );
@@ -342,11 +352,11 @@ class TestSkipTokenParser extends \PHPUnit_Framework_TestCase
     public function testCreationOfNextLink1()
     {
         $northWindMetadata = NorthWindMetadata::Create();
-        $configuration = new DataServiceConfiguration($northWindMetadata);
+        $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                    $northWindMetadata, //IDataServiceMetadataProvider implementation
-                                    null, //IDataServiceQueryProvider implementation (set to null)
+                                    $northWindMetadata, //IMetadataProvider implementation
+							        $this->mockQueryProvider,
                                     $configuration, //Service configuuration
                                     false
                                     );
@@ -386,12 +396,12 @@ class TestSkipTokenParser extends \PHPUnit_Framework_TestCase
     public function testCreationOfNextLink2()
     {
         $northWindMetadata = NorthWindMetadata::Create();
-        $configuration = new DataServiceConfiguration($northWindMetadata);
+        $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                    $northWindMetadata, //IDataServiceMetadataProvider implementation
-                                    null, //IDataServiceQueryProvider implementation (set to null)
-                                    $configuration, //Service configuuration
+                                    $northWindMetadata, //IMetadataProvider implementation
+							        $this->mockQueryProvider,
+                                    $configuration, //Service configuration
                                     false
                                     );
 
@@ -423,11 +433,11 @@ class TestSkipTokenParser extends \PHPUnit_Framework_TestCase
     public function testCreationOfNextLink3()
     {
         $northWindMetadata = NorthWindMetadata::Create();
-        $configuration = new DataServiceConfiguration($northWindMetadata);
+        $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                    $northWindMetadata, //IDataServiceMetadataProvider implementation
-                                    null, //IDataServiceQueryProvider implementation (set to null)
+                                    $northWindMetadata, //IMetadataProvider implementation
+	                                $this->mockQueryProvider,
                                     $configuration, //Service configuuration
                                     false
                                     );
@@ -456,11 +466,11 @@ class TestSkipTokenParser extends \PHPUnit_Framework_TestCase
     public function testCreationOfNextLink4()
     {
         $northWindMetadata = NorthWindMetadata::Create();
-        $configuration = new DataServiceConfiguration($northWindMetadata);
+        $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                    $northWindMetadata, //IDataServiceMetadataProvider implementation
-                                    null, //IDataServiceQueryProvider implementation (set to null)
+                                    $northWindMetadata, //IMetadataProvider implementation
+	                                $this->mockQueryProvider,
                                     $configuration, //Service configuuration
                                     false
                                     );
@@ -479,7 +489,5 @@ class TestSkipTokenParser extends \PHPUnit_Framework_TestCase
         $this->assertEquals($nextLink, "'ABC', guid'%7B05b242e7-52eb-46bd-8f0e-6568b72cd9a5%7D'");
     }
     
-    protected function tearDown()
-    {
-    }
+
 }

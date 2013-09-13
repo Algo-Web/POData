@@ -3,7 +3,7 @@
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\ResourceProperty;
-use POData\Providers\Query\IDataServiceQueryProvider2;
+use POData\Providers\Query\IQueryProvider;
 require_once "WordPressMetadata.php";
 require_once "POData\Providers\Query\IDataServiceQueryProvider2.php";
 
@@ -20,7 +20,7 @@ define('DB_PASSWORD', 'root');
 define('DB_HOST', 'localhost');
 
 
-class WordPressQueryProvider implements IDataServiceQueryProvider2
+class WordPressQueryProvider implements IQueryProvider
 {
     /**
      * Handle to connection to Database     
@@ -51,7 +51,7 @@ class WordPressQueryProvider implements IDataServiceQueryProvider2
 
     /**
      * (non-PHPdoc)
-     * @see POData\Providers\Query.IDataServiceQueryProvider2::canApplyQueryOptions()
+     * @see POData\Providers\Query.IQueryProvider::canApplyQueryOptions()
      */
     public function canApplyQueryOptions()
     {
@@ -60,7 +60,7 @@ class WordPressQueryProvider implements IDataServiceQueryProvider2
 
     /**
      * (non-PHPdoc)
-     * @see POData\Providers\Query.IDataServiceQueryProvider2::getExpressionProvider()
+     * @see POData\Providers\Query.IQueryProvider::getExpressionProvider()
      */
     public function getExpressionProvider()
     {

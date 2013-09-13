@@ -4,7 +4,7 @@
 namespace POData\ObjectModel;
 
 use POData\Common\ODataConstants;
-use POData\DataService;
+use POData\IService;
 use POData\Providers\MetadataQueryProviderWrapper;
 use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Metadata\ResourceProperty;
@@ -24,11 +24,11 @@ use POData\Common\Messages;
 class ObjectModelSerializerBase
 {
     /**
-     * Holds refernece to the data service instance.
+     * The service implementation.
      * 
-     * @var DataService
+     * @var IService
      */
-    protected $dataService;
+    protected $service;
 
     /**
      * Request description instance describes OData request the
@@ -89,17 +89,17 @@ class ObjectModelSerializerBase
     /**
      * Constructs a new instance of ObjectModelSerializerBase.
      * 
-     * @param DataService        &$dataService        Reference to the 
+     * @param IService        &$service        Reference to the
      *                                                data service instance.
      * @param RequestDescription &$requestDescription Type instance describing 
      *                                                the client submitted
      *                                                request.
      */
-    protected function __construct(DataService &$dataService, RequestDescription &$requestDescription)
+    protected function __construct(IService &$service, RequestDescription &$requestDescription)
     {
-        $this->dataService = $dataService;
+        $this->service = $service;
         $this->requestDescription = $requestDescription;
-        $this->absoluteServiceUri = $dataService->getHost()->getAbsoluteServiceUri()->getUrlAsString();
+        $this->absoluteServiceUri = $service->getHost()->getAbsoluteServiceUri()->getUrlAsString();
         $this->absoluteServiceUriWithSlash = rtrim($this->absoluteServiceUri, '/') . '/';
         $this->_segmentNames = array();
         $this->_segmentResourceSetWrappers = array();
@@ -293,7 +293,7 @@ class ObjectModelSerializerBase
             $this->assert(!empty($this->_segmentNames), '!is_empty($this->_segmentNames');
             $currentResourceSetWrapper = $this->getCurrentResourceSetWrapper();
             $currentResourceType = $currentResourceSetWrapper->getResourceType();
-            $currentResourceSetWrapper = $this->dataService
+            $currentResourceSetWrapper = $this->service
                 ->getMetadataQueryProviderWrapper()
                 ->getResourceSetWrapperForNavigationProperty(
                     $currentResourceSetWrapper, 
@@ -414,7 +414,7 @@ class ObjectModelSerializerBase
         //
         // if ((!is_null($rootProjectionNode) && $rootProjectionNode->isExpansionSpecified()) 
         //    || ($resourceSetWrapper->getResourceSetPageSize() != 0)
-        //    || ($this->dataService->getServiceConfiguration()->getMaxResultsPerCollection() != PHP_INT_MAX)            
+        //    || ($this->service->getServiceConfiguration()->getMaxResultsPerCollection() != PHP_INT_MAX)
         //) {}
 
         if (!is_null($rootProjectionNode) 
@@ -476,7 +476,7 @@ class ObjectModelSerializerBase
             ODataConstants::HTTPQUERY_STRING_INLINECOUNT, 
             ODataConstants::HTTPQUERY_STRING_SELECT) as $queryOption
         ) {
-            $value = $this->dataService->getHost()->getQueryStringItem($queryOption);
+            $value = $this->service->getHost()->getQueryStringItem($queryOption);
             if (!is_null($value)) {
                 if (!is_null($queryParameterString)) {
                     $queryParameterString = $queryParameterString . '&';

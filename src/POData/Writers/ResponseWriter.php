@@ -6,7 +6,7 @@ use POData\Common\HttpStatus;
 use POData\Common\ODataConstants;
 use POData\Common\Version;
 use POData\ResponseFormat;
-use POData\DataService;
+use POData\IService;
 use POData\UriProcessor\RequestDescription;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\RequestTargetKind;
 use POData\Writers\Metadata\MetadataWriter;
@@ -22,16 +22,17 @@ class ResponseWriter
     /**
      * Write in specific format 
      * 
-     * @param DataService        &$dataService        Dataservice
-     * @param RequestDescription &$requestDescription Request description object
+     * @param IService        $service
+     * @param RequestDescription $requestDescription Request description object
      * @param Object             &$odataModelInstance OData model instance
      * @param String             $responseContentType Content type of the response
      * @param String             $responseFormat      Output format
      * 
      * @return void
      */
-    public static function write(DataService &$dataService, 
-        RequestDescription &$requestDescription, 
+    public static function write(
+	    IService $service,
+        RequestDescription $requestDescription,
         &$odataModelInstance, 
         $responseContentType, 
         $responseFormat
@@ -40,7 +41,7 @@ class ResponseWriter
         $dataServiceVersion = $requestDescription->getResponseDataServiceVersion();
         if ($responseFormat == ResponseFormat::METADATA_DOCUMENT) {
             // /$metadata
-            $writer = new MetadataWriter($dataService->getMetadataQueryProviderWrapper());
+            $writer = new MetadataWriter($service->getMetadataQueryProviderWrapper());
             $responseBody = $writer->writeMetadata();            
             $dataServiceVersion = $writer->getDataServiceVersion();
         } else if ($responseFormat == ResponseFormat::TEXT) {
@@ -51,12 +52,12 @@ class ResponseWriter
             // Binary property or media resource
             $targetKind = $requestDescription->getTargetKind();
             if ($targetKind == RequestTargetKind::MEDIA_RESOURCE) {
-                $eTag = $dataService->getStreamProvider()->getStreamETag(
+                $eTag = $service->getStreamProvider()->getStreamETag(
                     $requestDescription->getTargetResult(),  
                     $requestDescription->getResourceStreamInfo()
                 );
-                $dataService->getHost()->setResponseETag($eTag);
-                $responseBody = $dataService->getStreamProvider()->getReadStream(
+                $service->getHost()->setResponseETag($eTag);
+                $responseBody = $service->getStreamProvider()->getReadStream(
                     $requestDescription->getTargetResult(), 
                     $requestDescription->getResourceStreamInfo()
                 );
@@ -70,13 +71,13 @@ class ResponseWriter
             
         } else {
             $writer = null;
-            $absoluteServiceUri = $dataService->getHost()->getAbsoluteServiceUri()->getUrlAsString();
+            $absoluteServiceUri = $service->getHost()->getAbsoluteServiceUri()->getUrlAsString();
             if ($responseFormat == ResponseFormat::ATOM 
                 || $responseFormat == ResponseFormat::PLAIN_XML
             ) {
                 if (is_null($odataModelInstance)) {
                     $writer = new \POData\Writers\ServiceDocument\Atom\ServiceDocumentWriter(
-                        $dataService->getMetadataQueryProviderWrapper(), 
+                        $service->getMetadataQueryProviderWrapper(),
                         $absoluteServiceUri
                     );
                 } else {
@@ -90,7 +91,7 @@ class ResponseWriter
             } else if ($responseFormat == ResponseFormat::JSON) {
                 if (is_null($odataModelInstance)) {
                     $writer = new \POData\Writers\ServiceDocument\Json\ServiceDocumentWriter(
-                        $dataService->getMetadataQueryProviderWrapper(), 
+                        $service->getMetadataQueryProviderWrapper(),
                         $absoluteServiceUri
                     );
                 } else {
@@ -106,12 +107,12 @@ class ResponseWriter
             $responseBody = $writer->writeRequest($odataModelInstance);
         }
 
-        $dataService->getHost()->setResponseStatusCode(HttpStatus::CODE_OK);
-        $dataService->getHost()->setResponseContentType($responseContentType);
-        $dataService->getHost()->setResponseVersion(
+        $service->getHost()->setResponseStatusCode(HttpStatus::CODE_OK);
+        $service->getHost()->setResponseContentType($responseContentType);
+        $service->getHost()->setResponseVersion(
             $dataServiceVersion->toString() .';'
         );
-        $dataService->getHost()->setResponseCacheControl(ODataConstants::HTTPRESPONSE_HEADER_CACHECONTROL_NOCACHE);
-        $dataService->getHost()->getWebOperationContext()->outgoingResponse()->setStream($responseBody);
+        $service->getHost()->setResponseCacheControl(ODataConstants::HTTPRESPONSE_HEADER_CACHECONTROL_NOCACHE);
+        $service->getHost()->getWebOperationContext()->outgoingResponse()->setStream($responseBody);
     }    
 }

@@ -1,20 +1,19 @@
 <?php
 
 use POData\Configuration\EntitySetRights;
-require_once 'POData\IDataService.php';
+require_once 'POData\IBaseService.php';
 require_once 'POData\IRequestHandler.php';
 require_once 'POData\DataService.php';
 require_once 'POData\IServiceProvider.php';
-use POData\Configuration\DataServiceProtocolVersion;
-use POData\Configuration\DataServiceConfiguration;
-use POData\IServiceProvider;
-use POData\DataService;
+use POData\Configuration\ServiceProtocolVersion;
+use POData\Configuration\ServiceConfiguration;
+use POData\BaseService;
 require_once 'NorthWindMetadata.php';
 require_once 'NorthWindQueryProvider.php';
 require_once 'NorthWindStreamProvider.php';
 
 
-class NorthWindDataService extends DataService implements IServiceProvider
+class NorthWindDataService extends BaseService
 {
     private $_northWindMetadata = null;
     private $_northWindQueryProvider = null;
@@ -22,45 +21,45 @@ class NorthWindDataService extends DataService implements IServiceProvider
     /**
      * This method is called only once to initialize service-wide policies
      * 
-     * @param DataServiceConfiguration &$config Data service configuration object
+     * @param ServiceConfiguration &$config Data service configuration object
      * 
      * @return void
      */
-    public function initializeService(DataServiceConfiguration &$config)
+    public function initializeService(ServiceConfiguration &$config)
     {
         $config->setEntitySetPageSize('*', 5);
         $config->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $config->setAcceptCountRequests(true);
         $config->setAcceptProjectionRequests(true);
-        $config->setMaxDataServiceVersion(DataServiceProtocolVersion::V3);
+        $config->setMaxDataServiceVersion(ServiceProtocolVersion::V3);
     }
 
     /**
-     * Get the service like IDataServiceMetadataProvider, IDataServiceQueryProvider,
-     * IDataServiceStreamProvider
+     * Get the service like IMetadataProvider, IDataServiceQueryProvider,
+     * IStreamProvider
      * 
-     * @param String $serviceType Type of service IDataServiceMetadataProvider, 
+     * @param String $serviceType Type of service IMetadataProvider,
      *                            IDataServiceQueryProvider,
-     *                            IDataServiceQueryProvider2,
-     *                            IDataServiceStreamProvider
+     *                            IQueryProvider,
+     *                            IStreamProvider
      * 
      * @see library/POData.IServiceProvider::getService()
      * @return object
      */
     public function getService($serviceType)
     {
-        if ($serviceType === 'IDataServiceMetadataProvider') {
+        if ($serviceType === 'IMetadataProvider') {
             if (is_null($this->_northWindMetadata)) {
                 $this->_northWindMetadata = CreateNorthWindMetadata::create();
             }
             
             return $this->_northWindMetadata;
-        } else if ($serviceType === 'IDataServiceQueryProvider2') {
+        } else if ($serviceType === 'IQueryProvider') {
             if (is_null($this->_northWindQueryProvider)) {
                 $this->_northWindQueryProvider = new NorthWindQueryProvider();
             }
             return $this->_northWindQueryProvider;
-        } else if ($serviceType === 'IDataServiceStreamProvider') {
+        } else if ($serviceType === 'IStreamProvider') {
             return new NorthWindStreamProvider();
         }
         return null;

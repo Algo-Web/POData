@@ -5,7 +5,7 @@ namespace POData;
 /**
  * Class IRequestHandler
  *
- * The base DataService (DataService.php) should implement this interface so
+ * The base BaseService (BaseService.php) should implement this interface so
  * that the Dispatcher can invoke handleRequest method upon receiving any
  * Request to a data service.
  *

@@ -5,7 +5,7 @@ namespace UnitTests\POData\UriProcessor\QueryProcessor\SkipTokenParser;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Configuration\EntitySetRights;
 use POData\Providers\MetadataQueryProviderWrapper;
-use POData\Configuration\DataServiceConfiguration;
+use POData\Configuration\ServiceConfiguration;
 use POData\Common\ODataException;
 use POData\UriProcessor\QueryProcessor\OrderByParser\OrderByParser;
 use POData\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenParser;
@@ -26,10 +26,10 @@ class TestSkipTokenParser2 extends \PHPUnit_Framework_TestCase
     {
 
         $northWindMetadata = NorthWindMetadata::Create();
-        $configuration = new DataServiceConfiguration($northWindMetadata);
+        $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                          $northWindMetadata, //IDataServiceMetadataProvider implementation
+                          $northWindMetadata, //IMetadataProvider implementation
                           null, //IDataServiceQueryProvider implementation (set to null)
                           $configuration, //Service configuuration
                           false
@@ -59,10 +59,10 @@ class TestSkipTokenParser2 extends \PHPUnit_Framework_TestCase
         $this->markTestSkipped("Skipped because it depends on a query provdier that isn't mocked");
 
         $northWindMetadata = NorthWindMetadata::Create();
-        $configuration = new DataServiceConfiguration($northWindMetadata);
+        $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                          $northWindMetadata, //IDataServiceMetadataProvider implementation
+                          $northWindMetadata, //IMetadataProvider implementation
                           null, //IDataServiceQueryProvider implementation (set to null)
                           $configuration, //Service configuuration
                           false

@@ -1,12 +1,12 @@
 <?php
 use POData\Common\Url;
 use POData\Common\ODataException;
-use POData\OperationContext\DataServiceHost;
+use POData\OperationContext\ServiceHost;
 
 use UnitTests\POData\Facets\NorthWind2\DataServiceHost1;
 
 //require_once(dirname(__FILE__) . "/./../Resources/NorthWind2/NorthWindDataService.php");
-//require_once(dirname(__FILE__) . "/./../Resources/NorthWind2/DataServiceHost2.php");
+//require_once(dirname(__FILE__) . "/./../Resources/NorthWind2/ServiceHostTestFake.php");
 
 
 

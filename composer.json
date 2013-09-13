@@ -17,10 +17,15 @@
     ],
     "minimum-stability": "stable",
     "require": {
+        "myclabs/php-enum": "1.2.0",
+
         "php": ">=5.3.0"
     },
 
     "require-dev": {
+
+        "hafriedlander/phockito" : "dev-master",
+
         "satooshi/php-coveralls": "dev-master"
     },
 

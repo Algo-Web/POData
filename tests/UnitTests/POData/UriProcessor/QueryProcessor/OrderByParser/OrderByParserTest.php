@@ -5,7 +5,7 @@ namespace POData\UriProcessor\QueryProcessor\OrderByParser;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Configuration\EntitySetRights;
 use POData\Providers\MetadataQueryProviderWrapper;
-use POData\Configuration\DataServiceConfiguration;
+use POData\Configuration\ServiceConfiguration;
 use POData\Common\ODataException;
 use POData\UriProcessor\QueryProcessor\OrderByParser\OrderByParser;
 
@@ -19,11 +19,16 @@ use UnitTests\POData\Facets\NorthWind1\Order2;
 use UnitTests\POData\Facets\NorthWind1\Order_Details2;
 use UnitTests\POData\Facets\NorthWind1\Product2;
 
+use POData\Providers\Query\IQueryProvider;
 
 class TestOrderByParser extends \PHPUnit_Framework_TestCase
 {
+	/** @var  IQueryProvider */
+	protected $mockQueryProvider;
+
     protected function setUp()
     {
+	    $this->mockQueryProvider = \Phockito::mock('POData\Providers\Query\IQueryProvider');
     }
 
     public function testOrderByWithSyntaxError()
@@ -45,11 +50,11 @@ class TestOrderByParser extends \PHPUnit_Framework_TestCase
     {
 
         $northWindMetadata = NorthWindMetadata::Create();
-        $configuration = new DataServiceConfiguration($northWindMetadata);
+        $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                          $northWindMetadata, //IDataServiceMetadataProvider implementation
-                                          null, //IDataServiceQueryProvider implementation (set to null)
+                                          $northWindMetadata, //IMetadataProvider implementation
+	                                        $this->mockQueryProvider,
                                           $configuration, //Service configuuration
                                           false
                                          );
@@ -75,11 +80,11 @@ class TestOrderByParser extends \PHPUnit_Framework_TestCase
     {
 
         $northWindMetadata = NorthWindMetadata::Create();
-        $configuration = new DataServiceConfiguration($northWindMetadata);
+        $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                          $northWindMetadata, //IDataServiceMetadataProvider implementation
-                                          null, //IDataServiceQueryProvider implementation (set to null)
+                                          $northWindMetadata, //IMetadataProvider implementation
+	                                        $this->mockQueryProvider,
                                           $configuration, //Service configuuration
                                           false
                                          );
@@ -116,11 +121,11 @@ class TestOrderByParser extends \PHPUnit_Framework_TestCase
     {
 
         $northWindMetadata = NorthWindMetadata::Create();
-        $configuration = new DataServiceConfiguration($northWindMetadata);
+        $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                          $northWindMetadata, //IDataServiceMetadataProvider implementation
-                                          null, //IDataServiceQueryProvider implementation (set to null)
+                                          $northWindMetadata, //IMetadataProvider implementation
+	                                        $this->mockQueryProvider,
                                           $configuration, //Service configuuration
                                           false
                                          );
@@ -143,11 +148,11 @@ class TestOrderByParser extends \PHPUnit_Framework_TestCase
     {
 
         $northWindMetadata = NorthWindMetadata::Create();
-        $configuration = new DataServiceConfiguration($northWindMetadata);
+        $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                          $northWindMetadata, //IDataServiceMetadataProvider implementation
-                                          null, //IDataServiceQueryProvider implementation (set to null)
+                                          $northWindMetadata, //IMetadataProvider implementation
+	        $this->mockQueryProvider,
                                           $configuration, //Service configuuration
                                           false
                                          );
@@ -183,11 +188,11 @@ class TestOrderByParser extends \PHPUnit_Framework_TestCase
     {
 
         $northWindMetadata = NorthWindMetadata::Create();
-        $configuration = new DataServiceConfiguration($northWindMetadata);
+        $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                          $northWindMetadata, //IDataServiceMetadataProvider implementation
-                                          null, //IDataServiceQueryProvider implementation (set to null)
+                                          $northWindMetadata, //IMetadataProvider implementation
+	                                        $this->mockQueryProvider,
                                           $configuration, //Service configuuration
                                           false
                                          );
@@ -296,11 +301,11 @@ class TestOrderByParser extends \PHPUnit_Framework_TestCase
     {
 
         $northWindMetadata = NorthWindMetadata::Create();
-        $configuration = new DataServiceConfiguration($northWindMetadata);
+        $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                          $northWindMetadata, //IDataServiceMetadataProvider implementation
-                                          null, //IDataServiceQueryProvider implementation (set to null)
+                                          $northWindMetadata, //IMetadataProvider implementation
+	                                        $this->mockQueryProvider,
                                           $configuration, //Service configuuration
                                           false
                                          );
@@ -326,11 +331,11 @@ class TestOrderByParser extends \PHPUnit_Framework_TestCase
     {
 
         $northWindMetadata = NorthWindMetadata::Create();
-        $configuration = new DataServiceConfiguration($northWindMetadata);
+        $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                          $northWindMetadata, //IDataServiceMetadataProvider implementation
-                                          null, //IDataServiceQueryProvider implementation (set to null)
+                                          $northWindMetadata, //IMetadataProvider implementation
+	                                    $this->mockQueryProvider,
                                           $configuration, //Service configuuration
                                           false
                                          );
@@ -401,12 +406,12 @@ class TestOrderByParser extends \PHPUnit_Framework_TestCase
     {
 
         $northWindMetadata = NorthWindMetadata::Create();
-        $configuration = new DataServiceConfiguration($northWindMetadata);
+        $configuration = new ServiceConfiguration($northWindMetadata);
         //Make 'Orders' visible, make 'Customers' invisible
         $configuration->setEntitySetAccessRule('Orders', EntitySetRights::ALL);
         $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                              $northWindMetadata, //IDataServiceMetadataProvider implementation
-                                              null, //IDataServiceQueryProvider implementation (set to null)
+                                              $northWindMetadata, //IMetadataProvider implementation
+	                                         $this->mockQueryProvider,
                                               $configuration, //Service configuuration
                                               false
                                              );
@@ -430,11 +435,11 @@ class TestOrderByParser extends \PHPUnit_Framework_TestCase
     public function testOrderByWithMultiplePathSegment1()
     {
         $northWindMetadata = NorthWindMetadata::Create();
-        $configuration = new DataServiceConfiguration($northWindMetadata);
+        $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                              $northWindMetadata, //IDataServiceMetadataProvider implementation
-                                              null, //IDataServiceQueryProvider implementation (set to null)
+                                              $northWindMetadata, //IMetadataProvider implementation
+	                                        $this->mockQueryProvider,
                                               $configuration, //Service configuuration
                                               false
                                              );
@@ -629,11 +634,11 @@ class TestOrderByParser extends \PHPUnit_Framework_TestCase
     public function testOrderByWithPathDuplication()
     {
         $northWindMetadata = NorthWindMetadata::Create();
-        $configuration = new DataServiceConfiguration($northWindMetadata);
+        $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                              $northWindMetadata, //IDataServiceMetadataProvider implementation
-                                              null, //IDataServiceQueryProvider implementation (set to null)
+                                              $northWindMetadata, //IMetadataProvider implementation
+	                                        $this->mockQueryProvider,
                                               $configuration, //Service configuuration
                                               false
                                              );

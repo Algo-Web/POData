@@ -6,12 +6,12 @@ namespace POData\UriProcessor\QueryProcessor\ExpandProjectionParser;
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandedProjectionNode;
 use POData\Configuration\EntitySetRights;
 use POData\Providers\MetadataQueryProviderWrapper;
-use POData\Configuration\DataServiceConfiguration;
+use POData\Configuration\ServiceConfiguration;
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandProjectionParser;
 use POData\Common\ODataException;
 
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
-use UnitTests\POData\Facets\NorthWind1\NorthWindQueryProvider2;
+use UnitTests\POData\Facets\NorthWind1\NorthWindQueryProvider;
 
 
 class ExpandTest extends \PHPUnit_Framework_TestCase
@@ -26,11 +26,11 @@ class ExpandTest extends \PHPUnit_Framework_TestCase
     public function testEmptyExpandAndSelect()
     {
         $northWindMetadata = NorthWindMetadata::Create();
-        $queryProvider = new NorthWindQueryProvider2();
-        $configuration = new DataServiceConfiguration($northWindMetadata);
+        $queryProvider = new NorthWindQueryProvider();
+        $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                       $northWindMetadata, //IDataServiceMetadataProvider implementation
+                                       $northWindMetadata, //IMetadataProvider implementation
                                        $queryProvider, //IDataServiceQueryProvider implementation (set to null)
                                        $configuration, //Service configuration
                                        false
@@ -73,11 +73,11 @@ class ExpandTest extends \PHPUnit_Framework_TestCase
     public function testExpandWithOneLevelNavigationProperty()
     {
         $northWindMetadata = NorthWindMetadata::Create();
-        $queryProvider = new NorthWindQueryProvider2();
-        $configuration = new DataServiceConfiguration($northWindMetadata);
+        $queryProvider = new NorthWindQueryProvider();
+        $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                       $northWindMetadata, //IDataServiceMetadataProvider implementation
+                                       $northWindMetadata, //IMetadataProvider implementation
                                        $queryProvider, //IDataServiceQueryProvider implementation (set to null)
                                        $configuration, //Service configuration
                                        false
@@ -127,11 +127,11 @@ class ExpandTest extends \PHPUnit_Framework_TestCase
     public function testExpandWithOneLevelNavigationPropertyWithDuplication()
     {
         $northWindMetadata = NorthWindMetadata::Create();
-        $queryProvider = new NorthWindQueryProvider2();
-        $configuration = new DataServiceConfiguration($northWindMetadata);
+        $queryProvider = new NorthWindQueryProvider();
+        $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                       $northWindMetadata, //IDataServiceMetadataProvider implementation
+                                       $northWindMetadata, //IMetadataProvider implementation
                                        $queryProvider, //IDataServiceQueryProvider implementation (set to null)
                                        $configuration, //Service configuration
                                        false
@@ -171,11 +171,11 @@ class ExpandTest extends \PHPUnit_Framework_TestCase
     public function testExpandWithNonIdentifierPathSegment()
     {
         $northWindMetadata = NorthWindMetadata::Create();
-        $queryProvider = new NorthWindQueryProvider2();
-        $configuration = new DataServiceConfiguration($northWindMetadata);
+        $queryProvider = new NorthWindQueryProvider();
+        $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                       $northWindMetadata, //IDataServiceMetadataProvider implementation
+                                       $northWindMetadata, //IMetadataProvider implementation
                                        $queryProvider, //IDataServiceQueryProvider implementation (set to null)
                                        $configuration, //Service configuration
                                        false
@@ -205,11 +205,11 @@ class ExpandTest extends \PHPUnit_Framework_TestCase
     public function testExpandWithStartEndTokenAsComma()
     {
         $northWindMetadata = NorthWindMetadata::Create();
-        $queryProvider = new NorthWindQueryProvider2();
-        $configuration = new DataServiceConfiguration($northWindMetadata);
+        $queryProvider = new NorthWindQueryProvider();
+        $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                       $northWindMetadata, //IDataServiceMetadataProvider implementation
+                                       $northWindMetadata, //IMetadataProvider implementation
                                        $queryProvider, //IDataServiceQueryProvider implementation (set to null)
                                        $configuration, //Service configuration
                                        false
@@ -265,11 +265,11 @@ class ExpandTest extends \PHPUnit_Framework_TestCase
     public function testExpandWithNonNavigationPropertyInThePath()
     {
         $northWindMetadata = NorthWindMetadata::Create();
-        $queryProvider = new NorthWindQueryProvider2();
-        $configuration = new DataServiceConfiguration($northWindMetadata);
+        $queryProvider = new NorthWindQueryProvider();
+        $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                       $northWindMetadata, //IDataServiceMetadataProvider implementation
+                                       $northWindMetadata, //IMetadataProvider implementation
                                        $queryProvider, //IDataServiceQueryProvider implementation (set to null)
                                        $configuration, //Service configuration
                                        false
@@ -317,11 +317,11 @@ class ExpandTest extends \PHPUnit_Framework_TestCase
     public function testExpandWithSelectAllTokenInThePath()
     {
         $northWindMetadata = NorthWindMetadata::Create();
-        $queryProvider = new NorthWindQueryProvider2();
-        $configuration = new DataServiceConfiguration($northWindMetadata);
+        $queryProvider = new NorthWindQueryProvider();
+        $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                       $northWindMetadata, //IDataServiceMetadataProvider implementation
+                                       $northWindMetadata, //IMetadataProvider implementation
                                        $queryProvider, //IDataServiceQueryProvider implementation (set to null)
                                        $configuration, //Service configuration
                                        false
@@ -351,11 +351,11 @@ class ExpandTest extends \PHPUnit_Framework_TestCase
     public function testExpandWithMultilevelNavigationProperty()
     {
         $northWindMetadata = NorthWindMetadata::Create();
-        $queryProvider = new NorthWindQueryProvider2();
-        $configuration = new DataServiceConfiguration($northWindMetadata);
+        $queryProvider = new NorthWindQueryProvider();
+        $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                       $northWindMetadata, //IDataServiceMetadataProvider implementation
+                                       $northWindMetadata, //IMetadataProvider implementation
                                        $queryProvider, //IDataServiceQueryProvider implementation (set to null)
                                        $configuration, //Service configuration
                                        false
@@ -445,11 +445,11 @@ class ExpandTest extends \PHPUnit_Framework_TestCase
     public function testExpandWithMultipleMultilevelNavigationProperty()
     {
         $northWindMetadata = NorthWindMetadata::Create();
-        $queryProvider = new NorthWindQueryProvider2();
-        $configuration = new DataServiceConfiguration($northWindMetadata);
+        $queryProvider = new NorthWindQueryProvider();
+        $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                       $northWindMetadata, //IDataServiceMetadataProvider implementation
+                                       $northWindMetadata, //IMetadataProvider implementation
                                        $queryProvider, //IDataServiceQueryProvider implementation (set to null)
                                        $configuration, //Service configuration
                                        false
@@ -501,13 +501,13 @@ class ExpandTest extends \PHPUnit_Framework_TestCase
     public function testExpandWithNonVisibleResourceSet()
     {
         $northWindMetadata = NorthWindMetadata::Create();
-        $queryProvider = new NorthWindQueryProvider2();
-        $configuration = new DataServiceConfiguration($northWindMetadata);
+        $queryProvider = new NorthWindQueryProvider();
+        $configuration = new ServiceConfiguration($northWindMetadata);
         //Make 'Customers' and 'Orders' visible, make 'Order_Details' invisible
         $configuration->setEntitySetAccessRule('Customers', EntitySetRights::ALL);
         $configuration->setEntitySetAccessRule('Orders', EntitySetRights::ALL);
         $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                          $northWindMetadata, //IDataServiceMetadataProvider implementation
+                                          $northWindMetadata, //IMetadataProvider implementation
                                           $queryProvider, //IDataServiceQueryProvider implementation (set to null)
                                           $configuration, //Service configuuration
                                           false

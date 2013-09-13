@@ -7,7 +7,7 @@
           <baseURL>/NorthWind.svc</baseURL>
         </service>
       <service name="NorthWind2.svc">
-        <path>\services\IDataServiceQueryProvider2 Implementation\NorthWind\NorthWindDataService.php</path>
+        <path>\services\IQueryProvider Implementation\NorthWind\NorthWindDataService.php</path>
         <classname>NorthWindDataService</classname>
         <baseURL>/NorthWind2.svc</baseURL>
       </service>
@@ -17,7 +17,7 @@
         <baseURL>/WordPress.svc</baseURL>
       </service>
         <service name="WordPress2.svc">
-          <path>\services\IDataServiceQueryProvider2 Implementation\WordPress\WordPressDataService.php</path>
+          <path>\services\IQueryProvider Implementation\WordPress\WordPressDataService.php</path>
           <classname>WordPressDataService</classname>
           <baseURL>/WordPress2.svc</baseURL>
       </service>

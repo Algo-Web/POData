@@ -5,7 +5,7 @@ namespace POData\UriProcessor\QueryProcessor\ExpandProjectionParser;
 use POData\Common\ODataException;
 use POData\Common\Messages;
 use POData\Providers\Metadata\ResourceTypeKind;
-use POData\Configuration\DataServiceConfiguration;
+use POData\Configuration\ServiceConfiguration;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\MetadataQueryProviderWrapper;
@@ -35,8 +35,8 @@ use POData\UriProcessor\QueryProcessor\OrderByParser\OrderByParser;
 class ExpandProjectionParser
 {
     /**
-     * Holds reference to the wrapper class over IDataServiceMetadataProvider 
-     * and IDataServiceQueryProvider. 
+     * The wrapper of IMetadataProvider and IQueryProvider
+     * .
      * 
      * @var MetadataQueryProviderWrapper
      */
@@ -52,8 +52,8 @@ class ExpandProjectionParser
     /**
      * Creates new instance of ExpandProjectionParser
      * 
-     * @param MetadataQueryProviderWrapper $providerWrapper Reference to 
-     * metadata and query provider wrapper.
+     * @param MetadataQueryProviderWrapper $providerWrapper Reference to metadata and query provider wrapper
+     * .
      */
     private function __construct(MetadataQueryProviderWrapper $providerWrapper)
     {

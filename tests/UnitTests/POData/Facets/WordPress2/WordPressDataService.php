@@ -4,81 +4,79 @@ namespace UnitTests\POData\Facets\WordPress2;
 
 
 use POData\Configuration\EntitySetRights;
-use POData\IDataService;
+use POData\IService;
 use POData\IRequestHandler;
-use POData\Configuration\DataServiceProtocolVersion;
-use POData\Configuration\DataServiceConfiguration;
-use POData\IServiceProvider;
-use POData\DataService;
-use POData\OperationContext\DataServiceHost;
+use POData\Configuration\ServiceProtocolVersion;
+use POData\Configuration\IServiceConfiguration;
+
+use POData\BaseService;
+use POData\OperationContext\ServiceHost;
 use POData\Common\ODataException;
 use POData\Common\ODataConstants;
 use POData\Common\Messages;
 use POData\UriProcessor\UriProcessor;
+use Symfony\Component\Config\Definition\Exception\Exception;
 
-
-
-class WordPressDataService extends DataService implements IServiceProvider
+class WordPressDataService extends BaseService
 {
     private $_wordPressMetadata = null;
     private $_wordPressQueryProvider = null;
     private $_wordPressExpressionProvider = null;
-    
+
+
     /**
      * This method is called only once to initialize service-wide policies
      * 
-     * @param DataServiceConfiguration &$config Data service configuration object
+     * @param IServiceConfiguration $config Data service configuration object
      * 
      * @return void
      */
-    public function initializeService(DataServiceConfiguration &$config)
+    public function initializeService(IServiceConfiguration $config)
     {
         $config->setEntitySetPageSize('*', 5);
         $config->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $config->setAcceptCountRequests(true);
         $config->setAcceptProjectionRequests(true);
-        $config->setMaxDataServiceVersion(DataServiceProtocolVersion::V3);
+        $config->setMaxDataServiceVersion(ServiceProtocolVersion::V3);
     }
 
-    /**
-     * Get the service like IDataServiceMetadataProvider, IDataServiceQueryProvider,
-     * IDataServiceStreamProvider
-     * 
-     * @param String $serviceType Type of service IDataServiceMetadataProvider, 
-     *                            IDataServiceQueryProvider,
-     *                            IDataServiceStreamProvider
-     * 
-     * @see library/POData.IServiceProvider::getService()
-     * @return object
-     */
-    public function getService($serviceType)
-    {
-    	if(($serviceType === 'IDataServiceMetadataProvider') || 
-    		($serviceType === 'IDataServiceQueryProvider2') ||
-    		($serviceType === 'IDataServiceStreamProvider')) {
-    		if (is_null($this->_wordPressExpressionProvider)) {
-				$this->_wordPressExpressionProvider = new WordPressDSExpressionProvider();    			
-    		}    	
-    	}
-        if ($serviceType === 'IDataServiceMetadataProvider') {
-            if (is_null($this->_wordPressMetadata)) {
-                $this->_wordPressMetadata = WordPressMetadata::create();
-                // $this->_wordPressMetadata->mappedDetails = CreateWordPressMetadata::mappingInitialize();
-            }
-            return $this->_wordPressMetadata;
-        } else if ($serviceType === 'IDataServiceQueryProvider2') {
-            if (is_null($this->_wordPressQueryProvider)) {
-                $this->_wordPressQueryProvider = new WordPressQueryProvider();
-            }
-            return $this->_wordPressQueryProvider;
-        } else if ($serviceType === 'IDataServiceStreamProvider') {
-            return new WordPressStreamProvider();
-        }
-        return null;
-    }
+
+	/**
+	 * @return \POData\Providers\Metadata\IMetadataProvider
+	 */
+	public function getMetadataProvider()
+	{
+		if (is_null($this->_wordPressMetadata)) {
+			$this->_wordPressMetadata = WordPressMetadata::create();
+			// $this->_wordPressMetadata->mappedDetails = CreateWordPressMetadata::mappingInitialize();
+		}
+		return $this->_wordPressMetadata;
+	}
+
+	/**
+	 * @return \POData\Providers\Query\IQueryProvider
+	 */
+	public function getQueryProvider()
+	{
+		if (is_null($this->_wordPressQueryProvider)) {
+			$this->_wordPressQueryProvider = new WordPressQueryProvider();
+		}
+		return $this->_wordPressQueryProvider;
+	}
+
+	/**
+	 * @return \POData\Providers\Stream\IStreamProvider
+	 */
+	public function getStreamProviderX()
+	{
+		throw new Exception("not implemented");
+	}
+
+
+
     
-    // For testing we overridden the DataService::handleRequest method, one thing is the
-    // private memeber variable DataService::_dataServiceHost is not accessible in this class,
+    // For testing we overridden the BaseService::handleRequest method, one thing is the
+    // private member variable BaseService::_dataServiceHost is not accessible in this class,
     // so we are using getHost() below.
     public function handleRequest()
     {
@@ -87,7 +85,7 @@ class WordPressDataService extends DataService implements IServiceProvider
     		$this->getHost()->validateQueryParameters();
     		$requestMethod = $this->getOperationContext()->incomingRequest()->getMethod();
     		if ($requestMethod !== ODataConstants::HTTP_METHOD_GET) {
-    			ODataException::createNotImplementedError(Messages::dataServiceOnlyReadSupport($requestMethod));
+    			ODataException::createNotImplementedError(Messages::onlyReadSupport($requestMethod));
     		}
     	} catch (\Exception $exception) {
     		throw $exception;

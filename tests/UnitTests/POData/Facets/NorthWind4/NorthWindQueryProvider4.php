@@ -5,14 +5,14 @@ namespace UnitTests\POData\Facets\NorthWind4;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\ResourceProperty;
-use POData\Providers\Query\IDataServiceQueryProvider2;
+use POData\Providers\Query\IQueryProvider;
 use POData\Common\ODataException;
 
 
 // Note: This QP2 implementation is to test IDSQP2::getExpressionProvider functionality 
 // we will not test the actual data, instead the sql query generated.
 
-class NorthWindQueryProvider4 implements IDataServiceQueryProvider2
+class NorthWindQueryProvider4 implements IQueryProvider
 {
 	/**
 	 * The not implemented error message
@@ -42,7 +42,7 @@ class NorthWindQueryProvider4 implements IDataServiceQueryProvider2
 
     /**
      * (non-PHPdoc)
-     * @see POData\Providers\Query.IDataServiceQueryProvider2::getExpressionProvider()
+     * @see POData\Providers\Query.IQueryProvider::getExpressionProvider()
      */
     public function getExpressionProvider()
     {

@@ -4,7 +4,7 @@
 namespace POData\Providers\Metadata;
 
 use POData\Common\ODataException;
-use POData\Configuration\DataServiceConfiguration;
+use POData\Configuration\ServiceConfiguration;
 use POData\Configuration\EntitySetRights;
 use POData\Providers\MetadataQueryProviderWrapper;
 
@@ -13,7 +13,7 @@ use POData\Providers\MetadataQueryProviderWrapper;
  * Class ResourceSetWrapper
  *
  * A wrapper class for a resource set and it's configuration (rights and page size)
- * described using DataServiceConfiguration
+ * described using ServiceConfiguration
  *
  * @package POData\Providers\Metadata
  */
@@ -45,12 +45,12 @@ class ResourceSetWrapper
      * Constructs a new instance of ResourceSetWrapper
      * 
      * @param ResourceSet              $resourceSet   The resource set to wrap
-     * @param DataServiceConfiguration $configuration Configuration to take 
+     * @param ServiceConfiguration $configuration Configuration to take
      *                                                settings specific to wrapped 
      *                                                resource set
      */
     public function __construct(ResourceSet $resourceSet, 
-        DataServiceConfiguration $configuration
+        ServiceConfiguration $configuration
     ) {
         $this->_resourceSet = $resourceSet;
         $this->_resourceSetRights 

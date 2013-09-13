@@ -32,7 +32,7 @@ class FilterInfo
      * 
      * @param array(array(ResourceProperty))/NULL $navigationPropertiesUsedInTheFilterClause Collection of navigation properties specified in the filter
      * 
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
     public function __construct($navigationPropertiesUsedInTheFilterClause) 
     {
@@ -51,8 +51,8 @@ class FilterInfo
     /**
      * Gets collection of navigation properties specified in the filter clause
      * if no navigation (resource reference) properties are used in the clause then
-     * this function returns null, DataServiceQueryProvider must check this
-     * function and include these resource reference type navigation properties
+     * this function returns null,
+     * IQueryProvider must check this  function and include these resource reference type navigation properties
      * in the result.
      *  
      * @return array(array(ResourceProperty))/NULL

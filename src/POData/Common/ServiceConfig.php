@@ -3,7 +3,7 @@
 namespace POData\Common;
 
 /**
- * Class ServiceConfig Helper class to read and velidate the service config file
+ * Class ServiceConfig Helper class to read and validate the service config file
  * @package POData\Common
  */
 class ServiceConfig

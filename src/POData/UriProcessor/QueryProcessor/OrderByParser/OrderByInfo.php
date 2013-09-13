@@ -23,10 +23,8 @@ class OrderByInfo
     private $_orderByPathSegments;
 
     /**
-     * The DataServiceQueryProvider implementor will set this to true
-     * using 'setSorted' function if implementor is going to perform 
-     * the sorting, a false value for this flag means the library is 
-     * responsible for sorting. 
+     * The IQueryProvider implementation sets this to true using 'setSorted' function if it is going to perform
+     * the sorting, a false value for this flag means the library is responsible for sorting.
      * 
      * @var boolean
      */
@@ -53,7 +51,7 @@ class OrderByInfo
      *
      * @param array(array(ResourceProperty))|null $navigationPropertiesUsedInTheOrderByClause navigation properties used in the order by clause
      *
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
     public function __construct($orderByPathSegments, $navigationPropertiesUsedInTheOrderByClause) 
     {
@@ -84,8 +82,7 @@ class OrderByInfo
         }
 
         $this->_orderByPathSegments = $orderByPathSegments;
-        $this->_navigationPropertiesUsedInTheOrderByClause 
-            = $navigationPropertiesUsedInTheOrderByClause;
+        $this->_navigationPropertiesUsedInTheOrderByClause = $navigationPropertiesUsedInTheOrderByClause;
     }
 
     /**
@@ -101,7 +98,7 @@ class OrderByInfo
     /**
      * Gets collection of navigation properties specified in the orderby clause
      * if no navigation (resource reference) properties are used in the clause then
-     * this function returns null, DataServiceQueryProvider must check this
+     * this function returns null, IQueryProvider must check this
      * function and include these resource reference type navigation properties
      * in the result.
      *  
@@ -113,7 +110,7 @@ class OrderByInfo
     }
 
     /**
-     * DataServiceQueryProvider implementation should use this function to let the
+     * IQueryProvider implementation should use this function to let the
      * library know that whether implementation will be performing the sorting
      * or not, if not library will perform the sorting.
      * 
@@ -127,9 +124,8 @@ class OrderByInfo
     }
 
     /**
-     * Whether library should do the sorting or not, if the QueryProvider 
-     * implementor already sort the entities then library will not perform 
-     * the sorting.
+     * Whether library should do the sorting or not, if the IQueryProvider implementation already sorted the
+     * entities then library will not perform the sorting.
      * 
      * @return boolean
      */

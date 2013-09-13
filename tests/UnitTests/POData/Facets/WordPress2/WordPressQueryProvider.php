@@ -11,7 +11,7 @@ namespace UnitTests\POData\Facets\WordPress2;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\ResourceProperty;
-use POData\Providers\Query\IDataServiceQueryProvider2;
+use POData\Providers\Query\IQueryProvider;
 use POData\Common\ODataException;
 
 
@@ -28,7 +28,7 @@ define('DB_PASSWORD', 'root');
 define('DB_HOST', 'localhost');
 
 
-class WordPressQueryProvider implements IDataServiceQueryProvider2
+class WordPressQueryProvider implements IQueryProvider
 {
 	/**
 	 * The not implemented error message
@@ -57,7 +57,7 @@ class WordPressQueryProvider implements IDataServiceQueryProvider2
 
     /**
      * (non-PHPdoc)
-     * @see POData\Providers\Query.IDataServiceQueryProvider2::getExpressionProvider()
+     * @see POData\Providers\Query.IQueryProvider::getExpressionProvider()
      */
     public function getExpressionProvider()
     {

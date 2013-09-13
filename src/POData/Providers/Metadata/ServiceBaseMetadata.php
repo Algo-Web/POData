@@ -13,14 +13,14 @@ use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceTypeKind;
 use POData\Providers\Metadata\ResourceType;
 use POData\Common\InvalidOperationException;
-use POData\Providers\Metadata\IDataServiceMetadataProvider;
+use POData\Providers\Metadata\IMetadataProvider;
 
 
 /**
  * Class ServiceBaseMetadata
  * @package POData\Providers\Metadata
  */
-class ServiceBaseMetadata implements IDataServiceMetadataProvider
+class ServiceBaseMetadata implements IMetadataProvider
 {
     protected $resourceSets = array();
     protected $resourceTypes = array();
@@ -29,7 +29,7 @@ class ServiceBaseMetadata implements IDataServiceMetadataProvider
     protected $namespaceName;
     public $mappedDetails = null;
     
-    //Begin Implementation of IDataServiceMetadataProvider
+    //Begin Implementation of IMetadataProvider
     /**
      * get the Container name for the data source.
      * 
@@ -178,7 +178,7 @@ class ServiceBaseMetadata implements IDataServiceMetadataProvider
         return null;
     }
 
-    //End Implementation of IDataServiceMetadataProvider
+    //End Implementation of IMetadataProvider
     
     /** 
      * Construct new instance of NorthWindMetadata

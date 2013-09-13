@@ -7,17 +7,24 @@ use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceTypeKind;
 use POData\Providers\MetadataQueryProviderWrapper;
-use POData\Configuration\DataServiceConfiguration;
+use POData\Configuration\ServiceConfiguration;
 use POData\Configuration\EntitySetRights;
-use POData\Providers\Metadata\IDataServiceMetadataProvider;
+use POData\Providers\Metadata\IMetadataProvider;
 use POData\Common\ODataException;
 
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
+use POData\Providers\Query\IQueryProvider;
 
 class MetadataQueryProviderWrapperTest extends \PHPUnit_Framework_TestCase
 {
+
+	/** @var  IQueryProvider */
+	protected $mockQueryProvider;
+
     protected function setUp()
     {
+	    $this->mockQueryProvider = \Phockito::mock('POData\Providers\Query\IQueryProvider');
+
         //TODO: move the entity types into their own files
         //unit then we need to ensure they are "in scope"
         $x = NorthWindMetadata::Create();
@@ -33,8 +40,8 @@ class MetadataQueryProviderWrapperTest extends \PHPUnit_Framework_TestCase
         $configuration = null;
         $metadataProvider = $this->_createMetadataAndConfiguration1($configuration);
         $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                    $metadataProvider, //IDataServiceMetadataProvider implementation
-                                    null, //IDataServiceQueryProvider implementation (set to null)
+                                    $metadataProvider, //IMetadataProvider implementation
+	                                $this->mockQueryProvider,
                                     $configuration, //Service configuration
                                     false
                                     );
@@ -51,9 +58,9 @@ class MetadataQueryProviderWrapperTest extends \PHPUnit_Framework_TestCase
         $configuration = null;
         $metadataProvider = $this->_createMetadataAndConfiguration1($configuration);
         $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                    $metadataProvider, //IDataServiceMetadataProvider implementation
-                                    null, //IDataServiceQueryProvider implementation (set to null)
-                                    $configuration, //Service configuuration
+                                    $metadataProvider, //IMetadataProvider implementation
+	        $this->mockQueryProvider,
+	        $configuration, //Service configuuration
                                     false
                                     );
         $customerResourceSet = $metaQueryProverWrapper->resolveResourceSet('Customers');
@@ -63,9 +70,9 @@ class MetadataQueryProviderWrapperTest extends \PHPUnit_Framework_TestCase
         $configuration = null;
         $metadataProvider = $this->_createMetadataAndConfiguration1($configuration);
         $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                    $metadataProvider, //IDataServiceMetadataProvider implementation
-                                    null, //IDataServiceQueryProvider implementation (set to null)
-                                    $configuration, //Service configuuration
+                                    $metadataProvider, //IMetadataProvider implementation
+	        $this->mockQueryProvider,
+	        $configuration, //Service configuuration
                                     false
                                     );
         $configuration->setEntitySetAccessRule('Customers', EntitySetRights::ALL);
@@ -83,9 +90,9 @@ class MetadataQueryProviderWrapperTest extends \PHPUnit_Framework_TestCase
         $configuration = null;
         $metadataProvider = $this->_createMetadataAndConfiguration1($configuration);
         $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                    $metadataProvider, //IDataServiceMetadataProvider implementation
-                                    null, //IDataServiceQueryProvider implementation (set to null)
-                                    $configuration, //Service configuuration
+                                    $metadataProvider, //IMetadataProvider implementation
+	        $this->mockQueryProvider,
+	        $configuration, //Service configuuration
                                     false
                                     );
         $resourceSets = $metaQueryProverWrapper->getResourceSets();
@@ -95,9 +102,9 @@ class MetadataQueryProviderWrapperTest extends \PHPUnit_Framework_TestCase
         $configuration = null;
         $metadataProvider = $this->_createMetadataAndConfiguration1($configuration);
         $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                    $metadataProvider, //IDataServiceMetadataProvider implementation
-                                    null, //IDataServiceQueryProvider implementation (set to null)
-                                    $configuration, //Service configuuration
+                                    $metadataProvider, //IMetadataProvider implementation
+	        $this->mockQueryProvider,
+	        $configuration, //Service configuuration
                                     false
                                     );
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
@@ -115,9 +122,9 @@ class MetadataQueryProviderWrapperTest extends \PHPUnit_Framework_TestCase
         $configuration = null;
         $metadataProvider = $this->_createMetadataAndConfiguration1($configuration);
         $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                    $metadataProvider, //IDataServiceMetadataProvider implementation
-                                    null, //IDataServiceQueryProvider implementation (set to null)
-                                    $configuration, //Service configuuration
+                                    $metadataProvider, //IMetadataProvider implementation
+	        $this->mockQueryProvider,
+	        $configuration, //Service configuuration
                                     false
                                     );
         //Try to resolve non-existing type
@@ -141,9 +148,9 @@ class MetadataQueryProviderWrapperTest extends \PHPUnit_Framework_TestCase
         $configuration = null;
         $metadataProvider = $this->_createMetadataAndConfiguration1($configuration);
         $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                    $metadataProvider, //IDataServiceMetadataProvider implementation
-                                    null, //IDataServiceQueryProvider implementation (set to null)
-                                    $configuration, //Service configuuration
+                                    $metadataProvider, //IMetadataProvider implementation
+	        $this->mockQueryProvider,
+	        $configuration, //Service configuuration
                                     false
                                     );
         $resourceTypes = $metaQueryProverWrapper->getTypes();
@@ -160,9 +167,9 @@ class MetadataQueryProviderWrapperTest extends \PHPUnit_Framework_TestCase
         $configuration = null;
         $metadataProvider = $this->_createMetadataAndConfiguration1($configuration);
         $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                    $metadataProvider, //IDataServiceMetadataProvider implementation
-                                    null, //IDataServiceQueryProvider implementation (set to null)
-                                    $configuration, //Service configuuration
+                                    $metadataProvider, //IMetadataProvider implementation
+	        $this->mockQueryProvider,
+	        $configuration, //Service configuuration
                                     false
                                     );
         $customerEntityType = $metaQueryProverWrapper->resolveResourceType('Customer');
@@ -178,9 +185,9 @@ class MetadataQueryProviderWrapperTest extends \PHPUnit_Framework_TestCase
         $configuration = null;
         $metadataProvider = $this->_createMetadataAndConfiguration1($configuration);
         $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                    $metadataProvider, //IDataServiceMetadataProvider implementation
-                                    null, //IDataServiceQueryProvider implementation (set to null)
-                                    $configuration, //Service configuuration
+                                    $metadataProvider, //IMetadataProvider implementation
+	        $this->mockQueryProvider,
+	        $configuration, //Service configuuration
                                     false
                                     );
         $orderEntityType = $metaQueryProverWrapper->resolveResourceType('Order');
@@ -197,9 +204,9 @@ class MetadataQueryProviderWrapperTest extends \PHPUnit_Framework_TestCase
         $configuration = null;
         $metadataProvider = $this->_createMetadataAndConfiguration1($configuration);
         $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                    $metadataProvider, //IDataServiceMetadataProvider implementation
-                                    null, //IDataServiceQueryProvider implementation (set to null)
-                                    $configuration, //Service configuuration
+                                    $metadataProvider, //IMetadataProvider implementation
+	        $this->mockQueryProvider,
+	        $configuration, //Service configuuration
                                     false
                                     );
         $configuration->setEntitySetAccessRule('Customers', EntitySetRights::ALL);
@@ -230,9 +237,9 @@ class MetadataQueryProviderWrapperTest extends \PHPUnit_Framework_TestCase
         $configuration = null;
         $metadataProvider = $this->_createMetadataAndConfiguration1($configuration);
         $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                    $metadataProvider, //IDataServiceMetadataProvider implementation
-                                    null, //IDataServiceQueryProvider implementation (set to null)
-                                    $configuration, //Service configuuration
+                                    $metadataProvider, //IMetadataProvider implementation
+	        $this->mockQueryProvider,
+	        $configuration, //Service configuuration
                                     false
                                     );
         $configuration->setEntitySetAccessRule('Customers', EntitySetRights::ALL);
@@ -258,9 +265,9 @@ class MetadataQueryProviderWrapperTest extends \PHPUnit_Framework_TestCase
         $configuration = null;
         $metadataProvider = $this->_createMetadataAndConfiguration2($configuration);
         $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                    $metadataProvider, //IDataServiceMetadataProvider implementation
-                                    null, //IDataServiceQueryProvider implementation (set to null)
-                                    $configuration, //Service configuuration
+                                    $metadataProvider, //IMetadataProvider implementation
+	        $this->mockQueryProvider,
+	        $configuration, //Service configuuration
                                     false
                                     );
 
@@ -268,7 +275,7 @@ class MetadataQueryProviderWrapperTest extends \PHPUnit_Framework_TestCase
             $metaQueryProverWrapper->getContainerName();
             $this->fail('An expected ODataException null container name has not been thrown');
         } catch (ODataException $exception) {
-            $this->assertEquals($exception->getMessage(), 'The value returned by IDataServiceMetadataProvider::getContainerName method must not be null or empty');
+            $this->assertEquals($exception->getMessage(), 'The value returned by IMetadataProvider::getContainerName method must not be null or empty');
         }
 
 
@@ -276,7 +283,7 @@ class MetadataQueryProviderWrapperTest extends \PHPUnit_Framework_TestCase
             $metaQueryProverWrapper->getContainerNamespace();
             $this->fail('An expected ODataException null container namespace has not been thrown');
         } catch (ODataException $exception) {
-            $this->assertEquals($exception->getMessage(), 'The value returned by IDataServiceMetadataProvider::getContainerNamespace method must not be null or empty');
+            $this->assertEquals($exception->getMessage(), 'The value returned by IMetadataProvider::getContainerNamespace method must not be null or empty');
         }
 
     }
@@ -288,9 +295,9 @@ class MetadataQueryProviderWrapperTest extends \PHPUnit_Framework_TestCase
         $metadataProvider = $this->_createMetadataAndConfiguration2($configuration);
 
 	    $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-            $metadataProvider, //IDataServiceMetadataProvider implementation
-            null, //IDataServiceQueryProvider implementation (set to null)
-            $configuration, //Service configuration
+            $metadataProvider, //IMetadataProvider implementation
+		    $this->mockQueryProvider,
+		    $configuration, //Service configuration
             false
         );
 
@@ -310,9 +317,9 @@ class MetadataQueryProviderWrapperTest extends \PHPUnit_Framework_TestCase
         $configuration = null;
         $metadataProvider = $this->_createMetadataAndConfiguration2($configuration);
         $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                    $metadataProvider, //IDataServiceMetadataProvider implementation
-                                    null, //IDataServiceQueryProvider implementation (set to null)
-                                    $configuration, //Service configuration
+                                    $metadataProvider, //IMetadataProvider implementation
+	        $this->mockQueryProvider,
+	        $configuration, //Service configuration
                                     false
                                     );
         try {
@@ -327,37 +334,37 @@ class MetadataQueryProviderWrapperTest extends \PHPUnit_Framework_TestCase
 
 
     /**
-     * Creates a valid IDataServiceMetadataProvider implementation, and associated configuration
+     * Creates a valid IMetadataProvider implementation, and associated configuration
      * Note: This metadata is for positive testing
      * 
-     * @param DataServiceConfiguration $configuration On return, this will hold reference to configuration object
+     * @param ServiceConfiguration $configuration On return, this will hold reference to configuration object
      * 
-     * @return IDataServiceMetadataProvider
+     * @return IMetadataProvider
      */
     private function _createMetadataAndConfiguration1(&$configuration)
     {
         $northWindMetadata = NorthWindMetadata::Create();
-        $configuration = new DataServiceConfiguration($northWindMetadata);
+        $configuration = new ServiceConfiguration($northWindMetadata);
         return $northWindMetadata;
     }
 
     /**
-     * Creates a valid IDataServiceMetadataProvider implementation, and associated configuration
+     * Creates a valid IMetadataProvider implementation, and associated configuration
      * Note: This metadata is for negative testing
      * 
-     * @param DataServiceConfiguration $configuration On return, this will hold reference to configuration object
+     * @param ServiceConfiguration $configuration On return, this will hold reference to configuration object
      * 
-     * @return IDataServiceMetadataProvider
+     * @return IMetadataProvider
      */
     private function _createMetadataAndConfiguration2(&$configuration)
     {
         $northWindMetadata = new NorthWindMetadata2();
-        $configuration = new DataServiceConfiguration($northWindMetadata);
+        $configuration = new ServiceConfiguration($northWindMetadata);
         return $northWindMetadata;
     }
 }
 
-class NorthWindMetadata2 implements IDataServiceMetadataProvider
+class NorthWindMetadata2 implements IMetadataProvider
 {
     protected $_resourceSets = array();
     protected $_resourceTypes = array();
@@ -381,7 +388,7 @@ class NorthWindMetadata2 implements IDataServiceMetadataProvider
     	$this->_resourceSets[] = $ordersResourceSet;
     }
 
-	//Begin Implementation of IDataServiceMetadataProvider
+	//Begin Implementation of IMetadataProvider
     public function getContainerName()
     {
     	return null;

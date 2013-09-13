@@ -6,7 +6,7 @@ use POData\UriProcessor\ResourcePathProcessor\SegmentParser\SegmentParser;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\RequestTargetKind;
 use POData\UriProcessor\RequestDescription;
 use POData\UriProcessor\RequestCountOption;
-use POData\DataService;
+use POData\IService;
 use POData\Common\Url;
 use POData\Common\ODataConstants;
 use POData\Common\Messages;
@@ -24,19 +24,17 @@ class ResourcePathProcessor
      * RequestDescription from the processed uri.
      * 
      * @param Url         &$absoluteRequestUri The absolute request uri.
-     * @param DataService &$dataService        Reference to the data service
-     *                                         instance.
-     * 
+     * @param IService $service        Reference to the data service instance.
+     *
      * @return RequestDescription
      * 
      * @throws ODataException If any exception occurs while processing the segments
      *                        or incase of any version incompatibility.
      */
-    public static function process(Url &$absoluteRequestUri, 
-        DataService &$dataService
+    public static function process(Url &$absoluteRequestUri, IService $service
     ) {
-        $absoluteRequestUri = $dataService->getHost()->getAbsoluteRequestUri();
-        $absoluteServiceUri = $dataService->getHost()->getAbsoluteServiceUri();
+        $absoluteRequestUri = $service->getHost()->getAbsoluteRequestUri();
+        $absoluteServiceUri = $service->getHost()->getAbsoluteServiceUri();
 
         $requestUriSegments = array_slice(
             $absoluteRequestUri->getSegments(),
@@ -46,7 +44,7 @@ class ResourcePathProcessor
         try {
             $segmentDescriptors = SegmentParser::parseRequestUriSegements(
                 $requestUriSegments,
-                $dataService->getMetadataQueryProviderWrapper(),
+                $service->getMetadataQueryProviderWrapper(),
                 true
             );
         } catch (ODataException $odataException) {
@@ -79,35 +77,22 @@ class ResourcePathProcessor
 
             if ($requestDescription->getIdentifier() === ODataConstants::URI_COUNT_SEGMENT
             ) {
-                if (!$dataService->getServiceConfiguration()->getAcceptCountRequests()
+                if (!$service->getServiceConfiguration()->getAcceptCountRequests()
                 ) {
                     ODataException::createBadRequestError(
-                        Messages::dataServiceConfigurationCountNotAccepted()
+                        Messages::configurationCountNotAccepted()
                     );
                 }
 
-                $requestDescription->setRequestCountOption(
-                    RequestCountOption::VALUE_ONLY
-                );
+                $requestDescription->setRequestCountOption( RequestCountOption::VALUE_ONLY() );
                 // use of $count requires request DataServiceVersion 
-                // and MaxDataServiceVersion
-                // greater than or equal to 2.0
-                $requestDescription->raiseResponseVersion(
-                    2, 
-                    0, 
-                    $dataService
-                );
-                $requestDescription->raiseMinimumVersionRequirement(
-                    2, 
-                    0, 
-                    $dataService
-                );
+                // and MaxDataServiceVersion greater than or equal to 2.0
+
+                $requestDescription->raiseResponseVersion( 2, 0, $service );
+                $requestDescription->raiseMinVersionRequirement(2, 0, $service );
+
             } else if ($requestDescription->isNamedStream()) {
-                $requestDescription->raiseMinimumVersionRequirement(
-                    3, 
-                    0, 
-                    $dataService
-                );
+                $requestDescription->raiseMinVersionRequirement(3, 0, $service );
             } else if ($requestDescription->getTargetKind() == RequestTargetKind::RESOURCE
             ) {                    
                 if (!$requestDescription->isLinkUri()) {
@@ -115,28 +100,20 @@ class ResourcePathProcessor
                         ->getTargetResourceSetWrapper();
                     //assert($resourceSetWrapper != null)
                     $hasNamedStream = $resourceSetWrapper->hasNamedStreams(
-                        $dataService->getMetadataQueryProviderWrapper()
+                        $service->getMetadataQueryProviderWrapper()
                     );
 
                     $hasBagProperty = $resourceSetWrapper->hasBagProperty(
-                        $dataService->getMetadataQueryProviderWrapper()
+                        $service->getMetadataQueryProviderWrapper()
                     );
 
                     if ($hasNamedStream || $hasBagProperty) {
-                        $requestDescription->raiseResponseVersion(
-                            3, 
-                            0, 
-                            $dataService
-                        );
+                        $requestDescription->raiseResponseVersion( 3, 0, $service );
                     }
                 }
             } else if ($requestDescription->getTargetKind() == RequestTargetKind::BAG
             ) {
-                $requestDescription->raiseResponseVersion(
-                    3, 
-                    0, 
-                    $dataService
-                );
+                $requestDescription->raiseResponseVersion( 3, 0, $service );
             }
         }
 
