@@ -20,20 +20,20 @@ class Int16 implements IType
     }
 
     /**
-     * Checks this type (Int16) is compactible with another type
+     * Checks this type (Int16) is compatible with another type
      * Note: implementation of IType::isCompatibleWith
      * 
-     * @param IType $type Type to check compactibility
+     * @param IType $type Type to check compatibility
      * 
      * @return boolean 
      */
     public function isCompatibleWith(IType $type)
     {
         switch ($type->getTypeCode()) {
-        case TypeCode::BYTE:
-        case TypeCode::SBYTE:
-        case TypeCode::INT16:
-            return true;
+	        case TypeCode::BYTE:
+	        case TypeCode::SBYTE:
+	        case TypeCode::INT16:
+	            return true;
         }
         
         return false;

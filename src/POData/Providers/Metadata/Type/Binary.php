@@ -20,10 +20,10 @@ class Binary implements IType
     }
 
     /**
-     * Checks this type is compactible with another type
+     * Checks this type is compatible with another type
      * Note: implementation of IType::isCompatibleWith
      * 
-     * @param IType $type Type to check compactibility
+     * @param IType $type Type to check compatibility
      * 
      * @return boolean 
      */

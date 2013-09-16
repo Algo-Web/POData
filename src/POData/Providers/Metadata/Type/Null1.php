@@ -22,10 +22,10 @@ class Null1 implements IType
     }
 
     /**
-     * Checks this type (Null) is compactible with another type
+     * Checks this type (Null) is compatible with another type
      * Note: implementation of IType::isCompatibleWith
      * 
-     * @param IType $type Type to check compactibility
+     * @param IType $type Type to check compatibility
      * 
      * @return boolean 
      */

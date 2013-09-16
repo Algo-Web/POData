@@ -21,23 +21,23 @@ class Single implements IType
     }
 
     /**
-     * Checks this type (single) is compactible with another type
+     * Checks this type (single) is compatible with another type
      * Note: implementation of IType::isCompatibleWith
      * 
-     * @param IType $type Type to check compactibility
+     * @param IType $type Type to check compatibility
      * 
      * @return boolean 
      */
     public function isCompatibleWith(IType $type)
     {
         switch ($type->getTypeCode()) {
-        case TypeCode::BYTE:
-        case TypeCode::SBYTE:
-        case TypeCode::INT16:
-        case TypeCode::INT32:
-        case TypeCode::INT64:
-        case TypeCode::SINGLE:
-            return true;
+	        case TypeCode::BYTE:
+	        case TypeCode::SBYTE:
+	        case TypeCode::INT16:
+	        case TypeCode::INT32:
+	        case TypeCode::INT64:
+	        case TypeCode::SINGLE:
+	            return true;
         }
         
         return false;

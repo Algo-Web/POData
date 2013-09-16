@@ -24,15 +24,14 @@ class Navigation implements INavigationType
      * Creates new instance of Navigation
      * 
      * @param ResourceType $resourceType The resource type for this navigation.
+     * @throws \InvalidArgumentException when the resource type kind is not complex or entity
      */
     public function __construct($resourceType)
     {
         if ($resourceType->getResourceTypeKind() != ResourceTypeKind::COMPLEX 
             && $resourceType->getResourceTypeKind() != ResourceTypeKind::ENTITY
         ) {            
-            throw new InvalidArgumentException(
-                Messages::navigationInvalidResourceType()
-            );
+            throw new \InvalidArgumentException(Messages::navigationInvalidResourceType() );
         }
         
         $this->_resourceType = $resourceType;
@@ -52,10 +51,10 @@ class Navigation implements INavigationType
     }
 
     /**
-     * Checks this type (Navigation) is compactible with another type
+     * Checks this type (Navigation) is compatible with another type
      * Note: implementation of IType::isCompatibleWith
      * 
-     * @param IType $type Type to check compactibility
+     * @param IType $type Type to check compatibility
      * 
      * @return boolean 
      */

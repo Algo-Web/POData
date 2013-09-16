@@ -16,9 +16,9 @@ interface IType
     public function getTypeCode();
 
     /**
-     * Checks the type implementing this interface is compactible with another type
+     * Checks the type implementing this interface is compatible with another type
      * 
-     * @param IType $type Type to check compactibility
+     * @param IType $type Type to check compatibility
      * 
      * @return boolean 
      */

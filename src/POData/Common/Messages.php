@@ -207,7 +207,7 @@ class Messages
      * Message to show error when the navigationPropertiesUsedInTheFilterClause
      * argument found as neither null or a non-empty array
      * 
-     * @return The message
+     * @return string The message
      */
     public static function filterInfoNaviUsedArgumentShouldBeNullOrNonEmptyArray()
     {
@@ -319,7 +319,7 @@ class Messages
      * Format a message to show error when a non-integer value passed to 
      * a function, which expects integer parameter
      * 
-     * @param var    $argument     The non-integer argument
+     * @param mixed    $argument     The non-integer argument
      * @param string $functionName The name of function
      * 
      * @return string The formatted message
@@ -333,7 +333,7 @@ class Messages
      * Format a message to show error when a negative value passed to a 
      * function, which expects non-negative parameter
      * 
-     * @param var    $argument     The negative argument
+     * @param mixed    $argument     The negative argument
      * @param string $functionName The name of function
      * 
      * @return string The formatted message
@@ -497,7 +497,7 @@ class Messages
      * The message to show error when trying to add 
      * property to 'Primitive' resource type
      * 
-     * @return The message
+     * @return string The message
      */
     public static function resourceTypeNoAddPropertyForPrimitive()
     {
@@ -508,7 +508,7 @@ class Messages
      * The message to show error when trying to 
      * add key property to non-entity resource type
      * 
-     * @return The message
+     * @return string The message
      */
     public static function resourceTypeKeyPropertiesOnlyOnEntityTypes()
     {
@@ -519,7 +519,7 @@ class Messages
      * The message to show error when trying to add an 
      * etag property to non-entity resource type
      * 
-     * @return The message
+     * @return string The message
      */
     public static function resourceTypeETagPropertiesOnlyOnEntityTypes()
     {
@@ -543,9 +543,9 @@ class Messages
     /**
      * The message to show error when trying to add a key property to derived type
      * 
-     * @return The message
+     * @return string The message
      */
-    public function resourceTypeNoKeysInDerivedTypes()
+    public static function resourceTypeNoKeysInDerivedTypes()
     {
         return 'Key properties cannot be defined in derived types';
     }
@@ -553,7 +553,7 @@ class Messages
     /**
      * The message to show error when trying to set a non-entity resource type as MLE
      * 
-     * @return The message
+     * @return string The message
      */
     public static function resourceTypeHasStreamAttributeOnlyAppliesToEntityType()
     {
@@ -563,7 +563,7 @@ class Messages
     /**
      * The message to show error when trying to add a named stream on non-entity type
      * 
-     * @return The message
+     * @return string The message
      */
     public static function resourceTypeNamedStreamsOnlyApplyToEntityType()
     {
@@ -597,11 +597,9 @@ class Messages
     }
 
     /**
-     * Format a message to show error when ResourcePropertyKind and 
-     * ResourceType's ResourceTypeKind mismatches
-     * 
-     * @param string $resourcePropertyKindArgName The ResourcePropertyKind a
-     *                                            rgument name
+     * Format a message to show error when ResourcePropertyKind and ResourceType's ResourceTypeKind mismatches
+     *
+     * @param string $resourcePropertyKindArgName The ResourcePropertyKind argument name
      * @param string $resourceTypeArgName         The ResourceType argument name
      * 
      * @return string The formatted message
@@ -615,7 +613,7 @@ class Messages
      * The error message to show when tyring to 
      * associate resource set with non-entity
      * 
-     * @return The message
+     * @return string The message
      */
     public static function resourceSetContainerMustBeAssociatedWithEntityType()
     {
@@ -626,7 +624,7 @@ class Messages
      * The error message to show when IQueryProvider::getExpressionProvider
      * method returns empty or null
      *
-     * @return The message
+     * @return string The message
      */
     public static function metadataQueryProviderExpressionProviderMustNotBeNullOrEmpty()
     {
@@ -637,7 +635,7 @@ class Messages
      * The error message to show when IQueryProvider::getExpressionProvider
      * method returns non-object or an object which does not implement IExpressionProvider
      *
-     * @return The message
+     * @return string The message
      */
     public static function metadataQueryProviderInvalidExpressionProviderInstance()
     {
@@ -648,7 +646,7 @@ class Messages
      * The error message to show when IMetadataProvider::getContainerName
      * method returns empty container name
      * 
-     * @return The message
+     * @return string The message
      */
     public static function metadataQueryProviderWrapperContainerNameMustNotBeNullOrEmpty()
     {
@@ -660,7 +658,7 @@ class Messages
      * IMetadataProvider::getContainerNamespace
      * method returns empty container name 
      * 
-     * @return The message
+     * @return string The message
      */
     public static function metadataQueryProviderWrapperContainerNamespaceMustNotBeNullOrEmpty()
     {
@@ -701,7 +699,7 @@ class Messages
      * @param string $resourceTypeName     Name of the resource type
      * @param string $resourcePropertyName Name of the navigation property
      * 
-     * @return The formatted message
+     * @return string The formatted message
      */
     public static function metadataQueryProviderWrapperIDSMPGetResourceSetReturnsInvalidResourceSet($resourceSetName, $resourceTypeName, $resourcePropertyName)
     {
@@ -713,7 +711,7 @@ class Messages
      * 
      * @param string $methodName method name
      * 
-     * @return The message
+     * @return string The message
      */
     public static function metadataQueryProviderWrapperIDSQPMethodReturnsNonArray($methodName)
     {
@@ -727,7 +725,7 @@ class Messages
      * @param string $entityTypeName The name of expected entity type.
      * @param string $methodName     Method name
      * 
-     * @return The formatted message
+     * @return string The formatted message
      */
     public static function metadataQueryProviderWrapperIDSQPMethodReturnsUnExpectedType($entityTypeName, $methodName)
     {
@@ -740,7 +738,7 @@ class Messages
      * 
      * @param string $methodName Method name
      * 
-     * @return The message
+     * @return string The message
      */
     public static function metadataQueryProviderWrapperIDSQPMethodReturnsInstanceWithNullKeyProperties($methodName)
     {
@@ -754,7 +752,7 @@ class Messages
      * 
      * @param string $methodName Method name
      * 
-     * @return The message
+     * @return string The message
      */
     public static function metadataQueryProviderWrapperIDSQPMethodReturnsInstanceWithNonMatchingKeys($methodName)
     {
@@ -764,9 +762,9 @@ class Messages
     /**
      * The error message to show for invalid navigation resource type
      * 
-     * @return The message
+     * @return string The message
      */
-    public function navigationInvalidResourceType()
+    public static function navigationInvalidResourceType()
     {
         return 'Only possible Navigation types are Complex and Entity';
     }
@@ -2015,7 +2013,7 @@ class Messages
     /**
      * Message to show error when media header value misses type segment.
      * 
-     * @return The message
+     * @return string The message
      */
     public static function httpProcessUtilityMediaTypeUnspecified()
     {
@@ -2025,7 +2023,7 @@ class Messages
     /**
      * Message to show error when media header value misses slash after type.
      * 
-     * @return The message
+     * @return string The message
      */
     public static function httpProcessUtilityMediaTypeRequiresSlash()
     {
@@ -2035,7 +2033,7 @@ class Messages
     /**
      * Message to show error when media header value misses sub-type.
      * 
-     * @return The message
+     * @return string The message
      */
     public static function httpProcessUtilityMediaTypeRequiresSubType()
     {
@@ -2045,7 +2043,7 @@ class Messages
     /**
      * Message to show error when media type misses parameter value.
      * 
-     * @return The message
+     * @return string The message
      */
     public static function httpProcessUtilityMediaTypeMissingValue()
     {
@@ -2058,7 +2056,7 @@ class Messages
      * 
      * @param string $parameterName Name of the parameter
      * 
-     * @return The formatted message.
+     * @return string The formatted message.
      */
     public static function httpProcessUtilityEscapeCharWithoutQuotes($parameterName)
     {
@@ -2071,7 +2069,7 @@ class Messages
      * 
      * @param string $parameterName Name of the parameter
      * 
-     * @return The formatted message.
+     * @return string The formatted message.
      */
     public static function httpProcessUtilityEscapeCharAtEnd($parameterName)
     {
@@ -2084,7 +2082,7 @@ class Messages
      * 
      * @param string $parameterName Name of the parameter
      * 
-     * @return The formatted message.
+     * @return string The formatted message.
      */
     public static function httpProcessUtilityClosingQuoteNotFound($parameterName)
     {
@@ -2094,7 +2092,7 @@ class Messages
     /**
      * Message to show error when the header found malformed. 
      * 
-     * @return The formatted message.
+     * @return string The formatted message.
      */
     public static function httpProcessUtilityMalformedHeaderValue()
     {
@@ -2103,9 +2101,9 @@ class Messages
 
     /**
      * Message to show error when request contains eTag headers
-     * but targetted resource type does not have eTag properties defined.
+     * but targeted resource type does not have eTag properties defined.
      * 
-     * @return The message
+     * @return string The message
      */
     public static function noETagPropertiesForType()
     {
@@ -2232,7 +2230,7 @@ class Messages
     public static function hostMalFormedBaseUriInConfig($notEndWithSvcOrHasQuery = false)
     {
         if ($notEndWithSvcOrHasQuery) {
-            'Malformed base service uri in the configuration file (should end with .svc, there should not be query or fragment in the base service uri)';
+            return 'Malformed base service uri in the configuration file (should end with .svc, there should not be query or fragment in the base service uri)';
         }
 
         return 'Malformed base service uri in the configuration file';

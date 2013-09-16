@@ -21,24 +21,24 @@ class Decimal implements IType
     }
 
     /**
-     * Checks this type is compactible with another type
+     * Checks this type is compatible with another type
      * Note: implementation of IType::isCompatibleWith
      * 
-     * @param IType $type Type to check compactibility
+     * @param IType $type Type to check compatibility
      * 
      * @return boolean 
      */
     public function isCompatibleWith(IType $type)
     {
         switch ($type->getTypeCode()) {
-        case TypeCode::BYTE:
-        case TypeCode::SBYTE:
-        case TypeCode::INT16:
-        case TypeCode::INT32:
-        case TypeCode::INT64:
-        case TypeCode::DOUBLE:
-        case TypeCode::DECIMAL:
-            return true;
+	        case TypeCode::BYTE:
+	        case TypeCode::SBYTE:
+	        case TypeCode::INT16:
+	        case TypeCode::INT32:
+	        case TypeCode::INT64:
+	        case TypeCode::DOUBLE:
+	        case TypeCode::DECIMAL:
+	            return true;
         }
 
         return false;

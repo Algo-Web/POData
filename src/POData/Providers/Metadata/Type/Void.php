@@ -22,10 +22,10 @@ class Void implements IType
     }
 
     /**
-     * Checks this type (Void) is compactible with another type
+     * Checks this type (Void) is compatible with another type
      * Note: implementation of IType::isCompatibleWith
      * 
-     * @param IType $type Type to check compactibility
+     * @param IType $type Type to check compatibility
      * 
      * @return boolean 
      */
