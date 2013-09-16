@@ -53,10 +53,5 @@ class ODataLink
      */
     public $isExpanded;
 
-    /**
-     * Constructor for Initialization of Link. 
-     */
-    function __construct()
-    {
-    }
+
 }

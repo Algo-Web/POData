@@ -11,16 +11,10 @@ use POData\Providers\Metadata\Type\String;
 class ODataURL
 {
     /**
-     * 
      * contains the url value.
      * @var String
      */
     public $oDataUrl;
 
-    /**
-     * Constructor for Initialization of Url.
-     */
-    function __construct ()
-    {
-    }
+
 }

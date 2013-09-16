@@ -12,7 +12,7 @@ use POData\ObjectModel\ODataPropertyContent;
 use POData\ObjectModel\ODataProperty;
 use POData\ObjectModel\ODataBagContent;
 use POData\Writers\Atom\AtomODataWriter;
-use POData\Writers\Common\ODataWriter;
+use POData\Writers\ODataWriter;
 use POData\Common\InvalidOperationException;
 use POData\Common\ODataException;
 

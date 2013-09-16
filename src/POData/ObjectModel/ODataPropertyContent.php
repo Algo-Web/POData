@@ -14,7 +14,7 @@ class ODataPropertyContent
     /**
      * 
      * The collection of properties
-     * @var array<odataProperty>
+     * @var ODataProperty[]
      */
     public $odataProperty;
     /**

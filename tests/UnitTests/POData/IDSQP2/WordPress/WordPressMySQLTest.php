@@ -8,7 +8,7 @@ use POData\Common\Version;
 use POData\Common\ODataException;
 use POData\OperationContext\Web\WebOperationContext;
 
-use UnitTests\POData\Facets\WordPress2\DataServiceHost5;
+use UnitTests\POData\Facets\ServiceHostTestFake;
 use UnitTests\POData\Facets\WordPress2\WordPressDataService;
 
 class WordPressMySQLTest extends \PHPUnit_Framework_testCase
@@ -39,7 +39,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
             'MaxDataServiceVersion' => new Version(3, 0),
         );
     
-        $host = new DataServiceHost5($hostInfo);
+        $host = new ServiceHostTestFake($hostInfo);
         $dataService = new WordPressDataService();
         $dataService->setHost($host);
         
@@ -74,7 +74,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
             'MaxDataServiceVersion' => new Version(3, 0)
         );
 
-        $host = new DataServiceHost5($hostInfo);
+        $host = new ServiceHostTestFake($hostInfo);
         $dataService = new WordPressDataService();
         $dataService->setHost($host);
 
@@ -109,7 +109,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
             'MaxDataServiceVersion' => new Version(3, 0)
         );
 
-        $host = new DataServiceHost5($hostInfo);
+        $host = new ServiceHostTestFake($hostInfo);
         $dataService = new WordPressDataService();
         $dataService->setHost($host);
 
@@ -144,7 +144,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
             'MaxDataServiceVersion' => new Version(3, 0)
         );
 
-        $host = new DataServiceHost5($hostInfo);
+        $host = new ServiceHostTestFake($hostInfo);
         $dataService = new WordPressDataService();
         $dataService->setHost($host);
 
@@ -179,7 +179,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
             'MaxDataServiceVersion' => new Version(3, 0)
         );
 
-        $host = new DataServiceHost5($hostInfo);
+        $host = new ServiceHostTestFake($hostInfo);
         $dataService = new WordPressDataService();
         $dataService->setHost($host);
 
@@ -214,7 +214,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
             'MaxDataServiceVersion' => new Version(3, 0)
         );
 
-        $host = new DataServiceHost5($hostInfo);
+        $host = new ServiceHostTestFake($hostInfo);
         $dataService = new WordPressDataService();
         $dataService->setHost($host);
 
@@ -249,7 +249,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
             'MaxDataServiceVersion' => new Version(3, 0)
         );
 
-        $host = new DataServiceHost5($hostInfo);
+        $host = new ServiceHostTestFake($hostInfo);
         $dataService = new WordPressDataService();
         $dataService->setHost($host);
 
@@ -283,7 +283,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
             'MaxDataServiceVersion' => new Version(3, 0)
         );
 
-        $host = new DataServiceHost5($hostInfo);
+        $host = new ServiceHostTestFake($hostInfo);
         $dataService = new WordPressDataService();
         $dataService->setHost($host);
 
@@ -317,7 +317,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
             'MaxDataServiceVersion' => new Version(3, 0)
         );
 
-        $host = new DataServiceHost5($hostInfo);
+        $host = new ServiceHostTestFake($hostInfo);
         $dataService = new WordPressDataService();
         $dataService->setHost($host);
 
@@ -351,7 +351,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
             'MaxDataServiceVersion' => new Version(3, 0)
         );
 
-        $host = new DataServiceHost5($hostInfo);
+        $host = new ServiceHostTestFake($hostInfo);
         $dataService = new WordPressDataService();
         $dataService->setHost($host);
 
@@ -385,7 +385,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
             'MaxDataServiceVersion' => new Version(3, 0)
         );
 
-        $host = new DataServiceHost5($hostInfo);
+        $host = new ServiceHostTestFake($hostInfo);
         $dataService = new WordPressDataService();
         $dataService->setHost($host);
 
@@ -420,7 +420,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
                 'MaxDataServiceVersion' => new Version(3, 0)
             );
 	
-			$host = new DataServiceHost5($hostInfo);
+			$host = new ServiceHostTestFake($hostInfo);
 			$dataService = new WordPressDataService();
 			$dataService->setHost($host);
 
@@ -455,7 +455,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
             'MaxDataServiceVersion' => new Version(3, 0)
         );
 
-        $host = new DataServiceHost5($hostInfo);
+        $host = new ServiceHostTestFake($hostInfo);
         $dataService = new WordPressDataService();
         $dataService->setHost($host);
 
@@ -490,7 +490,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
             'MaxDataServiceVersion' => new Version(3, 0)
         );
 
-        $host = new DataServiceHost5($hostInfo);
+        $host = new ServiceHostTestFake($hostInfo);
         $dataService = new WordPressDataService();
         $dataService->setHost($host);
 
@@ -525,7 +525,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
             'MaxDataServiceVersion' => new Version(3, 0)
         );
 
-        $host = new DataServiceHost5($hostInfo);
+        $host = new ServiceHostTestFake($hostInfo);
         $dataService = new WordPressDataService();
         $dataService->setHost($host);
 
@@ -560,7 +560,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
             'MaxDataServiceVersion' => new Version(3, 0)
         );
 
-        $host = new DataServiceHost5($hostInfo);
+        $host = new ServiceHostTestFake($hostInfo);
         $dataService = new WordPressDataService();
         $dataService->setHost($host);
 
@@ -595,7 +595,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
             'MaxDataServiceVersion' => new Version(3, 0)
         );
 
-        $host = new DataServiceHost5($hostInfo);
+        $host = new ServiceHostTestFake($hostInfo);
         $dataService = new WordPressDataService();
         $dataService->setHost($host);
 
@@ -630,7 +630,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
             'MaxDataServiceVersion' => new Version(3, 0)
         );
 
-        $host = new DataServiceHost5($hostInfo);
+        $host = new ServiceHostTestFake($hostInfo);
         $dataService = new WordPressDataService();
         $dataService->setHost($host);
 
@@ -665,7 +665,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
             'MaxDataServiceVersion' => new Version(3, 0)
         );
 
-        $host = new DataServiceHost5($hostInfo);
+        $host = new ServiceHostTestFake($hostInfo);
         $dataService = new WordPressDataService();
         $dataService->setHost($host);
 
@@ -702,7 +702,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
             'MaxDataServiceVersion' => new Version(3, 0)
         );
 
-        $host = new DataServiceHost5($hostInfo);
+        $host = new ServiceHostTestFake($hostInfo);
         $dataService = new WordPressDataService();
         $dataService->setHost($host);
         $uriProcessor = $dataService->handleRequest();

@@ -12,7 +12,7 @@ use POData\ObjectModel\ODataBagContent;
 use POData\ObjectModel\ODataProperty;
 use POData\ObjectModel\ODataMediaLink;
 use POData\Writers\Json\JsonWriter;
-use POData\Writers\Common\BaseODataWriter;
+use POData\Writers\BaseODataWriter;
 use POData\Common\Version;
 use POData\Common\ODataConstants;
 use POData\Common\Messages;
@@ -75,32 +75,30 @@ class JsonODataWriter extends BaseODataWriter
     }
   
     /**
-     * begin write odata url
-     * 
-     * @param ODataURL &$odataUrl OData url to write
+     * @param ODataURL $url OData url to write
      * 
      * @return void
      */
-    protected function startUrl(ODataURL &$odataUrl)
+    protected function startUrl(ODataURL $url)
     {
         $this->enterTopLevelScope();
         $this->_writer->startObjectScope();
       
         $this->_writer->writeName(ODataConstants::JSON_URI_STRING);
-        $this->_writer->writeValue($odataUrl->oDataUrl);
+        $this->_writer->writeValue($url->oDataUrl);
       
         $this->_writer->endScope();
         $this->_writer->endScope();
     }
     
     /** 
-     * begin write odata links
+     * begin write OData links
      * 
-     * @param ODataURLCollection &$odataUrlCollection url collection to write
+     * @param ODataURLCollection $urls url collection to write
      * 
      * @return void
      */
-    protected function startUrlCollection(ODataURLCollection &$odataUrlCollection)
+    protected function startUrlCollection(ODataURLCollection $urls)
     {
         $this->enterTopLevelScope();
         if ($this->_isPostV1) {
@@ -113,24 +111,25 @@ class JsonODataWriter extends BaseODataWriter
         }
         // [
         $this->_writer->startArrayScope();
-        foreach ($odataUrlCollection->oDataUrls as $odataUrl) {
-            $this->_writer->startObjectScope();
-            $this->_writer->writeName(ODataConstants::JSON_URI_STRING);
-            $this->_writer->writeValue($odataUrl->oDataUrl);
-            $this->_writer->endScope();
+        foreach ($urls->oDataUrls as $url) {
+            $this->_writer
+	            ->startObjectScope()
+                ->writeName(ODataConstants::JSON_URI_STRING)
+	            ->writeValue($url->oDataUrl)
+	            ->endScope();
         }
     }
   
     /**
      * Start writing a feed
      *
-     * @param ODataFeed &$odataFeed Feed to write
+     * @param ODataFeed $feed Feed to write
      * 
      * @return void 
      */
-    protected function startFeed(ODataFeed &$odataFeed)
+    protected function startFeed(ODataFeed $feed)
     {
-        if ($odataFeed->isTopLevel) {
+        if ($feed->isTopLevel) {
             $this->enterTopLevelScope();
         }
     
@@ -149,36 +148,36 @@ class JsonODataWriter extends BaseODataWriter
     /**
      * Write feed metadata
      *
-     * @param ODataFeed &$odataFeed Feed to write
+     * @param ODataFeed $feed Feed to write
      * 
      * @return void 
      */
-    protected function writeFeedMetadata(ODataFeed &$odataFeed)
+    protected function writeFeedMetadata(ODataFeed $feed)
     {    
     }
   
     /**
      * End writing feed
      *
-     * @param ODataFeed &$odataFeed Feed to write
+     * @param ODataFeed $feed Feed to write
      * 
      * @return void 
      */
-    protected function endFeed(ODataFeed &$odataFeed)
+    protected function endFeed(ODataFeed $feed)
     {
         // ]
         $this->_writer->endScope();
     
         if ($this->_isPostV1) {
-            if ($odataFeed->isTopLevel) {
-                $this->writeRowCount($odataFeed->rowCount);
+            if ($feed->isTopLevel) {
+                $this->writeRowCount($feed->rowCount);
             }
-            $this->writeNextPageLink($odataFeed->nextPageLink);
+            $this->writeNextPageLink($feed->nextPageLink);
 
             // }, End object scope for V2
             $this->_writer->endScope();
         }
-        if ($odataFeed->isTopLevel) {
+        if ($feed->isTopLevel) {
             $this->leaveTopLevelScope();
         }
     }
@@ -186,13 +185,13 @@ class JsonODataWriter extends BaseODataWriter
     /**
      * Start writing a entry
      *
-     * @param ODataEntry &$odataEntry Entry to write
+     * @param ODataEntry $entry Entry to write
      * 
      * @return void 
      */
-    protected function startEntry(ODataEntry &$odataEntry)
+    protected function startEntry(ODataEntry $entry)
     {
-        if ($odataEntry->isTopLevel) {
+        if ($entry->isTopLevel) {
             $this->enterTopLevelScope();
 
             if ($this->_isPostV1) {
@@ -212,74 +211,79 @@ class JsonODataWriter extends BaseODataWriter
     /**
      * Write metadata information for the entry.
      *
-     * @param ODataEntry &$odataEntry Entry to write metadata for.
+     * @param ODataEntry $entry Entry to write metadata for.
      * 
      * @return void 
      */
-    protected function writeEntryMetadata(ODataEntry &$odataEntry)
+    protected function writeEntryMetadata(ODataEntry $entry)
     {
         // __metadata : { uri: "Uri", type: "Type" [Media Link Properties] }
-        if ($odataEntry->id != null 
-            || $odataEntry->type != null 
-            || $odataEntry->eTag != null
-        ) {
+        if ($entry->id != null || $entry->type != null || $entry->eTag != null) {
             // "__metadata"
-            $this->_writer->writeName(ODataConstants::JSON_METADATA_STRING);
-            $this->_writer->startObjectScope();
+            $this->_writer
+	            ->writeName(ODataConstants::JSON_METADATA_STRING)
+                ->startObjectScope();
 
             // Write uri value only for entity types
-            if ($odataEntry->id != null) {
-                $this->_writer->writeName(ODataConstants::JSON_URI_STRING);
-                $this->_writer->writeValue($odataEntry->id);
+            if ($entry->id != null) {
+                $this->_writer
+	                ->writeName(ODataConstants::JSON_URI_STRING)
+                    ->writeValue($entry->id);
             }
         
             // Write the etag property, if the entry has etag properties.
-            if ($odataEntry->eTag != null) {
-                $this->_writer->writeName(ODataConstants::JSON_ETAG_STRING);
-                $this->_writer->writeValue($odataEntry->eTag);
+            if ($entry->eTag != null) {
+                $this->_writer
+	                ->writeName(ODataConstants::JSON_ETAG_STRING)
+                    ->writeValue($entry->eTag);
             }
 
             // Write the type property, if the entry has type properties.
-            if ($odataEntry->type != null) {
-                $this->_writer->writeName(ODataConstants::JSON_TYPE_STRING);
-                $this->_writer->writeValue($odataEntry->type);
+            if ($entry->type != null) {
+                $this->_writer
+	                ->writeName(ODataConstants::JSON_TYPE_STRING)
+	                ->writeValue($entry->type);
             }
         }
       
         // Media links.
-        if ($odataEntry->isMediaLinkEntry) {
-            if ($odataEntry->mediaLink != null) {
-                $this->_writer->writeName(ODataConstants::JSON_EDITMEDIA_STRING);
-                $this->_writer->writeValue($odataEntry->mediaLink->editLink);
+        if ($entry->isMediaLinkEntry) {
+            if ($entry->mediaLink != null) {
+                $this->_writer
+	                ->writeName(ODataConstants::JSON_EDITMEDIA_STRING)
+	                ->writeValue($entry->mediaLink->editLink)
 
-                $this->_writer->writeName(ODataConstants::JSON_MEDIASRC_STRING);
-                $this->_writer->writeValue($odataEntry->mediaLink->srcLink);
-          
-                $this->_writer->writeName(ODataConstants::JSON_CONTENTTYPE_STRING);
-                $this->_writer->writeValue($odataEntry->mediaLink->contentType);
+	                ->writeName(ODataConstants::JSON_MEDIASRC_STRING)
+	                ->writeValue($entry->mediaLink->srcLink)
 
-                if ($odataEntry->mediaLink->eTag != null) {
-                    $this->_writer->writeName(ODataConstants::JSON_MEDIAETAG_STRING);
-                    $this->_writer->writeValue($odataEntry->mediaLink->eTag);
+	                ->writeName(ODataConstants::JSON_CONTENTTYPE_STRING)
+	                ->writeValue($entry->mediaLink->contentType);
+
+                if ($entry->mediaLink->eTag != null) {
+                    $this->_writer
+	                    ->writeName(ODataConstants::JSON_MEDIAETAG_STRING)
+	                    ->writeValue($entry->mediaLink->eTag);
                 }
           
                 $this->_writer->endScope();
             }
 
             // writing named resource streams
-            foreach ($odataEntry->mediaLinks as $mediaLink) {
-                $this->_writer->writeName($mediaLink->name);
-                $this->_writer->startObjectScope();
+            foreach ($entry->mediaLinks as $mediaLink) {
+                $this->_writer
+	                ->writeName($mediaLink->name)
+	                ->startObjectScope()
 
-                $this->_writer->writeName(ODataConstants::JSON_MEDIASRC_STRING);
-                $this->_writer->writeValue($mediaLink->srcLink);
+	                ->writeName(ODataConstants::JSON_MEDIASRC_STRING)
+	                ->writeValue($mediaLink->srcLink)
 
-                $this->_writer->writeName(ODataConstants::JSON_CONTENTTYPE_STRING);
-                $this->_writer->writeValue($mediaLink->contentType);
+	                ->writeName(ODataConstants::JSON_CONTENTTYPE_STRING)
+	                ->writeValue($mediaLink->contentType);
 
                 if ($mediaLink->eTag != null) {
-                    $this->_writer->writeName(ODataConstants::JSON_MEDIAETAG_STRING);
-                    $this->_writer->writeValue($mediaLink->eTag);
+                    $this->_writer
+	                    ->writeName(ODataConstants::JSON_MEDIAETAG_STRING)
+	                    ->writeValue($mediaLink->eTag);
                 }
 
                 $this->_writer->endScope();
@@ -292,16 +296,16 @@ class JsonODataWriter extends BaseODataWriter
     /**
      * Write end of entry.
      *
-     * @param ODataEntry &$odataEntry entry to end
+     * @param ODataEntry $entry entry to end
      * 
      * @return void  
      */
-    protected function endEntry(ODataEntry &$odataEntry)
+    protected function endEntry(ODataEntry $entry)
     {
         // }
         $this->_writer->endScope();
 
-        if ($odataEntry->isTopLevel) {
+        if ($entry->isTopLevel) {
             if ($this->_isPostV1) {
                 // }, End object scope for V2
                 $this->_writer->endScope();
@@ -314,34 +318,36 @@ class JsonODataWriter extends BaseODataWriter
     /**
      * Start writing a link.
      *
-     * @param ODataLink &$odataLink Link to write
+     * @param ODataLink $link Link to write
      * @param Boolean   $isExpanded expanded or not
      * 
      * @return void  
      */
-    protected function startLink(ODataLink &$odataLink, $isExpanded)
+    protected function startLink(ODataLink $link, $isExpanded)
     {
         // "<linkname>" :
-        $this->_writer->writeName($odataLink->title);
+        $this->_writer->writeName($link->title);
     }
   
     /**
      * Start writing a link metadata.
      *
-     * @param ODataLink &$odataLink Link to write
+     * @param ODataLink $link Link to write
      * @param Boolean   $isExpanded expanded or not
      * 
      * @return void  
      */
-    protected function writeLinkMetadata(ODataLink &$odataLink, $isExpanded)
+    protected function writeLinkMetadata(ODataLink $link, $isExpanded)
     {
-        if (!$odataLink->expandedResult) {
-            $this->_writer->startObjectScope();
-            $this->_writer->writeName(ODataConstants::JSON_DEFERRED_STRING);
-            $this->_writer->startObjectScope();
-            $this->_writer->writeName(ODataConstants::JSON_URI_STRING);
-            $this->_writer->writeValue($odataLink->url);
-            $this->_writer->endScope();
+        if (!$link->expandedResult) {
+            $this->_writer
+	            ->startObjectScope()
+	            ->writeName(ODataConstants::JSON_DEFERRED_STRING)
+	            ->startObjectScope()
+	            ->writeName(ODataConstants::JSON_URI_STRING)
+	            ->writeValue($link->url)
+	            ->endScope()
+            ;
         }
     }
   
@@ -392,26 +398,25 @@ class JsonODataWriter extends BaseODataWriter
     }
   
     /**
-     * Pre Write Properties.
-     * Do nothing for json
-     * 
-     * @param ODataEntry &$odataEntry OData entry to write.
+     * Pre Write Properties. For this writer this means do nothing
+     *
+     * @param ODataEntry $entry OData entry to write.
      * 
      * @return void 
      */
-    public function preWriteProperties(ODataEntry &$odataEntry)
+    public function preWriteProperties(ODataEntry $entry)
     {
     }
   
     /**
      * Begin write property.
      *
-     * @param ODataProperty &$odataProperty property to write.
+     * @param ODataProperty $property property to write.
      * @param Boolean       $isTopLevel     is top level or not.
      * 
      * @return void 
      */
-    protected function beginWriteProperty(ODataProperty &$odataProperty, $isTopLevel)
+    protected function beginWriteProperty(ODataProperty $property, $isTopLevel)
     {
         if ($isTopLevel) {
             $this->enterTopLevelScope();
@@ -427,17 +432,17 @@ class JsonODataWriter extends BaseODataWriter
             $this->_writer->startObjectScope();
         }
 
-        $this->_writer->writeName($odataProperty->name);
+        $this->_writer->writeName($property->name);
     }
   
     /**
      * Begin write complex property.
      *
-     * @param ODataProperty &$odataProperty property to write.
+     * @param ODataProperty $property property to write.
      * 
      * @return void 
      */
-    protected function beginComplexProperty(ODataProperty &$odataProperty)
+    protected function beginComplexProperty(ODataProperty $property)
     {
         // {
         $this->_writer->startObjectScope();
@@ -447,7 +452,7 @@ class JsonODataWriter extends BaseODataWriter
         $this->_writer->startObjectScope();
 
         $this->_writer->writeName(ODataConstants::JSON_TYPE_STRING);
-        $this->_writer->writeValue($odataProperty->typeName);
+        $this->_writer->writeValue($property->typeName);
 
         $this->_writer->endScope();
     }
@@ -466,41 +471,34 @@ class JsonODataWriter extends BaseODataWriter
     /**
      * Begin an item in a collection
      *  
-     * @param ODataProperty &$odataBagProperty bag property to write
+     * @param ODataBagContent $bag bag property to write
      * 
      * @return void 
      */
-    protected function beginBagPropertyItem(ODataProperty &$odataBagProperty)
+    protected function beginBagPropertyItem(ODataBagContent $bag)
     {
-        // {
-        $this->_writer->startObjectScope();
 
-        // __metadata : { Type : "typename" }
-        $this->_writer->writeName(ODataConstants::JSON_METADATA_STRING);
-        $this->_writer->startObjectScope();
+        $this->_writer
+	        ->startObjectScope() // {
+	        ->writeName(ODataConstants::JSON_METADATA_STRING) //__metadata : { Type : "typename" }
+            ->startObjectScope()
 
-        $this->_writer->writeName(ODataConstants::JSON_TYPE_STRING);
-        $this->_writer->writeValue($odataBagProperty->typeName);
+            ->writeName(ODataConstants::JSON_TYPE_STRING)
+            ->writeValue($bag->type)
+            ->endScope()  // }
+	        ->writeDataArrayName() // "__results":
+	    	->startArrayScope(); // [
 
-        // }
-        $this->_writer->endScope();
-
-        // "__results":
-        $this->_writer->writeDataArrayName();
-
-        // [
-        $this->_writer->startArrayScope();
-
-        foreach ($odataBagProperty->value->propertyContents as $odataPropertyContent) {
-            if ($odataPropertyContent instanceof ODataPropertyContent) {
+        foreach ($bag->propertyContents as $content) {
+            if ($content instanceof ODataPropertyContent) {
                 $this->_writer->startObjectScope();
-                $this->writeBeginProperties($odataPropertyContent);
+                $this->writeBeginProperties($content);
                 $this->_writer->endScope();
             } else {
                 // retrieving the collection datatype in order 
                 //to write in json specific format, with in chords or not
-                preg_match('#\((.*?)\)#', $odataBagProperty->typeName, $type);
-                $this->_writer->writeValue($odataPropertyContent, $type[1]);
+                preg_match('#\((.*?)\)#', $bag->type, $type);
+                $this->_writer->writeValue($content, $type[1]);
             }
         }
 
@@ -520,32 +518,32 @@ class JsonODataWriter extends BaseODataWriter
     }
     
     /**
-     * Write end of odata url
+     * Write end of OData url
      * 
-     * @param ODataURL &$odataUrl OData url to end
+     * @param ODataURL $url OData url to end
      * 
      * @return void 
      */
-    protected function endUrl(ODataURL &$odataUrl)
+    protected function endUrl(ODataURL $url)
     {
       
     }
     
     /**
-     * Write end of odata links
+     * Write end of OData links
      * 
-     * @param ODataURLCollection &$odataUrlCollection odata url collection to end
+     * @param ODataURLCollection $urls odata url collection to end
      * 
      * @return void 
      */
-    protected function endUrlCollection(ODataURLCollection &$odataUrlCollection)
+    protected function endUrlCollection(ODataURLCollection $urls)
     {
         // ]
         $this->_writer->endScope();
 
         if ($this->_isPostV1) {
-            $this->writeRowCount($odataUrlCollection->count);
-            $this->writeNextPageLink($odataUrlCollection->nextPageLink);
+            $this->writeRowCount($urls->count);
+            $this->writeNextPageLink($urls->nextPageLink);
             // }, End object scope for V2
             $this->_writer->endScope();
         }
@@ -556,13 +554,13 @@ class JsonODataWriter extends BaseODataWriter
     /**
      * End write property.
      *
-     * @param object $kind kind of operatino to end
+     * @param ODataPropertyContent $property kind of operation to end
      * 
      * @return void 
      */
-    protected function endWriteProperty($kind)
+    protected function endWriteProperty(ODataPropertyContent $property)
     {   
-        if ($kind->isTopLevel) {
+        if ($property->isTopLevel) {
             // }
             $this->_writer->endScope();
             if ($this->_isPostV1) {
@@ -577,22 +575,22 @@ class JsonODataWriter extends BaseODataWriter
     /**
      * post write properties
      *
-     * @param ODataEntry &$odataEntry OData entry
+     * @param ODataEntry $entry OData entry
      *
      * @return void 
      */
-    public function postWriteProperties(ODataEntry &$odataEntry)
+    public function postWriteProperties(ODataEntry $entry)
     {
     }
   
     /**
      * write null value.
      *
-     * @param ODataProperty &$odataProperty odata property
+     * @param ODataProperty $property odata property
      *
      * @return void 
      */
-    protected function writeNullValue(ODataProperty &$odataProperty)
+    protected function writeNullValue(ODataProperty $property)
     {
         $this->_writer->writeValue("null");
     }
@@ -600,62 +598,61 @@ class JsonODataWriter extends BaseODataWriter
     /**
      * serialize exception.
      * 
-     * @param ODataException &$exception              Exception to serialize
+     * @param ODataException $exception              Exception to serialize
      * @param Boolean        $serializeInnerException if set to true
      * 
      * serialize the inner exception if $exception is an ODataException.
      * 
-     * @return void  
+     * @return string
      */
-    public static function serializeException(ODataException &$exception, $serializeInnerException)
+    public static function serializeException(ODataException $exception, $serializeInnerException)
     {
         $writer = new JsonWriter('');
         // Wrapper for error.
-        $writer->startObjectScope();
-        // "error"
-        $writer->writeName(ODataConstants::JSON_ERROR);
-        $writer->startObjectScope();
+        $writer
+	        ->startObjectScope()
+            ->writeName(ODataConstants::JSON_ERROR) // "error"
+            ->startObjectScope();
 
         // "code"
         if ($exception->getCode() != null) {
-            $writer->writeName(ODataConstants::JSON_ERROR_CODE);
-            $writer->writeValue($exception->getCode());
+            $writer
+	            ->writeName(ODataConstants::JSON_ERROR_CODE)
+	            ->writeValue($exception->getCode());
         }
 
         // "message"
-        $writer->writeName(ODataConstants::JSON_ERROR_MESSAGE);
-        $writer->startObjectScope();
-        // "lang"
-        $writer->writeName(ODataConstants::XML_LANG_ATTRIBUTE_NAME);
-        //if ($exception->getMsgLang() != null) {
-        $writer->writeValue('en-US');
-        //}
-        // "value"
-        $writer->writeName(ODataConstants::JSON_ERROR_VALUE);
-        $writer->writeValue($exception->getMessage());
+        $writer
+	        ->writeName(ODataConstants::JSON_ERROR_MESSAGE)
+	        ->startObjectScope()
+	        ->writeName(ODataConstants::XML_LANG_ATTRIBUTE_NAME) // "lang"
+	        ->writeValue('en-US')
+            ->writeName(ODataConstants::JSON_ERROR_VALUE)
+	        ->writeValue($exception->getMessage())
 
-        $writer->endScope();
-        $writer->endScope();
-        $writer->endScope();
+	        ->endScope()
+	        ->endScope()
+	        ->endScope();
+
         return $writer->getJsonOutput();
     }
   
     /**
      * attempts to convert the specified primitive value to a serializable string.
      *
-     * @param ODataProperty &$odataProperty value to convert.
+     * @param ODataProperty $property value to convert.
      * 
      * @return void 
      */
-    protected function writePrimitiveValue(ODataProperty &$odataProperty)
+    protected function writePrimitiveValue(ODataProperty $property)
     {
-        $this->_writer->writeValue($odataProperty->value, $odataProperty->typeName);
+        $this->_writer->writeValue($property->value, $property->typeName);
     }
   
     /**
      * Get the Json final output.
      *
-     * @return void 
+     * @return string
      */
     protected function getOutput()
     {

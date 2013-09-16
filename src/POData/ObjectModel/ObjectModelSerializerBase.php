@@ -168,17 +168,16 @@ class ObjectModelSerializerBase
      * 
      * @return mixed The value of the given property.
      * 
-     * @throws ODataException If reflection exception occured 
-     * while trying to access the property.
+     * @throws ODataException If reflection exception occured while trying to access the property.
+     *
      */
     protected function getPropertyValue(&$object, ResourceType &$resourceType, ResourceProperty &$resourceProperty)
     {
         try {
-                $reflectionProperty = new \ReflectionProperty($object, $resourceProperty->getName());
-                $propertyValue = $reflectionProperty->getValue($object);
-                return $propertyValue;                   
+			$reflectionProperty = new \ReflectionProperty($object, $resourceProperty->getName());
+	        return $reflectionProperty->getValue($object);
         } catch (\ReflectionException $reflectionException) {
-            throw ODataException::createInternalServerError(
+            ODataException::createInternalServerError(
                 Messages::objectModelSerializerFailedToAccessProperty(
                     $resourceProperty->getName(), 
                     $resourceType->getName()

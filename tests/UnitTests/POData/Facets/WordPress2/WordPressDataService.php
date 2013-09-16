@@ -80,23 +80,16 @@ class WordPressDataService extends BaseService
     // so we are using getHost() below.
     public function handleRequest()
     {
-    	try {
-    		$this->createProviders();
-    		$this->getHost()->validateQueryParameters();
-    		$requestMethod = $this->getOperationContext()->incomingRequest()->getMethod();
-    		if ($requestMethod !== ODataConstants::HTTP_METHOD_GET) {
-    			ODataException::createNotImplementedError(Messages::onlyReadSupport($requestMethod));
-    		}
-    	} catch (\Exception $exception) {
-    		throw $exception;
-    	}
+
+        $this->createProviders();
+        $this->getHost()->validateQueryParameters();
+        $requestMethod = $this->getOperationContext()->incomingRequest()->getMethod();
+        if ($requestMethod !== ODataConstants::HTTP_METHOD_GET) {
+            ODataException::createNotImplementedError(Messages::onlyReadSupport($requestMethod));
+        }
+
     
-    	$uriProcessor = null;
-    	try {
-    		$uriProcessor = UriProcessor::process($this);
-    		return $uriProcessor;
-    	} catch (\Exception $exception) {
-    		throw $exception;
-    	}
+   		return UriProcessor::process($this);
+
     }
 }

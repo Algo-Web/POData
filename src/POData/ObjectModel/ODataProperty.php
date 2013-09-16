@@ -25,20 +25,15 @@ class ODataProperty
     /**
      * 
      * The property attribute extensions
-     * @var array<XMLAttribute>
+     * @var XMLAttribute[]
      */
     public $attributeExtensions;
     /**
      * 
      * The value of the property. 
-     * @var string/ODataPropertyContent/ODataBagContent
+     * @var string|ODataPropertyContent|ODataBagContent
      */
     public $value;
 
-    /**
-     * Constructor for Initialization of Odata Property.
-     */
-    function __construct()
-    {
-    }
+
 }

@@ -161,12 +161,11 @@ class MetadataQueryProviderWrapper
 
     /**
      *  To get all entity set information, 
-     *  Note: Wrapper for IMetadataProvider::getResourceSets method
-     *  implementation,
-     *  This method returns array of ResourceSetWrapper instances but the 
-     *  corresponding IDSMP method returns array of ResourceSet instances
-     *  
+     *  Note: Wrapper for IMetadataProvider::getResourceSets method implementation,
+     *  This method returns array of ResourceSetWrapper instances but the corresponding IDSMP method returns array of ResourceSet instances
+     *
      *  @return ResourceSetWrapper[] Array of ResourceSetWrapper for ResourceSets which are visible
+     *  @throws ODataException when two resource sets with the same name are encountered
      *
      */
     public function getResourceSets()
@@ -176,12 +175,7 @@ class MetadataQueryProviderWrapper
         $resourceSetNames = array();
         foreach ($resourceSets as $resourceSet) {
             if (in_array($resourceSet->getName(), $resourceSetNames)) {
-                throw new ODataException(
-                    Messages::metadataQueryProviderWrapperEntitySetNameShouldBeUnique(
-                        $resourceSet->getName()
-                    ), 
-                    500
-                );
+                throw new ODataException(Messages::metadataQueryProviderWrapperEntitySetNameShouldBeUnique($resourceSet->getName()), 500 );
             }
 
             $resourceSetNames[] = $resourceSet->getName();

@@ -1,10 +1,10 @@
 <?php
 
-namespace POData\Writers\Common;
+namespace POData\Writers;
 
 use POData\Writers\Atom\AtomODataWriter;
 use POData\Writers\Json\JsonODataWriter;
-use POData\Writers\Common\IODataWriter;
+use POData\Writers\IODataWriter;
 use POData\Providers\Metadata\Type\String;
 use POData\ObjectModel\ODataURL;
 use POData\ObjectModel\ODataURLCollection;
@@ -56,7 +56,7 @@ class ODataWriter
      * 
      * @return string Result in Atom or Json format 
      */
-    public function writeRequest ($resultItem)
+    public function writeRequest($resultItem)
     {
         if ($resultItem instanceof ODataURL) {
             $this->writeURL($resultItem);
@@ -70,7 +70,6 @@ class ODataWriter
             $this->writeEntry($resultItem);
         } 
 
-        unset ($resultItem);
         return $this->iODataWriter->getResult();
     }
 
@@ -81,7 +80,7 @@ class ODataWriter
      * 
      * @return String Requested Url in format of Atom or JSON. 
      */
-    protected function writeURL (ODataURL $oDataUrl)
+    protected function writeURL(ODataURL $oDataUrl)
     {
         $this->iODataWriter->writeBeginUrl($oDataUrl);
         $this->iODataWriter->writeEnd($oDataUrl);
@@ -103,46 +102,45 @@ class ODataWriter
     /**
      * Write top level Feed/Collection 
      * 
-     * @param ODataFeed $odataFeed Object of ODataFeed
+     * @param ODataFeed $feed Object of ODataFeed
      * 
      * @return String Requested ODataFeed in format of Atom or JSON.
      */
-    protected function writeFeed (ODataFeed $odataFeed)
+    protected function writeFeed(ODataFeed $feed)
     {
-        $this->iODataWriter->writeBeginFeed($odataFeed);
-        foreach ($odataFeed->entries as $odataEntry) {
-            $this->writeEntry($odataEntry);
+        $this->iODataWriter->writeBeginFeed($feed);
+        foreach ($feed->entries as $entry) {
+            $this->writeEntry($entry);
         }
-        $this->iODataWriter->writeEnd($odataFeed);
+        $this->iODataWriter->writeEnd($feed);
     }
 
     /**
      * Write top level entry
      * 
-     * @param ODataEntry $odataEntry Object of ODataEntry
+     * @param ODataEntry $entry Object of ODataEntry
      * 
      * @return String Requested ODataEntry in format of Atom or JSON.
      */
-    protected function writeEntry (ODataEntry $odataEntry)
+    protected function writeEntry (ODataEntry $entry)
     {
-        $this->iODataWriter->writeBeginEntry($odataEntry);
-        foreach ($odataEntry->links as $odataLink) {
-            $this->iODataWriter->writeBeginLink(
-                $odataLink, $odataLink->isExpanded
-            );
-            if ($odataLink->isExpanded && !is_null($odataLink->expandedResult)) {
-                if ($odataLink->isCollection) {
-                    $this->writeFeed($odataLink->expandedResult);
+        $this->iODataWriter->writeBeginEntry($entry);
+        foreach ($entry->links as $link) {
+            $this->iODataWriter->writeBeginLink($link, $link->isExpanded);
+
+            if ($link->isExpanded && !is_null($link->expandedResult)) {
+                if ($link->isCollection) {
+                    $this->writeFeed($link->expandedResult);
                 } else {
-                    $this->writeEntry($odataLink->expandedResult);
+                    $this->writeEntry($link->expandedResult);
                 }
             }
-            $this->iODataWriter->writeEndLink($odataLink->isExpanded);
+            $this->iODataWriter->writeEndLink($link->isExpanded);
         }
-        $this->iODataWriter->preWriteProperties($odataEntry);
-        $this->iODataWriter->writeBeginProperties($odataEntry->propertyContent);
-        $this->iODataWriter->postWriteProperties($odataEntry);
-        $this->iODataWriter->writeEnd($odataEntry);
+        $this->iODataWriter->preWriteProperties($entry);
+        $this->iODataWriter->writeBeginProperties($entry->propertyContent);
+        $this->iODataWriter->postWriteProperties($entry);
+        $this->iODataWriter->writeEnd($entry);
     }
 
     /**

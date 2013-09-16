@@ -12,7 +12,7 @@ class ODataURLCollection
     /**
      * 
      * Array of ODataURL
-     * @var array<ODataURL>
+     * @var ODataURL[]
      */
     public $oDataUrls;
     /**

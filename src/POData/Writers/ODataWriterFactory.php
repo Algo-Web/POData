@@ -1,6 +1,6 @@
 <?php
 
-namespace POData\Writers\Common;
+namespace POData\Writers;
 
 /**
  * Class ODataWriterFactory
@@ -11,7 +11,7 @@ class ODataWriterFactory
     static $WRITERS = array();
     
     /** 
-     * To instanciate correct writer from content type.
+     * To instantiate correct writer from content type.
      *  
      * @param string $contentType  Writer Type 
      * (Atom, json etc..) which implements IOdataWriter interface.

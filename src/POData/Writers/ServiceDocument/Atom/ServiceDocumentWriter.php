@@ -14,19 +14,17 @@ class ServiceDocumentWriter
     /**
      * Writer to which output (Service Document) is sent
      * 
-     * @var XMLWriter
+     * @var \XMLWriter
      */
     private $_xmlWriter;
 
     /**
-     * Holds reference to the wrapper over service metadata and 
-     * query provider implemenations
-     * In this context this provider will be used for 
-     * gathering metadata informations only.
-     *      
+     * Holds reference to the wrapper over service metadata and query provider implementations
+     * In this context this provider will be used for gathering metadata information only.
+     *
      * @var MetadataQueryProviderWrapper
      */
-    private $_metadataQueryproviderWrapper;
+    private $_metadataQueryProviderWrapper;
 
     /**
      * Data service base uri from which resources should be resolved
@@ -61,18 +59,18 @@ class ServiceDocumentWriter
      */
     public function __construct(MetadataQueryProviderWrapper $provider, $baseUri)
     {
-        $this->_metadataQueryproviderWrapper = $provider;
+        $this->_metadataQueryProviderWrapper = $provider;
         $this->_baseUri = $baseUri;
     }
 
     /**
      * Write the service document in Atom format.
      * 
-     * @param Object &$dummy Dummy object
+     * @param Object $dummy Dummy object
      * 
      * @return string
      */
-    public function writeRequest(&$dummy)
+    public function writeRequest($dummy)
     {
         $this->_xmlWriter = new \XMLWriter();
         $this->_xmlWriter->openMemory();
@@ -86,7 +84,7 @@ class ServiceDocumentWriter
         $this->_xmlWriter->startElementNs(self::ATOM_NAMESPACE_PREFIX, ODataConstants::ATOM_TITLE_ELELMET_NAME, null);
         $this->_xmlWriter->text(ODataConstants::ATOM_PUBLISHING_WORKSPACE_DEFAULT_VALUE);
         $this->_xmlWriter->endElement();
-        foreach ($this->_metadataQueryproviderWrapper->getResourceSets() as $resourceSetWrapper) {
+        foreach ($this->_metadataQueryProviderWrapper->getResourceSets() as $resourceSetWrapper) {
             //start collection node
             $this->_xmlWriter->startElement(ODataConstants::ATOM_PUBLISHING_COLLECTION_ELEMENT_NAME);
             $this->_xmlWriter->writeAttribute(ODataConstants::ATOM_HREF_ATTRIBUTE_NAME, $resourceSetWrapper->getName());

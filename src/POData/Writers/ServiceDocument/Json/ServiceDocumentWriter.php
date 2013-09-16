@@ -19,28 +19,26 @@ class ServiceDocumentWriter
     private $_writer;
 
     /**
-     * Holds reference to the wrapper over service metadata and 
-     * query provider implemenations
-     * In this context this provider will be used for 
-     * gathering metadata informations only.
-     *      
+     * Holds reference to the wrapper over service metadata and query provider implementations
+     * In this context this provider will be used for gathering metadata information only.
+     *
      * @var MetadataQueryProviderWrapper
      */
-    private $_metadataQueryproviderWrapper;
+    private $_metadataQueryProviderWrapper;
     
     /**
      * Constructs new instance of ServiceDocumentWriter
      * 
      * @param MetadataQueryProviderWrapper $provider Reference to the wrapper over 
      *                                               service metadata and 
-     *                                               query provider implemenations.
+     *                                               query provider implementations.
      * @param string                       $baseUri  Data service base uri from 
      *                                               which resources 
      *                                               should be resolved.
      */
     public function __construct(MetadataQueryProviderWrapper $provider, $baseUri)
     {
-        $this->_metadataQueryproviderWrapper = $provider;
+        $this->_metadataQueryProviderWrapper = $provider;
         $this->_writer = new JsonWriter('');
     }
     
@@ -53,26 +51,25 @@ class ServiceDocumentWriter
      */
     public function writeRequest(&$dummy)
     {
-        // { "d" :
-        $this->_writer->startObjectScope();
-        $this->_writer->writeDataWrapper();
-        // {
-        $this->_writer->startObjectScope();
-        // "EntitySets"
-        $this->_writer->writeName(ODataConstants::ENTITY_SET);
-        // [
-        $this->_writer->startArrayScope();
-        foreach ($this->_metadataQueryproviderWrapper->getResourceSets() as $resourceSetWrapper) {
+
+        $this->_writer
+	        ->startObjectScope() // { "d" :
+	        ->writeDataWrapper()
+	        ->startObjectScope() // {
+	        ->writeName(ODataConstants::ENTITY_SET) // "EntitySets"
+            ->startArrayScope() // [
+	    ;
+
+        foreach ($this->_metadataQueryProviderWrapper->getResourceSets() as $resourceSetWrapper) {
             $this->_writer->writeValue($resourceSetWrapper->getName());
         }
-        // ]
-        $this->_writer->endScope();
-        // }
-        $this->_writer->endScope();
-        // }
-        $this->_writer->endScope();
-        //result
-        $serviceDocumentInJson = $this->_writer->getJsonOutput();
-        return $serviceDocumentInJson;
+
+        $this->_writer
+	        ->endScope() // ]
+	        ->endScope() // }
+			->endScope() // }
+		;
+
+        return $this->_writer->getJsonOutput();
     }  
 }

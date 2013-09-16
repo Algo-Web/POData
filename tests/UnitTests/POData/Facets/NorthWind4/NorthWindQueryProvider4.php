@@ -161,11 +161,4 @@ class NorthWindQueryProvider4 implements IQueryProvider
     }
 
 
-
-    /**
-     * The destructor     
-     */
-    public function __destruct()
-    {
-    }
 }

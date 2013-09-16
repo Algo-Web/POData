@@ -10,27 +10,27 @@ class IndentedTextWriter
 {
     /**
      * writer to which Json text needs to be written
-     *      
+     * @var string
      */
-    private $_result;
+    private $result;
   
     /**
      * keeps track of the indentLevel
-     *      
+     * @var int
      */
-    private $_indentLevel;
+    private $indentLevel;
   
     /**
      * keeps track of pending tabs
-     *      
+     * @var bool
      */
-    private $_tabsPending;
+    private $tabsPending;
   
     /**
      * string representation of tab
-     *      
+     * @var string
      */
-    private $_tabString;
+    private $tabString;
   
     /**
      * Creates a new instance of IndentedTextWriter
@@ -39,85 +39,88 @@ class IndentedTextWriter
      */
     public function __construct($writer)
     {
-        $this->_result = $writer;
-        $this->_tabString = "    ";
+        $this->result = $writer;
+        $this->tabString = "    ";
     }
   
-    /**
-     * Setter
-     * is run when writing data to inaccessible properties
-     * 
-     * @param string $name  name of the property being interacted with
-     * @param int    $value the value the name'ed property should be set to
-     * 
-     * @return void
-     */
-    public function __set($name, $value)
-    {
-        switch ($name) {
-        case '_indentLevel':
-            if ($value < 0) {
-                $value = 0;
-            }
-            $this->_indentLevel = $value;
-            break;
-        }
-    }
-   
-    /**
-     * Getter
-     * is utilized for reading data from inaccessible properties
-     * 
-     * @param string $name name of the property being interacted with
-     * 
-     * @return the value of the parameter
-     */
-    public function __get($name)
-    {
-        $vars = array('_result', '_indentLevel', '_tabsPending', '_tabString');
-        if (in_array($name, $vars)) {
-            return $this->$name;
-        }
-    }
-   
     /**
      * Writes the given string value to the underlying writer
      * 
      * @param string $value string, char, text value to be written
      * 
-     * @return void
+     * @return IndentedTextWriter
      */
     public function writeValue($value)
     {
-        $this->_outputTabs();
+        $this->outputTabs();
         $this->_write($value);
+	    return $this;
     }
-   
-   
-    /**
-     * Writes the trimmed text if minimizeWhiteSpeace is set to true
-     * 
-     * @param string $value value to be written
-     * 
-     * @return void
-     */
-    public function writeTrimmed($value)
-    {
-        $this->_write($value);
-    }
+
+	/**
+	 * Writes a new line character to the text stream
+	 *
+	 * @return IndentedTextWriter
+	 */
+	public function writeLine()
+	{
+		$this->_write("\n");
+		$this->tabsPending = true;
+		return $this;
+	}
+
+	/**
+	 * Writes the given text trimmed with no indentation
+	 *
+	 * @param string $value text to be written
+	 *
+	 * @return IndentedTextWriter
+	 */
+	public function writeTrimmed($value)
+	{
+		$this->_write(trim($value));
+		return $this;
+	}
+
+	/**
+	 * Increases the current indent setting by 1
+	 * @return IndentedTextWriter
+	 */
+	public function increaseIndent()
+	{
+		$this->indentLevel++;
+		return $this;
+	}
+
+	/**
+	 * Decreases the current indent setting by 1, never going below 0
+	 * @return IndentedTextWriter
+	 */
+	public function decreaseIndent()
+	{
+		if($this->indentLevel > 0) $this->indentLevel--;
+		return $this;
+	}
+
+
+	/**
+	 * @return string the current written text
+	 */
+	public function getResult()
+	{
+		return $this->result;
+	}
    
     /**
      * Writes the tabs depending on the indent level
      * 
      * @return void
      */
-    private function _outputTabs()
+    private function outputTabs()
     {
-        if ($this->_tabsPending) {
-            for ($i = 0; $i < $this->_indentLevel; $i++) {
-                $this->_write($this->_tabString);
-            }
-            $this->_tabsPending = false;
+        if ($this->tabsPending) {
+            $this->_write(str_repeat($this->tabString, $this->indentLevel));
+            $this->tabsPending = false;
         }
     }
   
@@ -130,17 +133,8 @@ class IndentedTextWriter
      */
     private function _write($value)
     {
-        $this->_result .= $value;
+        $this->result .= $value;
     }
    
-    /**
-     * Writes a new line character to the text stream
-     * 
-     * @return void
-     */
-    public function writeLine()
-    {
-        $this->_write("\n");
-        $this->_tabsPending = true;
-    }
+
 }

@@ -21,14 +21,8 @@ class ODataBagContent
     /**
      * 
      * Represents elements of the bag.
-     * @var array<string/PropertyContent>
+     * @var string[]|ODataPropertyContent[]
      */
     public $propertyContents;
 
-    /**
-     * Constructs a new instance of ODataBagContent
-     */
-    public function __construct()
-    {
-    }
 }

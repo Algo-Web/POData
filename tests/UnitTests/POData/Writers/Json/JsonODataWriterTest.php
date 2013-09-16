@@ -1,5 +1,7 @@
 <?php
 
+namespace UnitTests\POData\Writers\Json;
+
 use POData\ObjectModel\ODataURL;
 use POData\ObjectModel\ODataURLCollection;
 use POData\ObjectModel\ODataFeed;
@@ -9,12 +11,12 @@ use POData\ObjectModel\ODataMediaLink;
 use POData\ObjectModel\ODataPropertyContent;
 use POData\ObjectModel\ODataProperty;
 use POData\ObjectModel\ODataBagContent;
-use POData\Writers\Atom\JsonODataWriter;
-use POData\Writers\Common\ODataWriter;
+use POData\Writers\json\JsonODataWriter;
+use POData\Writers\ODataWriter;
 use POData\Common\InvalidOperationException;
 use POData\Common\ODataException;
 
-class TestJsonODataWriter extends PHPUnit_Framework_TestCase
+class TestJsonODataWriter extends \PHPUnit_Framework_TestCase
 {
 	protected function setUp()
 	{
@@ -589,7 +591,8 @@ class TestJsonODataWriter extends PHPUnit_Framework_TestCase
 		$bagEntryProp3->propertyContents = array(
     	                              "mike@foo.com",
     	                              "mike2@foo.com");
-		
+		$bagEntryProp3->type = 'Bag(Edm.String)'; //TODO: this might not be what really happens in the code..#61
+
 		$entryProp3 = new ODataProperty();
 		$entryProp3->name = 'EmailAddresses';
 		$entryProp3->typeName = 'Bag(Edm.String)';
@@ -644,6 +647,7 @@ class TestJsonODataWriter extends PHPUnit_Framework_TestCase
 		$bagEntryProp4->propertyContents = array($bagEntryProp4ContentProp1Content, 
 		                                         $bagEntryProp4ContentProp1Content2
 		                                        );
+		$bagEntryProp4->type = 'Bag(SampleModel.Address)'; //TODO: this might not be what really happens in the code..#61
 		
 		$entryProp4 = new ODataProperty();
 		$entryProp4->name = 'Addresses';
@@ -690,7 +694,7 @@ class TestJsonODataWriter extends PHPUnit_Framework_TestCase
 						}';
 	   $expectedResultObj = json_decode($expectedResult);
 		
-	   $this->assertEquals($resultObj, $expectedResultObj); 
+	   $this->assertEquals(array($expectedResultObj), array($resultObj));
 	}
 	
     /** 

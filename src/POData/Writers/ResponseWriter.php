@@ -10,7 +10,7 @@ use POData\IService;
 use POData\UriProcessor\RequestDescription;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\RequestTargetKind;
 use POData\Writers\Metadata\MetadataWriter;
-use POData\Writers\Common\ODataWriter;
+use POData\Writers\ODataWriter;
 
 
 /**
@@ -24,7 +24,7 @@ class ResponseWriter
      * 
      * @param IService        $service
      * @param RequestDescription $requestDescription Request description object
-     * @param Object             &$odataModelInstance OData model instance
+     * @param Object             $entityModel OData model instance
      * @param String             $responseContentType Content type of the response
      * @param String             $responseFormat      Output format
      * 
@@ -33,7 +33,7 @@ class ResponseWriter
     public static function write(
 	    IService $service,
         RequestDescription $requestDescription,
-        &$odataModelInstance, 
+        $entityModel,
         $responseContentType, 
         $responseFormat
     ) {
@@ -72,39 +72,29 @@ class ResponseWriter
         } else {
             $writer = null;
             $absoluteServiceUri = $service->getHost()->getAbsoluteServiceUri()->getUrlAsString();
-            if ($responseFormat == ResponseFormat::ATOM 
-                || $responseFormat == ResponseFormat::PLAIN_XML
-            ) {
-                if (is_null($odataModelInstance)) {
+            if ($responseFormat == ResponseFormat::ATOM || $responseFormat == ResponseFormat::PLAIN_XML) {
+                if (is_null($entityModel)) {  //TODO: this seems like a weird way to know that the request is for a service document..i'd think we know this some other way
                     $writer = new \POData\Writers\ServiceDocument\Atom\ServiceDocumentWriter(
                         $service->getMetadataQueryProviderWrapper(),
                         $absoluteServiceUri
                     );
                 } else {
                     $isPostV1 = ($requestDescription->getResponseDataServiceVersion()->compare(new Version(1, 0)) == 1);
-                    $writer = new ODataWriter(
-                        $absoluteServiceUri, 
-                        $isPostV1, 
-                        'atom'
-                    );
+                    $writer = new ODataWriter( $absoluteServiceUri, $isPostV1, 'atom' );
                 }
             } else if ($responseFormat == ResponseFormat::JSON) {
-                if (is_null($odataModelInstance)) {
+                if (is_null($entityModel)) {
                     $writer = new \POData\Writers\ServiceDocument\Json\ServiceDocumentWriter(
                         $service->getMetadataQueryProviderWrapper(),
                         $absoluteServiceUri
                     );
                 } else {
                     $isPostV1 = ($requestDescription->getResponseDataServiceVersion()->compare(new Version(1, 0)) == 1);
-                    $writer = new ODataWriter(
-                        $absoluteServiceUri, 
-                        $isPostV1, 
-                        'json'
-                    );
+                    $writer = new ODataWriter( $absoluteServiceUri, $isPostV1, 'json' );
                 }
             }           
-            
-            $responseBody = $writer->writeRequest($odataModelInstance);
+            //TODO: can't we type this down a service document writer somehow..using a ODataWriter factory could help
+            $responseBody = $writer->writeRequest($entityModel);
         }
 
         $service->getHost()->setResponseStatusCode(HttpStatus::CODE_OK);

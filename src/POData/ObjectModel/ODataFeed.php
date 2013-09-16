@@ -46,7 +46,7 @@ class ODataFeed
     /**
      * 
      * Collection of entries under this feed
-     * @var array<ODataEntry>
+     * @var ODataEntry[]
      */
     public $entries;
     /**
