@@ -58,7 +58,7 @@ class Int64 implements IType
         }
         // In PHP there is no difference b/w int and long int. 
         // The postfix 'L' is not valid in PHP
-        $outValue = rtrim($value, 'L');
+        $outValue = rtrim(rtrim($value, 'L'), 'l');
         return true;
     }
 

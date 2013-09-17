@@ -102,8 +102,8 @@ class Binary implements IType
      * 
      * @param mixed $value The binary data
      * 
-     * @return string Hexa decimal represenation of the binary data
-     *                     prefixed with the 'binary'
+     * @return string Hexadecimal representation of the binary data prefixed with the 'binary'
+     *
      */
     public function convertToOData($value)
     {
