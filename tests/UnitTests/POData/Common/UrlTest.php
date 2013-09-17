@@ -37,17 +37,14 @@ class UrlTest extends \PHPUnit_Framework_TestCase
         $urlStr = "http://localhost/NorthwindService.svc/@/./!/Customers('ALFKI')/Orders?\$filter=OrderID eq 123";
         new Url($urlStr);
 
-        $exceptionThrown = false;
+	    $urlStr = "http://localhost/NorthwindService.svc//Customers('ALFKI')/Orders?\$filter=OrderID eq 123";
         try {
-            $urlStr = "http://localhost/NorthwindService.svc//Customers('ALFKI')/Orders?\$filter=OrderID eq 123";
             new Url($urlStr);
+	        $this->fail('An expected UrlFormatException has not been raised');
         } catch (UrlFormatException $exception) {
-            $exceptionThrown = true;
+	         $this->assertEquals("Bad Request - The url '$urlStr' is malformed", $exception->getMessage());
         }
 
-        if (!$exceptionThrown) {
-            $this->fail('An expected UrlFormatException has not been raised');
-        }
 
         $urlStr1 = "http://localhost/NorthwindService.svc";
         $urlStr2 = "http://localhost/NorthwindService.svc/Customers('ALFKI')/Orders";
