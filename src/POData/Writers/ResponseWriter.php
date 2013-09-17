@@ -9,6 +9,8 @@ use POData\ResponseFormat;
 use POData\IService;
 use POData\UriProcessor\RequestDescription;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\RequestTargetKind;
+use POData\Writers\Atom\AtomServiceDocumentWriter;
+use POData\Writers\Json\JsonServiceDocumentWriter;
 use POData\Writers\Metadata\MetadataWriter;
 use POData\Writers\ODataWriter;
 
@@ -26,7 +28,7 @@ class ResponseWriter
      * @param RequestDescription $requestDescription Request description object
      * @param Object             $entityModel OData model instance
      * @param String             $responseContentType Content type of the response
-     * @param String             $responseFormat      Output format
+     * @param ResponseFormat             $responseFormat      Output format
      * 
      * @return void
      */
@@ -35,32 +37,29 @@ class ResponseWriter
         RequestDescription $requestDescription,
         $entityModel,
         $responseContentType, 
-        $responseFormat
+        ResponseFormat $responseFormat
     ) {
         $responseBody = null;
         $dataServiceVersion = $requestDescription->getResponseDataServiceVersion();
-        if ($responseFormat == ResponseFormat::METADATA_DOCUMENT) {
+
+        if ($responseFormat == ResponseFormat::METADATA_DOCUMENT()) {
             // /$metadata
             $writer = new MetadataWriter($service->getMetadataQueryProviderWrapper());
             $responseBody = $writer->writeMetadata();            
             $dataServiceVersion = $writer->getDataServiceVersion();
-        } else if ($responseFormat == ResponseFormat::TEXT) {
+        } else if ($responseFormat == ResponseFormat::TEXT()) {
             // /Customer('ALFKI')/CompanyName/$value
             // /Customers/$count
             $responseBody = utf8_encode($requestDescription->getTargetResult());
-        } else if ($responseFormat == ResponseFormat::BINARY) {
+        } else if ($responseFormat == ResponseFormat::BINARY()) {
             // Binary property or media resource
-            $targetKind = $requestDescription->getTargetKind();
-            if ($targetKind == RequestTargetKind::MEDIA_RESOURCE) {
-                $eTag = $service->getStreamProvider()->getStreamETag(
-                    $requestDescription->getTargetResult(),  
-                    $requestDescription->getResourceStreamInfo()
-                );
+            if ($requestDescription->getTargetKind() == RequestTargetKind::MEDIA_RESOURCE) {
+	            $result = $requestDescription->getTargetResult();
+	            $streamInfo =  $requestDescription->getResourceStreamInfo();
+	            $provider = $service->getStreamProviderWrapper();
+                $eTag = $provider->getStreamETag( $result, $streamInfo );
                 $service->getHost()->setResponseETag($eTag);
-                $responseBody = $service->getStreamProvider()->getReadStream(
-                    $requestDescription->getTargetResult(), 
-                    $requestDescription->getResourceStreamInfo()
-                );
+                $responseBody = $provider->getReadStream( $result, $streamInfo );
             } else {
                 $responseBody = $requestDescription->getTargetResult(); 
             }
@@ -69,31 +68,22 @@ class ResponseWriter
                 $responseContentType = ODataConstants::MIME_APPLICATION_OCTETSTREAM;
             }
             
-        } else {
+        } else if (is_null($entityModel)) {  //TODO: this seems like a weird way to know that the request is for a service document..i'd think we know this some other way
+			$writer = $service->getServiceDocumentWriterFactory()->getWriter($service, $responseFormat);
+	        $responseBody = $writer->getOutput();
+
+        }
+	    else {
             $writer = null;
-            $absoluteServiceUri = $service->getHost()->getAbsoluteServiceUri()->getUrlAsString();
-            if ($responseFormat == ResponseFormat::ATOM || $responseFormat == ResponseFormat::PLAIN_XML) {
-                if (is_null($entityModel)) {  //TODO: this seems like a weird way to know that the request is for a service document..i'd think we know this some other way
-                    $writer = new \POData\Writers\ServiceDocument\Atom\ServiceDocumentWriter(
-                        $service->getMetadataQueryProviderWrapper(),
-                        $absoluteServiceUri
-                    );
-                } else {
-                    $isPostV1 = ($requestDescription->getResponseDataServiceVersion()->compare(new Version(1, 0)) == 1);
-                    $writer = new ODataWriter( $absoluteServiceUri, $isPostV1, 'atom' );
-                }
-            } else if ($responseFormat == ResponseFormat::JSON) {
-                if (is_null($entityModel)) {
-                    $writer = new \POData\Writers\ServiceDocument\Json\ServiceDocumentWriter(
-                        $service->getMetadataQueryProviderWrapper(),
-                        $absoluteServiceUri
-                    );
-                } else {
-                    $isPostV1 = ($requestDescription->getResponseDataServiceVersion()->compare(new Version(1, 0)) == 1);
-                    $writer = new ODataWriter( $absoluteServiceUri, $isPostV1, 'json' );
-                }
-            }           
-            //TODO: can't we type this down a service document writer somehow..using a ODataWriter factory could help
+		    $absoluteServiceUri = $service->getHost()->getAbsoluteServiceUri()->getUrlAsString();
+		    $isPostV1 = ($requestDescription->getResponseDataServiceVersion()->compare(new Version(1, 0)) == 1);
+            if ($responseFormat == ResponseFormat::ATOM() || $responseFormat == ResponseFormat::PLAIN_XML()) {
+				$writer = new ODataWriter( $absoluteServiceUri, $isPostV1, 'atom' );
+            }
+            else if ($responseFormat == ResponseFormat::JSON()) {
+				$writer = new ODataWriter( $absoluteServiceUri, $isPostV1, 'json' );
+            }
+
             $responseBody = $writer->writeRequest($entityModel);
         }
 

@@ -1,22 +1,17 @@
 <?php
 
-namespace POData\Writers\ServiceDocument\Atom;
+namespace POData\Writers\Atom;
 
 use POData\Common\ODataConstants;
 use POData\Providers\MetadataQueryProviderWrapper;
+use POData\Writers\IServiceDocumentWriter;
 
 /**
  * Class ServiceDocumentWriter
  * @package POData\Writers\ServiceDocument\Atom
  */
-class ServiceDocumentWriter
+class AtomServiceDocumentWriter implements IServiceDocumentWriter
 {
-    /**
-     * Writer to which output (Service Document) is sent
-     * 
-     * @var \XMLWriter
-     */
-    private $_xmlWriter;
 
     /**
      * Holds reference to the wrapper over service metadata and query provider implementations
@@ -66,42 +61,39 @@ class ServiceDocumentWriter
     /**
      * Write the service document in Atom format.
      * 
-     * @param Object $dummy Dummy object
-     * 
      * @return string
      */
-    public function writeRequest($dummy)
+    public function getOutput()
     {
-        $this->_xmlWriter = new \XMLWriter();
-        $this->_xmlWriter->openMemory();
+        $writer = new \XMLWriter();
+        $writer->openMemory();
 
-        $this->_xmlWriter->startElementNs(null, ODataConstants::ATOM_PUBLISHING_SERVICE_ELEMENT_NAME, ODataConstants::APP_NAMESPACE);
-        $this->_xmlWriter->writeAttributeNs(ODataConstants::XML_NAMESPACE_PREFIX, ODataConstants::XML_BASE_ATTRIBUTE_NAME, null, $this->_baseUri);
-        $this->_xmlWriter->writeAttributeNs(ODataConstants::XMLNS_NAMESPACE_PREFIX, self::ATOM_NAMESPACE_PREFIX, null, ODataConstants::ATOM_NAMESPACE);
-        $this->_xmlWriter->writeAttributeNs(ODataConstants::XMLNS_NAMESPACE_PREFIX, self::APP_NAMESPACE_PREFIX, null, ODataConstants::APP_NAMESPACE);
+        $writer->startElementNs(null, ODataConstants::ATOM_PUBLISHING_SERVICE_ELEMENT_NAME, ODataConstants::APP_NAMESPACE);
+        $writer->writeAttributeNs(ODataConstants::XML_NAMESPACE_PREFIX, ODataConstants::XML_BASE_ATTRIBUTE_NAME, null, $this->_baseUri);
+        $writer->writeAttributeNs(ODataConstants::XMLNS_NAMESPACE_PREFIX, self::ATOM_NAMESPACE_PREFIX, null, ODataConstants::ATOM_NAMESPACE);
+        $writer->writeAttributeNs(ODataConstants::XMLNS_NAMESPACE_PREFIX, self::APP_NAMESPACE_PREFIX, null, ODataConstants::APP_NAMESPACE);
 
-        $this->_xmlWriter->startElement(ODataConstants::ATOM_PUBLISHING_WORKSPACE_ELEMNT_NAME);
-        $this->_xmlWriter->startElementNs(self::ATOM_NAMESPACE_PREFIX, ODataConstants::ATOM_TITLE_ELELMET_NAME, null);
-        $this->_xmlWriter->text(ODataConstants::ATOM_PUBLISHING_WORKSPACE_DEFAULT_VALUE);
-        $this->_xmlWriter->endElement();
+        $writer->startElement(ODataConstants::ATOM_PUBLISHING_WORKSPACE_ELEMNT_NAME);
+        $writer->startElementNs(self::ATOM_NAMESPACE_PREFIX, ODataConstants::ATOM_TITLE_ELELMET_NAME, null);
+        $writer->text(ODataConstants::ATOM_PUBLISHING_WORKSPACE_DEFAULT_VALUE);
+        $writer->endElement();
         foreach ($this->_metadataQueryProviderWrapper->getResourceSets() as $resourceSetWrapper) {
             //start collection node
-            $this->_xmlWriter->startElement(ODataConstants::ATOM_PUBLISHING_COLLECTION_ELEMENT_NAME);
-            $this->_xmlWriter->writeAttribute(ODataConstants::ATOM_HREF_ATTRIBUTE_NAME, $resourceSetWrapper->getName());
+            $writer->startElement(ODataConstants::ATOM_PUBLISHING_COLLECTION_ELEMENT_NAME);
+            $writer->writeAttribute(ODataConstants::ATOM_HREF_ATTRIBUTE_NAME, $resourceSetWrapper->getName());
             //start title node
-            $this->_xmlWriter->startElementNs(self::ATOM_NAMESPACE_PREFIX, ODataConstants::ATOM_TITLE_ELELMET_NAME, null);
-            $this->_xmlWriter->text($resourceSetWrapper->getName());
+            $writer->startElementNs(self::ATOM_NAMESPACE_PREFIX, ODataConstants::ATOM_TITLE_ELELMET_NAME, null);
+            $writer->text($resourceSetWrapper->getName());
             //end title node
-            $this->_xmlWriter->endElement();
+            $writer->endElement();
             //end collection node
-            $this->_xmlWriter->endElement();
+            $writer->endElement();
         }
 
         //End workspace and service nodes
-        $this->_xmlWriter->endElement();
-        $this->_xmlWriter->endElement();
+        $writer->endElement();
+        $writer->endElement();
 
-        $serviceDocumentInAtom = $this->_xmlWriter->outputMemory(true);
-        return $serviceDocumentInAtom;
+	    return $writer->outputMemory(true);
     }
 }

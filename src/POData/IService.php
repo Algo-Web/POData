@@ -8,6 +8,7 @@ use POData\Configuration\IServiceConfiguration;
 use POData\Providers\Stream\StreamProviderWrapper;
 use POData\OperationContext\IServiceHost;
 use POData\OperationContext\Web\WebOperationContext;
+use POData\Writers\ServiceDocumentWriterFactory;
 
 /**
  * Class IService
@@ -77,4 +78,10 @@ interface IService
      * @return WebOperationContext
      */
     public function getOperationContext();
+
+	/**
+	 * Returns the ServiceDocumentWriterFactory to use when writing the response to a service document request
+	 * @return ServiceDocumentWriterFactory
+	 */
+	public function getServiceDocumentWriterFactory();
 }

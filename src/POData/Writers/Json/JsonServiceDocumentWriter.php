@@ -1,16 +1,17 @@
 <?php
 
-namespace POData\Writers\ServiceDocument\Json;
+namespace POData\Writers\Json;
 
 use POData\Writers\Json\JsonWriter;
 use POData\Common\ODataConstants;
 use POData\Providers\MetadataQueryProviderWrapper;
+use POData\Writers\IServiceDocumentWriter;
 
 /**
  * Class ServiceDocumentWriter
  * @package POData\Writers\ServiceDocument\Json
  */
-class ServiceDocumentWriter
+class JsonServiceDocumentWriter implements IServiceDocumentWriter
 {
     /**
      * Json output writer.
@@ -32,27 +33,21 @@ class ServiceDocumentWriter
      * @param MetadataQueryProviderWrapper $provider Reference to the wrapper over 
      *                                               service metadata and 
      *                                               query provider implementations.
-     * @param string                       $baseUri  Data service base uri from 
-     *                                               which resources 
-     *                                               should be resolved.
      */
-    public function __construct(MetadataQueryProviderWrapper $provider, $baseUri)
+    public function __construct(MetadataQueryProviderWrapper $provider)
     {
         $this->_metadataQueryProviderWrapper = $provider;
-        $this->_writer = new JsonWriter('');
     }
     
     /**
      * Write the service document in JSON format.
      * 
-     * @param Object &$dummy Dummy object
-     * 
      * @return string
      */
-    public function writeRequest(&$dummy)
+    public function getOutput()
     {
-
-        $this->_writer
+	    $writer = new JsonWriter("");
+	    $writer
 	        ->startObjectScope() // { "d" :
 	        ->writeDataWrapper()
 	        ->startObjectScope() // {
@@ -61,15 +56,15 @@ class ServiceDocumentWriter
 	    ;
 
         foreach ($this->_metadataQueryProviderWrapper->getResourceSets() as $resourceSetWrapper) {
-            $this->_writer->writeValue($resourceSetWrapper->getName());
+	        $writer->writeValue($resourceSetWrapper->getName());
         }
 
-        $this->_writer
+	    $writer
 	        ->endScope() // ]
 	        ->endScope() // }
 			->endScope() // }
 		;
 
-        return $this->_writer->getJsonOutput();
+        return $writer->getJsonOutput();
     }  
 }

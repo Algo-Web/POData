@@ -26,6 +26,7 @@ use POData\Writers\ResponseWriter;
 use POData\Providers\Query\IQueryProvider;
 use POData\Providers\Metadata\IMetadataProvider;
 use POData\OperationContext\Web\WebOperationContext;
+use POData\Writers\ServiceDocumentWriterFactory;
 
 /**
  * Class BaseService
@@ -242,6 +243,15 @@ abstract class BaseService implements IRequestHandler, IService
 	 */
 	public abstract function getStreamProviderX();
 
+
+	/**
+	 * Returns the ServiceDocumentWriterFactory to use when writing the response to a service document request
+	 * Implementations can override this to handle custom formats.
+	 * @return ServiceDocumentWriterFactory
+	 */
+	public function getServiceDocumentWriterFactory(){
+		return new ServiceDocumentWriterFactory();
+	}
     /**
      * This method will query and validates for IMetadataProvider and IQueryProvider implementations, invokes
      * BaseService::InitializeService to initialize service specific policies.
@@ -462,7 +472,7 @@ abstract class BaseService implements IRequestHandler, IService
 
         //Note: Response content type can be null for named stream
         if ($hasResponseBody && !is_null($responseContentType)) {
-            if ($responseFormat != ResponseFormat::BINARY) {
+            if ($responseFormat != ResponseFormat::BINARY()) {
                 $responseContentType .= ';charset=utf-8';
             }
         }
@@ -501,7 +511,7 @@ abstract class BaseService implements IRequestHandler, IService
         // The Accept request-header field specifies media types which are 
         // acceptable for the response
         $requestAcceptText = $service->getHost()->getRequestAccept();
-        $responseFormat = ResponseFormat::UNSUPPORTED;
+        $responseFormat = ResponseFormat::UNSUPPORTED();
         $requestTargetKind = $requestDescription->getTargetKind();
 
         if ($requestDescription->isLinkUri()) {
@@ -514,7 +524,7 @@ abstract class BaseService implements IRequestHandler, IService
                 array(ODataConstants::MIME_APPLICATION_XML)
             );
             if (!is_null($responseContentType)) {
-                $responseFormat = ResponseFormat::METADATA_DOCUMENT;
+                $responseFormat = ResponseFormat::METADATA_DOCUMENT();
             }
         } else if ($requestTargetKind == RequestTargetKind::SERVICE_DIRECTORY) {
             $responseContentType = HttpProcessUtility::selectMimeType(
@@ -530,7 +540,7 @@ abstract class BaseService implements IRequestHandler, IService
             }
         } else if ($requestTargetKind == RequestTargetKind::PRIMITIVE_VALUE) {
             $supportedResponseMimeTypes = array(ODataConstants::MIME_TEXTPLAIN);
-            $responseFormat = ResponseFormat::TEXT;
+            $responseFormat = ResponseFormat::TEXT();
             if ($requestDescription->getIdentifier() != '$count') {
                 $projectedProperty = $requestDescription->getProjectedProperty();
                 self::assert(
@@ -548,7 +558,7 @@ abstract class BaseService implements IRequestHandler, IService
                 if ($type instanceof Binary) {
                     $supportedResponseMimeTypes 
                         = array(ODataConstants::MIME_APPLICATION_OCTETSTREAM);
-                    $responseFormat = ResponseFormat::BINARY;
+                    $responseFormat = ResponseFormat::BINARY();
                 }
             }
 
@@ -557,7 +567,7 @@ abstract class BaseService implements IRequestHandler, IService
                 $supportedResponseMimeTypes
             );
             if (is_null($responseContentType)) {
-                $responseFormat = ResponseFormat::UNSUPPORTED;
+                $responseFormat = ResponseFormat::UNSUPPORTED();
             }
         } else if ($requestTargetKind == RequestTargetKind::PRIMITIVE
             || $requestTargetKind == RequestTargetKind::COMPLEX_OBJECT
@@ -587,7 +597,7 @@ abstract class BaseService implements IRequestHandler, IService
                 $responseFormat = self::_getContentFormat($responseContentType);
             }
         } else if ($requestTargetKind == RequestTargetKind::MEDIA_RESOURCE) {
-            $responseFormat = ResponseFormat::BINARY;
+            $responseFormat = ResponseFormat::BINARY();
             if ($requestDescription->isNamedStream() 
                 || $requestDescription->getTargetResourceType()->isMediaLinkEntry()
             ) {
@@ -600,7 +610,7 @@ abstract class BaseService implements IRequestHandler, IService
                 // 1. If the required stream implementation not found
                 // 2. If IDSSP::getStreamContentType returns NULL for MLE 
                 $contentType 
-                    = $service->getStreamProvider()
+                    = $service->getStreamProviderWrapper()
                         ->getStreamContentType(
                             $requestDescription->getTargetResult(), 
                             $streamInfo
@@ -612,7 +622,7 @@ abstract class BaseService implements IRequestHandler, IService
                     );
 
                     if (is_null($responseContentType)) {
-                        $responseFormat = ResponseFormat::UNSUPPORTED;
+                        $responseFormat = ResponseFormat::UNSUPPORTED();
                     }
                 } else {
                     // For NamedStream StreamWrapper::getStreamContentType 
@@ -631,7 +641,7 @@ abstract class BaseService implements IRequestHandler, IService
             }
         }
 
-        if ($responseFormat == ResponseFormat::UNSUPPORTED) {
+        if ($responseFormat == ResponseFormat::UNSUPPORTED()) {
             throw new ODataException( Messages::unsupportedMediaType(), 415 );
         }
 
@@ -648,9 +658,9 @@ abstract class BaseService implements IRequestHandler, IService
     private static function _getContentFormat($mime)
     {
         if (strcasecmp($mime, ODataConstants::MIME_APPLICATION_JSON) === 0) {
-            return ResponseFormat::JSON;
+            return ResponseFormat::JSON();
         } else if (strcasecmp($mime, ODataConstants::MIME_APPLICATION_ATOM) === 0) {
-            return ResponseFormat::ATOM;
+            return ResponseFormat::ATOM();
         } else {
             $flag 
                 = strcasecmp($mime, ODataConstants::MIME_APPLICATION_XML) === 0 ||
@@ -660,7 +670,7 @@ abstract class BaseService implements IRequestHandler, IService
                 $flag, 
                 'expecting application/xml, application/atomsvc+xml or plain/xml, got ' . $mime
             );
-            return ResponseFormat::PLAIN_XML;
+            return ResponseFormat::PLAIN_XML();
         }
     }
 

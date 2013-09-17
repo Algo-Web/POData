@@ -2,7 +2,7 @@
 
 namespace POData\Providers\Stream;
 
-use POData\BaseService;
+use POData\IService;
 use POData\Providers\Metadata\ResourceStreamInfo;
 use POData\OperationContext\ServiceHost;
 use POData\Common\Version;
@@ -20,28 +20,28 @@ class StreamProviderWrapper
     /**
      * Holds reference to the data service instance.
      * 
-     * @var BaseService
+     * @var IService
      */
     private $_service;
 
     /**
-     * Holds reference to the implementation of IStreamProvider
-     * or IStreamProvider2.
+     * Holds reference to the implementation of IStreamProvider or IStreamProvider2.
+     *
      * 
-     * @var IStreamProvider/IStreamProvider2
+     * @var IStreamProvider|IStreamProvider2
      */
     private $_streamProvider;
 
     /**
-     * Used to check whether interface implementor modified repsonse content
-     * type header or not.
+     * Used to check whether interface implementation modified response content type header or not.
+     *
      *
      * @var string|null
      */
     private $_responseContentType;
 
     /**
-     * Used to check whether interface implementor modified etag header or not.
+     * Used to check whether interface implementation modified ETag header or not.
      *
      * @var string|null
      */
@@ -57,11 +57,11 @@ class StreamProviderWrapper
     /**
      * To set reference to the data service instance.
      * 
-     * @param BaseService &$service The data service instance.
+     * @param IService &$service The data service instance.
      * 
      * @return void
      */
-    public function setService(BaseService &$service)
+    public function setService(IService &$service)
     {
         $this->_service = $service;
     }

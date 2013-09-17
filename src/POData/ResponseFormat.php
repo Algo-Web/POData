@@ -1,12 +1,21 @@
 <?php
 
 namespace POData;
+use MyCLabs\Enum\Enum;
 
 /**
  * Class ResponseFormat
  * @package POData
+ *
+ * @method static \POData\ResponseFormat ATOM()
+ * @method static \POData\ResponseFormat BINARY()
+ * @method static \POData\ResponseFormat JSON()
+ * @method static \POData\ResponseFormat METADATA_DOCUMENT()
+ * @method static \POData\ResponseFormat PLAIN_XML()
+ * @method static \POData\ResponseFormat TEXT()
+ * @method static \POData\ResponseFormat UNSUPPORTED()
  */
-class ResponseFormat
+class ResponseFormat extends Enum
 {
     /**
      * The application/atom+xml format.
@@ -14,7 +23,7 @@ class ResponseFormat
      *  (1) Entry
      *      e.g. /Customer('ALFKI')
      */    
-    const ATOM = 1;
+    const ATOM = "Atom";
 
     /**
      * The binary format.
@@ -26,7 +35,7 @@ class ResponseFormat
      *   (3) Stream associated with named stream property
      *       e.g. /Employees(1)/ThimNail_48X48/$value
      */
-    const BINARY = 2;
+    const BINARY = "Binary";
 
     /**
      * The application/json format.
@@ -40,7 +49,7 @@ class ResponseFormat
      *   (3) Service document
      *       e.g. NorthWindServcie.svc?$format=json
      */
-    const JSON = 3;
+    const JSON = "Json";
 
     /**
      * An XML document for CSDL
@@ -48,7 +57,7 @@ class ResponseFormat
      *   (1) Metadata
      *       e.g. NorthWindServcie.svc/$metadata
      */
-    const METADATA_DOCUMENT = 4;
+    const METADATA_DOCUMENT = "Metadata Document";
 
     /**
      * An XML document for primitive complex and bag types
@@ -57,7 +66,7 @@ class ResponseFormat
      *       /Customer('ALFKI')/EMails 
      * 
      */
-    const PLAIN_XML = 5;
+    const PLAIN_XML = "XML";
 
     /**
      * A text-based format.
@@ -67,10 +76,10 @@ class ResponseFormat
      *           /Costomers/$count
      * 
      */
-    const TEXT = 6;
+    const TEXT = "Text";
 
     /**
      * An unsupported format
      */
-    const UNSUPPORTED = 7;
+    const UNSUPPORTED = "Unsupported";
 }
