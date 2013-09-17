@@ -28,7 +28,7 @@ class ResourceSet
     private $_resourceType;
 
     /**
-     * Creates new intstance of ResourceSet
+     * Creates new instance of ResourceSet
      * 
      * @param string       $name         Name of the resource set (entity set)  
      * @param ResourceType $resourceType ResourceType describing the resource 

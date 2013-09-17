@@ -17,7 +17,7 @@ use POData\Common\InvalidOperationException;
 use POData\Common\ODataException;
 
 
-class TestAtomODataWriter extends \PHPUnit_Framework_TestCase
+class AtomODataWriterTest extends \PHPUnit_Framework_TestCase
 {
     protected function setUp()
     {        

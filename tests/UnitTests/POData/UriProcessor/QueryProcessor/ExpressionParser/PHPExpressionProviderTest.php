@@ -34,7 +34,7 @@ use UnitTests\POData\Facets\NorthWind1\Address4;
 use UnitTests\POData\Facets\NorthWind1\Customer2;
 use UnitTests\POData\Facets\NorthWind1\Order2;
 
-class PHPExpressionProviderTest1 extends \PHPUnit_Framework_TestCase
+class PHPExpressionProviderTest extends \PHPUnit_Framework_TestCase
 {
     private $_northWindMetadata;
     

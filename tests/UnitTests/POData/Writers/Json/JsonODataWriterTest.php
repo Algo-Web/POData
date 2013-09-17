@@ -16,7 +16,7 @@ use POData\Writers\ODataWriter;
 use POData\Common\InvalidOperationException;
 use POData\Common\ODataException;
 
-class TestJsonODataWriter extends \PHPUnit_Framework_TestCase
+class JsonODataWriterTest extends \PHPUnit_Framework_TestCase
 {
 	protected function setUp()
 	{

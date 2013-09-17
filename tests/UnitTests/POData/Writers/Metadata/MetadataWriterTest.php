@@ -18,7 +18,7 @@ use POData\Common\Version;
 use UnitTests\POData\Facets\NorthWind2\NorthWindMetadata;
 use POData\Providers\Query\IQueryProvider;
 
-class TestMetadataWriter extends PHPUnit_Framework_TestCase
+class MetadataWriterTest extends PHPUnit_Framework_TestCase
 {
 	/** @var  IQueryProvider */
 	protected $mockQueryProvider;

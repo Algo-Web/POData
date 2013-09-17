@@ -13,11 +13,6 @@ use POData\Writers\IServiceDocumentWriter;
  */
 class JsonServiceDocumentWriter implements IServiceDocumentWriter
 {
-    /**
-     * Json output writer.
-     *      
-     */
-    private $_writer;
 
     /**
      * Holds reference to the wrapper over service metadata and query provider implementations

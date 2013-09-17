@@ -9,7 +9,7 @@ use POData\Common\ODataException;
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 
 
-class PHPExpressionProviderTest extends \PHPUnit_Framework_TestCase
+class ExpressionParser2Test extends \PHPUnit_Framework_TestCase
 {
     private $_northWindMetadata;
     

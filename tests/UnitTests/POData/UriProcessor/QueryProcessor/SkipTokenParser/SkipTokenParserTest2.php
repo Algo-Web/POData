@@ -13,7 +13,7 @@ use POData\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenParser;
 use UnitTests\POData\Facets\NorthWind2\NorthWindMetadata;
 
 
-class TestSkipTokenParser2 extends \PHPUnit_Framework_TestCase
+class SkipTokenParser2Test extends \PHPUnit_Framework_TestCase
 {
     protected function setUp()
     {

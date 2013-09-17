@@ -9,7 +9,7 @@ use POData\Common\ODataException;
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 
 
-class TestKeyDescriptor extends \PHPUnit_Framework_TestCase
+class KeyDescriptorTest extends \PHPUnit_Framework_TestCase
 {
     protected function setUp()
     {        

@@ -21,7 +21,7 @@ use UnitTests\POData\Facets\NorthWind1\Product2;
 
 use POData\Providers\Query\IQueryProvider;
 
-class TestOrderByParser extends \PHPUnit_Framework_TestCase
+class OrderByParserTest extends \PHPUnit_Framework_TestCase
 {
 	/** @var  IQueryProvider */
 	protected $mockQueryProvider;

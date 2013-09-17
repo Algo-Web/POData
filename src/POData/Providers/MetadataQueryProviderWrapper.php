@@ -164,7 +164,7 @@ class MetadataQueryProviderWrapper
      *  Note: Wrapper for IMetadataProvider::getResourceSets method implementation,
      *  This method returns array of ResourceSetWrapper instances but the corresponding IDSMP method returns array of ResourceSet instances
      *
-     *  @return ResourceSetWrapper[] Array of ResourceSetWrapper for ResourceSets which are visible
+     *  @return ResourceSetWrapper[] The ResourceSetWrappers for the visible ResourceSets
      *  @throws ODataException when two resource sets with the same name are encountered
      *
      */
