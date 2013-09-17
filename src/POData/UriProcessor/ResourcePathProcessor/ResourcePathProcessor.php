@@ -40,16 +40,12 @@ class ResourcePathProcessor
             $absoluteRequestUri->getSegments(),
             $absoluteServiceUri->getSegmentCount()
         );
-        $segmentDescriptors = null;
-        try {
-            $segmentDescriptors = SegmentParser::parseRequestUriSegements(
-                $requestUriSegments,
-                $service->getMetadataQueryProviderWrapper(),
-                true
-            );
-        } catch (ODataException $odataException) {
-            throw $odataException;
-        }
+        $segmentDescriptors = SegmentParser::parseRequestUriSegements(
+            $requestUriSegments,
+            $service->getMetadataQueryProviderWrapper(),
+            true
+        );
+
 
         $requestDescription = new RequestDescription(
             $segmentDescriptors,

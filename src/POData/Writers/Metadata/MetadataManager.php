@@ -8,6 +8,7 @@ use POData\Providers\MetadataEdmSchemaVersion;
 use POData\Providers\MetadataQueryProviderWrapper;
 
 use POData\Providers\Metadata\ResourceAssociationType;
+use POData\Providers\Metadata\ResourceProperty;
 
 /**
  * Class MetadataManager
@@ -78,12 +79,8 @@ class MetadataManager
     {
         if (is_null(self::$_metadataManager)) {
             self::$_metadataManager = new MetadataManager($provider);
-            try {
-                self::$_metadataManager->_metadataResourceTypeSet = new MetadataResourceTypeSet($provider);
-                self::$_metadataManager->_metadataAssociationTypeSet = new MetadataAssociationTypeSet($provider);
-            } catch (\Exception $exception) {
-                throw $exception;
-            }
+            self::$_metadataManager->_metadataResourceTypeSet = new MetadataResourceTypeSet($provider);
+            self::$_metadataManager->_metadataAssociationTypeSet = new MetadataAssociationTypeSet($provider);
         }
 
         return  self::$_metadataManager;

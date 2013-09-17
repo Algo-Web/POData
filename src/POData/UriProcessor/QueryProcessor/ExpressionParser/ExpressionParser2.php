@@ -91,12 +91,8 @@ class ExpressionParser2 extends ExpressionParser
         $expressionParser2 = new ExpressionParser2(
             $text, $resourceType, $isCustomExpressionProvider
         );
-        $expressionTree = null;
-        try {
-            $expressionTree = $expressionParser2->parseFilter();
-        } catch (ODataException $odataException) {
-            throw $odataException;
-        }
+        $expressionTree = $expressionParser2->parseFilter();
+
 
         $expressionProcessor = null;
         $expressionAsString = null;
@@ -194,7 +190,7 @@ class ExpressionParser2 extends ExpressionParser
         } else if ($expression instanceof ConstantExpression) {
             return null;
         } else if ($expression instanceof FunctionCallExpression) {
-            return $this->_processFuncationCallNode($expression, $parentExpression);
+            return $this->_processFunctionCallNode($expression, $parentExpression);
         } else if ($expression instanceof LogicalExpression) {
             return $this->_processLogicalNode($expression, $parentExpression);
         } else if ($expression instanceof PropertyAccessExpression) {
@@ -256,7 +252,7 @@ class ExpressionParser2 extends ExpressionParser
      * 
      * @return LogicalExpression|null
      */
-    private function _processFuncationCallNode(FunctionCallExpression $expression, 
+    private function _processFunctionCallNode(FunctionCallExpression $expression,
         $parentExpression
     ) {
         $paramExpressions = $expression->getParamExpressions();

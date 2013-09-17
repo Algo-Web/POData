@@ -438,14 +438,14 @@ class SegmentParser
         $resourceType, $keyPredicate
     ) {
         /**
-         * @var KeyDescriptor
+         * @var KeyDescriptor $keyDescriptor
          */
         $keyDescriptor = null;
         if (!KeyDescriptor::tryParseKeysFromKeyPredicate($keyPredicate, $keyDescriptor)) {
             ODataException::createSyntaxError(Messages::syntaxError());
         }
         
-        // Note: Currenlty WCF Data Service does not support multiple 
+        // Note: Currently WCF Data Service does not support multiple
         // 'Positional values' so Order_Details(10248, 11) is not valid
         if (!$keyDescriptor->isEmpty() 
             && !$keyDescriptor->areNamedValues() 
@@ -456,12 +456,9 @@ class SegmentParser
             );
         }
 
-        try {
-            $keyDescriptor->validate($segment, $resourceType);
+
+        $keyDescriptor->validate($segment, $resourceType);
             
-        } catch (ODataException $exception) {
-            throw $exception;
-        }
 
         return $keyDescriptor;
     }

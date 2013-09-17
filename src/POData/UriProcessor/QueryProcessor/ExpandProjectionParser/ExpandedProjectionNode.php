@@ -6,6 +6,7 @@ use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Common\Messages;
+use POData\Providers\Metadata\ResourceProperty;
 
 /**
  * Class ExpandedProjectionNode

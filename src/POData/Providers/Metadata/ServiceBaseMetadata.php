@@ -370,7 +370,7 @@ class ServiceBaseMetadata implements IMetadataProvider
         {
             $resourceType->getInstanceType()->getProperty($name);
         }
-        catch (ReflectionException $ex)
+        catch (\ReflectionException $ex)
         {
             throw new InvalidOperationException(
                 'Can\'t add a property which does not exist on the instance type.'
@@ -405,22 +405,15 @@ class ServiceBaseMetadata implements IMetadataProvider
         {
             $resourceType->getInstanceType()->getProperty($name);
         }
-        catch (ReflectionException $ex)
+        catch (\ReflectionException $ex)
         {
             throw new InvalidOperationException(
                 'Can\'t add a property which does not exist on the instance type.'
             );
         }
         
-        $primitiveResourceType = null;
-        try 
-        {
-            $primitiveResourceType = ResourceType::getPrimitiveResourceType($typeCode);
-        }
-        catch (InvalidArgumentException $ex)
-        {
-            throw $ex;
-        }
+        $primitiveResourceType = ResourceType::getPrimitiveResourceType($typeCode);
+
 
         if ($isETagProperty && $isBag) {
             throw new InvalidOperationException('Only primitve property can be etag property, bag property cannot be etag property');
@@ -465,7 +458,7 @@ class ServiceBaseMetadata implements IMetadataProvider
         try {
             $resourceType->getInstanceType()->getProperty($name);
                   
-        } catch (ReflectionException $exception) {
+        } catch (\ReflectionException $exception) {
             throw new InvalidOperationException(
                 'Can\'t add a property which does not exist on the instance type.'
             );

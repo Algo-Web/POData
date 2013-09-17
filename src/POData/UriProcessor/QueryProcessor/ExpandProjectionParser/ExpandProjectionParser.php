@@ -252,16 +252,13 @@ class ExpandProjectionParser
                     }
 
                     $orderBy = rtrim($orderBy, ', ');
-                    try {
-                        $internalOrderByInfo = OrderByParser::parseOrderByClause(
-                            $resourceSetWrapper, 
-                            $rt,
-                            $orderBy, 
-                            $this->_providerWrapper
-                        );            
-                    } catch (ODataException $odataException) {
-                        throw $odataException;
-                    }
+                    $internalOrderByInfo = OrderByParser::parseOrderByClause(
+                        $resourceSetWrapper,
+                        $rt,
+                        $orderBy,
+                        $this->_providerWrapper
+                    );
+
                 }
 
                 $node = $currentNode->findNode($expandSubPathSegment);

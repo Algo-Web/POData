@@ -88,12 +88,7 @@ class MetadataWriter
      */
     public function writeMetadata()
     {   
-        try {
-            $this->_metadataManager = MetadataManager::create($this->_metadataQueryproviderWrapper);
-            
-        } catch (\Exception $exception) {
-            throw $exception;
-        }
+       $this->_metadataManager = MetadataManager::create($this->_metadataQueryproviderWrapper);
 
         $this->_dataServiceVersion = new Version(1, 0);
         $edmSchemaVersion = $this->_metadataQueryproviderWrapper->getEdmSchemaVersion();
@@ -101,7 +96,7 @@ class MetadataWriter
         $this->_xmlWriter = new \XMLWriter();
         $this->_xmlWriter->openMemory();
         $this->_xmlWriter->setIndent(4);
-        $this->_writeToplevelElements($this->_dataServiceVersion->toString());
+        $this->_writeTopLevelElements($this->_dataServiceVersion->toString());
         $resourceTypesInContainerNamespace = array();
         $containerNamespace = $this->_metadataQueryproviderWrapper->getContainerNamespace();
         foreach ($this->_metadataManager->getResourceTypesAlongWithNamespace() as $resourceTypeNamespace => $resourceTypesWithName) {
@@ -161,7 +156,7 @@ class MetadataWriter
      * 
      * @return void
      */
-    private function _writeToplevelElements($dataServiceVersion)
+    private function _writeTopLevelElements($dataServiceVersion)
     {
         $this->_xmlWriter->startElementNs(ODataConstants::EDMX_NAMESPACE_PREFIX, ODataConstants::EDMX_ELEMENT, ODataConstants::EDMX_NAMESPACE_1_0);
         $this->_xmlWriter->writeAttribute(ODataConstants::EDMX_VERSION, ODataConstants::EDMX_VERSION_VALUE);
