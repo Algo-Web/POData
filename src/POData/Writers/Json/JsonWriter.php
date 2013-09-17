@@ -128,7 +128,7 @@ class JsonWriter
     public function writeName($name)
     {
         $currentScope = end($this->_scopes);
-        if ($currentScope->type == $this->_scopeType['Object']) {
+        if ($currentScope && $currentScope->type == $this->_scopeType['Object']) {
             if ($currentScope->objectCount != 0) {
                 $this->_writer->writeTrimmed(", ");
             }
