@@ -86,9 +86,7 @@ class ExpressionParser2 extends ExpressionParser
      * @throws ODataException If any error occurs while parsing the odata 
      *                        expression or building the php/custom expression.
      */
-    public static function parseExpression2($text, ResourceType $resourceType,
-                                            IExpressionProvider $expressionProvider
-    ) {
+    public static function parseExpression2($text, ResourceType $resourceType, IExpressionProvider $expressionProvider = null) {
         $isCustomExpressionProvider = !is_null($expressionProvider);
         $expressionParser2 = new ExpressionParser2(
             $text, $resourceType, $isCustomExpressionProvider
