@@ -18,6 +18,7 @@ use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\FunctionCall
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\UnaryExpression;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ExpressionType;
 use POData\UriProcessor\QueryProcessor\FunctionDescription\FunctionDescription;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\IExpressionProvider;
 
 /**
  * Class ExpressionParser2
@@ -85,8 +86,8 @@ class ExpressionParser2 extends ExpressionParser
      * @throws ODataException If any error occurs while parsing the odata 
      *                        expression or building the php/custom expression.
      */
-    public static function parseExpression2($text, ResourceType $resourceType, 
-        $expressionProvider
+    public static function parseExpression2($text, ResourceType $resourceType,
+                                            IExpressionProvider $expressionProvider
     ) {
         $isCustomExpressionProvider = !is_null($expressionProvider);
         $expressionParser2 = new ExpressionParser2(

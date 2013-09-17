@@ -4,6 +4,8 @@ namespace POData\UriProcessor\QueryProcessor\ExpressionParser;
 
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\Type\IType;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ExpressionType;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\PropertyAccessExpression;
 
 /**
  * Class IExpressionProvider
@@ -75,7 +77,7 @@ interface IExpressionProvider
      * Call-back for constant expression
      * 
      * @param IType  $type  The type of constant
-     * @param objetc $value The value of the constant
+     * @param object $value The value of the constant
      * 
      * @return string
      */

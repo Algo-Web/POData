@@ -16,6 +16,7 @@ use POData\Providers\Metadata\MetadataMapping;
 
 use POData\Providers\Query\IQueryProvider;
 use POData\Providers\Metadata\IMetadataProvider;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\IExpressionProvider;
 
 /**
  * Class MetadataQueryProviderWrapper

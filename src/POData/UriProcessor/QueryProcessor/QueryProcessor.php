@@ -225,20 +225,18 @@ class QueryProcessor
         }
 
         if (!is_null($orderBy)) {
-            try {
-                $internalOrderByInfo = OrderByParser::parseOrderByClause(
-                    $this->_requestDescription->getTargetResourceSetWrapper(), 
-                    $targetResourceType, 
-                    $orderBy, 
-                    $this->service->getMetadataQueryProviderWrapper()
-                );
 
-                $this->_requestDescription->setInternalOrderByInfo(
-                    $internalOrderByInfo
-                );
-            } catch (ODataException $odataException) {
-                throw $odataException;
-            }
+            $internalOrderByInfo = OrderByParser::parseOrderByClause(
+                $this->_requestDescription->getTargetResourceSetWrapper(),
+                $targetResourceType,
+                $orderBy,
+                $this->service->getMetadataQueryProviderWrapper()
+            );
+
+            $this->_requestDescription->setInternalOrderByInfo(
+                $internalOrderByInfo
+            );
+
         }
     }
 
@@ -270,17 +268,11 @@ class QueryProcessor
                 );
             }
             $resourceType = $this->_requestDescription->getTargetResourceType();
-            try {
-            	$expressionProvider = $this->service->getMetadataQueryProviderWrapper()->getExpressionProvider();
-                $internalFilterInfo = ExpressionParser2::parseExpression2(
+           	$expressionProvider = $this->service->getMetadataQueryProviderWrapper()->getExpressionProvider();
+            $internalFilterInfo = ExpressionParser2::parseExpression2(
                     $filter, $resourceType, $expressionProvider
-                );
-                $this->_requestDescription->setInternalFilterInfo(
-                    $internalFilterInfo
-                );                
-            } catch (ODataException $odataException) {
-                throw $odataException;
-            }
+            );
+            $this->_requestDescription->setInternalFilterInfo( $internalFilterInfo );
         }
     }
 
