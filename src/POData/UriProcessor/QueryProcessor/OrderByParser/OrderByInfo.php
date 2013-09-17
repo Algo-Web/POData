@@ -70,13 +70,13 @@ class OrderByInfo
         if (!is_null($navigationPropertiesUsedInTheOrderByClause)) {
             if (!is_array($navigationPropertiesUsedInTheOrderByClause)) {
                 throw new \InvalidArgumentException(
-                    Messages::orderByInfoNaviUSedArgumentShouldBeNullOrNonEmptyArray()
+                    Messages::orderByInfoNaviUsedArgumentShouldBeNullOrNonEmptyArray()
                 );
             }
 
             if (empty($navigationPropertiesUsedInTheOrderByClause)) {
                 throw new \InvalidArgumentException(
-                    Messages::orderByInfoNaviUSedArgumentShouldBeNullOrNonEmptyArray()
+                    Messages::orderByInfoNaviUsedArgumentShouldBeNullOrNonEmptyArray()
                 );
             }
         }

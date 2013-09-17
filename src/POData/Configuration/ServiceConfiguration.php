@@ -192,7 +192,7 @@ class ServiceConfiguration implements IServiceConfiguration
     {
         if ($this->_isPageSizeDefined()) {
             throw new InvalidOperationException(
-                Messages::configurationMaxResultAndPageSizeMuctuallyExclusive()
+                Messages::configurationMaxResultAndPageSizeMutuallyExclusive()
             );
         }
 
@@ -309,7 +309,7 @@ class ServiceConfiguration implements IServiceConfiguration
             );
         if ($this->_maxResultsPerCollection != PHP_INT_MAX) {
             throw new InvalidOperationException(
-                Messages::configurationMaxResultAndPageSizeMuctuallyExclusive()
+                Messages::configurationMaxResultAndPageSizeMutuallyExclusive()
             );
         }
 

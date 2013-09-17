@@ -49,7 +49,7 @@ class ResourceAssociationSetEnd
             && !($resourceProperty instanceof ResourceProperty)
         ) {
             throw new \InvalidArgumentException(
-                Messages::resourceAssociationSetPropertyMustBeNullOrInsatnceofResourceProperty(
+                Messages::resourceAssociationSetPropertyMustBeNullOrInstanceofResourceProperty(
                     '$resourceProperty'
                 )
             );

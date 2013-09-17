@@ -62,16 +62,16 @@ class Messages
     }
 
     /**
-     * Format message for an operator's incompactible operands types
+     * Format message for an operator's incompatible operands types
      * 
      * @param string $operator The operator
-     * @param string $str      The operand list seperated by comma
-     * @param string $pos      Position at which operator with incompactible 
-     *                         operands found
+     * @param string $str      The operand list separated by comma
+     * @param string $pos      Position at which operator with incompatible operands found
+     *
      * 
      * @return string The formatted message
      */
-    public static function expressionParserInCompactibleTypes($operator, $str, $pos)
+    public static function expressionParserInCompatibleTypes($operator, $str, $pos)
     {
         return "Operator '$operator' incompatible with operand types $str at position $pos";
     }
@@ -219,11 +219,11 @@ class Messages
      * Format a message to show error when target resource property 
      * argument is not null or instance of ResourceProperty
      * 
-     * @param string $argumentName The nmae of the target resource property argument
+     * @param string $argumentName The name of the target resource property argument
      * 
      * @return string The formatted message
      */
-    public static function resourceAssociationSetPropertyMustBeNullOrInsatnceofResourceProperty($argumentName)
+    public static function resourceAssociationSetPropertyMustBeNullOrInstanceofResourceProperty($argumentName)
     {
         return "The argument '$argumentName' must be either null or instance of 'ResourceProperty";
     }
@@ -282,11 +282,11 @@ class Messages
      * Format a message to show error when target resource property argument is 
      * not null or instance of ResourceProperty
      * 
-     * @param string $argumentName The nmae of the target resource property argument
+     * @param string $argumentName The name of the target resource property argument
      * 
      * @return string The formatted message
      */
-    public static function resourceAssociationTypeEndPropertyMustBeNullOrInsatnceofResourceProperty($argumentName)
+    public static function resourceAssociationTypeEndPropertyMustBeNullOrInstanceofResourceProperty($argumentName)
     {
         return "The argument '$argumentName' must be either null or instance of 'ResourceProperty";
     }
@@ -363,7 +363,7 @@ class Messages
      * 
      * @return string The message
      */
-    public static function configurationMaxResultAndPageSizeMuctuallyExclusive()
+    public static function configurationMaxResultAndPageSizeMutuallyExclusive()
     {
         return 'Specification of \'entity set page size\' is mutually exclusive with the specification of \'maximum result per collection\' in configuration';    
     }
@@ -837,7 +837,7 @@ class Messages
      * KeyDescriptor::_validatedNamedValues before 
      * invoking KeyDescriptor::validate function
      * 
-     * @return The message
+     * @return string The message
      */
     public static function keyDescriptorValidateNotCalled()
     {
@@ -960,7 +960,7 @@ class Messages
     /**
      * A message to show error when no segment follows a link segment
      * 
-     * @return The message
+     * @return string The message
      */
     public static function segmentParserMissingSegmentAfterLink()
     {
@@ -1112,7 +1112,7 @@ class Messages
      * Message to show error when expecting entity or 
      * complex type, but a different type found 
      * 
-     * @return The error message
+     * @return string The error message
      */
     public static function metadataWriterExpectingEntityOrComplexResourceType() 
     {
@@ -1140,7 +1140,7 @@ class Messages
      * 
      * @return string The error message
      */
-    public static function expandedProjectionNodeArgumentTypeShouldbeProjection()
+    public static function expandedProjectionNodeArgumentTypeShouldBeProjection()
     {
         return 'The argument to ExpandedProjectionNode::addNode should be either ProjectionNode or ExpandedProjectionNode';
     }
@@ -1227,7 +1227,7 @@ class Messages
      * Message to show error when parser come across a type which is expected
      * to be Entity type, but actually it is not
      * 
-     * @return The message
+     * @return string The message
      */
     public static function expandProjectionParserUnexpectedPropertyType()
     {
@@ -1252,7 +1252,7 @@ class Messages
      * Message to show error when the orderByPathSegments argument found as
      * not a non-empty array
      * 
-     * @return The message
+     * @return string The message
      */
     public static function orderByInfoPathSegmentsArgumentShouldBeNonEmptyArray()
     {
@@ -1263,9 +1263,9 @@ class Messages
      * Message to show error when the navigationPropertiesUsedInTheOrderByClause
      * argument found as neither null or a non-empty array
      * 
-     * @return The message
+     * @return string The message
      */
-    public static function orderByInfoNaviUSedArgumentShouldBeNullOrNonEmptyArray()
+    public static function orderByInfoNaviUsedArgumentShouldBeNullOrNonEmptyArray()
     {
         return 'The argument navigationPropertiesUsedInTheOrderByClause should be either null or a non-empty array';
     }
@@ -1274,7 +1274,7 @@ class Messages
      * Message to show error when the orderBySubPathSegments argument found as 
      * not a non-empty array
      * 
-     * @return The message
+     * @return string The message
      */
     public static function orderByPathSegmentOrderBySubPathSegmentArgumentShouldBeNonEmptyArray()
     {
@@ -1329,7 +1329,7 @@ class Messages
      * 
      * @return string The formatted message
      */
-    public static function orderbyParserSortByBinaryPropertyNotAllowed($binaryPropertyName)
+    public static function orderByParserSortByBinaryPropertyNotAllowed($binaryPropertyName)
     {
         return "Binary property is not allowed in orderby clause, '$binaryPropertyName'";
     }
@@ -1343,7 +1343,7 @@ class Messages
      * 
      * @return string The formatted message
      */
-    public static function orderbyParserResourceSetReferenceNotAllowed($propertyName, $definedType)
+    public static function orderByParserResourceSetReferenceNotAllowed($propertyName, $definedType)
     {
         return "Navigation property points to a collection cannot be used in orderby clause, The property '$propertyName' defined on type '$definedType' is such a property";
     }
@@ -1388,7 +1388,7 @@ class Messages
      * Message to show error when orderby parser come across a type
      * which is not expected
      * 
-     * @return The message
+     * @return string The message
      */
     public static function orderByParserUnexpectedPropertyType()
     {
@@ -1437,7 +1437,7 @@ class Messages
     /**
      * Message to show error when found empty anscestor list.
      * 
-     * @return The message
+     * @return string The message
      */
     public static function orderByLeafNodeArgumentShouldBeNonEmptyArray()
     {
@@ -1463,9 +1463,9 @@ class Messages
      * 
      * @return string The message
      */
-    public static function anonymousFunctionParameterShouldStartWithDollorSymbol()
+    public static function anonymousFunctionParameterShouldStartWithDollarSymbol()
     {
-        return 'The parameter names in parameter array should start with dollor symbol';
+        return 'The parameter names in parameter array should start with dollar symbol';
     }
 
     /**

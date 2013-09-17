@@ -219,7 +219,7 @@ class OrderByParser
 
                     $type = $resourceProperty->getInstanceType();
                     if ($type instanceof Binary) {
-                        ODataException::createBadRequestError(Messages::orderbyParserSortByBinaryPropertyNotAllowed($resourceProperty->getName()));
+                        ODataException::createBadRequestError(Messages::orderByParserSortByBinaryPropertyNotAllowed($resourceProperty->getName()));
                     }
                 } else if ($resourceProperty->getKind() == ResourcePropertyKind::RESOURCESET_REFERENCE 
                     || $resourceProperty->getKind() == ResourcePropertyKind::RESOURCE_REFERENCE
@@ -244,7 +244,7 @@ class OrderByParser
 
                     if ($resourceProperty->getKind() == ResourcePropertyKind::RESOURCESET_REFERENCE) {
                         ODataException::createBadRequestError(
-                            Messages::orderbyParserResourceSetReferenceNotAllowed(
+                            Messages::orderByParserResourceSetReferenceNotAllowed(
                                 $resourceProperty->getName(), $resourceType->getFullName()
                             )
                         );

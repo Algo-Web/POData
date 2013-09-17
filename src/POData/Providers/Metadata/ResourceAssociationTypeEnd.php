@@ -69,7 +69,7 @@ class ResourceAssociationTypeEnd
             && !($fromProperty instanceof ResourceProperty)
         ) {
             throw new \InvalidArgumentException(
-                Messages::resourceAssociationTypeEndPropertyMustBeNullOrInsatnceofResourceProperty(
+                Messages::resourceAssociationTypeEndPropertyMustBeNullOrInstanceofResourceProperty(
                     '$fromProperty'
                 )
             );
@@ -79,7 +79,7 @@ class ResourceAssociationTypeEnd
             && !($resourceProperty instanceof ResourceProperty)
         ) {
             throw new \InvalidArgumentException(
-                Messages::resourceAssociationTypeEndPropertyMustBeNullOrInsatnceofResourceProperty(
+                Messages::resourceAssociationTypeEndPropertyMustBeNullOrInstanceofResourceProperty(
                     '$$resourceProperty'
                 )
             );

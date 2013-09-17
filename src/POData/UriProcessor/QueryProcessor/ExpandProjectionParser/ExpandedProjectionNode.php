@@ -391,7 +391,7 @@ class ExpandedProjectionNode extends ProjectionNode
             && !($node instanceof ExpandedProjectionNode)
         ) {
             throw new \InvalidArgumentException(
-                Messages::expandedProjectionNodeArgumentTypeShouldbeProjection()
+                Messages::expandedProjectionNodeArgumentTypeShouldBeProjection()
             );
         }
 

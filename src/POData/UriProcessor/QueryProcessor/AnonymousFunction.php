@@ -50,7 +50,7 @@ class AnonymousFunction
         foreach ($this->_parameters as $parameter) {
             if (strpos($parameter, '$') !== 0) {
                 throw new \InvalidArgumentException(
-                    Messages::anonymousFunctionParameterShouldStartWithDollorSymbol()
+                    Messages::anonymousFunctionParameterShouldStartWithDollarSymbol()
                 );
             } 
         }

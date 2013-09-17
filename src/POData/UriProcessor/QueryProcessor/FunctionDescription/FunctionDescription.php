@@ -479,7 +479,7 @@ class FunctionDescription
         }
 
         ODataException::createSyntaxError(
-            Messages::expressionParserInCompactibleTypes(
+            Messages::expressionParserInCompatibleTypes(
                 $expressionToken->Text, 
                 $string, $expressionToken->Position
             )
