@@ -102,13 +102,10 @@ class ExpressionParser2 extends ExpressionParser
         }
         
         $expressionProvider->setResourceType($resourceType);
-        $expressionProcessor = new ExpressionProcessor(
-            $expressionTree,
-            $expressionProvider
-        );
+        $expressionProcessor = new ExpressionProcessor($expressionProvider);
 
         try {
-            $expressionAsString = $expressionProcessor->processExpression();
+            $expressionAsString = $expressionProcessor->processExpression( $expressionTree );
         } catch (\InvalidArgumentException $invalidArgumentException) {
             ODataException::createInternalServerError(
                 $invalidArgumentException->getMessage()

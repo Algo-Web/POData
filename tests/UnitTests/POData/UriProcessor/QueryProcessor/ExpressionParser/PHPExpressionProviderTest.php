@@ -2,29 +2,13 @@
 
 namespace POData\UriProcessor\QueryProcessor\ExpressionParser;
 
-use POData\Providers\Metadata\Type\Int32;
-use POData\Providers\Metadata\Type\Int64;
-use POData\Providers\Metadata\Type\Double;
-use POData\Providers\Metadata\Type\Single;
-use POData\Providers\Metadata\Type\Decimal;
 use POData\Providers\Metadata\Type\DateTime;
 use POData\Providers\Metadata\Type\Binary;
-use POData\Providers\Metadata\Type\String;
-use POData\Providers\Metadata\Type\Navigation;
-use POData\Providers\Metadata\Type\Boolean;
-use POData\Providers\Metadata\Type\Null1;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\PropertyAccessExpression;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ConstantExpression;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ArithmeticExpression;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\LogicalExpression;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\RelationalExpression;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\FunctionCallExpression;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\UnaryExpression;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ExpressionType;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionParser2;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionProcessor;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\PHPExpressionProvider;
 use POData\Common\ODataException;
+use POData\Providers\Metadata\IMetadataProvider;
 
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 //These are in the file loaded by above use statement
@@ -36,11 +20,14 @@ use UnitTests\POData\Facets\NorthWind1\Order2;
 
 class PHPExpressionProviderTest extends \PHPUnit_Framework_TestCase
 {
-    private $_northWindMetadata;
+    /**
+     * @var IMetadataProvider
+     */
+    private $northWindMetadata;
     
     protected function setUp()
     {        
-         $this->_northWindMetadata = NorthWindMetadata::Create();
+         $this->northWindMetadata = NorthWindMetadata::Create();
     }
     
     /**     
@@ -51,162 +38,144 @@ class PHPExpressionProviderTest extends \PHPUnit_Framework_TestCase
         //Relational EQUAL expression with left child as arithmetic expression, the null check should propagte from AE to LE level
         $odataUriExpression = 'Customer/Address/LineNumber add 4 eq 8';
         $parser = new ExpressionParser2($odataUriExpression,
-                        $this->_northWindMetadata->resolveResourceSet('Orders')->getResourceType(),
+                        $this->northWindMetadata->resolveResourceSet('Orders')->getResourceType(),
                         null);
         $expressionTree = $parser->parseFilter();
-        $expressionProcessor = new ExpressionProcessor($expressionTree, new PHPExpressionProvider('$lt'));
-        $actualPHPExpression = $expressionProcessor->processExpression();
+        $expressionProcessor = new ExpressionProcessor(new PHPExpressionProvider('$lt'));
+        $actualPHPExpression = $expressionProcessor->processExpression($expressionTree);
         $expectedPHPExpression = '(((!(is_null($lt->Customer)) && !(is_null($lt->Customer->Address))) && !(is_null($lt->Customer->Address->LineNumber))) && (($lt->Customer->Address->LineNumber + 4) == 8))';
-        $this->AssertEquals($actualPHPExpression, $expectedPHPExpression);
+        $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
 
         //Relational EQUAL expression with both children as arithmetic expression, the null check should propagte from AE to LE level
         $odataUriExpression = 'Customer/Address/LineNumber add Customer/Address/LineNumber2 eq 8';
         $parser->resetParser($odataUriExpression);
-        $expressionProcessor->setExpression($parser->parseFilter());
-        $actualPHPExpression = $expressionProcessor->processExpression();
+        $actualPHPExpression = $expressionProcessor->processExpression($parser->parseFilter());
         $expectedPHPExpression = '((((!(is_null($lt->Customer)) && !(is_null($lt->Customer->Address))) && !(is_null($lt->Customer->Address->LineNumber))) && !(is_null($lt->Customer->Address->LineNumber2))) && (($lt->Customer->Address->LineNumber + $lt->Customer->Address->LineNumber2) == 8))';
-        $this->AssertEquals($actualPHPExpression, $expectedPHPExpression);
+        $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
 
         //Logical AND expression with both child as relational expression, with left relational expressions having arithmetic expression
         //(with nullability check) as children, null check should propagate from AE to RE to LE.
         $odataUriExpression = 'Customer/Address/LineNumber add 2 eq 4 and 6 mul 7 eq 42';
         $parser->resetParser($odataUriExpression);
-        $expressionProcessor->setExpression($parser->parseFilter());
-        $actualPHPExpression = $expressionProcessor->processExpression();
+        $actualPHPExpression = $expressionProcessor->processExpression($parser->parseFilter());
         $expectedPHPExpression = '(((!(is_null($lt->Customer)) && !(is_null($lt->Customer->Address))) && !(is_null($lt->Customer->Address->LineNumber))) && ((($lt->Customer->Address->LineNumber + 2) == 4) && ((6 * 7) == 42)))';
-        $this->AssertEquals($actualPHPExpression, $expectedPHPExpression);
+        $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
 
         //Logical AND expression with both child as relational expression, with right relational expressions having arithmetic expressions
         //(with nullability check) as children, null check should propagate from AE to RE to LE.
         $odataUriExpression = '6 mul 7 eq 42 and Customer/Address/LineNumber add 2 eq 4';
         $parser->resetParser($odataUriExpression);
-        $expressionProcessor->setExpression($parser->parseFilter());
-        $actualPHPExpression = $expressionProcessor->processExpression();
+        $actualPHPExpression = $expressionProcessor->processExpression($parser->parseFilter());
         $expectedPHPExpression = '(((!(is_null($lt->Customer)) && !(is_null($lt->Customer->Address))) && !(is_null($lt->Customer->Address->LineNumber))) && (((6 * 7) == 42) && (($lt->Customer->Address->LineNumber + 2) == 4)))';
-        $this->AssertEquals($actualPHPExpression, $expectedPHPExpression);
+        $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
 
         //Logical AND expression with both child as relational expression, with right and left relational expressions having arithmetic expressions
         //(with nullability check) as children, null check should propagate from both AE to RE to LE.
         $odataUriExpression = 'Customer/Address/LineNumber add 2 eq 4 and Customer/Address/LineNumber2 sub 2 ne 6';
         $parser->resetParser($odataUriExpression);
-        $expressionProcessor->setExpression($parser->parseFilter());
-        $actualPHPExpression = $expressionProcessor->processExpression();
+        $actualPHPExpression = $expressionProcessor->processExpression($parser->parseFilter());
         $expectedPHPExpression = '((((!(is_null($lt->Customer)) && !(is_null($lt->Customer->Address))) && !(is_null($lt->Customer->Address->LineNumber))) && !(is_null($lt->Customer->Address->LineNumber2))) && ((($lt->Customer->Address->LineNumber + 2) == 4) && (($lt->Customer->Address->LineNumber2 - 2) != 6)))';
-        $this->AssertEquals($actualPHPExpression, $expectedPHPExpression);
+        $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
 
         //Logical OR expression with both child as relational expression, with left relational expressions having arithmetic expressions
         //(with nullability check) as children, null check should propagate from AE to RE only not to LE.
         $odataUriExpression = 'Customer/Address/LineNumber add 2 eq 4 or 6 mul 7 eq 42';
         $parser->resetParser($odataUriExpression);
-        $expressionProcessor->setExpression($parser->parseFilter());
-        $actualPHPExpression = $expressionProcessor->processExpression();
+        $actualPHPExpression = $expressionProcessor->processExpression($parser->parseFilter());
         $expectedPHPExpression = '((((!(is_null($lt->Customer)) && !(is_null($lt->Customer->Address))) && !(is_null($lt->Customer->Address->LineNumber))) && (($lt->Customer->Address->LineNumber + 2) == 4)) || ((6 * 7) == 42))';
-        $this->AssertEquals($actualPHPExpression, $expectedPHPExpression);
+        $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
 
         //Logical OR expression with both child as relational expression, with right relational expressions having arithmetic expressions
         //(with nullability check) as children, null check should propagate from AE to RE only not to LE.
         $odataUriExpression = '6 mul 7 eq 42 or Customer/Address/LineNumber add 2 eq 4';
         $parser->resetParser($odataUriExpression);
-        $expressionProcessor->setExpression($parser->parseFilter());
-        $actualPHPExpression = $expressionProcessor->processExpression();
+        $actualPHPExpression = $expressionProcessor->processExpression($parser->parseFilter());
         $expectedPHPExpression = '(((6 * 7) == 42) || (((!(is_null($lt->Customer)) && !(is_null($lt->Customer->Address))) && !(is_null($lt->Customer->Address->LineNumber))) && (($lt->Customer->Address->LineNumber + 2) == 4)))';
-        $this->AssertEquals($actualPHPExpression, $expectedPHPExpression);
+        $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
 
         //Logical OR expression with both child as relational expression, both having relational expression (candidate for nullability check) as children,
         //null check should navigate from AE to RE only not to LE.
         $odataUriExpression = 'Customer/Address/LineNumber add 2 eq 4 or Customer/Address/LineNumber2 sub 2 ne 6';
         $parser->resetParser($odataUriExpression);
-        $expressionProcessor->setExpression($parser->parseFilter());
-        $actualPHPExpression = $expressionProcessor->processExpression();
+        $actualPHPExpression = $expressionProcessor->processExpression($parser->parseFilter());
         $expectedPHPExpression = '((((!(is_null($lt->Customer)) && !(is_null($lt->Customer->Address))) && !(is_null($lt->Customer->Address->LineNumber))) && (($lt->Customer->Address->LineNumber + 2) == 4)) || (((!(is_null($lt->Customer)) && !(is_null($lt->Customer->Address))) && !(is_null($lt->Customer->Address->LineNumber2))) && (($lt->Customer->Address->LineNumber2 - 2) != 6)))';
-        $this->AssertEquals($actualPHPExpression, $expectedPHPExpression);
+        $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
 
         //Relational expression as root
         $odataUriExpression = 'Customer/Address/Address2/IsPrimary eq true';
         $parser->resetParser($odataUriExpression);
-        $expressionProcessor->setExpression($parser->parseFilter());
-        $actualPHPExpression = $expressionProcessor->processExpression();
+        $actualPHPExpression = $expressionProcessor->processExpression($parser->parseFilter());
         $expectedPHPExpression = '((((!(is_null($lt->Customer)) && !(is_null($lt->Customer->Address))) && !(is_null($lt->Customer->Address->Address2))) && !(is_null($lt->Customer->Address->Address2->IsPrimary))) && ($lt->Customer->Address->Address2->IsPrimary == true))';
-        $this->AssertEquals($actualPHPExpression, $expectedPHPExpression);
+        $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
 
         //Logical AND expression without relational expression
         $odataUriExpression = 'Customer/Address/Address2/IsPrimary and Customer/Address/IsValid';
         $parser->resetParser($odataUriExpression);
-        $expressionProcessor->setExpression($parser->parseFilter());
-        $actualPHPExpression = $expressionProcessor->processExpression();
+        $actualPHPExpression = $expressionProcessor->processExpression($parser->parseFilter());
         $expectedPHPExpression = '(((((!(is_null($lt->Customer)) && !(is_null($lt->Customer->Address))) && !(is_null($lt->Customer->Address->Address2))) && !(is_null($lt->Customer->Address->Address2->IsPrimary))) && !(is_null($lt->Customer->Address->IsValid))) && ($lt->Customer->Address->Address2->IsPrimary && $lt->Customer->Address->IsValid))';
-        $this->AssertEquals($actualPHPExpression, $expectedPHPExpression);
+        $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
 
         //Logical OR expression without relational expression
         $odataUriExpression = 'Customer/Address/Address2/IsPrimary or Customer/Address/IsValid';
         $parser->resetParser($odataUriExpression);
-        $expressionProcessor->setExpression($parser->parseFilter());
-        $actualPHPExpression = $expressionProcessor->processExpression();
+        $actualPHPExpression = $expressionProcessor->processExpression($parser->parseFilter());
         $expectedPHPExpression = '(((((!(is_null($lt->Customer)) && !(is_null($lt->Customer->Address))) && !(is_null($lt->Customer->Address->Address2))) && !(is_null($lt->Customer->Address->Address2->IsPrimary))) && $lt->Customer->Address->Address2->IsPrimary) || (((!(is_null($lt->Customer)) && !(is_null($lt->Customer->Address))) && !(is_null($lt->Customer->Address->IsValid))) && $lt->Customer->Address->IsValid))';
-        $this->AssertEquals($actualPHPExpression, $expectedPHPExpression);
+        $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
 
         $odataUriExpression = 'Customer/Address/Address2/IsPrimary le Customer/Address/IsValid';
         $parser->resetParser($odataUriExpression);
-        $expressionProcessor->setExpression($parser->parseFilter());
-        $actualPHPExpression = $expressionProcessor->processExpression();
+        $actualPHPExpression = $expressionProcessor->processExpression($parser->parseFilter());
         $expectedPHPExpression = '(((((!(is_null($lt->Customer)) && !(is_null($lt->Customer->Address))) && !(is_null($lt->Customer->Address->Address2))) && !(is_null($lt->Customer->Address->Address2->IsPrimary))) && !(is_null($lt->Customer->Address->IsValid))) && ($lt->Customer->Address->Address2->IsPrimary <= $lt->Customer->Address->IsValid))';
-        $this->AssertEquals($actualPHPExpression, $expectedPHPExpression);
+        $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
 
         //Relational expression with child as logical expression
         $odataUriExpression = '(Customer/Address/IsValid and true) eq false';
         $parser->resetParser($odataUriExpression);
-        $expressionProcessor->setExpression($parser->parseFilter());
-        $actualPHPExpression = $expressionProcessor->processExpression();
+        $actualPHPExpression = $expressionProcessor->processExpression($parser->parseFilter());
         $expectedPHPExpression = '(((!(is_null($lt->Customer)) && !(is_null($lt->Customer->Address))) && !(is_null($lt->Customer->Address->IsValid))) && (($lt->Customer->Address->IsValid && true) == false))';
-        $this->AssertEquals($actualPHPExpression, $expectedPHPExpression);
+        $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
 
         //Nullability check for property
         $odataUriExpression = 'Customer/Address/IsValid eq null';
         $parser->resetParser($odataUriExpression);
-        $expressionProcessor->setExpression($parser->parseFilter());
-        $actualPHPExpression = $expressionProcessor->processExpression();
+        $actualPHPExpression = $expressionProcessor->processExpression($parser->parseFilter());
         $expectedPHPExpression = '((!(is_null($lt->Customer)) && !(is_null($lt->Customer->Address))) && is_null($lt->Customer->Address->IsValid))';
-        $this->AssertEquals($actualPHPExpression, $expectedPHPExpression);
+        $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
 
         //Property access expression as root
         $odataUriExpression = 'Customer/Address/IsValid';
         $parser->resetParser($odataUriExpression);
-        $expressionProcessor->setExpression($parser->parseFilter());
-        $actualPHPExpression = $expressionProcessor->processExpression();
+        $actualPHPExpression = $expressionProcessor->processExpression($parser->parseFilter());
         $expectedPHPExpression = '(((!(is_null($lt->Customer)) && !(is_null($lt->Customer->Address))) && !(is_null($lt->Customer->Address->IsValid))) && $lt->Customer->Address->IsValid)';
-        $this->AssertEquals($actualPHPExpression, $expectedPHPExpression);
+        $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
 
         //Unary NOT with Relational expressons as child
         $odataUriExpression = 'not(Customer/Address/LineNumber eq 4)';
         $parser->resetParser($odataUriExpression);
-        $expressionProcessor->setExpression($parser->parseFilter());
-        $actualPHPExpression = $expressionProcessor->processExpression();
+        $actualPHPExpression = $expressionProcessor->processExpression($parser->parseFilter());
         $expectedPHPExpression = '(((!(is_null($lt->Customer)) && !(is_null($lt->Customer->Address))) && !(is_null($lt->Customer->Address->LineNumber))) && !(($lt->Customer->Address->LineNumber == 4)))';
-        $this->AssertEquals($actualPHPExpression, $expectedPHPExpression);
+        $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
 
         //Unary NOT with Logical AND expressons as child
         $odataUriExpression = 'not(Customer/Address/LineNumber add 2 eq 4 and true)';
         $parser->resetParser($odataUriExpression);
-        $expressionProcessor->setExpression($parser->parseFilter());
-        $actualPHPExpression = $expressionProcessor->processExpression();
+        $actualPHPExpression = $expressionProcessor->processExpression($parser->parseFilter());
         $expectedPHPExpression = '(((!(is_null($lt->Customer)) && !(is_null($lt->Customer->Address))) && !(is_null($lt->Customer->Address->LineNumber))) && !(((($lt->Customer->Address->LineNumber + 2) == 4) && true)))';
-        $this->AssertEquals($actualPHPExpression, $expectedPHPExpression);
+        $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
 
        //Unary NOT with Logical OR expressons as child
         $odataUriExpression = 'not(Customer/Address/LineNumber add 2 eq 4 or true)';
         $parser->resetParser($odataUriExpression);
-        $expressionProcessor->setExpression($parser->parseFilter());
-        $actualPHPExpression = $expressionProcessor->processExpression();
+        $actualPHPExpression = $expressionProcessor->processExpression($parser->parseFilter());
         $expectedPHPExpression = '!(((((!(is_null($lt->Customer)) && !(is_null($lt->Customer->Address))) && !(is_null($lt->Customer->Address->LineNumber))) && (($lt->Customer->Address->LineNumber + 2) == 4)) || true))';
-        $this->AssertEquals($actualPHPExpression, $expectedPHPExpression);
+        $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
 
         //Logical AND with not as child
         $odataUriExpression = 'not(Customer/Address/IsValid) and true';
         $parser->resetParser($odataUriExpression);
-        $expressionProcessor->setExpression($parser->parseFilter());
-        $actualPHPExpression = $expressionProcessor->processExpression();
+        $actualPHPExpression = $expressionProcessor->processExpression($parser->parseFilter());
         $expectedPHPExpression = '(((!(is_null($lt->Customer)) && !(is_null($lt->Customer->Address))) && !(is_null($lt->Customer->Address->IsValid))) && (!($lt->Customer->Address->IsValid) && true))';
-        $this->AssertEquals($actualPHPExpression, $expectedPHPExpression);
+        $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
             
     }
     
@@ -217,90 +186,79 @@ class PHPExpressionProviderTest extends \PHPUnit_Framework_TestCase
     {
         $odataUriExpression = 'CustomerID ge \'ALFKI\'';
         $parser = new ExpressionParser2($odataUriExpression,
-                        $this->_northWindMetadata->resolveResourceSet('Customers')->getResourceType(),
+                        $this->northWindMetadata->resolveResourceSet('Customers')->getResourceType(),
                         null);
         $expressionTree = $parser->parseFilter();
-        $expressionProcessor = new ExpressionProcessor($expressionTree, new PHPExpressionProvider('$lt'));
-        $actualPHPExpression = $expressionProcessor->processExpression();
+        $expressionProcessor = new ExpressionProcessor(new PHPExpressionProvider('$lt'));
+        $actualPHPExpression = $expressionProcessor->processExpression($expressionTree);
         $expectedPHPExpression = '(!(is_null($lt->CustomerID)) && (strcmp($lt->CustomerID, \'ALFKI\') >= 0))';
-        $this->AssertEquals($actualPHPExpression, $expectedPHPExpression);
+        $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
 
         $odataUriExpression = 'endswith(CustomerID, \'KI\')';
         $parser->resetParser($odataUriExpression);
-        $expressionProcessor->setExpression($parser->parseFilter());
-        $actualPHPExpression = $expressionProcessor->processExpression();
+        $actualPHPExpression = $expressionProcessor->processExpression($parser->parseFilter());
         $expectedPHPExpression = '(!(is_null($lt->CustomerID)) && (strcmp(substr($lt->CustomerID, strlen($lt->CustomerID) - strlen(\'KI\')), \'KI\') === 0))';
-        $this->AssertEquals($actualPHPExpression, $expectedPHPExpression);
+        $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
 
         $odataUriExpression = 'indexof(CustomerID, \'LFK\') eq 2';
         $parser->resetParser($odataUriExpression);
-        $expressionProcessor->setExpression($parser->parseFilter());
-        $actualPHPExpression = $expressionProcessor->processExpression();
+        $actualPHPExpression = $expressionProcessor->processExpression($parser->parseFilter());
         $expectedPHPExpression = '(!(is_null($lt->CustomerID)) && (strpos($lt->CustomerID, \'LFK\') == 2))';
-        $this->AssertEquals($actualPHPExpression, $expectedPHPExpression);
+        $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
 
         $odataUriExpression = 'replace(CustomerID, \'LFK\', \'RTT\') eq \'ARTTI\'';
         $parser->resetParser($odataUriExpression);
-        $expressionProcessor->setExpression($parser->parseFilter());
-        $actualPHPExpression = $expressionProcessor->processExpression();
+        $actualPHPExpression = $expressionProcessor->processExpression($parser->parseFilter());
         $expectedPHPExpression = '(!(is_null($lt->CustomerID)) && (strcmp(str_replace(\'LFK\', \'RTT\', $lt->CustomerID), \'ARTTI\') == 0))';
-        $this->AssertEquals($actualPHPExpression, $expectedPHPExpression);
+        $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
 
         $odataUriExpression = 'startswith(CustomerID, \'AL\')';
         $parser->resetParser($odataUriExpression);
-        $expressionProcessor->setExpression($parser->parseFilter());
-        $actualPHPExpression = $expressionProcessor->processExpression();
+        $actualPHPExpression = $expressionProcessor->processExpression($parser->parseFilter());
         $expectedPHPExpression = '(!(is_null($lt->CustomerID)) && (strpos($lt->CustomerID, \'AL\') === 0))';
-        $this->AssertEquals($actualPHPExpression, $expectedPHPExpression);
+        $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
 
         $odataUriExpression = 'tolower(\'PeRsIsTeNt\') eq \'persistent\'';
         $parser->resetParser($odataUriExpression);
-        $expressionProcessor->setExpression($parser->parseFilter());
-        $actualPHPExpression = $expressionProcessor->processExpression();
+        $actualPHPExpression = $expressionProcessor->processExpression($parser->parseFilter());
         $expectedPHPExpression = '(strcmp(strtolower(\'PeRsIsTeNt\'), \'persistent\') == 0)';
-        $this->AssertEquals($actualPHPExpression, $expectedPHPExpression);
+        $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
 
         $odataUriExpression = 'toupper(\'mICRosoFT\') eq \'MICROSOFT\'';
         $parser->resetParser($odataUriExpression);
-        $expressionProcessor->setExpression($parser->parseFilter());
-        $actualPHPExpression = $expressionProcessor->processExpression();
+        $actualPHPExpression = $expressionProcessor->processExpression($parser->parseFilter());
         $expectedPHPExpression = '(strcmp(strtoupper(\'mICRosoFT\'), \'MICROSOFT\') == 0)';
-        $this->AssertEquals($actualPHPExpression, $expectedPHPExpression);
+        $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
 
         $odataUriExpression = 'trim(\'  ODataPHP Producer   \') eq null';
         $parser->resetParser($odataUriExpression);
-        $expressionProcessor->setExpression($parser->parseFilter());
-        $actualPHPExpression = $expressionProcessor->processExpression();
+        $actualPHPExpression = $expressionProcessor->processExpression($parser->parseFilter());
         $expectedPHPExpression = 'is_null(trim(\'  ODataPHP Producer   \'))';
-        $this->AssertEquals($actualPHPExpression, $expectedPHPExpression);
+        $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
 
         $odataUriExpression = 'substring(\'Red_Black_Tree\', 3) ne \'Black_Tree\'';
         $parser->resetParser($odataUriExpression);
-        $expressionProcessor->setExpression($parser->parseFilter());
-        $actualPHPExpression = $expressionProcessor->processExpression();
+        $actualPHPExpression = $expressionProcessor->processExpression($parser->parseFilter());
         $expectedPHPExpression = '(strcmp(substr(\'Red_Black_Tree\', 3), \'Black_Tree\') != 0)';
-        $this->AssertEquals($actualPHPExpression, $expectedPHPExpression);
+        $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
 
         $odataUriExpression = 'substring(\'Red_Black_Tree\', 3, 5) ne \'Black\'';
         $parser->resetParser($odataUriExpression);
-        $expressionProcessor->setExpression($parser->parseFilter());
-        $actualPHPExpression = $expressionProcessor->processExpression();
+        $actualPHPExpression = $expressionProcessor->processExpression($parser->parseFilter());
         $expectedPHPExpression = '(strcmp(substr(\'Red_Black_Tree\', 3, 5), \'Black\') != 0)';
-        $this->AssertEquals($actualPHPExpression, $expectedPHPExpression);
+        $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
 
         $odataUriExpression = 'substringof(CustomerID, \'MRR\')';
         $parser->resetParser($odataUriExpression);
-        $expressionProcessor->setExpression($parser->parseFilter());
-        $actualPHPExpression = $expressionProcessor->processExpression();
+        $actualPHPExpression = $expressionProcessor->processExpression($parser->parseFilter());
         $expectedPHPExpression = '(!(is_null($lt->CustomerID)) && (strpos(\'MRR\', $lt->CustomerID) !== false))';
-        $this->AssertEquals($actualPHPExpression, $expectedPHPExpression);
+        $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
 
         $odataUriExpression = 'length(\'Red_Black_Tree\') eq 8';
         $parser->resetParser($odataUriExpression);
-        $expressionProcessor->setExpression($parser->parseFilter());
-        $actualPHPExpression = $expressionProcessor->processExpression();
+        $actualPHPExpression = $expressionProcessor->processExpression($parser->parseFilter());
         $expectedPHPExpression = '(strlen(\'Red_Black_Tree\') == 8)';
-        $this->AssertEquals($actualPHPExpression, $expectedPHPExpression);
+        $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
             
     }
     
@@ -311,55 +269,49 @@ class PHPExpressionProviderTest extends \PHPUnit_Framework_TestCase
     {
         $odataUriExpression = 'OrderDate eq datetime\'2010-12-08\'';
         $parser = new ExpressionParser2($odataUriExpression,
-                        $this->_northWindMetadata->resolveResourceSet('Orders')->getResourceType(),
+                        $this->northWindMetadata->resolveResourceSet('Orders')->getResourceType(),
                         null);
         $expressionTree = $parser->parseFilter();
-        $expressionProcessor = new ExpressionProcessor($expressionTree, new PHPExpressionProvider('$lt'));
-        $actualPHPExpression = $expressionProcessor->processExpression();
+        $expressionProcessor = new ExpressionProcessor(new PHPExpressionProvider('$lt'));
+        $actualPHPExpression = $expressionProcessor->processExpression($expressionTree);
         $expectedPHPExpression = '(!(is_null($lt->OrderDate)) && (POData\Providers\Metadata\Type\DateTime::dateTimeCmp($lt->OrderDate, \'2010-12-08\') == 0))';
-        $this->AssertEquals($actualPHPExpression, $expectedPHPExpression);
+        $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
 
         $odataUriExpression = 'OrderDate gt DeliveryDate';
         $parser->resetParser($odataUriExpression);
-        $expressionProcessor->setExpression($parser->parseFilter());
-        $actualPHPExpression = $expressionProcessor->processExpression();
+        $actualPHPExpression = $expressionProcessor->processExpression($parser->parseFilter());
         $expectedPHPExpression = '((!(is_null($lt->OrderDate)) && !(is_null($lt->DeliveryDate))) && (POData\Providers\Metadata\Type\DateTime::dateTimeCmp($lt->OrderDate, $lt->DeliveryDate) > 0))';
-        $this->AssertEquals($actualPHPExpression, $expectedPHPExpression);
+        $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
 
         $odataUriExpression = 'OrderDate eq null';
         $parser->resetParser($odataUriExpression);
-        $expressionProcessor->setExpression($parser->parseFilter());
-        $actualPHPExpression = $expressionProcessor->processExpression();
+        $actualPHPExpression = $expressionProcessor->processExpression($parser->parseFilter());
         $expectedPHPExpression = 'is_null($lt->OrderDate)';
-        $this->AssertEquals($actualPHPExpression, $expectedPHPExpression);
+        $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
 
         $odataUriExpression = 'OrderDate eq null eq true';
         $parser->resetParser($odataUriExpression);
-        $expressionProcessor->setExpression($parser->parseFilter());
-        $actualPHPExpression = $expressionProcessor->processExpression();
+        $actualPHPExpression = $expressionProcessor->processExpression($parser->parseFilter());
         $expectedPHPExpression = '(is_null($lt->OrderDate) == true)';
-        $this->AssertEquals($actualPHPExpression, $expectedPHPExpression);
+        $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
 
         $odataUriExpression = 'year(OrderDate) eq 2010';
         $parser->resetParser($odataUriExpression);
-        $expressionProcessor->setExpression($parser->parseFilter());
-        $actualPHPExpression = $expressionProcessor->processExpression();
+        $actualPHPExpression = $expressionProcessor->processExpression($parser->parseFilter());
         $expectedPHPExpression = '(!(is_null($lt->OrderDate)) && (POData\Providers\Metadata\Type\DateTime::year($lt->OrderDate) == 2010))';
-        $this->AssertEquals($actualPHPExpression, $expectedPHPExpression);
+        $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
 
         $odataUriExpression = 'month(OrderDate) eq month(DeliveryDate)';
         $parser->resetParser($odataUriExpression);
-        $expressionProcessor->setExpression($parser->parseFilter());
-        $actualPHPExpression = $expressionProcessor->processExpression();
+        $actualPHPExpression = $expressionProcessor->processExpression($parser->parseFilter());
         $expectedPHPExpression = '((!(is_null($lt->OrderDate)) && !(is_null($lt->DeliveryDate))) && (POData\Providers\Metadata\Type\DateTime::month($lt->OrderDate) == POData\Providers\Metadata\Type\DateTime::month($lt->DeliveryDate)))';
-        $this->AssertEquals($actualPHPExpression, $expectedPHPExpression);
+        $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
 
         $odataUriExpression = 'month(OrderDate) eq 12 and day(OrderDate) eq 22';
         $parser->resetParser($odataUriExpression);
-        $expressionProcessor->setExpression($parser->parseFilter());
-        $actualPHPExpression = $expressionProcessor->processExpression();
+        $actualPHPExpression = $expressionProcessor->processExpression($parser->parseFilter());
         $expectedPHPExpression = '(!(is_null($lt->OrderDate)) && ((POData\Providers\Metadata\Type\DateTime::month($lt->OrderDate) == 12) && (POData\Providers\Metadata\Type\DateTime::day($lt->OrderDate) == 22)))';
-        $this->AssertEquals($actualPHPExpression, $expectedPHPExpression);
+        $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
             
     }
     
@@ -370,36 +322,35 @@ class PHPExpressionProviderTest extends \PHPUnit_Framework_TestCase
     {
         $odataUriExpression = 'Customer/CustomerGuid eq guid\'05b242e752eb46bd8f0e6568b72cd9a5\'';
         $parser = new ExpressionParser2($odataUriExpression,
-                        $this->_northWindMetadata->resolveResourceSet('Orders')->getResourceType(),
+                        $this->northWindMetadata->resolveResourceSet('Orders')->getResourceType(),
                         null);
         $expressionTree = $parser->parseFilter();
-        $expressionProcessor = new ExpressionProcessor($expressionTree, new PHPExpressionProvider('$lt'));
-        $actualPHPExpression = $expressionProcessor->processExpression();
+        $expressionProcessor = new ExpressionProcessor(new PHPExpressionProvider('$lt'));
+        $actualPHPExpression = $expressionProcessor->processExpression($expressionTree);
         $expectedPHPExpression = '((!(is_null($lt->Customer)) && !(is_null($lt->Customer->CustomerGuid))) && (POData\Providers\Metadata\Type\Guid::guidEqual($lt->Customer->CustomerGuid, \'05b242e752eb46bd8f0e6568b72cd9a5\') == true))';
-        $this->AssertEquals($actualPHPExpression, $expectedPHPExpression);
+        $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
     }
     
     /**     
-     * Test the possilbe math functions defined for filter option
+     * Test the possible math functions defined for filter option
      */
     public function testMathFunctions()
     {
         $odataUriExpression = 'round(Price) eq 200.60';
         $parser = new ExpressionParser2($odataUriExpression,
-                        $this->_northWindMetadata->resolveResourceSet('Orders')->getResourceType(),
+                        $this->northWindMetadata->resolveResourceSet('Orders')->getResourceType(),
                         null);
         $expressionTree = $parser->parseFilter();
-        $expressionProcessor = new ExpressionProcessor($expressionTree, new PHPExpressionProvider('$lt'));
-        $actualPHPExpression = $expressionProcessor->processExpression();
+        $expressionProcessor = new ExpressionProcessor(new PHPExpressionProvider('$lt'));
+        $actualPHPExpression = $expressionProcessor->processExpression($expressionTree);
         $expectedPHPExpression = '(!(is_null($lt->Price)) && (round($lt->Price) == 200.60))';
-        $this->AssertEquals($actualPHPExpression, $expectedPHPExpression);
+        $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
 
         $odataUriExpression = 'ceiling(floor(Price) add 5) eq 345.90';
         $parser->resetParser($odataUriExpression);
-        $expressionProcessor->setExpression($parser->parseFilter());
-        $actualPHPExpression = $expressionProcessor->processExpression();
+        $actualPHPExpression = $expressionProcessor->processExpression($parser->parseFilter());
         $expectedPHPExpression = '(!(is_null($lt->Price)) && (ceil((floor($lt->Price) + 5)) == 345.90))';
-        $this->AssertEquals($actualPHPExpression, $expectedPHPExpression);
+        $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
             
     }
     
@@ -412,71 +363,71 @@ class PHPExpressionProviderTest extends \PHPUnit_Framework_TestCase
         $data = $this->createTestData();
         //Query for Customers with 'L' as second letter of CustomerID
         $result = $this->executeExpression('indexof(CustomerID, \'L\') eq 1',
-                                            $this->_northWindMetadata->resolveResourceSet('Customers')->getResourceType(),
+                                            $this->northWindMetadata->resolveResourceSet('Customers')->getResourceType(),
                                             $data['Customers']);
-        $this->AssertEquals(count($result), 1);
-        $this->AssertEquals($result[0]->CustomerID, 'ALFKI');
+        $this->assertEquals(1, count($result));
+        $this->assertEquals('ALFKI', $result[0]->CustomerID);
 
         //Query for Customers with country as Germany
         $result = $this->executeExpression('Country eq \'Germany\'',
-                                            $this->_northWindMetadata->resolveResourceSet('Customers')->getResourceType(),
+                                            $this->northWindMetadata->resolveResourceSet('Customers')->getResourceType(),
                                             $data['Customers']);
-        $this->AssertEquals(count($result), 2);
-        $this->AssertEquals($result[0]->Country, 'Germany');
-        $this->AssertEquals($result[1]->Country, 'Germany');
+        $this->assertEquals(2, count($result));
+        $this->assertEquals('Germany', $result[0]->Country);
+        $this->assertEquals('Germany', $result[1]->Country);
 
         //Query for Customers with no address
         $result = $this->executeExpression('Address eq null',
-                                            $this->_northWindMetadata->resolveResourceSet('Customers')->getResourceType(),
+                                            $this->northWindMetadata->resolveResourceSet('Customers')->getResourceType(),
                                             $data['Customers']);
-        $this->AssertEquals(count($result), 1);
-        $this->AssertEquals($result[0]->CustomerGuid, '15b242e7-52eb-46bd-8f0e-6568b72cd9a6');
+        $this->assertEquals(1, count($result));
+        $this->assertEquals('15b242e7-52eb-46bd-8f0e-6568b72cd9a6', $result[0]->CustomerGuid);
 
         //Query for Customers with non-primary address
         $result = $this->executeExpression('Address/Address2/IsPrimary eq false',
-                                            $this->_northWindMetadata->resolveResourceSet('Customers')->getResourceType(),
+                                            $this->northWindMetadata->resolveResourceSet('Customers')->getResourceType(),
                                             $data['Customers']);
-        $this->AssertEquals(count($result), 1);
-        $this->AssertEquals($result[0]->CustomerName, 'Ann Devon');
+        $this->assertEquals(1, count($result));
+        $this->assertEquals('Ann Devon', $result[0]->CustomerName);
 
         //Query for Customers with ID 'ALFKI' or 'EASTC'
         $result = $this->executeExpression('CustomerID eq \'ALFKI\' or CustomerID eq \'EASTC\'',
-                                            $this->_northWindMetadata->resolveResourceSet('Customers')->getResourceType(),
+                                            $this->northWindMetadata->resolveResourceSet('Customers')->getResourceType(),
                                             $data['Customers']);
-        $this->AssertEquals(count($result), 2);
-        $this->AssertEquals($result[0]->CustomerID, 'ALFKI');
-        $this->AssertEquals($result[1]->CustomerID, 'EASTC');
+        $this->assertEquals(2, count($result));
+        $this->assertEquals('ALFKI', $result[0]->CustomerID);
+        $this->assertEquals('EASTC', $result[1]->CustomerID);
 
         //Query for Customers with an expression which evaluates to false
         $result = $this->executeExpression('1 add 2 eq 5',
-                                            $this->_northWindMetadata->resolveResourceSet('Customers')->getResourceType(),
+                                            $this->northWindMetadata->resolveResourceSet('Customers')->getResourceType(),
                                             $data['Customers']);
-        $this->AssertEquals(count($result), 0);
+        $this->assertEquals(0, count($result));
 
         //Query for all Orders
         $result = $this->executeExpression('true',
-                                            $this->_northWindMetadata->resolveResourceSet('Orders')->getResourceType(),
+                                            $this->northWindMetadata->resolveResourceSet('Orders')->getResourceType(),
                                             $data['Orders']);
-        $this->AssertEquals(count($result), 5);
+        $this->assertEquals(5, count($result));
 
         //Query for Order with ShipName as 'Speedy Express'
         $result = $this->executeExpression('ShipName eq \'Speedy Express\'',
-                                            $this->_northWindMetadata->resolveResourceSet('Orders')->getResourceType(),
+                                            $this->northWindMetadata->resolveResourceSet('Orders')->getResourceType(),
                                             $data['Orders']);
-        $this->AssertEquals(count($result), 2);
+        $this->assertEquals(2, count($result));
         foreach($result as $order) {
-            $this->AssertEquals($order->ShipName, 'Speedy Express');
+            $this->assertEquals($order->ShipName, 'Speedy Express');
         }
 
         //Query for Order with CustomerID as 'DUMON'
         $result = $this->executeExpression('Customer/CustomerID eq \'DUMON\'',
-                                            $this->_northWindMetadata->resolveResourceSet('Orders')->getResourceType(),
+                                            $this->northWindMetadata->resolveResourceSet('Orders')->getResourceType(),
                                             $data['Orders']);
-        $this->AssertEquals(count($result), 3);
+        $this->assertEquals(3, count($result));
 
         //Query for Orders with year of order as 1999 or 1995
         $result = $this->executeExpression('year(OrderDate) eq 1999 or year(OrderDate) add 4 eq 1999',
-                                            $this->_northWindMetadata->resolveResourceSet('Orders')->getResourceType(),
+                                            $this->northWindMetadata->resolveResourceSet('Orders')->getResourceType(),
                                             $data['Orders']);
         foreach($result as $order) {
             $this->assertContains($order->OrderDate, array(1999, 1995));
@@ -484,7 +435,7 @@ class PHPExpressionProviderTest extends \PHPUnit_Framework_TestCase
 
         //Query for Orders with date greater than 2000-11-11
         $result = $this->executeExpression('OrderDate ge datetime\'2000-11-11\'',
-                                            $this->_northWindMetadata->resolveResourceSet('Orders')->getResourceType(),
+                                            $this->northWindMetadata->resolveResourceSet('Orders')->getResourceType(),
                                             $data['Orders']);
         foreach($result as $order) {
             $this->assertGreaterThanOrEqual(0, DateTime::dateTimeCmp($order->OrderDate, '2000-11-11'));
@@ -492,31 +443,31 @@ class PHPExpressionProviderTest extends \PHPUnit_Framework_TestCase
 
         //Query for Customer using different flavours of guid
         $result = $this->executeExpression('CustomerGuid eq guid\'15b242e7-52eb-46bd-8f0e-6568b72cd9a6\'',
-                                            $this->_northWindMetadata->resolveResourceSet('Customers')->getResourceType(),
+                                            $this->northWindMetadata->resolveResourceSet('Customers')->getResourceType(),
                                             $data['Customers']);
-        $this->AssertEquals(count($result), 1);
+        $this->assertEquals(1, count($result));
         $customer1 = $result[0];
 
         $result = $this->executeExpression('CustomerGuid eq guid\'{15b242e7-52eb-46bd-8f0e-6568b72cd9a6}\'',
-                                            $this->_northWindMetadata->resolveResourceSet('Customers')->getResourceType(),
+                                            $this->northWindMetadata->resolveResourceSet('Customers')->getResourceType(),
                                             $data['Customers']);
-        $this->AssertEquals(count($result), 1);
+        $this->assertEquals(1, count($result));
         $customer2 = $result[0];
 
         $result = $this->executeExpression('CustomerGuid eq guid\'(15b242e7-52eb-46bd-8f0e-6568b72cd9a6)\'',
-                                            $this->_northWindMetadata->resolveResourceSet('Customers')->getResourceType(),
+                                            $this->northWindMetadata->resolveResourceSet('Customers')->getResourceType(),
                                             $data['Customers']);
-        $this->AssertEquals(count($result), 1);
+        $this->assertEquals(1, count($result));
         $customer3 = $result[0];
 
         $result = $this->executeExpression('CustomerGuid eq guid\'15b242e752eb46bd8f0e6568b72cd9a6\'',
-                                            $this->_northWindMetadata->resolveResourceSet('Customers')->getResourceType(),
+                                            $this->northWindMetadata->resolveResourceSet('Customers')->getResourceType(),
                                             $data['Customers']);
-        $this->AssertEquals(count($result), 1);
+        $this->assertEquals(1, count($result));
         $customer4 = $result[0];
-        $this->AssertEquals($customer1->CustomerID, $customer2->CustomerID);
-        $this->AssertEquals($customer3->CustomerID, $customer4->CustomerID);
-        $this->AssertEquals($customer1->CustomerID, $customer4->CustomerID);
+        $this->assertEquals($customer1->CustomerID, $customer2->CustomerID);
+        $this->assertEquals($customer3->CustomerID, $customer4->CustomerID);
+        $this->assertEquals($customer1->CustomerID, $customer4->CustomerID);
             
     }
     
@@ -536,8 +487,8 @@ class PHPExpressionProviderTest extends \PHPUnit_Framework_TestCase
         $parser = new ExpressionParser2($astoriaFilter, $resourceType, null);
         $expressionTree = $parser->parseFilter();
         //emit the PHP expression corresponds to Astoria filter query
-        $expressionProcessor = new ExpressionProcessor($expressionTree, new PHPExpressionProvider('$lt'));
-        $phpExpression = $expressionProcessor->processExpression();
+        $expressionProcessor = new ExpressionProcessor(new PHPExpressionProvider('$lt'));
+        $phpExpression = $expressionProcessor->processExpression($expressionTree);
         //create an anonymous function with the generated PHP expression in if condition
         $fun = create_function('$lt', 'if(' . $phpExpression . ') { return true; } else { return false;}');
         $result = array();
@@ -551,7 +502,19 @@ class PHPExpressionProviderTest extends \PHPUnit_Framework_TestCase
         return $result;
             
     }
-    
+
+    public function testProcessUnknownAbstractExpressionType()
+    {
+        //Currently the expression parser just ignores expression types it doesn't know
+        //TODO: maybe this should throw instead??
+        $unknownExpression = \Phockito::mock('POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\AbstractExpression');
+        $expressionProcessor = new ExpressionProcessor(new PHPExpressionProvider('$lt'));
+        $actual = $expressionProcessor->processExpression($unknownExpression);
+
+        $this->assertNull($actual);
+
+    }
+
     /**
      * Prepare test data.
      * 
@@ -660,7 +623,4 @@ class PHPExpressionProviderTest extends \PHPUnit_Framework_TestCase
         $order->Customer = $customer;
     }
     
-    protected function tearDown()
-    {
-    }
 }
