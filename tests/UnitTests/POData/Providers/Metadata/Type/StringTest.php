@@ -135,6 +135,20 @@ class StringTest extends \PHPUnit_Framework_TestCase {
 
 		$expected = "afaefasevaswee";
 		$this->assertEquals($expected, $actual);
+
+
+        $value = "a";
+        $actual = $type->convert($value);
+
+        $expected = "a";
+        $this->assertEquals($expected, $actual);
+
+
+        $value = "";
+        $actual = $type->convert($value);
+
+        $expected = "";
+        $this->assertEquals($expected, $actual);
 	}
 
 	public function testConvertToOData()
