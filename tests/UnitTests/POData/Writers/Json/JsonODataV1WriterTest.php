@@ -11,9 +11,9 @@ use POData\ObjectModel\ODataMediaLink;
 use POData\ObjectModel\ODataPropertyContent;
 use POData\ObjectModel\ODataProperty;
 use POData\ObjectModel\ODataBagContent;
-use POData\Writers\Json\JsonODataWriter;
+use POData\Writers\Json\JsonODataV1Writer;
 
-class JsonODataWriterTest extends \PHPUnit_Framework_TestCase
+class JsonODataV1WriterTest extends \PHPUnit_Framework_TestCase
 {
 
 	/**
@@ -24,7 +24,7 @@ class JsonODataWriterTest extends \PHPUnit_Framework_TestCase
 	{
 		$oDataUrl = new ODataURL();
 		$oDataUrl->oDataUrl = 'http://services.odata.org/OData/OData.svc/Suppliers(0)';
-		$writer = new JsonODataWriter(true);
+		$writer = new JsonODataV1Writer();
 		$result = $writer->write($oDataUrl);
 		$this->assertSame($writer, $result);
 		
@@ -33,7 +33,7 @@ class JsonODataWriterTest extends \PHPUnit_Framework_TestCase
 		
 		$expectedResult = '{ "d" : {"uri": "http://services.odata.org/OData/OData.svc/Suppliers(0)"} }';
 		$expected = json_decode($expectedResult);
-		$this->assertEquals($expected, $actual);
+		$this->assertEquals(array($expected), array($actual));
 	}
 	
 	/**
@@ -54,7 +54,7 @@ class JsonODataWriterTest extends \PHPUnit_Framework_TestCase
 		                                       $oDataUrl3
 		                                      );
 		$oDataUrlCollection->count = 3;
-		$writer = new JsonODataWriter(true);
+		$writer = new JsonODataV1Writer();
 		$result = $writer->write($oDataUrlCollection);
 		$this->assertSame($writer, $result);
 
@@ -62,8 +62,7 @@ class JsonODataWriterTest extends \PHPUnit_Framework_TestCase
 		//decoding the json string to test
 		$actual = json_decode($writer->getOutput());
 		
-		$expectedResult = '{ "d" : {
-							    "results": [
+		$expectedResult = '{ "d" : [
 							      {
 							        "uri": "http://services.odata.org/OData/OData.svc/Products(0)"
 							      }, 
@@ -73,13 +72,12 @@ class JsonODataWriterTest extends \PHPUnit_Framework_TestCase
 							      {
 							        "uri": "http://services.odata.org/OData/OData.svc/Products(8)"
 							      }
-							    ], 
-							    "__count": "3"
-							} }';
+							    ]
+							}';
 		
 		 $expected = json_decode($expectedResult);
 
-		$this->assertEquals($expected, $actual);                                      
+		$this->assertEquals(array($expected), array($actual));
 	}
 	
 	/**
@@ -151,7 +149,7 @@ class JsonODataWriterTest extends \PHPUnit_Framework_TestCase
 		$oDataFeed->entries = array($entry1);
 		$oDataFeed->isTopLevel = true;
 		
-		$writer = new JsonODataWriter(true);
+		$writer = new JsonODataV1Writer();
 		$result = $writer->write($oDataFeed);
 		$this->assertSame($writer, $result);
 
@@ -159,19 +157,18 @@ class JsonODataWriterTest extends \PHPUnit_Framework_TestCase
 		//decoding the json string to test
 		$actual = json_decode($writer->getOutput());
 		$expectedResult = '{
-						    "d" : {
-						        "results": [
-						            {
-						                "__metadata": {
-						                    "uri": "http://services.odata.org/OData/OData.svc/Categories(0)", "type": "DataServiceProviderDemo.Category"
-						                }, "Products": {
-						                    "__deferred": {
-						                        "uri": "http://services.odata.org/OData/OData.svc/Categories(0)/Products"
-						                    }
-						                }, "ID": 100, "Name": "Food"
-						            }
-						        ], "__count": "3", "__next": "http://services.odata.org/OData/OData.svc$skiptoken=12"
-						    }
+						    "d" : [
+					            {
+					                "__metadata": {
+					                    "uri": "http://services.odata.org/OData/OData.svc/Categories(0)", "type": "DataServiceProviderDemo.Category"
+					                }, "Products": {
+					                    "__deferred": {
+					                        "uri": "http://services.odata.org/OData/OData.svc/Categories(0)/Products"
+					                    }
+					                }, "ID": 100, "Name": "Food"
+					            }
+						    ]
+
 						}';
 		 $expected = json_decode($expectedResult);
 
@@ -375,7 +372,7 @@ class JsonODataWriterTest extends \PHPUnit_Framework_TestCase
 		$oDataFeed->entries = array($entry1, $entry2);
 		$oDataFeed->isTopLevel = true;
 		
-		$writer = new JsonODataWriter(true);
+		$writer = new JsonODataV1Writer();
 		$result = $writer->write($oDataFeed);
 		$this->assertSame($writer, $result);
 
@@ -383,35 +380,33 @@ class JsonODataWriterTest extends \PHPUnit_Framework_TestCase
 		//decoding the json string to test
 		$actual = json_decode($writer->getOutput());
 		$expectedResult = '{
-							"d" : {
-                            "results": [
-							{
-							"__metadata": {
-							"uri": "http://services.odata.org/OData/OData.svc/Suppliers(0)", "etag": "W/\"0\"", "type": "ODataDemo.Supplier"
-							}, "ID": 0, "Name": "Exotic Liquids", "Address": {
-							"__metadata": {
-							"type": "ODataDemo.Address"
-							}, "Street": "NE 228th", "City": "Sammamish", "State": "WA", "ZipCode": "98074", "Country": "USA"
-							}, "Concurrency": 0, "Products": {
-							"__deferred": {
-							"uri": "http://services.odata.org/OData/OData.svc/Suppliers(0)/Products"
-							}
-							}
-							}, {
-							"__metadata": {
-							"uri": "http://services.odata.org/OData/OData.svc/Suppliers(1)", "etag": "W/\"0\"", "type": "ODataDemo.Supplier"
-							}, "ID": 1, "Name": "Tokyo Traders", "Address": {
-							"__metadata": {
-							"type": "ODataDemo.Address"
-							}, "Street": "NE 40th", "City": "Redmond", "State": "WA", "ZipCode": "98052", "Country": "USA"
-							}, "Concurrency": 0, "Products": {
-							"__deferred": {
-							"uri": "http://services.odata.org/OData/OData.svc/Suppliers(1)/Products"
-							}
-							}
-							}
-							], "__count": "3", "__next": "http:\/\/services.odata.org\/OData\/OData.svc$skiptoken=12"
-							}
+							"d" : [
+								{
+								"__metadata": {
+								"uri": "http://services.odata.org/OData/OData.svc/Suppliers(0)", "etag": "W/\"0\"", "type": "ODataDemo.Supplier"
+								}, "ID": 0, "Name": "Exotic Liquids", "Address": {
+								"__metadata": {
+								"type": "ODataDemo.Address"
+								}, "Street": "NE 228th", "City": "Sammamish", "State": "WA", "ZipCode": "98074", "Country": "USA"
+								}, "Concurrency": 0, "Products": {
+								"__deferred": {
+								"uri": "http://services.odata.org/OData/OData.svc/Suppliers(0)/Products"
+								}
+								}
+								}, {
+								"__metadata": {
+								"uri": "http://services.odata.org/OData/OData.svc/Suppliers(1)", "etag": "W/\"0\"", "type": "ODataDemo.Supplier"
+								}, "ID": 1, "Name": "Tokyo Traders", "Address": {
+								"__metadata": {
+								"type": "ODataDemo.Address"
+								}, "Street": "NE 40th", "City": "Redmond", "State": "WA", "ZipCode": "98052", "Country": "USA"
+								}, "Concurrency": 0, "Products": {
+								"__deferred": {
+								"uri": "http://services.odata.org/OData/OData.svc/Suppliers(1)/Products"
+								}
+								}
+								}
+							]
 							}';
 		 $expected = json_decode($expectedResult);
 
@@ -458,7 +453,7 @@ class JsonODataWriterTest extends \PHPUnit_Framework_TestCase
 		
     	$entry->links = array($link);
     	
-    	$writer = new JsonODataWriter(true);
+    	$writer = new JsonODataV1Writer();
 		$result = $writer->write($entry);
 		$this->assertSame($writer, $result);
 
@@ -468,20 +463,20 @@ class JsonODataWriterTest extends \PHPUnit_Framework_TestCase
 		
 		$expectedResult = '{
 							 "d" : {
-							 "results": {
-							"__metadata": {
-							"uri": "http://services.odata.org/OData/OData.svc/Categories(0)", "type": "ODataDemo.Category"
-							}, "ID": 0, "Name": "Food", "Products": {
-							"__deferred": {
-							"uri": "http://services.odata.org/OData/OData.svc/Categories(0)/Products"
-							}
-							}
-							}
-							}
+
+								"__metadata": {
+								"uri": "http://services.odata.org/OData/OData.svc/Categories(0)", "type": "ODataDemo.Category"
+								}, "ID": 0, "Name": "Food", "Products": {
+								"__deferred": {
+								"uri": "http://services.odata.org/OData/OData.svc/Categories(0)/Products"
+								}
+								}
+								}
+
 							}';
 		 $expected = json_decode($expectedResult);
 
-		$this->assertEquals($expected, $actual);
+		$this->assertEquals(array($expected), array($actual));
 		
 	}
 	
@@ -536,7 +531,7 @@ class JsonODataWriterTest extends \PHPUnit_Framework_TestCase
 		
 		$propContent->odataProperty = array($prop1);
 		
-		$writer = new JsonODataWriter(true);
+		$writer = new JsonODataV1Writer();
 		$result = $writer->write($propContent);
 		$this->assertSame($writer, $result);
 
@@ -546,13 +541,11 @@ class JsonODataWriterTest extends \PHPUnit_Framework_TestCase
 		
 		$expectedResult = '{
 							"d" : {
-							"results": {
-							"Address": {
-							"__metadata": {
-							"type": "ODataDemo.Address"
-							}, "Street": "NE 228th", "City": "Sammamish", "State": "WA", "ZipCode": "98074", "Country": "USA"
-							}
-							}
+								"Address": {
+								"__metadata": {
+								"type": "ODataDemo.Address"
+								}, "Street": "NE 228th", "City": "Sammamish", "State": "WA", "ZipCode": "98074", "Country": "USA"
+								}
 							}
 							}';
 		 $expected = json_decode($expectedResult);
@@ -664,7 +657,7 @@ class JsonODataWriterTest extends \PHPUnit_Framework_TestCase
 		
 		$entry->propertyContent = $entryPropContent;
 		
-		$writer = new JsonODataWriter(true);
+		$writer = new JsonODataV1Writer();
 		$result = $writer->write($entry);
 		$this->assertSame($writer, $result);
 
@@ -675,27 +668,25 @@ class JsonODataWriterTest extends \PHPUnit_Framework_TestCase
 		
 	    $expectedResult = '{
 						    "d" : {
-						        "results": {
-						            "__metadata": {
-						                "uri": "http://host/service.svc/Customers(1)", "type": "SampleModel.Customer"
-						            }, "ID": 1, "Name": "mike", "EmailAddresses": {
-						                "__metadata": {
-						                    "type": "Bag(Edm.String)"
-						                }, "results": [
-						                    "mike@foo.com", "mike2@foo.com"
-						                ]
-						            }, "Addresses": {
-						                "__metadata": {
-						                    "type": "Bag(SampleModel.Address)"
-						                }, "results": [
-						                    {
-						                        "Street": "123 contoso street", "Apartment": "508"
-						                    }, {
-						                        "Street": "834 foo street", "Apartment": "102"
-						                    }
-						                ]
-						            }
-						        }
+					            "__metadata": {
+					                "uri": "http://host/service.svc/Customers(1)", "type": "SampleModel.Customer"
+					            }, "ID": 1, "Name": "mike", "EmailAddresses": {
+					                "__metadata": {
+					                    "type": "Bag(Edm.String)"
+					                }, "results": [
+					                    "mike@foo.com", "mike2@foo.com"
+					                ]
+					            }, "Addresses": {
+					                "__metadata": {
+					                    "type": "Bag(SampleModel.Address)"
+					                }, "results": [
+					                    {
+					                        "Street": "123 contoso street", "Apartment": "508"
+					                    }, {
+					                        "Street": "834 foo street", "Apartment": "102"
+					                    }
+					                ]
+					            }
 						    }
 						}';
 	    $expected = json_decode($expectedResult);
@@ -716,7 +707,7 @@ class JsonODataWriterTest extends \PHPUnit_Framework_TestCase
     	$content = new ODataPropertyContent();
     	$content->odataProperty = array($property);
     	$content->isTopLevel = true;
-    	$writer = new JsonODataWriter(true);
+    	$writer = new JsonODataV1Writer();
     	$result = $writer->write($content);
 	    $this->assertSame($writer, $result);
 
@@ -726,9 +717,7 @@ class JsonODataWriterTest extends \PHPUnit_Framework_TestCase
 		
     	$expectedResult = '{
 							    "d" : {
-							        "results": {
 							            "Count": 56
-							        }
 							    }
 							}';
         $expected = json_decode($expectedResult);

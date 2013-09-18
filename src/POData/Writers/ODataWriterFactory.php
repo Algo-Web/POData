@@ -7,7 +7,8 @@ use POData\ResponseFormat;
 use POData\UriProcessor\RequestDescription;
 use POData\Writers\Atom\AtomODataWriter;
 use POData\Common\Messages;
-use POData\Writers\Json\JsonODataWriter;
+use POData\Writers\Json\JsonODataV1Writer;
+use POData\Writers\Json\JsonODataV2Writer;
 use POData\Common\Version;
 use POData\Writers\IODataWriter;
 
@@ -34,7 +35,7 @@ class ODataWriterFactory
 
 		    case ResponseFormat::JSON():
 			    $isPostV1 = ($request->getResponseDataServiceVersion()->compare(new Version(1, 0)) == 1);
-			    return new JsonODataWriter($isPostV1);
+			    return $isPostV1 ? new JsonODataV2Writer() : new JsonODataV1Writer();
 
 			default:
 		        throw new \Exception( Messages::badFormatForResource($format) );

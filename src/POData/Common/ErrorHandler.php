@@ -3,7 +3,7 @@
 namespace POData\Common;
 
 
-use POData\Writers\Json\JsonODataWriter;
+use POData\Writers\Json\JsonODataV2Writer;
 
 use POData\Writers\Atom\AtomODataWriter;
 use POData\BaseService;
@@ -65,7 +65,7 @@ class ErrorHandler
             if (strcasecmp($responseContentType, ODataConstants::MIME_APPLICATION_XML) == 0) {
                 $responseBody = AtomODataWriter::serializeException($exception, true);
             } else {
-                $responseBody = JsonODataWriter::serializeException($exception, true);
+                $responseBody = JsonODataV2Writer::serializeException($exception, true);
             }
 
             $service->getHost()->getWebOperationContext()->outgoingResponse()->setStream($responseBody);

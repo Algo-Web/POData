@@ -20,39 +20,30 @@ use POData\Common\ODataException;
 use POData\Common\InvalidOperationException;
 
 /**
- * Class JsonODataWriter
+ * Class JsonODataV1Writer is a writer for the json format in OData V1
  * @package POData\Writers\Json
  */
-class JsonODataWriter extends BaseODataWriter
+class JsonODataV1Writer extends BaseODataWriter
 {
     /**
      * Json output writer.
      *
      */
-    private $_writer;
-  
-    /**
-     * Odata version.
-     *      
-     */
-    private $_isPostV1;
+    protected $_writer;
   
     /**
      * Constructs and initializes the Json output writer.
      * 
-     * @param Boolean $isPostV1 OData version above to v1 or not
-     * 
      */
-    public function __construct($isPostV1)
+    public function __construct()
     {
         $this->_writer = new JsonWriter('');
-        $this->_isPostV1 = $isPostV1;
     }
   
     /**
      * Enter the top level scope.
      *
-     * @return JsonODataWriter
+     * @return JsonODataV2Writer
      */
     protected function enterTopLevelScope()
     {
@@ -67,7 +58,7 @@ class JsonODataWriter extends BaseODataWriter
     /**
      * Leave the top level scope.
      * 
-     * @return JsonODataWriter
+     * @return JsonODataV2Writer
      */
     protected function leaveTopLevelScope()
     {
@@ -79,7 +70,7 @@ class JsonODataWriter extends BaseODataWriter
     /**
      * @param ODataURL $url OData url to write
      * 
-     * @return JsonODataWriter
+     * @return JsonODataV2Writer
      */
     protected function startUrl(ODataURL $url)
     {
@@ -99,19 +90,11 @@ class JsonODataWriter extends BaseODataWriter
      * 
      * @param ODataURLCollection $urls url collection to write
      * 
-     * @return JsonODataWriter
+     * @return JsonODataV2Writer
      */
     protected function startUrlCollection(ODataURLCollection $urls)
     {
         $this->enterTopLevelScope();
-        if ($this->_isPostV1) {
-            // {
-            $this->_writer->startObjectScope();
-      
-            // Json Format V2:
-            // "__results":
-            $this->_writer->writeDataArrayName();
-        }
         // [
         $this->_writer->startArrayScope();
         foreach ($urls->oDataUrls as $url) {
@@ -130,7 +113,7 @@ class JsonODataWriter extends BaseODataWriter
      *
      * @param ODataFeed $feed Feed to write
      * 
-     * @return JsonODataWriter
+     * @return JsonODataV2Writer
      */
     protected function startFeed(ODataFeed $feed)
     {
@@ -138,13 +121,6 @@ class JsonODataWriter extends BaseODataWriter
             $this->enterTopLevelScope();
         }
     
-        if ($this->_isPostV1) {
-            // {
-            $this->_writer->startObjectScope();
-            // Json Format V2:
-            // "__results":
-            $this->_writer->writeDataArrayName();
-        }
 
         // [
         $this->_writer->startArrayScope();
@@ -157,7 +133,7 @@ class JsonODataWriter extends BaseODataWriter
      *
      * @param ODataFeed $feed Feed to write
      * 
-     * @return JsonODataWriter
+     * @return JsonODataV2Writer
      */
     protected function writeFeedMetadata(ODataFeed $feed)
     {
@@ -169,22 +145,13 @@ class JsonODataWriter extends BaseODataWriter
      *
      * @param ODataFeed $feed Feed to write
      * 
-     * @return JsonODataWriter
+     * @return JsonODataV2Writer
      */
     protected function endFeed(ODataFeed $feed)
     {
         // ]
         $this->_writer->endScope();
     
-        if ($this->_isPostV1) {
-            if ($feed->isTopLevel) {
-                $this->writeRowCount($feed->rowCount);
-            }
-            $this->writeNextPageLink($feed->nextPageLink);
-
-            // }, End object scope for V2
-            $this->_writer->endScope();
-        }
         if ($feed->isTopLevel) {
             $this->leaveTopLevelScope();
         }
@@ -197,21 +164,13 @@ class JsonODataWriter extends BaseODataWriter
      *
      * @param ODataEntry $entry Entry to write
      * 
-     * @return JsonODataWriter
+     * @return JsonODataV2Writer
      */
     protected function startEntry(ODataEntry $entry)
     {
         if ($entry->isTopLevel) {
             $this->enterTopLevelScope();
 
-            if ($this->_isPostV1) {
-                // {
-                $this->_writer->startObjectScope();
-
-                // Json Format V2:
-                // "__results":
-                $this->_writer->writeDataArrayName();
-            }
         }
 
         // {
@@ -225,7 +184,7 @@ class JsonODataWriter extends BaseODataWriter
      *
      * @param ODataEntry $entry Entry to write metadata for.
      * 
-     * @return JsonODataWriter
+     * @return JsonODataV2Writer
      */
     protected function writeEntryMetadata(ODataEntry $entry)
     {
@@ -312,7 +271,7 @@ class JsonODataWriter extends BaseODataWriter
      *
      * @param ODataEntry $entry entry to end
      * 
-     * @return JsonODataWriter
+     * @return JsonODataV2Writer
      */
     protected function endEntry(ODataEntry $entry)
     {
@@ -320,10 +279,6 @@ class JsonODataWriter extends BaseODataWriter
         $this->_writer->endScope();
 
         if ($entry->isTopLevel) {
-            if ($this->_isPostV1) {
-                // }, End object scope for V2
-                $this->_writer->endScope();
-            }
 
             $this->leaveTopLevelScope();
         }
@@ -337,7 +292,7 @@ class JsonODataWriter extends BaseODataWriter
      * @param ODataLink $link Link to write
      * @param Boolean   $isExpanded expanded or not
      * 
-     * @return JsonODataWriter
+     * @return JsonODataV2Writer
      */
     protected function startLink(ODataLink $link, $isExpanded)
     {
@@ -353,7 +308,7 @@ class JsonODataWriter extends BaseODataWriter
      * @param ODataLink $link Link to write
      * @param Boolean   $isExpanded expanded or not
      * 
-     * @return JsonODataWriter
+     * @return JsonODataV2Writer
      */
     protected function writeLinkMetadata(ODataLink $link, $isExpanded)
     {
@@ -376,7 +331,7 @@ class JsonODataWriter extends BaseODataWriter
      *
      * @param Boolean $isExpanded expanded or not
      * 
-     * @return JsonODataWriter
+     * @return JsonODataV2Writer
      */
     protected function endLink($isExpanded)
     {
@@ -393,7 +348,7 @@ class JsonODataWriter extends BaseODataWriter
      *
      * @param int $count Row count value.
      * 
-     * @return JsonODataWriter
+     * @return JsonODataV2Writer
      */
     protected function writeRowCount($count)
     {
@@ -410,14 +365,15 @@ class JsonODataWriter extends BaseODataWriter
      *
      * @param ODataLink $nextPageLinkUri Uri for next page link.
      * 
-     * @return JsonODataWriter
+     * @return JsonODataV2Writer
      */
     protected function writeNextPageLink(ODataLink $nextPageLinkUri = null)
     {
         // "__next" : uri 
         if ($nextPageLinkUri != null) {
-            $this->_writer->writeName(ODataConstants::JSON_NEXT_STRING);
-            $this->_writer->writeValue($nextPageLinkUri->url);
+            $this->_writer
+	            ->writeName(ODataConstants::JSON_NEXT_STRING)
+	            ->writeValue($nextPageLinkUri->url);
         }
 
 	    return $this;
@@ -428,7 +384,7 @@ class JsonODataWriter extends BaseODataWriter
      *
      * @param ODataEntry $entry OData entry to write.
      * 
-     * @return JsonODataWriter
+     * @return JsonODataV2Writer
      */
     public function preWriteProperties(ODataEntry $entry)
     {
@@ -441,20 +397,12 @@ class JsonODataWriter extends BaseODataWriter
      * @param ODataProperty $property property to write.
      * @param Boolean       $isTopLevel     is top level or not.
      * 
-     * @return JsonODataWriter
+     * @return JsonODataV2Writer
      */
     protected function beginWriteProperty(ODataProperty $property, $isTopLevel)
     {
         if ($isTopLevel) {
             $this->enterTopLevelScope();
-            if ($this->_isPostV1) {
-                // {
-                $this->_writer->startObjectScope();
-                // Json Format V2:
-                // "__results":
-                $this->_writer->writeDataArrayName();
-            }
-
             // {
             $this->_writer->startObjectScope();
         }
@@ -469,7 +417,7 @@ class JsonODataWriter extends BaseODataWriter
      *
      * @param ODataProperty $property property to write.
      * 
-     * @return JsonODataWriter
+     * @return JsonODataV2Writer
      */
     protected function beginComplexProperty(ODataProperty $property)
     {
@@ -491,7 +439,7 @@ class JsonODataWriter extends BaseODataWriter
     /**
      * End write complex property.
      *
-     * @return JsonODataWriter
+     * @return JsonODataV2Writer
      */
     protected function endComplexProperty()
     {
@@ -505,7 +453,7 @@ class JsonODataWriter extends BaseODataWriter
      *  
      * @param ODataBagContent $bag bag property to write
      * 
-     * @return JsonODataWriter
+     * @return JsonODataV2Writer
      */
     protected function beginBagPropertyItem(ODataBagContent $bag)
     {
@@ -542,7 +490,7 @@ class JsonODataWriter extends BaseODataWriter
     /**
      * End an item in a collection
      * 
-     * @return JsonODataWriter
+     * @return JsonODataV2Writer
      */
     protected function endBagPropertyItem()
     {
@@ -556,7 +504,7 @@ class JsonODataWriter extends BaseODataWriter
      * 
      * @param ODataURL $url OData url to end
      * 
-     * @return JsonODataWriter
+     * @return JsonODataV2Writer
      */
     protected function endUrl(ODataURL $url)
     {
@@ -568,19 +516,12 @@ class JsonODataWriter extends BaseODataWriter
      * 
      * @param ODataURLCollection $urls odata url collection to end
      * 
-     * @return JsonODataWriter
+     * @return JsonODataV2Writer
      */
     protected function endUrlCollection(ODataURLCollection $urls)
     {
         // ]
         $this->_writer->endScope();
-
-        if ($this->_isPostV1) {
-            $this->writeRowCount($urls->count);
-            $this->writeNextPageLink($urls->nextPageLink);
-            // }, End object scope for V2
-            $this->_writer->endScope();
-        }
 
         return $this->leaveTopLevelScope();
     }
@@ -590,17 +531,13 @@ class JsonODataWriter extends BaseODataWriter
      *
      * @param ODataPropertyContent $property kind of operation to end
      * 
-     * @return JsonODataWriter
+     * @return JsonODataV2Writer
      */
     protected function endWriteProperty(ODataPropertyContent $property)
     {   
         if ($property->isTopLevel) {
             // }
             $this->_writer->endScope();
-            if ($this->_isPostV1) {
-                // }
-                $this->_writer->endScope();
-            }
 
             $this->leaveTopLevelScope();
         }
@@ -613,7 +550,7 @@ class JsonODataWriter extends BaseODataWriter
      *
      * @param ODataEntry $entry OData entry
      *
-     * @return JsonODataWriter
+     * @return JsonODataV2Writer
      */
     public function postWriteProperties(ODataEntry $entry)
     {
@@ -625,7 +562,7 @@ class JsonODataWriter extends BaseODataWriter
      *
      * @param ODataProperty $property odata property
      *
-     * @return JsonODataWriter
+     * @return JsonODataV2Writer
      */
     protected function writeNullValue(ODataProperty $property)
     {
@@ -680,7 +617,7 @@ class JsonODataWriter extends BaseODataWriter
      *
      * @param ODataProperty $property value to convert.
      * 
-     * @return JsonODataWriter
+     * @return JsonODataV2Writer
      */
     protected function writePrimitiveValue(ODataProperty $property)
     {

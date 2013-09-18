@@ -10,7 +10,8 @@ use POData\Common\Url;
 use POData\Providers\MetadataQueryProviderWrapper;
 use POData\ResponseFormat;
 use POData\Writers\Atom\AtomODataWriter;
-use POData\Writers\Json\JsonODataWriter;
+use POData\Writers\Json\JsonODataV1Writer;
+use POData\Writers\Json\JsonODataV2Writer;
 use POData\Writers\ODataWriterFactory;
 use UnitTests\POData\BaseUnitTestCase;
 use POData\UriProcessor\RequestDescription;
@@ -236,7 +237,7 @@ class ODataWriterFactoryTest extends  BaseUnitTestCase {
 		$factory = new ODataWriterFactory();
 
 		$result = $factory->getWriter($this->mockService, $this->mockRequest, ResponseFormat::JSON());
-		$this->assertTrue($result instanceof JsonODataWriter);
+		$this->assertTrue($result instanceof JsonODataV1Writer);
 	}
 
 
@@ -265,7 +266,7 @@ class ODataWriterFactoryTest extends  BaseUnitTestCase {
 		$factory = new ODataWriterFactory();
 
 		$result = $factory->getWriter($this->mockService, $this->mockRequest, ResponseFormat::JSON());
-		$this->assertTrue($result instanceof JsonODataWriter);
+		$this->assertTrue($result instanceof JsonODataV2Writer);
 	}
 
 	public function testGetWriterJsonVersion3()
@@ -292,7 +293,7 @@ class ODataWriterFactoryTest extends  BaseUnitTestCase {
 		$factory = new ODataWriterFactory();
 
 		$result = $factory->getWriter($this->mockService, $this->mockRequest, ResponseFormat::JSON());
-		$this->assertTrue($result instanceof JsonODataWriter);
+		$this->assertTrue($result instanceof JsonODataV2Writer);
 	}
 
 
