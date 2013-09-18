@@ -40,12 +40,10 @@ class JsonODataWriter extends BaseODataWriter
     /**
      * Constructs and initializes the Json output writer.
      * 
-     * @param String  $absoluteServiceUri Absolute url
-     * @param Boolean $isPostV1           OData version above to v1 or not
+     * @param Boolean $isPostV1 OData version above to v1 or not
      * 
-     * @return Void
      */
-    public function __construct($absoluteServiceUri, $isPostV1)
+    public function __construct($isPostV1)
     {
         $this->_writer = new JsonWriter('');
         $this->_isPostV1 = $isPostV1;
@@ -59,8 +57,9 @@ class JsonODataWriter extends BaseODataWriter
     protected function enterTopLevelScope()
     {
         // { "d" :
-        $this->_writer->startObjectScope();
-        $this->_writer->writeDataWrapper();
+        $this->_writer
+	        ->startObjectScope()
+            ->writeDataWrapper();
     }
   
     /**
@@ -82,13 +81,12 @@ class JsonODataWriter extends BaseODataWriter
     protected function startUrl(ODataURL $url)
     {
         $this->enterTopLevelScope();
-        $this->_writer->startObjectScope();
-      
-        $this->_writer->writeName(ODataConstants::JSON_URI_STRING);
-        $this->_writer->writeValue($url->oDataUrl);
-      
-        $this->_writer->endScope();
-        $this->_writer->endScope();
+        $this->_writer
+	        ->startObjectScope()
+            ->writeName(ODataConstants::JSON_URI_STRING)
+	        ->writeValue($url->oDataUrl)
+	        ->endScope()
+	        ->endScope();
     }
     
     /** 
@@ -444,17 +442,17 @@ class JsonODataWriter extends BaseODataWriter
      */
     protected function beginComplexProperty(ODataProperty $property)
     {
-        // {
-        $this->_writer->startObjectScope();
 
-        // __metadata : { Type : "typename" }
-        $this->_writer->writeName(ODataConstants::JSON_METADATA_STRING);
-        $this->_writer->startObjectScope();
+        $this->_writer
+	        // {
+	        ->startObjectScope()
 
-        $this->_writer->writeName(ODataConstants::JSON_TYPE_STRING);
-        $this->_writer->writeValue($property->typeName);
-
-        $this->_writer->endScope();
+	        // __metadata : { Type : "typename" }
+	        ->writeName(ODataConstants::JSON_METADATA_STRING)
+	        ->startObjectScope()
+	        ->writeName(ODataConstants::JSON_TYPE_STRING)
+	        ->writeValue($property->typeName)
+	        ->endScope();
     }
   
     /**
@@ -654,7 +652,7 @@ class JsonODataWriter extends BaseODataWriter
      *
      * @return string
      */
-    protected function getOutput()
+    public function getOutput()
     {
         return $this->_writer->getJsonOutput();
     }

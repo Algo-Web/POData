@@ -11,18 +11,11 @@ use POData\ObjectModel\ODataMediaLink;
 use POData\ObjectModel\ODataPropertyContent;
 use POData\ObjectModel\ODataProperty;
 use POData\ObjectModel\ODataBagContent;
-use POData\Writers\json\JsonODataWriter;
-use POData\Writers\ODataWriter;
-use POData\Common\InvalidOperationException;
-use POData\Common\ODataException;
+use POData\Writers\Json\JsonODataWriter;
 
 class JsonODataWriterTest extends \PHPUnit_Framework_TestCase
 {
-	protected function setUp()
-	{
-		
-	}
-	
+
 	/**
 	 * 
 	 * Testing write url 
@@ -31,15 +24,15 @@ class JsonODataWriterTest extends \PHPUnit_Framework_TestCase
 	{
 		$oDataUrl = new ODataURL();
 		$oDataUrl->oDataUrl = 'http://services.odata.org/OData/OData.svc/Suppliers(0)';
-		$oWriter = new ODataWriter('http://localhost/NorthWind.svc', true, 'json');
-		$result = $oWriter->writeRequest($oDataUrl);
+		$writer = new JsonODataWriter(true);
+		$writer->write($oDataUrl);
 		
 		//decoding the json string to test, there is no json string comparison in php unit
-		$resultObj = json_decode($result);
+		$actual = json_decode($writer->getOutput());
 		
 		$expectedResult = '{ "d" : {"uri": "http://services.odata.org/OData/OData.svc/Suppliers(0)"} }';
-		$expectedResultObj = json_decode($expectedResult);
-		$this->assertEquals($resultObj, $expectedResultObj);
+		$expected = json_decode($expectedResult);
+		$this->assertEquals($expected, $actual);
 	}
 	
 	/**
@@ -60,11 +53,11 @@ class JsonODataWriterTest extends \PHPUnit_Framework_TestCase
 		                                       $oDataUrl3
 		                                      );
 		$oDataUrlCollection->count = 3;
-		$oWriter = new ODataWriter('http://localhost/NorthWind.svc', true, 'json');
-		$result = $oWriter->writeRequest($oDataUrlCollection);
+		$writer = new JsonODataWriter(true);
+		$writer->write($oDataUrlCollection);
 	
 		//decoding the json string to test
-		$resultObj = json_decode($result);
+		$actual = json_decode($writer->getOutput());
 		
 		$expectedResult = '{ "d" : {
 							    "results": [
@@ -81,9 +74,9 @@ class JsonODataWriterTest extends \PHPUnit_Framework_TestCase
 							    "__count": "3"
 							} }';
 		
-		$expectedResultObj = json_decode($expectedResult);
-		
-		$this->assertEquals($resultObj, $expectedResultObj);                                       
+		 $expected = json_decode($expectedResult);
+
+		$this->assertEquals($expected, $actual);                                      
 	}
 	
 	/**
@@ -155,11 +148,11 @@ class JsonODataWriterTest extends \PHPUnit_Framework_TestCase
 		$oDataFeed->entries = array($entry1);
 		$oDataFeed->isTopLevel = true;
 		
-		$oWriter = new ODataWriter('http://localhost/NorthWind.svc', true, 'json');
-		$result = $oWriter->writeRequest($oDataFeed);
+		$writer = new JsonODataWriter(true);
+		$writer->write($oDataFeed);
 		
 		//decoding the json string to test
-		$resultObj = json_decode($result);
+		$actual = json_decode($writer->getOutput());
 		$expectedResult = '{
 						    "d" : {
 						        "results": [
@@ -175,9 +168,9 @@ class JsonODataWriterTest extends \PHPUnit_Framework_TestCase
 						        ], "__count": "3", "__next": "http://services.odata.org/OData/OData.svc$skiptoken=12"
 						    }
 						}';
-		$expectedResultObj = json_decode($expectedResult);
-		
-		$this->assertEquals($resultObj, $expectedResultObj); 
+		 $expected = json_decode($expectedResult);
+
+		$this->assertEquals($expected, $actual); 
 	}
 	
 	/**
@@ -377,11 +370,11 @@ class JsonODataWriterTest extends \PHPUnit_Framework_TestCase
 		$oDataFeed->entries = array($entry1, $entry2);
 		$oDataFeed->isTopLevel = true;
 		
-		$oWriter = new ODataWriter('http://localhost/NorthWind.svc', true, 'json');
-		$result = $oWriter->writeRequest($oDataFeed);
+		$writer = new JsonODataWriter(true);
+		$writer->write($oDataFeed);
 		
 		//decoding the json string to test
-		$resultObj = json_decode($result);
+		$actual = json_decode($writer->getOutput());
 		$expectedResult = '{
 							"d" : {
                             "results": [
@@ -413,9 +406,9 @@ class JsonODataWriterTest extends \PHPUnit_Framework_TestCase
 							], "__count": "3", "__next": "http:\/\/services.odata.org\/OData\/OData.svc$skiptoken=12"
 							}
 							}';
-		$expectedResultObj = json_decode($expectedResult);
-		
-		$this->assertEquals($resultObj, $expectedResultObj);
+		 $expected = json_decode($expectedResult);
+
+		$this->assertEquals($expected, $actual);
 	}
 	
 	/**
@@ -458,11 +451,11 @@ class JsonODataWriterTest extends \PHPUnit_Framework_TestCase
 		
     	$entry->links = array($link);
     	
-    	$oWriter = new ODataWriter('http://localhost/NorthWind.svc', true, 'json');
-		$result = $oWriter->writeRequest($entry);
+    	$writer = new JsonODataWriter(true);
+		$writer->write($entry);
 		
 		//decoding the json string to test
-		$resultObj = json_decode($result);
+		$actual = json_decode($writer->getOutput());
 		
 		$expectedResult = '{
 							 "d" : {
@@ -477,9 +470,9 @@ class JsonODataWriterTest extends \PHPUnit_Framework_TestCase
 							}
 							}
 							}';
-		$expectedResultObj = json_decode($expectedResult);
-		
-		$this->assertEquals($resultObj, $expectedResultObj);
+		 $expected = json_decode($expectedResult);
+
+		$this->assertEquals($expected, $actual);
 		
 	}
 	
@@ -534,11 +527,11 @@ class JsonODataWriterTest extends \PHPUnit_Framework_TestCase
 		
 		$propContent->odataProperty = array($prop1);
 		
-		$oWriter = new ODataWriter('http://localhost/NorthWind.svc', true, 'json');
-		$result = $oWriter->writeRequest($propContent);
+		$writer = new JsonODataWriter(true);
+		$writer->write($propContent);
 		
 		//decoding the json string to test
-		$resultObj = json_decode($result);
+		$actual = json_decode($writer->getOutput());
 		
 		$expectedResult = '{
 							"d" : {
@@ -551,9 +544,9 @@ class JsonODataWriterTest extends \PHPUnit_Framework_TestCase
 							}
 							}
 							}';
-		$expectedResultObj = json_decode($expectedResult);
+		 $expected = json_decode($expectedResult);
 		
-		$this->assertEquals($resultObj, $expectedResultObj);
+		$this->assertEquals($expected, $actual);
 	}
 	
 	/**
@@ -660,12 +653,12 @@ class JsonODataWriterTest extends \PHPUnit_Framework_TestCase
 		
 		$entry->propertyContent = $entryPropContent;
 		
-		$oWriter = new ODataWriter('http://localhost/NorthWind.svc', true, 'json');
-		$result = $oWriter->writeRequest($entry);
+		$writer = new JsonODataWriter(true);
+		$writer->write($entry);
 		
 		
 		//decoding the json string to test
-		$resultObj = json_decode($result);
+		$actual = json_decode($writer->getOutput());
 		
 	    $expectedResult = '{
 						    "d" : {
@@ -692,9 +685,9 @@ class JsonODataWriterTest extends \PHPUnit_Framework_TestCase
 						        }
 						    }
 						}';
-	   $expectedResultObj = json_decode($expectedResult);
-		
-	   $this->assertEquals(array($expectedResultObj), array($resultObj));
+	    $expected = json_decode($expectedResult);
+
+		$this->assertEquals($expected, $actual);
 	}
 	
     /** 
@@ -702,20 +695,19 @@ class JsonODataWriterTest extends \PHPUnit_Framework_TestCase
      */
     function testPrimitiveProperty(){
     	
-    	$odataProperty = new ODataProperty();
-    	$odataProperty->name = "Count";
-    	$odataProperty->typeName = 'Edm.Int16';
-    	$odataProperty->value = 56;
+    	$property = new ODataProperty();
+    	$property->name = "Count";
+    	$property->typeName = 'Edm.Int16';
+    	$property->value = 56;
 
-    	$propCont = new ODataPropertyContent();
-    	$propCont->odataProperty = array($odataProperty);
-    	$propCont->isTopLevel = true;
-    	$odataPropertyContent = $propCont;
-    	$oWriter = new ODataWriter('http://localhost/NorthWind.svc', true, 'json');
-    	$result = $oWriter->writeRequest($odataPropertyContent);
+    	$content = new ODataPropertyContent();
+    	$content->odataProperty = array($property);
+    	$content->isTopLevel = true;
+    	$writer = new JsonODataWriter(true);
+    	$writer->write($content);
     	
     	//decoding the json string to test
-		$resultObj = json_decode($result);
+	    $actual = json_decode($writer->getOutput());
 		
     	$expectedResult = '{
 							    "d" : {
@@ -724,9 +716,9 @@ class JsonODataWriterTest extends \PHPUnit_Framework_TestCase
 							        }
 							    }
 							}';
-       $expectedResultObj = json_decode($expectedResult);
-		
-	   $this->assertEquals($resultObj, $expectedResultObj); 
+        $expected = json_decode($expectedResult);
+
+	    $this->assertEquals($expected, $actual); 
     }
      
 }

@@ -7,9 +7,6 @@ use POData\Common\UrlFormatException;
 
 class UrlTest extends \PHPUnit_Framework_TestCase
 {
-    protected function setUp()
-    {     
-    }
 
     public function testUrl()
     {
@@ -85,7 +82,4 @@ class UrlTest extends \PHPUnit_Framework_TestCase
 
     }
 
-    protected function tearDown()
-    {
-    }
 }

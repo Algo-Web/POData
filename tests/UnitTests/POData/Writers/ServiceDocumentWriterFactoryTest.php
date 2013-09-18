@@ -62,7 +62,7 @@ class ServiceDocumentWriterFactoryTest extends  BaseUnitTestCase {
 
 	}
 
-	public function testGetWriterPlanXML()
+	public function testGetWriterPlainXML()
 	{
 		Phockito::when($this->mockService->getMetadataQueryProviderWrapper())
 			->return($this->mockProvider);

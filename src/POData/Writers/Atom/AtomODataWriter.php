@@ -32,18 +32,22 @@ class AtomODataWriter extends BaseODataWriter
      */
     public $xmlWriter;
 
+	/**
+	 *
+	 * The service base uri
+	 * @var string
+	 */
+	protected $baseUri;
 
     /**
      * Construct a new instance of AtomODataWriter.
      * 
      * @param string  $absoluteServiceUri The absolute service Uri.
-     * @param boolean $isPostV1           True if the server used version 
-     *                                    greater than 1 to generate the 
-     *                                    object model instance, False otherwise. 
      */
-    public function __construct($absoluteServiceUri, $isPostV1)
+    public function __construct($absoluteServiceUri)
     {
-        parent::__construct($absoluteServiceUri, $isPostV1);
+	    $this->baseUri = $absoluteServiceUri;
+
         $this->xmlWriter = new \XMLWriter();
         $this->xmlWriter->openMemory();
         $this->xmlWriter->startDocument('1.0', 'UTF-8', 'yes');
@@ -133,10 +137,7 @@ class AtomODataWriter extends BaseODataWriter
             $feed->title
         );
         $this->writeNodeValue(ODataConstants::ATOM_ID_ELEMENT_NAME, $feed->id);
-        $this->writeNodeValue(
-            ODataConstants::ATOM_UPDATED_ELEMENT_NAME, 
-            date(DATE_ATOM)
-        );
+        $this->writeNodeValue(ODataConstants::ATOM_UPDATED_ELEMENT_NAME, date(DATE_ATOM) );
         $this->writeLinkNode($feed->selfLink, false);
         if ($feed->rowCount != null) {
             $this->xmlWriter->startElementNs(

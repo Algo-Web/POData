@@ -27,6 +27,7 @@ use POData\Providers\Query\IQueryProvider;
 use POData\Providers\Metadata\IMetadataProvider;
 use POData\OperationContext\Web\WebOperationContext;
 use POData\Writers\ServiceDocumentWriterFactory;
+use POData\Writers\ODataWriterFactory;
 
 /**
  * Class BaseService
@@ -252,6 +253,17 @@ abstract class BaseService implements IRequestHandler, IService
 	public function getServiceDocumentWriterFactory(){
 		return new ServiceDocumentWriterFactory();
 	}
+
+	/**
+	 * Returns the ODataWriterFactory to use when writing the response to a service document request
+	 * Implementations can override this to handle custom formats.
+	 * @return ODataWriterFactory
+	 */
+	public function getODataWriterFactory(){
+		return new ODataWriterFactory();
+	}
+
+
     /**
      * This method will query and validates for IMetadataProvider and IQueryProvider implementations, invokes
      * BaseService::InitializeService to initialize service specific policies.
@@ -797,18 +809,11 @@ abstract class BaseService implements IRequestHandler, IService
       
             $value = null; 
             try {
-                $reflectionProperty 
-                    = new \ReflectionProperty(
-                        $entryObject, 
-                        $eTagProperty->getName()
-                    );
+                $reflectionProperty  = new \ReflectionProperty($entryObject, $eTagProperty->getName() );
                 $value = $reflectionProperty->getValue($entryObject);
             } catch (\ReflectionException $reflectionException) {
-                throw ODataException::createInternalServerError(
-                    Messages::failedToAccessProperty(
-                        $eTagProperty->getName(), 
-                        $resourceType->getName()
-                    )
+                ODataException::createInternalServerError(
+                    Messages::failedToAccessProperty($eTagProperty->getName(), $resourceType->getName() )
                 );
             }
 

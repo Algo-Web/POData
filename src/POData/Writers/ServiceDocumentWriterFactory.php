@@ -31,11 +31,8 @@ class ServiceDocumentWriterFactory {
 				$serviceBaseAbsoluteURI = $service->getHost()->getAbsoluteServiceUri()->getUrlAsString();
 				return new AtomServiceDocumentWriter($service->getMetadataQueryProviderWrapper(), $serviceBaseAbsoluteURI);
 
-				break;
-
 			case ResponseFormat::JSON():
 				return new JsonServiceDocumentWriter($service->getMetadataQueryProviderWrapper());
-				break;
 
 			default:
 				throw new \Exception( Messages::badFormatForServiceDocument($format) );

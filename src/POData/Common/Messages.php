@@ -2261,4 +2261,18 @@ class Messages
 	{
 		return "The requested format of " . $requestedFormat . " is not supported for service documents";
 	}
+
+
+	/**
+	 * Formats a message to show when the resource is requested with an invalid format
+	 *
+	 * @param ResponseFormat $requestedFormat the format that was requested
+	 * @return string the formatted message
+	 */
+	public static function badFormatForResource(ResponseFormat $requestedFormat)
+	{
+		return "The requested format of " . $requestedFormat . " is not supported for the identified resource";
+	}
+
+
 }

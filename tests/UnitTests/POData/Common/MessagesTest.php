@@ -196,6 +196,7 @@ class MessagesTest extends BaseUnitTestCase {
 			'hostMalFormedBaseUriInConfig',
 			'hostRequestUriIsNotBasedOnRelativeUriInConfig',
 			'badFormatForServiceDocument',
+			'badFormatForResource',
 		);
 
 		$this->assertEquals($expected, $actual, "You probably added a message without a corresponding test!");
@@ -206,5 +207,11 @@ class MessagesTest extends BaseUnitTestCase {
 	{
 
 		$this->assertEquals("The requested format of Atom is not supported for service documents", Messages::badFormatForServiceDocument(ResponseFormat::ATOM()));
+	}
+
+
+	public function testBadFormatForResource()
+	{
+		$this->assertEquals("The requested format of Atom is not supported for the identified resource", Messages::badFormatForResource(ResponseFormat::ATOM()));
 	}
 }

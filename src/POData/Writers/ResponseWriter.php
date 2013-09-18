@@ -4,15 +4,13 @@ namespace POData\Writers;
 
 use POData\Common\HttpStatus;
 use POData\Common\ODataConstants;
-use POData\Common\Version;
 use POData\ResponseFormat;
 use POData\IService;
 use POData\UriProcessor\RequestDescription;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\RequestTargetKind;
-use POData\Writers\Atom\AtomServiceDocumentWriter;
-use POData\Writers\Json\JsonServiceDocumentWriter;
 use POData\Writers\Metadata\MetadataWriter;
-use POData\Writers\ODataWriter;
+
+
 
 
 /**
@@ -26,7 +24,7 @@ class ResponseWriter
      * 
      * @param IService        $service
      * @param RequestDescription $requestDescription Request description object
-     * @param Object             $entityModel OData model instance
+     * @param mixed $entityModel OData model instance
      * @param String             $responseContentType Content type of the response
      * @param ResponseFormat             $responseFormat      Output format
      * 
@@ -71,20 +69,11 @@ class ResponseWriter
         } else if (is_null($entityModel)) {  //TODO: this seems like a weird way to know that the request is for a service document..i'd think we know this some other way
 			$writer = $service->getServiceDocumentWriterFactory()->getWriter($service, $responseFormat);
 	        $responseBody = $writer->getOutput();
-
         }
 	    else {
-            $writer = null;
-		    $absoluteServiceUri = $service->getHost()->getAbsoluteServiceUri()->getUrlAsString();
-		    $isPostV1 = ($requestDescription->getResponseDataServiceVersion()->compare(new Version(1, 0)) == 1);
-            if ($responseFormat == ResponseFormat::ATOM() || $responseFormat == ResponseFormat::PLAIN_XML()) {
-				$writer = new ODataWriter( $absoluteServiceUri, $isPostV1, 'atom' );
-            }
-            else if ($responseFormat == ResponseFormat::JSON()) {
-				$writer = new ODataWriter( $absoluteServiceUri, $isPostV1, 'json' );
-            }
-
-            $responseBody = $writer->writeRequest($entityModel);
+            $writer = $service->getODataWriterFactory()->getWriter($service, $requestDescription, $responseFormat);
+		    $writer->write($entityModel);
+            $responseBody = $writer->getOutput();
         }
 
         $service->getHost()->setResponseStatusCode(HttpStatus::CODE_OK);

@@ -12,16 +12,26 @@ use POData\ObjectModel\ODataPropertyContent;
 use POData\ObjectModel\ODataProperty;
 use POData\ObjectModel\ODataBagContent;
 use POData\Writers\Atom\AtomODataWriter;
-use POData\Writers\ODataWriter;
-use POData\Common\InvalidOperationException;
-use POData\Common\ODataException;
 
 
 class AtomODataWriterTest extends \PHPUnit_Framework_TestCase
 {
-    protected function setUp()
-    {        
-    }
+	/**
+	 * Removes the updated tag from an XML string
+	 * IE <updated>2013-09-17T19:22:33-06:00</updated>
+	 * @param $xml
+	 */
+	public function removeUpdatedTags($xml)
+	{
+		$start = strpos($xml, '<updated>');
+		while($start !== false)
+		{
+			$xml = substr($xml, 0, $start) . substr($xml, $start + 9  + 25 + 10);
+			$start = strpos($xml, '<updated>');
+		}
+		return $xml;
+	}
+
 	/**
 	 * Test for write top level URI item.
 	 */
@@ -30,13 +40,22 @@ class AtomODataWriterTest extends \PHPUnit_Framework_TestCase
     	$url = "http://www.odata.org/developers/protocols/atom-format";
 		$odataURLItem = new ODataURL();
 		$odataURLItem->oDataUrl = $url;
-		$oWriter= new ODataWriter('http://localhost/NorthWind.svc', true, 'atom');
-		$result = $oWriter->writeRequest($odataURLItem);
-		$expected = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+	    $writer = new AtomODataWriter('http://localhost/NorthWind.svc');
+		$writer->write($odataURLItem);
+
+	    $actual = $writer->getOutput();
+
+	    $expected = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 		<uri xmlns="http://schemas.microsoft.com/ado/2007/08/dataservices">http://www.odata.org/developers/protocols/atom-format</uri>';
-		//$this->assertXmlStringEqualsXmlString($result, $expected);		
+
+	    $this->assertXmlStringEqualsXmlString($expected, $actual);
+
     }
-    
+
+
+
+
 	/**
 	 * Test for write top level Collection of URL item.
 	 */
@@ -59,9 +78,13 @@ class AtomODataWriterTest extends \PHPUnit_Framework_TestCase
     	
     	$odataURLItem->nextPageLink = $nextPageLink;
 		$odataURLItem->count = 10;
-		$oWriter = new ODataWriter('http://localhost/NorthWind.svc', true, 'atom');
-		$result = $oWriter->writeRequest($odataURLItem);
-		$expected = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+	    $writer = new AtomODataWriter('http://localhost/NorthWind.svc');
+		$writer->write($odataURLItem);
+	    
+	    $actual = $writer->getOutput();
+
+	    $expected = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <links xmlns="http://schemas.microsoft.com/ado/2007/08/dataservices" 
 xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
  <m:count>10</m:count>
@@ -69,7 +92,8 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
  <uri>http://www.odata.org/developers/protocols/json-format</uri>
  <link rel="Next" href="Next Link Url"/>
 </links>';
-		//$this->assertXmlStringEqualsXmlString($result, $expected);  		
+
+	    $this->assertXmlStringEqualsXmlString($expected, $actual);
     }
     
 	/**
@@ -77,9 +101,9 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 	 */
 	public function testWriteFeed()
     {
-    	$odataFeedItem = new ODataFeed();
-    	$odataFeedItem->id = 'Feed Id';
-    	$odataFeedItem->rowCount = 'Count';
+    	$feed = new ODataFeed();
+    	$feed->id = 'Feed Id';
+    	$feed->rowCount = 'Count';
     	
     	$selfLink = new ODataLink ();
     	$selfLink->name = "Self Link Name";
@@ -87,7 +111,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
     	$selfLink->type = "";
     	$selfLink->url = "Self Link Url";
     	
-    	$odataFeedItem->selfLink = $selfLink;
+    	$feed->selfLink = $selfLink;
 
     	$nextPageLink = new ODataLink ();
     	$nextPageLink->name = "Next";
@@ -95,16 +119,16 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
     	$nextPageLink->type = "";
     	$nextPageLink->url = "Next Link Url";
     	
-    	$odataFeedItem->nextPageLink = $nextPageLink;
-    	$odataFeedItem->title = 'Feed Title';
-    	$odataFeedItem->isTopLevel = true;
+    	$feed->nextPageLink = $nextPageLink;
+    	$feed->title = 'Feed Title';
+    	$feed->isTopLevel = true;
 
     	
     	 // Entry 1
     	
-    	$odataEntryItem1 = new ODataEntry();
-    	$odataEntryItem1->id = 'Entry 1';
-    	$odataEntryItem1->title = 'Entry Title';
+    	$entry1 = new ODataEntry();
+    	$entry1->id = 'Entry 1';
+    	$entry1->title = 'Entry Title';
 
     	$editLink = new ODataLink();
     	$editLink->name = "edit";
@@ -112,7 +136,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
     	$editLink->type = "Edit link type";
     	$editLink->url = "Edit Link URL";
     	
-    	$odataEntryItem1->editLink = $editLink;
+    	$entry1->editLink = $editLink;
     	
     	$selfLink = new ODataLink();
     	$selfLink->name = "self";
@@ -120,8 +144,8 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
     	$selfLink->type = "";
     	$selfLink->url = "Self Link URL";
                                                 
-    	$odataEntryItem1->selfLink = $selfLink;
-        $odataEntryItem1->mediaLinks = array(new ODataMediaLink('Media Link Name', 
+    	$entry1->selfLink = $selfLink;
+        $entry1->mediaLinks = array(new ODataMediaLink('Media Link Name',
                                                       'Edit Media link', 
                                                       'Src Media Link', 
                                                       'Media Content Type', 
@@ -132,10 +156,10 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
     	$link->type = "Link Type";
     	$link->url = "Link URL";
         
-        $odataEntryItem1->links = array();
-        $odataEntryItem1->eTag = 'Entry ETag';
+        $entry1->links = array();
+        $entry1->eTag = 'Entry ETag';
         $link->isExpanded       = false;
-        $odataEntryItem1->isMediaLinkEntry = false;
+        $entry1->isMediaLinkEntry = false;
         
         $bagProp1 = new ODataBagContent();
         
@@ -189,13 +213,52 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         
         $propCont = new ODataPropertyContent ();
         $propCont->odataProperty = array ($prop1);
-        $odataEntryItem1->propertyContent = $propCont;
+        $entry1->propertyContent = $propCont;
     	
-        $odataFeedItem->entries = array (
-            $odataEntryItem1
-            );
-		$oWriter = new ODataWriter('http://localhost/NorthWind.svc', true, 'atom');
-		$result = $oWriter->writeRequest($odataFeedItem);		
+        $feed->entries = array (
+            $entry1,
+        );
+
+	    $writer = new AtomODataWriter('http://localhost/NorthWind.svc');
+	    $writer->write($feed);
+
+		$actual = $writer->getOutput();
+
+	    $expected = '<feed xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns="http://www.w3.org/2005/Atom" xml:base="http://localhost/NorthWind.svc">
+  <title type="text">Feed Title</title>
+  <id>Feed Id</id>
+  <updated>2013-09-17T19:22:33-06:00</updated>
+  <link rel="Self Link Name" href="Self Link Url"/>
+  <m:count>Count</m:count>
+  <entry m:etag="Entry ETag">
+    <id>Entry 1</id>
+    <title type="text">Entry Title</title>
+    <updated>2013-09-17T19:22:33-06:00</updated>
+    <author>
+      <name/>
+    </author>
+    <category term="" scheme="http://schemas.microsoft.com/ado/2007/08/dataservices/scheme"/>
+    <content type="application/xml">
+      <m:properties>
+        <d:name m:type="Bag(Name)">
+          <d:element>
+            <d:name>
+              <d:fname m:type="string">Yash</d:fname>
+              <d:lname m:type="string">Kothari</d:lname>
+            </d:name>
+            <d:name>
+              <d:fname m:type="string">Yash</d:fname>
+              <d:lname m:type="string">Kothari</d:lname>
+            </d:name>
+          </d:element>
+        </d:name>
+      </m:properties>
+    </content>
+  </entry>
+  <link rel="Next" href="Next Link Url"/>
+</feed>';
+
+	    $this->assertXmlStringEqualsXmlString($this->removeUpdatedTags($expected), $this->removeUpdatedTags($actual));
     }
     
     /**
@@ -203,9 +266,9 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 	 */
 	public function testWriteMediaEntry()
     {
-    	$odataEntryItem = new ODataEntry();
-    	$odataEntryItem->id = 'Entry 1';
-    	$odataEntryItem->title = 'Entry Title';
+    	$entry1 = new ODataEntry();
+    	$entry1->id = 'Entry 1';
+    	$entry1->title = 'Entry Title';
     	
     	$editLink = new ODataLink();
     	$editLink->name = "edit";
@@ -213,7 +276,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
     	$editLink->type = "Edit link type";
     	$editLink->url = "Edit Link URL";
     	
-    	$odataEntryItem->editLink = $editLink;
+    	$entry1->editLink = $editLink;
     	
     	$selfLink = new ODataLink();
     	$selfLink->name = "self";
@@ -221,9 +284,9 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
     	$selfLink->type = "";
     	$selfLink->url = "Self Link URL";
                                                 
-    	$odataEntryItem->selfLink = $selfLink;
-    	$odataEntryItem->mediaLink = new ODataMediaLink("Thumbnail_600X450", "http://storage.live.com/123/christmas-tree-with-presents.jpg", "http://cdn-8.nflximg.com/US/boxshots/large/5632678.jpg", "image/jpg", time());
-    	$odataEntryItem->mediaLinks = array(new ODataMediaLink('Media Link Name', 
+    	$entry1->selfLink = $selfLink;
+    	$entry1->mediaLink = new ODataMediaLink("Thumbnail_600X450", "http://storage.live.com/123/christmas-tree-with-presents.jpg", "http://cdn-8.nflximg.com/US/boxshots/large/5632678.jpg", "image/jpg", time());
+    	$entry1->mediaLinks = array(new ODataMediaLink('Media Link Name',
                                                       'Edit Media link', 
                                                       'Src Media Link', 
                                                       'Media Content Type', 
@@ -235,16 +298,24 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
                                                       'Media ETag2'));
         
         
-        $odataEntryItem->links = array();
+        $entry1->links = array();
         
-        $odataEntryItem->eTag = 'Entry ETag';
-        $odataEntryItem->isMediaLinkEntry = true;
+        $entry1->eTag = 'Entry ETag';
+        $entry1->isMediaLinkEntry = true;
         
         $propCont = new ODataPropertyContent ();
         $propCont->odataProperty = array (); 
-        $odataEntryItem->propertyContent = $propCont;                     
-		$oWriter = new ODataWriter('http://localhost/NorthWind.svc', true, 'atom');
-		$result = $oWriter->writeRequest($odataEntryItem);
+        $entry1->propertyContent = $propCont;
+
+	    $writer = new AtomODataWriter('http://localhost/NorthWind.svc');
+	    $writer->write($entry1);
+
+		$actual = $writer->getOutput();
+	    $expected = '<x/>';
+
+	    $this->markTestSkipped("see #75 DOMDocument::loadXML(): Namespace prefix m for etag on entry is not defined in Entity, line: 2");
+
+	    $this->assertXmlStringEqualsXmlString($this->removeUpdatedTags($expected), $actual);
     }
     
 	/**
@@ -252,9 +323,9 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 	 */
 	public function testWriteEntry()
     {
-    	$odataEntryItem = new ODataEntry();
-    	$odataEntryItem->id = 'Entry 1';
-    	$odataEntryItem->title = 'Entry Title';
+    	$entry1 = new ODataEntry();
+    	$entry1->id = 'Entry 1';
+    	$entry1->title = 'Entry Title';
     	
     	$editLink = new ODataLink();
     	$editLink->name = "edit";
@@ -262,7 +333,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
     	$editLink->type = "Edit link type";
     	$editLink->url = "Edit Link URL";
     	
-    	$odataEntryItem->editLink = $editLink;
+    	$entry1->editLink = $editLink;
     	
     	$selfLink = new ODataLink();
     	$selfLink->name = "self";
@@ -270,9 +341,9 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
     	$selfLink->type = "";
     	$selfLink->url = "Self Link URL";
                                                 
-    	$odataEntryItem->selfLink = $selfLink;
-    	$odataEntryItem->mediaLink = new ODataMediaLink("Thumbnail_600X450", "http://storage.live.com/123/christmas-tree-with-presents.jpg", null, "image/jpg", time());
-    	$odataEntryItem->mediaLinks = array(new ODataMediaLink('Media Link Name', 
+    	$entry1->selfLink = $selfLink;
+    	$entry1->mediaLink = new ODataMediaLink("Thumbnail_600X450", "http://storage.live.com/123/christmas-tree-with-presents.jpg", null, "image/jpg", time());
+    	$entry1->mediaLinks = array(new ODataMediaLink('Media Link Name',
                                                       'Edit Media link', 
                                                       'Src Media Link', 
                                                       'Media Content Type', 
@@ -291,10 +362,10 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
     	$link->url = "Link URL";
         $link->isExpanded       = false;
         
-        $odataEntryItem->links = array($link);
+        $entry1->links = array($link);
         
-        $odataEntryItem->eTag = 'Entry ETag';
-        $odataEntryItem->isMediaLinkEntry = true;
+        $entry1->eTag = 'Entry ETag';
+        $entry1->isMediaLinkEntry = true;
         
         $bagProp1 = new ODataBagContent ();
         
@@ -516,9 +587,17 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
             $prop6,
             $prop_address
         ); 
-        $odataEntryItem->propertyContent = $propCont;                     
-		$oWriter = new ODataWriter('http://localhost/NorthWind.svc', true, 'atom');
-		$result = $oWriter->writeRequest($odataEntryItem);
+        $entry1->propertyContent = $propCont;
+
+	    $writer = new AtomODataWriter('http://localhost/NorthWind.svc');
+		$writer->write($entry1);
+
+	    $actual = $writer->getOutput();
+	    $expected = '<x/>';
+
+	    $this->markTestSkipped("see #75 DOMDocument::loadXML(): Namespace prefix m for etag on entry is not defined in Entity, line: 2");
+
+	    $this->assertXmlStringEqualsXmlString($this->removeUpdatedTags($expected), $actual);
     }
     
 	/**
@@ -545,7 +624,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
     	$selfLink->url = "Self Link URL";
     	
     	$odataEntryItem->selfLink = $selfLink;
-        $odataEntryItem->mediaLinks = array(new ODataMediaLink('Media Link Name', 
+        $odataEntryItem->mediaLinks = array(new ODataMediaLink('Media Link Name',
                                                       'Edit Media link', 
                                                       'Src Media Link', 
                                                       'Media Content Type', 
@@ -701,10 +780,64 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         
         $propCont = new ODataPropertyContent ();
         $propCont->odataProperty = array ($prop1);
-        $odataEntryItem->propertyContent = $propCont;             
-        
-        $oWriter = new ODataWriter('http://localhost/NorthWind.svc', true, 'atom');
-		$result = $oWriter->writeRequest($odataEntryItem);
+        $odataEntryItem->propertyContent = $propCont;
+
+	    $writer = new AtomODataWriter('http://localhost/NorthWind.svc');
+	    $writer->write($odataEntryItem);
+
+	    $actual = $writer->getOutput();
+	    $expected = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<entry xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns="http://www.w3.org/2005/Atom" xml:base="http://localhost/NorthWind.svc" m:etag="Entry ETag">
+  <id>Expand Entry</id>
+  <title type="text">Entry Title</title>
+  <updated>2013-09-17T19:49:59-06:00</updated>
+  <author>
+    <name/>
+  </author>
+  <link rel="" href="">
+    <m:inline>
+      <entry m:etag="Entry ETag">
+        <id>Entry 1</id>
+        <title type="text">Entry Title</title>
+        <updated>2013-09-17T19:49:59-06:00</updated>
+        <author>
+          <name/>
+        </author>
+        <category term="" scheme="http://schemas.microsoft.com/ado/2007/08/dataservices/scheme"/>
+        <content type="application/xml">
+          <m:properties>
+            <d:name m:type="string">
+              <d:fname m:type="string">Yash</d:fname>
+              <d:lname m:type="string">Kothari</d:lname>
+            </d:name>
+            <d:city m:type="string">Ahmedabad</d:city>
+            <d:state m:type="string">Gujarat</d:state>
+          </m:properties>
+        </content>
+      </entry>
+    </m:inline>
+  </link>
+  <category term="" scheme="http://schemas.microsoft.com/ado/2007/08/dataservices/scheme"/>
+  <content type="application/xml">
+    <m:properties>
+      <d:name m:type="Bag(Name)">
+        <d:element>
+          <d:name>
+            <d:fname m:type="string">Yash</d:fname>
+            <d:lname m:type="string">Kothari</d:lname>
+          </d:name>
+          <d:name>
+            <d:fname m:type="string">Anu</d:fname>
+            <d:lname m:type="string">Chandy</d:lname>
+          </d:name>
+        </d:element>
+      </d:name>
+    </m:properties>
+  </content>
+</entry>';
+
+	    $this->assertXmlStringEqualsXmlString($this->removeUpdatedTags($expected), $this->removeUpdatedTags($actual));
+
     }
     
     /** 
@@ -712,22 +845,27 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
      */
     public function testPrimitiveProperty(){
     	
-    	$odataProperty = new ODataProperty();
-    	$odataProperty->name = "Count";
-    	$odataProperty->typeName = null;
-    	$odataProperty->value = "56";
+    	$prop = new ODataProperty();
+    	$prop->name = "Count";
+    	$prop->typeName = null;
+    	$prop->value = "56";
 
     	$propCont = new ODataPropertyContent();
-    	$propCont->odataProperty = array($odataProperty);
+    	$propCont->odataProperty = array($prop);
     	$propCont->isTopLevel = true;
-    	$odataPropertyContent = $propCont;
-    	$oWriter = new ODataWriter('http://localhost/NorthWind.svc', true, 'atom');
-    	$result = $oWriter->writeRequest($odataPropertyContent);
-    	$expected = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+
+	    $writer = new AtomODataWriter('http://localhost/NorthWind.svc');
+	    $writer->write($propCont);
+
+	    $actual = $writer->getOutput();
+	    $expected = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <d:Count xmlns="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
 xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices"
 xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">56</d:Count>';
-    	//$this->assertXmlStringEqualsXmlString($result, $expected);
+
+	    $this->assertXmlStringEqualsXmlString($expected, $actual);
+
     }
 
 	/**
@@ -753,17 +891,21 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">56</d:C
     	
     	$propCont1->odataProperty = array($pr1, $pr2, $pr3);
     	
-    	$odataProperty = new ODataProperty();
-    	$odataProperty->name = "Address";
-    	$odataProperty->typeName = "Complex.Address";
-    	$odataProperty->value = $propCont1;
+    	$prop = new ODataProperty();
+    	$prop->name = "Address";
+    	$prop->typeName = "Complex.Address";
+    	$prop->value = $propCont1;
 
     	$propCont = new ODataPropertyContent();
-    	$propCont->odataProperty = array($odataProperty);
+    	$propCont->odataProperty = array($prop);
     	$propCont->isTopLevel = true;
-    	$odataPropertyContent = $propCont;
-    	$oWriter = new ODataWriter('http://localhost/NorthWind.svc', true, 'atom');
-    	$result = $oWriter->writeRequest($odataPropertyContent);
+
+
+	    $writer = new AtomODataWriter('http://localhost/NorthWind.svc');
+	    $writer->write($propCont);
+
+	    $actual = $writer->getOutput();
+
     	$expected = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <d:Address m:type="Complex.Address" xmlns="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
 xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices"
@@ -772,7 +914,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
  <d:StreetName>Ankur</d:StreetName>
  <d:City>Ahmedabad</d:City>
 </d:Address>';
-    	//$this->assertXmlStringEqualsXmlString($result, $expected);
+	    $this->assertXmlStringEqualsXmlString($expected, $actual);
     }
     
 /**
@@ -876,9 +1018,12 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 		$entryPropContent->odataProperty = array($entryProp1, $entryProp2, $entryProp3, $entryProp4);
 		
 		$entry->propertyContent = $entryPropContent;
-		
-		$oWriter = new ODataWriter('http://localhost/NorthWind.svc', true, 'atom');
-		$result = $oWriter->writeRequest($entry);
+
+		$writer = new AtomODataWriter('http://localhost/NorthWind.svc');
+		$writer->write($entry);
+
+		$actual = $writer->getOutput();
+
 		$expected = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <entry xml:base="http://localhost/NorthWind.svc" xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns="http://www.w3.org/2005/Atom" m:etag="">
  <id>http://host/service.svc/Customers(1)</id>
@@ -909,8 +1054,8 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
   </m:properties>
  </content>
 </entry>';
-		
-		//$this->assertXmlStringEqualsXmlString($result, $expected);
+
+		$this->assertXmlStringEqualsXmlString($this->removeUpdatedTags($expected), $this->removeUpdatedTags($actual));
 	}
     
    
@@ -936,9 +1081,12 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
     	$propCont = new ODataPropertyContent();
     	$propCont->odataProperty = array($odataProperty);
     	$propCont->isTopLevel = true;
-    	$odataPropertyContent = $propCont;
-    	$oWriter = new ODataWriter('http://localhost/NorthWind.svc', true, 'atom');
-    	$result = $oWriter->writeRequest($odataPropertyContent);
+
+	   $writer = new AtomODataWriter('http://localhost/NorthWind.svc');
+	   $writer->write($propCont);
+
+	   $actual = $writer->getOutput();
+
     	$expected = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <d:Emails m:type="Bag(edm.String)" xmlns="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" 
 xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" 
@@ -948,10 +1096,9 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
  <d:element>yash2712@gmail.com</d:element>
  <d:element>y2k2712@yahoo.com</d:element>
 </d:Emails>';
-		//$this->assertXmlStringEqualsXmlString($result, $expected);
+
+	   $this->assertXmlStringEqualsXmlString($this->removeUpdatedTags($expected), $this->removeUpdatedTags($actual));
     }
     
-    protected function tearDown()
-    {
-    }
+
 }

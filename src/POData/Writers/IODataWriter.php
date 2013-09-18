@@ -18,7 +18,18 @@ use POData\ObjectModel\ODataProperty;
  */
 interface IODataWriter
 {
-    /**
+
+	/**
+	 * Create odata object model from the request description and transform it to required content type form
+	 *
+	 *
+	 * @param  ODataURL|ODataURLCollection|ODataPropertyContent|ODataFeed|ODataEntry $model Object of requested content.
+	 *
+	 * @return void
+	 */
+	public function write($model);
+
+	/**
      * Start writing a feed
      *
      * @param ODataFeed $feed Feed to write
@@ -84,9 +95,9 @@ interface IODataWriter
     public function writeEnd($kind);
 
     /**
-     * Get the result as string
+     * Get the output as string
      *  
      * @return string Result in requested format i.e. Atom or JSON.
      */
-    public function getResult();
+    public function getOutput();
 }
