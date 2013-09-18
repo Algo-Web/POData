@@ -2,7 +2,7 @@
 
 * Added composer support (see [#11](https://github.com/balihoo/POData/issues/11))
 * Reorganized tests and got all unit tests passing (see [#31](https://github.com/balihoo/POData/issues/31), [#36](https://github.com/balihoo/POData/issues/36) )
-* Added in Travis CI ( see [#19](https://github.com/balihoo/POData/issues/19) )
+* Added in Travis CI & Coveralls ( see [#19](https://github.com/balihoo/POData/issues/19) & [#26](https://github.com/balihoo/POData/issues/26) )
 * Fixed a bug when handling query string ($filter & $expand) decoding (see [#10](https://github.com/balihoo/POData/issues/10) )
 * Allowed for optimiation of $count implementations (see [#3](https://github.com/balihoo/POData/issues/3) )
 * Added $inlinecount support (see [#4](https://github.com/balihoo/POData/issues/4) )
