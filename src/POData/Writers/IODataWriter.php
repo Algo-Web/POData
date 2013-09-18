@@ -25,7 +25,7 @@ interface IODataWriter
 	 *
 	 * @param  ODataURL|ODataURLCollection|ODataPropertyContent|ODataFeed|ODataEntry $model Object of requested content.
 	 *
-	 * @return void
+	 * @return IODataWriter
 	 */
 	public function write($model);
 
@@ -34,7 +34,7 @@ interface IODataWriter
      *
      * @param ODataFeed $feed Feed to write
      * 
-     * @return void
+     * @return IODataWriter
      */
 
     public function writeBeginFeed(ODataFeed $feed);
@@ -44,7 +44,7 @@ interface IODataWriter
      *
      * @param ODataEntry $entry Entry to write
      * 
-     * @return void
+     * @return IODataWriter
      */
     public function writeBeginEntry(ODataEntry $entry);
 
@@ -54,7 +54,7 @@ interface IODataWriter
      * @param ODataLink $link Link to write.
      * @param Boolean   $isExpanded If entry type is Expanded or not.
      * 
-     * @return void
+     * @return IODataWriter
      */
     public function writeBeginLink(ODataLink $link, $isExpanded);
 
@@ -63,7 +63,7 @@ interface IODataWriter
      * 
      * @param ODataPropertyContent $properties ODataProperty Object to write.
      * 
-     * @return void
+     * @return IODataWriter
      */
     public function writeBeginProperties(ODataPropertyContent $properties);
     
@@ -72,7 +72,7 @@ interface IODataWriter
      *  
      * @param ODataURL $url ODataUrl object to write.
      * 
-     * @return void
+     * @return IODataWriter
      */
     public function writeBeginUrl(ODataURL $url);
     
@@ -81,7 +81,7 @@ interface IODataWriter
      * 
      * @param ODataUrlCollection $urls ODataUrlCollection to Write.
      * 
-     * @return void
+     * @return IODataWriter
      */
     public function writeBeginUrlCollection(ODataURLCollection $urls);
 
@@ -90,7 +90,7 @@ interface IODataWriter
      * 
      * @param ODataFeed|ODataEntry|ODataURL|ODataURLCollection|ODataProperty $kind Type of the top level object
      * 
-     * @return void
+     * @return IODataWriter
      */
     public function writeEnd($kind);
 

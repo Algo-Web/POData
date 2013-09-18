@@ -19,7 +19,9 @@ class AtomODataWriterTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * Removes the updated tag from an XML string
 	 * IE <updated>2013-09-17T19:22:33-06:00</updated>
-	 * @param $xml
+	 * @param string $xml
+	 *
+	 * @return string
 	 */
 	public function removeUpdatedTags($xml)
 	{
@@ -37,13 +39,13 @@ class AtomODataWriterTest extends \PHPUnit_Framework_TestCase
 	 */
     public function testODataURLItem()
     {
-    	$url = "http://www.odata.org/developers/protocols/atom-format";
-		$odataURLItem = new ODataURL();
-		$odataURLItem->oDataUrl = $url;
+		$url = new ODataURL();
+		$url->oDataUrl = "http://www.odata.org/developers/protocols/atom-format";
 
 	    $writer = new AtomODataWriter('http://localhost/NorthWind.svc');
-		$writer->write($odataURLItem);
-
+		$result = $writer->write($url);
+	    $this->assertSame($writer, $result);
+	    
 	    $actual = $writer->getOutput();
 
 	    $expected = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -80,8 +82,9 @@ class AtomODataWriterTest extends \PHPUnit_Framework_TestCase
 		$odataURLItem->count = 10;
 
 	    $writer = new AtomODataWriter('http://localhost/NorthWind.svc');
-		$writer->write($odataURLItem);
-	    
+		$result = $writer->write($odataURLItem);
+	    $this->assertSame($writer, $result);
+
 	    $actual = $writer->getOutput();
 
 	    $expected = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -220,9 +223,10 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         );
 
 	    $writer = new AtomODataWriter('http://localhost/NorthWind.svc');
-	    $writer->write($feed);
+	    $result = $writer->write($feed);
+	    $this->assertSame($writer, $result);
 
-		$actual = $writer->getOutput();
+	    $actual = $writer->getOutput();
 
 	    $expected = '<feed xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns="http://www.w3.org/2005/Atom" xml:base="http://localhost/NorthWind.svc">
   <title type="text">Feed Title</title>
@@ -308,9 +312,10 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $entry1->propertyContent = $propCont;
 
 	    $writer = new AtomODataWriter('http://localhost/NorthWind.svc');
-	    $writer->write($entry1);
+	    $result = $writer->write($entry1);
+	    $this->assertSame($writer, $result);
 
-		$actual = $writer->getOutput();
+	    $actual = $writer->getOutput();
 	    $expected = '<x/>';
 
 	    $this->markTestSkipped("see #75 DOMDocument::loadXML(): Namespace prefix m for etag on entry is not defined in Entity, line: 2");
@@ -590,7 +595,8 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $entry1->propertyContent = $propCont;
 
 	    $writer = new AtomODataWriter('http://localhost/NorthWind.svc');
-		$writer->write($entry1);
+		$result = $writer->write($entry1);
+	    $this->assertSame($writer, $result);
 
 	    $actual = $writer->getOutput();
 	    $expected = '<x/>';
@@ -783,7 +789,8 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $odataEntryItem->propertyContent = $propCont;
 
 	    $writer = new AtomODataWriter('http://localhost/NorthWind.svc');
-	    $writer->write($odataEntryItem);
+	    $result = $writer->write($odataEntryItem);
+	    $this->assertSame($writer, $result);
 
 	    $actual = $writer->getOutput();
 	    $expected = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -856,7 +863,8 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 
 
 	    $writer = new AtomODataWriter('http://localhost/NorthWind.svc');
-	    $writer->write($propCont);
+	    $result = $writer->write($propCont);
+	    $this->assertSame($writer, $result);
 
 	    $actual = $writer->getOutput();
 	    $expected = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -902,7 +910,8 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">56</d:C
 
 
 	    $writer = new AtomODataWriter('http://localhost/NorthWind.svc');
-	    $writer->write($propCont);
+	    $result = $writer->write($propCont);
+	    $this->assertSame($writer, $result);
 
 	    $actual = $writer->getOutput();
 
@@ -1020,7 +1029,8 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 		$entry->propertyContent = $entryPropContent;
 
 		$writer = new AtomODataWriter('http://localhost/NorthWind.svc');
-		$writer->write($entry);
+		$result = $writer->write($entry);
+		$this->assertSame($writer, $result);
 
 		$actual = $writer->getOutput();
 
@@ -1083,7 +1093,8 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
     	$propCont->isTopLevel = true;
 
 	   $writer = new AtomODataWriter('http://localhost/NorthWind.svc');
-	   $writer->write($propCont);
+	   $result = $writer->write($propCont);
+	   $this->assertSame($writer, $result);
 
 	   $actual = $writer->getOutput();
 

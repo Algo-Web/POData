@@ -12,11 +12,8 @@ use POData\ObjectModel\ODataBagContent;
 use POData\ObjectModel\ODataProperty;
 use POData\ObjectModel\ODataMediaLink;
 use POData\Writers\BaseODataWriter;
-use POData\Common\Version;
 use POData\Common\ODataConstants;
-use POData\Common\Messages;
 use POData\Common\ODataException;
-use POData\Common\InvalidOperationException;
 
 
 /**
@@ -59,7 +56,7 @@ class AtomODataWriter extends BaseODataWriter
      * 
      * @param ODataUrl $url Object of ODataUrl to start writing url.
      * 
-     * @return void
+     * @return AtomODataWriter
      */
     protected function startUrl(ODataURL $url)
     {
@@ -67,6 +64,8 @@ class AtomODataWriter extends BaseODataWriter
         $this->xmlWriter->writeAttribute(ODataConstants::XMLNS_NAMESPACE_PREFIX, ODataConstants::ODATA_NAMESPACE);
         $this->xmlWriter->text($url->oDataUrl);
         $this->xmlWriter->endElement();
+
+	    return $this;
     }
 
     /**
@@ -75,7 +74,7 @@ class AtomODataWriter extends BaseODataWriter
      * @param ODataUrlCollection $urls Object of ODataUrlCollection to start writing collection of url.
      *
      * 
-     * @return void
+     * @return AtomODataWriter
      */
     protected function startUrlCollection(ODataURLCollection $urls)
     {
@@ -103,6 +102,8 @@ class AtomODataWriter extends BaseODataWriter
         foreach ($urls->oDataUrls as $url) {
             $this->writeNodeValue(ODataConstants::ATOM_URI_ELEMENT_NAME, $url->oDataUrl);
         }
+
+	    return $this;
         
     }
 
@@ -111,7 +112,7 @@ class AtomODataWriter extends BaseODataWriter
      * 
      * @param ODataFeed $feed Object of OData feed to start writing feed
      * 
-     * @return void
+     * @return AtomODataWriter
      */
     protected function startFeed(ODataFeed $feed)
     {
@@ -119,6 +120,8 @@ class AtomODataWriter extends BaseODataWriter
         if ($feed->isTopLevel) {
             $this->writeBaseUriAndDefaultNamespaces();
         }
+
+	    return $this;
     }
 
     /**
@@ -126,19 +129,21 @@ class AtomODataWriter extends BaseODataWriter
      *
      * @param ODataFeed $feed Feed whose metadata to be written
      * 
-     * @return void
+     * @return AtomODataWriter
      */
     protected function writeFeedMetadata(ODataFeed $feed)
     {
-        $this->writeNodeAttributeValue(
-            ODataConstants::ATOM_TITLE_ELELMET_NAME, 
-            ODataConstants::ATOM_TYPE_ATTRIBUTE_NAME, 
-            ODataConstants::MIME_TEXTTYPE,
-            $feed->title
-        );
-        $this->writeNodeValue(ODataConstants::ATOM_ID_ELEMENT_NAME, $feed->id);
-        $this->writeNodeValue(ODataConstants::ATOM_UPDATED_ELEMENT_NAME, date(DATE_ATOM) );
-        $this->writeLinkNode($feed->selfLink, false);
+        $this
+	        ->writeNodeAttributeValue(
+                ODataConstants::ATOM_TITLE_ELELMET_NAME,
+                ODataConstants::ATOM_TYPE_ATTRIBUTE_NAME,
+                ODataConstants::MIME_TEXTTYPE,
+                $feed->title
+            )
+	        ->writeNodeValue(ODataConstants::ATOM_ID_ELEMENT_NAME, $feed->id)
+	        ->writeNodeValue(ODataConstants::ATOM_UPDATED_ELEMENT_NAME, date(DATE_ATOM) )
+	        ->writeLinkNode($feed->selfLink, false);
+
         if ($feed->rowCount != null) {
             $this->xmlWriter->startElementNs(
                 ODataConstants::ODATA_METADATA_NAMESPACE_PREFIX, 
@@ -147,6 +152,8 @@ class AtomODataWriter extends BaseODataWriter
             $this->xmlWriter->text($feed->rowCount);
             $this->xmlWriter->endElement();
         }
+
+	    return $this;
     }
 
     /**
@@ -154,7 +161,7 @@ class AtomODataWriter extends BaseODataWriter
      * 
      * @param ODataFeed $feed Feed object to end feed writing.
      * 
-     * @return void
+     * @return AtomODataWriter
      */
     protected function endFeed(ODataFeed $feed)
     {
@@ -162,13 +169,15 @@ class AtomODataWriter extends BaseODataWriter
             $this->writeLinkNode($feed->nextPageLink, false);
         }
         $this->xmlWriter->endElement();
+
+	    return $this;
     }
     /**
      * Start writing a entry
      *
      * @param ODataEntry $entry Entry to write
      * 
-     * @return void
+     * @return AtomODataWriter
      */
     protected function startEntry(ODataEntry $entry)
     {
@@ -186,6 +195,8 @@ class AtomODataWriter extends BaseODataWriter
             $this->xmlWriter->text($entry->eTag);
             $this->xmlWriter->endAttribute();
         }
+
+	    return $this;
     }
 
     /**
@@ -193,21 +204,20 @@ class AtomODataWriter extends BaseODataWriter
      *
      * @param ODataEntry $entry Entry whose metadata to be written
      * 
-     * @return void
+     * @return AtomODataWriter
      */
     protected function writeEntryMetadata(ODataEntry $entry)
     {
-        $this->writeNodeValue(ODataConstants::ATOM_ID_ELEMENT_NAME, $entry->id);
-        $this->writeNodeAttributeValue(
-            ODataConstants::ATOM_TITLE_ELELMET_NAME, 
-            ODataConstants::ATOM_TYPE_ATTRIBUTE_NAME, 
-            ODataConstants::MIME_TEXTTYPE, 
-            $entry->title
-        );
-        $this->writeNodeValue(
-            ODataConstants::ATOM_UPDATED_ELEMENT_NAME,
-            date(DATE_ATOM)
-        );
+        $this
+	        ->writeNodeValue(ODataConstants::ATOM_ID_ELEMENT_NAME, $entry->id)
+	        ->writeNodeAttributeValue(
+	            ODataConstants::ATOM_TITLE_ELELMET_NAME,
+	            ODataConstants::ATOM_TYPE_ATTRIBUTE_NAME,
+	            ODataConstants::MIME_TEXTTYPE,
+	            $entry->title
+	        )
+	        ->writeNodeValue(ODataConstants::ATOM_UPDATED_ELEMENT_NAME, date(DATE_ATOM));
+
         $this->xmlWriter->startElement(ODataConstants::ATOM_AUTHOR_ELEMENT_NAME);
         $this->xmlWriter->startElement(ODataConstants::ATOM_NAME_ELEMENT_NAME);
         $this->xmlWriter->endElement();
@@ -253,46 +263,41 @@ class AtomODataWriter extends BaseODataWriter
                     $this->xmlWriter->text($mediaLink->eTag);
                     $this->xmlWriter->endAttribute();
                 }
-                $this->xmlWriter->startAttribute(
-                    ODataConstants::ATOM_LINK_RELATION_ATTRIBUTE_NAME
-                );
+                $this->xmlWriter->startAttribute(ODataConstants::ATOM_LINK_RELATION_ATTRIBUTE_NAME);
                 $this->xmlWriter->text(
                     "http://schemas.microsoft.com/ado/2007/08/dataservices/mediaresource/"
                     .$mediaLink->name
                 );
                 $this->xmlWriter->endAttribute();
 
-                $this->xmlWriter->startAttribute(
-                    ODataConstants::ATOM_TYPE_ATTRIBUTE_NAME
-                );
+                $this->xmlWriter->startAttribute(ODataConstants::ATOM_TYPE_ATTRIBUTE_NAME);
                 $this->xmlWriter->text($mediaLink->contentType);
                 $this->xmlWriter->endAttribute();
 
-                $this->xmlWriter->startAttribute(
-                    ODataConstants::ATOM_TITLE_ELELMET_NAME
-                );
+                $this->xmlWriter->startAttribute(ODataConstants::ATOM_TITLE_ELELMET_NAME);
                 $this->xmlWriter->text($mediaLink->name);
                 $this->xmlWriter->endAttribute();
 
-                $this->xmlWriter->startAttribute(
-                    ODataConstants::ATOM_HREF_ATTRIBUTE_NAME
-                );
+                $this->xmlWriter->startAttribute(ODataConstants::ATOM_HREF_ATTRIBUTE_NAME);
                 $this->xmlWriter->text($mediaLink->editLink);
                 $this->xmlWriter->endAttribute();
                 $this->xmlWriter->endElement();
             }
         }
+
+	    return $this;
     }
     /**
      * Write end of entry
      *
      * @param ODataEntry $entry ODataEntry object to end entry.
      * 
-     * @return void
+     * @return AtomODataWriter
      */
     protected function endEntry(ODataEntry $entry)
     {
         $this->xmlWriter->endElement();
+	    return $this;
     }
 
     /**
@@ -301,11 +306,12 @@ class AtomODataWriter extends BaseODataWriter
      * @param ODataLink $link Link to write
      * @param Boolean   $isExpanded Is link expanded or not.
      * 
-     * @return void
+     * @return AtomODataWriter
      */
     protected function startLink(ODataLink $link, $isExpanded)
     {
         $this->writeLinkNode($link, $isExpanded);
+	    return $this;
     }
 
     /**
@@ -314,7 +320,7 @@ class AtomODataWriter extends BaseODataWriter
      * @param ODataLink $link Link whose metadata to be written
      * @param Boolean   $isExpanded Is link expanded or not.
      * 
-     * @return void
+     * @return AtomODataWriter
      */
     protected function writeLinkMetadata(ODataLink $link, $isExpanded)
     {
@@ -325,6 +331,7 @@ class AtomODataWriter extends BaseODataWriter
                 null
             );
         }
+	    return $this;
     }
 
     /**
@@ -332,14 +339,15 @@ class AtomODataWriter extends BaseODataWriter
      *
      * @param boolean $isExpanded is link expanded or not.
      * 
-     * @return void
+     * @return AtomODataWriter
      */
     protected function endLink($isExpanded)
     {
         if ($isExpanded) {
             $this->xmlWriter->endElement();
             $this->xmlWriter->endElement();
-        }        
+        }
+	    return $this;
     }
 
     /**
@@ -347,7 +355,7 @@ class AtomODataWriter extends BaseODataWriter
      * 
      * @param ODataEntry $entry ODataEntry object for pre writing properties.
      * 
-     * @return void
+     * @return AtomODataWriter
      */
     public function preWriteProperties(ODataEntry $entry)
     {
@@ -387,6 +395,8 @@ class AtomODataWriter extends BaseODataWriter
                 null
             );
         }
+
+	    return $this;
     }
 
     /**
@@ -395,7 +405,7 @@ class AtomODataWriter extends BaseODataWriter
      * @param ODataProperty $property Property to be written
      * @param boolean       $isTopLevel     is link top level or not.
      * 
-     * @return void
+     * @return AtomODataWriter
      */
     protected function beginWriteProperty(ODataProperty $property, $isTopLevel)
     {
@@ -423,6 +433,8 @@ class AtomODataWriter extends BaseODataWriter
         if ($property->typeName!=null || $isTopLevel) {
             $this->xmlWriter->endAttribute();
         }
+
+	    return $this;
     }
 
     /**
@@ -430,11 +442,13 @@ class AtomODataWriter extends BaseODataWriter
      * 
      * @param ODataPropertyContent $property Object of property which want to end.
      * 
-     * @return void
+     * @return AtomODataWriter
      */
     protected function endWriteProperty(ODataPropertyContent $property)
     {
         $this->xmlWriter->endElement();
+
+	    return $this;
     }
 
     /**
@@ -442,7 +456,7 @@ class AtomODataWriter extends BaseODataWriter
      * 
      * @param ODataEntry $entry Entry object to post writing properties.
      *  
-     * @return void
+     * @return AtomODataWriter
      */
     public function postWriteProperties(ODataEntry $entry)
     {
@@ -450,6 +464,8 @@ class AtomODataWriter extends BaseODataWriter
             $this->xmlWriter->endElement();
         }
         $this->xmlWriter->endElement();
+
+	    return $this;
     }
 
     /**
@@ -457,21 +473,23 @@ class AtomODataWriter extends BaseODataWriter
      * 
      * @param ODataProperty $property whose value hold the complex property
      * 
-     * @return void
+     * @return AtomODataWriter
      */
     protected function beginComplexProperty(ODataProperty $property)
     {
         //Nothing
+	    return $this;
     }
 
     /**
      * End  complex property
      * 
-     * @return void
+     * @return AtomODataWriter
      */
     protected function endComplexProperty()
     {
-
+	    //Nothing
+	    return $this;
     }
 
     /**
@@ -480,7 +498,7 @@ class AtomODataWriter extends BaseODataWriter
      * @param ODataBagContent $bag Bag property object to begin write property
      *
      * 
-     * @return void
+     * @return AtomODataWriter
      */
     protected function beginBagPropertyItem(ODataBagContent $bag)
     {
@@ -503,16 +521,18 @@ class AtomODataWriter extends BaseODataWriter
                     $this->xmlWriter->endElement();
             }
         }
+
+	    return $this;
     }
 
     /**
      * End an item in a collection
      * 
-     * @return void
+     * @return AtomODataWriter
      */
     protected function endBagPropertyItem()
     {
-
+	    return $this;
     }
 
     /**
@@ -520,11 +540,12 @@ class AtomODataWriter extends BaseODataWriter
      * 
      * @param ODataURL $url ODataUrl object to end top level url.
      * 
-     * @return void
+     * @return AtomODataWriter
      */
     protected function endUrl(ODataURL $url)
     {
         $this->xmlWriter->endElement();
+	    return $this;
     }
 
     /**
@@ -533,7 +554,7 @@ class AtomODataWriter extends BaseODataWriter
      * @param ODataUrlCollection $urls ODataUrlCollection object to end url collection.
      *
      * 
-     * @return void
+     * @return AtomODataWriter
      */
     protected function endUrlCollection(ODataURLCollection $urls)
     {
@@ -541,6 +562,7 @@ class AtomODataWriter extends BaseODataWriter
             $this->writeLinkNode($urls->nextPageLink, false);
         }
         $this->xmlWriter->endElement();
+	    return $this;
     }
 
     /**
@@ -549,7 +571,7 @@ class AtomODataWriter extends BaseODataWriter
      * @param ODataProperty $property ODataProperty object to write null value
      * according to property type.
      * 
-     * @return void
+     * @return AtomODataWriter
      */
     protected function writeNullValue(ODataProperty $property)
     {
@@ -561,6 +583,7 @@ class AtomODataWriter extends BaseODataWriter
                 ODataConstants::XML_TRUE_LITERAL
             );
         }
+	    return $this;
     }
 
     /**
@@ -568,11 +591,12 @@ class AtomODataWriter extends BaseODataWriter
      *
      * @param ODataProperty $property Object of ODataProperty
      * 
-     * @return void
+     * @return AtomODataWriter
      */
     protected function writePrimitiveValue(ODataProperty $property)
     {
         $this->xmlWriter->text($property->value);
+	    return $this;
     }
 
     /**
@@ -593,7 +617,7 @@ class AtomODataWriter extends BaseODataWriter
      * @param boolean        $serializeInnerException if set to true,
      * serialize the inner exception if $exception is an ODataException.
      * 
-     * @return void
+     * @return string
      */
     public static function serializeException(ODataException $exception, $serializeInnerException)
     {
@@ -633,13 +657,15 @@ class AtomODataWriter extends BaseODataWriter
      * @param String $node  Element name
      * @param String $value Element value
      * 
-     * @return void
+     * @return AtomODataWriter
      */
     public function writeNodeValue($node, $value)
     {
         $this->xmlWriter->startElement($node);
         $this->xmlWriter->text($value);
         $this->xmlWriter->endElement();
+
+	    return $this;
     }
 
     /**
@@ -650,7 +676,7 @@ class AtomODataWriter extends BaseODataWriter
      * @param string $attributeValue Attribute value
      * @param string $nodeValue      Element value
      *  
-     * @return void
+     * @return AtomODataWriter
      */
     public function writeNodeAttributeValue(
         $node,
@@ -662,6 +688,8 @@ class AtomODataWriter extends BaseODataWriter
         $this->xmlWriter->writeAttribute($attribute, $attributeValue);
         $this->xmlWriter->text($nodeValue);
         $this->xmlWriter->endElement();
+
+	    return $this;
     }
 
     /**
@@ -670,7 +698,7 @@ class AtomODataWriter extends BaseODataWriter
      * @param ODataLink $link      Link object to make link element
      * @param Boolean   $isExpanded Is link expanded or not.
      * 
-     * @return void
+     * @return AtomODataWriter
      */
     protected function writeLinkNode(ODataLink $link, $isExpanded)
     {
@@ -698,12 +726,14 @@ class AtomODataWriter extends BaseODataWriter
         if (!$isExpanded) {
             $this->xmlWriter->endElement();
         }
+
+	    return $this;
     }
 
     /**
      * Function to write base uri and default namespaces for top level elements.
      * 
-     * @return void
+     * @return AtomODataWriter
      */
     public function writeBaseUriAndDefaultNamespaces()
     {
@@ -727,5 +757,7 @@ class AtomODataWriter extends BaseODataWriter
             ODataConstants::XMLNS_NAMESPACE_PREFIX, 
             ODataConstants::ATOM_NAMESPACE
         );
+
+	    return $this;
     }
 }

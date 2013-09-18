@@ -25,7 +25,8 @@ class JsonODataWriterTest extends \PHPUnit_Framework_TestCase
 		$oDataUrl = new ODataURL();
 		$oDataUrl->oDataUrl = 'http://services.odata.org/OData/OData.svc/Suppliers(0)';
 		$writer = new JsonODataWriter(true);
-		$writer->write($oDataUrl);
+		$result = $writer->write($oDataUrl);
+		$this->assertSame($writer, $result);
 		
 		//decoding the json string to test, there is no json string comparison in php unit
 		$actual = json_decode($writer->getOutput());
@@ -54,8 +55,10 @@ class JsonODataWriterTest extends \PHPUnit_Framework_TestCase
 		                                      );
 		$oDataUrlCollection->count = 3;
 		$writer = new JsonODataWriter(true);
-		$writer->write($oDataUrlCollection);
-	
+		$result = $writer->write($oDataUrlCollection);
+		$this->assertSame($writer, $result);
+
+
 		//decoding the json string to test
 		$actual = json_decode($writer->getOutput());
 		
@@ -149,8 +152,10 @@ class JsonODataWriterTest extends \PHPUnit_Framework_TestCase
 		$oDataFeed->isTopLevel = true;
 		
 		$writer = new JsonODataWriter(true);
-		$writer->write($oDataFeed);
-		
+		$result = $writer->write($oDataFeed);
+		$this->assertSame($writer, $result);
+
+
 		//decoding the json string to test
 		$actual = json_decode($writer->getOutput());
 		$expectedResult = '{
@@ -371,8 +376,10 @@ class JsonODataWriterTest extends \PHPUnit_Framework_TestCase
 		$oDataFeed->isTopLevel = true;
 		
 		$writer = new JsonODataWriter(true);
-		$writer->write($oDataFeed);
-		
+		$result = $writer->write($oDataFeed);
+		$this->assertSame($writer, $result);
+
+
 		//decoding the json string to test
 		$actual = json_decode($writer->getOutput());
 		$expectedResult = '{
@@ -452,8 +459,10 @@ class JsonODataWriterTest extends \PHPUnit_Framework_TestCase
     	$entry->links = array($link);
     	
     	$writer = new JsonODataWriter(true);
-		$writer->write($entry);
-		
+		$result = $writer->write($entry);
+		$this->assertSame($writer, $result);
+
+
 		//decoding the json string to test
 		$actual = json_decode($writer->getOutput());
 		
@@ -528,8 +537,10 @@ class JsonODataWriterTest extends \PHPUnit_Framework_TestCase
 		$propContent->odataProperty = array($prop1);
 		
 		$writer = new JsonODataWriter(true);
-		$writer->write($propContent);
-		
+		$result = $writer->write($propContent);
+		$this->assertSame($writer, $result);
+
+
 		//decoding the json string to test
 		$actual = json_decode($writer->getOutput());
 		
@@ -654,9 +665,11 @@ class JsonODataWriterTest extends \PHPUnit_Framework_TestCase
 		$entry->propertyContent = $entryPropContent;
 		
 		$writer = new JsonODataWriter(true);
-		$writer->write($entry);
-		
-		
+		$result = $writer->write($entry);
+		$this->assertSame($writer, $result);
+
+
+
 		//decoding the json string to test
 		$actual = json_decode($writer->getOutput());
 		
@@ -704,9 +717,11 @@ class JsonODataWriterTest extends \PHPUnit_Framework_TestCase
     	$content->odataProperty = array($property);
     	$content->isTopLevel = true;
     	$writer = new JsonODataWriter(true);
-    	$writer->write($content);
-    	
-    	//decoding the json string to test
+    	$result = $writer->write($content);
+	    $this->assertSame($writer, $result);
+
+
+	    //decoding the json string to test
 	    $actual = json_decode($writer->getOutput());
 		
     	$expectedResult = '{
