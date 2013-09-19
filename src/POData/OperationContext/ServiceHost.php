@@ -167,14 +167,9 @@ Class ServiceHost implements IServiceHost
             $isAbsoluteServiceUri = (strpos($serviceUri, 'http://') === 0)
                 || (strpos($serviceUri, 'https://') === 0);
             try {
-                $this->_absoluteServiceUri = new Url(
-                    $serviceUri, 
-                    $isAbsoluteServiceUri
-                );
+                $this->_absoluteServiceUri = new Url($serviceUri, $isAbsoluteServiceUri );
             } catch (UrlFormatException $exception) {
-                ODataException::createInternalServerError(
-                    Messages::hostMalFormedBaseUriInConfig()
-                );
+                ODataException::createInternalServerError(Messages::hostMalFormedBaseUriInConfig());
             }
 
             $segments = $this->_absoluteServiceUri->getSegments();
@@ -185,9 +180,7 @@ Class ServiceHost implements IServiceHost
                 || !is_null($this->_absoluteServiceUri->getQuery()) 
                 || !is_null($this->_absoluteServiceUri->getFragment())
             ) {
-                ODataException::createInternalServerError(
-                    Messages::hostMalFormedBaseUriInConfig(true)
-                );
+                ODataException::createInternalServerError(Messages::hostMalFormedBaseUriInConfig(true));
             }
 
             if (!$isAbsoluteServiceUri) {
@@ -237,9 +230,7 @@ Class ServiceHost implements IServiceHost
                     $serviceUri .= '/' . $requestUriSegments[$l];
                 }
                 
-                $this->_absoluteServiceUri = new Url(
-                    $serviceUri
-                );
+                $this->_absoluteServiceUri = new Url($serviceUri);
             }
 
             $this->_absoluteServiceUriAsString = $serviceUri;

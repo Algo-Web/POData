@@ -84,17 +84,6 @@ class UrlTest extends \PHPUnit_Framework_TestCase
 	}
 
 
-	public function testNotAURLRelativeSpecified()
-	{
-		$urlStr = " ";//a tab was about all i could find that it failed on...rather permissive
-		try {
-			new Url($urlStr, false);
-			$this->fail('An expected UrlFormatException has not been raised');
-		} catch (UrlFormatException $exception) {
-			$this->assertEquals("Bad Request - The url '$urlStr' is malformed", $exception->getMessage());
-		}
-	}
-
 	public function testABadlyFormedURL()
 	{
 		$urlStr = "http:///example.com";     //this one gets passed the relative regex check, but not parse_url
