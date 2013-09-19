@@ -520,10 +520,13 @@ abstract class BaseService implements IRequestHandler, IService
         IService $service,
         &$responseContentType
     ) {
+	    //By default say the format is unsupported
+	    $responseFormat = ResponseFormat::UNSUPPORTED();
+
         // The Accept request-header field specifies media types which are 
         // acceptable for the response
         $requestAcceptText = $service->getHost()->getRequestAccept();
-        $responseFormat = ResponseFormat::UNSUPPORTED();
+
         $requestTargetKind = $requestDescription->getTargetKind();
 
         if ($requestDescription->isLinkUri()) {

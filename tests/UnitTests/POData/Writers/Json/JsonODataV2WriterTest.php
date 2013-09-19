@@ -30,9 +30,9 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 		
 		//decoding the json string to test, there is no json string comparison in php unit
 		$actual = json_decode($writer->getOutput());
-		
-		$expectedResult = '{ "d" : {"uri": "http://services.odata.org/OData/OData.svc/Suppliers(0)"} }';
-		$expected = json_decode($expectedResult);
+
+		$expected = '{ "d" : {"uri": "http://services.odata.org/OData/OData.svc/Suppliers(0)"} }';
+		$expected = json_decode($expected);
 		$this->assertEquals($expected, $actual);
 	}
 	
@@ -62,22 +62,24 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 		//decoding the json string to test
 		$actual = json_decode($writer->getOutput());
 		
-		$expectedResult = '{ "d" : {
-							    "results": [
-							      {
+		$expected = '{
+		                "d" : {
+							"results": [
+								{
 							        "uri": "http://services.odata.org/OData/OData.svc/Products(0)"
-							      }, 
-							      {
+								},
+							    {
 							        "uri": "http://services.odata.org/OData/OData.svc/Products(7)"
-							      }, 
-							      {
+							    },
+							    {
 							        "uri": "http://services.odata.org/OData/OData.svc/Products(8)"
-							      }
-							    ], 
-							    "__count": "3"
-							} }';
+							    }
+							],
+							"__count": "3"
+						}
+					}';
 		
-		 $expected = json_decode($expectedResult);
+		 $expected = json_decode($expected);
 
 		$this->assertEquals($expected, $actual);                                      
 	}
@@ -158,22 +160,28 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 
 		//decoding the json string to test
 		$actual = json_decode($writer->getOutput());
-		$expectedResult = '{
-						    "d" : {
-						        "results": [
-						            {
-						                "__metadata": {
-						                    "uri": "http://services.odata.org/OData/OData.svc/Categories(0)", "type": "DataServiceProviderDemo.Category"
-						                }, "Products": {
-						                    "__deferred": {
-						                        "uri": "http://services.odata.org/OData/OData.svc/Categories(0)/Products"
-						                    }
-						                }, "ID": 100, "Name": "Food"
-						            }
-						        ], "__count": "3", "__next": "http://services.odata.org/OData/OData.svc$skiptoken=12"
-						    }
-						}';
-		 $expected = json_decode($expectedResult);
+		$expected = '{
+					    "d" : {
+					        "results": [
+					            {
+					                "__metadata": {
+					                    "uri": "http://services.odata.org/OData/OData.svc/Categories(0)",
+					                    "type": "DataServiceProviderDemo.Category"
+					                },
+					                "Products": {
+					                    "__deferred": {
+					                        "uri": "http://services.odata.org/OData/OData.svc/Categories(0)/Products"
+					                    }
+					                },
+					                "ID": 100,
+					                "Name": "Food"
+					            }
+					        ],
+					        "__count": "3",
+					        "__next": "http://services.odata.org/OData/OData.svc$skiptoken=12"
+					    }
+					}';
+		 $expected = json_decode($expected);
 
 		$this->assertEquals($expected, $actual); 
 	}
@@ -382,38 +390,63 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 
 		//decoding the json string to test
 		$actual = json_decode($writer->getOutput());
-		$expectedResult = '{
-							"d" : {
+		$expected = '{
+						"d" : {
                             "results": [
-							{
-							"__metadata": {
-							"uri": "http://services.odata.org/OData/OData.svc/Suppliers(0)", "etag": "W/\"0\"", "type": "ODataDemo.Supplier"
-							}, "ID": 0, "Name": "Exotic Liquids", "Address": {
-							"__metadata": {
-							"type": "ODataDemo.Address"
-							}, "Street": "NE 228th", "City": "Sammamish", "State": "WA", "ZipCode": "98074", "Country": "USA"
-							}, "Concurrency": 0, "Products": {
-							"__deferred": {
-							"uri": "http://services.odata.org/OData/OData.svc/Suppliers(0)/Products"
-							}
-							}
-							}, {
-							"__metadata": {
-							"uri": "http://services.odata.org/OData/OData.svc/Suppliers(1)", "etag": "W/\"0\"", "type": "ODataDemo.Supplier"
-							}, "ID": 1, "Name": "Tokyo Traders", "Address": {
-							"__metadata": {
-							"type": "ODataDemo.Address"
-							}, "Street": "NE 40th", "City": "Redmond", "State": "WA", "ZipCode": "98052", "Country": "USA"
-							}, "Concurrency": 0, "Products": {
-							"__deferred": {
-							"uri": "http://services.odata.org/OData/OData.svc/Suppliers(1)/Products"
-							}
-							}
-							}
-							], "__count": "3", "__next": "http:\/\/services.odata.org\/OData\/OData.svc$skiptoken=12"
-							}
-							}';
-		 $expected = json_decode($expectedResult);
+								{
+									"__metadata": {
+										"uri": "http://services.odata.org/OData/OData.svc/Suppliers(0)",
+										"etag": "W/\"0\"", "type": "ODataDemo.Supplier"
+									},
+									"ID": 0,
+									"Name": "Exotic Liquids",
+									"Address": {
+										"__metadata": {
+											"type": "ODataDemo.Address"
+										},
+										"Street": "NE 228th",
+										 "City": "Sammamish",
+										 "State": "WA",
+										 "ZipCode": "98074",
+										 "Country": "USA"
+									},
+									"Concurrency": 0,
+									"Products": {
+									        "__deferred": {
+												"uri": "http://services.odata.org/OData/OData.svc/Suppliers(0)/Products"
+											}
+									}
+								},
+								{
+									"__metadata": {
+										"uri": "http://services.odata.org/OData/OData.svc/Suppliers(1)",
+										"etag": "W/\"0\"", "type": "ODataDemo.Supplier"
+									},
+									"ID": 1,
+									"Name": "Tokyo Traders",
+									"Address": {
+										"__metadata": {
+											"type": "ODataDemo.Address"
+										},
+										"Street": "NE 40th",
+										"City": "Redmond",
+										"State": "WA",
+										"ZipCode": "98052",
+										"Country": "USA"
+									},
+									"Concurrency": 0,
+									"Products": {
+										"__deferred": {
+											"uri": "http://services.odata.org/OData/OData.svc/Suppliers(1)/Products"
+										}
+									}
+								}
+							],
+							"__count": "3",
+							"__next": "http:\/\/services.odata.org\/OData\/OData.svc$skiptoken=12"
+						}
+					}';
+		 $expected = json_decode($expected);
 
 		$this->assertEquals($expected, $actual);
 	}
@@ -465,21 +498,24 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 
 		//decoding the json string to test
 		$actual = json_decode($writer->getOutput());
-		
-		$expectedResult = '{
-							 "d" : {
-							 "results": {
-							"__metadata": {
-							"uri": "http://services.odata.org/OData/OData.svc/Categories(0)", "type": "ODataDemo.Category"
-							}, "ID": 0, "Name": "Food", "Products": {
-							"__deferred": {
-							"uri": "http://services.odata.org/OData/OData.svc/Categories(0)/Products"
+
+		$expected = '{
+						"d" : {
+							"results": {
+								"__metadata": {
+									"uri": "http://services.odata.org/OData/OData.svc/Categories(0)", "type": "ODataDemo.Category"
+								},
+								"ID": 0,
+								"Name": "Food",
+								"Products": {
+									"__deferred": {
+										"uri": "http://services.odata.org/OData/OData.svc/Categories(0)/Products"
+									}
+								}
 							}
-							}
-							}
-							}
-							}';
-		 $expected = json_decode($expectedResult);
+						}
+					}';
+		 $expected = json_decode($expected);
 
 		$this->assertEquals($expected, $actual);
 		
@@ -543,19 +579,24 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 
 		//decoding the json string to test
 		$actual = json_decode($writer->getOutput());
-		
-		$expectedResult = '{
-							"d" : {
+
+		$expected = '{
+						"d" : {
 							"results": {
-							"Address": {
-							"__metadata": {
-							"type": "ODataDemo.Address"
-							}, "Street": "NE 228th", "City": "Sammamish", "State": "WA", "ZipCode": "98074", "Country": "USA"
+								"Address": {
+									"__metadata": {
+										"type": "ODataDemo.Address"
+									},
+									"Street": "NE 228th",
+									"City": "Sammamish",
+									"State": "WA",
+									"ZipCode": "98074",
+									"Country": "USA"
+								}
 							}
-							}
-							}
-							}';
-		 $expected = json_decode($expectedResult);
+						}
+					}';
+		 $expected = json_decode($expected);
 		
 		$this->assertEquals($expected, $actual);
 	}
@@ -672,33 +713,43 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 
 		//decoding the json string to test
 		$actual = json_decode($writer->getOutput());
-		
-	    $expectedResult = '{
-						    "d" : {
-						        "results": {
+
+		$expected = '{
+						"d" : {
+							"results": {
+								"__metadata": {
+									"uri": "http://host/service.svc/Customers(1)",
+									"type": "SampleModel.Customer"
+								},
+								"ID": 1,
+								"Name": "mike",
+								"EmailAddresses": {
 						            "__metadata": {
-						                "uri": "http://host/service.svc/Customers(1)", "type": "SampleModel.Customer"
-						            }, "ID": 1, "Name": "mike", "EmailAddresses": {
-						                "__metadata": {
-						                    "type": "Bag(Edm.String)"
-						                }, "results": [
-						                    "mike@foo.com", "mike2@foo.com"
-						                ]
-						            }, "Addresses": {
-						                "__metadata": {
-						                    "type": "Bag(SampleModel.Address)"
-						                }, "results": [
-						                    {
-						                        "Street": "123 contoso street", "Apartment": "508"
-						                    }, {
-						                        "Street": "834 foo street", "Apartment": "102"
-						                    }
-						                ]
-						            }
-						        }
-						    }
-						}';
-	    $expected = json_decode($expectedResult);
+						                "type": "Bag(Edm.String)"
+						            },
+						            "results": [
+						                "mike@foo.com", "mike2@foo.com"
+						            ]
+					            },
+					            "Addresses": {
+					                "__metadata": {
+					                    "type": "Bag(SampleModel.Address)"
+					                },
+					                "results": [
+					                    {
+					                        "Street": "123 contoso street",
+					                        "Apartment": "508"
+					                    },
+					                    {
+					                        "Street": "834 foo street",
+					                        "Apartment": "102"
+					                    }
+					                ]
+					            }
+					        }
+					    }
+					}';
+	    $expected = json_decode($expected);
 
 		$this->assertEquals($expected, $actual);
 	}
@@ -723,15 +774,15 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 
 	    //decoding the json string to test
 	    $actual = json_decode($writer->getOutput());
-		
-    	$expectedResult = '{
-							    "d" : {
-							        "results": {
-							            "Count": 56
-							        }
-							    }
-							}';
-        $expected = json_decode($expectedResult);
+
+	    $expected = '{
+						"d" : {
+							"results": {
+								"Count": 56
+							}
+						}
+					}';
+        $expected = json_decode($expected);
 
 	    $this->assertEquals($expected, $actual); 
     }

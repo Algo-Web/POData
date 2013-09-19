@@ -230,4 +230,42 @@ class JsonODataV2Writer extends JsonODataV1Writer
 	    return $this;
     }
 
+
+	/**
+	 * Writes the row count.
+	 *
+	 * @param int $count Row count value.
+	 *
+	 * @return JsonODataV2Writer
+	 */
+	protected function writeRowCount($count)
+	{
+		if ($count != null) {
+			$this->_writer->writeName(ODataConstants::JSON_ROWCOUNT_STRING);
+			$this->_writer->writeValue($count);
+		}
+
+		return $this;
+	}
+
+
+	/**
+	 * Writes the next page link.
+	 *
+	 * @param ODataLink $nextPageLinkUri Uri for next page link.
+	 *
+	 * @return JsonODataV2Writer
+	 */
+	protected function writeNextPageLink(ODataLink $nextPageLinkUri = null)
+	{
+		// "__next" : uri
+		if ($nextPageLinkUri != null) {
+			$this->_writer
+				->writeName(ODataConstants::JSON_NEXT_STRING)
+				->writeValue($nextPageLinkUri->url);
+		}
+
+		return $this;
+	}
+
 }

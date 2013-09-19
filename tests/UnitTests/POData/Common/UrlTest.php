@@ -8,32 +8,60 @@ use POData\Common\UrlFormatException;
 class UrlTest extends \PHPUnit_Framework_TestCase
 {
 
-    public function testUrl()
+    public function testAbsoluteUrl()
     {
 
         $urlStr = "http://localhost/NorthwindService.svc/Customers('ALFKI')/Orders?\$filter=OrderID eq 123";
         $url = new Url($urlStr);
-        $this->assertEquals($url->getScheme(), 'http');
-        $this->assertEquals($url->getPort(), 80);
-        $this->assertEquals($url->getHost(), 'localhost');
-        $this->assertEquals($url->getPath(), "/NorthwindService.svc/Customers('ALFKI')/Orders");
-        $this->assertEquals($url->getQuery(), '$filter=OrderID eq 123');
+        $this->assertEquals('http', $url->getScheme());
+        $this->assertEquals(80, $url->getPort());
+        $this->assertEquals('localhost', $url->getHost());
+        $this->assertEquals("/NorthwindService.svc/Customers('ALFKI')/Orders", $url->getPath());
+        $this->assertEquals('$filter=OrderID eq 123', $url->getQuery());
         $this->assertTrue($url->isAbsolute());
         $this->assertFalse($url->isRelative());
+    }
 
+	public function testGetSegmentsAbsoluteUrlWithRedundantSlashing()
+	{
         //This is valid
         $urlStr = "http://localhost///NorthwindService.svc/Customers('ALFKI')/Orders//?\$filter=OrderID eq 123";
         $url = new Url($urlStr);
-        $segments = $url->getSegments();
-        $this->assertEquals(count($segments), 3);
-        $this->assertEquals($segments[0], 'NorthwindService.svc');
-        $this->assertEquals($segments[1], "Customers('ALFKI')");
-        $this->assertEquals($segments[2], "Orders");
+
+		$actual = $url->getSegments();
+
+		$expected = array(
+		    'NorthwindService.svc',
+		    "Customers('ALFKI')",
+		    "Orders",
+		);
+
+		$this->assertEquals($expected, $actual);
+	}
+
+	public function testAbsoluteUrlWithSpecialCharacters()
+	{
+		//TODO: i thought the @ made it so everything before is a username...
 
         //This is valid
         $urlStr = "http://localhost/NorthwindService.svc/@/./!/Customers('ALFKI')/Orders?\$filter=OrderID eq 123";
-        new Url($urlStr);
+		$url = new Url($urlStr);
+		$actual = $url->getSegments();
 
+		$expected = array(
+			'NorthwindService.svc',
+			'@',
+			'.',
+			'!',
+			"Customers('ALFKI')",
+			"Orders",
+		);
+		$this->assertEquals($expected, $actual);
+	}
+
+
+	public function testAbsoluteURLWithDoubleSlashesAfterService()
+	{
 	    $urlStr = "http://localhost/NorthwindService.svc//Customers('ALFKI')/Orders?\$filter=OrderID eq 123";
         try {
             new Url($urlStr);
@@ -41,7 +69,46 @@ class UrlTest extends \PHPUnit_Framework_TestCase
         } catch (UrlFormatException $exception) {
 	         $this->assertEquals("Bad Request - The url '$urlStr' is malformed", $exception->getMessage());
         }
+	}
 
+
+	public function testNotAURL()
+	{
+		$urlStr = "doubt i'm a url";
+		try {
+			new Url($urlStr);
+			$this->fail('An expected UrlFormatException has not been raised');
+		} catch (UrlFormatException $exception) {
+			$this->assertEquals("Bad Request - The url '$urlStr' is malformed", $exception->getMessage());
+		}
+	}
+
+
+	public function testNotAURLRelativeSpecified()
+	{
+		$urlStr = " ";//a tab was about all i could find that it failed on...rather permissive
+		try {
+			new Url($urlStr, false);
+			$this->fail('An expected UrlFormatException has not been raised');
+		} catch (UrlFormatException $exception) {
+			$this->assertEquals("Bad Request - The url '$urlStr' is malformed", $exception->getMessage());
+		}
+	}
+
+	public function testABadlyFormedURL()
+	{
+		$urlStr = "http:///example.com";     //this one gets passed the relative regex check, but not parse_url
+		try {
+			new Url($urlStr, false);
+			$this->fail('An expected UrlFormatException has not been raised');
+		} catch (UrlFormatException $exception) {
+			$this->assertEquals("Bad Request - The url '$urlStr' is malformed", $exception->getMessage());
+		}
+	}
+
+
+	public function testIsBaseOf()
+	{
 
         $urlStr1 = "http://localhost/NorthwindService.svc";
         $urlStr2 = "http://localhost/NorthwindService.svc/Customers('ALFKI')/Orders";
