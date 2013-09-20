@@ -31,13 +31,6 @@ class JsonODataV1Writer extends BaseODataWriter
      */
     protected $_writer;
 
-
-	/**
-	 * Text used to start a data object wrapper in JSON.
-	 *
-	 */
-	private $_jsonDataWrapper = "\"d\" : ";
-
     /**
      * Constructs and initializes the Json output writer.
      * 
@@ -123,11 +116,7 @@ class JsonODataV1Writer extends BaseODataWriter
         // [
         $this->_writer->startArrayScope();
         foreach ($urls->oDataUrls as $url) {
-            $this->_writer
-	            ->startObjectScope()
-                ->writeName(ODataConstants::JSON_URI_STRING)
-	            ->writeValue($url->oDataUrl)
-	            ->endScope();
+            $this->writeUrl($url);
         }
 
 	    // ]

@@ -47,13 +47,8 @@ class JsonODataV2Writer extends JsonODataV1Writer
             ->startArrayScope();
 
         foreach ($urls->oDataUrls as $url) {
-            $this->_writer
-	            ->startObjectScope()
-                ->writeName(ODataConstants::JSON_URI_STRING)
-	            ->writeValue($url->oDataUrl)
-	            ->endScope();
+            $this->writeUrl($url);
         }
-
 
 	    // ]
 	    $this->_writer->endScope();
