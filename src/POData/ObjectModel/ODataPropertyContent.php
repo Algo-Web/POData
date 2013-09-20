@@ -16,7 +16,7 @@ class ODataPropertyContent
      * The collection of properties
      * @var ODataProperty[]
      */
-    public $odataProperty;
+    public $properties;
     /**
      * 
      * To check if top level or not
@@ -34,6 +34,6 @@ class ODataPropertyContent
     public function __construct($isTopLevel = false)
     {
         $this->isTopLevel = $isTopLevel;
-        $this->odataProperty = array();
+        $this->properties = array();
     }
 }

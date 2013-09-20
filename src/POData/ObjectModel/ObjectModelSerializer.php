@@ -251,11 +251,11 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
         ResourceProperty &$resourceProperty, ODataPropertyContent &$odataPropertyContent
     ) {
         $odataPropertyContent->isTopLevel = true;
-        $odataPropertyContent->odataProperty[] = new ODataProperty();
+        $odataPropertyContent->properties[] = new ODataProperty();
         $this->_writePrimitiveValue(
             $primitiveValue, 
             $resourceProperty, 
-            $odataPropertyContent->odataProperty[0]
+            $odataPropertyContent->properties[0]
         );
     }
 
@@ -443,7 +443,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
                     $odataProperty = new ODataProperty();
                     $primitiveValue = $this->getPropertyValue($customObject, $resourceType, $resourceProperty);
                     $this->_writePrimitiveValue($primitiveValue, $resourceProperty, $odataProperty);
-                    $odataPropertyContent->odataProperty[] = $odataProperty;
+                    $odataPropertyContent->properties[] = $odataProperty;
                 }
             }
 
@@ -541,7 +541,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
                 } else if (ResourceProperty::sIsKindOf($propertyTypeKind, ResourcePropertyKind::PRIMITIVE)) {
                     $odataProperty = new ODataProperty();
                     $this->_writePrimitiveValue($propertyValue, $resourceProperty, $odataProperty);
-                    $odataPropertyContent->odataProperty[] = $odataProperty;
+                    $odataPropertyContent->properties[] = $odataProperty;
                 } else if ($propertyTypeKind == ResourcePropertyKind::COMPLEX_TYPE) {
                     $complexResourceType = $resourceProperty->getResourceType();
                     $this->_writeComplexValue(
@@ -701,7 +701,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
             $odataProperty->value = $content;
         }
 
-        $odataPropertyContent->odataProperty[] = $odataProperty;
+        $odataPropertyContent->properties[] = $odataProperty;
     }
 
     /**
@@ -761,7 +761,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
             $odataProperty->value = $odataBagContent;
         }
 
-        $odataPropertyContent->odataProperty[] = $odataProperty;
+        $odataPropertyContent->properties[] = $odataProperty;
     }
 
     /**

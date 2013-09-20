@@ -108,11 +108,11 @@ class ServiceDocumentWriterFactoryTest extends  BaseUnitTestCase {
 		$factory = new ServiceDocumentWriterFactory();
 
 		try {
-			$factory->getWriter($this->mockService, ResponseFormat::UNSUPPORTED());
+			$factory->getWriter($this->mockService, ResponseFormat::METADATA_DOCUMENT());
 			$this->fail("Expected exception not thrown");
 		}
 		catch(\Exception $ex){
-			$this->assertEquals(Messages::badFormatForServiceDocument(ResponseFormat::UNSUPPORTED()), $ex->getMessage());
+			$this->assertEquals(Messages::badFormatForServiceDocument(ResponseFormat::METADATA_DOCUMENT()), $ex->getMessage());
 		}
 
 

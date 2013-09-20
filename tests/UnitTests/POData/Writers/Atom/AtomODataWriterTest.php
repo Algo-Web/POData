@@ -179,7 +179,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $pr2->typeName = 'string';
         $pr2->value = 'Kothari';
         
-        $propCont1_1->odataProperty = array($pr1, $pr2);
+        $propCont1_1->properties = array($pr1, $pr2);
 		$propCont1_1_1 = new ODataPropertyContent();
 		
 		$pr3 = new ODataProperty();
@@ -202,8 +202,8 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $pr6->typeName = null;
         $pr6->value = $propCont1_1;
         
-		$propCont1_1_1->odataProperty = array ($pr3,$pr4);
-        $propCont1->odataProperty = array($pr5, $pr6);
+		$propCont1_1_1->properties = array ($pr3,$pr4);
+        $propCont1->properties = array($pr5, $pr6);
         
         $bagProp1->propertyContents = array($propCont1);
         
@@ -215,7 +215,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $prop1 = $pr7;
         
         $propCont = new ODataPropertyContent ();
-        $propCont->odataProperty = array ($prop1);
+        $propCont->properties = array ($prop1);
         $entry1->propertyContent = $propCont;
     	
         $feed->entries = array (
@@ -308,7 +308,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $entry1->isMediaLinkEntry = true;
         
         $propCont = new ODataPropertyContent ();
-        $propCont->odataProperty = array (); 
+        $propCont->properties = array ();
         $entry1->propertyContent = $propCont;
 
 	    $writer = new AtomODataWriter('http://localhost/NorthWind.svc');
@@ -387,7 +387,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $pr2->typeName = 'string';
         $pr2->value = 'Kothari';
 
-        $propCont3_1->odataProperty = array($pr1, $pr2);
+        $propCont3_1->properties = array($pr1, $pr2);
 		$propCont3_2 = new ODataPropertyContent();
 		
 		$pr3 = new ODataProperty();
@@ -400,7 +400,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $pr4->typeName = 'string';
         $pr4->value = 'Chandy';
 		
-		$propCont3_2->odataProperty = array ($pr3, $pr4);
+		$propCont3_2->properties = array ($pr3, $pr4);
 		
         $pr5 = new ODataProperty();
         $pr5->name = 'name';
@@ -412,7 +412,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $pr6->typeName = null;
         $pr6->value = $propCont3_2;
 		
-        $propCont3->odataProperty = array($pr5, $pr6);
+        $propCont3->properties = array($pr5, $pr6);
         $bagProp1->propertyContents = array($propCont3);
         
         $pr7 = new ODataProperty();
@@ -434,7 +434,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $pr9->typeName = 'String';
         $pr9->value = 'Ankur Road';
         
-        $propCont4->odataProperty = array ($pr8,$pr9);
+        $propCont4->properties = array ($pr8,$pr9);
         
         $pr9= new ODataProperty();
         $pr9->name = 'Address';
@@ -477,7 +477,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $pr14->typeName = '';
         $pr14->value = 'Ahmedabad';
         
-        $propCont5_1->odataProperty = array($pr12, $pr13, $pr14);
+        $propCont5_1->properties = array($pr12, $pr13, $pr14);
         
         $propCont5_2 = new ODataPropertyContent();
 
@@ -496,7 +496,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $pr17->typeName = '';
         $pr17->value = 'Pune';
         
-        $propCont5_2->odataProperty = array ($pr15, $pr16, $pr17);
+        $propCont5_2->properties = array ($pr15, $pr16, $pr17);
         
         $pr18= new ODataProperty();
         $pr18->name = 'Address';
@@ -508,7 +508,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $pr19->typeName = '';
         $pr19->value = $propCont5_2;
         
-        $propCont5->odataProperty = array ($pr18, $pr19);
+        $propCont5->properties = array ($pr18, $pr19);
         $bagProp3->propertyContents = array ($propCont5);
 
         $pr20= new ODataProperty();
@@ -534,7 +534,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $pr22->typeName = 'String';
         $pr22->value = 'le-merdian';
         
-        $propCont6_1_1->odataProperty = array($pr21, $pr22);
+        $propCont6_1_1->properties = array($pr21, $pr22);
 
         $pr23= new ODataProperty();
         $pr23->name = 'Street';
@@ -547,7 +547,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $pr24->value = $propCont6_1_1;
         
         
-        $propCont6_1->odataProperty = array($pr23, $pr24);
+        $propCont6_1->properties = array($pr23, $pr24);
         $propCont6_2 = new ODataPropertyContent();
 
         $pr25= new ODataProperty();
@@ -560,7 +560,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $pr26->typeName = '';
         $pr26->value = '';
         
-        $propCont6_2->odataProperty = array ($pr25, $pr26);
+        $propCont6_2->properties = array ($pr25, $pr26);
 
         $pr27= new ODataProperty();
         $pr27->name = 'Addresses';
@@ -572,7 +572,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $pr28->typeName = '';
         $pr28->value = $propCont6_2;
         
-        $propCont6->odataProperty = array ($pr27, $pr28);
+        $propCont6->properties = array ($pr27, $pr28);
         $bagProp4->propertyContents = array ($propCont6);
         
         $pr29= new ODataProperty();
@@ -583,7 +583,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $prop_address = $pr29;
         
         $propCont = new ODataPropertyContent ();
-        $propCont->odataProperty = array (
+        $propCont->properties = array (
             $prop1,
             //$prop2,
             $prop3,
@@ -700,7 +700,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $pr2->typeName = 'string';
         $pr2->value = 'Kothari';
         
-        $propCon1->odataProperty = array ($pr1, $pr2);
+        $propCon1->properties = array ($pr1, $pr2);
 
         $pr3 = new ODataProperty();
         $pr3->name = 'name';
@@ -720,7 +720,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $prop5->value = 'Gujarat';
         
         $propCon = new ODataPropertyContent ();
-        $propCon->odataProperty = array (
+        $propCon->properties = array (
             $prop3,
             $prop4,
             $prop5
@@ -748,7 +748,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $pr7->typeName = 'string';
         $pr7->value = 'Kothari';
         
-        $propCont1_1->odataProperty = array($pr6, $pr7);
+        $propCont1_1->properties = array($pr6, $pr7);
 
         $propCont1_2 = new ODataPropertyContent();
 
@@ -762,7 +762,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $pr9->typeName = 'string';
         $pr9->value = 'Chandy';
         
-        $propCont1_2->odataProperty = array ($pr8, $pr9);
+        $propCont1_2->properties = array ($pr8, $pr9);
 
         $pr10 = new ODataProperty();
         $pr10->name = 'name';
@@ -774,7 +774,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $pr11->typeName = null;
         $pr11->value = $propCont1_2;
         
-        $propCont1->odataProperty = array($pr10, $pr11);
+        $propCont1->properties = array($pr10, $pr11);
         $bagProp1->propertyContents = array($propCont1);
 
         $pr12 = new ODataProperty();
@@ -785,7 +785,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $prop1 = $pr12;
         
         $propCont = new ODataPropertyContent ();
-        $propCont->odataProperty = array ($prop1);
+        $propCont->properties = array ($prop1);
         $odataEntryItem->propertyContent = $propCont;
 
 	    $writer = new AtomODataWriter('http://localhost/NorthWind.svc');
@@ -858,7 +858,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
     	$prop->value = "56";
 
     	$propCont = new ODataPropertyContent();
-    	$propCont->odataProperty = array($prop);
+    	$propCont->properties = array($prop);
     	$propCont->isTopLevel = true;
 
 
@@ -880,7 +880,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">56</d:C
      * test for write top level Complex property.
      */
     public function testComplexProperty(){
-    	$propCont1 = new ODataPropertyContent();
+
     	
         $pr1 = new ODataProperty();
     	$pr1->name = "FlatNo.";
@@ -896,8 +896,9 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">56</d:C
     	$pr3->name = "City";
     	$pr3->typeName = null;
     	$pr3->value = "Ahmedabad";
-    	
-    	$propCont1->odataProperty = array($pr1, $pr2, $pr3);
+
+	    $propCont1 = new ODataPropertyContent();
+    	$propCont1->properties = array($pr1, $pr2, $pr3);
     	
     	$prop = new ODataProperty();
     	$prop->name = "Address";
@@ -905,7 +906,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">56</d:C
     	$prop->value = $propCont1;
 
     	$propCont = new ODataPropertyContent();
-    	$propCont->odataProperty = array($prop);
+    	$propCont->properties = array($prop);
     	$propCont->isTopLevel = true;
 
 
@@ -987,7 +988,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 		$bagEntryProp4ContentProp1ContentProp2->typeName = 'Edm.String';
 		$bagEntryProp4ContentProp1ContentProp2->value = '508';
 		
-		$bagEntryProp4ContentProp1Content->odataProperty = array($bagEntryProp4ContentProp1ContentProp1,
+		$bagEntryProp4ContentProp1Content->properties = array($bagEntryProp4ContentProp1ContentProp1,
 		                                                         $bagEntryProp4ContentProp1ContentProp2);
 		
 		//end property content for bagEntryProp4ContentProp1
@@ -1006,7 +1007,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 		$bagEntryProp4ContentProp1Content2Prop2->typeName = 'Edm.String';
 		$bagEntryProp4ContentProp1Content2Prop2->value = '102';
 		
-		$bagEntryProp4ContentProp1Content2->odataProperty = array($bagEntryProp4ContentProp1Content2Prop1,
+		$bagEntryProp4ContentProp1Content2->properties = array($bagEntryProp4ContentProp1Content2Prop1,
 		                                                         $bagEntryProp4ContentProp1Content2Prop2);
 		
 		//end property content for bagEntryProp4ContentProp1
@@ -1024,7 +1025,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 		//property 4 ends
 		
 		
-		$entryPropContent->odataProperty = array($entryProp1, $entryProp2, $entryProp3, $entryProp4);
+		$entryPropContent->properties = array($entryProp1, $entryProp2, $entryProp3, $entryProp4);
 		
 		$entry->propertyContent = $entryPropContent;
 
@@ -1089,7 +1090,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
     	                              "y2k2712@yahoo.com");
     	
     	$propCont = new ODataPropertyContent();
-    	$propCont->odataProperty = array($odataProperty);
+    	$propCont->properties = array($odataProperty);
     	$propCont->isTopLevel = true;
 
 	   $writer = new AtomODataWriter('http://localhost/NorthWind.svc');

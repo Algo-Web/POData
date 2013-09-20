@@ -24,7 +24,7 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 	{
 		$oDataUrl = new ODataURL();
 		$oDataUrl->oDataUrl = 'http://services.odata.org/OData/OData.svc/Suppliers(0)';
-		$writer = new JsonODataV2Writer(true);
+		$writer = new JsonODataV2Writer();
 		$result = $writer->write($oDataUrl);
 		$this->assertSame($writer, $result);
 		
@@ -33,7 +33,7 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 
 		$expected = '{ "d" : {"uri": "http://services.odata.org/OData/OData.svc/Suppliers(0)"} }';
 		$expected = json_decode($expected);
-		$this->assertEquals($expected, $actual);
+		$this->assertEquals($expected, $actual, "raw JSON is: " . $writer->getOutput());
 	}
 	
 	/**
@@ -54,7 +54,7 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 		                                       $oDataUrl3
 		                                      );
 		$oDataUrlCollection->count = 3;
-		$writer = new JsonODataV2Writer(true);
+		$writer = new JsonODataV2Writer();
 		$result = $writer->write($oDataUrlCollection);
 		$this->assertSame($writer, $result);
 
@@ -81,7 +81,7 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 		
 		 $expected = json_decode($expected);
 
-		$this->assertEquals($expected, $actual);                                      
+		$this->assertEquals($expected, $actual, "raw JSON is: " . $writer->getOutput());
 	}
 	
 	/**
@@ -131,7 +131,7 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 		$entry1Prop2->typeName = 'Edm.String';
 		$entry1Prop2->value = 'Food';
 		
-		$entry1PropContent->odataProperty = array($entry1Prop1, $entry1Prop2);
+		$entry1PropContent->properties = array($entry1Prop1, $entry1Prop2);
 		//entry 1 property content end
 		
 		$entry1->propertyContent = $entry1PropContent;
@@ -153,7 +153,7 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 		$oDataFeed->entries = array($entry1);
 		$oDataFeed->isTopLevel = true;
 		
-		$writer = new JsonODataV2Writer(true);
+		$writer = new JsonODataV2Writer();
 		$result = $writer->write($oDataFeed);
 		$this->assertSame($writer, $result);
 
@@ -183,7 +183,7 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 					}';
 		 $expected = json_decode($expected);
 
-		$this->assertEquals($expected, $actual); 
+		$this->assertEquals($expected, $actual, "raw JSON is: " . $writer->getOutput());
 	}
 	
 	/**
@@ -260,7 +260,7 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 		$compForEntry1Prop3Prop5->typeName = 'Edm.String';
 		$compForEntry1Prop3Prop5->value = 'USA';
 		
-		$compForEntry1Prop3->odataProperty = array($compForEntry1Prop3Prop1, 
+		$compForEntry1Prop3->properties = array($compForEntry1Prop3Prop1,
 		                                           $compForEntry1Prop3Prop2, 
 		                                           $compForEntry1Prop3Prop3, 
 		                                           $compForEntry1Prop3Prop4, 
@@ -276,7 +276,7 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 		$entry1Prop4->typeName = 'Edm.Int16';
 		$entry1Prop4->value = (string) 0 ;
 		
-		$entry1PropContent->odataProperty = array($entry1Prop1, $entry1Prop2, $entry1Prop3, $entry1Prop4);
+		$entry1PropContent->properties = array($entry1Prop1, $entry1Prop2, $entry1Prop3, $entry1Prop4);
 		//entry 1 property content end
 		
 		$entry1->propertyContent = $entry1PropContent;
@@ -344,7 +344,7 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 		$compForEntry2Prop3Prop5->typeName = 'Edm.String';
 		$compForEntry2Prop3Prop5->value = 'USA';
 		
-		$compForEntry2Prop3->odataProperty = array($compForEntry2Prop3Prop1, 
+		$compForEntry2Prop3->properties = array($compForEntry2Prop3Prop1,
 		                                           $compForEntry2Prop3Prop2, 
 		                                           $compForEntry2Prop3Prop3, 
 		                                           $compForEntry2Prop3Prop4, 
@@ -360,7 +360,7 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 		$entry2Prop4->typeName = 'Edm.Int16';
 		$entry2Prop4->value = (string) 0 ;
 		
-		$entry2PropContent->odataProperty = array($entry2Prop1, $entry2Prop2, $entry2Prop3, $entry2Prop4);
+		$entry2PropContent->properties = array($entry2Prop1, $entry2Prop2, $entry2Prop3, $entry2Prop4);
 		//entry 2 property content end
 		
 		$entry2->propertyContent = $entry2PropContent;
@@ -383,7 +383,7 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 		$oDataFeed->entries = array($entry1, $entry2);
 		$oDataFeed->isTopLevel = true;
 		
-		$writer = new JsonODataV2Writer(true);
+		$writer = new JsonODataV2Writer();
 		$result = $writer->write($oDataFeed);
 		$this->assertSame($writer, $result);
 
@@ -448,7 +448,7 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 					}';
 		 $expected = json_decode($expected);
 
-		$this->assertEquals($expected, $actual);
+		$this->assertEquals($expected, $actual, "raw JSON is: " . $writer->getOutput());
 	}
 	
 	/**
@@ -479,7 +479,7 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 		$entryProp2->typeName = 'Edm.String';
 		$entryProp2->value = 'Food';
 		
-		$entryPropContent->odataProperty = array($entryProp1, $entryProp2);
+		$entryPropContent->properties = array($entryProp1, $entryProp2);
 		
 		$entry->propertyContent = $entryPropContent;
 		
@@ -491,7 +491,7 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 		
     	$entry->links = array($link);
     	
-    	$writer = new JsonODataV2Writer(true);
+    	$writer = new JsonODataV2Writer();
 		$result = $writer->write($entry);
 		$this->assertSame($writer, $result);
 
@@ -517,15 +517,12 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 					}';
 		 $expected = json_decode($expected);
 
-		$this->assertEquals($expected, $actual);
+		$this->assertEquals($expected, $actual, "raw JSON is: " . $writer->getOutput());
 		
 	}
 	
-	/**
-	 * 
-	 * Testing write property
-	 */
-	function testWriteProperty()
+
+	function testWriteComplexProperty()
 	{
 		$propContent = new ODataPropertyContent();
 		
@@ -558,7 +555,7 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 		$compProp5->typeName = 'Edm.String';
 		$compProp5->value = 'USA';
 		
-		$compProp->odataProperty = array($compProp1, 
+		$compProp->properties = array($compProp1,
 		                                 $compProp2, 
 		                                 $compProp3, 
 		                                 $compProp4, 
@@ -570,9 +567,9 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 		$prop1->value = $compProp;
 		
 		
-		$propContent->odataProperty = array($prop1);
+		$propContent->properties = array($prop1);
 		
-		$writer = new JsonODataV2Writer(true);
+		$writer = new JsonODataV2Writer();
 		$result = $writer->write($propContent);
 		$this->assertSame($writer, $result);
 
@@ -598,7 +595,7 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 					}';
 		 $expected = json_decode($expected);
 		
-		$this->assertEquals($expected, $actual);
+		$this->assertEquals($expected, $actual, "raw JSON is: " . $writer->getOutput());
 	}
 	
 	/**
@@ -607,6 +604,8 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 	 */
 	function testBagProperty()
 	{
+		//TODO: bags are not available till v3 see https://github.com/balihoo/POData/issues/79
+
 		//entry
 		$entry = new ODataEntry();
 		$entry->id = 'http://host/service.svc/Customers(1)';
@@ -663,7 +662,7 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 		$bagEntryProp4ContentProp1ContentProp2->typeName = 'Edm.String';
 		$bagEntryProp4ContentProp1ContentProp2->value = '508';
 		
-		$bagEntryProp4ContentProp1Content->odataProperty = array($bagEntryProp4ContentProp1ContentProp1,
+		$bagEntryProp4ContentProp1Content->properties = array($bagEntryProp4ContentProp1ContentProp1,
 		                                                         $bagEntryProp4ContentProp1ContentProp2);
 		
 		//end property content for bagEntryProp4ContentProp1
@@ -682,7 +681,7 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 		$bagEntryProp4ContentProp1Content2Prop2->typeName = 'Edm.String';
 		$bagEntryProp4ContentProp1Content2Prop2->value = '102';
 		
-		$bagEntryProp4ContentProp1Content2->odataProperty = array($bagEntryProp4ContentProp1Content2Prop1,
+		$bagEntryProp4ContentProp1Content2->properties = array($bagEntryProp4ContentProp1Content2Prop1,
 		                                                         $bagEntryProp4ContentProp1Content2Prop2);
 		
 		//end property content for bagEntryProp4ContentProp1
@@ -701,13 +700,13 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 		//property 4 ends
 		
 		
-		$entryPropContent->odataProperty = array($entryProp1, $entryProp2, $entryProp3, $entryProp4);
+		$entryPropContent->properties = array($entryProp1, $entryProp2, $entryProp3, $entryProp4);
 		
 		$entry->propertyContent = $entryPropContent;
 		
-		$writer = new JsonODataV2Writer(true);
+		$writer = new JsonODataV2Writer();
 		$result = $writer->write($entry);
-		$this->assertSame($writer, $result);
+		$this->assertSame($writer, $result, "raw JSON is: " . $writer->getOutput());
 
 
 
@@ -751,7 +750,7 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 					}';
 	    $expected = json_decode($expected);
 
-		$this->assertEquals($expected, $actual);
+		$this->assertEquals($expected, $actual, "raw JSON is: " . $writer->getOutput());
 	}
 	
     /** 
@@ -765,9 +764,9 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
     	$property->value = 56;
 
     	$content = new ODataPropertyContent();
-    	$content->odataProperty = array($property);
+    	$content->properties = array($property);
     	$content->isTopLevel = true;
-    	$writer = new JsonODataV2Writer(true);
+    	$writer = new JsonODataV2Writer();
     	$result = $writer->write($content);
 	    $this->assertSame($writer, $result);
 
@@ -784,7 +783,7 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 					}';
         $expected = json_decode($expected);
 
-	    $this->assertEquals($expected, $actual); 
+	    $this->assertEquals($expected, $actual, "raw JSON is: " . $writer->getOutput());
     }
      
 }

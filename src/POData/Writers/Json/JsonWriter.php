@@ -23,7 +23,7 @@ class JsonWriter
      * Text used to start a data object wrapper in JSON.
      *
      */
-    private $_jsonDataWrapper = "\"d\" : ";
+    private $_jsonDataWrapper;
 
     /**
      * Writer to write text into
@@ -47,10 +47,12 @@ class JsonWriter
      * Creates a new instance of Json writer
      * 
      * @param string $writer writer to which text needs to be written
+     * @param string $jsonDataWrapper the json text that wraps a piece of data. defaults to json light's "value" :
      */
-    public function __construct($writer)
+    public function __construct($writer, $jsonDataWrapper = '"value" : ')
     {
         $this->_writer = new IndentedTextWriter($writer);
+	    $this->_jsonDataWrapper = $jsonDataWrapper;
     }
 
     /**

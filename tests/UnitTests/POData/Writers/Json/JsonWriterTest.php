@@ -366,14 +366,6 @@ class JsonWriterTest extends \PHPUnit_Framework_TestCase {
 	}
 
 
-	public function testWriteDataWrapper(){
-		$writer = new JsonWriter("");
-		$result = $writer->writeDataWrapper();
-		$this->assertSame($result, $writer);
-		$this->assertEquals('"d" : ', $writer->getJsonOutput());
-
-	}
-
 
 	public function testComplexObject(){
 

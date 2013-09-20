@@ -302,11 +302,11 @@ class ODataWriterFactoryTest extends  BaseUnitTestCase {
 		$factory = new ODataWriterFactory();
 
 		try {
-			$factory->getWriter($this->mockService, $this->mockRequest, ResponseFormat::UNSUPPORTED());
+			$factory->getWriter($this->mockService, $this->mockRequest, ResponseFormat::METADATA_DOCUMENT());
 			$this->fail("Expected exception not thrown");
 		}
 		catch(\Exception $ex){
-			$this->assertEquals(Messages::badFormatForResource(ResponseFormat::UNSUPPORTED()), $ex->getMessage());
+			$this->assertEquals(Messages::badFormatForResource(ResponseFormat::METADATA_DOCUMENT()), $ex->getMessage());
 		}
 
 	}

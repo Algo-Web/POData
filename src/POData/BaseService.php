@@ -351,7 +351,14 @@ abstract class BaseService implements IRequestHandler, IService
 
         $responseContentType = null;
         $responseFormat = self::getResponseFormat($requestDescription, $uriProcessor, $this, $responseContentType );
-        $odataModelInstance = null;
+
+	    if (is_null($responseContentType)) {
+		    //Note: when refactoring this, if it's targeting a media resource it may return null and be ok..not sure
+		    //what situations this will arrise.
+		    throw new ODataException( Messages::unsupportedMediaType(), 415 );
+	    }
+
+	    $odataModelInstance = null;
         $hasResponseBody = true;
         // Execution required at this point if request target to any resource 
         // other than
@@ -361,8 +368,7 @@ abstract class BaseService implements IRequestHandler, IService
         // (3) service directory - internal resource
         if ($requestDescription->needExecution()) {
             $uriProcessor->execute();
-            $objectModelSerializer 
-                = new ObjectModelSerializer($this, $requestDescription);
+            $objectModelSerializer = new ObjectModelSerializer($this, $requestDescription);
             if (!$requestDescription->isSingleResult()) {
                 // Code path for collection (feed or links)
                 $entryObjects = $requestDescription->getTargetResult();
@@ -373,8 +379,7 @@ abstract class BaseService implements IRequestHandler, IService
                 // If related resource set is empty for an entry then we should 
                 // not throw error instead response must be empty feed or empty links
                 if ($requestDescription->isLinkUri()) {
-                    $odataModelInstance 
-                        = $objectModelSerializer->writeUrlElements($entryObjects);
+                    $odataModelInstance = $objectModelSerializer->writeUrlElements($entryObjects);
                     self::assert(
                         $odataModelInstance instanceof \POData\ObjectModel\ODataURLCollection, 
                         '$odataModelInstance instanceof ODataURLCollection'
@@ -392,7 +397,7 @@ abstract class BaseService implements IRequestHandler, IService
                 $result = $requestDescription->getTargetResult();
                 $requestTargetKind = $requestDescription->getTargetKind();
                 if ($requestDescription->isLinkUri()) {
-                    // In the query 'Orders(1245)/$links/Customer', the targetted 
+                    // In the query 'Orders(1245)/$links/Customer', the targeted
                     // Customer might be null
                     if (is_null($result)) {
                         ODataException::createResourceNotFoundError(
@@ -400,8 +405,7 @@ abstract class BaseService implements IRequestHandler, IService
                         );
                     }
 
-                    $odataModelInstance 
-                        = $objectModelSerializer->writeUrlElement($result);
+                    $odataModelInstance = $objectModelSerializer->writeUrlElement($result);
                 } else if ($requestTargetKind == RequestTargetKind::RESOURCE) {
                     if (!is_null($this->_serviceHost->getRequestIfMatch())
                         && !is_null($this->_serviceHost->getRequestIfNoneMatch())
@@ -503,7 +507,7 @@ abstract class BaseService implements IRequestHandler, IService
     /**
      * Gets the response format for the requested resource.
      * 
-     * @param RequestDescription $requestDescription  The request submitted by client and it's execution result.
+     * @param RequestDescription $request  The request submitted by client and it's execution result.
      * @param UriProcessor       $uriProcessor        The reference to the UriProcessor.
      * @param IService        $service         Reference to the service implementation instance
      * @param string             &$responseContentType On Return, this will hold
@@ -515,33 +519,34 @@ abstract class BaseService implements IRequestHandler, IService
      * @throws ODataException, HttpHeaderFailure
      */
     public static function getResponseFormat(
-	    RequestDescription $requestDescription,
+	    RequestDescription $request,
         UriProcessor $uriProcessor,
         IService $service,
         &$responseContentType
     ) {
-	    //By default say the format is unsupported
-	    $responseFormat = ResponseFormat::UNSUPPORTED();
 
-        // The Accept request-header field specifies media types which are 
-        // acceptable for the response
+        // The Accept request-header field specifies media types which are acceptable for the response
+	    // Note the $format QSP is parsed and shoved in the header collection so it overrides
+	    // any normal headers
         $requestAcceptText = $service->getHost()->getRequestAccept();
 
-        $requestTargetKind = $requestDescription->getTargetKind();
+	    //The response format can be dictated by the target resource kind. IE a $value will be different then expected
+	    //getTargetKind doesn't deal with link resources directly and this can change things
+	    $requestTargetKind = $request->isLinkUri() ? RequestTargetKind::LINK : $request->getTargetKind();
 
-        if ($requestDescription->isLinkUri()) {
-            $requestTargetKind = RequestTargetKind::LINK;
-        }
 
         if ($requestTargetKind == RequestTargetKind::METADATA) {
             $responseContentType = HttpProcessUtility::selectMimeType(
-                $requestAcceptText, 
+                $requestAcceptText,
                 array(ODataConstants::MIME_APPLICATION_XML)
             );
-            if (!is_null($responseContentType)) {
-                $responseFormat = ResponseFormat::METADATA_DOCUMENT();
-            }
-        } else if ($requestTargetKind == RequestTargetKind::SERVICE_DIRECTORY) {
+
+
+            return ResponseFormat::METADATA_DOCUMENT();
+        }
+
+
+	    if ($requestTargetKind == RequestTargetKind::SERVICE_DIRECTORY) {
             $responseContentType = HttpProcessUtility::selectMimeType(
                 $requestAcceptText, 
                 array(
@@ -550,14 +555,18 @@ abstract class BaseService implements IRequestHandler, IService
                     ODataConstants::MIME_APPLICATION_JSON
                 )
             );
-            if (!is_null($responseContentType)) {
-                $responseFormat = self::_getContentFormat($responseContentType);
-            }
-        } else if ($requestTargetKind == RequestTargetKind::PRIMITIVE_VALUE) {
+
+            return self::_getResponseFormatForMime($responseContentType);
+
+        }
+
+
+	    if ($requestTargetKind == RequestTargetKind::PRIMITIVE_VALUE) {
             $supportedResponseMimeTypes = array(ODataConstants::MIME_TEXTPLAIN);
             $responseFormat = ResponseFormat::TEXT();
-            if ($requestDescription->getIdentifier() != '$count') {
-                $projectedProperty = $requestDescription->getProjectedProperty();
+
+            if ($request->getIdentifier() != '$count') {
+                $projectedProperty = $request->getProjectedProperty();
                 self::assert(
                     !is_null($projectedProperty), 
                     '!is_null($projectedProperty)'
@@ -581,10 +590,12 @@ abstract class BaseService implements IRequestHandler, IService
                 $requestAcceptText, 
                 $supportedResponseMimeTypes
             );
-            if (is_null($responseContentType)) {
-                $responseFormat = ResponseFormat::UNSUPPORTED();
-            }
-        } else if ($requestTargetKind == RequestTargetKind::PRIMITIVE
+
+		    return $responseFormat;
+	    }
+
+
+	    if ($requestTargetKind == RequestTargetKind::PRIMITIVE
             || $requestTargetKind == RequestTargetKind::COMPLEX_OBJECT
             || $requestTargetKind == RequestTargetKind::BAG
             || $requestTargetKind == RequestTargetKind::LINK
@@ -597,10 +608,12 @@ abstract class BaseService implements IRequestHandler, IService
                     ODataConstants::MIME_APPLICATION_JSON
                   )
             );
-            if (!is_null($responseContentType)) {
-                $responseFormat = self::_getContentFormat($responseContentType);
-            }
-        } else if ($requestTargetKind == RequestTargetKind::RESOURCE) {
+
+		    return self::_getResponseFormatForMime($responseContentType);
+        }
+
+
+	    if ($requestTargetKind == RequestTargetKind::RESOURCE) {
             $responseContentType = HttpProcessUtility::selectMimeType(
                 $requestAcceptText, 
                 array(
@@ -608,69 +621,59 @@ abstract class BaseService implements IRequestHandler, IService
                     ODataConstants::MIME_APPLICATION_JSON
                   )
             );
-            if (!is_null($responseContentType)) {
-                $responseFormat = self::_getContentFormat($responseContentType);
-            }
-        } else if ($requestTargetKind == RequestTargetKind::MEDIA_RESOURCE) {
-            $responseFormat = ResponseFormat::BINARY();
-            if ($requestDescription->isNamedStream() 
-                || $requestDescription->getTargetResourceType()->isMediaLinkEntry()
-            ) {
-                $streamInfo = $requestDescription->getResourceStreamInfo();
-                //Execute the query as we need media resource instance for 
-                //further processing
-                $uriProcessor->execute();
-                $requestDescription->setExecuted();
-                // DSSW::getStreamContentType can throw error in 2 cases
-                // 1. If the required stream implementation not found
-                // 2. If IDSSP::getStreamContentType returns NULL for MLE 
-                $contentType 
-                    = $service->getStreamProviderWrapper()
-                        ->getStreamContentType(
-                            $requestDescription->getTargetResult(), 
-                            $streamInfo
-                        );
-                if (!is_null($contentType)) {
-                    $responseContentType = HttpProcessUtility::selectMimeType(
-                        $requestAcceptText, 
-                        array($contentType)
-                    );
 
-                    if (is_null($responseContentType)) {
-                        $responseFormat = ResponseFormat::UNSUPPORTED();
-                    }
-                } else {
-                    // For NamedStream StreamWrapper::getStreamContentType 
-                    // can return NULL if the requested named stream has not 
-                    // yet been uploaded. But for an MLE if 
-                    // IDSSP::getStreamContentType
-                    // returns NULL then StreamWrapper will throw error
-                    $responseContentType = null;
-                }
-            } else {
-                ODataException::createBadRequestError(
-                    Messages::badRequestInvalidUriForMediaResource(
-                        $service->getHost()->getAbsoluteRequestUri()->getUrlAsString()
-                    )
+		    return self::_getResponseFormatForMime($responseContentType);
+        }
+
+
+	    if ($requestTargetKind == RequestTargetKind::MEDIA_RESOURCE) {
+
+		    if (!$request->isNamedStream() && !$request->getTargetResourceType()->isMediaLinkEntry()){
+			    ODataException::createBadRequestError(
+				    Messages::badRequestInvalidUriForMediaResource(
+					    $service->getHost()->getAbsoluteRequestUri()->getUrlAsString()
+				    )
+			    );
+		    }
+
+            $uriProcessor->execute();
+            $request->setExecuted();
+            // DSSW::getStreamContentType can throw error in 2 cases
+            // 1. If the required stream implementation not found
+            // 2. If IDSSP::getStreamContentType returns NULL for MLE
+		    $responseContentType = $service->getStreamProviderWrapper()
+                ->getStreamContentType(
+					$request->getTargetResult(),
+				    $request->getResourceStreamInfo()
+                );
+
+
+		    // Note StreamWrapper::getStreamContentType can return NULL if the requested named stream has not
+		    // yet been uploaded. But for an MLE if IDSSP::getStreamContentType returns NULL then StreamWrapper will throw error
+		    if (!is_null($responseContentType)) {
+                $responseContentType = HttpProcessUtility::selectMimeType(
+                    $requestAcceptText,
+                    array($responseContentType)
                 );
             }
+
+		    return ResponseFormat::BINARY();
+
         }
 
-        if ($responseFormat == ResponseFormat::UNSUPPORTED()) {
-            throw new ODataException( Messages::unsupportedMediaType(), 415 );
-        }
+	    //If we got here, we just don't know what it is...
+        throw new ODataException( Messages::unsupportedMediaType(), 415 );
 
-        return $responseFormat;
     }
 
     /**
-     * Get the content format corresponding to the given mime type.
+     * Get the format corresponding to the given mime type.
      *
      * @param string $mime mime type for the request.
      * 
      * @return ResponseFormat Response format mapping to the given mime type.
      */
-    private static function _getContentFormat($mime)
+    private static function _getResponseFormatForMime($mime)
     {
         if (strcasecmp($mime, ODataConstants::MIME_APPLICATION_JSON) === 0) {
             return ResponseFormat::JSON();

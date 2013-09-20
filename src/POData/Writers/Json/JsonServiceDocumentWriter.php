@@ -21,7 +21,7 @@ class JsonServiceDocumentWriter implements IServiceDocumentWriter
      * @var MetadataQueryProviderWrapper
      */
     private $_metadataQueryProviderWrapper;
-    
+
     /**
      * Constructs new instance of ServiceDocumentWriter
      * 
@@ -41,7 +41,7 @@ class JsonServiceDocumentWriter implements IServiceDocumentWriter
      */
     public function getOutput()
     {
-	    $writer = new JsonWriter("");
+	    $writer = new JsonWriter("", '"d" : ');
 	    $writer
 	        ->startObjectScope() // { "d" :
 	        ->writeDataWrapper()

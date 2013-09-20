@@ -13,7 +13,6 @@ use MyCLabs\Enum\Enum;
  * @method static \POData\ResponseFormat METADATA_DOCUMENT()
  * @method static \POData\ResponseFormat PLAIN_XML()
  * @method static \POData\ResponseFormat TEXT()
- * @method static \POData\ResponseFormat UNSUPPORTED()
  */
 class ResponseFormat extends Enum
 {
@@ -78,8 +77,4 @@ class ResponseFormat extends Enum
      */
     const TEXT = "Text";
 
-    /**
-     * An unsupported format
-     */
-    const UNSUPPORTED = "Unsupported";
 }
