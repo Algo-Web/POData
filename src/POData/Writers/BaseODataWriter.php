@@ -109,8 +109,6 @@ abstract class BaseODataWriter implements IODataWriter
 	abstract protected function writeEndLink(ODataLink $link);
 
 	/**
-	 * Start writing a top level url collection
-	 *
 	 * @param ODataUrlCollection $urls ODataUrlCollection to Write.
 	 *
 	 * @return BaseODataWriter

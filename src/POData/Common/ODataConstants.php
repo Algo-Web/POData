@@ -241,6 +241,9 @@ class ODataConstants
     //uri element name in json payload.
     const JSON_URI_STRING = 'uri';
 
+	//uri element name in json payload.
+	const JSON_URL_STRING = 'url';
+
     //type element name in json payload.
     const JSON_TYPE_STRING = 'type';
 

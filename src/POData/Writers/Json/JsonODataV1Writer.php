@@ -31,6 +31,9 @@ class JsonODataV1Writer extends BaseODataWriter
      */
     protected $_writer;
 
+
+	protected $urlKey = ODataConstants::JSON_URI_STRING;
+
     /**
      * Constructs and initializes the Json output writer.
      * 
@@ -97,7 +100,7 @@ class JsonODataV1Writer extends BaseODataWriter
     {
         $this->_writer
 	        ->startObjectScope()
-            ->writeName(ODataConstants::JSON_URI_STRING)
+            ->writeName($this->urlKey)
 	        ->writeValue($url->oDataUrl)
 	        ->endScope();
 
@@ -191,7 +194,7 @@ class JsonODataV1Writer extends BaseODataWriter
             // Write uri value only for entity types
             if ($entry->id != null) {
                 $this->_writer
-	                ->writeName(ODataConstants::JSON_URI_STRING)
+	                ->writeName($this->urlKey)
                     ->writeValue($entry->id);
             }
 
@@ -290,7 +293,7 @@ class JsonODataV1Writer extends BaseODataWriter
 			    ->startObjectScope()
 			    ->writeName(ODataConstants::JSON_DEFERRED_STRING)
 			    ->startObjectScope()
-			    ->writeName(ODataConstants::JSON_URI_STRING)
+			    ->writeName($this->urlKey)
 			    ->writeValue($link->url)
 			    ->endScope()
 		    ;
