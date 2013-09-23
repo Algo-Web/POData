@@ -11,9 +11,11 @@ use POData\ObjectModel\ODataMediaLink;
 use POData\ObjectModel\ODataPropertyContent;
 use POData\ObjectModel\ODataProperty;
 use POData\ObjectModel\ODataBagContent;
-use POData\Writers\Json\JsonLightNoMetadataODataWriter;
+use POData\Writers\Json\JsonLightMetadataLevel;
+use POData\Writers\Json\JsonLightODataWriter;
 
-class JsonLightNoMetadataODataWriterTest extends \PHPUnit_Framework_TestCase
+
+class JsonLightODataWriterNoMetadataTest extends \PHPUnit_Framework_TestCase
 {
 
 	/**
@@ -26,7 +28,7 @@ class JsonLightNoMetadataODataWriterTest extends \PHPUnit_Framework_TestCase
 
 		$oDataUrl = new ODataURL();
 		$oDataUrl->oDataUrl = 'http://services.odata.org/OData/OData.svc/Suppliers(0)';
-		$writer = new JsonLightNoMetadataODataWriter();
+		$writer = new JsonLightODataWriter(JsonLightMetadataLevel::NONE());
 		$result = $writer->write($oDataUrl);
 		$this->assertSame($writer, $result);
 		
@@ -44,7 +46,7 @@ class JsonLightNoMetadataODataWriterTest extends \PHPUnit_Framework_TestCase
 	 */
 	function testWriteURLCollection()
 	{
-		http://services.odata.org/v3/(S(q0qf0chjvehdij1b1itgm1yy))/OData/OData.svc/Categories(1)/$links/Products?$format=application/json;odata=nometadata
+		// see http://services.odata.org/v3/OData/OData.svc/Categories(1)/$links/Products?$format=application/json;odata=nometadata
 
 		$oDataUrlCollection = new ODataURLCollection();
 		$oDataUrl1 = new ODataURL();
@@ -57,8 +59,9 @@ class JsonLightNoMetadataODataWriterTest extends \PHPUnit_Framework_TestCase
 		                                       $oDataUrl2,
 		                                       $oDataUrl3
 		                                      );
-		$oDataUrlCollection->count = 3;
-		$writer = new JsonLightNoMetadataODataWriter();
+
+		$oDataUrlCollection->count = null; //simulate no $inlinecount
+		$writer = new JsonLightODataWriter(JsonLightMetadataLevel::NONE());
 		$result = $writer->write($oDataUrlCollection);
 		$this->assertSame($writer, $result);
 
@@ -81,6 +84,35 @@ class JsonLightNoMetadataODataWriterTest extends \PHPUnit_Framework_TestCase
 					}';
 
 		 $expected = json_decode($expected);
+
+		$this->assertEquals($expected, $actual, "raw JSON is: " . $writer->getOutput());
+
+
+		$oDataUrlCollection->count = 44; //simulate an $inlinecount
+		$writer = new JsonLightODataWriter(JsonLightMetadataLevel::NONE());
+		$result = $writer->write($oDataUrlCollection);
+		$this->assertSame($writer, $result);
+
+
+		//decoding the json string to test
+		$actual = json_decode($writer->getOutput());
+
+		$expected = '{
+		                "odata.count" : "44",
+		                "value" : [
+							{
+						        "url": "http://services.odata.org/OData/OData.svc/Products(0)"
+							},
+						    {
+						        "url": "http://services.odata.org/OData/OData.svc/Products(7)"
+						    },
+						    {
+						        "url": "http://services.odata.org/OData/OData.svc/Products(8)"
+						    }
+						]
+					}';
+
+		$expected = json_decode($expected);
 
 		$this->assertEquals($expected, $actual, "raw JSON is: " . $writer->getOutput());
 	}
@@ -163,7 +195,7 @@ class JsonLightNoMetadataODataWriterTest extends \PHPUnit_Framework_TestCase
 
 		$oDataFeed->rowCount = null;
 
-		$writer = new JsonLightNoMetadataODataWriter();
+		$writer = new JsonLightODataWriter(JsonLightMetadataLevel::NONE());
 		$result = $writer->write($oDataFeed);
 		$this->assertSame($writer, $result);
 
@@ -185,7 +217,7 @@ class JsonLightNoMetadataODataWriterTest extends \PHPUnit_Framework_TestCase
 		//Now we'll simulate an $inlinecount=allpages by specifying a count
 		$oDataFeed->rowCount = 33;
 
-		$writer = new JsonLightNoMetadataODataWriter();
+		$writer = new JsonLightODataWriter(JsonLightMetadataLevel::NONE());
 		$result = $writer->write($oDataFeed);
 		$this->assertSame($writer, $result);
 
@@ -193,7 +225,7 @@ class JsonLightNoMetadataODataWriterTest extends \PHPUnit_Framework_TestCase
 		//decoding the json string to test
 		$actual = json_decode($writer->getOutput());
 		$expected = '{
-						"odata.count":"3",
+						"odata.count":"33",
 					    "value" : [
 				            {
 				                "ID": 100,
@@ -206,35 +238,13 @@ class JsonLightNoMetadataODataWriterTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals($expected, $actual, "raw JSON is: " . $writer->getOutput());
 	}
 	
-	/**
-	 * 
-	 * Testing write feed function(complex property)
-	 */
-	function testWriteFeedCompProp()
+
+	function testWriteFeedWithComplexProperty()
 	{
 		//see http://services.odata.org/v3/(S(q0qf0chjvehdij1b1itgm1yy))/OData/OData.svc/Suppliers?$top=1&$format=application/json;odata=nometadata
 		// suppliers have address and location as complex properties
 
-		$oDataFeed = new ODataFeed();
-		$oDataFeed->id = 'FEED ID';
-		$oDataFeed->title = 'FEED TITLE';
-		//self link
-		$selfLink = new ODataLink();
-    	$selfLink->name = "Products";
-    	$selfLink->title = "Products";
-    	$selfLink->url = "Categories(0)/Products";
-		$oDataFeed->selfLink = $selfLink;
-		//self link end
 
-		
-		//next page
-		$nextPageLink = new ODataLink();
-		$nextPageLink->name = "Next Page Link";
-    	$nextPageLink->title = "Next Page";
-    	$nextPageLink->url = 'http://services.odata.org/OData/OData.svc$skiptoken=12';
-		$oDataFeed->nextPageLink = $nextPageLink;
-		//feed entries
-		
 		//entry1
 		$entry1 = new ODataEntry();
 		$entry1->id = 'http://services.odata.org/OData/OData.svc/Suppliers(0)';
@@ -402,13 +412,34 @@ class JsonLightNoMetadataODataWriterTest extends \PHPUnit_Framework_TestCase
 		//entry 2 links end
 		
 		//entry 2 end
-    	
+
+
+		$oDataFeed = new ODataFeed();
+		$oDataFeed->id = 'FEED ID';
+		$oDataFeed->title = 'FEED TITLE';
+		//self link
+		$selfLink = new ODataLink();
+		$selfLink->name = "Products";
+		$selfLink->title = "Products";
+		$selfLink->url = "Categories(0)/Products";
+		$oDataFeed->selfLink = $selfLink;
+		//self link end
+
+
+		//next page
+		$nextPageLink = new ODataLink();
+		$nextPageLink->name = "Next Page Link";
+		$nextPageLink->title = "Next Page";
+		$nextPageLink->url = 'http://services.odata.org/OData/OData.svc$skiptoken=12';
+		$oDataFeed->nextPageLink = $nextPageLink;
+		//feed entries
+
 		$oDataFeed->entries = array($entry1, $entry2);
 		$oDataFeed->isTopLevel = true;
 
 		$oDataFeed->rowCount = null; //simulate no inline count
 
-		$writer = new JsonLightNoMetadataODataWriter();
+		$writer = new JsonLightODataWriter(JsonLightMetadataLevel::NONE());
 		$result = $writer->write($oDataFeed);
 		$this->assertSame($writer, $result);
 
@@ -427,8 +458,7 @@ class JsonLightNoMetadataODataWriterTest extends \PHPUnit_Framework_TestCase
 									 "ZipCode": "98074",
 									 "Country": "USA"
 								},
-								"Concurrency": 0,
-								}
+								"Concurrency": 0
 							},
 							{
 								"ID": 1,
@@ -440,17 +470,18 @@ class JsonLightNoMetadataODataWriterTest extends \PHPUnit_Framework_TestCase
 									"ZipCode": "98052",
 									"Country": "USA"
 								},
-								"Concurrency": 0,							}
+								"Concurrency": 0
+							}
 						]
 					}';
-		 $expected = json_decode($expected);
+		$expected = json_decode($expected);
 
 		$this->assertEquals($expected, $actual, "raw JSON is: " . $writer->getOutput());
 
 
 		$oDataFeed->rowCount = null; //simulate  $inlinecount=allpages
 
-		$writer = new JsonLightNoMetadataODataWriter();
+		$writer = new JsonLightODataWriter(JsonLightMetadataLevel::NONE());
 		$result = $writer->write($oDataFeed);
 		$this->assertSame($writer, $result);
 
@@ -458,7 +489,6 @@ class JsonLightNoMetadataODataWriterTest extends \PHPUnit_Framework_TestCase
 		//decoding the json string to test
 		$actual = json_decode($writer->getOutput());
 		$expected = '{
-						"odata.count":"2",
 					    "value": [
 							{
 								"ID": 0,
@@ -470,8 +500,7 @@ class JsonLightNoMetadataODataWriterTest extends \PHPUnit_Framework_TestCase
 									 "ZipCode": "98074",
 									 "Country": "USA"
 								},
-								"Concurrency": 0,
-								}
+								"Concurrency": 0
 							},
 							{
 								"ID": 1,
@@ -483,7 +512,8 @@ class JsonLightNoMetadataODataWriterTest extends \PHPUnit_Framework_TestCase
 									"ZipCode": "98052",
 									"Country": "USA"
 								},
-								"Concurrency": 0,							}
+								"Concurrency": 0
+							}
 						]
 					}';
 		$expected = json_decode($expected);
@@ -533,7 +563,7 @@ class JsonLightNoMetadataODataWriterTest extends \PHPUnit_Framework_TestCase
 		
     	$entry->links = array($link);
     	
-    	$writer = new JsonLightNoMetadataODataWriter();
+    	$writer = new JsonLightODataWriter(JsonLightMetadataLevel::NONE());
 		$result = $writer->write($entry);
 		$this->assertSame($writer, $result);
 
@@ -543,7 +573,7 @@ class JsonLightNoMetadataODataWriterTest extends \PHPUnit_Framework_TestCase
 
 		$expected = '{
 						"ID": 0,
-						"Name": "Food",
+						"Name": "Food"
 					}';
 		 $expected = json_decode($expected);
 
@@ -604,7 +634,7 @@ class JsonLightNoMetadataODataWriterTest extends \PHPUnit_Framework_TestCase
 		
 		$propContent->properties = array($prop1);
 		
-		$writer = new JsonLightNoMetadataODataWriter();
+		$writer = new JsonLightODataWriter(JsonLightMetadataLevel::NONE());
 		$result = $writer->write($propContent);
 		$this->assertSame($writer, $result);
 
@@ -733,7 +763,7 @@ class JsonLightNoMetadataODataWriterTest extends \PHPUnit_Framework_TestCase
 		
 		$entry->propertyContent = $entryPropContent;
 		
-		$writer = new JsonLightNoMetadataODataWriter();
+		$writer = new JsonLightODataWriter(JsonLightMetadataLevel::NONE());
 		$result = $writer->write($entry);
 		$this->assertSame($writer, $result);
 
@@ -777,7 +807,7 @@ class JsonLightNoMetadataODataWriterTest extends \PHPUnit_Framework_TestCase
     	$content = new ODataPropertyContent();
     	$content->properties = array($property);
     	$content->isTopLevel = true;
-    	$writer = new JsonLightNoMetadataODataWriter();
+    	$writer = new JsonLightODataWriter(JsonLightMetadataLevel::NONE());
     	$result = $writer->write($content);
 	    $this->assertSame($writer, $result);
 
@@ -785,7 +815,7 @@ class JsonLightNoMetadataODataWriterTest extends \PHPUnit_Framework_TestCase
 	    //decoding the json string to test
 	    $actual = json_decode($writer->getOutput());
 
-	    $expected = '{ value :  56 }';
+	    $expected = '{ "value" :  56 }';
         $expected = json_decode($expected);
 
 	    $this->assertEquals($expected, $actual, "raw JSON is: " . $writer->getOutput());

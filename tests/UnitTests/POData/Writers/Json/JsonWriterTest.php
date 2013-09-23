@@ -357,16 +357,6 @@ class JsonWriterTest extends \PHPUnit_Framework_TestCase {
 	}
 
 
-	public function testWriteDataArrayName(){
-		$writer = new JsonWriter("");
-		$result = $writer->writeDataArrayName();
-		$this->assertSame($result, $writer);
-		$this->assertEquals('"' . ODataConstants::JSON_RESULT_NAME . '":', $writer->getJsonOutput());
-
-	}
-
-
-
 	public function testComplexObject(){
 
 		$writer = new JsonWriter("");

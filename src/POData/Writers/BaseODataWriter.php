@@ -39,7 +39,7 @@ abstract class BaseODataWriter implements IODataWriter
 		}
 
 		if ($model instanceof ODataPropertyContent) {
-			return $this->writeProperty($model);
+			return $this->writeProperties($model, true);
 		}
 
 		if ($model instanceof ODataFeed) {
@@ -66,14 +66,7 @@ abstract class BaseODataWriter implements IODataWriter
 	 *
 	 * @return BaseODataWriter
 	 */
-	protected function writeFeed(ODataFeed $feed)
-	{
-		$this->writeBeginFeed($feed);
-		foreach ($feed->entries as $entry) {
-			$this->writeEntry($entry);
-		}
-		return $this->endFeed($feed);
-	}
+	abstract protected function writeFeed(ODataFeed $feed);
 
 	/**
 	 * Write top level entry
@@ -100,7 +93,7 @@ abstract class BaseODataWriter implements IODataWriter
 
 		return $this
 			->preWriteProperties($entry)
-			->writeProperty($entry->propertyContent)
+			->writeProperties($entry->propertyContent)
 			->postWriteProperties($entry)
 			->endEntry($entry);
 	}
@@ -115,16 +108,6 @@ abstract class BaseODataWriter implements IODataWriter
 	 */
 	abstract protected  function writeUrlCollection(ODataURLCollection $urls);
 
-
-
-    /**
-     * Write end of feed
-     * 
-     * @param ODataFeed $feed Ending the feed.
-     * 
-     * @return BaseODataWriter
-     */
-    abstract protected function endFeed(ODataFeed $feed);
 
 
 
@@ -162,11 +145,12 @@ abstract class BaseODataWriter implements IODataWriter
     /**
      * Write end of a property
      * 
-     * @param ODataPropertyContent $property Object of the property which need to end.
+     * @param ODataProperty $property Object of the property which need to end.
+     * @param Boolean       $isTopLevel     Is property top level or not.
      * 
      * @return BaseODataWriter
      */
-    abstract protected function endWriteProperty(ODataPropertyContent $property);
+    abstract protected function endWriteProperty(ODataProperty $property, $isTopLevel);
 
     /**
      * Write after last property
@@ -223,15 +207,6 @@ abstract class BaseODataWriter implements IODataWriter
 
 
     /**
-     * Start writing a feed including applicable metadata
-     *
-     * @param ODataFeed $feed Feed to write
-     * 
-     * @return BaseODataWriter
-     */
-    abstract protected function writeBeginFeed(ODataFeed $feed);
-
-    /**
      * Start writing an entry including it's metadata
      *
      * @param ODataEntry $entry Entry to write
@@ -255,26 +230,25 @@ abstract class BaseODataWriter implements IODataWriter
     abstract protected function writeBeginLink(ODataLink $link);
 
 
-
-    /**
-     * Write the given collection of properties. 
-     * (properties of an entity or complex type)
-     *
-     * @param ODataPropertyContent $properties Collection of properties.
-     * 
-     * @return BaseODataWriter
-     */
-    protected function writeProperty(ODataPropertyContent $properties)
+	/**
+	 * Write the given collection of properties.
+	 * (properties of an entity or complex type)
+	 *
+	 * @param ODataPropertyContent $properties Collection of properties.
+	 * @param bool $topLevel indicates if this property content is the top level response to be written
+	 * @return BaseODataWriter
+	 */
+	protected function writeProperties(ODataPropertyContent $properties, $topLevel = false)
     {
         foreach ($properties->properties as $property) {
-            $this->beginWriteProperty($property, $properties->isTopLevel);
+            $this->beginWriteProperty($property, $topLevel);
 
             if ($property->value == null) {
                 $this->writeNullValue($property);
             } elseif ($property->value instanceof ODataPropertyContent) {
                 $this
 	                ->beginComplexProperty($property)
-	                ->writeProperty($property->value)
+	                ->writeProperties($property->value, false)
 	                ->endComplexProperty();
             } elseif ($property->value instanceof ODataBagContent) {
                 $this->writeBagContent($property->value);
@@ -282,12 +256,42 @@ abstract class BaseODataWriter implements IODataWriter
                 $this->writePrimitiveValue($property);
             }
 
-            $this->endWriteProperty($properties);
+            $this->endWriteProperty($property, $topLevel);
         }
 
 	    return $this;
     }
 
+	/*
+	protected function writeProperty(ODataProperty $property)
+	{
+		$dummyTopLevel = false;
+		$this->beginWriteProperty($property, $dummyTopLevel);
+
+		if ($property->value == null) {
+			$this->writeNullValue($property);
+		} elseif (is_array($property->value)) {
+			$this
+				->beginComplexProperty($property)
+				->writeProperties($property->value)
+				->endComplexProperty();
+		} elseif ($property->value instanceof ODataBagContent) {
+			$this->writeBagContent($property->value);
+		} else {
+			$this->writePrimitiveValue($property);
+		}
+
+		foreach ($property->properties as $property) {
+			$this->beginWriteProperty($property, $properties->isTopLevel);
+
+
+
+			$this->endWriteProperty($properties);
+		}
+
+		return $this;
+	}
+	*/
 
 
 	/**

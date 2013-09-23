@@ -268,11 +268,17 @@ class ODataConstants
     //row count element name in json payload
     const JSON_ROWCOUNT_STRING = '__count';
 
+	//row count element name in json payload
+	const JSON_LIGHT_ROWCOUNT_STRING = 'odata.count';
+
     //next page link element name in json payload
     const JSON_NEXT_STRING = '__next';
 
     //'results' header for Json data array
     const JSON_RESULT_NAME = 'results';
+
+	//'results' header for Json data array
+	const JSON_LIGHT_VALUE_NAME = 'value';
 
     const JSON_DATAWRAPPER_ELEMENT_NAME = 'd';
 

@@ -118,7 +118,7 @@ class AtomODataWriter extends BaseODataWriter
      * 
      * @return AtomODataWriter
      */
-    protected function writeBeginFeed(ODataFeed $feed)
+    protected function writeFeed(ODataFeed $feed)
     {
         $this->xmlWriter->startElement(ODataConstants::ATOM_FEED_ELEMENT_NAME);
         if ($feed->isTopLevel) {
@@ -145,26 +145,21 @@ class AtomODataWriter extends BaseODataWriter
 		    $this->xmlWriter->endElement();
 	    }
 
+	    foreach ($feed->entries as $entry) {
+		    $this->writeEntry($entry);
+	    }
+
+	    if ($feed->nextPageLink != null) {
+		    $this->writeLinkNode($feed->nextPageLink, false);
+	    }
+	    $this->xmlWriter->endElement();
+
+
 	    return $this;
     }
 
 
-    /**
-     * Write end of feed
-     * 
-     * @param ODataFeed $feed Feed object to end feed writing.
-     * 
-     * @return AtomODataWriter
-     */
-    protected function endFeed(ODataFeed $feed)
-    {
-        if ($feed->nextPageLink != null) {
-            $this->writeLinkNode($feed->nextPageLink, false);
-        }
-        $this->xmlWriter->endElement();
 
-	    return $this;
-    }
     /**
      * Start writing a entry
      *
@@ -411,11 +406,12 @@ class AtomODataWriter extends BaseODataWriter
     /**
      * Write end of a property
      * 
-     * @param ODataPropertyContent $property Object of property which want to end.
-     * 
+     * @param ODataProperty $property Object of property which want to end.
+     * @param Boolean       $isTopLevel     Is property top level or not.
+     *
      * @return AtomODataWriter
      */
-    protected function endWriteProperty(ODataPropertyContent $property)
+    protected function endWriteProperty(ODataProperty $property, $isTopLevel)
     {
         $this->xmlWriter->endElement();
 
@@ -480,7 +476,7 @@ class AtomODataWriter extends BaseODataWriter
                     ODataConstants::COLLECTION_ELEMENT_NAME, 
                     null
                 );
-                    $this->writeProperty($content);
+                    $this->writeProperties($content);
                     $this->xmlWriter->endElement();
             } else {  //probably just a primitive string
                     $this->xmlWriter->startElementNs(

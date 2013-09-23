@@ -41,10 +41,10 @@ class JsonServiceDocumentWriter implements IServiceDocumentWriter
      */
     public function getOutput()
     {
-	    $writer = new JsonWriter("", '"d" : ');
+	    $writer = new JsonWriter("");
 	    $writer
-	        ->startObjectScope() // { "d" :
-	        ->writeDataWrapper()
+	        ->startObjectScope() // {
+	        ->writeName("d") //  "d" :
 	        ->startObjectScope() // {
 	        ->writeName(ODataConstants::ENTITY_SET) // "EntitySets"
             ->startArrayScope() // [

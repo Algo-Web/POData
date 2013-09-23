@@ -25,6 +25,13 @@ use POData\Common\InvalidOperationException;
  */
 class JsonODataV2Writer extends JsonODataV1Writer
 {
+	//The key difference between 1 and 2 is that in 2 collection results
+	//are wrapped in a "result" array.  this is to allow a place for collection metadata to be placed
+	//
+	//IE {d : [ item1, item2, item3] }
+	//is now { d : { results :[item1, item2, item3], meta1 : x, meta2 : y }
+
+	protected $dataArrayName = ODataConstants::JSON_RESULT_NAME;
 
     /** 
      * begin write OData links
@@ -36,25 +43,17 @@ class JsonODataV2Writer extends JsonODataV1Writer
     public function writeUrlCollection(ODataURLCollection $urls)
     {
         // {
-        $this->_writer
-	        ->startObjectScope()
+        $this->_writer->startObjectScope();
+
+        $this->writeRowCount($urls->count);
+	    $this->writeNextPageLink($urls->nextPageLink);
 
             // Json Format V2:
             // "results":
-            ->writeDataArrayName()
+	    $this->_writer->writeName($this->dataArrayName);
 
-            // [
-            ->startArrayScope();
+	   	parent::writeUrlCollection($urls);
 
-        foreach ($urls->oDataUrls as $url) {
-            $this->writeUrl($url);
-        }
-
-	    // ]
-	    $this->_writer->endScope();
-
-	    $this->writeRowCount($urls->count);
-	    $this->writeNextPageLink($urls->nextPageLink);
 	    // }, End object scope for V2
 	    $this->_writer->endScope();
 
@@ -69,140 +68,27 @@ class JsonODataV2Writer extends JsonODataV1Writer
      * 
      * @return JsonODataV2Writer
      */
-    protected function writeBeginFeed(ODataFeed $feed)
+    protected function writeFeed(ODataFeed $feed)
     {
-
-        // {
-        $this->_writer
-	        ->startObjectScope()
-            // Json Format V2:
-            // "results":
-            ->writeDataArrayName()
-	         // [
-	        ->startArrayScope();
-
-	    return $this;
-    }
-  
-
-    /**
-     * End writing feed
-     *
-     * @param ODataFeed $feed Feed to write
-     * 
-     * @return JsonODataV2Writer
-     */
-    protected function endFeed(ODataFeed $feed)
-    {
-        // ]
-        $this->_writer->endScope();
-    
-        if ($feed->isTopLevel) {
-            $this->writeRowCount($feed->rowCount);
-        }
-        $this->writeNextPageLink($feed->nextPageLink);
-
-        // }, End object scope for V2
-        $this->_writer->endScope();
-
-
-	    return $this;
-    }
-  
-    /**
-     * Start writing a entry
-     *
-     * @param ODataEntry $entry Entry to write
-     * 
-     * @return JsonODataV2Writer
-     */
-    protected function writeBeginEntry(ODataEntry $entry)
-    {
-        if ($entry->isTopLevel) {
-            // {
-            $this->_writer->startObjectScope();
-
-            // Json Format V2:
-            // "results":
-            $this->_writer->writeDataArrayName();
-        }
 
         // {
         $this->_writer->startObjectScope();
 
-	    return $this->writeEntryMetadata($entry);
-    }
-  
+	    $this->writeRowCount($feed->rowCount);
 
-  
-    /**
-     * Write end of entry.
-     *
-     * @param ODataEntry $entry entry to end
-     * 
-     * @return JsonODataV2Writer
-     */
-    protected function endEntry(ODataEntry $entry)
-    {
-        // }
-        $this->_writer->endScope();
+	    $this->writeNextPageLink($feed->nextPageLink);
 
-        if ($entry->isTopLevel) {
-			// }, End object scope for V2
-            $this->_writer->endScope();
-        }
 
-	    return $this;
-    }
-  
-
-    /**
-     * Begin write property.
-     *
-     * @param ODataProperty $property property to write.
-     * @param Boolean       $isTopLevel     is top level or not.
-     * 
-     * @return JsonODataV2Writer
-     */
-    protected function beginWriteProperty(ODataProperty $property, $isTopLevel)
-    {
-        if ($isTopLevel) {
-            // {
-            $this->_writer->startObjectScope();
             // Json Format V2:
             // "results":
-            $this->_writer->writeDataArrayName();
+	    $this->_writer->writeName($this->dataArrayName);
 
-            // {
-            $this->_writer->startObjectScope();
-        }
+	    parent::writeFeed($feed);
 
-        $this->_writer->writeName($property->name);
-
+	    $this->_writer->endScope(); // }, End object scope for V2
 	    return $this;
     }
   
-
-    /**
-     * End write property.
-     *
-     * @param ODataPropertyContent $property kind of operation to end
-     * 
-     * @return JsonODataV2Writer
-     */
-    protected function endWriteProperty(ODataPropertyContent $property)
-    {   
-        if ($property->isTopLevel) {
-            // }
-            $this->_writer->endScope();
-            // }
-            $this->_writer->endScope();
-
-        }
-
-	    return $this;
-    }
-
 
 	/**
 	 * Writes the row count.

@@ -27,7 +27,7 @@ class JsonServiceDocumentWriterTest extends BaseUnitTestCase
 		$actual = $writer->getOutput();
 
 		$expected = '{
-    "d" : {
+    "d":{
         "EntitySet":[
 
         ]
@@ -61,7 +61,7 @@ class JsonServiceDocumentWriterTest extends BaseUnitTestCase
 		$actual = $writer->getOutput();
 
 		$expected = '{
-    "d" : {
+    "d":{
         "EntitySet":[
             "Name 1","XML escaped stuff \" \' <> & ?"
         ]
