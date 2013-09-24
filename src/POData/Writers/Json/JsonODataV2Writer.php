@@ -33,6 +33,39 @@ class JsonODataV2Writer extends JsonODataV1Writer
 
 	protected $dataArrayName = ODataConstants::JSON_RESULT_NAME;
 
+
+
+	/**
+	 * Enter the top level scope.
+	 *
+	 * @param  ODataURL|ODataURLCollection|ODataPropertyContent|ODataFeed|ODataEntry $model Object of requested content.
+	 *
+	 * @return JsonODataV1Writer
+	 */
+	protected function enterTopLevelScope($model)
+	{
+		// { "d" :
+		$this->_writer
+			->startObjectScope()
+			->writeName("d");
+
+
+		if ($model instanceof ODataURL) {
+			$this->_writer->startObjectScope();
+		} else if ($model instanceof ODataURLCollection) {
+			$this->_writer->startObjectScope();
+		} elseif ($model instanceof ODataPropertyContent) {
+
+		} elseif ($model instanceof ODataFeed) {
+			$this->_writer->startObjectScope();
+		} elseif ($model instanceof ODataEntry) {
+			$this->_writer->startObjectScope();
+		}
+
+		return $this;
+	}
+
+
     /** 
      * begin write OData links
      * 
@@ -42,21 +75,19 @@ class JsonODataV2Writer extends JsonODataV1Writer
      */
     public function writeUrlCollection(ODataURLCollection $urls)
     {
-        // {
-        $this->_writer->startObjectScope();
 
         $this->writeRowCount($urls->count);
 	    $this->writeNextPageLink($urls->nextPageLink);
 
             // Json Format V2:
             // "results":
-	    $this->_writer->writeName($this->dataArrayName);
+	    $this->_writer
+	        ->writeName($this->dataArrayName)
+		    ->startArrayScope();
 
 	   	parent::writeUrlCollection($urls);
 
-	    // }, End object scope for V2
 	    $this->_writer->endScope();
-
 
 	    return $this;
     }
@@ -71,8 +102,6 @@ class JsonODataV2Writer extends JsonODataV1Writer
     protected function writeFeed(ODataFeed $feed)
     {
 
-        // {
-        $this->_writer->startObjectScope();
 
 	    $this->writeRowCount($feed->rowCount);
 
@@ -81,11 +110,14 @@ class JsonODataV2Writer extends JsonODataV1Writer
 
             // Json Format V2:
             // "results":
-	    $this->_writer->writeName($this->dataArrayName);
+	    $this->_writer
+		    ->writeName($this->dataArrayName)
+	        ->startArrayScope();
 
 	    parent::writeFeed($feed);
 
-	    $this->_writer->endScope(); // }, End object scope for V2
+	    $this->_writer->endScope();
+
 	    return $this;
     }
   

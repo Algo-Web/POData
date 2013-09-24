@@ -60,12 +60,25 @@ class JsonLightODataWriter extends JsonODataV2Writer
 
 	protected function enterTopLevelScope($model)
 	{
+		if ($model instanceof ODataURL) {
+			$this->_writer->startObjectScope();
+		} else if ($model instanceof ODataURLCollection) {
+			$this->_writer->startObjectScope();
+		} elseif ($model instanceof ODataPropertyContent) {
+
+		} elseif ($model instanceof ODataFeed) {
+			$this->_writer->startObjectScope();
+		} elseif ($model instanceof ODataEntry) {
+			$this->_writer->startObjectScope();
+		}
+
 		return $this;
 	}
 
 
 	protected function leaveTopLevelScope()
 	{
+		$this->_writer->endScope();
 		return $this;
 	}
 
@@ -79,20 +92,18 @@ class JsonLightODataWriter extends JsonODataV2Writer
 		switch($this->metadataLevel){
 
 			case JsonLightMetadataLevel::NONE():
-				return parent::writeUrl($url);
+				break;
 
 
 			case JsonLightMetadataLevel::MINIMAL():
 				$this->_writer
-					->startObjectScope()
 					->writeName(ODataConstants::JSON_LIGHT_METADATA_STRING)
-					->writeValue($url->oDataUrl)
-					->writeName($this->urlKey)
-					->writeValue($url->oDataUrl)
-					->endScope();
+					->writeValue($url->oDataUrl);
 
-				return $this;
+				break;
 		}
+
+		return parent::writeUrl($url);
 	}
 
 
@@ -260,6 +271,19 @@ class JsonLightODataWriter extends JsonODataV2Writer
 		return $this;
 	}
 
+
+	/**
+	 * End write complex property.
+	 *
+	 * @return JsonODataV1Writer
+	 */
+	protected function endComplexProperty()
+	{
+		// }
+		$this->_writer->endScope();
+		return $this;
+	}
+
 	/**
 	 * Begin write property.
 	 *
@@ -291,29 +315,7 @@ class JsonLightODataWriter extends JsonODataV2Writer
 	}
 
 
-	/**
-	 * End write property.
-	 *
-	 * @param ODataProperty $property kind of operation to end
-	 * @param Boolean       $isTopLevel     Is property top level or not.
-	 *
-	 * @return JsonLightODataWriter
-	 */
-	protected function endWriteProperty(ODataProperty $property, $isTopLevel)
-	{
-		if($isTopLevel){
-			if($property->value instanceof ODataPropertyContent){
-				return $this;
-			}
 
-			$this->_writer
-				->endScope();
-
-			return $this;
-		}
-
-		return parent::endWriteProperty($property, $isTopLevel);
-	}
 
 
 	/**
