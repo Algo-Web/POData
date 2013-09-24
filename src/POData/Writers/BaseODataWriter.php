@@ -262,38 +262,6 @@ abstract class BaseODataWriter implements IODataWriter
 	    return $this;
     }
 
-	/*
-	protected function writeProperty(ODataProperty $property)
-	{
-		$dummyTopLevel = false;
-		$this->beginWriteProperty($property, $dummyTopLevel);
-
-		if ($property->value == null) {
-			$this->writeNullValue($property);
-		} elseif (is_array($property->value)) {
-			$this
-				->beginComplexProperty($property)
-				->writeProperties($property->value)
-				->endComplexProperty();
-		} elseif ($property->value instanceof ODataBagContent) {
-			$this->writeBagContent($property->value);
-		} else {
-			$this->writePrimitiveValue($property);
-		}
-
-		foreach ($property->properties as $property) {
-			$this->beginWriteProperty($property, $properties->isTopLevel);
-
-
-
-			$this->endWriteProperty($properties);
-		}
-
-		return $this;
-	}
-	*/
-
-
 	/**
 	 * Serialize the exception
 	 *

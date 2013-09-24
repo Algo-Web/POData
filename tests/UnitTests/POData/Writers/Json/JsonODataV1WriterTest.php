@@ -81,10 +81,7 @@ class JsonODataV1WriterTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(array($expected), array($actual), "raw JSON is: " . $writer->getOutput());
 	}
 	
-	/**
-	 * 
-	 * Testing write feed function
-	 */
+
 	function testWriteFeed()
 	{
 		$oDataFeed = new ODataFeed();
@@ -109,11 +106,11 @@ class JsonODataV1WriterTest extends \PHPUnit_Framework_TestCase
 		
 		//entry1
 		$entry1 = new ODataEntry();
-		$entry1->id = 'http://services.odata.org/OData/OData.svc/Categories(0)';
+		$entry1->id = 'http://services.odata.org/OData/OData.svc/Products(0)';
 		$entry1->selfLink = 'entry1 self link';
 		$entry1->title = 'title of entry 1';
 		$entry1->editLink = 'edit link of entry 1';
-		$entry1->type = 'DataServiceProviderDemo.Category';
+		$entry1->type = 'DataServiceProviderDemo.Product';
 		$entry1->eTag = '';
 		//entry 1 property content
 		$entry1PropContent = new ODataPropertyContent();
@@ -126,10 +123,31 @@ class JsonODataV1WriterTest extends \PHPUnit_Framework_TestCase
 		$entry1Prop2 = new ODataProperty();
 		$entry1Prop2->name = 'Name';
 		$entry1Prop2->typeName = 'Edm.String';
-		$entry1Prop2->value = 'Food';
-		
-		$entry1PropContent->properties = array($entry1Prop1, $entry1Prop2);
-		//entry 1 property content end
+		$entry1Prop2->value = 'Bread';
+		$entry1Prop3 = new ODataProperty();
+		$entry1Prop3->name = 'ReleaseDate';
+		$entry1Prop3->typeName = 'Edm.DateTime';
+		$entry1Prop3->value = "2012-09-17T14:17:13";
+
+		$entry1Prop4 = new ODataProperty();
+		$entry1Prop4->name = 'DiscontinuedDate';
+		$entry1Prop4->typeName = 'Edm.DateTime';
+		$entry1Prop4->value = null;
+
+		$entry1Prop5 = new ODataProperty();
+		$entry1Prop5->name = 'Price';
+		$entry1Prop5->typeName = 'Edm.Double';
+		$entry1Prop5->value = 2.5;
+
+
+		$entry1PropContent = new ODataPropertyContent();
+		$entry1PropContent->properties = array(
+			$entry1Prop1,
+			$entry1Prop2,
+			$entry1Prop3,
+			$entry1Prop4,
+			$entry1Prop5,
+		);//entry 1 property content end
 		
 		$entry1->propertyContent = $entry1PropContent;
 		
@@ -139,9 +157,9 @@ class JsonODataV1WriterTest extends \PHPUnit_Framework_TestCase
 		//entry 1 links
 		//link1
 		$link1 = new ODataLink();
-		$link1->name = "http://services.odata.org/OData/OData.svc/Categories(0)/Products";
-    	$link1->title = "Products";
-    	$link1->url = "http://services.odata.org/OData/OData.svc/Categories(0)/Products";
+		$link1->name = "http://services.odata.org/OData/OData.svc/Products(0)/Categories";
+		$link1->title = "Categories";
+		$link1->url = "http://services.odata.org/OData/OData.svc/Products(0)/Categories";
 		
     	$entry1->links = array($link1);
 		//entry 1 links end
@@ -161,16 +179,19 @@ class JsonODataV1WriterTest extends \PHPUnit_Framework_TestCase
 					    "d" : [
 				            {
 				                "__metadata": {
-				                    "uri": "http://services.odata.org/OData/OData.svc/Categories(0)",
-				                    "type": "DataServiceProviderDemo.Category"
+				                    "uri": "http://services.odata.org/OData/OData.svc/Products(0)",
+				                    "type": "DataServiceProviderDemo.Product"
 				                },
-				                "Products": {
+				                "Categories": {
 				                    "__deferred": {
-				                        "uri": "http://services.odata.org/OData/OData.svc/Categories(0)/Products"
+				                        "uri": "http://services.odata.org/OData/OData.svc/Products(0)/Categories"
 				                    }
 				                },
 				                "ID": 100,
-				                "Name": "Food"
+				                "Name": "Bread",
+				                "ReleaseDate" : "2012-09-17T14:17:13",
+				                "DiscontinuedDate" : null,
+				                "Price" : 2.5
 				            }
 				        ]
 					}';

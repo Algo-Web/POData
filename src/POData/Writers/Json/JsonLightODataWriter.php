@@ -21,6 +21,7 @@ use POData\Common\InvalidOperationException;
 
 use POData\Writers\Json\JsonLightMetadataLevel;
 
+
 /**
  * Class JsonLightODataWriter is a writer for the json format in OData V3 also known as JSON Light
  * @package POData\Writers\Json
@@ -33,8 +34,23 @@ class JsonLightODataWriter extends JsonODataV2Writer
 	 */
 	protected $metadataLevel;
 
-	public function __construct(JsonLightMetadataLevel $metadataLevel)
+
+	/**
+	 *
+	 * The service base uri
+	 * @var string
+	 */
+	protected $baseUri;
+
+
+	public function __construct(JsonLightMetadataLevel $metadataLevel, $absoluteServiceUri)
 	{
+		if(strlen($absoluteServiceUri) == 0)
+		{
+			throw new \Exception("absoluteServiceUri must not be empty or null");
+		}
+		$this->baseUri = $absoluteServiceUri;
+
 		$this->_writer = new JsonWriter('');
 		$this->urlKey = ODataConstants::JSON_URL_STRING;
 		$this->dataArrayName = ODataConstants::JSON_LIGHT_VALUE_NAME;
@@ -44,13 +60,39 @@ class JsonLightODataWriter extends JsonODataV2Writer
 
 	protected function enterTopLevelScope($model)
 	{
-
+		return $this;
 	}
 
 
 	protected function leaveTopLevelScope()
 	{
+		return $this;
+	}
 
+	/**
+	 * @param ODataURL $url the url to write
+	 *
+	 * @return JsonLightODataWriter
+	 */
+	public function writeUrl(ODataURL $url)
+	{
+		switch($this->metadataLevel){
+
+			case JsonLightMetadataLevel::NONE():
+				return parent::writeUrl($url);
+
+
+			case JsonLightMetadataLevel::MINIMAL():
+				$this->_writer
+					->startObjectScope()
+					->writeName(ODataConstants::JSON_LIGHT_METADATA_STRING)
+					->writeValue($url->oDataUrl)
+					->writeName($this->urlKey)
+					->writeValue($url->oDataUrl)
+					->endScope();
+
+				return $this;
+		}
 	}
 
 
@@ -69,6 +111,8 @@ class JsonLightODataWriter extends JsonODataV2Writer
 				break;
 
 		}
+
+		return $this;
 	}
 
 

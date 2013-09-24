@@ -238,6 +238,9 @@ class ODataConstants
     //metadata element name in json payload.
     const JSON_METADATA_STRING = '__metadata';
 
+	//metadata element name in json payload.
+	const JSON_LIGHT_METADATA_STRING = 'odata.metadata';
+
     //uri element name in json payload.
     const JSON_URI_STRING = 'uri';
 

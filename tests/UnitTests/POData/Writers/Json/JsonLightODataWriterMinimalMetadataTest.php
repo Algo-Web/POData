@@ -11,10 +11,14 @@ use POData\ObjectModel\ODataMediaLink;
 use POData\ObjectModel\ODataPropertyContent;
 use POData\ObjectModel\ODataProperty;
 use POData\ObjectModel\ODataBagContent;
-use POData\Writers\Json\JsonODataV2Writer;
+use POData\Writers\Json\JsonLightMetadataLevel;
+use POData\Writers\Json\JsonLightODataWriter;
 
-class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
+
+class JsonLightODataWriterMinimalMetadataTest extends \PHPUnit_Framework_TestCase
 {
+
+	protected $serviceBase = "http://services.odata.org/V3/OData/OData.svc";
 
 	/**
 	 * 
@@ -22,16 +26,23 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 	 */
 	function testWriteURL()
 	{
+		$this->markTestSkipped("see #80 ODataURL doesn't have enough context to get the meta data return result");
+
+		//IE: http://services.odata.org/v3/OData/OData.svc/Products(0)/$links/Supplier?$format=application/json;odata=minimalmetadata
+
 		$oDataUrl = new ODataURL();
 		$oDataUrl->oDataUrl = 'http://services.odata.org/OData/OData.svc/Suppliers(0)';
-		$writer = new JsonODataV2Writer();
+		$writer = new JsonLightODataWriter(JsonLightMetadataLevel::MINIMAL(), $this->serviceBase);
 		$result = $writer->write($oDataUrl);
 		$this->assertSame($writer, $result);
 		
 		//decoding the json string to test, there is no json string comparison in php unit
 		$actual = json_decode($writer->getOutput());
 
-		$expected = '{ "d" : {"uri": "http://services.odata.org/OData/OData.svc/Suppliers(0)"} }';
+		$expected = '{
+						"odata.metdata" : "http://services.odata.org/OData/OData.svc/$metadata#Products/$links/Supplier",
+						"url": "http://services.odata.org/OData/OData.svc/Suppliers(0)"
+					}';
 		$expected = json_decode($expected);
 		$this->assertEquals($expected, $actual, "raw JSON is: " . $writer->getOutput());
 	}
@@ -42,7 +53,8 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 	 */
 	function testWriteURLCollection()
 	{
-		//see http://services.odata.org/v3/OData/OData.svc/Categories(1)/$links/Products?$format=application/json;odata=verbose
+		$this->markTestSkipped("see #80 ODataURL doesn't have enough context to get the meta data return result");
+		// see http://services.odata.org/v3/OData/OData.svc/Categories(1)/$links/Products?$format=application/json;odata=minimalmetadata
 
 		$oDataUrlCollection = new ODataURLCollection();
 		$oDataUrl1 = new ODataURL();
@@ -51,14 +63,13 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 		$oDataUrl2->oDataUrl = 'http://services.odata.org/OData/OData.svc/Products(7)';
 		$oDataUrl3 = new ODataURL();
 		$oDataUrl3->oDataUrl = 'http://services.odata.org/OData/OData.svc/Products(8)';
-		$oDataUrlCollection->oDataUrls = array(
-			$oDataUrl1,
-		    $oDataUrl2,
-		    $oDataUrl3,
-		);
+		$oDataUrlCollection->oDataUrls = array($oDataUrl1,
+		                                       $oDataUrl2,
+		                                       $oDataUrl3
+		                                      );
 
-		$oDataUrlCollection->count = 3;
-		$writer = new JsonODataV2Writer();
+		$oDataUrlCollection->count = null; //simulate no $inlinecount
+		$writer = new JsonLightODataWriter(JsonLightMetadataLevel::MINIMAL(), $this->serviceBase);
 		$result = $writer->write($oDataUrlCollection);
 		$this->assertSame($writer, $result);
 
@@ -67,23 +78,51 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 		$actual = json_decode($writer->getOutput());
 		
 		$expected = '{
-		                "d" : {
-							"results": [
-								{
-							        "uri": "http://services.odata.org/OData/OData.svc/Products(0)"
-								},
-							    {
-							        "uri": "http://services.odata.org/OData/OData.svc/Products(7)"
-							    },
-							    {
-							        "uri": "http://services.odata.org/OData/OData.svc/Products(8)"
-							    }
-							],
-							"__count": "3"
-						}
+						"odata.metdata" : "http://services.odata.org/OData/OData.svc/$metadata#Products/$links/Products",
+		                "value" : [
+							{
+						        "url": "http://services.odata.org/OData/OData.svc/Products(0)"
+							},
+						    {
+						        "url": "http://services.odata.org/OData/OData.svc/Products(7)"
+						    },
+						    {
+						        "url": "http://services.odata.org/OData/OData.svc/Products(8)"
+						    }
+						]
 					}';
-		
+
 		 $expected = json_decode($expected);
+
+		$this->assertEquals($expected, $actual, "raw JSON is: " . $writer->getOutput());
+
+
+		$oDataUrlCollection->count = 44; //simulate an $inlinecount
+		$writer = new JsonLightODataWriter(JsonLightMetadataLevel::MINIMAL(), $this->serviceBase);
+		$result = $writer->write($oDataUrlCollection);
+		$this->assertSame($writer, $result);
+
+
+		//decoding the json string to test
+		$actual = json_decode($writer->getOutput());
+
+		$expected = '{
+		                "odata.count" : "44",
+		                "odata.metdata" : "http://services.odata.org/OData/OData.svc/$metadata#Products/$links/Products",
+		                "value" : [
+							{
+						        "url": "http://services.odata.org/OData/OData.svc/Products(0)"
+							},
+						    {
+						        "url": "http://services.odata.org/OData/OData.svc/Products(7)"
+						    },
+						    {
+						        "url": "http://services.odata.org/OData/OData.svc/Products(8)"
+						    }
+						]
+					}';
+
+		$expected = json_decode($expected);
 
 		$this->assertEquals($expected, $actual, "raw JSON is: " . $writer->getOutput());
 	}
@@ -94,6 +133,8 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 	 */
 	function testWriteFeed()
 	{
+		//see http://services.odata.org/v3/OData/OData.svc/Categories(0)/Products?$top=2&$format=application/json;odata=minimalmetadata
+
 		$oDataFeed = new ODataFeed();
 		$oDataFeed->id = 'FEED ID';
 		$oDataFeed->title = 'FEED TITLE';
@@ -104,9 +145,10 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
     	$selfLink->url = "Categories(0)/Products";
 		$oDataFeed->selfLink = $selfLink;
 		//self link end
-		$oDataFeed->rowCount = '3';
-		
-		//next page link
+
+
+
+		//next page link: NOTE minimalmetadata means this won't be output
 		$nextPageLink = new ODataLink();
 		$nextPageLink->name = "Next Page Link";
     	$nextPageLink->title = "Next Page";
@@ -122,9 +164,8 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 		$entry1->editLink = 'edit link of entry 1';
 		$entry1->type = 'DataServiceProviderDemo.Product';
 		$entry1->eTag = '';
+
 		//entry 1 property content
-		$entry1PropContent = new ODataPropertyContent();
-		
 		$entry1Prop1 = new ODataProperty();
 		$entry1Prop1->name = 'ID';
 		$entry1Prop1->typeName = 'Edm.Int16';
@@ -138,7 +179,7 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 		$entry1Prop3 = new ODataProperty();
 		$entry1Prop3->name = 'ReleaseDate';
 		$entry1Prop3->typeName = 'Edm.DateTime';
-		$entry1Prop3->value = "2012-09-07T04:07:03";
+		$entry1Prop3->value = "2012-09-17T14:17:13";
 
 		$entry1Prop4 = new ODataProperty();
 		$entry1Prop4->name = 'DiscontinuedDate';
@@ -159,7 +200,6 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 			$entry1Prop4,
 			$entry1Prop5,
 		);
-
 		//entry 1 property content end
 		
 		$entry1->propertyContent = $entry1PropContent;
@@ -167,12 +207,12 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 		$entry1->isExpanded       = false;
 		$entry1->isMediaLinkEntry = false;
 		
-		//entry 1 links
+		//entry 1 links NOTE minimalmetadata means this won't be output
 		//link1
 		$link1 = new ODataLink();
 		$link1->name = "http://services.odata.org/OData/OData.svc/Products(0)/Categories";
-    	$link1->title = "Categories";
-    	$link1->url = "http://services.odata.org/OData/OData.svc/Products(0)/Categories";
+		$link1->title = "Categories";
+		$link1->url = "http://services.odata.org/OData/OData.svc/Products(0)/Categories";
 		
     	$entry1->links = array($link1);
 		//entry 1 links end
@@ -180,8 +220,14 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 		//entry 1 end
 		$oDataFeed->entries = array($entry1);
 		$oDataFeed->isTopLevel = true;
-		
-		$writer = new JsonODataV2Writer();
+
+		//Note that even if the top limits the collection the count should not be output unless inline count is specified
+		//IE: http://services.odata.org/v3/OData/OData.svc/Categories?$top=1&$inlinecount=allpages&$format=application/json;odata=minimalmetadata
+		//The feed count will be null unless inlinecount is specified
+
+		$oDataFeed->rowCount = null;
+
+		$writer = new JsonLightODataWriter(JsonLightMetadataLevel::MINIMAL(), $this->serviceBase);
 		$result = $writer->write($oDataFeed);
 		$this->assertSame($writer, $result);
 
@@ -189,40 +235,56 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 		//decoding the json string to test
 		$actual = json_decode($writer->getOutput());
 		$expected = '{
-					    "d" : {
-							"__count": "3",
-					        "__next": "http://services.odata.org/OData/OData.svc$skiptoken=12",
-					        "results": [
-					            {
-					                "__metadata": {
-					                    "uri": "http://services.odata.org/OData/OData.svc/Products(0)",
-					                    "type": "DataServiceProviderDemo.Product"
-					                },
-					                "Categories": {
-					                    "__deferred": {
-					                        "uri": "http://services.odata.org/OData/OData.svc/Products(0)/Categories"
-					                    }
-					                },
-					                "ID": 100,
-					                "Name": "Bread",
-					                "ReleaseDate" : "2012-09-07T04:07:03",
-					                "DiscontinuedDate" : null,
-					                "Price" : 2.5
-					            }
-					        ]
-					    }
+					    "odata.metadata":"http://services.odata.org/OData/OData.svc/$metadata#Products",
+					    "value" : [
+				            {
+				                "ID": 100,
+				                "Name": "Bread",
+				                "ReleaseDate" : "2012-09-17T14:17:13",
+				                "DiscontinuedDate" : null,
+				                "Price" : 2.5
+				            }
+				        ]
 					}';
 		 $expected = json_decode($expected);
 
-		$this->assertEquals($expected, $actual, "raw JSON is: " . $writer->getOutput());
+		$this->assertEquals(array($expected), array($actual), "raw JSON is: " . $writer->getOutput());
+
+		//Now we'll simulate an $inlinecount=allpages by specifying a count
+		$oDataFeed->rowCount = 33;
+
+		$writer = new JsonLightODataWriter(JsonLightMetadataLevel::MINIMAL(), $this->serviceBase);
+		$result = $writer->write($oDataFeed);
+		$this->assertSame($writer, $result);
+
+		//TODO: v3 specifies that the count must be before value..how can we test this well?
+		//decoding the json string to test
+		$actual = json_decode($writer->getOutput());
+		$expected = '{
+						"odata.metadata":"http://services.odata.org/OData/OData.svc/$metadata#Products",
+						"odata.count":"33",
+					    "value" : [
+				            {
+				                "ID": 100,
+				                "Name": "Bread",
+				                "ReleaseDate" : "2012-09-17T14:17:13",
+				                "DiscontinuedDate" : null,
+				                "Price" : 2.5
+				            }
+				        ]
+					}';
+		$expected = json_decode($expected);
+
+		$this->assertEquals(array($expected), array($actual), "raw JSON is: " . $writer->getOutput());
 	}
 	
 
-
 	function testWriteFeedWithComplexProperty()
 	{
+		//see http://services.odata.org/v3/OData/OData.svc/Suppliers?$top=2&$format=application/json;odata=minimalmetadata
+		// suppliers have address and location as complex properties
 
-		
+
 		//entry1
 		$entry1 = new ODataEntry();
 		$entry1->id = 'http://services.odata.org/OData/OData.svc/Suppliers(0)';
@@ -402,7 +464,7 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 		$selfLink->url = "Categories(0)/Products";
 		$oDataFeed->selfLink = $selfLink;
 		//self link end
-		$oDataFeed->rowCount = '13';
+
 
 		//next page
 		$nextPageLink = new ODataLink();
@@ -411,10 +473,13 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 		$nextPageLink->url = 'http://services.odata.org/OData/OData.svc$skiptoken=12';
 		$oDataFeed->nextPageLink = $nextPageLink;
 		//feed entries
+
 		$oDataFeed->entries = array($entry1, $entry2);
 		$oDataFeed->isTopLevel = true;
 
-		$writer = new JsonODataV2Writer();
+		$oDataFeed->rowCount = null; //simulate no inline count
+
+		$writer = new JsonLightODataWriter(JsonLightMetadataLevel::MINIMAL(), $this->serviceBase);
 		$result = $writer->write($oDataFeed);
 		$this->assertSame($writer, $result);
 
@@ -422,198 +487,81 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 		//decoding the json string to test
 		$actual = json_decode($writer->getOutput());
 		$expected = '{
-						"d" : {
-							"__count": "13",
-							"__next": "http:\/\/services.odata.org\/OData\/OData.svc$skiptoken=12",
-                            "results": [
-								{
-									"__metadata": {
-										"uri": "http://services.odata.org/OData/OData.svc/Suppliers(0)",
-										"etag": "W/\"0\"", "type": "ODataDemo.Supplier"
-									},
-									"ID": 0,
-									"Name": "Exotic Liquids",
-									"Address": {
-										"__metadata": {
-											"type": "ODataDemo.Address"
-										},
-										"Street": "NE 228th",
-										 "City": "Sammamish",
-										 "State": "WA",
-										 "ZipCode": "98074",
-										 "Country": "USA"
-									},
-									"Concurrency": 0,
-									"Products": {
-									        "__deferred": {
-												"uri": "http://services.odata.org/OData/OData.svc/Suppliers(0)/Products"
-											}
-									}
+						"odata.metadata":"http://services.odata.org/V3/OData/OData.svc/$metadata#Suppliers",
+					    "value": [
+							{
+								"ID": 0,
+								"Name": "Exotic Liquids",
+								"Address": {
+									"Street": "NE 228th",
+									 "City": "Sammamish",
+									 "State": "WA",
+									 "ZipCode": "98074",
+									 "Country": "USA"
 								},
-								{
-									"__metadata": {
-										"uri": "http://services.odata.org/OData/OData.svc/Suppliers(1)",
-										"etag": "W/\"0\"", "type": "ODataDemo.Supplier"
-									},
-									"ID": 1,
-									"Name": "Tokyo Traders",
-									"Address": {
-										"__metadata": {
-											"type": "ODataDemo.Address"
-										},
-										"Street": "NE 40th",
-										"City": "Redmond",
-										"State": "WA",
-										"ZipCode": "98052",
-										"Country": "USA"
-									},
-									"Concurrency": 0,
-									"Products": {
-										"__deferred": {
-											"uri": "http://services.odata.org/OData/OData.svc/Suppliers(1)/Products"
-										}
-									}
-								}
-							]
-						}
+								"Concurrency": 0
+							},
+							{
+								"ID": 1,
+								"Name": "Tokyo Traders",
+								"Address": {
+									"Street": "NE 40th",
+									"City": "Redmond",
+									"State": "WA",
+									"ZipCode": "98052",
+									"Country": "USA"
+								},
+								"Concurrency": 0
+							}
+						]
 					}';
 		$expected = json_decode($expected);
 
-		$this->assertEquals($expected, $actual, "raw JSON is: " . $writer->getOutput());
+		$this->assertEquals(array($expected), array($actual), "raw JSON is: " . $writer->getOutput());
 
-		$oDataFeed->rowCount = null;
-		$writer = new JsonODataV2Writer();
+
+		$oDataFeed->rowCount = 55; //simulate  $inlinecount=allpages
+
+		$writer = new JsonLightODataWriter(JsonLightMetadataLevel::MINIMAL(), $this->serviceBase);
 		$result = $writer->write($oDataFeed);
 		$this->assertSame($writer, $result);
 
-
+		//TODO: spec says count must be before! need to verify positioning in the test somehow
 		//decoding the json string to test
 		$actual = json_decode($writer->getOutput());
 		$expected = '{
-						"d" : {
-							"__next": "http:\/\/services.odata.org\/OData\/OData.svc$skiptoken=12",
-                            "results": [
-								{
-									"__metadata": {
-										"uri": "http://services.odata.org/OData/OData.svc/Suppliers(0)",
-										"etag": "W/\"0\"", "type": "ODataDemo.Supplier"
-									},
-									"ID": 0,
-									"Name": "Exotic Liquids",
-									"Address": {
-										"__metadata": {
-											"type": "ODataDemo.Address"
-										},
-										"Street": "NE 228th",
-										 "City": "Sammamish",
-										 "State": "WA",
-										 "ZipCode": "98074",
-										 "Country": "USA"
-									},
-									"Concurrency": 0,
-									"Products": {
-									        "__deferred": {
-												"uri": "http://services.odata.org/OData/OData.svc/Suppliers(0)/Products"
-											}
-									}
+					    "odata.metadata":"http://services.odata.org/V3/OData/OData.svc/$metadata#Suppliers",
+					    "odata.count":"55",
+					    "value": [
+							{
+								"ID": 0,
+								"Name": "Exotic Liquids",
+								"Address": {
+									"Street": "NE 228th",
+									 "City": "Sammamish",
+									 "State": "WA",
+									 "ZipCode": "98074",
+									 "Country": "USA"
 								},
-								{
-									"__metadata": {
-										"uri": "http://services.odata.org/OData/OData.svc/Suppliers(1)",
-										"etag": "W/\"0\"", "type": "ODataDemo.Supplier"
-									},
-									"ID": 1,
-									"Name": "Tokyo Traders",
-									"Address": {
-										"__metadata": {
-											"type": "ODataDemo.Address"
-										},
-										"Street": "NE 40th",
-										"City": "Redmond",
-										"State": "WA",
-										"ZipCode": "98052",
-										"Country": "USA"
-									},
-									"Concurrency": 0,
-									"Products": {
-										"__deferred": {
-											"uri": "http://services.odata.org/OData/OData.svc/Suppliers(1)/Products"
-										}
-									}
-								}
-							]
-						}
+								"Concurrency": 0
+							},
+							{
+								"ID": 1,
+								"Name": "Tokyo Traders",
+								"Address": {
+									"Street": "NE 40th",
+									"City": "Redmond",
+									"State": "WA",
+									"ZipCode": "98052",
+									"Country": "USA"
+								},
+								"Concurrency": 0
+							}
+						]
 					}';
 		$expected = json_decode($expected);
 
-		$this->assertEquals($expected, $actual, "raw JSON is: " . $writer->getOutput());
-
-
-		$oDataFeed->nextPageLink = null;
-		$writer = new JsonODataV2Writer();
-		$result = $writer->write($oDataFeed);
-		$this->assertSame($writer, $result);
-
-
-		//decoding the json string to test
-		$actual = json_decode($writer->getOutput());
-		$expected = '{
-						"d" : {
-                            "results": [
-								{
-									"__metadata": {
-										"uri": "http://services.odata.org/OData/OData.svc/Suppliers(0)",
-										"etag": "W/\"0\"", "type": "ODataDemo.Supplier"
-									},
-									"ID": 0,
-									"Name": "Exotic Liquids",
-									"Address": {
-										"__metadata": {
-											"type": "ODataDemo.Address"
-										},
-										"Street": "NE 228th",
-										 "City": "Sammamish",
-										 "State": "WA",
-										 "ZipCode": "98074",
-										 "Country": "USA"
-									},
-									"Concurrency": 0,
-									"Products": {
-									        "__deferred": {
-												"uri": "http://services.odata.org/OData/OData.svc/Suppliers(0)/Products"
-											}
-									}
-								},
-								{
-									"__metadata": {
-										"uri": "http://services.odata.org/OData/OData.svc/Suppliers(1)",
-										"etag": "W/\"0\"", "type": "ODataDemo.Supplier"
-									},
-									"ID": 1,
-									"Name": "Tokyo Traders",
-									"Address": {
-										"__metadata": {
-											"type": "ODataDemo.Address"
-										},
-										"Street": "NE 40th",
-										"City": "Redmond",
-										"State": "WA",
-										"ZipCode": "98052",
-										"Country": "USA"
-									},
-									"Concurrency": 0,
-									"Products": {
-										"__deferred": {
-											"uri": "http://services.odata.org/OData/OData.svc/Suppliers(1)/Products"
-										}
-									}
-								}
-							]
-						}
-					}';
-		$expected = json_decode($expected);
-
-		$this->assertEquals($expected, $actual, "raw JSON is: " . $writer->getOutput());
+		$this->assertEquals(array($expected), array($actual), "raw JSON is: " . $writer->getOutput());
 	}
 	
 	/**
@@ -622,7 +570,7 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 	 */
 	function testWriteEntry()
 	{
-		//IE http://services.odata.org/v3/OData/OData.svc/Products(0)?$format=application/json;odata=verbose
+		//see http://services.odata.org/v3/OData/OData.svc/Suppliers(0)?$format=application/json;odata=minimalmetadata
 
 		//entry
 		$entry = new ODataEntry();
@@ -658,7 +606,7 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 		
     	$entry->links = array($link);
     	
-    	$writer = new JsonODataV2Writer();
+    	$writer = new JsonLightODataWriter(JsonLightMetadataLevel::MINIMAL(), $this->serviceBase);
 		$result = $writer->write($entry);
 		$this->assertSame($writer, $result);
 
@@ -667,18 +615,9 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 		$actual = json_decode($writer->getOutput());
 
 		$expected = '{
-						"d" : {
-							"__metadata": {
-								"uri": "http://services.odata.org/OData/OData.svc/Categories(0)", "type": "ODataDemo.Category"
-							},
-							"ID": 0,
-							"Name": "Food",
-							"Products": {
-								"__deferred": {
-									"uri": "http://services.odata.org/OData/OData.svc/Categories(0)/Products"
-								}
-							}
-						}
+						"odata.metadata":"http://services.odata.org/OData/OData.svc/$metadata#Categories/@Element",
+						"ID": 0,
+						"Name": "Food"
 					}';
 		 $expected = json_decode($expected);
 
@@ -686,12 +625,17 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 		
 	}
 	
-
+	/**
+	 * 
+	 * Testing write a complex property
+	 */
 	function testWriteComplexProperty()
 	{
-		//see http://services.odata.org/v3/OData/OData.svc/Suppliers(0)/Address?$format=application/json;odata=verbose
+		//see http://services.odata.org/v3/OData/OData.svc/Suppliers(0)/Address?$format=application/json;odata=minimalmetadata
 
-
+		$propContent = new ODataPropertyContent();
+		
+		$propContent->isTopLevel = true;
 		//property
 		$compProp = new ODataPropertyContent();
 		
@@ -730,12 +674,11 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 		$prop1->name = 'Address';
 		$prop1->typeName = 'ODataDemo.Address';
 		$prop1->value = $compProp;
-
-		$propContent = new ODataPropertyContent();
-		$propContent->isTopLevel = true;
+		
+		
 		$propContent->properties = array($prop1);
 		
-		$writer = new JsonODataV2Writer();
+		$writer = new JsonLightODataWriter(JsonLightMetadataLevel::MINIMAL(), $this->serviceBase);
 		$result = $writer->write($propContent);
 		$this->assertSame($writer, $result);
 
@@ -744,18 +687,12 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 		$actual = json_decode($writer->getOutput());
 
 		$expected = '{
-						"d" : {
-							"Address": {
-								"__metadata": {
-									"type": "ODataDemo.Address"
-								},
-								"Street": "NE 228th",
-								"City": "Sammamish",
-								"State": "WA",
-								"ZipCode": "98074",
-								"Country": "USA"
-								}
-						}
+						"odata.metadata":"http://services.odata.org/V3/OData/OData.svc/$metadata#ODataDemo.Address",
+						"Street": "NE 228th",
+						"City": "Sammamish",
+						"State": "WA",
+						"ZipCode": "98074",
+						"Country": "USA"
 					}';
 		 $expected = json_decode($expected);
 		
@@ -768,7 +705,10 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 	 */
 	function testBagProperty()
 	{
-		//TODO: bags are not available till v3 see https://github.com/balihoo/POData/issues/79
+		//Intro to bags: http://www.odata.org/2010/09/adding-support-for-bags/
+		//TODO: bags were renamed to collection in v3 see https://github.com/balihoo/POData/issues/79
+		//see http://docs.oasis-open.org/odata/odata-json-format/v4.0/cs01/odata-json-format-v4.0-cs01.html#_Toc365464701
+		//can't find a Collection type in online demo
 
 		//entry
 		$entry = new ODataEntry();
@@ -868,9 +808,9 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 		
 		$entry->propertyContent = $entryPropContent;
 		
-		$writer = new JsonODataV2Writer();
+		$writer = new JsonLightODataWriter(JsonLightMetadataLevel::MINIMAL(), $this->serviceBase);
 		$result = $writer->write($entry);
-		$this->assertSame($writer, $result, "raw JSON is: " . $writer->getOutput());
+		$this->assertSame($writer, $result);
 
 
 
@@ -878,37 +818,21 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 		$actual = json_decode($writer->getOutput());
 
 		$expected = '{
-						"d" : {
-							"__metadata": {
-								"uri": "http://host/service.svc/Customers(1)",
-								"type": "SampleModel.Customer"
-							},
-							"ID": 1,
-							"Name": "mike",
-							"EmailAddresses": {
-					            "__metadata": {
-					                "type": "Bag(Edm.String)"
-					            },
-					            "results": [
-					                "mike@foo.com", "mike2@foo.com"
-					            ]
-				            },
-				            "Addresses": {
-				                "__metadata": {
-				                    "type": "Bag(SampleModel.Address)"
-				                },
-				                "results": [
-				                    {
-				                        "Street": "123 contoso street",
-				                        "Apartment": "508"
-				                    },
-				                    {
-				                        "Street": "834 foo street",
-				                        "Apartment": "102"
-				                    }
-				                ]
-				            }
-					    }
+						"ID": 1,
+						"Name": "mike",
+						"EmailAddresses": [
+							"mike@foo.com", "mike2@foo.com"
+				        ],
+			            "Addresses": [
+		                    {
+		                        "Street": "123 contoso street",
+		                        "Apartment": "508"
+		                    },
+		                    {
+		                        "Street": "834 foo street",
+		                        "Apartment": "102"
+		                    }
+		                ]
 					}';
 	    $expected = json_decode($expected);
 
@@ -919,17 +843,16 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
      * test for write top level primitive property.
      */
     function testPrimitiveProperty(){
-
-	    //see http://services.odata.org/v3/OData/OData.svc/Products(0)/Rating?$format=application/json;odata=verbose
+    	//see http://services.odata.org/v3/OData/OData.svc/Suppliers(0)/Address/City?$format=application/json;odata=minimalmetadata
     	$property = new ODataProperty();
-    	$property->name = "SomeProp";
+    	$property->name = "Count";
     	$property->typeName = 'Edm.Int16';
     	$property->value = 56;
 
     	$content = new ODataPropertyContent();
     	$content->properties = array($property);
     	$content->isTopLevel = true;
-    	$writer = new JsonODataV2Writer();
+    	$writer = new JsonLightODataWriter(JsonLightMetadataLevel::MINIMAL(), $this->serviceBase);
     	$result = $writer->write($content);
 	    $this->assertSame($writer, $result);
 
@@ -938,10 +861,9 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 	    $actual = json_decode($writer->getOutput());
 
 	    $expected = '{
-						"d" : {
-							"SomeProp": 56
-						}
-					}';
+	                    "odata.metadata":"http://services.odata.org/V3/OData/OData.svc/$metadata#Edm.String",
+	                    "value" :  56
+	                 }';
         $expected = json_decode($expected);
 
 	    $this->assertEquals($expected, $actual, "raw JSON is: " . $writer->getOutput());
