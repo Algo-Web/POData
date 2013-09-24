@@ -67,9 +67,7 @@ class WebOperationContext
      */ 
     public function __clone()
     {
-        throw ODataException::notAcceptableError(
-            "Cloning of WebOperationContext is not allowed!!!"
-        );
+        ODataException::notAcceptableError("Cloning of WebOperationContext is not allowed!!!");
     }
     
     /**
@@ -107,7 +105,7 @@ class WebOperationContext
     }
 
     /**
-     * This is an internal method to reset the conotext.
+     * This is an internal method to reset the context.
      * Note: This is added for testing, end user is not
      * supposed to use this function.
      * 
