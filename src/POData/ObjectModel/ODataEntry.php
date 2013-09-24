@@ -51,7 +51,7 @@ class ODataEntry
      * Collection of entry media links (Named Stream Links)
      * @var array<ODataMediaLink>
      */
-    public $mediaLinks;
+    public $mediaLinks = array();
     /**
      * 
      * media link entry (MLE Link)
@@ -63,32 +63,26 @@ class ODataEntry
      * Collection of navigation links (can be expanded)
      * @var array<ODataLink>
      */
-    public $links;
+    public $links = array();
     /**
      * 
      * Entry ETag
      * @var string
      */
     public $eTag;
-    /**
-     * 
-     * Entry IsTopLevel
-     * @var string
-     */
-    public $isTopLevel;
+
     /**
      * 
      * True if this is a media link entry.
      * @var boolean
      */
     public $isMediaLinkEntry;
+
+	/**
+	 * The name of the resource set this entry belongs to, use in metadata output
+	 * @var string
+	 */
+	public $resourceSetName;
     
-    /**
-     * Constructs a new insatnce of ODataEntry
-     */
-    function __construct()
-    {
-        $this->mediaLinks = array();
-        $this->links = array();
-    }
+
 }

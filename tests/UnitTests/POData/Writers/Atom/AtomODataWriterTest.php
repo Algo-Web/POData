@@ -124,7 +124,6 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
     	
     	$feed->nextPageLink = $nextPageLink;
     	$feed->title = 'Feed Title';
-    	$feed->isTopLevel = true;
 
     	
     	 // Entry 1
@@ -640,7 +639,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
                                                       'Media Content Type2', 
                                                       'Media ETag2'));
         
-        $odataEntryItem->isTopLevel = true;
+
         $odataLink = new ODataLink();
         $odataLink->isCollection = false;
         $odataLink->isExpanded = true;
@@ -675,7 +674,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
                                                       'Media Content Type2', 
                                                       'Media ETag2'));
         
-        $odataExpandEntry->isTopLevel       = false;
+
         
         $link = new ODataLink();
         $link->name = "Link Name";
@@ -931,7 +930,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 	 * 
 	 * Testing bag property
 	 */
-	function testBagProperty()
+	function testEntryWithBagProperty()
 	{
 		//entry
 		$entry = new ODataEntry();
@@ -941,7 +940,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 		$entry->editLink = 'edit link of entry 2';
 		$entry->type = 'SampleModel.Customer';
 		$entry->eTag = '';
-		$entry->isTopLevel = true;
+
 		
 		$entryPropContent = new ODataPropertyContent();
 		//entry property

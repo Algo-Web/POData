@@ -48,8 +48,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
     public function writeTopLevelElement(&$entryObject)
     {
         $requestTargetSource = $this->requestDescription->getTargetSource();
-        $odataEntry = new ODataEntry();
-        $odataEntry->isTopLevel = true;
+
         $resourceType = null;
         if ($requestTargetSource == RequestTargetSource::ENTITY_SET) {
             $resourceType = $this->requestDescription->getTargetResourceType();
@@ -64,13 +63,14 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
         }
 
         $needPop = $this->pushSegmentForRoot();
-        $this->_writeEntryElement(
-            $entryObject, $resourceType, 
+        $entry = $this->_writeEntryElement(
+            $entryObject,
+	        $resourceType,
             $this->requestDescription->getRequestUri()->getUrlAsString(), 
-            $this->requestDescription->getContainerName(), $odataEntry
+            $this->requestDescription->getContainerName()
         );
         $this->popSegment($needPop);
-        return $odataEntry;        
+        return $entry;
     }
 
     /**
@@ -101,10 +101,10 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
         }
 
         $relativeUri = $this->requestDescription->getIdentifier(); 
-        $odataFeed = new ODataFeed();
-        $odataFeed->isTopLevel = true;
+        $feed = new ODataFeed();
+
         if ($this->requestDescription->getRequestCountOption() == RequestCountOption::INLINE()) {
-            $odataFeed->rowCount = $this->requestDescription->getCountValue();
+            $feed->rowCount = $this->requestDescription->getCountValue();
         }
 
         $needPop = $this->pushSegmentForRoot();
@@ -115,10 +115,10 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
             $title,
             $this->requestDescription->getRequestUri()->getUrlAsString(),
             $relativeUri,
-            $odataFeed
+            $feed
         );
         $this->popSegment($needPop);
-        return $odataFeed;
+        return $feed;
     }
 
     /**
@@ -266,14 +266,16 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
      * @param ResourceType &$resourceType Expected type of the entry object.
      * @param string       $absoluteUri   Absolute uri of the entry element.
      * @param string       $relativeUri   Relative uri of the entry element.
-     * @param ODataEntry   &$odataEntry   OData entry object to write to.
-     * 
+     *
      * @return void
      */
     private function _writeEntryElement(&$entryObject, 
         ResourceType &$resourceType,
-        $absoluteUri, $relativeUri, ODataEntry &$odataEntry
+        $absoluteUri, $relativeUri
     ) {
+	    $entry = new ODataEntry();
+	    $entry->resourceSetName = $this->getCurrentResourceSetWrapper()->getName();
+
         if (is_null($entryObject)) {
             //According to atom standard an empty entry must have an Author
             //node.
@@ -293,25 +295,27 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
                 $actualResourceType,
                 $title,
                 $relativeUri,
-                $odataEntry
+	            $entry
             );
 
-            $odataEntry->id = $absoluteUri;
-            $odataEntry->eTag = $this->getETagForEntry($entryObject, $resourceType);
-            $odataEntry->title = $title;
-            $odataEntry->editLink = $relativeUri;
-            $odataEntry->type = $actualResourceType->getFullName();
+	        $entry->id = $absoluteUri;
+	        $entry->eTag = $this->getETagForEntry($entryObject, $resourceType);
+	        $entry->title = $title;
+	        $entry->editLink = $relativeUri;
+	        $entry->type = $actualResourceType->getFullName();
             $odataPropertyContent = new ODataPropertyContent();
             $this->_writeObjectProperties(
                 $entryObject, 
                 $actualResourceType,
                 $absoluteUri,
                 $relativeUri,
-                $odataEntry,
+	            $entry,
                 $odataPropertyContent
             );
-            $odataEntry->propertyContent = $odataPropertyContent;
+	        $entry->propertyContent = $odataPropertyContent;
         }
+
+	    return $entry;
     }
 
     /**
@@ -344,15 +348,12 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
             //then the feed should 
             //have at least one Author tag
         } else {
-            $i = 0;
             foreach ($entryObjects as &$entryObject) {
-                $odataFeed->entries[$i] = new ODataEntry();
-                $this->_writeEntryElement($entryObject, $resourceType, null, null, $odataFeed->entries[$i]);
-                $i++;
+                $odataFeed->entries[] = $this->_writeEntryElement($entryObject, $resourceType, null, null);
             }
 
             if ($this->needNextPageLink(count($entryObjects))) {
-                $odataFeed->nextPageLink = $this->getNextLinkUri($entryObjects[$i - 1], $absoluteUri);
+                $odataFeed->nextPageLink = $this->getNextLinkUri(end($entryObjects), $absoluteUri);
             }
         }
     }
@@ -600,17 +601,16 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
                             );
                             $link->expandedResult = $inlineFeed;
                         } else {
-                            $inlineEntry = new ODataEntry();
+
                             $link->isCollection = false;
                             $currentResourceType1 = $currentResourceSetWrapper->getResourceType();
-                            $this->_writeEntryElement(
-                                $navigationPropertyInfo->value, 
-                                $currentResourceType1, 
-                                $propertyAbsoluteUri, 
-                                $propertyRelativeUri, 
-                                $inlineEntry
+
+                            $link->expandedResult = $this->_writeEntryElement(
+	                            $navigationPropertyInfo->value,
+	                            $currentResourceType1,
+	                            $propertyAbsoluteUri,
+	                            $propertyRelativeUri
                             );
-                            $link->expandedResult = $inlineEntry;
                         }
                     } else {
                         $link->expandedResult = null;

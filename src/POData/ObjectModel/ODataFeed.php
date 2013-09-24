@@ -5,7 +5,6 @@ namespace POData\ObjectModel;
 
 use POData\ObjectModel\ODataLink;
 use POData\ObjectModel\ODataEntry;
-use POData\Providers\Metadata\Type\Boolean;
 
 /**
  * Class ODataFeed
@@ -36,33 +35,20 @@ class ODataFeed
      * Row count, in case of $inlinecount option 
      * @var int
      */
-    public $rowCount;
+    public $rowCount = null;
     /**
      * 
      * Enter URL to next page, if pagination is enabled
      * @var ODataLink
      */
-    public $nextPageLink;
+    public $nextPageLink = null;
     /**
      * 
      * Collection of entries under this feed
      * @var ODataEntry[]
      */
-    public $entries;
-    /**
-     * 
-     * Boolean value which check for feed is top level or not.
-     * @var Boolean
-     */
-    public $isTopLevel;
+    public $entries = array();
 
-    /**
-     * Constructor for Initialization of Feed.
-     */
-    function __construct()
-    {
-        $this->entries = array();
-        $this->rowCount = null;
-        $this->nextPageLink = null;
-    }
+
+
 }

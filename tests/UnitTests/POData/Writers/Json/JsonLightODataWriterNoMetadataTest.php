@@ -39,7 +39,7 @@ class JsonLightODataWriterNoMetadataTest extends \PHPUnit_Framework_TestCase
 
 		$expected = '{"url": "http://services.odata.org/OData/OData.svc/Suppliers(0)"}';
 		$expected = json_decode($expected);
-		$this->assertEquals($expected, $actual, "raw JSON is: " . $writer->getOutput());
+		$this->assertEquals(array($expected), array($actual), "raw JSON is: " . $writer->getOutput());
 	}
 	
 	/**
@@ -85,9 +85,9 @@ class JsonLightODataWriterNoMetadataTest extends \PHPUnit_Framework_TestCase
 						]
 					}';
 
-		 $expected = json_decode($expected);
+		$expected = json_decode($expected);
 
-		$this->assertEquals($expected, $actual, "raw JSON is: " . $writer->getOutput());
+		$this->assertEquals(array($expected), array($actual), "raw JSON is: " . $writer->getOutput());
 
 
 		$oDataUrlCollection->count = 44; //simulate an $inlinecount
@@ -116,7 +116,7 @@ class JsonLightODataWriterNoMetadataTest extends \PHPUnit_Framework_TestCase
 
 		$expected = json_decode($expected);
 
-		$this->assertEquals($expected, $actual, "raw JSON is: " . $writer->getOutput());
+		$this->assertEquals(array($expected), array($actual), "raw JSON is: " . $writer->getOutput());
 	}
 	
 	/**
@@ -213,7 +213,6 @@ class JsonLightODataWriterNoMetadataTest extends \PHPUnit_Framework_TestCase
 		$oDataFeed->nextPageLink = $nextPageLink;
 		//feed entries
 		$oDataFeed->entries = array($entry1);
-		$oDataFeed->isTopLevel = true;
 
 		//Note that even if the top limits the collection the count should not be output unlesss inline count is specified
 		//IE: http://services.odata.org/v3/(S(q0qf0chjvehdij1b1itgm1yy))/OData/OData.svc/Categories?$top=1&$inlinecount=allpages&$format=application/json;odata=nometadata
@@ -239,7 +238,7 @@ class JsonLightODataWriterNoMetadataTest extends \PHPUnit_Framework_TestCase
 				            }
 				        ]
 					}';
-		 $expected = json_decode($expected);
+		$expected = json_decode($expected);
 
 		$this->assertEquals(array($expected), array($actual), "raw JSON is: " . $writer->getOutput());
 
@@ -467,7 +466,6 @@ class JsonLightODataWriterNoMetadataTest extends \PHPUnit_Framework_TestCase
 		//feed entries
 
 		$oDataFeed->entries = array($entry1, $entry2);
-		$oDataFeed->isTopLevel = true;
 
 		$oDataFeed->rowCount = null; //simulate no inline count
 
@@ -508,7 +506,7 @@ class JsonLightODataWriterNoMetadataTest extends \PHPUnit_Framework_TestCase
 					}';
 		$expected = json_decode($expected);
 
-		$this->assertEquals($expected, $actual, "raw JSON is: " . $writer->getOutput());
+		$this->assertEquals(array($expected), array($actual), "raw JSON is: " . $writer->getOutput());
 
 
 		$oDataFeed->rowCount = 55; //simulate  $inlinecount=allpages
@@ -551,7 +549,7 @@ class JsonLightODataWriterNoMetadataTest extends \PHPUnit_Framework_TestCase
 					}';
 		$expected = json_decode($expected);
 
-		$this->assertEquals($expected, $actual, "raw JSON is: " . $writer->getOutput());
+		$this->assertEquals(array($expected), array($actual), "raw JSON is: " . $writer->getOutput());
 	}
 	
 	/**
@@ -570,7 +568,7 @@ class JsonLightODataWriterNoMetadataTest extends \PHPUnit_Framework_TestCase
 		$entry->editLink = 'edit link of entry 2';
 		$entry->type = 'ODataDemo.Category';
 		$entry->eTag = '';
-		$entry->isTopLevel = true;
+
 		
 		$entryPropContent = new ODataPropertyContent();
 		//entry property
@@ -608,9 +606,9 @@ class JsonLightODataWriterNoMetadataTest extends \PHPUnit_Framework_TestCase
 						"ID": 0,
 						"Name": "Food"
 					}';
-		 $expected = json_decode($expected);
+		$expected = json_decode($expected);
 
-		$this->assertEquals($expected, $actual, "raw JSON is: " . $writer->getOutput());
+		$this->assertEquals(array($expected), array($actual), "raw JSON is: " . $writer->getOutput());
 		
 	}
 	
@@ -683,15 +681,15 @@ class JsonLightODataWriterNoMetadataTest extends \PHPUnit_Framework_TestCase
 						"Country": "USA"
 					}';
 		$expected = json_decode($expected);
-		
-		$this->assertEquals($expected, $actual, "raw JSON is: " . $writer->getOutput());
+
+		$this->assertEquals(array($expected), array($actual), "raw JSON is: " . $writer->getOutput());
 	}
 	
 	/**
 	 * 
 	 * Testing bag property
 	 */
-	function testBagProperty()
+	function testEntryWithBagProperty()
 	{
 		//Intro to bags: http://www.odata.org/2010/09/adding-support-for-bags/
 		//TODO: bags were renamed to collection in v3 see https://github.com/balihoo/POData/issues/79
@@ -706,7 +704,6 @@ class JsonLightODataWriterNoMetadataTest extends \PHPUnit_Framework_TestCase
 		$entry->editLink = 'edit link of entry 2';
 		$entry->type = 'SampleModel.Customer';
 		$entry->eTag = '';
-		$entry->isTopLevel = true;
 		
 		$entryPropContent = new ODataPropertyContent();
 		//entry property
@@ -824,7 +821,7 @@ class JsonLightODataWriterNoMetadataTest extends \PHPUnit_Framework_TestCase
 					}';
 	    $expected = json_decode($expected);
 
-		$this->assertEquals($expected, $actual, "raw JSON is: " . $writer->getOutput());
+		$this->assertEquals(array($expected), array($actual), "raw JSON is: " . $writer->getOutput());
 	}
 	
     /** 
@@ -851,7 +848,7 @@ class JsonLightODataWriterNoMetadataTest extends \PHPUnit_Framework_TestCase
 	    $expected = '{ "value" :  56 }';
         $expected = json_decode($expected);
 
-	    $this->assertEquals($expected, $actual, "raw JSON is: " . $writer->getOutput());
+	    $this->assertEquals(array($expected), array($actual), "raw JSON is: " . $writer->getOutput());
     }
      
 }

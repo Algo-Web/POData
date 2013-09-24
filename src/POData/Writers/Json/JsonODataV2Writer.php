@@ -30,37 +30,45 @@ class JsonODataV2Writer extends JsonODataV1Writer
 	//
 	//IE {d : [ item1, item2, item3] }
 	//is now { d : { results :[item1, item2, item3], meta1 : x, meta2 : y }
+	//So we override the collection methods to shove this stuff in there
 
 	protected $dataArrayName = ODataConstants::JSON_RESULT_NAME;
 
+	protected $rowCountName = ODataConstants::JSON_ROWCOUNT_STRING;
 
+	protected $nextLinkName = ODataConstants::JSON_NEXT_STRING;
 
 	/**
-	 * Enter the top level scope.
+	 * Write the given OData model in a specific response format
 	 *
 	 * @param  ODataURL|ODataURLCollection|ODataPropertyContent|ODataFeed|ODataEntry $model Object of requested content.
 	 *
 	 * @return JsonODataV1Writer
 	 */
-	protected function enterTopLevelScope($model)
-	{
+	public function write($model){
 		// { "d" :
 		$this->_writer
 			->startObjectScope()
-			->writeName("d");
+			->writeName("d")
+			->startObjectScope();
 
 
 		if ($model instanceof ODataURL) {
-			$this->_writer->startObjectScope();
-		} else if ($model instanceof ODataURLCollection) {
-			$this->_writer->startObjectScope();
-		} elseif ($model instanceof ODataPropertyContent) {
 
+			$this->writeURL($model);
+		} elseif ($model instanceof ODataURLCollection) {
+			$this->writeURLCollection($model);
+		} elseif ($model instanceof ODataPropertyContent) {
+			$this->writeProperties($model);
 		} elseif ($model instanceof ODataFeed) {
-			$this->_writer->startObjectScope();
-		} elseif ($model instanceof ODataEntry) {
-			$this->_writer->startObjectScope();
+			$this->writeFeed($model);
+		}elseif ($model instanceof ODataEntry) {
+			$this->writeEntry($model);
 		}
+
+
+		$this->_writer->endScope();
+		$this->_writer->endScope();
 
 		return $this;
 	}
@@ -79,8 +87,8 @@ class JsonODataV2Writer extends JsonODataV1Writer
         $this->writeRowCount($urls->count);
 	    $this->writeNextPageLink($urls->nextPageLink);
 
-            // Json Format V2:
-            // "results":
+        // Json Format V2:
+        // "results":
 	    $this->_writer
 	        ->writeName($this->dataArrayName)
 		    ->startArrayScope();
@@ -101,15 +109,12 @@ class JsonODataV2Writer extends JsonODataV1Writer
      */
     protected function writeFeed(ODataFeed $feed)
     {
-
-
 	    $this->writeRowCount($feed->rowCount);
+        $this->writeNextPageLink($feed->nextPageLink);
 
-	    $this->writeNextPageLink($feed->nextPageLink);
 
-
-            // Json Format V2:
-            // "results":
+        // Json Format V2:
+        // "results":
 	    $this->_writer
 		    ->writeName($this->dataArrayName)
 	        ->startArrayScope();
@@ -132,7 +137,7 @@ class JsonODataV2Writer extends JsonODataV1Writer
 	protected function writeRowCount($count)
 	{
 		if ($count != null) {
-			$this->_writer->writeName(ODataConstants::JSON_ROWCOUNT_STRING);
+			$this->_writer->writeName($this->rowCountName);
 			$this->_writer->writeValue($count);
 		}
 
@@ -152,7 +157,7 @@ class JsonODataV2Writer extends JsonODataV1Writer
 		// "__next" : uri
 		if ($nextPageLinkUri != null) {
 			$this->_writer
-				->writeName(ODataConstants::JSON_NEXT_STRING)
+				->writeName($this->nextLinkName)
 				->writeValue($nextPageLinkUri->url);
 		}
 

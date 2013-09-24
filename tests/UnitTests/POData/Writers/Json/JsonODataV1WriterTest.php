@@ -166,7 +166,6 @@ class JsonODataV1WriterTest extends \PHPUnit_Framework_TestCase
 		
 		//entry 1 end
 		$oDataFeed->entries = array($entry1);
-		$oDataFeed->isTopLevel = true;
 		
 		$writer = new JsonODataV1Writer();
 		$result = $writer->write($oDataFeed);
@@ -197,7 +196,7 @@ class JsonODataV1WriterTest extends \PHPUnit_Framework_TestCase
 					}';
 		$expected = json_decode($expected);
 
-		$this->assertEquals($expected, $actual, "raw JSON is: " . $writer->getOutput());
+		$this->assertEquals(array($expected), array($actual), "raw JSON is: " . $writer->getOutput());
 	}
 	
 	/**
@@ -395,7 +394,6 @@ class JsonODataV1WriterTest extends \PHPUnit_Framework_TestCase
 		//entry 2 end
     	
 		$oDataFeed->entries = array($entry1, $entry2);
-		$oDataFeed->isTopLevel = true;
 		
 		$writer = new JsonODataV1Writer();
 		$result = $writer->write($oDataFeed);
@@ -458,7 +456,7 @@ class JsonODataV1WriterTest extends \PHPUnit_Framework_TestCase
 					}';
 		$expected = json_decode($expected);
 
-		$this->assertEquals($expected, $actual, "raw JSON is: " . $writer->getOutput());
+		$this->assertEquals(array($expected), array($actual), "raw JSON is: " . $writer->getOutput());
 	}
 	
 	/**
@@ -475,7 +473,6 @@ class JsonODataV1WriterTest extends \PHPUnit_Framework_TestCase
 		$entry->editLink = 'edit link of entry 2';
 		$entry->type = 'ODataDemo.Category';
 		$entry->eTag = '';
-		$entry->isTopLevel = true;
 		
 		$entryPropContent = new ODataPropertyContent();
 		//entry property
@@ -603,15 +600,15 @@ class JsonODataV1WriterTest extends \PHPUnit_Framework_TestCase
 						}
 					}';
 		$expected = json_decode($expected);
-		
-		$this->assertEquals($expected, $actual, "raw JSON is: " . $writer->getOutput());
+
+		$this->assertEquals(array($expected), array($actual), "raw JSON is: " . $writer->getOutput());
 	}
 	
 	/**
 	 * 
 	 * Testing bag property
 	 */
-	function testBagProperty()
+	function testBagProtestEntryWithBagPropertyperty()
 	{
 		//TODO: bags are not available till v3 see https://github.com/balihoo/POData/issues/79
 
@@ -623,7 +620,7 @@ class JsonODataV1WriterTest extends \PHPUnit_Framework_TestCase
 		$entry->editLink = 'edit link of entry 2';
 		$entry->type = 'SampleModel.Customer';
 		$entry->eTag = '';
-		$entry->isTopLevel = true;
+
 		
 		$entryPropContent = new ODataPropertyContent();
 		//entry property
@@ -757,7 +754,7 @@ class JsonODataV1WriterTest extends \PHPUnit_Framework_TestCase
 					}';
 		$expected = json_decode($expected);
 
-		$this->assertEquals($expected, $actual, "raw JSON is: " . $writer->getOutput());
+		$this->assertEquals(array($expected), array($actual), "raw JSON is: " . $writer->getOutput());
 	}
 	
     /** 
@@ -788,7 +785,7 @@ class JsonODataV1WriterTest extends \PHPUnit_Framework_TestCase
 					}';
 	    $expected = json_decode($expected);
 
-	    $this->assertEquals($expected, $actual, "raw JSON is: " . $writer->getOutput());
+	    $this->assertEquals(array($expected), array($actual), "raw JSON is: " . $writer->getOutput());
     }
      
 }

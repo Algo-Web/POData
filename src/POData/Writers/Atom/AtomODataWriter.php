@@ -11,7 +11,7 @@ use POData\ObjectModel\ODataPropertyContent;
 use POData\ObjectModel\ODataBagContent;
 use POData\ObjectModel\ODataProperty;
 use POData\ObjectModel\ODataMediaLink;
-use POData\Writers\BaseODataWriter;
+use POData\Writers\IODataWriter;
 use POData\Common\ODataConstants;
 use POData\Common\ODataException;
 
@@ -20,7 +20,7 @@ use POData\Common\ODataException;
  * Class AtomODataWriter
  * @package POData\Writers\Atom
  */
-class AtomODataWriter extends BaseODataWriter
+class AtomODataWriter implements IODataWriter
 {
     /**
      * Writer to which output (CSDL Document) is sent
@@ -50,6 +50,39 @@ class AtomODataWriter extends BaseODataWriter
         $this->xmlWriter->startDocument('1.0', 'UTF-8', 'yes');
         $this->xmlWriter->setIndent(4);
     }
+
+
+	/**
+	 * Write the given OData model in a specific response format
+	 *
+	 * @param  ODataURL|ODataURLCollection|ODataPropertyContent|ODataFeed|ODataEntry $model Object of requested content.
+	 *
+	 * @return AtomODataWriter
+	 */
+	public function write($model)
+	{
+		if ($model instanceof ODataURL) {
+			return $this->writeURL($model);
+		}
+
+		if ($model instanceof ODataURLCollection) {
+			return $this->writeURLCollection($model);
+		}
+
+		if ($model instanceof ODataPropertyContent) {
+			return $this->writeProperties($model, true);
+		}
+
+		if ($model instanceof ODataFeed) {
+			return $this->writeFeed($model, true);
+		}
+
+		if ($model instanceof ODataEntry) {
+			return $this->writeEntry($model, true);
+		}
+
+		return $this;
+	}
 
     /** 
      * @param ODataUrl $url the url to write.
@@ -115,13 +148,14 @@ class AtomODataWriter extends BaseODataWriter
      * Begin write OData Feed
      * 
      * @param ODataFeed $feed Object of OData feed to start writing feed
+     * @param boolean $isTopLevel indicates if this is the top level feed in the response
      * 
      * @return AtomODataWriter
      */
-    protected function writeFeed(ODataFeed $feed)
+    protected function writeFeed(ODataFeed $feed, $isTopLevel = false)
     {
         $this->xmlWriter->startElement(ODataConstants::ATOM_FEED_ELEMENT_NAME);
-        if ($feed->isTopLevel) {
+        if ($isTopLevel) {
             $this->writeBaseUriAndDefaultNamespaces();
         }
 
@@ -159,18 +193,45 @@ class AtomODataWriter extends BaseODataWriter
     }
 
 
+	/**
+	 * Write top level entry
+	 *
+	 * @param ODataEntry $entry Object of ODataEntry
+	 * @param boolean $isTopLevel
+	 *
+	 * @return AtomODataWriter
+	 */
+	protected function writeEntry(ODataEntry $entry, $isTopLevel = false)
+	{
+		$this->writeBeginEntry($entry, $isTopLevel);
+		foreach ($entry->links as $link) {
+			$this->writeLink($link);
+		}
+
+		$this
+			->preWriteProperties($entry)
+			->writeProperties($entry->propertyContent)
+			->postWriteProperties($entry);
+
+		$this->xmlWriter->endElement();
+
+
+		return $this;
+	}
+
 
     /**
      * Start writing a entry
      *
      * @param ODataEntry $entry Entry to write
+     * @param boolean $isTopLevel
      * 
      * @return AtomODataWriter
      */
-    protected function writeBeginEntry(ODataEntry $entry)
+    protected function writeBeginEntry(ODataEntry $entry, $isTopLevel)
     {
         $this->xmlWriter->startElement(ODataConstants::ATOM_ENTRY_ELEMENT_NAME);
-        if ($entry->isTopLevel) {
+        if ($isTopLevel) {
             $this->writeBaseUriAndDefaultNamespaces();
         }
 
@@ -265,18 +326,7 @@ class AtomODataWriter extends BaseODataWriter
     }
 
 
-    /**
-     * Write end of entry
-     *
-     * @param ODataEntry $entry ODataEntry object to end entry.
-     * 
-     * @return AtomODataWriter
-     */
-    protected function endEntry(ODataEntry $entry)
-    {
-        $this->xmlWriter->endElement();
-	    return $this;
-    }
+
 
 	/**
 	 *
@@ -284,7 +334,7 @@ class AtomODataWriter extends BaseODataWriter
 	 *
 	 * @return AtomODataWriter
 	 */
-	protected function writeBeginLink(ODataLink $link)
+	protected function writeLink(ODataLink $link)
     {
         $this->writeLinkNode($link, $link->isExpanded);
 
@@ -294,27 +344,55 @@ class AtomODataWriter extends BaseODataWriter
 			    ODataConstants::ATOM_INLINE_ELEMENT_NAME,
 			    null
 		    );
+
+
+	        if (!is_null($link->expandedResult)) {
+		        if ($link->isCollection) {
+			        $this->writeFeed($link->expandedResult);
+		        } else {
+			        $this->writeEntry($link->expandedResult);
+		        }
+	        }
+
+
+		    $this->xmlWriter->endElement();
+		    $this->xmlWriter->endElement();
 	    }
 
 	    return $this;
     }
 
 
-    /**
-     * Write end of link
-     *
-     * @param ODataLink $link the link to close scope on
-     * 
-     * @return AtomODataWriter
-     */
-    public function writeEndLink(ODataLink $link)
-    {
-        if ($link->isExpanded) {
-            $this->xmlWriter->endElement();
-            $this->xmlWriter->endElement();
-        }
-	    return $this;
-    }
+
+
+	/**
+	 * Write the given collection of properties.
+	 * (properties of an entity or complex type)
+	 *
+	 * @param ODataPropertyContent $properties Collection of properties.
+	 * @param bool $topLevel indicates if this property content is the top level response to be written
+	 * @return AtomODataWriter
+	 */
+	protected function writeProperties(ODataPropertyContent $properties, $topLevel = false)
+	{
+		foreach ($properties->properties as $property) {
+			$this->beginWriteProperty($property, $topLevel);
+
+			if ($property->value == null) {
+				$this->writeNullValue($property);
+			} elseif ($property->value instanceof ODataPropertyContent) {
+				$this->writeProperties($property->value, false);
+			} elseif ($property->value instanceof ODataBagContent) {
+				$this->writeBagContent($property->value);
+			} else {
+				$this->xmlWriter->text($property->value);
+			}
+
+			$this->xmlWriter->endElement();
+		}
+
+		return $this;
+	}
 
     /**
      * Write the node which hold the entity properties as child
@@ -403,20 +481,7 @@ class AtomODataWriter extends BaseODataWriter
 	    return $this;
     }
 
-    /**
-     * Write end of a property
-     * 
-     * @param ODataProperty $property Object of property which want to end.
-     * @param Boolean       $isTopLevel     Is property top level or not.
-     *
-     * @return AtomODataWriter
-     */
-    protected function endWriteProperty(ODataProperty $property, $isTopLevel)
-    {
-        $this->xmlWriter->endElement();
 
-	    return $this;
-    }
 
     /**
      * Write after last property
@@ -432,30 +497,6 @@ class AtomODataWriter extends BaseODataWriter
         }
         $this->xmlWriter->endElement();
 
-	    return $this;
-    }
-
-    /**
-     * Begin a complex property
-     * 
-     * @param ODataProperty $property whose value hold the complex property
-     * 
-     * @return AtomODataWriter
-     */
-    protected function beginComplexProperty(ODataProperty $property)
-    {
-        //Nothing
-	    return $this;
-    }
-
-    /**
-     * End  complex property
-     * 
-     * @return AtomODataWriter
-     */
-    protected function endComplexProperty()
-    {
-	    //Nothing
 	    return $this;
     }
 
@@ -515,18 +556,7 @@ class AtomODataWriter extends BaseODataWriter
 	    return $this;
     }
 
-    /**
-     * Write basic (primitive) value
-     *
-     * @param ODataProperty $property Object of ODataProperty
-     * 
-     * @return AtomODataWriter
-     */
-    protected function writePrimitiveValue(ODataProperty $property)
-    {
-        $this->xmlWriter->text($property->value);
-	    return $this;
-    }
+
 
     /**
      * Get the final result as string

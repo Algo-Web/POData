@@ -12,7 +12,6 @@ use POData\ObjectModel\ODataBagContent;
 use POData\ObjectModel\ODataProperty;
 use POData\ObjectModel\ODataMediaLink;
 use POData\Writers\Json\JsonWriter;
-use POData\Writers\BaseODataWriter;
 use POData\Common\Version;
 use POData\Common\ODataConstants;
 use POData\Common\Messages;
@@ -54,58 +53,77 @@ class JsonLightODataWriter extends JsonODataV2Writer
 		$this->_writer = new JsonWriter('');
 		$this->urlKey = ODataConstants::JSON_URL_STRING;
 		$this->dataArrayName = ODataConstants::JSON_LIGHT_VALUE_NAME;
+		$this->rowCountName = ODataConstants::JSON_LIGHT_ROWCOUNT_STRING;
 		$this->metadataLevel = $metadataLevel;
 	}
 
-
-	protected function enterTopLevelScope($model)
-	{
-		if ($model instanceof ODataURL) {
-			$this->_writer->startObjectScope();
-		} else if ($model instanceof ODataURLCollection) {
-			$this->_writer->startObjectScope();
-		} elseif ($model instanceof ODataPropertyContent) {
-
-		} elseif ($model instanceof ODataFeed) {
-			$this->_writer->startObjectScope();
-		} elseif ($model instanceof ODataEntry) {
-			$this->_writer->startObjectScope();
-		}
-
-		return $this;
-	}
-
-
-	protected function leaveTopLevelScope()
-	{
-		$this->_writer->endScope();
-		return $this;
-	}
-
 	/**
-	 * @param ODataURL $url the url to write
+	 * Write the given OData model in a specific response format
+	 *
+	 * @param  ODataURL|ODataURLCollection|ODataPropertyContent|ODataFeed|ODataEntry $model Object of requested content.
 	 *
 	 * @return JsonLightODataWriter
 	 */
-	public function writeUrl(ODataURL $url)
-	{
-		switch($this->metadataLevel){
+	public function write($model){
+		$this->_writer->startObjectScope();
 
-			case JsonLightMetadataLevel::NONE():
-				break;
-
-
-			case JsonLightMetadataLevel::MINIMAL():
-				$this->_writer
-					->writeName(ODataConstants::JSON_LIGHT_METADATA_STRING)
-					->writeValue($url->oDataUrl);
-
-				break;
+		if ($model instanceof ODataURL) {
+			$this->writeTopLevelMeta("url");
+			$this->writeURL($model);
+		} elseif ($model instanceof ODataURLCollection) {
+			$this->writeTopLevelMeta("urlCollection");
+			$this->writeURLCollection($model);
+		} elseif ($model instanceof ODataPropertyContent) {
+			$this->writeTopLevelMeta( $model->properties[0]->typeName );
+			$this->writeTopLevelProperty($model->properties[0]);
+		} elseif ($model instanceof ODataFeed) {
+			$this->writeTopLevelMeta($model->title);
+			$this->writeFeed($model);
+		}elseif ($model instanceof ODataEntry) {
+			$this->writeTopLevelMeta($model->resourceSetName . "/@Element");
+			$this->writeEntry($model);
 		}
 
-		return parent::writeUrl($url);
+		$this->_writer->endScope();
+
+		return $this;
 	}
 
+
+	/**
+	 *
+	 * @param ODataProperty $property
+	 *
+	 * @return JsonODataV1Writer
+	 */
+	protected function writeTopLevelProperty(ODataProperty $property)
+	{
+		if ($property->value == null) {
+			$this->_writer->writeName(ODataConstants::JSON_LIGHT_VALUE_NAME);
+			$this->_writer->writeValue("null");
+		} elseif ($property->value instanceof ODataPropertyContent) {
+			$this->writeProperties($property->value);
+		} elseif ($property->value instanceof ODataBagContent) {
+			$this->_writer->writeName(ODataConstants::JSON_LIGHT_VALUE_NAME);
+			$this->writeBagContent($property->value);
+		} else {
+			$this->_writer->writeName(ODataConstants::JSON_LIGHT_VALUE_NAME);
+			$this->_writer->writeValue($property->value, $property->typeName);
+		}
+
+		return $this;
+	}
+
+
+	protected function writeTopLevelMeta($fragement)
+	{
+		if($this->metadataLevel == JsonLightMetadataLevel::MINIMAL())
+		{
+			$this->_writer
+				->writeName(ODataConstants::JSON_LIGHT_METADATA_STRING)
+				->writeValue($this->baseUri . '/' . ODataConstants::URI_METADATA_SEGMENT . '#' . $fragement);
+		}
+	}
 
 	/**
 	 *
@@ -114,14 +132,6 @@ class JsonLightODataWriter extends JsonODataV2Writer
 	 * @return JsonLightODataWriter
 	 */
 	protected function writeEntryMetadata(ODataEntry $entry){
-
-		switch($this->metadataLevel){
-
-			case JsonLightMetadataLevel::NONE():
-				//No meta data means no meta data
-				break;
-
-		}
 
 		return $this;
 	}
@@ -132,79 +142,10 @@ class JsonLightODataWriter extends JsonODataV2Writer
 	 *
 	 * @return JsonLightODataWriter
 	 */
-	protected function writeBeginLink(ODataLink $link)
-	{
-		switch($this->metadataLevel){
-
-			case JsonLightMetadataLevel::NONE():
-				//No meta data means no meta data
-				break;
-
-		}
-
-		/*
-		// "<linkname>" :
-		$this->_writer
-			->writeName($link->title);
-
-		if (!$link->expandedResult) {
-			$this->_writer
-				->startObjectScope()
-				->writeName(ODataConstants::JSON_DEFERRED_STRING)
-				->startObjectScope()
-				->writeName($this->urlKey)
-				->writeValue($link->url)
-				->endScope()
-			;
-		}
-        */
+	protected function writeLink(ODataLink $link){
 		return $this;
 	}
 
-	/**
-	 * Write end of link.
-	 *
-	 * @param ODataLink $link the link to end
-	 *
-	 * @return JsonLightODataWriter
-	 */
-	public function writeEndLink(ODataLink $link)
-	{
-		switch($this->metadataLevel){
-
-			case JsonLightMetadataLevel::NONE():
-				//No meta data means no meta data
-				break;
-
-		}
-
-		/*
-		if (!$link->isExpanded) {
-			// }
-			$this->_writer->endScope();
-		}
-        */
-		return $this;
-	}
-
-
-	/**
-	 * Writes the row count for when $inlinecount is specified as allpages.
-	 *
-	 * @param int $count Row count value.
-	 *
-	 * @return JsonLightODataWriter
-	 */
-	protected function writeRowCount($count)
-	{
-		if ($count != null) {
-			$this->_writer
-				->writeName(ODataConstants::JSON_LIGHT_ROWCOUNT_STRING)
-				->writeValue($count);
-		}
-
-		return $this;
-	}
 
 
 	/**
@@ -216,14 +157,6 @@ class JsonLightODataWriter extends JsonODataV2Writer
 	 */
 	protected function writeNextPageLink(ODataLink $nextPageLinkUri = null)
 	{
-		switch($this->metadataLevel){
-
-			case JsonLightMetadataLevel::NONE():
-				//No meta data means no meta data
-				break;
-
-		}
-
 		/*
 		// "__next" : uri
 		if ($nextPageLinkUri != null) {
@@ -244,11 +177,12 @@ class JsonLightODataWriter extends JsonODataV2Writer
 	 *
 	 * @return JsonLightODataWriter
 	 */
-	protected function beginComplexProperty(ODataProperty $property)
+	protected function writeComplexProperty(ODataProperty $property)
 	{
-		// {
-		$this->_writer->startObjectScope();
 
+		$this->_writer
+			// {
+			->startObjectScope();
 
 		/*
 			// __metadata : { Type : "typename" }
@@ -256,79 +190,33 @@ class JsonLightODataWriter extends JsonODataV2Writer
 			->startObjectScope()
 			->writeName(ODataConstants::JSON_TYPE_STRING)
 			->writeValue($property->typeName)
-			->endScope()
+			->endScope();
 		*/
 
+		$this->writeProperties($property->value);
 
-		switch($this->metadataLevel){
-
-			case JsonLightMetadataLevel::NONE():
-				//No meta data means no meta data
-				break;
-
-		}
-
-		return $this;
-	}
-
-
-	/**
-	 * End write complex property.
-	 *
-	 * @return JsonODataV1Writer
-	 */
-	protected function endComplexProperty()
-	{
-		// }
 		$this->_writer->endScope();
+
 		return $this;
 	}
 
-	/**
-	 * Begin write property.
-	 *
-	 * @param ODataProperty $property property to write.
-	 * @param Boolean       $isTopLevel     is top level or not.
-	 *
-	 * @return JsonLightODataWriter
-	 */
-	protected function beginWriteProperty(ODataProperty $property, $isTopLevel)
-	{
 
-		//JSON light doesn't output the property name
-		//Complex looks like {  subProp1: X, subProp2 : Y}
-		//Primitive looks like { value : X };
-		if($isTopLevel){
-			if($property->value instanceof ODataPropertyContent){
-				return $this;
-			}
-
-			$this->_writer
-				->startObjectScope()
-				->writeName(ODataConstants::JSON_LIGHT_VALUE_NAME);
-
-			return $this;
-
-		}
-
-		return parent::beginWriteProperty($property, $isTopLevel);
-	}
-
-
-
-
-
-	/**
-	 * Begin an item in a collection
-	 *
-	 * @param ODataBagContent $bag bag property to write
-	 *
-	 * @return JsonLightODataWriter
-	 */
 	protected function writeBagContent(ODataBagContent $bag)
 	{
 
 		$this->_writer
+
+
+			/*
+			->writeName(ODataConstants::JSON_METADATA_STRING) //__metadata : { Type : "typename" }
+			->startObjectScope()
+
+			->writeName(ODataConstants::JSON_TYPE_STRING)
+			->writeValue($bag->type)
+			->endScope()  // }
+			*/
+
+
 			->startArrayScope(); // [
 
 		foreach ($bag->propertyContents as $content) {
@@ -345,8 +233,8 @@ class JsonLightODataWriter extends JsonODataV2Writer
 		}
 
 
-		$this->_writer
-			->endScope();  // ]
+		$this->_writer->endScope();  // ]
 		return $this;
 	}
+
 }

@@ -277,6 +277,8 @@ class ODataConstants
     //next page link element name in json payload
     const JSON_NEXT_STRING = '__next';
 
+	const JSON_LIGHT_NEXT_STRING = 'odata.next';
+
     //'results' header for Json data array
     const JSON_RESULT_NAME = 'results';
 
