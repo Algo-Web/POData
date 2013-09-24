@@ -92,7 +92,7 @@ class JsonODataV1Writer implements IODataWriter
     {
         $this->_writer
             ->writeName($this->urlKey)
-	        ->writeValue($url->oDataUrl);
+	        ->writeValue($url->url);
 
 	    return $this;
     }
@@ -106,7 +106,7 @@ class JsonODataV1Writer implements IODataWriter
      */
     public function writeUrlCollection(ODataURLCollection $urls)
     {
-        foreach ($urls->oDataUrls as $url) {
+        foreach ($urls->urls as $url) {
 	        $this->_writer->startObjectScope();
             $this->writeUrl($url);
 	        $this->_writer->endScope();

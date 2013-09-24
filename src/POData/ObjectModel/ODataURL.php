@@ -14,7 +14,7 @@ class ODataURL
      * contains the url value.
      * @var String
      */
-    public $oDataUrl;
+    public $url;
 
 
 }

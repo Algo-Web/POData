@@ -23,7 +23,7 @@ class JsonODataV1WriterTest extends \PHPUnit_Framework_TestCase
 	function testWriteURL()
 	{
 		$oDataUrl = new ODataURL();
-		$oDataUrl->oDataUrl = 'http://services.odata.org/OData/OData.svc/Suppliers(0)';
+		$oDataUrl->url = 'http://services.odata.org/OData/OData.svc/Suppliers(0)';
 		$writer = new JsonODataV1Writer();
 		$result = $writer->write($oDataUrl);
 		$this->assertSame($writer, $result);
@@ -44,12 +44,12 @@ class JsonODataV1WriterTest extends \PHPUnit_Framework_TestCase
 	{
 		$oDataUrlCollection = new ODataURLCollection();
 		$oDataUrl1 = new ODataURL();
-		$oDataUrl1->oDataUrl = 'http://services.odata.org/OData/OData.svc/Products(0)';
+		$oDataUrl1->url = 'http://services.odata.org/OData/OData.svc/Products(0)';
 		$oDataUrl2 = new ODataURL();
-		$oDataUrl2->oDataUrl = 'http://services.odata.org/OData/OData.svc/Products(7)';
+		$oDataUrl2->url = 'http://services.odata.org/OData/OData.svc/Products(7)';
 		$oDataUrl3 = new ODataURL();
-		$oDataUrl3->oDataUrl = 'http://services.odata.org/OData/OData.svc/Products(8)';
-		$oDataUrlCollection->oDataUrls = array($oDataUrl1,
+		$oDataUrl3->url = 'http://services.odata.org/OData/OData.svc/Products(8)';
+		$oDataUrlCollection->urls = array($oDataUrl1,
 		                                       $oDataUrl2,
 		                                       $oDataUrl3
 		                                      );
@@ -531,9 +531,7 @@ class JsonODataV1WriterTest extends \PHPUnit_Framework_TestCase
 	{
 		$propContent = new ODataPropertyContent();
 		
-		$propContent->isTopLevel = true;
 
-		
 		$compProp1 = new ODataProperty();
 		$compProp1->name = 'Street';
 		$compProp1->typeName = 'Edm.String';
@@ -769,7 +767,7 @@ class JsonODataV1WriterTest extends \PHPUnit_Framework_TestCase
 
     	$content = new ODataPropertyContent();
     	$content->properties = array($property);
-    	$content->isTopLevel = true;
+
     	$writer = new JsonODataV1Writer();
     	$result = $writer->write($content);
 	    $this->assertSame($writer, $result);

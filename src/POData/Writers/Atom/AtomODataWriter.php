@@ -93,7 +93,7 @@ class AtomODataWriter implements IODataWriter
     {
         $this->xmlWriter->startElement(ODataConstants::ATOM_URI_ELEMENT_NAME);
         $this->xmlWriter->writeAttribute(ODataConstants::XMLNS_NAMESPACE_PREFIX, ODataConstants::ODATA_NAMESPACE);
-        $this->xmlWriter->text($url->oDataUrl);
+        $this->xmlWriter->text($url->url);
         $this->xmlWriter->endElement();
 
 	    return $this;
@@ -130,8 +130,8 @@ class AtomODataWriter implements IODataWriter
             $this->xmlWriter->text($urls->count);
             $this->xmlWriter->endElement();
         }
-        foreach ($urls->oDataUrls as $url) {
-            $this->writeNodeValue(ODataConstants::ATOM_URI_ELEMENT_NAME, $url->oDataUrl);
+        foreach ($urls->urls as $url) {
+            $this->writeNodeValue(ODataConstants::ATOM_URI_ELEMENT_NAME, $url->url);
         }
 
 

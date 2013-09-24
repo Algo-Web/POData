@@ -40,7 +40,7 @@ class AtomODataWriterTest extends \PHPUnit_Framework_TestCase
     public function testODataURLItem()
     {
 		$url = new ODataURL();
-		$url->oDataUrl = "http://www.odata.org/developers/protocols/atom-format";
+		$url->url = "http://www.odata.org/developers/protocols/atom-format";
 
 	    $writer = new AtomODataWriter('http://localhost/NorthWind.svc');
 		$result = $writer->write($url);
@@ -64,13 +64,13 @@ class AtomODataWriterTest extends \PHPUnit_Framework_TestCase
     public function testODataURLCollectionItem()
     {
     	$url1 = new ODataURL();
-    	$url1->oDataUrl = 'http://www.odata.org/developers/protocols/atom-format';
+    	$url1->url = 'http://www.odata.org/developers/protocols/atom-format';
     	$url2 = new ODataURL();
-    	$url2->oDataUrl = 'http://www.odata.org/developers/protocols/json-format';
+    	$url2->url = 'http://www.odata.org/developers/protocols/json-format';
     	
     	$urls = array($url1, $url2);
 		$odataURLItem = new ODataURLCollection();
-		$odataURLItem->oDataUrls = $urls;
+		$odataURLItem->urls = $urls;
 		
 		$nextPageLink = new ODataLink ();
     	$nextPageLink->name = "Next";
@@ -858,8 +858,6 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 
     	$propCont = new ODataPropertyContent();
     	$propCont->properties = array($prop);
-    	$propCont->isTopLevel = true;
-
 
 	    $writer = new AtomODataWriter('http://localhost/NorthWind.svc');
 	    $result = $writer->write($propCont);
@@ -906,7 +904,6 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">56</d:C
 
     	$propCont = new ODataPropertyContent();
     	$propCont->properties = array($prop);
-    	$propCont->isTopLevel = true;
 
 
 	    $writer = new AtomODataWriter('http://localhost/NorthWind.svc');
@@ -1090,7 +1087,6 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
     	
     	$propCont = new ODataPropertyContent();
     	$propCont->properties = array($odataProperty);
-    	$propCont->isTopLevel = true;
 
 	   $writer = new AtomODataWriter('http://localhost/NorthWind.svc');
 	   $result = $writer->write($propCont);

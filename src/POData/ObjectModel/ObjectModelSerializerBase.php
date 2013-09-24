@@ -310,7 +310,7 @@ class ObjectModelSerializerBase
     /**
      * Gets collection of projection nodes under the current node.
      * 
-     * @return array(ProjectionNode/ExpandedProjectionNode)/NULL List of nodes 
+     * @return ProjectionNode[]|ExpandedProjectionNode[]|null List of nodes
      * describing projections for the current segment, If this method returns 
      * null it means no projections are to be applied and the entire resource
      * for the current segment should be serialized, If it returns non-null 

@@ -139,7 +139,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
                 $this->getCurrentResourceSetWrapper()->getName()
             );
             
-            $odataUrl->oDataUrl 
+            $odataUrl->url
                 = rtrim($this->absoluteServiceUri, '/') . '/' . $relativeUri;
         }
 
@@ -160,7 +160,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
         if (!empty($entryObjects)) {        
             $i = 0;
             foreach ($entryObjects as &$entryObject) {
-                $odataUrlCollection->oDataUrls[$i] = $this->writeUrlElement($entryObject);
+                $odataUrlCollection->urls[$i] = $this->writeUrlElement($entryObject);
                 $i++;
             }
 
@@ -185,22 +185,22 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
      *                                                    complex property.
      * @param ResourceType         &$resourceType         Describes the type of 
      *                                                    complex object.
-     * @param ODataPropertyContent &$odataPropertyContent On return, this object
-     *                                                    will hold complex value
-     *                                                    which can be used by writer
      *
-     * @return void
+     * @return ODataPropertyContent
      */
-    public function writeTopLevelComplexObject(&$complexValue,
-        $propertyName, ResourceType &$resourceType,
-        ODataPropertyContent &$odataPropertyContent
+    public function writeTopLevelComplexObject(
+	    &$complexValue,
+        $propertyName,
+        ResourceType &$resourceType
     ) {
-        $odataPropertyContent->isTopLevel = true;
+	    $propertyContent = new ODataPropertyContent();
         $this->_writeComplexValue(
             $complexValue,
-            $propertyName, $resourceType, null, 
-            $odataPropertyContent
+            $propertyName, $resourceType, null,
+	        $propertyContent
         );
+
+	    return $propertyContent;
     }
 
     /**
@@ -212,22 +212,23 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
      *                                                    bag property.
      * @param ResourceType         &$resourceType         Describes the type of 
      *                                                    bag object.
-     * @param ODataPropertyContent &$odataPropertyContent On return, this object 
-     *                                                    will hold bag value which
-     *                                                    can be used by writers.
-     * 
-     * @return void
+     *
+     * @return ODataPropertyContent
      */
-    public function writeTopLevelBagObject(&$BagValue,
-        $propertyName, ResourceType &$resourceType,
-        ODataPropertyContent &$odataPropertyContent 
+    public function writeTopLevelBagObject(
+	    &$BagValue,
+        $propertyName,
+        ResourceType &$resourceType
     ) {
-        $odataPropertyContent->isTopLevel = true;
+
+	    $propertyContent = new ODataPropertyContent();
         $this->_writeBagValue(
             $BagValue,
             $propertyName, $resourceType, null,
-            $odataPropertyContent
+	        $propertyContent
         );
+
+	    return $propertyContent;
     }
 
     /**
@@ -239,24 +240,22 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
      *                                                    describing the 
      *                                                    primitive property 
      *                                                    to be written. 
-     * @param ODataPropertyContent &$odataPropertyContent On return, this object 
-     *                                                    will hold
-     *                                                    primitive value 
-     *                                                    which can be used 
-     *                                                    by writers.
-     * 
-     * @return void
+     *
+     * @return ODataPropertyContent
      */
-    public function writeTopLevelPrimitive(&$primitiveValue, 
-        ResourceProperty &$resourceProperty, ODataPropertyContent &$odataPropertyContent
+    public function writeTopLevelPrimitive(
+	    &$primitiveValue,
+        ResourceProperty &$resourceProperty
     ) {
-        $odataPropertyContent->isTopLevel = true;
-        $odataPropertyContent->properties[] = new ODataProperty();
+	    $propertyContent = new ODataPropertyContent();
+	    $propertyContent->properties[] = new ODataProperty();
         $this->_writePrimitiveValue(
             $primitiveValue, 
-            $resourceProperty, 
-            $odataPropertyContent->properties[0]
+            $resourceProperty,
+	        $propertyContent->properties[0]
         );
+
+	    return $propertyContent;
     }
 
     /**

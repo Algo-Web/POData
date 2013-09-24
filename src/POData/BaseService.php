@@ -3,7 +3,6 @@
 namespace POData;
 
 use POData\Providers\Metadata\ResourceTypeKind;
-use POData\ObjectModel\ODataPropertyContent;
 use POData\Common\ErrorHandler;
 use POData\Common\Messages;
 use POData\Common\ODataException;
@@ -449,29 +448,23 @@ abstract class BaseService implements IRequestHandler, IService
                         $this->_serviceHost->setResponseETag($eTag);
                     }
                 } else if ($requestTargetKind == RequestTargetKind::COMPLEX_OBJECT) {
-                    $odataModelInstance = new ODataPropertyContent();
-                    $targetResourceTypeComplex = $requestDescription->getTargetResourceType();
-                    $objectModelSerializer->writeTopLevelComplexObject(
+
+	                $odataModelInstance = $objectModelSerializer->writeTopLevelComplexObject(
                         $result, 
                         $requestDescription->getProjectedProperty()->getName(),
-                        $targetResourceTypeComplex, 
-                        $odataModelInstance
-                    );
+	                    $requestDescription->getTargetResourceType()
+	                );
                 } else if ($requestTargetKind == RequestTargetKind::BAG) {
-                    $odataModelInstance = new ODataPropertyContent();
-                    $targetResourceTypeBag = $requestDescription->getTargetResourceType();
-                    $objectModelSerializer->writeTopLevelBagObject(
+                    $odataModelInstance = $objectModelSerializer->writeTopLevelBagObject(
                         $result, 
                         $requestDescription->getProjectedProperty()->getName(),
-                        $targetResourceTypeBag,
+	                    $requestDescription->getTargetResourceType(),
                         $odataModelInstance
                     );
                 } else if ($requestTargetKind == RequestTargetKind::PRIMITIVE) {
-                    $odataModelInstance = new ODataPropertyContent();
-                    $projectedProperty = $requestDescription->getProjectedProperty();
-                    $objectModelSerializer->writeTopLevelPrimitive(
-                        $result, 
-                        $projectedProperty,
+                    $odataModelInstance = $objectModelSerializer->writeTopLevelPrimitive(
+                        $result,
+	                    $requestDescription->getProjectedProperty(),
                         $odataModelInstance
                     );
                 } else if ($requestTargetKind == RequestTargetKind::PRIMITIVE_VALUE) {
