@@ -20,10 +20,7 @@ class JsonLightODataWriterNoMetadataTest extends \PHPUnit_Framework_TestCase
 
 	protected $serviceBase = "this should not be used for minimal metadata";
 
-	/**
-	 * 
-	 * Testing write url 
-	 */
+
 	function testWriteURL()
 	{
 		//IE: http://services.odata.org/v3/OData/OData.svc/Products(0)/$links/Supplier?$format=application/json;odata=nometadata
@@ -42,10 +39,7 @@ class JsonLightODataWriterNoMetadataTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(array($expected), array($actual), "raw JSON is: " . $writer->getOutput());
 	}
 	
-	/**
-	 * 
-	 * Testing write url collection
-	 */
+
 	function testWriteURLCollection()
 	{
 		// see http://services.odata.org/v3/OData/OData.svc/Categories(1)/$links/Products?$format=application/json;odata=nometadata
@@ -119,10 +113,7 @@ class JsonLightODataWriterNoMetadataTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(array($expected), array($actual), "raw JSON is: " . $writer->getOutput());
 	}
 	
-	/**
-	 * 
-	 * Testing write feed function
-	 */
+
 	function testWriteFeed()
 	{
 		//see http://services.odata.org/v3/OData/OData.svc/Categories(0)/Products?$top=1&$format=application/json;odata=nometadata
@@ -270,10 +261,10 @@ class JsonLightODataWriterNoMetadataTest extends \PHPUnit_Framework_TestCase
 	}
 	
 
-	function testWriteFeedWithComplexProperty()
+	function testWriteFeedWithEntriesWithComplexProperty()
 	{
 		//see http://services.odata.org/v3/OData/OData.svc/Suppliers?$top=1&$format=application/json;odata=nometadata
-		// suppliers have address and location as complex properties
+		// suppliers have address as a complex property
 
 
 		//entry1
@@ -552,10 +543,7 @@ class JsonLightODataWriterNoMetadataTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(array($expected), array($actual), "raw JSON is: " . $writer->getOutput());
 	}
 	
-	/**
-	 * 
-	 * Testing write entry
-	 */
+
 	function testWriteEntry()
 	{
 		//see http://services.odata.org/v3/OData/OData.svc/Suppliers(0)?$format=application/json;odata=nometadata
@@ -612,10 +600,7 @@ class JsonLightODataWriterNoMetadataTest extends \PHPUnit_Framework_TestCase
 		
 	}
 	
-	/**
-	 * 
-	 * Testing write a complex property
-	 */
+
 	function testWriteComplexProperty()
 	{
 		//see http://services.odata.org/v3/OData/OData.svc/Suppliers(0)/Address?$format=application/json;odata=nometadata
@@ -684,10 +669,7 @@ class JsonLightODataWriterNoMetadataTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(array($expected), array($actual), "raw JSON is: " . $writer->getOutput());
 	}
 	
-	/**
-	 * 
-	 * Testing bag property
-	 */
+
 	function testEntryWithBagProperty()
 	{
 		//Intro to bags: http://www.odata.org/2010/09/adding-support-for-bags/
@@ -823,9 +805,7 @@ class JsonLightODataWriterNoMetadataTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(array($expected), array($actual), "raw JSON is: " . $writer->getOutput());
 	}
 	
-    /** 
-     * test for write top level primitive property.
-     */
+
     function testPrimitiveProperty(){
 	    //see http://services.odata.org/v3/OData/OData.svc/Suppliers(0)/Address/City?$format=application/json;odata=nometadata
     	$property = new ODataProperty();

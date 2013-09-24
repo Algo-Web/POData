@@ -164,4 +164,23 @@ class JsonODataV2Writer extends JsonODataV1Writer
 		return $this;
 	}
 
+	protected function writeExpandedLink(ODataLink $link)
+	{
+		//Difference from v1 is that expanded collection have a result: wrapper to allow for metadata to exist
+		$this->_writer->startObjectScope();
+
+		if ($link->isCollection) {
+			$this->_writer
+				->writeName($this->dataArrayName)
+				->startArrayScope();
+			$this->writeFeed($link->expandedResult);
+			$this->_writer->endScope();
+		} else {
+			$this->writeEntry($link->expandedResult);
+		}
+
+
+		$this->_writer->endScope();
+	}
+
 }

@@ -16,10 +16,7 @@ use POData\Writers\Json\JsonODataV1Writer;
 class JsonODataV1WriterTest extends \PHPUnit_Framework_TestCase
 {
 
-	/**
-	 * 
-	 * Testing write url 
-	 */
+
 	function testWriteURL()
 	{
 		$oDataUrl = new ODataURL();
@@ -36,10 +33,7 @@ class JsonODataV1WriterTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(array($expected), array($actual), "raw JSON is: " . $writer->getOutput());
 	}
 	
-	/**
-	 * 
-	 * Testing write url collection
-	 */
+
 	function testWriteURLCollection()
 	{
 		$oDataUrlCollection = new ODataURLCollection();
@@ -199,11 +193,8 @@ class JsonODataV1WriterTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(array($expected), array($actual), "raw JSON is: " . $writer->getOutput());
 	}
 	
-	/**
-	 * 
-	 * Testing write feed function(complex property)
-	 */
-	function testWriteFeedCompProp()
+
+	function testWriteFeedWithEntriesWithComplexProperty()
 	{
 		$oDataFeed = new ODataFeed();
 		$oDataFeed->id = 'FEED ID';
@@ -459,10 +450,7 @@ class JsonODataV1WriterTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(array($expected), array($actual), "raw JSON is: " . $writer->getOutput());
 	}
 	
-	/**
-	 * 
-	 * Testing write entry
-	 */
+
 	function testWriteEntry()
 	{
 		//entry
@@ -602,11 +590,8 @@ class JsonODataV1WriterTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(array($expected), array($actual), "raw JSON is: " . $writer->getOutput());
 	}
 	
-	/**
-	 * 
-	 * Testing bag property
-	 */
-	function testBagProtestEntryWithBagPropertyperty()
+
+	function testEntryWithBagProperty()
 	{
 		//TODO: bags are not available till v3 see https://github.com/balihoo/POData/issues/79
 
@@ -755,9 +740,7 @@ class JsonODataV1WriterTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(array($expected), array($actual), "raw JSON is: " . $writer->getOutput());
 	}
 	
-    /** 
-     * test for write top level primitive property.
-     */
+
     function testPrimitiveProperty(){
     	
     	$property = new ODataProperty();

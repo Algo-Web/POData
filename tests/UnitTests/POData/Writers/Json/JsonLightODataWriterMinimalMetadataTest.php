@@ -20,10 +20,7 @@ class JsonLightODataWriterMinimalMetadataTest extends \PHPUnit_Framework_TestCas
 
 	protected $serviceBase = "http://services.odata.org/OData/OData.svc";
 
-	/**
-	 * 
-	 * Testing write url 
-	 */
+
 	function testWriteURL()
 	{
 		$this->markTestSkipped("see #80 ODataURL doesn't have enough context to get the meta data return result");
@@ -47,10 +44,7 @@ class JsonLightODataWriterMinimalMetadataTest extends \PHPUnit_Framework_TestCas
 		$this->assertEquals(array($expected), array($actual), "raw JSON is: " . $writer->getOutput());
 	}
 	
-	/**
-	 * 
-	 * Testing write url collection
-	 */
+
 	function testWriteURLCollection()
 	{
 		$this->markTestSkipped("see #80 ODataURL doesn't have enough context to get the meta data return result");
@@ -127,10 +121,7 @@ class JsonLightODataWriterMinimalMetadataTest extends \PHPUnit_Framework_TestCas
 		$this->assertEquals(array($expected), array($actual), "raw JSON is: " . $writer->getOutput());
 	}
 	
-	/**
-	 * 
-	 * Testing write feed function
-	 */
+
 	function testWriteFeed()
 	{
 		//see http://services.odata.org/v3/OData/OData.svc/Categories(0)/Products?$top=2&$format=application/json;odata=minimalmetadata
@@ -276,10 +267,10 @@ class JsonLightODataWriterMinimalMetadataTest extends \PHPUnit_Framework_TestCas
 	}
 	
 
-	function testWriteFeedWithComplexProperty()
+	function testWriteFeedWithEntriesWithComplexProperty()
 	{
 		//see http://services.odata.org/v3/OData/OData.svc/Suppliers?$top=2&$format=application/json;odata=minimalmetadata
-		// suppliers have address and location as complex properties
+		// suppliers have address as a complex property
 
 
 		//entry1
@@ -560,10 +551,7 @@ class JsonLightODataWriterMinimalMetadataTest extends \PHPUnit_Framework_TestCas
 		$this->assertEquals(array($expected), array($actual), "raw JSON is: " . $writer->getOutput());
 	}
 	
-	/**
-	 * 
-	 * Testing write entry
-	 */
+
 	function testWriteEntry()
 	{
 		//see http://services.odata.org/v3/OData/OData.svc/Suppliers(0)?$format=application/json;odata=minimalmetadata
@@ -621,10 +609,7 @@ class JsonLightODataWriterMinimalMetadataTest extends \PHPUnit_Framework_TestCas
 		
 	}
 	
-	/**
-	 * 
-	 * Testing write a complex property
-	 */
+
 	function testWriteComplexProperty()
 	{
 		//see http://services.odata.org/v3/OData/OData.svc/Suppliers(0)/Address?$format=application/json;odata=minimalmetadata
@@ -694,10 +679,7 @@ class JsonLightODataWriterMinimalMetadataTest extends \PHPUnit_Framework_TestCas
 		$this->assertEquals(array($expected), array($actual), "raw JSON is: " . $writer->getOutput());
 	}
 	
-	/**
-	 * 
-	 * Testing bag property
-	 */
+
 	function testEntryWithBagProperty()
 	{
 		//Intro to bags: http://www.odata.org/2010/09/adding-support-for-bags/
@@ -835,9 +817,7 @@ class JsonLightODataWriterMinimalMetadataTest extends \PHPUnit_Framework_TestCas
 		$this->assertEquals(array($expected), array($actual), "raw JSON is: " . $writer->getOutput());
 	}
 	
-    /** 
-     * test for write top level primitive property.
-     */
+
     function testPrimitiveProperty(){
     	//see http://services.odata.org/v3/OData/OData.svc/Suppliers(0)/Address/City?$format=application/json;odata=minimalmetadata
     	$property = new ODataProperty();

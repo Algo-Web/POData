@@ -255,7 +255,9 @@ class JsonODataV1Writer implements IODataWriter
         // "<linkname>" :
         $this->_writer->writeName($link->title);
 
-	    if (!$link->expandedResult) {
+	    if ($link->isExpanded) {
+			$this->writeExpandedLink($link);
+	    } else {
 		    $this->_writer
 			    ->startObjectScope()
 			    ->writeName(ODataConstants::JSON_DEFERRED_STRING)
@@ -263,16 +265,25 @@ class JsonODataV1Writer implements IODataWriter
 			    ->writeName($this->urlKey)
 			    ->writeValue($link->url)
 			    ->endScope()
+			    ->endScope()
 		    ;
-	    }
-
-	    if (!$link->isExpanded) {
-		    // }
-		    $this->_writer->endScope();
 	    }
 
 	    return $this;
     }
+
+	protected function writeExpandedLink(ODataLink $link)
+	{
+		if ($link->isCollection) {
+			$this->_writer->startArrayScope();
+			$this->writeFeed($link->expandedResult);
+		} else {
+			$this->_writer->startObjectScope();
+			$this->writeEntry($link->expandedResult);
+		}
+
+		$this->_writer->endScope();
+	}
 
 
 	/**
@@ -287,6 +298,7 @@ class JsonODataV1Writer implements IODataWriter
 	{
 		foreach ($properties->properties as $property) {
 
+			$this->writePropertyMeta($property);
 			$this->_writer->writeName($property->name);
 
 			if ($property->value == null) {
@@ -305,7 +317,10 @@ class JsonODataV1Writer implements IODataWriter
 	}
 
 
-
+	protected function writePropertyMeta(ODataProperty $property)
+	{
+		return $this; //does nothing in v1 or v2, json light outputs stuff
+	}
 
     /**
      * Begin write complex property.

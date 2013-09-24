@@ -94,15 +94,19 @@ class JsonLightODataWriter extends JsonODataV2Writer
 	 *
 	 * @param ODataProperty $property
 	 *
-	 * @return JsonODataV1Writer
+	 * @return JsonLightODataWriter
 	 */
 	protected function writeTopLevelProperty(ODataProperty $property)
 	{
+		$this->writePropertyMeta($property);
 		if ($property->value == null) {
 			$this->_writer->writeName(ODataConstants::JSON_LIGHT_VALUE_NAME);
 			$this->_writer->writeValue("null");
 		} elseif ($property->value instanceof ODataPropertyContent) {
-			$this->writeProperties($property->value);
+			//In the case of complex properties at the top level we don't write the name of the property,
+			//just the sub properties.
+			$this->writeComplexPropertyMeta($property)
+				->writeProperties($property->value);
 		} elseif ($property->value instanceof ODataBagContent) {
 			$this->_writer->writeName(ODataConstants::JSON_LIGHT_VALUE_NAME);
 			$this->writeBagContent($property->value);
@@ -115,14 +119,50 @@ class JsonLightODataWriter extends JsonODataV2Writer
 	}
 
 
-	protected function writeTopLevelMeta($fragement)
+
+	protected function writeTopLevelMeta($fragment)
 	{
-		if($this->metadataLevel == JsonLightMetadataLevel::MINIMAL())
+		if($this->metadataLevel == JsonLightMetadataLevel::NONE())
 		{
-			$this->_writer
-				->writeName(ODataConstants::JSON_LIGHT_METADATA_STRING)
-				->writeValue($this->baseUri . '/' . ODataConstants::URI_METADATA_SEGMENT . '#' . $fragement);
+			return;
 		}
+
+		$this->_writer
+			->writeName(ODataConstants::JSON_LIGHT_METADATA_STRING)
+			->writeValue($this->baseUri . '/' . ODataConstants::URI_METADATA_SEGMENT . '#' . $fragment);
+
+	}
+
+
+	protected function writePropertyMeta(ODataProperty $property)
+	{
+		if($this->metadataLevel != JsonLightMetadataLevel::FULL())
+		{
+			//Only full meta level outputs this info
+			return $this;
+		}
+
+		if(is_null($property->value))
+		{
+			//it appears full metadata doesn't output types for nulls...
+			return $this;
+		}
+
+
+		switch($property->typeName)
+		{
+			//The type metadata is only included on certain types of properties
+			//Note this also excludes Complex types
+
+			case "Edm.Decimal":
+			case "Edm.DateTime":
+				$this->_writer
+					->writeName($property->name . ODataConstants::JSON_LIGHT_METADATA_PROPERTY_TYPE_SUFFIX_STRING)
+					->writeValue($property->typeName);
+		}
+
+
+		return $this;
 	}
 
 	/**
@@ -132,6 +172,23 @@ class JsonLightODataWriter extends JsonODataV2Writer
 	 * @return JsonLightODataWriter
 	 */
 	protected function writeEntryMetadata(ODataEntry $entry){
+
+		if($this->metadataLevel != JsonLightMetadataLevel::FULL())
+		{
+			//Only full meta level outputs this info
+			return $this;
+		}
+
+		$this->_writer
+			->writeName(ODataConstants::JSON_LIGHT_METADATA_TYPE_STRING)
+			->writeValue($entry->type)
+			->writeName(ODataConstants::JSON_LIGHT_METADATA_ID_STRING)
+			->writeValue($entry->id)
+			->writeName(ODataConstants::JSON_LIGHT_METADATA_ETAG_STRING)
+			->writeValue($entry->eTag)
+			->writeName(ODataConstants::JSON_LIGHT_METADATA_EDIT_LINK_STRING)
+			->writeValue($entry->editLink)
+		;
 
 		return $this;
 	}
@@ -143,10 +200,41 @@ class JsonLightODataWriter extends JsonODataV2Writer
 	 * @return JsonLightODataWriter
 	 */
 	protected function writeLink(ODataLink $link){
+
+		if($this->metadataLevel != JsonLightMetadataLevel::FULL())
+		{
+			//Only full meta level outputs any link info
+			return $this;
+		}
+		//Interestingly the fullmetadata outputs this metadata..even if the thing is expanded
+		$this->_writer
+			->writeName($link->title . ODataConstants::JSON_LIGHT_METADATA_LINK_NAVIGATION_SUFFIX_STRING)
+			->writeValue($link->url);
+
+		if($link->isExpanded)
+		{
+			$this->_writer->writeName($link->title);
+			$this->writeExpandedLink($link);
+		}
+
 		return $this;
 	}
 
+	protected function writeExpandedLink(ODataLink $link)
+	{
+		$this->_writer->startObjectScope();
 
+		if ($link->isCollection) {
+			$this->_writer->startArrayScope();
+			$this->writeFeed($link->expandedResult);
+			$this->_writer->endScope();
+		} else {
+			$this->writeEntry($link->expandedResult);
+		}
+
+
+		$this->_writer->endScope();
+	}
 
 	/**
 	 * Writes the next page link.
@@ -180,26 +268,27 @@ class JsonLightODataWriter extends JsonODataV2Writer
 	protected function writeComplexProperty(ODataProperty $property)
 	{
 
-		$this->_writer
-			// {
-			->startObjectScope();
+		// {
+		$this->_writer->startObjectScope();
 
-		/*
-			// __metadata : { Type : "typename" }
-			->writeName(ODataConstants::JSON_METADATA_STRING)
-			->startObjectScope()
-			->writeName(ODataConstants::JSON_TYPE_STRING)
-			->writeValue($property->typeName)
-			->endScope();
-		*/
-
-		$this->writeProperties($property->value);
+		$this->writeComplexPropertyMeta($property)
+			->writeProperties($property->value);
 
 		$this->_writer->endScope();
 
 		return $this;
 	}
 
+	protected function writeComplexPropertyMeta(ODataProperty $property)
+	{
+		if($this->metadataLevel == JsonLightMetadataLevel::FULL()){
+			$this->_writer
+				->writeName(ODataConstants::JSON_LIGHT_METADATA_TYPE_STRING)
+				->writeValue($property->typeName);
+		}
+
+		return $this;
+	}
 
 	protected function writeBagContent(ODataBagContent $bag)
 	{

@@ -250,7 +250,14 @@ class ODataConstants
     //type element name in json payload.
     const JSON_TYPE_STRING = 'type';
 
-    //edit_media element name in json payload.
+	const JSON_LIGHT_METADATA_TYPE_STRING = 'odata.type';
+	const JSON_LIGHT_METADATA_ID_STRING = 'odata.id';
+	const JSON_LIGHT_METADATA_ETAG_STRING = 'odata.etag';
+	const JSON_LIGHT_METADATA_EDIT_LINK_STRING = 'odata.editLink';
+	const JSON_LIGHT_METADATA_PROPERTY_TYPE_SUFFIX_STRING = '@odata.type';
+	const JSON_LIGHT_METADATA_LINK_NAVIGATION_SUFFIX_STRING = '@odata.navigationLinkUrl';
+
+	//edit_media element name in json payload.
     const JSON_EDITMEDIA_STRING = 'edit_media';
 
     //media_src element name in json payload.

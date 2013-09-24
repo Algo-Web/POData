@@ -42,8 +42,8 @@ class ODataLink
     public $isCollection;
     /**
      * 
-     * The expanded result. This become the inline content of the link
-     * @var ODataEntry/ODataFeed
+     * The expanded result. This becomes the inline content of the link
+     * @var ODataEntry|ODataFeed
      */
     public $expandedResult;
     /**
