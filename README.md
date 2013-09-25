@@ -15,7 +15,7 @@ POData started as a fork of [The OData Producer Library for PHP](https://github.
 * OData v3 Compliant
 * Full [BreezeJS](http://www.breezejs.com/) & [JayData](http://jaydata.org/) support (we love those libraries)
 * Availability via Composer
-* Simpler to plug in to common PHP frameworks (Zend, [Symphony](https://github.com/symphonycms/symphony-2), [Laravel](https://github.com/laravel/laravel))
+* Simpler to plug in to common PHP frameworks ([Zend](https://github.com/zendframework/zf1), [Symphony](https://github.com/symphonycms/symphony-2), [Laravel](https://github.com/laravel/laravel))
 * Produce sample services that pass [OData Validation](http://services.odata.org/validation/)
 * Offers your provider implementation more control on how to best execute the OData Query
 * Optimized $expand support
@@ -28,6 +28,10 @@ Long term goals include:
 * Transaction support
 * Port to Node
 * Convince WordPress & MediaWiki to change their entire API to OData
+
+MVC Integrations
+=================
+* ZendFramework 1 - [POData-ZF1](https://github.com/balihoo/POData-ZF1)
 
 
 Contact
