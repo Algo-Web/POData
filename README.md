@@ -31,6 +31,7 @@ Long term goals include:
 
 MVC Integrations
 =================
+It's likley POData will execute in the context of an Web MVC Framework.  As such, the framework has probably already done a lot of the parsing for you and it makes no sense to have POData reinvent the wheel.  As such, some MVC adapters are provided to bridge the MVC framework to POData.
 * ZendFramework 1 - [POData-ZF1](https://github.com/balihoo/POData-ZF1)
 
 
