@@ -10,6 +10,7 @@ use POData\Configuration\ServiceProtocolVersion;
 use POData\Configuration\IServiceConfiguration;
 
 use POData\BaseService;
+use POData\OperationContext\HTTPRequestMethod;
 use POData\OperationContext\ServiceHost;
 use POData\Common\ODataException;
 use POData\Common\ODataConstants;
@@ -84,7 +85,7 @@ class WordPressDataService extends BaseService
         $this->createProviders();
         $this->getHost()->validateQueryParameters();
         $requestMethod = $this->getOperationContext()->incomingRequest()->getMethod();
-        if ($requestMethod !== ODataConstants::HTTP_METHOD_GET) {
+        if ($requestMethod != HTTPRequestMethod::GET()) {
             ODataException::createNotImplementedError(Messages::onlyReadSupport($requestMethod));
         }
 

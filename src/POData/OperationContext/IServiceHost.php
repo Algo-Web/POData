@@ -2,7 +2,7 @@
 
 namespace POData\OperationContext;
 
-use POData\OperationContext\Web\WebOperationContext;
+use POData\OperationContext\IOperationContext;
 use POData\Common\Url;
 use POData\Common\ODataException;
 
@@ -15,9 +15,9 @@ interface IServiceHost
     /**
      * Gets reference to the operation context.
      * 
-     * @return WebOperationContext
+     * @return IOperationContext
      */
-    public function &getWebOperationContext();
+    public function getOperationContext();
 
     /**
       * Gets the absolute request Uri 
@@ -64,12 +64,6 @@ interface IServiceHost
      */
     public function getRequestAcceptCharSet();
         
-    /**
-     * Gets the MIME type of the  request stream
-     * 
-     * @return string
-     */
-    public function getRequestContentType();
 
     /**
      * To change the request accept type header in the request.
@@ -82,20 +76,8 @@ interface IServiceHost
      */
     public function setRequestAccept($mimeType);
 
-    /**
-     * Gets the MIME type of the  request length
-     * 
-     * @return string
-     */
-    public function getRequestContentLength();
-    
-    /**
-     * Gets the HTTP verb used by the client
-     * 
-     * @return string
-     */
-    public function getRequestHttpMethod();
-        
+
+
     /**
      * Get the value of If-Match header of the request
      * 
@@ -133,13 +115,6 @@ interface IServiceHost
      *                string null if $item not found
      */
     public function getQueryStringItem($item);
-
-    /**
-     * Get the request headers
-     * 
-     * @return array<headername, headerValue>
-     */
-    public function &getRequestHeaders();
 
     /**
      * Set the Cache-Control header on the response

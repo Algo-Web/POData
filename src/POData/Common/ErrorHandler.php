@@ -68,7 +68,7 @@ class ErrorHandler
                 $responseBody = JsonODataV2Writer::serializeException($exception, true);
             }
 
-            $service->getHost()->getWebOperationContext()->outgoingResponse()->setStream($responseBody);
+            $service->getHost()->getOperationContext()->outgoingResponse()->setStream($responseBody);
         }
     }
 }

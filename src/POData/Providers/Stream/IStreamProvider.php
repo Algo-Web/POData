@@ -2,7 +2,7 @@
 
 namespace POData\Providers\Stream;
 
-use POData\OperationContext\Web\WebOperationContext;
+use POData\OperationContext\IOperationContext;
 use POData\Common\ODataException;
 
 /**
@@ -93,7 +93,7 @@ interface IStreamProvider
      *                                                  the HTTP request for the 
      *                                                  stream was not a
      *                                                  conditional request.
-     * @param WebOperationContext $operationContext     A reference to the context
+     * @param IOperationContext $operationContext     A reference to the context
      *                                                  for the current operation.
      *
      * @return mixed A valid  default stream which is associated with the entity,Null should never be returned from this method.
@@ -102,7 +102,7 @@ interface IStreamProvider
      * @throws ODataException if a valid stream cannot be returned. Null should never be returned from this method.
      *
      */
-    public function getReadStream($entity, $eTag, $checkETagForEquality, $operationContext);
+    public function getReadStream($entity, $eTag, $checkETagForEquality, IOperationContext $operationContext);
 
     /**
      * This method is invoked by the data services framework to 
@@ -129,7 +129,7 @@ interface IStreamProvider
      *                                              with the stream for which 
      *                                              the content type is to
      *                                              be obtained.
-     * @param WebOperationContext $operationContext A reference to the context 
+     * @param IOperationContext $operationContext A reference to the context
      *                                              for the current operation
      * 
      * @return string Valid Content-Type string for the stream 
@@ -138,7 +138,7 @@ interface IStreamProvider
      * @throws ODataException if a valid stream content type 
      * associated with the entity specified could not be returned.
      */
-    public function getStreamContentType($entity, $operationContext);
+    public function getStreamContentType($entity, IOperationContext $operationContext);
 
     /**
      * This method is invoked by the data services framework to obtain 
@@ -163,13 +163,13 @@ interface IStreamProvider
      *                                              associated with the
      *                                              stream for which an 
      *                                              etag is to be obtained.
-     * @param WebOperationContext $operationContext A reference to the context
+     * @param IOperationContext $operationContext A reference to the context
      *                                              for the current
      *                                              operation.
      *
      * @return string ETag of the stream associated with the entity specified.
      */
-    public function getStreamETag($entity, $operationContext);
+    public function getStreamETag($entity, IOperationContext $operationContext);
 
     /**
      * This method is invoked by the data services framework 
@@ -209,12 +209,12 @@ interface IStreamProvider
      *                                              stream for which a read 
      *                                              stream URI is to
      *                                              be obtained.
-     * @param WebOperationContext $operationContext A reference to the 
+     * @param IOperationContext $operationContext A reference to the
      *                                              context for the current
      *                                              operation
      *
      * @return string The URI clients should use when making retrieve 
      * (ie. GET) requests to the stream(ie. Media Resource).
      */
-    public function getReadStreamUri($entity, $operationContext);
+    public function getReadStreamUri($entity, IOperationContext $operationContext);
 }

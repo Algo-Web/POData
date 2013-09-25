@@ -39,11 +39,9 @@ class OutgoingResponse
     /**
      * Initialize a new instance of OutgoingWebResponseContext
      * 
-     * @param string $requestStream The response stream
      */
-    public function __construct($requestStream = null)
+    public function __construct()
     {
-        $this->_stream = $requestStream;
         $this->_headers = array();
         $this->_initializeResponseHeaders();
     }

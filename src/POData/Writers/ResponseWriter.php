@@ -82,6 +82,6 @@ class ResponseWriter
             $dataServiceVersion->toString() .';'
         );
         $service->getHost()->setResponseCacheControl(ODataConstants::HTTPRESPONSE_HEADER_CACHECONTROL_NOCACHE);
-        $service->getHost()->getWebOperationContext()->outgoingResponse()->setStream($responseBody);
+        $service->getHost()->getOperationContext()->outgoingResponse()->setStream($responseBody);
     }    
 }

@@ -2,10 +2,11 @@
 
 namespace POData\OperationContext\Web;
 
-use POData\Common\ODataConstants;
 use POData\Common\ODataException;
 use POData\OperationContext\Web\IncomingRequest;
 use POData\OperationContext\Web\OutgoingResponse;
+use POData\OperationContext\IOperationContext;
+use POData\OperationContext\IHTTPRequest;
 
 /**
  * Class WebOperationContext
@@ -18,15 +19,9 @@ use POData\OperationContext\Web\OutgoingResponse;
  *
  * @package POData\OperationContext\Web
  */
-class WebOperationContext
+class WebOperationContext implements IOperationContext
 {
-    /**
-     * Current context
-     * 
-     * @var WebOperationContext
-     */
-    private  static $_context = null;
-    
+
     /**
      * Object of IncomingRequest which is needed to get all the HTTP headers info
      * 
@@ -41,44 +36,15 @@ class WebOperationContext
      */
     private $_outgoingResponse;
     
-    /**
-     * Method which is needed to make this class as singleton class 
-     * It always provides the object which is already existed,if it is there 
-     * or create a new object of WebOperationContext class if no instance was
-     * available of this class 
-     * 
-     * @return WebOperationContext Current web operation context
-     */
-    public static function current()
-    {
-        if (empty(self::$_context)) {
-            self::$_context = new WebOperationContext();
-        }
 
-        return  self::$_context;
-    }
-    
+
     /**
-     * The clone method is private, so it can't be call from outside of the class
-     * 
-     * @return void
-     * 
-     * $throws ODataException if developer try to make a clone of WebOperationContext class.
-     */ 
-    public function __clone()
-    {
-        ODataException::notAcceptableError("Cloning of WebOperationContext is not allowed!!!");
-    }
-    
-    /**
-     * The constructor is protected, only through ‘Current’,method 
-     * one can access the context.
      * Initializes a new instance of the WebOperationContext class. 
      * This function will perform the following tasks:
      *  (1) Retrieve the current HTTP method,headers and stream. 
      *  (2) Populate $_incomingRequest using these. 
      */
-    private function __construct()
+    public function __construct()
     {
         $this->_incomingRequest = new IncomingRequest();
         $this->_outgoingResponse = new OutgoingResponse();
@@ -87,9 +53,9 @@ class WebOperationContext
     /**
      * Gets the Web request context for the request being sent.
      * 
-     * @return OutgoingResponse reference of OutgoingResponse object
+     * @return OutgoingResponse
      */
-    public function &outgoingResponse()
+    public function outgoingResponse()
     {
         return $this->_outgoingResponse;
     }
@@ -97,22 +63,11 @@ class WebOperationContext
     /**
      * Gets the Web request context for the request being received.
      * 
-     * @return IncomingRequest reference of IncomingRequest object
+     * @return IHTTPRequest
      */
-    public function &incomingRequest()
+    public function incomingRequest()
     {
         return $this->_incomingRequest;
     }
 
-    /**
-     * This is an internal method to reset the context.
-     * Note: This is added for testing, end user is not
-     * supposed to use this function.
-     * 
-     * @return void
-     */
-    public function resetWebContextInternal()
-    {
-        self::$_context = null;
-    }
 }

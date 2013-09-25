@@ -11,15 +11,13 @@ use POData\Common\ODataException;
 use POData\Common\InvalidOperationException;
 use POData\OperationContext\IServiceHost;
 use POData\OperationContext\Web\WebOperationContext;
-use POData\OperationContext\Web\IncomingRequest;
-use POData\OperationContext\Web\OutgoingResponse;
-
+use POData\OperationContext\IOperationContext;
 
 /**
  * Class ServiceHost
  *
  * ServiceHost class implements IServiceHost interface
- * It uses WebOperationContext to get/set all context related
+ * It uses an IOperationContext implementation to get/set all context related
  * headers/stream info It also validates the each header value
  *
  * @package POData\OperationContext
@@ -29,7 +27,7 @@ Class ServiceHost implements IServiceHost
     /**
      * Holds reference to the underlying operation context.
      * 
-     * @var WebOperationContext
+     * @var IOperationContext
      */
     private $_operationContext;
 
@@ -75,20 +73,25 @@ Class ServiceHost implements IServiceHost
     /**
      * Gets reference to the operation context.
      * 
-     * @return WebOperationContext
+     * @return IOperationContext
      */
-    public function &getWebOperationContext()
+    public function getOperationContext()
     {
         return $this->_operationContext;
     }
 
-    /**
-      * Creates new instance of ServiceHost.
-      */
-    public function __construct()
+	/**
+	 * @param IOperationContext $context the OperationContext implementation to use.  If null the WebOperationContext
+	 * will be used.  Defaults to null.
+	 */
+	public function __construct(IOperationContext $context = null)
     {
-        // WebOperationContext::current will not throw any error
-        $this->_operationContext = WebOperationContext::current();
+        if(is_null($context)){
+	        $this->_operationContext = new WebOperationContext();
+        } else {
+	        $this->_operationContext = $context;
+        }
+
         // getAbsoluteRequestUri can throw UrlFormatException 
         // let Dispatcher handle it
         $this->_absoluteRequestUri = $this->getAbsoluteRequestUri();
@@ -99,7 +102,7 @@ Class ServiceHost implements IServiceHost
       * Gets the absolute request Uri as Url instance
       * Note: This method will be called first time from constructor.
       * 
-      * @throws Exception if AbsoluteRequestUri is not a valid URI 
+      * @throws ODataException if AbsoluteRequestUri is not a valid URI
       * 
       * @return Url
       */
@@ -266,7 +269,7 @@ Class ServiceHost implements IServiceHost
      * any of the odata query option specified more than once or check any of the 
      * non-odata query parameter start will $ symbol or check any of the odata query 
      * option specified with out value. If any of the above check fails throws 
-     * ODataException, else set _queryOptions memeber variable
+     * ODataException, else set _queryOptions member variable
      * 
      * @return void
      * 
@@ -274,8 +277,7 @@ Class ServiceHost implements IServiceHost
      */
     public function validateQueryParameters()
     {
-        $queryOptions 
-            = &$this->_operationContext->incomingRequest()->getQueryParameters();
+        $queryOptions = $this->_operationContext->incomingRequest()->getQueryParameters();
         reset($queryOptions);
         // Check whether user specified $format query option
         while ($queryOption = current($queryOptions)) {
@@ -488,42 +490,8 @@ Class ServiceHost implements IServiceHost
             ->getRequestHeader(ODataConstants::HTTPREQUEST_HEADER_ACCEPT_CHARSET);
     }
         
-    /**
-     * Gets the MIME type of the  request stream
-     * 
-     * @return string
-     */
-    public function getRequestContentType()
-    {
-        return $this->_operationContext
-            ->incomingRequest()
-            ->getRequestHeader(ODataConstants::HTTPREQUEST_HEADER_CONTENT_TYPE);
-    }
 
-    /**
-     * Gets the ContentLength of the  request
-     * 
-     * @return string
-     */
-    public function getRequestContentLength()
-    {
-        return $this->_operationContext
-            ->incomingRequest()
-            ->getRequestHeader(ODataConstants::HTTPREQUEST_HEADER_CONTENT_LENGTH);
-    }
-    
-    /**
-     * Gets the HTTP verb used by the client
-     * 
-     * @return  string
-     */
-    public function getRequestHttpMethod()
-    {        
-        return $this->_operationContext
-            ->incomingRequest()
-            ->getMethod();
-    }
-        
+
     /**
      * Get the value of If-Match header of the request
      * 
@@ -548,15 +516,6 @@ Class ServiceHost implements IServiceHost
             ->getRequestHeader(ODataConstants::HTTPREQUEST_HEADER_IFNONE);
     }      
 
-    /**
-     * Get the request headers
-     * 
-     * @return array<headername, headerValue>
-     */
-    public function &getRequestHeaders()
-    {
-        return $this->_operationContext->incomingRequest()->getHeaders();
-    }
 
     /**
      * Set the Cache-Control header on the response

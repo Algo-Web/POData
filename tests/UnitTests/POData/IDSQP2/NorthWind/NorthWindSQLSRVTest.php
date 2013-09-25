@@ -7,7 +7,6 @@ use POData\Providers\Metadata\Type\DateTime;
 use POData\Common\Url;
 use POData\Common\Version;
 use POData\Common\ODataException;
-use POData\OperationContext\Web\WebOperationContext;
 
 use UnitTests\POData\Facets\ServiceHostTestFake;
 use UnitTests\POData\Facets\NorthWind4\NorthWindService;
@@ -15,14 +14,6 @@ use UnitTests\POData\Facets\NorthWind4\NorthWindService;
 
 class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
 {
-	protected function setUp()
-	{
-	}
-
-    protected function tearDown()
-    {
-        WebOperationContext::current()->resetWebContextInternal();
-	}
 
 	/**
 	 * Test the generated string comparison expression in sql server

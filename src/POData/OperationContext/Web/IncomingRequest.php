@@ -5,7 +5,8 @@ namespace POData\OperationContext\Web;
 use POData\Common\ODataException;
 use POData\Common\ODataConstants;
 use POData\Common\Url;
-
+use POData\OperationContext\HTTPRequestMethod;
+use POData\OperationContext\IHTTPRequest;
 
 /**
  * Class IncomingRequest
@@ -13,7 +14,7 @@ use POData\Common\Url;
  * Note: This class will not throw any error
  * @package POData\OperationContext\Web
  */
-class IncomingRequest
+class IncomingRequest implements IHTTPRequest
 {
     /**
      * The request headers
@@ -29,17 +30,11 @@ class IncomingRequest
      */
     private $_rawUrl  = null;
     
-    /**
-     * The incoming url as instance of Url
-     * 
-     * @var string
-     */
-    private $_url;
-    
+
     /**
      * The request method (GET, POST, PUT, DELETE or MERGE)
      * 
-     * @var string HttpVerb
+     * @var HTTPRequestMethod HttpVerb
      */
     private $_method;
 
@@ -63,7 +58,7 @@ class IncomingRequest
      */
     public function __construct()
     {
-        $this->_method = $_SERVER['REQUEST_METHOD'];
+        $this->_method = new HTTPRequestMethod($_SERVER['REQUEST_METHOD']);
         $this->_queryOptions = null;
         $this->_queryOptionsCount = null;
         $this->_headers = null;
@@ -103,9 +98,9 @@ class IncomingRequest
      * We may get user defined customized headers also like
      * HTTP_DATASERVICEVERSION, HTTP_MAXDATASERVICEVERSION
      * 
-     * @return array<string, string>
+     * @return string[]
      */
-    public function &getHeaders()
+    private function getHeaders()
     {
         if (is_null($this->_headers)) {
             $this->_headers = array();
@@ -177,7 +172,7 @@ class IncomingRequest
      * 
      * @return string $_header[HttpRequestHeaderQueryString]
      */
-    public function getQueryString()
+    private function getQueryString()
     {
         if (array_key_exists('QUERY_STRING', $_SERVER)) {
             return utf8_decode(trim($_SERVER['QUERY_STRING']));
@@ -191,25 +186,24 @@ class IncomingRequest
      * 
      * @return string[]
      */
-    public function &getQueryParameters()
+    public function getQueryParameters()
     {
         if (is_null($this->_queryOptions)) {
             $queryString = $this->getQueryString();
             $this->_queryOptions = array();
-            $i = 0;
+
             foreach (explode('&', $queryString) as $queryOptionAsString) {
                 $queryOptionAsString = trim($queryOptionAsString);
                 if (!empty($queryOptionAsString)) {    
                     $result = explode('=', $queryOptionAsString, 2);
                     $isNamedOptions = count($result) == 2;
                     if ($isNamedOptions) {
-                        $this->_queryOptions[$i]
+                        $this->_queryOptions[]
                             = array (rawurldecode($result[0]) => trim(rawurldecode($result[1])));
                     } else {
-                        $this->_queryOptions[$i]
+                        $this->_queryOptions[]
                             = array(null => trim(rawurldecode($result[0])));
                     }
-                    $i++;
                 }
             }
         }
@@ -217,78 +211,25 @@ class IncomingRequest
         return $this->_queryOptions;
     }
 
-    /**
-     * Gets an array that provides count of each query options. 
-     * 
-     * @return array(string, int)
-     */
-    public function &getQueryParametersCount()
-    {
-        if (is_null($this->_queryOptionsCount)) {
-            $this->getQueryParameters();
-            $this->_queryOptionsCount = array();
-            foreach ($this->_queryOptions as $queryOption) {
-                foreach ($queryOption as $key => $value) {
-                    if (array_key_exists($key, $this->_queryOptionsCount)) {
-                        $this->_queryOptionsCount[$key] += 1;
-                    } else {
-                        $this->_queryOptionsCount[$key] = 1;
-                    }
-                }
-            }
-        }
 
-        return $this->_queryOptionsCount;
-    }
-    
     
     /**
      * Get the HTTP method
      * Value will be set from the value of the HTTP method of the 
      * incoming Web request.
      * 
-     * @return string $_header[HttpRequestHeaderMethod] 
+     * @return HTTPRequestMethod $_header[HttpRequestHeaderMethod]
      */
     public function getMethod()
     {
         return $this->_method;
     }
 
-    /**
-     * Get the UserAgent header
-     * 
-     * @return string $_header[HttpRequestHeaderUserAgent]
-     */
-    public function getUserAgent()
-    {
-        return getRequestHeader(ODataConstants::HTTPREQUEST_HEADER_USER_AGENT);
-    }
-    
-    /**
-     * Get the If-Modified-Since header
-     *  
-     * @return string $_header[HttpRequestHeaderIfModified]
-     */
-    public function getIfModifiedSince()
-    {
-        return getRequestHeader(ODataConstants::HTTPREQUEST_HEADER_IFMODIFIED);
-    }
-    
-    /**
-     * Get the If-Unmatched-Since header
-     * 
-     * @return string $_header[HttpRequestHeaderIfUnmodified] 
-     */
-    public function getIfUnmodifiedSince()
-    {
-        return getRequestHeader(ODataConstants::HTTPREQUEST_HEADER_IFUNMODIFIED);
-    }
 
     /**
      * To change the request accept type header in the request.
-     * Note: This method will be used only when client specified $format
-     * query option.
-     * 
+     * Note: This method will be used only when client specified $format query option.
+     *
      * @param string $mime The mime value.
      * 
      * @return void

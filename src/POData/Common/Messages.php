@@ -2,6 +2,7 @@
 
 namespace POData\Common;
 
+use POData\OperationContext\HTTPRequestMethod;
 use POData\Providers\Metadata\Type\IType;
 use POData\ResponseFormat;
 
@@ -2160,11 +2161,11 @@ class Messages
     /**
      * Message to show error when data service found a request method other than GET.
      * 
-     * @param string $method Request method
+     * @param HTTPRequestMethod $method Request method
      * 
      * @return string The formatted message
      */
-    public static function onlyReadSupport($method)
+    public static function onlyReadSupport(HTTPRequestMethod $method)
     {
         return "This release of library support only GET (read) request, received a request with method $method";
     }

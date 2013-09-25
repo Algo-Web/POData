@@ -25,7 +25,6 @@ use POData\Providers\Metadata\Type\DateTime;
 use POData\Common\Url;
 use POData\Common\Version;
 use POData\Common\ODataException;
-use POData\OperationContext\Web\WebOperationContext;
 
 
 use UnitTests\POData\Facets\ServiceHostTestFake;
@@ -41,15 +40,6 @@ use UnitTests\POData\Facets\NorthWind1\Customer2;
 
 class UriProcessorTest extends \PHPUnit_Framework_TestCase
 {
-    protected function setUp()
-    {
-    }
-
-
-    protected function tearDown()
-    {
-        WebOperationContext::current()->resetWebContextInternal();
-    }
 
     /**
      * Test with request uri where RequestTargetKind is NONE. RequestTargetKind will be
@@ -73,9 +63,7 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($requestDescription->getTargetSource(), RequestTargetSource::NONE);
         $this->assertEquals($requestDescription->getTargetKind(), RequestTargetKind::SERVICE_DIRECTORY);
         
-        
-        // Context is a singleton class reset it
-        $host->getWebOperationContext()->resetWebContextInternal();
+
 
         //Request for metadata
         $hostInfo = array(
@@ -92,8 +80,7 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         $requestDescription = $uriProcessor->getRequestDescription();
         $this->assertEquals($requestDescription->getTargetSource(), RequestTargetSource::NONE);
         $this->assertEquals($requestDescription->getTargetKind(), RequestTargetKind::METADATA);
-        // Context is a singleton class reset it
-        $host->getWebOperationContext()->resetWebContextInternal();
+
 
         //Request for batch
         $hostInfo = array(
@@ -134,12 +121,11 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         try {
             $uriProcessor = $dataService->handleRequest();
             $this->fail('An expected ODataException for failure of capability negotiation over DataServiceVersion has not been thrown');
-        } catch (ODataException $odataException) {
-            $this->assertStringStartsWith("Request version '1.0' is not supported for the request payload. The only supported version is '2.0", $odataException->getMessage());
+        } catch (ODataException $ex) {
+            $this->assertStringStartsWith("Request version '1.0' is not supported for the request payload. The only supported version is '2.0", $ex->getMessage());
         }
 
-        // Context is a singleton class reset it
-        $host->getWebOperationContext()->resetWebContextInternal();
+
         //Test $count with MaxDataServiceVersion < 2.0
         $hostInfo = array(
             'AbsoluteRequestUri' => new Url('http://localhost:8083/NorthWindDataService.svc/Customers/$count'),
@@ -156,8 +142,8 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         try {
             $uriProcessor = $dataService->handleRequest();
             $this->fail('An expected ODataException for failure of capability negoitation over MaxDataServiceVersion has not been thrown');
-        } catch (ODataException $odataException) {
-            $this->assertStringStartsWith("Request version '1.0' is not supported for the request payload. The only supported version is '2.0", $odataException->getMessage());
+        } catch (ODataException $ex) {
+            $this->assertStringStartsWith("Request version '1.0' is not supported for the request payload. The only supported version is '2.0", $ex->getMessage());
         }
     }
 
@@ -182,8 +168,8 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         try {
             $uriProcessor = $dataService->handleRequest();
             $this->fail('An expected ODataException for failure of capability negoitation due to V1 configuration has not been thrown');
-        } catch (ODataException $odataException) {
-            $this->assertStringStartsWith("The response requires that version 2.0 of the protocol be used, but the MaxProtocolVersion of the data service is set to 1.0", $odataException->getMessage());
+        } catch (ODataException $ex) {
+            $this->assertStringStartsWith("The response requires that version 2.0 of the protocol be used, but the MaxProtocolVersion of the data service is set to 1.0", $ex->getMessage());
         }
     }
 
@@ -371,8 +357,8 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         try {
             $uriProcessor = $dataService->handleRequest();
             $this->fail('An expected ODataException for applying $skiptoken on $count has not been thrown');
-        } catch (ODataException $odataException) {
-            $this->assertStringStartsWith("Query option \$skiptoken cannot be applied to the requested resource", $odataException->getMessage());
+        } catch (ODataException $ex) {
+            $this->assertStringStartsWith("Query option \$skiptoken cannot be applied to the requested resource", $ex->getMessage());
         }
 
     }
@@ -473,8 +459,8 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         try {
             $uriProcessor = $dataService->handleRequest();
             $this->fail('An expected ODataException for applying $skiptoken on $count has not been thrown');
-        } catch (ODataException $odataException) {
-            $this->assertStringStartsWith("\$inlinecount cannot be applied to the resource segment \$count", $odataException->getMessage());
+        } catch (ODataException $ex) {
+            $this->assertStringStartsWith("\$inlinecount cannot be applied to the resource segment \$count", $ex->getMessage());
         }
     }
 
@@ -566,8 +552,8 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         try {
             $uriProcessor = $dataService->handleRequest();
             $this->fail('An expected ODataException due to capability negotiation has not been thrown (paged result but client\'s max supportedd version is 1.0)');
-        } catch (ODataException $odataException) {
-            $this->assertStringStartsWith("Request version '1.0' is not supported for the request payload. The only supported version is '2.0'", $odataException->getMessage());
+        } catch (ODataException $ex) {
+            $this->assertStringStartsWith("Request version '1.0' is not supported for the request payload. The only supported version is '2.0'", $ex->getMessage());
         }
 
     }
@@ -793,9 +779,7 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($orderByValuesInSkipToken[0][1] instanceof Int32);
 
 
-        $host->getWebOperationContext()->resetWebContextInternal();
-
-        //Test with skiptoken that corrosponds to explict ordering keys
+        //Test with skiptoken that corresponds to explict ordering keys
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Customers(CustomerID=\'ALFKI\', CustomerGuid=guid\'05b242e752eb46bd8f0e6568b72cd9a5\')/$links/Orders';
         $hostInfo = array(
@@ -921,7 +905,6 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         //$skiptoken also applicable, only thing is nextlink will be absent
 
 
-        $host->getWebOperationContext()->resetWebContextInternal();
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Customers(CustomerID=\'ALFKI\', CustomerGuid=guid\'05b242e752eb46bd8f0e6568b72cd9a5\')/$links/Orders';
         $hostInfo = array(
@@ -983,8 +966,7 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($orderByValuesInSkipToken[0][1] instanceof Int32);
        
        
-        $host->getWebOperationContext()->resetWebContextInternal();
-        //specification of a $top value greater than pagesize          
+        //specification of a $top value greater than pagesize
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Customers(CustomerID=\'ALFKI\', CustomerGuid=guid\'05b242e752eb46bd8f0e6568b72cd9a5\')/$links/Orders';
         $hostInfo = array(
@@ -1147,7 +1129,7 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         'if(((!(is_null($lt->OrderID)) && !(is_null($lt->OrderDate))) && (($lt->OrderID == 123) && (POData\Providers\Metadata\Type\DateTime::dateTimeCmp($lt->OrderDate, \'2000-11-11\') <= 0)))) { return true; } else { return false;}');
 
 
-        $host->getWebOperationContext()->resetWebContextInternal();
+        $host->getOperationContext()->resetWebContextInternal();
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Orders(1234)/$links/Customer';
         $hostInfo = array(
@@ -1208,11 +1190,10 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         try {
             $dataService->handleRequest();
             $this->fail('An expected ODataException for $orderby query option on non-set has not been thrown');
-        } catch (ODataException $odataException) {
-            $this->assertStringStartsWith('Query options $orderby, $inlinecount, $skip and $top cannot be applied to the requested resource', $odataException->getMessage());
+        } catch (ODataException $ex) {
+            $this->assertStringStartsWith('Query options $orderby, $inlinecount, $skip and $top cannot be applied to the requested resource', $ex->getMessage());
         }
 
-        $host->getWebOperationContext()->resetWebContextInternal();
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Orders(1234)/$links/Customer';
         $hostInfo = array(
@@ -1229,8 +1210,8 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         try {
             $dataService->handleRequest();
             $this->fail('An expected ODataException for $orderby query option on non-set has not been thrown');
-        } catch (ODataException $odataException) {
-            $this->assertStringStartsWith('Query options $orderby, $inlinecount, $skip and $top cannot be applied to the requested resource', $odataException->getMessage());
+        } catch (ODataException $ex) {
+            $this->assertStringStartsWith('Query options $orderby, $inlinecount, $skip and $top cannot be applied to the requested resource', $ex->getMessage());
         }
     }
 
@@ -1255,8 +1236,8 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         try {
             $dataService->handleRequest();
             $this->fail('An expected ODataException for $skiptoken query option on non-set has not been thrown');
-        } catch (ODataException $odataException) {
-            $this->assertStringStartsWith('Query option $skiptoken cannot be applied to the requested resource', $odataException->getMessage());
+        } catch (ODataException $ex) {
+            $this->assertStringStartsWith('Query option $skiptoken cannot be applied to the requested resource', $ex->getMessage());
         }
 
     }
@@ -1284,11 +1265,10 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         try {
             $dataService->handleRequest();
             $this->fail('An expected ODataException for $skip query option on non-set has not been thrown');
-        } catch (ODataException $odataException) {
-            $this->assertStringStartsWith('Query options $orderby, $inlinecount, $skip and $top cannot be applied to the requested resource', $odataException->getMessage());
+        } catch (ODataException $ex) {
+            $this->assertStringStartsWith('Query options $orderby, $inlinecount, $skip and $top cannot be applied to the requested resource', $ex->getMessage());
         }
 
-        $host->getWebOperationContext()->resetWebContextInternal();
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Customers(CustomerID=\'ALFKI\', CustomerGuid=guid\'05b242e752eb46bd8f0e6568b72cd9a5\')/$links/Orders(234)';
         $hostInfo = array(
@@ -1306,8 +1286,8 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         try {
             $dataService->handleRequest();
             $this->fail('An expected ODataException for $top query option on non-set has not been thrown');
-        } catch (ODataException $odataException) {
-            $this->assertStringStartsWith('Query options $orderby, $inlinecount, $skip and $top cannot be applied to the requested resource', $odataException->getMessage());
+        } catch (ODataException $ex) {
+            $this->assertStringStartsWith('Query options $orderby, $inlinecount, $skip and $top cannot be applied to the requested resource', $ex->getMessage());
         }
     }
 
@@ -1334,8 +1314,8 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         try {
             $dataService->handleRequest();
             $this->fail('An expected ODataException for $inlinecount query option on non-set has not been thrown');
-        } catch (ODataException $odataException) {
-            $this->assertStringStartsWith('Query options $orderby, $inlinecount, $skip and $top cannot be applied to the requested resource', $odataException->getMessage());
+        } catch (ODataException $ex) {
+            $this->assertStringStartsWith('Query options $orderby, $inlinecount, $skip and $top cannot be applied to the requested resource', $ex->getMessage());
         }
 
     }
@@ -1361,11 +1341,10 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         try {
             $dataService->handleRequest();
             $this->fail('An expected ODataException for $expand query option on $link resource has not been thrown');
-        } catch (ODataException $odataException) {
-            $this->assertStringStartsWith('Query option $expand cannot be applied to the requested resource', $odataException->getMessage());
+        } catch (ODataException $ex) {
+            $this->assertStringStartsWith('Query option $expand cannot be applied to the requested resource', $ex->getMessage());
         }
 
-        $host->getWebOperationContext()->resetWebContextInternal();
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Customers(CustomerID=\'ALFKI\', CustomerGuid=guid\'05b242e752eb46bd8f0e6568b72cd9a5\')/$links/Orders(123)';
         $hostInfo = array(
@@ -1382,8 +1361,8 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         try {
             $dataService->handleRequest();
             $this->fail('An expected ODataException for $select query option on $link resource has not been thrown');
-        } catch (ODataException $odataException) {
-            $this->assertStringStartsWith('Query option $select cannot be applied to the requested resource', $odataException->getMessage());
+        } catch (ODataException $ex) {
+            $this->assertStringStartsWith('Query option $select cannot be applied to the requested resource', $ex->getMessage());
         }
 
 
@@ -1428,8 +1407,8 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         try {
             $dataService->handleRequest();
             $this->fail('An expected ODataException for $inlinecount query option with V1 configured service has not been thrown');
-        } catch (ODataException $odataException) {
-            $this->assertStringStartsWith('The response requires that version 2.0 of the protocol be used, but the MaxProtocolVersion of the data service is set to 1.0', $odataException->getMessage());
+        } catch (ODataException $ex) {
+            $this->assertStringStartsWith('The response requires that version 2.0 of the protocol be used, but the MaxProtocolVersion of the data service is set to 1.0', $ex->getMessage());
         }
 
     }
@@ -1455,8 +1434,8 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         try {
             $dataService->handleRequest();
             $this->fail('An expected ODataException for $inlinecount query option request DataServiceVersion 1.0 has not been thrown');
-        } catch (ODataException $odataException) {
-            $this->assertStringStartsWith("Request version '1.0' is not supported for the request payload. The only supported version is '2.0'", $odataException->getMessage());
+        } catch (ODataException $ex) {
+            $this->assertStringStartsWith("Request version '1.0' is not supported for the request payload. The only supported version is '2.0'", $ex->getMessage());
         }
 
     }
@@ -1483,8 +1462,8 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         try {
             $dataService->handleRequest();
             $this->fail('An expected ODataException for $inlinecount query option with request DataServiceVersion 1.0 has not been thrown');
-        } catch (ODataException $odataException) {
-            $this->assertStringStartsWith("Request version '1.0' is not supported for the request payload. The only supported version is '2.0'", $odataException->getMessage());
+        } catch (ODataException $ex) {
+            $this->assertStringStartsWith("Request version '1.0' is not supported for the request payload. The only supported version is '2.0'", $ex->getMessage());
         }
 
     }
@@ -1511,8 +1490,8 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         try {
             $dataService->handleRequest();
             $this->fail('An expected ODataException for invalid $inlinecount query option has not been thrown');
-        } catch (ODataException $odataException) {
-            $this->assertStringStartsWith('Unknown $inlinecount option, only "allpages" and "none" are supported', $odataException->getMessage());
+        } catch (ODataException $ex) {
+            $this->assertStringStartsWith('Unknown $inlinecount option, only "allpages" and "none" are supported', $ex->getMessage());
         }
 
     }
@@ -1576,8 +1555,8 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         try {
                $dataService->handleRequest();
             $this->fail('An expected ODataException for $filter query on primitve  has not been thrown');
-        } catch (ODataException $odataException) {
-            $this->assertStringStartsWith('Query option $filter cannot be applied to the requested resource', $odataException->getMessage());
+        } catch (ODataException $ex) {
+            $this->assertStringStartsWith('Query option $filter cannot be applied to the requested resource', $ex->getMessage());
         }
 
     }
@@ -1604,8 +1583,8 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         try {
             $dataService->handleRequest();
             $this->fail('An expected ODataException for $filter query option on bag has not been thrown');
-        } catch (ODataException $odataException) {
-            $this->assertStringStartsWith('Query option $filter cannot be applied to the requested resource', $odataException->getMessage());
+        } catch (ODataException $ex) {
+            $this->assertStringStartsWith('Query option $filter cannot be applied to the requested resource', $ex->getMessage());
         }
 
     }
@@ -1631,8 +1610,8 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         try {
             $dataService->handleRequest();
             $this->fail('An expected ODataException for $filter query option on primitve value has not been thrown');
-        } catch (ODataException $odataException) {
-            $this->assertStringStartsWith('Query option $filter cannot be applied to the requested resource', $odataException->getMessage());
+        } catch (ODataException $ex) {
+            $this->assertStringStartsWith('Query option $filter cannot be applied to the requested resource', $ex->getMessage());
         }
 
     }
@@ -1658,8 +1637,8 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         try {
             $dataService->handleRequest();
             $this->fail('An expected ODataException for a bag request with  MaxDataServiceVersion < 3.0 has not been thrown');
-        } catch (ODataException $odataException) {
-            $this->assertStringStartsWith("Request version '2.0' is not supported for the request payload. The only supported version is '3.0'", $odataException->getMessage());
+        } catch (ODataException $ex) {
+            $this->assertStringStartsWith("Request version '2.0' is not supported for the request payload. The only supported version is '3.0'", $ex->getMessage());
         }
 
 
@@ -1686,8 +1665,8 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         try {
             $dataService->handleRequest();
             $this->fail('An expected ODataException for a bag request to a service configured with V2 has not been thrown');
-        } catch (ODataException $odataException) {
-            $this->assertStringStartsWith("The response requires that version 3.0 of the protocol be used, but the MaxProtocolVersion of the data service is set to 2.0", $odataException->getMessage());
+        } catch (ODataException $ex) {
+            $this->assertStringStartsWith("The response requires that version 3.0 of the protocol be used, but the MaxProtocolVersion of the data service is set to 2.0", $ex->getMessage());
         }
 
     }
@@ -1714,8 +1693,8 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         try {
               $dataService->handleRequest();
             $this->fail('An expected ODataException for $select option on projection disabled service  has not been thrown');
-        } catch (ODataException $odataException) {
-            $this->assertStringStartsWith('The ability to use the $select query option to define a projection in a data service query is disabled', $odataException->getMessage());
+        } catch (ODataException $ex) {
+            $this->assertStringStartsWith('The ability to use the $select query option to define a projection in a data service query is disabled', $ex->getMessage());
         }
 
     }
@@ -1752,8 +1731,8 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         try {
             $dataService->handleRequest();
             $this->fail('An expected ODataException for $select query option with  DataServiceVersion 1.0 has not been thrown');
-        } catch (ODataException $odataException) {
-            $this->assertStringStartsWith("Request version '1.0' is not supported for the request payload. The only supported version is '2.0'", $odataException->getMessage());
+        } catch (ODataException $ex) {
+            $this->assertStringStartsWith("Request version '1.0' is not supported for the request payload. The only supported version is '2.0'", $ex->getMessage());
         }
 
 
@@ -1786,11 +1765,10 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         try {
             $dataService->handleRequest();
             $this->fail('An expected ODataException for a paged top level result (having $top) with  MaxDataServiceVersion 1.0 has not been thrown');
-        } catch (ODataException $odataException) {
-            $this->assertStringStartsWith("Request version '1.0' is not supported for the request payload. The only supported version is '2.0'", $odataException->getMessage());
+        } catch (ODataException $ex) {
+            $this->assertStringStartsWith("Request version '1.0' is not supported for the request payload. The only supported version is '2.0'", $ex->getMessage());
         }
 
-        $host->getWebOperationContext()->resetWebContextInternal();
         //Paging enabled for top level resource set and no $top => require next link
         //so MaxDataServiceVersion 1.0 will not work
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
@@ -1813,11 +1791,10 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         try {
             $dataService->handleRequest();
             $this->fail('An expected ODataException for a paged top level result with  MaxDataServiceVersion 1.0 has not been thrown');
-        } catch (ODataException $odataException) {
-            $this->assertStringStartsWith("Request version '1.0' is not supported for the request payload. The only supported version is '2.0'", $odataException->getMessage());
+        } catch (ODataException $ex) {
+            $this->assertStringStartsWith("Request version '1.0' is not supported for the request payload. The only supported version is '2.0'", $ex->getMessage());
         }
 
-        $host->getWebOperationContext()->resetWebContextInternal();
         //Paging enabled for top level resource set and $top < pageSize => not require next link
         //so MaxDataServiceVersion 1.0 will work
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
@@ -1891,8 +1868,8 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         try {
             $dataService->handleRequest();
             $this->fail('An expected ODataException for an paged expanded result with  MaxDataServiceVersion 1.0 has not been thrown');
-        } catch (ODataException $odataException) {
-            $this->assertStringStartsWith("Request version '1.0' is not supported for the request payload. The only supported version is '2.0'", $odataException->getMessage());
+        } catch (ODataException $ex) {
+            $this->assertStringStartsWith("Request version '1.0' is not supported for the request payload. The only supported version is '2.0'", $ex->getMessage());
         }
 
     }
@@ -1982,11 +1959,10 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         try {
             $dataService->handleRequest();
             $this->fail('An expected ODataException for $expand on  non resource set or resource set refernce has not been thrown');
-        } catch (ODataException $odataException) {
-            $this->assertStringStartsWith('Query option $expand cannot be applied to the requested resource', $odataException->getMessage());
+        } catch (ODataException $ex) {
+            $this->assertStringStartsWith('Query option $expand cannot be applied to the requested resource', $ex->getMessage());
         }
 
-        $host->getWebOperationContext()->resetWebContextInternal();
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Orders(123)/Customer/Address';
         $hostInfo = array(
@@ -2003,8 +1979,8 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         try {
             $dataService->handleRequest();
             $this->fail('An expected ODataException for $select on  non resource set or resource set refernce has not been thrown');
-        } catch (ODataException $odataException) {
-            $this->assertStringStartsWith('Query option $select cannot be applied to the requested resource', $odataException->getMessage());
+        } catch (ODataException $ex) {
+            $this->assertStringStartsWith('Query option $select cannot be applied to the requested resource', $ex->getMessage());
         }
 
     }
@@ -2032,12 +2008,11 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         try {
             $dataService->handleRequest();
             $this->fail('An expected ODataException for incorrect $top value has not been thrown');
-        } catch (ODataException $odataException) {
-            $this->assertStringStartsWith("Incorrect format for \$top", $odataException->getMessage());
+        } catch (ODataException $ex) {
+            $this->assertStringStartsWith("Incorrect format for \$top", $ex->getMessage());
         }
 
 
-        $host->getWebOperationContext()->resetWebContextInternal();
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Orders';
         $hostInfo = array(
@@ -2055,12 +2030,11 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         try {
             $dataService->handleRequest();
             $this->fail('An expected ODataException for incorrect $top value has not been thrown');
-        } catch (ODataException $odataException) {
-            $this->assertStringStartsWith('Incorrect format for $top', $odataException->getMessage());
+        } catch (ODataException $ex) {
+            $this->assertStringStartsWith('Incorrect format for $top', $ex->getMessage());
         }
 
 
-        $host->getWebOperationContext()->resetWebContextInternal();
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Orders';
         $hostInfo = array(
@@ -2077,8 +2051,8 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         try {
             $dataService->handleRequest();
             $this->fail('An expected ODataException for incorrect $skip value has not been thrown');
-        } catch (ODataException $odataException) {
-            $this->assertStringStartsWith("Incorrect format for \$skip", $odataException->getMessage());
+        } catch (ODataException $ex) {
+            $this->assertStringStartsWith("Incorrect format for \$skip", $ex->getMessage());
         }
 
 
@@ -2098,8 +2072,8 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         try {
             $dataService->handleRequest();
             $this->fail('An expected ODataException for incorrect $skip value has not been thrown');
-        } catch (ODataException $odataException) {
-            $this->assertStringStartsWith('Incorrect format for $skip', $odataException->getMessage());
+        } catch (ODataException $ex) {
+            $this->assertStringStartsWith('Incorrect format for $skip', $ex->getMessage());
         }
 
 

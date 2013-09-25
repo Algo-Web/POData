@@ -8,6 +8,7 @@ use POData\IRequestHandler;
 use POData\Configuration\ServiceProtocolVersion;
 use POData\Configuration\IServiceConfiguration;
 use POData\BaseService;
+use POData\OperationContext\HTTPRequestMethod;
 use POData\OperationContext\ServiceHost;
 use POData\Common\ODataException;
 use POData\Common\ODataConstants;
@@ -67,7 +68,7 @@ class NorthWindService extends BaseService
 
     
     // For testing we overridden the BaseService::handleRequest method, one thing is the
-    // private memeber variable BaseService::_dataServiceHost is not accessible in this class,
+    // private member variable BaseService::_dataServiceHost is not accessible in this class,
     // so we are using getHost() below.
     public function handleRequest()
     {
@@ -75,7 +76,7 @@ class NorthWindService extends BaseService
         $this->createProviders();
         $this->getHost()->validateQueryParameters();
         $requestMethod = $this->getOperationContext()->incomingRequest()->getMethod();
-        if ($requestMethod !== ODataConstants::HTTP_METHOD_GET) {
+        if ($requestMethod != HTTPRequestMethod::GET()) {
             ODataException::createNotImplementedError(Messages::onlyReadSupport($requestMethod));
         }
 

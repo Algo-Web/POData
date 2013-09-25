@@ -7,7 +7,7 @@ use POData\Providers\MetadataQueryProviderWrapper;
 use POData\Configuration\IServiceConfiguration;
 use POData\Providers\Stream\StreamProviderWrapper;
 use POData\OperationContext\IServiceHost;
-use POData\OperationContext\Web\WebOperationContext;
+use POData\OperationContext\IOperationContext;
 use POData\Writers\ServiceDocumentWriterFactory;
 use POData\Writers\ODataWriterFactory;
 
@@ -76,7 +76,7 @@ interface IService
      * headers and body of Http Request we have received and the Http Response
      * We are going to send.
      * 
-     * @return WebOperationContext
+     * @return IOperationContext
      */
     public function getOperationContext();
 

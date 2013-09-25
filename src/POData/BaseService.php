@@ -2,6 +2,7 @@
 
 namespace POData;
 
+use POData\OperationContext\HTTPRequestMethod;
 use POData\Providers\Metadata\ResourceTypeKind;
 use POData\Common\ErrorHandler;
 use POData\Common\Messages;
@@ -24,7 +25,7 @@ use POData\Writers\ResponseWriter;
 
 use POData\Providers\Query\IQueryProvider;
 use POData\Providers\Metadata\IMetadataProvider;
-use POData\OperationContext\Web\WebOperationContext;
+use POData\OperationContext\IOperationContext;
 use POData\Writers\ServiceDocumentWriterFactory;
 use POData\Writers\ODataWriterFactory;
 
@@ -138,11 +139,11 @@ abstract class BaseService implements IRequestHandler, IService
      * headers and body of Http Request we have received and the Http Response
      * We are going to send.
      * 
-     * @return WebOperationContext
+     * @return IOperationContext
      */
     public function getOperationContext()
     {
-        return $this->_serviceHost->getWebOperationContext();
+        return $this->_serviceHost->getOperationContext();
     }
 
     /**
@@ -205,7 +206,7 @@ abstract class BaseService implements IRequestHandler, IService
             $this->createProviders();
             $this->_serviceHost->validateQueryParameters();
             $requestMethod = $this->getOperationContext()->incomingRequest()->getMethod();
-            if ($requestMethod !== ODataConstants::HTTP_METHOD_GET) {
+            if ($requestMethod != HTTPRequestMethod::GET()) {
                 ODataException::createNotImplementedError(Messages::onlyReadSupport($requestMethod));
             }          
         } catch (\Exception $exception) {

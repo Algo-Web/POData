@@ -4,7 +4,7 @@ namespace POData\Providers\Stream;
 
 use POData\Providers\Metadata\ResourceStreamInfo;
 use POData\Providers\Stream\IStreamProvider;
-use POData\OperationContext\Web\WebOperationContext;
+use POData\OperationContext\IOperationContext;
 use POData\Common\ODataException;
 
 /**
@@ -75,7 +75,7 @@ interface IStreamProvider2 extends IStreamProvider
      *                                                  of an If-None-Match HTTP request header null if
      *                                                  the HTTP request for the stream was not a
      *                                                  conditional request.
-     * @param WebOperationContext $operationContext     A reference to the context for the current operation.
+     * @param IOperationContext $operationContext     A reference to the context for the current operation.
      *
      * @return mixed A valid stream the data service use to query/read a named stream which is
      * associated with the $entity. Null may be returned from this method if the requested named
@@ -84,7 +84,7 @@ interface IStreamProvider2 extends IStreamProvider
      *
      * @throws ODataException if a valid stream or null cannot be returned for the given arguments.
      */
-    public function getReadStream2($entity, ResourceStreamInfo $resourceStreamInfo, $eTag, $checkETagForEquality, $operationContext);
+    public function getReadStream2($entity, ResourceStreamInfo $resourceStreamInfo, $eTag, $checkETagForEquality, IOperationContext $operationContext);
 
     /**
      * This method is invoked by the data services framework to obtain the IANA content type
@@ -108,12 +108,12 @@ interface IStreamProvider2 extends IStreamProvider
      *                                                be obtained.
      * @param ResourceStreamInfo  $resourceStreamInfo The ResourceStreamInfo instance that describes
      *                                                the named stream.
-     * @param WebOperationContext $operationContext   A reference to the context for the current
+     * @param IOperationContext $operationContext   A reference to the context for the current
      *                                                operation
      *
      * @return string Valid Content-Type string for the named stream associated with the entity.
      */
-    public function getStreamContentType2($entity, ResourceStreamInfo $resourceStreamInfo, $operationContext);
+    public function getStreamContentType2($entity, ResourceStreamInfo $resourceStreamInfo, IOperationContext $operationContext);
 
     /**
      * This method is invoked by the data services framework to obtain the ETag of the
@@ -133,12 +133,12 @@ interface IStreamProvider2 extends IStreamProvider
      *                                                stream for which an etag is to be obtained.
      * @param ResourceStreamInfo  $resourceStreamInfo The ResourceStreamInfo instance that describes
      *                                                the named stream.
-     * @param WebOperationContext $operationContext   A reference to the context for the current
+     * @param IOperationContext $operationContext   A reference to the context for the current
      *                                                operation.
      *
      * @return string ETag of the named stream associated with the entity specified.
      */
-    public function getStreamETag2($entity, ResourceStreamInfo $resourceStreamInfo, $operationContext);
+    public function getStreamETag2($entity, ResourceStreamInfo $resourceStreamInfo, IOperationContext $operationContext);
 
     /**
      * This method is invoked by the data services framework to obtain the URI clients should
@@ -167,11 +167,11 @@ interface IStreamProvider2 extends IStreamProvider
      *                                                be obtained.
      * @param ResourceStreamInfo  $resourceStreamInfo The ResourceStreamInfo instance that describes
      *                                                the named stream.
-     * @param WebOperationContext $operationContext   A reference to the context for the current
+     * @param IOperationContext $operationContext   A reference to the context for the current
      *                                                operation
      *
      * @return string The URI clients should use when making retrieve (ie. GET) requests to
      *                the stream(ie. Media Resource).
      */
-    public function getReadStreamUri2($entity, ResourceStreamInfo $resourceStreamInfo, $operationContext);
+    public function getReadStreamUri2($entity, ResourceStreamInfo $resourceStreamInfo, IOperationContext $operationContext);
 }

@@ -12,8 +12,6 @@ use POData\Common\Url;
 use POData\Common\UrlFormatException;
 use POData\Common\ODataException;
 use POData\OperationContext\ServiceHost;
-use POData\OperationContext\Web\IncomingRequest;
-use POData\OperationContext\Web\OutgoingResponse;
 require_once dirname(__FILE__) . "/../../Dispatcher.php";
 
 

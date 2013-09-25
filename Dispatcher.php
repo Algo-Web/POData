@@ -6,8 +6,6 @@ use POData\Common\ODataConstants;
 use POData\Common\ODataException;
 use POData\OperationContext\ServiceHost;
 use POData\Common\ServiceConfig;
-use POData\OperationContext\Web\WebOperationContext;
-use POData\OperationContext\Web\IncomingRequest;
 use POData\OperationContext\Web\OutgoingResponse;
 use POData\HttpOutput;
 
@@ -34,11 +32,7 @@ class Dispatcher
      */
     private $_serviceInfo;
 
-    /**
-     * This function is initializes the properties of Dispatcher class.
-     * 
-     * @return Object of WebOperationContext class
-     */
+
     function __construct()
     {        
         try {
@@ -117,7 +111,7 @@ class Dispatcher
         }
 
         $this->_writeResponse(
-            $service->getHost()->getWebOperationContext()->outgoingResponse()
+            $service->getHost()->getOperationContext()->outgoingResponse()
         );
     }
 

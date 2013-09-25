@@ -278,7 +278,7 @@ class StreamProviderWrapper
         $this->_verifyContentTypeOrETagModified('IDSSP::getReadStreamUri');
         if (!is_null($readStreamUri)) {
             try {
-                new POData\Common\Url($readStreamUri);
+                new \POData\Common\Url($readStreamUri);
             } catch (\POData\Common\UrlFormatException $ex) {
                 throw new InvalidOperationException(
                     Messages::streamProviderWrapperGetReadStreamUriMustReturnAbsoluteUriOrNull()
@@ -472,7 +472,7 @@ class StreamProviderWrapper
      * Construct the default edit media uri from the given media link entry uri.
      * 
      * @param string             $mediaLinkEntryUri  Uri to the media link entry.
-     * @param ResourceStremaInfo $resourceStreamInfo Stream info instance, if its 
+     * @param ResourceStreamInfo $resourceStreamInfo Stream info instance, if its
      *                                               null default stream is assumed.
      * 
      * @return string Uri to the media resource.

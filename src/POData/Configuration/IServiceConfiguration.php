@@ -3,6 +3,7 @@
 namespace POData\Configuration;
 
 use POData\Providers\Metadata\ResourceSet;
+use POData\Common\Version;
 
 /**
  * Class IServiceConfiguration Interface for modifying the configuration of an OData service
