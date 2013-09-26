@@ -5,6 +5,7 @@ namespace POData\Providers\Query;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 use POData\Providers\Metadata\ResourceSet;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\IExpressionProvider;
 
 /**
  * Class IQueryProvider

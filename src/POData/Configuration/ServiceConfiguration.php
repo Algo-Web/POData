@@ -53,14 +53,14 @@ class ServiceConfiguration implements IServiceConfiguration
     /**
      * A mapping from entity set name to its right
      * 
-     * @var array<string, EntitySetRights>
+     * @var EntitySetRights[]
      */
     private $_resourceRights;
 
     /**
      * A mapping from entity sets to their page sizes
      * 
-     * @var array<string, int> 
+     * @var int[]
      */
     private $_pageSizes;
 
@@ -83,7 +83,7 @@ class ServiceConfiguration implements IServiceConfiguration
     private $_acceptProjectionRequest;
 
     /**
-     * Maxumum version of the response sent by server
+     * Maximum version of the response sent by server
      */
     private $_maxProtocolVersion;
 
@@ -244,18 +244,17 @@ class ServiceConfiguration implements IServiceConfiguration
     /**
      * sets the access rights on the specified resource set
      *
-     * @param string          $name   Name of resource set to set; '*'
-     *                                to indicate all
+     * @param string          $name   Name of resource set to set; '*' to indicate all
      * @param EntitySetRights $rights Rights to be granted to this resource
      *
      * @return void
+     *
+     * @throws \InvalidArgumentException when the entity set rights are not known or the resource set is not known
      */
     public function setEntitySetAccessRule($name, $rights)
     {
         if ($rights < EntitySetRights::NONE || $rights > EntitySetRights::ALL) {
-            throw new \InvalidArgumentException(
-                Messages::configurationRightsAreNotInRange('$rights', 'setEntitySetAccessRule' )
-            );
+            throw new \InvalidArgumentException( Messages::configurationRightsAreNotInRange('$rights', 'setEntitySetAccessRule' ));
         }
 
         if (strcmp($name, '*') === 0) {
@@ -296,7 +295,7 @@ class ServiceConfiguration implements IServiceConfiguration
      *                         specified in name.
      *
      * @throws InvalidOperationException
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      *
      * @return void
      */
@@ -389,7 +388,7 @@ class ServiceConfiguration implements IServiceConfiguration
     }
 
     /**
-     * Gets Maxumum version of the response sent by server.
+     * Gets Maximum version of the response sent by server.
      *
      * @return Version
      */
@@ -415,7 +414,7 @@ class ServiceConfiguration implements IServiceConfiguration
      *
      * @param ServiceProtocolVersion $version The version to set
      *
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      *
      * @return void
      */
@@ -485,7 +484,7 @@ class ServiceConfiguration implements IServiceConfiguration
      * @param int    $value        The value of parameter to check
      * @param string $functionName The name of the function that receives above value
      * 
-     * @throws InvalidOperationException
+     * @throws \InvalidArgumentException
      * 
      * @return int
      */
