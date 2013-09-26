@@ -4,7 +4,7 @@ namespace UnitTests\POData\Writers;
 
 use POData\Common\Messages;
 use POData\IService;
-use POData\OperationContext\IServiceHost;
+use POData\OperationContext\ServiceHost;
 use POData\Common\Url;
 use POData\Providers\MetadataQueryProviderWrapper;
 use POData\ResponseFormat;
@@ -23,7 +23,7 @@ class ServiceDocumentWriterFactoryTest extends  BaseUnitTestCase {
 
 
 	/**
-	 * @var IServiceHost
+	 * @var ServiceHost
 	 */
 	protected $mockServiceHost;
 

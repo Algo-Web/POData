@@ -6,7 +6,6 @@ use POData\OperationContext\ServiceHost;
 use POData\Providers\MetadataQueryProviderWrapper;
 use POData\Configuration\IServiceConfiguration;
 use POData\Providers\Stream\StreamProviderWrapper;
-use POData\OperationContext\IServiceHost;
 use POData\OperationContext\IOperationContext;
 use POData\Writers\ServiceDocumentWriterFactory;
 use POData\Writers\ODataWriterFactory;
@@ -67,7 +66,7 @@ interface IService
      * using this library can access headers and body of Http Request 
      * dispatcher received and the Http Response Dispatcher is going to send.
      * 
-     * @return IServiceHost
+     * @return ServiceHost
      */
     public function getHost();
     

@@ -49,7 +49,7 @@ class Dispatcher
                 $this->_getServiceNameFromRequestUri(), 
                 $this->_serviceInfo
             );
-            $this->_host->setAbsoluteServiceUri(
+            $this->_host->setServiceUri(
                 $this->_serviceInfo['SERVICE_BASEURL']
             );
         } catch(ODataException $exception) {

@@ -50,7 +50,7 @@ class ServiceHostTestFake extends ServiceHost
         parent::__construct();
 
         if (array_key_exists('AbsoluteServiceUri', $this->_hostInfo)) {
-            $this->setAbsoluteServiceUri($this->_hostInfo['AbsoluteServiceUri']->getUrlAsString());  
+            $this->setServiceUri($this->_hostInfo['AbsoluteServiceUri']->getUrlAsString());
 
         }
     }

@@ -9,20 +9,18 @@ use POData\Common\Url;
 use POData\Common\UrlFormatException;
 use POData\Common\ODataException;
 use POData\Common\InvalidOperationException;
-use POData\OperationContext\IServiceHost;
 use POData\OperationContext\Web\WebOperationContext;
 use POData\OperationContext\IOperationContext;
 
 /**
  * Class ServiceHost
  *
- * ServiceHost class implements IServiceHost interface
  * It uses an IOperationContext implementation to get/set all context related
  * headers/stream info It also validates the each header value
  *
  * @package POData\OperationContext
  */
-Class ServiceHost implements IServiceHost
+Class ServiceHost
 {
     /**
      * Holds reference to the underlying operation context.
@@ -154,17 +152,15 @@ Class ServiceHost implements IServiceHost
 
 
     /**
-     * Sets the absolute service url from configuration file.
-     * Note: This is an one time called internal method invoked 
-     * from Dispathcer.
-     *   
-     * @param string $serviceUri The service url.
+     * Sets the service url from which the OData URL is parsed
+     *
+     * @param string $serviceUri The service url, absolute or relative.
      * 
      * @return void
      * 
      * @throws ODataException If the base uri in the configuration is malformed.
      */
-    public function setAbsoluteServiceUri($serviceUri)
+    public function setServiceUri($serviceUri)
     {
         if (is_null($this->_absoluteServiceUri)) {
             $isAbsoluteServiceUri = (strpos($serviceUri, 'http://') === 0)
