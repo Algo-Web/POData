@@ -124,6 +124,11 @@ class Binary implements IType
         if ($length == 0 || $length%2 != 0) {
             return false;    
         }
+
+	    if (!ctype_xdigit($value)){
+		    $outValue = null;
+		    return false;
+	    }
         
         $outValue = array();
         $outValIndex = 0;
@@ -131,19 +136,8 @@ class Binary implements IType
         while ($valueIndex < $length) {
             $ch0 = $value[$valueIndex];
             $ch1 = $value[$valueIndex + 1];
-            if (!Char::isHexDigit($ch0) || !Char::isHexDigit($ch1)) {
-                $outValue = null;
-                return false;
-            }
-            
-            $ch0 = self::hexCharToNibble($ch0);
-            $ch1 = self::hexCharToNibble($ch1);
-            if ($ch0 == -1 || $ch1 == -1) {
-                $outValue = null;
-                return false;
-            }
-            
-            $outValue[$outValIndex] = $ch0 << 4 + $ch1;
+
+            $outValue[$outValIndex] = hexdec($ch0) << 4 + hexdec($ch1);
             $valueIndex += 2;
             $outValIndex++;
         }
@@ -160,77 +154,14 @@ class Binary implements IType
      * @return boolean
      */
     public static function binaryEqual($binary1, $binary2) 
-    {    
+    {
+	    //str cmp will return true if they are both null, so check short circuit that..
         if (is_null($binary1) || is_null($binary2)) {
             return false;
         }
         
-        $length1 = length($binary1);
-        $length2 = length($binary2);
-
-        if ($length1 != $length2) {
-            return false;
-        }
-
-        for ($i = 0; $i < $length1; $i++) {
-            if ($binary1[$i] != $binary2[$i]) {
-                return false;
-            }
-        }
-        
-        return true;
+        return (strcmp($binary1, $binary2) == 0);
     }
 
-    /**
-     * Gets nibble of a hexa char
-     * 
-     * @param char $char The hexa char
-     * 
-     * @return int
-     */
-    protected static function hexCharToNibble($char) 
-    {
-        switch ($char) {
-        case '0':
-            return 0;
-        case '1':
-            return 1;
-        case '2':
-            return 2;
-        case '3':
-            return 3;
-        case '4':
-            return 4;
-        case '5':
-            return 5;
-        case '6':
-            return 6;
-        case '7':
-            return 7;
-        case '8':
-            return 8;
-        case '9':
-            return 9;
-        case 'a':
-        case 'A':
-            return 10;
-        case 'b':    
-        case 'B':
-            return 11;
-        case 'c':
-        case 'C':
-            return 12;
-        case 'd':
-        case 'D':
-            return 13;
-        case 'e':
-        case 'E':
-            return 14;
-        case 'f':
-        case 'F':
-            return 15;
-        default:
-            return -1;
-        }
-    }
+
 }

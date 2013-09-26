@@ -136,4 +136,46 @@ class BinaryTest extends \PHPUnit_Framework_TestCase {
 	 *  Begin Type Specific Tests
 	 *
 	 */
+
+
+	public function testValidateWithoutPrefix()
+	{
+
+
+		$out = null;
+		$this->assertFalse(Binary::validateWithoutPrefix("", $out), "empty string should be false");
+		$this->assertNull($out);
+
+		$rand = rand(1,11);
+		if($rand % 2 == 0) $rand++; //make it odd
+
+		$input = str_repeat(uniqid(), $rand);
+		$this->assertFalse(Binary::validateWithoutPrefix($input, $out), "odd numbered length string should be false");
+		$this->assertNull($out);
+
+
+		$input = '1234567890abcdefABCDEF';
+		$this->assertTrue(Binary::validateWithoutPrefix($input, $out), "These characters should work");
+		//Expect values for each individual byte
+		$expected = array(
+			hexdec('1') << 4 + hexdec('2'),
+			hexdec('3') << 4 + hexdec('4'),
+			hexdec('5') << 4 + hexdec('6'),
+			hexdec('7') << 4 + hexdec('8'),
+			hexdec('9') << 4 + hexdec('0'),
+			hexdec('a') << 4 + hexdec('b'),
+			hexdec('c') << 4 + hexdec('d'),
+			hexdec('e') << 4 + hexdec('f'),
+			hexdec('A') << 4 + hexdec('B'),
+			hexdec('C') << 4 + hexdec('D'),
+			hexdec('E') << 4 + hexdec('F'),
+
+		);
+		$this->assertEquals($expected, $out);
+
+		$input = '1234567890abcdefABCDXX';
+		$this->assertFalse(Binary::validateWithoutPrefix($input, $out), "Invalid character X anywhere in string should fail");
+		//Expect values for each individual byte
+		$this->assertNull($out);
+	}
 }

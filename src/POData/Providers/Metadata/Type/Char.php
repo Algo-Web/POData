@@ -151,20 +151,6 @@ class Char implements IType
             && $asciiVal <= Char::NINE;
     }
 
-    /**
-     * Checks a character is hexadecimal digit 
-     * 
-     * @param char $char character to check
-     * 
-     * @return boolean
-     */
-    public static function isHexDigit($char)
-    {
-        $asciiVal = ord($char);
-        return self::isDigit($char) 
-            || ($asciiVal >= Char::A && $asciiVal <= Char::F) 
-            || ($asciiVal >= Char::SMALL_A && $asciiVal <= Char::SMALL_F);
-    }
 
     /**
      * Checks a character is letter or digit
