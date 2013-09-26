@@ -163,7 +163,7 @@ class WordPressQueryProvider implements IQueryProvider
      * @param KeyDescriptor $keyDescriptor The key to identify the entity 
      *                                     to be fetched
      * 
-     * @return Object|null Returns entity instance if found else null
+     * @return object|null Returns entity instance if found else null
      */
     public function getResourceFromResourceSet(ResourceSet $resourceSet, KeyDescriptor $keyDescriptor)
     {
@@ -453,7 +453,7 @@ class WordPressQueryProvider implements IQueryProvider
      * @param KeyDescriptor    $keyDescriptor        The key to identify the entity 
      *                                               to be fetched.
      * 
-     * @return Object|null Returns entity instance if found else null
+     * @return object|null Returns entity instance if found else null
      */
     public function  getResourceFromRelatedResourceSet(ResourceSet $sourceResourceSet, 
         $sourceEntityInstance, 
@@ -587,7 +587,7 @@ class WordPressQueryProvider implements IQueryProvider
      * @param ResourceProperty $targetProperty       The navigation property to be 
      *                                               retrieved
      * 
-     * @return Object|null The related resource if exists else null
+     * @return object|null The related resource if exists else null
      */
     public function getRelatedResourceReference(ResourceSet $sourceResourceSet, 
         $sourceEntityInstance, 
@@ -681,7 +681,7 @@ class WordPressQueryProvider implements IQueryProvider
      * 
      * @param array $record each post row
      * 
-     * @return Object
+     * @return object
      */
     private function _serializePost($record)
     {
@@ -760,7 +760,7 @@ class WordPressQueryProvider implements IQueryProvider
      * 
      * @param array $record each tag row
      * 
-     * @return Object
+     * @return object
      */
     private function _serializeTag($record)
     {
@@ -794,7 +794,7 @@ class WordPressQueryProvider implements IQueryProvider
      * 
      * @param array $record each category row
      * 
-     * @return Object
+     * @return object
      */
     private function _serializeCategory($record)
     {
@@ -828,7 +828,7 @@ class WordPressQueryProvider implements IQueryProvider
      * 
      * @param array $record each comment row
      * 
-     * @return Object
+     * @return object
      */
     private function _serializeComment($record)
     {
@@ -886,7 +886,7 @@ class WordPressQueryProvider implements IQueryProvider
      * 
      * @param array $record each user row
      * 
-     * @return Object
+     * @return object
      */
     private function _serializeUser($record)
     {

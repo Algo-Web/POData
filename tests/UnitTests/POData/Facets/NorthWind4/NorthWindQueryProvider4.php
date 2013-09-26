@@ -80,7 +80,7 @@ class NorthWindQueryProvider4 implements IQueryProvider
      *                                     an entity needs to be fetched
      * @param KeyDescriptor $keyDescriptor The key to identify the entity to be fetched
      * 
-     * @return Object|null Returns entity instance if found else null
+     * @return object|null Returns entity instance if found else null
      */
     public function getResourceFromResourceSet(ResourceSet $resourceSet, KeyDescriptor $keyDescriptor)
     {
@@ -100,7 +100,7 @@ class NorthWindQueryProvider4 implements IQueryProvider
      * @param KeyDescriptor    $keyDescriptor        The key to identify the entity 
      *                                               to be fetched.
      * 
-     * @return Object|null Returns entity instance if found else null
+     * @return object|null Returns entity instance if found else null
      */
     public function  getResourceFromRelatedResourceSet(ResourceSet $sourceResourceSet, 
         $sourceEntityInstance, 
@@ -150,7 +150,7 @@ class NorthWindQueryProvider4 implements IQueryProvider
      * @param ResourceProperty $targetProperty       The navigation property to be 
      *                                               retrieved
      * 
-     * @return Object|null The related resource if exists else null
+     * @return object|null The related resource if exists else null
      */
     public function getRelatedResourceReference(ResourceSet $sourceResourceSet, 
         $sourceEntityInstance, 
