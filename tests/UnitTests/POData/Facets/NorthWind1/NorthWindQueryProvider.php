@@ -67,7 +67,7 @@ class NorthWindQueryProvider implements IQueryProvider
      *                                     an entity needs to be fetched
      * @param KeyDescriptor $keyDescriptor The key to identify the entity to be fetched
      * 
-     * @return stdClass|null Returns entity instance if found else null
+     * @return \stdClass|null Returns entity instance if found else null
      */
     public function getResourceFromResourceSet(ResourceSet $resourceSet, KeyDescriptor $keyDescriptor)
     {
@@ -87,7 +87,7 @@ class NorthWindQueryProvider implements IQueryProvider
      * @param KeyDescriptor    $keyDescriptor        The key to identify the entity 
      *                                               to be fetched.
      * 
-     * @return stdClass|null Returns entity instance if found else null
+     * @return \stdClass|null Returns entity instance if found else null
      */
     public function  getResourceFromRelatedResourceSet(ResourceSet $sourceResourceSet, 
         $sourceEntityInstance, 
@@ -114,7 +114,7 @@ class NorthWindQueryProvider implements IQueryProvider
      * @param string           $top                  For future purpose,no need to pass it
      * @param string           $skip                 For future purpose,no need to pass it
      *                                                
-     * @return stdClass[] Array of related resource if exists, if no 
+     * @return \stdClass[] Array of related resource if exists, if no 
      *                                related resources found returns empty array
      */
     public function  getRelatedResourceSet(
@@ -138,7 +138,7 @@ class NorthWindQueryProvider implements IQueryProvider
      * @param ResourceProperty $targetProperty       The navigation property to be 
      *                                               retrieved
      * 
-     * @return stdClass|null The related resource if exists else null
+     * @return \stdClass|null The related resource if exists else null
      */
     public function getRelatedResourceReference(
 	    ResourceSet $sourceResourceSet,

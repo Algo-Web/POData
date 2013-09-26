@@ -644,7 +644,7 @@ class MetadataQueryProviderWrapper
      * @param int                $top                The top count
      * @param int                $skip               The skip count
      * 
-     * @return stdClass[]
+     * @return \stdClass[]
      */
     public function getResourceSet(ResourceSet $resourceSet, $internalFilterInfo, $select, $orderby, $top, $skip)
     {
@@ -684,7 +684,7 @@ class MetadataQueryProviderWrapper
      * @param ResourceSet   $resourceSet   The entity set from which an entity needs to be fetched
      * @param KeyDescriptor $keyDescriptor The key to identify the entity to be fetched
      *
-     * @return stdClass|null Returns entity instance if found else null
+     * @return \stdClass|null Returns entity instance if found else null
      */
     public function getResourceFromResourceSet(ResourceSet $resourceSet, KeyDescriptor $keyDescriptor)
     {
@@ -716,7 +716,7 @@ class MetadataQueryProviderWrapper
      * @param int                $top                The top count
      * @param int                $skip               The skip count
      *                                               
-     * @return stdClass[] Array of related resource if exists, if no related resources found returns empty array
+     * @return \stdClass[] Array of related resource if exists, if no related resources found returns empty array
      *
      */
 	public function getRelatedResourceSet(
@@ -771,7 +771,7 @@ class MetadataQueryProviderWrapper
      * @param KeyDescriptor    $keyDescriptor     The key to identify the entity to be fetched.
      *
      * 
-     * @return stdClass|null Returns entity instance if found else null
+     * @return \stdClass|null Returns entity instance if found else null
      */
     public function getResourceFromRelatedResourceSet(ResourceSet $sourceResourceSet,
         $sourceEntity, ResourceSet $targetResourceSet, ResourceProperty $targetProperty,
@@ -803,7 +803,7 @@ class MetadataQueryProviderWrapper
      * @param ResourceProperty $targetProperty    The navigation property to be 
      *                                            retrieved
      * 
-     * @return stdClass|null The related resource if exists else null
+     * @return \stdClass|null The related resource if exists else null
      */
     public function getRelatedResourceReference(ResourceSet $sourceResourceSet, 
         $sourceEntity, ResourceSet $targetResourceSet, 
