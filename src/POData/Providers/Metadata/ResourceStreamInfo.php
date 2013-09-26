@@ -41,7 +41,7 @@ class ResourceStreamInfo
     /**
      * Gets custom state
      * 
-     * @return object
+     * @return stdClass
      */
     public function getCustomState()
     {

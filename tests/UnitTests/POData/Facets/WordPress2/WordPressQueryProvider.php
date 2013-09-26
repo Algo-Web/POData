@@ -94,7 +94,7 @@ class WordPressQueryProvider implements IQueryProvider
      * @param KeyDescriptor $keyDescriptor The key to identify the entity 
      *                                     to be fetched
      * 
-     * @return object|null Returns entity instance if found else null
+     * @return stdClass|null Returns entity instance if found else null
      */
     public function getResourceFromResourceSet(ResourceSet $resourceSet, KeyDescriptor $keyDescriptor)
     {
@@ -116,7 +116,7 @@ class WordPressQueryProvider implements IQueryProvider
      * @param string           $top                  For future purpose,no need to pass it
      * @param string           $skip                 For future purpose,no need to pass it
      *                                               
-     * @return object[] Array of related resource if exists, if no 
+     * @return stdClass[] Array of related resource if exists, if no 
      *                                related resources found returns empty array
      */
     public function  getRelatedResourceSet(ResourceSet $sourceResourceSet, 
@@ -141,7 +141,7 @@ class WordPressQueryProvider implements IQueryProvider
      * @param KeyDescriptor    $keyDescriptor        The key to identify the entity 
      *                                               to be fetched.
      * 
-     * @return object|null Returns entity instance if found else null
+     * @return stdClass|null Returns entity instance if found else null
      */
     public function  getResourceFromRelatedResourceSet(ResourceSet $sourceResourceSet, 
         $sourceEntityInstance, 
@@ -162,7 +162,7 @@ class WordPressQueryProvider implements IQueryProvider
      * @param ResourceProperty $targetProperty       The navigation property to be
      *                                               retrieved
      *
-     * @return object|null The related resource if exists else null
+     * @return stdClass|null The related resource if exists else null
      */
     public function getRelatedResourceReference(ResourceSet $sourceResourceSet,
     		$sourceEntityInstance,

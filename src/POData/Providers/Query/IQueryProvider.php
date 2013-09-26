@@ -48,7 +48,7 @@ interface IQueryProvider
      * @param String      $skiptoken   skiptoken value if we want to skip records till 
      *                                 that skiptoken value
      * 
-     * @return object[]
+     * @return stdClass[]
      */
     public function getResourceSet(
 	    ResourceSet $resourceSet,
@@ -67,7 +67,7 @@ interface IQueryProvider
      * @param KeyDescriptor $keyDescriptor The key to identify the entity to be 
      *                                     fetched
      * 
-     * @return object|null Returns entity instance if found else null
+     * @return stdClass|null Returns entity instance if found else null
      */
     public function getResourceFromResourceSet(ResourceSet $resourceSet, 
         KeyDescriptor $keyDescriptor
@@ -86,7 +86,7 @@ interface IQueryProvider
      * @param KeyDescriptor    $keyDescriptor        The key to identify the entity 
      *                                               to be fetched.
      * 
-     * @return object|null Returns entity instance if found else null
+     * @return stdClass|null Returns entity instance if found else null
      */
     public function getResourceFromRelatedResourceSet(ResourceSet $sourceResourceSet,
         $sourceEntityInstance, 
@@ -114,7 +114,7 @@ interface IQueryProvider
      * @param String           $skip                 skiptoken value if we want to skip records till that skiptoken value
      *
      *                                               
-     * @return object[] Array of related resource if exists, if no related resources found returns empty array
+     * @return stdClass[] Array of related resource if exists, if no related resources found returns empty array
      *
      */
     public function  getRelatedResourceSet(ResourceSet $sourceResourceSet, 
@@ -138,7 +138,7 @@ interface IQueryProvider
      * @param ResourceProperty $targetProperty       The navigation property to be 
      *                                               retrieved
      * 
-     * @return object|null The related resource if exists else null
+     * @return stdClass|null The related resource if exists else null
      */
     public function getRelatedResourceReference(ResourceSet $sourceResourceSet, 
         $sourceEntityInstance, 

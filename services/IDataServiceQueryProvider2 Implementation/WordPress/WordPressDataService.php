@@ -49,7 +49,7 @@ class WordPressDataService extends BaseService
      *                            IStreamProvider
      * 
      * @see library/POData.IServiceProvider::getService()
-     * @return object
+     * @return stdClass
      */
     public function getService($serviceType)
     {
