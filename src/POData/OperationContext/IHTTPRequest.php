@@ -31,9 +31,10 @@ interface IHTTPRequest
 
 
     /**
-     * Split the QueryString and assigns them as array element in KEY=VALUE
+     * Returns the Query String Parameters (QSPs) as an array of KEY-VALUE pairs.  If a QSP appears twice
+     * it will have two entries in this array
      * 
-     * @return string[]
+     * @return array[]
      */
     public function getQueryParameters();
 
