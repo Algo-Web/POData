@@ -5,7 +5,7 @@ use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceTypeKind;
-use POData\Providers\MetadataQueryProviderWrapper;
+use POData\Providers\ProvidersWrapper;
 use POData\Configuration\ServiceConfiguration;
 use POData\Configuration\EntitySetRights;
 use POData\Configuration\ServiceProtocolVersion;
@@ -35,26 +35,26 @@ class MetadataWriterTest extends PHPUnit_Framework_TestCase
         $configuration->setEntitySetAccessRule("*", EntitySetRights::ALL);
         $configuration->setMaxDataServiceVersion(ServiceProtocolVersion::V3);
 
-        $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
+        $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
 	        $this->mockQueryProvider, //This should not be used for meta data writing
             $configuration, //Service configuration
             false
         );
-        $metadataWriter = new MetadataWriter($metaQueryProverWrapper);
+        $metadataWriter = new MetadataWriter($providersWrapper);
         $metadata = $metadataWriter->writeMetadata();
 
         $this->assertNotNull($metadata);
-        $this->assertEquals($metaQueryProverWrapper->getContainerName(), 'NorthWindEntities');
-        $this->assertEquals($metaQueryProverWrapper->getContainerNamespace(), 'NorthWind');
+        $this->assertEquals($providersWrapper->getContainerName(), 'NorthWindEntities');
+        $this->assertEquals($providersWrapper->getContainerNamespace(), 'NorthWind');
         
         $this->assertStringStartsWith('<edmx:Edmx Version="1.0"',$metadata);
         
-        $customerResourceSet = $metaQueryProverWrapper->resolveResourceSet('Customers');
+        $customerResourceSet = $providersWrapper->resolveResourceSet('Customers');
         $this->assertEquals($customerResourceSet->getName(), 'Customers');
         $this->assertEquals($customerResourceSet->getResourceType()->getName(), 'Customer');
         
-        $customerEntityType = $metaQueryProverWrapper->resolveResourceType('Customer');
+        $customerEntityType = $providersWrapper->resolveResourceType('Customer');
         $this->assertEquals($customerEntityType->getResourceTypeKind(), ResourceTypeKind::ENTITY);
     }
 }

@@ -42,7 +42,7 @@ class ResponseWriter
 
         if ($responseFormat == ResponseFormat::METADATA_DOCUMENT()) {
             // /$metadata
-            $writer = new MetadataWriter($service->getMetadataQueryProviderWrapper());
+            $writer = new MetadataWriter($service->getProvidersWrapper());
             $responseBody = $writer->writeMetadata();            
             $dataServiceVersion = $writer->getDataServiceVersion();
         } else if ($responseFormat == ResponseFormat::TEXT()) {

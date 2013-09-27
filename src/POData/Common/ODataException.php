@@ -80,7 +80,7 @@ class ODataException extends \Exception
      * Creates and throws an instance of ODataException when a 
      * resource represented by a segment in the url is not found
      * 
-     * @param String $segment The segment in the url for which corrosponding
+     * @param String $segment The segment in the url for which corresponding
      * resource not present in the data source
      *  
      * @throws ODataException

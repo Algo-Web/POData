@@ -8,18 +8,20 @@ use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceSet;
+use POData\Providers\Metadata\ResourceAssociationSet;
 use POData\Configuration\IServiceConfiguration;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 use POData\Common\ODataException;
 use POData\Common\Messages;
 use POData\Providers\Metadata\MetadataMapping;
-
+use POData\Providers\Metadata\EdmSchemaVersion;
 use POData\Providers\Query\IQueryProvider;
 use POData\Providers\Metadata\IMetadataProvider;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\IExpressionProvider;
+use POData\Common\InvalidOperationException;
 
 /**
- * Class MetadataQueryProviderWrapper
+ * Class ProvidersWrapper
  *
  * A wrapper class over IMetadataProvider and IQueryProvider implementations, All calls to implementation of methods
  * of these interfaces should go through this wrapper class so that wrapper methods of this class can perform validations
@@ -27,7 +29,7 @@ use POData\UriProcessor\QueryProcessor\ExpressionParser\IExpressionProvider;
  *
  * @package POData\Providers
  */
-class MetadataQueryProviderWrapper
+class ProvidersWrapper
 {
     /**
      * Holds reference to IMetadataProvider implementation
@@ -85,7 +87,7 @@ class MetadataQueryProviderWrapper
     private $_resourceAssociationSetCache;
 
     /**
-     * Creates a new instance of MetadataQueryProviderWrapper
+     * Creates a new instance of ProvidersWrapper
      * 
      * @param IMetadataProvider $metadataProvider Reference to IMetadataProvider implementation
      * @param IQueryProvider    $queryProvider    Reference to IQueryProvider implementation
@@ -119,7 +121,7 @@ class MetadataQueryProviderWrapper
         $containerName = $this->_metadataProvider->getContainerName();
         if (empty($containerName)) {
             throw new ODataException(
-                Messages::metadataQueryProviderWrapperContainerNameMustNotBeNullOrEmpty(), 
+                Messages::providersWrapperContainerNameMustNotBeNullOrEmpty(),
                 500
             );
         }
@@ -129,20 +131,19 @@ class MetadataQueryProviderWrapper
 
     /**
      * To get Namespace name for the data source,
-     * Note: Wrapper for IMetadataProvider::getContainerNamespace method
-     * implementation
-     * 
+     * Note: Wrapper for IMetadataProvider::getContainerNamespace method implementation
+     *
      * @return string that contains the namespace name.
      * 
-     * @throws ODataException Exception if IDSMP implementation returns empty 
-     *                        container namespace
+     * @throws ODataException Exception if IDSMP implementation returns empty container namespace
+     *
      */
     public function getContainerNamespace()
     {
         $containerNamespace = $this->_metadataProvider->getContainerNamespace();
         if (empty($containerNamespace)) {
             throw new ODataException(
-                Messages::metadataQueryProviderWrapperContainerNamespaceMustNotBeNullOrEmpty(),
+                Messages::providersWrapperContainerNamespaceMustNotBeNullOrEmpty(),
                 500
             );
         }
@@ -176,7 +177,7 @@ class MetadataQueryProviderWrapper
         $resourceSetNames = array();
         foreach ($resourceSets as $resourceSet) {
             if (in_array($resourceSet->getName(), $resourceSetNames)) {
-                throw new ODataException(Messages::metadataQueryProviderWrapperEntitySetNameShouldBeUnique($resourceSet->getName()), 500 );
+                throw new ODataException(Messages::providersWrapperEntitySetNameShouldBeUnique($resourceSet->getName()), 500 );
             }
 
             $resourceSetNames[] = $resourceSet->getName();
@@ -202,9 +203,7 @@ class MetadataQueryProviderWrapper
         foreach ($resourceTypes as $resourceType) {
             if (in_array($resourceType->getName(), $resourceTypeNames)) {
                 throw new ODataException(
-                    Messages::metadataQueryProviderWrapperEntityTypeNameShouldBeUnique(
-                        $resourceType->getName()
-                    ), 
+                    Messages::providersWrapperEntityTypeNameShouldBeUnique($resourceType->getName()),
                     500
                 );
             }
@@ -314,54 +313,48 @@ class MetadataQueryProviderWrapper
      * Note: Wrapper for IMetadataProvider::getResourceAssociationSet
      * method implementation
      * 
-     * @param ResourceSetWrapper $resourceSetWrapper Resource set of the source 
-     *                                               association end
-     * @param ResourceType       $resourceType       Resource type of the source 
-     *                                               association end
-     * @param ResourceProperty   $resourceProperty   Resource property of the source 
-     *                                               association end
+     * @param ResourceSetWrapper $wrapper Resource set of the source association end
+     * @param ResourceType       $type       Resource type of the source association end
+     * @param ResourceProperty   $property   Resource property of the source association end
+     *
      * 
      * @return ResourceAssociationSet|null Returns ResourceAssociationSet for the source
      *                                             association end, NULL if no such 
      *                                             association end or resource set in the
      *                                             other end of the association is invisible
      */
-    public function getResourceAssociationSet(ResourceSetWrapper $resourceSetWrapper, 
-        ResourceType $resourceType, ResourceProperty $resourceProperty
+    public function getResourceAssociationSet(
+	    ResourceSetWrapper $wrapper,
+        ResourceType $type,
+        ResourceProperty $property
     ) {        
-        $resourceType 
-            = $this->_getResourceTypeWherePropertyIsDeclared(
-                $resourceType, 
-                $resourceProperty
-            );
-        $cacheKey 
-            = $resourceSetWrapper->getName() 
-                . '_' . $resourceType->getName() 
-                . '_' . $resourceProperty->getName();
+        $type = $this->_getResourceTypeWherePropertyIsDeclared($type, $property);
+        $cacheKey = $wrapper->getName() . '_' . $type->getName() . '_' . $property->getName();
+
         if (array_key_exists($cacheKey,  $this->_resourceAssociationSetCache)) {
             return $this->_resourceAssociationSetCache[$cacheKey];
         }
 
-        $associationSet
-            = $this->_metadataProvider->getResourceAssociationSet(
-                $resourceSetWrapper->getResourceSet(), 
-                $resourceType, 
-                $resourceProperty
-            );
+        $associationSet = $this->_metadataProvider->getResourceAssociationSet(
+            $wrapper->getResourceSet(),
+            $type,
+            $property
+        );
+
         if (!is_null($associationSet)) {
-            $thisAssociationSetEnd
-                = $associationSet->getResourceAssociationSetEnd(
-                    $resourceSetWrapper->getResourceSet(), 
-                    $resourceType, 
-                    $resourceProperty
-                );
-            $relatedAssociationSetEnd 
-                = $associationSet->getRelatedResourceAssociationSetEnd(
-                    $resourceSetWrapper->getResourceSet(), 
-                    $resourceType, 
-                    $resourceProperty
-                );
-            //If $thisAssociationSetEnd or $relatedAssociationSetEnd 
+            $thisAssociationSetEnd = $associationSet->getResourceAssociationSetEnd(
+				$wrapper->getResourceSet(),
+                $type,
+                $property
+            );
+
+            $relatedAssociationSetEnd = $associationSet->getRelatedResourceAssociationSetEnd(
+                $wrapper->getResourceSet(),
+                $type,
+                $property
+            );
+
+            //If $thisAssociationSetEnd or $relatedAssociationSetEnd
             //is null means the associationset
             //we got from the IDSMP::getResourceAssociationSet is invalid. 
             //AssociationSet::getResourceAssociationSetEnd
@@ -371,28 +364,23 @@ class MetadataQueryProviderWrapper
             //from given resource type (param2)   
             if (is_null($thisAssociationSetEnd) || is_null($relatedAssociationSetEnd)) {
                 throw new ODataException(
-                    Messages::metadataQueryProviderWrapperIDSMPGetResourceSetReturnsInvalidResourceSet(
-                        $resourceSetWrapper->getName(), 
-                        $resourceType->getFullName(), 
-                        $resourceProperty->getName()
+                    Messages::providersWrapperIDSMPGetResourceSetReturnsInvalidResourceSet(
+                        $wrapper->getName(),
+                        $type->getFullName(),
+                        $property->getName()
                     ), 
                     500
                 );
             }
 
-            $relatedResourceSetWrapper 
-                = $this->_validateResourceSetAndGetWrapper(
-                    $relatedAssociationSetEnd->getResourceSet()
-                );
+            $relatedResourceSetWrapper = $this->_validateResourceSetAndGetWrapper(
+                $relatedAssociationSetEnd->getResourceSet()
+            );
             if ($relatedResourceSetWrapper === null) {
                 $associationSet = null;
             } else {
-                $this->_validateResourceType(
-                    $thisAssociationSetEnd->getResourceType()
-                );
-                $this->_validateResourceType(
-                    $relatedAssociationSetEnd->getResourceType()
-                );
+                $this->_validateResourceType($thisAssociationSetEnd->getResourceType());
+                $this->_validateResourceType($relatedAssociationSetEnd->getResourceType());
             }
         }
 
@@ -415,22 +403,22 @@ class MetadataQueryProviderWrapper
      *     null resource association set
      */
     public function getResourceSetWrapperForNavigationProperty(
-        ResourceSetWrapper $resourceSetWrapper, ResourceType $resourceType, 
+        ResourceSetWrapper $resourceSetWrapper,
+        ResourceType $resourceType,
         ResourceProperty $navigationResourceProperty
     ) {
-        $associationSet 
-            = $this->getResourceAssociationSet(
-                $resourceSetWrapper, 
-                $resourceType, 
+        $associationSet = $this->getResourceAssociationSet(
+            $resourceSetWrapper,
+            $resourceType,
+            $navigationResourceProperty
+        );
+
+        if (!is_null($associationSet)) {
+            $relatedAssociationSetEnd = $associationSet->getRelatedResourceAssociationSetEnd(
+                $resourceSetWrapper->getResourceSet(),
+                $resourceType,
                 $navigationResourceProperty
             );
-        if (!is_null($associationSet)) {
-            $relatedAssociationSetEnd 
-                = $associationSet->getRelatedResourceAssociationSetEnd(
-                    $resourceSetWrapper->getResourceSet(), 
-                    $resourceType, 
-                    $navigationResourceProperty
-                );
             return $this->_validateResourceSetAndGetWrapper(
                 $relatedAssociationSetEnd->getResourceSet()
             );
@@ -493,12 +481,12 @@ class MetadataQueryProviderWrapper
     /**
      * Gets the Edm Schema version compliance to the metadata
      * 
-     * @return MetadataEdmSchemaVersion
+     * @return EdmSchemaVersion
      */
     public function getEdmSchemaVersion()
     {
         //The minimal schema version for custom provider is 1.1
-        return MetadataEdmSchemaVersion::VERSION_1_DOT_1;
+        return EdmSchemaVersion::VERSION_1_DOT_1;
     }
 
     /**
@@ -601,7 +589,7 @@ class MetadataQueryProviderWrapper
 	    $expressionProvider = $this->_queryProvider->getExpressionProvider();
         if (is_null($expressionProvider)) {
             ODataException::createInternalServerError(
-                Messages::metadataQueryProviderExpressionProviderMustNotBeNullOrEmpty()
+                Messages::providersWrapperExpressionProviderMustNotBeNullOrEmpty()
             );
         }
 
@@ -609,7 +597,7 @@ class MetadataQueryProviderWrapper
           || array_search('POData\UriProcessor\QueryProcessor\ExpressionParser\IExpressionProvider', class_implements($expressionProvider)) === false
         ) {
             ODataException::createInternalServerError(
-                Messages::metadataQueryProviderInvalidExpressionProviderInstance()
+                Messages::providersWrapperInvalidExpressionProviderInstance()
             );
         }
 
@@ -667,7 +655,7 @@ class MetadataQueryProviderWrapper
 
         if (!is_array($entityInstances)) {
             ODataException::createInternalServerError(
-                Messages::metadataQueryProviderWrapperIDSQPMethodReturnsNonArray(
+                Messages::providersWrapperIDSQPMethodReturnsNonArray(
                     'IQueryProvider::getResourceSet'
                 )
             );
@@ -752,7 +740,7 @@ class MetadataQueryProviderWrapper
 
         if (!is_array($entityInstances)) {
             ODataException::createInternalServerError(
-                Messages::metadataQueryProviderWrapperIDSQPMethodReturnsNonArray(
+                Messages::providersWrapperIDSQPMethodReturnsNonArray(
                     'IQueryProvider::getRelatedResourceSet'
                 )
             );
@@ -831,7 +819,7 @@ class MetadataQueryProviderWrapper
                 || !($entityInstance instanceof $entityName)
             ) {
                 ODataException::createInternalServerError(
-                    Messages::metadataQueryProviderWrapperIDSQPMethodReturnsUnExpectedType(
+                    Messages::providersWrapperIDSQPMethodReturnsUnExpectedType(
                         $entityName, 
                         'IQueryProvider::getRelatedResourceReference'
                     )
@@ -848,7 +836,7 @@ class MetadataQueryProviderWrapper
                     $keyValue = $keyProperty->getValue($entityInstance);
                     if (is_null($keyValue)) {
                         ODataException::createInternalServerError(
-                            Messages::metadataQueryProviderWrapperIDSQPMethodReturnsInstanceWithNullKeyProperties('IDSQP::getRelatedResourceReference')
+                            Messages::providersWrapperIDSQPMethodReturnsInstanceWithNullKeyProperties('IDSQP::getRelatedResourceReference')
                         );
                     }
                 } catch (\ReflectionException $reflectionException) {
@@ -892,7 +880,7 @@ class MetadataQueryProviderWrapper
             || !($entityInstance instanceof $entityName)
         ) {
             ODataException::createInternalServerError(
-                Messages::metadataQueryProviderWrapperIDSQPMethodReturnsUnExpectedType(
+                Messages::providersWrapperIDSQPMethodReturnsUnExpectedType(
                     $entityName, 
                     $methodName
                 )
@@ -906,7 +894,7 @@ class MetadataQueryProviderWrapper
                 $keyValue = $keyProperty->getValue($entityInstance);
                 if (is_null($keyValue)) {
                     ODataException::createInternalServerError(
-                        Messages::metadataQueryProviderWrapperIDSQPMethodReturnsInstanceWithNullKeyProperties($methodName)
+                        Messages::providersWrapperIDSQPMethodReturnsInstanceWithNullKeyProperties($methodName)
                     );
                 }
 
@@ -914,7 +902,7 @@ class MetadataQueryProviderWrapper
                     = $valueDescription[1]->convert($valueDescription[0]);
                 if ($keyValue != $convertedValue) {
                     ODataException::createInternalServerError(
-                        Messages::metadataQueryProviderWrapperIDSQPMethodReturnsInstanceWithNonMatchingKeys($methodName)
+                        Messages::providersWrapperIDSQPMethodReturnsInstanceWithNonMatchingKeys($methodName)
                     );
                 }
             } catch (\ReflectionException $reflectionException) {

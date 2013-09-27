@@ -20,7 +20,7 @@ class InternalOrderByInfo
     private $_orderByInfo;
 
     /**
-     * Collection of sub sorter functions corrosponding to each orderby path segment.
+     * Collection of sub sorter functions corresponding to each orderby path segment.
      * 
      * @var AnonymousFunction[]
      */

@@ -11,7 +11,7 @@ use POData\Common\ODataConstants;
 use POData\Common\NotImplementedException;
 use POData\Common\InvalidOperationException;
 use POData\Common\HttpStatus;
-use POData\Providers\MetadataQueryProviderWrapper;
+use POData\Providers\ProvidersWrapper;
 use POData\Providers\Stream\StreamProviderWrapper;
 use POData\Configuration\ServiceConfiguration;
 use POData\UriProcessor\UriProcessor;
@@ -48,9 +48,9 @@ abstract class BaseService implements IRequestHandler, IService
     /** 
      * The wrapper over IQueryProvider and IMetadataProvider implementations.
      * 
-     * @var MetadataQueryProviderWrapper
+     * @var ProvidersWrapper
      */
-    private $_metadataQueryProviderWrapper;
+    private $providersWrapper;
 
     /**
      * The wrapper over IStreamProvider implementation
@@ -95,11 +95,11 @@ abstract class BaseService implements IRequestHandler, IService
     /**
      * Get the wrapper over developer's IQueryProvider and IMetadataProvider implementation.
      * 
-     * @return MetadataQueryProviderWrapper
+     * @return ProvidersWrapper
      */
-    public function getMetadataQueryProviderWrapper()
+    public function getProvidersWrapper()
     {
-          return $this->_metadataQueryProviderWrapper;
+          return $this->providersWrapper;
     }
 
     /**
@@ -277,17 +277,13 @@ abstract class BaseService implements IRequestHandler, IService
 
         $metadataProvider = $this->getMetadataProvider();
         if (is_null($metadataProvider)) {
-            ODataException::createInternalServerError(
-                Messages::metadataQueryProviderNull()
-            );
+            ODataException::createInternalServerError(Messages::providersWrapperNull());
         }
     
         if (!is_object($metadataProvider) 
             || array_search('POData\Providers\Metadata\IMetadataProvider', class_implements($metadataProvider)) === false
         ) {
-            ODataException::createInternalServerError(
-                Messages::invalidMetadataInstance()
-            );
+            ODataException::createInternalServerError(Messages::invalidMetadataInstance());
         }
 
 
@@ -295,31 +291,24 @@ abstract class BaseService implements IRequestHandler, IService
 
 
         if (is_null($queryProvider)) {
-            ODataException::createInternalServerError(
-                Messages::metadataQueryProviderNull()
-            );
+            ODataException::createInternalServerError(Messages::providersWrapperNull());
         }
 
         if (!is_object($queryProvider)) {
-          ODataException::createInternalServerError(
-              Messages::invalidQueryInstance()
-          );
+          ODataException::createInternalServerError(Messages::invalidQueryInstance());
         }
 
 
         if (array_search('POData\Providers\Query\IQueryProvider', class_implements($queryProvider)) === false) {
-            ODataException::createInternalServerError(
-                Messages::invalidQueryInstance()
-            );
+            ODataException::createInternalServerError(Messages::invalidQueryInstance());
         }
 
 
         $this->_serviceConfiguration = new ServiceConfiguration($metadataProvider);
-        $this->_metadataQueryProviderWrapper = new MetadataQueryProviderWrapper(
+        $this->providersWrapper = new ProvidersWrapper(
             $metadataProvider, 
             $queryProvider, 
             $this->_serviceConfiguration
-
         );
 
         
@@ -342,9 +331,7 @@ abstract class BaseService implements IRequestHandler, IService
                 ||!is_null($this->_serviceHost->getRequestIfNoneMatch())
             ) {
                 ODataException::createBadRequestError(
-                    Messages::eTagCannotBeSpecified(
-                        $this->getHost()->getAbsoluteRequestUri()->getUrlAsString()
-                    )
+                    Messages::eTagCannotBeSpecified($this->getHost()->getAbsoluteRequestUri()->getUrlAsString())
                 );
             }
         }
@@ -354,7 +341,7 @@ abstract class BaseService implements IRequestHandler, IService
 
 	    if (is_null($responseContentType)) {
 		    //Note: when refactoring this, if it's targeting a media resource it may return null and be ok..not sure
-		    //what situations this will arrise.
+		    //what situations this will arise.
 		    throw new ODataException( Messages::unsupportedMediaType(), 415 );
 	    }
 

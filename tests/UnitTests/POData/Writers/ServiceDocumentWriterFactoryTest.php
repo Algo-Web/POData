@@ -6,7 +6,7 @@ use POData\Common\Messages;
 use POData\IService;
 use POData\OperationContext\ServiceHost;
 use POData\Common\Url;
-use POData\Providers\MetadataQueryProviderWrapper;
+use POData\Providers\ProvidersWrapper;
 use POData\ResponseFormat;
 use POData\Writers\Atom\AtomServiceDocumentWriter;
 use POData\Writers\Json\JsonServiceDocumentWriter;
@@ -34,13 +34,13 @@ class ServiceDocumentWriterFactoryTest extends  BaseUnitTestCase {
 	protected $mockServiceURI;
 
 	/**
-	 * @var MetadataQueryProviderWrapper
+	 * @var ProvidersWrapper
 	 */
 	protected $mockProvider;
 
 	public function testGetWriterAtom()
 	{
-		Phockito::when($this->mockService->getMetadataQueryProviderWrapper())
+		Phockito::when($this->mockService->getProvidersWrapper())
 			->return($this->mockProvider);
 
 		Phockito::when($this->mockService->getHost())
@@ -64,7 +64,7 @@ class ServiceDocumentWriterFactoryTest extends  BaseUnitTestCase {
 
 	public function testGetWriterPlainXML()
 	{
-		Phockito::when($this->mockService->getMetadataQueryProviderWrapper())
+		Phockito::when($this->mockService->getProvidersWrapper())
 			->return($this->mockProvider);
 
 		Phockito::when($this->mockService->getHost())
@@ -89,7 +89,7 @@ class ServiceDocumentWriterFactoryTest extends  BaseUnitTestCase {
 
 	public function testGetWriterJSON()
 	{
-		Phockito::when($this->mockService->getMetadataQueryProviderWrapper())
+		Phockito::when($this->mockService->getProvidersWrapper())
 			->return($this->mockProvider);
 
 

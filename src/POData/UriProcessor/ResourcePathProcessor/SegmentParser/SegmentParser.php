@@ -5,7 +5,7 @@ namespace POData\UriProcessor\ResourcePathProcessor\SegmentParser;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\ResourceTypeKind;
 use POData\Providers\Metadata\ResourcePropertyKind;
-use POData\Providers\MetadataQueryProviderWrapper;
+use POData\Providers\ProvidersWrapper;
 use POData\Common\ODataConstants;
 use POData\Common\Messages;
 use POData\Common\ODataException;
@@ -34,7 +34,7 @@ class SegmentParser
      * The wrapper of IMetadataProvider and IQueryProvider
      *
      * 
-     * @var MetadataQueryProviderWrapper
+     * @var ProvidersWrapper
      */
     private $_providerWrapper;
 
@@ -49,10 +49,10 @@ class SegmentParser
      * Constructs a new instance of SegmentParser
      * 
      * @param string[] $segments Array of segments in the request Uri
-     * @param MetadataQueryProviderWrapper $providerWrapper Reference to metadata and query provider wrapper
+     * @param ProvidersWrapper $providerWrapper Reference to metadata and query provider wrapper
      *
      */
-    private function __construct($segments, MetadataQueryProviderWrapper $providerWrapper ) {
+    private function __construct($segments, ProvidersWrapper $providerWrapper ) {
         $this->_segmentDescriptors = array();
         $this->_providerWrapper = $providerWrapper;
     }
@@ -62,14 +62,14 @@ class SegmentParser
      * 
      * @param string[] $segments Array of segments in the request Uri
      *
-     * @param MetadataQueryProviderWrapper $providerWrapper Reference to metadata and query provider wrapper
+     * @param ProvidersWrapper $providerWrapper Reference to metadata and query provider wrapper
      * @param boolean $checkForRights  Whether to check for rights on the resource sets in the segments
      *
      * @return SegmentDescriptor[]
      * 
      * @throws ODataException If any error occurs while processing segment
      */
-    public static function parseRequestUriSegements($segments, MetadataQueryProviderWrapper $providerWrapper, $checkForRights = true ) {
+    public static function parseRequestUriSegements($segments, ProvidersWrapper $providerWrapper, $checkForRights = true ) {
         $segmentParser = new SegmentParser($segments, $providerWrapper);
         $segmentParser->_createSegmentDescriptors($segments, $checkForRights);
         return $segmentParser->_segmentDescriptors;

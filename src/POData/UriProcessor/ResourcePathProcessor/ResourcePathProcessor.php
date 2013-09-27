@@ -42,7 +42,7 @@ class ResourcePathProcessor
         );
         $segmentDescriptors = SegmentParser::parseRequestUriSegements(
             $requestUriSegments,
-            $service->getMetadataQueryProviderWrapper(),
+            $service->getProvidersWrapper(),
             true
         );
 
@@ -96,11 +96,11 @@ class ResourcePathProcessor
                         ->getTargetResourceSetWrapper();
                     //assert($resourceSetWrapper != null)
                     $hasNamedStream = $resourceSetWrapper->hasNamedStreams(
-                        $service->getMetadataQueryProviderWrapper()
+                        $service->getProvidersWrapper()
                     );
 
                     $hasBagProperty = $resourceSetWrapper->hasBagProperty(
-                        $service->getMetadataQueryProviderWrapper()
+                        $service->getProvidersWrapper()
                     );
 
                     if ($hasNamedStream || $hasBagProperty) {

@@ -4,7 +4,7 @@ namespace POData\UriProcessor\QueryProcessor\OrderByParser;
 
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Configuration\EntitySetRights;
-use POData\Providers\MetadataQueryProviderWrapper;
+use POData\Providers\ProvidersWrapper;
 use POData\Configuration\ServiceConfiguration;
 use POData\Common\ODataException;
 use POData\UriProcessor\QueryProcessor\OrderByParser\OrderByParser;
@@ -52,19 +52,19 @@ class OrderByParserTest extends \PHPUnit_Framework_TestCase
         $northWindMetadata = NorthWindMetadata::Create();
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
-        $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
+        $providersWrapper = new ProvidersWrapper(
                                           $northWindMetadata, //IMetadataProvider implementation
 	                                        $this->mockQueryProvider,
                                           $configuration, //Service configuuration
                                           false
                                          );
 
-        $resourceSetWrapper = $metaQueryProverWrapper->resolveResourceSet('Employees');
+        $resourceSetWrapper = $providersWrapper->resolveResourceSet('Employees');
         $resourceType = $resourceSetWrapper->getResourceType();
         $orderBy = 'Emails';
 
         try {
-            $internalOrderInfo = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $metaQueryProverWrapper);
+            OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
             $this->fail('An expected ODataException for bag property in the path');
         } catch (ODataException $odataException) {
             $this->assertStringStartsWith('orderby clause does not support Bag property in the path, the property', $odataException->getMessage());
@@ -82,30 +82,30 @@ class OrderByParserTest extends \PHPUnit_Framework_TestCase
         $northWindMetadata = NorthWindMetadata::Create();
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
-        $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
+        $providersWrapper = new ProvidersWrapper(
                                           $northWindMetadata, //IMetadataProvider implementation
 	                                        $this->mockQueryProvider,
                                           $configuration, //Service configuuration
                                           false
                                          );
 
-        $resourceSetWrapper = $metaQueryProverWrapper->resolveResourceSet('Customers');
+        $resourceSetWrapper = $providersWrapper->resolveResourceSet('Customers');
         $resourceType = $resourceSetWrapper->getResourceType();
         $orderBy = 'Address';
 
         try {
-            $internalOrderInfo = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $metaQueryProverWrapper);
+            OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
             $this->fail('An expected ODataException for using complex property as sort key has not been thrown');
         } catch (ODataException $odataException) {
             $this->assertStringStartsWith('Complex property cannot be used as sort key,', $odataException->getMessage());
         }
 
-        $resourceSetWrapper = $metaQueryProverWrapper->resolveResourceSet('Customers');
+        $resourceSetWrapper = $providersWrapper->resolveResourceSet('Customers');
         $resourceType = $resourceSetWrapper->getResourceType();
         $orderBy = 'Address/Address2';
 
         try {
-            $internalOrderInfo = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $metaQueryProverWrapper);
+            OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
             $this->fail('An expected ODataException for using complex property as sort key has not been thrown');
         } catch (ODataException $odataException) {
             $this->assertStringStartsWith('Complex property cannot be used as sort key,', $odataException->getMessage());
@@ -123,18 +123,18 @@ class OrderByParserTest extends \PHPUnit_Framework_TestCase
         $northWindMetadata = NorthWindMetadata::Create();
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
-        $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
+        $providersWrapper = new ProvidersWrapper(
                                           $northWindMetadata, //IMetadataProvider implementation
 	                                        $this->mockQueryProvider,
                                           $configuration, //Service configuuration
                                           false
                                          );
 
-        $resourceSetWrapper = $metaQueryProverWrapper->resolveResourceSet('Customers');
+        $resourceSetWrapper = $providersWrapper->resolveResourceSet('Customers');
         $resourceType = $resourceSetWrapper->getResourceType();
         $orderBy = 'Orders/OrderID';
         try {
-            $internalOrderInfo = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $metaQueryProverWrapper);
+            OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
             $this->fail('An expected ODataException for usage of resource reference set has not been thrown');
         } catch (ODataException $odataException) {
             $this->assertStringStartsWith('Navigation property points to a collection cannot be used in orderby clause', $odataException->getMessage());
@@ -150,30 +150,30 @@ class OrderByParserTest extends \PHPUnit_Framework_TestCase
         $northWindMetadata = NorthWindMetadata::Create();
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
-        $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
+        $providersWrapper = new ProvidersWrapper(
                                           $northWindMetadata, //IMetadataProvider implementation
 	        $this->mockQueryProvider,
                                           $configuration, //Service configuuration
                                           false
                                          );
 
-        $resourceSetWrapper = $metaQueryProverWrapper->resolveResourceSet('Orders');
+        $resourceSetWrapper = $providersWrapper->resolveResourceSet('Orders');
         $resourceType = $resourceSetWrapper->getResourceType();
         $orderBy = 'Customer';
 
         try {
-            $internalOrderInfo = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $metaQueryProverWrapper);
+            OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
             $this->fail('An expected ODataException for usage of resource reference as sort key has not been thrown');
         } catch (ODataException $odataException) {
             $this->assertStringStartsWith('Navigation property cannot be used as sort key,', $odataException->getMessage());
         }
 
-        $resourceSetWrapper = $metaQueryProverWrapper->resolveResourceSet('Order_Details');
+        $resourceSetWrapper = $providersWrapper->resolveResourceSet('Order_Details');
         $resourceType = $resourceSetWrapper->getResourceType();
         $orderBy = 'Order/Customer';
 
         try {
-            $internalOrderInfo = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $metaQueryProverWrapper);
+            OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
             $this->fail('An expected ODataException for usage of resource reference as sort key has not been thrown');
         } catch (ODataException $odataException) {
             $this->assertStringStartsWith('Navigation property cannot be used as sort key,', $odataException->getMessage());
@@ -190,21 +190,21 @@ class OrderByParserTest extends \PHPUnit_Framework_TestCase
         $northWindMetadata = NorthWindMetadata::Create();
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
-        $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
+        $providersWrapper = new ProvidersWrapper(
                                           $northWindMetadata, //IMetadataProvider implementation
 	                                        $this->mockQueryProvider,
                                           $configuration, //Service configuuration
                                           false
                                          );
 
-        $resourceSetWrapper = $metaQueryProverWrapper->resolveResourceSet('Customers');
+        $resourceSetWrapper = $providersWrapper->resolveResourceSet('Customers');
         $resourceType = $resourceSetWrapper->getResourceType();
         $orderBy = 'Address/HouseNumber';
-        $internalOrderInfo = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $metaQueryProverWrapper);
+        $internalOrderInfo = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
         $orderByInfo = $internalOrderInfo->getOrderByInfo();
         //There is no navigation (resource reference) property in the orderby path so getNavigationPropertiesUsed should
         //return null (not empty array)
-        $this->assertTrue(is_null($orderByInfo->getNavigationPropertiesUsed()));
+        $this->assertNull($orderByInfo->getNavigationPropertiesUsed());
         //There should be one orderby path segment with two sub path segments
         $orderByPathSegments = $orderByInfo->getOrderByPathSegments();
         $this->assertEquals(count($orderByPathSegments), 1);
@@ -212,7 +212,7 @@ class OrderByParserTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($orderByPathSegments[0]->isAscending());
         //there are two sub path 'Address' and 'HouseNumber'
         $subPathSegments = $orderByPathSegments[0]->getSubPathSegments();
-        $this->assertTrue(!is_null($subPathSegments));
+        $this->assertNotNull($subPathSegments);
         $this->assertEquals(count($subPathSegments), 2);
         $this->assertEquals($subPathSegments[0]->getName(), 'Address');
         $this->assertEquals($subPathSegments[1]->getName(), 'HouseNumber');
@@ -220,7 +220,7 @@ class OrderByParserTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($subPathSegments[1]->getResourceProperty() instanceof ResourceProperty);
         //There is only one sub sorter function
         $subSorters = $internalOrderInfo->getSubSorterFunctions();
-        $this->assertTrue(!is_null($subSorters));
+        $this->assertNotNull($subSorters);
         $this->assertEquals(count($subSorters), 1);
         //Parmater to this sub sort must be CustomersA, CustomersB
         $this->assertEquals($subSorters[0]->getParametersAsString(), '$CustomersA, $CustomersB');
@@ -228,7 +228,7 @@ class OrderByParserTest extends \PHPUnit_Framework_TestCase
         //asset this by comapring the anonymous function names
         $subSorterName = $subSorters[0]->getReference();
         $sorter = $internalOrderInfo->getSorterFunction();
-        $this->assertTrue(!is_null($sorter));
+        $this->assertNotNull($sorter);
         $mainSorterName = $sorter->getReference();
         $this->assertEquals($subSorterName, $mainSorterName);
         //check code inside the anonymous function (see the generated function code)
@@ -303,19 +303,19 @@ class OrderByParserTest extends \PHPUnit_Framework_TestCase
         $northWindMetadata = NorthWindMetadata::Create();
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
-        $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
+        $providersWrapper = new ProvidersWrapper(
                                           $northWindMetadata, //IMetadataProvider implementation
 	                                        $this->mockQueryProvider,
                                           $configuration, //Service configuuration
                                           false
                                          );
 
-        $resourceSetWrapper = $metaQueryProverWrapper->resolveResourceSet('Customers');
+        $resourceSetWrapper = $providersWrapper->resolveResourceSet('Customers');
         $resourceType = $resourceSetWrapper->getResourceType();
         $orderBy = 'Photo';
 
         try {
-            $internalOrderInfo = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $metaQueryProverWrapper);
+            OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
             $this->fail('An expected ODataException for usage of binary property has not been thrown');
         } catch (ODataException $odataException) {
             $this->assertStringStartsWith('Binary property is not allowed in orderby', $odataException->getMessage());
@@ -333,17 +333,17 @@ class OrderByParserTest extends \PHPUnit_Framework_TestCase
         $northWindMetadata = NorthWindMetadata::Create();
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
-        $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
+        $providersWrapper = new ProvidersWrapper(
                                           $northWindMetadata, //IMetadataProvider implementation
 	                                    $this->mockQueryProvider,
                                           $configuration, //Service configuuration
                                           false
                                          );
 
-        $resourceSetWrapper = $metaQueryProverWrapper->resolveResourceSet('Order_Details');
+        $resourceSetWrapper = $providersWrapper->resolveResourceSet('Order_Details');
         $resourceType = $resourceSetWrapper->getResourceType();
         $orderBy = 'Order/Customer/Rating';
-        $internalOrderInfo = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $metaQueryProverWrapper);
+        $internalOrderInfo = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
         //Check the dummy object is initialized properly
         $dummyObject = $internalOrderInfo->getDummyObject();
         $this->assertTrue(is_object($dummyObject));
@@ -409,19 +409,19 @@ class OrderByParserTest extends \PHPUnit_Framework_TestCase
         $configuration = new ServiceConfiguration($northWindMetadata);
         //Make 'Orders' visible, make 'Customers' invisible
         $configuration->setEntitySetAccessRule('Orders', EntitySetRights::ALL);
-        $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
+        $providersWrapper = new ProvidersWrapper(
                                               $northWindMetadata, //IMetadataProvider implementation
 	                                         $this->mockQueryProvider,
                                               $configuration, //Service configuuration
                                               false
                                              );
 
-        $resourceSetWrapper = $metaQueryProverWrapper->resolveResourceSet('Orders');
+        $resourceSetWrapper = $providersWrapper->resolveResourceSet('Orders');
         $resourceType = $resourceSetWrapper->getResourceType();
         $orderBy = 'Customer/CustomerID';
 
         try {
-            OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $metaQueryProverWrapper);
+            OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
             $this->fail('An expected ODataException for navigation to invisible resource set has not been thrown');
         } catch (ODataException $odataException) {
             $this->assertStringEndsWith("(Check the resource set of the navigation property 'Customer' is visible)", $odataException->getMessage());
@@ -437,17 +437,17 @@ class OrderByParserTest extends \PHPUnit_Framework_TestCase
         $northWindMetadata = NorthWindMetadata::Create();
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
-        $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
+        $providersWrapper = new ProvidersWrapper(
                                               $northWindMetadata, //IMetadataProvider implementation
 	                                        $this->mockQueryProvider,
                                               $configuration, //Service configuuration
                                               false
                                              );
 
-        $resourceSetWrapper = $metaQueryProverWrapper->resolveResourceSet('Order_Details');
+        $resourceSetWrapper = $providersWrapper->resolveResourceSet('Order_Details');
         $resourceType = $resourceSetWrapper->getResourceType();
         $orderBy = 'Order/Price desc, Product/ProductName asc';
-        $internalOrderInfo = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $metaQueryProverWrapper);
+        $internalOrderInfo = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
         //Check the dummy object is initialized properly
         $dummyObject = $internalOrderInfo->getDummyObject();
         $this->assertTrue(is_object($dummyObject));
@@ -636,17 +636,17 @@ class OrderByParserTest extends \PHPUnit_Framework_TestCase
         $northWindMetadata = NorthWindMetadata::Create();
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
-        $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
+        $providersWrapper = new ProvidersWrapper(
                                               $northWindMetadata, //IMetadataProvider implementation
 	                                        $this->mockQueryProvider,
                                               $configuration, //Service configuuration
                                               false
                                              );
 
-        $resourceSetWrapper = $metaQueryProverWrapper->resolveResourceSet('Order_Details');
+        $resourceSetWrapper = $providersWrapper->resolveResourceSet('Order_Details');
         $resourceType = $resourceSetWrapper->getResourceType();
         $orderBy = 'Order/Price desc, Product/ProductName asc, Order/Price asc';
-        $internalOrderInfo = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $metaQueryProverWrapper);
+        $internalOrderInfo = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
         //The orderby path Order/Price appears twice, but parser will consider only first path
         $orderByInfo = $internalOrderInfo->getOrderByInfo();
         //There are navigation (resource reference) properties in the orderby path so getNavigationPropertiesUsed should

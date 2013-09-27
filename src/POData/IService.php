@@ -3,7 +3,7 @@
 namespace POData;
 
 use POData\OperationContext\ServiceHost;
-use POData\Providers\MetadataQueryProviderWrapper;
+use POData\Providers\ProvidersWrapper;
 use POData\Configuration\IServiceConfiguration;
 use POData\Providers\Stream\StreamProviderWrapper;
 use POData\OperationContext\IOperationContext;
@@ -41,9 +41,9 @@ interface IService
      * Gets reference to wrapper class instance over IDSQP and IDSMP 
      * implementation
      * 
-     * @return MetadataQueryProviderWrapper
+     * @return ProvidersWrapper
      */
-    public function getMetadataQueryProviderWrapper();
+    public function getProvidersWrapper();
 
     /**
      * Gets reference to wrapper class instance over IDSSP implementation.

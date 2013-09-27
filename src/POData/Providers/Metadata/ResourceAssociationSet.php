@@ -137,7 +137,7 @@ class ResourceAssociationSet
     /**
      * Get first end of the association set
      * 
-     *  @return string
+     *  @return ResourceAssociationSetEnd
      */
     public function getEnd1()
     {
@@ -147,7 +147,7 @@ class ResourceAssociationSet
     /**
      * Get second end of the association set
      * 
-     *  @return string
+     *  @return ResourceAssociationSetEnd
      */
     public function getEnd2()
     {

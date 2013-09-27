@@ -29,10 +29,10 @@ class ServiceDocumentWriterFactory {
 			case ResponseFormat::ATOM():
 			case ResponseFormat::PLAIN_XML():
 				$serviceBaseAbsoluteURI = $service->getHost()->getAbsoluteServiceUri()->getUrlAsString();
-				return new AtomServiceDocumentWriter($service->getMetadataQueryProviderWrapper(), $serviceBaseAbsoluteURI);
+				return new AtomServiceDocumentWriter($service->getProvidersWrapper(), $serviceBaseAbsoluteURI);
 
 			case ResponseFormat::JSON():
-				return new JsonServiceDocumentWriter($service->getMetadataQueryProviderWrapper());
+				return new JsonServiceDocumentWriter($service->getProvidersWrapper());
 
 			default:
 				throw new \Exception( Messages::badFormatForServiceDocument($format) );

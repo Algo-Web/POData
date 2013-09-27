@@ -3,7 +3,7 @@
 namespace POData\Writers\Metadata;
 
 use POData\Providers\Metadata\ResourceType;
-use POData\Providers\MetadataQueryProviderWrapper;
+use POData\Providers\ProvidersWrapper;
 
 /**
  * Class MetadataBase
@@ -15,19 +15,19 @@ class MetadataBase
      * Holds reference to the wrapper over service metadata and 
      * query provider implementations.
      * 
-     * @var MetadataQueryProviderWrapper
+     * @var ProvidersWrapper
      */
-    protected $metadataQueryproviderWrapper;
+    protected $providersWrapper;
 
     /**
      * Constructs a new instance of MetadataBase
      * 
-     * @param MetadataQueryProviderWrapper $provider Reference to service metadata
+     * @param ProvidersWrapper $provider Reference to service metadata
      *                                               and query provider wrapper
      */
-    public function __construct(MetadataQueryProviderWrapper $provider)
+    public function __construct(ProvidersWrapper $provider)
     {
-        $this->metadataQueryproviderWrapper = $provider;
+        $this->providersWrapper = $provider;
     }
 
     /**
@@ -42,7 +42,7 @@ class MetadataBase
     {
         $resourceTypeNamespace = $resourceType->getNamespace();
         if (empty($resourceTypeNamespace)) {
-            $resourceTypeNamespace = $this->metadataQueryproviderWrapper->getContainerNamespace();
+            $resourceTypeNamespace = $this->providersWrapper->getContainerNamespace();
         }
 
         return $resourceTypeNamespace;

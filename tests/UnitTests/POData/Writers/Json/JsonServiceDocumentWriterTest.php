@@ -5,7 +5,7 @@ namespace UnitTests\POData\Writers\Atom;
 
 
 
-use POData\Providers\MetadataQueryProviderWrapper;
+use POData\Providers\ProvidersWrapper;
 use POData\Writers\Json\JsonServiceDocumentWriter;
 use UnitTests\POData\BaseUnitTestCase;
 use Phockito;
@@ -14,7 +14,7 @@ class JsonServiceDocumentWriterTest extends BaseUnitTestCase
 {
 
 	/**
-	 * @var MetadataQueryProviderWrapper
+	 * @var ProvidersWrapper
 	 */
 	protected $mockProvider;
 

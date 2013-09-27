@@ -230,7 +230,7 @@ class QueryProcessor
                 $this->_requestDescription->getTargetResourceSetWrapper(),
                 $targetResourceType,
                 $orderBy,
-                $this->service->getMetadataQueryProviderWrapper()
+                $this->service->getProvidersWrapper()
             );
 
             $this->_requestDescription->setInternalOrderByInfo(
@@ -268,7 +268,7 @@ class QueryProcessor
                 );
             }
             $resourceType = $this->_requestDescription->getTargetResourceType();
-           	$expressionProvider = $this->service->getMetadataQueryProviderWrapper()->getExpressionProvider();
+           	$expressionProvider = $this->service->getProvidersWrapper()->getExpressionProvider();
             $internalFilterInfo = ExpressionParser2::parseExpression2(
                     $filter, $resourceType, $expressionProvider
             );
@@ -421,7 +421,7 @@ class QueryProcessor
 				 $this->_requestDescription->getTopCount(),
 				 $expand,
 				 $select,
-				 $this->service->getMetadataQueryProviderWrapper()
+				 $this->service->getProvidersWrapper()
 			);
 			if ($rootProjectionNode->isSelectionSpecified()) {
 			    $this->_requestDescription->raiseMinVersionRequirement(2, 0, $this->service );

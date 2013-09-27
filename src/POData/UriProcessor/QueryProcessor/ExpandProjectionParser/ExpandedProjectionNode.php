@@ -364,7 +364,7 @@ class ExpandedProjectionNode extends ProjectionNode
      * return NULL. 
      * 
      * @param string $propertyName Name of the property to get the 
-     *                             corrosponding node.
+     *                             corresponding node.
      * 
      * @return ProjectionNode|ExpandedProjectionNode|null
      */

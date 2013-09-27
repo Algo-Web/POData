@@ -8,7 +8,7 @@ use POData\Providers\Metadata\ResourceTypeKind;
 use POData\Configuration\ServiceConfiguration;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\ResourceSetWrapper;
-use POData\Providers\MetadataQueryProviderWrapper;
+use POData\Providers\ProvidersWrapper;
 use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionLexer;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionTokenId;
@@ -38,7 +38,7 @@ class ExpandProjectionParser
      * The wrapper of IMetadataProvider and IQueryProvider
      * .
      * 
-     * @var MetadataQueryProviderWrapper
+     * @var ProvidersWrapper
      */
     private $_providerWrapper;
 
@@ -52,10 +52,10 @@ class ExpandProjectionParser
     /**
      * Creates new instance of ExpandProjectionParser
      * 
-     * @param MetadataQueryProviderWrapper $providerWrapper Reference to metadata and query provider wrapper
+     * @param ProvidersWrapper $providerWrapper Reference to metadata and query provider wrapper
      * .
      */
-    private function __construct(MetadataQueryProviderWrapper $providerWrapper)
+    private function __construct(ProvidersWrapper $providerWrapper)
     {
         $this->_providerWrapper = $providerWrapper;
     }
@@ -105,7 +105,7 @@ class ExpandProjectionParser
      *                                                         clause
      * @param string                       $select             The value of $select
      *                                                         clause
-     * @param MetadataQueryProviderWrapper $providerWrapper    Reference to metadata
+     * @param ProvidersWrapper $providerWrapper    Reference to metadata
      *                                                         and query provider
      *                                                         wrapper
      * 
@@ -116,7 +116,7 @@ class ExpandProjectionParser
      */
     public static function parseExpandAndSelectClause(ResourceSetWrapper $resourceSetWrapper,
         ResourceType $resourceType, $internalOrderInfo, $skipCount, $takeCount, $expand,
-        $select, MetadataQueryProviderWrapper $providerWrapper
+        $select, ProvidersWrapper $providerWrapper
     ) {
         $expandSelectParser = new ExpandProjectionParser($providerWrapper);
         $expandSelectParser->_rootProjectionNode 

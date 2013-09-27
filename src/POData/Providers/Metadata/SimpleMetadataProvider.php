@@ -17,10 +17,10 @@ use POData\Providers\Metadata\IMetadataProvider;
 
 
 /**
- * Class ServiceBaseMetadata
+ * Class SimpleMetadataProvider
  * @package POData\Providers\Metadata
  */
-class ServiceBaseMetadata implements IMetadataProvider
+class SimpleMetadataProvider implements IMetadataProvider
 {
     protected $resourceSets = array();
     protected $resourceTypes = array();
@@ -121,13 +121,10 @@ class ServiceBaseMetadata implements IMetadataProvider
     }
     
     /**
-     * Returns true if $resourceType represents an Entity Type which has derived
-     *                               Entity Types, else false.
-     * 
-     * @param ResourceType $resourceType Resource to check for derived resource 
-     *                                   types.
-     * 
-     * @return boolean
+     *
+     * @param ResourceType $resourceType Resource to check for derived resource types.
+     *
+     * @return boolean true if $resourceType represents an Entity Type which has derived Entity Types, else false.
      */
     public function hasDerivedTypes(ResourceType $resourceType)
     {
@@ -181,12 +178,10 @@ class ServiceBaseMetadata implements IMetadataProvider
     //End Implementation of IMetadataProvider
     
     /** 
-     * Construct new instance of NorthWindMetadata
-     * 
+     *
      * @param string $containerName container name for the datasource.
      * @param string $namespaceName namespace for the datasource.
      * 
-     * @return void
      */
     public function __construct($containerName, $namespaceName)
     {

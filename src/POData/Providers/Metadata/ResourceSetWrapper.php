@@ -6,7 +6,7 @@ namespace POData\Providers\Metadata;
 use POData\Common\ODataException;
 use POData\Configuration\ServiceConfiguration;
 use POData\Configuration\EntitySetRights;
-use POData\Providers\MetadataQueryProviderWrapper;
+use POData\Providers\ProvidersWrapper;
 
 
 /**
@@ -123,21 +123,18 @@ class ResourceSetWrapper
      * Check wrapped resource set's resource type or any of the resource type derived
      * from the this resource type has named stream associated with it.
      * 
-     * @param MetadataQueryProviderWrapper $provider Metadata query provider wrapper
+     * @param ProvidersWrapper $provider
      * 
      * @return boolean
      */
-    public function hasNamedStreams(MetadataQueryProviderWrapper $provider)
+    public function hasNamedStreams(ProvidersWrapper $provider)
     {
         $hasNamedStream = $this->_resourceSet->getResourceType()->hasNamedStream();
         // This will check only the resource type associated with 
         // the resource set, we need to check presence of named streams 
         // in resource type(s) which is derived form this resource type also.
         if (!$hasNamedStream) {
-            $derivedTypes
-                = $provider->getDerivedTypes(
-                    $this->_resourceSet->getResourceType()
-                );
+            $derivedTypes = $provider->getDerivedTypes($this->_resourceSet->getResourceType());
             if (!is_null($derivedTypes)) {
                 foreach ($derivedTypes as $derivedType) {
                     if ($derivedType->hasNamedStream()) {
@@ -155,11 +152,11 @@ class ResourceSetWrapper
      * Check wrapped resource set's resource type or any of the resource type derived
      * from the this resource type has bag property associated with it.
      * 
-     * @param MetadataQueryProviderWrapper $provider Metadata query provider wrapper
+     * @param ProvidersWrapper $provider Metadata query provider wrapper
      * 
      * @return boolean
      */
-    public function hasBagProperty(MetadataQueryProviderWrapper $provider)
+    public function hasBagProperty(ProvidersWrapper $provider)
     {
         $arrayToDetectLoop = array();
         $hasBagProperty = $this->_resourceSet->getResourceType()->hasBagProperty($arrayToDetectLoop);

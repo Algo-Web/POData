@@ -6,7 +6,7 @@ use POData\Common\Messages;
 use POData\Common\InvalidOperationException;
 use POData\Providers\Metadata\ResourceTypeKind;
 use POData\Providers\Metadata\ResourceAssociationTypeEnd;
-use POData\Providers\MetadataQueryProviderWrapper;
+use POData\Providers\ProvidersWrapper;
 use POData\Providers\Metadata\ResourceAssociationType;
 use POData\Providers\Metadata\ResourceAssociationSet;
 use POData\Providers\Metadata\ResourceAssociationSetEnd;
@@ -82,13 +82,13 @@ class MetadataAssociationTypeSet extends MetadataBase
      * creates and caches resource association set and association type for
      * all resource (entity) sets.
      * 
-     * @param MetadataQueryProviderWrapper $provider Reference to the 
+     * @param ProvidersWrapper $provider Reference to the
      * service metadata and query provider wrapper
      */
-    public function __construct(MetadataQueryProviderWrapper $provider)
+    public function __construct(ProvidersWrapper $provider)
     {
         parent::__construct($provider);
-        foreach ($this->metadataQueryproviderWrapper->getResourceSets() as $resourceSetWrapper) {
+        foreach ($this->providersWrapper->getResourceSets() as $resourceSetWrapper) {
             $this->_populateAssociationForSet($resourceSetWrapper);
         }
     }
@@ -180,7 +180,7 @@ class MetadataAssociationTypeSet extends MetadataBase
      */
     private function _populateAssociationForSet(ResourceSetWrapper $resourceSetWrapper)
     {
-        $derivedTypes = $this->metadataQueryproviderWrapper->getDerivedTypes($resourceSetWrapper->getResourceType());
+        $derivedTypes = $this->providersWrapper->getDerivedTypes($resourceSetWrapper->getResourceType());
         if (!is_null($derivedTypes)) {
             if (!is_array($derivedTypes)) {
                 throw new InvalidOperationException(Messages::metadataAssociationTypeSetInvalidGetDerivedTypesReturnType($resourceSetWrapper->getName()));
@@ -214,7 +214,7 @@ class MetadataAssociationTypeSet extends MetadataBase
      * @throws InvalidOperationException If validation fails at 
      * _getResourceAssociationSet
      * @throws ODataException If validation fails at 
-     * MetadataQueryProviderWrapper::getResourceAssociationSet 
+     * ProvidersWrapper::getResourceAssociationSet
      */
     private function _populateAssociationForSetAndType(ResourceSetWrapper $resourceSetWrapper, ResourceType $resourceType)
     {
@@ -254,7 +254,7 @@ class MetadataAssociationTypeSet extends MetadataBase
      *                                  
      * @throws InvalidOperationException If validation of AssociationSet fails
      * @throws ODataException If validation fails at 
-     * MetadataQueryProviderWrapper::getResourceAssociationSet
+     * ProvidersWrapper::getResourceAssociationSet
      */
     private function _getResourceAssociationSet(ResourceSetWrapper $resourceSet, ResourceType $resourceType, ResourceProperty $navigationProperty)
     {
@@ -263,7 +263,7 @@ class MetadataAssociationTypeSet extends MetadataBase
             return $this->_resourceAssociationSets[$associationSetLookupKey];
         }
 
-        $resourceAssociationSet = $this->metadataQueryproviderWrapper->getResourceAssociationSet($resourceSet, $resourceType, $navigationProperty);
+        $resourceAssociationSet = $this->providersWrapper->getResourceAssociationSet($resourceSet, $resourceType, $navigationProperty);
         if (is_null($resourceAssociationSet)) {
             //Either the related ResourceSet is invisible or IDSMP implementation returns null
             return null;
@@ -282,13 +282,13 @@ class MetadataAssociationTypeSet extends MetadataBase
         if (!is_null($relatedEnd->getResourceProperty())) {
             //No need to check whether the following call returns NULL, 
             //because the above call 
-            //MetadataQueryproviderWrapper::getResourceAssociationSet
+            //providersWrapper::getResourceAssociationSet
             //causes the metadata wrapper to check the visibility of
-            //related resource set and cache the corrosponding wrapper.
+            //related resource set and cache the corresponding wrapper.
             //If found invisible it would have return NULL, 
             //which we are any way handling above.
-            $relatedResourceSetWrapper = $this->metadataQueryproviderWrapper->validateResourceSetAndGetWrapper($relatedEnd->getResourceSet());
-            $reverseResourceAssociationSet = $this->metadataQueryproviderWrapper->getResourceAssociationSet($relatedResourceSetWrapper, $relatedEnd->getResourceType(), $relatedEnd->getResourceProperty());
+            $relatedResourceSetWrapper = $this->providersWrapper->validateResourceSetAndGetWrapper($relatedEnd->getResourceSet());
+            $reverseResourceAssociationSet = $this->providersWrapper->getResourceAssociationSet($relatedResourceSetWrapper, $relatedEnd->getResourceType(), $relatedEnd->getResourceProperty());
             if (is_null($reverseResourceAssociationSet) || (!is_null($reverseResourceAssociationSet) && $resourceAssociationSet->getName() != $reverseResourceAssociationSet->getName())) {
                 throw new InvalidOperationException(Messages::metadataAssociationTypeSetBidirectionalAssociationMustReturnSameResourceAssociationSetFromBothEnd());
             }
@@ -325,21 +325,14 @@ class MetadataAssociationTypeSet extends MetadataBase
      *  'ResourceAssociationType'
      *  Refer ./AssociationSetAndTypeNamingRules.txt for naming rules.
      *   
-     * @param ResourceAssociationSet $resourceAssociationSet Association set to
-     *                                                       get the 
-     *                                                       association type
-     * @param ResourceSetWrapper     $resourceSet            Resource set for
-     *                                                       one of the ends of 
-     *                                                       given association set
-     * @param ResourceType           $resourceType           Resource type for 
-     *                                                       one of the ends of 
-     *                                                       given association set
-     * @param ResourceProperty       $navigationProperty     Resource property for 
-     *                                                       one of the ends of 
-     *                                                       given association set
+     * @param ResourceAssociationSet $resourceAssociationSet Association set to get the association type
+     * @param ResourceSetWrapper     $resourceSet            Resource set for one of the ends of given association set
+     * @param ResourceType           $resourceType           Resource type for one of the ends of given association set
+     * @param ResourceProperty       $navigationProperty     Resource property for one of the ends of given association set
+     *
      * 
-     * @return ResourceAssociationType The association type 
-     * for the given association set
+     * @return ResourceAssociationType The association type for the given association set
+     *
      */
     private function _getResourceAssociationType(ResourceAssociationSet $resourceAssociationSet, ResourceSetWrapper $resourceSet, ResourceType $resourceType, ResourceProperty $navigationProperty)
     {
@@ -367,7 +360,7 @@ class MetadataAssociationTypeSet extends MetadataBase
             }
         }
 
-        //Generate resource assoication type name
+        //Generate resource association type name
         //Refer ./AssociationSetAndTypeNamingRules.txt
         $resourceAssociationTypeName = $this->_getAssociationTypeName($resourceAssociationSet);
         //Create and cache the association type
@@ -401,7 +394,7 @@ class MetadataAssociationTypeSet extends MetadataBase
     /**
      * Generate association type name for a given association set, 
      * this name is used as value of Name attribute of Association type node in the
-     * metadata corrosponding to the given association set.
+     * metadata corresponding to the given association set.
      * 
      * Refer ./AssociationSetAndTypeNamingRules.txt for naming rules.
      * 

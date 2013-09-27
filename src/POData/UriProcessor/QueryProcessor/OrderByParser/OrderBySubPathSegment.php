@@ -19,7 +19,7 @@ use POData\Providers\Metadata\ResourceProperty;
 class OrderBySubPathSegment
 {
     /**
-     * Resource property of the property corrosponding to this sub path segment
+     * Resource property of the property corresponding to this sub path segment
      * 
      * @var ResourceProperty
      */
@@ -29,7 +29,7 @@ class OrderBySubPathSegment
      * Constructs a new instance of OrderBySubPathSegment
      * 
      * @param ResourceProperty $resourceProperty Resource property of the property
-     *                                           corrosponding to this sub path 
+     *                                           corresponding to this sub path 
      *                                           segment
      */
     public function __construct(ResourceProperty $resourceProperty)
@@ -48,7 +48,7 @@ class OrderBySubPathSegment
     }
 
     /**
-     * Gets refernece to the ResourceProperty instance corrosponding to this
+     * Gets refernece to the ResourceProperty instance corresponding to this
      * sub path segment
      * 
      * @return ResourceProperty
@@ -59,7 +59,7 @@ class OrderBySubPathSegment
     }
 
     /**
-     * Gets instance type of the ResourceProperty instance corrosponding to 
+     * Gets instance type of the ResourceProperty instance corresponding to 
      * this sub path segment If this sub path segment is last segment then 
      * this function returns 'IType' otherwise 'ReflectionClass'.
      * 

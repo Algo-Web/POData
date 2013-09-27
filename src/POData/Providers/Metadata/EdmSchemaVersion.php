@@ -1,12 +1,12 @@
 <?php
 
-namespace POData\Providers;
+namespace POData\Providers\Metadata;
 
 /**
- * Class MetadataEdmSchemaVersion
+ * Class EdmSchemaVersion
  * @package POData\Providers
  */
-class MetadataEdmSchemaVersion
+class EdmSchemaVersion
 {
     /**
      * Edm Schema v1.0

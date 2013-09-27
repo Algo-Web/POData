@@ -5,7 +5,7 @@ namespace POData\ObjectModel;
 
 use POData\Common\ODataConstants;
 use POData\IService;
-use POData\Providers\MetadataQueryProviderWrapper;
+use POData\Providers\ProvidersWrapper;
 use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceTypeKind;
@@ -293,7 +293,7 @@ class ObjectModelSerializerBase
             $currentResourceSetWrapper = $this->getCurrentResourceSetWrapper();
             $currentResourceType = $currentResourceSetWrapper->getResourceType();
             $currentResourceSetWrapper = $this->service
-                ->getMetadataQueryProviderWrapper()
+                ->getProvidersWrapper()
                 ->getResourceSetWrapperForNavigationProperty(
                     $currentResourceSetWrapper, 
                     $currentResourceType, 

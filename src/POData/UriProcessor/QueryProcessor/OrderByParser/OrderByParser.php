@@ -5,7 +5,7 @@ namespace POData\UriProcessor\QueryProcessor\OrderByParser;
 use POData\UriProcessor\QueryProcessor\AnonymousFunction;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionLexer;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionTokenId;
-use POData\Providers\MetadataQueryProviderWrapper;
+use POData\Providers\ProvidersWrapper;
 use POData\Providers\Metadata\Type\Binary;
 use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Metadata\ResourceType;
@@ -31,7 +31,7 @@ use POData\Common\Messages;
 class OrderByParser
 {
     /**
-     * Collection of anonymous sorter function corrosponding to 
+     * Collection of anonymous sorter function corresponding to 
      * each orderby path segment.
      * 
      * @var AnonymousFunction[]
@@ -58,7 +58,7 @@ class OrderByParser
     /**
      * Reference to metadata and query provider wrapper
      * 
-     * @var MetadataQueryProviderWrapper
+     * @var ProvidersWrapper
      */
     private $_providerWrapper;
 
@@ -73,11 +73,11 @@ class OrderByParser
     /**
      * Creates new instance of OrderByParser
      * 
-     * @param MetadataQueryProviderWrapper $providerWrapper Reference to metadata
+     * @param ProvidersWrapper $providerWrapper Reference to metadata
      *                                                      and query provider 
      *                                                      wrapper
      */
-    private function __construct(MetadataQueryProviderWrapper $providerWrapper)
+    private function __construct(ProvidersWrapper $providerWrapper)
     {
         $this->_providerWrapper = $providerWrapper;
     }
@@ -103,7 +103,7 @@ class OrderByParser
      *                                                         resource targetted
      *                                                         by resource path.
      * @param string                       $orderBy            The orderby clause.
-     * @param MetadataQueryProviderWrapper $providerWrapper    Reference to the 
+     * @param ProvidersWrapper $providerWrapper    Reference to the
      *                                                         wrapper for IDSQP
      *                                                         and IDSMP impl.
      * 
@@ -113,7 +113,7 @@ class OrderByParser
      */
     public static function parseOrderByClause(ResourceSetWrapper $resourceSetWrapper, 
         ResourceType $resourceType, $orderBy, 
-        MetadataQueryProviderWrapper $providerWrapper
+        ProvidersWrapper $providerWrapper
     ) {
         $orderByParser = new OrderByParser($providerWrapper);
         try {
@@ -153,7 +153,7 @@ class OrderByParser
      *                                           since we need this function to 
      *                                           modify this array in two cases:
      *                                           1. if asc or desc present, then the 
-     *                                              corrosponding sub path segment 
+     *                                              corresponding sub path segment 
      *                                              should be removed
      *                                           2. remove duplicate orderby path 
      *                                              segment

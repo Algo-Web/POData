@@ -135,7 +135,7 @@ class ResourceAssociationTypeEnd
     /**
      * Get the resource type that the end refers to
      * 
-     * @return string
+     * @return ResourceType
      */
     public function getResourceType()
     {
@@ -145,7 +145,7 @@ class ResourceAssociationTypeEnd
     /**
      * Get the property of the end
      * 
-     * @return string
+     * @return ResourceProperty
      */
     public function getResourceProperty()
     {
@@ -153,7 +153,7 @@ class ResourceAssociationTypeEnd
     }
 
     /**
-     * Get the Mulitplicity of the relationship end
+     * Get the Multiplicity of the relationship end
      * 
      * @return string
      */

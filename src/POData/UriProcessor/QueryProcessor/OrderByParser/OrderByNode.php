@@ -111,7 +111,7 @@ class OrderByNode extends OrderByBaseNode
      * Find a child node with given name, if no such child node then return NULL. 
      * 
      * @param string $propertyName Name of the property to get the 
-     *                             corrosponding node
+     *                             corresponding node
      * 
      * @return OrderByNode|OrderByLeafNode|null
      */

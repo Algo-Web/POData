@@ -13,7 +13,7 @@ use POData\Providers\Metadata\ResourceType;
 use POData\Common\InvalidOperationException;
 use POData\Providers\Metadata\IMetadataProvider;
 require_once 'POData\Providers\Metadata\IDataServiceMetadataProvider.php';
-use POData\Providers\Metadata\ServiceBaseMetadata;
+use POData\Providers\Metadata\SimpleMetadataProvider;
 use POData\Providers\Metadata\MetadataMapping;
 
 //Begin Resource Classes
@@ -194,7 +194,7 @@ class CreateWordPressMetadata
      */
     public static function create()
     {
-        $metadata = new ServiceBaseMetadata('WordPressEntities', 'WordPress');
+        $metadata = new SimpleMetadataProvider('WordPressEntities', 'WordPress');
     
         //Register the entity (resource) type 'Post'
         $postsEntityType = $metadata->addEntityType(new ReflectionClass('Post'), 'Post', 'WordPress');

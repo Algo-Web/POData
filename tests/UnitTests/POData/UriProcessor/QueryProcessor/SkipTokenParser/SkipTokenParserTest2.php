@@ -4,7 +4,7 @@ namespace UnitTests\POData\UriProcessor\QueryProcessor\SkipTokenParser;
 
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Configuration\EntitySetRights;
-use POData\Providers\MetadataQueryProviderWrapper;
+use POData\Providers\ProvidersWrapper;
 use POData\Configuration\ServiceConfiguration;
 use POData\Common\ODataException;
 use POData\UriProcessor\QueryProcessor\OrderByParser\OrderByParser;
@@ -28,17 +28,17 @@ class SkipTokenParser2Test extends \PHPUnit_Framework_TestCase
         $northWindMetadata = NorthWindMetadata::Create();
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
-        $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
+        $providersWrapper = new ProvidersWrapper(
                           $northWindMetadata, //IMetadataProvider implementation
                           null, //IDataServiceQueryProvider implementation (set to null)
                           $configuration, //Service configuuration
                           false
                          );
 
-        $resourceSetWrapper = $metaQueryProverWrapper->resolveResourceSet('Orders');
+        $resourceSetWrapper = $providersWrapper->resolveResourceSet('Orders');
         $resourceType = $resourceSetWrapper->getResourceType();
         $orderBy = 'OrderID';
-        $internalOrderByInfo = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $metaQueryProverWrapper);
+        $internalOrderByInfo = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
         $skipToken = "10365";
         $internalSkipTokenInfo = SkipTokenParser::parseSkipTokenClause($resourceType, $internalOrderByInfo, $skipToken);
 
@@ -61,21 +61,21 @@ class SkipTokenParser2Test extends \PHPUnit_Framework_TestCase
         $northWindMetadata = NorthWindMetadata::Create();
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
-        $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
+        $providersWrapper = new ProvidersWrapper(
                           $northWindMetadata, //IMetadataProvider implementation
                           null, //IDataServiceQueryProvider implementation (set to null)
                           $configuration, //Service configuuration
                           false
                          );
 
-        $resourceSetWrapper = $metaQueryProverWrapper->resolveResourceSet('Orders');
+        $resourceSetWrapper = $providersWrapper->resolveResourceSet('Orders');
         $resourceType = $resourceSetWrapper->getResourceType();
         $orderBy = 'ShipName asc, Freight';
         //Note: library will add prim key as last sort key
         $orderBy .= ', OrderID';
         $qp = new NorthWindQueryProvider1();
         $orders = $qp->getResourceSet($resourceSetWrapper->getResourceSet());
-        $internalOrderByInfo = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $metaQueryProverWrapper);
+        $internalOrderByInfo = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
         $compFun = $internalOrderByInfo->getSorterFunction();
         $fun = $compFun->getReference();
         usort($orders, $fun);

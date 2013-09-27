@@ -6,7 +6,7 @@ use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceTypeKind;
-use POData\Providers\MetadataQueryProviderWrapper;
+use POData\Providers\ProvidersWrapper;
 use POData\Configuration\ServiceConfiguration;
 use POData\Configuration\EntitySetRights;
 use POData\Providers\Metadata\IMetadataProvider;
@@ -15,7 +15,7 @@ use POData\Common\ODataException;
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 use POData\Providers\Query\IQueryProvider;
 
-class MetadataQueryProviderWrapperTest extends \PHPUnit_Framework_TestCase
+class ProvidersWrapperTest extends \PHPUnit_Framework_TestCase
 {
 
 	/** @var  IQueryProvider */
@@ -39,15 +39,15 @@ class MetadataQueryProviderWrapperTest extends \PHPUnit_Framework_TestCase
 
         $configuration = null;
         $metadataProvider = $this->_createMetadataAndConfiguration1($configuration);
-        $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
+        $providersWrapper = new ProvidersWrapper(
                                     $metadataProvider, //IMetadataProvider implementation
 	                                $this->mockQueryProvider,
                                     $configuration, //Service configuration
                                     false
                                     );
 
-        $this->assertEquals($metaQueryProverWrapper->getContainerName(), 'NorthWindEntities');
-        $this->assertEquals($metaQueryProverWrapper->getContainerNamespace(), 'NorthWind');
+        $this->assertEquals($providersWrapper->getContainerName(), 'NorthWindEntities');
+        $this->assertEquals($providersWrapper->getContainerNamespace(), 'NorthWind');
 
     }
 
@@ -57,26 +57,26 @@ class MetadataQueryProviderWrapperTest extends \PHPUnit_Framework_TestCase
         //Try to resolve invisible resource set
         $configuration = null;
         $metadataProvider = $this->_createMetadataAndConfiguration1($configuration);
-        $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
+        $providersWrapper = new ProvidersWrapper(
                                     $metadataProvider, //IMetadataProvider implementation
 	        $this->mockQueryProvider,
-	        $configuration, //Service configuuration
+	        $configuration, //Service configuration
                                     false
                                     );
-        $customerResourceSet = $metaQueryProverWrapper->resolveResourceSet('Customers');
+        $customerResourceSet = $providersWrapper->resolveResourceSet('Customers');
         $this->assertNull($customerResourceSet);
 
         //Try to resolve visible resource set
         $configuration = null;
         $metadataProvider = $this->_createMetadataAndConfiguration1($configuration);
-        $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                    $metadataProvider, //IMetadataProvider implementation
+        $providersWrapper = new ProvidersWrapper(
+			$metadataProvider, //IMetadataProvider implementation
 	        $this->mockQueryProvider,
-	        $configuration, //Service configuuration
-                                    false
-                                    );
+	        $configuration, //Service configuration
+            false
+        );
         $configuration->setEntitySetAccessRule('Customers', EntitySetRights::ALL);
-        $customerResourceSet = $metaQueryProverWrapper->resolveResourceSet('Customers');
+        $customerResourceSet = $providersWrapper->resolveResourceSet('Customers');
         $this->assertNotNull($customerResourceSet);
         $this->assertEquals($customerResourceSet->getName(), 'Customers');
         $this->assertEquals($customerResourceSet->getResourceType()->getName(), 'Customer');
@@ -89,29 +89,29 @@ class MetadataQueryProviderWrapperTest extends \PHPUnit_Framework_TestCase
         //Try to get all resource sets with non of the resouce sets are visible
         $configuration = null;
         $metadataProvider = $this->_createMetadataAndConfiguration1($configuration);
-        $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                    $metadataProvider, //IMetadataProvider implementation
+        $providersWrapper = new ProvidersWrapper(
+            $metadataProvider, //IMetadataProvider implementation
 	        $this->mockQueryProvider,
-	        $configuration, //Service configuuration
-                                    false
-                                    );
-        $resourceSets = $metaQueryProverWrapper->getResourceSets();
+	        $configuration, //Service configuration
+            false
+        );
+        $resourceSets = $providersWrapper->getResourceSets();
         $this->assertTrue(empty($resourceSets));
 
         //Try to get all resource sets after setting all resouce sets as visible
         $configuration = null;
         $metadataProvider = $this->_createMetadataAndConfiguration1($configuration);
-        $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
+        $providersWrapper = new ProvidersWrapper(
                                     $metadataProvider, //IMetadataProvider implementation
 	        $this->mockQueryProvider,
-	        $configuration, //Service configuuration
+	        $configuration, //Service configuration
                                     false
                                     );
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
-        $resourceSets = $metaQueryProverWrapper->getResourceSets();
+        $resourceSets = $providersWrapper->getResourceSets();
         $this->assertEquals(count($resourceSets), 5);
         //Try to resolve 'Customers' entity set, we should the resource set for it from cache as the above getResourceSets call caches all resource sets
-        $customerResourceSet = $metaQueryProverWrapper->resolveResourceSet('Customers');
+        $customerResourceSet = $providersWrapper->resolveResourceSet('Customers');
         $this->assertNotNull($customerResourceSet);
 
     }
@@ -121,21 +121,21 @@ class MetadataQueryProviderWrapperTest extends \PHPUnit_Framework_TestCase
 
         $configuration = null;
         $metadataProvider = $this->_createMetadataAndConfiguration1($configuration);
-        $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
-                                    $metadataProvider, //IMetadataProvider implementation
+        $providersWrapper = new ProvidersWrapper(
+            $metadataProvider, //IMetadataProvider implementation
 	        $this->mockQueryProvider,
-	        $configuration, //Service configuuration
-                                    false
-                                    );
+	        $configuration, //Service configuration
+            false
+        );
         //Try to resolve non-existing type
-        $type = $metaQueryProverWrapper->resolveResourceType('Customer1');
+        $type = $providersWrapper->resolveResourceType('Customer1');
         $this->assertNull($type);
-        $customerEntityType = $metaQueryProverWrapper->resolveResourceType('Customer');
+        $customerEntityType = $providersWrapper->resolveResourceType('Customer');
         $this->assertNotNull($customerEntityType);
         $this->assertEquals($customerEntityType->getName(), 'Customer');
         $this->assertEquals($customerEntityType->getResourceTypeKind(), ResourceTypeKind::ENTITY);
 
-        $addressCoomplexType = $metaQueryProverWrapper->resolveResourceType('Address');
+        $addressCoomplexType = $providersWrapper->resolveResourceType('Address');
         $this->assertNotNull($addressCoomplexType);
         $this->assertEquals($addressCoomplexType->getName(), 'Address');
         $this->assertEquals($addressCoomplexType->getResourceTypeKind(), ResourceTypeKind::COMPLEX);
@@ -147,15 +147,15 @@ class MetadataQueryProviderWrapperTest extends \PHPUnit_Framework_TestCase
 
         $configuration = null;
         $metadataProvider = $this->_createMetadataAndConfiguration1($configuration);
-        $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
+        $providersWrapper = new ProvidersWrapper(
                                     $metadataProvider, //IMetadataProvider implementation
 	        $this->mockQueryProvider,
-	        $configuration, //Service configuuration
+	        $configuration, //Service configuration
                                     false
                                     );
-        $resourceTypes = $metaQueryProverWrapper->getTypes();
+        $resourceTypes = $providersWrapper->getTypes();
         $this->assertEquals(count($resourceTypes), 7);
-        $orderEntityType = $metaQueryProverWrapper->resolveResourceType('Order');
+        $orderEntityType = $providersWrapper->resolveResourceType('Order');
         $this->assertNotNull($orderEntityType);
         $this->assertEquals($orderEntityType->getName(), 'Order');
 
@@ -166,15 +166,15 @@ class MetadataQueryProviderWrapperTest extends \PHPUnit_Framework_TestCase
 
         $configuration = null;
         $metadataProvider = $this->_createMetadataAndConfiguration1($configuration);
-        $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
+        $providersWrapper = new ProvidersWrapper(
                                     $metadataProvider, //IMetadataProvider implementation
 	        $this->mockQueryProvider,
-	        $configuration, //Service configuuration
+	        $configuration, //Service configuration
                                     false
                                     );
-        $customerEntityType = $metaQueryProverWrapper->resolveResourceType('Customer');
+        $customerEntityType = $providersWrapper->resolveResourceType('Customer');
         $this->assertNotNull($customerEntityType);
-        $derivedTypes = $metaQueryProverWrapper->getDerivedTypes($customerEntityType);
+        $derivedTypes = $providersWrapper->getDerivedTypes($customerEntityType);
         $this->assertNull($derivedTypes);
 
     }
@@ -184,15 +184,15 @@ class MetadataQueryProviderWrapperTest extends \PHPUnit_Framework_TestCase
 
         $configuration = null;
         $metadataProvider = $this->_createMetadataAndConfiguration1($configuration);
-        $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
+        $providersWrapper = new ProvidersWrapper(
                                     $metadataProvider, //IMetadataProvider implementation
 	        $this->mockQueryProvider,
-	        $configuration, //Service configuuration
+	        $configuration, //Service configuration
                                     false
                                     );
-        $orderEntityType = $metaQueryProverWrapper->resolveResourceType('Order');
+        $orderEntityType = $providersWrapper->resolveResourceType('Order');
         $this->assertNotNull($orderEntityType);
-        $hasDerivedTypes = $metaQueryProverWrapper->hasDerivedTypes($orderEntityType);
+        $hasDerivedTypes = $providersWrapper->hasDerivedTypes($orderEntityType);
         $this->assertFalse($hasDerivedTypes);
 
     }
@@ -203,23 +203,23 @@ class MetadataQueryProviderWrapperTest extends \PHPUnit_Framework_TestCase
         //Get the association set where resource set in both ends are visible
         $configuration = null;
         $metadataProvider = $this->_createMetadataAndConfiguration1($configuration);
-        $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
+        $providersWrapper = new ProvidersWrapper(
                                     $metadataProvider, //IMetadataProvider implementation
 	        $this->mockQueryProvider,
-	        $configuration, //Service configuuration
+	        $configuration, //Service configuration
                                     false
                                     );
         $configuration->setEntitySetAccessRule('Customers', EntitySetRights::ALL);
         $configuration->setEntitySetAccessRule('Orders', EntitySetRights::ALL);
-        $customersEntitySetWrapper = $metaQueryProverWrapper->resolveResourceSet('Customers');
+        $customersEntitySetWrapper = $providersWrapper->resolveResourceSet('Customers');
         $this->assertNotNull($customersEntitySetWrapper);
-        $customerEntityType = $metaQueryProverWrapper->resolveResourceType('Customer');
+        $customerEntityType = $providersWrapper->resolveResourceType('Customer');
         $this->assertNotNull($customerEntityType);
 
         $ordersProperty = $customerEntityType->tryResolvePropertyTypeByName('Orders');
         $this->assertNotNull($ordersProperty);
 
-        $associationSet = $metaQueryProverWrapper->getResourceAssociationSet($customersEntitySetWrapper, $customerEntityType, $ordersProperty);
+        $associationSet = $providersWrapper->getResourceAssociationSet($customersEntitySetWrapper, $customerEntityType, $ordersProperty);
         $this->assertNotNull($associationSet);
 
         $associationSetEnd1 = $associationSet->getEnd1();
@@ -236,25 +236,25 @@ class MetadataQueryProviderWrapperTest extends \PHPUnit_Framework_TestCase
         //Try to get the association set where resource set in one end is invisible
         $configuration = null;
         $metadataProvider = $this->_createMetadataAndConfiguration1($configuration);
-        $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
+        $providersWrapper = new ProvidersWrapper(
                                     $metadataProvider, //IMetadataProvider implementation
 	        $this->mockQueryProvider,
-	        $configuration, //Service configuuration
+	        $configuration, //Service configuration
                                     false
                                     );
         $configuration->setEntitySetAccessRule('Customers', EntitySetRights::ALL);
         //Set orders entity set as invisible
         $configuration->setEntitySetAccessRule('Orders', EntitySetRights::NONE);
-        $customersEntitySetWrapper = $metaQueryProverWrapper->resolveResourceSet('Customers');
+        $customersEntitySetWrapper = $providersWrapper->resolveResourceSet('Customers');
         $this->assertNotNull($customersEntitySetWrapper);
 
-        $customerEntityType = $metaQueryProverWrapper->resolveResourceType('Customer');
+        $customerEntityType = $providersWrapper->resolveResourceType('Customer');
         $this->assertNotNull($customerEntityType);
 
         $ordersProperty = $customerEntityType->tryResolvePropertyTypeByName('Orders');
         $this->assertNotNull($ordersProperty);
 
-        $associationSet = $metaQueryProverWrapper->getResourceAssociationSet($customersEntitySetWrapper, $customerEntityType, $ordersProperty);
+        $associationSet = $providersWrapper->getResourceAssociationSet($customersEntitySetWrapper, $customerEntityType, $ordersProperty);
         $this->assertNull($associationSet);
 
     }
@@ -264,15 +264,15 @@ class MetadataQueryProviderWrapperTest extends \PHPUnit_Framework_TestCase
 
         $configuration = null;
         $metadataProvider = $this->_createMetadataAndConfiguration2($configuration);
-        $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
+        $providersWrapper = new ProvidersWrapper(
                                     $metadataProvider, //IMetadataProvider implementation
 	        $this->mockQueryProvider,
-	        $configuration, //Service configuuration
+	        $configuration, //Service configuration
                                     false
                                     );
 
         try {
-            $metaQueryProverWrapper->getContainerName();
+            $providersWrapper->getContainerName();
             $this->fail('An expected ODataException null container name has not been thrown');
         } catch (ODataException $exception) {
             $this->assertEquals($exception->getMessage(), 'The value returned by IMetadataProvider::getContainerName method must not be null or empty');
@@ -280,7 +280,7 @@ class MetadataQueryProviderWrapperTest extends \PHPUnit_Framework_TestCase
 
 
         try {
-            $metaQueryProverWrapper->getContainerNamespace();
+            $providersWrapper->getContainerNamespace();
             $this->fail('An expected ODataException null container namespace has not been thrown');
         } catch (ODataException $exception) {
             $this->assertEquals($exception->getMessage(), 'The value returned by IMetadataProvider::getContainerNamespace method must not be null or empty');
@@ -294,7 +294,7 @@ class MetadataQueryProviderWrapperTest extends \PHPUnit_Framework_TestCase
         $configuration = null;
         $metadataProvider = $this->_createMetadataAndConfiguration2($configuration);
 
-	    $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
+	    $providersWrapper = new ProvidersWrapper(
             $metadataProvider, //IMetadataProvider implementation
 		    $this->mockQueryProvider,
 		    $configuration, //Service configuration
@@ -302,7 +302,7 @@ class MetadataQueryProviderWrapperTest extends \PHPUnit_Framework_TestCase
         );
 
         try {
-            $metaQueryProverWrapper->getResourceSets();
+            $providersWrapper->getResourceSets();
             $this->fail('An expected ODataException for entity set repetition has not been thrown');
         } catch(ODataException $exception) {
             $this->assertEquals($exception->getMessage(), 'More than one entity set with the name \'Customers\' was found. Entity set names must be unique');
@@ -316,14 +316,14 @@ class MetadataQueryProviderWrapperTest extends \PHPUnit_Framework_TestCase
         //Try to get all resource sets with non of the resource sets are visible
         $configuration = null;
         $metadataProvider = $this->_createMetadataAndConfiguration2($configuration);
-        $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
+        $providersWrapper = new ProvidersWrapper(
                                     $metadataProvider, //IMetadataProvider implementation
 	        $this->mockQueryProvider,
 	        $configuration, //Service configuration
                                     false
                                     );
         try {
-            $metaQueryProverWrapper->getTypes();
+            $providersWrapper->getTypes();
             $this->fail('An expected ODataException for entity type name repetition has not been thrown');
         } catch(ODataException $exception) {
             $this->assertEquals($exception->getMessage(), 'More than one entity type with the name \'Order\' was found. Entity type names must be unique.');

@@ -13,7 +13,7 @@ use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceTypeKind;
 use POData\Providers\Metadata\ResourceType;
 use POData\Common\InvalidOperationException;
-use POData\Providers\Metadata\ServiceBaseMetadata;
+use POData\Providers\Metadata\SimpleMetadataProvider;
 use POData\Providers\Metadata\IMetadataProvider;
 
 //Begin Resource Classes
@@ -176,7 +176,7 @@ class NorthWindMetadata
      */
     public static function create()
     {
-        $metadata = new ServiceBaseMetadata('NorthWindEntities', 'NorthWind');
+        $metadata = new SimpleMetadataProvider('NorthWindEntities', 'NorthWind');
         
         //Register the complex type 'Address' having a property of same type.
         $addressComplexType = $metadata->addComplexType(new \ReflectionClass('UnitTests\POData\Facets\NorthWind4\Address5'), 'Address', 'NorthWind', null);

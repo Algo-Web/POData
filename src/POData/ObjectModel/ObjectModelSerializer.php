@@ -12,7 +12,7 @@ use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\ResourceTypeKind;
 use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\Providers\Metadata\ResourceProperty;
-use POData\Providers\MetadataQueryProviderWrapper;
+use POData\Providers\ProvidersWrapper;
 use POData\Providers\Metadata\Type\Binary;
 use POData\Providers\Metadata\Type\Boolean;
 use POData\Providers\Metadata\Type\String;
@@ -418,13 +418,13 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
             $resourceProperties = array(); 
             if ($resourceTypeKind == ResourceTypeKind::ENTITY) {
                 // If custom object is an entry then it can contain navigation 
-                // properties which are invisible (because the corrosponding 
+                // properties which are invisible (because the corresponding 
                 // resource set is invisible).  
                 // IDSMP::getResourceProperties will give collection of properties
                 // which are visible.
                 $currentResourceSetWrapper1 = $this->getCurrentResourceSetWrapper();
                 $resourceProperties = $this->service
-                    ->getMetadataQueryProviderWrapper()
+                    ->getProvidersWrapper()
                     ->getResourceProperties(
                         $currentResourceSetWrapper1, 
                         $resourceType
@@ -507,7 +507,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
                 if ($resourceProperty->getTypeKind() == ResourceTypeKind::ENTITY) {
                     $currentResourceSetWrapper2 = $this->getCurrentResourceSetWrapper();
                     $resourceProperties = $this->service
-                        ->getMetadataQueryProviderWrapper()
+                        ->getProvidersWrapper()
                         ->getResourceProperties(
                             $currentResourceSetWrapper2, 
                             $resourceType

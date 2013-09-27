@@ -9,14 +9,14 @@ use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\ResourceTypeKind;
-use POData\Providers\MetadataQueryProviderWrapper;
-use POData\Providers\MetadataEdmSchemaVersion;
+use POData\Providers\ProvidersWrapper;
 use POData\Common\Version;
 use POData\Common\ODataConstants;
 use POData\Common\Messages;
 use POData\Common\ODataException;
 use POData\Common\InvalidOperationException;
 use POData\Providers\Metadata\ResourceAssociationType;
+use POData\Providers\Metadata\EdmSchemaVersion;
 
 /**
  * Class MetadataWriter
@@ -41,13 +41,12 @@ class MetadataWriter
     private $_metadataManager;
 
     /**
-     * Holds reference to the wrapper over service metadata and 
-     * query provider implemenations In this context this provider will be 
-     * used for gathering metadata informations only.
-     *      
-     * @var MetadataQueryProviderWrapper
+     * Holds reference to the wrapper over service metadata and query provider implementations
+     * In this context this provider will be used for gathering metadata information only.
+     *
+     * @var ProvidersWrapper
      */
-    private $_metadataQueryproviderWrapper;
+    private $providersWrapper;
 
     /**
      * Data service base uri from which resources should be resolved
@@ -73,32 +72,32 @@ class MetadataWriter
     /**
      * Creates new instance of MetadataWriter
      * 
-     * @param MetadataQueryProviderWrapper $provider Reference to the  
+     * @param ProvidersWrapper $provider Reference to the
      * service metadata and query provider wrapper
      */
-    public function __construct(MetadataQueryProviderWrapper $provider)
+    public function __construct(ProvidersWrapper $provider)
     {
-        $this->_metadataQueryproviderWrapper = $provider; 
+        $this->providersWrapper = $provider;
     }
 
     /**
-     * Wrtite the metadata in CSDL format. 
+     * Write the metadata in CSDL format.
      * 
      * @return string
      */
     public function writeMetadata()
     {   
-       $this->_metadataManager = MetadataManager::create($this->_metadataQueryproviderWrapper);
+       $this->_metadataManager = MetadataManager::create($this->providersWrapper);
 
         $this->_dataServiceVersion = new Version(1, 0);
-        $edmSchemaVersion = $this->_metadataQueryproviderWrapper->getEdmSchemaVersion();
+        $edmSchemaVersion = $this->providersWrapper->getEdmSchemaVersion();
         $this->_metadataManager->getDataServiceAndEdmSchemaVersions($this->_dataServiceVersion, $edmSchemaVersion);
         $this->_xmlWriter = new \XMLWriter();
         $this->_xmlWriter->openMemory();
         $this->_xmlWriter->setIndent(4);
         $this->_writeTopLevelElements($this->_dataServiceVersion->toString());
         $resourceTypesInContainerNamespace = array();
-        $containerNamespace = $this->_metadataQueryproviderWrapper->getContainerNamespace();
+        $containerNamespace = $this->providersWrapper->getContainerNamespace();
         foreach ($this->_metadataManager->getResourceTypesAlongWithNamespace() as $resourceTypeNamespace => $resourceTypesWithName) {
             if ($resourceTypeNamespace == $containerNamespace) {                
                 foreach ($resourceTypesWithName as $resourceTypeName => $resourceType) {
@@ -169,7 +168,7 @@ class MetadataWriter
      * Write 'Schema' node with associated attributes
      * 
      * @param string                   $schemaNamespace  schema namespace
-     * @param MetadataEdmSchemaVersion $edmSchemaVersion edm schema version
+     * @param EdmSchemaVersion $edmSchemaVersion edm schema version
      * 
      * @return void
      */
@@ -466,7 +465,7 @@ class MetadataWriter
     private function _writeEntityContainer()
     {
         $this->_xmlWriter->startElement(ODataConstants::ENTITY_CONTAINER);
-        $this->_xmlWriter->writeAttribute(ODataConstants::NAME, $this->_metadataQueryproviderWrapper->getContainerName());
+        $this->_xmlWriter->writeAttribute(ODataConstants::NAME, $this->providersWrapper->getContainerName());
         $this->_xmlWriter->writeAttributeNs(ODataConstants::ODATA_METADATA_NAMESPACE_PREFIX, ODataConstants::ISDEFAULT_ENTITY_CONTAINER_ATTRIBUTE, null, "true");
         foreach ($this->_metadataManager->getResourceSets() as $resourceSet) {
             $this->_xmlWriter->startElement(ODataConstants::ENTITY_SET);
@@ -519,31 +518,31 @@ class MetadataWriter
     /**
      * Gets the edmx schema namespace uri for the given schema version 
      * 
-     * @param MetadataEdmSchemaVersion $metadataEdmSchemaVersion metadata edm
+     * @param EdmSchemaVersion $edmSchemaVersion metadata edm
      * schema version
      * 
      * @return string The schema namespace uri
      */
-    private function _getSchemaNamespaceUri($metadataEdmSchemaVersion)
+    private function _getSchemaNamespaceUri($edmSchemaVersion)
     {
-        switch ($metadataEdmSchemaVersion) {
-        case MetadataEdmSchemaVersion::VERSION_1_DOT_0:
-            return ODataConstants::CSDL_VERSION_1_0;
+        switch ($edmSchemaVersion) {
+	        case EdmSchemaVersion::VERSION_1_DOT_0:
+	            return ODataConstants::CSDL_VERSION_1_0;
 
-        case MetadataEdmSchemaVersion::VERSION_1_DOT_1:
-            return ODataConstants::CSDL_VERSION_1_1;
+	        case EdmSchemaVersion::VERSION_1_DOT_1:
+	            return ODataConstants::CSDL_VERSION_1_1;
 
-        case MetadataEdmSchemaVersion::VERSION_1_DOT_2:
-            return ODataConstants::CSDL_VERSION_1_2;
-            
-        case MetadataEdmSchemaVersion::VERSION_2_DOT_0:
-            return ODataConstants::CSDL_VERSION_2_0;
+	        case EdmSchemaVersion::VERSION_1_DOT_2:
+	            return ODataConstants::CSDL_VERSION_1_2;
 
-        case MetadataEdmSchemaVersion::VERSION_2_DOT_2:
-            return ODataConstants::CSDL_VERSION_2_2;
+	        case EdmSchemaVersion::VERSION_2_DOT_0:
+	            return ODataConstants::CSDL_VERSION_2_0;
 
-        default:
-            return ODataConstants::CSDL_VERSION_2_2;
+	        case EdmSchemaVersion::VERSION_2_DOT_2:
+	            return ODataConstants::CSDL_VERSION_2_2;
+
+	        default:
+	            return ODataConstants::CSDL_VERSION_2_2;
         }
     }
 }

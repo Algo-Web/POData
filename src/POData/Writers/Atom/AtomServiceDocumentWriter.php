@@ -3,7 +3,7 @@
 namespace POData\Writers\Atom;
 
 use POData\Common\ODataConstants;
-use POData\Providers\MetadataQueryProviderWrapper;
+use POData\Providers\ProvidersWrapper;
 use POData\Writers\IServiceDocumentWriter;
 
 /**
@@ -17,9 +17,9 @@ class AtomServiceDocumentWriter implements IServiceDocumentWriter
      * Holds reference to the wrapper over service metadata and query provider implementations
      * In this context this provider will be used for gathering metadata information only.
      *
-     * @var MetadataQueryProviderWrapper
+     * @var ProvidersWrapper
      */
-    private $_metadataQueryProviderWrapper;
+    private $providersWrapper;
 
     /**
      * Data service base uri from which resources should be resolved
@@ -45,16 +45,16 @@ class AtomServiceDocumentWriter implements IServiceDocumentWriter
     /**
      * Constructs new instance of ServiceDocumentWriter
      * 
-     * @param MetadataQueryProviderWrapper $provider Reference to the wrapper over 
+     * @param ProvidersWrapper $provider Reference to the wrapper over
      *                                               service metadata and 
      *                                               query provider implemenations.
      * @param string                       $baseUri  Data service base uri from 
      *                                               which resources 
      *                                               should be resolved.
      */
-    public function __construct(MetadataQueryProviderWrapper $provider, $baseUri)
+    public function __construct(ProvidersWrapper $provider, $baseUri)
     {
-        $this->_metadataQueryProviderWrapper = $provider;
+        $this->providersWrapper = $provider;
         $this->_baseUri = $baseUri;
     }
 
@@ -77,7 +77,7 @@ class AtomServiceDocumentWriter implements IServiceDocumentWriter
         $writer->startElementNs(self::ATOM_NAMESPACE_PREFIX, ODataConstants::ATOM_TITLE_ELELMET_NAME, null);
         $writer->text(ODataConstants::ATOM_PUBLISHING_WORKSPACE_DEFAULT_VALUE);
         $writer->endElement();
-        foreach ($this->_metadataQueryProviderWrapper->getResourceSets() as $resourceSetWrapper) {
+        foreach ($this->providersWrapper->getResourceSets() as $resourceSetWrapper) {
             //start collection node
             $writer->startElement(ODataConstants::ATOM_PUBLISHING_COLLECTION_ELEMENT_NAME);
             $writer->writeAttribute(ODataConstants::ATOM_HREF_ATTRIBUTE_NAME, $resourceSetWrapper->getName());

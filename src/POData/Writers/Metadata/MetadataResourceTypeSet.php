@@ -8,7 +8,7 @@ use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\ResourceTypeKind;
-use POData\Providers\MetadataQueryProviderWrapper;
+use POData\Providers\ProvidersWrapper;
 
 /**
  * Class MetadataResourceTypeSet
@@ -75,13 +75,13 @@ class MetadataResourceTypeSet extends MetadataBase
      * Construct new instance of MetadataResourceTypeSet, this constructor 
      * finds and caches all resource types in the service
      * 
-     * @param MetadataQueryProviderWrapper $provider Reference to the 
+     * @param ProvidersWrapper $provider Reference to the
      * service metadata and query provider wrapper 
      */
-    public function __construct(MetadataQueryProviderWrapper $provider)
+    public function __construct(ProvidersWrapper $provider)
     {
         parent::__construct($provider);
-        foreach ($this->metadataQueryproviderWrapper->getResourceSets() as $resourceSetWrapper) {
+        foreach ($this->providersWrapper->getResourceSets() as $resourceSetWrapper) {
             $this->_populateResourceTypeForSet($resourceSetWrapper);
         }
     }
@@ -205,7 +205,7 @@ class MetadataResourceTypeSet extends MetadataBase
      */
     private function _populateResourceTypeForSet(ResourceSetWrapper $resourceSetWrapper)
     {
-        $derivedTypes = $this->metadataQueryproviderWrapper->getDerivedTypes($resourceSetWrapper->getResourceType());
+        $derivedTypes = $this->providersWrapper->getDerivedTypes($resourceSetWrapper->getResourceType());
         if (!is_null($derivedTypes)) {
             if (!is_array($derivedTypes)) {
                 throw new InvalidOperationException(Messages::metadataAssociationTypeSetInvalidGetDerivedTypesReturnType($resourceSetWrapper->getName()));
@@ -235,7 +235,7 @@ class MetadataResourceTypeSet extends MetadataBase
     /**
      * Store the given resource type into the 
      * cache for the resource type namespace, if not already cached, 
-     * also  check for MLE and named stream to set the corrosponding 
+     * also  check for MLE and named stream to set the corresponding 
      * class level properties.
      * 
      * @param ResourceType $resourceType The resource type to cache
@@ -286,7 +286,7 @@ class MetadataResourceTypeSet extends MetadataBase
                 if ($property->isKindOf(ResourcePropertyKind::BAG)) {
                     //Validate the bag complex type 
                     //as it should not have derived type
-                    if ($this->metadataQueryproviderWrapper->hasDerivedTypes($resourceType)) {
+                    if ($this->providersWrapper->hasDerivedTypes($resourceType)) {
                         throw new InvalidOperationException(Messages::metadataResourceTypeSetBagOfComplexTypeWithDerivedTypes($resourceType->getFullName()));
                     }
                 }

@@ -6070,7 +6070,7 @@ style='font-size:11.0pt;mso-bidi-font-size:10.0pt;line-height:125%'>Defining a c
 mso-fareast-font-family:Calibri;mso-fareast-theme-font:minor-latin'>CreateNorthWindMetaData</span></a><span
 style='font-size:11.0pt;mso-bidi-font-size:10.0pt;line-height:125%'> and method
 CreateNorthWindMetaData::<span class=GramE>Create(</span>) that uses the
-methods of ServiceBaseMetadata</span><span style='font-size:9.5pt;line-height:
+methods of SimpleMetadataProvider</span><span style='font-size:9.5pt;line-height:
 125%;font-family:"Courier New";mso-fareast-font-family:Calibri;mso-fareast-theme-font:
 minor-latin;color:#2B91AF'> </span><span style='font-size:11.0pt;mso-bidi-font-size:
 10.0pt;line-height:125%'>class to define the shape of the service (container
@@ -6619,10 +6619,10 @@ normal;mso-bidi-font-style:italic'>Implementing IMetadataProvider<o:p></o:p></sp
 justify;text-justify:inter-ideograph'><span style='font-size:11.0pt;line-height:
 115%;mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin;color:#333333'>We
 don’t need to implement IdataServiceMetada directly because library has one
-file “Providers\Metadata\ServiceBaseMetadata.php” which actually implements the
+file “Providers\Metadata\SimpleMetadataProvider.php” which actually implements the
 interface IdataServiceMetadataProvider. </span><span style='font-size:11.0pt;
 line-height:115%;mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin'>We
-have to use object of ServiceBaseMetadata to define the metadata.<o:p></o:p></span></p>
+have to use object of SimpleMetadataProvider to define the metadata.<o:p></o:p></span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;text-align:
 justify;text-justify:inter-ideograph'><span style='font-size:11.0pt;line-height:
@@ -6632,7 +6632,7 @@ of </span><a href="#_Implementing_IServiceProvider"><span style='font-size:
 11.0pt;line-height:115%;mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin'>IServiceProvider::<span
 class=GramE>getService(</span>)</span></a><span style='font-size:11.0pt;
 line-height:115%;mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin'>
-it returns instance of ServiceBaseMetadata which implements
+it returns instance of SimpleMetadataProvider which implements
 IMetadataProvider.<o:p></o:p></span></p>
 
 <div style='mso-element:para-border-div;border:none;border-bottom:solid #4F81BD 1.0pt;
@@ -6908,7 +6908,7 @@ style='font-size:11.0pt;line-height:115%;mso-bidi-font-family:Calibri;
 mso-bidi-theme-font:minor-latin'>We have to define one class for OData service
 like CreateNorthWindMetadata and has to define method CreateNorthWindMetadata::<span
 class=GramE>create(</span>).This function will define the metadata structure of
-that OData service using of methods defined in ServiceBaseMetadata class: <o:p></o:p></span></p>
+that OData service using of methods defined in SimpleMetadataProvider class: <o:p></o:p></span></p>
 
 <table class=MsoNormalTable border=1 cellspacing=0 cellpadding=0 width="100%"
  style='width:100.0%;mso-cellspacing:0in;background:#F2F2F2;mso-shading:windowtext;
@@ -6977,7 +6977,7 @@ that OData service using of methods defined in ServiceBaseMetadata class: <o:p><
   style='mso-bidi-font-weight:normal'>$metadata = </b></span><b><span
   style='font-family:"Courier New";color:#7F0055'>new </span></b><b
   style='mso-bidi-font-weight:normal'><span style='font-family:"Courier New";
-  color:black'>ServiceBaseMetadata(</span></b><b style='mso-bidi-font-weight:
+  color:black'>SimpleMetadataProvider(</span></b><b style='mso-bidi-font-weight:
   normal'><span style='font-family:"Courier New";color:#0000C0'>'NorthWindEntities'</span></b><b
   style='mso-bidi-font-weight:normal'><span style='font-family:"Courier New";
   color:black'>, </span></b><b style='mso-bidi-font-weight:normal'><span
@@ -7215,9 +7215,9 @@ by following way:<o:p></o:p></span></p>
 <p class=MsoNormal style='text-align:justify;text-justify:inter-ideograph'><span
 style='font-size:11.0pt;line-height:115%;mso-bidi-font-family:Calibri;
 mso-bidi-theme-font:minor-latin'>The OrderID is the entity key, so we called
-ServiceBaseMetadata::<span class=GramE>addKeyProperty(</span>) else we had to
-call ServiceBaseMetadata::addPrimitiveProperty() or
-ServiceBaseMetadata::addEtagProperty().<o:p></o:p></span></p>
+SimpleMetadataProvider::<span class=GramE>addKeyProperty(</span>) else we had to
+call SimpleMetadataProvider::addPrimitiveProperty() or
+SimpleMetadataProvider::addEtagProperty().<o:p></o:p></span></p>
 
 <p class=MsoNormal style='text-align:justify;text-justify:inter-ideograph'><span
 style='font-size:11.0pt;line-height:115%;mso-fareast-font-family:"Times New Roman"'>Now

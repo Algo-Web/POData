@@ -74,13 +74,11 @@ interface IMetadataProvider
     public function getDerivedTypes(ResourceType $resourceType);
 
     /**
-     * Returns true if $resourceType represents an Entity Type which has derived
-     *                               Entity Types, else false.
      *
-     * @param ResourceType $resourceType Resource to check for derived resource 
-     *                                   types.
-     * 
-     * @return boolean
+     * @param ResourceType $resourceType Resource to check for derived resource types.
+     *
+     * @return boolean  true if $resourceType represents an Entity Type which has derived Entity Types, else false.
+     *
      */
     public function hasDerivedTypes(ResourceType $resourceType);
 

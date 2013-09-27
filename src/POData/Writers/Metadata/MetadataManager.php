@@ -4,9 +4,9 @@ namespace POData\Writers\Metadata;
 
 use POData\Common\Version;
 use POData\Providers\Metadata\ResourceType;
-use POData\Providers\MetadataEdmSchemaVersion;
-use POData\Providers\MetadataQueryProviderWrapper;
-
+use POData\Providers\Metadata\EdmSchemaVersion;
+use POData\Providers\ProvidersWrapper;
+use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Metadata\ResourceAssociationType;
 use POData\Providers\Metadata\ResourceProperty;
 
@@ -34,9 +34,9 @@ class MetadataManager
      * In this context this provider will be used for 
      * gathering metadata informations only.
      *      
-     * @var MetadataQueryProviderWrapper
+     * @var ProvidersWrapper
      */
-    private $_metadataQueryproviderWrapper;
+    private $providersWrapper;
 
     /**
      * Helps to get details about all visible resource types defined in the service 
@@ -56,18 +56,18 @@ class MetadataManager
     /**
      * Creates new instance of MetadataManager
      * 
-     * @param MetadataQueryProviderWrapper $provider Reference to the service metadata and query provider wrapper
+     * @param ProvidersWrapper $provider Reference to the service metadata and query provider wrapper
      *
      */
-    private function __construct(MetadataQueryProviderWrapper $provider)
+    private function __construct(ProvidersWrapper $provider)
     {
-        $this->_metadataQueryproviderWrapper = $provider;
+        $this->providersWrapper = $provider;
     }
 
     /**
      * Gets reference to MetadataManager instance.
      * 
-     * @param MetadataQueryProviderWrapper $provider Reference to the 
+     * @param ProvidersWrapper $provider Reference to the
      * service metadata and query provider wrapper
      * 
      * @return MetadataManager
@@ -75,7 +75,7 @@ class MetadataManager
      * @throws InvalidOperationException
      * @throws ODataException
      */
-    public static function create(MetadataQueryProviderWrapper $provider)
+    public static function create(ProvidersWrapper $provider)
     {
         if (is_null(self::$_metadataManager)) {
             self::$_metadataManager = new MetadataManager($provider);
@@ -113,7 +113,7 @@ class MetadataManager
      */
     public function getResourceSets()
     {
-        return $this->_metadataQueryproviderWrapper->getResourceSets();
+        return $this->providersWrapper->getResourceSets();
     }
 
     /**
@@ -220,15 +220,15 @@ class MetadataManager
     {
         if ($this->_metadataResourceTypeSet->hasNamedStreams()) {
             $dsVersion->raiseVersion(3, 0);
-            if ($edmSchemaVersion < MetadataEdmSchemaVersion::VERSION_2_DOT_0) {
-                $edmSchemaVersion = MetadataEdmSchemaVersion::VERSION_2_DOT_0;
+            if ($edmSchemaVersion < EdmSchemaVersion::VERSION_2_DOT_0) {
+                $edmSchemaVersion = EdmSchemaVersion::VERSION_2_DOT_0;
             }
         }
 
         if ($this->_metadataResourceTypeSet->hasBagProperty()) {
             $dsVersion->raiseVersion(3, 0);
-            if ($edmSchemaVersion < MetadataEdmSchemaVersion::VERSION_2_DOT_2) {
-                    $edmSchemaVersion = MetadataEdmSchemaVersion::VERSION_2_DOT_2;
+            if ($edmSchemaVersion < EdmSchemaVersion::VERSION_2_DOT_2) {
+                    $edmSchemaVersion = EdmSchemaVersion::VERSION_2_DOT_2;
             }
         }
 

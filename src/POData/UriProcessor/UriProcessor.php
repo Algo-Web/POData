@@ -2,7 +2,7 @@
 
 namespace POData\UriProcessor;
 
-use POData\Providers\MetadataQueryProviderWrapper;
+use POData\Providers\ProvidersWrapper;
 use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\Providers\Metadata\ResourceTypeKind;
 use POData\Providers\Metadata\ResourceSetWrapper;
@@ -51,7 +51,7 @@ class UriProcessor
     /**
      * Holds reference to the wrapper over IDSMP and IDSQP implementation.
      * 
-     * @var MetadataQueryProviderWrapper
+     * @var ProvidersWrapper
      */
     private $_provider;
 
@@ -77,7 +77,7 @@ class UriProcessor
     private function __construct(IService $service)
     {
         $this->service = $service;
-        $this->_provider = $service->getMetadataQueryProviderWrapper();
+        $this->_provider = $service->getProvidersWrapper();
         $this->_segmentNames = array();
         $this->_segmentResourceSetWrappers = array();
     }
@@ -623,7 +623,7 @@ class UriProcessor
             $currentResourceSetWrapper = $this->_getCurrentResourceSetWrapper();
             $currentResourceType = $currentResourceSetWrapper->getResourceType();
             $currentResourceSetWrapper = $this->service
-                ->getMetadataQueryProviderWrapper()
+                ->getProvidersWrapper()
                 ->getResourceSetWrapperForNavigationProperty(
                     $currentResourceSetWrapper,
                     $currentResourceType,

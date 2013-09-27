@@ -4,7 +4,7 @@ namespace POData\Writers\Json;
 
 use POData\Writers\Json\JsonWriter;
 use POData\Common\ODataConstants;
-use POData\Providers\MetadataQueryProviderWrapper;
+use POData\Providers\ProvidersWrapper;
 use POData\Writers\IServiceDocumentWriter;
 
 /**
@@ -18,20 +18,20 @@ class JsonServiceDocumentWriter implements IServiceDocumentWriter
      * Holds reference to the wrapper over service metadata and query provider implementations
      * In this context this provider will be used for gathering metadata information only.
      *
-     * @var MetadataQueryProviderWrapper
+     * @var ProvidersWrapper
      */
-    private $_metadataQueryProviderWrapper;
+    private $providersWrapper;
 
     /**
      * Constructs new instance of ServiceDocumentWriter
      * 
-     * @param MetadataQueryProviderWrapper $provider Reference to the wrapper over 
+     * @param ProvidersWrapper $provider Reference to the wrapper over
      *                                               service metadata and 
      *                                               query provider implementations.
      */
-    public function __construct(MetadataQueryProviderWrapper $provider)
+    public function __construct(ProvidersWrapper $provider)
     {
-        $this->_metadataQueryProviderWrapper = $provider;
+        $this->providersWrapper = $provider;
     }
     
     /**
@@ -50,7 +50,7 @@ class JsonServiceDocumentWriter implements IServiceDocumentWriter
             ->startArrayScope() // [
 	    ;
 
-        foreach ($this->_metadataQueryProviderWrapper->getResourceSets() as $resourceSetWrapper) {
+        foreach ($this->providersWrapper->getResourceSets() as $resourceSetWrapper) {
 	        $writer->writeValue($resourceSetWrapper->getName());
         }
 

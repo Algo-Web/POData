@@ -628,7 +628,7 @@ class Messages
      *
      * @return string The message
      */
-    public static function metadataQueryProviderExpressionProviderMustNotBeNullOrEmpty()
+    public static function providersWrapperExpressionProviderMustNotBeNullOrEmpty()
     {
         return 'The value returned by IQueryProvider::getExpressionProvider method must not be null or empty';
     }
@@ -639,7 +639,7 @@ class Messages
      *
      * @return string The message
      */
-    public static function metadataQueryProviderInvalidExpressionProviderInstance()
+    public static function providersWrapperInvalidExpressionProviderInstance()
     {
     	return 'The value returned by IQueryProvider::getExpressionProvider method must be an implementation of IExpressionProvider';
     }
@@ -650,7 +650,7 @@ class Messages
      * 
      * @return string The message
      */
-    public static function metadataQueryProviderWrapperContainerNameMustNotBeNullOrEmpty()
+    public static function providersWrapperContainerNameMustNotBeNullOrEmpty()
     {
         return 'The value returned by IMetadataProvider::getContainerName method must not be null or empty';
     }
@@ -662,7 +662,7 @@ class Messages
      * 
      * @return string The message
      */
-    public static function metadataQueryProviderWrapperContainerNamespaceMustNotBeNullOrEmpty()
+    public static function providersWrapperContainerNamespaceMustNotBeNullOrEmpty()
     {
         return 'The value returned by IMetadataProvider::getContainerNamespace method must not be null or empty';
     }
@@ -675,7 +675,7 @@ class Messages
      * 
      * @return string The formatted message
      */
-    public static function metadataQueryProviderWrapperEntitySetNameShouldBeUnique($entitySetName)
+    public static function providersWrapperEntitySetNameShouldBeUnique($entitySetName)
     {
         return "More than one entity set with the name '$entitySetName' was found. Entity set names must be unique";
     }
@@ -688,7 +688,7 @@ class Messages
      * 
      * @return string The formatted message
      */
-    public static function metadataQueryProviderWrapperEntityTypeNameShouldBeUnique($entityTypeName)
+    public static function providersWrapperEntityTypeNameShouldBeUnique($entityTypeName)
     {
         return "More than one entity type with the name '$entityTypeName' was found. Entity type names must be unique.";
     }
@@ -703,7 +703,7 @@ class Messages
      * 
      * @return string The formatted message
      */
-    public static function metadataQueryProviderWrapperIDSMPGetResourceSetReturnsInvalidResourceSet($resourceSetName, $resourceTypeName, $resourcePropertyName)
+    public static function providersWrapperIDSMPGetResourceSetReturnsInvalidResourceSet($resourceSetName, $resourceTypeName, $resourcePropertyName)
     {
         return "IDSMP::GetResourceSet retruns invalid instance of ResourceSet when invoked with params {ResourceSet with name $resourceSetName, ResourceType with name $resourceTypeName, ResourceProperty with name $resourcePropertyName}.";
     }
@@ -715,7 +715,7 @@ class Messages
      * 
      * @return string The message
      */
-    public static function metadataQueryProviderWrapperIDSQPMethodReturnsNonArray($methodName)
+    public static function providersWrapperIDSQPMethodReturnsNonArray($methodName)
     {
         return "The implementation of the method $methodName must return an array of entities belonging to the requested resource set or an empty array if there is no entities.";
     }
@@ -729,7 +729,7 @@ class Messages
      * 
      * @return string The formatted message
      */
-    public static function metadataQueryProviderWrapperIDSQPMethodReturnsUnExpectedType($entityTypeName, $methodName)
+    public static function providersWrapperIDSQPMethodReturnsUnExpectedType($entityTypeName, $methodName)
     {
         return 'The implementation of the method ' . $methodName . ' must return an instance of type described by resource set\'s type(' . $entityTypeName .') or null if resource does not exists';
     }
@@ -742,7 +742,7 @@ class Messages
      * 
      * @return string The message
      */
-    public static function metadataQueryProviderWrapperIDSQPMethodReturnsInstanceWithNullKeyProperties($methodName)
+    public static function providersWrapperIDSQPMethodReturnsInstanceWithNullKeyProperties($methodName)
     {
         return 'The ' . $methodName . ' implementation returns an entity with null key propert(y|ies)';
     }
@@ -756,7 +756,7 @@ class Messages
      * 
      * @return string The message
      */
-    public static function metadataQueryProviderWrapperIDSQPMethodReturnsInstanceWithNonMatchingKeys($methodName)
+    public static function providersWrapperIDSQPMethodReturnsInstanceWithNonMatchingKeys($methodName)
     {
         return 'The ' . $methodName . ' implementation returns an instance with non-matching key';
     }
@@ -1524,7 +1524,7 @@ class Messages
     /**
      * Format a message to show error when skiptoken parser found values in
      * skiptoken which is not compatible with the
-     * type of corrosponding orderby constraint.
+     * type of corresponding orderby constraint.
      * 
      * @param string $skipToken                   Skip token
      * @param string $expectedTypeName            Expected type name
@@ -1536,7 +1536,7 @@ class Messages
      */
     public static function skipTokenParserInCompatibleTypeAtPosition($skipToken, $expectedTypeName, $position, $typeProvidedInSkipTokenName)
     {
-        return "The skiptoken value '$skipToken' contain a value of type '$typeProvidedInSkipTokenName' at position $position which is not compatible with the type '$expectedTypeName' of corrosponding orderby constraint.";
+        return "The skiptoken value '$skipToken' contain a value of type '$typeProvidedInSkipTokenName' at position $position which is not compatible with the type '$expectedTypeName' of corresponding orderby constraint.";
     }
 
     /**
@@ -1546,7 +1546,7 @@ class Messages
      * @param string $orderByPathsVarName  Name of the argument 
      *                                     holding orderByPathSegment
      * @param string $orderByValuesVarName Name of the argument holding 
-     *                                     skip token values corrosponding 
+     *                                     skip token values corresponding 
      *                                     to orderby paths
      * 
      * @return string The formatted message
@@ -1805,7 +1805,7 @@ class Messages
      * 
      * @return string The message
      */
-    public static function metadataQueryProviderNull()
+    public static function providersWrapperNull()
     {
         return 'For custom providers, GetService should not return null for both IMetadataProvider and IQueryProvider types.';
     }

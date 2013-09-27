@@ -5,7 +5,7 @@ namespace POData\UriProcessor\QueryProcessor\ExpandProjectionParser;
 
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandedProjectionNode;
 use POData\Configuration\EntitySetRights;
-use POData\Providers\MetadataQueryProviderWrapper;
+use POData\Providers\ProvidersWrapper;
 use POData\Configuration\ServiceConfiguration;
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandProjectionParser;
 use POData\Common\ODataException;
@@ -29,13 +29,13 @@ class ExpandTest extends \PHPUnit_Framework_TestCase
         $queryProvider = new NorthWindQueryProvider();
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
-        $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
+        $providersWrapper = new ProvidersWrapper(
                                        $northWindMetadata, //IMetadataProvider implementation
                                        $queryProvider, //IDataServiceQueryProvider implementation (set to null)
                                        $configuration, //Service configuration
                                        false
                                      );
-        $customersResourceSetWrapper = $metaQueryProverWrapper->resolveResourceSet('Customers');
+        $customersResourceSetWrapper = $providersWrapper->resolveResourceSet('Customers');
         $customerResourceType = $customersResourceSetWrapper->getResourceType();
         //check with empty expand/select option
         $projectionTreeRoot = ExpandProjectionParser::parseExpandAndSelectClause(
@@ -46,7 +46,7 @@ class ExpandTest extends \PHPUnit_Framework_TestCase
                                                     null,
                                                     null, // $expand
                                                     null, // $select
-                                                    $metaQueryProverWrapper);
+                                                    $providersWrapper);
         //The root of tree represents the details identifed by the request uri path
         //PropertyName and ResourceProperty must be null for root
         $this->assertNull($projectionTreeRoot->getPropertyName());
@@ -57,7 +57,7 @@ class ExpandTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(count($projectionTreeRoot->getChildNodes()), 0);
         $this->assertEquals($projectionTreeRoot->getResourceSetWrapper()->getName(), $customersResourceSetWrapper->getName());
         $this->assertEquals($projectionTreeRoot->getResourceType()->getName(), $customerResourceType->getName());
-        //Since no expansion and selection applied, the corrosponding flag will be false
+        //Since no expansion and selection applied, the corresponding flag will be false
         $this->assertFalse($projectionTreeRoot->isExpansionSpecified());
         $this->assertFalse($projectionTreeRoot->isSelectionSpecified());
         //No selection means we need to return all properties of the resource type identifed by the request uri path
@@ -76,13 +76,13 @@ class ExpandTest extends \PHPUnit_Framework_TestCase
         $queryProvider = new NorthWindQueryProvider();
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
-        $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
+        $providersWrapper = new ProvidersWrapper(
                                        $northWindMetadata, //IMetadataProvider implementation
                                        $queryProvider, //IDataServiceQueryProvider implementation (set to null)
                                        $configuration, //Service configuration
                                        false
                                      );
-        $customersResourceSetWrapper = $metaQueryProverWrapper->resolveResourceSet('Customers');
+        $customersResourceSetWrapper = $providersWrapper->resolveResourceSet('Customers');
         $customerResourceType = $customersResourceSetWrapper->getResourceType();
 
         $projectionTreeRoot = ExpandProjectionParser::parseExpandAndSelectClause(
@@ -93,7 +93,7 @@ class ExpandTest extends \PHPUnit_Framework_TestCase
                                                     null,
                                                     'Orders', // $expand
                                                     null, // $select
-                                                    $metaQueryProverWrapper);
+                                                    $providersWrapper);
         //Expansion is specified but selection is absent
         $this->assertTrue($projectionTreeRoot->isExpansionSpecified());
         $this->assertFalse($projectionTreeRoot->isSelectionSpecified());
@@ -130,13 +130,13 @@ class ExpandTest extends \PHPUnit_Framework_TestCase
         $queryProvider = new NorthWindQueryProvider();
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
-        $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
+        $providersWrapper = new ProvidersWrapper(
                                        $northWindMetadata, //IMetadataProvider implementation
                                        $queryProvider, //IDataServiceQueryProvider implementation (set to null)
                                        $configuration, //Service configuration
                                        false
                                      );
-        $customersResourceSetWrapper = $metaQueryProverWrapper->resolveResourceSet('Customers');
+        $customersResourceSetWrapper = $providersWrapper->resolveResourceSet('Customers');
         $customerResourceType = $customersResourceSetWrapper->getResourceType();
         $projectionTreeRoot = ExpandProjectionParser::parseExpandAndSelectClause(
                                                     $customersResourceSetWrapper,
@@ -146,7 +146,7 @@ class ExpandTest extends \PHPUnit_Framework_TestCase
                                                     null,
                                                     'Orders,Orders', // $expand
                                                     null, // $select
-                                                    $metaQueryProverWrapper);
+                                                    $providersWrapper);
         //Expansion is specified but selection is absent
         $this->assertTrue($projectionTreeRoot->isExpansionSpecified());
         $this->assertFalse($projectionTreeRoot->isSelectionSpecified());
@@ -174,13 +174,13 @@ class ExpandTest extends \PHPUnit_Framework_TestCase
         $queryProvider = new NorthWindQueryProvider();
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
-        $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
+        $providersWrapper = new ProvidersWrapper(
                                        $northWindMetadata, //IMetadataProvider implementation
                                        $queryProvider, //IDataServiceQueryProvider implementation (set to null)
                                        $configuration, //Service configuration
                                        false
                                      );
-        $customersResourceSetWrapper = $metaQueryProverWrapper->resolveResourceSet('Customers');
+        $customersResourceSetWrapper = $providersWrapper->resolveResourceSet('Customers');
         $customerResourceType = $customersResourceSetWrapper->getResourceType();
         try {
             $projectionTreeRoot = ExpandProjectionParser::parseExpandAndSelectClause(
@@ -191,7 +191,7 @@ class ExpandTest extends \PHPUnit_Framework_TestCase
                                                         null,
                                                         'Orders,123', // $expand
                                                         null,         // $select
-                                                        $metaQueryProverWrapper);
+                                                        $providersWrapper);
             $this->fail('An expected ODataException for syntax error has not been thrown');
         } catch (ODataException $odataException) {
             $this->assertStringStartsWith('Syntax Error at position', $odataException->getMessage());
@@ -208,13 +208,13 @@ class ExpandTest extends \PHPUnit_Framework_TestCase
         $queryProvider = new NorthWindQueryProvider();
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
-        $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
+        $providersWrapper = new ProvidersWrapper(
                                        $northWindMetadata, //IMetadataProvider implementation
                                        $queryProvider, //IDataServiceQueryProvider implementation (set to null)
                                        $configuration, //Service configuration
                                        false
                                      );
-        $customersResourceSetWrapper = $metaQueryProverWrapper->resolveResourceSet('Customers');
+        $customersResourceSetWrapper = $providersWrapper->resolveResourceSet('Customers');
         $customerResourceType = $customersResourceSetWrapper->getResourceType();
         try {
             $projectionTreeRoot = ExpandProjectionParser::parseExpandAndSelectClause(
@@ -225,7 +225,7 @@ class ExpandTest extends \PHPUnit_Framework_TestCase
                                                         null,
                                                         ',Orders', // $expand
                                                         null,         // $select
-                                                        $metaQueryProverWrapper);
+                                                        $providersWrapper);
             $this->fail('An expected ODataException for syntax error has not been thrown');
         } catch (ODataException $odataException) {
             $this->assertStringStartsWith('Syntax Error at position', $odataException->getMessage());
@@ -240,7 +240,7 @@ class ExpandTest extends \PHPUnit_Framework_TestCase
                                                         null,
                                                         'Orders,', // $expand
                                                         null,         // $select
-                                                        $metaQueryProverWrapper);
+                                                        $providersWrapper);
 
         try {
             $projectionTreeRoot = ExpandProjectionParser::parseExpandAndSelectClause(
@@ -251,7 +251,7 @@ class ExpandTest extends \PHPUnit_Framework_TestCase
                                                         null,
                                                         'Orders,,', // $expand
                                                         null,       // $select
-                                                        $metaQueryProverWrapper);
+                                                        $providersWrapper);
             $this->fail('An expected ODataException for syntax error has not been thrown');
         } catch (ODataException $odataException) {
             $this->assertStringStartsWith('Syntax Error at position', $odataException->getMessage());
@@ -268,13 +268,13 @@ class ExpandTest extends \PHPUnit_Framework_TestCase
         $queryProvider = new NorthWindQueryProvider();
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
-        $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
+        $providersWrapper = new ProvidersWrapper(
                                        $northWindMetadata, //IMetadataProvider implementation
                                        $queryProvider, //IDataServiceQueryProvider implementation (set to null)
                                        $configuration, //Service configuration
                                        false
                                      );
-        $customersResourceSetWrapper = $metaQueryProverWrapper->resolveResourceSet('Customers');
+        $customersResourceSetWrapper = $providersWrapper->resolveResourceSet('Customers');
         $customerResourceType = $customersResourceSetWrapper->getResourceType();
         try {
             //Test with Primitive property in expand path
@@ -286,7 +286,7 @@ class ExpandTest extends \PHPUnit_Framework_TestCase
                                                         null,
                                                         'CustomerName', // $expand
                                                         null,         // $select
-                                                        $metaQueryProverWrapper);
+                                                        $providersWrapper);
             $this->fail('An expected ODataException for non-navigation property in the path has not been thrown');
         } catch (ODataException $odataException) {
             $this->assertStringStartsWith("Error in the expand clause. Expand path can contain only navigation property, the property 'CustomerName' defined in 'Customer' is not a navigation property", $odataException->getMessage());
@@ -303,7 +303,7 @@ class ExpandTest extends \PHPUnit_Framework_TestCase
                                                         null,
                                                         'Address', // $expand
                                                         null,         // $select
-                                                        $metaQueryProverWrapper);
+                                                        $providersWrapper);
             $this->fail('An expected ODataException for non-navigation property in the path has not been thrown');
         } catch (ODataException $odataException) {
             $this->assertStringStartsWith("Error in the expand clause. Expand path can contain only navigation property", $odataException->getMessage());
@@ -320,13 +320,13 @@ class ExpandTest extends \PHPUnit_Framework_TestCase
         $queryProvider = new NorthWindQueryProvider();
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
-        $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
+        $providersWrapper = new ProvidersWrapper(
                                        $northWindMetadata, //IMetadataProvider implementation
                                        $queryProvider, //IDataServiceQueryProvider implementation (set to null)
                                        $configuration, //Service configuration
                                        false
                                      );
-        $customersResourceSetWrapper = $metaQueryProverWrapper->resolveResourceSet('Customers');
+        $customersResourceSetWrapper = $providersWrapper->resolveResourceSet('Customers');
         $customerResourceType = $customersResourceSetWrapper->getResourceType();
         try {
             //Test with * in expand path
@@ -338,7 +338,7 @@ class ExpandTest extends \PHPUnit_Framework_TestCase
                                                         null,
                                                         '*', // $expand
                                                         null,         // $select
-                                                        $metaQueryProverWrapper);
+                                                        $providersWrapper);
             $this->fail('An expected ODataException for non-navigation property in the path has not been thrown');
         } catch (ODataException $odataException) {
             $this->assertStringStartsWith("Syntax Error at position", $odataException->getMessage());
@@ -354,13 +354,13 @@ class ExpandTest extends \PHPUnit_Framework_TestCase
         $queryProvider = new NorthWindQueryProvider();
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
-        $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
+        $providersWrapper = new ProvidersWrapper(
                                        $northWindMetadata, //IMetadataProvider implementation
                                        $queryProvider, //IDataServiceQueryProvider implementation (set to null)
                                        $configuration, //Service configuration
                                        false
                                      );
-        $customersResourceSetWrapper = $metaQueryProverWrapper->resolveResourceSet('Customers');
+        $customersResourceSetWrapper = $providersWrapper->resolveResourceSet('Customers');
         $customerResourceType = $customersResourceSetWrapper->getResourceType();
 
         $projectionTreeRoot = ExpandProjectionParser::parseExpandAndSelectClause(
@@ -371,7 +371,7 @@ class ExpandTest extends \PHPUnit_Framework_TestCase
                                                     null,
                                                     'Orders/Order_Details/Product', // $expand
                                                     null, // $select
-                                                    $metaQueryProverWrapper);
+                                                    $providersWrapper);
         //Expansion is specified but selection is absent
         $this->assertTrue($projectionTreeRoot->isExpansionSpecified());
         $this->assertFalse($projectionTreeRoot->isSelectionSpecified());
@@ -448,13 +448,13 @@ class ExpandTest extends \PHPUnit_Framework_TestCase
         $queryProvider = new NorthWindQueryProvider();
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
-        $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
+        $providersWrapper = new ProvidersWrapper(
                                        $northWindMetadata, //IMetadataProvider implementation
                                        $queryProvider, //IDataServiceQueryProvider implementation (set to null)
                                        $configuration, //Service configuration
                                        false
                                      );
-        $orderDetailsResourceSetWrapper = $metaQueryProverWrapper->resolveResourceSet('Order_Details');
+        $orderDetailsResourceSetWrapper = $providersWrapper->resolveResourceSet('Order_Details');
         $orderDetailResourceType = $orderDetailsResourceSetWrapper->getResourceType();
 
         $projectionTreeRoot = ExpandProjectionParser::parseExpandAndSelectClause(
@@ -465,7 +465,7 @@ class ExpandTest extends \PHPUnit_Framework_TestCase
                                                     null,
                                                     'Order/Customer, Product/Order_Details', // $expand
                                                     null, // $select
-                                                    $metaQueryProverWrapper);
+                                                    $providersWrapper);
         //Expansion is specified but selection is absent
         $this->assertTrue($projectionTreeRoot->isExpansionSpecified());
         $this->assertFalse($projectionTreeRoot->isSelectionSpecified());
@@ -495,7 +495,7 @@ class ExpandTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * One can expand a navigation property only if corrosponding resource set is visible
+     * One can expand a navigation property only if corresponding resource set is visible
      * 
      */
     public function testExpandWithNonVisibleResourceSet()
@@ -506,14 +506,14 @@ class ExpandTest extends \PHPUnit_Framework_TestCase
         //Make 'Customers' and 'Orders' visible, make 'Order_Details' invisible
         $configuration->setEntitySetAccessRule('Customers', EntitySetRights::ALL);
         $configuration->setEntitySetAccessRule('Orders', EntitySetRights::ALL);
-        $metaQueryProverWrapper = new MetadataQueryProviderWrapper(
+        $providersWrapper = new ProvidersWrapper(
                                           $northWindMetadata, //IMetadataProvider implementation
                                           $queryProvider, //IDataServiceQueryProvider implementation (set to null)
                                           $configuration, //Service configuuration
                                           false
                                          );
 
-        $customersResourceSetWrapper = $metaQueryProverWrapper->resolveResourceSet('Customers');
+        $customersResourceSetWrapper = $providersWrapper->resolveResourceSet('Customers');
         $customerResourceType = $customersResourceSetWrapper->getResourceType();
 
         $exceptionThrown = false;
@@ -527,7 +527,7 @@ class ExpandTest extends \PHPUnit_Framework_TestCase
                     null,
                     'Orders/Order_Details', // $expand
                     null,     // $select
-                    $metaQueryProverWrapper);
+                    $providersWrapper);
             $this->fail('An expected ODataException for navigation to invisible resource set has not been thrown');
         } catch (ODataException $odataException) {
             $this->assertStringEndsWith("(Check the resource set of the navigation property 'Order_Details' is visible)", $odataException->getMessage());

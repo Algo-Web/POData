@@ -77,7 +77,7 @@ class DateTime implements IType
 
     /**
      * Converts the given string value to datetime type.     
-     * Note: This function will not perfrom any conversion.
+     * Note: This function will not perform any conversion.
      * 
      * @param string $stringValue Value to convert.
      * 

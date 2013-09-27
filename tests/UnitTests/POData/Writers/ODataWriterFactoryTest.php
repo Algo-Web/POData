@@ -7,7 +7,7 @@ use POData\Common\Version;
 use POData\IService;
 use POData\OperationContext\ServiceHost;
 use POData\Common\Url;
-use POData\Providers\MetadataQueryProviderWrapper;
+use POData\Providers\ProvidersWrapper;
 use POData\ResponseFormat;
 use POData\Writers\Atom\AtomODataWriter;
 use POData\Writers\Json\JsonODataV1Writer;
@@ -41,13 +41,13 @@ class ODataWriterFactoryTest extends  BaseUnitTestCase {
 	protected $mockServiceURI;
 
 	/**
-	 * @var MetadataQueryProviderWrapper
+	 * @var ProvidersWrapper
 	 */
 	protected $mockProvider;
 
 	public function testGetWriterAtomVersion1()
 	{
-		Phockito::when($this->mockService->getMetadataQueryProviderWrapper())
+		Phockito::when($this->mockService->getProvidersWrapper())
 			->return($this->mockProvider);
 
 		Phockito::when($this->mockService->getHost())
@@ -76,7 +76,7 @@ class ODataWriterFactoryTest extends  BaseUnitTestCase {
 
 	public function testGetWriterAtomVersion2()
 	{
-		Phockito::when($this->mockService->getMetadataQueryProviderWrapper())
+		Phockito::when($this->mockService->getProvidersWrapper())
 			->return($this->mockProvider);
 
 		Phockito::when($this->mockService->getHost())
@@ -103,7 +103,7 @@ class ODataWriterFactoryTest extends  BaseUnitTestCase {
 
 	public function testGetWriterAtomVersion3()
 	{
-		Phockito::when($this->mockService->getMetadataQueryProviderWrapper())
+		Phockito::when($this->mockService->getProvidersWrapper())
 			->return($this->mockProvider);
 
 		Phockito::when($this->mockService->getHost())
@@ -131,7 +131,7 @@ class ODataWriterFactoryTest extends  BaseUnitTestCase {
 
 	public function testGetWriterPlainXMLVersion1()
 	{
-		Phockito::when($this->mockService->getMetadataQueryProviderWrapper())
+		Phockito::when($this->mockService->getProvidersWrapper())
 			->return($this->mockProvider);
 
 		Phockito::when($this->mockService->getHost())
@@ -160,7 +160,7 @@ class ODataWriterFactoryTest extends  BaseUnitTestCase {
 
 	public function testGetWriterPlainXMLVersion2()
 	{
-		Phockito::when($this->mockService->getMetadataQueryProviderWrapper())
+		Phockito::when($this->mockService->getProvidersWrapper())
 			->return($this->mockProvider);
 
 		Phockito::when($this->mockService->getHost())
@@ -187,7 +187,7 @@ class ODataWriterFactoryTest extends  BaseUnitTestCase {
 
 	public function testGetWriterPlainXMLVersion3()
 	{
-		Phockito::when($this->mockService->getMetadataQueryProviderWrapper())
+		Phockito::when($this->mockService->getProvidersWrapper())
 			->return($this->mockProvider);
 
 		Phockito::when($this->mockService->getHost())
@@ -215,7 +215,7 @@ class ODataWriterFactoryTest extends  BaseUnitTestCase {
 
 	public function testGetWriterJsonVersion1()
 	{
-		Phockito::when($this->mockService->getMetadataQueryProviderWrapper())
+		Phockito::when($this->mockService->getProvidersWrapper())
 			->return($this->mockProvider);
 
 		Phockito::when($this->mockService->getHost())
@@ -244,7 +244,7 @@ class ODataWriterFactoryTest extends  BaseUnitTestCase {
 
 	public function testGetWriterJsonVersion2()
 	{
-		Phockito::when($this->mockService->getMetadataQueryProviderWrapper())
+		Phockito::when($this->mockService->getProvidersWrapper())
 			->return($this->mockProvider);
 
 		Phockito::when($this->mockService->getHost())
@@ -271,7 +271,7 @@ class ODataWriterFactoryTest extends  BaseUnitTestCase {
 
 	public function testGetWriterJsonVersion3()
 	{
-		Phockito::when($this->mockService->getMetadataQueryProviderWrapper())
+		Phockito::when($this->mockService->getProvidersWrapper())
 			->return($this->mockProvider);
 
 		Phockito::when($this->mockService->getHost())
