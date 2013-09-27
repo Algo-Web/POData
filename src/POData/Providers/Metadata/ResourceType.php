@@ -155,7 +155,7 @@ class ResourceType
 
     /**     
      * ReflectionClass (for complex/Entity) or IType (for Primitive) instance for 
-     * the resource (type) described by this class intstance
+     * the resource (type) described by this class instance
      * 
      * @var \ReflectionClass|IType
      */
@@ -178,14 +178,13 @@ class ResourceType
     /**
      * Create new instance of ResourceType
      * 
-     * @param ReflectionClass|IType $instanceType     Instance type for the resource,
+     * @param \ReflectionClass|IType $instanceType     Instance type for the resource,
      *                                                for entity and 
      *                                                complex this will 
      *                                                be 'ReflectionClass' and for 
      *                                                primitive type this 
      *                                                will be IType
      * @param ResourceTypeKind      $resourceTypeKind Kind of resource (Entity, Complex or Primitive)
-     *
      * @param string                $name             Name of the resource
      * @param string                $namespaceName    Namespace of the resource
      * @param ResourceType          $baseType         Base type of the resource, if exists
@@ -194,8 +193,12 @@ class ResourceType
      * 
      * @throws \InvalidArgumentException
      */
-    public function __construct($instanceType, $resourceTypeKind, $name, 
-        $namespaceName = null, ResourceType $baseType = null, 
+    public function __construct(
+	    $instanceType,
+	    $resourceTypeKind,
+	    $name,
+        $namespaceName = null,
+        ResourceType $baseType = null,
         $isAbstract = false
     ) {
         $this->_type = $instanceType;

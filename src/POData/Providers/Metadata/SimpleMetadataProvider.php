@@ -192,13 +192,15 @@ class SimpleMetadataProvider implements IMetadataProvider
     /**
      * Add an entity type
      * 
-     * @param ReflectionClass $refClass  reflection class of the entity
-     * @param string          $name      name of the entity
-     * @param string          $namespace namespace of the datasource
+     * @param \ReflectionClass $refClass  reflection class of the entity
+     * @param string $name name of the entity
+     * @param string $namespace namespace of the data source
      * 
      * @return ResourceType
+     *
+     * @throws InvalidOperationException when the name is already in use
      */
-    public function addEntityType($refClass, $name, $namespace=null)
+    public function addEntityType(\ReflectionClass $refClass, $name, $namespace = null)
     {
         if (array_key_exists($name, $this->resourceTypes)) {
             throw new InvalidOperationException('Type with same name already added');
@@ -212,15 +214,16 @@ class SimpleMetadataProvider implements IMetadataProvider
     /**
      * Add a complex type
      * 
-     * @param ReflectionClass $refClass         reflection class of the 
-     *                                          complex entity type
+     * @param \ReflectionClass $refClass         reflection class of the complex entity type
      * @param string          $name             name of the entity
-     * @param string          $namespace        namespace of the datasource.
+     * @param string          $namespace        namespace of the data source.
      * @param ResourceType    $baseResourceType base resource type
      * 
      * @return ResourceType
+     *
+     * @throws InvalidOperationException when the name is already in use
      */
-    public function addComplexType($refClass, $name, $namespace=null, $baseResourceType = null)
+    public function addComplexType(\ReflectionClass $refClass, $name, $namespace = null, $baseResourceType = null)
     {
         if (array_key_exists($name, $this->resourceTypes)) {
             throw new InvalidOperationException('Type with same name already added');
@@ -232,16 +235,14 @@ class SimpleMetadataProvider implements IMetadataProvider
     }
     
     /**
-     * Add a resouce set
-     * 
      * @param string      $name         name of the resource set
-     * @param ResouceType $resourceType resource type
+     * @param ResourceType $resourceType resource type
      * 
      * @throws InvalidOperationException
      * 
      * @return ResourceSet
      */
-    public function addResourceSet($name, $resourceType)
+    public function addResourceSet($name, ResourceType $resourceType)
     {
         if (array_key_exists($name, $this->resourceSets)) {
             throw new InvalidOperationException('Resource Set already added');
@@ -367,9 +368,7 @@ class SimpleMetadataProvider implements IMetadataProvider
         }
         catch (\ReflectionException $ex)
         {
-            throw new InvalidOperationException(
-                'Can\'t add a property which does not exist on the instance type.'
-            );
+            throw new InvalidOperationException('Can\'t add a property which does not exist on the instance type.');
         }
 
         $kind = ResourcePropertyKind::COMPLEX_TYPE;
@@ -446,7 +445,9 @@ class SimpleMetadataProvider implements IMetadataProvider
      * 
      * @return void
      */
-    private function _addReferencePropertyInternal(ResourceType $resourceType, $name, 
+    private function _addReferencePropertyInternal(
+	    ResourceType $resourceType,
+	    $name,
         ResourceSet $targetResourceSet,
         $resourcePropertyKind
     ) {
@@ -479,13 +480,13 @@ class SimpleMetadataProvider implements IMetadataProvider
 
         //Customer_Orders_Orders, Order_Customer_Customers 
         //(source type::name _ source property::name _ target set::name)
-        $assoicationSetKey = $resourceType->getName() . '_' .  $name . '_' . $targetResourceSet->getName();
-        $associationSet = new ResourceAssociationSet(
-            $assoicationSetKey, 
+        $setKey = $resourceType->getName() . '_' .  $name . '_' . $targetResourceSet->getName();
+        $set = new ResourceAssociationSet(
+            $setKey,
             new ResourceAssociationSetEnd($sourceResourceSet, $resourceType, $resourceProperty),
             new ResourceAssociationSetEnd($targetResourceSet, $targetResourceSet->getResourceType(), null)
         );
-        $this->associationSets[$assoicationSetKey] = $associationSet;
+        $this->associationSets[$setKey] = $set;
     }
     
 }
