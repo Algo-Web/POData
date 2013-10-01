@@ -60,8 +60,7 @@ class ExpressionParser2 extends ExpressionParser
      * @param Bool         $isCustomExpressionProvider True if IExpressionProvider provider is
      *                                                 implemented by user, False otherwise
      */
-    public function __construct($text, ResourceType $resourceType, 
-        $isCustomExpressionProvider
+    public function __construct($text, ResourceType $resourceType, $isCustomExpressionProvider
     ) {
         parent::__construct($text, $resourceType, $isCustomExpressionProvider);
         $this->_navigationPropertiesUsedInTheExpression = array();
@@ -69,39 +68,28 @@ class ExpressionParser2 extends ExpressionParser
     }
 
     /**
-     * Parse and generate PHP or custom (using custom expression provider) expression 
-     * from the the given odata expression.
+     * Parse and generate PHP or custom (using custom expression provider) expression from the the given odata expression.
+     *
      * 
      * @param string              $text               The text expression to parse
-     * @param ResourceType        $resourceType       The resource type in which 
-     *                                                expression will be applied
+     * @param ResourceType        $resourceType       The resource type in which
      * @param IExpressionProvider $expressionProvider Implementation of IExpressionProvider
-     *                                                if developer is using IDSQP2, null
-     *                                                in-case of IDSQP which falls to default
-     *                                                expression provider that is PHP expression
-     *                                                provider
      * 
      * @return InternalFilterInfo
      * 
-     * @throws ODataException If any error occurs while parsing the odata 
-     *                        expression or building the php/custom expression.
+     * @throws ODataException If any error occurs while parsing the odata expression or building the php/custom expression.
+     *
      */
-    public static function parseExpression2($text, ResourceType $resourceType, IExpressionProvider $expressionProvider = null) {
-        $isCustomExpressionProvider = !is_null($expressionProvider);
-        $expressionParser2 = new ExpressionParser2(
-            $text, $resourceType, $isCustomExpressionProvider
-        );
+    public static function parseExpression2($text, ResourceType $resourceType, IExpressionProvider $expressionProvider) {
+
+	    $isCustomExpressionProvider = !$expressionProvider instanceof PHPExpressionProvider;
+
+        $expressionParser2 = new ExpressionParser2($text, $resourceType, $isCustomExpressionProvider);
         $expressionTree = $expressionParser2->parseFilter();
 
 
-        $expressionProcessor = null;
         $expressionAsString = null;
-        $filterFunction = null;
 
-	    if (!$isCustomExpressionProvider) {
-            $expressionProvider = new PHPExpressionProvider('$lt');
-        }
-        
         $expressionProvider->setResourceType($resourceType);
         $expressionProcessor = new ExpressionProcessor($expressionProvider);
 
@@ -111,22 +99,9 @@ class ExpressionParser2 extends ExpressionParser
             ODataException::createInternalServerError( $invalidArgumentException->getMessage() );
         }
 
-
-        if ($isCustomExpressionProvider) {
-            $filterFunction = new AnonymousFunction(
-                array(),
-                ' ODataException::createInternalServerError("Library will not perform filtering in case of custom IExpressionProvider"); '
-            );
-        } else {
-            $filterFunction = new AnonymousFunction(
-                array('$lt'),
-                'if(' . $expressionAsString . ') { return true; } else { return false;}'
-            );
-        }
         
         return new InternalFilterInfo(
             $expressionParser2->_navigationPropertiesUsedInTheExpression,
-            $filterFunction,
             $expressionAsString,
             $isCustomExpressionProvider
         );

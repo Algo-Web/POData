@@ -49,7 +49,7 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
         $dispatcher->dispatch();
         $my_str = ob_get_contents();
         ob_end_clean();
-        $dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
+
         $this->assertStringStartsWith(
             '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" . '<feed'
             , $my_str
@@ -82,7 +82,7 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
         $dispatcher->dispatch();
         $my_str = ob_get_contents();
         ob_end_clean();
-        $dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
+
         $this->assertStringStartsWith(
             '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" . '<feed'
             , $my_str
@@ -113,7 +113,7 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
         $dispatcher->dispatch();
         $my_str = ob_get_contents();
         ob_end_clean();
-        $dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
+
         $this->assertStringStartsWith(
             '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" . '<feed'
             , $my_str
@@ -146,7 +146,7 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
         $dispatcher->dispatch();
         $my_str = ob_get_contents();
         ob_end_clean();
-        $dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
+;
         $this->assertStringStartsWith(
             '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" . '<entry'
             , $my_str
@@ -179,7 +179,7 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
         $dispatcher->dispatch();
         $my_str = ob_get_contents();
         ob_end_clean();
-        $dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
+
         $this->assertStringStartsWith(
             '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" . '<entry'
             , $my_str
@@ -212,7 +212,7 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
         $dispatcher->dispatch();
         $my_str = ob_get_contents();
         ob_end_clean();
-        $dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
+
         $this->assertStringStartsWith(
             '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" . '<links'
             , $my_str
@@ -245,7 +245,7 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
         $dispatcher->dispatch();
         $my_str = ob_get_contents();
         ob_end_clean();
-        $dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
+
         $this->assertStringStartsWith(
             '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" . '<uri'
             , $my_str
@@ -278,7 +278,7 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
         $dispatcher->dispatch();
         $my_str = ob_get_contents();
         ob_end_clean();
-        $dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
+
         $this->assertStringStartsWith(
             '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" . '<d:Address m:type="NorthWind.Address"'
             , $my_str
@@ -311,7 +311,7 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
         $dispatcher->dispatch();
         $my_str = ob_get_contents();
         ob_end_clean();
-        $dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
+
         $this->assertStringStartsWith(
             '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" . '<d:Country m:type="Edm.String"'
             , $my_str
@@ -344,7 +344,7 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
         $dispatcher->dispatch();
         $my_str = ob_get_contents();
         ob_end_clean();
-        $dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
+
         $this->assertStringStartsWith(
             '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" . '<d:OtherAddresses m:type="Collection(NorthWind.Address)"'
             , $my_str
@@ -377,7 +377,7 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
         $dispatcher->dispatch();
         $my_str = ob_get_contents();
         ob_end_clean();
-        $dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
+
         $this->assertStringStartsWith(
             '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" . '<entry'
             , $my_str
@@ -410,7 +410,7 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
         $dispatcher->dispatch();
         $my_str = ob_get_contents();
         ob_end_clean();
-        $dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
+
         $this->assertStringStartsWith(
             '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" . '<feed'
             , $my_str
@@ -443,7 +443,7 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
         $dispatcher->dispatch();
         $my_str = ob_get_contents();
         ob_end_clean();
-        $dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
+
         $this->assertStringStartsWith(
             '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" . '<feed'
             , $my_str
@@ -476,7 +476,7 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
         $dispatcher->dispatch();
         $my_str = ob_get_contents();
         ob_end_clean();
-        $dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
+
         $this->assertStringStartsWith(
             '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" . '<feed'
             , $my_str

@@ -392,9 +392,7 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(array(), $internalFilterInfo->getNavigationPropertiesUsed());
 
-        $filterFunction = $internalFilterInfo->getFilterFunction();
-        $this->assertNotNull($filterFunction);
-        $this->assertTrue($filterFunction instanceof  AnonymousFunction);
+        $this->assertEquals("", $internalFilterInfo->getExpressionAsString(), "because northwind expression provider does nothing, this is empty");
 
     }
 
@@ -1004,7 +1002,7 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
      */
     public function testUriProcessorForLinksResourceSet4()
     {
-        $this->markTestSkipped("This test checks that POData will generate a filter function for providers that don't handle filtering...but i temporarily removed that functionality by elimitiation IDataServiceQueryProvider1");
+        $this->markTestSkipped("This test checks that POData will generate a filter function for providers that don't handle filtering...but i temporarily removed that functionality by elimination IDataServiceQueryProvider1.  Need to make this service provider use PHPExpressionProvider, then re-enable tests");
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Customers(CustomerID=\'ALFKI\', CustomerGuid=guid\'05b242e752eb46bd8f0e6568b72cd9a5\')/$links/Orders';
         $hostInfo = array(
@@ -1033,16 +1031,9 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         $internalFilterInfo = $requestDescription->getInternalFilterInfo();
         $this->assertNotNull($internalFilterInfo);
         $this->assertTrue($internalFilterInfo instanceof InternalFilterInfo);
-        
-        $filterFunction = $internalFilterInfo->getFilterFunction();
-        $this->assertNotNull($filterFunction);
-        $this->assertTrue($filterFunction instanceof AnonymousFunction);
-        
-        $actual = $filterFunction->getCode();
 
-	    $expected =' if(((!(is_null($lt->OrderID)) && !(is_null($lt->OrderDate))) && (($lt->OrderID == 123) && (POData\Providers\Metadata\Type\DateTime::dateTimeCmp($lt->OrderDate, \'2000-11-11\') <= 0)))) { return true; } else { return false;}';
-
-        $this->assertEquals($expected, $actual);
+	    $expected ='((!(is_null($lt->OrderID)) && !(is_null($lt->OrderDate))) && (($lt->OrderID == 123) && (POData\Providers\Metadata\Type\DateTime::dateTimeCmp($lt->OrderDate, \'2000-11-11\') <= 0)))';
+	    $this->assertEquals($expected, $internalFilterInfo->getExpressionAsString(), "because northwind expression provider does nothing, this is empty");
 
     }
 
@@ -1087,8 +1078,7 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
      */
     public function testUriProcessorForLinksResourceSetReference1()
     {
-	    $this->markTestSkipped("This test checks that POData will generate a filter function for providers that don't handle filtering...but i temporarily removed that functionality by elimitiation IDataServiceQueryProvider1");
-
+	    $this->markTestSkipped("This test checks that POData will generate a filter function for providers that don't handle filtering...but i temporarily removed that functionality by elimination IDataServiceQueryProvider1.  Need to make this service provider use PHPExpressionProvider, then re-enable tests");
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Customers(CustomerID=\'ALFKI\', CustomerGuid=guid\'05b242e752eb46bd8f0e6568b72cd9a5\')/$links/Orders(123)';
         $hostInfo = array(
@@ -1119,16 +1109,12 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         $this->assertNotNull($internalFilterInfo);
         $this->assertTrue($internalFilterInfo instanceof InternalFilterInfo);
 
-        $filterFunction = $internalFilterInfo->getFilterFunction();
-        $this->assertNotNull($filterFunction);
-        $this->assertTrue($filterFunction instanceof AnonymousFunction);
-
-        $code = $filterFunction->getCode();
-        $this->assertEquals($code,
-        'if(((!(is_null($lt->OrderID)) && !(is_null($lt->OrderDate))) && (($lt->OrderID == 123) && (POData\Providers\Metadata\Type\DateTime::dateTimeCmp($lt->OrderDate, \'2000-11-11\') <= 0)))) { return true; } else { return false;}');
+	    $expected = '((!(is_null($lt->OrderID)) && !(is_null($lt->OrderDate))) && (($lt->OrderID == 123) && (POData\Providers\Metadata\Type\DateTime::dateTimeCmp($lt->OrderDate, \'2000-11-11\') <= 0)))';
+	    $this->assertEquals($expected, $internalFilterInfo->getExpressionAsString(), "because northwind expression provider does nothing, this is empty");
 
 
-        $host->getOperationContext()->resetWebContextInternal();
+
+
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Orders(1234)/$links/Customer';
         $hostInfo = array(
@@ -1159,12 +1145,9 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         $this->assertNotNull($internalFilterInfo);
         $this->assertTrue($internalFilterInfo instanceof InternalFilterInfo);
 
-        $filterFunction = $internalFilterInfo->getFilterFunction();
-        $this->assertNotNull($filterFunction);
-        $this->assertTrue($filterFunction instanceof AnonymousFunction);
+	    $expected = 'true';
+	    $this->assertEquals($expected, $internalFilterInfo->getExpressionAsString(), "because northwind expression provider does nothing, this is empty");
 
-        $code = $filterFunction->getCode();
-        $this->assertEquals($code, 'if(true) { return true; } else { return false;}');
 
     }
 
@@ -1524,11 +1507,10 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         $this->assertNotNull($internalFilterInfo);
         $this->assertTrue($internalFilterInfo instanceof InternalFilterInfo);
 
-        $filterFunction = $internalFilterInfo->getFilterFunction();
-        $this->assertNotNull($filterFunction);
-        $this->assertTrue($filterFunction instanceof AnonymousFunction);
+	    $this->assertEquals("", $internalFilterInfo->getExpressionAsString(), "because northwind expression provider does nothing, this is empty");
 
-        $this->assertNull($requestDescription->getRootProjectionNode());
+
+	    $this->assertNull($requestDescription->getRootProjectionNode());
 
     }
 

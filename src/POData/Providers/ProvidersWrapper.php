@@ -589,17 +589,12 @@ class ProvidersWrapper
     {
 	    $expressionProvider = $this->_queryProvider->getExpressionProvider();
         if (is_null($expressionProvider)) {
-            ODataException::createInternalServerError(
-                Messages::providersWrapperExpressionProviderMustNotBeNullOrEmpty()
-            );
+            ODataException::createInternalServerError(Messages::providersWrapperExpressionProviderMustNotBeNullOrEmpty());
         }
 
-        if (!is_object($expressionProvider)
-          || array_search('POData\UriProcessor\QueryProcessor\ExpressionParser\IExpressionProvider', class_implements($expressionProvider)) === false
-        ) {
-            ODataException::createInternalServerError(
-                Messages::providersWrapperInvalidExpressionProviderInstance()
-            );
+        if (!$expressionProvider instanceof IExpressionProvider)
+        {
+			ODataException::createInternalServerError( Messages::providersWrapperInvalidExpressionProviderInstance() );
         }
 
         return $expressionProvider;

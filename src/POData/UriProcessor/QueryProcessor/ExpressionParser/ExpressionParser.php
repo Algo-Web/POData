@@ -778,20 +778,21 @@ class ExpressionParser
                           'is_null', new Boolean(), array($arg->getType())
                       );
                 switch ($expressionToken->Text) {
-                case ODataConstants::KEYWORD_EQUAL:
-                    return new FunctionCallExpression(
-                        $isNullFunctionDescription, array($arg)
-                    );
-                    break;
-                case ODataConstants::KEYWORD_NOT_EQUAL:
-                    return new UnaryExpression(
-                        new FunctionCallExpression(
-                            $isNullFunctionDescription, array($arg)
-                        ), 
-                        ExpressionType::NOT_LOGICAL, 
-                        new Boolean()
-                    );
-                    break;
+	                case ODataConstants::KEYWORD_EQUAL:
+	                    return new FunctionCallExpression(
+	                        $isNullFunctionDescription, array($arg)
+	                    );
+	                    break;
+
+	                case ODataConstants::KEYWORD_NOT_EQUAL:
+	                    return new UnaryExpression(
+	                        new FunctionCallExpression(
+	                            $isNullFunctionDescription, array($arg)
+	                        ),
+	                        ExpressionType::NOT_LOGICAL,
+	                        new Boolean()
+	                    );
+	                    break;
                 }
             }
         }

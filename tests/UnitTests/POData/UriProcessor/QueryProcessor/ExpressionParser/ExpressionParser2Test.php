@@ -23,23 +23,23 @@ class ExpressionParser2Test extends \PHPUnit_Framework_TestCase
 
     public function testParseExpression2()
     {
+	    $expressionProvider = new PHPExpressionProvider('$lt');
+
 		$filterExpression = 'UnitPrice ge 6';
 		$resourceType = $this->_northWindMetadata->resolveResourceSet('Order_Details')->getResourceType();
-		$internalFilterInfo = ExpressionParser2::parseExpression2($filterExpression, $resourceType, null);
+		$internalFilterInfo = ExpressionParser2::parseExpression2($filterExpression, $resourceType, $expressionProvider);
 		$this->assertTrue(!is_null($internalFilterInfo));
 
 
 		//There are no navigation properties in the expression so should be empty.
 		$this->assertEquals(array(), $internalFilterInfo->getNavigationPropertiesUsed());
-		$filterFunction = $internalFilterInfo->getFilterFunction();
-		$whereCode = $filterFunction->getCode();
-		$this->assertEquals($whereCode, 'if((!(is_null($lt->UnitPrice)) && ($lt->UnitPrice >= 6))) { return true; } else { return false;}');
+		$this->assertEquals('(!(is_null($lt->UnitPrice)) && ($lt->UnitPrice >= 6))', $internalFilterInfo->getExpressionAsString());
 
 
 
 
 		$filterExpression = 'Order/Customer/CustomerID eq \'ANU\' or Product/ProductID gt 123 and UnitPrice ge 6';
-		$internalFilterInfo = ExpressionParser2::parseExpression2($filterExpression, $resourceType, null);
+		$internalFilterInfo = ExpressionParser2::parseExpression2($filterExpression, $resourceType, $expressionProvider);
 		$this->assertTrue(!is_null($internalFilterInfo));
 
 		$navigationsUsed = $internalFilterInfo->getNavigationPropertiesUsed();
@@ -73,7 +73,7 @@ class ExpressionParser2Test extends \PHPUnit_Framework_TestCase
 
 		$filterExpression = 'Customer/Address/LineNumber add 4 eq 8';
 		$resourceType = $this->_northWindMetadata->resolveResourceSet('Orders')->getResourceType();
-		$internalFilterInfo = ExpressionParser2::parseExpression2($filterExpression, $resourceType, null);
+		$internalFilterInfo = ExpressionParser2::parseExpression2($filterExpression, $resourceType, $expressionProvider);
 		$this->assertTrue(!is_null($internalFilterInfo));
 
 
@@ -93,7 +93,7 @@ class ExpressionParser2Test extends \PHPUnit_Framework_TestCase
 
 		//Test with property acess expression in function call
 		$filterExpression = 'replace(Customer/CustomerID, \'LFK\', \'RTT\') eq \'ARTTI\'';
-		$internalFilterInfo = ExpressionParser2::parseExpression2($filterExpression, $resourceType, null);
+		$internalFilterInfo = ExpressionParser2::parseExpression2($filterExpression, $resourceType, $expressionProvider);
 		$this->assertTrue(!is_null($internalFilterInfo));
 
 

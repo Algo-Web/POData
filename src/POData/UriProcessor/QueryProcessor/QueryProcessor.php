@@ -269,9 +269,7 @@ class QueryProcessor
             }
             $resourceType = $this->_requestDescription->getTargetResourceType();
            	$expressionProvider = $this->service->getProvidersWrapper()->getExpressionProvider();
-            $internalFilterInfo = ExpressionParser2::parseExpression2(
-                    $filter, $resourceType, $expressionProvider
-            );
+            $internalFilterInfo = ExpressionParser2::parseExpression2($filter, $resourceType, $expressionProvider);
             $this->_requestDescription->setInternalFilterInfo( $internalFilterInfo );
         }
     }

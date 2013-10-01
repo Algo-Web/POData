@@ -53,10 +53,8 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
     		$exceptionThrown = true;
     		$this->fail('Without Query Params - An unexpected exception  has been thrown:'.$exception->getMessage());
     	} 
-    	if (!$exceptionThrown) {
-    		$this->assertTrue(TRUE);
-		}
-		$dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
+
+
 	}
 		
     /**
@@ -86,10 +84,7 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
     		$exceptionThrown = true;
     		$this->fail('With Query Params - An unexpected exception  has been thrown:'.$exception->getMessage());	
     	}
-    	if(!$exceptionThrown) {
-    		$this->assertTrue(TRUE);
-    	}    
-		$dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();    	
+
 	}
 
 	function testInvalidServiceUri()
@@ -114,10 +109,7 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
     		$exceptionThrown = true;
     		$this->fail('InvalidServiceUri - An unexpected exception  has been thrown:'.$exception->getMessage());    		
     	}
-    	if(!$exceptionThrown) {
-    		$this->assertTrue(TRUE);
-    	}
-		$dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
+
 	}
 
 	function testInvalidServiceUriContainsFragments()
@@ -143,10 +135,7 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
    			$exceptionThrown = true;
    			$this->fail('FragmentsInServiceUri - An unexpected exception  has been thrown:'.$exception->getMessage());
     	}
-    	if(!$exceptionThrown) {
-   			$this->assertTrue(TRUE);
-    	}
-		$dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();    	   
+
 	}
 	
 	function testServiceUriContainsQueryParams()
@@ -173,10 +162,7 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
    			$exceptionThrown = true;
    			$this->fail('QueryStringInServiceUri - An unexpected exception  has been thrown:'.$exception->getMessage());
     	}
-    	if(!$exceptionThrown) {
-    		$this->assertTrue(TRUE);
-    	}
-		$dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
+
 	}
 
 	function testValidateQueryParametersFormatAtom()
@@ -207,10 +193,7 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
    			$exceptionThrown = true;
    			$this->fail("Format=ATOM - An unexpected exception has been occured:",$exception->getMessage());
     	}
-    	if(!$exceptionThrown) {
-    		$this->assertTrue(TRUE);
-    	}
-		$dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
+
 	}
 
 	function testValidateQueryParametersFormatJson()
@@ -241,10 +224,7 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
    			$exceptionThrown = true;
    			$this->fail("Format=JSON - An unexpected exception has been occured:",$exception->getMessage());
  	    }
-    	if(!$exceptionThrown) {
-    		$this->assertTrue(TRUE);
-    	}
-		$dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();    	
+
 	}
 
 	function testValidateQueryParameterEmptyTOP()
@@ -270,10 +250,7 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
    			$exceptionThrown = true;
    			$this->fail("An unexpected exception has been occured for empty \$top :",$exception->getMessage());
     	}
-    	if(!$exceptionThrown) {
-   			$this->assertTrue(TRUE);
-    	}
-		$dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
+
 	}
 
 	function testValidateQueryParameterEmptyFORMAT()
@@ -299,10 +276,7 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
    			$exceptionThrown = true;
    			$this->fail("An unexpected exception has been occured for empty \$format :",$exception->getMessage());
     	}
-    	if(!$exceptionThrown) {
-    		$this->assertTrue(TRUE);
-    	}
-		$dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();    	    
+
 	}
 
 	function testValidateQueryParameterUnknownOdataQueryOptionIsEmpty()
@@ -328,10 +302,7 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
    			$exceptionThrown = true;
    			$this->fail("An unexpected exception has been occured for empty \$my :",$exception->getMessage());
     	}
-    	if(!$exceptionThrown) {
-    		$this->assertTrue(TRUE);
-    	}
-		$dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
+
 	}
 
 	function testValidateQueryParameterMoreThanOnce()
@@ -357,10 +328,7 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
    			$exceptionThrown = true;
    			$this->fail("An unexpected exception has been occured : ",$exception->getMessage());
     	}
-    	if(!$exceptionThrown) {
-    		$this->assertTrue(TRUE);
-    	}
-		$dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();    	
+
 	}
 	
 	function testValidateQueryParameterEmptyOptionValueSystemParam()
@@ -387,10 +355,7 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
    			$exceptionThrown = true;
    			$this->fail("An unexpected exception has been occured : ",$exception->getMessage());
     	}
-    	if(!$exceptionThrown) {
-    		$this->assertTrue(TRUE);
-    	}
-		$dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
+
 	}
 
 	function testValidateQueryParameterEmptyOptionValueOnknownOdataOption()
@@ -417,10 +382,7 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
    			$exceptionThrown = true;
    			$this->fail("An unexpected exception has been occured : ",$exception->getMessage());
  	    }
-    	if(!$exceptionThrown) {
-    		$this->assertTrue(TRUE);
-    	}
-		$dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();    	
+
 	}
 
 	function testValidateQueryParameterEmptyOptionValueMoreThanOnce()
@@ -447,10 +409,7 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
    			$exceptionThrown = true;
    			$this->fail("An unexpected exception has been occured : ",$exception->getMessage());
     	}
-    	if(!$exceptionThrown) {
-    		$this->assertTrue(TRUE);
-    	}
-		$dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();    	
+
 	}
 	
 	function testRequestVersion()
@@ -477,10 +436,7 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
    			$exceptionThrown = true;
    			$this->fail("RequestServiceVersion - Some Unexpected exception has been occured:",$exception->getMessage());
     	}
-    	if(!$exceptionThrown) {
-			$this->assertTrue(TRUE);
-    	}
-		$dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();    	
+
 	}
 
 	function testRequestMaxVersion()
@@ -507,10 +463,7 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
    			$exceptionThrown = true;
    			$this->fail("RequestMaxServiceVersion - Some Unexpected exception has been occured:",$exception->getMessage());
     	}
-    	if(!$exceptionThrown) {
-			$this->assertTrue(TRUE);
-    	}
-		$dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
+
 	}
 	
 	function testRequestAcceptCharSet()
@@ -537,10 +490,7 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
  	    	$exceptionThrown = true;
    			$this->fail("AcceptCharSet - Some Unexpected exception has been occured:",$exception->getMessage());
     	}
-    	if(!$exceptionThrown) {
-			$this->assertTrue(TRUE);
-    	}
-		$dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
+
 	}
 
 	function testRequestContentType()
@@ -567,10 +517,7 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
  	    	$exceptionThrown = true;
  	    	$this->fail("ContentType - Some Unexpected exception has been occured:",$exception->getMessage());
     	}
-    	if(!$exceptionThrown) {
-			$this->assertTrue(TRUE);
-    	}
-		$dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
+
 	}
 
 	function testRequestContentLength()
@@ -597,10 +544,7 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
  	    	$exceptionThrown = true;
    			$this->fail("ContentLength - Some Unexpected exception has been occured:",$exception->getMessage());
     	}
-    	if(!$exceptionThrown) {
-			$this->assertTrue(TRUE);
-    	}
-		$dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
+
 	}
 
 	function testRequestMethod()
@@ -627,10 +571,7 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
  	    	$exceptionThrown = true;
    			$this->fail("HTTP Request Method - Some Unexpected exception has been occured:",$exception->getMessage());
     	}
-    	if(!$exceptionThrown) {
-			$this->assertTrue(TRUE);
-    	}
-    	$dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
+
 	}
 	
 	function testRequestIfMatch()
@@ -660,10 +601,7 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
  	    	$exceptionThrown = true;
    			$this->fail("IfMatch - Some Unexpected exception has been occured:",$exception->getMessage());
     	}
-    	if(!$exceptionThrown) {
-			$this->assertTrue(TRUE);
-    	}
-    	$dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
+
 	}
 	
 	function testRequestIfNoneMatch()
@@ -692,10 +630,7 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
  	    	$exceptionThrown = true;
    			$this->fail("IfNoneMatch - Some Unexpected exception has been occured:",$exception->getMessage());
     	}
-    	if(!$exceptionThrown) {
-			$this->assertTrue(TRUE);
-    	}
-    	$dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
+
 	}
 	
 	function testSetResponseCacheControl()
@@ -722,10 +657,7 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
  	    	$exceptionThrown = true;
    			$this->fail("Cache-Control - Some Unexpected exception has been occured:",$exception->getMessage());
     	}
-    	if(!$exceptionThrown) {
-			$this->assertTrue(TRUE);
-    	}
-    	$dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
+
 	}
 
 	function testSetResponseContentType()
@@ -751,10 +683,7 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
  	    	$exceptionThrown = true;
    			$this->fail("Content-Type - Some Unexpected exception has been occured:",$exception->getMessage());
     	}
-    	if(!$exceptionThrown) {
-			$this->assertTrue(TRUE);
-    	}
-    	$dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
+
 	}
 
 	function testSetResponseContentLength()
@@ -781,10 +710,7 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
  	    	$exceptionThrown = true;
    			$this->fail("Content-Length - Some Unexpected exception has been occured:",$exception->getMessage());
     	}
-    	if(!$exceptionThrown) {
-			$this->assertTrue(TRUE);
-    	}
-    	$dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
+
 	}
 	
 	function testETag()
@@ -810,10 +736,7 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
  	    	$exceptionThrown = true;
    			$this->fail("ETag - Some Unexpected exception has been occured:",$exception->getMessage());
     	}
-    	if(!$exceptionThrown) {
-			$this->assertTrue(TRUE);
-    	}
-    	$dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
+
 	}
 
 	function testSetResponseLocation()
@@ -840,10 +763,7 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
  	    	$exceptionThrown = true;
    			$this->fail("Location - Some Unexpected exception has been occured:",$exception->getMessage());
     	}
-    	if(!$exceptionThrown) {
-			$this->assertTrue(TRUE);
-    	}
-    	$dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
+
 	}
 	
 	function testSetResponseStatusCodeValidCodeRange()
@@ -870,10 +790,7 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
  	    	$exceptionThrown = true;
    			$this->fail("Valid StatusCode Range - Some Unexpected exception has been occured:",$exception->getMessage());
     	}
-    	if(!$exceptionThrown) {
-			$this->assertTrue(TRUE);
-    	}
-    	$dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
+
 	}
 
 	function testSetResponseStatusCodeValidCodeRangeInvalidCode()
@@ -900,10 +817,7 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
  	    	$exceptionThrown = true;
    			$this->fail("Invalid Status Code - Some Unexpected exception has been occured:",$exception->getMessage());
     	}
-    	if(!$exceptionThrown) {
-			$this->assertTrue(TRUE);
-    	}
-    	$dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
+
 	}
 	
 	function testSetResponseStatusCodeInvalidCodeRange()
@@ -930,10 +844,7 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
     		$exceptionThrown = true;
    			$this->assertTrue(TRUE);
     	}
-    	if(!$exceptionThrown) {
-			$this->fail('Invalid range of HTTP status code : Some expected exception has not been thrown');
-    	}
-    	$dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
+
 	}
 	
 	function testSetResponseStatusDescription()
@@ -960,10 +871,7 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
     		$exceptionThrown = true;
    			$this->fail("Some unexpected exception has been thrown:",$exception->getMessage());
     	}
-    	if(!$exceptionThrown) {
-			$this->assertTrue(TRUE);
-    	}
-    	$dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
+
 	}
 
 	function testSetResponseVersion()
@@ -990,9 +898,6 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
     		$exceptionThrown = true;
    			$this->fail("Some unexpected exception has been thrown:",$exception->getMessage());
     	}
-    	if(!$exceptionThrown) {
-			$this->assertTrue(TRUE);
-    	}
-    	$dispatcher->getHost()->getWebOperationContext()->resetWebContextInternal();
+
 	}
 }
