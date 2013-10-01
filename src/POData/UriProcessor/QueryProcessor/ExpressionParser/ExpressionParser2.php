@@ -49,7 +49,7 @@ class ExpressionParser2 extends ExpressionParser
      * 
      * @var bool
      */
-    private $_isCustomExpressionProvider;
+    private $_isPHPExpressionProvider;
    
     /**
      * Create new instance of ExpressionParser2
@@ -57,14 +57,14 @@ class ExpressionParser2 extends ExpressionParser
      * @param string       $text                       The text expression to parse.
      * @param ResourceType $resourceType               The resource type in which 
      *                                                 expression will be applied.
-     * @param Bool         $isCustomExpressionProvider True if IExpressionProvider provider is
+     * @param Bool         $isPHPExpressionProvider True if IExpressionProvider provider is
      *                                                 implemented by user, False otherwise
      */
-    public function __construct($text, ResourceType $resourceType, $isCustomExpressionProvider
+    public function __construct($text, ResourceType $resourceType, $isPHPExpressionProvider
     ) {
-        parent::__construct($text, $resourceType, $isCustomExpressionProvider);
+        parent::__construct($text, $resourceType, $isPHPExpressionProvider);
         $this->_navigationPropertiesUsedInTheExpression = array();
-        $this->_isCustomExpressionProvider = $isCustomExpressionProvider;
+        $this->_isPHPExpressionProvider = $isPHPExpressionProvider;
     }
 
     /**
@@ -82,9 +82,7 @@ class ExpressionParser2 extends ExpressionParser
      */
     public static function parseExpression2($text, ResourceType $resourceType, IExpressionProvider $expressionProvider) {
 
-	    $isCustomExpressionProvider = !$expressionProvider instanceof PHPExpressionProvider;
-
-        $expressionParser2 = new ExpressionParser2($text, $resourceType, $isCustomExpressionProvider);
+        $expressionParser2 = new ExpressionParser2($text, $resourceType, $expressionProvider instanceof PHPExpressionProvider);
         $expressionTree = $expressionParser2->parseFilter();
 
 
@@ -123,7 +121,7 @@ class ExpressionParser2 extends ExpressionParser
                 Messages::expressionParser2BooleanRequired()
             );
         }
-        if (!$this->_isCustomExpressionProvider) {
+        if ($this->_isPHPExpressionProvider) {
             $resultExpression = $this->_processNodeForNullability($expression, null);
             if ($resultExpression != null) {
                 return $resultExpression;

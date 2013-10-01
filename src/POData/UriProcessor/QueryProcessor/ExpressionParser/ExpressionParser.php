@@ -70,7 +70,7 @@ class ExpressionParser
      * 
      * @var bool
      */
-    private $_isCustomExpressionProvider;
+    private $_isPHPExpressionProvider;
 
     /**
      * True if the filter expression contains level 2 property acess, for example
@@ -87,18 +87,17 @@ class ExpressionParser
      * Construct a new instance of ExpressionParser
      * 
      * @param string       $text                       The expression to parse.
-     * @param ResourceType $resourceType               The resource type of the resource
-     *                                                 targetted by the resource path.
-     * @param bool         $isCustomExpressionProvider True if the end developer is responsible
-     *                                                 for the expression provider implementation.
-     * Note: TODO Expression parser should not depends on the fact that end user is implmenting
-     * IExpressionProider or not.
+     * @param ResourceType $resourceType               The resource type of the resource targeted by the resource path.
+     *
+     * @param bool         $isPHPExpressionProvider True if the end developer is responsible for the expression provider implementation.
+     *
+     * TODO Expression parser should not depend on the fact that end user is implementing IExpressionProvider or not.
      */
-    public function __construct($text, ResourceType $resourceType, $isCustomExpressionProvider)
+    public function __construct($text, ResourceType $resourceType, $isPHPExpressionProvider)
     {
         $this->_lexer = new ExpressionLexer($text);
         $this->_resourceType = $resourceType;
-        $this->_isCustomExpressionProvider = $isCustomExpressionProvider;
+        $this->_isPHPExpressionProvider = $isPHPExpressionProvider;
         $this->_hasLevel2PropertyInTheExpression = false;
     }
 
@@ -183,9 +182,7 @@ class ExpressionParser
             $logicalOpToken = clone $this->_getCurrentToken();
             $this->_lexer->nextToken();
             $right = $this->_parseLogicalAnd();
-            FunctionDescription::verifyLogicalOpArguments(
-                $logicalOpToken, $left, $right
-            );
+            FunctionDescription::verifyLogicalOpArguments($logicalOpToken, $left, $right);
             $left = new LogicalExpression(
                 $left, $right, ExpressionType::OR_LOGICAL
             );
@@ -236,7 +233,7 @@ class ExpressionParser
             $right = $this->_parseAdditive();
             $left = self::_generateComparisonExpression(
                 $left, $right, 
-                $comparisonToken, $this->_isCustomExpressionProvider
+                $comparisonToken, $this->_isPHPExpressionProvider
             );
         }
 
@@ -258,8 +255,7 @@ class ExpressionParser
             $additiveToken = clone $this->_getCurrentToken();
             $this->_lexer->nextToken();
             $right = $this->_parseMultiplicative();
-            $opReturnType 
-                = FunctionDescription::verifyAndPromoteArithmeticOpArguments(
+            $opReturnType = FunctionDescription::verifyAndPromoteArithmeticOpArguments(
                     $additiveToken, $left, $right
                 );
             if ($additiveToken->identifierIs(ODataConstants::KEYWORD_ADD)) {
@@ -295,8 +291,7 @@ class ExpressionParser
             $multiplicativeToken = clone $this->_getCurrentToken();
             $this->_lexer->nextToken();
             $right = $this->_parseUnary();
-            $opReturnType 
-                = FunctionDescription::verifyAndPromoteArithmeticOpArguments(
+            $opReturnType = FunctionDescription::verifyAndPromoteArithmeticOpArguments(
                     $multiplicativeToken, $left, $right
                 );
             if ($multiplicativeToken->identifierIs(ODataConstants::KEYWORD_MULTIPLY)) {
@@ -387,8 +382,8 @@ class ExpressionParser
     }
 
     /** 
-     * Parse primary tokens [literals, identifiers (e.g. function call), open 
-     * param for sub expressions]
+     * Parse primary tokens [literals, identifiers (e.g. function call), open param for sub expressions]
+     *
      * 
      * @return AbstractExpression
      */
@@ -421,7 +416,7 @@ class ExpressionParser
             throw new NotImplementedException(
                 'Support for binary is not implemented'
             );
-            return $this->_parseTypedLiteral(new Binary());
+            //return $this->_parseTypedLiteral(new Binary());
         case ExpressionTokenId::OPENPARAM:
             return $this->_parseParenExpression();
         default:
@@ -460,8 +455,7 @@ class ExpressionParser
         $this->_validateToken(ExpressionTokenId::IDENTIFIER);
 
         // An open paren here would indicate calling a method        
-        $identifierIsFunction 
-            = $this->_lexer->peekNextToken()->Id == ExpressionTokenId::OPENPARAM;
+        $identifierIsFunction = $this->_lexer->peekNextToken()->Id == ExpressionTokenId::OPENPARAM;
         if ($identifierIsFunction) {
             return $this->_parseIdentifierAsFunction();
         } else {
@@ -488,8 +482,7 @@ class ExpressionParser
             $this->_hasLevel2PropertyInTheExpression = true;
         }
 
-        $resourceProperty 
-            = $parentResourceType->tryResolvePropertyTypeByName($identifier);
+        $resourceProperty = $parentResourceType->tryResolvePropertyTypeByName($identifier);
         if (is_null($resourceProperty)) {
             ODataException::createSyntaxError(
                 Messages::expressionLexerNoPropertyInType(
@@ -677,18 +670,14 @@ class ExpressionParser
      * 
      * @param AbstractExpression $left                       The LHS expression.
      * @param AbstractExpression $right                      The RHS expression.
-     * @param ExpressionToken    $expressionToken            The cmparision expression token.
-     * @param boolean            $isCustomExpressionProvider True if the end user is responsible
-     *                                                       for providing the IExpressionProvider
-     *                                                       implementation.
+     * @param ExpressionToken    $expressionToken            The comparison expression token.
+     * @param boolean            $isPHPExpressionProvider
      * 
      * @return AbstractExpression
      */
-    private static function _generateComparisonExpression($left, $right, $expressionToken, $isCustomExpressionProvider)
+    private static function _generateComparisonExpression($left, $right, $expressionToken, $isPHPExpressionProvider)
     {
-        FunctionDescription::verifyRelationalOpArguments(
-            $expressionToken, $left, $right
-        );
+        FunctionDescription::verifyRelationalOpArguments($expressionToken, $left, $right);
 
         //We need special handling for comparison of following types:
         //1. String
@@ -700,8 +689,7 @@ class ExpressionParser
         // provider
         $string = new String();
         if ($left->typeIs($string) && $right->typeIs($string)) {
-            $strcmpFunctions 
-                = FunctionDescription::stringComparisonFunctions();
+            $strcmpFunctions = FunctionDescription::stringComparisonFunctions();
             $left = new FunctionCallExpression(
                 $strcmpFunctions[0], array($left, $right)
             );
@@ -710,8 +698,7 @@ class ExpressionParser
 
         $dateTime = new DateTime();
         if ($left->typeIs($dateTime) && $right->typeIs($dateTime)) {
-            $dateTimeCmpFunctions 
-                = FunctionDescription::dateTimeComparisonFunctions();
+            $dateTimeCmpFunctions = FunctionDescription::dateTimeComparisonFunctions();
             $left = new FunctionCallExpression(
                 $dateTimeCmpFunctions[0], array($left, $right)
             );
@@ -720,8 +707,7 @@ class ExpressionParser
 
         $guid = new Guid();
         if ($left->typeIs($guid) && $right->typeIs($guid)) {
-            $guidEqualityFunctions 
-                = FunctionDescription::guidEqualityFunctions();
+            $guidEqualityFunctions = FunctionDescription::guidEqualityFunctions();
             $left = new FunctionCallExpression(
                 $guidEqualityFunctions[0], array($left, $right)
             );
@@ -730,8 +716,7 @@ class ExpressionParser
 
         $binary = new Binary();
         if ($left->typeIs($binary) && $right->typeIs($binary)) {
-            $binaryEqualityFunctions 
-                = FunctionDescription::binaryEqualityFunctions();
+            $binaryEqualityFunctions = FunctionDescription::binaryEqualityFunctions();
             $left = new FunctionCallExpression(
                 $binaryEqualityFunctions[0], array($left, $right)
             );
@@ -771,12 +756,9 @@ class ExpressionParser
           //                       |- Signature => bool (typeof(CustomerID))
           //                       |- args => {CustomerID}
           //
-            if (!$isCustomExpressionProvider) {
+            if ($isPHPExpressionProvider) {
                 $arg = $left->typeIs($null) ? $right : $left;
-                  $isNullFunctionDescription 
-                      = new FunctionDescription(
-                          'is_null', new Boolean(), array($arg->getType())
-                      );
+                $isNullFunctionDescription = new FunctionDescription('is_null', new Boolean(), array($arg->getType()));
                 switch ($expressionToken->Text) {
 	                case ODataConstants::KEYWORD_EQUAL:
 	                    return new FunctionCallExpression(
@@ -786,9 +768,7 @@ class ExpressionParser
 
 	                case ODataConstants::KEYWORD_NOT_EQUAL:
 	                    return new UnaryExpression(
-	                        new FunctionCallExpression(
-	                            $isNullFunctionDescription, array($arg)
-	                        ),
+	                        new FunctionCallExpression($isNullFunctionDescription, array($arg)),
 	                        ExpressionType::NOT_LOGICAL,
 	                        new Boolean()
 	                    );
@@ -798,30 +778,30 @@ class ExpressionParser
         }
 
         switch ($expressionToken->Text) {
-        case ODataConstants::KEYWORD_EQUAL:
-            return new RelationalExpression(
-                $left, $right, ExpressionType::EQUAL
-            );
-        case ODataConstants::KEYWORD_NOT_EQUAL:
-            return new RelationalExpression(
-                $left, $right, ExpressionType::NOTEQUAL
-            );
-        case ODataConstants::KEYWORD_GREATERTHAN:
-            return new RelationalExpression(
-                $left, $right, ExpressionType::GREATERTHAN
-            );
-        case ODataConstants::KEYWORD_GREATERTHAN_OR_EQUAL:
-            return new RelationalExpression(
-                $left, $right, ExpressionType::GREATERTHAN_OR_EQUAL
-            );
-        case ODataConstants::KEYWORD_LESSTHAN:
-            return new RelationalExpression(
-                $left, $right, ExpressionType::LESSTHAN
-            );
-        default:
-            return new RelationalExpression(
-                $left, $right, ExpressionType::LESSTHAN_OR_EQUAL
-            );
+	        case ODataConstants::KEYWORD_EQUAL:
+	            return new RelationalExpression(
+	                $left, $right, ExpressionType::EQUAL
+	            );
+	        case ODataConstants::KEYWORD_NOT_EQUAL:
+	            return new RelationalExpression(
+	                $left, $right, ExpressionType::NOTEQUAL
+	            );
+	        case ODataConstants::KEYWORD_GREATERTHAN:
+	            return new RelationalExpression(
+	                $left, $right, ExpressionType::GREATERTHAN
+	            );
+	        case ODataConstants::KEYWORD_GREATERTHAN_OR_EQUAL:
+	            return new RelationalExpression(
+	                $left, $right, ExpressionType::GREATERTHAN_OR_EQUAL
+	            );
+	        case ODataConstants::KEYWORD_LESSTHAN:
+	            return new RelationalExpression(
+	                $left, $right, ExpressionType::LESSTHAN
+	            );
+	        default:
+	            return new RelationalExpression(
+	                $left, $right, ExpressionType::LESSTHAN_OR_EQUAL
+	            );
         }
     }
 
