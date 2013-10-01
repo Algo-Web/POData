@@ -40,7 +40,7 @@ class ExpressionParser2 extends ExpressionParser
     /**
      * Collection of navigation properties used in the expression.
      * 
-     * @var array()/array(array(ResourceProperty))
+     * @var array(array(ResourceProperty))
      */
     private $_navigationPropertiesUsedInTheExpression;
 
@@ -97,7 +97,8 @@ class ExpressionParser2 extends ExpressionParser
         $expressionProcessor = null;
         $expressionAsString = null;
         $filterFunction = null;
-        if (!$isCustomExpressionProvider) {
+
+	    if (!$isCustomExpressionProvider) {
             $expressionProvider = new PHPExpressionProvider('$lt');
         }
         
@@ -107,18 +108,10 @@ class ExpressionParser2 extends ExpressionParser
         try {
             $expressionAsString = $expressionProcessor->processExpression( $expressionTree );
         } catch (\InvalidArgumentException $invalidArgumentException) {
-            ODataException::createInternalServerError(
-                $invalidArgumentException->getMessage()
-            );
+            ODataException::createInternalServerError( $invalidArgumentException->getMessage() );
         }
 
-        $navigationPropertiesUsed
-        = empty($expressionParser2->_navigationPropertiesUsedInTheExpression)
-        ?
-        null :
-        $expressionParser2->_navigationPropertiesUsedInTheExpression;
-        unset($expressionProcessor);
-        unset($expressionParser2);
+
         if ($isCustomExpressionProvider) {
             $filterFunction = new AnonymousFunction(
                 array(),
@@ -132,7 +125,7 @@ class ExpressionParser2 extends ExpressionParser
         }
         
         return new InternalFilterInfo(
-            new FilterInfo($navigationPropertiesUsed),
+            $expressionParser2->_navigationPropertiesUsedInTheExpression,
             $filterFunction,
             $expressionAsString,
             $isCustomExpressionProvider
@@ -380,8 +373,7 @@ class ExpressionParser2 extends ExpressionParser
             $this->_navigationPropertiesUsedInTheExpression[] = $navigationsUsed;
         } 
 
-        $nullableExpTree 
-            = $expression->createNullableExpressionTree($checkNullForMostChild);
+        $nullableExpTree = $expression->createNullableExpressionTree($checkNullForMostChild);
         
         if ($parentExpression == null) {
             return new LogicalExpression(

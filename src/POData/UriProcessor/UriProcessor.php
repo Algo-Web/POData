@@ -306,14 +306,16 @@ class UriProcessor
     /**
      * Applies the query options to the resource(s) retrieved from the data source.
      * 
-     * @param SegmentDescriptor &$segmentDescriptor The descriptor which holds 
+     * @param SegmentDescriptor $segmentDescriptor The descriptor which holds
      *                                              resource(s) on which query
      *                                              options to be applied.
      * 
      * @return void
      */
-    private function _applyQueryOptions(SegmentDescriptor &$segmentDescriptor)
+    private function _applyQueryOptions(SegmentDescriptor $segmentDescriptor)
     {
+	    //TODO: much of this will change as #3
+
         // This function will not set RequestDescription::Count value if IDSQP2::canApplyQueryOptions 
         // returns false, this function assumes IDSQP2 has already set the count value in the global
         // variable named _odata_server_count. temporary fix for Drupal OData Plugin support
@@ -333,22 +335,18 @@ class UriProcessor
             }
         }
         
-        // Library applies query options only if the IDSQP2::canApplyQueryOptions returns true, IDSQP::canApplyQueryOptions
-        // always returns true.
+        // Library applies query options only if the QueryProvider::canApplyQueryOptions returns true.
         $applicableForSetQuery = $this->_provider->canApplyQueryOptions() && is_array($result) && !empty($result);
         if ($applicableForSetQuery) {
             //Apply (implicit and explicit) $orderby option
-            $internalOrderByInfo 
-                = $this->_requestDescription->getInternalOrderByInfo();
+            $internalOrderByInfo = $this->_requestDescription->getInternalOrderByInfo();
             if (!is_null($internalOrderByInfo)) {
-                $orderByFunction 
-                    = $internalOrderByInfo->getSorterFunction()->getReference();
+                $orderByFunction = $internalOrderByInfo->getSorterFunction()->getReference();
                 usort($result, $orderByFunction);
             }
 
             //Apply $skiptoken option
-            $internalSkipTokenInfo 
-                = $this->_requestDescription->getInternalSkipTokenInfo();
+            $internalSkipTokenInfo = $this->_requestDescription->getInternalSkipTokenInfo();
             if (!is_null($internalSkipTokenInfo)) {
                 $matchingIndex = $internalSkipTokenInfo->getIndexOfFirstEntryInTheNextPage($result);
                 $result = array_slice($result, $matchingIndex);

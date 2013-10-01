@@ -19,6 +19,7 @@ use POData\Providers\Query\IQueryProvider;
 use POData\Providers\Metadata\IMetadataProvider;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\IExpressionProvider;
 use POData\Common\InvalidOperationException;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\InternalFilterInfo;
 
 /**
  * Class ProvidersWrapper

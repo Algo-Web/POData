@@ -389,9 +389,8 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         $internalFilterInfo = $requestDescription->getInternalFilterInfo();
         $this->assertNotNull($internalFilterInfo);
 
-        $filterInfo = $internalFilterInfo->getFilterInfo();
-        $this->assertNotNull($filterInfo);
-        $this->assertNull($filterInfo->getNavigationPropertiesUsed());
+
+        $this->assertEquals(array(), $internalFilterInfo->getNavigationPropertiesUsed());
 
         $filterFunction = $internalFilterInfo->getFilterFunction();
         $this->assertNotNull($filterFunction);

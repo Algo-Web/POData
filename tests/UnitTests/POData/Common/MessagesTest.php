@@ -31,7 +31,6 @@ class MessagesTest extends BaseUnitTestCase {
 			'expressionParser2NonPrimitivePropertyNotAllowed',
 			'expressionLexerNoApplicableFunctionsFound',
 			'expressionLexerNoPropertyInType',
-			'filterInfoNaviUsedArgumentShouldBeNullOrNonEmptyArray',
 			'resourceAssociationSetPropertyMustBeNullOrInstanceofResourceProperty',
 			'resourceAssociationSetEndPropertyMustBeNavigationProperty',
 			'resourceAssociationSetEndResourceTypeMustBeAssignableToResourceSet',

@@ -205,16 +205,6 @@ class Messages
         return "No property '$property' exists in type '$type' at position $position";
     }
 
-    /**
-     * Message to show error when the navigationPropertiesUsedInTheFilterClause
-     * argument found as neither null or a non-empty array
-     * 
-     * @return string The message
-     */
-    public static function filterInfoNaviUsedArgumentShouldBeNullOrNonEmptyArray()
-    {
-        return 'The argument navigationPropertiesUsedInTheFilterClause should be either null or a non-empty array';
-    }
 
     /**
      * Format a message to show error when target resource property 
