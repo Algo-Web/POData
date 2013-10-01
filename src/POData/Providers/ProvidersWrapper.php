@@ -19,7 +19,8 @@ use POData\Providers\Query\IQueryProvider;
 use POData\Providers\Metadata\IMetadataProvider;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\IExpressionProvider;
 use POData\Common\InvalidOperationException;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\InternalFilterInfo;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
+use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
 
 /**
  * Class ProvidersWrapper
@@ -619,24 +620,20 @@ class ProvidersWrapper
      * 
      * @param ResourceSet        $resourceSet        The entity set whose entities needs 
      *                                               to be fetched
-     * @param InternalFilterInfo $internalFilterInfo An instance of InternalFilterInfo
+     * @param FilterInfo $filterInfo An instance of FilterInfo
      *                                               if the $filter option is submitted
      *                                               by the client, NULL if no $filter 
      *                                               option present in the client request
      * @param TODO               $select             The select information
-     * @param TODO               $orderby            The orderby information
+     * @param InternalOrderByInfo $orderby            The orderby information
      * @param int                $top                The top count
      * @param int                $skip               The skip count
      * 
      * @return \stdClass[]
      */
-    public function getResourceSet(ResourceSet $resourceSet, $internalFilterInfo, $select, $orderby, $top, $skip)
+    public function getResourceSet(ResourceSet $resourceSet, $filterInfo, $select, $orderby, $top, $skip)
     {
-		$customExpressionAsString = null;
-		if (!is_null($internalFilterInfo)) {
-			$this->assert($internalFilterInfo->isCustomExpression(), '$internalFilterInfo->isCustomExpression()');
-			$customExpressionAsString = $internalFilterInfo->getExpressionAsString();
-		}
+		$customExpressionAsString = $filterInfo->getExpressionAsString();
 
 
 		$entityInstances = $this->_queryProvider->getResourceSet(
@@ -651,9 +648,7 @@ class ProvidersWrapper
 
         if (!is_array($entityInstances)) {
             ODataException::createInternalServerError(
-                Messages::providersWrapperIDSQPMethodReturnsNonArray(
-                    'IQueryProvider::getResourceSet'
-                )
+                Messages::providersWrapperIDSQPMethodReturnsNonArray('IQueryProvider::getResourceSet')
             );
         }
 
@@ -691,10 +686,7 @@ class ProvidersWrapper
      *
      * @param ResourceProperty   $targetProperty     The navigation property to be retrieved
      *
-     * @param InternalFilterInfo $internalFilterInfo An instance of InternalFilterInfo
-     *                                               if the $filter option is submitted
-     *                                               by the client, NULL if no $filter 
-     *                                               option present in the client request
+     * @param FilterInfo $filterInfo An instance of FilterInfo if the $filter option is present, null otherwise
      * @param TODO               $select             The select information
      * @param TODO               $orderby            The orderby information
      * @param int                $top                The top count
@@ -708,18 +700,14 @@ class ProvidersWrapper
         $sourceEntity,
         ResourceSet $targetResourceSet,
         ResourceProperty $targetProperty, 
-        $internalFilterInfo,
+        $filterInfo,
         $select,
         $orderby,
         $top,
         $skip
     ) {
 
-		$customExpressionAsString = null;
-		if (!is_null($internalFilterInfo)) {
-            $this->assert($internalFilterInfo->isCustomExpression(), '$internalFilterInfo->isCustomExpression()');
-            $customExpressionAsString = $internalFilterInfo->getExpressionAsString();
-		}
+		$customExpressionAsString = $filterInfo->getExpressionAsString();
 
 		$entityInstances = $this->_queryProvider->getRelatedResourceSet(
 		    $sourceResourceSet,
@@ -736,9 +724,7 @@ class ProvidersWrapper
 
         if (!is_array($entityInstances)) {
             ODataException::createInternalServerError(
-                Messages::providersWrapperIDSQPMethodReturnsNonArray(
-                    'IQueryProvider::getRelatedResourceSet'
-                )
+                Messages::providersWrapperIDSQPMethodReturnsNonArray('IQueryProvider::getRelatedResourceSet')
             );
         }
 

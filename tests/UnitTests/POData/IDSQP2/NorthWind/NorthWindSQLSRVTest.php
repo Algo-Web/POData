@@ -43,10 +43,10 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         $requestDescription = $uriProcessor->getRequestDescription();
         $this->assertNotNull($requestDescription);
 
-        $internalFilterInfo = $requestDescription->getInternalFilterInfo();;
-        $this->assertNotNull($internalFilterInfo);
+        $filterInfo = $requestDescription->getFilterInfo();;
+        $this->assertNotNull($filterInfo);
 
-        $sqlexpression = $internalFilterInfo->getExpressionAsString();
+        $sqlexpression = $filterInfo->getExpressionAsString();
         $this->AssertEquals("((CustomerID >  'ALFKI'))", $sqlexpression);
 
 	}
@@ -79,10 +79,10 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         $requestDescription = $uriProcessor->getRequestDescription();
         $this->assertNotNull($requestDescription);
 
-        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
-        $this->assertNotNull($internalFilterInfo);
+        $filterInfo = $requestDescription->getFilterInfo();
+        $this->assertNotNull($filterInfo);
 
-        $sqlexpression = $internalFilterInfo->getExpressionAsString();
+        $sqlexpression = $filterInfo->getExpressionAsString();
         $this->AssertEquals("((REPLACE(CustomerID, 'LFK', 'RTT') =  'ARTTI'))", $sqlexpression);
 
 	}
@@ -114,11 +114,11 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         $requestDescription = $uriProcessor->getRequestDescription();
         $this->assertNotNull($requestDescription);
 
-        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
-        $this->assertNotNull($internalFilterInfo);
+        $filterInfo = $requestDescription->getFilterInfo();
+        $this->assertNotNull($filterInfo);
 
 
-        $sqlexpression = $internalFilterInfo->getExpressionAsString();
+        $sqlexpression = $filterInfo->getExpressionAsString();
         $this->AssertEquals("(CustomerID = NULL)", $sqlexpression);
 
 	}
@@ -150,10 +150,10 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         $requestDescription = $uriProcessor->getRequestDescription();
         $this->assertNotNull($requestDescription);
 
-        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
-        $this->assertNotNull($internalFilterInfo);
+        $filterInfo = $requestDescription->getFilterInfo();
+        $this->assertNotNull($filterInfo);
 
-        $sqlexpression = $internalFilterInfo->getExpressionAsString();
+        $sqlexpression = $filterInfo->getExpressionAsString();
         $this->AssertEquals("(-(OrderID) = -10248)", $sqlexpression);
 
 	}
@@ -185,10 +185,10 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         $requestDescription = $uriProcessor->getRequestDescription();
         $this->assertNotNull($requestDescription);
 
-        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
-        $this->assertNotNull($internalFilterInfo);
+        $filterInfo = $requestDescription->getFilterInfo();
+        $this->assertNotNull($filterInfo);
 
-        $sqlexpression = $internalFilterInfo->getExpressionAsString();
+        $sqlexpression = $filterInfo->getExpressionAsString();
         $this->AssertEquals("((OrderDate =  '1996-07-04'))", $sqlexpression);
 
 	}
@@ -220,10 +220,10 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         $requestDescription = $uriProcessor->getRequestDescription();
         $this->assertNotNull($requestDescription);
 
-        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
-        $this->assertNotNull($internalFilterInfo);
+        $filterInfo = $requestDescription->getFilterInfo();
+        $this->assertNotNull($filterInfo);
 
-        $sqlexpression = $internalFilterInfo->getExpressionAsString();
+        $sqlexpression = $filterInfo->getExpressionAsString();
         $this->AssertEquals("(YEAR(OrderDate) = YEAR('1996-07-09'))", $sqlexpression);
 
 	}
@@ -255,10 +255,10 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         $requestDescription = $uriProcessor->getRequestDescription();
         $this->assertNotNull($requestDescription);
 
-        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
-        $this->assertNotNull($internalFilterInfo);
+        $filterInfo = $requestDescription->getFilterInfo();
+        $this->assertNotNull($filterInfo);
 
-        $sqlexpression = $internalFilterInfo->getExpressionAsString();
+        $sqlexpression = $filterInfo->getExpressionAsString();
         $this->AssertEquals("((YEAR(OrderDate) + 2) = 1998)", $sqlexpression);
 
 	}
@@ -290,10 +290,10 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         $requestDescription = $uriProcessor->getRequestDescription();
         $this->assertNotNull($requestDescription);
 
-        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
-        $this->assertNotNull($internalFilterInfo);
+        $filterInfo = $requestDescription->getFilterInfo();
+        $this->assertNotNull($filterInfo);
 
-        $sqlexpression = $internalFilterInfo->getExpressionAsString();
+        $sqlexpression = $filterInfo->getExpressionAsString();
         $this->AssertEquals("(CEILING(FLOOR(Freight)) = 32)", $sqlexpression);
 
 	}
@@ -325,10 +325,10 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         $requestDescription = $uriProcessor->getRequestDescription();
         $this->assertNotNull($requestDescription);
 
-        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
-        $this->assertNotNull($internalFilterInfo);
+        $filterInfo = $requestDescription->getFilterInfo();
+        $this->assertNotNull($filterInfo);
 
-        $sqlexpression = $internalFilterInfo->getExpressionAsString();
+        $sqlexpression = $filterInfo->getExpressionAsString();
         $this->AssertEquals("(ROUND(Freight, 0) = 34)", $sqlexpression);
 
 	}
@@ -360,10 +360,10 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         $requestDescription = $uriProcessor->getRequestDescription();
         $this->assertNotNull($requestDescription);
 
-        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
-        $this->assertNotNull($internalFilterInfo);
+        $filterInfo = $requestDescription->getFilterInfo();
+        $this->assertNotNull($filterInfo);
 
-        $sqlexpression = $internalFilterInfo->getExpressionAsString();
+        $sqlexpression = $filterInfo->getExpressionAsString();
         $this->AssertEquals("((Freight % 10) = 2.38)", $sqlexpression);
 
 	}
@@ -395,10 +395,10 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         $requestDescription = $uriProcessor->getRequestDescription();
         $this->assertNotNull($requestDescription);
 
-        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
-        $this->assertNotNull($internalFilterInfo);
+        $filterInfo = $requestDescription->getFilterInfo();
+        $this->assertNotNull($filterInfo);
 
-        $sqlexpression = $internalFilterInfo->getExpressionAsString();
+        $sqlexpression = $filterInfo->getExpressionAsString();
         $this->AssertEquals("((SUBSTRING(CompanyName, 1 + 1, LEN(CompanyName)) =  'lfreds Futterkiste'))", $sqlexpression);
 
 	}
@@ -429,10 +429,10 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         $requestDescription = $uriProcessor->getRequestDescription();
         $this->assertNotNull($requestDescription);
 
-        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
-        $this->assertNotNull($internalFilterInfo);
+        $filterInfo = $requestDescription->getFilterInfo();
+        $this->assertNotNull($filterInfo);
 
-        $sqlexpression = $internalFilterInfo->getExpressionAsString();
+        $sqlexpression = $filterInfo->getExpressionAsString();
         $this->AssertEquals("((SUBSTRING(CompanyName, 1 + 1, 6) =  'lfreds'))", $sqlexpression);
 	}
 	
@@ -463,10 +463,10 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         $requestDescription = $uriProcessor->getRequestDescription();
         $this->assertNotNull($requestDescription);
 
-        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
-        $this->assertNotNull($internalFilterInfo);
+        $filterInfo = $requestDescription->getFilterInfo();
+        $this->assertNotNull($filterInfo);
 
-        $sqlexpression = $internalFilterInfo->getExpressionAsString();
+        $sqlexpression = $filterInfo->getExpressionAsString();
         $this->AssertEquals("((RTRIM(LTRIM('  ALFKI  ')) =  CustomerID))", $sqlexpression);
 
 	}
@@ -497,10 +497,10 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         $requestDescription = $uriProcessor->getRequestDescription();
         $this->assertNotNull($requestDescription);
 
-        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
-        $this->assertNotNull($internalFilterInfo);
+        $filterInfo = $requestDescription->getFilterInfo();
+        $this->assertNotNull($filterInfo);
 
-        $sqlexpression = $internalFilterInfo->getExpressionAsString();
+        $sqlexpression = $filterInfo->getExpressionAsString();
         $this->AssertEquals("(('KI') = RIGHT((CustomerID), LEN('KI')))", $sqlexpression);
 	}
 	
@@ -530,10 +530,10 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         $requestDescription = $uriProcessor->getRequestDescription();
         $this->assertNotNull($requestDescription);
 
-        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
-        $this->assertNotNull($internalFilterInfo);
+        $filterInfo = $requestDescription->getFilterInfo();
+        $this->assertNotNull($filterInfo);
 
-        $sqlexpression = $internalFilterInfo->getExpressionAsString();
+        $sqlexpression = $filterInfo->getExpressionAsString();
         $this->AssertEquals("(('AL') = LEFT((CustomerID), LEN('AL')))", $sqlexpression);
 	}
 
@@ -563,10 +563,10 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         $requestDescription = $uriProcessor->getRequestDescription();
         $this->assertNotNull($requestDescription);
 
-        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
-        $this->assertNotNull($internalFilterInfo);
+        $filterInfo = $requestDescription->getFilterInfo();
+        $this->assertNotNull($filterInfo);
 
-        $sqlexpression = $internalFilterInfo->getExpressionAsString();
+        $sqlexpression = $filterInfo->getExpressionAsString();
         $this->AssertEquals("((CHARINDEX('FKI', CustomerID) - 1) = 2)", $sqlexpression);
 
 	}
@@ -597,10 +597,10 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         $requestDescription = $uriProcessor->getRequestDescription();
         $this->assertNotNull($requestDescription);
 
-        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
-        $this->assertNotNull($internalFilterInfo);
+        $filterInfo = $requestDescription->getFilterInfo();
+        $this->assertNotNull($filterInfo);
 
-        $sqlexpression = $internalFilterInfo->getExpressionAsString();
+        $sqlexpression = $filterInfo->getExpressionAsString();
         $this->AssertEquals("((REPLACE(CompanyName, ' ', '') =  'AlfredsFutterkiste'))", $sqlexpression);
 
 	}
@@ -631,10 +631,10 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         $requestDescription = $uriProcessor->getRequestDescription();
         $this->assertNotNull($requestDescription);
 
-        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
-        $this->assertNotNull($internalFilterInfo);
+        $filterInfo = $requestDescription->getFilterInfo();
+        $this->assertNotNull($filterInfo);
 
-        $sqlexpression = $internalFilterInfo->getExpressionAsString();
+        $sqlexpression = $filterInfo->getExpressionAsString();
         $this->AssertEquals("(CHARINDEX('Alfreds', CompanyName) != 0)", $sqlexpression);
 	}
 
@@ -664,10 +664,10 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         $requestDescription = $uriProcessor->getRequestDescription();
         $this->assertNotNull($requestDescription);
 
-        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
-        $this->assertNotNull($internalFilterInfo);
+        $filterInfo = $requestDescription->getFilterInfo();
+        $this->assertNotNull($filterInfo);
 
-        $sqlexpression = $internalFilterInfo->getExpressionAsString();
+        $sqlexpression = $filterInfo->getExpressionAsString();
         $this->AssertEquals("((CHARINDEX('Alfreds', CompanyName) != 0) AND ((CHARINDEX('FKI', CustomerID) - 1) = 2))", $sqlexpression);
 	}
 
@@ -698,10 +698,10 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         $requestDescription = $uriProcessor->getRequestDescription();
         $this->assertNotNull($requestDescription);
 
-        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
-        $this->assertNotNull($internalFilterInfo);
+        $filterInfo = $requestDescription->getFilterInfo();
+        $this->assertNotNull($filterInfo);
 
-        $sqlexpression = $internalFilterInfo->getExpressionAsString();
+        $sqlexpression = $filterInfo->getExpressionAsString();
         $this->AssertEquals("((CustomerID + ', ' + ContactName =  'ALFKI, Maria Anders'))", $sqlexpression);
 
 
@@ -734,10 +734,10 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         $requestDescription = $uriProcessor->getRequestDescription();
         $this->assertNotNull($requestDescription);
 
-        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
-        $this->assertNotNull($internalFilterInfo);
+        $filterInfo = $requestDescription->getFilterInfo();
+        $this->assertNotNull($filterInfo);
 
-        $sqlexpression = $internalFilterInfo->getExpressionAsString();
+        $sqlexpression = $filterInfo->getExpressionAsString();
         $this->AssertEquals("((Country =  'USA'))", $sqlexpression);
 
 	}

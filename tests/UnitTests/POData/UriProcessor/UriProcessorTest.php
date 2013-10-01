@@ -14,7 +14,7 @@ use POData\UriProcessor\QueryProcessor\OrderByParser\OrderBySubPathSegment;
 use POData\UriProcessor\QueryProcessor\OrderByParser\OrderByPathSegment;
 use POData\UriProcessor\QueryProcessor\SkipTokenParser\InternalSkipTokenInfo;
 use POData\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenInfo;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\InternalFilterInfo;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
 use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
 use POData\UriProcessor\RequestCountOption;
 use POData\Configuration\ServiceProtocolVersion;
@@ -386,13 +386,13 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         $requestDescription = $uriProcessor->getRequestDescription();
         $this->assertNotNull($requestDescription);
 
-        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
-        $this->assertNotNull($internalFilterInfo);
+        $filterInfo = $requestDescription->getFilterInfo();
+        $this->assertNotNull($filterInfo);
 
 
-        $this->assertEquals(array(), $internalFilterInfo->getNavigationPropertiesUsed());
+        $this->assertEquals(array(), $filterInfo->getNavigationPropertiesUsed());
 
-        $this->assertEquals("", $internalFilterInfo->getExpressionAsString(), "because northwind expression provider does nothing, this is empty");
+        $this->assertEquals("", $filterInfo->getExpressionAsString(), "because northwind expression provider does nothing, this is empty");
 
     }
 
@@ -1028,12 +1028,12 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         $this->assertNotNull($internalOrderByInfo);
         
         //$filter applied
-        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
-        $this->assertNotNull($internalFilterInfo);
-        $this->assertTrue($internalFilterInfo instanceof InternalFilterInfo);
+        $filterInfo = $requestDescription->getFilterInfo();
+        $this->assertNotNull($filterInfo);
+        $this->assertTrue($filterInfo instanceof FilterInfo);
 
 	    $expected ='((!(is_null($lt->OrderID)) && !(is_null($lt->OrderDate))) && (($lt->OrderID == 123) && (POData\Providers\Metadata\Type\DateTime::dateTimeCmp($lt->OrderDate, \'2000-11-11\') <= 0)))';
-	    $this->assertEquals($expected, $internalFilterInfo->getExpressionAsString(), "because northwind expression provider does nothing, this is empty");
+	    $this->assertEquals($expected, $filterInfo->getExpressionAsString(), "because northwind expression provider does nothing, this is empty");
 
     }
 
@@ -1105,12 +1105,12 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($internalOrderByInfo);
 
         //$filter applied
-        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
-        $this->assertNotNull($internalFilterInfo);
-        $this->assertTrue($internalFilterInfo instanceof InternalFilterInfo);
+        $filterInfo = $requestDescription->getFilterInfo();
+        $this->assertNotNull($filterInfo);
+        $this->assertTrue($filterInfo instanceof FilterInfo);
 
 	    $expected = '((!(is_null($lt->OrderID)) && !(is_null($lt->OrderDate))) && (($lt->OrderID == 123) && (POData\Providers\Metadata\Type\DateTime::dateTimeCmp($lt->OrderDate, \'2000-11-11\') <= 0)))';
-	    $this->assertEquals($expected, $internalFilterInfo->getExpressionAsString(), "because northwind expression provider does nothing, this is empty");
+	    $this->assertEquals($expected, $filterInfo->getExpressionAsString(), "because northwind expression provider does nothing, this is empty");
 
 
 
@@ -1141,12 +1141,12 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($internalOrderByInfo);
 
         //$filter applied
-        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
-        $this->assertNotNull($internalFilterInfo);
-        $this->assertTrue($internalFilterInfo instanceof InternalFilterInfo);
+        $filterInfo = $requestDescription->getFilterInfo();
+        $this->assertNotNull($filterInfo);
+        $this->assertTrue($filterInfo instanceof FilterInfo);
 
 	    $expected = 'true';
-	    $this->assertEquals($expected, $internalFilterInfo->getExpressionAsString(), "because northwind expression provider does nothing, this is empty");
+	    $this->assertEquals($expected, $filterInfo->getExpressionAsString(), "because northwind expression provider does nothing, this is empty");
 
 
     }
@@ -1503,11 +1503,11 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($requestDescription->isSingleResult());
 
         //$filter applied
-        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
-        $this->assertNotNull($internalFilterInfo);
-        $this->assertTrue($internalFilterInfo instanceof InternalFilterInfo);
+        $filterInfo = $requestDescription->getFilterInfo();
+        $this->assertNotNull($filterInfo);
+        $this->assertTrue($filterInfo instanceof FilterInfo);
 
-	    $this->assertEquals("", $internalFilterInfo->getExpressionAsString(), "because northwind expression provider does nothing, this is empty");
+	    $this->assertEquals("", $filterInfo->getExpressionAsString(), "because northwind expression provider does nothing, this is empty");
 
 
 	    $this->assertNull($requestDescription->getRootProjectionNode());
@@ -2086,7 +2086,7 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($requestDescription->getSkipCount(), 10);
 
         $this->assertNotNull($requestDescription->getInternalOrderByInfo());
-        $this->assertNotNull($requestDescription->getInternalFilterInfo());
+        $this->assertNotNull($requestDescription->getFilterInfo());
         $this->assertNotNull($requestDescription->getInternalSkipTokenInfo());
         $this->assertNotNull($requestDescription->getRootProjectionNode());
 
@@ -2119,8 +2119,8 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         $identifier = $requestDescription->getIdentifier();
         $this->assertNotNull($identifier);
 
-        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
-        $this->assertNull($internalFilterInfo);
+        $filterInfo = $requestDescription->getFilterInfo();
+        $this->assertNull($filterInfo);
 
         $internalOrderByInfo = $requestDescription->getInternalOrderByInfo();
         $this->assertNotNull($internalOrderByInfo);

@@ -11,7 +11,7 @@ use POData\UriProcessor\ResourcePathProcessor\SegmentParser\RequestTargetSource;
 use POData\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenParser;
 use POData\UriProcessor\QueryProcessor\OrderByParser\OrderByParser;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionParser2;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\InternalFilterInfo;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandProjectionParser;
 use POData\Common\Messages;
 use POData\Common\ODataException;
@@ -269,8 +269,8 @@ class QueryProcessor
             }
             $resourceType = $this->_requestDescription->getTargetResourceType();
            	$expressionProvider = $this->service->getProvidersWrapper()->getExpressionProvider();
-            $internalFilterInfo = ExpressionParser2::parseExpression2($filter, $resourceType, $expressionProvider);
-            $this->_requestDescription->setInternalFilterInfo( $internalFilterInfo );
+            $filterInfo = ExpressionParser2::parseExpression2($filter, $resourceType, $expressionProvider);
+            $this->_requestDescription->setFilterInfo( $filterInfo );
         }
     }
 

@@ -27,22 +27,22 @@ class ExpressionParser2Test extends \PHPUnit_Framework_TestCase
 
 		$filterExpression = 'UnitPrice ge 6';
 		$resourceType = $this->_northWindMetadata->resolveResourceSet('Order_Details')->getResourceType();
-		$internalFilterInfo = ExpressionParser2::parseExpression2($filterExpression, $resourceType, $expressionProvider);
-		$this->assertTrue(!is_null($internalFilterInfo));
+		$filterInfo = ExpressionParser2::parseExpression2($filterExpression, $resourceType, $expressionProvider);
+		$this->assertTrue(!is_null($filterInfo));
 
 
 		//There are no navigation properties in the expression so should be empty.
-		$this->assertEquals(array(), $internalFilterInfo->getNavigationPropertiesUsed());
-		$this->assertEquals('(!(is_null($lt->UnitPrice)) && ($lt->UnitPrice >= 6))', $internalFilterInfo->getExpressionAsString());
+		$this->assertEquals(array(), $filterInfo->getNavigationPropertiesUsed());
+		$this->assertEquals('(!(is_null($lt->UnitPrice)) && ($lt->UnitPrice >= 6))', $filterInfo->getExpressionAsString());
 
 
 
 
 		$filterExpression = 'Order/Customer/CustomerID eq \'ANU\' or Product/ProductID gt 123 and UnitPrice ge 6';
-		$internalFilterInfo = ExpressionParser2::parseExpression2($filterExpression, $resourceType, $expressionProvider);
-		$this->assertTrue(!is_null($internalFilterInfo));
+		$filterInfo = ExpressionParser2::parseExpression2($filterExpression, $resourceType, $expressionProvider);
+		$this->assertTrue(!is_null($filterInfo));
 
-		$navigationsUsed = $internalFilterInfo->getNavigationPropertiesUsed();
+		$navigationsUsed = $filterInfo->getNavigationPropertiesUsed();
 		$this->assertTrue(!is_null($navigationsUsed));
 		$this->assertTrue(is_array($navigationsUsed));
 		$this->assertEquals(count($navigationsUsed), 2);
@@ -73,11 +73,11 @@ class ExpressionParser2Test extends \PHPUnit_Framework_TestCase
 
 		$filterExpression = 'Customer/Address/LineNumber add 4 eq 8';
 		$resourceType = $this->_northWindMetadata->resolveResourceSet('Orders')->getResourceType();
-		$internalFilterInfo = ExpressionParser2::parseExpression2($filterExpression, $resourceType, $expressionProvider);
-		$this->assertTrue(!is_null($internalFilterInfo));
+		$filterInfo = ExpressionParser2::parseExpression2($filterExpression, $resourceType, $expressionProvider);
+		$this->assertTrue(!is_null($filterInfo));
 
 
-		$navigationsUsed = $internalFilterInfo->getNavigationPropertiesUsed();
+		$navigationsUsed = $filterInfo->getNavigationPropertiesUsed();
 		//Customer
 		$this->assertTrue(!is_null($navigationsUsed));
 		$this->assertTrue(is_array($navigationsUsed));
@@ -93,11 +93,11 @@ class ExpressionParser2Test extends \PHPUnit_Framework_TestCase
 
 		//Test with property acess expression in function call
 		$filterExpression = 'replace(Customer/CustomerID, \'LFK\', \'RTT\') eq \'ARTTI\'';
-		$internalFilterInfo = ExpressionParser2::parseExpression2($filterExpression, $resourceType, $expressionProvider);
-		$this->assertTrue(!is_null($internalFilterInfo));
+		$filterInfo = ExpressionParser2::parseExpression2($filterExpression, $resourceType, $expressionProvider);
+		$this->assertTrue(!is_null($filterInfo));
 
 
-		$navigationsUsed = $internalFilterInfo->getNavigationPropertiesUsed();
+		$navigationsUsed = $filterInfo->getNavigationPropertiesUsed();
 		//Customer
 		$this->assertTrue(!is_null($navigationsUsed));
 		$this->assertTrue(is_array($navigationsUsed));

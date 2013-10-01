@@ -41,10 +41,10 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
         $requestDescription = $uriProcessor->getRequestDescription();
         $this->assertNotNull($requestDescription);
         
-        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
-        $this->assertNotNull($internalFilterInfo);
+        $filterInfo = $requestDescription->getFilterInfo();
+        $this->assertNotNull($filterInfo);
         
-        $mysqlexpression = $internalFilterInfo->getExpressionAsString();
+        $mysqlexpression = $filterInfo->getExpressionAsString();
         $this->AssertEquals("(STRCMP(post_title, 'OData PHP Producer') = 0)", $mysqlexpression);
 
 	}
@@ -76,10 +76,10 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
         $requestDescription = $uriProcessor->getRequestDescription();
         $this->assertNotNull($requestDescription);
 
-        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
-        $this->assertNotNull($internalFilterInfo);
+        $filterInfo = $requestDescription->getFilterInfo();
+        $this->assertNotNull($filterInfo);
 
-        $mysqlexpression = $internalFilterInfo->getExpressionAsString();
+        $mysqlexpression = $filterInfo->getExpressionAsString();
         $this->AssertEquals("(STRCMP(REPLACE(post_title,'PHP','Java'), 'OData Java Producer') = 0)", $mysqlexpression);
 
 	}
@@ -111,10 +111,10 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
         $requestDescription = $uriProcessor->getRequestDescription();
         $this->assertNotNull($requestDescription);
 
-        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
-        $this->assertNotNull($internalFilterInfo);
+        $filterInfo = $requestDescription->getFilterInfo();
+        $this->assertNotNull($filterInfo);
 
-        $mysqlexpression = $internalFilterInfo->getExpressionAsString();
+        $mysqlexpression = $filterInfo->getExpressionAsString();
         $this->AssertEquals("(ID = NULL)", $mysqlexpression);
 
 	}
@@ -146,10 +146,10 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
         $requestDescription = $uriProcessor->getRequestDescription();
         $this->assertNotNull($requestDescription);
 
-        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
-        $this->assertNotNull($internalFilterInfo);
+        $filterInfo = $requestDescription->getFilterInfo();
+        $this->assertNotNull($filterInfo);
 
-        $mysqlexpression = $internalFilterInfo->getExpressionAsString();
+        $mysqlexpression = $filterInfo->getExpressionAsString();
         $this->AssertEquals("(-(ID) = -1)", $mysqlexpression);
 
 	}
@@ -181,10 +181,10 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
         $requestDescription = $uriProcessor->getRequestDescription();
         $this->assertNotNull($requestDescription);
 
-        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
-        $this->assertNotNull($internalFilterInfo);
+        $filterInfo = $requestDescription->getFilterInfo();
+        $this->assertNotNull($filterInfo);
 
-        $mysqlexpression = $internalFilterInfo->getExpressionAsString();
+        $mysqlexpression = $filterInfo->getExpressionAsString();
         $this->AssertEquals("((post_date =  '2011-12-24 19:54:00'))", $mysqlexpression);
 
 	}
@@ -216,10 +216,10 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
         $requestDescription = $uriProcessor->getRequestDescription();
         $this->assertNotNull($requestDescription);
 
-        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
-        $this->assertNotNull($internalFilterInfo);
+        $filterInfo = $requestDescription->getFilterInfo();
+        $this->assertNotNull($filterInfo);
 
-        $mysqlexpression = $internalFilterInfo->getExpressionAsString();
+        $mysqlexpression = $filterInfo->getExpressionAsString();
         $this->AssertEquals("(EXTRACT(YEAR from post_date) = EXTRACT(YEAR from '1996-07-09'))", $mysqlexpression);
 
 	}
@@ -251,10 +251,10 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
         $requestDescription = $uriProcessor->getRequestDescription();
         $this->assertNotNull($requestDescription);
 
-        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
-        $this->assertNotNull($internalFilterInfo);
+        $filterInfo = $requestDescription->getFilterInfo();
+        $this->assertNotNull($filterInfo);
 
-        $mysqlexpression = $internalFilterInfo->getExpressionAsString();
+        $mysqlexpression = $filterInfo->getExpressionAsString();
         $this->AssertEquals("((EXTRACT(YEAR from post_date) + 2) = 2013)", $mysqlexpression);
 
 	}
@@ -285,10 +285,10 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
         $requestDescription = $uriProcessor->getRequestDescription();
         $this->assertNotNull($requestDescription);
 
-        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
-        $this->assertNotNull($internalFilterInfo);
+        $filterInfo = $requestDescription->getFilterInfo();
+        $this->assertNotNull($filterInfo);
 
-        $mysqlexpression = $internalFilterInfo->getExpressionAsString();
+        $mysqlexpression = $filterInfo->getExpressionAsString();
         $this->AssertEquals("(CEIL(FLOOR(ID)) = 2)", $mysqlexpression);
 
 	}
@@ -319,10 +319,10 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
         $requestDescription = $uriProcessor->getRequestDescription();
         $this->assertNotNull($requestDescription);
 
-        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
-        $this->assertNotNull($internalFilterInfo);
+        $filterInfo = $requestDescription->getFilterInfo();
+        $this->assertNotNull($filterInfo);
 
-        $mysqlexpression = $internalFilterInfo->getExpressionAsString();
+        $mysqlexpression = $filterInfo->getExpressionAsString();
         $this->AssertEquals("(ROUND(ID) = 1)", $mysqlexpression);
 	
 	}
@@ -353,10 +353,10 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
         $requestDescription = $uriProcessor->getRequestDescription();
         $this->assertNotNull($requestDescription);
 
-        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
-        $this->assertNotNull($internalFilterInfo);
+        $filterInfo = $requestDescription->getFilterInfo();
+        $this->assertNotNull($filterInfo);
 
-        $mysqlexpression = $internalFilterInfo->getExpressionAsString();
+        $mysqlexpression = $filterInfo->getExpressionAsString();
         $this->AssertEquals("((ID % 5) = 4)", $mysqlexpression);
 
 	}
@@ -387,10 +387,10 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
         $requestDescription = $uriProcessor->getRequestDescription();
         $this->assertNotNull($requestDescription);
 
-        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
-        $this->assertNotNull($internalFilterInfo);
+        $filterInfo = $requestDescription->getFilterInfo();
+        $this->assertNotNull($filterInfo);
 
-        $mysqlexpression = $internalFilterInfo->getExpressionAsString();
+        $mysqlexpression = $filterInfo->getExpressionAsString();
         $this->AssertEquals("(STRCMP(SUBSTRING(post_title, 1 + 1), 'Data PHP Producer') = 0)", $mysqlexpression);
 
 	}
@@ -422,10 +422,10 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
             $requestDescription = $uriProcessor->getRequestDescription();
             $this->assertNotNull($requestDescription);
 
-            $internalFilterInfo = $requestDescription->getInternalFilterInfo();
-            $this->assertNotNull($internalFilterInfo);
+            $filterInfo = $requestDescription->getFilterInfo();
+            $this->assertNotNull($filterInfo);
 
-			$mysqlexpression = $internalFilterInfo->getExpressionAsString();
+			$mysqlexpression = $filterInfo->getExpressionAsString();
 			$this->AssertEquals("(STRCMP(SUBSTRING(post_title, 1 + 1, 6), 'Data P') = 0)", $mysqlexpression);
 
 	}
@@ -457,10 +457,10 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
         $requestDescription = $uriProcessor->getRequestDescription();
         $this->assertNotNull($requestDescription);
 
-        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
-        $this->assertNotNull($internalFilterInfo);
+        $filterInfo = $requestDescription->getFilterInfo();
+        $this->assertNotNull($filterInfo);
 
-        $mysqlexpression = $internalFilterInfo->getExpressionAsString();
+        $mysqlexpression = $filterInfo->getExpressionAsString();
         $this->AssertEquals("(STRCMP(TRIM('  OData PHP Producer   '), post_title) = 0)", $mysqlexpression);
 
 	}
@@ -492,10 +492,10 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
         $requestDescription = $uriProcessor->getRequestDescription();
         $this->assertNotNull($requestDescription);
 
-        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
-        $this->assertNotNull($internalFilterInfo);
+        $filterInfo = $requestDescription->getFilterInfo();
+        $this->assertNotNull($filterInfo);
 
-        $mysqlexpression = $internalFilterInfo->getExpressionAsString();
+        $mysqlexpression = $filterInfo->getExpressionAsString();
         $this->AssertEquals("(STRCMP('umer',RIGHT(post_title,LENGTH('umer'))) = 0)", $mysqlexpression);
 
 	}
@@ -527,10 +527,10 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
         $requestDescription = $uriProcessor->getRequestDescription();
         $this->assertNotNull($requestDescription);
 
-        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
-        $this->assertNotNull($internalFilterInfo);
+        $filterInfo = $requestDescription->getFilterInfo();
+        $this->assertNotNull($filterInfo);
 
-        $mysqlexpression = $internalFilterInfo->getExpressionAsString();
+        $mysqlexpression = $filterInfo->getExpressionAsString();
         $this->AssertEquals("(STRCMP('OData',LEFT(post_title,LENGTH('OData'))) = 0)", $mysqlexpression);
 
 	}
@@ -562,10 +562,10 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
         $requestDescription = $uriProcessor->getRequestDescription();
         $this->assertNotNull($requestDescription);
 
-        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
-        $this->assertNotNull($internalFilterInfo);
+        $filterInfo = $requestDescription->getFilterInfo();
+        $this->assertNotNull($filterInfo);
 
-        $mysqlexpression = $internalFilterInfo->getExpressionAsString();
+        $mysqlexpression = $filterInfo->getExpressionAsString();
         $this->AssertEquals("(INSTR(post_title, 'ata') - 1 = 2)", $mysqlexpression);
 
 	}
@@ -597,10 +597,10 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
         $requestDescription = $uriProcessor->getRequestDescription();
         $this->assertNotNull($requestDescription);
 
-        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
-        $this->assertNotNull($internalFilterInfo);
+        $filterInfo = $requestDescription->getFilterInfo();
+        $this->assertNotNull($filterInfo);
 
-        $mysqlexpression = $internalFilterInfo->getExpressionAsString();
+        $mysqlexpression = $filterInfo->getExpressionAsString();
         $this->AssertEquals("(STRCMP(REPLACE(post_title,' ',''), 'ODataPHPProducer') = 0)", $mysqlexpression);
 
 	}
@@ -632,10 +632,10 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
         $requestDescription = $uriProcessor->getRequestDescription();
         $this->assertNotNull($requestDescription);
 
-        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
-        $this->assertNotNull($internalFilterInfo);
+        $filterInfo = $requestDescription->getFilterInfo();
+        $this->assertNotNull($filterInfo);
 
-        $mysqlexpression = $internalFilterInfo->getExpressionAsString();
+        $mysqlexpression = $filterInfo->getExpressionAsString();
         $this->AssertEquals("(LOCATE('Producer', post_title) > 0)", $mysqlexpression);
 
 	}
@@ -667,10 +667,10 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
         $requestDescription = $uriProcessor->getRequestDescription();
         $this->assertNotNull($requestDescription);
 
-        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
-        $this->assertNotNull($internalFilterInfo);
+        $filterInfo = $requestDescription->getFilterInfo();
+        $this->assertNotNull($filterInfo);
 
-        $mysqlexpression = $internalFilterInfo->getExpressionAsString();
+        $mysqlexpression = $filterInfo->getExpressionAsString();
         $this->AssertEquals("((LOCATE('Producer', post_title) > 0) && (INSTR(post_title, 'Producer') - 1 = 11))", $mysqlexpression);
 
 	}
@@ -705,11 +705,11 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
         $check = !is_null($requestDescription);
         $this->assertTrue($check);
         
-        $internalFilterInfo = $requestDescription->getInternalFilterInfo();
-        $check = !is_null($internalFilterInfo);
+        $filterInfo = $requestDescription->getFilterInfo();
+        $check = !is_null($filterInfo);
         $this->assertTrue($check);
         
-        $mysqlexpression = $internalFilterInfo->getExpressionAsString();
+        $mysqlexpression = $filterInfo->getExpressionAsString();
         $this->AssertEquals("(STRCMP(CONCAT(CONCAT(post_title,', '),'Open source now'), 'OData .NET Producer, Open source now') = 0)", $mysqlexpression);
 
 	}

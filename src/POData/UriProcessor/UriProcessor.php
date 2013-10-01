@@ -234,8 +234,8 @@ class UriProcessor
         } else {
             $entityInstances = $this->_provider->getResourceSet(
                 $segmentDescriptor->getTargetResourceSetWrapper()->getResourceSet(),
-                $this->_requestDescription->getInternalFilterInfo(),
-                null, // $select :: We will not pass RequestionDescriptio::ProjectionNode which contains 
+                $this->_requestDescription->getFilterInfo(),
+                null, // $select :: We will not pass RequestionDescription::ProjectionNode which contains
                 // $select and $expand info to IDSQP2 this will be handled by the library::_handleExpansion 
                 // function.
                 $this->_requestDescription->getInternalOrderByInfo(),
@@ -279,7 +279,7 @@ class UriProcessor
                         $segmentDescriptor->getPrevious()->getResult(),
                         $segmentDescriptor->getTargetResourceSetWrapper()->getResourceSet(),
                         $segmentDescriptor->getProjectedProperty(),
-                        $this->_requestDescription->getInternalFilterInfo(),
+                        $this->_requestDescription->getFilterInfo(),
                         null, // $select
                         null, // $orderby
                         null, // $top

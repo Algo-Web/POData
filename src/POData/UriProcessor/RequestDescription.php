@@ -17,7 +17,7 @@ use POData\UriProcessor\ResourcePathProcessor\SegmentParser\RequestTargetKind;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\SegmentDescriptor;
 use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
 use POData\UriProcessor\QueryProcessor\SkipTokenParser\InternalSkipTokenInfo;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\InternalFilterInfo;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\RootProjectionNode;
 use POData\Providers\Metadata\ResourceType;
 
@@ -168,12 +168,11 @@ class RequestDescription
     private $_internalSkipTokenInfo;
 
     /**
-     * Holds the parsed details for $filter option, this will
-     * be NULL if $filter option is absent.
-     * 
-     * @var InternalFilterInfo|null
+     * Holds the parsed details for $filter option, this will be NULL if $filter option is absent.
+     *
+     * @var FilterInfo|null
      */
-    private $_internalFilterInfo;
+    private $_filterInfo;
 
     /**
      * Holds reference to the root of the tree describing expand
@@ -229,7 +228,7 @@ class RequestDescription
         $this->_topOptionCount = null;
         $this->_internalOrdeByInfo = null;
         $this->_internalSkipTokenInfo = null;
-        $this->_internalFilterInfo = null;
+        $this->_filterInfo = null;
         $this->_countValue = null;
         $this->_isExecuted = false;
     }
@@ -617,26 +616,23 @@ class RequestDescription
     }
 
     /**
-     * Gets the parsed details for $filter option.
-     * 
-     * @return InternalFilterInfo|null Returns parsed details of $filter
-     *                                 option, NULL if $filter is absent.
+     *
+     * @return FilterInfo|null Returns parsed details of $filter option, NULL if $filter is absent.
+     *
      */
-    public function getInternalFilterInfo()
+    public function getFilterInfo()
     {
-        return $this->_internalFilterInfo;
+        return $this->_filterInfo;
     }
 
     /**
-     * Sets $filter information.
-     *     
-     * @param InternalFilterInfo &$internalFilterInfo The filter information.
+     *
+     * @param FilterInfo $filterInfo The filter information.
      * 
-     * @return void
      */
-    public function setInternalFilterInfo(InternalFilterInfo &$internalFilterInfo)
+    public function setFilterInfo(FilterInfo $filterInfo)
     {
-        $this->_internalFilterInfo = $internalFilterInfo;
+        $this->_filterInfo = $filterInfo;
     }
 
     /**

@@ -3,6 +3,8 @@
 namespace POData\UriProcessor\ResourcePathProcessor\SegmentParser;
 
 use POData\Providers\Metadata\ResourceSetWrapper;
+use POData\Providers\Metadata\ResourceType;
+use POData\Providers\Metadata\ResourceProperty;
 
 /**
  * Class SegmentDescriptor
@@ -82,7 +84,7 @@ class SegmentDescriptor
     /**
      * The data for this segment
      * 
-     * @var unknown_type
+     * @var mixed
      */
     private $_result;
 
@@ -120,12 +122,10 @@ class SegmentDescriptor
     }
 
     /**
-     * Creates a new instance of SegmentDescriptor from another 
-     * SegmentDescriptor instance
-     * 
-     * @param SegmentDescriptor $anotherDescriptor The descriptor whose shallow copy
-     *                                             to be created
-     * 
+     * Creates a new instance of SegmentDescriptor from another SegmentDescriptor instance
+     *
+     * @param SegmentDescriptor $anotherDescriptor The descriptor whose shallow copy to be created
+     *
      * @return SegmentDescriptor
      */
     public static function createFrom(SegmentDescriptor $anotherDescriptor)
@@ -136,8 +136,7 @@ class SegmentDescriptor
         $descriptor->_projectedProperty = $anotherDescriptor->_projectedProperty;
         $descriptor->_singleResult = $anotherDescriptor->_singleResult;
         $descriptor->_targetKind = $anotherDescriptor->_targetKind;
-        $descriptor->_targetResourceSetWrapper 
-            = $anotherDescriptor->_targetResourceSetWrapper;
+        $descriptor->_targetResourceSetWrapper = $anotherDescriptor->_targetResourceSetWrapper;
         $descriptor->_targetResourceType = $anotherDescriptor->_targetResourceType;
         $descriptor->_targetSource = $anotherDescriptor->_targetSource;
         return $descriptor;
@@ -157,8 +156,6 @@ class SegmentDescriptor
      * sets the identifier for this segment
      * 
      * @param string $identifier The identifier part of the segment
-     * 
-     * @return void
      */
     public function setIdentifier($identifier)
     {
@@ -178,10 +175,7 @@ class SegmentDescriptor
     /**
      * Sets the description of the key, if any, associated with this segment
      * 
-     * @param KeyDescriptor $keyDescriptor The descriptor for the key associated 
-     *                                     with this segment
-     * 
-     * @return void
+     * @param KeyDescriptor $keyDescriptor The descriptor for the key associated with this segment
      */
     public function setKeyDescriptor($keyDescriptor)
     {
@@ -201,10 +195,7 @@ class SegmentDescriptor
     /**
      * Sets the property that is being projected in this segment, if there's any
      * 
-     * @param ResourceProperty $projectedProperty The property projected in 
-     *                                            this segment
-     * 
-     * @return void
+     * @param ResourceProperty $projectedProperty The property projected in this segment
      */
     public function setProjectedProperty($projectedProperty)
     {
@@ -224,10 +215,7 @@ class SegmentDescriptor
     /**
      * Sets whether this segment targets a single result or not
      * 
-     * @param boolean $isSingleResult Boolean repersents whether this segment 
-     *                                        targets a single result or not
-     * 
-     * @return void
+     * @param boolean $isSingleResult Boolean represents whether this segment targets a single result or not
      */
     public function setSingleResult($isSingleResult)
     {
@@ -248,8 +236,6 @@ class SegmentDescriptor
      * Sets the kind of resource targeted by this segment
      * 
      * @param RequestTargetKind $targetKind The kind of resource
-     * 
-     * @return void
      */
     public function setTargetKind($targetKind)
     {
@@ -257,9 +243,8 @@ class SegmentDescriptor
     }
 
     /**
-     * Gets the resource set wrapper (describes the resource set for this segment 
-     * and its configuration) if applicable
-     * 
+     * Gets the resource set wrapper (describes the resource set for this segment and its configuration) if applicable
+     *
      * @return ResourceSetWrapper
      */
     public function getTargetResourceSetWrapper()
@@ -272,8 +257,6 @@ class SegmentDescriptor
      * and its configuration) if applicable
      * 
      * @param ResourceSetWrapper $resourceSetWrapper The resource set wrapper
-     * 
-     * @return void
      */
     public function setTargetResourceSetWrapper($resourceSetWrapper)
     {
@@ -295,10 +278,7 @@ class SegmentDescriptor
      * Sets reference to an instance of ResourceType describes type of resource 
      * targeted by this segment
      * 
-     * @param ResourceType $resourceType Type describing resource targeted by 
-     *                                   this segment
-     * 
-     * @return void
+     * @param ResourceType $resourceType Type describing resource targeted by this segment
      */
     public function setTargetResourceType($resourceType)
     {
@@ -319,8 +299,6 @@ class SegmentDescriptor
      * Sets the kind of 'source of data' for this segment
      * 
      * @param RequestTargetSource $targetSource The kind of 'source of data' 
-     * 
-     * @return void
      */
     public function setTargetSource($targetSource)
     {
@@ -330,7 +308,7 @@ class SegmentDescriptor
     /**
      * Gets the data targeted by this segment 
      * 
-     * @return var
+     * @return mixed
      */
     public function getResult()
     {
@@ -340,9 +318,7 @@ class SegmentDescriptor
     /**
      * Sets the data targeted by this segment 
      * 
-     * @param var $result The data targetted by this segment
-     * 
-     * @return void
+     * @param mixed $result The data targeted by this segment
      */
     public function setResult($result)
     {
@@ -352,8 +328,7 @@ class SegmentDescriptor
     /**
      * Gets reference to next descriptor
      * 
-     * @return SegmentDescriptor|null Returns reference to next descriptor, 
-     *                                NULL if this is the last descriptor
+     * @return SegmentDescriptor|null Returns reference to next descriptor, NULL if this is the last descriptor
      */
     public function getNext()
     {
@@ -364,8 +339,6 @@ class SegmentDescriptor
      * Sets reference to next descriptor
      * 
      * @param SegmentDescriptor $next Reference to next descriptor
-     * 
-     * @return void
      */
     public function setNext(SegmentDescriptor $next)
     {
@@ -373,10 +346,7 @@ class SegmentDescriptor
     }
 
     /**
-     * Gets reference to previous descriptor
-     * 
-     * @return SegmentDescriptor|null Returns reference to previous descriptor, 
-     *                                NULL if this is the first descriptor
+     * @return SegmentDescriptor|null Returns reference to previous descriptor, NULL if this is the first descriptor
      */
     public function getPrevious()
     {
@@ -387,8 +357,6 @@ class SegmentDescriptor
      * Sets reference to previous descriptor
      * 
      * @param SegmentDescriptor $previous Reference to previous descriptor
-     * 
-     * @return void
      */
     public function setPrevious(SegmentDescriptor $previous)
     {
@@ -396,9 +364,7 @@ class SegmentDescriptor
     }
 
     /**
-     * Returns true if this segment has a key filter with values; false otherwise
-     * 
-     * @return boolean
+     * @return boolean true if this segment has a key filter with values; false otherwise
      */
     public function hasKeyValues()
     {

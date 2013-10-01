@@ -2,7 +2,7 @@
 
 namespace POData\UriProcessor\QueryProcessor\ExpressionParser;
 
-use POData\UriProcessor\QueryProcessor\AnonymousFunction;
+
 use POData\Common\Messages;
 use POData\Common\ODataException;
 use POData\Providers\Metadata\Type\Boolean;
@@ -68,14 +68,14 @@ class ExpressionParser2 extends ExpressionParser
     }
 
     /**
-     * Parse and generate PHP or custom (using custom expression provider) expression from the the given odata expression.
+     * Parse and generate expression from the the given odata expression.
      *
      * 
      * @param string              $text               The text expression to parse
      * @param ResourceType        $resourceType       The resource type in which
      * @param IExpressionProvider $expressionProvider Implementation of IExpressionProvider
      * 
-     * @return InternalFilterInfo
+     * @return FilterInfo
      * 
      * @throws ODataException If any error occurs while parsing the odata expression or building the php/custom expression.
      *
@@ -100,10 +100,9 @@ class ExpressionParser2 extends ExpressionParser
         }
 
         
-        return new InternalFilterInfo(
+        return new FilterInfo(
             $expressionParser2->_navigationPropertiesUsedInTheExpression,
-            $expressionAsString,
-            $isCustomExpressionProvider
+            $expressionAsString
         );
     }
 
@@ -136,12 +135,9 @@ class ExpressionParser2 extends ExpressionParser
     /**
      * Process the expression node for nullability
      * 
-     * @param AbstractExpression $expression            The expression node to 
-     *                                                  process.
-     * @param AbstractExpression $parentExpression      The parent expression of 
-     *                                                  expression node to process.
-     * @param boolean            $checkNullForMostChild whether to include null check
-     *                                                  for current property.
+     * @param AbstractExpression $expression The expression node to process.
+     * @param AbstractExpression $parentExpression The parent expression of expression node to process.
+     * @param boolean            $checkNullForMostChild whether to include null check for current property.
      * 
      * @return AbstractExpression New expression tree with nullability check
      * 
