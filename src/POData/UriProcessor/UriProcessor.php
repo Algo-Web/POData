@@ -320,41 +320,8 @@ class UriProcessor
         global $_odata_server_count;
 
         $result = $segmentDescriptor->getResult();
-        //Apply $filter option
-        if (!is_null($result)) {
-            $internalFilterInfo 
-                = $this->_requestDescription->getInternalFilterInfo();
-            if (!is_null($internalFilterInfo)) {
-                if (!$internalFilterInfo->isCustomExpression()) {
-                  // The QP implementation is not going to perform the filtering
-                  // opted for PHPExpressionProvider so run the filtering.
-                    $filterFunction 
-                        = $internalFilterInfo->getFilterFunction()->getReference();
-                    if (is_array($result)) {
-                        $count = count($result);
-                        for ($i = 0; $i < $count; $i++) {
-                            if (!$filterFunction($result[$i])) {
-                                unset($result[$i]);
-                            } 
-                        }
 
-                        $result = array_merge($result);
-                    } else {
-                        if (!$filterFunction($result)) {
-                            unset($result);
-                            $result = null;
-                        }
-                    }
 
-                    unset($filterFunction);
-                } else {
-                      // The QP2 implementation performed the filtering so don't perform
-                      // filtering using library generated filter function.
-                }
-
-              unset($internalFilterInfo);
-            }
-        }
         // $inlinecount=allpages should ignore the query options 
         // $skiptoken, $top and $skip so take count before applying these options
         if ($this->_requestDescription->getRequestCountOption() != RequestCountOption::NONE() && is_array($result)
