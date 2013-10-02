@@ -24,92 +24,98 @@ use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ExpressionTy
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionParser;
 use POData\Common\ODataException;
 use POData\Providers\Metadata\IMetadataProvider;
+use POData\Providers\Metadata\ResourceType;
 
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 
 class ExpressionParserTest extends \PHPUnit_Framework_TestCase
 {
     /** @var IMetadataProvider  */
-    private $_northWindMetadata;
-    
+    private $northWindMetadata;
+
+	/**
+	 * @var ResourceType
+	 */
+	private $customersResourceType;
+
     protected function setUp()
     {        
-        $this->_northWindMetadata = NorthWindMetadata::Create();
+        $this->northWindMetadata = NorthWindMetadata::Create();
+
+	    $this->customersResourceType = $this->northWindMetadata->resolveResourceSet('Customers')->getResourceType();
     }
 
     public function testConstantExpression()
     {
         $expression = '123';
-        $parser = new ExpressionParser($expression,
-                     $this->_northWindMetadata->resolveResourceSet('Customers')->getResourceType(),
-                     false);
+        $parser = new ExpressionParser($expression,$this->customersResourceType, false);
         $expr = $parser->parseFilter();
-        $this->assertEquals($expr instanceof ConstantExpression, true);
+        $this->assertTrue($expr instanceof ConstantExpression);
         $this->assertTrue($expr->getType() instanceof Int32);
-        $this->assertEquals($expr->getValue(), 123);
+        $this->assertEquals(123, $expr->getValue());
 
         $expression = '-127';
         $parser->resetParser($expression);
         $expr = $parser->parseFilter();
-        $this->assertEquals($expr instanceof ConstantExpression, true);
+        $this->assertTrue($expr instanceof ConstantExpression);
         $this->assertTrue($expr->getType() instanceof Int32);
-        $this->assertEquals($expr->getValue(), -127);
+        $this->assertEquals(-127, $expr->getValue());
 
         $expression = '125L';
         $parser->resetParser($expression);
         $expr = $parser->parseFilter();
-        $this->assertEquals($expr instanceof ConstantExpression, true);
+        $this->assertTrue($expr instanceof ConstantExpression);
         $this->assertTrue($expr->getType() instanceof Int64);
-        $this->assertEquals($expr->getValue(), '125');
+        $this->assertEquals('125', $expr->getValue());
 
         $expression = '122.3';
         $parser->resetParser($expression);
         $expr = $parser->parseFilter();
-        $this->assertEquals($expr instanceof ConstantExpression, true);
+        $this->assertTrue($expr instanceof ConstantExpression);
         $this->assertTrue($expr->getType() instanceof Double);
-        $this->assertEquals($expr->getValue(), 122.3);
+        $this->assertEquals(122.3, $expr->getValue());
 
         $expression = '126E2';
         $parser->resetParser($expression);
         $expr = $parser->parseFilter();
-        $this->assertEquals($expr instanceof ConstantExpression, true);
+        $this->assertTrue($expr instanceof ConstantExpression);
         $this->assertTrue($expr->getType() instanceof Double);
-        $this->assertEquals($expr->getValue(), '126E2');
+        $this->assertEquals('126E2', $expr->getValue());
 
         $expression = '121D';
         $parser->resetParser($expression);
         $expr = $parser->parseFilter();
-        $this->assertEquals($expr instanceof ConstantExpression, true);
+        $this->assertTrue($expr instanceof ConstantExpression);
         $this->assertTrue($expr->getType() instanceof Double);
         $this->assertEquals('121', $expr->getValue());
 
         $expression = '126.3F';
         $parser->resetParser($expression);
         $expr = $parser->parseFilter();
-        $this->assertEquals($expr instanceof ConstantExpression, true);
+        $this->assertTrue($expr instanceof ConstantExpression);
         $this->assertTrue($expr->getType() instanceof Single);
         $this->assertEquals('126.3', $expr->getValue());
 
         $expression = '126.3M';
         $parser->resetParser($expression);
         $expr = $parser->parseFilter();
-        $this->assertEquals($expr instanceof ConstantExpression, true);
-        $this->assertEquals($expr->getType() instanceof Decimal, true);
+        $this->assertTrue($expr instanceof ConstantExpression);
+        $this->assertTrue($expr->getType() instanceof Decimal);
         $this->assertEquals('126.3', $expr->getValue());
 
         $expression = '126E2m';
         $parser->resetParser($expression);
         $expr = $parser->parseFilter();
-        $this->assertEquals($expr instanceof ConstantExpression, true);
-        $this->assertEquals($expr->getType() instanceof Decimal, true);
-        $this->assertEquals($expr->getValue(), '126E2');
+        $this->assertTrue($expr instanceof ConstantExpression);
+        $this->assertTrue($expr->getType() instanceof Decimal);
+        $this->assertEquals('126E2', $expr->getValue());
 
         $expression = 'datetime\'1990-12-23\'';
         $parser->resetParser($expression);
         $expr = $parser->parseFilter();
-        $this->assertEquals($expr instanceof ConstantExpression, true);
-        $this->assertEquals($expr->getType() instanceof DateTime, true);
-        $this->assertEquals($expr->getValue(), '\'1990-12-23\'');
+        $this->assertTrue($expr instanceof ConstantExpression);
+        $this->assertTrue($expr->getType() instanceof DateTime);
+        $this->assertEquals("'1990-12-23'", $expr->getValue());
 
         $expression = 'datetime\'11990-12-23\'';
         $parser->resetParser($expression);
@@ -126,13 +132,13 @@ class ExpressionParserTest extends \PHPUnit_Framework_TestCase
         //$expression = 'binary\'ABCD\'';
         //$parser->resetParser($expression);
         //$expr = $parser->parseFilter();
-        //$this->assertEquals($expr instanceof ConstantExpression, true);
+        //$this->assertTrue($expr instanceof ConstantExpression);
         //$this->assertEquals($expr->getType() instanceof Binary, true);
 
         //$expression = 'X\'123F\'';
         //$parser->resetParser($expression);
         //$expr = $parser->parseFilter();
-        //$this->assertEquals($expr instanceof ConstantExpression, true);
+        //$this->assertTrue($expr instanceof ConstantExpression);
         //$this->assertEquals($expr->getType() instanceof Binary, true);
             
     }
@@ -140,33 +146,31 @@ class ExpressionParserTest extends \PHPUnit_Framework_TestCase
     public function testPropertyAccessExpression()
     {
         $expression = 'CustomerID';
-        $parser = new ExpressionParser($expression,
-                     $this->_northWindMetadata->resolveResourceSet('Customers')->getResourceType(),
-                     false);
+        $parser = new ExpressionParser($expression, $this->customersResourceType, false);
         $expr = $parser->parseFilter();
-        $this->assertEquals($expr instanceof PropertyAccessExpression, true);
-        $this->assertEquals($expr->getType() instanceof String, true);
+        $this->assertTrue($expr instanceof PropertyAccessExpression);
+        $this->assertTrue($expr->getType() instanceof String);
 
         $expression = 'Rating';
         $parser->resetParser($expression);
         $expr = $parser->parseFilter();
-        $this->assertEquals($expr instanceof PropertyAccessExpression, true);
+        $this->assertTrue($expr instanceof PropertyAccessExpression);
         $this->assertTrue($expr->getType() instanceof Int32);
 
         $expression = 'Address';
         $parser->resetParser($expression);
         $expr = $parser->parseFilter();
-        $this->assertEquals($expr instanceof PropertyAccessExpression, true);
-        $this->assertEquals($expr->getType() instanceof Navigation, true);
-        $this->assertEquals($expr->getResourceType()->getFullName(), 'Address');
+        $this->assertTrue($expr instanceof PropertyAccessExpression);
+        $this->assertTrue($expr->getType() instanceof Navigation);
+        $this->assertEquals('Address', $expr->getResourceType()->getFullName());
 
         $expression = 'Address/LineNumber';
         $parser->resetParser($expression);
         $expr = $parser->parseFilter();
-        $this->assertEquals($expr instanceof PropertyAccessExpression, true);
+        $this->assertTrue($expr instanceof PropertyAccessExpression);
         $this->assertTrue($expr->getType() instanceof Int32);
-        $this->assertEquals($expr->getResourceType()->getFullName(), 'Edm.Int32');
-        $this->assertEquals($expr->getParent()->getResourceType()->getFullName(), 'Address');
+        $this->assertEquals('Edm.Int32', $expr->getResourceType()->getFullName());
+        $this->assertEquals('Address', $expr->getParent()->getResourceType()->getFullName());
 
         $expression = 'Address\LineNumber';
         $parser->resetParser($expression);
@@ -206,12 +210,12 @@ class ExpressionParserTest extends \PHPUnit_Framework_TestCase
 
         $expression = 'Customer/CustomerID';
         $parser = new ExpressionParser($expression,
-                     $this->_northWindMetadata->resolveResourceSet('Orders')->getResourceType(),
+                     $this->northWindMetadata->resolveResourceSet('Orders')->getResourceType(),
                      false);
         $expr = $parser->parseFilter();
-        $this->assertEquals($expr instanceof PropertyAccessExpression, true);
-        $this->assertEquals($expr->getType() instanceof String, true);
-        $this->assertEquals($expr->getResourceType()->getFullName(), 'Edm.String');
+        $this->assertTrue($expr instanceof PropertyAccessExpression);
+        $this->assertTrue($expr->getType() instanceof String);
+        $this->assertEquals('Edm.String', $expr->getResourceType()->getFullName());
 
         $expression = 'Customer/Orders/OrderID';
         $parser->resetParser($expression);
@@ -228,15 +232,13 @@ class ExpressionParserTest extends \PHPUnit_Framework_TestCase
     public function testArithmeticExpressionAndOperandPromotion()
     {
         $expression = "1 add 2";
-        $parser = new ExpressionParser($expression,
-                     $this->_northWindMetadata->resolveResourceSet('Customers')->getResourceType(),
-                     false);
+        $parser = new ExpressionParser($expression, $this->customersResourceType, false);
         $expr = $parser->parseFilter();
         $this->assertTrue($expr instanceof ArithmeticExpression);
         $this->assertTrue($expr->getType() instanceof Int32);
         $this->assertTrue($expr->getLeft() instanceof ConstantExpression);
-        $this->assertEquals($expr->getRight() instanceof ConstantExpression, true);
-        $this->assertEquals($expr->getLeft()->getValue(), 1);
+        $this->assertTrue($expr->getRight() instanceof ConstantExpression);
+        $this->assertEquals(1, $expr->getLeft()->getValue());
 
         $expression = "1 sub 2.5";
         $parser->resetParser($expression);
@@ -244,9 +246,9 @@ class ExpressionParserTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($expr instanceof ArithmeticExpression);
         $this->assertTrue($expr->getType() instanceof Double);
         $this->assertTrue($expr->getLeft() instanceof ConstantExpression);
-        $this->assertEquals($expr->getRight() instanceof ConstantExpression, true);
-        $this->assertEquals($expr->getLeft()->getType() instanceof Double, true);
-        $this->assertEquals($expr->getRight()->getType() instanceof Double, true);
+        $this->assertTrue($expr->getRight() instanceof ConstantExpression);
+        $this->assertTrue($expr->getLeft()->getType() instanceof Double);
+        $this->assertTrue($expr->getRight()->getType() instanceof Double);
 
         $expression = "1.1F sub 2";
         $parser->resetParser($expression);
@@ -254,9 +256,9 @@ class ExpressionParserTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($expr instanceof ArithmeticExpression);
         $this->assertTrue($expr->getType() instanceof Single);
         $this->assertTrue($expr->getLeft() instanceof ConstantExpression);
-        $this->assertEquals($expr->getRight() instanceof ConstantExpression, true);
-        $this->assertEquals($expr->getLeft()->getType() instanceof Single, true);
-        $this->assertEquals($expr->getRight()->getType() instanceof Single, true);
+        $this->assertTrue($expr->getRight() instanceof ConstantExpression);
+        $this->assertTrue($expr->getLeft()->getType() instanceof Single);
+        $this->assertTrue($expr->getRight()->getType() instanceof Single);
 
         $expression = "1.1F mul 2.7";
         $parser->resetParser($expression);
@@ -264,66 +266,66 @@ class ExpressionParserTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($expr instanceof ArithmeticExpression);
         $this->assertTrue($expr->getType() instanceof Double);
         $this->assertTrue($expr->getLeft() instanceof ConstantExpression);
-        $this->assertEquals($expr->getRight() instanceof ConstantExpression, true);
-        $this->assertEquals($expr->getLeft()->getType() instanceof Double, true);
-        $this->assertEquals($expr->getRight()->getType() instanceof Double, true);
+        $this->assertTrue($expr->getRight() instanceof ConstantExpression);
+        $this->assertTrue($expr->getLeft()->getType() instanceof Double);
+        $this->assertTrue($expr->getRight()->getType() instanceof Double);
 
         $expression = "1 add 2 sub 4";
         $parser->resetParser($expression);
         $expr = $parser->parseFilter();
-        $this->assertEquals($expr->getNodeType(), ExpressionType::SUBTRACT);
-        $this->assertEquals($expr->getLeft() instanceof ArithmeticExpression, true);
-        $this->assertEquals($expr->getRight() instanceof ConstantExpression, true);
-        $this->assertEquals($expr->getLeft()->getNodeType(), ExpressionType::ADD);
-        $this->assertEquals($expr->getRight()->getNodeType(), ExpressionType::CONSTANT);
-        $this->assertEquals($expr->getLeft()->getLeft() instanceof ConstantExpression, true);
-        $this->assertEquals($expr->getLeft()->getRight() instanceof ConstantExpression, true);
-        $this->assertEquals($expr->getLeft()->getLeft()->getValue(), 1);
+        $this->assertEquals(ExpressionType::SUBTRACT, $expr->getNodeType());
+        $this->assertTrue($expr->getLeft() instanceof ArithmeticExpression);
+        $this->assertTrue($expr->getRight() instanceof ConstantExpression);
+        $this->assertEquals(ExpressionType::ADD, $expr->getLeft()->getNodeType());
+        $this->assertEquals(ExpressionType::CONSTANT, $expr->getRight()->getNodeType());
+        $this->assertTrue($expr->getLeft()->getLeft() instanceof ConstantExpression);
+        $this->assertTrue($expr->getLeft()->getRight() instanceof ConstantExpression);
+        $this->assertEquals(1, $expr->getLeft()->getLeft()->getValue());
 
         $expression = "1 add (2 sub 4)";
         $parser->resetParser($expression);
         $expr = $parser->parseFilter();
-        $this->assertEquals($expr->getNodeType(), ExpressionType::ADD);
+        $this->assertEquals(ExpressionType::ADD, $expr->getNodeType());
         $this->assertTrue($expr->getLeft() instanceof ConstantExpression);
-        $this->assertEquals($expr->getRight() instanceof ArithmeticExpression, true);
-        $this->assertEquals($expr->getRight()->getNodeType(), ExpressionType::SUBTRACT);
-        $this->assertEquals($expr->getLeft()->getNodeType(), ExpressionType::CONSTANT);
-        $this->assertEquals($expr->getRight()->getLeft() instanceof ConstantExpression, true);
-        $this->assertEquals($expr->getRight()->getRight() instanceof ConstantExpression, true);
-        $this->assertEquals($expr->getRight()->getLeft()->getValue(), 2);
+        $this->assertTrue($expr->getRight() instanceof ArithmeticExpression);
+        $this->assertEquals(ExpressionType::SUBTRACT, $expr->getRight()->getNodeType());
+        $this->assertEquals(ExpressionType::CONSTANT, $expr->getLeft()->getNodeType());
+        $this->assertTrue($expr->getRight()->getLeft() instanceof ConstantExpression);
+        $this->assertTrue($expr->getRight()->getRight() instanceof ConstantExpression);
+        $this->assertEquals(2, $expr->getRight()->getLeft()->getValue());
 
         $expression = "1 add (2 sub 4)";
         $parser->resetParser($expression);
         $expr = $parser->parseFilter();
-        $this->assertEquals($expr->getNodeType(), ExpressionType::ADD);
+        $this->assertEquals(ExpressionType::ADD, $expr->getNodeType());
         $this->assertTrue($expr->getLeft() instanceof ConstantExpression);
-        $this->assertEquals($expr->getRight() instanceof ArithmeticExpression, true);
-        $this->assertEquals($expr->getRight()->getNodeType(), ExpressionType::SUBTRACT);
-        $this->assertEquals($expr->getLeft()->getNodeType(), ExpressionType::CONSTANT);
-        $this->assertEquals($expr->getRight()->getLeft() instanceof ConstantExpression, true);
-        $this->assertEquals($expr->getRight()->getRight() instanceof ConstantExpression, true);
-        $this->assertEquals($expr->getRight()->getLeft()->getValue(), 2);
+        $this->assertTrue($expr->getRight() instanceof ArithmeticExpression);
+        $this->assertEquals(ExpressionType::SUBTRACT, $expr->getRight()->getNodeType());
+        $this->assertEquals(ExpressionType::CONSTANT, $expr->getLeft()->getNodeType());
+        $this->assertTrue($expr->getRight()->getLeft() instanceof ConstantExpression);
+        $this->assertTrue($expr->getRight()->getRight() instanceof ConstantExpression);
+        $this->assertEquals(2, $expr->getRight()->getLeft()->getValue());
 
         $expression = "1 add 2 mul 4";
         $parser->resetParser($expression);
         $expr = $parser->parseFilter();
-        $this->assertEquals($expr->getNodeType(), ExpressionType::ADD);
+        $this->assertEquals(ExpressionType::ADD, $expr->getNodeType());
         $this->assertTrue($expr->getLeft() instanceof ConstantExpression);
-        $this->assertEquals($expr->getRight() instanceof ArithmeticExpression, true);
-        $this->assertEquals($expr->getRight()->getNodeType(), ExpressionType::MULTIPLY);
-        $this->assertEquals($expr->getLeft()->getNodeType(), ExpressionType::CONSTANT);
-        $this->assertEquals($expr->getRight()->getLeft() instanceof ConstantExpression, true);
-        $this->assertEquals($expr->getRight()->getRight() instanceof ConstantExpression, true);
-        $this->assertEquals($expr->getRight()->getRight()->getValue(), 4);
+        $this->assertTrue($expr->getRight() instanceof ArithmeticExpression);
+        $this->assertEquals(ExpressionType::MULTIPLY, $expr->getRight()->getNodeType());
+        $this->assertEquals(ExpressionType::CONSTANT, $expr->getLeft()->getNodeType());
+        $this->assertTrue($expr->getRight()->getLeft() instanceof ConstantExpression);
+        $this->assertTrue($expr->getRight()->getRight() instanceof ConstantExpression);
+        $this->assertEquals(4, $expr->getRight()->getRight()->getValue());
 
         $expression = "Rating add 2.5 mul 3.4F";
         $parser->resetParser($expression);
         $expr = $parser->parseFilter();
         $this->assertTrue($expr instanceof ArithmeticExpression);
         $this->assertTrue($expr->getType() instanceof Double);
-        $this->assertEquals($expr->getNodeType(), ExpressionType::ADD);
-        $this->assertEquals($expr->getLeft() instanceof PropertyAccessExpression, true);
-        $this->assertEquals($expr->getLeft()->getType() instanceof Double, true);
+        $this->assertEquals(ExpressionType::ADD, $expr->getNodeType());
+        $this->assertTrue($expr->getLeft() instanceof PropertyAccessExpression);
+        $this->assertTrue($expr->getLeft()->getType() instanceof Double);
 
         $expression = "5.2 mul true";
         $parser->resetParser($expression);
@@ -385,7 +387,7 @@ class ExpressionParserTest extends \PHPUnit_Framework_TestCase
     public function testRelationalExpression()
     {
         $expression = '2.5 gt 2';
-        $parser = new ExpressionParser($expression, $this->_northWindMetadata->resolveResourceSet('Customers')->getResourceType(), true);
+        $parser = new ExpressionParser($expression, $this->customersResourceType, true);
         $expr = $parser->parseFilter();
         $this->assertTrue($expr instanceof RelationalExpression);
         $this->assertTrue($expr->getType() instanceof Boolean);
@@ -396,9 +398,9 @@ class ExpressionParserTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($expr instanceof RelationalExpression);
         $this->assertTrue($expr->getType() instanceof Boolean);
         $this->assertTrue($expr->getLeft() instanceof ConstantExpression);
-        $this->assertEquals($expr->getRight() instanceof ConstantExpression, true);
-        $this->assertEquals($expr->getLeft()->getValue(), 'true');
-        $this->assertEquals($expr->getRight()->getType() instanceof Boolean, true);
+        $this->assertTrue($expr->getRight() instanceof ConstantExpression);
+        $this->assertEquals('true', $expr->getLeft()->getValue());
+        $this->assertTrue($expr->getRight()->getType() instanceof Boolean);
 
         $expression = 'Country eq null';
         $parser->resetParser($expression);
@@ -407,21 +409,21 @@ class ExpressionParserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('is_null', $expr->getFunctionDescription()->functionName);
         $this->assertTrue($expr->getType() instanceof Boolean);
         $paramExpressions = $expr->getParamExpressions();
-        $this->assertEquals($paramExpressions[0] instanceof PropertyAccessExpression, true);
+        $this->assertTrue($paramExpressions[0] instanceof PropertyAccessExpression);
 
         $expression = 'Country ge \'India\'';
         $parser->resetParser($expression);
         $expr = $parser->parseFilter();
         $this->assertTrue($expr instanceof RelationalExpression);
         $this->assertEquals($expr->getNodeType(), ExpressionType::GREATERTHAN_OR_EQUAL);
-        $this->assertEquals($expr->getLeft() instanceof FunctionCallExpression, true);
-        $this->assertEquals($expr->getLeft()->getFunctionDescription()->functionName, 'strcmp');
+        $this->assertTrue($expr->getLeft() instanceof FunctionCallExpression);
+        $this->assertEquals('strcmp', $expr->getLeft()->getFunctionDescription()->functionName);
         $paramExpression = $expr->getLeft()->getParamExpressions();
-        $this->assertEquals($paramExpression[0] instanceof PropertyAccessExpression, true);
-        $this->assertEquals($paramExpression[1] instanceof ConstantExpression, true);
-        $this->assertEquals($paramExpression[0]->getType() instanceof String, true);
-        $this->assertEquals($paramExpression[1]->getType() instanceof String, true);
-        $this->assertEquals($expr->getRight() instanceof ConstantExpression, true);
+        $this->assertTrue($paramExpression[0] instanceof PropertyAccessExpression);
+        $this->assertTrue($paramExpression[1] instanceof ConstantExpression);
+        $this->assertTrue($paramExpression[0]->getType() instanceof String);
+        $this->assertTrue($paramExpression[1]->getType() instanceof String);
+        $this->assertTrue($expr->getRight() instanceof ConstantExpression);
         $this->assertEquals($expr->getRight()->getValue(), 0);
 
         $expression = "1F gt 2M";
@@ -451,24 +453,22 @@ class ExpressionParserTest extends \PHPUnit_Framework_TestCase
     public function testLogicalExpression()
     {
         $expression = 'true or false';
-        $parser = new ExpressionParser($expression,
-                      $this->_northWindMetadata->resolveResourceSet('Customers')->getResourceType(),
-                      false);
+        $parser = new ExpressionParser($expression, $this->customersResourceType, false);
         $expr = $parser->parseFilter();
-        $this->assertEquals($expr instanceof LogicalExpression, true);
+        $this->assertTrue($expr instanceof LogicalExpression);
         $this->assertTrue($expr->getType() instanceof Boolean);
 
         $expression = "1 add 2 gt 5 and 5 le 8";
         $parser->resetParser($expression);
         $expr = $parser->parseFilter();
-        $this->assertEquals($expr instanceof LogicalExpression, true);
-        $this->assertEquals($expr->getNodeType(), ExpressionType::AND_LOGICAL);
-        $this->assertEquals($expr->getLeft() instanceof RelationalExpression, true);
-        $this->assertEquals($expr->getRight() instanceof RelationalExpression, true);
-        $this->assertEquals($expr->getLeft()->getNodeType(), ExpressionType::GREATERTHAN);
-        $this->assertEquals($expr->getRight()->getNodeType(), ExpressionType::LESSTHAN_OR_EQUAL);
-        $this->assertEquals($expr->getLeft()->getLeft() instanceof ArithmeticExpression, true);
-        $this->assertEquals($expr->getLeft()->getRight() instanceof ConstantExpression, true);
+        $this->assertTrue($expr instanceof LogicalExpression);
+        $this->assertEquals(ExpressionType::AND_LOGICAL, $expr->getNodeType());
+        $this->assertTrue($expr->getLeft() instanceof RelationalExpression);
+        $this->assertTrue($expr->getRight() instanceof RelationalExpression);
+        $this->assertEquals(ExpressionType::GREATERTHAN, $expr->getLeft()->getNodeType());
+        $this->assertEquals(ExpressionType::LESSTHAN_OR_EQUAL, $expr->getRight()->getNodeType());
+        $this->assertTrue($expr->getLeft()->getLeft() instanceof ArithmeticExpression);
+        $this->assertTrue($expr->getLeft()->getRight() instanceof ConstantExpression);
 
         $expression = '1 add (2 gt 5) and 5 le 8';
         $parser->resetParser($expression);
@@ -511,21 +511,19 @@ class ExpressionParserTest extends \PHPUnit_Framework_TestCase
     public function testUnaryExpression()
     {
         $expression = "-Rating";
-        $parser = new ExpressionParser($expression,
-                      $this->_northWindMetadata->resolveResourceSet('Customers')->getResourceType(),
-                      false);
+        $parser = new ExpressionParser($expression,$this->customersResourceType, false);
         $expr = $parser->parseFilter();
-        $this->assertEquals($expr instanceof UnaryExpression, true);
-        $this->assertEquals($expr->getNodeType(), ExpressionType::NEGATE);
-        $this->assertEquals($expr->getChild() instanceof PropertyAccessExpression, true);
+        $this->assertTrue($expr instanceof UnaryExpression);
+        $this->assertEquals(ExpressionType::NEGATE, $expr->getNodeType());
+        $this->assertTrue($expr->getChild() instanceof PropertyAccessExpression);
 
         $expression = "not(1 gt 4)";
         $parser->resetParser($expression);
         $expr = $parser->parseFilter();
-        $this->assertEquals($expr instanceof UnaryExpression, true);
-        $this->assertEquals($expr->getNodeType(), ExpressionType::NOT_LOGICAL);
+        $this->assertTrue($expr instanceof UnaryExpression);
+        $this->assertEquals(ExpressionType::NOT_LOGICAL, $expr->getNodeType());
         $this->assertTrue($expr->getType() instanceof Boolean);
-        $this->assertEquals($expr->getChild() instanceof RelationalExpression, true);
+        $this->assertTrue($expr->getChild() instanceof RelationalExpression);
 
         $expression = '-\'myString\'';
         $parser->resetParser($expression);
@@ -551,27 +549,28 @@ class ExpressionParserTest extends \PHPUnit_Framework_TestCase
     public function testFunctionCallExpression()
     {
         $expression = 'year(datetime\'1988-11-11\')';
-        $parser = new ExpressionParser($expression,
-                      $this->_northWindMetadata->resolveResourceSet('Customers')->getResourceType(),
-                      false);
+        $parser = new ExpressionParser($expression, $this->customersResourceType, false);
         $expr = $parser->parseFilter();
         $this->assertTrue($expr instanceof FunctionCallExpression);
         $this->assertTrue($expr->getType() instanceof Int32);
 
         $expression = "substring('pspl', 1) eq 'pl'";
+
+
         $parser->resetParser($expression);
         $expr = $parser->parseFilter();
         $this->assertTrue($expr instanceof RelationalExpression);
-        $this->assertEquals($expr->getLeft() instanceof FunctionCallExpression, true);
-        $this->assertEquals($expr->getLeft()->getFunctionDescription()->functionName, 'strcmp');
+	    /** @var RelationalExpression $expr */
+        $this->assertTrue($expr->getLeft() instanceof FunctionCallExpression);
+        $this->assertEquals('strcmp', $expr->getLeft()->getFunctionDescription()->functionName);
         $paramExpressions = $expr->getLeft()->getParamExpressions();
-        $this->assertEquals(count($paramExpressions), 2);
-        $this->assertEquals($paramExpressions[0] instanceof FunctionCallExpression, true);
-        $this->assertEquals($paramExpressions[0]->getFunctionDescription()->functionName, 'substring');
+        $this->assertEquals(2, count($paramExpressions));
+        $this->assertTrue($paramExpressions[0] instanceof FunctionCallExpression);
+        $this->assertEquals('substring', $paramExpressions[0]->getFunctionDescription()->functionName);
         $paramExpressions1 = $paramExpressions[0]->getParamExpressions();
-        $this->assertEquals(count($paramExpressions1), 2);
-        $this->assertEquals($paramExpressions1[0] instanceof ConstantExpression, true);
-        $this->assertEquals($paramExpressions1[0]->getValue(), '\'pspl\'');
+        $this->assertEquals(2, count($paramExpressions1));
+        $this->assertTrue($paramExpressions1[0] instanceof ConstantExpression);
+        $this->assertEquals("'pspl'", $paramExpressions1[0]->getValue());
 
         $expression = 'unknownFun(1, 3)';
         $parser->resetParser($expression);
@@ -613,8 +612,5 @@ class ExpressionParserTest extends \PHPUnit_Framework_TestCase
 
     }
 
-    protected function tearDown()
-    {    
-    }
 }
 
