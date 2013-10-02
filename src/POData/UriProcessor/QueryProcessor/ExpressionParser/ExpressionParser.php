@@ -65,15 +65,12 @@ class ExpressionParser
     private $_resourceType;
     
     /**
-     * True if the end developer implemented IDSQP2, in that case the end developer
-     * is responsible for implementing expression provider (IExpressionProvider).
-     * 
      * @var bool
      */
     private $_isPHPExpressionProvider;
 
     /**
-     * True if the filter expression contains level 2 property acess, for example
+     * True if the filter expression contains level 2 property access, for example
      * Customers?$filter=Address/LineNumber eq 12
      * Customer?$filter=Order/OrderID gt 1234    
      * False otherwise.
@@ -86,10 +83,9 @@ class ExpressionParser
     /**
      * Construct a new instance of ExpressionParser
      * 
-     * @param string       $text                       The expression to parse.
-     * @param ResourceType $resourceType               The resource type of the resource targeted by the resource path.
-     *
-     * @param bool         $isPHPExpressionProvider True if the end developer is responsible for the expression provider implementation.
+     * @param string $text The expression to parse.
+     * @param ResourceType $resourceType The resource type of the resource targeted by the resource path.
+     * @param bool $isPHPExpressionProvider
      *
      * TODO Expression parser should not depend on the fact that end user is implementing IExpressionProvider or not.
      */
@@ -205,13 +201,8 @@ class ExpressionParser
             $logicalOpToken = clone $this->_getCurrentToken();
             $this->_lexer->nextToken();
             $right = $this->_parseComparison();
-            FunctionDescription::verifyLogicalOpArguments(
-                $logicalOpToken, $left, $right
-            );
-            $left = new LogicalExpression(
-                $left, $right, 
-                ExpressionType::AND_LOGICAL
-            );
+            FunctionDescription::verifyLogicalOpArguments($logicalOpToken, $left, $right);
+            $left = new LogicalExpression($left, $right, ExpressionType::AND_LOGICAL );
         }
 
         $this->_recurseLeave();
@@ -255,19 +246,11 @@ class ExpressionParser
             $additiveToken = clone $this->_getCurrentToken();
             $this->_lexer->nextToken();
             $right = $this->_parseMultiplicative();
-            $opReturnType = FunctionDescription::verifyAndPromoteArithmeticOpArguments(
-                    $additiveToken, $left, $right
-                );
+            $opReturnType = FunctionDescription::verifyAndPromoteArithmeticOpArguments($additiveToken, $left, $right);
             if ($additiveToken->identifierIs(ODataConstants::KEYWORD_ADD)) {
-                $left = new ArithmeticExpression(
-                    $left, $right, 
-                    ExpressionType::ADD, $opReturnType
-                );
+                $left = new ArithmeticExpression($left, $right, ExpressionType::ADD, $opReturnType);
             } else {
-                $left = new ArithmeticExpression(
-                    $left, $right, 
-                    ExpressionType::SUBTRACT, $opReturnType
-                );
+                $left = new ArithmeticExpression($left, $right, ExpressionType::SUBTRACT, $opReturnType );
             }
         }
 
@@ -295,17 +278,11 @@ class ExpressionParser
                     $multiplicativeToken, $left, $right
                 );
             if ($multiplicativeToken->identifierIs(ODataConstants::KEYWORD_MULTIPLY)) {
-                $left = new ArithmeticExpression(
-                    $left, $right, ExpressionType::MULTIPLY, $opReturnType
-                );
+                $left = new ArithmeticExpression($left, $right, ExpressionType::MULTIPLY, $opReturnType);
             } else if ($multiplicativeToken->identifierIs(ODataConstants::KEYWORD_DIVIDE)) {
-                $left = new ArithmeticExpression(
-                    $left, $right, ExpressionType::DIVIDE, $opReturnType
-                );
+                $left = new ArithmeticExpression($left, $right, ExpressionType::DIVIDE, $opReturnType);
             } else {                
-                $left = new ArithmeticExpression(
-                    $left, $right, ExpressionType::MODULO, $opReturnType
-                );
+                $left = new ArithmeticExpression($left, $right, ExpressionType::MODULO, $opReturnType);
             }
         }
 
@@ -342,13 +319,9 @@ class ExpressionParser
             $expr = $this->_parsePrimary();
             FunctionDescription::validateUnaryOpArguments($op, $expr);
             if ($op->Id == ExpressionTokenId::MINUS) {
-                $expr = new UnaryExpression(
-                    $expr, ExpressionType::NEGATE, $expr->getType()
-                );
+                $expr = new UnaryExpression($expr, ExpressionType::NEGATE, $expr->getType());
             } else {
-                $expr = new UnaryExpression(
-                    $expr, ExpressionType::NOT_LOGICAL, new Boolean()
-                );
+                $expr = new UnaryExpression($expr, ExpressionType::NOT_LOGICAL, new Boolean());
             }
 
             $this->_recurseLeave();
@@ -690,36 +663,28 @@ class ExpressionParser
         $string = new String();
         if ($left->typeIs($string) && $right->typeIs($string)) {
             $strcmpFunctions = FunctionDescription::stringComparisonFunctions();
-            $left = new FunctionCallExpression(
-                $strcmpFunctions[0], array($left, $right)
-            );
+            $left = new FunctionCallExpression($strcmpFunctions[0], array($left, $right));
             $right = new ConstantExpression(0, new Int32());  
         }
 
         $dateTime = new DateTime();
         if ($left->typeIs($dateTime) && $right->typeIs($dateTime)) {
             $dateTimeCmpFunctions = FunctionDescription::dateTimeComparisonFunctions();
-            $left = new FunctionCallExpression(
-                $dateTimeCmpFunctions[0], array($left, $right)
-            );
+            $left = new FunctionCallExpression( $dateTimeCmpFunctions[0], array($left, $right));
             $right = new ConstantExpression(0, new Int32());
         }
 
         $guid = new Guid();
         if ($left->typeIs($guid) && $right->typeIs($guid)) {
             $guidEqualityFunctions = FunctionDescription::guidEqualityFunctions();
-            $left = new FunctionCallExpression(
-                $guidEqualityFunctions[0], array($left, $right)
-            );
+            $left = new FunctionCallExpression($guidEqualityFunctions[0], array($left, $right));
             $right = new ConstantExpression(true, new Boolean());
         }
 
         $binary = new Binary();
         if ($left->typeIs($binary) && $right->typeIs($binary)) {
             $binaryEqualityFunctions = FunctionDescription::binaryEqualityFunctions();
-            $left = new FunctionCallExpression(
-                $binaryEqualityFunctions[0], array($left, $right)
-            );
+            $left = new FunctionCallExpression($binaryEqualityFunctions[0], array($left, $right));
             $right = new ConstantExpression(true, new Boolean());
         }
 
@@ -761,9 +726,7 @@ class ExpressionParser
                 $isNullFunctionDescription = new FunctionDescription('is_null', new Boolean(), array($arg->getType()));
                 switch ($expressionToken->Text) {
 	                case ODataConstants::KEYWORD_EQUAL:
-	                    return new FunctionCallExpression(
-	                        $isNullFunctionDescription, array($arg)
-	                    );
+	                    return new FunctionCallExpression($isNullFunctionDescription, array($arg));
 	                    break;
 
 	                case ODataConstants::KEYWORD_NOT_EQUAL:

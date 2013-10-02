@@ -430,42 +430,37 @@ class ProvidersWrapper
     }
 
     /**
-     * Gets the visible resource properties for the given resource type from 
-     * the given resource set wrapper.
-     * 
-     * @param ResourceSetWrapper &$resourceSetWrapper Resource set wrapper in question.
+     * Gets the visible resource properties for the given resource type from the given resource set wrapper.
      *
-     * @param ResourceType       &$resourceType       Resource type in question.
-     * 
+     * @param ResourceSetWrapper $setWrapper Resource set wrapper in question.
+     * @param ResourceType       $resourceType       Resource type in question.
      * @return ResourceProperty[] Collection of visible resource properties from the given resource set wrapper and resource type.
      */
-    public function getResourceProperties(ResourceSetWrapper &$resourceSetWrapper, 
-        ResourceType &$resourceType
-    ) {
-        if ($resourceType->getResourceTypeKind() == ResourceTypeKind::ENTITY) {
-            $cacheKey = $resourceSetWrapper->getName() . '_' . $resourceType->getFullName();
-            if (array_key_exists($cacheKey,  $this->_resourcePropertyCache)) {
-                return $this->_resourcePropertyCache[$cacheKey];
-            }
-
-            $this->_resourcePropertyCache[$cacheKey] = array();
-            foreach ($resourceType->getAllProperties() as $resourceProperty) {
-                //Check whether this is a visible navigation property
-                if ($resourceProperty->getTypeKind() == ResourceTypeKind::ENTITY 
-                    && !is_null($this->getResourceSetWrapperForNavigationProperty($resourceSetWrapper, $resourceType, $resourceProperty))
-                ) {
-                    $this->_resourcePropertyCache[$cacheKey][$resourceProperty->getName()] = $resourceProperty;
-                } else {
-                    //primitive, bag or complex property
-                    $this->_resourcePropertyCache[$cacheKey][$resourceProperty->getName()] = $resourceProperty;
-                }
-            }
-
-            return $this->_resourcePropertyCache[$cacheKey];
-        } else {
-            //Complex resource type
-            return $resourceType->getAllProperties();
+    public function getResourceProperties(ResourceSetWrapper $setWrapper, ResourceType $resourceType) {
+        if ($resourceType->getResourceTypeKind() != ResourceTypeKind::ENTITY) {
+	        //Complex resource type
+	        return $resourceType->getAllProperties();
         }
+	    //TODO: move this to doctrine annotations
+	    $cacheKey = $setWrapper->getName() . '_' . $resourceType->getFullName();
+        if (!array_key_exists($cacheKey,  $this->_resourcePropertyCache)) {
+	        //Fill the cache
+	        $this->_resourcePropertyCache[$cacheKey] = array();
+	        foreach ($resourceType->getAllProperties() as $resourceProperty) {
+	            //Check whether this is a visible navigation property
+		        //TODO: is this broken?? see #87
+	            if ($resourceProperty->getTypeKind() == ResourceTypeKind::ENTITY
+	                && !is_null($this->getResourceSetWrapperForNavigationProperty($setWrapper, $resourceType, $resourceProperty))
+	            ) {
+	                $this->_resourcePropertyCache[$cacheKey][$resourceProperty->getName()] = $resourceProperty;
+	            } else {
+	                //primitive, bag or complex property
+	                $this->_resourcePropertyCache[$cacheKey][$resourceProperty->getName()] = $resourceProperty;
+	            }
+	        }
+        }
+        return $this->_resourcePropertyCache[$cacheKey];
+
     }
 
     /**
@@ -601,46 +596,38 @@ class ProvidersWrapper
         return $expressionProvider;
     }
 
-	//TODO: do i have this definition backwards now?  or was it broken english when i translated it
 	/**
-	* POData uses this function to determine if the provider implementation or POData is responsible for handling orderby, skip and top.
-	*
-	* @return Boolean True if the provider will handle the query options False If POData is responsible
-	*
-	*
-	*/
-	public function canApplyQueryOptions()
+	 * Indicates if the QueryProvider can handle ordered paging, this means respecting order, skip, and top parameters
+	 * If the query provider can not handle ordered paging, it must return the entire result set and POData will
+	 * perform the ordering and paging
+	 *
+	 * @return Boolean True if the query provider can handle ordered paging, false if POData should perform the paging
+	 */
+	public function handlesOrderedPaging()
 	{
-		return $this->_queryProvider->canApplyQueryOptions();
+		return $this->_queryProvider->handlesOrderedPaging();
 	}
 
 
     /**
      * Gets collection of entities belongs to an entity set
-     * 
-     * @param ResourceSet        $resourceSet        The entity set whose entities needs 
-     *                                               to be fetched
-     * @param FilterInfo $filterInfo An instance of FilterInfo
-     *                                               if the $filter option is submitted
-     *                                               by the client, NULL if no $filter 
-     *                                               option present in the client request
-     * @param TODO               $select             The select information
-     * @param InternalOrderByInfo $orderby            The orderby information
-     * @param int                $top                The top count
-     * @param int                $skip               The skip count
+     *
+     * @param ResourceSet $resourceSet The entity set containing the entities that need to be fetched
+     * @param FilterInfo $filterInfo represents the $filter parameter of the OData query.  NULL if no $filter specified
+     * @param InternalOrderByInfo $orderBy The orderBy information
+     * @param int $top The top count
+     * @param int $skip The skip count
      * 
      * @return \stdClass[]
      */
-    public function getResourceSet(ResourceSet $resourceSet, $filterInfo, $select, $orderby, $top, $skip)
+    public function getResourceSet(ResourceSet $resourceSet, FilterInfo $filterInfo, $orderBy, $top, $skip)
     {
 		$customExpressionAsString = $filterInfo->getExpressionAsString();
-
 
 		$entityInstances = $this->_queryProvider->getResourceSet(
 			$resourceSet,
 			$customExpressionAsString,
-			$select,
-			$orderby,
+			$orderBy,
 			$top,
 			$skip
 		);
@@ -659,9 +646,9 @@ class ProvidersWrapper
     
     /**
      * Gets an entity instance from an entity set identified by a key
-     * 
-     * @param ResourceSet   $resourceSet   The entity set from which an entity needs to be fetched
-     * @param KeyDescriptor $keyDescriptor The key to identify the entity to be fetched
+     *
+     * @param ResourceSet $resourceSet The entity set containing the entity to fetch
+     * @param KeyDescriptor $keyDescriptor The key identifying the entity to fetch
      *
      * @return \stdClass|null Returns entity instance if found else null
      */
@@ -687,8 +674,7 @@ class ProvidersWrapper
      * @param ResourceProperty   $targetProperty     The navigation property to be retrieved
      *
      * @param FilterInfo $filterInfo An instance of FilterInfo if the $filter option is present, null otherwise
-     * @param TODO               $select             The select information
-     * @param TODO               $orderby            The orderby information
+     * @param TODO               $orderBy            The orderby information
      * @param int                $top                The top count
      * @param int                $skip               The skip count
      *                                               
@@ -701,8 +687,7 @@ class ProvidersWrapper
         ResourceSet $targetResourceSet,
         ResourceProperty $targetProperty, 
         $filterInfo,
-        $select,
-        $orderby,
+        $orderBy,
         $top,
         $skip
     ) {
@@ -715,8 +700,7 @@ class ProvidersWrapper
 		    $targetResourceSet,
 		    $targetProperty,
 		    $customExpressionAsString,
-		    $select,
-		    $orderby,
+		    $orderBy,
 		    $top,
 		    $skip
 		);

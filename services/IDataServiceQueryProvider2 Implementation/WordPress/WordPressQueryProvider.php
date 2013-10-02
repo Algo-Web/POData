@@ -53,7 +53,7 @@ class WordPressQueryProvider implements IQueryProvider
      * (non-PHPdoc)
      * @see POData\Providers\Query.IQueryProvider::canApplyQueryOptions()
      */
-    public function canApplyQueryOptions()
+    public function handlesOrderedPaging()
     {
         return true;
     }

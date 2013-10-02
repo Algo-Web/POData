@@ -39,7 +39,7 @@ class UriProcessor
      * 
      * @var RequestDescription
      */
-    private $_requestDescription;
+    private $request;
 
     /**
      * Holds reference to the data service instance.
@@ -107,16 +107,16 @@ class UriProcessor
 
         $uriProcessor = new UriProcessor($service);
         //Parse the resource path part of the request Uri.
-		$uriProcessor->_requestDescription = ResourcePathProcessor::process(
+		$uriProcessor->request = ResourcePathProcessor::process(
 			$absoluteRequestUri,
 			$service
 		);
 
-	    $uriProcessor->_requestDescription->setUriProcessor($uriProcessor);
+	    $uriProcessor->request->setUriProcessor($uriProcessor);
 
 
         //Parse the query string options of the request Uri.
-        QueryProcessor::process( $uriProcessor->_requestDescription, $service );
+        QueryProcessor::process( $uriProcessor->request, $service );
 
         return $uriProcessor;
     }
@@ -126,9 +126,9 @@ class UriProcessor
      * 
      * @return RequestDescription
      */
-    public function getRequestDescription()
+    public function getRequest()
     {
-        return $this->_requestDescription;
+        return $this->request;
     }
 
     /**
@@ -138,73 +138,69 @@ class UriProcessor
      */
     public function execute()
     {
-        $segmentDescriptors = $this->_requestDescription->getSegmentDescriptors();
-        foreach ($segmentDescriptors as $segmentDescriptor) {
-            $requestTargetKind = $segmentDescriptor->getTargetKind();
-            if ($segmentDescriptor->getTargetSource() == RequestTargetSource::ENTITY_SET) {
-                $this->_handleSegmentTargetsToResourceSet($segmentDescriptor);
+        $segmentDescriptors = $this->request->getSegmentDescriptors();
+        foreach ($segmentDescriptors as $segment) {
+            $requestTargetKind = $segment->getTargetKind();
+            if ($segment->getTargetSource() == RequestTargetSource::ENTITY_SET) {
+                $this->_handleSegmentTargetsToResourceSet($segment);
             } else if ($requestTargetKind == RequestTargetKind::RESOURCE) {
-                if (is_null($segmentDescriptor->getPrevious()->getResult())) {
+                if (is_null($segment->getPrevious()->getResult())) {
                     ODataException::createResourceNotFoundError(
-                        $segmentDescriptor->getPrevious()->getIdentifier()
+                        $segment->getPrevious()->getIdentifier()
                     );
                 }
-                $this->_handleSegmentTargetsToRelatedResource($segmentDescriptor);
+                $this->_handleSegmentTargetsToRelatedResource($segment);
             } else if ($requestTargetKind == RequestTargetKind::LINK) {
-                $segmentDescriptor->setResult($segmentDescriptor->getPrevious()->getResult());
-            } else if ($segmentDescriptor->getIdentifier() == ODataConstants::URI_COUNT_SEGMENT) {
+                $segment->setResult($segment->getPrevious()->getResult());
+            } else if ($segment->getIdentifier() == ODataConstants::URI_COUNT_SEGMENT) {
                 // we are done, $count will the last segment and 
                 // taken care by _applyQueryOptions method
-                $segmentDescriptor->setResult($this->_requestDescription->getCountValue());
+                $segment->setResult($this->request->getCountValue());
                 break;
             } else {
                 if ($requestTargetKind == RequestTargetKind::MEDIA_RESOURCE) {
-                    if (is_null($segmentDescriptor->getPrevious()->getResult())) {
+                    if (is_null($segment->getPrevious()->getResult())) {
                         ODataException::createResourceNotFoundError(
-                            $segmentDescriptor->getPrevious()->getIdentifier()
+                            $segment->getPrevious()->getIdentifier()
                         );
                     }
                     // For MLE and Named Stream the result of last segment 
                     // should be that of previous segment, this is required 
-                    // while retriving content type or stream from IDSSP
-                    $segmentDescriptor->setResult($segmentDescriptor->getPrevious()->getResult());
+                    // while retrieving content type or stream from IDSSP
+                    $segment->setResult($segment->getPrevious()->getResult());
                     // we are done, as named stream property or $value on 
                     // media resource will be the last segment
                     break;
-                } else {
-                    $value = $segmentDescriptor->getPrevious()->getResult();
-                    while (!is_null($segmentDescriptor)) {
-                        if (is_null($value)) {
-                            $value = null;
-                        } else {
-                            try {
-                                $property = new \ReflectionProperty($value, $segmentDescriptor->getIdentifier());
-                                $value = $property->getValue($value);
-                            } catch (\ReflectionException $reflectionException) {
-                                //throw ODataException::createInternalServerError(Messages::orderByParserFailedToAccessOrInitializeProperty($resourceProperty->getName(), $resourceType->getName()));
-                            }
-                        }
+                }
 
-                        $segmentDescriptor->setResult($value);
-                        $segmentDescriptor = $segmentDescriptor->getNext();
-                        if (!is_null($segmentDescriptor) 
-                            && $segmentDescriptor->getIdentifier() == ODataConstants::URI_VALUE_SEGMENT
-                        ) {
-                            $segmentDescriptor->setResult($value);
-                            $segmentDescriptor = $segmentDescriptor->getNext();
+	            $value = $segment->getPrevious()->getResult();
+                while (!is_null($segment)) {
+	                //TODO: what exactly is this doing here?  Once a null's found it seems everything will be null
+                    if (!is_null($value)) {
+                        $value = null;
+                    } else {
+                        try {
+                            $property = new \ReflectionProperty($value, $segment->getIdentifier());
+                            $value = $property->getValue($value);
+                        } catch (\ReflectionException $reflectionException) {
+                            //throw ODataException::createInternalServerError(Messages::orderByParserFailedToAccessOrInitializeProperty($resourceProperty->getName(), $resourceType->getName()));
                         }
                     }
 
-                    //done, exit from outer loop as inner while complete traversal.
-                    break;
+                    $segment->setResult($value);
+                    $segment = $segment->getNext();
+                    if (!is_null($segment) && $segment->getIdentifier() == ODataConstants::URI_VALUE_SEGMENT) {
+                        $segment->setResult($value);
+                        $segment = $segment->getNext();
+                    }
                 }
+
+                break;
+
             }
 
-            if (is_null($segmentDescriptor->getNext()) 
-                || $segmentDescriptor->getNext()->getIdentifier() == ODataConstants::URI_COUNT_SEGMENT
-            ) {
-                    $this->_applyQueryOptions($segmentDescriptor);
-                    
+            if (is_null($segment->getNext()) || $segment->getNext()->getIdentifier() == ODataConstants::URI_COUNT_SEGMENT) {
+                    $this->_applyQueryOptions($segment);
             }
         }
 
@@ -215,34 +211,30 @@ class UriProcessor
     }
 
     /**
-     * Query for a resource set pointed by the given segment descriptor and update
-     * the descriptor with the result.
+     * Query for a resource set pointed by the given segment descriptor and update the descriptor with the result.
      *
-     * @param SegmentDescriptor &$segmentDescriptor Describes the resource set to query
+     * @param SegmentDescriptor $segment Describes the resource set to query
      * @return void
      *
      */
-    private function _handleSegmentTargetsToResourceSet( SegmentDescriptor $segmentDescriptor ) {
-        if ($segmentDescriptor->isSingleResult()) {
+    private function _handleSegmentTargetsToResourceSet( SegmentDescriptor $segment ) {
+        if ($segment->isSingleResult()) {
             $entityInstance = $this->_provider->getResourceFromResourceSet(
-                $segmentDescriptor->getTargetResourceSetWrapper()->getResourceSet(),
-                $segmentDescriptor->getKeyDescriptor()
+                $segment->getTargetResourceSetWrapper()->getResourceSet(),
+                $segment->getKeyDescriptor()
             );
 
-            $segmentDescriptor->setResult($entityInstance);
+            $segment->setResult($entityInstance);
             
         } else {
             $entityInstances = $this->_provider->getResourceSet(
-                $segmentDescriptor->getTargetResourceSetWrapper()->getResourceSet(),
-                $this->_requestDescription->getFilterInfo(),
-                null, // $select :: We will not pass RequestionDescription::ProjectionNode which contains
-                // $select and $expand info to IDSQP2 this will be handled by the library::_handleExpansion 
-                // function.
-                $this->_requestDescription->getInternalOrderByInfo(),
-                $this->_requestDescription->getTopCount(),
-                $this->_requestDescription->getSkipCount()
+                $segment->getTargetResourceSetWrapper()->getResourceSet(),
+                $this->request->getFilterInfo(),
+                $this->request->getInternalOrderByInfo(),
+                $this->request->getTopCount(),
+                $this->request->getSkipCount()
             );
-            $segmentDescriptor->setResult($entityInstances);
+            $segment->setResult($entityInstances);
         }
     }
 
@@ -279,8 +271,7 @@ class UriProcessor
                         $segmentDescriptor->getPrevious()->getResult(),
                         $segmentDescriptor->getTargetResourceSetWrapper()->getResourceSet(),
                         $segmentDescriptor->getProjectedProperty(),
-                        $this->_requestDescription->getFilterInfo(),
-                        null, // $select
+                        $this->request->getFilterInfo(),
                         null, // $orderby
                         null, // $top
                         null  // $skip
@@ -326,27 +317,27 @@ class UriProcessor
 
         // $inlinecount=allpages should ignore the query options 
         // $skiptoken, $top and $skip so take count before applying these options
-        if ($this->_requestDescription->getRequestCountOption() != RequestCountOption::NONE() && is_array($result)
+        if ($this->request->getRequestCountOption() != RequestCountOption::NONE() && is_array($result)
         ) {
-            if ($this->_provider->canApplyQueryOptions()) {
-                $this->_requestDescription->setCountValue(count($result));
+            if ($this->_provider->handlesOrderedPaging()) {
+                $this->request->setCountValue(count($result));
             } else {
-                $this->_requestDescription->setCountValue($_odata_server_count);
+                $this->request->setCountValue($_odata_server_count);
             }
         }
         
         // Library applies query options only if the QueryProvider::canApplyQueryOptions returns true.
-        $applicableForSetQuery = $this->_provider->canApplyQueryOptions() && is_array($result) && !empty($result);
+        $applicableForSetQuery = $this->_provider->handlesOrderedPaging() && is_array($result) && !empty($result);
         if ($applicableForSetQuery) {
             //Apply (implicit and explicit) $orderby option
-            $internalOrderByInfo = $this->_requestDescription->getInternalOrderByInfo();
+            $internalOrderByInfo = $this->request->getInternalOrderByInfo();
             if (!is_null($internalOrderByInfo)) {
                 $orderByFunction = $internalOrderByInfo->getSorterFunction()->getReference();
                 usort($result, $orderByFunction);
             }
 
             //Apply $skiptoken option
-            $internalSkipTokenInfo = $this->_requestDescription->getInternalSkipTokenInfo();
+            $internalSkipTokenInfo = $this->request->getInternalSkipTokenInfo();
             if (!is_null($internalSkipTokenInfo)) {
                 $matchingIndex = $internalSkipTokenInfo->getIndexOfFirstEntryInTheNextPage($result);
                 $result = array_slice($result, $matchingIndex);
@@ -354,8 +345,8 @@ class UriProcessor
             
             //Apply $top and $skip option
             if (!empty($result)) {
-                $top  = $this->_requestDescription->getTopCount();
-                $skip = $this->_requestDescription->getSkipCount();
+                $top  = $this->request->getTopCount();
+                $skip = $this->request->getSkipCount();
                 if (!is_null($top) && !is_null($skip)) {
                     $result = array_slice($result, $skip, $top);
                 } else if (is_null($top)) {
@@ -365,8 +356,8 @@ class UriProcessor
                 }
 
                 //$skip and $top affects $count so consider here.
-                if ($this->_requestDescription->getRequestCountOption() == RequestCountOption::VALUE_ONLY()) {
-                    $this->_requestDescription->setCountValue(count($result));
+                if ($this->request->getRequestCountOption() == RequestCountOption::VALUE_ONLY()) {
+                    $this->request->setCountValue(count($result));
                 }
             }
         }
@@ -381,11 +372,11 @@ class UriProcessor
      */
     private function _handleExpansion()
     {
-        $rootrojectionNode = $this->_requestDescription->getRootProjectionNode();
+        $rootrojectionNode = $this->request->getRootProjectionNode();
         if (!is_null($rootrojectionNode) 
             && $rootrojectionNode->isExpansionSpecified()
         ) {
-            $result = $this->_requestDescription->getTargetResult();
+            $result = $this->request->getTargetResult();
             if (!is_null($result) || is_array($result) && !empty($result)) {
                 $needPop = $this->_pushSegmentForRoot();
                 $this->_executeExpansion($result);
@@ -423,7 +414,6 @@ class UriProcessor
                             $resourceSetOfProjectedProperty,
                             $projectedProperty1,
                             null, // $filter
-                            null, // $select
                             null, // $orderby
                             null, // $top
                             null  // $skip
@@ -484,7 +474,6 @@ class UriProcessor
                         $resourceSetOfProjectedProperty2,
                         $projectedProperty4,
                         null, // $filter
-                        null, // $select
                         null, // $orderby
                         null, // $top
                         null  // $skip
@@ -544,7 +533,7 @@ class UriProcessor
     {
         $count = count($this->_segmentResourceSetWrappers);
         if ($count == 0) {
-            return $this->_requestDescription->getTargetResourceSetWrapper();
+            return $this->request->getTargetResourceSetWrapper();
         } else {
             return $this->_segmentResourceSetWrappers[$count - 1];
         }
@@ -558,9 +547,9 @@ class UriProcessor
      */
     private function _pushSegmentForRoot()
     {
-        $segmentName = $this->_requestDescription->getContainerName();
+        $segmentName = $this->request->getContainerName();
         $segmentResourceSetWrapper 
-            = $this->_requestDescription->getTargetResourceSetWrapper();
+            = $this->request->getTargetResourceSetWrapper();
         return $this->_pushSegment($segmentName, $segmentResourceSetWrapper);
     }
 
@@ -640,7 +629,7 @@ class UriProcessor
     private function _getCurrentExpandedProjectionNode()
     {
         $expandedProjectionNode 
-            = $this->_requestDescription->getRootProjectionNode();
+            = $this->request->getRootProjectionNode();
         if (!is_null($expandedProjectionNode)) {
             $depth = count($this->_segmentNames);
             if ($depth != 0) {
@@ -675,7 +664,7 @@ class UriProcessor
      */
     private function _pushSegment($segmentName, ResourceSetWrapper &$resourceSetWrapper)
     {
-        $rootProjectionNode = $this->_requestDescription->getRootProjectionNode();
+        $rootProjectionNode = $this->request->getRootProjectionNode();
         if (!is_null($rootProjectionNode) 
             && $rootProjectionNode->isExpansionSpecified()
         ) {

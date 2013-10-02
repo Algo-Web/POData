@@ -218,7 +218,7 @@ abstract class BaseService implements IRequestHandler, IService
         $uriProcessor = null;
         try {
             $uriProcessor = UriProcessor::process($this);
-            $requestDescription = $uriProcessor->getRequestDescription();
+            $requestDescription = $uriProcessor->getRequest();
             $this->serializeResult($requestDescription, $uriProcessor);
         } catch (\Exception $exception) {
             ErrorHandler::handleException($exception, $this);

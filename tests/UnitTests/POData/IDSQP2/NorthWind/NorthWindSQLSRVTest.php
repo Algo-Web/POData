@@ -40,7 +40,7 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         $this->assertNotNull($uriProcessor);
 
 
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
 
         $filterInfo = $requestDescription->getFilterInfo();;
@@ -76,7 +76,7 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         $check = !is_null($uriProcessor);
         $this->assertTrue($check);
 
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
 
         $filterInfo = $requestDescription->getFilterInfo();
@@ -111,7 +111,7 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
 
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
 
         $filterInfo = $requestDescription->getFilterInfo();
@@ -147,7 +147,7 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
 
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
 
         $filterInfo = $requestDescription->getFilterInfo();
@@ -182,7 +182,7 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
 
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
 
         $filterInfo = $requestDescription->getFilterInfo();
@@ -217,7 +217,7 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
 
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
 
         $filterInfo = $requestDescription->getFilterInfo();
@@ -252,7 +252,7 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
 
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
 
         $filterInfo = $requestDescription->getFilterInfo();
@@ -287,7 +287,7 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
 
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
 
         $filterInfo = $requestDescription->getFilterInfo();
@@ -322,7 +322,7 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
 
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
 
         $filterInfo = $requestDescription->getFilterInfo();
@@ -357,7 +357,7 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
 
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
 
         $filterInfo = $requestDescription->getFilterInfo();
@@ -392,7 +392,7 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
 
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
 
         $filterInfo = $requestDescription->getFilterInfo();
@@ -426,7 +426,7 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
 
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
 
         $filterInfo = $requestDescription->getFilterInfo();
@@ -460,7 +460,7 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
 
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
 
         $filterInfo = $requestDescription->getFilterInfo();
@@ -494,7 +494,7 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
 
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
 
         $filterInfo = $requestDescription->getFilterInfo();
@@ -527,7 +527,7 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
 
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
 
         $filterInfo = $requestDescription->getFilterInfo();
@@ -560,7 +560,7 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
 
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
 
         $filterInfo = $requestDescription->getFilterInfo();
@@ -594,7 +594,7 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
 
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
 
         $filterInfo = $requestDescription->getFilterInfo();
@@ -628,7 +628,7 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
 
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
 
         $filterInfo = $requestDescription->getFilterInfo();
@@ -661,7 +661,7 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
 
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
 
         $filterInfo = $requestDescription->getFilterInfo();
@@ -695,7 +695,7 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
 
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
 
         $filterInfo = $requestDescription->getFilterInfo();
@@ -731,7 +731,7 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
 
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
 
         $filterInfo = $requestDescription->getFilterInfo();

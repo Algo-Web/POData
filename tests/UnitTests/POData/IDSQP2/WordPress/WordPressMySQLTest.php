@@ -38,7 +38,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
         
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
         
         $filterInfo = $requestDescription->getFilterInfo();
@@ -73,7 +73,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
 
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
 
         $filterInfo = $requestDescription->getFilterInfo();
@@ -108,7 +108,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
 
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
 
         $filterInfo = $requestDescription->getFilterInfo();
@@ -143,7 +143,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
 
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
 
         $filterInfo = $requestDescription->getFilterInfo();
@@ -178,7 +178,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
 
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
 
         $filterInfo = $requestDescription->getFilterInfo();
@@ -213,7 +213,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
 
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
 
         $filterInfo = $requestDescription->getFilterInfo();
@@ -248,7 +248,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
 
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
 
         $filterInfo = $requestDescription->getFilterInfo();
@@ -282,7 +282,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
 
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
 
         $filterInfo = $requestDescription->getFilterInfo();
@@ -316,7 +316,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
 
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
 
         $filterInfo = $requestDescription->getFilterInfo();
@@ -350,7 +350,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
 
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
 
         $filterInfo = $requestDescription->getFilterInfo();
@@ -384,7 +384,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
 
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
 
         $filterInfo = $requestDescription->getFilterInfo();
@@ -419,7 +419,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
             $uriProcessor = $dataService->handleRequest();
             $this->assertNotNull($uriProcessor);
 
-            $requestDescription = $uriProcessor->getRequestDescription();
+            $requestDescription = $uriProcessor->getRequest();
             $this->assertNotNull($requestDescription);
 
             $filterInfo = $requestDescription->getFilterInfo();
@@ -454,7 +454,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
 
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
 
         $filterInfo = $requestDescription->getFilterInfo();
@@ -489,7 +489,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
 
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
 
         $filterInfo = $requestDescription->getFilterInfo();
@@ -524,7 +524,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
 
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
 
         $filterInfo = $requestDescription->getFilterInfo();
@@ -559,7 +559,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
 
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
 
         $filterInfo = $requestDescription->getFilterInfo();
@@ -594,7 +594,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
 
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
 
         $filterInfo = $requestDescription->getFilterInfo();
@@ -629,7 +629,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
 
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
 
         $filterInfo = $requestDescription->getFilterInfo();
@@ -664,7 +664,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
 
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
 
         $filterInfo = $requestDescription->getFilterInfo();
@@ -701,7 +701,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
         $check = !is_null($uriProcessor);
         $this->assertTrue($check);
         
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $check = !is_null($requestDescription);
         $this->assertTrue($check);
         

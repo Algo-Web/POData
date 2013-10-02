@@ -59,7 +59,7 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         $dataService->setHost($host);
 
         $uriProcessor = $dataService->handleRequest();
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertEquals($requestDescription->getTargetSource(), RequestTargetSource::NONE);
         $this->assertEquals($requestDescription->getTargetKind(), RequestTargetKind::SERVICE_DIRECTORY);
         
@@ -77,7 +77,7 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         $dataService->setHost($host);
 
         $uriProcessor = $dataService->handleRequest();
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertEquals($requestDescription->getTargetSource(), RequestTargetSource::NONE);
         $this->assertEquals($requestDescription->getTargetKind(), RequestTargetKind::METADATA);
 
@@ -93,7 +93,7 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         $dataService->setHost($host);
 
         $uriProcessor = $dataService->handleRequest();
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertEquals($requestDescription->getTargetSource(), RequestTargetSource::NONE);
         $this->assertEquals($requestDescription->getTargetKind(), RequestTargetKind::BATCH);
 
@@ -199,7 +199,7 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         $dataService->setHost($host);
 
         $uriProcessor = $dataService->handleRequest();
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
         $this->assertNull($requestDescription->getInternalOrderByInfo());
 
@@ -225,7 +225,7 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         $dataService->setHost($host);
 
         $uriProcessor = $dataService->handleRequest();
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
 
         $internalOrderByInfo = $requestDescription->getInternalOrderByInfo();
@@ -258,7 +258,7 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         $dataService->setHost($host);
 
         $uriProcessor = $dataService->handleRequest();
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
         $this->assertEquals($requestDescription->getTopCount(), 4);
         $this->assertEquals($requestDescription->getSkipCount(), 2);
@@ -293,7 +293,7 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         $dataService->setHost($host);
 
         $uriProcessor = $dataService->handleRequest();
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
         $this->assertEquals($requestDescription->getTopCount(), 4);
         $this->assertEquals($requestDescription->getSkipCount(), 2);
@@ -383,7 +383,7 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         $dataService->setHost($host);
 
         $uriProcessor = $dataService->handleRequest();
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
 
         $filterInfo = $requestDescription->getFilterInfo();
@@ -417,7 +417,7 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         $dataService->setHost($host);
 
         $uriProcessor = $dataService->handleRequest();
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
 
         $projectionTreeRoot = $requestDescription->getRootProjectionNode();
@@ -486,7 +486,7 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         $dataService->setHost($host);
 
         $uriProcessor = $dataService->handleRequest();
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
         //Page size is 5, so take count is 5
         $this->assertEquals($requestDescription->getTopCount(), 5);
@@ -577,7 +577,7 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         $dataService->setHost($host);
 
         $uriProcessor = $dataService->handleRequest();
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
         //Page is not appliable for single resouce
         $this->assertNull($requestDescription->getTopCount());
@@ -614,7 +614,7 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
 
         $uriProcessor = $dataService->handleRequest();
 
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
         //Page size is 5, so take count is 5
         $this->assertEquals($requestDescription->getTopCount(), 5);
@@ -659,7 +659,7 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         $dataService->setHost($host);
 
         $uriProcessor = $dataService->handleRequest();
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
         $this->assertFalse($requestDescription->isSingleResult());
         //Page size is 5, so take count is 5 means you will get only 5 links for a request
@@ -731,7 +731,7 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
 
         $uriProcessor = $dataService->handleRequest();
 
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
         $this->assertFalse($requestDescription->isSingleResult());
         //Page size is 5, so take count is 5 means you will get only 5 links for a request
@@ -791,7 +791,7 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         $dataService->setHost($host);
 
         $uriProcessor = $dataService->handleRequest();
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
         $this->assertEquals($requestDescription->isSingleResult(), false);
         //Page size is 5, so take count is 5 means you will get only 5 links for a request
@@ -872,7 +872,7 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         $dataService->setHost($host);
         $uriProcessor = $dataService->handleRequest();
         
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
         $this->assertEquals($requestDescription->isSingleResult(), false);
         //$skip has been specified
@@ -917,7 +917,7 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         $dataService->setHost($host);
         $uriProcessor = $dataService->handleRequest();
         
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
         $this->assertEquals($requestDescription->isSingleResult(), false);
         //$skip has not been specified
@@ -979,7 +979,7 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         $dataService->setHost($host);
         $uriProcessor = $dataService->handleRequest();
         
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
         $this->assertEquals($requestDescription->isSingleResult(), false);
         //$skip has not been specified
@@ -1018,7 +1018,7 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         $dataService->setHost($host);
         
         $uriProcessor = $dataService->handleRequest();
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
         $this->assertFalse($requestDescription->isSingleResult());
         $this->assertEquals($requestDescription->getTopCount(), 5); 
@@ -1058,7 +1058,7 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         $dataService->setHost($host);
 
         $uriProcessor = $dataService->handleRequest();
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
         $this->assertFalse($requestDescription->isSingleResult());
         $this->assertEquals($requestDescription->getTopCount(), 5);
@@ -1094,7 +1094,7 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         $dataService->setHost($host);
 
         $uriProcessor = $dataService->handleRequest();
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
         $this->assertTrue($requestDescription->isSingleResult());
         $this->assertNull($requestDescription->getTopCount());
@@ -1130,7 +1130,7 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         $dataService->setHost($host);
 
         $uriProcessor = $dataService->handleRequest();
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
         $this->assertTrue($requestDescription->isSingleResult());
         $this->assertNull($requestDescription->getTopCount());
@@ -1498,7 +1498,7 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         $dataService->setHost($host);
 
         $uriProcessor = $dataService->handleRequest();
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
         $this->assertTrue($requestDescription->isSingleResult());
 
@@ -1792,7 +1792,7 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         $dataService->setHost($host);
 
         $uriProcessor = $dataService->handleRequest();
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
 
         $this->assertNotNull($requestDescription);
         $this->assertEquals($requestDescription->isSingleResult(), false);
@@ -1881,7 +1881,7 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         $dataService->setHost($host);
 
         $uriProcessor = $dataService->handleRequest();
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
         $this->assertEquals($requestDescription->isSingleResult(), true);
 
@@ -2081,7 +2081,7 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         $dataService->setHost($host);
 
         $uriProcessor = $dataService->handleRequest();
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertEquals($requestDescription->getTopCount(), 5);
         $this->assertEquals($requestDescription->getSkipCount(), 10);
 
@@ -2110,7 +2110,7 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         $dataService->setHost($host);
         $uriProcessor = $dataService->handleRequest();
 
-        $requestDescription = $uriProcessor->getRequestDescription();
+        $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
 
         $countValue = $requestDescription->getCountValue();
