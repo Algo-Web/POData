@@ -361,8 +361,7 @@ class SegmentParser
             );
         }
 
-        $resourceSetWrapper
-            = $this->providerWrapper->resolveResourceSet($segmentIdentifier);
+        $resourceSetWrapper = $this->providerWrapper->resolveResourceSet($segmentIdentifier);
         if ($resourceSetWrapper === null) {
             ODataException::createResourceNotFoundError($segmentIdentifier);
         }

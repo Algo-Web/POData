@@ -94,7 +94,9 @@ interface IMetadataProvider
      * 
      * @return ResourceAssociationSet
      */
-    public function getResourceAssociationSet(ResourceSet $resourceSet, 
-        ResourceType $resourceType, ResourceProperty $resourceProperty
+    public function getResourceAssociationSet(
+        ResourceSet $resourceSet,
+        ResourceType $resourceType,
+        ResourceProperty $resourceProperty
     );
 }

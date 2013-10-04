@@ -130,8 +130,6 @@ class UriProcessor
 
     /**
      * Execute the client submitted request against the data source.
-     * 
-     * @return void
      */
     public function execute()
     {
@@ -225,7 +223,7 @@ class UriProcessor
             
         } else {
             $entityInstances = $this->_provider->getResourceSet(
-                $segment->getTargetResourceSetWrapper()->getResourceSet(),
+                $segment->getTargetResourceSetWrapper(),
                 $this->request->getFilterInfo(),
                 $this->request->getInternalOrderByInfo(),
                 $this->request->getTopCount(),

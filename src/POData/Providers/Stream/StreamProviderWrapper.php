@@ -49,21 +49,15 @@ class StreamProviderWrapper
      */
     private $_responseETag;
 
-    /**
-     * Constructs a new instance of StreamProviderWrapper
-     */
-    public function __construct()
-    {
-    }
 
     /**
      * To set reference to the data service instance.
      * 
-     * @param IService &$service The data service instance.
+     * @param IService $service The data service instance.
      * 
      * @return void
      */
-    public function setService(IService &$service)
+    public function setService(IService $service)
     {
         $this->_service = $service;
     }
@@ -110,15 +104,15 @@ class StreamProviderWrapper
             }
 
             $this->_verifyContentTypeOrETagModified('IDSSP::getReadStream');
-        } catch(ODataException $odataException) {
+        } catch(ODataException $ex) {
             //Check for status code 304 (stream Not Modified)
-            if ($odataException->getStatusCode() == 304) {
+            if ($ex->getStatusCode() == 304) {
                 $eTag = $this->getStreamETag($entity, $resourceStreamInfo);
                 if (!is_null($eTag)) {
                     $this->_service->getHost()->setResponseETag($eTag);
                 }
             }
-            throw $odataException;
+            throw $ex;
         }
 
         if ($resourceStreamInfo == null) {
@@ -458,8 +452,7 @@ class StreamProviderWrapper
             }
 
             if (is_null($this->_streamProvider)) {
-                $this->_streamProvider 
-                    = $this->_service->getService('IStreamProvider');
+                $this->_streamProvider = $this->_service->getService('IStreamProvider');
                 if (!is_null($this->_streamProvider) && (!is_object($this->_streamProvider) || !$this->_streamProvider instanceof IStreamProvider)) {
                     ODataException::createInternalServerError(
                         Messages::streamProviderWrapperInvalidStreamInstance()
@@ -495,10 +488,8 @@ class StreamProviderWrapper
      */
     private function _saveContentTypeAndETag()
     {
-        $this->_responseContentType
-            = $this->_service->getHost()->getResponseContentType();
-        $this->_responseETag
-            = $this->_service->getHost()->getResponseETag();
+        $this->_responseContentType = $this->_service->getHost()->getResponseContentType();
+        $this->_responseETag = $this->_service->getHost()->getResponseETag();
     }
 
     /**

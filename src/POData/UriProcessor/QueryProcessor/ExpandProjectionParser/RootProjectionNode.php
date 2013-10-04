@@ -4,6 +4,7 @@ namespace POData\UriProcessor\QueryProcessor\ExpandProjectionParser;
 
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\ResourceSetWrapper;
+use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
 
 /**
  * Class RootProjectionNode
@@ -20,30 +21,30 @@ use POData\Providers\Metadata\ResourceSetWrapper;
 class RootProjectionNode extends ExpandedProjectionNode
 {
     /**
-     * Flag indicates whether expansions were specifed in the query or not
+     * Flag indicates whether expansions were specified in the query or not
      * 
      * @var boolean
      */
-    private $_expansionSpecifed = false;
+    private $expansionSpecified = false;
 
     /**
-     * Flag indicates whether selections were specifed in the query or not
+     * Flag indicates whether selections were specified in the query or not
      * 
      * @var boolean
      */
-    private $_selectionSpecifed = false;
+    private $selectionSpecified = false;
 
     /**
-     * Flag indicates whether any of the expaned resource set is paged or not
+     * Flag indicates whether any of the expanded resource set is paged or not
      * 
      * @var boolean
      */
     private $_hasPagedExpandedResult = false;
 
     /**
-     * The base resource type of entities identifed by the resource path uri, 
+     * The base resource type of entities identified by the resource path uri,
      * this is usually the base resource type of the resource set to which 
-     * the entites belongs to, but it can happen that it's a derived type of 
+     * the entities belongs to, but it can happen that it's a derived type of
      * the resource set base type.
      * 
      * @var ResourceType
@@ -88,9 +89,9 @@ class RootProjectionNode extends ExpandedProjectionNode
     }
 
     /**
-     * Gets reference to the base resource type of entities identifed by
+     * Gets reference to the base resource type of entities identified by
      * the resource path uri this is usually the base resource type of the
-     * resource set to which the entites belongs to but it can happen that 
+     * resource set to which the entities belongs to but it can happen that
      * it's a derived type of the resource set base type.
      * 
      * @return ResourceType
@@ -103,14 +104,13 @@ class RootProjectionNode extends ExpandedProjectionNode
     /**
      * Mark expansions are used in the query or not
      * 
-     * @param boolean $isExpansionSpecified True if expansion found, 
-     *                                      False else.
-     * 
+     * @param boolean $isExpansionSpecified True if expansion found, False else.
+     *
      * @return void
      */
     public function setExpansionSpecified($isExpansionSpecified = true)
     {
-        $this->_expansionSpecifed = $isExpansionSpecified;
+        $this->expansionSpecified = $isExpansionSpecified;
     }
 
     /**
@@ -120,7 +120,7 @@ class RootProjectionNode extends ExpandedProjectionNode
      */
     public function isExpansionSpecified()
     {
-        return $this->_expansionSpecifed;
+        return $this->expansionSpecified;
     }
 
     /**
@@ -133,7 +133,7 @@ class RootProjectionNode extends ExpandedProjectionNode
      */
     public function setSelectionSpecified($isSelectionSpecified = true)
     {
-        $this->_selectionSpecifed = $isSelectionSpecified;
+        $this->selectionSpecified = $isSelectionSpecified;
     }
 
     /**
@@ -143,7 +143,7 @@ class RootProjectionNode extends ExpandedProjectionNode
      */
     public function isSelectionSpecified()
     {
-        return $this->_selectionSpecifed;
+        return $this->selectionSpecified;
     }
 
     /**

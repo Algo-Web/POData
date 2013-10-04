@@ -28,12 +28,12 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
     /**
      * Creates new instance of ObjectModelSerializer.
      * 
-     * @param IService        &$service        Reference to data service instance.
+     * @param IService $service
      *
-     * @param RequestDescription &$request Reference to the type describing request submitted by the client.
+     * @param RequestDescription $request the  request submitted by the client.
      *
      */
-    public function __construct(IService &$service, RequestDescription &$request)
+    public function __construct(IService $service, RequestDescription $request)
     {
         parent::__construct($service, $request);
     }
@@ -41,11 +41,11 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
     /**
      * Write a top level entry resource.
      * 
-     * @param mixed &$entryObject Reference to the entry object to be written.
+     * @param mixed $entryObject Reference to the entry object to be written.
      * 
      * @return ODataEntry
      */
-    public function writeTopLevelElement(&$entryObject)
+    public function writeTopLevelElement($entryObject)
     {
         $requestTargetSource = $this->request->getTargetSource();
 
@@ -261,16 +261,18 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
     /**
      * Write an entry element.
      * 
-     * @param mixed        &$entryObject  Object representing entry element.
-     * @param ResourceType &$resourceType Expected type of the entry object.
+     * @param mixed        $entryObject  Object representing entry element.
+     * @param ResourceType $resourceType Expected type of the entry object.
      * @param string       $absoluteUri   Absolute uri of the entry element.
      * @param string       $relativeUri   Relative uri of the entry element.
      *
-     * @return void
+     * @return ODataEntry
      */
-    private function _writeEntryElement(&$entryObject, 
-        ResourceType &$resourceType,
-        $absoluteUri, $relativeUri
+    private function _writeEntryElement(
+        $entryObject,
+        ResourceType $resourceType,
+        $absoluteUri,
+        $relativeUri
     ) {
 	    $entry = new ODataEntry();
 	    $entry->resourceSetName = $this->getCurrentResourceSetWrapper()->getName();
@@ -326,33 +328,36 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
      * @param string       $title         Title of the feed element.
      * @param string       $absoluteUri   Absolute uri representing the feed element.
      * @param string       $relativeUri   Relative uri representing the feed element.
-     * @param ODataFeed    &$odataFeed    Feed to write to.
+     * @param ODataFeed    &$feed    Feed to write to.
      * 
      * @return void
      */
-    private function _writeFeedElements(&$entryObjects, 
-        ResourceType &$resourceType, $title, 
-        $absoluteUri, $relativeUri, ODataFeed &$odataFeed
+    private function _writeFeedElements(
+        &$entryObjects,
+        ResourceType &$resourceType,
+        $title,
+        $absoluteUri,
+        $relativeUri,
+        ODataFeed &$feed
     ) {
         $this->assert(is_array($entryObjects), '_writeFeedElements::is_array($entryObjects)');
-        $odataFeed->id = $absoluteUri;
-        $odataFeed->title = $title;
-        $odataFeed->selfLink = new ODataLink();
-        $odataFeed->selfLink->name = ODataConstants::ATOM_SELF_RELATION_ATTRIBUTE_VALUE;
-        $odataFeed->selfLink->title =  $title;
-        $odataFeed->selfLink->url = $relativeUri;
+        $feed->id = $absoluteUri;
+        $feed->title = $title;
+        $feed->selfLink = new ODataLink();
+        $feed->selfLink->name = ODataConstants::ATOM_SELF_RELATION_ATTRIBUTE_VALUE;
+        $feed->selfLink->title =  $title;
+        $feed->selfLink->url = $relativeUri;
         
         if (empty($entryObjects)) {
             //TODO // ATOM specification: if a feed contains no entries, 
-            //then the feed should 
-            //have at least one Author tag
+            //then the feed should have at least one Author tag
         } else {
-            foreach ($entryObjects as &$entryObject) {
-                $odataFeed->entries[] = $this->_writeEntryElement($entryObject, $resourceType, null, null);
+            foreach ($entryObjects as $entryObject) {
+                $feed->entries[] = $this->_writeEntryElement($entryObject, $resourceType, null, null);
             }
 
             if ($this->needNextPageLink(count($entryObjects))) {
-                $odataFeed->nextPageLink = $this->getNextLinkUri(end($entryObjects), $absoluteUri);
+                $feed->nextPageLink = $this->getNextLinkUri(end($entryObjects), $absoluteUri);
             }
         }
     }
@@ -767,7 +772,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
     /**
      * Write media resource metadata (for MLE and Named Streams)
      * 
-     * @param mixed        &$entryObject  The entry instance being serialized.
+     * @param mixed        $entryObject  The entry instance being serialized.
      * @param ResourceType &$resourceType Resource type of the entry instance.
      * @param string       $title         Title for the current 
      *                                    current entry instance.
@@ -777,7 +782,8 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
      * 
      * @return void
      */
-    private function _writeMediaResourceMetadata(&$entryObject,
+    private function _writeMediaResourceMetadata(
+        $entryObject,
         ResourceType &$resourceType,
         $title,
         $relativeUri,

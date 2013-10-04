@@ -12,6 +12,7 @@ class BaseUnitTestCase extends \PHPUnit_Framework_TestCase {
 
 	public function setUp()
 	{
+        \Phockito::include_hamcrest();
 		$this->generateTestMocks();
 	}
 

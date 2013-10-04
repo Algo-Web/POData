@@ -162,7 +162,7 @@ class SimpleMetadataProvider implements IMetadataProvider
         
         $targetResourceSet = $targetResourceProperty->getResourceType()->getCustomState();
         if (is_null($targetResourceSet)) {
-            throw new InvalidOperationException('Failed to retrieve the custom state from ' . $resourceProperty->getResourceType()->getName());
+            throw new InvalidOperationException('Failed to retrieve the custom state from ' . $targetResourceProperty->getResourceType()->getName());
         }
 
         //Customer_Orders_Orders, Order_Customer_Customers

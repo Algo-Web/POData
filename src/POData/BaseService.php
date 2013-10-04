@@ -308,14 +308,13 @@ abstract class BaseService implements IRequestHandler, IService
     /**
      * Serialize the requested resource.
      * 
-     * @param RequestDescription &$requestDescription The description of the request  submitted by the client.
-     * @param UriProcessor       $uriProcessor       Reference to the uri processor.
+     * @param RequestDescription $request The description of the request  submitted by the client.
+     * @param UriProcessor $uriProcessor Reference to the uri processor.
      * 
      * @return void
      */
-    protected function serializeResult(RequestDescription &$requestDescription, UriProcessor $uriProcessor
-    ) {
-        $isETagHeaderAllowed = $requestDescription->isETagHeaderAllowed();
+    protected function serializeResult(RequestDescription $request, UriProcessor $uriProcessor) {
+        $isETagHeaderAllowed = $request->isETagHeaderAllowed();
         if ($this->_serviceConfiguration->getValidateETagHeader() && !$isETagHeaderAllowed) {
             if (!is_null($this->_serviceHost->getRequestIfMatch())
                 ||!is_null($this->_serviceHost->getRequestIfNoneMatch())
@@ -327,7 +326,7 @@ abstract class BaseService implements IRequestHandler, IService
         }
 
         $responseContentType = null;
-        $responseFormat = self::getResponseFormat($requestDescription, $uriProcessor, $this, $responseContentType );
+        $responseFormat = self::getResponseFormat($request, $uriProcessor, $this, $responseContentType );
 
 	    if (is_null($responseContentType)) {
 		    //Note: when refactoring this, if it's targeting a media resource it may return null and be ok..not sure
@@ -343,19 +342,19 @@ abstract class BaseService implements IRequestHandler, IService
         //     performed execution
         // (2) metadata - internal resource
         // (3) service directory - internal resource
-        if ($requestDescription->needExecution()) {
+        if ($request->needExecution()) {
             $uriProcessor->execute();
-            $objectModelSerializer = new ObjectModelSerializer($this, $requestDescription);
-            if (!$requestDescription->isSingleResult()) {
+            $objectModelSerializer = new ObjectModelSerializer($this, $request);
+            if (!$request->isSingleResult()) {
                 // Code path for collection (feed or links)
-                $entryObjects = $requestDescription->getTargetResult();
+                $entryObjects = $request->getTargetResult();
                 self::assert(
                     !is_null($entryObjects) && is_array($entryObjects), 
                     '!is_null($entryObjects) && is_array($entryObjects)'
                 );
                 // If related resource set is empty for an entry then we should 
                 // not throw error instead response must be empty feed or empty links
-                if ($requestDescription->isLinkUri()) {
+                if ($request->isLinkUri()) {
                     $odataModelInstance = $objectModelSerializer->writeUrlElements($entryObjects);
                     self::assert(
                         $odataModelInstance instanceof \POData\ObjectModel\ODataURLCollection, 
@@ -371,14 +370,14 @@ abstract class BaseService implements IRequestHandler, IService
             } else {
                 // Code path for entry, complex, bag, resource reference link, 
                 // primitive type or primitive value
-                $result = $requestDescription->getTargetResult();
-                $requestTargetKind = $requestDescription->getTargetKind();
-                if ($requestDescription->isLinkUri()) {
+                $result = $request->getTargetResult();
+                $requestTargetKind = $request->getTargetKind();
+                if ($request->isLinkUri()) {
                     // In the query 'Orders(1245)/$links/Customer', the targeted
                     // Customer might be null
                     if (is_null($result)) {
                         ODataException::createResourceNotFoundError(
-                            $requestDescription->getIdentifier()
+                            $request->getIdentifier()
                         );
                     }
 
@@ -393,7 +392,7 @@ abstract class BaseService implements IRequestHandler, IService
                     }
                     // handle entry resource
                     $needToSerializeResponse = true;
-                    $targetResourceType = $requestDescription->getTargetResourceType();
+                    $targetResourceType = $request->getTargetResourceType();
                     $eTag = $this->compareETag(
                         $result, 
                         $targetResourceType, 
@@ -402,22 +401,18 @@ abstract class BaseService implements IRequestHandler, IService
 
                     if ($needToSerializeResponse) {
                         if (is_null($result)) {
-                            // In the query 'Orders(1245)/Customer', the targetted 
+                            // In the query 'Orders(1245)/Customer', the targeted
                             // Customer might be null
                             // set status code to 204 => 'No Content'
-                            $this->_serviceHost->setResponseStatusCode(
-                                HttpStatus::CODE_NOCONTENT
-                            );
+                            $this->_serviceHost->setResponseStatusCode(HttpStatus::CODE_NOCONTENT);
                             $hasResponseBody = false;
                         } else {
-                            $odataModelInstance 
-                                = $objectModelSerializer->writeTopLevelElement($result);
+                            $odataModelInstance = $objectModelSerializer->writeTopLevelElement($result);
                         }
                     } else {
                         // Resource is not modified so set status code 
                         // to 304 => 'Not Modified'
-                        $this->_serviceHost
-                            ->setResponseStatusCode(HttpStatus::CODE_NOT_MODIFIED);
+                        $this->_serviceHost->setResponseStatusCode(HttpStatus::CODE_NOT_MODIFIED);
                         $hasResponseBody = false;
                     }
 
@@ -429,20 +424,20 @@ abstract class BaseService implements IRequestHandler, IService
 
 	                $odataModelInstance = $objectModelSerializer->writeTopLevelComplexObject(
                         $result, 
-                        $requestDescription->getProjectedProperty()->getName(),
-	                    $requestDescription->getTargetResourceType()
+                        $request->getProjectedProperty()->getName(),
+	                    $request->getTargetResourceType()
 	                );
                 } else if ($requestTargetKind == TargetKind::BAG) {
                     $odataModelInstance = $objectModelSerializer->writeTopLevelBagObject(
                         $result, 
-                        $requestDescription->getProjectedProperty()->getName(),
-	                    $requestDescription->getTargetResourceType(),
+                        $request->getProjectedProperty()->getName(),
+	                    $request->getTargetResourceType(),
                         $odataModelInstance
                     );
                 } else if ($requestTargetKind == TargetKind::PRIMITIVE) {
                     $odataModelInstance = $objectModelSerializer->writeTopLevelPrimitive(
                         $result,
-	                    $requestDescription->getProjectedProperty(),
+	                    $request->getProjectedProperty(),
                         $odataModelInstance
                     );
                 } else if ($requestTargetKind == TargetKind::PRIMITIVE_VALUE) {
@@ -467,7 +462,7 @@ abstract class BaseService implements IRequestHandler, IService
         if ($hasResponseBody) {
             ResponseWriter::write(
                 $this, 
-                $requestDescription, 
+                $request,
                 $odataModelInstance, 
                 $responseContentType, 
                 $responseFormat

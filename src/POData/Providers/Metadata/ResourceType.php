@@ -705,71 +705,70 @@ class ResourceType
         // from null depending on the current state of 
         // _propertiesDeclaredOnThisType array, so method
         // should be called only after adding all properties
-        if (is_null($this->_hasBagProperty)) {
-            if ($this->_baseType != null 
-                && $this->_baseType->hasBagProperty($arrayToDetectLoopInComplexType)
-            ) {
-                        $this->_hasBagProperty = true;
-            } else {
-                foreach ($this->_propertiesDeclaredOnThisType as $resourceProperty) {
-                    $hasBagInComplex = false;
-                    if ($resourceProperty->isKindOf(ResourcePropertyKind::COMPLEX_TYPE)) {
-                        //We can say current ResouceType ("this") 
-                        //is contains a bag property if:
-                        //1. It contain a property of kind bag.
-                        //2. It contains a normal complex property 
-                        //with a sub property of kind bag.
-                        //The second case can be further expanded, i.e. 
-                        //if the normal complex property
-                        //has a normal complex sub property with a 
-                        //sub property of kind bag.
-                        //So for complex type we recursively call this 
-                        //function to check for bag.
-                        //Shown below how looping can happen in complex type:
-                        //Customer ResourceType (id1)
-                        //{
-                        //  ....
-                        //  Address: Address ResourceType (id2)
-                        //  {
-                        //    .....
-                        //    AltAddress: Address ResourceType (id2)
-                        //    {
-                        //      ...
-                        //    }
-                        //  }
-                        //}
-                        //
-                        //Here the resource type of Customer::Address and 
-                        //Customer::Address::AltAddress
-                        //are same, this is a loop, we need to detect 
-                        //this and avoid infinite recursive loop.
-                        //
-                        $count = count($arrayToDetectLoopInComplexType);
-                        $foundLoop = false;
-                        for ($i = 0; $i < $count; $i++) {
-                            if ($arrayToDetectLoopInComplexType[$i] === $resourceProperty->getResourceType()) {
-                                $foundLoop = true;
-                                break;
-                            }
-                        }
+        if (!is_null($this->_hasBagProperty)) {
+            return $this->_hasBagProperty;
+        }
 
-                        if (!$foundLoop) {
-                            $arrayToDetectLoopInComplexType[$count] = $resourceProperty->getResourceType();
-                            $hasBagInComplex = $resourceProperty->getResourceType()->hasBagProperty($arrayToDetectLoopInComplexType);
-                            unset($arrayToDetectLoopInComplexType[$count]);
+        if ($this->_baseType != null && $this->_baseType->hasBagProperty($arrayToDetectLoopInComplexType)) {
+            $this->_hasBagProperty = true;
+        } else {
+            foreach ($this->_propertiesDeclaredOnThisType as $resourceProperty) {
+                $hasBagInComplex = false;
+                if ($resourceProperty->isKindOf(ResourcePropertyKind::COMPLEX_TYPE)) {
+                    //We can say current ResouceType ("this")
+                    //is contains a bag property if:
+                    //1. It contain a property of kind bag.
+                    //2. It contains a normal complex property
+                    //with a sub property of kind bag.
+                    //The second case can be further expanded, i.e.
+                    //if the normal complex property
+                    //has a normal complex sub property with a
+                    //sub property of kind bag.
+                    //So for complex type we recursively call this
+                    //function to check for bag.
+                    //Shown below how looping can happen in complex type:
+                    //Customer ResourceType (id1)
+                    //{
+                    //  ....
+                    //  Address: Address ResourceType (id2)
+                    //  {
+                    //    .....
+                    //    AltAddress: Address ResourceType (id2)
+                    //    {
+                    //      ...
+                    //    }
+                    //  }
+                    //}
+                    //
+                    //Here the resource type of Customer::Address and
+                    //Customer::Address::AltAddress
+                    //are same, this is a loop, we need to detect
+                    //this and avoid infinite recursive loop.
+                    //
+                    $count = count($arrayToDetectLoopInComplexType);
+                    $foundLoop = false;
+                    for ($i = 0; $i < $count; $i++) {
+                        if ($arrayToDetectLoopInComplexType[$i] === $resourceProperty->getResourceType()) {
+                            $foundLoop = true;
+                            break;
                         }
                     }
 
-                    if ($resourceProperty->isKindOf(ResourcePropertyKind::BAG) 
-                        || $hasBagInComplex
-                    ) {
-                        $this->_hasBagProperty = true;
-                        break;
+                    if (!$foundLoop) {
+                        $arrayToDetectLoopInComplexType[$count] = $resourceProperty->getResourceType();
+                        $hasBagInComplex = $resourceProperty->getResourceType()->hasBagProperty($arrayToDetectLoopInComplexType);
+                        unset($arrayToDetectLoopInComplexType[$count]);
                     }
+                }
+
+                if ($resourceProperty->isKindOf(ResourcePropertyKind::BAG) || $hasBagInComplex) {
+                    $this->_hasBagProperty = true;
+                    break;
                 }
             }
         }
-        
+
+
         return $this->_hasBagProperty;
     }
     

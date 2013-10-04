@@ -620,7 +620,7 @@ class ProvidersWrapper
      * 
      * @return \stdClass[]
      */
-    public function getResourceSet(ResourceSet $resourceSet, FilterInfo $filterInfo, $orderBy, $top, $skip)
+    public function getResourceSet(ResourceSet $resourceSet, $filterInfo, $orderBy, $top, $skip)
     {
 		$customExpressionAsString = $filterInfo->getExpressionAsString();
 

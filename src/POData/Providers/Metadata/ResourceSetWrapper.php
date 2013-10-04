@@ -17,7 +17,7 @@ use POData\Providers\ProvidersWrapper;
  *
  * @package POData\Providers\Metadata
  */
-class ResourceSetWrapper
+class ResourceSetWrapper extends ResourceSet
 {
     /**
      * Reference to the wrapped resource set
@@ -44,19 +44,13 @@ class ResourceSetWrapper
     /**
      * Constructs a new instance of ResourceSetWrapper
      * 
-     * @param ResourceSet              $resourceSet   The resource set to wrap
-     * @param ServiceConfiguration $configuration Configuration to take
-     *                                                settings specific to wrapped 
-     *                                                resource set
+     * @param ResourceSet $resourceSet   The resource set to wrap
+     * @param ServiceConfiguration $configuration Configuration to take settings specific to wrapped resource set
      */
-    public function __construct(ResourceSet $resourceSet, 
-        ServiceConfiguration $configuration
-    ) {
+    public function __construct(ResourceSet $resourceSet, ServiceConfiguration $configuration) {
         $this->_resourceSet = $resourceSet;
-        $this->_resourceSetRights 
-            = $configuration->getEntitySetAccessRule($resourceSet);
-        $this->_resourceSetPageSize 
-            = $configuration->getEntitySetPageSize($resourceSet);
+        $this->_resourceSetRights = $configuration->getEntitySetAccessRule($resourceSet);
+        $this->_resourceSetPageSize = $configuration->getEntitySetPageSize($resourceSet);
     }
 
     /**
@@ -70,6 +64,16 @@ class ResourceSetWrapper
     }
 
     /**
+     * Gets reference to the resource type of wrapped resource set
+     *
+     * @return ResourceType
+     */
+    public function getResourceType()
+    {
+        return $this->_resourceSet->getResourceType();
+    }
+
+    /**
      * Gets reference to the wrapped resource set
      * 
      * @return ResourceSet
@@ -79,15 +83,6 @@ class ResourceSetWrapper
         return $this->_resourceSet;
     }
 
-    /**
-     * Gets reference to the resource type of wrapped resource set
-     * 
-     * @return ResourceType
-     */
-    public function getResourceType()
-    {
-        return $this->_resourceSet->getResourceType();
-    }
 
     /**
      * Gets reference to the configured rights of the wrapped resource set

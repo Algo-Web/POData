@@ -6,10 +6,12 @@ namespace POData\UriProcessor\ResourcePathProcessor;
  * Mainly test UriProcessor, but also do some partial test for BaseService class.
  */
 
+use POData\Providers\Metadata\ResourceSet;
+use POData\Providers\Metadata\ResourceType;
+use POData\Providers\Query\QueryResult;
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ProjectionNode;
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandedProjectionNode;
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\RootProjectionNode;
-use POData\UriProcessor\QueryProcessor\AnonymousFunction;
 use POData\UriProcessor\QueryProcessor\OrderByParser\OrderBySubPathSegment;
 use POData\UriProcessor\QueryProcessor\OrderByParser\OrderByPathSegment;
 use POData\UriProcessor\QueryProcessor\SkipTokenParser\InternalSkipTokenInfo;
@@ -31,6 +33,10 @@ use UnitTests\POData\Facets\ServiceHostTestFake;
 use UnitTests\POData\Facets\NorthWind1\NorthWindService2;
 use UnitTests\POData\Facets\NorthWind1\NorthWindServiceV1;
 use UnitTests\POData\Facets\NorthWind1\NorthWindServiceV3;
+use POData\Providers\ProvidersWrapper;
+use POData\Providers\Metadata\ResourceSetWrapper;
+use POData\Providers\Query\IQueryProvider;
+
 use Phockito;
 use POData\IService;
 use UnitTests\POData\BaseUnitTestCase;
@@ -122,7 +128,7 @@ class UriProcessorTest extends BaseUnitTestCase
         $dataService->setHost($host);
 
         try {
-            $uriProcessor = $dataService->handleRequest();
+            $dataService->handleRequest();
             $this->fail('An expected ODataException for failure of capability negotiation over DataServiceVersion has not been thrown');
         } catch (ODataException $ex) {
             $this->assertStringStartsWith("Request version '1.0' is not supported for the request payload. The only supported version is '2.0", $ex->getMessage(), $ex->getTraceAsString());
@@ -143,7 +149,7 @@ class UriProcessorTest extends BaseUnitTestCase
         $dataService->setHost($host);
 
         try {
-            $uriProcessor = $dataService->handleRequest();
+            $dataService->handleRequest();
             $this->fail('An expected ODataException for failure of capability negoitation over MaxDataServiceVersion has not been thrown');
         } catch (ODataException $ex) {
             $this->assertStringStartsWith("Request version '1.0' is not supported for the request payload. The only supported version is '2.0", $ex->getMessage());
@@ -169,7 +175,7 @@ class UriProcessorTest extends BaseUnitTestCase
         $dataService->setHost($host);
 
         try {
-            $uriProcessor = $dataService->handleRequest();
+            $dataService->handleRequest();
             $this->fail('An expected ODataException for failure of capability negoitation due to V1 configuration has not been thrown');
         } catch (ODataException $ex) {
             $this->assertStringStartsWith("The response requires that version 2.0 of the protocol be used, but the MaxProtocolVersion of the data service is set to 1.0", $ex->getMessage());
@@ -358,7 +364,7 @@ class UriProcessorTest extends BaseUnitTestCase
         $dataService->setHost($host);
 
         try {
-            $uriProcessor = $dataService->handleRequest();
+            $dataService->handleRequest();
             $this->fail('An expected ODataException for applying $skiptoken on $count has not been thrown');
         } catch (ODataException $ex) {
             $this->assertStringStartsWith("Query option \$skiptoken cannot be applied to the requested resource", $ex->getMessage());
@@ -457,7 +463,7 @@ class UriProcessorTest extends BaseUnitTestCase
         $dataService->setHost($host);
 
         try {
-            $uriProcessor = $dataService->handleRequest();
+            $dataService->handleRequest();
             $this->fail('An expected ODataException for applying $skiptoken on $count has not been thrown');
         } catch (ODataException $ex) {
             $this->assertStringStartsWith("\$inlinecount cannot be applied to the resource segment \$count", $ex->getMessage());
@@ -550,7 +556,7 @@ class UriProcessorTest extends BaseUnitTestCase
         $dataService->setHost($host);
 
         try {
-            $uriProcessor = $dataService->handleRequest();
+            $dataService->handleRequest();
             $this->fail('An expected ODataException due to capability negotiation has not been thrown (paged result but client\'s max supportedd version is 1.0)');
         } catch (ODataException $ex) {
             $this->assertStringStartsWith("Request version '1.0' is not supported for the request payload. The only supported version is '2.0'", $ex->getMessage());
@@ -2181,7 +2187,17 @@ class UriProcessorTest extends BaseUnitTestCase
 	/** @var  ServiceHost */
 	protected $mockServiceHost;
 
-	public function skiptestProcessRequestForCollection()
+    /** @var  ProvidersWrapper */
+    protected $mockProvidersWrapper;
+
+    /** @var ResourceSetWrapper */
+    protected $mockCollectionResourceSetWrapper;
+
+
+    /** @var  IQueryProvider */
+    protected $mockQueryProvider;
+
+	public function testProcessRequestForCollection()
 	{
 		Phockito::when($this->mockService->getHost())
 			->return($this->mockServiceHost);
@@ -2194,8 +2210,19 @@ class UriProcessorTest extends BaseUnitTestCase
 		Phockito::when($this->mockServiceHost->getAbsoluteServiceUri())
 			->return($serviceURI);
 
+        Phockito::when($this->mockService->getProvidersWrapper())
+            ->return($this->mockProvidersWrapper);
+
+
+        Phockito::when($this->mockProvidersWrapper->resolveResourceSet("Collection"))
+            ->return($this->mockCollectionResourceSetWrapper);
+
+        $fakeQueryResult = new QueryResult();
+        $fakeQueryResult->results = array();
 
 		$uriProcessor = UriProcessor::process($this->mockService);
+        $uriProcessor->execute();
+
 
 	}
 

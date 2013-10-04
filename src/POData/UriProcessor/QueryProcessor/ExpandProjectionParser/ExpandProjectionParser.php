@@ -13,6 +13,7 @@ use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionLexer;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionTokenId;
 use POData\UriProcessor\QueryProcessor\OrderByParser\OrderByParser;
+use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
 
 /**
  * Class ExpandProjectionParser
@@ -64,32 +65,20 @@ class ExpandProjectionParser
      * Parse the given expand and select clause, validate them 
      * and build 'Projection Tree'
      * 
-     * @param ResourceSetWrapper           $resourceSetWrapper The resource set
-     *                                                         identified by the
-     *                                                         resource path uri.
-     * @param ResourceType                 $resourceType       The resource type of
-     *                                                         entities identified 
-     *                                                         by the resource 
-     *                                                         path uri.
-     * @param InternalOrderByInfo          $internalOrderInfo  The top level sort
-     *                                                         information, this 
-     *                                                         will be set if the 
-     *                                                         $skip, $top is 
+     * @param ResourceSetWrapper $resourceSetWrapper The resource set identified by the resource path uri.
+     * @param ResourceType $resourceType The resource type of entities identified by the resource path uri.
+     * @param InternalOrderByInfo $internalOrderInfo The top level sort information, this will be set if the $skip, $top is
      *                                                         specified in the 
      *                                                         request uri or Server 
      *                                                         side paging is
      *                                                         enabled for top level 
      *                                                         resource
-     * @param int                          $skipCount          The value of $skip 
-     *                                                         option applied to the 
-     *                                                         top level resource
+     * @param int $skipCount The value of $skip option applied to the top level resource
      *                                                         set identified by the 
      *                                                         resource path uri 
      *                                                         null means $skip 
      *                                                         option is not present.
-     * @param int                          $takeCount          The minimum among the
-     *                                                         value of $top option 
-     *                                                         applied to and 
+     * @param int $takeCount The minimum among the value of $top option applied to and
      *                                                         page size configured
      *                                                         for the top level
      *                                                         resource 
@@ -101,32 +90,37 @@ class ExpandProjectionParser
      *                                                         page size is not 
      *                                                         configured for top
      *                                                         level resource set.
-     * @param string                       $expand             The value of $expand
-     *                                                         clause
-     * @param string                       $select             The value of $select
-     *                                                         clause
-     * @param ProvidersWrapper $providerWrapper    Reference to metadata
-     *                                                         and query provider
-     *                                                         wrapper
+     * @param string $expand The value of $expand clause
+     * @param string $select The value of $select clause
+     * @param ProvidersWrapper $providerWrapper Reference to metadata and query provider wrapper
      * 
      * @return RootProjectionNode Returns root of the 'Projection Tree'
      * 
-     * @throws ODataException If any error occur while parsing expand and/or
-     *                        select clause
+     * @throws ODataException If any error occur while parsing expand and/or select clause
+     *
      */
-    public static function parseExpandAndSelectClause(ResourceSetWrapper $resourceSetWrapper,
-        ResourceType $resourceType, $internalOrderInfo, $skipCount, $takeCount, $expand,
-        $select, ProvidersWrapper $providerWrapper
+    public static function parseExpandAndSelectClause(
+        ResourceSetWrapper $resourceSetWrapper,
+        ResourceType $resourceType,
+        $internalOrderInfo,
+        $skipCount,
+        $takeCount,
+        $expand,
+        $select,
+        ProvidersWrapper $providerWrapper
     ) {
-        $expandSelectParser = new ExpandProjectionParser($providerWrapper);
-        $expandSelectParser->_rootProjectionNode 
-            = new RootProjectionNode(
-                $resourceSetWrapper, $internalOrderInfo, $skipCount, 
-                $takeCount, null, $resourceType
-            );
-        $expandSelectParser->_parseExpand($expand);
-        $expandSelectParser->_parseSelect($select);
-        return $expandSelectParser->_rootProjectionNode;
+        $parser = new ExpandProjectionParser($providerWrapper);
+        $parser->_rootProjectionNode = new RootProjectionNode(
+            $resourceSetWrapper,
+            $internalOrderInfo,
+            $skipCount,
+            $takeCount,
+            null,
+            $resourceType
+        );
+        $parser->_parseExpand($expand);
+        $parser->_parseSelect($select);
+        return $parser->_rootProjectionNode;
     }
 
     /**
@@ -158,8 +152,7 @@ class ExpandProjectionParser
      * information will be ready.
      * 
      * @param string $select Value of $select clause.
-     * 
-     * @return void
+     *
      * 
      * @throws ODataException If any error occurs while reading expand clause
      *                        or applying selection to projection tree

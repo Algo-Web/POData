@@ -14,7 +14,7 @@ class ServiceHostTestFake extends ServiceHost
 {
     private $_hostInfo;
     
-    public function __construct($hostInfo) 
+    public function __construct(array $hostInfo)
     {
         $this->_hostInfo = $hostInfo;
         $_SERVER['REQUEST_METHOD'] = 'GET';
