@@ -41,22 +41,22 @@ interface IQueryProvider
 	 * IE: http://host/EntitySet
 	 *  http://host/EntitySet?$skip=10&$top=5&filter=Prop gt Value
 	 *
+	 * @param QueryType $queryType indicates if this is a query for a count, entities, or entities with a count
 	 * @param ResourceSet $resourceSet The entity set containing the entities to fetch
 	 * @param String $filter filter condition if any need to be apply in the query
 	 * @param mixed $orderBy sorted order if we want to get the data in some specific order
 	 * @param int $top number of records which  need to be skip
 	 * @param String $skipToken value indicating what records to skip
-	 * @param QueryType $queryType indicates if this is a query for a count, entities, or entities with a count
 	 *
 	 * @return QueryResult
 	 */
 	public function getResourceSet(
+		QueryType $queryType,
 		ResourceSet $resourceSet,
 		$filter = null,
 		$orderBy = null,
 		$top = null,
-		$skipToken = null,
-		QueryType $queryType
+		$skipToken = null
 	);
 
 

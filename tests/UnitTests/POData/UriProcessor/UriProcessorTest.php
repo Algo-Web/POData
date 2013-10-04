@@ -2194,8 +2194,6 @@ class UriProcessorTest extends BaseUnitTestCase
     protected $mockCollectionResourceSetWrapper;
 
 
-    /** @var  IQueryProvider */
-    protected $mockQueryProvider;
 
 	public function testProcessRequestForCollection()
 	{
@@ -2220,10 +2218,24 @@ class UriProcessorTest extends BaseUnitTestCase
         $fakeQueryResult = new QueryResult();
         $fakeQueryResult->results = array();
 
+		Phockito::when(
+			$this->mockProvidersWrapper->getResourceSet(
+				$this->mockCollectionResourceSetWrapper,
+				null,
+				null,
+				null,
+				null
+			)
+		)->return($fakeQueryResult);
+
 		$uriProcessor = UriProcessor::process($this->mockService);
         $uriProcessor->execute();
 
+		$request = $uriProcessor->getRequest();
 
+		$actual = $request->getTargetResult();
+
+		$this->assertEquals($fakeQueryResult, $actual);
 	}
 
 

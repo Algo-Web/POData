@@ -64,17 +64,17 @@ class QueryProcessor
     /**
      * Creates new instance of QueryProcessor
      * 
-     * @param RequestDescription $requestDescription Description of the request submitted by client.
+     * @param RequestDescription $request Description of the request submitted by client.
      * @param IService        $service        Reference to the service implementation.
      */
-    private function __construct(RequestDescription $requestDescription, IService $service ) {
-        $this->request = $requestDescription;
+    private function __construct(RequestDescription $request, IService $service ) {
+        $this->request = $request;
         $this->service = $service;
 
-        $requestTargetKind = $requestDescription->getTargetKind();
-        $isSingleResult = $requestDescription->isSingleResult();
+        $requestTargetKind = $request->getTargetKind();
+        $isSingleResult = $request->isSingleResult();
 
-        $requestCountOption = $requestDescription->getRequestCountOption();
+        $requestCountOption = $request->getRequestCountOption();
 
 
         $this->_setQueryApplicable = ($requestTargetKind == TargetKind::RESOURCE && !$isSingleResult) || $requestCountOption == RequestCountOption::VALUE_ONLY();
@@ -290,7 +290,7 @@ class QueryProcessor
     {
         $inlineCount = $this->service->getHost()->getQueryStringItem( ODataConstants::HTTPQUERY_STRING_INLINECOUNT );
 
-	    //If it's not specified, we're fine
+	    //If it's not specified, we're done
 	    if(is_null($inlineCount)) return;
 
 	    //If the service doesn't allow count requests..then throw an exception
@@ -301,6 +301,8 @@ class QueryProcessor
         }
 
         $inlineCount = trim($inlineCount);
+
+	    //if it's set to none, we don't do inline counts
         if ($inlineCount === ODataConstants::URI_ROWCOUNT_OFFOPTION) {
             return;
         }

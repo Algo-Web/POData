@@ -175,6 +175,7 @@ class UriProcessor
                         $value = null;
                     } else {
                         try {
+	                        //see #88
                             $property = new \ReflectionProperty($value, $segment->getIdentifier());
                             $value = $property->getValue($value);
                         } catch (\ReflectionException $reflectionException) {
@@ -222,14 +223,16 @@ class UriProcessor
             $segment->setResult($entityInstance);
             
         } else {
-            $entityInstances = $this->_provider->getResourceSet(
+	        $this->request->getRequestCountOption()
+            $queryResult = $this->_provider->getResourceSet(
+
                 $segment->getTargetResourceSetWrapper(),
                 $this->request->getFilterInfo(),
                 $this->request->getInternalOrderByInfo(),
                 $this->request->getTopCount(),
                 $this->request->getSkipCount()
             );
-            $segment->setResult($entityInstances);
+            $segment->setResult($queryResult);
         }
     }
 

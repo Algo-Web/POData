@@ -21,6 +21,8 @@ use POData\UriProcessor\QueryProcessor\ExpressionParser\IExpressionProvider;
 use POData\Common\InvalidOperationException;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
 use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
+use POData\Providers\Query\QueryResult;
+use POData\Providers\Query\QueryType;
 
 /**
  * Class ProvidersWrapper
@@ -612,19 +614,22 @@ class ProvidersWrapper
     /**
      * Gets collection of entities belongs to an entity set
      *
+     * @param QueryType $queryType indicates if this is a query for a count, entities, or entities with a count
      * @param ResourceSet $resourceSet The entity set containing the entities that need to be fetched
      * @param FilterInfo $filterInfo represents the $filter parameter of the OData query.  NULL if no $filter specified
      * @param InternalOrderByInfo $orderBy The orderBy information
      * @param int $top The top count
      * @param int $skip The skip count
      * 
-     * @return \stdClass[]
+     * @return QueryResult
      */
-    public function getResourceSet(ResourceSet $resourceSet, $filterInfo, $orderBy, $top, $skip)
+    public function getResourceSet(QueryType $queryType, ResourceSet $resourceSet, $filterInfo, $orderBy, $top, $skip)
     {
+
 		$customExpressionAsString = $filterInfo->getExpressionAsString();
 
 		$entityInstances = $this->_queryProvider->getResourceSet(
+			$queryType,
 			$resourceSet,
 			$customExpressionAsString,
 			$orderBy,
