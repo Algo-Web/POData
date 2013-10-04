@@ -18,6 +18,7 @@ use POData\Common\ODataConstants;
 use POData\Common\Messages;
 use POData\Common\ODataException;
 use POData\Common\InvalidOperationException;
+use POData\Providers\ProvidersWrapper;
 
 /**
  * Class JsonODataV1Writer is a writer for the json format in OData V1
@@ -447,5 +448,34 @@ class JsonODataV1Writer implements IODataWriter
     public function getOutput()
     {
         return $this->_writer->getJsonOutput();
+    }
+
+
+    /**
+     * @param ProvidersWrapper $providers
+     * @return IODataWriter
+     */
+    public function writeServiceDocument(ProvidersWrapper $providers){
+        $writer = $this->_writer;
+        $writer
+            ->startObjectScope() // {
+            ->writeName("d") //  "d" :
+            ->startObjectScope() // {
+            ->writeName(ODataConstants::ENTITY_SET) // "EntitySets"
+            ->startArrayScope() // [
+        ;
+
+        foreach ($providers->getResourceSets() as $resourceSetWrapper) {
+            $writer->writeValue($resourceSetWrapper->getName());
+        }
+
+        $writer
+            ->endScope() // ]
+            ->endScope() // }
+            ->endScope() // }
+        ;
+
+        return $this;
+
     }
 }

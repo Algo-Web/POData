@@ -12,9 +12,11 @@ use POData\ObjectModel\ODataPropertyContent;
 use POData\ObjectModel\ODataProperty;
 use POData\ObjectModel\ODataBagContent;
 use POData\Writers\Atom\AtomODataWriter;
+use UnitTests\POData\BaseUnitTestCase;
+use POData\Providers\ProvidersWrapper;
+use Phockito;
 
-
-class AtomODataWriterTest extends \PHPUnit_Framework_TestCase
+class AtomODataWriterTest extends BaseUnitTestCase
 {
 	/**
 	 * Removes the updated tag from an XML string
@@ -1105,6 +1107,74 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 </d:Emails>';
 
 	   $this->assertXmlStringEqualsXmlString($this->removeUpdatedTags($expected), $this->removeUpdatedTags($actual));
+    }
+
+
+    /**
+     * @var ProvidersWrapper
+     */
+    protected $mockProvider;
+
+    public function testGetOutputNoResourceSets()
+    {
+        Phockito::when($this->mockProvider->getResourceSets())
+            ->return(array());
+
+        $fakeBaseURL = "http://some/place/some/where/" . uniqid();
+
+        $writer = new AtomODataWriter($fakeBaseURL);
+        $actual = $writer->writeServiceDocument($this->mockProvider)->getOutput();
+
+        $expected = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<service xml:base="' . $fakeBaseURL . '" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:app="http://www.w3.org/2007/app" xmlns="http://www.w3.org/2007/app">
+ <workspace>
+  <atom:title>Default</atom:title>
+ </workspace>
+</service>
+';
+
+        $this->assertEquals($expected, $actual);
+    }
+
+
+    public function testGetOutputTwoResourceSets()
+    {
+
+        $fakeResourceSet1 = Phockito::mock('POData\Providers\Metadata\ResourceSetWrapper');
+        Phockito::when($fakeResourceSet1->getName())->return("Name 1");
+
+        $fakeResourceSet2 = Phockito::mock('POData\Providers\Metadata\ResourceSetWrapper');
+        //TODO: this certainly doesn't seem right...see #73
+        Phockito::when($fakeResourceSet2->getName())->return("XML escaped stuff \" ' <> & ?");
+
+        $fakeResourceSets = array(
+            $fakeResourceSet1,
+            $fakeResourceSet2,
+        );
+
+        Phockito::when($this->mockProvider->getResourceSets())
+            ->return($fakeResourceSets);
+
+        $fakeBaseURL = "http://some/place/some/where/" . uniqid();
+
+        $writer = new AtomODataWriter($fakeBaseURL);
+        $actual = $writer->writeServiceDocument($this->mockProvider)->getOutput();
+
+        $expected = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<service xml:base="' . $fakeBaseURL . '" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:app="http://www.w3.org/2007/app" xmlns="http://www.w3.org/2007/app">
+ <workspace>
+  <atom:title>Default</atom:title>
+  <collection href="Name 1">
+   <atom:title>Name 1</atom:title>
+  </collection>
+  <collection href="XML escaped stuff &quot; \' &lt;&gt; &amp; ?">
+   <atom:title>XML escaped stuff &quot; \' &lt;&gt; &amp; ?</atom:title>
+  </collection>
+ </workspace>
+</service>
+';
+
+        $this->assertEquals($expected, $actual);
     }
     
 

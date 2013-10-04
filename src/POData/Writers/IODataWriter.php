@@ -10,7 +10,7 @@ use POData\ObjectModel\ODataEntry;
 use POData\ObjectModel\ODataLink;
 use POData\ObjectModel\ODataPropertyContent;
 use POData\ObjectModel\ODataProperty;
-
+use POData\Providers\ProvidersWrapper;
 
 /**
  * Class IODataWriter
@@ -20,7 +20,7 @@ interface IODataWriter
 {
 
 	/**
-	 * Create odata object model from the request description and transform it to required content type form
+	 * Create OData object model from the request description and transform it to required content type form
 	 *
 	 *
 	 * @param  ODataURL|ODataURLCollection|ODataPropertyContent|ODataFeed|ODataEntry $model Object of requested content.
@@ -30,6 +30,11 @@ interface IODataWriter
 	public function write($model);
 
 
+    /**
+     * @param ProvidersWrapper $providers
+     * @return IODataWriter
+     */
+    public function writeServiceDocument(ProvidersWrapper $providers);
 
     /**
      * Get the output as string

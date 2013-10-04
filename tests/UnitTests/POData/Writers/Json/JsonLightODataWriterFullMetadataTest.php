@@ -13,9 +13,12 @@ use POData\ObjectModel\ODataProperty;
 use POData\ObjectModel\ODataBagContent;
 use POData\Writers\Json\JsonLightMetadataLevel;
 use POData\Writers\Json\JsonLightODataWriter;
+use POData\Providers\ProvidersWrapper;
 
+use UnitTests\POData\BaseUnitTestCase;
+use Phockito;
 
-class JsonLightODataWriterFullMetadataTest extends \PHPUnit_Framework_TestCase
+class JsonLightODataWriterFullMetadataTest extends BaseUnitTestCase
 {
 
 	protected $serviceBase = "http://services.odata.org/OData/OData.svc";
@@ -898,5 +901,63 @@ class JsonLightODataWriterFullMetadataTest extends \PHPUnit_Framework_TestCase
 
 	    $this->assertEquals(array($expected), array($actual), "raw JSON is: " . $writer->getOutput());
     }
-     
+
+
+    /**
+     * @var ProvidersWrapper
+     */
+    protected $mockProvider;
+
+    public function testGetOutputNoResourceSets()
+    {
+        Phockito::when($this->mockProvider->getResourceSets())
+            ->return(array());
+
+        $writer = new JsonLightODataWriter(JsonLightMetadataLevel::FULL(), $this->serviceBase);
+        $actual = $writer->writeServiceDocument($this->mockProvider)->getOutput();
+
+        $expected = '{
+    "d":{
+        "EntitySet":[
+
+        ]
+    }
+}';
+
+        $this->assertEquals($expected, $actual);
+    }
+
+
+    public function testGetOutputTwoResourceSets()
+    {
+
+        $fakeResourceSet1 = Phockito::mock('POData\Providers\Metadata\ResourceSetWrapper');
+        Phockito::when($fakeResourceSet1->getName())->return("Name 1");
+
+        $fakeResourceSet2 = Phockito::mock('POData\Providers\Metadata\ResourceSetWrapper');
+        //TODO: this certainly doesn't seem right...see #73
+        Phockito::when($fakeResourceSet2->getName())->return("XML escaped stuff \" ' <> & ?");
+
+        $fakeResourceSets = array(
+            $fakeResourceSet1,
+            $fakeResourceSet2,
+        );
+
+        Phockito::when($this->mockProvider->getResourceSets())
+            ->return($fakeResourceSets);
+
+
+        $writer = new JsonLightODataWriter(JsonLightMetadataLevel::FULL(), $this->serviceBase);
+        $actual = $writer->writeServiceDocument($this->mockProvider)->getOutput();
+
+        $expected = '{
+    "d":{
+        "EntitySet":[
+            "Name 1","XML escaped stuff \" \' <> & ?"
+        ]
+    }
+}';
+
+        $this->assertEquals($expected, $actual);
+    }
 }

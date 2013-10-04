@@ -23,7 +23,7 @@ class ResponseWriter
      * Write in specific format 
      * 
      * @param IService        $service
-     * @param RequestDescription $requestDescription Request description object
+     * @param RequestDescription $request Request description object
      * @param mixed $entityModel OData model instance
      * @param String             $responseContentType Content type of the response
      * @param ResponseFormat             $responseFormat      Output format
@@ -32,13 +32,13 @@ class ResponseWriter
      */
     public static function write(
 	    IService $service,
-        RequestDescription $requestDescription,
+        RequestDescription $request,
         $entityModel,
         $responseContentType, 
         ResponseFormat $responseFormat
     ) {
         $responseBody = null;
-        $dataServiceVersion = $requestDescription->getResponseDataServiceVersion();
+        $dataServiceVersion = $request->getResponseDataServiceVersion();
 
         if ($responseFormat == ResponseFormat::METADATA_DOCUMENT()) {
             // /$metadata
@@ -48,39 +48,37 @@ class ResponseWriter
         } else if ($responseFormat == ResponseFormat::TEXT()) {
             // /Customer('ALFKI')/CompanyName/$value
             // /Customers/$count
-            $responseBody = utf8_encode($requestDescription->getTargetResult());
+            $responseBody = utf8_encode($request->getTargetResult());
         } else if ($responseFormat == ResponseFormat::BINARY()) {
             // Binary property or media resource
-            if ($requestDescription->getTargetKind() == TargetKind::MEDIA_RESOURCE) {
-	            $result = $requestDescription->getTargetResult();
-	            $streamInfo =  $requestDescription->getResourceStreamInfo();
+            if ($request->getTargetKind() == TargetKind::MEDIA_RESOURCE) {
+	            $result = $request->getTargetResult();
+	            $streamInfo =  $request->getResourceStreamInfo();
 	            $provider = $service->getStreamProviderWrapper();
                 $eTag = $provider->getStreamETag( $result, $streamInfo );
                 $service->getHost()->setResponseETag($eTag);
                 $responseBody = $provider->getReadStream( $result, $streamInfo );
             } else {
-                $responseBody = $requestDescription->getTargetResult(); 
+                $responseBody = $request->getTargetResult();
             }
 
             if (is_null($responseContentType)) {
                 $responseContentType = ODataConstants::MIME_APPLICATION_OCTETSTREAM;
             }
-            
-        } else if (is_null($entityModel)) {  //TODO: this seems like a weird way to know that the request is for a service document..i'd think we know this some other way
-			$writer = $service->getServiceDocumentWriterFactory()->getWriter($service, $responseFormat);
-	        $responseBody = $writer->getOutput();
-        }
-	    else {
-            $writer = $service->getODataWriterFactory()->getWriter($service, $requestDescription, $responseFormat);
-		    $writer->write($entityModel);
-            $responseBody = $writer->getOutput();
+        } else {
+            $writer = $service->getODataWriterFactory()->getWriter($service, $request, $responseFormat);
+
+            if (is_null($entityModel)) {  //TODO: this seems like a weird way to know that the request is for a service document..i'd think we know this some other way
+                $responseBody = $writer->writeServiceDocument($service->getProvidersWrapper())->getOutput();
+            }
+            else {
+                $responseBody = $writer->write($entityModel)->getOutput();
+            }
         }
 
         $service->getHost()->setResponseStatusCode(HttpStatus::CODE_OK);
         $service->getHost()->setResponseContentType($responseContentType);
-        $service->getHost()->setResponseVersion(
-            $dataServiceVersion->toString() .';'
-        );
+        $service->getHost()->setResponseVersion($dataServiceVersion->toString() .';');
         $service->getHost()->setResponseCacheControl(ODataConstants::HTTPRESPONSE_HEADER_CACHECONTROL_NOCACHE);
         $service->getHost()->getOperationContext()->outgoingResponse()->setStream($responseBody);
     }    

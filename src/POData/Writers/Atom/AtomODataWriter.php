@@ -14,7 +14,7 @@ use POData\ObjectModel\ODataMediaLink;
 use POData\Writers\IODataWriter;
 use POData\Common\ODataConstants;
 use POData\Common\ODataException;
-
+use POData\Providers\ProvidersWrapper;
 
 /**
  * Class AtomODataWriter
@@ -718,5 +718,55 @@ class AtomODataWriter implements IODataWriter
         );
 
 	    return $this;
+    }
+
+
+    /**
+     * XML prefix for the Atom namespace.
+     *
+     * @var string
+     */
+    const ATOM_NAMESPACE_PREFIX = 'atom';
+
+    /**
+     * XML prefix for the Atom Publishing Protocol namespace
+     *
+     * @var string
+     */
+    const APP_NAMESPACE_PREFIX = 'app';
+
+    /**
+     * @param ProvidersWrapper $providers
+     * @return IODataWriter
+     */
+    public function writeServiceDocument(ProvidersWrapper $providers){
+        $writer = $this->xmlWriter;
+        $writer->startElementNs(null, ODataConstants::ATOM_PUBLISHING_SERVICE_ELEMENT_NAME, ODataConstants::APP_NAMESPACE);
+        $writer->writeAttributeNs(ODataConstants::XML_NAMESPACE_PREFIX, ODataConstants::XML_BASE_ATTRIBUTE_NAME, null, $this->baseUri);
+        $writer->writeAttributeNs(ODataConstants::XMLNS_NAMESPACE_PREFIX, self::ATOM_NAMESPACE_PREFIX, null, ODataConstants::ATOM_NAMESPACE);
+        $writer->writeAttributeNs(ODataConstants::XMLNS_NAMESPACE_PREFIX, self::APP_NAMESPACE_PREFIX, null, ODataConstants::APP_NAMESPACE);
+
+        $writer->startElement(ODataConstants::ATOM_PUBLISHING_WORKSPACE_ELEMNT_NAME);
+        $writer->startElementNs(self::ATOM_NAMESPACE_PREFIX, ODataConstants::ATOM_TITLE_ELELMET_NAME, null);
+        $writer->text(ODataConstants::ATOM_PUBLISHING_WORKSPACE_DEFAULT_VALUE);
+        $writer->endElement();
+        foreach ($providers->getResourceSets() as $resourceSetWrapper) {
+            //start collection node
+            $writer->startElement(ODataConstants::ATOM_PUBLISHING_COLLECTION_ELEMENT_NAME);
+            $writer->writeAttribute(ODataConstants::ATOM_HREF_ATTRIBUTE_NAME, $resourceSetWrapper->getName());
+            //start title node
+            $writer->startElementNs(self::ATOM_NAMESPACE_PREFIX, ODataConstants::ATOM_TITLE_ELELMET_NAME, null);
+            $writer->text($resourceSetWrapper->getName());
+            //end title node
+            $writer->endElement();
+            //end collection node
+            $writer->endElement();
+        }
+
+        //End workspace and service nodes
+        $writer->endElement();
+        $writer->endElement();
+
+        return $this;
     }
 }
