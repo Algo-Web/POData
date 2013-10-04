@@ -6,9 +6,11 @@ namespace POData\UriProcessor\ResourcePathProcessor;
  * Mainly test UriProcessor, but also do some partial test for BaseService class.
  */
 
+use POData\Configuration\ServiceConfiguration;
 use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Query\QueryResult;
+use POData\Providers\Query\QueryType;
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ProjectionNode;
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandedProjectionNode;
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\RootProjectionNode;
@@ -18,7 +20,6 @@ use POData\UriProcessor\QueryProcessor\SkipTokenParser\InternalSkipTokenInfo;
 use POData\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenInfo;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
 use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
-use POData\UriProcessor\RequestCountOption;
 use POData\Configuration\ServiceProtocolVersion;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetSource;
@@ -36,6 +37,9 @@ use UnitTests\POData\Facets\NorthWind1\NorthWindServiceV3;
 use POData\Providers\ProvidersWrapper;
 use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Query\IQueryProvider;
+use POData\Providers\Metadata\IMetadataProvider;
+use POData\Common\Messages;
+use POData\Common\ODataConstants;
 
 use Phockito;
 use POData\IService;
@@ -1076,8 +1080,7 @@ class UriProcessorTest extends BaseUnitTestCase
         $internalOrderByInfo = $requestDescription->getInternalOrderByInfo();
         $this->assertNotNull($internalOrderByInfo);
 
-        //count mode is all pages
-        $this->assertEquals($requestDescription->getRequestCountOption(), RequestCountOption::INLINE());
+	    $this->assertEquals(QueryType::ENTITIES_WITH_COUNT(), $requestDescription->queryType);
 
 
     }
@@ -2140,16 +2143,16 @@ class UriProcessorTest extends BaseUnitTestCase
         $knownDataServiceVersions = $requestDescription->getKnownDataServiceVersions();
         $this->assertNotNull($knownDataServiceVersions);
 
-        $lastSegmentDescriptor = $requestDescription->getLastSegmentDescriptor();
+        $lastSegmentDescriptor = $requestDescription->getLastSegment();
         $this->assertNotNull($lastSegmentDescriptor);
 
         $projectedProperty = $requestDescription->getProjectedProperty();
         $this->assertNull($projectedProperty);
 
-        $requestCountOption = $requestDescription->getRequestCountOption();
-        $this->assertNotNull($requestCountOption);
 
-        $requestUri = $requestDescription->getRequestUri();
+        $this->assertEquals(QueryType::ENTITIES(), $requestDescription->queryType);
+
+        $requestUri = $requestDescription->getRequestUrl();
         $this->assertNotNull($requestUri);
 
         $resourceStreamInfo = $requestDescription->getResourceStreamInfo();
@@ -2158,7 +2161,7 @@ class UriProcessorTest extends BaseUnitTestCase
         $rootProjectionNode = $requestDescription->getRootProjectionNode();
         $this->assertNotNull($rootProjectionNode);
 
-        $segmentDescriptors = $requestDescription->getSegmentDescriptors();
+        $segmentDescriptors = $requestDescription->getSegments();
         $this->assertNotNull($segmentDescriptors);
 
         $skipCount = $requestDescription->getSkipCount();
@@ -2187,20 +2190,24 @@ class UriProcessorTest extends BaseUnitTestCase
 	/** @var  ServiceHost */
 	protected $mockServiceHost;
 
+	/** @var  IMetadataProvider */
+	protected $mockMetadataProvider;
+
     /** @var  ProvidersWrapper */
     protected $mockProvidersWrapper;
 
     /** @var ResourceSetWrapper */
     protected $mockCollectionResourceSetWrapper;
 
-
+	/** @var ResourceType */
+	protected $mockCollectionResourceType;
 
 	public function testProcessRequestForCollection()
 	{
 		Phockito::when($this->mockService->getHost())
 			->return($this->mockServiceHost);
 
-		$requestURI = new Url("http://host.com/data.svc/Collection");
+		$requestURI = new Url('http://host.com/data.svc/Collection');
 		Phockito::when($this->mockServiceHost->getAbsoluteRequestUri())
 			->return($requestURI);
 
@@ -2215,11 +2222,15 @@ class UriProcessorTest extends BaseUnitTestCase
         Phockito::when($this->mockProvidersWrapper->resolveResourceSet("Collection"))
             ->return($this->mockCollectionResourceSetWrapper);
 
-        $fakeQueryResult = new QueryResult();
-        $fakeQueryResult->results = array();
+
+		$uriProcessor = UriProcessor::process($this->mockService);
+
+		$fakeQueryResult = new QueryResult();
+		$fakeQueryResult->results = array(1,2,3);
 
 		Phockito::when(
 			$this->mockProvidersWrapper->getResourceSet(
+				QueryType::ENTITIES(),
 				$this->mockCollectionResourceSetWrapper,
 				null,
 				null,
@@ -2228,14 +2239,500 @@ class UriProcessorTest extends BaseUnitTestCase
 			)
 		)->return($fakeQueryResult);
 
-		$uriProcessor = UriProcessor::process($this->mockService);
         $uriProcessor->execute();
 
 		$request = $uriProcessor->getRequest();
 
 		$actual = $request->getTargetResult();
 
-		$this->assertEquals($fakeQueryResult, $actual);
+		$this->assertEquals(array(1,2,3), $actual);
+	}
+
+
+	public function testProcessRequestForCollectionCountThrowsWhenVersionIsTooLow()
+	{
+		Phockito::when($this->mockService->getHost())
+			->return($this->mockServiceHost);
+
+		$requestURI = new Url('http://host.com/data.svc/Collection/$count');
+		Phockito::when($this->mockServiceHost->getAbsoluteRequestUri())
+			->return($requestURI);
+
+		$serviceURI = new Url("http://host.com/data.svc");
+		Phockito::when($this->mockServiceHost->getAbsoluteServiceUri())
+			->return($serviceURI);
+
+		Phockito::when($this->mockService->getProvidersWrapper())
+			->return($this->mockProvidersWrapper);
+
+
+		Phockito::when($this->mockProvidersWrapper->resolveResourceSet("Collection"))
+			->return($this->mockCollectionResourceSetWrapper);
+
+		Phockito::when($this->mockCollectionResourceSetWrapper->getResourceType())
+			->return($this->mockCollectionResourceType);
+
+
+		$fakeServiceConfig = new ServiceConfiguration($this->mockMetadataProvider);
+		$fakeServiceConfig->setAcceptCountRequests(true);
+
+		Phockito::when($this->mockService->getConfiguration())
+			->return($fakeServiceConfig);
+
+
+		try{
+			UriProcessor::process($this->mockService);
+			$this->fail("Expected exception not thrown");
+		} catch(ODataException $ex) {
+			$expected = Messages::requestVersionIsBiggerThanProtocolVersion("2.0", "1.0");
+			$this->assertEquals($expected, $ex->getMessage(), $ex->getTraceAsString());
+		}
+
+
+
+	}
+
+	public function testProcessRequestForCollectionCountThrowsWhenCountsAreDisabled()
+	{
+		Phockito::when($this->mockService->getHost())
+			->return($this->mockServiceHost);
+
+		$requestURI = new Url('http://host.com/data.svc/Collection/$count');
+		Phockito::when($this->mockServiceHost->getAbsoluteRequestUri())
+			->return($requestURI);
+
+		$serviceURI = new Url("http://host.com/data.svc");
+		Phockito::when($this->mockServiceHost->getAbsoluteServiceUri())
+			->return($serviceURI);
+
+		Phockito::when($this->mockService->getProvidersWrapper())
+			->return($this->mockProvidersWrapper);
+
+
+		Phockito::when($this->mockProvidersWrapper->resolveResourceSet("Collection"))
+			->return($this->mockCollectionResourceSetWrapper);
+
+		Phockito::when($this->mockCollectionResourceSetWrapper->getResourceType())
+			->return($this->mockCollectionResourceType);
+
+
+
+		$fakeServiceConfig = new ServiceConfiguration($this->mockMetadataProvider);
+		$fakeServiceConfig->setAcceptCountRequests(false);
+		Phockito::when($this->mockService->getConfiguration())
+			->return($fakeServiceConfig);
+
+		try{
+			UriProcessor::process($this->mockService);
+			$this->fail("Expected exception not thrown");
+		} catch(ODataException $ex) {
+			$expected = Messages::configurationCountNotAccepted();
+			$this->assertEquals($expected, $ex->getMessage(), $ex->getTraceAsString());
+		}
+	}
+
+	public function testProcessRequestForCollectionCountProviderDoesNotHandlePaging()
+	{
+		Phockito::when($this->mockService->getHost())
+			->return($this->mockServiceHost);
+
+		$requestURI = new Url('http://host.com/data.svc/Collection/$count');
+		Phockito::when($this->mockServiceHost->getAbsoluteRequestUri())
+			->return($requestURI);
+
+		$serviceURI = new Url("http://host.com/data.svc");
+		Phockito::when($this->mockServiceHost->getAbsoluteServiceUri())
+			->return($serviceURI);
+
+		Phockito::when($this->mockService->getProvidersWrapper())
+			->return($this->mockProvidersWrapper);
+
+
+		Phockito::when($this->mockProvidersWrapper->resolveResourceSet("Collection"))
+			->return($this->mockCollectionResourceSetWrapper);
+
+
+		Phockito::when($this->mockCollectionResourceSetWrapper->getResourceType())
+			->return($this->mockCollectionResourceType);
+
+
+
+		$fakeServiceConfig = new ServiceConfiguration($this->mockMetadataProvider);
+		$fakeServiceConfig->setAcceptCountRequests(true);
+		$fakeServiceConfig->setMaxDataServiceVersion(ServiceProtocolVersion::V2);
+		Phockito::when($this->mockService->getConfiguration())
+			->return($fakeServiceConfig);
+
+
+
+		$uriProcessor = UriProcessor::process($this->mockService);
+
+		$fakeQueryResult = new QueryResult();
+		$fakeQueryResult->results = array(1,2,3);
+		Phockito::when(
+			$this->mockProvidersWrapper->getResourceSet(
+				QueryType::COUNT(),
+				$this->mockCollectionResourceSetWrapper,
+				null,
+				null,
+				null,
+				null
+			)
+		)->return($fakeQueryResult);
+
+		//indicate that POData must perform the paging (thus it will count the results)
+		Phockito::when($this->mockProvidersWrapper->handlesOrderedPaging())
+			->return(false);
+
+
+		$uriProcessor->execute();
+
+		$request = $uriProcessor->getRequest();
+
+		$actual = $request->getTargetResult();
+
+		$this->assertEquals(3, $actual);
+	}
+
+
+	public function testProcessRequestForCollectionCountProviderHandlesPaging()
+	{
+		Phockito::when($this->mockService->getHost())
+			->return($this->mockServiceHost);
+
+		$requestURI = new Url('http://host.com/data.svc/Collection/$count');
+		Phockito::when($this->mockServiceHost->getAbsoluteRequestUri())
+			->return($requestURI);
+
+		$serviceURI = new Url("http://host.com/data.svc");
+		Phockito::when($this->mockServiceHost->getAbsoluteServiceUri())
+			->return($serviceURI);
+
+		Phockito::when($this->mockService->getProvidersWrapper())
+			->return($this->mockProvidersWrapper);
+
+
+		Phockito::when($this->mockProvidersWrapper->resolveResourceSet("Collection"))
+			->return($this->mockCollectionResourceSetWrapper);
+
+
+		Phockito::when($this->mockCollectionResourceSetWrapper->getResourceType())
+			->return($this->mockCollectionResourceType);
+
+
+		$fakeServiceConfig = new ServiceConfiguration($this->mockMetadataProvider);
+		$fakeServiceConfig->setAcceptCountRequests(true);
+		$fakeServiceConfig->setMaxDataServiceVersion(ServiceProtocolVersion::V2);
+		Phockito::when($this->mockService->getConfiguration())
+			->return($fakeServiceConfig);
+
+
+
+		$uriProcessor = UriProcessor::process($this->mockService);
+
+		$fakeQueryResult = new QueryResult();
+		$fakeQueryResult->results = array(1,2,3);
+		$fakeQueryResult->count = 10; //note this differs from the size of the results array
+		Phockito::when(
+			$this->mockProvidersWrapper->getResourceSet(
+				QueryType::COUNT(),
+				$this->mockCollectionResourceSetWrapper,
+				null,
+				null,
+				null,
+				null
+			)
+		)->return($fakeQueryResult);
+
+		//indicate that the Provider performs the paging (thus it will use the count in the QueryResult)
+		Phockito::when($this->mockProvidersWrapper->handlesOrderedPaging())
+			->return(true);
+
+
+		$uriProcessor->execute();
+
+		$request = $uriProcessor->getRequest();
+
+		$actual = $request->getTargetResult();
+
+		$this->assertEquals(10, $actual);
+	}
+
+
+	public function testProcessRequestForCollectionWithInlineCountWhenCountsAreDisabled()
+	{
+		Phockito::when($this->mockService->getHost())
+			->return($this->mockServiceHost);
+
+		$requestURI = new Url('http://host.com/data.svc/Collection/?$inlinecount=allpages');
+		Phockito::when($this->mockServiceHost->getAbsoluteRequestUri())
+			->return($requestURI);
+
+		//mock inline count as all pages
+		Phockito::when($this->mockServiceHost->getQueryStringItem( ODataConstants::HTTPQUERY_STRING_INLINECOUNT ))
+			->return("allpages");
+
+		$fakeServiceConfig = new ServiceConfiguration($this->mockMetadataProvider);
+		$fakeServiceConfig->setAcceptCountRequests(false);
+		//$fakeServiceConfig->setMaxDataServiceVersion(ServiceProtocolVersion::V2);
+		Phockito::when($this->mockService->getConfiguration())
+			->return($fakeServiceConfig);
+
+
+		$serviceURI = new Url("http://host.com/data.svc");
+		Phockito::when($this->mockServiceHost->getAbsoluteServiceUri())
+			->return($serviceURI);
+
+		Phockito::when($this->mockService->getProvidersWrapper())
+			->return($this->mockProvidersWrapper);
+
+
+		Phockito::when($this->mockProvidersWrapper->resolveResourceSet("Collection"))
+			->return($this->mockCollectionResourceSetWrapper);
+
+
+
+		try{
+			UriProcessor::process($this->mockService);
+			$this->fail("Expected exception not thrown");
+		} catch(ODataException $ex) {
+			$expected = Messages::configurationCountNotAccepted();
+			$this->assertEquals($expected, $ex->getMessage(), $ex->getTraceAsString());
+		}
+	}
+
+	public function testProcessRequestForCollectionWithInlineCountWhenVersionIsTooLow()
+	{
+		Phockito::when($this->mockService->getHost())
+			->return($this->mockServiceHost);
+
+		$requestURI = new Url('http://host.com/data.svc/Collection/?$inlinecount=allpages');
+		Phockito::when($this->mockServiceHost->getAbsoluteRequestUri())
+			->return($requestURI);
+
+		//mock inline count as all pages
+		Phockito::when($this->mockServiceHost->getQueryStringItem( ODataConstants::HTTPQUERY_STRING_INLINECOUNT ))
+			->return("allpages");
+
+		$fakeServiceConfig = new ServiceConfiguration($this->mockMetadataProvider);
+		$fakeServiceConfig->setAcceptCountRequests(true);
+		$fakeServiceConfig->setMaxDataServiceVersion(ServiceProtocolVersion::V1);
+		Phockito::when($this->mockService->getConfiguration())
+			->return($fakeServiceConfig);
+
+
+		$serviceURI = new Url("http://host.com/data.svc");
+		Phockito::when($this->mockServiceHost->getAbsoluteServiceUri())
+			->return($serviceURI);
+
+		Phockito::when($this->mockService->getProvidersWrapper())
+			->return($this->mockProvidersWrapper);
+
+
+		Phockito::when($this->mockProvidersWrapper->resolveResourceSet("Collection"))
+			->return($this->mockCollectionResourceSetWrapper);
+
+
+		try{
+			UriProcessor::process($this->mockService);
+			$this->fail("Expected exception not thrown");
+		} catch(ODataException $ex) {
+			$expected = Messages::requestVersionIsBiggerThanProtocolVersion("2.0", "1.0");
+			$this->assertEquals($expected, $ex->getMessage(), $ex->getTraceAsString());
+		}
+	}
+
+
+	public function testProcessRequestForCollectionWithNoInlineCountWhenVersionIsTooLow()
+	{
+		//I'm not so sure about this test...basically $inlinecount is ignored if it's none, but maybe we should
+		//be throwing an exception?
+		Phockito::when($this->mockService->getHost())
+			->return($this->mockServiceHost);
+
+		$requestURI = new Url('http://host.com/data.svc/Collection/?$inlinecount=none');
+		Phockito::when($this->mockServiceHost->getAbsoluteRequestUri())
+			->return($requestURI);
+
+		//mock inline count as all pages
+		Phockito::when($this->mockServiceHost->getQueryStringItem( ODataConstants::HTTPQUERY_STRING_INLINECOUNT ))
+			->return("none");
+
+		$fakeServiceConfig = new ServiceConfiguration($this->mockMetadataProvider);
+		$fakeServiceConfig->setAcceptCountRequests(true);
+		$fakeServiceConfig->setMaxDataServiceVersion(ServiceProtocolVersion::V1);
+		Phockito::when($this->mockService->getConfiguration())
+			->return($fakeServiceConfig);
+
+
+		$serviceURI = new Url("http://host.com/data.svc");
+		Phockito::when($this->mockServiceHost->getAbsoluteServiceUri())
+			->return($serviceURI);
+
+		Phockito::when($this->mockService->getProvidersWrapper())
+			->return($this->mockProvidersWrapper);
+
+
+		Phockito::when($this->mockProvidersWrapper->resolveResourceSet("Collection"))
+			->return($this->mockCollectionResourceSetWrapper);
+
+
+		$uriProcessor = UriProcessor::process($this->mockService);
+
+		$fakeQueryResult = new QueryResult();
+		$fakeQueryResult->results = array(1,2,3);
+		$fakeQueryResult->count = 10; //note this is different than the size of the array
+		Phockito::when(
+			$this->mockProvidersWrapper->getResourceSet(
+				QueryType::ENTITIES(),
+				$this->mockCollectionResourceSetWrapper,
+				null,
+				null,
+				null,
+				null
+			)
+		)->return($fakeQueryResult);
+
+		//indicate that POData must perform the paging (thus it will use the count of the results in QueryResult)
+		Phockito::when($this->mockProvidersWrapper->handlesOrderedPaging())
+			->return(false);
+
+		$uriProcessor->execute();
+
+		$request = $uriProcessor->getRequest();
+
+		$actual = $request->getTargetResult();
+
+		$this->assertEquals(array(1,2,3), $actual);
+		$this->assertNull($request->getCountValue(), 'Since $inlinecount is specified as none, there should be no count set');
+	}
+
+
+	public function testProcessRequestForCollectionWithInlineCountProviderDoesNotHandlePaging()
+	{
+		Phockito::when($this->mockService->getHost())
+			->return($this->mockServiceHost);
+
+		$requestURI = new Url('http://host.com/data.svc/Collection/?$inlinecount=allpages');
+		Phockito::when($this->mockServiceHost->getAbsoluteRequestUri())
+			->return($requestURI);
+
+		//mock inline count as all pages
+		Phockito::when($this->mockServiceHost->getQueryStringItem( ODataConstants::HTTPQUERY_STRING_INLINECOUNT ))
+			->return("allpages");
+
+		$fakeServiceConfig = new ServiceConfiguration($this->mockMetadataProvider);
+		$fakeServiceConfig->setAcceptCountRequests(true);
+		$fakeServiceConfig->setMaxDataServiceVersion(ServiceProtocolVersion::V2);
+		Phockito::when($this->mockService->getConfiguration())
+			->return($fakeServiceConfig);
+
+
+		$serviceURI = new Url("http://host.com/data.svc");
+		Phockito::when($this->mockServiceHost->getAbsoluteServiceUri())
+			->return($serviceURI);
+
+		Phockito::when($this->mockService->getProvidersWrapper())
+			->return($this->mockProvidersWrapper);
+
+
+		Phockito::when($this->mockProvidersWrapper->resolveResourceSet("Collection"))
+			->return($this->mockCollectionResourceSetWrapper);
+
+
+
+		$uriProcessor = UriProcessor::process($this->mockService);
+
+		$fakeQueryResult = new QueryResult();
+		$fakeQueryResult->results = array(1,2,3);
+		$fakeQueryResult->count = 10; //note this is different than the size of the array
+		Phockito::when(
+			$this->mockProvidersWrapper->getResourceSet(
+				QueryType::ENTITIES_WITH_COUNT(),
+				$this->mockCollectionResourceSetWrapper,
+				null,
+				null,
+				null,
+				null
+			)
+		)->return($fakeQueryResult);
+
+		//indicate that POData must perform the paging (thus it will use the count of the results in QueryResult)
+		Phockito::when($this->mockProvidersWrapper->handlesOrderedPaging())
+			->return(false);
+
+		$uriProcessor->execute();
+
+		$request = $uriProcessor->getRequest();
+
+		$actual = $request->getTargetResult();
+
+		$this->assertEquals(array(1,2,3), $actual);
+		$this->assertEquals(3, $request->getCountValue());
+	}
+
+
+	public function testProcessRequestForCollectionWithInlineCountProviderHandlesPaging()
+	{
+		Phockito::when($this->mockService->getHost())
+			->return($this->mockServiceHost);
+
+		$requestURI = new Url('http://host.com/data.svc/Collection/?$inlinecount=allpages');
+		Phockito::when($this->mockServiceHost->getAbsoluteRequestUri())
+			->return($requestURI);
+
+		//mock inline count as all pages
+		Phockito::when($this->mockServiceHost->getQueryStringItem( ODataConstants::HTTPQUERY_STRING_INLINECOUNT ))
+			->return("allpages");
+
+		$fakeServiceConfig = new ServiceConfiguration($this->mockMetadataProvider);
+		$fakeServiceConfig->setAcceptCountRequests(true);
+		$fakeServiceConfig->setMaxDataServiceVersion(ServiceProtocolVersion::V2);
+		Phockito::when($this->mockService->getConfiguration())
+			->return($fakeServiceConfig);
+
+
+		$serviceURI = new Url("http://host.com/data.svc");
+		Phockito::when($this->mockServiceHost->getAbsoluteServiceUri())
+			->return($serviceURI);
+
+		Phockito::when($this->mockService->getProvidersWrapper())
+			->return($this->mockProvidersWrapper);
+
+
+		Phockito::when($this->mockProvidersWrapper->resolveResourceSet("Collection"))
+			->return($this->mockCollectionResourceSetWrapper);
+
+
+
+		$uriProcessor = UriProcessor::process($this->mockService);
+
+		$fakeQueryResult = new QueryResult();
+		$fakeQueryResult->results = array(1,2,3);
+		$fakeQueryResult->count = 10;
+		Phockito::when(
+			$this->mockProvidersWrapper->getResourceSet(
+				QueryType::ENTITIES_WITH_COUNT(),
+				$this->mockCollectionResourceSetWrapper,
+				null,
+				null,
+				null,
+				null
+			)
+		)->return($fakeQueryResult);
+
+		//indicate that the Provider performs the paging (thus it will use the count in the QueryResult)
+		Phockito::when($this->mockProvidersWrapper->handlesOrderedPaging())
+			->return(true);
+
+		$uriProcessor->execute();
+
+		$request = $uriProcessor->getRequest();
+
+		$actual = $request->getTargetResult();
+
+		$this->assertEquals(array(1,2,3), $actual);
+		$this->assertEquals(10, $request->getCountValue());
 	}
 
 

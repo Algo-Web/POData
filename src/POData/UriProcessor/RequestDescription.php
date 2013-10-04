@@ -11,6 +11,7 @@ use POData\IService;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Metadata\ResourceStreamInfo;
+use POData\UriProcessor\QueryProcessor\QueryProcessor;
 use POData\UriProcessor\UriProcessor;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetSource;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
@@ -20,6 +21,7 @@ use POData\UriProcessor\QueryProcessor\SkipTokenParser\InternalSkipTokenInfo;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\RootProjectionNode;
 use POData\Providers\Metadata\ResourceType;
+use POData\Providers\Query\QueryType;
 
 
 /**
@@ -81,11 +83,10 @@ class RequestDescription
     private static $_knownDataServiceVersions = null;
 
     /**
-     * The request Uri.
-     * 
-     * @var Uri
+     *
+     * @var Url
      */
-    private $_requestUri;
+    private $requestUrl;
 
     /**
      * Collection of SegmentDescriptor containing information about 
@@ -93,14 +94,14 @@ class RequestDescription
      * 
      * @var SegmentDescriptor[]
      */
-    private $_segmentDescriptors;
+    private $segments;
 
     /**
      * Holds reference to the last segment descriptor.
      * 
      * @var SegmentDescriptor
      */
-    private $_lastSegmentDescriptor;
+    private $lastSegment;
 
     /**
      * The name of the container for results
@@ -109,12 +110,13 @@ class RequestDescription
      */
     private $_containerName;
 
-    /**
-     * The count option specified in the request.
-     * 
-     * @var RequestCountOption
-     */
-    private $_requestCountOption;
+
+	/**
+	 * The count option specified in the request.
+	 *
+	 * @var QueryType
+	 */
+	public $queryType;
 
     /**
      * Number of segments.
@@ -215,11 +217,11 @@ class RequestDescription
      */
     public function __construct(&$segmentDescriptors, Url $requestUri)
     {
-        $this->_segmentDescriptors = $segmentDescriptors;
-        $this->_segmentCount = count($this->_segmentDescriptors);
-        $this->_requestUri = $requestUri;        
-        $this->_lastSegmentDescriptor = $segmentDescriptors[$this->_segmentCount - 1];
-        $this->_requestCountOption = RequestCountOption::NONE();
+        $this->segments = $segmentDescriptors;
+        $this->_segmentCount = count($this->segments);
+        $this->requestUrl = $requestUri;
+        $this->lastSegment = $segmentDescriptors[$this->_segmentCount - 1];
+	    $this->queryType = QueryType::ENTITIES();
         $this->_responseDataServiceVersion = new Version(1, 0);
         $this->_minimumRequiredClientVersion = new Version(1, 0);
         $this->_containerName = null;
@@ -273,9 +275,9 @@ class RequestDescription
      * 
      * @return SegmentDescriptor[]
      */
-    public function getSegmentDescriptors()
+    public function getSegments()
     {
-        return $this->_segmentDescriptors;
+        return $this->segments;
     }
 
     /**
@@ -283,9 +285,9 @@ class RequestDescription
      * 
      * @return SegmentDescriptor
      */
-    public function getLastSegmentDescriptor()
+    public function getLastSegment()
     {
-        return $this->_lastSegmentDescriptor;
+        return $this->lastSegment;
     }
 
     /**
@@ -295,7 +297,7 @@ class RequestDescription
      */
     public function getTargetKind()
     {
-        return $this->_lastSegmentDescriptor->getTargetKind();
+        return $this->lastSegment->getTargetKind();
     }
 
     /**
@@ -305,7 +307,7 @@ class RequestDescription
      */
     public function getTargetSource()
     {
-        return $this->_lastSegmentDescriptor->getTargetSource();
+        return $this->lastSegment->getTargetSource();
     }
 
     /**
@@ -349,7 +351,7 @@ class RequestDescription
      */
     public function getTargetResourceSetWrapper()
     {
-        return $this->_lastSegmentDescriptor->getTargetResourceSetWrapper();
+        return $this->lastSegment->getTargetResourceSetWrapper();
     }
 
     /**
@@ -393,7 +395,7 @@ class RequestDescription
      */
     public function getTargetResourceType()
     {
-        return $this->_lastSegmentDescriptor->getTargetResourceType();
+        return $this->lastSegment->getTargetResourceType();
     }
 
     /**
@@ -440,7 +442,7 @@ class RequestDescription
      */
     public function getProjectedProperty()
     {
-        return  $this->_lastSegmentDescriptor->getProjectedProperty();
+        return  $this->lastSegment->getProjectedProperty();
     }
 
     /**
@@ -472,7 +474,7 @@ class RequestDescription
      */
     public function isSingleResult()
     {
-        return $this->_lastSegmentDescriptor->isSingleResult();
+        return $this->lastSegment->isSingleResult();
     }
 
     /**
@@ -482,7 +484,7 @@ class RequestDescription
      */
     public function getIdentifier()
     {
-        return $this->_lastSegmentDescriptor->getIdentifier();
+        return $this->lastSegment->getIdentifier();
     }
 
     /**
@@ -490,9 +492,9 @@ class RequestDescription
      * 
      * @return Url
      */
-    public function getRequestUri()
+    public function getRequestUrl()
     {
-        return $this->_requestUri;
+        return $this->requestUrl;
     }
 
     /**
@@ -659,27 +661,6 @@ class RequestDescription
         return $this->_rootProjectionNode;
     }
 
-    /**
-     * Gets the count option associated with the request.
-     * 
-     * @return RequestCountOption
-     */
-    public function getRequestCountOption()
-    {
-        return $this->_requestCountOption;
-    }
-
-    /**
-     * Sets the count option associated with the request.
-     * 
-     * @param RequestCountOption $countOption The count option.
-     * 
-     * @return void
-     */
-    public function setRequestCountOption(RequestCountOption $countOption)
-    {
-        $this->_requestCountOption = $countOption;
-    }
 
     /**
      * Gets the count of result set if $count or $inlinecount=allpages
@@ -722,8 +703,8 @@ class RequestDescription
     public function needExecution()
     {
         return !$this->_isExecuted 
-            && ($this->_lastSegmentDescriptor->getTargetKind() != TargetKind::METADATA)
-            && ($this->_lastSegmentDescriptor->getTargetKind() != TargetKind::SERVICE_DIRECTORY);
+            && ($this->lastSegment->getTargetKind() != TargetKind::METADATA)
+            && ($this->lastSegment->getTargetKind() != TargetKind::SERVICE_DIRECTORY);
     }
 
     /**
@@ -734,7 +715,7 @@ class RequestDescription
     public function isLinkUri()
     {
         return (($this->_segmentCount > 2) && 
-            ($this->_segmentDescriptors[$this->_segmentCount - 2]->getTargetKind() == 
+            ($this->segments[$this->_segmentCount - 2]->getTargetKind() ==
              TargetKind::LINK));
     }
 
@@ -745,7 +726,7 @@ class RequestDescription
      */
     public function isMediaResource()
     {
-        return ($this->_lastSegmentDescriptor->getTargetKind() == TargetKind::MEDIA_RESOURCE);
+        return ($this->lastSegment->getTargetKind() == TargetKind::MEDIA_RESOURCE);
     }
 
     /**
@@ -756,7 +737,7 @@ class RequestDescription
     public function isNamedStream()
     {
         return $this->isMediaResource() && 
-            !($this->_lastSegmentDescriptor->getIdentifier() === ODataConstants::URI_VALUE_SEGMENT);
+            !($this->lastSegment->getIdentifier() === ODataConstants::URI_VALUE_SEGMENT);
     }
 
     /**
@@ -771,7 +752,7 @@ class RequestDescription
         if ($this->isNamedStream()) {
             return $this->getTargetResourceType()
                 ->tryResolveNamedStreamByName(
-                    $this->_lastSegmentDescriptor->getIdentifier()
+                    $this->lastSegment->getIdentifier()
                 );
         }
 
@@ -786,7 +767,7 @@ class RequestDescription
      */
     public function getTargetResult()
     {
-        return $this->_lastSegmentDescriptor->getResult();
+        return $this->lastSegment->getResult();
     }
 
     /**
@@ -807,8 +788,8 @@ class RequestDescription
      */
     public function isETagHeaderAllowed()
     {
-        return $this->_lastSegmentDescriptor->isSingleResult()
-            && ($this->_requestCountOption != RequestCountOption::VALUE_ONLY())
+        return $this->lastSegment->isSingleResult()
+            && ($this->queryType != QueryType::COUNT())
             && !$this->isLinkUri() 
             && (is_null($this->_rootProjectionNode) 
                 || !($this->_rootProjectionNode->isExpansionSpecified())
@@ -846,81 +827,72 @@ class RequestDescription
      *  initializing the properties respresenting 'DataServiceVersion' and
      *  'MaxDataServiceVersion'.
      *  
-     * @param RequestDescription $requestDescription The request description object
+     * @param RequestDescription $request The request description object
      * @param IService        $service        The Service to check
      * 
      * @return void
      * 
      * @throws ODataException If any of the above 3 check fails.
      */
-    public static function checkVersion(RequestDescription $requestDescription, IService $service) {
-        if (is_null($requestDescription->_requestDataServiceVersion)) {
+    public static function checkVersion(RequestDescription $request, IService $service) {
+        if (is_null($request->_requestDataServiceVersion)) {
             $version = $service->getHost()->getRequestVersion();
             //'DataServiceVersion' header not present in the request, so use
             //default value as the maximum version number that the server can 
             //interpret.
             if (is_null($version)) {
-                $knownVersions = $requestDescription::getKnownDataServiceVersions();
+                $knownVersions = $request::getKnownDataServiceVersions();
                 $version = $knownVersions[count($knownVersions) - 1];
             } else {
-                $version = $requestDescription::_validateAndGetVersion(
+                $version = $request::_validateAndGetVersion(
                     $version, ODataConstants::ODATAVERSIONHEADER
                 );
             }
 
-            $requestDescription->_requestDataServiceVersion = $version;
+            $request->_requestDataServiceVersion = $version;
         }
 
-        if (is_null($requestDescription->_requestMaxDataServiceVersion)) {
+        if (is_null($request->_requestMaxDataServiceVersion)) {
             $version = $service->getHost()->getRequestMaxVersion();
             //'MaxDataServiceVersion' header not present in the request, so use
             //default value as the maximum version number that the server can 
             //interpret.
             if (is_null($version)) {
-                $knownVersions = $requestDescription::getKnownDataServiceVersions();
+                $knownVersions = $request::getKnownDataServiceVersions();
                 $version = $knownVersions[count($knownVersions) - 1];
             } else {
-                $version = $requestDescription::_validateAndGetVersion(
+                $version = $request::_validateAndGetVersion(
                     $version, ODataConstants::ODATAMAXVERSIONHEADER
                 );
             }
 
-            $requestDescription->_requestMaxDataServiceVersion = $version;
+            $request->_requestMaxDataServiceVersion = $version;
         }
 
-        if ($requestDescription->_requestDataServiceVersion->compare(
-            $requestDescription->_minimumRequiredClientVersion
-        ) < 0
-        ) {
+        if ($request->_requestDataServiceVersion->compare($request->_minimumRequiredClientVersion) < 0) {
             ODataException::createBadRequestError(
                 Messages::requestVersionTooLow(
-                    $requestDescription->_requestDataServiceVersion->toString(),
-                    $requestDescription->_minimumRequiredClientVersion->toString()
+                    $request->_requestDataServiceVersion->toString(),
+                    $request->_minimumRequiredClientVersion->toString()
                 )
             );
         }
 
-        if ($requestDescription->_requestMaxDataServiceVersion->compare(
-            $requestDescription->_responseDataServiceVersion
-        ) < 0
-        ) {
+        if ($request->_requestMaxDataServiceVersion->compare($request->_responseDataServiceVersion) < 0) {
             ODataException::createBadRequestError(
                 Messages::requestVersionTooLow(
-                    $requestDescription->_requestMaxDataServiceVersion->toString(),
-                    $requestDescription->_responseDataServiceVersion->toString()
+                    $request->_requestMaxDataServiceVersion->toString(),
+                    $request->_responseDataServiceVersion->toString()
                 )
             );
         }
 
-        $configuration = $service->getServiceConfiguration();
+        $configuration = $service->getConfiguration();
         $maxConfiguredProtocolVersion = $configuration->getMaxDataServiceVersionObject();
-        if ($maxConfiguredProtocolVersion->compare(
-            $requestDescription->_responseDataServiceVersion
-        ) < 0
-        ) {
+        if ($maxConfiguredProtocolVersion->compare($request->_responseDataServiceVersion) < 0) {
             ODataException::createBadRequestError(
                 Messages::requestVersionIsBiggerThanProtocolVersion(
-                    $requestDescription->_responseDataServiceVersion->toString(),
+                    $request->_responseDataServiceVersion->toString(),
                     $maxConfiguredProtocolVersion->toString()
                 )
             );

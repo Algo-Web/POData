@@ -10,14 +10,7 @@ use POData\OperationContext\IOperationContext;
 use POData\Writers\ServiceDocumentWriterFactory;
 use POData\Writers\ODataWriterFactory;
 
-/**
- * Class IService
- *
- * The base BaseService (BaseService.php) should implement this interface
- * to make sure access to all providers and Operation context are available.
- *
- * @package POData
- */
+
 interface IService
 {
     /**
@@ -25,9 +18,8 @@ interface IService
      * 
      * @param IServiceConfiguration $config data service configuration
      * 
-     * @return void
      */
-    public function initializeService(IServiceConfiguration $config);
+    public function initialize(IServiceConfiguration $config);
 
     /**
      * Gets reference to the configuration class to access the
@@ -35,7 +27,7 @@ interface IService
      * 
      * @return IServiceConfiguration
      */
-    public function getServiceConfiguration();
+    public function getConfiguration();
 
     /**
      * Gets reference to wrapper class instance over IDSQP and IDSMP 
@@ -78,12 +70,6 @@ interface IService
      * @return IOperationContext
      */
     public function getOperationContext();
-
-	/**
-	 * Returns the ServiceDocumentWriterFactory to use when writing the response to a service document request
-	 * @return ServiceDocumentWriterFactory
-	 */
-	public function getServiceDocumentWriterFactory();
 
 
 	/**

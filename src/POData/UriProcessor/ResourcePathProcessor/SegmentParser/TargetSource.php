@@ -32,7 +32,7 @@ class TargetSource
      * The associated TargetKind enum values are:
      *  TargetKind::VOID_SERVICE_OPERATION
      */
-    const  SERVICE_OPERATION = 3;
+    const SERVICE_OPERATION = 3;
     
     /**
      * A property of an entity or a complex object provides the data.

@@ -136,9 +136,9 @@ class SegmentParser
                 || $kind == TargetKind::BAG
                 || $kind == TargetKind::MEDIA_RESOURCE
             ) {
-                    ODataException::resourceNotFoundError(
-                        Messages::segmentParserMustBeLeafSegment($previous->getIdentifier())
-                    );
+                ODataException::resourceNotFoundError(
+                    Messages::segmentParserMustBeLeafSegment($previous->getIdentifier())
+                );
             }
 
             $identifier = $keyPredicate = null;

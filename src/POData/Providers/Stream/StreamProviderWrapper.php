@@ -407,7 +407,7 @@ class StreamProviderWrapper
     private function _loadAndValidateStreamProvider2()
     {
         $maxServiceVersion = $this->_service
-            ->getServiceConfiguration()
+            ->getConfiguration()
             ->getMaxDataServiceVersionObject();
         if ($maxServiceVersion->compare(new Version(3, 0)) < 0) {
             ODataException::createInternalServerError(
@@ -440,7 +440,7 @@ class StreamProviderWrapper
     {
         if (is_null($this->_streamProvider)) {
             $maxServiceVersion = $this->_service
-                ->getServiceConfiguration()
+                ->getConfiguration()
                 ->getMaxDataServiceVersionObject();
             if ($maxServiceVersion->compare(new Version(3, 0)) >= 0) {
                 $this->_streamProvider = $this->_service->getService('IStreamProvider2');

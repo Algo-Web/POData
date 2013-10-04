@@ -6,9 +6,9 @@ use MyCLabs\Enum\Enum;
 
 
 	/**
-	 * @method static QueryType ENTITIES()
-	 * @method static QueryType COUNT()
-	 * @method static QueryType ENTITIES_WITH_COUNT()
+	 * @method static \POData\Providers\Query\QueryType ENTITIES()
+	 * @method static \POData\Providers\Query\QueryType COUNT()
+	 * @method static \POData\Providers\Query\QueryType ENTITIES_WITH_COUNT()
 	 */
 class QueryType extends Enum {
 

@@ -25,7 +25,7 @@ class NorthWindDataService extends BaseService
      * 
      * @return void
      */
-    public function initializeService(ServiceConfiguration &$config)
+    public function initialize(ServiceConfiguration &$config)
     {
         $config->setEntitySetPageSize('*', 5);
         $config->setEntitySetAccessRule('*', EntitySetRights::ALL);

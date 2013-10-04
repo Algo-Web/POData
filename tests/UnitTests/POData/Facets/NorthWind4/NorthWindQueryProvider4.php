@@ -64,12 +64,12 @@ class NorthWindQueryProvider4 implements IQueryProvider
 	 * @return QueryResult
 	 */
 	public function getResourceSet(
+		QueryType $queryType,
 		ResourceSet $resourceSet,
 		$filter = null,
 		$orderBy = null,
 		$top = null,
-		$skipToken = null,
-		QueryType $queryType
+		$skipToken = null
 	)
 	{
 		// TODO: Implement getResourceSet() method.

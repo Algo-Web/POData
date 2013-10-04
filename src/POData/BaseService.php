@@ -86,7 +86,7 @@ abstract class BaseService implements IRequestHandler, IService
      * 
      * @return ServiceConfiguration
      */
-    public function getServiceConfiguration()
+    public function getConfiguration()
     {
         return $this->_serviceConfiguration;
     }
@@ -238,15 +238,6 @@ abstract class BaseService implements IRequestHandler, IService
 
 
 	/**
-	 * Returns the ServiceDocumentWriterFactory to use when writing the response to a service document request
-	 * Implementations can override this to handle custom formats.
-	 * @return ServiceDocumentWriterFactory
-	 */
-	public function getServiceDocumentWriterFactory(){
-		return new ServiceDocumentWriterFactory();
-	}
-
-	/**
 	 * Returns the ODataWriterFactory to use when writing the response to a service document request
 	 * Implementations can override this to handle custom formats.
 	 * @return ODataWriterFactory
@@ -276,9 +267,7 @@ abstract class BaseService implements IRequestHandler, IService
             ODataException::createInternalServerError(Messages::invalidMetadataInstance());
         }
 
-
         $queryProvider = $this->getQueryProvider();
-
 
         if (is_null($queryProvider)) {
             ODataException::createInternalServerError(Messages::providersWrapperNull());
@@ -288,11 +277,9 @@ abstract class BaseService implements IRequestHandler, IService
           ODataException::createInternalServerError(Messages::invalidQueryInstance());
         }
 
-
         if (!$queryProvider instanceof IQueryProvider) {
             ODataException::createInternalServerError(Messages::invalidQueryInstance());
         }
-
 
         $this->_serviceConfiguration = new ServiceConfiguration($metadataProvider);
         $this->providersWrapper = new ProvidersWrapper(
@@ -302,7 +289,7 @@ abstract class BaseService implements IRequestHandler, IService
         );
 
         
-        $this->initializeService($this->_serviceConfiguration);
+        $this->initialize($this->_serviceConfiguration);
     }
 
     /**

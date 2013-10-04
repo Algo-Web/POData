@@ -4,7 +4,7 @@ namespace POData\ObjectModel;
 
 use POData\Common\ODataConstants;
 use POData\Common\InvalidOperationException;
-use POData\UriProcessor\RequestCountOption;
+use POData\Providers\Query\QueryType;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetSource;
 use POData\UriProcessor\RequestDescription;
 use POData\IService;
@@ -66,7 +66,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
         $entry = $this->_writeEntryElement(
             $entryObject,
 	        $resourceType,
-            $this->request->getRequestUri()->getUrlAsString(),
+            $this->request->getRequestUrl()->getUrlAsString(),
             $this->request->getContainerName()
         );
         $this->popSegment($needPop);
@@ -103,7 +103,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
         $relativeUri = $this->request->getIdentifier();
         $feed = new ODataFeed();
 
-        if ($this->request->getRequestCountOption() == RequestCountOption::INLINE()) {
+        if ($this->request->queryType == QueryType::ENTITIES_WITH_COUNT()) {
             $feed->rowCount = $this->request->getCountValue();
         }
 
@@ -113,7 +113,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
             $entryObjects,
             $targetResourceType,
             $title,
-            $this->request->getRequestUri()->getUrlAsString(),
+            $this->request->getRequestUrl()->getUrlAsString(),
             $relativeUri,
             $feed
         );
@@ -124,13 +124,13 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
     /**
      * Write top level url element.
      * 
-     * @param mixed &$entryObject The entry resource whose url to be written.
+     * @param mixed $entryObject The entry resource whose url to be written.
      * 
      * @return ODataURL
      */
-    public function writeUrlElement(&$entryObject)
+    public function writeUrlElement($entryObject)
     {
-        $odataUrl = new ODataURL();
+        $url = new ODataURL();
         if (!is_null($entryObject)) {
             $currentResourceType = $this->getCurrentResourceSetWrapper()->getResourceType();
             $relativeUri = $this->getEntryInstanceKey(
@@ -139,41 +139,40 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
                 $this->getCurrentResourceSetWrapper()->getName()
             );
             
-            $odataUrl->url
-                = rtrim($this->absoluteServiceUri, '/') . '/' . $relativeUri;
+            $url->url = rtrim($this->absoluteServiceUri, '/') . '/' . $relativeUri;
         }
 
-        return $odataUrl;
+        return $url;
     }
 
     /**
      * Write top level url collection.
      * 
-     * @param array &$entryObjects Array of entry resources
+     * @param array $entryObjects Array of entry resources
      * whose url to be written.
      * 
      * @return ODataURLCollection
      */
-    public function writeUrlElements(&$entryObjects)
+    public function writeUrlElements($entryObjects)
     {
-        $odataUrlCollection = new ODataURLCollection();
+        $urls = new ODataURLCollection();
         if (!empty($entryObjects)) {        
             $i = 0;
-            foreach ($entryObjects as &$entryObject) {
-                $odataUrlCollection->urls[$i] = $this->writeUrlElement($entryObject);
+            foreach ($entryObjects as $entryObject) {
+                $urls->urls[$i] = $this->writeUrlElement($entryObject);
                 $i++;
             }
 
             if ($i > 0 && $this->needNextPageLink(count($entryObjects))) {
-                $odataUrlCollection->nextPageLink = $this->getNextLinkUri($entryObjects[$i - 1], $this->request->getRequestUri()->getUrlAsString());
+                $urls->nextPageLink = $this->getNextLinkUri($entryObjects[$i - 1], $this->request->getRequestUrl()->getUrlAsString());
             }
         }
 
-        if ($this->request->getRequestCountOption() == RequestCountOption::INLINE()) {
-            $odataUrlCollection->count = $this->request->getCountValue();
+        if ($this->request->queryType == QueryType::ENTITIES_WITH_COUNT()) {
+            $urls->count = $this->request->getCountValue();
         }
 
-        return $odataUrlCollection;
+        return $urls;
     }
 
     /**

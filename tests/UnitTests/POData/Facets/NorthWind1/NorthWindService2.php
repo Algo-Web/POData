@@ -23,7 +23,7 @@ class NorthWindService2 extends BaseServiceTestWrapper
      * 
      * @param IServiceConfiguration $config
      */
-    public function initializeService(IServiceConfiguration $config)
+    public function initialize(IServiceConfiguration $config)
     {
         $config->setEntitySetPageSize('*', 5);
         $config->setEntitySetAccessRule('*', EntitySetRights::ALL);

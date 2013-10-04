@@ -7,6 +7,7 @@ use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\Providers\Metadata\ResourceTypeKind;
 use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Metadata\ResourceProperty;
+use POData\Providers\Query\QueryType;
 use POData\UriProcessor\QueryProcessor\QueryProcessor;
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandedProjectionNode;
 use POData\UriProcessor\ResourcePathProcessor\ResourcePathProcessor;
@@ -17,9 +18,9 @@ use POData\IService;
 use POData\Common\Url;
 use POData\Common\Messages;
 use POData\Common\ODataException;
-use POData\Common\NotImplementedException;
 use POData\Common\InvalidOperationException;
 use POData\Common\ODataConstants;
+use POData\Providers\Query\QueryResult;
 
 /**
  * Class UriProcessor
@@ -53,7 +54,7 @@ class UriProcessor
      * 
      * @var ProvidersWrapper
      */
-    private $_provider;
+    private $providers;
 
     /**
      * Collection of segment names.
@@ -77,7 +78,7 @@ class UriProcessor
     private function __construct(IService $service)
     {
         $this->service = $service;
-        $this->_provider = $service->getProvidersWrapper();
+        $this->providers = $service->getProvidersWrapper();
         $this->_segmentNames = array();
         $this->_segmentResourceSetWrappers = array();
     }
@@ -133,10 +134,13 @@ class UriProcessor
      */
     public function execute()
     {
-        $segmentDescriptors = $this->request->getSegmentDescriptors();
-        foreach ($segmentDescriptors as $segment) {
+        $segments = $this->request->getSegments();
+
+        foreach ($segments as $segment) {
+
             $requestTargetKind = $segment->getTargetKind();
-            if ($segment->getTargetSource() == TargetSource::ENTITY_SET) {
+
+	        if ($segment->getTargetSource() == TargetSource::ENTITY_SET) {
                 $this->_handleSegmentTargetsToResourceSet($segment);
             } else if ($requestTargetKind == TargetKind::RESOURCE) {
                 if (is_null($segment->getPrevious()->getResult())) {
@@ -215,17 +219,17 @@ class UriProcessor
      */
     private function _handleSegmentTargetsToResourceSet( SegmentDescriptor $segment ) {
         if ($segment->isSingleResult()) {
-            $entityInstance = $this->_provider->getResourceFromResourceSet(
-                $segment->getTargetResourceSetWrapper()->getResourceSet(),
+            $entityInstance = $this->providers->getResourceFromResourceSet(
+                $segment->getTargetResourceSetWrapper(),
                 $segment->getKeyDescriptor()
             );
 
             $segment->setResult($entityInstance);
             
         } else {
-	        $this->request->getRequestCountOption()
-            $queryResult = $this->_provider->getResourceSet(
 
+            $queryResult = $this->providers->getResourceSet(
+	            $this->request->queryType,
                 $segment->getTargetResourceSetWrapper(),
                 $this->request->getFilterInfo(),
                 $this->request->getInternalOrderByInfo(),
@@ -240,53 +244,49 @@ class UriProcessor
      * Query for a related resource set or resource set reference pointed by the 
      * given segment descriptor and update the descriptor with the result.
      * 
-     * @param SegmentDescriptor &$segmentDescriptor Describes the related resource
+     * @param SegmentDescriptor &$segment Describes the related resource
      *                                              to query.
      * 
      * @return void
      */
-    private function _handleSegmentTargetsToRelatedResource(
-        SegmentDescriptor &$segmentDescriptor
-    ) {
-        $projectedProperty = $segmentDescriptor->getProjectedProperty();
+    private function _handleSegmentTargetsToRelatedResource(SegmentDescriptor $segment) {
+        $projectedProperty = $segment->getProjectedProperty();
         $projectedPropertyKind = $projectedProperty->getKind();
+
         if ($projectedPropertyKind == ResourcePropertyKind::RESOURCESET_REFERENCE) {
-            if ($segmentDescriptor->isSingleResult()) {
-                $entityInstance 
-                    = $this->_provider->getResourceFromRelatedResourceSet(
-                        $segmentDescriptor->getPrevious()->getTargetResourceSetWrapper()->getResourceSet(),
-                        $segmentDescriptor->getPrevious()->getResult(),
-                        $segmentDescriptor->getTargetResourceSetWrapper()->getResourceSet(),
-                        $projectedProperty,
-                        $segmentDescriptor->getKeyDescriptor()
-                    );
-
-                $segmentDescriptor->setResult($entityInstance);
-            } else {
-                $entityInstances 
-                    = $this->_provider->getRelatedResourceSet(
-                        $segmentDescriptor->getPrevious()->getTargetResourceSetWrapper()->getResourceSet(),
-                        $segmentDescriptor->getPrevious()->getResult(),
-                        $segmentDescriptor->getTargetResourceSetWrapper()->getResourceSet(),
-                        $segmentDescriptor->getProjectedProperty(),
-                        $this->request->getFilterInfo(),
-                        null, // $orderby
-                        null, // $top
-                        null  // $skip
-                    );
-
-                $segmentDescriptor->setResult($entityInstances);
-            }           
-        } else if ($projectedPropertyKind == ResourcePropertyKind::RESOURCE_REFERENCE) {
-            $entityInstance 
-                = $this->_provider->getRelatedResourceReference(
-                    $segmentDescriptor->getPrevious()->getTargetResourceSetWrapper()->getResourceSet(),
-                    $segmentDescriptor->getPrevious()->getResult(),
-                    $segmentDescriptor->getTargetResourceSetWrapper()->getResourceSet(),
-                    $segmentDescriptor->getProjectedProperty()
+            if ($segment->isSingleResult()) {
+                $entityInstance = $this->providers->getResourceFromRelatedResourceSet(
+                    $segment->getPrevious()->getTargetResourceSetWrapper(),
+                    $segment->getPrevious()->getResult(),
+                    $segment->getTargetResourceSetWrapper(),
+                    $projectedProperty,
+                    $segment->getKeyDescriptor()
                 );
 
-            $segmentDescriptor->setResult($entityInstance);
+                $segment->setResult($entityInstance);
+            } else {
+                $entityInstances = $this->providers->getRelatedResourceSet(
+                    $segment->getPrevious()->getTargetResourceSetWrapper(),
+                    $segment->getPrevious()->getResult(),
+                    $segment->getTargetResourceSetWrapper(),
+                    $segment->getProjectedProperty(),
+                    $this->request->getFilterInfo(),
+                    null, // $orderby
+                    null, // $top
+                    null  // $skip
+                );
+
+                $segment->setResult($entityInstances);
+            }           
+        } else if ($projectedPropertyKind == ResourcePropertyKind::RESOURCE_REFERENCE) {
+            $entityInstance = $this->providers->getRelatedResourceReference(
+                $segment->getPrevious()->getTargetResourceSetWrapper(),
+                $segment->getPrevious()->getResult(),
+                $segment->getTargetResourceSetWrapper(),
+                $segment->getProjectedProperty()
+            );
+
+            $segment->setResult($entityInstance);
         } else {
             //Unexpected state
         }
@@ -295,76 +295,87 @@ class UriProcessor
     /**
      * Applies the query options to the resource(s) retrieved from the data source.
      * 
-     * @param SegmentDescriptor $segmentDescriptor The descriptor which holds
-     *                                              resource(s) on which query
-     *                                              options to be applied.
-     * 
-     * @return void
+     * @param SegmentDescriptor $segment The descriptor which holds resource(s) on which query options to be applied.
+     *
      */
-    private function _applyQueryOptions(SegmentDescriptor $segmentDescriptor)
+    private function _applyQueryOptions(SegmentDescriptor $segment)
     {
-	    //TODO: much of this will change as #3
+	    //TODO: I'm not really happy with this..i think i'd rather keep the result the QueryResult
+	    //not even bother with the setCountValue stuff (shouldn't counts be on segments?)
+	    //and just work with the QueryResult in the object model serializer
+	    $result = $segment->getResult();
 
-        // This function will not set RequestDescription::Count value if IDSQP2::canApplyQueryOptions 
-        // returns false, this function assumes IDSQP2 has already set the count value in the global
-        // variable named _odata_server_count. temporary fix for Drupal OData Plugin support
-        global $_odata_server_count;
-
-        $result = $segmentDescriptor->getResult();
+	    if(!$result instanceof QueryResult){
+		    //If the segment isn't a query result, then there's no paging or counting to be done
+		    return;
+        }
 
 
-        // $inlinecount=allpages should ignore the query options 
-        // $skiptoken, $top and $skip so take count before applying these options
-        if ($this->request->getRequestCountOption() != RequestCountOption::NONE() && is_array($result)
-        ) {
-            if ($this->_provider->handlesOrderedPaging()) {
-                $this->request->setCountValue(count($result));
+        // Note $inlinecount=allpages means include the total count regardless of paging..so we set the counts first
+	    // regardless if POData does the paging or not.
+        if ($this->request->queryType == QueryType::ENTITIES_WITH_COUNT()) {
+            if ($this->providers->handlesOrderedPaging()) {
+                $this->request->setCountValue($result->count);
             } else {
-                $this->request->setCountValue($_odata_server_count);
-            }
-        }
-        
-        // Library applies query options only if the QueryProvider::canApplyQueryOptions returns true.
-        $applicableForSetQuery = $this->_provider->handlesOrderedPaging() && is_array($result) && !empty($result);
-        if ($applicableForSetQuery) {
-            //Apply (implicit and explicit) $orderby option
-            $internalOrderByInfo = $this->request->getInternalOrderByInfo();
-            if (!is_null($internalOrderByInfo)) {
-                $orderByFunction = $internalOrderByInfo->getSorterFunction()->getReference();
-                usort($result, $orderByFunction);
-            }
-
-            //Apply $skiptoken option
-            $internalSkipTokenInfo = $this->request->getInternalSkipTokenInfo();
-            if (!is_null($internalSkipTokenInfo)) {
-                $matchingIndex = $internalSkipTokenInfo->getIndexOfFirstEntryInTheNextPage($result);
-                $result = array_slice($result, $matchingIndex);
-            }
-            
-            //Apply $top and $skip option
-            if (!empty($result)) {
-                $top  = $this->request->getTopCount();
-                $skip = $this->request->getSkipCount();
-                if (!is_null($top) && !is_null($skip)) {
-                    $result = array_slice($result, $skip, $top);
-                } else if (is_null($top)) {
-                    $result = array_slice($result, $skip);
-                } else if (is_null($skip)) {
-                    $result = array_slice($result, 0, $top);
-                }
-
-                //$skip and $top affects $count so consider here.
-                if ($this->request->getRequestCountOption() == RequestCountOption::VALUE_ONLY()) {
-                    $this->request->setCountValue(count($result));
-                }
+                $this->request->setCountValue(count($result->results));
             }
         }
 
-        $segmentDescriptor->setResult($result);
+	    //Have POData perform paging if necessary
+	    if(!$this->providers->handlesOrderedPaging() && !empty($result->results)){
+			$result->results = $this->performPaging($result->results);
+	    }
+
+	    //a bit surprising, but $skip and $top affects $count so update it here, not above
+	    //IE  data.svc/Collection/$count?$top=10 returns 10 even if Collection has 11+ entries
+	    if ($this->request->queryType == QueryType::COUNT()) {
+		    if ($this->providers->handlesOrderedPaging()) {
+			    $this->request->setCountValue($result->count);
+		    } else {
+			    $this->request->setCountValue(count($result->results));
+		    }
+	    }
+
+        $segment->setResult($result->results);
     }
 
+	/**
+	 * If the provider does not perform the paging (ordering, top, skip) then this method does it
+	 *
+	 * @param array $result
+	 * @return array
+	 */
+	private function performPaging(array $result)
+	{
+		//Apply (implicit and explicit) $orderby option
+		$internalOrderByInfo = $this->request->getInternalOrderByInfo();
+		if (!is_null($internalOrderByInfo)) {
+			$orderByFunction = $internalOrderByInfo->getSorterFunction()->getReference();
+			usort($result, $orderByFunction);
+		}
+
+		//Apply $skiptoken option
+		$internalSkipTokenInfo = $this->request->getInternalSkipTokenInfo();
+		if (!is_null($internalSkipTokenInfo)) {
+			$matchingIndex = $internalSkipTokenInfo->getIndexOfFirstEntryInTheNextPage($result);
+			$result = array_slice($result, $matchingIndex);
+		}
+
+		//Apply $top and $skip option
+		if (!empty($result)) {
+			$top  = $this->request->getTopCount();
+			$skip = $this->request->getSkipCount();
+			if(is_null($skip)) $skip = 0;
+
+			$result = array_slice($result, $skip, $top);
+		}
+
+		return $result;
+	}
+
+
     /**
-     * Perfrom expansion.
+     * Perform expansion.
      * 
      * @return void
      */
@@ -406,7 +417,7 @@ class UriProcessor
                         $currentResourceSet = $this->_getCurrentResourceSetWrapper()->getResourceSet();
                         $resourceSetOfProjectedProperty = $expandedProjectionNode->getResourceSetWrapper()->getResourceSet();
                         $projectedProperty1 = $expandedProjectionNode->getResourceProperty();
-                        $result1 = $this->_provider->getRelatedResourceSet(
+                        $result1 = $this->providers->getRelatedResourceSet(
                             $currentResourceSet,
                             $entry,
                             $resourceSetOfProjectedProperty,
@@ -444,7 +455,7 @@ class UriProcessor
                         $currentResourceSet1 = $this->_getCurrentResourceSetWrapper()->getResourceSet();
                         $resourceSetOfProjectedProperty1 = $expandedProjectionNode->getResourceSetWrapper()->getResourceSet();
                         $projectedProperty2 = $expandedProjectionNode->getResourceProperty();
-                        $result1 = $this->_provider->getRelatedResourceReference(
+                        $result1 = $this->providers->getRelatedResourceReference(
                             $currentResourceSet1,
                             $entry,
                             $resourceSetOfProjectedProperty1,
@@ -466,7 +477,7 @@ class UriProcessor
                     $currentResourceSet2 = $this->_getCurrentResourceSetWrapper()->getResourceSet();
                     $resourceSetOfProjectedProperty2 = $expandedProjectionNode->getResourceSetWrapper()->getResourceSet();
                     $projectedProperty4 = $expandedProjectionNode->getResourceProperty();
-                    $result1 = $this->_provider->getRelatedResourceSet(
+                    $result1 = $this->providers->getRelatedResourceSet(
                         $currentResourceSet2,
                         $result,
                         $resourceSetOfProjectedProperty2,
@@ -502,7 +513,7 @@ class UriProcessor
                     $currentResourceSet3 = $this->_getCurrentResourceSetWrapper()->getResourceSet();
                     $resourceSetOfProjectedProperty3 = $expandedProjectionNode->getResourceSetWrapper()->getResourceSet();
                     $projectedProperty5 = $expandedProjectionNode->getResourceProperty();
-                    $result1 = $this->_provider->getRelatedResourceReference(
+                    $result1 = $this->providers->getRelatedResourceReference(
                         $currentResourceSet3,
                         $result,
                         $resourceSetOfProjectedProperty3,

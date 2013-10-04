@@ -4,7 +4,6 @@ namespace POData\UriProcessor\QueryProcessor;
 
 use POData\Providers\Metadata\Type\Int32;
 use POData\Providers\Metadata\ResourceTypeKind;
-use POData\UriProcessor\RequestCountOption;
 use POData\UriProcessor\RequestDescription;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetSource;
@@ -17,6 +16,7 @@ use POData\Common\Messages;
 use POData\Common\ODataException;
 use POData\Common\ODataConstants;
 use POData\IService;
+use POData\Providers\Query\QueryType;
 
 /**
  * Class QueryProcessor
@@ -40,9 +40,7 @@ class QueryProcessor
     private $service;
 
     /**
-     * Whether the $orderby, $skip, $take and $count options can be 
-     * applied to the request.
-     * 
+     * If $orderby, $skip, $top and $count options can be applied to the request.
      * @var boolean
      */
     private $_setQueryApplicable;
@@ -71,14 +69,18 @@ class QueryProcessor
         $this->request = $request;
         $this->service = $service;
 
-        $requestTargetKind = $request->getTargetKind();
         $isSingleResult = $request->isSingleResult();
 
-        $requestCountOption = $request->getRequestCountOption();
+	    //$top, $skip, $order, $inlinecount & $count are only applicable if:
+	    //The query targets a resource collection
+        $this->_setQueryApplicable = ($request->getTargetKind() == TargetKind::RESOURCE && !$isSingleResult);
+	    //Or it's a $count resource (although $inlinecount isn't applicable in this case..but there's a check somewhere else for this
+	    $this->_setQueryApplicable |= $request->queryType == QueryType::COUNT();
 
-
-        $this->_setQueryApplicable = ($requestTargetKind == TargetKind::RESOURCE && !$isSingleResult) || $requestCountOption == RequestCountOption::VALUE_ONLY();
-        $this->_pagingApplicable = $this->request->getTargetKind() == TargetKind::RESOURCE && !$this->request->isSingleResult() && ($requestCountOption != RequestCountOption::VALUE_ONLY());
+	    //Paging is allowed if
+	    //The request targets a resource collection
+	    //and the request isn't for a $count segment
+	    $this->_pagingApplicable = $this->request->getTargetKind() == TargetKind::RESOURCE && !$isSingleResult && ($request->queryType != QueryType::COUNT());
 
 	    $targetResourceType = $this->request->getTargetResourceType();
         $targetResourceSetWrapper = $this->request->getTargetResourceSetWrapper();
@@ -262,7 +264,7 @@ class QueryProcessor
         $kind = $this->request->getTargetKind();
         if (!($kind == TargetKind::RESOURCE
             || $kind == TargetKind::COMPLEX_OBJECT
-            || $this->request->getRequestCountOption() == RequestCountOption::VALUE_ONLY() )
+            || $this->request->queryType == QueryType::COUNT() )
         ) {
             ODataException::createBadRequestError(
                 Messages::queryProcessorQueryFilterOptionNotApplicable()
@@ -294,7 +296,7 @@ class QueryProcessor
 	    if(is_null($inlineCount)) return;
 
 	    //If the service doesn't allow count requests..then throw an exception
-        if (!$this->service->getServiceConfiguration()->getAcceptCountRequests()) {
+        if (!$this->service->getConfiguration()->getAcceptCountRequests()) {
             ODataException::createBadRequestError(
                 Messages::configurationCountNotAccepted()
             );
@@ -309,7 +311,7 @@ class QueryProcessor
 
 	    //You can't specify $count & $inlinecount together
 	    //TODO: ensure there's a test for this case see #55
-        if ($this->request->getRequestCountOption() == RequestCountOption::VALUE_ONLY() ) {
+        if ($this->request->queryType == QueryType::COUNT() ) {
             ODataException::createBadRequestError(
                 Messages::queryProcessorInlineCountWithValueCount()
             );
@@ -319,7 +321,7 @@ class QueryProcessor
 
 
         if ($inlineCount === ODataConstants::URI_ROWCOUNT_ALLOPTION) {
-            $this->request->setRequestCountOption( RequestCountOption::INLINE() );
+	        $this->request->queryType = QueryType::ENTITIES_WITH_COUNT();
 
             $this->request->raiseMinVersionRequirement( 2, 0, $this->service );
             $this->request->raiseResponseVersion( 2, 0, $this->service );
@@ -405,7 +407,7 @@ class QueryProcessor
         $select = $this->service->getHost()->getQueryStringItem( ODataConstants::HTTPQUERY_STRING_SELECT );
 
         if (!is_null($select)) {
-            if (!$this->service->getServiceConfiguration()->getAcceptProjectionRequests()) {
+            if (!$this->service->getConfiguration()->getAcceptProjectionRequests()) {
                 ODataException::createBadRequestError( Messages::configurationProjectionsNotAccepted() );
             }
 

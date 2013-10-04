@@ -22,7 +22,7 @@ class NorthWindServiceV1 extends BaseServiceTestWrapper
      * 
      * @param IServiceConfiguration $config
      */
-    public function initializeService(IServiceConfiguration $config)
+    public function initialize(IServiceConfiguration $config)
     {
         $config->setEntitySetAccessRule('*', EntitySetRights::ALL);
         //we are using V1 protocol, but still we set page size because with

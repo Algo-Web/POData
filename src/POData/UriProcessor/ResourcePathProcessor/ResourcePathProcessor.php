@@ -2,10 +2,10 @@
 
 namespace POData\UriProcessor\ResourcePathProcessor;
 
+use POData\Providers\Query\QueryType;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\SegmentParser;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
 use POData\UriProcessor\RequestDescription;
-use POData\UriProcessor\RequestCountOption;
 use POData\IService;
 use POData\Common\Url;
 use POData\Common\ODataConstants;
@@ -68,11 +68,11 @@ class ResourcePathProcessor
         }
 
         if ($request->getIdentifier() === ODataConstants::URI_COUNT_SEGMENT) {
-            if (!$service->getServiceConfiguration()->getAcceptCountRequests()) {
+            if (!$service->getConfiguration()->getAcceptCountRequests()) {
                 ODataException::createBadRequestError(Messages::configurationCountNotAccepted());
             }
 
-            $request->setRequestCountOption( RequestCountOption::VALUE_ONLY() );
+	        $request->queryType = QueryType::COUNT();
             // use of $count requires request DataServiceVersion
             // and MaxDataServiceVersion greater than or equal to 2.0
 
