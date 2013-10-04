@@ -7,7 +7,7 @@ use POData\IService;
 use POData\IRequestHandler;
 use POData\BaseService;
 use POData\Configuration\ServiceProtocolVersion;
-use POData\Configuration\IServiceConfiguration;
+use POData\Configuration\ServiceConfiguration;
 use Symfony\Component\Config\Definition\Exception\Exception;
 
 use UnitTests\POData\Facets\NorthWind1\NorthWindQueryProvider;
@@ -21,9 +21,9 @@ class NorthWindService2 extends BaseServiceTestWrapper
     /**
      * This method is called only once to initialize service-wide policies
      * 
-     * @param IServiceConfiguration $config
+     * @param ServiceConfiguration $config
      */
-    public function initialize(IServiceConfiguration $config)
+    public function initialize(ServiceConfiguration $config)
     {
         $config->setEntitySetPageSize('*', 5);
         $config->setEntitySetAccessRule('*', EntitySetRights::ALL);

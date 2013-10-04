@@ -9,7 +9,7 @@ use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\ResourceAssociationSet;
-use POData\Configuration\IServiceConfiguration;
+use POData\Configuration\ServiceConfiguration;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 use POData\Common\ODataException;
 use POData\Common\Messages;
@@ -53,9 +53,9 @@ class ProvidersWrapper
     /**
      * Holds reference to IServiceConfiguration implementation
      * 
-     * @var IServiceConfiguration
+     * @var ServiceConfiguration
      */
-    private $_configuration;
+    private $config;
 
 
     /**
@@ -95,13 +95,13 @@ class ProvidersWrapper
      * 
      * @param IMetadataProvider $metadataProvider Reference to IMetadataProvider implementation
      * @param IQueryProvider    $queryProvider    Reference to IQueryProvider implementation
-     * @param IServiceConfiguration    $configuration    Reference to IServiceConfiguration implementation
+     * @param ServiceConfiguration    $configuration    Reference to IServiceConfiguration implementation
      */
-    public function __construct(IMetadataProvider $metadataProvider, IQueryProvider $queryProvider, IServiceConfiguration $configuration)
+    public function __construct(IMetadataProvider $metadataProvider, IQueryProvider $queryProvider, ServiceConfiguration $configuration)
     {
         $this->_metadataProvider = $metadataProvider;
         $this->_queryProvider = $queryProvider;
-        $this->_configuration = $configuration;
+        $this->config = $configuration;
         $this->_resourceSetWrapperCache = array();
         $this->_resourceTypeCache = array();
         $this->_resourceAssociationSetCache = array();
@@ -158,11 +158,11 @@ class ProvidersWrapper
     /**
      * To get the data service configuration
      * 
-     * @return IServiceConfiguration
+     * @return ServiceConfiguration
      */
     public function getConfiguration()
     {
-        return $this->_configuration;
+        return $this->config;
     }
 
     /**
@@ -180,11 +180,12 @@ class ProvidersWrapper
         $resourceSetWrappers = array();
         $resourceSetNames = array();
         foreach ($resourceSets as $resourceSet) {
-            if (in_array($resourceSet->getName(), $resourceSetNames)) {
-                throw new ODataException(Messages::providersWrapperEntitySetNameShouldBeUnique($resourceSet->getName()), 500 );
+	        $name = $resourceSet->getName();
+            if (in_array($name, $resourceSetNames)) {
+                throw new ODataException(Messages::providersWrapperEntitySetNameShouldBeUnique($name), 500 );
             }
 
-            $resourceSetNames[] = $resourceSet->getName();
+            $resourceSetNames[] = $name;
             $resourceSetWrapper = $this->_validateResourceSetAndGetWrapper($resourceSet);
             if (!is_null($resourceSetWrapper)) {
                 $resourceSetWrappers[] = $resourceSetWrapper;
@@ -233,7 +234,7 @@ class ProvidersWrapper
     public function resolveResourceSet($name)
     {
         if (array_key_exists($name, $this->_resourceSetWrapperCache)) {
-            return $this->_resourceSetWrapperCache[$name];
+			return $this->_resourceSetWrapperCache[$name];
         }
         
         $resourceSet = $this->_metadataProvider->resolveResourceSet($name);
@@ -502,8 +503,7 @@ class ProvidersWrapper
      * @param ResourceSet $resourceSet The resourceset to validate and get the 
      *                                 wrapper for
      * 
-     * @return ResourceSetWrapper|null Returns an instance if ResourceSetWrapper 
-     *     if resourceset is visible else NULL
+     * @return ResourceSetWrapper|null Returns an instance if a resource set with the given name is visible
      */
     private function _validateResourceSetAndGetWrapper(ResourceSet $resourceSet)
     {
@@ -513,12 +513,9 @@ class ProvidersWrapper
         }
 
         $this->_validateResourceType($resourceSet->getResourceType());
-        $resourceSetWrapper = new ResourceSetWrapper(
-            $resourceSet, 
-            $this->_configuration
-        );
-        if ($resourceSetWrapper->isVisible()) {
-            $this->_resourceSetWrapperCache[$cacheKey] = $resourceSetWrapper;
+        $wrapper = new ResourceSetWrapper($resourceSet, $this->config);
+        if ($wrapper->isVisible()) {
+            $this->_resourceSetWrapperCache[$cacheKey] = $wrapper;
         } else {
             $this->_resourceSetWrapperCache[$cacheKey] = null;
         }

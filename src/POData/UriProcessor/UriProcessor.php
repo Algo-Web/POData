@@ -141,7 +141,7 @@ class UriProcessor
             $requestTargetKind = $segment->getTargetKind();
 
 	        if ($segment->getTargetSource() == TargetSource::ENTITY_SET) {
-                $this->_handleSegmentTargetsToResourceSet($segment);
+                $this->handleSegmentTargetsToResourceSet($segment);
             } else if ($requestTargetKind == TargetKind::RESOURCE) {
                 if (is_null($segment->getPrevious()->getResult())) {
                     ODataException::createResourceNotFoundError(
@@ -200,14 +200,14 @@ class UriProcessor
             }
 
             if (is_null($segment->getNext()) || $segment->getNext()->getIdentifier() == ODataConstants::URI_COUNT_SEGMENT) {
-                    $this->_applyQueryOptions($segment);
+                    $this->applyQueryOptions($segment);
             }
         }
 
          // Apply $select and $expand options to result set, this function will be always applied
          // irrespective of return value of IDSQP2::canApplyQueryOptions which means library will
          // not delegate $expand/$select operation to IDSQP2 implementation
-        $this->_handleExpansion();
+        $this->handleExpansion();
     }
 
     /**
@@ -217,7 +217,7 @@ class UriProcessor
      * @return void
      *
      */
-    private function _handleSegmentTargetsToResourceSet( SegmentDescriptor $segment ) {
+    private function handleSegmentTargetsToResourceSet( SegmentDescriptor $segment ) {
         if ($segment->isSingleResult()) {
             $entityInstance = $this->providers->getResourceFromResourceSet(
                 $segment->getTargetResourceSetWrapper(),
@@ -298,7 +298,7 @@ class UriProcessor
      * @param SegmentDescriptor $segment The descriptor which holds resource(s) on which query options to be applied.
      *
      */
-    private function _applyQueryOptions(SegmentDescriptor $segment)
+    private function applyQueryOptions(SegmentDescriptor $segment)
     {
 	    //TODO: I'm not really happy with this..i think i'd rather keep the result the QueryResult
 	    //not even bother with the setCountValue stuff (shouldn't counts be on segments?)
@@ -379,12 +379,10 @@ class UriProcessor
      * 
      * @return void
      */
-    private function _handleExpansion()
+    private function handleExpansion()
     {
-        $rootrojectionNode = $this->request->getRootProjectionNode();
-        if (!is_null($rootrojectionNode) 
-            && $rootrojectionNode->isExpansionSpecified()
-        ) {
+        $node = $this->request->getRootProjectionNode();
+        if (!is_null($node) && $node->isExpansionSpecified()) {
             $result = $this->request->getTargetResult();
             if (!is_null($result) || is_array($result) && !empty($result)) {
                 $needPop = $this->_pushSegmentForRoot();

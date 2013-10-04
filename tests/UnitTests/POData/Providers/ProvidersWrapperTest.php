@@ -3,6 +3,7 @@
 namespace UnitTests\POData\Providers\Metadata;
 
 use POData\Providers\Metadata\ResourceSet;
+use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceTypeKind;
@@ -11,107 +12,215 @@ use POData\Configuration\ServiceConfiguration;
 use POData\Configuration\EntitySetRights;
 use POData\Providers\Metadata\IMetadataProvider;
 use POData\Common\ODataException;
+use POData\Common\Messages;
+use POData\Providers\Metadata\Type\String;
 
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 use POData\Providers\Query\IQueryProvider;
 
-class ProvidersWrapperTest extends \PHPUnit_Framework_TestCase
+use Phockito;
+use UnitTests\POData\BaseUnitTestCase;
+
+class ProvidersWrapperTest extends BaseUnitTestCase
 {
 
 	/** @var  IQueryProvider */
 	protected $mockQueryProvider;
 
-    protected function setUp()
+
+	/** @var  IMetadataProvider */
+	protected $mockMetadataProvider;
+
+	/**
+	 * @var ServiceConfiguration
+	 */
+	protected $mockServiceConfig;
+
+	/** @var  ResourceSet */
+	protected $mockResourceSet;
+
+	/** @var  ResourceSet */
+	protected $mockResourceSet2;
+
+	/** @var  ResourceType */
+	protected $mockResourceType;
+
+
+	/**
+	 * @return ProvidersWrapper
+	 */
+	public function getMockedWrapper()
+	{
+		return new ProvidersWrapper(
+			$this->mockMetadataProvider,
+			$this->mockQueryProvider,
+			$this->mockServiceConfig
+		);
+	}
+
+    public function testGetContainerName()
     {
-	    $this->mockQueryProvider = \Phockito::mock('POData\Providers\Query\IQueryProvider');
 
-        //TODO: move the entity types into their own files
-        //unit then we need to ensure they are "in scope"
-        $x = NorthWindMetadata::Create();
-    }
+	    $fakeContainerName = "BigBadContainer";
+	    Phockito::when($this->mockMetadataProvider->getContainerName())
+		    ->return($fakeContainerName);
 
+        $wrapper = $this->getMockedWrapper();
 
-    public function testContainerNameAndNameSpace1()
-    {
-
-        $configuration = null;
-        $metadataProvider = $this->_createMetadataAndConfiguration1($configuration);
-        $providersWrapper = new ProvidersWrapper(
-                                    $metadataProvider, //IMetadataProvider implementation
-	                                $this->mockQueryProvider,
-                                    $configuration, //Service configuration
-                                    false
-                                    );
-
-        $this->assertEquals($providersWrapper->getContainerName(), 'NorthWindEntities');
-        $this->assertEquals($providersWrapper->getContainerNamespace(), 'NorthWind');
-
-    }
-
-    public function testResolveResourceSet1()
-    {
-
-        //Try to resolve invisible resource set
-        $configuration = null;
-        $metadataProvider = $this->_createMetadataAndConfiguration1($configuration);
-        $providersWrapper = new ProvidersWrapper(
-                                    $metadataProvider, //IMetadataProvider implementation
-	        $this->mockQueryProvider,
-	        $configuration, //Service configuration
-                                    false
-                                    );
-        $customerResourceSet = $providersWrapper->resolveResourceSet('Customers');
-        $this->assertNull($customerResourceSet);
-
-        //Try to resolve visible resource set
-        $configuration = null;
-        $metadataProvider = $this->_createMetadataAndConfiguration1($configuration);
-        $providersWrapper = new ProvidersWrapper(
-			$metadataProvider, //IMetadataProvider implementation
-	        $this->mockQueryProvider,
-	        $configuration, //Service configuration
-            false
-        );
-        $configuration->setEntitySetAccessRule('Customers', EntitySetRights::ALL);
-        $customerResourceSet = $providersWrapper->resolveResourceSet('Customers');
-        $this->assertNotNull($customerResourceSet);
-        $this->assertEquals($customerResourceSet->getName(), 'Customers');
-        $this->assertEquals($customerResourceSet->getResourceType()->getName(), 'Customer');
+        $this->assertEquals($fakeContainerName, $wrapper->getContainerName());
 
     }
 
-    public function testGetResourceSets1()
-    {
+	public function testGetContainerNameThrowsWhenNull()
+	{
 
-        //Try to get all resource sets with non of the resouce sets are visible
-        $configuration = null;
-        $metadataProvider = $this->_createMetadataAndConfiguration1($configuration);
-        $providersWrapper = new ProvidersWrapper(
-            $metadataProvider, //IMetadataProvider implementation
-	        $this->mockQueryProvider,
-	        $configuration, //Service configuration
-            false
-        );
-        $resourceSets = $providersWrapper->getResourceSets();
-        $this->assertTrue(empty($resourceSets));
 
-        //Try to get all resource sets after setting all resouce sets as visible
-        $configuration = null;
-        $metadataProvider = $this->_createMetadataAndConfiguration1($configuration);
-        $providersWrapper = new ProvidersWrapper(
-                                    $metadataProvider, //IMetadataProvider implementation
-	        $this->mockQueryProvider,
-	        $configuration, //Service configuration
-                                    false
-                                    );
-        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
-        $resourceSets = $providersWrapper->getResourceSets();
-        $this->assertEquals(count($resourceSets), 5);
-        //Try to resolve 'Customers' entity set, we should the resource set for it from cache as the above getResourceSets call caches all resource sets
-        $customerResourceSet = $providersWrapper->resolveResourceSet('Customers');
-        $this->assertNotNull($customerResourceSet);
+		$wrapper = $this->getMockedWrapper();
 
-    }
+		try{
+			$wrapper->getContainerName();
+			$this->fail("Expected exception not thrown");
+		} catch(ODataException $ex) {
+			$this->assertEquals(Messages::providersWrapperContainerNameMustNotBeNullOrEmpty(), $ex->getMessage());
+			$this->assertEquals(500, $ex->getStatusCode());
+		}
+
+	}
+
+	public function testGetContainerNameThrowsWhenEmpty()
+	{
+
+		Phockito::when($this->mockMetadataProvider->getContainerName())
+			->return('');
+		$wrapper = $this->getMockedWrapper();
+
+		try{
+			$wrapper->getContainerName();
+			$this->fail("Expected exception not thrown");
+		} catch(ODataException $ex) {
+			$this->assertEquals(Messages::providersWrapperContainerNameMustNotBeNullOrEmpty(), $ex->getMessage());
+			$this->assertEquals(500, $ex->getStatusCode());
+		}
+
+	}
+
+	public function testGetContainerNamespace()
+	{
+		$fakeContainerNamespace = "BigBadNamespace";
+		Phockito::when($this->mockMetadataProvider->getContainerNamespace())
+			->return($fakeContainerNamespace);
+
+		$wrapper = $this->getMockedWrapper();
+
+		$this->assertEquals($fakeContainerNamespace, $wrapper->getContainerNamespace());
+
+	}
+
+	public function testGetContainerNamespaceThrowsWhenNull()
+	{
+
+
+		$wrapper = $this->getMockedWrapper();
+
+		try{
+			$wrapper->getContainerNamespace();
+			$this->fail("Expected exception not thrown");
+		} catch(ODataException $ex) {
+			$this->assertEquals(Messages::providersWrapperContainerNamespaceMustNotBeNullOrEmpty(), $ex->getMessage());
+			$this->assertEquals(500, $ex->getStatusCode());
+		}
+
+	}
+
+	public function testGetContainerNamespaceThrowsWhenEmpty()
+	{
+
+		Phockito::when($this->mockMetadataProvider->getContainerNamespace())
+			->return('');
+
+		$wrapper = $this->getMockedWrapper();
+
+		try{
+			$wrapper->getContainerNamespace();
+			$this->fail("Expected exception not thrown");
+		} catch(ODataException $ex) {
+			$this->assertEquals(Messages::providersWrapperContainerNamespaceMustNotBeNullOrEmpty(), $ex->getMessage());
+			$this->assertEquals(500, $ex->getStatusCode());
+		}
+
+	}
+
+	public function testResolveResourceSet()
+	{
+		$fakeSetName = 'SomeSet';
+
+		Phockito::when($this->mockMetadataProvider->resolveResourceSet($fakeSetName))
+			->return($this->mockResourceSet);
+
+
+		Phockito::when($this->mockResourceSet->getResourceType())
+			->return($this->mockResourceType);
+
+		//Indicate the resource set is visible
+		Phockito::when($this->mockServiceConfig->getEntitySetAccessRule($this->mockResourceSet))
+			->return(EntitySetRights::READ_SINGLE);
+
+
+		$wrapper = $this->getMockedWrapper();
+
+		$actual = $wrapper->resolveResourceSet($fakeSetName);
+
+		$this->assertEquals(new ResourceSetWrapper($this->mockResourceSet, $this->mockServiceConfig), $actual);
+
+		//Verify it comes from cache
+		$actual2 = $wrapper->resolveResourceSet($fakeSetName);
+		$this->assertSame($actual, $actual2);
+
+	}
+
+	public function testResolveResourceSetNotVisible()
+	{
+		$fakeSetName = 'SomeSet';
+
+		Phockito::when($this->mockMetadataProvider->resolveResourceSet($fakeSetName))
+			->return($this->mockResourceSet);
+
+
+		Phockito::when($this->mockResourceSet->getResourceType())
+			->return($this->mockResourceType);
+
+		//Indicate the resource set is NOT visible
+		Phockito::when($this->mockServiceConfig->getEntitySetAccessRule($this->mockResourceSet))
+			->return(EntitySetRights::NONE);
+
+		Phockito::when($this->mockResourceSet->getName())
+			->return($fakeSetName);
+
+		$wrapper = $this->getMockedWrapper();
+
+		$this->assertNull($wrapper->resolveResourceSet($fakeSetName));
+
+		//verify it comes from cache
+		$wrapper->resolveResourceSet($fakeSetName); //call it again
+
+		//make sure the metadata provider was only called once
+		Phockito::verify($this->mockMetadataProvider, 1)->resolveResourceSet($fakeSetName);
+
+	}
+
+	public function testResolveResourceSetNonExistent()
+	{
+		$fakeSetName = 'SomeSet';
+
+		Phockito::when($this->mockMetadataProvider->resolveResourceSet($fakeSetName))
+			->return(null);
+
+		$wrapper = $this->getMockedWrapper();
+
+		$this->assertNull($wrapper->resolveResourceSet($fakeSetName));
+
+	}
+
 
     public function testResolveResourceType1()
     {
@@ -256,77 +365,142 @@ class ProvidersWrapperTest extends \PHPUnit_Framework_TestCase
 
     }
 
-    public function testContainerNameAndNameSpace2()
-    {
 
-        $configuration = null;
-        $metadataProvider = $this->_createMetadataAndConfiguration2($configuration);
-        $providersWrapper = new ProvidersWrapper(
-                                    $metadataProvider, //IMetadataProvider implementation
-	        $this->mockQueryProvider,
-	        $configuration, //Service configuration
-                                    false
-                                    );
+	public function testGetResourceSets()
+	{
+		$fakeSets = array(
+			$this->mockResourceSet,
+		);
 
-        try {
-            $providersWrapper->getContainerName();
-            $this->fail('An expected ODataException null container name has not been thrown');
-        } catch (ODataException $exception) {
-            $this->assertEquals($exception->getMessage(), 'The value returned by IMetadataProvider::getContainerName method must not be null or empty');
-        }
+		Phockito::when($this->mockMetadataProvider->getResourceSets())
+			->return($fakeSets);
+
+		Phockito::when($this->mockResourceSet->getResourceType())
+			->return($this->mockResourceType);
+
+		Phockito::when($this->mockServiceConfig->getEntitySetAccessRule($this->mockResourceSet))
+			->return(EntitySetRights::READ_SINGLE);
+
+		$wrapper = $this->getMockedWrapper();
+
+		$actual = $wrapper->getResourceSets();
 
 
-        try {
-            $providersWrapper->getContainerNamespace();
-            $this->fail('An expected ODataException null container namespace has not been thrown');
-        } catch (ODataException $exception) {
-            $this->assertEquals($exception->getMessage(), 'The value returned by IMetadataProvider::getContainerNamespace method must not be null or empty');
-        }
+		$expected = array(
+			new ResourceSetWrapper($this->mockResourceSet, $this->mockServiceConfig)
+		);
+		$this->assertEquals($expected, $actual);
 
-    }
+	}
 
-    public function testGetResourceSets2()
-    {
-        //Try to get all resource sets with non of the resouce sets are visible
-        $configuration = null;
-        $metadataProvider = $this->_createMetadataAndConfiguration2($configuration);
+	public function testGetResourceSetsDuplicateNames()
+	{
+		$fakeSets = array(
+			$this->mockResourceSet,
+			$this->mockResourceSet,
+		);
 
-	    $providersWrapper = new ProvidersWrapper(
-            $metadataProvider, //IMetadataProvider implementation
-		    $this->mockQueryProvider,
-		    $configuration, //Service configuration
-            false
-        );
+		Phockito::when($this->mockMetadataProvider->getResourceSets())
+			->return($fakeSets);
 
-        try {
-            $providersWrapper->getResourceSets();
-            $this->fail('An expected ODataException for entity set repetition has not been thrown');
-        } catch(ODataException $exception) {
-            $this->assertEquals($exception->getMessage(), 'More than one entity set with the name \'Customers\' was found. Entity set names must be unique');
-        }
+		Phockito::when($this->mockResourceSet->getResourceType())
+			->return($this->mockResourceType);
 
-    }
+		$fakeName = "Fake Set 1";
+		Phockito::when($this->mockResourceSet->getName())
+			->return($fakeName);
 
-    public function testGetTypes2()
-    {
+		Phockito::when($this->mockServiceConfig->getEntitySetAccessRule($this->mockResourceSet))
+			->return(EntitySetRights::READ_SINGLE);
 
-        //Try to get all resource sets with non of the resource sets are visible
-        $configuration = null;
-        $metadataProvider = $this->_createMetadataAndConfiguration2($configuration);
-        $providersWrapper = new ProvidersWrapper(
-                                    $metadataProvider, //IMetadataProvider implementation
-	        $this->mockQueryProvider,
-	        $configuration, //Service configuration
-                                    false
-                                    );
-        try {
-            $providersWrapper->getTypes();
-            $this->fail('An expected ODataException for entity type name repetition has not been thrown');
-        } catch(ODataException $exception) {
-            $this->assertEquals($exception->getMessage(), 'More than one entity type with the name \'Order\' was found. Entity type names must be unique.');
-        }
+		$wrapper = $this->getMockedWrapper();
 
-    }
+		try{
+			$wrapper->getResourceSets();
+			$this->fail('An expected ODataException for entity set repetition has not been thrown');
+		} catch(ODataException $exception) {
+			$this->assertEquals(Messages::providersWrapperEntitySetNameShouldBeUnique($fakeName), $exception->getMessage());
+			$this->assertEquals(500, $exception->getStatusCode());
+		}
+	}
+
+	public function testGetResourceSetsSecondOneIsNotVisible()
+	{
+
+		$fakeSets = array(
+			$this->mockResourceSet,
+			$this->mockResourceSet2,
+		);
+
+		Phockito::when($this->mockMetadataProvider->getResourceSets())
+			->return($fakeSets);
+
+		Phockito::when($this->mockResourceSet->getName())
+			->return("fake name 1");
+
+		Phockito::when($this->mockResourceSet2->getName())
+			->return("fake name 2");
+
+		Phockito::when($this->mockResourceSet->getResourceType())
+			->return($this->mockResourceType);
+
+		Phockito::when($this->mockResourceSet2->getResourceType())
+			->return($this->mockResourceType);
+
+		Phockito::when($this->mockServiceConfig->getEntitySetAccessRule($this->mockResourceSet))
+			->return(EntitySetRights::NONE);
+
+		Phockito::when($this->mockServiceConfig->getEntitySetAccessRule($this->mockResourceSet2))
+			->return(EntitySetRights::READ_SINGLE);
+
+		$wrapper = $this->getMockedWrapper();
+
+		$actual = $wrapper->getResourceSets();
+
+
+		$expected = array(
+			new ResourceSetWrapper($this->mockResourceSet2, $this->mockServiceConfig)
+		);
+		$this->assertEquals($expected, $actual);
+
+	}
+
+	public function testGetTypes()
+	{
+		$fakeTypes = array(
+			new ResourceType(new String(), ResourceTypeKind::PRIMITIVE, "FakeType1" ),
+		);
+
+		Phockito::when($this->mockMetadataProvider->getTypes())
+			->return($fakeTypes);
+
+		$wrapper = $this->getMockedWrapper();
+
+		$this->assertEquals($fakeTypes, $wrapper->getTypes());
+
+	}
+
+	public function testGetTypesDuplicateNames()
+	{
+		$fakeTypes = array(
+			new ResourceType(new String(), ResourceTypeKind::PRIMITIVE, "FakeType1" ),
+			new ResourceType(new String(), ResourceTypeKind::PRIMITIVE, "FakeType1" ),
+		);
+
+		Phockito::when($this->mockMetadataProvider->getTypes())
+			->return($fakeTypes);
+
+		$wrapper = $this->getMockedWrapper();
+
+		try {
+			$wrapper->getTypes();
+			$this->fail('An expected ODataException for entity type name repetition has not been thrown');
+		} catch(ODataException $exception) {
+			$this->assertEquals(Messages::providersWrapperEntityTypeNameShouldBeUnique("FakeType1"), $exception->getMessage());
+			$this->assertEquals(500, $exception->getStatusCode());
+		}
+
+	}
     
 
 
@@ -345,85 +519,5 @@ class ProvidersWrapperTest extends \PHPUnit_Framework_TestCase
         return $northWindMetadata;
     }
 
-    /**
-     * Creates a valid IMetadataProvider implementation, and associated configuration
-     * Note: This metadata is for negative testing
-     * 
-     * @param ServiceConfiguration $configuration On return, this will hold reference to configuration object
-     * 
-     * @return IMetadataProvider
-     */
-    private function _createMetadataAndConfiguration2(&$configuration)
-    {
-        $northWindMetadata = new NorthWindMetadata2();
-        $configuration = new ServiceConfiguration($northWindMetadata);
-        return $northWindMetadata;
-    }
-}
 
-class NorthWindMetadata2 implements IMetadataProvider
-{
-    protected $_resourceSets = array();
-    protected $_resourceTypes = array();
-	
-    public function __construct()
-    {
-        $customerEntityType = new ResourceType(new \ReflectionClass('UnitTests\POData\Facets\NorthWind1\Customer2'), ResourceTypeKind::ENTITY, 'Customer');
-    	$this->_resourceTypes[] = $customerEntityType;
-
-	    //Add the Order resource type twice
-	    $orderEntityType = new ResourceType(new \ReflectionClass('UnitTests\POData\Facets\NorthWind1\Order2'), ResourceTypeKind::ENTITY, 'Order');
-    	$this->_resourceTypes[] = $orderEntityType;
-    	$this->_resourceTypes[] = $orderEntityType;
-    	
-    	$customersResourceSet = new ResourceSet('Customers', $customerEntityType);
-    	//Add the customers resource set twice to the collection
-    	$this->_resourceSets[] = $customersResourceSet;
-    	$this->_resourceSets[] = $customersResourceSet;
-
-	    $ordersResourceSet = new ResourceSet('Orders', $orderEntityType);
-    	$this->_resourceSets[] = $ordersResourceSet;
-    }
-
-	//Begin Implementation of IMetadataProvider
-    public function getContainerName()
-    {
-    	return null;
-    }
-
-    public function getContainerNamespace()
-    {
-    	return null;
-    }
-
-    public function getResourceSets()
-    {
-    	return $this->_resourceSets;
-    }
-
-    public function getTypes()
-    {
-    	return $this->_resourceTypes;
-    }
-
-    public function resolveResourceSet($name)
-    {
-    }
-
-    public function resolveResourceType($name)
-    {
-    }
-
-    public function getDerivedTypes(ResourceType $resourceType)
-    {
-        return null;     
-    }
-
-    public function hasDerivedTypes(ResourceType $resourceType)
-    {     
-    }
-
-    public function getResourceAssociationSet(ResourceSet $sourceResourceSet, ResourceType $sourceResourceType, ResourceProperty $targetResourceProperty)
-    {
-    }
 }

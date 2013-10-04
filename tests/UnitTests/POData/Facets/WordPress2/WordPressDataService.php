@@ -7,7 +7,7 @@ use POData\Configuration\EntitySetRights;
 use POData\IService;
 use POData\IRequestHandler;
 use POData\Configuration\ServiceProtocolVersion;
-use POData\Configuration\IServiceConfiguration;
+use POData\Configuration\ServiceConfiguration;
 
 use POData\BaseService;
 use POData\OperationContext\HTTPRequestMethod;
@@ -28,11 +28,11 @@ class WordPressDataService extends BaseService
     /**
      * This method is called only once to initialize service-wide policies
      * 
-     * @param IServiceConfiguration $config Data service configuration object
+     * @param ServiceConfiguration $config Data service configuration object
      * 
      * @return void
      */
-    public function initialize(IServiceConfiguration $config)
+    public function initialize(ServiceConfiguration $config)
     {
         $config->setEntitySetPageSize('*', 5);
         $config->setEntitySetAccessRule('*', EntitySetRights::ALL);

@@ -7,14 +7,10 @@ use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\Metadata\ResourceSet;
 use POData\Common\Messages;
 use POData\Common\Version;
-use POData\Common\NotImplementedException;
 use POData\Common\InvalidOperationException;
 
-/**
- * Class ServiceConfiguration
- * @package POData\Configuration
- */
-class ServiceConfiguration implements IServiceConfiguration
+
+class ServiceConfiguration
 {
     /**
      * Maximum number of segments to be expanded allowed in a request     
@@ -134,10 +130,9 @@ class ServiceConfiguration implements IServiceConfiguration
      */
     public function setMaxExpandCount($maxExpandCount)
     {
-        $this->_maxExpandCount 
-            = $this->_checkIntegerNonNegativeParameter(
-                $maxExpandCount, 'setMaxExpandCount'
-            );
+        $this->_maxExpandCount = $this->_checkIntegerNonNegativeParameter(
+            $maxExpandCount, 'setMaxExpandCount'
+        );
     }
 
     /**
@@ -159,11 +154,10 @@ class ServiceConfiguration implements IServiceConfiguration
      */
     public function setMaxExpandDepth($maxExpandDepth)
     {
-        $this->_maxExpandDepth 
-            = $this->_checkIntegerNonNegativeParameter(
-                $maxExpandDepth, 
-                'setMaxExpandDepth'
-            );
+        $this->_maxExpandDepth = $this->_checkIntegerNonNegativeParameter(
+            $maxExpandDepth,
+            'setMaxExpandDepth'
+        );
     }
 
     /**

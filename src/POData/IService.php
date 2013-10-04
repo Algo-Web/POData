@@ -4,7 +4,7 @@ namespace POData;
 
 use POData\OperationContext\ServiceHost;
 use POData\Providers\ProvidersWrapper;
-use POData\Configuration\IServiceConfiguration;
+use POData\Configuration\ServiceConfiguration;
 use POData\Providers\Stream\StreamProviderWrapper;
 use POData\OperationContext\IOperationContext;
 use POData\Writers\ServiceDocumentWriterFactory;
@@ -16,16 +16,16 @@ interface IService
     /**
      * This method is called only once to initialize service-wide policies.
      * 
-     * @param IServiceConfiguration $config data service configuration
+     * @param ServiceConfiguration $config data service configuration
      * 
      */
-    public function initialize(IServiceConfiguration $config);
+    public function initialize(ServiceConfiguration $config);
 
     /**
      * Gets reference to the configuration class to access the
      * configuration set by the developer.
      * 
-     * @return IServiceConfiguration
+     * @return ServiceConfiguration
      */
     public function getConfiguration();
 
