@@ -36,7 +36,7 @@ class ObjectModelSerializerBase
      * 
      * @var RequestDescription
      */
-    protected $requestDescription;
+    protected $request;
 
     /**
      * Collection of segment names
@@ -87,18 +87,14 @@ class ObjectModelSerializerBase
     protected $absoluteServiceUriWithSlash;
 
     /**
-     * Constructs a new instance of ObjectModelSerializerBase.
-     * 
-     * @param IService        &$service        Reference to the
-     *                                                data service instance.
-     * @param RequestDescription &$requestDescription Type instance describing 
-     *                                                the client submitted
-     *                                                request.
+     * @param IService $service Reference to the data service instance.
+     * @param RequestDescription $request Type instance describing the client submitted request.
+     *
      */
-    protected function __construct(IService &$service, RequestDescription &$requestDescription)
+    protected function __construct(IService $service, RequestDescription $request)
     {
         $this->service = $service;
-        $this->requestDescription = $requestDescription;
+        $this->request = $request;
         $this->absoluteServiceUri = $service->getHost()->getAbsoluteServiceUri()->getUrlAsString();
         $this->absoluteServiceUriWithSlash = rtrim($this->absoluteServiceUri, '/') . '/';
         $this->_segmentNames = array();
@@ -116,17 +112,15 @@ class ObjectModelSerializerBase
      * Note to method caller: Don't do urlencoding on 
      * return value of this method as it already encoded.
      * 
-     * @param mixed        &$entityInstance Entity instance for which 
-     *                                      key value needs to be prepared.
-     * @param ResourceType &$resourceType   Resource type instance containing 
-     *                                      metadata about the instance.
-     * @param string       $containerName   Name of the entity set that 
-     *                                      the entity instance belongs to.
+     * @param mixed        $entityInstance Entity instance for which key value needs to be prepared.
+     * @param ResourceType $resourceType   Resource type instance containing metadata about the instance.
+     * @param string       $containerName   Name of the entity set that the entity instance belongs to
+     *                                      .
      * 
-     * @return string      Key for the given resource, with values 
-     * encoded for use in a URI.
+     * @return string      Key for the given resource, with values encoded for use in a URI
+     * .
      */
-    protected function getEntryInstanceKey(&$entityInstance, ResourceType &$resourceType, $containerName)
+    protected function getEntryInstanceKey($entityInstance, ResourceType $resourceType, $containerName)
     {
         $keyProperties = $resourceType->getKeyProperties();
         $this->assert(count($keyProperties) != 0, 'count($keyProperties) != 0');
@@ -134,10 +128,7 @@ class ObjectModelSerializerBase
         $comma = null;
         foreach ($keyProperties as $keyName => $resourceProperty) {
             $keyType = $resourceProperty->getInstanceType();            
-            $this->assert(
-                array_search('POData\Providers\Metadata\Type\IType', class_implements($keyType)) !== false, 
-                'array_search(\'POData\Providers\Metadata\Type\IType\', class_implements($keyType)) !== false'
-            );
+            $this->assert($keyType instanceof IType, '$keyType instanceof IType');
 
             $keyValue = $this->getPropertyValue($entityInstance, $resourceType, $resourceProperty);
             if (is_null($keyValue)) {
@@ -156,26 +147,21 @@ class ObjectModelSerializerBase
     /**
      * Get the value of a given property from an instance.
      * 
-     * @param mixed            &$object           Instance of a type which 
-     *                                            contains this property. 
-     * @param ResourceType     &$resourceType     Resource type instance 
-     *                                            containing metadata about 
-     *                                            the instance.
-     * @param ResourceProperty &$resourceProperty Resource property instance 
-     *                                            containing metadata about the 
-     *                                            property whose value 
-     *                                            to be retrieved.
-     * 
+     * @param mixed $entity Instance of a type which contains this property.
+     * @param ResourceType $resourceType Resource type instance containing metadata about the instance.
+     * @param ResourceProperty $resourceProperty Resource property instance containing metadata about the property whose value to be retrieved.
+     *
      * @return mixed The value of the given property.
      * 
-     * @throws ODataException If reflection exception occured while trying to access the property.
+     * @throws ODataException If reflection exception occurred while trying to access the property.
      *
      */
-    protected function getPropertyValue(&$object, ResourceType &$resourceType, ResourceProperty &$resourceProperty)
+    protected function getPropertyValue($entity, ResourceType $resourceType, ResourceProperty $resourceProperty)
     {
         try {
-			$reflectionProperty = new \ReflectionProperty($object, $resourceProperty->getName());
-	        return $reflectionProperty->getValue($object);
+	        //Is this slow?  See #88
+			$reflectionProperty = new \ReflectionProperty($entity, $resourceProperty->getName());
+	        return $reflectionProperty->getValue($entity);
         } catch (\ReflectionException $reflectionException) {
             ODataException::createInternalServerError(
                 Messages::objectModelSerializerFailedToAccessProperty(
@@ -195,7 +181,7 @@ class ObjectModelSerializerBase
     {
         $count = count($this->_segmentResourceSetWrappers);
         if ($count == 0) {
-            return $this->requestDescription->getTargetResourceSetWrapper();
+            return $this->request->getTargetResourceSetWrapper();
         } else {
             return $this->_segmentResourceSetWrappers[$count - 1];
         }
@@ -216,25 +202,23 @@ class ObjectModelSerializerBase
     /**
      * Returns the etag for the given resource.
      * 
-     * @param mixed        &$entryObject  Resource for which etag value 
+     * @param mixed        $entryObject  Resource for which etag value
      *                                    needs to be returned
-     * @param ResourceType &$resourceType Resource type of the $entryObject
+     * @param ResourceType $resourceType Resource type of the $entryObject
      * 
      * @return string|null ETag value for the given resource 
      * (with values encoded for use in a URI)
      * if there are etag properties, NULL if there is no etag property.
      */
-    protected function getETagForEntry(&$entryObject, ResourceType &$resourceType)
+    protected function getETagForEntry($entryObject, ResourceType $resourceType)
     {
         $eTag = null;
         $comma = null;
         foreach ($resourceType->getETagProperties() as $eTagProperty) {
             $type = $eTagProperty->getInstanceType();
             $this->assert(
-                !is_null($type) 
-                && array_search('POData\Providers\Metadata\Type\IType', class_implements($type)) !== false,
-                '!is_null($type) 
-                && array_search(\'POData\Providers\Metadata\Type\IType\', class_implements($type)) !== false'
+                !is_null($type) && $type instanceof IType,
+                '!is_null($type) && $type instanceof IType'
             );
             $value = $this->getPropertyValue($entryObject, $resourceType, $eTagProperty);
             if (is_null($value)) {
@@ -267,8 +251,8 @@ class ObjectModelSerializerBase
      */
     protected function pushSegmentForRoot()
     {
-        $segmentName = $this->requestDescription->getContainerName();
-        $segmentResourceSetWrapper = $this->requestDescription->getTargetResourceSetWrapper();
+        $segmentName = $this->request->getContainerName();
+        $segmentResourceSetWrapper = $this->request->getTargetResourceSetWrapper();
         return $this->_pushSegment($segmentName, $segmentResourceSetWrapper);
     }
 
@@ -337,7 +321,7 @@ class ObjectModelSerializerBase
      */
     protected function getCurrentExpandedProjectionNode()
     {
-        $expandedProjectionNode = $this->requestDescription->getRootProjectionNode();
+        $expandedProjectionNode = $this->request->getRootProjectionNode();
         if (is_null($expandedProjectionNode)) {
             return null;
         } else {
@@ -401,7 +385,7 @@ class ObjectModelSerializerBase
      */
     private function _pushSegment($segmentName, ResourceSetWrapper &$resourceSetWrapper)
     {
-        $rootProjectionNode = $this->requestDescription->getRootProjectionNode();
+        $rootProjectionNode = $this->request->getRootProjectionNode();
         // Even though there is no expand in the request URI, still we need to push
         // the segment information if we need to count 
         //the number of entities written.
@@ -485,9 +469,9 @@ class ObjectModelSerializerBase
             }            
         }
 
-        $topCountValue = $this->requestDescription->getTopOptionCount();
+        $topCountValue = $this->request->getTopOptionCount();
         if (!is_null($topCountValue)) {
-            $remainingCount  = $topCountValue - $this->requestDescription->getTopCount();
+            $remainingCount  = $topCountValue - $this->request->getTopCount();
             if (!is_null($queryParameterString)) {
                 $queryParameterString .= '&';
             }
@@ -572,7 +556,7 @@ class ObjectModelSerializerBase
 
         if ($recursionLevel == 1) {
             //presence of $top option affect next link for root container
-            $topValueCount = $this->requestDescription->getTopOptionCount();
+            $topValueCount = $this->request->getTopOptionCount();
             if (!is_null($topValueCount) && ($topValueCount <= $pageSize)) {
                  return false;
             }            

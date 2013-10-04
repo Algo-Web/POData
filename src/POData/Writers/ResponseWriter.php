@@ -7,7 +7,7 @@ use POData\Common\ODataConstants;
 use POData\ResponseFormat;
 use POData\IService;
 use POData\UriProcessor\RequestDescription;
-use POData\UriProcessor\ResourcePathProcessor\SegmentParser\RequestTargetKind;
+use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
 use POData\Writers\Metadata\MetadataWriter;
 
 
@@ -51,7 +51,7 @@ class ResponseWriter
             $responseBody = utf8_encode($requestDescription->getTargetResult());
         } else if ($responseFormat == ResponseFormat::BINARY()) {
             // Binary property or media resource
-            if ($requestDescription->getTargetKind() == RequestTargetKind::MEDIA_RESOURCE) {
+            if ($requestDescription->getTargetKind() == TargetKind::MEDIA_RESOURCE) {
 	            $result = $requestDescription->getTargetResult();
 	            $streamInfo =  $requestDescription->getResourceStreamInfo();
 	            $provider = $service->getStreamProviderWrapper();

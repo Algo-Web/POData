@@ -30,9 +30,6 @@ class ProvidersWrapperTest extends \PHPUnit_Framework_TestCase
         $x = NorthWindMetadata::Create();
     }
 
-    protected function tearDown()
-    {
-    }
 
     public function testContainerNameAndNameSpace1()
     {
@@ -175,7 +172,7 @@ class ProvidersWrapperTest extends \PHPUnit_Framework_TestCase
         $customerEntityType = $providersWrapper->resolveResourceType('Customer');
         $this->assertNotNull($customerEntityType);
         $derivedTypes = $providersWrapper->getDerivedTypes($customerEntityType);
-        $this->assertNull($derivedTypes);
+        $this->assertEquals(array(), $derivedTypes);
 
     }
 

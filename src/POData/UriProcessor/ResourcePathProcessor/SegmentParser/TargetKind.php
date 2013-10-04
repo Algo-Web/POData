@@ -3,10 +3,10 @@
 namespace POData\UriProcessor\ResourcePathProcessor\SegmentParser;
 
 /**
- * Class RequestTargetKind
+ * Class TargetKind
  * @package POData\UriProcessor\ResourcePathProcessor\SegmentParser
  */
-class RequestTargetKind
+class TargetKind
 {
     /**
      * Nothing specific is being requested.

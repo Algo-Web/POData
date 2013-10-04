@@ -3,8 +3,8 @@
 namespace POData\UriProcessor\ResourcePathProcessor\SegmentParser;
 
 use POData\Providers\Metadata\ResourceTypeKind;
-use POData\UriProcessor\ResourcePathProcessor\SegmentParser\RequestTargetSource;
-use POData\UriProcessor\ResourcePathProcessor\SegmentParser\RequestTargetKind;
+use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetSource;
+use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
 use POData\Configuration\EntitySetRights;
 use POData\Providers\ProvidersWrapper;
 use POData\Configuration\ServiceConfiguration;
@@ -38,12 +38,12 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
     public function testEmptySegments()
     {
         $segments = array();
-        $segmentDescriptors = SegmentParser::parseRequestUriSegements($segments, $this->providersWrapper);
+        $segmentDescriptors = SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
         //No segment means request for service directory
         $this->assertTrue(!empty($segmentDescriptors));
         $this->assertEquals(count($segmentDescriptors), 1);
-        $this->assertEquals($segmentDescriptors[0]->getTargetKind(), RequestTargetKind::SERVICE_DIRECTORY);
-        $this->assertEquals($segmentDescriptors[0]->getTargetSource(), RequestTargetSource::NONE);
+        $this->assertEquals($segmentDescriptors[0]->getTargetKind(), TargetKind::SERVICE_DIRECTORY);
+        $this->assertEquals($segmentDescriptors[0]->getTargetSource(), TargetSource::NONE);
     }
 
     public function testExtractionOfIdentifierAndPredicate()
@@ -51,7 +51,7 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
         //test case for SegmentParser::_extractSegmentIdentifierAndKeyPredicate
         $segments = array('Customers(\'ALFKI\'');
         try {
-            $segmentDescriptors = SegmentParser::parseRequestUriSegements($segments, $this->providersWrapper);
+            $segmentDescriptors = SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
             $this->fail('An expected ODataException query syntax error for \'Customers(\ has not been thrown');
         } catch (ODataException $exception) {
             $this->assertEquals($exception->getMessage(), 'Bad Request - Error in query syntax');
@@ -63,13 +63,13 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
     {
         //Test for $metadata option
         $segments = array('$metadata');
-        $segmentDescriptors = SegmentParser::parseRequestUriSegements($segments, $this->providersWrapper);
+        $segmentDescriptors = SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
         $this->assertEquals($segmentDescriptors[0]->getIdentifier(), '$metadata');
 
         $segments = array('$metadata(123)');
 
         try {
-            $segmentDescriptors = SegmentParser::parseRequestUriSegements($segments, $this->providersWrapper);
+            $segmentDescriptors = SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
             $this->fail('An expected ODataException query syntax error for $metadata(123) has not been thrown');
         } catch (ODataException $exception) {
             $this->assertEquals($exception->getMessage(), 'Bad Request - Error in query syntax');
@@ -77,11 +77,11 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
 
         //Test for $batch option
         $segments = array('$batch');
-        $segmentDescriptors = SegmentParser::parseRequestUriSegements($segments, $this->providersWrapper);
+        $segmentDescriptors = SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
         $this->assertEquals($segmentDescriptors[0]->getIdentifier(), '$batch');
         $segments = array('$batch(\'XYZ\')');
         try {
-            $segmentDescriptors = SegmentParser::parseRequestUriSegements($segments, $this->providersWrapper);
+            $segmentDescriptors = SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
             $this->fail('An expected ODataException query syntax error for $batch(\'XYZ\') has not been thrown');
         } catch (ODataException $exception) {
             $this->assertEquals($exception->getMessage(), 'Bad Request - Error in query syntax');
@@ -90,7 +90,7 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
         //Test for $links option
         $segments = array('$links');
         try {
-            $segmentDescriptors = SegmentParser::parseRequestUriSegements($segments, $this->providersWrapper);
+            $segmentDescriptors = SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
             $this->fail('An expected ODataException query syntax error for \'$links\'');
         } catch (ODataException $exception) {
             $this->assertStringStartsWith('The request URI is not valid, the segment \'$links\' cannot be applied', $exception->getMessage());
@@ -99,7 +99,7 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
         //Test for $count option
         $segments = array('$count');
         try {
-            $segmentDescriptors = SegmentParser::parseRequestUriSegements($segments, $this->providersWrapper);
+            $segmentDescriptors = SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
             $this->fail('An expected ODataException query syntax error for \'$count\'');
         } catch (ODataException $exception) {
             $this->assertStringStartsWith('The request URI is not valid, the segment \'$count\' cannot be applied', $exception->getMessage());
@@ -108,7 +108,7 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
         //Test for unknown entity set
         $segments = array('Customers1(\'ALFKI\')');
         try {
-            $segmentDescriptors = SegmentParser::parseRequestUriSegements($segments, $this->providersWrapper);
+            $segmentDescriptors = SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
             $this->fail('An expected Resource not found ODataException for \'Customers1\' has not been thrown');
         } catch (ODataException $exception) {
             $this->assertEquals('Resource not found for the segment \'Customers1\'', $exception->getMessage());
@@ -117,7 +117,7 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
 
         //test with single positional value
         $segments = array("Employees('AF123')");
-        $segmentDescriptors = SegmentParser::parseRequestUriSegements($segments, $this->providersWrapper);
+        $segmentDescriptors = SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
         $this->assertEquals(count($segmentDescriptors), 1);
         $this->assertTrue($segmentDescriptors[0]->isSingleResult());
         $this->assertEquals($segmentDescriptors[0]->getIdentifier(), 'Employees');
@@ -127,13 +127,13 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(count($namedKeys), 1);
         $this->assertTrue(array_key_exists('EmployeeID', $namedKeys));
         $this->assertEquals($namedKeys['EmployeeID'][0], '\'AF123\'');
-        $this->assertEquals($segmentDescriptors[0]->getTargetSource(), RequestTargetSource::ENTITY_SET);
-        $this->assertEquals($segmentDescriptors[0]->getTargetKind(), RequestTargetKind::RESOURCE);
+        $this->assertEquals($segmentDescriptors[0]->getTargetSource(), TargetSource::ENTITY_SET);
+        $this->assertEquals($segmentDescriptors[0]->getTargetKind(), TargetKind::RESOURCE);
 
         //test with multiple positional values
         $segments = array("Customers('ALFKI', guid'15b242e7-52eb-46bd-8f0e-6568b72cd9a6')");
         try {
-            $segmentDescriptors = SegmentParser::parseRequestUriSegements($segments, $this->providersWrapper);
+            $segmentDescriptors = SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
             $this->fail('An expected ODataException for multiple positional values has not been thrown');
         } catch (ODataException $exception) {
             $this->assertStringStartsWith('Segments with multiple key values must specify them in \'name=value\' form', $exception->getMessage());
@@ -141,7 +141,7 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
 
         //test with multiple named values
         $segments = array("Customers(CustomerID='ALFKI', CustomerGuid=guid'15b242e7-52eb-46bd-8f0e-6568b72cd9a6')");
-        $segmentDescriptors = SegmentParser::parseRequestUriSegements($segments, $this->providersWrapper);
+        $segmentDescriptors = SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
         $this->assertEquals(count($segmentDescriptors), 1);
         $resourceSetWrapper = $segmentDescriptors[0]->getTargetResourceSetWrapper();
         $this->assertNotNull($resourceSetWrapper);
@@ -155,12 +155,12 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($namedKeys['CustomerGuid'][0], '\'15b242e7-52eb-46bd-8f0e-6568b72cd9a6\'');
         //test for multiple results
         $segments = array("Orders");
-        $segmentDescriptors = SegmentParser::parseRequestUriSegements($segments, $this->providersWrapper);
+        $segmentDescriptors = SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
         $this->assertEquals(count($segmentDescriptors), 1);
         $this->assertFalse($segmentDescriptors[0]->isSingleResult());
         //test for multiple results, Orders(   ) is also valid segment for all Orders
         $segments = array("Orders(   )");
-        $segmentDescriptors = SegmentParser::parseRequestUriSegements($segments, $this->providersWrapper);
+        $segmentDescriptors = SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
         $this->assertEquals(count($segmentDescriptors), 1);
         $this->assertFalse($segmentDescriptors[0]->isSingleResult());
         //test for FORBIDDEN
@@ -172,7 +172,7 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
         $segments = array("Employees('AF123')");
 
         try {
-            SegmentParser::parseRequestUriSegements($segments, $providersWrapper);
+            SegmentParser::parseRequestUriSegments($segments, $providersWrapper);
             $this->fail('An expected Forbidden ODataException has not been thrown');
         } catch (ODataException $exception) {
             $this->assertEquals('Resource not found for the segment \'Employees\'', $exception->getMessage());
@@ -184,7 +184,7 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
     {
         $segments = array('$metadata', "Customers('ALFKI')");
         try {
-            SegmentParser::parseRequestUriSegements($segments, $this->providersWrapper);
+            SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
             $this->fail('An expected ODataException for invalid uri ($metadata/Customers(\'ALFKI\')) has not been thrown');
         } catch (ODataException $exception) {
             $this->assertStringStartsWith('The request URI is not valid. The segment \'$metadata\' must be the last segment in the URI', $exception->getMessage());
@@ -193,7 +193,7 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
 
         $segments = array('$batch', "Employees('ID234')");
         try {
-            SegmentParser::parseRequestUriSegements($segments, $this->providersWrapper);
+            SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
             $this->fail('An expected ODataException for invalid uri ($metadata/Employees(\'ID234\')) has not been thrown');
         } catch (ODataException $exception) {
             $this->assertStringStartsWith('The request URI is not valid. The segment \'$batch\' must be the last segment in the URI', $exception->getMessage());
@@ -207,11 +207,11 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
             "Customers(CustomerID='ALFKI', CustomerGuid=guid'15b242e7-52eb-46bd-8f0e-6568b72cd9a6')",
             "CustomerName"
         );
-        $segmentDescriptors = SegmentParser::parseRequestUriSegements($segments, $this->providersWrapper);
+        $segmentDescriptors = SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
         $this->assertEquals(count($segmentDescriptors), 2);
         $this->assertEquals($segmentDescriptors[1]->getIdentifier(), 'CustomerName');
-        $this->assertEquals($segmentDescriptors[1]->getTargetKind(), RequestTargetKind::PRIMITIVE);
-        $this->assertEquals($segmentDescriptors[1]->getTargetSource(), RequestTargetSource::PROPERTY);
+        $this->assertEquals($segmentDescriptors[1]->getTargetKind(), TargetKind::PRIMITIVE);
+        $this->assertEquals($segmentDescriptors[1]->getTargetSource(), TargetSource::PROPERTY);
         $this->assertNotNull($segmentDescriptors[1]->getProjectedProperty());
         $this->assertNull($segmentDescriptors[1]->getTargetResourceSetWrapper());
 
@@ -220,7 +220,7 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
             "CustomerName",
             "CustomerID");
         try {
-            SegmentParser::parseRequestUriSegements($segments, $this->providersWrapper);
+            SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
             $this->fail('An expected ODataException that indicates only allowed segment \'$value\' after primitve property has not been thrown');
         } catch (ODataException $exception) {
             $this->assertStringEndsWith('Since the segment \'CustomerName\' refers to a primitive type property, the only supported value from the next segment is \'$value\'.', $exception->getMessage());
@@ -230,26 +230,26 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
         $segments = array("Customers(CustomerID='ALFKI', CustomerGuid=guid'15b242e7-52eb-46bd-8f0e-6568b72cd9a6')",
                           "CustomerName",
                           '$value');
-        $segmentDescriptors = SegmentParser::parseRequestUriSegements($segments, $this->providersWrapper);
+        $segmentDescriptors = SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
         $this->assertEquals(count($segmentDescriptors), 3);
         /** check first segment */
         $this->assertEquals($segmentDescriptors[0]->getIdentifier(), 'Customers');
-        $this->assertEquals($segmentDescriptors[0]->getTargetKind(), RequestTargetKind::RESOURCE);
-        $this->assertEquals($segmentDescriptors[0]->getTargetSource(), RequestTargetSource::ENTITY_SET);
+        $this->assertEquals($segmentDescriptors[0]->getTargetKind(), TargetKind::RESOURCE);
+        $this->assertEquals($segmentDescriptors[0]->getTargetSource(), TargetSource::ENTITY_SET);
         $this->assertNull($segmentDescriptors[0]->getProjectedProperty());
         $this->assertTrue($segmentDescriptors[2]->isSingleResult());
         $this->assertNotNull($segmentDescriptors[0]->getTargetResourceSetWrapper());
         /** check second segment */
         $this->assertEquals($segmentDescriptors[1]->getIdentifier(), 'CustomerName');
-        $this->assertEquals($segmentDescriptors[1]->getTargetKind(), RequestTargetKind::PRIMITIVE);
-        $this->assertEquals($segmentDescriptors[1]->getTargetSource(), RequestTargetSource::PROPERTY);
+        $this->assertEquals($segmentDescriptors[1]->getTargetKind(), TargetKind::PRIMITIVE);
+        $this->assertEquals($segmentDescriptors[1]->getTargetSource(), TargetSource::PROPERTY);
         $this->assertNotNull($segmentDescriptors[1]->getProjectedProperty());
         $this->assertTrue($segmentDescriptors[2]->isSingleResult());
         $this->assertNull($segmentDescriptors[1]->getTargetResourceSetWrapper());
         /** check third segment */
         $this->assertEquals($segmentDescriptors[2]->getIdentifier(), '$value');
-        $this->assertEquals($segmentDescriptors[2]->getTargetKind(), RequestTargetKind::PRIMITIVE_VALUE);
-        $this->assertEquals($segmentDescriptors[2]->getTargetSource(), RequestTargetSource::PROPERTY);
+        $this->assertEquals($segmentDescriptors[2]->getTargetKind(), TargetKind::PRIMITIVE_VALUE);
+        $this->assertEquals($segmentDescriptors[2]->getTargetSource(), TargetSource::PROPERTY);
         $this->assertNotNull($segmentDescriptors[2]->getProjectedProperty());
         $this->assertTrue($segmentDescriptors[2]->isSingleResult());
         $this->assertNull($segmentDescriptors[2]->getTargetResourceSetWrapper());
@@ -262,7 +262,7 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
         $segments = array("Customers(CustomerID='ALFKI', CustomerGuid=guid'15b242e7-52eb-46bd-8f0e-6568b72cd9a6')",
             '$links');
         try {
-            SegmentParser::parseRequestUriSegements($segments, $this->providersWrapper);
+            SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
             $this->fail('An expected ODataException missing segment after $links segment has not been thrown');
         } catch (ODataException $exception) {
             $this->assertStringEndsWith('must a segment specified after the \'$links\' segment and the segment must refer to a entity resource.', $exception->getMessage());
@@ -274,7 +274,7 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
             'Orders',
             'OrderID');
         try {
-            SegmentParser::parseRequestUriSegements($segments, $this->providersWrapper);
+            SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
             $this->fail('An expected ODataException post post segment has not been thrown');
         } catch (ODataException $exception) {
             $this->assertStringEndsWith('The segment \'OrderID\' is not valid. Since the uri contains the $links segment, there must be only one segment specified after that.', $exception->getMessage());
@@ -285,7 +285,7 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
             '$links(123)',
             'Orders');
         try {
-            SegmentParser::parseRequestUriSegements($segments, $this->providersWrapper);
+            SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
             $this->fail('An expected ODataException bad request for $links(123) has not been thrown');
         } catch (ODataException $exception) {
             $this->assertEquals('Bad Request - Error in query syntax', $exception->getMessage());
@@ -296,7 +296,7 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
             '$links',
             'CustomerName');
         try {
-            SegmentParser::parseRequestUriSegements($segments, $this->providersWrapper);
+            SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
             $this->fail('An expected ODataException for non-navigation followed by $links has not been thrown');
         } catch (ODataException $exception) {
             $this->assertStringEndsWith('The segment \'CustomerName\' must refer to a navigation property since the previous segment identifier is \'$links\'.', $exception->getMessage());
@@ -307,7 +307,7 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
             '$links',
             'Orders');
         try {
-            SegmentParser::parseRequestUriSegements($segments, $this->providersWrapper);
+            SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
             $this->fail('An expected ODataException intermediate collection in uri not thrown');
         } catch (ODataException $exception) {
             $this->assertStringEndsWith('Since the segment \'Customers\' refers to a collection, this must be the last segment in the request URI. All intermediate segments must refer to a single resource.', $exception->getMessage());
@@ -317,25 +317,25 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
         $segments = array("Customers(CustomerID='ALFKI', CustomerGuid=guid'15b242e7-52eb-46bd-8f0e-6568b72cd9a6')",
                               '$links',
                               'Orders');
-        $segmentDescriptors = SegmentParser::parseRequestUriSegements($segments, $this->providersWrapper);
+        $segmentDescriptors = SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
         /** check first segment */
         $this->assertEquals($segmentDescriptors[0]->getIdentifier(), 'Customers');
-        $this->assertEquals($segmentDescriptors[0]->getTargetKind(), RequestTargetKind::RESOURCE);
-        $this->assertEquals($segmentDescriptors[0]->getTargetSource(), RequestTargetSource::ENTITY_SET);
+        $this->assertEquals($segmentDescriptors[0]->getTargetKind(), TargetKind::RESOURCE);
+        $this->assertEquals($segmentDescriptors[0]->getTargetSource(), TargetSource::ENTITY_SET);
         $this->assertNull($segmentDescriptors[0]->getProjectedProperty());
         $this->assertTrue($segmentDescriptors[0]->isSingleResult());
         $this->assertNotNull($segmentDescriptors[0]->getTargetResourceSetWrapper());
         /** check second segment */
         $this->assertEquals($segmentDescriptors[1]->getIdentifier(), '$links');
-        $this->assertEquals($segmentDescriptors[1]->getTargetKind(), RequestTargetKind::LINK);
-        $this->assertEquals($segmentDescriptors[1]->getTargetSource(), RequestTargetSource::ENTITY_SET);
+        $this->assertEquals($segmentDescriptors[1]->getTargetKind(), TargetKind::LINK);
+        $this->assertEquals($segmentDescriptors[1]->getTargetSource(), TargetSource::ENTITY_SET);
         $this->assertNull($segmentDescriptors[1]->getProjectedProperty());
         $this->assertTrue($segmentDescriptors[1]->isSingleResult());
         $this->assertNotNull($segmentDescriptors[1]->getTargetResourceSetWrapper());
         /** check third segment */
         $this->assertEquals($segmentDescriptors[2]->getIdentifier(), 'Orders');
-        $this->assertEquals($segmentDescriptors[2]->getTargetKind(), RequestTargetKind::RESOURCE);
-        $this->assertEquals($segmentDescriptors[2]->getTargetSource(), RequestTargetSource::PROPERTY);
+        $this->assertEquals($segmentDescriptors[2]->getTargetKind(), TargetKind::RESOURCE);
+        $this->assertEquals($segmentDescriptors[2]->getTargetSource(), TargetSource::PROPERTY);
         $this->assertNotNull($segmentDescriptors[2]->getProjectedProperty());
         $this->assertFalse($segmentDescriptors[2]->isSingleResult());
         $this->assertNotNull($segmentDescriptors[2]->getTargetResourceSetWrapper());
@@ -344,26 +344,26 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
         $segments = array("Customers(CustomerID='ALFKI', CustomerGuid=guid'15b242e7-52eb-46bd-8f0e-6568b72cd9a6')",
                               '$links',
                               'Orders(123)');
-        $segmentDescriptors = SegmentParser::parseRequestUriSegements($segments, $this->providersWrapper);
+        $segmentDescriptors = SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
         $this->assertEquals(count($segmentDescriptors), 3);
         /** check first segment */
         $this->assertEquals($segmentDescriptors[0]->getIdentifier(), 'Customers');
-        $this->assertEquals($segmentDescriptors[0]->getTargetKind(), RequestTargetKind::RESOURCE);
-        $this->assertEquals($segmentDescriptors[0]->getTargetSource(), RequestTargetSource::ENTITY_SET);
+        $this->assertEquals($segmentDescriptors[0]->getTargetKind(), TargetKind::RESOURCE);
+        $this->assertEquals($segmentDescriptors[0]->getTargetSource(), TargetSource::ENTITY_SET);
         $this->assertNull($segmentDescriptors[0]->getProjectedProperty());
         $this->assertTrue($segmentDescriptors[0]->isSingleResult());
         $this->assertNotNull($segmentDescriptors[0]->getTargetResourceSetWrapper());
         /** check second segment */
         $this->assertEquals($segmentDescriptors[1]->getIdentifier(), '$links');
-        $this->assertEquals($segmentDescriptors[1]->getTargetKind(), RequestTargetKind::LINK);
-        $this->assertEquals($segmentDescriptors[1]->getTargetSource(), RequestTargetSource::ENTITY_SET);
+        $this->assertEquals($segmentDescriptors[1]->getTargetKind(), TargetKind::LINK);
+        $this->assertEquals($segmentDescriptors[1]->getTargetSource(), TargetSource::ENTITY_SET);
         $this->assertNull($segmentDescriptors[1]->getProjectedProperty());
         $this->assertTrue($segmentDescriptors[1]->isSingleResult());
         $this->assertNotNull($segmentDescriptors[1]->getTargetResourceSetWrapper());
         /** check third segment */
         $this->assertEquals($segmentDescriptors[2]->getIdentifier(), 'Orders');
-        $this->assertEquals($segmentDescriptors[2]->getTargetKind(), RequestTargetKind::RESOURCE);
-        $this->assertEquals($segmentDescriptors[2]->getTargetSource(), RequestTargetSource::PROPERTY);
+        $this->assertEquals($segmentDescriptors[2]->getTargetKind(), TargetKind::RESOURCE);
+        $this->assertEquals($segmentDescriptors[2]->getTargetSource(), TargetSource::PROPERTY);
         $this->assertNotNull($segmentDescriptors[2]->getProjectedProperty());
         $this->assertTrue($segmentDescriptors[2]->isSingleResult());
         $this->assertNotNull($segmentDescriptors[2]->getTargetResourceSetWrapper());
@@ -378,34 +378,34 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
                               '$links',
                               'Orders',
                               '$count');
-        $segmentDescriptors = SegmentParser::parseRequestUriSegements($segments, $this->providersWrapper);
+        $segmentDescriptors = SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
         $this->assertEquals(count($segmentDescriptors), 4);
         /** check first segment */
         $this->assertEquals($segmentDescriptors[0]->getIdentifier(), 'Customers');
-        $this->assertEquals($segmentDescriptors[0]->getTargetKind(), RequestTargetKind::RESOURCE);
-        $this->assertEquals($segmentDescriptors[0]->getTargetSource(), RequestTargetSource::ENTITY_SET);
+        $this->assertEquals($segmentDescriptors[0]->getTargetKind(), TargetKind::RESOURCE);
+        $this->assertEquals($segmentDescriptors[0]->getTargetSource(), TargetSource::ENTITY_SET);
         $this->assertNull($segmentDescriptors[0]->getProjectedProperty());
         $this->assertTrue($segmentDescriptors[0]->isSingleResult());
         $this->assertNotNull($segmentDescriptors[0]->getTargetResourceSetWrapper());
         /** check second segment */
         $this->assertEquals($segmentDescriptors[1]->getIdentifier(), '$links');
-        $this->assertEquals($segmentDescriptors[1]->getTargetKind(), RequestTargetKind::LINK);
-        $this->assertEquals($segmentDescriptors[1]->getTargetSource(), RequestTargetSource::ENTITY_SET);
+        $this->assertEquals($segmentDescriptors[1]->getTargetKind(), TargetKind::LINK);
+        $this->assertEquals($segmentDescriptors[1]->getTargetSource(), TargetSource::ENTITY_SET);
         $this->assertNull($segmentDescriptors[1]->getProjectedProperty());
         $this->assertTrue($segmentDescriptors[1]->isSingleResult());
         $this->assertNotNull($segmentDescriptors[1]->getTargetResourceSetWrapper());
         /** check third segment */
         $this->assertEquals($segmentDescriptors[2]->getIdentifier(), 'Orders');
-        $this->assertEquals($segmentDescriptors[2]->getTargetKind(), RequestTargetKind::RESOURCE);
-        $this->assertEquals($segmentDescriptors[2]->getTargetSource(), RequestTargetSource::PROPERTY);
+        $this->assertEquals($segmentDescriptors[2]->getTargetKind(), TargetKind::RESOURCE);
+        $this->assertEquals($segmentDescriptors[2]->getTargetSource(), TargetSource::PROPERTY);
         $this->assertNotNull($segmentDescriptors[2]->getProjectedProperty());
         $this->assertFalse($segmentDescriptors[2]->isSingleResult());
         $this->assertNotNull($segmentDescriptors[2]->getTargetResourceSetWrapper());
         $this->assertNull($segmentDescriptors[2]->getKeyDescriptor());
         /** check fourth segment */
         $this->assertEquals($segmentDescriptors[3]->getIdentifier(), '$count');
-        $this->assertEquals($segmentDescriptors[3]->getTargetKind(), RequestTargetKind::PRIMITIVE_VALUE);
-        $this->assertEquals($segmentDescriptors[3]->getTargetSource(), RequestTargetSource::PROPERTY);
+        $this->assertEquals($segmentDescriptors[3]->getTargetKind(), TargetKind::PRIMITIVE_VALUE);
+        $this->assertEquals($segmentDescriptors[3]->getTargetSource(), TargetSource::PROPERTY);
         $this->assertNull($segmentDescriptors[3]->getProjectedProperty());
         $this->assertTrue($segmentDescriptors[3]->isSingleResult());
         $this->assertNotNull($segmentDescriptors[3]->getTargetResourceSetWrapper());
@@ -418,26 +418,26 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
         $segments = array("Customers(CustomerID='ALFKI', CustomerGuid=guid'15b242e7-52eb-46bd-8f0e-6568b72cd9a6')",
                           'Orders',
                           '$count');
-        $segmentDescriptors = SegmentParser::parseRequestUriSegements($segments, $this->providersWrapper);
+        $segmentDescriptors = SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
         $this->assertEquals(count($segmentDescriptors), 3);
         /** check first segment */
         $this->assertEquals($segmentDescriptors[0]->getIdentifier(), 'Customers');
-        $this->assertEquals($segmentDescriptors[0]->getTargetKind(), RequestTargetKind::RESOURCE);
-        $this->assertEquals($segmentDescriptors[0]->getTargetSource(), RequestTargetSource::ENTITY_SET);
+        $this->assertEquals($segmentDescriptors[0]->getTargetKind(), TargetKind::RESOURCE);
+        $this->assertEquals($segmentDescriptors[0]->getTargetSource(), TargetSource::ENTITY_SET);
         $this->assertNull($segmentDescriptors[0]->getProjectedProperty());
         $this->assertTrue($segmentDescriptors[0]->isSingleResult());
         $this->assertNotNull($segmentDescriptors[0]->getTargetResourceSetWrapper());
         /** check second segment */
         $this->assertEquals($segmentDescriptors[1]->getIdentifier(), 'Orders');
-        $this->assertEquals($segmentDescriptors[1]->getTargetKind(), RequestTargetKind::RESOURCE);
-        $this->assertEquals($segmentDescriptors[1]->getTargetSource(), RequestTargetSource::PROPERTY);
+        $this->assertEquals($segmentDescriptors[1]->getTargetKind(), TargetKind::RESOURCE);
+        $this->assertEquals($segmentDescriptors[1]->getTargetSource(), TargetSource::PROPERTY);
         $this->assertNotNull($segmentDescriptors[1]->getProjectedProperty());
         $this->assertFalse($segmentDescriptors[1]->isSingleResult());
         $this->assertNotNull($segmentDescriptors[1]->getTargetResourceSetWrapper());
         /** check third segment */
         $this->assertEquals($segmentDescriptors[2]->getIdentifier(), '$count');
-        $this->assertEquals($segmentDescriptors[2]->getTargetKind(), RequestTargetKind::PRIMITIVE_VALUE);
-        $this->assertEquals($segmentDescriptors[2]->getTargetSource(), RequestTargetSource::PROPERTY);
+        $this->assertEquals($segmentDescriptors[2]->getTargetKind(), TargetKind::PRIMITIVE_VALUE);
+        $this->assertEquals($segmentDescriptors[2]->getTargetSource(), TargetSource::PROPERTY);
         $this->assertNull($segmentDescriptors[2]->getProjectedProperty());
         $this->assertTrue($segmentDescriptors[2]->isSingleResult());
         $this->assertNotNull($segmentDescriptors[2]->getTargetResourceSetWrapper());
@@ -448,7 +448,7 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
             'Orders(123)',
             '$count');
         try {
-            SegmentParser::parseRequestUriSegements($segments, $this->providersWrapper);
+            SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
             $this->fail('An expected ODataException singleton followed by $count has not been thrown');
         } catch (ODataException $exception) {
             $this->assertStringEndsWith('since the segment \'Orders\' refers to a singleton, and the segment \'$count\' can only follow a resource collection.', $exception->getMessage());
@@ -459,7 +459,7 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
             'CustomerID',
             '$count');
         try {
-            SegmentParser::parseRequestUriSegements($segments, $this->providersWrapper);
+            SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
             $this->fail('An expected ODataException primitive followed by non $value segment has not been thrown');
         } catch (ODataException $exception) {
             $this->assertStringEndsWith('Since the segment \'CustomerID\' refers to a primitive type property, the only supported value from the next segment is \'$value\'.', $exception->getMessage());
@@ -471,7 +471,7 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
             'Address',
             '$count');
         try {
-            SegmentParser::parseRequestUriSegements($segments, $this->providersWrapper);
+            SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
             $this->fail('An expected ODataException non resource followed by $count segment has not been thrown');
         } catch (ODataException $exception) {
             $this->assertStringEndsWith('$count cannot be applied to the segment \'Address\' since $count can only follow a resource segment.', $exception->getMessage());
@@ -484,7 +484,7 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
             '$count',
             'OrderID');
         try {
-            SegmentParser::parseRequestUriSegements($segments, $this->providersWrapper);
+            SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
             $this->fail('An expected ODataException non resource followed by $count segment has not been thrown');
         } catch (ODataException $exception) {
             $this->assertStringStartsWith('The request URI is not valid. The segment \'$count\' must be the last segment in the URI because it is one of the following:', $exception->getMessage());
@@ -497,19 +497,19 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
         //Test complex segment
         $segments = array("Customers(CustomerID='ALFKI', CustomerGuid=guid'15b242e7-52eb-46bd-8f0e-6568b72cd9a6')",
                           'Address');
-        $segmentDescriptors = SegmentParser::parseRequestUriSegements($segments, $this->providersWrapper);
+        $segmentDescriptors = SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
         $this->assertEquals(count($segmentDescriptors), 2);
         /** check first segment */
         $this->assertEquals($segmentDescriptors[0]->getIdentifier(), 'Customers');
-        $this->assertEquals($segmentDescriptors[0]->getTargetKind(), RequestTargetKind::RESOURCE);
-        $this->assertEquals($segmentDescriptors[0]->getTargetSource(), RequestTargetSource::ENTITY_SET);
+        $this->assertEquals($segmentDescriptors[0]->getTargetKind(), TargetKind::RESOURCE);
+        $this->assertEquals($segmentDescriptors[0]->getTargetSource(), TargetSource::ENTITY_SET);
         $this->assertNull($segmentDescriptors[0]->getProjectedProperty());
         $this->assertTrue($segmentDescriptors[0]->isSingleResult());
         $this->assertNotNull($segmentDescriptors[0]->getTargetResourceSetWrapper());
         /** check second segment */
         $this->assertEquals($segmentDescriptors[1]->getIdentifier(), 'Address');
-        $this->assertEquals($segmentDescriptors[1]->getTargetKind(), RequestTargetKind::COMPLEX_OBJECT);
-        $this->assertEquals($segmentDescriptors[1]->getTargetSource(), RequestTargetSource::PROPERTY);
+        $this->assertEquals($segmentDescriptors[1]->getTargetKind(), TargetKind::COMPLEX_OBJECT);
+        $this->assertEquals($segmentDescriptors[1]->getTargetSource(), TargetSource::PROPERTY);
         $projectedProperty = $segmentDescriptors[1]->getProjectedProperty();
         $this->assertFalse(is_null($projectedProperty));
         $this->assertEquals($projectedProperty->getName(), 'Address');
@@ -519,19 +519,19 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
         $segments = array("Customers(CustomerID='ALFKI', CustomerGuid=guid'15b242e7-52eb-46bd-8f0e-6568b72cd9a6')",
                           'Address',
                           'StreetName');
-        $segmentDescriptors = SegmentParser::parseRequestUriSegements($segments, $this->providersWrapper);
+        $segmentDescriptors = SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
         $this->assertEquals(count($segmentDescriptors), 3);
         /** check first segment */
         $this->assertEquals($segmentDescriptors[0]->getIdentifier(), 'Customers');
-        $this->assertEquals($segmentDescriptors[0]->getTargetKind(), RequestTargetKind::RESOURCE);
-        $this->assertEquals($segmentDescriptors[0]->getTargetSource(), RequestTargetSource::ENTITY_SET);
+        $this->assertEquals($segmentDescriptors[0]->getTargetKind(), TargetKind::RESOURCE);
+        $this->assertEquals($segmentDescriptors[0]->getTargetSource(), TargetSource::ENTITY_SET);
         $this->assertNull($segmentDescriptors[0]->getProjectedProperty());
         $this->assertTrue($segmentDescriptors[0]->isSingleResult());
         $this->assertNotNull($segmentDescriptors[0]->getTargetResourceSetWrapper());
         /** check second segment */
         $this->assertEquals($segmentDescriptors[1]->getIdentifier(), 'Address');
-        $this->assertEquals($segmentDescriptors[1]->getTargetKind(), RequestTargetKind::COMPLEX_OBJECT);
-        $this->assertEquals($segmentDescriptors[1]->getTargetSource(), RequestTargetSource::PROPERTY);
+        $this->assertEquals($segmentDescriptors[1]->getTargetKind(), TargetKind::COMPLEX_OBJECT);
+        $this->assertEquals($segmentDescriptors[1]->getTargetSource(), TargetSource::PROPERTY);
         $projectedProperty = $segmentDescriptors[1]->getProjectedProperty();
         $this->assertFalse(is_null($projectedProperty));
         $this->assertEquals($projectedProperty->getName(), 'Address');
@@ -539,8 +539,8 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($segmentDescriptors[1]->getTargetResourceSetWrapper());
         /** check third segment */
         $this->assertEquals($segmentDescriptors[2]->getIdentifier(), 'StreetName');
-        $this->assertEquals($segmentDescriptors[2]->getTargetKind(), RequestTargetKind::PRIMITIVE);
-        $this->assertEquals($segmentDescriptors[2]->getTargetSource(), RequestTargetSource::PROPERTY);
+        $this->assertEquals($segmentDescriptors[2]->getTargetKind(), TargetKind::PRIMITIVE);
+        $this->assertEquals($segmentDescriptors[2]->getTargetSource(), TargetSource::PROPERTY);
         $projectedProperty = $segmentDescriptors[2]->getProjectedProperty();
         $this->assertFalse(is_null($projectedProperty));
         $this->assertEquals($projectedProperty->getName(), 'StreetName');
@@ -556,7 +556,7 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
             'Address',
             '$value');
         try {
-            SegmentParser::parseRequestUriSegements($segments, $this->providersWrapper);
+            SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
             $this->fail('An expected ODataException resource not found for $value segment has no been thrown');
         } catch (ODataException $exception) {
             $this->assertEquals('Resource not found for the segment \'$value\'', $exception->getMessage());
@@ -567,7 +567,7 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
             'Address',
             '$count');
         try {
-            SegmentParser::parseRequestUriSegements($segments, $this->providersWrapper);
+            SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
             $this->fail('An expected ODataException for $count followed by non-resource has not been thrown');
         } catch (ODataException $exception) {
             $this->assertStringEndsWith('$count cannot be applied to the segment \'Address\' since $count can only follow a resource segment.', $exception->getMessage());
@@ -580,19 +580,19 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
         //Test bag segment
         $segments = array("Employees('ABC')",
                           'Emails');
-        $segmentDescriptors = SegmentParser::parseRequestUriSegements($segments, $this->providersWrapper);
+        $segmentDescriptors = SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
         $this->assertEquals(count($segmentDescriptors), 2);
         /** check first segment */
         $this->assertEquals($segmentDescriptors[0]->getIdentifier(), 'Employees');
-        $this->assertEquals($segmentDescriptors[0]->getTargetKind(), RequestTargetKind::RESOURCE);
-        $this->assertEquals($segmentDescriptors[0]->getTargetSource(), RequestTargetSource::ENTITY_SET);
+        $this->assertEquals($segmentDescriptors[0]->getTargetKind(), TargetKind::RESOURCE);
+        $this->assertEquals($segmentDescriptors[0]->getTargetSource(), TargetSource::ENTITY_SET);
         $this->assertNull($segmentDescriptors[0]->getProjectedProperty());
         $this->assertTrue($segmentDescriptors[0]->isSingleResult());
         $this->assertNotNull($segmentDescriptors[0]->getTargetResourceSetWrapper());
         /** check second segment */
         $this->assertEquals($segmentDescriptors[1]->getIdentifier(), 'Emails');
-        $this->assertEquals($segmentDescriptors[1]->getTargetKind(), RequestTargetKind::BAG);
-        $this->assertEquals($segmentDescriptors[1]->getTargetSource(), RequestTargetSource::PROPERTY);
+        $this->assertEquals($segmentDescriptors[1]->getTargetKind(), TargetKind::BAG);
+        $this->assertEquals($segmentDescriptors[1]->getTargetSource(), TargetSource::PROPERTY);
         $projectedProperty = $segmentDescriptors[1]->getProjectedProperty();
         $this->assertFalse(is_null($projectedProperty));
         $this->assertEquals($projectedProperty->getName(), 'Emails');
@@ -606,7 +606,7 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
             'Emails',
             'AB');
         try {
-            $segmentDescriptors = SegmentParser::parseRequestUriSegements($segments, $this->providersWrapper);
+            $segmentDescriptors = SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
             $this->fail('An expected ODataException for using bag property as non-leaf segment has not been thrown');
         } catch (ODataException $exception) {
             $this->assertStringStartsWith('The request URI is not valid. The segment \'Emails\' must be the last segment in the URI', $exception->getMessage());
@@ -621,7 +621,7 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
                           'Orders(789)',
                           'Customer',
                           'CustomerName');
-        $segmentDescriptors = SegmentParser::parseRequestUriSegements($segments, $this->providersWrapper);
+        $segmentDescriptors = SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
         $this->assertEquals(count($segmentDescriptors), 4);
         $this->assertEquals($segmentDescriptors[0]->getIdentifier(), 'Customers');
         $this->assertEquals($segmentDescriptors[1]->getIdentifier(), 'Orders');
@@ -650,15 +650,15 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(array_key_exists('OrderID', $namedKeyValues));
         $this->assertEquals($namedKeyValues['OrderID'][0], 789);
         
-        $this->assertEquals($segmentDescriptors[0]->getTargetKind(), RequestTargetKind::RESOURCE);
-        $this->assertEquals($segmentDescriptors[1]->getTargetKind(), RequestTargetKind::RESOURCE);
-        $this->assertEquals($segmentDescriptors[2]->getTargetKind(), RequestTargetKind::RESOURCE);
-        $this->assertEquals($segmentDescriptors[3]->getTargetKind(), RequestTargetKind::PRIMITIVE);
+        $this->assertEquals($segmentDescriptors[0]->getTargetKind(), TargetKind::RESOURCE);
+        $this->assertEquals($segmentDescriptors[1]->getTargetKind(), TargetKind::RESOURCE);
+        $this->assertEquals($segmentDescriptors[2]->getTargetKind(), TargetKind::RESOURCE);
+        $this->assertEquals($segmentDescriptors[3]->getTargetKind(), TargetKind::PRIMITIVE);
         
-        $this->assertEquals($segmentDescriptors[0]->getTargetSource(), RequestTargetSource::ENTITY_SET);
-        $this->assertEquals($segmentDescriptors[1]->getTargetSource(), RequestTargetSource::PROPERTY);
-        $this->assertEquals($segmentDescriptors[2]->getTargetSource(), RequestTargetSource::PROPERTY);
-        $this->assertEquals($segmentDescriptors[3]->getTargetSource(), RequestTargetSource::PROPERTY);
+        $this->assertEquals($segmentDescriptors[0]->getTargetSource(), TargetSource::ENTITY_SET);
+        $this->assertEquals($segmentDescriptors[1]->getTargetSource(), TargetSource::PROPERTY);
+        $this->assertEquals($segmentDescriptors[2]->getTargetSource(), TargetSource::PROPERTY);
+        $this->assertEquals($segmentDescriptors[3]->getTargetSource(), TargetSource::PROPERTY);
         
         $resourceSetWrapper = $segmentDescriptors[0]->getTargetResourcesetWrapper();
         $this->assertFalse(is_null($resourceSetWrapper));
@@ -686,7 +686,7 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
                           'Orders(789)',
                           'OrderID');
         try {
-            SegmentParser::parseRequestUriSegements($segments, $providersWrapper);
+            SegmentParser::parseRequestUriSegments($segments, $providersWrapper);
             $this->fail('An expected ODataException for \'Orders\' resource not found error has not been thrown');
         } catch (ODataException $exception) {
             $this->assertEquals( 'Resource not found for the segment \'Orders\'', $exception->getMessage());
@@ -699,13 +699,13 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
         //Test MLE
         $segments = array("Employees('JKT')",
                       '$value');
-        $segmentDescriptors = SegmentParser::parseRequestUriSegements($segments, $this->providersWrapper);
+        $segmentDescriptors = SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
         $this->assertEquals(count($segmentDescriptors), 2);
         $this->assertEquals($segmentDescriptors[0]->getIdentifier(), 'Employees');
         $this->assertEquals($segmentDescriptors[1]->getIdentifier(), '$value');
 
-        $this->assertEquals($segmentDescriptors[0]->getTargetKind(), RequestTargetKind::RESOURCE);
-        $this->assertEquals($segmentDescriptors[1]->getTargetKind(), RequestTargetKind::MEDIA_RESOURCE);
+        $this->assertEquals($segmentDescriptors[0]->getTargetKind(), TargetKind::RESOURCE);
+        $this->assertEquals($segmentDescriptors[1]->getTargetKind(), TargetKind::MEDIA_RESOURCE);
 
         $resourceType = $segmentDescriptors[0]->getTargetResourceType();
         $this->assertFalse(is_null($resourceType));
@@ -723,15 +723,15 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
         $segments = array("Employees('JKT')",
                       'Manager',
                       '$value');
-        $segmentDescriptors = SegmentParser::parseRequestUriSegements($segments, $this->providersWrapper);
+        $segmentDescriptors = SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
         $this->assertEquals(count($segmentDescriptors), 3);
         $this->assertEquals($segmentDescriptors[0]->getIdentifier(), 'Employees');
         $this->assertEquals($segmentDescriptors[1]->getIdentifier(), 'Manager');
         $this->assertEquals($segmentDescriptors[2]->getIdentifier(), '$value');
 
-        $this->assertEquals($segmentDescriptors[0]->getTargetKind(), RequestTargetKind::RESOURCE);
-        $this->assertEquals($segmentDescriptors[1]->getTargetKind(), RequestTargetKind::RESOURCE);
-        $this->assertEquals($segmentDescriptors[2]->getTargetKind(), RequestTargetKind::MEDIA_RESOURCE);
+        $this->assertEquals($segmentDescriptors[0]->getTargetKind(), TargetKind::RESOURCE);
+        $this->assertEquals($segmentDescriptors[1]->getTargetKind(), TargetKind::RESOURCE);
+        $this->assertEquals($segmentDescriptors[2]->getTargetKind(), TargetKind::MEDIA_RESOURCE);
 
         $resourceType = $segmentDescriptors[0]->getTargetResourceType();
         $this->assertFalse(is_null($resourceType));
@@ -750,14 +750,14 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
         //Test Named Stream
         $segments = array("Employees('JKT')",
                       'TumbNail_48X48');
-        $segmentDescriptors = SegmentParser::parseRequestUriSegements($segments, $this->providersWrapper);
+        $segmentDescriptors = SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
         $this->assertEquals(count($segmentDescriptors), 2);
 
         $this->assertEquals($segmentDescriptors[0]->getIdentifier(), 'Employees');
         $this->assertEquals($segmentDescriptors[1]->getIdentifier(), 'TumbNail_48X48');
 
-        $this->assertEquals($segmentDescriptors[0]->getTargetKind(), RequestTargetKind::RESOURCE);
-        $this->assertEquals($segmentDescriptors[1]->getTargetKind(), RequestTargetKind::MEDIA_RESOURCE);
+        $this->assertEquals($segmentDescriptors[0]->getTargetKind(), TargetKind::RESOURCE);
+        $this->assertEquals($segmentDescriptors[1]->getTargetKind(), TargetKind::MEDIA_RESOURCE);
 
         $resourceType = $segmentDescriptors[0]->getTargetResourceType();
         $this->assertFalse(is_null($resourceType));
@@ -774,7 +774,7 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
                       'TumbNail_48X48',
                       'anything');
         try {
-            SegmentParser::parseRequestUriSegements($segments, $this->providersWrapper);
+            SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
             $this->fail('An expected ODataException for segments specifed after named stream has not been thrown');
         } catch (ODataException $exception) {
             $this->assertStringStartsWith('The request URI is not valid. The segment \'TumbNail_48X48\' must be the last segment in the', $exception->getMessage());

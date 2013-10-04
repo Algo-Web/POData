@@ -107,17 +107,16 @@ class SimpleMetadataProvider implements IMetadataProvider
     /**
      * The method must return a collection of all the types derived from 
      * $resourceType The collection returned should NOT include the type 
-     * passed in as a parameter An implementer of the interface should 
-     * return null if the type does not have any derived types.
+     * passed in as a parameter
      * 
      * @param ResourceType $resourceType Resource to get derived resource types from
      *
      * 
-     * @return ResourceType[]|null
+     * @return ResourceType[]
      */
     public function getDerivedTypes(ResourceType $resourceType)
     {
-        return null;
+        return array();
     }
     
     /**

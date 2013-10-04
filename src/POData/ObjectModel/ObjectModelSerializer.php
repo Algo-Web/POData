@@ -5,7 +5,7 @@ namespace POData\ObjectModel;
 use POData\Common\ODataConstants;
 use POData\Common\InvalidOperationException;
 use POData\UriProcessor\RequestCountOption;
-use POData\UriProcessor\ResourcePathProcessor\SegmentParser\RequestTargetSource;
+use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetSource;
 use POData\UriProcessor\RequestDescription;
 use POData\IService;
 use POData\Providers\Metadata\ResourceType;
@@ -30,12 +30,12 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
      * 
      * @param IService        &$service        Reference to data service instance.
      *
-     * @param RequestDescription &$requestDescription Reference to the type describing request submitted by the client.
+     * @param RequestDescription &$request Reference to the type describing request submitted by the client.
      *
      */
-    public function __construct(IService &$service, RequestDescription &$requestDescription)
+    public function __construct(IService &$service, RequestDescription &$request)
     {
-        parent::__construct($service, $requestDescription);
+        parent::__construct($service, $request);
     }
 
     /**
@@ -47,17 +47,17 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
      */
     public function writeTopLevelElement(&$entryObject)
     {
-        $requestTargetSource = $this->requestDescription->getTargetSource();
+        $requestTargetSource = $this->request->getTargetSource();
 
         $resourceType = null;
-        if ($requestTargetSource == RequestTargetSource::ENTITY_SET) {
-            $resourceType = $this->requestDescription->getTargetResourceType();
+        if ($requestTargetSource == TargetSource::ENTITY_SET) {
+            $resourceType = $this->request->getTargetResourceType();
         } else {
             $this->assert(
-                $requestTargetSource == RequestTargetSource::PROPERTY, 
-                '$requestTargetSource == RequestTargetSource::PROPERTY'
+                $requestTargetSource == TargetSource::PROPERTY,
+                '$requestTargetSource == TargetSource::PROPERTY'
             );
-            $resourceProperty = $this->requestDescription->getProjectedProperty();
+            $resourceProperty = $this->request->getProjectedProperty();
             //$this->assert($resourceProperty->getKind() == ResourcePropertyKind::RESOURCE_REFERENCE, '$resourceProperty->getKind() == ResourcePropertyKind::RESOURCE_REFERENCE');
             $resourceType = $resourceProperty->getResourceType();
         }
@@ -66,8 +66,8 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
         $entry = $this->_writeEntryElement(
             $entryObject,
 	        $resourceType,
-            $this->requestDescription->getRequestUri()->getUrlAsString(), 
-            $this->requestDescription->getContainerName()
+            $this->request->getRequestUri()->getUrlAsString(),
+            $this->request->getContainerName()
         );
         $this->popSegment($needPop);
         return $entry;
@@ -83,16 +83,16 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
     public function writeTopLevelElements(&$entryObjects)
     {
         $this->assert(is_array($entryObjects), 'is_array($entryObjects)');
-        $requestTargetSource = $this->requestDescription->getTargetSource();
+        $requestTargetSource = $this->request->getTargetSource();
         $title = null;
-        if ($requestTargetSource == RequestTargetSource::ENTITY_SET) {
-            $title = $this->requestDescription->getContainerName();
+        if ($requestTargetSource == TargetSource::ENTITY_SET) {
+            $title = $this->request->getContainerName();
         } else {
             $this->assert(
-                $requestTargetSource == RequestTargetSource::PROPERTY, 
-                '$requestTargetSource == RequestTargetSource::PROPERTY'
+                $requestTargetSource == TargetSource::PROPERTY,
+                '$requestTargetSource == TargetSource::PROPERTY'
             );            
-            $resourceProperty = $this->requestDescription->getProjectedProperty();
+            $resourceProperty = $this->request->getProjectedProperty();
             $this->assert(
                 $resourceProperty->getKind() == ResourcePropertyKind::RESOURCESET_REFERENCE, 
                 '$resourceProperty->getKind() == ResourcePropertyKind::RESOURCESET_REFERENCE'
@@ -100,20 +100,20 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
             $title = $resourceProperty->getName();
         }
 
-        $relativeUri = $this->requestDescription->getIdentifier(); 
+        $relativeUri = $this->request->getIdentifier();
         $feed = new ODataFeed();
 
-        if ($this->requestDescription->getRequestCountOption() == RequestCountOption::INLINE()) {
-            $feed->rowCount = $this->requestDescription->getCountValue();
+        if ($this->request->getRequestCountOption() == RequestCountOption::INLINE()) {
+            $feed->rowCount = $this->request->getCountValue();
         }
 
         $needPop = $this->pushSegmentForRoot();
-        $targetResourceType = $this->requestDescription->getTargetResourceType();
+        $targetResourceType = $this->request->getTargetResourceType();
         $this->_writeFeedElements(
             $entryObjects,
             $targetResourceType,
             $title,
-            $this->requestDescription->getRequestUri()->getUrlAsString(),
+            $this->request->getRequestUri()->getUrlAsString(),
             $relativeUri,
             $feed
         );
@@ -165,12 +165,12 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
             }
 
             if ($i > 0 && $this->needNextPageLink(count($entryObjects))) {
-                $odataUrlCollection->nextPageLink = $this->getNextLinkUri($entryObjects[$i - 1], $this->requestDescription->getRequestUri()->getUrlAsString());
+                $odataUrlCollection->nextPageLink = $this->getNextLinkUri($entryObjects[$i - 1], $this->request->getRequestUri()->getUrlAsString());
             }
         }
 
-        if ($this->requestDescription->getRequestCountOption() == RequestCountOption::INLINE()) {
-            $odataUrlCollection->count = $this->requestDescription->getCountValue();
+        if ($this->request->getRequestCountOption() == RequestCountOption::INLINE()) {
+            $odataUrlCollection->count = $this->request->getCountValue();
         }
 
         return $odataUrlCollection;
@@ -382,7 +382,8 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
      * 
      * @return void
      */
-    private function _writeObjectProperties($customObject, 
+    private function _writeObjectProperties(
+	    $customObject,
         ResourceType &$resourceType, 
         $absoluteUri, 
         $relativeUri, 

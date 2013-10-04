@@ -63,14 +63,14 @@ class SegmentDescriptor
     /**
      * The kind of resource targeted by this segment
      * 
-     * @var RequestTargetKind
+     * @var TargetKind
      */
     private $_targetKind;
 
     /**
      * The kind of 'source of data' for this segment
      * 
-     * @var RequestTargetSource
+     * @var TargetSource
      */
     private $_targetSource;
     
@@ -109,8 +109,8 @@ class SegmentDescriptor
     public function __construct()
     {
         $this->_singleResult = false;
-        $this->_targetKind = RequestTargetKind::NOTHING;
-        $this->_targetSource = RequestTargetSource::NONE;
+        $this->_targetKind = TargetKind::NOTHING;
+        $this->_targetSource = TargetSource::NONE;
         $this->_identifier 
             = $this->_keyDescriptor 
                 = $this->_projectedProperty 
@@ -225,7 +225,7 @@ class SegmentDescriptor
     /**
      * Gets the kind of resource targeted by this segment
      * 
-     * @return RequestTargetKind
+     * @return TargetKind
      */
     public function getTargetKind()
     {
@@ -235,7 +235,7 @@ class SegmentDescriptor
     /**
      * Sets the kind of resource targeted by this segment
      * 
-     * @param RequestTargetKind $targetKind The kind of resource
+     * @param TargetKind $targetKind The kind of resource
      */
     public function setTargetKind($targetKind)
     {
@@ -288,7 +288,7 @@ class SegmentDescriptor
     /**
      * Gets the kind of 'source of data' for this segment
      * 
-     * @return RequestTargetSource
+     * @return TargetSource
      */
     public function getTargetSource()
     {
@@ -298,7 +298,7 @@ class SegmentDescriptor
     /**
      * Sets the kind of 'source of data' for this segment
      * 
-     * @param RequestTargetSource $targetSource The kind of 'source of data' 
+     * @param TargetSource $targetSource The kind of 'source of data'
      */
     public function setTargetSource($targetSource)
     {

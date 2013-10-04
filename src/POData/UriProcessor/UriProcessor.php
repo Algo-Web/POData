@@ -11,8 +11,8 @@ use POData\UriProcessor\QueryProcessor\QueryProcessor;
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandedProjectionNode;
 use POData\UriProcessor\ResourcePathProcessor\ResourcePathProcessor;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\SegmentDescriptor;
-use POData\UriProcessor\ResourcePathProcessor\SegmentParser\RequestTargetKind;
-use POData\UriProcessor\ResourcePathProcessor\SegmentParser\RequestTargetSource;
+use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
+use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetSource;
 use POData\IService;
 use POData\Common\Url;
 use POData\Common\Messages;
@@ -107,10 +107,7 @@ class UriProcessor
 
         $uriProcessor = new UriProcessor($service);
         //Parse the resource path part of the request Uri.
-		$uriProcessor->request = ResourcePathProcessor::process(
-			$absoluteRequestUri,
-			$service
-		);
+		$uriProcessor->request = ResourcePathProcessor::process($service);
 
 	    $uriProcessor->request->setUriProcessor($uriProcessor);
 
@@ -141,16 +138,16 @@ class UriProcessor
         $segmentDescriptors = $this->request->getSegmentDescriptors();
         foreach ($segmentDescriptors as $segment) {
             $requestTargetKind = $segment->getTargetKind();
-            if ($segment->getTargetSource() == RequestTargetSource::ENTITY_SET) {
+            if ($segment->getTargetSource() == TargetSource::ENTITY_SET) {
                 $this->_handleSegmentTargetsToResourceSet($segment);
-            } else if ($requestTargetKind == RequestTargetKind::RESOURCE) {
+            } else if ($requestTargetKind == TargetKind::RESOURCE) {
                 if (is_null($segment->getPrevious()->getResult())) {
                     ODataException::createResourceNotFoundError(
                         $segment->getPrevious()->getIdentifier()
                     );
                 }
                 $this->_handleSegmentTargetsToRelatedResource($segment);
-            } else if ($requestTargetKind == RequestTargetKind::LINK) {
+            } else if ($requestTargetKind == TargetKind::LINK) {
                 $segment->setResult($segment->getPrevious()->getResult());
             } else if ($segment->getIdentifier() == ODataConstants::URI_COUNT_SEGMENT) {
                 // we are done, $count will the last segment and 
@@ -158,7 +155,7 @@ class UriProcessor
                 $segment->setResult($this->request->getCountValue());
                 break;
             } else {
-                if ($requestTargetKind == RequestTargetKind::MEDIA_RESOURCE) {
+                if ($requestTargetKind == TargetKind::MEDIA_RESOURCE) {
                     if (is_null($segment->getPrevious()->getResult())) {
                         ODataException::createResourceNotFoundError(
                             $segment->getPrevious()->getIdentifier()

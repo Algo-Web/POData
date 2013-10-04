@@ -12,8 +12,8 @@ use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Metadata\ResourceStreamInfo;
 use POData\UriProcessor\UriProcessor;
-use POData\UriProcessor\ResourcePathProcessor\SegmentParser\RequestTargetSource;
-use POData\UriProcessor\ResourcePathProcessor\SegmentParser\RequestTargetKind;
+use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetSource;
+use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\SegmentDescriptor;
 use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
 use POData\UriProcessor\QueryProcessor\SkipTokenParser\InternalSkipTokenInfo;
@@ -211,9 +211,9 @@ class RequestDescription
      * 
      * @param SegmentDescriptor[] &$segmentDescriptors Description of segments in the resource path.
      *
-     * @param Url &$requestUri The request Uri.
+     * @param Url $requestUri The request Uri.
      */
-    public function __construct(&$segmentDescriptors, Url &$requestUri)
+    public function __construct(&$segmentDescriptors, Url $requestUri)
     {
         $this->_segmentDescriptors = $segmentDescriptors;
         $this->_segmentCount = count($this->_segmentDescriptors);
@@ -291,7 +291,7 @@ class RequestDescription
     /**
      * Gets kind of resource targeted by the resource path.
      * 
-     * @return RequestTargetKind
+     * @return TargetKind
      */
     public function getTargetKind()
     {
@@ -301,7 +301,7 @@ class RequestDescription
     /**
      * Gets kind of 'source of data' targeted by the resource path.
      * 
-     * @return RequestTargetSource
+     * @return TargetSource
      */
     public function getTargetSource()
     {
@@ -722,8 +722,8 @@ class RequestDescription
     public function needExecution()
     {
         return !$this->_isExecuted 
-            && ($this->_lastSegmentDescriptor->getTargetKind() != RequestTargetKind::METADATA)
-            && ($this->_lastSegmentDescriptor->getTargetKind() != RequestTargetKind::SERVICE_DIRECTORY);
+            && ($this->_lastSegmentDescriptor->getTargetKind() != TargetKind::METADATA)
+            && ($this->_lastSegmentDescriptor->getTargetKind() != TargetKind::SERVICE_DIRECTORY);
     }
 
     /**
@@ -735,7 +735,7 @@ class RequestDescription
     {
         return (($this->_segmentCount > 2) && 
             ($this->_segmentDescriptors[$this->_segmentCount - 2]->getTargetKind() == 
-             RequestTargetKind::LINK));
+             TargetKind::LINK));
     }
 
     /**
@@ -745,7 +745,7 @@ class RequestDescription
      */
     public function isMediaResource()
     {
-        return ($this->_lastSegmentDescriptor->getTargetKind() == RequestTargetKind::MEDIA_RESOURCE); 
+        return ($this->_lastSegmentDescriptor->getTargetKind() == TargetKind::MEDIA_RESOURCE);
     }
 
     /**

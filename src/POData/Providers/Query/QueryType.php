@@ -6,14 +6,14 @@ use MyCLabs\Enum\Enum;
 
 
 	/**
-	 * @method static QueryType ENTITY()
+	 * @method static QueryType ENTITIES()
 	 * @method static QueryType COUNT()
-	 * @method static QueryType INLINECOUNT()
+	 * @method static QueryType ENTITIES_WITH_COUNT()
 	 */
 class QueryType extends Enum {
 
-	const ENTITY      = "ENTITY";
-	const COUNT         = "Count";
-	const INLINECOUNT   = "InlineCount";
+	const ENTITIES = "ENTITIES";
+	const COUNT = "COUNT";
+	const ENTITIES_WITH_COUNT = "ENTITIES_WITH_COUNT";
 
 }

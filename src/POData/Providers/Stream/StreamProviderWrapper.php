@@ -10,6 +10,8 @@ use POData\Common\ODataException;
 use POData\Common\ODataConstants;
 use POData\Common\Messages;
 use POData\Common\InvalidOperationException;
+use POData\Providers\Stream\IStreamProvider;
+use POData\Providers\Stream\IStreamProvider2;
 
 /**
  * Class StreamProviderWrapper Wrapper over IDSSP and IDSSP2 implementations.
@@ -425,7 +427,7 @@ class StreamProviderWrapper
                 ODataException::createInternalServerError(
                     Messages::streamProviderWrapperMustImplementStreamProvider2ToSupportNamedStreams()
                 );
-            } else if (array_search('POData\Providers\Stream\IDataServiceStreamProvider2', class_implements($this->_streamProvider)) === false) {
+            } else if (!$this->_streamProvider instanceof IStreamProvider2) {
                 ODataException::createInternalServerError(
                     Messages::streamProviderWrapperInvalidStream2Instance()
                 );
@@ -447,9 +449,8 @@ class StreamProviderWrapper
                 ->getServiceConfiguration()
                 ->getMaxDataServiceVersionObject();
             if ($maxServiceVersion->compare(new Version(3, 0)) >= 0) {
-                $this->_streamProvider 
-                    = $this->_service->getService('IStreamProvider2');
-                if (!is_null($this->_streamProvider) && (!is_object($this->_streamProvider) || array_search('POData\Providers\Stream\IDataServiceStreamProvider2', class_implements($this->_streamProvider)) === false)) {
+                $this->_streamProvider = $this->_service->getService('IStreamProvider2');
+                if (!is_null($this->_streamProvider) && (!is_object($this->_streamProvider) || !$this->_streamProvider instanceof IStreamProvider2)) {
                     ODataException::createInternalServerError(
                         Messages::streamProviderWrapperInvalidStream2Instance()
                     ); 
@@ -459,7 +460,7 @@ class StreamProviderWrapper
             if (is_null($this->_streamProvider)) {
                 $this->_streamProvider 
                     = $this->_service->getService('IStreamProvider');
-                if (!is_null($this->_streamProvider) && (!is_object($this->_streamProvider) || array_search('POData\Providers\Stream\IDataServiceStreamProvider', class_implements($this->_streamProvider)) === false)) {
+                if (!is_null($this->_streamProvider) && (!is_object($this->_streamProvider) || !$this->_streamProvider instanceof IStreamProvider)) {
                     ODataException::createInternalServerError(
                         Messages::streamProviderWrapperInvalidStreamInstance()
                     );

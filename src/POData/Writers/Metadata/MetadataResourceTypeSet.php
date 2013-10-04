@@ -199,27 +199,22 @@ class MetadataResourceTypeSet extends MetadataBase
      * 
      * @return void
      * 
-     * @throws InvalidOperationException Throws exception in floowing cases:
+     * @throws InvalidOperationException Throws exception in following cases:
      * (1) If IDSMP::getDerivedTypes returns any type other than null or array
      * (2) If Named streams are found on derived types
      */
     private function _populateResourceTypeForSet(ResourceSetWrapper $resourceSetWrapper)
     {
         $derivedTypes = $this->providersWrapper->getDerivedTypes($resourceSetWrapper->getResourceType());
-        if (!is_null($derivedTypes)) {
-            if (!is_array($derivedTypes)) {
-                throw new InvalidOperationException(Messages::metadataAssociationTypeSetInvalidGetDerivedTypesReturnType($resourceSetWrapper->getName()));
-            }
 
-            //Populate Resource type for derived types and 
-            //complex types in derived types
-            foreach ($derivedTypes as $derivedType) {
-                if ($derivedType->hasNamedStream()) {
-                    throw new InvalidOperationException(Messages::metadataResourceTypeSetNamedStreamsOnDerivedEntityTypesNotSupported($resourceSetWrapper->getName(), $derivedType->getFullName()));
-                }
-                $this->_populateResourceTypes($derivedType);
-                $this->_populateComplexTypes($derivedType);
+        //Populate Resource type for derived types and
+        //complex types in derived types
+        foreach ($derivedTypes as $derivedType) {
+            if ($derivedType->hasNamedStream()) {
+                throw new InvalidOperationException(Messages::metadataResourceTypeSetNamedStreamsOnDerivedEntityTypesNotSupported($resourceSetWrapper->getName(), $derivedType->getFullName()));
             }
+            $this->_populateResourceTypes($derivedType);
+            $this->_populateComplexTypes($derivedType);
         }
 
         //Populate Resource type for for this type and 

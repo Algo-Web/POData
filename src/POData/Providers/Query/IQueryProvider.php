@@ -6,7 +6,11 @@ use POData\Providers\Metadata\ResourceProperty;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 use POData\Providers\Metadata\ResourceSet;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\IExpressionProvider;
+use POData\Providers\Query\QueryType;
+
 use stdClass;
+
+
 
 /**
  * Class IQueryProvider
@@ -42,16 +46,17 @@ interface IQueryProvider
 	 * @param mixed $orderBy sorted order if we want to get the data in some specific order
 	 * @param int $top number of records which  need to be skip
 	 * @param String $skipToken value indicating what records to skip
+	 * @param QueryType $queryType indicates if this is a query for a count, entities, or entities with a count
 	 *
-	 *
-	 * @return stdClass[]
+	 * @return QueryResult
 	 */
 	public function getResourceSet(
 		ResourceSet $resourceSet,
 		$filter = null,
 		$orderBy = null,
 		$top = null,
-		$skipToken = null
+		$skipToken = null,
+		QueryType $queryType
 	);
 
 
@@ -84,9 +89,9 @@ interface IQueryProvider
 	 * @param mixed $orderBy sorted order if we want to get the data in some specific order
 	 * @param int $top number of records which  need to be skip
 	 * @param String $skip value indicating what records to skip
+	 * @param QueryType $queryType indicates if this is a query for a count, entities, or entities with a count
 	 *
-	 *
-	 * @return stdClass[] Array of related resource if exists, if no related resources found returns empty array
+	 * @return QueryResult
 	 *
 	 */
 	public function getRelatedResourceSet(
@@ -97,7 +102,8 @@ interface IQueryProvider
 		$filter = null,
 		$orderBy = null,
 		$top = null,
-		$skip = null
+		$skip = null,
+		QueryType $queryType
 	);
 
     /**

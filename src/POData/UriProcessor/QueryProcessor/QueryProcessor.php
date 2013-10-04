@@ -6,8 +6,8 @@ use POData\Providers\Metadata\Type\Int32;
 use POData\Providers\Metadata\ResourceTypeKind;
 use POData\UriProcessor\RequestCountOption;
 use POData\UriProcessor\RequestDescription;
-use POData\UriProcessor\ResourcePathProcessor\SegmentParser\RequestTargetKind;
-use POData\UriProcessor\ResourcePathProcessor\SegmentParser\RequestTargetSource;
+use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
+use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetSource;
 use POData\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenParser;
 use POData\UriProcessor\QueryProcessor\OrderByParser\OrderByParser;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionParser2;
@@ -77,8 +77,8 @@ class QueryProcessor
         $requestCountOption = $requestDescription->getRequestCountOption();
 
 
-        $this->_setQueryApplicable = ($requestTargetKind == RequestTargetKind::RESOURCE && !$isSingleResult) || $requestCountOption == RequestCountOption::VALUE_ONLY();
-        $this->_pagingApplicable = $this->_requestDescription->getTargetKind() == RequestTargetKind::RESOURCE && !$this->_requestDescription->isSingleResult() && ($requestCountOption != RequestCountOption::VALUE_ONLY());
+        $this->_setQueryApplicable = ($requestTargetKind == TargetKind::RESOURCE && !$isSingleResult) || $requestCountOption == RequestCountOption::VALUE_ONLY();
+        $this->_pagingApplicable = $this->_requestDescription->getTargetKind() == TargetKind::RESOURCE && !$this->_requestDescription->isSingleResult() && ($requestCountOption != RequestCountOption::VALUE_ONLY());
 
 	    $targetResourceType = $this->_requestDescription->getTargetResourceType();
         $targetResourceSetWrapper = $this->_requestDescription->getTargetResourceSetWrapper();
@@ -102,7 +102,7 @@ class QueryProcessor
      */
     public static function process(RequestDescription $requestDescription, IService $service ) {
         $queryProcessor = new QueryProcessor($requestDescription, $service);
-        if ($requestDescription->getTargetSource() == RequestTargetSource::NONE) {
+        if ($requestDescription->getTargetSource() == TargetSource::NONE) {
             //A service directory, metadata or batch request
             $queryProcessor->_checkForEmptyQueryArguments();
         } else {
@@ -259,8 +259,8 @@ class QueryProcessor
         $filter = $this->service->getHost()->getQueryStringItem( ODataConstants::HTTPQUERY_STRING_FILTER );
         if (!is_null($filter)) {
             $requestTargetKind = $this->_requestDescription->getTargetKind();
-            if (!($requestTargetKind == RequestTargetKind::RESOURCE 
-                || $requestTargetKind == RequestTargetKind::COMPLEX_OBJECT 
+            if (!($requestTargetKind == TargetKind::RESOURCE
+                || $requestTargetKind == TargetKind::COMPLEX_OBJECT
                 || $this->_requestDescription->getRequestCountOption() == RequestCountOption::VALUE_ONLY() )
             ) {
                 ODataException::createBadRequestError(

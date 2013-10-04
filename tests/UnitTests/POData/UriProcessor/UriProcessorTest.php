@@ -18,19 +18,22 @@ use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
 use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
 use POData\UriProcessor\RequestCountOption;
 use POData\Configuration\ServiceProtocolVersion;
-use POData\UriProcessor\ResourcePathProcessor\SegmentParser\RequestTargetKind;
-use POData\UriProcessor\ResourcePathProcessor\SegmentParser\RequestTargetSource;
+use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
+use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetSource;
 use POData\Providers\Metadata\Type\Int32;
 use POData\Providers\Metadata\Type\DateTime;
 use POData\Common\Url;
 use POData\Common\Version;
 use POData\Common\ODataException;
-
-
+use POData\OperationContext\ServiceHost;
+use POData\UriProcessor\UriProcessor;
 use UnitTests\POData\Facets\ServiceHostTestFake;
 use UnitTests\POData\Facets\NorthWind1\NorthWindService2;
 use UnitTests\POData\Facets\NorthWind1\NorthWindServiceV1;
 use UnitTests\POData\Facets\NorthWind1\NorthWindServiceV3;
+use Phockito;
+use POData\IService;
+use UnitTests\POData\BaseUnitTestCase;
 
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 //These are in the file loaded by above use statement
@@ -38,11 +41,11 @@ use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 use UnitTests\POData\Facets\NorthWind1\Customer2;
 
 
-class UriProcessorTest extends \PHPUnit_Framework_TestCase
+class UriProcessorTest extends BaseUnitTestCase
 {
 
     /**
-     * Test with request uri where RequestTargetKind is NONE. RequestTargetKind will be
+     * Test with request uri where TargetKind is NONE. TargetKind will be
      * NONE for service directory, metadata and batch.
      */
     public function testUriProcessorWithRequestUriOfNoneTargetSourceKind()
@@ -60,8 +63,8 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
 
         $uriProcessor = $dataService->handleRequest();
         $requestDescription = $uriProcessor->getRequest();
-        $this->assertEquals($requestDescription->getTargetSource(), RequestTargetSource::NONE);
-        $this->assertEquals($requestDescription->getTargetKind(), RequestTargetKind::SERVICE_DIRECTORY);
+        $this->assertEquals($requestDescription->getTargetSource(), TargetSource::NONE);
+        $this->assertEquals($requestDescription->getTargetKind(), TargetKind::SERVICE_DIRECTORY);
         
 
 
@@ -78,8 +81,8 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
 
         $uriProcessor = $dataService->handleRequest();
         $requestDescription = $uriProcessor->getRequest();
-        $this->assertEquals($requestDescription->getTargetSource(), RequestTargetSource::NONE);
-        $this->assertEquals($requestDescription->getTargetKind(), RequestTargetKind::METADATA);
+        $this->assertEquals($requestDescription->getTargetSource(), TargetSource::NONE);
+        $this->assertEquals($requestDescription->getTargetKind(), TargetKind::METADATA);
 
 
         //Request for batch
@@ -94,8 +97,8 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
 
         $uriProcessor = $dataService->handleRequest();
         $requestDescription = $uriProcessor->getRequest();
-        $this->assertEquals($requestDescription->getTargetSource(), RequestTargetSource::NONE);
-        $this->assertEquals($requestDescription->getTargetKind(), RequestTargetKind::BATCH);
+        $this->assertEquals($requestDescription->getTargetSource(), TargetSource::NONE);
+        $this->assertEquals($requestDescription->getTargetKind(), TargetKind::BATCH);
 
     }
 
@@ -122,7 +125,7 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
             $uriProcessor = $dataService->handleRequest();
             $this->fail('An expected ODataException for failure of capability negotiation over DataServiceVersion has not been thrown');
         } catch (ODataException $ex) {
-            $this->assertStringStartsWith("Request version '1.0' is not supported for the request payload. The only supported version is '2.0", $ex->getMessage());
+            $this->assertStringStartsWith("Request version '1.0' is not supported for the request payload. The only supported version is '2.0", $ex->getMessage(), $ex->getTraceAsString());
         }
 
 
@@ -2171,6 +2174,32 @@ class UriProcessorTest extends \PHPUnit_Framework_TestCase
         $this->assertNotNull($topCount);
 
     }
-    
+
+	/** @var  IService */
+	protected $mockService;
+
+	/** @var  ServiceHost */
+	protected $mockServiceHost;
+
+	public function skiptestProcessRequestForCollection()
+	{
+		Phockito::when($this->mockService->getHost())
+			->return($this->mockServiceHost);
+
+		$requestURI = new Url("http://host.com/data.svc/Collection");
+		Phockito::when($this->mockServiceHost->getAbsoluteRequestUri())
+			->return($requestURI);
+
+		$serviceURI = new Url("http://host.com/data.svc");
+		Phockito::when($this->mockServiceHost->getAbsoluteServiceUri())
+			->return($serviceURI);
+
+
+		$uriProcessor = UriProcessor::process($this->mockService);
+
+	}
+
+
+
 
 }

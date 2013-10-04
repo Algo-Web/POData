@@ -181,16 +181,10 @@ class MetadataAssociationTypeSet extends MetadataBase
     private function _populateAssociationForSet(ResourceSetWrapper $resourceSetWrapper)
     {
         $derivedTypes = $this->providersWrapper->getDerivedTypes($resourceSetWrapper->getResourceType());
-        if (!is_null($derivedTypes)) {
-            if (!is_array($derivedTypes)) {
-                throw new InvalidOperationException(Messages::metadataAssociationTypeSetInvalidGetDerivedTypesReturnType($resourceSetWrapper->getName()));
-            }
 
-            //Populate ResourceAssociationSet and ResourceAssociationType 
-            //for derived types
-            foreach ($derivedTypes as $derivedType) {
-                $this->_populateAssociationForSetAndType($resourceSetWrapper, $derivedType);
-            }
+        //Populate ResourceAssociationSet and ResourceAssociationType for derived types
+        foreach ($derivedTypes as $derivedType) {
+            $this->_populateAssociationForSetAndType($resourceSetWrapper, $derivedType);
         }
 
         //Populate ResourceAssociationSet and ResourceAssociationType 

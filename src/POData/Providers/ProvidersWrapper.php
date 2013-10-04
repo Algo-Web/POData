@@ -268,21 +268,21 @@ class ProvidersWrapper
      * The method must return a collection of all the types derived from 
      * $resourceType The collection returned should NOT include the type 
      * passed in as a parameter
-     * An implementer of the interface should return null if the type does 
-     * not have any derived types, 
      * Note: Wrapper for IMetadataProvider::getDerivedTypes
      * method implementation
      * 
      * @param ResourceType $resourceType Resource to get derived resource types from
      * 
-     * @return ResourceType[]|null
+     * @return ResourceType[]
+     *
+     * @throws InvalidOperationException when the meat provider doesn't return an array
      */
     public function getDerivedTypes(ResourceType $resourceType)
     {
         $derivedTypes = $this->_metadataProvider->getDerivedTypes($resourceType);
-        if (is_null($derivedTypes)) {
-            return null;
-        }
+	    if (!is_array($derivedTypes)) {
+		    throw new InvalidOperationException(Messages::metadataAssociationTypeSetInvalidGetDerivedTypesReturnType($resourceType->getName()));
+	    }
 
         foreach ($derivedTypes as $derivedType) {
             $this->_validateResourceType($derivedType);

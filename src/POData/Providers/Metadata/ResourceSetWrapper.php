@@ -135,17 +135,15 @@ class ResourceSetWrapper
         // in resource type(s) which is derived form this resource type also.
         if (!$hasNamedStream) {
             $derivedTypes = $provider->getDerivedTypes($this->_resourceSet->getResourceType());
-            if (!is_null($derivedTypes)) {
-                foreach ($derivedTypes as $derivedType) {
-                    if ($derivedType->hasNamedStream()) {
-                        $hasNamedStream = true;
-                        break;
-                    }
+            foreach ($derivedTypes as $derivedType) {
+                if ($derivedType->hasNamedStream()) {
+                    return true;
                 }
             }
+
         }
 
-        return $hasNamedStream;
+        return false;
     }
 
     /**
@@ -165,22 +163,16 @@ class ResourceSetWrapper
         // the resource set, we need to check presence of bag property 
         // in resource type which is derived form this resource type also.
         if (!$hasBagProperty) {
-            $derivedTypes 
-                = $provider->getDerivedTypes(
-                    $this->_resourceSet->getResourceType()
-                );
-            if (!is_null($derivedTypes)) {
-                foreach ($derivedTypes as $derivedType) {
-                    $arrayToDetectLoop = array();
-                    if ($derivedType->hasBagProperty($arrayToDetectLoop)) {
-                        $hasBagProperty = true;
-                        break;
-                    }
+            $derivedTypes = $provider->getDerivedTypes($this->_resourceSet->getResourceType());
+            foreach ($derivedTypes as $derivedType) {
+                $arrayToDetectLoop = array();
+                if ($derivedType->hasBagProperty($arrayToDetectLoop)) {
+                    return true;
                 }
             }
         }
 
-        return $hasBagProperty;
+        return false;
     }
     
     /**

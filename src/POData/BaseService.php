@@ -11,12 +11,13 @@ use POData\Common\ODataConstants;
 use POData\Common\NotImplementedException;
 use POData\Common\InvalidOperationException;
 use POData\Common\HttpStatus;
+use POData\Providers\Metadata\Type\IType;
 use POData\Providers\ProvidersWrapper;
 use POData\Providers\Stream\StreamProviderWrapper;
 use POData\Configuration\ServiceConfiguration;
 use POData\UriProcessor\UriProcessor;
 use POData\UriProcessor\RequestDescription;
-use POData\UriProcessor\ResourcePathProcessor\SegmentParser\RequestTargetKind;
+use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
 use POData\OperationContext\ServiceHost;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\Type\Binary;
@@ -209,14 +210,7 @@ abstract class BaseService implements IRequestHandler, IService
             if ($requestMethod != HTTPRequestMethod::GET()) {
                 ODataException::createNotImplementedError(Messages::onlyReadSupport($requestMethod));
             }          
-        } catch (\Exception $exception) {
-            ErrorHandler::handleException($exception, $this);
-            // Return to dispatcher for writing serialized exception
-            return;
-        }
 
-        $uriProcessor = null;
-        try {
             $uriProcessor = UriProcessor::process($this);
             $requestDescription = $uriProcessor->getRequest();
             $this->serializeResult($requestDescription, $uriProcessor);
@@ -225,8 +219,6 @@ abstract class BaseService implements IRequestHandler, IService
             // Return to dispatcher for writing serialized exception
             return;
         }
-
-        // Return to dispatcher for writing result
     }
 
 	/**
@@ -280,9 +272,7 @@ abstract class BaseService implements IRequestHandler, IService
             ODataException::createInternalServerError(Messages::providersWrapperNull());
         }
     
-        if (!is_object($metadataProvider) 
-            || array_search('POData\Providers\Metadata\IMetadataProvider', class_implements($metadataProvider)) === false
-        ) {
+        if (!is_object($metadataProvider) || !$metadataProvider instanceof IMetadataProvider) {
             ODataException::createInternalServerError(Messages::invalidMetadataInstance());
         }
 
@@ -299,7 +289,7 @@ abstract class BaseService implements IRequestHandler, IService
         }
 
 
-        if (array_search('POData\Providers\Query\IQueryProvider', class_implements($queryProvider)) === false) {
+        if (!$queryProvider instanceof IQueryProvider) {
             ODataException::createInternalServerError(Messages::invalidQueryInstance());
         }
 
@@ -393,7 +383,7 @@ abstract class BaseService implements IRequestHandler, IService
                     }
 
                     $odataModelInstance = $objectModelSerializer->writeUrlElement($result);
-                } else if ($requestTargetKind == RequestTargetKind::RESOURCE) {
+                } else if ($requestTargetKind == TargetKind::RESOURCE) {
                     if (!is_null($this->_serviceHost->getRequestIfMatch())
                         && !is_null($this->_serviceHost->getRequestIfNoneMatch())
                     ) {
@@ -435,27 +425,27 @@ abstract class BaseService implements IRequestHandler, IService
                     if (!is_null($eTag)) {
                         $this->_serviceHost->setResponseETag($eTag);
                     }
-                } else if ($requestTargetKind == RequestTargetKind::COMPLEX_OBJECT) {
+                } else if ($requestTargetKind == TargetKind::COMPLEX_OBJECT) {
 
 	                $odataModelInstance = $objectModelSerializer->writeTopLevelComplexObject(
                         $result, 
                         $requestDescription->getProjectedProperty()->getName(),
 	                    $requestDescription->getTargetResourceType()
 	                );
-                } else if ($requestTargetKind == RequestTargetKind::BAG) {
+                } else if ($requestTargetKind == TargetKind::BAG) {
                     $odataModelInstance = $objectModelSerializer->writeTopLevelBagObject(
                         $result, 
                         $requestDescription->getProjectedProperty()->getName(),
 	                    $requestDescription->getTargetResourceType(),
                         $odataModelInstance
                     );
-                } else if ($requestTargetKind == RequestTargetKind::PRIMITIVE) {
+                } else if ($requestTargetKind == TargetKind::PRIMITIVE) {
                     $odataModelInstance = $objectModelSerializer->writeTopLevelPrimitive(
                         $result,
 	                    $requestDescription->getProjectedProperty(),
                         $odataModelInstance
                     );
-                } else if ($requestTargetKind == RequestTargetKind::PRIMITIVE_VALUE) {
+                } else if ($requestTargetKind == TargetKind::PRIMITIVE_VALUE) {
                     // Code path for primitive value (Since its primitve no need for
                     // object model serialization) 
                     // Customers('ANU')/CompanyName/$value => string 
@@ -513,10 +503,10 @@ abstract class BaseService implements IRequestHandler, IService
 
 	    //The response format can be dictated by the target resource kind. IE a $value will be different then expected
 	    //getTargetKind doesn't deal with link resources directly and this can change things
-	    $requestTargetKind = $request->isLinkUri() ? RequestTargetKind::LINK : $request->getTargetKind();
+	    $requestTargetKind = $request->isLinkUri() ? TargetKind::LINK : $request->getTargetKind();
 
 
-        if ($requestTargetKind == RequestTargetKind::METADATA) {
+        if ($requestTargetKind == TargetKind::METADATA) {
             $responseContentType = HttpProcessUtility::selectMimeType(
                 $requestAcceptText,
                 array(ODataConstants::MIME_APPLICATION_XML)
@@ -527,7 +517,7 @@ abstract class BaseService implements IRequestHandler, IService
         }
 
 
-	    if ($requestTargetKind == RequestTargetKind::SERVICE_DIRECTORY) {
+	    if ($requestTargetKind == TargetKind::SERVICE_DIRECTORY) {
             $responseContentType = HttpProcessUtility::selectMimeType(
                 $requestAcceptText, 
                 array(
@@ -542,7 +532,7 @@ abstract class BaseService implements IRequestHandler, IService
         }
 
 
-	    if ($requestTargetKind == RequestTargetKind::PRIMITIVE_VALUE) {
+	    if ($requestTargetKind == TargetKind::PRIMITIVE_VALUE) {
             $supportedResponseMimeTypes = array(ODataConstants::MIME_TEXTPLAIN);
             $responseFormat = ResponseFormat::TEXT();
 
@@ -554,11 +544,8 @@ abstract class BaseService implements IRequestHandler, IService
                 );
                 $type = $projectedProperty->getInstanceType();
                 self::assert(
-                    !is_null($type) && array_search(
-                        'POData\Providers\Metadata\Type\IType', 
-                        class_implements($type)
-                    ) !== false, 
-                    '!is_null($type) && array_search(\'POData\Providers\Metadata\Type\IType\', class_implements($type)) !== false'
+                    !is_null($type) && $type instanceof IType,
+                    '!is_null($type) && $type instanceof IType'
                 );
                 if ($type instanceof Binary) {
                     $supportedResponseMimeTypes 
@@ -576,10 +563,10 @@ abstract class BaseService implements IRequestHandler, IService
 	    }
 
 
-	    if ($requestTargetKind == RequestTargetKind::PRIMITIVE
-            || $requestTargetKind == RequestTargetKind::COMPLEX_OBJECT
-            || $requestTargetKind == RequestTargetKind::BAG
-            || $requestTargetKind == RequestTargetKind::LINK
+	    if ($requestTargetKind == TargetKind::PRIMITIVE
+            || $requestTargetKind == TargetKind::COMPLEX_OBJECT
+            || $requestTargetKind == TargetKind::BAG
+            || $requestTargetKind == TargetKind::LINK
         ) {
             $responseContentType = HttpProcessUtility::selectMimeType(
                 $requestAcceptText, 
@@ -594,7 +581,7 @@ abstract class BaseService implements IRequestHandler, IService
         }
 
 
-	    if ($requestTargetKind == RequestTargetKind::RESOURCE) {
+	    if ($requestTargetKind == TargetKind::RESOURCE) {
             $responseContentType = HttpProcessUtility::selectMimeType(
                 $requestAcceptText, 
                 array(
@@ -607,7 +594,7 @@ abstract class BaseService implements IRequestHandler, IService
         }
 
 
-	    if ($requestTargetKind == RequestTargetKind::MEDIA_RESOURCE) {
+	    if ($requestTargetKind == TargetKind::MEDIA_RESOURCE) {
 
 		    if (!$request->isNamedStream() && !$request->getTargetResourceType()->isMediaLinkEntry()){
 			    ODataException::createBadRequestError(
@@ -788,14 +775,14 @@ abstract class BaseService implements IRequestHandler, IService
         foreach ($resourceType->getETagProperties() as $eTagProperty) {
             $type = $eTagProperty->getInstanceType();
             self::assert(
-                !is_null($type) 
-                && array_search('POData\Providers\Metadata\Type\IType', class_implements($type)) !== false,
-                '!is_null($type) 
-                && array_search(\'POData\Providers\Metadata\Type\IType\', class_implements($type)) !== false'
+                !is_null($type) && $type instanceof IType,
+                '!is_null($type) && $type instanceof IType'
             );
       
             $value = null; 
             try {
+
+	            //TODO #88...also this seems like dupe work
                 $reflectionProperty  = new \ReflectionProperty($entryObject, $eTagProperty->getName() );
                 $value = $reflectionProperty->getValue($entryObject);
             } catch (\ReflectionException $reflectionException) {
@@ -815,7 +802,7 @@ abstract class BaseService implements IRequestHandler, IService
 
         if (!is_null($eTag)) {
             // If eTag is made up of datetime or string properties then the above
-            // IType::converToOData will perform utf8 and url encode. But we don't
+            // IType::convertToOData will perform utf8 and url encode. But we don't
             // want this for eTag value.
             $eTag = urldecode(utf8_decode($eTag));
             return rtrim($eTag, ',');
