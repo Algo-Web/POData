@@ -18,6 +18,10 @@ use POData\Common\InvalidOperationException;
 use POData\Providers\Metadata\ResourceAssociationSet;
 use POData\Providers\Metadata\ResourceAssociationSetEnd;
 use POData\Providers\Query\IQueryProvider;
+use POData\Providers\Query\QueryType;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
+use POData\Providers\Query\QueryResult;
+
 
 use Phockito;
 use UnitTests\POData\BaseUnitTestCase;
@@ -565,6 +569,255 @@ class ProvidersWrapperTest extends BaseUnitTestCase
 
 	}
 
+    /** @var  FilterInfo */
+    protected $mockFilterInfo;
+
+    public function testGetResourceSetJustEntities()
+    {
+        $orderBy = null;
+        $top = 10;
+        $skip = 10;
+
+        $fakeFilterString = "some garbage";
+        Phockito::when($this->mockFilterInfo->getExpressionAsString())
+            ->return($fakeFilterString);
+
+        $fakeQueryResult = new QueryResult();
+        $fakeQueryResult->results = array();
+
+        Phockito::when($this->mockQueryProvider->getResourceSet(
+            QueryType::ENTITIES(),
+            $this->mockResourceSet,
+            $fakeFilterString,
+            $orderBy,
+            $top,
+            $skip
+        ))->return($fakeQueryResult);
+
+        $wrapper = $this->getMockedWrapper();
+
+        $actual = $wrapper->getResourceSet(
+            QueryType::ENTITIES(),
+            $this->mockResourceSet,
+            $this->mockFilterInfo,
+            $orderBy,
+            $top,
+            $skip
+        );
+        $this->assertEquals($fakeQueryResult, $actual);
+
+    }
 
 
+    public function testGetResourceSetReturnsNonQueryResult()
+    {
+        $orderBy = null;
+        $top = 10;
+        $skip = 10;
+
+        $fakeFilterString = "some garbage";
+        Phockito::when($this->mockFilterInfo->getExpressionAsString())
+            ->return($fakeFilterString);
+
+
+        Phockito::when($this->mockQueryProvider->getResourceSet(
+            QueryType::ENTITIES(),
+            $this->mockResourceSet,
+            $fakeFilterString,
+            $orderBy,
+            $top,
+            $skip
+        ))->return(null);
+
+        $wrapper = $this->getMockedWrapper();
+
+        try{
+            $wrapper->getResourceSet(
+                QueryType::ENTITIES(),
+                $this->mockResourceSet,
+                $this->mockFilterInfo,
+                $orderBy,
+                $top,
+                $skip
+            );
+            $this->fail("expected exception not thrown");
+        }
+        catch(ODataException $ex){
+            $this->assertEquals(Messages::queryProviderReturnsNonQueryResult("IQueryProvider::getResourceSet"), $ex->getMessage());
+            $this->assertEquals(500, $ex->getStatusCode());
+        }
+
+    }
+
+
+    public function testGetResourceSetReturnsCountWhenQueryTypeIsCount()
+    {
+        $orderBy = null;
+        $top = 10;
+        $skip = 10;
+
+        $fakeFilterString = "some garbage";
+        Phockito::when($this->mockFilterInfo->getExpressionAsString())
+            ->return($fakeFilterString);
+
+        $fakeQueryResult = new QueryResult();
+        $fakeQueryResult->count = null; //null is not numeric
+
+        Phockito::when($this->mockQueryProvider->getResourceSet(
+            QueryType::COUNT(),
+            $this->mockResourceSet,
+            $fakeFilterString,
+            $orderBy,
+            $top,
+            $skip
+        ))->return($fakeQueryResult);
+
+        $wrapper = $this->getMockedWrapper();
+
+        try{
+            $wrapper->getResourceSet(
+                QueryType::COUNT(),
+                $this->mockResourceSet,
+                $this->mockFilterInfo,
+                $orderBy,
+                $top,
+                $skip
+            );
+            $this->fail("expected exception not thrown");
+        }
+        catch(ODataException $ex){
+            $this->assertEquals(Messages::queryProviderResultCountMissing("IQueryProvider::getResourceSet", QueryType::COUNT()), $ex->getMessage());
+            $this->assertEquals(500, $ex->getStatusCode());
+        }
+
+    }
+
+    public function testGetResourceSetReturnsCountWhenQueryTypeIsEntitiesWithCount()
+    {
+        $orderBy = null;
+        $top = 10;
+        $skip = 10;
+
+        $fakeFilterString = "some garbage";
+        Phockito::when($this->mockFilterInfo->getExpressionAsString())
+            ->return($fakeFilterString);
+
+        $fakeQueryResult = new QueryResult();
+        $fakeQueryResult->count = null; //null is not numeric
+
+        Phockito::when($this->mockQueryProvider->getResourceSet(
+            QueryType::ENTITIES_WITH_COUNT(),
+            $this->mockResourceSet,
+            $fakeFilterString,
+            $orderBy,
+            $top,
+            $skip
+        ))->return($fakeQueryResult);
+
+        $wrapper = $this->getMockedWrapper();
+
+        try{
+            $wrapper->getResourceSet(
+                QueryType::ENTITIES_WITH_COUNT(),
+                $this->mockResourceSet,
+                $this->mockFilterInfo,
+                $orderBy,
+                $top,
+                $skip
+            );
+            $this->fail("expected exception not thrown");
+        }
+        catch(ODataException $ex){
+            $this->assertEquals(Messages::queryProviderResultCountMissing("IQueryProvider::getResourceSet", QueryType::ENTITIES_WITH_COUNT()), $ex->getMessage());
+            $this->assertEquals(500, $ex->getStatusCode());
+        }
+
+    }
+
+
+    public function testGetResourceSetReturnsArrayWhenQueryTypeIsEntities()
+    {
+        $orderBy = null;
+        $top = 10;
+        $skip = 10;
+
+        $fakeFilterString = "some garbage";
+        Phockito::when($this->mockFilterInfo->getExpressionAsString())
+            ->return($fakeFilterString);
+
+        $fakeQueryResult = new QueryResult();
+        $fakeQueryResult->count = 2;
+        $fakeQueryResult->results = null; //null is not an array
+
+        Phockito::when($this->mockQueryProvider->getResourceSet(
+            QueryType::ENTITIES(),
+            $this->mockResourceSet,
+            $fakeFilterString,
+            $orderBy,
+            $top,
+            $skip
+        ))->return($fakeQueryResult);
+
+        $wrapper = $this->getMockedWrapper();
+
+        try{
+            $wrapper->getResourceSet(
+                QueryType::ENTITIES(),
+                $this->mockResourceSet,
+                $this->mockFilterInfo,
+                $orderBy,
+                $top,
+                $skip
+            );
+            $this->fail("expected exception not thrown");
+        }
+        catch(ODataException $ex){
+            $this->assertEquals(Messages::queryProviderResultsMissing("IQueryProvider::getResourceSet", QueryType::ENTITIES()), $ex->getMessage());
+            $this->assertEquals(500, $ex->getStatusCode());
+        }
+
+    }
+
+    public function testGetResourceSetReturnsArrayWhenQueryTypeIsEntitiesWithCount()
+    {
+        $orderBy = null;
+        $top = 10;
+        $skip = 10;
+
+        $fakeFilterString = "some garbage";
+        Phockito::when($this->mockFilterInfo->getExpressionAsString())
+            ->return($fakeFilterString);
+
+        $fakeQueryResult = new QueryResult();
+        $fakeQueryResult->count = 4;
+        $fakeQueryResult->results = null; //null is not an array
+
+        Phockito::when($this->mockQueryProvider->getResourceSet(
+            QueryType::ENTITIES_WITH_COUNT(),
+            $this->mockResourceSet,
+            $fakeFilterString,
+            $orderBy,
+            $top,
+            $skip
+        ))->return($fakeQueryResult);
+
+        $wrapper = $this->getMockedWrapper();
+
+        try{
+            $wrapper->getResourceSet(
+                QueryType::ENTITIES_WITH_COUNT(),
+                $this->mockResourceSet,
+                $this->mockFilterInfo,
+                $orderBy,
+                $top,
+                $skip
+            );
+            $this->fail("expected exception not thrown");
+        }
+        catch(ODataException $ex){
+            $this->assertEquals(Messages::queryProviderResultsMissing("IQueryProvider::getResourceSet", QueryType::ENTITIES_WITH_COUNT()), $ex->getMessage());
+            $this->assertEquals(500, $ex->getStatusCode());
+        }
+
+    }
 }

@@ -26,8 +26,7 @@ use POData\Providers\Query\QueryType;
  * Class ProvidersWrapper
  *
  * A wrapper class over IMetadataProvider and IQueryProvider implementations, All calls to implementation of methods
- * of these interfaces should go through this wrapper class so that wrapper methods of this class can perform validations
- * on data returned by IDSMP methods
+ * of these interfaces should go through this wrapper class so that wrapper methods of this class can perform validation
  *
  * @package POData\Providers
  */
@@ -38,7 +37,7 @@ class ProvidersWrapper
      * 
      * @var IMetadataProvider
      */
-    private $_metadataProvider;
+    private $metaProvider;
 
     /**
      * Holds reference to IQueryProvider implementation
@@ -46,7 +45,7 @@ class ProvidersWrapper
      * @var IQueryProvider
      *
      */
-    private $_queryProvider;
+    private $queryProvider;
 
     /**
      * Holds reference to IServiceConfiguration implementation
@@ -97,8 +96,8 @@ class ProvidersWrapper
      */
     public function __construct(IMetadataProvider $metadataProvider, IQueryProvider $queryProvider, ServiceConfiguration $configuration)
     {
-        $this->_metadataProvider = $metadataProvider;
-        $this->_queryProvider = $queryProvider;
+        $this->metaProvider = $metadataProvider;
+        $this->queryProvider = $queryProvider;
         $this->config = $configuration;
         $this->setWrapperCache = array();
         $this->typeCache = array();
@@ -115,12 +114,12 @@ class ProvidersWrapper
      * 
      * @return string that contains the name of the container
      * 
-     * @throws ODataException Exception if IDSMP implementation returns empty container name
+     * @throws ODataException Exception if implementation returns empty container name
      *
      */
     public function getContainerName()
     {
-        $containerName = $this->_metadataProvider->getContainerName();
+        $containerName = $this->metaProvider->getContainerName();
         if (empty($containerName)) {
             throw new ODataException(
                 Messages::providersWrapperContainerNameMustNotBeNullOrEmpty(),
@@ -137,12 +136,12 @@ class ProvidersWrapper
      *
      * @return string that contains the namespace name.
      * 
-     * @throws ODataException Exception if IDSMP implementation returns empty container namespace
+     * @throws ODataException Exception if implementation returns empty container namespace
      *
      */
     public function getContainerNamespace()
     {
-        $containerNamespace = $this->_metadataProvider->getContainerNamespace();
+        $containerNamespace = $this->metaProvider->getContainerNamespace();
         if (empty($containerNamespace)) {
             throw new ODataException(
                 Messages::providersWrapperContainerNamespaceMustNotBeNullOrEmpty(),
@@ -174,7 +173,7 @@ class ProvidersWrapper
      */
     public function getResourceSets()
     {
-        $resourceSets = $this->_metadataProvider->getResourceSets();
+        $resourceSets = $this->metaProvider->getResourceSets();
         $resourceSetWrappers = array();
         $resourceSetNames = array();
         foreach ($resourceSets as $resourceSet) {
@@ -201,7 +200,7 @@ class ProvidersWrapper
      */
     public function getTypes()
     {
-        $resourceTypes = $this->_metadataProvider->getTypes();
+        $resourceTypes = $this->metaProvider->getTypes();
         $resourceTypeNames = array();
         foreach ($resourceTypes as $resourceType) {
             if (in_array($resourceType->getName(), $resourceTypeNames)) {
@@ -235,7 +234,7 @@ class ProvidersWrapper
 			return $this->setWrapperCache[$name];
         }
         
-        $resourceSet = $this->_metadataProvider->resolveResourceSet($name);
+        $resourceSet = $this->metaProvider->resolveResourceSet($name);
         if (is_null($resourceSet)) {
             return null;
         }
@@ -257,7 +256,7 @@ class ProvidersWrapper
      */
     public function resolveResourceType($name)
     {
-        $resourceType = $this->_metadataProvider->resolveResourceType($name);
+        $resourceType = $this->metaProvider->resolveResourceType($name);
         if (is_null($resourceType)) {
             return null;
         }
@@ -280,7 +279,7 @@ class ProvidersWrapper
      */
     public function getDerivedTypes(ResourceType $resourceType)
     {
-        $derivedTypes = $this->_metadataProvider->getDerivedTypes($resourceType);
+        $derivedTypes = $this->metaProvider->getDerivedTypes($resourceType);
 	    if (!is_array($derivedTypes)) {
 		    throw new InvalidOperationException(Messages::metadataAssociationTypeSetInvalidGetDerivedTypesReturnType($resourceType->getName()));
 	    }
@@ -308,7 +307,7 @@ class ProvidersWrapper
     public function hasDerivedTypes(ResourceType $resourceType)
     {
         $this->_validateResourceType($resourceType);
-        return $this->_metadataProvider->hasDerivedTypes($resourceType);
+        return $this->metaProvider->hasDerivedTypes($resourceType);
     }
 
     /**
@@ -338,7 +337,7 @@ class ProvidersWrapper
             return $this->associationSetCache[$cacheKey];
         }
 
-        $associationSet = $this->_metadataProvider->getResourceAssociationSet(
+        $associationSet = $this->metaProvider->getResourceAssociationSet(
             $set,
             $type,
             $property
@@ -580,7 +579,7 @@ class ProvidersWrapper
      */
     public function getExpressionProvider()
     {
-	    $expressionProvider = $this->_queryProvider->getExpressionProvider();
+	    $expressionProvider = $this->queryProvider->getExpressionProvider();
         if (is_null($expressionProvider)) {
             ODataException::createInternalServerError(Messages::providersWrapperExpressionProviderMustNotBeNullOrEmpty());
         }
@@ -602,7 +601,7 @@ class ProvidersWrapper
 	 */
 	public function handlesOrderedPaging()
 	{
-		return $this->_queryProvider->handlesOrderedPaging();
+		return $this->queryProvider->handlesOrderedPaging();
 	}
 
 
@@ -623,7 +622,7 @@ class ProvidersWrapper
 
 		$customExpressionAsString = $filterInfo->getExpressionAsString();
 
-		$entityInstances = $this->_queryProvider->getResourceSet(
+		$queryResult = $this->queryProvider->getResourceSet(
 			$queryType,
 			$resourceSet,
 			$customExpressionAsString,
@@ -633,13 +632,25 @@ class ProvidersWrapper
 		);
 
 
-        if (!is_array($entityInstances)) {
+        if (!$queryResult instanceof QueryResult) {
             ODataException::createInternalServerError(
-                Messages::providersWrapperIDSQPMethodReturnsNonArray('IQueryProvider::getResourceSet')
+                Messages::queryProviderReturnsNonQueryResult('IQueryProvider::getResourceSet')
             );
         }
 
-        return $entityInstances;
+        if(($queryType == QueryType::COUNT() || $queryType == QueryType::ENTITIES_WITH_COUNT()) && !is_numeric($queryResult->count)){
+            ODataException::createInternalServerError(
+                Messages::queryProviderResultCountMissing('IQueryProvider::getResourceSet', $queryType)
+            );
+        }
+
+        if(($queryType == QueryType::ENTITIES() || $queryType == QueryType::ENTITIES_WITH_COUNT()) && !is_array($queryResult->results)){
+            ODataException::createInternalServerError(
+                Messages::queryProviderResultsMissing('IQueryProvider::getResourceSet', $queryType)
+            );
+        }
+
+        return $queryResult;
     }
  
 
@@ -654,7 +665,7 @@ class ProvidersWrapper
      */
     public function getResourceFromResourceSet(ResourceSet $resourceSet, KeyDescriptor $keyDescriptor)
     {
-        $entityInstance = $this->_queryProvider->getResourceFromResourceSet( $resourceSet, $keyDescriptor );
+        $entityInstance = $this->queryProvider->getResourceFromResourceSet( $resourceSet, $keyDescriptor );
         $this->_validateEntityInstance(
             $entityInstance, 
             $resourceSet, 
@@ -694,7 +705,7 @@ class ProvidersWrapper
 
 		$customExpressionAsString = $filterInfo->getExpressionAsString();
 
-		$entityInstances = $this->_queryProvider->getRelatedResourceSet(
+		$entityInstances = $this->queryProvider->getRelatedResourceSet(
 		    $sourceResourceSet,
 		    $sourceEntity,
 		    $targetResourceSet,
@@ -708,7 +719,7 @@ class ProvidersWrapper
 
         if (!is_array($entityInstances)) {
             ODataException::createInternalServerError(
-                Messages::providersWrapperIDSQPMethodReturnsNonArray('IQueryProvider::getRelatedResourceSet')
+                Messages::queryProviderReturnsNonQueryResult('IQueryProvider::getRelatedResourceSet')
             );
         }
 
@@ -731,7 +742,7 @@ class ProvidersWrapper
         $sourceEntity, ResourceSet $targetResourceSet, ResourceProperty $targetProperty,
         KeyDescriptor $keyDescriptor
     ) {
-        $entityInstance = $this->_queryProvider->getResourceFromRelatedResourceSet(
+        $entityInstance = $this->queryProvider->getResourceFromRelatedResourceSet(
 			$sourceResourceSet,
 			$sourceEntity,
 			$targetResourceSet,
@@ -763,7 +774,7 @@ class ProvidersWrapper
         $sourceEntity, ResourceSet $targetResourceSet, 
         ResourceProperty $targetProperty
     ) {
-        $entityInstance = $this->_queryProvider->getRelatedResourceReference(
+        $entityInstance = $this->queryProvider->getRelatedResourceReference(
             $sourceResourceSet, 
             $sourceEntity, 
             $targetResourceSet, 

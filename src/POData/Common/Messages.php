@@ -4,6 +4,7 @@ namespace POData\Common;
 
 use POData\OperationContext\HTTPRequestMethod;
 use POData\Providers\Metadata\Type\IType;
+use POData\Providers\Query\QueryType;
 use POData\ResponseFormat;
 
 /**
@@ -699,15 +700,40 @@ class Messages
     }
 
     /**
-     * A message to show error when IDSQP::getResourceSet returns non-array
-     * 
+     *
      * @param string $methodName method name
      * 
      * @return string The message
      */
-    public static function providersWrapperIDSQPMethodReturnsNonArray($methodName)
+    public static function queryProviderReturnsNonQueryResult($methodName)
     {
-        return "The implementation of the method $methodName must return an array of entities belonging to the requested resource set or an empty array if there is no entities.";
+        return "The implementation of the method $methodName must return a QueryResult instance.";
+    }
+
+
+    /**
+     *
+     * @param string $methodName method name
+     * @param QueryType $queryType
+     *
+     * @return string The message
+     */
+    public static function queryProviderResultCountMissing($methodName, QueryType $queryType)
+    {
+        return "The implementation of the method $methodName must return a QueryResult instance with a count for queries of type $queryType.";
+    }
+
+
+    /**
+     *
+     * @param string $methodName method name
+     * @param QueryType $queryType
+     *
+     * @return string The message
+     */
+    public static function queryProviderResultsMissing($methodName, QueryType $queryType)
+    {
+        return "The implementation of the method $methodName must return a QueryResult instance with an array of results for queries of type $queryType.";
     }
 
     /**
