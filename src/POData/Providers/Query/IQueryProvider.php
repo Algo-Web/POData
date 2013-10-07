@@ -7,6 +7,7 @@ use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Expression\IExpressionProvider;
 use POData\Providers\Query\QueryType;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
 
 use stdClass;
 
@@ -43,7 +44,7 @@ interface IQueryProvider
 	 *
 	 * @param QueryType $queryType indicates if this is a query for a count, entities, or entities with a count
 	 * @param ResourceSet $resourceSet The entity set containing the entities to fetch
-	 * @param String $filter filter condition if any need to be apply in the query
+	 * @param FilterInfo $filterInfo represents the $filter parameter of the OData query.  NULL if no $filter specified
 	 * @param mixed $orderBy sorted order if we want to get the data in some specific order
 	 * @param int $top number of records which  need to be skip
 	 * @param String $skipToken value indicating what records to skip

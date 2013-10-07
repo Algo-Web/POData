@@ -578,9 +578,6 @@ class ProvidersWrapperTest extends BaseUnitTestCase
         $top = 10;
         $skip = 10;
 
-        $fakeFilterString = "some garbage";
-        Phockito::when($this->mockFilterInfo->getExpressionAsString())
-            ->return($fakeFilterString);
 
         $fakeQueryResult = new QueryResult();
         $fakeQueryResult->results = array();
@@ -588,7 +585,7 @@ class ProvidersWrapperTest extends BaseUnitTestCase
         Phockito::when($this->mockQueryProvider->getResourceSet(
             QueryType::ENTITIES(),
             $this->mockResourceSet,
-            $fakeFilterString,
+	        $this->mockFilterInfo,
             $orderBy,
             $top,
             $skip
@@ -656,17 +653,13 @@ class ProvidersWrapperTest extends BaseUnitTestCase
         $top = 10;
         $skip = 10;
 
-        $fakeFilterString = "some garbage";
-        Phockito::when($this->mockFilterInfo->getExpressionAsString())
-            ->return($fakeFilterString);
-
         $fakeQueryResult = new QueryResult();
         $fakeQueryResult->count = null; //null is not numeric
 
         Phockito::when($this->mockQueryProvider->getResourceSet(
             QueryType::COUNT(),
             $this->mockResourceSet,
-            $fakeFilterString,
+	        $this->mockFilterInfo,
             $orderBy,
             $top,
             $skip
@@ -698,9 +691,6 @@ class ProvidersWrapperTest extends BaseUnitTestCase
         $top = 10;
         $skip = 10;
 
-        $fakeFilterString = "some garbage";
-        Phockito::when($this->mockFilterInfo->getExpressionAsString())
-            ->return($fakeFilterString);
 
         $fakeQueryResult = new QueryResult();
         $fakeQueryResult->count = null; //null is not numeric
@@ -708,7 +698,7 @@ class ProvidersWrapperTest extends BaseUnitTestCase
         Phockito::when($this->mockQueryProvider->getResourceSet(
             QueryType::ENTITIES_WITH_COUNT(),
             $this->mockResourceSet,
-            $fakeFilterString,
+	        $this->mockFilterInfo,
             $orderBy,
             $top,
             $skip
@@ -741,9 +731,6 @@ class ProvidersWrapperTest extends BaseUnitTestCase
         $top = 10;
         $skip = 10;
 
-        $fakeFilterString = "some garbage";
-        Phockito::when($this->mockFilterInfo->getExpressionAsString())
-            ->return($fakeFilterString);
 
         $fakeQueryResult = new QueryResult();
         $fakeQueryResult->count = 2;
@@ -752,7 +739,7 @@ class ProvidersWrapperTest extends BaseUnitTestCase
         Phockito::when($this->mockQueryProvider->getResourceSet(
             QueryType::ENTITIES(),
             $this->mockResourceSet,
-            $fakeFilterString,
+	        $this->mockFilterInfo,
             $orderBy,
             $top,
             $skip
@@ -784,9 +771,6 @@ class ProvidersWrapperTest extends BaseUnitTestCase
         $top = 10;
         $skip = 10;
 
-        $fakeFilterString = "some garbage";
-        Phockito::when($this->mockFilterInfo->getExpressionAsString())
-            ->return($fakeFilterString);
 
         $fakeQueryResult = new QueryResult();
         $fakeQueryResult->count = 4;
@@ -795,7 +779,7 @@ class ProvidersWrapperTest extends BaseUnitTestCase
         Phockito::when($this->mockQueryProvider->getResourceSet(
             QueryType::ENTITIES_WITH_COUNT(),
             $this->mockResourceSet,
-            $fakeFilterString,
+	        $this->mockFilterInfo,
             $orderBy,
             $top,
             $skip

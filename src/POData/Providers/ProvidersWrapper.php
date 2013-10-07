@@ -620,12 +620,10 @@ class ProvidersWrapper
     public function getResourceSet(QueryType $queryType, ResourceSet $resourceSet, $filterInfo, $orderBy, $top, $skip)
     {
 
-		$customExpressionAsString = $filterInfo->getExpressionAsString();
-
 		$queryResult = $this->queryProvider->getResourceSet(
 			$queryType,
 			$resourceSet,
-			$customExpressionAsString,
+			$filterInfo,
 			$orderBy,
 			$top,
 			$skip
