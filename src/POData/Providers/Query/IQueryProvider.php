@@ -54,7 +54,7 @@ interface IQueryProvider
 	public function getResourceSet(
 		QueryType $queryType,
 		ResourceSet $resourceSet,
-		$filter = null,
+		$filterInfo = null,
 		$orderBy = null,
 		$top = null,
 		$skipToken = null
