@@ -11,9 +11,9 @@ use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ExpressionTy
 use POData\Providers\Metadata\Type\IType;
 use POData\Common\NotImplementedException;
 use POData\Common\ODataConstants;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\IExpressionProvider;
+use POData\Providers\Expression\IExpressionProvider;
 use POData\Providers\Metadata\ResourceType;
-
+use POData\UriProcessor\QueryProcessor\FunctionDescription;
 
 class WordPressDSExpressionProvider implements IExpressionProvider
 {
@@ -246,7 +246,7 @@ class WordPressDSExpressionProvider implements IExpressionProvider
      */
     public function onFunctionCallExpression($functionDescription, $params)
     {
-        switch($functionDescription->functionName) {
+        switch($functionDescription->name) {
         case ODataConstants::STRFUN_COMPARE:
             return "STRCMP($params[0], $params[1])";
             break;

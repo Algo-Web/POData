@@ -406,7 +406,7 @@ class ExpressionParserTest extends \PHPUnit_Framework_TestCase
         $parser->resetParser($expression);
         $expr = $parser->parseFilter();
         $this->assertTrue($expr instanceof FunctionCallExpression);
-        $this->assertEquals('is_null', $expr->getFunctionDescription()->functionName);
+        $this->assertEquals('is_null', $expr->getFunctionDescription()->name);
         $this->assertTrue($expr->getType() instanceof Boolean);
         $paramExpressions = $expr->getParamExpressions();
         $this->assertTrue($paramExpressions[0] instanceof PropertyAccessExpression);
@@ -417,7 +417,7 @@ class ExpressionParserTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($expr instanceof RelationalExpression);
         $this->assertEquals($expr->getNodeType(), ExpressionType::GREATERTHAN_OR_EQUAL);
         $this->assertTrue($expr->getLeft() instanceof FunctionCallExpression);
-        $this->assertEquals('strcmp', $expr->getLeft()->getFunctionDescription()->functionName);
+        $this->assertEquals('strcmp', $expr->getLeft()->getFunctionDescription()->name);
         $paramExpression = $expr->getLeft()->getParamExpressions();
         $this->assertTrue($paramExpression[0] instanceof PropertyAccessExpression);
         $this->assertTrue($paramExpression[1] instanceof ConstantExpression);
@@ -562,11 +562,11 @@ class ExpressionParserTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($expr instanceof RelationalExpression);
 	    /** @var RelationalExpression $expr */
         $this->assertTrue($expr->getLeft() instanceof FunctionCallExpression);
-        $this->assertEquals('strcmp', $expr->getLeft()->getFunctionDescription()->functionName);
+        $this->assertEquals('strcmp', $expr->getLeft()->getFunctionDescription()->name);
         $paramExpressions = $expr->getLeft()->getParamExpressions();
         $this->assertEquals(2, count($paramExpressions));
         $this->assertTrue($paramExpressions[0] instanceof FunctionCallExpression);
-        $this->assertEquals('substring', $paramExpressions[0]->getFunctionDescription()->functionName);
+        $this->assertEquals('substring', $paramExpressions[0]->getFunctionDescription()->name);
         $paramExpressions1 = $paramExpressions[0]->getParamExpressions();
         $this->assertEquals(2, count($paramExpressions1));
         $this->assertTrue($paramExpressions1[0] instanceof ConstantExpression);

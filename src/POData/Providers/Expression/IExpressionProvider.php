@@ -1,6 +1,6 @@
 <?php
 
-namespace POData\UriProcessor\QueryProcessor\ExpressionParser;
+namespace POData\Providers\Expression;
 
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\Type\IType;
@@ -13,6 +13,8 @@ use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\PropertyAcce
  */
 interface IExpressionProvider
 {
+
+	//TODO: does this really need to be part of this interface? see #89
     /**
      * Get the name of the iterator
      * 

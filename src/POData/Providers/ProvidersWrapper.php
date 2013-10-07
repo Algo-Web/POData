@@ -15,7 +15,7 @@ use POData\Common\Messages;
 use POData\Providers\Metadata\EdmSchemaVersion;
 use POData\Providers\Query\IQueryProvider;
 use POData\Providers\Metadata\IMetadataProvider;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\IExpressionProvider;
+use POData\Providers\Expression\IExpressionProvider;
 use POData\Common\InvalidOperationException;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
 use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;

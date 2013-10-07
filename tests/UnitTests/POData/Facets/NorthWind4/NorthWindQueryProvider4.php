@@ -9,7 +9,7 @@ use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Query\IQueryProvider;
 use POData\Common\ODataException;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\IExpressionProvider;
+use POData\Providers\Expression\IExpressionProvider;
 use stdClass;
 // Note: This QP2 implementation is to test IDSQP2::getExpressionProvider functionality 
 // we will not test the actual data, instead the sql query generated.
@@ -20,7 +20,7 @@ class NorthWindQueryProvider4 implements IQueryProvider
     /**
      * Reference to the custom expression provider
      * 
-     * @var IExpressionProvider
+     * @var \POData\Providers\Expression\IExpressionProvider
      */
     private $_northWindSQLSRVExpressionProvider;
 

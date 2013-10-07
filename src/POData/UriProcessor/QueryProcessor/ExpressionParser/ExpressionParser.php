@@ -31,7 +31,7 @@ use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\FunctionCall
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\UnaryExpression;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ConstantExpression;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ExpressionType;
-use POData\UriProcessor\QueryProcessor\FunctionDescription\FunctionDescription;
+use POData\UriProcessor\QueryProcessor\FunctionDescription;
 use POData\Common\NotImplementedException;
 
 

@@ -6,7 +6,7 @@ use POData\Common\NotImplementedException;
 use POData\Common\ODataConstants;
 use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\Providers\Metadata\ResourceType;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\IExpressionProvider as IExpressionProvider;
+use POData\Providers\Expression\IExpressionProvider as IExpressionProvider;
 
 
 class NorthWindDSExpressionProvider implements IExpressionProvider

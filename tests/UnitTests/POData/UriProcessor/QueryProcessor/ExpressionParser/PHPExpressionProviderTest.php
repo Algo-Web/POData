@@ -6,7 +6,7 @@ use POData\Providers\Metadata\Type\DateTime;
 use POData\Providers\Metadata\Type\Binary;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionParser2;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionProcessor;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\PHPExpressionProvider;
+use POData\Providers\Expression\PHPExpressionProvider;
 use POData\Common\ODataException;
 use POData\Providers\Metadata\IMetadataProvider;
 
@@ -189,7 +189,7 @@ class PHPExpressionProviderTest extends \PHPUnit_Framework_TestCase
                         $this->northWindMetadata->resolveResourceSet('Customers')->getResourceType(),
                         true);
         $expressionTree = $parser->parseFilter();
-        $expressionProcessor = new ExpressionProcessor(new PHPExpressionProvider('$lt'));
+        $expressionProcessor = new ExpressionProcessor(new \POData\Providers\Expression\PHPExpressionProvider('$lt'));
         $actualPHPExpression = $expressionProcessor->processExpression($expressionTree);
         $expectedPHPExpression = '(!(is_null($lt->CustomerID)) && (strcmp($lt->CustomerID, \'ALFKI\') >= 0))';
         $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
@@ -325,7 +325,7 @@ class PHPExpressionProviderTest extends \PHPUnit_Framework_TestCase
                         $this->northWindMetadata->resolveResourceSet('Orders')->getResourceType(),
                         true);
         $expressionTree = $parser->parseFilter();
-        $expressionProcessor = new ExpressionProcessor(new PHPExpressionProvider('$lt'));
+        $expressionProcessor = new ExpressionProcessor(new \POData\Providers\Expression\PHPExpressionProvider('$lt'));
         $actualPHPExpression = $expressionProcessor->processExpression($expressionTree);
         $expectedPHPExpression = '((!(is_null($lt->Customer)) && !(is_null($lt->Customer->CustomerGuid))) && (POData\Providers\Metadata\Type\Guid::guidEqual($lt->Customer->CustomerGuid, \'05b242e752eb46bd8f0e6568b72cd9a5\') == true))';
         $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
@@ -341,7 +341,7 @@ class PHPExpressionProviderTest extends \PHPUnit_Framework_TestCase
                         $this->northWindMetadata->resolveResourceSet('Orders')->getResourceType(),
                         true);
         $expressionTree = $parser->parseFilter();
-        $expressionProcessor = new ExpressionProcessor(new PHPExpressionProvider('$lt'));
+        $expressionProcessor = new ExpressionProcessor(new \POData\Providers\Expression\PHPExpressionProvider('$lt'));
         $actualPHPExpression = $expressionProcessor->processExpression($expressionTree);
         $expectedPHPExpression = '(!(is_null($lt->Price)) && (round($lt->Price) == 200.60))';
         $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
@@ -487,7 +487,7 @@ class PHPExpressionProviderTest extends \PHPUnit_Framework_TestCase
         $parser = new ExpressionParser2($astoriaFilter, $resourceType, true);
         $expressionTree = $parser->parseFilter();
         //emit the PHP expression corresponds to Astoria filter query
-        $expressionProcessor = new ExpressionProcessor(new PHPExpressionProvider('$lt'));
+        $expressionProcessor = new ExpressionProcessor(new \POData\Providers\Expression\PHPExpressionProvider('$lt'));
         $phpExpression = $expressionProcessor->processExpression($expressionTree);
         //create an anonymous function with the generated PHP expression in if condition
         $fun = create_function('$lt', 'if(' . $phpExpression . ') { return true; } else { return false;}');

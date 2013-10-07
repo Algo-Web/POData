@@ -6,9 +6,12 @@ use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ExpressionTy
 use POData\Providers\Metadata\Type\IType;
 use POData\Common\NotImplementedException;
 use POData\Common\ODataConstants;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\IExpressionProvider; 
+use POData\Providers\Expression\IExpressionProvider;
 use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\Providers\Metadata\ResourceType;
+use POData\UriProcessor\QueryProcessor\FunctionDescription;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\PropertyAccessExpression;
+
 
 class NorthWindDSExpressionProvider4 implements IExpressionProvider
 {
@@ -34,12 +37,7 @@ class NorthWindDSExpressionProvider4 implements IExpressionProvider
     // The default parameter for ROUND sql function-call
     private $_default_round = 0;
 
-    /**
-     * The name of iterator
-     * 
-     * @var string
-     */
-    private $_iterName;
+
 
     /**
      * The type of the resource pointed by the resource path segement
@@ -48,14 +46,7 @@ class NorthWindDSExpressionProvider4 implements IExpressionProvider
      */
     private $_resourceType;
 
-    /**
-     * Constructs new instance of SQLSrverExpressionProvider for NorthWind DB
-     * 
-     * @param string $iterName The name of the iterator
-     */
-    public function __construct()
-    {
-    }
+
 
     /**
      * Get the name of the iterator
@@ -198,7 +189,7 @@ class NorthWindDSExpressionProvider4 implements IExpressionProvider
      * Call-back for constant expression
      * 
      * @param IType  $type  The type of constant
-     * @param objetc $value The value of the constant
+     * @param mixed $value The value of the constant
      * 
      * @return string
      */
@@ -299,7 +290,7 @@ class NorthWindDSExpressionProvider4 implements IExpressionProvider
      */
     public function onFunctionCallExpression($functionDescription, $params)
     {
-        switch($functionDescription->functionName) {
+        switch($functionDescription->name) {
         case ODataConstants::STRFUN_COMPARE:
             return "STRCMP($params[0]; $params[1])";
             break;

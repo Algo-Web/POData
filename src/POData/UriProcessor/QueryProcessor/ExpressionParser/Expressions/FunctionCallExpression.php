@@ -2,7 +2,7 @@
 
 namespace POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions;
 
-use POData\UriProcessor\QueryProcessor\FunctionDescription\FunctionDescription;
+use POData\UriProcessor\QueryProcessor\FunctionDescription;
 
 /**
  * Class FunctionCallExpression

@@ -4,7 +4,7 @@ use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ExpressionTy
 use POData\Providers\Metadata\Type\IType;
 use POData\Common\NotImplementedException;
 use POData\Common\ODataConstants;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\IExpressionProvider;
+use POData\Providers\Expression\IExpressionProvider;
 use POData\Providers\Metadata\ResourceType;
 require_once 'WordPressMetadata.php';
 

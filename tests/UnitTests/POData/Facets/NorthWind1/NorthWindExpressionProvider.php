@@ -5,10 +5,10 @@ namespace UnitTests\POData\Facets\NorthWind1;
 
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\Type\IType;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionType;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\IExpressionProvider;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\objetc;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\PropertyAccessExpression;
+use POData\Providers\Expression\IExpressionProvider;
+use POData\UriProcessor\QueryProcessor\FunctionDescription;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\PropertyAccessExpression;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ExpressionType;
 
 class NorthWindExpressionProvider implements IExpressionProvider
 {
@@ -95,7 +95,7 @@ class NorthWindExpressionProvider implements IExpressionProvider
 	 * Call-back for constant expression
 	 *
 	 * @param IType $type  The type of constant
-	 * @param objetc $value The value of the constant
+	 * @param mixed $value The value of the constant
 	 *
 	 * @return string
 	 */

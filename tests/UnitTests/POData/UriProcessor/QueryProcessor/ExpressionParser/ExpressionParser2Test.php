@@ -2,6 +2,7 @@
 
 namespace POData\UriProcessor\QueryProcessor\ExpressionParser;
 
+use POData\Providers\Expression\PHPExpressionProvider;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionParser2;
 use POData\Common\ODataException;

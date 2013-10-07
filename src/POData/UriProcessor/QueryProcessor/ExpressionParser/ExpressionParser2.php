@@ -5,6 +5,7 @@ namespace POData\UriProcessor\QueryProcessor\ExpressionParser;
 
 use POData\Common\Messages;
 use POData\Common\ODataException;
+use POData\Providers\Expression\PHPExpressionProvider;
 use POData\Providers\Metadata\Type\Boolean;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\ResourceTypeKind;
@@ -17,8 +18,8 @@ use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\PropertyAcce
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\FunctionCallExpression;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\UnaryExpression;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ExpressionType;
-use POData\UriProcessor\QueryProcessor\FunctionDescription\FunctionDescription;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\IExpressionProvider;
+use POData\UriProcessor\QueryProcessor\FunctionDescription;
+use POData\Providers\Expression\IExpressionProvider;
 
 /**
  * Class ExpressionParser2
@@ -80,7 +81,7 @@ class ExpressionParser2 extends ExpressionParser
      * @throws ODataException If any error occurs while parsing the odata expression or building the php/custom expression.
      *
      */
-    public static function parseExpression2($text, ResourceType $resourceType, IExpressionProvider $expressionProvider) {
+    public static function parseExpression2($text, ResourceType $resourceType, \POData\Providers\Expression\IExpressionProvider $expressionProvider) {
 
         $expressionParser2 = new ExpressionParser2($text, $resourceType, $expressionProvider instanceof PHPExpressionProvider);
         $expressionTree = $expressionParser2->parseFilter();
@@ -217,7 +218,7 @@ class ExpressionParser2 extends ExpressionParser
         $paramExpressions = $expression->getParamExpressions();
         $checkNullForMostChild 
             = strcmp(
-                $expression->getFunctionDescription()->functionName, 
+                $expression->getFunctionDescription()->name,
                 'is_null'
             ) === 0;
         $resultExpression = null;
