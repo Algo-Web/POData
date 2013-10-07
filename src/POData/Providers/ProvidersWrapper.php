@@ -3,7 +3,6 @@
 namespace POData\Providers;
 
 use POData\Providers\Metadata\ResourceTypeKind;
-use POData\Common\NotImplementedException;
 use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\ResourceProperty;
@@ -13,7 +12,6 @@ use POData\Configuration\ServiceConfiguration;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 use POData\Common\ODataException;
 use POData\Common\Messages;
-use POData\Providers\Metadata\MetadataMapping;
 use POData\Providers\Metadata\EdmSchemaVersion;
 use POData\Providers\Query\IQueryProvider;
 use POData\Providers\Metadata\IMetadataProvider;
@@ -65,7 +63,7 @@ class ProvidersWrapper
      * 
      * @var array(string, array(string, ResourceProperty))
      */
-    private $_resourcePropertyCache;
+    private $propertyCache;
 
     /**
      * Cache for ResourceSetWrappers. If ResourceSet is invisible value will 
@@ -73,14 +71,14 @@ class ProvidersWrapper
      * 
      * @var ResourceSetWrapper[] indexed by resource set name
      */
-    private $_resourceSetWrapperCache;
+    private $setWrapperCache;
 
     /**
      * Cache for ResourceTypes
      * 
      * @var ResourceType[] indexed by resource type name
      */
-    private $_resourceTypeCache;
+    private $typeCache;
 
     /**
      * Cache for ResourceAssociationSet. If ResourceAssociationSet is invisible 
@@ -88,7 +86,7 @@ class ProvidersWrapper
      * 
      * @var ResourceAssociationSet[] indexed by name
      */
-    private $_resourceAssociationSetCache;
+    private $associationSetCache;
 
     /**
      * Creates a new instance of ProvidersWrapper
@@ -102,10 +100,10 @@ class ProvidersWrapper
         $this->_metadataProvider = $metadataProvider;
         $this->_queryProvider = $queryProvider;
         $this->config = $configuration;
-        $this->_resourceSetWrapperCache = array();
-        $this->_resourceTypeCache = array();
-        $this->_resourceAssociationSetCache = array();
-        $this->_resourcePropertyCache = array();
+        $this->setWrapperCache = array();
+        $this->typeCache = array();
+        $this->associationSetCache = array();
+        $this->propertyCache = array();
     }
 
     //Wrappers for IMetadataProvider methods
@@ -233,8 +231,8 @@ class ProvidersWrapper
      */
     public function resolveResourceSet($name)
     {
-        if (array_key_exists($name, $this->_resourceSetWrapperCache)) {
-			return $this->_resourceSetWrapperCache[$name];
+        if (array_key_exists($name, $this->setWrapperCache)) {
+			return $this->setWrapperCache[$name];
         }
         
         $resourceSet = $this->_metadataProvider->resolveResourceSet($name);
@@ -318,7 +316,7 @@ class ProvidersWrapper
      * Note: Wrapper for IMetadataProvider::getResourceAssociationSet
      * method implementation
      * 
-     * @param ResourceSetWrapper $wrapper Resource set of the source association end
+     * @param ResourceSet $set Resource set of the source association end
      * @param ResourceType       $type       Resource type of the source association end
      * @param ResourceProperty   $property   Resource property of the source association end
      *
@@ -329,32 +327,32 @@ class ProvidersWrapper
      *                                             other end of the association is invisible
      */
     public function getResourceAssociationSet(
-	    ResourceSetWrapper $wrapper,
+	    ResourceSet $set,
         ResourceType $type,
         ResourceProperty $property
     ) {        
         $type = $this->_getResourceTypeWherePropertyIsDeclared($type, $property);
-        $cacheKey = $wrapper->getName() . '_' . $type->getName() . '_' . $property->getName();
+        $cacheKey = $set->getName() . '_' . $type->getName() . '_' . $property->getName();
 
-        if (array_key_exists($cacheKey,  $this->_resourceAssociationSetCache)) {
-            return $this->_resourceAssociationSetCache[$cacheKey];
+        if (array_key_exists($cacheKey,  $this->associationSetCache)) {
+            return $this->associationSetCache[$cacheKey];
         }
 
         $associationSet = $this->_metadataProvider->getResourceAssociationSet(
-            $wrapper->getResourceSet(),
+            $set,
             $type,
             $property
         );
 
         if (!is_null($associationSet)) {
             $thisAssociationSetEnd = $associationSet->getResourceAssociationSetEnd(
-				$wrapper->getResourceSet(),
+				$set,
                 $type,
                 $property
             );
 
             $relatedAssociationSetEnd = $associationSet->getRelatedResourceAssociationSetEnd(
-                $wrapper->getResourceSet(),
+                $set,
                 $type,
                 $property
             );
@@ -370,7 +368,7 @@ class ProvidersWrapper
             if (is_null($thisAssociationSetEnd) || is_null($relatedAssociationSetEnd)) {
                 throw new ODataException(
                     Messages::providersWrapperIDSMPGetResourceSetReturnsInvalidResourceSet(
-                        $wrapper->getName(),
+                        $set->getName(),
                         $type->getFullName(),
                         $property->getName()
                     ), 
@@ -389,7 +387,7 @@ class ProvidersWrapper
             }
         }
 
-        $this->_resourceAssociationSetCache[$cacheKey] = $associationSet;
+        $this->associationSetCache[$cacheKey] = $associationSet;
         return $associationSet;
     }
  
@@ -446,23 +444,23 @@ class ProvidersWrapper
         }
 	    //TODO: move this to doctrine annotations
 	    $cacheKey = $setWrapper->getName() . '_' . $resourceType->getFullName();
-        if (!array_key_exists($cacheKey,  $this->_resourcePropertyCache)) {
+        if (!array_key_exists($cacheKey,  $this->propertyCache)) {
 	        //Fill the cache
-	        $this->_resourcePropertyCache[$cacheKey] = array();
+	        $this->propertyCache[$cacheKey] = array();
 	        foreach ($resourceType->getAllProperties() as $resourceProperty) {
 	            //Check whether this is a visible navigation property
 		        //TODO: is this broken?? see #87
 	            if ($resourceProperty->getTypeKind() == ResourceTypeKind::ENTITY
 	                && !is_null($this->getResourceSetWrapperForNavigationProperty($setWrapper, $resourceType, $resourceProperty))
 	            ) {
-	                $this->_resourcePropertyCache[$cacheKey][$resourceProperty->getName()] = $resourceProperty;
+	                $this->propertyCache[$cacheKey][$resourceProperty->getName()] = $resourceProperty;
 	            } else {
 	                //primitive, bag or complex property
-	                $this->_resourcePropertyCache[$cacheKey][$resourceProperty->getName()] = $resourceProperty;
+	                $this->propertyCache[$cacheKey][$resourceProperty->getName()] = $resourceProperty;
 	            }
 	        }
         }
-        return $this->_resourcePropertyCache[$cacheKey];
+        return $this->propertyCache[$cacheKey];
 
     }
 
@@ -508,19 +506,19 @@ class ProvidersWrapper
     private function _validateResourceSetAndGetWrapper(ResourceSet $resourceSet)
     {
         $cacheKey = $resourceSet->getName();
-        if (array_key_exists($cacheKey, $this->_resourceSetWrapperCache)) {
-            return $this->_resourceSetWrapperCache[$cacheKey];
+        if (array_key_exists($cacheKey, $this->setWrapperCache)) {
+            return $this->setWrapperCache[$cacheKey];
         }
 
         $this->_validateResourceType($resourceSet->getResourceType());
         $wrapper = new ResourceSetWrapper($resourceSet, $this->config);
         if ($wrapper->isVisible()) {
-            $this->_resourceSetWrapperCache[$cacheKey] = $wrapper;
+            $this->setWrapperCache[$cacheKey] = $wrapper;
         } else {
-            $this->_resourceSetWrapperCache[$cacheKey] = null;
+            $this->setWrapperCache[$cacheKey] = null;
         }
 
-        return $this->_resourceSetWrapperCache[$cacheKey];
+        return $this->setWrapperCache[$cacheKey];
     }
 
     /**
@@ -535,12 +533,12 @@ class ProvidersWrapper
     private function _validateResourceType(ResourceType $resourceType)
     {
         $cacheKey = $resourceType->getName();
-        if (array_key_exists($cacheKey, $this->_resourceTypeCache)) {
-            return $this->_resourceTypeCache[$cacheKey];
+        if (array_key_exists($cacheKey, $this->typeCache)) {
+            return $this->typeCache[$cacheKey];
         }
 
         //TODO: Do validation if any for the ResourceType
-        $this->_resourceTypeCache[$cacheKey] = $resourceType;
+        $this->typeCache[$cacheKey] = $resourceType;
         return $resourceType;
     }
 

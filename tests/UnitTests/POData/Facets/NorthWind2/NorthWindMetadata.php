@@ -145,7 +145,7 @@ class NorthWindMetadata
 	 * 
 	 * 
 	 * @throws InvalidOperationException
-	 * @return NorthWindMetadata
+	 * @return IMetadataProvider
 	 */
 	public static function Create()
 	{

@@ -14,8 +14,9 @@ use POData\Providers\Metadata\IMetadataProvider;
 use POData\Common\ODataException;
 use POData\Common\Messages;
 use POData\Providers\Metadata\Type\String;
-
-use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
+use POData\Common\InvalidOperationException;
+use POData\Providers\Metadata\ResourceAssociationSet;
+use POData\Providers\Metadata\ResourceAssociationSetEnd;
 use POData\Providers\Query\IQueryProvider;
 
 use Phockito;
@@ -45,7 +46,17 @@ class ProvidersWrapperTest extends BaseUnitTestCase
 	/** @var  ResourceType */
 	protected $mockResourceType;
 
+    /** @var  ResourceType */
+    protected $mockResourceType2;
 
+    /** @var  ResourceAssociationSet */
+    protected $mockResourceAssociationSet;
+
+    /** @var  ResourceProperty */
+    protected $mockResourceProperty;
+
+    /** @var  ResourceAssociationSetEnd */
+    protected $mockResourceAssociationSetEnd;
 	/**
 	 * @return ProvidersWrapper
 	 */
@@ -222,149 +233,201 @@ class ProvidersWrapperTest extends BaseUnitTestCase
 	}
 
 
-    public function testResolveResourceType1()
+    public function testResolveResourceTypeNonExistent()
     {
 
-        $configuration = null;
-        $metadataProvider = $this->_createMetadataAndConfiguration1($configuration);
-        $providersWrapper = new ProvidersWrapper(
-            $metadataProvider, //IMetadataProvider implementation
-	        $this->mockQueryProvider,
-	        $configuration, //Service configuration
-            false
-        );
-        //Try to resolve non-existing type
-        $type = $providersWrapper->resolveResourceType('Customer1');
-        $this->assertNull($type);
-        $customerEntityType = $providersWrapper->resolveResourceType('Customer');
-        $this->assertNotNull($customerEntityType);
-        $this->assertEquals($customerEntityType->getName(), 'Customer');
-        $this->assertEquals($customerEntityType->getResourceTypeKind(), ResourceTypeKind::ENTITY);
+        $fakeTypeName = 'SomeType';
 
-        $addressCoomplexType = $providersWrapper->resolveResourceType('Address');
-        $this->assertNotNull($addressCoomplexType);
-        $this->assertEquals($addressCoomplexType->getName(), 'Address');
-        $this->assertEquals($addressCoomplexType->getResourceTypeKind(), ResourceTypeKind::COMPLEX);
+        Phockito::when($this->mockMetadataProvider->resolveResourceType($fakeTypeName))
+            ->return(null);
+
+        $wrapper = $this->getMockedWrapper();
+
+        $this->assertNull($wrapper->resolveResourceType($fakeTypeName));
 
     }
 
-    public function testGetTypes1()
+
+    public function testResolveResourceType()
     {
 
-        $configuration = null;
-        $metadataProvider = $this->_createMetadataAndConfiguration1($configuration);
-        $providersWrapper = new ProvidersWrapper(
-                                    $metadataProvider, //IMetadataProvider implementation
-	        $this->mockQueryProvider,
-	        $configuration, //Service configuration
-                                    false
-                                    );
-        $resourceTypes = $providersWrapper->getTypes();
-        $this->assertEquals(count($resourceTypes), 7);
-        $orderEntityType = $providersWrapper->resolveResourceType('Order');
-        $this->assertNotNull($orderEntityType);
-        $this->assertEquals($orderEntityType->getName(), 'Order');
+        $fakeTypeName = 'SomeType';
+
+        Phockito::when($this->mockMetadataProvider->resolveResourceType($fakeTypeName))
+            ->return($this->mockResourceType);
+
+        $wrapper = $this->getMockedWrapper();
+
+        $actual = $wrapper->resolveResourceType($fakeTypeName);
+
+        $this->assertEquals($this->mockResourceType, $actual);
 
     }
 
-    public function testGetDerivedTypes1()
-    {
 
-        $configuration = null;
-        $metadataProvider = $this->_createMetadataAndConfiguration1($configuration);
-        $providersWrapper = new ProvidersWrapper(
-                                    $metadataProvider, //IMetadataProvider implementation
-	        $this->mockQueryProvider,
-	        $configuration, //Service configuration
-                                    false
-                                    );
-        $customerEntityType = $providersWrapper->resolveResourceType('Customer');
-        $this->assertNotNull($customerEntityType);
-        $derivedTypes = $providersWrapper->getDerivedTypes($customerEntityType);
-        $this->assertEquals(array(), $derivedTypes);
+    public function testGetDerivedTypesNonArrayReturnedThrows()
+    {
+        $fakeName = "FakeType";
+
+        Phockito::when($this->mockMetadataProvider->getDerivedTypes($this->mockResourceType))
+            ->return($this->mockResourceType);
+
+        Phockito::when($this->mockResourceType->getName())
+            ->return($fakeName);
+
+        $wrapper = $this->getMockedWrapper();
+
+        try{
+            $wrapper->getDerivedTypes($this->mockResourceType);
+            $this->fail("Expected exception not thrown");
+        } catch(InvalidOperationException $ex) {
+            $this->assertEquals(Messages::metadataAssociationTypeSetInvalidGetDerivedTypesReturnType($fakeName),$ex->getMessage());
+
+        }
 
     }
 
-    public function testHasDerivedTypes1()
+    public function testGetDerivedTypes()
     {
+        $fakeName = "FakeType";
 
-        $configuration = null;
-        $metadataProvider = $this->_createMetadataAndConfiguration1($configuration);
-        $providersWrapper = new ProvidersWrapper(
-                                    $metadataProvider, //IMetadataProvider implementation
-	        $this->mockQueryProvider,
-	        $configuration, //Service configuration
-                                    false
-                                    );
-        $orderEntityType = $providersWrapper->resolveResourceType('Order');
-        $this->assertNotNull($orderEntityType);
-        $hasDerivedTypes = $providersWrapper->hasDerivedTypes($orderEntityType);
-        $this->assertFalse($hasDerivedTypes);
+        Phockito::when($this->mockMetadataProvider->getDerivedTypes($this->mockResourceType))
+            ->return(array($this->mockResourceType2));
+
+        Phockito::when($this->mockResourceType->getName())
+            ->return($fakeName);
+
+        $wrapper = $this->getMockedWrapper();
+
+        $actual = $wrapper->getDerivedTypes($this->mockResourceType);
+        $this->assertEquals(array($this->mockResourceType2), $actual);
 
     }
 
-    public function testGetResourceAssociationSet1()
+    public function testHasDerivedTypes()
     {
 
-        //Get the association set where resource set in both ends are visible
-        $configuration = null;
-        $metadataProvider = $this->_createMetadataAndConfiguration1($configuration);
-        $providersWrapper = new ProvidersWrapper(
-                                    $metadataProvider, //IMetadataProvider implementation
-	        $this->mockQueryProvider,
-	        $configuration, //Service configuration
-                                    false
-                                    );
-        $configuration->setEntitySetAccessRule('Customers', EntitySetRights::ALL);
-        $configuration->setEntitySetAccessRule('Orders', EntitySetRights::ALL);
-        $customersEntitySetWrapper = $providersWrapper->resolveResourceSet('Customers');
-        $this->assertNotNull($customersEntitySetWrapper);
-        $customerEntityType = $providersWrapper->resolveResourceType('Customer');
-        $this->assertNotNull($customerEntityType);
+        Phockito::when($this->mockMetadataProvider->hasDerivedTypes($this->mockResourceType))
+            ->return(true);
 
-        $ordersProperty = $customerEntityType->tryResolvePropertyTypeByName('Orders');
-        $this->assertNotNull($ordersProperty);
+        $wrapper = $this->getMockedWrapper();
 
-        $associationSet = $providersWrapper->getResourceAssociationSet($customersEntitySetWrapper, $customerEntityType, $ordersProperty);
-        $this->assertNotNull($associationSet);
-
-        $associationSetEnd1 = $associationSet->getEnd1();
-        $this->assertNotNull($associationSetEnd1);
-
-        $associationSetEnd2 = $associationSet->getEnd2();
-        $this->assertNotNull($associationSetEnd2);
-
-        $this->assertEquals($associationSetEnd1->getResourceSet()->getName(), 'Customers');
-        $this->assertEquals($associationSetEnd2->getResourceSet()->getName(), 'Orders');
-        $this->assertEquals($associationSetEnd1->getResourceType()->getName(), 'Customer');
-        $this->assertEquals($associationSetEnd2->getResourceType()->getName(), 'Order');
-
-        //Try to get the association set where resource set in one end is invisible
-        $configuration = null;
-        $metadataProvider = $this->_createMetadataAndConfiguration1($configuration);
-        $providersWrapper = new ProvidersWrapper(
-                                    $metadataProvider, //IMetadataProvider implementation
-	        $this->mockQueryProvider,
-	        $configuration, //Service configuration
-                                    false
-                                    );
-        $configuration->setEntitySetAccessRule('Customers', EntitySetRights::ALL);
-        //Set orders entity set as invisible
-        $configuration->setEntitySetAccessRule('Orders', EntitySetRights::NONE);
-        $customersEntitySetWrapper = $providersWrapper->resolveResourceSet('Customers');
-        $this->assertNotNull($customersEntitySetWrapper);
-
-        $customerEntityType = $providersWrapper->resolveResourceType('Customer');
-        $this->assertNotNull($customerEntityType);
-
-        $ordersProperty = $customerEntityType->tryResolvePropertyTypeByName('Orders');
-        $this->assertNotNull($ordersProperty);
-
-        $associationSet = $providersWrapper->getResourceAssociationSet($customersEntitySetWrapper, $customerEntityType, $ordersProperty);
-        $this->assertNull($associationSet);
+        $this->assertTrue($wrapper->hasDerivedTypes($this->mockResourceType));
 
     }
 
+    public function testGetResourceAssociationSet()
+    {
+        $fakePropName = "Fake Prop";
+        Phockito::when($this->mockResourceProperty->getName())
+            ->return($fakePropName);
+
+
+        Phockito::when($this->mockResourceType->tryResolvePropertyTypeDeclaredOnThisTypeByName($fakePropName))
+            ->return($this->mockResourceProperty);
+
+        $fakeTypeName = "Fake Type";
+        Phockito::when($this->mockResourceType->getName())
+            ->return($fakeTypeName);
+
+        $fakeSetName = "Fake Set";
+        Phockito::when($this->mockResourceSet->getName())
+            ->return($fakeSetName);
+
+        Phockito::when($this->mockResourceSet->getResourceType())
+            ->return($this->mockResourceType);
+
+        Phockito::when($this->mockResourceSet2->getResourceType())
+            ->return($this->mockResourceType2);
+
+        //Indicate the resource set is visible
+        Phockito::when($this->mockServiceConfig->getEntitySetAccessRule($this->mockResourceSet))
+            ->return(EntitySetRights::READ_SINGLE);
+
+        //Indicate the resource set is visible
+        Phockito::when($this->mockServiceConfig->getEntitySetAccessRule($this->mockResourceSet2))
+            ->return(EntitySetRights::READ_SINGLE);
+
+        Phockito::when($this->mockMetadataProvider->getResourceAssociationSet($this->mockResourceSet, $this->mockResourceType, $this->mockResourceProperty))
+            ->return($this->mockResourceAssociationSet);
+
+
+        Phockito::when($this->mockResourceAssociationSet->getResourceAssociationSetEnd($this->mockResourceSet, $this->mockResourceType, $this->mockResourceProperty))
+            ->return($this->mockResourceAssociationSetEnd);
+
+        Phockito::when($this->mockResourceAssociationSet->getRelatedResourceAssociationSetEnd($this->mockResourceSet, $this->mockResourceType, $this->mockResourceProperty))
+            ->return($this->mockResourceAssociationSetEnd);
+
+        Phockito::when($this->mockResourceAssociationSetEnd->getResourceSet())
+            ->return($this->mockResourceSet2);
+
+        Phockito::when($this->mockResourceAssociationSetEnd->getResourceType())
+            ->return($this->mockResourceType2);
+
+        $wrapper = $this->getMockedWrapper();
+
+        $actual = $wrapper->getResourceAssociationSet($this->mockResourceSet, $this->mockResourceType, $this->mockResourceProperty);
+
+        $this->assertEquals($this->mockResourceAssociationSet, $actual);
+
+    }
+
+
+    public function testGetResourceAssociationSetEndIsNotVisible()
+    {
+        $fakePropName = "Fake Prop";
+        Phockito::when($this->mockResourceProperty->getName())
+            ->return($fakePropName);
+
+
+        Phockito::when($this->mockResourceType->tryResolvePropertyTypeDeclaredOnThisTypeByName($fakePropName))
+            ->return($this->mockResourceProperty);
+
+        $fakeTypeName = "Fake Type";
+        Phockito::when($this->mockResourceType->getName())
+            ->return($fakeTypeName);
+
+        $fakeSetName = "Fake Set";
+        Phockito::when($this->mockResourceSet->getName())
+            ->return($fakeSetName);
+
+        Phockito::when($this->mockResourceSet->getResourceType())
+            ->return($this->mockResourceType);
+
+        Phockito::when($this->mockResourceSet2->getResourceType())
+            ->return($this->mockResourceType2);
+
+        //Indicate the resource set is visible
+        Phockito::when($this->mockServiceConfig->getEntitySetAccessRule($this->mockResourceSet))
+            ->return(EntitySetRights::READ_SINGLE);
+
+        //Indicate the resource set is visible
+        Phockito::when($this->mockServiceConfig->getEntitySetAccessRule($this->mockResourceSet2))
+            ->return(EntitySetRights::NONE);
+
+        Phockito::when($this->mockMetadataProvider->getResourceAssociationSet($this->mockResourceSet, $this->mockResourceType, $this->mockResourceProperty))
+            ->return($this->mockResourceAssociationSet);
+
+
+        Phockito::when($this->mockResourceAssociationSet->getResourceAssociationSetEnd($this->mockResourceSet, $this->mockResourceType, $this->mockResourceProperty))
+            ->return($this->mockResourceAssociationSetEnd);
+
+        Phockito::when($this->mockResourceAssociationSet->getRelatedResourceAssociationSetEnd($this->mockResourceSet, $this->mockResourceType, $this->mockResourceProperty))
+            ->return($this->mockResourceAssociationSetEnd);
+
+        Phockito::when($this->mockResourceAssociationSetEnd->getResourceSet())
+            ->return($this->mockResourceSet2);
+
+        Phockito::when($this->mockResourceAssociationSetEnd->getResourceType())
+            ->return($this->mockResourceType2);
+
+        $wrapper = $this->getMockedWrapper();
+
+        $actual = $wrapper->getResourceAssociationSet($this->mockResourceSet, $this->mockResourceType, $this->mockResourceProperty);
+
+        $this->assertNull($actual);
+
+    }
 
 	public function testGetResourceSets()
 	{
@@ -501,23 +564,7 @@ class ProvidersWrapperTest extends BaseUnitTestCase
 		}
 
 	}
-    
 
-
-    /**
-     * Creates a valid IMetadataProvider implementation, and associated configuration
-     * Note: This metadata is for positive testing
-     * 
-     * @param ServiceConfiguration $configuration On return, this will hold reference to configuration object
-     * 
-     * @return IMetadataProvider
-     */
-    private function _createMetadataAndConfiguration1(&$configuration)
-    {
-        $northWindMetadata = NorthWindMetadata::Create();
-        $configuration = new ServiceConfiguration($northWindMetadata);
-        return $northWindMetadata;
-    }
 
 
 }

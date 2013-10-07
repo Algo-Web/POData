@@ -81,7 +81,7 @@ class ResourceAssociationSetEnd
     }
 
     /**
-     * To check this relationship belongs to a specfic resource set, type 
+     * To check this relationship belongs to a specific resource set, type
      * and property
      * 
      * @param ResourceSet      $resourceSet      Resource set for the association

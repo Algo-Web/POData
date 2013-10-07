@@ -15,9 +15,6 @@ use UnitTests\POData\Facets\NorthWind2\NorthWindMetadata;
 
 class SkipTokenParser2Test extends \PHPUnit_Framework_TestCase
 {
-    protected function setUp()
-    {
-    }
 
     /**
      * Test will null as resultSet and empty array as resultSet     
@@ -29,11 +26,11 @@ class SkipTokenParser2Test extends \PHPUnit_Framework_TestCase
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
-                          $northWindMetadata, //IMetadataProvider implementation
-                          null, //IDataServiceQueryProvider implementation (set to null)
-                          $configuration, //Service configuuration
-                          false
-                         );
+            $northWindMetadata, //IMetadataProvider implementation
+            null, //IDataServiceQueryProvider implementation (set to null)
+            $configuration, //Service configuuration
+            false
+        );
 
         $resourceSetWrapper = $providersWrapper->resolveResourceSet('Orders');
         $resourceType = $resourceSetWrapper->getResourceType();
@@ -52,21 +49,21 @@ class SkipTokenParser2Test extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test search InternalSkipToeknInfo::GetIndexOfFirstEntryInNextPage function
+     * Test search InternalSkipTokenInfo::GetIndexOfFirstEntryInNextPage function
      */
     public function testGetIndexOfFirstEntryInNextPage2()
     {
-        $this->markTestSkipped("Skipped because it depends on a query provdier that isn't mocked");
+        $this->markTestSkipped("Skipped because it depends on a query provider that isn't mocked");
 
         $northWindMetadata = NorthWindMetadata::Create();
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
-                          $northWindMetadata, //IMetadataProvider implementation
-                          null, //IDataServiceQueryProvider implementation (set to null)
-                          $configuration, //Service configuuration
-                          false
-                         );
+        $northWindMetadata, //IMetadataProvider implementation
+            null, //IDataServiceQueryProvider implementation (set to null)
+            $configuration, //Service configuuration
+            false
+        );
 
         $resourceSetWrapper = $providersWrapper->resolveResourceSet('Orders');
         $resourceType = $resourceSetWrapper->getResourceType();
@@ -123,7 +120,4 @@ class SkipTokenParser2Test extends \PHPUnit_Framework_TestCase
 
     }
 
-    protected function tearDown()
-    {
-    }
 }

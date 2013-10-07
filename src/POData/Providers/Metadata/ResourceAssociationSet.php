@@ -86,8 +86,10 @@ class ResourceAssociationSet
      * @return ResourceAssociationSetEnd Resource association set end for the 
      *                                   given parameters
      */
-    public function getResourceAssociationSetEnd(ResourceSet $resourceSet, 
-        ResourceType $resourceType, ResourceProperty $resourceProperty
+    public function getResourceAssociationSetEnd(
+        ResourceSet $resourceSet,
+        ResourceType $resourceType,
+        ResourceProperty $resourceProperty
     ) {
         if ($this->_end1->isBelongsTo($resourceSet, $resourceType, $resourceProperty)) {
             return $this->_end1;
