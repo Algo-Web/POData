@@ -738,8 +738,8 @@ class RequestDescription
     public function needExecution()
     {
         return !$this->_isExecuted 
-            && ($this->lastSegment->getTargetKind() != TargetKind::METADATA)
-            && ($this->lastSegment->getTargetKind() != TargetKind::SERVICE_DIRECTORY);
+            && ($this->lastSegment->getTargetKind() != TargetKind::METADATA())
+            && ($this->lastSegment->getTargetKind() != TargetKind::SERVICE_DIRECTORY());
     }
 
     /**
@@ -749,9 +749,7 @@ class RequestDescription
      */
     public function isLinkUri()
     {
-        return (($this->_segmentCount > 2) && 
-            ($this->segments[$this->_segmentCount - 2]->getTargetKind() ==
-             TargetKind::LINK));
+        return (($this->_segmentCount > 2) && ($this->segments[$this->_segmentCount - 2]->getTargetKind() == TargetKind::LINK()));
     }
 
     /**
@@ -761,7 +759,7 @@ class RequestDescription
      */
     public function isMediaResource()
     {
-        return ($this->lastSegment->getTargetKind() == TargetKind::MEDIA_RESOURCE);
+        return ($this->lastSegment->getTargetKind() == TargetKind::MEDIA_RESOURCE());
     }
 
     /**
@@ -771,8 +769,7 @@ class RequestDescription
      */
     public function isNamedStream()
     {
-        return $this->isMediaResource() && 
-            !($this->lastSegment->getIdentifier() === ODataConstants::URI_VALUE_SEGMENT);
+        return $this->isMediaResource() && !($this->lastSegment->getIdentifier() === ODataConstants::URI_VALUE_SEGMENT);
     }
 
     /**

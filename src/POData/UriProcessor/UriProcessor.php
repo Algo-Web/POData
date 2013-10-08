@@ -142,14 +142,14 @@ class UriProcessor
 
 	        if ($segment->getTargetSource() == TargetSource::ENTITY_SET) {
                 $this->handleSegmentTargetsToResourceSet($segment);
-            } else if ($requestTargetKind == TargetKind::RESOURCE) {
+            } else if ($requestTargetKind == TargetKind::RESOURCE()) {
                 if (is_null($segment->getPrevious()->getResult())) {
                     ODataException::createResourceNotFoundError(
                         $segment->getPrevious()->getIdentifier()
                     );
                 }
                 $this->_handleSegmentTargetsToRelatedResource($segment);
-            } else if ($requestTargetKind == TargetKind::LINK) {
+            } else if ($requestTargetKind == TargetKind::LINK()) {
                 $segment->setResult($segment->getPrevious()->getResult());
             } else if ($segment->getIdentifier() == ODataConstants::URI_COUNT_SEGMENT) {
                 // we are done, $count will the last segment and 
@@ -157,7 +157,7 @@ class UriProcessor
                 $segment->setResult($this->request->getCountValue());
                 break;
             } else {
-                if ($requestTargetKind == TargetKind::MEDIA_RESOURCE) {
+                if ($requestTargetKind == TargetKind::MEDIA_RESOURCE()) {
                     if (is_null($segment->getPrevious()->getResult())) {
                         ODataException::createResourceNotFoundError(
                             $segment->getPrevious()->getIdentifier()

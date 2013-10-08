@@ -109,16 +109,8 @@ class SegmentDescriptor
     public function __construct()
     {
         $this->_singleResult = false;
-        $this->_targetKind = TargetKind::NOTHING;
+        $this->_targetKind = TargetKind::NOTHING();
         $this->_targetSource = TargetSource::NONE;
-        $this->_identifier 
-            = $this->_keyDescriptor 
-                = $this->_projectedProperty 
-                    = $this->_result 
-                        = $this->_targetResourceSetWrapper 
-                            = $this->_targetResourceType 
-                                = null;
-        $this->_previous = $this->_next = null;
     }
 
     /**
@@ -237,7 +229,7 @@ class SegmentDescriptor
      * 
      * @param TargetKind $targetKind The kind of resource
      */
-    public function setTargetKind($targetKind)
+    public function setTargetKind(TargetKind $targetKind)
     {
         $this->_targetKind = $targetKind;
     }

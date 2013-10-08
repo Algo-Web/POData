@@ -37,19 +37,19 @@ class ResponseWriter
         $dataServiceVersion = $request->getResponseVersion();
 	    $targetKind = $request->getTargetKind();
 
-        if ($targetKind == TargetKind::METADATA) {
+        if ($targetKind == TargetKind::METADATA()) {
             // /$metadata
             $writer = new MetadataWriter($service->getProvidersWrapper());
             $responseBody = $writer->writeMetadata();            
             $dataServiceVersion = $writer->getDataServiceVersion();
-        } else if ($targetKind == TargetKind::PRIMITIVE_VALUE && $responseContentType != ODataConstants::MIME_APPLICATION_OCTETSTREAM) {
+        } else if ($targetKind == TargetKind::PRIMITIVE_VALUE() && $responseContentType != ODataConstants::MIME_APPLICATION_OCTETSTREAM) {
 	        //This second part is to exclude binary properties
             // /Customer('ALFKI')/CompanyName/$value
             // /Customers/$count
             $responseBody = utf8_encode($request->getTargetResult());
-        } else if ($responseContentType == ODataConstants::MIME_APPLICATION_OCTETSTREAM || $targetKind == TargetKind::MEDIA_RESOURCE) {
+        } else if ($responseContentType == ODataConstants::MIME_APPLICATION_OCTETSTREAM || $targetKind == TargetKind::MEDIA_RESOURCE()) {
             // Binary property or media resource
-            if ($request->getTargetKind() == TargetKind::MEDIA_RESOURCE) {
+            if ($request->getTargetKind() == TargetKind::MEDIA_RESOURCE()) {
 	            $result = $request->getTargetResult();
 	            $streamInfo =  $request->getResourceStreamInfo();
 	            $provider = $service->getStreamProviderWrapper();

@@ -70,7 +70,7 @@ class UriProcessorTest extends BaseUnitTestCase
         $uriProcessor = $dataService->handleRequest();
         $requestDescription = $uriProcessor->getRequest();
         $this->assertEquals($requestDescription->getTargetSource(), TargetSource::NONE);
-        $this->assertEquals($requestDescription->getTargetKind(), TargetKind::SERVICE_DIRECTORY);
+        $this->assertEquals($requestDescription->getTargetKind(), TargetKind::SERVICE_DIRECTORY());
         
 
 
@@ -88,7 +88,7 @@ class UriProcessorTest extends BaseUnitTestCase
         $uriProcessor = $dataService->handleRequest();
         $requestDescription = $uriProcessor->getRequest();
         $this->assertEquals($requestDescription->getTargetSource(), TargetSource::NONE);
-        $this->assertEquals($requestDescription->getTargetKind(), TargetKind::METADATA);
+        $this->assertEquals($requestDescription->getTargetKind(), TargetKind::METADATA());
 
 
         //Request for batch
@@ -104,7 +104,7 @@ class UriProcessorTest extends BaseUnitTestCase
         $uriProcessor = $dataService->handleRequest();
         $requestDescription = $uriProcessor->getRequest();
         $this->assertEquals($requestDescription->getTargetSource(), TargetSource::NONE);
-        $this->assertEquals($requestDescription->getTargetKind(), TargetKind::BATCH);
+        $this->assertEquals($requestDescription->getTargetKind(), TargetKind::BATCH());
 
     }
 

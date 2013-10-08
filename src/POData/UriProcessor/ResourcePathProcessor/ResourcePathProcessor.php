@@ -55,13 +55,13 @@ class ResourcePathProcessor
         );
         $kind = $request->getTargetKind();
 
-	    if ($kind == TargetKind::METADATA || $kind == TargetKind::BATCH || $kind == TargetKind::SERVICE_DIRECTORY){
+	    if ($kind == TargetKind::METADATA() || $kind == TargetKind::BATCH() || $kind == TargetKind::SERVICE_DIRECTORY()){
 		    return $request;
 	    }
 
 
 
-        if ($kind == TargetKind::PRIMITIVE_VALUE || $kind == TargetKind::MEDIA_RESOURCE) {
+        if ($kind == TargetKind::PRIMITIVE_VALUE() || $kind == TargetKind::MEDIA_RESOURCE()) {
             // http://odata/NW.svc/Orders/$count
             // http://odata/NW.svc/Orders(123)/Customer/CustomerID/$value
             // http://odata/NW.svc/Employees(1)/$value
@@ -85,7 +85,7 @@ class ResourcePathProcessor
 
         } else if ($request->isNamedStream()) {
             $request->raiseMinVersionRequirement(3, 0 );
-        } else if ($request->getTargetKind() == TargetKind::RESOURCE) {
+        } else if ($request->getTargetKind() == TargetKind::RESOURCE()) {
             if (!$request->isLinkUri()) {
                 $resourceSetWrapper = $request->getTargetResourceSetWrapper();
                 //assert($resourceSetWrapper != null)
@@ -97,7 +97,7 @@ class ResourcePathProcessor
                     $request->raiseResponseVersion( 3, 0 );
                 }
             }
-        } else if ($request->getTargetKind() == TargetKind::BAG
+        } else if ($request->getTargetKind() == TargetKind::BAG()
         ) {
             $request->raiseResponseVersion( 3, 0 );
         }

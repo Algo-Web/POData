@@ -314,7 +314,7 @@ abstract class BaseService implements IRequestHandler, IService
 
         $responseContentType = self::getResponseContentType($request, $uriProcessor, $this);
 
-	    if (is_null($responseContentType) && $request->getTargetKind() != TargetKind::MEDIA_RESOURCE) {
+	    if (is_null($responseContentType) && $request->getTargetKind() != TargetKind::MEDIA_RESOURCE()) {
 		    //the responseContentType can ONLY be null if it's a stream (media resource) and that stream is storing null as the content type
 		    throw new ODataException( Messages::unsupportedMediaType(), 415 );
 	    }
@@ -366,7 +366,7 @@ abstract class BaseService implements IRequestHandler, IService
                     }
 
                     $odataModelInstance = $objectModelSerializer->writeUrlElement($result);
-                } else if ($requestTargetKind == TargetKind::RESOURCE) {
+                } else if ($requestTargetKind == TargetKind::RESOURCE()) {
                     if (!is_null($this->_serviceHost->getRequestIfMatch())
                         && !is_null($this->_serviceHost->getRequestIfNoneMatch())
                     ) {
@@ -404,27 +404,27 @@ abstract class BaseService implements IRequestHandler, IService
                     if (!is_null($eTag)) {
                         $this->_serviceHost->setResponseETag($eTag);
                     }
-                } else if ($requestTargetKind == TargetKind::COMPLEX_OBJECT) {
+                } else if ($requestTargetKind == TargetKind::COMPLEX_OBJECT()) {
 
 	                $odataModelInstance = $objectModelSerializer->writeTopLevelComplexObject(
                         $result, 
                         $request->getProjectedProperty()->getName(),
 	                    $request->getTargetResourceType()
 	                );
-                } else if ($requestTargetKind == TargetKind::BAG) {
+                } else if ($requestTargetKind == TargetKind::BAG()) {
                     $odataModelInstance = $objectModelSerializer->writeTopLevelBagObject(
                         $result, 
                         $request->getProjectedProperty()->getName(),
 	                    $request->getTargetResourceType(),
                         $odataModelInstance
                     );
-                } else if ($requestTargetKind == TargetKind::PRIMITIVE) {
+                } else if ($requestTargetKind == TargetKind::PRIMITIVE()) {
                     $odataModelInstance = $objectModelSerializer->writeTopLevelPrimitive(
                         $result,
 	                    $request->getProjectedProperty(),
                         $odataModelInstance
                     );
-                } else if ($requestTargetKind == TargetKind::PRIMITIVE_VALUE) {
+                } else if ($requestTargetKind == TargetKind::PRIMITIVE_VALUE()) {
                     // Code path for primitive value (Since its primitve no need for
                     // object model serialization) 
                     // Customers('ANU')/CompanyName/$value => string 
@@ -438,7 +438,7 @@ abstract class BaseService implements IRequestHandler, IService
 
         //Note: Response content type can be null for named stream
         if ($hasResponseBody && !is_null($responseContentType)) {
-            if ($request->getTargetKind() != TargetKind::MEDIA_RESOURCE && $responseContentType != ODataConstants::MIME_APPLICATION_OCTETSTREAM) {
+            if ($request->getTargetKind() != TargetKind::MEDIA_RESOURCE() && $responseContentType != ODataConstants::MIME_APPLICATION_OCTETSTREAM) {
 	            //append charset for everything except:
 	            //stream resources as they have their own content type
 	            //binary properties (they content type will be App Octet for those...is this a good way? we could also decide based upon the projected property
@@ -488,10 +488,10 @@ abstract class BaseService implements IRequestHandler, IService
 
 	    //The response format can be dictated by the target resource kind. IE a $value will be different then expected
 	    //getTargetKind doesn't deal with link resources directly and this can change things
-	    $requestTargetKind = $request->isLinkUri() ? TargetKind::LINK : $request->getTargetKind();
+	    $requestTargetKind = $request->isLinkUri() ? TargetKind::LINK() : $request->getTargetKind();
 
 
-        if ($requestTargetKind == TargetKind::METADATA) {
+        if ($requestTargetKind == TargetKind::METADATA()) {
             return HttpProcessUtility::selectMimeType(
                 $requestAcceptText,
                 array(ODataConstants::MIME_APPLICATION_XML)
@@ -499,7 +499,7 @@ abstract class BaseService implements IRequestHandler, IService
         }
 
 
-	    if ($requestTargetKind == TargetKind::SERVICE_DIRECTORY) {
+	    if ($requestTargetKind == TargetKind::SERVICE_DIRECTORY()) {
             return HttpProcessUtility::selectMimeType(
                 $requestAcceptText, 
                 array(
@@ -512,7 +512,7 @@ abstract class BaseService implements IRequestHandler, IService
         }
 
 
-	    if ($requestTargetKind == TargetKind::PRIMITIVE_VALUE) {
+	    if ($requestTargetKind == TargetKind::PRIMITIVE_VALUE()) {
             $supportedResponseMimeTypes = array(ODataConstants::MIME_TEXTPLAIN);
 
             if ($request->getIdentifier() != '$count') {
@@ -539,10 +539,10 @@ abstract class BaseService implements IRequestHandler, IService
 	    }
 
 
-	    if ($requestTargetKind == TargetKind::PRIMITIVE
-            || $requestTargetKind == TargetKind::COMPLEX_OBJECT
-            || $requestTargetKind == TargetKind::BAG
-            || $requestTargetKind == TargetKind::LINK
+	    if ($requestTargetKind == TargetKind::PRIMITIVE()
+            || $requestTargetKind == TargetKind::COMPLEX_OBJECT()
+            || $requestTargetKind == TargetKind::BAG()
+            || $requestTargetKind == TargetKind::LINK()
         ) {
             return HttpProcessUtility::selectMimeType(
                 $requestAcceptText, 
@@ -556,7 +556,7 @@ abstract class BaseService implements IRequestHandler, IService
         }
 
 
-	    if ($requestTargetKind == TargetKind::RESOURCE) {
+	    if ($requestTargetKind == TargetKind::RESOURCE()) {
             return HttpProcessUtility::selectMimeType(
                 $requestAcceptText, 
                 array(
@@ -567,7 +567,7 @@ abstract class BaseService implements IRequestHandler, IService
         }
 
 
-	    if ($requestTargetKind == TargetKind::MEDIA_RESOURCE) {
+	    if ($requestTargetKind == TargetKind::MEDIA_RESOURCE()) {
 
 		    if (!$request->isNamedStream() && !$request->getTargetResourceType()->isMediaLinkEntry()){
 			    ODataException::createBadRequestError(

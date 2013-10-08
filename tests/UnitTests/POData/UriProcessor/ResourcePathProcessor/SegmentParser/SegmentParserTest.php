@@ -42,7 +42,7 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
         //No segment means request for service directory
         $this->assertTrue(!empty($segmentDescriptors));
         $this->assertEquals(count($segmentDescriptors), 1);
-        $this->assertEquals($segmentDescriptors[0]->getTargetKind(), TargetKind::SERVICE_DIRECTORY);
+        $this->assertEquals($segmentDescriptors[0]->getTargetKind(), TargetKind::SERVICE_DIRECTORY());
         $this->assertEquals($segmentDescriptors[0]->getTargetSource(), TargetSource::NONE);
     }
 
@@ -128,7 +128,7 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(array_key_exists('EmployeeID', $namedKeys));
         $this->assertEquals($namedKeys['EmployeeID'][0], '\'AF123\'');
         $this->assertEquals($segmentDescriptors[0]->getTargetSource(), TargetSource::ENTITY_SET);
-        $this->assertEquals($segmentDescriptors[0]->getTargetKind(), TargetKind::RESOURCE);
+        $this->assertEquals($segmentDescriptors[0]->getTargetKind(), TargetKind::RESOURCE());
 
         //test with multiple positional values
         $segments = array("Customers('ALFKI', guid'15b242e7-52eb-46bd-8f0e-6568b72cd9a6')");
@@ -210,7 +210,7 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
         $segmentDescriptors = SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
         $this->assertEquals(count($segmentDescriptors), 2);
         $this->assertEquals($segmentDescriptors[1]->getIdentifier(), 'CustomerName');
-        $this->assertEquals($segmentDescriptors[1]->getTargetKind(), TargetKind::PRIMITIVE);
+        $this->assertEquals($segmentDescriptors[1]->getTargetKind(), TargetKind::PRIMITIVE());
         $this->assertEquals($segmentDescriptors[1]->getTargetSource(), TargetSource::PROPERTY);
         $this->assertNotNull($segmentDescriptors[1]->getProjectedProperty());
         $this->assertNull($segmentDescriptors[1]->getTargetResourceSetWrapper());
@@ -234,21 +234,21 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(count($segmentDescriptors), 3);
         /** check first segment */
         $this->assertEquals($segmentDescriptors[0]->getIdentifier(), 'Customers');
-        $this->assertEquals($segmentDescriptors[0]->getTargetKind(), TargetKind::RESOURCE);
+        $this->assertEquals($segmentDescriptors[0]->getTargetKind(), TargetKind::RESOURCE());
         $this->assertEquals($segmentDescriptors[0]->getTargetSource(), TargetSource::ENTITY_SET);
         $this->assertNull($segmentDescriptors[0]->getProjectedProperty());
         $this->assertTrue($segmentDescriptors[2]->isSingleResult());
         $this->assertNotNull($segmentDescriptors[0]->getTargetResourceSetWrapper());
         /** check second segment */
         $this->assertEquals($segmentDescriptors[1]->getIdentifier(), 'CustomerName');
-        $this->assertEquals($segmentDescriptors[1]->getTargetKind(), TargetKind::PRIMITIVE);
+        $this->assertEquals($segmentDescriptors[1]->getTargetKind(), TargetKind::PRIMITIVE());
         $this->assertEquals($segmentDescriptors[1]->getTargetSource(), TargetSource::PROPERTY);
         $this->assertNotNull($segmentDescriptors[1]->getProjectedProperty());
         $this->assertTrue($segmentDescriptors[2]->isSingleResult());
         $this->assertNull($segmentDescriptors[1]->getTargetResourceSetWrapper());
         /** check third segment */
         $this->assertEquals($segmentDescriptors[2]->getIdentifier(), '$value');
-        $this->assertEquals($segmentDescriptors[2]->getTargetKind(), TargetKind::PRIMITIVE_VALUE);
+        $this->assertEquals($segmentDescriptors[2]->getTargetKind(), TargetKind::PRIMITIVE_VALUE());
         $this->assertEquals($segmentDescriptors[2]->getTargetSource(), TargetSource::PROPERTY);
         $this->assertNotNull($segmentDescriptors[2]->getProjectedProperty());
         $this->assertTrue($segmentDescriptors[2]->isSingleResult());
@@ -320,21 +320,21 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
         $segmentDescriptors = SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
         /** check first segment */
         $this->assertEquals($segmentDescriptors[0]->getIdentifier(), 'Customers');
-        $this->assertEquals($segmentDescriptors[0]->getTargetKind(), TargetKind::RESOURCE);
+        $this->assertEquals($segmentDescriptors[0]->getTargetKind(), TargetKind::RESOURCE());
         $this->assertEquals($segmentDescriptors[0]->getTargetSource(), TargetSource::ENTITY_SET);
         $this->assertNull($segmentDescriptors[0]->getProjectedProperty());
         $this->assertTrue($segmentDescriptors[0]->isSingleResult());
         $this->assertNotNull($segmentDescriptors[0]->getTargetResourceSetWrapper());
         /** check second segment */
         $this->assertEquals($segmentDescriptors[1]->getIdentifier(), '$links');
-        $this->assertEquals($segmentDescriptors[1]->getTargetKind(), TargetKind::LINK);
+        $this->assertEquals($segmentDescriptors[1]->getTargetKind(), TargetKind::LINK());
         $this->assertEquals($segmentDescriptors[1]->getTargetSource(), TargetSource::ENTITY_SET);
         $this->assertNull($segmentDescriptors[1]->getProjectedProperty());
         $this->assertTrue($segmentDescriptors[1]->isSingleResult());
         $this->assertNotNull($segmentDescriptors[1]->getTargetResourceSetWrapper());
         /** check third segment */
         $this->assertEquals($segmentDescriptors[2]->getIdentifier(), 'Orders');
-        $this->assertEquals($segmentDescriptors[2]->getTargetKind(), TargetKind::RESOURCE);
+        $this->assertEquals($segmentDescriptors[2]->getTargetKind(), TargetKind::RESOURCE());
         $this->assertEquals($segmentDescriptors[2]->getTargetSource(), TargetSource::PROPERTY);
         $this->assertNotNull($segmentDescriptors[2]->getProjectedProperty());
         $this->assertFalse($segmentDescriptors[2]->isSingleResult());
@@ -348,21 +348,21 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(count($segmentDescriptors), 3);
         /** check first segment */
         $this->assertEquals($segmentDescriptors[0]->getIdentifier(), 'Customers');
-        $this->assertEquals($segmentDescriptors[0]->getTargetKind(), TargetKind::RESOURCE);
+        $this->assertEquals($segmentDescriptors[0]->getTargetKind(), TargetKind::RESOURCE());
         $this->assertEquals($segmentDescriptors[0]->getTargetSource(), TargetSource::ENTITY_SET);
         $this->assertNull($segmentDescriptors[0]->getProjectedProperty());
         $this->assertTrue($segmentDescriptors[0]->isSingleResult());
         $this->assertNotNull($segmentDescriptors[0]->getTargetResourceSetWrapper());
         /** check second segment */
         $this->assertEquals($segmentDescriptors[1]->getIdentifier(), '$links');
-        $this->assertEquals($segmentDescriptors[1]->getTargetKind(), TargetKind::LINK);
+        $this->assertEquals($segmentDescriptors[1]->getTargetKind(), TargetKind::LINK());
         $this->assertEquals($segmentDescriptors[1]->getTargetSource(), TargetSource::ENTITY_SET);
         $this->assertNull($segmentDescriptors[1]->getProjectedProperty());
         $this->assertTrue($segmentDescriptors[1]->isSingleResult());
         $this->assertNotNull($segmentDescriptors[1]->getTargetResourceSetWrapper());
         /** check third segment */
         $this->assertEquals($segmentDescriptors[2]->getIdentifier(), 'Orders');
-        $this->assertEquals($segmentDescriptors[2]->getTargetKind(), TargetKind::RESOURCE);
+        $this->assertEquals($segmentDescriptors[2]->getTargetKind(), TargetKind::RESOURCE());
         $this->assertEquals($segmentDescriptors[2]->getTargetSource(), TargetSource::PROPERTY);
         $this->assertNotNull($segmentDescriptors[2]->getProjectedProperty());
         $this->assertTrue($segmentDescriptors[2]->isSingleResult());
@@ -382,21 +382,21 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(count($segmentDescriptors), 4);
         /** check first segment */
         $this->assertEquals($segmentDescriptors[0]->getIdentifier(), 'Customers');
-        $this->assertEquals($segmentDescriptors[0]->getTargetKind(), TargetKind::RESOURCE);
+        $this->assertEquals($segmentDescriptors[0]->getTargetKind(), TargetKind::RESOURCE());
         $this->assertEquals($segmentDescriptors[0]->getTargetSource(), TargetSource::ENTITY_SET);
         $this->assertNull($segmentDescriptors[0]->getProjectedProperty());
         $this->assertTrue($segmentDescriptors[0]->isSingleResult());
         $this->assertNotNull($segmentDescriptors[0]->getTargetResourceSetWrapper());
         /** check second segment */
         $this->assertEquals($segmentDescriptors[1]->getIdentifier(), '$links');
-        $this->assertEquals($segmentDescriptors[1]->getTargetKind(), TargetKind::LINK);
+        $this->assertEquals($segmentDescriptors[1]->getTargetKind(), TargetKind::LINK());
         $this->assertEquals($segmentDescriptors[1]->getTargetSource(), TargetSource::ENTITY_SET);
         $this->assertNull($segmentDescriptors[1]->getProjectedProperty());
         $this->assertTrue($segmentDescriptors[1]->isSingleResult());
         $this->assertNotNull($segmentDescriptors[1]->getTargetResourceSetWrapper());
         /** check third segment */
         $this->assertEquals($segmentDescriptors[2]->getIdentifier(), 'Orders');
-        $this->assertEquals($segmentDescriptors[2]->getTargetKind(), TargetKind::RESOURCE);
+        $this->assertEquals($segmentDescriptors[2]->getTargetKind(), TargetKind::RESOURCE());
         $this->assertEquals($segmentDescriptors[2]->getTargetSource(), TargetSource::PROPERTY);
         $this->assertNotNull($segmentDescriptors[2]->getProjectedProperty());
         $this->assertFalse($segmentDescriptors[2]->isSingleResult());
@@ -404,7 +404,7 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($segmentDescriptors[2]->getKeyDescriptor());
         /** check fourth segment */
         $this->assertEquals($segmentDescriptors[3]->getIdentifier(), '$count');
-        $this->assertEquals($segmentDescriptors[3]->getTargetKind(), TargetKind::PRIMITIVE_VALUE);
+        $this->assertEquals($segmentDescriptors[3]->getTargetKind(), TargetKind::PRIMITIVE_VALUE());
         $this->assertEquals($segmentDescriptors[3]->getTargetSource(), TargetSource::PROPERTY);
         $this->assertNull($segmentDescriptors[3]->getProjectedProperty());
         $this->assertTrue($segmentDescriptors[3]->isSingleResult());
@@ -422,21 +422,21 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(count($segmentDescriptors), 3);
         /** check first segment */
         $this->assertEquals($segmentDescriptors[0]->getIdentifier(), 'Customers');
-        $this->assertEquals($segmentDescriptors[0]->getTargetKind(), TargetKind::RESOURCE);
+        $this->assertEquals($segmentDescriptors[0]->getTargetKind(), TargetKind::RESOURCE());
         $this->assertEquals($segmentDescriptors[0]->getTargetSource(), TargetSource::ENTITY_SET);
         $this->assertNull($segmentDescriptors[0]->getProjectedProperty());
         $this->assertTrue($segmentDescriptors[0]->isSingleResult());
         $this->assertNotNull($segmentDescriptors[0]->getTargetResourceSetWrapper());
         /** check second segment */
         $this->assertEquals($segmentDescriptors[1]->getIdentifier(), 'Orders');
-        $this->assertEquals($segmentDescriptors[1]->getTargetKind(), TargetKind::RESOURCE);
+        $this->assertEquals($segmentDescriptors[1]->getTargetKind(), TargetKind::RESOURCE());
         $this->assertEquals($segmentDescriptors[1]->getTargetSource(), TargetSource::PROPERTY);
         $this->assertNotNull($segmentDescriptors[1]->getProjectedProperty());
         $this->assertFalse($segmentDescriptors[1]->isSingleResult());
         $this->assertNotNull($segmentDescriptors[1]->getTargetResourceSetWrapper());
         /** check third segment */
         $this->assertEquals($segmentDescriptors[2]->getIdentifier(), '$count');
-        $this->assertEquals($segmentDescriptors[2]->getTargetKind(), TargetKind::PRIMITIVE_VALUE);
+        $this->assertEquals($segmentDescriptors[2]->getTargetKind(), TargetKind::PRIMITIVE_VALUE());
         $this->assertEquals($segmentDescriptors[2]->getTargetSource(), TargetSource::PROPERTY);
         $this->assertNull($segmentDescriptors[2]->getProjectedProperty());
         $this->assertTrue($segmentDescriptors[2]->isSingleResult());
@@ -501,14 +501,14 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(count($segmentDescriptors), 2);
         /** check first segment */
         $this->assertEquals($segmentDescriptors[0]->getIdentifier(), 'Customers');
-        $this->assertEquals($segmentDescriptors[0]->getTargetKind(), TargetKind::RESOURCE);
+        $this->assertEquals($segmentDescriptors[0]->getTargetKind(), TargetKind::RESOURCE());
         $this->assertEquals($segmentDescriptors[0]->getTargetSource(), TargetSource::ENTITY_SET);
         $this->assertNull($segmentDescriptors[0]->getProjectedProperty());
         $this->assertTrue($segmentDescriptors[0]->isSingleResult());
         $this->assertNotNull($segmentDescriptors[0]->getTargetResourceSetWrapper());
         /** check second segment */
         $this->assertEquals($segmentDescriptors[1]->getIdentifier(), 'Address');
-        $this->assertEquals($segmentDescriptors[1]->getTargetKind(), TargetKind::COMPLEX_OBJECT);
+        $this->assertEquals($segmentDescriptors[1]->getTargetKind(), TargetKind::COMPLEX_OBJECT());
         $this->assertEquals($segmentDescriptors[1]->getTargetSource(), TargetSource::PROPERTY);
         $projectedProperty = $segmentDescriptors[1]->getProjectedProperty();
         $this->assertFalse(is_null($projectedProperty));
@@ -523,14 +523,14 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(count($segmentDescriptors), 3);
         /** check first segment */
         $this->assertEquals($segmentDescriptors[0]->getIdentifier(), 'Customers');
-        $this->assertEquals($segmentDescriptors[0]->getTargetKind(), TargetKind::RESOURCE);
+        $this->assertEquals($segmentDescriptors[0]->getTargetKind(), TargetKind::RESOURCE());
         $this->assertEquals($segmentDescriptors[0]->getTargetSource(), TargetSource::ENTITY_SET);
         $this->assertNull($segmentDescriptors[0]->getProjectedProperty());
         $this->assertTrue($segmentDescriptors[0]->isSingleResult());
         $this->assertNotNull($segmentDescriptors[0]->getTargetResourceSetWrapper());
         /** check second segment */
         $this->assertEquals($segmentDescriptors[1]->getIdentifier(), 'Address');
-        $this->assertEquals($segmentDescriptors[1]->getTargetKind(), TargetKind::COMPLEX_OBJECT);
+        $this->assertEquals($segmentDescriptors[1]->getTargetKind(), TargetKind::COMPLEX_OBJECT());
         $this->assertEquals($segmentDescriptors[1]->getTargetSource(), TargetSource::PROPERTY);
         $projectedProperty = $segmentDescriptors[1]->getProjectedProperty();
         $this->assertFalse(is_null($projectedProperty));
@@ -539,7 +539,7 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($segmentDescriptors[1]->getTargetResourceSetWrapper());
         /** check third segment */
         $this->assertEquals($segmentDescriptors[2]->getIdentifier(), 'StreetName');
-        $this->assertEquals($segmentDescriptors[2]->getTargetKind(), TargetKind::PRIMITIVE);
+        $this->assertEquals($segmentDescriptors[2]->getTargetKind(), TargetKind::PRIMITIVE());
         $this->assertEquals($segmentDescriptors[2]->getTargetSource(), TargetSource::PROPERTY);
         $projectedProperty = $segmentDescriptors[2]->getProjectedProperty();
         $this->assertFalse(is_null($projectedProperty));
@@ -584,14 +584,14 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(count($segmentDescriptors), 2);
         /** check first segment */
         $this->assertEquals($segmentDescriptors[0]->getIdentifier(), 'Employees');
-        $this->assertEquals($segmentDescriptors[0]->getTargetKind(), TargetKind::RESOURCE);
+        $this->assertEquals($segmentDescriptors[0]->getTargetKind(), TargetKind::RESOURCE());
         $this->assertEquals($segmentDescriptors[0]->getTargetSource(), TargetSource::ENTITY_SET);
         $this->assertNull($segmentDescriptors[0]->getProjectedProperty());
         $this->assertTrue($segmentDescriptors[0]->isSingleResult());
         $this->assertNotNull($segmentDescriptors[0]->getTargetResourceSetWrapper());
         /** check second segment */
         $this->assertEquals($segmentDescriptors[1]->getIdentifier(), 'Emails');
-        $this->assertEquals($segmentDescriptors[1]->getTargetKind(), TargetKind::BAG);
+        $this->assertEquals($segmentDescriptors[1]->getTargetKind(), TargetKind::BAG());
         $this->assertEquals($segmentDescriptors[1]->getTargetSource(), TargetSource::PROPERTY);
         $projectedProperty = $segmentDescriptors[1]->getProjectedProperty();
         $this->assertFalse(is_null($projectedProperty));
@@ -650,10 +650,10 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(array_key_exists('OrderID', $namedKeyValues));
         $this->assertEquals($namedKeyValues['OrderID'][0], 789);
         
-        $this->assertEquals($segmentDescriptors[0]->getTargetKind(), TargetKind::RESOURCE);
-        $this->assertEquals($segmentDescriptors[1]->getTargetKind(), TargetKind::RESOURCE);
-        $this->assertEquals($segmentDescriptors[2]->getTargetKind(), TargetKind::RESOURCE);
-        $this->assertEquals($segmentDescriptors[3]->getTargetKind(), TargetKind::PRIMITIVE);
+        $this->assertEquals($segmentDescriptors[0]->getTargetKind(), TargetKind::RESOURCE());
+        $this->assertEquals($segmentDescriptors[1]->getTargetKind(), TargetKind::RESOURCE());
+        $this->assertEquals($segmentDescriptors[2]->getTargetKind(), TargetKind::RESOURCE());
+        $this->assertEquals($segmentDescriptors[3]->getTargetKind(), TargetKind::PRIMITIVE());
         
         $this->assertEquals($segmentDescriptors[0]->getTargetSource(), TargetSource::ENTITY_SET);
         $this->assertEquals($segmentDescriptors[1]->getTargetSource(), TargetSource::PROPERTY);
@@ -704,8 +704,8 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($segmentDescriptors[0]->getIdentifier(), 'Employees');
         $this->assertEquals($segmentDescriptors[1]->getIdentifier(), '$value');
 
-        $this->assertEquals($segmentDescriptors[0]->getTargetKind(), TargetKind::RESOURCE);
-        $this->assertEquals($segmentDescriptors[1]->getTargetKind(), TargetKind::MEDIA_RESOURCE);
+        $this->assertEquals($segmentDescriptors[0]->getTargetKind(), TargetKind::RESOURCE());
+        $this->assertEquals($segmentDescriptors[1]->getTargetKind(), TargetKind::MEDIA_RESOURCE());
 
         $resourceType = $segmentDescriptors[0]->getTargetResourceType();
         $this->assertFalse(is_null($resourceType));
@@ -729,9 +729,9 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($segmentDescriptors[1]->getIdentifier(), 'Manager');
         $this->assertEquals($segmentDescriptors[2]->getIdentifier(), '$value');
 
-        $this->assertEquals($segmentDescriptors[0]->getTargetKind(), TargetKind::RESOURCE);
-        $this->assertEquals($segmentDescriptors[1]->getTargetKind(), TargetKind::RESOURCE);
-        $this->assertEquals($segmentDescriptors[2]->getTargetKind(), TargetKind::MEDIA_RESOURCE);
+        $this->assertEquals($segmentDescriptors[0]->getTargetKind(), TargetKind::RESOURCE());
+        $this->assertEquals($segmentDescriptors[1]->getTargetKind(), TargetKind::RESOURCE());
+        $this->assertEquals($segmentDescriptors[2]->getTargetKind(), TargetKind::MEDIA_RESOURCE());
 
         $resourceType = $segmentDescriptors[0]->getTargetResourceType();
         $this->assertFalse(is_null($resourceType));
@@ -756,8 +756,8 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($segmentDescriptors[0]->getIdentifier(), 'Employees');
         $this->assertEquals($segmentDescriptors[1]->getIdentifier(), 'TumbNail_48X48');
 
-        $this->assertEquals($segmentDescriptors[0]->getTargetKind(), TargetKind::RESOURCE);
-        $this->assertEquals($segmentDescriptors[1]->getTargetKind(), TargetKind::MEDIA_RESOURCE);
+        $this->assertEquals($segmentDescriptors[0]->getTargetKind(), TargetKind::RESOURCE());
+        $this->assertEquals($segmentDescriptors[1]->getTargetKind(), TargetKind::MEDIA_RESOURCE());
 
         $resourceType = $segmentDescriptors[0]->getTargetResourceType();
         $this->assertFalse(is_null($resourceType));
