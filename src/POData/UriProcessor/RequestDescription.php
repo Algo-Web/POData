@@ -38,7 +38,7 @@ class RequestDescription
      * 
      * @var Version
      */
-    private $_requestDataServiceVersion = null;
+    private $requestVersion = null;
 
     /**
      * Holds the value of HTTP 'MaxDataServiceVersion' header in the request,
@@ -48,13 +48,13 @@ class RequestDescription
      * 
      * @var Version
      */
-    private $_requestMaxDataServiceVersion = null;
+    private $requestMaxVersion = null;
 
     /**
-     * This is the value of 'DataServiceVersion' header in response, this header
+     * This is the value of 'DataServiceVersion' header to be output in the response. this header
      * value states the OData version the server used to generate the response.
      * While processing the query and result set this value will be keeps on
-     * updating, after every updation this is compared against the 
+     * updating, after every update this is compared against the
      * 'MaxDataServiceVersion' header in the client request to see whether the 
      * client can interpret the response or not. The client should use this 
      * value to determine whether it can correctly interpret the response or not.
@@ -62,7 +62,7 @@ class RequestDescription
      * 
      * @var Version
      */
-    private $_responseDataServiceVersion;
+    private $requiredMinResponseVersion;
 
     /**
      * The minimum client version requirement, This value keeps getting updated
@@ -73,7 +73,10 @@ class RequestDescription
      * 
      * @var Version
      */
-    private $_minimumRequiredClientVersion;
+    private $requiredMinRequestVersion;
+
+	/** @var Version */
+	private $maxServiceVersion;
 
     /**
      * Collection of known data service versions.
@@ -155,11 +158,11 @@ class RequestDescription
      * (1) if $orderby option is specified in the request uri
      * (2) if $skip or $top option is specified in the request uri
      * (3) if server side paging is enabled for the resource 
-     *     targetted by the request uri.
+     *     targeted by the request uri.
      * 
      * @var InternalOrderByInfo|null
      */
-    private $_internalOrdeByInfo;
+    private $internalOrderByInfo;
 
     /**
      * Holds the parsed details for $skiptoken option, this will
@@ -208,28 +211,46 @@ class RequestDescription
      */
     private $_uriProcessor;
 
-    /**
-     * Constructs a new instance of RequestDescription.
-     * 
-     * @param SegmentDescriptor[] &$segmentDescriptors Description of segments in the resource path.
-     *
-     * @param Url $requestUri The request Uri.
-     */
-    public function __construct(&$segmentDescriptors, Url $requestUri)
+
+
+	/**
+	 * @param SegmentDescriptor[] $segmentDescriptors Description of segments in the resource path.
+	 * @param Url $requestUri
+	 * @param Version $serviceMaxVersion
+	 * @param $requestVersion
+	 * @param $maxRequestVersion
+	 */
+	public function __construct($segmentDescriptors, Url $requestUri, Version $serviceMaxVersion, $requestVersion, $maxRequestVersion)
     {
         $this->segments = $segmentDescriptors;
         $this->_segmentCount = count($this->segments);
         $this->requestUrl = $requestUri;
         $this->lastSegment = $segmentDescriptors[$this->_segmentCount - 1];
 	    $this->queryType = QueryType::ENTITIES();
-        $this->_responseDataServiceVersion = new Version(1, 0);
-        $this->_minimumRequiredClientVersion = new Version(1, 0);
+
+	    //Per OData spec we must return the smallest size
+	    //We start at 1.0 and move it up as features are requested
+        $this->requiredMinResponseVersion = new Version(1, 0);
+        $this->requiredMinRequestVersion = new Version(1, 0);
+
+
+	    //see http://www.odata.org/documentation/odata-v2-documentation/overview/#ProtocolVersioning
+	    //if requestVersion isn't there, use Service Max Version
+	    $this->requestVersion = is_null($requestVersion) ? $serviceMaxVersion : self::parseVersionHeader($requestVersion, ODataConstants::ODATAVERSIONHEADER);
+
+	    //if max version isn't there, use the request version
+	    $this->requestMaxVersion = is_null($maxRequestVersion) ? $this->requestVersion : self::parseVersionHeader($maxRequestVersion, ODataConstants::ODATAMAXVERSIONHEADER);
+
+	    //we use this for validation checks down in validateVersions...but maybe we should check that outside of this object...
+	    $this->maxServiceVersion = $serviceMaxVersion;
+
         $this->_containerName = null;
         $this->_skipCount = null;
         $this->_topCount = null;
         $this->_topOptionCount = null;
-        $this->_internalOrdeByInfo = null;
+        $this->internalOrderByInfo = null;
         $this->_internalSkipTokenInfo = null;
+
         $this->_filterInfo = null;
         $this->_countValue = null;
         $this->_isExecuted = false;
@@ -239,34 +260,32 @@ class RequestDescription
      * Raise the minimum client version requirement for this request and
      * perform capability negotiation.
      * 
-     * @param int         $major       The major segment of the version
-     * @param int         $minor       The minor segment of the version
-     * @param IService $service The data service instance
-     * 
-     * @return void
+     * @param int $major The major segment of the version
+     * @param int $minor The minor segment of the version
      * 
      * @throws ODataException If capability negotiation fails.
      */
-    public function raiseMinVersionRequirement($major, $minor,  IService $service) {
-        $this->_minimumRequiredClientVersion->raiseVersion($major, $minor);
-        self::checkVersion($this, $service);
+    public function raiseMinVersionRequirement($major, $minor) {
+        if($this->requiredMinRequestVersion->raiseVersion($major, $minor))
+        {
+	        $this->validateVersions();
+        }
     }
 
     /**
-     * Raise the response version for this request and perform 
-     * capability negotiation.
+     * Raise the response version for this request and perform capability negotiation.
+     *
      * 
-     * @param int         $major       The major segment of the version
-     * @param int         $minor       The minor segment of the version
-     * @param IService $service The data service instance
-     * 
-     * @return void
+     * @param int $major The major segment of the version
+     * @param int $minor The minor segment of the version
      * 
      * @throws ODataException If capability negotiation fails.
      */  
-    public function raiseResponseVersion($major, $minor, IService $service ) {
-        $this->_responseDataServiceVersion->raiseVersion($major, $minor);
-        self::checkVersion($this, $service);
+    public function raiseResponseVersion($major, $minor) {
+        if($this->requiredMinResponseVersion->raiseVersion($major, $minor)){
+	        $this->validateVersions();
+        }
+
     }
 
     /**
@@ -311,7 +330,7 @@ class RequestDescription
     }
 
     /**
-     * Gets reference to the ResourceSetWrapper instance targetted by 
+     * Gets reference to the ResourceSetWrapper instance targeted by 
      * the resource path, ResourceSetWrapper will present in the 
      * following cases:
      * if the last segment descriptor describes 
@@ -355,10 +374,10 @@ class RequestDescription
     }
 
     /**
-     * Gets reference to the ResourceType instance targetted by 
+     * Gets reference to the ResourceType instance targeted by 
      * the resource path, ResourceType will present in the 
      * following cases:
-     * if the last segement descriptor describes
+     * if the last segment descriptor describes
      *      (a) resource set 
      *          http://server/NW.svc/Customers
      *          http://server/NW.svc/Customers('ALFKI')
@@ -399,10 +418,10 @@ class RequestDescription
     }
 
     /**
-     * Gets reference to the ResourceProperty instance targetted by 
+     * Gets reference to the ResourceProperty instance targeted by 
      * the resource path, ResourceProperty will present in the 
      * following cases:
-     * if the last segement descriptor describes
+     * if the last segment descriptor describes
      *      (a) resource set (after 1 level)
      *          http://server/NW.svc/Customers('ALFKI')/Orders
      *          http://server/NW.svc/Customers('ALFKI')/Orders(123)
@@ -500,8 +519,8 @@ class RequestDescription
     /**
      * Gets the value of $skip query option
      * 
-     * @return int|null The value of $skip query option, NULL
-     *                  if $skip is absent.
+     * @return int|null The value of $skip query option, NULL if $skip is absent.
+     *
      */
     public function getSkipCount()
     {
@@ -523,8 +542,8 @@ class RequestDescription
     /**
      * Gets the value of take count
      * 
-     * @return int|null The value of take, NULL
-     *                  if no take to be applied.
+     * @return int|null The value of take, NULL if no take to be applied.
+     *
      */
     public function getTopCount()
     {
@@ -546,8 +565,8 @@ class RequestDescription
     /**
      * Gets the value of $top query option
      * 
-     * @return int|null The value of $top query option, NULL
-     *                  if $top is absent.
+     * @return int|null The value of $top query option, NULL if $top is absent.
+     *
      */
     public function getTopOptionCount()
     {
@@ -571,14 +590,14 @@ class RequestDescription
      * sorting information in 3 cases:
      * (1) if $orderby option is specified in the request uri
      * (2) if $skip or $top option is specified in the request uri
-     * (3) if server side paging is enabled for the resource targetted 
+     * (3) if server side paging is enabled for the resource targeted 
      *     by the request uri.
      * 
      * @return InternalOrderByInfo|null
      */
     public function getInternalOrderByInfo()
     {
-        return $this->_internalOrdeByInfo;
+        return $this->internalOrderByInfo;
     }
 
     /**
@@ -590,14 +609,14 @@ class RequestDescription
      */
     public function setInternalOrderByInfo(InternalOrderByInfo &$internalOrderByInfo)
     {
-        $this->_internalOrdeByInfo = $internalOrderByInfo;
+        $this->internalOrderByInfo = $internalOrderByInfo;
     }
 
     /**
      * Gets the parsed details for $skiptoken option.
      * 
-     * @return InternalSkipTokenInfo|null Returns parsed details of $skiptoken
-     *                                    option, NULL if $skiptoken is absent.
+     * @return InternalSkipTokenInfo|null Returns parsed details of $skiptoken option, NULL if $skiptoken is absent.
+     *
      */
     public function getInternalSkipTokenInfo()
     {
@@ -760,7 +779,7 @@ class RequestDescription
     }
 
     /**
-     * Gets the resource instance targetted by the request uri.
+     * Gets the resource instance targeted by the request uri.
      * Note: This value will be populated after query execution only.
      * 
      * @return mixed
@@ -775,9 +794,10 @@ class RequestDescription
      * 
      * @return Version
      */
-    public function getResponseDataServiceVersion()
+    public function getResponseVersion()
     {
-        return $this->_responseDataServiceVersion;
+
+	    return $this->requiredMinResponseVersion;
     }
 
     /**
@@ -804,9 +824,11 @@ class RequestDescription
     public static function getKnownDataServiceVersions()
     {
         if (is_null(self::$_knownDataServiceVersions)) {
-            self::$_knownDataServiceVersions = array(new Version(1, 0),
-                                                    new Version(2, 0),
-                                                    new Version(3, 0));
+            self::$_knownDataServiceVersions = array(
+	            new Version(1, 0),
+                new Version(2, 0),
+                new Version(3, 0)
+            );
         }
 
         return self::$_knownDataServiceVersions;
@@ -824,76 +846,40 @@ class RequestDescription
      *  (3) Check the configured maximum protocol version is less than or equal 
      *      to the version of protocol required to generate the response
      *  In addition to these checking, this function is also responsible for
-     *  initializing the properties respresenting 'DataServiceVersion' and
+     *  initializing the properties representing 'DataServiceVersion' and
      *  'MaxDataServiceVersion'.
      *  
-     * @param RequestDescription $request The request description object
-     * @param IService        $service        The Service to check
-     * 
-     * @return void
-     * 
+     *
      * @throws ODataException If any of the above 3 check fails.
      */
-    public static function checkVersion(RequestDescription $request, IService $service) {
-        if (is_null($request->_requestDataServiceVersion)) {
-            $version = $service->getHost()->getRequestVersion();
-            //'DataServiceVersion' header not present in the request, so use
-            //default value as the maximum version number that the server can 
-            //interpret.
-            if (is_null($version)) {
-                $knownVersions = $request::getKnownDataServiceVersions();
-                $version = $knownVersions[count($knownVersions) - 1];
-            } else {
-                $version = $request::_validateAndGetVersion(
-                    $version, ODataConstants::ODATAVERSIONHEADER
-                );
-            }
+    public function validateVersions() {
 
-            $request->_requestDataServiceVersion = $version;
-        }
-
-        if (is_null($request->_requestMaxDataServiceVersion)) {
-            $version = $service->getHost()->getRequestMaxVersion();
-            //'MaxDataServiceVersion' header not present in the request, so use
-            //default value as the maximum version number that the server can 
-            //interpret.
-            if (is_null($version)) {
-                $knownVersions = $request::getKnownDataServiceVersions();
-                $version = $knownVersions[count($knownVersions) - 1];
-            } else {
-                $version = $request::_validateAndGetVersion(
-                    $version, ODataConstants::ODATAMAXVERSIONHEADER
-                );
-            }
-
-            $request->_requestMaxDataServiceVersion = $version;
-        }
-
-        if ($request->_requestDataServiceVersion->compare($request->_minimumRequiredClientVersion) < 0) {
+	    //If the request version is below the minimum version required by supplied request arguments..throw an exception
+        if ($this->requestVersion->compare($this->requiredMinRequestVersion) < 0) {
             ODataException::createBadRequestError(
                 Messages::requestVersionTooLow(
-                    $request->_requestDataServiceVersion->toString(),
-                    $request->_minimumRequiredClientVersion->toString()
+	                $this->requestVersion->toString(),
+	                $this->requiredMinRequestVersion->toString()
                 )
             );
         }
 
-        if ($request->_requestMaxDataServiceVersion->compare($request->_responseDataServiceVersion) < 0) {
+	    //If the requested max version is below the version required to fulfill the response...throw an exception
+        if ($this->requestMaxVersion->compare($this->requiredMinResponseVersion) < 0) {
             ODataException::createBadRequestError(
                 Messages::requestVersionTooLow(
-                    $request->_requestMaxDataServiceVersion->toString(),
-                    $request->_responseDataServiceVersion->toString()
+	                $this->requestMaxVersion->toString(),
+	                $this->requiredMinResponseVersion->toString()
                 )
             );
         }
 
-        $configuration = $service->getConfiguration();
-        $maxConfiguredProtocolVersion = $configuration->getMaxDataServiceVersionObject();
-        if ($maxConfiguredProtocolVersion->compare($request->_responseDataServiceVersion) < 0) {
+        //If the max version supported by the service is below the version required to fulfill the response..throw an exception
+        if ($this->maxServiceVersion->compare($this->requiredMinResponseVersion) < 0) {
             ODataException::createBadRequestError(
                 Messages::requestVersionIsBiggerThanProtocolVersion(
-                    $request->_responseDataServiceVersion->toString(),
-                    $maxConfiguredProtocolVersion->toString()
+	                $this->requiredMinResponseVersion->toString(),
+	                $this->maxServiceVersion->toString()
                 )
             );
         }
@@ -909,7 +895,7 @@ class RequestDescription
      * 
      * @throws ODataException If the version is malformed or not supported
      */
-    private static function _validateAndGetVersion($versionHeader, $headerName)
+    private static function parseVersionHeader($versionHeader, $headerName)
     {
         $libName = null;
         $versionHeader = trim($versionHeader);
@@ -923,7 +909,9 @@ class RequestDescription
         $dotIndex = -1;
         for ($i = 0; $i < $libNameIndex; $i++) {
             if ($versionHeader[$i] == '.') {
-                if ($dotIndex != -1) {
+
+	            //Throw an exception if we find more than 1 dot
+	            if ($dotIndex != -1) {
                     ODataException::createBadRequestError(
                         Messages::requestDescriptionInvalidVersionHeader(
                             $versionHeader,
@@ -943,9 +931,14 @@ class RequestDescription
             }
         }
 
-        $major = $minor = 0;
+
+	    $major = intval(substr($versionHeader, 0, $dotIndex));
+	    $minor = 0;
+
+	   //Apparently the . is optional
         if ($dotIndex != -1) {
             if ($dotIndex == 0) {
+	            //If it starts with a ., throw an exception
                 ODataException::createBadRequestError(
                     Messages::requestDescriptionInvalidVersionHeader(
                         $versionHeader,
@@ -953,16 +946,14 @@ class RequestDescription
                     )
                 );
             }
-
-            $major = intval(substr($versionHeader, 0, $dotIndex));
             $minor = intval(substr($versionHeader, $dotIndex + 1, $libNameIndex));
-
-        } else {
-            $major = intval(substr($versionHeader, 0, $dotIndex));
-            $minor = 0;
         }
 
+
         $version = new Version($major, $minor);
+
+	    //TODO: move this somewhere...
+	    /*
         $isSupportedVersion = false;
         foreach (self::getKnownDataServiceVersions() as $version1) {
             if ($version->compare($version1) == 0) {
@@ -981,10 +972,12 @@ class RequestDescription
             ODataException::createBadRequestError(
                 Messages::requestDescriptionUnSupportedVersion(
                     $headerName,
-                    $versionHeader, $availableVersions
+                    $versionHeader,
+	                $availableVersions
                 )
             );
         }
+	    */
 
         return $version;
     }

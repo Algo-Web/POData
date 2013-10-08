@@ -2,11 +2,14 @@
 
 namespace POData\Configuration;
 
+use MyCLabs\Enum\Enum;
+
 /**
- * Class ServiceProtocolVersion  Enumeration to describe the supported OData versions
- * @package POData\Configuration
+ * @method static \POData\Configuration\ProtocolVersion V1()
+ * @method static \POData\Configuration\ProtocolVersion V2()
+ * @method static \POData\Configuration\ProtocolVersion V3()
  */
-class ServiceProtocolVersion
+class ProtocolVersion extends Enum
 {
     /**
      * Version 1 of the OData protocol.

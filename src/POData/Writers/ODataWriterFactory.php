@@ -34,7 +34,7 @@ class ODataWriterFactory
 				return new AtomODataWriter($serviceBaseAbsoluteURI);
 
 		    case ResponseFormat::JSON():
-			    $isPostV1 = ($request->getResponseDataServiceVersion()->compare(new Version(1, 0)) == 1);
+			    $isPostV1 = ($request->getResponseVersion()->compare(new Version(1, 0)) == 1);
 			    return $isPostV1 ? new JsonODataV2Writer() : new JsonODataV1Writer();
 
 			default:

@@ -6,7 +6,7 @@ use POData\Configuration\EntitySetRights;
 use POData\IService;
 use POData\IRequestHandler;
 
-use POData\Configuration\ServiceProtocolVersion;
+use POData\Configuration\ProtocolVersion;
 use POData\Configuration\ServiceConfiguration;
 use POData\BaseService;
 
@@ -31,7 +31,7 @@ class NorthWindServiceV1 extends BaseServiceTestWrapper
         $config->setEntitySetPageSize('*', 5);
         $config->setAcceptCountRequests(true);
         $config->setAcceptProjectionRequests(true);
-        $config->setMaxDataServiceVersion(ServiceProtocolVersion::V1);
+        $config->setMaxDataServiceVersion(ProtocolVersion::V1());
     }
 
 	/**

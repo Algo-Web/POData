@@ -54,7 +54,7 @@ interface IHTTPRequest
      * Any subsequent call to getRequestHeader("HTTP_ACCEPT") must return the value set with this call
      *
      * @param string $mime The mime value.
-     * 
+     *
      * @return void
      */
     public function setRequestAccept($mime);

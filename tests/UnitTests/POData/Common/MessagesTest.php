@@ -46,7 +46,6 @@ class MessagesTest extends BaseUnitTestCase {
 			'configurationResourceSetNameNotFound',
 			'configurationRightsAreNotInRange',
 			'configurationInvalidVersion',
-			'configurationFeatureVersionMismatch',
 			'configurationCountNotAccepted',
 			'resourceTypeNoBaseTypeForPrimitive',
 			'resourceTypeNoAbstractForPrimitive',

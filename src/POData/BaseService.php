@@ -77,7 +77,7 @@ abstract class BaseService implements IRequestHandler, IService
      * 
      * @var ServiceConfiguration
      */
-    private $_serviceConfiguration;
+    private $config;
 
     /**
      * Gets reference to ServiceConfiguration instance so that
@@ -88,7 +88,7 @@ abstract class BaseService implements IRequestHandler, IService
      */
     public function getConfiguration()
     {
-        return $this->_serviceConfiguration;
+        return $this->config;
     }
 
 
@@ -205,6 +205,9 @@ abstract class BaseService implements IRequestHandler, IService
     {
         try {
             $this->createProviders();
+	        $serviceVersionMax = $this->getConfiguration()->getMaxDataServiceVersionObject();
+
+
             $this->_serviceHost->validateQueryParameters();
             $requestMethod = $this->getOperationContext()->incomingRequest()->getMethod();
             if ($requestMethod != HTTPRequestMethod::GET()) {
@@ -212,8 +215,8 @@ abstract class BaseService implements IRequestHandler, IService
             }          
 
             $uriProcessor = UriProcessor::process($this);
-            $requestDescription = $uriProcessor->getRequest();
-            $this->serializeResult($requestDescription, $uriProcessor);
+            $request = $uriProcessor->getRequest();
+            $this->serializeResult($request, $uriProcessor);
         } catch (\Exception $exception) {
             ErrorHandler::handleException($exception, $this);
             // Return to dispatcher for writing serialized exception
@@ -281,15 +284,15 @@ abstract class BaseService implements IRequestHandler, IService
             ODataException::createInternalServerError(Messages::invalidQueryInstance());
         }
 
-        $this->_serviceConfiguration = new ServiceConfiguration($metadataProvider);
+        $this->config = new ServiceConfiguration($metadataProvider);
         $this->providersWrapper = new ProvidersWrapper(
             $metadataProvider, 
             $queryProvider, 
-            $this->_serviceConfiguration
+            $this->config
         );
 
         
-        $this->initialize($this->_serviceConfiguration);
+        $this->initialize($this->config);
     }
 
     /**
@@ -302,7 +305,7 @@ abstract class BaseService implements IRequestHandler, IService
      */
     protected function serializeResult(RequestDescription $request, UriProcessor $uriProcessor) {
         $isETagHeaderAllowed = $request->isETagHeaderAllowed();
-        if ($this->_serviceConfiguration->getValidateETagHeader() && !$isETagHeaderAllowed) {
+        if ($this->config->getValidateETagHeader() && !$isETagHeaderAllowed) {
             if (!is_null($this->_serviceHost->getRequestIfMatch())
                 ||!is_null($this->_serviceHost->getRequestIfNoneMatch())
             ) {
@@ -674,7 +677,7 @@ abstract class BaseService implements IRequestHandler, IService
             return null;
         }
      
-        if ($this->_serviceConfiguration->getValidateETagHeader() && !$resourceType->hasETagProperties()) {
+        if ($this->config->getValidateETagHeader() && !$resourceType->hasETagProperties()) {
             if (!is_null($ifMatch) || !is_null($ifNoneMatch)) {
                 // No eTag properties but request has eTag headers, bad request
                 ODataException::createBadRequestError(
@@ -686,7 +689,7 @@ abstract class BaseService implements IRequestHandler, IService
             return null;
         }
 
-        if (!$this->_serviceConfiguration->getValidateETagHeader()) {
+        if (!$this->config->getValidateETagHeader()) {
             // Configuration says do not validate ETag so we will not write ETag header in the 
             // response even though the requested resource support it
             return null;

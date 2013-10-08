@@ -8,7 +8,7 @@ use POData\Providers\Metadata\ResourceTypeKind;
 use POData\Providers\ProvidersWrapper;
 use POData\Configuration\ServiceConfiguration;
 use POData\Configuration\EntitySetRights;
-use POData\Configuration\ServiceProtocolVersion;
+use POData\Configuration\ProtocolVersion;
 use POData\Providers\Metadata\IMetadataProvider;
 use POData\Common\ODataException;
 use POData\Writers\Metadata\MetadataWriter;
@@ -33,7 +33,7 @@ class MetadataWriterTest extends PHPUnit_Framework_TestCase
 		$northWindMetadata = NorthWindMetadata::Create();
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule("*", EntitySetRights::ALL);
-        $configuration->setMaxDataServiceVersion(ServiceProtocolVersion::V3);
+        $configuration->setMaxDataServiceVersion(ProtocolVersion::V3());
 
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation

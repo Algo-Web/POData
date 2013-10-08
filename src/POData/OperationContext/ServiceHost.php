@@ -107,33 +107,27 @@ Class ServiceHost
     public function getAbsoluteRequestUri()
     {
         if (is_null($this->_absoluteRequestUri)) {
-            $this->_absoluteRequestUriAsString 
-                = $this->_operationContext->incomingRequest()->getRawUrl();
+            $this->_absoluteRequestUriAsString = $this->_operationContext->incomingRequest()->getRawUrl();
             // Validate the uri first
             try {
-                $this->_absoluteRequestUri 
-                    = new Url($this->_absoluteRequestUriAsString);
-                unset($this->_absoluteRequestUri);
+                new Url($this->_absoluteRequestUriAsString);
             } catch (UrlFormatException $exception) {
                 ODataException::createBadRequestError($exception->getMessage());
             }
 
             $queryStartIndex = strpos($this->_absoluteRequestUriAsString, '?');
             if ($queryStartIndex !== false) {
-                $this->_absoluteRequestUriAsString 
-                    = substr(
-                        $this->_absoluteRequestUriAsString,
-                        0,
-                        $queryStartIndex
-                    );
+                $this->_absoluteRequestUriAsString = substr(
+                    $this->_absoluteRequestUriAsString,
+                    0,
+                    $queryStartIndex
+                );
             }
 
             // We need the absolute uri only not associated components 
             // (query, fragments etc..)
-            $this->_absoluteRequestUri 
-                = new Url($this->_absoluteRequestUriAsString);
-            $this->_absoluteRequestUriAsString 
-                = rtrim($this->_absoluteRequestUriAsString, '/');
+            $this->_absoluteRequestUri = new Url($this->_absoluteRequestUriAsString);
+            $this->_absoluteRequestUriAsString = rtrim($this->_absoluteRequestUriAsString, '/');
         }
 
         return $this->_absoluteRequestUri;
@@ -261,7 +255,7 @@ Class ServiceHost
 
 
     /**
-     * This method verfiy the client provided url query parameters and check whether
+     * This method verfies the client provided url query parameters and check whether
      * any of the odata query option specified more than once or check any of the 
      * non-odata query parameter start will $ symbol or check any of the odata query 
      * option specified with out value. If any of the above check fails throws 
@@ -274,55 +268,11 @@ Class ServiceHost
     public function validateQueryParameters()
     {
         $queryOptions = $this->_operationContext->incomingRequest()->getQueryParameters();
-        reset($queryOptions);
-        // Check whether user specified $format query option
-        while ($queryOption = current($queryOptions)) {
-            $optionName =  key($queryOption);
-            $optionValue = current($queryOption);
-            if (!empty($optionName) 
-                && $optionName === ODataConstants::HTTPQUERY_STRING_FORMAT
-            ) {
-                //$optionValue is the format
-                if (!is_null($optionValue)) {
-                    if ($optionValue === ODataConstants::FORMAT_ATOM) {
-                        $this->setRequestAccept(
-                            ODataConstants::MIME_APPLICATION_ATOM . ';q=1.0'
-                        );
-                    } else if ($optionValue === ODataConstants::FORMAT_JSON) {
-                        $this->setRequestAccept(
-                            ODataConstants::MIME_APPLICATION_JSON . ';q=1.0'
-                        );
-                    } else {
-                        // Invalid format value, this error should not be 
-                        // serialized in atom or json format since we don't 
-                        // know which format client can understand, so error
-                        // will be in plain text.
-                        header(
-                            ODataConstants::HTTPRESPONSE_HEADER_CONTENTTYPE . 
-                            ':' . 
-                            ODataConstants::MIME_TEXTPLAIN
-                        );
-
-                        header(
-                            ODataConstants::HTTPRESPONSE_HEADER_STATUS . 
-                            ':' . HttpStatus::CODE_BAD_REQUEST . ' ' . 'Bad Request'
-                        );
-
-                        echo Messages::queryProcessorInvalidValueForFormat();
-                        exit;
-                    }
-                }
-
-                break;
-            }
-
-            next($queryOptions); 
-        }
 
         reset($queryOptions);
         $namesFound = array();
         while ($queryOption = current($queryOptions)) {
-            $optionName =  key($queryOption);
+            $optionName = key($queryOption);
             $optionValue = current($queryOption);
             if (empty($optionName)) {
                 if (!empty($optionValue)) {
@@ -379,12 +329,12 @@ Class ServiceHost
     }
     
     /**
-     * Varifies the given url option is a valid odata query option.
+     * Verifies the given url option is a valid odata query option.
      * 
      * @param string $optionName option to validate
      * 
-     * @return boolean True if the given option is a valid odata option
-     *                 False otherwise.
+     * @return boolean True if the given option is a valid odata option False otherwise.
+     *
      */
     private function _isODataQueryOption($optionName)
     {
@@ -457,22 +407,6 @@ Class ServiceHost
             ->getRequestHeader(ODataConstants::HTTPREQUEST_HEADER_ACCEPT);
     }
 
-    /**
-     * To change the request accept type header in the request.
-     * Note: This method will be used when client specified $format
-     * query option.
-     * 
-     * @param string $mimeType MIME to set.
-     * 
-     * @return void
-     * 
-     */
-    public function setRequestAccept($mimeType)
-    {
-        $this->_operationContext
-            ->incomingRequest()
-            ->setRequestAccept($mimeType);
-    }
 
     /**
      * Get the character set encoding that the client requested

@@ -1,6 +1,6 @@
 <?php
 
-namespace POData\UriProcessor\QueryProcessor\ExpandProjectionParser;
+namespace UnitTests\POData\UriProcessor\QueryProcessor\ExpandProjectionParser;
 
 
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandedProjectionNode;

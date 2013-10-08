@@ -5,7 +5,7 @@ require_once 'POData\IBaseService.php';
 require_once 'POData\IRequestHandler.php';
 require_once 'POData\DataService.php';
 require_once 'POData\IServiceProvider.php';
-use POData\Configuration\ServiceProtocolVersion;
+use POData\Configuration\ProtocolVersion;
 use POData\Configuration\ServiceConfiguration;
 use POData\BaseService;
 require_once 'NorthWindMetadata.php';
@@ -21,17 +21,17 @@ class NorthWindDataService extends BaseService
     /**
      * This method is called only once to initialize service-wide policies
      * 
-     * @param ServiceConfiguration &$config Data service configuration object
+     * @param ServiceConfiguration $config Data service configuration object
      * 
      * @return void
      */
-    public function initialize(ServiceConfiguration &$config)
+    public function initialize(ServiceConfiguration $config)
     {
         $config->setEntitySetPageSize('*', 5);
         $config->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $config->setAcceptCountRequests(true);
         $config->setAcceptProjectionRequests(true);
-        $config->setMaxDataServiceVersion(ServiceProtocolVersion::V3);
+        $config->setMaxDataServiceVersion(ProtocolVersion::V3());
     }
 
     /**

@@ -60,16 +60,20 @@ class Version
      * @param int $major The major component of the new version
      * @param int $minor The minor component of the new version
      * 
-     * @return void
+     * @return boolean true if the version was raised, false otherwise
      */
     public function raiseVersion($major, $minor) 
     {
         if ($major > $this->_major) {
             $this->_major = $major;
             $this->_minor = $minor;
+	        return true;
         } else if ($major == $this->_major && $minor > $this->_minor) {
             $this->_minor = $minor;
-        }    
+	        return true;
+        }
+
+	    return false;
     }
 
     /**

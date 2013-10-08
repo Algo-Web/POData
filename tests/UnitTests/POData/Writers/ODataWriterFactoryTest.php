@@ -63,7 +63,7 @@ class ODataWriterFactoryTest extends  BaseUnitTestCase {
 
 		$fakeVersion = new Version(1,0);
 
-		Phockito::when($this->mockRequest->getResponseDataServiceVersion())
+		Phockito::when($this->mockRequest->getResponseVersion())
 			->return($fakeVersion);
 
 		$factory = new ODataWriterFactory();
@@ -92,7 +92,7 @@ class ODataWriterFactoryTest extends  BaseUnitTestCase {
 
 		$fakeVersion = new Version(2,0);
 
-		Phockito::when($this->mockRequest->getResponseDataServiceVersion())
+		Phockito::when($this->mockRequest->getResponseVersion())
 			->return($fakeVersion);
 
 		$factory = new ODataWriterFactory();
@@ -119,7 +119,7 @@ class ODataWriterFactoryTest extends  BaseUnitTestCase {
 
 		$fakeVersion = new Version(3,0);
 
-		Phockito::when($this->mockRequest->getResponseDataServiceVersion())
+		Phockito::when($this->mockRequest->getResponseVersion())
 			->return($fakeVersion);
 
 		$factory = new ODataWriterFactory();
@@ -147,7 +147,7 @@ class ODataWriterFactoryTest extends  BaseUnitTestCase {
 
 		$fakeVersion = new Version(1,0);
 
-		Phockito::when($this->mockRequest->getResponseDataServiceVersion())
+		Phockito::when($this->mockRequest->getResponseVersion())
 			->return($fakeVersion);
 
 		$factory = new ODataWriterFactory();
@@ -176,7 +176,7 @@ class ODataWriterFactoryTest extends  BaseUnitTestCase {
 
 		$fakeVersion = new Version(2,0);
 
-		Phockito::when($this->mockRequest->getResponseDataServiceVersion())
+		Phockito::when($this->mockRequest->getResponseVersion())
 			->return($fakeVersion);
 
 		$factory = new ODataWriterFactory();
@@ -203,7 +203,7 @@ class ODataWriterFactoryTest extends  BaseUnitTestCase {
 
 		$fakeVersion = new Version(3,0);
 
-		Phockito::when($this->mockRequest->getResponseDataServiceVersion())
+		Phockito::when($this->mockRequest->getResponseVersion())
 			->return($fakeVersion);
 
 		$factory = new ODataWriterFactory();
@@ -231,7 +231,7 @@ class ODataWriterFactoryTest extends  BaseUnitTestCase {
 
 		$fakeVersion = new Version(1,0);
 
-		Phockito::when($this->mockRequest->getResponseDataServiceVersion())
+		Phockito::when($this->mockRequest->getResponseVersion())
 			->return($fakeVersion);
 
 		$factory = new ODataWriterFactory();
@@ -260,7 +260,7 @@ class ODataWriterFactoryTest extends  BaseUnitTestCase {
 
 		$fakeVersion = new Version(2,0);
 
-		Phockito::when($this->mockRequest->getResponseDataServiceVersion())
+		Phockito::when($this->mockRequest->getResponseVersion())
 			->return($fakeVersion);
 
 		$factory = new ODataWriterFactory();
@@ -287,7 +287,7 @@ class ODataWriterFactoryTest extends  BaseUnitTestCase {
 
 		$fakeVersion = new Version(3,0);
 
-		Phockito::when($this->mockRequest->getResponseDataServiceVersion())
+		Phockito::when($this->mockRequest->getResponseVersion())
 			->return($fakeVersion);
 
 		$factory = new ODataWriterFactory();

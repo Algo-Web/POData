@@ -31,8 +31,9 @@ class ResourcePathProcessor
      *                        or in case of any version incompatibility.
      */
     public static function process(IService $service) {
-        $absoluteRequestUri = $service->getHost()->getAbsoluteRequestUri();
-        $absoluteServiceUri = $service->getHost()->getAbsoluteServiceUri();
+	    $host = $service->getHost();
+        $absoluteRequestUri = $host->getAbsoluteRequestUri();
+        $absoluteServiceUri = $host->getAbsoluteServiceUri();
 
         $requestUriSegments = array_slice(
             $absoluteRequestUri->getSegments(),
@@ -47,7 +48,10 @@ class ResourcePathProcessor
 
         $request = new RequestDescription(
             $segments,
-            $absoluteRequestUri
+            $absoluteRequestUri,
+	        $service->getConfiguration()->getMaxDataServiceVersion(),
+	        $host->getRequestVersion(),
+	        $host->getRequestMaxVersion()
         );
         $kind = $request->getTargetKind();
 
@@ -76,11 +80,11 @@ class ResourcePathProcessor
             // use of $count requires request DataServiceVersion
             // and MaxDataServiceVersion greater than or equal to 2.0
 
-            $request->raiseResponseVersion( 2, 0, $service );
-            $request->raiseMinVersionRequirement(2, 0, $service );
+            $request->raiseResponseVersion( 2, 0);
+            $request->raiseMinVersionRequirement(2, 0 );
 
         } else if ($request->isNamedStream()) {
-            $request->raiseMinVersionRequirement(3, 0, $service );
+            $request->raiseMinVersionRequirement(3, 0 );
         } else if ($request->getTargetKind() == TargetKind::RESOURCE) {
             if (!$request->isLinkUri()) {
                 $resourceSetWrapper = $request->getTargetResourceSetWrapper();
@@ -90,12 +94,12 @@ class ResourcePathProcessor
                 $hasBagProperty = $resourceSetWrapper->hasBagProperty($service->getProvidersWrapper());
 
                 if ($hasNamedStream || $hasBagProperty) {
-                    $request->raiseResponseVersion( 3, 0, $service );
+                    $request->raiseResponseVersion( 3, 0 );
                 }
             }
         } else if ($request->getTargetKind() == TargetKind::BAG
         ) {
-            $request->raiseResponseVersion( 3, 0, $service );
+            $request->raiseResponseVersion( 3, 0 );
         }
 
 

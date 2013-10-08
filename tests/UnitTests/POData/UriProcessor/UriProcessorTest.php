@@ -1,10 +1,6 @@
 <?php
 
-namespace POData\UriProcessor\ResourcePathProcessor;
-
-/**
- * Mainly test UriProcessor, but also do some partial test for BaseService class.
- */
+namespace UnitTests\POData\UriProcessor;
 
 use POData\Configuration\ServiceConfiguration;
 use POData\Providers\Metadata\ResourceSet;
@@ -20,7 +16,7 @@ use POData\UriProcessor\QueryProcessor\SkipTokenParser\InternalSkipTokenInfo;
 use POData\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenInfo;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
 use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
-use POData\Configuration\ServiceProtocolVersion;
+use POData\Configuration\ProtocolVersion;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetSource;
 use POData\Providers\Metadata\Type\Int32;
@@ -190,7 +186,7 @@ class UriProcessorTest extends BaseUnitTestCase
      * Test request uri for row count ($count)     
      * 
      * Suppose $top option is absent, still
-     * RequestDescription::topCount will be set if the resource targetted by the
+     * RequestDescription::topCount will be set if the resource targeted by the
      * uri has paging enabled, if RequestDescription::topCount 
      * is set then internal orderby info will be generated. But if the request 
      * is for raw count for a resource collection then paging is not applicable
@@ -2190,6 +2186,9 @@ class UriProcessorTest extends BaseUnitTestCase
 	/** @var  ServiceHost */
 	protected $mockServiceHost;
 
+	/** @var  ServiceConfiguration */
+	protected $mockServiceConfig;
+
 	/** @var  IMetadataProvider */
 	protected $mockMetadataProvider;
 
@@ -2206,6 +2205,13 @@ class UriProcessorTest extends BaseUnitTestCase
 	{
 		Phockito::when($this->mockService->getHost())
 			->return($this->mockServiceHost);
+
+		Phockito::when($this->mockService->getConfiguration())
+			->return($this->mockServiceConfig);
+
+		Phockito::when($this->mockServiceConfig->getMaxDataServiceVersion())
+			->return(new Version(2, 0));
+
 
 		$requestURI = new Url('http://host.com/data.svc/Collection');
 		Phockito::when($this->mockServiceHost->getAbsoluteRequestUri())
@@ -2359,7 +2365,7 @@ class UriProcessorTest extends BaseUnitTestCase
 
 		$fakeServiceConfig = new ServiceConfiguration($this->mockMetadataProvider);
 		$fakeServiceConfig->setAcceptCountRequests(true);
-		$fakeServiceConfig->setMaxDataServiceVersion(ServiceProtocolVersion::V2);
+		$fakeServiceConfig->setMaxDataServiceVersion(ProtocolVersion::V2());
 		Phockito::when($this->mockService->getConfiguration())
 			->return($fakeServiceConfig);
 
@@ -2422,7 +2428,7 @@ class UriProcessorTest extends BaseUnitTestCase
 
 		$fakeServiceConfig = new ServiceConfiguration($this->mockMetadataProvider);
 		$fakeServiceConfig->setAcceptCountRequests(true);
-		$fakeServiceConfig->setMaxDataServiceVersion(ServiceProtocolVersion::V2);
+		$fakeServiceConfig->setMaxDataServiceVersion(ProtocolVersion::V2());
 		Phockito::when($this->mockService->getConfiguration())
 			->return($fakeServiceConfig);
 
@@ -2474,7 +2480,7 @@ class UriProcessorTest extends BaseUnitTestCase
 
 		$fakeServiceConfig = new ServiceConfiguration($this->mockMetadataProvider);
 		$fakeServiceConfig->setAcceptCountRequests(false);
-		//$fakeServiceConfig->setMaxDataServiceVersion(ServiceProtocolVersion::V2);
+		//$fakeServiceConfig->setMaxDataServiceVersion(ProtocolVersion::V2);
 		Phockito::when($this->mockService->getConfiguration())
 			->return($fakeServiceConfig);
 
@@ -2516,7 +2522,7 @@ class UriProcessorTest extends BaseUnitTestCase
 
 		$fakeServiceConfig = new ServiceConfiguration($this->mockMetadataProvider);
 		$fakeServiceConfig->setAcceptCountRequests(true);
-		$fakeServiceConfig->setMaxDataServiceVersion(ServiceProtocolVersion::V1);
+		$fakeServiceConfig->setMaxDataServiceVersion(ProtocolVersion::V1());
 		Phockito::when($this->mockService->getConfiguration())
 			->return($fakeServiceConfig);
 
@@ -2560,7 +2566,7 @@ class UriProcessorTest extends BaseUnitTestCase
 
 		$fakeServiceConfig = new ServiceConfiguration($this->mockMetadataProvider);
 		$fakeServiceConfig->setAcceptCountRequests(true);
-		$fakeServiceConfig->setMaxDataServiceVersion(ServiceProtocolVersion::V1);
+		$fakeServiceConfig->setMaxDataServiceVersion(ProtocolVersion::V1());
 		Phockito::when($this->mockService->getConfiguration())
 			->return($fakeServiceConfig);
 
@@ -2623,7 +2629,7 @@ class UriProcessorTest extends BaseUnitTestCase
 
 		$fakeServiceConfig = new ServiceConfiguration($this->mockMetadataProvider);
 		$fakeServiceConfig->setAcceptCountRequests(true);
-		$fakeServiceConfig->setMaxDataServiceVersion(ServiceProtocolVersion::V2);
+		$fakeServiceConfig->setMaxDataServiceVersion(ProtocolVersion::V2());
 		Phockito::when($this->mockService->getConfiguration())
 			->return($fakeServiceConfig);
 
@@ -2687,7 +2693,7 @@ class UriProcessorTest extends BaseUnitTestCase
 
 		$fakeServiceConfig = new ServiceConfiguration($this->mockMetadataProvider);
 		$fakeServiceConfig->setAcceptCountRequests(true);
-		$fakeServiceConfig->setMaxDataServiceVersion(ServiceProtocolVersion::V2);
+		$fakeServiceConfig->setMaxDataServiceVersion(ProtocolVersion::V2());
 		Phockito::when($this->mockService->getConfiguration())
 			->return($fakeServiceConfig);
 

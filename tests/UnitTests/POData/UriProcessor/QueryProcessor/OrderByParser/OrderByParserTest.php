@@ -1,6 +1,6 @@
 <?php
 
-namespace POData\UriProcessor\QueryProcessor\OrderByParser;
+namespace UnitTests\POData\UriProcessor\QueryProcessor\OrderByParser;
 
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Configuration\EntitySetRights;

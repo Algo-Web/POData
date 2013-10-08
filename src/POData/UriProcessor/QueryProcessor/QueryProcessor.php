@@ -114,6 +114,59 @@ class QueryProcessor
         unset($queryProcessor);
     }
 
+
+	private function processFormat(){
+		$version = $this->service->getHost()->getRequestVersion();
+
+		$format = $this->service->getHost()->getOperationContext()->incomingRequest()->getQueryParameters();
+
+		reset($queryOptions);
+		// Check whether user specified $format query option
+		while ($queryOption = current($queryOptions)) {
+			$optionName = key($queryOption);
+			$optionValue = current($queryOption);
+			if (!empty($optionName) && $optionName === ODataConstants::HTTPQUERY_STRING_FORMAT) {
+				//$optionValue is the format
+				switch($optionValue) {
+					case ODataConstants::FORMAT_ATOM:
+						$this->request->responseFormat = ODataConstants::MIME_APPLICATION_ATOM . ';q=1.0';
+						break;
+
+					case ODataConstants::FORMAT_JSON:
+						$this->setRequestAccept(
+							ODataConstants::MIME_APPLICATION_JSON . ';q=1.0'
+						);
+						break;
+
+					default:
+						// Invalid format value, this error should not be
+						// serialized in atom or json format since we don't
+						// know which format client can understand, so error
+						// will be in plain text.
+						header(
+							ODataConstants::HTTPRESPONSE_HEADER_CONTENTTYPE .
+							':' .
+							ODataConstants::MIME_TEXTPLAIN
+						);
+
+						header(
+							ODataConstants::HTTPRESPONSE_HEADER_STATUS .
+							':' . HttpStatus::CODE_BAD_REQUEST . ' ' . 'Bad Request'
+						);
+
+						echo Messages::queryProcessorInvalidValueForFormat();
+						exit;
+
+				}
+
+				break;
+			}
+
+			next($queryOptions);
+		}
+	}
+
+
     /**
      * Processes the odata query options in the request uri and update the request description instance with processed details.
      * @return void
@@ -162,13 +215,13 @@ class QueryProcessor
                 //If $top is greater than or equal to page size, 
                 //we will need a $skiptoken and thus our response 
                 //will be 2.0
-                $this->request->raiseResponseVersion(2, 0, $this->service);
+                $this->request->raiseResponseVersion(2, 0);
                 $this->request->setTopCount($pageSize);
             } else {
                 $this->request->setTopCount($value);
             }
         } else if ($isPagingRequired) {
-            $this->request->raiseResponseVersion(2, 0, $this->service);
+            $this->request->raiseResponseVersion(2, 0);
             $this->request->setTopCount($pageSize);
         }
 
@@ -247,7 +300,7 @@ class QueryProcessor
      * 
      * @throws ODataException Throws error in the following cases:
      *                          (1) If $filter cannot be applied to the 
-     *                              resource targetted by the request uri
+     *                              resource targeted by the request uri
      *                          (2) If any error occured while parsing and
      *                              translating the odata $filter expression
      *                              to expression tree
@@ -323,8 +376,8 @@ class QueryProcessor
         if ($inlineCount === ODataConstants::URI_ROWCOUNT_ALLOPTION) {
 	        $this->request->queryType = QueryType::ENTITIES_WITH_COUNT();
 
-            $this->request->raiseMinVersionRequirement( 2, 0, $this->service );
-            $this->request->raiseResponseVersion( 2, 0, $this->service );
+            $this->request->raiseMinVersionRequirement( 2, 0 );
+            $this->request->raiseResponseVersion( 2, 0 );
 
         } else {
             ODataException::createBadRequestError(
@@ -364,7 +417,7 @@ class QueryProcessor
 
         if (!$this->_isSSPagingRequired()) {
             ODataException::createBadRequestError(
-                Messages::queryProcessorSkipTokenCannotBeAppliedForNonPagedResourceSet()
+                Messages::queryProcessorSkipTokenCannotBeAppliedForNonPagedResourceSet($this->request->getTargetResourceSetWrapper())
             );
         }
 
@@ -379,8 +432,8 @@ class QueryProcessor
             $skipToken
         );
         $this->request->setInternalSkipTokenInfo($internalSkipTokenInfo);
-        $this->request->raiseMinVersionRequirement( 2, 0, $this->service );
-        $this->request->raiseResponseVersion( 2, 0, $this->service );
+        $this->request->raiseMinVersionRequirement( 2, 0 );
+        $this->request->raiseResponseVersion( 2, 0 );
 
 
     }
@@ -430,11 +483,11 @@ class QueryProcessor
 				 $this->service->getProvidersWrapper()
 			);
 			if ($rootProjectionNode->isSelectionSpecified()) {
-			    $this->request->raiseMinVersionRequirement(2, 0, $this->service );
+			    $this->request->raiseMinVersionRequirement(2, 0 );
 			}
 
             if ($rootProjectionNode->hasPagedExpandedResult()) {
-                $this->request->raiseResponseVersion( 2, 0, $this->service );
+                $this->request->raiseResponseVersion( 2, 0 );
             }
             $this->request->setRootProjectionNode($rootProjectionNode );
 
@@ -443,8 +496,8 @@ class QueryProcessor
 
     /**
      * Is server side paging is configured, this function return true
-     * if the resource targetted by the resource path is applicable
-     * for paging and paging is enabled for the targetted resource set
+     * if the resource targeted by the resource path is applicable
+     * for paging and paging is enabled for the targeted resource set
      * else false.
      * 
      * @return boolean
@@ -452,8 +505,7 @@ class QueryProcessor
     private function _isSSPagingRequired()
     {
         if ($this->_pagingApplicable) {
-            $targetResourceSetWrapper 
-                = $this->request->getTargetResourceSetWrapper();
+            $targetResourceSetWrapper = $this->request->getTargetResourceSetWrapper();
             //assert($targetResourceSetWrapper != NULL)
             return ($targetResourceSetWrapper->getResourceSetPageSize() != 0);
         }

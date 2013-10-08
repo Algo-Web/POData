@@ -1,6 +1,6 @@
 <?php
 
-namespace POData\UriProcessor\QueryProcessor\ExpressionParser;
+namespace UnitTests\POData\UriProcessor\QueryProcessor\ExpressionParser;
 
 use POData\Providers\Expression\PHPExpressionProvider;
 use POData\Providers\Metadata\ResourceProperty;

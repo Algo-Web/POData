@@ -4,7 +4,7 @@ namespace UnitTests\POData\Configuration;
 
 use POData\Configuration\ServiceConfiguration;
 use POData\Configuration\EntitySetRights;
-use POData\Configuration\ServiceProtocolVersion;
+use POData\Configuration\ProtocolVersion;
 use POData\Common\InvalidOperationException;
 use POData\Providers\Metadata\IMetadataProvider;
 
@@ -138,32 +138,5 @@ class ServiceConfigurationTest extends \PHPUnit_Framework_TestCase
 
     }
 
-    public function testConfiguration5()
-    {
 
-        $this->_dataServiceConfiguration->setAcceptCountRequests(true);
-        $this->_dataServiceConfiguration->setAcceptProjectionRequests(true);
-        $this->_dataServiceConfiguration->setMaxDataServiceVersion(ServiceProtocolVersion::V1);
-        $this->AssertTrue($this->_dataServiceConfiguration->getAcceptCountRequests());
-        $this->AssertTrue($this->_dataServiceConfiguration->getAcceptProjectionRequests());
-
-        try {
-            $this->_dataServiceConfiguration->validateConfigAganistVersion();
-            $this->fail('An expected InvalidOperationException for \'feature not supported for version\' was not thrown for month');
-        } catch (InvalidOperationException $exception) {
-           $this->AssertEquals('The feature \'projection and count request\' is supported only for OData version \'V2\' or greater', $exception->getMessage());
-        }
-
-
-        $this->_dataServiceConfiguration->setMaxDataServiceVersion(ServiceProtocolVersion::V2);
-        $this->_dataServiceConfiguration->validateConfigAganistVersion();
-
-    }
-
-    protected function tearDown()
-    {
-        //TODO: verify this is needed!
-        unset($this->_dataServiceConfiguration);
-        unset($this->_northWindMetadata);
-    }
 }

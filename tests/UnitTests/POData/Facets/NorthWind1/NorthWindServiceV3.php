@@ -6,7 +6,7 @@ namespace UnitTests\POData\Facets\NorthWind1;
 use POData\Configuration\EntitySetRights;
 use POData\IService;
 use POData\IRequestHandler;
-use POData\Configuration\ServiceProtocolVersion;
+use POData\Configuration\ProtocolVersion;
 use POData\Configuration\ServiceConfiguration;
 use POData\BaseService;
 
@@ -28,7 +28,7 @@ class NorthWindServiceV3 extends BaseServiceTestWrapper
         $config->setAcceptCountRequests(true);
         //Disable projection request for testing purpose
         $config->setAcceptProjectionRequests(false);
-        $config->setMaxDataServiceVersion(ServiceProtocolVersion::V3);
+        $config->setMaxDataServiceVersion(ProtocolVersion::V3());
     }
 
 	/**

@@ -5,7 +5,7 @@ namespace UnitTests\POData\Facets\NorthWind4;
 use POData\Configuration\EntitySetRights;
 use POData\IService;
 use POData\IRequestHandler;
-use POData\Configuration\ServiceProtocolVersion;
+use POData\Configuration\ProtocolVersion;
 use POData\Configuration\ServiceConfiguration;
 use POData\BaseService;
 use POData\OperationContext\HTTPRequestMethod;
@@ -35,7 +35,7 @@ class NorthWindService extends BaseService
         $config->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $config->setAcceptCountRequests(true);
         $config->setAcceptProjectionRequests(true);
-        $config->setMaxDataServiceVersion(ServiceProtocolVersion::V3);
+        $config->setMaxDataServiceVersion(ProtocolVersion::V3());
     }
 
 	/**

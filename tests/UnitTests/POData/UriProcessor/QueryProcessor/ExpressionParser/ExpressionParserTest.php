@@ -1,6 +1,6 @@
 <?php
 
-namespace POData\UriProcessor\QueryProcessor\ExpressionParser;
+namespace UnitTests\POData\UriProcessor\QueryProcessor\ExpressionParser;
 
 use POData\Providers\Metadata\Type\Int32;
 use POData\Providers\Metadata\Type\Int64;

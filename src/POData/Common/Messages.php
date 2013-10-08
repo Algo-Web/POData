@@ -387,33 +387,7 @@ class Messages
         return "The argument '$argument' of '$functionName' should be EntitySetRights enum value";
     }
 
-    /**
-     * Format a message to show error when a function argument expected to 
-     * ServiceProtocolVersion enum value but it is not
-     * 
-     * @param string $argument     The argument name
-     * @param string $functionName The function name
-     * 
-     * @return string The formatted message
-     */
-    public static function configurationInvalidVersion($argument, $functionName)
-    {
-        return "The argument '$argument' of '$functionName' should be ServiceProtocolVersion enum value";
-    }
 
-    /**
-     * Format a message to show error when a tyring to set a 
-     * feature which is not supported in the version
-     * 
-     * @param string $feature       the feature name
-     * @param string $supportedFrom odata supported version
-     * 
-     * @return string The formatted message
-     */
-    public static function configurationFeatureVersionMismatch($feature, $supportedFrom)
-    {
-        return "The feature '$feature' is supported only for OData version '$supportedFrom' or greater";
-    }
 
     /**
      * A message to show error when service developer disabled count request and
@@ -1684,7 +1658,7 @@ class Messages
     /**
      * Message to show error when query processor found odata query option 
      * in the request uri which is not applicable for the
-     * resource targetted by the resource path.  
+     * resource targeted by the resource path.  
      * 
      * @return string The message
      */
@@ -1695,7 +1669,7 @@ class Messages
 
     /**
      * Message to show error when query processor found $filter option in the 
-     * request uri but is not applicable for the resource targetted by the 
+     * request uri but is not applicable for the resource targeted by the 
      * resource path.
      * 
      * @return string The message
@@ -1708,7 +1682,7 @@ class Messages
     /**
      * Message to show error when query processor found any $orderby, 
      * $inlinecount, $skip or $top options in the request uri but is not 
-     * applicable for the resource targetted by the resource path.
+     * applicable for the resource targeted by the resource path.
      * 
      * @return string The message
      */
@@ -1719,7 +1693,7 @@ class Messages
 
     /**
      * Message to show error when query processor found skiptoken option in the 
-     * request uri but is not applicable for the resource targetted by the 
+     * request uri but is not applicable for the resource targeted by the 
      * resource path.
      * 
      * @return string The message
@@ -1731,7 +1705,7 @@ class Messages
 
     /**
      * Message to show error when query processor found $expand option in the 
-     * request uri but is not applicable for the resource targetted by the 
+     * request uri but is not applicable for the resource targeted by the 
      * resource path.
      * 
      * @return string The message
@@ -1792,7 +1766,7 @@ class Messages
 
     /**     
      * Format a message to show error when query processor found $select
-     * or $expand which cannot be applied to resource targetted by the
+     * or $expand which cannot be applied to resource targeted by the
      * request uri.
      * 
      * @param string $queryItem Query item
@@ -1904,7 +1878,7 @@ class Messages
      */
     public static function streamProviderWrapperMaxProtocolVersionMustBeV3OrAboveToSupportNamedStreams()
     {
-        return 'To support named streams, the MaxProtocolVersion of the data service must be set to ServiceProtocolVersion.V3 or above.';
+        return 'To support named streams, the MaxProtocolVersion of the data service must be set to ProtocolVersion.V3 or above.';
     }
 
     /**
@@ -2141,7 +2115,7 @@ class Messages
 
     /**
      * Format a message to show error when request eTag header has been 
-     * specified but eTag is not allowed for the targetted resource.
+     * specified but eTag is not allowed for the targeted resource.
      * 
      * @param string $uri Url
      * 

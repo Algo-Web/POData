@@ -38,7 +38,7 @@ class ResponseWriter
         ResponseFormat $responseFormat
     ) {
         $responseBody = null;
-        $dataServiceVersion = $request->getResponseDataServiceVersion();
+        $dataServiceVersion = $request->getResponseVersion();
 
         if ($responseFormat == ResponseFormat::METADATA_DOCUMENT()) {
             // /$metadata

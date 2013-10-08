@@ -1,6 +1,6 @@
 <?php
 
-namespace POData\UriProcessor\ResourcePathProcessor\SegmentParser;
+namespace UnitTests\POData\UriProcessor\ResourcePathProcessor\SegmentParser;
 
 use POData\Providers\Metadata\ResourceTypeKind;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetSource;

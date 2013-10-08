@@ -80,8 +80,9 @@ class ServiceConfiguration
 
     /**
      * Maximum version of the response sent by server
+     * @var ProtocolVersion
      */
-    private $_maxProtocolVersion;
+    private $maxVersion;
 
     /**
      * Boolean value indicating whether to validate ETag header or not
@@ -107,8 +108,10 @@ class ServiceConfiguration
         $this->_useVerboseErrors = false;
         $this->_acceptCountRequest = false;
         $this->_acceptProjectionRequest = false;
-        $this->_maxProtocolVersion = ServiceProtocolVersion::V1;
-        $this->_validateETagHeader = true;
+
+        $this->maxVersion = ProtocolVersion::V3(); //We default to the highest version
+
+	    $this->_validateETagHeader = true;
     }
     
     /**
@@ -190,10 +193,9 @@ class ServiceConfiguration
             );
         }
 
-        $this->_maxResultsPerCollection
-            = $this->_checkIntegerNonNegativeParameter(
-                $maxResultPerCollection, 'setMaxResultsPerCollection'
-            );
+        $this->_maxResultsPerCollection= $this->_checkIntegerNonNegativeParameter(
+			$maxResultPerCollection, 'setMaxResultsPerCollection'
+        );
     }
 
     /**
@@ -371,65 +373,43 @@ class ServiceConfiguration
         $this->_acceptProjectionRequest = $acceptProjectionRequest;
     }
 
-    /**
-     * Gets Maxumum version of the response sent by server
-     *
-     * @return ServiceProtocolVersion
-     */
-    public function getMaxDataServiceVersion()
-    {
-        return $this->_maxProtocolVersion;
-    }
 
     /**
      * Gets Maximum version of the response sent by server.
      *
      * @return Version
      */
-    public function getMaxDataServiceVersionObject()
+    public function getMaxDataServiceVersion()
     {
-        switch ($this->_maxProtocolVersion) {
-        case ServiceProtocolVersion::V1:
-            return new Version(1, 0);
-            break;
-        case ServiceProtocolVersion::V2:
-            return new Version(2, 0);
-            break;
-        case ServiceProtocolVersion::V3:
-            return new Version(3, 0);
-            break;
-        default:
-            return new Version(1, 0);
+        switch ($this->maxVersion) {
+	        case ProtocolVersion::V1():
+	            return new Version(1, 0);
+
+	        case ProtocolVersion::V2():
+	            return new Version(2, 0);
+
+	        case ProtocolVersion::V3():
+	        default:
+	            return new Version(3, 0);
         }
     }
 
     /**
-     * Sets Maxumum version of the response sent by server
+     * Sets Maximum version of the response sent by server
      *
-     * @param ServiceProtocolVersion $version The version to set
-     *
-     * @throws \InvalidArgumentException
+     * @param ProtocolVersion $version The version to set
      *
      * @return void
      */
-    public function setMaxDataServiceVersion($version)
+    public function setMaxDataServiceVersion(ProtocolVersion $version)
     {
-        if ($version < ServiceProtocolVersion::V1
-            || $version > ServiceProtocolVersion::V3
-        ) {
-            throw new \InvalidArgumentException(
-                Messages::configurationInvalidVersion('$version', 'setMaxDataServiceVersion')
-            );
-        }
-
-        $this->_maxProtocolVersion = $version;
+        $this->maxVersion = $version;
     }
 
      /**
       * Specify whether to validate the ETag or not
       *
-      * @param boolean $validate True if ETag needs to validated, false
-      *                          otherwise.
+      * @param boolean $validate True if ETag needs to validated, false otherwise.
       *
       * @return void
       */
@@ -452,25 +432,7 @@ class ServiceConfiguration
          return $this->_validateETagHeader;
      }
 
-    /**
-     * Validate the specified configuration is supported in the currently
-     * selected version
-     * Note: This is an internal method used by library
-     *
-     * @throws InvalidOperationException
-     *
-     * @return void
-     */
-    public function validateConfigAganistVersion()
-    {
-        if ($this->_maxProtocolVersion < ServiceProtocolVersion::V2
-            && ($this->_acceptProjectionRequest || $this->_acceptCountRequest)
-        ) {
-            throw new InvalidOperationException(
-                Messages::configurationFeatureVersionMismatch('projection and count request', 'V2' )
-            );
-        }
-    }
+
 
     /**
      * Checks that the parameter to a function is numeric and is not negative

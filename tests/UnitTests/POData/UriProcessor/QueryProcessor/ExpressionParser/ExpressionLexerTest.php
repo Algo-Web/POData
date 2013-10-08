@@ -1,6 +1,6 @@
 <?php
 
-namespace POData\UriProcessor\QueryProcessor\ExpressionParser;
+namespace UnitTests\POData\UriProcessor\QueryProcessor\ExpressionParser;
 
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionTokenId;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionLexer;

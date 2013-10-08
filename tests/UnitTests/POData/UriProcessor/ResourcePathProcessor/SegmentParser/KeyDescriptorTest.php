@@ -1,6 +1,6 @@
 <?php
 
-namespace POData\UriProcessor\ResourcePathProcessor\SegmentParser;
+namespace UnitTests\POData\UriProcessor\ResourcePathProcessor\SegmentParser;
 
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 use POData\Common\InvalidOperationException;

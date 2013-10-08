@@ -6,7 +6,7 @@ use POData\Configuration\EntitySetRights;
 use POData\IService;
 use POData\IRequestHandler;
 use POData\BaseService;
-use POData\Configuration\ServiceProtocolVersion;
+use POData\Configuration\ProtocolVersion;
 use POData\Configuration\ServiceConfiguration;
 use Symfony\Component\Config\Definition\Exception\Exception;
 
@@ -29,7 +29,7 @@ class NorthWindService2 extends BaseServiceTestWrapper
         $config->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $config->setAcceptCountRequests(true);
         $config->setAcceptProjectionRequests(true);
-        $config->setMaxDataServiceVersion(ServiceProtocolVersion::V2);
+        $config->setMaxDataServiceVersion(ProtocolVersion::V2());
     }
 
 	/**
