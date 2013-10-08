@@ -51,7 +51,7 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
         //test case for SegmentParser::_extractSegmentIdentifierAndKeyPredicate
         $segments = array('Customers(\'ALFKI\'');
         try {
-            $segmentDescriptors = SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
+            SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
             $this->fail('An expected ODataException query syntax error for \'Customers(\ has not been thrown');
         } catch (ODataException $exception) {
             $this->assertEquals($exception->getMessage(), 'Bad Request - Error in query syntax');
@@ -69,7 +69,7 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
         $segments = array('$metadata(123)');
 
         try {
-            $segmentDescriptors = SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
+            SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
             $this->fail('An expected ODataException query syntax error for $metadata(123) has not been thrown');
         } catch (ODataException $exception) {
             $this->assertEquals($exception->getMessage(), 'Bad Request - Error in query syntax');
@@ -81,7 +81,7 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($segmentDescriptors[0]->getIdentifier(), '$batch');
         $segments = array('$batch(\'XYZ\')');
         try {
-            $segmentDescriptors = SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
+            SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
             $this->fail('An expected ODataException query syntax error for $batch(\'XYZ\') has not been thrown');
         } catch (ODataException $exception) {
             $this->assertEquals($exception->getMessage(), 'Bad Request - Error in query syntax');
@@ -90,7 +90,7 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
         //Test for $links option
         $segments = array('$links');
         try {
-            $segmentDescriptors = SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
+            SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
             $this->fail('An expected ODataException query syntax error for \'$links\'');
         } catch (ODataException $exception) {
             $this->assertStringStartsWith('The request URI is not valid, the segment \'$links\' cannot be applied', $exception->getMessage());
@@ -99,7 +99,7 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
         //Test for $count option
         $segments = array('$count');
         try {
-            $segmentDescriptors = SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
+            SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
             $this->fail('An expected ODataException query syntax error for \'$count\'');
         } catch (ODataException $exception) {
             $this->assertStringStartsWith('The request URI is not valid, the segment \'$count\' cannot be applied', $exception->getMessage());
@@ -108,7 +108,7 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
         //Test for unknown entity set
         $segments = array('Customers1(\'ALFKI\')');
         try {
-            $segmentDescriptors = SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
+            SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
             $this->fail('An expected Resource not found ODataException for \'Customers1\' has not been thrown');
         } catch (ODataException $exception) {
             $this->assertEquals('Resource not found for the segment \'Customers1\'', $exception->getMessage());
@@ -133,7 +133,7 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
         //test with multiple positional values
         $segments = array("Customers('ALFKI', guid'15b242e7-52eb-46bd-8f0e-6568b72cd9a6')");
         try {
-            $segmentDescriptors = SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
+            SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
             $this->fail('An expected ODataException for multiple positional values has not been thrown');
         } catch (ODataException $exception) {
             $this->assertStringStartsWith('Segments with multiple key values must specify them in \'name=value\' form', $exception->getMessage());
@@ -606,7 +606,7 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
             'Emails',
             'AB');
         try {
-            $segmentDescriptors = SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
+            SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
             $this->fail('An expected ODataException for using bag property as non-leaf segment has not been thrown');
         } catch (ODataException $exception) {
             $this->assertStringStartsWith('The request URI is not valid. The segment \'Emails\' must be the last segment in the URI', $exception->getMessage());

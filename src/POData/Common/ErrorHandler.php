@@ -31,8 +31,9 @@ class ErrorHandler
         try {
             $responseContentType = HttpProcessUtility::selectMimeType(
                 $acceptTypesText, 
-                array (ODataConstants::MIME_APPLICATION_XML, 
-                    ODataConstants::MIME_APPLICATION_JSON
+                array(
+	                MimeTypes::MIME_APPLICATION_XML,
+	                MimeTypes::MIME_APPLICATION_JSON
                 )
             );
         } catch (HttpHeaderFailure $exception) {
@@ -45,7 +46,7 @@ class ErrorHandler
         }
 
         if (is_null($responseContentType)) {
-            $responseContentType = ODataConstants::MIME_APPLICATION_XML;
+            $responseContentType = MimeTypes::MIME_APPLICATION_XML;
         }
 
         if (!($exception instanceof ODataException)) {
@@ -62,7 +63,7 @@ class ErrorHandler
             $service->getHost()->setResponseStatusCode($exception->getStatusCode());
             $service->getHost()->setResponseContentType($responseContentType);
             $responseBody = null;
-            if (strcasecmp($responseContentType, ODataConstants::MIME_APPLICATION_XML) == 0) {
+            if (strcasecmp($responseContentType, MimeTypes::MIME_APPLICATION_XML) == 0) {
                 $responseBody = AtomODataWriter::serializeException($exception, true);
             } else {
                 $responseBody = JsonODataV2Writer::serializeException($exception, true);

@@ -2,6 +2,7 @@
 
 namespace POData;
 
+use POData\Common\MimeTypes;
 use POData\OperationContext\HTTPRequestMethod;
 use POData\Providers\Metadata\ResourceTypeKind;
 use POData\Common\ErrorHandler;
@@ -438,7 +439,7 @@ abstract class BaseService implements IRequestHandler, IService
 
         //Note: Response content type can be null for named stream
         if ($hasResponseBody && !is_null($responseContentType)) {
-            if ($request->getTargetKind() != TargetKind::MEDIA_RESOURCE() && $responseContentType != ODataConstants::MIME_APPLICATION_OCTETSTREAM) {
+            if ($request->getTargetKind() != TargetKind::MEDIA_RESOURCE() && $responseContentType != MimeTypes::MIME_APPLICATION_OCTETSTREAM) {
 	            //append charset for everything except:
 	            //stream resources as they have their own content type
 	            //binary properties (they content type will be App Octet for those...is this a good way? we could also decide based upon the projected property
@@ -481,7 +482,7 @@ abstract class BaseService implements IRequestHandler, IService
 	    $requestAcceptText = $host->getRequestAccept();
 
 	    //the $format header if present overrides the accepts header
-	    $format = $host->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_FORMAT);
+	    $format = $host->getQueryStringItem(MimeTypes::HTTPQUERY_STRING_FORMAT);
 	    if(!is_null($format)){
 		    $requestAcceptText = ServiceHost::getMimeTypeFromFormat($request->getResponseVersion(), $format);
 	    }
@@ -494,7 +495,7 @@ abstract class BaseService implements IRequestHandler, IService
         if ($requestTargetKind == TargetKind::METADATA()) {
             return HttpProcessUtility::selectMimeType(
                 $requestAcceptText,
-                array(ODataConstants::MIME_APPLICATION_XML)
+                array(MimeTypes::MIME_APPLICATION_XML)
             );
         }
 
@@ -503,9 +504,9 @@ abstract class BaseService implements IRequestHandler, IService
             return HttpProcessUtility::selectMimeType(
                 $requestAcceptText, 
                 array(
-                    ODataConstants::MIME_APPLICATION_XML,
-                    ODataConstants::MIME_APPLICATION_ATOMSERVICE, 
-                    ODataConstants::MIME_APPLICATION_JSON
+	                MimeTypes::MIME_APPLICATION_XML,
+	                MimeTypes::MIME_APPLICATION_ATOMSERVICE,
+	                MimeTypes::MIME_APPLICATION_JSON
                 )
             );
 
@@ -513,7 +514,7 @@ abstract class BaseService implements IRequestHandler, IService
 
 
 	    if ($requestTargetKind == TargetKind::PRIMITIVE_VALUE()) {
-            $supportedResponseMimeTypes = array(ODataConstants::MIME_TEXTPLAIN);
+            $supportedResponseMimeTypes = array(MimeTypes::MIME_TEXTPLAIN);
 
             if ($request->getIdentifier() != '$count') {
                 $projectedProperty = $request->getProjectedProperty();
@@ -527,7 +528,7 @@ abstract class BaseService implements IRequestHandler, IService
                     '!is_null($type) && $type instanceof IType'
                 );
                 if ($type instanceof Binary) {
-                    $supportedResponseMimeTypes = array(ODataConstants::MIME_APPLICATION_OCTETSTREAM);
+                    $supportedResponseMimeTypes = array(MimeTypes::MIME_APPLICATION_OCTETSTREAM);
                 }
             }
 
@@ -547,9 +548,9 @@ abstract class BaseService implements IRequestHandler, IService
             return HttpProcessUtility::selectMimeType(
                 $requestAcceptText, 
                 array(
-                    ODataConstants::MIME_APPLICATION_XML, 
-                    ODataConstants::MIME_TEXTXML, 
-                    ODataConstants::MIME_APPLICATION_JSON
+	                MimeTypes::MIME_APPLICATION_XML,
+	                MimeTypes::MIME_TEXTXML,
+	                MimeTypes::MIME_APPLICATION_JSON
                   )
             );
 
@@ -560,8 +561,8 @@ abstract class BaseService implements IRequestHandler, IService
             return HttpProcessUtility::selectMimeType(
                 $requestAcceptText, 
                 array(
-                    ODataConstants::MIME_APPLICATION_ATOM, 
-                    ODataConstants::MIME_APPLICATION_JSON
+                    MimeTypes::MIME_APPLICATION_ATOM,
+	                MimeTypes::MIME_APPLICATION_JSON
                   )
             );
         }

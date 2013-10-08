@@ -13,6 +13,7 @@ use POData\ObjectModel\ODataProperty;
 use POData\ObjectModel\ODataMediaLink;
 use POData\Writers\IODataWriter;
 use POData\Common\ODataConstants;
+use POData\Common\MimeTypes;
 use POData\Common\ODataException;
 use POData\Providers\ProvidersWrapper;
 
@@ -163,7 +164,7 @@ class AtomODataWriter implements IODataWriter
 		    ->writeNodeAttributeValue(
 			    ODataConstants::ATOM_TITLE_ELELMET_NAME,
 			    ODataConstants::ATOM_TYPE_ATTRIBUTE_NAME,
-			    ODataConstants::MIME_TEXTTYPE,
+			    MimeTypes::MIME_TEXTTYPE,
 			    $feed->title
 		    )
 		    ->writeNodeValue(ODataConstants::ATOM_ID_ELEMENT_NAME, $feed->id)
@@ -250,7 +251,7 @@ class AtomODataWriter implements IODataWriter
 		    ->writeNodeAttributeValue(
 			    ODataConstants::ATOM_TITLE_ELELMET_NAME,
 			    ODataConstants::ATOM_TYPE_ATTRIBUTE_NAME,
-			    ODataConstants::MIME_TEXTTYPE,
+			    MimeTypes::MIME_TEXTTYPE,
 			    $entry->title
 		    )
 		    ->writeNodeValue(ODataConstants::ATOM_UPDATED_ELEMENT_NAME, date(DATE_ATOM));
@@ -431,7 +432,7 @@ class AtomODataWriter implements IODataWriter
         } else {
             $this->xmlWriter->writeAttribute(
                 ODataConstants::ATOM_TYPE_ATTRIBUTE_NAME,
-                ODataConstants::MIME_APPLICATION_XML
+	            MimeTypes::MIME_APPLICATION_XML
             );
             $this->xmlWriter->startElementNS(
                 ODataConstants::ODATA_METADATA_NAMESPACE_PREFIX,

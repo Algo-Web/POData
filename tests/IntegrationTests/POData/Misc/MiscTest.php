@@ -12,7 +12,7 @@ use POData\Common\Url;
 use POData\Common\UrlFormatException;
 use POData\Common\ODataException;
 use POData\OperationContext\ServiceHost;
-require_once dirname(__FILE__) . "/../../Dispatcher.php";
+use POData\Common\MimeTypes;
 
 
 class TestETag extends PHPUnit_Framework_TestCase
@@ -76,7 +76,7 @@ class TestETag extends PHPUnit_Framework_TestCase
 
         // request unsupported content type (metadata cannot be in json format)
         $ch = curl_init();
-        $headers = array(ODataConstants::HTTP_REQUEST_ACCEPT .':'. ODataConstants::MIME_APPLICATION_JSON);
+        $headers = array(ODataConstants::HTTP_REQUEST_ACCEPT .':'. MimeTypes::MIME_APPLICATION_JSON);
         curl_setopt($ch, CURLOPT_URL, self::BASE_SERIVE_URL . '/$metadata');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -111,7 +111,7 @@ class TestETag extends PHPUnit_Framework_TestCase
 
         // Request feed in json format
         $ch = curl_init();
-        $headers = array(ODataConstants::HTTP_REQUEST_ACCEPT .':'. ODataConstants::MIME_APPLICATION_JSON);
+        $headers = array(ODataConstants::HTTP_REQUEST_ACCEPT .':'. MimeTypes::MIME_APPLICATION_JSON);
         curl_setopt($ch, CURLOPT_URL, self::BASE_SERIVE_URL . '/Customers');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -144,7 +144,7 @@ class TestETag extends PHPUnit_Framework_TestCase
 
         // Request feed in json format
         $ch = curl_init();
-        $headers = array(ODataConstants::HTTP_REQUEST_ACCEPT .':'. ODataConstants::MIME_APPLICATION_JSON);
+        $headers = array(ODataConstants::HTTP_REQUEST_ACCEPT .':'. MimeTypes::MIME_APPLICATION_JSON);
         curl_setopt($ch, CURLOPT_URL, self::BASE_SERIVE_URL . '/Customers(\'ALFKI\')');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -177,7 +177,7 @@ class TestETag extends PHPUnit_Framework_TestCase
 
         // Request for count in json format, this iwll cause service to thow error
         $ch = curl_init();
-        $headers = array(ODataConstants::HTTP_REQUEST_ACCEPT .':'. ODataConstants::MIME_APPLICATION_JSON);
+        $headers = array(ODataConstants::HTTP_REQUEST_ACCEPT .':'. MimeTypes::MIME_APPLICATION_JSON);
         curl_setopt($ch, CURLOPT_URL, self::BASE_SERIVE_URL . '/Customers/$count');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -192,7 +192,7 @@ class TestETag extends PHPUnit_Framework_TestCase
 
         // Request for count in atom format, this iwll cause service to thow error
         $ch = curl_init();
-        $headers = array(ODataConstants::HTTP_REQUEST_ACCEPT .':'. ODataConstants::MIME_APPLICATION_ATOM);
+        $headers = array(ODataConstants::HTTP_REQUEST_ACCEPT .':'. MimeTypes::MIME_APPLICATION_ATOM);
         curl_setopt($ch, CURLOPT_URL, self::BASE_SERIVE_URL . '/Customers/$count');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -228,7 +228,7 @@ class TestETag extends PHPUnit_Framework_TestCase
 
         // Request for $links in json format, is allowed
         $ch = curl_init();
-        $headers = array(ODataConstants::HTTP_REQUEST_ACCEPT .':'. ODataConstants::MIME_APPLICATION_JSON);
+        $headers = array(ODataConstants::HTTP_REQUEST_ACCEPT .':'. MimeTypes::MIME_APPLICATION_JSON);
         curl_setopt($ch, CURLOPT_URL, self::BASE_SERIVE_URL . '/Customers(\'ALFKI\')/$links/Orders');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -242,7 +242,7 @@ class TestETag extends PHPUnit_Framework_TestCase
 
         // Request for $links in atom format, does not support
         $ch = curl_init();
-        $headers = array(ODataConstants::HTTP_REQUEST_ACCEPT .':'. ODataConstants::MIME_APPLICATION_ATOM);
+        $headers = array(ODataConstants::HTTP_REQUEST_ACCEPT .':'. MimeTypes::MIME_APPLICATION_ATOM);
         curl_setopt($ch, CURLOPT_URL, self::BASE_SERIVE_URL . '/Customers(\'ALFKI\')/$links/Orders');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -278,7 +278,7 @@ class TestETag extends PHPUnit_Framework_TestCase
 
         // Request for complex in json format, is allowed
         $ch = curl_init();
-        $headers = array(ODataConstants::HTTP_REQUEST_ACCEPT .':'. ODataConstants::MIME_APPLICATION_JSON);
+        $headers = array(ODataConstants::HTTP_REQUEST_ACCEPT .':'. MimeTypes::MIME_APPLICATION_JSON);
         curl_setopt($ch, CURLOPT_URL, self::BASE_SERIVE_URL . '/Customers(\'ALFKI\')/Address');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -292,7 +292,7 @@ class TestETag extends PHPUnit_Framework_TestCase
 
         // Request for $links in atom format, does not support
         $ch = curl_init();
-        $headers = array(ODataConstants::HTTP_REQUEST_ACCEPT .':'. ODataConstants::MIME_APPLICATION_ATOM);
+        $headers = array(ODataConstants::HTTP_REQUEST_ACCEPT .':'. MimeTypes::MIME_APPLICATION_ATOM);
         curl_setopt($ch, CURLOPT_URL, self::BASE_SERIVE_URL . '/Customers(\'ALFKI\')/Address');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);

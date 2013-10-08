@@ -11,7 +11,7 @@ use POData\Common\Url;
 use POData\Common\UrlFormatException;
 use POData\Common\ODataException;
 use POData\OperationContext\ServiceHost;
-use POData\Dispatcher;
+use POData\Common\MimeTypes;
 
 
 
@@ -184,7 +184,7 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
  	        //print "Contents:".$contents;
 			//$dispatcher->getHost()->validateQueryParameters();
 			$requestAccept = $dispatcher->getHost()->getWebOperationContext()->IncomingRequest()->getRequestHeader(ODataConstants::HTTPREQUEST_HEADER_ACCEPT);
-			$this->assertEquals(ODataConstants::MIME_APPLICATION_ATOM .';q=1.0',$requestAccept);
+			$this->assertEquals(MimeTypes::MIME_APPLICATION_ATOM .';q=1.0',$requestAccept);
  	    } catch(\Exception $exception) {
     		if(ob_get_length())
     		{
@@ -215,7 +215,7 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
  	        //print "Contents:".$contents;
 			//$dispatcher->getHost()->validateQueryParameters();
 			$requestAccept = $dispatcher->getHost()->getWebOperationContext()->IncomingRequest()->getRequestHeader(ODataConstants::HTTPREQUEST_HEADER_ACCEPT);
-			$this->assertEquals(ODataConstants::MIME_APPLICATION_JSON.';q=1.0',$requestAccept);
+			$this->assertEquals(MimeTypes::MIME_APPLICATION_JSON.';q=1.0',$requestAccept);
  	    } catch(\Exception $exception) {
     		if(ob_get_length())
     		{
