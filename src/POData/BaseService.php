@@ -205,9 +205,6 @@ abstract class BaseService implements IRequestHandler, IService
     {
         try {
             $this->createProviders();
-	        $serviceVersionMax = $this->getConfiguration()->getMaxDataServiceVersionObject();
-
-
             $this->_serviceHost->validateQueryParameters();
             $requestMethod = $this->getOperationContext()->incomingRequest()->getMethod();
             if ($requestMethod != HTTPRequestMethod::GET()) {

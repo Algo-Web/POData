@@ -408,7 +408,7 @@ class StreamProviderWrapper
     {
         $maxServiceVersion = $this->_service
             ->getConfiguration()
-            ->getMaxDataServiceVersionObject();
+            ->getMaxDataServiceVersion();
         if ($maxServiceVersion->compare(new Version(3, 0)) < 0) {
             ODataException::createInternalServerError(
                 Messages::streamProviderWrapperMaxProtocolVersionMustBeV3OrAboveToSupportNamedStreams()
@@ -441,7 +441,7 @@ class StreamProviderWrapper
         if (is_null($this->_streamProvider)) {
             $maxServiceVersion = $this->_service
                 ->getConfiguration()
-                ->getMaxDataServiceVersionObject();
+                ->getMaxDataServiceVersion();
             if ($maxServiceVersion->compare(new Version(3, 0)) >= 0) {
                 $this->_streamProvider = $this->_service->getService('IStreamProvider2');
                 if (!is_null($this->_streamProvider) && (!is_object($this->_streamProvider) || !$this->_streamProvider instanceof IStreamProvider2)) {
