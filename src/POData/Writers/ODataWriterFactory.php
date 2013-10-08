@@ -21,12 +21,13 @@ class ODataWriterFactory
 	/**
 	 * @param IService $service
 	 * @param RequestDescription $request
-	 * @param ResponseFormat $format
+	 * @param string $contentType
 	 * @return IODataWriter
 	 * @throws \Exception when the response format is invalid
 	 */
-	public function getWriter(IService $service, RequestDescription $request, ResponseFormat $format){
-	    switch($format){
+	public function getWriter(IService $service, RequestDescription $request, $contentType){
+	    /*
+		switch($format){
 		    case ResponseFormat::ATOM():
 		    case ResponseFormat::PLAIN_XML():
 				//NOTE: the version of OData is irrelevant to the atom format
@@ -41,6 +42,7 @@ class ODataWriterFactory
 		        throw new \Exception( Messages::badFormatForResource($format) );
 
 	    }
+	    */
 
     }
 

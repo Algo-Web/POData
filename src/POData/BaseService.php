@@ -312,21 +312,18 @@ abstract class BaseService implements IRequestHandler, IService
             }
         }
 
-        $responseContentType = null;
-        $responseFormat = self::getResponseFormat($request, $uriProcessor, $this, $responseContentType );
+        $responseContentType = self::getResponseContentType($request, $uriProcessor, $this);
 
-	    if (is_null($responseContentType)) {
-		    //Note: when refactoring this, if it's targeting a media resource it may return null and be ok..not sure
-		    //what situations this will arise.
+	    if (is_null($responseContentType) && $request->getTargetKind() != TargetKind::MEDIA_RESOURCE) {
+		    //the responseContentType can ONLY be null if it's a stream (media resource) and that stream is storing null as the content type
 		    throw new ODataException( Messages::unsupportedMediaType(), 415 );
 	    }
 
 	    $odataModelInstance = null;
         $hasResponseBody = true;
-        // Execution required at this point if request target to any resource 
-        // other than
-        // (1) media resource - For Media resource 'getResponseFormat' already 
-        //     performed execution
+        // Execution required at this point if request target to any resource other than
+        //
+        // (1) media resource - For Media resource 'getResponseContentType' already performed execution as it needs to know the mime type of the stream
         // (2) metadata - internal resource
         // (3) service directory - internal resource
         if ($request->needExecution()) {
@@ -441,7 +438,11 @@ abstract class BaseService implements IRequestHandler, IService
 
         //Note: Response content type can be null for named stream
         if ($hasResponseBody && !is_null($responseContentType)) {
-            if ($responseFormat != ResponseFormat::BINARY()) {
+            if ($request->getTargetKind() != TargetKind::MEDIA_RESOURCE && $responseContentType != ODataConstants::MIME_APPLICATION_OCTETSTREAM) {
+	            //append charset for everything except:
+	            //stream resources as they have their own content type
+	            //binary properties (they content type will be App Octet for those...is this a good way? we could also decide based upon the projected property
+	            //
                 $responseContentType .= ';charset=utf-8';
             }
         }
@@ -451,8 +452,7 @@ abstract class BaseService implements IRequestHandler, IService
                 $this, 
                 $request,
                 $odataModelInstance, 
-                $responseContentType, 
-                $responseFormat
+                $responseContentType
             );
         }
     }
@@ -460,29 +460,31 @@ abstract class BaseService implements IRequestHandler, IService
     /**
      * Gets the response format for the requested resource.
      * 
-     * @param RequestDescription $request  The request submitted by client and it's execution result.
-     * @param UriProcessor       $uriProcessor        The reference to the UriProcessor.
-     * @param IService        $service         Reference to the service implementation instance
-     * @param string             &$responseContentType On Return, this will hold
-     * the response content-type, a null value means the requested resource
-     * is named stream and IDSSP2::getStreamContentType returned null.
-     * 
-     * @return ResponseFormat The format in which response needs to be serialized.
+     * @param RequestDescription $request The request submitted by client and it's execution result.
+     * @param UriProcessor $uriProcessor The reference to the UriProcessor.
+     * @param IService $service Reference to the service implementation instance
+     *
+     * @return string the response content-type, a null value means the requested resource
+     * is named stream and IDSSP2::getStreamContentType returned null
      * 
      * @throws ODataException, HttpHeaderFailure
      */
-    public static function getResponseFormat(
+    public static function getResponseContentType(
 	    RequestDescription $request,
         UriProcessor $uriProcessor,
-        IService $service,
-        &$responseContentType
+        IService $service
     ) {
 
         // The Accept request-header field specifies media types which are acceptable for the response
-	    // Note the $format QSP is parsed and shoved in the header collection so it overrides
-	    // any normal headers
-        $requestAcceptText = $service->getHost()->getRequestAccept();
 
+        $host = $service->getHost();
+	    $requestAcceptText = $host->getRequestAccept();
+
+	    //the $format header if present overrides the accepts header
+	    $format = $host->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_FORMAT);
+	    if(!is_null($format)){
+		    $requestAcceptText = ServiceHost::getMimeTypeFromFormat($request->getResponseVersion(), $format);
+	    }
 
 	    //The response format can be dictated by the target resource kind. IE a $value will be different then expected
 	    //getTargetKind doesn't deal with link resources directly and this can change things
@@ -490,18 +492,15 @@ abstract class BaseService implements IRequestHandler, IService
 
 
         if ($requestTargetKind == TargetKind::METADATA) {
-            $responseContentType = HttpProcessUtility::selectMimeType(
+            return HttpProcessUtility::selectMimeType(
                 $requestAcceptText,
                 array(ODataConstants::MIME_APPLICATION_XML)
             );
-
-
-            return ResponseFormat::METADATA_DOCUMENT();
         }
 
 
 	    if ($requestTargetKind == TargetKind::SERVICE_DIRECTORY) {
-            $responseContentType = HttpProcessUtility::selectMimeType(
+            return HttpProcessUtility::selectMimeType(
                 $requestAcceptText, 
                 array(
                     ODataConstants::MIME_APPLICATION_XML,
@@ -510,14 +509,11 @@ abstract class BaseService implements IRequestHandler, IService
                 )
             );
 
-            return self::_getResponseFormatForMime($responseContentType);
-
         }
 
 
 	    if ($requestTargetKind == TargetKind::PRIMITIVE_VALUE) {
             $supportedResponseMimeTypes = array(ODataConstants::MIME_TEXTPLAIN);
-            $responseFormat = ResponseFormat::TEXT();
 
             if ($request->getIdentifier() != '$count') {
                 $projectedProperty = $request->getProjectedProperty();
@@ -531,18 +527,15 @@ abstract class BaseService implements IRequestHandler, IService
                     '!is_null($type) && $type instanceof IType'
                 );
                 if ($type instanceof Binary) {
-                    $supportedResponseMimeTypes 
-                        = array(ODataConstants::MIME_APPLICATION_OCTETSTREAM);
-                    $responseFormat = ResponseFormat::BINARY();
+                    $supportedResponseMimeTypes = array(ODataConstants::MIME_APPLICATION_OCTETSTREAM);
                 }
             }
 
-            $responseContentType = HttpProcessUtility::selectMimeType(
+            return HttpProcessUtility::selectMimeType(
                 $requestAcceptText, 
                 $supportedResponseMimeTypes
             );
 
-		    return $responseFormat;
 	    }
 
 
@@ -551,7 +544,7 @@ abstract class BaseService implements IRequestHandler, IService
             || $requestTargetKind == TargetKind::BAG
             || $requestTargetKind == TargetKind::LINK
         ) {
-            $responseContentType = HttpProcessUtility::selectMimeType(
+            return HttpProcessUtility::selectMimeType(
                 $requestAcceptText, 
                 array(
                     ODataConstants::MIME_APPLICATION_XML, 
@@ -560,20 +553,17 @@ abstract class BaseService implements IRequestHandler, IService
                   )
             );
 
-		    return self::_getResponseFormatForMime($responseContentType);
         }
 
 
 	    if ($requestTargetKind == TargetKind::RESOURCE) {
-            $responseContentType = HttpProcessUtility::selectMimeType(
+            return HttpProcessUtility::selectMimeType(
                 $requestAcceptText, 
                 array(
                     ODataConstants::MIME_APPLICATION_ATOM, 
                     ODataConstants::MIME_APPLICATION_JSON
                   )
             );
-
-		    return self::_getResponseFormatForMime($responseContentType);
         }
 
 
@@ -582,7 +572,7 @@ abstract class BaseService implements IRequestHandler, IService
 		    if (!$request->isNamedStream() && !$request->getTargetResourceType()->isMediaLinkEntry()){
 			    ODataException::createBadRequestError(
 				    Messages::badRequestInvalidUriForMediaResource(
-					    $service->getHost()->getAbsoluteRequestUri()->getUrlAsString()
+					    $host->getAbsoluteRequestUri()->getUrlAsString()
 				    )
 			    );
 		    }
@@ -608,7 +598,7 @@ abstract class BaseService implements IRequestHandler, IService
                 );
             }
 
-		    return ResponseFormat::BINARY();
+		    return $responseContentType;
 
         }
 
@@ -618,32 +608,6 @@ abstract class BaseService implements IRequestHandler, IService
     }
 
 
-
-    /**
-     * Get the format corresponding to the given mime type.
-     *
-     * @param string $mime mime type for the request.
-     * 
-     * @return ResponseFormat Response format mapping to the given mime type.
-     */
-    private static function _getResponseFormatForMime($mime)
-    {
-        if (strcasecmp($mime, ODataConstants::MIME_APPLICATION_JSON) === 0) {
-            return ResponseFormat::JSON();
-        } else if (strcasecmp($mime, ODataConstants::MIME_APPLICATION_ATOM) === 0) {
-            return ResponseFormat::ATOM();
-        } else {
-            $flag 
-                = strcasecmp($mime, ODataConstants::MIME_APPLICATION_XML) === 0 ||
-                    strcasecmp($mime, ODataConstants::MIME_APPLICATION_ATOMSERVICE) === 0 ||
-                    strcasecmp($mime, ODataConstants::MIME_TEXTXML) === 0;
-            self::assert(
-                $flag, 
-                'expecting application/xml, application/atomsvc+xml or plain/xml, got ' . $mime
-            );
-            return ResponseFormat::PLAIN_XML();
-        }
-    }
 
     /**
      * For the given entry object compare it's eTag (if it has eTag properties)

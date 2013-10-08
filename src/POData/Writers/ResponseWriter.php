@@ -4,7 +4,6 @@ namespace POData\Writers;
 
 use POData\Common\HttpStatus;
 use POData\Common\ODataConstants;
-use POData\ResponseFormat;
 use POData\IService;
 use POData\UriProcessor\RequestDescription;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
@@ -22,34 +21,33 @@ class ResponseWriter
     /**
      * Write in specific format 
      * 
-     * @param IService        $service
-     * @param RequestDescription $request Request description object
+     * @param IService $service
+     * @param RequestDescription $request the OData request
      * @param mixed $entityModel OData model instance
-     * @param String             $responseContentType Content type of the response
-     * @param ResponseFormat             $responseFormat      Output format
+     * @param String $responseContentType Content type of the response
      * 
-     * @return void
      */
     public static function write(
 	    IService $service,
         RequestDescription $request,
         $entityModel,
-        $responseContentType, 
-        ResponseFormat $responseFormat
+        $responseContentType
     ) {
         $responseBody = null;
         $dataServiceVersion = $request->getResponseVersion();
+	    $targetKind = $request->getTargetKind();
 
-        if ($responseFormat == ResponseFormat::METADATA_DOCUMENT()) {
+        if ($targetKind == TargetKind::METADATA) {
             // /$metadata
             $writer = new MetadataWriter($service->getProvidersWrapper());
             $responseBody = $writer->writeMetadata();            
             $dataServiceVersion = $writer->getDataServiceVersion();
-        } else if ($responseFormat == ResponseFormat::TEXT()) {
+        } else if ($targetKind == TargetKind::PRIMITIVE_VALUE && $responseContentType != ODataConstants::MIME_APPLICATION_OCTETSTREAM) {
+	        //This second part is to exclude binary properties
             // /Customer('ALFKI')/CompanyName/$value
             // /Customers/$count
             $responseBody = utf8_encode($request->getTargetResult());
-        } else if ($responseFormat == ResponseFormat::BINARY()) {
+        } else if ($responseContentType == ODataConstants::MIME_APPLICATION_OCTETSTREAM || $targetKind == TargetKind::MEDIA_RESOURCE) {
             // Binary property or media resource
             if ($request->getTargetKind() == TargetKind::MEDIA_RESOURCE) {
 	            $result = $request->getTargetResult();
@@ -66,7 +64,7 @@ class ResponseWriter
                 $responseContentType = ODataConstants::MIME_APPLICATION_OCTETSTREAM;
             }
         } else {
-            $writer = $service->getODataWriterFactory()->getWriter($service, $request, $responseFormat);
+            $writer = $service->getODataWriterFactory()->getWriter($service, $request, $responseContentType);
 
             if (is_null($entityModel)) {  //TODO: this seems like a weird way to know that the request is for a service document..i'd think we know this some other way
                 $responseBody = $writer->writeServiceDocument($service->getProvidersWrapper())->getOutput();
