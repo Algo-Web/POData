@@ -629,36 +629,43 @@ Class ServiceHost
             ->outgoingResponse()->addHeader($headerName, $headerValue);
     }
 
-
-
-    public static function getMimeTypeFromFormat(Version $responseVersion, $format){
-        //TODO: double check these exceptions see #91
+	/**
+	 * Translates the short $format forms into the full mime type forms
+	 * @param Version $responseVersion the version scheme to interpret the short form with
+	 * @param string $format the short $format form
+	 * @return string the full mime type corresponding to the short format form for the given version
+	 */
+	public static function translateFormatToMime(Version $responseVersion, $format){
         //TODO: should the version switches be off of the requestVersion, not the response version? see #91
 
-
         switch($format) {
+
+	        case ODataConstants::FORMAT_XML:
+		        $format = MimeTypes::MIME_APPLICATION_XML;
+		        break;
+
             case ODataConstants::FORMAT_ATOM:
-                return MimeTypes::MIME_APPLICATION_ATOM . ';q=1.0';
+	            $format = MimeTypes::MIME_APPLICATION_ATOM ;
+		        break;
 
             case ODataConstants::FORMAT_VERBOSE_JSON:
-                if($responseVersion != new Version(3,0)){
-                    throw new ODataException("Format unrecognized for data service version", 500);
+                if($responseVersion == new Version(3,0)){
+	                //only translatable in 3.0 systems
+	                $format = MimeTypes::MIME_APPLICATION_JSON_VERBOSE;
                 }
-                return MimeTypes::MIME_APPLICATION_JSON_VERBOSE . ';q=1.0';
+                break;
 
             case ODataConstants::FORMAT_JSON:
                 if($responseVersion == new Version(3,0)){
-                    return MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META . ';q=1.0';
+                    $format = MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META;
+                } else{
+	                $format = MimeTypes::MIME_APPLICATION_JSON;
                 }
-                return MimeTypes::MIME_APPLICATION_JSON . ';q=1.0';
-
-            default:
-                //TODO: This isn't really going to work because any valid format is allowed, the check needs to go against a registry of writers
-                //to see if the format is allowed for the version/target/etc
-                throw new ODataException("Format unrecognized for data service version", 500);
+		        break;
 
         }
 
+	    return $format . ';q=1.0';
     }
 
 

@@ -30,6 +30,9 @@ class ODataConstants
     // Value for $format option for response atom format
     const FORMAT_ATOM = 'atom';
 
+	// Value for $format option for response atom format
+	const FORMAT_XML = 'xml';
+
     //HTTP name for Accept header
     const HTTP_REQUEST_ACCEPT = 'Accept';
 
