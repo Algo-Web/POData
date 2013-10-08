@@ -3,73 +3,80 @@
 namespace UnitTests\POData\OperationContext\Web;
 
 use POData\OperationContext\ServiceHost;
-use POData\OperationContext\Web\IncomingRequest;
+
+use POData\Common\Version;
+
 use UnitTests\POData\BaseUnitTestCase;
-use POData\OperationContext\IOperationContext;
-use POData\OperationContext\IHTTPRequest;
-use POData\Common\ODataConstants;
-
-
 use Phockito;
 
 class ServiceHostTest extends BaseUnitTestCase {
 
 
-	/** @var  IOperationContext */
-	protected $mockOperationContext;
-
-	/** @var  IHTTPRequest */
-	protected $mockHTTPRequest;
-
-    public function testProcessFormatOptionWithFormatOfJSON()
+    public function testGetMimeTypeFromFormatVersion10FormatAtom()
     {
-		Phockito::when($this->mockOperationContext->incomingRequest())
-			->return($this->mockHTTPRequest);
+		$actual = ServiceHost::getMimeTypeFromFormat(new Version(1,0), "atom");
 
-	    $fakeURL = "http://host/service.svc/Collection";
-	    Phockito::when($this->mockHTTPRequest->getRawUrl())
-		    ->return($fakeURL);
+	    $expected = "application/atom+xml;q=1.0";
 
-	    $fakeQueryParameters = array(
-			array(
-				'$format' => 'json'
-			)
-	    );
-	    Phockito::when($this->mockHTTPRequest->getQueryParameters())
-		    ->return($fakeQueryParameters);
-
-	    $host = new ServiceHost($this->mockOperationContext);
-
-	    $host->processFormatOption();
-
-	    //because $format was specified, the setRequestAccept should have been called to override the header info
-	    Phockito::verify($this->mockHTTPRequest, 1)->setRequestAccept(ODataConstants::MIME_APPLICATION_JSON . ';q=1.0');
+        $this->assertEquals($expected, $actual);
     }
 
 
-	public function testProcessFormatOptionWithFormatOfAtom()
-	{
-		Phockito::when($this->mockOperationContext->incomingRequest())
-			->return($this->mockHTTPRequest);
+    public function testGetMimeTypeFromFormatVersion10FormatJson()
+    {
+        $actual = ServiceHost::getMimeTypeFromFormat(new Version(1,0), "json");
 
-		$fakeURL = "http://host/service.svc/Collection";
-		Phockito::when($this->mockHTTPRequest->getRawUrl())
-			->return($fakeURL);
+        $expected = "application/json;q=1.0";
 
-		$fakeQueryParameters = array(
-			array(
-				'$format' => 'atom'
-			)
-		);
-		Phockito::when($this->mockHTTPRequest->getQueryParameters())
-			->return($fakeQueryParameters);
+        $this->assertEquals($expected, $actual);
+    }
 
-		$host = new ServiceHost($this->mockOperationContext);
+    public function testGetMimeTypeFromFormatVersion20FormatAtom()
+    {
+        $actual = ServiceHost::getMimeTypeFromFormat(new Version(2,0), "atom");
 
-		$host->processFormatOption();
+        $expected = "application/atom+xml;q=1.0";
 
-		//because $format was specified, the setRequestAccept should have been called to override the header info
-		Phockito::verify($this->mockHTTPRequest, 1)->setRequestAccept(ODataConstants::MIME_APPLICATION_ATOM . ';q=1.0');
-	}
+        $this->assertEquals($expected, $actual);
+    }
+
+
+    public function testGetMimeTypeFromFormatVersion20FormatJson()
+    {
+        $actual = ServiceHost::getMimeTypeFromFormat(new Version(2,0), "json");
+
+        $expected = "application/json;q=1.0";
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testGetMimeTypeFromFormatVersion30FormatAtom()
+    {
+        $actual = ServiceHost::getMimeTypeFromFormat(new Version(3,0), "atom");
+
+        $expected = "application/atom+xml;q=1.0";
+
+        $this->assertEquals($expected, $actual);
+    }
+
+
+    public function testGetMimeTypeFromFormatVersion30FormatJson()
+    {
+        $actual = ServiceHost::getMimeTypeFromFormat(new Version(3,0), "json");
+
+        $expected = "application/json;odata=minimalmetadata;q=1.0";
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testGetMimeTypeFromFormatVersion30FormatVerboseJson()
+    {
+        $actual = ServiceHost::getMimeTypeFromFormat(new Version(3,0), "verbosejson");
+
+        $expected = "application/json;odata=verbose;q=1.0";
+
+        $this->assertEquals($expected, $actual);
+    }
+
 
 }

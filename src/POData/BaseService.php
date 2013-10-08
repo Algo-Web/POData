@@ -486,6 +486,7 @@ abstract class BaseService implements IRequestHandler, IService
 	    // any normal headers
         $requestAcceptText = $service->getHost()->getRequestAccept();
 
+
 	    //The response format can be dictated by the target resource kind. IE a $value will be different then expected
 	    //getTargetKind doesn't deal with link resources directly and this can change things
 	    $requestTargetKind = $request->isLinkUri() ? TargetKind::LINK : $request->getTargetKind();
@@ -618,6 +619,8 @@ abstract class BaseService implements IRequestHandler, IService
         throw new ODataException( Messages::unsupportedMediaType(), 415 );
 
     }
+
+
 
     /**
      * Get the format corresponding to the given mime type.

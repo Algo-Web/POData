@@ -24,6 +24,9 @@ class ODataConstants
     // Value for $format option for response json format
     const FORMAT_JSON = 'json';
 
+    // Value for $format option for response json format
+    const FORMAT_VERBOSE_JSON = 'verbosejson';
+
     // Value for $format option for response atom format
     const FORMAT_ATOM = 'atom';
 
@@ -98,6 +101,10 @@ class ODataConstants
     //MIME type for JSON bodies 
     //(http://www.iana.org/assignments/media-types/application/).
     const MIME_APPLICATION_JSON = 'application/json';
+
+    const MIME_APPLICATION_JSON_MINIMAL_META = 'application/json;odata=minimalmetadata';
+
+    const MIME_APPLICATION_JSON_VERBOSE = 'application/json;odata=verbose';
 
     //MIME type for XML bodies.
     const MIME_APPLICATION_XML = 'application/xml';

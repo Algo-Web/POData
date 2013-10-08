@@ -2255,7 +2255,7 @@ class UriProcessorTest extends BaseUnitTestCase
 	}
 
 
-	public function testProcessRequestForCollectionCountThrowsWhenVersionIsTooLow()
+	public function testProcessRequestForCollectionCountThrowsWhenServiceVersionIs10()
 	{
 		Phockito::when($this->mockService->getHost())
 			->return($this->mockServiceHost);
@@ -2281,6 +2281,7 @@ class UriProcessorTest extends BaseUnitTestCase
 
 		$fakeServiceConfig = new ServiceConfiguration($this->mockMetadataProvider);
 		$fakeServiceConfig->setAcceptCountRequests(true);
+        $fakeServiceConfig->setMaxDataServiceVersion(ProtocolVersion::V1()); //because this is V1 and $count requires V2, this will fail
 
 		Phockito::when($this->mockService->getConfiguration())
 			->return($fakeServiceConfig);
@@ -2290,7 +2291,7 @@ class UriProcessorTest extends BaseUnitTestCase
 			UriProcessor::process($this->mockService);
 			$this->fail("Expected exception not thrown");
 		} catch(ODataException $ex) {
-			$expected = Messages::requestVersionIsBiggerThanProtocolVersion("2.0", "1.0");
+			$expected = Messages::requestVersionTooLow("1.0", "2.0");
 			$this->assertEquals($expected, $ex->getMessage(), $ex->getTraceAsString());
 		}
 
@@ -2507,7 +2508,7 @@ class UriProcessorTest extends BaseUnitTestCase
 		}
 	}
 
-	public function testProcessRequestForCollectionWithInlineCountWhenVersionIsTooLow()
+	public function testProcessRequestForCollectionWithInlineCountWhenServiceVersionIs10()
 	{
 		Phockito::when($this->mockService->getHost())
 			->return($this->mockServiceHost);
@@ -2543,7 +2544,7 @@ class UriProcessorTest extends BaseUnitTestCase
 			UriProcessor::process($this->mockService);
 			$this->fail("Expected exception not thrown");
 		} catch(ODataException $ex) {
-			$expected = Messages::requestVersionIsBiggerThanProtocolVersion("2.0", "1.0");
+			$expected = Messages::requestVersionTooLow("1.0", "2.0");
 			$this->assertEquals($expected, $ex->getMessage(), $ex->getTraceAsString());
 		}
 	}

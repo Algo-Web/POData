@@ -228,7 +228,10 @@ class RequestDescription
         $this->lastSegment = $segmentDescriptors[$this->_segmentCount - 1];
 	    $this->queryType = QueryType::ENTITIES();
 
-	    //Per OData spec we must return the smallest size
+        //we use this for validation checks down in validateVersions...but maybe we should check that outside of this object...
+        $this->maxServiceVersion = $serviceMaxVersion;
+
+	    //Per OData 1 & 2 spec we must return the smallest size
 	    //We start at 1.0 and move it up as features are requested
         $this->requiredMinResponseVersion = new Version(1, 0);
         $this->requiredMinRequestVersion = new Version(1, 0);
@@ -241,8 +244,21 @@ class RequestDescription
 	    //if max version isn't there, use the request version
 	    $this->requestMaxVersion = is_null($maxRequestVersion) ? $this->requestVersion : self::parseVersionHeader($maxRequestVersion, ODataConstants::ODATAMAXVERSIONHEADER);
 
-	    //we use this for validation checks down in validateVersions...but maybe we should check that outside of this object...
-	    $this->maxServiceVersion = $serviceMaxVersion;
+        //if it's OData v3..things change a bit
+        if($this->maxServiceVersion == new Version(3,0)){
+            if(is_null($maxRequestVersion))
+            {
+                //if max request version isn't specified we use the service max version instead of the request version
+                //thus we favour newer versions
+                $this->requestMaxVersion = $this->maxServiceVersion;
+            }
+
+            //also we change min response version to be the max version, again favoring later things
+            //note that if the request max version is specified, it is still respected
+            $this->requiredMinResponseVersion = clone $this->requestMaxVersion;
+        }
+
+
 
         $this->_containerName = null;
         $this->_skipCount = null;

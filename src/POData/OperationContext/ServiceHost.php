@@ -11,6 +11,7 @@ use POData\Common\ODataException;
 use POData\Common\InvalidOperationException;
 use POData\OperationContext\Web\WebOperationContext;
 use POData\OperationContext\IOperationContext;
+use POData\Common\Version;
 
 /**
  * Class ServiceHost
@@ -626,4 +627,39 @@ Class ServiceHost
         $this->_operationContext
             ->outgoingResponse()->addHeader($headerName, $headerValue);
     }
+
+
+
+    public static function getMimeTypeFromFormat(Version $responseVersion, $format){
+        //TODO: double check these exceptions see #91
+        //TODO: should the version switches be off of the requestVersion, not the response version? see #91
+
+
+        switch($format) {
+            case ODataConstants::FORMAT_ATOM:
+                return ODataConstants::MIME_APPLICATION_ATOM . ';q=1.0';
+
+            case ODataConstants::FORMAT_VERBOSE_JSON:
+                if($responseVersion != new Version(3,0)){
+                    throw new ODataException("Format unrecognized for data service version", 500);
+                }
+                return ODataConstants::MIME_APPLICATION_JSON_VERBOSE . ';q=1.0';
+
+            case ODataConstants::FORMAT_JSON:
+                if($responseVersion == new Version(3,0)){
+                    return ODataConstants::MIME_APPLICATION_JSON_MINIMAL_META . ';q=1.0';
+                }
+                return ODataConstants::MIME_APPLICATION_JSON . ';q=1.0';
+
+            default:
+                //TODO: This isn't really going to work because any valid format is allowed, the check needs to go against a registry of writers
+                //to see if the format is allowed for the version/target/etc
+                throw new ODataException("Format unrecognized for data service version", 500);
+
+        }
+
+    }
+
+
+
 }

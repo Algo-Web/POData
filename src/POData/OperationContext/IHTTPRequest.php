@@ -47,15 +47,4 @@ interface IHTTPRequest
      */
     public function getMethod();
 
-
-    /**
-     * To change the request accept type header in the request.
-     * Note: This method will be used only when client specified $format query option.
-     * Any subsequent call to getRequestHeader("HTTP_ACCEPT") must return the value set with this call
-     *
-     * @param string $mime The mime value.
-     *
-     * @return void
-     */
-    public function setRequestAccept($mime);
 }

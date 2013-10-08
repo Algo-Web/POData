@@ -9,12 +9,21 @@ use POData\Configuration\ServiceConfiguration;
 use POData\Common\ODataException;
 use POData\UriProcessor\QueryProcessor\OrderByParser\OrderByParser;
 use POData\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenParser;
+use POData\Providers\Query\IQueryProvider;
+
 
 use UnitTests\POData\Facets\NorthWind2\NorthWindMetadata;
 
 
-class SkipTokenParser2Test extends \PHPUnit_Framework_TestCase
+use UnitTests\POData\BaseUnitTestCase;
+use Phockito;
+
+class SkipTokenParser2Test extends BaseUnitTestCase
 {
+
+    /** @var  IQueryProvider */
+    protected $mockQueryProvider;
+
 
     /**
      * Test will null as resultSet and empty array as resultSet     
@@ -27,9 +36,8 @@ class SkipTokenParser2Test extends \PHPUnit_Framework_TestCase
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
-            null, //IDataServiceQueryProvider implementation (set to null)
-            $configuration, //Service configuuration
-            false
+            $this->mockQueryProvider,
+            $configuration
         );
 
         $resourceSetWrapper = $providersWrapper->resolveResourceSet('Orders');
@@ -59,10 +67,9 @@ class SkipTokenParser2Test extends \PHPUnit_Framework_TestCase
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
-        $northWindMetadata, //IMetadataProvider implementation
-            null, //IDataServiceQueryProvider implementation (set to null)
-            $configuration, //Service configuuration
-            false
+            $northWindMetadata, //IMetadataProvider implementation
+            $this->mockQueryProvider,
+            $configuration
         );
 
         $resourceSetWrapper = $providersWrapper->resolveResourceSet('Orders');

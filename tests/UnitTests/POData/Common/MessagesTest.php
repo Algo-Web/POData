@@ -45,7 +45,6 @@ class MessagesTest extends BaseUnitTestCase {
 			'configurationMaxResultAndPageSizeMutuallyExclusive',
 			'configurationResourceSetNameNotFound',
 			'configurationRightsAreNotInRange',
-			'configurationInvalidVersion',
 			'configurationCountNotAccepted',
 			'resourceTypeNoBaseTypeForPrimitive',
 			'resourceTypeNoAbstractForPrimitive',

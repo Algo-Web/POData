@@ -115,56 +115,7 @@ class QueryProcessor
     }
 
 
-	private function processFormat(){
-		$version = $this->service->getHost()->getRequestVersion();
 
-		$format = $this->service->getHost()->getOperationContext()->incomingRequest()->getQueryParameters();
-
-		reset($queryOptions);
-		// Check whether user specified $format query option
-		while ($queryOption = current($queryOptions)) {
-			$optionName = key($queryOption);
-			$optionValue = current($queryOption);
-			if (!empty($optionName) && $optionName === ODataConstants::HTTPQUERY_STRING_FORMAT) {
-				//$optionValue is the format
-				switch($optionValue) {
-					case ODataConstants::FORMAT_ATOM:
-						$this->request->responseFormat = ODataConstants::MIME_APPLICATION_ATOM . ';q=1.0';
-						break;
-
-					case ODataConstants::FORMAT_JSON:
-						$this->setRequestAccept(
-							ODataConstants::MIME_APPLICATION_JSON . ';q=1.0'
-						);
-						break;
-
-					default:
-						// Invalid format value, this error should not be
-						// serialized in atom or json format since we don't
-						// know which format client can understand, so error
-						// will be in plain text.
-						header(
-							ODataConstants::HTTPRESPONSE_HEADER_CONTENTTYPE .
-							':' .
-							ODataConstants::MIME_TEXTPLAIN
-						);
-
-						header(
-							ODataConstants::HTTPRESPONSE_HEADER_STATUS .
-							':' . HttpStatus::CODE_BAD_REQUEST . ' ' . 'Bad Request'
-						);
-
-						echo Messages::queryProcessorInvalidValueForFormat();
-						exit;
-
-				}
-
-				break;
-			}
-
-			next($queryOptions);
-		}
-	}
 
 
     /**
