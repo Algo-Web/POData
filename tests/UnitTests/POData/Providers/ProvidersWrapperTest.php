@@ -647,7 +647,50 @@ class ProvidersWrapperTest extends BaseUnitTestCase
     }
 
 
-    public function testGetResourceSetReturnsCountWhenQueryTypeIsCount()
+	public function testGetResourceSetReturnsCountWhenQueryTypeIsCountProviderDoesNotHandlePaging()
+	{
+		$orderBy = null;
+		$top = 10;
+		$skip = 10;
+
+		$fakeQueryResult = new QueryResult();
+		$fakeQueryResult->count = 123; //this is irrelevant
+		$fakeQueryResult->results = null;
+
+		//Because the provider doe NOT handle paging and this request needs a count, there must be results to calculate a count from
+		Phockito::when($this->mockQueryProvider->handlesOrderedPaging())
+			->return(false);
+
+		Phockito::when($this->mockQueryProvider->getResourceSet(
+			QueryType::COUNT(),
+			$this->mockResourceSet,
+			$this->mockFilterInfo,
+			$orderBy,
+			$top,
+			$skip
+		))->return($fakeQueryResult);
+
+		$wrapper = $this->getMockedWrapper();
+
+		try{
+			$wrapper->getResourceSet(
+				QueryType::COUNT(),
+				$this->mockResourceSet,
+				$this->mockFilterInfo,
+				$orderBy,
+				$top,
+				$skip
+			);
+			$this->fail("expected exception not thrown");
+		}
+		catch(ODataException $ex){
+			$this->assertEquals(Messages::queryProviderResultsMissing("IQueryProvider::getResourceSet", QueryType::COUNT()), $ex->getMessage());
+			$this->assertEquals(500, $ex->getStatusCode());
+		}
+
+	}
+
+    public function testGetResourceSetReturnsCountWhenQueryTypeIsCountProviderHandlesPaging()
     {
         $orderBy = null;
         $top = 10;
@@ -655,6 +698,10 @@ class ProvidersWrapperTest extends BaseUnitTestCase
 
         $fakeQueryResult = new QueryResult();
         $fakeQueryResult->count = null; //null is not numeric
+
+	    //Because the provider handles paging and this request needs a count, the count must be numeric
+	    Phockito::when($this->mockQueryProvider->handlesOrderedPaging())
+		    ->return(true);
 
         Phockito::when($this->mockQueryProvider->getResourceSet(
             QueryType::COUNT(),
@@ -685,7 +732,7 @@ class ProvidersWrapperTest extends BaseUnitTestCase
 
     }
 
-    public function testGetResourceSetReturnsCountWhenQueryTypeIsEntitiesWithCount()
+    public function testGetResourceSetReturnsCountWhenQueryTypeIsEntitiesWithCountProviderHandlesPaging()
     {
         $orderBy = null;
         $top = 10;
@@ -694,6 +741,10 @@ class ProvidersWrapperTest extends BaseUnitTestCase
 
         $fakeQueryResult = new QueryResult();
         $fakeQueryResult->count = null; //null is not numeric
+
+	    //Because the provider handles paging and this request needs a count, the count must be numeric
+	    Phockito::when($this->mockQueryProvider->handlesOrderedPaging())
+		    ->return(true);
 
         Phockito::when($this->mockQueryProvider->getResourceSet(
             QueryType::ENTITIES_WITH_COUNT(),
@@ -723,6 +774,50 @@ class ProvidersWrapperTest extends BaseUnitTestCase
         }
 
     }
+
+	public function testGetResourceSetReturnsCountWhenQueryTypeIsEntitiesWithCountProviderDoesNotHandlePaging()
+	{
+		$orderBy = null;
+		$top = 10;
+		$skip = 10;
+
+
+		$fakeQueryResult = new QueryResult();
+		$fakeQueryResult->count = 444; //irrelevant
+		$fakeQueryResult->results = null;
+
+		//Because the provider does NOT handle paging and this request needs a count, the result must have results collection to calculate count from
+		Phockito::when($this->mockQueryProvider->handlesOrderedPaging())
+			->return(false);
+
+		Phockito::when($this->mockQueryProvider->getResourceSet(
+			QueryType::ENTITIES_WITH_COUNT(),
+			$this->mockResourceSet,
+			$this->mockFilterInfo,
+			$orderBy,
+			$top,
+			$skip
+		))->return($fakeQueryResult);
+
+		$wrapper = $this->getMockedWrapper();
+
+		try{
+			$wrapper->getResourceSet(
+				QueryType::ENTITIES_WITH_COUNT(),
+				$this->mockResourceSet,
+				$this->mockFilterInfo,
+				$orderBy,
+				$top,
+				$skip
+			);
+			$this->fail("expected exception not thrown");
+		}
+		catch(ODataException $ex){
+			$this->assertEquals(Messages::queryProviderResultsMissing("IQueryProvider::getResourceSet", QueryType::ENTITIES_WITH_COUNT()), $ex->getMessage());
+			$this->assertEquals(500, $ex->getStatusCode());
+		}
+
+	}
 
 
     public function testGetResourceSetReturnsArrayWhenQueryTypeIsEntities()

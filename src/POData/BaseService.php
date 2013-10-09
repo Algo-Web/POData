@@ -190,7 +190,7 @@ abstract class BaseService implements IRequestHandler, IService
      *     IDSSP will be ensured only when there is an GET request on MLE/Named 
      *     stream.
      *  
-     * (2). Invoke 'InitializeService' method of top level service for 
+     * (2). Invoke 'Initialize' method of top level service for
      *      collecting the configuration rules set by the developer for this 
      *      service. 
      *  
@@ -259,9 +259,8 @@ abstract class BaseService implements IRequestHandler, IService
 
     /**
      * This method will query and validates for IMetadataProvider and IQueryProvider implementations, invokes
-     * BaseService::InitializeService to initialize service specific policies.
-     * 
-     * @return void
+     * BaseService::Initialize to initialize service specific policies.
+     *
      * 
      * @throws ODataException
      */

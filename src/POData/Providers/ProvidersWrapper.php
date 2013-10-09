@@ -636,10 +636,20 @@ class ProvidersWrapper
             );
         }
 
-        if(($queryType == QueryType::COUNT() || $queryType == QueryType::ENTITIES_WITH_COUNT()) && !is_numeric($queryResult->count)){
-            ODataException::createInternalServerError(
-                Messages::queryProviderResultCountMissing('IQueryProvider::getResourceSet', $queryType)
-            );
+	    if($queryType == QueryType::COUNT() || $queryType == QueryType::ENTITIES_WITH_COUNT()){
+		    //and the provider is supposed to handle the ordered paging they must return a count!
+		    if($this->queryProvider->handlesOrderedPaging() && !is_numeric($queryResult->count)){
+                ODataException::createInternalServerError(
+                    Messages::queryProviderResultCountMissing('IQueryProvider::getResourceSet', $queryType)
+                );
+		    }
+
+		    //If POData is supposed to handle the ordered aging they must return results! (possibly empty)
+		    if(!$this->queryProvider->handlesOrderedPaging() && !is_array($queryResult->results)){
+			    ODataException::createInternalServerError(
+				    Messages::queryProviderResultsMissing('IQueryProvider::getResourceSet', $queryType)
+			    );
+		    }
         }
 
         if(($queryType == QueryType::ENTITIES() || $queryType == QueryType::ENTITIES_WITH_COUNT()) && !is_array($queryResult->results)){
