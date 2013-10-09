@@ -5,6 +5,7 @@ namespace POData\OperationContext\Web;
 use POData\Common\ODataException;
 use POData\Common\ODataConstants;
 use POData\Common\Url;
+use POData\HttpProcessUtility;
 use POData\OperationContext\HTTPRequestMethod;
 use POData\OperationContext\IHTTPRequest;
 
@@ -116,13 +117,6 @@ class IncomingRequest implements IHTTPRequest
                 }
             }
 
-            if (!array_key_exists(ODataConstants::ODATASERVICEVERSION, $this->_headers)) {
-                $this->_headers[ODataConstants::ODATASERVICEVERSION] = null;
-            }
-
-            if (!array_key_exists(ODataConstants::ODATAMAXSERVICEVERSION, $this->_headers)) {
-                $this->_headers[ODataConstants::ODATAMAXSERVICEVERSION] = null;
-            }
         }
 
         return $this->_headers;
@@ -142,7 +136,7 @@ class IncomingRequest implements IHTTPRequest
                 $this->_rawUrl = ODataConstants::HTTPREQUEST_PROTOCOL_HTTPS;
             }
 
-            $this->_rawUrl .= "://".$_SERVER[ODataConstants::HTTPREQUEST_HEADER_HOST];
+            $this->_rawUrl .= "://".$_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)];
             $this->_rawUrl .= utf8_decode(urldecode($_SERVER[ODataConstants::HTTPREQUEST_URI]));
         }
 
@@ -158,8 +152,10 @@ class IncomingRequest implements IHTTPRequest
      */
     public function getRequestHeader($key)
     {
-        $trimmedKey = trim($key);
-        if (array_key_exists($trimmedKey, $this->_headers)) {
+	    //PHP normalizes header keys
+	    $trimmedKey = HttpProcessUtility::headerToServerKey(trim($key));
+
+	    if (array_key_exists($trimmedKey, $this->_headers)) {
             return $this->_headers[$trimmedKey];
         }
 
@@ -226,16 +222,4 @@ class IncomingRequest implements IHTTPRequest
     }
 
 
-    /**
-     * To change the request accept type header in the request.
-     * Note: This method will be used only when client specified $format query option.
-     *
-     * @param string $mime The mime value.
-     * 
-     * @return void
-     */
-    public function setRequestAccept($mime)
-    {
-        $this->_headers[ODataConstants::HTTPREQUEST_HEADER_ACCEPT] = $mime;
-    }
 }

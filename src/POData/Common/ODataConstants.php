@@ -817,36 +817,31 @@ class ODataConstants
     const HTTPREQUEST_CONTENT_LENGTH  = 'CONTENT_LENGTH';
     const HTTPREQUEST_CONTENT_TYPE    = 'CONTENT_TYPE';
 
-    const HTTPREQUEST_HEADER_ACCEPT          = 'HTTP_ACCEPT';
-    const HTTPREQUEST_HEADER_ACCEPT_CHARSET  = 'HTTP_ACCEPT_CHARSET';
-    const HTTPREQUEST_HEADER_USER_AGENT      = 'HTTP_USER_AGENT';
-    const HTTPREQUEST_HEADER_HOST            = 'HTTP_HOST';
-    const HTTPREQUEST_HEADER_IFMATCH         = 'HTTP_IF_MATCH';
-    const HTTPREQUEST_HEADER_IFMODIFIED      = 'HTTP_IF_MODIFIED_SINCE';
-    const HTTPREQUEST_HEADER_IFNONE          = 'HTTP_IF_NONE_MATCH';
-    const HTTPREQUEST_HEADER_IFUNMODIFIED    = 'HTTP_IF_UNMODIFIED_SINCE';
+    const HTTPREQUEST_HEADER_ACCEPT          = 'ACCEPT';
+    const HTTPREQUEST_HEADER_ACCEPT_CHARSET  = 'ACCEPT_CHARSET';
+    const HTTPREQUEST_HEADER_USER_AGENT      = 'USER_AGENT';
+    const HTTPREQUEST_HEADER_HOST            = 'HOST';
+    const HTTPREQUEST_HEADER_IF_MATCH        = 'IF_MATCH';
+    const HTTPREQUEST_HEADER_IF_MODIFIED     = 'IF_MODIFIED_SINCE';
+    const HTTPREQUEST_HEADER_IF_NONE         = 'IF_NONE_MATCH';
+    const HTTPREQUEST_HEADER_IF_UNMODIFIED   = 'IF_UNMODIFIED_SINCE';
+
+	const HTTPREQUEST_HEADER_DATA_SERVICE_VERSION       = 'DATASERVICEVERSION';
+	const HTTPREQUEST_HEADER_MAX_DATA_SERVICE_VERSION   = 'MAXDATASERVICEVERSION';
 
     // Headers for HTTPResponse
-    // We need to use these constant with $_SERVER to get the value of the headers 
-    //const HTTPRESPONSE_HEADER_CONTENTLENGTH    = 'CONTENT_LENGTH';
-    //const HTTPRESPONSE_HEADER_CONTENTTYPE    = 'CONTENT_TYPE';    
-    //const HTTPRESPONSE_HEADER_CACHECONTROL    = 'HTTP_CACHE_CONTROL';
-    //const HTTPRESPONSE_HEADER_IFNONE        = 'HTTP_IF_NONE_MATCH';
-        
-    // Headers for HTTPResponse
     // We need to use these string with header() for setting-up these headers
-    const HTTPRESPONSE_HEADER_CONTENTLENGTH        = 'Content-Length';
-    const HTTPRESPONSE_HEADER_CONTENTTYPE        = 'Content-Type';
-    const HTTPRESPONSE_HEADER_CACHECONTROL        = 'Cache-Control';
-    const HTTPRESPONSE_HEADER_ETAG                = 'ETag';
-    const HTTPRESPONSE_HEADER_LASTMODIFIED        = 'Last-Modified';
-    const HTTPRESPONSE_HEADER_LOCATION            = 'Location';
-    const HTTPRESPONSE_HEADER_STATUS            = 'Status';
-    const HTTPRESPONSE_HEADER_STATUS_CODE        = 'StatusCode';
-    const HTTPRESPONSE_HEADER_STATUS_DESC        = 'StatusDesc';
+    const HTTPRESPONSE_HEADER_CONTENTLENGTH         = 'Content-Length';
+    const HTTPRESPONSE_HEADER_CONTENTTYPE           = 'Content-Type';
+    const HTTPRESPONSE_HEADER_CACHECONTROL          = 'Cache-Control';
+    const HTTPRESPONSE_HEADER_ETAG                  = 'ETag';
+    const HTTPRESPONSE_HEADER_LASTMODIFIED          = 'Last-Modified';
+    const HTTPRESPONSE_HEADER_LOCATION              = 'Location';
+    const HTTPRESPONSE_HEADER_STATUS                = 'Status';
+    const HTTPRESPONSE_HEADER_STATUS_CODE           = 'StatusCode';
+    const HTTPRESPONSE_HEADER_STATUS_DESC           = 'StatusDesc';
     
     const HTTPRESPONSE_HEADER_CACHECONTROL_NOCACHE = 'no-cache';
 
-    const ODATASERVICEVERSION                    = 'HTTP_DATASERVICEVERSION';
-    const ODATAMAXSERVICEVERSION                = 'HTTP_MAXDATASERVICEVERSION';
+
 }

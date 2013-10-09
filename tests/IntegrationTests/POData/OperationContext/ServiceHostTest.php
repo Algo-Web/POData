@@ -12,7 +12,7 @@ use POData\Common\UrlFormatException;
 use POData\Common\ODataException;
 use POData\OperationContext\ServiceHost;
 use POData\Common\MimeTypes;
-
+use POData\HttpProcessUtility;
 
 
 class ServiceHostTest extends PHPUnit_Framework_TestCase
@@ -29,8 +29,8 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
 	{
     	$_SERVER[ODataConstants::HTTPREQUEST_METHOD] 		= ODataConstants::HTTP_METHOD_GET;
     	$_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL]		= ODataConstants::HTTPREQUEST_PROTOCOL_HTTP;
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_HOST]			= "localhost:8086";
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_URI]			= "/NorthWind.svc/Customers";
+    	$_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)]			= "localhost:8086";
+    	$_SERVER[ODataConstants::HTTPREQUEST_URI]			= "/NorthWind.svc/Customers";
     	$_SERVER[ODataConstants::HTTPREQUEST_QUERY_STRING]	= null;
     	try {
 			$exceptionThrown = false;
@@ -65,8 +65,8 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
 	{
     	$_SERVER[ODataConstants::HTTPREQUEST_METHOD] 		= ODataConstants::HTTP_METHOD_GET;
     	$_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL]		= ODataConstants::HTTPREQUEST_PROTOCOL_HTTP;
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_HOST]			= "localhost:8086";
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_URI]			= "/NorthWind.svc/Customers('AROUT')?\$select=CompanyName";
+    	$_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)]			= "localhost:8086";
+    	$_SERVER[ODataConstants::HTTPREQUEST_URI]			= "/NorthWind.svc/Customers('AROUT')?\$select=CompanyName";
     	$_SERVER[ODataConstants::HTTPREQUEST_QUERY_STRING]	= "\$select=CompanyName";
     	try {
 			$exceptionThrown = false;
@@ -91,8 +91,8 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
 	{
     	$_SERVER[ODataConstants::HTTPREQUEST_METHOD] 		= ODataConstants::HTTP_METHOD_GET;
     	$_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL]		= ODataConstants::HTTPREQUEST_PROTOCOL_HTTP;
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_HOST]			= "localhost:8086";
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_URI]			= "/NorthWind.svc/Customers1";
+    	$_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)]			= "localhost:8086";
+    	$_SERVER[ODataConstants::HTTPREQUEST_URI]			= "/NorthWind.svc/Customers1";
     	try {
 			$exceptionThrown = false;
 			$dispatcher = new dispatcher();
@@ -116,8 +116,8 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
 	{
     	$_SERVER[ODataConstants::HTTPREQUEST_METHOD] 		= ODataConstants::HTTP_METHOD_GET;
     	$_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL]		= ODataConstants::HTTPREQUEST_PROTOCOL_HTTP;
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_HOST]			= "localhost:8086";
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_URI]			= "/NorthWind.svc/Customers('AROUT')";
+    	$_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)]			= "localhost:8086";
+    	$_SERVER[ODataConstants::HTTPREQUEST_URI]			= "/NorthWind.svc/Customers('AROUT')";
     	try {
 			$exceptionThrown = false;
 			$dispatcher = new dispatcher();
@@ -142,8 +142,8 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
 	{
     	$_SERVER[ODataConstants::HTTPREQUEST_METHOD] 		= ODataConstants::HTTP_METHOD_GET;
     	$_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL]		= ODataConstants::HTTPREQUEST_PROTOCOL_HTTP;
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_HOST]			= "localhost:8086";
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_URI]			= "/NorthWind.svc/Customers('AROUT')?\$select=CompanyName";
+    	$_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)]			= "localhost:8086";
+    	$_SERVER[ODataConstants::HTTPREQUEST_URI]			= "/NorthWind.svc/Customers('AROUT')?\$select=CompanyName";
     	$_SERVER[ODataConstants::HTTPREQUEST_QUERY_STRING]	= "\$select=CompanyName";
     	try {
 			$exceptionThrown = false;
@@ -169,8 +169,8 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
 	{
     	$_SERVER[ODataConstants::HTTPREQUEST_METHOD] 		= ODataConstants::HTTP_METHOD_GET;
     	$_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL]		= ODataConstants::HTTPREQUEST_PROTOCOL_HTTP;
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_HOST]			= "localhost:8086";
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_URI]			= "/NorthWind.svc/Customers?\$format=atom";
+    	$_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)]			= "localhost:8086";
+    	$_SERVER[ODataConstants::HTTPREQUEST_URI]			= "/NorthWind.svc/Customers?\$format=atom";
     	$_SERVER[ODataConstants::HTTPREQUEST_QUERY_STRING]	= "\$format=atom";
     	try {
 			$exceptionThrown = false;
@@ -200,8 +200,8 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
 	{
     	$_SERVER[ODataConstants::HTTPREQUEST_METHOD] 		= ODataConstants::HTTP_METHOD_GET;
     	$_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL]		= ODataConstants::HTTPREQUEST_PROTOCOL_HTTP;
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_HOST]			= "localhost:8086";
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_URI]			= "/NorthWind.svc/Customers?\$format=json";
+    	$_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)]			= "localhost:8086";
+    	$_SERVER[ODataConstants::HTTPREQUEST_URI]			= "/NorthWind.svc/Customers?\$format=json";
     	$_SERVER[ODataConstants::HTTPREQUEST_QUERY_STRING]	= "\$format=json";
     	try {
 			$exceptionThrown = false;    		
@@ -231,8 +231,8 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
 	{
     	$_SERVER[ODataConstants::HTTPREQUEST_METHOD] 		= ODataConstants::HTTP_METHOD_GET;
     	$_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL]		= ODataConstants::HTTPREQUEST_PROTOCOL_HTTP;
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_HOST]			= "localhost:8086";
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_URI]			= "/NorthWind.svc/Customers?\$top";
+    	$_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)]			= "localhost:8086";
+    	$_SERVER[ODataConstants::HTTPREQUEST_URI]			= "/NorthWind.svc/Customers?\$top";
     	$_SERVER[ODataConstants::HTTPREQUEST_QUERY_STRING]	= "\$top";
     	try {
 			$exceptionThrown = false;    		
@@ -257,8 +257,8 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
 	{
     	$_SERVER[ODataConstants::HTTPREQUEST_METHOD] 		= ODataConstants::HTTP_METHOD_GET;
     	$_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL]		= ODataConstants::HTTPREQUEST_PROTOCOL_HTTP;
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_HOST]			= "localhost:8086";
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_URI]			= "/NorthWind.svc/Customers?\$format";
+    	$_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)]			= "localhost:8086";
+    	$_SERVER[ODataConstants::HTTPREQUEST_URI]			= "/NorthWind.svc/Customers?\$format";
     	$_SERVER[ODataConstants::HTTPREQUEST_QUERY_STRING]	= "\$format";
     	try {
 			$exceptionThrown = false;    		
@@ -283,8 +283,8 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
 	{
     	$_SERVER[ODataConstants::HTTPREQUEST_METHOD] 		= ODataConstants::HTTP_METHOD_GET;
     	$_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL]		= ODataConstants::HTTPREQUEST_PROTOCOL_HTTP;
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_HOST]			= "localhost:8086";
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_URI]			= "/NorthWind.svc/Customers?\$my";
+    	$_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)]			= "localhost:8086";
+    	$_SERVER[ODataConstants::HTTPREQUEST_URI]			= "/NorthWind.svc/Customers?\$my";
     	$_SERVER[ODataConstants::HTTPREQUEST_QUERY_STRING]	= "\$my";
     	try {
 			$exceptionThrown = false;    		
@@ -309,8 +309,8 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
 	{
     	$_SERVER[ODataConstants::HTTPREQUEST_METHOD] 		= ODataConstants::HTTP_METHOD_GET;
     	$_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL]		= ODataConstants::HTTPREQUEST_PROTOCOL_HTTP;
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_HOST]			= "localhost:8086";
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_URI]			= "/NorthWind.svc/Customers?\$format=atom&\$format=atom";
+    	$_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)]			= "localhost:8086";
+    	$_SERVER[ODataConstants::HTTPREQUEST_URI]			= "/NorthWind.svc/Customers?\$format=atom&\$format=atom";
     	$_SERVER[ODataConstants::HTTPREQUEST_QUERY_STRING]	= "\$format=atom&\$format=atom";
     	try {
 			$exceptionThrown = false;    		
@@ -335,8 +335,8 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
 	{
     	$_SERVER[ODataConstants::HTTPREQUEST_METHOD] 		= ODataConstants::HTTP_METHOD_GET;
     	$_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL]		= ODataConstants::HTTPREQUEST_PROTOCOL_HTTP;
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_HOST]			= "localhost:8086";
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_URI]			= "/NorthWind.svc/Customers?\$top=";
+    	$_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)]			= "localhost:8086";
+    	$_SERVER[ODataConstants::HTTPREQUEST_URI]			= "/NorthWind.svc/Customers?\$top=";
     	$_SERVER[ODataConstants::HTTPREQUEST_QUERY_STRING]	= "\$top=";
     	try {
 			$exceptionThrown = false;    		
@@ -362,8 +362,8 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
 	{
     	$_SERVER[ODataConstants::HTTPREQUEST_METHOD] 		= ODataConstants::HTTP_METHOD_GET;
     	$_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL]		= ODataConstants::HTTPREQUEST_PROTOCOL_HTTP;
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_HOST]			= "localhost:8086";
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_URI]			= "/NorthWind.svc/Customers?\$my=";
+    	$_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)]			= "localhost:8086";
+    	$_SERVER[ODataConstants::HTTPREQUEST_URI]			= "/NorthWind.svc/Customers?\$my=";
     	$_SERVER[ODataConstants::HTTPREQUEST_QUERY_STRING]	= "\$my=";
     	try {
 			$exceptionThrown = false;    		
@@ -389,8 +389,8 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
 	{
     	$_SERVER[ODataConstants::HTTPREQUEST_METHOD] 		= ODataConstants::HTTP_METHOD_GET;
     	$_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL]		= ODataConstants::HTTPREQUEST_PROTOCOL_HTTP;
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_HOST]			= "localhost:8086";
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_URI]			= "/NorthWind.svc/Customers?\$top=&\$top=";
+    	$_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)]			= "localhost:8086";
+    	$_SERVER[ODataConstants::HTTPREQUEST_URI]			= "/NorthWind.svc/Customers?\$top=&\$top=";
     	$_SERVER[ODataConstants::HTTPREQUEST_QUERY_STRING]	= "\$top=&\$top=";
     	try {
 			$exceptionThrown = false;    		
@@ -416,9 +416,9 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
 	{
     	$_SERVER[ODataConstants::HTTPREQUEST_METHOD] 		= ODataConstants::HTTP_METHOD_GET;
     	$_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL]		= ODataConstants::HTTPREQUEST_PROTOCOL_HTTP;
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_HOST]			= "localhost:8086";
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_URI]			= "/NorthWind.svc/Customers";
-    	$_SERVER[ODataConstants::ODATASERVICEVERSION]				= '1.0';
+    	$_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)]			= "localhost:8086";
+    	$_SERVER[ODataConstants::HTTPREQUEST_URI]			= "/NorthWind.svc/Customers";
+    	$_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_DATA_SERVICE_VERSION)] = '1.0';
     	try {
 			$exceptionThrown = false;    		
 			$dispatcher = new dispatcher();
@@ -443,9 +443,10 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
 	{
     	$_SERVER[ODataConstants::HTTPREQUEST_METHOD] 		= ODataConstants::HTTP_METHOD_GET;
     	$_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL]		= ODataConstants::HTTPREQUEST_PROTOCOL_HTTP;
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_HOST]			= "localhost:8086";
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_URI]			= "/NorthWind.svc/Customers";
-    	$_SERVER[ODataConstants::ODATAMAXSERVICEVERSION]			= '2.0';    	
+    	$_SERVER[ODataConstants::HTTPREQUEST_URI]			= "/NorthWind.svc/Customers";
+		$_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)]			= "localhost:8086";
+    	$_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_MAX_DATA_SERVICE_VERSION)]			= '2.0';
+
     	try {
 			$exceptionThrown = false;    		
 			$dispatcher = new dispatcher();
@@ -470,9 +471,9 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
 	{
     	$_SERVER[ODataConstants::HTTPREQUEST_METHOD] 		= ODataConstants::HTTP_METHOD_GET;
     	$_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL]		= ODataConstants::HTTPREQUEST_PROTOCOL_HTTP;
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_HOST]			= "localhost:8086";
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_URI]			= "/NorthWind.svc/Customers";
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_ACCEPT_CHARSET]	= "ISO-8859-1";
+		$_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_URI)]			= "/NorthWind.svc/Customers";
+    	$_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)]			= "localhost:8086";
+    	$_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_ACCEPT_CHARSET)]	= "ISO-8859-1";
     	try {
 			$exceptionThrown = false;    		
 			$dispatcher = new dispatcher();
@@ -497,8 +498,8 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
 	{
     	$_SERVER[ODataConstants::HTTPREQUEST_METHOD] 		= ODataConstants::HTTP_METHOD_GET;
     	$_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL]		= ODataConstants::HTTPREQUEST_PROTOCOL_HTTP;
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_HOST]			= "localhost:8086";
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_URI]			= "/NorthWind.svc/Customers";
+    	$_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)]			= "localhost:8086";
+    	$_SERVER[ODataConstants::HTTPREQUEST_URI]			= "/NorthWind.svc/Customers";
     	$_SERVER[ODataConstants::HTTPREQUEST_CONTENT_TYPE]	= "text/comma-separated-values";
     	try {
 			$exceptionThrown = false;    		
@@ -524,8 +525,8 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
 	{
     	$_SERVER[ODataConstants::HTTPREQUEST_METHOD] 		= ODataConstants::HTTP_METHOD_GET;
     	$_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL]		= ODataConstants::HTTPREQUEST_PROTOCOL_HTTP;
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_HOST]			= "localhost:8086";
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_URI]			= "/NorthWind.svc/Customers";
+    	$_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)]			= "localhost:8086";
+    	$_SERVER[ODataConstants::HTTPREQUEST_URI]			= "/NorthWind.svc/Customers";
 		$_SERVER[ODataConstants::HTTPREQUEST_CONTENT_LENGTH]	= "1000";
     	try {
 			$exceptionThrown = false;    		
@@ -551,8 +552,8 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
 	{
     	$_SERVER[ODataConstants::HTTPREQUEST_METHOD] 		= ODataConstants::HTTP_METHOD_GET;
     	$_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL]		= ODataConstants::HTTPREQUEST_PROTOCOL_HTTP;
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_HOST]			= "localhost:8086";
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_URI]			= "/NorthWind.svc/Customers";
+    	$_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)]			= "localhost:8086";
+    	$_SERVER[ODataConstants::HTTPREQUEST_URI]			= "/NorthWind.svc/Customers";
 		//$_SERVER[ODataConstants::HttpRequestHeaderMethod]		= ODataConstants::oDataMethodInsert;    	
     	try {
 			$exceptionThrown = false;    		
@@ -578,9 +579,9 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
 	{
     	$_SERVER[ODataConstants::HTTPREQUEST_METHOD] 	= ODataConstants::HTTP_METHOD_GET;
     	$_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL]	= ODataConstants::HTTPREQUEST_PROTOCOL_HTTP;
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_HOST]		= "localhost:8086";
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_URI]		= "/NorthWind.svc/Customers";
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_IFMATCH]	= '123';
+    	$_SERVER[ODataConstants::HTTPREQUEST_URI]		= "/NorthWind.svc/Customers";
+		$_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)]		= "localhost:8086";
+    	$_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_IF_MATCH)]	= '123';
     	try {
 			$exceptionThrown = false;    		
 			$dispatcher = new dispatcher();
@@ -608,9 +609,9 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
 	{
     	$_SERVER[ODataConstants::HTTPREQUEST_METHOD] 	= ODataConstants::HTTP_METHOD_GET;
     	$_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL]	= ODataConstants::HTTPREQUEST_PROTOCOL_HTTP;
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_HOST]		= "localhost:8086";
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_URI]		= "/NorthWind.svc/Customers";
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_IFNONE]		= '456';    	
+    	$_SERVER[ODataConstants::HTTPREQUEST_URI]		= "/NorthWind.svc/Customers";
+		$_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)]		= "localhost:8086";
+    	$_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_IF_NONE)]		= '456';
     	try {
 			$exceptionThrown = false;    		
 			$dispatcher = new dispatcher();
@@ -637,8 +638,8 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
 	{
     	$_SERVER[ODataConstants::HTTPREQUEST_METHOD] 		= ODataConstants::HTTP_METHOD_GET;
     	$_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL]		= ODataConstants::HTTPREQUEST_PROTOCOL_HTTP;
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_HOST]			= "localhost:8086";
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_URI]			= "/NorthWind.svc/Customers";
+    	$_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)]			= "localhost:8086";
+    	$_SERVER[ODataConstants::HTTPREQUEST_URI]			= "/NorthWind.svc/Customers";
     	try {
 			$exceptionThrown = false;    		
 			$dispatcher = new dispatcher();
@@ -664,8 +665,8 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
 	{
     	$_SERVER[ODataConstants::HTTPREQUEST_METHOD] 		= ODataConstants::HTTP_METHOD_GET;
     	$_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL]		= ODataConstants::HTTPREQUEST_PROTOCOL_HTTP;
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_HOST]			= "localhost:8086";
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_URI]			= "/NorthWind.svc/Customers";
+    	$_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)]			= "localhost:8086";
+    	$_SERVER[ODataConstants::HTTPREQUEST_URI]			= "/NorthWind.svc/Customers";
     	try {
 			$exceptionThrown = false;    		
 			$dispatcher = new dispatcher();
@@ -690,8 +691,8 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
 	{
     	$_SERVER[ODataConstants::HTTPREQUEST_METHOD] 		= ODataConstants::HTTP_METHOD_GET;
     	$_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL]		= ODataConstants::HTTPREQUEST_PROTOCOL_HTTP;
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_HOST]			= "localhost:8086";
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_URI]			= "/NorthWind.svc/Customers";
+    	$_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)]			= "localhost:8086";
+    	$_SERVER[ODataConstants::HTTPREQUEST_URI]			= "/NorthWind.svc/Customers";
     	try {
 			$exceptionThrown = false;    		
 			$dispatcher = new dispatcher();
@@ -717,8 +718,8 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
 	{
     	$_SERVER[ODataConstants::HTTPREQUEST_METHOD] 		= ODataConstants::HTTP_METHOD_GET;
     	$_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL]		= ODataConstants::HTTPREQUEST_PROTOCOL_HTTP;
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_HOST]			= "localhost:8086";
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_URI]			= "/NorthWind.svc/Customers";
+    	$_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)]			= "localhost:8086";
+    	$_SERVER[ODataConstants::HTTPREQUEST_URI]			= "/NorthWind.svc/Customers";
     	try {
 			$exceptionThrown = false;    		
 			$dispatcher = new dispatcher();
@@ -743,8 +744,8 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
 	{
     	$_SERVER[ODataConstants::HTTPREQUEST_METHOD] 		= ODataConstants::HTTP_METHOD_GET;
     	$_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL]		= ODataConstants::HTTPREQUEST_PROTOCOL_HTTP;
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_HOST]			= "localhost:8086";
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_URI]			= "/NorthWind.svc/Customers";
+    	$_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)]			= "localhost:8086";
+    	$_SERVER[ODataConstants::HTTPREQUEST_URI]			= "/NorthWind.svc/Customers";
     	try {
 			$exceptionThrown = false;    		
 			$dispatcher = new dispatcher();
@@ -770,8 +771,8 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
 	{
     	$_SERVER[ODataConstants::HTTPREQUEST_METHOD] 		= ODataConstants::HTTP_METHOD_GET;
     	$_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL]		= ODataConstants::HTTPREQUEST_PROTOCOL_HTTP;
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_HOST]			= "localhost:8086";
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_URI]			= "/NorthWind.svc/Customers";
+    	$_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)]			= "localhost:8086";
+    	$_SERVER[ODataConstants::HTTPREQUEST_URI]			= "/NorthWind.svc/Customers";
     	try {
 			$exceptionThrown = false;    		
 			$dispatcher = new dispatcher();
@@ -797,8 +798,8 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
 	{
     	$_SERVER[ODataConstants::HTTPREQUEST_METHOD] 		= ODataConstants::HTTP_METHOD_GET;
     	$_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL]		= ODataConstants::HTTPREQUEST_PROTOCOL_HTTP;
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_HOST]			= "localhost:8086";
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_URI]			= "/NorthWind.svc/Customers";
+    	$_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)]			= "localhost:8086";
+    	$_SERVER[ODataConstants::HTTPREQUEST_URI]			= "/NorthWind.svc/Customers";
     	try {
 			$exceptionThrown = false;    		
 			$dispatcher = new dispatcher();
@@ -824,8 +825,8 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
 	{
     	$_SERVER[ODataConstants::HTTPREQUEST_METHOD] 		= ODataConstants::HTTP_METHOD_GET;
     	$_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL]		= ODataConstants::HTTPREQUEST_PROTOCOL_HTTP;
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_HOST]			= "localhost:8086";
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_URI]			= "/NorthWind.svc/Customers";
+    	$_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)]			= "localhost:8086";
+    	$_SERVER[ODataConstants::HTTPREQUEST_URI]			= "/NorthWind.svc/Customers";
     	try {
 			$exceptionThrown = false;    		
 			$dispatcher = new dispatcher();
@@ -851,8 +852,8 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
 	{
     	$_SERVER[ODataConstants::HTTPREQUEST_METHOD] 		= ODataConstants::HTTP_METHOD_GET;
     	$_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL]		= ODataConstants::HTTPREQUEST_PROTOCOL_HTTP;
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_HOST]			= "localhost:8086";
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_URI]			= "/NorthWind.svc/Customers";
+    	$_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)]			= "localhost:8086";
+    	$_SERVER[ODataConstants::HTTPREQUEST_URI]			= "/NorthWind.svc/Customers";
     	try {
 			$exceptionThrown = false;    		
 			$dispatcher = new dispatcher();
@@ -878,8 +879,8 @@ class ServiceHostTest extends PHPUnit_Framework_TestCase
 	{
     	$_SERVER[ODataConstants::HTTPREQUEST_METHOD] 		= ODataConstants::HTTP_METHOD_GET;
     	$_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL]		= ODataConstants::HTTPREQUEST_PROTOCOL_HTTP;
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_HOST]			= "localhost:8086";
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_URI]			= "/NorthWind.svc/Customers";
+    	$_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)]			= "localhost:8086";
+    	$_SERVER[ODataConstants::HTTPREQUEST_URI]			= "/NorthWind.svc/Customers";
     	try {
 			$exceptionThrown = false;    		
 			$dispatcher = new dispatcher();

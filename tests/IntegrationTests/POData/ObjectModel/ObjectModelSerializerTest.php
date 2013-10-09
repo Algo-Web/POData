@@ -15,8 +15,8 @@ use POData\Common\Url;
 use POData\Common\UrlFormatException;
 use POData\Common\ODataException;
 use POData\OperationContext\ServiceHost;
-use POData\Dispatcher;
 
+ use POData\HttpProcessUtility;
 
 class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
 {	
@@ -38,9 +38,9 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
     	    = ODataConstants::HTTP_METHOD_GET;
     	$_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL]
     	    = ODataConstants::HTTPREQUEST_PROTOCOL_HTTP;
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_HOST]		
+    	$_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)]		
     	    = "localhost:8086";
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_URI]
+    	$_SERVER[ODataConstants::HTTPREQUEST_URI]
     	    = "/NorthWind.svc/Customers";
         //$_SERVER[ODataConstants::HTTPREQUEST_HEADER_QUERY_STRING]
     	//    = '$top=1';
@@ -71,9 +71,9 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
     	    = ODataConstants::HTTP_METHOD_GET;
     	$_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL]
     	    = ODataConstants::HTTPREQUEST_PROTOCOL_HTTP;
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_HOST]		
+    	$_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)]		
     	    = "localhost:8086";
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_URI]
+    	$_SERVER[ODataConstants::HTTPREQUEST_URI]
     	    = "/NorthWind.svc/Customers";
         $_SERVER[ODataConstants::HTTPREQUEST_QUERY_STRING]
     	    = '$top=2&$skip=3';
@@ -104,9 +104,9 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
     	    = ODataConstants::HTTP_METHOD_GET;
     	$_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL]
     	    = ODataConstants::HTTPREQUEST_PROTOCOL_HTTP;
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_HOST]		
+    	$_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)]		
     	    = "localhost:8086";
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_URI]
+    	$_SERVER[ODataConstants::HTTPREQUEST_URI]
     	    = "/NorthWind.svc/Orders(10643)/Customer/Orders";
 
         $dispatcher = new Dispatcher();
@@ -135,9 +135,9 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
     	    = ODataConstants::HTTP_METHOD_GET;
     	$_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL]
     	    = ODataConstants::HTTPREQUEST_PROTOCOL_HTTP;
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_HOST]		
+    	$_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)]		
     	    = "localhost:8086";
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_URI]
+    	$_SERVER[ODataConstants::HTTPREQUEST_URI]
     	    = "/NorthWind.svc/Customers('ALFKI')";
         //$_SERVER[ODataConstants::HTTPREQUEST_HEADER_QUERY_STRING]
     	//    = '$top=1';
@@ -168,9 +168,9 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
     	    = ODataConstants::HTTP_METHOD_GET;
     	$_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL]
     	    = ODataConstants::HTTPREQUEST_PROTOCOL_HTTP;
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_HOST]		
+    	$_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)]		
     	    = "localhost:8086";
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_URI]
+    	$_SERVER[ODataConstants::HTTPREQUEST_URI]
     	    = "/NorthWind.svc/Orders(10643)/Customer";
         //$_SERVER[ODataConstants::HTTPREQUEST_HEADER_QUERY_STRING]
     	//    = '$top=1';
@@ -201,9 +201,9 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
     	    = ODataConstants::HTTP_METHOD_GET;
     	$_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL]
     	    = ODataConstants::HTTPREQUEST_PROTOCOL_HTTP;
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_HOST]		
+    	$_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)]		
     	    = "localhost:8086";
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_URI]
+    	$_SERVER[ODataConstants::HTTPREQUEST_URI]
     	    = "/NorthWind.svc/Customers('ALFKI')/\$links/Orders";
         //$_SERVER[ODataConstants::HTTPREQUEST_HEADER_QUERY_STRING]
     	//    = '$top=1';
@@ -234,9 +234,9 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
     	    = ODataConstants::HTTP_METHOD_GET;
     	$_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL]
     	    = ODataConstants::HTTPREQUEST_PROTOCOL_HTTP;
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_HOST]		
+    	$_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)]		
     	    = "localhost:8086";
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_URI]
+    	$_SERVER[ODataConstants::HTTPREQUEST_URI]
     	    = "/NorthWind.svc/Orders(10643)/\$links/Customer";
         //$_SERVER[ODataConstants::HTTPREQUEST_HEADER_QUERY_STRING]
     	//    = '$top=1';
@@ -267,9 +267,9 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
     	    = ODataConstants::HTTP_METHOD_GET;
     	$_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL]
     	    = ODataConstants::HTTPREQUEST_PROTOCOL_HTTP;
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_HOST]		
+    	$_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)]		
     	    = "localhost:8086";
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_URI]
+    	$_SERVER[ODataConstants::HTTPREQUEST_URI]
     	    = "/NorthWind.svc/Customers('ALFKI')/Address";
         //$_SERVER[ODataConstants::HTTPREQUEST_HEADER_QUERY_STRING]
     	//    = '$top=1';
@@ -300,9 +300,9 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
     	    = ODataConstants::HTTP_METHOD_GET;
     	$_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL]
     	    = ODataConstants::HTTPREQUEST_PROTOCOL_HTTP;
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_HOST]		
+    	$_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)]		
     	    = "localhost:8086";
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_URI]
+    	$_SERVER[ODataConstants::HTTPREQUEST_URI]
     	    = "/NorthWind.svc/Customers('ALFKI')/Address/Country";
         //$_SERVER[ODataConstants::HTTPREQUEST_HEADER_QUERY_STRING]
     	//    = '$top=1';
@@ -333,9 +333,9 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
     	    = ODataConstants::HTTP_METHOD_GET;
     	$_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL]
     	    = ODataConstants::HTTPREQUEST_PROTOCOL_HTTP;
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_HOST]		
+    	$_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)]		
     	    = "localhost:8086";
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_URI]
+    	$_SERVER[ODataConstants::HTTPREQUEST_URI]
     	    = "/NorthWind.svc/Customers('ALFKI')/OtherAddresses";
         //$_SERVER[ODataConstants::HTTPREQUEST_HEADER_QUERY_STRING]
     	//    = '$top=1';
@@ -366,9 +366,9 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
     	    = ODataConstants::HTTP_METHOD_GET;
     	$_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL]
     	    = ODataConstants::HTTPREQUEST_PROTOCOL_HTTP;
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_HOST]		
+    	$_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)]		
     	    = "localhost:8086";
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_URI]
+    	$_SERVER[ODataConstants::HTTPREQUEST_URI]
     	    = "/NorthWind.svc/Customers('ALFKI')";
         $_SERVER[ODataConstants::HTTPREQUEST_QUERY_STRING]
     	    = '$expand=Orders,$select=CustomerID,Orders/OrderID';
@@ -399,9 +399,9 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
     	    = ODataConstants::HTTP_METHOD_GET;
     	$_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL]
     	    = ODataConstants::HTTPREQUEST_PROTOCOL_HTTP;
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_HOST]		
+    	$_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)]		
     	    = "localhost:8086";
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_URI]
+    	$_SERVER[ODataConstants::HTTPREQUEST_URI]
     	    = "/NorthWind.svc/Customers";
         $_SERVER[ODataConstants::HTTPREQUEST_QUERY_STRING]
     	    = '$orderby=Address/Country';
@@ -432,10 +432,8 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
     	    = ODataConstants::HTTP_METHOD_GET;
     	$_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL]
     	    = ODataConstants::HTTPREQUEST_PROTOCOL_HTTP;
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_HOST]		
-    	    = "localhost:8086";
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_URI]
-    	    = "/NorthWind.svc/Customers";
+    	$_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)] = "localhost:8086";
+    	$_SERVER[ODataConstants::HTTPREQUEST_URI] = "/NorthWind.svc/Customers";
         $_SERVER[ODataConstants::HTTPREQUEST_QUERY_STRING]
     	    = '$inlinecount=allpages';
 
@@ -465,12 +463,9 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
     	    = ODataConstants::HTTP_METHOD_GET;
     	$_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL]
     	    = ODataConstants::HTTPREQUEST_PROTOCOL_HTTP;
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_HOST]		
-    	    = "localhost:8086";
-    	$_SERVER[ODataConstants::HTTPREQUEST_HEADER_URI]
-    	    = "/NorthWind.svc/Customers";
-        $_SERVER[ODataConstants::HTTPREQUEST_QUERY_STRING]
-    	    = '$inlinecount=none';
+    	$_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)] = "localhost:8086";
+    	$_SERVER[ODataConstants::HTTPREQUEST_URI] = "/NorthWind.svc/Customers";
+        $_SERVER[ODataConstants::HTTPREQUEST_QUERY_STRING] = '$inlinecount=none';
 
         $dispatcher = new Dispatcher();
         $dispatcher->dispatch();

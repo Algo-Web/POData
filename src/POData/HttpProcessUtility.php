@@ -695,4 +695,9 @@ class HttpProcessUtility
     {
         return $c == ',' || $c == ' ' || $c == '\t';
     }
+
+
+	public static function headerToServerKey($headerName){
+		return 'HTTP_' . strtoupper(str_replace('-', '_', $headerName));
+	}
 }

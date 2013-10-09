@@ -381,7 +381,7 @@ Class ServiceHost
     {
         return $this->_operationContext
             ->incomingRequest()
-            ->getRequestHeader(ODataConstants::ODATASERVICEVERSION);
+            ->getRequestHeader(ODataConstants::HTTPREQUEST_HEADER_DATA_SERVICE_VERSION);
     }
 
     /**
@@ -393,7 +393,7 @@ Class ServiceHost
     {
         return $this->_operationContext
             ->incomingRequest()
-            ->getRequestHeader(ODataConstants::ODATAMAXSERVICEVERSION);
+            ->getRequestHeader(ODataConstants::HTTPREQUEST_HEADER_MAX_DATA_SERVICE_VERSION);
     }     
 
     
@@ -433,7 +433,7 @@ Class ServiceHost
     {
         return $this->_operationContext
             ->incomingRequest()
-            ->getRequestHeader(ODataConstants::HTTPREQUEST_HEADER_IFMATCH);
+            ->getRequestHeader(ODataConstants::HTTPREQUEST_HEADER_IF_MATCH);
     }
         
     /**
@@ -445,7 +445,7 @@ Class ServiceHost
     {
         return $this->_operationContext
             ->incomingRequest()
-            ->getRequestHeader(ODataConstants::HTTPREQUEST_HEADER_IFNONE);
+            ->getRequestHeader(ODataConstants::HTTPREQUEST_HEADER_IF_NONE);
     }      
 
 
