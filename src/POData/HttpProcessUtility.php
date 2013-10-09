@@ -89,24 +89,48 @@ class MediaType
      *                        sub-types is '*' (accept all sub-type), 2 if both
      *                        type and sub-type matches.
      */
-    public function getMatchingParts($candidate)
+    public function getMatchingRating($candidate)
     {
         $result = -1;
         if (strlen($candidate) > 0) {
+
+            //get the odata parameter (if there is one)
+            $candidateODataValue = null;
+            $candidateParts = explode(';', $candidate);
+            if(count($candidateParts) > 1){
+                //is it safe to assume the mime type is always the first part?
+                $candidate = array_shift($candidateParts); //move off the first type matcher
+                //the rest look like QSPs..kinda so we can do this
+                parse_str(implode("&", $candidateParts), $candidateParts);
+                if(array_key_exists('odata', $candidateParts)){
+                   $candidateODataValue = $candidateParts['odata'];
+                }
+            }
+
+            //ensure that the odata parameter values match
+            if($this->getODataValue() !== $candidateODataValue){
+                return -1;
+            }
+
+
             if ($this->_type == '*') {
                 $result = 0;
             } else {
                 $separatorIdx = strpos($candidate, '/');
                 if ($separatorIdx !== false) {
+                    //if there's a subtype..look further
                     $candidateType = substr($candidate, 0, $separatorIdx);
                     if (strcasecmp($this->_type, $candidateType) == 0) {
+                        //If main type matches
                         if ($this->_subType == '*') {
+                            //and sub type matches with wildcard
                             $result = 1;
                         } else {
-                            $candidateSubType 
-                                = substr($candidate, strlen($candidateType) + 1);
+                            $candidateSubType = substr($candidate, strlen($candidateType) + 1);
                             if (strcasecmp($this->_subType, $candidateSubType) == 0) {
+                                //if sub type matches
                                 $result = 2;
+
                             }
                         }
                     }
@@ -115,6 +139,19 @@ class MediaType
         }
 
         return $result;
+    }
+
+    public function getODataValue()
+    {
+        foreach ($this->_parameters as $parameter) {
+            foreach ($parameter as $key => $value) {
+                if (strcasecmp($key, 'odata') === 0) {
+                    return $value;
+                }
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -192,7 +229,7 @@ class HttpProcessUtility
                 }
 
                 $matchingParts 
-                    = $acceptType->getMatchingParts($inexactContentType);
+                    = $acceptType->getMatchingRating($inexactContentType);
                 if ($matchingParts < 0) {
                     continue;
                 }
@@ -239,7 +276,7 @@ class HttpProcessUtility
      *
      * @throws HttpHeaderFailure
      */
-    public static function selectMimeType($acceptTypesText, $availableTypes)
+    public static function selectMimeType($acceptTypesText, array $availableTypes)
     {
         $selectedContentType = null;
         $selectedMatchingParts = -1;
@@ -253,19 +290,19 @@ class HttpProcessUtility
                 $acceptTypesEmpty = false;
                 for ($i = 0; $i < count($availableTypes); $i++) {
                     $availableType = $availableTypes[$i];
-                    $matchingParts = $acceptType->getMatchingParts($availableType);
-                    if ($matchingParts < 0) {
+                    $matchRating = $acceptType->getMatchingRating($availableType);
+                    if ($matchRating < 0) {
                         continue;
                     }
 
-                    if ($matchingParts > $selectedMatchingParts) {
+                    if ($matchRating > $selectedMatchingParts) {
                         // A more specific type wins.
                         $selectedContentType = $availableType;
-                        $selectedMatchingParts = $matchingParts;
+                        $selectedMatchingParts = $matchRating;
                         $selectedQualityValue = $acceptType->getQualityValue();
                         $selectedPreferenceIndex = $i;
                         $acceptable = $selectedQualityValue != 0;
-                    } else if ($matchingParts == $selectedMatchingParts) {
+                    } else if ($matchRating == $selectedMatchingParts) {
                         // A type with a higher q-value wins.
                         $candidateQualityValue = $acceptType->getQualityValue();
                         if ($candidateQualityValue > $selectedQualityValue) {

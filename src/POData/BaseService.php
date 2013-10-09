@@ -515,12 +515,24 @@ abstract class BaseService implements IRequestHandler, IService
 
         $host = $service->getHost();
 	    $requestAcceptText = $host->getRequestAccept();
+        $requestVersion = $request->getResponseVersion();
 
 	    //if the $format header is present it overrides the accepts header
 	    $format = $host->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_FORMAT);
 	    if(!is_null($format)){
-		    $requestAcceptText = ServiceHost::translateFormatToMime($request->getResponseVersion(), $format);
+
+            //There's a strange edge case..if application/json is supplied and it's V3
+            if($format == MimeTypes::MIME_APPLICATION_JSON && $requestVersion == Version::v3()){
+                //then it's actual minimalmetadata
+                //TODO: should this be done with the header text too?
+                $format = MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META;
+            }
+
+		    $requestAcceptText = ServiceHost::translateFormatToMime($requestVersion, $format);
 	    }
+
+
+
 
 	    //The response format can be dictated by the target resource kind. IE a $value will be different then expected
 	    //getTargetKind doesn't deal with link resources directly and this can change things
@@ -539,8 +551,12 @@ abstract class BaseService implements IRequestHandler, IService
 				    array(
 					    MimeTypes::MIME_APPLICATION_XML,
 					    MimeTypes::MIME_APPLICATION_ATOMSERVICE,
-					    MimeTypes::MIME_APPLICATION_JSON
-				    )
+					    MimeTypes::MIME_APPLICATION_JSON,
+                        MimeTypes::MIME_APPLICATION_JSON_FULL_META,
+                        MimeTypes::MIME_APPLICATION_JSON_NO_META,
+                        MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META,
+
+                    )
 			    );
 
 		    case TargetKind::PRIMITIVE_VALUE():
@@ -576,7 +592,10 @@ abstract class BaseService implements IRequestHandler, IService
 				    array(
 					    MimeTypes::MIME_APPLICATION_XML,
 					    MimeTypes::MIME_TEXTXML,
-					    MimeTypes::MIME_APPLICATION_JSON
+					    MimeTypes::MIME_APPLICATION_JSON,
+                        MimeTypes::MIME_APPLICATION_JSON_FULL_META,
+                        MimeTypes::MIME_APPLICATION_JSON_NO_META,
+                        MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META,
 				    )
 			    );
 
@@ -585,7 +604,10 @@ abstract class BaseService implements IRequestHandler, IService
 				    $requestAcceptText,
 				    array(
 					    MimeTypes::MIME_APPLICATION_ATOM,
-					    MimeTypes::MIME_APPLICATION_JSON
+					    MimeTypes::MIME_APPLICATION_JSON,
+                        MimeTypes::MIME_APPLICATION_JSON_FULL_META,
+                        MimeTypes::MIME_APPLICATION_JSON_NO_META,
+                        MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META,
 				    )
 			    );
 

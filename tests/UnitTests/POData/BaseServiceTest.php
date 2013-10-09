@@ -38,10 +38,6 @@ class BaseServiceTest extends BaseUnitTestCase {
 	/** @var  ServiceHost */
 	protected $mockHost;
 
-	public function setUp(){
-		parent::setUp();
-
-	}
 
 
 	public function testRegisterWritersV1()
