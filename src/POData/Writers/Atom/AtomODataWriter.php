@@ -70,7 +70,8 @@ class AtomODataWriter implements IODataWriter
 			return in_array(MimeTypes::MIME_APPLICATION_XML, $parts);
 		}
 
-		return in_array(MimeTypes::MIME_APPLICATION_ATOMSERVICE, $parts);
+		//first part is for service documents, second part is for Resources
+		return in_array(MimeTypes::MIME_APPLICATION_ATOMSERVICE, $parts) || in_array(MimeTypes::MIME_APPLICATION_ATOM, $parts);
 	}
 
 	/**

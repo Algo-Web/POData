@@ -1205,8 +1205,8 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 			array(202, Version::V3(), MimeTypes::MIME_APPLICATION_XML, false),
 
 			array(300, Version::V1(), MimeTypes::MIME_APPLICATION_ATOM, false),
-			array(301, Version::V2(), MimeTypes::MIME_APPLICATION_ATOM, false),
-			array(302, Version::V3(), MimeTypes::MIME_APPLICATION_ATOM, false),
+			array(301, Version::V2(), MimeTypes::MIME_APPLICATION_ATOM, true),
+			array(302, Version::V3(), MimeTypes::MIME_APPLICATION_ATOM, true),
 		);
 	}
 }

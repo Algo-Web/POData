@@ -58,7 +58,7 @@ class BaseServiceTest extends BaseUnitTestCase {
 		$fakeConfig->setMaxDataServiceVersion(ProtocolVersion::V1());
 		Phockito::when($service->getConfiguration())->return($fakeConfig);
 
-		//fake the serice url
+		//fake the service url
 		$fakeUrl = "http://host/service.svc/Collection";
 		Phockito::when($this->mockHost->getAbsoluteServiceUri())->return(new Url($fakeUrl));
 
@@ -88,7 +88,7 @@ class BaseServiceTest extends BaseUnitTestCase {
 		$fakeConfig->setMaxDataServiceVersion(ProtocolVersion::V2());
 		Phockito::when($service->getConfiguration())->return($fakeConfig);
 
-		//fake the serice url
+		//fake the service url
 		$fakeUrl = "http://host/service.svc/Collection";
 		Phockito::when($this->mockHost->getAbsoluteServiceUri())->return(new Url($fakeUrl));
 
@@ -119,7 +119,7 @@ class BaseServiceTest extends BaseUnitTestCase {
 		$fakeConfig->setMaxDataServiceVersion(ProtocolVersion::V3());
 		Phockito::when($service->getConfiguration())->return($fakeConfig);
 
-		//fake the serice url
+		//fake the service url
 		$fakeUrl = "http://host/service.svc/Collection";
 		Phockito::when($this->mockHost->getAbsoluteServiceUri())->return(new Url($fakeUrl));
 
@@ -130,8 +130,8 @@ class BaseServiceTest extends BaseUnitTestCase {
 		//only 2 writers for v1
 		Phockito::verify($this->mockRegistry, 6)->register(anything());
 		Phockito::verify($this->mockRegistry, 1)->register(anInstanceOf('\POData\Writers\Atom\AtomODataWriter'));
-		Phockito::verify($this->mockRegistry, 5)->register(anInstanceOf('\POData\Writers\Json\JsonODataV1Writer')); //since v2 derives from this,,it's 2 times
-		Phockito::verify($this->mockRegistry, 4)->register(anInstanceOf('\POData\Writers\Json\JsonODataV2Writer'));
+		Phockito::verify($this->mockRegistry, 5)->register(anInstanceOf('\POData\Writers\Json\JsonODataV1Writer')); //since v2 & light derives from this,,it's 1+1+3 times
+		Phockito::verify($this->mockRegistry, 4)->register(anInstanceOf('\POData\Writers\Json\JsonODataV2Writer')); //since light derives from this it's 1+3 times
 		Phockito::verify($this->mockRegistry, 3)->register(anInstanceOf('\POData\Writers\Json\JsonLightODataWriter'));
 
 
