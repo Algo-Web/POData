@@ -63,15 +63,10 @@ class AtomODataWriter implements IODataWriter
 	{
 
 		$parts = explode(";", $contentType);
-		if($responseVersion == Version::v1())
-		{
 
-			//I believe this is only valid for 1.0 services
-			return in_array(MimeTypes::MIME_APPLICATION_XML, $parts);
-		}
-
-		//first part is for service documents, second part is for Resources
-		return in_array(MimeTypes::MIME_APPLICATION_ATOMSERVICE, $parts) || in_array(MimeTypes::MIME_APPLICATION_ATOM, $parts);
+		//first 2 parts are for service documents, second part is for Resources
+		//TODO: i'm not sold about this first part not being constrained to v1 (or maybe v2)..but it's how WS DS works. See #94
+		return in_array(MimeTypes::MIME_APPLICATION_XML, $parts) || in_array(MimeTypes::MIME_APPLICATION_ATOMSERVICE, $parts) || in_array(MimeTypes::MIME_APPLICATION_ATOM, $parts);
 	}
 
 	/**
