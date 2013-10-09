@@ -1196,15 +1196,16 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 
 
 		return array(
-			array(100, Version::v1(), MimeTypes::MIME_APPLICATION_ATOMSERVICE, false),
+			array(100, Version::v1(), MimeTypes::MIME_APPLICATION_ATOMSERVICE, true), //see #94
 			array(101, Version::v2(), MimeTypes::MIME_APPLICATION_ATOMSERVICE, true),
 			array(102, Version::v3(), MimeTypes::MIME_APPLICATION_ATOMSERVICE, true),
 
 			array(200, Version::v1(), MimeTypes::MIME_APPLICATION_XML, true),
-			array(201, Version::v2(), MimeTypes::MIME_APPLICATION_XML, false),
-			array(202, Version::v3(), MimeTypes::MIME_APPLICATION_XML, false),
+			//For these two see #94 it may nto be right
+			array(201, Version::v2(), MimeTypes::MIME_APPLICATION_XML, true),
+			array(202, Version::v3(), MimeTypes::MIME_APPLICATION_XML, true),
 
-			array(300, Version::v1(), MimeTypes::MIME_APPLICATION_ATOM, false),
+			array(300, Version::v1(), MimeTypes::MIME_APPLICATION_ATOM, true), //see #94
 			array(301, Version::v2(), MimeTypes::MIME_APPLICATION_ATOM, true),
 			array(302, Version::v3(), MimeTypes::MIME_APPLICATION_ATOM, true),
 		);

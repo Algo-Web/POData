@@ -555,6 +555,7 @@ abstract class BaseService implements IRequestHandler, IService
                         MimeTypes::MIME_APPLICATION_JSON_FULL_META,
                         MimeTypes::MIME_APPLICATION_JSON_NO_META,
                         MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META,
+					    MimeTypes::MIME_APPLICATION_JSON_VERBOSE,
 
                     )
 			    );
@@ -596,6 +597,7 @@ abstract class BaseService implements IRequestHandler, IService
                         MimeTypes::MIME_APPLICATION_JSON_FULL_META,
                         MimeTypes::MIME_APPLICATION_JSON_NO_META,
                         MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META,
+					    MimeTypes::MIME_APPLICATION_JSON_VERBOSE,
 				    )
 			    );
 
@@ -608,6 +610,7 @@ abstract class BaseService implements IRequestHandler, IService
                         MimeTypes::MIME_APPLICATION_JSON_FULL_META,
                         MimeTypes::MIME_APPLICATION_JSON_NO_META,
                         MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META,
+					    MimeTypes::MIME_APPLICATION_JSON_VERBOSE,
 				    )
 			    );
 

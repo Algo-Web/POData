@@ -94,8 +94,12 @@ class BaseServiceGetResponseContentTest extends BaseUnitTestCase {
             array(115, TargetKind::METADATA(), $v2,  MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META, null,                           null),
             array(116, TargetKind::METADATA(), $v3,  MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META, null,                           null),
 
+			array(124, TargetKind::METADATA(), $v1,  MimeTypes::MIME_APPLICATION_JSON_VERBOSE,      null,                           null),
+			array(125, TargetKind::METADATA(), $v2,  MimeTypes::MIME_APPLICATION_JSON_VERBOSE,      null,                           null),
+			array(126, TargetKind::METADATA(), $v3,  MimeTypes::MIME_APPLICATION_JSON_VERBOSE,      null,                           null),
 
-            //         Target                           Ver   header                                         $format                           expected
+
+			//         Target                           Ver   header                                         $format                           expected
 			array(201, TargetKind::SERVICE_DIRECTORY(), $v1,  null,                                          null,                             MimeTypes::MIME_APPLICATION_XML),
 			array(202, TargetKind::SERVICE_DIRECTORY(), $v1,  MimeTypes::MIME_APPLICATION_ATOMSERVICE,       null,                             MimeTypes::MIME_APPLICATION_ATOMSERVICE),
 			array(203, TargetKind::SERVICE_DIRECTORY(), $v1,  MimeTypes::MIME_APPLICATION_JSON,              null,                             MimeTypes::MIME_APPLICATION_JSON),
@@ -117,7 +121,12 @@ class BaseServiceGetResponseContentTest extends BaseUnitTestCase {
             array(215, TargetKind::SERVICE_DIRECTORY(), $v2,  MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META, null,                             MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META),
             array(216, TargetKind::SERVICE_DIRECTORY(), $v3,  MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META, null,                             MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META),
 
-            //TODO: this is more complicated, so we'll test them separately
+			array(224, TargetKind::SERVICE_DIRECTORY(), $v1,  MimeTypes::MIME_APPLICATION_JSON_VERBOSE,      null,                             MimeTypes::MIME_APPLICATION_JSON_VERBOSE),
+			array(225, TargetKind::SERVICE_DIRECTORY(), $v2,  MimeTypes::MIME_APPLICATION_JSON_VERBOSE,      null,                             MimeTypes::MIME_APPLICATION_JSON_VERBOSE),
+			array(226, TargetKind::SERVICE_DIRECTORY(), $v3,  MimeTypes::MIME_APPLICATION_JSON_VERBOSE,      null,                             MimeTypes::MIME_APPLICATION_JSON_VERBOSE),
+
+
+			//TODO: this is more complicated, so we'll test them separately
 
 			//       Target                           Ver   header                                     $format                          expected
 			//array(300, TargetKind::PRIMITIVE_VALUE(), $v1,  MimeTypes::MIME_APPLICATION_ATOM,        MimeTypes::MIME_APPLICATION_JSON, MimeTypes::MIME_APPLICATION_JSON),
@@ -148,8 +157,12 @@ class BaseServiceGetResponseContentTest extends BaseUnitTestCase {
             array(425, TargetKind::PRIMITIVE(), $v2,  MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META, null,                             MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META),
             array(426, TargetKind::PRIMITIVE(), $v3,  MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META, null,                             MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META),
 
+			array(434, TargetKind::PRIMITIVE(), $v1,  MimeTypes::MIME_APPLICATION_JSON_VERBOSE,      null,                             MimeTypes::MIME_APPLICATION_JSON_VERBOSE),
+			array(435, TargetKind::PRIMITIVE(), $v2,  MimeTypes::MIME_APPLICATION_JSON_VERBOSE,      null,                             MimeTypes::MIME_APPLICATION_JSON_VERBOSE),
+			array(436, TargetKind::PRIMITIVE(), $v3,  MimeTypes::MIME_APPLICATION_JSON_VERBOSE,      null,                             MimeTypes::MIME_APPLICATION_JSON_VERBOSE),
 
-            //          Target                       Ver   header                                         $format                          expected
+
+			//          Target                       Ver   header                                         $format                          expected
 			array(500, TargetKind::COMPLEX_OBJECT(), $v1,  MimeTypes::MIME_APPLICATION_XML,               null,                            MimeTypes::MIME_APPLICATION_XML),
 			array(501, TargetKind::COMPLEX_OBJECT(), $v1,  MimeTypes::MIME_TEXTXML,                       null,                            MimeTypes::MIME_TEXTXML),
 			array(502, TargetKind::COMPLEX_OBJECT(), $v1,  MimeTypes::MIME_APPLICATION_JSON,              null,                            MimeTypes::MIME_APPLICATION_JSON),
@@ -175,8 +188,11 @@ class BaseServiceGetResponseContentTest extends BaseUnitTestCase {
             array(525, TargetKind::COMPLEX_OBJECT(), $v2,  MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META, null,                             MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META),
             array(526, TargetKind::COMPLEX_OBJECT(), $v3,  MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META, null,                             MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META),
 
+			array(534, TargetKind::COMPLEX_OBJECT(), $v1,  MimeTypes::MIME_APPLICATION_JSON_VERBOSE,      null,                             MimeTypes::MIME_APPLICATION_JSON_VERBOSE),
+			array(535, TargetKind::COMPLEX_OBJECT(), $v2,  MimeTypes::MIME_APPLICATION_JSON_VERBOSE,      null,                             MimeTypes::MIME_APPLICATION_JSON_VERBOSE),
+			array(536, TargetKind::COMPLEX_OBJECT(), $v3,  MimeTypes::MIME_APPLICATION_JSON_VERBOSE,      null,                             MimeTypes::MIME_APPLICATION_JSON_VERBOSE),
 
-            //          Target            Ver   header                                         $format                          expected
+			//          Target            Ver   header                                         $format                          expected
 			array(600, TargetKind::BAG(), $v1,  MimeTypes::MIME_APPLICATION_XML,               null,                            MimeTypes::MIME_APPLICATION_XML),
 			array(601, TargetKind::BAG(), $v1,  MimeTypes::MIME_TEXTXML,                       null,                            MimeTypes::MIME_TEXTXML),
 			array(602, TargetKind::BAG(), $v1,  MimeTypes::MIME_APPLICATION_JSON,              null,                            MimeTypes::MIME_APPLICATION_JSON),
@@ -202,8 +218,11 @@ class BaseServiceGetResponseContentTest extends BaseUnitTestCase {
             array(625, TargetKind::BAG(), $v2,  MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META, null,                             MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META),
             array(626, TargetKind::BAG(), $v3,  MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META, null,                             MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META),
 
+			array(634, TargetKind::BAG(), $v1,  MimeTypes::MIME_APPLICATION_JSON_VERBOSE,      null,                             MimeTypes::MIME_APPLICATION_JSON_VERBOSE),
+			array(635, TargetKind::BAG(), $v2,  MimeTypes::MIME_APPLICATION_JSON_VERBOSE,      null,                             MimeTypes::MIME_APPLICATION_JSON_VERBOSE),
+			array(636, TargetKind::BAG(), $v3,  MimeTypes::MIME_APPLICATION_JSON_VERBOSE,      null,                             MimeTypes::MIME_APPLICATION_JSON_VERBOSE),
 
-            //          Target             Ver   header                                         $format                          expected
+			//          Target             Ver   header                                         $format                          expected
 			array(700, TargetKind::LINK(), $v1,  MimeTypes::MIME_APPLICATION_XML,               null,                            MimeTypes::MIME_APPLICATION_XML),
 			array(701, TargetKind::LINK(), $v1,  MimeTypes::MIME_TEXTXML,                       null,                            MimeTypes::MIME_TEXTXML),
 			array(702, TargetKind::LINK(), $v1,  MimeTypes::MIME_APPLICATION_JSON,              null,                            MimeTypes::MIME_APPLICATION_JSON),
@@ -229,8 +248,11 @@ class BaseServiceGetResponseContentTest extends BaseUnitTestCase {
             array(725, TargetKind::LINK(), $v2,  MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META, null,                             MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META),
             array(726, TargetKind::LINK(), $v3,  MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META, null,                             MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META),
 
+			array(734, TargetKind::LINK(), $v1,  MimeTypes::MIME_APPLICATION_JSON_VERBOSE,      null,                             MimeTypes::MIME_APPLICATION_JSON_VERBOSE),
+			array(735, TargetKind::LINK(), $v2,  MimeTypes::MIME_APPLICATION_JSON_VERBOSE,      null,                             MimeTypes::MIME_APPLICATION_JSON_VERBOSE),
+			array(736, TargetKind::LINK(), $v3,  MimeTypes::MIME_APPLICATION_JSON_VERBOSE,      null,                             MimeTypes::MIME_APPLICATION_JSON_VERBOSE),
 
-            //          Target                 Ver   header                                         $format                          expected
+			//          Target                 Ver   header                                         $format                          expected
 			array(800, TargetKind::RESOURCE(), $v1,  MimeTypes::MIME_APPLICATION_ATOM,              null,                            MimeTypes::MIME_APPLICATION_ATOM),
 			array(802, TargetKind::RESOURCE(), $v1,  MimeTypes::MIME_APPLICATION_JSON,              null,                            MimeTypes::MIME_APPLICATION_JSON),
 
@@ -255,7 +277,11 @@ class BaseServiceGetResponseContentTest extends BaseUnitTestCase {
             array(825, TargetKind::RESOURCE(), $v2,  MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META, null,                             MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META),
             array(826, TargetKind::RESOURCE(), $v3,  MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META, null,                             MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META),
 
-            //Note: we don't test media resources because they execute stuff and it's more complicated
+			array(834, TargetKind::RESOURCE(), $v1,  MimeTypes::MIME_APPLICATION_JSON_VERBOSE,      null,                             MimeTypes::MIME_APPLICATION_JSON_VERBOSE),
+			array(835, TargetKind::RESOURCE(), $v2,  MimeTypes::MIME_APPLICATION_JSON_VERBOSE,      null,                             MimeTypes::MIME_APPLICATION_JSON_VERBOSE),
+			array(836, TargetKind::RESOURCE(), $v3,  MimeTypes::MIME_APPLICATION_JSON_VERBOSE,      null,                             MimeTypes::MIME_APPLICATION_JSON_VERBOSE),
+
+			//Note: we don't test media resources because they execute stuff and it's more complicated
 		);
 	}
 
