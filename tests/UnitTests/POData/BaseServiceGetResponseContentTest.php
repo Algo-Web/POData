@@ -69,9 +69,9 @@ class BaseServiceGetResponseContentTest extends BaseUnitTestCase {
 
 	public function provider()
 	{
-		$v1 = new Version(1,0);
-		$v2 = new Version(2,0);
-		$v3 = new Version(3,0);
+		$v1 = Version::v1();
+		$v2 = Version::v2();
+		$v3 = Version::v3();
 		return array(
 			//    Target                  Ver   header                              $format                         expected
 			array(101, TargetKind::METADATA(), $v1,  null,                               null,                           MimeTypes::MIME_APPLICATION_XML),

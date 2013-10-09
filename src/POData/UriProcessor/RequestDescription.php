@@ -233,8 +233,8 @@ class RequestDescription
 
 	    //Per OData 1 & 2 spec we must return the smallest size
 	    //We start at 1.0 and move it up as features are requested
-        $this->requiredMinResponseVersion = new Version(1, 0);
-        $this->requiredMinRequestVersion = new Version(1, 0);
+        $this->requiredMinResponseVersion = clone Version::v1();
+        $this->requiredMinRequestVersion = clone Version::v1();
 
 
 	    //see http://www.odata.org/documentation/odata-v2-documentation/overview/#ProtocolVersioning
@@ -245,7 +245,7 @@ class RequestDescription
 	    $this->requestMaxVersion = is_null($maxRequestVersion) ? $this->requestVersion : self::parseVersionHeader($maxRequestVersion, ODataConstants::ODATAMAXVERSIONHEADER);
 
         //if it's OData v3..things change a bit
-        if($this->maxServiceVersion == new Version(3,0)){
+        if($this->maxServiceVersion == Version::v3()){
             if(is_null($maxRequestVersion))
             {
                 //if max request version isn't specified we use the service max version instead of the request version

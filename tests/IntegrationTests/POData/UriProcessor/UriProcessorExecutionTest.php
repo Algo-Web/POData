@@ -11,11 +11,9 @@ use UnitTests\POData\Facets\NorthWind2\DataServiceHost1;
 
 
 use POData\Common\Version;
-class TestUriProcessorExecution extends PHPUnit_Framework_TestCase
+class UriProcessorExecutionTest extends PHPUnit_Framework_TestCase
 {
-    protected function setUp()
-    {
-    }
+
 
     /**
      * test uri processor executor with combination of all querystring options.

@@ -63,7 +63,7 @@ class AtomODataWriter implements IODataWriter
 	{
 
 		$parts = explode(";", $contentType);
-		if($responseVersion == Version::V1())
+		if($responseVersion == Version::v1())
 		{
 
 			//I believe this is only valid for 1.0 services

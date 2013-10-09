@@ -67,7 +67,7 @@ class JsonLightODataWriter extends JsonODataV2Writer
 	 */
 	public function canHandle(Version $responseVersion, $contentType)
 	{
-		if($responseVersion != Version::V3()){
+		if($responseVersion != Version::v3()){
 			return false;
 		}
 

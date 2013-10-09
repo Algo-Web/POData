@@ -53,7 +53,7 @@ class JsonODataV1Writer implements IODataWriter
 	 */
 	public function canHandle(Version $responseVersion, $contentType)
 	{
-		if($responseVersion != Version::V1()){
+		if($responseVersion != Version::v1()){
 			return false;
 		}
 

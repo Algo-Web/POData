@@ -649,14 +649,14 @@ Class ServiceHost
 		        break;
 
             case ODataConstants::FORMAT_VERBOSE_JSON:
-                if($responseVersion == new Version(3,0)){
+                if($responseVersion == Version::v3()){
 	                //only translatable in 3.0 systems
 	                $format = MimeTypes::MIME_APPLICATION_JSON_VERBOSE;
                 }
                 break;
 
             case ODataConstants::FORMAT_JSON:
-                if($responseVersion == new Version(3,0)){
+                if($responseVersion == Version::v3()){
                     $format = MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META;
                 } else{
 	                $format = MimeTypes::MIME_APPLICATION_JSON;

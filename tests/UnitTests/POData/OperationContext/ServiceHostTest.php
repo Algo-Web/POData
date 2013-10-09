@@ -15,7 +15,7 @@ class ServiceHostTest extends BaseUnitTestCase {
 	//TODO: should i use the data generator instead of all these tests?
     public function testTranslateFormatToMimeVersion10FormatAtom()
     {
-		$actual = ServiceHost::translateFormatToMime(new Version(1,0), ODataConstants::FORMAT_ATOM);
+		$actual = ServiceHost::translateFormatToMime(Version::v1(), ODataConstants::FORMAT_ATOM);
 
 	    $expected = "application/atom+xml;q=1.0";
 
@@ -25,7 +25,7 @@ class ServiceHostTest extends BaseUnitTestCase {
 
     public function testTranslateFormatToMimeVersion10FormatJson()
     {
-        $actual = ServiceHost::translateFormatToMime(new Version(1,0), ODataConstants::FORMAT_JSON);
+        $actual = ServiceHost::translateFormatToMime(Version::v1(), ODataConstants::FORMAT_JSON);
 
         $expected = "application/json;q=1.0";
 
@@ -34,7 +34,7 @@ class ServiceHostTest extends BaseUnitTestCase {
 
 	public function testTranslateFormatToMimeVersion10FormatXml()
 	{
-		$actual = ServiceHost::translateFormatToMime(new Version(1,0), ODataConstants::FORMAT_XML);
+		$actual = ServiceHost::translateFormatToMime(Version::v1(), ODataConstants::FORMAT_XML);
 
 		$expected = "application/xml;q=1.0";
 
@@ -44,7 +44,7 @@ class ServiceHostTest extends BaseUnitTestCase {
 	public function testTranslateFormatToMimeVersion10FormatRandom()
 	{
 		$format = uniqid("xxx");
-		$actual = ServiceHost::translateFormatToMime(new Version(1,0), $format);
+		$actual = ServiceHost::translateFormatToMime(Version::v1(), $format);
 
 		$expected = "$format;q=1.0";
 
@@ -53,7 +53,7 @@ class ServiceHostTest extends BaseUnitTestCase {
 
     public function testTranslateFormatToMimeVersion20FormatAtom()
     {
-        $actual = ServiceHost::translateFormatToMime(new Version(2,0), ODataConstants::FORMAT_ATOM);
+        $actual = ServiceHost::translateFormatToMime(Version::v2(), ODataConstants::FORMAT_ATOM);
 
         $expected = "application/atom+xml;q=1.0";
 
@@ -65,7 +65,7 @@ class ServiceHostTest extends BaseUnitTestCase {
 
     public function testTranslateFormatToMimeVersion20FormatJson()
     {
-        $actual = ServiceHost::translateFormatToMime(new Version(2,0), ODataConstants::FORMAT_JSON);
+        $actual = ServiceHost::translateFormatToMime(Version::v2(), ODataConstants::FORMAT_JSON);
 
         $expected = "application/json;q=1.0";
 
@@ -74,7 +74,7 @@ class ServiceHostTest extends BaseUnitTestCase {
 
 	public function testTranslateFormatToMimeVersion20FormatXml()
 	{
-		$actual = ServiceHost::translateFormatToMime(new Version(2,0), ODataConstants::FORMAT_XML);
+		$actual = ServiceHost::translateFormatToMime(Version::v2(), ODataConstants::FORMAT_XML);
 
 		$expected = "application/xml;q=1.0";
 
@@ -84,7 +84,7 @@ class ServiceHostTest extends BaseUnitTestCase {
 	public function testTranslateFormatToMimeVersion20FormatRandom()
 	{
 		$format = uniqid("xxx");
-		$actual = ServiceHost::translateFormatToMime(new Version(2,0), $format);
+		$actual = ServiceHost::translateFormatToMime(Version::v2(), $format);
 
 		$expected = "$format;q=1.0";
 
@@ -93,7 +93,7 @@ class ServiceHostTest extends BaseUnitTestCase {
 
     public function testTranslateFormatToMimeVersion30FormatAtom()
     {
-        $actual = ServiceHost::translateFormatToMime(new Version(3,0), ODataConstants::FORMAT_ATOM);
+        $actual = ServiceHost::translateFormatToMime(Version::v3(), ODataConstants::FORMAT_ATOM);
 
         $expected = "application/atom+xml;q=1.0";
 
@@ -103,7 +103,7 @@ class ServiceHostTest extends BaseUnitTestCase {
 
     public function testTranslateFormatToMimeVersion30FormatJson()
     {
-        $actual = ServiceHost::translateFormatToMime(new Version(3,0), ODataConstants::FORMAT_JSON);
+        $actual = ServiceHost::translateFormatToMime(Version::v3(), ODataConstants::FORMAT_JSON);
 
         $expected = "application/json;odata=minimalmetadata;q=1.0";
 
@@ -112,7 +112,7 @@ class ServiceHostTest extends BaseUnitTestCase {
 
 	public function testTranslateFormatToMimeVersion30FormatXml()
 	{
-		$actual = ServiceHost::translateFormatToMime(new Version(3,0), ODataConstants::FORMAT_XML);
+		$actual = ServiceHost::translateFormatToMime(Version::v3(), ODataConstants::FORMAT_XML);
 
 		$expected = "application/xml;q=1.0";
 
@@ -121,7 +121,7 @@ class ServiceHostTest extends BaseUnitTestCase {
 
     public function testTranslateFormatToMimeVersion30FormatVerboseJson()
     {
-        $actual = ServiceHost::translateFormatToMime(new Version(3,0), ODataConstants::FORMAT_VERBOSE_JSON);
+        $actual = ServiceHost::translateFormatToMime(Version::v3(), ODataConstants::FORMAT_VERBOSE_JSON);
 
         $expected = "application/json;odata=verbose;q=1.0";
 
@@ -131,7 +131,7 @@ class ServiceHostTest extends BaseUnitTestCase {
 	public function testTranslateFormatToMimeVersion30FormatRandom()
 	{
 		$format = uniqid("xxx");
-		$actual = ServiceHost::translateFormatToMime(new Version(3,0), $format);
+		$actual = ServiceHost::translateFormatToMime(Version::v3(), $format);
 
 		$expected = "$format;q=1.0";
 

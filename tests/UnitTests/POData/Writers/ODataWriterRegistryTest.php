@@ -24,7 +24,7 @@ class ODataWriterRegistryTest extends  BaseUnitTestCase {
 	{
 		$registry = new ODataWriterRegistry();
 		//the registry should start empty, so there should be no matches
-		$this->assertNull($registry->getWriter(Version::V1(), MimeTypes::MIME_APPLICATION_JSON));
+		$this->assertNull($registry->getWriter(Version::v1(), MimeTypes::MIME_APPLICATION_JSON));
 	}
 
 
@@ -35,16 +35,16 @@ class ODataWriterRegistryTest extends  BaseUnitTestCase {
 		$registry->register($this->mockWriter1);
 		$registry->register($this->mockWriter2);
 
-		Phockito::when($this->mockWriter2->canHandle(Version::V2(), MimeTypes::MIME_APPLICATION_ATOM))
+		Phockito::when($this->mockWriter2->canHandle(Version::v2(), MimeTypes::MIME_APPLICATION_ATOM))
 			->return(true);
 
-		$this->assertEquals($this->mockWriter2, $registry->getWriter(Version::V2(), MimeTypes::MIME_APPLICATION_ATOM));
+		$this->assertEquals($this->mockWriter2, $registry->getWriter(Version::v2(), MimeTypes::MIME_APPLICATION_ATOM));
 
-		$this->assertNull($registry->getWriter(Version::V1(), MimeTypes::MIME_APPLICATION_ATOM));
+		$this->assertNull($registry->getWriter(Version::v1(), MimeTypes::MIME_APPLICATION_ATOM));
 
 		//now clear it, should be no matches
 		$registry->reset();
-		$this->assertNull( $registry->getWriter(Version::V2(), MimeTypes::MIME_APPLICATION_ATOM));
+		$this->assertNull( $registry->getWriter(Version::v2(), MimeTypes::MIME_APPLICATION_ATOM));
 	}
 
 }
