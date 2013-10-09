@@ -18,9 +18,9 @@ class ServiceHostTestFake extends ServiceHost
     {
         $this->_hostInfo = $hostInfo;
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_SERVER[ODataConstants::HTTPREQUEST_HEADER_PROTOCOL] = $this->_hostInfo['AbsoluteRequestUri']->getScheme();
+        $_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL] = $this->_hostInfo['AbsoluteRequestUri']->getScheme();
         $_SERVER[ODataConstants::HTTPREQUEST_HEADER_HOST] = $this->_hostInfo['AbsoluteRequestUri']->getHost() . ':' .  $this->_hostInfo['AbsoluteRequestUri']->getPort();
-        $_SERVER[ODataConstants::HTTPREQUEST_HEADER_URI] = $this->_hostInfo['AbsoluteRequestUri']->getPath();
+        $_SERVER[ODataConstants::HTTPREQUEST_URI] = $this->_hostInfo['AbsoluteRequestUri']->getPath();
 
         if (array_key_exists('DataServiceVersion', $this->_hostInfo)) {
             $_SERVER[ODataConstants::ODATASERVICEVERSION] 
@@ -44,7 +44,7 @@ class ServiceHostTestFake extends ServiceHost
         }
 
         if (array_key_exists('QueryString', $this->_hostInfo)) {
-            $_SERVER[ODataConstants::HTTPREQUEST_HEADER_QUERY_STRING] = $this->_hostInfo['QueryString'];
+            $_SERVER[ODataConstants::HTTPREQUEST_QUERY_STRING] = $this->_hostInfo['QueryString'];
         }
         //print_r($_SERVER); 
         parent::__construct();

@@ -136,14 +136,14 @@ class IncomingRequest implements IHTTPRequest
     public function getRawUrl()
     {
         if (is_null($this->_rawUrl)) {
-            if (!preg_match('/^HTTTPS/', $_SERVER[ODataConstants::HTTPREQUEST_HEADER_PROTOCOL])) {
-                $this->_rawUrl = ODataConstants::HTTPREQUEST_HEADER_PROTOCOL_HTTP;
+            if (!preg_match('/^HTTTPS/', $_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL])) {
+                $this->_rawUrl = ODataConstants::HTTPREQUEST_PROTOCOL_HTTP;
             } else {
-                $this->_rawUrl = ODataConstants::HTTPREQUEST_HEADER_PROTOCOL_HTTPS;
+                $this->_rawUrl = ODataConstants::HTTPREQUEST_PROTOCOL_HTTPS;
             }
 
             $this->_rawUrl .= "://".$_SERVER[ODataConstants::HTTPREQUEST_HEADER_HOST];
-            $this->_rawUrl .= utf8_decode(urldecode($_SERVER[ODataConstants::HTTPREQUEST_HEADER_URI]));
+            $this->_rawUrl .= utf8_decode(urldecode($_SERVER[ODataConstants::HTTPREQUEST_URI]));
         }
 
         return $this->_rawUrl;
@@ -174,8 +174,8 @@ class IncomingRequest implements IHTTPRequest
      */
     private function getQueryString()
     {
-        if (array_key_exists('QUERY_STRING', $_SERVER)) {
-            return utf8_decode(trim($_SERVER['QUERY_STRING']));
+        if (array_key_exists(ODataConstants::HTTPREQUEST_QUERY_STRING, $_SERVER)) {
+            return utf8_decode(trim($_SERVER[ODataConstants::HTTPREQUEST_QUERY_STRING]));
         } else {
             return "";
         }
