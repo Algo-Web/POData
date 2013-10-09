@@ -8,19 +8,22 @@ namespace POData\Common;
  */
 class Version
 {
+
+
+
     /**
      * The major component of the version
      * 
      * @var int
      */
-    private $_major;
+    private $major;
 
     /**
      * The minor component of the version
      * 
      * @var int
      */
-    private $_minor;
+    private $minor;
 
     /**
      * Constructs a new instance of Version class
@@ -30,8 +33,8 @@ class Version
      */
     public function __construct($major, $minor) 
     {
-        $this->_major = $major;
-        $this->_minor = $minor;
+        $this->major = $major;
+        $this->minor = $minor;
     }
 
     /**
@@ -41,7 +44,7 @@ class Version
      */
     public function getMajor() 
     {
-        return $this->_major;
+        return $this->major;
     }
 
     /**
@@ -51,7 +54,7 @@ class Version
      */
     public function getMinor() 
     {
-        return $this->_minor;
+        return $this->minor;
     }
 
     /**
@@ -64,12 +67,12 @@ class Version
      */
     public function raiseVersion($major, $minor) 
     {
-        if ($major > $this->_major) {
-            $this->_major = $major;
-            $this->_minor = $minor;
+        if ($major > $this->major) {
+            $this->major = $major;
+            $this->minor = $minor;
 	        return true;
-        } else if ($major == $this->_major && $minor > $this->_minor) {
-            $this->_minor = $minor;
+        } else if ($major == $this->major && $minor > $this->minor) {
+            $this->minor = $minor;
 	        return true;
         }
 
@@ -87,16 +90,16 @@ class Version
      */
     public function compare(Version $targetVersion)
     {
-        if ($this->_major > $targetVersion->_major) {
+        if ($this->major > $targetVersion->major) {
             return 1;
         }
 
-        if ($this->_major == $targetVersion->_major) {
-            if ($this->_minor == $targetVersion->_minor) {
+        if ($this->major == $targetVersion->major) {
+            if ($this->minor == $targetVersion->minor) {
                 return 0;
             }
 
-            if ($this->_minor > $targetVersion->_minor) {
+            if ($this->minor > $targetVersion->minor) {
                 return 1;
             }
         }
@@ -111,6 +114,40 @@ class Version
      */
     public function toString()
     {
-        return $this->_major . '.' . $this->_minor;
+        return $this->major . '.' . $this->minor;
     }
+
+	//Is there a better way to do static const of complex type?
+
+	/** @var Version[] */
+	private static $fixedVersion;
+
+	private static function fillVersions(){
+		if(is_null(self::$fixedVersion)){
+			self::$fixedVersion = array(
+				1 => new Version(1,0),
+				2 => new Version(2,0),
+				3 => new Version(3,0),
+			);
+		}
+	}
+
+	public static function V1()
+	{
+		self::fillVersions();
+		return self::$fixedVersion[1];
+	}
+
+
+	public static function V2(){
+		self::fillVersions();
+		return self::$fixedVersion[2];
+	}
+
+
+	public static function V3(){
+		self::fillVersions();
+		return self::$fixedVersion[3];
+	}
+
 }

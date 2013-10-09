@@ -14,6 +14,7 @@ use POData\ObjectModel\ODataMediaLink;
 use POData\Writers\Json\JsonWriter;
 use POData\Common\Version;
 use POData\Common\ODataConstants;
+use POData\Common\MimeTypes;
 use POData\Common\Messages;
 use POData\Common\ODataException;
 use POData\Common\InvalidOperationException;
@@ -56,6 +57,27 @@ class JsonLightODataWriter extends JsonODataV2Writer
 		$this->rowCountName = ODataConstants::JSON_LIGHT_ROWCOUNT_STRING;
 		$this->metadataLevel = $metadataLevel;
 	}
+
+
+	/**
+	 * Determines if the given writer is capable of writing the response or not
+	 * @param Version $responseVersion the OData version of the response
+	 * @param string $contentType the Content Type of the response
+	 * @return boolean true if the writer can handle the response, false otherwise
+	 */
+	public function canHandle(Version $responseVersion, $contentType)
+	{
+		if($responseVersion != Version::V3()){
+			return false;
+		}
+
+		$parts = explode(";", $contentType);
+
+		//It must be app/json and have the right odata= piece
+		return in_array(MimeTypes::MIME_APPLICATION_JSON, $parts) && in_array($this->metadataLevel->getValue(), $parts);
+	}
+
+
 
 	/**
 	 * Write the given OData model in a specific response format

@@ -2,6 +2,7 @@
 
 namespace POData\Writers\Atom;
 
+use POData\Common\Version;
 use POData\ObjectModel\ODataFeed;
 use POData\ObjectModel\ODataEntry;
 use POData\ObjectModel\ODataURLCollection;
@@ -52,6 +53,25 @@ class AtomODataWriter implements IODataWriter
         $this->xmlWriter->setIndent(4);
     }
 
+	/**
+	 * Determines if the given writer is capable of writing the response or not
+	 * @param Version $responseVersion the OData version of the response
+	 * @param string $contentType the Content Type of the response
+	 * @return boolean true if the writer can handle the response, false otherwise
+	 */
+	public function canHandle(Version $responseVersion, $contentType)
+	{
+
+		$parts = explode(";", $contentType);
+		if($responseVersion == Version::V1())
+		{
+
+			//I believe this is only valid for 1.0 services
+			return in_array(MimeTypes::MIME_APPLICATION_XML, $parts);
+		}
+
+		return in_array(MimeTypes::MIME_APPLICATION_ATOMSERVICE, $parts);
+	}
 
 	/**
 	 * Write the given OData model in a specific response format

@@ -12,9 +12,13 @@ use POData\ObjectModel\ODataPropertyContent;
 use POData\ObjectModel\ODataProperty;
 use POData\ObjectModel\ODataBagContent;
 use POData\Writers\Atom\AtomODataWriter;
-use UnitTests\POData\BaseUnitTestCase;
 use POData\Providers\ProvidersWrapper;
+use POData\Common\Version;
+use POData\Common\MimeTypes;
+
 use Phockito;
+use UnitTests\POData\BaseUnitTestCase;
+
 
 class AtomODataWriterTest extends BaseUnitTestCase
 {
@@ -1176,6 +1180,33 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 
         $this->assertEquals($expected, $actual);
     }
-    
 
+	/**
+	 * @dataProvider canHandleProvider
+	 */
+	public function testCanHandle($id, $version, $contentType, $expected){
+		$writer = new AtomODataWriter("http://yahoo.com/some.svc");
+
+		$actual = $writer->canHandle($version, $contentType);
+
+		$this->assertEquals($expected, $actual, $id);
+	}
+
+	public function canHandleProvider(){
+
+
+		return array(
+			array(100, Version::V1(), MimeTypes::MIME_APPLICATION_ATOMSERVICE, false),
+			array(101, Version::V2(), MimeTypes::MIME_APPLICATION_ATOMSERVICE, true),
+			array(102, Version::V3(), MimeTypes::MIME_APPLICATION_ATOMSERVICE, true),
+
+			array(200, Version::V1(), MimeTypes::MIME_APPLICATION_XML, true),
+			array(201, Version::V2(), MimeTypes::MIME_APPLICATION_XML, false),
+			array(202, Version::V3(), MimeTypes::MIME_APPLICATION_XML, false),
+
+			array(300, Version::V1(), MimeTypes::MIME_APPLICATION_ATOM, false),
+			array(301, Version::V2(), MimeTypes::MIME_APPLICATION_ATOM, false),
+			array(302, Version::V3(), MimeTypes::MIME_APPLICATION_ATOM, false),
+		);
+	}
 }

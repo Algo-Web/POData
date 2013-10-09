@@ -13,6 +13,8 @@ use POData\ObjectModel\ODataProperty;
 use POData\ObjectModel\ODataBagContent;
 use POData\Writers\Json\JsonODataV2Writer;
 use POData\Providers\ProvidersWrapper;
+use POData\Common\Version;
+use POData\Common\MimeTypes;
 
 use UnitTests\POData\BaseUnitTestCase;
 use Phockito;
@@ -987,5 +989,51 @@ class JsonODataV2WriterTest extends BaseUnitTestCase
 
         $this->assertEquals($expected, $actual);
     }
+
+
+
+	/**
+	 * @dataProvider canHandleProvider
+	 */
+	public function testCanHandle($id, $version, $contentType, $expected){
+		$writer = new JsonODataV2Writer();
+
+		$actual = $writer->canHandle($version, $contentType);
+
+		$this->assertEquals($expected, $actual, $id);
+	}
+
+	public function canHandleProvider(){
+
+
+		return array(
+			array(100, Version::V1(), MimeTypes::MIME_APPLICATION_ATOMSERVICE, false),
+			array(101, Version::V2(), MimeTypes::MIME_APPLICATION_ATOMSERVICE, false),
+			array(102, Version::V3(), MimeTypes::MIME_APPLICATION_ATOMSERVICE, false),
+
+			array(200, Version::V1(), MimeTypes::MIME_APPLICATION_JSON, false),
+			array(201, Version::V2(), MimeTypes::MIME_APPLICATION_JSON, true),
+			array(202, Version::V3(), MimeTypes::MIME_APPLICATION_JSON, false),
+
+			//TODO: is this second one right?  this should NEVER come up, but should we claim to handle this format when
+			//it's invalid for V1? Ditto first of the next sections
+			array(300, Version::V1(), MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META, false),
+			array(301, Version::V2(), MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META, true),
+			array(302, Version::V3(), MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META, false),
+
+			array(400, Version::V1(), MimeTypes::MIME_APPLICATION_JSON_NO_META, false),
+			array(401, Version::V2(), MimeTypes::MIME_APPLICATION_JSON_NO_META, true),
+			array(402, Version::V3(), MimeTypes::MIME_APPLICATION_JSON_NO_META, false),
+
+			array(500, Version::V1(), MimeTypes::MIME_APPLICATION_JSON_FULL_META, false),
+			array(501, Version::V2(), MimeTypes::MIME_APPLICATION_JSON_FULL_META, true),
+			array(502, Version::V3(), MimeTypes::MIME_APPLICATION_JSON_FULL_META, false),
+
+
+			array(600, Version::V1(), MimeTypes::MIME_APPLICATION_JSON_VERBOSE, false),
+			array(601, Version::V2(), MimeTypes::MIME_APPLICATION_JSON_VERBOSE, true),
+			array(602, Version::V3(), MimeTypes::MIME_APPLICATION_JSON_VERBOSE, true), //Notice this is a special case
+		);
+	}
      
 }

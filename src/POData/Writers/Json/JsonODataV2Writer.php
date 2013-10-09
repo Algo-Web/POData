@@ -11,8 +11,8 @@ use POData\ObjectModel\ODataPropertyContent;
 use POData\ObjectModel\ODataBagContent;
 use POData\ObjectModel\ODataProperty;
 use POData\ObjectModel\ODataMediaLink;
-use POData\Writers\Json\JsonWriter;
-use POData\Writers\BaseODataWriter;
+
+use POData\Common\MimeTypes;
 use POData\Common\Version;
 use POData\Common\ODataConstants;
 use POData\Common\Messages;
@@ -37,6 +37,31 @@ class JsonODataV2Writer extends JsonODataV1Writer
 	protected $rowCountName = ODataConstants::JSON_ROWCOUNT_STRING;
 
 	protected $nextLinkName = ODataConstants::JSON_NEXT_STRING;
+
+
+	/**
+	 * Determines if the given writer is capable of writing the response or not
+	 * @param Version $responseVersion the OData version of the response
+	 * @param string $contentType the Content Type of the response
+	 * @return boolean true if the writer can handle the response, false otherwise
+	 */
+	public function canHandle(Version $responseVersion, $contentType)
+	{
+		$parts = explode(";", $contentType);
+
+		//special case, in v3 verbose is the v2 writer
+		if($responseVersion == Version::V3()){
+			return in_array(MimeTypes::MIME_APPLICATION_JSON, $parts) && in_array('odata=verbose', $parts);
+		}
+
+		if($responseVersion != Version::V2()){
+			return false;
+		}
+
+		return in_array(MimeTypes::MIME_APPLICATION_JSON, $parts);
+
+	}
+
 
 	/**
 	 * Write the given OData model in a specific response format

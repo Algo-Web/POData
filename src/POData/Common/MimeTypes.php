@@ -15,6 +15,10 @@ class MimeTypes
 
     const MIME_APPLICATION_JSON_MINIMAL_META = 'application/json;odata=minimalmetadata';
 
+	const MIME_APPLICATION_JSON_NO_META = 'application/json;odata=nometadata';
+
+	const MIME_APPLICATION_JSON_FULL_META = 'application/json;odata=fullmetadata';
+
     const MIME_APPLICATION_JSON_VERBOSE = 'application/json;odata=verbose';
 
     //MIME type for XML bodies.
@@ -31,7 +35,7 @@ class MimeTypes
     const MIME_MULTIPART_MIXED_BOUNDARY = 'boundary';
 
     //MIME type for batch requests - this mime type must be specified in 
-    //CUD changesets or GET batch requests.
+    //CUD change sets or GET batch requests.
     const MIME_APPLICATION_HTTP = 'application/http';
 
     //MIME type for any content type.
