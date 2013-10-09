@@ -7,8 +7,7 @@ use POData\Providers\ProvidersWrapper;
 use POData\Configuration\ServiceConfiguration;
 use POData\Providers\Stream\StreamProviderWrapper;
 use POData\OperationContext\IOperationContext;
-use POData\Writers\ServiceDocumentWriterFactory;
-use POData\Writers\ODataWriterFactory;
+use POData\Writers\ODataWriterRegistry;
 
 
 interface IService
@@ -73,8 +72,8 @@ interface IService
 
 
 	/**
-	 * Returns the ODataWriterFactory to use when writing the response to a service document request
-	 * @return ODataWriterFactory
+	 * Returns the ODataWriterRegistry to use when writing the response to a service document or resource request
+	 * @return ODataWriterRegistry
 	 */
-	public function getODataWriterFactory();
+	public function getODataWriterRegistry();
 }

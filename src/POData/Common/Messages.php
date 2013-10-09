@@ -3,9 +3,7 @@
 namespace POData\Common;
 
 use POData\OperationContext\HTTPRequestMethod;
-use POData\Providers\Metadata\Type\IType;
 use POData\Providers\Query\QueryType;
-use POData\ResponseFormat;
 
 /**
  * Class Messages helps to format error messages
@@ -2242,17 +2240,6 @@ class Messages
         return 'The request uri ' . $requestUri . ' is not valid as it is not based on the configured relative uri ' . $relativeUri;
     }
 
-
-	/**
-	 * Formats a message to show when the resource is requested with an invalid format
-	 *
-	 * @param ResponseFormat $requestedFormat the format that was requested
-	 * @return string the formatted message
-	 */
-	public static function badFormatForResource(ResponseFormat $requestedFormat)
-	{
-		return "The requested format of " . $requestedFormat . " is not supported for the identified resource";
-	}
 
 
 }

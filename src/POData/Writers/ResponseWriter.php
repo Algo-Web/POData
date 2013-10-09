@@ -65,7 +65,9 @@ class ResponseWriter
                 $responseContentType = MimeTypes::MIME_APPLICATION_OCTETSTREAM;
             }
         } else {
-            $writer = $service->getODataWriterFactory()->getWriter($service, $request, $responseContentType);
+            $writer = $service->getODataWriterRegistry()->getWriter($request->getResponseVersion(), $responseContentType);
+	        //TODO: move ot Messages
+	        if(is_null($writer)) throw new \Exception("no writer can handle the request");
 
             if (is_null($entityModel)) {  //TODO: this seems like a weird way to know that the request is for a service document..i'd think we know this some other way
                 $responseBody = $writer->writeServiceDocument($service->getProvidersWrapper())->getOutput();

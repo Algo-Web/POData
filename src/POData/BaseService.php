@@ -3,6 +3,7 @@
 namespace POData;
 
 use POData\Common\MimeTypes;
+use POData\Common\Version;
 use POData\OperationContext\HTTPRequestMethod;
 use POData\Providers\Metadata\ResourceTypeKind;
 use POData\Common\ErrorHandler;
@@ -23,13 +24,18 @@ use POData\OperationContext\ServiceHost;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\Type\Binary;
 use POData\ObjectModel\ObjectModelSerializer;
+use POData\Writers\Atom\AtomODataWriter;
+use POData\Writers\Json\JsonLightMetadataLevel;
+use POData\Writers\Json\JsonLightODataWriter;
+use POData\Writers\Json\JsonODataV1Writer;
+use POData\Writers\Json\JsonODataV2Writer;
 use POData\Writers\ResponseWriter;
 
 use POData\Providers\Query\IQueryProvider;
 use POData\Providers\Metadata\IMetadataProvider;
 use POData\OperationContext\IOperationContext;
-use POData\Writers\ServiceDocumentWriterFactory;
-use POData\Writers\ODataWriterFactory;
+
+use POData\Writers\ODataWriterRegistry;
 
 /**
  * Class BaseService
@@ -238,13 +244,16 @@ abstract class BaseService implements IRequestHandler, IService
 	public abstract function getStreamProviderX();
 
 
+	/** @var  ODataWriterRegistry */
+	private $writerRegistry;
+
 	/**
-	 * Returns the ODataWriterFactory to use when writing the response to a service document request
-	 * Implementations can override this to handle custom formats.
-	 * @return ODataWriterFactory
+	 * Returns the ODataWriterRegistry to use when writing the response to a service document or resource request
+	 * @return ODataWriterRegistry
 	 */
-	public function getODataWriterFactory(){
-		return new ODataWriterFactory();
+	public function getODataWriterRegistry()
+	{
+		return $this->writerRegistry;
 	}
 
 
@@ -291,7 +300,33 @@ abstract class BaseService implements IRequestHandler, IService
 
         
         $this->initialize($this->config);
+
+	    //TODO: this seems like a bad spot to do this
+	    $this->writerRegistry = new ODataWriterRegistry();
+	    $this->registerWriters();
     }
+
+	//TODO: i don't want this to be public..but it's the only way to test it right now...
+	public function registerWriters()
+	{
+		$registry = $this->getODataWriterRegistry();
+		$serviceVersion = $this->getConfiguration()->getMaxDataServiceVersion();
+		$serviceURI = $this->getHost()->getAbsoluteServiceUri()->getUrlAsString();
+
+		//We always register the v1 stuff
+		$registry->register(new JsonODataV1Writer());
+		$registry->register(new AtomODataWriter($serviceURI));
+
+		if($serviceVersion->compare(Version::V2()) > -1){
+			$registry->register(new JsonODataV2Writer());
+		}
+
+		if($serviceVersion->compare(Version::V3()) > -1){
+			$registry->register(new JsonLightODataWriter(JsonLightMetadataLevel::NONE(), $serviceURI));
+			$registry->register(new JsonLightODataWriter(JsonLightMetadataLevel::MINIMAL(), $serviceURI));
+			$registry->register(new JsonLightODataWriter(JsonLightMetadataLevel::FULL(), $serviceURI));
+		}
+	}
 
     /**
      * Serialize the requested resource.
