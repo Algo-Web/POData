@@ -86,7 +86,16 @@ class JsonODataV2Writer extends JsonODataV1Writer
 		} elseif ($model instanceof ODataPropertyContent) {
 			$this->writeProperties($model);
 		} elseif ($model instanceof ODataFeed) {
+			// Json Format V2:
+			// "results":
+			$this->writeRowCount($model->rowCount);
+			$this->writeNextPageLink($model->nextPageLink);
+			$this->_writer
+				->writeName($this->dataArrayName)
+				->startArrayScope();
 			$this->writeFeed($model);
+			$this->_writer->endScope();
+
 		}elseif ($model instanceof ODataEntry) {
 			$this->writeEntry($model);
 		}
@@ -119,32 +128,6 @@ class JsonODataV2Writer extends JsonODataV1Writer
 		    ->startArrayScope();
 
 	   	parent::writeUrlCollection($urls);
-
-	    $this->_writer->endScope();
-
-	    return $this;
-    }
-  
-    /**
-     * Start writing a feed
-     *
-     * @param ODataFeed $feed Feed to write
-     * 
-     * @return JsonODataV2Writer
-     */
-    protected function writeFeed(ODataFeed $feed)
-    {
-	    $this->writeRowCount($feed->rowCount);
-        $this->writeNextPageLink($feed->nextPageLink);
-
-
-        // Json Format V2:
-        // "results":
-	    $this->_writer
-		    ->writeName($this->dataArrayName)
-	        ->startArrayScope();
-
-	    parent::writeFeed($feed);
 
 	    $this->_writer->endScope();
 

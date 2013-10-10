@@ -1097,6 +1097,272 @@ class JsonODataV2WriterTest extends BaseUnitTestCase
 		$this->assertEquals(array($expected), array($actual), "raw JSON is: " . $writer->getOutput());
 	}
 
+	public function testWriteEntryWithExpandedFeed()
+	{
+		//First build up the expanded entry 1
+		$expandedEntry1 = new ODataEntry();
+		$expandedEntry1->id = 'Expanded Entry 1';
+		$expandedEntry1->title = 'Expanded Entry 1 Title';
+		$expandedEntry1->type = "Expanded.Type";
+		$expandedEntry1->editLink = "Edit Link URL";
+		$expandedEntry1->selfLink = "Self Link URL";
+
+
+		$expandedEntry1->mediaLinks = array(
+			new ODataMediaLink(
+				'Media Link Name',
+				'Edit Media link',
+				'Src Media Link',
+				'Media Content Type',
+				'Media ETag'
+			),
+			new ODataMediaLink(
+				'Media Link Name2',
+				'Edit Media link2',
+				'Src Media Link2',
+				'Media Content Type2',
+				'Media ETag2'
+			)
+		);
+
+		$expandedEntry1->links = array();
+		$expandedEntry1->eTag = 'Entry ETag';
+		$expandedEntry1->isMediaLinkEntry = false;
+
+
+		$pr1 = new ODataProperty();
+		$pr1->name = 'first';
+		$pr1->typeName = 'string';
+		$pr1->value = 'Entry 1 Name First';
+
+		$pr2 = new ODataProperty();
+		$pr2->name = 'last';
+		$pr2->typeName = 'string';
+		$pr2->value = 'Entry 1 Name Last';
+
+
+		$expandedEntry1ComplexProperty = new ODataProperty();
+		$expandedEntry1ComplexProperty->name = 'Expanded Entry Complex Property';
+		$expandedEntry1ComplexProperty->typeName = 'Full Name';
+		$expandedEntry1ComplexProperty->value = new ODataPropertyContent();;
+		$expandedEntry1ComplexProperty->value->properties = array($pr1, $pr2);
+
+		$expandedEntry1Property1 = new ODataProperty ();
+		$expandedEntry1Property1->name = 'Expanded Entry City Property';
+		$expandedEntry1Property1->typeName = 'string';
+		$expandedEntry1Property1->value = 'Entry 1 City Value';
+
+		$expandedEntry1Property2 = new ODataProperty ();
+		$expandedEntry1Property2->name = 'Expanded Entry State Property';
+		$expandedEntry1Property2->typeName = 'string';
+		$expandedEntry1Property2->value = 'Entry 1 State Value';
+
+
+		$expandedEntry1->propertyContent = new ODataPropertyContent();
+		$expandedEntry1->propertyContent->properties = array (
+			$expandedEntry1ComplexProperty,
+			$expandedEntry1Property1,
+			$expandedEntry1Property2
+		);
+		//End the expanded entry 1
+
+
+		//First build up the expanded entry 2
+		$expandedEntry2 = new ODataEntry();
+		$expandedEntry2->id = 'Expanded Entry 2';
+		$expandedEntry2->title = 'Expanded Entry 2 Title';
+		$expandedEntry2->type = "Expanded.Type";
+		$expandedEntry2->editLink = "Edit Link URL";
+		$expandedEntry2->selfLink = "Self Link URL";
+
+
+		$expandedEntry2->mediaLinks = array(
+			new ODataMediaLink(
+				'Media Link Name',
+				'Edit Media link',
+				'Src Media Link',
+				'Media Content Type',
+				'Media ETag'
+			),
+			new ODataMediaLink(
+				'Media Link Name2',
+				'Edit Media link2',
+				'Src Media Link2',
+				'Media Content Type2',
+				'Media ETag2'
+			)
+		);
+
+		$expandedEntry2->links = array();
+		$expandedEntry2->eTag = 'Entry ETag';
+		$expandedEntry2->isMediaLinkEntry = false;
+
+
+		$pr1 = new ODataProperty();
+		$pr1->name = 'first';
+		$pr1->typeName = 'string';
+		$pr1->value = 'Entry 2 Name First';
+
+		$pr2 = new ODataProperty();
+		$pr2->name = 'last';
+		$pr2->typeName = 'string';
+		$pr2->value = 'Entry 2 Name Last';
+
+
+		$expandedEntry2ComplexProperty = new ODataProperty();
+		$expandedEntry2ComplexProperty->name = 'Expanded Entry Complex Property';
+		$expandedEntry2ComplexProperty->typeName = 'Full Name';
+		$expandedEntry2ComplexProperty->value = new ODataPropertyContent();;
+		$expandedEntry2ComplexProperty->value->properties = array($pr1, $pr2);
+
+		$expandedEntry2Property1 = new ODataProperty ();
+		$expandedEntry2Property1->name = 'Expanded Entry City Property';
+		$expandedEntry2Property1->typeName = 'string';
+		$expandedEntry2Property1->value = 'Entry 2 City Value';
+
+		$expandedEntry2Property2 = new ODataProperty ();
+		$expandedEntry2Property2->name = 'Expanded Entry State Property';
+		$expandedEntry2Property2->typeName = 'string';
+		$expandedEntry2Property2->value = 'Entry 2 State Value';
+
+
+		$expandedEntry2->propertyContent = new ODataPropertyContent();
+		$expandedEntry2->propertyContent->properties = array (
+			$expandedEntry2ComplexProperty,
+			$expandedEntry2Property1,
+			$expandedEntry2Property2
+		);
+		//End the expanded entry 2
+
+		//build up the main entry
+
+		$entry = new ODataEntry();
+		$entry->id = 'Main Entry';
+		$entry->title = 'Entry Title';
+		$entry->type = "Main.Type";
+		$entry->editLink ="Edit Link URL";
+		$entry->selfLink = "Self Link URL";
+		$entry->mediaLinks = array(
+			new ODataMediaLink(
+				'Media Link Name',
+				'Edit Media link',
+				'Src Media Link',
+				'Media Content Type',
+				'Media ETag'
+			),
+			new ODataMediaLink(
+				'Media Link Name2',
+				'Edit Media link2',
+				'Src Media Link2',
+				'Media Content Type2',
+				'Media ETag2'
+			)
+		);
+
+		$entry->eTag = 'Entry ETag';
+		$entry->isMediaLinkEntry = false;
+
+		$entryProperty1 = new ODataProperty();
+		$entryProperty1->name = 'Main Entry Property 1';
+		$entryProperty1->typeName = 'string';
+		$entryProperty1->value = 'Yash';
+
+		$entryProperty2 = new ODataProperty();
+		$entryProperty2->name = 'Main Entry Property 2';
+		$entryProperty2->typeName = 'string';
+		$entryProperty2->value = 'Kothari';
+
+		$entry->propertyContent = new ODataPropertyContent();
+		$entry->propertyContent->properties = array($entryProperty1, $entryProperty2);
+		//End of main entry
+
+
+		//Create a the expanded feed
+		$expandedFeed = new ODataFeed();
+		$expandedFeed->id = "expanded feed id";
+		$expandedFeed->title = "SubCollection";
+		$expandedFeed->entries = array($expandedEntry1, $expandedEntry2);
+
+		$expandedFeedSelfLink = new ODataLink();
+		$expandedFeedSelfLink->name = "self";
+		$expandedFeedSelfLink->title = "SubCollection";
+		$expandedFeedSelfLink->url = "SubCollection Self URL";
+
+
+		$expandedFeed->selfLink = $expandedFeedSelfLink;
+
+		//Now link the expanded entry to the main entry
+		$expandLink = new ODataLink();
+		$expandLink->isCollection = true;
+		$expandLink->isExpanded = true;
+		$expandLink->title = "SubCollection";
+		$expandLink->url = "SubCollectionURL";
+		$expandLink->expandedResult = $expandedFeed;
+		$entry->links = array($expandLink);
+
+
+
+		$writer = new JsonODataV2Writer();
+		$result = $writer->write($entry);
+		$this->assertSame($writer, $result);
+
+
+		//decoding the json string to test
+		$actual = json_decode($writer->getOutput());
+
+		$expected = '{
+	"d":{
+        "__metadata":{
+            "uri":"Main Entry",
+            "etag":"Entry ETag",
+            "type":"Main.Type"
+        },
+        "SubCollection" : {
+            "results" : [
+			    {
+			        "__metadata":{
+			            "uri":"Expanded Entry 1",
+			            "etag":"Entry ETag",
+			            "type":"Expanded.Type"
+			        },
+			        "Expanded Entry Complex Property":{
+			            "__metadata":{
+		                    "type":"Full Name"
+		                },
+			            "first":"Entry 1 Name First",
+			            "last":"Entry 1 Name Last"
+			        },
+			        "Expanded Entry City Property":"Entry 1 City Value",
+			        "Expanded Entry State Property":"Entry 1 State Value"
+			    },
+			    {
+			        "__metadata":{
+			            "uri":"Expanded Entry 2",
+			            "etag":"Entry ETag",
+			            "type":"Expanded.Type"
+			        },
+			        "Expanded Entry Complex Property":{
+				        "__metadata":{
+		                    "type":"Full Name"
+		                },
+			            "first":"Entry 2 Name First",
+			            "last":"Entry 2 Name Last"
+			        },
+			        "Expanded Entry City Property":"Entry 2 City Value",
+			        "Expanded Entry State Property":"Entry 2 State Value"
+			    }
+			]
+		},
+	    "Main Entry Property 1":"Yash",
+	    "Main Entry Property 2":"Kothari"
+	}
+}';
+		$expected = json_decode($expected);
+
+		$this->assertEquals(array($expected), array($actual), "raw JSON is: " . $writer->getOutput());
+	}
+
+
     /**
      * @var ProvidersWrapper
      */

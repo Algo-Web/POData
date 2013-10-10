@@ -100,7 +100,13 @@ class JsonLightODataWriter extends JsonODataV2Writer
 			$this->writeTopLevelProperty($model->properties[0]);
 		} elseif ($model instanceof ODataFeed) {
 			$this->writeTopLevelMeta($model->title);
+			$this->writeRowCount($model->rowCount);
+			$this->writeNextPageLink($model->nextPageLink);
+			$this->_writer
+				->writeName($this->dataArrayName)
+				->startArrayScope();
 			$this->writeFeed($model);
+			$this->_writer->endScope();
 		}elseif ($model instanceof ODataEntry) {
 			$this->writeTopLevelMeta($model->resourceSetName . "/@Element");
 			$this->writeEntry($model);
@@ -243,13 +249,13 @@ class JsonLightODataWriter extends JsonODataV2Writer
 
 	protected function writeExpandedLink(ODataLink $link)
 	{
-		$this->_writer->startObjectScope();
+
 
 		if ($link->isCollection) {
 			$this->_writer->startArrayScope();
 			$this->writeFeed($link->expandedResult);
-			$this->_writer->endScope();
 		} else {
+			$this->_writer->startObjectScope();
 			$this->writeEntry($link->expandedResult);
 		}
 
