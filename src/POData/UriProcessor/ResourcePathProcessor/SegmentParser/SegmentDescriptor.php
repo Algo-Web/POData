@@ -102,10 +102,7 @@ class SegmentDescriptor
      */
     private $_previous;
 
-    /**
-     * Creates a new instance of SegmentDescriptor
-     * 
-     */
+
     public function __construct()
     {
         $this->_singleResult = false;

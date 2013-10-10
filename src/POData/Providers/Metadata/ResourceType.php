@@ -535,7 +535,7 @@ class ResourceType
      * 
      * @return ResourceProperty|null
      */
-    public function tryResolvePropertyTypeDeclaredOnThisTypeByName($propertyName)
+    public function resolvePropertyDeclaredOnThisType($propertyName)
     {
         if (array_key_exists($propertyName, $this->_propertiesDeclaredOnThisType)) {
             return $this->_propertiesDeclaredOnThisType[$propertyName];
@@ -552,7 +552,7 @@ class ResourceType
      * 
      * @return ResourceProperty|null
      */
-    public function tryResolvePropertyTypeByName($propertyName)
+    public function resolveProperty($propertyName)
     {
         if (array_key_exists($propertyName, $this->getAllProperties())) {
             return $this->_allProperties[$propertyName];

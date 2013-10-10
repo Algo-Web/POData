@@ -327,7 +327,7 @@ class ProvidersWrapperTest extends BaseUnitTestCase
             ->return($fakePropName);
 
 
-        Phockito::when($this->mockResourceType->tryResolvePropertyTypeDeclaredOnThisTypeByName($fakePropName))
+        Phockito::when($this->mockResourceType->resolvePropertyDeclaredOnThisType($fakePropName))
             ->return($this->mockResourceProperty);
 
         $fakeTypeName = "Fake Type";
@@ -384,7 +384,7 @@ class ProvidersWrapperTest extends BaseUnitTestCase
             ->return($fakePropName);
 
 
-        Phockito::when($this->mockResourceType->tryResolvePropertyTypeDeclaredOnThisTypeByName($fakePropName))
+        Phockito::when($this->mockResourceType->resolvePropertyDeclaredOnThisType($fakePropName))
             ->return($this->mockResourceProperty);
 
         $fakeTypeName = "Fake Type";

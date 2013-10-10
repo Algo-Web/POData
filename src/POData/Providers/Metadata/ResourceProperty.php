@@ -4,11 +4,9 @@ namespace POData\Providers\Metadata;
 
 use POData\Common\Messages;
 use POData\Providers\Metadata\Type\IType;
+use InvalidArgumentException;
 
-/**
- * Class ResourceProperty
- * @package POData\Providers\Metadata
- */
+
 class ResourceProperty
 {
     /**
@@ -48,27 +46,22 @@ class ResourceProperty
     private $_propertyResourceType;
 
     /**
-     * Construct a new instance of ResouceProperty
-     * 
      * @param string               $name                  Name of the property
      * @param string               $mimeType              Mime type of the property
      * @param ResourcePropertyKind $kind                  The kind of property
-     * @param ResourceType         &$propertyResourceType ResourceType of the 
-     *                                                    property
+     * @param ResourceType         $propertyResourceType ResourceType of the property
      * 
-     * @throws InvalidOperationException
+     * @throws InvalidArgumentException
      */
-    public function __construct($name, $mimeType, $kind, 
-        ResourceType &$propertyResourceType
-    ) {
+    public function __construct($name, $mimeType, $kind, ResourceType $propertyResourceType) {
         if (!$this->_isValidResourcePropertyKind($kind)) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 Messages::resourcePropertyInvalidKindParameter('$kind')
             );
         }
     
         if (!$this->_isResourceKindValidForPropertyKind($kind, $propertyResourceType->getResourceTypeKind())) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 Messages::resourcePropertyPropertyKindAndResourceTypeKindMismatch(
                     '$kind', '$propertyResourceType'
                 )

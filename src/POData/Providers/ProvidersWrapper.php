@@ -561,7 +561,7 @@ class ProvidersWrapper
     ) {
         $type = $resourceType;
         while ($type !== null) {
-            if ($type->tryResolvePropertyTypeDeclaredOnThisTypeByName($resourceProperty->getName()) !== null) {
+            if ($type->resolvePropertyDeclaredOnThisType($resourceProperty->getName()) !== null) {
                 break;
             }
 

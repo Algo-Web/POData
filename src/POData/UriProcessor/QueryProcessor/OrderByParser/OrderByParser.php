@@ -180,7 +180,7 @@ class OrderByParser
                 $isLastSegment = ($index2 == $subPathCount - 1);
                 $resourceSetWrapper = null;
                 $resourceType = $currentNode->getResourceType();
-                $resourceProperty = $resourceType->tryResolvePropertyTypeByName($orderBySubPathSegment);
+                $resourceProperty = $resourceType->resolveProperty($orderBySubPathSegment);
                 if (is_null($resourceProperty)) {
                     ODataException::createSyntaxError(
                         Messages::orderByParserPropertyNotFound(

@@ -170,8 +170,8 @@ class ResourceClassesTest extends \PHPUnit_Framework_TestCase
         }
 
         $this->AssertEquals(count($customerResType->getETagProperties()), 0);
-        $this->AssertEquals($customerResType->tryResolvePropertyTypeByName('PropNotExists'), null);
-        $property = $customerResType->tryResolvePropertyTypeByName('CustomerName');
+        $this->AssertEquals($customerResType->resolveProperty('PropNotExists'), null);
+        $property = $customerResType->resolveProperty('CustomerName');
         $this->AssertNotEquals($property, null);
         $this->AssertEquals($property->getName(), 'CustomerName');
 
@@ -338,7 +338,7 @@ class ResourceClassesTest extends \PHPUnit_Framework_TestCase
         $customerResType->addProperty($ordersReferenceSetProperty);
         $customerResourceSet = new ResourceSet('Customers', $customerResType);
 
-        $customerIDPrimProperty = $customerResType->tryResolvePropertyTypeByName('CustomerID');
+        $customerIDPrimProperty = $customerResType->resolveProperty('CustomerID');
 
         try {
             $assoSetEnd = new ResourceAssociationSetEnd($customerResourceSet, $customerResType, $customerIDPrimProperty);

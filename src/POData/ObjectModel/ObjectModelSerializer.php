@@ -506,7 +506,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
             $i = 0;
             foreach ($projectionNodes as $projectionNode) {
                 $propertyName = $projectionNode->getPropertyName();
-                $resourceProperty = $resourceType->tryResolvePropertyTypeByName($propertyName);
+                $resourceProperty = $resourceType->resolveProperty($propertyName);
                 $this->assert(!is_null($resourceProperty), '!is_null($resourceProperty)');
                 
                 if ($resourceProperty->getTypeKind() == ResourceTypeKind::ENTITY) {

@@ -191,7 +191,7 @@ class ExpandProjectionParser
                 $resourceSetWrapper = $currentNode->getResourceSetWrapper();
                 $resourceType = $currentNode->getResourceType();
                 $resourceProperty 
-                    = $resourceType->tryResolvePropertyTypeByName(
+                    = $resourceType->resolveProperty(
                         $expandSubPathSegment
                     );
                 if (is_null($resourceProperty)) {
@@ -311,7 +311,7 @@ class ExpandProjectionParser
 
                 $currentResourceType = $currentNode->getResourceType();
                 $resourceProperty 
-                    = $currentResourceType->tryResolvePropertyTypeByName(
+                    = $currentResourceType->resolveProperty(
                         $selectSubPathSegment
                     );
                 if (is_null($resourceProperty)) {

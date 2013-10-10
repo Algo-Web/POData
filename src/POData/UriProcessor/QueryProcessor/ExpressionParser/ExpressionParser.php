@@ -455,7 +455,7 @@ class ExpressionParser
             $this->_hasLevel2PropertyInTheExpression = true;
         }
 
-        $resourceProperty = $parentResourceType->tryResolvePropertyTypeByName($identifier);
+        $resourceProperty = $parentResourceType->resolveProperty($identifier);
         if (is_null($resourceProperty)) {
             ODataException::createSyntaxError(
                 Messages::expressionLexerNoPropertyInType(

@@ -175,8 +175,6 @@ class ResourceSetWrapper extends ResourceSet
      * 
      * @param EntitySetRights $requiredRights The rights to check
      * 
-     * @return void
-     * 
      * @throws ODataException exception if access to this resource set is forbidden
      */
     public function checkResourceSetRights($requiredRights)
@@ -189,13 +187,9 @@ class ResourceSetWrapper extends ResourceSet
     /**
      * Checks whether this request has the reading rights
      * 
-     * @param boolean $singleResult Check for multiple result read if false else
-     * single result read
-     * 
-     * @return void
-     * 
-     * @throws ODataException exception if read-access to this resource set is
-     *                        forbidden
+     * @param boolean $singleResult Check for multiple result read if false else single result read
+     *
+     * @throws ODataException exception if read-access to this resource set is forbidden
      */
     public function checkResourceSetRightsForRead($singleResult)
     {
