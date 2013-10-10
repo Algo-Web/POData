@@ -1066,6 +1066,87 @@ class JsonLightODataWriterFullMetadataTest extends BaseUnitTestCase
 	}
 
 
+	public function testWriteEntryWithExpandedEntryThatIsNull()
+	{
+
+		//build up the main entry
+
+		$entry = new ODataEntry();
+		$entry->id = 'Main Entry';
+		$entry->title = 'Entry Title';
+		$entry->type = "Main.Type";
+		$entry->editLink ="Edit Link URL";
+		$entry->selfLink = "Self Link URL";
+		$entry->mediaLinks = array(
+			new ODataMediaLink(
+				'Media Link Name',
+				'Edit Media link',
+				'Src Media Link',
+				'Media Content Type',
+				'Media ETag'
+			),
+			new ODataMediaLink(
+				'Media Link Name2',
+				'Edit Media link2',
+				'Src Media Link2',
+				'Media Content Type2',
+				'Media ETag2'
+			)
+		);
+
+		$entry->eTag = 'Entry ETag';
+		$entry->isMediaLinkEntry = false;
+
+		$entryProperty1 = new ODataProperty();
+		$entryProperty1->name = 'Main Entry Property 1';
+		$entryProperty1->typeName = 'string';
+		$entryProperty1->value = 'Yash';
+
+		$entryProperty2 = new ODataProperty();
+		$entryProperty2->name = 'Main Entry Property 2';
+		$entryProperty2->typeName = 'string';
+		$entryProperty2->value = 'Kothari';
+
+		$entry->propertyContent = new ODataPropertyContent();
+		$entry->propertyContent->properties = array($entryProperty1, $entryProperty2);
+		//End of main entry
+
+
+		//Now link the expanded entry to the main entry
+		$expandLink = new ODataLink();
+		$expandLink->isCollection = false;
+		$expandLink->isExpanded = true;
+		$expandLink->title = "Expanded Property";
+		$expandLink->url = "ExpandedURL";
+		$expandLink->expandedResult = null; //<--key part
+		$entry->links = array($expandLink);
+
+
+
+		$writer = new JsonLightODataWriter(JsonLightMetadataLevel::FULL(), $this->serviceBase);
+		$result = $writer->write($entry);
+		$this->assertSame($writer, $result);
+
+
+		//decoding the json string to test
+		$actual = json_decode($writer->getOutput());
+
+		$expected = '{
+	"odata.metadata":"http://services.odata.org/OData/OData.svc/$metadata#/@Element",
+	"odata.type":"Main.Type",
+	"odata.id":"Main Entry",
+	"odata.etag":"Entry ETag",
+	"odata.editLink":"Edit Link URL",
+	"Expanded Property@odata.navigationLinkUrl":"ExpandedURL",
+    "Expanded Property":null,
+    "Main Entry Property 1":"Yash",
+    "Main Entry Property 2":"Kothari"
+}';
+		$expected = json_decode($expected);
+
+		$this->assertEquals(array($expected), array($actual), "raw JSON is: " . $writer->getOutput());
+	}
+
 	public function testWriteEntryWithExpandedFeed()
 	{
 		//First build up the expanded entry 1
