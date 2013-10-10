@@ -606,6 +606,36 @@ class ProvidersWrapper
 	}
 
 
+    private function ValidateQueryResult($queryResult, QueryType $queryType, $methodName){
+        if (!$queryResult instanceof QueryResult) {
+            ODataException::createInternalServerError(
+                Messages::queryProviderReturnsNonQueryResult($methodName)
+            );
+        }
+
+        if($queryType == QueryType::COUNT() || $queryType == QueryType::ENTITIES_WITH_COUNT()){
+            //and the provider is supposed to handle the ordered paging they must return a count!
+            if($this->queryProvider->handlesOrderedPaging() && !is_numeric($queryResult->count)){
+                ODataException::createInternalServerError(
+                    Messages::queryProviderResultCountMissing($methodName, $queryType)
+                );
+            }
+
+            //If POData is supposed to handle the ordered aging they must return results! (possibly empty)
+            if(!$this->queryProvider->handlesOrderedPaging() && !is_array($queryResult->results)){
+                ODataException::createInternalServerError(
+                    Messages::queryProviderResultsMissing($methodName, $queryType)
+                );
+            }
+        }
+
+        if(($queryType == QueryType::ENTITIES() || $queryType == QueryType::ENTITIES_WITH_COUNT()) && !is_array($queryResult->results)){
+            ODataException::createInternalServerError(
+                Messages::queryProviderResultsMissing($methodName, $queryType)
+            );
+        }
+    }
+
     /**
      * Gets collection of entities belongs to an entity set
      *
@@ -630,34 +660,7 @@ class ProvidersWrapper
 			$skip
 		);
 
-
-        if (!$queryResult instanceof QueryResult) {
-            ODataException::createInternalServerError(
-                Messages::queryProviderReturnsNonQueryResult('IQueryProvider::getResourceSet')
-            );
-        }
-
-	    if($queryType == QueryType::COUNT() || $queryType == QueryType::ENTITIES_WITH_COUNT()){
-		    //and the provider is supposed to handle the ordered paging they must return a count!
-		    if($this->queryProvider->handlesOrderedPaging() && !is_numeric($queryResult->count)){
-                ODataException::createInternalServerError(
-                    Messages::queryProviderResultCountMissing('IQueryProvider::getResourceSet', $queryType)
-                );
-		    }
-
-		    //If POData is supposed to handle the ordered aging they must return results! (possibly empty)
-		    if(!$this->queryProvider->handlesOrderedPaging() && !is_array($queryResult->results)){
-			    ODataException::createInternalServerError(
-				    Messages::queryProviderResultsMissing('IQueryProvider::getResourceSet', $queryType)
-			    );
-		    }
-        }
-
-        if(($queryType == QueryType::ENTITIES() || $queryType == QueryType::ENTITIES_WITH_COUNT()) && !is_array($queryResult->results)){
-            ODataException::createInternalServerError(
-                Messages::queryProviderResultsMissing('IQueryProvider::getResourceSet', $queryType)
-            );
-        }
+        $this->validateQueryResult($queryResult, $queryType, 'IQueryProvider::getResourceSet');
 
         return $queryResult;
     }
@@ -713,7 +716,7 @@ class ProvidersWrapper
         $skip
     ) {
 
-		$entityInstances = $this->queryProvider->getRelatedResourceSet(
+		$queryResult = $this->queryProvider->getRelatedResourceSet(
 			$queryType,
 		    $sourceResourceSet,
 		    $sourceEntity,
@@ -726,13 +729,10 @@ class ProvidersWrapper
 		);
 
 
-        if (!is_array($entityInstances)) {
-            ODataException::createInternalServerError(
-                Messages::queryProviderReturnsNonQueryResult('IQueryProvider::getRelatedResourceSet')
-            );
-        }
+        $this->validateQueryResult($queryResult, $queryType, 'IQueryProvider::getRelatedResourceSet');
 
-        return $entityInstances;
+
+        return $queryResult;
     }
 
     /**
