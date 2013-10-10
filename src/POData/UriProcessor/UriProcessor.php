@@ -265,18 +265,20 @@ class UriProcessor
 
                 $segment->setResult($entityInstance);
             } else {
-                $entityInstances = $this->providers->getRelatedResourceSet(
+                $queryResult = $this->providers->getRelatedResourceSet(
+	                $this->request->queryType,
                     $segment->getPrevious()->getTargetResourceSetWrapper(),
                     $segment->getPrevious()->getResult(),
                     $segment->getTargetResourceSetWrapper(),
                     $segment->getProjectedProperty(),
                     $this->request->getFilterInfo(),
+	                //TODO: why are these null?  see #98
                     null, // $orderby
                     null, // $top
                     null  // $skip
                 );
 
-                $segment->setResult($entityInstances);
+                $segment->setResult($queryResult);
             }           
         } else if ($projectedPropertyKind == ResourcePropertyKind::RESOURCE_REFERENCE) {
             $entityInstance = $this->providers->getRelatedResourceReference(
@@ -395,19 +397,17 @@ class UriProcessor
     /**
      * Execute queries for expansion.
      * 
-     * @param array(mixed)/mixed &$result Resource(s) whose navigation properties needs to be expanded.
+     * @param array(mixed)/mixed $result Resource(s) whose navigation properties needs to be expanded.
      *
      *
      * @return void
      */
-    private function _executeExpansion(&$result)
+    private function _executeExpansion($result)
     {
         $expandedProjectionNodes = $this->_getExpandedProjectionNodes();
         foreach ($expandedProjectionNodes as $expandedProjectionNode) {
-            $isCollection 
-                = $expandedProjectionNode->getResourceProperty()->getKind() == ResourcePropertyKind::RESOURCESET_REFERENCE;
-            $expandedPropertyName 
-                = $expandedProjectionNode->getResourceProperty()->getName();
+            $isCollection = $expandedProjectionNode->getResourceProperty()->getKind() == ResourcePropertyKind::RESOURCESET_REFERENCE;
+            $expandedPropertyName = $expandedProjectionNode->getResourceProperty()->getName();
             if (is_array($result)) {
                 foreach ($result as $entry) {
                     // Check for null entry
@@ -416,6 +416,7 @@ class UriProcessor
                         $resourceSetOfProjectedProperty = $expandedProjectionNode->getResourceSetWrapper()->getResourceSet();
                         $projectedProperty1 = $expandedProjectionNode->getResourceProperty();
                         $result1 = $this->providers->getRelatedResourceSet(
+	                        QueryType::ENTITIES(), //it's always entities for an expansion
                             $currentResourceSet,
                             $entry,
                             $resourceSetOfProjectedProperty,
@@ -424,13 +425,11 @@ class UriProcessor
                             null, // $orderby
                             null, // $top
                             null  // $skip
-                        );
+                        )->results;
                         if (!empty($result1)) {
-                            $internalOrderByInfo 
-                                = $expandedProjectionNode->getInternalOrderByInfo();
+                            $internalOrderByInfo = $expandedProjectionNode->getInternalOrderByInfo();
                             if (!is_null($internalOrderByInfo)) {
-                                $orderByFunction 
-                                    = $internalOrderByInfo->getSorterFunction()->getReference();
+                                $orderByFunction = $internalOrderByInfo->getSorterFunction()->getReference();
                                 usort($result1, $orderByFunction);
                                 unset($internalOrderByInfo);
                                 $takeCount = $expandedProjectionNode->getTakeCount();
@@ -476,6 +475,7 @@ class UriProcessor
                     $resourceSetOfProjectedProperty2 = $expandedProjectionNode->getResourceSetWrapper()->getResourceSet();
                     $projectedProperty4 = $expandedProjectionNode->getResourceProperty();
                     $result1 = $this->providers->getRelatedResourceSet(
+	                    QueryType::ENTITIES(), //it's always entities for an expansion
                         $currentResourceSet2,
                         $result,
                         $resourceSetOfProjectedProperty2,
@@ -484,7 +484,7 @@ class UriProcessor
                         null, // $orderby
                         null, // $top
                         null  // $skip
-                    );
+                    )->results;
                     if (!empty($result1)) {
                         $internalOrderByInfo = $expandedProjectionNode->getInternalOrderByInfo();
                         if (!is_null($internalOrderByInfo)) {

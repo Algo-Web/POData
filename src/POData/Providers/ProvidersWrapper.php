@@ -21,6 +21,7 @@ use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
 use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
 use POData\Providers\Query\QueryResult;
 use POData\Providers\Query\QueryType;
+use stdClass;
 
 /**
  * Class ProvidersWrapper
@@ -669,7 +670,7 @@ class ProvidersWrapper
      * @param ResourceSet $resourceSet The entity set containing the entity to fetch
      * @param KeyDescriptor $keyDescriptor The key identifying the entity to fetch
      *
-     * @return \stdClass|null Returns entity instance if found else null
+     * @return stdClass|null Returns entity instance if found else null
      */
     public function getResourceFromResourceSet(ResourceSet $resourceSet, KeyDescriptor $keyDescriptor)
     {
@@ -685,24 +686,25 @@ class ProvidersWrapper
 
     /**
      * Get related resource set for a resource
-     * 
-     * @param ResourceSet        $sourceResourceSet  The source resource set
-     * @param mixed              $sourceEntity       The resource
-     * @param ResourceSet        $targetResourceSet  The resource set of the navigation property
      *
-     * @param ResourceProperty   $targetProperty     The navigation property to be retrieved
+     * @param QueryType $queryType indicates if this is a query for a count, entities, or entities with a count
+     * @param ResourceSet $sourceResourceSet The entity set containing the source entity
+     * @param stdClass $sourceEntity The source entity instance.
+     * @param ResourceSet      $targetResourceSet    The resource set of containing the target of the navigation property
+     * @param ResourceProperty $targetProperty       The navigation property to retrieve
+     * @param FilterInfo  $filterInfo represents the $filter parameter of the OData query.  NULL if no $filter specified
+     * @param mixed $orderBy sorted order if we want to get the data in some specific order
+     * @param int $top number of records which  need to be skip
+     * @param String $skip value indicating what records to skip
      *
-     * @param FilterInfo $filterInfo An instance of FilterInfo if the $filter option is present, null otherwise
-     * @param TODO               $orderBy            The orderby information
-     * @param int                $top                The top count
-     * @param int                $skip               The skip count
-     *                                               
-     * @return \stdClass[] Array of related resource if exists, if no related resources found returns empty array
+     * @return QueryResult
      *
+     * @throws ODataException
      */
 	public function getRelatedResourceSet(
+		QueryType $queryType,
 	    ResourceSet $sourceResourceSet,
-        $sourceEntity,
+	    stdClass $sourceEntity,
         ResourceSet $targetResourceSet,
         ResourceProperty $targetProperty, 
         $filterInfo,
@@ -711,14 +713,13 @@ class ProvidersWrapper
         $skip
     ) {
 
-		$customExpressionAsString = $filterInfo->getExpressionAsString();
-
 		$entityInstances = $this->queryProvider->getRelatedResourceSet(
+			$queryType,
 		    $sourceResourceSet,
 		    $sourceEntity,
 		    $targetResourceSet,
 		    $targetProperty,
-		    $customExpressionAsString,
+			$filterInfo,
 		    $orderBy,
 		    $top,
 		    $skip

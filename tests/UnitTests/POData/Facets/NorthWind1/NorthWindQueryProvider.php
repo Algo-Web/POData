@@ -4,6 +4,7 @@ namespace UnitTests\POData\Facets\NorthWind1;
 
 use POData\Providers\Query\QueryResult;
 use POData\Providers\Query\QueryType;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\ResourceProperty;
@@ -84,20 +85,21 @@ class NorthWindQueryProvider implements IQueryProvider
 	 * IE: http://host/EntitySet(1L)/NavigationPropertyToCollection
 	 * http://host/EntitySet?$expand=NavigationPropertyToCollection
 	 *
+	 * @param QueryType $queryType indicates if this is a query for a count, entities, or entities with a count
 	 * @param ResourceSet $sourceResourceSet The entity set containing the source entity
 	 * @param stdClass $sourceEntityInstance The source entity instance.
 	 * @param ResourceSet $targetResourceSet    The resource set of containing the target of the navigation property
 	 * @param ResourceProperty $targetProperty       The navigation property to retrieve
-	 * @param String $filter               filter condition if any need to be apply in the query
+	 * @param FilterInfo $filter represents the $filter parameter of the OData query.  NULL if no $filter specified
 	 * @param mixed $orderBy sorted order if we want to get the data in some specific order
 	 * @param int $top number of records which  need to be skip
 	 * @param String $skip value indicating what records to skip
-	 * @param QueryType $queryType indicates if this is a query for a count, entities, or entities with a count
 	 *
 	 * @return QueryResult
 	 *
 	 */
 	public function getRelatedResourceSet(
+		QueryType $queryType,
 		ResourceSet $sourceResourceSet,
 		stdClass $sourceEntityInstance,
 		ResourceSet $targetResourceSet,
@@ -105,8 +107,7 @@ class NorthWindQueryProvider implements IQueryProvider
 		$filter = null,
 		$orderBy = null,
 		$top = null,
-		$skip = null,
-		QueryType $queryType
+		$skip = null
 	)
 	{
 		// TODO: Implement getRelatedResourceSet() method.
