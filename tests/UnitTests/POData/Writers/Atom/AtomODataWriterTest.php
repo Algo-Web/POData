@@ -74,9 +74,8 @@ class AtomODataWriterTest extends BaseUnitTestCase
     	$url2 = new ODataURL();
     	$url2->url = 'http://www.odata.org/developers/protocols/json-format';
     	
-    	$urls = array($url1, $url2);
-		$odataURLItem = new ODataURLCollection();
-		$odataURLItem->urls = $urls;
+		$urls = new ODataURLCollection();
+		$urls->urls = array($url1, $url2);
 		
 		$nextPageLink = new ODataLink ();
     	$nextPageLink->name = "Next";
@@ -84,11 +83,11 @@ class AtomODataWriterTest extends BaseUnitTestCase
     	$nextPageLink->type = "";
     	$nextPageLink->url = "Next Link Url";
     	
-    	$odataURLItem->nextPageLink = $nextPageLink;
-		$odataURLItem->count = 10;
+    	$urls->nextPageLink = $nextPageLink;
+		$urls->count = 10;
 
 	    $writer = new AtomODataWriter('http://localhost/NorthWind.svc');
-		$result = $writer->write($odataURLItem);
+		$result = $writer->write($urls);
 	    $this->assertSame($writer, $result);
 
 	    $actual = $writer->getOutput();
@@ -616,9 +615,9 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 	 */
 	public function testWriteExpandEntry()
     {
-    	$odataEntryItem = new ODataEntry();
-    	$odataEntryItem->id = 'Expand Entry';
-    	$odataEntryItem->title = 'Entry Title';
+    	$entry = new ODataEntry();
+    	$entry->id = 'Expand Entry';
+    	$entry->title = 'Entry Title';
 
     	$editLink = new ODataLink();
     	$editLink->name = "edit";
@@ -626,7 +625,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
     	$editLink->type = "Edit link type";
     	$editLink->url = "Edit Link URL";
     	
-    	$odataEntryItem->editLink = $editLink;
+    	$entry->editLink = $editLink;
 
     	$selfLink = new ODataLink();
     	$selfLink->name = "self";
@@ -634,8 +633,8 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
     	$selfLink->type = "";
     	$selfLink->url = "Self Link URL";
     	
-    	$odataEntryItem->selfLink = $selfLink;
-        $odataEntryItem->mediaLinks = array(new ODataMediaLink('Media Link Name',
+    	$entry->selfLink = $selfLink;
+        $entry->mediaLinks = array(new ODataMediaLink('Media Link Name',
                                                       'Edit Media link', 
                                                       'Src Media Link', 
                                                       'Media Content Type', 
@@ -734,9 +733,9 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         
         $odataLink->expandedResult = $odataExpandEntry;
         
-        $odataEntryItem->links = array($odataLink);
-        $odataEntryItem->eTag = 'Entry ETag';
-        $odataEntryItem->isMediaLinkEntry = false;
+        $entry->links = array($odataLink);
+        $entry->eTag = 'Entry ETag';
+        $entry->isMediaLinkEntry = false;
 		
         $bagProp1 = new ODataBagContent ();
         
@@ -791,10 +790,10 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         
         $propCont = new ODataPropertyContent ();
         $propCont->properties = array ($prop1);
-        $odataEntryItem->propertyContent = $propCont;
+        $entry->propertyContent = $propCont;
 
 	    $writer = new AtomODataWriter('http://localhost/NorthWind.svc');
-	    $result = $writer->write($odataEntryItem);
+	    $result = $writer->write($entry);
 	    $this->assertSame($writer, $result);
 
 	    $actual = $writer->getOutput();

@@ -223,15 +223,14 @@ class JsonLightODataWriter extends JsonODataV2Writer
 	 */
 	protected function writeLink(ODataLink $link){
 
-		if($this->metadataLevel != JsonLightMetadataLevel::FULL())
+		if($this->metadataLevel == JsonLightMetadataLevel::FULL())
 		{
-			//Only full meta level outputs any link info
-			return $this;
+			//Interestingly the fullmetadata outputs this metadata..even if the thing is expanded
+			$this->_writer
+				->writeName($link->title . ODataConstants::JSON_LIGHT_METADATA_LINK_NAVIGATION_SUFFIX_STRING)
+				->writeValue($link->url);;
 		}
-		//Interestingly the fullmetadata outputs this metadata..even if the thing is expanded
-		$this->_writer
-			->writeName($link->title . ODataConstants::JSON_LIGHT_METADATA_LINK_NAVIGATION_SUFFIX_STRING)
-			->writeValue($link->url);
+
 
 		if($link->isExpanded)
 		{
