@@ -40,7 +40,7 @@ use POData\Providers\Metadata\ResourceProperty;
 
 use Phockito;
 use POData\IService;
-use UnitTests\POData\BaseUnitTestCase;
+use PhockitoUnit\PhockitoUnitTestCase;
 
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 //These are in the file loaded by above use statement
@@ -48,7 +48,7 @@ use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 use UnitTests\POData\Facets\NorthWind1\Customer2;
 
 
-class UriProcessorTest extends BaseUnitTestCase
+class UriProcessorTest extends PhockitoUnitTestCase
 {
 
     public function setUp(){

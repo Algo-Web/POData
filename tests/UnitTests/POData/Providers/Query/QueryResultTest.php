@@ -8,9 +8,9 @@ use POData\Providers\Query\QueryResult;
 
 
 use Phockito;
-use UnitTests\POData\BaseUnitTestCase;
+use PhockitoUnit\PhockitoUnitTestCase;
 
-class QueryResultTest extends BaseUnitTestCase
+class QueryResultTest extends PhockitoUnitTestCase
 {
 	/**
 	 * @dataProvider provider

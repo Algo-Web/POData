@@ -5,9 +5,9 @@ namespace UnitTests\POData\Common;
 
 
 use POData\Common\Messages;
-use UnitTests\POData\BaseUnitTestCase;
+use PhockitoUnit\PhockitoUnitTestCase;
 
-class MessagesTest extends BaseUnitTestCase {
+class MessagesTest extends PhockitoUnitTestCase {
 
 	public function testVerifyMessageList()
 	{

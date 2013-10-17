@@ -18,10 +18,10 @@ use POData\Common\Version;
 use POData\Common\MimeTypes;
 
 
-use UnitTests\POData\BaseUnitTestCase;
+use PhockitoUnit\PhockitoUnitTestCase;
 use Phockito;
 
-class JsonLightODataWriterMinimalMetadataTest extends BaseUnitTestCase
+class JsonLightODataWriterMinimalMetadataTest extends PhockitoUnitTestCase
 {
 
 	protected $serviceBase = "http://services.odata.org/OData/OData.svc";

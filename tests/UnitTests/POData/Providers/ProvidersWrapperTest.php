@@ -24,9 +24,9 @@ use POData\Providers\Query\QueryResult;
 
 
 use Phockito;
-use UnitTests\POData\BaseUnitTestCase;
+use PhockitoUnit\PhockitoUnitTestCase;
 
-class ProvidersWrapperTest extends BaseUnitTestCase
+class ProvidersWrapperTest extends PhockitoUnitTestCase
 {
 
 	/** @var  IQueryProvider */

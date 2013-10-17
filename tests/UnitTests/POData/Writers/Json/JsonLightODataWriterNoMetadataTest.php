@@ -18,10 +18,10 @@ use POData\Common\Version;
 use POData\Common\MimeTypes;
 
 
-use UnitTests\POData\BaseUnitTestCase;
+use PhockitoUnit\PhockitoUnitTestCase;
 use Phockito;
 
-class JsonLightODataWriterNoMetadataTest extends BaseUnitTestCase
+class JsonLightODataWriterNoMetadataTest extends PhockitoUnitTestCase
 {
 
 	protected $serviceBase = "this should not be used for minimal metadata";

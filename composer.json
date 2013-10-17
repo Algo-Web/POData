@@ -23,7 +23,7 @@
     },
 
     "require-dev": {
-
+        "balihoo/phockito-unit" : "1.0.0",
         "hafriedlander/phockito" : "dev-master",
         "doctrine/annotations": "1.*",
         "satooshi/php-coveralls": "dev-master"
