@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/balihoo/POData.png?branch=master)](https://travis-ci.org/balihoo/POData) 
+Master Status: [![Build Status](https://travis-ci.org/balihoo/POData.png?branch=master)](https://travis-ci.org/balihoo/POData) 
 [![Coverage Status](https://coveralls.io/repos/balihoo/POData/badge.png)](https://coveralls.io/r/balihoo/POData)
 [![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/balihoo/POData/badges/quality-score.png?s=f64c3b87cfa28d109fa394e68dd34c3caa88bedc)](https://scrutinizer-ci.com/g/balihoo/POData/)
 [![Code Coverage](https://scrutinizer-ci.com/g/balihoo/POData/badges/coverage.png?s=ce164b3b45a6a2f06fb42c344d61bed2e5eea63d)](https://scrutinizer-ci.com/g/balihoo/POData/)
