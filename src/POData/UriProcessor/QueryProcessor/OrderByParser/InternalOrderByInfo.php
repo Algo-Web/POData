@@ -2,6 +2,8 @@
 
 namespace POData\UriProcessor\QueryProcessor\OrderByParser;
 
+use POData\Common\Messages;
+use POData\Common\ODataException;
 use POData\UriProcessor\QueryProcessor\AnonymousFunction;
 
 /**
@@ -177,7 +179,7 @@ class InternalOrderByInfo
                         $nextPageLink .= $value . ', ';
                     }
                 } catch (\ReflectionException $reflectionException) {
-                    throw ODataException::createInternalServerError(
+                    ODataException::createInternalServerError(
                         Messages::internalSkipTokenInfoFailedToAccessOrInitializeProperty(
                             $subPathSegment->getName()
                         )
