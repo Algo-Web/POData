@@ -180,7 +180,7 @@ class ResourceSetWrapper extends ResourceSet
     public function checkResourceSetRights($requiredRights)
     {
         if (($this->_resourceSetRights & $requiredRights) == 0) {
-            ODataException::createForbiddenError();
+            throw ODataException::createForbiddenError();
         }
     }
 

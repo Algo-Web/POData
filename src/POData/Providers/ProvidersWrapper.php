@@ -582,12 +582,12 @@ class ProvidersWrapper
     {
 	    $expressionProvider = $this->queryProvider->getExpressionProvider();
         if (is_null($expressionProvider)) {
-            ODataException::createInternalServerError(Messages::providersWrapperExpressionProviderMustNotBeNullOrEmpty());
+            throw ODataException::createInternalServerError(Messages::providersWrapperExpressionProviderMustNotBeNullOrEmpty());
         }
 
         if (!$expressionProvider instanceof IExpressionProvider)
         {
-			ODataException::createInternalServerError( Messages::providersWrapperInvalidExpressionProviderInstance() );
+			throw ODataException::createInternalServerError( Messages::providersWrapperInvalidExpressionProviderInstance() );
         }
 
         return $expressionProvider;
@@ -608,7 +608,7 @@ class ProvidersWrapper
 
     private function ValidateQueryResult($queryResult, QueryType $queryType, $methodName){
         if (!$queryResult instanceof QueryResult) {
-            ODataException::createInternalServerError(
+            throw ODataException::createInternalServerError(
                 Messages::queryProviderReturnsNonQueryResult($methodName)
             );
         }
@@ -616,21 +616,21 @@ class ProvidersWrapper
         if($queryType == QueryType::COUNT() || $queryType == QueryType::ENTITIES_WITH_COUNT()){
             //and the provider is supposed to handle the ordered paging they must return a count!
             if($this->queryProvider->handlesOrderedPaging() && !is_numeric($queryResult->count)){
-                ODataException::createInternalServerError(
+                throw ODataException::createInternalServerError(
                     Messages::queryProviderResultCountMissing($methodName, $queryType)
                 );
             }
 
             //If POData is supposed to handle the ordered aging they must return results! (possibly empty)
             if(!$this->queryProvider->handlesOrderedPaging() && !is_array($queryResult->results)){
-                ODataException::createInternalServerError(
+                throw ODataException::createInternalServerError(
                     Messages::queryProviderResultsMissing($methodName, $queryType)
                 );
             }
         }
 
         if(($queryType == QueryType::ENTITIES() || $queryType == QueryType::ENTITIES_WITH_COUNT()) && !is_array($queryResult->results)){
-            ODataException::createInternalServerError(
+            throw ODataException::createInternalServerError(
                 Messages::queryProviderResultsMissing($methodName, $queryType)
             );
         }
@@ -804,7 +804,7 @@ class ProvidersWrapper
             if (!is_object($entityInstance) 
                 || !($entityInstance instanceof $entityName)
             ) {
-                ODataException::createInternalServerError(
+                throw ODataException::createInternalServerError(
                     Messages::providersWrapperIDSQPMethodReturnsUnExpectedType(
                         $entityName, 
                         'IQueryProvider::getRelatedResourceReference'
@@ -821,7 +821,7 @@ class ProvidersWrapper
                     );
                     $keyValue = $keyProperty->getValue($entityInstance);
                     if (is_null($keyValue)) {
-                        ODataException::createInternalServerError(
+                        throw ODataException::createInternalServerError(
                             Messages::providersWrapperIDSQPMethodReturnsInstanceWithNullKeyProperties('IDSQP::getRelatedResourceReference')
                         );
                     }
@@ -858,14 +858,14 @@ class ProvidersWrapper
         $methodName
     ) {
         if (is_null($entityInstance)) {
-            ODataException::createResourceNotFoundError($resourceSet->getName());
+            throw ODataException::createResourceNotFoundError($resourceSet->getName());
         }
 
         $entityName = $resourceSet->getResourceType()->getInstanceType()->getName();
         if (!is_object($entityInstance) 
             || !($entityInstance instanceof $entityName)
         ) {
-            ODataException::createInternalServerError(
+            throw ODataException::createInternalServerError(
                 Messages::providersWrapperIDSQPMethodReturnsUnExpectedType(
                     $entityName, 
                     $methodName
@@ -879,7 +879,7 @@ class ProvidersWrapper
                 $keyProperty = new \ReflectionProperty($entityInstance, $keyName);
                 $keyValue = $keyProperty->getValue($entityInstance);
                 if (is_null($keyValue)) {
-                    ODataException::createInternalServerError(
+                    throw ODataException::createInternalServerError(
                         Messages::providersWrapperIDSQPMethodReturnsInstanceWithNullKeyProperties($methodName)
                     );
                 }
@@ -887,7 +887,7 @@ class ProvidersWrapper
                 $convertedValue 
                     = $valueDescription[1]->convert($valueDescription[0]);
                 if ($keyValue != $convertedValue) {
-                    ODataException::createInternalServerError(
+                    throw ODataException::createInternalServerError(
                         Messages::providersWrapperIDSQPMethodReturnsInstanceWithNonMatchingKeys($methodName)
                     );
                 }

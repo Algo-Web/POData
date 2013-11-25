@@ -195,7 +195,7 @@ class ExpandProjectionParser
                         $expandSubPathSegment
                     );
                 if (is_null($resourceProperty)) {
-                    ODataException::createSyntaxError(
+					throw ODataException::createSyntaxError(
                         Messages::expandProjectionParserPropertyNotFound(
                             $resourceType->getFullName(), 
                             $expandSubPathSegment, 
@@ -203,7 +203,7 @@ class ExpandProjectionParser
                         )
                     );
                 } else if ($resourceProperty->getTypeKind() != ResourceTypeKind::ENTITY) {
-                    ODataException::createBadRequestError(
+					throw ODataException::createBadRequestError(
                         Messages::expandProjectionParserExpandCanOnlyAppliedToEntity(
                             $resourceType->getFullName(), 
                             $expandSubPathSegment
@@ -218,7 +218,7 @@ class ExpandProjectionParser
                         $resourceProperty
                     );
                 if (is_null($resourceSetWrapper)) {
-                    ODataException::createBadRequestError(
+					throw ODataException::createBadRequestError(
                         Messages::badRequestInvalidPropertyNameSpecified(
                             $resourceType->getFullName(), 
                             $expandSubPathSegment
@@ -295,7 +295,7 @@ class ExpandProjectionParser
                 if (!($currentNode instanceof RootProjectionNode) 
                     && !($currentNode instanceof ExpandedProjectionNode)
                 ) {
-                    ODataException::createBadRequestError(
+					throw ODataException::createBadRequestError(
                         Messages::expandProjectionParserPropertyWithoutMatchingExpand(
                             $currentNode->getPropertyName()
                         )
@@ -315,7 +315,7 @@ class ExpandProjectionParser
                         $selectSubPathSegment
                     );
                 if (is_null($resourceProperty)) {
-                    ODataException::createSyntaxError(
+                    throw ODataException::createSyntaxError(
                         Messages::expandProjectionParserPropertyNotFound(
                             $currentResourceType->getFullName(), 
                             $selectSubPathSegment, 
@@ -326,28 +326,28 @@ class ExpandProjectionParser
 
                 if (!$isLastSegment) {
                     if ($resourceProperty->isKindOf(ResourcePropertyKind::BAG)) {
-                        ODataException::createBadRequestError(
+						throw ODataException::createBadRequestError(
                             Messages::expandProjectionParserBagPropertyAsInnerSelectSegment(
                                 $currentResourceType->getFullName(), 
                                 $selectSubPathSegment
                             )
                         );
                     } else if ($resourceProperty->isKindOf(ResourcePropertyKind::PRIMITIVE)) {
-                        ODataException::createBadRequestError(
+						throw ODataException::createBadRequestError(
                             Messages::expandProjectionParserPrimitivePropertyUsedAsNavigationProperty(
                                 $currentResourceType->getFullName(), 
                                 $selectSubPathSegment
                             )
                         );
                     } else if ($resourceProperty->isKindOf(ResourcePropertyKind::COMPLEX_TYPE)) {
-                        ODataException::createBadRequestError(
+						throw ODataException::createBadRequestError(
                             Messages::expandProjectionParserComplexPropertyAsInnerSelectSegment(
                                 $currentResourceType->getFullName(), 
                                 $selectSubPathSegment
                             )
                         );
                     } else if ($resourceProperty->getKind() != ResourcePropertyKind::RESOURCE_REFERENCE && $resourceProperty->getKind() != ResourcePropertyKind::RESOURCESET_REFERENCE) {
-                        ODataException::createInternalServerError(
+                        throw ODataException::createInternalServerError(
                             Messages::expandProjectionParserUnexpectedPropertyType()
                         );
                     }
@@ -356,7 +356,7 @@ class ExpandProjectionParser
                 $node = $currentNode->findNode($selectSubPathSegment);
                 if (is_null($node)) {
                     if (!$isLastSegment) {
-                        ODataException::createBadRequestError(
+						throw ODataException::createBadRequestError(
                             Messages::expandProjectionParserPropertyWithoutMatchingExpand(
                                 $selectSubPathSegment
                             )

@@ -73,7 +73,7 @@ class ResourcePathProcessor
 
         if ($request->getIdentifier() === ODataConstants::URI_COUNT_SEGMENT) {
             if (!$service->getConfiguration()->getAcceptCountRequests()) {
-                ODataException::createBadRequestError(Messages::configurationCountNotAccepted());
+                throw ODataException::createBadRequestError(Messages::configurationCountNotAccepted());
             }
 
 	        $request->queryType = QueryType::COUNT();

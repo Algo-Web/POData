@@ -132,7 +132,7 @@ class ObjectModelSerializerBase
 
             $keyValue = $this->getPropertyValue($entityInstance, $resourceType, $resourceProperty);
             if (is_null($keyValue)) {
-                ODataException::createInternalServerError(Messages::badQueryNullKeysAreNotSupported($resourceType->getName(), $keyName));
+                throw ODataException::createInternalServerError(Messages::badQueryNullKeysAreNotSupported($resourceType->getName(), $keyName));
             }
             
             $keyValue = $keyType->convertToOData($keyValue);
@@ -163,7 +163,7 @@ class ObjectModelSerializerBase
 			$reflectionProperty = new \ReflectionProperty($entity, $resourceProperty->getName());
 	        return $reflectionProperty->getValue($entity);
         } catch (\ReflectionException $reflectionException) {
-            ODataException::createInternalServerError(
+            throw ODataException::createInternalServerError(
                 Messages::objectModelSerializerFailedToAccessProperty(
                     $resourceProperty->getName(), 
                     $resourceType->getName()

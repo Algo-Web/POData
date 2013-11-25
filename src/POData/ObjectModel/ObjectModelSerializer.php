@@ -398,7 +398,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
         $resourceTypeKind = $resourceType->getResourceTypeKind();
         if (is_null($absoluteUri) == ($resourceTypeKind == ResourceTypeKind::ENTITY)
         ) {
-            ODataException::createInternalServerError(
+            throw ODataException::createInternalServerError(
                 Messages::badProviderInconsistentEntityOrComplexTypeUsage(
                     $resourceType->getName()
                 )

@@ -98,7 +98,7 @@ class UriProcessor
         $absoluteServiceUri = $service->getHost()->getAbsoluteServiceUri();
         
         if (!$absoluteServiceUri->isBaseOf($absoluteRequestUri)) {
-            ODataException::createInternalServerError(
+			throw ODataException::createInternalServerError(
                 Messages::uriProcessorRequestUriDoesNotHaveTheRightBaseUri(
                     $absoluteRequestUri->getUrlAsString(), 
                     $absoluteServiceUri->getUrlAsString()
@@ -144,7 +144,7 @@ class UriProcessor
                 $this->handleSegmentTargetsToResourceSet($segment);
             } else if ($requestTargetKind == TargetKind::RESOURCE()) {
                 if (is_null($segment->getPrevious()->getResult())) {
-                    ODataException::createResourceNotFoundError(
+					throw ODataException::createResourceNotFoundError(
                         $segment->getPrevious()->getIdentifier()
                     );
                 }
@@ -159,7 +159,7 @@ class UriProcessor
             } else {
                 if ($requestTargetKind == TargetKind::MEDIA_RESOURCE()) {
                     if (is_null($segment->getPrevious()->getResult())) {
-                        ODataException::createResourceNotFoundError(
+						throw ODataException::createResourceNotFoundError(
                             $segment->getPrevious()->getIdentifier()
                         );
                     }
