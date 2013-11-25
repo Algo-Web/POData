@@ -27,7 +27,7 @@ class NorthWindQueryProvider implements IQueryProvider
 
 
 	public function handlesOrderedPaging(){
-		ODataException::createNotImplementedError($this->_message);
+		throw ODataException::createNotImplementedError($this->_message);
 	}
 
 	public function getExpressionProvider()

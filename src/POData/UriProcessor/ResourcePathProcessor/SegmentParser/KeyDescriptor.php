@@ -259,7 +259,7 @@ class KeyDescriptor
         $keyPropertiesCount = count($keyProperties);        
         if (!empty($this->_namedValues)) {
             if (count($this->_namedValues) != $keyPropertiesCount) {
-                ODataException::createSyntaxError(
+                throw ODataException::createSyntaxError(
                     Messages::keyDescriptorKeyCountNotMatching(
                         $segmentAsString, $keyPropertiesCount, 
                         count($this->_namedValues)
@@ -275,7 +275,7 @@ class KeyDescriptor
                     }
                     
                     $keysAsString = rtrim($keysAsString, ' ,');
-                    ODataException::createSyntaxError(
+                    throw ODataException::createSyntaxError(
                         Messages::keyDescriptorMissingKeys(
                             $segmentAsString, $keysAsString
                         )
@@ -285,7 +285,7 @@ class KeyDescriptor
                 $typeProvided = $this->_namedValues[$keyName][1];
                 $expectedType = $keyResourceProperty->getInstanceType();
                 if (!$expectedType->isCompatibleWith($typeProvided)) {
-                    ODataException::createSyntaxError(
+                    throw ODataException::createSyntaxError(
                         Messages::keyDescriptorInCompatibleKeyType(
                             $segmentAsString, $keyName, 
                             $expectedType->getFullTypeName(), 
@@ -298,7 +298,7 @@ class KeyDescriptor
             }
         } else {            
             if (count($this->_positionalValues) != $keyPropertiesCount) {
-                ODataException::createSyntaxError(
+                throw ODataException::createSyntaxError(
                     Messages::keyDescriptorKeyCountNotMatching(
                         $segmentAsString, $keyPropertiesCount, 
                         count($this->_positionalValues)
@@ -312,7 +312,7 @@ class KeyDescriptor
                 $expectedType = $keyResourceProperty->getInstanceType();
 
                 if (!$expectedType->isCompatibleWith($typeProvided)) {
-                    ODataException::createSyntaxError(
+                    throw ODataException::createSyntaxError(
                         Messages::keyDescriptorInCompatibleKeyTypeAtPosition(
                             $segmentAsString, $keyResourceProperty->getName(), 
                             $i, $expectedType->getFullTypeName(), 

@@ -869,7 +869,7 @@ class RequestDescription
 
 	    //If the request version is below the minimum version required by supplied request arguments..throw an exception
         if ($this->requestVersion->compare($this->requiredMinRequestVersion) < 0) {
-            ODataException::createBadRequestError(
+			throw ODataException::createBadRequestError(
                 Messages::requestVersionTooLow(
 	                $this->requestVersion->toString(),
 	                $this->requiredMinRequestVersion->toString()
@@ -879,7 +879,7 @@ class RequestDescription
 
 	    //If the requested max version is below the version required to fulfill the response...throw an exception
         if ($this->requestMaxVersion->compare($this->requiredMinResponseVersion) < 0) {
-            ODataException::createBadRequestError(
+			throw ODataException::createBadRequestError(
                 Messages::requestVersionTooLow(
 	                $this->requestMaxVersion->toString(),
 	                $this->requiredMinResponseVersion->toString()
@@ -889,7 +889,7 @@ class RequestDescription
 
         //If the max version supported by the service is below the version required to fulfill the response..throw an exception
         if ($this->maxServiceVersion->compare($this->requiredMinResponseVersion) < 0) {
-            ODataException::createBadRequestError(
+			throw ODataException::createBadRequestError(
                 Messages::requestVersionIsBiggerThanProtocolVersion(
 	                $this->requiredMinResponseVersion->toString(),
 	                $this->maxServiceVersion->toString()
@@ -925,7 +925,7 @@ class RequestDescription
 
 	            //Throw an exception if we find more than 1 dot
 	            if ($dotIndex != -1) {
-                    ODataException::createBadRequestError(
+					throw ODataException::createBadRequestError(
                         Messages::requestDescriptionInvalidVersionHeader(
                             $versionHeader,
                             $headerName
@@ -935,7 +935,7 @@ class RequestDescription
 
                 $dotIndex = $i;
             } else if ($versionHeader[$i] < '0' || $versionHeader[$i] > '9') {
-                ODataException::createBadRequestError(
+				throw ODataException::createBadRequestError(
                     Messages::requestDescriptionInvalidVersionHeader(
                         $versionHeader,
                         $headerName
@@ -952,7 +952,7 @@ class RequestDescription
         if ($dotIndex != -1) {
             if ($dotIndex == 0) {
 	            //If it starts with a ., throw an exception
-                ODataException::createBadRequestError(
+				throw ODataException::createBadRequestError(
                     Messages::requestDescriptionInvalidVersionHeader(
                         $versionHeader,
                         $headerName
@@ -982,7 +982,7 @@ class RequestDescription
             }
 
             $availableVersions = rtrim($availableVersions, ', ');
-            ODataException::createBadRequestError(
+            throw ODataException::createBadRequestError(
                 Messages::requestDescriptionUnSupportedVersion(
                     $headerName,
                     $versionHeader,

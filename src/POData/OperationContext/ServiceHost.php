@@ -114,7 +114,7 @@ Class ServiceHost
             try {
                 new Url($this->_absoluteRequestUriAsString);
             } catch (UrlFormatException $exception) {
-                ODataException::createBadRequestError($exception->getMessage());
+				throw ODataException::createBadRequestError($exception->getMessage());
             }
 
             $queryStartIndex = strpos($this->_absoluteRequestUriAsString, '?');
@@ -164,7 +164,7 @@ Class ServiceHost
             try {
                 $this->_absoluteServiceUri = new Url($serviceUri, $isAbsoluteServiceUri );
             } catch (UrlFormatException $exception) {
-                ODataException::createInternalServerError(Messages::hostMalFormedBaseUriInConfig());
+                throw ODataException::createInternalServerError(Messages::hostMalFormedBaseUriInConfig());
             }
 
             $segments = $this->_absoluteServiceUri->getSegments();
@@ -175,7 +175,7 @@ Class ServiceHost
                 || !is_null($this->_absoluteServiceUri->getQuery()) 
                 || !is_null($this->_absoluteServiceUri->getFragment())
             ) {
-                ODataException::createInternalServerError(Messages::hostMalFormedBaseUriInConfig(true));
+                throw ODataException::createInternalServerError(Messages::hostMalFormedBaseUriInConfig(true));
             }
 
             if (!$isAbsoluteServiceUri) {
@@ -194,7 +194,7 @@ Class ServiceHost
                 $j = count($segments) - 1;
                 $k = $i;
                 if ($j > $i) {
-                    ODataException::createBadRequestError(
+					throw ODataException::createBadRequestError(
                         Messages::hostRequestUriIsNotBasedOnRelativeUriInConfig(
                             $this->_absoluteRequestUriAsString,
                             $serviceUri
@@ -207,7 +207,7 @@ Class ServiceHost
                 }
 
                 if ($j != -1) {
-                    ODataException::createBadRequestError(
+					throw ODataException::createBadRequestError(
                         Messages::hostRequestUriIsNotBasedOnRelativeUriInConfig(
                             $this->_absoluteRequestUriAsString,
                             $serviceUri
@@ -280,13 +280,13 @@ Class ServiceHost
                 if (!empty($optionValue)) {
                     if ($optionValue[0] == '$') {
                         if ($this->_isODataQueryOption($optionValue)) {
-                            ODataException::createBadRequestError(
+							throw ODataException::createBadRequestError(
                                 Messages::hostODataQueryOptionFoundWithoutValue(
                                     $optionValue
                                 )
                             );
                         } else {
-                            ODataException::createBadRequestError(
+							throw ODataException::createBadRequestError(
                                 Messages::hostNonODataOptionBeginsWithSystemCharacter(
                                     $optionValue
                                 )
@@ -297,7 +297,7 @@ Class ServiceHost
             } else {
                 if ($optionName[0] == '$') {
                     if (!$this->_isODataQueryOption($optionName)) {
-                        ODataException::createBadRequestError(
+						throw ODataException::createBadRequestError(
                             Messages::hostNonODataOptionBeginsWithSystemCharacter(
                                 $optionName
                             )
@@ -305,7 +305,7 @@ Class ServiceHost
                     }
 
                     if (array_search($optionName, $namesFound) !== false) {
-                        ODataException::createBadRequestError(
+						throw ODataException::createBadRequestError(
                             Messages::hostODataQueryOptionCannotBeSpecifiedMoreThanOnce(
                                 $optionName
                             )
@@ -313,7 +313,7 @@ Class ServiceHost
                     }
                     
                     if (empty($optionValue)) {
-                        ODataException::createBadRequestError(
+						throw ODataException::createBadRequestError(
                             Messages::hostODataQueryOptionFoundWithoutValue(
                                 $optionName
                             )
@@ -503,7 +503,7 @@ Class ServiceHost
         if (preg_match('/[0-9]+/', $value)) {
             $this->_operationContext->outgoingResponse()->setContentLength($value);
         } else {
-            \POData\Common\ODataException::notAcceptableError(
+            throw ODataException::notAcceptableError(
                 "ContentLength:$value is invalid"
             );
         }
@@ -562,7 +562,7 @@ Class ServiceHost
             $this->_operationContext
                 ->outgoingResponse()->setStatusCode($value . $statusDescription);
         } else {
-            ODataException::createInternalServerError(
+            throw ODataException::createInternalServerError(
                 'Invalid Status Code' . $value
             );
         }

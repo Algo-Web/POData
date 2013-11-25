@@ -478,7 +478,7 @@ class FunctionDescription
             $string = substr_replace($string, ' and ', strrpos($string, ', '), 2);
         }
 
-        ODataException::createSyntaxError(
+        throw ODataException::createSyntaxError(
             Messages::expressionParserInCompatibleTypes(
                 $expressionToken->Text, 
                 $string, $expressionToken->Position
@@ -556,7 +556,7 @@ class FunctionDescription
             if ((strcmp($expressionToken->Text, ODataConstants::KEYWORD_EQUAL) != 0) 
                 && (strcmp($expressionToken->Text, ODataConstants::KEYWORD_NOT_EQUAL) != 0)
             ) {                
-                ODataException::createSyntaxError(
+                throw ODataException::createSyntaxError(
                     Messages::expressionParserOperatorNotSupportNull(
                         $expressionToken->Text, 
                         $expressionToken->Position
@@ -573,7 +573,7 @@ class FunctionDescription
             if ((strcmp($expressionToken->Text, ODataConstants::KEYWORD_EQUAL) != 0) 
                 && (strcmp($expressionToken->Text, ODataConstants::KEYWORD_NOT_EQUAL) != 0)
             ) {                
-                ODataException::createSyntaxError(
+                throw ODataException::createSyntaxError(
                     Messages::expressionParserOperatorNotSupportGuid(
                         $expressionToken->Text, $expressionToken->Position
                     )
@@ -589,7 +589,7 @@ class FunctionDescription
             if ((strcmp($expressionToken->Text, ODataConstants::KEYWORD_EQUAL) != 0) 
                 && (strcmp($expressionToken->Text, ODataConstants::KEYWORD_NOT_EQUAL) != 0)
             ) {                
-                ODataException::createSyntaxError(
+                throw ODataException::createSyntaxError(
                     Messages::expressionParserOperatorNotSupportBinary(
                         $expressionToken->Text, $expressionToken->Position
                     )
@@ -662,7 +662,7 @@ class FunctionDescription
     public static function verifyFunctionExists($expressionToken)
     {
         if (!array_key_exists($expressionToken->Text, self::filterFunctionDescriptions())) {
-            ODataException::createSyntaxError(
+            throw ODataException::createSyntaxError(
                 Messages::expressionParserUnknownFunction(
                     $expressionToken->Text, 
                     $expressionToken->Position
@@ -698,7 +698,7 @@ class FunctionDescription
                 $protoTypes .=  $function->getPrototypeAsString() . '; ';
             }
 
-            ODataException::createSyntaxError(
+            throw ODataException::createSyntaxError(
                 Messages::expressionLexerNoApplicableFunctionsFound(
                     $expressionToken->Text, 
                     $protoTypes, 

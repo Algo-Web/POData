@@ -50,7 +50,7 @@ class NorthWindQueryProvider implements IQueryProvider
         if ( $this->_connectionHandle ) {        	
         } else {
             $errorAsString = self::_getSQLSRVError();
-        	ODataException::createInternalServerError($errorAsString);
+        	throw ODataException::createInternalServerError($errorAsString);
         }
 
         $this->_northWindSQLSRVExpressionProvider = null;
@@ -100,7 +100,7 @@ class NorthWindQueryProvider implements IQueryProvider
             && $resourceSetName !== 'Order_Details'
             && $resourceSetName !== 'Employees'
         ) {
-        	ODataException::createInternalServerError('(NorthWindQueryProvider) Unknown resource set ' . $resourceSetName . '! Contact service provider');        
+        	throw ODataException::createInternalServerError('(NorthWindQueryProvider) Unknown resource set ' . $resourceSetName . '! Contact service provider');
         }
 
         if ($resourceSetName === 'Order_Details') {
@@ -114,7 +114,7 @@ class NorthWindQueryProvider implements IQueryProvider
         $stmt = sqlsrv_query($this->_connectionHandle, $query);
         if ($stmt === false) {
             $errorAsString = self::_getSQLSRVError();
-        	ODataException::createInternalServerError($errorAsString);
+        	throw ODataException::createInternalServerError($errorAsString);
         }
         $returnResult = array();
         switch ($resourceSetName) {
@@ -172,7 +172,7 @@ class NorthWindQueryProvider implements IQueryProvider
         $stmt = sqlsrv_query($this->_connectionHandle, $query);
         if ($stmt === false) {
             $errorAsString = self::_getSQLSRVError();
-        	ODataException::createInternalServerError($errorAsString);
+        	throw ODataException::createInternalServerError($errorAsString);
         }
 
         //If resource not found return null to the library
@@ -237,7 +237,7 @@ class NorthWindQueryProvider implements IQueryProvider
                 $stmt = sqlsrv_query($this->_connectionHandle, $query);
                 if ($stmt === false) {            
                     $errorAsString = self::_getSQLSRVError();
-        	        ODataException::createInternalServerError($errorAsString);
+        	        throw ODataException::createInternalServerError($errorAsString);
                 }
 
                 $result = $this->_serializeOrders($stmt);
@@ -250,7 +250,7 @@ class NorthWindQueryProvider implements IQueryProvider
                 $stmt = sqlsrv_query($this->_connectionHandle, $query);
                 if ($stmt === false) {            
                     $errorAsString = self::_getSQLSRVError();
-        	        ODataException::createInternalServerError($errorAsString);
+        	        throw ODataException::createInternalServerError($errorAsString);
                 }
 
                 $result = $this->_serializeOrderDetails($stmt);
@@ -301,7 +301,7 @@ class NorthWindQueryProvider implements IQueryProvider
                 $stmt = sqlsrv_query($this->_connectionHandle, $query);
                 if ($stmt === false) {
                     $errorAsString = self::_getSQLSRVError();
-        	        ODataException::createInternalServerError($errorAsString);
+        	        throw ODataException::createInternalServerError($errorAsString);
                 }
 
                 $result = $this->_serializeOrders($stmt);
@@ -317,7 +317,7 @@ class NorthWindQueryProvider implements IQueryProvider
                 $stmt = sqlsrv_query($this->_connectionHandle, $query);
                 if ($stmt === false) {            
                     $errorAsString = self::_getSQLSRVError();
-        	        ODataException::createInternalServerError($errorAsString);
+        	        throw ODataException::createInternalServerError($errorAsString);
                 }
 
                 $result = $this->_serializeOrderDetails($stmt);
@@ -358,7 +358,7 @@ class NorthWindQueryProvider implements IQueryProvider
                     $stmt = sqlsrv_query($this->_connectionHandle, $query);
                     if ($stmt === false) {
                         $errorAsString = self::_getSQLSRVError();
-        	            ODataException::createInternalServerError($errorAsString);
+        	            throw ODataException::createInternalServerError($errorAsString);
                     }
 
                     if (!sqlsrv_has_rows($stmt)) {
@@ -379,7 +379,7 @@ class NorthWindQueryProvider implements IQueryProvider
                     $stmt = sqlsrv_query($this->_connectionHandle, $query);
                     if ($stmt === false) {
                         $errorAsString = self::_getSQLSRVError();
-        	            ODataException::createInternalServerError($errorAsString);
+        	            throw ODataException::createInternalServerError($errorAsString);
                     }
                     
                     if (!sqlsrv_has_rows($stmt)) {

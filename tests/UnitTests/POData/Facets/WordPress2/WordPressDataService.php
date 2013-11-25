@@ -86,7 +86,7 @@ class WordPressDataService extends BaseService
         $this->getHost()->validateQueryParameters();
         $requestMethod = $this->getOperationContext()->incomingRequest()->getMethod();
         if ($requestMethod != HTTPRequestMethod::GET()) {
-            ODataException::createNotImplementedError(Messages::onlyReadSupport($requestMethod));
+            throw ODataException::createNotImplementedError(Messages::onlyReadSupport($requestMethod));
         }
 
     

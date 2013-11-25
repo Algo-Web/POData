@@ -270,7 +270,7 @@ class QueryProcessor
             || $kind == TargetKind::COMPLEX_OBJECT()
             || $this->request->queryType == QueryType::COUNT() )
         ) {
-            ODataException::createBadRequestError(
+			throw ODataException::createBadRequestError(
                 Messages::queryProcessorQueryFilterOptionNotApplicable()
             );
         }
@@ -301,7 +301,7 @@ class QueryProcessor
 
 	    //If the service doesn't allow count requests..then throw an exception
         if (!$this->service->getConfiguration()->getAcceptCountRequests()) {
-            ODataException::createBadRequestError(
+			throw ODataException::createBadRequestError(
                 Messages::configurationCountNotAccepted()
             );
         }
@@ -316,7 +316,7 @@ class QueryProcessor
 	    //You can't specify $count & $inlinecount together
 	    //TODO: ensure there's a test for this case see #55
         if ($this->request->queryType == QueryType::COUNT() ) {
-            ODataException::createBadRequestError(
+			throw ODataException::createBadRequestError(
                 Messages::queryProcessorInlineCountWithValueCount()
             );
         }
@@ -331,7 +331,7 @@ class QueryProcessor
             $this->request->raiseResponseVersion( 2, 0 );
 
         } else {
-            ODataException::createBadRequestError(
+			throw ODataException::createBadRequestError(
                 Messages::queryProcessorInvalidInlineCountOptionError()
             );
         }
@@ -361,13 +361,13 @@ class QueryProcessor
         }
 
         if (!$this->_pagingApplicable) {
-            ODataException::createBadRequestError(
+			throw ODataException::createBadRequestError(
                 Messages::queryProcessorSkipTokenNotAllowed()
             );
         }
 
         if (!$this->_isSSPagingRequired()) {
-            ODataException::createBadRequestError(
+			throw ODataException::createBadRequestError(
                 Messages::queryProcessorSkipTokenCannotBeAppliedForNonPagedResourceSet($this->request->getTargetResourceSetWrapper())
             );
         }
@@ -412,7 +412,7 @@ class QueryProcessor
 
         if (!is_null($select)) {
             if (!$this->service->getConfiguration()->getAcceptProjectionRequests()) {
-                ODataException::createBadRequestError( Messages::configurationProjectionsNotAccepted() );
+				throw ODataException::createBadRequestError( Messages::configurationProjectionsNotAccepted() );
             }
 
             $this->_checkExpandOrSelectApplicable( ODataConstants::HTTPQUERY_STRING_SELECT );
@@ -488,7 +488,7 @@ class QueryProcessor
         if (!is_null($value)) {
             $int = new Int32();
             if (!$int->validate($value, $outValue)) {
-                ODataException::createSyntaxError(
+                throw ODataException::createSyntaxError(
                     Messages::queryProcessorIncorrectArgumentFormat(
                         $queryItem, 
                         $value
@@ -498,7 +498,7 @@ class QueryProcessor
 
             $value = intval($value);
             if ($value < 0) {
-                ODataException::createSyntaxError(
+                throw ODataException::createSyntaxError(
                     Messages::queryProcessorIncorrectArgumentFormat(
                         $queryItem, 
                         $value
@@ -533,7 +533,7 @@ class QueryProcessor
             || !is_null($serviceHost->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_SKIPTOKEN))
             || !is_null($serviceHost->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_TOP))
         ) {
-            ODataException::createBadRequestError(
+			throw ODataException::createBadRequestError(
                 Messages::queryProcessorNoQueryOptionsApplicable()
             );
         }
@@ -550,8 +550,8 @@ class QueryProcessor
      */
     private function _checkSetQueryApplicable()
     {
-        if (!$this->_setQueryApplicable) { 
-            ODataException::createBadRequestError(
+        if (!$this->_setQueryApplicable) {
+			throw ODataException::createBadRequestError(
                 Messages::queryProcessorQuerySetOptionsNotApplicable()
             );
         }
@@ -572,7 +572,7 @@ class QueryProcessor
     private function _checkExpandOrSelectApplicable($queryItem)
     {
         if (!$this->_expandSelectApplicable) {
-            ODataException::createBadRequestError(
+			throw ODataException::createBadRequestError(
                 Messages::queryProcessorSelectOrExpandOptionNotApplicable($queryItem)
             );
         }
