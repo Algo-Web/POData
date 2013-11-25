@@ -54,7 +54,7 @@ class SkipTokenParser
             $tokenValueDescriptor
         )
         ) {
-            ODataException::createSyntaxError(
+            throw ODataException::createSyntaxError(
                 Messages::skipTokenParserSyntaxError($skipToken)
             );
         }
@@ -66,7 +66,7 @@ class SkipTokenParser
         $orderByPathSegments = $internalOrderByInfo->getOrderByPathSegments();
         $orderByPathCount = count($orderByPathSegments);
         if ($count != ($orderByPathCount)) {
-                ODataException::createBadRequestError(
+			    throw ODataException::createBadRequestError(
                     Messages::skipTokenParserSkipTokenNotMatchingOrdering(
                         $count, $skipToken, $orderByPathCount
                     )
@@ -81,7 +81,7 @@ class SkipTokenParser
                 $j = count($orderBySubPathSegments) - 1;
                 $expectedType = $orderBySubPathSegments[$j]->getInstanceType();
                 if (!$expectedType->isCompatibleWith($typeProvidedInSkipToken)) {
-                    ODataException::createSyntaxError(
+                    throw ODataException::createSyntaxError(
                         Messages::skipTokenParserInCompatibleTypeAtPosition(
                             $skipToken, $expectedType->getFullTypeName(), $i,
                             $typeProvidedInSkipToken->getFullTypeName()

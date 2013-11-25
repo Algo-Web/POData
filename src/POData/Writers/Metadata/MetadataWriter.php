@@ -199,7 +199,7 @@ class MetadataWriter
             } else if ($resourceType->getResourceTypeKind() == ResourceTypeKind::COMPLEX) {
                 $this->_writeComplexType($resourceType);
             } else {
-                ODataException::createInternalServerError(Messages::metadataWriterExpectingEntityOrComplexResourceType());
+                throw ODataException::createInternalServerError(Messages::metadataWriterExpectingEntityOrComplexResourceType());
             }
         }
     }

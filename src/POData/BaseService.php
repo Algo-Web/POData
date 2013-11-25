@@ -215,7 +215,7 @@ abstract class BaseService implements IRequestHandler, IService
             $this->_serviceHost->validateQueryParameters();
             $requestMethod = $this->getOperationContext()->incomingRequest()->getMethod();
             if ($requestMethod != HTTPRequestMethod::GET()) {
-                ODataException::createNotImplementedError(Messages::onlyReadSupport($requestMethod));
+                throw ODataException::createNotImplementedError(Messages::onlyReadSupport($requestMethod));
             }          
 
             $uriProcessor = UriProcessor::process($this);
@@ -269,25 +269,25 @@ abstract class BaseService implements IRequestHandler, IService
 
         $metadataProvider = $this->getMetadataProvider();
         if (is_null($metadataProvider)) {
-            ODataException::createInternalServerError(Messages::providersWrapperNull());
+            throw ODataException::createInternalServerError(Messages::providersWrapperNull());
         }
     
         if (!is_object($metadataProvider) || !$metadataProvider instanceof IMetadataProvider) {
-            ODataException::createInternalServerError(Messages::invalidMetadataInstance());
+            throw ODataException::createInternalServerError(Messages::invalidMetadataInstance());
         }
 
         $queryProvider = $this->getQueryProvider();
 
         if (is_null($queryProvider)) {
-            ODataException::createInternalServerError(Messages::providersWrapperNull());
+            throw ODataException::createInternalServerError(Messages::providersWrapperNull());
         }
 
         if (!is_object($queryProvider)) {
-          ODataException::createInternalServerError(Messages::invalidQueryInstance());
+            throw ODataException::createInternalServerError(Messages::invalidQueryInstance());
         }
 
         if (!$queryProvider instanceof IQueryProvider) {
-            ODataException::createInternalServerError(Messages::invalidQueryInstance());
+            throw ODataException::createInternalServerError(Messages::invalidQueryInstance());
         }
 
         $this->config = new ServiceConfiguration($metadataProvider);
@@ -341,7 +341,7 @@ abstract class BaseService implements IRequestHandler, IService
             if (!is_null($this->_serviceHost->getRequestIfMatch())
                 ||!is_null($this->_serviceHost->getRequestIfNoneMatch())
             ) {
-                ODataException::createBadRequestError(
+                throw ODataException::createBadRequestError(
                     Messages::eTagCannotBeSpecified($this->getHost()->getAbsoluteRequestUri()->getUrlAsString())
                 );
             }
@@ -395,7 +395,7 @@ abstract class BaseService implements IRequestHandler, IService
                     // In the query 'Orders(1245)/$links/Customer', the targeted
                     // Customer might be null
                     if (is_null($result)) {
-                        ODataException::createResourceNotFoundError(
+						throw ODataException::createResourceNotFoundError(
                             $request->getIdentifier()
                         );
                     }
@@ -405,7 +405,7 @@ abstract class BaseService implements IRequestHandler, IService
                     if (!is_null($this->_serviceHost->getRequestIfMatch())
                         && !is_null($this->_serviceHost->getRequestIfNoneMatch())
                     ) {
-                        ODataException::createBadRequestError(
+						throw ODataException::createBadRequestError(
                             Messages::bothIfMatchAndIfNoneMatchHeaderSpecified()
                         );
                     }
@@ -615,7 +615,7 @@ abstract class BaseService implements IRequestHandler, IService
 
 		    case TargetKind::MEDIA_RESOURCE():
 			    if (!$request->isNamedStream() && !$request->getTargetResourceType()->isMediaLinkEntry()){
-				    ODataException::createBadRequestError(
+					throw ODataException::createBadRequestError(
 					    Messages::badRequestInvalidUriForMediaResource(
 						    $host->getAbsoluteRequestUri()->getUrlAsString()
 					    )
@@ -678,7 +678,7 @@ abstract class BaseService implements IRequestHandler, IService
         $ifNoneMatch = $this->_serviceHost->getRequestIfNoneMatch();
         if (is_null($entryObject)) {
             if (!is_null($ifMatch)) {
-                ODataException::createPreConditionFailedError(
+                throw ODataException::createPreConditionFailedError(
                     Messages::eTagNotAllowedForNonExistingResource()
                 ); 
             }
@@ -689,7 +689,7 @@ abstract class BaseService implements IRequestHandler, IService
         if ($this->config->getValidateETagHeader() && !$resourceType->hasETagProperties()) {
             if (!is_null($ifMatch) || !is_null($ifNoneMatch)) {
                 // No eTag properties but request has eTag headers, bad request
-                ODataException::createBadRequestError(
+				throw ODataException::createBadRequestError(
                     Messages::noETagPropertiesForType()
                 );
             }
@@ -726,7 +726,7 @@ abstract class BaseService implements IRequestHandler, IService
                     // Requested If-Match value does not match with current 
                     // eTag Value then pre-condition error
                     // http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html
-                    ODataException::createPreConditionFailedError(
+                    throw ODataException::createPreConditionFailedError(
                         Messages::eTagValueDoesNotMatch()
                     );
                 }
@@ -780,7 +780,7 @@ abstract class BaseService implements IRequestHandler, IService
                 $reflectionProperty  = new \ReflectionProperty($entryObject, $eTagProperty->getName() );
                 $value = $reflectionProperty->getValue($entryObject);
             } catch (\ReflectionException $reflectionException) {
-                ODataException::createInternalServerError(
+                throw ODataException::createInternalServerError(
                     Messages::failedToAccessProperty($eTagProperty->getName(), $resourceType->getName() )
                 );
             }
