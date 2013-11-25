@@ -177,7 +177,7 @@ class InternalOrderByInfo
                         $nextPageLink .= $value . ', ';
                     }
                 } catch (\ReflectionException $reflectionException) {
-                    throws ODataException::createInternalServerError(
+                    throw ODataException::createInternalServerError(
                         Messages::internalSkipTokenInfoFailedToAccessOrInitializeProperty(
                             $subPathSegment->getName()
                         )
