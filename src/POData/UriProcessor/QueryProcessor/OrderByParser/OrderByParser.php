@@ -129,7 +129,8 @@ class OrderByParser
             $orderByParser->_orderByInfo, 
             $orderByParser->_comparisonFunctions, 
             $orderByParser->_topLevelComparisonFunction, 
-            $orderByParser->_dummyObject
+            $orderByParser->_dummyObject,
+            $resourceType
         );
         unset($orderByParser->_orderByInfo);
         unset($orderByParser->_topLevelComparisonFunction);
@@ -277,12 +278,8 @@ class OrderByParser
                         // Initialize this member variable (identified by 
                         // $resourceProperty) of parent object. 
                         try {
-                            $dummyProperty 
-                                = new \ReflectionProperty(
-                                    $currentObject, $resourceProperty->getName()
-                                );
                             $object = $resourceProperty->getInstanceType()->newInstance();
-                            $dummyProperty->setValue($currentObject, $object);
+							$resourceType->setPropertyValue($currentObject, $resourceProperty->getName(), $object);
                             $currentObject = $object;
                         } catch (\ReflectionException $reflectionException) {
                             ODataException::createInternalServerError(
@@ -296,12 +293,8 @@ class OrderByParser
                         // Initialize this member variable
                         // (identified by $resourceProperty)of parent object. 
                         try {
-                            $dummyProperty 
-                                = new \ReflectionProperty(
-                                    $currentObject, $resourceProperty->getName()
-                                );
                             $object = $resourceProperty->getInstanceType()->newInstance();
-                            $dummyProperty->setValue($currentObject, $object);
+							$resourceType->setPropertyValue($currentObject, $resourceProperty->getName(), $object);
                             $currentObject = $object;
                         } catch (\ReflectionException $reflectionException) {
                             ODataException::createInternalServerError(
@@ -315,10 +308,7 @@ class OrderByParser
                     $currentNode->addNode($node);
                 } else {
                     try {
-                        $dummyProperty = new \ReflectionProperty(
-                            $currentObject, $resourceProperty->getName()
-                        );
-                        $currentObject = $dummyProperty->getValue($currentObject);
+						$currentObject = $resourceType->getPropertyValue($currentObject, $resourceProperty->getName());
                     } catch (\ReflectionException $reflectionException) {
                             ODataException::createInternalServerError(
                                 Messages::orderByParserFailedToAccessOrInitializeProperty(

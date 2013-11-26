@@ -41,6 +41,13 @@ class InternalOrderByInfo
     private $_dummyObject;
 
     /**
+	 * The ResourceType for the resource targeted by resource path.
+	 *
+	 * @var ResourceType
+	 */
+	private $_resourceType;
+
+    /**
      * Creates new instance of InternalOrderByInfo
      * 
      * @param OrderByInfo              $orderByInfo        The structure holds
@@ -60,14 +67,19 @@ class InternalOrderByInfo
      *                                                     of the resource set 
      *                                                     identified by the
      *                                                     request uri.
+	 *
+	 * @param ResourceType             $resourceType       The ResourceType for the resource
+	 *                                                     targeted by resource path.
      */
     public function __construct(OrderByInfo $orderByInfo, $subSorterFunctions, 
-        AnonymousFunction $sorterFunction, $dummyObject
+        AnonymousFunction $sorterFunction, $dummyObject,
+		ResourceType $resourceType
     ) {
         $this->_orderByInfo = $orderByInfo;
         $this->_sorterFunction = $sorterFunction;
         $this->_subSorterFunctions = $subSorterFunctions;
         $this->_dummyObject = $dummyObject;
+        $this->_resourceType = $resourceType;
     }
 
     /**
@@ -143,10 +155,7 @@ class InternalOrderByInfo
             foreach ($subPathSegments as &$subPathSegment) {
                 $isLastSegment = ($index == $subPathCount - 1);
                 try {
-                    $dummyProperty = new \ReflectionProperty(
-                        $currentObject, $subPathSegment->getName()
-                    );
-                    $currentObject = $dummyProperty->getValue($currentObject);
+					$currentObject = $this->_resourceType->getPropertyValue($currentObject, $subPathSegment->getName());
                     if (is_null($currentObject)) {                        
                             $nextPageLink .= 'null, ';
                             break;
