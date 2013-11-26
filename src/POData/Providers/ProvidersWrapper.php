@@ -795,9 +795,11 @@ class ProvidersWrapper
         // Orders(1234)/Customer/Orders => here if Customer is null then 
         // the UriProcessor will throw error.
         if (!is_null($entityInstance)) {
+			$targetResourceType
+				= $targetResourceSet
+				   ->getResourceType();
             $entityName 
-                = $targetResourceSet
-                    ->getResourceType()
+                = $targetResourceType
                     ->getInstanceType()
                     ->getName();
             if (!is_object($entityInstance) 
@@ -810,15 +812,10 @@ class ProvidersWrapper
                     )
                 );
             }
-
-            foreach ($targetProperty->getResourceType()->getKeyProperties() 
+            foreach ($targetProperty->getResourceType()->getKeyProperties()
             as $keyName => $resourceProperty) {
                 try {
-                    $keyProperty = new \ReflectionProperty(
-                        $entityInstance, 
-                        $keyName
-                    );
-                    $keyValue = $keyProperty->getValue($entityInstance);
+                    $keyValue = $targetResourceType->getPropertyValue($entityInstance, $keyName);
                     if (is_null($keyValue)) {
                         throw ODataException::createInternalServerError(
                             Messages::providersWrapperIDSQPMethodReturnsInstanceWithNullKeyProperties('IDSQP::getRelatedResourceReference')
@@ -860,7 +857,8 @@ class ProvidersWrapper
             throw ODataException::createResourceNotFoundError($resourceSet->getName());
         }
 
-        $entityName = $resourceSet->getResourceType()->getInstanceType()->getName();
+		$resourceType = $resourceSet->getResourceType();
+        $entityName   = $resourceType->getInstanceType()->getName();
         if (!is_object($entityInstance) 
             || !($entityInstance instanceof $entityName)
         ) {
@@ -875,8 +873,7 @@ class ProvidersWrapper
         foreach ($keyDescriptor->getValidatedNamedValues() 
             as $keyName => $valueDescription) {
             try {
-                $keyProperty = new \ReflectionProperty($entityInstance, $keyName);
-                $keyValue = $keyProperty->getValue($entityInstance);
+				$keyValue = $resourceType->getPropertyValue($entityInstance, $keyName);
                 if (is_null($keyValue)) {
                     throw ODataException::createInternalServerError(
                         Messages::providersWrapperIDSQPMethodReturnsInstanceWithNullKeyProperties($methodName)

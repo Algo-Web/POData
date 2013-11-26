@@ -924,4 +924,18 @@ class ResourceType
             );
         }    
     }
+
+	public function setPropertyValue($entity, $property, $value) {
+		$reflect = new \ReflectionProperty($entity, $property);
+		$reflect->setValue($value);
+
+		return $this;
+	}
+
+	public function getPropertyValue($entity, $property) {
+		// Issue #88 - is this too slow?
+		$reflect = new \ReflectionProperty($entity, $property);
+
+		return $reflect->getValue($entity);
+	}
 }
