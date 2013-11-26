@@ -180,8 +180,8 @@ Class ServiceHost
 
             if (!$isAbsoluteServiceUri) {
                 $requestUriSegments = $this->_absoluteRequestUri->getSegments();
-				$requestUriScheme   = $this->_absoluteRequestUri->getScheme();
-				$requestUriPort     = $this->_absoluteRequestUri->getPort();
+                $requestUriScheme   = $this->_absoluteRequestUri->getScheme();
+                $requestUriPort     = $this->_absoluteRequestUri->getPort();
                 $i = count($requestUriSegments) - 1;
                 // Find index of segment in the request uri that end with .svc
                 // There will be always a .svc segment in the request uri otherwise
@@ -220,13 +220,13 @@ Class ServiceHost
                 $serviceUri = $requestUriScheme
                     . '://' 
                     . $this->_absoluteRequestUri->getHost();
-				
-				if (
-					($requestUriScheme == 'http' && $requestUriPort != '80') ||
-					($requestUriScheme == 'https' && $requestUriPort != '443')
-				) {
-					$serviceUri .= ':' . $requestUriPort;
-				}
+
+                if (
+                    ($requestUriScheme == 'http' && $requestUriPort != '80') ||
+                    ($requestUriScheme == 'https' && $requestUriPort != '443')
+                ) {
+                    $serviceUri .= ':' . $requestUriPort;
+                }
 
                 for ($l = 0; $l <= $k; $l++) {
                     $serviceUri .= '/' . $requestUriSegments[$l];
