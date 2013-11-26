@@ -50,7 +50,7 @@ class NorthWindQueryProvider implements IQueryProvider
         if ( $this->_connectionHandle ) {        	
         } else {
             $errorAsString = self::_getSQLSRVError();
-        	ODataException::createInternalServerError($errorAsString);
+        	throw ODataException::createInternalServerError($errorAsString);
         }
 
         $this->_northWindSQLSRVExpressionProvider = null;
@@ -100,7 +100,7 @@ class NorthWindQueryProvider implements IQueryProvider
             && $resourceSetName !== 'Order_Details'
             && $resourceSetName !== 'Employees'
         ) {
-        	ODataException::createInternalServerError('(NorthWindQueryProvider) Unknown resource set ' . $resourceSetName . '! Contact service provider');        
+        	throw ODataException::createInternalServerError('(NorthWindQueryProvider) Unknown resource set ' . $resourceSetName . '! Contact service provider');
         }
 
         if ($resourceSetName === 'Order_Details') {
@@ -114,7 +114,7 @@ class NorthWindQueryProvider implements IQueryProvider
         $stmt = sqlsrv_query($this->_connectionHandle, $query);
         if ($stmt === false) {
             $errorAsString = self::_getSQLSRVError();
-        	ODataException::createInternalServerError($errorAsString);
+        	throw ODataException::createInternalServerError($errorAsString);
         }
         $returnResult = array();
         switch ($resourceSetName) {
@@ -142,7 +142,7 @@ class NorthWindQueryProvider implements IQueryProvider
      *                                     an entity needs to be fetched
      * @param KeyDescriptor $keyDescriptor The key to identify the entity to be fetched
      * 
-     * @return \stdClass|null Returns entity instance if found else null
+     * @return object|null Returns entity instance if found else null
      */
     public function getResourceFromResourceSet(ResourceSet $resourceSet, KeyDescriptor $keyDescriptor)
     {   
@@ -172,7 +172,7 @@ class NorthWindQueryProvider implements IQueryProvider
         $stmt = sqlsrv_query($this->_connectionHandle, $query);
         if ($stmt === false) {
             $errorAsString = self::_getSQLSRVError();
-        	ODataException::createInternalServerError($errorAsString);
+        	throw ODataException::createInternalServerError($errorAsString);
         }
 
         //If resource not found return null to the library
@@ -214,7 +214,7 @@ class NorthWindQueryProvider implements IQueryProvider
      * @param KeyDescriptor    $keyDescriptor        The key to identify the entity 
      *                                               to be fetched.
      * 
-     * @return \stdClass|null Returns entity instance if found else null
+     * @return object|null Returns entity instance if found else null
      */
     public function  getResourceFromRelatedResourceSet(ResourceSet $sourceResourceSet, 
         $sourceEntityInstance, 
@@ -237,7 +237,7 @@ class NorthWindQueryProvider implements IQueryProvider
                 $stmt = sqlsrv_query($this->_connectionHandle, $query);
                 if ($stmt === false) {            
                     $errorAsString = self::_getSQLSRVError();
-        	        ODataException::createInternalServerError($errorAsString);
+        	        throw ODataException::createInternalServerError($errorAsString);
                 }
 
                 $result = $this->_serializeOrders($stmt);
@@ -250,7 +250,7 @@ class NorthWindQueryProvider implements IQueryProvider
                 $stmt = sqlsrv_query($this->_connectionHandle, $query);
                 if ($stmt === false) {            
                     $errorAsString = self::_getSQLSRVError();
-        	        ODataException::createInternalServerError($errorAsString);
+        	        throw ODataException::createInternalServerError($errorAsString);
                 }
 
                 $result = $this->_serializeOrderDetails($stmt);
@@ -279,7 +279,7 @@ class NorthWindQueryProvider implements IQueryProvider
      * @param string           $top                  For future purpose,no need to pass it
      * @param string           $skip                 For future purpose,no need to pass it
      *                                                
-     * @return \stdClass[] Array of related resource if exists, if no 
+     * @return object[] Array of related resource if exists, if no
      *                                related resources found returns empty array
      */
     public function  getRelatedResourceSet(ResourceSet $sourceResourceSet, 
@@ -301,7 +301,7 @@ class NorthWindQueryProvider implements IQueryProvider
                 $stmt = sqlsrv_query($this->_connectionHandle, $query);
                 if ($stmt === false) {
                     $errorAsString = self::_getSQLSRVError();
-        	        ODataException::createInternalServerError($errorAsString);
+        	        throw ODataException::createInternalServerError($errorAsString);
                 }
 
                 $result = $this->_serializeOrders($stmt);
@@ -317,7 +317,7 @@ class NorthWindQueryProvider implements IQueryProvider
                 $stmt = sqlsrv_query($this->_connectionHandle, $query);
                 if ($stmt === false) {            
                     $errorAsString = self::_getSQLSRVError();
-        	        ODataException::createInternalServerError($errorAsString);
+        	        throw ODataException::createInternalServerError($errorAsString);
                 }
 
                 $result = $this->_serializeOrderDetails($stmt);
@@ -339,7 +339,7 @@ class NorthWindQueryProvider implements IQueryProvider
      * @param ResourceProperty $targetProperty       The navigation property to be 
      *                                               retrieved
      * 
-     * @return \stdClass|null The related resource if exists else null
+     * @return object|null The related resource if exists else null
      */
     public function getRelatedResourceReference(ResourceSet $sourceResourceSet, 
         $sourceEntityInstance, 
@@ -358,7 +358,7 @@ class NorthWindQueryProvider implements IQueryProvider
                     $stmt = sqlsrv_query($this->_connectionHandle, $query);
                     if ($stmt === false) {
                         $errorAsString = self::_getSQLSRVError();
-        	            ODataException::createInternalServerError($errorAsString);
+        	            throw ODataException::createInternalServerError($errorAsString);
                     }
 
                     if (!sqlsrv_has_rows($stmt)) {
@@ -379,7 +379,7 @@ class NorthWindQueryProvider implements IQueryProvider
                     $stmt = sqlsrv_query($this->_connectionHandle, $query);
                     if ($stmt === false) {
                         $errorAsString = self::_getSQLSRVError();
-        	            ODataException::createInternalServerError($errorAsString);
+        	            throw ODataException::createInternalServerError($errorAsString);
                     }
                     
                     if (!sqlsrv_has_rows($stmt)) {
@@ -418,7 +418,7 @@ class NorthWindQueryProvider implements IQueryProvider
      * 
      * @param array $record each row of customer
      * 
-     * @return \stdClass
+     * @return object
      */
     private function _serializeCustomer($record)
     {
@@ -503,7 +503,7 @@ class NorthWindQueryProvider implements IQueryProvider
      * 
      * @param array $record each row of customer
      * 
-     * @return \stdClass
+     * @return object
      */
     private function _serializeOrder($record)
     {
@@ -547,7 +547,7 @@ class NorthWindQueryProvider implements IQueryProvider
      * 
      * @param array $record each row of employee
      * 
-     * @return \stdClass
+     * @return object
      */
     private function _serializeEmployee($record)
     {
@@ -595,7 +595,7 @@ class NorthWindQueryProvider implements IQueryProvider
      * 
      * @param array $record each row of order detail
      * 
-     * @return \stdClass
+     * @return object
      */
     private function _serializeOrderDetail($record)
     {

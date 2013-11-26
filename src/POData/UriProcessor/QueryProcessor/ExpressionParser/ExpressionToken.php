@@ -84,7 +84,7 @@ class ExpressionToken
     public function getIdentifier()
     {
         if ($this->Id != ExpressionTokenId::IDENTIFIER) {
-            ODataException::createSyntaxError(
+            throw ODataException::createSyntaxError(
                 'Identifier expected at position ' . $this->Position
             );
         }

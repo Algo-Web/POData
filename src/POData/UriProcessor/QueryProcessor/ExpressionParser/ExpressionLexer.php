@@ -614,6 +614,6 @@ class ExpressionLexer
      */
     private function _parseError($message)
     {
-        ODataException::createSyntaxError($message);
+        throw ODataException::createSyntaxError($message);
     }
 }

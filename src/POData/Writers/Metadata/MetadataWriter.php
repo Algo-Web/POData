@@ -112,7 +112,7 @@ class MetadataWriter
             }            
         }
 
-        //write Container schema node and define required nmaespaces
+        //write Container schema node and define required namespaces
         $this->_writeSchemaElement($resourceTypeNamespace, $edmSchemaVersion);
         if (!empty($resourceTypesInContainerNamespace)) {
             //Get assocation types in container namespace as array of 
@@ -199,7 +199,7 @@ class MetadataWriter
             } else if ($resourceType->getResourceTypeKind() == ResourceTypeKind::COMPLEX) {
                 $this->_writeComplexType($resourceType);
             } else {
-                ODataException::createInternalServerError(Messages::metadataWriterExpectingEntityOrComplexResourceType());
+                throw ODataException::createInternalServerError(Messages::metadataWriterExpectingEntityOrComplexResourceType());
             }
         }
     }

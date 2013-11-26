@@ -264,7 +264,7 @@ class ResourceType
     /**
      * To get custom state object for this type
      * 
-     * @return \stdClass
+     * @return object
      */
     public function getCustomState()
     {
