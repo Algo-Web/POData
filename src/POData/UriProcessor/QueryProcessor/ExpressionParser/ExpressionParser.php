@@ -393,7 +393,7 @@ class ExpressionParser
         case ExpressionTokenId::OPENPARAM:
             return $this->_parseParenExpression();
         default:
-            ODataException::createSyntaxError("Expression expected.");
+            throw ODataException::createSyntaxError("Expression expected.");
         }
     }
 
@@ -405,13 +405,13 @@ class ExpressionParser
     private function _parseParenExpression()
     {
         if ($this->_getCurrentToken()->Id != ExpressionTokenId::OPENPARAM) {
-            ODataException::createSyntaxError("Open parenthesis expected.");
+            throw ODataException::createSyntaxError("Open parenthesis expected.");
         }
 
         $this->_lexer->nextToken();
         $expr = $this->_parseExpression();
         if ($this->_getCurrentToken()->Id != ExpressionTokenId::CLOSEPARAM) {
-            ODataException::createSyntaxError("Close parenthesis expected.");
+            throw ODataException::createSyntaxError("Close parenthesis expected.");
         }
 
         $this->_lexer->nextToken();
@@ -457,7 +457,7 @@ class ExpressionParser
 
         $resourceProperty = $parentResourceType->resolveProperty($identifier);
         if (is_null($resourceProperty)) {
-            ODataException::createSyntaxError(
+            throw ODataException::createSyntaxError(
                 Messages::expressionLexerNoPropertyInType(
                     $identifier, 
                     $parentResourceType->getFullName(), 
@@ -467,7 +467,7 @@ class ExpressionParser
         }
 
         if ($resourceProperty->getKind() == ResourcePropertyKind::RESOURCESET_REFERENCE) {
-            ODataException::createSyntaxError(
+            throw ODataException::createSyntaxError(
                 Messages::expressionParserEntityCollectionNotAllowedInFilter(
                     $resourceProperty->getName(), 
                     $parentResourceType->getFullName(), 
@@ -509,7 +509,7 @@ class ExpressionParser
     private function _parseArgumentList()
     {
         if ($this->_getCurrentToken()->Id != ExpressionTokenId::OPENPARAM) {
-            ODataException::createSyntaxError("Open parenthesis expected.");
+            throw ODataException::createSyntaxError("Open parenthesis expected.");
         }
 
         $this->_lexer->nextToken();
@@ -517,7 +517,7 @@ class ExpressionParser
             = $this->_getCurrentToken()->Id != ExpressionTokenId::CLOSEPARAM 
              ? $this->_parseArguments() : array();
         if ($this->_getCurrentToken()->Id != ExpressionTokenId::CLOSEPARAM) {
-            ODataException::createSyntaxError("Close parenthesis expected.");
+            throw ODataException::createSyntaxError("Close parenthesis expected.");
         }
 
         $this->_lexer->nextToken();
@@ -558,7 +558,7 @@ class ExpressionParser
         $literal = $this->_lexer->getCurrentToken()->Text;
         $outVal = null;
         if (!$targetType->validate($literal, $outVal)) {
-            ODataException::createSyntaxError(
+            throw ODataException::createSyntaxError(
                 Messages::expressionParserUnrecognizedLiteral(
                     $targetType->getFullTypeName(), 
                     $literal, 
@@ -609,7 +609,7 @@ class ExpressionParser
     private function _validateToken($expressionTokenId)
     {
         if ($this->_getCurrentToken()->Id != $expressionTokenId) {
-            ODataException::createSyntaxError("Syntax error.");
+            throw ODataException::createSyntaxError("Syntax error.");
         }
     }
 
@@ -624,7 +624,7 @@ class ExpressionParser
     {
         $this->_recursionDepth++;
         if ($this->_recursionDepth == self::RECURSION_LIMIT) {
-            ODataException::createSyntaxError("Recursion limit reached.");
+            throw ODataException::createSyntaxError("Recursion limit reached.");
         }
     }
 

@@ -115,7 +115,7 @@ class OrderByParser
         try {
             $orderByParser->_dummyObject = $resourceType->getInstanceType()->newInstance();
         } catch (\ReflectionException $reflectionException) {
-            ODataException::createInternalServerError(Messages::orderByParserFailedToCreateDummyObject());
+            throw ODataException::createInternalServerError(Messages::orderByParserFailedToCreateDummyObject());
         }
         $orderByParser->_rootOrderByNode = new OrderByRootNode($resourceSetWrapper, $resourceType);
         $orderByPathSegments = $orderByParser->_readOrderBy($orderBy);
@@ -182,7 +182,7 @@ class OrderByParser
                 $resourceType = $currentNode->getResourceType();
                 $resourceProperty = $resourceType->resolveProperty($orderBySubPathSegment);
                 if (is_null($resourceProperty)) {
-                    ODataException::createSyntaxError(
+                    throw ODataException::createSyntaxError(
                         Messages::orderByParserPropertyNotFound(
                             $resourceType->getFullName(), $orderBySubPathSegment
                         )
@@ -190,14 +190,14 @@ class OrderByParser
                 }
 
                 if ($resourceProperty->isKindOf(ResourcePropertyKind::BAG)) {
-                    ODataException::createBadRequestError(
+					throw ODataException::createBadRequestError(
                         Messages::orderByParserBagPropertyNotAllowed(
                             $resourceProperty->getName()
                         )
                     );
                 } else if ($resourceProperty->isKindOf(ResourcePropertyKind::PRIMITIVE)) {
                     if (!$isLastSegment) {
-                        ODataException::createBadRequestError(
+						throw ODataException::createBadRequestError(
                             Messages::orderByParserPrimitiveAsIntermediateSegment(
                                 $resourceProperty->getName()
                             )
@@ -206,7 +206,7 @@ class OrderByParser
 
                     $type = $resourceProperty->getInstanceType();
                     if ($type instanceof Binary) {
-                        ODataException::createBadRequestError(Messages::orderByParserSortByBinaryPropertyNotAllowed($resourceProperty->getName()));
+						throw ODataException::createBadRequestError(Messages::orderByParserSortByBinaryPropertyNotAllowed($resourceProperty->getName()));
                     }
                 } else if ($resourceProperty->getKind() == ResourcePropertyKind::RESOURCESET_REFERENCE 
                     || $resourceProperty->getKind() == ResourcePropertyKind::RESOURCE_REFERENCE
@@ -219,7 +219,7 @@ class OrderByParser
                             $resourceSetWrapper, $resourceType, $resourceProperty
                         );
                     if (is_null($resourceSetWrapper)) {
-                        ODataException::createBadRequestError(
+						throw ODataException::createBadRequestError(
                             Messages::badRequestInvalidPropertyNameSpecified(
                                 $resourceType->getFullName(), $orderBySubPathSegment
                             )
@@ -227,7 +227,7 @@ class OrderByParser
                     }
 
                     if ($resourceProperty->getKind() == ResourcePropertyKind::RESOURCESET_REFERENCE) {
-                        ODataException::createBadRequestError(
+						throw ODataException::createBadRequestError(
                             Messages::orderByParserResourceSetReferenceNotAllowed(
                                 $resourceProperty->getName(), $resourceType->getFullName()
                             )
@@ -236,7 +236,7 @@ class OrderByParser
 
                     $resourceSetWrapper->checkResourceSetRightsForRead(true);
                     if ($isLastSegment) {
-                        ODataException::createBadRequestError(
+						throw ODataException::createBadRequestError(
                             Messages::orderByParserSortByNavigationPropertyIsNotAllowed(
                                 $resourceProperty->getName()
                             )
@@ -246,7 +246,7 @@ class OrderByParser
                     $ancestors[] = $orderBySubPathSegment;
                 } else if ($resourceProperty->isKindOf(ResourcePropertyKind::COMPLEX_TYPE)) {
                     if ($isLastSegment) {
-                        ODataException::createBadRequestError(
+						throw ODataException::createBadRequestError(
                             Messages::orderByParserSortByComplexPropertyIsNotAllowed(
                                 $resourceProperty->getName()
                             )
@@ -255,7 +255,7 @@ class OrderByParser
 
                     $ancestors[] = $orderBySubPathSegment;
                 } else {
-                    ODataException::createInternalServerError(
+                    throw ODataException::createInternalServerError(
                         Messages::orderByParserUnexpectedPropertyType()
                     );
                 }
@@ -285,7 +285,7 @@ class OrderByParser
                             $dummyProperty->setValue($currentObject, $object);
                             $currentObject = $object;
                         } catch (\ReflectionException $reflectionException) {
-                            ODataException::createInternalServerError(
+                            throw ODataException::createInternalServerError(
                                 Messages::orderByParserFailedToAccessOrInitializeProperty(
                                     $resourceProperty->getName(), $resourceType->getName()
                                 )
@@ -304,7 +304,7 @@ class OrderByParser
                             $dummyProperty->setValue($currentObject, $object);
                             $currentObject = $object;
                         } catch (\ReflectionException $reflectionException) {
-                            ODataException::createInternalServerError(
+                            throw ODataException::createInternalServerError(
                                 Messages::orderByParserFailedToAccessOrInitializeProperty(
                                     $resourceProperty->getName(), $resourceType->getName()
                                 )
@@ -320,7 +320,7 @@ class OrderByParser
                         );
                         $currentObject = $dummyProperty->getValue($currentObject);
                     } catch (\ReflectionException $reflectionException) {
-                            ODataException::createInternalServerError(
+                            throw ODataException::createInternalServerError(
                                 Messages::orderByParserFailedToAccessOrInitializeProperty(
                                     $resourceProperty->getName(), 
                                     $resourceType->getName()
@@ -476,7 +476,7 @@ class OrderByParser
     private function _assertion($condition)
     {
         if (!$condition) {
-            ODataException::createInternalServerError(Messages::orderByParserUnExpectedState());
+            throw ODataException::createInternalServerError(Messages::orderByParserUnExpectedState());
         }
     }
 }

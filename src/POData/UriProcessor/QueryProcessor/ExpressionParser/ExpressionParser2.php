@@ -95,7 +95,7 @@ class ExpressionParser2 extends ExpressionParser
         try {
             $expressionAsString = $expressionProcessor->processExpression( $expressionTree );
         } catch (\InvalidArgumentException $invalidArgumentException) {
-            ODataException::createInternalServerError( $invalidArgumentException->getMessage() );
+            throw ODataException::createInternalServerError( $invalidArgumentException->getMessage() );
         }
 
         
@@ -118,7 +118,7 @@ class ExpressionParser2 extends ExpressionParser
     {
         $expression = parent::parseFilter();
         if (!$expression->typeIs(new Boolean())) {
-            ODataException::createSyntaxError(
+            throw ODataException::createSyntaxError(
                 Messages::expressionParser2BooleanRequired()
             );
         }
@@ -165,7 +165,7 @@ class ExpressionParser2 extends ExpressionParser
             return $this->_processUnaryNode($expression, $parentExpression);
         }
 
-        ODataException::createSyntaxError(
+        throw ODataException::createSyntaxError(
             Messages::expressionParser2UnexpectedExpression(get_class($expression))
         );
     }
@@ -443,7 +443,7 @@ class ExpressionParser2 extends ExpressionParser
             return $resultExpression;
         }
 
-        ODataException::createSyntaxError(
+        throw ODataException::createSyntaxError(
             Messages::expressionParser2UnexpectedExpression(get_class($expression))
         );
     }
@@ -524,7 +524,7 @@ class ExpressionParser2 extends ExpressionParser
                         
             $this->_mapTable[$key] = $nullCheckExpTree;
         } else {
-            ODataException::createSyntaxError(
+            throw ODataException::createSyntaxError(
                 Messages::expressionParser2UnexpectedExpression(get_class($nullCheckExpTree))
             );
             
