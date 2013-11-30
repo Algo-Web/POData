@@ -9,6 +9,7 @@ use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\ResourceAssociationSet;
 use POData\Configuration\ServiceConfiguration;
+use POData\UriProcessor\QueryProcessor\SkipTokenParser\InternalSkipTokenInfo;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 use POData\Common\ODataException;
 use POData\Common\Messages;
@@ -644,19 +645,20 @@ class ProvidersWrapper
      * @param InternalOrderByInfo $orderBy The orderBy information
      * @param int $top The top count
      * @param int $skip The skip count
+     * @param int $skipToken The skip token
      * 
      * @return QueryResult
      */
-    public function getResourceSet(QueryType $queryType, ResourceSet $resourceSet, $filterInfo, $orderBy, $top, $skip)
+    public function getResourceSet(QueryType $queryType, ResourceSet $resourceSet, FilterInfo $filterInfo = null, InternalOrderByInfo $orderBy = null, $top = null, $skip = null, InternalSkipTokenInfo $skipToken = null)
     {
-
 		$queryResult = $this->queryProvider->getResourceSet(
 			$queryType,
 			$resourceSet,
 			$filterInfo,
 			$orderBy,
 			$top,
-			$skip
+			$skip,
+			$skipToken
 		);
 
         $this->validateQueryResult($queryResult, $queryType, 'IQueryProvider::getResourceSet');

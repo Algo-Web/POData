@@ -236,7 +236,8 @@ class UriProcessor
                 $this->request->getFilterInfo(),
                 $this->request->getInternalOrderByInfo(),
                 $this->request->getTopCount(),
-                $this->request->getSkipCount()
+                $this->request->getSkipCount(),
+				$this->request->getInternalSkipTokenInfo()
             );
             $segment->setResult($queryResult);
         }

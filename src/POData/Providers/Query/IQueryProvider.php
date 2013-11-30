@@ -53,6 +53,7 @@ interface IQueryProvider
 		$filterInfo = null,
 		$orderBy = null,
 		$top = null,
+		$skip = null,
 		$skipToken = null
 	);
 
