@@ -17,7 +17,6 @@ use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Query\IQueryProvider;
 use POData\Common\ODataException;
 use POData\Providers\Expression\IExpressionProvider;
-use stdClass;
 
 /** The name of the database for WordPress */
 define('DB_NAME', 'wordpress');
@@ -108,7 +107,7 @@ class WordPressQueryProvider implements IQueryProvider
 	 * @param ResourceSet $resourceSet The entity set containing the entity to fetch
 	 * @param KeyDescriptor $keyDescriptor The key identifying the entity to fetch
 	 *
-	 * @return stdClass|null Returns entity instance if found else null
+	 * @return object|null Returns entity instance if found else null
 	 */
 	public function getResourceFromResourceSet(
 		ResourceSet $resourceSet,
@@ -125,7 +124,7 @@ class WordPressQueryProvider implements IQueryProvider
 	 *
 	 * @param QueryType $queryType indicates if this is a query for a count, entities, or entities with a count
 	 * @param ResourceSet $sourceResourceSet The entity set containing the source entity
-	 * @param stdClass $sourceEntityInstance The source entity instance.
+	 * @param object $sourceEntityInstance The source entity instance.
 	 * @param ResourceSet $targetResourceSet    The resource set of containing the target of the navigation property
 	 * @param ResourceProperty $targetProperty       The navigation property to retrieve
 	 * @param FilterInfo $filter represents the $filter parameter of the OData query.  NULL if no $filter specified
@@ -139,7 +138,7 @@ class WordPressQueryProvider implements IQueryProvider
 	public function getRelatedResourceSet(
 		QueryType $queryType,
 		ResourceSet $sourceResourceSet,
-		stdClass $sourceEntityInstance,
+		$sourceEntityInstance,
 		ResourceSet $targetResourceSet,
 		ResourceProperty $targetProperty,
 		$filter = null,
@@ -156,16 +155,16 @@ class WordPressQueryProvider implements IQueryProvider
 	 * IE: http://host/EntitySet(1L)/NavigationPropertyToCollection(33)
 	 *
 	 * @param ResourceSet $sourceResourceSet The entity set containing the source entity
-	 * @param stdClass $sourceEntityInstance The source entity instance.
+	 * @param object $sourceEntityInstance The source entity instance.
 	 * @param ResourceSet $targetResourceSet The entity set containing the entity to fetch
 	 * @param ResourceProperty $targetProperty The metadata of the target property.
 	 * @param KeyDescriptor $keyDescriptor The key identifying the entity to fetch
 	 *
-	 * @return stdClass|null Returns entity instance if found else null
+	 * @return object|null Returns entity instance if found else null
 	 */
 	public function getResourceFromRelatedResourceSet(
 		ResourceSet $sourceResourceSet,
-		stdClass $sourceEntityInstance,
+		$sourceEntityInstance,
 		ResourceSet $targetResourceSet,
 		ResourceProperty $targetProperty,
 		KeyDescriptor $keyDescriptor
@@ -180,15 +179,15 @@ class WordPressQueryProvider implements IQueryProvider
 	 * http://host/EntitySet?$expand=NavigationPropertyToSingleEntity
 	 *
 	 * @param ResourceSet $sourceResourceSet The entity set containing the source entity
-	 * @param stdClass $sourceEntityInstance The source entity instance.
+	 * @param object $sourceEntityInstance The source entity instance.
 	 * @param ResourceSet $targetResourceSet The entity set containing the entity pointed to by the navigation property
 	 * @param ResourceProperty $targetProperty The navigation property to fetch
 	 *
-	 * @return stdClass|null The related resource if found else null
+	 * @return object|null The related resource if found else null
 	 */
 	public function getRelatedResourceReference(
 		ResourceSet $sourceResourceSet,
-		stdClass $sourceEntityInstance,
+		$sourceEntityInstance,
 		ResourceSet $targetResourceSet,
 		ResourceProperty $targetProperty
 	)
