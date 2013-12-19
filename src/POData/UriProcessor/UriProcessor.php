@@ -178,6 +178,8 @@ class UriProcessor
                     if (!is_null($value)) {
                         $value = null;
                     } else {
+
+						// This is theoretically impossible to reach, but should that be changed, this will need to call ResourceType::getPropertyValue... somehow
                         try {
 	                        //see #88
                             $property = new \ReflectionProperty($value, $segment->getIdentifier());
@@ -234,7 +236,8 @@ class UriProcessor
                 $this->request->getFilterInfo(),
                 $this->request->getInternalOrderByInfo(),
                 $this->request->getTopCount(),
-                $this->request->getSkipCount()
+                $this->request->getSkipCount(),
+				$this->request->getInternalSkipTokenInfo()
             );
             $segment->setResult($queryResult);
         }
@@ -406,6 +409,7 @@ class UriProcessor
     {
         $expandedProjectionNodes = $this->_getExpandedProjectionNodes();
         foreach ($expandedProjectionNodes as $expandedProjectionNode) {
+			$resourceType = $expandedProjectionNode->getResourceType();
             $isCollection = $expandedProjectionNode->getResourceProperty()->getKind() == ResourcePropertyKind::RESOURCESET_REFERENCE;
             $expandedPropertyName = $expandedProjectionNode->getResourceProperty()->getName();
             if (is_array($result)) {
@@ -438,7 +442,7 @@ class UriProcessor
                                 }
                             }
 
-                            $entry->$expandedPropertyName = $result1;
+							$resourceType->setPropertyValue($entry, $expandedPropertyName, $result1);
                             $projectedProperty = $expandedProjectionNode->getResourceProperty();
                             $needPop = $this->_pushSegmentForNavigationProperty(
                                 $projectedProperty
@@ -446,7 +450,7 @@ class UriProcessor
                             $this->_executeExpansion($result1);
                             $this->_popSegment($needPop);
                         } else {
-                            $entry->$expandedPropertyName = array();
+							$resourceType->setPropertyValue($entry, $expandedPropertyName, array());
                         }
                     } else {
                         $currentResourceSet1 = $this->_getCurrentResourceSetWrapper()->getResourceSet();
@@ -458,7 +462,7 @@ class UriProcessor
                             $resourceSetOfProjectedProperty1,
                             $projectedProperty2
                         );
-                        $entry->$expandedPropertyName = $result1;
+						$resourceType->setPropertyValue($entry, $expandedPropertyName, $result1);
                         if (!is_null($result1)) {
                             $projectedProperty3 = $expandedProjectionNode->getResourceProperty();
                             $needPop = $this->_pushSegmentForNavigationProperty(
@@ -496,8 +500,7 @@ class UriProcessor
                                 $result1 = array_slice($result1, 0, $takeCount);
                             }
                         }
-
-                        $result->$expandedPropertyName = $result1;
+						$resourceType->setPropertyValue($result, $expandedPropertyName, $result1);
                         $projectedProperty7 = $expandedProjectionNode->getResourceProperty();
                         $needPop = $this->_pushSegmentForNavigationProperty(
                             $projectedProperty7
@@ -505,7 +508,7 @@ class UriProcessor
                         $this->_executeExpansion($result1);
                         $this->_popSegment($needPop);
                     } else {
-                        $result->$expandedPropertyName = array();
+						$resourceType->setPropertyValue($result, $expandedPropertyName, $result1);
                     }
                 } else {
                     $currentResourceSet3 = $this->_getCurrentResourceSetWrapper()->getResourceSet();
@@ -517,7 +520,7 @@ class UriProcessor
                         $resourceSetOfProjectedProperty3,
                         $projectedProperty5
                     );
-                    $result->$expandedPropertyName = $result1;
+					$resourceType->setPropertyValue($result, $expandedPropertyName, $result1);
                     if (!is_null($result1)) {
                         $projectedProperty6 = $expandedProjectionNode->getResourceProperty();
                         $needPop = $this->_pushSegmentForNavigationProperty(

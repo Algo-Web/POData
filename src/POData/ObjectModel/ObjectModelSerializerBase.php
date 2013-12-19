@@ -159,9 +159,7 @@ class ObjectModelSerializerBase
     protected function getPropertyValue($entity, ResourceType $resourceType, ResourceProperty $resourceProperty)
     {
         try {
-	        //Is this slow?  See #88
-			$reflectionProperty = new \ReflectionProperty($entity, $resourceProperty->getName());
-	        return $reflectionProperty->getValue($entity);
+			return $resourceType->getPropertyValue($entity, $resourceProperty->getName());
         } catch (\ReflectionException $reflectionException) {
             throw ODataException::createInternalServerError(
                 Messages::objectModelSerializerFailedToAccessProperty(

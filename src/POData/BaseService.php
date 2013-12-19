@@ -775,10 +775,7 @@ abstract class BaseService implements IRequestHandler, IService
       
             $value = null; 
             try {
-
-	            //TODO #88...also this seems like dupe work
-                $reflectionProperty  = new \ReflectionProperty($entryObject, $eTagProperty->getName() );
-                $value = $reflectionProperty->getValue($entryObject);
+                $value = $resourceType->getPropertyValue($entryObject, $eTagProperty->getName());
             } catch (\ReflectionException $reflectionException) {
                 throw ODataException::createInternalServerError(
                     Messages::failedToAccessProperty($eTagProperty->getName(), $resourceType->getName() )
