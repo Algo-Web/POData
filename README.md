@@ -1,7 +1,7 @@
-Master Status: [![Build Status](https://travis-ci.org/balihoo/POData.png?branch=master)](https://travis-ci.org/balihoo/POData) 
-[![Coverage Status](https://coveralls.io/repos/balihoo/POData/badge.png)](https://coveralls.io/r/balihoo/POData)
-[![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/balihoo/POData/badges/quality-score.png?s=f64c3b87cfa28d109fa394e68dd34c3caa88bedc)](https://scrutinizer-ci.com/g/balihoo/POData/)
-[![Code Coverage](https://scrutinizer-ci.com/g/balihoo/POData/badges/coverage.png?s=ce164b3b45a6a2f06fb42c344d61bed2e5eea63d)](https://scrutinizer-ci.com/g/balihoo/POData/)
+Master Status: [![Build Status](https://travis-ci.org/POData/POData.png?branch=master)](https://travis-ci.org/POData/POData) 
+[![Coverage Status](https://coveralls.io/repos/POData/POData/badge.png)](https://coveralls.io/r/POData/POData)
+[![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/POData/POData/badges/quality-score.png?s=f64c3b87cfa28d109fa394e68dd34c3caa88bedc)](https://scrutinizer-ci.com/g/POData/POData/)
+[![Code Coverage](https://scrutinizer-ci.com/g/POData/POData/badges/coverage.png?s=ce164b3b45a6a2f06fb42c344d61bed2e5eea63d)](https://scrutinizer-ci.com/g/POData/POData/)
 
 POData - OData for the Poor PHP Developer
 ============
@@ -32,7 +32,7 @@ Long term goals include:
 MVC Integrations
 =================
 It's likley POData will execute in the context of an Web MVC Framework.  As such, the framework has probably already done a lot of the parsing for you and it makes no sense to have POData reinvent the wheel.  As such, some MVC adapters are provided to bridge the MVC framework to POData.
-* ZendFramework 1 - [POData-ZF1](https://github.com/balihoo/POData-ZF1)
+* ZendFramework 1 - [POData-ZF1](https://github.com/POData/POData-ZF1)
 
 
 Contact
