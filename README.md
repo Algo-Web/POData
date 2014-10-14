@@ -35,6 +35,10 @@ It's likley POData will execute in the context of an Web MVC Framework.  As such
 * ZendFramework 1 - [POData-ZF1](https://github.com/POData/POData-ZF1)
 
 
+Getting Started
+================
+Check the Wiki for a [step by step getting started guide](https://github.com/POData/POData/wiki#getting-started-guide)
+
 Contact
 ============
 Need Support? Want to help contribute (but not yet ready to submit a pull request)?  Want to complain about something being too hard?  Doesn't matter why we're interested, contact us at:
