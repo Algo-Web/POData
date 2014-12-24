@@ -1,15 +1,14 @@
 {
-    "name": "balihoo/POData",
+    "name": "POData/POData",
     "type": "library",
     "description": "OData for Poor PHP Developers",
     "keywords": [ "rest", "odata" ],
     "license": "BSD-2-Clause",
     "authors": [
         {
-            "name": "Balihoo, Inc.",
-            "email": "github@balihoo.com"
+            "name": "Podata Project",
+            "email": "podataproject@gmail.com"
         },
-
         {
             "name": "Microsoft Open Technologies, Inc.",
             "email": "msopentech@microsoft.com"
@@ -18,21 +17,17 @@
     "minimum-stability": "stable",
     "require": {
         "myclabs/php-enum": "1.2.0",
-
         "php": ">=5.3.0"
     },
-
     "require-dev": {
         "balihoo/phockito-unit" : "1.0.0",
         "hafriedlander/phockito" : "dev-master",
         "doctrine/annotations": "1.*",
         "satooshi/php-coveralls": "dev-master"
     },
-
     "autoload": {
         "psr-0": {
             "POData": "src/",
-
             "UnitTests" : "tests/"
         }
     }
