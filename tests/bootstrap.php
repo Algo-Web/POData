@@ -9,3 +9,5 @@ php composer.phar install
 EOT
     );
 }
+
+date_default_timezone_set('America/Denver');

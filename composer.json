@@ -6,7 +6,7 @@
     "license": "BSD-2-Clause",
     "authors": [
         {
-            "name": "Podata Project",
+            "name": "POData Project",
             "email": "podataproject@gmail.com"
         },
         {
@@ -23,7 +23,8 @@
         "balihoo/phockito-unit" : "1.0.0",
         "hafriedlander/phockito" : "dev-master",
         "doctrine/annotations": "1.*",
-        "satooshi/php-coveralls": "dev-master"
+        "satooshi/php-coveralls": "dev-master",
+        "phpunit/phpunit": "3.7.*"
     },
     "autoload": {
         "psr-0": {
