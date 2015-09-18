@@ -2,12 +2,10 @@
 
 namespace POData\Providers\Query;
 
-use stdClass;
-
 class QueryResult {
 
 	/**
-	 * @var stdClass[]|null
+	 * @var object[]|null
 	 */
 	public $results;
 
