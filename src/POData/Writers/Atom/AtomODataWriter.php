@@ -402,7 +402,8 @@ class AtomODataWriter implements IODataWriter
 			} elseif ($property->value instanceof ODataBagContent) {
 				$this->writeBagContent($property->value);
 			} else {
-				$this->xmlWriter->text($property->value);
+				$value = $this->beforeWriteValue($property->value, $property->typeName);
+				$this->xmlWriter->text($value);
 			}
 
 			$this->xmlWriter->endElement();
@@ -410,6 +411,29 @@ class AtomODataWriter implements IODataWriter
 
 		return $this;
 	}
+
+    /**
+     * XML write a basic data type (string, number, boolean, null)
+     * 
+     * @param mixed  $value value to be written
+     * @param string $type  data type of the value
+     * 
+     * @return mixed
+     */
+    protected function beforeWriteValue($value, $type = null)
+    {
+        switch ($type) {
+            case 'Edm.DateTime':
+                $dateTime = new \DateTime($value, new \DateTimeZone('UTC'));
+                $result = $dateTime->format('Y-m-d\TH:i:s');
+                break;
+
+            default:
+                $result = $value;
+        }
+
+        return $result;
+    }
 
     /**
      * Write the node which hold the entity properties as child
