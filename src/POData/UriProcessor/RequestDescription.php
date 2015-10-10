@@ -304,7 +304,7 @@ class RequestDescription
                 }
             }
         }
-        if ($dataType === MimeTypes::MIME_APPLICATION_JSON) {
+        elseif ($dataType === MimeTypes::MIME_APPLICATION_JSON) {
             $data = json_decode($string, true);
             $this->_data = $data;
         }

@@ -135,7 +135,13 @@ class UriProcessor
      */
     public function execute()
     {
-        $requestMethod = $this->service->getOperationContext()->incomingRequest()->getMethod();
+        $operationContext = $this->service->getOperationContext();
+        if (!$operationContext) {
+            $this->executeBase();
+            return;
+        }
+
+        $requestMethod = $operationContext->incomingRequest()->getMethod();
         if ($requestMethod == HTTPRequestMethod::GET()) {
             $this->executeGet();
         }

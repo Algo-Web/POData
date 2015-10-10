@@ -48,7 +48,8 @@ class ResourcePathProcessor
 
 
         $dataType = null;
-        if ($service->getOperationContext()->incomingRequest()->getMethod() != HTTPRequestMethod::GET()) {
+        $operationContext = $service->getOperationContext();
+        if ($operationContext && $operationContext->incomingRequest()->getMethod() != HTTPRequestMethod::GET()) {
             $dataType = $service->getHost()->getRequestContentType();
         }
         $request = new RequestDescription(
