@@ -713,6 +713,8 @@ class HttpProcessUtility
             case 'ACCEPT':
             case 'ACCEPT_ENCODING':
             case 'ACCEPT_LANGUAGE':
+            case 'DATASERVICEVERSION':
+            case 'MAXDATASERVICEVERSION':
                 return 'HTTP_' . $name;
         }
 		return $name;
