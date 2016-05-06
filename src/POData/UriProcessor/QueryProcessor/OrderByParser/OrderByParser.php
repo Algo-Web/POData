@@ -323,7 +323,7 @@ class OrderByParser
                         //$dummyProperty = new \ReflectionProperty(
                         //    $currentObject, $resourceProperty->getName()
                         //);
-                        $currentObject = $dummyProperty->getValue($currentObject);
+                        //$currentObject = $dummyProperty->getValue($currentObject);
                     } catch (\ReflectionException $reflectionException) {
                             throw ODataException::createInternalServerError(
                                 Messages::orderByParserFailedToAccessOrInitializeProperty(
