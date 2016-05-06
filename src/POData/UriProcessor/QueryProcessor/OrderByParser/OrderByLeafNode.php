@@ -126,8 +126,10 @@ class OrderByLeafNode extends OrderByBaseNode
             }
         }
 
-        $accessor1 .= '->' . $this->propertyName;
-        $accessor2 .= '->' . $this->propertyName;
+        // $accessor1 .= '->' . $this->propertyName;
+        // $accessor2 .= '->' . $this->propertyName;
+        $accessor1 .= '->get' . ucfirst($this->propertyName) . '()';
+        $accessor2 .= '->get' . ucfirst($this->propertyName) . '()';
         $flag1 .= 'is_null(' . $accessor1 . ')';
         $flag2 .= 'is_null(' . $accessor2 . ')';
 
