@@ -24,7 +24,7 @@ class IlluminateOperationContext implements IOperationContext
 	private $_outgoingResponse;
 
 	/**
-	 * Initializes a new instance of the WebOperationContext class.
+	 * Initializes a new instance of the IlluminateOperationContext class.
 	 * This function will perform the following tasks:
 	 *  (1) Retrieve the current HTTP method,headers and stream.
 	 *  (2) Populate $_incomingRequest using these.
