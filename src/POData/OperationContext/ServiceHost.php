@@ -2,6 +2,7 @@
 
 namespace POData\OperationContext;
 
+use Illuminate\Http\Request;
 use POData\Common\Messages;
 use POData\Common\HttpStatus;
 use POData\Common\ODataConstants;
@@ -9,8 +10,6 @@ use POData\Common\Url;
 use POData\Common\UrlFormatException;
 use POData\Common\ODataException;
 use POData\Common\InvalidOperationException;
-use POData\OperationContext\Web\WebOperationContext;
-use POData\OperationContext\IOperationContext;
 use POData\Common\Version;
 use POData\Common\MimeTypes;
 use POData\POData\OperationContext\Web\Illuminate\IlluminateOperationContext;
@@ -81,14 +80,21 @@ Class ServiceHost
         return $this->_operationContext;
     }
 
-	/**
-	 * @param IOperationContext $context the OperationContext implementation to use.
+    /**
+     * @param IOperationContext $context the OperationContext implementation to use.
      * If null the IlluminateOperationContex will be used.  Defaults to null.
-	 */
-	public function __construct(IOperationContext $context = null)
+     *
+     * Currently we are forcing the input request to be of type
+     * \Illuminate\Http\Request but in the future we could make this more flexible
+     * if needed.
+     *
+     * @param Request $incomingRequest
+     * @throws ODataException
+     */
+	public function __construct(IOperationContext $context = null, Request $incomingRequest)
     {
         if(is_null($context)){
-	        $this->_operationContext = new IlluminateOperationContext();
+	        $this->_operationContext = new IlluminateOperationContext($incomingRequest);
         } else {
 	        $this->_operationContext = $context;
         }
