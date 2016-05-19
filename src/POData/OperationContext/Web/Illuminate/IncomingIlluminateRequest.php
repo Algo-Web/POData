@@ -1,7 +1,7 @@
 <?php
 
 
-namespace POData\POData\OperationContext\Web;
+namespace POData\POData\OperationContext\Web\Illuminate;
 
 
 use Illuminate\Http\Request;
