@@ -31,9 +31,6 @@
         "psr-0": {
             "POData": "src/",
             "UnitTests" : "tests/"
-        },
-        "psr-4": {
-            "POData\\": "src/"
         }
     }
 }
