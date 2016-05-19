@@ -5,7 +5,6 @@ namespace POData\OperationContext\Web;
 use POData\Common\ODataException;
 use POData\OperationContext\IOperationContext;
 use POData\OperationContext\IHTTPRequest;
-use POData\POData\OperationContext\Web\IncomingIlluminateRequest;
 
 /**
  * Class WebOperationContext
@@ -45,7 +44,7 @@ class WebOperationContext implements IOperationContext
      */
     public function __construct()
     {
-        $this->_incomingRequest = new IncomingIlluminateRequest();
+        $this->_incomingRequest = new IncomingRequest();
         $this->_outgoingResponse = new OutgoingResponse();
     }
     
