@@ -13,6 +13,7 @@ use POData\OperationContext\Web\WebOperationContext;
 use POData\OperationContext\IOperationContext;
 use POData\Common\Version;
 use POData\Common\MimeTypes;
+use POData\POData\OperationContext\Web\Illuminate\IlluminateOperationContext;
 
 /**
  * Class ServiceHost
@@ -81,13 +82,13 @@ Class ServiceHost
     }
 
 	/**
-	 * @param IOperationContext $context the OperationContext implementation to use.  If null the WebOperationContext
-	 * will be used.  Defaults to null.
+	 * @param IOperationContext $context the OperationContext implementation to use.
+     * If null the IlluminateOperationContex will be used.  Defaults to null.
 	 */
 	public function __construct(IOperationContext $context = null)
     {
         if(is_null($context)){
-	        $this->_operationContext = new WebOperationContext();
+	        $this->_operationContext = new IlluminateOperationContext();
         } else {
 	        $this->_operationContext = $context;
         }
