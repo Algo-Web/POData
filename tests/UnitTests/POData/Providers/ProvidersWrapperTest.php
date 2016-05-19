@@ -13,7 +13,7 @@ use POData\Configuration\EntitySetRights;
 use POData\Providers\Metadata\IMetadataProvider;
 use POData\Common\ODataException;
 use POData\Common\Messages;
-use POData\Providers\Metadata\Type\String;
+use POData\Providers\Metadata\Type\StringType;
 use POData\Common\InvalidOperationException;
 use POData\Providers\Metadata\ResourceAssociationSet;
 use POData\Providers\Metadata\ResourceAssociationSetEnd;
@@ -535,7 +535,7 @@ class ProvidersWrapperTest extends PhockitoUnitTestCase
 	public function testGetTypes()
 	{
 		$fakeTypes = array(
-			new ResourceType(new String(), ResourceTypeKind::PRIMITIVE, "FakeType1" ),
+			new ResourceType(new StringType(), ResourceTypeKind::PRIMITIVE, "FakeType1" ),
 		);
 
 		Phockito::when($this->mockMetadataProvider->getTypes())
@@ -550,8 +550,8 @@ class ProvidersWrapperTest extends PhockitoUnitTestCase
 	public function testGetTypesDuplicateNames()
 	{
 		$fakeTypes = array(
-			new ResourceType(new String(), ResourceTypeKind::PRIMITIVE, "FakeType1" ),
-			new ResourceType(new String(), ResourceTypeKind::PRIMITIVE, "FakeType1" ),
+			new ResourceType(new StringType(), ResourceTypeKind::PRIMITIVE, "FakeType1" ),
+			new ResourceType(new StringType(), ResourceTypeKind::PRIMITIVE, "FakeType1" ),
 		);
 
 		Phockito::when($this->mockMetadataProvider->getTypes())

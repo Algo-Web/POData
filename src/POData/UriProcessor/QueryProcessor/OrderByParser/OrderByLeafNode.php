@@ -4,7 +4,7 @@ namespace POData\UriProcessor\QueryProcessor\OrderByParser;
 
 use POData\UriProcessor\QueryProcessor\AnonymousFunction;
 use POData\Providers\Metadata\Type\Guid;
-use POData\Providers\Metadata\Type\String;
+use POData\Providers\Metadata\Type\StringType;
 use POData\Providers\Metadata\Type\DateTime;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Common\Messages;
@@ -145,7 +145,7 @@ class OrderByLeafNode extends OrderByBaseNode
         $type = $this->resourceProperty->getInstanceType();
         if ($type instanceof DateTime) {
             $code .= " \$result = strtotime($accessor1) - strtotime($accessor2);";
-        } else if ($type instanceof String) {
+        } else if ($type instanceof StringType) {
             $code .= " \$result = strcmp($accessor1, $accessor2);";
         } else if ($type instanceof Guid) {
             $code .= " \$result = strcmp($accessor1, $accessor2);";
