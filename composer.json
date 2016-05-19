@@ -17,7 +17,8 @@
     "minimum-stability": "stable",
     "require": {
         "myclabs/php-enum": "1.2.0",
-        "php": ">=5.3.0"
+        "php": ">=5.3.0",
+        "illuminate/http": "^5.1"
     },
     "require-dev": {
         "balihoo/phockito-unit" : "1.0.0",
@@ -30,6 +31,9 @@
         "psr-0": {
             "POData": "src/",
             "UnitTests" : "tests/"
+        },
+        "psr-4": {
+            "POData\\": "src/"
         }
     }
 }
