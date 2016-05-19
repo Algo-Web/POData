@@ -102,6 +102,11 @@ Class ServiceHost
         // let Dispatcher handle it
         $this->_absoluteRequestUri = $this->getAbsoluteRequestUri();
         $this->_absoluteServiceUri = null;
+
+        //Dev Note: Andrew Clinton 5/19/16
+        //_absoluteServiceUri is never being set from what I can tell
+        //so for now we'll set it as such
+        $this->setServiceUri($this->_absoluteRequestUriAsString);
     }
 
     /**
