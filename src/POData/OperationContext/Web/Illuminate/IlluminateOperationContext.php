@@ -6,6 +6,7 @@ namespace POData\OperationContext\Web\Illuminate;
 
 use Illuminate\Http\Request;
 use POData\OperationContext\IOperationContext;
+use POData\OperationContext\Web\OutgoingResponse;
 
 class IlluminateOperationContext implements IOperationContext
 {
