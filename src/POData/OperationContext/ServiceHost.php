@@ -9,7 +9,6 @@ use POData\Common\ODataConstants;
 use POData\Common\Url;
 use POData\Common\UrlFormatException;
 use POData\Common\ODataException;
-use POData\Common\InvalidOperationException;
 use POData\Common\Version;
 use POData\Common\MimeTypes;
 use POData\POData\OperationContext\Web\Illuminate\IlluminateOperationContext;
