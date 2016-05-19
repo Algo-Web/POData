@@ -106,7 +106,7 @@ Class ServiceHost
         //Dev Note: Andrew Clinton 5/19/16
         //_absoluteServiceUri is never being set from what I can tell
         //so for now we'll set it as such
-        $this->setServiceUri($this->_absoluteRequestUriAsString);
+        $this->setServiceUri($this->_getServiceUri());
     }
 
     /**
@@ -360,6 +360,25 @@ Class ServiceHost
                 $optionName === ODataConstants::HTTPQUERY_STRING_SKIPTOKEN ||
                 $optionName === ODataConstants::HTTPQUERY_STRING_TOP ||
                 $optionName === ODataConstants::HTTPQUERY_STRING_FORMAT);
+    }
+
+    /**
+     * Dev Note: Andrew Clinton
+     * 5/19/16
+     *
+     * Currently it doesn't seem that the service URI is ever being built
+     * so I am doing that here.
+     *
+     * return void
+     */
+    private function _getServiceUri()
+    {
+        if(($pos = strpos($this->_absoluteRequestUriAsString, ".svc")) !== FALSE){
+            $serviceUri = substr($this->_absoluteRequestUriAsString, 0, $pos + strlen(".svc"));
+            return $serviceUri;
+        }
+
+        return "";
     }
 
     /**
