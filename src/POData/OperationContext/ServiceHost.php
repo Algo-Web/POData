@@ -11,7 +11,7 @@ use POData\Common\UrlFormatException;
 use POData\Common\ODataException;
 use POData\Common\Version;
 use POData\Common\MimeTypes;
-use POData\POData\OperationContext\Web\Illuminate\IlluminateOperationContext;
+use POData\OperationContext\Web\Illuminate\IlluminateOperationContext;
 
 /**
  * Class ServiceHost
