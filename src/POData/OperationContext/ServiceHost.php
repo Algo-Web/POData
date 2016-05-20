@@ -181,7 +181,7 @@ Class ServiceHost
             $segments = $this->_absoluteServiceUri->getSegments();
             $lastSegment = $segments[count($segments) - 1];
             $endsWithSvc
-                = (substr_compare($lastSegment, '/api', -strlen('/api'), strlen('/api')) === 0);
+                = (substr_compare($lastSegment, '.svc', -strlen('.svc'), strlen('.svc')) === 0);
             if (!$endsWithSvc
                 || !is_null($this->_absoluteServiceUri->getQuery())
                 || !is_null($this->_absoluteServiceUri->getFragment())
@@ -196,7 +196,7 @@ Class ServiceHost
                 // There will be always a .svc segment in the request uri otherwise
                 // uri redirection will not happen.
                 for (; $i >=0; $i--) {
-                    $endsWithSvc = (substr_compare($requestUriSegments[$i], '/api', -strlen('/api'), strlen('/api')) === 0);
+                    $endsWithSvc = (substr_compare($requestUriSegments[$i], '.svc', -strlen('.svc'), strlen('.svc')) === 0);
                     if ($endsWithSvc) {
                         break;
                     }
@@ -352,8 +352,8 @@ Class ServiceHost
      */
     private function _getServiceUri()
     {
-        if(($pos = strpos($this->_absoluteRequestUriAsString, "/api")) !== FALSE){
-            $serviceUri = substr($this->_absoluteRequestUriAsString, 0, $pos + strlen("/api"));
+        if(($pos = strpos($this->_absoluteRequestUriAsString, ".svc")) !== FALSE){
+            $serviceUri = substr($this->_absoluteRequestUriAsString, 0, $pos + strlen(".svc"));
             return $serviceUri;
         }
 
