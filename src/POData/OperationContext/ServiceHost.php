@@ -340,7 +340,26 @@ Class ServiceHost
         
         $this->_queryOptions = $queryOptions;
     }
-    
+
+    /**
+     * Dev Note: Andrew Clinton
+     * 5/19/16
+     *
+     * Currently it doesn't seem that the service URI is ever being built
+     * so I am doing that here.
+     *
+     * return void
+     */
+    private function _getServiceUri()
+    {
+        if(($pos = strpos($this->_absoluteRequestUriAsString, "/api")) !== FALSE){
+            $serviceUri = substr($this->_absoluteRequestUriAsString, 0, $pos + strlen("/api"));
+            return $serviceUri;
+        }
+
+        return $this->_absoluteRequestUriAsString;
+    }
+
     /**
      * Verifies the given url option is a valid odata query option.
      * 
