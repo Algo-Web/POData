@@ -180,10 +180,10 @@ Class ServiceHost
 
             $segments = $this->_absoluteServiceUri->getSegments();
             $lastSegment = $segments[count($segments) - 1];
-            $endsWithSvc 
-                = (substr_compare($lastSegment, '.svc', -strlen('.svc'), strlen('.svc')) === 0);
-            if (!$endsWithSvc 
-                || !is_null($this->_absoluteServiceUri->getQuery()) 
+            $endsWithSvc
+                = (substr_compare($lastSegment, '/api', -strlen('/api'), strlen('/api')) === 0);
+            if (!$endsWithSvc
+                || !is_null($this->_absoluteServiceUri->getQuery())
                 || !is_null($this->_absoluteServiceUri->getFragment())
             ) {
                 throw ODataException::createInternalServerError(Messages::hostMalFormedBaseUriInConfig(true));
@@ -196,7 +196,7 @@ Class ServiceHost
                 // There will be always a .svc segment in the request uri otherwise
                 // uri redirection will not happen.
                 for (; $i >=0; $i--) {
-                    $endsWithSvc = (substr_compare($requestUriSegments[$i], '.svc', -strlen('.svc'), strlen('.svc')) === 0);
+                    $endsWithSvc = (substr_compare($requestUriSegments[$i], '/api', -strlen('/api'), strlen('/api')) === 0);
                     if ($endsWithSvc) {
                         break;
                     }
@@ -360,25 +360,6 @@ Class ServiceHost
                 $optionName === ODataConstants::HTTPQUERY_STRING_SKIPTOKEN ||
                 $optionName === ODataConstants::HTTPQUERY_STRING_TOP ||
                 $optionName === ODataConstants::HTTPQUERY_STRING_FORMAT);
-    }
-
-    /**
-     * Dev Note: Andrew Clinton
-     * 5/19/16
-     *
-     * Currently it doesn't seem that the service URI is ever being built
-     * so I am doing that here.
-     *
-     * return void
-     */
-    private function _getServiceUri()
-    {
-        if(($pos = strpos($this->_absoluteRequestUriAsString, ".svc")) !== FALSE){
-            $serviceUri = substr($this->_absoluteRequestUriAsString, 0, $pos + strlen(".svc"));
-            return $serviceUri;
-        }
-
-        return "";
     }
 
     /**
