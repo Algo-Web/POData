@@ -8,7 +8,7 @@ use POData\Common\ODataException;
 use POData\Providers\Metadata\Type\Boolean;
 use POData\Providers\Metadata\Type\DateTime;
 use POData\Providers\Metadata\Type\Decimal;
-use POData\Providers\Metadata\Type\String;
+use POData\Providers\Metadata\Type\EdmString;
 use POData\Providers\Metadata\Type\Int64;
 use POData\Providers\Metadata\Type\Int32;
 use POData\Providers\Metadata\Type\Double;
@@ -374,7 +374,7 @@ class ExpressionParser
         case ExpressionTokenId::IDENTIFIER:
             return $this->_parseIdentifier();
         case ExpressionTokenId::STRING_LITERAL:
-            return $this->_parseTypedLiteral(new String());
+            return $this->_parseTypedLiteral(new EdmString());
         case ExpressionTokenId::INT64_LITERAL:
             return $this->_parseTypedLiteral(new Int64());
         case ExpressionTokenId::INTEGER_LITERAL:
@@ -653,14 +653,14 @@ class ExpressionParser
         FunctionDescription::verifyRelationalOpArguments($expressionToken, $left, $right);
 
         //We need special handling for comparison of following types:
-        //1. String
+        //1. EdmString
         //2. DateTime
         //3. Guid
         //4. Binary
         //Will make these comparison as function calls, which will 
         // be converted to language specific function call by expression 
         // provider
-        $string = new String();
+        $string = new EdmString();
         if ($left->typeIs($string) && $right->typeIs($string)) {
             $strcmpFunctions = FunctionDescription::stringComparisonFunctions();
             $left = new FunctionCallExpression($strcmpFunctions[0], array($left, $right));

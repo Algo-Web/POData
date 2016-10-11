@@ -9,7 +9,7 @@ use POData\Providers\Metadata\Type\Single;
 use POData\Providers\Metadata\Type\Int64;
 use POData\Providers\Metadata\Type\Double;
 use POData\Providers\Metadata\Type\Decimal;
-use POData\Providers\Metadata\Type\String;
+use POData\Providers\Metadata\Type\EdmString;
 use POData\Providers\Metadata\Type\Guid;
 use POData\Providers\Metadata\Type\DateTime;
 use POData\Providers\Metadata\Type\Boolean;
@@ -480,7 +480,7 @@ class KeyDescriptor
             $outType = new Guid();
             break;
         case ExpressionTokenId::STRING_LITERAL:
-            $outType = new String();
+            $outType = new EdmString();
             break;
         case ExpressionTokenId::INTEGER_LITERAL:
             $outType = new Int32();

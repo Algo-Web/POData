@@ -15,7 +15,7 @@ use POData\Providers\Metadata\Type\Double;
 use POData\Providers\Metadata\Type\Decimal;
 use POData\Providers\Metadata\Type\DateTime;
 use POData\Providers\Metadata\Type\Int32;
-use POData\Providers\Metadata\Type\String;
+use POData\Providers\Metadata\Type\EdmString;
 use POData\Providers\Metadata\Type\Boolean;
 use POData\Providers\Metadata\Type\Void;
 use POData\Providers\Metadata\Type\Binary;
@@ -88,86 +88,86 @@ class FunctionDescription
     public static function filterFunctionDescriptions()
     {
         $functions = array(
-            //String Functions
+            //EdmString Functions
             'endswith'      =>
                 array(
                     new FunctionDescription(
                         'endswith', new Boolean(),
-                        array(new String(), new String())
+                        array(new EdmString(), new EdmString())
                     )
                 ),
             'indexof'       =>
                 array(
                     new FunctionDescription(
                         'indexof', new Int32(),
-                        array(new String(), new String())
+                        array(new EdmString(), new EdmString())
                     )
                 ),
             'replace'       =>
                 array(
                     new FunctionDescription(
-                        'replace', new String(),
-                        array(new String(), new String(), new String())
+                        'replace', new EdmString(),
+                        array(new EdmString(), new EdmString(), new EdmString())
                     )
                 ),
             'startswith'    =>
                 array(
                     new FunctionDescription(
                         'startswith', new Boolean(),
-                        array(new String(), new String())
+                        array(new EdmString(), new EdmString())
                     )
                 ),
             'tolower'       =>
                 array(
                     new FunctionDescription(
-                        'tolower', new String(),
-                        array(new String())
+                        'tolower', new EdmString(),
+                        array(new EdmString())
                     )
                 ),
             'toupper'       =>
                 array(
                     new FunctionDescription(
-                        'toupper', new String(),
-                        array(new String())
+                        'toupper', new EdmString(),
+                        array(new EdmString())
                     )
                 ),
             'trim'          =>
                 array(
                     new FunctionDescription(
-                        'trim', new String(),
-                        array(new String())
+                        'trim', new EdmString(),
+                        array(new EdmString())
                     )
                 ),
             'substring'     =>
                 array(
                     new FunctionDescription(
-                        'substring', new String(),
-                        array(new String(), new Int32())
+                        'substring', new EdmString(),
+                        array(new EdmString(), new Int32())
                     ),
                     new FunctionDescription(
-                        'substring', new String(),
-                        array(new String(), new Int32(), new Int32())
+                        'substring', new EdmString(),
+                        array(new EdmString(), new Int32(), new Int32())
                     )
                 ),
             'substringof'   =>
                 array(
                     new FunctionDescription(
                         'substringof', new Boolean(),
-                        array(new String(), new String())
+                        array(new EdmString(), new EdmString())
                     )
                 ),
             'concat'        =>
                 array(
                     new FunctionDescription(
-                        'concat', new String(),
-                        array(new String(), new String())
+                        'concat', new EdmString(),
+                        array(new EdmString(), new EdmString())
                     )
                 ),
             'length'        =>
                 array(
                     new FunctionDescription(
                         'length', new Int32(),
-                        array(new String())
+                        array(new EdmString())
                     )
                 ),
             //DateTime functions
@@ -262,7 +262,7 @@ class FunctionDescription
         return array(
             new FunctionDescription(
                 'strcmp', new Int32(), 
-                array(new String(), new String())
+                array(new EdmString(), new EdmString())
             )
         );
     }

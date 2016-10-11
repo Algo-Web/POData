@@ -15,7 +15,7 @@ use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\ProvidersWrapper;
 use POData\Providers\Metadata\Type\Binary;
 use POData\Providers\Metadata\Type\Boolean;
-use POData\Providers\Metadata\Type\String;
+use POData\Providers\Metadata\Type\EdmString;
 use POData\Providers\Metadata\Type\DateTime;
 use POData\Common\ODataException;
 use POData\Common\Messages;
