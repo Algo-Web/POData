@@ -318,16 +318,13 @@ class JsonWriterTest extends \PHPUnit_Framework_TestCase {
 		$writer->writeValue("1", "Edm.String");
 		$writer->writeValue(2, "Edm.Int16");
 
-		$expected = '[
-    "1",2';
+		$expected = "[\n    \"1\",2";
 		$this->assertEquals($expected, $writer->getJsonOutput());
 
 		$result = $writer->endScope();
 		$this->assertSame($result, $writer);
 
-		$expected = '[
-    "1",2
-]';
+		$expected = "[\n    \"1\",2\n]";
 		$this->assertEquals($expected, $writer->getJsonOutput());
 
 	}
@@ -342,16 +339,13 @@ class JsonWriterTest extends \PHPUnit_Framework_TestCase {
 		$writer->writeName("1");
 		$writer->writeValue(2, "Edm.Int16");
 
-		$expected = '{
-    "1":2';
+		$expected = "{\n    \"1\":2";
 		$this->assertEquals($expected, $writer->getJsonOutput());
 
 		$result = $writer->endScope();
 		$this->assertSame($result, $writer);
 
-		$expected = '{
-    "1":2
-}';
+		$expected = "{\n    \"1\":2\n}";
 		$this->assertEquals($expected, $writer->getJsonOutput());
 
 	}
@@ -378,13 +372,7 @@ class JsonWriterTest extends \PHPUnit_Framework_TestCase {
 		$writer->endScope();
 
 
-		$expected = '{
-    "1":2,"child":{
-        "array":[
-            "100.00155","2012-03-03T11:14:32"
-        ]
-    }
-}';
+		$expected = "{\n    \"1\":2,\"child\":{\n        \"array\":[\n            \"100.00155\",\"2012-03-03T11:14:32\"\n        ]\n    }\n}";
 		$this->assertEquals($expected, $writer->getJsonOutput());
 
 	}

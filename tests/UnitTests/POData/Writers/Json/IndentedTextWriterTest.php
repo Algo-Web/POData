@@ -69,10 +69,7 @@ class IndentedTextWriterTest extends \PHPUnit_Framework_TestCase {
 
 
 		$writer->writeValue("indented0x");
-		$expected = "indented1x
-        indented2x
-    indented1xtrimmed
-indented0x";
+		$expected = "indented1x\n        indented2x\n    indented1xtrimmed\nindented0x";
 
 		$this->assertEquals($expected, $writer->getResult());
 	}
