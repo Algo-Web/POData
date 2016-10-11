@@ -1,10 +1,14 @@
 {
-    "name": "grimmlink/podata",
+    "name": "balint777/podata",
     "type": "library",
     "description": "OData for Poor PHP Developers",
     "keywords": [ "rest", "odata" ],
     "license": "BSD-2-Clause",
     "authors": [
+        {
+            "name": "Csonka Bálint",
+            "email": "balint777@gmail.com"
+        },
         {
             "name": "POData Project",
             "email": "podataproject@gmail.com"
