@@ -44,7 +44,9 @@ class ServiceHostTestFake extends ServiceHost
             $_SERVER[ODataConstants::HTTPREQUEST_QUERY_STRING] = $this->_hostInfo['QueryString'];
         }
         //print_r($_SERVER); 
-        parent::__construct();
+        parse_str($hostInfo['QueryString'], $_GET);
+        parse_str($hostInfo['QueryString'], $_REQUEST);
+        parent::__construct(null, new Request($_GET, $_REQUEST, array(), array(), $_FILES, $_SERVER, null));
 
         if (array_key_exists('AbsoluteServiceUri', $this->_hostInfo)) {
             $this->setServiceUri($this->_hostInfo['AbsoluteServiceUri']->getUrlAsString());
