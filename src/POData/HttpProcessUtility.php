@@ -696,8 +696,27 @@ class HttpProcessUtility
         return $c == ',' || $c == ' ' || $c == '\t';
     }
 
-
-	public static function headerToServerKey($headerName){
-		return 'HTTP_' . strtoupper(str_replace('-', '_', $headerName));
+	/**
+     * Get server key by header
+     * @param string $headerName Name of header
+     */
+    public static function headerToServerKey($headerName)
+    {
+        $name = strtoupper(str_replace('-', '_', $headerName));
+        switch ($name) {
+            case 'HOST':
+            case 'CONNECTION':
+            case 'CACHE_CONTROL':
+            case 'ORIGIN':
+            case 'USER_AGENT':
+            case 'POSTMAN_TOKEN':
+            case 'ACCEPT':
+            case 'ACCEPT_ENCODING':
+            case 'ACCEPT_LANGUAGE':
+            case 'DATASERVICEVERSION':
+            case 'MAXDATASERVICEVERSION':
+                return 'HTTP_' . $name;
+        }
+		return $name;
 	}
 }

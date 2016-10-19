@@ -687,6 +687,28 @@ class ProvidersWrapper
     }
 
     /**
+     * Puts an entity instance to entity set identified by a key
+     *
+     * @param ResourceSet $resourceSet The entity set containing the entity to update
+     * @param KeyDescriptor $keyDescriptor The key identifying the entity to update
+     *
+     * @return bool|null Returns result of executiong query
+     */
+    public function putResource(
+        ResourceSet $resourceSet,
+        KeyDescriptor $keyDescriptor,
+        $data
+    ) {
+        $queryResult = $this->queryProvider->putResource(
+            $resourceSet,
+            $keyDescriptor,
+            $data
+        );
+
+        return $queryResult;
+    }
+
+    /**
      * Get related resource set for a resource
      *
      * @param QueryType $queryType indicates if this is a query for a count, entities, or entities with a count

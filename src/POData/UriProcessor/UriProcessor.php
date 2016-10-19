@@ -21,6 +21,7 @@ use POData\Common\ODataException;
 use POData\Common\InvalidOperationException;
 use POData\Common\ODataConstants;
 use POData\Providers\Query\QueryResult;
+use POData\OperationContext\HTTPRequestMethod;
 
 /**
  * Class UriProcessor
@@ -134,6 +135,63 @@ class UriProcessor
      */
     public function execute()
     {
+        $operationContext = $this->service->getOperationContext();
+        if (!$operationContext) {
+            $this->executeBase();
+            return;
+        }
+
+        $requestMethod = $operationContext->incomingRequest()->getMethod();
+        if ($requestMethod == HTTPRequestMethod::GET()) {
+            $this->executeGet();
+        }
+        elseif ($requestMethod == HTTPRequestMethod::PUT()) {
+            $this->executePut();
+        }
+        else {
+            throw ODataException::createNotImplementedError(Messages::onlyReadSupport($requestMethod));
+        }
+    }
+
+    /**
+     * Execute the client submitted request against the data source (GET)
+     */
+    protected function executeGet()
+    {
+        return $this->executeBase();
+    }
+
+    /**
+     * Execute the client submitted request against the data source (PUT)
+     */
+    protected function executePut()
+    {
+        return $this->executeBase(function ($uriProcessor, $segment) {
+            $requestMethod = $uriProcessor->service->getOperationContext()->incomingRequest()->getMethod();
+            $resourceSet = $segment->getTargetResourceSetWrapper();
+            $keyDescriptor = $segment->getKeyDescriptor();
+            $data = $uriProcessor->request->getData();
+
+            if (!$resourceSet || !$keyDescriptor) {
+                $url = $uriProcessor->service->getHost()->getAbsoluteRequestUri()->getUrlAsString();
+                throw ODataException::createBadRequestError(Messages::badRequestInvalidUriForThisVerb($url, $requestMethod));
+            }
+
+            if (!$data) {
+                throw ODataException::createBadRequestError(Messages::noDataForThisVerb($requestMethod));
+            }
+
+            return $uriProcessor->providers->putResource($resourceSet, $keyDescriptor, $data);
+        });
+    }
+
+    /**
+     * Execute the client submitted request against the data source
+     *
+     * @param callable $callback Function, what must be called
+     */
+    protected function executeBase($callback = null)
+    {
         $segments = $this->request->getSegments();
 
         foreach ($segments as $segment) {
@@ -200,7 +258,7 @@ class UriProcessor
             }
 
             if (is_null($segment->getNext()) || $segment->getNext()->getIdentifier() == ODataConstants::URI_COUNT_SEGMENT) {
-                    $this->applyQueryOptions($segment);
+                $this->applyQueryOptions($segment, $callback);
             }
         }
 
@@ -298,10 +356,17 @@ class UriProcessor
      * Applies the query options to the resource(s) retrieved from the data source.
      * 
      * @param SegmentDescriptor $segment The descriptor which holds resource(s) on which query options to be applied.
+     * @param callable $callback Function, what must be called
      *
      */
-    private function applyQueryOptions(SegmentDescriptor $segment)
+    private function applyQueryOptions(SegmentDescriptor $segment, $callback = null)
     {
+        // For non-GET methods
+        if ($callback) {
+            $callback($this, $segment);
+            return;
+        }
+
 	    //TODO: I'm not really happy with this..i think i'd rather keep the result the QueryResult
 	    //not even bother with the setCountValue stuff (shouldn't counts be on segments?)
 	    //and just work with the QueryResult in the object model serializer
