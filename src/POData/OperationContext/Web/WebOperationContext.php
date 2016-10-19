@@ -3,8 +3,6 @@
 namespace POData\OperationContext\Web;
 
 use POData\Common\ODataException;
-use POData\OperationContext\Web\IncomingRequest;
-use POData\OperationContext\Web\OutgoingResponse;
 use POData\OperationContext\IOperationContext;
 use POData\OperationContext\IHTTPRequest;
 

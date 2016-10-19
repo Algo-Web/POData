@@ -2,7 +2,9 @@
 
 namespace POData\ObjectModel;
 
-use POData\Providers\Metadata\Type\EdmString;
+
+use POData\Providers\Metadata\Type\StringType;
+
 
 /**
  * Class ODataURL Represents top level link

@@ -19,7 +19,7 @@ use POData\Providers\Metadata\Type\Navigation;
 use POData\Providers\Metadata\Type\Null1;
 use POData\Providers\Metadata\Type\SByte;
 use POData\Providers\Metadata\Type\Single;
-use POData\Providers\Metadata\Type\EdmString;
+use POData\Providers\Metadata\Type\StringType;
 use POData\Providers\Metadata\Type\TypeCode;
 use POData\Providers\Metadata\Type\Void;
 
@@ -87,7 +87,7 @@ class VoidTest extends \PHPUnit_Framework_TestCase {
 		$this->assertFalse( $type->isCompatibleWith(new Null1()) );
 		$this->assertFalse( $type->isCompatibleWith(new SByte()) );
 		$this->assertFalse( $type->isCompatibleWith(new Single()) );
-		$this->assertFalse( $type->isCompatibleWith(new EdmString()) );
+		$this->assertFalse( $type->isCompatibleWith(new StringType()) );
 		$this->assertTrue( $type->isCompatibleWith(new Void()) );
 
 
