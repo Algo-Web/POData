@@ -19,7 +19,7 @@ use POData\Providers\Metadata\Type\Navigation;
 use POData\Providers\Metadata\Type\Null1;
 use POData\Providers\Metadata\Type\SByte;
 use POData\Providers\Metadata\Type\Single;
-use POData\Providers\Metadata\Type\String;
+use POData\Providers\Metadata\Type\EdmString;
 use POData\Providers\Metadata\Type\TypeCode;
 use POData\Providers\Metadata\Type\Void;
 
@@ -30,7 +30,7 @@ class StringTest extends \PHPUnit_Framework_TestCase {
 	 */
 	public function getAsIType()
 	{
-		return new String();
+		return new EdmString();
 	}
 
 	public function testConstructorAndDefaultValues()
@@ -86,7 +86,7 @@ class StringTest extends \PHPUnit_Framework_TestCase {
 		$this->assertFalse( $type->isCompatibleWith(new Null1()) );
 		$this->assertFalse( $type->isCompatibleWith(new SByte()) );
 		$this->assertFalse( $type->isCompatibleWith(new Single()) );
-		$this->assertTrue( $type->isCompatibleWith(new String()) );
+		$this->assertTrue( $type->isCompatibleWith(new EdmString()) );
 		$this->assertFalse( $type->isCompatibleWith(new Void()) );
 
 

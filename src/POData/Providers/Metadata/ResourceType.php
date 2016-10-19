@@ -14,7 +14,7 @@ use POData\Providers\Metadata\Type\Int32;
 use POData\Providers\Metadata\Type\Int64;
 use POData\Providers\Metadata\Type\SByte;
 use POData\Providers\Metadata\Type\Single;
-use POData\Providers\Metadata\Type\String;
+use POData\Providers\Metadata\Type\EdmString;
 use POData\Providers\Metadata\Type\TypeCode;
 use POData\Providers\Metadata\Type\EdmPrimitiveType;
 use POData\Providers\Metadata\Type\IType;
@@ -264,7 +264,7 @@ class ResourceType
     /**
      * To get custom state object for this type
      * 
-     * @return \stdClass
+     * @return object
      */
     public function getCustomState()
     {
@@ -911,7 +911,7 @@ class ResourceType
             break;
         case EdmPrimitiveType::STRING:
             return new ResourceType(
-                new String(), 
+                new EdmString(), 
                 ResourceTypeKind::PRIMITIVE, 
                 'String', 'Edm'
             );

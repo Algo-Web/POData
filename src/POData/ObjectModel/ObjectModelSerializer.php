@@ -15,7 +15,7 @@ use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\ProvidersWrapper;
 use POData\Providers\Metadata\Type\Binary;
 use POData\Providers\Metadata\Type\Boolean;
-use POData\Providers\Metadata\Type\String;
+use POData\Providers\Metadata\Type\EdmString;
 use POData\Providers\Metadata\Type\DateTime;
 use POData\Common\ODataException;
 use POData\Common\Messages;
@@ -841,10 +841,8 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
             $stringValue = ($primitiveValue === true) ? 'true' : 'false';
         } else if ($type instanceof Binary) {
             $stringValue = base64_encode($primitiveValue);
-	} else if ($type instanceof DateTime && $primitiveValue instanceOf \DateTime) {
+        } else if ($type instanceof DateTime && $primitiveValue instanceOf \DateTime) {
             $stringValue = $primitiveValue->format(\DateTime::ATOM);
-        } else if ($type instanceof String) {
-            $stringValue = utf8_encode($primitiveValue);
         } else {        
             $stringValue = strval($primitiveValue);
         }

@@ -4,7 +4,7 @@ namespace POData\UriProcessor\QueryProcessor\OrderByParser;
 
 use POData\UriProcessor\QueryProcessor\AnonymousFunction;
 use POData\Providers\Metadata\Type\Guid;
-use POData\Providers\Metadata\Type\String;
+use POData\Providers\Metadata\Type\EdmString;
 use POData\Providers\Metadata\Type\DateTime;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Common\Messages;
@@ -126,8 +126,13 @@ class OrderByLeafNode extends OrderByBaseNode
             }
         }
 
-        $accessor1 .= '->' . $this->propertyName;
-        $accessor2 .= '->' . $this->propertyName;
+        // $accessor1 .= '->' . $this->propertyName;
+        // $accessor2 .= '->' . $this->propertyName;
+        $propertyName = $this->propertyName;
+        $getter = 'get' . ucfirst($propertyName);
+        $accessor1 = "(method_exists({$accessor1}, '{$getter}') ? {$accessor1}->{$getter}() : {$accessor1}->{$propertyName})";
+        $accessor2 = "(method_exists({$accessor2}, '{$getter}') ? {$accessor2}->{$getter}() : {$accessor2}->{$propertyName})";
+        
         $flag1 .= 'is_null(' . $accessor1 . ')';
         $flag2 .= 'is_null(' . $accessor2 . ')';
 

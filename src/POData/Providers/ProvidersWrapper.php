@@ -21,7 +21,6 @@ use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
 use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
 use POData\Providers\Query\QueryResult;
 use POData\Providers\Query\QueryType;
-use stdClass;
 
 /**
  * Class ProvidersWrapper
@@ -673,7 +672,7 @@ class ProvidersWrapper
      * @param ResourceSet $resourceSet The entity set containing the entity to fetch
      * @param KeyDescriptor $keyDescriptor The key identifying the entity to fetch
      *
-     * @return stdClass|null Returns entity instance if found else null
+     * @return object|null Returns entity instance if found else null
      */
     public function getResourceFromResourceSet(ResourceSet $resourceSet, KeyDescriptor $keyDescriptor)
     {
@@ -692,7 +691,7 @@ class ProvidersWrapper
      *
      * @param QueryType $queryType indicates if this is a query for a count, entities, or entities with a count
      * @param ResourceSet $sourceResourceSet The entity set containing the source entity
-     * @param stdClass $sourceEntity The source entity instance.
+     * @param object $sourceEntity The source entity instance.
      * @param ResourceSet      $targetResourceSet    The resource set of containing the target of the navigation property
      * @param ResourceProperty $targetProperty       The navigation property to retrieve
      * @param FilterInfo  $filterInfo represents the $filter parameter of the OData query.  NULL if no $filter specified
@@ -707,7 +706,7 @@ class ProvidersWrapper
 	public function getRelatedResourceSet(
 		QueryType $queryType,
 	    ResourceSet $sourceResourceSet,
-	    stdClass $sourceEntity,
+	    $sourceEntity,
         ResourceSet $targetResourceSet,
         ResourceProperty $targetProperty, 
         $filterInfo,
@@ -745,7 +744,7 @@ class ProvidersWrapper
      * @param KeyDescriptor    $keyDescriptor     The key to identify the entity to be fetched.
      *
      * 
-     * @return \stdClass|null Returns entity instance if found else null
+     * @return object|null Returns entity instance if found else null
      */
     public function getResourceFromRelatedResourceSet(ResourceSet $sourceResourceSet,
         $sourceEntity, ResourceSet $targetResourceSet, ResourceProperty $targetProperty,
@@ -771,13 +770,13 @@ class ProvidersWrapper
      * Get related resource for a resource
      * 
      * @param ResourceSet      $sourceResourceSet The source resource set
-     * @param mixed            $sourceEntity      The source resource
+     * @param object           $sourceEntity      The source resource
      * @param ResourceSet      $targetResourceSet The resource set of the navigation
      *                                            property
      * @param ResourceProperty $targetProperty    The navigation property to be 
      *                                            retrieved
      * 
-     * @return \stdClass|null The related resource if exists else null
+     * @return object|null The related resource if exists else null
      */
     public function getRelatedResourceReference(ResourceSet $sourceResourceSet, 
         $sourceEntity, ResourceSet $targetResourceSet, 

@@ -5,7 +5,7 @@ namespace POData\UriProcessor\QueryProcessor\SkipTokenParser;
 use POData\Providers\Metadata\Type\Guid;
 use POData\Providers\Metadata\Type\Null1;
 use POData\Providers\Metadata\Type\DateTime;
-use POData\Providers\Metadata\Type\String;
+use POData\Providers\Metadata\Type\EdmString;
 use POData\Providers\Metadata\ResourceType;
 use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
 use POData\Common\Messages;

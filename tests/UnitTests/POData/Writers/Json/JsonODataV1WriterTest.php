@@ -1302,13 +1302,7 @@ class JsonODataV1WriterTest extends PhockitoUnitTestCase
         $writer = new JsonODataV1Writer();
         $actual = $writer->writeServiceDocument($this->mockProvider)->getOutput();
 
-        $expected = '{
-    "d":{
-        "EntitySet":[
-
-        ]
-    }
-}';
+        $expected = "{\n    \"d\":{\n        \"EntitySet\":[\n\n        ]\n    }\n}";
 
         $this->assertEquals($expected, $actual);
     }
@@ -1336,13 +1330,7 @@ class JsonODataV1WriterTest extends PhockitoUnitTestCase
         $writer = new JsonODataV1Writer();
         $actual = $writer->writeServiceDocument($this->mockProvider)->getOutput();
 
-        $expected = '{
-    "d":{
-        "EntitySet":[
-            "Name 1","XML escaped stuff \" \' <> & ?"
-        ]
-    }
-}';
+        $expected = "{\n    \"d\":{\n        \"EntitySet\":[\n            \"Name 1\",\"XML escaped stuff \\\" ' <> & ?\"\n        ]\n    }\n}";
 
         $this->assertEquals($expected, $actual);
     }

@@ -9,7 +9,7 @@ use POData\Providers\Metadata\Type\Single;
 use POData\Providers\Metadata\Type\Decimal;
 use POData\Providers\Metadata\Type\DateTime;
 use POData\Providers\Metadata\Type\Binary;
-use POData\Providers\Metadata\Type\String;
+use POData\Providers\Metadata\Type\EdmString;
 use POData\Providers\Metadata\Type\Navigation;
 use POData\Providers\Metadata\Type\Boolean;
 use POData\Providers\Metadata\Type\Null1;
@@ -149,7 +149,7 @@ class ExpressionParserTest extends \PHPUnit_Framework_TestCase
         $parser = new ExpressionParser($expression, $this->customersResourceType, false);
         $expr = $parser->parseFilter();
         $this->assertTrue($expr instanceof PropertyAccessExpression);
-        $this->assertTrue($expr->getType() instanceof String);
+        $this->assertTrue($expr->getType() instanceof EdmString);
 
         $expression = 'Rating';
         $parser->resetParser($expression);
@@ -214,7 +214,7 @@ class ExpressionParserTest extends \PHPUnit_Framework_TestCase
                      false);
         $expr = $parser->parseFilter();
         $this->assertTrue($expr instanceof PropertyAccessExpression);
-        $this->assertTrue($expr->getType() instanceof String);
+        $this->assertTrue($expr->getType() instanceof EdmString);
         $this->assertEquals('Edm.String', $expr->getResourceType()->getFullName());
 
         $expression = 'Customer/Orders/OrderID';
@@ -353,7 +353,7 @@ class ExpressionParserTest extends \PHPUnit_Framework_TestCase
         $parser->resetParser($expression);
         try {
             $expr = $parser->parseFilter();
-            $this->fail('An expected ODataException for incompatible between Int32 and String was not thrown');
+            $this->fail('An expected ODataException for incompatible between Int32 and EdmString was not thrown');
         } catch(ODataException $exception)
         {
             $this->assertStringStartsWith('Operator \'add\' incompatible with operand types Edm.Int32 and Edm.String', $exception->getMessage());
@@ -421,8 +421,8 @@ class ExpressionParserTest extends \PHPUnit_Framework_TestCase
         $paramExpression = $expr->getLeft()->getParamExpressions();
         $this->assertTrue($paramExpression[0] instanceof PropertyAccessExpression);
         $this->assertTrue($paramExpression[1] instanceof ConstantExpression);
-        $this->assertTrue($paramExpression[0]->getType() instanceof String);
-        $this->assertTrue($paramExpression[1]->getType() instanceof String);
+        $this->assertTrue($paramExpression[0]->getType() instanceof EdmString);
+        $this->assertTrue($paramExpression[1]->getType() instanceof EdmString);
         $this->assertTrue($expr->getRight() instanceof ConstantExpression);
         $this->assertEquals($expr->getRight()->getValue(), 0);
 

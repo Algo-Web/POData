@@ -1,3 +1,7 @@
+## 1.1
+
+* Removed stdClass restrictions (see [#113](https://github.com/POData/POData/issues/113))
+
 ## 1.0
 
 * Added composer support (see [#11](https://github.com/balihoo/POData/issues/11))

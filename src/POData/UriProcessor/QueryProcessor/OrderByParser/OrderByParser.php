@@ -315,10 +315,15 @@ class OrderByParser
                     $currentNode->addNode($node);
                 } else {
                     try {
-                        $dummyProperty = new \ReflectionProperty(
-                            $currentObject, $resourceProperty->getName()
-                        );
-                        $currentObject = $dummyProperty->getValue($currentObject);
+                        $reflectionClass = new \ReflectionClass(get_class($currentObject));
+                        $reflectionProperty = $reflectionClass->getProperty($resourceProperty->getName());
+                        $reflectionProperty->setAccessible(true);
+                        $currentObject = $reflectionProperty->getValue($currentObject);
+                        
+                        //$dummyProperty = new \ReflectionProperty(
+                        //    $currentObject, $resourceProperty->getName()
+                        //);
+                        //$currentObject = $dummyProperty->getValue($currentObject);
                     } catch (\ReflectionException $reflectionException) {
                             throw ODataException::createInternalServerError(
                                 Messages::orderByParserFailedToAccessOrInitializeProperty(

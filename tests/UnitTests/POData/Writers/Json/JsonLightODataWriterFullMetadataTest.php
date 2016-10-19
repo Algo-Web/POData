@@ -1416,13 +1416,7 @@ class JsonLightODataWriterFullMetadataTest extends PhockitoUnitTestCase
         $writer = new JsonLightODataWriter(JsonLightMetadataLevel::FULL(), $this->serviceBase);
         $actual = $writer->writeServiceDocument($this->mockProvider)->getOutput();
 
-        $expected = '{
-    "d":{
-        "EntitySet":[
-
-        ]
-    }
-}';
+        $expected = "{\n    \"d\":{\n        \"EntitySet\":[\n\n        ]\n    }\n}";
 
         $this->assertEquals($expected, $actual);
     }
@@ -1450,13 +1444,7 @@ class JsonLightODataWriterFullMetadataTest extends PhockitoUnitTestCase
         $writer = new JsonLightODataWriter(JsonLightMetadataLevel::FULL(), $this->serviceBase);
         $actual = $writer->writeServiceDocument($this->mockProvider)->getOutput();
 
-        $expected = '{
-    "d":{
-        "EntitySet":[
-            "Name 1","XML escaped stuff \" \' <> & ?"
-        ]
-    }
-}';
+        $expected = "{\n    \"d\":{\n        \"EntitySet\":[\n            \"Name 1\",\"XML escaped stuff \\\" ' <> & ?\"\n        ]\n    }\n}";
 
         $this->assertEquals($expected, $actual);
     }

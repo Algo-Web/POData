@@ -3,10 +3,10 @@
 namespace POData\Providers\Metadata\Type;
 
 /**
- * Class String
+ * Class EdmString
  * @package POData\Providers\Metadata\Type
  */
-class String implements IType
+class EdmString implements IType
 {
     /**
      * Gets the type code
@@ -20,7 +20,7 @@ class String implements IType
     }
 
     /**
-     * Checks this type (String) is compatible with another type
+     * Checks this type (EdmString) is compatible with another type
      * Note: implementation of IType::isCompatibleWith
      * 
      * @param IType $type Type to check compatibility
@@ -77,7 +77,7 @@ class String implements IType
         //WebOperationContext will do urldecode, so the clause become
         //$filter=ShipName eq 'Antonio Moreno Taquería', the lexer will
         //give the token as
-        //Token {Text string(25):'Antonio Moreno Taquería', Id: String}, 
+        //Token {Text string(25):'Antonio Moreno Taquería', Id: EdmString}, 
         //this function is used to remove the pre-post quotes from Token::Text 
         //i.e. 'Antonio Moreno Taquería'
         //to Antonio Moreno Taquería
