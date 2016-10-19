@@ -2,17 +2,16 @@
 
 namespace POData\OperationContext;
 
+use Illuminate\Http\Request;
 use POData\Common\Messages;
 use POData\Common\HttpStatus;
 use POData\Common\ODataConstants;
 use POData\Common\Url;
 use POData\Common\UrlFormatException;
 use POData\Common\ODataException;
-use POData\Common\InvalidOperationException;
-use POData\OperationContext\Web\WebOperationContext;
-use POData\OperationContext\IOperationContext;
 use POData\Common\Version;
 use POData\Common\MimeTypes;
+use POData\OperationContext\Web\Illuminate\IlluminateOperationContext;
 
 /**
  * Class ServiceHost
@@ -80,14 +79,21 @@ Class ServiceHost
         return $this->_operationContext;
     }
 
-	/**
-	 * @param IOperationContext $context the OperationContext implementation to use.  If null the WebOperationContext
-	 * will be used.  Defaults to null.
-	 */
-	public function __construct(IOperationContext $context = null)
+    /**
+     * @param IOperationContext $context the OperationContext implementation to use.
+     * If null the IlluminateOperationContex will be used.  Defaults to null.
+     *
+     * Currently we are forcing the input request to be of type
+     * \Illuminate\Http\Request but in the future we could make this more flexible
+     * if needed.
+     *
+     * @param Request $incomingRequest
+     * @throws ODataException
+     */
+	public function __construct(IOperationContext $context = null, Request $incomingRequest)
     {
         if(is_null($context)){
-	        $this->_operationContext = new WebOperationContext();
+	        $this->_operationContext = new IlluminateOperationContext($incomingRequest);
         } else {
 	        $this->_operationContext = $context;
         }
@@ -96,6 +102,11 @@ Class ServiceHost
         // let Dispatcher handle it
         $this->_absoluteRequestUri = $this->getAbsoluteRequestUri();
         $this->_absoluteServiceUri = null;
+
+        //Dev Note: Andrew Clinton 5/19/16
+        //_absoluteServiceUri is never being set from what I can tell
+        //so for now we'll set it as such
+        $this->setServiceUri($this->_getServiceUri());
     }
 
     /**
@@ -169,10 +180,10 @@ Class ServiceHost
 
             $segments = $this->_absoluteServiceUri->getSegments();
             $lastSegment = $segments[count($segments) - 1];
-            $endsWithSvc 
+            $endsWithSvc
                 = (substr_compare($lastSegment, '.svc', -strlen('.svc'), strlen('.svc')) === 0);
-            if (!$endsWithSvc 
-                || !is_null($this->_absoluteServiceUri->getQuery()) 
+            if (!$endsWithSvc
+                || !is_null($this->_absoluteServiceUri->getQuery())
                 || !is_null($this->_absoluteServiceUri->getFragment())
             ) {
                 throw ODataException::createInternalServerError(Messages::hostMalFormedBaseUriInConfig(true));
@@ -329,7 +340,26 @@ Class ServiceHost
         
         $this->_queryOptions = $queryOptions;
     }
-    
+
+    /**
+     * Dev Note: Andrew Clinton
+     * 5/19/16
+     *
+     * Currently it doesn't seem that the service URI is ever being built
+     * so I am doing that here.
+     *
+     * return void
+     */
+    private function _getServiceUri()
+    {
+        if(($pos = strpos($this->_absoluteRequestUriAsString, ".svc")) !== FALSE){
+            $serviceUri = substr($this->_absoluteRequestUriAsString, 0, $pos + strlen(".svc"));
+            return $serviceUri;
+        }
+
+        return $this->_absoluteRequestUriAsString;
+    }
+
     /**
      * Verifies the given url option is a valid odata query option.
      * 

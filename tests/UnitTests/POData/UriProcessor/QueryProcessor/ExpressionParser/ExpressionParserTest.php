@@ -9,7 +9,7 @@ use POData\Providers\Metadata\Type\Single;
 use POData\Providers\Metadata\Type\Decimal;
 use POData\Providers\Metadata\Type\DateTime;
 use POData\Providers\Metadata\Type\Binary;
-use POData\Providers\Metadata\Type\EdmString;
+use POData\Providers\Metadata\Type\StringType;
 use POData\Providers\Metadata\Type\Navigation;
 use POData\Providers\Metadata\Type\Boolean;
 use POData\Providers\Metadata\Type\Null1;
@@ -149,7 +149,7 @@ class ExpressionParserTest extends \PHPUnit_Framework_TestCase
         $parser = new ExpressionParser($expression, $this->customersResourceType, false);
         $expr = $parser->parseFilter();
         $this->assertTrue($expr instanceof PropertyAccessExpression);
-        $this->assertTrue($expr->getType() instanceof EdmString);
+        $this->assertTrue($expr->getType() instanceof StringType);
 
         $expression = 'Rating';
         $parser->resetParser($expression);
@@ -214,7 +214,11 @@ class ExpressionParserTest extends \PHPUnit_Framework_TestCase
                      false);
         $expr = $parser->parseFilter();
         $this->assertTrue($expr instanceof PropertyAccessExpression);
+<<<<<<< HEAD
         $this->assertTrue($expr->getType() instanceof EdmString);
+=======
+        $this->assertTrue($expr->getType() instanceof StringType);
+>>>>>>> a1206fe992a4182c61f2d6668316017e39c77c79
         $this->assertEquals('Edm.String', $expr->getResourceType()->getFullName());
 
         $expression = 'Customer/Orders/OrderID';
@@ -421,8 +425,13 @@ class ExpressionParserTest extends \PHPUnit_Framework_TestCase
         $paramExpression = $expr->getLeft()->getParamExpressions();
         $this->assertTrue($paramExpression[0] instanceof PropertyAccessExpression);
         $this->assertTrue($paramExpression[1] instanceof ConstantExpression);
+<<<<<<< HEAD
         $this->assertTrue($paramExpression[0]->getType() instanceof EdmString);
         $this->assertTrue($paramExpression[1]->getType() instanceof EdmString);
+=======
+        $this->assertTrue($paramExpression[0]->getType() instanceof StringType);
+        $this->assertTrue($paramExpression[1]->getType() instanceof StringType);
+>>>>>>> a1206fe992a4182c61f2d6668316017e39c77c79
         $this->assertTrue($expr->getRight() instanceof ConstantExpression);
         $this->assertEquals($expr->getRight()->getValue(), 0);
 

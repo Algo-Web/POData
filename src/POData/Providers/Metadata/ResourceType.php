@@ -14,7 +14,7 @@ use POData\Providers\Metadata\Type\Int32;
 use POData\Providers\Metadata\Type\Int64;
 use POData\Providers\Metadata\Type\SByte;
 use POData\Providers\Metadata\Type\Single;
-use POData\Providers\Metadata\Type\EdmString;
+use POData\Providers\Metadata\Type\StringType;
 use POData\Providers\Metadata\Type\TypeCode;
 use POData\Providers\Metadata\Type\EdmPrimitiveType;
 use POData\Providers\Metadata\Type\IType;
@@ -911,7 +911,7 @@ class ResourceType
             break;
         case EdmPrimitiveType::STRING:
             return new ResourceType(
-                new EdmString(), 
+                new StringType(), 
                 ResourceTypeKind::PRIMITIVE, 
                 'String', 'Edm'
             );
