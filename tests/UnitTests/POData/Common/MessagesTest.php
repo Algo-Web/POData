@@ -187,6 +187,8 @@ class MessagesTest extends PhockitoUnitTestCase {
 			'bothIfMatchAndIfNoneMatchHeaderSpecified',
 			'eTagNotAllowedForNonExistingResource',
 			'onlyReadSupport',
+			'badRequestInvalidUriForThisVerb',
+			'noDataForThisVerb',
 			'badRequestInvalidUriForMediaResource',
 			'hostNonODataOptionBeginsWithSystemCharacter',
 			'hostODataQueryOptionFoundWithoutValue',

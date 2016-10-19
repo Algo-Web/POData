@@ -5,6 +5,7 @@ namespace POData\UriProcessor;
 use POData\Common\Url;
 use POData\Common\ODataConstants;
 use POData\Common\Messages;
+use POData\Common\MimeTypes;
 use POData\Common\Version;
 use POData\Common\ODataException;
 use POData\IService;
@@ -22,6 +23,7 @@ use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\RootProjectionNode;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Query\QueryType;
+use Verdant\XML2Array;
 
 
 /**
@@ -198,6 +200,13 @@ class RequestDescription
     private $_countValue;
 
     /**
+     * Data of request from request body
+     * 
+     * @var array
+     */
+    private $_data;
+
+    /**
      * Flag indicating status of query execution.
      * 
      * @var boolean
@@ -219,8 +228,9 @@ class RequestDescription
 	 * @param Version $serviceMaxVersion
 	 * @param $requestVersion
 	 * @param $maxRequestVersion
+     * @param string $dataType
 	 */
-	public function __construct($segmentDescriptors, Url $requestUri, Version $serviceMaxVersion, $requestVersion, $maxRequestVersion)
+	public function __construct($segmentDescriptors, Url $requestUri, Version $serviceMaxVersion, $requestVersion, $maxRequestVersion, $dataType = null)
     {
         $this->segments = $segmentDescriptors;
         $this->_segmentCount = count($this->segments);
@@ -270,6 +280,41 @@ class RequestDescription
         $this->_filterInfo = null;
         $this->_countValue = null;
         $this->_isExecuted = false;
+    
+        // Define data from request body
+        if ($dataType) {
+            $this->_readData($dataType);
+        }
+    }
+
+    /**
+     * Define request data from body
+     */
+    private function _readData($dataType) {
+        $this->_data = null;
+        $string = file_get_contents('php://input');
+        if ($dataType === MimeTypes::MIME_APPLICATION_XML) {
+            $data = Xml2Array::createArray($string);
+            if (!empty($data['a:entry']['a:content']['m:properties'])) {
+                $clearData = $data['a:entry']['a:content']['m:properties'];
+                if (is_array($clearData)) {
+                    foreach ($clearData as $key => $value) {
+                        $this->_data[substr($key, 2)] = $value['@value'];
+                    }
+                }
+            }
+        }
+        elseif ($dataType === MimeTypes::MIME_APPLICATION_JSON) {
+            $data = json_decode($string, true);
+            $this->_data = $data;
+        }
+    }
+
+    /**
+     * Get request data from body
+     */
+    public function getData() {
+        return $this->_data;
     }
 
     /**

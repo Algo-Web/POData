@@ -2159,6 +2159,31 @@ class Messages
     }
 
     /**
+     * Format a message to show error when the uri for verb is wrong.
+     * 
+     * @param string $uri Url pointing to resource
+     * @param string $verb GET/POST/PUT/DELETE/PATCH/MERGE
+     * 
+     * @return string The formatted message
+     */
+    public static function badRequestInvalidUriForThisVerb($uri, $verb)
+    {
+        return "The URI '$uri' is not valid for $verb method.";
+    }
+
+    /**
+     * Format a message to show error when data for non-GET requests is empty.
+     * 
+     * @param string $verb GET/POST/PUT/DELETE/PATCH/MERGE
+     * 
+     * @return string The formatted message
+     */
+    public static function noDataForThisVerb($verb)
+    {
+        return "Method $verb expecting some data, but received empty data.";
+    }
+
+    /**
      * Format a message to show error when the uri that look like pointing to 
      * MLE but actaully it is not.
      * 

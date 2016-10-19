@@ -448,6 +448,17 @@ Class ServiceHost
             ->getRequestHeader(ODataConstants::HTTPREQUEST_HEADER_IF_NONE);
     }      
 
+    /**
+     * Gets the value of Content-Type header of the request
+     * 
+     * @return string
+     */
+    public function getRequestContentType()
+    {
+        return $this->_operationContext
+            ->incomingRequest()
+            ->getRequestHeader(ODataConstants::HTTP_CONTENTTYPE);
+    }
 
     /**
      * Set the Cache-Control header on the response
