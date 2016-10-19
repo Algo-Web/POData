@@ -7,6 +7,7 @@ namespace UnitTests\POData\Facets;
  * BaseService and UriProcessor.
  */
 
+use Illuminate\Http\Request;
 use POData\Common\ODataConstants;
 use POData\OperationContext\ServiceHost;
 use POData\HttpProcessUtility;
