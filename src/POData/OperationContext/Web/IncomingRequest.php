@@ -152,6 +152,9 @@ class IncomingRequest implements IHTTPRequest
      */
     public function getRequestHeader($key)
     {
+        if (!$this->_headers) {
+            $this->getHeaders();
+        }
 	    //PHP normalizes header keys
 	    $trimmedKey = HttpProcessUtility::headerToServerKey(trim($key));
 

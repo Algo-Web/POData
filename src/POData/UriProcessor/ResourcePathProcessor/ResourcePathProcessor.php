@@ -11,6 +11,7 @@ use POData\Common\Url;
 use POData\Common\ODataConstants;
 use POData\Common\Messages;
 use POData\Common\ODataException;
+use POData\OperationContext\HTTPRequestMethod;
 
 
 /**
@@ -46,12 +47,18 @@ class ResourcePathProcessor
         );
 
 
+        $dataType = null;
+        $operationContext = $service->getOperationContext();
+        if ($operationContext && $operationContext->incomingRequest()->getMethod() != HTTPRequestMethod::GET()) {
+            $dataType = $service->getHost()->getRequestContentType();
+        }
         $request = new RequestDescription(
             $segments,
             $absoluteRequestUri,
-	        $service->getConfiguration()->getMaxDataServiceVersion(),
-	        $host->getRequestVersion(),
-	        $host->getRequestMaxVersion()
+            $service->getConfiguration()->getMaxDataServiceVersion(),
+            $host->getRequestVersion(),
+            $host->getRequestMaxVersion(),
+            $dataType
         );
         $kind = $request->getTargetKind();
 
