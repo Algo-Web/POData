@@ -50,7 +50,6 @@ class NorthWindDSExpressionProvider implements IExpressionProvider
     /**
      * Constructs new instance of SQLSrverExpressionProvider for NorthWind DB
      * 
-     * @param string $iterName The name of the iterator
      */
     public function __construct()
     {
