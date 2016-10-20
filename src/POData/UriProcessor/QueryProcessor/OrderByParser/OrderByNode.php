@@ -89,7 +89,7 @@ class OrderByNode extends OrderByBaseNode
      * 
      * @see library/POData/QueryProcessorOrderByParser.OrderByBaseNode::getResourceType()
      * 
-     * @return ResourceType
+     * @return \POData\Providers\Metadata\ResourceType
      */
     public function getResourceType()
     {

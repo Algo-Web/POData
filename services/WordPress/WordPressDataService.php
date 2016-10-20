@@ -8,11 +8,6 @@ require_once 'POData\IServiceProvider.php';
 use POData\Configuration\ProtocolVersion;
 use POData\Configuration\ServiceConfiguration;
 use POData\BaseService;
-use POData\OperationContext\ServiceHost;
-use POData\Common\ODataException;
-use POData\Common\ODataConstants;
-use POData\Common\Messages;
-use POData\UriProcessor\UriProcessor;
 require_once 'WordPressMetadata.php';
 require_once 'WordPressQueryProvider.php';
 require_once 'WordPressDSExpressionProvider.php';
@@ -53,13 +48,13 @@ class WordPressDataService extends BaseService
      */
     public function getService($serviceType)
     {
-      if(($serviceType === 'IMetadataProvider') ||
+        if(($serviceType === 'IMetadataProvider') ||
         ($serviceType === 'IQueryProvider') ||
         ($serviceType === 'IStreamProvider')) {
         if (is_null($this->_wordPressExpressionProvider)) {
         $this->_wordPressExpressionProvider = new WordPressDSExpressionProvider();    			
         }    	
-      }
+        }
         if ($serviceType === 'IMetadataProvider') {
             if (is_null($this->_wordPressMetadata)) {
                 $this->_wordPressMetadata = CreateWordPressMetadata::create();

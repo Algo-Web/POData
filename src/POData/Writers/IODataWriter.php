@@ -20,23 +20,23 @@ use POData\Common\Version;
 interface IODataWriter
 {
 
-	/**
-	 * Determines if the given writer is capable of writing the response or not
-	 * @param Version $responseVersion the OData version of the response
-	 * @param string $contentType the Content Type of the response
-	 * @return boolean true if the writer can handle the response, false otherwise
-	 */
-	public function canHandle(Version $responseVersion, $contentType);
+    /**
+     * Determines if the given writer is capable of writing the response or not
+     * @param Version $responseVersion the OData version of the response
+     * @param string $contentType the Content Type of the response
+     * @return boolean true if the writer can handle the response, false otherwise
+     */
+    public function canHandle(Version $responseVersion, $contentType);
 
-	/**
-	 * Create OData object model from the request description and transform it to required content type form
-	 *
-	 *
-	 * @param  ODataURL|ODataURLCollection|ODataPropertyContent|ODataFeed|ODataEntry $model Object of requested content.
-	 *
-	 * @return IODataWriter
-	 */
-	public function write($model);
+    /**
+     * Create OData object model from the request description and transform it to required content type form
+     *
+     *
+     * @param  ODataURL|ODataURLCollection|ODataPropertyContent|ODataFeed|ODataEntry $model Object of requested content.
+     *
+     * @return IODataWriter
+     */
+    public function write($model);
 
 
     /**

@@ -58,7 +58,7 @@ class TargetKind extends Enum
      * e.g. http://localhost/myservice.svc/Customers('ALFKI')/CustomerName/$value
      *      http://localhost/myservice.svc/Customers/$count
      */
-    const PRIMITIVE_VALUE= 6;
+    const PRIMITIVE_VALUE = 6;
 
     /**
      * System metadata.

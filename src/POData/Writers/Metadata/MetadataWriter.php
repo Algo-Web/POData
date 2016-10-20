@@ -4,7 +4,6 @@ namespace POData\Writers\Metadata;
 
 use POData\Providers\Metadata\ResourceAssociationSet;
 use POData\Providers\Metadata\ResourceAssociationTypeEnd;
-use POData\Providers\Metadata\ResourceAssociationSetEnd;
 use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceType;
@@ -87,7 +86,7 @@ class MetadataWriter
      */
     public function writeMetadata()
     {   
-       $this->_metadataManager = MetadataManager::create($this->providersWrapper);
+        $this->_metadataManager = MetadataManager::create($this->providersWrapper);
 
         $this->_dataServiceVersion = new Version(1, 0);
         $edmSchemaVersion = $this->providersWrapper->getEdmSchemaVersion();
@@ -185,7 +184,7 @@ class MetadataWriter
      * 
      * @param ResourceType[] $resourceTypes resource types array
 
-     * @param array $associationTypesInResourceTypesNamespace collection of 
+     * @param ResourceAssociationType[] $associationTypesInResourceTypesNamespace collection of 
      * association types for the given resource types
      * array(string, AssociationType)
      * 
@@ -286,10 +285,10 @@ class MetadataWriter
             } else if ($resourceProperty->isKindOf(ResourcePropertyKind::RESOURCE_REFERENCE) 
                 || $resourceProperty->isKindOf(ResourcePropertyKind::RESOURCESET_REFERENCE)
             ) {
-                 $this->_writeNavigationProperty($resourceType, $associationTypesInResourceTypeNamespace, $resourceProperty);
+                    $this->_writeNavigationProperty($resourceType, $associationTypesInResourceTypeNamespace, $resourceProperty);
             } else {
-                 //Unexpected ResourceProperty, expected 
-                 //Bag/Primitive/Complex/Navigation Property   
+                    //Unexpected ResourceProperty, expected 
+                    //Bag/Primitive/Complex/Navigation Property   
             }            
         }
     }
@@ -503,8 +502,8 @@ class MetadataWriter
      */
     private function _writeAssocationSetEnds(ResourceAssociationSet $associationSet)
     {
-        $associationTypeEnd1 =  $associationSet->resourceAssociationType->getResourceAssociationTypeEnd($associationSet->getEnd1()->getResourceType(), $associationSet->getEnd1()->getResourceProperty());
-        $associationTypeEnd2 =  $associationSet->resourceAssociationType->getResourceAssociationTypeEnd($associationSet->getEnd2()->getResourceType(), $associationSet->getEnd2()->getResourceProperty());
+        $associationTypeEnd1 = $associationSet->resourceAssociationType->getResourceAssociationTypeEnd($associationSet->getEnd1()->getResourceType(), $associationSet->getEnd1()->getResourceProperty());
+        $associationTypeEnd2 = $associationSet->resourceAssociationType->getResourceAssociationTypeEnd($associationSet->getEnd2()->getResourceType(), $associationSet->getEnd2()->getResourceProperty());
         $this->_xmlWriter->startElement(ODataConstants::END);
         $this->_xmlWriter->writeAttribute(ODataConstants::ROLE, $associationTypeEnd1->getName());
         $this->_xmlWriter->writeAttribute(ODataConstants::ENTITY_SET, $associationSet->getEnd1()->getResourceSet()->getName());
@@ -526,23 +525,23 @@ class MetadataWriter
     private function _getSchemaNamespaceUri($edmSchemaVersion)
     {
         switch ($edmSchemaVersion) {
-	        case EdmSchemaVersion::VERSION_1_DOT_0:
-	            return ODataConstants::CSDL_VERSION_1_0;
+            case EdmSchemaVersion::VERSION_1_DOT_0:
+                return ODataConstants::CSDL_VERSION_1_0;
 
-	        case EdmSchemaVersion::VERSION_1_DOT_1:
-	            return ODataConstants::CSDL_VERSION_1_1;
+            case EdmSchemaVersion::VERSION_1_DOT_1:
+                return ODataConstants::CSDL_VERSION_1_1;
 
-	        case EdmSchemaVersion::VERSION_1_DOT_2:
-	            return ODataConstants::CSDL_VERSION_1_2;
+            case EdmSchemaVersion::VERSION_1_DOT_2:
+                return ODataConstants::CSDL_VERSION_1_2;
 
-	        case EdmSchemaVersion::VERSION_2_DOT_0:
-	            return ODataConstants::CSDL_VERSION_2_0;
+            case EdmSchemaVersion::VERSION_2_DOT_0:
+                return ODataConstants::CSDL_VERSION_2_0;
 
-	        case EdmSchemaVersion::VERSION_2_DOT_2:
-	            return ODataConstants::CSDL_VERSION_2_2;
+            case EdmSchemaVersion::VERSION_2_DOT_2:
+                return ODataConstants::CSDL_VERSION_2_2;
 
-	        default:
-	            return ODataConstants::CSDL_VERSION_2_2;
+            default:
+                return ODataConstants::CSDL_VERSION_2_2;
         }
     }
 }

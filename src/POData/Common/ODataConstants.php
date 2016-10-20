@@ -30,8 +30,8 @@ class ODataConstants
     // Value for $format option for response atom format
     const FORMAT_ATOM = 'atom';
 
-	// Value for $format option for response atom format
-	const FORMAT_XML = 'xml';
+    // Value for $format option for response atom format
+    const FORMAT_XML = 'xml';
 
     //HTTP name for Accept header
     const HTTP_REQUEST_ACCEPT = 'Accept';
@@ -198,26 +198,26 @@ class ODataConstants
     //metadata element name in json payload.
     const JSON_METADATA_STRING = '__metadata';
 
-	//metadata element name in json payload.
-	const JSON_LIGHT_METADATA_STRING = 'odata.metadata';
+    //metadata element name in json payload.
+    const JSON_LIGHT_METADATA_STRING = 'odata.metadata';
 
     //uri element name in json payload.
     const JSON_URI_STRING = 'uri';
 
-	//uri element name in json payload.
-	const JSON_URL_STRING = 'url';
+    //uri element name in json payload.
+    const JSON_URL_STRING = 'url';
 
     //type element name in json payload.
     const JSON_TYPE_STRING = 'type';
 
-	const JSON_LIGHT_METADATA_TYPE_STRING = 'odata.type';
-	const JSON_LIGHT_METADATA_ID_STRING = 'odata.id';
-	const JSON_LIGHT_METADATA_ETAG_STRING = 'odata.etag';
-	const JSON_LIGHT_METADATA_EDIT_LINK_STRING = 'odata.editLink';
-	const JSON_LIGHT_METADATA_PROPERTY_TYPE_SUFFIX_STRING = '@odata.type';
-	const JSON_LIGHT_METADATA_LINK_NAVIGATION_SUFFIX_STRING = '@odata.navigationLinkUrl';
+    const JSON_LIGHT_METADATA_TYPE_STRING = 'odata.type';
+    const JSON_LIGHT_METADATA_ID_STRING = 'odata.id';
+    const JSON_LIGHT_METADATA_ETAG_STRING = 'odata.etag';
+    const JSON_LIGHT_METADATA_EDIT_LINK_STRING = 'odata.editLink';
+    const JSON_LIGHT_METADATA_PROPERTY_TYPE_SUFFIX_STRING = '@odata.type';
+    const JSON_LIGHT_METADATA_LINK_NAVIGATION_SUFFIX_STRING = '@odata.navigationLinkUrl';
 
-	//edit_media element name in json payload.
+    //edit_media element name in json payload.
     const JSON_EDITMEDIA_STRING = 'edit_media';
 
     //media_src element name in json payload.
@@ -238,19 +238,19 @@ class ODataConstants
     //row count element name in json payload
     const JSON_ROWCOUNT_STRING = '__count';
 
-	//row count element name in json payload
-	const JSON_LIGHT_ROWCOUNT_STRING = 'odata.count';
+    //row count element name in json payload
+    const JSON_LIGHT_ROWCOUNT_STRING = 'odata.count';
 
     //next page link element name in json payload
     const JSON_NEXT_STRING = '__next';
 
-	const JSON_LIGHT_NEXT_STRING = 'odata.next';
+    const JSON_LIGHT_NEXT_STRING = 'odata.next';
 
     //'results' header for Json data array
     const JSON_RESULT_NAME = 'results';
 
-	//'results' header for Json data array
-	const JSON_LIGHT_VALUE_NAME = 'value';
+    //'results' header for Json data array
+    const JSON_LIGHT_VALUE_NAME = 'value';
 
     const JSON_DATAWRAPPER_ELEMENT_NAME = 'd';
 
@@ -772,7 +772,7 @@ class ODataConstants
     const XML_DECIMAL_LITERAL_SUFFIX = 'M';
 
     //'L': Suffix for long (int64) type's representation
-    const XML_INT64_LITERAL_SUFFIX  = 'L';
+    const XML_INT64_LITERAL_SUFFIX = 'L';
 
     //'f': Suffix for float (single) type's representation
     const XML_SINGLE_LITERAL_SUFFIX  = 'f';
@@ -826,8 +826,8 @@ class ODataConstants
     const HTTPREQUEST_HEADER_IF_NONE         = 'IF_NONE_MATCH';
     const HTTPREQUEST_HEADER_IF_UNMODIFIED   = 'IF_UNMODIFIED_SINCE';
 
-	const HTTPREQUEST_HEADER_DATA_SERVICE_VERSION       = 'DATASERVICEVERSION';
-	const HTTPREQUEST_HEADER_MAX_DATA_SERVICE_VERSION   = 'MAXDATASERVICEVERSION';
+    const HTTPREQUEST_HEADER_DATA_SERVICE_VERSION       = 'DATASERVICEVERSION';
+    const HTTPREQUEST_HEADER_MAX_DATA_SERVICE_VERSION   = 'MAXDATASERVICEVERSION';
 
     // Headers for HTTPResponse
     // We need to use these string with header() for setting-up these headers

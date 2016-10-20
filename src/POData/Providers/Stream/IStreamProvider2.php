@@ -125,7 +125,7 @@ interface IStreamProvider2 extends IStreamProvider
      * of its associated entity. The returned string MUST be formatted such that it is
      * directly usable as the value of an HTTP ETag response header. If null is returned
      * the data service framework will assume that no ETag is associated with the stream.
-          *
+     *
      * NOTE: Altering properties on the $operationContext parameter may corrupt the response
      * from the data service.
      *

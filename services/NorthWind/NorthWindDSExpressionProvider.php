@@ -50,7 +50,6 @@ class NorthWindDSExpressionProvider implements IExpressionProvider
     /**
      * Constructs new instance of SQLSrverExpressionProvider for NorthWind DB
      * 
-     * @param string $iterName The name of the iterator
      */
     public function __construct()
     {
@@ -63,7 +62,7 @@ class NorthWindDSExpressionProvider implements IExpressionProvider
      */
     public function getIteratorName()
     {
-      return null;
+        return null;
     }
 
     /**
@@ -74,7 +73,7 @@ class NorthWindDSExpressionProvider implements IExpressionProvider
      */
     public function setResourceType(ResourceType $resourceType)
     {
-    	$this->_resourceType = $resourceType;
+        $this->_resourceType = $resourceType;
     }
 
     /**
@@ -89,14 +88,14 @@ class NorthWindDSExpressionProvider implements IExpressionProvider
     public function onLogicalExpression($expressionType, $left, $right)
     {
         switch($expressionType) {
-        case ExpressionType::AND_LOGICAL:
-            return $this->_prepareBinaryExpression(self::LOGICAL_AND, $left, $right);
-            break;
-        case ExpressionType::OR_LOGICAL:
-            return $this->_prepareBinaryExpression(self::LOGICAL_OR, $left, $right);
-            break;
-        default:
-            throw new \InvalidArgumentException('onLogicalExpression');
+            case ExpressionType::AND_LOGICAL:
+                return $this->_prepareBinaryExpression(self::LOGICAL_AND, $left, $right);
+                break;
+            case ExpressionType::OR_LOGICAL:
+                return $this->_prepareBinaryExpression(self::LOGICAL_OR, $left, $right);
+                break;
+            default:
+                throw new \InvalidArgumentException('onLogicalExpression');
         }
     }
 
@@ -112,23 +111,23 @@ class NorthWindDSExpressionProvider implements IExpressionProvider
     public function onArithmeticExpression($expressionType, $left, $right)
     {
         switch($expressionType) {
-        case ExpressionType::MULTIPLY:
-            return $this->_prepareBinaryExpression(self::MULTIPLY, $left, $right);
-            break;
-        case ExpressionType::DIVIDE:
-            return $this->_prepareBinaryExpression(self::DIVIDE, $left, $right);
-            break;
-        case ExpressionType::MODULO:
-            return $this->_prepareBinaryExpression(self::MODULO, $left, $right);
-            break;
-        case ExpressionType::ADD:
-            return $this->_prepareBinaryExpression(self::ADD, $left, $right);
-            break;
-        case ExpressionType::SUBTRACT:
-            return $this->_prepareBinaryExpression(self::SUBTRACT, $left, $right);
-            break;
-        default:
-            throw new \InvalidArgumentException('onArithmeticExpression');
+            case ExpressionType::MULTIPLY:
+                return $this->_prepareBinaryExpression(self::MULTIPLY, $left, $right);
+                break;
+            case ExpressionType::DIVIDE:
+                return $this->_prepareBinaryExpression(self::DIVIDE, $left, $right);
+                break;
+            case ExpressionType::MODULO:
+                return $this->_prepareBinaryExpression(self::MODULO, $left, $right);
+                break;
+            case ExpressionType::ADD:
+                return $this->_prepareBinaryExpression(self::ADD, $left, $right);
+                break;
+            case ExpressionType::SUBTRACT:
+                return $this->_prepareBinaryExpression(self::SUBTRACT, $left, $right);
+                break;
+            default:
+                throw new \InvalidArgumentException('onArithmeticExpression');
         }
     }
 
@@ -144,30 +143,30 @@ class NorthWindDSExpressionProvider implements IExpressionProvider
     public function onRelationalExpression($expressionType, $left, $right)
     {
         switch($expressionType) {
-        case ExpressionType::GREATERTHAN:
-            return $this->_prepareBinaryExpression(self::GREATERTHAN, $left, $right);
-            break;
-        case ExpressionType::GREATERTHAN_OR_EQUAL:
-            return $this->_prepareBinaryExpression(
-                self::GREATERTHAN_OR_EQUAL, $left, $right
-            );
-            break;
-        case ExpressionType::LESSTHAN:
-            return $this->_prepareBinaryExpression(self::LESSTHAN, $left, $right);
-            break;
-        case ExpressionType::LESSTHAN_OR_EQUAL:
-            return $this->_prepareBinaryExpression(
-                self::LESSTHAN_OR_EQUAL, $left, $right
-            );
-            break;
-        case ExpressionType::EQUAL:
-            return $this->_prepareBinaryExpression(self::EQUAL, $left, $right);
-            break;
-        case ExpressionType::NOTEQUAL:
-            return $this->_prepareBinaryExpression(self::NOTEQUAL, $left, $right);
-            break;
-        default:
-            throw new \InvalidArgumentException('onArithmeticExpression');
+            case ExpressionType::GREATERTHAN:
+                return $this->_prepareBinaryExpression(self::GREATERTHAN, $left, $right);
+                break;
+            case ExpressionType::GREATERTHAN_OR_EQUAL:
+                return $this->_prepareBinaryExpression(
+                    self::GREATERTHAN_OR_EQUAL, $left, $right
+                );
+                break;
+            case ExpressionType::LESSTHAN:
+                return $this->_prepareBinaryExpression(self::LESSTHAN, $left, $right);
+                break;
+            case ExpressionType::LESSTHAN_OR_EQUAL:
+                return $this->_prepareBinaryExpression(
+                    self::LESSTHAN_OR_EQUAL, $left, $right
+                );
+                break;
+            case ExpressionType::EQUAL:
+                return $this->_prepareBinaryExpression(self::EQUAL, $left, $right);
+                break;
+            case ExpressionType::NOTEQUAL:
+                return $this->_prepareBinaryExpression(self::NOTEQUAL, $left, $right);
+                break;
+            default:
+                throw new \InvalidArgumentException('onArithmeticExpression');
         }
     }
 
@@ -182,14 +181,14 @@ class NorthWindDSExpressionProvider implements IExpressionProvider
     public function onUnaryExpression($expressionType, $child)
     {
         switch($expressionType) {
-        case ExpressionType::NEGATE:
-            return $this->_prepareUnaryExpression(self::NEGATE, $child);
-            break;
-        case ExpressionType::NOT_LOGICAL:
-            return $this->_prepareUnaryExpression(self::LOGICAL_NOT, $child);
-            break;
-        default:
-            throw new \InvalidArgumentException('onUnaryExpression');
+            case ExpressionType::NEGATE:
+                return $this->_prepareUnaryExpression(self::NEGATE, $child);
+                break;
+            case ExpressionType::NOT_LOGICAL:
+                return $this->_prepareUnaryExpression(self::LOGICAL_NOT, $child);
+                break;
+            default:
+                throw new \InvalidArgumentException('onUnaryExpression');
         }
     }
 
@@ -225,66 +224,66 @@ class NorthWindDSExpressionProvider implements IExpressionProvider
         $variable = null;
         $isFirstLevelPrimitive = is_null($parent->getParent());
         if (!$isFirstLevelPrimitive) {
-        	// This propery access sub-expression in the $filter need access
-        	// to level 2 or greater property of a complex or resource reference
-        	// property.
-        	// e.g. Customers?$filter=Address/City eq 'Kottayam'
-        	//          Level_2 property access [Complex]
-        	//      Customers?$filter=Address/AltAddress/City eq 'Seattle'
-        	//          Level_3 property access [Complex]
-        	//      Orders?$filter=Customer/CustomerID eq 'ALFKI'
-        	//          Level_2 property access [Resource Reference]
-        	$parent2 = null;
-        	do {
-        		$parent2 = $parent;
-        		$parent = $parent->getParent();
-        	} while ($parent != null);
+            // This propery access sub-expression in the $filter need access
+            // to level 2 or greater property of a complex or resource reference
+            // property.
+            // e.g. Customers?$filter=Address/City eq 'Kottayam'
+            //          Level_2 property access [Complex]
+            //      Customers?$filter=Address/AltAddress/City eq 'Seattle'
+            //          Level_3 property access [Complex]
+            //      Orders?$filter=Customer/CustomerID eq 'ALFKI'
+            //          Level_2 property access [Resource Reference]
+            $parent2 = null;
+            do {
+                $parent2 = $parent;
+                $parent = $parent->getParent();
+            } while ($parent != null);
         	
-        	$resourceProperty = $parent2->getResourceProperty();
-        	if ($resourceProperty->isKindOf(ResourcePropertyKind::RESOURCE_REFERENCE)) {
-        		// Orders?$filter=Customer/CustomerID eq 'ALFKI'
-        		throw new NotImplementedException(
-        				'This implementation not supports Resource reference in the filter',
-        				500,
-        				NULL
-        		);
-        	} else {
-        		// Customers?$filter=Address/AltAddress/City eq 'Seattle'
-        		// Customers?$filter=Address/City eq 'Seattle'
-        		$propertyName = $parent2->getResourceProperty()->getName();
-        		if ("Address" == $propertyName) {
-        			$child = $parent2->getChild();
-        			$propertyName = $child->getResourceProperty()->getName();
-        			if ("AltAddress" != $propertyName) {
-        				return $propertyName;
-        			}
+            $resourceProperty = $parent2->getResourceProperty();
+            if ($resourceProperty->isKindOf(ResourcePropertyKind::RESOURCE_REFERENCE)) {
+                // Orders?$filter=Customer/CustomerID eq 'ALFKI'
+                throw new NotImplementedException(
+                        'This implementation not supports Resource reference in the filter',
+                        500,
+                        NULL
+                );
+            } else {
+                // Customers?$filter=Address/AltAddress/City eq 'Seattle'
+                // Customers?$filter=Address/City eq 'Seattle'
+                $propertyName = $parent2->getResourceProperty()->getName();
+                if ("Address" == $propertyName) {
+                    $child = $parent2->getChild();
+                    $propertyName = $child->getResourceProperty()->getName();
+                    if ("AltAddress" != $propertyName) {
+                        return $propertyName;
+                    }
         			
-        			throw new NotImplementedException(
-        					'This implementation not supports Customer::Address::AltAddress in the filter',
-        					500,
-        					NULL
-        			);
-        		}
-        	}
+                    throw new NotImplementedException(
+                            'This implementation not supports Customer::Address::AltAddress in the filter',
+                            500,
+                            NULL
+                    );
+                }
+            }
 
         } else {
-        	// This is a first level property access
-        	$resourceProperty = $parent->getResourceProperty();
-        	if ($resourceProperty->isKindOf(ResourcePropertyKind::COMPLEX_TYPE)
-        	    || $resourceProperty->isKindOf(ResourcePropertyKind::RESOURCE_REFERENCE)) {
-        		// Customers?$filter=Address eq null
-        		// Orders?$filter=Customer ne null
-        		// First level property access to a complex or resource reference
-        		// which is not supported by $this [this implementation of IDSQP2]
-        		throw new NotImplementedException(
+            // This is a first level property access
+            $resourceProperty = $parent->getResourceProperty();
+            if ($resourceProperty->isKindOf(ResourcePropertyKind::COMPLEX_TYPE)
+                || $resourceProperty->isKindOf(ResourcePropertyKind::RESOURCE_REFERENCE)) {
+                // Customers?$filter=Address eq null
+                // Orders?$filter=Customer ne null
+                // First level property access to a complex or resource reference
+                // which is not supported by $this [this implementation of IDSQP2]
+                throw new NotImplementedException(
                     'First level complex and Resource reference are not supported in the filter', 
-        		    500, 
-        		    NULL
+                    500, 
+                    NULL
                 );
-        	} else {
-        		// First level property access to primitive property
-        		return $parent->getResourceProperty()->getName();
-        	}
+            } else {
+                // First level property access to primitive property
+                return $parent->getResourceProperty()->getName();
+            }
         }
     }
     /**
@@ -297,7 +296,7 @@ class NorthWindDSExpressionProvider implements IExpressionProvider
      */
     public function onFunctionCallExpression($functionDescription, $params)
     {
-        switch($functionDescription->functionName) {
+        switch ($functionDescription->functionName) {
         case ODataConstants::STRFUN_COMPARE:
             return "STRCMP($params[0]; $params[1])";
             break;
@@ -330,8 +329,8 @@ class NorthWindDSExpressionProvider implements IExpressionProvider
         case ODataConstants::STRFUN_SUBSTRING:
           if (count($params) == 3) {
             // 3 Param version of OData substring
-              return "SUBSTRING($params[0], $params[1] + 1, $params[2])";
-          } else {
+                return "SUBSTRING($params[0], $params[1] + 1, $params[2])";
+            } else {
             // 2 Params version of OData substring
             // We don't have the same function for SQL Server, we have only:
             //
@@ -342,7 +341,7 @@ class NorthWindDSExpressionProvider implements IExpressionProvider
             // in value_expression, the whole value expression beginning at start_expression is returned
             // In OData substring function the index start from 0, in SQL Server its from 1
             return "SUBSTRING($params[0], $params[1] + 1, LEN($params[0]))";        	    
-          }
+            }
             break;
         case ODataConstants::STRFUN_SUBSTRINGOF:
           return "(CHARINDEX($params[0], $params[1]) != 0)";
@@ -389,7 +388,7 @@ class NorthWindDSExpressionProvider implements IExpressionProvider
         case ODataConstants::BINFUL_EQUAL:
             return "($params[0] = $params[1])";
             break;
-         case 'is_null':
+            case 'is_null':
             return "is_null($params[0])";
             break;
 
@@ -409,20 +408,20 @@ class NorthWindDSExpressionProvider implements IExpressionProvider
      */
     private function _prepareBinaryExpression($operator, $left, $right)
     {
-      if (!substr_compare($left, "STRCMP", 0, 6)) {
+        if (!substr_compare($left, "STRCMP", 0, 6)) {
             $str = explode(';', $left, 2);
             $str[0] = str_replace('STRCMP', '', $str[0]);
             if ($right == 'false' and $right != '0') {
-              if (!substr_compare($operator, '!', 0, 1)) {
-                  $operator = str_replace('!', '', $operator);
-              } else if ($operator == '>=') {
-                  $operator = '<';
-              } else if ($operator == '<=') {
-                  $operator = '>';
-              } else {
+                if (!substr_compare($operator, '!', 0, 1)) {
+                    $operator = str_replace('!', '', $operator);
+                } else if ($operator == '>=') {
+                    $operator = '<';
+                } else if ($operator == '<=') {
+                    $operator = '>';
+                } else {
                     $operator = "!".$operator;
-              }
-              return self::OPEN_BRAKET 
+                }
+                return self::OPEN_BRAKET 
                     . $str[0] . ' ' . $operator 
                     . ' ' . $str[1] . self::CLOSE_BRACKET;
             } else {
@@ -434,26 +433,26 @@ class NorthWindDSExpressionProvider implements IExpressionProvider
         
         //DATETIMECMP
         if (!substr_compare($left, "DATETIMECMP", 0, 11)) {
-          $str = explode(';', $left, 2);
-          $str[0] = str_replace('DATETIMECMP', '', $str[0]);
-          if ($right == 'false' and $right != '0') {
+            $str = explode(';', $left, 2);
+            $str[0] = str_replace('DATETIMECMP', '', $str[0]);
+            if ($right == 'false' and $right != '0') {
             if (!substr_compare($operator, '!', 0, 1)) {
-              $operator = str_replace('!', '', $operator);
+                $operator = str_replace('!', '', $operator);
             } else if ($operator == '>=') {
-              $operator = '<';
+                $operator = '<';
             } else if ($operator == '<=') {
-              $operator = '>';
+                $operator = '>';
             } else {
-              $operator = "!".$operator;
+                $operator = "!".$operator;
             }
             return self::OPEN_BRAKET
             . $str[0] . ' ' . $operator
             . ' ' . $str[1] . self::CLOSE_BRACKET;
-          } else {
+            } else {
             return self::OPEN_BRAKET
             . $str[0] . ' ' . $operator
             . ' ' . $str[1] . self::CLOSE_BRACKET;
-          }
+            }
         }
 
         return 

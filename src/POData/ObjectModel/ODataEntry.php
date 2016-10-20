@@ -78,11 +78,11 @@ class ODataEntry
      */
     public $isMediaLinkEntry;
 
-	/**
-	 * The name of the resource set this entry belongs to, use in metadata output
-	 * @var string
-	 */
-	public $resourceSetName;
+    /**
+     * The name of the resource set this entry belongs to, use in metadata output
+     * @var string
+     */
+    public $resourceSetName;
     
 
 }

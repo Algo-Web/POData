@@ -90,12 +90,12 @@ Class ServiceHost
      * @param Request $incomingRequest
      * @throws ODataException
      */
-	public function __construct(IOperationContext $context = null, Request $incomingRequest)
+    public function __construct(IOperationContext $context = null, Request $incomingRequest)
     {
         if(is_null($context)){
-	        $this->_operationContext = new IlluminateOperationContext($incomingRequest);
+            $this->_operationContext = new IlluminateOperationContext($incomingRequest);
         } else {
-	        $this->_operationContext = $context;
+            $this->_operationContext = $context;
         }
 
         // getAbsoluteRequestUri can throw UrlFormatException 
@@ -110,13 +110,13 @@ Class ServiceHost
     }
 
     /**
-      * Gets the absolute request Uri as Url instance
-      * Note: This method will be called first time from constructor.
-      * 
-      * @throws ODataException if AbsoluteRequestUri is not a valid URI
-      * 
-      * @return Url
-      */
+     * Gets the absolute request Uri as Url instance
+     * Note: This method will be called first time from constructor.
+     * 
+     * @throws ODataException if AbsoluteRequestUri is not a valid URI
+     * 
+     * @return Url
+     */
     public function getAbsoluteRequestUri()
     {
         if (is_null($this->_absoluteRequestUri)) {
@@ -125,7 +125,7 @@ Class ServiceHost
             try {
                 new Url($this->_absoluteRequestUriAsString);
             } catch (UrlFormatException $exception) {
-				throw ODataException::createBadRequestError($exception->getMessage());
+                throw ODataException::createBadRequestError($exception->getMessage());
             }
 
             $queryStartIndex = strpos($this->_absoluteRequestUriAsString, '?');
@@ -173,7 +173,7 @@ Class ServiceHost
             $isAbsoluteServiceUri = (strpos($serviceUri, 'http://') === 0)
                 || (strpos($serviceUri, 'https://') === 0);
             try {
-                $this->_absoluteServiceUri = new Url($serviceUri, $isAbsoluteServiceUri );
+                $this->_absoluteServiceUri = new Url($serviceUri, $isAbsoluteServiceUri);
             } catch (UrlFormatException $exception) {
                 throw ODataException::createInternalServerError(Messages::hostMalFormedBaseUriInConfig());
             }
@@ -195,7 +195,7 @@ Class ServiceHost
                 // Find index of segment in the request uri that end with .svc
                 // There will be always a .svc segment in the request uri otherwise
                 // uri redirection will not happen.
-                for (; $i >=0; $i--) {
+                for (; $i >= 0; $i--) {
                     $endsWithSvc = (substr_compare($requestUriSegments[$i], '.svc', -strlen('.svc'), strlen('.svc')) === 0);
                     if ($endsWithSvc) {
                         break;
@@ -205,7 +205,7 @@ Class ServiceHost
                 $j = count($segments) - 1;
                 $k = $i;
                 if ($j > $i) {
-					throw ODataException::createBadRequestError(
+                    throw ODataException::createBadRequestError(
                         Messages::hostRequestUriIsNotBasedOnRelativeUriInConfig(
                             $this->_absoluteRequestUriAsString,
                             $serviceUri
@@ -218,7 +218,7 @@ Class ServiceHost
                 }
 
                 if ($j != -1) {
-					throw ODataException::createBadRequestError(
+                    throw ODataException::createBadRequestError(
                         Messages::hostRequestUriIsNotBasedOnRelativeUriInConfig(
                             $this->_absoluteRequestUriAsString,
                             $serviceUri
@@ -291,13 +291,13 @@ Class ServiceHost
                 if (!empty($optionValue)) {
                     if ($optionValue[0] == '$') {
                         if ($this->_isODataQueryOption($optionValue)) {
-							throw ODataException::createBadRequestError(
+                            throw ODataException::createBadRequestError(
                                 Messages::hostODataQueryOptionFoundWithoutValue(
                                     $optionValue
                                 )
                             );
                         } else {
-							throw ODataException::createBadRequestError(
+                            throw ODataException::createBadRequestError(
                                 Messages::hostNonODataOptionBeginsWithSystemCharacter(
                                     $optionValue
                                 )
@@ -308,7 +308,7 @@ Class ServiceHost
             } else {
                 if ($optionName[0] == '$') {
                     if (!$this->_isODataQueryOption($optionName)) {
-						throw ODataException::createBadRequestError(
+                        throw ODataException::createBadRequestError(
                             Messages::hostNonODataOptionBeginsWithSystemCharacter(
                                 $optionName
                             )
@@ -316,7 +316,7 @@ Class ServiceHost
                     }
 
                     if (array_search($optionName, $namesFound) !== false) {
-						throw ODataException::createBadRequestError(
+                        throw ODataException::createBadRequestError(
                             Messages::hostODataQueryOptionCannotBeSpecifiedMoreThanOnce(
                                 $optionName
                             )
@@ -324,7 +324,7 @@ Class ServiceHost
                     }
                     
                     if (empty($optionValue) && $optionValue !== '0') {
-						throw ODataException::createBadRequestError(
+                        throw ODataException::createBadRequestError(
                             Messages::hostODataQueryOptionFoundWithoutValue(
                                 $optionName
                             )
@@ -352,7 +352,7 @@ Class ServiceHost
      */
     private function _getServiceUri()
     {
-        if(($pos = strpos($this->_absoluteRequestUriAsString, ".svc")) !== FALSE){
+        if (($pos = strpos($this->_absoluteRequestUriAsString, ".svc")) !== FALSE) {
             $serviceUri = substr($this->_absoluteRequestUriAsString, 0, $pos + strlen(".svc"));
             return $serviceUri;
         }
@@ -593,7 +593,7 @@ Class ServiceHost
      */
     public function setResponseStatusCode($value)
     {
-        $floor = floor($value / 100);
+        $floor = floor($value/100);
         if ($floor >= 1 && $floor <= 5) {
             $statusDescription = HttpStatus::getStatusDescription($value);
             if (!is_null($statusDescription)) {
@@ -670,29 +670,29 @@ Class ServiceHost
             ->outgoingResponse()->addHeader($headerName, $headerValue);
     }
 
-	/**
-	 * Translates the short $format forms into the full mime type forms
-	 * @param Version $responseVersion the version scheme to interpret the short form with
-	 * @param string $format the short $format form
-	 * @return string the full mime type corresponding to the short format form for the given version
-	 */
-	public static function translateFormatToMime(Version $responseVersion, $format){
+    /**
+     * Translates the short $format forms into the full mime type forms
+     * @param Version $responseVersion the version scheme to interpret the short form with
+     * @param string $format the short $format form
+     * @return string the full mime type corresponding to the short format form for the given version
+     */
+    public static function translateFormatToMime(Version $responseVersion, $format){
         //TODO: should the version switches be off of the requestVersion, not the response version? see #91
 
         switch($format) {
 
-	        case ODataConstants::FORMAT_XML:
-		        $format = MimeTypes::MIME_APPLICATION_XML;
-		        break;
+            case ODataConstants::FORMAT_XML:
+                $format = MimeTypes::MIME_APPLICATION_XML;
+                break;
 
             case ODataConstants::FORMAT_ATOM:
-	            $format = MimeTypes::MIME_APPLICATION_ATOM ;
-		        break;
+                $format = MimeTypes::MIME_APPLICATION_ATOM ;
+                break;
 
             case ODataConstants::FORMAT_VERBOSE_JSON:
                 if($responseVersion == Version::v3()){
-	                //only translatable in 3.0 systems
-	                $format = MimeTypes::MIME_APPLICATION_JSON_VERBOSE;
+                    //only translatable in 3.0 systems
+                    $format = MimeTypes::MIME_APPLICATION_JSON_VERBOSE;
                 }
                 break;
 
@@ -700,13 +700,13 @@ Class ServiceHost
                 if($responseVersion == Version::v3()){
                     $format = MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META;
                 } else{
-	                $format = MimeTypes::MIME_APPLICATION_JSON;
+                    $format = MimeTypes::MIME_APPLICATION_JSON;
                 }
-		        break;
+                break;
 
         }
 
-	    return $format . ';q=1.0';
+        return $format . ';q=1.0';
     }
 
 

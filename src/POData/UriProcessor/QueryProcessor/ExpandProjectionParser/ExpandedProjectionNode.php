@@ -413,7 +413,7 @@ class ExpandedProjectionNode extends ProjectionNode
         $this->_selectAllImmediateProperties = false;
         foreach ($this->_childNodes as $node) {
             if ($node instanceof ExpandedProjectionNode) {
-                 $node->markSubtreeAsSelected();   
+                    $node->markSubtreeAsSelected();   
             }
         }
     }

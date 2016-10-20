@@ -15,12 +15,10 @@ use POData\Providers\Metadata\Type\Int64;
 use POData\Providers\Metadata\Type\SByte;
 use POData\Providers\Metadata\Type\Single;
 use POData\Providers\Metadata\Type\StringType;
-use POData\Providers\Metadata\Type\TypeCode;
 use POData\Providers\Metadata\Type\EdmPrimitiveType;
 use POData\Providers\Metadata\Type\IType;
 use POData\Common\Messages;
 use POData\Common\InvalidOperationException;
-use POData\Common;
 
 /**
  * Class ResourceType
@@ -194,9 +192,9 @@ class ResourceType
      * @throws \InvalidArgumentException
      */
     public function __construct(
-	    $instanceType,
-	    $resourceTypeKind,
-	    $name,
+        $instanceType,
+        $resourceTypeKind,
+        $name,
         $namespaceName = null,
         ResourceType $baseType = null,
         $isAbstract = false
@@ -274,7 +272,7 @@ class ResourceType
     /**
      * To set custom state object for this type
      * 
-     * @param Object $object The custom object.
+     * @param ResourceSet $object The custom object.
      * 
      * @return void
      */
@@ -696,7 +694,7 @@ class ResourceType
      * 
      * @param array &$arrayToDetectLoopInComplexType array for detecting loop.
      * 
-     * @return boolean true if resource type instance has bag property else false
+     * @return boolean|null true if resource type instance has bag property else false
      */
     public function hasBagProperty(&$arrayToDetectLoopInComplexType)
     {        
@@ -826,102 +824,102 @@ class ResourceType
     public static function getPrimitiveResourceType($typeCode)
     {
         switch($typeCode) {
-        case EdmPrimitiveType::BINARY:
-            return new ResourceType(
-                new Binary(), ResourceTypeKind::PRIMITIVE, 
-                'Binary', 'Edm'
-            );
-            break;
-        case EdmPrimitiveType::BOOLEAN:
-            return new ResourceType(
-                new Boolean(), 
-                ResourceTypeKind::PRIMITIVE, 
-                'Boolean', 'Edm'
-            );
-            break;
-        case EdmPrimitiveType::BYTE:
-            return new ResourceType(
-                new Byte(), 
-                ResourceTypeKind::PRIMITIVE, 
-                'Byte', 'Edm'
-            );
-            break;
-        case EdmPrimitiveType::DATETIME:
-            return new ResourceType(
-                new DateTime(), 
-                ResourceTypeKind::PRIMITIVE, 
-                'DateTime', 'Edm'
-            );
-            break;
-        case EdmPrimitiveType::DECIMAL:
-            return new ResourceType(
-                new Decimal(), 
-                ResourceTypeKind::PRIMITIVE, 
-                'Decimal', 'Edm'
-            );
-            break;
-        case EdmPrimitiveType::DOUBLE:
-            return new ResourceType(
-                new Double(), 
-                ResourceTypeKind::PRIMITIVE, 
-                'Double', 'Edm'
-            );
-            break;
-        case EdmPrimitiveType::GUID:
-            return new ResourceType(
-                new Guid(), 
-                ResourceTypeKind::PRIMITIVE, 
-                'Guid', 'Edm'
-            );
-            break;
-        case EdmPrimitiveType::INT16:
-            return new ResourceType(
-                new Int16(), 
-                ResourceTypeKind::PRIMITIVE, 
-                'Int16', 'Edm'
-            );
-            break;
-        case EdmPrimitiveType::INT32:
-            return new ResourceType(
-                new Int32(), 
-                ResourceTypeKind::PRIMITIVE, 
-                'Int32', 'Edm'
-            );
-            break;
-        case EdmPrimitiveType::INT64:
-            return new ResourceType(
-                new Int64(), 
-                ResourceTypeKind::PRIMITIVE, 
-                'Int64', 'Edm'
-            );
-            break;
-        case EdmPrimitiveType::SBYTE:
-            return new ResourceType(
-                new SByte(), 
-                ResourceTypeKind::PRIMITIVE, 
-                'SByte', 'Edm'
-            );
-            break;
-        case EdmPrimitiveType::SINGLE:
-            return new ResourceType(
-                new Single(), 
-                ResourceTypeKind::PRIMITIVE, 
-                'Single', 'Edm'
-            );
-            break;
-        case EdmPrimitiveType::STRING:
-            return new ResourceType(
-                new StringType(), 
-                ResourceTypeKind::PRIMITIVE, 
-                'String', 'Edm'
-            );
-            break;
-        default:
-            throw new \InvalidArgumentException(
-                Messages::commonNotValidPrimitiveEDMType(
-                    '$typeCode', 'getPrimitiveResourceType'
-                )
-            );
+            case EdmPrimitiveType::BINARY:
+                return new ResourceType(
+                    new Binary(), ResourceTypeKind::PRIMITIVE, 
+                    'Binary', 'Edm'
+                );
+                break;
+            case EdmPrimitiveType::BOOLEAN:
+                return new ResourceType(
+                    new Boolean(), 
+                    ResourceTypeKind::PRIMITIVE, 
+                    'Boolean', 'Edm'
+                );
+                break;
+            case EdmPrimitiveType::BYTE:
+                return new ResourceType(
+                    new Byte(), 
+                    ResourceTypeKind::PRIMITIVE, 
+                    'Byte', 'Edm'
+                );
+                break;
+            case EdmPrimitiveType::DATETIME:
+                return new ResourceType(
+                    new DateTime(), 
+                    ResourceTypeKind::PRIMITIVE, 
+                    'DateTime', 'Edm'
+                );
+                break;
+            case EdmPrimitiveType::DECIMAL:
+                return new ResourceType(
+                    new Decimal(), 
+                    ResourceTypeKind::PRIMITIVE, 
+                    'Decimal', 'Edm'
+                );
+                break;
+            case EdmPrimitiveType::DOUBLE:
+                return new ResourceType(
+                    new Double(), 
+                    ResourceTypeKind::PRIMITIVE, 
+                    'Double', 'Edm'
+                );
+                break;
+            case EdmPrimitiveType::GUID:
+                return new ResourceType(
+                    new Guid(), 
+                    ResourceTypeKind::PRIMITIVE, 
+                    'Guid', 'Edm'
+                );
+                break;
+            case EdmPrimitiveType::INT16:
+                return new ResourceType(
+                    new Int16(), 
+                    ResourceTypeKind::PRIMITIVE, 
+                    'Int16', 'Edm'
+                );
+                break;
+            case EdmPrimitiveType::INT32:
+                return new ResourceType(
+                    new Int32(), 
+                    ResourceTypeKind::PRIMITIVE, 
+                    'Int32', 'Edm'
+                );
+                break;
+            case EdmPrimitiveType::INT64:
+                return new ResourceType(
+                    new Int64(), 
+                    ResourceTypeKind::PRIMITIVE, 
+                    'Int64', 'Edm'
+                );
+                break;
+            case EdmPrimitiveType::SBYTE:
+                return new ResourceType(
+                    new SByte(), 
+                    ResourceTypeKind::PRIMITIVE, 
+                    'SByte', 'Edm'
+                );
+                break;
+            case EdmPrimitiveType::SINGLE:
+                return new ResourceType(
+                    new Single(), 
+                    ResourceTypeKind::PRIMITIVE, 
+                    'Single', 'Edm'
+                );
+                break;
+            case EdmPrimitiveType::STRING:
+                return new ResourceType(
+                    new StringType(), 
+                    ResourceTypeKind::PRIMITIVE, 
+                    'String', 'Edm'
+                );
+                break;
+            default:
+                throw new \InvalidArgumentException(
+                    Messages::commonNotValidPrimitiveEDMType(
+                        '$typeCode', 'getPrimitiveResourceType'
+                    )
+                );
         }    
     }
 }

@@ -12,19 +12,19 @@ use POData\UriProcessor\QueryProcessor\OrderByParser\OrderByInfo;
 class FilterInfo
 {
 
-	/**
-	 * Collection of navigation properties specified in the filter
-	 * clause, if no navigation (resource reference) property used
-	 * in the clause then this property will be null.
-	 *
-	 * e.g. $filter=NaviProp1/NaviProp2/PrimitiveProp eq 12
-	 *      $filter=NaviPropA/NaviPropB/PrimitiveProp gt 56.3
-	 * In this case array will be as follows:
-	 * array(array(NaviProp1, NaviProp2), array(NaviPropA, NaviPropB))
-	 *
-	 * @var array(array(ResourceProperty))/NULL
-	 */
-	private $_navigationPropertiesUsedInTheFilterClause;
+    /**
+     * Collection of navigation properties specified in the filter
+     * clause, if no navigation (resource reference) property used
+     * in the clause then this property will be null.
+     *
+     * e.g. $filter=NaviProp1/NaviProp2/PrimitiveProp eq 12
+     *      $filter=NaviPropA/NaviPropB/PrimitiveProp gt 56.3
+     * In this case array will be as follows:
+     * array(array(NaviProp1, NaviProp2), array(NaviPropA, NaviPropB))
+     *
+     * @var array(array(ResourceProperty))/NULL
+     */
+    private $_navigationPropertiesUsedInTheFilterClause;
 
 
     /**
@@ -47,15 +47,15 @@ class FilterInfo
      */
     public function __construct($navigationPropertiesUsedInTheFilterClause, $filterExpAsDataSourceExp)
     {
-	    $this->_navigationPropertiesUsedInTheFilterClause = $navigationPropertiesUsedInTheFilterClause;
+        $this->_navigationPropertiesUsedInTheFilterClause = $navigationPropertiesUsedInTheFilterClause;
         $this->_filterExpressionAsDataSourceExpression = $filterExpAsDataSourceExp;
     }
 
 
-	public function getNavigationPropertiesUsed()
-	{
-		return $this->_navigationPropertiesUsedInTheFilterClause;
-	}
+    public function getNavigationPropertiesUsed()
+    {
+        return $this->_navigationPropertiesUsedInTheFilterClause;
+    }
 
 
     /**

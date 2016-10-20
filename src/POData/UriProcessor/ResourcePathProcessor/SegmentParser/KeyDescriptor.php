@@ -16,7 +16,6 @@ use POData\Providers\Metadata\Type\Boolean;
 use POData\Providers\Metadata\Type\Int32;
 use POData\Providers\Metadata\Type\Null1;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionTokenId;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionToken;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionLexer;
 use POData\Common\Messages;
 
@@ -175,7 +174,7 @@ class KeyDescriptor
      */
     public function isEmpty()
     {
-         return empty($this->_namedValues) 
+            return empty($this->_namedValues) 
              && empty($this->_positionalValues);
     }
 
@@ -202,7 +201,7 @@ class KeyDescriptor
      *  KeyDescription. 
      *    
      * @param string        $keyPredicate   The predicate to parse
-     * @param KeyDescriptor &$keyDescriptor On return, Description of key after 
+     * @param KeyDescriptor KeyDescriptor On return, Description of key after 
      *                                      parsing
      * 
      * @return boolean True if the given values were parsed; false if there was 
@@ -454,7 +453,7 @@ class KeyDescriptor
      * the type if valid this function provide the PHP value equivalent to 
      * the astoira URI key value
      * 
-     * @param unknown           $value     The Astoria URI key value
+     * @param string           $value     The Astoria URI key value
      * @param ExpressionTokenId $tokenId   The tokenId for $value literal
      * @param unknown           &$outValue After the invocation, this parameter 
      *                                     holds the PHP value equivalent to $value, 
@@ -470,39 +469,39 @@ class KeyDescriptor
     private static function _getTypeAndValidateKeyValue($value, $tokenId, &$outValue, &$outType)
     {     
         switch ($tokenId) {
-        case ExpressionTokenId::BOOLEAN_LITERAL:
-            $outType = new Boolean();
-            break;
-        case ExpressionTokenId::DATETIME_LITERAL:
-            $outType = new DateTime();
-            break;
-        case ExpressionTokenId::GUID_LITERAL:
-            $outType = new Guid();
-            break;
-        case ExpressionTokenId::STRING_LITERAL:
-            $outType = new StringType();
-            break;
-        case ExpressionTokenId::INTEGER_LITERAL:
-            $outType = new Int32();
-            break;
-        case ExpressionTokenId::DECIMAL_LITERAL:
-            $outType = new Decimal();
-            break;
-        case ExpressionTokenId::DOUBLE_LITERAL:
-            $outType = new Double();
-            break;
-        case ExpressionTokenId::INT64_LITERAL:
-            $outType = new Int64();
-            break;
-        case ExpressionTokenId::SINGLE_LITERAL:
-            $outType = new Single();
-            break;
-        case ExpressionTokenId::NULL_LITERAL:
-            $outType = new Null1();
-            break;
-        default:
-            $outType = null;
-            return false;
+            case ExpressionTokenId::BOOLEAN_LITERAL:
+                $outType = new Boolean();
+                break;
+            case ExpressionTokenId::DATETIME_LITERAL:
+                $outType = new DateTime();
+                break;
+            case ExpressionTokenId::GUID_LITERAL:
+                $outType = new Guid();
+                break;
+            case ExpressionTokenId::STRING_LITERAL:
+                $outType = new StringType();
+                break;
+            case ExpressionTokenId::INTEGER_LITERAL:
+                $outType = new Int32();
+                break;
+            case ExpressionTokenId::DECIMAL_LITERAL:
+                $outType = new Decimal();
+                break;
+            case ExpressionTokenId::DOUBLE_LITERAL:
+                $outType = new Double();
+                break;
+            case ExpressionTokenId::INT64_LITERAL:
+                $outType = new Int64();
+                break;
+            case ExpressionTokenId::SINGLE_LITERAL:
+                $outType = new Single();
+                break;
+            case ExpressionTokenId::NULL_LITERAL:
+                $outType = new Null1();
+                break;
+            default:
+                $outType = null;
+                return false;
         }
 
         if (!$outType->validate($value, $outValue)) {

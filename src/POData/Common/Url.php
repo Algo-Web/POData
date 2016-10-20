@@ -93,7 +93,7 @@ class Url
      */
     public function getPort()
     {        
-        $port = isset ($this->_parts['port'])? $this->_parts['port'] : null;
+        $port = isset ($this->_parts['port']) ? $this->_parts['port'] : null;
         if ($port != null) {
             return $port;
         }

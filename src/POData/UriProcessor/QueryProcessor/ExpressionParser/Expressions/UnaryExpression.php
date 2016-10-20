@@ -16,9 +16,9 @@ class UnaryExpression extends AbstractExpression
     /**
      * Construct a new instance of UnaryExpression
      * 
-     * @param unknown_type $child    Child expression
+     * @param AbstractExpression $child    Child expression
      * @param unknown_type $nodeType Expression node type
-     * @param unknown_type $type     Expression type
+     * @param \POData\Providers\Metadata\Type\IType $type     Expression type
      */
     public function __construct($child, $nodeType, $type)
     {

@@ -2,10 +2,7 @@
 
 namespace POData\UriProcessor\QueryProcessor\SkipTokenParser;
 
-use POData\Providers\Metadata\Type\Guid;
 use POData\Providers\Metadata\Type\Null1;
-use POData\Providers\Metadata\Type\DateTime;
-use POData\Providers\Metadata\Type\StringType;
 use POData\Providers\Metadata\ResourceType;
 use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
 use POData\Common\Messages;
@@ -72,8 +69,8 @@ class InternalSkipTokenInfo
      *                                                                orderby path segments.
      * @param ResourceType                  &$resourceType            Reference to the type of the resource pointed by the request uri.
      */
-    public function __construct(InternalOrderByInfo &$internalOrderByInfo, 
-        $orderByValuesInSkipToken, ResourceType &$resourceType
+    public function __construct(InternalOrderByInfo & $internalOrderByInfo, 
+        $orderByValuesInSkipToken, ResourceType & $resourceType
     ) {
         $this->_internalOrderByInfo = $internalOrderByInfo;        
         $this->_orderByValuesInSkipToken = $orderByValuesInSkipToken;

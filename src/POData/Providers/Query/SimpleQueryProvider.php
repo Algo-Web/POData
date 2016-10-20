@@ -3,7 +3,6 @@ namespace POData\Providers\Query;
 
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceSet;
-use POData\UriProcessor\QueryProcessor\Expression\Parser\IExpressionProvider;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
 use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
@@ -14,10 +13,10 @@ use POData\Providers\Query\QueryResult;
 abstract class SimpleQueryProvider implements IQueryProvider
 {
     /**
-    * @var Connection
-    */
+     * @var Connection
+     */
     protected $db;
-    public function __construct($db){
+    public function __construct($db) {
         $this->db = $db;
     }
     /**
@@ -103,6 +102,7 @@ abstract class SimpleQueryProvider implements IQueryProvider
     }
     /**
      * Common method for getResourceFromRelatedResourceSet() and getResourceFromResourceSet()
+     * @param KeyDescriptor|null $keyDescriptor
      */
     protected function getResource(
         ResourceSet $resourceSet,
@@ -153,7 +153,7 @@ abstract class SimpleQueryProvider implements IQueryProvider
         $entityName = $this->getEntityName($entityClassName);
         $tableName = $this->getTableName($entityName);
         $option = null;
-        if ($queryType == QueryType::ENTITIES_WITH_COUNT()){
+        if ($queryType == QueryType::ENTITIES_WITH_COUNT()) {
             //tell mysql we want to know the count prior to the LIMIT 
             //$option = 'SQL_CALC_FOUND_ROWS';
         }
@@ -165,14 +165,13 @@ abstract class SimpleQueryProvider implements IQueryProvider
                     . ($top ? ' LIMIT ' . $top : '') . ($skip ? ' OFFSET ' . $skip : '');
             $data = $this->queryAll($sql);
             
-            if ($queryType == QueryType::ENTITIES_WITH_COUNT()){
+            if ($queryType == QueryType::ENTITIES_WITH_COUNT()) {
                 //get those found rows
                 //$result->count = $this->queryScalar('SELECT FOUND_ROWS()');
                 $result->count = $this->queryScalar($sqlCount);
             }
             $result->results = array_map($entityClassName . '::fromRecord', $data);
-        }
-        elseif ($queryType == QueryType::COUNT()) {
+        } elseif ($queryType == QueryType::COUNT()) {
             $result->count = QueryResult::adjustCountForPaging(
                 $this->queryScalar($sqlCount), $top, $skip);
         }

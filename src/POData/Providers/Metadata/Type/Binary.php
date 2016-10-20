@@ -107,7 +107,7 @@ class Binary implements IType
      */
     public function convertToOData($value)
     {
-        return 'binary\'' . bin2hex($value). '\'';
+        return 'binary\'' . bin2hex($value) . '\'';
     }
 
     /**
@@ -125,10 +125,10 @@ class Binary implements IType
             return false;    
         }
 
-	    if (!ctype_xdigit($value)){
-		    $outValue = null;
-		    return false;
-	    }
+        if (!ctype_xdigit($value)){
+            $outValue = null;
+            return false;
+        }
         
         $outValue = array();
         $outValIndex = 0;
@@ -155,7 +155,7 @@ class Binary implements IType
      */
     public static function binaryEqual($binary1, $binary2) 
     {
-	    //str cmp will return true if they are both null, so check short circuit that..
+        //str cmp will return true if they are both null, so check short circuit that..
         if (is_null($binary1) || is_null($binary2)) {
             return false;
         }

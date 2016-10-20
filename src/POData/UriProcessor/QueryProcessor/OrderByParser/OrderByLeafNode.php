@@ -72,7 +72,7 @@ class OrderByLeafNode extends OrderByBaseNode
      * 
      * @see library/POData/QueryProcessorOrderByParser.OrderByBaseNode::getResourceType()
      * 
-     * @return void
+     * @return \POData\Providers\Metadata\ResourceType
      */
     public function getResourceType()
     {
@@ -111,18 +111,18 @@ class OrderByLeafNode extends OrderByBaseNode
         
         foreach ($ancestors as $i => $anscestor) {
             if ($i == 0) {
-                $parameterNames = array (
+                $parameterNames = array(
                     '$' . $anscestor . 'A', '$' . $anscestor . 'B'
                 );
                 $accessor1 = $parameterNames[0];
                 $accessor2 = $parameterNames[1];
-                $flag1 = '$flag1 = ' . 'is_null(' . $accessor1. ') || ';
-                $flag2 = '$flag2 = ' . 'is_null(' . $accessor2. ') || '; 
+                $flag1 = '$flag1 = ' . 'is_null(' . $accessor1 . ') || ';
+                $flag2 = '$flag2 = ' . 'is_null(' . $accessor2 . ') || '; 
             } else {
                 $accessor1 .= '->' . $anscestor;
                 $accessor2 .= '->' . $anscestor;
-                $flag1 .= 'is_null(' .$accessor1 . ')' . ' || ';
-                $flag2 .= 'is_null(' .$accessor2 . ')' . ' || ';
+                $flag1 .= 'is_null(' . $accessor1 . ')' . ' || ';
+                $flag2 .= 'is_null(' . $accessor2 . ')' . ' || ';
             }
         }
 

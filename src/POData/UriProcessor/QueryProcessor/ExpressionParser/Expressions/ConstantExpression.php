@@ -18,7 +18,7 @@ class ConstantExpression extends AbstractExpression
      * Create new inatnce of ConstantExpression.
      * 
      * @param string $value The constant value
-     * @param IType  $type  The expression node type
+     * @param \POData\Providers\Metadata\Type\IType  $type  The expression node type
      */
     public function __construct($value, $type)
     {

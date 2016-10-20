@@ -6,7 +6,6 @@ use POData\Common\ODataException;
 use POData\Common\Messages;
 use POData\Common\ODataConstants;
 use POData\Providers\Metadata\Type\Null1;
-use POData\Providers\Metadata\Type\INavigationType;
 use POData\Providers\Metadata\Type\Int64;
 use POData\Providers\Metadata\Type\Int16;
 use POData\Providers\Metadata\Type\Guid;
@@ -17,10 +16,8 @@ use POData\Providers\Metadata\Type\DateTime;
 use POData\Providers\Metadata\Type\Int32;
 use POData\Providers\Metadata\Type\StringType;
 use POData\Providers\Metadata\Type\Boolean;
-use POData\Providers\Metadata\Type\Void;
 use POData\Providers\Metadata\Type\Binary;
 use POData\Providers\Metadata\Type\IType;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ExpressionType;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\AbstractExpression;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionToken;
 
@@ -71,7 +68,7 @@ class FunctionDescription
     {
         $str = $this->returnType->getFullTypeName() . ' ' . $this->name . '(';
 
-	    foreach ($this->argumentTypes as $argumentType) {
+        foreach ($this->argumentTypes as $argumentType) {
             $str .= $argumentType->getFullTypeName() . ', ';
         }
 
@@ -248,7 +245,7 @@ class FunctionDescription
                         array(new Double())
                     )
                 )
-          );
+            );
 
         return $functions;
     }
@@ -256,7 +253,7 @@ class FunctionDescription
     /** 
      * Get function description for string comparison
      * 
-     * @return \POData\UriProcessor\QueryProcessor\FunctionDescription[]
+     * @return FunctionDescription[]
      */
     public static function stringComparisonFunctions()
     {
@@ -271,7 +268,7 @@ class FunctionDescription
     /**
      * Get function description for datetime comparison
      * 
-     * @return \POData\UriProcessor\QueryProcessor\FunctionDescription[]
+     * @return FunctionDescription[]
      */
     public static function dateTimeComparisonFunctions()
     {
@@ -286,7 +283,7 @@ class FunctionDescription
     /**
      * Get function description for guid equality check
      * 
-     * @return \POData\UriProcessor\QueryProcessor\FunctionDescription[]
+     * @return FunctionDescription[]
      */
     public static function guidEqualityFunctions()
     {
@@ -301,7 +298,7 @@ class FunctionDescription
     /**
      * Get function description for binary equality check
      * 
-     * @return \POData\UriProcessor\QueryProcessor\FunctionDescription[]
+     * @return FunctionDescription[]
      */
     public static function binaryEqualityFunctions()
     {
@@ -316,7 +313,7 @@ class FunctionDescription
     /**
      * Get function descriptions for arithmetic operations
      * 
-     * @return \POData\UriProcessor\QueryProcessor\FunctionDescription[]
+     * @return FunctionDescription[]
      */
     public static function arithmeticOperationFunctions()
     {      
@@ -351,7 +348,7 @@ class FunctionDescription
     /**      
      * Get function descriptions for arithmetic add operations
      * 
-     * @return \POData\UriProcessor\QueryProcessor\FunctionDescription[] indexed by function name
+     * @return FunctionDescription[] indexed by function name
      */
     public static function addOperationFunctions()
     {
@@ -361,7 +358,7 @@ class FunctionDescription
     /**
      * Get function descriptions for arithmetic subtract operations
      * 
-     * @return \POData\UriProcessor\QueryProcessor\FunctionDescription[] indexed by function name
+     * @return FunctionDescription[] indexed by function name
      */
     public static function subtractOperationFunctions()
     {
@@ -371,7 +368,7 @@ class FunctionDescription
     /**      
      * Get function descriptions for logical operations
      * 
-     * @return \POData\UriProcessor\QueryProcessor\FunctionDescription[]
+     * @return FunctionDescription[]
      */
     public static function logicalOperationFunctions()
     {
@@ -386,7 +383,7 @@ class FunctionDescription
     /**
      * Get function descriptions for relational operations
      * 
-     * @return \POData\UriProcessor\QueryProcessor\FunctionDescription[]
+     * @return FunctionDescription[]
      */
     public static function relationalOperationFunctions()
     {
@@ -416,7 +413,7 @@ class FunctionDescription
     /**
      * Get function descriptions for unary not operation
      * 
-     * @return \POData\UriProcessor\QueryProcessor\FunctionDescription[]
+     * @return FunctionDescription[]
      */
     public static function notOperationFunctions()
     {
@@ -443,7 +440,7 @@ class FunctionDescription
     /**      
      * Get function description for unary negate operator
      * 
-     * @return \POData\UriProcessor\QueryProcessor\FunctionDescription[]
+     * @return FunctionDescription[]
      */
     public static function negateOperationFunctions()
     {
@@ -631,7 +628,7 @@ class FunctionDescription
     public static function validateUnaryOpArguments($expressionToken, $argExpression)
     {
         //Unary not
-        if (strcmp($expressionToken->Text, ODataConstants::KEYWORD_NOT) == 0 ) {
+        if (strcmp($expressionToken->Text, ODataConstants::KEYWORD_NOT) == 0) {
             $function = self::findFunctionWithPromotion(
                 self::notOperationFunctions(), 
                 array($argExpression)
@@ -658,7 +655,7 @@ class FunctionDescription
      * 
      * @throws ODataException
      * 
-     * @return \POData\UriProcessor\QueryProcessor\FunctionDescription[] Array of matching functions
+     * @return FunctionDescription[] Array of matching functions
      */
     public static function verifyFunctionExists($expressionToken)
     {
@@ -672,7 +669,7 @@ class FunctionDescription
             
         }
 
-        $filterFunctions =  self::filterFunctionDescriptions();
+        $filterFunctions = self::filterFunctionDescriptions();
         return $filterFunctions[$expressionToken->Text];
     }
 
@@ -696,7 +693,7 @@ class FunctionDescription
         if ($function == null) {
             $protoTypes = null;
             foreach ($functions as $function) {
-                $protoTypes .=  $function->getPrototypeAsString() . '; ';
+                $protoTypes .= $function->getPrototypeAsString() . '; ';
             }
 
             throw ODataException::createSyntaxError(

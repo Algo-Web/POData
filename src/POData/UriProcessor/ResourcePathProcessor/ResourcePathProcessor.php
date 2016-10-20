@@ -32,7 +32,7 @@ class ResourcePathProcessor
      *                        or in case of any version incompatibility.
      */
     public static function process(IService $service) {
-	    $host = $service->getHost();
+        $host = $service->getHost();
         $absoluteRequestUri = $host->getAbsoluteRequestUri();
         $absoluteServiceUri = $host->getAbsoluteServiceUri();
 
@@ -62,9 +62,9 @@ class ResourcePathProcessor
         );
         $kind = $request->getTargetKind();
 
-	    if ($kind == TargetKind::METADATA() || $kind == TargetKind::BATCH() || $kind == TargetKind::SERVICE_DIRECTORY()){
-		    return $request;
-	    }
+        if ($kind == TargetKind::METADATA() || $kind == TargetKind::BATCH() || $kind == TargetKind::SERVICE_DIRECTORY()){
+            return $request;
+        }
 
 
 
@@ -75,7 +75,7 @@ class ResourcePathProcessor
             // http://odata/NW.svc/Employees(1)/ThumbNail_48X48/$value
             $request->setContainerName($segments[count($segments) - 2]->getIdentifier());
         } else {
-	        $request->setContainerName($request->getIdentifier());
+            $request->setContainerName($request->getIdentifier());
         }
 
         if ($request->getIdentifier() === ODataConstants::URI_COUNT_SEGMENT) {
@@ -83,15 +83,15 @@ class ResourcePathProcessor
                 throw ODataException::createBadRequestError(Messages::configurationCountNotAccepted());
             }
 
-	        $request->queryType = QueryType::COUNT();
+            $request->queryType = QueryType::COUNT();
             // use of $count requires request DataServiceVersion
             // and MaxDataServiceVersion greater than or equal to 2.0
 
-            $request->raiseResponseVersion( 2, 0);
-            $request->raiseMinVersionRequirement(2, 0 );
+            $request->raiseResponseVersion(2, 0);
+            $request->raiseMinVersionRequirement(2, 0);
 
         } else if ($request->isNamedStream()) {
-            $request->raiseMinVersionRequirement(3, 0 );
+            $request->raiseMinVersionRequirement(3, 0);
         } else if ($request->getTargetKind() == TargetKind::RESOURCE()) {
             if (!$request->isLinkUri()) {
                 $resourceSetWrapper = $request->getTargetResourceSetWrapper();
@@ -101,12 +101,12 @@ class ResourcePathProcessor
                 $hasBagProperty = $resourceSetWrapper->hasBagProperty($service->getProvidersWrapper());
 
                 if ($hasNamedStream || $hasBagProperty) {
-                    $request->raiseResponseVersion( 3, 0 );
+                    $request->raiseResponseVersion(3, 0);
                 }
             }
         } else if ($request->getTargetKind() == TargetKind::BAG()
         ) {
-            $request->raiseResponseVersion( 3, 0 );
+            $request->raiseResponseVersion(3, 0);
         }
 
 

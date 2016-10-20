@@ -117,7 +117,7 @@ class ExpressionLexer
     /**
      * To get the text being parsed
      * 
-     * @return string
+     * @return char[]
      */
     public function getExpressionText()
     {
@@ -166,111 +166,111 @@ class ExpressionLexer
         $t = null;
         $tokenPos = $this->_textPos;
         switch ($this->_ch) {
-	        case '(':
-	            $this->_nextChar();
-	            $t = ExpressionTokenId::OPENPARAM;
-	            break;
-	        case ')':
-	            $this->_nextChar();
-	            $t = ExpressionTokenId::CLOSEPARAM;
-	            break;
-	        case ',':
-	            $this->_nextChar();
-	            $t = ExpressionTokenId::COMMA;
-	            break;
-	        case '-':
-	            $hasNext = $this->_textPos + 1 < $this->_textLen;
-	            if ($hasNext && Char::isDigit($this->_text[$this->_textPos + 1])) {
-	                $this->_nextChar();
-	                $t = $this->_parseFromDigit();
-	                if (self::isNumeric($t)) {
-	                    break;
-	                }
+            case '(':
+                $this->_nextChar();
+                $t = ExpressionTokenId::OPENPARAM;
+                break;
+            case ')':
+                $this->_nextChar();
+                $t = ExpressionTokenId::CLOSEPARAM;
+                break;
+            case ',':
+                $this->_nextChar();
+                $t = ExpressionTokenId::COMMA;
+                break;
+            case '-':
+                $hasNext = $this->_textPos + 1 < $this->_textLen;
+                if ($hasNext && Char::isDigit($this->_text[$this->_textPos + 1])) {
+                    $this->_nextChar();
+                    $t = $this->_parseFromDigit();
+                    if (self::isNumeric($t)) {
+                        break;
+                    }
 
-	                $this->_setTextPos($tokenPos);
-	            } else if ($hasNext && $this->_text[$tokenPos + 1] == 'I') {
-	                $this->_nextChar();
-	                $this->_parseIdentifier();
-	                $currentIdentifier = substr($this->_text, $tokenPos + 1, $this->_textPos - $tokenPos - 1);
+                    $this->_setTextPos($tokenPos);
+                } else if ($hasNext && $this->_text[$tokenPos + 1] == 'I') {
+                    $this->_nextChar();
+                    $this->_parseIdentifier();
+                    $currentIdentifier = substr($this->_text, $tokenPos + 1, $this->_textPos - $tokenPos - 1);
 
-	                if (self::_isInfinityLiteralDouble($currentIdentifier)) {
-	                    $t = ExpressionTokenId::DOUBLE_LITERAL;
-	                    break;
-	                } else if (self::_isInfinityLiteralSingle($currentIdentifier)) {
-	                    $t = ExpressionTokenId::SINGLE_LITERAL;
-	                    break;
-	                }
+                    if (self::_isInfinityLiteralDouble($currentIdentifier)) {
+                        $t = ExpressionTokenId::DOUBLE_LITERAL;
+                        break;
+                    } else if (self::_isInfinityLiteralSingle($currentIdentifier)) {
+                        $t = ExpressionTokenId::SINGLE_LITERAL;
+                        break;
+                    }
 
-	                // If it looked like '-INF' but wasn't we'll rewind and fall
-	                // through to a simple '-' token.
-	                $this->_setTextPos($tokenPos);
-	            }
+                    // If it looked like '-INF' but wasn't we'll rewind and fall
+                    // through to a simple '-' token.
+                    $this->_setTextPos($tokenPos);
+                }
 
-	            $this->_nextChar();
-	            $t = ExpressionTokenId::MINUS;
-	            break;
-	        case '=':
-	            $this->_nextChar();
-	            $t = ExpressionTokenId::EQUAL;
-	            break;
-	        case '/':
-	            $this->_nextChar();
-	            $t = ExpressionTokenId::SLASH;
-	            break;
-	        case '?':
-	            $this->_nextChar();
-	            $t = ExpressionTokenId::QUESTION;
-	            break;
-	        case '.':
-	            $this->_nextChar();
-	            $t = ExpressionTokenId::DOT;
-	            break;
-	        case '\'':
-	            $quote = $this->_ch;
-	            do {
-	                $this->_nextChar();
-	                while ($this->_textPos < $this->_textLen && $this->_ch != $quote) {
-	                    $this->_nextChar();
-	                }
+                $this->_nextChar();
+                $t = ExpressionTokenId::MINUS;
+                break;
+            case '=':
+                $this->_nextChar();
+                $t = ExpressionTokenId::EQUAL;
+                break;
+            case '/':
+                $this->_nextChar();
+                $t = ExpressionTokenId::SLASH;
+                break;
+            case '?':
+                $this->_nextChar();
+                $t = ExpressionTokenId::QUESTION;
+                break;
+            case '.':
+                $this->_nextChar();
+                $t = ExpressionTokenId::DOT;
+                break;
+            case '\'':
+                $quote = $this->_ch;
+                do {
+                    $this->_nextChar();
+                    while ($this->_textPos < $this->_textLen && $this->_ch != $quote) {
+                        $this->_nextChar();
+                    }
 
-	                if ($this->_textPos == $this->_textLen) {
-	                    $this->_parseError(
-	                        Messages::expressionLexerUnterminatedStringLiteral(
-	                            $this->_textPos, $this->_text
-	                        )
-	                    );
-	                }
+                    if ($this->_textPos == $this->_textLen) {
+                        $this->_parseError(
+                            Messages::expressionLexerUnterminatedStringLiteral(
+                                $this->_textPos, $this->_text
+                            )
+                        );
+                    }
 
-	                $this->_nextChar();
-	            } while ($this->_ch == $quote);
-	            $t = ExpressionTokenId::STRING_LITERAL;
-	            break;
-	        case '*':
-	            $this->_nextChar();
-	            $t = ExpressionTokenId::STAR;
-	            break;
-	        default:
-	            if (Char::isLetter($this->_ch) || $this->_ch == '_') {
-	                $this->_parseIdentifier();
-	                $t = ExpressionTokenId::IDENTIFIER;
-	                break;
-	            }
+                    $this->_nextChar();
+                } while ($this->_ch == $quote);
+                $t = ExpressionTokenId::STRING_LITERAL;
+                break;
+            case '*':
+                $this->_nextChar();
+                $t = ExpressionTokenId::STAR;
+                break;
+            default:
+                if (Char::isLetter($this->_ch) || $this->_ch == '_') {
+                    $this->_parseIdentifier();
+                    $t = ExpressionTokenId::IDENTIFIER;
+                    break;
+                }
 
-	            if (Char::isDigit($this->_ch)) {
-	                $t = $this->_parseFromDigit();
-	                break;
-	            }
+                if (Char::isDigit($this->_ch)) {
+                    $t = $this->_parseFromDigit();
+                    break;
+                }
 
-	            if ($this->_textPos == $this->_textLen) {
-	                $t = ExpressionTokenId::END;
-	                break;
-	            }
+                if ($this->_textPos == $this->_textLen) {
+                    $t = ExpressionTokenId::END;
+                    break;
+                }
 
-	            $this->_parseError(
-	                Messages::expressionLexerInvalidCharacter(
-	                    $this->_ch, $this->_textPos
-	                )
-	            );
+                $this->_parseError(
+                    Messages::expressionLexerInvalidCharacter(
+                        $this->_ch, $this->_textPos
+                    )
+                );
         }
 
         $this->_token->Id = $t;
@@ -458,7 +458,7 @@ class ExpressionLexer
             || strcasecmp('X', $tokenText) == 0 
             || strcasecmp('x', $tokenText) == 0
         ) {
-            $id =  ExpressionTokenId::BINARY_LITERAL;
+            $id = ExpressionTokenId::BINARY_LITERAL;
         } else {
             return;
         }

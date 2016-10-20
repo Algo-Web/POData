@@ -2,9 +2,7 @@
 
 namespace POData\OperationContext\Web;
 
-use POData\Common\ODataException;
 use POData\Common\ODataConstants;
-use POData\Common\Url;
 use POData\HttpProcessUtility;
 use POData\OperationContext\HTTPRequestMethod;
 use POData\OperationContext\IHTTPRequest;
@@ -29,7 +27,7 @@ class IncomingRequest implements IHTTPRequest
      * 
      * @var string
      */
-    private $_rawUrl  = null;
+    private $_rawUrl = null;
     
 
     /**
@@ -136,7 +134,7 @@ class IncomingRequest implements IHTTPRequest
                 $this->_rawUrl = ODataConstants::HTTPREQUEST_PROTOCOL_HTTPS;
             }
 
-            $this->_rawUrl .= "://".$_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)];
+            $this->_rawUrl .= "://" . $_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)];
             $this->_rawUrl .= utf8_decode(urldecode($_SERVER[ODataConstants::HTTPREQUEST_URI]));
         }
 
@@ -155,10 +153,10 @@ class IncomingRequest implements IHTTPRequest
         if (!$this->_headers) {
             $this->getHeaders();
         }
-	    //PHP normalizes header keys
-	    $trimmedKey = HttpProcessUtility::headerToServerKey(trim($key));
+        //PHP normalizes header keys
+        $trimmedKey = HttpProcessUtility::headerToServerKey(trim($key));
 
-	    if (array_key_exists($trimmedKey, $this->_headers)) {
+        if (array_key_exists($trimmedKey, $this->_headers)) {
             return $this->_headers[$trimmedKey];
         }
 
@@ -198,7 +196,7 @@ class IncomingRequest implements IHTTPRequest
                     $isNamedOptions = count($result) == 2;
                     if ($isNamedOptions) {
                         $this->_queryOptions[]
-                            = array (rawurldecode($result[0]) => trim(rawurldecode($result[1])));
+                            = array(rawurldecode($result[0]) => trim(rawurldecode($result[1])));
                     } else {
                         $this->_queryOptions[]
                             = array(null => trim(rawurldecode($result[0])));

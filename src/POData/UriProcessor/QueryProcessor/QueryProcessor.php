@@ -10,7 +10,6 @@ use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetSource;
 use POData\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenParser;
 use POData\UriProcessor\QueryProcessor\OrderByParser\OrderByParser;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionParser2;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandProjectionParser;
 use POData\Common\Messages;
 use POData\Common\ODataException;
@@ -65,27 +64,27 @@ class QueryProcessor
      * @param RequestDescription $request Description of the request submitted by client.
      * @param IService        $service        Reference to the service implementation.
      */
-    private function __construct(RequestDescription $request, IService $service ) {
+    private function __construct(RequestDescription $request, IService $service) {
         $this->request = $request;
         $this->service = $service;
 
         $isSingleResult = $request->isSingleResult();
 
-	    //$top, $skip, $order, $inlinecount & $count are only applicable if:
-	    //The query targets a resource collection
+        //$top, $skip, $order, $inlinecount & $count are only applicable if:
+        //The query targets a resource collection
         $this->_setQueryApplicable = ($request->getTargetKind() == TargetKind::RESOURCE() && !$isSingleResult);
-	    //Or it's a $count resource (although $inlinecount isn't applicable in this case..but there's a check somewhere else for this
-	    $this->_setQueryApplicable |= $request->queryType == QueryType::COUNT();
+        //Or it's a $count resource (although $inlinecount isn't applicable in this case..but there's a check somewhere else for this
+        $this->_setQueryApplicable |= $request->queryType == QueryType::COUNT();
 
-	    //Paging is allowed if
-	    //The request targets a resource collection
-	    //and the request isn't for a $count segment
-	    $this->_pagingApplicable = $this->request->getTargetKind() == TargetKind::RESOURCE() && !$isSingleResult && ($request->queryType != QueryType::COUNT());
+        //Paging is allowed if
+        //The request targets a resource collection
+        //and the request isn't for a $count segment
+        $this->_pagingApplicable = $this->request->getTargetKind() == TargetKind::RESOURCE() && !$isSingleResult && ($request->queryType != QueryType::COUNT());
 
-	    $targetResourceType = $this->request->getTargetResourceType();
+        $targetResourceType = $this->request->getTargetResourceType();
         $targetResourceSetWrapper = $this->request->getTargetResourceSetWrapper();
 
-	    $this->_expandSelectApplicable = !is_null($targetResourceType)
+        $this->_expandSelectApplicable = !is_null($targetResourceType)
             && !is_null($targetResourceSetWrapper)
             && $targetResourceType->getResourceTypeKind() == ResourceTypeKind::ENTITY
             && !$this->request->isLinkUri();
@@ -102,7 +101,7 @@ class QueryProcessor
      * 
      * @throws ODataException
      */
-    public static function process(RequestDescription $request, IService $service ) {
+    public static function process(RequestDescription $request, IService $service) {
         $queryProcessor = new QueryProcessor($request, $service);
         if ($request->getTargetSource() == TargetSource::NONE) {
             //A service directory, metadata or batch request
@@ -148,7 +147,7 @@ class QueryProcessor
     private function _processSkipAndTop()
     {
         $value = null;
-        if ($this->_readSkipOrTopOption( ODataConstants::HTTPQUERY_STRING_SKIP, $value ) ) {
+        if ($this->_readSkipOrTopOption(ODataConstants::HTTPQUERY_STRING_SKIP, $value)) {
             $this->request->setSkipCount($value);
         }
 
@@ -160,7 +159,7 @@ class QueryProcessor
                 ->getResourceSetPageSize(); 
         }
 
-        if ($this->_readSkipOrTopOption(ODataConstants::HTTPQUERY_STRING_TOP, $value) ) {
+        if ($this->_readSkipOrTopOption(ODataConstants::HTTPQUERY_STRING_TOP, $value)) {
             $this->request->setTopOptionCount($value);
             if ($isPagingRequired && $pageSize < $value) {
                 //If $top is greater than or equal to page size, 
@@ -196,7 +195,7 @@ class QueryProcessor
      */
     private function _processOrderBy()
     {
-        $orderBy = $this->service->getHost()->getQueryStringItem( ODataConstants::HTTPQUERY_STRING_ORDERBY );
+        $orderBy = $this->service->getHost()->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_ORDERBY);
 
         if (!is_null($orderBy)) {
             $this->_checkSetQueryApplicable();
@@ -217,7 +216,7 @@ class QueryProcessor
          *     RequestDescription::getTopCount will give non-null value.
          *      
          */
-        if (!is_null($this->request->getSkipCount())|| !is_null($this->request->getTopCount())) {
+        if (!is_null($this->request->getSkipCount()) || !is_null($this->request->getTopCount())) {
             $orderBy = !is_null($orderBy) ? $orderBy . ', ' : null;
             $keys = array_keys($targetResourceType->getKeyProperties());
             //assert(!empty($keys))
@@ -260,7 +259,7 @@ class QueryProcessor
      */ 
     private function _processFilter()
     {
-        $filter = $this->service->getHost()->getQueryStringItem( ODataConstants::HTTPQUERY_STRING_FILTER );
+        $filter = $this->service->getHost()->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_FILTER);
         if (is_null($filter)) {
             return;
         }
@@ -268,16 +267,16 @@ class QueryProcessor
         $kind = $this->request->getTargetKind();
         if (!($kind == TargetKind::RESOURCE()
             || $kind == TargetKind::COMPLEX_OBJECT()
-            || $this->request->queryType == QueryType::COUNT() )
+            || $this->request->queryType == QueryType::COUNT())
         ) {
-			throw ODataException::createBadRequestError(
+            throw ODataException::createBadRequestError(
                 Messages::queryProcessorQueryFilterOptionNotApplicable()
             );
         }
         $resourceType = $this->request->getTargetResourceType();
         $expressionProvider = $this->service->getProvidersWrapper()->getExpressionProvider();
         $filterInfo = ExpressionParser2::parseExpression2($filter, $resourceType, $expressionProvider);
-        $this->request->setFilterInfo( $filterInfo );
+        $this->request->setFilterInfo($filterInfo);
 
     }
 
@@ -296,27 +295,27 @@ class QueryProcessor
     {
         $inlineCount = $this->service->getHost()->getQueryStringItem( ODataConstants::HTTPQUERY_STRING_INLINECOUNT );
 
-	    //If it's not specified, we're done
-	    if(is_null($inlineCount)) return;
+        //If it's not specified, we're done
+        if(is_null($inlineCount)) return;
 
-	    //If the service doesn't allow count requests..then throw an exception
+        //If the service doesn't allow count requests..then throw an exception
         if (!$this->service->getConfiguration()->getAcceptCountRequests()) {
-			throw ODataException::createBadRequestError(
+            throw ODataException::createBadRequestError(
                 Messages::configurationCountNotAccepted()
             );
         }
 
         $inlineCount = trim($inlineCount);
 
-	    //if it's set to none, we don't do inline counts
+        //if it's set to none, we don't do inline counts
         if ($inlineCount === ODataConstants::URI_ROWCOUNT_OFFOPTION) {
             return;
         }
 
-	    //You can't specify $count & $inlinecount together
-	    //TODO: ensure there's a test for this case see #55
+        //You can't specify $count & $inlinecount together
+        //TODO: ensure there's a test for this case see #55
         if ($this->request->queryType == QueryType::COUNT() ) {
-			throw ODataException::createBadRequestError(
+            throw ODataException::createBadRequestError(
                 Messages::queryProcessorInlineCountWithValueCount()
             );
         }
@@ -325,13 +324,13 @@ class QueryProcessor
 
 
         if ($inlineCount === ODataConstants::URI_ROWCOUNT_ALLOPTION) {
-	        $this->request->queryType = QueryType::ENTITIES_WITH_COUNT();
+            $this->request->queryType = QueryType::ENTITIES_WITH_COUNT();
 
-            $this->request->raiseMinVersionRequirement( 2, 0 );
-            $this->request->raiseResponseVersion( 2, 0 );
+            $this->request->raiseMinVersionRequirement(2, 0);
+            $this->request->raiseResponseVersion(2, 0);
 
         } else {
-			throw ODataException::createBadRequestError(
+            throw ODataException::createBadRequestError(
                 Messages::queryProcessorInvalidInlineCountOptionError()
             );
         }
@@ -355,19 +354,19 @@ class QueryProcessor
      */
     private function _processSkipToken()
     {
-        $skipToken = $this->service->getHost()->getQueryStringItem( ODataConstants::HTTPQUERY_STRING_SKIPTOKEN );
+        $skipToken = $this->service->getHost()->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_SKIPTOKEN);
         if (is_null($skipToken)) {
             return;
         }
 
         if (!$this->_pagingApplicable) {
-			throw ODataException::createBadRequestError(
+            throw ODataException::createBadRequestError(
                 Messages::queryProcessorSkipTokenNotAllowed()
             );
         }
 
         if (!$this->_isSSPagingRequired()) {
-			throw ODataException::createBadRequestError(
+            throw ODataException::createBadRequestError(
                 Messages::queryProcessorSkipTokenCannotBeAppliedForNonPagedResourceSet($this->request->getTargetResourceSetWrapper())
             );
         }
@@ -383,8 +382,8 @@ class QueryProcessor
             $skipToken
         );
         $this->request->setInternalSkipTokenInfo($internalSkipTokenInfo);
-        $this->request->raiseMinVersionRequirement( 2, 0 );
-        $this->request->raiseResponseVersion( 2, 0 );
+        $this->request->raiseMinVersionRequirement(2, 0);
+        $this->request->raiseResponseVersion(2, 0);
 
 
     }
@@ -412,7 +411,7 @@ class QueryProcessor
 
         if (!is_null($select)) {
             if (!$this->service->getConfiguration()->getAcceptProjectionRequests()) {
-				throw ODataException::createBadRequestError( Messages::configurationProjectionsNotAccepted() );
+                throw ODataException::createBadRequestError( Messages::configurationProjectionsNotAccepted() );
             }
 
             $this->_checkExpandOrSelectApplicable( ODataConstants::HTTPQUERY_STRING_SELECT );
@@ -423,19 +422,19 @@ class QueryProcessor
         // 'RootProjectionNode' is required while generating next page Link
         if ($this->_expandSelectApplicable || $this->request->isLinkUri() ) {
 
-			$rootProjectionNode = ExpandProjectionParser::parseExpandAndSelectClause(
-				 $this->request->getTargetResourceSetWrapper(),
-				 $this->request->getTargetResourceType(),
-				 $this->request->getInternalOrderByInfo(),
-				 $this->request->getSkipCount(),
-				 $this->request->getTopCount(),
-				 $expand,
-				 $select,
-				 $this->service->getProvidersWrapper()
-			);
-			if ($rootProjectionNode->isSelectionSpecified()) {
-			    $this->request->raiseMinVersionRequirement(2, 0 );
-			}
+            $rootProjectionNode = ExpandProjectionParser::parseExpandAndSelectClause(
+                    $this->request->getTargetResourceSetWrapper(),
+                    $this->request->getTargetResourceType(),
+                    $this->request->getInternalOrderByInfo(),
+                    $this->request->getSkipCount(),
+                    $this->request->getTopCount(),
+                    $expand,
+                    $select,
+                    $this->service->getProvidersWrapper()
+            );
+            if ($rootProjectionNode->isSelectionSpecified()) {
+                $this->request->raiseMinVersionRequirement(2, 0 );
+            }
 
             if ($rootProjectionNode->hasPagedExpandedResult()) {
                 $this->request->raiseResponseVersion( 2, 0 );
@@ -533,7 +532,7 @@ class QueryProcessor
             || !is_null($serviceHost->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_SKIPTOKEN))
             || !is_null($serviceHost->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_TOP))
         ) {
-			throw ODataException::createBadRequestError(
+            throw ODataException::createBadRequestError(
                 Messages::queryProcessorNoQueryOptionsApplicable()
             );
         }
@@ -551,7 +550,7 @@ class QueryProcessor
     private function _checkSetQueryApplicable()
     {
         if (!$this->_setQueryApplicable) {
-			throw ODataException::createBadRequestError(
+            throw ODataException::createBadRequestError(
                 Messages::queryProcessorQuerySetOptionsNotApplicable()
             );
         }
@@ -572,7 +571,7 @@ class QueryProcessor
     private function _checkExpandOrSelectApplicable($queryItem)
     {
         if (!$this->_expandSelectApplicable) {
-			throw ODataException::createBadRequestError(
+            throw ODataException::createBadRequestError(
                 Messages::queryProcessorSelectOrExpandOptionNotApplicable($queryItem)
             );
         }

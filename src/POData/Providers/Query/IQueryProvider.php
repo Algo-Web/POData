@@ -16,45 +16,45 @@ use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
 interface IQueryProvider
 {
 
-	/**
-	* Indicates if the QueryProvider can handle ordered paging, this means respecting order, skip, and top parameters
-	* If the query provider can not handle ordered paging, it must return the entire result set and POData will
-	* perform the ordering and paging
-	*
-	* @return Boolean True if the query provider can handle ordered paging, false if POData should perform the paging
-	*/
-	public function handlesOrderedPaging();
+    /**
+     * Indicates if the QueryProvider can handle ordered paging, this means respecting order, skip, and top parameters
+     * If the query provider can not handle ordered paging, it must return the entire result set and POData will
+     * perform the ordering and paging
+     *
+     * @return Boolean True if the query provider can handle ordered paging, false if POData should perform the paging
+     */
+    public function handlesOrderedPaging();
 
-	/**
-	* Gets the expression provider used by to compile OData expressions into expression used by this query provider.
-	*
-	* @return IExpressionProvider
-	*/
-	public function getExpressionProvider();
+    /**
+     * Gets the expression provider used by to compile OData expressions into expression used by this query provider.
+     *
+     * @return IExpressionProvider
+     */
+    public function getExpressionProvider();
 
 
-	/**
-	 * Gets collection of entities belongs to an entity set
-	 * IE: http://host/EntitySet
-	 *  http://host/EntitySet?$skip=10&$top=5&filter=Prop gt Value
-	 *
-	 * @param QueryType $queryType indicates if this is a query for a count, entities, or entities with a count
-	 * @param ResourceSet $resourceSet The entity set containing the entities to fetch
-	 * @param FilterInfo $filterInfo represents the $filter parameter of the OData query.  NULL if no $filter specified
-	 * @param mixed $orderBy sorted order if we want to get the data in some specific order
-	 * @param int $top number of records which  need to be skip
-	 * @param String $skipToken value indicating what records to skip
-	 *
-	 * @return QueryResult
-	 */
-	public function getResourceSet(
-		QueryType $queryType,
-		ResourceSet $resourceSet,
-		$filterInfo = null,
-		$orderBy = null,
-		$top = null,
-		$skipToken = null
-	);
+    /**
+     * Gets collection of entities belongs to an entity set
+     * IE: http://host/EntitySet
+     *  http://host/EntitySet?$skip=10&$top=5&filter=Prop gt Value
+     *
+     * @param QueryType $queryType indicates if this is a query for a count, entities, or entities with a count
+     * @param ResourceSet $resourceSet The entity set containing the entities to fetch
+     * @param FilterInfo $filterInfo represents the $filter parameter of the OData query.  NULL if no $filter specified
+     * @param mixed $orderBy sorted order if we want to get the data in some specific order
+     * @param int $top number of records which  need to be skip
+     * @param String $skipToken value indicating what records to skip
+     *
+     * @return QueryResult
+     */
+    public function getResourceSet(
+        QueryType $queryType,
+        ResourceSet $resourceSet,
+        $filterInfo = null,
+        $orderBy = null,
+        $top = null,
+        $skipToken = null
+    );
 
 
     /**
@@ -68,40 +68,40 @@ interface IQueryProvider
      * @return object|null Returns entity instance if found else null
      */
     public function getResourceFromResourceSet(
-	    ResourceSet $resourceSet,
+        ResourceSet $resourceSet,
         KeyDescriptor $keyDescriptor
     );
 
 
-	/**
-	 * Get related resource set for a resource
-	 * IE: http://host/EntitySet(1L)/NavigationPropertyToCollection
-	 * http://host/EntitySet?$expand=NavigationPropertyToCollection
-	 *
-	 * @param QueryType $queryType indicates if this is a query for a count, entities, or entities with a count
-	 * @param ResourceSet $sourceResourceSet The entity set containing the source entity
-	 * @param object $sourceEntityInstance The source entity instance.
-	 * @param ResourceSet      $targetResourceSet    The resource set of containing the target of the navigation property
-	 * @param ResourceProperty $targetProperty       The navigation property to retrieve
-	 * @param FilterInfo  $filter represents the $filter parameter of the OData query.  NULL if no $filter specified
-	 * @param mixed $orderBy sorted order if we want to get the data in some specific order
-	 * @param int $top number of records which  need to be skip
-	 * @param String $skip value indicating what records to skip
-	 *
-	 * @return QueryResult
-	 *
-	 */
-	public function getRelatedResourceSet(
-		QueryType $queryType,
-		ResourceSet $sourceResourceSet,
-		$sourceEntityInstance,
-		ResourceSet $targetResourceSet,
-		ResourceProperty $targetProperty,
-		$filter = null,
-		$orderBy = null,
-		$top = null,
-		$skip = null
-	);
+    /**
+     * Get related resource set for a resource
+     * IE: http://host/EntitySet(1L)/NavigationPropertyToCollection
+     * http://host/EntitySet?$expand=NavigationPropertyToCollection
+     *
+     * @param QueryType $queryType indicates if this is a query for a count, entities, or entities with a count
+     * @param ResourceSet $sourceResourceSet The entity set containing the source entity
+     * @param object $sourceEntityInstance The source entity instance.
+     * @param ResourceSet      $targetResourceSet    The resource set of containing the target of the navigation property
+     * @param ResourceProperty $targetProperty       The navigation property to retrieve
+     * @param FilterInfo  $filter represents the $filter parameter of the OData query.  NULL if no $filter specified
+     * @param mixed $orderBy sorted order if we want to get the data in some specific order
+     * @param int $top number of records which  need to be skip
+     * @param String $skip value indicating what records to skip
+     *
+     * @return QueryResult
+     *
+     */
+    public function getRelatedResourceSet(
+        QueryType $queryType,
+        ResourceSet $sourceResourceSet,
+        $sourceEntityInstance,
+        ResourceSet $targetResourceSet,
+        ResourceProperty $targetProperty,
+        $filter = null,
+        $orderBy = null,
+        $top = null,
+        $skip = null
+    );
 
     /**
      * Gets a related entity instance from an entity set identified by a key
@@ -116,7 +116,7 @@ interface IQueryProvider
      * @return object|null Returns entity instance if found else null
      */
     public function getResourceFromRelatedResourceSet(
-	    ResourceSet $sourceResourceSet,
+        ResourceSet $sourceResourceSet,
         $sourceEntityInstance,
         ResourceSet $targetResourceSet,
         ResourceProperty $targetProperty,
@@ -139,7 +139,7 @@ interface IQueryProvider
      * @return object|null The related resource if found else null
      */
     public function getRelatedResourceReference(
-	    ResourceSet $sourceResourceSet,
+        ResourceSet $sourceResourceSet,
         $sourceEntityInstance,
         ResourceSet $targetResourceSet,
         ResourceProperty $targetProperty

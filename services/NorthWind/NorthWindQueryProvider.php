@@ -40,17 +40,17 @@ class NorthWindQueryProvider implements IQueryProvider
      */
     public function __construct()
     {
-    	$connectionInfo = array("Database" => DATABASE);
+        $connectionInfo = array("Database" => DATABASE);
         if (defined('UID')) {
-        	$connectionInfo['UID'] = UID;
-        	$connectionInfo['PWD'] = PWD;    		
-    	}
+            $connectionInfo['UID'] = UID;
+            $connectionInfo['PWD'] = PWD;    		
+        }
 
         $this->_connectionHandle = sqlsrv_connect(SERVER, $connectionInfo);
-        if ( $this->_connectionHandle ) {        	
+        if ($this->_connectionHandle) {        	
         } else {
             $errorAsString = self::_getSQLSRVError();
-        	throw ODataException::createInternalServerError($errorAsString);
+            throw ODataException::createInternalServerError($errorAsString);
         }
 
         $this->_northWindSQLSRVExpressionProvider = null;
@@ -71,11 +71,11 @@ class NorthWindQueryProvider implements IQueryProvider
      */
     public function getExpressionProvider()
     {
-    	if (is_null($this->_northWindSQLSRVExpressionProvider)) {
-    		$this->_northWindSQLSRVExpressionProvider = new NorthWindDSExpressionProvider();
-    	}
+        if (is_null($this->_northWindSQLSRVExpressionProvider)) {
+            $this->_northWindSQLSRVExpressionProvider = new NorthWindDSExpressionProvider();
+        }
 
-    	return $this->_northWindSQLSRVExpressionProvider;
+        return $this->_northWindSQLSRVExpressionProvider;
     }
 
     /**
@@ -92,15 +92,15 @@ class NorthWindQueryProvider implements IQueryProvider
      * @return array(Object)
      */
     public function getResourceSet(ResourceSet $resourceSet, $filterOption = null, 
-        $select=null, $orderby=null, $top=null, $skip=null
+        $select = null, $orderby = null, $top = null, $skip = null
     ) {
-        $resourceSetName =  $resourceSet->getName();
+        $resourceSetName = $resourceSet->getName();
         if ($resourceSetName !== 'Customers' 
             && $resourceSetName !== 'Orders' 
             && $resourceSetName !== 'Order_Details'
             && $resourceSetName !== 'Employees'
         ) {
-        	throw ODataException::createInternalServerError('(NorthWindQueryProvider) Unknown resource set ' . $resourceSetName . '! Contact service provider');
+            throw ODataException::createInternalServerError('(NorthWindQueryProvider) Unknown resource set ' . $resourceSetName . '! Contact service provider');
         }
 
         if ($resourceSetName === 'Order_Details') {
@@ -114,22 +114,22 @@ class NorthWindQueryProvider implements IQueryProvider
         $stmt = sqlsrv_query($this->_connectionHandle, $query);
         if ($stmt === false) {
             $errorAsString = self::_getSQLSRVError();
-        	throw ODataException::createInternalServerError($errorAsString);
+            throw ODataException::createInternalServerError($errorAsString);
         }
         $returnResult = array();
         switch ($resourceSetName) {
-        case 'Customers':
-            $returnResult = $this->_serializeCustomers($stmt);
-            break;
-        case 'Orders':
-            $returnResult = $this->_serializeOrders($stmt);
-            break;
-        case 'Order Details':
-            $returnResult = $this->_serializeOrderDetails($stmt);
-            break;
-        case 'Employees':
-            $returnResult = $this->_serializeEmployees($stmt);
-            break;
+            case 'Customers':
+                $returnResult = $this->_serializeCustomers($stmt);
+                break;
+            case 'Orders':
+                $returnResult = $this->_serializeOrders($stmt);
+                break;
+            case 'Order Details':
+                $returnResult = $this->_serializeOrderDetails($stmt);
+                break;
+            case 'Employees':
+                $returnResult = $this->_serializeEmployees($stmt);
+                break;
         }
         sqlsrv_free_stmt($stmt);
         return $returnResult;
@@ -146,7 +146,7 @@ class NorthWindQueryProvider implements IQueryProvider
      */
     public function getResourceFromResourceSet(ResourceSet $resourceSet, KeyDescriptor $keyDescriptor)
     {   
-        $resourceSetName =  $resourceSet->getName();
+        $resourceSetName = $resourceSet->getName();
         if ($resourceSetName !== 'Customers' 
             && $resourceSetName !== 'Orders' 
             && $resourceSetName !== 'Order_Details' 
@@ -172,7 +172,7 @@ class NorthWindQueryProvider implements IQueryProvider
         $stmt = sqlsrv_query($this->_connectionHandle, $query);
         if ($stmt === false) {
             $errorAsString = self::_getSQLSRVError();
-        	throw ODataException::createInternalServerError($errorAsString);
+            throw ODataException::createInternalServerError($errorAsString);
         }
 
         //If resource not found return null to the library
@@ -181,20 +181,20 @@ class NorthWindQueryProvider implements IQueryProvider
         }
 
         $result = null;
-        while ( $record = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+        while ($record = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
             switch ($resourceSetName) {
-            case 'Customers':
-                $result = $this->_serializeCustomer($record);
-                break;
-            case 'Orders':                    
-                $result = $this->_serializeOrder($record);
-                break;
-            case 'Order Details':                    
-                $result = $this->_serializeOrderDetail($record);
-                break;
-            case 'Employees':
-                $result = $this->_serializeEmployee($record);
-                break;
+                case 'Customers':
+                    $result = $this->_serializeCustomer($record);
+                    break;
+                case 'Orders':                    
+                    $result = $this->_serializeOrder($record);
+                    break;
+                case 'Order Details':                    
+                    $result = $this->_serializeOrderDetail($record);
+                    break;
+                case 'Employees':
+                    $result = $this->_serializeEmployee($record);
+                    break;
             }
         }
         sqlsrv_free_stmt($stmt);
@@ -237,7 +237,7 @@ class NorthWindQueryProvider implements IQueryProvider
                 $stmt = sqlsrv_query($this->_connectionHandle, $query);
                 if ($stmt === false) {            
                     $errorAsString = self::_getSQLSRVError();
-        	        throw ODataException::createInternalServerError($errorAsString);
+                    throw ODataException::createInternalServerError($errorAsString);
                 }
 
                 $result = $this->_serializeOrders($stmt);
@@ -250,7 +250,7 @@ class NorthWindQueryProvider implements IQueryProvider
                 $stmt = sqlsrv_query($this->_connectionHandle, $query);
                 if ($stmt === false) {            
                     $errorAsString = self::_getSQLSRVError();
-        	        throw ODataException::createInternalServerError($errorAsString);
+                    throw ODataException::createInternalServerError($errorAsString);
                 }
 
                 $result = $this->_serializeOrderDetails($stmt);
@@ -287,7 +287,7 @@ class NorthWindQueryProvider implements IQueryProvider
         ResourceSet $targetResourceSet,
         ResourceProperty $targetProperty, 
         $filterOption = null,
-        $select=null, $orderby=null, $top=null, $skip=null
+        $select = null, $orderby = null, $top = null, $skip = null
     ) {    
         $result = array();
         $srcClass = get_class($sourceEntityInstance);
@@ -301,7 +301,7 @@ class NorthWindQueryProvider implements IQueryProvider
                 $stmt = sqlsrv_query($this->_connectionHandle, $query);
                 if ($stmt === false) {
                     $errorAsString = self::_getSQLSRVError();
-        	        throw ODataException::createInternalServerError($errorAsString);
+                    throw ODataException::createInternalServerError($errorAsString);
                 }
 
                 $result = $this->_serializeOrders($stmt);
@@ -317,7 +317,7 @@ class NorthWindQueryProvider implements IQueryProvider
                 $stmt = sqlsrv_query($this->_connectionHandle, $query);
                 if ($stmt === false) {            
                     $errorAsString = self::_getSQLSRVError();
-        	        throw ODataException::createInternalServerError($errorAsString);
+                    throw ODataException::createInternalServerError($errorAsString);
                 }
 
                 $result = $this->_serializeOrderDetails($stmt);
@@ -358,11 +358,11 @@ class NorthWindQueryProvider implements IQueryProvider
                     $stmt = sqlsrv_query($this->_connectionHandle, $query);
                     if ($stmt === false) {
                         $errorAsString = self::_getSQLSRVError();
-        	            throw ODataException::createInternalServerError($errorAsString);
+                        throw ODataException::createInternalServerError($errorAsString);
                     }
 
                     if (!sqlsrv_has_rows($stmt)) {
-                        $result =  null;
+                        $result = null;
                     }
 
                     $result = $this->_serializeCustomer(sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC));
@@ -379,11 +379,11 @@ class NorthWindQueryProvider implements IQueryProvider
                     $stmt = sqlsrv_query($this->_connectionHandle, $query);
                     if ($stmt === false) {
                         $errorAsString = self::_getSQLSRVError();
-        	            throw ODataException::createInternalServerError($errorAsString);
+                        throw ODataException::createInternalServerError($errorAsString);
                     }
                     
                     if (!sqlsrv_has_rows($stmt)) {
-                        $result =  null;
+                        $result = null;
                     }
                     
                     $result = $this->_serializeOrder(sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC));
@@ -407,7 +407,7 @@ class NorthWindQueryProvider implements IQueryProvider
     {
         $customers = array();
         while ($record = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {         
-             $customers[] = $this->_serializeCustomer($record);
+                $customers[] = $this->_serializeCustomer($record);
         }
 
         return $customers;
@@ -418,7 +418,7 @@ class NorthWindQueryProvider implements IQueryProvider
      * 
      * @param array $record each row of customer
      * 
-     * @return object
+     * @return Customer
      */
     private function _serializeCustomer($record)
     {
@@ -461,7 +461,8 @@ class NorthWindQueryProvider implements IQueryProvider
      * 
      * @param Object &$src    source
      * @param Object &$target target
-     * @param Object $tag     tag
+     * @param integer $tag     tag
+     * @param Address $target
      * 
      * @return void
      */
@@ -492,7 +493,7 @@ class NorthWindQueryProvider implements IQueryProvider
     {
         $orders = array();
         while ( $record = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
-             $orders[] = $this->_serializeOrder($record);
+                $orders[] = $this->_serializeOrder($record);
         }
 
         return $orders;
@@ -503,7 +504,7 @@ class NorthWindQueryProvider implements IQueryProvider
      * 
      * @param array $record each row of customer
      * 
-     * @return object
+     * @return Order
      */
     private function _serializeOrder($record)
     {
@@ -511,9 +512,9 @@ class NorthWindQueryProvider implements IQueryProvider
         $order->OrderID = $record['OrderID'];
         $order->CustomerID = $record['CustomerID'];
         $order->EmployeeID = $record['EmployeeID'];
-        $order->OrderDate = !is_null($record['OrderDate']) ? $record['OrderDate']->format('Y-m-d\TH:i:s'): null;
-        $order->RequiredDate = !is_null($record['RequiredDate']) ? $record['RequiredDate']->format('Y-m-d\TH:i:s'): null;
-        $order->ShippedDate = !is_null($record['ShippedDate']) ? $record['ShippedDate']->format('Y-m-d\TH:i:s'): null;
+        $order->OrderDate = !is_null($record['OrderDate']) ? $record['OrderDate']->format('Y-m-d\TH:i:s') : null;
+        $order->RequiredDate = !is_null($record['RequiredDate']) ? $record['RequiredDate']->format('Y-m-d\TH:i:s') : null;
+        $order->ShippedDate = !is_null($record['ShippedDate']) ? $record['ShippedDate']->format('Y-m-d\TH:i:s') : null;
         $order->ShipVia = $record['ShipVia'];
         $order->Freight = $record['Freight'];
         $order->ShipName = $record['ShipName'];
@@ -536,7 +537,7 @@ class NorthWindQueryProvider implements IQueryProvider
     {
         $employees = array();
         while ($record = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
-             $employees[] = $this->_serializeEmployee($record);
+                $employees[] = $this->_serializeEmployee($record);
         }
 
         return $employees;
@@ -547,7 +548,7 @@ class NorthWindQueryProvider implements IQueryProvider
      * 
      * @param array $record each row of employee
      * 
-     * @return object
+     * @return Employee
      */
     private function _serializeEmployee($record)
     {
@@ -557,8 +558,8 @@ class NorthWindQueryProvider implements IQueryProvider
         $employee->LastName = $record['LastName'];
         $employee->Title = $record['Title'];
         $employee->TitleOfCourtesy = $record['TitleOfCourtesy'];
-        $employee->BirthDate = !is_null($record['BirthDate']) ? $record['BirthDate']->format('Y-m-d\TH:i:s'): null;
-        $employee->HireDate = !is_null($record['HireDate']) ? $record['HireDate']->format('Y-m-d\TH:i:s'): null;        
+        $employee->BirthDate = !is_null($record['BirthDate']) ? $record['BirthDate']->format('Y-m-d\TH:i:s') : null;
+        $employee->HireDate = !is_null($record['HireDate']) ? $record['HireDate']->format('Y-m-d\TH:i:s') : null;        
         $employee->Address = $record['Address'];
         $employee->City = $record['City'];
         $employee->Region = $record['Region'];
@@ -569,7 +570,7 @@ class NorthWindQueryProvider implements IQueryProvider
         $employee->Notes = $record['Notes'];
         $employee->ReportsTo = $record['ReportsTo'];
         //$employee->Photo = $record['Photo'];
-        $employee->Emails = array ($employee->FirstName . '@hotmail.com', $employee->FirstName . '@live.com');
+        $employee->Emails = array($employee->FirstName . '@hotmail.com', $employee->FirstName . '@live.com');
         return $employee;
     }
 
@@ -595,7 +596,7 @@ class NorthWindQueryProvider implements IQueryProvider
      * 
      * @param array $record each row of order detail
      * 
-     * @return object
+     * @return Order_Details
      */
     private function _serializeOrderDetail($record)
     {
@@ -616,10 +617,10 @@ class NorthWindQueryProvider implements IQueryProvider
      */
     private static function _getSQLSRVError()
     {
-    	$result = null;
-    	$errors = sqlsrv_errors();
-    	self::_getSQLSRVError1($errors, $result);
-    	return $result;
+        $result = null;
+        $errors = sqlsrv_errors();
+        self::_getSQLSRVError1($errors, $result);
+        return $result;
     }
     
     /**
@@ -630,13 +631,13 @@ class NorthWindQueryProvider implements IQueryProvider
      */
     private static function _getSQLSRVError1($errors, &$result)
     {
-    	if (is_array($errors)) {
-    		foreach ($errors as $error) {
-    			self::_getSQLSRVError1($error, $result);
-    		}
-    	} else {
-    		$result .= $errors;
-    	}
+        if (is_array($errors)) {
+            foreach ($errors as $error) {
+                self::_getSQLSRVError1($error, $result);
+            }
+        } else {
+            $result .= $errors;
+        }
     }
 
     /**

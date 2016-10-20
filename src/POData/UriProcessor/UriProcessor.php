@@ -15,7 +15,6 @@ use POData\UriProcessor\ResourcePathProcessor\SegmentParser\SegmentDescriptor;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetSource;
 use POData\IService;
-use POData\Common\Url;
 use POData\Common\Messages;
 use POData\Common\ODataException;
 use POData\Common\InvalidOperationException;
@@ -99,7 +98,7 @@ class UriProcessor
         $absoluteServiceUri = $service->getHost()->getAbsoluteServiceUri();
         
         if (!$absoluteServiceUri->isBaseOf($absoluteRequestUri)) {
-			throw ODataException::createInternalServerError(
+            throw ODataException::createInternalServerError(
                 Messages::uriProcessorRequestUriDoesNotHaveTheRightBaseUri(
                     $absoluteRequestUri->getUrlAsString(), 
                     $absoluteServiceUri->getUrlAsString()
@@ -109,13 +108,13 @@ class UriProcessor
 
         $uriProcessor = new UriProcessor($service);
         //Parse the resource path part of the request Uri.
-		$uriProcessor->request = ResourcePathProcessor::process($service);
+        $uriProcessor->request = ResourcePathProcessor::process($service);
 
-	    $uriProcessor->request->setUriProcessor($uriProcessor);
+        $uriProcessor->request->setUriProcessor($uriProcessor);
 
 
         //Parse the query string options of the request Uri.
-        QueryProcessor::process( $uriProcessor->request, $service );
+        QueryProcessor::process($uriProcessor->request, $service);
 
         return $uriProcessor;
     }
@@ -144,11 +143,9 @@ class UriProcessor
         $requestMethod = $operationContext->incomingRequest()->getMethod();
         if ($requestMethod == HTTPRequestMethod::GET()) {
             $this->executeGet();
-        }
-        elseif ($requestMethod == HTTPRequestMethod::PUT()) {
+        } elseif ($requestMethod == HTTPRequestMethod::PUT()) {
             $this->executePut();
-        }
-        else {
+        } else {
             throw ODataException::createNotImplementedError(Messages::onlyReadSupport($requestMethod));
         }
     }
@@ -166,7 +163,7 @@ class UriProcessor
      */
     protected function executePut()
     {
-        return $this->executeBase(function ($uriProcessor, $segment) {
+        return $this->executeBase(function($uriProcessor, $segment) {
             $requestMethod = $uriProcessor->service->getOperationContext()->incomingRequest()->getMethod();
             $resourceSet = $segment->getTargetResourceSetWrapper();
             $keyDescriptor = $segment->getKeyDescriptor();
@@ -198,11 +195,11 @@ class UriProcessor
 
             $requestTargetKind = $segment->getTargetKind();
 
-	        if ($segment->getTargetSource() == TargetSource::ENTITY_SET) {
+            if ($segment->getTargetSource() == TargetSource::ENTITY_SET) {
                 $this->handleSegmentTargetsToResourceSet($segment);
             } else if ($requestTargetKind == TargetKind::RESOURCE()) {
                 if (is_null($segment->getPrevious()->getResult())) {
-					throw ODataException::createResourceNotFoundError(
+                    throw ODataException::createResourceNotFoundError(
                         $segment->getPrevious()->getIdentifier()
                     );
                 }
@@ -217,7 +214,7 @@ class UriProcessor
             } else {
                 if ($requestTargetKind == TargetKind::MEDIA_RESOURCE()) {
                     if (is_null($segment->getPrevious()->getResult())) {
-						throw ODataException::createResourceNotFoundError(
+                        throw ODataException::createResourceNotFoundError(
                             $segment->getPrevious()->getIdentifier()
                         );
                     }
@@ -230,14 +227,14 @@ class UriProcessor
                     break;
                 }
 
-	            $value = $segment->getPrevious()->getResult();
+                $value = $segment->getPrevious()->getResult();
                 while (!is_null($segment)) {
-	                //TODO: what exactly is this doing here?  Once a null's found it seems everything will be null
+                    //TODO: what exactly is this doing here?  Once a null's found it seems everything will be null
                     if (!is_null($value)) {
                         $value = null;
                     } else {
                         try {
-	                        //see #88
+                            //see #88
                             $property = new \ReflectionProperty($value, $segment->getIdentifier());
                             $value = $property->getValue($value);
                         } catch (\ReflectionException $reflectionException) {
@@ -262,9 +259,9 @@ class UriProcessor
             }
         }
 
-         // Apply $select and $expand options to result set, this function will be always applied
-         // irrespective of return value of IDSQP2::canApplyQueryOptions which means library will
-         // not delegate $expand/$select operation to IDSQP2 implementation
+            // Apply $select and $expand options to result set, this function will be always applied
+            // irrespective of return value of IDSQP2::canApplyQueryOptions which means library will
+            // not delegate $expand/$select operation to IDSQP2 implementation
         $this->handleExpansion();
     }
 
@@ -275,7 +272,7 @@ class UriProcessor
      * @return void
      *
      */
-    private function handleSegmentTargetsToResourceSet( SegmentDescriptor $segment ) {
+    private function handleSegmentTargetsToResourceSet(SegmentDescriptor $segment) {
         if ($segment->isSingleResult()) {
             $entityInstance = $this->providers->getResourceFromResourceSet(
                 $segment->getTargetResourceSetWrapper(),
@@ -287,7 +284,7 @@ class UriProcessor
         } else {
 
             $queryResult = $this->providers->getResourceSet(
-	            $this->request->queryType,
+                $this->request->queryType,
                 $segment->getTargetResourceSetWrapper(),
                 $this->request->getFilterInfo(),
                 $this->request->getInternalOrderByInfo(),
@@ -324,13 +321,13 @@ class UriProcessor
                 $segment->setResult($entityInstance);
             } else {
                 $queryResult = $this->providers->getRelatedResourceSet(
-	                $this->request->queryType,
+                    $this->request->queryType,
                     $segment->getPrevious()->getTargetResourceSetWrapper(),
                     $segment->getPrevious()->getResult(),
                     $segment->getTargetResourceSetWrapper(),
                     $segment->getProjectedProperty(),
                     $this->request->getFilterInfo(),
-	                //TODO: why are these null?  see #98
+                    //TODO: why are these null?  see #98
                     null, // $orderby
                     null, // $top
                     null  // $skip
@@ -367,19 +364,19 @@ class UriProcessor
             return;
         }
 
-	    //TODO: I'm not really happy with this..i think i'd rather keep the result the QueryResult
-	    //not even bother with the setCountValue stuff (shouldn't counts be on segments?)
-	    //and just work with the QueryResult in the object model serializer
-	    $result = $segment->getResult();
+        //TODO: I'm not really happy with this..i think i'd rather keep the result the QueryResult
+        //not even bother with the setCountValue stuff (shouldn't counts be on segments?)
+        //and just work with the QueryResult in the object model serializer
+        $result = $segment->getResult();
 
-	    if(!$result instanceof QueryResult){
-		    //If the segment isn't a query result, then there's no paging or counting to be done
-		    return;
+        if(!$result instanceof QueryResult){
+            //If the segment isn't a query result, then there's no paging or counting to be done
+            return;
         }
 
 
         // Note $inlinecount=allpages means include the total count regardless of paging..so we set the counts first
-	    // regardless if POData does the paging or not.
+        // regardless if POData does the paging or not.
         if ($this->request->queryType == QueryType::ENTITIES_WITH_COUNT()) {
             if ($this->providers->handlesOrderedPaging()) {
                 $this->request->setCountValue($result->count);
@@ -388,57 +385,57 @@ class UriProcessor
             }
         }
 
-	    //Have POData perform paging if necessary
-	    if(!$this->providers->handlesOrderedPaging() && !empty($result->results)){
-			$result->results = $this->performPaging($result->results);
-	    }
+        //Have POData perform paging if necessary
+        if(!$this->providers->handlesOrderedPaging() && !empty($result->results)){
+            $result->results = $this->performPaging($result->results);
+        }
 
-	    //a bit surprising, but $skip and $top affects $count so update it here, not above
-	    //IE  data.svc/Collection/$count?$top=10 returns 10 even if Collection has 11+ entries
-	    if ($this->request->queryType == QueryType::COUNT()) {
-		    if ($this->providers->handlesOrderedPaging()) {
-			    $this->request->setCountValue($result->count);
-		    } else {
-			    $this->request->setCountValue(count($result->results));
-		    }
-	    }
+        //a bit surprising, but $skip and $top affects $count so update it here, not above
+        //IE  data.svc/Collection/$count?$top=10 returns 10 even if Collection has 11+ entries
+        if ($this->request->queryType == QueryType::COUNT()) {
+            if ($this->providers->handlesOrderedPaging()) {
+                $this->request->setCountValue($result->count);
+            } else {
+                $this->request->setCountValue(count($result->results));
+            }
+        }
 
         $segment->setResult($result->results);
     }
 
-	/**
-	 * If the provider does not perform the paging (ordering, top, skip) then this method does it
-	 *
-	 * @param array $result
-	 * @return array
-	 */
-	private function performPaging(array $result)
-	{
-		//Apply (implicit and explicit) $orderby option
-		$internalOrderByInfo = $this->request->getInternalOrderByInfo();
-		if (!is_null($internalOrderByInfo)) {
-			$orderByFunction = $internalOrderByInfo->getSorterFunction()->getReference();
-			usort($result, $orderByFunction);
-		}
+    /**
+     * If the provider does not perform the paging (ordering, top, skip) then this method does it
+     *
+     * @param array $result
+     * @return array
+     */
+    private function performPaging(array $result)
+    {
+        //Apply (implicit and explicit) $orderby option
+        $internalOrderByInfo = $this->request->getInternalOrderByInfo();
+        if (!is_null($internalOrderByInfo)) {
+            $orderByFunction = $internalOrderByInfo->getSorterFunction()->getReference();
+            usort($result, $orderByFunction);
+        }
 
-		//Apply $skiptoken option
-		$internalSkipTokenInfo = $this->request->getInternalSkipTokenInfo();
-		if (!is_null($internalSkipTokenInfo)) {
-			$matchingIndex = $internalSkipTokenInfo->getIndexOfFirstEntryInTheNextPage($result);
-			$result = array_slice($result, $matchingIndex);
-		}
+        //Apply $skiptoken option
+        $internalSkipTokenInfo = $this->request->getInternalSkipTokenInfo();
+        if (!is_null($internalSkipTokenInfo)) {
+            $matchingIndex = $internalSkipTokenInfo->getIndexOfFirstEntryInTheNextPage($result);
+            $result = array_slice($result, $matchingIndex);
+        }
 
-		//Apply $top and $skip option
-		if (!empty($result)) {
-			$top  = $this->request->getTopCount();
-			$skip = $this->request->getSkipCount();
-			if(is_null($skip)) $skip = 0;
+        //Apply $top and $skip option
+        if (!empty($result)) {
+            $top  = $this->request->getTopCount();
+            $skip = $this->request->getSkipCount();
+            if(is_null($skip)) $skip = 0;
 
-			$result = array_slice($result, $skip, $top);
-		}
+            $result = array_slice($result, $skip, $top);
+        }
 
-		return $result;
-	}
+        return $result;
+    }
 
 
     /**
@@ -481,7 +478,7 @@ class UriProcessor
                         $resourceSetOfProjectedProperty = $expandedProjectionNode->getResourceSetWrapper()->getResourceSet();
                         $projectedProperty1 = $expandedProjectionNode->getResourceProperty();
                         $result1 = $this->providers->getRelatedResourceSet(
-	                        QueryType::ENTITIES(), //it's always entities for an expansion
+                            QueryType::ENTITIES(), //it's always entities for an expansion
                             $currentResourceSet,
                             $entry,
                             $resourceSetOfProjectedProperty,
@@ -540,7 +537,7 @@ class UriProcessor
                     $resourceSetOfProjectedProperty2 = $expandedProjectionNode->getResourceSetWrapper()->getResourceSet();
                     $projectedProperty4 = $expandedProjectionNode->getResourceProperty();
                     $result1 = $this->providers->getRelatedResourceSet(
-	                    QueryType::ENTITIES(), //it's always entities for an expansion
+                        QueryType::ENTITIES(), //it's always entities for an expansion
                         $currentResourceSet2,
                         $result,
                         $resourceSetOfProjectedProperty2,
@@ -639,7 +636,7 @@ class UriProcessor
      * @throws InvalidOperationException If this function invoked with non-navigation
      *                                   property instance.
      */
-    private function _pushSegmentForNavigationProperty(ResourceProperty &$resourceProperty)
+    private function _pushSegmentForNavigationProperty(ResourceProperty & $resourceProperty)
     {
         if ($resourceProperty->getTypeKind() == ResourceTypeKind::ENTITY) {
             $this->assert(
@@ -734,7 +731,7 @@ class UriProcessor
      *
      * @return bool true if the segment was push, false otherwise
      */
-    private function _pushSegment($segmentName, ResourceSetWrapper &$resourceSetWrapper)
+    private function _pushSegment($segmentName, ResourceSetWrapper & $resourceSetWrapper)
     {
         $rootProjectionNode = $this->request->getRootProjectionNode();
         if (!is_null($rootProjectionNode) 

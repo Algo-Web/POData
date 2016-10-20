@@ -171,7 +171,7 @@ class Messages
      */
     public static function expressionParser2NonPrimitivePropertyNotAllowed()
     {
-    	return 'This data service does not support non-primitive types in the expression';
+        return 'This data service does not support non-primitive types in the expression';
     }
 
     /** 
@@ -604,7 +604,7 @@ class Messages
      */
     public static function providersWrapperInvalidExpressionProviderInstance()
     {
-    	return 'The value returned by IQueryProvider::getExpressionProvider method must be an implementation of IExpressionProvider';
+        return 'The value returned by IQueryProvider::getExpressionProvider method must be an implementation of IExpressionProvider';
     }
 
     /**
@@ -719,7 +719,7 @@ class Messages
      */
     public static function providersWrapperIDSQPMethodReturnsUnExpectedType($entityTypeName, $methodName)
     {
-        return 'The implementation of the method ' . $methodName . ' must return an instance of type described by resource set\'s type(' . $entityTypeName .') or null if resource does not exists';
+        return 'The implementation of the method ' . $methodName . ' must return an instance of type described by resource set\'s type(' . $entityTypeName . ') or null if resource does not exists';
     }
 
     /**
@@ -1976,7 +1976,7 @@ class Messages
      */
     public static function objectModelSerializerLoopsNotAllowedInComplexTypes($complexPropertyName)
     {
-        return 'A circular loop was detected while serializing the property \''. $complexPropertyName . '\'. You must make sure that loops are not present in properties that return a bag or complex type.';
+        return 'A circular loop was detected while serializing the property \'' . $complexPropertyName . '\'. You must make sure that loops are not present in properties that return a bag or complex type.';
     }
 
     /**

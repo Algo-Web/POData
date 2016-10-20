@@ -54,62 +54,62 @@ class IndentedTextWriter
     {
         $this->outputTabs();
         $this->_write($value);
-	    return $this;
+        return $this;
     }
 
-	/**
-	 * Writes a new line character to the text stream
-	 *
-	 * @return IndentedTextWriter
-	 */
-	public function writeLine()
-	{
-		$this->_write("\n");
-		$this->tabsPending = true;
-		return $this;
-	}
+    /**
+     * Writes a new line character to the text stream
+     *
+     * @return IndentedTextWriter
+     */
+    public function writeLine()
+    {
+        $this->_write("\n");
+        $this->tabsPending = true;
+        return $this;
+    }
 
-	/**
-	 * Writes the given text trimmed with no indentation
-	 *
-	 * @param string $value text to be written
-	 *
-	 * @return IndentedTextWriter
-	 */
-	public function writeTrimmed($value)
-	{
-		$this->_write(trim($value));
-		return $this;
-	}
+    /**
+     * Writes the given text trimmed with no indentation
+     *
+     * @param string $value text to be written
+     *
+     * @return IndentedTextWriter
+     */
+    public function writeTrimmed($value)
+    {
+        $this->_write(trim($value));
+        return $this;
+    }
 
-	/**
-	 * Increases the current indent setting by 1
-	 * @return IndentedTextWriter
-	 */
-	public function increaseIndent()
-	{
-		$this->indentLevel++;
-		return $this;
-	}
+    /**
+     * Increases the current indent setting by 1
+     * @return IndentedTextWriter
+     */
+    public function increaseIndent()
+    {
+        $this->indentLevel++;
+        return $this;
+    }
 
-	/**
-	 * Decreases the current indent setting by 1, never going below 0
-	 * @return IndentedTextWriter
-	 */
-	public function decreaseIndent()
-	{
-		if($this->indentLevel > 0) $this->indentLevel--;
-		return $this;
-	}
+    /**
+     * Decreases the current indent setting by 1, never going below 0
+     * @return IndentedTextWriter
+     */
+    public function decreaseIndent()
+    {
+        if($this->indentLevel > 0) $this->indentLevel--;
+        return $this;
+    }
 
 
-	/**
-	 * @return string the current written text
-	 */
-	public function getResult()
-	{
-		return $this->result;
-	}
+    /**
+     * @return string the current written text
+     */
+    public function getResult()
+    {
+        return $this->result;
+    }
    
     /**
      * Writes the tabs depending on the indent level

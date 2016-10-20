@@ -16,11 +16,8 @@ use POData\Providers\Metadata\Type\Single;
 use POData\Providers\Metadata\Type\Guid;
 use POData\Providers\Metadata\Type\Binary;
 use POData\Providers\Metadata\Type\Null1;
-use POData\Providers\Metadata\Type\INavigationType;
-use POData\Providers\Metadata\Type\TypeCode;
 use POData\Providers\Metadata\Type\IType;
 use POData\Providers\Metadata\ResourceType;
-use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\AbstractExpression;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\PropertyAccessExpression;
@@ -202,7 +199,7 @@ class ExpressionParser
             $this->_lexer->nextToken();
             $right = $this->_parseComparison();
             FunctionDescription::verifyLogicalOpArguments($logicalOpToken, $left, $right);
-            $left = new LogicalExpression($left, $right, ExpressionType::AND_LOGICAL );
+            $left = new LogicalExpression($left, $right, ExpressionType::AND_LOGICAL);
         }
 
         $this->_recurseLeave();
@@ -250,7 +247,7 @@ class ExpressionParser
             if ($additiveToken->identifierIs(ODataConstants::KEYWORD_ADD)) {
                 $left = new ArithmeticExpression($left, $right, ExpressionType::ADD, $opReturnType);
             } else {
-                $left = new ArithmeticExpression($left, $right, ExpressionType::SUBTRACT, $opReturnType );
+                $left = new ArithmeticExpression($left, $right, ExpressionType::SUBTRACT, $opReturnType);
             }
         }
 
@@ -363,37 +360,37 @@ class ExpressionParser
     private function _parsePrimaryStart()
     {
         switch ($this->_lexer->getCurrentToken()->Id) {
-        case ExpressionTokenId::BOOLEAN_LITERAL:
-            return $this->_parseTypedLiteral(new Boolean());
-        case ExpressionTokenId::DATETIME_LITERAL:
-            return $this->_parseTypedLiteral(new DateTime());
-        case ExpressionTokenId::DECIMAL_LITERAL:
-            return $this->_parseTypedLiteral(new Decimal());
-        case ExpressionTokenId::NULL_LITERAL:
-            return $this->_parseNullLiteral();
-        case ExpressionTokenId::IDENTIFIER:
-            return $this->_parseIdentifier();
-        case ExpressionTokenId::STRING_LITERAL:
-            return $this->_parseTypedLiteral(new StringType());
-        case ExpressionTokenId::INT64_LITERAL:
-            return $this->_parseTypedLiteral(new Int64());
-        case ExpressionTokenId::INTEGER_LITERAL:
-            return $this->_parseTypedLiteral(new Int32());
-        case ExpressionTokenId::DOUBLE_LITERAL:
-            return $this->_parseTypedLiteral(new Double());
-        case ExpressionTokenId::SINGLE_LITERAL:
-            return $this->_parseTypedLiteral(new Single());
-        case ExpressionTokenId::GUID_LITERAL:
-            return $this->_parseTypedLiteral(new Guid());
-        case ExpressionTokenId::BINARY_LITERAL:
-            throw new NotImplementedException(
-                'Support for binary is not implemented'
-            );
-            //return $this->_parseTypedLiteral(new Binary());
-        case ExpressionTokenId::OPENPARAM:
-            return $this->_parseParenExpression();
-        default:
-            throw ODataException::createSyntaxError("Expression expected.");
+            case ExpressionTokenId::BOOLEAN_LITERAL:
+                return $this->_parseTypedLiteral(new Boolean());
+            case ExpressionTokenId::DATETIME_LITERAL:
+                return $this->_parseTypedLiteral(new DateTime());
+            case ExpressionTokenId::DECIMAL_LITERAL:
+                return $this->_parseTypedLiteral(new Decimal());
+            case ExpressionTokenId::NULL_LITERAL:
+                return $this->_parseNullLiteral();
+            case ExpressionTokenId::IDENTIFIER:
+                return $this->_parseIdentifier();
+            case ExpressionTokenId::STRING_LITERAL:
+                return $this->_parseTypedLiteral(new StringType());
+            case ExpressionTokenId::INT64_LITERAL:
+                return $this->_parseTypedLiteral(new Int64());
+            case ExpressionTokenId::INTEGER_LITERAL:
+                return $this->_parseTypedLiteral(new Int32());
+            case ExpressionTokenId::DOUBLE_LITERAL:
+                return $this->_parseTypedLiteral(new Double());
+            case ExpressionTokenId::SINGLE_LITERAL:
+                return $this->_parseTypedLiteral(new Single());
+            case ExpressionTokenId::GUID_LITERAL:
+                return $this->_parseTypedLiteral(new Guid());
+            case ExpressionTokenId::BINARY_LITERAL:
+                throw new NotImplementedException(
+                    'Support for binary is not implemented'
+                );
+                //return $this->_parseTypedLiteral(new Binary());
+            case ExpressionTokenId::OPENPARAM:
+                return $this->_parseParenExpression();
+            default:
+                throw ODataException::createSyntaxError("Expression expected.");
         }
     }
 
@@ -670,7 +667,7 @@ class ExpressionParser
         $dateTime = new DateTime();
         if ($left->typeIs($dateTime) && $right->typeIs($dateTime)) {
             $dateTimeCmpFunctions = FunctionDescription::dateTimeComparisonFunctions();
-            $left = new FunctionCallExpression( $dateTimeCmpFunctions[0], array($left, $right));
+            $left = new FunctionCallExpression($dateTimeCmpFunctions[0], array($left, $right));
             $right = new ConstantExpression(0, new Int32());
         }
 
@@ -690,81 +687,81 @@ class ExpressionParser
 
         $null = new Null1();
         if ($left->typeIs($null) || $right->typeIs($null)) {
-          // If the end user is responsible for implementing IExpressionProvider
-          // then the sub-tree for a nullability check would be:
-          //
-          //          RelationalExpression(EQ/NE)
-          //                    |
-          //               ------------
-          //               |           |
-          //               |           |
-          //            CustomerID    NULL
-          //
-          // Otherwise (In case of default PHPExpressionProvider):
-          //          
-          //  CustomerID eq null
-          //  ==================
-          //
-          //              FunctionCallExpression(is_null)
-          //                       |
-          //                       |- Signature => bool (typeof(CustomerID))
-          //                       |- args => {CustomerID}
-          //
-          //
-          //  CustomerID ne null
-          //  ==================
-          //
-          //              UnaryExpression (not)
-          //                       |
-          //              FunctionCallExpression(is_null)
-          //                       |
-          //                       |- Signature => bool (typeof(CustomerID))
-          //                       |- args => {CustomerID}
-          //
+            // If the end user is responsible for implementing IExpressionProvider
+            // then the sub-tree for a nullability check would be:
+            //
+            //          RelationalExpression(EQ/NE)
+            //                    |
+            //               ------------
+            //               |           |
+            //               |           |
+            //            CustomerID    NULL
+            //
+            // Otherwise (In case of default PHPExpressionProvider):
+            //          
+            //  CustomerID eq null
+            //  ==================
+            //
+            //              FunctionCallExpression(is_null)
+            //                       |
+            //                       |- Signature => bool (typeof(CustomerID))
+            //                       |- args => {CustomerID}
+            //
+            //
+            //  CustomerID ne null
+            //  ==================
+            //
+            //              UnaryExpression (not)
+            //                       |
+            //              FunctionCallExpression(is_null)
+            //                       |
+            //                       |- Signature => bool (typeof(CustomerID))
+            //                       |- args => {CustomerID}
+            //
             if ($isPHPExpressionProvider) {
                 $arg = $left->typeIs($null) ? $right : $left;
                 $isNullFunctionDescription = new FunctionDescription('is_null', new Boolean(), array($arg->getType()));
                 switch ($expressionToken->Text) {
-	                case ODataConstants::KEYWORD_EQUAL:
-	                    return new FunctionCallExpression($isNullFunctionDescription, array($arg));
-	                    break;
+                    case ODataConstants::KEYWORD_EQUAL:
+                        return new FunctionCallExpression($isNullFunctionDescription, array($arg));
+                        break;
 
-	                case ODataConstants::KEYWORD_NOT_EQUAL:
-	                    return new UnaryExpression(
-	                        new FunctionCallExpression($isNullFunctionDescription, array($arg)),
-	                        ExpressionType::NOT_LOGICAL,
-	                        new Boolean()
-	                    );
-	                    break;
+                    case ODataConstants::KEYWORD_NOT_EQUAL:
+                        return new UnaryExpression(
+                            new FunctionCallExpression($isNullFunctionDescription, array($arg)),
+                            ExpressionType::NOT_LOGICAL,
+                            new Boolean()
+                        );
+                        break;
                 }
             }
         }
 
         switch ($expressionToken->Text) {
-	        case ODataConstants::KEYWORD_EQUAL:
-	            return new RelationalExpression(
-	                $left, $right, ExpressionType::EQUAL
-	            );
-	        case ODataConstants::KEYWORD_NOT_EQUAL:
-	            return new RelationalExpression(
-	                $left, $right, ExpressionType::NOTEQUAL
-	            );
-	        case ODataConstants::KEYWORD_GREATERTHAN:
-	            return new RelationalExpression(
-	                $left, $right, ExpressionType::GREATERTHAN
-	            );
-	        case ODataConstants::KEYWORD_GREATERTHAN_OR_EQUAL:
-	            return new RelationalExpression(
-	                $left, $right, ExpressionType::GREATERTHAN_OR_EQUAL
-	            );
-	        case ODataConstants::KEYWORD_LESSTHAN:
-	            return new RelationalExpression(
-	                $left, $right, ExpressionType::LESSTHAN
-	            );
-	        default:
-	            return new RelationalExpression(
-	                $left, $right, ExpressionType::LESSTHAN_OR_EQUAL
-	            );
+            case ODataConstants::KEYWORD_EQUAL:
+                return new RelationalExpression(
+                    $left, $right, ExpressionType::EQUAL
+                );
+            case ODataConstants::KEYWORD_NOT_EQUAL:
+                return new RelationalExpression(
+                    $left, $right, ExpressionType::NOTEQUAL
+                );
+            case ODataConstants::KEYWORD_GREATERTHAN:
+                return new RelationalExpression(
+                    $left, $right, ExpressionType::GREATERTHAN
+                );
+            case ODataConstants::KEYWORD_GREATERTHAN_OR_EQUAL:
+                return new RelationalExpression(
+                    $left, $right, ExpressionType::GREATERTHAN_OR_EQUAL
+                );
+            case ODataConstants::KEYWORD_LESSTHAN:
+                return new RelationalExpression(
+                    $left, $right, ExpressionType::LESSTHAN
+                );
+            default:
+                return new RelationalExpression(
+                    $left, $right, ExpressionType::LESSTHAN_OR_EQUAL
+                );
         }
     }
 
