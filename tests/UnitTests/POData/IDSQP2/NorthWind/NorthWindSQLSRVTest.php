@@ -43,7 +43,7 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         $requestDescription = $uriProcessor->getRequest();
         $this->assertNotNull($requestDescription);
 
-        $filterInfo = $requestDescription->getFilterInfo();;
+        $filterInfo = $requestDescription->getFilterInfo();
         $this->assertNotNull($filterInfo);
 
         $sqlexpression = $filterInfo->getExpressionAsString();
