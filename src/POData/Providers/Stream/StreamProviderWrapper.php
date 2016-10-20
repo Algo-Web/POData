@@ -104,7 +104,7 @@ class StreamProviderWrapper
             }
 
             $this->_verifyContentTypeOrETagModified('IDSSP::getReadStream');
-        } catch(ODataException $ex) {
+        } catch (ODataException $ex) {
             //Check for status code 304 (stream Not Modified)
             if ($ex->getStatusCode() == 304) {
                 $eTag = $this->getStreamETag($entity, $resourceStreamInfo);

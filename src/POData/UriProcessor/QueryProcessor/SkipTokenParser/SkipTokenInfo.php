@@ -2,8 +2,6 @@
 
 namespace POData\UriProcessor\QueryProcessor\SkipTokenParser;
 
-use POData\Common\Messages;
-use POData\Providers\Metadata\ResourceType;
 use POData\UriProcessor\QueryProcessor\OrderByParser\OrderByInfo;
 
 /**
@@ -40,7 +38,7 @@ class SkipTokenInfo
      * @param array(int,(array(string,IType))) $orderByValuesInSkipToken Collection of values in the skiptoken corrosponds
      *                                                                   to the orderby path segments.
      */
-    public function __construct(OrderByInfo &$orderByInfo, $orderByValuesInSkipToken)
+    public function __construct(OrderByInfo & $orderByInfo, $orderByValuesInSkipToken)
     {
         $this->_orderByInfo = $orderByInfo;
         $this->_orderByValuesInSkipToken = $orderByValuesInSkipToken;

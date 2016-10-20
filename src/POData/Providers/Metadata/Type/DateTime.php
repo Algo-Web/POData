@@ -125,7 +125,7 @@ class DateTime implements IType
      * 
      * @param string $dateTime datetime to get the year from
      * 
-     * @return int
+     * @return string
      */
     public static function year($dateTime)
     {
@@ -138,7 +138,7 @@ class DateTime implements IType
      * 
      * @param string $dateTime datetime to get the month from
      * 
-     * @return int
+     * @return string
      */
     public static function month($dateTime)
     {
@@ -151,7 +151,7 @@ class DateTime implements IType
      * 
      * @param string $dateTime datetime to get the day from
      * 
-     * @return int
+     * @return string
      */
     public static function day($dateTime)
     {
@@ -164,7 +164,7 @@ class DateTime implements IType
      * 
      * @param string $dateTime datetime to get the hour from
      * 
-     * @return int
+     * @return string
      */
     public static function hour($dateTime)
     {
@@ -177,7 +177,7 @@ class DateTime implements IType
      * 
      * @param string $dateTime datetime to get the minute from
      * 
-     * @return int
+     * @return string
      */
     public static function minute($dateTime)
     {
@@ -190,7 +190,7 @@ class DateTime implements IType
      * 
      * @param string $dateTime datetime to get the second from
      * 
-     * @return int
+     * @return string
      */
     public static function second($dateTime)
     {

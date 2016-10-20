@@ -1,20 +1,9 @@
 <?php
 
-use POData\Providers\Metadata\ResourceStreamInfo;
-use POData\Providers\Metadata\ResourceAssociationSetEnd;
-use POData\Providers\Metadata\ResourceAssociationSet;
-use POData\Common\NotImplementedException;
 use POData\Providers\Metadata\Type\EdmPrimitiveType;
-use POData\Providers\Metadata\ResourceSet;
-use POData\Providers\Metadata\ResourcePropertyKind;
-use POData\Providers\Metadata\ResourceProperty;
-use POData\Providers\Metadata\ResourceTypeKind;
-use POData\Providers\Metadata\ResourceType;
 use POData\Common\InvalidOperationException;
-use POData\Providers\Metadata\IMetadataProvider;
 require_once 'POData\Providers\Metadata\IDataServiceMetadataProvider.php';
 use POData\Providers\Metadata\SimpleMetadataProvider;
-use POData\Providers\Metadata\MetadataMapping;
 
 //Begin Resource Classes
 
@@ -178,11 +167,11 @@ class User
 class CreateWordPressMetadata
 {
 
-	/**
-	 * Array holding the mapping between the entity properties and coulmns.
-	 * 
-	 * @var array
-	 */
+    /**
+     * Array holding the mapping between the entity properties and coulmns.
+     * 
+     * @var array
+     */
     private static $_entityMapping = array();
 
     /**
@@ -190,7 +179,7 @@ class CreateWordPressMetadata
      * 
      * @throws InvalidOperationException
      * 
-     * @return NorthWindMetadata
+     * @return SimpleMetadataProvider
      */
     public static function create()
     {
@@ -295,8 +284,8 @@ class CreateWordPressMetadata
      * @return array(string, array(string, string))
      */
     public static function getEntityMapping() {
-      if (!is_null(self::$_entityMapping))
-      {
+        if (!is_null(self::$_entityMapping))
+        {
         self::$_entityMapping = array (
             'Post' => array (
                 '$MappedTable$' => 'wp_posts',
@@ -322,9 +311,9 @@ class CreateWordPressMetadata
                 'Type' => 'post_type',
                 'MimeType' => 'post_mime_type',
                 'CommentCount' => 'comment_count'
-              ),
+                ),
           
-            'Tag' => array (
+            'Tag' => array(
                 '$MappedTable$' => 'wp_terms',
                 'TagID' =>'t.term_id',
                 'Name' =>'t.name',
@@ -332,7 +321,7 @@ class CreateWordPressMetadata
                 'Description' =>'tt.description'
             ),
           
-            'Category' => array (
+            'Category' => array(
                 '$MappedTable$' => 'wp_terms',
                 'CategoryID' =>'t.term_id',
                 'Name' =>'t.name',
@@ -340,7 +329,7 @@ class CreateWordPressMetadata
                 'Description' =>'tt.description'
             ),
           
-            'Comment' => array (
+            'Comment' => array(
                 '$MappedTable$' => 'wp_comments',
                 'CommentID', 'comment_id',
                 'PostID', 'comment_post_id',
@@ -358,7 +347,7 @@ class CreateWordPressMetadata
                 'UserID', 'user_id'
             ),
           
-            'User' => array (
+            'User' => array(
                 '$MappedTable$' => 'wp_users',
                 'UserID' => 'ID',
                 'Login' => 'user_login',
@@ -369,9 +358,9 @@ class CreateWordPressMetadata
                 'Status' => 'user_status',
                 'DisplayName' => 'display_name'
             )
-          );
-      }
+            );
+        }
       
-      return self::$_entityMapping;
+        return self::$_entityMapping;
     }
 }

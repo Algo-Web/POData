@@ -5,7 +5,6 @@ namespace POData\ObjectModel;
 
 use POData\Common\ODataConstants;
 use POData\IService;
-use POData\Providers\ProvidersWrapper;
 use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceTypeKind;
@@ -136,7 +135,7 @@ class ObjectModelSerializerBase
             }
             
             $keyValue = $keyType->convertToOData($keyValue);
-            $keyString .= $comma . $keyName.'='.$keyValue;
+            $keyString .= $comma . $keyName . '=' . $keyValue;
             $comma = ',';
         }
 
@@ -159,11 +158,11 @@ class ObjectModelSerializerBase
     protected function getPropertyValue($entity, ResourceType $resourceType, ResourceProperty $resourceProperty)
     {
         try {
-	        //Is this slow?  See #88
-            	$reflectionClass = new \ReflectionClass(get_class($entity));
-            	$reflectionProperty = $reflectionClass->getProperty($resourceProperty->getName());
-            	$reflectionProperty->setAccessible(true);
-            	return $reflectionProperty->getValue($entity);
+            //Is this slow?  See #88
+                $reflectionClass = new \ReflectionClass(get_class($entity));
+                $reflectionProperty = $reflectionClass->getProperty($resourceProperty->getName());
+                $reflectionProperty->setAccessible(true);
+                return $reflectionProperty->getValue($entity);
         } catch (\ReflectionException $reflectionException) {
             throw ODataException::createInternalServerError(
                 Messages::objectModelSerializerFailedToAccessProperty(
@@ -224,7 +223,7 @@ class ObjectModelSerializerBase
             );
             $value = $this->getPropertyValue($entryObject, $resourceType, $eTagProperty);
             if (is_null($value)) {
-                $eTag = $eTag . $comma. 'null';
+                $eTag = $eTag . $comma . 'null';
             } else {
                 $eTag = $eTag . $comma . $type->convertToOData($value);
             }
@@ -272,7 +271,7 @@ class ObjectModelSerializerBase
      * @throws InvalidOperationException If this function invoked with non-navigation
      *                                   property instance.
      */
-    protected function pushSegmentForNavigationProperty(ResourceProperty &$resourceProperty)
+    protected function pushSegmentForNavigationProperty(ResourceProperty & $resourceProperty)
     {
         if ($resourceProperty->getTypeKind() == ResourceTypeKind::ENTITY) {
             $this->assert(!empty($this->_segmentNames), '!is_empty($this->_segmentNames');
@@ -385,7 +384,7 @@ class ObjectModelSerializerBase
      * 
      * @return bool true if the segment was push, false otherwise
      */
-    private function _pushSegment($segmentName, ResourceSetWrapper &$resourceSetWrapper)
+    private function _pushSegment($segmentName, ResourceSetWrapper & $resourceSetWrapper)
     {
         $rootProjectionNode = $this->request->getRootProjectionNode();
         // Even though there is no expand in the request URI, still we need to push
@@ -421,7 +420,7 @@ class ObjectModelSerializerBase
      *                            used for generating $skiptoken.
      * @param string $absoluteUri Absolute response URI.
      * 
-     * @return URI for the link for next page.
+     * @return ODataLink for the link for next page.
      */
     protected function getNextLinkUri(&$lastObject, $absoluteUri)
     {
@@ -473,7 +472,7 @@ class ObjectModelSerializerBase
 
         $topCountValue = $this->request->getTopOptionCount();
         if (!is_null($topCountValue)) {
-            $remainingCount  = $topCountValue - $this->request->getTopCount();
+            $remainingCount = $topCountValue - $this->request->getTopCount();
             if (!is_null($queryParameterString)) {
                 $queryParameterString .= '&';
             }
@@ -560,7 +559,7 @@ class ObjectModelSerializerBase
             //presence of $top option affect next link for root container
             $topValueCount = $this->request->getTopOptionCount();
             if (!is_null($topValueCount) && ($topValueCount <= $pageSize)) {
-                 return false;
+                    return false;
             }            
         }
 
@@ -634,12 +633,14 @@ class ObjectModelSerializerBase
      *                                                        true if any expansion
      *                                                        defined under this node
      *                                                        false otherwise.
+     * @param boolean $foundSelections
+     * @param boolean $foundExpansions
      *
      * @return void
      */
     private function _buildSelectionAndExpansionPathsForNode(&$parentPathSegments, 
         &$selectionPaths, &$expansionPaths, 
-        ExpandedProjectionNode &$expandedProjectionNode, 
+        ExpandedProjectionNode & $expandedProjectionNode, 
         &$foundSelections, &$foundExpansions
     ) {
         $foundSelections = false;

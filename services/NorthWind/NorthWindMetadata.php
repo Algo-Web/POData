@@ -1,17 +1,8 @@
 <?php
 
 use POData\Providers\Metadata\ResourceStreamInfo;
-use POData\Providers\Metadata\ResourceAssociationSetEnd;
-use POData\Providers\Metadata\ResourceAssociationSet;
-use POData\Common\NotImplementedException;
 use POData\Providers\Metadata\Type\EdmPrimitiveType;
-use POData\Providers\Metadata\ResourceSet;
-use POData\Providers\Metadata\ResourcePropertyKind;
-use POData\Providers\Metadata\ResourceProperty;
-use POData\Providers\Metadata\ResourceTypeKind;
-use POData\Providers\Metadata\ResourceType;
 use POData\Common\InvalidOperationException;
-use POData\Providers\Metadata\IMetadataProvider;
 require_once 'POData\Providers\Metadata\IDataServiceMetadataProvider.php';
 use POData\Providers\Metadata\SimpleMetadataProvider;
 //Begin Resource Classes
@@ -117,49 +108,49 @@ class Order_Details
 class Employee
 {
     //Key Edm.Int32
-     public $EmployeeID;
-     //Edm.String
-     public $FirstName;
-     //Edm.String
-     public $LastName;
-     //Edm.String
-     public $Title;
-     //Edm.String
-     public $TitleOfCourtesy;
-     //Edm.DateTime
-     public $BirthDate;
-     //Edm.DateTime
-     public $HireDate;
-     //Edm.String
-     public $Address;
-     //Edm.String
-     public $City;
-     //Edm.String
-     public $Region;
-     //Edm.String
-     public $PostalCode;
-     //Edm.String
-     public $Country;
-     //Edm.String
-     public $HomePhone;
-     //Edm.String
-     public $Extension;
-     //Edm.String
-     public $Notes;
-     //Bag of strings
-     public $Emails;
-     //Edm.Int32
-     public $ReportsTo;
-     //Edm.Binary
-     public $Photo;
-     //Edm.String
-     public $PhotoPath;
-     //Navigation Property to associated instance of Employee instance 
-     //representing manager (ResourceReference)
-     //public $Manager; 
-     //Navigation Property to associated instance of Employee instances 
-     //representing subordinates (ResourceSetReference)
-     //public $Subordinates;
+        public $EmployeeID;
+        //Edm.String
+        public $FirstName;
+        //Edm.String
+        public $LastName;
+        //Edm.String
+        public $Title;
+        //Edm.String
+        public $TitleOfCourtesy;
+        //Edm.DateTime
+        public $BirthDate;
+        //Edm.DateTime
+        public $HireDate;
+        //Edm.String
+        public $Address;
+        //Edm.String
+        public $City;
+        //Edm.String
+        public $Region;
+        //Edm.String
+        public $PostalCode;
+        //Edm.String
+        public $Country;
+        //Edm.String
+        public $HomePhone;
+        //Edm.String
+        public $Extension;
+        //Edm.String
+        public $Notes;
+        //Bag of strings
+        public $Emails;
+        //Edm.Int32
+        public $ReportsTo;
+        //Edm.Binary
+        public $Photo;
+        //Edm.String
+        public $PhotoPath;
+        //Navigation Property to associated instance of Employee instance 
+        //representing manager (ResourceReference)
+        //public $Manager; 
+        //Navigation Property to associated instance of Employee instances 
+        //representing subordinates (ResourceSetReference)
+        //public $Subordinates;
 }
 //End Resource Classes
 
@@ -172,7 +163,7 @@ class CreateNorthWindMetadata
      * 
      * @throws InvalidOperationException
      * 
-     * @return NorthWindMetadata
+     * @return SimpleMetadataProvider
      */
     public static function create()
     {

@@ -8,7 +8,6 @@ use POData\Common\ODataException;
 use POData\Providers\Expression\PHPExpressionProvider;
 use POData\Providers\Metadata\Type\Boolean;
 use POData\Providers\Metadata\ResourceType;
-use POData\Providers\Metadata\ResourceTypeKind;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\AbstractExpression;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ArithmeticExpression;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\LogicalExpression;
@@ -93,9 +92,9 @@ class ExpressionParser2 extends ExpressionParser
         $expressionProcessor = new ExpressionProcessor($expressionProvider);
 
         try {
-            $expressionAsString = $expressionProcessor->processExpression( $expressionTree );
+            $expressionAsString = $expressionProcessor->processExpression($expressionTree);
         } catch (\InvalidArgumentException $invalidArgumentException) {
-            throw ODataException::createInternalServerError( $invalidArgumentException->getMessage() );
+            throw ODataException::createInternalServerError($invalidArgumentException->getMessage());
         }
 
         
@@ -176,7 +175,7 @@ class ExpressionParser2 extends ExpressionParser
      * @param ArithmeticExpression $expression The arithmetic expression node
      *                                         to process.
      *                                          
-     * @return LogicalExpression|null
+     * @return AbstractExpression|null
      */
     private function _processArithmeticNode(ArithmeticExpression $expression)
     {
@@ -210,7 +209,7 @@ class ExpressionParser2 extends ExpressionParser
      * @param AbstractExpression     $parentExpression The parent expression of 
      *                                                 expression node to process.
      * 
-     * @return LogicalExpression|null
+     * @return null|AbstractExpression
      */
     private function _processFunctionCallNode(FunctionCallExpression $expression,
         $parentExpression
@@ -261,7 +260,7 @@ class ExpressionParser2 extends ExpressionParser
      * @param AbstractExpression $parentExpression The parent expression of 
      *                                             expression node to process.
      * 
-     * @return LogicalExpression|null
+     * @return null|AbstractExpression
      */
     private function _processLogicalNode(
         LogicalExpression $expression, $parentExpression
@@ -308,7 +307,7 @@ class ExpressionParser2 extends ExpressionParser
         }
 
         if ($resultExpression == null) {
-               return null;
+                return null;
         }
            
         if ($parentExpression == null) {
@@ -364,7 +363,7 @@ class ExpressionParser2 extends ExpressionParser
      * @param AbstractExpression   $parentExpression The parent expression of 
      *                                               expression node to process.
      * 
-     * @return LogicalExpression|null
+     * @return null|AbstractExpression
      */
     private function _processRelationalNode(RelationalExpression $expression, 
         $parentExpression
@@ -389,7 +388,7 @@ class ExpressionParser2 extends ExpressionParser
         }
         
         if ($resultExpression == null) {
-               return null;
+                return null;
         }
            
         if ($parentExpression == null) {
@@ -411,7 +410,7 @@ class ExpressionParser2 extends ExpressionParser
      * @param AbstractExpression $parentExpression The parent expression of 
      *                                             expression node to process.
      * 
-     * @return LogicalExpression|null
+     * @return AbstractExpression|null
      */
     private function _processUnaryNode(UnaryExpression $expression, 
         $parentExpression
@@ -454,7 +453,7 @@ class ExpressionParser2 extends ExpressionParser
      * @param AbstractExpression $nullCheckExpTree1 First expression.
      * @param AbstractExpression $nullCheckExpTree2 Second expression.
      * 
-     * @return UnaryExpression|LogicalExpression
+     * @return AbstractExpression
      */
     private function _mergeNullableExpressionTrees($nullCheckExpTree1, 
         $nullCheckExpTree2

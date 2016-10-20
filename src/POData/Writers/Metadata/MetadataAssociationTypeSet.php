@@ -399,8 +399,7 @@ class MetadataAssociationTypeSet extends MetadataBase
     private function _getAssociationTypeName(ResourceAssociationSet $resourceAssociationSet)
     {
         $end1 = !is_null($resourceAssociationSet->getEnd1()->getResourceProperty()) ?
-                    $resourceAssociationSet->getEnd1() :
-                    $resourceAssociationSet->getEnd2();
+                    $resourceAssociationSet->getEnd1() : $resourceAssociationSet->getEnd2();
         $end2 = $resourceAssociationSet->getRelatedResourceAssociationSetEnd($end1->getResourceSet(), $end1->getResourceType(), $end1->getResourceProperty());
         //e.g. Customer_Orders (w.r.t Northwind DB)
         $associationTypeName = $end1->getResourceType()->getName() . '_' . $end1->getResourceProperty()->getName();

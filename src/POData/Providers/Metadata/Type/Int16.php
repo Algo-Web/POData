@@ -30,10 +30,10 @@ class Int16 implements IType
     public function isCompatibleWith(IType $type)
     {
         switch ($type->getTypeCode()) {
-	        case TypeCode::BYTE:
-	        case TypeCode::SBYTE:
-	        case TypeCode::INT16:
-	            return true;
+            case TypeCode::BYTE:
+            case TypeCode::SBYTE:
+            case TypeCode::INT16:
+                return true;
         }
         
         return false;

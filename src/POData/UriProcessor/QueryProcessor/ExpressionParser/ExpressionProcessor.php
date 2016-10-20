@@ -3,7 +3,6 @@
 namespace POData\UriProcessor\QueryProcessor\ExpressionParser;
 
 use POData\Providers\Expression\IExpressionProvider;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\PropertyNullabilityCheckExpression;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\AbstractExpression;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ArithmeticExpression;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\LogicalExpression;

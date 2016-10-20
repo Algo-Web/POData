@@ -71,9 +71,9 @@ interface IService
     public function getOperationContext();
 
 
-	/**
-	 * Returns the ODataWriterRegistry to use when writing the response to a service document or resource request
-	 * @return ODataWriterRegistry
-	 */
-	public function getODataWriterRegistry();
+    /**
+     * Returns the ODataWriterRegistry to use when writing the response to a service document or resource request
+     * @return ODataWriterRegistry
+     */
+    public function getODataWriterRegistry();
 }

@@ -29,9 +29,9 @@ class ODataException extends \Exception
      * @param string $statusCode The status code
      * @param string $errorCode  The error code
      * 
-     * @return void
+     * @return ODataException
      */
-    public function __construct($message, $statusCode, $errorCode= null)
+    public function __construct($message, $statusCode, $errorCode = null)
     {
         $this->_errorCode = $errorCode;
         $this->_statusCode = $statusCode;        

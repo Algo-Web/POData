@@ -3,7 +3,6 @@
 namespace POData\OperationContext\Web;
 
 use POData\Common\ODataConstants;
-use POData\Common\ODataException;
 
 
 /**

@@ -12,35 +12,35 @@ use POData\Writers\IODataWriter;
 class ODataWriterRegistry
 {
 
-	/** @var IODataWriter[]  */
-	private $writers = array();
+    /** @var IODataWriter[]  */
+    private $writers = array();
 
 
-	public function register(IODataWriter $writer)
-	{
-		$this->writers[] = $writer;
-	}
+    public function register(IODataWriter $writer)
+    {
+        $this->writers[] = $writer;
+    }
 
-	public function reset()
-	{
-		$this->writers = array();
-	}
+    public function reset()
+    {
+        $this->writers = array();
+    }
 
-	/**
-	 * @param Version $responseVersion
-	 * @param $contentType
-	 *
-	 * @return IODataWriter|null the writer that can handle the give criteria, or null
-	 */
-	public function getWriter(Version $responseVersion, $contentType){
+    /**
+     * @param Version $responseVersion
+     * @param $contentType
+     *
+     * @return IODataWriter|null the writer that can handle the give criteria, or null
+     */
+    public function getWriter(Version $responseVersion, $contentType){
 
-		foreach($this->writers as $writer)
-		{
-			if($writer->canHandle($responseVersion, $contentType)) return $writer;
-		}
+        foreach($this->writers as $writer)
+        {
+            if($writer->canHandle($responseVersion, $contentType)) return $writer;
+        }
 
-		return null;
-	}
+        return null;
+    }
 
 
 }

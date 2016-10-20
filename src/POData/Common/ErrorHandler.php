@@ -4,9 +4,7 @@ namespace POData\Common;
 
 
 use POData\Writers\Json\JsonODataV2Writer;
-
 use POData\Writers\Atom\AtomODataWriter;
-use POData\BaseService;
 use POData\HttpProcessUtility;
 use POData\IService;
 
@@ -32,8 +30,8 @@ class ErrorHandler
             $responseContentType = HttpProcessUtility::selectMimeType(
                 $acceptTypesText, 
                 array(
-	                MimeTypes::MIME_APPLICATION_XML,
-	                MimeTypes::MIME_APPLICATION_JSON
+                    MimeTypes::MIME_APPLICATION_XML,
+                    MimeTypes::MIME_APPLICATION_JSON
                 )
             );
         } catch (HttpHeaderFailure $exception) {

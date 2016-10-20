@@ -17,7 +17,7 @@ class ArithmeticExpression extends BinaryExpression
      * @param AbstractExpression $left     left expression
      * @param AbstractExpression $right    right Expression
      * @param ExpressionType     $nodeType Expression node type
-     * @param IType              $type     Expression type 
+     * @param \POData\Providers\Metadata\Type\IType              $type     Expression type 
      */
     public function __construct($left, $right, $nodeType, $type)
     {

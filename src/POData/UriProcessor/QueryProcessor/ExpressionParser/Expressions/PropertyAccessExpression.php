@@ -97,7 +97,7 @@ class PropertyAccessExpression extends AbstractExpression
     /**
      * Get the resource type of the property hold by this expression
      * 
-     * @return ResourceType
+     * @return \POData\Providers\Metadata\ResourceType
      */
     public function getResourceType()
     {

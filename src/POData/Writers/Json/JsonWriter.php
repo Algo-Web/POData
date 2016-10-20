@@ -3,9 +3,7 @@
 namespace POData\Writers\Json;
 
 
-use MyCLabs\Enum\Enum;
 use POData\Writers\Json\IndentedTextWriter;
-use POData\Common\ODataConstants;
 
 /**
  * Class JsonWriter
@@ -20,7 +18,7 @@ class JsonWriter
     private $_jsonDateTimeFormat = "\/Date(%s)\/";
 
 
-	/**
+    /**
      * Writer to write text into
      *
      */
@@ -57,8 +55,8 @@ class JsonWriter
     public function endScope()
     {
         $this->_writer
-	        ->writeLine()
-	        ->decreaseIndent();
+            ->writeLine()
+            ->decreaseIndent();
  
         if (array_pop($this->_scopes)->type == $this->_scopeType['Array']) {
             $this->_writer->writeValue("]");
@@ -66,7 +64,7 @@ class JsonWriter
             $this->_writer->writeValue("}");
         }
 
-	    return $this;
+        return $this;
 
     }
 
@@ -78,7 +76,7 @@ class JsonWriter
     public function startArrayScope()
     {
         $this->_startScope($this->_scopeType['Array']);
-	    return $this;
+        return $this;
     }
 
 
@@ -90,7 +88,7 @@ class JsonWriter
     public function writeDataArrayName()
     {
         $this->writeName($this->dataArrayName);
-	    return $this;
+        return $this;
     }
 
     /**
@@ -101,7 +99,7 @@ class JsonWriter
     public function startObjectScope()
     {
         $this->_startScope($this->_scopeType['Object']);
-	    return $this;
+        return $this;
     }
 
     /**
@@ -125,7 +123,7 @@ class JsonWriter
         $this->_writeCore($name, true /*quotes*/);
         $this->_writer->writeTrimmed(": ");
 
-	    return $this;
+        return $this;
     }
 
     /**
@@ -139,62 +137,62 @@ class JsonWriter
     public function writeValue($value, $type = null)
     {
         switch ($type) {
-	        case 'Edm.Boolean':
-	        case 'Edm.Int16':
-	        case 'Edm.Int32':
-	        case 'Edm.Byte':
-	        case 'Edm.SByte':
-	            $this->_writeCore($value, /* quotes */ false);
-	            break;
+            case 'Edm.Boolean':
+            case 'Edm.Int16':
+            case 'Edm.Int32':
+            case 'Edm.Byte':
+            case 'Edm.SByte':
+                $this->_writeCore($value, /* quotes */ false);
+                break;
 
 
-	        case 'Edm.Int64':
-	        case 'Edm.Guid':
-	        case 'Edm.Decimal':
-	        case 'Edm.Binary':
-	            $this->_writeCore($value, /* quotes */ true);
-	            break;
+            case 'Edm.Int64':
+            case 'Edm.Guid':
+            case 'Edm.Decimal':
+            case 'Edm.Binary':
+                $this->_writeCore($value, /* quotes */ true);
+                break;
 
-	        case 'Edm.Single':
-	        case 'Edm.Double':
-	            if (is_infinite($value) || is_nan($value)) {
-	                $this->_writeCore("null", /* quotes */ true);
-	            } else {
-	                $this->_writeCore($value, /* quotes */ false);
-	            }
+            case 'Edm.Single':
+            case 'Edm.Double':
+                if (is_infinite($value) || is_nan($value)) {
+                    $this->_writeCore("null", /* quotes */ true);
+                } else {
+                    $this->_writeCore($value, /* quotes */ false);
+                }
 
-	            break;
-
-
-	        case 'Edm.DateTime':
-	            $dateTime = new \DateTime($value, new \DateTimeZone('UTC'));
-		        $formattedDateTime = $dateTime->format('Y-m-d\TH:i:s');
-	            $this->_writeCore($formattedDateTime, /* quotes */ true);
-	            break;
+                break;
 
 
-	        case 'Edm.String':
-	            if ($value == null) {
-	                $this->_writeCore("null", /* quotes */ false);
-	            } else {
-	                $jsonEncoded = json_encode($value);
-	                //json_encode always escapes a solidus (forward slash, %x2F),
-	                //this will be a problem when encoding urls
-	                //JSON_UNESCAPED_SLASHES not available in earlier versions of php 5.3
-	                //So removing escaping forward slashes manually
-	                $jsonEncoded = str_replace('\\/', '/', $jsonEncoded);
-	                //since json_encode is already appending chords
-	                //there is no need to set it again
-	                $this->_writeCore($jsonEncoded, /* quotes */ false);
-	            }
-	            break;
+            case 'Edm.DateTime':
+                $dateTime = new \DateTime($value, new \DateTimeZone('UTC'));
+                $formattedDateTime = $dateTime->format('Y-m-d\TH:i:s');
+                $this->_writeCore($formattedDateTime, /* quotes */ true);
+                break;
 
 
-	        default:
-	            $this->_writeCore($this->_quoteJScriptString($value), /* quotes */ true);
+            case 'Edm.String':
+                if ($value == null) {
+                    $this->_writeCore("null", /* quotes */ false);
+                } else {
+                    $jsonEncoded = json_encode($value);
+                    //json_encode always escapes a solidus (forward slash, %x2F),
+                    //this will be a problem when encoding urls
+                    //JSON_UNESCAPED_SLASHES not available in earlier versions of php 5.3
+                    //So removing escaping forward slashes manually
+                    $jsonEncoded = str_replace('\\/', '/', $jsonEncoded);
+                    //since json_encode is already appending chords
+                    //there is no need to set it again
+                    $this->_writeCore($jsonEncoded, /* quotes */ false);
+                }
+                break;
+
+
+            default:
+                $this->_writeCore($this->_quoteJScriptString($value), /* quotes */ true);
         }
 
-	    return $this;
+        return $this;
     }
 
     /**
@@ -211,7 +209,7 @@ class JsonWriter
         // Escape ( " \ / \n \r \t \b \f) characters with a backslash.
         $search  = array('\\', "\n", "\t", "\r", "\b", "\f", '"');
         $replace = array('\\\\', '\\n', '\\t', '\\r', '\\b', '\\f', '\"');
-        $processedString  = str_replace($search, $replace, $string);
+        $processedString = str_replace($search, $replace, $string);
         // Escape some ASCII characters(0x08, 0x0c)
         $processedString = str_replace(array(chr(0x08), chr(0x0C)), array('\b', '\f'), $processedString);
         return $processedString;
@@ -278,7 +276,7 @@ class JsonWriter
         }
 
         $this->_writer
-	        ->increaseIndent()
+            ->increaseIndent()
             ->writeLine();
     }
 
@@ -321,7 +319,7 @@ class Scope
     public function __construct($type)
     {
         $this->type = $type;
-	    $this->objectCount = 0;
+        $this->objectCount = 0;
     }
 
 }

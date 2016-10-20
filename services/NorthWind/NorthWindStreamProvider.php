@@ -48,7 +48,7 @@ class NorthWindStreamProvider implements IStreamProvider2
      * @param WebOperationContext $operationContext     A reference to the context
      *                                                  for the current operation.
      *
-     * @return mixed A valid  default stream which is associated with the entity, 
+     * @return string A valid  default stream which is associated with the entity, 
      * Null should never be returned from this method.
      *
      * @throws ODataException if a valid stream cannot be returned.  
@@ -212,7 +212,7 @@ class NorthWindStreamProvider implements IStreamProvider2
      *                                                  conditional request.
      * @param WebOperationContext $operationContext     A reference to the context for the current operation.
      *
-     * @return mixed A valid stream the data service use to query/read a named stream which is
+     * @return string A valid stream the data service use to query/read a named stream which is
      * associated with the $entity. Null may be returned from this method if the requested named
      * stream has not been created since the creation of $entity. The data service will respond 
      * with 204 if this method returns null.
@@ -230,7 +230,7 @@ class NorthWindStreamProvider implements IStreamProvider2
                 400
             );
         }
-        **/
+         **/
 
         if (!($entity instanceof Employee)) {
             throw new ODataException('Internal Server Error.', 500);

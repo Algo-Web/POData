@@ -31,7 +31,7 @@ class Navigation implements INavigationType
         if ($resourceType->getResourceTypeKind() != ResourceTypeKind::COMPLEX 
             && $resourceType->getResourceTypeKind() != ResourceTypeKind::ENTITY
         ) {            
-            throw new \InvalidArgumentException(Messages::navigationInvalidResourceType() );
+            throw new \InvalidArgumentException(Messages::navigationInvalidResourceType());
         }
         
         $this->_resourceType = $resourceType;

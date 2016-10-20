@@ -51,7 +51,7 @@ class SegmentParser
      * @param ProvidersWrapper $providerWrapper Reference to metadata and query provider wrapper
      *
      */
-    private function __construct(ProvidersWrapper $providerWrapper ) {
+    private function __construct(ProvidersWrapper $providerWrapper) {
         $this->providerWrapper = $providerWrapper;
     }
 
@@ -92,7 +92,7 @@ class SegmentParser
 
         $segmentLength = strlen($segment);
         if (strrpos($segment, ')') !== $segmentLength - 1) {
-			throw ODataException::createSyntaxError(Messages::syntaxError());
+            throw ODataException::createSyntaxError(Messages::syntaxError());
         }
 
         $identifier = substr($segment, 0, $predicateStart);
@@ -112,8 +112,8 @@ class SegmentParser
     {        
         if (empty($segments)) {
             //If there's no segments, then it's the service root
-	        $descriptor = new SegmentDescriptor();
-	        $descriptor->setTargetKind(TargetKind::SERVICE_DIRECTORY());
+            $descriptor = new SegmentDescriptor();
+            $descriptor->setTargetKind(TargetKind::SERVICE_DIRECTORY());
             $this->_segmentDescriptors[] = $descriptor;
             return;
         }
@@ -121,13 +121,13 @@ class SegmentParser
         $segmentCount = count($segments);
         $identifier = $keyPredicate = null;
         $this->extractSegmentIdentifierAndKeyPredicate($segments[0], $identifier, $keyPredicate);
-	    $previous = $this->_createFirstSegmentDescriptor(
+        $previous = $this->_createFirstSegmentDescriptor(
             $identifier, $keyPredicate, $checkRights
         );
         $this->_segmentDescriptors[0] = $previous;
 
         for ($i = 1; $i < $segmentCount; $i++) {
-	        $current = $this->createNextSegment($previous, $segments[$i], $checkRights);
+            $current = $this->createNextSegment($previous, $segments[$i], $checkRights);
 
             
             $current->setPrevious($previous);
@@ -138,10 +138,14 @@ class SegmentParser
 
         //At this point $previous is the final segment..which cannot be a $link
         if ($previous->getTargetKind() == TargetKind::LINK()) {
-			throw ODataException::createBadRequestError(Messages::segmentParserMissingSegmentAfterLink());
+            throw ODataException::createBadRequestError(Messages::segmentParserMissingSegmentAfterLink());
         }
     }
 
+    /**
+     * @param string $segment
+     * @param boolean $checkRights
+     */
     private function createNextSegment(SegmentDescriptor $previous, $segment, $checkRights){
         $previousKind = $previous->getTargetKind();
         if ($previousKind == TargetKind::METADATA()
@@ -151,7 +155,7 @@ class SegmentParser
             || $previousKind == TargetKind::MEDIA_RESOURCE()
         ) {
             //All these targets are terminal segments, there cannot be anything after them.
-			throw ODataException::resourceNotFoundError(
+            throw ODataException::resourceNotFoundError(
                 Messages::segmentParserMustBeLeafSegment($previous->getIdentifier())
             );
         }
@@ -162,7 +166,7 @@ class SegmentParser
         $current = null;
         if ($previousKind == TargetKind::PRIMITIVE()) {
             if ($identifier !== ODataConstants::URI_VALUE_SEGMENT) {
-				throw ODataException::resourceNotFoundError(
+                throw ODataException::resourceNotFoundError(
                     Messages::segmentParserOnlyValueSegmentAllowedAfterPrimitivePropertySegment(
                         $identifier, $previous->getIdentifier()
                     )
@@ -175,7 +179,7 @@ class SegmentParser
             $current->setTargetKind(TargetKind::PRIMITIVE_VALUE());
             $current->setSingleResult(true);
         } else if (!is_null($previous->getPrevious()) && $previous->getPrevious()->getIdentifier() === ODataConstants::URI_LINK_SEGMENT && $identifier !== ODataConstants::URI_COUNT_SEGMENT) {
-			throw ODataException::createBadRequestError(
+            throw ODataException::createBadRequestError(
                 Messages::segmentParserNoSegmentAllowedAfterPostLinkSegment($identifier)
             );
         } else if ($previousKind == TargetKind::RESOURCE()
@@ -198,7 +202,7 @@ class SegmentParser
             }
 
             if (!$previous->isSingleResult() && $identifier !== ODataConstants::URI_COUNT_SEGMENT) {
-				throw ODataException::createBadRequestError(
+                throw ODataException::createBadRequestError(
                     Messages::segmentParserCannotQueryCollection($previous->getIdentifier())
                 );
             }
@@ -211,13 +215,13 @@ class SegmentParser
 
             if ($identifier === ODataConstants::URI_COUNT_SEGMENT) {
                 if ($previousKind != TargetKind::RESOURCE()) {
-					throw ODataException::createBadRequestError(
+                    throw ODataException::createBadRequestError(
                         Messages::segmentParserCountCannotBeApplied($previous->getIdentifier())
                     );
                 }
 
                 if ($previous->isSingleResult()) {
-					throw ODataException::createBadRequestError(
+                    throw ODataException::createBadRequestError(
                         Messages::segmentParserCountCannotFollowSingleton($previous->getIdentifier())
                     );
                 }
@@ -248,7 +252,7 @@ class SegmentParser
                         $previous->getTargetResourceType()
                     );
                 } else {
-					throw ODataException::createResourceNotFoundError($identifier);
+                    throw ODataException::createResourceNotFoundError($identifier);
                 }
             } else {
                 $current->setTargetResourceType($projectedProperty->getResourceType());
@@ -256,14 +260,14 @@ class SegmentParser
                 if ($previousKind == TargetKind::LINK()
                     && $projectedProperty->getTypeKind() != ResourceTypeKind::ENTITY
                 ) {
-					throw ODataException::createBadRequestError(
+                    throw ODataException::createBadRequestError(
                         Messages::segmentParserLinkSegmentMustBeFollowedByEntitySegment(
                             $identifier
                         )
                     );
                 }
 
-                switch($projectedProperty->getKind()) {
+                switch ($projectedProperty->getKind()) {
                     case ResourcePropertyKind::COMPLEX_TYPE:
                         $current->setTargetKind(TargetKind::COMPLEX_OBJECT());
                         break;
@@ -276,14 +280,14 @@ class SegmentParser
                         $current->setTargetKind(TargetKind::RESOURCE());
                         $resourceSetWrapper = $this->providerWrapper->getResourceSetWrapperForNavigationProperty($previous->getTargetResourceSetWrapper(), $previous->getTargetResourceType(), $projectedProperty);
                         if (is_null($resourceSetWrapper)) {
-							throw ODataException::createResourceNotFoundError($projectedProperty->getName());
+                            throw ODataException::createResourceNotFoundError($projectedProperty->getName());
                         }
 
                         $current->setTargetResourceSetWrapper($resourceSetWrapper);
                         break;
                     default:
                         if (!$projectedProperty->isKindOf(ResourcePropertyKind::PRIMITIVE)) {
-							throw ODataException::createInternalServerError(
+                            throw ODataException::createInternalServerError(
                                 Messages::segmentParserUnExpectedPropertyKind(
                                     'Primitive'
                                 )
@@ -307,7 +311,7 @@ class SegmentParser
                     }
                 }
 
-                if ($checkRights&& !is_null($current->getTargetResourceSetWrapper())) {
+                if ($checkRights && !is_null($current->getTargetResourceSetWrapper())) {
                     $current->getTargetResourceSetWrapper()
                         ->checkResourceSetRightsForRead(
                             $current->isSingleResult()
@@ -347,7 +351,7 @@ class SegmentParser
         }
 
         if ($segmentIdentifier === ODataConstants::URI_COUNT_SEGMENT) {
-			throw ODataException::createBadRequestError(
+            throw ODataException::createBadRequestError(
                 Messages::segmentParserSegmentNotAllowedOnRoot(
                     ODataConstants::URI_COUNT_SEGMENT
                 )
@@ -355,7 +359,7 @@ class SegmentParser
         }
 
         if ($segmentIdentifier === ODataConstants::URI_LINK_SEGMENT) {
-			throw ODataException::createBadRequestError(
+            throw ODataException::createBadRequestError(
                 Messages::segmentParserSegmentNotAllowedOnRoot(
                     ODataConstants::URI_LINK_SEGMENT
                 )
@@ -364,7 +368,7 @@ class SegmentParser
 
         $resourceSetWrapper = $this->providerWrapper->resolveResourceSet($segmentIdentifier);
         if ($resourceSetWrapper === null) {
-			throw ODataException::createResourceNotFoundError($segmentIdentifier);
+            throw ODataException::createResourceNotFoundError($segmentIdentifier);
         }
 
         $descriptor->setTargetResourceSetWrapper($resourceSetWrapper);

@@ -70,13 +70,13 @@ class Version
         if ($major > $this->major) {
             $this->major = $major;
             $this->minor = $minor;
-	        return true;
+            return true;
         } else if ($major == $this->major && $minor > $this->minor) {
             $this->minor = $minor;
-	        return true;
+            return true;
         }
 
-	    return false;
+        return false;
     }
 
     /**
@@ -117,37 +117,37 @@ class Version
         return $this->major . '.' . $this->minor;
     }
 
-	//Is there a better way to do static const of complex type?
+    //Is there a better way to do static const of complex type?
 
-	/** @var Version[] */
-	private static $fixedVersion;
+    /** @var Version[] */
+    private static $fixedVersion;
 
-	private static function fillVersions(){
-		if(is_null(self::$fixedVersion)){
-			self::$fixedVersion = array(
-				1 => new Version(1,0),
-				2 => new Version(2,0),
-				3 => new Version(3,0),
-			);
-		}
-	}
+    private static function fillVersions(){
+        if(is_null(self::$fixedVersion)){
+            self::$fixedVersion = array(
+                1 => new Version(1,0),
+                2 => new Version(2,0),
+                3 => new Version(3,0),
+            );
+        }
+    }
 
-	public static function v1()
-	{
-		self::fillVersions();
-		return self::$fixedVersion[1];
-	}
-
-
-	public static function v2(){
-		self::fillVersions();
-		return self::$fixedVersion[2];
-	}
+    public static function v1()
+    {
+        self::fillVersions();
+        return self::$fixedVersion[1];
+    }
 
 
-	public static function v3(){
-		self::fillVersions();
-		return self::$fixedVersion[3];
-	}
+    public static function v2(){
+        self::fillVersions();
+        return self::$fixedVersion[2];
+    }
+
+
+    public static function v3(){
+        self::fillVersions();
+        return self::$fixedVersion[3];
+    }
 
 }

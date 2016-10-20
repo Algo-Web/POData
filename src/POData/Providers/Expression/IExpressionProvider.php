@@ -14,7 +14,7 @@ use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\PropertyAcce
 interface IExpressionProvider
 {
 
-	//TODO: does this really need to be part of this interface? see #89
+    //TODO: does this really need to be part of this interface? see #89
     /**
      * Get the name of the iterator
      * 

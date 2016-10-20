@@ -103,7 +103,7 @@ class MediaType
                 //the rest look like QSPs..kinda so we can do this
                 parse_str(implode("&", $candidateParts), $candidateParts);
                 if(array_key_exists('odata', $candidateParts)){
-                   $candidateODataValue = $candidateParts['odata'];
+                    $candidateODataValue = $candidateParts['odata'];
                 }
             }
 
@@ -463,7 +463,7 @@ class HttpProcessUtility
      * To check whether the given character is a HTTP token character
      * or not.
      * 
-     * @param char $char The character to inspect.
+     * @param string $char The character to inspect.
      * 
      * @return boolean True if the given character is a valid HTTP token
      *                 character, False otherwise.
@@ -606,6 +606,7 @@ class HttpProcessUtility
      * @param string $text          Text to read qvalue from.
      * @param int    &$textIndex    Index into text where the qvalue starts.
      * @param int    &$qualityValue After the method executes, the normalized qvalue.
+     * @param integer $textIndex
      *
      * @throws HttpHeaderFailure If any error occured while reading and processing
      *                           the quality factor.
@@ -659,7 +660,7 @@ class HttpProcessUtility
     /**
      * Converts the specified character from the ASCII range to a digit.
      * 
-     * @param char $c Character to convert
+     * @param string $c Character to convert
      *
      * @return int The Int32 value for $c, or -1 if it is an element separator.
      *
@@ -696,7 +697,7 @@ class HttpProcessUtility
         return $c == ',' || $c == ' ' || $c == '\t';
     }
 
-	/**
+    /**
      * Get server key by header
      * @param string $headerName Name of header
      */
@@ -717,6 +718,6 @@ class HttpProcessUtility
             case 'MAXDATASERVICEVERSION':
                 return 'HTTP_' . $name;
         }
-		return $name;
-	}
+        return $name;
+    }
 }

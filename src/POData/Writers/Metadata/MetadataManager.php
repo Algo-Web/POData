@@ -164,7 +164,7 @@ class MetadataManager
     /**
      * Gets collection of association set
      * 
-     * @return ResourceAssociationSet[]
+     * @return \POData\Providers\Metadata\ResourceAssociationSet[]
      */
     public function getAssociationSets()
     {
@@ -213,10 +213,11 @@ class MetadataManager
      *                                   data service version for the metadata
      * @param string  &$edmSchemaVersion On return, this parmater will contain 
      *                                   edm schema version for the metadata
+     * @param EdmSchemaVersion $edmSchemaVersion
      * 
      * @return void 
      */
-    public function getDataServiceAndEdmSchemaVersions(Version &$dsVersion, &$edmSchemaVersion)
+    public function getDataServiceAndEdmSchemaVersions(Version & $dsVersion, &$edmSchemaVersion)
     {
         if ($this->_metadataResourceTypeSet->hasNamedStreams()) {
             $dsVersion->raiseVersion(3, 0);
