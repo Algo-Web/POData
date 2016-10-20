@@ -1,7 +1,7 @@
 
 Master Status: [![Build Status](https://travis-ci.org/c-harris/POData.png?branch=master)](https://travis-ci.org/c-harris/POData) 
 [![Coverage Status](https://img.shields.io/coveralls/c-harris/POData.svg)](https://coveralls.io/r/c-harris/POData?branch=master)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/balint777/POData/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/c-harris/POData/?branch=master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/c-harris/POData/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/c-harris/POData/?branch=master)
 
 POData - OData for the Poor PHP Developer
 ============
