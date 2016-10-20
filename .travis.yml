@@ -16,6 +16,8 @@ script:
 after_script:
   - php vendor/bin/coveralls --exclude-no-stmt
 
+after_success:
+  - coveralls
 #notifications:
 #  webhooks:
 #    urls:
