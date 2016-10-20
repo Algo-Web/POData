@@ -11,7 +11,7 @@ use POData\Providers\Query\IQueryProvider;
 use POData\Providers\Expression\MySQLExpressionProvider;
 use POData\Providers\Query\QueryType;
 use POData\Providers\Query\QueryResult;
-abstract class BaseQueryProvider implements IQueryProvider
+abstract class SimpleQueryProvider implements IQueryProvider
 {
     /**
     * @var Connection
