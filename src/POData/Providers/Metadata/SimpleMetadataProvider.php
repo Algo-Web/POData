@@ -394,15 +394,18 @@ class SimpleMetadataProvider implements IMetadataProvider
      */
     private function _addPrimitivePropertyInternal($resourceType, $name, $typeCode, $isKey = false, $isBag = false, $isETagProperty = false)
     {
-        try 
-        {
-            $resourceType->getInstanceType()->getProperty($name);
-        }
-        catch (\ReflectionException $ex)
-        {
-            throw new InvalidOperationException(
-                'Can\'t add a property which does not exist on the instance type.'
-            );
+         $instance = $resourceType->getInstanceType();
+
+        // This check doesn't play well with how Eloquent stores model properties via magic methods,
+        // so skip it for Eloquent models
+        if (!$instance instanceof \Illuminate\Database\Eloquent\Model) {
+            try {
+                $instance->getProperty($name);
+            } catch (\ReflectionException $ex) {
+                throw new InvalidOperationException(
+                    'Can\'t add a property which does not exist on the instance type.'
+                );
+            }
         }
         
         $primitiveResourceType = ResourceType::getPrimitiveResourceType($typeCode);
