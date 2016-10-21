@@ -159,6 +159,11 @@ class ObjectModelSerializerBase
     {
         try {
             //Is this slow?  See #88
+                // If a magic method for properties exists (eg Eloquent), dive into it directly and return value
+                if (method_exists($entity, '__get')) {
+                    $targProperty = $resourceProperty->getName();
+                    return $entity->$targProperty;
+                }
                 $reflectionClass = new \ReflectionClass(get_class($entity));
                 $reflectionProperty = $reflectionClass->getProperty($resourceProperty->getName());
                 $reflectionProperty->setAccessible(true);
