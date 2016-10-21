@@ -26,7 +26,9 @@ class SimpleDataService extends BaseService implements IService
   
     public function __construct($db, SimpleMetadataProvider $metaProvider) {
         $this->metaProvider = $metaProvider;
-        if (!empty($db->queryProviderClassName)) {
+        if($db instanceof IQueryProvider){
+            $this->queryProvider = $db;
+        }else if (!empty($db->queryProviderClassName)) {
             $queryProviderClassName = $db->queryProviderClassName;
             $this->queryProvider = new $queryProviderClassName($db);
         } else {
