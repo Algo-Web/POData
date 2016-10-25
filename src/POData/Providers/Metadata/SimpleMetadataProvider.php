@@ -42,7 +42,7 @@ class SimpleMetadataProvider implements IMetadataProvider
      *
      * @return ResourceSet[]
      */
-    public function getResourceSets()
+    public function getResourceSets($params = null)
     {
         return array_values($this->resourceSets);
     }
