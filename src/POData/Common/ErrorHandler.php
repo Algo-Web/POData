@@ -2,25 +2,21 @@
 
 namespace POData\Common;
 
-
 use POData\Writers\Json\JsonODataV2Writer;
 use POData\Writers\Atom\AtomODataWriter;
 use POData\HttpProcessUtility;
 use POData\IService;
 
 /**
- * Class ErrorHandler
- * @package POData\Common
+ * Class ErrorHandler.
  */
 class ErrorHandler
 {
     /**
      * Common function to handle exceptions in the data service.
-     * 
-     * @param \Exception    $exception    exception
-     * @param IService      $service service
-     * 
-     * @return void
+     *
+     * @param \Exception $exception exception
+     * @param IService   $service   service
      */
     public static function handleException($exception, IService $service)
     {
@@ -28,15 +24,15 @@ class ErrorHandler
         $responseContentType = null;
         try {
             $responseContentType = HttpProcessUtility::selectMimeType(
-                $acceptTypesText, 
+                $acceptTypesText,
                 array(
                     MimeTypes::MIME_APPLICATION_XML,
-                    MimeTypes::MIME_APPLICATION_JSON
+                    MimeTypes::MIME_APPLICATION_JSON,
                 )
             );
         } catch (HttpHeaderFailure $exception) {
             $exception = new ODataException(
-                $exception->getMessage(), 
+                $exception->getMessage(),
                 $exception->getStatusCode()
             );
         } catch (\Exception $exception) {
@@ -51,10 +47,10 @@ class ErrorHandler
             $exception = new ODataException($exception->getMessage(), HttpStatus::CODE_INTERNAL_SERVER_ERROR);
         }
 
-        $service->getHost()->setResponseVersion(ODataConstants::DATASERVICEVERSION_1_DOT_0 . ';');
+        $service->getHost()->setResponseVersion(ODataConstants::DATASERVICEVERSION_1_DOT_0.';');
 
-        // At this point all kind of exceptions will be converted 
-        //to 'ODataException' 
+        // At this point all kind of exceptions will be converted
+        //to 'ODataException'
         if ($exception->getStatusCode() == HttpStatus::CODE_NOT_MODIFIED) {
             $service->getHost()->setResponseStatusCode(HttpStatus::CODE_NOT_MODIFIED);
         } else {

@@ -5,27 +5,27 @@ namespace POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions;
 use POData\Providers\Metadata\Type\IType;
 
 /**
- * Class AbstractExpression
- * @package POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions
+ * Class AbstractExpression.
  */
 abstract class AbstractExpression
 {
     /**
-     * The expression node type
-     * 
+     * The expression node type.
+     *
      * @var ExpressionType
      */
     protected $nodeType;
 
     /**
-     * The type of expression 
+     * The type of expression.
+     *
      * @var IType
      */
     protected $type;
 
     /**
-     * Get the node type
-     * 
+     * Get the node type.
+     *
      * @return ExpressionType
      */
     public function getNodeType()
@@ -34,8 +34,8 @@ abstract class AbstractExpression
     }
 
     /**
-     * Get the expression type
-     * 
+     * Get the expression type.
+     *
      * @return IType
      */
     public function getType()
@@ -44,11 +44,9 @@ abstract class AbstractExpression
     }
 
     /**
-     * Set the expression type
-     * 
+     * Set the expression type.
+     *
      * @param IType $type The type to set as expression type
-     * 
-     * @return void
      */
     public function setType($type)
     {
@@ -56,11 +54,11 @@ abstract class AbstractExpression
     }
 
     /**
-     * Checks expression is a specific type
-     * 
+     * Checks expression is a specific type.
+     *
      * @param IType $type The type to check
-     * 
-     * @return boolean
+     *
+     * @return bool
      */
     public function typeIs(IType $type)
     {
@@ -68,9 +66,7 @@ abstract class AbstractExpression
     }
 
     /**
-     * Frees the resources hold by this expression
-     * 
-     * @return void
+     * Frees the resources hold by this expression.
      */
     abstract public function free();
 }

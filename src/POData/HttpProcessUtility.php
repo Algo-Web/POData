@@ -6,16 +6,13 @@ use POData\Common\Messages;
 use POData\Common\HttpHeaderFailure;
 use POData\Providers\Metadata\Type\Char;
 
-
 /**
- * Class MediaType
+ * Class MediaType.
  *
  * The Accept request-header field can be used to specify certain
  * media types which are acceptable for the response, this class
  * is used to hold details of such media type.
  * http://www.w3.org/Protocols/rfc1341/4_Content-Type.html
- *
- * @package POData
  */
 class MediaType
 {
@@ -28,28 +25,26 @@ class MediaType
 
     /**
      * The sub-type part of media type.
-     * 
+     *
      * @var string
      */
     private $_subType;
 
     /**
      * The parameters associated with the media type.
-     * 
+     *
      * @var array(array(string, string))
      */
     private $_parameters;
 
     /**
      * Constructs a new instance of Media Type.
-     * 
+     *
      * @param string $type       The type of media type
      * @param string $subType    The sub type of media type
      * @param array  $parameters The parameters associated with media type
-     * 
-     * @return void
      */
-    public function  __construct($type, $subType, $parameters)
+    public function __construct($type, $subType, $parameters)
     {
         $this->_type = $type;
         $this->_subType = $subType;
@@ -58,17 +53,17 @@ class MediaType
 
     /**
      * Gets the MIME type.
-     * 
+     *
      * @return string
      */
     public function getMimeType()
     {
-        return $this->_type . '/' . $this->_subType;
+        return $this->_type.'/'.$this->_subType;
     }
 
     /**
      * Gets the parameters associated with the media types.
-     * 
+     *
      * @return array(array(string, string))
      */
     public function getParameters()
@@ -79,15 +74,15 @@ class MediaType
     /**
      * Gets the number of parts in this media type that matches with
      * the given candidate type.
-     * 
-     * @param string $candidate The candidate mime type.
-     * 
+     *
+     * @param string $candidate The candidate mime type
+     *
      * @return int Returns -1 if this media type does not match with the
-     *                        candidate media type, 0 if media type's type is '*'
-     *                        (accept all types), 1 if media types's type matches
-     *                        with the candidate MIME type's type and media type's
-     *                        sub-types is '*' (accept all sub-type), 2 if both
-     *                        type and sub-type matches.
+     *             candidate media type, 0 if media type's type is '*'
+     *             (accept all types), 1 if media types's type matches
+     *             with the candidate MIME type's type and media type's
+     *             sub-types is '*' (accept all sub-type), 2 if both
+     *             type and sub-type matches
      */
     public function getMatchingRating($candidate)
     {
@@ -97,21 +92,20 @@ class MediaType
             //get the odata parameter (if there is one)
             $candidateODataValue = null;
             $candidateParts = explode(';', $candidate);
-            if(count($candidateParts) > 1){
+            if (count($candidateParts) > 1) {
                 //is it safe to assume the mime type is always the first part?
                 $candidate = array_shift($candidateParts); //move off the first type matcher
                 //the rest look like QSPs..kinda so we can do this
-                parse_str(implode("&", $candidateParts), $candidateParts);
-                if(array_key_exists('odata', $candidateParts)){
+                parse_str(implode('&', $candidateParts), $candidateParts);
+                if (array_key_exists('odata', $candidateParts)) {
                     $candidateODataValue = $candidateParts['odata'];
                 }
             }
 
             //ensure that the odata parameter values match
-            if($this->getODataValue() !== $candidateODataValue){
+            if ($this->getODataValue() !== $candidateODataValue) {
                 return -1;
             }
-
 
             if ($this->_type == '*') {
                 $result = 0;
@@ -130,7 +124,6 @@ class MediaType
                             if (strcasecmp($this->_subType, $candidateSubType) == 0) {
                                 //if sub type matches
                                 $result = 2;
-
                             }
                         }
                     }
@@ -156,9 +149,9 @@ class MediaType
 
     /**
      * Gets the quality factor associated with this media type.
-     * 
+     *
      * @return int The value associated with 'q' parameter (0-1000),
-     *             if absent return 1000.
+     *             if absent return 1000
      */
     public function getQualityValue()
     {
@@ -172,6 +165,7 @@ class MediaType
                         $textIndex,
                         $result
                     );
+
                     return $result;
                 }
             }
@@ -182,22 +176,19 @@ class MediaType
 }
 
 /**
- * Class HttpProcessUtility
- * @package POData
+ * Class HttpProcessUtility.
  */
 class HttpProcessUtility
 {
-
     /**
      * Gets the appropriate MIME type for the request, throwing if there is none.
-     * 
-     * @param string        $acceptTypesText    Text as it appears in an HTTP
-     *                                          Accepts header.
-     * @param string[] $exactContentTypes  Preferred content type to match if an exact media type is given - this is in descending order of preference.
      *
-     * @param string        $inexactContentType Preferred fallback content type for inexact matches.
+     * @param string   $acceptTypesText    Text as it appears in an HTTP
+     *                                     Accepts header
+     * @param string[] $exactContentTypes  Preferred content type to match if an exact media type is given - this is in descending order of preference
+     * @param string   $inexactContentType Preferred fallback content type for inexact matches
      *
-     * @return string One of exactContentType or inexactContentType.
+     * @return string One of exactContentType or inexactContentType
      */
     public static function selectRequiredMimeType($acceptTypesText,
         $exactContentTypes,
@@ -228,7 +219,7 @@ class HttpProcessUtility
                     break;
                 }
 
-                $matchingParts 
+                $matchingParts
                     = $acceptType->getMatchingRating($inexactContentType);
                 if ($matchingParts < 0) {
                     continue;
@@ -240,7 +231,7 @@ class HttpProcessUtility
                     $selectedMatchingParts = $matchingParts;
                     $selectedQualityValue = $acceptType->getQualityValue();
                     $acceptable = $selectedQualityValue != 0;
-                } else if ($matchingParts == $selectedMatchingParts) {
+                } elseif ($matchingParts == $selectedMatchingParts) {
                     // A type with a higher q-value wins.
                     $candidateQualityValue = $acceptType->getQualityValue();
                     if ($candidateQualityValue > $selectedQualityValue) {
@@ -268,11 +259,11 @@ class HttpProcessUtility
 
     /**
      * Selects an acceptable MIME type that satisfies the Accepts header.
-     * 
-     * @param string $acceptTypesText Text for Accepts header.
-     * @param string[] $availableTypes  Types that the server is willing to return, in descending order of preference.
-     * 
-     * @return string The best MIME type for the client.
+     *
+     * @param string   $acceptTypesText Text for Accepts header
+     * @param string[] $availableTypes  Types that the server is willing to return, in descending order of preference
+     *
+     * @return string The best MIME type for the client
      *
      * @throws HttpHeaderFailure
      */
@@ -288,7 +279,7 @@ class HttpProcessUtility
             $acceptTypes = self::mimeTypesFromAcceptHeaders($acceptTypesText);
             foreach ($acceptTypes as $acceptType) {
                 $acceptTypesEmpty = false;
-                for ($i = 0; $i < count($availableTypes); $i++) {
+                for ($i = 0; $i < count($availableTypes); ++$i) {
                     $availableType = $availableTypes[$i];
                     $matchRating = $acceptType->getMatchingRating($availableType);
                     if ($matchRating < 0) {
@@ -302,7 +293,7 @@ class HttpProcessUtility
                         $selectedQualityValue = $acceptType->getQualityValue();
                         $selectedPreferenceIndex = $i;
                         $acceptable = $selectedQualityValue != 0;
-                    } else if ($matchRating == $selectedMatchingParts) {
+                    } elseif ($matchRating == $selectedMatchingParts) {
                         // A type with a higher q-value wins.
                         $candidateQualityValue = $acceptType->getQualityValue();
                         if ($candidateQualityValue > $selectedQualityValue) {
@@ -310,7 +301,7 @@ class HttpProcessUtility
                             $selectedQualityValue = $candidateQualityValue;
                             $selectedPreferenceIndex = $i;
                             $acceptable = $selectedQualityValue != 0;
-                        } else if ($candidateQualityValue == $selectedQualityValue) {
+                        } elseif ($candidateQualityValue == $selectedQualityValue) {
                             // A type that is earlier in the availableTypes array wins.
                             if ($i < $selectedPreferenceIndex) {
                                 $selectedContentType = $availableType;
@@ -324,7 +315,7 @@ class HttpProcessUtility
 
         if ($acceptTypesEmpty) {
             $selectedContentType = $availableTypes[0];
-        } else if (!$acceptable) {
+        } elseif (!$acceptable) {
             $selectedContentType = null;
         }
 
@@ -333,12 +324,12 @@ class HttpProcessUtility
 
     /**
      * Returns all MIME types from the $text.
-     * 
-     * @param string $text Text as it appears on an HTTP Accepts header.
-     * 
-     * @return MediaType[] Array of media (MIME) type description.
      *
-     * @throws HttpHeaderFailure If found any syntax error in the given text.
+     * @param string $text Text as it appears on an HTTP Accepts header
+     *
+     * @return MediaType[] Array of media (MIME) type description
+     *
+     * @throws HttpHeaderFailure If found any syntax error in the given text
      */
     public static function mimeTypesFromAcceptHeaders($text)
     {
@@ -352,18 +343,18 @@ class HttpProcessUtility
             $parameters = array();
             while (!self::skipWhitespace($text, $textIndex)) {
                 if ($text[$textIndex] == ',') {
-                    $textIndex++;
+                    ++$textIndex;
                     break;
                 }
 
                 if ($text[$textIndex] != ';') {
                     throw new HttpHeaderFailure(
-                        Messages::httpProcessUtilityMediaTypeRequiresSemicolonBeforeParameter(), 
+                        Messages::httpProcessUtilityMediaTypeRequiresSemicolonBeforeParameter(),
                         400
                     );
                 }
 
-                $textIndex++;
+                ++$textIndex;
                 if (self::skipWhitespace($text, $textIndex)) {
                     break;
                 }
@@ -380,17 +371,17 @@ class HttpProcessUtility
     /**
      * Skips whitespace in the specified text by advancing an index to
      * the next non-whitespace character.
-     * 
-     * @param string $text       Text to scan.
-     * @param int    &$textIndex Index to begin scanning from.
-     * 
-     * @return boolean true if the end of the string was reached, false otherwise.
+     *
+     * @param string $text       Text to scan
+     * @param int    &$textIndex Index to begin scanning from
+     *
+     * @return bool true if the end of the string was reached, false otherwise
      */
     public static function skipWhiteSpace($text, &$textIndex)
     {
         $textLen = strlen($text);
         while (($textIndex < $textLen) && Char::isWhiteSpace($text[$textIndex])) {
-            $textIndex++;
+            ++$textIndex;
         }
 
         return $textLen == $textIndex;
@@ -398,42 +389,40 @@ class HttpProcessUtility
 
     /**
      * Reads the type and subtype specifications for a MIME type.
-     * 
-     * @param string $text       Text in which specification exists.
-     * @param int    &$textIndex Pointer into text.
-     * @param string &$type      Type of media found.
-     * @param string &$subType   Subtype of media found.
      *
-     * @throws HttpHeaderFailure If failed to read type and sub-type.
-     * 
-     * @return void
+     * @param string $text       Text in which specification exists
+     * @param int    &$textIndex Pointer into text
+     * @param string &$type      Type of media found
+     * @param string &$subType   Subtype of media found
+     *
+     * @throws HttpHeaderFailure If failed to read type and sub-type
      */
-    public static function readMediaTypeAndSubtype($text, &$textIndex, 
+    public static function readMediaTypeAndSubtype($text, &$textIndex,
         &$type, &$subType
     ) {
         $textStart = $textIndex;
         if (self::readToken($text, $textIndex)) {
             throw new HttpHeaderFailure(
-                Messages::httpProcessUtilityMediaTypeUnspecified(), 
+                Messages::httpProcessUtilityMediaTypeUnspecified(),
                 400
             );
         }
 
         if ($text[$textIndex] != '/') {
             throw new HttpHeaderFailure(
-                Messages::httpProcessUtilityMediaTypeRequiresSlash(), 
+                Messages::httpProcessUtilityMediaTypeRequiresSlash(),
                 400
             );
         }
 
         $type = substr($text, $textStart, $textIndex - $textStart);
-        $textIndex++;
+        ++$textIndex;
 
         $subTypeStart = $textIndex;
         self::readToken($text, $textIndex);
         if ($textIndex == $subTypeStart) {
             throw new HttpHeaderFailure(
-                Messages::httpProcessUtilityMediaTypeRequiresSubType(), 
+                Messages::httpProcessUtilityMediaTypeRequiresSubType(),
                 400
             );
         }
@@ -443,17 +432,17 @@ class HttpProcessUtility
 
     /**
      * Reads a token on the specified text by advancing an index on it.
-     * 
-     * @param string $text       Text to read token from.
-     * @param int    &$textIndex Index for the position being scanned on text.
-     * 
-     * @return boolean true if the end of the text was reached; false otherwise.
+     *
+     * @param string $text       Text to read token from
+     * @param int    &$textIndex Index for the position being scanned on text
+     *
+     * @return bool true if the end of the text was reached; false otherwise
      */
     public static function readToken($text, &$textIndex)
     {
         $textLen = strlen($text);
         while (($textIndex < $textLen) && self::isHttpTokenChar($text[$textIndex])) {
-            $textIndex++;
+            ++$textIndex;
         }
 
         return $textLen == $textIndex;
@@ -462,11 +451,11 @@ class HttpProcessUtility
     /**
      * To check whether the given character is a HTTP token character
      * or not.
-     * 
-     * @param string $char The character to inspect.
-     * 
-     * @return boolean True if the given character is a valid HTTP token
-     *                 character, False otherwise.
+     *
+     * @param string $char The character to inspect
+     *
+     * @return bool True if the given character is a valid HTTP token
+     *              character, False otherwise
      */
     public static function isHttpTokenChar($char)
     {
@@ -477,10 +466,10 @@ class HttpProcessUtility
     /**
      * To check whether the given character is a HTTP seperator character.
      *
-     * @param char $char The character to inspect.
-     * 
-     * @return boolean True if the given character is a valid HTTP seperator
-     *                 character, False otherwise.
+     * @param char $char The character to inspect
+     *
+     * @return bool True if the given character is a valid HTTP seperator
+     *              character, False otherwise
      */
     public static function isHttpSeparator($char)
     {
@@ -494,20 +483,19 @@ class HttpProcessUtility
 
     /**
      * Read a parameter for a media type/range.
-     * 
-     * @param string $text        Text to read from.
-     * @param int    &$textIndex  Pointer in text.
-     * @param array  &$parameters Array with parameters.
      *
-     * @throws HttpHeaderFailure If found parameter value missing.
-     * @return void
+     * @param string $text        Text to read from
+     * @param int    &$textIndex  Pointer in text
+     * @param array  &$parameters Array with parameters
+     *
+     * @throws HttpHeaderFailure If found parameter value missing
      */
     public static function readMediaTypeParameter($text, &$textIndex, &$parameters)
     {
         $textStart = $textIndex;
         if (self::readToken($text, $textIndex)) {
             throw new HttpHeaderFailure(
-                Messages::httpProcessUtilityMediaTypeMissingValue(), 
+                Messages::httpProcessUtilityMediaTypeMissingValue(),
                 400
             );
         }
@@ -515,13 +503,13 @@ class HttpProcessUtility
         $parameterName = substr($text, $textStart, $textIndex - $textStart);
         if ($text[$textIndex] != '=') {
             throw new HttpHeaderFailure(
-                Messages::httpProcessUtilityMediaTypeMissingValue(), 
+                Messages::httpProcessUtilityMediaTypeMissingValue(),
                 400
             );
         }
 
-        $textIndex++;
-        $parameterValue 
+        ++$textIndex;
+        $parameterValue
             = self::readQuotedParameterValue($parameterName, $text, $textIndex);
         $parameters[] = array($parameterName => $parameterValue);
     }
@@ -529,16 +517,16 @@ class HttpProcessUtility
     /**
      * Reads Mime type parameter value for a particular parameter in the
      * Content-Type/Accept headers.
-     * 
-     * @param string $parameterName Name of parameter.
-     * @param string $text          Header text.
-     * @param int    &$textIndex    Parsing index in $text.
-     * 
-     * @return string String representing the value of the $parameterName parameter.
+     *
+     * @param string $parameterName Name of parameter
+     * @param string $text          Header text
+     * @param int    &$textIndex    Parsing index in $text
+     *
+     * @return string String representing the value of the $parameterName parameter
      *
      * @throws HttpHeaderFailure
      */
-    public static function readQuotedParameterValue($parameterName, $text, 
+    public static function readQuotedParameterValue($parameterName, $text,
         &$textIndex
     ) {
         $parameterValue = array();
@@ -546,7 +534,7 @@ class HttpProcessUtility
         $valueIsQuoted = false;
         if ($textIndex < $textLen) {
             if ($text[$textIndex] == '"') {
-                $textIndex++;
+                ++$textIndex;
                 $valueIsQuoted = true;
             }
         }
@@ -559,12 +547,12 @@ class HttpProcessUtility
                     throw new HttpHeaderFailure(
                         Messages::httpProcessUtilityEscapeCharWithoutQuotes(
                             $parameterName
-                        ), 
+                        ),
                         400
                     );
                 }
 
-                $textIndex++;
+                ++$textIndex;
 
                 // End of quoted parameter value.
                 if ($currentChar == '"') {
@@ -574,24 +562,24 @@ class HttpProcessUtility
 
                 if ($textIndex >= $textLen) {
                     throw new HttpHeaderFailure(
-                        Messages::httpProcessUtilityEscapeCharAtEnd($parameterName), 
+                        Messages::httpProcessUtilityEscapeCharAtEnd($parameterName),
                         400
                     );
                 }
 
                 $currentChar = $text[$textIndex];
-            } else if (!self::isHttpTokenChar($currentChar)) {
+            } elseif (!self::isHttpTokenChar($currentChar)) {
                 // If the given character is special, we stop processing.
                 break;
             }
 
             $parameterValue[] = $currentChar;
-            $textIndex++;
+            ++$textIndex;
         }
 
         if ($valueIsQuoted) {
             throw new HttpHeaderFailure(
-                Messages::httpProcessUtilityClosingQuoteNotFound($parameterName), 
+                Messages::httpProcessUtilityClosingQuoteNotFound($parameterName),
                 400
             );
         }
@@ -600,42 +588,41 @@ class HttpProcessUtility
     }
 
     /**
-     * Reads the numeric part of a quality value substring, normalizing it to 0-1000
-       rather than the standard 0.000-1.000 ranges.
-     * 
-     * @param string $text          Text to read qvalue from.
-     * @param int    &$textIndex    Index into text where the qvalue starts.
-     * @param int    &$qualityValue After the method executes, the normalized qvalue.
-     * @param integer $textIndex
+     * Reads the numeric part of a quality value substring, normalizing it to 0-1000.
+     rather than the standard 0.000-1.000 ranges.
+     *
+     * @param string $text          Text to read qvalue from
+     * @param int    &$textIndex    Index into text where the qvalue starts
+     * @param int    &$qualityValue After the method executes, the normalized qvalue
+     * @param int    $textIndex
      *
      * @throws HttpHeaderFailure If any error occured while reading and processing
-     *                           the quality factor.
-     * @return void
+     *                           the quality factor
      */
     public static function readQualityValue($text, &$textIndex, &$qualityValue)
     {
         $digit = $text[$textIndex++];
         if ($digit == '0') {
             $qualityValue = 0;
-        } else if ($digit == '1') {
+        } elseif ($digit == '1') {
             $qualityValue = 1;
         } else {
             throw new HttpHeaderFailure(
-                Messages::httpProcessUtilityMalformedHeaderValue(), 
+                Messages::httpProcessUtilityMalformedHeaderValue(),
                 400
             );
         }
 
         $textLen = strlen($text);
         if ($textIndex < $textLen && $text[$textIndex] == '.') {
-            $textIndex++;
+            ++$textIndex;
 
             $adjustFactor = 1000;
             while ($adjustFactor > 1 && $textIndex < $textLen) {
                 $c = $text[$textIndex];
                 $charValue = self::digitToInt32($c);
                 if ($charValue >= 0) {
-                    $textIndex++;
+                    ++$textIndex;
                     $adjustFactor /= 10;
                     $qualityValue *= 10;
                     $qualityValue += $charValue;
@@ -648,7 +635,7 @@ class HttpProcessUtility
             if ($qualityValue > 1000) {
                 // Too high of a value in qvalue.
                 throw new HttpHeaderFailure(
-                    Messages::httpProcessUtilityMalformedHeaderValue(), 
+                    Messages::httpProcessUtilityMalformedHeaderValue(),
                     400
                 );
             }
@@ -659,24 +646,24 @@ class HttpProcessUtility
 
     /**
      * Converts the specified character from the ASCII range to a digit.
-     * 
+     *
      * @param string $c Character to convert
      *
-     * @return int The Int32 value for $c, or -1 if it is an element separator.
+     * @return int The Int32 value for $c, or -1 if it is an element separator
      *
      * @throws HttpHeaderFailure If $c is not ASCII value for digit or element
-     *                           seperator.
+     *                           seperator
      */
     public static function digitToInt32($c)
     {
         if ($c >= '0' && $c <= '9') {
-                return intval($c);
+            return intval($c);
         } else {
             if (self::isHttpElementSeparator($c)) {
                 return -1;
             } else {
                 throw new HttpHeaderFailure(
-                    Messages::httpProcessUtilityMalformedHeaderValue(), 
+                    Messages::httpProcessUtilityMalformedHeaderValue(),
                     400
                 );
             }
@@ -684,13 +671,13 @@ class HttpProcessUtility
     }
 
     /**
-     * Verifies whether the specified character is a valid separator in
-       an HTTP header list of element.
-     * 
+     * Verifies whether the specified character is a valid separator in.
+     an HTTP header list of element.
+     *
      * @param char $c Character to verify
-     * 
-     * @return boolean true if c is a valid character for separating elements;
-     *                 false otherwise.
+     *
+     * @return bool true if c is a valid character for separating elements;
+     *              false otherwise
      */
     public static function isHttpElementSeparator($c)
     {
@@ -698,7 +685,8 @@ class HttpProcessUtility
     }
 
     /**
-     * Get server key by header
+     * Get server key by header.
+     *
      * @param string $headerName Name of header
      */
     public static function headerToServerKey($headerName)
@@ -716,8 +704,9 @@ class HttpProcessUtility
             case 'ACCEPT_LANGUAGE':
             case 'DATASERVICEVERSION':
             case 'MAXDATASERVICEVERSION':
-                return 'HTTP_' . $name;
+                return 'HTTP_'.$name;
         }
+
         return $name;
     }
 }

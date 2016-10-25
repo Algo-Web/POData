@@ -3,13 +3,10 @@
 namespace UnitTests\POData\UriProcessor\QueryProcessor\ExpressionParser;
 
 use POData\Providers\Metadata\Type\DateTime;
-use POData\Providers\Metadata\Type\Binary;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionParser2;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionProcessor;
 use POData\Providers\Expression\PHPExpressionProvider;
-use POData\Common\ODataException;
 use POData\Providers\Metadata\IMetadataProvider;
-
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 //These are in the file loaded by above use statement
 //TODO: move to own class files
@@ -24,14 +21,14 @@ class PHPExpressionProviderTest extends \PHPUnit_Framework_TestCase
      * @var IMetadataProvider
      */
     private $northWindMetadata;
-    
+
     protected function setUp()
-    {        
-         $this->northWindMetadata = NorthWindMetadata::Create();
+    {
+        $this->northWindMetadata = NorthWindMetadata::Create();
     }
-    
-    /**     
-     * Test null checks are propagated properly
+
+    /**
+     * Test null checks are propagated properly.
      */
     public function testNullabilityChecking()
     {
@@ -176,11 +173,10 @@ class PHPExpressionProviderTest extends \PHPUnit_Framework_TestCase
         $actualPHPExpression = $expressionProcessor->processExpression($parser->parseFilter());
         $expectedPHPExpression = '(((!(is_null($lt->Customer)) && !(is_null($lt->Customer->Address))) && !(is_null($lt->Customer->Address->IsValid))) && (!($lt->Customer->Address->IsValid) && true))';
         $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
-            
     }
-    
-    /**     
-     * Test the possible string operators defined for filter option 
+
+    /**
+     * Test the possible string operators defined for filter option.
      */
     public function testStringFunctions()
     {
@@ -259,11 +255,10 @@ class PHPExpressionProviderTest extends \PHPUnit_Framework_TestCase
         $actualPHPExpression = $expressionProcessor->processExpression($parser->parseFilter());
         $expectedPHPExpression = '(strlen(\'Red_Black_Tree\') == 8)';
         $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
-            
     }
-    
-    /**     
-     * Test the possible datetime operators defined for filter option 
+
+    /**
+     * Test the possible datetime operators defined for filter option.
      */
     public function testDateTimeFunctions()
     {
@@ -312,11 +307,10 @@ class PHPExpressionProviderTest extends \PHPUnit_Framework_TestCase
         $actualPHPExpression = $expressionProcessor->processExpression($parser->parseFilter());
         $expectedPHPExpression = '(!(is_null($lt->OrderDate)) && ((POData\Providers\Metadata\Type\DateTime::month($lt->OrderDate) == 12) && (POData\Providers\Metadata\Type\DateTime::day($lt->OrderDate) == 22)))';
         $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
-            
     }
-    
-    /**     
-     * Test guid opertor (guid comparison)
+
+    /**
+     * Test guid opertor (guid comparison).
      */
     public function testGuidFunctions()
     {
@@ -330,9 +324,9 @@ class PHPExpressionProviderTest extends \PHPUnit_Framework_TestCase
         $expectedPHPExpression = '((!(is_null($lt->Customer)) && !(is_null($lt->Customer->CustomerGuid))) && (POData\Providers\Metadata\Type\Guid::guidEqual($lt->Customer->CustomerGuid, \'05b242e752eb46bd8f0e6568b72cd9a5\') == true))';
         $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
     }
-    
-    /**     
-     * Test the possible math functions defined for filter option
+
+    /**
+     * Test the possible math functions defined for filter option.
      */
     public function testMathFunctions()
     {
@@ -351,11 +345,10 @@ class PHPExpressionProviderTest extends \PHPUnit_Framework_TestCase
         $actualPHPExpression = $expressionProcessor->processExpression($parser->parseFilter());
         $expectedPHPExpression = '(!(is_null($lt->Price)) && (ceil((floor($lt->Price) + 5)) == 345.90))';
         $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
-            
     }
-    
-    /**     
-     * Test expression provider using real data
+
+    /**
+     * Test expression provider using real data.
      */
     public function testAnonymousFunction()
     {
@@ -415,7 +408,7 @@ class PHPExpressionProviderTest extends \PHPUnit_Framework_TestCase
                                             $this->northWindMetadata->resolveResourceSet('Orders')->getResourceType(),
                                             $data['Orders']);
         $this->assertEquals(2, count($result));
-        foreach($result as $order) {
+        foreach ($result as $order) {
             $this->assertEquals($order->ShipName, 'Speedy Express');
         }
 
@@ -429,7 +422,7 @@ class PHPExpressionProviderTest extends \PHPUnit_Framework_TestCase
         $result = $this->executeExpression('year(OrderDate) eq 1999 or year(OrderDate) add 4 eq 1999',
                                             $this->northWindMetadata->resolveResourceSet('Orders')->getResourceType(),
                                             $data['Orders']);
-        foreach($result as $order) {
+        foreach ($result as $order) {
             $this->assertContains($order->OrderDate, array(1999, 1995));
         }
 
@@ -437,7 +430,7 @@ class PHPExpressionProviderTest extends \PHPUnit_Framework_TestCase
         $result = $this->executeExpression('OrderDate ge datetime\'2000-11-11\'',
                                             $this->northWindMetadata->resolveResourceSet('Orders')->getResourceType(),
                                             $data['Orders']);
-        foreach($result as $order) {
+        foreach ($result as $order) {
             $this->assertGreaterThanOrEqual(0, DateTime::dateTimeCmp($order->OrderDate, '2000-11-11'));
         }
 
@@ -468,17 +461,16 @@ class PHPExpressionProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($customer1->CustomerID, $customer2->CustomerID);
         $this->assertEquals($customer3->CustomerID, $customer4->CustomerID);
         $this->assertEquals($customer1->CustomerID, $customer4->CustomerID);
-            
     }
-    
+
     /**
      * Parse the astoria filter expression, generate the same expression as PHP expression,
      * retrieve only the entries which satisfies this expression.
-     * 
+     *
      * @param string         $astoriaFilter
-     * @param ResourceType    $resourceType
+     * @param ResourceType   $resourceType
      * @param array<objects> $entries
-     * 
+     *
      * @return array<objects>
      */
     private function executeExpression($astoriaFilter, $resourceType, $entries)
@@ -490,17 +482,16 @@ class PHPExpressionProviderTest extends \PHPUnit_Framework_TestCase
         $expressionProcessor = new ExpressionProcessor(new \POData\Providers\Expression\PHPExpressionProvider('$lt'));
         $phpExpression = $expressionProcessor->processExpression($expressionTree);
         //create an anonymous function with the generated PHP expression in if condition
-        $fun = create_function('$lt', 'if(' . $phpExpression . ') { return true; } else { return false;}');
+        $fun = create_function('$lt', 'if('.$phpExpression.') { return true; } else { return false;}');
         $result = array();
-        foreach($entries as $lt) {
+        foreach ($entries as $lt) {
             //Filter out only the entries which satisfies the condition
-            if($fun($lt)) {
-               $result[] = $lt;
+            if ($fun($lt)) {
+                $result[] = $lt;
             }
         }
 
         return $result;
-            
     }
 
     public function testProcessUnknownAbstractExpressionType()
@@ -512,12 +503,11 @@ class PHPExpressionProviderTest extends \PHPUnit_Framework_TestCase
         $actual = $expressionProcessor->processExpression($unknownExpression);
 
         $this->assertNull($actual);
-
     }
 
     /**
      * Prepare test data.
-     * 
+     *
      * @return array<key, array<objects>>
      */
     private function createTestData()
@@ -525,12 +515,12 @@ class PHPExpressionProviderTest extends \PHPUnit_Framework_TestCase
         $customers = array();
         $orders = array();
 
-        $customer = $this->createCustomer('ALFKI', 
-                        '05b242e7-52eb-46bd-8f0e-6568b72cd9a5', 
-                    	'Alfreds Futterkiste', 
-                        $this->createAddress('AF34', 12, 15, 'Obere Str. 57', true, true), 
-                		'Germany', 1);
-        $customers[] = $customer;                
+        $customer = $this->createCustomer('ALFKI',
+                        '05b242e7-52eb-46bd-8f0e-6568b72cd9a5',
+                        'Alfreds Futterkiste',
+                        $this->createAddress('AF34', 12, 15, 'Obere Str. 57', true, true),
+                        'Germany', 1);
+        $customers[] = $customer;
         $order = $this->createOrder(123, '2000-12-12', '2000-12-12', 'Speedy Express', 23, 4, 100.44);
         $orders[] = $order;
         $this->setCustomerOrder($customer, $order);
@@ -540,12 +530,12 @@ class PHPExpressionProviderTest extends \PHPUnit_Framework_TestCase
         $this->setCustomerOrder($customer, $order);
         $this->setOrderCustomer($order, $customer);
 
-        $customer = $this->createCustomer('DUMON', 
-                        '15b242e7-52eb-46bd-8f0e-6568b72cd9a6', 
-                    	'Janine Labrune', 
+        $customer = $this->createCustomer('DUMON',
+                        '15b242e7-52eb-46bd-8f0e-6568b72cd9a6',
+                        'Janine Labrune',
                         null, //Address is null
-                		'France', 4);
-        $customers[] = $customer;                
+                        'France', 4);
+        $customers[] = $customer;
         $order = $this->createOrder(125, '1995-05-05', '1995-05-09', 'Federal Shipping', 100, 1, 800);
         $orders[] = $order;
         $this->setCustomerOrder($customer, $order);
@@ -559,13 +549,13 @@ class PHPExpressionProviderTest extends \PHPUnit_Framework_TestCase
         $this->setCustomerOrder($customer, $order);
         $this->setOrderCustomer($order, $customer);
 
+        $customer = $this->createCustomer('EASTC',
+                            '15b242e7-52eb-46bd-8f0e-6568b72cd9a7',
+                            'Ann Devon',
+                            $this->createAddress('FF45', 15, 16, '35 King George', true, false),
+                            'Germany', 3);
+        $customers[] = $customer;
 
-        $customer = $this->createCustomer('EASTC', 
-                            '15b242e7-52eb-46bd-8f0e-6568b72cd9a7', 
-                        	'Ann Devon', 
-                            $this->createAddress('FF45', 15, 16, '35 King George', true, false), 
-                        	'Germany', 3);
-        $customers[] = $customer;                
         return array('Customers' => $customers, 'Orders' => $orders);
     }
 
@@ -579,6 +569,7 @@ class PHPExpressionProviderTest extends \PHPUnit_Framework_TestCase
         $address->LineNumber = $lineNumber;
         $address->LineNumber2 = $lineNumber2;
         $address->StreetName = $streetName;
+
         return $address;
     }
 
@@ -592,6 +583,7 @@ class PHPExpressionProviderTest extends \PHPUnit_Framework_TestCase
         $customer->Country = $country;
         $customer->Rating = $rating;
         $customer->Orders = null;
+
         return $customer;
     }
 
@@ -605,6 +597,7 @@ class PHPExpressionProviderTest extends \PHPUnit_Framework_TestCase
         $order->ShipName = $shipName;
         $order->QualityRate = $qualityRate;
         $order->Price = $price;
+
         return $order;
     }
 
@@ -613,14 +606,12 @@ class PHPExpressionProviderTest extends \PHPUnit_Framework_TestCase
         if (is_null($customer->Orders)) {
             $customer->Orders = array();
         }
-    
+
         $customer->Orders[] = $order;
     }
 
-
     private function setOrderCustomer($order, $customer)
-    {    
+    {
         $order->Customer = $customer;
     }
-    
 }

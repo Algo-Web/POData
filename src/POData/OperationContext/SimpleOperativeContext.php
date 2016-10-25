@@ -1,10 +1,10 @@
 <?php
+
 namespace POData\OperationContext;
 
-use POData\OperationContext\IHTTPRequest;
-use POData\OperationContext\IOperationContext;
 use POData\OperationContext\Web\OutgoingResponse;
-class SimpleOperationContextAdapter implements IOperationContext
+
+class SimpleOperativeContext implements IOperationContext
 {
     /**
      * @var RequestAdapter;

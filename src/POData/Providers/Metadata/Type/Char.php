@@ -5,8 +5,7 @@ namespace POData\Providers\Metadata\Type;
 use POData\Common\NotImplementedException;
 
 /**
- * Class Char
- * @package POData\Providers\Metadata\Type
+ * Class Char.
  */
 class Char implements IType
 {
@@ -22,11 +21,11 @@ class Char implements IType
     const NEWLINE = 10;
     const CARRIAGE_RETURN = 13;
     const SPACE = 32;
-    
+
     /**
      * Gets the type code
-     * Note: implementation of IType::getTypeCode
-     *   
+     * Note: implementation of IType::getTypeCode.
+     *
      * @return TypeCode
      */
     public function getTypeCode()
@@ -36,11 +35,11 @@ class Char implements IType
 
     /**
      * Checks this type is compatible with another type
-     * Note: implementation of IType::isCompatibleWith
-     * 
+     * Note: implementation of IType::isCompatibleWith.
+     *
      * @param IType $type Type to check compatibility
-     * 
-     * @return boolean 
+     *
+     * @return bool
      */
     public function isCompatibleWith(IType $type)
     {
@@ -49,19 +48,19 @@ class Char implements IType
             case TypeCode::CHAR:
                 return true;
         }
-        
+
         return false;
     }
 
     /**
      * Validate a value in Astoria uri is in a format for this type
-     * Note: implementation of IType::validate
-     * 
-     * @param string $value     The value to validate 
-     * @param string &$outValue The stripped form of $value that can 
+     * Note: implementation of IType::validate.
+     *
+     * @param string $value     The value to validate
+     * @param string &$outValue The stripped form of $value that can
      *                          be used in PHP expressions
-     * 
-     * @return boolean
+     *
+     * @return bool
      */
     public function validate($value, &$outValue)
     {
@@ -71,8 +70,8 @@ class Char implements IType
 
     /**
      * Gets full name of this type in EDM namespace
-     * Note: implementation of IType::getFullTypeName
-     * 
+     * Note: implementation of IType::getFullTypeName.
+     *
      * @return string
      */
     public function getFullTypeName()
@@ -81,25 +80,25 @@ class Char implements IType
     }
 
     /**
-     * Converts the given string value to char type.     
+     * Converts the given string value to char type.
      * Note: This function will not perform any conversion.
-     * 
-     * @param string $stringValue The value to convert.
-     * 
+     *
+     * @param string $stringValue The value to convert
+     *
      * @return string
      */
     public function convert($stringValue)
     {
-        return $stringValue;     
+        return $stringValue;
     }
 
     /**
      * Convert the given value to a form that can be used in OData uri.
-     * Note: The calling function should not pass null value, as this 
-     * function will not perform any check for nullability 
-     * 
-     * @param mixed $value The value to convert.
-     * 
+     * Note: The calling function should not pass null value, as this
+     * function will not perform any check for nullability.
+     *
+     * @param mixed $value The value to convert
+     *
      * @return string
      */
     public function convertToOData($value)
@@ -108,59 +107,61 @@ class Char implements IType
     }
 
     /**
-     * Checks a character is whilespace
-     * 
+     * Checks a character is whilespace.
+     *
      * @param char $char character to check
-     * 
-     * @return boolean
+     *
+     * @return bool
      */
     public static function isWhiteSpace($char)
     {
         $asciiVal = ord($char);
-        return $asciiVal == Char::SPACE 
-            || $asciiVal == Char::TAB 
-            || $asciiVal == Char::CARRIAGE_RETURN 
-            || $asciiVal == Char::NEWLINE;
+
+        return $asciiVal == self::SPACE
+            || $asciiVal == self::TAB
+            || $asciiVal == self::CARRIAGE_RETURN
+            || $asciiVal == self::NEWLINE;
     }
 
     /**
-     * Checks a character is letter 
-     * 
+     * Checks a character is letter.
+     *
      * @param char $char character to check
-     * 
-     * @return boolean
+     *
+     * @return bool
      */
     public static function isLetter($char)
     {
         $asciiVal = ord($char);
-        return ($asciiVal >= Char::A && $asciiVal <= Char::Z) 
-            || ($asciiVal >= Char::SMALL_A && $asciiVal <= Char::SMALL_Z);
+
+        return ($asciiVal >= self::A && $asciiVal <= self::Z)
+            || ($asciiVal >= self::SMALL_A && $asciiVal <= self::SMALL_Z);
     }
 
     /**
-     * Checks a character is digit 
-     * 
+     * Checks a character is digit.
+     *
      * @param char $char character to check
-     * 
-     * @return boolean
+     *
+     * @return bool
      */
     public static function isDigit($char)
     {
         $asciiVal = ord($char);
-        return $asciiVal >= Char::ZERO 
-            && $asciiVal <= Char::NINE;
+
+        return $asciiVal >= self::ZERO
+            && $asciiVal <= self::NINE;
     }
 
-
     /**
-     * Checks a character is letter or digit
-     * 
+     * Checks a character is letter or digit.
+     *
      * @param char $char character to check
-     * 
-     * @return boolean
+     *
+     * @return bool
      */
     public static function isLetterOrDigit($char)
-    { 
+    {
         return self::isDigit($char) || self::isLetter($char);
     }
 }

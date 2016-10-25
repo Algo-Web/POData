@@ -2,54 +2,44 @@
 
 namespace POData\Writers\Json;
 
-
-use POData\Writers\Json\IndentedTextWriter;
-
 /**
- * Class JsonWriter
- * @package POData\Writers\Json
+ * Class JsonWriter.
  */
 class JsonWriter
 {
     /**
      * Json datetime format.
-     *
      */
     private $_jsonDateTimeFormat = "\/Date(%s)\/";
 
-
     /**
-     * Writer to write text into
-     *
+     * Writer to write text into.
      */
     private $_writer;
 
     /**
-     * scope of the json text - object, array, etc
-     *
+     * scope of the json text - object, array, etc.
      */
     private $_scopes = array();
 
     /**
-     * Various scope types for Json writer
-     *
+     * Various scope types for Json writer.
      */
     private $_scopeType = array('Array' => 0, 'Object' => 1);
 
     /**
-     * Creates a new instance of Json writer
-     * 
+     * Creates a new instance of Json writer.
+     *
      * @param string $writer writer to which text needs to be written
      */
     public function __construct($writer)
     {
         $this->_writer = new IndentedTextWriter($writer);
-
     }
 
     /**
-     * End the current scope
-     * 
+     * End the current scope.
+     *
      * @return JsonWriter
      */
     public function endScope()
@@ -57,56 +47,57 @@ class JsonWriter
         $this->_writer
             ->writeLine()
             ->decreaseIndent();
- 
+
         if (array_pop($this->_scopes)->type == $this->_scopeType['Array']) {
-            $this->_writer->writeValue("]");
+            $this->_writer->writeValue(']');
         } else {
-            $this->_writer->writeValue("}");
+            $this->_writer->writeValue('}');
         }
 
         return $this;
-
     }
 
     /**
-     * Start the array scope
-     * 
+     * Start the array scope.
+     *
      * @return JsonWriter
      */
     public function startArrayScope()
     {
         $this->_startScope($this->_scopeType['Array']);
+
         return $this;
     }
 
-
     /**
-     * Write the "results" header for the data array
-     * 
+     * Write the "results" header for the data array.
+     *
      * @return JsonWriter
      */
     public function writeDataArrayName()
     {
         $this->writeName($this->dataArrayName);
+
         return $this;
     }
 
     /**
-     * Start the object scope
+     * Start the object scope.
      *
      * @return JsonWriter
      */
     public function startObjectScope()
     {
         $this->_startScope($this->_scopeType['Object']);
+
         return $this;
     }
 
     /**
-     * Write the name for the object property
-     * 
+     * Write the name for the object property.
+     *
      * @param string $name name of the object property
-     * 
+     *
      * @return JsonWriter
      */
     public function writeName($name)
@@ -114,24 +105,24 @@ class JsonWriter
         $currentScope = end($this->_scopes);
         if ($currentScope && $currentScope->type == $this->_scopeType['Object']) {
             if ($currentScope->objectCount != 0) {
-                $this->_writer->writeTrimmed(", ");
+                $this->_writer->writeTrimmed(', ');
             }
 
-            $currentScope->objectCount++;
+            ++$currentScope->objectCount;
         }
 
         $this->_writeCore($name, true /*quotes*/);
-        $this->_writer->writeTrimmed(": ");
+        $this->_writer->writeTrimmed(': ');
 
         return $this;
     }
 
     /**
-     * JSON write a basic data type (string, number, boolean, null)
-     * 
+     * JSON write a basic data type (string, number, boolean, null).
+     *
      * @param mixed  $value value to be written
      * @param string $type  data type of the value
-     * 
+     *
      * @return JsonWriter
      */
     public function writeValue($value, $type = null)
@@ -145,7 +136,6 @@ class JsonWriter
                 $this->_writeCore($value, /* quotes */ false);
                 break;
 
-
             case 'Edm.Int64':
             case 'Edm.Guid':
             case 'Edm.Decimal':
@@ -156,13 +146,12 @@ class JsonWriter
             case 'Edm.Single':
             case 'Edm.Double':
                 if (is_infinite($value) || is_nan($value)) {
-                    $this->_writeCore("null", /* quotes */ true);
+                    $this->_writeCore('null', /* quotes */ true);
                 } else {
                     $this->_writeCore($value, /* quotes */ false);
                 }
 
                 break;
-
 
             case 'Edm.DateTime':
                 $dateTime = new \DateTime($value, new \DateTimeZone('UTC'));
@@ -170,10 +159,9 @@ class JsonWriter
                 $this->_writeCore($formattedDateTime, /* quotes */ true);
                 break;
 
-
             case 'Edm.String':
                 if ($value == null) {
-                    $this->_writeCore("null", /* quotes */ false);
+                    $this->_writeCore('null', /* quotes */ false);
                 } else {
                     $jsonEncoded = json_encode($value);
                     //json_encode always escapes a solidus (forward slash, %x2F),
@@ -187,7 +175,6 @@ class JsonWriter
                 }
                 break;
 
-
             default:
                 $this->_writeCore($this->_quoteJScriptString($value), /* quotes */ true);
         }
@@ -196,32 +183,31 @@ class JsonWriter
     }
 
     /**
-     * Returns the string value with special characters escaped
-     * 
-     * @param string $string input string value
-     * 
      * Returns the string value with special characters escaped.
-     * 
+     *
+     * @param string $string input string value
+     *
+     * Returns the string value with special characters escaped
+     *
      * @return string
      */
     private function _quoteJScriptString($string)
     {
         // Escape ( " \ / \n \r \t \b \f) characters with a backslash.
-        $search  = array('\\', "\n", "\t", "\r", "\b", "\f", '"');
+        $search = array('\\', "\n", "\t", "\r", "\b", "\f", '"');
         $replace = array('\\\\', '\\n', '\\t', '\\r', '\\b', '\\f', '\"');
         $processedString = str_replace($search, $replace, $string);
         // Escape some ASCII characters(0x08, 0x0c)
         $processedString = str_replace(array(chr(0x08), chr(0x0C)), array('\b', '\f'), $processedString);
+
         return $processedString;
     }
 
     /**
-     * Write the string value with/without quotes
-     * 
+     * Write the string value with/without quotes.
+     *
      * @param string $text   value to be written
      * @param string $quotes put quotes around the value if this value is true
-     * 
-     * @return void
      */
     private function _writeCore($text, $quotes)
     {
@@ -229,10 +215,10 @@ class JsonWriter
             $currentScope = end($this->_scopes);
             if ($currentScope->type == $this->_scopeType['Array']) {
                 if ($currentScope->objectCount != 0) {
-                    $this->_writer->writeTrimmed(", ");
+                    $this->_writer->writeTrimmed(', ');
                 }
 
-                $currentScope->objectCount++;
+                ++$currentScope->objectCount;
             }
         }
 
@@ -247,11 +233,9 @@ class JsonWriter
     }
 
     /**
-     * Start the scope given the scope type
-     * 
+     * Start the scope given the scope type.
+     *
      * @param int $type scope type
-     * 
-     * @return void
      */
     private function _startScope($type)
     {
@@ -260,19 +244,19 @@ class JsonWriter
             if (($currentScope->type == $this->_scopeType['Array'])
                 && ($currentScope->objectCount != 0)
             ) {
-                $this->_writer->writeTrimmed(", ");
+                $this->_writer->writeTrimmed(', ');
             }
 
-            $currentScope->objectCount++;
+            ++$currentScope->objectCount;
         }
 
         $scope = new Scope($type);
         array_push($this->_scopes, $scope);
 
         if ($type == $this->_scopeType['Array']) {
-            $this->_writer->writeValue("[");
+            $this->_writer->writeValue('[');
         } else {
-            $this->_writer->writeValue("{");
+            $this->_writer->writeValue('{');
         }
 
         $this->_writer
@@ -281,8 +265,8 @@ class JsonWriter
     }
 
     /**
-     * return the indented result
-     * 
+     * return the indented result.
+     *
      * @return string
      */
     public function getJsonOutput()
@@ -291,29 +275,24 @@ class JsonWriter
     }
 }
 
-
-
 /**
- * class representing scope information 
-*
+ * class representing scope information.
  */
 class Scope
 {
     /**
-     * keeps the count of the nested scopes
-     *      
+     * keeps the count of the nested scopes.
      */
     public $objectCount;
 
     /**
-     *  keeps the type of the scope
-     *      
+     *  keeps the type of the scope.
      */
     public $type;
 
     /**
-     * Creates a new instance of scope type
-     * 
+     * Creates a new instance of scope type.
+     *
      * @param int $type type of the scope
      */
     public function __construct($type)
@@ -321,5 +300,4 @@ class Scope
         $this->type = $type;
         $this->objectCount = 0;
     }
-
 }

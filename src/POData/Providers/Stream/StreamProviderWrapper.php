@@ -10,18 +10,15 @@ use POData\Common\ODataException;
 use POData\Common\ODataConstants;
 use POData\Common\Messages;
 use POData\Common\InvalidOperationException;
-use POData\Providers\Stream\IStreamProvider;
-use POData\Providers\Stream\IStreamProvider2;
 
 /**
  * Class StreamProviderWrapper Wrapper over IDSSP and IDSSP2 implementations.
- * @package POData\Providers\Stream
  */
 class StreamProviderWrapper
 {
     /**
      * Holds reference to the data service instance.
-     * 
+     *
      * @var IService
      */
     private $_service;
@@ -29,7 +26,7 @@ class StreamProviderWrapper
     /**
      * Holds reference to the implementation of IStreamProvider or IStreamProvider2.
      *
-     * 
+     *
      * @var IStreamProvider|IStreamProvider2
      */
     private $_streamProvider;
@@ -49,13 +46,10 @@ class StreamProviderWrapper
      */
     private $_responseETag;
 
-
     /**
      * To set reference to the data service instance.
-     * 
-     * @param IService $service The data service instance.
-     * 
-     * @return void
+     *
+     * @param IService $service The data service instance
      */
     public function setService(IService $service)
     {
@@ -64,16 +58,16 @@ class StreamProviderWrapper
 
     /**
      * To get stream associated with the given media resource.
-     * 
-     * @param object             $entity             The media resource.
+     *
+     * @param object             $entity             The media resource
      * @param ResourceStreamInfo $resourceStreamInfo This will be null if media
-     *                                               resource is MLE, if media 
+     *                                               resource is MLE, if media
      *                                               resource is named
-     *                                               stream then will be the 
-     *                                               ResourceStreamInfo instance 
-     *                                               holding the details of 
-     *                                               named stream.
-     * 
+     *                                               stream then will be the
+     *                                               ResourceStreamInfo instance
+     *                                               holding the details of
+     *                                               named stream
+     *
      * @return string|null
      */
     public function getReadStream($entity, $resourceStreamInfo)
@@ -127,7 +121,7 @@ class StreamProviderWrapper
             // For named streams, getReadStream() can return null to indicate
             // that the stream has not been created.
             if (is_null($stream)) {
-                // 204 == no content                
+                // 204 == no content
                 $this->_service->getHost()->setResponseStatusCode(204);
             }
         }
@@ -136,21 +130,21 @@ class StreamProviderWrapper
     }
 
     /**
-     * Gets the IANA content type (aka media type) of the stream associated with 
+     * Gets the IANA content type (aka media type) of the stream associated with
      * the specified media resource.
-     * 
-     * @param object             $entity             The entity instance 
+     *
+     * @param object             $entity             The entity instance
      *                                               (media resource) associated with
      *                                               the stream for which the content
-     *                                               type is to be obtained.
-     * @param ResourceStreamInfo $resourceStreamInfo This will be null if 
-     *                                               media resource is MLE, 
+     *                                               type is to be obtained
+     * @param ResourceStreamInfo $resourceStreamInfo This will be null if
+     *                                               media resource is MLE,
      *                                               if media resource is named
-     *                                               stream then will be the 
-     *                                               ResourceStreamInfo instance 
-     *                                               holding the details of 
-     *                                               named stream.
-     * 
+     *                                               stream then will be the
+     *                                               ResourceStreamInfo instance
+     *                                               holding the details of
+     *                                               named stream
+     *
      * @return string|null
      */
     public function getStreamContentType($entity, $resourceStreamInfo)
@@ -178,26 +172,28 @@ class StreamProviderWrapper
         }
 
         $this->_verifyContentTypeOrETagModified('IDSSP::getStreamContentType');
+
         return $contentType;
     }
 
     /**
      * Get the ETag of the stream associated with the entity specified.
-     * 
-     * @param object             $entity             The entity instance 
+     *
+     * @param object             $entity             The entity instance
      *                                               (media resource) associated
-     *                                               with the stream for which 
-     *                                               the etag is to be obtained.
-     * @param ResourceStreamInfo $resourceStreamInfo This will be null if 
-     *                                               media resource is MLE, 
+     *                                               with the stream for which
+     *                                               the etag is to be obtained
+     * @param ResourceStreamInfo $resourceStreamInfo This will be null if
+     *                                               media resource is MLE,
      *                                               if media resource is named
-     *                                               stream then will be the 
+     *                                               stream then will be the
      *                                               ResourceStreamInfo
-     *                                               instance holding the 
-     *                                               details of named stream.
-     * 
+     *                                               instance holding the
+     *                                               details of named stream
+     *
      * @throws InvalidOperationException
-     * @return String Etag
+     *
+     * @return string Etag
      */
     public function getStreamETag($entity, $resourceStreamInfo)
     {
@@ -229,29 +225,29 @@ class StreamProviderWrapper
     }
 
     /**
-     * Gets the URI clients should use when making retrieve (ie. GET) requests 
+     * Gets the URI clients should use when making retrieve (ie. GET) requests
      * to the stream.
-     * 
-     * @param object             $entity             The entity instance 
+     *
+     * @param object             $entity             The entity instance
      *                                               associated with the
-     *                                               stream for which a 
+     *                                               stream for which a
      *                                               read stream URI is to
-     *                                               be obtained.
-     * @param ResourceStreamInfo $resourceStreamInfo This will be null 
+     *                                               be obtained
+     * @param ResourceStreamInfo $resourceStreamInfo This will be null
      *                                               if media resource
-     *                                               is MLE, if media 
+     *                                               is MLE, if media
      *                                               resource is named
-     *                                               stream then will be 
+     *                                               stream then will be
      *                                               the ResourceStreamInfo
-     *                                               instance holding the 
-     *                                               details of named stream.
-     * @param string             $mediaLinkEntryUri  MLE uri.
-     * 
+     *                                               instance holding the
+     *                                               details of named stream
+     * @param string             $mediaLinkEntryUri  MLE uri
+     *
      * @return string
-     * 
+     *
      * @throws InvalidOperationException
      */
-    public function getReadStreamUri($entity, $resourceStreamInfo, 
+    public function getReadStreamUri($entity, $resourceStreamInfo,
         $mediaLinkEntryUri
     ) {
         $readStreamUri = null;
@@ -279,10 +275,10 @@ class StreamProviderWrapper
                 throw new InvalidOperationException(
                     Messages::streamProviderWrapperGetReadStreamUriMustReturnAbsoluteUriOrNull()
                 );
-            }            
+            }
         } else {
             if (is_null($resourceStreamInfo)) {
-                // For MLEs the content src attribute is 
+                // For MLEs the content src attribute is
                 //required so we cannot return null.
                 $readStreamUri
                     = $this->getDefaultStreamEditMediaUri(
@@ -299,12 +295,12 @@ class StreamProviderWrapper
 
     /**
      * Checks the given value is a valid eTag.
-     * 
-     * @param string  $etag            eTag to validate.
-     * @param boolean $allowStrongEtag True if strong eTag is allowed 
-     *                                 False otherwise.
-     * 
-     * @return boolean
+     *
+     * @param string $etag            eTag to validate
+     * @param bool   $allowStrongEtag True if strong eTag is allowed
+     *                                False otherwise
+     *
+     * @return bool
      */
     public static function isETagValueValid($etag, $allowStrongEtag)
     {
@@ -319,20 +315,20 @@ class StreamProviderWrapper
         $etagValueStartIndex = 1;
         $eTagLength = strlen($etag);
 
-        if (strpos($etag, "W/\"") === 0 && $etag[$eTagLength - 1] == '"') {
+        if (strpos($etag, 'W/"') === 0 && $etag[$eTagLength - 1] == '"') {
             $etagValueStartIndex = 3;
-        } else if (!$allowStrongEtag || $etag[0] != '"' 
+        } elseif (!$allowStrongEtag || $etag[0] != '"'
             || $etag[$eTagLength - 1] != '"'
         ) {
             return false;
         }
 
-        for ($i = $etagValueStartIndex; $i < $eTagLength - 1; $i++) {
-            // Format of etag looks something like: W/"etag property values" 
-            // or "strong etag value" according to HTTP RFC 2616, if someone 
-            // wants to specify more than 1 etag value, then need to specify 
+        for ($i = $etagValueStartIndex; $i < $eTagLength - 1; ++$i) {
+            // Format of etag looks something like: W/"etag property values"
+            // or "strong etag value" according to HTTP RFC 2616, if someone
+            // wants to specify more than 1 etag value, then need to specify
             // something like this: W/"etag values", W/"etag values", ...
-            // To make sure only one etag is specified, we need to ensure 
+            // To make sure only one etag is specified, we need to ensure
             // that if " is part of the key value, it needs to be escaped.
             if ($etag[$i] == '"') {
                 return false;
@@ -344,17 +340,15 @@ class StreamProviderWrapper
 
     /**
      * Get ETag header value from request header.
-     *      
+     *
      * @param mixed &$eTag                 On return, this parameter will hold
      *                                     value of IfMatch or IfNoneMatch
      *                                     header, if this header is absent then
-     *                                     this parameter will hold NULL.
+     *                                     this parameter will hold NULL
      * @param mixed &$checkETagForEquality On return, this parameter will hold
      *                                     true if IfMatch is present, false if
      *                                     IfNoneMatch header is present, null
-     *                                     otherwise.
-     * 
-     * @return void
+     *                                     otherwise
      */
     private function _getETagFromHeaders(&$eTag, &$checkETagForEquality)
     {
@@ -364,12 +358,14 @@ class StreamProviderWrapper
         $eTag = $dataServiceHost->getRequestIfMatch();
         if (!is_null($eTag)) {
             $checkETagForEquality = true;
+
             return;
         }
 
         $eTag = $dataServiceHost->getRequestIfNoneMatch();
         if (!is_null($eTag)) {
             $checkETagForEquality = false;
+
             return;
         }
 
@@ -379,9 +375,8 @@ class StreamProviderWrapper
     /**
      * Validates that an implementation of IStreamProvider exists and
      * load it.
-     * 
-     * @return void
-     * 
+     *
+     *
      * @throws ODataException
      */
     private function _loadAndValidateStreamProvider()
@@ -399,9 +394,8 @@ class StreamProviderWrapper
     /**
      * Validates that an implementation of IStreamProvider2 exists and
      * load it.
-     * 
-     * @return void
-     * 
+     *
+     *
      * @throws ODataException
      */
     private function _loadAndValidateStreamProvider2()
@@ -421,7 +415,7 @@ class StreamProviderWrapper
                 throw ODataException::createInternalServerError(
                     Messages::streamProviderWrapperMustImplementStreamProvider2ToSupportNamedStreams()
                 );
-            } else if (!$this->_streamProvider instanceof IStreamProvider2) {
+            } elseif (!$this->_streamProvider instanceof IStreamProvider2) {
                 throw ODataException::createInternalServerError(
                     Messages::streamProviderWrapperInvalidStream2Instance()
                 );
@@ -431,9 +425,8 @@ class StreamProviderWrapper
 
     /**
      * Ask data service to load stream provider instance.
-     * 
-     * @return void
-     * 
+     *
+     *
      * @throws ODataException
      */
     private function _loadStreamProvider()
@@ -447,7 +440,7 @@ class StreamProviderWrapper
                 if (!is_null($this->_streamProvider) && (!is_object($this->_streamProvider) || !$this->_streamProvider instanceof IStreamProvider2)) {
                     throw ODataException::createInternalServerError(
                         Messages::streamProviderWrapperInvalidStream2Instance()
-                    ); 
+                    );
                 }
             }
 
@@ -464,27 +457,25 @@ class StreamProviderWrapper
 
     /**
      * Construct the default edit media uri from the given media link entry uri.
-     * 
-     * @param string             $mediaLinkEntryUri  Uri to the media link entry.
+     *
+     * @param string             $mediaLinkEntryUri  Uri to the media link entry
      * @param ResourceStreamInfo $resourceStreamInfo Stream info instance, if its
-     *                                               null default stream is assumed.
-     * 
-     * @return string Uri to the media resource.
+     *                                               null default stream is assumed
+     *
+     * @return string Uri to the media resource
      */
     public function getDefaultStreamEditMediaUri($mediaLinkEntryUri, $resourceStreamInfo)
     {
         if (is_null($resourceStreamInfo)) {
-            return rtrim($mediaLinkEntryUri, '/') . '/' . ODataConstants::URI_VALUE_SEGMENT;
+            return rtrim($mediaLinkEntryUri, '/').'/'.ODataConstants::URI_VALUE_SEGMENT;
         } else {
-            return rtrim($mediaLinkEntryUri, '/') . '/' . ltrim($resourceStreamInfo->getName(), '/');
+            return rtrim($mediaLinkEntryUri, '/').'/'.ltrim($resourceStreamInfo->getName(), '/');
         }
     }
 
     /**
      * Save value of content type and etag headers before invoking implementor
      * methods.
-     * 
-     * @return void
      */
     private function _saveContentTypeAndETag()
     {
@@ -495,11 +486,9 @@ class StreamProviderWrapper
     /**
      * Check whether implementor modified content type or etag header
      * if so throw InvalidOperationException.
-     * 
+     *
      * @param string $methodName NAme of the method
-     * 
-     * @return void
-     * 
+     *
      * @throws InvalidOperationException
      */
     private function _verifyContentTypeOrETagModified($methodName)

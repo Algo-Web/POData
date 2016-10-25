@@ -2,7 +2,6 @@
 
 namespace UnitTests\POData\UriProcessor\QueryProcessor\SkipTokenParser;
 
-use POData\Providers\Metadata\ResourceProperty;
 use POData\Configuration\EntitySetRights;
 use POData\Providers\ProvidersWrapper;
 use POData\Configuration\ServiceConfiguration;
@@ -10,27 +9,19 @@ use POData\Common\ODataException;
 use POData\UriProcessor\QueryProcessor\OrderByParser\OrderByParser;
 use POData\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenParser;
 use POData\Providers\Query\IQueryProvider;
-
-
 use UnitTests\POData\Facets\NorthWind2\NorthWindMetadata;
-
-
 use PhockitoUnit\PhockitoUnitTestCase;
-use Phockito;
 
 class SkipTokenParser2Test extends PhockitoUnitTestCase
 {
-
-    /** @var  IQueryProvider */
+    /** @var IQueryProvider */
     protected $mockQueryProvider;
 
-
     /**
-     * Test will null as resultSet and empty array as resultSet     
+     * Test will null as resultSet and empty array as resultSet.
      */
     public function testGetIndexOfFirstEntryInNextPage1()
     {
-
         $northWindMetadata = NorthWindMetadata::Create();
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
@@ -44,7 +35,7 @@ class SkipTokenParser2Test extends PhockitoUnitTestCase
         $resourceType = $resourceSetWrapper->getResourceType();
         $orderBy = 'OrderID';
         $internalOrderByInfo = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
-        $skipToken = "10365";
+        $skipToken = '10365';
         $internalSkipTokenInfo = SkipTokenParser::parseSkipTokenClause($resourceType, $internalOrderByInfo, $skipToken);
 
         try {
@@ -53,11 +44,10 @@ class SkipTokenParser2Test extends PhockitoUnitTestCase
         } catch (\InvalidArgumentException $exception) {
             $this->assertStringStartsWith("The argument 'searchArray' should be an array to perfrom binary search", $exception->getMessage());
         }
-
     }
 
     /**
-     * Test search InternalSkipTokenInfo::GetIndexOfFirstEntryInNextPage function
+     * Test search InternalSkipTokenInfo::GetIndexOfFirstEntryInNextPage function.
      */
     public function testGetIndexOfFirstEntryInNextPage2()
     {
@@ -115,7 +105,7 @@ class SkipTokenParser2Test extends PhockitoUnitTestCase
         //Make sure this is the most matching record by comparing with next record
         $nextOrder = $orders[$nextIndex + 1];
         $r = strcmp($nextOrder->ShipName, $orders[$nextIndex]->ShipName);
-         $this->assertTrue($r >= 0);
+        $this->assertTrue($r >= 0);
         //-----------------------------------------------------------------
         //Search with a key that does not exists
         $skipToken = "'XXX',11,10365";
@@ -123,8 +113,5 @@ class SkipTokenParser2Test extends PhockitoUnitTestCase
         $nextIndex = $internalSkipTokenInfo->getIndexOfFirstEntryInTheNextPage($orders);
         $this->assertTrue($nextIndex == -1);
         //-----------------------------------------------------------------
-
-
     }
-
 }

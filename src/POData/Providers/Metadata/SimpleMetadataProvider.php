@@ -2,20 +2,10 @@
 
 namespace POData\Providers\Metadata;
 
-use POData\Providers\Metadata\ResourceAssociationSetEnd;
-use POData\Providers\Metadata\ResourceAssociationSet;
-use POData\Providers\Metadata\ResourceSet;
-use POData\Providers\Metadata\ResourcePropertyKind;
-use POData\Providers\Metadata\ResourceProperty;
-use POData\Providers\Metadata\ResourceTypeKind;
-use POData\Providers\Metadata\ResourceType;
 use POData\Common\InvalidOperationException;
-use POData\Providers\Metadata\IMetadataProvider;
-
 
 /**
- * Class SimpleMetadataProvider
- * @package POData\Providers\Metadata
+ * Class SimpleMetadataProvider.
  */
 class SimpleMetadataProvider implements IMetadataProvider
 {
@@ -25,121 +15,117 @@ class SimpleMetadataProvider implements IMetadataProvider
     protected $containerName;
     protected $namespaceName;
     public $mappedDetails = null;
-    
+
     //Begin Implementation of IMetadataProvider
     /**
      * get the Container name for the data source.
-     * 
-     * @return String container name
+     *
+     * @return string container name
      */
     public function getContainerName()
     {
         return $this->containerName;
     }
-    
+
     /**
      * get Namespace name for the data source.
-     * 
-     * @return String namespace
+     *
+     * @return string namespace
      */
     public function getContainerNamespace()
     {
         return $this->namespaceName;
     }
-    
+
     /**
      * get all entity set information.
-     * 
+     *
      * @return ResourceSet[]
      */
     public function getResourceSets()
     {
         return array_values($this->resourceSets);
     }
-    
+
     /**
      * get all resource types in the data source.
-     * 
+     *
      * @return ResourceType[]
      */
     public function getTypes()
     {
         return array_values($this->resourceTypes);
     }
-    
+
     /**
      * get a resource set based on the specified resource set name.
-     * 
-     * @param string $name Name of the resource set
-     * 
-     * @return ResourceSet|null resource set with the given name if found else NULL
      *
+     * @param string $name Name of the resource set
+     *
+     * @return ResourceSet|null resource set with the given name if found else NULL
      */
     public function resolveResourceSet($name)
     {
         if (array_key_exists($name, $this->resourceSets)) {
             return $this->resourceSets[$name];
         }
-        
+
         return null;
     }
-    
+
     /**
      * get a resource type based on the resource set name.
-     * 
-     * @param string $name Name of the resource set
-     * 
-     * @return ResourceType|null resource type with the given resource set name if found else NULL
      *
+     * @param string $name Name of the resource set
+     *
+     * @return ResourceType|null resource type with the given resource set name if found else NULL
      */
     public function resolveResourceType($name)
     {
         if (array_key_exists($name, $this->resourceTypes)) {
             return $this->resourceTypes[$name];
         }
-        
+
         return null;
     }
-    
+
     /**
-     * The method must return a collection of all the types derived from 
-     * $resourceType The collection returned should NOT include the type 
-     * passed in as a parameter
-     * 
+     * The method must return a collection of all the types derived from
+     * $resourceType The collection returned should NOT include the type
+     * passed in as a parameter.
+     *
      * @param ResourceType $resourceType Resource to get derived resource types from
      *
-     * 
      * @return ResourceType[]
      */
     public function getDerivedTypes(ResourceType $resourceType)
     {
         return array();
     }
-    
+
     /**
+     * @param ResourceType $resourceType Resource to check for derived resource types
      *
-     * @param ResourceType $resourceType Resource to check for derived resource types.
-     *
-     * @return boolean true if $resourceType represents an Entity Type which has derived Entity Types, else false.
+     * @return bool true if $resourceType represents an Entity Type which has derived Entity Types, else false
      */
     public function hasDerivedTypes(ResourceType $resourceType)
     {
         return false;
     }
-    
+
     /**
-     * Gets the ResourceAssociationSet instance for the given source 
+     * Gets the ResourceAssociationSet instance for the given source
      * association end.
-     * 
-     * @param ResourceSet      $sourceResourceSet      Resource set 
+     *
+     * @param ResourceSet      $sourceResourceSet      Resource set
      *                                                 of the source
      *                                                 association end
      * @param ResourceType     $sourceResourceType     Resource type of the source
      *                                                 association end
-     * @param ResourceProperty $targetResourceProperty Resource property of 
+     * @param ResourceProperty $targetResourceProperty Resource property of
      *                                                 the source
      *                                                 association end
-     * 
+     *
      * @return ResourceAssociationSet
      */
     public function getResourceAssociationSet(ResourceSet $sourceResourceSet, ResourceType $sourceResourceType, ResourceProperty $targetResourceProperty)
@@ -148,22 +134,22 @@ class SimpleMetadataProvider implements IMetadataProvider
         //ResourceSet => Representing 'Customers' entity set
         //ResourceType => Representing'Customer' entity type
         //ResourceProperty => Representing 'Orders' property
-        //We have created ResourceAssoicationSet while adding 
+        //We have created ResourceAssoicationSet while adding
         //ResourceSetReference or ResourceReference
         //and kept in $this->associationSets
         //$metadata->addResourceSetReferenceProperty(
-        //             $customersEntityType, 
-        //             'Orders', 
+        //             $customersEntityType,
+        //             'Orders',
         //             $ordersResourceSet
         //             );
-        
+
         $targetResourceSet = $targetResourceProperty->getResourceType()->getCustomState();
         if (is_null($targetResourceSet)) {
-            throw new InvalidOperationException('Failed to retrieve the custom state from ' . $targetResourceProperty->getResourceType()->getName());
+            throw new InvalidOperationException('Failed to retrieve the custom state from '.$targetResourceProperty->getResourceType()->getName());
         }
 
         //Customer_Orders_Orders, Order_Customer_Customers
-        $key = $sourceResourceType->getName() . '_' . $targetResourceProperty->getName() . '_' . $targetResourceSet->getName();
+        $key = $sourceResourceType->getName().'_'.$targetResourceProperty->getName().'_'.$targetResourceSet->getName();
         if (array_key_exists($key, $this->associationSets)) {
             return $this->associationSets[$key];
         }
@@ -172,26 +158,24 @@ class SimpleMetadataProvider implements IMetadataProvider
     }
 
     //End Implementation of IMetadataProvider
-    
-    /** 
-     *
-     * @param string $containerName container name for the datasource.
-     * @param string $namespaceName namespace for the datasource.
-     * 
+
+    /**
+     * @param string $containerName container name for the datasource
+     * @param string $namespaceName namespace for the datasource
      */
     public function __construct($containerName, $namespaceName)
     {
         $this->containerName = $containerName;
         $this->namespaceName = $namespaceName;
     }
-    
+
     /**
-     * Add an entity type
-     * 
+     * Add an entity type.
+     *
      * @param \ReflectionClass $refClass  reflection class of the entity
-     * @param string $name name of the entity
-     * @param string $namespace namespace of the data source
-     * 
+     * @param string           $name      name of the entity
+     * @param string           $namespace namespace of the data source
+     *
      * @return ResourceType
      *
      * @throws InvalidOperationException when the name is already in use
@@ -201,20 +185,21 @@ class SimpleMetadataProvider implements IMetadataProvider
         if (array_key_exists($name, $this->resourceTypes)) {
             throw new InvalidOperationException('Type with same name already added');
         }
-        
+
         $entityType = new ResourceType($refClass, ResourceTypeKind::ENTITY, $name, $namespace);
         $this->resourceTypes[$name] = $entityType;
+
         return $entityType;
     }
-    
+
     /**
-     * Add a complex type
-     * 
+     * Add a complex type.
+     *
      * @param \ReflectionClass $refClass         reflection class of the complex entity type
-     * @param string          $name             name of the entity
-     * @param string          $namespace        namespace of the data source.
-     * @param ResourceType    $baseResourceType base resource type
-     * 
+     * @param string           $name             name of the entity
+     * @param string           $namespace        namespace of the data source
+     * @param ResourceType     $baseResourceType base resource type
+     *
      * @return ResourceType
      *
      * @throws InvalidOperationException when the name is already in use
@@ -224,18 +209,19 @@ class SimpleMetadataProvider implements IMetadataProvider
         if (array_key_exists($name, $this->resourceTypes)) {
             throw new InvalidOperationException('Type with same name already added');
         }
-        
-        $complexType = new ResourceType($refClass, ResourceTypeKind::COMPLEX, $name, $namespace, $baseResourceType);    	
+
+        $complexType = new ResourceType($refClass, ResourceTypeKind::COMPLEX, $name, $namespace, $baseResourceType);
         $this->resourceTypes[$name] = $complexType;
+
         return $complexType;
     }
-    
+
     /**
-     * @param string      $name         name of the resource set
+     * @param string       $name         name of the resource set
      * @param ResourceType $resourceType resource type
-     * 
+     *
      * @throws InvalidOperationException
-     * 
+     *
      * @return ResourceSet
      */
     public function addResourceSet($name, ResourceType $resourceType)
@@ -243,39 +229,36 @@ class SimpleMetadataProvider implements IMetadataProvider
         if (array_key_exists($name, $this->resourceSets)) {
             throw new InvalidOperationException('Resource Set already added');
         }
-        
+
         $this->resourceSets[$name] = new ResourceSet($name, $resourceType);
         //No support for multiple ResourceSet with same EntityType
         //So keeping reference to the 'ResourceSet' with the entity type
         $resourceType->setCustomState($this->resourceSets[$name]);
+
         return $this->resourceSets[$name];
     }
-    
+
     /**
-     * To add a Key-primitive property to a resouce (Complex/Entuty)
-     * 
+     * To add a Key-primitive property to a resouce (Complex/Entuty).
+     *
      * @param ResourceType $resourceType resource type to which key property
      *                                   is to be added
      * @param string       $name         name of the key property
      * @param TypeCode     $typeCode     type of the key property
-     * 
-     * @return void
      */
     public function addKeyProperty($resourceType, $name, $typeCode)
     {
         $this->_addPrimitivePropertyInternal($resourceType, $name, $typeCode, true);
     }
-    
+
     /**
-     * To add a NonKey-primitive property (Complex/Entity)
-     * 
+     * To add a NonKey-primitive property (Complex/Entity).
+     *
      * @param ResourceType $resourceType resource type to which key property
      *                                   is to be added
      * @param string       $name         name of the key property
      * @param TypeCode     $typeCode     type of the key property
-     * @param Boolean      $isBag        property is bag or not
-     * 
-     * @return void
+     * @param bool         $isBag        property is bag or not
      */
     public function addPrimitiveProperty($resourceType, $name, $typeCode, $isBag = false)
     {
@@ -283,14 +266,12 @@ class SimpleMetadataProvider implements IMetadataProvider
     }
 
     /**
-     * To add a non-key etag property
-     * 
+     * To add a non-key etag property.
+     *
      * @param ResourceType $resourceType resource type to which key property
      *                                   is to be added
-     * @param String       $name         name of the property
-     * @param String       $typeCode     type of the etag property
-     * 
-     * @return void
+     * @param string       $name         name of the property
+     * @param string       $typeCode     type of the etag property
      */
     public function addETagProperty($resourceType, $name, $typeCode)
     {
@@ -298,102 +279,95 @@ class SimpleMetadataProvider implements IMetadataProvider
     }
 
     /**
-     * To add a resource reference property
-     * 
+     * To add a resource reference property.
+     *
      * @param ResourceType $resourceType      The resource type to add the resource
      *                                        reference property to
      * @param string       $name              The name of the property to add
      * @param ResourceSet  $targetResourceSet The resource set the resource reference
      *                                        property points to
-     *                    
-     * @return void                  
      */
     public function addResourceReferenceProperty($resourceType, $name, $targetResourceSet)
     {
         $this->_addReferencePropertyInternal(
-            $resourceType, 
-            $name, 
+            $resourceType,
+            $name,
             $targetResourceSet,
             ResourcePropertyKind::RESOURCE_REFERENCE
         );
     }
 
     /**
-     * To add a resource set reference property
-     *      
-     * @param ResourceType $resourceType      The resource type to add the 
+     * To add a resource set reference property.
+     *
+     * @param ResourceType $resourceType      The resource type to add the
      *                                        resource reference set property to
      * @param string       $name              The name of the property to add
-     * @param ResourceSet  $targetResourceSet The resource set the resource 
+     * @param ResourceSet  $targetResourceSet The resource set the resource
      *                                        reference set property points to
-     *                                        
-     * @return void                                      
      */
     public function addResourceSetReferenceProperty($resourceType, $name, $targetResourceSet)
     {
         $this->_addReferencePropertyInternal(
-            $resourceType, 
-            $name, 
+            $resourceType,
+            $name,
             $targetResourceSet,
             ResourcePropertyKind::RESOURCESET_REFERENCE
         );
     }
-    
+
     /**
-     * To add a complex property to entity or complex type
-     * 
-     * @param ResourceType $resourceType        The resource type to which the 
+     * To add a complex property to entity or complex type.
+     *
+     * @param ResourceType $resourceType        The resource type to which the
      *                                          complex property needs to add
      * @param string       $name                name of the complex property
      * @param ResourceType $complexResourceType complex resource type
-     * @param Boolean      $isBag               complex type is bag or not
-     * 
+     * @param bool         $isBag               complex type is bag or not
+     *
      * @return ResourceProperty
      */
     public function addComplexProperty($resourceType, $name, $complexResourceType, $isBag = false)
     {
-        if ($resourceType->getResourceTypeKind() != ResourceTypeKind::ENTITY 
+        if ($resourceType->getResourceTypeKind() != ResourceTypeKind::ENTITY
             && $resourceType->getResourceTypeKind() != ResourceTypeKind::COMPLEX
         ) {
             throw new InvalidOperationException('complex property can be added to an entity or another complex type');
         }
-        
-        try 
-        {
+
+        try {
             $resourceType->getInstanceType()->getProperty($name);
-        } catch (\ReflectionException $ex)
-        {
+        } catch (\ReflectionException $ex) {
             throw new InvalidOperationException('Can\'t add a property which does not exist on the instance type.');
         }
 
         $kind = ResourcePropertyKind::COMPLEX_TYPE;
-        if ($isBag) {    	   
+        if ($isBag) {
             $kind = $kind | ResourcePropertyKind::BAG;
         }
 
         $resourceProperty = new ResourceProperty($name, null, $kind, $complexResourceType);
         $resourceType->addProperty($resourceProperty);
+
         return $resourceProperty;
     }
-    
+
     /**
-     * To add a Key/NonKey-primitive property to a resource (complex/entity)
-     * 
+     * To add a Key/NonKey-primitive property to a resource (complex/entity).
+     *
      * @param ResourceType $resourceType   Resource type
      * @param string       $name           name of the property
      * @param TypeCode     $typeCode       type of property
-     * @param boolean      $isKey          property is key or not
-     * @param boolean      $isBag          property is bag or not
-     * @param boolean      $isETagProperty property is etag or not
-     * 
-     * @return void
+     * @param bool         $isKey          property is key or not
+     * @param bool         $isBag          property is bag or not
+     * @param bool         $isETagProperty property is etag or not
      */
     private function _addPrimitivePropertyInternal($resourceType, $name, $typeCode, $isKey = false, $isBag = false, $isETagProperty = false)
     {
-                $instance = $resourceType->getInstanceType();
+        $instance = $resourceType->getInstanceType();
         $typeName = $instance->getName();
         $rawInstance = new $typeName(); // avoid clobbering retrieved $instance if we're not in Laravel
-        
+
         // This check doesn't play well with how Eloquent stores model properties via magic methods,
         // so skip it for Eloquent models
         if (!$rawInstance instanceof \Illuminate\Database\Eloquent\Model) {
@@ -405,16 +379,15 @@ class SimpleMetadataProvider implements IMetadataProvider
                 );
             }
         }
-        
-        $primitiveResourceType = ResourceType::getPrimitiveResourceType($typeCode);
 
+        $primitiveResourceType = ResourceType::getPrimitiveResourceType($typeCode);
 
         if ($isETagProperty && $isBag) {
             throw new InvalidOperationException('Only primitve property can be etag property, bag property cannot be etag property');
         }
 
         $kind = $isKey ? ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::KEY : ResourcePropertyKind::PRIMITIVE;
-        if ($isBag) {    	   
+        if ($isBag) {
             $kind = $kind | ResourcePropertyKind::BAG;
         }
 
@@ -425,25 +398,23 @@ class SimpleMetadataProvider implements IMetadataProvider
         $resourceProperty = new ResourceProperty($name, null, $kind, $primitiveResourceType);
         $resourceType->addProperty($resourceProperty);
     }
-    
+
     /**
      * To add a navigation property (resource set or resource reference)
-     * to a resource type
-     * 
-     * @param ResourceType         $resourceType         The resource type to add 
-     *                                                   the resource reference 
-     *                                                   or resource 
+     * to a resource type.
+     *
+     * @param ResourceType         $resourceType         The resource type to add
+     *                                                   the resource reference
+     *                                                   or resource
      *                                                   reference set property to
-     * @param string               $name                 The name of the 
+     * @param string               $name                 The name of the
      *                                                   property to add
-     * @param ResourceSet          $targetResourceSet    The resource set the 
+     * @param ResourceSet          $targetResourceSet    The resource set the
      *                                                   resource reference
-     *                                                   or reference 
-     *                                                   set property 
+     *                                                   or reference
+     *                                                   set property
      *                                                   ponits to
      * @param ResourcePropertyKind $resourcePropertyKind The property kind
-     * 
-     * @return void
      */
     private function _addReferencePropertyInternal(
         ResourceType $resourceType,
@@ -453,14 +424,13 @@ class SimpleMetadataProvider implements IMetadataProvider
     ) {
         try {
             $resourceType->getInstanceType()->getProperty($name);
-                  
         } catch (\ReflectionException $exception) {
             throw new InvalidOperationException(
                 'Can\'t add a property which does not exist on the instance type.'
             );
         }
-          
-        if (!($resourcePropertyKind == ResourcePropertyKind::RESOURCESET_REFERENCE 
+
+        if (!($resourcePropertyKind == ResourcePropertyKind::RESOURCESET_REFERENCE
             || $resourcePropertyKind == ResourcePropertyKind::RESOURCE_REFERENCE)
         ) {
             throw new InvalidOperationException(
@@ -471,16 +441,16 @@ class SimpleMetadataProvider implements IMetadataProvider
         $targetResourceType = $targetResourceSet->getResourceType();
         $resourceProperty = new ResourceProperty($name, null, $resourcePropertyKind, $targetResourceType);
         $resourceType->addProperty($resourceProperty);
-        
-        //Create instance of AssociationSet for this relationship        
+
+        //Create instance of AssociationSet for this relationship
         $sourceResourceSet = $resourceType->getCustomState();
         if (is_null($sourceResourceSet)) {
-            throw new InvalidOperationException('Failed to retrieve the custom state from ' . $resourceType->getName());
+            throw new InvalidOperationException('Failed to retrieve the custom state from '.$resourceType->getName());
         }
 
-        //Customer_Orders_Orders, Order_Customer_Customers 
+        //Customer_Orders_Orders, Order_Customer_Customers
         //(source type::name _ source property::name _ target set::name)
-        $setKey = $resourceType->getName() . '_' . $name . '_' . $targetResourceSet->getName();
+        $setKey = $resourceType->getName().'_'.$name.'_'.$targetResourceSet->getName();
         $set = new ResourceAssociationSet(
             $setKey,
             new ResourceAssociationSetEnd($sourceResourceSet, $resourceType, $resourceProperty),
@@ -488,5 +458,4 @@ class SimpleMetadataProvider implements IMetadataProvider
         );
         $this->associationSets[$setKey] = $set;
     }
-    
 }

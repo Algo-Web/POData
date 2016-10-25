@@ -8,32 +8,32 @@ use POData\Providers\Metadata\ResourceTypeKind;
 use POData\Providers\Metadata\ResourceType;
 
 /**
- * Class Navigation
- * @package POData\Providers\Metadata\Type
+ * Class Navigation.
  */
 class Navigation implements INavigationType
 {
     /**
-     * 
-     * The type describing this navigation
-     * @var ResourceType 
+     * The type describing this navigation.
+     *
+     * @var ResourceType
      */
     private $_resourceType;
 
     /**
-     * Creates new instance of Navigation
-     * 
-     * @param ResourceType $resourceType The resource type for this navigation.
+     * Creates new instance of Navigation.
+     *
+     * @param ResourceType $resourceType The resource type for this navigation
+     *
      * @throws \InvalidArgumentException when the resource type kind is not complex or entity
      */
     public function __construct($resourceType)
     {
-        if ($resourceType->getResourceTypeKind() != ResourceTypeKind::COMPLEX 
+        if ($resourceType->getResourceTypeKind() != ResourceTypeKind::COMPLEX
             && $resourceType->getResourceTypeKind() != ResourceTypeKind::ENTITY
-        ) {            
+        ) {
             throw new \InvalidArgumentException(Messages::navigationInvalidResourceType());
         }
-        
+
         $this->_resourceType = $resourceType;
     }
 
@@ -41,8 +41,8 @@ class Navigation implements INavigationType
 
     /**
      * Gets the type code
-     * Note: implementation of IType::getTypeCode
-     *   
+     * Note: implementation of IType::getTypeCode.
+     *
      * @return TypeCode
      */
     public function getTypeCode()
@@ -52,49 +52,49 @@ class Navigation implements INavigationType
 
     /**
      * Checks this type (Navigation) is compatible with another type
-     * Note: implementation of IType::isCompatibleWith
-     * 
+     * Note: implementation of IType::isCompatibleWith.
+     *
      * @param IType $type Type to check compatibility
-     * 
-     * @return boolean 
+     *
+     * @return bool
      */
     public function isCompatibleWith(IType $type)
     {
-        if (!($type instanceof Navigation)) {
+        if (!($type instanceof self)) {
             return false;
         }
-        
+
         return strcmp(
-            $type->_resourceType->getFullName(), 
+            $type->_resourceType->getFullName(),
             $this->_resourceType->getFullName()
         ) == 0;
-        
     }
 
     /**
      * Validate a value in Astoria uri is in a format for this type
-     * Note: implementation of IType::validate
-     * 
-     * @param string $value     The value to validate 
-     * @param string &$outValue The stripped form of $value that can 
+     * Note: implementation of IType::validate.
+     *
+     * @param string $value     The value to validate
+     * @param string &$outValue The stripped form of $value that can
      *                          be used in PHP expressions
-     * 
-     * @return boolean
+     *
+     * @return bool
      */
     public function validate($value, &$outValue)
     {
-        if (!$value instanceof Navigation) {
+        if (!$value instanceof self) {
             return false;
         }
-        
+
         $outValue = $value;
+
         return true;
     }
 
     /**
      * Gets full name of this type in EDM namespace
-     * Note: implementation of IType::getFullTypeName
-     * 
+     * Note: implementation of IType::getFullTypeName.
+     *
      * @return string
      */
     public function getFullTypeName()
@@ -104,11 +104,9 @@ class Navigation implements INavigationType
 
     /**
      * Converts the given string value to navigation type.
-     * 
-     * @param string $stringValue value to convert.
-     * 
-     * @return void
-     * 
+     *
+     * @param string $stringValue value to convert
+     *
      * @throws NotImplementedException
      */
     public function convert($stringValue)
@@ -118,11 +116,9 @@ class Navigation implements INavigationType
 
     /**
      * Convert the given value to a form that can be used in OData uri.
-     * 
-     * @param mixed $value value to convert.
-     * 
-     * @return void
-     * 
+     *
+     * @param mixed $value value to convert
+     *
      * @throws NotImplementedException
      */
     public function convertToOData($value)
@@ -135,8 +131,8 @@ class Navigation implements INavigationType
     //Begin implementation of INavigationType interface
 
     /**
-     * Gets the resource type associated with the navigation type
-     * 
+     * Gets the resource type associated with the navigation type.
+     *
      * @return ResourceType
      */
     public function getResourceType()

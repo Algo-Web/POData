@@ -5,62 +5,60 @@ namespace POData\UriProcessor\QueryProcessor\OrderByParser;
 use POData\Providers\Metadata\ResourceSetWrapper;
 
 /**
- * Class OrderByNode
+ * Class OrderByNode.
  *
  * Type to represent non-leaf node of 'OrderBy Tree' (the root node and
  * intermediate nodes[complex/navigation]).
- *
- * @package POData\UriProcessor\QueryProcessor\OrderByParser
  */
 class OrderByNode extends OrderByBaseNode
 {
     /**
-     * The resource set wrapper associated with this node, this will 
-     * be null if this node represents a complex sub path segment
-     * 
+     * The resource set wrapper associated with this node, this will
+     * be null if this node represents a complex sub path segment.
+     *
      * @var ResourceSetWrapper
      */
     private $_resourceSetWrapper;
 
     /**
      * list of child nodes.
-     * 
+     *
      * @var array(OrderByNode/OrderByLeafNode)
      */
     private $_childNodes = array();
 
     /**
-     * Construct a new instance of OrderByNode
-     * 
+     * Construct a new instance of OrderByNode.
+     *
      * @param string             $propertyName       Name of the property corrosponds
      *                                               to the sub path
-     *                                               segment represented by 
+     *                                               segment represented by
      *                                               this node, this parameter
      *                                               will be null if this
-     *                                               node is root.
-     * @param ResourceProperty   $resourceProperty   Resource property corrosponds 
-     *                                               to the sub path 
+     *                                               node is root
+     * @param ResourceProperty   $resourceProperty   Resource property corrosponds
+     *                                               to the sub path
      *                                               segment represented by this
      *                                               node, this parameter
-     *                                               will be null if 
-     *                                               this node is root.
+     *                                               will be null if
+     *                                               this node is root
      * @param ResourceSetWrapper $resourceSetWrapper The resource set wrapper
-     *                                               associated with the sub path 
-     *                                               segment represented by this 
-     *                                               node, this will be null 
-     *                                               if this node represents a 
+     *                                               associated with the sub path
+     *                                               segment represented by this
+     *                                               node, this will be null
+     *                                               if this node represents a
      *                                               complex sub path segment
      */
     public function __construct($propertyName, $resourceProperty, $resourceSetWrapper)
     {
-        // This must be the parameter state at this point, we won't chek 
+        // This must be the parameter state at this point, we won't chek
         // these as this is an internal class
         //if ($resourceProperty != NULL)
         //{
         //    Node represents navigation or complex
         //    if ($resourceProperty::Kind == Complex)
         //        assert($resourceSetWrapper == null);
-        //    else if ($resourceProperty::Kind == ResourceReference) 
+        //    else if ($resourceProperty::Kind == ResourceReference)
         //        assert($resourceSetWrapper !== null);
         //} else {
         //    Node represents root
@@ -71,24 +69,22 @@ class OrderByNode extends OrderByBaseNode
     }
 
     /**
-     * (non-PHPdoc)
-     * 
+     * (non-PHPdoc).
+     *
      * @see library/POData/QueryProcessorOrderByParser.OrderByBaseNode::free()
-     * 
-     * @return void
      */
     public function free()
     {
         foreach ($this->_childNodes as $childNode) {
             $childNode->free();
-        }       
+        }
     }
 
     /**
-     * (non-PHPdoc)
-     * 
+     * (non-PHPdoc).
+     *
      * @see library/POData/QueryProcessorOrderByParser.OrderByBaseNode::getResourceType()
-     * 
+     *
      * @return \POData\Providers\Metadata\ResourceType
      */
     public function getResourceType()
@@ -97,9 +93,9 @@ class OrderByNode extends OrderByBaseNode
     }
 
     /**
-     * To get reference to the resource set wrapper, this will be null 
-     * if this node represents a complex sub path segment
-     * 
+     * To get reference to the resource set wrapper, this will be null
+     * if this node represents a complex sub path segment.
+     *
      * @return ResourceSetWrapper
      */
     public function getResourceSetWrapper()
@@ -108,11 +104,11 @@ class OrderByNode extends OrderByBaseNode
     }
 
     /**
-     * Find a child node with given name, if no such child node then return NULL. 
-     * 
-     * @param string $propertyName Name of the property to get the 
+     * Find a child node with given name, if no such child node then return NULL.
+     *
+     * @param string $propertyName Name of the property to get the
      *                             corresponding node
-     * 
+     *
      * @return OrderByNode|OrderByLeafNode|null
      */
     public function findNode($propertyName)
@@ -126,16 +122,14 @@ class OrderByNode extends OrderByBaseNode
 
     /**
      * To add a child node to the list of child nodes.
-     * 
-     * @param OrderByNode/OrderByLeafNode $node The child node.
-     * 
-     * @return void
-     * 
+     *
+     * @param OrderByNode/OrderByLeafNode $node The child node
+     *
      * @throws InvalidArgumentException
      */
     public function addNode($node)
     {
-        // if (!($node instanceof OrderByNode) 
+        // if (!($node instanceof OrderByNode)
         //     && !($node instanceof OrderByLeafNode)
         // ) {
             //Error

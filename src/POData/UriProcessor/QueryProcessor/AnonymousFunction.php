@@ -1,31 +1,31 @@
 <?php
 
 namespace POData\UriProcessor\QueryProcessor;
+
 use POData\Common\Messages;
 
 /**
- * Class AnonymousFunction
- * @package POData\UriProcessor\QueryProcessor
+ * Class AnonymousFunction.
  */
 class AnonymousFunction
 {
     /**
-     * An array of parameters to the function represented by this instance
-     * 
+     * An array of parameters to the function represented by this instance.
+     *
      * @var array
      */
     private $_parameters;
 
     /**
-     * Parameters as string separated by comma
-     * 
+     * Parameters as string separated by comma.
+     *
      * @var string
      */
     private $_parametersAsString;
 
     /**
-     * body of the function represented by this instance
-     * 
+     * body of the function represented by this instance.
+     *
      * @var string
      */
     private $_code;
@@ -33,14 +33,14 @@ class AnonymousFunction
     /**
      * Reference to the anonymous function represented by this instance
      * reference will be the name of the function in the form char(0).lamba_n.
-     * 
+     *
      * @var string
      */
     private $_reference = null;
 
     /**
-     * Create new instance of AnonymousFunction
-     * 
+     * Create new instance of AnonymousFunction.
+     *
      * @param array  $parameters Array of parameters
      * @param string $code       Body of the function
      */
@@ -52,7 +52,7 @@ class AnonymousFunction
                 throw new \InvalidArgumentException(
                     Messages::anonymousFunctionParameterShouldStartWithDollarSymbol()
                 );
-            } 
+            }
         }
 
         $this->_parametersAsString = implode(', ', $this->_parameters);
@@ -61,7 +61,7 @@ class AnonymousFunction
 
     /**
      * Gets function parameters as array.
-     * 
+     *
      * @return array
      */
     public function getParameters()
@@ -70,8 +70,8 @@ class AnonymousFunction
     }
 
     /**
-     * Gets function parameters as string seperated by comma
-     * 
+     * Gets function parameters as string seperated by comma.
+     *
      * @return string
      */
     public function getParametersAsString()
@@ -80,8 +80,8 @@ class AnonymousFunction
     }
 
     /**
-     * Gets number of parameters
-     * 
+     * Gets number of parameters.
+     *
      * @return int
      */
     public function getParametersCount()
@@ -90,8 +90,8 @@ class AnonymousFunction
     }
 
     /**
-     * Gets function body
-     * 
+     * Gets function body.
+     *
      * @return string
      */
     public function getCode()
@@ -101,7 +101,7 @@ class AnonymousFunction
 
     /**
      * Gets refernece to the anonymous function.
-     * 
+     *
      * @return string
      */
     public function getReference()

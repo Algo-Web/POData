@@ -5,14 +5,12 @@ namespace UnitTests\POData\UriProcessor\ResourcePathProcessor\SegmentParser;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 use POData\Common\InvalidOperationException;
 use POData\Common\ODataException;
-
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
-
 
 class KeyDescriptorTest extends \PHPUnit_Framework_TestCase
 {
     protected function setUp()
-    {        
+    {
     }
 
     public function testKeyPredicateParsing()
@@ -43,7 +41,7 @@ class KeyDescriptorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($orderVal[0], 2546);
 
         try {
-           $keyDescriptor->getValidatedNamedValues();
+            $keyDescriptor->getValidatedNamedValues();
             $this->fail('An expected InvalidOperationException has not been raised');
         } catch (InvalidOperationException $exception) {
             $exceptionThrown = true;
@@ -65,7 +63,7 @@ class KeyDescriptorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($orderVal[0], 2546);
 
         try {
-           $keyDescriptor->getValidatedNamedValues();
+            $keyDescriptor->getValidatedNamedValues();
             $this->fail('An expected InvalidOperationException has not been raised');
         } catch (InvalidOperationException $exception) {
             $exceptionThrown = true;
@@ -135,7 +133,6 @@ class KeyDescriptorTest extends \PHPUnit_Framework_TestCase
         $keyPredicate = 'Id=guid\'05b242e7---52eb-46bd-8f0e-6568b72cd9a5\', PlaceName=\'Ktym\'';
         $validPredicateSyntax = KeyDescriptor::tryParseKeysFromKeyPredicate($keyPredicate, $keyDescriptor);
         $this->assertFalse($validPredicateSyntax);
-
     }
 
     public function testKeyDescriptorValidation()
@@ -199,7 +196,6 @@ class KeyDescriptorTest extends \PHPUnit_Framework_TestCase
             $this->assertStringEndsWith('The key predicate expect the keys \'ProductID, OrderID\'', $exception->getMessage());
         }
 
-
         //test for key type
         $keyDescriptor = null;
         $keyPredicate = 'ProductID=11.12, OrderID=2546';
@@ -212,7 +208,6 @@ class KeyDescriptorTest extends \PHPUnit_Framework_TestCase
             $this->assertStringEndsWith('The value of key property \'ProductID\' should be of type Edm.Int32, given Edm.Double', $exception->getMessage());
         }
 
-
         //test for key type
         $keyDescriptor = null;
         $keyPredicate = '11, \'ABCD\'';
@@ -224,7 +219,6 @@ class KeyDescriptorTest extends \PHPUnit_Framework_TestCase
         } catch (ODataException $exception) {
             $this->assertStringEndsWith('The value of key property \'OrderID\' at position 1 should be of type Edm.Int32, given Edm.String', $exception->getMessage());
         }
-
     }
 
     protected function tearDown()

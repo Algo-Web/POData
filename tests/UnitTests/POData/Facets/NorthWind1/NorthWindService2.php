@@ -3,24 +3,19 @@
 namespace UnitTests\POData\Facets\NorthWind1;
 
 use POData\Configuration\EntitySetRights;
-use POData\IService;
-use POData\IRequestHandler;
-use POData\BaseService;
 use POData\Configuration\ProtocolVersion;
 use POData\Configuration\ServiceConfiguration;
 use Symfony\Component\Config\Definition\Exception\Exception;
 
-use UnitTests\POData\Facets\NorthWind1\NorthWindQueryProvider;
-use UnitTests\POData\Facets\NorthWind1\NorthWindExpressionProvider;
 use UnitTests\POData\Facets\BaseServiceTestWrapper;
 
 class NorthWindService2 extends BaseServiceTestWrapper
 {
     private $_northWindMetadata = null;
-    
+
     /**
-     * This method is called only once to initialize service-wide policies
-     * 
+     * This method is called only once to initialize service-wide policies.
+     *
      * @param ServiceConfiguration $config
      */
     public function initialize(ServiceConfiguration $config)
@@ -32,26 +27,24 @@ class NorthWindService2 extends BaseServiceTestWrapper
         $config->setMaxDataServiceVersion(ProtocolVersion::V2());
     }
 
-	/**
-	 * @return \POData\Providers\Metadata\IMetadataProvider
-	 */
-	public function getMetadataProvider()
-	{
-		return NorthWindMetadata::Create();
-	}
+    /**
+     * @return \POData\Providers\Metadata\IMetadataProvider
+     */
+    public function getMetadataProvider()
+    {
+        return NorthWindMetadata::Create();
+    }
 
-	/**
-	 * @return \POData\Providers\Query\IQueryProvider
-	 */
-	public function getQueryProvider()
-	{
-		return new NorthWindQueryProvider();
-	}
+    /**
+     * @return \POData\Providers\Query\IQueryProvider
+     */
+    public function getQueryProvider()
+    {
+        return new NorthWindQueryProvider();
+    }
 
-
-	public function getStreamProviderX(){
-		throw new Exception("not implemented");
-	}
-
-
+    public function getStreamProviderX()
+    {
+        throw new Exception('not implemented');
+    }
 }

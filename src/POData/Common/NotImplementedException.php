@@ -3,10 +3,8 @@
 namespace POData\Common;
 
 /**
- * Class NotImplementedException
- * @package POData\Common
+ * Class NotImplementedException.
  */
 class NotImplementedException extends \Exception
 {
-
 }

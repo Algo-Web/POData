@@ -2,16 +2,11 @@
 
 namespace POData\UriProcessor\QueryProcessor\ExpressionParser;
 
-use POData\UriProcessor\QueryProcessor\AnonymousFunction;
-use POData\UriProcessor\QueryProcessor\OrderByParser\OrderByInfo;
-
 /**
- * Class FilterInfo
- * @package POData\UriProcessor\QueryProcessor\ExpressionParser
+ * Class FilterInfo.
  */
 class FilterInfo
 {
-
     /**
      * Collection of navigation properties specified in the filter
      * clause, if no navigation (resource reference) property used
@@ -26,24 +21,21 @@ class FilterInfo
      */
     private $_navigationPropertiesUsedInTheFilterClause;
 
-
     /**
      * The translated expression based on the Expression provider, if the end developer
      * opt for IDSQP2 then he is responsible for implementing IExpressionProvider
      * in this case this member variable will hold the expression generated through
-     * custom ExpressionProvider, if user opt for IDSQP then the default 
+     * custom ExpressionProvider, if user opt for IDSQP then the default
      * PHPExpressionProvider will be used, in this case this member variable will
      * hold the PHP expression generated through the PHPExpressionProvider.
-     * 
+     *
      * @var string
      */
     private $_filterExpressionAsDataSourceExpression;
 
-
     /**
-     * @param array $navigationPropertiesUsedInTheFilterClause navigation properties in the $filter clause.
-     * @param string $filterExpAsDataSourceExp The $filter expression as expression specific to data source
-     *
+     * @param array  $navigationPropertiesUsedInTheFilterClause navigation properties in the $filter clause
+     * @param string $filterExpAsDataSourceExp                  The $filter expression as expression specific to data source
      */
     public function __construct($navigationPropertiesUsedInTheFilterClause, $filterExpAsDataSourceExp)
     {
@@ -51,22 +43,18 @@ class FilterInfo
         $this->_filterExpressionAsDataSourceExpression = $filterExpAsDataSourceExp;
     }
 
-
     public function getNavigationPropertiesUsed()
     {
         return $this->_navigationPropertiesUsedInTheFilterClause;
     }
 
-
     /**
-     * Gets the data source specific expression as string.  
-     * 
+     * Gets the data source specific expression as string.
+     *
      * @return string
      */
     public function getExpressionAsString()
     {
         return $this->_filterExpressionAsDataSourceExpression;
     }
-
-
 }

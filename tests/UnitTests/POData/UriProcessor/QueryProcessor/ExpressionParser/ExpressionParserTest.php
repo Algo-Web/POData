@@ -12,7 +12,6 @@ use POData\Providers\Metadata\Type\Binary;
 use POData\Providers\Metadata\Type\StringType;
 use POData\Providers\Metadata\Type\Navigation;
 use POData\Providers\Metadata\Type\Boolean;
-use POData\Providers\Metadata\Type\Null1;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\PropertyAccessExpression;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ConstantExpression;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ArithmeticExpression;
@@ -25,30 +24,29 @@ use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionParser;
 use POData\Common\ODataException;
 use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\Metadata\ResourceType;
-
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 
 class ExpressionParserTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var IMetadataProvider  */
+    /** @var IMetadataProvider */
     private $northWindMetadata;
 
-	/**
-	 * @var ResourceType
-	 */
-	private $customersResourceType;
+    /**
+     * @var ResourceType
+     */
+    private $customersResourceType;
 
     protected function setUp()
-    {        
+    {
         $this->northWindMetadata = NorthWindMetadata::Create();
 
-	    $this->customersResourceType = $this->northWindMetadata->resolveResourceSet('Customers')->getResourceType();
+        $this->customersResourceType = $this->northWindMetadata->resolveResourceSet('Customers')->getResourceType();
     }
 
     public function testConstantExpression()
     {
         $expression = '123';
-        $parser = new ExpressionParser($expression,$this->customersResourceType, false);
+        $parser = new ExpressionParser($expression, $this->customersResourceType, false);
         $expr = $parser->parseFilter();
         $this->assertTrue($expr instanceof ConstantExpression);
         $this->assertTrue($expr->getType() instanceof Int32);
@@ -122,12 +120,9 @@ class ExpressionParserTest extends \PHPUnit_Framework_TestCase
         try {
             $expr = $parser->parseFilter();
             $this->fail('An expected ODataException for \'dateime\' validation has not been raised');
-        }
-        catch(ODataException $ex)
-        {
+        } catch (ODataException $ex) {
             $this->assertEquals('Unrecognized \'Edm.DateTime\' literal \'datetime\'11990-12-23\'\' in position \'0\'.', $ex->getMessage());
         }
-
 
         //$expression = 'binary\'ABCD\'';
         //$parser->resetParser($expression);
@@ -140,9 +135,8 @@ class ExpressionParserTest extends \PHPUnit_Framework_TestCase
         //$expr = $parser->parseFilter();
         //$this->assertTrue($expr instanceof ConstantExpression);
         //$this->assertEquals($expr->getType() instanceof Binary, true);
-            
     }
-    
+
     public function testPropertyAccessExpression()
     {
         $expression = 'CustomerID';
@@ -177,7 +171,7 @@ class ExpressionParserTest extends \PHPUnit_Framework_TestCase
         try {
             $expr = $parser->parseFilter();
             $this->fail('An expected ODataException for \'invalid chatacter\' has not been thrown');
-        } catch(ODataException $exception) {
+        } catch (ODataException $exception) {
             $this->assertEquals('Invalid character \'\\\' at position 7', $exception->getMessage());
         }
 
@@ -186,8 +180,8 @@ class ExpressionParserTest extends \PHPUnit_Framework_TestCase
         try {
             $expr = $parser->parseFilter();
             $this->fail('An expected ODataException for \'No property exists\' has not been thrown');
-        } catch(ODataException $exception) {
-           $this->assertEquals('No property \'CustomerID1\' exists in type \'Customer\' at position 0', $exception->getMessage());
+        } catch (ODataException $exception) {
+            $this->assertEquals('No property \'CustomerID1\' exists in type \'Customer\' at position 0', $exception->getMessage());
         }
 
         $expression = 'Address/InvalidLineNumber';
@@ -195,8 +189,8 @@ class ExpressionParserTest extends \PHPUnit_Framework_TestCase
         try {
             $expr = $parser->parseFilter();
             $this->fail('An expected ODataException for \'No property exists\' has not been thrown');
-        } catch(ODataException $exception) {
-           $this->assertEquals('No property \'InvalidLineNumber\' exists in type \'Address\' at position 8', $exception->getMessage());
+        } catch (ODataException $exception) {
+            $this->assertEquals('No property \'InvalidLineNumber\' exists in type \'Address\' at position 8', $exception->getMessage());
         }
 
         $expression = 'Orders/OrderID';
@@ -204,8 +198,8 @@ class ExpressionParserTest extends \PHPUnit_Framework_TestCase
         try {
             $expr = $parser->parseFilter();
             $this->fail('An expected ODataException for collection property navigation was not thrown');
-        } catch(ODataException $exception) {
-           $this->assertStringStartsWith('The \'Orders\' is an entity collection property of \'Customer\'', $exception->getMessage());
+        } catch (ODataException $exception) {
+            $this->assertStringStartsWith('The \'Orders\' is an entity collection property of \'Customer\'', $exception->getMessage());
         }
 
         $expression = 'Customer/CustomerID';
@@ -222,16 +216,14 @@ class ExpressionParserTest extends \PHPUnit_Framework_TestCase
         try {
             $expr = $parser->parseFilter();
             $this->fail('An expected ODataException for collection property navigation was not thrown');
-        } catch(ODataException $exception) {
-           $this->assertStringStartsWith('The \'Orders\' is an entity collection property of \'Customer\'', $exception->getMessage());
+        } catch (ODataException $exception) {
+            $this->assertStringStartsWith('The \'Orders\' is an entity collection property of \'Customer\'', $exception->getMessage());
         }
-
-
     }
 
     public function testArithmeticExpressionAndOperandPromotion()
     {
-        $expression = "1 add 2";
+        $expression = '1 add 2';
         $parser = new ExpressionParser($expression, $this->customersResourceType, false);
         $expr = $parser->parseFilter();
         $this->assertTrue($expr instanceof ArithmeticExpression);
@@ -240,7 +232,7 @@ class ExpressionParserTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($expr->getRight() instanceof ConstantExpression);
         $this->assertEquals(1, $expr->getLeft()->getValue());
 
-        $expression = "1 sub 2.5";
+        $expression = '1 sub 2.5';
         $parser->resetParser($expression);
         $expr = $parser->parseFilter();
         $this->assertTrue($expr instanceof ArithmeticExpression);
@@ -250,7 +242,7 @@ class ExpressionParserTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($expr->getLeft()->getType() instanceof Double);
         $this->assertTrue($expr->getRight()->getType() instanceof Double);
 
-        $expression = "1.1F sub 2";
+        $expression = '1.1F sub 2';
         $parser->resetParser($expression);
         $expr = $parser->parseFilter();
         $this->assertTrue($expr instanceof ArithmeticExpression);
@@ -260,7 +252,7 @@ class ExpressionParserTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($expr->getLeft()->getType() instanceof Single);
         $this->assertTrue($expr->getRight()->getType() instanceof Single);
 
-        $expression = "1.1F mul 2.7";
+        $expression = '1.1F mul 2.7';
         $parser->resetParser($expression);
         $expr = $parser->parseFilter();
         $this->assertTrue($expr instanceof ArithmeticExpression);
@@ -270,7 +262,7 @@ class ExpressionParserTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($expr->getLeft()->getType() instanceof Double);
         $this->assertTrue($expr->getRight()->getType() instanceof Double);
 
-        $expression = "1 add 2 sub 4";
+        $expression = '1 add 2 sub 4';
         $parser->resetParser($expression);
         $expr = $parser->parseFilter();
         $this->assertEquals(ExpressionType::SUBTRACT, $expr->getNodeType());
@@ -282,7 +274,7 @@ class ExpressionParserTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($expr->getLeft()->getRight() instanceof ConstantExpression);
         $this->assertEquals(1, $expr->getLeft()->getLeft()->getValue());
 
-        $expression = "1 add (2 sub 4)";
+        $expression = '1 add (2 sub 4)';
         $parser->resetParser($expression);
         $expr = $parser->parseFilter();
         $this->assertEquals(ExpressionType::ADD, $expr->getNodeType());
@@ -294,7 +286,7 @@ class ExpressionParserTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($expr->getRight()->getRight() instanceof ConstantExpression);
         $this->assertEquals(2, $expr->getRight()->getLeft()->getValue());
 
-        $expression = "1 add (2 sub 4)";
+        $expression = '1 add (2 sub 4)';
         $parser->resetParser($expression);
         $expr = $parser->parseFilter();
         $this->assertEquals(ExpressionType::ADD, $expr->getNodeType());
@@ -306,7 +298,7 @@ class ExpressionParserTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($expr->getRight()->getRight() instanceof ConstantExpression);
         $this->assertEquals(2, $expr->getRight()->getLeft()->getValue());
 
-        $expression = "1 add 2 mul 4";
+        $expression = '1 add 2 mul 4';
         $parser->resetParser($expression);
         $expr = $parser->parseFilter();
         $this->assertEquals(ExpressionType::ADD, $expr->getNodeType());
@@ -318,7 +310,7 @@ class ExpressionParserTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($expr->getRight()->getRight() instanceof ConstantExpression);
         $this->assertEquals(4, $expr->getRight()->getRight()->getValue());
 
-        $expression = "Rating add 2.5 mul 3.4F";
+        $expression = 'Rating add 2.5 mul 3.4F';
         $parser->resetParser($expression);
         $expr = $parser->parseFilter();
         $this->assertTrue($expr instanceof ArithmeticExpression);
@@ -327,61 +319,50 @@ class ExpressionParserTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($expr->getLeft() instanceof PropertyAccessExpression);
         $this->assertTrue($expr->getLeft()->getType() instanceof Double);
 
-        $expression = "5.2 mul true";
+        $expression = '5.2 mul true';
         $parser->resetParser($expression);
         try {
             $expr = $parser->parseFilter();
             $this->fail('An expected ODataException for incompatible between Double and Boolean was not thrown');
-        } catch(ODataException $exception)
-        {
+        } catch (ODataException $exception) {
             $this->assertStringStartsWith('Operator \'mul\' incompatible with operand types Edm.Double and Edm.Boolean', $exception->getMessage());
         }
 
-
-        $expression = "1F add 2M";
+        $expression = '1F add 2M';
         $parser->resetParser($expression);
         try {
             $expr = $parser->parseFilter();
             $this->fail('An expected ODataException for incompatible between Single and Decimal was not thrown');
-        } catch(ODataException $exception)
-        {
+        } catch (ODataException $exception) {
             $this->assertStringStartsWith('Operator \'add\' incompatible with operand types Edm.Single and Edm.Decimal', $exception->getMessage());
         }
-
 
         $expression = "1 add 'MyString'";
         $parser->resetParser($expression);
         try {
             $expr = $parser->parseFilter();
             $this->fail('An expected ODataException for incompatible between Int32 and EdmString was not thrown');
-        } catch(ODataException $exception)
-        {
+        } catch (ODataException $exception) {
             $this->assertStringStartsWith('Operator \'add\' incompatible with operand types Edm.Int32 and Edm.String', $exception->getMessage());
         }
 
-
-        $expression = "1F add 2M";
+        $expression = '1F add 2M';
         $parser->resetParser($expression);
         try {
             $expr = $parser->parseFilter();
             $this->fail('An expected ODataException for incompatible between Single and Decimal was not thrown');
-        } catch(ODataException $exception)
-        {
+        } catch (ODataException $exception) {
             $this->assertStringStartsWith('Operator \'add\' incompatible with operand types Edm.Single and Edm.Decimal', $exception->getMessage());
         }
-
 
         $expression = "datetime'1990-12-12' add datetime'1991-11-11'";
         $parser->resetParser($expression);
         try {
             $expr = $parser->parseFilter();
             $this->fail('An expected ODataException for incompatible between DateTime types was not thrown');
-        } catch(ODataException $exception)
-        {
+        } catch (ODataException $exception) {
             $this->assertStringStartsWith('Operator \'add\' incompatible with operand types Edm.DateTime and Edm.DateTime', $exception->getMessage());
         }
-
-
     }
 
     public function testRelationalExpression()
@@ -426,28 +407,23 @@ class ExpressionParserTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($expr->getRight() instanceof ConstantExpression);
         $this->assertEquals($expr->getRight()->getValue(), 0);
 
-        $expression = "1F gt 2M";
+        $expression = '1F gt 2M';
         $parser->resetParser($expression);
         try {
             $expr = $parser->parseFilter();
             $this->fail('An expected ODataException for gt operator\'s incompatible between Edm.Single and Edm.Decimal was not thrown');
-        } catch(ODataException $exception)
-        {
+        } catch (ODataException $exception) {
             $this->assertStringStartsWith('Operator \'gt\' incompatible with operand types Edm.Single and Edm.Decimal', $exception->getMessage());
         }
 
-
-        $expression = "Rating lt null";
+        $expression = 'Rating lt null';
         $parser->resetParser($expression);
         try {
             $expr = $parser->parseFilter();
             $this->fail('An expected ODataException for lt operator\'s incompatible for null was not thrown');
-        } catch(ODataException $exception)
-        {
+        } catch (ODataException $exception) {
             $this->assertStringStartsWith('The operator \'lt\' at position 7 is not supported for the \'null\' literal; only equality checks', $exception->getMessage());
         }
-
-
     }
 
     public function testLogicalExpression()
@@ -458,7 +434,7 @@ class ExpressionParserTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($expr instanceof LogicalExpression);
         $this->assertTrue($expr->getType() instanceof Boolean);
 
-        $expression = "1 add 2 gt 5 and 5 le 8";
+        $expression = '1 add 2 gt 5 and 5 le 8';
         $parser->resetParser($expression);
         $expr = $parser->parseFilter();
         $this->assertTrue($expr instanceof LogicalExpression);
@@ -475,7 +451,7 @@ class ExpressionParserTest extends \PHPUnit_Framework_TestCase
         try {
             $expr = $parser->parseFilter();
             $this->fail('An expected ODataException for add operator\'s incompatible between Edm.Int32 and Edm.Boolean was not thrown');
-        } catch(ODataException $exception) {
+        } catch (ODataException $exception) {
             $this->assertStringStartsWith('Operator \'add\' incompatible with operand types Edm.Int32 and Edm.Boolean', $exception->getMessage());
         }
 
@@ -484,7 +460,7 @@ class ExpressionParserTest extends \PHPUnit_Framework_TestCase
         try {
             $expr = $parser->parseFilter();
             $this->fail('An expected ODataException for or operator\'s incompatible between Edm.Int32 and Edm.Double was not thrown');
-        } catch(ODataException $exception) {
+        } catch (ODataException $exception) {
             $this->assertStringStartsWith('Operator \'or\' incompatible with operand types Edm.Int32 and Edm.Double', $exception->getMessage());
         }
 
@@ -493,7 +469,7 @@ class ExpressionParserTest extends \PHPUnit_Framework_TestCase
         try {
             $expr = $parser->parseFilter();
             $this->fail('An expected ODataException for and operator\'s incompatible between Edm.Single and Edm.Boolean was not thrown');
-        } catch(ODataException $exception) {
+        } catch (ODataException $exception) {
             $this->assertStringStartsWith('Operator \'and\' incompatible with operand types Edm.Single and Edm.Boolean', $exception->getMessage());
         }
 
@@ -502,22 +478,21 @@ class ExpressionParserTest extends \PHPUnit_Framework_TestCase
         try {
             $expr = $parser->parseFilter();
             $this->fail('An expected ODataException for and operator\'s incompatible between Edm.String and Edm.String was not thrown');
-        } catch(ODataException $exception) {
+        } catch (ODataException $exception) {
             $this->assertStringStartsWith('Operator \'and\' incompatible with operand types Edm.String and Edm.String', $exception->getMessage());
         }
-
     }
 
     public function testUnaryExpression()
     {
-        $expression = "-Rating";
-        $parser = new ExpressionParser($expression,$this->customersResourceType, false);
+        $expression = '-Rating';
+        $parser = new ExpressionParser($expression, $this->customersResourceType, false);
         $expr = $parser->parseFilter();
         $this->assertTrue($expr instanceof UnaryExpression);
         $this->assertEquals(ExpressionType::NEGATE, $expr->getNodeType());
         $this->assertTrue($expr->getChild() instanceof PropertyAccessExpression);
 
-        $expression = "not(1 gt 4)";
+        $expression = 'not(1 gt 4)';
         $parser->resetParser($expression);
         $expr = $parser->parseFilter();
         $this->assertTrue($expr instanceof UnaryExpression);
@@ -530,20 +505,18 @@ class ExpressionParserTest extends \PHPUnit_Framework_TestCase
         try {
             $expr = $parser->parseFilter();
             $this->fail('An expected ODataException for negate operator\'s incompatible with Edm.String was not thrown');
-        } catch(ODataException $exception) {
+        } catch (ODataException $exception) {
             $this->assertStringStartsWith('Operator \'-\' incompatible with operand types Edm.String at position 0', $exception->getMessage());
         }
-
 
         $expression = 'not(1 mul 3)';
         $parser->resetParser($expression);
         try {
             $expr = $parser->parseFilter();
             $this->fail('An expected ODataException for not operator\'s incompatible with Edm.Int32 was not thrown');
-        } catch(ODataException $exception) {
+        } catch (ODataException $exception) {
             $this->assertStringStartsWith('Operator \'not\' incompatible with operand types Edm.Int32 at position 0', $exception->getMessage());
         }
-
     }
 
     public function testFunctionCallExpression()
@@ -556,11 +529,10 @@ class ExpressionParserTest extends \PHPUnit_Framework_TestCase
 
         $expression = "substring('pspl', 1) eq 'pl'";
 
-
         $parser->resetParser($expression);
         $expr = $parser->parseFilter();
         $this->assertTrue($expr instanceof RelationalExpression);
-	    /** @var RelationalExpression $expr */
+        /* @var RelationalExpression $expr */
         $this->assertTrue($expr->getLeft() instanceof FunctionCallExpression);
         $this->assertEquals('strcmp', $expr->getLeft()->getFunctionDescription()->name);
         $paramExpressions = $expr->getLeft()->getParamExpressions();
@@ -577,7 +549,7 @@ class ExpressionParserTest extends \PHPUnit_Framework_TestCase
         try {
             $expr = $parser->parseFilter();
             $this->fail('An expected ODataException for and unknown function was not thrown');
-        } catch(ODataException $exception) {
+        } catch (ODataException $exception) {
             $this->assertStringStartsWith('Unknown function \'unknownFun\' at position 0', $exception->getMessage());
         }
 
@@ -586,7 +558,7 @@ class ExpressionParserTest extends \PHPUnit_Framework_TestCase
         try {
             $expr = $parser->parseFilter();
             $this->fail('An expected ODataException for function without closing bracket was not thrown');
-        } catch(ODataException $exception) {
+        } catch (ODataException $exception) {
             $this->assertStringStartsWith('Close parenthesis expected', $exception->getMessage());
         }
 
@@ -595,22 +567,17 @@ class ExpressionParserTest extends \PHPUnit_Framework_TestCase
         try {
             $expr = $parser->parseFilter();
             $this->fail('An expected ODataException for \'No applicable function found\' was not thrown for trim');
-
-        } catch(ODataException $exception) {
+        } catch (ODataException $exception) {
             $this->assertStringStartsWith('No applicable function found for \'trim\' at position 0 with the specified arguments. The functions considered are: Edm.String trim(Edm.String)', $exception->getMessage());
         }
-
 
         $expression = 'month(123.4)';
         $parser->resetParser($expression);
         try {
             $expr = $parser->parseFilter();
             $this->fail('An expected ODataException for \'No applicable function found\' was not thrown for month');
-        } catch(ODataException $exception) {
+        } catch (ODataException $exception) {
             $this->assertStringStartsWith('No applicable function found for \'month\' at position', $exception->getMessage());
         }
-
     }
-
 }
-

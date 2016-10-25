@@ -3,76 +3,74 @@
 namespace POData\Common;
 
 /**
- * Class Version Type to represents the version number of data service and edmx
- * @package POData\Common
+ * Class Version Type to represents the version number of data service and edmx.
  */
 class Version
 {
-
-
-
     /**
-     * The major component of the version
-     * 
+     * The major component of the version.
+     *
      * @var int
      */
     private $major;
 
     /**
-     * The minor component of the version
-     * 
+     * The minor component of the version.
+     *
      * @var int
      */
     private $minor;
 
     /**
-     * Constructs a new instance of Version class
-     * 
+     * Constructs a new instance of Version class.
+     *
      * @param int $major The major component of the version
      * @param int $minor The minor component of the version
      */
-    public function __construct($major, $minor) 
+    public function __construct($major, $minor)
     {
         $this->major = $major;
         $this->minor = $minor;
     }
 
     /**
-     * Gets the major component of the version
-     * 
+     * Gets the major component of the version.
+     *
      * @return int
      */
-    public function getMajor() 
+    public function getMajor()
     {
         return $this->major;
     }
 
     /**
-     * Gets the minor component of the version
-     * 
+     * Gets the minor component of the version.
+     *
      * @return int
      */
-    public function getMinor() 
+    public function getMinor()
     {
         return $this->minor;
     }
 
     /**
-     * If necessary raises version to the version given 
-     * 
+     * If necessary raises version to the version given.
+     *
      * @param int $major The major component of the new version
      * @param int $minor The minor component of the new version
-     * 
-     * @return boolean true if the version was raised, false otherwise
+     *
+     * @return bool true if the version was raised, false otherwise
      */
-    public function raiseVersion($major, $minor) 
+    public function raiseVersion($major, $minor)
     {
         if ($major > $this->major) {
             $this->major = $major;
             $this->minor = $minor;
+
             return true;
-        } else if ($major == $this->major && $minor > $this->minor) {
+        } elseif ($major == $this->major && $minor > $this->minor) {
             $this->minor = $minor;
+
             return true;
         }
 
@@ -81,12 +79,12 @@ class Version
 
     /**
      * Compare this version with a target version.
-     * 
-     * @param Version $targetVersion The target version to compare with.
-     * 
+     *
+     * @param Version $targetVersion The target version to compare with
+     *
      * @return int Return 1 if this version is greater than target version
-     *                 -1 if this version is less than the target version
-     *                  0 if both are equal.
+     *             -1 if this version is less than the target version
+     *             0 if both are equal
      */
     public function compare(Version $targetVersion)
     {
@@ -108,13 +106,13 @@ class Version
     }
 
     /**
-     * Gets the value of the current Version object as string
-     * 
+     * Gets the value of the current Version object as string.
+     *
      * @return string
      */
     public function toString()
     {
-        return $this->major . '.' . $this->minor;
+        return $this->major.'.'.$this->minor;
     }
 
     //Is there a better way to do static const of complex type?
@@ -122,12 +120,13 @@ class Version
     /** @var Version[] */
     private static $fixedVersion;
 
-    private static function fillVersions(){
-        if(is_null(self::$fixedVersion)){
+    private static function fillVersions()
+    {
+        if (is_null(self::$fixedVersion)) {
             self::$fixedVersion = array(
-                1 => new Version(1,0),
-                2 => new Version(2,0),
-                3 => new Version(3,0),
+                1 => new self(1, 0),
+                2 => new self(2, 0),
+                3 => new self(3, 0),
             );
         }
     }
@@ -135,19 +134,21 @@ class Version
     public static function v1()
     {
         self::fillVersions();
+
         return self::$fixedVersion[1];
     }
 
-
-    public static function v2(){
+    public static function v2()
+    {
         self::fillVersions();
+
         return self::$fixedVersion[2];
     }
 
-
-    public static function v3(){
+    public static function v3()
+    {
         self::fillVersions();
+
         return self::$fixedVersion[3];
     }
-
 }

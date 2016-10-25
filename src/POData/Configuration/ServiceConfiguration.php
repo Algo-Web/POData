@@ -2,98 +2,97 @@
 
 namespace POData\Configuration;
 
-
 use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\Metadata\ResourceSet;
 use POData\Common\Messages;
 use POData\Common\Version;
 use POData\Common\InvalidOperationException;
 
-
 class ServiceConfiguration
 {
     /**
-     * Maximum number of segments to be expanded allowed in a request     
+     * Maximum number of segments to be expanded allowed in a request.
      */
     private $_maxExpandCount;
 
     /**
-     * Maximum number of segments in a single $expand path
+     * Maximum number of segments in a single $expand path.
      */
     private $_maxExpandDepth;
 
     /**
-     * Maximum number of elements in each returned collection (top-level or expanded)
+     * Maximum number of elements in each returned collection (top-level or expanded).
      */
     private $_maxResultsPerCollection;
 
     /**
-     * The provider for the web service
-     * 
+     * The provider for the web service.
+     *
      * @var IMetadataProvider
      */
     private $_provider;
 
     /**
-     * Rights used for unspecified resource sets
-     * 
+     * Rights used for unspecified resource sets.
+     *
      * @var EntitySetRights
      */
     private $_defaultResourceSetRight;
 
     /**
-     * Page size for unspecified resource sets
+     * Page size for unspecified resource sets.
      */
     private $_defaultPageSize;
 
     /**
-     * A mapping from entity set name to its right
-     * 
+     * A mapping from entity set name to its right.
+     *
      * @var EntitySetRights[]
      */
     private $_resourceRights;
 
     /**
-     * A mapping from entity sets to their page sizes
-     * 
+     * A mapping from entity sets to their page sizes.
+     *
      * @var int[]
      */
     private $_pageSizes;
 
     /**
-     * Whether verbose errors should be returned by default
-     * 
-     * @var boolean
+     * Whether verbose errors should be returned by default.
+     *
+     * @var bool
      */
     private $_useVerboseErrors;
 
     /**
-     * Whether requests with the $count path segment or the $inlinecount 
-     * query options are accepted
+     * Whether requests with the $count path segment or the $inlinecount
+     * query options are accepted.
      */
     private $_acceptCountRequest;
 
     /**
-     * Whether projection requests ($select) should be accepted
+     * Whether projection requests ($select) should be accepted.
      */
     private $_acceptProjectionRequest;
 
     /**
-     * Maximum version of the response sent by server
+     * Maximum version of the response sent by server.
+     *
      * @var ProtocolVersion
      */
     private $maxVersion;
 
     /**
-     * Boolean value indicating whether to validate ETag header or not
+     * Boolean value indicating whether to validate ETag header or not.
      */
     private $_validateETagHeader;
-    
+
     /**
-     * Construct a new instance of ServiceConfiguration
-     * 
+     * Construct a new instance of ServiceConfiguration.
+     *
      * @param IMetadataProvider $metadataProvider The metadata
-     * provider for the OData service
+     *                                            provider for the OData service
      */
     public function __construct(IMetadataProvider $metadataProvider)
     {
@@ -113,10 +112,10 @@ class ServiceConfiguration
 
         $this->_validateETagHeader = true;
     }
-    
+
     /**
-     * Gets maximum number of segments to be expanded allowed in a request
-     * 
+     * Gets maximum number of segments to be expanded allowed in a request.
+     *
      * @return int
      */
     public function getMaxExpandCount()
@@ -125,11 +124,9 @@ class ServiceConfiguration
     }
 
     /**
-     * Sets maximum number of segments to be expanded allowed in a request
-     * 
+     * Sets maximum number of segments to be expanded allowed in a request.
+     *
      * @param int $maxExpandCount Maximum number of segments to be expanded
-     * 
-     * @return void
      */
     public function setMaxExpandCount($maxExpandCount)
     {
@@ -139,8 +136,8 @@ class ServiceConfiguration
     }
 
     /**
-     * Gets the maximum number of segments in a single $expand path
-     * 
+     * Gets the maximum number of segments in a single $expand path.
+     *
      * @return int
      */
     public function getMaxExpandDepth()
@@ -149,11 +146,9 @@ class ServiceConfiguration
     }
 
     /**
-     * Sets the maximum number of segments in a single $expand path
-     * 
+     * Sets the maximum number of segments in a single $expand path.
+     *
      * @param int $maxExpandDepth Maximum number of segments in a single $expand path
-     * 
-     * @return void
      */
     public function setMaxExpandDepth($maxExpandDepth)
     {
@@ -164,12 +159,10 @@ class ServiceConfiguration
     }
 
     /**
-     * Gets maximum number of elements in each returned collection 
-     * (top-level or expanded)
-     * 
+     * Gets maximum number of elements in each returned collection
+     * (top-level or expanded).
+     *
      * @return int
-     * 
-     * @return void
      */
     public function getMaxResultsPerCollection()
     {
@@ -177,13 +170,11 @@ class ServiceConfiguration
     }
 
     /**
-     * Sets maximum number of elements in each returned collection 
-     * (top-level or expanded)
-     * 
+     * Sets maximum number of elements in each returned collection
+     * (top-level or expanded).
+     *
      * @param int $maxResultPerCollection Maximum number of elements
      *                                    in returned collection
-     * 
-     * @return void
      */
     public function setMaxResultsPerCollection($maxResultPerCollection)
     {
@@ -193,15 +184,15 @@ class ServiceConfiguration
             );
         }
 
-        $this->_maxResultsPerCollection= $this->_checkIntegerNonNegativeParameter(
+        $this->_maxResultsPerCollection = $this->_checkIntegerNonNegativeParameter(
             $maxResultPerCollection, 'setMaxResultsPerCollection'
         );
     }
 
     /**
-     * Gets whether verbose errors should be used by default
+     * Gets whether verbose errors should be used by default.
      *
-     * @return boolean
+     * @return bool
      */
     public function getUseVerboseErrors()
     {
@@ -209,11 +200,9 @@ class ServiceConfiguration
     }
 
     /**
-     * Sets whether verbose errors should be used by default
+     * Sets whether verbose errors should be used by default.
      *
-     * @param boolean $useVerboseError true to enable verbose error else false
-     *
-     * @return void
+     * @param bool $useVerboseError true to enable verbose error else false
      */
     public function setUseVerboseErrors($useVerboseError)
     {
@@ -221,7 +210,7 @@ class ServiceConfiguration
     }
 
     /**
-     * gets the access rights on the specified resource set
+     * gets the access rights on the specified resource set.
      *
      * @param ResourceSet $resourceSet The resource set for which get the access
      *                                 rights
@@ -238,12 +227,10 @@ class ServiceConfiguration
     }
 
     /**
-     * sets the access rights on the specified resource set
+     * sets the access rights on the specified resource set.
      *
      * @param string          $name   Name of resource set to set; '*' to indicate all
      * @param EntitySetRights $rights Rights to be granted to this resource
-     *
-     * @return void
      *
      * @throws \InvalidArgumentException when the entity set rights are not known or the resource set is not known
      */
@@ -267,7 +254,7 @@ class ServiceConfiguration
     }
 
     /**
-     * Gets the maximum page size for an entity set resource
+     * Gets the maximum page size for an entity set resource.
      *
      * @param ResourceSet $resourceSet Entity set for which to get the page size
      *
@@ -286,14 +273,12 @@ class ServiceConfiguration
      * Sets the maximum page size for an entity set resource.
      *
      * @param string $name     Name of entity set resource for which to set
-     *                         the page size.
+     *                         the page size
      * @param int    $pageSize Page size for the entity set resource that is
-     *                         specified in name.
+     *                         specified in name
      *
      * @throws InvalidOperationException
      * @throws \InvalidArgumentException
-     *
-     * @return void
      */
     public function setEntitySetPageSize($name, $pageSize)
     {
@@ -327,9 +312,9 @@ class ServiceConfiguration
 
     /**
      * Gets whether requests with the $count path segment or the $inlinecount query
-     * options are accepted
+     * options are accepted.
      *
-     * @return boolean
+     * @return bool
      */
     public function getAcceptCountRequests()
     {
@@ -338,12 +323,10 @@ class ServiceConfiguration
 
     /**
      * Sets whether requests with the $count path segment or the $inlinecount
-     * query options are accepted
+     * query options are accepted.
      *
-     * @param boolean $acceptCountRequest true to accept count request,
-     *                                    false to not
-     *
-     * @return void
+     * @param bool $acceptCountRequest true to accept count request,
+     *                                 false to not
      */
     public function setAcceptCountRequests($acceptCountRequest)
     {
@@ -351,9 +334,9 @@ class ServiceConfiguration
     }
 
     /**
-     * Gets whether projection requests ($select) should be accepted
+     * Gets whether projection requests ($select) should be accepted.
      *
-     * @return boolean
+     * @return bool
      */
     public function getAcceptProjectionRequests()
     {
@@ -361,18 +344,15 @@ class ServiceConfiguration
     }
 
     /**
-     * Sets whether projection requests ($select) should be accepted
+     * Sets whether projection requests ($select) should be accepted.
      *
-     * @param boolean $acceptProjectionRequest true to accept projection
-     *                                         request, false to not
-     *
-     * @return void
+     * @param bool $acceptProjectionRequest true to accept projection
+     *                                      request, false to not
      */
     public function setAcceptProjectionRequests($acceptProjectionRequest)
     {
         $this->_acceptProjectionRequest = $acceptProjectionRequest;
     }
-
 
     /**
      * Gets Maximum version of the response sent by server.
@@ -395,11 +375,9 @@ class ServiceConfiguration
     }
 
     /**
-     * Sets Maximum version of the response sent by server
+     * Sets Maximum version of the response sent by server.
      *
      * @param ProtocolVersion $version The version to set
-     *
-     * @return void
      */
     public function setMaxDataServiceVersion(ProtocolVersion $version)
     {
@@ -407,41 +385,37 @@ class ServiceConfiguration
     }
 
         /**
-         * Specify whether to validate the ETag or not
+         * Specify whether to validate the ETag or not.
          *
-         * @param boolean $validate True if ETag needs to validated, false otherwise.
-         *
-         * @return void
+         * @param bool $validate True if ETag needs to validated, false otherwise
          */
-        function setValidateETagHeader($validate)
+        public function setValidateETagHeader($validate)
         {
             $this->_validateETagHeader = $validate;
         }
 
         /**
-         * Gets whether to validate the ETag or not
+         * Gets whether to validate the ETag or not.
          *
-         * @return boolean True if ETag needs to validated, false
-         *                 if its not to be validated, Note that in case
-         *                 of false library will not write the ETag header
-         *                 in the response even though the requested resource
-         *                 support ETag
+         * @return bool True if ETag needs to validated, false
+         *              if its not to be validated, Note that in case
+         *              of false library will not write the ETag header
+         *              in the response even though the requested resource
+         *              support ETag
          */
-        function getValidateETagHeader()
+        public function getValidateETagHeader()
         {
             return $this->_validateETagHeader;
         }
 
-
-
     /**
-     * Checks that the parameter to a function is numeric and is not negative
-     * 
+     * Checks that the parameter to a function is numeric and is not negative.
+     *
      * @param int    $value        The value of parameter to check
      * @param string $functionName The name of the function that receives above value
-     * 
+     *
      * @throws \InvalidArgumentException
-     * 
+     *
      * @return int
      */
     private function _checkIntegerNonNegativeParameter($value, $functionName)
@@ -451,20 +425,20 @@ class ServiceConfiguration
                 Messages::commonArgumentShouldBeInteger($value, $functionName)
             );
         }
-        
+
         if ($value < 0) {
             throw new \InvalidArgumentException(
                 Messages::commonArgumentShouldBeNonNegative($value, $functionName)
             );
         }
-        
+
         return $value;
     }
 
     /**
      * Whether size of a page has been defined for any entity set.
-     * 
-     * @return boolean
+     *
+     * @return bool
      */
     private function _isPageSizeDefined()
     {

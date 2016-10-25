@@ -5,7 +5,7 @@ namespace POData\UriProcessor\QueryProcessor\OrderByParser;
 use POData\Providers\Metadata\ResourceProperty;
 
 /**
- * Class OrderBySubPathSegment
+ * Class OrderBySubPathSegment.
  *
  * A type to represent sub path segment in an order by path segment.
  * Syntax of orderby clause is:
@@ -13,23 +13,21 @@ use POData\Providers\Metadata\ResourceProperty;
  * OrderByClause         : OrderByPathSegment [, OrderByPathSegment]*
  * OrderByPathSegment    : OrderBySubPathSegment [/OrderBySubPathSegment]*[asc|desc]?
  * OrderBySubPathSegment : identifier
- *
- * @package POData\UriProcessor\QueryProcessor\OrderByParser
  */
 class OrderBySubPathSegment
 {
     /**
-     * Resource property of the property corresponding to this sub path segment
-     * 
+     * Resource property of the property corresponding to this sub path segment.
+     *
      * @var ResourceProperty
      */
     private $_resourceProperty;
 
     /**
-     * Constructs a new instance of OrderBySubPathSegment
-     * 
+     * Constructs a new instance of OrderBySubPathSegment.
+     *
      * @param ResourceProperty $resourceProperty Resource property of the property
-     *                                           corresponding to this sub path 
+     *                                           corresponding to this sub path
      *                                           segment
      */
     public function __construct(ResourceProperty $resourceProperty)
@@ -38,8 +36,8 @@ class OrderBySubPathSegment
     }
 
     /**
-     * Gets name of the sub path segment
-     * 
+     * Gets name of the sub path segment.
+     *
      * @return string
      */
     public function getName()
@@ -49,8 +47,8 @@ class OrderBySubPathSegment
 
     /**
      * Gets refernece to the ResourceProperty instance corresponding to this
-     * sub path segment
-     * 
+     * sub path segment.
+     *
      * @return ResourceProperty
      */
     public function getResourceProperty()
@@ -59,10 +57,10 @@ class OrderBySubPathSegment
     }
 
     /**
-     * Gets instance type of the ResourceProperty instance corresponding to 
-     * this sub path segment If this sub path segment is last segment then 
+     * Gets instance type of the ResourceProperty instance corresponding to
+     * this sub path segment If this sub path segment is last segment then
      * this function returns 'IType' otherwise 'ReflectionClass'.
-     * 
+     *
      * @return ReflectionClass|IType
      */
     public function getInstanceType()

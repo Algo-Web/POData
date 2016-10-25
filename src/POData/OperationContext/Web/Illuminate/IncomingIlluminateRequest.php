@@ -1,8 +1,6 @@
 <?php
 
-
 namespace POData\OperationContext\Web\Illuminate;
-
 
 use Illuminate\Http\Request;
 use POData\OperationContext\HTTPRequestMethod;
@@ -11,29 +9,28 @@ use POData\OperationContext\IHTTPRequest;
 class IncomingIlluminateRequest implements IHTTPRequest
 {
     /**
-     * The Illuminate request
+     * The Illuminate request.
      *
      * @var Request
      */
     private $request;
 
     /**
-     * The request headers
+     * The request headers.
      *
      * @var array
      */
     private $_headers;
 
     /**
-     * The incoming url in raw format
+     * The incoming url in raw format.
      *
      * @var string
      */
-    private $_rawUrl  = null;
-
+    private $_rawUrl = null;
 
     /**
-     * The request method (GET, POST, PUT, DELETE or MERGE)
+     * The request method (GET, POST, PUT, DELETE or MERGE).
      *
      * @var HTTPRequestMethod HttpVerb
      */
@@ -56,6 +53,7 @@ class IncomingIlluminateRequest implements IHTTPRequest
 
     /**
      * IncomingIlluminateRequest constructor.
+     *
      * @param Request $request
      */
     public function __construct(Request $request)
@@ -79,21 +77,23 @@ class IncomingIlluminateRequest implements IHTTPRequest
 
     /**
      * @param string $key The header name
+     *
      * @return array|null|string
      */
     public function getRequestHeader($key)
     {
         $result = $this->request->header($key);
         //Zend returns false for a missing header...POData needs a null
-        if($result === false || $result === ''){
+        if ($result === false || $result === '') {
             return null;
         }
+
         return $result;
     }
 
     /**
      * Returns the Query String Parameters (QSPs) as an array of KEY-VALUE pairs.  If a QSP appears twice
-     * it will have two entries in this array
+     * it will have two entries in this array.
      *
      * @return array
      */
@@ -108,10 +108,11 @@ class IncomingIlluminateRequest implements IHTTPRequest
         //odata.svc/?$format=xml&$format=json the format will be json
         $this->_queryOptions = [];
         $this->_queryOptionsCount = 0;
-        foreach($this->request->all() as $key => $value){
+        foreach ($this->request->all() as $key => $value) {
             $this->_queryOptions[] = [$key => $value];
-            $this->_queryOptionsCount++;
+            ++$this->_queryOptionsCount;
         }
+
         return $this->_queryOptions;
     }
 

@@ -3,8 +3,7 @@
 namespace POData\UriProcessor\QueryProcessor\ExpressionParser;
 
 /**
- * Class ExpressionTokenId
- * @package POData\UriProcessor\QueryProcessor\ExpressionParser
+ * Class ExpressionTokenId.
  */
 class ExpressionTokenId
 {

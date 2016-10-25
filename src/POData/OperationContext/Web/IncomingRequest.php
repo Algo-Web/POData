@@ -10,50 +10,48 @@ use POData\OperationContext\IHTTPRequest;
 /**
  * Class IncomingRequest
  * Class represents HTTP methods,headers and stream associated with a HTTP request
- * Note: This class will not throw any error
- * @package POData\OperationContext\Web
+ * Note: This class will not throw any error.
  */
 class IncomingRequest implements IHTTPRequest
 {
     /**
-     * The request headers
-     * 
+     * The request headers.
+     *
      * @var array
      */
     private $_headers;
-    
+
     /**
-     * The incoming url in raw format
-     * 
+     * The incoming url in raw format.
+     *
      * @var string
      */
     private $_rawUrl = null;
-    
 
     /**
-     * The request method (GET, POST, PUT, DELETE or MERGE)
-     * 
+     * The request method (GET, POST, PUT, DELETE or MERGE).
+     *
      * @var HTTPRequestMethod HttpVerb
      */
     private $_method;
 
     /**
      * The query options as key value.
-     * 
+     *
      * @var array(string, string);
      */
     private $_queryOptions;
 
     /**
-     * A collection that represents mapping between query 
+     * A collection that represents mapping between query
      * option and its count.
-     * 
+     *
      * @var array(string, int)
      */
     private $_queryOptionsCount;
 
     /**
-     * Initialize a new instance of IncomingWebRequestContext
+     * Initialize a new instance of IncomingWebRequestContext.
      */
     public function __construct()
     {
@@ -95,8 +93,8 @@ class IncomingRequest implements IHTTPRequest
      * CONTENT_TYPE
      * CONTENT_LENGTH
      * We may get user defined customized headers also like
-     * HTTP_DATASERVICEVERSION, HTTP_MAXDATASERVICEVERSION
-     * 
+     * HTTP_DATASERVICEVERSION, HTTP_MAXDATASERVICEVERSION.
+     *
      * @return string[]
      */
     private function getHeaders()
@@ -105,26 +103,25 @@ class IncomingRequest implements IHTTPRequest
             $this->_headers = array();
 
             foreach ($_SERVER as $key => $value) {
-                if ((strpos($key, 'HTTP_') === 0) 
+                if ((strpos($key, 'HTTP_') === 0)
                     || (strpos($key, 'REQUEST_') === 0)
-                    || (strpos($key, 'SERVER_') === 0) 
+                    || (strpos($key, 'SERVER_') === 0)
                     || (strpos($key, 'CONTENT_') === 0)
                 ) {
                     $trimmedValue = trim($value);
                     $this->_headers[$key] = isset($trimmedValue) ? $trimmedValue : null;
                 }
             }
-
         }
 
         return $this->_headers;
     }
 
     /**
-     * get the raw incoming url
-     * 
+     * get the raw incoming url.
+     *
      * @return string RequestURI called by User with the value of QueryString
-     */  
+     */
     public function getRawUrl()
     {
         if (is_null($this->_rawUrl)) {
@@ -134,7 +131,7 @@ class IncomingRequest implements IHTTPRequest
                 $this->_rawUrl = ODataConstants::HTTPREQUEST_PROTOCOL_HTTPS;
             }
 
-            $this->_rawUrl .= "://" . $_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)];
+            $this->_rawUrl .= '://'.$_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)];
             $this->_rawUrl .= utf8_decode(urldecode($_SERVER[ODataConstants::HTTPREQUEST_URI]));
         }
 
@@ -142,11 +139,11 @@ class IncomingRequest implements IHTTPRequest
     }
 
     /**
-     * get the specific request headers
-     * 
+     * get the specific request headers.
+     *
      * @param string $key The header name
-     * 
-     * @return string|null value of the header, NULL if header is absent.
+     *
+     * @return string|null value of the header, NULL if header is absent
      */
     public function getRequestHeader($key)
     {
@@ -166,7 +163,7 @@ class IncomingRequest implements IHTTPRequest
     /**
      * Get the QUERY_STRING
      * Note: This method will return empty string if no query string present.
-     * 
+     *
      * @return string $_header[HttpRequestHeaderQueryString]
      */
     private function getQueryString()
@@ -174,13 +171,13 @@ class IncomingRequest implements IHTTPRequest
         if (array_key_exists(ODataConstants::HTTPREQUEST_QUERY_STRING, $_SERVER)) {
             return utf8_decode(trim($_SERVER[ODataConstants::HTTPREQUEST_QUERY_STRING]));
         } else {
-            return "";
+            return '';
         }
     }
-    
+
     /**
-     * Split the QueryString and assigns them as array element in KEY=VALUE
-     * 
+     * Split the QueryString and assigns them as array element in KEY=VALUE.
+     *
      * @return string[]
      */
     public function getQueryParameters()
@@ -191,7 +188,7 @@ class IncomingRequest implements IHTTPRequest
 
             foreach (explode('&', $queryString) as $queryOptionAsString) {
                 $queryOptionAsString = trim($queryOptionAsString);
-                if (!empty($queryOptionAsString)) {    
+                if (!empty($queryOptionAsString)) {
                     $result = explode('=', $queryOptionAsString, 2);
                     $isNamedOptions = count($result) == 2;
                     if ($isNamedOptions) {
@@ -208,19 +205,15 @@ class IncomingRequest implements IHTTPRequest
         return $this->_queryOptions;
     }
 
-
-    
     /**
      * Get the HTTP method
-     * Value will be set from the value of the HTTP method of the 
+     * Value will be set from the value of the HTTP method of the
      * incoming Web request.
-     * 
+     *
      * @return HTTPRequestMethod $_header[HttpRequestHeaderMethod]
      */
     public function getMethod()
     {
         return $this->_method;
     }
-
-
 }
