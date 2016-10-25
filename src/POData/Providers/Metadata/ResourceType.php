@@ -925,7 +925,7 @@ class ResourceType
 
 	public function setPropertyValue($entity, $property, $value) {
 		$reflect = new \ReflectionProperty($entity, $property);
-		$reflect->setValue($value);
+		$reflect->setValue($entity,$value);
 
 		return $this;
 	}
