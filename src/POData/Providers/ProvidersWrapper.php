@@ -649,7 +649,7 @@ class ProvidersWrapper
      * @param InternalOrderByInfo $orderBy The orderBy information
      * @param int $top The top count
      * @param int $skip The skip count
-     * @param int $skipToken The skip token
+     * @param InternalSkipTokenInfo $skipToken The skip token
      * 
      * @return QueryResult
      */
