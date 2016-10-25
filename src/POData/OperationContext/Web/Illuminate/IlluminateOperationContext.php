@@ -1,8 +1,6 @@
 <?php
 
-
 namespace POData\OperationContext\Web\Illuminate;
-
 
 use Illuminate\Http\Request;
 use POData\OperationContext\IOperationContext;
@@ -11,14 +9,14 @@ use POData\OperationContext\Web\OutgoingResponse;
 class IlluminateOperationContext implements IOperationContext
 {
     /**
-     * Object of IncomingRequest which is needed to get all the HTTP headers info
+     * Object of IncomingRequest which is needed to get all the HTTP headers info.
      *
      * @var IncomingRequest
      */
     private $_incomingRequest;
 
     /**
-     * Object of OutgoingResponse which is needed to get all the HTTP headers info
+     * Object of OutgoingResponse which is needed to get all the HTTP headers info.
      *
      * @var OutgoingResponse
      */
@@ -29,6 +27,7 @@ class IlluminateOperationContext implements IOperationContext
      * This function will perform the following tasks:
      *  (1) Retrieve the current HTTP method,headers and stream.
      *  (2) Populate $_incomingRequest using these.
+     *
      * @param Request $request
      */
     public function __construct(Request $request)

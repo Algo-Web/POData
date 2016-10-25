@@ -9,18 +9,17 @@ use POData\Providers\ProvidersWrapper;
 use POData\Configuration\ServiceConfiguration;
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandProjectionParser;
 use POData\Common\ODataException;
-
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 use UnitTests\POData\Facets\NorthWind1\NorthWindQueryProvider;
 
 class SelectTest extends \PHPUnit_Framework_TestCase
-{   
+{
     protected function setUp()
     {
     }
 
     /**
-     * Test applying wild card '*' on root
+     * Test applying wild card '*' on root.
      */
     public function testWildCartSelectOnRoot()
     {
@@ -61,8 +60,7 @@ class SelectTest extends \PHPUnit_Framework_TestCase
     /**
      * Application of '*' on a node means select (only) all immediate properties of that node
      * in this case parser should remove any explicitly included nodes if its there
-     * this will actually test the function 'ExpandProjectionNode::removeNodesAlreadyIncludedImplicitly'
-     *
+     * this will actually test the function 'ExpandProjectionNode::removeNodesAlreadyIncludedImplicitly'.
      */
     public function testWildCardWithExplicitSelectionOnRoot()
     {
@@ -131,7 +129,6 @@ class SelectTest extends \PHPUnit_Framework_TestCase
         //Even though we explicity selected 'CustomerID', 'CustomerName' and link to 'Orders'
         //these children will be removed since '*' implcilty select all properties
         $this->assertEquals(count($projectionTreeRoot->getChildNodes()), 0);
-                
     }
 
     /**
@@ -143,8 +140,7 @@ class SelectTest extends \PHPUnit_Framework_TestCase
      * $expand=Nav1 & $select=Navi1/Navi2
      *     This is correct, result will include Navi1 with link to Navi2
      * $expand=Nav1 & $select=Navi1/Navi2/PropertyOFNavi
-     * 	  This is incorrect, trying to traverse Navi2 that is not expanded
-     * 
+     * 	  This is incorrect, trying to traverse Navi2 that is not expanded.
      */
     public function testTraversalOfNavigationPropertyWhichIsNotExpandedOnRoot()
     {
@@ -162,7 +158,7 @@ class SelectTest extends \PHPUnit_Framework_TestCase
         $customerResourceType = $customersResourceSetWrapper->getResourceType();
 
         try {
-                //Try to traverse 'Orders' on select without expanding
+            //Try to traverse 'Orders' on select without expanding
                 $projectionTreeRoot = ExpandProjectionParser::parseExpandAndSelectClause(
                                                             $customersResourceSetWrapper,
                                                             $customerResourceType,
@@ -176,14 +172,13 @@ class SelectTest extends \PHPUnit_Framework_TestCase
         } catch (ODataException $odataException) {
             $this->assertStringStartsWith('Only navigation properties specified in expand option can be travered in select option,In order to treaverse', $odataException->getMessage());
         }
-
     }
 
     /**
      * Selection of a parent navigation property causes selection of child navigations
      * for example $expand=A/B/C, A/D/F & $select = A
      * case result to include A and subtree of A (i.e B/C and D/F)
-     * with all immediate properties of A, B, C, D and F
+     * with all immediate properties of A, B, C, D and F.
      */
     public function testInclusionOfSubTreeDueToParentInclusion1()
     {
@@ -237,13 +232,12 @@ class SelectTest extends \PHPUnit_Framework_TestCase
         foreach ($childNodes as $propertyName => $childNode) {
             if ($i == 0) {
                 $this->assertEquals($propertyName, 'Order');
-            } else if($i == 1) {
+            } elseif ($i == 1) {
                 $this->assertEquals($propertyName, 'Product');
             }
 
-            $i++;
+            ++$i;
         }
-
     }
 
     /**
@@ -251,7 +245,7 @@ class SelectTest extends \PHPUnit_Framework_TestCase
      * for example $expand=A/B/C & $select = A/B
      * case result to include A and subtree of A (i.e B/C)
      * but result won't include immediate properties of A, but include immediate
-     * properties of B and C
+     * properties of B and C.
      */
     public function testInclusionOfSubTreeDueToParentInclusion2()
     {
@@ -319,15 +313,14 @@ class SelectTest extends \PHPUnit_Framework_TestCase
         //Both child nodes's all properties should be included in the result
         $this->assertTrue($childNodes['Product']->canSelectAllProperties());
         $this->assertTrue($childNodes['Order']->canSelectAllProperties());
-                
     }
 
     /**
      * Once client applied selection clause, navigation properties specified in the expand clause
-	 * will included in the result only if they are selected. For example:
-	 * $expand=A/B, X/Y & select=A
-     * The result will include only A and associated B (with all properties). X/Y will be 
-     * ignored as they are not selected
+     * will included in the result only if they are selected. For example:
+     * $expand=A/B, X/Y & select=A
+     * The result will include only A and associated B (with all properties). X/Y will be
+     * ignored as they are not selected.
      */
     public function testRemovalOfSubTreeWhichIsExpandedButNotSelected1()
     {
@@ -424,20 +417,18 @@ class SelectTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(count($childNodes), 1);
         $this->assertTrue(array_key_exists('Product', $childNodes));
         $this->assertTrue($childNodes['Product'] instanceof ExpandedProjectionNode);
-                
     }
 
     /**
      * Selection of a parent navigation property casues selection of child navigations
      * for example $expand=A/B/C, A/D/F & $select = A
      * case result to include A and subtree of A (i.e B/C and D/F)
-     * But selection of immediate properties of A with '*' cause to ignore the 
+     * But selection of immediate properties of A with '*' cause to ignore the
      * child nodes if they are not selected explicitly.
      *  $expand=A/B/C, A/D/F & $select = A/*
      *  	cause to ingore B/C and D/F
      *  $expand=A/B/C, A/D/F & $select = A/*, A/B
-     *  	cuase of include immediate propertises of A, select B and ignore D
-     * 
+     *  	cuase of include immediate propertises of A, select B and ignore D.
      */
     public function testRemovalOfSubTreeWhichIsExpandedButNotSelected2()
     {
@@ -489,8 +480,7 @@ class SelectTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Only navigation property can come as intermediate path segment
-     * Primitive/Bag/Complex types should be the last segment
-     * 
+     * Primitive/Bag/Complex types should be the last segment.
      */
     public function testPrimitiveBagComplexAsIntermediateSegments()
     {
@@ -538,7 +528,6 @@ class SelectTest extends \PHPUnit_Framework_TestCase
             $this->assertStringStartsWith('select doesn\'t support selection of properties of complex type. The property \'Address\' on type \'Customer\' is a complex type', $odataException->getMessage());
         }
 
-
         $employeesResourceSetWrapper = $providersWrapper->resolveResourceSet('Employees');
         $employeeResourceType = $employeesResourceSetWrapper->getResourceType();
         //Test using bag type as navigation
@@ -556,13 +545,11 @@ class SelectTest extends \PHPUnit_Framework_TestCase
         } catch (ODataException $odataException) {
             $this->assertStringStartsWith('The selection from property \'Emails\' on type \'Employee\' is not valid. The select query option does not support selection items from a bag property', $odataException->getMessage());
         }
-
-
     }
 
     /**
      * If last sub path segment specified in the select clause does not appear in the prjection tree,
-     * then parser will create 'ProjectionNode' for them
+     * then parser will create 'ProjectionNode' for them.
      */
     public function testProjectionNodeCreation()
     {

@@ -3,32 +3,31 @@
 namespace POData\ObjectModel;
 
 /**
- * Class XMLAttribute represents XML attribute
- * @package POData\ObjectModel
+ * Class XMLAttribute represents XML attribute.
  */
 class XMLAttribute
 {
     /**
-     * 
-     * The namespace prefix
+     * The namespace prefix.
+     *
      * @var string
      */
     public $nsPrefix;
     /**
-     * 
-     * The namespace URI. 
+     * The namespace URI.
+     *
      * @var string
      */
     public $nsUri;
     /**
-     * 
-     * The attribute name
+     * The attribute name.
+     *
      * @var string
      */
     public $name;
     /**
-     * 
-     * The attribute value
+     * The attribute value.
+     *
      * @var string
      */
     public $Value;

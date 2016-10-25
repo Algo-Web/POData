@@ -12,35 +12,31 @@ use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\PropertyAcce
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\FunctionCallExpression;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\UnaryExpression;
 
-
 /**
- * Class ExpressionProcessor
+ * Class ExpressionProcessor.
  *
  * Class to process an expression tree and generate specialized
  * (e.g. PHP) expression using expression provider
- *
- * @package POData\UriProcessor\QueryProcessor\ExpressionParser
  */
 class ExpressionProcessor
 {
     private $_expressionProvider;
-    
-    /**
-     * Construct new instance of ExpressionProcessor
-     * 
-     * @param IExpressionProvider $expressionProvider Reference to the language specific provider.
-     *
-     */
-    public function __construct(IExpressionProvider $expressionProvider) {
 
+    /**
+     * Construct new instance of ExpressionProcessor.
+     *
+     * @param IExpressionProvider $expressionProvider Reference to the language specific provider
+     */
+    public function __construct(IExpressionProvider $expressionProvider)
+    {
         $this->_expressionProvider = $expressionProvider;
     }
 
     /**
-     * Process the expression tree using expression provider and return the 
-     * expression as string
+     * Process the expression tree using expression provider and return the
+     * expression as string.
      *
-     * @param AbstractExpression  $rootExpression     The root of the expression tree.
+     * @param AbstractExpression $rootExpression The root of the expression tree
      *
      * @return string
      */
@@ -50,20 +46,21 @@ class ExpressionProcessor
     }
 
     /**
-     * Recursive function to process each node of the expression
-     * 
-     * @param AbstractExpression $expression Current node to process.
-     * 
-     * @return string The language specific expression.
+     * Recursive function to process each node of the expression.
+     *
+     * @param AbstractExpression $expression Current node to process
+     *
+     * @return string The language specific expression
      */
     private function _processExpressionNode(AbstractExpression $expression)
     {
         if ($expression instanceof ArithmeticExpression) {
             $left = $this->_processExpressionNode($expression->getLeft());
             $right = $this->_processExpressionNode($expression->getRight());
+
             return $this->_expressionProvider->onArithmeticExpression(
-                $expression->getNodeType(), 
-                $left, 
+                $expression->getNodeType(),
+                $left,
                 $right
             );
         }
@@ -71,9 +68,10 @@ class ExpressionProcessor
         if ($expression instanceof LogicalExpression) {
             $left = $this->_processExpressionNode($expression->getLeft());
             $right = $this->_processExpressionNode($expression->getRight());
+
             return $this->_expressionProvider->onLogicalExpression(
-                $expression->getNodeType(), 
-                $left, 
+                $expression->getNodeType(),
+                $left,
                 $right
             );
         }
@@ -81,16 +79,17 @@ class ExpressionProcessor
         if ($expression instanceof RelationalExpression) {
             $left = $this->_processExpressionNode($expression->getLeft());
             $right = $this->_processExpressionNode($expression->getRight());
+
             return $this->_expressionProvider->onRelationalExpression(
-                $expression->getNodeType(), 
-                $left, 
+                $expression->getNodeType(),
+                $left,
                 $right
             );
         }
 
         if ($expression instanceof ConstantExpression) {
             return $this->_expressionProvider->onConstantExpression(
-                $expression->getType(), 
+                $expression->getType(),
                 $expression->getValue()
             );
         }
@@ -106,16 +105,18 @@ class ExpressionProcessor
             foreach ($expression->getParamExpressions() as $paramExpression) {
                 $params[] = $this->_processExpressionNode($paramExpression);
             }
+
             return $this->_expressionProvider->onFunctionCallExpression(
-                $expression->getFunctionDescription(), 
+                $expression->getFunctionDescription(),
                 $params
             );
         }
 
         if ($expression instanceof UnaryExpression) {
             $child = $this->_processExpressionNode($expression->getChild());
+
             return $this->_expressionProvider->onUnaryExpression(
-                $expression->getNodeType(), 
+                $expression->getNodeType(),
                 $child
             );
         }

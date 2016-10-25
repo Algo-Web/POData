@@ -5,8 +5,7 @@ namespace POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions;
 use POData\UriProcessor\QueryProcessor\FunctionDescription;
 
 /**
- * Class FunctionCallExpression
- * @package POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions
+ * Class FunctionCallExpression.
  */
 class FunctionCallExpression extends AbstractExpression
 {
@@ -14,14 +13,14 @@ class FunctionCallExpression extends AbstractExpression
      * @var FunctionDescription
      */
     protected $functionDescription;
-    
+
     /**
      * @var array<AbstractExpression>
      */
     protected $paramExpressions;
 
     /**
-     * Creates new instance of FunctionCallExpression
+     * Creates new instance of FunctionCallExpression.
      *
      * @param FunctionDescription       $functionDescription The signature of function-call
      * @param array<AbstractExpression> $paramExpressions    The parameters to the function
@@ -35,8 +34,8 @@ class FunctionCallExpression extends AbstractExpression
     }
 
     /**
-     * To get the array of expressions represents arguments of function
-     * 
+     * To get the array of expressions represents arguments of function.
+     *
      * @return array<ParamExpression>
      */
     public function getParamExpressions()
@@ -45,8 +44,8 @@ class FunctionCallExpression extends AbstractExpression
     }
 
     /**
-     * To get description of the function this expression represents
-     * 
+     * To get description of the function this expression represents.
+     *
      * @return FunctionDescription
      */
     public function getFunctionDescription()
@@ -55,11 +54,9 @@ class FunctionCallExpression extends AbstractExpression
     }
 
     /**
-     * (non-PHPdoc)
-     * 
+     * (non-PHPdoc).
+     *
      * @see library/POData/QueryProcessor/ExpressionParser/Expressions.AbstractExpression::free()
-     * 
-     * @return void
      */
     public function free()
     {

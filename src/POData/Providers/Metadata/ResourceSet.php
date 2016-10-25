@@ -8,32 +8,30 @@ use POData\Common\Messages;
  * Class ResourceSet Represents entity set.
  *
  * A type to represent entity set (resource set or container)
- *
- * @package POData\Providers\Metadata
  */
 class ResourceSet
 {
     /**
-     * name of the entity set (resource set, container)
-     * 
+     * name of the entity set (resource set, container).
+     *
      * @var string
      */
     private $_name;
 
     /**
-     * The type hold by this container
-     * 
+     * The type hold by this container.
+     *
      * @var ResourceType
      */
     private $_resourceType;
 
     /**
-     * Creates new instance of ResourceSet
-     * 
-     * @param string       $name         Name of the resource set (entity set)  
-     * @param ResourceType $resourceType ResourceType describing the resource 
+     * Creates new instance of ResourceSet.
+     *
+     * @param string       $name         Name of the resource set (entity set)
+     * @param ResourceType $resourceType ResourceType describing the resource
      *                                   this entity set holds
-     * 
+     *
      * @throws \InvalidArgumentException
      */
     public function __construct($name, ResourceType $resourceType)
@@ -49,8 +47,8 @@ class ResourceSet
     }
 
     /**
-     * Get the container name
-     * 
+     * Get the container name.
+     *
      * @return string
      */
     public function getName()
@@ -59,8 +57,8 @@ class ResourceSet
     }
 
     /**
-     * Get the type hold by this container
-     * 
+     * Get the type hold by this container.
+     *
      * @return ResourceType
      */
     public function getResourceType()

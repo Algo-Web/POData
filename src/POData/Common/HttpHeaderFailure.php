@@ -3,32 +3,29 @@
 namespace POData\Common;
 
 /**
- * Class HttpHeaderFailure
- * @package POData\Common
+ * Class HttpHeaderFailure.
  */
 class HttpHeaderFailure extends \Exception
 {
     private $_statusCode;
-    
+
     /**
-     * Creates new instance of HttpHeaderFailure
-     * 
-     * @param String $message    Error message
-     * @param Int    $statusCode Http status code
-     * @param Int    $errorCode  Http error code
-     * 
-     * @return void
+     * Creates new instance of HttpHeaderFailure.
+     *
+     * @param string $message    Error message
+     * @param int    $statusCode Http status code
+     * @param int    $errorCode  Http error code
      */
-    public function  __construct($message, $statusCode, $errorCode = null) 
+    public function __construct($message, $statusCode, $errorCode = null)
     {
         $this->_statusCode = $statusCode;
         parent::__construct($message, $errorCode);
     }
-    
+
     /**
-     * Get the status code
-     * 
-     * @return Int
+     * Get the status code.
+     *
+     * @return int
      */
     public function getStatusCode()
     {

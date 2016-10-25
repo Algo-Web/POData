@@ -3,22 +3,22 @@
 namespace POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions;
 
 /**
- * Class ConstantExpression
- * @package POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions
+ * Class ConstantExpression.
  */
 class ConstantExpression extends AbstractExpression
 {
     /**
-     * The value hold by the expression
+     * The value hold by the expression.
+     *
      * @var string
      */
     protected $value;
 
     /**
      * Create new inatnce of ConstantExpression.
-     * 
-     * @param string $value The constant value
-     * @param \POData\Providers\Metadata\Type\IType  $type  The expression node type
+     *
+     * @param string                                $value The constant value
+     * @param \POData\Providers\Metadata\Type\IType $type  The expression node type
      */
     public function __construct($value, $type)
     {
@@ -28,8 +28,8 @@ class ConstantExpression extends AbstractExpression
     }
 
     /**
-     * Get the value associated with the expression
-     * 
+     * Get the value associated with the expression.
+     *
      * @return string
      */
     public function getValue()
@@ -38,11 +38,9 @@ class ConstantExpression extends AbstractExpression
     }
 
     /**
-     * (non-PHPdoc)
-     * 
+     * (non-PHPdoc).
+     *
      * @see library/POData/QueryProcessor/ExpressionParser/Expressions.AbstractExpression::free()
-     * 
-     * @return void
      */
     public function free()
     {

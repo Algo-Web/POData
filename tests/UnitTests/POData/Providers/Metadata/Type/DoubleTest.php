@@ -1,6 +1,5 @@
 <?php
 
-
 namespace UnitTests\POData\Providers\Metadata\Type;
 
 use POData\Providers\Metadata\Type\Binary;
@@ -15,7 +14,6 @@ use POData\Providers\Metadata\Type\Int16;
 use POData\Providers\Metadata\Type\Int32;
 use POData\Providers\Metadata\Type\Int64;
 use POData\Providers\Metadata\Type\IType;
-use POData\Providers\Metadata\Type\Navigation;
 use POData\Providers\Metadata\Type\Null1;
 use POData\Providers\Metadata\Type\SByte;
 use POData\Providers\Metadata\Type\Single;
@@ -23,118 +21,104 @@ use POData\Providers\Metadata\Type\StringType;
 use POData\Providers\Metadata\Type\TypeCode;
 use POData\Providers\Metadata\Type\Void;
 
-class DoubleTest extends \PHPUnit_Framework_TestCase {
+class DoubleTest extends \PHPUnit_Framework_TestCase
+{
+    /**
+     * @return IType
+     */
+    public function getAsIType()
+    {
+        return new Double();
+    }
 
-	/**
-	 * @return IType
-	 */
-	public function getAsIType()
-	{
-		return new Double();
-	}
+    public function testConstructorAndDefaultValues()
+    {
+        $type = $this->getAsIType();
 
-	public function testConstructorAndDefaultValues()
-	{
-		$type = $this->getAsIType();
+        $actual = get_object_vars($type);
 
-		$actual = get_object_vars($type);
+        $expected = array(
 
-		$expected = array(
+        );
 
-		);
+        $this->assertEquals($expected, $actual);
+    }
 
-		$this->assertEquals($expected, $actual);
+    public function testGetFullTypeName()
+    {
+        $type = $this->getAsIType();
 
-	}
+        $actual = $type->getFullTypeName();
 
+        $this->assertEquals('Edm.Double', $actual);
+    }
 
-	public function testGetFullTypeName()
-	{
-		$type = $this->getAsIType();
+    public function testGetTypeCode()
+    {
+        $type = $this->getAsIType();
 
-		$actual = $type->getFullTypeName();
+        $actual = $type->getTypeCode();
 
-		$this->assertEquals("Edm.Double", $actual);
+        $this->assertEquals(TypeCode::DOUBLE, $actual);
+    }
 
-	}
+    public function testCompatibleWith()
+    {
+        $type = $this->getAsIType();
 
-	public function testGetTypeCode()
-	{
-		$type = $this->getAsIType();
+        $this->assertFalse($type->isCompatibleWith(new Binary()));
+        $this->assertFalse($type->isCompatibleWith(new Boolean()));
+        $this->assertTrue($type->isCompatibleWith(new Byte()));
+        $this->assertFalse($type->isCompatibleWith(new Char()));
+        $this->assertFalse($type->isCompatibleWith(new DateTime()));
+        $this->assertFalse($type->isCompatibleWith(new Decimal()));
+        $this->assertTrue($type->isCompatibleWith(new Double()));
+        $this->assertFalse($type->isCompatibleWith(new Guid()));
+        $this->assertTrue($type->isCompatibleWith(new Int16()));
+        $this->assertTrue($type->isCompatibleWith(new Int32()));
+        $this->assertTrue($type->isCompatibleWith(new Int64()));
+        $this->assertFalse($type->isCompatibleWith(new Null1()));
+        $this->assertTrue($type->isCompatibleWith(new SByte()));
+        $this->assertTrue($type->isCompatibleWith(new Single()));
+        $this->assertFalse($type->isCompatibleWith(new StringType()));
+        $this->assertFalse($type->isCompatibleWith(new Void()));
+    }
 
-		$actual = $type->getTypeCode();
+    public function testValidateSuccess()
+    {
+        $this->markTestSkipped('Too lazy see #64');
+    }
 
-		$this->assertEquals(TypeCode::DOUBLE, $actual);
+    public function testValidateFailure()
+    {
+        $this->markTestSkipped('Too lazy see #64');
+    }
 
-	}
+    public function testConvert()
+    {
+        $type = $this->getAsIType();
 
-	public function testCompatibleWith()
-	{
-		$type = $this->getAsIType();
+        $value = '-343.3533';
+        $actual = $type->convert($value);
 
-		$this->assertFalse( $type->isCompatibleWith(new Binary()) );
-		$this->assertFalse( $type->isCompatibleWith(new Boolean()) );
-		$this->assertTrue( $type->isCompatibleWith(new Byte()) );
-		$this->assertFalse( $type->isCompatibleWith(new Char()) );
-		$this->assertFalse( $type->isCompatibleWith(new DateTime()) );
-		$this->assertFalse( $type->isCompatibleWith(new Decimal()) );
-		$this->assertTrue( $type->isCompatibleWith(new Double()) );
-		$this->assertFalse( $type->isCompatibleWith(new Guid()) );
-		$this->assertTrue( $type->isCompatibleWith(new Int16()) );
-		$this->assertTrue( $type->isCompatibleWith(new Int32()) );
-		$this->assertTrue( $type->isCompatibleWith(new Int64()) );
-		$this->assertFalse( $type->isCompatibleWith(new Null1()) );
-		$this->assertTrue( $type->isCompatibleWith(new SByte()) );
-		$this->assertTrue( $type->isCompatibleWith(new Single()) );
-		$this->assertFalse( $type->isCompatibleWith(new StringType()) );
-		$this->assertFalse( $type->isCompatibleWith(new Void()) );
+        $expected = -343.3533;
+        $this->assertEquals($expected, $actual);
+    }
 
+    public function testConvertToOData()
+    {
+        $type = $this->getAsIType();
 
+        $value = '-343.3533';
+        $actual = $type->convertToOData($value);
 
-	}
+        $expected = '-343.3533D';
+        $this->assertEquals($expected, $actual);
+    }
 
-	public function testValidateSuccess()
-	{
-		$this->markTestSkipped("Too lazy see #64");
-	}
-
-
-	public function testValidateFailure()
-	{
-		$this->markTestSkipped("Too lazy see #64");
-	}
-
-
-
-	public function testConvert()
-	{
-
-		$type = $this->getAsIType();
-
-		$value = "-343.3533";
-		$actual = $type->convert($value);
-
-		$expected = -343.3533;
-		$this->assertEquals($expected, $actual);
-	}
-
-	public function testConvertToOData()
-	{
-
-		$type = $this->getAsIType();
-
-		$value = "-343.3533";
-		$actual = $type->convertToOData($value);
-
-		$expected = "-343.3533D";
-		$this->assertEquals($expected, $actual);
-	}
-
-
-
-	/**************
-	 *
-	 *  Begin Type Specific Tests
-	 *
-	 */
+    /**************
+     *
+     *  Begin Type Specific Tests
+     *
+     */
 }

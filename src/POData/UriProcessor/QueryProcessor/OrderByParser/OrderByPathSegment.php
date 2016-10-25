@@ -5,7 +5,7 @@ namespace POData\UriProcessor\QueryProcessor\OrderByParser;
 use POData\Common\Messages;
 
 /**
- * Class OrderByPathSegment
+ * Class OrderByPathSegment.
  *
  * A type to represent path segment in an order by clause
  * Syntax of orderby clause is:
@@ -13,37 +13,34 @@ use POData\Common\Messages;
  * OrderByClause         : OrderByPathSegment [, OrderByPathSegment]*
  * OrderByPathSegment    : OrderBySubPathSegment [/OrderBySubPathSegment]*[asc|desc]?
  * OrderBySubPathSegment : identifier
- *
- * @package POData\UriProcessor\QueryProcessor\OrderByParser
  */
 class OrderByPathSegment
 {
     /**
-     * Collection of sub path in this path segment
-     * 
+     * Collection of sub path in this path segment.
+     *
      * @var OrderBySubPathSegment[]
      */
     private $_orderBySubPathSegments;
 
     /**
-     * Flag indicates order of sorting, ascending or descending, default is ascending
-     * 
-     * @var boolean
+     * Flag indicates order of sorting, ascending or descending, default is ascending.
+     *
+     * @var bool
      */
     private $_isAscending;
 
     /**
-     * Constructs a new instance of OrderByPathSegment
-     * 
-     * @param OrderBySubPathSegment[] $orderBySubPathSegments Collection of orderby sub path segments for this path segment.
+     * Constructs a new instance of OrderByPathSegment.
      *
-     * @param boolean                      $isAscending            sort order, 
-     *                                                             True for 
-     *                                                             ascending and 
-     *                                                             false
-     *                                                             for desending.
+     * @param OrderBySubPathSegment[] $orderBySubPathSegments Collection of orderby sub path segments for this path segment
+     * @param bool                    $isAscending            sort order,
+     *                                                        True for
+     *                                                        ascending and
+     *                                                        false
+     *                                                        for desending
      */
-    public function __construct($orderBySubPathSegments, $isAscending = true) 
+    public function __construct($orderBySubPathSegments, $isAscending = true)
     {
         if (!is_array($orderBySubPathSegments)) {
             throw new \InvalidArgumentException(
@@ -62,8 +59,8 @@ class OrderByPathSegment
     }
 
     /**
-     * Gets collection of sub path segments that made up this path segment
-     * 
+     * Gets collection of sub path segments that made up this path segment.
+     *
      * @return OrderBySubPathSegment[]
      */
     public function getSubPathSegments()
@@ -72,9 +69,9 @@ class OrderByPathSegment
     }
 
     /**
-     * To check sorting order is ascending or descending
-     * 
-     * @return boolean Return true for ascending sort order else false
+     * To check sorting order is ascending or descending.
+     *
+     * @return bool Return true for ascending sort order else false
      */
     public function isAscending()
     {

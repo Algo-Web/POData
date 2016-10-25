@@ -8,56 +8,54 @@ use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Expression\IExpressionProvider as IExpressionProvider;
 
-
 class NorthWindDSExpressionProvider implements IExpressionProvider
 {
-    const ADD                  = '+';
-    const CLOSE_BRACKET        = ')';
-    const COMMA                = ',';
-    const DIVIDE               = '/';
-    const SUBTRACT             = '-';
-    const EQUAL                = '=';
-    const GREATERTHAN          = '>';
+    const ADD = '+';
+    const CLOSE_BRACKET = ')';
+    const COMMA = ',';
+    const DIVIDE = '/';
+    const SUBTRACT = '-';
+    const EQUAL = '=';
+    const GREATERTHAN = '>';
     const GREATERTHAN_OR_EQUAL = '>=';
-    const LESSTHAN             = '<';
-    const LESSTHAN_OR_EQUAL    = '<=';
-    const LOGICAL_AND          = 'AND';
-    const LOGICAL_NOT          = 'not';
-    const LOGICAL_OR           = 'OR';
-    const MEMBERACCESS         = '';
-    const MODULO               = '%';
-    const MULTIPLY             = '*';
-    const NEGATE               = '-';
-    const NOTEQUAL             = '!=';
-    const OPEN_BRAKET          = '(';
+    const LESSTHAN = '<';
+    const LESSTHAN_OR_EQUAL = '<=';
+    const LOGICAL_AND = 'AND';
+    const LOGICAL_NOT = 'not';
+    const LOGICAL_OR = 'OR';
+    const MEMBERACCESS = '';
+    const MODULO = '%';
+    const MULTIPLY = '*';
+    const NEGATE = '-';
+    const NOTEQUAL = '!=';
+    const OPEN_BRAKET = '(';
     // The default parameter for ROUND sql function-call
     private $_default_round = 0;
 
     /**
-     * The name of iterator
-     * 
+     * The name of iterator.
+     *
      * @var string
      */
     private $_iterName;
 
     /**
-     * The type of the resource pointed by the resource path segement
+     * The type of the resource pointed by the resource path segement.
      *
      * @var ResourceType
      */
     private $_resourceType;
 
     /**
-     * Constructs new instance of SQLSrverExpressionProvider for NorthWind DB
-     * 
+     * Constructs new instance of SQLSrverExpressionProvider for NorthWind DB.
      */
     public function __construct()
     {
     }
 
     /**
-     * Get the name of the iterator
-     * 
+     * Get the name of the iterator.
+     *
      * @return string
      */
     public function getIteratorName()
@@ -69,7 +67,7 @@ class NorthWindDSExpressionProvider implements IExpressionProvider
      * call-back for setting the resource type.
      *
      * @param ResourceType $resourceType The resource type on which the filter
-     *                                   is going to be applied.
+     *                                   is going to be applied
      */
     public function setResourceType(ResourceType $resourceType)
     {
@@ -77,17 +75,17 @@ class NorthWindDSExpressionProvider implements IExpressionProvider
     }
 
     /**
-     * Call-back for logical expression
-     * 
-     * @param ExpressionType $expressionType The type of logical expression.
-     * @param string         $left           The left expression.
-     * @param string         $right          The left expression.
-     * 
+     * Call-back for logical expression.
+     *
+     * @param ExpressionType $expressionType The type of logical expression
+     * @param string         $left           The left expression
+     * @param string         $right          The left expression
+     *
      * @return string
      */
     public function onLogicalExpression($expressionType, $left, $right)
     {
-        switch($expressionType) {
+        switch ($expressionType) {
             case ExpressionType::AND_LOGICAL:
                 return $this->_prepareBinaryExpression(self::LOGICAL_AND, $left, $right);
                 break;
@@ -100,17 +98,17 @@ class NorthWindDSExpressionProvider implements IExpressionProvider
     }
 
     /**
-     * Call-back for arithmetic expression
-     * 
-     * @param ExpressionType $expressionType The type of arithmetic expression.
-     * @param string         $left           The left expression.
-     * @param string         $right          The left expression.
-     * 
+     * Call-back for arithmetic expression.
+     *
+     * @param ExpressionType $expressionType The type of arithmetic expression
+     * @param string         $left           The left expression
+     * @param string         $right          The left expression
+     *
      * @return string
      */
     public function onArithmeticExpression($expressionType, $left, $right)
     {
-        switch($expressionType) {
+        switch ($expressionType) {
             case ExpressionType::MULTIPLY:
                 return $this->_prepareBinaryExpression(self::MULTIPLY, $left, $right);
                 break;
@@ -132,17 +130,17 @@ class NorthWindDSExpressionProvider implements IExpressionProvider
     }
 
     /**
-     * Call-back for relational expression
-     * 
+     * Call-back for relational expression.
+     *
      * @param ExpressionType $expressionType The type of relation expression
      * @param string         $left           The left expression
      * @param string         $right          The left expression
-     * 
+     *
      * @return string
      */
     public function onRelationalExpression($expressionType, $left, $right)
     {
-        switch($expressionType) {
+        switch ($expressionType) {
             case ExpressionType::GREATERTHAN:
                 return $this->_prepareBinaryExpression(self::GREATERTHAN, $left, $right);
                 break;
@@ -171,16 +169,16 @@ class NorthWindDSExpressionProvider implements IExpressionProvider
     }
 
     /**
-     * Call-back for unary expression
-     * 
+     * Call-back for unary expression.
+     *
      * @param ExpressionType $expressionType The type of unary expression
      * @param string         $child          The child expression
-     * 
+     *
      * @return string
      */
     public function onUnaryExpression($expressionType, $child)
     {
-        switch($expressionType) {
+        switch ($expressionType) {
             case ExpressionType::NEGATE:
                 return $this->_prepareUnaryExpression(self::NEGATE, $child);
                 break;
@@ -193,18 +191,18 @@ class NorthWindDSExpressionProvider implements IExpressionProvider
     }
 
     /**
-     * Call-back for constant expression
-     * 
+     * Call-back for constant expression.
+     *
      * @param IType  $type  The type of constant
      * @param objetc $value The value of the constant
-     * 
+     *
      * @return string
      */
     public function onConstantExpression(IType $type, $value)
-    {    	
+    {
         if (is_bool($value)) {
             return var_export($value, true);
-        } else if (is_null($value)) {
+        } elseif (is_null($value)) {
             return var_export(null, true);
         }
 
@@ -212,10 +210,10 @@ class NorthWindDSExpressionProvider implements IExpressionProvider
     }
 
     /**
-     * Call-back for property access expression
-     * 
+     * Call-back for property access expression.
+     *
      * @param PropertyAccessExpression $expression The property access expression
-     * 
+     *
      * @return string
      */
     public function onPropertyAccessExpression($expression)
@@ -238,34 +236,33 @@ class NorthWindDSExpressionProvider implements IExpressionProvider
                 $parent2 = $parent;
                 $parent = $parent->getParent();
             } while ($parent != null);
-        	
+
             $resourceProperty = $parent2->getResourceProperty();
             if ($resourceProperty->isKindOf(ResourcePropertyKind::RESOURCE_REFERENCE)) {
                 // Orders?$filter=Customer/CustomerID eq 'ALFKI'
                 throw new NotImplementedException(
                         'This implementation not supports Resource reference in the filter',
                         500,
-                        NULL
+                        null
                 );
             } else {
                 // Customers?$filter=Address/AltAddress/City eq 'Seattle'
                 // Customers?$filter=Address/City eq 'Seattle'
                 $propertyName = $parent2->getResourceProperty()->getName();
-                if ("Address" == $propertyName) {
+                if ('Address' == $propertyName) {
                     $child = $parent2->getChild();
                     $propertyName = $child->getResourceProperty()->getName();
-                    if ("AltAddress" != $propertyName) {
+                    if ('AltAddress' != $propertyName) {
                         return $propertyName;
                     }
-        			
+
                     throw new NotImplementedException(
                             'This implementation not supports Customer::Address::AltAddress in the filter',
                             500,
-                            NULL
+                            null
                     );
                 }
             }
-
         } else {
             // This is a first level property access
             $resourceProperty = $parent->getResourceProperty();
@@ -276,9 +273,9 @@ class NorthWindDSExpressionProvider implements IExpressionProvider
                 // First level property access to a complex or resource reference
                 // which is not supported by $this [this implementation of IDSQP2]
                 throw new NotImplementedException(
-                    'First level complex and Resource reference are not supported in the filter', 
-                    500, 
-                    NULL
+                    'First level complex and Resource reference are not supported in the filter',
+                    500,
+                    null
                 );
             } else {
                 // First level property access to primitive property
@@ -287,11 +284,11 @@ class NorthWindDSExpressionProvider implements IExpressionProvider
         }
     }
     /**
-     * Call-back for function call expression
-     * 
-     * @param FunctionDescription $functionDescription Description of the function.
-     * @param array<string>       $params              Paameters to the function.
-     * 
+     * Call-back for function call expression.
+     *
+     * @param FunctionDescription $functionDescription Description of the function
+     * @param array<string>       $params              Paameters to the function
+     *
      * @return string
      */
     public function onFunctionCallExpression($functionDescription, $params)
@@ -328,20 +325,20 @@ class NorthWindDSExpressionProvider implements IExpressionProvider
             break;
         case ODataConstants::STRFUN_SUBSTRING:
           if (count($params) == 3) {
-            // 3 Param version of OData substring
+              // 3 Param version of OData substring
                 return "SUBSTRING($params[0], $params[1] + 1, $params[2])";
-            } else {
-            // 2 Params version of OData substring
+          } else {
+              // 2 Params version of OData substring
             // We don't have the same function for SQL Server, we have only:
-            //
+
             // SUBSTRING ( value_expression , start_expression , length_expression )
             // http://msdn.microsoft.com/en-us/library/ms187748.aspx
-            //
-            // If the sum of start_expression and length_expression is greater than the number of characters 
+
+            // If the sum of start_expression and length_expression is greater than the number of characters
             // in value_expression, the whole value expression beginning at start_expression is returned
             // In OData substring function the index start from 0, in SQL Server its from 1
-            return "SUBSTRING($params[0], $params[1] + 1, LEN($params[0]))";        	    
-            }
+            return "SUBSTRING($params[0], $params[1] + 1, LEN($params[0]))";
+          }
             break;
         case ODataConstants::STRFUN_SUBSTRINGOF:
           return "(CHARINDEX($params[0], $params[1]) != 0)";
@@ -375,7 +372,7 @@ class NorthWindDSExpressionProvider implements IExpressionProvider
             break;
         case ODataConstants::DATETIME_SECOND:
             return "DATENAME(SECOND, $params[0])";
-            break;                
+            break;
         case ODataConstants::MATHFUN_ROUND:
             return "ROUND($params[0], $this->_default_round)";
             break;
@@ -398,79 +395,81 @@ class NorthWindDSExpressionProvider implements IExpressionProvider
     }
 
     /**
-     * To format binary expression
-     * 
-     * @param string $operator The binary operator.
-     * @param string $left     The left operand.
-     * @param string $right    The right operand.
-     * 
+     * To format binary expression.
+     *
+     * @param string $operator The binary operator
+     * @param string $left     The left operand
+     * @param string $right    The right operand
+     *
      * @return string
      */
     private function _prepareBinaryExpression($operator, $left, $right)
     {
-        if (!substr_compare($left, "STRCMP", 0, 6)) {
+        if (!substr_compare($left, 'STRCMP', 0, 6)) {
             $str = explode(';', $left, 2);
             $str[0] = str_replace('STRCMP', '', $str[0]);
             if ($right == 'false' and $right != '0') {
                 if (!substr_compare($operator, '!', 0, 1)) {
                     $operator = str_replace('!', '', $operator);
-                } else if ($operator == '>=') {
+                } elseif ($operator == '>=') {
                     $operator = '<';
-                } else if ($operator == '<=') {
+                } elseif ($operator == '<=') {
                     $operator = '>';
                 } else {
-                    $operator = "!".$operator;
+                    $operator = '!'.$operator;
                 }
-                return self::OPEN_BRAKET 
-                    . $str[0] . ' ' . $operator 
-                    . ' ' . $str[1] . self::CLOSE_BRACKET;
+
+                return self::OPEN_BRAKET
+                    .$str[0].' '.$operator
+                    .' '.$str[1].self::CLOSE_BRACKET;
             } else {
-                return self::OPEN_BRAKET 
-                    . $str[0] . ' ' . $operator 
-                    . ' ' . $str[1] . self::CLOSE_BRACKET;
+                return self::OPEN_BRAKET
+                    .$str[0].' '.$operator
+                    .' '.$str[1].self::CLOSE_BRACKET;
             }
         }
-        
+
         //DATETIMECMP
-        if (!substr_compare($left, "DATETIMECMP", 0, 11)) {
+        if (!substr_compare($left, 'DATETIMECMP', 0, 11)) {
             $str = explode(';', $left, 2);
             $str[0] = str_replace('DATETIMECMP', '', $str[0]);
             if ($right == 'false' and $right != '0') {
-            if (!substr_compare($operator, '!', 0, 1)) {
-                $operator = str_replace('!', '', $operator);
-            } else if ($operator == '>=') {
-                $operator = '<';
-            } else if ($operator == '<=') {
-                $operator = '>';
+                if (!substr_compare($operator, '!', 0, 1)) {
+                    $operator = str_replace('!', '', $operator);
+                } elseif ($operator == '>=') {
+                    $operator = '<';
+                } elseif ($operator == '<=') {
+                    $operator = '>';
+                } else {
+                    $operator = '!'.$operator;
+                }
+
+                return self::OPEN_BRAKET
+            .$str[0].' '.$operator
+            .' '.$str[1].self::CLOSE_BRACKET;
             } else {
-                $operator = "!".$operator;
-            }
-            return self::OPEN_BRAKET
-            . $str[0] . ' ' . $operator
-            . ' ' . $str[1] . self::CLOSE_BRACKET;
-            } else {
-            return self::OPEN_BRAKET
-            . $str[0] . ' ' . $operator
-            . ' ' . $str[1] . self::CLOSE_BRACKET;
+                return self::OPEN_BRAKET
+            .$str[0].' '.$operator
+            .' '.$str[1].self::CLOSE_BRACKET;
             }
         }
 
-        return 
-            self::OPEN_BRAKET 
-            . $left . ' ' . $operator 
-            . ' ' . $right . self::CLOSE_BRACKET;
+        return
+            self::OPEN_BRAKET
+            .$left.' '.$operator
+            .' '.$right.self::CLOSE_BRACKET;
     }
 
     /**
-     * To format unary expression
-     * 
-     * @param string $operator The unary operator.
-     * @param string $child    The operand.
-     * 
+     * To format unary expression.
+     *
+     * @param string $operator The unary operator
+     * @param string $child    The operand
+     *
      * @return string
      */
     private function _prepareUnaryExpression($operator, $child)
     {
-        return $operator . self::OPEN_BRAKET . $child . self::CLOSE_BRACKET;
+        return $operator.self::OPEN_BRAKET.$child.self::CLOSE_BRACKET;
     }
 }

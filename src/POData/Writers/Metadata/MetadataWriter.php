@@ -18,23 +18,22 @@ use POData\Providers\Metadata\ResourceAssociationType;
 use POData\Providers\Metadata\EdmSchemaVersion;
 
 /**
- * Class MetadataWriter
- * @package POData\Writers\Metadata
+ * Class MetadataWriter.
  */
 class MetadataWriter
 {
     /**
-     * Writer to which output (CSDL Document) is sent
-     * 
+     * Writer to which output (CSDL Document) is sent.
+     *
      * @var \XMLWriter
      */
     private $_xmlWriter;
 
     /**                                     `
-     * Hold reference to the MetadataManager instance, 
-     * which can be used for retrieving details about all ResourceType, 
+     * Hold reference to the MetadataManager instance,
+     * which can be used for retrieving details about all ResourceType,
      * ResourceSet, AssociationType and AssociationSet defined in the service.
-     * 
+     *
      * @var MetadataManager
      */
     private $_metadataManager;
@@ -48,31 +47,31 @@ class MetadataWriter
     private $providersWrapper;
 
     /**
-     * Data service base uri from which resources should be resolved
-     * 
+     * Data service base uri from which resources should be resolved.
+     *
      * @var string
      */
     private $_baseUri;
 
     /**
-     * Encoding used for the output (CSDL document)
-     * 
+     * Encoding used for the output (CSDL document).
+     *
      * @var string
      */
     private $_encoding;
 
     /**
      * The DataServiceVersion for this metadata.
-     * 
+     *
      * @var Version
      */
     private $_dataServiceVersion;
-    
+
     /**
-     * Creates new instance of MetadataWriter
-     * 
+     * Creates new instance of MetadataWriter.
+     *
      * @param ProvidersWrapper $provider Reference to the
-     * service metadata and query provider wrapper
+     *                                   service metadata and query provider wrapper
      */
     public function __construct(ProvidersWrapper $provider)
     {
@@ -81,11 +80,11 @@ class MetadataWriter
 
     /**
      * Write the metadata in CSDL format.
-     * 
+     *
      * @return string
      */
     public function writeMetadata()
-    {   
+    {
         $this->_metadataManager = MetadataManager::create($this->providersWrapper);
 
         $this->_dataServiceVersion = new Version(1, 0);
@@ -98,7 +97,7 @@ class MetadataWriter
         $resourceTypesInContainerNamespace = array();
         $containerNamespace = $this->providersWrapper->getContainerNamespace();
         foreach ($this->_metadataManager->getResourceTypesAlongWithNamespace() as $resourceTypeNamespace => $resourceTypesWithName) {
-            if ($resourceTypeNamespace == $containerNamespace) {                
+            if ($resourceTypeNamespace == $containerNamespace) {
                 foreach ($resourceTypesWithName as $resourceTypeName => $resourceType) {
                     $resourceTypesInContainerNamespace[] = $resourceType;
                 }
@@ -108,16 +107,16 @@ class MetadataWriter
                 $uniqueAssociationsInThisNamespace = $this->_metadataManager->getUniqueResourceAssociationTypesForNamespace($resourceTypeNamespace);
                 $this->_writeResourceTypes(array_values($resourceTypesWithName), $associationsInThisNamespace);
                 $this->_writeAssociationTypes($uniqueAssociationsInThisNamespace);
-            }            
+            }
         }
 
         //write Container schema node and define required namespaces
         $this->_writeSchemaElement($resourceTypeNamespace, $edmSchemaVersion);
         if (!empty($resourceTypesInContainerNamespace)) {
-            //Get assocation types in container namespace as array of 
+            //Get assocation types in container namespace as array of
             //key-value pairs (with key as association type
-            //lookup key i.e. ResourceType::Name_NavigationProperty::Name. 
-            //Same association will appear twice for di-directional relationship 
+            //lookup key i.e. ResourceType::Name_NavigationProperty::Name.
+            //Same association will appear twice for di-directional relationship
             //(duplicate value will be there in this case)
             $associationsInThisNamespace = $this->_metadataManager->getResourceAssociationTypesForNamespace($containerNamespace);
             //Get association type in container namespace as array of unique values
@@ -129,17 +128,18 @@ class MetadataWriter
         $this->_writeEntityContainer();
         //End container Schema node
         $this->_xmlWriter->endElement();
-        
+
         //End edmx:Edmx and edmx:DataServices nodes
         $this->_xmlWriter->endElement();
         $this->_xmlWriter->endElement();
         $metadataInCsdl = $this->_xmlWriter->outputMemory(true);
+
         return $metadataInCsdl;
     }
 
     /**
      * Gets data service version for this metadata.
-     * 
+     *
      * @return Version
      */
     public function getDataServiceVersion()
@@ -148,11 +148,9 @@ class MetadataWriter
     }
 
     /**
-     * Write top level 'Edmx' and 'DataServices' nodes with associated attributes
-     * 
+     * Write top level 'Edmx' and 'DataServices' nodes with associated attributes.
+     *
      * @param Version $dataServiceVersion version of the data service
-     * 
-     * @return void
      */
     private function _writeTopLevelElements($dataServiceVersion)
     {
@@ -164,12 +162,10 @@ class MetadataWriter
     }
 
     /**
-     * Write 'Schema' node with associated attributes
-     * 
-     * @param string                   $schemaNamespace  schema namespace
+     * Write 'Schema' node with associated attributes.
+     *
+     * @param string           $schemaNamespace  schema namespace
      * @param EdmSchemaVersion $edmSchemaVersion edm schema version
-     * 
-     * @return void
      */
     private function _writeSchemaElement($schemaNamespace, $edmSchemaVersion)
     {
@@ -180,22 +176,19 @@ class MetadataWriter
     }
 
     /**
-     * Write all resource types (entity and complex types)
-     * 
-     * @param ResourceType[] $resourceTypes resource types array
-
-     * @param ResourceAssociationType[] $associationTypesInResourceTypesNamespace collection of 
-     * association types for the given resource types
-     * array(string, AssociationType)
-     * 
-     * @return void
+     * Write all resource types (entity and complex types).
+     *
+     * @param ResourceType[]            $resourceTypes                            resource types array
+     * @param ResourceAssociationType[] $associationTypesInResourceTypesNamespace collection of
+     *                                                                            association types for the given resource types
+     *                                                                            array(string, AssociationType)
      */
     private function _writeResourceTypes($resourceTypes, $associationTypesInResourceTypesNamespace)
     {
         foreach ($resourceTypes as $resourceType) {
             if ($resourceType->getResourceTypeKind() == ResourceTypeKind::ENTITY) {
                 $this->_writeEntityType($resourceType, $associationTypesInResourceTypesNamespace);
-            } else if ($resourceType->getResourceTypeKind() == ResourceTypeKind::COMPLEX) {
+            } elseif ($resourceType->getResourceTypeKind() == ResourceTypeKind::COMPLEX) {
                 $this->_writeComplexType($resourceType);
             } else {
                 throw ODataException::createInternalServerError(Messages::metadataWriterExpectingEntityOrComplexResourceType());
@@ -205,24 +198,22 @@ class MetadataWriter
 
     /**
      * Write an entity type and associated attributes.
-     * 
+     *
      * @param ResourceType $resourceType                            Resource type
-     * @param array        $associationTypesInResourceTypeNamespace Collection of 
-     * association types for the given resource types
-     * array(string, AssociationType)
-     * 
-     * @return void
+     * @param array        $associationTypesInResourceTypeNamespace Collection of
+     *                                                              association types for the given resource types
+     *                                                              array(string, AssociationType)
      */
     private function _writeEntityType(ResourceType $resourceType, $associationTypesInResourceTypeNamespace)
     {
         $this->_xmlWriter->startElement(ODataConstants::ENTITY_TYPE);
         $this->_xmlWriter->writeAttribute(ODataConstants::NAME, $resourceType->getName());
         if ($resourceType->isAbstract()) {
-            $this->_xmlWriter->writeAttribute(ODataConstants::ABSTRACT1, "true");
+            $this->_xmlWriter->writeAttribute(ODataConstants::ABSTRACT1, 'true');
         }
 
         if ($resourceType->isMediaLinkEntry() && (!$resourceType->hasBaseType() || ($resourceType->hasBaseType() && $resourceType->getBaseType()->isMediaLinkEntry()))) {
-            $this->_xmlWriter->writeAttributeNs(ODataConstants::ODATA_METADATA_NAMESPACE_PREFIX, ODataConstants::DATAWEB_ACCESS_HASSTREAM_ATTRIBUTE, null, "true");            
+            $this->_xmlWriter->writeAttributeNs(ODataConstants::ODATA_METADATA_NAMESPACE_PREFIX, ODataConstants::DATAWEB_ACCESS_HASSTREAM_ATTRIBUTE, null, 'true');
         }
 
         if ($resourceType->hasBaseType()) {
@@ -244,11 +235,9 @@ class MetadataWriter
     }
 
     /**
-     * Write a complex type and associated attributes
-     * 
+     * Write a complex type and associated attributes.
+     *
      * @param ResourceType $complexType resource type
-     * 
-     * @return void
      */
     private function _writeComplexType(ResourceType $complexType)
     {
@@ -259,66 +248,60 @@ class MetadataWriter
     }
 
     /**
-     * Write properties of a resource type (entity or complex type)
-     * 
-     * @param ResourceType $resourceType                            The Entity 
-     * or Complex resource type.
-     * @param array        $associationTypesInResourceTypeNamespace When the 
-     * resource type represents an entity, This will be an array of AssociationType 
-     * in the namespace same as resource type namespace, array will be 
-     * key-value pair with key as association type lookup name and value as
-     * association type, this parameter will be null if the resource type
-     * represents a complex type
-     * array(string, AssociationType)
-     * 
-     * @return void
+     * Write properties of a resource type (entity or complex type).
+     *
+     * @param ResourceType $resourceType                            The Entity
+     *                                                              or Complex resource type
+     * @param array        $associationTypesInResourceTypeNamespace When the
+     *                                                              resource type represents an entity, This will be an array of AssociationType
+     *                                                              in the namespace same as resource type namespace, array will be
+     *                                                              key-value pair with key as association type lookup name and value as
+     *                                                              association type, this parameter will be null if the resource type
+     *                                                              represents a complex type
+     *                                                              array(string, AssociationType)
      */
     private function _writeProperties(ResourceType $resourceType, $associationTypesInResourceTypeNamespace)
     {
         foreach ($this->_metadataManager->getAllVisiblePropertiesDeclaredOnThisType($resourceType) as $resourceProperty) {
             if ($resourceProperty->isKindOf(ResourcePropertyKind::BAG)) {
                 $this->_writeBagProperty($resourceProperty);
-            } else if ($resourceProperty->isKindOf(ResourcePropertyKind::PRIMITIVE)) {
+            } elseif ($resourceProperty->isKindOf(ResourcePropertyKind::PRIMITIVE)) {
                 $this->_writePrimitiveProperty($resourceProperty);
-            } else if ($resourceProperty->isKindOf(ResourcePropertyKind::COMPLEX_TYPE)) {
+            } elseif ($resourceProperty->isKindOf(ResourcePropertyKind::COMPLEX_TYPE)) {
                 $this->_writeComplexProperty($resourceProperty);
-            } else if ($resourceProperty->isKindOf(ResourcePropertyKind::RESOURCE_REFERENCE) 
+            } elseif ($resourceProperty->isKindOf(ResourcePropertyKind::RESOURCE_REFERENCE)
                 || $resourceProperty->isKindOf(ResourcePropertyKind::RESOURCESET_REFERENCE)
             ) {
-                    $this->_writeNavigationProperty($resourceType, $associationTypesInResourceTypeNamespace, $resourceProperty);
+                $this->_writeNavigationProperty($resourceType, $associationTypesInResourceTypeNamespace, $resourceProperty);
             } else {
-                    //Unexpected ResourceProperty, expected 
-                    //Bag/Primitive/Complex/Navigation Property   
-            }            
+                //Unexpected ResourceProperty, expected
+                    //Bag/Primitive/Complex/Navigation Property
+            }
         }
     }
 
     /**
-     * Write a bag property and associated attributes
-     * 
+     * Write a bag property and associated attributes.
+     *
      * @param ResourceProperty $bagProperty bag property
-     * 
-     * @return void
      */
     private function _writeBagProperty(ResourceProperty $bagProperty)
     {
         $this->_xmlWriter->startElement(ODataConstants::PROPERTY);
         $this->_xmlWriter->writeAttribute(ODataConstants::NAME, $bagProperty->getName());
         $this->_xmlWriter->writeAttribute(ODataConstants::TYPE1, ODataConstants::EDM_BAG_TYPE);
-        $this->_xmlWriter->writeAttribute(ODataConstants::NULLABLE, "false");
+        $this->_xmlWriter->writeAttribute(ODataConstants::NULLABLE, 'false');
         $this->_xmlWriter->startElement(ODataConstants::TYPE_REF);
         $this->_xmlWriter->writeAttribute(ODataConstants::TYPE1, $bagProperty->getResourceType()->getFullName());
-        $this->_xmlWriter->writeAttribute(ODataConstants::NULLABLE, "false");
+        $this->_xmlWriter->writeAttribute(ODataConstants::NULLABLE, 'false');
         $this->_xmlWriter->endElement();
         $this->_xmlWriter->endElement();
     }
 
     /**
-     * Write a primitive property and associated attributes
-     * 
+     * Write a primitive property and associated attributes.
+     *
      * @param ResourceProperty $primitiveProperty primitive resource property
-     * 
-     * @return void 
      */
     private function _writePrimitiveProperty(ResourceProperty $primitiveProperty)
     {
@@ -331,7 +314,7 @@ class MetadataWriter
         }
 
         if ($primitiveProperty->isKindOf(ResourcePropertyKind::ETAG)) {
-            $this->_xmlWriter->writeAttribute(ODataConstants::CONCURRENCY_ATTRIBUTE, ODataConstants::CONCURRENCY_FIXEDVALUE);        
+            $this->_xmlWriter->writeAttribute(ODataConstants::CONCURRENCY_ATTRIBUTE, ODataConstants::CONCURRENCY_FIXEDVALUE);
         }
 
         $this->_xmlWriter->endElement();
@@ -339,33 +322,30 @@ class MetadataWriter
 
     /**
      * Write a complex property and associated attributes.
-     * 
+     *
      * @param ResourceProperty $complexProperty complex property
-     * 
-     * @return void
      */
     private function _writeComplexProperty(ResourceProperty $complexProperty)
     {
         $this->_xmlWriter->startElement(ODataConstants::PROPERTY);
         $this->_xmlWriter->writeAttribute(ODataConstants::NAME, $complexProperty->getName());
         $this->_xmlWriter->writeAttribute(ODataConstants::TYPE1, $complexProperty->getResourceType()->getFullName());
-        $this->_xmlWriter->writeAttribute(ODataConstants::NULLABLE, "false");
+        $this->_xmlWriter->writeAttribute(ODataConstants::NULLABLE, 'false');
         $this->_xmlWriter->endElement();
     }
 
     /**
-     * Write a navigation property
-     * 
-     * @param ResourceType     $resourceType                            Resource type
+     * Write a navigation property.
+     *
+     * @param ResourceType              $resourceType                            Resource type
      * @param ResourceAssociationType[] $associationTypesInResourceTypeNamespace Collection of association types for the given resource types
-     * @param ResourceProperty $navigationProperty Navigation property
-     * 
+     * @param ResourceProperty          $navigationProperty                      Navigation property
+     *
      * @throws InvalidOperationException
-     * @return void
      */
     private function _writeNavigationProperty(ResourceType $resourceType, $associationTypesInResourceTypeNamespace, ResourceProperty $navigationProperty)
     {
-        $associationTypeLookupName = $resourceType->getName() . '_' . $navigationProperty->getName();
+        $associationTypeLookupName = $resourceType->getName().'_'.$navigationProperty->getName();
         if (!array_key_exists($associationTypeLookupName, $associationTypesInResourceTypeNamespace)) {
             throw new InvalidOperationException(Messages::metadataWriterNoResourceAssociationSetForNavigationProperty($navigationProperty->getName(), $resourceType->getName()));
         }
@@ -373,7 +353,7 @@ class MetadataWriter
         $associationType = $associationTypesInResourceTypeNamespace[$associationTypeLookupName];
         $thisEnd = $associationType->getResourceAssociationTypeEnd($resourceType, $navigationProperty);
         $relatedEnd = $associationType->getRelatedResourceAssociationSetEnd($resourceType, $navigationProperty);
-        
+
         $this->_xmlWriter->startElement(ODataConstants::NAVIGATION_PROPERTY);
         $this->_xmlWriter->writeAttribute(ODataConstants::NAME, $navigationProperty->getName());
         $this->_xmlWriter->writeAttribute(ODataConstants::RELATIONSHIP, $associationType->getFullName());
@@ -383,28 +363,24 @@ class MetadataWriter
     }
 
     /**
-     * Write primitive property facets. 
-     * 
+     * Write primitive property facets.
+     *
      * @param ResourceProperty $primitveProperty primitive property
-     * 
-     * @return void
      */
     private function _writePrimitivePropertyFacets(ResourceProperty $primitveProperty)
     {
         $nullable = true;
         if ($primitveProperty->isKindOf(ResourcePropertyKind::KEY)) {
-            $nullable = false;    
+            $nullable = false;
         }
 
-        $this->_xmlWriter->writeAttribute(ODataConstants::NULLABLE, $nullable ? "true" : "false");
+        $this->_xmlWriter->writeAttribute(ODataConstants::NULLABLE, $nullable ? 'true' : 'false');
     }
 
     /**
-     * Write all named streams in the given entity type
-     * 
+     * Write all named streams in the given entity type.
+     *
      * @param ResourceType $resourceType resource type
-     * 
-     * @return void
      */
     private function _writeNamedStreams(ResourceType $resourceType)
     {
@@ -422,11 +398,9 @@ class MetadataWriter
     }
 
     /**
-     * Write all association type
-     * 
-     * @param ResourceAssociationType[] $resourceAssociationTypes collection of resource association types
+     * Write all association type.
      *
-     * @return void
+     * @param ResourceAssociationType[] $resourceAssociationTypes collection of resource association types
      */
     private function _writeAssociationTypes($resourceAssociationTypes)
     {
@@ -441,11 +415,9 @@ class MetadataWriter
 
     /**
      * Write an association type end.
-     * 
-     * @param ResourceAssociationTypeEnd $resourceAssociationTypeEnd Resource 
-     * association type end
-     * 
-     * @return void
+     *
+     * @param ResourceAssociationTypeEnd $resourceAssociationTypeEnd Resource
+     *                                                               association type end
      */
     private function _writeAssociationTypeEnd(ResourceAssociationTypeEnd $resourceAssociationTypeEnd)
     {
@@ -457,15 +429,13 @@ class MetadataWriter
     }
 
     /**
-     * Write entity container 
-     * 
-     * @return void
+     * Write entity container.
      */
     private function _writeEntityContainer()
     {
         $this->_xmlWriter->startElement(ODataConstants::ENTITY_CONTAINER);
         $this->_xmlWriter->writeAttribute(ODataConstants::NAME, $this->providersWrapper->getContainerName());
-        $this->_xmlWriter->writeAttributeNs(ODataConstants::ODATA_METADATA_NAMESPACE_PREFIX, ODataConstants::ISDEFAULT_ENTITY_CONTAINER_ATTRIBUTE, null, "true");
+        $this->_xmlWriter->writeAttributeNs(ODataConstants::ODATA_METADATA_NAMESPACE_PREFIX, ODataConstants::ISDEFAULT_ENTITY_CONTAINER_ATTRIBUTE, null, 'true');
         foreach ($this->_metadataManager->getResourceSets() as $resourceSet) {
             $this->_xmlWriter->startElement(ODataConstants::ENTITY_SET);
             $this->_xmlWriter->writeAttribute(ODataConstants::NAME, $resourceSet->getName());
@@ -479,8 +449,6 @@ class MetadataWriter
 
     /**
      * Write all association sets.
-     * 
-     * @return void
      */
     private function _writeAssociationSets()
     {
@@ -495,10 +463,8 @@ class MetadataWriter
 
     /**
      * Write both ends of the given association set.
-     * 
+     *
      * @param ResourceAssociationSet $associationSet resource association set
-     * 
-     * @return void
      */
     private function _writeAssocationSetEnds(ResourceAssociationSet $associationSet)
     {
@@ -515,11 +481,11 @@ class MetadataWriter
     }
 
     /**
-     * Gets the edmx schema namespace uri for the given schema version 
-     * 
+     * Gets the edmx schema namespace uri for the given schema version.
+     *
      * @param EdmSchemaVersion $edmSchemaVersion metadata edm
-     * schema version
-     * 
+     *                                           schema version
+     *
      * @return string The schema namespace uri
      */
     private function _getSchemaNamespaceUri($edmSchemaVersion)

@@ -2,14 +2,13 @@
 
 namespace POData\Common;
 
-
 class MimeTypes
 {
     //MIME type for ATOM bodies
     //(http://www.iana.org/assignments/media-types/application/).
     const MIME_APPLICATION_ATOM = 'application/atom+xml';
 
-    //MIME type for JSON bodies 
+    //MIME type for JSON bodies
     //(http://www.iana.org/assignments/media-types/application/).
     const MIME_APPLICATION_JSON = 'application/json';
 
@@ -24,7 +23,7 @@ class MimeTypes
     //MIME type for XML bodies.
     const MIME_APPLICATION_XML = 'application/xml';
 
-    //MIME type for ATOM Service Documents 
+    //MIME type for ATOM Service Documents
     //(http://tools.ietf.org/html/rfc5023#section-8).
     const MIME_APPLICATION_ATOMSERVICE = 'application/atomsvc+xml';
 
@@ -34,7 +33,7 @@ class MimeTypes
     //Boundary parameter name for multipart/mixed MIME type
     const MIME_MULTIPART_MIXED_BOUNDARY = 'boundary';
 
-    //MIME type for batch requests - this mime type must be specified in 
+    //MIME type for batch requests - this mime type must be specified in
     //CUD change sets or GET batch requests.
     const MIME_APPLICATION_HTTP = 'application/http';
 
@@ -49,7 +48,7 @@ class MimeTypes
 
     //MIME type general binary bodies.
     const MIME_APPLICATION_OCTETSTREAM = 'application/octet-stream';
-    
+
     //'text' - MIME type for text subtypes.
     const MIME_TEXTTYPE = 'text';
 
@@ -61,5 +60,4 @@ class MimeTypes
 
     //'json' - constant for MIME JSON subtypes.
     const MIME_JSON_SUBTYPE = 'json';
-
 }

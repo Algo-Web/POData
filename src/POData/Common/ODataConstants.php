@@ -3,15 +3,14 @@
 namespace POData\Common;
 
 /**
- * Class ODataConstants holds definition of OData constants
- * @package POData\Common
+ * Class ODataConstants holds definition of OData constants.
  */
 class ODataConstants
 {
     //'DataServiceVersion' - HTTP header name for data service version.
     const ODATAVERSIONHEADER = 'DataServiceVersion';
 
-    //'MaxDataServiceVersion' - HTTP header name for 
+    //'MaxDataServiceVersion' - HTTP header name for
     //maximum understood data service version.
     const ODATAMAXVERSIONHEADER = 'MaxDataServiceVersion';
 
@@ -54,7 +53,7 @@ class ODataConstants
     //HTTP name for If-None-Match header
     const HTTP_REQUEST_IFNONEMATCH = 'If-None-Match';
 
-    //'X-HTTP-Method' - HTTP header name for requests that want to 
+    //'X-HTTP-Method' - HTTP header name for requests that want to
     //tunnel a method through POST.
     const HTTP_X_METHOD = 'X-HTTP-Method';
 
@@ -84,24 +83,21 @@ class ODataConstants
 
     //HTTP name for Status-Code header
     const HTTP_RESPONSE_STATUSCODE = 'Status-Code';
-    
+
     //byte-length of the corresponding body
     const HTTP_CONTENT_LENGTH = 'Content-Length';
 
     //'charset' - HTTP parameter name.
     const HTTP_CHARSET_PARAMETER = 'charset';
-    
+
     //HTTP weak etag prefix
-    const HTTP_WEAK_ETAG_PREFIX = "W/\"";
+    const HTTP_WEAK_ETAG_PREFIX = 'W/"';
 
     //HTTP name for user agent
     const HTTP_USER_AGENT = 'User-Agent';
 
-
-
     //Content-Transfer-Encoding value for batch requests.
     const BATCHREQUEST_CONTENTTRANSFER_ENCODING = 'binary';
-
 
     //'q' - HTTP q-value parameter name.
     const HTTP_QVALUE_PARAMETER = 'q';
@@ -121,7 +117,7 @@ class ODataConstants
     //Name of collection element for value reader/writer.
     const COLLECTION_ELEMENT_NAME = 'element';
 
-    //XML attribute name to pass to the XMLReader.GetValue API to get 
+    //XML attribute name to pass to the XMLReader.GetValue API to get
     //the xml:base attribute value.
     const XML_BASE_ATTRIBUTE_NAME_WITH_PREFIX = 'xml:base';
 
@@ -324,10 +320,10 @@ class ODataConstants
 
     //XML element name to mark author/uri or contributor/uri element in Atom.
     const ATOM_URI_ELEMENT_NAME = 'uri';
-    
+
     //XML element name to mark uri collection in atom.
     const ATOM_LINKS_ELEMENT_NAME = 'links';
-    
+
     //XML element name to mark published element in Atom.
     const ATOM_PUBLISHED_ELEMENT_NAME = 'published';
 
@@ -385,7 +381,7 @@ class ODataConstants
     //'Inline' - wrapping element for inlined entry/feed content.
     const ATOM_INLINE_ELEMENT_NAME = 'inline';
 
-    //Element containing property values when 'content' is used 
+    //Element containing property values when 'content' is used
     //for media link entries
     const ATOM_PROPERTIES_ELEMENT_NAME = 'properties';
 
@@ -612,7 +608,7 @@ class ODataConstants
     const CONCURRENCY_ATTRIBUTE = 'ConcurrencyMode';
 
     //Value of the concurrency attribute.
-    const CONCURRENCY_FIXEDVALUE = 'Fixed';  
+    const CONCURRENCY_FIXEDVALUE = 'Fixed';
 
     //DataWeb Elements and Attributes.
 
@@ -637,7 +633,7 @@ class ODataConstants
     //Attribute to indicate whether this is a default entity container or not.
     const ISDEFAULT_ENTITY_CONTAINER_ATTRIBUTE = 'IsDefaultEntityContainer';
 
-    //Attribute name in the csdl to indicate whether the service operation must be 
+    //Attribute name in the csdl to indicate whether the service operation must be
     //called using POST or GET verb.
     const SERVICEOPERATION_HTTP_METHODNAME = 'HttpMethod';
 
@@ -699,7 +695,6 @@ class ODataConstants
 
     //'true' keyword for expressions.
     const KEYWORD_TRUE = 'true';
-   
 
     //Constants for Query options
 
@@ -736,7 +731,7 @@ class ODataConstants
     //A segment name in a URI that indicates metadata is being requested.
     const URI_BATCH_SEGMENT = '$batch';
 
-    //A segment name in a URI that indicates a plain primitive value 
+    //A segment name in a URI that indicates a plain primitive value
     //is being requested.
     const URI_VALUE_SEGMENT = '$value';
 
@@ -746,27 +741,26 @@ class ODataConstants
     //HTTP query parameter value for counting query result set
     const URI_COUNT_SEGMENT = '$count';
 
-    //A const value for the query parameter $inlinecount to set 
+    //A const value for the query parameter $inlinecount to set
     //counting mode to inline
     const URI_ROWCOUNT_ALLOPTION = 'allpages';
 
     //A const value for the query parameter $inlinecount to set counting mode to none
     const URI_ROWCOUNT_OFFOPTION = 'none';
-   
 
     //Constants for Expression Parsing
 
     //'binary' constant prefixed to binary literals.
-    const LITERAL_PREFIX_BINARY   = 'binary';
+    const LITERAL_PREFIX_BINARY = 'binary';
 
     //'datetime' constant prefixed to datetime literals.
     const LITERAL_PREFIX_DATETIME = 'datetime';
 
     //'guid' constant prefixed to guid literals.
-    const LITERAL_PREFIX_GUID     = 'guid';
+    const LITERAL_PREFIX_GUID = 'guid';
 
     //'X': Prefix to binary type representation.
-    const XML_BINARY_PREFIX       = 'X';
+    const XML_BINARY_PREFIX = 'X';
 
     //'M': Suffix for decimal type's representation
     const XML_DECIMAL_LITERAL_SUFFIX = 'M';
@@ -775,13 +769,13 @@ class ODataConstants
     const XML_INT64_LITERAL_SUFFIX = 'L';
 
     //'f': Suffix for float (single) type's representation
-    const XML_SINGLE_LITERAL_SUFFIX  = 'f';
+    const XML_SINGLE_LITERAL_SUFFIX = 'f';
 
     //'D': Suffix for double (Real) type's representation
-    const XML_DOUBLE_LITERAL_SUFFIX  = 'D';
-    
+    const XML_DOUBLE_LITERAL_SUFFIX = 'D';
+
     const STRFUN_COMPARE = 'strcmp';
-    const STRFUN_ENDSWITH = 'endswith';    
+    const STRFUN_ENDSWITH = 'endswith';
     const STRFUN_INDEXOF = 'indexof';
     const STRFUN_REPLACE = 'replace';
     const STRFUN_STARTSWITH = 'startswith';
@@ -806,42 +800,40 @@ class ODataConstants
     const BINFUL_EQUAL = 'binaryEqual';
 
     // Headers for HTTPRequest
-    // We need to use these constant with $_SERVER to get the value of the headers 
-    const HTTPREQUEST_PROTOCOL        = 'SERVER_PROTOCOL';
-    const HTTPREQUEST_PROTOCOL_HTTP   = 'http';
-    const HTTPREQUEST_PROTOCOL_HTTPS  = 'https';
-    const HTTPREQUEST_PORT            = 'SERVER_PORT';
-    const HTTPREQUEST_URI             = 'REQUEST_URI';
-    const HTTPREQUEST_QUERY_STRING    = 'QUERY_STRING';
-    const HTTPREQUEST_METHOD          = 'REQUEST_METHOD';
-    const HTTPREQUEST_CONTENT_LENGTH  = 'CONTENT_LENGTH';
-    const HTTPREQUEST_CONTENT_TYPE    = 'CONTENT_TYPE';
+    // We need to use these constant with $_SERVER to get the value of the headers
+    const HTTPREQUEST_PROTOCOL = 'SERVER_PROTOCOL';
+    const HTTPREQUEST_PROTOCOL_HTTP = 'http';
+    const HTTPREQUEST_PROTOCOL_HTTPS = 'https';
+    const HTTPREQUEST_PORT = 'SERVER_PORT';
+    const HTTPREQUEST_URI = 'REQUEST_URI';
+    const HTTPREQUEST_QUERY_STRING = 'QUERY_STRING';
+    const HTTPREQUEST_METHOD = 'REQUEST_METHOD';
+    const HTTPREQUEST_CONTENT_LENGTH = 'CONTENT_LENGTH';
+    const HTTPREQUEST_CONTENT_TYPE = 'CONTENT_TYPE';
 
-    const HTTPREQUEST_HEADER_ACCEPT          = 'ACCEPT';
-    const HTTPREQUEST_HEADER_ACCEPT_CHARSET  = 'ACCEPT_CHARSET';
-    const HTTPREQUEST_HEADER_USER_AGENT      = 'USER_AGENT';
-    const HTTPREQUEST_HEADER_HOST            = 'HOST';
-    const HTTPREQUEST_HEADER_IF_MATCH        = 'IF_MATCH';
-    const HTTPREQUEST_HEADER_IF_MODIFIED     = 'IF_MODIFIED_SINCE';
-    const HTTPREQUEST_HEADER_IF_NONE         = 'IF_NONE_MATCH';
-    const HTTPREQUEST_HEADER_IF_UNMODIFIED   = 'IF_UNMODIFIED_SINCE';
+    const HTTPREQUEST_HEADER_ACCEPT = 'ACCEPT';
+    const HTTPREQUEST_HEADER_ACCEPT_CHARSET = 'ACCEPT_CHARSET';
+    const HTTPREQUEST_HEADER_USER_AGENT = 'USER_AGENT';
+    const HTTPREQUEST_HEADER_HOST = 'HOST';
+    const HTTPREQUEST_HEADER_IF_MATCH = 'IF_MATCH';
+    const HTTPREQUEST_HEADER_IF_MODIFIED = 'IF_MODIFIED_SINCE';
+    const HTTPREQUEST_HEADER_IF_NONE = 'IF_NONE_MATCH';
+    const HTTPREQUEST_HEADER_IF_UNMODIFIED = 'IF_UNMODIFIED_SINCE';
 
-    const HTTPREQUEST_HEADER_DATA_SERVICE_VERSION       = 'DATASERVICEVERSION';
-    const HTTPREQUEST_HEADER_MAX_DATA_SERVICE_VERSION   = 'MAXDATASERVICEVERSION';
+    const HTTPREQUEST_HEADER_DATA_SERVICE_VERSION = 'DATASERVICEVERSION';
+    const HTTPREQUEST_HEADER_MAX_DATA_SERVICE_VERSION = 'MAXDATASERVICEVERSION';
 
     // Headers for HTTPResponse
     // We need to use these string with header() for setting-up these headers
-    const HTTPRESPONSE_HEADER_CONTENTLENGTH         = 'Content-Length';
-    const HTTPRESPONSE_HEADER_CONTENTTYPE           = 'Content-Type';
-    const HTTPRESPONSE_HEADER_CACHECONTROL          = 'Cache-Control';
-    const HTTPRESPONSE_HEADER_ETAG                  = 'ETag';
-    const HTTPRESPONSE_HEADER_LASTMODIFIED          = 'Last-Modified';
-    const HTTPRESPONSE_HEADER_LOCATION              = 'Location';
-    const HTTPRESPONSE_HEADER_STATUS                = 'Status';
-    const HTTPRESPONSE_HEADER_STATUS_CODE           = 'StatusCode';
-    const HTTPRESPONSE_HEADER_STATUS_DESC           = 'StatusDesc';
-    
+    const HTTPRESPONSE_HEADER_CONTENTLENGTH = 'Content-Length';
+    const HTTPRESPONSE_HEADER_CONTENTTYPE = 'Content-Type';
+    const HTTPRESPONSE_HEADER_CACHECONTROL = 'Cache-Control';
+    const HTTPRESPONSE_HEADER_ETAG = 'ETag';
+    const HTTPRESPONSE_HEADER_LASTMODIFIED = 'Last-Modified';
+    const HTTPRESPONSE_HEADER_LOCATION = 'Location';
+    const HTTPRESPONSE_HEADER_STATUS = 'Status';
+    const HTTPRESPONSE_HEADER_STATUS_CODE = 'StatusCode';
+    const HTTPRESPONSE_HEADER_STATUS_DESC = 'StatusDesc';
+
     const HTTPRESPONSE_HEADER_CACHECONTROL_NOCACHE = 'no-cache';
-
-
 }

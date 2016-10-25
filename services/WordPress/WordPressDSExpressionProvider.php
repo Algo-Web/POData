@@ -5,46 +5,45 @@ use POData\Providers\Metadata\Type\IType;
 use POData\Common\ODataConstants;
 use POData\Providers\Expression\IExpressionProvider;
 use POData\Providers\Metadata\ResourceType;
+
 require_once 'WordPressMetadata.php';
 
 class WordPressDSExpressionProvider implements IExpressionProvider
 {
-    const ADD                  = '+';
-    const CLOSE_BRACKET        = ')';
-    const COMMA                = ',';
-    const DIVIDE               = '/';
-    const SUBTRACT             = '-';
-    const EQUAL                = '=';
-    const GREATERTHAN          = '>';
+    const ADD = '+';
+    const CLOSE_BRACKET = ')';
+    const COMMA = ',';
+    const DIVIDE = '/';
+    const SUBTRACT = '-';
+    const EQUAL = '=';
+    const GREATERTHAN = '>';
     const GREATERTHAN_OR_EQUAL = '>=';
-    const LESSTHAN             = '<';
-    const LESSTHAN_OR_EQUAL    = '<=';
-    const LOGICAL_AND          = '&&';
-    const LOGICAL_NOT          = '!';
-    const LOGICAL_OR           = '||';
-    const MEMBERACCESS         = '';
-    const MODULO               = '%';
-    const MULTIPLY             = '*';
-    const NEGATE               = '-';
-    const NOTEQUAL             = '!=';
-    const OPEN_BRAKET          = '(';
-    
+    const LESSTHAN = '<';
+    const LESSTHAN_OR_EQUAL = '<=';
+    const LOGICAL_AND = '&&';
+    const LOGICAL_NOT = '!';
+    const LOGICAL_OR = '||';
+    const MEMBERACCESS = '';
+    const MODULO = '%';
+    const MULTIPLY = '*';
+    const NEGATE = '-';
+    const NOTEQUAL = '!=';
+    const OPEN_BRAKET = '(';
+
     /**
-     * The type of the resource pointed by the resource path segement
+     * The type of the resource pointed by the resource path segement.
      *
      * @var ResourceType
      */
     private $_resourceType;
 
     /**
-     * 
      * @var array(string, array(string, string))
      */
     private $_entityMapping;
 
     /**
-     * Constructs new instance of WordPressDSExpressionProvider
-     *    
+     * Constructs new instance of WordPressDSExpressionProvider.
      */
     public function __construct()
     {
@@ -52,8 +51,8 @@ class WordPressDSExpressionProvider implements IExpressionProvider
     }
 
     /**
-     * Get the name of the iterator
-     * 
+     * Get the name of the iterator.
+     *
      * @return string
      */
     public function getIteratorName()
@@ -65,7 +64,7 @@ class WordPressDSExpressionProvider implements IExpressionProvider
      * call-back for setting the resource type.
      *
      * @param ResourceType $resourceType The resource type on which the filter
-     *                                   is going to be applied.
+     *                                   is going to be applied
      */
     public function setResourceType(ResourceType $resourceType)
     {
@@ -73,17 +72,17 @@ class WordPressDSExpressionProvider implements IExpressionProvider
     }
 
     /**
-     * Call-back for logical expression
-     * 
-     * @param ExpressionType $expressionType The type of logical expression.
-     * @param string         $left           The left expression.
-     * @param string         $right          The left expression.
-     * 
+     * Call-back for logical expression.
+     *
+     * @param ExpressionType $expressionType The type of logical expression
+     * @param string         $left           The left expression
+     * @param string         $right          The left expression
+     *
      * @return string
      */
     public function onLogicalExpression($expressionType, $left, $right)
     {
-        switch($expressionType) {
+        switch ($expressionType) {
             case ExpressionType::AND_LOGICAL:
                 return $this->_prepareBinaryExpression(self::LOGICAL_AND, $left, $right);
                 break;
@@ -96,17 +95,17 @@ class WordPressDSExpressionProvider implements IExpressionProvider
     }
 
     /**
-     * Call-back for arithmetic expression
-     * 
-     * @param ExpressionType $expressionType The type of arithmetic expression.
-     * @param string         $left           The left expression.
-     * @param string         $right          The left expression.
-     * 
+     * Call-back for arithmetic expression.
+     *
+     * @param ExpressionType $expressionType The type of arithmetic expression
+     * @param string         $left           The left expression
+     * @param string         $right          The left expression
+     *
      * @return string
      */
     public function onArithmeticExpression($expressionType, $left, $right)
     {
-        switch($expressionType) {
+        switch ($expressionType) {
             case ExpressionType::MULTIPLY:
                 return $this->_prepareBinaryExpression(self::MULTIPLY, $left, $right);
                 break;
@@ -128,17 +127,17 @@ class WordPressDSExpressionProvider implements IExpressionProvider
     }
 
     /**
-     * Call-back for relational expression
-     * 
+     * Call-back for relational expression.
+     *
      * @param ExpressionType $expressionType The type of relation expression
      * @param string         $left           The left expression
      * @param string         $right          The left expression
-     * 
+     *
      * @return string
      */
     public function onRelationalExpression($expressionType, $left, $right)
     {
-        switch($expressionType) {
+        switch ($expressionType) {
             case ExpressionType::GREATERTHAN:
                 return $this->_prepareBinaryExpression(self::GREATERTHAN, $left, $right);
                 break;
@@ -167,16 +166,16 @@ class WordPressDSExpressionProvider implements IExpressionProvider
     }
 
     /**
-     * Call-back for unary expression
-     * 
+     * Call-back for unary expression.
+     *
      * @param ExpressionType $expressionType The type of unary expression
      * @param string         $child          The child expression
-     * 
+     *
      * @return string
      */
     public function onUnaryExpression($expressionType, $child)
     {
-        switch($expressionType) {
+        switch ($expressionType) {
             case ExpressionType::NEGATE:
                 return $this->_prepareUnaryExpression(self::NEGATE, $child);
                 break;
@@ -189,18 +188,18 @@ class WordPressDSExpressionProvider implements IExpressionProvider
     }
 
     /**
-     * Call-back for constant expression
-     * 
+     * Call-back for constant expression.
+     *
      * @param IType  $type  The type of constant
      * @param objetc $value The value of the constant
-     * 
+     *
      * @return string
      */
     public function onConstantExpression(IType $type, $value)
     {
         if (is_bool($value)) {
             return var_export($value, true);
-        } else if (is_null($value)) {
+        } elseif (is_null($value)) {
             return var_export(null, true);
         }
 
@@ -208,13 +207,12 @@ class WordPressDSExpressionProvider implements IExpressionProvider
     }
 
     /**
-     * Call-back for property access expression
-     * 
+     * Call-back for property access expression.
+     *
      * @param PropertyAccessExpression $expression The property access expression
-     * 
+     *
      * @return string
      */
-
     public function onPropertyAccessExpression($expression)
     {
         $parent = $expression;
@@ -223,21 +221,21 @@ class WordPressDSExpressionProvider implements IExpressionProvider
         $propertyName = $parent->getResourceProperty()->getName();
         if (is_array($this->_entityMapping)) {
             if (array_key_exists($entityTypeName, $this->_entityMapping)) {
-            if (array_key_exists($propertyName, $this->_entityMapping[$entityTypeName])) {
-                return $this->_entityMapping[$entityTypeName][$propertyName];
-            }
+                if (array_key_exists($propertyName, $this->_entityMapping[$entityTypeName])) {
+                    return $this->_entityMapping[$entityTypeName][$propertyName];
+                }
             }
         }
-     
+
         return $propertyName;
     }
 
     /**
-     * Call-back for function call expression
-     * 
-     * @param FunctionDescription $functionDescription Description of the function.
-     * @param array<string>       $params              Paameters to the function.
-     * 
+     * Call-back for function call expression.
+     *
+     * @param FunctionDescription $functionDescription Description of the function
+     * @param array<string>       $params              Paameters to the function
+     *
      * @return string
      */
     public function onFunctionCallExpression($functionDescription, $params)
@@ -257,7 +255,7 @@ class WordPressDSExpressionProvider implements IExpressionProvider
             break;
         case ODataConstants::STRFUN_STARTSWITH:
           return "(STRCMP($params[1],LEFT($params[0],LENGTH($params[1]))) = 0)";
-            break; 
+            break;
         case ODataConstants::STRFUN_TOLOWER:
           return "LOWER($params[0])";
             break;
@@ -287,23 +285,23 @@ class WordPressDSExpressionProvider implements IExpressionProvider
             return "DATETIMECMP($params[0]; $params[1])";
             break;
         case ODataConstants::DATETIME_YEAR:
-            return "EXTRACT(YEAR from " . $params[0] . ")";
+            return 'EXTRACT(YEAR from '.$params[0].')';
             break;
         case ODataConstants::DATETIME_MONTH:
-            return "EXTRACT(MONTH from " . $params[0] . ")";
+            return 'EXTRACT(MONTH from '.$params[0].')';
             break;
         case ODataConstants::DATETIME_DAY:
-            return "EXTRACT(DAY from " . $params[0] . ")";
+            return 'EXTRACT(DAY from '.$params[0].')';
             break;
         case ODataConstants::DATETIME_HOUR:
-            return "EXTRACT(HOUR from " . $params[0] . ")";
+            return 'EXTRACT(HOUR from '.$params[0].')';
             break;
         case ODataConstants::DATETIME_MINUTE:
-            return "EXTRACT(MINUTE from " . $params[0] . ")";
+            return 'EXTRACT(MINUTE from '.$params[0].')';
             break;
         case ODataConstants::DATETIME_SECOND:
-            return "EXTRACT(SECOND from " . $params[0] . ")";
-            break;                
+            return 'EXTRACT(SECOND from '.$params[0].')';
+            break;
         case ODataConstants::MATHFUN_ROUND:
             return "ROUND($params[0])";
             break;
@@ -319,48 +317,49 @@ class WordPressDSExpressionProvider implements IExpressionProvider
         case 'is_null':
             return "is_null($params[0])";
             break;
-            
+
         default:
             throw new \InvalidArgumentException('onFunctionCallExpression');
         }
     }
 
     /**
-     * To format binary expression
-     * 
-     * @param string $operator The binary operator.
-     * @param string $left     The left operand.
-     * @param string $right    The right operand.
-     * 
+     * To format binary expression.
+     *
+     * @param string $operator The binary operator
+     * @param string $left     The left operand
+     * @param string $right    The right operand
+     *
      * @return string
      */
     private function _prepareBinaryExpression($operator, $left, $right)
     {
         // Special handling for DATETIMECMP
-        if (!substr_compare($left, "DATETIMECMP", 0, 11)) {
-        $str = explode(';', $left, 2);
-        $str[0] = str_replace('DATETIMECMP', '', $str[0]);
-        return self::OPEN_BRAKET
-            . $str[0] . ' ' . $operator
-            . ' ' . $str[1] . self::CLOSE_BRACKET;
+        if (!substr_compare($left, 'DATETIMECMP', 0, 11)) {
+            $str = explode(';', $left, 2);
+            $str[0] = str_replace('DATETIMECMP', '', $str[0]);
+
+            return self::OPEN_BRAKET
+            .$str[0].' '.$operator
+            .' '.$str[1].self::CLOSE_BRACKET;
         }
 
-        return 
-            self::OPEN_BRAKET 
-            . $left . ' ' . $operator 
-            . ' ' . $right . self::CLOSE_BRACKET;
+        return
+            self::OPEN_BRAKET
+            .$left.' '.$operator
+            .' '.$right.self::CLOSE_BRACKET;
     }
 
     /**
-     * To format unary expression
-     * 
-     * @param string $operator The unary operator.
-     * @param string $child    The operand.
-     * 
+     * To format unary expression.
+     *
+     * @param string $operator The unary operator
+     * @param string $child    The operand
+     *
      * @return string
      */
     private function _prepareUnaryExpression($operator, $child)
     {
-        return $operator . self::OPEN_BRAKET . $child . self::CLOSE_BRACKET;
+        return $operator.self::OPEN_BRAKET.$child.self::CLOSE_BRACKET;
     }
 }

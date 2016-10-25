@@ -5,7 +5,8 @@ use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Query\IQueryProvider;
 use POData\Common\ODataException;
-require_once "NorthWindMetadata.php";
+
+require_once 'NorthWindMetadata.php';
 require_once "POData\Providers\Query\IDataServiceQueryProvider2.php";
 require_once 'NorthWindDSExpressionProvider.php';
 define('DATABASE', 'Northwind');
@@ -13,41 +14,39 @@ define('DATABASE', 'Northwind');
 // Start ->All progrmas->Microsoft SQL Server 2008 -> Configuration Tools -> SQL Server Configuration Manager
 // In Configuration Manager -> SQL Server 2008 Services -> double click the SQL Service -> click the Service Tab.
 define('SERVER', '.\SQLEXPRESS');
-// Note: If your database access require credentials then un-comment 
-// the following two lines [definition of UID and PWD] and provide db user name 
+// Note: If your database access require credentials then un-comment
+// the following two lines [definition of UID and PWD] and provide db user name
 // as value for UID and password as value for PWD.
 // define('UID',  '');
 // define('PWD',  '');
 
-
 class NorthWindQueryProvider implements IQueryProvider
 {
     /**
-     * Handle to connection to Database     
+     * Handle to connection to Database.
      */
     private $_connectionHandle = null;
 
     /**
-     * Reference to the custom expression provider
-     * 
+     * Reference to the custom expression provider.
+     *
      * @var NorthWindDSExpressionProvider
      */
     private $_northWindSQLSRVExpressionProvider;
 
     /**
-     * Constructs a new instance of NorthWindQueryProvider
-     * 
+     * Constructs a new instance of NorthWindQueryProvider.
      */
     public function __construct()
     {
-        $connectionInfo = array("Database" => DATABASE);
+        $connectionInfo = array('Database' => DATABASE);
         if (defined('UID')) {
             $connectionInfo['UID'] = UID;
-            $connectionInfo['PWD'] = PWD;    		
+            $connectionInfo['PWD'] = PWD;
         }
 
         $this->_connectionHandle = sqlsrv_connect(SERVER, $connectionInfo);
-        if ($this->_connectionHandle) {        	
+        if ($this->_connectionHandle) {
         } else {
             $errorAsString = self::_getSQLSRVError();
             throw ODataException::createInternalServerError($errorAsString);
@@ -57,7 +56,8 @@ class NorthWindQueryProvider implements IQueryProvider
     }
 
     /**
-     * (non-PHPdoc)
+     * (non-PHPdoc).
+     *
      * @see POData\Providers\Query.IQueryProvider::canApplyQueryOptions()
      */
     public function handlesOrderedPaging()
@@ -66,7 +66,8 @@ class NorthWindQueryProvider implements IQueryProvider
     }
 
     /**
-     * (non-PHPdoc)
+     * (non-PHPdoc).
+     *
      * @see POData\Providers\Query.IQueryProvider::getExpressionProvider()
      */
     public function getExpressionProvider()
@@ -79,28 +80,28 @@ class NorthWindQueryProvider implements IQueryProvider
     }
 
     /**
-     * Gets collection of entities belongs to an entity set
-     * 
-     * @param ResourceSet $resourceSet        The entity set whose entities 
-     *                                        needs to be fetched.
-     * @param string           $filterOption  Contains the filter condition
-     * @param string           $select        For future purpose,no need to pass it
-     * @param string           $orderby       For future purpose,no need to pass it
-     * @param string           $top           For future purpose,no need to pass it
-     * @param string           $skip          For future purpose,no need to pass it
-     * 
+     * Gets collection of entities belongs to an entity set.
+     *
+     * @param ResourceSet $resourceSet  The entity set whose entities
+     *                                  needs to be fetched
+     * @param string      $filterOption Contains the filter condition
+     * @param string      $select       For future purpose,no need to pass it
+     * @param string      $orderby      For future purpose,no need to pass it
+     * @param string      $top          For future purpose,no need to pass it
+     * @param string      $skip         For future purpose,no need to pass it
+     *
      * @return array(Object)
      */
-    public function getResourceSet(ResourceSet $resourceSet, $filterOption = null, 
+    public function getResourceSet(ResourceSet $resourceSet, $filterOption = null,
         $select = null, $orderby = null, $top = null, $skip = null
     ) {
         $resourceSetName = $resourceSet->getName();
-        if ($resourceSetName !== 'Customers' 
-            && $resourceSetName !== 'Orders' 
+        if ($resourceSetName !== 'Customers'
+            && $resourceSetName !== 'Orders'
             && $resourceSetName !== 'Order_Details'
             && $resourceSetName !== 'Employees'
         ) {
-            throw ODataException::createInternalServerError('(NorthWindQueryProvider) Unknown resource set ' . $resourceSetName . '! Contact service provider');
+            throw ODataException::createInternalServerError('(NorthWindQueryProvider) Unknown resource set '.$resourceSetName.'! Contact service provider');
         }
 
         if ($resourceSetName === 'Order_Details') {
@@ -109,7 +110,7 @@ class NorthWindQueryProvider implements IQueryProvider
 
         $query = "SELECT * FROM [$resourceSetName]";
         if ($filterOption != null) {
-            $query .= ' WHERE ' . $filterOption;
+            $query .= ' WHERE '.$filterOption;
         }
         $stmt = sqlsrv_query($this->_connectionHandle, $query);
         if ($stmt === false) {
@@ -132,28 +133,29 @@ class NorthWindQueryProvider implements IQueryProvider
                 break;
         }
         sqlsrv_free_stmt($stmt);
+
         return $returnResult;
     }
 
     /**
-     * Gets an entity instance from an entity set identifed by a key
-     * 
-     * @param ResourceSet   $resourceSet   The entity set from which 
+     * Gets an entity instance from an entity set identifed by a key.
+     *
+     * @param ResourceSet   $resourceSet   The entity set from which
      *                                     an entity needs to be fetched
      * @param KeyDescriptor $keyDescriptor The key to identify the entity to be fetched
-     * 
+     *
      * @return object|null Returns entity instance if found else null
      */
     public function getResourceFromResourceSet(ResourceSet $resourceSet, KeyDescriptor $keyDescriptor)
-    {   
+    {
         $resourceSetName = $resourceSet->getName();
-        if ($resourceSetName !== 'Customers' 
-            && $resourceSetName !== 'Orders' 
-            && $resourceSetName !== 'Order_Details' 
-            && $resourceSetName !== 'Products' 
+        if ($resourceSetName !== 'Customers'
+            && $resourceSetName !== 'Orders'
+            && $resourceSetName !== 'Order_Details'
+            && $resourceSetName !== 'Products'
             && $resourceSetName !== 'Employees'
         ) {
-            die('(NorthWindQueryProvider) Unknown resource set ' . $resourceSetName);    
+            die('(NorthWindQueryProvider) Unknown resource set '.$resourceSetName);
         }
 
         if ($resourceSetName === 'Order_Details') {
@@ -163,11 +165,11 @@ class NorthWindQueryProvider implements IQueryProvider
         $namedKeyValues = $keyDescriptor->getValidatedNamedValues();
         $condition = null;
         foreach ($namedKeyValues as $key => $value) {
-            $condition .= $key . ' = ' . $value[0] . ' and ';
+            $condition .= $key.' = '.$value[0].' and ';
         }
 
         $len = strlen($condition);
-        $condition = substr($condition, 0, $len - 5); 
+        $condition = substr($condition, 0, $len - 5);
         $query = "SELECT * FROM [$resourceSetName] WHERE $condition";
         $stmt = sqlsrv_query($this->_connectionHandle, $query);
         if ($stmt === false) {
@@ -186,10 +188,10 @@ class NorthWindQueryProvider implements IQueryProvider
                 case 'Customers':
                     $result = $this->_serializeCustomer($record);
                     break;
-                case 'Orders':                    
+                case 'Orders':
                     $result = $this->_serializeOrder($record);
                     break;
-                case 'Order Details':                    
+                case 'Order Details':
                     $result = $this->_serializeOrderDetail($record);
                     break;
                 case 'Employees':
@@ -198,26 +200,27 @@ class NorthWindQueryProvider implements IQueryProvider
             }
         }
         sqlsrv_free_stmt($stmt);
+
         return $result;
     }
-    
+
     /**
-     * Gets a related entity instance from an entity set identifed by a key
-     * 
+     * Gets a related entity instance from an entity set identifed by a key.
+     *
      * @param ResourceSet      $sourceResourceSet    The entity set related to
-     *                                               the entity to be fetched.
-     * @param object           $sourceEntityInstance The related entity instance.
+     *                                               the entity to be fetched
+     * @param object           $sourceEntityInstance The related entity instance
      * @param ResourceSet      $targetResourceSet    The entity set from which
-     *                                               entity needs to be fetched.
-     * @param ResourceProperty $targetProperty       The metadata of the target 
-     *                                               property.
-     * @param KeyDescriptor    $keyDescriptor        The key to identify the entity 
-     *                                               to be fetched.
-     * 
+     *                                               entity needs to be fetched
+     * @param ResourceProperty $targetProperty       The metadata of the target
+     *                                               property
+     * @param KeyDescriptor    $keyDescriptor        The key to identify the entity
+     *                                               to be fetched
+     *
      * @return object|null Returns entity instance if found else null
      */
-    public function  getResourceFromRelatedResourceSet(ResourceSet $sourceResourceSet, 
-        $sourceEntityInstance, 
+    public function getResourceFromRelatedResourceSet(ResourceSet $sourceResourceSet,
+        $sourceEntityInstance,
         ResourceSet $targetResourceSet,
         ResourceProperty $targetProperty,
         KeyDescriptor $keyDescriptor
@@ -227,76 +230,75 @@ class NorthWindQueryProvider implements IQueryProvider
         $navigationPropName = $targetProperty->getName();
         $key = null;
         foreach ($keyDescriptor->getValidatedNamedValues() as $keyName => $valueDescription) {
-            $key = $key . $keyName . '=' . $valueDescription[0] . ' and ';
+            $key = $key.$keyName.'='.$valueDescription[0].' and ';
         }
 
         $key = rtrim($key, ' and ');
         if ($srcClass === 'Customer') {
-            if ($navigationPropName === 'Orders') {                
+            if ($navigationPropName === 'Orders') {
                 $query = "SELECT * FROM Orders WHERE CustomerID = '$sourceEntityInstance->CustomerID' and $key";
                 $stmt = sqlsrv_query($this->_connectionHandle, $query);
-                if ($stmt === false) {            
+                if ($stmt === false) {
                     $errorAsString = self::_getSQLSRVError();
                     throw ODataException::createInternalServerError($errorAsString);
                 }
 
                 $result = $this->_serializeOrders($stmt);
             } else {
-                die('Customer does not have navigation porperty with name: ' . $navigationPropName);
-            }            
-        } else if ($srcClass === 'Order') {
+                die('Customer does not have navigation porperty with name: '.$navigationPropName);
+            }
+        } elseif ($srcClass === 'Order') {
             if ($navigationPropName === 'Order_Details') {
                 $query = "SELECT * FROM [Order Details] WHERE OrderID = $sourceEntityInstance->OrderID";
                 $stmt = sqlsrv_query($this->_connectionHandle, $query);
-                if ($stmt === false) {            
+                if ($stmt === false) {
                     $errorAsString = self::_getSQLSRVError();
                     throw ODataException::createInternalServerError($errorAsString);
                 }
 
                 $result = $this->_serializeOrderDetails($stmt);
             } else {
-                die('Order does not have navigation porperty with name: ' . $navigationPropName);
+                die('Order does not have navigation porperty with name: '.$navigationPropName);
             }
-        } 
+        }
 
         return empty($result) ? null : $result[0];
-        
     }
 
     /**
-     * Get related resource set for a resource
-     * 
+     * Get related resource set for a resource.
+     *
      * @param ResourceSet      $sourceResourceSet    The source resource set
      * @param mixed            $sourceEntityInstance The resource
-     * @param ResourceSet      $targetResourceSet    The resource set of 
+     * @param ResourceSet      $targetResourceSet    The resource set of
      *                                               the navigation property
-     * @param ResourceProperty $targetProperty       The navigation property to be 
+     * @param ResourceProperty $targetProperty       The navigation property to be
      *                                               retrieved
-     * @param string           $filterOption         Contains the filter condition 
-     *                                               to append with query.
+     * @param string           $filterOption         Contains the filter condition
+     *                                               to append with query
      * @param string           $select               For future purpose,no need to pass it
      * @param string           $orderby              For future purpose,no need to pass it
      * @param string           $top                  For future purpose,no need to pass it
      * @param string           $skip                 For future purpose,no need to pass it
-     *                                                
-     * @return object[] Array of related resource if exists, if no 
-     *                                related resources found returns empty array
+     *
+     * @return object[] Array of related resource if exists, if no
+     *                  related resources found returns empty array
      */
-    public function  getRelatedResourceSet(ResourceSet $sourceResourceSet, 
-        $sourceEntityInstance, 
+    public function getRelatedResourceSet(ResourceSet $sourceResourceSet,
+        $sourceEntityInstance,
         ResourceSet $targetResourceSet,
-        ResourceProperty $targetProperty, 
+        ResourceProperty $targetProperty,
         $filterOption = null,
         $select = null, $orderby = null, $top = null, $skip = null
-    ) {    
+    ) {
         $result = array();
         $srcClass = get_class($sourceEntityInstance);
         $navigationPropName = $targetProperty->getName();
         if ($srcClass === 'Customer') {
-            if ($navigationPropName === 'Orders') {                
+            if ($navigationPropName === 'Orders') {
                 $query = "SELECT * FROM Orders WHERE CustomerID = '$sourceEntityInstance->CustomerID'";
                 if ($filterOption != null) {
-                    $query .= ' AND ' . $filterOption;
+                    $query .= ' AND '.$filterOption;
                 }
                 $stmt = sqlsrv_query($this->_connectionHandle, $query);
                 if ($stmt === false) {
@@ -306,23 +308,23 @@ class NorthWindQueryProvider implements IQueryProvider
 
                 $result = $this->_serializeOrders($stmt);
             } else {
-                die('Customer does not have navigation porperty with name: ' . $navigationPropName);
-            }            
-        } else if ($srcClass === 'Order') {
+                die('Customer does not have navigation porperty with name: '.$navigationPropName);
+            }
+        } elseif ($srcClass === 'Order') {
             if ($navigationPropName === 'Order_Details') {
                 $query = "SELECT * FROM [Order Details] WHERE OrderID = $sourceEntityInstance->OrderID";
                 if ($filterOption != null) {
-                    $query .= ' AND ' . $filterOption;
+                    $query .= ' AND '.$filterOption;
                 }
                 $stmt = sqlsrv_query($this->_connectionHandle, $query);
-                if ($stmt === false) {            
+                if ($stmt === false) {
                     $errorAsString = self::_getSQLSRVError();
                     throw ODataException::createInternalServerError($errorAsString);
                 }
 
                 $result = $this->_serializeOrderDetails($stmt);
             } else {
-                die('Order does not have navigation porperty with name: ' . $navigationPropName);
+                die('Order does not have navigation porperty with name: '.$navigationPropName);
             }
         }
 
@@ -330,19 +332,19 @@ class NorthWindQueryProvider implements IQueryProvider
     }
 
     /**
-     * Get related resource for a resource
-     * 
+     * Get related resource for a resource.
+     *
      * @param ResourceSet      $sourceResourceSet    The source resource set
      * @param mixed            $sourceEntityInstance The source resource
-     * @param ResourceSet      $targetResourceSet    The resource set of 
+     * @param ResourceSet      $targetResourceSet    The resource set of
      *                                               the navigation property
-     * @param ResourceProperty $targetProperty       The navigation property to be 
+     * @param ResourceProperty $targetProperty       The navigation property to be
      *                                               retrieved
-     * 
+     *
      * @return object|null The related resource if exists else null
      */
-    public function getRelatedResourceReference(ResourceSet $sourceResourceSet, 
-        $sourceEntityInstance, 
+    public function getRelatedResourceReference(ResourceSet $sourceResourceSet,
+        $sourceEntityInstance,
         ResourceSet $targetResourceSet,
         ResourceProperty $targetProperty
     ) {
@@ -353,8 +355,8 @@ class NorthWindQueryProvider implements IQueryProvider
             if ($navigationPropName === 'Customer') {
                 if (empty($sourceEntityInstance->CustomerID)) {
                     $result = null;
-                } else {                    
-                    $query = "SELECT * FROM Customers WHERE CustomerID = '$sourceEntityInstance->CustomerID'";                
+                } else {
+                    $query = "SELECT * FROM Customers WHERE CustomerID = '$sourceEntityInstance->CustomerID'";
                     $stmt = sqlsrv_query($this->_connectionHandle, $query);
                     if ($stmt === false) {
                         $errorAsString = self::_getSQLSRVError();
@@ -368,9 +370,9 @@ class NorthWindQueryProvider implements IQueryProvider
                     $result = $this->_serializeCustomer(sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC));
                 }
             } else {
-                die('Customer does not have navigation porperty with name: ' . $navigationPropName);
-            }            
-        } else if ($srcClass === 'Order_Details') {
+                die('Customer does not have navigation porperty with name: '.$navigationPropName);
+            }
+        } elseif ($srcClass === 'Order_Details') {
             if ($navigationPropName === 'Order') {
                 if (empty($sourceEntityInstance->OrderID)) {
                     $result = null;
@@ -381,43 +383,43 @@ class NorthWindQueryProvider implements IQueryProvider
                         $errorAsString = self::_getSQLSRVError();
                         throw ODataException::createInternalServerError($errorAsString);
                     }
-                    
+
                     if (!sqlsrv_has_rows($stmt)) {
                         $result = null;
                     }
-                    
+
                     $result = $this->_serializeOrder(sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC));
                 }
             } else {
-                die('Order_Details does not have navigation porperty with name: ' . $navigationPropName);
+                die('Order_Details does not have navigation porperty with name: '.$navigationPropName);
             }
-        } 
+        }
 
         return $result;
     }
 
     /**
-     * Serialize the sql result array into Customer objects
-     * 
+     * Serialize the sql result array into Customer objects.
+     *
      * @param array(array) $result result of the sql query
-     * 
+     *
      * @return array(Object)
      */
     private function _serializeCustomers($result)
     {
         $customers = array();
-        while ($record = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {         
-                $customers[] = $this->_serializeCustomer($record);
+        while ($record = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
+            $customers[] = $this->_serializeCustomer($record);
         }
 
         return $customers;
     }
 
     /**
-     * Serialize the sql row into Customer object
-     * 
+     * Serialize the sql row into Customer object.
+     *
      * @param array $record each row of customer
-     * 
+     *
      * @return Customer
      */
     private function _serializeCustomer($record)
@@ -428,7 +430,7 @@ class NorthWindQueryProvider implements IQueryProvider
         $customer->ContactName = $record['ContactName'];
         $customer->ContactTitle = $record['ContactTitle'];
         $customer->Phone = $record['Phone'];
-        $customer->Fax = $record['Fax'];        
+        $customer->Fax = $record['Fax'];
         $customer->Address = new Address();
         $customer->Address->StreetName = ($record['Address']);
         $customer->Address->City = $record['City'];
@@ -437,73 +439,71 @@ class NorthWindQueryProvider implements IQueryProvider
         $customer->Address->Country = $record['Country'];
         //Set alternate address
         $customer->Address->AltAddress = new Address();
-        $customer->Address->AltAddress->StreetName = 'ALT_' . $customer->Address->StreetName;
-        $customer->Address->AltAddress->City = 'ALT_' . $customer->Address->City;
-        $customer->Address->AltAddress->Region = 'ALT_' . $customer->Address->Region;
-        $customer->Address->AltAddress->PostalCode = 'ALT_' . $customer->Address->PostalCode;
-        $customer->Address->AltAddress->Country = 'ALT_' . $customer->Address->Country;
+        $customer->Address->AltAddress->StreetName = 'ALT_'.$customer->Address->StreetName;
+        $customer->Address->AltAddress->City = 'ALT_'.$customer->Address->City;
+        $customer->Address->AltAddress->Region = 'ALT_'.$customer->Address->Region;
+        $customer->Address->AltAddress->PostalCode = 'ALT_'.$customer->Address->PostalCode;
+        $customer->Address->AltAddress->Country = 'ALT_'.$customer->Address->Country;
         $customer->EmailAddresses = array();
-        for ($i = 1; $i < 4; $i++) {
-            $customer->EmailAddresses[] = $customer->CustomerID . $i . '@live.com'; 
+        for ($i = 1; $i < 4; ++$i) {
+            $customer->EmailAddresses[] = $customer->CustomerID.$i.'@live.com';
         }
 
         $customer->OtherAddresses = array();
-        for ($i = 0; $i < 2; $i++) {
+        for ($i = 0; $i < 2; ++$i) {
             $customer->OtherAddresses[$i] = new Address();
             $this->_copyAddress($customer->Address, $customer->OtherAddresses[$i], $i + 1);
         }
-		
+
         return $customer;
-    }
-    
-     /**
-     * copy address
-     * 
-     * @param Object &$src    source
-     * @param Object &$target target
-     * @param integer $tag     tag
-     * @param Address $target
-     * 
-     * @return void
-     */
-    private function _copyAddress(&$src, &$target, $tag)
-    {
-        $target->StreetName = $src->StreetName . $tag;
-        $target->City = $src->City . $tag;
-        $target->Region = $src->Region . $tag;
-        $target->PostalCode = $src->PostalCode . $tag;
-        $target->Country = $src->Country . $tag;
-        
-        $target->AltAddress = new Address();
-        $target->AltAddress->StreetName = $target->AltAddress->StreetName . $tag;
-        $target->AltAddress->City = $target->AltAddress->City . $tag;
-        $target->AltAddress->Region = $target->AltAddress->Region . $tag;
-        $target->AltAddress->PostalCode = $target->AltAddress->PostalCode . $tag;
-        $target->AltAddress->Country = $target->AltAddress->Country . $tag;
     }
 
     /**
-     * Serialize the sql result array into Order objects
-     * 
+     * copy address.
+     *
+     * @param object  &$src    source
+     * @param object  &$target target
+     * @param int     $tag     tag
+     * @param Address $target
+     */
+    private function _copyAddress(&$src, &$target, $tag)
+    {
+        $target->StreetName = $src->StreetName.$tag;
+        $target->City = $src->City.$tag;
+        $target->Region = $src->Region.$tag;
+        $target->PostalCode = $src->PostalCode.$tag;
+        $target->Country = $src->Country.$tag;
+
+        $target->AltAddress = new Address();
+        $target->AltAddress->StreetName = $target->AltAddress->StreetName.$tag;
+        $target->AltAddress->City = $target->AltAddress->City.$tag;
+        $target->AltAddress->Region = $target->AltAddress->Region.$tag;
+        $target->AltAddress->PostalCode = $target->AltAddress->PostalCode.$tag;
+        $target->AltAddress->Country = $target->AltAddress->Country.$tag;
+    }
+
+    /**
+     * Serialize the sql result array into Order objects.
+     *
      * @param array(array) $result result of the sql query
-     * 
+     *
      * @return array(Object)
      */
     private function _serializeOrders($result)
     {
         $orders = array();
-        while ( $record = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
-                $orders[] = $this->_serializeOrder($record);
+        while ($record = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
+            $orders[] = $this->_serializeOrder($record);
         }
 
         return $orders;
     }
 
     /**
-     * Serialize the sql row into Order object
-     * 
+     * Serialize the sql row into Order object.
+     *
      * @param array $record each row of customer
-     * 
+     *
      * @return Order
      */
     private function _serializeOrder($record)
@@ -523,31 +523,32 @@ class NorthWindQueryProvider implements IQueryProvider
         $order->ShipRegion = $record['ShipRegion'];
         $order->ShipPostalCode = $record['ShipPostalCode'];
         $order->ShipCountry = $record['ShipCountry'];
+
         return $order;
     }
 
     /**
-     * Serialize the sql result array into Employee objects
-     * 
+     * Serialize the sql result array into Employee objects.
+     *
      * @param array(array) $result result of the sql query
-     * 
+     *
      * @return array(Object)
      */
     private function _serializeEmployees($result)
     {
         $employees = array();
         while ($record = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
-                $employees[] = $this->_serializeEmployee($record);
+            $employees[] = $this->_serializeEmployee($record);
         }
 
         return $employees;
     }
 
     /**
-     * Serialize the sql row into Employee object
-     * 
+     * Serialize the sql row into Employee object.
+     *
      * @param array $record each row of employee
-     * 
+     *
      * @return Employee
      */
     private function _serializeEmployee($record)
@@ -559,7 +560,7 @@ class NorthWindQueryProvider implements IQueryProvider
         $employee->Title = $record['Title'];
         $employee->TitleOfCourtesy = $record['TitleOfCourtesy'];
         $employee->BirthDate = !is_null($record['BirthDate']) ? $record['BirthDate']->format('Y-m-d\TH:i:s') : null;
-        $employee->HireDate = !is_null($record['HireDate']) ? $record['HireDate']->format('Y-m-d\TH:i:s') : null;        
+        $employee->HireDate = !is_null($record['HireDate']) ? $record['HireDate']->format('Y-m-d\TH:i:s') : null;
         $employee->Address = $record['Address'];
         $employee->City = $record['City'];
         $employee->Region = $record['Region'];
@@ -570,21 +571,22 @@ class NorthWindQueryProvider implements IQueryProvider
         $employee->Notes = $record['Notes'];
         $employee->ReportsTo = $record['ReportsTo'];
         //$employee->Photo = $record['Photo'];
-        $employee->Emails = array($employee->FirstName . '@hotmail.com', $employee->FirstName . '@live.com');
+        $employee->Emails = array($employee->FirstName.'@hotmail.com', $employee->FirstName.'@live.com');
+
         return $employee;
     }
 
     /**
-     * Serialize the sql result array into Order_Details objects
-     * 
+     * Serialize the sql result array into Order_Details objects.
+     *
      * @param array(array) $result result of the sql query
-     * 
+     *
      * @return array(Object)
      */
     private function _serializeOrderDetails($result)
     {
         $order_details = array();
-        while ($record = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {        
+        while ($record = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
             $order_details[] = $this->_serializeOrderDetail($record);
         }
 
@@ -592,10 +594,10 @@ class NorthWindQueryProvider implements IQueryProvider
     }
 
     /**
-     * Serialize the sql row into Order_Details object
-     * 
+     * Serialize the sql row into Order_Details object.
+     *
      * @param array $record each row of order detail
-     * 
+     *
      * @return Order_Details
      */
     private function _serializeOrderDetail($record)
@@ -606,10 +608,10 @@ class NorthWindQueryProvider implements IQueryProvider
         $order_details->ProductID = $record['ProductID'];
         $order_details->Quantity = $record['Quantity'];
         $order_details->UnitPrice = $record['UnitPrice'];
-        return $order_details; 
+
+        return $order_details;
     }
 
-    
     /**
      * Gets the last sql server error as a string.
      *
@@ -620,14 +622,15 @@ class NorthWindQueryProvider implements IQueryProvider
         $result = null;
         $errors = sqlsrv_errors();
         self::_getSQLSRVError1($errors, $result);
+
         return $result;
     }
-    
+
     /**
      * Rescursive function to get the sql server error as string.
      *
      * @param array/string $errors
-     * @param string $result
+     * @param string       $result
      */
     private static function _getSQLSRVError1($errors, &$result)
     {
@@ -641,7 +644,7 @@ class NorthWindQueryProvider implements IQueryProvider
     }
 
     /**
-     * The destructor     
+     * The destructor.
      */
     public function __destruct()
     {

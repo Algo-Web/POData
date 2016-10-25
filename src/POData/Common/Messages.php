@@ -6,54 +6,53 @@ use POData\OperationContext\HTTPRequestMethod;
 use POData\Providers\Query\QueryType;
 
 /**
- * Class Messages helps to format error messages
- * @package POData\Common
+ * Class Messages helps to format error messages.
  */
 class Messages
 {
     /**
-     * Format message for unterminated string literal error
-     * 
+     * Format message for unterminated string literal error.
+     *
      * @param int    $pos  Position of unterminated string literal in the text
      * @param string $text The text with unterminated string literal
-     * 
+     *
      * @return string The formatted message
      */
     public static function expressionLexerUnterminatedStringLiteral($pos, $text)
     {
-        return 'Unterminated string literal at position ' . $pos . ' in ' . $text;
+        return 'Unterminated string literal at position '.$pos.' in '.$text;
     }
-    
+
     /**
-     * Format message for digit expected error
-     * 
+     * Format message for digit expected error.
+     *
      * @param int $pos Position at which digit is expected
-     * 
+     *
      * @return string The formatted message
      */
     public static function expressionLexerDigitExpected($pos)
     {
-        return 'Digit expected at position ' . $pos;
+        return 'Digit expected at position '.$pos;
     }
 
     /**
-     * Format message for syntax error
-     * 
+     * Format message for syntax error.
+     *
      * @param int $pos Position at which syntax error found
-     * 
+     *
      * @return string The formatted message
      */
     public static function expressionLexerSyntaxError($pos)
     {
-        return 'Syntax Error at position ' . $pos;
+        return 'Syntax Error at position '.$pos;
     }
 
     /**
-     * Format message for invalid character error
-     * 
-     * @param string $ch  The invalid character found 
+     * Format message for invalid character error.
+     *
+     * @param string $ch  The invalid character found
      * @param int    $pos Position at which invalid character found
-     * 
+     *
      * @return string The formatted message
      */
     public static function expressionLexerInvalidCharacter($ch, $pos)
@@ -62,13 +61,12 @@ class Messages
     }
 
     /**
-     * Format message for an operator's incompatible operands types
-     * 
+     * Format message for an operator's incompatible operands types.
+     *
      * @param string $operator The operator
      * @param string $str      The operand list separated by comma
      * @param string $pos      Position at which operator with incompatible operands found
      *
-     * 
      * @return string The formatted message
      */
     public static function expressionParserInCompatibleTypes($operator, $str, $pos)
@@ -77,51 +75,51 @@ class Messages
     }
 
     /**
-     * Format message for an unsupported null operation
+     * Format message for an unsupported null operation.
      *
      * @param string $operator The operator
      * @param int    $pos      Position at which operator with null operands found
-     * 
+     *
      * @return string The formatted message
      */
     public static function expressionParserOperatorNotSupportNull($operator, $pos)
     {
         return "The operator '$operator' at position $pos is not supported for the 'null' literal; only equality checks are supported";
     }
-    
+
     /**
-     * Format message for an unsupported guid operation
+     * Format message for an unsupported guid operation.
      *
      * @param string $operator The operator
      * @param int    $pos      Position at which operator with guid operands found
-     * 
+     *
      * @return string The formatted message
      */
     public static function expressionParserOperatorNotSupportGuid($operator, $pos)
     {
         return "The operator '$operator' at position $pos is not supported for the Edm.Guid ; only equality checks are supported";
-    }       
-    
+    }
+
     /**
-     * Format message for an unsupported binary operation
+     * Format message for an unsupported binary operation.
      *
      * @param string $operator The operator
      * @param int    $pos      Position at which operator with binary operands found
-     * 
+     *
      * @return string The formatted message
      */
     public static function expressionParserOperatorNotSupportBinary($operator, $pos)
     {
         return "The operator '$operator' at position $pos is not supported for the Edm.Binary ; only equality checks are supported";
     }
-    
+
     /**
-     * Format message for an unrecognized literal
-     * 
+     * Format message for an unrecognized literal.
+     *
      * @param string $type    The expected literal type
      * @param string $literal The malformed literal
      * @param int    $pos     Position at which literal found
-     * 
+     *
      * @return string The formatted message
      */
     public static function expressionParserUnrecognizedLiteral($type, $literal, $pos)
@@ -129,12 +127,12 @@ class Messages
         return "Unrecognized '$type' literal '$literal' in position '$pos'.";
     }
 
-    /** 
-     * Format message for an unknown function-call
-     * 
+    /**
+     * Format message for an unknown function-call.
+     *
      * @param string $str The unknown function name
      * @param int    $pos Position at which unknown function-call found
-     * 
+     *
      * @return string The formatted message
      */
     public static function expressionParserUnknownFunction($str, $pos)
@@ -143,8 +141,8 @@ class Messages
     }
 
     /**
-     * Format message for non-boolean filter expression
-     * 
+     * Format message for non-boolean filter expression.
+     *
      * @return string The formatted message
      */
     public static function expressionParser2BooleanRequired()
@@ -153,20 +151,20 @@ class Messages
     }
 
     /**
-     * Format message for unexpected expression
-     * 
+     * Format message for unexpected expression.
+     *
      * @param string $expressionClassName Name  of the unexpected expression
-     * 
+     *
      * @return string The formatted message
      */
-    public static function expressionParser2UnexpectedExpression($expressionClassName) 
+    public static function expressionParser2UnexpectedExpression($expressionClassName)
     {
         return "Unexpected expression of type \'$expressionClassName\' found";
-    }   
- 
+    }
+
     /**
      * Format a message to show error when expression contains sub-property access of non-primitive property.
-     * 
+     *
      * @return string The message
      */
     public static function expressionParser2NonPrimitivePropertyNotAllowed()
@@ -174,29 +172,29 @@ class Messages
         return 'This data service does not support non-primitive types in the expression';
     }
 
-    /** 
-     * Format message for not applicable function error
-     * 
+    /**
+     * Format message for not applicable function error.
+     *
      * @param string $functionName The name of the function called
      * @param string $protoTypes   Prototype of the functions considered
      * @param int    $position     Position at which function-call found
-     * 
+     *
      * @return string The formatted message
      */
-    public static function expressionLexerNoApplicableFunctionsFound($functionName, 
-        $protoTypes, 
+    public static function expressionLexerNoApplicableFunctionsFound($functionName,
+        $protoTypes,
         $position
     ) {
         return "No applicable function found for '$functionName' at position $position with the specified arguments. The functions considered are: $protoTypes";
     }
 
     /**
-     * Format message for property not found error
-     * 
+     * Format message for property not found error.
+     *
      * @param string $property The name of the property
      * @param string $type     The parent type in which property searched for
      * @param int    $position Position at which property mentioned
-     * 
+     *
      * @return string The formatted message
      */
     public static function expressionLexerNoPropertyInType($property, $type, $position)
@@ -204,13 +202,12 @@ class Messages
         return "No property '$property' exists in type '$type' at position $position";
     }
 
-
     /**
-     * Format a message to show error when target resource property 
-     * argument is not null or instance of ResourceProperty
-     * 
+     * Format a message to show error when target resource property
+     * argument is not null or instance of ResourceProperty.
+     *
      * @param string $argumentName The name of the target resource property argument
-     * 
+     *
      * @return string The formatted message
      */
     public static function resourceAssociationSetPropertyMustBeNullOrInstanceofResourceProperty($argumentName)
@@ -219,12 +216,12 @@ class Messages
     }
 
     /**
-     * Format a message when a property is used as 
-     * navigation property of a resource type which is actually not
-     * 
+     * Format a message when a property is used as
+     * navigation property of a resource type which is actually not.
+     *
      * @param string $propertyName     Property
      * @param string $resourceTypeName Resource type
-     * 
+     *
      * @return string The formatted message
      */
     public static function resourceAssociationSetEndPropertyMustBeNavigationProperty($propertyName, $resourceTypeName)
@@ -234,22 +231,22 @@ class Messages
 
     /**
      * Format a message for showing the error when a resource type is
-     * not assignable to resource set
-     * 
+     * not assignable to resource set.
+     *
      * @param string $resourceTypeName Resource type
      * @param string $resourceSetName  Resource set name
-     * 
+     *
      * @return string The formatted message
-     */    
+     */
     public static function resourceAssociationSetEndResourceTypeMustBeAssignableToResourceSet($resourceTypeName, $resourceSetName)
     {
         return "The resource type $resourceTypeName must be assignable to the resource set $resourceSetName";
     }
 
     /**
-     * Format a message for showing the error when trying to 
-     * create an association set with both null resource property
-     * 
+     * Format a message for showing the error when trying to
+     * create an association set with both null resource property.
+     *
      * @return string The formatted message
      */
     public static function resourceAssociationSetResourcePropertyCannotBeBothNull()
@@ -258,9 +255,9 @@ class Messages
     }
 
     /**
-     * Format a message for showing the error when trying to 
-     * create a self referencing bidirectional association
-     * 
+     * Format a message for showing the error when trying to
+     * create a self referencing bidirectional association.
+     *
      * @return string The formatted message
      */
     public static function resourceAssociationSetSelfReferencingAssociationCannotBeBiDirectional()
@@ -269,11 +266,11 @@ class Messages
     }
 
     /**
-     * Format a message to show error when target resource property argument is 
-     * not null or instance of ResourceProperty
-     * 
+     * Format a message to show error when target resource property argument is
+     * not null or instance of ResourceProperty.
+     *
      * @param string $argumentName The name of the target resource property argument
-     * 
+     *
      * @return string The formatted message
      */
     public static function resourceAssociationTypeEndPropertyMustBeNullOrInstanceofResourceProperty($argumentName)
@@ -282,23 +279,23 @@ class Messages
     }
 
     /**
-     * Error message to show when both from and to property arguments are null
-     * 
+     * Error message to show when both from and to property arguments are null.
+     *
      * @return string The error message
      */
     public static function resourceAssociationTypeEndBothPropertyCannotBeNull()
     {
-        return 'Both to and from property argument to ResourceAssociationTypeEnd constructor cannot be null';        
+        return 'Both to and from property argument to ResourceAssociationTypeEnd constructor cannot be null';
     }
 
-    /**      
-     * Format a message to show error when resourceset reference is 
-     * used in $filter query option
-     * 
-     * @param string $property       The resourceset property used in query 
+    /**
+     * Format a message to show error when resourceset reference is
+     * used in $filter query option.
+     *
+     * @param string $property       The resourceset property used in query
      * @param string $parentProperty The parent resource of property
      * @param int    $pos            Postion at which resource set has been used
-     * 
+     *
      * @return string The formatted message
      */
     public static function expressionParserEntityCollectionNotAllowedInFilter($property, $parentProperty, $pos)
@@ -307,26 +304,26 @@ class Messages
     }
 
     /**
-     * Format a message to show error when a non-integer value passed to 
-     * a function, which expects integer parameter
-     * 
-     * @param mixed    $argument     The non-integer argument
+     * Format a message to show error when a non-integer value passed to
+     * a function, which expects integer parameter.
+     *
+     * @param mixed  $argument     The non-integer argument
      * @param string $functionName The name of function
-     * 
+     *
      * @return string The formatted message
      */
     public static function commonArgumentShouldBeInteger($argument, $functionName)
-    {        
+    {
         return "The argument to the function '$functionName' should be integer, non-integer value '$argument' passed";
     }
 
     /**
-     * Format a message to show error when a negative value passed to a 
-     * function, which expects non-negative parameter
-     * 
-     * @param mixed    $argument     The negative argument
+     * Format a message to show error when a negative value passed to a
+     * function, which expects non-negative parameter.
+     *
+     * @param mixed  $argument     The negative argument
      * @param string $functionName The name of function
-     * 
+     *
      * @return string The formatted message
      */
     public static function commonArgumentShouldBeNonNegative($argument, $functionName)
@@ -335,35 +332,35 @@ class Messages
     }
 
     /**
-     * Format a message to show error when a function expect a 
-     * valid EdmPrimitiveType enum value, but it is not 
-     * 
+     * Format a message to show error when a function expect a
+     * valid EdmPrimitiveType enum value, but it is not.
+     *
      * @param string $argumentName The argument name
      * @param string $functionName The function name
-     * 
+     *
      * @return string The formatted message
      */
     public static function commonNotValidPrimitiveEDMType($argumentName, $functionName)
-    {    
+    {
         return "The argument '$argumentName' to $functionName is not a valid EdmPrimitiveType Enum value";
     }
     /**
-     * Error message to show when both page size and 
-     * result collection size are specified 
-     * 
+     * Error message to show when both page size and
+     * result collection size are specified.
+     *
      * @return string The message
      */
     public static function configurationMaxResultAndPageSizeMutuallyExclusive()
     {
-        return 'Specification of \'entity set page size\' is mutually exclusive with the specification of \'maximum result per collection\' in configuration';    
+        return 'Specification of \'entity set page size\' is mutually exclusive with the specification of \'maximum result per collection\' in configuration';
     }
 
-    /**     
-     * Format a message to show error when configuration expects a 
-     * name as resource set name but it is not
-     *  
+    /**
+     * Format a message to show error when configuration expects a
+     * name as resource set name but it is not.
+     *
      * @param string $name The unresolved name
-     * 
+     *
      * @return string The formatted message
      */
     public static function configurationResourceSetNameNotFound($name)
@@ -372,12 +369,12 @@ class Messages
     }
 
     /**
-     * Format a message to show error when a function argument expected to 
-     * EntitySetRights enum value but it is not
-     * 
+     * Format a message to show error when a function argument expected to
+     * EntitySetRights enum value but it is not.
+     *
      * @param string $argument     The argument name
      * @param string $functionName The function name
-     * 
+     *
      * @return string The formatted message
      */
     public static function configurationRightsAreNotInRange($argument, $functionName)
@@ -385,12 +382,10 @@ class Messages
         return "The argument '$argument' of '$functionName' should be EntitySetRights enum value";
     }
 
-
-
     /**
      * A message to show error when service developer disabled count request and
      * client requested for count.
-     * 
+     *
      * @return string The message
      */
     public static function configurationCountNotAccepted()
@@ -399,33 +394,33 @@ class Messages
     }
 
     /**
-     * Format a message to show error when a tyring to set a 
-     * base class for primitive type
-     * 
+     * Format a message to show error when a tyring to set a
+     * base class for primitive type.
+     *
      * @return string The message
      */
     public static function resourceTypeNoBaseTypeForPrimitive()
     {
         return 'Primitive type cannot have base type';
     }
- 
+
     /**
-     * Format a message to show error when tyring to 
-     * set a primitive type as abstract
-     * 
+     * Format a message to show error when tyring to
+     * set a primitive type as abstract.
+     *
      * @return string The message
      */
     public static function resourceTypeNoAbstractForPrimitive()
     {
-        return "Primitive type cannot be abstract";
+        return 'Primitive type cannot be abstract';
     }
 
     /**
      * Format a message to show error when a primitive instance type
-     * is not IType implementation
-     * 
+     * is not IType implementation.
+     *
      * @param string $argument The name of instance type argument
-     * 
+     *
      * @return string The message
      */
     public static function resourceTypeTypeShouldImplementIType($argument)
@@ -434,11 +429,11 @@ class Messages
     }
 
     /**
-     * Format a message to show error when instance type of a 
-     * complex or entity type is not instance of ReflectionClass
-     * 
+     * Format a message to show error when instance type of a
+     * complex or entity type is not instance of ReflectionClass.
+     *
      * @param string $argument The name of instance type argument
-     * 
+     *
      * @return string The message
      */
     public static function resourceTypeTypeShouldReflectionClass($argument)
@@ -447,10 +442,10 @@ class Messages
     }
 
     /**
-     * Format a message to show error when an entity type missing key properties
-     * 
+     * Format a message to show error when an entity type missing key properties.
+     *
      * @param string $entityName The name of instance type argument
-     * 
+     *
      * @return string The formatted message
      */
     public static function resourceTypeMissingKeyPropertiesForEntity($entityName)
@@ -459,20 +454,20 @@ class Messages
     }
 
     /**
-     * The message to show error when trying to add 
-     * property to 'Primitive' resource type
-     * 
+     * The message to show error when trying to add
+     * property to 'Primitive' resource type.
+     *
      * @return string The message
      */
     public static function resourceTypeNoAddPropertyForPrimitive()
     {
-        return 'Properties cannot be added to ResourceType instances with a ResourceTypeKind equal to \'Primitive\'';        
+        return 'Properties cannot be added to ResourceType instances with a ResourceTypeKind equal to \'Primitive\'';
     }
 
     /**
-     * The message to show error when trying to 
-     * add key property to non-entity resource type
-     * 
+     * The message to show error when trying to
+     * add key property to non-entity resource type.
+     *
      * @return string The message
      */
     public static function resourceTypeKeyPropertiesOnlyOnEntityTypes()
@@ -481,9 +476,9 @@ class Messages
     }
 
     /**
-     * The message to show error when trying to add an 
-     * etag property to non-entity resource type
-     * 
+     * The message to show error when trying to add an
+     * etag property to non-entity resource type.
+     *
      * @return string The message
      */
     public static function resourceTypeETagPropertiesOnlyOnEntityTypes()
@@ -492,12 +487,12 @@ class Messages
     }
 
     /**
-     * Format a message to show error for 
-     * duplication of resource property on resource type
-     * 
+     * Format a message to show error for
+     * duplication of resource property on resource type.
+     *
      * @param string $propertyName     The property name
      * @param string $resourceTypeName The rtesource type name
-     * 
+     *
      * @return string The formatted message
      */
     public static function resourceTypePropertyWithSameNameAlreadyExists($propertyName, $resourceTypeName)
@@ -506,8 +501,8 @@ class Messages
     }
 
     /**
-     * The message to show error when trying to add a key property to derived type
-     * 
+     * The message to show error when trying to add a key property to derived type.
+     *
      * @return string The message
      */
     public static function resourceTypeNoKeysInDerivedTypes()
@@ -516,8 +511,8 @@ class Messages
     }
 
     /**
-     * The message to show error when trying to set a non-entity resource type as MLE
-     * 
+     * The message to show error when trying to set a non-entity resource type as MLE.
+     *
      * @return string The message
      */
     public static function resourceTypeHasStreamAttributeOnlyAppliesToEntityType()
@@ -526,22 +521,22 @@ class Messages
     }
 
     /**
-     * The message to show error when trying to add a named stream on non-entity type
-     * 
+     * The message to show error when trying to add a named stream on non-entity type.
+     *
      * @return string The message
      */
     public static function resourceTypeNamedStreamsOnlyApplyToEntityType()
     {
         return 'Named streams can only be added to entity types';
     }
-    
+
     /**
-     * Format a message to show error for 
-     * duplication of named stream property on resource type
-     * 
+     * Format a message to show error for
+     * duplication of named stream property on resource type.
+     *
      * @param string $namedStreamName  The named stream name
      * @param string $resourceTypeName The resource Property
-     * 
+     *
      * @return string The formatted message
      */
     public static function resourceTypeNamedStreamWithSameNameAlreadyExists($namedStreamName, $resourceTypeName)
@@ -550,10 +545,10 @@ class Messages
     }
 
     /**
-     * Format a message to show error for invalid ResourcePropertyKind enum argument
-     * 
+     * Format a message to show error for invalid ResourcePropertyKind enum argument.
+     *
      * @param string $argumentName The argument name
-     * 
+     *
      * @return string The formatted message
      */
     public static function resourcePropertyInvalidKindParameter($argumentName)
@@ -562,11 +557,11 @@ class Messages
     }
 
     /**
-     * Format a message to show error when ResourcePropertyKind and ResourceType's ResourceTypeKind mismatches
+     * Format a message to show error when ResourcePropertyKind and ResourceType's ResourceTypeKind mismatches.
      *
      * @param string $resourcePropertyKindArgName The ResourcePropertyKind argument name
      * @param string $resourceTypeArgName         The ResourceType argument name
-     * 
+     *
      * @return string The formatted message
      */
     public static function resourcePropertyPropertyKindAndResourceTypeKindMismatch($resourcePropertyKindArgName, $resourceTypeArgName)
@@ -575,9 +570,9 @@ class Messages
     }
 
     /**
-     * The error message to show when tyring to 
-     * associate resource set with non-entity
-     * 
+     * The error message to show when tyring to
+     * associate resource set with non-entity.
+     *
      * @return string The message
      */
     public static function resourceSetContainerMustBeAssociatedWithEntityType()
@@ -587,7 +582,7 @@ class Messages
 
     /**
      * The error message to show when IQueryProvider::getExpressionProvider
-     * method returns empty or null
+     * method returns empty or null.
      *
      * @return string The message
      */
@@ -598,7 +593,7 @@ class Messages
 
     /**
      * The error message to show when IQueryProvider::getExpressionProvider
-     * method returns non-object or an object which does not implement IExpressionProvider
+     * method returns non-object or an object which does not implement IExpressionProvider.
      *
      * @return string The message
      */
@@ -609,8 +604,8 @@ class Messages
 
     /**
      * The error message to show when IMetadataProvider::getContainerName
-     * method returns empty container name
-     * 
+     * method returns empty container name.
+     *
      * @return string The message
      */
     public static function providersWrapperContainerNameMustNotBeNullOrEmpty()
@@ -619,10 +614,10 @@ class Messages
     }
 
     /**
-     * The error message to show when 
+     * The error message to show when
      * IMetadataProvider::getContainerNamespace
-     * method returns empty container name 
-     * 
+     * method returns empty container name.
+     *
      * @return string The message
      */
     public static function providersWrapperContainerNamespaceMustNotBeNullOrEmpty()
@@ -631,11 +626,11 @@ class Messages
     }
 
     /**
-     * Format a message to show error when 
-     * more than one entity set with the same name found 
-     * 
+     * Format a message to show error when
+     * more than one entity set with the same name found.
+     *
      * @param string $entitySetName The name of the entity set
-     * 
+     *
      * @return string The formatted message
      */
     public static function providersWrapperEntitySetNameShouldBeUnique($entitySetName)
@@ -644,11 +639,11 @@ class Messages
     }
 
     /**
-     * Format a message to show error when 
-     * more than one entity type with the same name found 
-     * 
+     * Format a message to show error when
+     * more than one entity type with the same name found.
+     *
      * @param string $entityTypeName The name of the entity type
-     * 
+     *
      * @return string The formatted message
      */
     public static function providersWrapperEntityTypeNameShouldBeUnique($entityTypeName)
@@ -657,13 +652,13 @@ class Messages
     }
 
     /**
-     * Format a message to show error when IDSMP::getResourceSet 
-     * returns inconsistent instance of ResourceSet 
-     * 
+     * Format a message to show error when IDSMP::getResourceSet
+     * returns inconsistent instance of ResourceSet.
+     *
      * @param string $resourceSetName      Name of the resource set
      * @param string $resourceTypeName     Name of the resource type
      * @param string $resourcePropertyName Name of the navigation property
-     * 
+     *
      * @return string The formatted message
      */
     public static function providersWrapperIDSMPGetResourceSetReturnsInvalidResourceSet($resourceSetName, $resourceTypeName, $resourcePropertyName)
@@ -672,9 +667,8 @@ class Messages
     }
 
     /**
-     *
      * @param string $methodName method name
-     * 
+     *
      * @return string The message
      */
     public static function queryProviderReturnsNonQueryResult($methodName)
@@ -682,10 +676,8 @@ class Messages
         return "The implementation of the method $methodName must return a QueryResult instance.";
     }
 
-
     /**
-     *
-     * @param string $methodName method name
+     * @param string    $methodName method name
      * @param QueryType $queryType
      *
      * @return string The message
@@ -695,10 +687,8 @@ class Messages
         return "The implementation of the method $methodName must return a QueryResult instance with a count for queries of type $queryType.";
     }
 
-
     /**
-     *
-     * @param string $methodName method name
+     * @param string    $methodName method name
      * @param QueryType $queryType
      *
      * @return string The message
@@ -709,49 +699,49 @@ class Messages
     }
 
     /**
-     * Format a message to show error when IDSMP::getResourceFromResourceSet 
+     * Format a message to show error when IDSMP::getResourceFromResourceSet
      * returns an instnce which is not an instance of expected entity instance.
-     * 
-     * @param string $entityTypeName The name of expected entity type.
+     *
+     * @param string $entityTypeName The name of expected entity type
      * @param string $methodName     Method name
-     * 
+     *
      * @return string The formatted message
      */
     public static function providersWrapperIDSQPMethodReturnsUnExpectedType($entityTypeName, $methodName)
     {
-        return 'The implementation of the method ' . $methodName . ' must return an instance of type described by resource set\'s type(' . $entityTypeName . ') or null if resource does not exists';
+        return 'The implementation of the method '.$methodName.' must return an instance of type described by resource set\'s type('.$entityTypeName.') or null if resource does not exists';
     }
 
     /**
-     * A message to show error when IDSQP::getResourceFromResourceSet 
+     * A message to show error when IDSQP::getResourceFromResourceSet
      * returns an entity instance with null key properties.
-     * 
+     *
      * @param string $methodName Method name
-     * 
+     *
      * @return string The message
      */
     public static function providersWrapperIDSQPMethodReturnsInstanceWithNullKeyProperties($methodName)
     {
-        return 'The ' . $methodName . ' implementation returns an entity with null key propert(y|ies)';
+        return 'The '.$methodName.' implementation returns an entity with null key propert(y|ies)';
     }
 
     /**
-     * A message to show error when IDSQP::getResourceFromResourceSet 
+     * A message to show error when IDSQP::getResourceFromResourceSet
      * returns an entity instance with keys
      * not matching with the expected keys in the uri predicate.
-     * 
+     *
      * @param string $methodName Method name
-     * 
+     *
      * @return string The message
      */
     public static function providersWrapperIDSQPMethodReturnsInstanceWithNonMatchingKeys($methodName)
     {
-        return 'The ' . $methodName . ' implementation returns an instance with non-matching key';
+        return 'The '.$methodName.' implementation returns an instance with non-matching key';
     }
-    
+
     /**
-     * The error message to show for invalid navigation resource type
-     * 
+     * The error message to show for invalid navigation resource type.
+     *
      * @return string The message
      */
     public static function navigationInvalidResourceType()
@@ -761,12 +751,12 @@ class Messages
 
     /**
      * Format a message to show error when actual number of key values given
-     * in the key predicate is not matching with the expected number of key values 
-     * 
+     * in the key predicate is not matching with the expected number of key values.
+     *
      * @param string $segment       The segment with key predicate in question
      * @param int    $expectedCount The expected number of key values
      * @param int    $actualCount   The actual number of key values
-     * 
+     *
      * @return string The formatted message
      */
     public static function keyDescriptorKeyCountNotMatching($segment, $expectedCount, $actualCount)
@@ -775,12 +765,12 @@ class Messages
     }
 
     /**
-     * Format a message to show error when a required key is 
-     * missing from key predicate of a segment  
-     * 
+     * Format a message to show error when a required key is
+     * missing from key predicate of a segment.
+     *
      * @param string $segment      The segment with key predicate in question
      * @param string $expectedKeys The keys expected by the predicate
-     * 
+     *
      * @return string The formatted message
      */
     public static function keyDescriptorMissingKeys($segment, $expectedKeys)
@@ -789,65 +779,65 @@ class Messages
     }
 
     /**
-     * Format a message to show error when type of a key given in the 
-     * predicate with named key values does not compatible with the expected type
-     * 
+     * Format a message to show error when type of a key given in the
+     * predicate with named key values does not compatible with the expected type.
+     *
      * @param string $segment      The segment with key predicate in question
      * @param string $keyProperty  Name of the key in question
      * @param string $expectedType Expected type of the key
      * @param string $actualType   Actual type of the key
-     * 
+     *
      * @return string The formatted message
      */
     public static function keyDescriptorInCompatibleKeyType($segment, $keyProperty, $expectedType, $actualType)
     {
-        return "Syntax error in the segment '$segment'. The value of key property '$keyProperty' should be of type " . $expectedType . ", given " . $actualType;
+        return "Syntax error in the segment '$segment'. The value of key property '$keyProperty' should be of type ".$expectedType.', given '.$actualType;
     }
 
     /**
      * Format a message to show error when type of a key given in the predicate
-     * with positional key values does not compatible with the expected type
-     * 
-     * @param String $segment      The segment with key predicate in question
-     * @param String $keyProperty  The Key property
-     * @param Int    $position     The position of key
-     * @param String $expectedType Expected type of the key
-     * @param String $actualType   Actual type of the key
-     * 
+     * with positional key values does not compatible with the expected type.
+     *
+     * @param string $segment      The segment with key predicate in question
+     * @param string $keyProperty  The Key property
+     * @param int    $position     The position of key
+     * @param string $expectedType Expected type of the key
+     * @param string $actualType   Actual type of the key
+     *
      * @return string The formatted message
      */
     public static function keyDescriptorInCompatibleKeyTypeAtPosition($segment, $keyProperty, $position, $expectedType, $actualType)
     {
-        return "Syntax error in the segment '$segment'. The value of key property '$keyProperty' at position $position should be of type " . $expectedType . ", given " . $actualType;
+        return "Syntax error in the segment '$segment'. The value of key property '$keyProperty' at position $position should be of type ".$expectedType.', given '.$actualType;
     }
 
     /**
-     * Format a message to show error when trying to access 
-     * KeyDescriptor::_validatedNamedValues before 
-     * invoking KeyDescriptor::validate function
-     * 
+     * Format a message to show error when trying to access
+     * KeyDescriptor::_validatedNamedValues before
+     * invoking KeyDescriptor::validate function.
+     *
      * @return string The message
      */
     public static function keyDescriptorValidateNotCalled()
     {
-        return "Invoking KeyDescriptor::getValidatedNamedValues requires KeyDescriptor::validate to be called before";
+        return 'Invoking KeyDescriptor::getValidatedNamedValues requires KeyDescriptor::validate to be called before';
     }
 
     /**
-     * Message to show error when there is a syntax error in the query
-     * 
+     * Message to show error when there is a syntax error in the query.
+     *
      * @return string The message
-     */    
+     */
     public static function syntaxError()
     {
         return 'Bad Request - Error in query syntax';
     }
 
     /**
-     * Format a message to show error when given url is malformed
-     * 
+     * Format a message to show error when given url is malformed.
+     *
      * @param string $url The malformed url
-     * 
+     *
      * @return string The formatted message
      */
     public static function urlMalformedUrl($url)
@@ -856,11 +846,11 @@ class Messages
     }
 
     /**
-     * Format a message to show error when segment with 
-     * multiple positional keys present in the request uri
-     * 
+     * Format a message to show error when segment with
+     * multiple positional keys present in the request uri.
+     *
      * @param string $segment The segment with multiple positional keys
-     * 
+     *
      * @return string The formatted message
      */
     public static function segmentParserKeysMustBeNamed($segment)
@@ -869,12 +859,12 @@ class Messages
     }
 
     /**
-     * Format a message to show error when a leaft segment 
-     * ($batch, $value, $metadata, $count, a bag property, 
-     * a named media resource or void service operation) is followed by a segment
-     * 
+     * Format a message to show error when a leaft segment
+     * ($batch, $value, $metadata, $count, a bag property,
+     * a named media resource or void service operation) is followed by a segment.
+     *
      * @param string $leafSegment The leaf segment
-     * 
+     *
      * @return string The formatted message
      */
     public static function segmentParserMustBeLeafSegment($leafSegment)
@@ -883,10 +873,10 @@ class Messages
     }
 
     /**
-     * Format a message to show error when a segment follows a post link segment
-     * 
+     * Format a message to show error when a segment follows a post link segment.
+     *
      * @param string $postPostLinkSegment The segment following post link segment
-     * 
+     *
      * @return string The formatted message
      */
     public static function segmentParserNoSegmentAllowedAfterPostLinkSegment($postPostLinkSegment)
@@ -895,13 +885,13 @@ class Messages
     }
 
     /**
-     * Format a message to show error when a segment otherthan 
-     * $value is followed by primitive segment
-     * 
-     * @param string $segment                  The segment follows 
-     *                                         primitive property segment 
+     * Format a message to show error when a segment otherthan
+     * $value is followed by primitive segment.
+     *
+     * @param string $segment                  The segment follows
+     *                                         primitive property segment
      * @param string $primitivePropertySegment The primitive property segment
-     * 
+     *
      * @return string The formatted message
      */
     public static function segmentParserOnlyValueSegmentAllowedAfterPrimitivePropertySegment($segment, $primitivePropertySegment)
@@ -910,10 +900,10 @@ class Messages
     }
 
     /**
-     * Format a message to show error when try to query a collection segment
-     * 
+     * Format a message to show error when try to query a collection segment.
+     *
      * @param string $collectionSegment The segment representing collection
-     * 
+     *
      * @return string The formatted message
      */
     public static function segmentParserCannotQueryCollection($collectionSegment)
@@ -922,10 +912,10 @@ class Messages
     }
 
     /**
-     * Format a message to show error when a count segment is followed by singleton
-     * 
+     * Format a message to show error when a count segment is followed by singleton.
+     *
      * @param string $segment The singleton segment
-     * 
+     *
      * @return string The formatted message
      */
     public static function segmentParserCountCannotFollowSingleton($segment)
@@ -934,11 +924,11 @@ class Messages
     }
 
     /**
-     * Format a message to show error when a link segment is 
-     * followed by non-entity segment
-     * 
+     * Format a message to show error when a link segment is
+     * followed by non-entity segment.
+     *
      * @param string $segment The segment follows primitive property segment
-     * 
+     *
      * @return string The formatted message
      */
     public static function segmentParserLinkSegmentMustBeFollowedByEntitySegment($segment)
@@ -947,8 +937,8 @@ class Messages
     }
 
     /**
-     * A message to show error when no segment follows a link segment
-     * 
+     * A message to show error when no segment follows a link segment.
+     *
      * @return string The message
      */
     public static function segmentParserMissingSegmentAfterLink()
@@ -957,11 +947,11 @@ class Messages
     }
 
     /**
-     * Format a message to show error when a segment 
-     * found on the root which cannot be applied on root 
-     * 
+     * Format a message to show error when a segment
+     * found on the root which cannot be applied on root.
+     *
      * @param string $segment The segment found
-     * 
+     *
      * @return string The formatted message
      */
     public static function segmentParserSegmentNotAllowedOnRoot($segment)
@@ -970,21 +960,21 @@ class Messages
     }
 
     /**
-     * Message to show error when there is a inconsistency while parsing segments
-     * 
+     * Message to show error when there is a inconsistency while parsing segments.
+     *
      * @return string The message
      */
     public static function segmentParserInconsistentTargetKindState()
     {
-        return "Paring of segments failed for inconsistent target kind state, contact provider";
+        return 'Paring of segments failed for inconsistent target kind state, contact provider';
     }
 
     /**
-     * Format a message to show error when expecting a 
-     * property kind not found while paring segments 
-     * 
+     * Format a message to show error when expecting a
+     * property kind not found while paring segments.
+     *
      * @param string $expectedKind The exptected property kind as string
-     * 
+     *
      * @return string
      */
     public static function segmentParserUnExpectedPropertyKind($expectedKind)
@@ -993,22 +983,22 @@ class Messages
     }
 
     /**
-     * Format a message to show error when trying to apply count on non-resource 
-     * 
+     * Format a message to show error when trying to apply count on non-resource.
+     *
      * @param string $segment The non-resource segment
-     * 
+     *
      * @return string The message
      */
     public static function segmentParserCountCannotBeApplied($segment)
     {
-        return "The request URI is not valid, \$count cannot be applied to the segment '$segment' since \$count can only follow a resource segment.";        
+        return "The request URI is not valid, \$count cannot be applied to the segment '$segment' since \$count can only follow a resource segment.";
     }
 
     /**
-     * Format a message to show error when a resource not found
-     * 
+     * Format a message to show error when a resource not found.
+     *
      * @param string $segment The segment follows primitive property segment
-     * 
+     *
      * @return string The formatted message
      */
     public static function uriProcessorResourceNotFound($segment)
@@ -1017,9 +1007,9 @@ class Messages
     }
 
     /**
-     * The message to show error when trying to 
-     * access a resourceset which is forbidden
-     * 
+     * The message to show error when trying to
+     * access a resourceset which is forbidden.
+     *
      * @return string The message
      */
     public static function uriProcessorForbidden()
@@ -1028,11 +1018,11 @@ class Messages
     }
 
     /**
-     * A message to show error when 
+     * A message to show error when
      * IMetadataProvider::GetResourceAssociationSet() returns different
-     * AssociationSet when called with 'ResourceAssociationSetEnd' instances that 
+     * AssociationSet when called with 'ResourceAssociationSetEnd' instances that
      * are expected to the ends of same association set.
-     *   
+     *
      * @return string The error message
      */
     public static function metadataAssociationTypeSetBidirectionalAssociationMustReturnSameResourceAssociationSetFromBothEnd()
@@ -1042,13 +1032,13 @@ class Messages
 
     /**
      * Format a message to show error when multiple ResourceAssociationSets
-     * have a ResourceAssociationSetEnd referring to the 
+     * have a ResourceAssociationSetEnd referring to the
      * same EntitySet through the same AssociationType.
-     * 
+     *
      * @param string $resourceSet1Name Name of the first association set
      * @param string $resourceSet2Name Name of the second association set
      * @param string $entitySetName    Name of the entity set
-     * 
+     *
      * @return string The formatted message
      */
     public static function metadataAssociationTypeSetMultipleAssociationSetsForTheSameAssociationTypeMustNotReferToSameEndSets($resourceSet1Name, $resourceSet2Name, $entitySetName)
@@ -1058,24 +1048,24 @@ class Messages
 
     /**
      * Format a message to show error when IDSMP::getDerivedTypes returns a
-     * type which is not null or array of ResourceType
-     * 
+     * type which is not null or array of ResourceType.
+     *
      * @param string $resourceTypeName Resource type name
-     * 
+     *
      * @return string The formatted message
      */
     public static function metadataAssociationTypeSetInvalidGetDerivedTypesReturnType($resourceTypeName)
     {
-        return "Return type of IDSMP::getDerivedTypes should be either null or array of 'ResourceType', check implementation of IDSMP::getDerivedTypes for the resource type '$resourceTypeName'.";        
+        return "Return type of IDSMP::getDerivedTypes should be either null or array of 'ResourceType', check implementation of IDSMP::getDerivedTypes for the resource type '$resourceTypeName'.";
     }
 
     /**
      * Format a message to show error when entity type of an entity set has a
      * derived type with named stream property(ies).
-     * 
+     *
      * @param string $entitySetName   The entity set name
      * @param string $derivedTypeName The full name of the derived type
-     * 
+     *
      * @return string The formatted message
      */
     public static function metadataResourceTypeSetNamedStreamsOnDerivedEntityTypesNotSupported($entitySetName, $derivedTypeName)
@@ -1085,11 +1075,11 @@ class Messages
 
     /**
      * Format a message to show error when complex type having derived type
-     * is used as item type of a bag property
-     * 
+     * is used as item type of a bag property.
+     *
      * @param string $complexTypeName The name of the bag's complex type
-     * having derived type
-     * 
+     *                                having derived type
+     *
      * @return string The formatted message
      */
     public static function metadataResourceTypeSetBagOfComplexTypeWithDerivedTypes($complexTypeName)
@@ -1098,24 +1088,24 @@ class Messages
     }
 
     /**
-     * Message to show error when expecting entity or 
-     * complex type, but a different type found 
-     * 
+     * Message to show error when expecting entity or
+     * complex type, but a different type found.
+     *
      * @return string The error message
      */
-    public static function metadataWriterExpectingEntityOrComplexResourceType() 
+    public static function metadataWriterExpectingEntityOrComplexResourceType()
     {
         return 'Unexpected resource type found, expecting either ResourceTypeKind::ENTITY or ResourceTypeKind::COMPLEX';
     }
 
     /**
-     * Format a message to show error when no association set 
-     * found for a navigation property
-     * 
-     * @param string $navigationPropertyName The name of the navigation property.
+     * Format a message to show error when no association set
+     * found for a navigation property.
+     *
+     * @param string $navigationPropertyName The name of the navigation property
      * @param string $resourceTypeName       The resource type on which the
-     *                                       navigation property is defined.
-     * 
+     *                                       navigation property is defined
+     *
      * @return string The formatted message
      */
     public static function metadataWriterNoResourceAssociationSetForNavigationProperty($navigationPropertyName, $resourceTypeName)
@@ -1124,9 +1114,9 @@ class Messages
     }
 
     /**
-     * Message to show error when type of 'ExpandedProjectionNode::addNode' 
-     * parameter is neither ProjectionNode nor ExpandedProjectionNode
-     * 
+     * Message to show error when type of 'ExpandedProjectionNode::addNode'
+     * parameter is neither ProjectionNode nor ExpandedProjectionNode.
+     *
      * @return string The error message
      */
     public static function expandedProjectionNodeArgumentTypeShouldBeProjection()
@@ -1135,30 +1125,31 @@ class Messages
     }
 
     /**
-     * Format a message to show error when parser failed to 
-     * resolve a property in select or expand path
-     * 
-     * @param string  $resourceTypeName The name of resource type
-     * @param string  $propertyName     Sub path segment, that comes after
-     *                                  the segment of type  $resourceTypeName
-     * @param boolean $isSelect         True if error found while parsing select
-     *                                  clause, false for expand
-     * 
+     * Format a message to show error when parser failed to
+     * resolve a property in select or expand path.
+     *
+     * @param string $resourceTypeName The name of resource type
+     * @param string $propertyName     Sub path segment, that comes after
+     *                                 the segment of type  $resourceTypeName
+     * @param bool   $isSelect         True if error found while parsing select
+     *                                 clause, false for expand
+     *
      * @return string The formatted message
      */
     public static function expandProjectionParserPropertyNotFound($resourceTypeName, $propertyName, $isSelect)
     {
         $clause = $isSelect ? 'select' : 'expand';
+
         return  "Error in the $clause clause. Type '$resourceTypeName' does not have a property named '$propertyName'.";
     }
 
     /**
-     * Format a message to show error when expand path 
+     * Format a message to show error when expand path
      * contain non-navigation property.
-     * 
+     *
      * @param string $resourceTypeName The resource type name
      * @param string $propertyName     The proeprty name
-     * 
+     *
      * @return string The formatted message
      */
     public static function expandProjectionParserExpandCanOnlyAppliedToEntity($resourceTypeName, $propertyName)
@@ -1168,13 +1159,13 @@ class Messages
 
     /**
      * Format a message to show error when a primitive property is used as
-     * navigation property in select clause
-     * 
-     * @param string $resourceTypeName     The resource type on which the 
+     * navigation property in select clause.
+     *
+     * @param string $resourceTypeName     The resource type on which the
      *                                     primitive property defined
-     * @param string $primitvePropertyName The primitive property used as 
+     * @param string $primitvePropertyName The primitive property used as
      *                                     navigation property
-     * 
+     *
      * @return string The formatted message
      */
     public static function expandProjectionParserPrimitivePropertyUsedAsNavigationProperty($resourceTypeName, $primitvePropertyName)
@@ -1184,38 +1175,38 @@ class Messages
 
     /**
      * Format a message to show error when a complex type is used as
-     * navigation property in select clause
-     * 
+     * navigation property in select clause.
+     *
      * @param string $resourceTypeName The name of the resource type on which
      *                                 complex property is defined
-     * @param string $complextTypeName The name of complex type     
-     * 
+     * @param string $complextTypeName The name of complex type
+     *
      * @return string The formatted message
      */
     public static function expandProjectionParserComplexPropertyAsInnerSelectSegment($resourceTypeName, $complextTypeName)
     {
-        return "select doesn't support selection of properties of complex type. The property '$complextTypeName' on type '$resourceTypeName' is a complex type.";        
+        return "select doesn't support selection of properties of complex type. The property '$complextTypeName' on type '$resourceTypeName' is a complex type.";
     }
 
     /**
-     * Format a message to show error when a bag type is used as 
-     * navigation property in select clause
-     * 
-     * @param string $resourceTypeName The name of the resource type on which 
+     * Format a message to show error when a bag type is used as
+     * navigation property in select clause.
+     *
+     * @param string $resourceTypeName The name of the resource type on which
      *                                 bag property is defined
      * @param string $bagPropertyName  The name of the bag property
-     * 
+     *
      * @return string The formatted message
      */
     public static function expandProjectionParserBagPropertyAsInnerSelectSegment($resourceTypeName, $bagPropertyName)
     {
-        return "The selection from property '$bagPropertyName' on type '$resourceTypeName' is not valid. The select query option does not support selection items from a bag property.";               
-    } 
+        return "The selection from property '$bagPropertyName' on type '$resourceTypeName' is not valid. The select query option does not support selection items from a bag property.";
+    }
 
     /**
      * Message to show error when parser come across a type which is expected
-     * to be Entity type, but actually it is not
-     * 
+     * to be Entity type, but actually it is not.
+     *
      * @return string The message
      */
     public static function expandProjectionParserUnexpectedPropertyType()
@@ -1225,22 +1216,22 @@ class Messages
 
     /**
      * Format a message to show error when found selection traversal of a
-     * navigation property with out expansion
-     * 
+     * navigation property with out expansion.
+     *
      * @param string $propertyName The navigation property in select path
-     * which is not in expand path
-     * 
+     *                             which is not in expand path
+     *
      * @return string The formatted message
      */
     public static function expandProjectionParserPropertyWithoutMatchingExpand($propertyName)
     {
-        return 'Only navigation properties specified in expand option can be travered in select option,In order to treaverse the navigation property \'' . $propertyName . '\', it should be first expanded';
+        return 'Only navigation properties specified in expand option can be travered in select option,In order to treaverse the navigation property \''.$propertyName.'\', it should be first expanded';
     }
 
     /**
      * Message to show error when the orderByPathSegments argument found as
-     * not a non-empty array
-     * 
+     * not a non-empty array.
+     *
      * @return string The message
      */
     public static function orderByInfoPathSegmentsArgumentShouldBeNonEmptyArray()
@@ -1250,8 +1241,8 @@ class Messages
 
     /**
      * Message to show error when the navigationPropertiesUsedInTheOrderByClause
-     * argument found as neither null or a non-empty array
-     * 
+     * argument found as neither null or a non-empty array.
+     *
      * @return string The message
      */
     public static function orderByInfoNaviUsedArgumentShouldBeNullOrNonEmptyArray()
@@ -1260,9 +1251,9 @@ class Messages
     }
 
     /**
-     * Message to show error when the orderBySubPathSegments argument found as 
-     * not a non-empty array
-     * 
+     * Message to show error when the orderBySubPathSegments argument found as
+     * not a non-empty array.
+     *
      * @return string The message
      */
     public static function orderByPathSegmentOrderBySubPathSegmentArgumentShouldBeNonEmptyArray()
@@ -1271,39 +1262,39 @@ class Messages
     }
 
     /**
-     * Format a message to show error when parser failed to resolve a 
-     * property in orderby path
-     * 
+     * Format a message to show error when parser failed to resolve a
+     * property in orderby path.
+     *
      * @param string $resourceTypeName The name of resource type
-     * @param string $propertyName     Sub path segment, that comes after the 
-     *                                 segment of type  $resourceTypeName     
-     * 
+     * @param string $propertyName     Sub path segment, that comes after the
+     *                                 segment of type  $resourceTypeName
+     *
      * @return string The formatted message
      */
     public static function orderByParserPropertyNotFound($resourceTypeName, $propertyName)
-    {        
+    {
         return  "Error in the 'orderby' clause. Type '$resourceTypeName' does not have a property named '$propertyName'.";
     }
 
     /**
-     * Format a message to show error when found a bag property used 
-     * in orderby clause 
-     * 
+     * Format a message to show error when found a bag property used
+     * in orderby clause.
+     *
      * @param string $bagPropertyName The name of the bag property
-     * 
+     *
      * @return string The formatted message
      */
     public static function orderByParserBagPropertyNotAllowed($bagPropertyName)
     {
-        return "orderby clause does not support Bag property in the path, the property '$bagPropertyName' is a bag property";    
+        return "orderby clause does not support Bag property in the path, the property '$bagPropertyName' is a bag property";
     }
 
     /**
-     * Format a message to show error when found a primitve property used as 
-     * intermediate segment in orderby clause
-     * 
+     * Format a message to show error when found a primitve property used as
+     * intermediate segment in orderby clause.
+     *
      * @param string $propertyName The name of primitive property
-     * 
+     *
      * @return string The formatted message
      */
     public static function orderByParserPrimitiveAsIntermediateSegment($propertyName)
@@ -1312,10 +1303,10 @@ class Messages
     }
 
     /**
-     * Format a message to show error when found binary property used as sort key
-     * 
+     * Format a message to show error when found binary property used as sort key.
+     *
      * @param string $binaryPropertyName The name of binary property
-     * 
+     *
      * @return string The formatted message
      */
     public static function orderByParserSortByBinaryPropertyNotAllowed($binaryPropertyName)
@@ -1324,12 +1315,12 @@ class Messages
     }
 
     /**
-     * Format a message to show error when found a resource set reference 
-     * property in the oriderby clause
-     * 
+     * Format a message to show error when found a resource set reference
+     * property in the oriderby clause.
+     *
      * @param string $propertyName The name of resource set reference property
      * @param string $definedType  Defined type
-     * 
+     *
      * @return string The formatted message
      */
     public static function orderByParserResourceSetReferenceNotAllowed($propertyName, $definedType)
@@ -1339,10 +1330,10 @@ class Messages
 
     /**
      * Format a message to show error when a navigation property is used as
-     * sort key in orderby clause
-     * 
+     * sort key in orderby clause.
+     *
      * @param string $navigationPropertyName The name of the navigation property
-     * 
+     *
      * @return string The formatted message
      */
     public static function orderByParserSortByNavigationPropertyIsNotAllowed($navigationPropertyName)
@@ -1352,10 +1343,10 @@ class Messages
 
     /**
      * Format a message to show error when a complex property is used as
-     * sort key in orderby clause
-     * 
+     * sort key in orderby clause.
+     *
      * @param string $complexPropertyName The name of the complex property
-     * 
+     *
      * @return string The formatted message
      */
     public static function orderByParserSortByComplexPropertyIsNotAllowed($complexPropertyName)
@@ -1364,8 +1355,8 @@ class Messages
     }
 
     /**
-     * Message to show error when orderby parser found unexpected state
-     * 
+     * Message to show error when orderby parser found unexpected state.
+     *
      * @return string The error message
      */
     public static function orderByParserUnExpectedState()
@@ -1375,8 +1366,8 @@ class Messages
 
     /**
      * Message to show error when orderby parser come across a type
-     * which is not expected
-     * 
+     * which is not expected.
+     *
      * @return string The message
      */
     public static function orderByParserUnexpectedPropertyType()
@@ -1386,8 +1377,8 @@ class Messages
 
     /**
      * Format a message to show error when the orderby parser fails to
-     * create an instance of request uri resource type
-     * 
+     * create an instance of request uri resource type.
+     *
      * @return string The formatted message
      */
     public static function orderByParserFailedToCreateDummyObject()
@@ -1396,12 +1387,12 @@ class Messages
     }
 
     /**
-     * Format a message to show error when orderby parser failed to 
-     * access some of the properties of dummy object
-     * 
+     * Format a message to show error when orderby parser failed to
+     * access some of the properties of dummy object.
+     *
      * @param string $propertyName     Property name
      * @param string $parentObjectName Parent object name
-     * 
+     *
      * @return string The formatted message
      */
     public static function orderByParserFailedToAccessOrInitializeProperty($propertyName, $parentObjectName)
@@ -1411,11 +1402,11 @@ class Messages
 
     /**
      * Format a message to show error when data service failed to
-     * access some of the properties of dummy object
-     * 
+     * access some of the properties of dummy object.
+     *
      * @param string $propertyName     Property name
      * @param string $parentObjectName Parent object name
-     * 
+     *
      * @return string The formatted message
      */
     public static function failedToAccessProperty($propertyName, $parentObjectName)
@@ -1425,7 +1416,7 @@ class Messages
 
     /**
      * Message to show error when found empty anscestor list.
-     * 
+     *
      * @return string The message
      */
     public static function orderByLeafNodeArgumentShouldBeNonEmptyArray()
@@ -1434,11 +1425,11 @@ class Messages
     }
 
     /**
-     * Format a message to show error when found a invalid property name
-     * 
-     * @param string $resourceTypeName The name of the resource type 
+     * Format a message to show error when found a invalid property name.
+     *
+     * @param string $resourceTypeName The name of the resource type
      * @param string $propertyName     The name of the property
-     * 
+     *
      * @return string The formatted message
      */
     public static function badRequestInvalidPropertyNameSpecified($resourceTypeName, $propertyName)
@@ -1448,8 +1439,8 @@ class Messages
 
     /**
      * Message to show error when parameter collection to
-     * AnonymousFunction constructor includes parameter that does not start with '$'
-     * 
+     * AnonymousFunction constructor includes parameter that does not start with '$'.
+     *
      * @return string The message
      */
     public static function anonymousFunctionParameterShouldStartWithDollarSymbol()
@@ -1460,20 +1451,20 @@ class Messages
     /**
      * Format a message to show error when skiptoken parser fails
      * to parse due to syntax error.
-     * 
+     *
      * @param string $skipToken Skip token
-     * 
+     *
      * @return string The formatted message
      */
     public static function skipTokenParserSyntaxError($skipToken)
     {
-        return "Bad Request - Error in the syntax of skiptoken '$skipToken'";        
+        return "Bad Request - Error in the syntax of skiptoken '$skipToken'";
     }
 
     /**
      * Message to show error when orderByInfo argument to SkipTokenParser is
-     * non null and not an instance of OrderByInfo
-     * 
+     * non null and not an instance of OrderByInfo.
+     *
      * @return string The message
      */
     public static function skipTokenParserUnexpectedTypeOfOrderByInfoArg()
@@ -1482,13 +1473,13 @@ class Messages
     }
 
     /**
-     * Format a message to show error when number of keys in the 
+     * Format a message to show error when number of keys in the
      * skiptoken does not matches with the number of keys required for ordering.
-     * 
+     *
      * @param int    $skipTokenValuesCount Number of keys in the skiptoken
      * @param string $skipToken            The skiptoken as string
      * @param int    $expectedCount        Expected number of skiptoken keys
-     * 
+     *
      * @return string The formatted message
      */
     public static function skipTokenParserSkipTokenNotMatchingOrdering($skipTokenValuesCount, $skipToken, $expectedCount)
@@ -1497,29 +1488,29 @@ class Messages
     }
 
     /**
-     * Format a message to show error when skiptoken parser 
-     * found null value for key. 
-     * 
+     * Format a message to show error when skiptoken parser
+     * found null value for key.
+     *
      * @param string $skipToken The skiptoken as string
-     * 
+     *
      * @return string The formatted message
      */
     public static function skipTokenParserNullNotAllowedForKeys($skipToken)
     {
-        return "The skiptoken value $skipToken contain null value for key";        
+        return "The skiptoken value $skipToken contain null value for key";
     }
 
     /**
      * Format a message to show error when skiptoken parser found values in
      * skiptoken which is not compatible with the
      * type of corresponding orderby constraint.
-     * 
+     *
      * @param string $skipToken                   Skip token
      * @param string $expectedTypeName            Expected type name
      * @param int    $position                    Position
      * @param string $typeProvidedInSkipTokenName The type provided in
      *                                            skip token name
-     * 
+     *
      * @return string The formatted message
      */
     public static function skipTokenParserInCompatibleTypeAtPosition($skipToken, $expectedTypeName, $position, $typeProvidedInSkipTokenName)
@@ -1530,13 +1521,13 @@ class Messages
     /**
      * Format a message to show error when one of the argument orderByPaths or
      * orderByValues is set and not both.
-     * 
-     * @param string $orderByPathsVarName  Name of the argument 
+     *
+     * @param string $orderByPathsVarName  Name of the argument
      *                                     holding orderByPathSegment
-     * @param string $orderByValuesVarName Name of the argument holding 
-     *                                     skip token values corresponding 
+     * @param string $orderByValuesVarName Name of the argument holding
+     *                                     skip token values corresponding
      *                                     to orderby paths
-     * 
+     *
      * @return string The formatted message
      */
     public static function skipTokenInfoBothOrderByPathAndOrderByValuesShouldBeSetOrNotSet($orderByPathsVarName, $orderByValuesVarName)
@@ -1545,11 +1536,11 @@ class Messages
     }
 
     /**
-     * Format a message to show error when internalSkipTokenInfo failed to 
-     * access some of the properties of key object
+     * Format a message to show error when internalSkipTokenInfo failed to
+     * access some of the properties of key object.
      *
      * @param string $propertyName Property name
-     * 
+     *
      * @return string The formatted message
      */
     public static function internalSkipTokenInfoFailedToAccessOrInitializeProperty($propertyName)
@@ -1558,11 +1549,11 @@ class Messages
     }
 
     /**
-     * Format a message to show error when found a non-array passed to 
+     * Format a message to show error when found a non-array passed to
      * InternalSkipTokenInfo::search function.
-     * 
+     *
      * @param string $argumentName The name of the argument expected to be array
-     * 
+     *
      * @return string The formatted message
      */
     public static function internalSkipTokenInfoBinarySearchRequireArray($argumentName)
@@ -1571,13 +1562,13 @@ class Messages
     }
 
     /**
-     * Format a message to show error when client requested version is 
+     * Format a message to show error when client requested version is
      * lower than the version required to intercept the response.
-     * 
-     * @param string $requestedVersion The client requested version.
-     * @param string $requiredVersion  The minimum version required to 
-     *                                 intercept the response.
-     * 
+     *
+     * @param string $requestedVersion The client requested version
+     * @param string $requiredVersion  The minimum version required to
+     *                                 intercept the response
+     *
      * @return string The formatted message
      */
     public static function requestVersionTooLow($requestedVersion, $requiredVersion)
@@ -1586,12 +1577,12 @@ class Messages
     }
 
     /**
-     * Format a message to show error when version required to intercept 
+     * Format a message to show error when version required to intercept
      * the response is greater than the configured maximum protocol version.
      *
      * @param string $requiredVersion   Required version
      * @param string $configuredVersion Configured version
-     * 
+     *
      * @return string The formatted message
      */
     public static function requestVersionIsBiggerThanProtocolVersion($requiredVersion, $configuredVersion)
@@ -1600,12 +1591,12 @@ class Messages
     }
 
     /**
-     * Format a message to show error when value of DataServiceVersion or 
+     * Format a message to show error when value of DataServiceVersion or
      * MaxDataServiceVersion is invalid.
-     * 
+     *
      * @param string $versionAsString String value of the version
      * @param string $headerName      Header name
-     * 
+     *
      * @return string The formatted message
      */
     public static function requestDescriptionInvalidVersionHeader($versionAsString, $headerName)
@@ -1616,25 +1607,25 @@ class Messages
     /**
      * Format a message to show error when value of DataServiceVersion or
      * MaxDataServiceVersion is invalid.
-     * 
+     *
      * @param string $requestHeaderName Name of the request header
      * @param string $requestedVersion  Requested version
      * @param string $availableVersions Available versions
-     * 
+     *
      * @return string The formatted message
      */
-    public static function requestDescriptionUnSupportedVersion($requestHeaderName, $requestedVersion, $availableVersions) 
+    public static function requestDescriptionUnSupportedVersion($requestHeaderName, $requestedVersion, $availableVersions)
     {
         return "The version value $requestedVersion in the header $requestHeaderName is not supported, available versions are $availableVersions";
     }
 
     /**
-     * Format a message to show error when the requested uri is not 
+     * Format a message to show error when the requested uri is not
      * based on the configured base service uri.
-     * 
-     * @param string $requestUri The uri requested by the client.
-     * @param string $serviceUri The base service uri.
-     * 
+     *
+     * @param string $requestUri The uri requested by the client
+     * @param string $serviceUri The base service uri
+     *
      * @return string The formatted message
      */
     public static function uriProcessorRequestUriDoesNotHaveTheRightBaseUri($requestUri, $serviceUri)
@@ -1643,9 +1634,9 @@ class Messages
     }
 
     /**
-     * Message to show error when query prcocessor found 
+     * Message to show error when query prcocessor found
      * invalid value for $format option.
-     * 
+     *
      * @return string The message
      */
     public static function queryProcessorInvalidValueForFormat()
@@ -1654,10 +1645,10 @@ class Messages
     }
 
     /**
-     * Message to show error when query processor found odata query option 
+     * Message to show error when query processor found odata query option
      * in the request uri which is not applicable for the
-     * resource targeted by the resource path.  
-     * 
+     * resource targeted by the resource path.
+     *
      * @return string The message
      */
     public static function queryProcessorNoQueryOptionsApplicable()
@@ -1666,10 +1657,10 @@ class Messages
     }
 
     /**
-     * Message to show error when query processor found $filter option in the 
-     * request uri but is not applicable for the resource targeted by the 
+     * Message to show error when query processor found $filter option in the
+     * request uri but is not applicable for the resource targeted by the
      * resource path.
-     * 
+     *
      * @return string The message
      */
     public static function queryProcessorQueryFilterOptionNotApplicable()
@@ -1678,10 +1669,10 @@ class Messages
     }
 
     /**
-     * Message to show error when query processor found any $orderby, 
-     * $inlinecount, $skip or $top options in the request uri but is not 
+     * Message to show error when query processor found any $orderby,
+     * $inlinecount, $skip or $top options in the request uri but is not
      * applicable for the resource targeted by the resource path.
-     * 
+     *
      * @return string The message
      */
     public static function queryProcessorQuerySetOptionsNotApplicable()
@@ -1690,10 +1681,10 @@ class Messages
     }
 
     /**
-     * Message to show error when query processor found skiptoken option in the 
-     * request uri but is not applicable for the resource targeted by the 
+     * Message to show error when query processor found skiptoken option in the
+     * request uri but is not applicable for the resource targeted by the
      * resource path.
-     * 
+     *
      * @return string The message
      */
     public static function queryProcessorSkipTokenNotAllowed()
@@ -1702,10 +1693,10 @@ class Messages
     }
 
     /**
-     * Message to show error when query processor found $expand option in the 
-     * request uri but is not applicable for the resource targeted by the 
+     * Message to show error when query processor found $expand option in the
+     * request uri but is not applicable for the resource targeted by the
      * resource path.
-     * 
+     *
      * @return string The message
      */
     public static function queryProcessorQueryExpandOptionNotApplicable()
@@ -1715,8 +1706,8 @@ class Messages
 
     /**
      * Message to show error when query processor found usage of $inline count
-     * option for a resource path ending with $count
-     * 
+     * option for a resource path ending with $count.
+     *
      * @return string The message
      */
     public static function queryProcessorInlineCountWithValueCount()
@@ -1726,7 +1717,7 @@ class Messages
 
     /**
      * Message to show error when value of $inlinecount option found invalid.
-     * 
+     *
      * @return string The message
      */
     public static function queryProcessorInvalidInlineCountOptionError()
@@ -1735,12 +1726,12 @@ class Messages
     }
 
     /**
-     * Format a message to show error when query processor found invalid 
+     * Format a message to show error when query processor found invalid
      * value for a query option.
-     * 
+     *
      * @param string $argName  The name of the argument
      * @param string $argValue The value of the argument
-     * 
+     *
      * @return string The formatted message
      */
     public static function queryProcessorIncorrectArgumentFormat($argName, $argValue)
@@ -1752,9 +1743,9 @@ class Messages
      * Format a message to show error when query processor found $skiptoken
      * in the request uri targetting to a resource for which paging is not
      * enabled.
-     * 
-     * @param string $resourceSetName The name of the resource set.
-     * 
+     *
+     * @param string $resourceSetName The name of the resource set
+     *
      * @return string The formatted message
      */
     public static function queryProcessorSkipTokenCannotBeAppliedForNonPagedResourceSet($resourceSetName)
@@ -1762,13 +1753,13 @@ class Messages
         return "\$skiptoken cannot be applied to the resource set '$resourceSetName', since paging is not enabled for this resource set";
     }
 
-    /**     
+    /**
      * Format a message to show error when query processor found $select
      * or $expand which cannot be applied to resource targeted by the
      * request uri.
-     * 
+     *
      * @param string $queryItem Query item
-     * 
+     *
      * @return string The formatted message
      */
     public static function queryProcessorSelectOrExpandOptionNotApplicable($queryItem)
@@ -1779,7 +1770,7 @@ class Messages
     /**
      * Message to show error when query processor found $select clause but which is
      * disabled by the service developer.
-     * 
+     *
      * @return string The message
      */
     public static function configurationProjectionsNotAccepted()
@@ -1787,10 +1778,9 @@ class Messages
         return 'The ability to use the $select query option to define a projection in a data service query is disabled. To enable this functionality, call ServiceConfiguration::setAcceptProjectionRequests method with argument as true.';
     }
 
-
     /**
      * Message to show error service implementation returns null for IMetadataProvider or IQueryProvider.
-     * 
+     *
      * @return string The message
      */
     public static function providersWrapperNull()
@@ -1800,7 +1790,7 @@ class Messages
 
     /**
      * Message to show when service implementation does not provide a valid IMetadataProvider.
-     * 
+     *
      * @return string The message
      */
     public static function invalidMetadataInstance()
@@ -1811,7 +1801,7 @@ class Messages
     /**
      * Message to show when service implementation does not provide a valid IQueryProvider.
      *
-     * 
+     *
      * @return string The message
      */
     public static function invalidQueryInstance()
@@ -1821,7 +1811,7 @@ class Messages
 
     /**
      * Message to show error when IStreamProvider.GetStreamETag returns invalid etag value.
-     * 
+     *
      * @return string The message
      */
     public static function streamProviderWrapperGetStreamETagReturnedInvalidETagFormat()
@@ -1831,7 +1821,7 @@ class Messages
 
     /**
      * Message to show error when IStreamProvider.GetStreamContentType returns null or empty string.
-     * 
+     *
      * @return string The message
      */
     public static function streamProviderWrapperGetStreamContentTypeReturnsEmptyOrNull()
@@ -1841,7 +1831,7 @@ class Messages
 
     /**
      * Message to show error when IStreamProvider.GetReadStream non stream.
-     * 
+     *
      * @return string The message
      */
     public static function streamProviderWrapperInvalidStreamFromGetReadStream()
@@ -1851,7 +1841,7 @@ class Messages
 
     /**
      * Message to show error when IStreamProvider.GetReadStreamUri returns relative uri.
-     * 
+     *
      * @return string The message
      */
     public static function streamProviderWrapperGetReadStreamUriMustReturnAbsoluteUriOrNull()
@@ -1861,7 +1851,7 @@ class Messages
 
     /**
      * Message to show error when data service does not implement IDSSP or IDSSP2 interfaces.
-     * 
+     *
      * @return string The message
      */
     public static function streamProviderWrapperMustImplementIStreamProviderToSupportStreaming()
@@ -1871,7 +1861,7 @@ class Messages
 
     /**
      * Message to show error when try to configure data service version as 2 for which named stream is defined.
-     * 
+     *
      * @return string The message
      */
     public static function streamProviderWrapperMaxProtocolVersionMustBeV3OrAboveToSupportNamedStreams()
@@ -1881,7 +1871,7 @@ class Messages
 
     /**
      * Message to show error when data service does not provide implementation of IDDSP2 for which named stream is defined.
-     * 
+     *
      * @return string The message
      */
     public static function streamProviderWrapperMustImplementStreamProvider2ToSupportNamedStreams()
@@ -1891,9 +1881,9 @@ class Messages
 
     /**
      * Message to show error when IDSSP/IDSSP2 implementation methods try to set etag or content type.
-     * 
+     *
      * @param string $methodName Method name
-     * 
+     *
      * @return string The formatted message
      */
     public static function streamProviderWrapperMustNotSetContentTypeAndEtag($methodName)
@@ -1902,9 +1892,9 @@ class Messages
     }
 
     /**
-     * Message to show error when IServiceProvider.GetService implementation returns invaild object when request for 
+     * Message to show error when IServiceProvider.GetService implementation returns invaild object when request for
      * IStreamProvider implementation.
-     * 
+     *
      * @return string The message
      */
     public static function streamProviderWrapperInvalidStreamInstance()
@@ -1913,9 +1903,9 @@ class Messages
     }
 
     /**
-     * Message to show error when IServiceProvider.GetService implementation returns invaild object when request for 
+     * Message to show error when IServiceProvider.GetService implementation returns invaild object when request for
      * IStreamProvider2 implementation.
-     * 
+     *
      * @return string The message
      */
     public static function streamProviderWrapperInvalidStream2Instance()
@@ -1928,9 +1918,9 @@ class Messages
      * in-inconsistency in resource type and current runtime information.
      *
      * @param string $typeName The name of the resource type for which
-     * serializer found inconsistency.
-     * 
-     * @return string The formatted message.
+     *                         serializer found inconsistency
+     *
+     * @return string The formatted message
      */
     public static function badProviderInconsistentEntityOrComplexTypeUsage($typeName)
     {
@@ -1939,13 +1929,13 @@ class Messages
 
     /**
      * Format a message to show error when object model serializer
-     * found null key value. 
-     * 
+     * found null key value.
+     *
      * @param string $resourceTypeName The name of the resource type of the
-     *                                 instance with null key. 
-     * @param string $keyName          Name of the key with null value.
-     * 
-     * @return string The formatted message.
+     *                                 instance with null key
+     * @param string $keyName          Name of the key with null value
+     *
+     * @return string The formatted message
      */
     public static function badQueryNullKeysAreNotSupported($resourceTypeName, $keyName)
     {
@@ -1955,10 +1945,10 @@ class Messages
     /**
      * Format a message to show error when object model serializer failed to
      * access some of the properties of a type instance.
-     * 
-     * @param string $propertyName     The name of the property in question.
-     * @param string $parentObjectName The entity instance in question.
-     * 
+     *
+     * @param string $propertyName     The name of the property in question
+     * @param string $parentObjectName The entity instance in question
+     *
      * @return string The formatted message
      */
     public static function objectModelSerializerFailedToAccessProperty($propertyName, $parentObjectName)
@@ -1969,20 +1959,20 @@ class Messages
     /**
      * Format a message to show error when object model serializer found loop
      * a in complex property instance.
-     * 
-     * @param string $complexPropertyName The name of the complex property with loop.
-     * 
+     *
+     * @param string $complexPropertyName The name of the complex property with loop
+     *
      * @return string The formatted message
      */
     public static function objectModelSerializerLoopsNotAllowedInComplexTypes($complexPropertyName)
     {
-        return 'A circular loop was detected while serializing the property \'' . $complexPropertyName . '\'. You must make sure that loops are not present in properties that return a bag or complex type.';
+        return 'A circular loop was detected while serializing the property \''.$complexPropertyName.'\'. You must make sure that loops are not present in properties that return a bag or complex type.';
     }
 
     /**
      * Message to show error when the requested resource instance
-     * cannot be serialized to requested format. 
-     * 
+     * cannot be serialized to requested format.
+     *
      * @return string The message
      */
     public static function unsupportedMediaType()
@@ -1992,7 +1982,7 @@ class Messages
 
     /**
      * Message to show error when media type header found malformed.
-     * 
+     *
      * @return string The message
      */
     public static function httpProcessUtilityMediaTypeRequiresSemicolonBeforeParameter()
@@ -2002,7 +1992,7 @@ class Messages
 
     /**
      * Message to show error when media header value misses type segment.
-     * 
+     *
      * @return string The message
      */
     public static function httpProcessUtilityMediaTypeUnspecified()
@@ -2012,7 +2002,7 @@ class Messages
 
     /**
      * Message to show error when media header value misses slash after type.
-     * 
+     *
      * @return string The message
      */
     public static function httpProcessUtilityMediaTypeRequiresSlash()
@@ -2022,17 +2012,17 @@ class Messages
 
     /**
      * Message to show error when media header value misses sub-type.
-     * 
+     *
      * @return string The message
      */
     public static function httpProcessUtilityMediaTypeRequiresSubType()
     {
-        return 'Media type requires a subtype definition.';        
+        return 'Media type requires a subtype definition.';
     }
 
     /**
      * Message to show error when media type misses parameter value.
-     * 
+     *
      * @return string The message
      */
     public static function httpProcessUtilityMediaTypeMissingValue()
@@ -2043,23 +2033,23 @@ class Messages
     /**
      * Format a message to show error when media type parameter value contain escape
      * character but the value is not quoted.
-     * 
+     *
      * @param string $parameterName Name of the parameter
-     * 
-     * @return string The formatted message.
+     *
+     * @return string The formatted message
      */
     public static function httpProcessUtilityEscapeCharWithoutQuotes($parameterName)
     {
         return "Value for MIME type parameter '$parameterName' is incorrect because it contained escape characters even though it was not quoted.";
-    } 
+    }
 
     /**
      * Format a message to show error when media type parameter value contain escape
      * character but the value at the end.
-     * 
+     *
      * @param string $parameterName Name of the parameter
-     * 
-     * @return string The formatted message.
+     *
+     * @return string The formatted message
      */
     public static function httpProcessUtilityEscapeCharAtEnd($parameterName)
     {
@@ -2069,10 +2059,10 @@ class Messages
     /**
      * Format a message to show error when media parameter
      * value misses closing bracket.
-     * 
+     *
      * @param string $parameterName Name of the parameter
-     * 
-     * @return string The formatted message.
+     *
+     * @return string The formatted message
      */
     public static function httpProcessUtilityClosingQuoteNotFound($parameterName)
     {
@@ -2080,9 +2070,9 @@ class Messages
     }
 
     /**
-     * Message to show error when the header found malformed. 
-     * 
-     * @return string The formatted message.
+     * Message to show error when the header found malformed.
+     *
+     * @return string The formatted message
      */
     public static function httpProcessUtilityMalformedHeaderValue()
     {
@@ -2092,53 +2082,53 @@ class Messages
     /**
      * Message to show error when request contains eTag headers
      * but targeted resource type does not have eTag properties defined.
-     * 
+     *
      * @return string The message
      */
     public static function noETagPropertiesForType()
     {
-        return 'If-Match or If-None-Match headers cannot be specified if the target type does not have etag properties defined.';        
+        return 'If-Match or If-None-Match headers cannot be specified if the target type does not have etag properties defined.';
     }
 
     /**
      * Message to show error when data service found the request eTag
      * does not match with entry eTag.
-     * 
+     *
      * @return string The message
      */
     public static function eTagValueDoesNotMatch()
     {
-        return 'The etag value in the request header does not match with the current etag value of the object.';        
+        return 'The etag value in the request header does not match with the current etag value of the object.';
     }
 
     /**
-     * Format a message to show error when request eTag header has been 
+     * Format a message to show error when request eTag header has been
      * specified but eTag is not allowed for the targeted resource.
-     * 
+     *
      * @param string $uri Url
-     * 
+     *
      * @return string The formatted message
      */
     public static function eTagCannotBeSpecified($uri)
     {
-        return "If-Match or If-None-Match HTTP headers cannot be specified since the URI '$uri' refers to a collection of resources or has a \$count or \$link segment or has a \$expand as one of the query parameters.";        
+        return "If-Match or If-None-Match HTTP headers cannot be specified since the URI '$uri' refers to a collection of resources or has a \$count or \$link segment or has a \$expand as one of the query parameters.";
     }
 
     /**
      * Message to show error when data service found presence of both
      * If-Match and if-None-Match headers.
-     * 
+     *
      * @return string The message
      */
     public static function bothIfMatchAndIfNoneMatchHeaderSpecified()
     {
-        return "Both If-Match and If-None-Match HTTP headers cannot be specified at the same time. Please specify either one of the headers or none of them.";        
+        return 'Both If-Match and If-None-Match HTTP headers cannot be specified at the same time. Please specify either one of the headers or none of them.';
     }
 
     /**
      * Message to show error when data service found eTag
-     * header for non-existing resource. 
-     * 
+     * header for non-existing resource.
+     *
      * @return string The message
      */
     public static function eTagNotAllowedForNonExistingResource()
@@ -2148,9 +2138,9 @@ class Messages
 
     /**
      * Message to show error when data service found a request method other than GET.
-     * 
+     *
      * @param HTTPRequestMethod $method Request method
-     * 
+     *
      * @return string The formatted message
      */
     public static function onlyReadSupport(HTTPRequestMethod $method)
@@ -2160,10 +2150,10 @@ class Messages
 
     /**
      * Format a message to show error when the uri for verb is wrong.
-     * 
-     * @param string $uri Url pointing to resource
+     *
+     * @param string $uri  Url pointing to resource
      * @param string $verb GET/POST/PUT/DELETE/PATCH/MERGE
-     * 
+     *
      * @return string The formatted message
      */
     public static function badRequestInvalidUriForThisVerb($uri, $verb)
@@ -2173,9 +2163,9 @@ class Messages
 
     /**
      * Format a message to show error when data for non-GET requests is empty.
-     * 
+     *
      * @param string $verb GET/POST/PUT/DELETE/PATCH/MERGE
-     * 
+     *
      * @return string The formatted message
      */
     public static function noDataForThisVerb($verb)
@@ -2184,11 +2174,11 @@ class Messages
     }
 
     /**
-     * Format a message to show error when the uri that look like pointing to 
+     * Format a message to show error when the uri that look like pointing to
      * MLE but actaully it is not.
-     * 
+     *
      * @param string $uri Url pointing to MLE
-     * 
+     *
      * @return string The formatted message
      */
     public static function badRequestInvalidUriForMediaResource($uri)
@@ -2199,10 +2189,10 @@ class Messages
     /**
      * Format a message to show error when library found non-odata
      * query option begins with $ character.
-     * 
+     *
      * @param string $optionName Name of the query option
-     * 
-     * @return string The formatted message.
+     *
+     * @return string The formatted message
      */
     public static function hostNonODataOptionBeginsWithSystemCharacter($optionName)
     {
@@ -2210,12 +2200,12 @@ class Messages
     }
 
     /**
-     * Format a message to show error when library found 
-     * a query option without value. 
-     * 
+     * Format a message to show error when library found
+     * a query option without value.
+     *
      * @param string $optionName Name of the query option
-     * 
-     * @return string The formatted message.
+     *
+     * @return string The formatted message
      */
     public static function hostODataQueryOptionFoundWithoutValue($optionName)
     {
@@ -2223,12 +2213,12 @@ class Messages
     }
 
     /**
-     * Format a message to show error when library found 
-     * a query option specified multiple times. 
-     * 
+     * Format a message to show error when library found
+     * a query option specified multiple times.
+     *
      * @param string $optionName Name of the query option
-     * 
-     * @return string The formatted message.
+     *
+     * @return string The formatted message
      */
     public static function hostODataQueryOptionCannotBeSpecifiedMoreThanOnce($optionName)
     {
@@ -2237,10 +2227,10 @@ class Messages
 
     /**
      * Message to show error when baseUrl given in service.config.xml is invalid.
-     * 
-     * @param boolean $notEndWithSvcOrHasQuery Base url end with svc or not
-     * 
-     * @return string The message.
+     *
+     * @param bool $notEndWithSvcOrHasQuery Base url end with svc or not
+     *
+     * @return string The message
      */
     public static function hostMalFormedBaseUriInConfig($notEndWithSvcOrHasQuery = false)
     {
@@ -2252,19 +2242,16 @@ class Messages
     }
 
     /**
-     * Format a message to show error when request uri is not 
+     * Format a message to show error when request uri is not
      * based on configured relative uri.
-     * 
-     * @param string $requestUri  The request uri.
-     * @param string $relativeUri The relative uri in service.config.xml.
-     * 
-     * @return string The formatted message.
+     *
+     * @param string $requestUri  The request uri
+     * @param string $relativeUri The relative uri in service.config.xml
+     *
+     * @return string The formatted message
      */
     public static function hostRequestUriIsNotBasedOnRelativeUriInConfig($requestUri, $relativeUri)
     {
-        return 'The request uri ' . $requestUri . ' is not valid as it is not based on the configured relative uri ' . $relativeUri;
+        return 'The request uri '.$requestUri.' is not valid as it is not based on the configured relative uri '.$relativeUri;
     }
-
-
-
 }

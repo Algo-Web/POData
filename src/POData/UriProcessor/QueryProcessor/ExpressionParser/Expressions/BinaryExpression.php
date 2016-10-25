@@ -3,11 +3,9 @@
 namespace POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions;
 
 /**
- * Class BinaryExpression
+ * Class BinaryExpression.
  *
  * Abstract base class for binary expressions (arithmetic, logical or relational)
- *
- * @package POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions
  */
 abstract class BinaryExpression extends AbstractExpression
 {
@@ -15,7 +13,7 @@ abstract class BinaryExpression extends AbstractExpression
      * @var AbstractExpression
      */
     protected $left;
-    
+
     /**
      * @var AbstractExpression
      */
@@ -23,7 +21,7 @@ abstract class BinaryExpression extends AbstractExpression
 
     /**
      * Create new inatnce of BinaryExpression.
-     * 
+     *
      * @param AbstractExpression $left  The left expression
      * @param AbstractExpression $right The right expression
      */
@@ -34,8 +32,8 @@ abstract class BinaryExpression extends AbstractExpression
     }
 
     /**
-     * Get left operand (expression) of binary expression
-     * 
+     * Get left operand (expression) of binary expression.
+     *
      * @return AbstractExpression
      */
     public function getLeft()
@@ -44,8 +42,8 @@ abstract class BinaryExpression extends AbstractExpression
     }
 
     /**
-     * Get right operand (expression) of binary expression
-     * 
+     * Get right operand (expression) of binary expression.
+     *
      * @return AbstractExpression
      */
     public function getRight()
@@ -54,11 +52,9 @@ abstract class BinaryExpression extends AbstractExpression
     }
 
     /**
-     * Set left operand (expression) of binary expression
-     * 
+     * Set left operand (expression) of binary expression.
+     *
      * @param AbstractExpression $expression Expression to set as left operand
-     * 
-     * @return void
      */
     public function setLeft($expression)
     {
@@ -66,11 +62,9 @@ abstract class BinaryExpression extends AbstractExpression
     }
 
     /**
-     * Set right operand (expression) of binary expression
-     * 
+     * Set right operand (expression) of binary expression.
+     *
      * @param AbstractExpression $expression Expression to set as right operand
-     * 
-     * @return void
      */
     public function setRight($expression)
     {
@@ -78,11 +72,9 @@ abstract class BinaryExpression extends AbstractExpression
     }
 
     /**
-     * (non-PHPdoc)
-     * 
+     * (non-PHPdoc).
+     *
      * @see library/POData/QueryProcessor/ExpressionParser/Expressions.AbstractExpression::free()
-     * 
-     * @return void
      */
     public function free()
     {

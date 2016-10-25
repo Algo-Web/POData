@@ -10,7 +10,7 @@ use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
 
 /**
- * Class SkipTokenParser
+ * Class SkipTokenParser.
  *
  * A parser to parse the skiptoken option
  *
@@ -23,33 +23,31 @@ use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
  * keyCount              : One less than the number of keys defined for the type
  *                         of the resource set identified by the Resource Path
  *                         section of the URI
- *
- * @package POData\UriProcessor\QueryProcessor\SkipTokenParser
  */
 class SkipTokenParser
 {
     /**
-     * Parse the given skiptoken, validate it using the given InternalOrderByInfo 
+     * Parse the given skiptoken, validate it using the given InternalOrderByInfo
      * and generates instance of InternalSkipTokenInfo.
-     * 
+     *
      * @param ResourceType        &$resourceType        The resource type of the
      *                                                  resource targeted by the
-     *                                                  resource path.
-     * @param InternalOrderByInfo &$internalOrderByInfo The $orderby details.
-     * @param string              $skipToken            The $skiptoken value.
-     * 
+     *                                                  resource path
+     * @param InternalOrderByInfo &$internalOrderByInfo The $orderby details
+     * @param string              $skipToken            The $skiptoken value
+     *
      * @return InternalSkipTokenInfo
-     * 
+     *
      * @throws ODataException
      */
     public static function parseSkipTokenClause(
-        ResourceType & $resourceType, 
-        InternalOrderByInfo & $internalOrderByInfo, 
+        ResourceType &$resourceType,
+        InternalOrderByInfo &$internalOrderByInfo,
         $skipToken
     ) {
         $tokenValueDescriptor = null;
         if (!KeyDescriptor::tryParseValuesFromSkipToken(
-            $skipToken, 
+            $skipToken,
             $tokenValueDescriptor
         )
         ) {
@@ -65,7 +63,7 @@ class SkipTokenParser
         $orderByPathSegments = $internalOrderByInfo->getOrderByPathSegments();
         $orderByPathCount = count($orderByPathSegments);
         if ($count != ($orderByPathCount)) {
-                throw ODataException::createBadRequestError(
+            throw ODataException::createBadRequestError(
                     Messages::skipTokenParserSkipTokenNotMatchingOrdering(
                         $count, $skipToken, $orderByPathCount
                     )
@@ -89,12 +87,12 @@ class SkipTokenParser
                 }
             }
 
-            $i++;
+            ++$i;
         }
 
         return  new InternalSkipTokenInfo(
-            $internalOrderByInfo, 
-            $positionalValues, 
+            $internalOrderByInfo,
+            $positionalValues,
             $resourceType
         );
     }

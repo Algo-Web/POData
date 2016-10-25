@@ -12,24 +12,26 @@ use POData\Common\Messages;
  * A relationship (described using ResourceAssociationType) composed of two ends
  * (described using ResourceAssociationTypeEnd).
  * s
- * @package POData\Providers\Metadata
  */
 class ResourceAssociationTypeEnd
 {
     /**
-     * Name of the association end
+     * Name of the association end.
+     *
      * @var string
      */
     private $_name;
-    
+
     /**
-     * Type of the entity in the relationship end
+     * Type of the entity in the relationship end.
+     *
      * @var ResourceType
      */
     private $_resourceType;
 
     /**
-     * Entity property involved in the relationship end
+     * Entity property involved in the relationship end.
+     *
      * @var ResourceProperty
      */
     private $_resourceProperty;
@@ -37,26 +39,27 @@ class ResourceAssociationTypeEnd
     /**
      * Property of the entity involved in the relationship end points to this end.
      * The multiplicity of this end is determined from the fromProperty.
+     *
      * @var ResourceProperty
      */
     private $_fromProperty;
-    
+
     /**
-     * Construct new instance of ResourceAssociationTypeEnd
-     * 
+     * Construct new instance of ResourceAssociationTypeEnd.
+     *
      * @param string                $name             name of the end
-     * @param ResourceType          $resourceType     resource type that the end 
+     * @param ResourceType          $resourceType     resource type that the end
      *                                                refers to
-     * @param ResourceProperty|null $resourceProperty property of the end, can be 
-     *                                                NULL if relationship is 
+     * @param ResourceProperty|null $resourceProperty property of the end, can be
+     *                                                NULL if relationship is
      *                                                uni-directional
-     * @param ResourceProperty|null $fromProperty     Property on the related end 
-     *                                                that points to this end, can 
-     *                                                be NULL if relationship is 
+     * @param ResourceProperty|null $fromProperty     Property on the related end
+     *                                                that points to this end, can
+     *                                                be NULL if relationship is
      *                                                uni-directional
      */
-    public function __construct($name, ResourceType $resourceType, 
-        $resourceProperty, 
+    public function __construct($name, ResourceType $resourceType,
+        $resourceProperty,
         $fromProperty
     ) {
         if (is_null($resourceProperty) && is_null($fromProperty)) {
@@ -65,7 +68,7 @@ class ResourceAssociationTypeEnd
             );
         }
 
-        if (!is_null($fromProperty) 
+        if (!is_null($fromProperty)
             && !($fromProperty instanceof ResourceProperty)
         ) {
             throw new \InvalidArgumentException(
@@ -75,7 +78,7 @@ class ResourceAssociationTypeEnd
             );
         }
 
-        if (!is_null($resourceProperty) 
+        if (!is_null($resourceProperty)
             && !($resourceProperty instanceof ResourceProperty)
         ) {
             throw new \InvalidArgumentException(
@@ -84,7 +87,7 @@ class ResourceAssociationTypeEnd
                 )
             );
         }
-        
+
         $this->_name = $name;
         $this->_resourceType = $resourceType;
         $this->_resourceProperty = $resourceProperty;
@@ -92,14 +95,14 @@ class ResourceAssociationTypeEnd
     }
 
     /**
-     * To check this relationship belongs to a specfic entity property
-     *  
+     * To check this relationship belongs to a specfic entity property.
+     *
      * @param ResourceType          $resourceType     The type of the entity
      * @param ResourceProperty|null $resourceProperty The property in the entity
-     * 
-     * @return boolean
+     *
+     * @return bool
      */
-    public function isBelongsTo(ResourceType $resourceType, $resourceProperty) 
+    public function isBelongsTo(ResourceType $resourceType, $resourceProperty)
     {
         $flag1 = is_null($resourceProperty);
         $flag2 = is_null($this->_resourceProperty);
@@ -109,7 +112,7 @@ class ResourceAssociationTypeEnd
 
         if ($flag1 === true) {
             return strcmp(
-                $resourceType->getFullName(), 
+                $resourceType->getFullName(),
                 $this->_resourceType->getFullName()
             ) == 0;
         }
@@ -123,8 +126,8 @@ class ResourceAssociationTypeEnd
     }
 
     /**
-     * Get the name of the end
-     * 
+     * Get the name of the end.
+     *
      * @return string
      */
     public function getName()
@@ -133,8 +136,8 @@ class ResourceAssociationTypeEnd
     }
 
     /**
-     * Get the resource type that the end refers to
-     * 
+     * Get the resource type that the end refers to.
+     *
      * @return ResourceType
      */
     public function getResourceType()
@@ -143,8 +146,8 @@ class ResourceAssociationTypeEnd
     }
 
     /**
-     * Get the property of the end
-     * 
+     * Get the property of the end.
+     *
      * @return ResourceProperty
      */
     public function getResourceProperty()
@@ -153,18 +156,18 @@ class ResourceAssociationTypeEnd
     }
 
     /**
-     * Get the Multiplicity of the relationship end
-     * 
+     * Get the Multiplicity of the relationship end.
+     *
      * @return string
      */
     public function getMultiplicity()
     {
-        if (!is_null($this->_fromProperty) 
+        if (!is_null($this->_fromProperty)
             && $this->_fromProperty->getKind() == ResourcePropertyKind::RESOURCE_REFERENCE
         ) {
             return ODataConstants::ZERO_OR_ONE;
         }
-        
+
         return ODataConstants::MANY;
     }
 }

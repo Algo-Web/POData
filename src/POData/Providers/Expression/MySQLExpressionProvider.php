@@ -2,39 +2,37 @@
 
 namespace POData\Providers\Expression;
 
-
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ExpressionType;
 use POData\Providers\Metadata\Type\IType;
 use POData\Common\ODataConstants;
-use POData\Providers\Expression\IExpressionProvider;
 use POData\Providers\Metadata\ResourceType;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\PropertyAccessExpression;
 use POData\UriProcessor\QueryProcessor\FunctionDescription;
 
 class MySQLExpressionProvider implements IExpressionProvider
 {
-    const ADD                   = '+';
-    const CLOSE_BRACKET         = ')';
-    const COMMA                 = ',';
-    const DIVIDE                = '/';
-    const SUBTRACT              = '-';
-    const EQUAL                 = '=';
-    const GREATER_THAN          = '>';
+    const ADD = '+';
+    const CLOSE_BRACKET = ')';
+    const COMMA = ',';
+    const DIVIDE = '/';
+    const SUBTRACT = '-';
+    const EQUAL = '=';
+    const GREATER_THAN = '>';
     const GREATER_THAN_OR_EQUAL = '>=';
-    const LESS_THAN             = '<';
-    const LESS_THAN_OR_EQUAL    = '<=';
-    const LOGICAL_AND           = '&&';
-    const LOGICAL_NOT           = '!';
-    const LOGICAL_OR            = '||';
-    const MEMBER_ACCESS         = '';
-    const MODULO                = '%';
-    const MULTIPLY              = '*';
-    const NEGATE                = '-';
-    const NOT_EQUAL             = '!=';
+    const LESS_THAN = '<';
+    const LESS_THAN_OR_EQUAL = '<=';
+    const LOGICAL_AND = '&&';
+    const LOGICAL_NOT = '!';
+    const LOGICAL_OR = '||';
+    const MEMBER_ACCESS = '';
+    const MODULO = '%';
+    const MULTIPLY = '*';
+    const NEGATE = '-';
+    const NOT_EQUAL = '!=';
     const OPEN_BRACKET = '(';
-    
+
     /**
-     * The type of the resource pointed by the resource path segment
+     * The type of the resource pointed by the resource path segment.
      *
      * @var ResourceType
      */
@@ -43,18 +41,16 @@ class MySQLExpressionProvider implements IExpressionProvider
     private $entityMapping;
 
     /**
-     * Constructs new instance of MySQLExpressionProvider
-     *    
+     * Constructs new instance of MySQLExpressionProvider.
      */
     public function __construct()
     {
         $this->entityMapping = array();
     }
 
-
     /**
-     * Get the name of the iterator
-     * 
+     * Get the name of the iterator.
+     *
      * @return string
      */
     public function getIteratorName()
@@ -65,8 +61,7 @@ class MySQLExpressionProvider implements IExpressionProvider
     /**
      * call-back for setting the resource type.
      *
-     * @param ResourceType $resourceType The resource type on which the filter is going to be applied.
-     *
+     * @param ResourceType $resourceType The resource type on which the filter is going to be applied
      */
     public function setResourceType(ResourceType $resourceType)
     {
@@ -74,17 +69,17 @@ class MySQLExpressionProvider implements IExpressionProvider
     }
 
     /**
-     * Call-back for logical expression
-     * 
-     * @param ExpressionType $expressionType The type of logical expression.
-     * @param string         $left           The left expression.
-     * @param string         $right          The left expression.
-     * 
+     * Call-back for logical expression.
+     *
+     * @param ExpressionType $expressionType The type of logical expression
+     * @param string         $left           The left expression
+     * @param string         $right          The left expression
+     *
      * @return string
      */
     public function onLogicalExpression($expressionType, $left, $right)
     {
-        switch($expressionType) {
+        switch ($expressionType) {
             case ExpressionType::AND_LOGICAL:
                 return $this->_prepareBinaryExpression(self::LOGICAL_AND, $left, $right);
 
@@ -97,17 +92,17 @@ class MySQLExpressionProvider implements IExpressionProvider
     }
 
     /**
-     * Call-back for arithmetic expression
-     * 
-     * @param ExpressionType $expressionType The type of arithmetic expression.
-     * @param string         $left           The left expression.
-     * @param string         $right          The left expression.
-     * 
+     * Call-back for arithmetic expression.
+     *
+     * @param ExpressionType $expressionType The type of arithmetic expression
+     * @param string         $left           The left expression
+     * @param string         $right          The left expression
+     *
      * @return string
      */
     public function onArithmeticExpression($expressionType, $left, $right)
     {
-        switch($expressionType) {
+        switch ($expressionType) {
             case ExpressionType::MULTIPLY:
                 return $this->_prepareBinaryExpression(self::MULTIPLY, $left, $right);
 
@@ -129,17 +124,17 @@ class MySQLExpressionProvider implements IExpressionProvider
     }
 
     /**
-     * Call-back for relational expression
-     * 
+     * Call-back for relational expression.
+     *
      * @param ExpressionType $expressionType The type of relation expression
      * @param string         $left           The left expression
      * @param string         $right          The left expression
-     * 
+     *
      * @return string
      */
     public function onRelationalExpression($expressionType, $left, $right)
     {
-        switch($expressionType) {
+        switch ($expressionType) {
             case ExpressionType::GREATERTHAN:
                 return $this->_prepareBinaryExpression(self::GREATER_THAN, $left, $right);
 
@@ -164,16 +159,16 @@ class MySQLExpressionProvider implements IExpressionProvider
     }
 
     /**
-     * Call-back for unary expression
-     * 
+     * Call-back for unary expression.
+     *
      * @param ExpressionType $expressionType The type of unary expression
      * @param string         $child          The child expression
-     * 
+     *
      * @return string
      */
     public function onUnaryExpression($expressionType, $child)
     {
-        switch($expressionType) {
+        switch ($expressionType) {
             case ExpressionType::NEGATE:
                 return $this->_prepareUnaryExpression(self::NEGATE, $child);
 
@@ -186,18 +181,18 @@ class MySQLExpressionProvider implements IExpressionProvider
     }
 
     /**
-     * Call-back for constant expression
-     * 
-     * @param IType  $type  The type of constant
+     * Call-back for constant expression.
+     *
+     * @param IType $type  The type of constant
      * @param mixed $value The value of the constant
-     * 
+     *
      * @return string
      */
     public function onConstantExpression(IType $type, $value)
     {
         if (is_bool($value)) {
             return var_export($value, true);
-        } else if (is_null($value)) {
+        } elseif (is_null($value)) {
             return var_export(null, true);
         }
 
@@ -205,13 +200,12 @@ class MySQLExpressionProvider implements IExpressionProvider
     }
 
     /**
-     * Call-back for property access expression
-     * 
+     * Call-back for property access expression.
+     *
      * @param PropertyAccessExpression $expression The property access expression
-     * 
+     *
      * @return string
      */
-
     public function onPropertyAccessExpression($expression)
     {
         $parent = $expression;
@@ -225,21 +219,21 @@ class MySQLExpressionProvider implements IExpressionProvider
                 }
             }
         }
-     
+
         return $propertyName;
     }
 
     /**
-     * Call-back for function call expression
-     * 
-     * @param FunctionDescription $functionDescription Description of the function.
-     * @param array<string>       $params              Paameters to the function.
-     * 
+     * Call-back for function call expression.
+     *
+     * @param FunctionDescription $functionDescription Description of the function
+     * @param array<string>       $params              Paameters to the function
+     *
      * @return string
      */
     public function onFunctionCallExpression($functionDescription, $params)
     {
-        switch($functionDescription->name) {
+        switch ($functionDescription->name) {
             case ODataConstants::STRFUN_COMPARE:
                 return "STRCMP($params[0], $params[1])";
 
@@ -285,22 +279,22 @@ class MySQLExpressionProvider implements IExpressionProvider
                 return "DATETIMECMP($params[0]; $params[1])";
 
             case ODataConstants::DATETIME_YEAR:
-                return "EXTRACT(YEAR from ".$params[0].")";
+                return 'EXTRACT(YEAR from '.$params[0].')';
 
             case ODataConstants::DATETIME_MONTH:
-                return "EXTRACT(MONTH from ".$params[0].")";
+                return 'EXTRACT(MONTH from '.$params[0].')';
 
             case ODataConstants::DATETIME_DAY:
-                return "EXTRACT(DAY from ".$params[0].")";
+                return 'EXTRACT(DAY from '.$params[0].')';
 
             case ODataConstants::DATETIME_HOUR:
-                return "EXTRACT(HOUR from ".$params[0].")";
+                return 'EXTRACT(HOUR from '.$params[0].')';
 
             case ODataConstants::DATETIME_MINUTE:
-                return "EXTRACT(MINUTE from ".$params[0].")";
+                return 'EXTRACT(MINUTE from '.$params[0].')';
 
             case ODataConstants::DATETIME_SECOND:
-                return "EXTRACT(SECOND from ".$params[0].")";
+                return 'EXTRACT(SECOND from '.$params[0].')';
 
             case ODataConstants::MATHFUN_ROUND:
                 return "ROUND($params[0])";
@@ -323,38 +317,39 @@ class MySQLExpressionProvider implements IExpressionProvider
     }
 
     /**
-     * To format binary expression
-     * 
-     * @param string $operator The binary operator.
-     * @param string $left     The left operand.
-     * @param string $right    The right operand.
-     * 
+     * To format binary expression.
+     *
+     * @param string $operator The binary operator
+     * @param string $left     The left operand
+     * @param string $right    The right operand
+     *
      * @return string
      */
     private function _prepareBinaryExpression($operator, $left, $right)
     {
         //DATETIMECMP
-        if (!substr_compare($left, "DATETIMECMP", 0, 11)) {
+        if (!substr_compare($left, 'DATETIMECMP', 0, 11)) {
             $str = explode(';', $left, 2);
             $str[0] = str_replace('DATETIMECMP', '', $str[0]);
+
             return self::OPEN_BRACKET
-                . $str[0] . ' ' . $operator
-                . ' ' . $str[1] . self::CLOSE_BRACKET;
+                .$str[0].' '.$operator
+                .' '.$str[1].self::CLOSE_BRACKET;
         }
 
-        return self::OPEN_BRACKET . $left . ' ' . $operator . ' ' . $right . self::CLOSE_BRACKET;
+        return self::OPEN_BRACKET.$left.' '.$operator.' '.$right.self::CLOSE_BRACKET;
     }
 
     /**
-     * To format unary expression
-     * 
-     * @param string $operator The unary operator.
-     * @param string $child    The operand.
-     * 
+     * To format unary expression.
+     *
+     * @param string $operator The unary operator
+     * @param string $child    The operand
+     *
      * @return string
      */
     private function _prepareUnaryExpression($operator, $child)
     {
-        return $operator . self::OPEN_BRACKET . $child . self::CLOSE_BRACKET;
+        return $operator.self::OPEN_BRACKET.$child.self::CLOSE_BRACKET;
     }
 }

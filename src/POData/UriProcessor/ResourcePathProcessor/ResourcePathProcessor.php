@@ -7,31 +7,29 @@ use POData\UriProcessor\ResourcePathProcessor\SegmentParser\SegmentParser;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
 use POData\UriProcessor\RequestDescription;
 use POData\IService;
-use POData\Common\Url;
 use POData\Common\ODataConstants;
 use POData\Common\Messages;
 use POData\Common\ODataException;
 use POData\OperationContext\HTTPRequestMethod;
 
-
 /**
- * Class ResourcePathProcessor
- * @package POData\UriProcessor\ResourcePathProcessor
+ * Class ResourcePathProcessor.
  */
 class ResourcePathProcessor
 {
     /**
      * Process the request Uri and creates an instance of
      * RequestDescription from the processed uri.
-     * 
-     * @param IService $service        Reference to the data service instance.
+     *
+     * @param IService $service Reference to the data service instance
      *
      * @return RequestDescription
-     * 
+     *
      * @throws ODataException If any exception occurs while processing the segments
-     *                        or in case of any version incompatibility.
+     *                        or in case of any version incompatibility
      */
-    public static function process(IService $service) {
+    public static function process(IService $service)
+    {
         $host = $service->getHost();
         $absoluteRequestUri = $host->getAbsoluteRequestUri();
         $absoluteServiceUri = $host->getAbsoluteServiceUri();
@@ -45,7 +43,6 @@ class ResourcePathProcessor
             $service->getProvidersWrapper(),
             true
         );
-
 
         $dataType = null;
         $operationContext = $service->getOperationContext();
@@ -62,11 +59,9 @@ class ResourcePathProcessor
         );
         $kind = $request->getTargetKind();
 
-        if ($kind == TargetKind::METADATA() || $kind == TargetKind::BATCH() || $kind == TargetKind::SERVICE_DIRECTORY()){
+        if ($kind == TargetKind::METADATA() || $kind == TargetKind::BATCH() || $kind == TargetKind::SERVICE_DIRECTORY()) {
             return $request;
         }
-
-
 
         if ($kind == TargetKind::PRIMITIVE_VALUE() || $kind == TargetKind::MEDIA_RESOURCE()) {
             // http://odata/NW.svc/Orders/$count
@@ -89,10 +84,9 @@ class ResourcePathProcessor
 
             $request->raiseResponseVersion(2, 0);
             $request->raiseMinVersionRequirement(2, 0);
-
-        } else if ($request->isNamedStream()) {
+        } elseif ($request->isNamedStream()) {
             $request->raiseMinVersionRequirement(3, 0);
-        } else if ($request->getTargetKind() == TargetKind::RESOURCE()) {
+        } elseif ($request->getTargetKind() == TargetKind::RESOURCE()) {
             if (!$request->isLinkUri()) {
                 $resourceSetWrapper = $request->getTargetResourceSetWrapper();
                 //assert($resourceSetWrapper != null)
@@ -104,12 +98,11 @@ class ResourcePathProcessor
                     $request->raiseResponseVersion(3, 0);
                 }
             }
-        } else if ($request->getTargetKind() == TargetKind::BAG()
+        } elseif ($request->getTargetKind() == TargetKind::BAG()
         ) {
             $request->raiseResponseVersion(3, 0);
         }
 
-
         return $request;
-    } 
+    }
 }

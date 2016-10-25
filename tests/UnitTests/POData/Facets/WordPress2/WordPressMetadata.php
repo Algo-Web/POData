@@ -2,26 +2,16 @@
 
 namespace UnitTests\POData\Facets\WordPress2;
 
-/** 
+/*
  * Implementation of IMetadataProvider.
  *
- * 
+ *
  */
 
-use POData\Providers\Metadata\ResourceStreamInfo;
-use POData\Providers\Metadata\ResourceAssociationSetEnd;
-use POData\Providers\Metadata\ResourceAssociationSet;
-use POData\Common\NotImplementedException;
 use POData\Providers\Metadata\Type\EdmPrimitiveType;
-use POData\Providers\Metadata\ResourceSet;
-use POData\Providers\Metadata\ResourcePropertyKind;
-use POData\Providers\Metadata\ResourceProperty;
-use POData\Providers\Metadata\ResourceTypeKind;
-use POData\Providers\Metadata\ResourceType;
 use POData\Common\InvalidOperationException;
 use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\Metadata\SimpleMetadataProvider;
-use POData\Providers\Metadata\MetadataMapping;
 
 //Begin Resource Classes
 
@@ -83,7 +73,6 @@ class Post
     public $Comments;
 }
 
-
 class Tag
 {
     //Key Edm.Int32
@@ -98,7 +87,6 @@ class Tag
     public $Posts;
 }
 
-
 class Category
 {
     //Key Edm.Int32
@@ -112,7 +100,6 @@ class Category
     //Navigation Property Posts (ResourceSetReference)
     public $Posts;
 }
-
 
 class Comment
 {
@@ -152,7 +139,6 @@ class Comment
     public $Post;
 }
 
-
 class User
 {
     //Key Edm.Int32
@@ -179,23 +165,21 @@ class User
 
 //End Resource Classes
 
-
 class WordPressMetadata
 {
-
-  private static $_entityMapping = array();
+    private static $_entityMapping = array();
 
     /**
-     * create metadata
-     * 
+     * create metadata.
+     *
      * @throws InvalidOperationException
-     * 
+     *
      * @return IMetadataProvider
      */
     public static function create()
     {
         $metadata = new SimpleMetadataProvider('WordPressEntities', 'WordPress');
-    
+
         //Register the entity (resource) type 'Post'
         $postsEntityType = $metadata->addEntityType(new \ReflectionClass('UnitTests\POData\Facets\WordPress2\Post'), 'Post', 'WordPress');
         $metadata->addKeyProperty($postsEntityType, 'PostID', EdmPrimitiveType::INT32);
@@ -221,21 +205,21 @@ class WordPressMetadata
         $metadata->addPrimitiveProperty($postsEntityType, 'Type', EdmPrimitiveType::STRING);
         $metadata->addPrimitiveProperty($postsEntityType, 'MimeType', EdmPrimitiveType::STRING);
         $metadata->addPrimitiveProperty($postsEntityType, 'CommentCount', EdmPrimitiveType::INT32);
-    
+
         //Register the entity (resource) type 'Tag'
         $tagsEntityType = $metadata->addEntityType(new \ReflectionClass('UnitTests\POData\Facets\WordPress2\Tag'), 'Tag', 'WordPress');
         $metadata->addKeyProperty($tagsEntityType, 'TagID', EdmPrimitiveType::INT32);
         $metadata->addPrimitiveProperty($tagsEntityType, 'Name', EdmPrimitiveType::STRING);
         $metadata->addPrimitiveProperty($tagsEntityType, 'Slug', EdmPrimitiveType::STRING);
         $metadata->addPrimitiveProperty($tagsEntityType, 'Description', EdmPrimitiveType::STRING);
-    
+
         //Register the entity (resource) type 'Category'
         $catsEntityType = $metadata->addEntityType(new \ReflectionClass('UnitTests\POData\Facets\WordPress2\Category'), 'Category', 'WordPress');
         $metadata->addKeyProperty($catsEntityType, 'CategoryID', EdmPrimitiveType::INT32);
         $metadata->addPrimitiveProperty($catsEntityType, 'Name', EdmPrimitiveType::STRING);
         $metadata->addPrimitiveProperty($catsEntityType, 'Slug', EdmPrimitiveType::STRING);
         $metadata->addPrimitiveProperty($catsEntityType, 'Description', EdmPrimitiveType::STRING);
-    
+
         //Register the entity (resource) type 'Comment'
         $commentsEntityType = $metadata->addEntityType(new \ReflectionClass('UnitTests\POData\Facets\WordPress2\Comment'), 'Comment', 'WordPress');
         $metadata->addKeyProperty($commentsEntityType, 'CommentID', EdmPrimitiveType::INT32);
@@ -253,7 +237,7 @@ class WordPressMetadata
         $metadata->addPrimitiveProperty($commentsEntityType, 'Type', EdmPrimitiveType::STRING);
         $metadata->addPrimitiveProperty($commentsEntityType, 'ParentID', EdmPrimitiveType::INT32);
         $metadata->addPrimitiveProperty($commentsEntityType, 'UserID', EdmPrimitiveType::INT32);
-    
+
         //Register the entity (resource) type 'User'
         $usersEntityType = $metadata->addEntityType(new \ReflectionClass('UnitTests\POData\Facets\WordPress2\User'), 'User', 'WordPress');
         $metadata->addKeyProperty($usersEntityType, 'UserID', EdmPrimitiveType::INT32);
@@ -264,7 +248,7 @@ class WordPressMetadata
         $metadata->addETagProperty($usersEntityType, 'Registered', EdmPrimitiveType::DATETIME);
         $metadata->addPrimitiveProperty($usersEntityType, 'Status', EdmPrimitiveType::INT16);
         $metadata->addPrimitiveProperty($usersEntityType, 'DisplayName', EdmPrimitiveType::STRING);
-    
+
         $postsResourceSet = $metadata->addResourceSet('Posts', $postsEntityType);
         $tagsResourceSet = $metadata->addResourceSet('Tags', $tagsEntityType);
         $catsResourceSet = $metadata->addResourceSet('Categories', $catsEntityType);
@@ -285,15 +269,15 @@ class WordPressMetadata
         //associations of User
         $metadata->addResourceSetReferenceProperty($usersEntityType, 'Posts', $postsResourceSet);
         $metadata->addResourceSetReferenceProperty($usersEntityType, 'Comments', $commentsResourceSet);
-    
+
         return $metadata;
     }
 
-    public static function getEntityMapping() {
-      if (!is_null(self::$_entityMapping))
-      {
-        self::$_entityMapping = array (
-            'Post' => array (
+    public static function getEntityMapping()
+    {
+        if (!is_null(self::$_entityMapping)) {
+            self::$_entityMapping = array(
+            'Post' => array(
                 '$MappedTable$' => 'wp_posts',
                 'PostID' => 'ID',
                 'Author' => 'post_author',
@@ -316,26 +300,26 @@ class WordPressMetadata
                 'MenuOrder' => 'menu_order',
                 'Type' => 'post_type',
                 'MimeType' => 'post_mime_type',
-                'CommentCount' => 'comment_count'
+                'CommentCount' => 'comment_count',
               ),
-          
-            'Tag' => array (
+
+            'Tag' => array(
                 '$MappedTable$' => 'wp_terms',
-                'TagID' =>'t.term_id',
-                'Name' =>'t.name',
-                'Slug' =>'t.slug',
-                'Description' =>'tt.description'
+                'TagID' => 't.term_id',
+                'Name' => 't.name',
+                'Slug' => 't.slug',
+                'Description' => 'tt.description',
             ),
-          
-            'Category' => array (
+
+            'Category' => array(
                 '$MappedTable$' => 'wp_terms',
-                'CategoryID' =>'t.term_id',
-                'Name' =>'t.name',
-                'Slug' =>'t.slug',
-                'Description' =>'tt.description'
+                'CategoryID' => 't.term_id',
+                'Name' => 't.name',
+                'Slug' => 't.slug',
+                'Description' => 'tt.description',
             ),
-          
-            'Comment' => array (
+
+            'Comment' => array(
                 '$MappedTable$' => 'wp_comments',
                 'CommentID', 'comment_id',
                 'PostID', 'comment_post_id',
@@ -350,10 +334,10 @@ class WordPressMetadata
                 'Agent', 'comment_agent',
                 'Type', 'comment_type',
                 'ParentID', 'comment_parent',
-                'UserID', 'user_id'
+                'UserID', 'user_id',
             ),
-          
-            'User' => array (
+
+            'User' => array(
                 '$MappedTable$' => 'wp_users',
                 'UserID' => 'ID',
                 'Login' => 'user_login',
@@ -362,11 +346,11 @@ class WordPressMetadata
                 'Url' => 'user_url',
                 'Registered' => 'user_registered',
                 'Status' => 'user_status',
-                'DisplayName' => 'display_name'
-            )
+                'DisplayName' => 'display_name',
+            ),
           );
-      }
-      
-      return self::$_entityMapping;
+        }
+
+        return self::$_entityMapping;
     }
 }

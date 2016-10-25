@@ -2,26 +2,23 @@
 
 namespace UnitTests\POData\UriProcessor\QueryProcessor\ExpandProjectionParser;
 
-
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandedProjectionNode;
 use POData\Configuration\EntitySetRights;
 use POData\Providers\ProvidersWrapper;
 use POData\Configuration\ServiceConfiguration;
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandProjectionParser;
 use POData\Common\ODataException;
-
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 use UnitTests\POData\Facets\NorthWind1\NorthWindQueryProvider;
 
-
 class ExpandTest extends \PHPUnit_Framework_TestCase
-{   
+{
     protected function setUp()
     {
     }
 
     /**
-     * Test case for testing empty expand and select clause     
+     * Test case for testing empty expand and select clause.
      */
     public function testEmptyExpandAndSelect()
     {
@@ -68,7 +65,7 @@ class ExpandTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test expand with only one level of navigation     
+     * Test expand with only one level of navigation.
      */
     public function testExpandWithOneLevelNavigationProperty()
     {
@@ -118,11 +115,10 @@ class ExpandTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($childNodes['Orders']->canSelectAllProperties());
         //flag for SelectionOfImmediate properties will be true only if select include 'Orders\*'
         $this->assertFalse($childNodes['Orders']->canSelectAllImmediateProperties());
-
     }
 
     /**
-     * Test expand with only one level of navigation with duplication     
+     * Test expand with only one level of navigation with duplication.
      */
     public function testExpandWithOneLevelNavigationPropertyWithDuplication()
     {
@@ -162,11 +158,10 @@ class ExpandTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($childNodes['Orders']->canSelectAllProperties());
         //flag for SelectionOfImmediate properties will be true only if select include 'Orders\*'
         $this->assertFalse($childNodes['Orders']->canSelectAllImmediateProperties());
-                
     }
 
     /**
-     * Test expand with non-identifiers in the path
+     * Test expand with non-identifiers in the path.
      */
     public function testExpandWithNonIdentifierPathSegment()
     {
@@ -196,11 +191,10 @@ class ExpandTest extends \PHPUnit_Framework_TestCase
         } catch (ODataException $odataException) {
             $this->assertStringStartsWith('Syntax Error at position', $odataException->getMessage());
         }
-
     }
-    
+
     /**
-     * Test expand path that start with comma and end with comma
+     * Test expand path that start with comma and end with comma.
      */
     public function testExpandWithStartEndTokenAsComma()
     {
@@ -231,7 +225,6 @@ class ExpandTest extends \PHPUnit_Framework_TestCase
             $this->assertStringStartsWith('Syntax Error at position', $odataException->getMessage());
         }
 
-
         $projectionTreeRoot = ExpandProjectionParser::parseExpandAndSelectClause(
                                                         $customersResourceSetWrapper,
                                                         $customerResourceType,
@@ -256,11 +249,10 @@ class ExpandTest extends \PHPUnit_Framework_TestCase
         } catch (ODataException $odataException) {
             $this->assertStringStartsWith('Syntax Error at position', $odataException->getMessage());
         }
-
     }
 
     /**
-     * Test expand with non-navigation properties in the path
+     * Test expand with non-navigation properties in the path.
      */
     public function testExpandWithNonNavigationPropertyInThePath()
     {
@@ -292,7 +284,6 @@ class ExpandTest extends \PHPUnit_Framework_TestCase
             $this->assertStringStartsWith("Error in the expand clause. Expand path can contain only navigation property, the property 'CustomerName' defined in 'Customer' is not a navigation property", $odataException->getMessage());
         }
 
-
         try {
             //Test with complex property in expand path
             $projectionTreeRoot = ExpandProjectionParser::parseExpandAndSelectClause(
@@ -306,13 +297,12 @@ class ExpandTest extends \PHPUnit_Framework_TestCase
                                                         $providersWrapper);
             $this->fail('An expected ODataException for non-navigation property in the path has not been thrown');
         } catch (ODataException $odataException) {
-            $this->assertStringStartsWith("Error in the expand clause. Expand path can contain only navigation property", $odataException->getMessage());
+            $this->assertStringStartsWith('Error in the expand clause. Expand path can contain only navigation property', $odataException->getMessage());
         }
-
     }
 
     /**
-     * '*' token will only work with select clause, with expand its syntax error     
+     * '*' token will only work with select clause, with expand its syntax error.
      */
     public function testExpandWithSelectAllTokenInThePath()
     {
@@ -341,12 +331,12 @@ class ExpandTest extends \PHPUnit_Framework_TestCase
                                                         $providersWrapper);
             $this->fail('An expected ODataException for non-navigation property in the path has not been thrown');
         } catch (ODataException $odataException) {
-            $this->assertStringStartsWith("Syntax Error at position", $odataException->getMessage());
+            $this->assertStringStartsWith('Syntax Error at position', $odataException->getMessage());
         }
     }
 
     /**
-     * Test expand with single path segment with multiple sub path segments     
+     * Test expand with single path segment with multiple sub path segments.
      */
     public function testExpandWithMultilevelNavigationProperty()
     {
@@ -440,7 +430,7 @@ class ExpandTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test expand with multiple path segment with multiple sub path segments     
+     * Test expand with multiple path segment with multiple sub path segments.
      */
     public function testExpandWithMultipleMultilevelNavigationProperty()
     {
@@ -491,12 +481,10 @@ class ExpandTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(count($childNodesOfProduct), 1);
         $this->assertTrue(array_key_exists('Order_Details', $childNodesOfProduct));
         $this->assertTrue($childNodesOfProduct['Order_Details'] instanceof ExpandedProjectionNode);
-                
     }
 
     /**
-     * One can expand a navigation property only if corresponding resource set is visible
-     * 
+     * One can expand a navigation property only if corresponding resource set is visible.
      */
     public function testExpandWithNonVisibleResourceSet()
     {
@@ -518,7 +506,6 @@ class ExpandTest extends \PHPUnit_Framework_TestCase
 
         $exceptionThrown = false;
         try {
-
             $projectionTree = ExpandProjectionParser::parseExpandAndSelectClause(
                     $customersResourceSetWrapper,
                     $customerResourceType,
@@ -532,8 +519,6 @@ class ExpandTest extends \PHPUnit_Framework_TestCase
         } catch (ODataException $odataException) {
             $this->assertStringEndsWith("(Check the resource set of the navigation property 'Order_Details' is visible)", $odataException->getMessage());
         }
-
-
     }
 
     protected function tearDown()

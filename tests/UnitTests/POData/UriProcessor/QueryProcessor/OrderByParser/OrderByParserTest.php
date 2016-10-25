@@ -8,7 +8,6 @@ use POData\Providers\ProvidersWrapper;
 use POData\Configuration\ServiceConfiguration;
 use POData\Common\ODataException;
 use POData\UriProcessor\QueryProcessor\OrderByParser\OrderByParser;
-
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 //These are in the file loaded by above use statement
 //TODO: move to own class files
@@ -18,43 +17,41 @@ use UnitTests\POData\Facets\NorthWind1\Customer2;
 use UnitTests\POData\Facets\NorthWind1\Order2;
 use UnitTests\POData\Facets\NorthWind1\Order_Details2;
 use UnitTests\POData\Facets\NorthWind1\Product2;
-
 use POData\Providers\Query\IQueryProvider;
 
 class OrderByParserTest extends \PHPUnit_Framework_TestCase
 {
-	/** @var  IQueryProvider */
-	protected $mockQueryProvider;
+    /** @var IQueryProvider */
+    protected $mockQueryProvider;
 
     protected function setUp()
     {
-	    $this->mockQueryProvider = \Phockito::mock('POData\Providers\Query\IQueryProvider');
+        $this->mockQueryProvider = \Phockito::mock('POData\Providers\Query\IQueryProvider');
     }
 
     public function testOrderByWithSyntaxError()
     {
         //If a path segment contains ( should throw synax error
-        
+
         //only asc or desc are allowed as a default segment last segment
         //so if asc/desc is last then next should be end or comma
 
         //multiple commas not allowed
-    } 
+    }
 
     //All all test case (which are +ve) check the generated function and
 
     /**
-     * Entities cannot be sorted using bag property
+     * Entities cannot be sorted using bag property.
      */
     public function testOrderByBag()
     {
-
         $northWindMetadata = NorthWindMetadata::Create();
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
                                           $northWindMetadata, //IMetadataProvider implementation
-	                                        $this->mockQueryProvider,
+                                            $this->mockQueryProvider,
                                           $configuration, //Service configuuration
                                           false
                                          );
@@ -69,22 +66,19 @@ class OrderByParserTest extends \PHPUnit_Framework_TestCase
         } catch (ODataException $odataException) {
             $this->assertStringStartsWith('orderby clause does not support Bag property in the path, the property', $odataException->getMessage());
         }
-
-
     }
 
     /**
-     * Entities cannot be sorted using complex property
+     * Entities cannot be sorted using complex property.
      */
     public function testOrderByComplex()
     {
-
         $northWindMetadata = NorthWindMetadata::Create();
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
                                           $northWindMetadata, //IMetadataProvider implementation
-	                                        $this->mockQueryProvider,
+                                            $this->mockQueryProvider,
                                           $configuration, //Service configuuration
                                           false
                                          );
@@ -110,22 +104,20 @@ class OrderByParserTest extends \PHPUnit_Framework_TestCase
         } catch (ODataException $odataException) {
             $this->assertStringStartsWith('Complex property cannot be used as sort key,', $odataException->getMessage());
         }
-
     }
 
     /**
      * Entities cannot be sorted using resource set reference property
-     * even resource set is not allowed in order by path     
+     * even resource set is not allowed in order by path.
      */
     public function testOrderByResourceSetReference()
     {
-
         $northWindMetadata = NorthWindMetadata::Create();
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
                                           $northWindMetadata, //IMetadataProvider implementation
-	                                        $this->mockQueryProvider,
+                                            $this->mockQueryProvider,
                                           $configuration, //Service configuuration
                                           false
                                          );
@@ -142,17 +134,16 @@ class OrderByParserTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Entities cannot be sorted using resource reference property
+     * Entities cannot be sorted using resource reference property.
      */
     public function testOrderByResourceReference()
     {
-
         $northWindMetadata = NorthWindMetadata::Create();
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
                                           $northWindMetadata, //IMetadataProvider implementation
-	        $this->mockQueryProvider,
+            $this->mockQueryProvider,
                                           $configuration, //Service configuuration
                                           false
                                          );
@@ -178,21 +169,19 @@ class OrderByParserTest extends \PHPUnit_Framework_TestCase
         } catch (ODataException $odataException) {
             $this->assertStringStartsWith('Navigation property cannot be used as sort key,', $odataException->getMessage());
         }
-
     }
 
     /**
-     * A primitive property of a complex type can be used as sort key
+     * A primitive property of a complex type can be used as sort key.
      */
     public function testOrderByPrimitiveInAComplex()
     {
-
         $northWindMetadata = NorthWindMetadata::Create();
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
                                           $northWindMetadata, //IMetadataProvider implementation
-	                                        $this->mockQueryProvider,
+                                            $this->mockQueryProvider,
                                           $configuration, //Service configuuration
                                           false
                                          );
@@ -232,19 +221,19 @@ class OrderByParserTest extends \PHPUnit_Framework_TestCase
         $mainSorterName = $sorter->getReference();
         $this->assertEquals($subSorterName, $mainSorterName);
         //check code inside the anonymous function (see the generated function code)
-        /**
+        /*
             $flag1 = is_null($CustomersA) || is_null($CustomersA->Address) || is_null($CustomersA->Address->HouseNumber);
-			$flag2 = is_null($CustomersB) || is_null($CustomersB->Address) || is_null($CustomersB->Address->HouseNumber);
-			if($flag1 && $flag2) {
+            $flag2 = is_null($CustomersB) || is_null($CustomersB->Address) || is_null($CustomersB->Address->HouseNumber);
+            if($flag1 && $flag2) {
                 return 0;
-			} else if ($flag1) {
+            } else if ($flag1) {
                 return 1*-1;
-			} else if ($flag2) {
+            } else if ($flag2) {
                 return 1*1;
-			}
+            }
 
-			$result = strcmp($CustomersA->Address->HouseNumber, $CustomersB->Address->HouseNumber);
-			return 1*$result;
+            $result = strcmp($CustomersA->Address->HouseNumber, $CustomersB->Address->HouseNumber);
+            return 1*$result;
          */
         $customer1 = new Customer2();
         $customer2 = new Customer2();
@@ -291,21 +280,19 @@ class OrderByParserTest extends \PHPUnit_Framework_TestCase
         $customer2->Address->HouseNumber = 'MN';
         $result = $mainSorterName($customer1, $customer2);
         $this->assertEquals($result, 0);
-
     }
 
     /**
-     * Entities cannot be sorted using binary property     
+     * Entities cannot be sorted using binary property.
      */
     public function testOrderByBinaryProperty()
     {
-
         $northWindMetadata = NorthWindMetadata::Create();
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
                                           $northWindMetadata, //IMetadataProvider implementation
-	                                        $this->mockQueryProvider,
+                                            $this->mockQueryProvider,
                                           $configuration, //Service configuuration
                                           false
                                          );
@@ -319,23 +306,20 @@ class OrderByParserTest extends \PHPUnit_Framework_TestCase
             $this->fail('An expected ODataException for usage of binary property has not been thrown');
         } catch (ODataException $odataException) {
             $this->assertStringStartsWith('Binary property is not allowed in orderby', $odataException->getMessage());
-
         }
-
     }
 
     /**
-     * A primitive property of a resource reference type can be used as sort key
+     * A primitive property of a resource reference type can be used as sort key.
      */
     public function testOrderByPrimitiveInAResourceReference()
     {
-
         $northWindMetadata = NorthWindMetadata::Create();
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
                                           $northWindMetadata, //IMetadataProvider implementation
-	                                    $this->mockQueryProvider,
+                                        $this->mockQueryProvider,
                                           $configuration, //Service configuuration
                                           false
                                          );
@@ -396,7 +380,6 @@ class OrderByParserTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(!is_null($sorter));
         $mainSorterName = $sorter->getReference();
         $this->assertEquals($subSorterName, $mainSorterName);
-
     }
 
     /**
@@ -404,14 +387,13 @@ class OrderByParserTest extends \PHPUnit_Framework_TestCase
      */
     public function testOrderByWithInvisibleResourceReferencePropertyInThePath()
     {
-
         $northWindMetadata = NorthWindMetadata::Create();
         $configuration = new ServiceConfiguration($northWindMetadata);
         //Make 'Orders' visible, make 'Customers' invisible
         $configuration->setEntitySetAccessRule('Orders', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
                                               $northWindMetadata, //IMetadataProvider implementation
-	                                         $this->mockQueryProvider,
+                                             $this->mockQueryProvider,
                                               $configuration, //Service configuuration
                                               false
                                              );
@@ -426,11 +408,10 @@ class OrderByParserTest extends \PHPUnit_Framework_TestCase
         } catch (ODataException $odataException) {
             $this->assertStringEndsWith("(Check the resource set of the navigation property 'Customer' is visible)", $odataException->getMessage());
         }
-
     }
 
     /**
-     * test parser with multiple path segment which does not have common ancestors     
+     * test parser with multiple path segment which does not have common ancestors.
      */
     public function testOrderByWithMultiplePathSegment1()
     {
@@ -439,7 +420,7 @@ class OrderByParserTest extends \PHPUnit_Framework_TestCase
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
                                               $northWindMetadata, //IMetadataProvider implementation
-	                                        $this->mockQueryProvider,
+                                            $this->mockQueryProvider,
                                               $configuration, //Service configuuration
                                               false
                                              );
@@ -512,21 +493,21 @@ class OrderByParserTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(!is_null($sorter));
         $mainSorterName = $sorter->getReference();
         //Test the function generated for 'Order/Price desc' path
-        /**
+        /*
          //Function Name: lambda_1
 
          $flag1 = is_null($Order_DetailsA) || is_null($Order_DetailsA->Order) || is_null($Order_DetailsA->Order->Price);
-		 $flag2 = is_null($Order_DetailsB) || is_null($Order_DetailsB->Order) || is_null($Order_DetailsB->Order->Price);
-		 if($flag1 && $flag2) {
+         $flag2 = is_null($Order_DetailsB) || is_null($Order_DetailsB->Order) || is_null($Order_DetailsB->Order->Price);
+         if($flag1 && $flag2) {
             return 0;
-		 } else if ($flag1) {
+         } else if ($flag1) {
             return -1*-1;
-		 } else if ($flag2) {
+         } else if ($flag2) {
             return -1*1;
-		 }
+         }
 
-		 $result = $Order_DetailsA->Order->Price > $Order_DetailsB->Order->Price;
-		 return -1*$result;
+         $result = $Order_DetailsA->Order->Price > $Order_DetailsB->Order->Price;
+         return -1*$result;
          */
         $OrderDetails1 = new Order_Details2();
         $OrderDetails2 = new Order_Details2();
@@ -574,38 +555,38 @@ class OrderByParserTest extends \PHPUnit_Framework_TestCase
         $result = $subSorterName1($OrderDetails1, $OrderDetails2);
         $this->assertEquals($result, 0);
         //No test for function generated for 'Product/ProductName asc' path, already done in the testcase testOrderByPrimitiveInAComplex
-        /**
+        /*
         //Function Name: lambda_2
 
-		$flag1 = is_null($Order_DetailsA) || is_null($Order_DetailsA->Product) || is_null($Order_DetailsA->Product->ProductName);
-		$flag2 = is_null($Order_DetailsB) || is_null($Order_DetailsB->Product) || is_null($Order_DetailsB->Product->ProductName);
-		if($flag1 && $flag2) {
+        $flag1 = is_null($Order_DetailsA) || is_null($Order_DetailsA->Product) || is_null($Order_DetailsA->Product->ProductName);
+        $flag2 = is_null($Order_DetailsB) || is_null($Order_DetailsB->Product) || is_null($Order_DetailsB->Product->ProductName);
+        if($flag1 && $flag2) {
             return 0;
-		} else if ($flag1) {
+        } else if ($flag1) {
             return 1*-1;
-		} else if ($flag2) {
+        } else if ($flag2) {
             return 1*1;
-		}
+        }
 
-		$result = strcmp($Order_DetailsA->Product->ProductName, $Order_DetailsB->Product->ProductName);
-		return 1*$result;
+        $result = strcmp($Order_DetailsA->Product->ProductName, $Order_DetailsB->Product->ProductName);
+        return 1*$result;
          */
 
         //Test the top level function
-        /**
+        /*
             //Function Name: lambda_3
 
-			$result = call_user_func_array(chr(0) . 'lambda_1', array($Order_DetailsA, $Order_DetailsB));
-			if ($result != 0) {
+            $result = call_user_func_array(chr(0) . 'lambda_1', array($Order_DetailsA, $Order_DetailsB));
+            if ($result != 0) {
                 return $result;
-			}
+            }
 
-			$result = call_user_func_array(chr(0) . 'lambda_2', array($Order_DetailsA, $Order_DetailsB));
-			if ($result != 0) {
+            $result = call_user_func_array(chr(0) . 'lambda_2', array($Order_DetailsA, $Order_DetailsB));
+            if ($result != 0) {
                 return $result;
-			}
+            }
 
-			return $result;
+            return $result;
          */
         $OrderDetails1->Order = new Order2();
         $OrderDetails1->Product = new Product2();
@@ -617,19 +598,17 @@ class OrderByParserTest extends \PHPUnit_Framework_TestCase
         $OrderDetails2->Product->ProductName = 'DE';
         $result = $mainSorterName($OrderDetails1, $OrderDetails2);
         $this->assertLessThan(0, $result);
-
-
     }
 
     /**
-     * test parser with multiple path segment which has common ancestors     
+     * test parser with multiple path segment which has common ancestors.
      */
     public function testOrderByWithMultiplePathSegment2()
     {
     }
 
     /**
-     * Test whether order by parser identify and remove path duplication
+     * Test whether order by parser identify and remove path duplication.
      */
     public function testOrderByWithPathDuplication()
     {
@@ -638,7 +617,7 @@ class OrderByParserTest extends \PHPUnit_Framework_TestCase
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
                                               $northWindMetadata, //IMetadataProvider implementation
-	                                        $this->mockQueryProvider,
+                                            $this->mockQueryProvider,
                                               $configuration, //Service configuuration
                                               false
                                              );
@@ -665,7 +644,6 @@ class OrderByParserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($naviUsed[1][0]->getName(), 'Product');
         $orderByPathSegments = $orderByInfo->getOrderByPathSegments();
         $this->assertEquals(count($orderByPathSegments), 2);
-
     }
 
     protected function tearDown()

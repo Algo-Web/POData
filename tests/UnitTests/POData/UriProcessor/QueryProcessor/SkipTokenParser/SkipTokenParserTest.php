@@ -2,14 +2,12 @@
 
 namespace UnitTests\POData\UriProcessor\QueryProcessor\SkipTokenParser;
 
-use POData\Providers\Metadata\ResourceProperty;
 use POData\Configuration\EntitySetRights;
 use POData\Providers\ProvidersWrapper;
 use POData\Configuration\ServiceConfiguration;
 use POData\Common\ODataException;
 use POData\UriProcessor\QueryProcessor\OrderByParser\OrderByParser;
 use POData\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenParser;
-
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 //These are in the file loaded by above use statement
 //TODO: move to own class files
@@ -20,21 +18,20 @@ use POData\Providers\Query\IQueryProvider;
 
 class SkipTokenParserTest extends \PHPUnit_Framework_TestCase
 {
-	/** @var  IQueryProvider */
-	protected $mockQueryProvider;
+    /** @var IQueryProvider */
+    protected $mockQueryProvider;
 
-	protected function setUp()
-	{
-		$this->mockQueryProvider = \Phockito::mock('POData\Providers\Query\IQueryProvider');
-	}
+    protected function setUp()
+    {
+        $this->mockQueryProvider = \Phockito::mock('POData\Providers\Query\IQueryProvider');
+    }
 
-	protected function tearDown()
-	{
-
-	}
+    protected function tearDown()
+    {
+    }
 
     /**
-     * Named values are not allowed in skip token     
+     * Named values are not allowed in skip token.
      */
     public function testNamedValuesInSkipToken()
     {
@@ -63,7 +60,6 @@ class SkipTokenParserTest extends \PHPUnit_Framework_TestCase
         } catch (ODataException $odataException) {
             $this->assertStringStartsWith('Bad Request - Error in the syntax of skiptoken', $odataException->getMessage());
         }
-
     }
 
     /**
@@ -77,7 +73,7 @@ class SkipTokenParserTest extends \PHPUnit_Framework_TestCase
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
                                     $northWindMetadata, //IMetadataProvider implementation
-	                                $this->mockQueryProvider,
+                                    $this->mockQueryProvider,
                                     $configuration, //Service configuration
                                     false
                                     );
@@ -110,7 +106,6 @@ class SkipTokenParserTest extends \PHPUnit_Framework_TestCase
             $this->assertStringStartsWith('Bad Request - Error in the syntax of skiptoken', $odataException->getMessage());
         }
 
-
         //Test with extra comma between values
         $skipToken = "'Antonio%20Moreno%20Taquer%C3%ADa',,22.000,10365,";
         $skipToken = urldecode($skipToken);
@@ -121,12 +116,11 @@ class SkipTokenParserTest extends \PHPUnit_Framework_TestCase
         } catch (ODataException $odataException) {
             $this->assertStringStartsWith('Bad Request - Error in the syntax of skiptoken', $odataException->getMessage());
         }
-
     }
 
     /**
      * Number of sub-values in skiptoken should match with number of
-     * ordering expressions.     
+     * ordering expressions.
      */
     public function testSkipTokenHavingCountMismatchWithOrderBy()
     {
@@ -135,7 +129,7 @@ class SkipTokenParserTest extends \PHPUnit_Framework_TestCase
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
                                     $northWindMetadata, //IMetadataProvider implementation
-							        $this->mockQueryProvider,
+                                    $this->mockQueryProvider,
                                     $configuration, //Service configuuration
                                     false
                                     );
@@ -147,7 +141,7 @@ class SkipTokenParserTest extends \PHPUnit_Framework_TestCase
         $orderBy .= ', OrderID';
         $internalOrderByInfo = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
         //zero skiptoken values
-        $skipToken = "";
+        $skipToken = '';
         $thrownException = false;
         try {
             $internalSkipTokenInfo = SkipTokenParser::parseSkipTokenClause($resourceType, $internalOrderByInfo, $skipToken);
@@ -166,12 +160,11 @@ class SkipTokenParserTest extends \PHPUnit_Framework_TestCase
         } catch (ODataException $odataException) {
             $this->assertStringStartsWith('The number of keys \'2\' in skip token with value', $odataException->getMessage());
         }
-
     }
 
     /**
      * test skiptoken sub-values where type does not match with
-     * corrseponding type of orderby path
+     * corrseponding type of orderby path.
      */
     public function testSkipTokenTypeInCompatibility()
     {
@@ -180,7 +173,7 @@ class SkipTokenParserTest extends \PHPUnit_Framework_TestCase
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
                                     $northWindMetadata, //IMetadataProvider implementation
-							        $this->mockQueryProvider,
+                                    $this->mockQueryProvider,
                                     $configuration, //Service configuration
                                     false
                                     );
@@ -215,15 +208,15 @@ class SkipTokenParserTest extends \PHPUnit_Framework_TestCase
         }
 
         //null is allowed in skiptoken and compactable with all types
-        $skipToken = "null, null, null";
+        $skipToken = 'null, null, null';
         $internalSkipTokenInfo = SkipTokenParser::parseSkipTokenClause($resourceType, $internalOrderByInfo, $skipToken);
     }
 
     /**
      * Test the initialzation of orderbyinfo's dummy object from the skiptoken value.
      * The orderby parser will create the dummy object, using the orderby path,
-     * we will do a negative testing on GetKeyObject, by explicitly unsetting property 
-     * set by orderby parser
+     * we will do a negative testing on GetKeyObject, by explicitly unsetting property
+     * set by orderby parser.
      */
     public function testInitializationOfKeyObject1()
     {
@@ -232,7 +225,7 @@ class SkipTokenParserTest extends \PHPUnit_Framework_TestCase
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
                                     $northWindMetadata, //IMetadataProvider implementation
-							        $this->mockQueryProvider,
+                                    $this->mockQueryProvider,
                                     $configuration, //Service configuuration
                                     false
                                     );
@@ -243,7 +236,7 @@ class SkipTokenParserTest extends \PHPUnit_Framework_TestCase
         //Note: library will add primary key as last sort key
         $orderBy .= ', ProductID, OrderID';
         $internalOrderByInfo = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
-        $skipToken = "12, 1234, 4567";
+        $skipToken = '12, 1234, 4567';
         $dummyObject = $internalOrderByInfo->getDummyObject();
         //we will remove Customer object created by orderby parser, so that getKeyObject function will
         //fail to access the property 'Rating', since parent ($dummyObject->Order->Customer) is null
@@ -260,15 +253,13 @@ class SkipTokenParserTest extends \PHPUnit_Framework_TestCase
         } catch (ODataException $odataException) {
             $this->assertStringStartsWith('internalSkipTokenInfo failed to access or initialize the property Rating', $odataException->getMessage());
         }
-
     }
 
     /**
      * Test the initialization of orderby info's dummy object from the skiptoken value.
      * 1. The string properties in the key object should be utf8 decoded.
      * 2. The lexer will consider all token text as string, but when the we populate the
-     *    dummy object with these values, it should be converted to appropriate type 
-     *  
+     *    dummy object with these values, it should be converted to appropriate type.
      */
     public function testInitializationOfKeyObject2()
     {
@@ -277,7 +268,7 @@ class SkipTokenParserTest extends \PHPUnit_Framework_TestCase
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
                                     $northWindMetadata, //IMetadataProvider implementation
-							        $this->mockQueryProvider,
+                                    $this->mockQueryProvider,
                                     $configuration, //Service configuration
                                     false
                                     );
@@ -303,15 +294,13 @@ class SkipTokenParserTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue(!is_null($keyObject->OrderID));
         $this->assertTrue(is_int($keyObject->OrderID));
-            
     }
 
     /**
      * Test the initialization of orderbyinfo's dummy object from the skiptoken value.
-     * 1. Complex navigation can be also used in the skiptoken  
+     * 1. Complex navigation can be also used in the skiptoken
      * 2. The lexer will consider all token text as string, but when the we populate the
-     *    dummy object with these values, it should be converted to appropriate type 
-     *  
+     *    dummy object with these values, it should be converted to appropriate type.
      */
     public function testInitializationOfKeyObject3()
     {
@@ -320,7 +309,7 @@ class SkipTokenParserTest extends \PHPUnit_Framework_TestCase
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
                                 $northWindMetadata, //IMetadataProvider implementation
-						        $this->mockQueryProvider,
+                                $this->mockQueryProvider,
                                 $configuration, //Service configuuration
                                 false
                                 );
@@ -339,15 +328,14 @@ class SkipTokenParserTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(!is_null($keyObject->Address));
         $this->assertTrue(!is_null($keyObject->Address->IsValid));
         $this->assertTrue($keyObject->Address->IsValid);
-            
 
-        //test with other values, double, guid, int, datetime        
+        //test with other values, double, guid, int, datetime
     }
 
     /**
      * test the creation of nextlink from an object.
      * Test whether the buildNextPageLink function set skiptoken sub value as null when
-     * it found one of the ancestor of corresponding ordering key property(ies) as null.     
+     * it found one of the ancestor of corresponding ordering key property(ies) as null.
      */
     public function testCreationOfNextLink1()
     {
@@ -356,7 +344,7 @@ class SkipTokenParserTest extends \PHPUnit_Framework_TestCase
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
                                     $northWindMetadata, //IMetadataProvider implementation
-							        $this->mockQueryProvider,
+                                    $this->mockQueryProvider,
                                     $configuration, //Service configuuration
                                     false
                                     );
@@ -386,12 +374,11 @@ class SkipTokenParserTest extends \PHPUnit_Framework_TestCase
         } catch (ODataException $odataException) {
             $this->assertStringStartsWith('internalSkipTokenInfo failed to access or initialize the property Address', $odataException->getMessage());
         }
-
     }
 
     /**
      * test the creation of nextlink from an object.
-     * Test building of link with string sub-value
+     * Test building of link with string sub-value.
      */
     public function testCreationOfNextLink2()
     {
@@ -400,7 +387,7 @@ class SkipTokenParserTest extends \PHPUnit_Framework_TestCase
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
                                     $northWindMetadata, //IMetadataProvider implementation
-							        $this->mockQueryProvider,
+                                    $this->mockQueryProvider,
                                     $configuration, //Service configuration
                                     false
                                     );
@@ -425,10 +412,10 @@ class SkipTokenParserTest extends \PHPUnit_Framework_TestCase
         $nextLink = $internalSkipTokenInfo->buildNextPageLink($lastObject);
         $this->assertEquals($nextLink, "'Antonio+Moreno+Taquer%C3%ADa', 23.56D, 3456");
     }
-    
+
     /**
      * test the creation of nextlink from an object.
-     * Test building of link with datetime sub-value
+     * Test building of link with datetime sub-value.
      */
     public function testCreationOfNextLink3()
     {
@@ -437,7 +424,7 @@ class SkipTokenParserTest extends \PHPUnit_Framework_TestCase
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
                                     $northWindMetadata, //IMetadataProvider implementation
-	                                $this->mockQueryProvider,
+                                    $this->mockQueryProvider,
                                     $configuration, //Service configuuration
                                     false
                                     );
@@ -448,7 +435,7 @@ class SkipTokenParserTest extends \PHPUnit_Framework_TestCase
         //Note: library will add prim key as last sort key
         $orderBy .= ', OrderID';
         $internalOrderByInfo = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
-        $skipToken = "null,10365";
+        $skipToken = 'null,10365';
         $internalSkipTokenInfo = SkipTokenParser::parseSkipTokenClause($resourceType, $internalOrderByInfo, $skipToken);
         $lastObject = new Order2();
         $lastObject->OrderDate = '1996-07-12T00:00:00';
@@ -459,9 +446,9 @@ class SkipTokenParserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($nextLink, "datetime'1996-07-12T00%3A00%3A00', 3456");
     }
 
-	/**
+    /**
      * test the creation of nextlink from an object.
-     * Test building of link with guid sub-value
+     * Test building of link with guid sub-value.
      */
     public function testCreationOfNextLink4()
     {
@@ -470,7 +457,7 @@ class SkipTokenParserTest extends \PHPUnit_Framework_TestCase
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
                                     $northWindMetadata, //IMetadataProvider implementation
-	                                $this->mockQueryProvider,
+                                    $this->mockQueryProvider,
                                     $configuration, //Service configuuration
                                     false
                                     );
@@ -488,6 +475,4 @@ class SkipTokenParserTest extends \PHPUnit_Framework_TestCase
         $nextLink = $internalSkipTokenInfo->buildNextPageLink($lastObject);
         $this->assertEquals($nextLink, "'ABC', guid'%7B05b242e7-52eb-46bd-8f0e-6568b72cd9a5%7D'");
     }
-    
-
 }

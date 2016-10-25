@@ -13,14 +13,13 @@ use POData\Common\Version;
 use POData\Common\ODataConstants;
 
 /**
- * Class JsonODataV2Writer is a writer for the json format in OData V2 AKA JSON Verbose
- * @package POData\Writers\Json
+ * Class JsonODataV2Writer is a writer for the json format in OData V2 AKA JSON Verbose.
  */
 class JsonODataV2Writer extends JsonODataV1Writer
 {
     //The key difference between 1 and 2 is that in 2 collection results
     //are wrapped in a "result" array.  this is to allow a place for collection metadata to be placed
-    //
+
     //IE {d : [ item1, item2, item3] }
     //is now { d : { results :[item1, item2, item3], meta1 : x, meta2 : y }
     //So we override the collection methods to shove this stuff in there
@@ -31,48 +30,46 @@ class JsonODataV2Writer extends JsonODataV1Writer
 
     protected $nextLinkName = ODataConstants::JSON_NEXT_STRING;
 
-
     /**
-     * Determines if the given writer is capable of writing the response or not
+     * Determines if the given writer is capable of writing the response or not.
+     *
      * @param Version $responseVersion the OData version of the response
-     * @param string $contentType the Content Type of the response
-     * @return boolean true if the writer can handle the response, false otherwise
+     * @param string  $contentType     the Content Type of the response
+     *
+     * @return bool true if the writer can handle the response, false otherwise
      */
     public function canHandle(Version $responseVersion, $contentType)
     {
-        $parts = explode(";", $contentType);
+        $parts = explode(';', $contentType);
 
         //special case, in v3 verbose is the v2 writer
-        if($responseVersion == Version::v3()){
+        if ($responseVersion == Version::v3()) {
             return in_array(MimeTypes::MIME_APPLICATION_JSON, $parts) && in_array('odata=verbose', $parts);
         }
 
-        if($responseVersion != Version::v2()){
+        if ($responseVersion != Version::v2()) {
             return false;
         }
 
         return in_array(MimeTypes::MIME_APPLICATION_JSON, $parts);
-
     }
 
-
     /**
-     * Write the given OData model in a specific response format
+     * Write the given OData model in a specific response format.
      *
-     * @param  ODataURL|ODataURLCollection|ODataPropertyContent|ODataFeed|ODataEntry $model Object of requested content.
+     * @param ODataURL|ODataURLCollection|ODataPropertyContent|ODataFeed|ODataEntry $model Object of requested content
      *
      * @return JsonODataV1Writer
      */
-    public function write($model){
+    public function write($model)
+    {
         // { "d" :
         $this->_writer
             ->startObjectScope()
-            ->writeName("d")
+            ->writeName('d')
             ->startObjectScope();
 
-
         if ($model instanceof ODataURL) {
-
             $this->writeURL($model);
         } elseif ($model instanceof ODataURLCollection) {
             $this->writeURLCollection($model);
@@ -88,11 +85,9 @@ class JsonODataV2Writer extends JsonODataV1Writer
                 ->startArrayScope();
             $this->writeFeed($model);
             $this->_writer->endScope();
-
-        }elseif ($model instanceof ODataEntry) {
+        } elseif ($model instanceof ODataEntry) {
             $this->writeEntry($model);
         }
-
 
         $this->_writer->endScope();
         $this->_writer->endScope();
@@ -100,17 +95,15 @@ class JsonODataV2Writer extends JsonODataV1Writer
         return $this;
     }
 
-
-    /** 
-     * begin write OData links
-     * 
+    /**
+     * begin write OData links.
+     *
      * @param ODataURLCollection $urls url collection to write
-     * 
+     *
      * @return JsonODataV2Writer
      */
     public function writeUrlCollection(ODataURLCollection $urls)
     {
-
         $this->writeRowCount($urls->count);
         $this->writeNextPageLink($urls->nextPageLink);
 
@@ -120,18 +113,17 @@ class JsonODataV2Writer extends JsonODataV1Writer
             ->writeName($this->dataArrayName)
             ->startArrayScope();
 
-            parent::writeUrlCollection($urls);
+        parent::writeUrlCollection($urls);
 
         $this->_writer->endScope();
 
         return $this;
     }
-  
 
     /**
      * Writes the row count.
      *
-     * @param int $count Row count value.
+     * @param int $count Row count value
      *
      * @return JsonODataV2Writer
      */
@@ -145,11 +137,10 @@ class JsonODataV2Writer extends JsonODataV1Writer
         return $this;
     }
 
-
     /**
      * Writes the next page link.
      *
-     * @param ODataLink $nextPageLinkUri Uri for next page link.
+     * @param ODataLink $nextPageLinkUri Uri for next page link
      *
      * @return JsonODataV2Writer
      */
@@ -180,8 +171,6 @@ class JsonODataV2Writer extends JsonODataV1Writer
             $this->writeEntry($link->expandedResult);
         }
 
-
         $this->_writer->endScope();
     }
-
 }

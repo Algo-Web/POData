@@ -3,18 +3,15 @@
 namespace POData\Providers\Stream;
 
 use POData\Providers\Metadata\ResourceStreamInfo;
-use POData\Providers\Stream\IStreamProvider;
 use POData\OperationContext\IOperationContext;
 use POData\Common\ODataException;
 
 /**
- * Class IStreamProvider2
+ * Class IStreamProvider2.
  *
  * The IStreamProvider2 interface defines the contract between the
  * data services framework server component and a data source's and a data
  * source's named stream implementation (ie. a stream provider).
- *
- * @package POData\Providers\Stream
  */
 interface IStreamProvider2 extends IStreamProvider
 {
@@ -60,29 +57,29 @@ interface IStreamProvider2 extends IStreamProvider
      *  If the stream returned from this method contains 0 byte, this method should set the response
      *  status code on the $operationContext.
      *
-     * @param object              $entity               The stream returned should be the default
-     *                                                  stream associated with this entity instance.
-     * @param ResourceStreamInfo  $resourceStreamInfo   The ResourceStreamInfo instance that describes
-     *                                                  the named stream.
-     * @param string              $eTag                 The etag value sent by the client (as the
-     *                                                  value of an If[-None-]Match header) as part
-     *                                                  of the HTTP request, This parameter will be
-     *                                                  null if no If[-None-]Match header was present.
-     * @param boolean             $checkETagForEquality True if an value of the etag parameter was sent
-     *                                                  to the server as the value of an If-Match HTTP
-     *                                                  request header, False if an value of the etag
-     *                                                  parameter was sent to the server as the the value
-     *                                                  of an If-None-Match HTTP request header null if
-     *                                                  the HTTP request for the stream was not a
-     *                                                  conditional request.
-     * @param IOperationContext $operationContext     A reference to the context for the current operation.
+     * @param object             $entity               The stream returned should be the default
+     *                                                 stream associated with this entity instance
+     * @param ResourceStreamInfo $resourceStreamInfo   The ResourceStreamInfo instance that describes
+     *                                                 the named stream
+     * @param string             $eTag                 The etag value sent by the client (as the
+     *                                                 value of an If[-None-]Match header) as part
+     *                                                 of the HTTP request, This parameter will be
+     *                                                 null if no If[-None-]Match header was present
+     * @param bool               $checkETagForEquality True if an value of the etag parameter was sent
+     *                                                 to the server as the value of an If-Match HTTP
+     *                                                 request header, False if an value of the etag
+     *                                                 parameter was sent to the server as the the value
+     *                                                 of an If-None-Match HTTP request header null if
+     *                                                 the HTTP request for the stream was not a
+     *                                                 conditional request
+     * @param IOperationContext  $operationContext     A reference to the context for the current operation
      *
      * @return mixed A valid stream the data service use to query/read a named stream which is
-     * associated with the $entity. Null may be returned from this method if the requested named
-     * stream has not been created since the creation of $entity. The data service will respond 
-     * with 204 if this method returns null.
+     *               associated with the $entity. Null may be returned from this method if the requested named
+     *               stream has not been created since the creation of $entity. The data service will respond
+     *               with 204 if this method returns null
      *
-     * @throws ODataException if a valid stream or null cannot be returned for the given arguments.
+     * @throws ODataException if a valid stream or null cannot be returned for the given arguments
      */
     public function getReadStream2($entity, ResourceStreamInfo $resourceStreamInfo, $eTag, $checkETagForEquality, IOperationContext $operationContext);
 
@@ -103,15 +100,15 @@ interface IStreamProvider2 extends IStreamProvider
      * Altering properties on the $operationContext parameter may corrupt the response
      * from the data service.
      *
-     * @param object              $entity             The entity instance associated with the
-     *                                                stream for which the content type is to
-     *                                                be obtained.
-     * @param ResourceStreamInfo  $resourceStreamInfo The ResourceStreamInfo instance that describes
-     *                                                the named stream.
-     * @param IOperationContext $operationContext   A reference to the context for the current
-     *                                                operation
+     * @param object             $entity             The entity instance associated with the
+     *                                               stream for which the content type is to
+     *                                               be obtained
+     * @param ResourceStreamInfo $resourceStreamInfo The ResourceStreamInfo instance that describes
+     *                                               the named stream
+     * @param IOperationContext  $operationContext   A reference to the context for the current
+     *                                               operation
      *
-     * @return string Valid Content-Type string for the named stream associated with the entity.
+     * @return string Valid Content-Type string for the named stream associated with the entity
      */
     public function getStreamContentType2($entity, ResourceStreamInfo $resourceStreamInfo, IOperationContext $operationContext);
 
@@ -129,14 +126,14 @@ interface IStreamProvider2 extends IStreamProvider
      * NOTE: Altering properties on the $operationContext parameter may corrupt the response
      * from the data service.
      *
-     * @param object              $entity             The entity instance associated with the
-     *                                                stream for which an etag is to be obtained.
-     * @param ResourceStreamInfo  $resourceStreamInfo The ResourceStreamInfo instance that describes
-     *                                                the named stream.
-     * @param IOperationContext $operationContext   A reference to the context for the current
-     *                                                operation.
+     * @param object             $entity             The entity instance associated with the
+     *                                               stream for which an etag is to be obtained
+     * @param ResourceStreamInfo $resourceStreamInfo The ResourceStreamInfo instance that describes
+     *                                               the named stream
+     * @param IOperationContext  $operationContext   A reference to the context for the current
+     *                                               operation
      *
-     * @return string ETag of the named stream associated with the entity specified.
+     * @return string ETag of the named stream associated with the entity specified
      */
     public function getStreamETag2($entity, ResourceStreamInfo $resourceStreamInfo, IOperationContext $operationContext);
 
@@ -162,16 +159,16 @@ interface IStreamProvider2 extends IStreamProvider
      * If URI returned is null, then the data service runtime omit the self link for the
      * named media resource.
      *
-     * @param object              $entity             The entity instance associated with the
-     *                                                stream for which a read stream URI is to
-     *                                                be obtained.
-     * @param ResourceStreamInfo  $resourceStreamInfo The ResourceStreamInfo instance that describes
-     *                                                the named stream.
-     * @param IOperationContext $operationContext   A reference to the context for the current
-     *                                                operation
+     * @param object             $entity             The entity instance associated with the
+     *                                               stream for which a read stream URI is to
+     *                                               be obtained
+     * @param ResourceStreamInfo $resourceStreamInfo The ResourceStreamInfo instance that describes
+     *                                               the named stream
+     * @param IOperationContext  $operationContext   A reference to the context for the current
+     *                                               operation
      *
      * @return string The URI clients should use when making retrieve (ie. GET) requests to
-     *                the stream(ie. Media Resource).
+     *                the stream(ie. Media Resource)
      */
     public function getReadStreamUri2($entity, ResourceStreamInfo $resourceStreamInfo, IOperationContext $operationContext);
 }
