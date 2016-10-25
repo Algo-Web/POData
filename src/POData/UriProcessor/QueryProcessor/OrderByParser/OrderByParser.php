@@ -315,6 +315,11 @@ class OrderByParser
                     $currentNode->addNode($node);
                 } else {
                     try {
+                        // If a magic method for properties exists (eg Eloquent), dive into it directly and return value
+                        if (method_exists($currentObject, '__get')) {
+                            $targProperty = $resourceProperty->getName();
+                            return $currentObject->$targProperty;
+                        }
                         $reflectionClass = new \ReflectionClass(get_class($currentObject));
                         $reflectionProperty = $reflectionClass->getProperty($resourceProperty->getName());
                         $reflectionProperty->setAccessible(true);
