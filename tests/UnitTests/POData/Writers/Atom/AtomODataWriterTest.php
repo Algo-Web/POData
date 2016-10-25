@@ -17,33 +17,33 @@ use POData\Common\Version;
 use POData\Common\MimeTypes;
 
 use Phockito\Phockito;
-
 use PhockitoUnit\PhockitoUnitTestCase;
+
+use Carbon\Carbon as Carbon;
 
 class AtomODataWriterTest extends PhockitoUnitTestCase
 {
     /**
      * Removes the updated tag from an XML string
-     * IE <updated>2013-09-17T19:22:33-06:00</updated>.
-     *
+     * IE <updated>2013-09-17T19:22:33-06:00</updated>
      * @param string $xml
      *
      * @return string
      */
-    public function removeUpdatedTags($xml)
+    public function removeUpdatedTags($xml, $new = null)
     {
-        $start = strpos($xml, '<updated>');
-        while ($start !== false) {
-            $xml = substr($xml, 0, $start).substr($xml, $start + 9 + 25 + 10);
-            $start = strpos($xml, '<updated>');
+        if (!isset($new)) {
+            $new = '';
         }
+
+        $xml = preg_replace('/<updated>.*?<\/updated>/i', '<updated>'.$new.'</updated>', $xml);
 
         return $xml;
     }
 
-    /**
-     * Test for write top level URI item.
-     */
+	/**
+	 * Test for write top level URI item.
+	 */
     public function testODataURLItem()
     {
         $url = new ODataURL();
@@ -106,6 +106,9 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
      */
     public function testWriteFeed()
     {
+        $testNow = Carbon::create(2013, 9, 17, 19, 22, 33);
+        Carbon::setTestNow($testNow);
+
         $feed = new ODataFeed();
         $feed->id = 'Feed Id';
         $feed->rowCount = 'Count';
@@ -148,6 +151,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $selfLink->url = 'Self Link URL';
 
         $entry1->selfLink = $selfLink;
+
         $entry1->mediaLinks = array(new ODataMediaLink('Media Link Name',
                                                       'Edit Media link',
                                                       'Src Media Link',
@@ -228,7 +232,8 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 
         $actual = $writer->getOutput();
 
-        $expected = '<feed xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns="http://www.w3.org/2005/Atom" xml:base="http://localhost/NorthWind.svc">
+	    $expected = '
+<feed xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns="http://www.w3.org/2005/Atom" xml:base="http://localhost/NorthWind.svc">
   <title type="text">Feed Title</title>
   <id>Feed Id</id>
   <updated>2013-09-17T19:22:33-06:00</updated>
@@ -262,7 +267,8 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
   <link rel="Next" href="Next Link Url"/>
 </feed>';
 
-        $this->assertXmlStringEqualsXmlString($this->removeUpdatedTags($expected), $this->removeUpdatedTags($actual));
+        $new = '2013-09-17T19:22:33-06:00';
+	    $this->assertXmlStringEqualsXmlString($this->removeUpdatedTags($expected, $new), $this->removeUpdatedTags($actual, $new));
     }
 
     /**
@@ -837,7 +843,8 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
   </content>
 </entry>';
 
-        $this->assertXmlStringEqualsXmlString($this->removeUpdatedTags($expected), $this->removeUpdatedTags($actual));
+        $new = '2013-09-17T19:49:59-06:00';
+	    $this->assertXmlStringEqualsXmlString($this->removeUpdatedTags($expected, $new), $this->removeUpdatedTags($actual, $new));
     }
 
     /**
