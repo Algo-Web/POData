@@ -8,6 +8,9 @@ use POData\Configuration\ProtocolVersion;
 use POData\Providers\Metadata\IMetadataProvider;
 use POData\Writers\Metadata\MetadataWriter;
 use POData\Common\Version;
+
+use Phockito\Phockito;
+
 use UnitTests\POData\Facets\NorthWind2\NorthWindMetadata;
 use POData\Providers\Query\IQueryProvider;
 
@@ -18,7 +21,7 @@ class MetadataWriterTest extends PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->mockQueryProvider = \Phockito::mock('POData\Providers\Query\IQueryProvider');
+	    $this->mockQueryProvider = Phockito::mock('POData\Providers\Query\IQueryProvider');
     }
 
     public function testWriteMetadata()

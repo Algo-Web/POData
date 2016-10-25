@@ -15,7 +15,9 @@ use POData\Writers\Atom\AtomODataWriter;
 use POData\Providers\ProvidersWrapper;
 use POData\Common\Version;
 use POData\Common\MimeTypes;
-use Phockito;
+
+use Phockito\Phockito;
+
 use PhockitoUnit\PhockitoUnitTestCase;
 
 class AtomODataWriterTest extends PhockitoUnitTestCase

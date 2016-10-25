@@ -5,6 +5,7 @@ namespace UnitTests\POData\Common;
 use POData\HttpProcessUtility;
 use POData\Common\MimeTypes;
 use PhockitoUnit\PhockitoUnitTestCase;
+use Phockito\Phockito;
 
 class HttpProcessUtilityTest extends PhockitoUnitTestCase
 {

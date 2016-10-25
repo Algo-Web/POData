@@ -6,6 +6,12 @@ use POData\OperationContext\ServiceHost;
 use POData\Common\ODataConstants;
 use POData\Common\Version;
 use PhockitoUnit\PhockitoUnitTestCase;
+<<<<<<< a6acea6934e84a2f5b2672eed9418be4dd8ccc8a
+=======
+use Phockito\Phockito;
+
+class ServiceHostTest extends PhockitoUnitTestCase {
+>>>>>>> Update phockito references
 
 class ServiceHostTest extends PhockitoUnitTestCase
 {

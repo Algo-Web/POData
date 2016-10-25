@@ -17,7 +17,7 @@ use POData\Providers\ProvidersWrapper;
 use POData\Common\Version;
 use POData\Common\MimeTypes;
 use PhockitoUnit\PhockitoUnitTestCase;
-use Phockito;
+use Phockito\Phockito;
 
 class JsonLightODataWriterFullMetadataTest extends PhockitoUnitTestCase
 {

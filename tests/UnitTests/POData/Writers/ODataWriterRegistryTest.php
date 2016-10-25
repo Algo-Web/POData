@@ -7,7 +7,7 @@ use POData\Common\MimeTypes;
 use POData\Writers\ODataWriterRegistry;
 use POData\Writers\IODataWriter;
 use PhockitoUnit\PhockitoUnitTestCase;
-use Phockito;
+use Phockito\Phockito;
 
 class ODataWriterRegistryTest extends PhockitoUnitTestCase
 {

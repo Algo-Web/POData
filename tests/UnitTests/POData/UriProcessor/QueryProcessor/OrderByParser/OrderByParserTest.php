@@ -8,6 +8,12 @@ use POData\Providers\ProvidersWrapper;
 use POData\Configuration\ServiceConfiguration;
 use POData\Common\ODataException;
 use POData\UriProcessor\QueryProcessor\OrderByParser\OrderByParser;
+<<<<<<< a6acea6934e84a2f5b2672eed9418be4dd8ccc8a
+=======
+
+use Phockito\Phockito;
+
+>>>>>>> Update phockito references
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 //These are in the file loaded by above use statement
 //TODO: move to own class files
@@ -26,7 +32,11 @@ class OrderByParserTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
+<<<<<<< a6acea6934e84a2f5b2672eed9418be4dd8ccc8a
         $this->mockQueryProvider = \Phockito::mock('POData\Providers\Query\IQueryProvider');
+=======
+	    $this->mockQueryProvider = Phockito::mock('POData\Providers\Query\IQueryProvider');
+>>>>>>> Update phockito references
     }
 
     public function testOrderByWithSyntaxError()

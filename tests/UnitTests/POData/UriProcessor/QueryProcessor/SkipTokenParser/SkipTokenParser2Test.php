@@ -11,6 +11,10 @@ use POData\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenParser;
 use POData\Providers\Query\IQueryProvider;
 use UnitTests\POData\Facets\NorthWind2\NorthWindMetadata;
 use PhockitoUnit\PhockitoUnitTestCase;
+<<<<<<< a6acea6934e84a2f5b2672eed9418be4dd8ccc8a
+=======
+use Phockito\Phockito;
+>>>>>>> Update phockito references
 
 class SkipTokenParser2Test extends PhockitoUnitTestCase
 {

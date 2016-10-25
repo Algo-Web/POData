@@ -12,7 +12,7 @@ use POData\Configuration\ServiceConfiguration;
 use POData\Providers\Metadata\IMetadataProvider;
 use POData\Writers\ODataWriterRegistry;
 use PhockitoUnit\PhockitoUnitTestCase;
-use Phockito;
+use Phockito\Phockito;
 
 class BaseServiceTest extends PhockitoUnitTestCase
 {
