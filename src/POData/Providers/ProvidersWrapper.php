@@ -731,17 +731,10 @@ class ProvidersWrapper
      *
      * @throws ODataException
      */
-<<<<<<< HEAD
     public function getRelatedResourceSet(
         QueryType $queryType,
         ResourceSet $sourceResourceSet,
         $sourceEntity,
-=======
-	public function getRelatedResourceSet(
-		QueryType $queryType,
-	    ResourceSet $sourceResourceSet,
-	    $sourceEntity,
->>>>>>> b8744fe09445159e82c2a52f13aac56a2247d03a
         ResourceSet $targetResourceSet,
         ResourceProperty $targetProperty, 
         $filterInfo,
