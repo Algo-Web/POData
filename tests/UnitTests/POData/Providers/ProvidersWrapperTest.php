@@ -588,7 +588,8 @@ class ProvidersWrapperTest extends PhockitoUnitTestCase
 	        $this->mockFilterInfo,
             $orderBy,
             $top,
-            $skip
+            $skip,
+            null
         ))->return($fakeQueryResult);
 
         $wrapper = $this->getMockedWrapper();
