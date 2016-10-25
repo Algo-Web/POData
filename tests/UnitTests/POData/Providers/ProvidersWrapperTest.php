@@ -648,7 +648,7 @@ class ProvidersWrapperTest extends PhockitoUnitTestCase
 		$orderBy = null;
 		$top = 10;
 		$skip = 10;
-
+		$SkipToken = 0;
 		$fakeQueryResult = new QueryResult();
 		$fakeQueryResult->count = 123; //this is irrelevant
 		$fakeQueryResult->results = null;
@@ -663,7 +663,8 @@ class ProvidersWrapperTest extends PhockitoUnitTestCase
 			$this->mockFilterInfo,
 			$orderBy,
 			$top,
-			$skip
+			$skip,
+                        null
 		))->return($fakeQueryResult);
 
 		$wrapper = $this->getMockedWrapper();
@@ -675,7 +676,8 @@ class ProvidersWrapperTest extends PhockitoUnitTestCase
 				$this->mockFilterInfo,
 				$orderBy,
 				$top,
-				$skip
+				$skip,
+				null
 			);
 			$this->fail("expected exception not thrown");
 		}
@@ -705,7 +707,8 @@ class ProvidersWrapperTest extends PhockitoUnitTestCase
 	        $this->mockFilterInfo,
             $orderBy,
             $top,
-            $skip
+            $skip,
+            null
         ))->return($fakeQueryResult);
 
         $wrapper = $this->getMockedWrapper();
@@ -748,7 +751,8 @@ class ProvidersWrapperTest extends PhockitoUnitTestCase
 	        $this->mockFilterInfo,
             $orderBy,
             $top,
-            $skip
+            $skip,
+            null
         ))->return($fakeQueryResult);
 
         $wrapper = $this->getMockedWrapper();
@@ -792,7 +796,8 @@ class ProvidersWrapperTest extends PhockitoUnitTestCase
 			$this->mockFilterInfo,
 			$orderBy,
 			$top,
-			$skip
+			$skip,
+                        null
 		))->return($fakeQueryResult);
 
 		$wrapper = $this->getMockedWrapper();
@@ -833,7 +838,8 @@ class ProvidersWrapperTest extends PhockitoUnitTestCase
 	        $this->mockFilterInfo,
             $orderBy,
             $top,
-            $skip
+            $skip,
+            null
         ))->return($fakeQueryResult);
 
         $wrapper = $this->getMockedWrapper();
@@ -873,7 +879,8 @@ class ProvidersWrapperTest extends PhockitoUnitTestCase
 	        $this->mockFilterInfo,
             $orderBy,
             $top,
-            $skip
+            $skip,
+            null
         ))->return($fakeQueryResult);
 
         $wrapper = $this->getMockedWrapper();
