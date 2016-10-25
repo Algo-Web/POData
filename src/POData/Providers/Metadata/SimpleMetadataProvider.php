@@ -44,7 +44,29 @@ class SimpleMetadataProvider implements IMetadataProvider
      */
     public function getResourceSets($params = null)
     {
-        return array_values($this->resourceSets);
+        $parameters = [];
+        if (is_string($params)) {
+            $parameters[] = $params;
+        } elseif (isset($params) && !is_array($params)) {
+            throw new \ErrorException('Input parameter must be absent, null, string or array');
+        } else {
+            $parameters = $params;
+        }
+        if (0 == count($parameters)) {
+            return array_values($this->resourceSets);
+        }
+        assert(is_array($parameters));
+        $return = [];
+        $counter = 0;
+        foreach ($this->resourceSets as $resource) {
+            $resName = $resource->getName();
+            if (in_array($resName, $parameters)) {
+                $return[] = $resource;
+                $counter++;
+            }
+        }
+        assert($counter == count($return));
+        return $return;
     }
 
     /**
