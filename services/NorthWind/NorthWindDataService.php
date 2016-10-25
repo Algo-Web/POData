@@ -44,7 +44,7 @@ class NorthWindDataService extends BaseService
      *                            IStreamProvider
      * 
      * @see library/POData.IServiceProvider::getService()
-     * @return object
+     * @return object|null
      */
     public function getService($serviceType)
     {

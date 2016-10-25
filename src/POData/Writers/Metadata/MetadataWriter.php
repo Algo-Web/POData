@@ -111,7 +111,7 @@ class MetadataWriter
             }            
         }
 
-        //write Container schema node and define required nmaespaces
+        //write Container schema node and define required namespaces
         $this->_writeSchemaElement($resourceTypeNamespace, $edmSchemaVersion);
         if (!empty($resourceTypesInContainerNamespace)) {
             //Get assocation types in container namespace as array of 

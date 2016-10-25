@@ -9,6 +9,7 @@ use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\ResourceAssociationSet;
 use POData\Configuration\ServiceConfiguration;
+use POData\UriProcessor\QueryProcessor\SkipTokenParser\InternalSkipTokenInfo;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 use POData\Common\ODataException;
 use POData\Common\Messages;
@@ -648,20 +649,21 @@ class ProvidersWrapper
      * @param InternalOrderByInfo $orderBy The orderBy information
      * @param int $top The top count
      * @param int $skip The skip count
+     * @param int $skipToken The skip token
      * 
      * @return QueryResult
      */
-    public function getResourceSet(QueryType $queryType, ResourceSet $resourceSet, $filterInfo, $orderBy, $top, $skip)
+    public function getResourceSet(QueryType $queryType, ResourceSet $resourceSet, FilterInfo $filterInfo = null, InternalOrderByInfo $orderBy = null, $top = null, $skip = null, InternalSkipTokenInfo $skipToken = null)
     {
-
-        $queryResult = $this->queryProvider->getResourceSet(
-            $queryType,
-            $resourceSet,
-            $filterInfo,
-            $orderBy,
-            $top,
-            $skip
-        );
+		$queryResult = $this->queryProvider->getResourceSet(
+			$queryType,
+			$resourceSet,
+			$filterInfo,
+			$orderBy,
+			$top,
+			$skip,
+			$skipToken
+		);
 
         $this->validateQueryResult($queryResult, $queryType, 'IQueryProvider::getResourceSet');
 
@@ -729,10 +731,17 @@ class ProvidersWrapper
      *
      * @throws ODataException
      */
+<<<<<<< HEAD
     public function getRelatedResourceSet(
         QueryType $queryType,
         ResourceSet $sourceResourceSet,
         $sourceEntity,
+=======
+	public function getRelatedResourceSet(
+		QueryType $queryType,
+	    ResourceSet $sourceResourceSet,
+	    $sourceEntity,
+>>>>>>> b8744fe09445159e82c2a52f13aac56a2247d03a
         ResourceSet $targetResourceSet,
         ResourceProperty $targetProperty, 
         $filterInfo,
@@ -821,9 +830,11 @@ class ProvidersWrapper
         // Orders(1234)/Customer/Orders => here if Customer is null then 
         // the UriProcessor will throw error.
         if (!is_null($entityInstance)) {
+			$targetResourceType
+				= $targetResourceSet
+				   ->getResourceType();
             $entityName 
-                = $targetResourceSet
-                    ->getResourceType()
+                = $targetResourceType
                     ->getInstanceType()
                     ->getName();
             if (!is_object($entityInstance) 
@@ -836,15 +847,10 @@ class ProvidersWrapper
                     )
                 );
             }
-
-            foreach ($targetProperty->getResourceType()->getKeyProperties() 
+            foreach ($targetProperty->getResourceType()->getKeyProperties()
             as $keyName => $resourceProperty) {
                 try {
-                    $keyProperty = new \ReflectionProperty(
-                        $entityInstance, 
-                        $keyName
-                    );
-                    $keyValue = $keyProperty->getValue($entityInstance);
+                    $keyValue = $targetResourceType->getPropertyValue($entityInstance, $keyName);
                     if (is_null($keyValue)) {
                         throw ODataException::createInternalServerError(
                             Messages::providersWrapperIDSQPMethodReturnsInstanceWithNullKeyProperties('IDSQP::getRelatedResourceReference')
@@ -886,7 +892,8 @@ class ProvidersWrapper
             throw ODataException::createResourceNotFoundError($resourceSet->getName());
         }
 
-        $entityName = $resourceSet->getResourceType()->getInstanceType()->getName();
+		$resourceType = $resourceSet->getResourceType();
+        $entityName   = $resourceType->getInstanceType()->getName();
         if (!is_object($entityInstance) 
             || !($entityInstance instanceof $entityName)
         ) {
@@ -901,8 +908,7 @@ class ProvidersWrapper
         foreach ($keyDescriptor->getValidatedNamedValues() 
             as $keyName => $valueDescription) {
             try {
-                $keyProperty = new \ReflectionProperty($entityInstance, $keyName);
-                $keyValue = $keyProperty->getValue($entityInstance);
+				$keyValue = $resourceType->getPropertyValue($entityInstance, $keyName);
                 if (is_null($keyValue)) {
                     throw ODataException::createInternalServerError(
                         Messages::providersWrapperIDSQPMethodReturnsInstanceWithNullKeyProperties($methodName)
