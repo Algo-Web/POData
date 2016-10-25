@@ -655,15 +655,15 @@ class ProvidersWrapper
      */
     public function getResourceSet(QueryType $queryType, ResourceSet $resourceSet, FilterInfo $filterInfo = null, InternalOrderByInfo $orderBy = null, $top = null, $skip = null, InternalSkipTokenInfo $skipToken = null)
     {
-		$queryResult = $this->queryProvider->getResourceSet(
-			$queryType,
-			$resourceSet,
-			$filterInfo,
-			$orderBy,
-			$top,
-			$skip,
-			$skipToken
-		);
+        $queryResult = $this->queryProvider->getResourceSet(
+            $queryType,
+            $resourceSet,
+            $filterInfo,
+            $orderBy,
+            $top,
+            $skip,
+            $skipToken
+        );
 
         $this->validateQueryResult($queryResult, $queryType, 'IQueryProvider::getResourceSet');
 
@@ -823,9 +823,9 @@ class ProvidersWrapper
         // Orders(1234)/Customer/Orders => here if Customer is null then 
         // the UriProcessor will throw error.
         if (!is_null($entityInstance)) {
-			$targetResourceType
-				= $targetResourceSet
-				   ->getResourceType();
+            $targetResourceType
+                = $targetResourceSet
+                    ->getResourceType();
             $entityName 
                 = $targetResourceType
                     ->getInstanceType()
@@ -885,7 +885,7 @@ class ProvidersWrapper
             throw ODataException::createResourceNotFoundError($resourceSet->getName());
         }
 
-		$resourceType = $resourceSet->getResourceType();
+        $resourceType = $resourceSet->getResourceType();
         $entityName   = $resourceType->getInstanceType()->getName();
         if (!is_object($entityInstance) 
             || !($entityInstance instanceof $entityName)
@@ -901,7 +901,7 @@ class ProvidersWrapper
         foreach ($keyDescriptor->getValidatedNamedValues() 
             as $keyName => $valueDescription) {
             try {
-				$keyValue = $resourceType->getPropertyValue($entityInstance, $keyName);
+                $keyValue = $resourceType->getPropertyValue($entityInstance, $keyName);
                 if (is_null($keyValue)) {
                     throw ODataException::createInternalServerError(
                         Messages::providersWrapperIDSQPMethodReturnsInstanceWithNullKeyProperties($methodName)
