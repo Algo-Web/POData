@@ -2,6 +2,9 @@
 
 namespace POData\Writers\Json;
 
+use POData\Writers\Json\IndentedTextWriter;
+use Carbon\Carbon;
+
 /**
  * Class JsonWriter.
  */
@@ -154,7 +157,7 @@ class JsonWriter
                 break;
 
             case 'Edm.DateTime':
-                $dateTime = new \DateTime($value, new \DateTimeZone('UTC'));
+                $dateTime = new Carbon($value, new \DateTimeZone('UTC'));
                 $formattedDateTime = $dateTime->format('Y-m-d\TH:i:s');
                 $this->_writeCore($formattedDateTime, /* quotes */ true);
                 break;
