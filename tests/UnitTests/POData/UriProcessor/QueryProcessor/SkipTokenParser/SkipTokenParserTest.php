@@ -8,12 +8,9 @@ use POData\Configuration\ServiceConfiguration;
 use POData\Common\ODataException;
 use POData\UriProcessor\QueryProcessor\OrderByParser\OrderByParser;
 use POData\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenParser;
-<<<<<<< a6acea6934e84a2f5b2672eed9418be4dd8ccc8a
-=======
 
 use Phockito\Phockito;
 
->>>>>>> Update phockito references
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 //These are in the file loaded by above use statement
 //TODO: move to own class files
@@ -24,22 +21,12 @@ use POData\Providers\Query\IQueryProvider;
 
 class SkipTokenParserTest extends \PHPUnit_Framework_TestCase
 {
-<<<<<<< a6acea6934e84a2f5b2672eed9418be4dd8ccc8a
     /** @var IQueryProvider */
     protected $mockQueryProvider;
-=======
-	/** @var  IQueryProvider */
-	protected $mockQueryProvider;
-
-	protected function setUp()
-	{
-		$this->mockQueryProvider = Phockito::mock('POData\Providers\Query\IQueryProvider');
-	}
->>>>>>> Update phockito references
 
     protected function setUp()
     {
-        $this->mockQueryProvider = \Phockito::mock('POData\Providers\Query\IQueryProvider');
+        $this->mockQueryProvider = Phockito::mock('POData\Providers\Query\IQueryProvider');
     }
 
     protected function tearDown()

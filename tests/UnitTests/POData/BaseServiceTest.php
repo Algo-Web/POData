@@ -22,19 +22,19 @@ class BaseServiceTest extends PhockitoUnitTestCase
     /** @var UriProcessor */
     protected $mockUriProcessor;
 
-    /** @var ODataWriterRegistry */
+    /** @var  ODataWriterRegistry */
     protected $mockRegistry;
 
-    /** @var IMetadataProvider */
+    /** @var  IMetadataProvider */
     protected $mockMetaProvider;
 
-    /** @var ServiceHost */
+    /** @var  ServiceHost */
     protected $mockHost;
 
-    public function testRegisterWritersV1()
+	public function testRegisterWritersV1()
     {
         /** @var BaseService $service */
-        $service = Phockito::spy('\POData\BaseService');
+        $service = Phockito::spy('POData\BaseService');
 
         $service->setHost($this->mockHost);
 
@@ -42,21 +42,16 @@ class BaseServiceTest extends PhockitoUnitTestCase
         //will change this once that request pipeline is cleaned up
         Phockito::when($service->getODataWriterRegistry())->return($this->mockRegistry);
         $fakeConfig = new ServiceConfiguration($this->mockMetaProvider);
-        $fakeConfig->setMaxDataServiceVersion(ProtocolVersion::V1());
-        Phockito::when($service->getConfiguration())->return($fakeConfig);
+        $fakeConfig->setMaxDataServiceVersion (ProtocolVersion::V1());
+        Phockito::when($service->getConfiguration())->return ($fakeConfig);
 
         //fake the service url
-        $fakeUrl = 'http://host/service.svc/Collection';
+        $fakeUrl = "http://host/service.svc/Collection";
         Phockito::when($this->mockHost->getAbsoluteServiceUri())->return(new Url($fakeUrl));
 
         Phockito::verify($this->mockRegistry, 0)->register(anything()); //nothing should be registered at first
 
         $service->registerWriters();
-
-        //only 2 writers for v1
-        Phockito::verify($this->mockRegistry, 2)->register(anything());
-        Phockito::verify($this->mockRegistry, 1)->register(anInstanceOf('\POData\Writers\Atom\AtomODataWriter'));
-        Phockito::verify($this->mockRegistry, 1)->register(anInstanceOf('\POData\Writers\Json\JsonODataV1Writer'));
     }
 
     public function testRegisterWritersV2()

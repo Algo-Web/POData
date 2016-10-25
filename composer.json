@@ -15,6 +15,14 @@
             "email": "msopentech@microsoft.com"
         }
     ],
+
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/CyberiaResurrection/phockito-unit.git"
+    }
+  ],
+
     "minimum-stability": "dev",
     "require": {
         "myclabs/php-enum": "1.2.0",
@@ -23,8 +31,8 @@
         "illuminate/http": "^5.1"
     },
     "require-dev": {
-        "balihoo/phockito-unit" : "1.0.0",
-        "hafriedlander/phockito" : "dev-master",
+        "balihoo/phockito-unit" : "dev-master",
+        "crashuxx/phockito" : "dev-master",
         "doctrine/annotations": "1.*",
         "satooshi/php-coveralls": "dev-master",
         "phpunit/phpunit": "4.8.*",
