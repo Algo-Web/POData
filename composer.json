@@ -5,10 +5,7 @@
     "keywords": [ "rest", "odata" ],
     "license": "BSD-2-Clause",
     "authors": [
-        {
-            "name": "Csonka Bálint",
-            "email": "balint777@gmail.com"
-        },
+
         {
             "name": "POData Project",
             "email": "podataproject@gmail.com"

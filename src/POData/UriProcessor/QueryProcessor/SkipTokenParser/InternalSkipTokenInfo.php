@@ -203,19 +203,10 @@ class InternalSkipTokenInfo
                         // the property is not set in the dummy object by OrderByParser, 
                         // an unexpected state.
                         if (!$isLastSegment) {
-                            $dummyProperty = new \ReflectionProperty(
-                                $currentObject, 
-                                $subPathSegment->getName()
-                            );
-                            $currentObject 
-                                = $dummyProperty->getValue($currentObject);
+							$currentObject = $this->_resourceType->getPropertyValue($currentObject, $subPathSegment->getName());
                         } else {
-                            $dummyProperty = new \ReflectionProperty(
-                                $currentObject, 
-                                $subPathSegment->getName()
-                            );
                             if ($this->_orderByValuesInSkipToken[$i][1] instanceof Null1) {
-                                $dummyProperty->setValue($currentObject, null);
+								$this->_resourceType->setPropertyValue($currentObject, $subPathSegment->getName(), null);
                             } else {
                                 // The Lexer's Token::Text value will be always 
                                 // string, convert the string to 
@@ -224,7 +215,7 @@ class InternalSkipTokenInfo
                                     = $this->_orderByValuesInSkipToken[$i][1]->convert(
                                         $this->_orderByValuesInSkipToken[$i][0]
                                     );
-                                $dummyProperty->setValue($currentObject, $value);
+								$this->_resourceType->setPropertyValue($currentObject, $subPathSegment->getName(), $value);
                             }
                         }
                     } catch (\ReflectionException $reflectionException) {
@@ -268,11 +259,7 @@ class InternalSkipTokenInfo
             foreach ($subPathSegments as &$subPathSegment) {
                 $isLastSegment = ($index == $subPathCount - 1);
                 try {
-                    $dummyProperty = new \ReflectionProperty(
-                        $currentObject, 
-                        $subPathSegment->getName()
-                    );
-                    $currentObject = $dummyProperty->getValue($currentObject);
+					$currentObject = $this->_resourceType->getPropertyValue($currentObject, $subPathSegment->getName());
                     if (is_null($currentObject)) {
                             $nextPageLink .= 'null, ';
                             break;

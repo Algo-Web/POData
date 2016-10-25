@@ -357,7 +357,8 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
             }
 
             if ($this->needNextPageLink(count($entryObjects))) {
-                $feed->nextPageLink = $this->getNextLinkUri(end($entryObjects), $absoluteUri);
+                $lastObject = end($entryObjects);
+                $feed->nextPageLink = $this->getNextLinkUri($lastObject, $absoluteUri);
             }
         }
     }
@@ -771,7 +772,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
     /**
      * Write media resource metadata (for MLE and Named Streams)
      * 
-     * @param mixed        $entryObject  The entry instance being serialized.
+     * @param mixed        $entryObject   The entry instance being serialized.
      * @param ResourceType &$resourceType Resource type of the entry instance.
      * @param string       $title         Title for the current 
      *                                    current entry instance.
