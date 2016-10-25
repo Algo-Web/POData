@@ -232,7 +232,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 
         $actual = $writer->getOutput();
 
-	    $expected = '
+	    $expected = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <feed xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns="http://www.w3.org/2005/Atom" xml:base="http://localhost/NorthWind.svc">
   <title type="text">Feed Title</title>
   <id>Feed Id</id>
@@ -268,7 +268,9 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 </feed>';
 
         $new = '2013-09-17T19:22:33-06:00';
-	    $this->assertXmlStringEqualsXmlString($this->removeUpdatedTags($expected, $new), $this->removeUpdatedTags($actual, $new));
+        $expected = $this->removeUpdatedTags($expected, $new);
+        $actual = $this->removeUpdatedTags($actual, $new);
+        $this->assertEquals($expected, $actual);
     }
 
     /**
@@ -844,7 +846,9 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 </entry>';
 
         $new = '2013-09-17T19:49:59-06:00';
-	    $this->assertXmlStringEqualsXmlString($this->removeUpdatedTags($expected, $new), $this->removeUpdatedTags($actual, $new));
+        $expected = $this->removeUpdatedTags($expected, $new);
+        $actual = $this->removeUpdatedTags($actual, $new);
+        $this->assertEquals($expected, $actual);
     }
 
     /**
@@ -1049,9 +1053,13 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
    </d:Addresses>
   </m:properties>
  </content>
-</entry>';
+</entry>
+';
 
-        $this->assertXmlStringEqualsXmlString($this->removeUpdatedTags($expected), $this->removeUpdatedTags($actual));
+        $new = '2011-05-24T15:01:23+05:30';
+        $expected = $this->removeUpdatedTags($expected, $new);
+        $actual = $this->removeUpdatedTags($actual, $new);
+        $this->assertEquals($expected, $actual);
     }
 
    /**
