@@ -2,6 +2,8 @@
 
 namespace POData\Providers\Metadata\Type;
 
+use Carbon\Carbon;
+
 /**
  * Class DateTime.
  */
@@ -111,7 +113,7 @@ class DateTime implements IType
     public static function validateWithoutPreFix($dateTime)
     {
         try {
-            $dt = new \DateTime($dateTime, new \DateTimeZone('UTC'));
+            $dt = new Carbon($dateTime, new \DateTimeZone('UTC'));
         } catch (\Exception $e) {
             return false;
         }
@@ -128,9 +130,8 @@ class DateTime implements IType
      */
     public static function year($dateTime)
     {
-        $date = new \DateTime($dateTime);
-
-        return $date->format('Y');
+        $date = new Carbon($dateTime);
+        return $date->format("Y");
     }
 
     /**
@@ -142,9 +143,8 @@ class DateTime implements IType
      */
     public static function month($dateTime)
     {
-        $date = new \DateTime($dateTime);
-
-        return $date->format('m');
+        $date = new Carbon($dateTime);
+        return $date->format("m");
     }
 
     /**
@@ -156,9 +156,8 @@ class DateTime implements IType
      */
     public static function day($dateTime)
     {
-        $date = new \DateTime($dateTime);
-
-        return $date->format('d');
+        $date = new Carbon($dateTime);
+        return $date->format("d");
     }
 
     /**
@@ -170,9 +169,8 @@ class DateTime implements IType
      */
     public static function hour($dateTime)
     {
-        $date = new \DateTime($dateTime);
-
-        return $date->format('H');
+        $date = new Carbon($dateTime);
+        return $date->format("H");
     }
 
     /**
@@ -184,9 +182,8 @@ class DateTime implements IType
      */
     public static function minute($dateTime)
     {
-        $date = new \DateTime($dateTime);
-
-        return $date->format('i');
+        $date = new Carbon($dateTime);
+        return $date->format("i");
     }
 
     /**
@@ -198,9 +195,8 @@ class DateTime implements IType
      */
     public static function second($dateTime)
     {
-        $date = new \DateTime($dateTime);
-
-        return $date->format('s');
+        $date = new Carbon($dateTime);
+        return $date->format("s");
     }
 
     /**

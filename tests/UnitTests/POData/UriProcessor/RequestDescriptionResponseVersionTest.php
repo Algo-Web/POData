@@ -11,7 +11,9 @@ use POData\UriProcessor\ResourcePathProcessor\SegmentParser\SegmentDescriptor;
 use POData\Common\Url;
 use POData\Common\Version;
 use POData\Common\ODataException;
-use Phockito;
+
+use Phockito\Phockito;
+
 use PhockitoUnit\PhockitoUnitTestCase;
 
 //OData has some interesting version negotiations

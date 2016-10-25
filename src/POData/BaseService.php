@@ -46,6 +46,11 @@ use POData\Writers\ODataWriterRegistry;
  *      Force BaseService class to implement functions for custom
  *      data service providers
  */
+// TODO: Look at ripping this out after phockito gets binned
+if (class_exists('POData\BaseService')) {
+    return;
+}
+
 abstract class BaseService implements IRequestHandler, IService
 {
     /**

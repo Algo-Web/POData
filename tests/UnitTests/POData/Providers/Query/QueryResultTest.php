@@ -3,6 +3,8 @@
 namespace UnitTests\POData\Providers\Metadata;
 
 use POData\Providers\Query\QueryResult;
+
+use Phockito\Phockito;
 use PhockitoUnit\PhockitoUnitTestCase;
 
 class QueryResultTest extends PhockitoUnitTestCase

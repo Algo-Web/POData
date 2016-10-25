@@ -15,33 +15,35 @@ use POData\Writers\Atom\AtomODataWriter;
 use POData\Providers\ProvidersWrapper;
 use POData\Common\Version;
 use POData\Common\MimeTypes;
-use Phockito;
+
+use Phockito\Phockito;
 use PhockitoUnit\PhockitoUnitTestCase;
+
+use Carbon\Carbon as Carbon;
 
 class AtomODataWriterTest extends PhockitoUnitTestCase
 {
     /**
      * Removes the updated tag from an XML string
-     * IE <updated>2013-09-17T19:22:33-06:00</updated>.
-     *
+     * IE <updated>2013-09-17T19:22:33-06:00</updated>
      * @param string $xml
      *
      * @return string
      */
-    public function removeUpdatedTags($xml)
+    public function removeUpdatedTags($xml, $new = null)
     {
-        $start = strpos($xml, '<updated>');
-        while ($start !== false) {
-            $xml = substr($xml, 0, $start).substr($xml, $start + 9 + 25 + 10);
-            $start = strpos($xml, '<updated>');
+        if (!isset($new)) {
+            $new = '';
         }
+
+        $xml = preg_replace('/<updated>.*?<\/updated>/i', '<updated>'.$new.'</updated>', $xml);
 
         return $xml;
     }
 
-    /**
-     * Test for write top level URI item.
-     */
+	/**
+	 * Test for write top level URI item.
+	 */
     public function testODataURLItem()
     {
         $url = new ODataURL();
@@ -104,6 +106,9 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
      */
     public function testWriteFeed()
     {
+        $testNow = Carbon::create(2013, 9, 17, 19, 22, 33);
+        Carbon::setTestNow($testNow);
+
         $feed = new ODataFeed();
         $feed->id = 'Feed Id';
         $feed->rowCount = 'Count';
@@ -146,6 +151,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $selfLink->url = 'Self Link URL';
 
         $entry1->selfLink = $selfLink;
+
         $entry1->mediaLinks = array(new ODataMediaLink('Media Link Name',
                                                       'Edit Media link',
                                                       'Src Media Link',
@@ -226,41 +232,46 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 
         $actual = $writer->getOutput();
 
-        $expected = '<feed xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns="http://www.w3.org/2005/Atom" xml:base="http://localhost/NorthWind.svc">
-  <title type="text">Feed Title</title>
-  <id>Feed Id</id>
+	    $expected = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<feed xml:base="http://localhost/NorthWind.svc" xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns="http://www.w3.org/2005/Atom">
+ <title type="text">Feed Title</title>
+ <id>Feed Id</id>
+ <updated>2013-09-17T19:22:33-06:00</updated>
+ <link rel="Self Link Name" href="Self Link Url"/>
+ <m:count>Count</m:count>
+ <entry m:etag="Entry ETag">
+  <id>Entry 1</id>
+  <title type="text">Entry Title</title>
   <updated>2013-09-17T19:22:33-06:00</updated>
-  <link rel="Self Link Name" href="Self Link Url"/>
-  <m:count>Count</m:count>
-  <entry m:etag="Entry ETag">
-    <id>Entry 1</id>
-    <title type="text">Entry Title</title>
-    <updated>2013-09-17T19:22:33-06:00</updated>
-    <author>
-      <name/>
-    </author>
-    <category term="" scheme="http://schemas.microsoft.com/ado/2007/08/dataservices/scheme"/>
-    <content type="application/xml">
-      <m:properties>
-        <d:name m:type="Bag(Name)">
-          <d:element>
-            <d:name>
-              <d:fname m:type="string">Yash</d:fname>
-              <d:lname m:type="string">Kothari</d:lname>
-            </d:name>
-            <d:name>
-              <d:fname m:type="string">Yash</d:fname>
-              <d:lname m:type="string">Kothari</d:lname>
-            </d:name>
-          </d:element>
-        </d:name>
-      </m:properties>
-    </content>
-  </entry>
-  <link rel="Next" href="Next Link Url"/>
-</feed>';
+  <author>
+   <name/>
+  </author>
+  <category term="" scheme="http://schemas.microsoft.com/ado/2007/08/dataservices/scheme"/>
+  <content type="application/xml">
+   <m:properties>
+    <d:name m:type="Bag(Name)">
+     <d:element>
+      <d:name>
+       <d:fname m:type="string">Yash</d:fname>
+       <d:lname m:type="string">Kothari</d:lname>
+      </d:name>
+      <d:name>
+       <d:fname m:type="string">Yash</d:fname>
+       <d:lname m:type="string">Kothari</d:lname>
+      </d:name>
+     </d:element>
+    </d:name>
+   </m:properties>
+  </content>
+ </entry>
+ <link rel="Next" href="Next Link Url"/>
+</feed>
+';
 
-        $this->assertXmlStringEqualsXmlString($this->removeUpdatedTags($expected), $this->removeUpdatedTags($actual));
+        $new = '2013-09-17T19:22:33-06:00';
+        $expected = $this->removeUpdatedTags($expected, $new);
+        $actual = $this->removeUpdatedTags($actual, $new);
+        $this->assertEquals($expected, $actual);
     }
 
     /**
@@ -786,56 +797,60 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 
         $actual = $writer->getOutput();
         $expected = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<entry xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns="http://www.w3.org/2005/Atom" xml:base="http://localhost/NorthWind.svc" m:etag="Entry ETag">
-  <id>Expand Entry</id>
-  <title type="text">Entry Title</title>
-  <updated>2013-09-17T19:49:59-06:00</updated>
-  <author>
-    <name/>
-  </author>
-  <link rel="" href="">
-    <m:inline>
-      <entry m:etag="Entry ETag">
-        <id>Entry 1</id>
-        <title type="text">Entry Title</title>
-        <updated>2013-09-17T19:49:59-06:00</updated>
-        <author>
-          <name/>
-        </author>
-        <category term="" scheme="http://schemas.microsoft.com/ado/2007/08/dataservices/scheme"/>
-        <content type="application/xml">
-          <m:properties>
-            <d:name m:type="string">
-              <d:fname m:type="string">Yash</d:fname>
-              <d:lname m:type="string">Kothari</d:lname>
-            </d:name>
-            <d:city m:type="string">Ahmedabad</d:city>
-            <d:state m:type="string">Gujarat</d:state>
-          </m:properties>
-        </content>
-      </entry>
-    </m:inline>
-  </link>
-  <category term="" scheme="http://schemas.microsoft.com/ado/2007/08/dataservices/scheme"/>
-  <content type="application/xml">
-    <m:properties>
-      <d:name m:type="Bag(Name)">
-        <d:element>
-          <d:name>
-            <d:fname m:type="string">Yash</d:fname>
-            <d:lname m:type="string">Kothari</d:lname>
-          </d:name>
-          <d:name>
-            <d:fname m:type="string">Anu</d:fname>
-            <d:lname m:type="string">Chandy</d:lname>
-          </d:name>
-        </d:element>
+<entry xml:base="http://localhost/NorthWind.svc" xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns="http://www.w3.org/2005/Atom" m:etag="Entry ETag">
+ <id>Expand Entry</id>
+ <title type="text">Entry Title</title>
+ <updated>2013-09-17T19:49:59-06:00</updated>
+ <author>
+  <name/>
+ </author>
+ <link rel="" href="">
+  <m:inline>
+   <entry m:etag="Entry ETag">
+    <id>Entry 1</id>
+    <title type="text">Entry Title</title>
+    <updated>2013-09-17T19:49:59-06:00</updated>
+    <author>
+     <name/>
+    </author>
+    <category term="" scheme="http://schemas.microsoft.com/ado/2007/08/dataservices/scheme"/>
+    <content type="application/xml">
+     <m:properties>
+      <d:name m:type="string">
+       <d:fname m:type="string">Yash</d:fname>
+       <d:lname m:type="string">Kothari</d:lname>
       </d:name>
-    </m:properties>
-  </content>
-</entry>';
+      <d:city m:type="string">Ahmedabad</d:city>
+      <d:state m:type="string">Gujarat</d:state>
+     </m:properties>
+    </content>
+   </entry>
+  </m:inline>
+ </link>
+ <category term="" scheme="http://schemas.microsoft.com/ado/2007/08/dataservices/scheme"/>
+ <content type="application/xml">
+  <m:properties>
+   <d:name m:type="Bag(Name)">
+    <d:element>
+     <d:name>
+      <d:fname m:type="string">Yash</d:fname>
+      <d:lname m:type="string">Kothari</d:lname>
+     </d:name>
+     <d:name>
+      <d:fname m:type="string">Anu</d:fname>
+      <d:lname m:type="string">Chandy</d:lname>
+     </d:name>
+    </d:element>
+   </d:name>
+  </m:properties>
+ </content>
+</entry>
+';
 
-        $this->assertXmlStringEqualsXmlString($this->removeUpdatedTags($expected), $this->removeUpdatedTags($actual));
+        $new = '2013-09-17T19:49:59-06:00';
+        $expected = $this->removeUpdatedTags($expected, $new);
+        $actual = $this->removeUpdatedTags($actual, $new);
+        $this->assertEquals($expected, $actual);
     }
 
     /**
@@ -1040,9 +1055,13 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
    </d:Addresses>
   </m:properties>
  </content>
-</entry>';
+</entry>
+';
 
-        $this->assertXmlStringEqualsXmlString($this->removeUpdatedTags($expected), $this->removeUpdatedTags($actual));
+        $new = '2011-05-24T15:01:23+05:30';
+        $expected = $this->removeUpdatedTags($expected, $new);
+        $actual = $this->removeUpdatedTags($actual, $new);
+        $this->assertEquals($expected, $actual);
     }
 
    /**

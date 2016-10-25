@@ -35,7 +35,9 @@ use POData\Providers\Metadata\IMetadataProvider;
 use POData\Common\Messages;
 use POData\Common\ODataConstants;
 use POData\Providers\Metadata\ResourceProperty;
-use Phockito;
+
+use Phockito\Phockito;
+
 use POData\IService;
 use PhockitoUnit\PhockitoUnitTestCase;
 //These are in the file loaded by above use statement

@@ -17,6 +17,8 @@ use POData\Common\MimeTypes;
 use POData\Common\ODataException;
 use POData\Providers\ProvidersWrapper;
 
+use Carbon\Carbon as Carbon;
+
 /**
  * Class AtomODataWriter.
  */
@@ -408,7 +410,7 @@ class AtomODataWriter implements IODataWriter
     {
         switch ($type) {
             case 'Edm.DateTime':
-                $dateTime = new \DateTime($value, new \DateTimeZone('UTC'));
+                $dateTime = new Carbon($value, new \DateTimeZone('UTC'));
                 $result = $dateTime->format('Y-m-d\TH:i:s');
                 break;
 

@@ -21,7 +21,9 @@ use POData\Providers\Query\IQueryProvider;
 use POData\Providers\Query\QueryType;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
 use POData\Providers\Query\QueryResult;
-use Phockito;
+
+use Phockito\Phockito;
+
 use PhockitoUnit\PhockitoUnitTestCase;
 
 class ProvidersWrapperTest extends PhockitoUnitTestCase

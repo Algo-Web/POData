@@ -13,7 +13,7 @@ use POData\Common\MimeTypes;
 use POData\OperationContext\ServiceHost;
 use POData\Common\Version;
 use PhockitoUnit\PhockitoUnitTestCase;
-use Phockito;
+use Phockito\Phockito;
 
 class BaseServiceGetResponseContentTest extends PhockitoUnitTestCase
 {

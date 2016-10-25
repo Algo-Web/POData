@@ -7,6 +7,9 @@ use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionParser2;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionProcessor;
 use POData\Providers\Expression\PHPExpressionProvider;
 use POData\Providers\Metadata\IMetadataProvider;
+
+use Phockito\Phockito;
+
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 //These are in the file loaded by above use statement
 //TODO: move to own class files
@@ -498,7 +501,7 @@ class PHPExpressionProviderTest extends \PHPUnit_Framework_TestCase
     {
         //Currently the expression parser just ignores expression types it doesn't know
         //TODO: maybe this should throw instead??
-        $unknownExpression = \Phockito::mock('POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\AbstractExpression');
+        $unknownExpression = Phockito::mock('POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\AbstractExpression');
         $expressionProcessor = new ExpressionProcessor(new PHPExpressionProvider('$lt'));
         $actual = $expressionProcessor->processExpression($unknownExpression);
 
