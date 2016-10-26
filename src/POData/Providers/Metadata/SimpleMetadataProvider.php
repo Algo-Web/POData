@@ -357,10 +357,12 @@ class SimpleMetadataProvider implements IMetadataProvider
             throw new InvalidOperationException('complex property can be added to an entity or another complex type');
         }
 
-        try {
-            $resourceType->getInstanceType()->getProperty($name);
-        } catch (\ReflectionException $ex) {
-            throw new InvalidOperationException('Can\'t add a property which does not exist on the instance type.');
+        if (!$resourceType->getInstanceType()->hasMethod('__get')) {
+            try {
+                $resourceType->getInstanceType()->getProperty ($name);
+            } catch (\ReflectionException $ex) {
+                throw new InvalidOperationException('Can\'t add a property which does not exist on the instance type.');
+            }
         }
 
         $kind = ResourcePropertyKind::COMPLEX_TYPE;
@@ -444,12 +446,14 @@ class SimpleMetadataProvider implements IMetadataProvider
         ResourceSet $targetResourceSet,
         $resourcePropertyKind
     ) {
-        try {
-            $resourceType->getInstanceType()->getProperty($name);
-        } catch (\ReflectionException $exception) {
-            throw new InvalidOperationException(
-                'Can\'t add a property which does not exist on the instance type.'
-            );
+        if (!$resourceType->getInstanceType()->hasMethod('__get')) {
+            try {
+                $resourceType->getInstanceType()->getProperty($name);
+            } catch (\ReflectionException $exception) {
+                throw new InvalidOperationException(
+                    'Can\'t add a property which does not exist on the instance type.'
+                );
+            }
         }
 
         if (!($resourcePropertyKind == ResourcePropertyKind::RESOURCESET_REFERENCE
