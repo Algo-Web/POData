@@ -58,7 +58,7 @@ class MediaType
      */
     public function getMimeType()
     {
-        return $this->_type.'/'.$this->_subType;
+        return $this->_type . '/' . $this->_subType;
     }
 
     /**
@@ -466,7 +466,7 @@ class HttpProcessUtility
     /**
      * To check whether the given character is a HTTP seperator character.
      *
-     * @param char $char The character to inspect
+     * @param string $char The character to inspect
      *
      * @return bool True if the given character is a valid HTTP seperator
      *              character, False otherwise
@@ -674,7 +674,7 @@ class HttpProcessUtility
      * Verifies whether the specified character is a valid separator in.
      an HTTP header list of element.
      *
-     * @param char $c Character to verify
+     * @param string $c Character to verify
      *
      * @return bool true if c is a valid character for separating elements;
      *              false otherwise
@@ -704,7 +704,7 @@ class HttpProcessUtility
             case 'ACCEPT_LANGUAGE':
             case 'DATASERVICEVERSION':
             case 'MAXDATASERVICEVERSION':
-                return 'HTTP_'.$name;
+                return 'HTTP_' . $name;
         }
 
         return $name;

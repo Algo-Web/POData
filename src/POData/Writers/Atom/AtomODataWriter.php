@@ -16,7 +16,6 @@ use POData\Common\ODataConstants;
 use POData\Common\MimeTypes;
 use POData\Common\ODataException;
 use POData\Providers\ProvidersWrapper;
-
 use Carbon\Carbon as Carbon;
 
 /**

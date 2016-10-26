@@ -101,7 +101,7 @@ class NorthWindQueryProvider implements IQueryProvider
             && $resourceSetName !== 'Order_Details'
             && $resourceSetName !== 'Employees'
         ) {
-            throw ODataException::createInternalServerError('(NorthWindQueryProvider) Unknown resource set '.$resourceSetName.'! Contact service provider');
+            throw ODataException::createInternalServerError('(NorthWindQueryProvider) Unknown resource set ' . $resourceSetName . '! Contact service provider');
         }
 
         if ($resourceSetName === 'Order_Details') {
@@ -110,7 +110,7 @@ class NorthWindQueryProvider implements IQueryProvider
 
         $query = "SELECT * FROM [$resourceSetName]";
         if ($filterOption != null) {
-            $query .= ' WHERE '.$filterOption;
+            $query .= ' WHERE ' . $filterOption;
         }
         $stmt = sqlsrv_query($this->_connectionHandle, $query);
         if ($stmt === false) {
@@ -155,7 +155,7 @@ class NorthWindQueryProvider implements IQueryProvider
             && $resourceSetName !== 'Products'
             && $resourceSetName !== 'Employees'
         ) {
-            die('(NorthWindQueryProvider) Unknown resource set '.$resourceSetName);
+            die('(NorthWindQueryProvider) Unknown resource set ' . $resourceSetName);
         }
 
         if ($resourceSetName === 'Order_Details') {
@@ -165,7 +165,7 @@ class NorthWindQueryProvider implements IQueryProvider
         $namedKeyValues = $keyDescriptor->getValidatedNamedValues();
         $condition = null;
         foreach ($namedKeyValues as $key => $value) {
-            $condition .= $key.' = '.$value[0].' and ';
+            $condition .= $key . ' = ' . $value[0] . ' and ';
         }
 
         $len = strlen($condition);
@@ -230,7 +230,7 @@ class NorthWindQueryProvider implements IQueryProvider
         $navigationPropName = $targetProperty->getName();
         $key = null;
         foreach ($keyDescriptor->getValidatedNamedValues() as $keyName => $valueDescription) {
-            $key = $key.$keyName.'='.$valueDescription[0].' and ';
+            $key = $key . $keyName . '=' . $valueDescription[0] . ' and ';
         }
 
         $key = rtrim($key, ' and ');
@@ -245,7 +245,7 @@ class NorthWindQueryProvider implements IQueryProvider
 
                 $result = $this->_serializeOrders($stmt);
             } else {
-                die('Customer does not have navigation porperty with name: '.$navigationPropName);
+                die('Customer does not have navigation porperty with name: ' . $navigationPropName);
             }
         } elseif ($srcClass === 'Order') {
             if ($navigationPropName === 'Order_Details') {
@@ -258,7 +258,7 @@ class NorthWindQueryProvider implements IQueryProvider
 
                 $result = $this->_serializeOrderDetails($stmt);
             } else {
-                die('Order does not have navigation porperty with name: '.$navigationPropName);
+                die('Order does not have navigation porperty with name: ' . $navigationPropName);
             }
         }
 
@@ -298,7 +298,7 @@ class NorthWindQueryProvider implements IQueryProvider
             if ($navigationPropName === 'Orders') {
                 $query = "SELECT * FROM Orders WHERE CustomerID = '$sourceEntityInstance->CustomerID'";
                 if ($filterOption != null) {
-                    $query .= ' AND '.$filterOption;
+                    $query .= ' AND ' . $filterOption;
                 }
                 $stmt = sqlsrv_query($this->_connectionHandle, $query);
                 if ($stmt === false) {
@@ -308,13 +308,13 @@ class NorthWindQueryProvider implements IQueryProvider
 
                 $result = $this->_serializeOrders($stmt);
             } else {
-                die('Customer does not have navigation porperty with name: '.$navigationPropName);
+                die('Customer does not have navigation porperty with name: ' . $navigationPropName);
             }
         } elseif ($srcClass === 'Order') {
             if ($navigationPropName === 'Order_Details') {
                 $query = "SELECT * FROM [Order Details] WHERE OrderID = $sourceEntityInstance->OrderID";
                 if ($filterOption != null) {
-                    $query .= ' AND '.$filterOption;
+                    $query .= ' AND ' . $filterOption;
                 }
                 $stmt = sqlsrv_query($this->_connectionHandle, $query);
                 if ($stmt === false) {
@@ -324,7 +324,7 @@ class NorthWindQueryProvider implements IQueryProvider
 
                 $result = $this->_serializeOrderDetails($stmt);
             } else {
-                die('Order does not have navigation porperty with name: '.$navigationPropName);
+                die('Order does not have navigation porperty with name: ' . $navigationPropName);
             }
         }
 
@@ -370,7 +370,7 @@ class NorthWindQueryProvider implements IQueryProvider
                     $result = $this->_serializeCustomer(sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC));
                 }
             } else {
-                die('Customer does not have navigation porperty with name: '.$navigationPropName);
+                die('Customer does not have navigation porperty with name: ' . $navigationPropName);
             }
         } elseif ($srcClass === 'Order_Details') {
             if ($navigationPropName === 'Order') {
@@ -391,7 +391,7 @@ class NorthWindQueryProvider implements IQueryProvider
                     $result = $this->_serializeOrder(sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC));
                 }
             } else {
-                die('Order_Details does not have navigation porperty with name: '.$navigationPropName);
+                die('Order_Details does not have navigation porperty with name: ' . $navigationPropName);
             }
         }
 
@@ -439,14 +439,14 @@ class NorthWindQueryProvider implements IQueryProvider
         $customer->Address->Country = $record['Country'];
         //Set alternate address
         $customer->Address->AltAddress = new Address();
-        $customer->Address->AltAddress->StreetName = 'ALT_'.$customer->Address->StreetName;
-        $customer->Address->AltAddress->City = 'ALT_'.$customer->Address->City;
-        $customer->Address->AltAddress->Region = 'ALT_'.$customer->Address->Region;
-        $customer->Address->AltAddress->PostalCode = 'ALT_'.$customer->Address->PostalCode;
-        $customer->Address->AltAddress->Country = 'ALT_'.$customer->Address->Country;
+        $customer->Address->AltAddress->StreetName = 'ALT_' . $customer->Address->StreetName;
+        $customer->Address->AltAddress->City = 'ALT_' . $customer->Address->City;
+        $customer->Address->AltAddress->Region = 'ALT_' . $customer->Address->Region;
+        $customer->Address->AltAddress->PostalCode = 'ALT_' . $customer->Address->PostalCode;
+        $customer->Address->AltAddress->Country = 'ALT_' . $customer->Address->Country;
         $customer->EmailAddresses = array();
         for ($i = 1; $i < 4; ++$i) {
-            $customer->EmailAddresses[] = $customer->CustomerID.$i.'@live.com';
+            $customer->EmailAddresses[] = $customer->CustomerID . $i . '@live.com';
         }
 
         $customer->OtherAddresses = array();
@@ -468,18 +468,18 @@ class NorthWindQueryProvider implements IQueryProvider
      */
     private function _copyAddress(&$src, &$target, $tag)
     {
-        $target->StreetName = $src->StreetName.$tag;
-        $target->City = $src->City.$tag;
-        $target->Region = $src->Region.$tag;
-        $target->PostalCode = $src->PostalCode.$tag;
-        $target->Country = $src->Country.$tag;
+        $target->StreetName = $src->StreetName . $tag;
+        $target->City = $src->City . $tag;
+        $target->Region = $src->Region . $tag;
+        $target->PostalCode = $src->PostalCode . $tag;
+        $target->Country = $src->Country . $tag;
 
         $target->AltAddress = new Address();
-        $target->AltAddress->StreetName = $target->AltAddress->StreetName.$tag;
-        $target->AltAddress->City = $target->AltAddress->City.$tag;
-        $target->AltAddress->Region = $target->AltAddress->Region.$tag;
-        $target->AltAddress->PostalCode = $target->AltAddress->PostalCode.$tag;
-        $target->AltAddress->Country = $target->AltAddress->Country.$tag;
+        $target->AltAddress->StreetName = $target->AltAddress->StreetName . $tag;
+        $target->AltAddress->City = $target->AltAddress->City . $tag;
+        $target->AltAddress->Region = $target->AltAddress->Region . $tag;
+        $target->AltAddress->PostalCode = $target->AltAddress->PostalCode . $tag;
+        $target->AltAddress->Country = $target->AltAddress->Country . $tag;
     }
 
     /**
@@ -571,7 +571,7 @@ class NorthWindQueryProvider implements IQueryProvider
         $employee->Notes = $record['Notes'];
         $employee->ReportsTo = $record['ReportsTo'];
         //$employee->Photo = $record['Photo'];
-        $employee->Emails = array($employee->FirstName.'@hotmail.com', $employee->FirstName.'@live.com');
+        $employee->Emails = array($employee->FirstName . '@hotmail.com', $employee->FirstName . '@live.com');
 
         return $employee;
     }

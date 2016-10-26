@@ -20,7 +20,7 @@ class Messages
      */
     public static function expressionLexerUnterminatedStringLiteral($pos, $text)
     {
-        return 'Unterminated string literal at position '.$pos.' in '.$text;
+        return 'Unterminated string literal at position ' . $pos . ' in ' . $text;
     }
 
     /**
@@ -32,7 +32,7 @@ class Messages
      */
     public static function expressionLexerDigitExpected($pos)
     {
-        return 'Digit expected at position '.$pos;
+        return 'Digit expected at position ' . $pos;
     }
 
     /**
@@ -44,7 +44,7 @@ class Messages
      */
     public static function expressionLexerSyntaxError($pos)
     {
-        return 'Syntax Error at position '.$pos;
+        return 'Syntax Error at position ' . $pos;
     }
 
     /**
@@ -709,7 +709,7 @@ class Messages
      */
     public static function providersWrapperIDSQPMethodReturnsUnExpectedType($entityTypeName, $methodName)
     {
-        return 'The implementation of the method '.$methodName.' must return an instance of type described by resource set\'s type('.$entityTypeName.') or null if resource does not exists';
+        return 'The implementation of the method ' . $methodName . ' must return an instance of type described by resource set\'s type(' . $entityTypeName . ') or null if resource does not exists';
     }
 
     /**
@@ -722,7 +722,7 @@ class Messages
      */
     public static function providersWrapperIDSQPMethodReturnsInstanceWithNullKeyProperties($methodName)
     {
-        return 'The '.$methodName.' implementation returns an entity with null key propert(y|ies)';
+        return 'The ' . $methodName . ' implementation returns an entity with null key propert(y|ies)';
     }
 
     /**
@@ -736,7 +736,7 @@ class Messages
      */
     public static function providersWrapperIDSQPMethodReturnsInstanceWithNonMatchingKeys($methodName)
     {
-        return 'The '.$methodName.' implementation returns an instance with non-matching key';
+        return 'The ' . $methodName . ' implementation returns an instance with non-matching key';
     }
 
     /**
@@ -791,7 +791,7 @@ class Messages
      */
     public static function keyDescriptorInCompatibleKeyType($segment, $keyProperty, $expectedType, $actualType)
     {
-        return "Syntax error in the segment '$segment'. The value of key property '$keyProperty' should be of type ".$expectedType.', given '.$actualType;
+        return "Syntax error in the segment '$segment'. The value of key property '$keyProperty' should be of type " . $expectedType . ', given ' . $actualType;
     }
 
     /**
@@ -808,7 +808,7 @@ class Messages
      */
     public static function keyDescriptorInCompatibleKeyTypeAtPosition($segment, $keyProperty, $position, $expectedType, $actualType)
     {
-        return "Syntax error in the segment '$segment'. The value of key property '$keyProperty' at position $position should be of type ".$expectedType.', given '.$actualType;
+        return "Syntax error in the segment '$segment'. The value of key property '$keyProperty' at position $position should be of type " . $expectedType . ', given ' . $actualType;
     }
 
     /**
@@ -1225,7 +1225,7 @@ class Messages
      */
     public static function expandProjectionParserPropertyWithoutMatchingExpand($propertyName)
     {
-        return 'Only navigation properties specified in expand option can be travered in select option,In order to treaverse the navigation property \''.$propertyName.'\', it should be first expanded';
+        return 'Only navigation properties specified in expand option can be travered in select option,In order to treaverse the navigation property \'' . $propertyName . '\', it should be first expanded';
     }
 
     /**
@@ -1966,7 +1966,7 @@ class Messages
      */
     public static function objectModelSerializerLoopsNotAllowedInComplexTypes($complexPropertyName)
     {
-        return 'A circular loop was detected while serializing the property \''.$complexPropertyName.'\'. You must make sure that loops are not present in properties that return a bag or complex type.';
+        return 'A circular loop was detected while serializing the property \'' . $complexPropertyName . '\'. You must make sure that loops are not present in properties that return a bag or complex type.';
     }
 
     /**
@@ -2252,6 +2252,6 @@ class Messages
      */
     public static function hostRequestUriIsNotBasedOnRelativeUriInConfig($requestUri, $relativeUri)
     {
-        return 'The request uri '.$requestUri.' is not valid as it is not based on the configured relative uri '.$relativeUri;
+        return 'The request uri ' . $requestUri . ' is not valid as it is not based on the configured relative uri ' . $relativeUri;
     }
 }

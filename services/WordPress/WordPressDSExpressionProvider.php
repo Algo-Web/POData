@@ -241,85 +241,85 @@ class WordPressDSExpressionProvider implements IExpressionProvider
     public function onFunctionCallExpression($functionDescription, $params)
     {
         switch ($functionDescription->functionName) {
-        case ODataConstants::STRFUN_COMPARE:
-            return "STRCMP($params[0], $params[1])";
-            break;
-        case ODataConstants::STRFUN_ENDSWITH:
-          return "(STRCMP($params[1],RIGHT($params[0],LENGTH($params[1]))) = 0)";
-            break;
-        case ODataConstants::STRFUN_INDEXOF:
-            return "INSTR($params[0], $params[1]) - 1";
-            break;
-        case ODataConstants::STRFUN_REPLACE:
-          return "REPLACE($params[0],$params[1],$params[2])";
-            break;
-        case ODataConstants::STRFUN_STARTSWITH:
-          return "(STRCMP($params[1],LEFT($params[0],LENGTH($params[1]))) = 0)";
-            break;
-        case ODataConstants::STRFUN_TOLOWER:
-          return "LOWER($params[0])";
-            break;
-        case ODataConstants::STRFUN_TOUPPER:
-          return "UPPER($params[0])";
-            break;
-        case ODataConstants::STRFUN_TRIM:
-          return "TRIM($params[0])";
-            break;
-        case ODataConstants::STRFUN_SUBSTRING:
-            return count($params) == 3 ?
-                "SUBSTRING($params[0], $params[1] + 1, $params[2])" : "SUBSTRING($params[0], $params[1] + 1)";
-            break;
-        case ODataConstants::STRFUN_SUBSTRINGOF:
-            return "(LOCATE($params[0], $params[1]) > 0)";
-            break;
-        case ODataConstants::STRFUN_CONCAT:
-            return "CONCAT($params[0],$params[1])";
-            break;
-        case ODataConstants::STRFUN_LENGTH:
-            return "LENGTH($params[0])";
-            break;
-        case ODataConstants::GUIDFUN_EQUAL:
-            return "STRCMP($params[0], $params[1])";
-            break;
-        case ODataConstants::DATETIME_COMPARE:
-            return "DATETIMECMP($params[0]; $params[1])";
-            break;
-        case ODataConstants::DATETIME_YEAR:
-            return 'EXTRACT(YEAR from '.$params[0].')';
-            break;
-        case ODataConstants::DATETIME_MONTH:
-            return 'EXTRACT(MONTH from '.$params[0].')';
-            break;
-        case ODataConstants::DATETIME_DAY:
-            return 'EXTRACT(DAY from '.$params[0].')';
-            break;
-        case ODataConstants::DATETIME_HOUR:
-            return 'EXTRACT(HOUR from '.$params[0].')';
-            break;
-        case ODataConstants::DATETIME_MINUTE:
-            return 'EXTRACT(MINUTE from '.$params[0].')';
-            break;
-        case ODataConstants::DATETIME_SECOND:
-            return 'EXTRACT(SECOND from '.$params[0].')';
-            break;
-        case ODataConstants::MATHFUN_ROUND:
-            return "ROUND($params[0])";
-            break;
-        case ODataConstants::MATHFUN_CEILING:
-            return "CEIL($params[0])";
-            break;
-        case ODataConstants::MATHFUN_FLOOR:
-            return "FLOOR($params[0])";
-            break;
-        case ODataConstants::BINFUL_EQUAL:
-            return "($params[0] = $params[1])";
-            break;
-        case 'is_null':
-            return "is_null($params[0])";
-            break;
+            case ODataConstants::STRFUN_COMPARE:
+                return "STRCMP($params[0], $params[1])";
+                break;
+            case ODataConstants::STRFUN_ENDSWITH:
+              return "(STRCMP($params[1],RIGHT($params[0],LENGTH($params[1]))) = 0)";
+                break;
+            case ODataConstants::STRFUN_INDEXOF:
+                return "INSTR($params[0], $params[1]) - 1";
+                break;
+            case ODataConstants::STRFUN_REPLACE:
+              return "REPLACE($params[0],$params[1],$params[2])";
+                break;
+            case ODataConstants::STRFUN_STARTSWITH:
+              return "(STRCMP($params[1],LEFT($params[0],LENGTH($params[1]))) = 0)";
+                break;
+            case ODataConstants::STRFUN_TOLOWER:
+              return "LOWER($params[0])";
+                break;
+            case ODataConstants::STRFUN_TOUPPER:
+              return "UPPER($params[0])";
+                break;
+            case ODataConstants::STRFUN_TRIM:
+              return "TRIM($params[0])";
+                break;
+            case ODataConstants::STRFUN_SUBSTRING:
+                return count($params) == 3 ?
+                    "SUBSTRING($params[0], $params[1] + 1, $params[2])" : "SUBSTRING($params[0], $params[1] + 1)";
+                break;
+            case ODataConstants::STRFUN_SUBSTRINGOF:
+                return "(LOCATE($params[0], $params[1]) > 0)";
+                break;
+            case ODataConstants::STRFUN_CONCAT:
+                return "CONCAT($params[0],$params[1])";
+                break;
+            case ODataConstants::STRFUN_LENGTH:
+                return "LENGTH($params[0])";
+                break;
+            case ODataConstants::GUIDFUN_EQUAL:
+                return "STRCMP($params[0], $params[1])";
+                break;
+            case ODataConstants::DATETIME_COMPARE:
+                return "DATETIMECMP($params[0]; $params[1])";
+                break;
+            case ODataConstants::DATETIME_YEAR:
+                return 'EXTRACT(YEAR from '.$params[0].')';
+                break;
+            case ODataConstants::DATETIME_MONTH:
+                return 'EXTRACT(MONTH from '.$params[0].')';
+                break;
+            case ODataConstants::DATETIME_DAY:
+                return 'EXTRACT(DAY from '.$params[0].')';
+                break;
+            case ODataConstants::DATETIME_HOUR:
+                return 'EXTRACT(HOUR from '.$params[0].')';
+                break;
+            case ODataConstants::DATETIME_MINUTE:
+                return 'EXTRACT(MINUTE from '.$params[0].')';
+                break;
+            case ODataConstants::DATETIME_SECOND:
+                return 'EXTRACT(SECOND from '.$params[0].')';
+                break;
+            case ODataConstants::MATHFUN_ROUND:
+                return "ROUND($params[0])";
+                break;
+            case ODataConstants::MATHFUN_CEILING:
+                return "CEIL($params[0])";
+                break;
+            case ODataConstants::MATHFUN_FLOOR:
+                return "FLOOR($params[0])";
+                break;
+            case ODataConstants::BINFUL_EQUAL:
+                return "($params[0] = $params[1])";
+                break;
+            case 'is_null':
+                return "is_null($params[0])";
+                break;
 
-        default:
-            throw new \InvalidArgumentException('onFunctionCallExpression');
+            default:
+                throw new \InvalidArgumentException('onFunctionCallExpression');
         }
     }
 
@@ -340,14 +340,14 @@ class WordPressDSExpressionProvider implements IExpressionProvider
             $str[0] = str_replace('DATETIMECMP', '', $str[0]);
 
             return self::OPEN_BRAKET
-            .$str[0].' '.$operator
-            .' '.$str[1].self::CLOSE_BRACKET;
+            .$str[0] . ' ' . $operator
+            .' ' . $str[1] . self::CLOSE_BRACKET;
         }
 
         return
             self::OPEN_BRAKET
-            .$left.' '.$operator
-            .' '.$right.self::CLOSE_BRACKET;
+            .$left . ' ' . $operator
+            .' ' . $right . self::CLOSE_BRACKET;
     }
 
     /**
@@ -360,6 +360,6 @@ class WordPressDSExpressionProvider implements IExpressionProvider
      */
     private function _prepareUnaryExpression($operator, $child)
     {
-        return $operator.self::OPEN_BRAKET.$child.self::CLOSE_BRACKET;
+        return $operator . self::OPEN_BRAKET . $child . self::CLOSE_BRACKET;
     }
 }

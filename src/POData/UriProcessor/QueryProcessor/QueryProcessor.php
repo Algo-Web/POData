@@ -208,11 +208,11 @@ class QueryProcessor
          *
          */
         if (!is_null($this->request->getSkipCount()) || !is_null($this->request->getTopCount())) {
-            $orderBy = !is_null($orderBy) ? $orderBy.', ' : null;
+            $orderBy = !is_null($orderBy) ? $orderBy . ', ' : null;
             $keys = array_keys($targetResourceType->getKeyProperties());
             //assert(!empty($keys))
             foreach ($keys as $key) {
-                $orderBy = $orderBy.$key.', ';
+                $orderBy = $orderBy . $key . ', ';
             }
 
             $orderBy = rtrim($orderBy, ', ');

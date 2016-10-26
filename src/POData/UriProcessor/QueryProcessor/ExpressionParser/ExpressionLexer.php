@@ -343,7 +343,7 @@ class ExpressionLexer
         while ($this->_token->Id == ExpressionTokenId::DOT) {
             $this->nextToken();
             $this->validateToken(ExpressionTokenId::IDENTIFIER);
-            $identifier = $identifier.'.'.$this->_token->Text;
+            $identifier = $identifier . '.' . $this->_token->Text;
             $this->nextToken();
         }
 

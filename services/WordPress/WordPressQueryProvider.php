@@ -93,62 +93,62 @@ class WordPressQueryProvider implements IQueryProvider
             && $resourceSetName !== 'Comments'
             && $resourceSetName !== 'Users'
         ) {
-            die('(WordPressQueryProvider) Unknown resource set '.$resourceSetName);
+            die('(WordPressQueryProvider) Unknown resource set ' . $resourceSetName);
         }
 
         $returnResult = array();
         switch ($resourceSetName) {
-        case 'Posts':
-            $query = 'SELECT * FROM `wp_posts` WHERE'
-                    ." wp_posts.post_type = 'post'"
-                    ." AND wp_posts.post_status = 'publish'";
-            if ($filter !== null) {
-                $query .= " AND $filter";
-            }
-            $stmt = mysql_query($query);
-            $returnResult = $this->_serializePosts($stmt);
-            break;
-        case 'Tags':
-            $query = 'SELECT t.*, tt.description'
-                    .' FROM `wp_terms` AS t INNER JOIN `wp_term_taxonomy` as tt'
-                    .' ON tt.term_id = t.term_id'
-                    ." WHERE tt.taxonomy = 'post_tag'";
-            if ($filter !== null) {
-                $query .= " AND $filter";
-            }
-            $stmt = mysql_query($query);
-            $returnResult = $this->_serializeTags($stmt);
-            break;
-        case 'Categories':
-            $query = 'SELECT t.*, tt.description'
-                    .' FROM `wp_terms` AS t INNER JOIN `wp_term_taxonomy` as tt'
-                    .' ON tt.term_id = t.term_id'
-                    ." WHERE tt.taxonomy = 'category'";
-            if ($filter !== null) {
-                $query .= " AND $filter";
-            }
-            $stmt = mysql_query($query);
-            $returnResult = $this->_serializeCategories($stmt);
-            break;
-        case 'Comments':
-            $query = 'SELECT * FROM `wp_comments` WHERE'
-                    .' wp_comments.comment_approved = 1';
-            if ($filter !== null) {
-                $query .= " AND $filter";
-            }
-            $stmt = mysql_query($query);
-            $returnResult = $this->_serializeComments($stmt);
-            break;
-        case 'Users':
-            $query = 'SELECT * FROM `wp_users`';
-            //print "<br>Filter:".$filter;
-            if ($filter !== null) {
-                $query .= " AND $filter";
-            }
-            $stmt = mysql_query($query);
-            //$data = mysql_fetch_assoc($stmt);
-            $returnResult = $this->_serializeUsers($stmt);
-            break;
+            case 'Posts':
+                $query = 'SELECT * FROM `wp_posts` WHERE'
+                        ." wp_posts.post_type = 'post'"
+                        ." AND wp_posts.post_status = 'publish'";
+                if ($filter !== null) {
+                    $query .= " AND $filter";
+                }
+                $stmt = mysql_query($query);
+                $returnResult = $this->_serializePosts($stmt);
+                break;
+            case 'Tags':
+                $query = 'SELECT t.*, tt.description'
+                        .' FROM `wp_terms` AS t INNER JOIN `wp_term_taxonomy` as tt'
+                        .' ON tt.term_id = t.term_id'
+                        ." WHERE tt.taxonomy = 'post_tag'";
+                if ($filter !== null) {
+                    $query .= " AND $filter";
+                }
+                $stmt = mysql_query($query);
+                $returnResult = $this->_serializeTags($stmt);
+                break;
+            case 'Categories':
+                $query = 'SELECT t.*, tt.description'
+                        .' FROM `wp_terms` AS t INNER JOIN `wp_term_taxonomy` as tt'
+                        .' ON tt.term_id = t.term_id'
+                        ." WHERE tt.taxonomy = 'category'";
+                if ($filter !== null) {
+                    $query .= " AND $filter";
+                }
+                $stmt = mysql_query($query);
+                $returnResult = $this->_serializeCategories($stmt);
+                break;
+            case 'Comments':
+                $query = 'SELECT * FROM `wp_comments` WHERE'
+                        .' wp_comments.comment_approved = 1';
+                if ($filter !== null) {
+                    $query .= " AND $filter";
+                }
+                $stmt = mysql_query($query);
+                $returnResult = $this->_serializeComments($stmt);
+                break;
+            case 'Users':
+                $query = 'SELECT * FROM `wp_users`';
+                //print "<br>Filter:".$filter;
+                if ($filter !== null) {
+                    $query .= " AND $filter";
+                }
+                $stmt = mysql_query($query);
+                //$data = mysql_fetch_assoc($stmt);
+                $returnResult = $this->_serializeUsers($stmt);
+                break;
         }
         mysql_free_result($stmt);
 
@@ -174,7 +174,7 @@ class WordPressQueryProvider implements IQueryProvider
             && $resourceSetName !== 'Comments'
             && $resourceSetName !== 'Users'
         ) {
-            die('(WordPressQueryProvider) Unknown resource set '.$resourceSetName);
+            die('(WordPressQueryProvider) Unknown resource set ' . $resourceSetName);
         }
 
         $namedKeyValues = $keyDescriptor->getValidatedNamedValues();
@@ -185,79 +185,79 @@ class WordPressQueryProvider implements IQueryProvider
         $conditionStr = implode(' AND ', $keys);
 
         switch ($resourceSetName) {
-        case 'Posts':
-            $query = 'SELECT * FROM `wp_posts` WHERE'
-                    ." wp_posts.post_type = 'post'"
-                    ." AND wp_posts.post_status = 'publish'"
-                    .' AND wp_posts.ID = '.$namedKeyValues['PostID'][0];
-            $stmt = mysql_query($query);
+            case 'Posts':
+                $query = 'SELECT * FROM `wp_posts` WHERE'
+                        ." wp_posts.post_type = 'post'"
+                        ." AND wp_posts.post_status = 'publish'"
+                        .' AND wp_posts.ID = '.$namedKeyValues['PostID'][0];
+                $stmt = mysql_query($query);
 
-            //If resource not found return null to the library
-            if (!mysql_num_rows($stmt)) {
-                return null;
-            }
+                //If resource not found return null to the library
+                if (!mysql_num_rows($stmt)) {
+                    return null;
+                }
 
-            $data = mysql_fetch_assoc($stmt);
-            $result = $this->_serializePost($data);
-            break;
-        case 'Tags':
-            $query = 'SELECT t.*, tt.description'
-                    .' FROM `wp_terms` AS t INNER JOIN `wp_term_taxonomy` as tt'
-                    .' ON tt.term_id = t.term_id'
-                    ." WHERE tt.taxonomy = 'post_tag'"
-                    .' AND t.term_id = '.$namedKeyValues['TagID'][0];
-            $stmt = mysql_query($query);
+                $data = mysql_fetch_assoc($stmt);
+                $result = $this->_serializePost($data);
+                break;
+            case 'Tags':
+                $query = 'SELECT t.*, tt.description'
+                        .' FROM `wp_terms` AS t INNER JOIN `wp_term_taxonomy` as tt'
+                        .' ON tt.term_id = t.term_id'
+                        ." WHERE tt.taxonomy = 'post_tag'"
+                        .' AND t.term_id = '.$namedKeyValues['TagID'][0];
+                $stmt = mysql_query($query);
 
-            //If resource not found return null to the library
-            if (!mysql_num_rows($stmt)) {
-                return null;
-            }
+                //If resource not found return null to the library
+                if (!mysql_num_rows($stmt)) {
+                    return null;
+                }
 
-            $data = mysql_fetch_assoc($stmt);
-            $result = $this->_serializeTag($data);
-            break;
-        case 'Categories':
-            $query = 'SELECT t.*, tt.description'
-                    .' FROM `wp_terms` AS t INNER JOIN `wp_term_taxonomy` as tt'
-                    .' ON tt.term_id = t.term_id'
-                    ." WHERE tt.taxonomy = 'category'"
-                    .' AND t.term_id = '.$namedKeyValues['CategoryID'][0];
-            $stmt = mysql_query($query);
+                $data = mysql_fetch_assoc($stmt);
+                $result = $this->_serializeTag($data);
+                break;
+            case 'Categories':
+                $query = 'SELECT t.*, tt.description'
+                        .' FROM `wp_terms` AS t INNER JOIN `wp_term_taxonomy` as tt'
+                        .' ON tt.term_id = t.term_id'
+                        ." WHERE tt.taxonomy = 'category'"
+                        .' AND t.term_id = '.$namedKeyValues['CategoryID'][0];
+                $stmt = mysql_query($query);
 
-            //If resource not found return null to the library
-            if (!mysql_num_rows($stmt)) {
-                return null;
-            }
+                //If resource not found return null to the library
+                if (!mysql_num_rows($stmt)) {
+                    return null;
+                }
 
-            $data = mysql_fetch_assoc($stmt);
-            $result = $this->_serializeCategory($data);
-            break;
-        case 'Comments':
-            $query = 'SELECT * FROM `wp_comments`'
-                    .' WHERE comment_approved = 1'
-                    .' AND comment_ID = '.$namedKeyValues['CommentID'][0];
-            $stmt = mysql_query($query);
+                $data = mysql_fetch_assoc($stmt);
+                $result = $this->_serializeCategory($data);
+                break;
+            case 'Comments':
+                $query = 'SELECT * FROM `wp_comments`'
+                        .' WHERE comment_approved = 1'
+                        .' AND comment_ID = '.$namedKeyValues['CommentID'][0];
+                $stmt = mysql_query($query);
 
-            //If resource not found return null to the library
-            if (!mysql_num_rows($stmt)) {
-                return null;
-            }
+                //If resource not found return null to the library
+                if (!mysql_num_rows($stmt)) {
+                    return null;
+                }
 
-            $data = mysql_fetch_assoc($stmt);
-            $result = $this->_serializeComment($data);
-            break;
-        case 'Users':
-            $query = 'SELECT * FROM `wp_users` WHERE ID = '.$namedKeyValues['UserID'][0];
-            $stmt = mysql_query($query);
+                $data = mysql_fetch_assoc($stmt);
+                $result = $this->_serializeComment($data);
+                break;
+            case 'Users':
+                $query = 'SELECT * FROM `wp_users` WHERE ID = '.$namedKeyValues['UserID'][0];
+                $stmt = mysql_query($query);
 
-            //If resource not found return null to the library
-            if (!mysql_num_rows($stmt)) {
-                return null;
-            }
+                //If resource not found return null to the library
+                if (!mysql_num_rows($stmt)) {
+                    return null;
+                }
 
-            $data = mysql_fetch_assoc($stmt);
-            $result = $this->_serializeUser($data);
-            break;
+                $data = mysql_fetch_assoc($stmt);
+                $result = $this->_serializeUser($data);
+                break;
         }
 
         mysql_free_result($stmt);
@@ -293,147 +293,147 @@ class WordPressQueryProvider implements IQueryProvider
         $navigationPropName = $targetProperty->getName();
 
         switch (true) {
-        case $srcClass == 'Post':
-            if ($navigationPropName == 'Tags') {
-                $query = 'SELECT t.*, tt.description'
-                        .' FROM wp_terms AS t'
-                        .' INNER JOIN wp_term_taxonomy AS tt'
-                        .' ON tt.term_id = t.term_id'
-                        .' INNER JOIN wp_term_relationships AS tr'
-                        .' ON tr.term_taxonomy_id = tt.term_taxonomy_id'
-                        ." WHERE tt.taxonomy IN ('post_tag')"
-                        ." AND tr.object_id IN ($sourceEntityInstance->PostID)";
-                if ($filter !== null) {
-                    $query .= " AND $filter";
-                }
-                $stmt = mysql_query($query);
-                if ($stmt === false) {
-                    die(mysql_error());
-                }
-
-                $result = $this->_serializeTags($stmt);
-            } elseif ($navigationPropName == 'Categories') {
-                $query = 'SELECT t.*, tt.description'
-                        .' FROM wp_terms AS t'
-                        .' INNER JOIN wp_term_taxonomy AS tt'
-                        .' ON tt.term_id = t.term_id'
-                        .' INNER JOIN wp_term_relationships AS tr'
-                        .' ON tr.term_taxonomy_id = tt.term_taxonomy_id'
-                        ." WHERE tt.taxonomy IN ('category')"
-                        ." AND tr.object_id IN ($sourceEntityInstance->PostID)";
-                if ($filter !== null) {
-                    $query .= " AND $filter";
-                }
-                $stmt = mysql_query($query);
-                if ($stmt === false) {
-                    die(mysql_error());
-                }
-
-                $result = $this->_serializeCategories($stmt);
-            } elseif ($navigationPropName == 'Comments') {
-                $query = 'SELECT * FROM `wp_comments`'
-                        .' WHERE comment_approved = 1'
-                        ." AND comment_post_ID = $sourceEntityInstance->PostID";
-                if ($filter !== null) {
-                    $query .= " AND $filter";
-                }
-                $stmt = mysql_query($query);
-                if ($stmt === false) {
-                    die(mysql_error());
-                }
-
-                $result = $this->_serializeComments($stmt);
-            } else {
-                die('Post does not have navigation porperty with name: '.$navigationPropName);
-            }
-            break;
-
-        case $srcClass == 'Tag':
-            if ($navigationPropName == 'Posts') {
-                $query = 'SELECT p . *'
-                            .' FROM wp_posts AS p'
-                            .' INNER JOIN wp_term_relationships AS tr'
-                            .' ON p.ID = tr.object_id'
+            case $srcClass == 'Post':
+                if ($navigationPropName == 'Tags') {
+                    $query = 'SELECT t.*, tt.description'
+                            .' FROM wp_terms AS t'
                             .' INNER JOIN wp_term_taxonomy AS tt'
-                            .' ON tr.term_taxonomy_id = tt.term_taxonomy_id'
-                            ." WHERE tt.term_id = $sourceEntityInstance->TagID"
-                            ." AND p.post_type = 'post'"
-                            ." AND p.post_status = 'publish'";
-                if ($filter !== null) {
-                    $query .= " AND $filter";
-                }
-                $stmt = mysql_query($query);
-                if ($stmt === false) {
-                    die(mysql_error());
-                }
-
-                $result = $this->_serializePosts($stmt);
-            } else {
-                die('Tag does not have navigation porperty with name: '.$navigationPropName);
-            }
-            break;
-
-        case $srcClass == 'Category':
-            if ($navigationPropName == 'Posts') {
-                $query = 'SELECT p . *'
-                            .' FROM wp_posts AS p'
+                            .' ON tt.term_id = t.term_id'
                             .' INNER JOIN wp_term_relationships AS tr'
-                            .' ON p.ID = tr.object_id'
-                            .' INNER JOIN wp_term_taxonomy AS tt'
                             .' ON tr.term_taxonomy_id = tt.term_taxonomy_id'
-                            ." WHERE tt.term_id = $sourceEntityInstance->CategoryID"
-                            ." AND p.post_type = 'post'"
-                            ." AND p.post_status = 'publish'";
-                if ($filter !== null) {
-                    $query .= " AND $filter";
-                }
-                $stmt = mysql_query($query);
-                if ($stmt === false) {
-                    die(mysql_error());
-                }
+                            ." WHERE tt.taxonomy IN ('post_tag')"
+                            ." AND tr.object_id IN ($sourceEntityInstance->PostID)";
+                    if ($filter !== null) {
+                        $query .= " AND $filter";
+                    }
+                    $stmt = mysql_query($query);
+                    if ($stmt === false) {
+                        die(mysql_error());
+                    }
 
-                $result = $this->_serializePosts($stmt);
-            } else {
-                die('Category does not have navigation porperty with name: '.$navigationPropName);
-            }
-            break;
+                    $result = $this->_serializeTags($stmt);
+                } elseif ($navigationPropName == 'Categories') {
+                    $query = 'SELECT t.*, tt.description'
+                            .' FROM wp_terms AS t'
+                            .' INNER JOIN wp_term_taxonomy AS tt'
+                            .' ON tt.term_id = t.term_id'
+                            .' INNER JOIN wp_term_relationships AS tr'
+                            .' ON tr.term_taxonomy_id = tt.term_taxonomy_id'
+                            ." WHERE tt.taxonomy IN ('category')"
+                            ." AND tr.object_id IN ($sourceEntityInstance->PostID)";
+                    if ($filter !== null) {
+                        $query .= " AND $filter";
+                    }
+                    $stmt = mysql_query($query);
+                    if ($stmt === false) {
+                        die(mysql_error());
+                    }
 
-        case $srcClass == 'Comment':
-            die('Comment does not have navigation porperty with name: '.$navigationPropName);
-            break;
+                    $result = $this->_serializeCategories($stmt);
+                } elseif ($navigationPropName == 'Comments') {
+                    $query = 'SELECT * FROM `wp_comments`'
+                            .' WHERE comment_approved = 1'
+                            ." AND comment_post_ID = $sourceEntityInstance->PostID";
+                    if ($filter !== null) {
+                        $query .= " AND $filter";
+                    }
+                    $stmt = mysql_query($query);
+                    if ($stmt === false) {
+                        die(mysql_error());
+                    }
 
-        case $srcClass == 'User':
-            if ($navigationPropName == 'Posts') {
-                $query = 'SELECT * FROM `wp_posts` WHERE'
-                        ." wp_posts.post_type = 'post'"
-                        ." AND wp_posts.post_status = 'publish'"
-                        ." AND wp_posts.post_author = $sourceEntityInstance->UserID";
-                if ($filter !== null) {
-                    $query .= " AND $filter";
+                    $result = $this->_serializeComments($stmt);
+                } else {
+                    die('Post does not have navigation porperty with name: '.$navigationPropName);
                 }
-                $stmt = mysql_query($query);
-                if ($stmt === false) {
-                    die(mysql_error());
-                }
+                break;
 
-                $result = $this->_serializePosts($stmt);
-            } elseif ($navigationPropName == 'Comments') {
-                $query = 'SELECT * FROM `wp_comments`'
-                        .' WHERE comment_approved = 1'
-                        ." AND wp_comments.user_id = $sourceEntityInstance->UserID";
-                if ($filter !== null) {
-                    $query .= " AND $filter";
-                }
-                $stmt = mysql_query($query);
-                if ($stmt === false) {
-                    die(mysql_error());
-                }
+            case $srcClass == 'Tag':
+                if ($navigationPropName == 'Posts') {
+                    $query = 'SELECT p . *'
+                                .' FROM wp_posts AS p'
+                                .' INNER JOIN wp_term_relationships AS tr'
+                                .' ON p.ID = tr.object_id'
+                                .' INNER JOIN wp_term_taxonomy AS tt'
+                                .' ON tr.term_taxonomy_id = tt.term_taxonomy_id'
+                                ." WHERE tt.term_id = $sourceEntityInstance->TagID"
+                                ." AND p.post_type = 'post'"
+                                ." AND p.post_status = 'publish'";
+                    if ($filter !== null) {
+                        $query .= " AND $filter";
+                    }
+                    $stmt = mysql_query($query);
+                    if ($stmt === false) {
+                        die(mysql_error());
+                    }
 
-                $result = $this->_serializeComments($stmt);
-            } else {
-                die('User does not have navigation porperty with name: '.$navigationPropName);
-            }
-            break;
+                    $result = $this->_serializePosts($stmt);
+                } else {
+                    die('Tag does not have navigation porperty with name: '.$navigationPropName);
+                }
+                break;
+
+            case $srcClass == 'Category':
+                if ($navigationPropName == 'Posts') {
+                    $query = 'SELECT p . *'
+                                .' FROM wp_posts AS p'
+                                .' INNER JOIN wp_term_relationships AS tr'
+                                .' ON p.ID = tr.object_id'
+                                .' INNER JOIN wp_term_taxonomy AS tt'
+                                .' ON tr.term_taxonomy_id = tt.term_taxonomy_id'
+                                ." WHERE tt.term_id = $sourceEntityInstance->CategoryID"
+                                ." AND p.post_type = 'post'"
+                                ." AND p.post_status = 'publish'";
+                    if ($filter !== null) {
+                        $query .= " AND $filter";
+                    }
+                    $stmt = mysql_query($query);
+                    if ($stmt === false) {
+                        die(mysql_error());
+                    }
+
+                    $result = $this->_serializePosts($stmt);
+                } else {
+                    die('Category does not have navigation porperty with name: '.$navigationPropName);
+                }
+                break;
+
+            case $srcClass == 'Comment':
+                die('Comment does not have navigation porperty with name: '.$navigationPropName);
+                break;
+
+            case $srcClass == 'User':
+                if ($navigationPropName == 'Posts') {
+                    $query = 'SELECT * FROM `wp_posts` WHERE'
+                            ." wp_posts.post_type = 'post'"
+                            ." AND wp_posts.post_status = 'publish'"
+                            ." AND wp_posts.post_author = $sourceEntityInstance->UserID";
+                    if ($filter !== null) {
+                        $query .= " AND $filter";
+                    }
+                    $stmt = mysql_query($query);
+                    if ($stmt === false) {
+                        die(mysql_error());
+                    }
+
+                    $result = $this->_serializePosts($stmt);
+                } elseif ($navigationPropName == 'Comments') {
+                    $query = 'SELECT * FROM `wp_comments`'
+                            .' WHERE comment_approved = 1'
+                            ." AND wp_comments.user_id = $sourceEntityInstance->UserID";
+                    if ($filter !== null) {
+                        $query .= " AND $filter";
+                    }
+                    $stmt = mysql_query($query);
+                    if ($stmt === false) {
+                        die(mysql_error());
+                    }
+
+                    $result = $this->_serializeComments($stmt);
+                } else {
+                    die('User does not have navigation porperty with name: '.$navigationPropName);
+                }
+                break;
         }
 
         mysql_free_result($stmt);
@@ -474,105 +474,105 @@ class WordPressQueryProvider implements IQueryProvider
         $conditionStr = implode(' AND ', $keys);
 
         switch (true) {
-        case $srcClass == 'Post':
-            if ($navigationPropName == 'Tags') {
-                $query = 'SELECT t.*, tt.description'
-                        .' FROM wp_terms AS t'
-                        .' INNER JOIN wp_term_taxonomy AS tt'
-                        .' ON tt.term_id = t.term_id'
-                        .' INNER JOIN wp_term_relationships AS tr'
-                        .' ON tr.term_taxonomy_id = tt.term_taxonomy_id'
-                        ." WHERE tt.taxonomy IN ('post_tag')"
-                        ." AND tr.object_id IN ($sourceEntityInstance->PostID)"
-                        .' AND tt.term_id = '.$namedKeyValues['TagID'][0];
-                $stmt = mysql_query($query);
-                $result = $this->_serializeTags($stmt);
-            } elseif ($navigationPropName == 'Categories') {
-                $query = 'SELECT t.*, tt.description'
-                        .' FROM wp_terms AS t'
-                        .' INNER JOIN wp_term_taxonomy AS tt'
-                        .' ON tt.term_id = t.term_id'
-                        .' INNER JOIN wp_term_relationships AS tr'
-                        .' ON tr.term_taxonomy_id = tt.term_taxonomy_id'
-                        ." WHERE tt.taxonomy IN ('category')"
-                        ." AND tr.object_id IN ($sourceEntityInstance->PostID)"
-                        .' AND tt.term_id = '.$namedKeyValues['CategoryID'][0];
-                $stmt = mysql_query($query);
-                $result = $this->_serializeCategories($stmt);
-            } elseif ($navigationPropName == 'Comments') {
-                $query = 'SELECT * FROM `wp_comments`'
-                        .' WHERE comment_approved = 1'
-                        ." AND comment_post_ID = $sourceEntityInstance->PostID"
-                        .' AND comment_ID = '.$namedKeyValues['CommentID'][0];
-                $stmt = mysql_query($query);
-                $result = $this->_serializeComments($stmt);
-            } else {
-                die('Post does not have navigation porperty with name: '.$navigationPropName);
-            }
-            break;
-
-        case $srcClass == 'Tag':
-            if ($navigationPropName == 'Posts') {
-                $query = 'SELECT p . *'
-                            .' FROM wp_posts AS p'
-                            .' INNER JOIN wp_term_relationships AS tr'
-                            .' ON p.ID = tr.object_id'
+            case $srcClass == 'Post':
+                if ($navigationPropName == 'Tags') {
+                    $query = 'SELECT t.*, tt.description'
+                            .' FROM wp_terms AS t'
                             .' INNER JOIN wp_term_taxonomy AS tt'
-                            .' ON tr.term_taxonomy_id = tt.term_taxonomy_id'
-                            ." WHERE tt.term_id = $sourceEntityInstance->TagID"
-                            ." AND p.post_type = 'post'"
-                            ." AND p.post_status = 'publish'"
-                            .' AND p.ID = '.$namedKeyValues['PostID'][0];
-                $stmt = mysql_query($query);
-                $result = $this->_serializePosts($stmt);
-            } else {
-                die('Tag does not have navigation porperty with name: '.$navigationPropName);
-            }
-            break;
-
-        case $srcClass == 'Category':
-            if ($navigationPropName == 'Posts') {
-                $query = 'SELECT p . *'
-                            .' FROM wp_posts AS p'
+                            .' ON tt.term_id = t.term_id'
                             .' INNER JOIN wp_term_relationships AS tr'
-                            .' ON p.ID = tr.object_id'
-                            .' INNER JOIN wp_term_taxonomy AS tt'
                             .' ON tr.term_taxonomy_id = tt.term_taxonomy_id'
-                            ." WHERE tt.term_id = $sourceEntityInstance->CategoryID"
-                            ." AND p.post_type = 'post'"
-                            ." AND p.post_status = 'publish'"
-                            .' AND p.ID = '.$namedKeyValues['PostID'][0];
-                $stmt = mysql_query($query);
-                $result = $this->_serializePosts($stmt);
-            } else {
-                die('Category does not have navigation porperty with name: '.$navigationPropName);
-            }
-            break;
+                            ." WHERE tt.taxonomy IN ('post_tag')"
+                            ." AND tr.object_id IN ($sourceEntityInstance->PostID)"
+                            .' AND tt.term_id = '.$namedKeyValues['TagID'][0];
+                    $stmt = mysql_query($query);
+                    $result = $this->_serializeTags($stmt);
+                } elseif ($navigationPropName == 'Categories') {
+                    $query = 'SELECT t.*, tt.description'
+                            .' FROM wp_terms AS t'
+                            .' INNER JOIN wp_term_taxonomy AS tt'
+                            .' ON tt.term_id = t.term_id'
+                            .' INNER JOIN wp_term_relationships AS tr'
+                            .' ON tr.term_taxonomy_id = tt.term_taxonomy_id'
+                            ." WHERE tt.taxonomy IN ('category')"
+                            ." AND tr.object_id IN ($sourceEntityInstance->PostID)"
+                            .' AND tt.term_id = '.$namedKeyValues['CategoryID'][0];
+                    $stmt = mysql_query($query);
+                    $result = $this->_serializeCategories($stmt);
+                } elseif ($navigationPropName == 'Comments') {
+                    $query = 'SELECT * FROM `wp_comments`'
+                            .' WHERE comment_approved = 1'
+                            ." AND comment_post_ID = $sourceEntityInstance->PostID"
+                            .' AND comment_ID = '.$namedKeyValues['CommentID'][0];
+                    $stmt = mysql_query($query);
+                    $result = $this->_serializeComments($stmt);
+                } else {
+                    die('Post does not have navigation porperty with name: '.$navigationPropName);
+                }
+                break;
 
-        case $srcClass == 'Comment':
-            die('Comment does not have navigation porperty with name: '.$navigationPropName);
-            break;
+            case $srcClass == 'Tag':
+                if ($navigationPropName == 'Posts') {
+                    $query = 'SELECT p . *'
+                                .' FROM wp_posts AS p'
+                                .' INNER JOIN wp_term_relationships AS tr'
+                                .' ON p.ID = tr.object_id'
+                                .' INNER JOIN wp_term_taxonomy AS tt'
+                                .' ON tr.term_taxonomy_id = tt.term_taxonomy_id'
+                                ." WHERE tt.term_id = $sourceEntityInstance->TagID"
+                                ." AND p.post_type = 'post'"
+                                ." AND p.post_status = 'publish'"
+                                .' AND p.ID = '.$namedKeyValues['PostID'][0];
+                    $stmt = mysql_query($query);
+                    $result = $this->_serializePosts($stmt);
+                } else {
+                    die('Tag does not have navigation porperty with name: '.$navigationPropName);
+                }
+                break;
 
-        case $srcClass == 'User':
-            if ($navigationPropName == 'Posts') {
-                $query = 'SELECT * FROM `wp_posts` WHERE'
-                        ." wp_posts.post_type = 'post'"
-                        ." AND wp_posts.post_status = 'publish'"
-                        ." AND wp_posts.post_author = $sourceEntityInstance->UserID"
-                        .' AND wp_posts.ID = '.$namedKeyValues['PostID'][0];
-                $stmt = mysql_query($query);
-                $result = $this->_serializePosts($stmt);
-            } elseif ($navigationPropName == 'Comments') {
-                $query = 'SELECT * FROM `wp_comments`'
-                        .' WHERE comment_approved = 1'
-                        ." AND wp_comments.user_id = $sourceEntityInstance->UserID"
-                        .' AND wp_comments.comment_ID = '.$namedKeyValues['CommentID'][0];
-                $stmt = mysql_query($query);
-                $result = $this->_serializeComments($stmt);
-            } else {
-                die('User does not have navigation porperty with name: '.$navigationPropName);
-            }
-            break;
+            case $srcClass == 'Category':
+                if ($navigationPropName == 'Posts') {
+                    $query = 'SELECT p . *'
+                                .' FROM wp_posts AS p'
+                                .' INNER JOIN wp_term_relationships AS tr'
+                                .' ON p.ID = tr.object_id'
+                                .' INNER JOIN wp_term_taxonomy AS tt'
+                                .' ON tr.term_taxonomy_id = tt.term_taxonomy_id'
+                                ." WHERE tt.term_id = $sourceEntityInstance->CategoryID"
+                                ." AND p.post_type = 'post'"
+                                ." AND p.post_status = 'publish'"
+                                .' AND p.ID = '.$namedKeyValues['PostID'][0];
+                    $stmt = mysql_query($query);
+                    $result = $this->_serializePosts($stmt);
+                } else {
+                    die('Category does not have navigation porperty with name: '.$navigationPropName);
+                }
+                break;
+
+            case $srcClass == 'Comment':
+                die('Comment does not have navigation porperty with name: '.$navigationPropName);
+                break;
+
+            case $srcClass == 'User':
+                if ($navigationPropName == 'Posts') {
+                    $query = 'SELECT * FROM `wp_posts` WHERE'
+                            ." wp_posts.post_type = 'post'"
+                            ." AND wp_posts.post_status = 'publish'"
+                            ." AND wp_posts.post_author = $sourceEntityInstance->UserID"
+                            .' AND wp_posts.ID = '.$namedKeyValues['PostID'][0];
+                    $stmt = mysql_query($query);
+                    $result = $this->_serializePosts($stmt);
+                } elseif ($navigationPropName == 'Comments') {
+                    $query = 'SELECT * FROM `wp_comments`'
+                            .' WHERE comment_approved = 1'
+                            ." AND wp_comments.user_id = $sourceEntityInstance->UserID"
+                            .' AND wp_comments.comment_ID = '.$namedKeyValues['CommentID'][0];
+                    $stmt = mysql_query($query);
+                    $result = $this->_serializeComments($stmt);
+                } else {
+                    die('User does not have navigation porperty with name: '.$navigationPropName);
+                }
+                break;
         }
 
         mysql_free_result($stmt);
@@ -601,59 +601,59 @@ class WordPressQueryProvider implements IQueryProvider
         $navigationPropName = $targetProperty->getName();
 
         switch (true) {
-        case $srcClass == 'Post':
-            if ($navigationPropName == 'User') {
-                $query = "SELECT * FROM `wp_users` WHERE ID = $sourceEntityInstance->Author";
-                $stmt = mysql_query($query);
-                $stmt = mysql_query($query);
-                $data = mysql_fetch_assoc($stmt);
-                $result = $this->_serializeUser($data);
-                if ($stmt === false) {
-                    die(mysql_error());
-                }
+            case $srcClass == 'Post':
+                if ($navigationPropName == 'User') {
+                    $query = "SELECT * FROM `wp_users` WHERE ID = $sourceEntityInstance->Author";
+                    $stmt = mysql_query($query);
+                    $stmt = mysql_query($query);
+                    $data = mysql_fetch_assoc($stmt);
+                    $result = $this->_serializeUser($data);
+                    if ($stmt === false) {
+                        die(mysql_error());
+                    }
 
-                if (!mysql_num_rows($stmt)) {
-                    $result = null;
+                    if (!mysql_num_rows($stmt)) {
+                        $result = null;
+                    }
+                } else {
+                    die('Post does not have navigation porperty with name: '.$navigationPropName);
                 }
-            } else {
-                die('Post does not have navigation porperty with name: '.$navigationPropName);
-            }
-            break;
+                break;
 
-        case $srcClass == 'Comment':
-            if ($navigationPropName == 'User') {
-                $query = "SELECT * FROM `wp_users` WHERE ID = $sourceEntityInstance->UserID";
-                $stmt = mysql_query($query);
-                if ($stmt === false) {
-                    die(mysql_error());
+            case $srcClass == 'Comment':
+                if ($navigationPropName == 'User') {
+                    $query = "SELECT * FROM `wp_users` WHERE ID = $sourceEntityInstance->UserID";
+                    $stmt = mysql_query($query);
+                    if ($stmt === false) {
+                        die(mysql_error());
+                    }
+
+                    if (!mysql_num_rows($stmt)) {
+                        $result = null;
+                    }
+
+                    $data = mysql_fetch_assoc($stmt);
+                    $result = $this->_serializeUser($data);
+                } elseif ($navigationPropName == 'Post') {
+                    $query = 'SELECT * FROM `wp_posts` WHERE'
+                            ." wp_posts.post_type = 'post'"
+                            ." AND wp_posts.post_status = 'publish'"
+                            ." AND wp_posts.ID = $sourceEntityInstance->PostID";
+                    $stmt = mysql_query($query);
+                    if ($stmt === false) {
+                        die(mysql_error());
+                    }
+
+                    if (!mysql_num_rows($stmt)) {
+                        $result = null;
+                    }
+
+                    $data = mysql_fetch_assoc($stmt);
+                    $result = $this->_serializePost($data);
+                } else {
+                    die('Comment does not have navigation porperty with name: '.$navigationPropName);
                 }
-
-                if (!mysql_num_rows($stmt)) {
-                    $result = null;
-                }
-
-                $data = mysql_fetch_assoc($stmt);
-                $result = $this->_serializeUser($data);
-            } elseif ($navigationPropName == 'Post') {
-                $query = 'SELECT * FROM `wp_posts` WHERE'
-                        ." wp_posts.post_type = 'post'"
-                        ." AND wp_posts.post_status = 'publish'"
-                        ." AND wp_posts.ID = $sourceEntityInstance->PostID";
-                $stmt = mysql_query($query);
-                if ($stmt === false) {
-                    die(mysql_error());
-                }
-
-                if (!mysql_num_rows($stmt)) {
-                    $result = null;
-                }
-
-                $data = mysql_fetch_assoc($stmt);
-                $result = $this->_serializePost($data);
-            } else {
-                die('Comment does not have navigation porperty with name: '.$navigationPropName);
-            }
-            break;
+                break;
         }
 
         mysql_free_result($stmt);

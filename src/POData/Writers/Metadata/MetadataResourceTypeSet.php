@@ -176,7 +176,7 @@ class MetadataResourceTypeSet extends MetadataBase
                 $resourceType = $resourceProperty->getResourceType();
                 $resourceTypeNamespace = $this->getResourceTypeNamespace($resourceType);
                 $resourceTypesInNamespace = $this->getResourceTypesForNamespace($resourceTypeNamespace);
-                if (!array_key_exists($resourceTypeNamespace.'.'.$resourceType->getName(), $resourceTypesInNamespace)) {
+                if (!array_key_exists($resourceTypeNamespace . '.' . $resourceType->getName(), $resourceTypesInNamespace)) {
                     continue;
                 }
             }
@@ -237,7 +237,7 @@ class MetadataResourceTypeSet extends MetadataBase
     {
         $resourceTypeNamespace = $this->getResourceTypeNamespace($resourceType);
         $resourceTypesInNamespace = &$this->getResourceTypesForNamespace($resourceTypeNamespace);
-        $resourceNameWithNamespace = $resourceTypeNamespace.'.'.$resourceType->getName();
+        $resourceNameWithNamespace = $resourceTypeNamespace . '.' . $resourceType->getName();
         if (!array_key_exists($resourceNameWithNamespace, $resourceTypesInNamespace)) {
             if ($resourceType->isMediaLinkEntry()) {
                 $this->_hasVisibleMediaLinkEntry = true;

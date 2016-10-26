@@ -232,11 +232,11 @@ class ServiceHost
                     ($requestUriScheme == 'http' && $requestUriPort != '80') ||
                     ($requestUriScheme == 'https' && $requestUriPort != '443')
                 ) {
-                    $serviceUri .= ':'.$requestUriPort;
+                    $serviceUri .= ':' . $requestUriPort;
                 }
 
                 for ($l = 0; $l <= $k; ++$l) {
-                    $serviceUri .= '/'.$requestUriSegments[$l];
+                    $serviceUri .= '/' . $requestUriSegments[$l];
                 }
 
                 $this->_absoluteServiceUri = new Url($serviceUri);
@@ -576,18 +576,18 @@ class ServiceHost
      */
     public function setResponseStatusCode($value)
     {
-        $floor = floor($value / 100);
+        $floor = floor($value/100);
         if ($floor >= 1 && $floor <= 5) {
             $statusDescription = HttpStatus::getStatusDescription($value);
             if (!is_null($statusDescription)) {
-                $statusDescription = ' '.$statusDescription;
+                $statusDescription = ' ' . $statusDescription;
             }
 
             $this->_operationContext
-                ->outgoingResponse()->setStatusCode($value.$statusDescription);
+                ->outgoingResponse()->setStatusCode($value . $statusDescription);
         } else {
             throw ODataException::createInternalServerError(
-                'Invalid Status Code'.$value
+                'Invalid Status Code' . $value
             );
         }
     }
@@ -684,6 +684,6 @@ class ServiceHost
 
         }
 
-        return $format.';q=1.0';
+        return $format . ';q=1.0';
     }
 }

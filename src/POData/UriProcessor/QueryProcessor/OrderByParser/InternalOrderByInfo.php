@@ -179,7 +179,7 @@ class InternalOrderByInfo
                         // Also we can think about moving above urlencode to this
                         // function
                         $value = $type->convertToOData($currentObject);
-                        $nextPageLink .= $value.', ';
+                        $nextPageLink .= $value . ', ';
                     }
                 } catch (\ReflectionException $reflectionException) {
                     throw ODataException::createInternalServerError(

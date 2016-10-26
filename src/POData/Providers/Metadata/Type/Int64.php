@@ -96,6 +96,6 @@ class Int64 implements IType
      */
     public function convertToOData($value)
     {
-        return $value.'L';
+        return $value . 'L';
     }
 }
