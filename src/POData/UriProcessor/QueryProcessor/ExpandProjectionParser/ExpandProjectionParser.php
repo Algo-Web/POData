@@ -230,7 +230,7 @@ class ExpandProjectionParser
                     //assert(!empty($keys))
                     $orderBy = null;
                     foreach ($keys as $key) {
-                        $orderBy = $orderBy.$key.', ';
+                        $orderBy = $orderBy . $key . ', ';
                     }
 
                     $orderBy = rtrim($orderBy, ', ');

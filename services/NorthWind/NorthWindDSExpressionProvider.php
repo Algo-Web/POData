@@ -325,10 +325,10 @@ class NorthWindDSExpressionProvider implements IExpressionProvider
             break;
         case ODataConstants::STRFUN_SUBSTRING:
           if (count($params) == 3) {
-              // 3 Param version of OData substring
+                // 3 Param version of OData substring
                 return "SUBSTRING($params[0], $params[1] + 1, $params[2])";
-          } else {
-              // 2 Params version of OData substring
+            } else {
+                // 2 Params version of OData substring
             // We don't have the same function for SQL Server, we have only:
 
             // SUBSTRING ( value_expression , start_expression , length_expression )
@@ -338,7 +338,7 @@ class NorthWindDSExpressionProvider implements IExpressionProvider
             // in value_expression, the whole value expression beginning at start_expression is returned
             // In OData substring function the index start from 0, in SQL Server its from 1
             return "SUBSTRING($params[0], $params[1] + 1, LEN($params[0]))";
-          }
+            }
             break;
         case ODataConstants::STRFUN_SUBSTRINGOF:
           return "(CHARINDEX($params[0], $params[1]) != 0)";
@@ -416,16 +416,16 @@ class NorthWindDSExpressionProvider implements IExpressionProvider
                 } elseif ($operator == '<=') {
                     $operator = '>';
                 } else {
-                    $operator = '!'.$operator;
+                    $operator = '!' . $operator;
                 }
 
                 return self::OPEN_BRAKET
-                    .$str[0].' '.$operator
-                    .' '.$str[1].self::CLOSE_BRACKET;
+                    .$str[0] . ' ' . $operator
+                    .' ' . $str[1] . self::CLOSE_BRACKET;
             } else {
                 return self::OPEN_BRAKET
-                    .$str[0].' '.$operator
-                    .' '.$str[1].self::CLOSE_BRACKET;
+                    .$str[0] . ' ' . $operator
+                    .' ' . $str[1] . self::CLOSE_BRACKET;
             }
         }
 
@@ -441,23 +441,23 @@ class NorthWindDSExpressionProvider implements IExpressionProvider
                 } elseif ($operator == '<=') {
                     $operator = '>';
                 } else {
-                    $operator = '!'.$operator;
+                    $operator = '!' . $operator;
                 }
 
                 return self::OPEN_BRAKET
-            .$str[0].' '.$operator
-            .' '.$str[1].self::CLOSE_BRACKET;
+            .$str[0] . ' ' . $operator
+            .' ' . $str[1] . self::CLOSE_BRACKET;
             } else {
                 return self::OPEN_BRAKET
-            .$str[0].' '.$operator
-            .' '.$str[1].self::CLOSE_BRACKET;
+            .$str[0] . ' ' . $operator
+            .' ' . $str[1] . self::CLOSE_BRACKET;
             }
         }
 
         return
             self::OPEN_BRAKET
-            .$left.' '.$operator
-            .' '.$right.self::CLOSE_BRACKET;
+            .$left . ' ' . $operator
+            .' ' . $right . self::CLOSE_BRACKET;
     }
 
     /**
@@ -470,6 +470,6 @@ class NorthWindDSExpressionProvider implements IExpressionProvider
      */
     private function _prepareUnaryExpression($operator, $child)
     {
-        return $operator.self::OPEN_BRAKET.$child.self::CLOSE_BRACKET;
+        return $operator . self::OPEN_BRAKET . $child . self::CLOSE_BRACKET;
     }
 }

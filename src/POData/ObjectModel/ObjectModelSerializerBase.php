@@ -92,7 +92,7 @@ class ObjectModelSerializerBase
         $this->service = $service;
         $this->request = $request;
         $this->absoluteServiceUri = $service->getHost()->getAbsoluteServiceUri()->getUrlAsString();
-        $this->absoluteServiceUriWithSlash = rtrim($this->absoluteServiceUri, '/').'/';
+        $this->absoluteServiceUriWithSlash = rtrim($this->absoluteServiceUri, '/') . '/';
         $this->_segmentNames = array();
         $this->_segmentResourceSetWrappers = array();
         $this->_segmentResultCounts = array();
@@ -118,7 +118,7 @@ class ObjectModelSerializerBase
     {
         $keyProperties = $resourceType->getKeyProperties();
         $this->assert(count($keyProperties) != 0, 'count($keyProperties) != 0');
-        $keyString = $containerName.'(';
+        $keyString = $containerName . '(';
         $comma = null;
         foreach ($keyProperties as $keyName => $resourceProperty) {
             $keyType = $resourceProperty->getInstanceType();
@@ -130,7 +130,7 @@ class ObjectModelSerializerBase
             }
 
             $keyValue = $keyType->convertToOData($keyValue);
-            $keyString .= $comma.$keyName.'='.$keyValue;
+            $keyString .= $comma . $keyName . '=' . $keyValue;
             $comma = ',';
         }
 
@@ -225,9 +225,9 @@ class ObjectModelSerializerBase
             );
             $value = $this->getPropertyValue($entryObject, $resourceType, $eTagProperty);
             if (is_null($value)) {
-                $eTag = $eTag.$comma.'null';
+                $eTag = $eTag . $comma . 'null';
             } else {
-                $eTag = $eTag.$comma.$type->convertToOData($value);
+                $eTag = $eTag . $comma . $type->convertToOData($value);
             }
 
             $comma = ',';
@@ -239,7 +239,7 @@ class ObjectModelSerializerBase
             // want this for eTag value.
             $eTag = urldecode(utf8_decode($eTag));
 
-            return ODataConstants::HTTP_WEAK_ETAG_PREFIX.rtrim($eTag, ',').'"';
+            return ODataConstants::HTTP_WEAK_ETAG_PREFIX . rtrim($eTag, ',') . '"';
         }
 
         return null;
@@ -275,7 +275,7 @@ class ObjectModelSerializerBase
      * @throws InvalidOperationException If this function invoked with non-navigation
      *                                   property instance
      */
-    protected function pushSegmentForNavigationProperty(ResourceProperty &$resourceProperty)
+    protected function pushSegmentForNavigationProperty(ResourceProperty & $resourceProperty)
     {
         if ($resourceProperty->getTypeKind() == ResourceTypeKind::ENTITY) {
             $this->assert(!empty($this->_segmentNames), '!is_empty($this->_segmentNames');
@@ -390,7 +390,7 @@ class ObjectModelSerializerBase
      *
      * @return bool true if the segment was push, false otherwise
      */
-    private function _pushSegment($segmentName, ResourceSetWrapper &$resourceSetWrapper)
+    private function _pushSegment($segmentName, ResourceSetWrapper & $resourceSetWrapper)
     {
         $rootProjectionNode = $this->request->getRootProjectionNode();
         // Even though there is no expand in the request URI, still we need to push
@@ -442,10 +442,10 @@ class ObjectModelSerializerBase
             $queryParameterString = $this->getNextPageLinkQueryParametersForExpandedResourceSet();
         }
 
-        $queryParameterString .= '$skiptoken='.$skipToken;
+        $queryParameterString .= '$skiptoken=' . $skipToken;
         $odalaLink = new ODataLink();
         $odalaLink->name = ODataConstants::ATOM_LINK_NEXT_ATTRIBUTE_STRING;
-        $odalaLink->url = rtrim($absoluteUri, '/').'?'.$queryParameterString;
+        $odalaLink->url = rtrim($absoluteUri, '/') . '?' . $queryParameterString;
 
         return $odalaLink;
     }
@@ -466,15 +466,15 @@ class ObjectModelSerializerBase
             ODataConstants::HTTPQUERY_STRING_EXPAND,
             ODataConstants::HTTPQUERY_STRING_ORDERBY,
             ODataConstants::HTTPQUERY_STRING_INLINECOUNT,
-            ODataConstants::HTTPQUERY_STRING_SELECT, ) as $queryOption
+            ODataConstants::HTTPQUERY_STRING_SELECT,) as $queryOption
         ) {
             $value = $this->service->getHost()->getQueryStringItem($queryOption);
             if (!is_null($value)) {
                 if (!is_null($queryParameterString)) {
-                    $queryParameterString = $queryParameterString.'&';
+                    $queryParameterString = $queryParameterString . '&';
                 }
 
-                $queryParameterString .= $queryOption.'='.$value;
+                $queryParameterString .= $queryOption . '=' . $value;
             }
         }
 
@@ -485,7 +485,7 @@ class ObjectModelSerializerBase
                 $queryParameterString .= '&';
             }
 
-            $queryParameterString .= ODataConstants::HTTPQUERY_STRING_TOP.'='.$remainingCount;
+            $queryParameterString .= ODataConstants::HTTPQUERY_STRING_TOP . '=' . $remainingCount;
         }
 
         if (!is_null($queryParameterString)) {
@@ -528,7 +528,7 @@ class ObjectModelSerializerBase
             }
 
             if (!is_null($selectionPaths)) {
-                $queryParameterString = '$select='.$selectionPaths;
+                $queryParameterString = '$select=' . $selectionPaths;
             }
 
             if (!is_null($expansionPaths)) {
@@ -536,7 +536,7 @@ class ObjectModelSerializerBase
                     $queryParameterString .= '&';
                 }
 
-                $queryParameterString = '$expand='.$expansionPaths;
+                $queryParameterString = '$expand=' . $expansionPaths;
             }
 
             if (!is_null($queryParameterString)) {
@@ -644,7 +644,7 @@ class ObjectModelSerializerBase
      */
     private function _buildSelectionAndExpansionPathsForNode(&$parentPathSegments,
         &$selectionPaths, &$expansionPaths,
-        ExpandedProjectionNode &$expandedProjectionNode,
+        ExpandedProjectionNode & $expandedProjectionNode,
         &$foundSelections, &$foundExpansions
     ) {
         $foundSelections = false;
@@ -675,7 +675,7 @@ class ObjectModelSerializerBase
                         $this->_appendSelectionOrExpandPath(
                             $selectionPaths,
                             $parentPathSegments,
-                            $childNode->getPropertyName().'/*'
+                            $childNode->getPropertyName() . '/*'
                         );
                     } else {
                         $expandedChildrenNeededToBeSelected[] = $childNode;
@@ -719,7 +719,7 @@ class ObjectModelSerializerBase
         }
 
         foreach ($parentPathSegments as $parentPathSegment) {
-            $path .= $parentPathSegment.'/';
+            $path .= $parentPathSegment . '/';
         }
 
         $path .= $segmentToAppend;

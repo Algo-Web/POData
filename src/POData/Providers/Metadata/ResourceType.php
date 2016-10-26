@@ -229,7 +229,7 @@ class ResourceType
         $this->_baseType = $baseType;
         $this->_namespaceName = $namespaceName;
         $this->_fullName
-            = is_null($namespaceName) ? $name : $namespaceName.'.'.$name;
+            = is_null($namespaceName) ? $name : $namespaceName . '.' . $name;
         $this->_abstractType = $isAbstract;
         $this->_isMediaLinkEntry = false;
         $this->_customState = null;
@@ -913,6 +913,9 @@ class ResourceType
         }
     }
 
+    /**
+     * @param string $property
+     */
     public function setPropertyValue($entity, $property, $value)
     {
         $reflect = new \ReflectionProperty($entity, $property);

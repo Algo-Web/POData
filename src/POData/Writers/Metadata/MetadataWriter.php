@@ -200,7 +200,7 @@ class MetadataWriter
      * Write an entity type and associated attributes.
      *
      * @param ResourceType $resourceType                            Resource type
-     * @param array        $associationTypesInResourceTypeNamespace Collection of
+     * @param ResourceAssociationType[]        $associationTypesInResourceTypeNamespace Collection of
      *                                                              association types for the given resource types
      *                                                              array(string, AssociationType)
      */
@@ -345,7 +345,7 @@ class MetadataWriter
      */
     private function _writeNavigationProperty(ResourceType $resourceType, $associationTypesInResourceTypeNamespace, ResourceProperty $navigationProperty)
     {
-        $associationTypeLookupName = $resourceType->getName().'_'.$navigationProperty->getName();
+        $associationTypeLookupName = $resourceType->getName() . '_' . $navigationProperty->getName();
         if (!array_key_exists($associationTypeLookupName, $associationTypesInResourceTypeNamespace)) {
             throw new InvalidOperationException(Messages::metadataWriterNoResourceAssociationSetForNavigationProperty($navigationProperty->getName(), $resourceType->getName()));
         }

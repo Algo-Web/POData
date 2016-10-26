@@ -107,29 +107,29 @@ class OrderByLeafNode extends OrderByBaseNode
         foreach ($ancestors as $i => $anscestor) {
             if ($i == 0) {
                 $parameterNames = array(
-                    '$'.$anscestor.'A', '$'.$anscestor.'B',
+                    '$' . $anscestor . 'A', '$' . $anscestor . 'B',
                 );
                 $accessor1 = $parameterNames[0];
                 $accessor2 = $parameterNames[1];
-                $flag1 = '$flag1 = '.'is_null('.$accessor1.') || ';
-                $flag2 = '$flag2 = '.'is_null('.$accessor2.') || ';
+                $flag1 = '$flag1 = ' . 'is_null(' . $accessor1 . ') || ';
+                $flag2 = '$flag2 = ' . 'is_null(' . $accessor2 . ') || ';
             } else {
-                $accessor1 .= '->'.$anscestor;
-                $accessor2 .= '->'.$anscestor;
-                $flag1 .= 'is_null('.$accessor1.')'.' || ';
-                $flag2 .= 'is_null('.$accessor2.')'.' || ';
+                $accessor1 .= '->' . $anscestor;
+                $accessor2 .= '->' . $anscestor;
+                $flag1 .= 'is_null(' . $accessor1 . ')' . ' || ';
+                $flag2 .= 'is_null(' . $accessor2 . ')' . ' || ';
             }
         }
 
         // $accessor1 .= '->' . $this->propertyName;
         // $accessor2 .= '->' . $this->propertyName;
         $propertyName = $this->propertyName;
-        $getter = 'get'.ucfirst($propertyName);
+        $getter = 'get' . ucfirst($propertyName);
         $accessor1 = "(method_exists({$accessor1}, '{$getter}') ? {$accessor1}->{$getter}() : {$accessor1}->{$propertyName})";
         $accessor2 = "(method_exists({$accessor2}, '{$getter}') ? {$accessor2}->{$getter}() : {$accessor2}->{$propertyName})";
 
-        $flag1 .= 'is_null('.$accessor1.')';
-        $flag2 .= 'is_null('.$accessor2.')';
+        $flag1 .= 'is_null(' . $accessor1 . ')';
+        $flag2 .= 'is_null(' . $accessor2 . ')';
 
         $code = "$flag1; 
              $flag2; 

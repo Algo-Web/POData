@@ -83,7 +83,7 @@ class ExpressionToken
     {
         if ($this->Id != ExpressionTokenId::IDENTIFIER) {
             throw ODataException::createSyntaxError(
-                'Identifier expected at position '.$this->Position
+                'Identifier expected at position ' . $this->Position
             );
         }
 

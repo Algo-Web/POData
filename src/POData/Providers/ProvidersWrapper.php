@@ -324,7 +324,7 @@ class ProvidersWrapper
         ResourceProperty $property
     ) {
         $type = $this->_getResourceTypeWherePropertyIsDeclared($type, $property);
-        $cacheKey = $set->getName().'_'.$type->getName().'_'.$property->getName();
+        $cacheKey = $set->getName() . '_' . $type->getName() . '_' . $property->getName();
 
         if (array_key_exists($cacheKey, $this->associationSetCache)) {
             return $this->associationSetCache[$cacheKey];
@@ -439,8 +439,8 @@ class ProvidersWrapper
             return $resourceType->getAllProperties();
         }
         //TODO: move this to doctrine annotations
-        $cacheKey = $setWrapper->getName().'_'.$resourceType->getFullName();
-        if (!array_key_exists($cacheKey,  $this->propertyCache)) {
+        $cacheKey = $setWrapper->getName() . '_' . $resourceType->getFullName();
+        if (!array_key_exists($cacheKey, $this->propertyCache)) {
             //Fill the cache
             $this->propertyCache[$cacheKey] = array();
             foreach ($resourceType->getAllProperties() as $resourceProperty) {
@@ -866,8 +866,8 @@ class ProvidersWrapper
      * @throws ODataException
      */
     private function _validateEntityInstance($entityInstance,
-        ResourceSet &$resourceSet,
-        KeyDescriptor &$keyDescriptor,
+        ResourceSet & $resourceSet,
+        KeyDescriptor & $keyDescriptor,
         $methodName
     ) {
         if (is_null($entityInstance)) {

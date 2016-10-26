@@ -443,7 +443,7 @@ class OrderByParser
                             $lexer->validateToken(ExpressionTokenId::DOT);
                         }
 
-                        $orderByPathSegments[$i][] = '*'.$identifier;
+                        $orderByPathSegments[$i][] = '*' . $identifier;
                         $lexer->nextToken();
                         $tokenId = $lexer->getCurrentToken()->Id;
                         if ($tokenId != ExpressionTokenId::END) {

@@ -652,7 +652,7 @@ abstract class BaseService implements IRequestHandler, IService
      * @return string|null The ETag for the entry object if it has eTag properties
      *                     NULL otherwise
      */
-    protected function compareETag(&$entryObject, ResourceType &$resourceType,
+    protected function compareETag(&$entryObject, ResourceType & $resourceType,
         &$needToSerializeResponse
     ) {
         $needToSerializeResponse = true;
@@ -703,7 +703,7 @@ abstract class BaseService implements IRequestHandler, IService
             // but that is causing an issue in Linux env where the
             // firefix browser is unable to parse the ETag in this case.
             // Need to follow up PHP core devs for this.
-            $eTag = ODataConstants::HTTP_WEAK_ETAG_PREFIX.$eTag.'"';
+            $eTag = ODataConstants::HTTP_WEAK_ETAG_PREFIX . $eTag . '"';
             if (!is_null($ifMatch)) {
                 if (strcmp($eTag, $ifMatch) != 0) {
                     // Requested If-Match value does not match with current
@@ -726,7 +726,7 @@ abstract class BaseService implements IRequestHandler, IService
             // but that is causing an issue in Linux env where the
             // firefix browser is unable to parse the ETag in this case.
             // Need to follow up PHP core devs for this.
-            $eTag = ODataConstants::HTTP_WEAK_ETAG_PREFIX.$eTag.'"';
+            $eTag = ODataConstants::HTTP_WEAK_ETAG_PREFIX . $eTag . '"';
         }
 
         return $eTag;
@@ -745,7 +745,7 @@ abstract class BaseService implements IRequestHandler, IService
      *                     for use in a URI) there are etag properties, NULL if
      *                     there is no etag property
      */
-    protected function getETagForEntry(&$entryObject, ResourceType &$resourceType)
+    protected function getETagForEntry(&$entryObject, ResourceType & $resourceType)
     {
         $eTag = null;
         $comma = null;
@@ -768,9 +768,9 @@ abstract class BaseService implements IRequestHandler, IService
             }
 
             if (is_null($value)) {
-                $eTag = $eTag.$comma.'null';
+                $eTag = $eTag . $comma . 'null';
             } else {
-                $eTag = $eTag.$comma.$type->convertToOData($value);
+                $eTag = $eTag . $comma . $type->convertToOData($value);
             }
 
             $comma = ',';

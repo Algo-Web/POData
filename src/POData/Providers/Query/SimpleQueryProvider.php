@@ -121,20 +121,20 @@ abstract class SimpleQueryProvider implements IQueryProvider
                 ++$index;
                 //Keys have already been validated, so this is not a SQL injection surface
                 $where .= $where ? ' AND ' : '';
-                $where .= $key.' = :param'.$index;
-                $parameters[':param'.$index] = $value[0];
+                $where .= $key . ' = :param' . $index;
+                $parameters[':param' . $index] = $value[0];
             }
         }
         foreach ($whereCondition as $fieldName => $fieldValue) {
             ++$index;
             $where .= $where ? ' AND ' : '';
-            $where .= $fieldName.' = :param'.$index;
-            $parameters[':param'.$index] = $fieldValue;
+            $where .= $fieldName . ' = :param' . $index;
+            $parameters[':param' . $index] = $fieldValue;
         }
-        $where = $where ? ' WHERE '.$where : '';
+        $where = $where ? ' WHERE ' . $where : '';
         $entityClassName = $resourceSet->getResourceType()->getInstanceType()->name;
         $entityName = $this->getEntityName($entityClassName);
-        $sql = 'SELECT * FROM '.$this->getTableName($entityName).$where.' LIMIT 1';
+        $sql = 'SELECT * FROM ' . $this->getTableName($entityName) . $where . ' LIMIT 1';
         $result = $this->queryAll($sql, $parameters);
         if ($result) {
             $result = $result[0];
@@ -162,12 +162,12 @@ abstract class SimpleQueryProvider implements IQueryProvider
             //tell mysql we want to know the count prior to the LIMIT
             //$option = 'SQL_CALC_FOUND_ROWS';
         }
-        $where = $filterInfo ? ' WHERE '.$filterInfo->getExpressionAsString() : '';
-        $order = $orderBy ? ' ORDER BY '.$this->getOrderByExpressionAsString($orderBy) : '';
-        $sqlCount = 'SELECT COUNT(*) FROM '.$tableName.$where;
+        $where = $filterInfo ? ' WHERE ' . $filterInfo->getExpressionAsString() : '';
+        $order = $orderBy ? ' ORDER BY ' . $this->getOrderByExpressionAsString($orderBy) : '';
+        $sqlCount = 'SELECT COUNT(*) FROM ' . $tableName . $where;
         if ($queryType == QueryType::ENTITIES() || $queryType == QueryType::ENTITIES_WITH_COUNT()) {
-            $sql = 'SELECT '.$option.' * FROM '.$tableName.$where.$order
-                    .($top ? ' LIMIT '.$top : '').($skip ? ' OFFSET '.$skip : '');
+            $sql = 'SELECT ' . $option . ' * FROM ' . $tableName . $where . $order
+                    .($top ? ' LIMIT ' . $top : '') . ($skip ? ' OFFSET ' . $skip : '');
             $data = $this->queryAll($sql);
 
             if ($queryType == QueryType::ENTITIES_WITH_COUNT()) {
@@ -175,7 +175,7 @@ abstract class SimpleQueryProvider implements IQueryProvider
                 //$result->count = $this->queryScalar('SELECT FOUND_ROWS()');
                 $result->count = $this->queryScalar($sqlCount);
             }
-            $result->results = array_map($entityClassName.'::fromRecord', $data);
+            $result->results = array_map($entityClassName . '::fromRecord', $data);
         } elseif ($queryType == QueryType::COUNT()) {
             $result->count = QueryResult::adjustCountForPaging(
                 $this->queryScalar($sqlCount), $top, $skip);
@@ -208,7 +208,7 @@ abstract class SimpleQueryProvider implements IQueryProvider
     ) {
         // Correct filter
         $srcClass = get_class($sourceEntityInstance);
-        $filterFieldName = $this->getTableName($this->getEntityName($srcClass)).'_id';
+        $filterFieldName = $this->getTableName($this->getEntityName($srcClass)) . '_id';
         $navigationPropertiesUsedInTheFilterClause = null;
         $filterExpAsDataSourceExp = '';
         if ($filterInfo) {
@@ -216,7 +216,7 @@ abstract class SimpleQueryProvider implements IQueryProvider
             $filterExpAsDataSourceExp = $filterInfo->getExpressionAsString();
         }
         $filterExpAsDataSourceExp .= $filterExpAsDataSourceExp ? ' AND ' : '';
-        $filterExpAsDataSourceExp .= $filterFieldName.' = '.$sourceEntityInstance->id;
+        $filterExpAsDataSourceExp .= $filterFieldName . ' = ' . $sourceEntityInstance->id;
         $completeFilterInfo = new FilterInfo($navigationPropertiesUsedInTheFilterClause, $filterExpAsDataSourceExp);
 
         return $this->getResourceSet($queryType, $targetResourceSet, $completeFilterInfo, $orderBy, $top, $skip);
@@ -233,7 +233,7 @@ abstract class SimpleQueryProvider implements IQueryProvider
     ) {
         $entityClassName = $sourceResourceSet->getResourceType()->getInstanceType()->name;
         $entityName = $this->getEntityName($entityClassName);
-        $fieldName = $this->getTableName($entityName).'_id';
+        $fieldName = $this->getTableName($entityName) . '_id';
 
         return $this->getResource($targetResourceSet, $keyDescriptor, [
             $fieldName => $sourceEntityInstance->id,
@@ -250,7 +250,7 @@ abstract class SimpleQueryProvider implements IQueryProvider
     ) {
         $entityClassName = $targetResourceSet->getResourceType()->getInstanceType()->name;
         $entityName = $this->getEntityName($entityClassName);
-        $fieldName = $this->getTableName($entityName).'_id';
+        $fieldName = $this->getTableName($entityName) . '_id';
 
         return $this->getResource($targetResourceSet, null, [
             'id' => $sourceEntityInstance->$fieldName,

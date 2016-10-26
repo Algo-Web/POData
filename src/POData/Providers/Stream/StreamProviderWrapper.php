@@ -467,9 +467,9 @@ class StreamProviderWrapper
     public function getDefaultStreamEditMediaUri($mediaLinkEntryUri, $resourceStreamInfo)
     {
         if (is_null($resourceStreamInfo)) {
-            return rtrim($mediaLinkEntryUri, '/').'/'.ODataConstants::URI_VALUE_SEGMENT;
+            return rtrim($mediaLinkEntryUri, '/') . '/' . ODataConstants::URI_VALUE_SEGMENT;
         } else {
-            return rtrim($mediaLinkEntryUri, '/').'/'.ltrim($resourceStreamInfo->getName(), '/');
+            return rtrim($mediaLinkEntryUri, '/') . '/' . ltrim($resourceStreamInfo->getName(), '/');
         }
     }
 

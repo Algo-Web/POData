@@ -75,7 +75,7 @@ class NorthWindStreamProvider implements IStreamProvider2
         }
 
         $filePath = self::IMAGE_PATH_ROOT
-            .'Employee_'.$entity->EmployeeID
+            .'Employee_' . $entity->EmployeeID
             .'.jpg';
         if (file_exists($filePath)) {
             $handle = fopen($filePath, 'r');
@@ -152,7 +152,7 @@ class NorthWindStreamProvider implements IStreamProvider2
         }
 
         $lastModifiedTime = null;
-        $filePath = self::IMAGE_PATH_ROOT.'Employee_'.$entity->EmployeeID.'.jpg';
+        $filePath = self::IMAGE_PATH_ROOT . 'Employee_' . $entity->EmployeeID . '.jpg';
         if (file_exists($filePath)) {
             $lastModifiedTime = date('"m-d-Y H:i:s"', filemtime($filePath));
         } else {
@@ -236,7 +236,7 @@ class NorthWindStreamProvider implements IStreamProvider2
             throw new ODataException('Internal Server Error.', 500);
         }
 
-        $filePath = self::IMAGE_PATH_ROOT.'Employee_'
+        $filePath = self::IMAGE_PATH_ROOT . 'Employee_'
             .$entity->EmployeeID
             .'_'
             .$resourceStreamInfo->getName()

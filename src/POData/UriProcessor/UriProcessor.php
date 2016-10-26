@@ -161,7 +161,7 @@ class UriProcessor
      */
     protected function executePut()
     {
-        return $this->executeBase(function ($uriProcessor, $segment) {
+        return $this->executeBase(function($uriProcessor, $segment) {
             $requestMethod = $uriProcessor->service->getOperationContext()->incomingRequest()->getMethod();
             $resourceSet = $segment->getTargetResourceSetWrapper();
             $keyDescriptor = $segment->getKeyDescriptor();
@@ -628,7 +628,7 @@ class UriProcessor
      * @throws InvalidOperationException If this function invoked with non-navigation
      *                                   property instance
      */
-    private function _pushSegmentForNavigationProperty(ResourceProperty &$resourceProperty)
+    private function _pushSegmentForNavigationProperty(ResourceProperty & $resourceProperty)
     {
         if ($resourceProperty->getTypeKind() == ResourceTypeKind::ENTITY) {
             $this->assert(
@@ -723,7 +723,7 @@ class UriProcessor
      *
      * @return bool true if the segment was push, false otherwise
      */
-    private function _pushSegment($segmentName, ResourceSetWrapper &$resourceSetWrapper)
+    private function _pushSegment($segmentName, ResourceSetWrapper & $resourceSetWrapper)
     {
         $rootProjectionNode = $this->request->getRootProjectionNode();
         if (!is_null($rootProjectionNode)
