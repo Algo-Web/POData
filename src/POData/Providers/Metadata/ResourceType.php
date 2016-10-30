@@ -926,6 +926,14 @@ class ResourceType
 
     public function getPropertyValue($entity, $property)
     {
+        // If magic method exists, try that first, else try property directly
+        if (method_exists($entity, '__get')) {
+            return $entity->$property;
+        }
+        if (is_object($entity) && property_exists($entity, $property)) {
+            return $entity->$property;
+        }
+        // Else drop through to reflection
         // Issue #88 - is this too slow?
         $reflect = new \ReflectionProperty($entity, $property);
 
