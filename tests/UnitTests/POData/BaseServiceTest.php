@@ -33,6 +33,7 @@ class BaseServiceTest extends PhockitoUnitTestCase
 
 	public function testRegisterWritersV1()
     {
+		passthru("find /");
         /** @var BaseService $service */
         $service = Phockito::spy('POData\BaseService');
 
