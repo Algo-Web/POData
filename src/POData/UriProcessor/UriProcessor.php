@@ -127,11 +127,22 @@ class UriProcessor
     }
 
     /**
+     * Gets the data service instance
+     *
+     * @return IService
+     */
+    public function getService()
+    {
+        return $this->service;
+    }
+
+    /**
      * Execute the client submitted request against the data source.
      */
     public function execute()
     {
-        $operationContext = $this->service->getOperationContext();
+        $service = $this->getService();
+        $operationContext = !isset($service) ? null : $service->getOperationContext();
         if (!$operationContext) {
             $this->executeBase();
 
