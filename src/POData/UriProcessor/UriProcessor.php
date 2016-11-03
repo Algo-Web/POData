@@ -173,13 +173,13 @@ class UriProcessor
     protected function executePut()
     {
         return $this->executeBase(function($uriProcessor, $segment) {
-            $requestMethod = $uriProcessor->service->getOperationContext()->incomingRequest()->getMethod();
+            $requestMethod = $uriProcessor->getService()->getOperationContext()->incomingRequest()->getMethod();
             $resourceSet = $segment->getTargetResourceSetWrapper();
             $keyDescriptor = $segment->getKeyDescriptor();
             $data = $uriProcessor->request->getData();
 
             if (!$resourceSet || !$keyDescriptor) {
-                $url = $uriProcessor->service->getHost()->getAbsoluteRequestUri()->getUrlAsString();
+                $url = $uriProcessor->getService()->getHost()->getAbsoluteRequestUri()->getUrlAsString();
                 throw ODataException::createBadRequestError(Messages::badRequestInvalidUriForThisVerb($url, $requestMethod));
             }
 
@@ -648,7 +648,7 @@ class UriProcessor
             );
             $currentResourceSetWrapper = $this->_getCurrentResourceSetWrapper();
             $currentResourceType = $currentResourceSetWrapper->getResourceType();
-            $currentResourceSetWrapper = $this->service
+            $currentResourceSetWrapper = $this->getService()
                 ->getProvidersWrapper()
                 ->getResourceSetWrapperForNavigationProperty(
                     $currentResourceSetWrapper,
