@@ -228,8 +228,7 @@ class ServiceHost
                     .'://'
                     .$this->_absoluteRequestUri->getHost();
 
-                if (
-                    ($requestUriScheme == 'http' && $requestUriPort != '80') ||
+                if (($requestUriScheme == 'http' && $requestUriPort != '80') ||
                     ($requestUriScheme == 'https' && $requestUriPort != '443')
                 ) {
                     $serviceUri .= ':' . $requestUriPort;
@@ -658,7 +657,6 @@ class ServiceHost
         //TODO: should the version switches be off of the requestVersion, not the response version? see #91
 
         switch ($format) {
-
             case ODataConstants::FORMAT_XML:
                 $format = MimeTypes::MIME_APPLICATION_XML;
                 break;
@@ -681,7 +679,6 @@ class ServiceHost
                     $format = MimeTypes::MIME_APPLICATION_JSON;
                 }
                 break;
-
         }
 
         return $format . ';q=1.0';

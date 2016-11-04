@@ -185,9 +185,14 @@ class ExpandedProjectionNode extends ProjectionNode
      *                                                 expected result,see comment
      *                                                 of _maxResultCount field
      */
-    public function __construct($propertyName, $resourceProperty,
-        ResourceSetWrapper $resourceSetWrapper, $internalOrderByInfo,
-        $skipCount, $takeCount, $maxResultCount
+    public function __construct(
+        $propertyName,
+        $resourceProperty,
+        ResourceSetWrapper $resourceSetWrapper,
+        $internalOrderByInfo,
+        $skipCount,
+        $takeCount,
+        $maxResultCount
     ) {
         $this->_resourceSetWrapper = $resourceSetWrapper;
         $this->_internalOrderByInfo = $internalOrderByInfo;
@@ -494,7 +499,7 @@ class ExpandedProjectionNode extends ProjectionNode
                 $existingNodes = $this->_childNodes;
                 $this->_childNodes = array();
                 foreach ($this->getResourceType()->getAllProperties()
-                    as $resourceProperty) {
+                as $resourceProperty) {
                     $propertyName = $resourceProperty->getName();
                     if (array_key_exists($propertyName, $existingNodes)) {
                         $this->_childNodes[$propertyName]

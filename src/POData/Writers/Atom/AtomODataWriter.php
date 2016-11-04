@@ -127,7 +127,8 @@ class AtomODataWriter implements IODataWriter
     {
         $this->xmlWriter->startElement(ODataConstants::ATOM_LINKS_ELEMENT_NAME);
         $this->xmlWriter->writeAttribute(
-            ODataConstants::XMLNS_NAMESPACE_PREFIX, ODataConstants::ODATA_NAMESPACE
+            ODataConstants::XMLNS_NAMESPACE_PREFIX,
+            ODataConstants::ODATA_NAMESPACE
         );
         $this->xmlWriter->endAttribute();
         if ($urls->count != null) {
@@ -187,7 +188,8 @@ class AtomODataWriter implements IODataWriter
         if ($feed->rowCount != null) {
             $this->xmlWriter->startElementNs(
                 ODataConstants::ODATA_METADATA_NAMESPACE_PREFIX,
-                ODataConstants::ROWCOUNT_ELEMENT, null
+                ODataConstants::ROWCOUNT_ELEMENT,
+                null
             );
             $this->xmlWriter->text($feed->rowCount);
             $this->xmlWriter->endElement();
@@ -452,7 +454,8 @@ class AtomODataWriter implements IODataWriter
             $this->xmlWriter->endElement();
             $this->xmlWriter->startElementNS(
                 ODataConstants::ODATA_METADATA_NAMESPACE_PREFIX,
-                ODataConstants::ATOM_PROPERTIES_ELEMENT_NAME, null
+                ODataConstants::ATOM_PROPERTIES_ELEMENT_NAME,
+                null
             );
         } else {
             $this->xmlWriter->writeAttribute(

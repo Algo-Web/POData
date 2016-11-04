@@ -194,7 +194,9 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
         $propertyContent = new ODataPropertyContent();
         $this->_writeComplexValue(
             $complexValue,
-            $propertyName, $resourceType, null,
+            $propertyName,
+            $resourceType,
+            null,
             $propertyContent
         );
 
@@ -221,7 +223,9 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
         $propertyContent = new ODataPropertyContent();
         $this->_writeBagValue(
             $BagValue,
-            $propertyName, $resourceType, null,
+            $propertyName,
+            $resourceType,
+            null,
             $propertyContent
         );
 
@@ -481,11 +485,11 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
                         continue;
                     } else {
                         $this->assert(
-                                ($resourcePropertyKind == ResourcePropertyKind::RESOURCE_REFERENCE)
+                            ($resourcePropertyKind == ResourcePropertyKind::RESOURCE_REFERENCE)
                              || ($resourcePropertyKind == ResourcePropertyKind::RESOURCESET_REFERENCE),
-                                '($resourcePropertyKind == ResourcePropertyKind::RESOURCE_REFERENCE)
+                            '($resourcePropertyKind == ResourcePropertyKind::RESOURCE_REFERENCE)
                              || ($resourcePropertyKind == ResourcePropertyKind::RESOURCESET_REFERENCE)'
-                            );
+                        );
 
                         $navigationProperties[$i] = new NavigationPropertyInfo($resourceProperty, $this->shouldExpandSegment($resourceProperty->getName()));
                         if ($navigationProperties[$i]->expanded) {
@@ -633,8 +637,10 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
      *
      * @throws ODataException If given value is not primitive
      */
-    private function _writePrimitiveValue(&$primitiveValue,
-        ResourceProperty & $resourceProperty, ODataProperty & $odataProperty
+    private function _writePrimitiveValue(
+        &$primitiveValue,
+        ResourceProperty & $resourceProperty,
+        ODataProperty & $odataProperty
     ) {
         if (is_object($primitiveValue)) {
             //TODO ERROR: The property 'PropertyName'
@@ -669,8 +675,11 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
      *                                                    complex type element
      * @param ODataPropertyContent &$odataPropertyContent Content to write to
      */
-    private function _writeComplexValue(&$complexValue,
-        $propertyName, ResourceType & $resourceType, $relativeUri,
+    private function _writeComplexValue(
+        &$complexValue,
+        $propertyName,
+        ResourceType & $resourceType,
+        $relativeUri,
         ODataPropertyContent & $odataPropertyContent
     ) {
         $odataProperty = new ODataProperty();
@@ -707,8 +716,11 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
      *                                                    will hold bag value which
      *                                                    can be used by writers
      */
-    private function _writeBagValue(&$BagValue,
-        $propertyName, ResourceType & $resourceType, $relativeUri,
+    private function _writeBagValue(
+        &$BagValue,
+        $propertyName,
+        ResourceType & $resourceType,
+        $relativeUri,
         ODataPropertyContent & $odataPropertyContent
     ) {
         $bagItemResourceTypeKind = $resourceType->getResourceTypeKind();
@@ -813,8 +825,10 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
      * @param string       &$stringValue          On return, this parameter will
      *                                            contain converted value
      */
-    private function _primitiveToString(ResourceType & $primtiveResourceType,
-        $primitiveValue, &$stringValue
+    private function _primitiveToString(
+        ResourceType & $primtiveResourceType,
+        $primitiveValue,
+        &$stringValue
     ) {
         $type = $primtiveResourceType->getInstanceType();
         if ($type instanceof Boolean) {
@@ -847,8 +861,11 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
      *
      * @return ResourceType The actual type of the complex object
      */
-    private function _complexObjectToContent(&$complexValue,
-        $propertyName, ResourceType & $resourceType, $relativeUri,
+    private function _complexObjectToContent(
+        &$complexValue,
+        $propertyName,
+        ResourceType & $resourceType,
+        $relativeUri,
         ODataPropertyContent & $odataPropertyContent
     ) {
         $count = count($this->complexTypeInstanceCollection);
@@ -864,8 +881,12 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
         $actualType = $resourceType;
         $odataEntry = null;
         $this->_writeObjectProperties(
-            $complexValue, $actualType,
-            null, $relativeUri, $odataEntry, $odataPropertyContent
+            $complexValue,
+            $actualType,
+            null,
+            $relativeUri,
+            $odataEntry,
+            $odataPropertyContent
         );
         unset($this->complexTypeInstanceCollection[$count]);
 

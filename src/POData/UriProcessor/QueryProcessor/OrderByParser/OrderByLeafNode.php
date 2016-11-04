@@ -42,8 +42,10 @@ class OrderByLeafNode extends OrderByBaseNode
      *                                           ascending order and false
      *                                           for descending order
      */
-    public function __construct($propertyName,
-        ResourceProperty $resourceProperty, $isAscending
+    public function __construct(
+        $propertyName,
+        ResourceProperty $resourceProperty,
+        $isAscending
     ) {
         parent::__construct($propertyName, $resourceProperty);
         $this->_isAscending = $isAscending;

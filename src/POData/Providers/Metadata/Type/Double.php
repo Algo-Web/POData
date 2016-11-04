@@ -37,7 +37,7 @@ class Double implements IType
             case TypeCode::SINGLE:
             case TypeCode::DOUBLE:
                 return true;
-            }
+        }
 
         return false;
     }

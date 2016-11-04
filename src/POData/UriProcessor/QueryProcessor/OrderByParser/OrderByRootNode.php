@@ -31,7 +31,8 @@ class OrderByRootNode extends OrderByNode
      *                                               pointed by the request resource
      *                                               path uri
      */
-    public function __construct(ResourceSetWrapper $resourceSetWrapper,
+    public function __construct(
+        ResourceSetWrapper $resourceSetWrapper,
         ResourceType $baseResourceType
     ) {
         parent::__construct(null, null, $resourceSetWrapper);

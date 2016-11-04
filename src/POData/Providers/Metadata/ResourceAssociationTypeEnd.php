@@ -58,7 +58,9 @@ class ResourceAssociationTypeEnd
      *                                                be NULL if relationship is
      *                                                uni-directional
      */
-    public function __construct($name, ResourceType $resourceType,
+    public function __construct(
+        $name,
+        ResourceType $resourceType,
         $resourceProperty,
         $fromProperty
     ) {
@@ -118,10 +120,12 @@ class ResourceAssociationTypeEnd
         }
 
         return strcmp(
-            $resourceType->getFullName(), $this->_resourceType->getFullName()
+            $resourceType->getFullName(),
+            $this->_resourceType->getFullName()
         ) == 0
         && (strcmp(
-            $resourceProperty->getName(), $this->_resourceProperty->getName()
+            $resourceProperty->getName(),
+            $this->_resourceProperty->getName()
         ) == 0);
     }
 

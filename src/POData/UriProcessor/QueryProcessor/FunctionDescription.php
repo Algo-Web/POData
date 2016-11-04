@@ -86,140 +86,164 @@ class FunctionDescription
             //EdmString Functions
             'endswith' => array(
                     new self(
-                        'endswith', new Boolean(),
+                        'endswith',
+                        new Boolean(),
                         array(new StringType(), new StringType())
                     ),
                 ),
             'indexof' => array(
                     new self(
-                        'indexof', new Int32(),
+                        'indexof',
+                        new Int32(),
                         array(new StringType(), new StringType())
                     ),
                 ),
             'replace' => array(
                     new self(
-                        'replace', new StringType(),
+                        'replace',
+                        new StringType(),
                         array(new StringType(), new StringType(), new StringType())
                     ),
                 ),
             'startswith' => array(
                     new self(
-                        'startswith', new Boolean(),
+                        'startswith',
+                        new Boolean(),
                         array(new StringType(), new StringType())
                     ),
                 ),
             'tolower' => array(
                     new self(
-                        'tolower', new StringType(),
+                        'tolower',
+                        new StringType(),
                         array(new StringType())
                     ),
                 ),
             'toupper' => array(
                     new self(
-                        'toupper', new StringType(),
+                        'toupper',
+                        new StringType(),
                         array(new StringType())
                     ),
                 ),
             'trim' => array(
                     new self(
-                        'trim', new StringType(),
+                        'trim',
+                        new StringType(),
                         array(new StringType())
                     ),
                 ),
             'substring' => array(
                     new self(
 
-                        'substring', new StringType(),
+                        'substring',
+                        new StringType(),
                         array(new StringType(), new Int32())
                     ),
                     new self(
-                        'substring', new StringType(),
+                        'substring',
+                        new StringType(),
                         array(new StringType(), new Int32(), new Int32())
                     ),
                 ),
             'substringof' => array(
                     new self(
-                        'substringof', new Boolean(),
+                        'substringof',
+                        new Boolean(),
                         array(new StringType(), new StringType())
                     ),
                 ),
             'concat' => array(
                     new self(
-                        'concat', new StringType(),
+                        'concat',
+                        new StringType(),
                         array(new StringType(), new StringType())
                     ),
                 ),
             'length' => array(
                     new self(
-                        'length', new Int32(),
+                        'length',
+                        new Int32(),
                         array(new StringType())
                     ),
                 ),
             //DateTime functions
             'year' => array(
                     new self(
-                        'year', new Int32(),
+                        'year',
+                        new Int32(),
                         array(new DateTime())
                     ),
                 ),
             'month' => array(
                     new self(
-                        'month', new Int32(),
+                        'month',
+                        new Int32(),
                         array(new DateTime())
                     ),
                 ),
             'day' => array(
                     new self(
-                        'day', new Int32(),
+                        'day',
+                        new Int32(),
                         array(new DateTime())
                     ),
                 ),
             'hour' => array(
                     new self(
-                        'hour', new Int32(),
+                        'hour',
+                        new Int32(),
                         array(new DateTime())
                     ),
                 ),
             'minute' => array(
                     new self(
-                        'minute', new Int32(),
+                        'minute',
+                        new Int32(),
                         array(new DateTime())
                     ),
                 ),
             'second' => array(
                     new self(
-                        'second', new Int32(),
+                        'second',
+                        new Int32(),
                         array(new DateTime())
                     ),
                 ),
             //Math Functions
             'round' => array(
                     new self(
-                        'round', new Decimal(),
+                        'round',
+                        new Decimal(),
                         array(new Decimal())
                     ),
                     new self(
-                        'round', new Double(),
+                        'round',
+                        new Double(),
                         array(new Double())
                     ),
                 ),
             'ceiling' => array(
                     new self(
-                        'ceiling', new Decimal(),
+                        'ceiling',
+                        new Decimal(),
                         array(new Decimal())
                     ),
                     new self(
-                        'ceiling', new Double(),
+                        'ceiling',
+                        new Double(),
                         array(new Double())
                     ),
                 ),
             'floor' => array(
                     new self(
-                        'floor', new Decimal(),
+                        'floor',
+                        new Decimal(),
                         array(new Decimal())
                     ),
                     new self(
-                        'floor', new Double(),
+                        'floor',
+                        new Double(),
                         array(new Double())
                     ),
                 ),
@@ -237,7 +261,8 @@ class FunctionDescription
     {
         return array(
             new self(
-                'strcmp', new Int32(),
+                'strcmp',
+                new Int32(),
                 array(new StringType(), new StringType())
             ),
         );
@@ -252,7 +277,8 @@ class FunctionDescription
     {
         return array(
             new self(
-                'dateTimeCmp', new Int32(),
+                'dateTimeCmp',
+                new Int32(),
                 array(new DateTime(), new DateTime())
             ),
         );
@@ -267,7 +293,8 @@ class FunctionDescription
     {
         return array(
             new self(
-                'guidEqual', new Boolean(),
+                'guidEqual',
+                new Boolean(),
                 array(new Guid(), new Guid())
             ),
         );
@@ -282,7 +309,8 @@ class FunctionDescription
     {
         return array(
             new self(
-                'binaryEqual', new Boolean(),
+                'binaryEqual',
+                new Boolean(),
                 array(new Binary(), new Binary())
             ),
         );
@@ -297,27 +325,33 @@ class FunctionDescription
     {
         return array(
             new self(
-                'F', new int16(),
+                'F',
+                new int16(),
                 array(new int16(), new int16())
             ),
             new self(
-                'F', new int32(),
+                'F',
+                new int32(),
                 array(new int32(), new int32())
             ),
             new self(
-                'F', new int64(),
+                'F',
+                new int64(),
                 array(new int64(), new int64())
             ),
             new self(
-                'F', new Single(),
+                'F',
+                new Single(),
                 array(new Single(), new Single())
             ),
             new self(
-                'F', new Double(),
+                'F',
+                new Double(),
                 array(new Double(), new Double())
             ),
             new self(
-                'F', new Decimal(),
+                'F',
+                new Decimal(),
                 array(new Decimal(), new Decimal())
             ),
         );
@@ -352,7 +386,8 @@ class FunctionDescription
     {
         return array(
             new self(
-                'F', new Boolean(),
+                'F',
+                new Boolean(),
                 array(new Boolean(), new Boolean())
             ),
         );
@@ -369,19 +404,23 @@ class FunctionDescription
             self::arithmeticOperationFunctions(),
             array(
                 new self(
-                    'F', new Boolean(),
+                    'F',
+                    new Boolean(),
                     array(new Boolean(), new Boolean())
                 ),
                 new self(
-                    'F', new DateTime(),
+                    'F',
+                    new DateTime(),
                     array(new DateTime(), new DateTime())
                 ),
                 new self(
-                    'F', new Guid(),
+                    'F',
+                    new Guid(),
                     array(new Guid(), new Guid())
                 ),
                 new self(
-                    'F', new Boolean(),
+                    'F',
+                    new Boolean(),
                     array(new Binary(), new Binary())
                 ),
             )
@@ -397,7 +436,8 @@ class FunctionDescription
     {
         return array(
             new self(
-                'F', new Boolean(),
+                'F',
+                new Boolean(),
                 array(new Boolean())
             ),
         );
@@ -456,7 +496,8 @@ class FunctionDescription
         throw ODataException::createSyntaxError(
             Messages::expressionParserInCompatibleTypes(
                 $expressionToken->Text,
-                $string, $expressionToken->Position
+                $string,
+                $expressionToken->Position
             )
         );
     }
@@ -470,8 +511,10 @@ class FunctionDescription
      *
      * @return IType
      */
-    public static function verifyAndPromoteArithmeticOpArguments($expressionToken,
-        $leftArgument, $rightArgument
+    public static function verifyAndPromoteArithmeticOpArguments(
+        $expressionToken,
+        $leftArgument,
+        $rightArgument
     ) {
         $function
             = self::findFunctionWithPromotion(
@@ -480,7 +523,8 @@ class FunctionDescription
             );
         if ($function == null) {
             self::incompatibleError(
-                $expressionToken, array($leftArgument, $rightArgument)
+                $expressionToken,
+                array($leftArgument, $rightArgument)
             );
         }
 
@@ -496,12 +540,15 @@ class FunctionDescription
      *
      * @throws ODataException
      */
-    public static function verifyLogicalOpArguments($expressionToken,
-        $leftArgument, $rightArgument
+    public static function verifyLogicalOpArguments(
+        $expressionToken,
+        $leftArgument,
+        $rightArgument
     ) {
         $function = self::findFunctionWithPromotion(
             self::logicalOperationFunctions(),
-            array($leftArgument, $rightArgument), false
+            array($leftArgument, $rightArgument),
+            false
         );
         if ($function == null) {
             self::incompatibleError(
@@ -518,8 +565,10 @@ class FunctionDescription
      * @param AbstractExpression $leftArgument    The left argument expression
      * @param AbstractExpression $rightArgument   The right argument expression
      */
-    public static function verifyRelationalOpArguments($expressionToken,
-        $leftArgument, $rightArgument
+    public static function verifyRelationalOpArguments(
+        $expressionToken,
+        $leftArgument,
+        $rightArgument
     ) {
         //for null operands only equality operators are allowed
         $null = new Null1();
@@ -546,7 +595,8 @@ class FunctionDescription
             ) {
                 throw ODataException::createSyntaxError(
                     Messages::expressionParserOperatorNotSupportGuid(
-                        $expressionToken->Text, $expressionToken->Position
+                        $expressionToken->Text,
+                        $expressionToken->Position
                     )
                 );
             }
@@ -562,7 +612,8 @@ class FunctionDescription
             ) {
                 throw ODataException::createSyntaxError(
                     Messages::expressionParserOperatorNotSupportBinary(
-                        $expressionToken->Text, $expressionToken->Position
+                        $expressionToken->Text,
+                        $expressionToken->Position
                     )
                 );
             }
@@ -578,7 +629,9 @@ class FunctionDescription
             self::stringComparisonFunctions()
         );
         $function = self::findFunctionWithPromotion(
-            $functions, array($leftArgument, $rightArgument), false
+            $functions,
+            array($leftArgument, $rightArgument),
+            false
         );
         if ($function == null) {
             self::incompatibleError(
@@ -656,8 +709,10 @@ class FunctionDescription
      *
      * @return \POData\UriProcessor\QueryProcessor\FunctionDescription
      */
-    public static function verifyFunctionCallOpArguments($functions,
-        $argExpressions, $expressionToken
+    public static function verifyFunctionCallOpArguments(
+        $functions,
+        $argExpressions,
+        $expressionToken
     ) {
         $function
             = self::findFunctionWithPromotion($functions, $argExpressions, false);
@@ -690,8 +745,10 @@ class FunctionDescription
      * @return \POData\UriProcessor\QueryProcessor\FunctionDescription|null Reference to the matching function if
      *                                                                      found else NULL
      */
-    public static function findFunctionWithPromotion($functionDescriptions,
-        $argExpressions, $promoteArguments = true
+    public static function findFunctionWithPromotion(
+        $functionDescriptions,
+        $argExpressions,
+        $promoteArguments = true
     ) {
         $argCount = count($argExpressions);
         $applicableFunctions = array();

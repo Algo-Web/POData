@@ -929,7 +929,6 @@ class RequestDescription
         $dotIndex = -1;
         for ($i = 0; $i < $libNameIndex; ++$i) {
             if ($versionHeader[$i] == '.') {
-
                 //Throw an exception if we find more than 1 dot
                 if ($dotIndex != -1) {
                     throw ODataException::createBadRequestError(
