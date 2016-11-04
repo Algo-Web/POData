@@ -284,7 +284,6 @@ class RequestDescription
         $string = file_get_contents('php://input');
         if ($dataType === MimeTypes::MIME_APPLICATION_XML) {
             $data = XML2Array::createArray($string);
-//die(var_dump($data));
             if (!empty($data['entry']['content']['m:properties'])) {
                 $clearData = $data['entry']['content']['m:properties'];
                 if (is_array($clearData)) {
