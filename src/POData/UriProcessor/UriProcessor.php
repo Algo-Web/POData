@@ -177,7 +177,6 @@ class UriProcessor
             $resourceSet = $segment->getTargetResourceSetWrapper();
             $keyDescriptor = $segment->getKeyDescriptor();
             $data = $uriProcessor->request->getData();
-
             if (!$resourceSet || !$keyDescriptor) {
                 $url = $uriProcessor->getService()->getHost()->getAbsoluteRequestUri()->getUrlAsString();
                 throw ODataException::createBadRequestError(Messages::badRequestInvalidUriForThisVerb($url, $requestMethod));
