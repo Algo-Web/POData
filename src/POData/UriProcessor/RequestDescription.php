@@ -283,9 +283,9 @@ class RequestDescription
         $this->_data = null;
         $string = file_get_contents('php://input');
         if ($dataType === MimeTypes::MIME_APPLICATION_XML) {
-            $data = Xml2Array::createArray($string);
-            if (!empty($data['a:entry']['a:content']['m:properties'])) {
-                $clearData = $data['a:entry']['a:content']['m:properties'];
+            $data = XML2Array::createArray($string);
+            if (!empty($data['entry']['content']['m:properties'])) {
+                $clearData = $data['entry']['content']['m:properties'];
                 if (is_array($clearData)) {
                     foreach ($clearData as $key => $value) {
                         $this->_data[substr($key, 2)] = $value['@value'];
