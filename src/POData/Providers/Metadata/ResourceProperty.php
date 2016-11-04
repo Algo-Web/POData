@@ -63,7 +63,8 @@ class ResourceProperty
         if (!$this->_isResourceKindValidForPropertyKind($kind, $propertyResourceType->getResourceTypeKind())) {
             throw new InvalidArgumentException(
                 Messages::resourcePropertyPropertyKindAndResourceTypeKindMismatch(
-                    '$kind', '$propertyResourceType'
+                    '$kind',
+                    '$propertyResourceType'
                 )
             );
         }

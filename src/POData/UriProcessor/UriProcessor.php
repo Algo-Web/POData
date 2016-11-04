@@ -172,7 +172,7 @@ class UriProcessor
      */
     protected function executePut()
     {
-        return $this->executeBase(function($uriProcessor, $segment) {
+        return $this->executeBase(function ($uriProcessor, $segment) {
             $requestMethod = $uriProcessor->getService()->getOperationContext()->incomingRequest()->getMethod();
             $resourceSet = $segment->getTargetResourceSetWrapper();
             $keyDescriptor = $segment->getKeyDescriptor();
@@ -240,7 +240,6 @@ class UriProcessor
                     if (!is_null($value)) {
                         $value = null;
                     } else {
-
                         // This is theoretically impossible to reach, but should that be changed, this will need to call ResourceType::getPropertyValue... somehow
                         try {
                             //see #88
@@ -708,13 +707,13 @@ class UriProcessor
                     $expandedProjectionNode
                         = $expandedProjectionNode->findNode($this->_segmentNames[$i]);
                     $this->assert(
-                            !is_null($expandedProjectionNode),
-                            '!is_null($expandedProjectionNode)'
-                        );
+                        !is_null($expandedProjectionNode),
+                        '!is_null($expandedProjectionNode)'
+                    );
                     $this->assert(
-                            $expandedProjectionNode instanceof ExpandedProjectionNode,
-                            '$expandedProjectionNode instanceof ExpandedProjectionNode'
-                        );
+                        $expandedProjectionNode instanceof ExpandedProjectionNode,
+                        '$expandedProjectionNode instanceof ExpandedProjectionNode'
+                    );
                 }
             }
         }

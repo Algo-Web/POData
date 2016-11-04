@@ -43,8 +43,10 @@ class ResourceAssociationSetEnd
      *
      * @throws \InvalidArgumentException
      */
-    public function __construct(ResourceSet $resourceSet,
-        ResourceType $resourceType, $resourceProperty
+    public function __construct(
+        ResourceSet $resourceSet,
+        ResourceType $resourceType,
+        $resourceProperty
     ) {
         if (!is_null($resourceProperty)
             && !($resourceProperty instanceof ResourceProperty)
@@ -61,7 +63,8 @@ class ResourceAssociationSetEnd
         ) {
             throw new \InvalidArgumentException(
                 Messages::resourceAssociationSetEndPropertyMustBeNavigationProperty(
-                    $resourceProperty->getName(), $resourceType->getFullName()
+                    $resourceProperty->getName(),
+                    $resourceType->getFullName()
                 )
             );
         }
@@ -71,7 +74,8 @@ class ResourceAssociationSetEnd
         ) {
             throw new \InvalidArgumentException(
                 Messages::resourceAssociationSetEndResourceTypeMustBeAssignableToResourceSet(
-                    $resourceType->getFullName(), $resourceSet->getName()
+                    $resourceType->getFullName(),
+                    $resourceSet->getName()
                 )
             );
         }
@@ -94,8 +98,10 @@ class ResourceAssociationSetEnd
      *
      * @return bool
      */
-    public function isBelongsTo(ResourceSet $resourceSet,
-        ResourceType $resourceType, ResourceProperty $resourceProperty
+    public function isBelongsTo(
+        ResourceSet $resourceSet,
+        ResourceType $resourceType,
+        ResourceProperty $resourceProperty
     ) {
         return strcmp($resourceSet->getName(), $this->_resourceSet->getName()) == 0
             && $this->_resourceType->isAssignableFrom($resourceType)

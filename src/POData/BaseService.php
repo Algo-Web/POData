@@ -509,7 +509,6 @@ abstract class BaseService implements IRequestHandler, IService
         //if the $format header is present it overrides the accepts header
         $format = $host->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_FORMAT);
         if (!is_null($format)) {
-
             //There's a strange edge case..if application/json is supplied and it's V3
             if ($format == MimeTypes::MIME_APPLICATION_JSON && $requestVersion == Version::v3()) {
                 //then it's actual minimalmetadata
@@ -652,7 +651,9 @@ abstract class BaseService implements IRequestHandler, IService
      * @return string|null The ETag for the entry object if it has eTag properties
      *                     NULL otherwise
      */
-    protected function compareETag(&$entryObject, ResourceType & $resourceType,
+    protected function compareETag(
+        &$entryObject,
+        ResourceType & $resourceType,
         &$needToSerializeResponse
     ) {
         $needToSerializeResponse = true;

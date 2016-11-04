@@ -209,7 +209,8 @@ class PropertyAccessExpression extends AbstractExpression
                 new Boolean()
             );
             $expression = new LogicalExpression(
-                $expression, $expression2,
+                $expression,
+                $expression2,
                 ExpressionType::AND_LOGICAL
             );
         }
@@ -227,7 +228,8 @@ class PropertyAccessExpression extends AbstractExpression
                 new Boolean()
             );
             $expression = new LogicalExpression(
-                $expression, $expression2,
+                $expression,
+                $expression2,
                 ExpressionType::AND_LOGICAL
             );
         }

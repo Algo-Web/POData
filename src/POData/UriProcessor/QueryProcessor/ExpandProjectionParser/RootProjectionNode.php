@@ -75,14 +75,23 @@ class RootProjectionNode extends ExpandedProjectionNode
      *                                                 resource pointed
      *                                                 by the resource path
      */
-    public function __construct(ResourceSetWrapper $resourceSetWrapper,
-        $internalOrderByInfo, $skipCount, $takeCount, $maxResultCount,
+    public function __construct(
+        ResourceSetWrapper $resourceSetWrapper,
+        $internalOrderByInfo,
+        $skipCount,
+        $takeCount,
+        $maxResultCount,
         ResourceType $baseResourceType
     ) {
         $this->_baseResourceType = $baseResourceType;
         parent::__construct(
-            null, null, $resourceSetWrapper, $internalOrderByInfo,
-            $skipCount, $takeCount, $maxResultCount
+            null,
+            null,
+            $resourceSetWrapper,
+            $internalOrderByInfo,
+            $skipCount,
+            $takeCount,
+            $maxResultCount
         );
     }
 

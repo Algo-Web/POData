@@ -56,7 +56,8 @@ class ExpressionParser2 extends ExpressionParser
      *                                              implemented by user, False otherwise
      */
     public function __construct($text, ResourceType $resourceType, $isPHPExpressionProvider
-    ) {
+    )
+    {
         parent::__construct($text, $resourceType, $isPHPExpressionProvider);
         $this->_navigationPropertiesUsedInTheExpression = array();
         $this->_isPHPExpressionProvider = $isPHPExpressionProvider;
@@ -134,7 +135,9 @@ class ExpressionParser2 extends ExpressionParser
      *
      * @throws ODataException
      */
-    private function _processNodeForNullability($expression, $parentExpression,
+    private function _processNodeForNullability(
+        $expression,
+        $parentExpression,
         $checkNullForMostChild = true
     ) {
         if ($expression instanceof ArithmeticExpression) {
@@ -204,7 +207,8 @@ class ExpressionParser2 extends ExpressionParser
      *
      * @return null|AbstractExpression
      */
-    private function _processFunctionCallNode(FunctionCallExpression $expression,
+    private function _processFunctionCallNode(
+        FunctionCallExpression $expression,
         $parentExpression
     ) {
         $paramExpressions = $expression->getParamExpressions();
@@ -256,7 +260,8 @@ class ExpressionParser2 extends ExpressionParser
      * @return null|AbstractExpression
      */
     private function _processLogicalNode(
-        LogicalExpression $expression, $parentExpression
+        LogicalExpression $expression,
+        $parentExpression
     ) {
         $leftNullableExpTree = $this->_processNodeForNullability(
             $expression->getLeft(),
@@ -328,7 +333,8 @@ class ExpressionParser2 extends ExpressionParser
      */
     private function _processPropertyAccessNode(
         PropertyAccessExpression $expression,
-        $parentExpression, $checkNullForMostChild
+        $parentExpression,
+        $checkNullForMostChild
     ) {
         $navigationsUsed = $expression->getNavigationPropertiesInThePath();
         if (!empty($navigationsUsed)) {
@@ -358,7 +364,8 @@ class ExpressionParser2 extends ExpressionParser
      *
      * @return null|AbstractExpression
      */
-    private function _processRelationalNode(RelationalExpression $expression,
+    private function _processRelationalNode(
+        RelationalExpression $expression,
         $parentExpression
     ) {
         $leftNullableExpTree = $this->_processNodeForNullability(
@@ -405,7 +412,8 @@ class ExpressionParser2 extends ExpressionParser
      *
      * @return AbstractExpression|null
      */
-    private function _processUnaryNode(UnaryExpression $expression,
+    private function _processUnaryNode(
+        UnaryExpression $expression,
         $parentExpression
     ) {
         if ($expression->getNodeType() == ExpressionType::NEGATE) {
@@ -448,7 +456,8 @@ class ExpressionParser2 extends ExpressionParser
      *
      * @return AbstractExpression
      */
-    private function _mergeNullableExpressionTrees($nullCheckExpTree1,
+    private function _mergeNullableExpressionTrees(
+        $nullCheckExpTree1,
         $nullCheckExpTree2
     ) {
         $this->_mapTable = array();

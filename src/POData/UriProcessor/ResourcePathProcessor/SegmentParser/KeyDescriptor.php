@@ -203,11 +203,15 @@ class KeyDescriptor
      * @return bool True if the given values were parsed; false if there was
      *              a syntactic error
      */
-    public static function tryParseKeysFromKeyPredicate($keyPredicate,
+    public static function tryParseKeysFromKeyPredicate(
+        $keyPredicate,
         &$keyDescriptor
     ) {
         return self::_tryParseKeysFromKeyPredicate(
-            $keyPredicate, true, false, $keyDescriptor
+            $keyPredicate,
+            true,
+            false,
+            $keyDescriptor
         );
     }
 
@@ -225,7 +229,10 @@ class KeyDescriptor
     public static function tryParseValuesFromSkipToken($skipToken, &$keyDescriptor)
     {
         return self::_tryParseKeysFromKeyPredicate(
-            $skipToken, false, true, $keyDescriptor
+            $skipToken,
+            false,
+            true,
+            $keyDescriptor
         );
     }
 
@@ -255,7 +262,8 @@ class KeyDescriptor
             if (count($this->_namedValues) != $keyPropertiesCount) {
                 throw ODataException::createSyntaxError(
                     Messages::keyDescriptorKeyCountNotMatching(
-                        $segmentAsString, $keyPropertiesCount,
+                        $segmentAsString,
+                        $keyPropertiesCount,
                         count($this->_namedValues)
                     )
                 );
@@ -271,7 +279,8 @@ class KeyDescriptor
                     $keysAsString = rtrim($keysAsString, ' ,');
                     throw ODataException::createSyntaxError(
                         Messages::keyDescriptorMissingKeys(
-                            $segmentAsString, $keysAsString
+                            $segmentAsString,
+                            $keysAsString
                         )
                     );
                 }
@@ -281,7 +290,8 @@ class KeyDescriptor
                 if (!$expectedType->isCompatibleWith($typeProvided)) {
                     throw ODataException::createSyntaxError(
                         Messages::keyDescriptorInCompatibleKeyType(
-                            $segmentAsString, $keyName,
+                            $segmentAsString,
+                            $keyName,
                             $expectedType->getFullTypeName(),
                             $typeProvided->getFullTypeName()
                         )
@@ -294,7 +304,8 @@ class KeyDescriptor
             if (count($this->_positionalValues) != $keyPropertiesCount) {
                 throw ODataException::createSyntaxError(
                     Messages::keyDescriptorKeyCountNotMatching(
-                        $segmentAsString, $keyPropertiesCount,
+                        $segmentAsString,
+                        $keyPropertiesCount,
                         count($this->_positionalValues)
                     )
                 );
@@ -308,8 +319,10 @@ class KeyDescriptor
                 if (!$expectedType->isCompatibleWith($typeProvided)) {
                     throw ODataException::createSyntaxError(
                         Messages::keyDescriptorInCompatibleKeyTypeAtPosition(
-                            $segmentAsString, $keyResourceProperty->getName(),
-                            $i, $expectedType->getFullTypeName(),
+                            $segmentAsString,
+                            $keyResourceProperty->getName(),
+                            $i,
+                            $expectedType->getFullTypeName(),
                             $typeProvided->getFullTypeName()
                         )
                     );
@@ -343,8 +356,11 @@ class KeyDescriptor
      * @return bool True if the given values were parsed; false if there was a
      *              syntactic error
      */
-    private static function _tryParseKeysFromKeyPredicate($keyPredicate,
-        $allowNamedValues, $allowNull, &$keyDescriptor
+    private static function _tryParseKeysFromKeyPredicate(
+        $keyPredicate,
+        $allowNamedValues,
+        $allowNull,
+        &$keyDescriptor
     ) {
         $expressionLexer = new ExpressionLexer($keyPredicate);
         $currentToken = $expressionLexer->getCurrentToken();
