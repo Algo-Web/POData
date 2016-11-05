@@ -285,22 +285,22 @@ class WordPressDSExpressionProvider implements IExpressionProvider
                 return "DATETIMECMP($params[0]; $params[1])";
                 break;
             case ODataConstants::DATETIME_YEAR:
-                return 'EXTRACT(YEAR from '.$params[0].')';
+                return 'EXTRACT(YEAR from ' . $params[0] . ')';
                 break;
             case ODataConstants::DATETIME_MONTH:
-                return 'EXTRACT(MONTH from '.$params[0].')';
+                return 'EXTRACT(MONTH from ' . $params[0] . ')';
                 break;
             case ODataConstants::DATETIME_DAY:
-                return 'EXTRACT(DAY from '.$params[0].')';
+                return 'EXTRACT(DAY from ' . $params[0] . ')';
                 break;
             case ODataConstants::DATETIME_HOUR:
-                return 'EXTRACT(HOUR from '.$params[0].')';
+                return 'EXTRACT(HOUR from ' . $params[0] . ')';
                 break;
             case ODataConstants::DATETIME_MINUTE:
-                return 'EXTRACT(MINUTE from '.$params[0].')';
+                return 'EXTRACT(MINUTE from ' . $params[0] . ')';
                 break;
             case ODataConstants::DATETIME_SECOND:
-                return 'EXTRACT(SECOND from '.$params[0].')';
+                return 'EXTRACT(SECOND from ' . $params[0] . ')';
                 break;
             case ODataConstants::MATHFUN_ROUND:
                 return "ROUND($params[0])";

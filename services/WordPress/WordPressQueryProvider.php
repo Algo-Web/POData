@@ -189,7 +189,7 @@ class WordPressQueryProvider implements IQueryProvider
                 $query = 'SELECT * FROM `wp_posts` WHERE'
                         ." wp_posts.post_type = 'post'"
                         ." AND wp_posts.post_status = 'publish'"
-                        .' AND wp_posts.ID = '.$namedKeyValues['PostID'][0];
+                        .' AND wp_posts.ID = ' . $namedKeyValues['PostID'][0];
                 $stmt = mysql_query($query);
 
                 //If resource not found return null to the library
@@ -205,7 +205,7 @@ class WordPressQueryProvider implements IQueryProvider
                         .' FROM `wp_terms` AS t INNER JOIN `wp_term_taxonomy` as tt'
                         .' ON tt.term_id = t.term_id'
                         ." WHERE tt.taxonomy = 'post_tag'"
-                        .' AND t.term_id = '.$namedKeyValues['TagID'][0];
+                        .' AND t.term_id = ' . $namedKeyValues['TagID'][0];
                 $stmt = mysql_query($query);
 
                 //If resource not found return null to the library
@@ -221,7 +221,7 @@ class WordPressQueryProvider implements IQueryProvider
                         .' FROM `wp_terms` AS t INNER JOIN `wp_term_taxonomy` as tt'
                         .' ON tt.term_id = t.term_id'
                         ." WHERE tt.taxonomy = 'category'"
-                        .' AND t.term_id = '.$namedKeyValues['CategoryID'][0];
+                        .' AND t.term_id = ' . $namedKeyValues['CategoryID'][0];
                 $stmt = mysql_query($query);
 
                 //If resource not found return null to the library
@@ -235,7 +235,7 @@ class WordPressQueryProvider implements IQueryProvider
             case 'Comments':
                 $query = 'SELECT * FROM `wp_comments`'
                         .' WHERE comment_approved = 1'
-                        .' AND comment_ID = '.$namedKeyValues['CommentID'][0];
+                        .' AND comment_ID = ' . $namedKeyValues['CommentID'][0];
                 $stmt = mysql_query($query);
 
                 //If resource not found return null to the library
@@ -247,7 +247,7 @@ class WordPressQueryProvider implements IQueryProvider
                 $result = $this->_serializeComment($data);
                 break;
             case 'Users':
-                $query = 'SELECT * FROM `wp_users` WHERE ID = '.$namedKeyValues['UserID'][0];
+                $query = 'SELECT * FROM `wp_users` WHERE ID = ' . $namedKeyValues['UserID'][0];
                 $stmt = mysql_query($query);
 
                 //If resource not found return null to the library
@@ -344,7 +344,7 @@ class WordPressQueryProvider implements IQueryProvider
 
                     $result = $this->_serializeComments($stmt);
                 } else {
-                    die('Post does not have navigation porperty with name: '.$navigationPropName);
+                    die('Post does not have navigation porperty with name: ' . $navigationPropName);
                 }
                 break;
 
@@ -369,7 +369,7 @@ class WordPressQueryProvider implements IQueryProvider
 
                     $result = $this->_serializePosts($stmt);
                 } else {
-                    die('Tag does not have navigation porperty with name: '.$navigationPropName);
+                    die('Tag does not have navigation porperty with name: ' . $navigationPropName);
                 }
                 break;
 
@@ -394,12 +394,12 @@ class WordPressQueryProvider implements IQueryProvider
 
                     $result = $this->_serializePosts($stmt);
                 } else {
-                    die('Category does not have navigation porperty with name: '.$navigationPropName);
+                    die('Category does not have navigation porperty with name: ' . $navigationPropName);
                 }
                 break;
 
             case $srcClass == 'Comment':
-                die('Comment does not have navigation porperty with name: '.$navigationPropName);
+                die('Comment does not have navigation porperty with name: ' . $navigationPropName);
                 break;
 
             case $srcClass == 'User':
@@ -431,7 +431,7 @@ class WordPressQueryProvider implements IQueryProvider
 
                     $result = $this->_serializeComments($stmt);
                 } else {
-                    die('User does not have navigation porperty with name: '.$navigationPropName);
+                    die('User does not have navigation porperty with name: ' . $navigationPropName);
                 }
                 break;
         }
@@ -484,7 +484,7 @@ class WordPressQueryProvider implements IQueryProvider
                             .' ON tr.term_taxonomy_id = tt.term_taxonomy_id'
                             ." WHERE tt.taxonomy IN ('post_tag')"
                             ." AND tr.object_id IN ($sourceEntityInstance->PostID)"
-                            .' AND tt.term_id = '.$namedKeyValues['TagID'][0];
+                            .' AND tt.term_id = ' . $namedKeyValues['TagID'][0];
                     $stmt = mysql_query($query);
                     $result = $this->_serializeTags($stmt);
                 } elseif ($navigationPropName == 'Categories') {
@@ -496,18 +496,18 @@ class WordPressQueryProvider implements IQueryProvider
                             .' ON tr.term_taxonomy_id = tt.term_taxonomy_id'
                             ." WHERE tt.taxonomy IN ('category')"
                             ." AND tr.object_id IN ($sourceEntityInstance->PostID)"
-                            .' AND tt.term_id = '.$namedKeyValues['CategoryID'][0];
+                            .' AND tt.term_id = ' . $namedKeyValues['CategoryID'][0];
                     $stmt = mysql_query($query);
                     $result = $this->_serializeCategories($stmt);
                 } elseif ($navigationPropName == 'Comments') {
                     $query = 'SELECT * FROM `wp_comments`'
                             .' WHERE comment_approved = 1'
                             ." AND comment_post_ID = $sourceEntityInstance->PostID"
-                            .' AND comment_ID = '.$namedKeyValues['CommentID'][0];
+                            .' AND comment_ID = ' . $namedKeyValues['CommentID'][0];
                     $stmt = mysql_query($query);
                     $result = $this->_serializeComments($stmt);
                 } else {
-                    die('Post does not have navigation porperty with name: '.$navigationPropName);
+                    die('Post does not have navigation porperty with name: ' . $navigationPropName);
                 }
                 break;
 
@@ -522,11 +522,11 @@ class WordPressQueryProvider implements IQueryProvider
                                 ." WHERE tt.term_id = $sourceEntityInstance->TagID"
                                 ." AND p.post_type = 'post'"
                                 ." AND p.post_status = 'publish'"
-                                .' AND p.ID = '.$namedKeyValues['PostID'][0];
+                                .' AND p.ID = ' . $namedKeyValues['PostID'][0];
                     $stmt = mysql_query($query);
                     $result = $this->_serializePosts($stmt);
                 } else {
-                    die('Tag does not have navigation porperty with name: '.$navigationPropName);
+                    die('Tag does not have navigation porperty with name: ' . $navigationPropName);
                 }
                 break;
 
@@ -541,16 +541,16 @@ class WordPressQueryProvider implements IQueryProvider
                                 ." WHERE tt.term_id = $sourceEntityInstance->CategoryID"
                                 ." AND p.post_type = 'post'"
                                 ." AND p.post_status = 'publish'"
-                                .' AND p.ID = '.$namedKeyValues['PostID'][0];
+                                .' AND p.ID = ' . $namedKeyValues['PostID'][0];
                     $stmt = mysql_query($query);
                     $result = $this->_serializePosts($stmt);
                 } else {
-                    die('Category does not have navigation porperty with name: '.$navigationPropName);
+                    die('Category does not have navigation porperty with name: ' . $navigationPropName);
                 }
                 break;
 
             case $srcClass == 'Comment':
-                die('Comment does not have navigation porperty with name: '.$navigationPropName);
+                die('Comment does not have navigation porperty with name: ' . $navigationPropName);
                 break;
 
             case $srcClass == 'User':
@@ -559,18 +559,18 @@ class WordPressQueryProvider implements IQueryProvider
                             ." wp_posts.post_type = 'post'"
                             ." AND wp_posts.post_status = 'publish'"
                             ." AND wp_posts.post_author = $sourceEntityInstance->UserID"
-                            .' AND wp_posts.ID = '.$namedKeyValues['PostID'][0];
+                            .' AND wp_posts.ID = ' . $namedKeyValues['PostID'][0];
                     $stmt = mysql_query($query);
                     $result = $this->_serializePosts($stmt);
                 } elseif ($navigationPropName == 'Comments') {
                     $query = 'SELECT * FROM `wp_comments`'
                             .' WHERE comment_approved = 1'
                             ." AND wp_comments.user_id = $sourceEntityInstance->UserID"
-                            .' AND wp_comments.comment_ID = '.$namedKeyValues['CommentID'][0];
+                            .' AND wp_comments.comment_ID = ' . $namedKeyValues['CommentID'][0];
                     $stmt = mysql_query($query);
                     $result = $this->_serializeComments($stmt);
                 } else {
-                    die('User does not have navigation porperty with name: '.$navigationPropName);
+                    die('User does not have navigation porperty with name: ' . $navigationPropName);
                 }
                 break;
         }
@@ -616,7 +616,7 @@ class WordPressQueryProvider implements IQueryProvider
                         $result = null;
                     }
                 } else {
-                    die('Post does not have navigation porperty with name: '.$navigationPropName);
+                    die('Post does not have navigation porperty with name: ' . $navigationPropName);
                 }
                 break;
 
@@ -651,7 +651,7 @@ class WordPressQueryProvider implements IQueryProvider
                     $data = mysql_fetch_assoc($stmt);
                     $result = $this->_serializePost($data);
                 } else {
-                    die('Comment does not have navigation porperty with name: '.$navigationPropName);
+                    die('Comment does not have navigation porperty with name: ' . $navigationPropName);
                 }
                 break;
         }
