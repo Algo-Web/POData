@@ -44,7 +44,9 @@ class ResourceAssociationType
      * @param ResourceAssociationTypeEnd $end1          First end of the association
      * @param ResourceAssociationTypeEnd $end2          Second end of the association
      */
-    public function __construct($name, $namespaceName,
+    public function __construct(
+        $name,
+        $namespaceName,
         ResourceAssociationTypeEnd $end1,
         ResourceAssociationTypeEnd $end2
     ) {
@@ -104,7 +106,8 @@ class ResourceAssociationType
      * @return ResourceAssociationTypeEnd Association type end for the
      *                                    given parameters
      */
-    public function getResourceAssociationTypeEnd(ResourceType $resourceType,
+    public function getResourceAssociationTypeEnd(
+        ResourceType $resourceType,
         $resourceProperty
     ) {
         if ($this->_end1->isBelongsTo($resourceType, $resourceProperty)) {
@@ -127,7 +130,8 @@ class ResourceAssociationType
      * @return ResourceAssociationTypeEndRelated Association type end for the
      *                                           given parameters
      */
-    public function getRelatedResourceAssociationSetEnd(ResourceType $resourceType,
+    public function getRelatedResourceAssociationSetEnd(
+        ResourceType $resourceType,
         $resourceProperty
     ) {
         if ($this->_end1->isBelongsTo($resourceType, $resourceProperty)) {

@@ -178,7 +178,10 @@ abstract class SimpleQueryProvider implements IQueryProvider
             $result->results = array_map($entityClassName . '::fromRecord', $data);
         } elseif ($queryType == QueryType::COUNT()) {
             $result->count = QueryResult::adjustCountForPaging(
-                $this->queryScalar($sqlCount), $top, $skip);
+                $this->queryScalar($sqlCount),
+                $top,
+                $skip
+            );
         }
 
         return $result;

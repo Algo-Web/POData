@@ -403,14 +403,14 @@ class QueryProcessor
         // 'RootProjectionNode' is required while generating next page Link
         if ($this->_expandSelectApplicable || $this->request->isLinkUri()) {
             $rootProjectionNode = ExpandProjectionParser::parseExpandAndSelectClause(
-                    $this->request->getTargetResourceSetWrapper(),
-                    $this->request->getTargetResourceType(),
-                    $this->request->getInternalOrderByInfo(),
-                    $this->request->getSkipCount(),
-                    $this->request->getTopCount(),
-                    $expand,
-                    $select,
-                    $this->service->getProvidersWrapper()
+                $this->request->getTargetResourceSetWrapper(),
+                $this->request->getTargetResourceType(),
+                $this->request->getInternalOrderByInfo(),
+                $this->request->getSkipCount(),
+                $this->request->getTopCount(),
+                $expand,
+                $select,
+                $this->service->getProvidersWrapper()
             );
             if ($rootProjectionNode->isSelectionSpecified()) {
                 $this->request->raiseMinVersionRequirement(2, 0);

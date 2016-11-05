@@ -247,7 +247,9 @@ class StreamProviderWrapper
      *
      * @throws InvalidOperationException
      */
-    public function getReadStreamUri($entity, $resourceStreamInfo,
+    public function getReadStreamUri(
+        $entity,
+        $resourceStreamInfo,
         $mediaLinkEntryUri
     ) {
         $readStreamUri = null;

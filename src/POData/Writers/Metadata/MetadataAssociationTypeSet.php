@@ -260,7 +260,8 @@ class MetadataAssociationTypeSet extends MetadataBase
          */
         $relatedEnd = $resourceAssociationSet->getRelatedResourceAssociationSetEnd(
             $resourceSet->getResourceSet(),
-            $resourceType, $navigationProperty
+            $resourceType,
+            $navigationProperty
         );
 
         //For bidirectional relationship IDSMP::getResourceAssociationSet should

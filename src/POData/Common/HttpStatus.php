@@ -60,87 +60,87 @@ class HttpStatus
     {
         switch ($statusCode) {
             case self::CODE_CONTINUE:
-                    return 'Continue';
+                return 'Continue';
             case self::CODE_SWITCHING_PROTOCOLS:
-                    return  'SwitchingProtocols';
+                return  'SwitchingProtocols';
             case self::CODE_OK:
-                    return  'OK';
+                return  'OK';
             case self::CODE_CREATED:
-                    return  'Created';
+                return  'Created';
             case self::CODE_ACCEPTED:
-                    return  'Accepted';
+                return  'Accepted';
             case self::CODE_NON_AUTHRATIVE_INFORMATION:
-                    return  'Non-Authrative Information';
+                return  'Non-Authrative Information';
             case self::CODE_NOCONTENT:
-                    return  'No Content';
+                return  'No Content';
             case self::CODE_RESET_CONTENT:
-                    return 'ResetContent';
+                return 'ResetContent';
             case self::CODE_PARTIAL_CONTENT:
-                    return 'Partial Content';
+                return 'Partial Content';
             case self::CODE_MULTIPLE_CHOICE:
-                    return 'Multiple Choices';
+                return 'Multiple Choices';
             case self::CODE_MOVED_PERMANENTLY:
-                    return 'Moved Permanently';
+                return 'Moved Permanently';
             case self::CODE_FOUND:
-                    return 'Found';
+                return 'Found';
             case self::CODE_SEE_OTHER:
-                    return 'See Other';
+                return 'See Other';
             case self::CODE_NOT_MODIFIED:
-                    return 'Not Modified';
+                return 'Not Modified';
             case self::CODE_USE_PROXY:
-                    return 'Use Proxy';
+                return 'Use Proxy';
             case self::CODE_UNUSED:
-                    return 'Unused';
+                return 'Unused';
             case self::CODE_TEMP_REDIRECT:
-                    return 'Temporary Redirect';
+                return 'Temporary Redirect';
             case self::CODE_BAD_REQUEST:
-                    return 'Bad Request';
+                return 'Bad Request';
             case self::CODE_UNAUTHORIZED:
-                    return 'Unauthorized';
+                return 'Unauthorized';
             case self::CODE_PAYMENT_REQ:
-                    return 'Payment Required';
+                return 'Payment Required';
             case self::CODE_FORBIDDEN:
-                    return 'Forbidden';
+                return 'Forbidden';
             case self::CODE_NOT_FOUND:
-                    return 'Not Found';
+                return 'Not Found';
             case self::CODE_METHOD_NOT_ALLOWED:
-                    return 'Method Not Allowed';
+                return 'Method Not Allowed';
             case self::CODE_NOT_ACCEPTABLE:
-                    return 'Not Acceptable';
+                return 'Not Acceptable';
             case self::CODE_PROXY_AUTHENTICATION_REQUIRED:
-                    return 'Proxy Authentication Required';
+                return 'Proxy Authentication Required';
             case self::CODE_REQUEST_TIMEOUT:
-                    return 'Request Timeout';
+                return 'Request Timeout';
             case self::CODE_CONFLICT:
-                    return 'Conflict';
+                return 'Conflict';
             case self::CODE_GONE:
-                    return 'Gone';
+                return 'Gone';
             case self::CODE_LENGTH_REQUIRED:
-                    return 'Length Required';
+                return 'Length Required';
             case self::CODE_PRECONDITION_FAILED:
-                    return 'Precondition Failed';
+                return 'Precondition Failed';
             case self::CODE_REQUEST_ENTITY_TOOLONG:
-                    return 'Request Entity Too Large';
+                return 'Request Entity Too Large';
             case self::CODE_REQUEST_URI_TOOLONG:
-                    return 'Request-URI Too Large';
+                return 'Request-URI Too Large';
             case self::CODE_UNSUPPORTED_MEDIATYPE:
-                    return 'Unsupported Media Type';
+                return 'Unsupported Media Type';
             case self::CODE_REQUESTED_RANGE_NOT_SATISFIABLE:
-                    return 'Requested Range NotSatisfiable';
+                return 'Requested Range NotSatisfiable';
             case self::CODE_EXPECTATION_FAILED:
-                    return 'Expectation Failed';
+                return 'Expectation Failed';
             case self::CODE_INTERNAL_SERVER_ERROR:
-                    return 'Internal Server Error';
+                return 'Internal Server Error';
             case self::CODE_NOT_IMPLEMENTED:
-                    return 'Not Implemented';
+                return 'Not Implemented';
             case self::CODE_BAD_GATEWAY:
-                    return 'Bad Gateway';
+                return 'Bad Gateway';
             case self::CODE_SERVICE_UNAVAILABLE:
-                    return 'Service Unavailable';
+                return 'Service Unavailable';
             case self::CODE_GATEWAY_TIMEOUT:
-                    return 'Gateway Timeout';
+                return 'Gateway Timeout';
             case self::CODE_HTTP_VERSION_NOT_SUPPORTED:
-                    return 'HTTP Version Not Suppoted';
+                return 'HTTP Version Not Suppoted';
         }
 
         return null;

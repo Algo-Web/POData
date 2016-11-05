@@ -2,7 +2,6 @@
 
 namespace POData\Providers\Metadata;
 
-
 use POData\Common\Messages;
 
 /**
@@ -51,7 +50,8 @@ class ResourceAssociationSet
      *
      * @throws \InvalidArgumentException
      */
-    public function __construct($name,
+    public function __construct(
+        $name,
         ResourceAssociationSetEnd $end1,
         ResourceAssociationSetEnd $end2
     ) {
@@ -67,8 +67,8 @@ class ResourceAssociationSet
             && $end1->getResourceProperty() == $end2->getResourceProperty()
         ) {
             throw new \InvalidArgumentException(
-                    Messages::resourceAssociationSetSelfReferencingAssociationCannotBeBiDirectional()
-                );
+                Messages::resourceAssociationSetSelfReferencingAssociationCannotBeBiDirectional()
+            );
         }
 
         $this->_name = $name;
@@ -112,8 +112,10 @@ class ResourceAssociationSet
      * @return ResourceAssociationSetEnd Related resource association set end
      *                                   for the given parameters
      */
-    public function getRelatedResourceAssociationSetEnd(ResourceSet $resourceSet,
-        ResourceType $resourceType, ResourceProperty $resourceProperty
+    public function getRelatedResourceAssociationSetEnd(
+        ResourceSet $resourceSet,
+        ResourceType $resourceType,
+        ResourceProperty $resourceProperty
     ) {
         if ($this->_end1->isBelongsTo($resourceSet, $resourceType, $resourceProperty)) {
             return $this->_end2;

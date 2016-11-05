@@ -181,7 +181,8 @@ class Messages
      *
      * @return string The formatted message
      */
-    public static function expressionLexerNoApplicableFunctionsFound($functionName,
+    public static function expressionLexerNoApplicableFunctionsFound(
+        $functionName,
         $protoTypes,
         $position
     ) {

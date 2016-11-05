@@ -229,7 +229,8 @@ class ExpressionLexer
                     if ($this->_textPos == $this->_textLen) {
                         $this->_parseError(
                             Messages::expressionLexerUnterminatedStringLiteral(
-                                $this->_textPos, $this->_text
+                                $this->_textPos,
+                                $this->_text
                             )
                         );
                     }
@@ -261,7 +262,8 @@ class ExpressionLexer
 
                 $this->_parseError(
                     Messages::expressionLexerInvalidCharacter(
-                        $this->_ch, $this->_textPos
+                        $this->_ch,
+                        $this->_textPos
                     )
                 );
         }
@@ -462,7 +464,8 @@ class ExpressionLexer
         if ($this->_ch == '\0') {
             $this->_parseError(
                 Messages::expressionLexerUnterminatedStringLiteral(
-                    $this->_textPos, $this->_text
+                    $this->_textPos,
+                    $this->_text
                 )
             );
         }

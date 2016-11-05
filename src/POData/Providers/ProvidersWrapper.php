@@ -553,7 +553,8 @@ class ProvidersWrapper
      *                           $resourceProperty is not declared anywhere
      *                           in the inheritance hierarchy
      */
-    private function _getResourceTypeWherePropertyIsDeclared(ResourceType $resourceType,
+    private function _getResourceTypeWherePropertyIsDeclared(
+        ResourceType $resourceType,
         ResourceProperty $resourceProperty
     ) {
         $type = $resourceType;
@@ -764,8 +765,11 @@ class ProvidersWrapper
      *
      * @return object|null Returns entity instance if found else null
      */
-    public function getResourceFromRelatedResourceSet(ResourceSet $sourceResourceSet,
-        $sourceEntity, ResourceSet $targetResourceSet, ResourceProperty $targetProperty,
+    public function getResourceFromRelatedResourceSet(
+        ResourceSet $sourceResourceSet,
+        $sourceEntity,
+        ResourceSet $targetResourceSet,
+        ResourceProperty $targetProperty,
         KeyDescriptor $keyDescriptor
     ) {
         $entityInstance = $this->queryProvider->getResourceFromRelatedResourceSet(
@@ -777,7 +781,8 @@ class ProvidersWrapper
         );
 
         $this->_validateEntityInstance(
-            $entityInstance, $targetResourceSet,
+            $entityInstance,
+            $targetResourceSet,
             $keyDescriptor,
             'IQueryProvider::getResourceFromRelatedResourceSet'
         );
@@ -797,8 +802,10 @@ class ProvidersWrapper
      *
      * @return object|null The related resource if exists else null
      */
-    public function getRelatedResourceReference(ResourceSet $sourceResourceSet,
-        $sourceEntity, ResourceSet $targetResourceSet,
+    public function getRelatedResourceReference(
+        ResourceSet $sourceResourceSet,
+        $sourceEntity,
+        ResourceSet $targetResourceSet,
         ResourceProperty $targetProperty
     ) {
         $entityInstance = $this->queryProvider->getRelatedResourceReference(
@@ -865,7 +872,8 @@ class ProvidersWrapper
      *
      * @throws ODataException
      */
-    private function _validateEntityInstance($entityInstance,
+    private function _validateEntityInstance(
+        $entityInstance,
         ResourceSet & $resourceSet,
         KeyDescriptor & $keyDescriptor,
         $methodName
@@ -888,7 +896,7 @@ class ProvidersWrapper
         }
 
         foreach ($keyDescriptor->getValidatedNamedValues()
-            as $keyName => $valueDescription) {
+        as $keyName => $valueDescription) {
             try {
                 $keyValue = $resourceType->getPropertyValue($entityInstance, $keyName);
                 if (is_null($keyValue)) {

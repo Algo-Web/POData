@@ -131,7 +131,8 @@ class ServiceConfiguration
     public function setMaxExpandCount($maxExpandCount)
     {
         $this->_maxExpandCount = $this->_checkIntegerNonNegativeParameter(
-            $maxExpandCount, 'setMaxExpandCount'
+            $maxExpandCount,
+            'setMaxExpandCount'
         );
     }
 
@@ -185,7 +186,8 @@ class ServiceConfiguration
         }
 
         $this->_maxResultsPerCollection = $this->_checkIntegerNonNegativeParameter(
-            $maxResultPerCollection, 'setMaxResultsPerCollection'
+            $maxResultPerCollection,
+            'setMaxResultsPerCollection'
         );
     }
 
@@ -389,10 +391,10 @@ class ServiceConfiguration
          *
          * @param bool $validate True if ETag needs to validated, false otherwise
          */
-        public function setValidateETagHeader($validate)
-        {
-            $this->_validateETagHeader = $validate;
-        }
+    public function setValidateETagHeader($validate)
+    {
+        $this->_validateETagHeader = $validate;
+    }
 
         /**
          * Gets whether to validate the ETag or not.
@@ -403,10 +405,10 @@ class ServiceConfiguration
          *              in the response even though the requested resource
          *              support ETag
          */
-        public function getValidateETagHeader()
-        {
-            return $this->_validateETagHeader;
-        }
+    public function getValidateETagHeader()
+    {
+        return $this->_validateETagHeader;
+    }
 
     /**
      * Checks that the parameter to a function is numeric and is not negative.

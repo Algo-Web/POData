@@ -88,7 +88,6 @@ class MediaType
     {
         $result = -1;
         if (strlen($candidate) > 0) {
-
             //get the odata parameter (if there is one)
             $candidateODataValue = null;
             $candidateParts = explode(';', $candidate);
@@ -190,7 +189,8 @@ class HttpProcessUtility
      *
      * @return string One of exactContentType or inexactContentType
      */
-    public static function selectRequiredMimeType($acceptTypesText,
+    public static function selectRequiredMimeType(
+        $acceptTypesText,
         $exactContentTypes,
         $inexactContentType
     ) {
@@ -397,8 +397,11 @@ class HttpProcessUtility
      *
      * @throws HttpHeaderFailure If failed to read type and sub-type
      */
-    public static function readMediaTypeAndSubtype($text, &$textIndex,
-        &$type, &$subType
+    public static function readMediaTypeAndSubtype(
+        $text,
+        &$textIndex,
+        &$type,
+        &$subType
     ) {
         $textStart = $textIndex;
         if (self::readToken($text, $textIndex)) {
@@ -526,7 +529,9 @@ class HttpProcessUtility
      *
      * @throws HttpHeaderFailure
      */
-    public static function readQuotedParameterValue($parameterName, $text,
+    public static function readQuotedParameterValue(
+        $parameterName,
+        $text,
         &$textIndex
     ) {
         $parameterValue = array();

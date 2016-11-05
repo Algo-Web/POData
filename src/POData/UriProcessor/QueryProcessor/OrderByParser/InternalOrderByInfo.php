@@ -67,8 +67,11 @@ class InternalOrderByInfo
      * @param ResourceType        $resourceType       The ResourceType for the resource
      *                                                targeted by resource path
      */
-    public function __construct(OrderByInfo $orderByInfo, $subSorterFunctions,
-        AnonymousFunction $sorterFunction, $dummyObject,
+    public function __construct(
+        OrderByInfo $orderByInfo,
+        $subSorterFunctions,
+        AnonymousFunction $sorterFunction,
+        $dummyObject,
         ResourceType $resourceType
     ) {
         $this->_orderByInfo = $orderByInfo;

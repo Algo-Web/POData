@@ -108,7 +108,8 @@ class AnonymousFunction
     {
         if (is_null($this->_reference)) {
             $this->_reference = create_function(
-                $this->_parametersAsString, $this->_code
+                $this->_parametersAsString,
+                $this->_code
             );
         }
 

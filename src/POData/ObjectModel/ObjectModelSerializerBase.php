@@ -155,11 +155,11 @@ class ObjectModelSerializerBase
         try {
             //Is this slow?  See #88
                 // If a magic method for properties exists (eg Eloquent), dive into it directly and return value
-                if (method_exists($entity, '__get')) {
-                    $targProperty = $resourceProperty->getName();
+            if (method_exists($entity, '__get')) {
+                $targProperty = $resourceProperty->getName();
 
-                    return $entity->$targProperty;
-                }
+                return $entity->$targProperty;
+            }
             $reflectionClass = new \ReflectionClass(get_class($entity));
             $reflectionProperty = $reflectionClass->getProperty($resourceProperty->getName());
             $reflectionProperty->setAccessible(true);
@@ -343,13 +343,13 @@ class ObjectModelSerializerBase
                     $expandedProjectionNode
                         = $expandedProjectionNode->findNode($this->_segmentNames[$i]);
                     $this->assert(
-                            !is_null($expandedProjectionNode),
-                            '!is_null($expandedProjectionNode)'
-                        );
+                        !is_null($expandedProjectionNode),
+                        '!is_null($expandedProjectionNode)'
+                    );
                     $this->assert(
-                            $expandedProjectionNode instanceof ExpandedProjectionNode,
-                            '$expandedProjectionNode instanceof ExpandedProjectionNode'
-                        );
+                        $expandedProjectionNode instanceof ExpandedProjectionNode,
+                        '$expandedProjectionNode instanceof ExpandedProjectionNode'
+                    );
                 }
             }
         }
@@ -466,8 +466,7 @@ class ObjectModelSerializerBase
             ODataConstants::HTTPQUERY_STRING_EXPAND,
             ODataConstants::HTTPQUERY_STRING_ORDERBY,
             ODataConstants::HTTPQUERY_STRING_INLINECOUNT,
-            ODataConstants::HTTPQUERY_STRING_SELECT,) as $queryOption
-        ) {
+            ODataConstants::HTTPQUERY_STRING_SELECT,) as $queryOption) {
             $value = $this->service->getHost()->getQueryStringItem($queryOption);
             if (!is_null($value)) {
                 if (!is_null($queryParameterString)) {
@@ -642,10 +641,13 @@ class ObjectModelSerializerBase
      * @param bool                   $foundSelections
      * @param bool                   $foundExpansions
      */
-    private function _buildSelectionAndExpansionPathsForNode(&$parentPathSegments,
-        &$selectionPaths, &$expansionPaths,
+    private function _buildSelectionAndExpansionPathsForNode(
+        &$parentPathSegments,
+        &$selectionPaths,
+        &$expansionPaths,
         ExpandedProjectionNode & $expandedProjectionNode,
-        &$foundSelections, &$foundExpansions
+        &$foundSelections,
+        &$foundExpansions
     ) {
         $foundSelections = false;
         $foundExpansions = false;
@@ -665,8 +667,10 @@ class ObjectModelSerializerBase
                 array_push($parentPathSegments, $childNode->getPropertyName());
                 $this->_buildSelectionAndExpansionPathsForNode(
                     $parentPathSegments,
-                    $selectionPaths, $expansionPaths,
-                    $childNode, $foundSelectionOnChild,
+                    $selectionPaths,
+                    $expansionPaths,
+                    $childNode,
+                    $foundSelectionOnChild,
                     $foundExpansionOnChild
                 );
                 array_pop($parentPathSegments);

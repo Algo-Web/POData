@@ -66,8 +66,10 @@ class InternalSkipTokenInfo
      *                                                                orderby path segments
      * @param ResourceType                  &$resourceType            Reference to the type of the resource pointed by the request uri
      */
-    public function __construct(InternalOrderByInfo & $internalOrderByInfo,
-        $orderByValuesInSkipToken, ResourceType & $resourceType
+    public function __construct(
+        InternalOrderByInfo & $internalOrderByInfo,
+        $orderByValuesInSkipToken,
+        ResourceType & $resourceType
     ) {
         $this->_internalOrderByInfo = $internalOrderByInfo;
         $this->_orderByValuesInSkipToken = $orderByValuesInSkipToken;
@@ -185,7 +187,7 @@ class InternalSkipTokenInfo
             $this->_keyObject = $this->_internalOrderByInfo->getDummyObject();
             $i = 0;
             foreach ($this->_internalOrderByInfo->getOrderByPathSegments()
-                as $orderByPathSegment) {
+            as $orderByPathSegment) {
                 $index = 0;
                 $currentObject = $this->_keyObject;
                 $subPathSegments = $orderByPathSegment->getSubPathSegments();

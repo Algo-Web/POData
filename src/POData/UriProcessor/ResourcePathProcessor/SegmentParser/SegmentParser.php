@@ -123,7 +123,9 @@ class SegmentParser
         $identifier = $keyPredicate = null;
         $this->extractSegmentIdentifierAndKeyPredicate($segments[0], $identifier, $keyPredicate);
         $previous = $this->_createFirstSegmentDescriptor(
-            $identifier, $keyPredicate, $checkRights
+            $identifier,
+            $keyPredicate,
+            $checkRights
         );
         $this->_segmentDescriptors[0] = $previous;
 
@@ -169,7 +171,8 @@ class SegmentParser
             if ($identifier !== ODataConstants::URI_VALUE_SEGMENT) {
                 throw ODataException::resourceNotFoundError(
                     Messages::segmentParserOnlyValueSegmentAllowedAfterPrimitivePropertySegment(
-                        $identifier, $previous->getIdentifier()
+                        $identifier,
+                        $previous->getIdentifier()
                     )
                 );
             }
