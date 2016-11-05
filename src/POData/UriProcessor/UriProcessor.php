@@ -172,7 +172,7 @@ class UriProcessor
      */
     protected function executePut()
     {
-        return $this->executeBase(function ($uriProcessor, $segment) {
+        return $this->executeBase(function($uriProcessor, $segment) {
             $requestMethod = $uriProcessor->getService()->getOperationContext()->incomingRequest()->getMethod();
             $resourceSet = $segment->getTargetResourceSetWrapper();
             $keyDescriptor = $segment->getKeyDescriptor();

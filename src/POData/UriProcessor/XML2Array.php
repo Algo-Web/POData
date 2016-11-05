@@ -19,8 +19,7 @@ class XML2Array
     }
     /**
      * Convert an XML to Array
-     * @param string $node_name - name of the root node to be converted
-     * @param array $arr - aray to be converterd
+     * @param string $input_xml
      * @return DOMDocument
      */
     public static function &createArray($input_xml)
@@ -38,12 +37,12 @@ class XML2Array
             $xml = self::$xml = $input_xml;
         }
         $array[$xml->documentElement->tagName] = self::convert($xml->documentElement);
-        self::$xml = null;    // clear the xml node in the class for 2nd time use.
+        self::$xml = null; // clear the xml node in the class for 2nd time use.
         return $array;
     }
     /**
      * Convert an Array to XML
-     * @param mixed $node - XML as a string or as an object of DOMDocument
+     * @param \DOMElement $node - XML as a string or as an object of DOMDocument
      * @return mixed
      */
     private static function &convert($node)
@@ -58,7 +57,7 @@ class XML2Array
                 break;
             case XML_ELEMENT_NODE:
                 // for each child node, call the covert function recursively
-                for ($i=0, $m=$node->childNodes->length; $i<$m; $i++) {
+                for ($i = 0, $m = $node->childNodes->length; $i < $m; $i++) {
                     $child = $node->childNodes->item($i);
                     $v = self::convert($child);
                     if (isset($child->tagName)) {
@@ -78,7 +77,7 @@ class XML2Array
                 if (is_array($output)) {
                     // if only one node of its kind, assign it directly instead if array($value);
                     foreach ($output as $t => $v) {
-                        if (is_array($v) && count($v)==1) {
+                        if (is_array($v) && count($v) == 1) {
                             $output[$t] = $v[0];
                         }
                     }
