@@ -147,5 +147,16 @@ interface IQueryProvider
      */
     public function updateResource(ResourceSet $sourceResourceSet,$sourceEntityInstance, KeyDescriptor $keyDescriptor,$data, $shouldUpdate = false);
 
+    /*
+     * Delete resource from a resource set.
+     * @param ResourceSet|null $resourceSet
+     * @param object           $sourceEntityInstance
+     *
+     * return bool true if resources sucessfully deteled, otherwise false.
+     */
+    protected function deleteResource(
+        ResourceSet $sourceResourceSet,
+        $sourceEntityInstance,
+    );
 
 }
