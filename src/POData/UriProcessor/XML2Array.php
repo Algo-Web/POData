@@ -8,17 +8,17 @@ class XML2Array
      */
     private static $encoding = 'UTF-8';
     /**
-     * @var DOMDocument
+     * @var \DOMDocument
      */
     private static $xml = null;
     /**
      * Convert an XML to Array.
      *
-     * @param string|DOMDocument $input_xml
+     * @param string|\DOMDocument $input_xml
      *
      * @return array
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public static function createArray($input_xml)
     {
@@ -62,7 +62,7 @@ class XML2Array
     /**
      * Convert an Array to XML.
      *
-     * @param DOMNode $node - XML as a string or as an object of DOMDocument
+     * @param \DOMNode $node - XML as a string or as an object of DOMDocument
      *
      * @return array
      */
@@ -126,7 +126,7 @@ class XML2Array
     /**
      * Get the root XML node, if there isn't one, create it.
      *
-     * @return DOMDocument
+     * @return \DOMDocument
      */
     private static function getXMLRoot()
     {
