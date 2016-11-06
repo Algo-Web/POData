@@ -156,7 +156,7 @@ interface IQueryProvider
      */
     public function deleteResource(
         ResourceSet $sourceResourceSet,
-        $sourceEntityInstance,
+        $sourceEntityInstance
     );
     /*
      * @param ResourceSet      $resourceSet   The entity set containing the entity to fetch
