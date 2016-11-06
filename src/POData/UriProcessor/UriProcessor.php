@@ -186,7 +186,7 @@ class UriProcessor
                 throw ODataException::createBadRequestError(Messages::noDataForThisVerb($requestMethod));
             }
 
-            return $uriProcessor->providers->putResource($resourceSet, $keyDescriptor, $data);
+            return $uriProcessor->providers->putResource($resourceSet, $segment->getResult(), $keyDescriptor, $data, false);
         });
     }
 
