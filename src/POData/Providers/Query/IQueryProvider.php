@@ -134,4 +134,18 @@ interface IQueryProvider
         ResourceSet $targetResourceSet,
         ResourceProperty $targetProperty
     );
+    /**
+     * Updates a resource 
+     *
+     * @param ResourceSet      $sourceResourceSet    The entity set containing the source entity
+     * @param object           $sourceEntityInstance The source entity instance
+     * @param KeyDescriptor    $keyDescriptor        The key identifying the entity to fetch
+     * @param object           $data                 The New data for the entity instance.
+     * @param bool             $shouldUpdate        Should undefined values be updated or reset to default
+     *
+     * @return object|null The new resource value if it is assignable or throw exception for null.
+     */
+    public function updateResource(ResourceSet $sourceResourceSet,$sourceEntityInstance, KeyDescriptor $keyDescriptor,$data, $shouldUpdate = false);
+
+
 }
