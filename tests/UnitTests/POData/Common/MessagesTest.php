@@ -195,5 +195,17 @@ class MessagesTest extends PhockitoUnitTestCase
         );
 
         $this->assertEquals(sort($expected), sort($actual), 'You probably added a message without a corresponding test!');
+	foreach($actual as $funcName){
+            $param = array();
+            $fct = new \ReflectionMethod('POData\Common\Messages',$funcName);
+            /*for($i = 0; $i < $fct->getNumberOfRequiredParameters();$i++){
+                $param[] = "the dingus TestString";
+            }*/
+            if($fct->getNumberOfRequiredParameters() == 0){
+                $r = $fct->invokeArgs(null,$param);
+                $this->assertTrue(is_string($r));
+                $this->assertNotEmpty($r);
+            }
+        }
     }
 }
