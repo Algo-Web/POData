@@ -205,6 +205,21 @@ class MessagesTest extends PhockitoUnitTestCase
                 $r = $fct->invokeArgs(null,$param);
                 $this->assertTrue(is_string($r));
                 $this->assertNotEmpty($r);
+            }else{
+                $p = $fct->getParameters();
+                for($i = 0; $i < $fct->getNumberOfRequiredParameters();$i++){
+                    $param[] = "the dingus TestString";
+                }
+		//Done this way due to php framework limitation
+                try{
+                    $r = $fct->invokeArgs(null,$param);
+                    $this->assertTrue(is_string($r));
+                    $this->assertNotEmpty($r);
+
+                }catch(\Exception $e){
+//                    dd($e);
+                }
+
             }
         }
     }
