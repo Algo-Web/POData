@@ -194,6 +194,6 @@ class MessagesTest extends PhockitoUnitTestCase
             'hostRequestUriIsNotBasedOnRelativeUriInConfig',
         );
 
-        $this->assertEquals($expected, $actual, 'You probably added a message without a corresponding test!');
+        $this->assertEquals(sort($expected), sort($actual), 'You probably added a message without a corresponding test!');
     }
 }
