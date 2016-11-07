@@ -1,8 +1,8 @@
 <?php
 namespace POData\Common\Messages;
 
-trait segmentParser{
-
+trait segmentParser
+{
     /**
      * Format a message to show error when segment with
      * multiple positional keys present in the request uri.

@@ -2,10 +2,9 @@
 namespace POData\Common\Messages;
 use POData\OperationContext\HTTPRequestMethod;
 
-
 trait http
 {
- /**
+    /**
      * Message to show error when baseUrl given in service.config.xml is invalid.
      *
      * @param bool $notEndWithSvcOrHasQuery Base url end with svc or not

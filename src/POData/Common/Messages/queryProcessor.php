@@ -3,7 +3,7 @@ namespace POData\Common\Messages;
 
 trait queryProcessor
 {
-/**
+    /**
      * Message to show error when query prcocessor found
      * invalid value for $format option.
      *

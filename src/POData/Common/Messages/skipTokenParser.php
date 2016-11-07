@@ -1,7 +1,6 @@
 <?php
 namespace POData\Common\Messages;
 
-
 trait skipTokenParser
 {
     /**

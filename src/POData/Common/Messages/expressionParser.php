@@ -3,7 +3,6 @@ namespace POData\Common\Messages;
 
 trait expressionParser
 {
-
     /**
      * Format message for an operator's incompatible operands types.
      *

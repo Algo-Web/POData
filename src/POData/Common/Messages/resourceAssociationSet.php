@@ -1,8 +1,9 @@
 <?php
 namespace POData\Common\Messages;
+
 trait resourceAssociationSet
 {
-/**
+    /**
      * Format a message to show error when target resource property
      * argument is not null or instance of ResourceProperty.
      *

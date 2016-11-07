@@ -3,7 +3,7 @@ namespace POData\Common\Messages;
 
 trait configuration
 {
-/**
+    /**
      * Error message to show when both page size and
      * result collection size are specified.
      *

@@ -3,7 +3,7 @@ namespace POData\Common\Messages;
 
 trait skipTokenInfo
 {
-/**
+    /**
      * Format a message to show error when one of the argument orderByPaths or
      * orderByValues is set and not both.
      *

@@ -2,10 +2,9 @@
 namespace POData\Common\Messages;
 use POData\Providers\Query\QueryType;
 
-
 trait queryProvider
 {
-/**
+    /**
      * @param string $methodName method name
      *
      * @return string The message

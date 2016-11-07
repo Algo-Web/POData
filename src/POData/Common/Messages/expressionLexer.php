@@ -3,7 +3,6 @@ namespace POData\Common\Messages;
 
 trait expressionLexer
 {
-
     /**
      * Format message for unterminated string literal error.
      *

@@ -3,9 +3,6 @@ namespace POData\Common\Messages;
 
 trait objectModelSerializer
 {
-
-    
-
     /**
      * Format a message to show error when object model serializer found
      * in-inconsistency in resource type and current runtime information.

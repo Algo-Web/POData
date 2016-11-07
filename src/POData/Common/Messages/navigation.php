@@ -3,7 +3,6 @@ namespace POData\Common\Messages;
 
 trait navigation
 {
-
     /**
      * The error message to show for invalid navigation resource type.
      *

@@ -3,7 +3,7 @@ namespace POData\Common\Messages;
 
 trait streamProviderWrapper
 {
-/**
+    /**
      * Message to show error when IStreamProvider.GetStreamETag returns invalid etag value.
      *
      * @return string The message

@@ -1,8 +1,9 @@
 <?php
 namespace POData\Common\Messages;
+
 trait common
 {
-/**
+    /**
      * Format a message to show error when a non-integer value passed to
      * a function, which expects integer parameter.
      *

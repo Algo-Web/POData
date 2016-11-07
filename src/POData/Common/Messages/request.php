@@ -1,10 +1,9 @@
 <?php
 namespace POData\Common\Messages;
 
-
 trait request
 {
-/**
+    /**
      * Format a message to show error when client requested version is
      * lower than the version required to intercept the response.
      *
