@@ -1,7 +1,8 @@
 <?php
 namespace POData\Common\Messages;
 
-trait resourceType{
+trait resourceType
+{
     /**
      * Format a message to show error when a tyring to set a
      * base class for primitive type.
