@@ -19,7 +19,7 @@ use POData\Providers\Metadata\Type\SByte;
 use POData\Providers\Metadata\Type\Single;
 use POData\Providers\Metadata\Type\StringType;
 use POData\Providers\Metadata\Type\TypeCode;
-use POData\Providers\Metadata\Type\Void;
+use POData\Providers\Metadata\Type\VoidType;
 
 class DateTimeTest extends \PHPUnit_Framework_TestCase
 {
@@ -81,7 +81,7 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($type->isCompatibleWith(new SByte()));
         $this->assertFalse($type->isCompatibleWith(new Single()));
         $this->assertFalse($type->isCompatibleWith(new StringType()));
-        $this->assertFalse($type->isCompatibleWith(new Void()));
+        $this->assertFalse($type->isCompatibleWith(new VoidType()));
     }
 
     public function testValidateSuccess()
