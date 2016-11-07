@@ -37,7 +37,7 @@ interface IQueryProvider
      * @param QueryType   $queryType   indicates if this is a query for a count, entities, or entities with a count
      * @param ResourceSet $resourceSet The entity set containing the entities to fetch
      * @param FilterInfo  $filterInfo  represents the $filter parameter of the OData query.  NULL if no $filter specified
-     * @param mixed       $orderBy     sorted order if we want to get the data in some specific order
+     * @param null|\POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo       $orderBy     sorted order if we want to get the data in some specific order
      * @param int         $top         number of records which  need to be skip
      * @param string      $skipToken   value indicating what records to skip
      *
@@ -145,7 +145,7 @@ interface IQueryProvider
      *
      * @return object|null The new resource value if it is assignable or throw exception for null.
      */
-    public function updateResource(ResourceSet $sourceResourceSet,$sourceEntityInstance, KeyDescriptor $keyDescriptor,$data, $shouldUpdate = false);
+    public function updateResource(ResourceSet $sourceResourceSet, $sourceEntityInstance, KeyDescriptor $keyDescriptor, $data, $shouldUpdate = false);
 
     /*
      * Delete resource from a resource set.

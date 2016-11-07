@@ -3,7 +3,7 @@ namespace POData\UriProcessor;
 
 class XML2Array
 {
- /**
+    /**
      * @var string
      */
     private static $encoding = 'UTF-8';
@@ -14,7 +14,7 @@ class XML2Array
     /**
      * Convert an XML to Array.
      *
-     * @param string|\DOMDocument $input_xml
+     * @param string $input_xml
      *
      * @return array
      *
@@ -30,7 +30,7 @@ class XML2Array
                     throw new \Exception();
                 }
             } catch (\Exception $ex) {
-                throw new \Exception('[XML2Array] Error parsing the XML string.'.PHP_EOL.$ex->getMessage());
+                throw new \Exception('[XML2Array] Error parsing the XML string.' . PHP_EOL . $ex->getMessage());
             }
         } elseif (is_object($input_xml)) {
             if (get_class($input_xml) != 'DOMDocument') {
@@ -41,7 +41,7 @@ class XML2Array
             throw new \Exception('[XML2Array] Invalid input');
         }
         $array[$xml->documentElement->tagName] = self::convert($xml->documentElement);
-        self::$xml = null;    // clear the xml node in the class for 2nd time use.
+        self::$xml = null; // clear the xml node in the class for 2nd time use.
         return $array;
     }
     /**
