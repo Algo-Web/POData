@@ -140,4 +140,3 @@ trait providersWrapper
         return 'The ' . $methodName . ' implementation returns an instance with non-matching key';
     }
 }
-?>
