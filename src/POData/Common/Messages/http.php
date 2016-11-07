@@ -34,7 +34,7 @@ trait http
         return 'The request uri ' . $requestUri . ' is not valid as it is not based on the configured relative uri ' . $relativeUri;
     }
 
-/**
+    /**
      * Message to show error when data service found a request method other than GET.
      *
      * @param HTTPRequestMethod $method Request method
