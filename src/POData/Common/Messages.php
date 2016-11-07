@@ -57,7 +57,8 @@ class Messages
         resourceProperty,
         skipTokenParser,
         expandProjectionParser,
-        IService,navigation,
+        IService,
+        navigation,
         queryProvider,
         resourceSet,
         streamProviderWrapper,
@@ -67,4 +68,4 @@ class Messages
         request,
         resourceType,
         uriProcessor;
-}//end class
+}
