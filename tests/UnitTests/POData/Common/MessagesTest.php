@@ -219,6 +219,17 @@ class MessagesTest extends PhockitoUnitTestCase
 
                     }catch(\Exception $e){
                     }
+                }else{
+                    $hasType = false;
+                    for($i = 0; $i < $fct->getNumberOfParameters();$i++){
+                        $param[] = "the dingus TestString";
+                        if($p[$i]->hasType()) $hasType = true ;
+                    }
+                    if($hasType)continue;
+                    $r = $fct->invokeArgs(null,$param);
+                    $this->assertTrue(is_string($r));
+                    $this->assertNotEmpty($r);
+
                 }
             }
         }
