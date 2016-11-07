@@ -38,5 +38,33 @@ use POData\Common\Messages\uriProcessor;
  */
 class Messages
 {
-    use common,expressionParser,metadataAssociationType,orderByInfo,resourceAssociationSet,segmentParser,configuration,http,metadataResourceType,providersWrapper,resourceAssociationType,skipTokenInfo,eTag,httpProcessUtility,metadataWriter,queryProcessor,resourceProperty,skipTokenParser,expandProjectionParser,IService,navigation,queryProvider,resourceSet,streamProviderWrapper,expressionLexer,keyDescriptor,objectModelSerializer,request,resourceType,uriProcessor;
-}
+    use common,
+        expressionParser,
+        metadataAssociationType,
+        orderByInfo,
+        resourceAssociationSet,
+        segmentParser,
+        configuration,
+        http,
+        metadataResourceType,
+        providersWrapper,
+        resourceAssociationType,
+        skipTokenInfo,
+        eTag,
+        httpProcessUtility,
+        metadataWriter,
+        queryProcessor,
+        resourceProperty,
+        skipTokenParser,
+        expandProjectionParser,
+        IService,navigation,
+        queryProvider,
+        resourceSet,
+        streamProviderWrapper,
+        expressionLexer,
+        keyDescriptor,
+        objectModelSerializer,
+        request,
+        resourceType,
+        uriProcessor;
+}//end class
