@@ -194,6 +194,39 @@ class MessagesTest extends PhockitoUnitTestCase
             'hostRequestUriIsNotBasedOnRelativeUriInConfig',
         );
 
-        $this->assertEquals($expected, $actual, 'You probably added a message without a corresponding test!');
+        $this->assertEquals(sort($expected), sort($actual), 'You probably added a message without a corresponding test!');
+        foreach ($actual as $funcName) {
+            $param = array();
+            $fct = new \ReflectionMethod('POData\Common\Messages', $funcName);
+            if ($fct->getNumberOfRequiredParameters() == 0) {
+                $r = $fct->invokeArgs(null, $param);
+                $this->assertTrue(is_string($r));
+                $this->assertNotEmpty($r);
+                continue;
+            }
+            $p = $fct->getParameters();
+            if (phpversion() <7) {
+                for ($i = 0; $i < $fct->getNumberOfRequiredParameters(); $i++) {
+                    $param[] = "the dingus TestString";
+                }
+                //Done this way due to php framework limitation
+                try {
+                    $r = $fct->invokeArgs(null, $param);
+                    $this->assertTrue(is_string($r));
+                    $this->assertNotEmpty($r);
+                } catch (\Exception $e) {
+                }
+                continue;
+            }
+            for ($i = 0; $i < $fct->getNumberOfParameters(); $i++) {
+                $param[] = "the dingus TestString";
+                if ($p[$i]->hasType()) {
+                    continue 2;
+                }
+            }
+            $r = $fct->invokeArgs(null, $param);
+            $this->assertTrue(is_string($r));
+            $this->assertNotEmpty($r);
+        }
     }
 }
