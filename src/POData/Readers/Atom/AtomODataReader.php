@@ -4,7 +4,6 @@ use DOMXPath;
 use DOMDocument;
 use ReflectionClass;
 use ReflectionProperty;
-use POData\Readers\IODataReader;
 
 class AtomODataReader
 {
@@ -14,7 +13,7 @@ class AtomODataReader
                                     'default' => 'http://www.w3.org/2005/Atom',
                                     'd' => 'http://schemas.microsoft.com/ado/2007/08/dataservices',
                                     'm' => 'http://schemas.microsoft.com/ado/2007/08/dataservices/metadata'
-                                 );
+                                    );
     protected static $QUERY_ROOT_FEED = '/default:feed';
     protected static $QUERY_ROOT_ENTRY = '/default:entry';
     protected static $QUERY_TITLE = 'default:title';
@@ -81,7 +80,7 @@ class AtomODataReader
     }
 
     /**
-     * @param DOMNode $feed
+     * @param \DOMNode $feed
      */
     protected function EnumerateFeed($feed, &$feedType, $parentObject = null)
     {
@@ -118,7 +117,7 @@ class AtomODataReader
     }
 
     /**
-     * @param DOMNode $entry
+     * @param \DOMNode $entry
      */
     protected function EnumerateEntry($entry, &$entityType, $parentObject = null)
     {
@@ -203,7 +202,7 @@ class AtomODataReader
     }
 
     /**
-     * @param DOMNodeList $links
+     * @param \DOMNodeList $links
      */
     protected function GetRelatedLinks($links)
     {
@@ -345,7 +344,7 @@ class AtomODataReader
                                  ($attributes['EdmType'] == 'Edm.Int16' ||
                                   $attributes['EdmType'] == 'Edm.Int32' ||
                                   $attributes['EdmType'] == 'Edm.Int64')))) {
-                                   $value = '0';
+                                    $value = '0';
                             }
                         } else {
                             $value = null;
