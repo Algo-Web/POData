@@ -19,6 +19,7 @@ after_script:
 
 after_success:
   - coveralls
+  
 #notifications:
 #  webhooks:
 #    urls:
