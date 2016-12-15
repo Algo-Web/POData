@@ -970,7 +970,7 @@ class RequestDescription
         $version = new Version($major, $minor);
 
         //TODO: move this somewhere...
-        $this->validateVersions();
+        //$this->validateVersions();
         $isSupportedVersion = false;
         foreach (self::getKnownDataServiceVersions() as $version1) {
             if ($version->compare($version1) == 0) {
