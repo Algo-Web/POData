@@ -1,5 +1,6 @@
 <?php
 namespace POData\Readers\Atom;
+
 use DOMXPath;
 use DOMDocument;
 use ReflectionClass;

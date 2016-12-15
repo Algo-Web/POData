@@ -174,5 +174,4 @@ trait orderByInfo
     {
         return "OrderBy parser failed to access or initialize the property $propertyName of $parentObjectName";
     }
-
 }

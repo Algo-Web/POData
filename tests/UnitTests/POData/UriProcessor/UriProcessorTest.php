@@ -1576,28 +1576,28 @@ class UriProcessorTest extends PhockitoUnitTestCase
    /**
     * $filter cannot be applied on primitve value.
     */
-   public function testUriProcessorForFilterOnValue()
-   {
-       $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
-       $resourcePath = 'Orders(11)/Customer/CustomerID/$value';
-       $hostInfo = array(
+    public function testUriProcessorForFilterOnValue()
+    {
+        $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
+        $resourcePath = 'Orders(11)/Customer/CustomerID/$value';
+        $hostInfo = array(
             'AbsoluteRequestUri' => new Url($baseUri.$resourcePath),
             'AbsoluteServiceUri' => new Url($baseUri),
             'QueryString' => '$filter=true',
             'DataServiceVersion' => new Version(1, 0),
             'MaxDataServiceVersion' => new Version(1, 0),
         );
-       $host = new ServiceHostTestFake($hostInfo);
-       $dataService = new NorthWindService2();
-       $dataService->setHost($host);
+        $host = new ServiceHostTestFake($hostInfo);
+        $dataService = new NorthWindService2();
+        $dataService->setHost($host);
 
-       try {
-           $dataService->handleRequest();
-           $this->fail('An expected ODataException for $filter query option on primitve value has not been thrown');
-       } catch (ODataException $ex) {
-           $this->assertStringStartsWith('Query option $filter cannot be applied to the requested resource', $ex->getMessage());
-       }
-   }
+        try {
+            $dataService->handleRequest();
+            $this->fail('An expected ODataException for $filter query option on primitve value has not been thrown');
+        } catch (ODataException $ex) {
+            $this->assertStringStartsWith('Query option $filter cannot be applied to the requested resource', $ex->getMessage());
+        }
+    }
 
     /**
      * When requesting for a bag DataServiceVersion should be >= 3.0.
@@ -1628,28 +1628,28 @@ class UriProcessorTest extends PhockitoUnitTestCase
    /**
     * The MaxProtocolVersion configured for the service should be >=3.0 to respond to request for Bag.
     */
-   public function testUriProcessorWithTargetAsBag2()
-   {
-       $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
-       $resourcePath = 'Employees(\'EMP1\')/Emails';
-       $hostInfo = array(
+    public function testUriProcessorWithTargetAsBag2()
+    {
+        $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
+        $resourcePath = 'Employees(\'EMP1\')/Emails';
+        $hostInfo = array(
             'AbsoluteRequestUri' => new Url($baseUri.$resourcePath),
             'AbsoluteServiceUri' => new Url($baseUri),
             'QueryString' => null,
             'DataServiceVersion' => new Version(3, 0),
             'MaxDataServiceVersion' => new Version(3, 0),
         );
-       $host = new ServiceHostTestFake($hostInfo);
-       $dataService = new NorthWindService2();
-       $dataService->setHost($host);
+        $host = new ServiceHostTestFake($hostInfo);
+        $dataService = new NorthWindService2();
+        $dataService->setHost($host);
 
-       try {
-           $dataService->handleRequest();
-           $this->fail('An expected ODataException for a bag request to a service configured with V2 has not been thrown');
-       } catch (ODataException $ex) {
-           $this->assertStringStartsWith('The response requires that version 3.0 of the protocol be used, but the MaxProtocolVersion of the data service is set to 2.0', $ex->getMessage());
-       }
-   }
+        try {
+            $dataService->handleRequest();
+            $this->fail('An expected ODataException for a bag request to a service configured with V2 has not been thrown');
+        } catch (ODataException $ex) {
+            $this->assertStringStartsWith('The response requires that version 3.0 of the protocol be used, but the MaxProtocolVersion of the data service is set to 2.0', $ex->getMessage());
+        }
+    }
 
     /**
      * $select cannot be applied if its disabled on configuration.

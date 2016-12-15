@@ -92,8 +92,13 @@ class NorthWindQueryProvider implements IQueryProvider
      *
      * @return array(Object)
      */
-    public function getResourceSet(ResourceSet $resourceSet, $filterOption = null,
-        $select = null, $orderby = null, $top = null, $skip = null
+    public function getResourceSet(
+        ResourceSet $resourceSet,
+        $filterOption = null,
+        $select = null,
+        $orderby = null,
+        $top = null,
+        $skip = null
     ) {
         $resourceSetName = $resourceSet->getName();
         if ($resourceSetName !== 'Customers'
@@ -219,7 +224,8 @@ class NorthWindQueryProvider implements IQueryProvider
      *
      * @return object|null Returns entity instance if found else null
      */
-    public function getResourceFromRelatedResourceSet(ResourceSet $sourceResourceSet,
+    public function getResourceFromRelatedResourceSet(
+        ResourceSet $sourceResourceSet,
         $sourceEntityInstance,
         ResourceSet $targetResourceSet,
         ResourceProperty $targetProperty,
@@ -284,12 +290,16 @@ class NorthWindQueryProvider implements IQueryProvider
      * @return object[] Array of related resource if exists, if no
      *                  related resources found returns empty array
      */
-    public function getRelatedResourceSet(ResourceSet $sourceResourceSet,
+    public function getRelatedResourceSet(
+        ResourceSet $sourceResourceSet,
         $sourceEntityInstance,
         ResourceSet $targetResourceSet,
         ResourceProperty $targetProperty,
         $filterOption = null,
-        $select = null, $orderby = null, $top = null, $skip = null
+        $select = null,
+        $orderby = null,
+        $top = null,
+        $skip = null
     ) {
         $result = array();
         $srcClass = get_class($sourceEntityInstance);
@@ -343,7 +353,8 @@ class NorthWindQueryProvider implements IQueryProvider
      *
      * @return object|null The related resource if exists else null
      */
-    public function getRelatedResourceReference(ResourceSet $sourceResourceSet,
+    public function getRelatedResourceReference(
+        ResourceSet $sourceResourceSet,
         $sourceEntityInstance,
         ResourceSet $targetResourceSet,
         ResourceProperty $targetProperty

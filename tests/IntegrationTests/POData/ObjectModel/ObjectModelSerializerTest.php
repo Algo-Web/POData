@@ -11,17 +11,17 @@ ob_start();
 use POData\Common\ODataConstants;
  use POData\HttpProcessUtility;
 
- class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
- {
-     protected function setUp()
-     {
-         ob_start();
-     }
+class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
+{
+    protected function setUp()
+    {
+        ob_start();
+    }
 
-     public function tearDown()
-     {
-         ob_end_clean();
-     }
+    public function tearDown()
+    {
+        ob_end_clean();
+    }
 
     /**
      * Tests ObjectModelSerializer::WriteTopLevelElements'.
@@ -45,11 +45,13 @@ use POData\Common\ODataConstants;
         ob_end_clean();
 
         $this->assertStringStartsWith(
-            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'."\n".'<feed', $my_str
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'."\n".'<feed',
+            $my_str
         );
 
         $this->assertStringEndsWith(
-            '</feed>'."\n", $my_str
+            '</feed>'."\n",
+            $my_str
         );
     }
 
@@ -75,11 +77,13 @@ use POData\Common\ODataConstants;
         ob_end_clean();
 
         $this->assertStringStartsWith(
-            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'."\n".'<feed', $my_str
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'."\n".'<feed',
+            $my_str
         );
 
         $this->assertStringEndsWith(
-            '</feed>'."\n", $my_str
+            '</feed>'."\n",
+            $my_str
         );
     }
 
@@ -103,11 +107,13 @@ use POData\Common\ODataConstants;
         ob_end_clean();
 
         $this->assertStringStartsWith(
-            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'."\n".'<feed', $my_str
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'."\n".'<feed',
+            $my_str
         );
 
         $this->assertStringEndsWith(
-            '</feed>'."\n", $my_str
+            '</feed>'."\n",
+            $my_str
         );
     }
 
@@ -132,11 +138,13 @@ use POData\Common\ODataConstants;
         $my_str = ob_get_contents();
         ob_end_clean();
         $this->assertStringStartsWith(
-            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'."\n".'<entry', $my_str
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'."\n".'<entry',
+            $my_str
         );
 
         $this->assertStringEndsWith(
-            '</entry>'."\n", $my_str
+            '</entry>'."\n",
+            $my_str
         );
     }
 
@@ -162,11 +170,13 @@ use POData\Common\ODataConstants;
         ob_end_clean();
 
         $this->assertStringStartsWith(
-            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'."\n".'<entry', $my_str
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'."\n".'<entry',
+            $my_str
         );
 
         $this->assertStringEndsWith(
-            '</entry>'."\n", $my_str
+            '</entry>'."\n",
+            $my_str
         );
     }
 
@@ -192,11 +202,13 @@ use POData\Common\ODataConstants;
         ob_end_clean();
 
         $this->assertStringStartsWith(
-            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'."\n".'<links', $my_str
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'."\n".'<links',
+            $my_str
         );
 
         $this->assertStringEndsWith(
-            '</links>'."\n", $my_str
+            '</links>'."\n",
+            $my_str
         );
     }
 
@@ -222,11 +234,13 @@ use POData\Common\ODataConstants;
         ob_end_clean();
 
         $this->assertStringStartsWith(
-            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'."\n".'<uri', $my_str
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'."\n".'<uri',
+            $my_str
         );
 
         $this->assertStringEndsWith(
-            '</uri>'."\n", $my_str
+            '</uri>'."\n",
+            $my_str
         );
     }
 
@@ -252,11 +266,13 @@ use POData\Common\ODataConstants;
         ob_end_clean();
 
         $this->assertStringStartsWith(
-            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'."\n".'<d:Address m:type="NorthWind.Address"', $my_str
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'."\n".'<d:Address m:type="NorthWind.Address"',
+            $my_str
         );
 
         $this->assertStringEndsWith(
-            '</d:Address>'."\n", $my_str
+            '</d:Address>'."\n",
+            $my_str
         );
     }
 
@@ -282,11 +298,13 @@ use POData\Common\ODataConstants;
         ob_end_clean();
 
         $this->assertStringStartsWith(
-            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'."\n".'<d:Country m:type="Edm.String"', $my_str
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'."\n".'<d:Country m:type="Edm.String"',
+            $my_str
         );
 
         $this->assertStringEndsWith(
-            '</d:Country>'."\n", $my_str
+            '</d:Country>'."\n",
+            $my_str
         );
     }
 
@@ -312,11 +330,13 @@ use POData\Common\ODataConstants;
         ob_end_clean();
 
         $this->assertStringStartsWith(
-            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'."\n".'<d:OtherAddresses m:type="Collection(NorthWind.Address)"', $my_str
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'."\n".'<d:OtherAddresses m:type="Collection(NorthWind.Address)"',
+            $my_str
         );
 
         $this->assertStringEndsWith(
-            '</d:OtherAddresses>'."\n", $my_str
+            '</d:OtherAddresses>'."\n",
+            $my_str
         );
     }
 
@@ -342,11 +362,13 @@ use POData\Common\ODataConstants;
         ob_end_clean();
 
         $this->assertStringStartsWith(
-            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'."\n".'<entry', $my_str
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'."\n".'<entry',
+            $my_str
         );
 
         $this->assertStringEndsWith(
-            '</entry>'."\n", $my_str
+            '</entry>'."\n",
+            $my_str
         );
     }
 
@@ -372,11 +394,13 @@ use POData\Common\ODataConstants;
         ob_end_clean();
 
         $this->assertStringStartsWith(
-            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'."\n".'<feed', $my_str
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'."\n".'<feed',
+            $my_str
         );
 
         $this->assertStringEndsWith(
-            '</feed>'."\n", $my_str
+            '</feed>'."\n",
+            $my_str
         );
     }
 
@@ -400,11 +424,13 @@ use POData\Common\ODataConstants;
         ob_end_clean();
 
         $this->assertStringStartsWith(
-            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'."\n".'<feed', $my_str
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'."\n".'<feed',
+            $my_str
         );
 
         $this->assertStringEndsWith(
-            '</feed>'."\n", $my_str
+            '</feed>'."\n",
+            $my_str
         );
     }
 
@@ -427,11 +453,13 @@ use POData\Common\ODataConstants;
         ob_end_clean();
 
         $this->assertStringStartsWith(
-            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'."\n".'<feed', $my_str
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'."\n".'<feed',
+            $my_str
         );
 
         $this->assertStringEndsWith(
-            '</feed>'."\n", $my_str
+            '</feed>'."\n",
+            $my_str
         );
     }
- }
+}

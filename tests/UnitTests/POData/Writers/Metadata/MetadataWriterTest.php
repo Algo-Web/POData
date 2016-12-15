@@ -21,7 +21,7 @@ class MetadataWriterTest extends PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-	    $this->mockQueryProvider = Phockito::mock('POData\Providers\Query\IQueryProvider');
+        $this->mockQueryProvider = Phockito::mock('POData\Providers\Query\IQueryProvider');
     }
 
     public function testWriteMetadata()

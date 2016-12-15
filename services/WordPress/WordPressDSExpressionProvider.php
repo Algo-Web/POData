@@ -143,7 +143,9 @@ class WordPressDSExpressionProvider implements IExpressionProvider
                 break;
             case ExpressionType::GREATERTHAN_OR_EQUAL:
                 return $this->_prepareBinaryExpression(
-                    self::GREATERTHAN_OR_EQUAL, $left, $right
+                    self::GREATERTHAN_OR_EQUAL,
+                    $left,
+                    $right
                 );
                 break;
             case ExpressionType::LESSTHAN:
@@ -151,7 +153,9 @@ class WordPressDSExpressionProvider implements IExpressionProvider
                 break;
             case ExpressionType::LESSTHAN_OR_EQUAL:
                 return $this->_prepareBinaryExpression(
-                    self::LESSTHAN_OR_EQUAL, $left, $right
+                    self::LESSTHAN_OR_EQUAL,
+                    $left,
+                    $right
                 );
                 break;
             case ExpressionType::EQUAL:
@@ -245,25 +249,25 @@ class WordPressDSExpressionProvider implements IExpressionProvider
                 return "STRCMP($params[0], $params[1])";
                 break;
             case ODataConstants::STRFUN_ENDSWITH:
-              return "(STRCMP($params[1],RIGHT($params[0],LENGTH($params[1]))) = 0)";
+                return "(STRCMP($params[1],RIGHT($params[0],LENGTH($params[1]))) = 0)";
                 break;
             case ODataConstants::STRFUN_INDEXOF:
                 return "INSTR($params[0], $params[1]) - 1";
                 break;
             case ODataConstants::STRFUN_REPLACE:
-              return "REPLACE($params[0],$params[1],$params[2])";
+                return "REPLACE($params[0],$params[1],$params[2])";
                 break;
             case ODataConstants::STRFUN_STARTSWITH:
-              return "(STRCMP($params[1],LEFT($params[0],LENGTH($params[1]))) = 0)";
+                return "(STRCMP($params[1],LEFT($params[0],LENGTH($params[1]))) = 0)";
                 break;
             case ODataConstants::STRFUN_TOLOWER:
-              return "LOWER($params[0])";
+                return "LOWER($params[0])";
                 break;
             case ODataConstants::STRFUN_TOUPPER:
-              return "UPPER($params[0])";
+                return "UPPER($params[0])";
                 break;
             case ODataConstants::STRFUN_TRIM:
-              return "TRIM($params[0])";
+                return "TRIM($params[0])";
                 break;
             case ODataConstants::STRFUN_SUBSTRING:
                 return count($params) == 3 ?

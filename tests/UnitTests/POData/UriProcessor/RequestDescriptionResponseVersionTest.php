@@ -224,7 +224,6 @@ class RequestDescriptionResponseVersionTest extends PhockitoUnitTestCase
                     $fakeConfigMaxVersion->toString()
                 ),
                 $ex->getMessage()
-
             );
             $this->assertEquals(400, $ex->getStatusCode());
         }

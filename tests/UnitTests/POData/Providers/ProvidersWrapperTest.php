@@ -611,7 +611,7 @@ class ProvidersWrapperTest extends PhockitoUnitTestCase
             $orderBy,
             $top,
             $skip,
-                        null
+            null
         ))->return($fakeQueryResult);
 
         $wrapper = $this->getMockedWrapper();
@@ -736,7 +736,7 @@ class ProvidersWrapperTest extends PhockitoUnitTestCase
             $orderBy,
             $top,
             $skip,
-                        null
+            null
         ))->return($fakeQueryResult);
 
         $wrapper = $this->getMockedWrapper();

@@ -153,5 +153,4 @@ trait resourceType
     {
         return "Named stream with the name '$namedStreamName' already exists in type '$resourceTypeName'. Please make sure that there is no named stream with the same name defined in one of the ancestor types";
     }
-
 }

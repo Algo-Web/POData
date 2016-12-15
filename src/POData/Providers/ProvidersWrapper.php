@@ -839,7 +839,7 @@ class ProvidersWrapper
                 );
             }
             foreach ($targetProperty->getResourceType()->getKeyProperties()
-            as $keyName => $resourceProperty) {
+ as $keyName => $resourceProperty) {
                 try {
                     $keyValue = $targetResourceType->getPropertyValue($entityInstance, $keyName);
                     if (is_null($keyValue)) {
@@ -896,7 +896,7 @@ class ProvidersWrapper
         }
 
         foreach ($keyDescriptor->getValidatedNamedValues()
-        as $keyName => $valueDescription) {
+ as $keyName => $valueDescription) {
             try {
                 $keyValue = $resourceType->getPropertyValue($entityInstance, $keyName);
                 if (is_null($keyValue)) {

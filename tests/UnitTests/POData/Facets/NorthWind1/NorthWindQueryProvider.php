@@ -54,7 +54,6 @@ class NorthWindQueryProvider implements IQueryProvider
         $orderBy = null,
         $top = null,
         $skipToken = null
-
     ) {
         // TODO: Implement getResourceSet() method.
     }
@@ -150,7 +149,7 @@ class NorthWindQueryProvider implements IQueryProvider
         // TODO: Implement getRelatedResourceReference() method.
     }
                 /**
-     * Updates a resource 
+     * Updates a resource
      *
      * @param ResourceSet      $sourceResourceSet    The entity set containing the source entity
      * @param object           $sourceEntityInstance The source entity instance
@@ -160,7 +159,9 @@ class NorthWindQueryProvider implements IQueryProvider
      *
      * @return object|null The new resource value if it is assignable or throw exception for null.
      */
-    public function updateResource(ResourceSet $sourceResourceSet,$sourceEntityInstance, KeyDescriptor $keyDescriptor,$data, $shouldUpdate = false){}
+    public function updateResource(ResourceSet $sourceResourceSet, $sourceEntityInstance, KeyDescriptor $keyDescriptor, $data, $shouldUpdate = false)
+    {
+    }
     /*
      * Delete resource from a resource set.
      * @param ResourceSet|null $resourceSet
@@ -171,7 +172,8 @@ class NorthWindQueryProvider implements IQueryProvider
     public function deleteResource(
         ResourceSet $sourceResourceSet,
         $sourceEntityInstance
-    ){}
+    ) {
+    }
     /*
      * @param ResourceSet      $resourceSet   The entity set containing the entity to fetch
      * @param object           $sourceEntityInstance The source entity instance
@@ -183,5 +185,6 @@ class NorthWindQueryProvider implements IQueryProvider
         ResourceSet $resourceSet,
         $sourceEntityInstance,
         $data
-    ){}
+    ) {
+    }
 }

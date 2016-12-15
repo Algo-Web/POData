@@ -28,23 +28,24 @@ class SelectTest extends \PHPUnit_Framework_TestCase
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
-                                       $northWindMetadata, //IMetadataProvider implementation
-                                       $queryProvider, //IDataServiceQueryProvider implementation (set to null)
-                                       $configuration, //Service configuration
-                                       false
-                                     );
+            $northWindMetadata, //IMetadataProvider implementation
+            $queryProvider, //IDataServiceQueryProvider implementation (set to null)
+            $configuration, //Service configuration
+            false
+        );
         $customersResourceSetWrapper = $providersWrapper->resolveResourceSet('Customers');
         $customerResourceType = $customersResourceSetWrapper->getResourceType();
 
         $projectionTreeRoot = ExpandProjectionParser::parseExpandAndSelectClause(
-                                                    $customersResourceSetWrapper,
-                                                    $customerResourceType,
-                                                    null,
-                                                    null,
-                                                    null,
-                                                    null, // $expand
-                                                    '*', // $select
-                                                    $providersWrapper);
+            $customersResourceSetWrapper,
+            $customerResourceType,
+            null,
+            null,
+            null,
+            null, // $expand
+            '*', // $select
+            $providersWrapper
+        );
         //expand option is absent
         $this->assertFalse($projectionTreeRoot->isExpansionSpecified());
         //select is applied
@@ -69,23 +70,24 @@ class SelectTest extends \PHPUnit_Framework_TestCase
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
-                                       $northWindMetadata, //IMetadataProvider implementation
-                                       $queryProvider, //IDataServiceQueryProvider implementation (set to null)
-                                       $configuration, //Service configuration
-                                       false
-                                     );
+            $northWindMetadata, //IMetadataProvider implementation
+            $queryProvider, //IDataServiceQueryProvider implementation (set to null)
+            $configuration, //Service configuration
+            false
+        );
         $customersResourceSetWrapper = $providersWrapper->resolveResourceSet('Customers');
         $customerResourceType = $customersResourceSetWrapper->getResourceType();
         //First test with explicit selection and no '*' application
         $projectionTreeRoot = ExpandProjectionParser::parseExpandAndSelectClause(
-                                                    $customersResourceSetWrapper,
-                                                    $customerResourceType,
-                                                    null,
-                                                    null,
-                                                    null,
-                                                    null, // $expand
-                                                    'CustomerID,CustomerName,Orders', //$select
-                                                    $providersWrapper);
+            $customersResourceSetWrapper,
+            $customerResourceType,
+            null,
+            null,
+            null,
+            null, // $expand
+            'CustomerID,CustomerName,Orders', //$select
+            $providersWrapper
+        );
         //expand option is absent
         $this->assertFalse($projectionTreeRoot->isExpansionSpecified());
         //select is applied
@@ -110,14 +112,15 @@ class SelectTest extends \PHPUnit_Framework_TestCase
 
         //Now test selection with both '*' and explicit property inclusion
         $projectionTreeRoot = ExpandProjectionParser::parseExpandAndSelectClause(
-                                                    $customersResourceSetWrapper,
-                                                    $customerResourceType,
-                                                    null,
-                                                    null,
-                                                    null,
-                                                    null, // $expand
-                                                    'CustomerID,CustomerName,Orders,*', //$select
-                                                    $providersWrapper);
+            $customersResourceSetWrapper,
+            $customerResourceType,
+            null,
+            null,
+            null,
+            null, // $expand
+            'CustomerID,CustomerName,Orders,*', //$select
+            $providersWrapper
+        );
 
         //expand option is absent
         $this->assertFalse($projectionTreeRoot->isExpansionSpecified());
@@ -136,11 +139,11 @@ class SelectTest extends \PHPUnit_Framework_TestCase
      * We can select navigation property which is not in expand to include links to them
      * in result, but traversal requires expansion
      * $expand=Nav1/Navi2 & $select=Navi1/Navi2/PropertyOFNavi
-     * 		This is correct, result will include Navi1 and Navi2 with only PropertyOFNavi
+     *      This is correct, result will include Navi1 and Navi2 with only PropertyOFNavi
      * $expand=Nav1 & $select=Navi1/Navi2
      *     This is correct, result will include Navi1 with link to Navi2
      * $expand=Nav1 & $select=Navi1/Navi2/PropertyOFNavi
-     * 	  This is incorrect, trying to traverse Navi2 that is not expanded.
+     *    This is incorrect, trying to traverse Navi2 that is not expanded.
      */
     public function testTraversalOfNavigationPropertyWhichIsNotExpandedOnRoot()
     {
@@ -149,25 +152,26 @@ class SelectTest extends \PHPUnit_Framework_TestCase
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
-                                       $northWindMetadata, //IMetadataProvider implementation
-                                       $queryProvider, //IDataServiceQueryProvider implementation (set to null)
-                                       $configuration, //Service configuration
-                                       false
-                                     );
+            $northWindMetadata, //IMetadataProvider implementation
+            $queryProvider, //IDataServiceQueryProvider implementation (set to null)
+            $configuration, //Service configuration
+            false
+        );
         $customersResourceSetWrapper = $providersWrapper->resolveResourceSet('Customers');
         $customerResourceType = $customersResourceSetWrapper->getResourceType();
 
         try {
             //Try to traverse 'Orders' on select without expanding
                 $projectionTreeRoot = ExpandProjectionParser::parseExpandAndSelectClause(
-                                                            $customersResourceSetWrapper,
-                                                            $customerResourceType,
-                                                            null,
-                                                            null,
-                                                            null,
-                                                            null, // $expand
-                                                            'Orders/OrderID', //$select
-                                                            $providersWrapper);
+                    $customersResourceSetWrapper,
+                    $customerResourceType,
+                    null,
+                    null,
+                    null,
+                    null, // $expand
+                    'Orders/OrderID', //$select
+                    $providersWrapper
+                );
             $this->fail('An expected ODataException for traversal on select without expansion has not been thrown');
         } catch (ODataException $odataException) {
             $this->assertStringStartsWith('Only navigation properties specified in expand option can be travered in select option,In order to treaverse', $odataException->getMessage());
@@ -187,23 +191,24 @@ class SelectTest extends \PHPUnit_Framework_TestCase
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
-                                       $northWindMetadata, //IMetadataProvider implementation
-                                       $queryProvider, //IDataServiceQueryProvider implementation (set to null)
-                                       $configuration, //Service configuration
-                                       false
-                                     );
+            $northWindMetadata, //IMetadataProvider implementation
+            $queryProvider, //IDataServiceQueryProvider implementation (set to null)
+            $configuration, //Service configuration
+            false
+        );
         $ordersResourceSetWrapper = $providersWrapper->resolveResourceSet('Orders');
         $orderResourceType = $ordersResourceSetWrapper->getResourceType();
         //First test with explicit selection and no '*' application
         $projectionTreeRoot = ExpandProjectionParser::parseExpandAndSelectClause(
-                                                    $ordersResourceSetWrapper,
-                                                    $orderResourceType,
-                                                    null,
-                                                    null,
-                                                    null,
-                                                    'Order_Details/Product,Order_Details/Order', // $expand
-                                                    'Order_Details', //$select
-                                                    $providersWrapper);
+            $ordersResourceSetWrapper,
+            $orderResourceType,
+            null,
+            null,
+            null,
+            'Order_Details/Product,Order_Details/Order', // $expand
+            'Order_Details', //$select
+            $providersWrapper
+        );
         //expand option is present
         $this->assertTrue($projectionTreeRoot->isExpansionSpecified());
         //select is applied
@@ -254,23 +259,24 @@ class SelectTest extends \PHPUnit_Framework_TestCase
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
-                                       $northWindMetadata, //IMetadataProvider implementation
-                                       $queryProvider, //IDataServiceQueryProvider implementation (set to null)
-                                       $configuration, //Service configuration
-                                       false
-                                     );
+            $northWindMetadata, //IMetadataProvider implementation
+            $queryProvider, //IDataServiceQueryProvider implementation (set to null)
+            $configuration, //Service configuration
+            false
+        );
         $ordersResourceSetWrapper = $providersWrapper->resolveResourceSet('Orders');
         $orderResourceType = $ordersResourceSetWrapper->getResourceType();
 
         $projectionTreeRoot = ExpandProjectionParser::parseExpandAndSelectClause(
-                                    $ordersResourceSetWrapper,
-                                    $orderResourceType,
-                                    null,
-                                    null,
-                                    null,
-                                    'Order_Details/Product/Order_Details/Product, Order_Details/Product/Order_Details/Order', //$expand
-                                    'Order_Details/Product', //$select
-                                    $providersWrapper);
+            $ordersResourceSetWrapper,
+            $orderResourceType,
+            null,
+            null,
+            null,
+            'Order_Details/Product/Order_Details/Product, Order_Details/Product/Order_Details/Order', //$expand
+            'Order_Details/Product', //$select
+            $providersWrapper
+        );
 
         //expand option is present
         $this->assertTrue($projectionTreeRoot->isExpansionSpecified());
@@ -329,23 +335,24 @@ class SelectTest extends \PHPUnit_Framework_TestCase
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
-                                       $northWindMetadata, //IMetadataProvider implementation
-                                       $queryProvider, //IDataServiceQueryProvider implementation (set to null)
-                                       $configuration, //Service configuration
-                                       false
-                                     );
+            $northWindMetadata, //IMetadataProvider implementation
+            $queryProvider, //IDataServiceQueryProvider implementation (set to null)
+            $configuration, //Service configuration
+            false
+        );
         $orderDetailsResourceSetWrapper = $providersWrapper->resolveResourceSet('Order_Details');
         $orderDetailsResourceType = $orderDetailsResourceSetWrapper->getResourceType();
 
         $projectionTreeRoot = ExpandProjectionParser::parseExpandAndSelectClause(
-                                    $orderDetailsResourceSetWrapper,
-                                    $orderDetailsResourceType,
-                                    null,
-                                    null,
-                                    null,
-                                    'Product, Order', //$expand
-                                    'Product', //$select
-                                    $providersWrapper);
+            $orderDetailsResourceSetWrapper,
+            $orderDetailsResourceType,
+            null,
+            null,
+            null,
+            'Product, Order', //$expand
+            'Product', //$select
+            $providersWrapper
+        );
 
         //expand option is present
         $this->assertTrue($projectionTreeRoot->isExpansionSpecified());
@@ -375,14 +382,15 @@ class SelectTest extends \PHPUnit_Framework_TestCase
         $orderResourceType = $ordersResourceSetWrapper->getResourceType();
         //Here parser should discard the last expanded node 'Orders' in 'Order_Details/Product/Order_Details/Order'
         $projectionTreeRoot = ExpandProjectionParser::parseExpandAndSelectClause(
-                                    $ordersResourceSetWrapper,
-                                    $orderResourceType,
-                                    null,
-                                    null,
-                                    null,
-                                    'Order_Details/Product/Order_Details/Product, Order_Details/Product/Order_Details/Order', //$expand
-                                    'Order_Details/Product/Order_Details/Product', //$select
-                                    $providersWrapper);
+            $ordersResourceSetWrapper,
+            $orderResourceType,
+            null,
+            null,
+            null,
+            'Order_Details/Product/Order_Details/Product, Order_Details/Product/Order_Details/Order', //$expand
+            'Order_Details/Product/Order_Details/Product', //$select
+            $providersWrapper
+        );
 
         //expand option is present
         $this->assertTrue($projectionTreeRoot->isExpansionSpecified());
@@ -426,9 +434,9 @@ class SelectTest extends \PHPUnit_Framework_TestCase
      * But selection of immediate properties of A with '*' cause to ignore the
      * child nodes if they are not selected explicitly.
      *  $expand=A/B/C, A/D/F & $select = A/*
-     *  	cause to ingore B/C and D/F
+     *      cause to ingore B/C and D/F
      *  $expand=A/B/C, A/D/F & $select = A/*, A/B
-     *  	cuase of include immediate propertises of A, select B and ignore D.
+     *      cuase of include immediate propertises of A, select B and ignore D.
      */
     public function testRemovalOfSubTreeWhichIsExpandedButNotSelected2()
     {
@@ -437,24 +445,25 @@ class SelectTest extends \PHPUnit_Framework_TestCase
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
-                                       $northWindMetadata, //IMetadataProvider implementation
-                                       $queryProvider, //IDataServiceQueryProvider implementation (set to null)
-                                       $configuration, //Service configuration
-                                       false
-                                     );
+            $northWindMetadata, //IMetadataProvider implementation
+            $queryProvider, //IDataServiceQueryProvider implementation (set to null)
+            $configuration, //Service configuration
+            false
+        );
         //Selecting immediate properties of 'Order_Details' will de-select subtree of
         //'Order_Details' if they are not selected explicitly
         $ordersResourceSetWrapper = $providersWrapper->resolveResourceSet('Orders');
         $orderResourceType = $ordersResourceSetWrapper->getResourceType();
         $projectionTreeRoot = ExpandProjectionParser::parseExpandAndSelectClause(
-                                    $ordersResourceSetWrapper,
-                                    $orderResourceType,
-                                    null,
-                                    null,
-                                    null,
-                                    'Order_Details/Product, Order_Details/Order', //$expand
-                                    'Order_Details/*', //$select
-                                    $providersWrapper);
+            $ordersResourceSetWrapper,
+            $orderResourceType,
+            null,
+            null,
+            null,
+            'Order_Details/Product, Order_Details/Order', //$expand
+            'Order_Details/*', //$select
+            $providersWrapper
+        );
 
         //expand option is present
         $this->assertTrue($projectionTreeRoot->isExpansionSpecified());
@@ -489,24 +498,25 @@ class SelectTest extends \PHPUnit_Framework_TestCase
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
-                                       $northWindMetadata, //IMetadataProvider implementation
-                                       $queryProvider, //IDataServiceQueryProvider implementation (set to null)
-                                       $configuration, //Service configuration
-                                       false
-                                     );
+            $northWindMetadata, //IMetadataProvider implementation
+            $queryProvider, //IDataServiceQueryProvider implementation (set to null)
+            $configuration, //Service configuration
+            false
+        );
         $customersResourceSetWrapper = $providersWrapper->resolveResourceSet('Customers');
         $customerResourceType = $customersResourceSetWrapper->getResourceType();
         //Test using primitive type as navigation
         try {
             $projectionTreeRoot = ExpandProjectionParser::parseExpandAndSelectClause(
-                                        $customersResourceSetWrapper,
-                                        $customerResourceType,
-                                        null,
-                                        null,
-                                        null,
-                                        'Orders', //$expand
-                                        'Orders/OrderID/*', //$select
-                                        $providersWrapper);
+                $customersResourceSetWrapper,
+                $customerResourceType,
+                null,
+                null,
+                null,
+                'Orders', //$expand
+                'Orders/OrderID/*', //$select
+                $providersWrapper
+            );
             $this->fail('An expected ODataException usage of primitive type as navigation property has not been thrown');
         } catch (ODataException $odataException) {
             $this->assertStringStartsWith('Property \'OrderID\' on type \'Order\' is of primitive type and cannot be used as a navigation property.', $odataException->getMessage());
@@ -515,14 +525,15 @@ class SelectTest extends \PHPUnit_Framework_TestCase
         //Test using complex type as navigation
         try {
             $projectionTreeRoot = ExpandProjectionParser::parseExpandAndSelectClause(
-                                        $customersResourceSetWrapper,
-                                        $customerResourceType,
-                                        null,
-                                        null,
-                                        null,
-                                        'Orders', //$expand
-                                        'Address/HouseNumber', //$select
-                                        $providersWrapper);
+                $customersResourceSetWrapper,
+                $customerResourceType,
+                null,
+                null,
+                null,
+                'Orders', //$expand
+                'Address/HouseNumber', //$select
+                $providersWrapper
+            );
             $this->fail('An expected ODataException usage of complex type as navigation property has not been thrown');
         } catch (ODataException $odataException) {
             $this->assertStringStartsWith('select doesn\'t support selection of properties of complex type. The property \'Address\' on type \'Customer\' is a complex type', $odataException->getMessage());
@@ -533,14 +544,15 @@ class SelectTest extends \PHPUnit_Framework_TestCase
         //Test using bag type as navigation
         try {
             $projectionTreeRoot = ExpandProjectionParser::parseExpandAndSelectClause(
-                                        $employeesResourceSetWrapper,
-                                        $employeeResourceType,
-                                        null,
-                                        null,
-                                        null,
-                                        null, //$expand
-                                        'Emails/ABC', //$select
-                                        $providersWrapper);
+                $employeesResourceSetWrapper,
+                $employeeResourceType,
+                null,
+                null,
+                null,
+                null, //$expand
+                'Emails/ABC', //$select
+                $providersWrapper
+            );
             $this->fail('An expected ODataException usage of bag type as navigation property has not been thrown');
         } catch (ODataException $odataException) {
             $this->assertStringStartsWith('The selection from property \'Emails\' on type \'Employee\' is not valid. The select query option does not support selection items from a bag property', $odataException->getMessage());
@@ -558,24 +570,25 @@ class SelectTest extends \PHPUnit_Framework_TestCase
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
-                                       $northWindMetadata, //IMetadataProvider implementation
-                                       $queryProvider, //IDataServiceQueryProvider implementation (set to null)
-                                       $configuration, //Service configuration
-                                       false
-                                     );
+            $northWindMetadata, //IMetadataProvider implementation
+            $queryProvider, //IDataServiceQueryProvider implementation (set to null)
+            $configuration, //Service configuration
+            false
+        );
         $ordersResourceSetWrapper = $providersWrapper->resolveResourceSet('Orders');
         $orderResourceType = $ordersResourceSetWrapper->getResourceType();
         //test selection of properties which is not included in expand clause
         //1 primitve ('Order_Details/UnitPrice') and 1 link to navigation 'Customer'
         $projectionTreeRoot = ExpandProjectionParser::parseExpandAndSelectClause(
-                                                    $ordersResourceSetWrapper,
-                                                    $orderResourceType,
-                                                    null,
-                                                    null,
-                                                    null,
-                                                    'Order_Details', // $expand
-                                                    'Order_Details/UnitPrice, Customer', //$select
-                                                    $providersWrapper);
+            $ordersResourceSetWrapper,
+            $orderResourceType,
+            null,
+            null,
+            null,
+            'Order_Details', // $expand
+            'Order_Details/UnitPrice, Customer', //$select
+            $providersWrapper
+        );
         //expand option is absent
         $this->assertTrue($projectionTreeRoot->isExpansionSpecified());
         //select is applied

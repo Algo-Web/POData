@@ -87,12 +87,12 @@ class Employee2
     public $FirstName;
     public $LastName;
      //Bag of strings
-     public $Emails;
+    public $Emails;
     public $ReportsTo;
      //Navigation Property to associated instance of Employee instance represeting manager (ResourceReference)
-     public $Manager;
+    public $Manager;
      //Navigation Property to associated instance of Employee instances represeting subordinates (ResourceSetReference)
-     public $Subordinates;
+    public $Subordinates;
 }
 //End Resource Classes
 

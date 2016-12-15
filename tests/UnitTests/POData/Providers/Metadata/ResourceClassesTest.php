@@ -256,26 +256,26 @@ class ResourceClassesTest extends \PHPUnit_Framework_TestCase
    * Test ResourceAssociationTypeEnd class
    * Note: ResourceAssociationTypeEnd is an internal class used for metadata generation, not suppose to used by the developers.
    */
-  public function testResourceAssociationTypeEnd()
-  {
-      $customerResType = $this->_getCustomerResourceType();
-      $orderResType = $this->_getOrderResourceType();
+    public function testResourceAssociationTypeEnd()
+    {
+        $customerResType = $this->_getCustomerResourceType();
+        $orderResType = $this->_getOrderResourceType();
         //Creates a one-to-many relationship from Customer to  Order entity
         $customerReferenceProperty = new ResourceProperty('Customer', null, ResourcePropertyKind::RESOURCE_REFERENCE, $customerResType);
-      $ordersReferenceSetProperty = new ResourceProperty('Orders', null, ResourcePropertyKind::RESOURCESET_REFERENCE, $orderResType);
-      $customerResType->addProperty($ordersReferenceSetProperty);
-      $orderResType->addProperty($customerReferenceProperty);
+        $ordersReferenceSetProperty = new ResourceProperty('Orders', null, ResourcePropertyKind::RESOURCESET_REFERENCE, $orderResType);
+        $customerResType->addProperty($ordersReferenceSetProperty);
+        $orderResType->addProperty($customerReferenceProperty);
 
-      $customerToOrderAssoEnd1 = new ResourceAssociationTypeEnd('Orders', $customerResType, $ordersReferenceSetProperty, $customerReferenceProperty);
-      $customerToOrderAssoEnd2 = new ResourceAssociationTypeEnd('Customers', $orderResType, $customerReferenceProperty, $ordersReferenceSetProperty);
+        $customerToOrderAssoEnd1 = new ResourceAssociationTypeEnd('Orders', $customerResType, $ordersReferenceSetProperty, $customerReferenceProperty);
+        $customerToOrderAssoEnd2 = new ResourceAssociationTypeEnd('Customers', $orderResType, $customerReferenceProperty, $ordersReferenceSetProperty);
 
-      $this->assertEquals($customerToOrderAssoEnd1->getName(), 'Orders');
-      $this->assertEquals($customerToOrderAssoEnd1->getResourceType()->getFullName(), 'Northwind.Customer');
-      $this->assertEquals($customerToOrderAssoEnd1->getResourceProperty()->getName(), 'Orders');
-      $this->assertEquals($customerToOrderAssoEnd1->getMultiplicity(), ODataConstants::ZERO_OR_ONE);
-      $this->assertEquals($customerToOrderAssoEnd2->getMultiplicity(), ODataConstants::MANY);
-      $this->assertTrue($customerToOrderAssoEnd1->isBelongsTo($customerResType, $ordersReferenceSetProperty));
-  }
+        $this->assertEquals($customerToOrderAssoEnd1->getName(), 'Orders');
+        $this->assertEquals($customerToOrderAssoEnd1->getResourceType()->getFullName(), 'Northwind.Customer');
+        $this->assertEquals($customerToOrderAssoEnd1->getResourceProperty()->getName(), 'Orders');
+        $this->assertEquals($customerToOrderAssoEnd1->getMultiplicity(), ODataConstants::ZERO_OR_ONE);
+        $this->assertEquals($customerToOrderAssoEnd2->getMultiplicity(), ODataConstants::MANY);
+        $this->assertTrue($customerToOrderAssoEnd1->isBelongsTo($customerResType, $ordersReferenceSetProperty));
+    }
 
     /**
      * Test ResourceAssociationType class

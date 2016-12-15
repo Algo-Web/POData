@@ -14,7 +14,7 @@ use POData\Providers\Metadata\IMetadataProvider;
 class Address3
 {
     //Edm.Int32
-   public $LineNumber2;
+    public $LineNumber2;
 }
 
 //Complex class for Address
@@ -112,21 +112,21 @@ class Order_Details1
 class Employee1
 {
     //Key Edm.Int32
-     public $EmployeeID;
+    public $EmployeeID;
      //Edm.String
-     public $FirstName;
+    public $FirstName;
      //Edm.String
-     public $LastName;
+    public $LastName;
      //Bag of strings
-     public $Emails;
+    public $Emails;
      //Edm.Binary
-     public $Photo;
+    public $Photo;
      //Edm.Int32
-     public $ReportsTo;
+    public $ReportsTo;
      //Navigation Property to associated instance of Employee instance representing manager (ResourceReference)
-     public $Manager;
+    public $Manager;
      //Navigation Property to associated instance of Employee instances representing subordinates (ResourceSetReference)
-     public $Subordinates;
+    public $Subordinates;
 }
 //End Resource Classes
 

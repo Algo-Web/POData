@@ -16,7 +16,6 @@ class HttpProcessUtilityTest extends PhockitoUnitTestCase
             array(
 
             )
-
         );
 
         $this->assertNull($actual);
@@ -29,7 +28,6 @@ class HttpProcessUtilityTest extends PhockitoUnitTestCase
             array(
                 MimeTypes::MIME_APPLICATION_ATOM,
             )
-
         );
 
         $this->assertEquals(MimeTypes::MIME_APPLICATION_ATOM, $actual);
@@ -43,7 +41,6 @@ class HttpProcessUtilityTest extends PhockitoUnitTestCase
                 MimeTypes::MIME_APPLICATION_ATOM,
                 MimeTypes::MIME_APPLICATION_ATOMSERVICE,
             )
-
         );
 
         $this->assertEquals(MimeTypes::MIME_APPLICATION_ATOM, $actual);
@@ -57,7 +54,6 @@ class HttpProcessUtilityTest extends PhockitoUnitTestCase
                 MimeTypes::MIME_APPLICATION_ATOM,
                 MimeTypes::MIME_APPLICATION_ATOMSERVICE,
             )
-
         );
 
         $this->assertEquals(MimeTypes::MIME_APPLICATION_ATOM, $actual);
@@ -71,7 +67,6 @@ class HttpProcessUtilityTest extends PhockitoUnitTestCase
                 MimeTypes::MIME_APPLICATION_ATOM,
                 MimeTypes::MIME_APPLICATION_ATOMSERVICE,
             )
-
         );
 
         $this->assertNull($actual);
@@ -85,7 +80,6 @@ class HttpProcessUtilityTest extends PhockitoUnitTestCase
                 MimeTypes::MIME_APPLICATION_ATOM,
                 MimeTypes::MIME_APPLICATION_ATOMSERVICE,
             )
-
         );
 
         $this->assertEquals(MimeTypes::MIME_APPLICATION_ATOM, $actual);
@@ -99,7 +93,6 @@ class HttpProcessUtilityTest extends PhockitoUnitTestCase
                 MimeTypes::MIME_APPLICATION_ATOM,
                 MimeTypes::MIME_APPLICATION_ATOMSERVICE,
             )
-
         );
 
         $this->assertEquals(MimeTypes::MIME_APPLICATION_ATOM, $actual);
@@ -113,7 +106,6 @@ class HttpProcessUtilityTest extends PhockitoUnitTestCase
                 MimeTypes::MIME_APPLICATION_ATOM,
                 MimeTypes::MIME_APPLICATION_ATOMSERVICE,
             )
-
         );
 
         $this->assertEquals(MimeTypes::MIME_APPLICATION_ATOM, $actual);
@@ -127,7 +119,6 @@ class HttpProcessUtilityTest extends PhockitoUnitTestCase
                 MimeTypes::MIME_APPLICATION_ATOM,
                 MimeTypes::MIME_APPLICATION_ATOMSERVICE,
             )
-
         );
 
         $this->assertEquals(MimeTypes::MIME_APPLICATION_ATOM, $actual);
@@ -141,7 +132,6 @@ class HttpProcessUtilityTest extends PhockitoUnitTestCase
                 MimeTypes::MIME_APPLICATION_ATOM,
                 MimeTypes::MIME_APPLICATION_ATOMSERVICE,
             )
-
         );
 
         $this->assertEquals(MimeTypes::MIME_APPLICATION_ATOMSERVICE, $actual);
@@ -155,7 +145,6 @@ class HttpProcessUtilityTest extends PhockitoUnitTestCase
                 MimeTypes::MIME_APPLICATION_ATOM,
                 MimeTypes::MIME_APPLICATION_ATOMSERVICE,
             )
-
         );
 
         $this->assertNull($actual);
@@ -169,7 +158,6 @@ class HttpProcessUtilityTest extends PhockitoUnitTestCase
                 MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META,
                 MimeTypes::MIME_APPLICATION_JSON_FULL_META,
             )
-
         );
 
         $this->assertEquals(MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META, $actual);
@@ -182,7 +170,6 @@ class HttpProcessUtilityTest extends PhockitoUnitTestCase
             array(
                 MimeTypes::MIME_APPLICATION_JSON,
             )
-
         );
 
         $this->assertNull($actual);
@@ -196,7 +183,6 @@ class HttpProcessUtilityTest extends PhockitoUnitTestCase
                 MimeTypes::MIME_APPLICATION_JSON,
                 MimeTypes::MIME_APPLICATION_JSON_FULL_META,
             )
-
         );
 
         $this->assertEquals(MimeTypes::MIME_APPLICATION_JSON_FULL_META, $actual);

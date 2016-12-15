@@ -42,11 +42,11 @@ class SkipTokenParserTest extends \PHPUnit_Framework_TestCase
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
-                                    $northWindMetadata, //IMetadataProvider implementation
-                                    $this->mockQueryProvider,
-                                    $configuration, //Service configuuration
-                                    false
-                                    );
+            $northWindMetadata, //IMetadataProvider implementation
+            $this->mockQueryProvider,
+            $configuration, //Service configuuration
+            false
+        );
 
         $resourceSetWrapper = $providersWrapper->resolveResourceSet('Orders');
         $resourceType = $resourceSetWrapper->getResourceType();
@@ -75,11 +75,11 @@ class SkipTokenParserTest extends \PHPUnit_Framework_TestCase
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
-                                    $northWindMetadata, //IMetadataProvider implementation
-                                    $this->mockQueryProvider,
-                                    $configuration, //Service configuration
-                                    false
-                                    );
+            $northWindMetadata, //IMetadataProvider implementation
+            $this->mockQueryProvider,
+            $configuration, //Service configuration
+            false
+        );
 
         $resourceSetWrapper = $providersWrapper->resolveResourceSet('Orders');
         $resourceType = $resourceSetWrapper->getResourceType();
@@ -131,11 +131,11 @@ class SkipTokenParserTest extends \PHPUnit_Framework_TestCase
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
-                                    $northWindMetadata, //IMetadataProvider implementation
-                                    $this->mockQueryProvider,
-                                    $configuration, //Service configuuration
-                                    false
-                                    );
+            $northWindMetadata, //IMetadataProvider implementation
+            $this->mockQueryProvider,
+            $configuration, //Service configuuration
+            false
+        );
 
         $resourceSetWrapper = $providersWrapper->resolveResourceSet('Orders');
         $resourceType = $resourceSetWrapper->getResourceType();
@@ -175,11 +175,11 @@ class SkipTokenParserTest extends \PHPUnit_Framework_TestCase
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
-                                    $northWindMetadata, //IMetadataProvider implementation
-                                    $this->mockQueryProvider,
-                                    $configuration, //Service configuration
-                                    false
-                                    );
+            $northWindMetadata, //IMetadataProvider implementation
+            $this->mockQueryProvider,
+            $configuration, //Service configuration
+            false
+        );
 
         $resourceSetWrapper = $providersWrapper->resolveResourceSet('Orders');
         $resourceType = $resourceSetWrapper->getResourceType();
@@ -227,11 +227,11 @@ class SkipTokenParserTest extends \PHPUnit_Framework_TestCase
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
-                                    $northWindMetadata, //IMetadataProvider implementation
-                                    $this->mockQueryProvider,
-                                    $configuration, //Service configuuration
-                                    false
-                                    );
+            $northWindMetadata, //IMetadataProvider implementation
+            $this->mockQueryProvider,
+            $configuration, //Service configuuration
+            false
+        );
 
         $resourceSetWrapper = $providersWrapper->resolveResourceSet('Order_Details');
         $resourceType = $resourceSetWrapper->getResourceType();
@@ -270,11 +270,11 @@ class SkipTokenParserTest extends \PHPUnit_Framework_TestCase
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
-                                    $northWindMetadata, //IMetadataProvider implementation
-                                    $this->mockQueryProvider,
-                                    $configuration, //Service configuration
-                                    false
-                                    );
+            $northWindMetadata, //IMetadataProvider implementation
+            $this->mockQueryProvider,
+            $configuration, //Service configuration
+            false
+        );
 
         $resourceSetWrapper = $providersWrapper->resolveResourceSet('Orders');
         $resourceType = $resourceSetWrapper->getResourceType();
@@ -311,11 +311,11 @@ class SkipTokenParserTest extends \PHPUnit_Framework_TestCase
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
-                                $northWindMetadata, //IMetadataProvider implementation
-                                $this->mockQueryProvider,
-                                $configuration, //Service configuuration
-                                false
-                                );
+            $northWindMetadata, //IMetadataProvider implementation
+            $this->mockQueryProvider,
+            $configuration, //Service configuuration
+            false
+        );
 
         $resourceSetWrapper = $providersWrapper->resolveResourceSet('Customers');
         $resourceType = $resourceSetWrapper->getResourceType();
@@ -346,11 +346,11 @@ class SkipTokenParserTest extends \PHPUnit_Framework_TestCase
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
-                                    $northWindMetadata, //IMetadataProvider implementation
-                                    $this->mockQueryProvider,
-                                    $configuration, //Service configuuration
-                                    false
-                                    );
+            $northWindMetadata, //IMetadataProvider implementation
+            $this->mockQueryProvider,
+            $configuration, //Service configuuration
+            false
+        );
 
         $resourceSetWrapper = $providersWrapper->resolveResourceSet('Customers');
         $resourceType = $resourceSetWrapper->getResourceType();
@@ -389,11 +389,11 @@ class SkipTokenParserTest extends \PHPUnit_Framework_TestCase
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
-                                    $northWindMetadata, //IMetadataProvider implementation
-                                    $this->mockQueryProvider,
-                                    $configuration, //Service configuration
-                                    false
-                                    );
+            $northWindMetadata, //IMetadataProvider implementation
+            $this->mockQueryProvider,
+            $configuration, //Service configuration
+            false
+        );
 
         $resourceSetWrapper = $providersWrapper->resolveResourceSet('Orders');
         $resourceType = $resourceSetWrapper->getResourceType();
@@ -426,11 +426,11 @@ class SkipTokenParserTest extends \PHPUnit_Framework_TestCase
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
-                                    $northWindMetadata, //IMetadataProvider implementation
-                                    $this->mockQueryProvider,
-                                    $configuration, //Service configuuration
-                                    false
-                                    );
+            $northWindMetadata, //IMetadataProvider implementation
+            $this->mockQueryProvider,
+            $configuration, //Service configuuration
+            false
+        );
 
         $resourceSetWrapper = $providersWrapper->resolveResourceSet('Orders');
         $resourceType = $resourceSetWrapper->getResourceType();
@@ -459,11 +459,11 @@ class SkipTokenParserTest extends \PHPUnit_Framework_TestCase
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
-                                    $northWindMetadata, //IMetadataProvider implementation
-                                    $this->mockQueryProvider,
-                                    $configuration, //Service configuuration
-                                    false
-                                    );
+            $northWindMetadata, //IMetadataProvider implementation
+            $this->mockQueryProvider,
+            $configuration, //Service configuuration
+            false
+        );
 
         $resourceSetWrapper = $providersWrapper->resolveResourceSet('Customers');
         $resourceType = $resourceSetWrapper->getResourceType();
