@@ -93,7 +93,7 @@ class BaseServiceGetResponseContentTest extends PhockitoUnitTestCase
             array(126, TargetKind::METADATA(), $v3,  MimeTypes::MIME_APPLICATION_JSON_VERBOSE,      null,                           null),
 
             //         Target                           Ver   header                                         $format                           expected
-            array(201, TargetKind::SERVICE_DIRECTORY(), $v1,  null,                                          null,                             MimeTypes::MIME_APPLICATION_XML),
+            array(201, TargetKind::SERVICE_DIRECTORY(), $v1,  null,                                          null,                             MimeTypes::MIME_APPLICATION_ATOMSERVICE),
             array(202, TargetKind::SERVICE_DIRECTORY(), $v1,  MimeTypes::MIME_APPLICATION_ATOMSERVICE,       null,                             MimeTypes::MIME_APPLICATION_ATOMSERVICE),
             array(203, TargetKind::SERVICE_DIRECTORY(), $v1,  MimeTypes::MIME_APPLICATION_JSON,              null,                             MimeTypes::MIME_APPLICATION_JSON),
             array(204, TargetKind::SERVICE_DIRECTORY(), $v1,  MimeTypes::MIME_APPLICATION_ATOM,              null,                             null),
