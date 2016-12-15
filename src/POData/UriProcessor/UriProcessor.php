@@ -152,12 +152,23 @@ class UriProcessor
         $requestMethod = $operationContext->incomingRequest()->getMethod();
         if ($requestMethod == HTTPRequestMethod::GET()) {
             $this->executeGet();
+        } elseif ($requestMethod == HTTPRequestMethod::POST()) {
+            $this->executePost();
         } elseif ($requestMethod == HTTPRequestMethod::PUT()) {
             $this->executePut();
+        } elseif ($requestMethod == HTTPRequestMethod::DELETE()) {
+            $this->executeDelete();
+            //TODO: we probably need these verbes eventually.
+        /*} elseif ($requestMethod == HTTPRequestMethod::PATCH()) {
+            $this->executePatch();
+        } elseif ($requestMethod == HTTPRequestMethod::MERGE()) {
+            $this->executeMerge();*/
         } else {
             throw ODataException::createNotImplementedError(Messages::onlyReadSupport($requestMethod));
         }
     }
+
+ 
 
     /**
      * Execute the client submitted request against the data source (GET).
@@ -166,7 +177,32 @@ class UriProcessor
     {
         return $this->executeBase();
     }
+           /**
+     * Execute the client submitted request against the data source (POST).
+     */
+    protected function executePost()
+    {
+        $segments = $this->request->getSegments();
 
+        foreach ($segments as $segment) {
+            if ($requestTargetKind == TargetKind::RESOURCE()) {
+                $requestMethod = $this->getService()->getOperationContext()->incomingRequest()->getMethod();
+                $resourceSet = $segment->getTargetResourceSetWrapper();
+                $keyDescriptor = $segment->getKeyDescriptor();
+                $data = $this->request->getData();
+                if (!$resourceSet || !$keyDescriptor) {
+                    $url = $this->getService()->getHost()->getAbsoluteRequestUri()->getUrlAsString();
+                    throw ODataException::createBadRequestError(Messages::badRequestInvalidUriForThisVerb($url, $requestMethod));
+                }
+                if (!$data) {
+                    throw ODataException::createBadRequestError(Messages::noDataForThisVerb($requestMethod));
+                }
+
+            return $uriProcessor->providers->createResourceforResourceSet($resourceSet, $keyDescriptor, $data);
+            }
+        }
+        return $this->executeBase();
+    }
     /**
      * Execute the client submitted request against the data source (PUT).
      */
@@ -186,7 +222,30 @@ class UriProcessor
                 throw ODataException::createBadRequestError(Messages::noDataForThisVerb($requestMethod));
             }
 
-            return $uriProcessor->providers->putResource($resourceSet, $segment->getResult(), $keyDescriptor, $data, false);
+            return $uriProcessor->providers->updateResource($resourceSet, $segment->getResult(), $keyDescriptor, $data, false);
+        });
+    }
+
+    /**
+     * Execute the client submitted request against the data source (DELETE).
+     */
+    protected function executeDelete()
+    {
+        return $this->executeBase(function($uriProcessor, $segment) {
+            $requestMethod = $uriProcessor->getService()->getOperationContext()->incomingRequest()->getMethod();
+            $resourceSet = $segment->getTargetResourceSetWrapper();
+            $keyDescriptor = $segment->getKeyDescriptor();
+            $data = $uriProcessor->request->getData();
+            if (!$resourceSet || !$keyDescriptor) {
+                $url = $uriProcessor->getService()->getHost()->getAbsoluteRequestUri()->getUrlAsString();
+                throw ODataException::createBadRequestError(Messages::badRequestInvalidUriForThisVerb($url, $requestMethod));
+            }
+
+            if (!$data) {
+                throw ODataException::createBadRequestError(Messages::noDataForThisVerb($requestMethod));
+            }
+
+            return $uriProcessor->providers->deleteResource($resourceSet, $segment->getResult());
         });
     }
 

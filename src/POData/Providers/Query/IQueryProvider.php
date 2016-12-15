@@ -171,5 +171,27 @@ interface IQueryProvider
         $data
     );
 
-
+        /**
+     * Delete resource from a resource set.
+     * @param ResourceSet|null $resourceSet
+     * @param object           $sourceEntityInstance
+     *
+     * return bool true if resources sucessfully deteled, otherwise false.
+     */
+    public function deleteResource(
+        ResourceSet $sourceResourceSet,
+        $sourceEntityInstance
+    );
+    /**
+     * @param ResourceSet      $resourceSet   The entity set containing the entity to fetch
+     * @param object           $sourceEntityInstance The source entity instance
+     * @param object           $data                 The New data for the entity instance.
+     *
+     * returns object|null returns the newly created model if sucessful or null if model creation failed.
+     */
+    public function createResourceforResourceSet(
+        ResourceSet $resourceSet,
+        $sourceEntityInstance,
+        $data
+    );
 }
