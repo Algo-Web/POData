@@ -72,5 +72,4 @@ trait skipTokenParser
     {
         return "The skiptoken value '$skipToken' contain a value of type '$typeProvidedInSkipTokenName' at position $position which is not compatible with the type '$expectedTypeName' of corresponding orderby constraint.";
     }
-
 }

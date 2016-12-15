@@ -25,6 +25,4 @@ trait resourceAssociationType
     {
         return 'Both to and from property argument to ResourceAssociationTypeEnd constructor cannot be null';
     }
-
-
 }

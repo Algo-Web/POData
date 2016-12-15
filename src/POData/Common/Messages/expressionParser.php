@@ -129,5 +129,4 @@ trait expressionParser
     {
         return "The '$property' is an entity collection property of '$parentProperty' (position: $pos), which cannot be used in \$filter query option";
     }
-
 }

@@ -348,7 +348,7 @@ class WordPressMetadata
                 'Status' => 'user_status',
                 'DisplayName' => 'display_name',
             ),
-          );
+            );
         }
 
         return self::$_entityMapping;

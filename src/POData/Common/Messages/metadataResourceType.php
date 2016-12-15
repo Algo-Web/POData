@@ -30,5 +30,4 @@ trait metadataResourceType
     {
         return "Complex type '$complexTypeName' has derived types and is used as the item type in a bag. Only bags containing complex types without derived types are supported.";
     }
-
 }

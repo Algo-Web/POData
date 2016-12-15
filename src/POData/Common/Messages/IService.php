@@ -23,5 +23,4 @@ trait IService
     {
         return 'IService.getQueryProvider returns invalid object.';
     }
-
 }

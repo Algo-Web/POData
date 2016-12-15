@@ -117,5 +117,4 @@ trait expandProjectionParser
     {
         return 'Only navigation properties specified in expand option can be travered in select option,In order to treaverse the navigation property \'' . $propertyName . '\', it should be first expanded';
     }
-
 }

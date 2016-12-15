@@ -104,43 +104,43 @@ class Order_Details
 class Employee
 {
     //Key Edm.Int32
-        public $EmployeeID;
+    public $EmployeeID;
         //Edm.String
-        public $FirstName;
+    public $FirstName;
         //Edm.String
-        public $LastName;
+    public $LastName;
         //Edm.String
-        public $Title;
+    public $Title;
         //Edm.String
-        public $TitleOfCourtesy;
+    public $TitleOfCourtesy;
         //Edm.DateTime
-        public $BirthDate;
+    public $BirthDate;
         //Edm.DateTime
-        public $HireDate;
+    public $HireDate;
         //Edm.String
-        public $Address;
+    public $Address;
         //Edm.String
-        public $City;
+    public $City;
         //Edm.String
-        public $Region;
+    public $Region;
         //Edm.String
-        public $PostalCode;
+    public $PostalCode;
         //Edm.String
-        public $Country;
+    public $Country;
         //Edm.String
-        public $HomePhone;
+    public $HomePhone;
         //Edm.String
-        public $Extension;
+    public $Extension;
         //Edm.String
-        public $Notes;
+    public $Notes;
         //Bag of strings
-        public $Emails;
+    public $Emails;
         //Edm.Int32
-        public $ReportsTo;
+    public $ReportsTo;
         //Edm.Binary
-        public $Photo;
+    public $Photo;
         //Edm.String
-        public $PhotoPath;
+    public $PhotoPath;
         //Navigation Property to associated instance of Employee instance
         //representing manager (ResourceReference)
         //public $Manager;

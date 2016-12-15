@@ -65,4 +65,3 @@ class XML2ArrayTest extends \PHPUnit_Framework_TestCase
         XML2Array::createArray($invalidXML);
     }
 }
-

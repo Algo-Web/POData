@@ -52,7 +52,7 @@ class SimpleMetadataProvider implements IMetadataProvider
         } else {
             $parameters = $params;
         }
-        if (0 == count($parameters)) {
+        if (!is_array($parameters) || 0 == count($parameters)) {
             return array_values($this->resourceSets);
         }
         assert(is_array($parameters));

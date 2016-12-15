@@ -1,5 +1,6 @@
 <?php
 namespace POData\Common\Messages;
+
 use POData\OperationContext\HTTPRequestMethod;
 
 trait http

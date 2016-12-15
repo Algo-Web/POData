@@ -41,9 +41,9 @@ class AtomODataWriterTest extends PhockitoUnitTestCase
         return $xml;
     }
 
-	/**
-	 * Test for write top level URI item.
-	 */
+    /**
+     * Test for write top level URI item.
+     */
     public function testODataURLItem()
     {
         $url = new ODataURL();
@@ -152,11 +152,13 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 
         $entry1->selfLink = $selfLink;
 
-        $entry1->mediaLinks = array(new ODataMediaLink('Media Link Name',
-                                                      'Edit Media link',
-                                                      'Src Media Link',
-                                                      'Media Content Type',
-                                                      'Media ETag'));
+        $entry1->mediaLinks = array(new ODataMediaLink(
+            'Media Link Name',
+            'Edit Media link',
+            'Src Media Link',
+            'Media Content Type',
+            'Media ETag'
+        ));
         $link = new ODataLink();
         $link->name = 'Link Name';
         $link->tytle = 'Link Title';
@@ -232,7 +234,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 
         $actual = $writer->getOutput();
 
-	    $expected = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+        $expected = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <feed xml:base="http://localhost/NorthWind.svc" xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns="http://www.w3.org/2005/Atom">
  <title type="text">Feed Title</title>
  <id>Feed Id</id>
@@ -299,16 +301,20 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 
         $entry1->selfLink = $selfLink;
         $entry1->mediaLink = new ODataMediaLink('Thumbnail_600X450', 'http://storage.live.com/123/christmas-tree-with-presents.jpg', 'http://cdn-8.nflximg.com/US/boxshots/large/5632678.jpg', 'image/jpg', time());
-        $entry1->mediaLinks = array(new ODataMediaLink('Media Link Name',
-                                                      'Edit Media link',
-                                                      'Src Media Link',
-                                                      'Media Content Type',
-                                                      'Media ETag'),
-                                            new ODataMediaLink('Media Link Name2',
-                                                      'Edit Media link2',
-                                                      'Src Media Link2',
-                                                      'Media Content Type2',
-                                                      'Media ETag2'), );
+        $entry1->mediaLinks = array(new ODataMediaLink(
+            'Media Link Name',
+            'Edit Media link',
+            'Src Media Link',
+            'Media Content Type',
+            'Media ETag'
+        ),
+                                            new ODataMediaLink(
+                                                'Media Link Name2',
+                                                'Edit Media link2',
+                                                'Src Media Link2',
+                                                'Media Content Type2',
+                                                'Media ETag2'
+                                            ), );
 
         $entry1->links = array();
 
@@ -356,16 +362,20 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 
         $entry1->selfLink = $selfLink;
         $entry1->mediaLink = new ODataMediaLink('Thumbnail_600X450', 'http://storage.live.com/123/christmas-tree-with-presents.jpg', null, 'image/jpg', time());
-        $entry1->mediaLinks = array(new ODataMediaLink('Media Link Name',
-                                                      'Edit Media link',
-                                                      'Src Media Link',
-                                                      'Media Content Type',
-                                                      'Media ETag'),
-                                            new ODataMediaLink('Media Link Name2',
-                                                      'Edit Media link2',
-                                                      'Src Media Link2',
-                                                      'Media Content Type2',
-                                                      'Media ETag2'), );
+        $entry1->mediaLinks = array(new ODataMediaLink(
+            'Media Link Name',
+            'Edit Media link',
+            'Src Media Link',
+            'Media Content Type',
+            'Media ETag'
+        ),
+                                            new ODataMediaLink(
+                                                'Media Link Name2',
+                                                'Edit Media link2',
+                                                'Src Media Link2',
+                                                'Media Content Type2',
+                                                'Media ETag2'
+                                            ), );
 
         $link = new ODataLink();
         $link->name = 'Link Name';
@@ -636,15 +646,19 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $selfLink->url = 'Self Link URL';
 
         $entry->selfLink = $selfLink;
-        $entry->mediaLinks = array(new ODataMediaLink('Media Link Name',
-                                                      'Edit Media link',
-                                                      'Src Media Link',
-                                                      'Media Content Type',
-                                                      'Media ETag'), new ODataMediaLink('Media Link Name2',
-                                                      'Edit Media link2',
-                                                      'Src Media Link2',
-                                                      'Media Content Type2',
-                                                      'Media ETag2'));
+        $entry->mediaLinks = array(new ODataMediaLink(
+            'Media Link Name',
+            'Edit Media link',
+            'Src Media Link',
+            'Media Content Type',
+            'Media ETag'
+        ), new ODataMediaLink(
+            'Media Link Name2',
+            'Edit Media link2',
+            'Src Media Link2',
+            'Media Content Type2',
+            'Media ETag2'
+        ));
 
         $odataLink = new ODataLink();
         $odataLink->isCollection = false;
@@ -670,15 +684,19 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 
         $odataExpandEntry->selfLink = $selfLink;
 
-        $odataExpandEntry->mediaLinks = array(new ODataMediaLink('Media Link Name',
-                                                      'Edit Media link',
-                                                      'Src Media Link',
-                                                      'Media Content Type',
-                                                      'Media ETag'), new ODataMediaLink('Media Link Name2',
-                                                      'Edit Media link2',
-                                                      'Src Media Link2',
-                                                      'Media Content Type2',
-                                                      'Media ETag2'));
+        $odataExpandEntry->mediaLinks = array(new ODataMediaLink(
+            'Media Link Name',
+            'Edit Media link',
+            'Src Media Link',
+            'Media Content Type',
+            'Media ETag'
+        ), new ODataMediaLink(
+            'Media Link Name2',
+            'Edit Media link2',
+            'Src Media Link2',
+            'Media Content Type2',
+            'Media ETag2'
+        ));
 
         $link = new ODataLink();
         $link->name = 'Link Name';
@@ -1067,32 +1085,32 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
    /**
     * test for write top level Bag of Primitive Property.
     */
-   public function testPrimitiveBagProperty()
-   {
-       $odataProperty = new ODataProperty();
+    public function testPrimitiveBagProperty()
+    {
+        $odataProperty = new ODataProperty();
 
-       $odataBag = new ODataBagContent();
+        $odataBag = new ODataBagContent();
 
-       $odataProperty->name = 'Emails';
-       $odataProperty->typeName = 'Bag(edm.String)';
-       $odataProperty->value = $odataBag;
+        $odataProperty->name = 'Emails';
+        $odataProperty->typeName = 'Bag(edm.String)';
+        $odataProperty->value = $odataBag;
 
-       $odataBag->propertyContents = array(
+        $odataBag->propertyContents = array(
                                       'yash_kothari@persistent.co.in',
                                       'v-yashk@microsoft.com',
                                       'yash2712@gmail.com',
                                       'y2k2712@yahoo.com', );
 
-       $propCont = new ODataPropertyContent();
-       $propCont->properties = array($odataProperty);
+        $propCont = new ODataPropertyContent();
+        $propCont->properties = array($odataProperty);
 
-       $writer = new AtomODataWriter('http://localhost/NorthWind.svc');
-       $result = $writer->write($propCont);
-       $this->assertSame($writer, $result);
+        $writer = new AtomODataWriter('http://localhost/NorthWind.svc');
+        $result = $writer->write($propCont);
+        $this->assertSame($writer, $result);
 
-       $actual = $writer->getOutput();
+        $actual = $writer->getOutput();
 
-       $expected = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+        $expected = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <d:Emails m:type="Bag(edm.String)" xmlns="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" 
 xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" 
 xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
@@ -1102,8 +1120,8 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
  <d:element>y2k2712@yahoo.com</d:element>
 </d:Emails>';
 
-       $this->assertXmlStringEqualsXmlString($this->removeUpdatedTags($expected), $this->removeUpdatedTags($actual));
-   }
+        $this->assertXmlStringEqualsXmlString($this->removeUpdatedTags($expected), $this->removeUpdatedTags($actual));
+    }
 
     /**
      * @var ProvidersWrapper

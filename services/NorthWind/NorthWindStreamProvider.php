@@ -53,7 +53,9 @@ class NorthWindStreamProvider implements IStreamProvider2
      * @throws ODataException if a valid stream cannot be returned.
      *                        Null should never be returned from this method
      */
-    public function getReadStream($entity, $eTag,
+    public function getReadStream(
+        $entity,
+        $eTag,
         $checkETagForEquality,
         $operationContext
     ) {
@@ -219,8 +221,11 @@ class NorthWindStreamProvider implements IStreamProvider2
      *
      * @throws ODataException if a valid stream or null cannot be returned for the given arguments
      */
-    public function getReadStream2($entity, ResourceStreamInfo $resourceStreamInfo,
-        $eTag, $checkETagForEquality,
+    public function getReadStream2(
+        $entity,
+        ResourceStreamInfo $resourceStreamInfo,
+        $eTag,
+        $checkETagForEquality,
         $operationContext
     ) {
         /*
@@ -268,7 +273,9 @@ class NorthWindStreamProvider implements IStreamProvider2
      *
      * @return string Valid Content-Type string for the named stream associated with the entity
      */
-    public function getStreamContentType2($entity, ResourceStreamInfo $resourceStreamInfo,
+    public function getStreamContentType2(
+        $entity,
+        ResourceStreamInfo $resourceStreamInfo,
         $operationContext
     ) {
         if (!($entity instanceof Employee)) {
@@ -293,7 +300,9 @@ class NorthWindStreamProvider implements IStreamProvider2
      *
      * @return string ETag of the named stream associated with the entity specified
      */
-    public function getStreamETag2($entity, ResourceStreamInfo $resourceStreamInfo,
+    public function getStreamETag2(
+        $entity,
+        ResourceStreamInfo $resourceStreamInfo,
         $operationContext
     ) {
         return null;
@@ -316,7 +325,9 @@ class NorthWindStreamProvider implements IStreamProvider2
      * @return string The URI clients should use when making retrieve (ie. GET) requests to
      *                the stream(ie. Media Resource)
      */
-    public function getReadStreamUri2($entity, ResourceStreamInfo $resourceStreamInfo,
+    public function getReadStreamUri2(
+        $entity,
+        ResourceStreamInfo $resourceStreamInfo,
         $operationContext
     ) {
         return null;

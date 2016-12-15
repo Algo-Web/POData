@@ -135,7 +135,7 @@ interface IQueryProvider
         ResourceProperty $targetProperty
     );
     /**
-     * Updates a resource 
+     * Updates a resource
      *
      * @param ResourceSet      $sourceResourceSet    The entity set containing the source entity
      * @param object           $sourceEntityInstance The source entity instance
@@ -170,5 +170,4 @@ interface IQueryProvider
         $sourceEntityInstance,
         $data
     );
-
 }

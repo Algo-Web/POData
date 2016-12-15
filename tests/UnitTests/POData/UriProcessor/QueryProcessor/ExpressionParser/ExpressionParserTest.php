@@ -203,9 +203,11 @@ class ExpressionParserTest extends \PHPUnit_Framework_TestCase
         }
 
         $expression = 'Customer/CustomerID';
-        $parser = new ExpressionParser($expression,
-                     $this->northWindMetadata->resolveResourceSet('Orders')->getResourceType(),
-                     false);
+        $parser = new ExpressionParser(
+            $expression,
+            $this->northWindMetadata->resolveResourceSet('Orders')->getResourceType(),
+            false
+        );
         $expr = $parser->parseFilter();
         $this->assertTrue($expr instanceof PropertyAccessExpression);
         $this->assertTrue($expr->getType() instanceof StringType);

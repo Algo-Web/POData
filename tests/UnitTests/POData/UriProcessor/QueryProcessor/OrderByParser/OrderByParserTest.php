@@ -29,7 +29,7 @@ class OrderByParserTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-	    $this->mockQueryProvider = Phockito::mock('POData\Providers\Query\IQueryProvider');
+        $this->mockQueryProvider = Phockito::mock('POData\Providers\Query\IQueryProvider');
     }
 
     public function testOrderByWithSyntaxError()
@@ -53,11 +53,11 @@ class OrderByParserTest extends \PHPUnit_Framework_TestCase
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
-                                          $northWindMetadata, //IMetadataProvider implementation
-                                            $this->mockQueryProvider,
-                                          $configuration, //Service configuuration
-                                          false
-                                         );
+            $northWindMetadata, //IMetadataProvider implementation
+            $this->mockQueryProvider,
+            $configuration, //Service configuuration
+            false
+        );
 
         $resourceSetWrapper = $providersWrapper->resolveResourceSet('Employees');
         $resourceType = $resourceSetWrapper->getResourceType();
@@ -80,11 +80,11 @@ class OrderByParserTest extends \PHPUnit_Framework_TestCase
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
-                                          $northWindMetadata, //IMetadataProvider implementation
-                                            $this->mockQueryProvider,
-                                          $configuration, //Service configuuration
-                                          false
-                                         );
+            $northWindMetadata, //IMetadataProvider implementation
+            $this->mockQueryProvider,
+            $configuration, //Service configuuration
+            false
+        );
 
         $resourceSetWrapper = $providersWrapper->resolveResourceSet('Customers');
         $resourceType = $resourceSetWrapper->getResourceType();
@@ -119,11 +119,11 @@ class OrderByParserTest extends \PHPUnit_Framework_TestCase
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
-                                          $northWindMetadata, //IMetadataProvider implementation
-                                            $this->mockQueryProvider,
-                                          $configuration, //Service configuuration
-                                          false
-                                         );
+            $northWindMetadata, //IMetadataProvider implementation
+            $this->mockQueryProvider,
+            $configuration, //Service configuuration
+            false
+        );
 
         $resourceSetWrapper = $providersWrapper->resolveResourceSet('Customers');
         $resourceType = $resourceSetWrapper->getResourceType();
@@ -145,11 +145,11 @@ class OrderByParserTest extends \PHPUnit_Framework_TestCase
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
-                                          $northWindMetadata, //IMetadataProvider implementation
+            $northWindMetadata, //IMetadataProvider implementation
             $this->mockQueryProvider,
-                                          $configuration, //Service configuuration
-                                          false
-                                         );
+            $configuration, //Service configuuration
+            false
+        );
 
         $resourceSetWrapper = $providersWrapper->resolveResourceSet('Orders');
         $resourceType = $resourceSetWrapper->getResourceType();
@@ -183,11 +183,11 @@ class OrderByParserTest extends \PHPUnit_Framework_TestCase
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
-                                          $northWindMetadata, //IMetadataProvider implementation
-                                            $this->mockQueryProvider,
-                                          $configuration, //Service configuuration
-                                          false
-                                         );
+            $northWindMetadata, //IMetadataProvider implementation
+            $this->mockQueryProvider,
+            $configuration, //Service configuuration
+            false
+        );
 
         $resourceSetWrapper = $providersWrapper->resolveResourceSet('Customers');
         $resourceType = $resourceSetWrapper->getResourceType();
@@ -294,11 +294,11 @@ class OrderByParserTest extends \PHPUnit_Framework_TestCase
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
-                                          $northWindMetadata, //IMetadataProvider implementation
-                                            $this->mockQueryProvider,
-                                          $configuration, //Service configuuration
-                                          false
-                                         );
+            $northWindMetadata, //IMetadataProvider implementation
+            $this->mockQueryProvider,
+            $configuration, //Service configuuration
+            false
+        );
 
         $resourceSetWrapper = $providersWrapper->resolveResourceSet('Customers');
         $resourceType = $resourceSetWrapper->getResourceType();
@@ -321,11 +321,11 @@ class OrderByParserTest extends \PHPUnit_Framework_TestCase
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
-                                          $northWindMetadata, //IMetadataProvider implementation
-                                        $this->mockQueryProvider,
-                                          $configuration, //Service configuuration
-                                          false
-                                         );
+            $northWindMetadata, //IMetadataProvider implementation
+            $this->mockQueryProvider,
+            $configuration, //Service configuuration
+            false
+        );
 
         $resourceSetWrapper = $providersWrapper->resolveResourceSet('Order_Details');
         $resourceType = $resourceSetWrapper->getResourceType();
@@ -395,11 +395,11 @@ class OrderByParserTest extends \PHPUnit_Framework_TestCase
         //Make 'Orders' visible, make 'Customers' invisible
         $configuration->setEntitySetAccessRule('Orders', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
-                                              $northWindMetadata, //IMetadataProvider implementation
-                                             $this->mockQueryProvider,
-                                              $configuration, //Service configuuration
-                                              false
-                                             );
+            $northWindMetadata, //IMetadataProvider implementation
+            $this->mockQueryProvider,
+            $configuration, //Service configuuration
+            false
+        );
 
         $resourceSetWrapper = $providersWrapper->resolveResourceSet('Orders');
         $resourceType = $resourceSetWrapper->getResourceType();
@@ -422,11 +422,11 @@ class OrderByParserTest extends \PHPUnit_Framework_TestCase
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
-                                              $northWindMetadata, //IMetadataProvider implementation
-                                            $this->mockQueryProvider,
-                                              $configuration, //Service configuuration
-                                              false
-                                             );
+            $northWindMetadata, //IMetadataProvider implementation
+            $this->mockQueryProvider,
+            $configuration, //Service configuuration
+            false
+        );
 
         $resourceSetWrapper = $providersWrapper->resolveResourceSet('Order_Details');
         $resourceType = $resourceSetWrapper->getResourceType();
@@ -619,11 +619,11 @@ class OrderByParserTest extends \PHPUnit_Framework_TestCase
         $configuration = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
-                                              $northWindMetadata, //IMetadataProvider implementation
-                                            $this->mockQueryProvider,
-                                              $configuration, //Service configuuration
-                                              false
-                                             );
+            $northWindMetadata, //IMetadataProvider implementation
+            $this->mockQueryProvider,
+            $configuration, //Service configuuration
+            false
+        );
 
         $resourceSetWrapper = $providersWrapper->resolveResourceSet('Order_Details');
         $resourceType = $resourceSetWrapper->getResourceType();

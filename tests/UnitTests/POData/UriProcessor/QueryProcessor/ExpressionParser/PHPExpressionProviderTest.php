@@ -37,9 +37,11 @@ class PHPExpressionProviderTest extends \PHPUnit_Framework_TestCase
     {
         //Relational EQUAL expression with left child as arithmetic expression, the null check should propagte from AE to LE level
         $odataUriExpression = 'Customer/Address/LineNumber add 4 eq 8';
-        $parser = new ExpressionParser2($odataUriExpression,
-                        $this->northWindMetadata->resolveResourceSet('Orders')->getResourceType(),
-                        true);
+        $parser = new ExpressionParser2(
+            $odataUriExpression,
+            $this->northWindMetadata->resolveResourceSet('Orders')->getResourceType(),
+            true
+        );
         $expressionTree = $parser->parseFilter();
         $expressionProcessor = new ExpressionProcessor(new PHPExpressionProvider('$lt'));
         $actualPHPExpression = $expressionProcessor->processExpression($expressionTree);
@@ -184,9 +186,11 @@ class PHPExpressionProviderTest extends \PHPUnit_Framework_TestCase
     public function testStringFunctions()
     {
         $odataUriExpression = 'CustomerID ge \'ALFKI\'';
-        $parser = new ExpressionParser2($odataUriExpression,
-                        $this->northWindMetadata->resolveResourceSet('Customers')->getResourceType(),
-                        true);
+        $parser = new ExpressionParser2(
+            $odataUriExpression,
+            $this->northWindMetadata->resolveResourceSet('Customers')->getResourceType(),
+            true
+        );
         $expressionTree = $parser->parseFilter();
         $expressionProcessor = new ExpressionProcessor(new \POData\Providers\Expression\PHPExpressionProvider('$lt'));
         $actualPHPExpression = $expressionProcessor->processExpression($expressionTree);
@@ -266,9 +270,11 @@ class PHPExpressionProviderTest extends \PHPUnit_Framework_TestCase
     public function testDateTimeFunctions()
     {
         $odataUriExpression = 'OrderDate eq datetime\'2010-12-08\'';
-        $parser = new ExpressionParser2($odataUriExpression,
-                        $this->northWindMetadata->resolveResourceSet('Orders')->getResourceType(),
-                        true);
+        $parser = new ExpressionParser2(
+            $odataUriExpression,
+            $this->northWindMetadata->resolveResourceSet('Orders')->getResourceType(),
+            true
+        );
         $expressionTree = $parser->parseFilter();
         $expressionProcessor = new ExpressionProcessor(new PHPExpressionProvider('$lt'));
         $actualPHPExpression = $expressionProcessor->processExpression($expressionTree);
@@ -318,9 +324,11 @@ class PHPExpressionProviderTest extends \PHPUnit_Framework_TestCase
     public function testGuidFunctions()
     {
         $odataUriExpression = 'Customer/CustomerGuid eq guid\'05b242e752eb46bd8f0e6568b72cd9a5\'';
-        $parser = new ExpressionParser2($odataUriExpression,
-                        $this->northWindMetadata->resolveResourceSet('Orders')->getResourceType(),
-                        true);
+        $parser = new ExpressionParser2(
+            $odataUriExpression,
+            $this->northWindMetadata->resolveResourceSet('Orders')->getResourceType(),
+            true
+        );
         $expressionTree = $parser->parseFilter();
         $expressionProcessor = new ExpressionProcessor(new \POData\Providers\Expression\PHPExpressionProvider('$lt'));
         $actualPHPExpression = $expressionProcessor->processExpression($expressionTree);
@@ -334,9 +342,11 @@ class PHPExpressionProviderTest extends \PHPUnit_Framework_TestCase
     public function testMathFunctions()
     {
         $odataUriExpression = 'round(Price) eq 200.60';
-        $parser = new ExpressionParser2($odataUriExpression,
-                        $this->northWindMetadata->resolveResourceSet('Orders')->getResourceType(),
-                        true);
+        $parser = new ExpressionParser2(
+            $odataUriExpression,
+            $this->northWindMetadata->resolveResourceSet('Orders')->getResourceType(),
+            true
+        );
         $expressionTree = $parser->parseFilter();
         $expressionProcessor = new ExpressionProcessor(new \POData\Providers\Expression\PHPExpressionProvider('$lt'));
         $actualPHPExpression = $expressionProcessor->processExpression($expressionTree);
@@ -358,107 +368,137 @@ class PHPExpressionProviderTest extends \PHPUnit_Framework_TestCase
         //Creates test data
         $data = $this->createTestData();
         //Query for Customers with 'L' as second letter of CustomerID
-        $result = $this->executeExpression('indexof(CustomerID, \'L\') eq 1',
-                                            $this->northWindMetadata->resolveResourceSet('Customers')->getResourceType(),
-                                            $data['Customers']);
+        $result = $this->executeExpression(
+            'indexof(CustomerID, \'L\') eq 1',
+            $this->northWindMetadata->resolveResourceSet('Customers')->getResourceType(),
+            $data['Customers']
+        );
         $this->assertEquals(1, count($result));
         $this->assertEquals('ALFKI', $result[0]->CustomerID);
 
         //Query for Customers with country as Germany
-        $result = $this->executeExpression('Country eq \'Germany\'',
-                                            $this->northWindMetadata->resolveResourceSet('Customers')->getResourceType(),
-                                            $data['Customers']);
+        $result = $this->executeExpression(
+            'Country eq \'Germany\'',
+            $this->northWindMetadata->resolveResourceSet('Customers')->getResourceType(),
+            $data['Customers']
+        );
         $this->assertEquals(2, count($result));
         $this->assertEquals('Germany', $result[0]->Country);
         $this->assertEquals('Germany', $result[1]->Country);
 
         //Query for Customers with no address
-        $result = $this->executeExpression('Address eq null',
-                                            $this->northWindMetadata->resolveResourceSet('Customers')->getResourceType(),
-                                            $data['Customers']);
+        $result = $this->executeExpression(
+            'Address eq null',
+            $this->northWindMetadata->resolveResourceSet('Customers')->getResourceType(),
+            $data['Customers']
+        );
         $this->assertEquals(1, count($result));
         $this->assertEquals('15b242e7-52eb-46bd-8f0e-6568b72cd9a6', $result[0]->CustomerGuid);
 
         //Query for Customers with non-primary address
-        $result = $this->executeExpression('Address/Address2/IsPrimary eq false',
-                                            $this->northWindMetadata->resolveResourceSet('Customers')->getResourceType(),
-                                            $data['Customers']);
+        $result = $this->executeExpression(
+            'Address/Address2/IsPrimary eq false',
+            $this->northWindMetadata->resolveResourceSet('Customers')->getResourceType(),
+            $data['Customers']
+        );
         $this->assertEquals(1, count($result));
         $this->assertEquals('Ann Devon', $result[0]->CustomerName);
 
         //Query for Customers with ID 'ALFKI' or 'EASTC'
-        $result = $this->executeExpression('CustomerID eq \'ALFKI\' or CustomerID eq \'EASTC\'',
-                                            $this->northWindMetadata->resolveResourceSet('Customers')->getResourceType(),
-                                            $data['Customers']);
+        $result = $this->executeExpression(
+            'CustomerID eq \'ALFKI\' or CustomerID eq \'EASTC\'',
+            $this->northWindMetadata->resolveResourceSet('Customers')->getResourceType(),
+            $data['Customers']
+        );
         $this->assertEquals(2, count($result));
         $this->assertEquals('ALFKI', $result[0]->CustomerID);
         $this->assertEquals('EASTC', $result[1]->CustomerID);
 
         //Query for Customers with an expression which evaluates to false
-        $result = $this->executeExpression('1 add 2 eq 5',
-                                            $this->northWindMetadata->resolveResourceSet('Customers')->getResourceType(),
-                                            $data['Customers']);
+        $result = $this->executeExpression(
+            '1 add 2 eq 5',
+            $this->northWindMetadata->resolveResourceSet('Customers')->getResourceType(),
+            $data['Customers']
+        );
         $this->assertEquals(0, count($result));
 
         //Query for all Orders
-        $result = $this->executeExpression('true',
-                                            $this->northWindMetadata->resolveResourceSet('Orders')->getResourceType(),
-                                            $data['Orders']);
+        $result = $this->executeExpression(
+            'true',
+            $this->northWindMetadata->resolveResourceSet('Orders')->getResourceType(),
+            $data['Orders']
+        );
         $this->assertEquals(5, count($result));
 
         //Query for Order with ShipName as 'Speedy Express'
-        $result = $this->executeExpression('ShipName eq \'Speedy Express\'',
-                                            $this->northWindMetadata->resolveResourceSet('Orders')->getResourceType(),
-                                            $data['Orders']);
+        $result = $this->executeExpression(
+            'ShipName eq \'Speedy Express\'',
+            $this->northWindMetadata->resolveResourceSet('Orders')->getResourceType(),
+            $data['Orders']
+        );
         $this->assertEquals(2, count($result));
         foreach ($result as $order) {
             $this->assertEquals($order->ShipName, 'Speedy Express');
         }
 
         //Query for Order with CustomerID as 'DUMON'
-        $result = $this->executeExpression('Customer/CustomerID eq \'DUMON\'',
-                                            $this->northWindMetadata->resolveResourceSet('Orders')->getResourceType(),
-                                            $data['Orders']);
+        $result = $this->executeExpression(
+            'Customer/CustomerID eq \'DUMON\'',
+            $this->northWindMetadata->resolveResourceSet('Orders')->getResourceType(),
+            $data['Orders']
+        );
         $this->assertEquals(3, count($result));
 
         //Query for Orders with year of order as 1999 or 1995
-        $result = $this->executeExpression('year(OrderDate) eq 1999 or year(OrderDate) add 4 eq 1999',
-                                            $this->northWindMetadata->resolveResourceSet('Orders')->getResourceType(),
-                                            $data['Orders']);
+        $result = $this->executeExpression(
+            'year(OrderDate) eq 1999 or year(OrderDate) add 4 eq 1999',
+            $this->northWindMetadata->resolveResourceSet('Orders')->getResourceType(),
+            $data['Orders']
+        );
         foreach ($result as $order) {
             $this->assertContains($order->OrderDate, array(1999, 1995));
         }
 
         //Query for Orders with date greater than 2000-11-11
-        $result = $this->executeExpression('OrderDate ge datetime\'2000-11-11\'',
-                                            $this->northWindMetadata->resolveResourceSet('Orders')->getResourceType(),
-                                            $data['Orders']);
+        $result = $this->executeExpression(
+            'OrderDate ge datetime\'2000-11-11\'',
+            $this->northWindMetadata->resolveResourceSet('Orders')->getResourceType(),
+            $data['Orders']
+        );
         foreach ($result as $order) {
             $this->assertGreaterThanOrEqual(0, DateTime::dateTimeCmp($order->OrderDate, '2000-11-11'));
         }
 
         //Query for Customer using different flavours of guid
-        $result = $this->executeExpression('CustomerGuid eq guid\'15b242e7-52eb-46bd-8f0e-6568b72cd9a6\'',
-                                            $this->northWindMetadata->resolveResourceSet('Customers')->getResourceType(),
-                                            $data['Customers']);
+        $result = $this->executeExpression(
+            'CustomerGuid eq guid\'15b242e7-52eb-46bd-8f0e-6568b72cd9a6\'',
+            $this->northWindMetadata->resolveResourceSet('Customers')->getResourceType(),
+            $data['Customers']
+        );
         $this->assertEquals(1, count($result));
         $customer1 = $result[0];
 
-        $result = $this->executeExpression('CustomerGuid eq guid\'{15b242e7-52eb-46bd-8f0e-6568b72cd9a6}\'',
-                                            $this->northWindMetadata->resolveResourceSet('Customers')->getResourceType(),
-                                            $data['Customers']);
+        $result = $this->executeExpression(
+            'CustomerGuid eq guid\'{15b242e7-52eb-46bd-8f0e-6568b72cd9a6}\'',
+            $this->northWindMetadata->resolveResourceSet('Customers')->getResourceType(),
+            $data['Customers']
+        );
         $this->assertEquals(1, count($result));
         $customer2 = $result[0];
 
-        $result = $this->executeExpression('CustomerGuid eq guid\'(15b242e7-52eb-46bd-8f0e-6568b72cd9a6)\'',
-                                            $this->northWindMetadata->resolveResourceSet('Customers')->getResourceType(),
-                                            $data['Customers']);
+        $result = $this->executeExpression(
+            'CustomerGuid eq guid\'(15b242e7-52eb-46bd-8f0e-6568b72cd9a6)\'',
+            $this->northWindMetadata->resolveResourceSet('Customers')->getResourceType(),
+            $data['Customers']
+        );
         $this->assertEquals(1, count($result));
         $customer3 = $result[0];
 
-        $result = $this->executeExpression('CustomerGuid eq guid\'15b242e752eb46bd8f0e6568b72cd9a6\'',
-                                            $this->northWindMetadata->resolveResourceSet('Customers')->getResourceType(),
-                                            $data['Customers']);
+        $result = $this->executeExpression(
+            'CustomerGuid eq guid\'15b242e752eb46bd8f0e6568b72cd9a6\'',
+            $this->northWindMetadata->resolveResourceSet('Customers')->getResourceType(),
+            $data['Customers']
+        );
         $this->assertEquals(1, count($result));
         $customer4 = $result[0];
         $this->assertEquals($customer1->CustomerID, $customer2->CustomerID);
@@ -518,11 +558,14 @@ class PHPExpressionProviderTest extends \PHPUnit_Framework_TestCase
         $customers = array();
         $orders = array();
 
-        $customer = $this->createCustomer('ALFKI',
-                        '05b242e7-52eb-46bd-8f0e-6568b72cd9a5',
-                        'Alfreds Futterkiste',
-                        $this->createAddress('AF34', 12, 15, 'Obere Str. 57', true, true),
-                        'Germany', 1);
+        $customer = $this->createCustomer(
+            'ALFKI',
+            '05b242e7-52eb-46bd-8f0e-6568b72cd9a5',
+            'Alfreds Futterkiste',
+            $this->createAddress('AF34', 12, 15, 'Obere Str. 57', true, true),
+            'Germany',
+            1
+        );
         $customers[] = $customer;
         $order = $this->createOrder(123, '2000-12-12', '2000-12-12', 'Speedy Express', 23, 4, 100.44);
         $orders[] = $order;
@@ -533,11 +576,14 @@ class PHPExpressionProviderTest extends \PHPUnit_Framework_TestCase
         $this->setCustomerOrder($customer, $order);
         $this->setOrderCustomer($order, $customer);
 
-        $customer = $this->createCustomer('DUMON',
-                        '15b242e7-52eb-46bd-8f0e-6568b72cd9a6',
-                        'Janine Labrune',
-                        null, //Address is null
-                        'France', 4);
+        $customer = $this->createCustomer(
+            'DUMON',
+            '15b242e7-52eb-46bd-8f0e-6568b72cd9a6',
+            'Janine Labrune',
+            null, //Address is null
+            'France',
+            4
+        );
         $customers[] = $customer;
         $order = $this->createOrder(125, '1995-05-05', '1995-05-09', 'Federal Shipping', 100, 1, 800);
         $orders[] = $order;
@@ -552,11 +598,14 @@ class PHPExpressionProviderTest extends \PHPUnit_Framework_TestCase
         $this->setCustomerOrder($customer, $order);
         $this->setOrderCustomer($order, $customer);
 
-        $customer = $this->createCustomer('EASTC',
-                            '15b242e7-52eb-46bd-8f0e-6568b72cd9a7',
-                            'Ann Devon',
-                            $this->createAddress('FF45', 15, 16, '35 King George', true, false),
-                            'Germany', 3);
+        $customer = $this->createCustomer(
+            'EASTC',
+            '15b242e7-52eb-46bd-8f0e-6568b72cd9a7',
+            'Ann Devon',
+            $this->createAddress('FF45', 15, 16, '35 King George', true, false),
+            'Germany',
+            3
+        );
         $customers[] = $customer;
 
         return array('Customers' => $customers, 'Orders' => $orders);

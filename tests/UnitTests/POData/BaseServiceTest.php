@@ -31,9 +31,9 @@ class BaseServiceTest extends PhockitoUnitTestCase
     /** @var  ServiceHost */
     protected $mockHost;
 
-	public function testRegisterWritersV1()
+    public function testRegisterWritersV1()
     {
-	/** @var BaseService $service */
+    /** @var BaseService $service */
         $service = Phockito::spy('POData\BaseService');
 
         $service->setHost($this->mockHost);
@@ -42,8 +42,8 @@ class BaseServiceTest extends PhockitoUnitTestCase
         //will change this once that request pipeline is cleaned up
         Phockito::when($service->getODataWriterRegistry())->return($this->mockRegistry);
         $fakeConfig = new ServiceConfiguration($this->mockMetaProvider);
-        $fakeConfig->setMaxDataServiceVersion (ProtocolVersion::V1());
-        Phockito::when($service->getConfiguration())->return ($fakeConfig);
+        $fakeConfig->setMaxDataServiceVersion(ProtocolVersion::V1());
+        Phockito::when($service->getConfiguration())->return($fakeConfig);
 
         //fake the service url
         $fakeUrl = "http://host/service.svc/Collection";

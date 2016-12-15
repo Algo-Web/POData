@@ -146,7 +146,9 @@ class NorthWindDSExpressionProvider implements IExpressionProvider
                 break;
             case ExpressionType::GREATERTHAN_OR_EQUAL:
                 return $this->_prepareBinaryExpression(
-                    self::GREATERTHAN_OR_EQUAL, $left, $right
+                    self::GREATERTHAN_OR_EQUAL,
+                    $left,
+                    $right
                 );
                 break;
             case ExpressionType::LESSTHAN:
@@ -154,7 +156,9 @@ class NorthWindDSExpressionProvider implements IExpressionProvider
                 break;
             case ExpressionType::LESSTHAN_OR_EQUAL:
                 return $this->_prepareBinaryExpression(
-                    self::LESSTHAN_OR_EQUAL, $left, $right
+                    self::LESSTHAN_OR_EQUAL,
+                    $left,
+                    $right
                 );
                 break;
             case ExpressionType::EQUAL:
@@ -241,9 +245,9 @@ class NorthWindDSExpressionProvider implements IExpressionProvider
             if ($resourceProperty->isKindOf(ResourcePropertyKind::RESOURCE_REFERENCE)) {
                 // Orders?$filter=Customer/CustomerID eq 'ALFKI'
                 throw new NotImplementedException(
-                        'This implementation not supports Resource reference in the filter',
-                        500,
-                        null
+                    'This implementation not supports Resource reference in the filter',
+                    500,
+                    null
                 );
             } else {
                 // Customers?$filter=Address/AltAddress/City eq 'Seattle'
@@ -257,9 +261,9 @@ class NorthWindDSExpressionProvider implements IExpressionProvider
                     }
 
                     throw new NotImplementedException(
-                            'This implementation not supports Customer::Address::AltAddress in the filter',
-                            500,
-                            null
+                        'This implementation not supports Customer::Address::AltAddress in the filter',
+                        500,
+                        null
                     );
                 }
             }
@@ -298,50 +302,50 @@ class NorthWindDSExpressionProvider implements IExpressionProvider
                 return "STRCMP($params[0]; $params[1])";
                 break;
             case ODataConstants::STRFUN_ENDSWITH:
-              return "(($params[1]) = RIGHT(($params[0]), LEN($params[1])))";
+                return "(($params[1]) = RIGHT(($params[0]), LEN($params[1])))";
                 break;
             case ODataConstants::STRFUN_INDEXOF:
               // In SQLServer the index of string starts from 1, but in OData
               // the string start with index 0, so the below subtraction of 1
-              return "(CHARINDEX($params[1], $params[0]) - 1)";
+                return "(CHARINDEX($params[1], $params[0]) - 1)";
                 break;
             case ODataConstants::STRFUN_REPLACE:
-              return "REPLACE($params[0], $params[1], $params[2])";
+                return "REPLACE($params[0], $params[1], $params[2])";
                 break;
             case ODataConstants::STRFUN_STARTSWITH:
-              return "(($params[1]) = LEFT(($params[0]), LEN($params[1])))";
+                return "(($params[1]) = LEFT(($params[0]), LEN($params[1])))";
                 break;
             case ODataConstants::STRFUN_TOLOWER:
-              return "LOWER($params[0])";
+                return "LOWER($params[0])";
                 break;
             case ODataConstants::STRFUN_TOUPPER:
-              return "UPPER($params[0])";
+                return "UPPER($params[0])";
                 break;
             case ODataConstants::STRFUN_TRIM:
               // OData supports trim function
               // We don't have the same function SQL Server, so use SQL functions LTRIM and RTRIM together
               // to achieve TRIM functionality.
-              return "RTRIM(LTRIM($params[0]))";
+                return "RTRIM(LTRIM($params[0]))";
                 break;
             case ODataConstants::STRFUN_SUBSTRING:
-              if (count($params) == 3) {
+                if (count($params) == 3) {
                     // 3 Param version of OData substring
                     return "SUBSTRING($params[0], $params[1] + 1, $params[2])";
                 } else {
                     // 2 Params version of OData substring
-                // We don't have the same function for SQL Server, we have only:
+                  // We don't have the same function for SQL Server, we have only:
 
-                // SUBSTRING ( value_expression , start_expression , length_expression )
-                // http://msdn.microsoft.com/en-us/library/ms187748.aspx
+                  // SUBSTRING ( value_expression , start_expression , length_expression )
+                  // http://msdn.microsoft.com/en-us/library/ms187748.aspx
 
-                // If the sum of start_expression and length_expression is greater than the number of characters
-                // in value_expression, the whole value expression beginning at start_expression is returned
-                // In OData substring function the index start from 0, in SQL Server its from 1
-                return "SUBSTRING($params[0], $params[1] + 1, LEN($params[0]))";
+                  // If the sum of start_expression and length_expression is greater than the number of characters
+                  // in value_expression, the whole value expression beginning at start_expression is returned
+                  // In OData substring function the index start from 0, in SQL Server its from 1
+                    return "SUBSTRING($params[0], $params[1] + 1, LEN($params[0]))";
                 }
                 break;
             case ODataConstants::STRFUN_SUBSTRINGOF:
-              return "(CHARINDEX($params[0], $params[1]) != 0)";
+                return "(CHARINDEX($params[0], $params[1]) != 0)";
                 break;
             case ODataConstants::STRFUN_CONCAT:
                 return "$params[0] + $params[1]";
@@ -386,7 +390,7 @@ class NorthWindDSExpressionProvider implements IExpressionProvider
                 return "($params[0] = $params[1])";
                 break;
             case 'is_null':
-            return "is_null($params[0])";
+                return "is_null($params[0])";
             break;
 
             default:
@@ -445,12 +449,12 @@ class NorthWindDSExpressionProvider implements IExpressionProvider
                 }
 
                 return self::OPEN_BRAKET
-            .$str[0] . ' ' . $operator
-            .' ' . $str[1] . self::CLOSE_BRACKET;
+                .$str[0] . ' ' . $operator
+                .' ' . $str[1] . self::CLOSE_BRACKET;
             } else {
                 return self::OPEN_BRAKET
-            .$str[0] . ' ' . $operator
-            .' ' . $str[1] . self::CLOSE_BRACKET;
+                .$str[0] . ' ' . $operator
+                .' ' . $str[1] . self::CLOSE_BRACKET;
             }
         }
 
