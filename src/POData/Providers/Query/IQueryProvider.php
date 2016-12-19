@@ -160,14 +160,14 @@ interface IQueryProvider
     );
     /*
      * @param ResourceSet      $resourceSet   The entity set containing the entity to fetch
-     * @param object           $sourceEntityInstance The source entity instance
+     * @param object           $keyDescriptor 
      * @param object           $data                 The New data for the entity instance.
      * 
      * returns object|null returns the newly created model if sucessful or null if model creation failed.
      */
     public function createResourceforResourceSet(
         ResourceSet $resourceSet,
-        $sourceEntityInstance,
+        $keyDescriptor,
         $data
     );
 }
