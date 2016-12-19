@@ -185,6 +185,7 @@ class UriProcessor
         $segments = $this->request->getSegments();
 
         foreach ($segments as $segment) {
+            $requestTargetKind = $segment->getTargetKind();
             if ($requestTargetKind == TargetKind::RESOURCE()) {
                 $requestMethod = $this->getService()->getOperationContext()->incomingRequest()->getMethod();
                 $resourceSet = $segment->getTargetResourceSetWrapper();
