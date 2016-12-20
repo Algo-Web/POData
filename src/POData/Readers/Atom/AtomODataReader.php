@@ -295,7 +295,7 @@ class AtomODataReader
     }
 
     /**
-     * @param DOMNode $node
+     * @param \DOMNode $node
      * @param string $attributeName
      */
     protected static function GetAttribute($node, $attributeName)

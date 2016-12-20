@@ -187,7 +187,7 @@ class InternalSkipTokenInfo
             $this->_keyObject = $this->_internalOrderByInfo->getDummyObject();
             $i = 0;
             foreach ($this->_internalOrderByInfo->getOrderByPathSegments()
- as $orderByPathSegment) {
+    as $orderByPathSegment) {
                 $index = 0;
                 $currentObject = $this->_keyObject;
                 $subPathSegments = $orderByPathSegment->getSubPathSegments();
@@ -250,7 +250,7 @@ class InternalSkipTokenInfo
     {
         $nextPageLink = null;
         foreach ($this->_internalOrderByInfo->getOrderByPathSegments()
- as $orderByPathSegment) {
+    as $orderByPathSegment) {
             $index = 0;
             $currentObject = $lastObject;
             $subPathSegments = $orderByPathSegment->getSubPathSegments();

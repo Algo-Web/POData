@@ -499,7 +499,7 @@ class ExpandedProjectionNode extends ProjectionNode
                 $existingNodes = $this->_childNodes;
                 $this->_childNodes = array();
                 foreach ($this->getResourceType()->getAllProperties()
- as $resourceProperty) {
+    as $resourceProperty) {
                     $propertyName = $resourceProperty->getName();
                     if (array_key_exists($propertyName, $existingNodes)) {
                         $this->_childNodes[$propertyName]

@@ -2,7 +2,6 @@
 
 namespace POData\OperationContext\Web;
 
-use POData\Common\NotImplementedException;
 use POData\Common\ODataConstants;
 use POData\HttpProcessUtility;
 use POData\OperationContext\HTTPRequestMethod;
