@@ -36,4 +36,11 @@ interface IHTTPRequest
      * @return HTTPRequestMethod
      */
     public function getMethod();
+
+    /**
+     * Get the input data of the HTTP Request.
+     *
+     * @return mixed|null
+     */
+    public function getAllInput();
 }

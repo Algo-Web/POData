@@ -2,6 +2,7 @@
 
 namespace POData\OperationContext\Web;
 
+use POData\Common\NotImplementedException;
 use POData\Common\ODataConstants;
 use POData\HttpProcessUtility;
 use POData\OperationContext\HTTPRequestMethod;
@@ -215,5 +216,10 @@ class IncomingRequest implements IHTTPRequest
     public function getMethod()
     {
         return $this->_method;
+    }
+
+    public function getAllInput()
+    {
+        return file_get_contents("php://input");
     }
 }
