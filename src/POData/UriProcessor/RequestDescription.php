@@ -309,7 +309,7 @@ class RequestDescription
                 }
             }
         } elseif ($dataType === MimeTypes::MIME_APPLICATION_JSON) {
-            $data = json_decode($string, true);
+            $data = !is_array($string) ? json_decode($string, true) : $string;
             $this->_data = $data;
         }
     }
