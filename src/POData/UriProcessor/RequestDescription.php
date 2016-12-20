@@ -195,7 +195,7 @@ class RequestDescription
     /**
      * Data of request from request body.
      *
-     * @var array
+     * @var array|null
      */
     private $_data;
 
