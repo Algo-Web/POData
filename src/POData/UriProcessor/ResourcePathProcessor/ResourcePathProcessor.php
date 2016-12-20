@@ -55,7 +55,8 @@ class ResourcePathProcessor
             $service->getConfiguration()->getMaxDataServiceVersion(),
             $host->getRequestVersion(),
             $host->getRequestMaxVersion(),
-            $dataType
+            $dataType,
+            $operationContext->incomingRequest()
         );
         $kind = $request->getTargetKind();
 
