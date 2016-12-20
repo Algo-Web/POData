@@ -199,7 +199,7 @@ class UriProcessor
                     throw ODataException::createBadRequestError(Messages::noDataForThisVerb($requestMethod));
                 }
 
-                return $this->providers->createResourceforResourceSet($resourceSet, $keyDescriptor, $data);
+                $this->providers->createResourceforResourceSet($resourceSet, $keyDescriptor, $data);
             }
         }
         return $this->executeBase();
