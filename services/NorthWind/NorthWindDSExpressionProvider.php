@@ -333,14 +333,14 @@ class NorthWindDSExpressionProvider implements IExpressionProvider
                     return "SUBSTRING($params[0], $params[1] + 1, $params[2])";
                 } else {
                     // 2 Params version of OData substring
-                  // We don't have the same function for SQL Server, we have only:
+                    // We don't have the same function for SQL Server, we have only:
 
-                  // SUBSTRING ( value_expression , start_expression , length_expression )
-                  // http://msdn.microsoft.com/en-us/library/ms187748.aspx
+                    // SUBSTRING ( value_expression , start_expression , length_expression )
+                    // http://msdn.microsoft.com/en-us/library/ms187748.aspx
 
-                  // If the sum of start_expression and length_expression is greater than the number of characters
-                  // in value_expression, the whole value expression beginning at start_expression is returned
-                  // In OData substring function the index start from 0, in SQL Server its from 1
+                    // If the sum of start_expression and length_expression is greater than the number of characters
+                    // in value_expression, the whole value expression beginning at start_expression is returned
+                    // In OData substring function the index start from 0, in SQL Server its from 1
                     return "SUBSTRING($params[0], $params[1] + 1, LEN($params[0]))";
                 }
                 break;

@@ -177,9 +177,9 @@ class UriProcessor
     {
         return $this->executeBase();
     }
-           /**
-     * Execute the client submitted request against the data source (POST).
-     */
+            /**
+             * Execute the client submitted request against the data source (POST).
+             */
     protected function executePost()
     {
         $segments = $this->request->getSegments();
@@ -209,7 +209,7 @@ class UriProcessor
      */
     protected function executePut()
     {
-        return $this->executeBase(function ($uriProcessor, $segment) {
+        return $this->executeBase(function($uriProcessor, $segment) {
             $requestMethod = $uriProcessor->getService()->getOperationContext()->incomingRequest()->getMethod();
             $resourceSet = $segment->getTargetResourceSetWrapper();
             $keyDescriptor = $segment->getKeyDescriptor();
@@ -232,7 +232,7 @@ class UriProcessor
      */
     protected function executeDelete()
     {
-        return $this->executeBase(function ($uriProcessor, $segment) {
+        return $this->executeBase(function($uriProcessor, $segment) {
             $requestMethod = $uriProcessor->getService()->getOperationContext()->incomingRequest()->getMethod();
             $resourceSet = $segment->getTargetResourceSetWrapper();
             $keyDescriptor = $segment->getKeyDescriptor();

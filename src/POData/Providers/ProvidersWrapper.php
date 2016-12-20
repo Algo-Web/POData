@@ -839,7 +839,7 @@ class ProvidersWrapper
                 );
             }
             foreach ($targetProperty->getResourceType()->getKeyProperties()
- as $keyName => $resourceProperty) {
+    as $keyName => $resourceProperty) {
                 try {
                     $keyValue = $targetResourceType->getPropertyValue($entityInstance, $keyName);
                     if (is_null($keyValue)) {
@@ -896,7 +896,7 @@ class ProvidersWrapper
         }
 
         foreach ($keyDescriptor->getValidatedNamedValues()
- as $keyName => $valueDescription) {
+    as $keyName => $valueDescription) {
             try {
                 $keyValue = $resourceType->getPropertyValue($entityInstance, $keyName);
                 if (is_null($keyValue)) {
@@ -923,16 +923,16 @@ class ProvidersWrapper
     }
     
         /**
-     * Updates a resource
-     *
-     * @param ResourceSet      $sourceResourceSet    The entity set containing the source entity
-     * @param object           $sourceEntityInstance The source entity instance
-     * @param KeyDescriptor    $keyDescriptor        The key identifying the entity to fetch
-     * @param object           $data                 The New data for the entity instance.
-     * @param bool             $shouldUpdate        Should undefined values be updated or reset to default
-     *
-     * @return object|null The new resource value if it is assignable or throw exception for null.
-     */
+         * Updates a resource
+         *
+         * @param ResourceSet      $sourceResourceSet    The entity set containing the source entity
+         * @param object           $sourceEntityInstance The source entity instance
+         * @param KeyDescriptor    $keyDescriptor        The key identifying the entity to fetch
+         * @param object           $data                 The New data for the entity instance.
+         * @param bool             $shouldUpdate        Should undefined values be updated or reset to default
+         *
+         * @return object|null The new resource value if it is assignable or throw exception for null.
+         */
     public function updateResource(
         ResourceSet $sourceResourceSet,
         $sourceEntityInstance,
@@ -950,7 +950,7 @@ class ProvidersWrapper
     }
     /**
      * Delete resource from a resource set.
-     * @param ResourceSet|null $sourceResourceSet
+     * @param ResourceSet $sourceResourceSet
      * @param object           $sourceEntityInstance
      *
      * return bool true if resources sucessfully deteled, otherwise false.
