@@ -49,17 +49,21 @@ class ResourcePathProcessor
         if ($operationContext && $operationContext->incomingRequest()->getMethod() != HTTPRequestMethod::GET()) {
             $dataType = $service->getHost()->getRequestContentType();
         }
+        $incoming = isset($operationContext) ? $operationContext->incomingRequest() : null;
         $request = new RequestDescription(
             $segments,
             $absoluteRequestUri,
             $service->getConfiguration()->getMaxDataServiceVersion(),
             $host->getRequestVersion(),
             $host->getRequestMaxVersion(),
-            $dataType
+            $dataType,
+            $incoming
         );
         $kind = $request->getTargetKind();
 
-        if ($kind == TargetKind::METADATA() || $kind == TargetKind::BATCH() || $kind == TargetKind::SERVICE_DIRECTORY()) {
+        if ($kind == TargetKind::METADATA()
+            || $kind == TargetKind::BATCH()
+            || $kind == TargetKind::SERVICE_DIRECTORY()) {
             return $request;
         }
 

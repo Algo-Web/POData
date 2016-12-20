@@ -123,4 +123,12 @@ class IncomingIlluminateRequest implements IHTTPRequest
     {
         return $this->_method;
     }
+
+    /**
+     * @return array|mixed
+     */
+    public function getAllInput()
+    {
+        return $this->request->all();
+    }
 }

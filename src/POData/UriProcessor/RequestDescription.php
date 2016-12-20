@@ -20,6 +20,7 @@ use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\RootProjectionNode;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Query\QueryType;
+use POData\OperationContext\IHTTPRequest;
 
 /**
  * Class RequestDescription.
@@ -194,7 +195,7 @@ class RequestDescription
     /**
      * Data of request from request body.
      *
-     * @var array
+     * @var array|null
      */
     private $_data;
 
@@ -220,15 +221,23 @@ class RequestDescription
      * @param string|null         $maxRequestVersion
      * @param string              $dataType
      */
-    public function __construct($segmentDescriptors, Url $requestUri, Version $serviceMaxVersion, $requestVersion, $maxRequestVersion, $dataType = null)
-    {
+    public function __construct(
+        $segmentDescriptors,
+        Url $requestUri,
+        Version $serviceMaxVersion,
+        $requestVersion,
+        $maxRequestVersion,
+        $dataType = null,
+        IHTTPRequest $payload = null
+    ) {
         $this->segments = $segmentDescriptors;
         $this->_segmentCount = count($this->segments);
         $this->requestUrl = $requestUri;
         $this->lastSegment = $segmentDescriptors[$this->_segmentCount - 1];
         $this->queryType = QueryType::ENTITIES();
 
-        //we use this for validation checks down in validateVersions...but maybe we should check that outside of this object...
+        //we use this for validation checks down in validateVersions...
+        //but maybe we should check that outside of this object...
         $this->maxServiceVersion = $serviceMaxVersion;
 
         //Per OData 1 & 2 spec we must return the smallest size
@@ -238,10 +247,14 @@ class RequestDescription
 
         //see http://www.odata.org/documentation/odata-v2-documentation/overview/#ProtocolVersioning
         //if requestVersion isn't there, use Service Max Version
-        $this->requestVersion = is_null($requestVersion) ? $serviceMaxVersion : self::parseVersionHeader($requestVersion, ODataConstants::ODATAVERSIONHEADER);
+        $this->requestVersion = is_null($requestVersion)
+            ? $serviceMaxVersion
+            : self::parseVersionHeader($requestVersion, ODataConstants::ODATAVERSIONHEADER);
 
         //if max version isn't there, use the request version
-        $this->requestMaxVersion = is_null($maxRequestVersion) ? $this->requestVersion : self::parseVersionHeader($maxRequestVersion, ODataConstants::ODATAMAXVERSIONHEADER);
+        $this->requestMaxVersion = is_null($maxRequestVersion)
+            ? $this->requestVersion
+            : self::parseVersionHeader($maxRequestVersion, ODataConstants::ODATAMAXVERSIONHEADER);
 
         //if it's OData v3..things change a bit
         if ($this->maxServiceVersion == Version::v3()) {
@@ -266,6 +279,7 @@ class RequestDescription
         $this->_filterInfo = null;
         $this->_countValue = null;
         $this->_isExecuted = false;
+        $this->_data = isset($payload) ? $payload->getAllInput() : null;
 
         // Define data from request body
         if ($dataType) {
@@ -280,9 +294,11 @@ class RequestDescription
      */
     private function _readData($dataType)
     {
-        $this->_data = null;
-        $string = file_get_contents('php://input');
+        $string = $this->_data;
         if ($dataType === MimeTypes::MIME_APPLICATION_XML) {
+            if (is_array($string) && 1 == count($string)) {
+                $string = $string[0];
+            }
             $data = XML2Array::createArray($string);
             if (!empty($data['entry']['content']['m:properties'])) {
                 $clearData = $data['entry']['content']['m:properties'];
