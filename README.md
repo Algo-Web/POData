@@ -20,20 +20,19 @@ POData started as a fork of [The OData Producer Library for PHP](https://github.
 * Offers your provider implementation more control on how to best execute the OData Query
 * Optimized $expand support
 * Support for an Annotation Based Provider Implementation
+* Create, Update, & Delete support
 
 Long term goals include:
 
 * OData v4 Support
-* Create, Update, & Delete support
 * Transaction support
-* Port to Node
 * Convince WordPress & MediaWiki to change their entire API to OData
 
 MVC Integrations
 =================
 It's likley POData will execute in the context of an Web MVC Framework.  As such, the framework has probably already done a lot of the parsing for you and it makes no sense to have POData reinvent the wheel.  As such, some MVC adapters are provided to bridge the MVC framework to POData.
 * ZendFramework 1 - [POData-ZF1](https://github.com/POData/POData-ZF1)
-
+* Laravel 5.1+ - [POData-Laravel](https://github.com/Algo-Web/POData-Laravel)
 
 Getting Started
 ================
@@ -41,6 +40,5 @@ Check the Wiki for a [step by step getting started guide](https://github.com/POD
 
 Contact
 ============
-Need Support? Want to help contribute (but not yet ready to submit a pull request)?  Want to complain about something being too hard?  Doesn't matter why we're interested, contact us at:
+Need Support? Want to help contribute (but not yet ready to submit a pull request)?  Want to complain about something being too hard?  Doesn't matter why, we're interested, contact us by raising an issue
 
-* Our [POData google group](https://groups.google.com/d/forum/podata)
