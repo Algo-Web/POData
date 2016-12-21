@@ -66,7 +66,7 @@ class XML2Array
      *
      * @return array
      */
-    private static function convert(DOMNode $node)
+    private static function convert(\DOMNode $node)
     {
         $output = [];
         switch ($node->nodeType) {
