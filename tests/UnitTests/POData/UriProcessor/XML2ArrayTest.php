@@ -14,10 +14,16 @@ class XML2ArrayTest extends \PHPUnit_Framework_TestCase
     public function provideInvalidTypes()
     {
         return [
-            [0],
             [1.1],
-            [null],
             [true],
+        ];
+    }
+    
+    public function provideEmptyTypes()
+        {
+        return [
+            [0],
+            [null],
             [false],
         ];
     }
@@ -51,6 +57,16 @@ class XML2ArrayTest extends \PHPUnit_Framework_TestCase
     public function testXMLFileToArrayRejectsInvalidTypes($invalidType)
     {
         XML2Array::createArray($invalidType);
+    }
+    
+    /**
+     * @param mixed $invalidType
+     *
+     * @dataProvider provideEmptyTypes
+     */
+    public function testXMLFileToArrayRejectsEmptyTypes($emptyType)
+    {
+        $this->assertEquals(0, count(XML2Array::createArray($emptyType);));
     }
     /**
      * @param string $invalidXML
