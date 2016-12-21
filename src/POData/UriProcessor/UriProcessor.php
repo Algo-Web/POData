@@ -241,16 +241,10 @@ class UriProcessor
             $requestMethod = $uriProcessor->getService()->getOperationContext()->incomingRequest()->getMethod();
             $resourceSet = $segment->getTargetResourceSetWrapper();
             $keyDescriptor = $segment->getKeyDescriptor();
-            $data = $uriProcessor->request->getData();
             if (!$resourceSet || !$keyDescriptor) {
                 $url = $uriProcessor->getService()->getHost()->getAbsoluteRequestUri()->getUrlAsString();
                 throw ODataException::createBadRequestError(Messages::badRequestInvalidUriForThisVerb($url, $requestMethod));
             }
-
-            if (!$data) {
-                throw ODataException::createBadRequestError(Messages::noDataForThisVerb($requestMethod));
-            }
-
             return $uriProcessor->providers->deleteResource($resourceSet, $segment->getResult());
         });
     }
