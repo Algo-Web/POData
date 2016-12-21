@@ -226,7 +226,9 @@ class UriProcessor
                 throw ODataException::createBadRequestError(Messages::noDataForThisVerb($requestMethod));
             }
 
-            $uriProcessor->providers->updateResource($resourceSet, $segment->getResult(), $keyDescriptor, $data, false);
+            $queryResult = $uriProcessor->providers->updateResource($resourceSet, $segment->getResult(), $keyDescriptor, $data, false);
+            $segment->setResult($queryResult);
+            return $queryResult;
         });
     }
 
