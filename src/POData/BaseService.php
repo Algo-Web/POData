@@ -355,7 +355,9 @@ abstract class BaseService implements IRequestHandler, IService
         if ($request->needExecution()) {
             $uriProcessor->execute();
             $objectModelSerializer = new ObjectModelSerializer($this, $request);
-            if (!$request->isSingleResult()) {
+            $method = $this->_serviceHost->getOperationContext()->incomingRequest()->getMethod();
+            $method = ($method != HTTPRequestMethod::POST());
+            if (!$request->isSingleResult() && $method) {
                 // Code path for collection (feed or links)
                 $entryObjects = $request->getTargetResult();
                 self::assert(
