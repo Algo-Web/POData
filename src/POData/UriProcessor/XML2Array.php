@@ -22,6 +22,9 @@ class XML2Array
      */
     public static function createArray($input_xml)
     {
+        if(!isset($input_xml) || 0 === strlen($input_xml){
+           return [];
+        }
         $xml = self::getXMLRoot();
         if (is_string($input_xml)) {
             try {
