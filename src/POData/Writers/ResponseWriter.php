@@ -60,6 +60,9 @@ class ResponseWriter
                 $responseContentType = MimeTypes::MIME_APPLICATION_OCTETSTREAM;
             }
         } else {
+            $responsePieces = explode(';', $responseContentType);
+            $responseContentType = $responsePieces[0];
+
             $writer = $service->getODataWriterRegistry()->getWriter($request->getResponseVersion(), $responseContentType);
             //TODO: move ot Messages
             if (is_null($writer)) {
