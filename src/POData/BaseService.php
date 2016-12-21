@@ -353,9 +353,14 @@ abstract class BaseService implements IRequestHandler, IService
         // (2) metadata - internal resource
         // (3) service directory - internal resource
         if ($request->needExecution()) {
-            $uriProcessor->execute();
-            $objectModelSerializer = new ObjectModelSerializer($this, $request);
             $method = $this->_serviceHost->getOperationContext()->incomingRequest()->getMethod();
+            $uriProcessor->execute();
+            if ($method == HTTPRequestMethod::DELETE()) {
+                $this->_serviceHost->setResponseStatusCode(HttpStatus::CODE_OK);
+                return;
+            }
+
+            $objectModelSerializer = new ObjectModelSerializer($this, $request);
             $method = ($method != HTTPRequestMethod::POST());
             if (!$request->isSingleResult() && $method) {
                 // Code path for collection (feed or links)
