@@ -66,7 +66,7 @@ class XML2ArrayTest extends \PHPUnit_Framework_TestCase
      */
     public function testXMLFileToArrayRejectsEmptyTypes($emptyType)
     {
-        $this->assertEquals(0, count(XML2Array::createArray($emptyType);));
+        $this->assertEquals(0, count(XML2Array::createArray($emptyType)));
     }
     /**
      * @param string $invalidXML
