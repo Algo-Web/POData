@@ -193,16 +193,19 @@ class UriProcessor
                 $data = $this->request->getData();
                 if (!$resourceSet) {
                     $url = $this->getService()->getHost()->getAbsoluteRequestUri()->getUrlAsString();
-                    throw ODataException::createBadRequestError(Messages::badRequestInvalidUriForThisVerb($url, $requestMethod));
+                    throw ODataException::createBadRequestError(
+                        Messages::badRequestInvalidUriForThisVerb($url, $requestMethod)
+                    );
                 }
                 if (!$data) {
                     throw ODataException::createBadRequestError(Messages::noDataForThisVerb($requestMethod));
                 }
 
-                $this->providers->createResourceforResourceSet($resourceSet, $keyDescriptor, $data);
+                $queryResult = $this->providers->createResourceforResourceSet($resourceSet, $keyDescriptor, $data);
+                $segment->setResult($queryResult);
             }
         }
-        return $this->executeBase();
+        //return $this->executeBase();
     }
     /**
      * Execute the client submitted request against the data source (PUT).
