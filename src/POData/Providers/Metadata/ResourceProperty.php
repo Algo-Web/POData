@@ -54,6 +54,12 @@ class ResourceProperty
      */
     public function __construct($name, $mimeType, $kind, ResourceType $propertyResourceType)
     {
+        if (!$this->_isValidPropertyName($name)) {
+            throw new InvalidArgumentException(
+                'Property name violates OData specification'
+            );
+        }
+
         if (!$this->_isValidResourcePropertyKind($kind)) {
             throw new InvalidArgumentException(
                 Messages::resourcePropertyInvalidKindParameter('$kind')
@@ -161,6 +167,24 @@ class ResourceProperty
     public static function sIsKindOf($kind1, $kind2)
     {
         return ($kind1 & $kind2) == $kind2;
+    }
+
+    /**
+     * Checks whether supplied name meets OData specification
+     *
+     * @param string $name  Field name to be validated
+     *
+     * @return bool
+     */
+    private function _isValidPropertyName($name)
+    {
+        if (!isset($name) || !is_string($name) || empty($name)) {
+            return false;
+        }
+        if ('_' == substr($name, 0)) {
+            return false;
+        }
+        return true;
     }
 
     /**
