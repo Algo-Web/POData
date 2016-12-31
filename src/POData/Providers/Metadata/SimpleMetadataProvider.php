@@ -210,6 +210,7 @@ class SimpleMetadataProvider implements IMetadataProvider
 
         $entityType = new ResourceType($refClass, ResourceTypeKind::ENTITY, $name, $namespace);
         $this->resourceTypes[$name] = $entityType;
+        ksort($this->resourceTypes);
 
         return $entityType;
     }
@@ -234,6 +235,7 @@ class SimpleMetadataProvider implements IMetadataProvider
 
         $complexType = new ResourceType($refClass, ResourceTypeKind::COMPLEX, $name, $namespace, $baseResourceType);
         $this->resourceTypes[$name] = $complexType;
+        ksort($this->resourceTypes);
 
         return $complexType;
     }
@@ -256,6 +258,7 @@ class SimpleMetadataProvider implements IMetadataProvider
         //No support for multiple ResourceSet with same EntityType
         //So keeping reference to the 'ResourceSet' with the entity type
         $resourceType->setCustomState($this->resourceSets[$name]);
+        ksort($this->resourceSets);
 
         return $this->resourceSets[$name];
     }
