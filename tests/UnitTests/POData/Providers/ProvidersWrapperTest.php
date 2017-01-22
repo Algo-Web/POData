@@ -251,6 +251,8 @@ class ProvidersWrapperTest extends PhockitoUnitTestCase
         Phockito::when($this->mockResourceType->getName())
             ->return($fakeName);
 
+        Phockito::when($this->mockResourceType->__sleep())->return([]);
+
         $wrapper = $this->getMockedWrapper();
 
         try {
@@ -271,6 +273,8 @@ class ProvidersWrapperTest extends PhockitoUnitTestCase
         Phockito::when($this->mockResourceType->getName())
             ->return($fakeName);
 
+        Phockito::when($this->mockResourceType->__sleep())->return([]);
+
         $wrapper = $this->getMockedWrapper();
 
         $actual = $wrapper->getDerivedTypes($this->mockResourceType);
@@ -283,6 +287,8 @@ class ProvidersWrapperTest extends PhockitoUnitTestCase
             ->return(true);
 
         $wrapper = $this->getMockedWrapper();
+
+        Phockito::when($this->mockResourceType->__sleep())->return([]);
 
         $this->assertTrue($wrapper->hasDerivedTypes($this->mockResourceType));
     }
@@ -332,6 +338,8 @@ class ProvidersWrapperTest extends PhockitoUnitTestCase
 
         Phockito::when($this->mockResourceAssociationSetEnd->getResourceType())
             ->return($this->mockResourceType2);
+
+        Phockito::when($this->mockResourceType->__sleep())->return([]);
 
         $wrapper = $this->getMockedWrapper();
 
@@ -385,6 +393,8 @@ class ProvidersWrapperTest extends PhockitoUnitTestCase
 
         Phockito::when($this->mockResourceAssociationSetEnd->getResourceType())
             ->return($this->mockResourceType2);
+
+        Phockito::when($this->mockResourceType->__sleep())->return([]);
 
         $wrapper = $this->getMockedWrapper();
 
