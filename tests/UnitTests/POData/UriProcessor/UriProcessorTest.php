@@ -2205,6 +2205,7 @@ class UriProcessorTest extends PhockitoUnitTestCase
                 null,
                 null,
                 null,
+                0,
                 null
             )
         )->return($fakeQueryResult);
@@ -2273,6 +2274,7 @@ class UriProcessorTest extends PhockitoUnitTestCase
                 null,
                 null,
                 null,
+                0,
                 null
             )
         )->return($fakeQueryResult);
@@ -2311,6 +2313,7 @@ class UriProcessorTest extends PhockitoUnitTestCase
                 null,
                 null,
                 null,
+                0,
                 null
             )
         )->return($fakeQueryResult);
@@ -2399,6 +2402,7 @@ class UriProcessorTest extends PhockitoUnitTestCase
                 null,
                 null,
                 null,
+                0,
                 null
             )
         )->return($fakeQueryResult);
@@ -2442,6 +2446,7 @@ class UriProcessorTest extends PhockitoUnitTestCase
                 null,
                 null,
                 null,
+                0,
                 null
             )
         )->return($fakeQueryResult);
@@ -2485,6 +2490,7 @@ class UriProcessorTest extends PhockitoUnitTestCase
                 null,
                 null,
                 null,
+                0,
                 null
             )
         )->return($fakeQueryResult);

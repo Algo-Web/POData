@@ -939,4 +939,21 @@ class ResourceType
 
         return $reflect->getValue($entity);
     }
+
+    public function __sleep()
+    {
+        if (null == $this->_type || $this->_type instanceof \POData\Providers\Metadata\Type\IType) {
+            return array_keys(get_object_vars($this));
+        }
+        $this->_type = $this->_type->getName();
+        $result = array_keys(get_object_vars($this));
+        return $result;
+    }
+
+    public function __wakeup()
+    {
+        if (is_string($this->_type)) {
+            $this->_type = new \ReflectionClass($this->_type);
+        }
+    }
 }
