@@ -86,8 +86,9 @@ class MetadataWriter
     public function writeMetadata()
     {
         $this->_metadataManager = MetadataManager::create($this->providersWrapper);
+        $conf = $this->providersWrapper->getConfiguration();
 
-        $this->_dataServiceVersion = new Version(1, 0);
+        $this->_dataServiceVersion = $conf->getMaxDataServiceVersion();
         $edmSchemaVersion = $this->providersWrapper->getEdmSchemaVersion();
         $this->_metadataManager->getDataServiceAndEdmSchemaVersions($this->_dataServiceVersion, $edmSchemaVersion);
         $this->_xmlWriter = new \XMLWriter();
@@ -96,15 +97,18 @@ class MetadataWriter
         $this->_writeTopLevelElements($this->_dataServiceVersion->toString());
         $resourceTypesInContainerNamespace = array();
         $containerNamespace = $this->providersWrapper->getContainerNamespace();
-        foreach ($this->_metadataManager->getResourceTypesAlongWithNamespace() as $resourceTypeNamespace => $resourceTypesWithName) {
+        foreach ($this->_metadataManager->getResourceTypesAlongWithNamespace()
+                 as $resourceTypeNamespace => $resourceTypesWithName) {
             if ($resourceTypeNamespace == $containerNamespace) {
                 foreach ($resourceTypesWithName as $resourceTypeName => $resourceType) {
                     $resourceTypesInContainerNamespace[] = $resourceType;
                 }
             } else {
-                $associationsInThisNamespace = $this->_metadataManager->getResourceAssociationTypesForNamespace($resourceTypeNamespace);
+                $associationsInThisNamespace =
+                    $this->_metadataManager->getResourceAssociationTypesForNamespace($resourceTypeNamespace);
                 $this->_writeSchemaElement($resourceTypeNamespace, $edmSchemaVersion);
-                $uniqueAssociationsInThisNamespace = $this->_metadataManager->getUniqueResourceAssociationTypesForNamespace($resourceTypeNamespace);
+                $uniqueAssociationsInThisNamespace =
+                    $this->_metadataManager->getUniqueResourceAssociationTypesForNamespace($resourceTypeNamespace);
                 $this->_writeResourceTypes(array_values($resourceTypesWithName), $associationsInThisNamespace);
                 $this->_writeAssociationTypes($uniqueAssociationsInThisNamespace);
             }
@@ -118,9 +122,11 @@ class MetadataWriter
             //lookup key i.e. ResourceType::Name_NavigationProperty::Name.
             //Same association will appear twice for di-directional relationship
             //(duplicate value will be there in this case)
-            $associationsInThisNamespace = $this->_metadataManager->getResourceAssociationTypesForNamespace($containerNamespace);
+            $associationsInThisNamespace =
+                $this->_metadataManager->getResourceAssociationTypesForNamespace($containerNamespace);
             //Get association type in container namespace as array of unique values
-            $uniqueAssociationsInThisNamespace = $this->_metadataManager->getUniqueResourceAssociationTypesForNamespace($containerNamespace);
+            $uniqueAssociationsInThisNamespace =
+                $this->_metadataManager->getUniqueResourceAssociationTypesForNamespace($containerNamespace);
             $this->_writeResourceTypes($resourceTypesInContainerNamespace, $associationsInThisNamespace);
             $this->_writeAssociationTypes($uniqueAssociationsInThisNamespace);
         }
@@ -191,7 +197,9 @@ class MetadataWriter
             } elseif ($resourceType->getResourceTypeKind() == ResourceTypeKind::COMPLEX) {
                 $this->_writeComplexType($resourceType);
             } else {
-                throw ODataException::createInternalServerError(Messages::metadataWriterExpectingEntityOrComplexResourceType());
+                throw ODataException::createInternalServerError(
+                    Messages::metadataWriterExpectingEntityOrComplexResourceType()
+                );
             }
         }
     }
@@ -212,8 +220,16 @@ class MetadataWriter
             $this->_xmlWriter->writeAttribute(ODataConstants::ABSTRACT1, 'true');
         }
 
-        if ($resourceType->isMediaLinkEntry() && (!$resourceType->hasBaseType() || ($resourceType->hasBaseType() && $resourceType->getBaseType()->isMediaLinkEntry()))) {
-            $this->_xmlWriter->writeAttributeNs(ODataConstants::ODATA_METADATA_NAMESPACE_PREFIX, ODataConstants::DATAWEB_ACCESS_HASSTREAM_ATTRIBUTE, null, 'true');
+        if ($resourceType->isMediaLinkEntry()
+            && (!$resourceType->hasBaseType()
+                || ($resourceType->hasBaseType()
+                    && $resourceType->getBaseType()->isMediaLinkEntry()))) {
+            $this->_xmlWriter->writeAttributeNs(
+                ODataConstants::ODATA_METADATA_NAMESPACE_PREFIX,
+                ODataConstants::DATAWEB_ACCESS_HASSTREAM_ATTRIBUTE,
+                null,
+                'true'
+            );
         }
 
         if ($resourceType->hasBaseType()) {
@@ -262,7 +278,8 @@ class MetadataWriter
      */
     private function _writeProperties(ResourceType $resourceType, $associationTypesInResourceTypeNamespace)
     {
-        foreach ($this->_metadataManager->getAllVisiblePropertiesDeclaredOnThisType($resourceType) as $resourceProperty) {
+        foreach ($this->_metadataManager->getAllVisiblePropertiesDeclaredOnThisType($resourceType)
+                 as $resourceProperty) {
             if ($resourceProperty->isKindOf(ResourcePropertyKind::BAG)) {
                 $this->_writeBagProperty($resourceProperty);
             } elseif ($resourceProperty->isKindOf(ResourcePropertyKind::PRIMITIVE)) {
@@ -272,7 +289,11 @@ class MetadataWriter
             } elseif ($resourceProperty->isKindOf(ResourcePropertyKind::RESOURCE_REFERENCE)
                 || $resourceProperty->isKindOf(ResourcePropertyKind::RESOURCESET_REFERENCE)
             ) {
-                $this->_writeNavigationProperty($resourceType, $associationTypesInResourceTypeNamespace, $resourceProperty);
+                $this->_writeNavigationProperty(
+                    $resourceType,
+                    $associationTypesInResourceTypeNamespace,
+                    $resourceProperty
+                );
             } else {
                 //Unexpected ResourceProperty, expected
                     //Bag/Primitive/Complex/Navigation Property
