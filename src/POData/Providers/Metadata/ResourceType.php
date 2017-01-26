@@ -278,9 +278,9 @@ class ResourceType
     }
 
     /**
-     * Get the instance type. If the resource type describes a complex or entity type
-     * then this function returns refernece to ReflectionClass instance for the type.
-     * If resource type describes a primitive type then this function returns ITYpe.
+     * Get the instance type. If the resource type describes a complex or entity type,
+     * then this function returns reference to ReflectionClass instance for the type.
+     * If resource type describes a primitive type, then this function returns ITYpe.
      *
      * @return \ReflectionClass|IType
      */
