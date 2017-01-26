@@ -278,14 +278,17 @@ class ResourceType
     }
 
     /**
-     * Get the instance type. If the resource type describes a complex or entity type
-     * then this function returns refernece to ReflectionClass instance for the type.
-     * If resource type describes a primitive type then this function returns ITYpe.
+     * Get the instance type. If the resource type describes a complex or entity type,
+     * then this function returns reference to ReflectionClass instance for the type.
+     * If resource type describes a primitive type, then this function returns ITYpe.
      *
      * @return \ReflectionClass|IType
      */
     public function getInstanceType()
     {
+        if (is_string($this->_type)) {
+            $this->__wakeup();
+        }
         return $this->_type;
     }
 
@@ -387,7 +390,8 @@ class ResourceType
             if (strcasecmp($propertyName, $name) == 0) {
                 throw new InvalidOperationException(
                     Messages::resourceTypePropertyWithSameNameAlreadyExists(
-                        $propertyName, $this->_name
+                        $propertyName,
+                        $this->_name
                     )
                 );
             }
@@ -475,9 +479,7 @@ class ResourceType
                 $baseType = $baseType->_baseType;
             }
 
-            foreach ($baseType->_propertiesDeclaredOnThisType
-                as $propertyName => $resourceProperty
-            ) {
+            foreach ($baseType->_propertiesDeclaredOnThisType as $propertyName => $resourceProperty) {
                 if ($resourceProperty->isKindOf(ResourcePropertyKind::KEY)) {
                     $this->_keyProperties[$propertyName] = $resourceProperty;
                 }
@@ -495,9 +497,7 @@ class ResourceType
     public function getETagProperties()
     {
         if (empty($this->_etagProperties)) {
-            foreach ($this->getAllProperties()
-                as $propertyName => $resourceProperty
-            ) {
+            foreach ($this->getAllProperties() as $propertyName => $resourceProperty) {
                 if ($resourceProperty->isKindOf(ResourcePropertyKind::ETAG)) {
                     $this->_etagProperties[$propertyName] = $resourceProperty;
                 }
@@ -569,13 +569,12 @@ class ResourceType
         }
 
         $name = $namedStream->getName();
-        foreach (array_keys($this->_namedStreamsDeclaredOnThisType)
-            as $namedStreamName
-        ) {
+        foreach (array_keys($this->_namedStreamsDeclaredOnThisType) as $namedStreamName) {
             if (strcasecmp($namedStreamName, $name) == 0) {
                 throw new InvalidOperationException(
                     Messages::resourceTypeNamedStreamWithSameNameAlreadyExists(
-                        $name, $this->_name
+                        $name,
+                        $this->_name
                     )
                 );
             }
@@ -746,7 +745,9 @@ class ResourceType
 
                     if (!$foundLoop) {
                         $arrayToDetectLoopInComplexType[$count] = $resourceProperty->getResourceType();
-                        $hasBagInComplex = $resourceProperty->getResourceType()->hasBagProperty($arrayToDetectLoopInComplexType);
+                        $hasBagInComplex = $resourceProperty
+                            ->getResourceType()
+                            ->hasBagProperty($arrayToDetectLoopInComplexType);
                         unset($arrayToDetectLoopInComplexType[$count]);
                     }
                 }
@@ -816,98 +817,113 @@ class ResourceType
         switch ($typeCode) {
             case EdmPrimitiveType::BINARY:
                 return new self(
-                    new Binary(), ResourceTypeKind::PRIMITIVE,
-                    'Binary', 'Edm'
+                    new Binary(),
+                    ResourceTypeKind::PRIMITIVE,
+                    'Binary',
+                    'Edm'
                 );
                 break;
             case EdmPrimitiveType::BOOLEAN:
                 return new self(
                     new Boolean(),
                     ResourceTypeKind::PRIMITIVE,
-                    'Boolean', 'Edm'
+                    'Boolean',
+                    'Edm'
                 );
                 break;
             case EdmPrimitiveType::BYTE:
                 return new self(
                     new Byte(),
                     ResourceTypeKind::PRIMITIVE,
-                    'Byte', 'Edm'
+                    'Byte',
+                    'Edm'
                 );
                 break;
             case EdmPrimitiveType::DATETIME:
                 return new self(
                     new DateTime(),
                     ResourceTypeKind::PRIMITIVE,
-                    'DateTime', 'Edm'
+                    'DateTime',
+                    'Edm'
                 );
                 break;
             case EdmPrimitiveType::DECIMAL:
                 return new self(
                     new Decimal(),
                     ResourceTypeKind::PRIMITIVE,
-                    'Decimal', 'Edm'
+                    'Decimal',
+                    'Edm'
                 );
                 break;
             case EdmPrimitiveType::DOUBLE:
                 return new self(
                     new Double(),
                     ResourceTypeKind::PRIMITIVE,
-                    'Double', 'Edm'
+                    'Double',
+                    'Edm'
                 );
                 break;
             case EdmPrimitiveType::GUID:
                 return new self(
                     new Guid(),
                     ResourceTypeKind::PRIMITIVE,
-                    'Guid', 'Edm'
+                    'Guid',
+                    'Edm'
                 );
                 break;
             case EdmPrimitiveType::INT16:
                 return new self(
                     new Int16(),
                     ResourceTypeKind::PRIMITIVE,
-                    'Int16', 'Edm'
+                    'Int16',
+                    'Edm'
                 );
                 break;
             case EdmPrimitiveType::INT32:
                 return new self(
                     new Int32(),
                     ResourceTypeKind::PRIMITIVE,
-                    'Int32', 'Edm'
+                    'Int32',
+                    'Edm'
                 );
                 break;
             case EdmPrimitiveType::INT64:
                 return new self(
                     new Int64(),
                     ResourceTypeKind::PRIMITIVE,
-                    'Int64', 'Edm'
+                    'Int64',
+                    'Edm'
                 );
                 break;
             case EdmPrimitiveType::SBYTE:
                 return new self(
                     new SByte(),
                     ResourceTypeKind::PRIMITIVE,
-                    'SByte', 'Edm'
+                    'SByte',
+                    'Edm'
                 );
                 break;
             case EdmPrimitiveType::SINGLE:
                 return new self(
                     new Single(),
                     ResourceTypeKind::PRIMITIVE,
-                    'Single', 'Edm'
+                    'Single',
+                    'Edm'
                 );
                 break;
             case EdmPrimitiveType::STRING:
                 return new self(
                     new StringType(),
                     ResourceTypeKind::PRIMITIVE,
-                    'String', 'Edm'
+                    'String',
+                    'Edm'
                 );
                 break;
             default:
                 throw new \InvalidArgumentException(
                     Messages::commonNotValidPrimitiveEDMType(
-                        '$typeCode', 'getPrimitiveResourceType'
+                        '$typeCode',
+                        'getPrimitiveResourceType'
                     )
                 );
         }
@@ -955,5 +971,10 @@ class ResourceType
         if (is_string($this->_type)) {
             $this->_type = new \ReflectionClass($this->_type);
         }
+
+        assert(
+            $this->_type instanceof \ReflectionClass || $this->_type instanceof IType,
+            "_type neither instance of reflection class nor IType"
+        );
     }
 }
