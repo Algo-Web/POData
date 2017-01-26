@@ -286,6 +286,9 @@ class ResourceType
      */
     public function getInstanceType()
     {
+        if (is_string($this->_type)) {
+            $this->__wakeup();
+        }
         return $this->_type;
     }
 
@@ -955,5 +958,10 @@ class ResourceType
         if (is_string($this->_type)) {
             $this->_type = new \ReflectionClass($this->_type);
         }
+
+        assert(
+            $this->_type instanceof \ReflectionClass || $this->_type instanceof IType,
+            "_type neither instance of reflection class nor IType"
+        );
     }
 }
