@@ -934,6 +934,15 @@ class ResourceType
      */
     public function setPropertyValue($entity, $property, $value)
     {
+        // If magic method exists, try that first, else try property directly
+        if (method_exists($entity, '__set')) {
+            $entity->$property = $value;
+            return $this;
+        }
+        if (is_object($entity) && property_exists($entity, $property)) {
+            $entity->$property = $value;
+            return $this;
+        }
         $reflect = new \ReflectionProperty($entity, $property);
         $reflect->setValue($entity, $value);
 
