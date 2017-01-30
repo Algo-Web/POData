@@ -346,8 +346,8 @@ class UriProcessor
 
             $segment->setResult($entityInstance);
         } else {
-            $skip = (null == $this->request->getInternalSkipTokenInfo()) ? 0 :
-                $this->request->getInternalSkipTokenInfo()->getSkipTokenInfo()->getOrderByKeysInToken()[0][0];
+            $skip = (null == $this->request) ? 0 : $this->request->getSkipCount();
+            $skip = (null == $skip) ? 0 :$skip;
             $queryResult = $this->providers->getResourceSet(
                 $this->request->queryType,
                 $segment->getTargetResourceSetWrapper(),
