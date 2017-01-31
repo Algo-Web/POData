@@ -442,7 +442,7 @@ class ObjectModelSerializerBase
             $queryParameterString = $this->getNextPageLinkQueryParametersForExpandedResourceSet();
         }
 
-        $queryParameterString .= '$skiptoken=' . $skipToken;
+        $queryParameterString .= '$skip=' . $skipToken;
         $odalaLink = new ODataLink();
         $odalaLink->name = ODataConstants::ATOM_LINK_NEXT_ATTRIBUTE_STRING;
         $odalaLink->url = rtrim($absoluteUri, '/') . '?' . $queryParameterString;
