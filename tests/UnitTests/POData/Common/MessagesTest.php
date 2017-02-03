@@ -2,9 +2,7 @@
 
 namespace UnitTests\POData\Common;
 
-use PhockitoUnit\PhockitoUnitTestCase;
-
-class MessagesTest extends PhockitoUnitTestCase
+class MessagesTest extends \PHPUnit_Framework_TestCase
 {
     public function testVerifyMessageList()
     {
