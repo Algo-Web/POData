@@ -4,10 +4,8 @@ namespace UnitTests\POData\Common;
 
 use POData\HttpProcessUtility;
 use POData\Common\MimeTypes;
-use PhockitoUnit\PhockitoUnitTestCase;
-use Phockito\Phockito;
 
-class HttpProcessUtilityTest extends PhockitoUnitTestCase
+class HttpProcessUtilityTest extends \PHPUnit_Framework_TestCase
 {
     public function testSelectMimeTypeEmptyAvailableTypes()
     {
@@ -140,7 +138,8 @@ class HttpProcessUtilityTest extends PhockitoUnitTestCase
     public function testSelectMimeTypeMultipleValuesWithODataPartNoneAvailable()
     {
         $actual = HttpProcessUtility::selectMimeType(
-            MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META.';q=1.0, '.MimeTypes::MIME_APPLICATION_JSON_FULL_META.';q=0.5',
+            MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META
+            .';q=1.0, '.MimeTypes::MIME_APPLICATION_JSON_FULL_META.';q=0.5',
             array(
                 MimeTypes::MIME_APPLICATION_ATOM,
                 MimeTypes::MIME_APPLICATION_ATOMSERVICE,
@@ -153,7 +152,8 @@ class HttpProcessUtilityTest extends PhockitoUnitTestCase
     public function testSelectMimeTypeMultipleValuesWithODataPartialSomeMatches()
     {
         $actual = HttpProcessUtility::selectMimeType(
-            MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META.';q=1.0, '.MimeTypes::MIME_APPLICATION_JSON_FULL_META.';q=0.5',
+            MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META
+            .';q=1.0, '.MimeTypes::MIME_APPLICATION_JSON_FULL_META.';q=0.5',
             array(
                 MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META,
                 MimeTypes::MIME_APPLICATION_JSON_FULL_META,
@@ -166,7 +166,8 @@ class HttpProcessUtilityTest extends PhockitoUnitTestCase
     public function testSelectMimeTypeMultipleValuesWithODataPartialSomeMatchesMissingODataPart()
     {
         $actual = HttpProcessUtility::selectMimeType(
-            MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META.';q=1.0, '.MimeTypes::MIME_APPLICATION_JSON_FULL_META.';q=0.5',
+            MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META
+            .';q=1.0, '.MimeTypes::MIME_APPLICATION_JSON_FULL_META.';q=0.5',
             array(
                 MimeTypes::MIME_APPLICATION_JSON,
             )
@@ -178,7 +179,8 @@ class HttpProcessUtilityTest extends PhockitoUnitTestCase
     public function testSelectMimeTypeMultipleValuesWithODataPartialSomeMatchesMissingODataPartSomeMatch()
     {
         $actual = HttpProcessUtility::selectMimeType(
-            MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META.';q=1.0, '.MimeTypes::MIME_APPLICATION_JSON_FULL_META.';q=0.5',
+            MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META
+            .';q=1.0, '.MimeTypes::MIME_APPLICATION_JSON_FULL_META.';q=0.5',
             array(
                 MimeTypes::MIME_APPLICATION_JSON,
                 MimeTypes::MIME_APPLICATION_JSON_FULL_META,
