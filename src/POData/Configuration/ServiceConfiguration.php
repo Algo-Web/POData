@@ -56,7 +56,7 @@ class ServiceConfiguration
      *
      * @var int[]
      */
-    private $_pageSizes;
+    private $_pageSizes = [];
 
     /**
      * Whether verbose errors should be returned by default.
