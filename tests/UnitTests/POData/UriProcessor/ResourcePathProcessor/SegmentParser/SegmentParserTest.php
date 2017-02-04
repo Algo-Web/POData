@@ -10,7 +10,7 @@ use POData\Configuration\ServiceConfiguration;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\SegmentParser;
 use POData\Common\ODataException;
 
-use Phockito\Phockito;
+use Mockery as m;
 
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 use POData\Providers\Query\IQueryProvider;
@@ -31,7 +31,7 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
         $this->_serviceConfiguration = new ServiceConfiguration($this->_metadataProvider);
         $this->_serviceConfiguration->setEntitySetAccessRule('*', EntitySetRights::ALL);
 
-        $this->mockQueryProvider = Phockito::mock('POData\Providers\Query\IQueryProvider');
+        $this->mockQueryProvider = m::mock('POData\Providers\Query\IQueryProvider');
 
         $this->providersWrapper = new ProvidersWrapper($this->_metadataProvider, $this->mockQueryProvider, $this->_serviceConfiguration, false);
     }
