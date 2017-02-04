@@ -23,11 +23,8 @@ use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
 use POData\Providers\Query\QueryResult;
 
 use Mockery as m;
-use Phockito\Phockito;
 
-use PhockitoUnit\PhockitoUnitTestCase;
-
-class ProvidersWrapperTest extends PhockitoUnitTestCase
+class ProvidersWrapperTest extends \PHPUnit_Framework_TestCase
 {
     /** @var IQueryProvider */
     protected $mockQueryProvider;

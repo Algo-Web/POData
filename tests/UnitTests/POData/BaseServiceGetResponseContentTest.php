@@ -12,10 +12,10 @@ use POData\Common\ODataConstants;
 use POData\Common\MimeTypes;
 use POData\OperationContext\ServiceHost;
 use POData\Common\Version;
-use PhockitoUnit\PhockitoUnitTestCase;
-use Phockito\Phockito;
 
-class BaseServiceGetResponseContentTest extends PhockitoUnitTestCase
+use Mockery as m;
+
+class BaseServiceGetResponseContentTest extends \PHPUnit_Framework_TestCase
 {
     /** @var RequestDescription */
     protected $mockRequest;
@@ -33,26 +33,35 @@ class BaseServiceGetResponseContentTest extends PhockitoUnitTestCase
     {
         parent::setUp();
 
-        Phockito::when($this->mockService->getHost())
-            ->return($this->mockHost);
+        $this->mockUriProcessor = m::mock(UriProcessor::class)->makePartial();
+        $this->mockHost = m::mock(ServiceHost::class)->makePartial();
+        $this->mockService = m::mock(IService::class)->makePartial();
+        $this->mockService->shouldReceive('getHost')->andReturn($this->mockHost);
+
+        $this->mockRequest = m::mock(RequestDescription::class)->makePartial();
+
+        /*Phockito::when($this->mockService->getHost())
+            ->return($this->mockHost);*/
     }
 
     /**
      * @dataProvider provider
      */
-    public function testGetResponseContentType($id, TargetKind $target, Version $version, $acceptsHeader, $format, $expectedValue)
-    {
-        Phockito::when($this->mockRequest->getTargetKind())
-            ->return($target);
+    public function testGetResponseContentType(
+        $id,
+        TargetKind $target,
+        Version $version,
+        $acceptsHeader,
+        $format,
+        $expectedValue
+    ) {
 
-        Phockito::when($this->mockHost->getRequestAccept())
-            ->return($acceptsHeader);
+        $this->mockRequest->shouldReceive('getTargetKind')->andReturn($target);
+        $this->mockRequest->shouldReceive('getResponseVersion')->andReturn($version);
 
-        Phockito::when($this->mockHost->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_FORMAT))
-            ->return($format);
-
-        Phockito::when($this->mockRequest->getResponseVersion())
-            ->return($version);
+        $this->mockHost->shouldReceive('getRequestAccept')->andReturn($acceptsHeader);
+        $this->mockHost->shouldReceive('getQueryStringItem')
+            ->withArgs([ODataConstants::HTTPQUERY_STRING_FORMAT])->andReturn($format);
 
         $actual = BaseService::getResponseContentType($this->mockRequest, $this->mockUriProcessor, $this->mockService);
 
