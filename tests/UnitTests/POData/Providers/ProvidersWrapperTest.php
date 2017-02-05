@@ -273,8 +273,6 @@ class ProvidersWrapperTest extends \PHPUnit_Framework_TestCase
         $this->mockMetadataProvider->shouldReceive('getDerivedTypes')->withArgs([$this->mockResourceType])
             ->andReturn($this->mockResourceType);
 
-        //Phockito::when($this->mockResourceType->__sleep())->return([]);
-
         $wrapper = $this->getMockedWrapper();
 
         try {
@@ -297,8 +295,6 @@ class ProvidersWrapperTest extends \PHPUnit_Framework_TestCase
         $this->mockMetadataProvider->shouldReceive('getDerivedTypes')->withArgs([$this->mockResourceType])
             ->andReturn(array($this->mockResourceType2));
 
-        //Phockito::when($this->mockResourceType->__sleep())->return([]);
-
         $wrapper = $this->getMockedWrapper();
 
         $actual = $wrapper->getDerivedTypes($this->mockResourceType);
@@ -311,8 +307,6 @@ class ProvidersWrapperTest extends \PHPUnit_Framework_TestCase
             ->andReturn(true);
 
         $wrapper = $this->getMockedWrapper();
-
-        //Phockito::when($this->mockResourceType->__sleep())->return([]);
 
         $this->assertTrue($wrapper->hasDerivedTypes($this->mockResourceType));
     }
@@ -354,8 +348,6 @@ class ProvidersWrapperTest extends \PHPUnit_Framework_TestCase
         $this->mockResourceAssociationSetEnd->shouldReceive('getResourceSet')->andReturn($this->mockResourceSet2);
 
         $this->mockResourceAssociationSetEnd->shouldReceive('getResourceType')->andReturn($this->mockResourceType2);
-
-        //Phockito::when($this->mockResourceType->__sleep())->return([]);
 
         $wrapper = $this->getMockedWrapper();
 
@@ -408,8 +400,6 @@ class ProvidersWrapperTest extends \PHPUnit_Framework_TestCase
 
         $this->mockResourceAssociationSetEnd->shouldReceive('getResourceType')->andReturn($this->mockResourceType2);
 
-        //Phockito::when($this->mockResourceType->__sleep())->return([]);
-
         $wrapper = $this->getMockedWrapper();
 
         $actual = $wrapper->getResourceAssociationSet(
@@ -450,20 +440,7 @@ class ProvidersWrapperTest extends \PHPUnit_Framework_TestCase
             $this->mockResourceSet,
         );
 
-        /*
-        Phockito::when($this->mockMetadataProvider->getResourceSets())
-            ->return($fakeSets);
-
-        Phockito::when($this->mockResourceSet->getResourceType())
-            ->return($this->mockResourceType);*/
-
         $fakeName = 'Fake Set 1';
-        /*
-        Phockito::when($this->mockResourceSet->getName())
-            ->return($fakeName);
-
-        Phockito::when($this->mockServiceConfig->getEntitySetAccessRule($this->mockResourceSet))
-            ->return(EntitySetRights::READ_SINGLE);*/
 
         $this->mockMetadataProvider->shouldReceive('getResourceSets')->andReturn($fakeSets);
         $this->mockResourceSet->shouldReceive('getResourceType')->andReturn($this->mockResourceType);
@@ -489,28 +466,6 @@ class ProvidersWrapperTest extends \PHPUnit_Framework_TestCase
             $this->mockResourceSet,
             $this->mockResourceSet2,
         );
-
-        /*
-        Phockito::when($this->mockMetadataProvider->getResourceSets())
-            ->return($fakeSets);
-
-        Phockito::when($this->mockResourceSet->getName())
-            ->return('fake name 1');
-
-        Phockito::when($this->mockResourceSet2->getName())
-            ->return('fake name 2');
-
-        Phockito::when($this->mockResourceSet->getResourceType())
-            ->return($this->mockResourceType);
-
-        Phockito::when($this->mockResourceSet2->getResourceType())
-            ->return($this->mockResourceType);
-
-        Phockito::when($this->mockServiceConfig->getEntitySetAccessRule($this->mockResourceSet))
-            ->return(EntitySetRights::NONE);
-
-        Phockito::when($this->mockServiceConfig->getEntitySetAccessRule($this->mockResourceSet2))
-            ->return(EntitySetRights::READ_SINGLE); */
 
         $this->mockMetadataProvider->shouldReceive('getResourceSets')->andReturn($fakeSets);
         $this->mockResourceSet->shouldReceive('getResourceType')->andReturn($this->mockResourceType);

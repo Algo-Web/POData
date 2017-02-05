@@ -39,9 +39,6 @@ class BaseServiceGetResponseContentTest extends \PHPUnit_Framework_TestCase
         $this->mockService->shouldReceive('getHost')->andReturn($this->mockHost);
 
         $this->mockRequest = m::mock(RequestDescription::class)->makePartial();
-
-        /*Phockito::when($this->mockService->getHost())
-            ->return($this->mockHost);*/
     }
 
     /**
