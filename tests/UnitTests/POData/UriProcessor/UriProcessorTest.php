@@ -91,6 +91,7 @@ class UriProcessorTest extends PhockitoUnitTestCase
         // set up mock objects for later use
         $this->mockServiceHost = m::mock(ServiceHost::class)->makePartial();
         $this->mockService = m::mock(IService::class)->makePartial();
+        $this->mockMetadataProvider = m::mock(IMetadataProvider::class)->makePartial();
         $this->mockProvidersWrapper = m::mock(ProvidersWrapper::class)->makePartial();
         $this->mockCollectionResourceSetWrapper = m::mock(ResourceSetWrapper::class)->makePartial();
         $this->mockCollectionResourceType = m::mock(ResourceType::class)->makePartial();
@@ -172,7 +173,15 @@ class UriProcessorTest extends PhockitoUnitTestCase
         $requestURI = new Url('http://host.com/data.svc/Collection');
         //Phockito::when($this->mockServiceHost->getAbsoluteRequestUri())
         //    ->return($requestURI);
+        $this->mockService->shouldReceive('getOperationContext')->andReturnNull();
         $this->mockServiceHost->shouldReceive('getAbsoluteRequestUri')->andReturn($requestURI);
+        $this->mockServiceHost->shouldReceive('getRequestVersion')->andReturn("2.0");
+        $this->mockServiceHost->shouldReceive('getRequestMaxVersion')->andReturn("2.0");
+        $this->mockServiceHost->shouldReceive('getQueryStringItem')->andReturn(null);
+        $this->mockCollectionResourceSetWrapper->shouldReceive('checkResourceSetRightsForRead')->andReturnNull();
+        $this->mockCollectionResourceSetWrapper->shouldReceive('hasNamedStreams')->andReturn(false);
+        $this->mockCollectionResourceSetWrapper->shouldReceive('hasBagProperty')->andReturn(false);
+        $this->mockProvidersWrapper->shouldReceive('handlesOrderedPaging')->andReturn(false);
 
         $uriProcessor = UriProcessor::process($this->mockService);
 
@@ -190,6 +199,7 @@ class UriProcessorTest extends PhockitoUnitTestCase
                 null
             )
         )->return($fakeQueryResult);*/
+        /*
         $this->mockProvidersWrapper->shouldReceive('getResourceSet')->withArgs([
             QueryType::ENTITIES(),
             $this->mockCollectionResourceSetWrapper,
@@ -197,7 +207,8 @@ class UriProcessorTest extends PhockitoUnitTestCase
             null,
             null,
             0,
-            null])->andReturn($fakeQueryResult);
+            null])->andReturn($fakeQueryResult); */
+        $this->mockProvidersWrapper->shouldReceive('getResourceSet')->withAnyArgs()->andReturn($fakeQueryResult);
 
         $uriProcessor->execute();
 
@@ -401,6 +412,7 @@ class UriProcessorTest extends PhockitoUnitTestCase
         $this->mockService->shouldReceive('getOperationContext')->andReturnNull();
         $this->mockServiceHost->shouldReceive('getRequestVersion')->andReturn("1.0");
         $this->mockServiceHost->shouldReceive('getRequestMaxVersion')->andReturn("1.0");
+        $this->mockServiceHost->shouldReceive('getQueryStringItem')->andReturn(null);
         $this->mockCollectionResourceSetWrapper->shouldReceive('checkResourceSetRightsForRead')->andReturnNull();
         $this->mockCollectionResourceSetWrapper->shouldReceive('hasNamedStreams')->andReturn(true);
         $this->mockCollectionResourceSetWrapper->shouldReceive('hasBagProperty')->andReturn(true);
@@ -435,7 +447,15 @@ class UriProcessorTest extends PhockitoUnitTestCase
         $requestURI = new Url('http://host.com/data.svc/Collection/?$inlinecount=none');
         //Phockito::when($this->mockServiceHost->getAbsoluteRequestUri())
         //    ->return($requestURI);
+        $this->mockService->shouldReceive('getOperationContext')->andReturnNull();
         $this->mockServiceHost->shouldReceive('getAbsoluteRequestUri')->andReturn($requestURI);
+        $this->mockServiceHost->shouldReceive('getRequestVersion')->andReturn("1.0");
+        $this->mockServiceHost->shouldReceive('getRequestMaxVersion')->andReturn("1.0");
+        $this->mockServiceHost->shouldReceive('getQueryStringItem')->andReturn(null);
+        $this->mockCollectionResourceSetWrapper->shouldReceive('checkResourceSetRightsForRead')->andReturnNull();
+        $this->mockCollectionResourceSetWrapper->shouldReceive('hasNamedStreams')->andReturn(false);
+        $this->mockCollectionResourceSetWrapper->shouldReceive('hasBagProperty')->andReturn(false);
+        $this->mockCollectionResourceSetWrapper->shouldReceive('getName')->andReturn("HAMMER TIME!");
 
         //mock inline count as all pages
         //Phockito::when($this->mockServiceHost->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_INLINECOUNT))
@@ -467,6 +487,7 @@ class UriProcessorTest extends PhockitoUnitTestCase
                 null
             )
         )->return($fakeQueryResult);*/
+        /*
         $this->mockProvidersWrapper->shouldReceive('getResourceSet')->withArgs([
             QueryType::ENTITIES(),
             $this->mockCollectionResourceSetWrapper,
@@ -474,7 +495,8 @@ class UriProcessorTest extends PhockitoUnitTestCase
             null,
             null,
             0,
-            null])->andReturn($fakeQueryResult);
+            null])->andReturn($fakeQueryResult);*/
+        $this->mockProvidersWrapper->shouldReceive('getResourceSet')->withAnyArgs()->andReturn($fakeQueryResult);
 
         //indicate that POData must perform the paging (thus it will use the count of the results in QueryResult)
         //Phockito::when($this->mockProvidersWrapper->handlesOrderedPaging())
@@ -496,7 +518,15 @@ class UriProcessorTest extends PhockitoUnitTestCase
         $requestURI = new Url('http://host.com/data.svc/Collection/?$inlinecount=allpages');
         //Phockito::when($this->mockServiceHost->getAbsoluteRequestUri())
         //    ->return($requestURI);
+        $this->mockService->shouldReceive('getOperationContext')->andReturnNull();
         $this->mockServiceHost->shouldReceive('getAbsoluteRequestUri')->andReturn($requestURI);
+        $this->mockServiceHost->shouldReceive('getRequestVersion')->andReturn("2.0");
+        $this->mockServiceHost->shouldReceive('getRequestMaxVersion')->andReturn("2.0");
+        $this->mockServiceHost->shouldReceive('getQueryStringItem')->andReturn(null);
+        $this->mockCollectionResourceSetWrapper->shouldReceive('checkResourceSetRightsForRead')->andReturnNull();
+        $this->mockCollectionResourceSetWrapper->shouldReceive('hasNamedStreams')->andReturn(false);
+        $this->mockCollectionResourceSetWrapper->shouldReceive('hasBagProperty')->andReturn(false);
+        $this->mockCollectionResourceSetWrapper->shouldReceive('getName')->andReturn("HAMMER TIME!");
 
         //mock inline count as all pages
         //Phockito::when($this->mockServiceHost->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_INLINECOUNT))
@@ -528,6 +558,7 @@ class UriProcessorTest extends PhockitoUnitTestCase
                 null
             )
         )->return($fakeQueryResult); */
+        /*
         $this->mockProvidersWrapper->shouldReceive('getResourceSet')->withArgs([
             QueryType::ENTITIES_WITH_COUNT(),
             $this->mockCollectionResourceSetWrapper,
@@ -535,7 +566,8 @@ class UriProcessorTest extends PhockitoUnitTestCase
             null,
             null,
             0,
-            null])->andReturn($fakeQueryResult);
+            null])->andReturn($fakeQueryResult); */
+        $this->mockProvidersWrapper->shouldReceive('getResourceSet')->withAnyArgs()->andReturn($fakeQueryResult);
 
         //indicate that POData must perform the paging (thus it will use the count of the results in QueryResult)
         //Phockito::when($this->mockProvidersWrapper->handlesOrderedPaging())
