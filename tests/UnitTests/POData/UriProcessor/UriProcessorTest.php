@@ -522,7 +522,6 @@ class UriProcessorTest extends PhockitoUnitTestCase
         $this->mockServiceHost->shouldReceive('getAbsoluteRequestUri')->andReturn($requestURI);
         $this->mockServiceHost->shouldReceive('getRequestVersion')->andReturn("2.0");
         $this->mockServiceHost->shouldReceive('getRequestMaxVersion')->andReturn("2.0");
-        $this->mockServiceHost->shouldReceive('getQueryStringItem')->andReturn(null);
         $this->mockCollectionResourceSetWrapper->shouldReceive('checkResourceSetRightsForRead')->andReturnNull();
         $this->mockCollectionResourceSetWrapper->shouldReceive('hasNamedStreams')->andReturn(false);
         $this->mockCollectionResourceSetWrapper->shouldReceive('hasBagProperty')->andReturn(false);
