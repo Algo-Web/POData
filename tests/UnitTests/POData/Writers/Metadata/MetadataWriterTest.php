@@ -9,19 +9,19 @@ use POData\Providers\Metadata\IMetadataProvider;
 use POData\Writers\Metadata\MetadataWriter;
 use POData\Common\Version;
 
-use Phockito\Phockito;
+use Mockery as m;
 
 use UnitTests\POData\Facets\NorthWind2\NorthWindMetadata;
 use POData\Providers\Query\IQueryProvider;
 
-class MetadataWriterTest extends PHPUnit_Framework_TestCase
+class MetadataWriterTest extends \PHPUnit_Framework_TestCase
 {
     /** @var IQueryProvider */
     protected $mockQueryProvider;
 
     protected function setUp()
     {
-        $this->mockQueryProvider = Phockito::mock('POData\Providers\Query\IQueryProvider');
+        $this->mockQueryProvider = m::mock('POData\Providers\Query\IQueryProvider');
     }
 
     public function testWriteMetadata()

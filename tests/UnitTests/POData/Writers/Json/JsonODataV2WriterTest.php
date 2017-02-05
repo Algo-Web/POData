@@ -15,11 +15,16 @@ use POData\Writers\Json\JsonODataV2Writer;
 use POData\Providers\ProvidersWrapper;
 use POData\Common\Version;
 use POData\Common\MimeTypes;
-use PhockitoUnit\PhockitoUnitTestCase;
-use Phockito\Phockito;
 
-class JsonODataV2WriterTest extends PhockitoUnitTestCase
+use Mockery as m;
+
+class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 {
+    public function setUp()
+    {
+        $this->mockProvider = m::mock(ProvidersWrapper::class)->makePartial();
+    }
+
     public function testWriteURL()
     {
         $oDataUrl = new ODataURL();
@@ -1392,8 +1397,7 @@ class JsonODataV2WriterTest extends PhockitoUnitTestCase
 
     public function testGetOutputNoResourceSets()
     {
-        Phockito::when($this->mockProvider->getResourceSets())
-            ->return(array());
+        $this->mockProvider->shouldReceive('getResourceSets')->andReturn([]);
 
         $writer = new JsonODataV2Writer();
         $actual = $writer->writeServiceDocument($this->mockProvider)->getOutput();
@@ -1405,20 +1409,19 @@ class JsonODataV2WriterTest extends PhockitoUnitTestCase
 
     public function testGetOutputTwoResourceSets()
     {
-        $fakeResourceSet1 = Phockito::mock('POData\Providers\Metadata\ResourceSetWrapper');
-        Phockito::when($fakeResourceSet1->getName())->return('Name 1');
+        $fakeResourceSet1 = m::mock('POData\Providers\Metadata\ResourceSetWrapper');
+        $fakeResourceSet1->shouldReceive('getName')->andReturn('Name 1');
 
-        $fakeResourceSet2 = Phockito::mock('POData\Providers\Metadata\ResourceSetWrapper');
+        $fakeResourceSet2 = m::mock('POData\Providers\Metadata\ResourceSetWrapper');
         //TODO: this certainly doesn't seem right...see #73
-        Phockito::when($fakeResourceSet2->getName())->return("XML escaped stuff \" ' <> & ?");
+        $fakeResourceSet2->shouldReceive('getName')->andReturn("XML escaped stuff \" ' <> & ?");
 
         $fakeResourceSets = array(
             $fakeResourceSet1,
             $fakeResourceSet2,
         );
 
-        Phockito::when($this->mockProvider->getResourceSets())
-            ->return($fakeResourceSets);
+        $this->mockProvider->shouldReceive('getResourceSets')->andReturn($fakeResourceSets);
 
         $writer = new JsonODataV2Writer();
         $actual = $writer->writeServiceDocument($this->mockProvider)->getOutput();

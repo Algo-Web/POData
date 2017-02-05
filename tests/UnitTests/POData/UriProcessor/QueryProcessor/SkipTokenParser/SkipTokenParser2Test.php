@@ -10,13 +10,17 @@ use POData\UriProcessor\QueryProcessor\OrderByParser\OrderByParser;
 use POData\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenParser;
 use POData\Providers\Query\IQueryProvider;
 use UnitTests\POData\Facets\NorthWind2\NorthWindMetadata;
-use PhockitoUnit\PhockitoUnitTestCase;
-use Phockito\Phockito;
+use Mockery as m;
 
-class SkipTokenParser2Test extends PhockitoUnitTestCase
+class SkipTokenParser2Test extends \PHPUnit_Framework_TestCase
 {
     /** @var IQueryProvider */
     protected $mockQueryProvider;
+
+    public function setUp()
+    {
+        $this->mockQueryProvider = m::mock(IQueryProvider::class)->makePartial();
+    }
 
     /**
      * Test will null as resultSet and empty array as resultSet.
@@ -35,7 +39,12 @@ class SkipTokenParser2Test extends PhockitoUnitTestCase
         $resourceSetWrapper = $providersWrapper->resolveResourceSet('Orders');
         $resourceType = $resourceSetWrapper->getResourceType();
         $orderBy = 'OrderID';
-        $internalOrderByInfo = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
+        $internalOrderByInfo = OrderByParser::parseOrderByClause(
+            $resourceSetWrapper,
+            $resourceType,
+            $orderBy,
+            $providersWrapper
+        );
         $skipToken = '10365';
         $internalSkipTokenInfo = SkipTokenParser::parseSkipTokenClause($resourceType, $internalOrderByInfo, $skipToken);
 
@@ -43,7 +52,10 @@ class SkipTokenParser2Test extends PhockitoUnitTestCase
             $internalSkipTokenInfo->getIndexOfFirstEntryInTheNextPage($m);
             $this->fail('An expected ODataException for non-array param type has not been thrown');
         } catch (\InvalidArgumentException $exception) {
-            $this->assertStringStartsWith("The argument 'searchArray' should be an array to perfrom binary search", $exception->getMessage());
+            $this->assertStringStartsWith(
+                "The argument 'searchArray' should be an array to perfrom binary search",
+                $exception->getMessage()
+            );
         }
     }
 
@@ -70,7 +82,12 @@ class SkipTokenParser2Test extends PhockitoUnitTestCase
         $orderBy .= ', OrderID';
         $qp = new NorthWindQueryProvider1();
         $orders = $qp->getResourceSet($resourceSetWrapper->getResourceSet());
-        $internalOrderByInfo = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
+        $internalOrderByInfo = OrderByParser::parseOrderByClause(
+            $resourceSetWrapper,
+            $resourceType,
+            $orderBy,
+            $providersWrapper
+        );
         $compFun = $internalOrderByInfo->getSorterFunction();
         $fun = $compFun->getReference();
         usort($orders, $fun);

@@ -38,6 +38,7 @@ class ResourcePathProcessor
             $absoluteRequestUri->getSegments(),
             $absoluteServiceUri->getSegmentCount()
         );
+
         $segments = SegmentParser::parseRequestUriSegments(
             $requestUriSegments,
             $service->getProvidersWrapper(),

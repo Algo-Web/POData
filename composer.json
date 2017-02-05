@@ -32,12 +32,11 @@
         "nesbot/carbon": "^1.21"
     },
     "require-dev": {
-        "balihoo/phockito-unit" : "dev-master",
-        "crashuxx/phockito" : "dev-master",
         "doctrine/annotations": "1.*",
         "satooshi/php-coveralls": "dev-master",
         "phpunit/phpunit": "4.8.*",
-        "mockery/mockery": "0.9.*"
+        "mockery/mockery": "0.9.*",
+        "fiunchinho/phpunit-randomizer": "2.0.*"
     },
     "autoload": {
         "psr-0": {

@@ -4,10 +4,7 @@ namespace UnitTests\POData\Providers\Metadata;
 
 use POData\Providers\Query\QueryResult;
 
-use Phockito\Phockito;
-use PhockitoUnit\PhockitoUnitTestCase;
-
-class QueryResultTest extends PhockitoUnitTestCase
+class QueryResultTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @dataProvider provider

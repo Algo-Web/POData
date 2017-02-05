@@ -16,13 +16,17 @@ use POData\Providers\ProvidersWrapper;
 use POData\Common\Version;
 use POData\Common\MimeTypes;
 
-use Phockito\Phockito;
-use PhockitoUnit\PhockitoUnitTestCase;
+use Mockery as m;
 
 use Carbon\Carbon as Carbon;
 
-class AtomODataWriterTest extends PhockitoUnitTestCase
+class AtomODataWriterTest extends \PHPUnit_Framework_TestCase
 {
+    public function setUp()
+    {
+        $this->mockProvider = m::mock(ProvidersWrapper::class)->makePartial();
+    }
+
     /**
      * Removes the updated tag from an XML string
      * IE <updated>2013-09-17T19:22:33-06:00</updated>
@@ -1130,8 +1134,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 
     public function testGetOutputNoResourceSets()
     {
-        Phockito::when($this->mockProvider->getResourceSets())
-            ->return(array());
+        $this->mockProvider->shouldReceive('getResourceSets')->andReturn([]);
 
         $fakeBaseURL = 'http://some/place/some/where/'.uniqid();
 
@@ -1145,20 +1148,19 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 
     public function testGetOutputTwoResourceSets()
     {
-        $fakeResourceSet1 = Phockito::mock('POData\Providers\Metadata\ResourceSetWrapper');
-        Phockito::when($fakeResourceSet1->getName())->return('Name 1');
+        $fakeResourceSet1 = m::mock('POData\Providers\Metadata\ResourceSetWrapper');
+        $fakeResourceSet1->shouldReceive('getName')->andReturn('Name 1');
 
-        $fakeResourceSet2 = Phockito::mock('POData\Providers\Metadata\ResourceSetWrapper');
+        $fakeResourceSet2 = m::mock('POData\Providers\Metadata\ResourceSetWrapper');
         //TODO: this certainly doesn't seem right...see #73
-        Phockito::when($fakeResourceSet2->getName())->return("XML escaped stuff \" ' <> & ?");
+        $fakeResourceSet2->shouldReceive('getName')->andReturn("XML escaped stuff \" ' <> & ?");
 
         $fakeResourceSets = array(
             $fakeResourceSet1,
             $fakeResourceSet2,
         );
 
-        Phockito::when($this->mockProvider->getResourceSets())
-            ->return($fakeResourceSets);
+        $this->mockProvider->shouldReceive('getResourceSets')->andReturn($fakeResourceSets);
 
         $fakeBaseURL = 'http://some/place/some/where/'.uniqid();
 

@@ -11,10 +11,10 @@ use POData\OperationContext\ServiceHost;
 use POData\Configuration\ServiceConfiguration;
 use POData\Providers\Metadata\IMetadataProvider;
 use POData\Writers\ODataWriterRegistry;
-use PhockitoUnit\PhockitoUnitTestCase;
-use Phockito\Phockito;
 
-class BaseServiceTest extends PhockitoUnitTestCase
+use Mockery as m;
+
+class BaseServiceTest extends \PHPUnit_Framework_TestCase
 {
     /** @var RequestDescription */
     protected $mockRequest;
@@ -31,25 +31,33 @@ class BaseServiceTest extends PhockitoUnitTestCase
     /** @var  ServiceHost */
     protected $mockHost;
 
+    public function setUp()
+    {
+        $this->mockHost = m::mock(ServiceHost::class)->makePartial();
+        $this->mockMetaProvider = m::mock(IMetadataProvider::class)->makePartial();
+        $this->mockRegistry = m::spy(ODataWriterRegistry::class)->makePartial();
+    }
+
     public function testRegisterWritersV1()
     {
     /** @var BaseService $service */
-        $service = Phockito::spy('POData\BaseService');
+        $service = m::spy('POData\BaseService');
+
+        $this->mockRegistry->shouldReceive('register')->withAnyArgs()->never();
+
+
+        //fake the service url
+        $fakeUrl = "http://host/service.svc/Collection";
+        $this->mockHost->shouldReceive('getAbsoluteServiceUri')->andReturn(new Url($fakeUrl));
 
         $service->setHost($this->mockHost);
 
         //TODO: have to do this since the registry & config is actually only instantiated during a handleRequest
         //will change this once that request pipeline is cleaned up
-        Phockito::when($service->getODataWriterRegistry())->return($this->mockRegistry);
+        $service->shouldReceive('getODataWriterRegistry')->andReturn($this->mockRegistry);
         $fakeConfig = new ServiceConfiguration($this->mockMetaProvider);
         $fakeConfig->setMaxDataServiceVersion(ProtocolVersion::V1());
-        Phockito::when($service->getConfiguration())->return($fakeConfig);
-
-        //fake the service url
-        $fakeUrl = "http://host/service.svc/Collection";
-        Phockito::when($this->mockHost->getAbsoluteServiceUri())->return(new Url($fakeUrl));
-
-        Phockito::verify($this->mockRegistry, 0)->register(anything()); //nothing should be registered at first
+        $service->shouldReceive('getConfig')->andReturn($fakeConfig);
 
         $service->registerWriters();
     }
@@ -57,59 +65,64 @@ class BaseServiceTest extends PhockitoUnitTestCase
     public function testRegisterWritersV2()
     {
         /** @var BaseService $service */
-        $service = Phockito::spy('\POData\BaseService');
+        $service = m::spy('\POData\BaseService');
 
         $service->setHost($this->mockHost);
 
-        //TODO: have to do this since the registry & config is actually only instantiated during a handleRequest
-        //will change this once that request pipeline is cleaned up
-        Phockito::when($service->getODataWriterRegistry())->return($this->mockRegistry);
-        $fakeConfig = new ServiceConfiguration($this->mockMetaProvider);
-        $fakeConfig->setMaxDataServiceVersion(ProtocolVersion::V2());
-        Phockito::when($service->getConfiguration())->return($fakeConfig);
+        $this->mockRegistry->shouldReceive('register')->withAnyArgs()->passthru()->times(3);
+        $this->mockRegistry->shouldReceive('register')
+            ->with(typeOf('\POData\Writers\Atom\AtomODataWriter'))->passthru()->times(1);
+        //since v2 derives from this,,it's 2 times
+        $this->mockRegistry->shouldReceive('register')
+            ->with(typeOf('\POData\Writers\Json\JsonODataV1Writer'))->passthru()->times(2);
+        $this->mockRegistry->shouldReceive('register')
+            ->with(typeOf('\POData\Writers\Json\JsonODataV2Writer'))->passthru()->times(1);
 
         //fake the service url
-        $fakeUrl = 'http://host/service.svc/Collection';
-        Phockito::when($this->mockHost->getAbsoluteServiceUri())->return(new Url($fakeUrl));
+        $fakeUrl = "http://host/service.svc/Collection";
+        $this->mockHost->shouldReceive('getAbsoluteServiceUri')->andReturn(new Url($fakeUrl));
 
-        Phockito::verify($this->mockRegistry, 0)->register(anything()); //nothing should be registered at first
+        //TODO: have to do this since the registry & config is actually only instantiated during a handleRequest
+        //will change this once that request pipeline is cleaned up
+        $service->shouldReceive('getODataWriterRegistry')->andReturn($this->mockRegistry);
+        $fakeConfig = new ServiceConfiguration($this->mockMetaProvider);
+        $fakeConfig->setMaxDataServiceVersion(ProtocolVersion::V2());
+        $service->shouldReceive('getConfig')->andReturn($fakeConfig);
 
         $service->registerWriters();
-
-        //only 2 writers for v1
-        Phockito::verify($this->mockRegistry, 3)->register(anything());
-        Phockito::verify($this->mockRegistry, 1)->register(anInstanceOf('\POData\Writers\Atom\AtomODataWriter'));
-        Phockito::verify($this->mockRegistry, 2)->register(anInstanceOf('\POData\Writers\Json\JsonODataV1Writer')); //since v2 derives from this,,it's 2 times
-        Phockito::verify($this->mockRegistry, 1)->register(anInstanceOf('\POData\Writers\Json\JsonODataV2Writer'));
     }
 
     public function testRegisterWritersV3()
     {
         /** @var BaseService $service */
-        $service = Phockito::spy('\POData\BaseService');
+        $service = m::spy('\POData\BaseService');
 
         $service->setHost($this->mockHost);
 
+        $this->mockRegistry->shouldReceive('register')->withAnyArgs()->passthru()->times(6);
+        $this->mockRegistry->shouldReceive('register')
+            ->with(typeOf('\POData\Writers\Atom\AtomODataWriter'))->passthru()->times(1);
+        //since v2 & light derives from this,,it's 1+1+3 times
+        $this->mockRegistry->shouldReceive('register')
+            ->with(typeOf('\POData\Writers\Json\JsonODataV1Writer'))->passthru()->times(5);
+        //since light derives from this it's 1+3 times
+        $this->mockRegistry->shouldReceive('register')
+            ->with(typeOf('\POData\Writers\Json\JsonODataV2Writer'))->passthru()->times(4);
+        $this->mockRegistry->shouldReceive('register')
+            ->with(typeOf('\POData\Writers\Json\JsonLightODataWriter'))->passthru()->times(3);
+
+
         //TODO: have to do this since the registry & config is actually only instantiated during a handleRequest
         //will change this once that request pipeline is cleaned up
-        Phockito::when($service->getODataWriterRegistry())->return($this->mockRegistry);
+        $service->shouldReceive('getODataWriterRegistry')->andReturn($this->mockRegistry);
         $fakeConfig = new ServiceConfiguration($this->mockMetaProvider);
-        $fakeConfig->setMaxDataServiceVersion(ProtocolVersion::V3());
-        Phockito::when($service->getConfiguration())->return($fakeConfig);
+        $fakeConfig->setMaxDataServiceVersion(ProtocolVersion::V2());
+        $service->shouldReceive('getConfig')->andReturn($fakeConfig);
 
         //fake the service url
-        $fakeUrl = 'http://host/service.svc/Collection';
-        Phockito::when($this->mockHost->getAbsoluteServiceUri())->return(new Url($fakeUrl));
-
-        Phockito::verify($this->mockRegistry, 0)->register(anything()); //nothing should be registered at first
+        $fakeUrl = "http://host/service.svc/Collection";
+        $this->mockHost->shouldReceive('getAbsoluteServiceUri')->andReturn(new Url($fakeUrl));
 
         $service->registerWriters();
-
-        //only 2 writers for v1
-        Phockito::verify($this->mockRegistry, 6)->register(anything());
-        Phockito::verify($this->mockRegistry, 1)->register(anInstanceOf('\POData\Writers\Atom\AtomODataWriter'));
-        Phockito::verify($this->mockRegistry, 5)->register(anInstanceOf('\POData\Writers\Json\JsonODataV1Writer')); //since v2 & light derives from this,,it's 1+1+3 times
-        Phockito::verify($this->mockRegistry, 4)->register(anInstanceOf('\POData\Writers\Json\JsonODataV2Writer')); //since light derives from this it's 1+3 times
-        Phockito::verify($this->mockRegistry, 3)->register(anInstanceOf('\POData\Writers\Json\JsonLightODataWriter'));
     }
 }

@@ -226,7 +226,13 @@ class UriProcessor
                 throw ODataException::createBadRequestError(Messages::noDataForThisVerb($requestMethod));
             }
 
-            $queryResult = $uriProcessor->providers->updateResource($resourceSet, $segment->getResult(), $keyDescriptor, $data, false);
+            $queryResult = $uriProcessor->providers->updateResource(
+                $resourceSet,
+                $segment->getResult(),
+                $keyDescriptor,
+                $data,
+                false
+            );
             $segment->setResult($queryResult);
             return $queryResult;
         });
@@ -243,7 +249,9 @@ class UriProcessor
             $keyDescriptor = $segment->getKeyDescriptor();
             if (!$resourceSet || !$keyDescriptor) {
                 $url = $uriProcessor->getService()->getHost()->getAbsoluteRequestUri()->getUrlAsString();
-                throw ODataException::createBadRequestError(Messages::badRequestInvalidUriForThisVerb($url, $requestMethod));
+                throw ODataException::createBadRequestError(
+                    Messages::badRequestInvalidUriForThisVerb($url, $requestMethod)
+                );
             }
             return $uriProcessor->providers->deleteResource($resourceSet, $segment->getResult());
         });
@@ -299,19 +307,20 @@ class UriProcessor
                     if (!is_null($value)) {
                         $value = null;
                     } else {
-                        // This is theoretically impossible to reach, but should that be changed, this will need to call ResourceType::getPropertyValue... somehow
+                        // This is theoretically impossible to reach, but should that be changed, this will need to call
+                        // ResourceType::getPropertyValue... somehow
                         try {
                             //see #88
                             $property = new \ReflectionProperty($value, $segment->getIdentifier());
                             $value = $property->getValue($value);
                         } catch (\ReflectionException $reflectionException) {
-                            //throw ODataException::createInternalServerError(Messages::orderByParserFailedToAccessOrInitializeProperty($resourceProperty->getName(), $resourceType->getName()));
+
                         }
                     }
 
                     $segment->setResult($value);
                     $segment = $segment->getNext();
-                    if (!is_null($segment) && $segment->getIdentifier() == ODataConstants::URI_VALUE_SEGMENT) {
+                    if (!is_null($segment) && ODataConstants::URI_VALUE_SEGMENT == $segment->getIdentifier()) {
                         $segment->setResult($value);
                         $segment = $segment->getNext();
                     }
@@ -320,7 +329,9 @@ class UriProcessor
                 break;
             }
 
-            if (is_null($segment->getNext()) || $segment->getNext()->getIdentifier() == ODataConstants::URI_COUNT_SEGMENT) {
+            if (is_null($segment->getNext())
+                || ODataConstants::URI_COUNT_SEGMENT == $segment->getNext()->getIdentifier()
+            ) {
                 $this->applyQueryOptions($segment, $callback);
             }
         }
@@ -530,14 +541,16 @@ class UriProcessor
         $expandedProjectionNodes = $this->_getExpandedProjectionNodes();
         foreach ($expandedProjectionNodes as $expandedProjectionNode) {
             $resourceType = $expandedProjectionNode->getResourceType();
-            $isCollection = $expandedProjectionNode->getResourceProperty()->getKind() == ResourcePropertyKind::RESOURCESET_REFERENCE;
+            $isCollection = ResourcePropertyKind::RESOURCESET_REFERENCE == $expandedProjectionNode->getResourceProperty()->getKind();
             $expandedPropertyName = $expandedProjectionNode->getResourceProperty()->getName();
             if (is_array($result)) {
                 foreach ($result as $entry) {
                     // Check for null entry
                     if ($isCollection) {
                         $currentResourceSet = $this->_getCurrentResourceSetWrapper()->getResourceSet();
-                        $resourceSetOfProjectedProperty = $expandedProjectionNode->getResourceSetWrapper()->getResourceSet();
+                        $resourceSetOfProjectedProperty = $expandedProjectionNode
+                            ->getResourceSetWrapper()
+                            ->getResourceSet();
                         $projectedProperty1 = $expandedProjectionNode->getResourceProperty();
                         $result1 = $this->providers->getRelatedResourceSet(
                             QueryType::ENTITIES(), //it's always entities for an expansion
@@ -574,7 +587,9 @@ class UriProcessor
                         }
                     } else {
                         $currentResourceSet1 = $this->_getCurrentResourceSetWrapper()->getResourceSet();
-                        $resourceSetOfProjectedProperty1 = $expandedProjectionNode->getResourceSetWrapper()->getResourceSet();
+                        $resourceSetOfProjectedProperty1 = $expandedProjectionNode
+                            ->getResourceSetWrapper()
+                            ->getResourceSet();
                         $projectedProperty2 = $expandedProjectionNode->getResourceProperty();
                         $result1 = $this->providers->getRelatedResourceReference(
                             $currentResourceSet1,
@@ -596,7 +611,9 @@ class UriProcessor
             } else {
                 if ($isCollection) {
                     $currentResourceSet2 = $this->_getCurrentResourceSetWrapper()->getResourceSet();
-                    $resourceSetOfProjectedProperty2 = $expandedProjectionNode->getResourceSetWrapper()->getResourceSet();
+                    $resourceSetOfProjectedProperty2 = $expandedProjectionNode
+                        ->getResourceSetWrapper()
+                        ->getResourceSet();
                     $projectedProperty4 = $expandedProjectionNode->getResourceProperty();
                     $result1 = $this->providers->getRelatedResourceSet(
                         QueryType::ENTITIES(), //it's always entities for an expansion
@@ -632,7 +649,9 @@ class UriProcessor
                     }
                 } else {
                     $currentResourceSet3 = $this->_getCurrentResourceSetWrapper()->getResourceSet();
-                    $resourceSetOfProjectedProperty3 = $expandedProjectionNode->getResourceSetWrapper()->getResourceSet();
+                    $resourceSetOfProjectedProperty3 = $expandedProjectionNode
+                        ->getResourceSetWrapper()
+                        ->getResourceSet();
                     $projectedProperty5 = $expandedProjectionNode->getResourceProperty();
                     $result1 = $this->providers->getRelatedResourceReference(
                         $currentResourceSet3,
@@ -698,7 +717,7 @@ class UriProcessor
      * @throws InvalidOperationException If this function invoked with non-navigation
      *                                   property instance
      */
-    private function _pushSegmentForNavigationProperty(ResourceProperty & $resourceProperty)
+    private function _pushSegmentForNavigationProperty(ResourceProperty &$resourceProperty)
     {
         if ($resourceProperty->getTypeKind() == ResourceTypeKind::ENTITY) {
             $this->assert(
@@ -793,7 +812,7 @@ class UriProcessor
      *
      * @return bool true if the segment was push, false otherwise
      */
-    private function _pushSegment($segmentName, ResourceSetWrapper & $resourceSetWrapper)
+    private function _pushSegment($segmentName, ResourceSetWrapper &$resourceSetWrapper)
     {
         $rootProjectionNode = $this->request->getRootProjectionNode();
         if (!is_null($rootProjectionNode)
@@ -836,8 +855,8 @@ class UriProcessor
     /**
      * Assert that the given condition is true.
      *
-     * @param bool   $condition         Constion to assert
-     * @param string $conditionAsString Message to show incase assertion fails
+     * @param bool   $condition         Condition to assert
+     * @param string $conditionAsString Message to show if assertion fails
      *
      * @throws InvalidOperationException
      */
