@@ -434,7 +434,7 @@ class UriProcessorTest extends PhockitoUnitTestCase
             UriProcessor::process($this->mockService);
             $this->fail('Expected exception not thrown');
         } catch (ODataException $ex) {
-            $expected = Messages::requestVersionTooLow('1.0', '2.0');
+            $expected = Messages::requestVersionTooLow('1.0', '3.0');
             $this->assertEquals($expected, $ex->getMessage(), $ex->getTraceAsString());
         }
     }
@@ -558,8 +558,8 @@ class UriProcessorTest extends PhockitoUnitTestCase
                 null
             )
         )->return($fakeQueryResult); */
-        /*
-        $this->mockProvidersWrapper->shouldReceive('getResourceSet')->withArgs([
+
+        /* $this->mockProvidersWrapper->shouldReceive('getResourceSet')->withArgs([
             QueryType::ENTITIES_WITH_COUNT(),
             $this->mockCollectionResourceSetWrapper,
             null,
