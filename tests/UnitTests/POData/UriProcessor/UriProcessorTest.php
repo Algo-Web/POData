@@ -46,6 +46,43 @@ use UnitTests\POData\Facets\NorthWind1\Customer2;
 
 class UriProcessorTest extends PhockitoUnitTestCase
 {
+    /** @var IService */
+    protected $mockService;
+
+    /** @var ServiceHost */
+    protected $mockServiceHost;
+
+    /** @var ServiceConfiguration */
+    protected $fakeServiceConfig;
+
+    /** @var IMetadataProvider */
+    protected $mockMetadataProvider;
+
+    /** @var ProvidersWrapper */
+    protected $mockProvidersWrapper;
+
+    /** @var ResourceSetWrapper */
+    protected $mockCollectionResourceSetWrapper;
+
+    /** @var ResourceType */
+    protected $mockCollectionResourceType;
+
+    /** @var ResourceProperty */
+    protected $mockCollectionKeyProperty;
+
+    /** @var ResourceProperty */
+    protected $mockCollectionRelatedCollectionProperty;
+
+    /** @var ResourceSetWrapper */
+    protected $mockRelatedCollectionResourceSetWrapper;
+
+    /** @var ResourceType */
+    protected $mockRelatedCollectionResourceType;
+
+    /** @var ResourceProperty */
+    protected $mockRelatedCollectionKeyProperty;
+
+
     public function setUp()
     {
         parent::setUp();
@@ -94,41 +131,6 @@ class UriProcessorTest extends PhockitoUnitTestCase
             ->return($this->fakeServiceConfig);
     }
 
-    /** @var IService */
-    protected $mockService;
-
-    /** @var ServiceHost */
-    protected $mockServiceHost;
-
-    /** @var ServiceConfiguration */
-    protected $fakeServiceConfig;
-
-    /** @var IMetadataProvider */
-    protected $mockMetadataProvider;
-
-    /** @var ProvidersWrapper */
-    protected $mockProvidersWrapper;
-
-    /** @var ResourceSetWrapper */
-    protected $mockCollectionResourceSetWrapper;
-
-    /** @var ResourceType */
-    protected $mockCollectionResourceType;
-
-    /** @var ResourceProperty */
-    protected $mockCollectionKeyProperty;
-
-    /** @var ResourceProperty */
-    protected $mockCollectionRelatedCollectionProperty;
-
-    /** @var ResourceSetWrapper */
-    protected $mockRelatedCollectionResourceSetWrapper;
-
-    /** @var ResourceType */
-    protected $mockRelatedCollectionResourceType;
-
-    /** @var ResourceProperty */
-    protected $mockRelatedCollectionKeyProperty;
 
     public function testProcessRequestForCollection()
     {
