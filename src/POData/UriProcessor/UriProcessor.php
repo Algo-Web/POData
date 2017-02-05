@@ -314,10 +314,7 @@ class UriProcessor
                             $property = new \ReflectionProperty($value, $segment->getIdentifier());
                             $value = $property->getValue($value);
                         } catch (\ReflectionException $reflectionException) {
-                            //throw ODataException::createInternalServerError(
-                            //Messages::orderByParserFailedToAccessOrInitializeProperty($resourceProperty->getName(),
-                            //$resourceType->getName())
-                            //);
+
                         }
                     }
 
