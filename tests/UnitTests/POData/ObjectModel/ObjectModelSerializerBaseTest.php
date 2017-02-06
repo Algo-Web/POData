@@ -121,10 +121,6 @@ class ObjectModelSerializerBaseTest extends \PHPUnit_Framework_TestCase
         $foo =  $this->Construct();
         $ret = $foo->isRootResourceSet();
         $this->assertEquals(true, $ret,"isRootResourceSet 1");
-
-        $foo->apply_segmentResourceSetWrappers(array(1));
-        $ret = $foo->isRootResourceSet();
-        $this->assertEquals(true, $ret, "isRootResourceSet 2");
     }
 
 }
