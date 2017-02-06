@@ -62,7 +62,7 @@ class HttpStatus
             case self::CODE_CONTINUE:
                 return 'Continue';
             case self::CODE_SWITCHING_PROTOCOLS:
-                return  'SwitchingProtocols';
+                return  'Switching Protocols';
             case self::CODE_OK:
                 return  'OK';
             case self::CODE_CREATED:
@@ -70,7 +70,7 @@ class HttpStatus
             case self::CODE_ACCEPTED:
                 return  'Accepted';
             case self::CODE_NON_AUTHRATIVE_INFORMATION:
-                return  'Non-Authrative Information';
+                return  'Non-Authoritative Information';
             case self::CODE_NOCONTENT:
                 return  'No Content';
             case self::CODE_RESET_CONTENT:
@@ -122,11 +122,11 @@ class HttpStatus
             case self::CODE_REQUEST_ENTITY_TOOLONG:
                 return 'Request Entity Too Large';
             case self::CODE_REQUEST_URI_TOOLONG:
-                return 'Request-URI Too Large';
+                return 'Request URI Too Large';
             case self::CODE_UNSUPPORTED_MEDIATYPE:
                 return 'Unsupported Media Type';
             case self::CODE_REQUESTED_RANGE_NOT_SATISFIABLE:
-                return 'Requested Range NotSatisfiable';
+                return 'Requested Range Not Satisfiable';
             case self::CODE_EXPECTATION_FAILED:
                 return 'Expectation Failed';
             case self::CODE_INTERNAL_SERVER_ERROR:
@@ -140,7 +140,7 @@ class HttpStatus
             case self::CODE_GATEWAY_TIMEOUT:
                 return 'Gateway Timeout';
             case self::CODE_HTTP_VERSION_NOT_SUPPORTED:
-                return 'HTTP Version Not Suppoted';
+                return 'HTTP Version Not Supported';
         }
 
         return null;
