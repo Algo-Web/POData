@@ -117,14 +117,6 @@ class ObjectModelSerializerBaseTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(true,$ret);
     }
 
-    public function testgetCurrentResourceSetWrapper2(){
-        $foo =  $this->Construct();
-        $this->mockRequest->shouldReceive('getTargetResourceSetWrapper')->andReturn(true);
-        $foo->apply_segmentResourceSetWrappers(array(1,2,3,5,7));
-        $ret = $foo->getCurrentResourceSetWrapper();
-        $this->assertEquals(7,$ret);
-    }
-
     public function testisRootResourceSet(){
         $foo =  $this->Construct();
         $ret = $foo->isRootResourceSet();
@@ -133,10 +125,6 @@ class ObjectModelSerializerBaseTest extends \PHPUnit_Framework_TestCase
         $foo->apply_segmentResourceSetWrappers(array(1));
         $ret = $foo->isRootResourceSet();
         $this->assertEquals(true, $ret, "isRootResourceSet 2");
-
-        $foo->apply_segmentResourceSetWrappers(array(1,2,3,4,5));
-        $ret = $foo->isRootResourceSet();
-        $this->assertEquals(false, $ret, "isRootResourceSet 3");
     }
 
 }
@@ -190,14 +178,6 @@ class ObjectModelSerializerDummy extends ObjectModelSerializerBase
      }
      public function isRootResourceSet(){
          return parent::isRootResourceSet();
-     }
-
-     public function apply_segmentResourceSetWrappers($val){
-        $changer = function (ObjectModelSerializerBase $o,$v) {
-           $o->_segmentResourceSetWrappers = $v;
-        };
-        $changer = \Closure::bind($changer, null, $this);
-	$changer($this,$val);
      }
 
 
