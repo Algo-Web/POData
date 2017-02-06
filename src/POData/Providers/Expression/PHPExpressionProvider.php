@@ -46,7 +46,7 @@ class PHPExpressionProvider implements IExpressionProvider
      *
      * @var ResourceType
      */
-    private $_resourceType;
+    private $resourceType;
 
     /**
      * @param string $iteratorName The name of the iterator
@@ -74,7 +74,7 @@ class PHPExpressionProvider implements IExpressionProvider
      */
     public function setResourceType(ResourceType $resourceType)
     {
-        $this->_resourceType = $resourceType;
+        $this->resourceType = $resourceType;
     }
 
     /**
@@ -163,7 +163,7 @@ class PHPExpressionProvider implements IExpressionProvider
                 return $this->_prepareBinaryExpression(self::NOT_EQUAL, $left, $right);
 
             default:
-                throw new \InvalidArgumentException('onArithmeticExpression');
+                throw new \InvalidArgumentException('onRelationalExpression');
         }
     }
 
@@ -217,6 +217,21 @@ class PHPExpressionProvider implements IExpressionProvider
      */
     public function onPropertyAccessExpression($expression)
     {
+        if (null == $expression) {
+            throw new \InvalidArgumentException('onPropertyAccessExpression - expression null');
+        }
+        if (!($expression instanceof PropertyAccessExpression)) {
+            throw new \InvalidArgumentException('onPropertyAccessExpression - expression is incorrect type');
+        }
+        if (null == $this->resourceType) {
+            throw new \InvalidArgumentException('onPropertyAccessExpression - resourceType null');
+        }
+        if (null == $this->resourceType->getName()) {
+            throw new \InvalidArgumentException('onPropertyAccessExpression - resourceType has no name');
+        }
+        if (null == $expression->getResourceProperty()) {
+            throw new \InvalidArgumentException('onPropertyAccessExpression - expression has no resource property');
+        }
         $parent = $expression;
         $variable = null;
 

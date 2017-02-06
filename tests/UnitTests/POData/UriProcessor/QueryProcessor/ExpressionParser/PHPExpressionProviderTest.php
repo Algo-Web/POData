@@ -18,7 +18,7 @@ use UnitTests\POData\Facets\NorthWind1\Address4;
 use UnitTests\POData\Facets\NorthWind1\Customer2;
 use UnitTests\POData\Facets\NorthWind1\Order2;
 
-class PHPExpressionProviderTest extends \PHPUnit_Framework_TestCase
+class PHPExpressionProviderParserTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var IMetadataProvider
@@ -43,7 +43,12 @@ class PHPExpressionProviderTest extends \PHPUnit_Framework_TestCase
             true
         );
         $expressionTree = $parser->parseFilter();
-        $expressionProcessor = new ExpressionProcessor(new PHPExpressionProvider('$lt'));
+        $res = m::mock(\POData\Providers\Metadata\ResourceType::class)->makePartial();
+        $res->shouldReceive('getName')->andReturn('OH NOES!');
+        $phpProvider = new \POData\Providers\Expression\PHPExpressionProvider('$lt');
+        $phpProvider->setResourceType($res);
+
+        $expressionProcessor = new ExpressionProcessor($phpProvider);
         $actualPHPExpression = $expressionProcessor->processExpression($expressionTree);
         $expectedPHPExpression = '(((!(is_null($lt->Customer)) && !(is_null($lt->Customer->Address))) && !(is_null($lt->Customer->Address->LineNumber))) && (($lt->Customer->Address->LineNumber + 4) == 8))';
         $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
@@ -192,7 +197,12 @@ class PHPExpressionProviderTest extends \PHPUnit_Framework_TestCase
             true
         );
         $expressionTree = $parser->parseFilter();
-        $expressionProcessor = new ExpressionProcessor(new \POData\Providers\Expression\PHPExpressionProvider('$lt'));
+        $res = m::mock(\POData\Providers\Metadata\ResourceType::class)->makePartial();
+        $res->shouldReceive('getName')->andReturn('OH NOES!');
+        $phpProvider = new \POData\Providers\Expression\PHPExpressionProvider('$lt');
+        $phpProvider->setResourceType($res);
+
+        $expressionProcessor = new ExpressionProcessor($phpProvider);
         $actualPHPExpression = $expressionProcessor->processExpression($expressionTree);
         $expectedPHPExpression = '(!(is_null($lt->CustomerID)) && (strcmp($lt->CustomerID, \'ALFKI\') >= 0))';
         $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
@@ -276,7 +286,12 @@ class PHPExpressionProviderTest extends \PHPUnit_Framework_TestCase
             true
         );
         $expressionTree = $parser->parseFilter();
-        $expressionProcessor = new ExpressionProcessor(new PHPExpressionProvider('$lt'));
+        $res = m::mock(\POData\Providers\Metadata\ResourceType::class)->makePartial();
+        $res->shouldReceive('getName')->andReturn('OH NOES!');
+        $phpProvider = new \POData\Providers\Expression\PHPExpressionProvider('$lt');
+        $phpProvider->setResourceType($res);
+
+        $expressionProcessor = new ExpressionProcessor($phpProvider);
         $actualPHPExpression = $expressionProcessor->processExpression($expressionTree);
         $expectedPHPExpression = '(!(is_null($lt->OrderDate)) && (POData\Providers\Metadata\Type\DateTime::dateTimeCmp($lt->OrderDate, \'2010-12-08\') == 0))';
         $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
@@ -330,7 +345,12 @@ class PHPExpressionProviderTest extends \PHPUnit_Framework_TestCase
             true
         );
         $expressionTree = $parser->parseFilter();
-        $expressionProcessor = new ExpressionProcessor(new \POData\Providers\Expression\PHPExpressionProvider('$lt'));
+        $res = m::mock(\POData\Providers\Metadata\ResourceType::class)->makePartial();
+        $res->shouldReceive('getName')->andReturn('OH NOES!');
+        $phpProvider = new \POData\Providers\Expression\PHPExpressionProvider('$lt');
+        $phpProvider->setResourceType($res);
+
+        $expressionProcessor = new ExpressionProcessor($phpProvider);
         $actualPHPExpression = $expressionProcessor->processExpression($expressionTree);
         $expectedPHPExpression = '((!(is_null($lt->Customer)) && !(is_null($lt->Customer->CustomerGuid))) && (POData\Providers\Metadata\Type\Guid::guidEqual($lt->Customer->CustomerGuid, \'05b242e752eb46bd8f0e6568b72cd9a5\') == true))';
         $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
@@ -348,7 +368,12 @@ class PHPExpressionProviderTest extends \PHPUnit_Framework_TestCase
             true
         );
         $expressionTree = $parser->parseFilter();
-        $expressionProcessor = new ExpressionProcessor(new \POData\Providers\Expression\PHPExpressionProvider('$lt'));
+        $res = m::mock(\POData\Providers\Metadata\ResourceType::class)->makePartial();
+        $res->shouldReceive('getName')->andReturn('OH NOES!');
+        $phpProvider = new \POData\Providers\Expression\PHPExpressionProvider('$lt');
+        $phpProvider->setResourceType($res);
+
+        $expressionProcessor = new ExpressionProcessor($phpProvider);
         $actualPHPExpression = $expressionProcessor->processExpression($expressionTree);
         $expectedPHPExpression = '(!(is_null($lt->Price)) && (round($lt->Price) == 200.60))';
         $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
@@ -520,9 +545,15 @@ class PHPExpressionProviderTest extends \PHPUnit_Framework_TestCase
     {
         //Parse the Astoria filter query option to expression tree
         $parser = new ExpressionParser2($astoriaFilter, $resourceType, true);
+
         $expressionTree = $parser->parseFilter();
         //emit the PHP expression corresponds to Astoria filter query
-        $expressionProcessor = new ExpressionProcessor(new \POData\Providers\Expression\PHPExpressionProvider('$lt'));
+        $res = m::mock(\POData\Providers\Metadata\ResourceType::class)->makePartial();
+        $res->shouldReceive('getName')->andReturn('OH NOES!');
+        $phpProvider = new \POData\Providers\Expression\PHPExpressionProvider('$lt');
+        $phpProvider->setResourceType($res);
+
+        $expressionProcessor = new ExpressionProcessor($phpProvider);
         $phpExpression = $expressionProcessor->processExpression($expressionTree);
         //create an anonymous function with the generated PHP expression in if condition
         $fun = create_function('$lt', 'if('.$phpExpression.') { return true; } else { return false;}');
@@ -542,7 +573,12 @@ class PHPExpressionProviderTest extends \PHPUnit_Framework_TestCase
         //Currently the expression parser just ignores expression types it doesn't know
         //TODO: maybe this should throw instead??
         $unknownExpression = m::mock('POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\AbstractExpression');
-        $expressionProcessor = new ExpressionProcessor(new PHPExpressionProvider('$lt'));
+        $res = m::mock(\POData\Providers\Metadata\ResourceType::class)->makePartial();
+        $res->shouldReceive('getName')->andReturn('OH NOES!');
+        $phpProvider = new \POData\Providers\Expression\PHPExpressionProvider('$lt');
+        $phpProvider->setResourceType($res);
+
+        $expressionProcessor = new ExpressionProcessor($phpProvider);
         $actual = $expressionProcessor->processExpression($unknownExpression);
 
         $this->assertNull($actual);
