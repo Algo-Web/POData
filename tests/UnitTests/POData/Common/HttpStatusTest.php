@@ -6,13 +6,6 @@ use POData\Common\HttpStatus;
 
 class HttpStatusTest extends \PHPUnit_Framework_TestCase
 {
-    public function testNumericCodeNotSet()
-    {
-        $input = 42;
-        $result = HttpStatus::getStatusDescription($input);
-        $this->assertNull($result);
-    }
-
     public function codeDataProvider()
     {
         return [
@@ -56,7 +49,9 @@ class HttpStatusTest extends \PHPUnit_Framework_TestCase
             [ 502, 'Bad Gateway'],
             [ 503, 'Service Unavailable'],
             [ 504, 'Gateway Timeout'],
-            [ 505, 'HTTP Version Not Supported']
+            [ 505, 'HTTP Version Not Supported'],
+            [ 42, null],
+            [ 'not found', null]
         ];
     }
 
