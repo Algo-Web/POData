@@ -30,4 +30,87 @@ class ObjectModelSerializerTest extends \PHPUnit_Framework_TestCase
         $foo = new ObjectModelSerializer($service, $request);
         $this->assertTrue(true);
     }*/
+    private $mockRequest;
+    public function Construct(){
+        $AbsoluteServiceURL = new \POData\Common\Url("http://192.168.2.1/abm-master/public/odata.svc");
+        $service = m::mock(IService::class);
+        $request = m::mock(RequestDescription::class)->makePartial();
+        $this->mockRequest = $request;
+        $serviceHost = m::mock(\POData\OperationContext\ServiceHost::class)->makePartial();
+        $serviceHost->shouldReceive('getAbsoluteServiceUri')->andReturn($AbsoluteServiceURL);
+        $service->shouldReceive('getHost')->andReturn($serviceHost);
+        $foo = new ObjectModelSerializer ($service, $request);
+        return $foo;
+
+    }
+    public function testObjectModelSerializerBaseconstructor(){
+        $foo = $this->Construct();
+        $this->assertTrue(is_object($foo));
+
+    }
+    public function testwriteTopLevelElement(){
+        $foo= $this->Construct();
+        $entity = new reusableEntityClass1();
+        $entity->name = "bilbo";
+        $entity->type = 2;
+        $mockResourceType = m::mock(\POData\Providers\Metadata\ResourceType::class)->makePartial();
+        $mockResourceSetWrapper = m::mock(\POData\Providers\Metadata\ResourceSetWrapper::class)->makePartial();
+
+        $requestURL = new \POData\Common\Url("http://192.168.2.1/abm-master/public/odata.svc/Entity(1)");
+
+        $this->mockRequest->shouldReceive('getTargetSource')->andReturn(2);
+        $this->mockRequest->shouldReceive('getContainerName')->andReturn("data");
+        $this->mockRequest->shouldReceive('getTargetResourceType')->andReturn($mockResourceType);
+        $this->mockRequest->shouldReceive('getTargetResourceSetWrapper')->andReturn($mockResourceSetWrapper);
+        $this->mockRequest->shouldReceive('getRequestUrl')->andReturn($requestURL);
+
+
+
+        $resourceProperty = m::mock(\POData\Providers\Metadata\ResourceProperty::class)->makePartial();
+        $resourceProperty->shouldReceive('getName')->andReturn("name");
+        $resourceProperty->shouldReceive('getInstanceType')->andReturn(new \POData\Providers\Metadata\Type\EdmString());
+
+        $resourceProperty2 = m::mock(\POData\Providers\Metadata\ResourceProperty::class)->makePartial();
+        $resourceProperty2->shouldReceive('getName')->andReturn("type");
+        $resourceProperty2->shouldReceive('getInstanceType')->andReturn(new \POData\Providers\Metadata\Type\Int32());
+
+        $keysProperty = array("name" => $resourceProperty, "type"=>$resourceProperty2);
+        $mockResourceType->shouldReceive('getKeyProperties')->andReturn($keysProperty);
+
+        $mockResourceSetWrapper->shouldReceive('getName')->andReturn("Entity");
+
+
+        $ret = $foo->writeTopLevelElement($entity);
+    }
+
+
 }
+
+class reusableEntityClass1{
+        public $name;
+        public $type;
+}
+
+class reusableEntityClass2{
+        private $name;
+        private $type;
+        public function __construct($n,$t){
+            $this->name = $n;
+            $this->type = $t;
+        }
+        public function __get($name){
+            return $this->$name;
+        }
+}
+
+class reusableEntityClass3{
+        private $name;
+        private $type;
+        public function __construct($n,$t){
+            $this->name = $n;
+            $this->type = $t;
+        }
+}
+
+
+
