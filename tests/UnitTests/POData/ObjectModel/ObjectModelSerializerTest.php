@@ -85,6 +85,9 @@ $mockResourceType->shouldReceive('getResourceTypeKind')->andReturn(2);
 
 
         $ret = $foo->writeTopLevelElement($entity);
+$this->assertEquals("http://192.168.2.1/abm-master/public/odata.svc/Entity(name='bilbo',type=2)", $ret->id);
+$this->assertEquals("Entity(name='bilbo',type=2)", $ret->editLink);
+$this->assertEquals("Entity", $ret->resourceSetName);
     }
 
 
