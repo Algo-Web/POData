@@ -154,7 +154,7 @@ class MySQLExpressionProvider implements IExpressionProvider
                 return $this->_prepareBinaryExpression(self::NOT_EQUAL, $left, $right);
 
             default:
-                throw new \InvalidArgumentException('onArithmeticExpression');
+                throw new \InvalidArgumentException('onRelationalExpression');
         }
     }
 
@@ -227,7 +227,7 @@ class MySQLExpressionProvider implements IExpressionProvider
      * Call-back for function call expression.
      *
      * @param FunctionDescription $functionDescription Description of the function
-     * @param array<string>       $params              Paameters to the function
+     * @param array<string>       $params              Parameters to the function
      *
      * @return string
      */
@@ -327,7 +327,7 @@ class MySQLExpressionProvider implements IExpressionProvider
     private function _prepareBinaryExpression($operator, $left, $right)
     {
         //DATETIMECMP
-        if (!substr_compare($left, 'DATETIMECMP', 0, 11)) {
+        if (0 == substr_compare($left, 'DATETIMECMP', 0, 11)) {
             $str = explode(';', $left, 2);
             $str[0] = str_replace('DATETIMECMP', '', $str[0]);
 
