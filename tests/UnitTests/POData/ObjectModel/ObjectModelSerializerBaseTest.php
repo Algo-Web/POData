@@ -87,6 +87,28 @@ class ObjectModelSerializerBaseTest extends \PHPUnit_Framework_TestCase
 
     }
 
+    public function testGetEntryInstanceKeyWithPrivate(){
+        $resourceType = m::mock(ResourceType::class)->makePartial();
+
+        $resourceProperty = m::mock(\POData\Providers\Metadata\ResourceProperty::class)->makePartial();
+        $resourceProperty->shouldReceive('getName')->andReturn("name");
+        $resourceProperty->shouldReceive('getInstanceType')->andReturn(new \POData\Providers\Metadata\Type\EdmString());
+
+        $resourceProperty2 = m::mock(\POData\Providers\Metadata\ResourceProperty::class)->makePartial();
+        $resourceProperty2->shouldReceive('getName')->andReturn("type");
+        $resourceProperty2->shouldReceive('getInstanceType')->andReturn(new \POData\Providers\Metadata\Type\Int32());
+
+        $keysProperty = array("name" => $resourceProperty, "type"=>$resourceProperty2);
+        $resourceType->shouldReceive('getKeyProperties')->andReturn($keysProperty);
+
+        $foo = $this->Construct();
+        $entity = new reUsableentityClass3("bilbo",2);
+        $ret = $foo->getEntryInstanceKey($entity,$resourceType,"Data");
+        $this->assertEquals("Data(name='bilbo',type=2)", $ret);
+
+    }
+
+
 }
 
 
@@ -106,6 +128,16 @@ class reusableEntityClass2{
             return $this->$name;
         }
 }
+
+class reusableEntityClass3{
+        private $name;
+        private $type;
+        public function __construct($n,$t){
+            $this->name = $n;
+            $this->type = $t;
+        }
+}
+
 
 class ObjectModelSerializerDummy extends ObjectModelSerializerBase
 {
