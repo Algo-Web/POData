@@ -23,11 +23,11 @@ use Mockery as m;
 
 class ObjectModelSerializerTest extends \PHPUnit_Framework_TestCase
 {
-    public function testDoNothingTest()
+/*    public function testDoNothingTest()
     {
         $service = m::mock(IService::class);
         $request = m::mock(RequestDescription::class)->makePartial();
         $foo = new ObjectModelSerializer($service, $request);
         $this->assertTrue(true);
-    }
+    }*/
 }
