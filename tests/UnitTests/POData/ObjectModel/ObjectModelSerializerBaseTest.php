@@ -61,7 +61,7 @@ class ObjectModelSerializerBaseTest extends \PHPUnit_Framework_TestCase
         $entity = new reUsableentityClass1();
 	$entity->name = "bilbo";
         $entity->type = 2;
-        $ret = $foo->getEntryInstanceKeyWrapper($entity,$resourceType,"Data");
+        $ret = $foo->getEntryInstanceKey($entity,$resourceType,"Data");
         $this->assertEquals("Data(name='bilbo',type=2)", $ret);
 
     }
@@ -86,8 +86,8 @@ class ObjectModelSerializerDummy extends ObjectModelSerializerBase
         parent::__construct($service, $request);
     }
 
-     public function getEntryInstanceKeyWrapper($entityInstance, ResourceType $resourceType, $containerName){
-         return $this->getEntryInstanceKey($entityInstance, $resourceType, $containerName);
+     public function getEntryInstanceKey($entityInstance, ResourceType $resourceType, $containerName){
+         return parent::getEntryInstanceKey($entityInstance, $resourceType, $containerName);
      }
 
 }
