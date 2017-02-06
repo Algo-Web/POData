@@ -50,7 +50,7 @@ class ObjectModelSerializerTest extends \PHPUnit_Framework_TestCase
     }
     public function testwriteTopLevelElement(){
         $foo= $this->Construct();
-        $entity = new reusableEntityClass1();
+        $entity = new reusableEntityClass4();
         $entity->name = "bilbo";
         $entity->type = 2;
         $mockResourceType = m::mock(\POData\Providers\Metadata\ResourceType::class)->makePartial();
@@ -86,12 +86,12 @@ class ObjectModelSerializerTest extends \PHPUnit_Framework_TestCase
 
 }
 
-class reusableEntityClass1{
+class reusableEntityClass4{
         public $name;
         public $type;
 }
 
-class reusableEntityClass2{
+class reusableEntityClass5{
         private $name;
         private $type;
         public function __construct($n,$t){
@@ -103,7 +103,7 @@ class reusableEntityClass2{
         }
 }
 
-class reusableEntityClass3{
+class reusableEntityClass6{
         private $name;
         private $type;
         public function __construct($n,$t){
