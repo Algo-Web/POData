@@ -26,11 +26,13 @@ class ObjectModelSerializerBaseTest extends \PHPUnit_Framework_TestCase
 //        $foo = new ObjectModelSerializerDummy($service, $request);
         $this->assertTrue(true);
     }*/
+    private $mockRequest;
 
     public function Construct(){
 	$AbsoluteServiceURL = new \POData\Common\Url("http://192.168.2.1/abm-master/public/odata.svc");
         $service = m::mock(IService::class);
         $request = m::mock(RequestDescription::class)->makePartial();
+        $this->mockRequest = $request;
         $serviceHost = m::mock(\POData\OperationContext\ServiceHost::class)->makePartial();
         $serviceHost->shouldReceive('getAbsoluteServiceUri')->andReturn($AbsoluteServiceURL);
         $service->shouldReceive('getHost')->andReturn($serviceHost);
@@ -105,9 +107,23 @@ class ObjectModelSerializerBaseTest extends \PHPUnit_Framework_TestCase
         $entity = new reUsableentityClass3("bilbo",2);
         $ret = $foo->getEntryInstanceKey($entity,$resourceType,"Data");
         $this->assertEquals("Data(name='bilbo',type=2)", $ret);
-
     }
 
+    public function testgetCurrentResourceSetWrapper(){
+        $foo =  $this->Construct();
+        $this->mockRequest->shouldReceive('getTargetResourceSetWrapper')->andReturn(true);
+        
+        $ret = $foo->getCurrentResourceSetWrapper();
+        $this->assertEquals(true,$ret);
+    }
+
+    public function testgetCurrentResourceSetWrapper2(){
+        $foo =  $this->Construct();
+        $this->mockRequest->shouldReceive('getTargetResourceSetWrapper')->andReturn(true);
+        $foo->Set_segmentResourceSetWrappers = array(1,2,3,4,5);
+        $ret = $foo->getCurrentResourceSetWrapper();
+        $this->assertEquals(5,$ret);
+    }
 
 }
 
@@ -155,5 +171,12 @@ class ObjectModelSerializerDummy extends ObjectModelSerializerBase
      public function getEntryInstanceKey($entityInstance, ResourceType $resourceType, $containerName){
          return parent::getEntryInstanceKey($entityInstance, $resourceType, $containerName);
      }
+     public function getCurrentResourceSetWrapper(){
+         return parent::getCurrentResourceSetWrapper();
+     }
+     public function Set_segmentResourceSetWrappers($val){
+         $this->_segmentResourceSetWrappers = $val;
+     }
+
 
 }
