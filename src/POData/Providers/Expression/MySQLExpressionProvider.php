@@ -208,6 +208,21 @@ class MySQLExpressionProvider implements IExpressionProvider
      */
     public function onPropertyAccessExpression($expression)
     {
+        if (null == $expression) {
+            throw new \InvalidArgumentException('onPropertyAccessExpression - expression null');
+        }
+        if (!($expression instanceof PropertyAccessExpression)) {
+            throw new \InvalidArgumentException('onPropertyAccessExpression - expression is incorrect type');
+        }
+        if (null == $this->resourceType) {
+            throw new \InvalidArgumentException('onPropertyAccessExpression - resourceType null');
+        }
+        if (null == $this->resourceType->getName()) {
+            throw new \InvalidArgumentException('onPropertyAccessExpression - resourceType has no name');
+        }
+        if (null == $expression->getResourceProperty()) {
+            throw new \InvalidArgumentException('onPropertyAccessExpression - expression has no resource property');
+        }
         $parent = $expression;
         $variable = null;
         $entityTypeName = $this->resourceType->getName();

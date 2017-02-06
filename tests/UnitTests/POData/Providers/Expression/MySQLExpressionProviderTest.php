@@ -216,4 +216,45 @@ class MySQLExpressionProviderTest extends \PHPUnit_Framework_TestCase
         }
         $this->assertEquals($expected, $actual);
     }
+
+    public function testonPropertyAccessExpression()
+    {
+        $property = m::mock(PropertyAccessExpression::class)->makePartial();
+        $property->shouldReceive('getResourceProperty->getName')->andReturn("HAMMER TIME!");
+        $res = m::mock(ResourceType::class)->makePartial();
+        $res->shouldReceive('getName')->andReturn('OH NOES!');
+        $foo = new MySQLExpressionProvider();
+        $foo->setResourceType($res);
+
+        $expected = "HAMMER TIME!";
+        $result = $foo->onPropertyAccessExpression($property);
+        $this->assertEquals($expected, $result);
+    }
+
+    public function testonConstantExpressionNullValue()
+    {
+        $type = m::mock(IType::class);
+        $foo = new MySQLExpressionProvider();
+
+        $result = $foo->onConstantExpression($type, null);
+        $this->assertEquals('NULL', $result);
+    }
+
+    public function testonConstantExpressionBoolValue()
+    {
+        $type = m::mock(IType::class);
+        $foo = new MySQLExpressionProvider();
+
+        $result = $foo->onConstantExpression($type, false);
+        $this->assertEquals('false', $result);
+    }
+
+    public function testonConstantExpressionOtherValue()
+    {
+        $type = m::mock(IType::class);
+        $foo = new MySQLExpressionProvider();
+
+        $result = $foo->onConstantExpression($type, 'fnord');
+        $this->assertEquals('fnord', $result);
+    }
 }
