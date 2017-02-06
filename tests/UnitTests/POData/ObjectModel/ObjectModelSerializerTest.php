@@ -35,10 +35,13 @@ class ObjectModelSerializerTest extends \PHPUnit_Framework_TestCase
         $AbsoluteServiceURL = new \POData\Common\Url("http://192.168.2.1/abm-master/public/odata.svc");
         $service = m::mock(IService::class);
         $request = m::mock(RequestDescription::class)->makePartial();
+        $wrapper = m::mock(ProvidersWrapper::class)->makePartial();
         $this->mockRequest = $request;
         $serviceHost = m::mock(\POData\OperationContext\ServiceHost::class)->makePartial();
         $serviceHost->shouldReceive('getAbsoluteServiceUri')->andReturn($AbsoluteServiceURL);
+        $wrapper->shouldReceive('getResourceProperties')->andReturn([]);
         $service->shouldReceive('getHost')->andReturn($serviceHost);
+        $service->shouldReceive('getProvidersWrapper')->andReturn($wrapper);
         $foo = new ObjectModelSerializer ($service, $request);
         return $foo;
 
@@ -77,6 +80,7 @@ class ObjectModelSerializerTest extends \PHPUnit_Framework_TestCase
         $keysProperty = array("name" => $resourceProperty, "type"=>$resourceProperty2);
         $mockResourceType->shouldReceive('getKeyProperties')->andReturn($keysProperty);
 
+$mockResourceType->shouldReceive('getResourceTypeKind')->andReturn(2);
         $mockResourceSetWrapper->shouldReceive('getName')->andReturn("Entity");
 
 
