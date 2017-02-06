@@ -120,9 +120,9 @@ class ObjectModelSerializerBaseTest extends \PHPUnit_Framework_TestCase
     public function testgetCurrentResourceSetWrapper2(){
         $foo =  $this->Construct();
         $this->mockRequest->shouldReceive('getTargetResourceSetWrapper')->andReturn(true);
-        $foo->apply_segmentResourceSetWrappers(array(1,2,3,4,5));
+        $foo->apply_segmentResourceSetWrappers(array(1,2,3,5,7));
         $ret = $foo->getCurrentResourceSetWrapper();
-        $this->assertEquals(5,$ret);
+        $this->assertEquals(7,$ret);
     }
 
     public function testisRootResourceSet(){
