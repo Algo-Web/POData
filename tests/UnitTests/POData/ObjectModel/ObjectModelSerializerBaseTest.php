@@ -107,7 +107,7 @@ class ObjectModelSerializerBaseTest extends \PHPUnit_Framework_TestCase
 
     public function testgetCurrentResourceSetWrapper()
     {
-        $foo =  $this->Construct();
+        $foo = $this->Construct();
         $this->mockRequest->shouldReceive('getTargetResourceSetWrapper')->andReturn(true);
         $ret = $foo->getCurrentResourceSetWrapper();
         $this->assertEquals(true, $ret);
@@ -115,7 +115,7 @@ class ObjectModelSerializerBaseTest extends \PHPUnit_Framework_TestCase
 
     public function testisRootResourceSet()
     {
-        $foo =  $this->Construct();
+        $foo = $this->Construct();
         $ret = $foo->isRootResourceSet();
         $this->assertEquals(true, $ret, "isRootResourceSet 1");
     }
@@ -141,7 +141,7 @@ class reusableEntityClass2
 
     public function __get($name)
     {
-            return $this->$name;
+        return $this->$name;
     }
 }
 
