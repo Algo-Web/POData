@@ -31,7 +31,8 @@ class ObjectModelSerializerTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(true);
     }*/
     private $mockRequest;
-    public function Construct(){
+    public function Construct()
+    {
         $AbsoluteServiceURL = new \POData\Common\Url("http://192.168.2.1/abm-master/public/odata.svc");
         $service = m::mock(IService::class);
         $request = m::mock(RequestDescription::class)->makePartial();
@@ -42,16 +43,16 @@ class ObjectModelSerializerTest extends \PHPUnit_Framework_TestCase
         $wrapper->shouldReceive('getResourceProperties')->andReturn([]);
         $service->shouldReceive('getHost')->andReturn($serviceHost);
         $service->shouldReceive('getProvidersWrapper')->andReturn($wrapper);
-        $foo = new ObjectModelSerializer ($service, $request);
+        $foo = new ObjectModelSerializer($service, $request);
         return $foo;
-
     }
-    public function testObjectModelSerializerBaseconstructor(){
+    public function testObjectModelSerializerBaseconstructor()
+    {
         $foo = $this->Construct();
         $this->assertTrue(is_object($foo));
-
     }
-    public function testwriteTopLevelElement(){
+    public function testwriteTopLevelElement()
+    {
         $foo= $this->Construct();
         $entity = new reusableEntityClass4();
         $entity->name = "bilbo";
@@ -80,22 +81,23 @@ class ObjectModelSerializerTest extends \PHPUnit_Framework_TestCase
         $keysProperty = array("name" => $resourceProperty, "type"=>$resourceProperty2);
         $mockResourceType->shouldReceive('getKeyProperties')->andReturn($keysProperty);
 
-$mockResourceType->shouldReceive('getResourceTypeKind')->andReturn(2);
+        $mockResourceType->shouldReceive('getResourceTypeKind')->andReturn(2);
         $mockResourceSetWrapper->shouldReceive('getName')->andReturn("Entity");
 
 
         $ret = $foo->writeTopLevelElement($entity);
-$this->assertEquals("http://192.168.2.1/abm-master/public/odata.svc/Entity(name='bilbo',type=2)", $ret->id);
-$this->assertEquals("Entity(name='bilbo',type=2)", $ret->editLink);
-$this->assertEquals("Entity", $ret->resourceSetName);
+        $this->assertEquals("http://192.168.2.1/abm-master/public/odata.svc/Entity(name='bilbo',type=2)", $ret->id);
+        $this->assertEquals("Entity(name='bilbo',type=2)", $ret->editLink);
+        $this->assertEquals("Entity", $ret->resourceSetName);
     }
 
- public function testwriteTopLevelElements(){
+    public function testwriteTopLevelElements()
+    {
         $foo= $this->Construct();
         $entity = new reusableEntityClass4();
         $entity->name = "bilbo";
         $entity->type = 2;
-	$entity1 =  new reusableEntityClass4();
+          $entity1 =  new reusableEntityClass4();
         $entity1->name = "dildo";
         $entity1->type = 3;
 
@@ -110,7 +112,7 @@ $this->assertEquals("Entity", $ret->resourceSetName);
         $this->mockRequest->shouldReceive('getTargetResourceType')->andReturn($mockResourceType);
         $this->mockRequest->shouldReceive('getTargetResourceSetWrapper')->andReturn($mockResourceSetWrapper);
         $this->mockRequest->shouldReceive('getRequestUrl')->andReturn($requestURL);
-$this->mockRequest->shouldReceive('getIdentifier')->andReturn("Entity");
+        $this->mockRequest->shouldReceive('getIdentifier')->andReturn("Entity");
 
 
 
@@ -125,74 +127,72 @@ $this->mockRequest->shouldReceive('getIdentifier')->andReturn("Entity");
         $keysProperty = array("name" => $resourceProperty, "type"=>$resourceProperty2);
         $mockResourceType->shouldReceive('getKeyProperties')->andReturn($keysProperty);
 
-$mockResourceType->shouldReceive('getResourceTypeKind')->andReturn(2);
+        $mockResourceType->shouldReceive('getResourceTypeKind')->andReturn(2);
         $mockResourceSetWrapper->shouldReceive('getName')->andReturn("Entity");
 
 
-$e = [$entity,$entity1];
+        $e = [$entity,$entity1];
         $ret = $foo->writeTopLevelElements($e);
-$this->assertTrue($ret instanceof \POData\ObjectModel\ODataFeed);
-$this->assertTrue($ret->selfLink instanceof \POData\ObjectModel\ODataLink);
+        $this->assertTrue($ret instanceof \POData\ObjectModel\ODataFeed);
+        $this->assertTrue($ret->selfLink instanceof \POData\ObjectModel\ODataLink);
 
-$this->assertTrue(is_array($ret->entries));
-
-
-
-$this->assertEquals("http://192.168.2.1/abm-master/public/odata.svc/Entity(1)",$ret->id);
-$this->assertEquals("data", $ret->title);
-
-$this->assertEquals("self", $ret->selfLink->name);
-$this->assertEquals("data", $ret->selfLink->title);
-$this->assertEquals("Entity", $ret->selfLink->url);
+        $this->assertTrue(is_array($ret->entries));
 
 
-$this->assertEquals(2,count($ret->entries));
 
-$this->assertTrue($ret->entries[0] instanceof \POData\ObjectModel\ODataEntry);
-$this->assertTrue($ret->entries[1] instanceof \POData\ObjectModel\ODataEntry);
+        $this->assertEquals("http://192.168.2.1/abm-master/public/odata.svc/Entity(1)", $ret->id);
+        $this->assertEquals("data", $ret->title);
 
-
-$this->assertEquals("http://192.168.2.1/abm-master/public/odata.svc/Entity(name='bilbo',type=2)", $ret->entries[0]->id);
-$this->assertEquals("http://192.168.2.1/abm-master/public/odata.svc/Entity(name='dildo',type=3)", $ret->entries[1]->id);
-
-$this->assertEquals("Entity(name='bilbo',type=2)", $ret->entries[0]->editLink);
-$this->assertEquals("Entity(name='dildo',type=3)", $ret->entries[1]->editLink);
-
-$this->assertTrue($ret->entries[0]->propertyContent instanceof \POData\ObjectModel\ODataPropertyContent);
-$this->assertTrue($ret->entries[1]->propertyContent instanceof \POData\ObjectModel\ODataPropertyContent);
+        $this->assertEquals("self", $ret->selfLink->name);
+        $this->assertEquals("data", $ret->selfLink->title);
+        $this->assertEquals("Entity", $ret->selfLink->url);
 
 
+        $this->assertEquals(2, count($ret->entries));
+
+        $this->assertTrue($ret->entries[0] instanceof \POData\ObjectModel\ODataEntry);
+        $this->assertTrue($ret->entries[1] instanceof \POData\ObjectModel\ODataEntry);
+
+
+        $this->assertEquals("http://192.168.2.1/abm-master/public/odata.svc/Entity(name='bilbo',type=2)", $ret->entries[0]->id);
+        $this->assertEquals("http://192.168.2.1/abm-master/public/odata.svc/Entity(name='dildo',type=3)", $ret->entries[1]->id);
+
+        $this->assertEquals("Entity(name='bilbo',type=2)", $ret->entries[0]->editLink);
+        $this->assertEquals("Entity(name='dildo',type=3)", $ret->entries[1]->editLink);
+
+        $this->assertTrue($ret->entries[0]->propertyContent instanceof \POData\ObjectModel\ODataPropertyContent);
+        $this->assertTrue($ret->entries[1]->propertyContent instanceof \POData\ObjectModel\ODataPropertyContent);
     }
-
-
-
 }
 
-class reusableEntityClass4{
-        public $name;
-        public $type;
+class reusableEntityClass4
+{
+    public $name;
+    public $type;
 }
 
-class reusableEntityClass5{
-        private $name;
-        private $type;
-        public function __construct($n,$t){
-            $this->name = $n;
-            $this->type = $t;
-        }
-        public function __get($name){
-            return $this->$name;
-        }
+class reusableEntityClass5
+{
+    private $name;
+    private $type;
+    public function __construct($n, $t)
+    {
+        $this->name = $n;
+        $this->type = $t;
+    }
+    public function __get($name)
+    {
+        return $this->$name;
+    }
 }
 
-class reusableEntityClass6{
-        private $name;
-        private $type;
-        public function __construct($n,$t){
-            $this->name = $n;
-            $this->type = $t;
-        }
+class reusableEntityClass6
+{
+    private $name;
+    private $type;
+    public function __construct($n, $t)
+    {
+        $this->name = $n;
+        $this->type = $t;
+    }
 }
-
-
-
