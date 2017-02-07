@@ -137,6 +137,16 @@ class UriProcessor
     }
 
     /**
+     * Gets reference to the request submitted by client.
+     *
+     * @return ProvidersWrapper
+     */
+    public function getProviders()
+    {
+        return $this->providers;
+    }
+
+    /**
      * Gets the data service instance
      *
      * @return IService
@@ -192,7 +202,7 @@ class UriProcessor
              */
     protected function executePost()
     {
-        $segments = $this->request->getSegments();
+        $segments = $this->getRequest()->getSegments();
 
         foreach ($segments as $segment) {
             $requestTargetKind = $segment->getTargetKind();
@@ -200,7 +210,7 @@ class UriProcessor
                 $requestMethod = $this->getService()->getOperationContext()->incomingRequest()->getMethod();
                 $resourceSet = $segment->getTargetResourceSetWrapper();
                 $keyDescriptor = $segment->getKeyDescriptor();
-                $data = $this->request->getData();
+                $data = $this->getRequest()->getData();
                 if (!$resourceSet) {
                     $url = $this->getService()->getHost()->getAbsoluteRequestUri()->getUrlAsString();
                     throw ODataException::createBadRequestError(
@@ -210,8 +220,7 @@ class UriProcessor
                 if (!$data) {
                     throw ODataException::createBadRequestError(Messages::noDataForThisVerb($requestMethod));
                 }
-
-                $queryResult = $this->providers->createResourceforResourceSet($resourceSet, $keyDescriptor, $data);
+                $queryResult = $this->getProviders()->createResourceforResourceSet($resourceSet, $keyDescriptor, $data);
                 $segment->setResult($queryResult);
             }
         }
@@ -274,7 +283,7 @@ class UriProcessor
      */
     protected function executeBase($callback = null)
     {
-        $segments = $this->request->getSegments();
+        $segments = $this->getRequest()->getSegments();
 
         foreach ($segments as $segment) {
             $requestTargetKind = $segment->getTargetKind();
@@ -293,7 +302,7 @@ class UriProcessor
             } elseif ($segment->getIdentifier() == ODataConstants::URI_COUNT_SEGMENT) {
                 // we are done, $count will the last segment and
                 // taken care by _applyQueryOptions method
-                $segment->setResult($this->request->getCountValue());
+                $segment->setResult($this->getRequest()->getCountValue());
                 break;
             } else {
                 if ($requestTargetKind == TargetKind::MEDIA_RESOURCE()) {
@@ -396,7 +405,7 @@ class UriProcessor
 
         if ($projectedPropertyKind == ResourcePropertyKind::RESOURCESET_REFERENCE) {
             if ($segment->isSingleResult()) {
-                $entityInstance = $this->providers->getResourceFromRelatedResourceSet(
+                $entityInstance = $this->getProviders()->getResourceFromRelatedResourceSet(
                     $segment->getPrevious()->getTargetResourceSetWrapper(),
                     $segment->getPrevious()->getResult(),
                     $segment->getTargetResourceSetWrapper(),
@@ -406,13 +415,13 @@ class UriProcessor
 
                 $segment->setResult($entityInstance);
             } else {
-                $queryResult = $this->providers->getRelatedResourceSet(
-                    $this->request->queryType,
+                $queryResult = $this->getProviders()->getRelatedResourceSet(
+                    $this->getRequest()->queryType,
                     $segment->getPrevious()->getTargetResourceSetWrapper(),
                     $segment->getPrevious()->getResult(),
                     $segment->getTargetResourceSetWrapper(),
                     $segment->getProjectedProperty(),
-                    $this->request->getFilterInfo(),
+                    $this->getRequest()->getFilterInfo(),
                     //TODO: why are these null?  see #98
                     null, // $orderby
                     null, // $top
@@ -422,7 +431,8 @@ class UriProcessor
                 $segment->setResult($queryResult);
             }
         } elseif ($projectedPropertyKind == ResourcePropertyKind::RESOURCE_REFERENCE) {
-            $entityInstance = $this->providers->getRelatedResourceReference(
+
+            $entityInstance = $this->getProviders()->getRelatedResourceReference(
                 $segment->getPrevious()->getTargetResourceSetWrapper(),
                 $segment->getPrevious()->getResult(),
                 $segment->getTargetResourceSetWrapper(),
@@ -513,8 +523,8 @@ class UriProcessor
 
         //Apply $top and $skip option
         if (!empty($result)) {
-            $top = $this->request->getTopCount();
-            $skip = $this->request->getSkipCount();
+            $top = $this->getRequest()->getTopCount();
+            $skip = $this->getRequest()->getSkipCount();
             if (is_null($skip)) {
                 $skip = 0;
             }
@@ -530,10 +540,10 @@ class UriProcessor
      */
     private function handleExpansion()
     {
-        $node = $this->request->getRootProjectionNode();
+        $node = $this->getRequest()->getRootProjectionNode();
         if (!is_null($node) && $node->isExpansionSpecified()) {
-            $result = $this->request->getTargetResult();
-            if (!is_null($result) || is_array($result) && !empty($result)) {
+            $result = $this->getRequest()->getTargetResult();
+            if (!is_null($result) || (is_array($result) && !empty($result))) {
                 $needPop = $this->_pushSegmentForRoot();
                 $this->_executeExpansion($result);
                 $this->_popSegment($needPop);
