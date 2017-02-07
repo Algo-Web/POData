@@ -56,18 +56,11 @@ class UriProcessor
     private $providers;
 
     /**
-     * Collection of segment names.
+     * Holds reference to segment stack being processed
      *
-     * @var string[]
+     * @var SegmentStack
      */
-    private $_segmentNames;
-
-    /**
-     * Collection of segment ResourceSetWrapper instances.
-     *
-     * @var ResourceSetWrapper[]
-     */
-    private $_segmentResourceSetWrappers;
+    private $stack;
 
     /**
      * Constructs a new instance of UriProcessor.
@@ -78,8 +71,6 @@ class UriProcessor
     {
         $this->service = $service;
         $this->providers = $service->getProvidersWrapper();
-        $this->_segmentNames = array();
-        $this->_segmentResourceSetWrappers = array();
     }
 
     /**
@@ -108,6 +99,7 @@ class UriProcessor
         $uriProcessor = new self($service);
         //Parse the resource path part of the request Uri.
         $uriProcessor->request = ResourcePathProcessor::process($service);
+        $uriProcessor->stack = new SegmentStack($uriProcessor->getRequest());
 
         $uriProcessor->getRequest()->setUriProcessor($uriProcessor);
 
@@ -157,6 +149,16 @@ class UriProcessor
     }
 
     /**
+     * Gets the segment stack instance
+     *
+     * @return SegmentStack
+     */
+    public function getStack()
+    {
+        return $this->stack;
+    }
+
+    /**
      * Execute the client submitted request against the data source.
      */
     public function execute()
@@ -178,7 +180,7 @@ class UriProcessor
             $this->executePut();
         } elseif ($requestMethod == HTTPRequestMethod::DELETE()) {
             $this->executeDelete();
-            //TODO: we probably need these verbes eventually.
+            //TODO: we probably need these verbs eventually.
         /*} elseif ($requestMethod == HTTPRequestMethod::PATCH()) {
             $this->executePatch();
         } elseif ($requestMethod == HTTPRequestMethod::MERGE()) {
@@ -376,7 +378,7 @@ class UriProcessor
 
             $segment->setResult($entityInstance);
         } else {
-            $skip = (null == $this->request) ? 0 : $this->getRequest()->getSkipCount();
+            $skip = (null == $this->getRequest()) ? 0 : $this->getRequest()->getSkipCount();
             $skip = (null == $skip) ? 0 :$skip;
             $queryResult = $this->getProviders()->getResourceSet(
                 $this->getRequest()->queryType,
@@ -700,11 +702,12 @@ class UriProcessor
      */
     private function _getCurrentResourceSetWrapper()
     {
-        $count = count($this->_segmentResourceSetWrappers);
-        if ($count == 0) {
+        $wraps = $this->getStack()->getSegmentWrappers();
+        $count = count($wraps);
+        if (0 == $count) {
             return $this->getRequest()->getTargetResourceSetWrapper();
         } else {
-            return $this->_segmentResourceSetWrappers[$count - 1];
+            return $wraps[$count - 1];
         }
     }
 
@@ -741,8 +744,8 @@ class UriProcessor
     {
         if ($resourceProperty->getTypeKind() == ResourceTypeKind::ENTITY) {
             $this->assert(
-                !empty($this->_segmentNames),
-                '!is_empty($this->_segmentNames'
+                !empty($this->getStack()->getSegmentNames()),
+                '!is_empty($this->getStack()->getSegmentNames())'
             );
             $currentResourceSetWrapper = $this->_getCurrentResourceSetWrapper();
             $currentResourceType = $currentResourceSetWrapper->getResourceType();
@@ -801,11 +804,12 @@ class UriProcessor
         $expandedProjectionNode
             = $this->getRequest()->getRootProjectionNode();
         if (!is_null($expandedProjectionNode)) {
-            $depth = count($this->_segmentNames);
+            $names = $this->getStack()->getSegmentNames();
+            $depth = count($names);
             if ($depth != 0) {
                 for ($i = 1; $i < $depth; ++$i) {
                     $expandedProjectionNode
-                        = $expandedProjectionNode->findNode($this->_segmentNames[$i]);
+                        = $expandedProjectionNode->findNode($names[$i]);
                     $this->assert(
                         !is_null($expandedProjectionNode),
                         '!is_null($expandedProjectionNode)'
@@ -834,17 +838,7 @@ class UriProcessor
      */
     private function _pushSegment($segmentName, ResourceSetWrapper &$resourceSetWrapper)
     {
-        $rootProjectionNode = $this->getRequest()->getRootProjectionNode();
-        if (!is_null($rootProjectionNode)
-            && $rootProjectionNode->isExpansionSpecified()
-        ) {
-            array_push($this->_segmentNames, $segmentName);
-            array_push($this->_segmentResourceSetWrappers, $resourceSetWrapper);
-
-            return true;
-        }
-
-        return false;
+        $this->getStack()->pushSegment($segmentName, $resourceSetWrapper);
     }
 
     /**
@@ -860,16 +854,7 @@ class UriProcessor
      */
     private function _popSegment($needPop)
     {
-        if ($needPop) {
-            if (!empty($this->_segmentNames)) {
-                array_pop($this->_segmentNames);
-                array_pop($this->_segmentResourceSetWrappers);
-            } else {
-                throw new InvalidOperationException(
-                    'Found non-balanced call to _pushSegment and popSegment'
-                );
-            }
-        }
+        $this->getStack()->popSegment($needPop);
     }
 
     /**
