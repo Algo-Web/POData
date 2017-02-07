@@ -2,6 +2,7 @@
 
 namespace POData\UriProcessor;
 
+use Illuminate\Support\Str;
 use POData\Providers\ProvidersWrapper;
 use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\Providers\Metadata\ResourceTypeKind;
@@ -114,6 +115,15 @@ class UriProcessor
         QueryProcessor::process($uriProcessor->request, $service);
 
         return $uriProcessor;
+    }
+
+    public function __get($name)
+    {
+        $name = 'get'.Str::studly($name);
+
+        if (method_exists($this, $name)) {
+            return $this->$name();
+        }
     }
 
     /**
