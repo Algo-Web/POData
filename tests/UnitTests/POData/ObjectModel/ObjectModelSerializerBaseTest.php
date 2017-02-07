@@ -19,13 +19,6 @@ use Mockery as m;
 
 class ObjectModelSerializerBaseTest extends \PHPUnit_Framework_TestCase
 {
-/*    public function testDoNothing()
-    {
-//        $service = m::mock(IService::class);
-//        $request = m::mock(RequestDescription::class)->makePartial();
-//        $foo = new ObjectModelSerializerDummy($service, $request);
-        $this->assertTrue(true);
-    }*/
     private $mockRequest;
 
     public function Construct()
@@ -40,11 +33,13 @@ class ObjectModelSerializerBaseTest extends \PHPUnit_Framework_TestCase
         $foo = new ObjectModelSerializerDummy($service, $request);
         return $foo;
     }
+
     public function testObjectModelSerializerBaseconstructor()
     {
         $foo = $this->Construct();
         $this->assertTrue(is_object($foo));
     }
+
     public function testGetEntryInstanceKey()
     {
         $resourceType = m::mock(ResourceType::class)->makePartial();
@@ -114,7 +109,6 @@ class ObjectModelSerializerBaseTest extends \PHPUnit_Framework_TestCase
     {
         $foo =  $this->Construct();
         $this->mockRequest->shouldReceive('getTargetResourceSetWrapper')->andReturn(true);
-        
         $ret = $foo->getCurrentResourceSetWrapper();
         $this->assertEquals(true, $ret);
     }
@@ -138,11 +132,13 @@ class reusableEntityClass2
 {
     private $name;
     private $type;
+
     public function __construct($n, $t)
     {
         $this->name = $n;
         $this->type = $t;
     }
+
     public function __get($name)
     {
             return $this->$name;
@@ -153,6 +149,7 @@ class reusableEntityClass3
 {
     private $name;
     private $type;
+
     public function __construct($n, $t)
     {
         $this->name = $n;
