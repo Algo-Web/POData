@@ -12,7 +12,7 @@ trait uriProcessor
      */
     public static function uriProcessorResourceNotFound($segment)
     {
-        return "Resource not found for the segment '$segment'";
+        return "Resource not found for the segment '$segment'.";
     }
 
     /**
