@@ -109,7 +109,7 @@ class UriProcessor
         //Parse the resource path part of the request Uri.
         $uriProcessor->request = ResourcePathProcessor::process($service);
 
-        $uriProcessor->request->setUriProcessor($uriProcessor);
+        $uriProcessor->getRequest()->setUriProcessor($uriProcessor);
 
         //Parse the query string options of the request Uri.
         QueryProcessor::process($uriProcessor->request, $service);
@@ -235,7 +235,7 @@ class UriProcessor
             $requestMethod = $uriProcessor->getService()->getOperationContext()->incomingRequest()->getMethod();
             $resourceSet = $segment->getTargetResourceSetWrapper();
             $keyDescriptor = $segment->getKeyDescriptor();
-            $data = $uriProcessor->request->getData();
+            $data = $uriProcessor->getRequest()->getData();
             if (!$resourceSet || !$keyDescriptor) {
                 $url = $uriProcessor->getService()->getHost()->getAbsoluteRequestUri()->getUrlAsString();
                 throw ODataException::createBadRequestError(Messages::badRequestInvalidUriForThisVerb($url, $requestMethod));
@@ -245,7 +245,7 @@ class UriProcessor
                 throw ODataException::createBadRequestError(Messages::noDataForThisVerb($requestMethod));
             }
 
-            $queryResult = $uriProcessor->providers->updateResource(
+            $queryResult = $uriProcessor->getProviders()->updateResource(
                 $resourceSet,
                 $segment->getResult(),
                 $keyDescriptor,
@@ -272,7 +272,7 @@ class UriProcessor
                     Messages::badRequestInvalidUriForThisVerb($url, $requestMethod)
                 );
             }
-            return $uriProcessor->providers->deleteResource($resourceSet, $segment->getResult());
+            return $uriProcessor->getProviders()->deleteResource($resourceSet, $segment->getResult());
         });
     }
 
@@ -369,21 +369,21 @@ class UriProcessor
     private function handleSegmentTargetsToResourceSet(SegmentDescriptor $segment)
     {
         if ($segment->isSingleResult()) {
-            $entityInstance = $this->providers->getResourceFromResourceSet(
+            $entityInstance = $this->getProviders()->getResourceFromResourceSet(
                 $segment->getTargetResourceSetWrapper(),
                 $segment->getKeyDescriptor()
             );
 
             $segment->setResult($entityInstance);
         } else {
-            $skip = (null == $this->request) ? 0 : $this->request->getSkipCount();
+            $skip = (null == $this->request) ? 0 : $this->getRequest()->getSkipCount();
             $skip = (null == $skip) ? 0 :$skip;
-            $queryResult = $this->providers->getResourceSet(
-                $this->request->queryType,
+            $queryResult = $this->getProviders()->getResourceSet(
+                $this->getRequest()->queryType,
                 $segment->getTargetResourceSetWrapper(),
-                $this->request->getFilterInfo(),
-                $this->request->getInternalOrderByInfo(),
-                $this->request->getTopCount(),
+                $this->getRequest()->getFilterInfo(),
+                $this->getRequest()->getInternalOrderByInfo(),
+                $this->getRequest()->getTopCount(),
                 $skip,
                 null
             );
@@ -472,26 +472,26 @@ class UriProcessor
 
         // Note $inlinecount=allpages means include the total count regardless of paging..so we set the counts first
         // regardless if POData does the paging or not.
-        if ($this->request->queryType == QueryType::ENTITIES_WITH_COUNT()) {
-            if ($this->providers->handlesOrderedPaging()) {
-                $this->request->setCountValue($result->count);
+        if ($this->getRequest()->queryType == QueryType::ENTITIES_WITH_COUNT()) {
+            if ($this->getProviders()->handlesOrderedPaging()) {
+                $this->getRequest()->setCountValue($result->count);
             } else {
-                $this->request->setCountValue(count($result->results));
+                $this->getRequest()->setCountValue(count($result->results));
             }
         }
 
         //Have POData perform paging if necessary
-        if (!$this->providers->handlesOrderedPaging() && !empty($result->results)) {
+        if (!$this->getProviders()->handlesOrderedPaging() && !empty($result->results)) {
             $result->results = $this->performPaging($result->results);
         }
 
         //a bit surprising, but $skip and $top affects $count so update it here, not above
         //IE  data.svc/Collection/$count?$top=10 returns 10 even if Collection has 11+ entries
-        if ($this->request->queryType == QueryType::COUNT()) {
-            if ($this->providers->handlesOrderedPaging()) {
-                $this->request->setCountValue($result->count);
+        if ($this->getRequest()->queryType == QueryType::COUNT()) {
+            if ($this->getProviders()->handlesOrderedPaging()) {
+                $this->getRequest()->setCountValue($result->count);
             } else {
-                $this->request->setCountValue(count($result->results));
+                $this->getRequest()->setCountValue(count($result->results));
             }
         }
 
@@ -508,14 +508,14 @@ class UriProcessor
     private function performPaging(array $result)
     {
         //Apply (implicit and explicit) $orderby option
-        $internalOrderByInfo = $this->request->getInternalOrderByInfo();
+        $internalOrderByInfo = $this->getRequest()->getInternalOrderByInfo();
         if (!is_null($internalOrderByInfo)) {
             $orderByFunction = $internalOrderByInfo->getSorterFunction()->getReference();
             usort($result, $orderByFunction);
         }
 
         //Apply $skiptoken option
-        $internalSkipTokenInfo = $this->request->getInternalSkipTokenInfo();
+        $internalSkipTokenInfo = $this->getRequest()->getInternalSkipTokenInfo();
         if (!is_null($internalSkipTokenInfo)) {
             $matchingIndex = $internalSkipTokenInfo->getIndexOfFirstEntryInTheNextPage($result);
             $result = array_slice($result, $matchingIndex);
@@ -572,7 +572,7 @@ class UriProcessor
                             ->getResourceSetWrapper()
                             ->getResourceSet();
                         $projectedProperty1 = $expandedProjectionNode->getResourceProperty();
-                        $result1 = $this->providers->getRelatedResourceSet(
+                        $result1 = $this->getProviders()->getRelatedResourceSet(
                             QueryType::ENTITIES(), //it's always entities for an expansion
                             $currentResourceSet,
                             $entry,
@@ -611,7 +611,7 @@ class UriProcessor
                             ->getResourceSetWrapper()
                             ->getResourceSet();
                         $projectedProperty2 = $expandedProjectionNode->getResourceProperty();
-                        $result1 = $this->providers->getRelatedResourceReference(
+                        $result1 = $this->getProviders()->getRelatedResourceReference(
                             $currentResourceSet1,
                             $entry,
                             $resourceSetOfProjectedProperty1,
@@ -635,7 +635,7 @@ class UriProcessor
                         ->getResourceSetWrapper()
                         ->getResourceSet();
                     $projectedProperty4 = $expandedProjectionNode->getResourceProperty();
-                    $result1 = $this->providers->getRelatedResourceSet(
+                    $result1 = $this->getProviders()->getRelatedResourceSet(
                         QueryType::ENTITIES(), //it's always entities for an expansion
                         $currentResourceSet2,
                         $result,
@@ -673,7 +673,7 @@ class UriProcessor
                         ->getResourceSetWrapper()
                         ->getResourceSet();
                     $projectedProperty5 = $expandedProjectionNode->getResourceProperty();
-                    $result1 = $this->providers->getRelatedResourceReference(
+                    $result1 = $this->getProviders()->getRelatedResourceReference(
                         $currentResourceSet3,
                         $result,
                         $resourceSetOfProjectedProperty3,
@@ -702,7 +702,7 @@ class UriProcessor
     {
         $count = count($this->_segmentResourceSetWrappers);
         if ($count == 0) {
-            return $this->request->getTargetResourceSetWrapper();
+            return $this->getRequest()->getTargetResourceSetWrapper();
         } else {
             return $this->_segmentResourceSetWrappers[$count - 1];
         }
@@ -716,9 +716,9 @@ class UriProcessor
      */
     private function _pushSegmentForRoot()
     {
-        $segmentName = $this->request->getContainerName();
+        $segmentName = $this->getRequest()->getContainerName();
         $segmentResourceSetWrapper
-            = $this->request->getTargetResourceSetWrapper();
+            = $this->getRequest()->getTargetResourceSetWrapper();
 
         return $this->_pushSegment($segmentName, $segmentResourceSetWrapper);
     }
@@ -799,7 +799,7 @@ class UriProcessor
     private function _getCurrentExpandedProjectionNode()
     {
         $expandedProjectionNode
-            = $this->request->getRootProjectionNode();
+            = $this->getRequest()->getRootProjectionNode();
         if (!is_null($expandedProjectionNode)) {
             $depth = count($this->_segmentNames);
             if ($depth != 0) {
@@ -834,7 +834,7 @@ class UriProcessor
      */
     private function _pushSegment($segmentName, ResourceSetWrapper &$resourceSetWrapper)
     {
-        $rootProjectionNode = $this->request->getRootProjectionNode();
+        $rootProjectionNode = $this->getRequest()->getRootProjectionNode();
         if (!is_null($rootProjectionNode)
             && $rootProjectionNode->isExpansionSpecified()
         ) {
