@@ -111,7 +111,7 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
             SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
             $this->fail('An expected Resource not found ODataException for \'Customers1\' has not been thrown');
         } catch (ODataException $exception) {
-            $this->assertEquals('Resource not found for the segment \'Customers1\'', $exception->getMessage());
+            $this->assertEquals('Resource not found for the segment \'Customers1\'.', $exception->getMessage());
         }
 
         //test with single positional value
@@ -174,7 +174,7 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
             SegmentParser::parseRequestUriSegments($segments, $providersWrapper);
             $this->fail('An expected Forbidden ODataException has not been thrown');
         } catch (ODataException $exception) {
-            $this->assertEquals('Resource not found for the segment \'Employees\'', $exception->getMessage());
+            $this->assertEquals('Resource not found for the segment \'Employees\'.', $exception->getMessage());
         }
     }
 
@@ -550,7 +550,7 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
             SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
             $this->fail('An expected ODataException resource not found for $value segment has no been thrown');
         } catch (ODataException $exception) {
-            $this->assertEquals('Resource not found for the segment \'$value\'', $exception->getMessage());
+            $this->assertEquals('Resource not found for the segment \'$value\'.', $exception->getMessage());
         }
 
         //Test $count followed by complex
@@ -678,7 +678,7 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
             SegmentParser::parseRequestUriSegments($segments, $providersWrapper);
             $this->fail('An expected ODataException for \'Orders\' resource not found error has not been thrown');
         } catch (ODataException $exception) {
-            $this->assertEquals('Resource not found for the segment \'Orders\'', $exception->getMessage());
+            $this->assertEquals('Resource not found for the segment \'Orders\'.', $exception->getMessage());
         }
     }
 

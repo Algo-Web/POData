@@ -805,13 +805,15 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
                 $eTag = $streamProvider->getStreamETag($entryObject, $resourceStreamInfo);
                 $readStreamUri = $streamProvider->getReadStreamUri($entryObject, $resourceStreamInfo, $relativeUri);
                 $mediaContentType = $streamProvider->getStreamContentType($entryObject, $resourceStreamInfo);
-                $odataEntry->mediaLinks[] = new ODataMediaLink(
+                $mediaLink = new ODataMediaLink(
                     $title,
                     $streamProvider->getDefaultStreamEditMediaUri($relativeUri, $resourceStreamInfo),
                     $readStreamUri,
                     $mediaContentType,
                     $eTag
                 );
+
+                $odataEntry->mediaLinks[] = $mediaLink;
             }
         }
     }
