@@ -124,119 +124,48 @@ class RequestExpander
                 foreach ($result as $entry) {
                     // Check for null entry
                     if ($isCollection) {
-                        $currentResourceSet = $this->getCurrentResourceSetWrapper()->getResourceSet();
-                        $resourceSetOfProjectedProperty = $expandedProjectionNode
-                            ->getResourceSetWrapper()
-                            ->getResourceSet();
-                        $projectedProperty1 = $expandedProjectionNode->getResourceProperty();
-                        $result1 = $this->getProviders()->getRelatedResourceSet(
-                            QueryType::ENTITIES(), //it's always entities for an expansion
-                            $currentResourceSet,
-                            $entry,
-                            $resourceSetOfProjectedProperty,
-                            $projectedProperty1,
-                            null, // $filter
-                            null, // $orderby
-                            null, // $top
-                            null  // $skip
-                        )->results;
+                        $result1 = $this->executeCollectionExpansionGetRelated($expandedProjectionNode, $entry);
                         if (!empty($result1)) {
-                            $internalOrderByInfo = $expandedProjectionNode->getInternalOrderByInfo();
-                            if (!is_null($internalOrderByInfo)) {
-                                $orderByFunction = $internalOrderByInfo->getSorterFunction()->getReference();
-                                usort($result1, $orderByFunction);
-                                unset($internalOrderByInfo);
-                                $takeCount = $expandedProjectionNode->getTakeCount();
-                                if (!is_null($takeCount)) {
-                                    $result1 = array_slice($result1, 0, $takeCount);
-                                }
-                            }
-
-                            $resourceType->setPropertyValue($entry, $expandedPropertyName, $result1);
-                            $projectedProperty = $expandedProjectionNode->getResourceProperty();
-                            $needPop = $this->pushSegmentForNavigationProperty($projectedProperty);
-                            $this->executeExpansion($result1);
-                            $this->popSegment($needPop);
+                            $this->executeCollectionExpansionProcessExpansion(
+                                $entry,
+                                $result1,
+                                $expandedProjectionNode,
+                                $resourceType,
+                                $expandedPropertyName
+                            );
                         } else {
                             $resourceType->setPropertyValue($entry, $expandedPropertyName, array());
                         }
                     } else {
-                        $currentResourceSet1 = $this->getCurrentResourceSetWrapper()->getResourceSet();
-                        $resourceSetOfProjectedProperty1 = $expandedProjectionNode
-                            ->getResourceSetWrapper()
-                            ->getResourceSet();
-                        $projectedProperty2 = $expandedProjectionNode->getResourceProperty();
-                        $result1 = $this->getProviders()->getRelatedResourceReference(
-                            $currentResourceSet1,
+                        $this->executeSingleExpansionGetRelated(
+                            $expandedProjectionNode,
                             $entry,
-                            $resourceSetOfProjectedProperty1,
-                            $projectedProperty2
+                            $resourceType,
+                            $expandedPropertyName
                         );
-                        $resourceType->setPropertyValue($entry, $expandedPropertyName, $result1);
-                        if (!is_null($result1)) {
-                            $projectedProperty3 = $expandedProjectionNode->getResourceProperty();
-                            $needPop = $this->pushSegmentForNavigationProperty($projectedProperty3);
-                            $this->executeExpansion($result1);
-                            $this->popSegment($needPop);
-                        }
                     }
                 }
             } else {
                 if ($isCollection) {
-                    $currentResourceSet2 = $this->getCurrentResourceSetWrapper()->getResourceSet();
-                    $resourceSetOfProjectedProperty2 = $expandedProjectionNode
-                        ->getResourceSetWrapper()
-                        ->getResourceSet();
-                    $projectedProperty4 = $expandedProjectionNode->getResourceProperty();
-                    $result1 = $this->getProviders()->getRelatedResourceSet(
-                        QueryType::ENTITIES(), //it's always entities for an expansion
-                        $currentResourceSet2,
-                        $result,
-                        $resourceSetOfProjectedProperty2,
-                        $projectedProperty4,
-                        null, // $filter
-                        null, // $orderby
-                        null, // $top
-                        null  // $skip
-                    )->results;
-                    if (!empty($result1)) {
-                        $internalOrderByInfo = $expandedProjectionNode->getInternalOrderByInfo();
-                        if (!is_null($internalOrderByInfo)) {
-                            $orderByFunction = $internalOrderByInfo->getSorterFunction()->getReference();
-                            usort($result1, $orderByFunction);
-                            unset($internalOrderByInfo);
-                            $takeCount = $expandedProjectionNode->getTakeCount();
-                            if (!is_null($takeCount)) {
-                                $result1 = array_slice($result1, 0, $takeCount);
-                            }
-                        }
-                        $resourceType->setPropertyValue($result, $expandedPropertyName, $result1);
-                        $projectedProperty7 = $expandedProjectionNode->getResourceProperty();
-                        $needPop = $this->pushSegmentForNavigationProperty($projectedProperty7);
-                        $this->executeExpansion($result1);
-                        $this->popSegment($needPop);
+                    $result2 = $this->executeCollectionExpansionGetRelated($expandedProjectionNode, $result);
+                    if (!empty($result2)) {
+                        $this->executeCollectionExpansionProcessExpansion(
+                            $result,
+                            $result2,
+                            $expandedProjectionNode,
+                            $resourceType,
+                            $expandedPropertyName
+                        );
                     } else {
-                        $resourceType->setPropertyValue($result, $expandedPropertyName, $result1);
+                        $resourceType->setPropertyValue($result, $expandedPropertyName, $result2);
                     }
                 } else {
-                    $currentResourceSet3 = $this->getCurrentResourceSetWrapper()->getResourceSet();
-                    $resourceSetOfProjectedProperty3 = $expandedProjectionNode
-                        ->getResourceSetWrapper()
-                        ->getResourceSet();
-                    $projectedProperty5 = $expandedProjectionNode->getResourceProperty();
-                    $result1 = $this->getProviders()->getRelatedResourceReference(
-                        $currentResourceSet3,
+                    $this->executeSingleExpansionGetRelated(
+                        $expandedProjectionNode,
                         $result,
-                        $resourceSetOfProjectedProperty3,
-                        $projectedProperty5
+                        $resourceType,
+                        $expandedPropertyName
                     );
-                    $resourceType->setPropertyValue($result, $expandedPropertyName, $result1);
-                    if (!is_null($result1)) {
-                        $projectedProperty6 = $expandedProjectionNode->getResourceProperty();
-                        $needPop = $this->pushSegmentForNavigationProperty($projectedProperty6);
-                        $this->executeExpansion($result1);
-                        $this->popSegment($needPop);
-                    }
                 }
             }
         }
@@ -409,5 +338,98 @@ class RequestExpander
                 "Unexpected state, expecting $conditionAsString"
             );
         }
+    }
+
+    /**
+     * @param $expandedProjectionNode
+     * @param $entry
+     * @return null|\object[]
+     */
+    private function executeCollectionExpansionGetRelated($expandedProjectionNode, $entry)
+    {
+        $currentResourceSet = $this->getCurrentResourceSetWrapper()->getResourceSet();
+        $resourceSetOfProjectedProperty = $expandedProjectionNode
+            ->getResourceSetWrapper()
+            ->getResourceSet();
+        $projectedProperty = $expandedProjectionNode->getResourceProperty();
+        $result = $this->getProviders()->getRelatedResourceSet(
+            QueryType::ENTITIES(), //it's always entities for an expansion
+            $currentResourceSet,
+            $entry,
+            $resourceSetOfProjectedProperty,
+            $projectedProperty,
+            null, // $filter
+            null, // $orderby
+            null, // $top
+            null  // $skip
+        )->results;
+        return $result;
+    }
+
+    /**
+     * @param $expandedProjectionNode
+     * @param $entry
+     * @param $resourceType
+     * @param $expandedPropertyName
+     * @throws InvalidOperationException
+     * @throws \POData\Common\ODataException
+     */
+    private function executeSingleExpansionGetRelated(
+        $expandedProjectionNode,
+        $entry,
+        $resourceType,
+        $expandedPropertyName
+    ) {
+        $currentResourceSet = $this->getCurrentResourceSetWrapper()->getResourceSet();
+        $resourceSetOfProjectedProperty = $expandedProjectionNode
+            ->getResourceSetWrapper()
+            ->getResourceSet();
+        $projectedProperty = $expandedProjectionNode->getResourceProperty();
+        $result = $this->getProviders()->getRelatedResourceReference(
+            $currentResourceSet,
+            $entry,
+            $resourceSetOfProjectedProperty,
+            $projectedProperty
+        );
+        $resourceType->setPropertyValue($entry, $expandedPropertyName, $result);
+        if (!is_null($result)) {
+            $projectedProperty = $expandedProjectionNode->getResourceProperty();
+            $needPop = $this->pushSegmentForNavigationProperty($projectedProperty);
+            $this->executeExpansion($result);
+            $this->popSegment($needPop);
+        }
+    }
+
+    /**
+     * @param $entry
+     * @param $result
+     * @param $expandedProjectionNode
+     * @param $resourceType
+     * @param $expandedPropertyName
+     * @throws InvalidOperationException
+     */
+    private function executeCollectionExpansionProcessExpansion(
+        $entry,
+        $result,
+        $expandedProjectionNode,
+        $resourceType,
+        $expandedPropertyName
+    ) {
+        $internalOrderByInfo = $expandedProjectionNode->getInternalOrderByInfo();
+        if (!is_null($internalOrderByInfo)) {
+            $orderByFunction = $internalOrderByInfo->getSorterFunction()->getReference();
+            usort($result, $orderByFunction);
+            unset($internalOrderByInfo);
+            $takeCount = $expandedProjectionNode->getTakeCount();
+            if (!is_null($takeCount)) {
+                $result = array_slice($result, 0, $takeCount);
+            }
+        }
+
+        $resourceType->setPropertyValue($entry, $expandedPropertyName, $result);
+        $projectedProperty = $expandedProjectionNode->getResourceProperty();
+        $needPop = $this->pushSegmentForNavigationProperty($projectedProperty);
+        $this->executeExpansion($result);
+        $this->popSegment($needPop);
     }
 }
