@@ -284,11 +284,10 @@ class ServiceConfiguration
      */
     public function setEntitySetPageSize($name, $pageSize)
     {
-        $pageSize
-            = $this->_checkIntegerNonNegativeParameter(
-                $pageSize,
-                'setEntitySetPageSize'
-            );
+        $pageSize = $this->_checkIntegerNonNegativeParameter(
+            $pageSize,
+            'setEntitySetPageSize'
+        );
         if ($this->_maxResultsPerCollection != PHP_INT_MAX) {
             throw new InvalidOperationException(
                 Messages::configurationMaxResultAndPageSizeMutuallyExclusive()
