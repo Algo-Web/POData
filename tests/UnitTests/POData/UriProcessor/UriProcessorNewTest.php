@@ -15,6 +15,7 @@ use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\ProvidersWrapper;
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\RootProjectionNode;
 use POData\UriProcessor\RequestDescription;
+use POData\UriProcessor\RequestExpander;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\SegmentDescriptor;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
 use POData\UriProcessor\UriProcessor;
@@ -163,16 +164,6 @@ class UriProcessorNewTest extends \PHPUnit_Framework_TestCase
         $processor->execute();
     }
 
-    public function testAddRequestGetter()
-    {
-        $processor = m::mock(UriProcessor::class)->shouldAllowMockingProtectedMethods()->makePartial();
-        $processor->shouldReceive('getRequest')->andReturn('request');
-
-        $expected = 'request';
-        $result = $processor->request;
-        $this->assertEquals($expected, $result);
-    }
-
     public function testGetResourceNotFound()
     {
         $seg1 = m::mock(SegmentDescriptor::class)->makePartial();
@@ -304,11 +295,15 @@ class UriProcessorNewTest extends \PHPUnit_Framework_TestCase
         $service->shouldReceive('getProvidersWrapper')->andReturn($wrapper);
         $service->shouldReceive('getOperationContext')->andReturn($context);
 
+        $expander = m::mock(RequestExpander::class);
+        $expander->shouldReceive('handleExpansion')->andReturnNull()->once();
+
         $processor = m::mock(UriProcessor::class)->shouldAllowMockingProtectedMethods()->makePartial();
         $processor->shouldReceive('executeGet')->passthru()->once();
         $processor->shouldReceive('getService')->andReturn($service);
         $processor->shouldReceive('getRequest')->andReturn($request);
         $processor->shouldReceive('getProviders')->andReturn($wrapper);
+        $processor->shouldReceive('getExpander')->andReturn($expander);
 
         $processor->execute();
     }
