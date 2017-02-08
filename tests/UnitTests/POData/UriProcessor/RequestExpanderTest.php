@@ -3,7 +3,11 @@
 namespace UnitTests\POData\UriProcessor;
 
 use POData\IService;
+use POData\Providers\Metadata\ResourceProperty;
+use POData\Providers\Metadata\ResourcePropertyKind;
+use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\ResourceSetWrapper;
+use POData\Providers\Metadata\ResourceType;
 use POData\Providers\ProvidersWrapper;
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\RootProjectionNode;
 use POData\UriProcessor\RequestDescription;
@@ -92,6 +96,53 @@ class RequestExpanderTest extends \PHPUnit_Framework_TestCase
         $foo = m::mock(RequestExpander::class)->makePartial();
         $foo->shouldReceive('getRequest')->andReturn($request);
         $foo->shouldReceive('getStack')->andReturn($stack);
+
+        $foo->handleExpansion();
+    }
+
+    public function testHandleExpansionOfSingleNode()
+    {
+        $providers = m::mock(ProvidersWrapper::class);
+        $providers->shouldReceive('getRelatedResourceReference')->andReturnNull()->once();
+
+        $resource = m::mock(ResourceSet::class);
+
+        $wrap = m::mock(ResourceSetWrapper::class);
+        $wrap->shouldReceive('getResourceSet')->andReturn($resource);
+
+        $stack = m::mock(SegmentStack::class);
+        $stack->shouldReceive('pushSegment')->andReturnNull()->once();
+        $stack->shouldReceive('popSegment')->andReturnNull()->once();
+        $stack->shouldReceive('getSegmentWrappers')->andReturn([])->once();
+
+        $node = m::mock(RootProjectionNode::class);
+        $node->shouldReceive('isExpansionSpecified')->andReturn(true);
+        $node->shouldReceive('getChildNodes')->andReturn([])->once();
+
+        $resProperty = m::mock(ResourceProperty::class);
+        $resProperty->shouldReceive('getKind')->andReturn(ResourcePropertyKind::RESOURCE_REFERENCE);
+        $resProperty->shouldReceive('getName')->andReturn('resourceProperty');
+
+        $type = m::mock(ResourceType::class);
+        $type->shouldReceive('setPropertyValue')->withAnyArgs()->andReturnNull()->once();
+
+        $nuNode = m::mock(RootProjectionNode::class);
+        $nuNode->shouldReceive('getChildNodes')->andReturn([])->once();
+        $nuNode->shouldReceive('getResourceType')->andReturn($type);
+        $nuNode->shouldReceive('getResourceProperty')->andReturn($resProperty);
+        $nuNode->shouldReceive('getResourceSetWrapper')->andReturn($wrap);
+
+        $request = m::mock(RequestDescription::class);
+        $request->shouldReceive('getRootProjectionNode')->andReturn($node);
+        $request->shouldReceive('getTargetResult')->andReturn('hammer');
+        $request->shouldReceive('getContainerName')->andReturn('request');
+        $request->shouldReceive('getTargetResourceSetWrapper')->andReturn($wrap);
+
+        $foo = m::mock(RequestExpander::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $foo->shouldReceive('getRequest')->andReturn($request);
+        $foo->shouldReceive('getStack')->andReturn($stack);
+        $foo->shouldReceive('getExpandedProjectionNodes')->andReturn([$nuNode]);
+        $foo->shouldReceive('getProviders')->andReturn($providers);
 
         $foo->handleExpansion();
     }

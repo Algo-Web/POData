@@ -243,7 +243,7 @@ class RequestExpander
     }
 
     /**
-     * Resource set wrapper for the resource being retireved.
+     * Resource set wrapper for the resource being retrieved.
      *
      * @return ResourceSetWrapper
      */
@@ -320,7 +320,7 @@ class RequestExpander
      *
      * @return ExpandedProjectionNode[] List of nodes describing expansions for the current segment
      */
-    private function getExpandedProjectionNodes()
+    protected function getExpandedProjectionNodes()
     {
         $expandedProjectionNode = $this->getCurrentExpandedProjectionNode();
         $expandedProjectionNodes = array();
