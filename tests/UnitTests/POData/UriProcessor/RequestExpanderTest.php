@@ -2,6 +2,7 @@
 
 namespace UnitTests\POData\UriProcessor;
 
+use POData\Common\InvalidOperationException;
 use POData\IService;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourcePropertyKind;
@@ -159,7 +160,7 @@ class RequestExpanderTest extends \PHPUnit_Framework_TestCase
         $orderInfo = m::mock(InternalOrderByInfo::class);
         // just need a dummy function that doesn't sort
         $orderInfo->shouldReceive('getSorterFunction->getReference')->andReturn($closure);
-        
+
         $queryResult = m::mock(QueryResult::class);
 
         $resource = m::mock(ResourceSet::class)->makePartial();
@@ -219,5 +220,110 @@ class RequestExpanderTest extends \PHPUnit_Framework_TestCase
         $foo->shouldReceive('getService')->andReturn($service);
 
         $foo->handleExpansion();
+    }
+
+    public function testExpandCollectionWithNothingRelated()
+    {
+        $resource = m::mock(ResourceSet::class)->makePartial();
+        $resource->results = null;
+
+        $resProperty = m::mock(ResourceProperty::class);
+        $resProperty->shouldReceive('getKind')->andReturn(ResourcePropertyKind::RESOURCESET_REFERENCE);
+        $resProperty->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::ENTITY);
+        $resProperty->shouldReceive('getName')->andReturn('resourceProperty');
+
+        $type = m::mock(ResourceType::class);
+        $type->shouldReceive('setPropertyValue')->withAnyArgs()->andReturnNull()->once();
+
+        $wrap = m::mock(ResourceSetWrapper::class);
+        $wrap->shouldReceive('getResourceSet')->andReturn($resource);
+
+        $node = m::mock(RootProjectionNode::class);
+        $node->shouldReceive('isExpansionSpecified')->andReturn(true);
+        $node->shouldReceive('getChildNodes')->andReturn([$node])->once();
+        $node->shouldReceive('findNode')->andReturn($node)->once();
+        $node->shouldReceive('getResourceType')->andReturn($type);
+        $node->shouldReceive('getResourceProperty')->andReturn($resProperty);
+        $node->shouldReceive('getResourceSetWrapper')->andReturn($wrap);
+
+        $stack = m::mock(SegmentStack::class);
+        $stack->shouldReceive('pushSegment')->andReturnNull()->once();
+        $stack->shouldReceive('popSegment')->andReturnNull()->once();
+        $stack->shouldReceive('getSegmentWrappers')->andReturn([])->once();
+        $stack->shouldReceive('getSegmentNames')->andReturn(['hammer', 'time'])->once();
+
+        $providers = m::mock(ProvidersWrapper::class);
+        $providers->shouldReceive('getRelatedResourceSet')->andReturn($resource)->once();
+
+        $request = m::mock(RequestDescription::class);
+        $request->shouldReceive('getRootProjectionNode')->andReturn($node);
+        $request->shouldReceive('getContainerName')->andReturn('request');
+        $request->shouldReceive('getTargetResult')->andReturn([['hammer']]);
+        $request->shouldReceive('getTargetResourceSetWrapper')->andReturn($wrap);
+
+        $foo = m::mock(RequestExpander::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $foo->shouldReceive('getRequest')->andReturn($request);
+        $foo->shouldReceive('getStack')->andReturn($stack);
+        $foo->shouldReceive('getProviders')->andReturn($providers);
+
+        $foo->handleExpansion();
+    }
+
+    public function testExpandSingletonAndThrowExceptionOnNavigation()
+    {
+        $queryResult = m::mock(QueryResult::class);
+
+        $resource = m::mock(ResourceSet::class)->makePartial();
+        $resource->results = $queryResult;
+
+        $type = m::mock(ResourceType::class);
+        $type->shouldReceive('setPropertyValue')->withAnyArgs()->andReturnNull()->once();
+
+        $resProperty = m::mock(ResourceProperty::class);
+        $resProperty->shouldReceive('getKind')->andReturn(ResourcePropertyKind::RESOURCESET_REFERENCE);
+        $resProperty->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::COMPLEX);
+        $resProperty->shouldReceive('getName')->andReturn('resourceProperty');
+
+        $wrap = m::mock(ResourceSetWrapper::class);
+        $wrap->shouldReceive('getResourceSet')->andReturn($resource);
+
+        $node = m::mock(RootProjectionNode::class);
+        $node->shouldReceive('isExpansionSpecified')->andReturn(true);
+        $node->shouldReceive('getChildNodes')->andReturn([$node])->once();
+        $node->shouldReceive('getResourceType')->andReturn($type);
+        $node->shouldReceive('getResourceType')->andReturn($type);
+        $node->shouldReceive('getResourceProperty')->andReturn($resProperty);
+        $node->shouldReceive('getResourceSetWrapper')->andReturn($wrap);
+        $node->shouldReceive('getInternalOrderByInfo')->andReturn(null);
+
+        $stack = m::mock(SegmentStack::class);
+        $stack->shouldReceive('pushSegment')->andReturnNull()->once();
+        $stack->shouldReceive('popSegment')->andReturnNull()->once();
+        $stack->shouldReceive('getSegmentWrappers')->andReturn([])->once();
+        $stack->shouldReceive('getSegmentNames')->andReturn([])->once();
+
+        $providers = m::mock(ProvidersWrapper::class);
+        $providers->shouldReceive('getRelatedResourceSet')->andReturn($resource)->once();
+
+        $request = m::mock(RequestDescription::class);
+        $request->shouldReceive('getRootProjectionNode')->andReturn($node);
+        $request->shouldReceive('getTargetResult')->andReturn('hammer');
+        $request->shouldReceive('getContainerName')->andReturn('request');
+        $request->shouldReceive('getTargetResourceSetWrapper')->andReturn($wrap);
+
+        $foo = m::mock(RequestExpander::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $foo->shouldReceive('getRequest')->andReturn($request);
+        $foo->shouldReceive('getStack')->andReturn($stack);
+        $foo->shouldReceive('getProviders')->andReturn($providers);
+
+        $expected = 'pushSegmentForNavigationProperty should not be called with non-entity type';
+        $actual = null;
+
+        try {
+            $foo->handleExpansion();
+        } catch (InvalidOperationException $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
     }
 }

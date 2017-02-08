@@ -120,49 +120,32 @@ class RequestExpander
             $isCollection = ResourcePropertyKind::RESOURCESET_REFERENCE
                             == $expandedProjectionNode->getResourceProperty()->getKind();
             $expandedPropertyName = $expandedProjectionNode->getResourceProperty()->getName();
-            if (is_array($result)) {
-                foreach ($result as $entry) {
-                    // Check for null entry
-                    if ($isCollection) {
-                        $result1 = $this->executeCollectionExpansionGetRelated($expandedProjectionNode, $entry);
-                        if (!empty($result1)) {
-                            $this->executeCollectionExpansionProcessExpansion(
-                                $entry,
-                                $result1,
-                                $expandedProjectionNode,
-                                $resourceType,
-                                $expandedPropertyName
-                            );
-                        } else {
-                            $resourceType->setPropertyValue($entry, $expandedPropertyName, array());
-                        }
-                    } else {
-                        $this->executeSingleExpansionGetRelated(
-                            $expandedProjectionNode,
-                            $entry,
-                            $resourceType,
-                            $expandedPropertyName
-                        );
-                    }
-                }
-            } else {
+            $originalIsArray = is_array($result);
+
+            if (!$originalIsArray) {
+                $result = [$result];
+            }
+
+            foreach ($result as $entry) {
+                // Check for null entry
                 if ($isCollection) {
-                    $result2 = $this->executeCollectionExpansionGetRelated($expandedProjectionNode, $result);
-                    if (!empty($result2)) {
+                    $result1 = $this->executeCollectionExpansionGetRelated($expandedProjectionNode, $entry);
+                    if (!empty($result1)) {
                         $this->executeCollectionExpansionProcessExpansion(
-                            $result,
-                            $result2,
+                            $entry,
+                            $result1,
                             $expandedProjectionNode,
                             $resourceType,
                             $expandedPropertyName
                         );
                     } else {
-                        $resourceType->setPropertyValue($result, $expandedPropertyName, $result2);
+                        $resultSet = $originalIsArray ? array() : $result1;
+                        $resourceType->setPropertyValue($entry, $expandedPropertyName, $resultSet);
                     }
                 } else {
                     $this->executeSingleExpansionGetRelated(
                         $expandedProjectionNode,
-                        $result,
+                        $entry,
                         $resourceType,
                         $expandedPropertyName
                     );
@@ -270,7 +253,7 @@ class RequestExpander
         if (!is_null($expandedProjectionNode)) {
             $names = $this->getStack()->getSegmentNames();
             $depth = count($names);
-            if ($depth != 0) {
+            if (0 != $depth) {
                 for ($i = 1; $i < $depth; ++$i) {
                     $expandedProjectionNode = $expandedProjectionNode->findNode($names[$i]);
                     assert(!is_null($expandedProjectionNode), '!is_null($expandedProjectionNode)');
@@ -370,10 +353,7 @@ class RequestExpander
         );
         $resourceType->setPropertyValue($entry, $expandedPropertyName, $result);
         if (!is_null($result)) {
-            $projectedProperty = $expandedProjectionNode->getResourceProperty();
-            $needPop = $this->pushSegmentForNavigationProperty($projectedProperty);
-            $this->executeExpansion($result);
-            $this->popSegment($needPop);
+            $this->pushPropertyToNavigation($result, $expandedProjectionNode);
         }
     }
 
@@ -405,6 +385,16 @@ class RequestExpander
         }
 
         $resourceType->setPropertyValue($entry, $expandedPropertyName, $result);
+        $this->pushPropertyToNavigation($result, $expandedProjectionNode);
+    }
+
+    /**
+     * @param $result
+     * @param $expandedProjectionNode
+     * @throws InvalidOperationException
+     */
+    private function pushPropertyToNavigation($result, $expandedProjectionNode)
+    {
         $projectedProperty = $expandedProjectionNode->getResourceProperty();
         $needPop = $this->pushSegmentForNavigationProperty($projectedProperty);
         $this->executeExpansion($result);
