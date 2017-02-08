@@ -214,10 +214,7 @@ class RequestExpander
     private function pushSegmentForNavigationProperty(ResourceProperty &$resourceProperty)
     {
         if ($resourceProperty->getTypeKind() == ResourceTypeKind::ENTITY) {
-            $this->assert(
-                !empty($this->getStack()->getSegmentNames()),
-                '!is_empty($this->getStack()->getSegmentNames())'
-            );
+            assert(!empty($this->getStack()->getSegmentNames()), '!is_empty($this->getStack()->getSegmentNames())');
             $currentResourceSetWrapper = $this->getCurrentResourceSetWrapper();
             $currentResourceType = $currentResourceSetWrapper->getResourceType();
             $currentResourceSetWrapper = $this->getService()
@@ -228,10 +225,7 @@ class RequestExpander
                     $resourceProperty
                 );
 
-            $this->assert(
-                !is_null($currentResourceSetWrapper),
-                '!null($currentResourceSetWrapper)'
-            );
+            assert(!is_null($currentResourceSetWrapper), '!null($currentResourceSetWrapper)');
 
             return $this->pushSegment(
                 $resourceProperty->getName(),
@@ -279,8 +273,8 @@ class RequestExpander
             if ($depth != 0) {
                 for ($i = 1; $i < $depth; ++$i) {
                     $expandedProjectionNode = $expandedProjectionNode->findNode($names[$i]);
-                    $this->assert(!is_null($expandedProjectionNode), '!is_null($expandedProjectionNode)');
-                    $this->assert(
+                    assert(!is_null($expandedProjectionNode), '!is_null($expandedProjectionNode)');
+                    assert(
                         $expandedProjectionNode instanceof ExpandedProjectionNode,
                         '$expandedProjectionNode instanceof ExpandedProjectionNode'
                     );
@@ -321,23 +315,6 @@ class RequestExpander
     private function popSegment($needPop)
     {
         $this->getStack()->popSegment($needPop);
-    }
-
-    /**
-     * Assert that the given condition is true.
-     *
-     * @param bool   $condition         Condition to assert
-     * @param string $conditionAsString Message to show if assertion fails
-     *
-     * @throws InvalidOperationException
-     */
-    protected function assert($condition, $conditionAsString)
-    {
-        if (!$condition) {
-            throw new InvalidOperationException(
-                "Unexpected state, expecting $conditionAsString"
-            );
-        }
     }
 
     /**
@@ -416,6 +393,7 @@ class RequestExpander
         $expandedPropertyName
     ) {
         $internalOrderByInfo = $expandedProjectionNode->getInternalOrderByInfo();
+        // TODO: Get someome who ain't me to review this
         if (!is_null($internalOrderByInfo)) {
             $orderByFunction = $internalOrderByInfo->getSorterFunction()->getReference();
             usort($result, $orderByFunction);
