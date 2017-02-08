@@ -214,13 +214,13 @@ class UriProcessor
                 $requestMethod = $this->getService()->getOperationContext()->incomingRequest()->getMethod();
                 $resourceSet = $segment->getTargetResourceSetWrapper();
                 $keyDescriptor = $segment->getKeyDescriptor();
-                $data = $this->getRequest()->getData();
                 if (!$resourceSet) {
                     $url = $this->getService()->getHost()->getAbsoluteRequestUri()->getUrlAsString();
                     throw ODataException::createBadRequestError(
                         Messages::badRequestInvalidUriForThisVerb($url, $requestMethod)
                     );
                 }
+                $data = $this->getRequest()->getData();
                 if (!$data) {
                     throw ODataException::createBadRequestError(Messages::noDataForThisVerb($requestMethod));
                 }
@@ -240,12 +240,12 @@ class UriProcessor
             $requestMethod = $uriProcessor->getService()->getOperationContext()->incomingRequest()->getMethod();
             $resourceSet = $segment->getTargetResourceSetWrapper();
             $keyDescriptor = $segment->getKeyDescriptor();
-            $data = $uriProcessor->getRequest()->getData();
             if (!$resourceSet || !$keyDescriptor) {
                 $url = $uriProcessor->getService()->getHost()->getAbsoluteRequestUri()->getUrlAsString();
                 throw ODataException::createBadRequestError(Messages::badRequestInvalidUriForThisVerb($url, $requestMethod));
             }
 
+            $data = $uriProcessor->getRequest()->getData();
             if (!$data) {
                 throw ODataException::createBadRequestError(Messages::noDataForThisVerb($requestMethod));
             }

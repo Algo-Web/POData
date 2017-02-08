@@ -44,6 +44,7 @@ trait http
      */
     public static function onlyReadSupport(HTTPRequestMethod $method)
     {
+        // TODO: Update to reflect expanded library capabilities?
         return "This release of library support only GET (read) request, received a request with method $method";
     }
 
