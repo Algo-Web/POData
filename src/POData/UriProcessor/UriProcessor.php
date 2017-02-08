@@ -56,13 +56,6 @@ class UriProcessor
     private $providers;
 
     /**
-     * Holds reference to segment stack being processed
-     *
-     * @var SegmentStack
-     */
-    private $stack;
-
-    /**
      * Holds reference to request expander
      *
      * @var RequestExpander
@@ -106,7 +99,6 @@ class UriProcessor
         $uriProcessor = new self($service);
         //Parse the resource path part of the request Uri.
         $uriProcessor->request = ResourcePathProcessor::process($service);
-        $uriProcessor->stack = new SegmentStack($uriProcessor->getRequest());
         $uriProcessor->expander = new RequestExpander(
             $uriProcessor->getRequest(),
             $uriProcessor->getService(),

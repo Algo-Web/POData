@@ -102,7 +102,7 @@ class RequestExpander
             if (!is_null($result) && (!is_array($result) || !empty($result))) {
                 $needPop = $this->pushSegmentForRoot();
                 $this->executeExpansion($result);
-                $this->popSegment($needPop);
+                $this->popSegment(true === $needPop);
             }
         }
     }
@@ -110,7 +110,7 @@ class RequestExpander
     /**
      * Execute queries for expansion.
      *
-     * @param array(mixed)/mixed $result Resource(s) whose navigation properties needs to be expanded
+     * @param array|mixed $result Resource(s) whose navigation properties needs to be expanded
      */
     private function executeExpansion($result)
     {
@@ -398,6 +398,6 @@ class RequestExpander
         $projectedProperty = $expandedProjectionNode->getResourceProperty();
         $needPop = $this->pushSegmentForNavigationProperty($projectedProperty);
         $this->executeExpansion($result);
-        $this->popSegment($needPop);
+        $this->popSegment(true === $needPop);
     }
 }
