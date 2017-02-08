@@ -63,6 +63,13 @@ class UriProcessor
     private $stack;
 
     /**
+     * Holds reference to request expander
+     *
+     * @var RequestExpander
+     */
+    private $expander;
+
+    /**
      * Constructs a new instance of UriProcessor.
      *
      * @param IService $service Reference to the data service instance
@@ -100,6 +107,11 @@ class UriProcessor
         //Parse the resource path part of the request Uri.
         $uriProcessor->request = ResourcePathProcessor::process($service);
         $uriProcessor->stack = new SegmentStack($uriProcessor->getRequest());
+        $uriProcessor->expander = new RequestExpander(
+            $uriProcessor->getRequest(),
+            $uriProcessor->getService(),
+            $uriProcessor->getProviders()
+        );
 
         $uriProcessor->getRequest()->setUriProcessor($uriProcessor);
 
@@ -159,6 +171,16 @@ class UriProcessor
     }
 
     /**
+     * Gets the request expander instance
+     *
+     * @return RequestExpander
+     */
+    public function getExpander()
+    {
+        return $this->expander;
+    }
+
+    /**
      * Execute the client submitted request against the data source.
      */
     public function execute()
@@ -190,8 +212,6 @@ class UriProcessor
         }
     }
 
- 
-
     /**
      * Execute the client submitted request against the data source (GET).
      */
@@ -199,9 +219,10 @@ class UriProcessor
     {
         return $this->executeBase();
     }
-            /**
-             * Execute the client submitted request against the data source (POST).
-             */
+
+    /**
+     * Execute the client submitted request against the data source (POST).
+     */
     protected function executePost()
     {
         $segments = $this->getRequest()->getSegments();
@@ -228,6 +249,7 @@ class UriProcessor
         }
         //return $this->executeBase();
     }
+
     /**
      * Execute the client submitted request against the data source (PUT).
      */
