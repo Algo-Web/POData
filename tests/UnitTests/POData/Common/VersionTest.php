@@ -57,4 +57,11 @@ class VersionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(3, $version->getMajor());
         $this->assertEquals(1, $version->getMinor());
     }
+
+    public function testStaticFunctionV1()
+    {
+        $version = Version::v1();
+        $this->assertEquals(1, $version->getMajor());
+        $this->assertEquals(0, $version->getMinor());
+    }
 }
