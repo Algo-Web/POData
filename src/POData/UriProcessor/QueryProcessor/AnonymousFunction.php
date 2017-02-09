@@ -112,6 +112,11 @@ class AnonymousFunction
                 $this->_code
             );
         }
+//echo "\r\n";
+//echo("function FunctionName (" .$this->_parametersAsString . "){\r\n");
+//echo "\r\n";
+//echo  $this->_code;
+//echo "}\r\n ============\r\n";
 
         return $this->_reference;
     }
