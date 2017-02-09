@@ -406,7 +406,7 @@ class OrderByParser
         } else {
             $code = null;
             $funcList = $this->_comparisonFunctions;
-            $BigFunc = function ($object1, $object2) use ($funcList) {
+            $BigFunc = function($object1, $object2) use ($funcList) {
                 foreach ($funcList as $f) {
                     $ret = $f($object1, $object2);
                     if ($ret != 0) {
@@ -416,18 +416,6 @@ class OrderByParser
                 return $ret;
             };
             $this->_topLevelComparisonFunction = $BigFunc;
-//            for ($i = 0; $i < $comparisonFunctionCount; ++$i) {
-//                $subComparisonFunctionName = substr($this->_comparisonFunctions[$i]->getReference(), 1);
-//                $code .= "\$result = call_user_func_array(chr(0) . '$subComparisonFunctionName', array($parameters[0], $parameters[1]));";
-//                $code .= '
-//                         if ($result != 0) {
-//                            return $result;
-//                         }
-//                         ';
-//            }
-//
-//            $code .= 'return $result;';
-//            $this->_topLevelComparisonFunction = new AnonymousFunction($parameters, $code);
         }
     }
 
