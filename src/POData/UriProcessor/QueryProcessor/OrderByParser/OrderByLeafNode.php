@@ -118,8 +118,8 @@ class OrderByLeafNode extends OrderByBaseNode
                 }
                 $accessor1 = $accessor1->$ancestor;
                 $accessor2 = $accessor2->$ancestor;
-                $flag1 = $flag1 || is_null($accessor1);
-                $flag2 = $flag2 || is_null($accessor2);
+                $flag1 |= is_null($accessor1);
+                $flag2 |= is_null($accessor2);
             }
             $propertyName = $this->propertyName;
             $getter = 'get' . ucfirst($propertyName);
@@ -130,8 +130,8 @@ class OrderByLeafNode extends OrderByBaseNode
                         $accessor2 = method_exists($accessor2, $getter) ? $accessor2->$getter() : $accessor2->$propertyName;
             }
 
-            $flag1 = $flag1 || is_null($accessor1);
-            $flag2 = $flag2 || is_null($accessor2);
+            $flag1 |= is_null($accessor1);
+            $flag2 |= is_null($accessor2);
 
             if ($flag1 && $flag2) {
                 return 0;
