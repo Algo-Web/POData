@@ -101,9 +101,6 @@ class OrderByLeafNode extends OrderByBaseNode
             );
         }
 
-        $parameterNames = null;
-        $accessor1 = null;
-        $accessor2 = null;
         $a = $this->_isAscending ? 1 : -1;
 
         $retVal = function($object1, $object2) use ($ancestors, $a) {
@@ -140,7 +137,7 @@ class OrderByLeafNode extends OrderByBaseNode
                 return $a*1;
             }
             $type = $this->resourceProperty->getInstanceType();
-            $result = null;
+            $result;
             if ($type instanceof DateTime) {
                 $result = strtotime($accessor1) - strtotime($accessor2);
             } elseif ($type instanceof StringType) {
