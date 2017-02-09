@@ -112,12 +112,12 @@ class OrderByLeafNode extends OrderByBaseNode
             $flag2 = is_null($object2);
             $accessor1 = $object1;
             $accessor2 = $object2;
-            foreach ($ancestors as $i => $anscestor) {
+            foreach ($ancestors as $i =>  $ancestor) {
                 if ($i == 0) {
                     continue;
                 }
-                $accessor1 = $accessor1->$anscestor;
-                $accessor2 = $accessor2->$anscestor;
+                $accessor1 = $accessor1->$ancestor;
+                $accessor2 = $accessor2->$ancestor;
                 if (!$flag1) {
                     $flag1 = $flag1 || is_null($accessor1);
                 }
@@ -150,68 +150,12 @@ class OrderByLeafNode extends OrderByBaseNode
             } elseif ($type instanceof Guid) {
                 $result = strcmp($accessor1, $accessor2);
             } else {
-                $result = (($accessor1 == $accessor2) ? 0 : (($accessor1 > $accessor2) ? 1 : -1));
+                $delta = $accessor1 - $accessor2;  
+                $result (0 == $delta) ? 0 : $delta / abs($delta);
             }
 
             return $a*$result;
         };
         return $retVal ;
-///////
-/*
-
-        foreach ($ancestors as $i => $anscestor) {
-            if ($i == 0) {
-                $parameterNames = array(
-                    '$' . $anscestor . 'A', '$' . $anscestor . 'B',
-                );
-                $accessor1 = $parameterNames[0];
-                $accessor2 = $parameterNames[1];
-                $flag1 = '$flag1 = ' . 'is_null(' . $accessor1 . ') || ';
-                $flag2 = '$flag2 = ' . 'is_null(' . $accessor2 . ') || ';
-            } else {
-                $accessor1 .= '->' . $anscestor;
-                $accessor2 .= '->' . $anscestor;
-                $flag1 .= 'is_null(' . $accessor1 . ')' . ' || ';
-                $flag2 .= 'is_null(' . $accessor2 . ')' . ' || ';
-            }
-        }
-
-        // $accessor1 .= '->' . $this->propertyName;
-        // $accessor2 .= '->' . $this->propertyName;
-        $propertyName = $this->propertyName;
-        $getter = 'get' . ucfirst($propertyName);
-        $accessor1 = "(method_exists({$accessor1}, '{$getter}') ? {$accessor1}->{$getter}() : {$accessor1}->{$propertyName})";
-        $accessor2 = "(method_exists({$accessor2}, '{$getter}') ? {$accessor2}->{$getter}() : {$accessor2}->{$propertyName})";
-
-        $flag1 .= 'is_null(' . $accessor1 . ')';
-        $flag2 .= 'is_null(' . $accessor2 . ')';
-
-        $code = "$flag1; 
-             $flag2; 
-             if(\$flag1 && \$flag2) { 
-               return 0;
-             } else if (\$flag1) { 
-                 return $a*-1;
-             } else if (\$flag2) { 
-                 return $a*1;
-             }
-             
-            ";
-        $type = $this->resourceProperty->getInstanceType();
-        if ($type instanceof DateTime) {
-            $code .= " \$result = strtotime($accessor1) - strtotime($accessor2);";
-        } elseif ($type instanceof StringType) {
-            $code .= " \$result = strcmp($accessor1, $accessor2);";
-        } elseif ($type instanceof Guid) {
-            $code .= " \$result = strcmp($accessor1, $accessor2);";
-        } else {
-            $code .= " \$result = (($accessor1 == $accessor2) ? 0 : (($accessor1 > $accessor2) ? 1 : -1));";
-        }
-
-        $code .= "
-             return $a*\$result;";
-        $this->_anonymousFunction = new AnonymousFunction($parameterNames, $code);
-
-        return $this->_anonymousFunction;*/
     }
 }
