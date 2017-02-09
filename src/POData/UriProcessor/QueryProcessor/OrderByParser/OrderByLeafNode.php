@@ -106,6 +106,59 @@ class OrderByLeafNode extends OrderByBaseNode
         $accessor2 = null;
         $a = $this->_isAscending ? 1 : -1;
 
+        $retVal = function ($object1, $object2) use ($ancestors, $a) {
+
+            $flag1 = is_null($object1);
+            $flag2 = is_null($object2);
+            $accessor1 = $object1;
+            $accessor2 = $object2;
+            foreach ($ancestors as $i => $anscestor) {
+                if ($i == 0) {
+                    continue;
+                }
+                $accessor1 = $accessor1->$anscestor;
+                $accessor2 = $accessor2->$anscestor;
+                if (!$flag1) {
+                    $flag1 = $flag1 || is_null($accessor1);
+                }
+                if (!$flag2) {
+                    $flag2 = $flag2 || is_null($accessor2);
+                }
+            }
+            $propertyName = $this->propertyName;
+            $getter = 'get' . ucfirst($propertyName);
+
+            $accessor1 = method_exists($accessor1) ? $accessor1->$getter() : $accessor1->$propertyName;
+            $accessor2 = method_exists($accessor2) ? $accessor2->$getter() : $accessor2->$propertyName;
+
+            $flag1 = $flag1 || is_null($accessor1);
+            $flag2 = $flag1 || is_null($accessor2);
+
+            if ($flag1 && $flag2) {
+                return 0;
+            } elseif ($flag1) {
+                return $a*-1;
+            } elseif ($flag2) {
+                return $a*1;
+            }
+            $type = $this->resourceProperty->getInstanceType();
+            $result  = null;
+            if ($type instanceof DateTime) {
+                $result = strtotime($accessor1) - strtotime($accessor2);
+            } elseif ($type instanceof StringType) {
+                $result = strcmp($accessor1, $accessor2);
+            } elseif ($type instanceof Guid) {
+                $result = strcmp($accessor1, $accessor2);
+            } else {
+                $result = (($accessor1 == $accessor2) ? 0 : (($accessor1 > $accessor2) ? 1 : -1));
+            }
+
+            return $a*$result;
+        };
+        return $retVal ;
+///////
+/*
+
         foreach ($ancestors as $i => $anscestor) {
             if ($i == 0) {
                 $parameterNames = array(
@@ -159,6 +212,6 @@ class OrderByLeafNode extends OrderByBaseNode
              return $a*\$result;";
         $this->_anonymousFunction = new AnonymousFunction($parameterNames, $code);
 
-        return $this->_anonymousFunction;
+        return $this->_anonymousFunction;*/
     }
 }
