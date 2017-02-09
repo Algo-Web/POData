@@ -282,8 +282,8 @@ class ObjectModelSerializerBase
      */
     protected function pushSegmentForNavigationProperty(ResourceProperty & $resourceProperty)
     {
-        if ($resourceProperty->getTypeKind() == ResourceTypeKind::ENTITY) {
-            assert(!empty($this->getStack()->getSegmentNames()), 'is_empty($this->_segmentNames');
+        if (ResourceTypeKind::ENTITY == $resourceProperty->getTypeKind()) {
+            assert(!empty($this->getStack()->getSegmentNames()), 'Segment names should not be empty');
             $currentResourceSetWrapper = $this->getCurrentResourceSetWrapper();
             $currentResourceType = $currentResourceSetWrapper->getResourceType();
             $currentResourceSetWrapper = $this->getService()
@@ -297,9 +297,8 @@ class ObjectModelSerializerBase
             assert(!is_null($currentResourceSetWrapper), 'is_null($currentResourceSetWrapper)');
 
             return $this->_pushSegment($resourceProperty->getName(), $currentResourceSetWrapper);
-        } else {
-            throw new InvalidOperationException('pushSegmentForNavigationProperty should not be called with non-entity type');
         }
+        throw new InvalidOperationException('pushSegmentForNavigationProperty should not be called with non-entity type');
     }
 
     /**
@@ -315,9 +314,7 @@ class ObjectModelSerializerBase
     protected function getProjectionNodes()
     {
         $expandedProjectionNode = $this->getCurrentExpandedProjectionNode();
-        if (is_null($expandedProjectionNode)
-            || $expandedProjectionNode->canSelectAllProperties()
-        ) {
+        if (is_null($expandedProjectionNode) || $expandedProjectionNode->canSelectAllProperties()) {
             return null;
         }
 
@@ -377,7 +374,8 @@ class ObjectModelSerializerBase
 
         $expandedProjectionNode = $expandedProjectionNode->findNode($navigationPropertyName);
 
-        return !is_null($expandedProjectionNode) && ($expandedProjectionNode instanceof ExpandedProjectionNode);
+        // null is a valid input to an instanceof call as of PHP 5.6 - will always return false
+        return $expandedProjectionNode instanceof ExpandedProjectionNode;
     }
 
     /**
@@ -421,7 +419,7 @@ class ObjectModelSerializerBase
         $currentExpandedProjectionNode = $this->getCurrentExpandedProjectionNode();
         $internalOrderByInfo = $currentExpandedProjectionNode->getInternalOrderByInfo();
         $skipToken = $internalOrderByInfo->buildSkipTokenValue($lastObject);
-        assert(!is_null($skipToken), 'is_null($skipToken)');
+        assert(!is_null($skipToken), '!is_null($skipToken)');
         $queryParameterString = null;
         if ($this->isRootResourceSet()) {
             $queryParameterString = $this->getNextPageLinkQueryParametersForRootResourceSet();
@@ -430,11 +428,11 @@ class ObjectModelSerializerBase
         }
 
         $queryParameterString .= '$skip=' . $skipToken;
-        $odalaLink = new ODataLink();
-        $odalaLink->name = ODataConstants::ATOM_LINK_NEXT_ATTRIBUTE_STRING;
-        $odalaLink->url = rtrim($absoluteUri, '/') . '?' . $queryParameterString;
+        $odataLink = new ODataLink();
+        $odataLink->name = ODataConstants::ATOM_LINK_NEXT_ATTRIBUTE_STRING;
+        $odataLink->url = rtrim($absoluteUri, '/') . '?' . $queryParameterString;
 
-        return $odalaLink;
+        return $odataLink;
     }
 
     /**
@@ -449,11 +447,11 @@ class ObjectModelSerializerBase
     protected function getNextPageLinkQueryParametersForRootResourceSet()
     {
         $queryParameterString = null;
-        foreach (array(ODataConstants::HTTPQUERY_STRING_FILTER,
+        foreach ([ODataConstants::HTTPQUERY_STRING_FILTER,
             ODataConstants::HTTPQUERY_STRING_EXPAND,
             ODataConstants::HTTPQUERY_STRING_ORDERBY,
             ODataConstants::HTTPQUERY_STRING_INLINECOUNT,
-            ODataConstants::HTTPQUERY_STRING_SELECT,) as $queryOption) {
+            ODataConstants::HTTPQUERY_STRING_SELECT] as $queryOption) {
             $value = $this->getService()->getHost()->getQueryStringItem($queryOption);
             if (!is_null($value)) {
                 if (!is_null($queryParameterString)) {
