@@ -54,15 +54,6 @@ class ObjectModelSerializerBase
     private $_segmentResourceSetWrappers;
 
     /**
-     * Result counts for segments
-     * Remark: Read 'ObjectModelSerializerNotes.txt' for more
-     * details about segment.
-     *
-     * @var int[]
-     */
-    private $_segmentResultCounts;
-
-    /**
      * Collection of complex type instances used for cycle detection.
      *
      * @var array
@@ -95,7 +86,6 @@ class ObjectModelSerializerBase
         $this->absoluteServiceUriWithSlash = rtrim($this->absoluteServiceUri, '/') . '/';
         $this->_segmentNames = array();
         $this->_segmentResourceSetWrappers = array();
-        $this->_segmentResultCounts = array();
         $this->complexTypeInstanceCollection = array();
     }
 
@@ -117,16 +107,18 @@ class ObjectModelSerializerBase
     protected function getEntryInstanceKey($entityInstance, ResourceType $resourceType, $containerName)
     {
         $keyProperties = $resourceType->getKeyProperties();
-        $this->assert(count($keyProperties) != 0, 'count($keyProperties) != 0');
+        assert(count($keyProperties) != 0, 'count($keyProperties) == 0');
         $keyString = $containerName . '(';
         $comma = null;
         foreach ($keyProperties as $keyName => $resourceProperty) {
             $keyType = $resourceProperty->getInstanceType();
-            $this->assert($keyType instanceof IType, '$keyType instanceof IType');
+            assert($keyType instanceof IType, '$keyType not instanceof IType');
 
             $keyValue = $this->getPropertyValue($entityInstance, $resourceType, $resourceProperty);
             if (is_null($keyValue)) {
-                throw ODataException::createInternalServerError(Messages::badQueryNullKeysAreNotSupported($resourceType->getName(), $keyName));
+                throw ODataException::createInternalServerError(
+                    Messages::badQueryNullKeysAreNotSupported($resourceType->getName(), $keyName)
+                );
             }
 
             $keyValue = $keyType->convertToOData($keyValue);
@@ -219,10 +211,7 @@ class ObjectModelSerializerBase
         $comma = null;
         foreach ($resourceType->getETagProperties() as $eTagProperty) {
             $type = $eTagProperty->getInstanceType();
-            $this->assert(
-                !is_null($type) && $type instanceof IType,
-                '!is_null($type) && $type instanceof IType'
-            );
+            assert(!is_null($type) && $type instanceof IType, 'is_null($type) || $type not instanceof IType');
             $value = $this->getPropertyValue($entryObject, $resourceType, $eTagProperty);
             if (is_null($value)) {
                 $eTag = $eTag . $comma . 'null';
@@ -278,7 +267,7 @@ class ObjectModelSerializerBase
     protected function pushSegmentForNavigationProperty(ResourceProperty & $resourceProperty)
     {
         if ($resourceProperty->getTypeKind() == ResourceTypeKind::ENTITY) {
-            $this->assert(!empty($this->_segmentNames), '!is_empty($this->_segmentNames');
+            assert(!empty($this->_segmentNames), 'is_empty($this->_segmentNames');
             $currentResourceSetWrapper = $this->getCurrentResourceSetWrapper();
             $currentResourceType = $currentResourceSetWrapper->getResourceType();
             $currentResourceSetWrapper = $this->service
@@ -289,7 +278,7 @@ class ObjectModelSerializerBase
                     $resourceProperty
                 );
 
-            $this->assert(!is_null($currentResourceSetWrapper), '!null($currentResourceSetWrapper)');
+            assert(!is_null($currentResourceSetWrapper), 'is_null($currentResourceSetWrapper)');
 
             return $this->_pushSegment($resourceProperty->getName(), $currentResourceSetWrapper);
         } else {
@@ -342,13 +331,10 @@ class ObjectModelSerializerBase
                 for ($i = 1; $i < $depth; ++$i) {
                     $expandedProjectionNode
                         = $expandedProjectionNode->findNode($this->_segmentNames[$i]);
-                    $this->assert(
-                        !is_null($expandedProjectionNode),
-                        '!is_null($expandedProjectionNode)'
-                    );
-                    $this->assert(
+                    assert(!is_null($expandedProjectionNode), 'is_null($expandedProjectionNode)');
+                    assert(
                         $expandedProjectionNode instanceof ExpandedProjectionNode,
-                        '$expandedProjectionNode instanceof ExpandedProjectionNode'
+                        '$expandedProjectionNode not instanceof ExpandedProjectionNode'
                     );
                 }
             }
@@ -412,7 +398,6 @@ class ObjectModelSerializerBase
         ) {
             array_push($this->_segmentNames, $segmentName);
             array_push($this->_segmentResourceSetWrappers, $resourceSetWrapper);
-            array_push($this->_segmentResultCounts, 0);
 
             return true;
         }
@@ -434,7 +419,7 @@ class ObjectModelSerializerBase
         $currentExpandedProjectionNode = $this->getCurrentExpandedProjectionNode();
         $internalOrderByInfo = $currentExpandedProjectionNode->getInternalOrderByInfo();
         $skipToken = $internalOrderByInfo->buildSkipTokenValue($lastObject);
-        $this->assert(!is_null($skipToken), '!is_null($skipToken)');
+        assert(!is_null($skipToken), 'is_null($skipToken)');
         $queryParameterString = null;
         if ($this->isRootResourceSet()) {
             $queryParameterString = $this->getNextPageLinkQueryParametersForRootResourceSet();
@@ -591,7 +576,6 @@ class ObjectModelSerializerBase
             if (!empty($this->_segmentNames)) {
                 array_pop($this->_segmentNames);
                 array_pop($this->_segmentResourceSetWrappers);
-                array_pop($this->_segmentResultCounts);
             } else {
                 throw new InvalidOperationException('Found non-balanced call to _pushSegment and popSegment');
             }
@@ -727,21 +711,5 @@ class ObjectModelSerializerBase
         }
 
         $path .= $segmentToAppend;
-    }
-
-    /**
-     * Assert that the given condition is true.
-     *
-     * @param bool   $condition         Condition to be asserted
-     * @param string $conditionAsString String containing message incase
-     *                                  if assertion fails
-     *
-     * @throws InvalidOperationException Incase if assertion failes
-     */
-    protected function assert($condition, $conditionAsString)
-    {
-        if (!$condition) {
-            throw new InvalidOperationException("Unexpected state, expecting $conditionAsString");
-        }
     }
 }
