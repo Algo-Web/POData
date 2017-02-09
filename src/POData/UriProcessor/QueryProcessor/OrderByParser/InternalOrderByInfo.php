@@ -70,7 +70,7 @@ class InternalOrderByInfo
     public function __construct(
         OrderByInfo $orderByInfo,
         $subSorterFunctions,
-        AnonymousFunction $sorterFunction,
+        callable  $sorterFunction,
         $dummyObject,
         ResourceType $resourceType
     ) {
