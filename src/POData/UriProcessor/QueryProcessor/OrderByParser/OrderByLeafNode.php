@@ -136,7 +136,6 @@ class OrderByLeafNode extends OrderByBaseNode
                 return $a*1;
             }
             $type = $this->resourceProperty->getInstanceType();
-            $result;
             if ($type instanceof DateTime) {
                 $result = strtotime($accessor1) - strtotime($accessor2);
             } elseif ($type instanceof StringType) {
