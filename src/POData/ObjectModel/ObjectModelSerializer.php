@@ -44,14 +44,14 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
      */
     public function writeTopLevelElement($entryObject)
     {
-        $requestTargetSource = $this->request->getTargetSource();
+        $requestTargetSource = $this->getRequest()->getTargetSource();
 
         $resourceType = null;
         if ($requestTargetSource == TargetSource::ENTITY_SET) {
-            $resourceType = $this->request->getTargetResourceType();
+            $resourceType = $this->getRequest()->getTargetResourceType();
         } else {
             assert($requestTargetSource == TargetSource::PROPERTY, '$requestTargetSource != TargetSource::PROPERTY');
-            $resourceProperty = $this->request->getProjectedProperty();
+            $resourceProperty = $this->getRequest()->getProjectedProperty();
             //assert(
             //$resourceProperty->getKind() == ResourcePropertyKind::RESOURCE_REFERENCE,
             //'$resourceProperty->getKind() != ResourcePropertyKind::RESOURCE_REFERENCE'
@@ -63,8 +63,8 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
         $entry = $this->_writeEntryElement(
             $entryObject,
             $resourceType,
-            $this->request->getRequestUrl()->getUrlAsString(),
-            $this->request->getContainerName()
+            $this->getRequest()->getRequestUrl()->getUrlAsString(),
+            $this->getRequest()->getContainerName()
         );
         $this->popSegment($needPop);
 
@@ -81,13 +81,13 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
     public function writeTopLevelElements(&$entryObjects)
     {
         assert(is_array($entryObjects), '!is_array($entryObjects)');
-        $requestTargetSource = $this->request->getTargetSource();
+        $requestTargetSource = $this->getRequest()->getTargetSource();
         $title = null;
         if ($requestTargetSource == TargetSource::ENTITY_SET) {
-            $title = $this->request->getContainerName();
+            $title = $this->getRequest()->getContainerName();
         } else {
             assert($requestTargetSource == TargetSource::PROPERTY, '$requestTargetSource != TargetSource::PROPERTY');
-            $resourceProperty = $this->request->getProjectedProperty();
+            $resourceProperty = $this->getRequest()->getProjectedProperty();
             assert(
                 $resourceProperty->getKind() == ResourcePropertyKind::RESOURCESET_REFERENCE,
                 '$resourceProperty->getKind() != ResourcePropertyKind::RESOURCESET_REFERENCE'
@@ -95,20 +95,20 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
             $title = $resourceProperty->getName();
         }
 
-        $relativeUri = $this->request->getIdentifier();
+        $relativeUri = $this->getRequest()->getIdentifier();
         $feed = new ODataFeed();
 
-        if ($this->request->queryType == QueryType::ENTITIES_WITH_COUNT()) {
-            $feed->rowCount = $this->request->getCountValue();
+        if ($this->getRequest()->queryType == QueryType::ENTITIES_WITH_COUNT()) {
+            $feed->rowCount = $this->getRequest()->getCountValue();
         }
 
         $needPop = $this->pushSegmentForRoot();
-        $targetResourceType = $this->request->getTargetResourceType();
+        $targetResourceType = $this->getRequest()->getTargetResourceType();
         $this->_writeFeedElements(
             $entryObjects,
             $targetResourceType,
             $title,
-            $this->request->getRequestUrl()->getUrlAsString(),
+            $this->getRequest()->getRequestUrl()->getUrlAsString(),
             $relativeUri,
             $feed
         );
@@ -160,12 +160,15 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
             }
 
             if ($i > 0 && $this->needNextPageLink(count($entryObjects))) {
-                $urls->nextPageLink = $this->getNextLinkUri($entryObjects[$i - 1], $this->request->getRequestUrl()->getUrlAsString());
+                $urls->nextPageLink = $this->getNextLinkUri(
+                    $entryObjects[$i - 1],
+                    $this->getRequest()->getRequestUrl()->getUrlAsString()
+                );
             }
         }
 
-        if ($this->request->queryType == QueryType::ENTITIES_WITH_COUNT()) {
-            $urls->count = $this->request->getCountValue();
+        if ($this->getRequest()->queryType == QueryType::ENTITIES_WITH_COUNT()) {
+            $urls->count = $this->getRequest()->getCountValue();
         }
 
         return $urls;
@@ -424,7 +427,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
                 // IDSMP::getResourceProperties will give collection of properties
                 // which are visible.
                 $currentResourceSetWrapper1 = $this->getCurrentResourceSetWrapper();
-                $resourceProperties = $this->service
+                $resourceProperties = $this->getService()
                     ->getProvidersWrapper()
                     ->getResourceProperties(
                         $currentResourceSetWrapper1,
@@ -506,7 +509,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
 
                 if ($resourceProperty->getTypeKind() == ResourceTypeKind::ENTITY) {
                     $currentResourceSetWrapper2 = $this->getCurrentResourceSetWrapper();
-                    $resourceProperties = $this->service
+                    $resourceProperties = $this->getService()
                         ->getProvidersWrapper()
                         ->getResourceProperties(
                             $currentResourceSetWrapper2,
@@ -782,7 +785,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
     ) {
         if ($resourceType->isMediaLinkEntry()) {
             $odataEntry->isMediaLinkEntry = true;
-            $streamProvider = $this->service->getStreamProvider();
+            $streamProvider = $this->getService()->getStreamProvider();
             $eTag = $streamProvider->getStreamETag($entryObject, null);
             $readStreamUri = $streamProvider->getReadStreamUri($entryObject, null, $relativeUri);
             $mediaContentType = $streamProvider->getStreamContentType($entryObject, null);

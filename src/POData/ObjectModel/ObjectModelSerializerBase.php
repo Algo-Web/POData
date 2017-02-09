@@ -14,6 +14,7 @@ use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandedProjection
 use POData\Common\InvalidOperationException;
 use POData\Common\ODataException;
 use POData\Common\Messages;
+use POData\UriProcessor\SegmentStack;
 
 /**
  * Class ObjectModelSerializerBase.
@@ -75,6 +76,13 @@ class ObjectModelSerializerBase
     protected $absoluteServiceUriWithSlash;
 
     /**
+     * Holds reference to segment stack being processed
+     *
+     * @var SegmentStack
+     */
+    private $stack;
+
+    /**
      * @param IService           $service Reference to the data service instance
      * @param RequestDescription $request Type instance describing the client submitted request
      */
@@ -87,6 +95,36 @@ class ObjectModelSerializerBase
         $this->_segmentNames = array();
         $this->_segmentResourceSetWrappers = array();
         $this->complexTypeInstanceCollection = array();
+    }
+
+    /**
+     * Gets reference to the request submitted by client.
+     *
+     * @return RequestDescription
+     */
+    public function getRequest()
+    {
+        return $this->request;
+    }
+
+    /**
+     * Gets the data service instance
+     *
+     * @return IService
+     */
+    public function getService()
+    {
+        return $this->service;
+    }
+
+    /**
+     * Gets the segment stack instance
+     *
+     * @return SegmentStack
+     */
+    public function getStack()
+    {
+        return $this->stack;
     }
 
     /**
@@ -176,7 +214,7 @@ class ObjectModelSerializerBase
     {
         $count = count($this->_segmentResourceSetWrappers);
         if ($count == 0) {
-            return $this->request->getTargetResourceSetWrapper();
+            return $this->getRequest()->getTargetResourceSetWrapper();
         } else {
             return $this->_segmentResourceSetWrappers[$count - 1];
         }
@@ -244,8 +282,8 @@ class ObjectModelSerializerBase
      */
     protected function pushSegmentForRoot()
     {
-        $segmentName = $this->request->getContainerName();
-        $segmentResourceSetWrapper = $this->request->getTargetResourceSetWrapper();
+        $segmentName = $this->getRequest()->getContainerName();
+        $segmentResourceSetWrapper = $this->getRequest()->getTargetResourceSetWrapper();
 
         return $this->_pushSegment($segmentName, $segmentResourceSetWrapper);
     }
@@ -270,7 +308,7 @@ class ObjectModelSerializerBase
             assert(!empty($this->_segmentNames), 'is_empty($this->_segmentNames');
             $currentResourceSetWrapper = $this->getCurrentResourceSetWrapper();
             $currentResourceType = $currentResourceSetWrapper->getResourceType();
-            $currentResourceSetWrapper = $this->service
+            $currentResourceSetWrapper = $this->getService()
                 ->getProvidersWrapper()
                 ->getResourceSetWrapperForNavigationProperty(
                     $currentResourceSetWrapper,
@@ -316,7 +354,7 @@ class ObjectModelSerializerBase
      */
     protected function getCurrentExpandedProjectionNode()
     {
-        $expandedProjectionNode = $this->request->getRootProjectionNode();
+        $expandedProjectionNode = $this->getRequest()->getRootProjectionNode();
         if (is_null($expandedProjectionNode)) {
             return null;
         } else {
@@ -378,7 +416,7 @@ class ObjectModelSerializerBase
      */
     private function _pushSegment($segmentName, ResourceSetWrapper & $resourceSetWrapper)
     {
-        $rootProjectionNode = $this->request->getRootProjectionNode();
+        $rootProjectionNode = $this->getRequest()->getRootProjectionNode();
         // Even though there is no expand in the request URI, still we need to push
         // the segment information if we need to count
         //the number of entities written.
@@ -452,7 +490,7 @@ class ObjectModelSerializerBase
             ODataConstants::HTTPQUERY_STRING_ORDERBY,
             ODataConstants::HTTPQUERY_STRING_INLINECOUNT,
             ODataConstants::HTTPQUERY_STRING_SELECT,) as $queryOption) {
-            $value = $this->service->getHost()->getQueryStringItem($queryOption);
+            $value = $this->getService()->getHost()->getQueryStringItem($queryOption);
             if (!is_null($value)) {
                 if (!is_null($queryParameterString)) {
                     $queryParameterString = $queryParameterString . '&';
@@ -462,9 +500,9 @@ class ObjectModelSerializerBase
             }
         }
 
-        $topCountValue = $this->request->getTopOptionCount();
+        $topCountValue = $this->getRequest()->getTopOptionCount();
         if (!is_null($topCountValue)) {
-            $remainingCount = $topCountValue - $this->request->getTopCount();
+            $remainingCount = $topCountValue - $this->getRequest()->getTopCount();
             if (!is_null($queryParameterString)) {
                 $queryParameterString .= '&';
             }
@@ -549,7 +587,7 @@ class ObjectModelSerializerBase
 
         if ($recursionLevel == 1) {
             //presence of $top option affect next link for root container
-            $topValueCount = $this->request->getTopOptionCount();
+            $topValueCount = $this->getRequest()->getTopOptionCount();
             if (!is_null($topValueCount) && ($topValueCount <= $pageSize)) {
                 return false;
             }
