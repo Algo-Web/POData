@@ -37,24 +37,6 @@ class ObjectModelSerializerBase
     protected $request;
 
     /**
-     * Collection of segment names
-     * Remark: Read 'ObjectModelSerializerNotes.txt' for more
-     * details about segment.
-     *
-     * @var string[]
-     */
-    private $_segmentNames;
-
-    /**
-     * Collection of segment ResourceSetWrapper instances
-     * Remark: Read 'ObjectModelSerializerNotes.txt' for more
-     * details about segment.
-     *
-     * @var ResourceSetWrapper[]
-     */
-    private $_segmentResourceSetWrappers;
-
-    /**
      * Collection of complex type instances used for cycle detection.
      *
      * @var array
@@ -80,7 +62,7 @@ class ObjectModelSerializerBase
      *
      * @var SegmentStack
      */
-    private $stack;
+    protected $stack;
 
     /**
      * @param IService           $service Reference to the data service instance
@@ -92,8 +74,7 @@ class ObjectModelSerializerBase
         $this->request = $request;
         $this->absoluteServiceUri = $service->getHost()->getAbsoluteServiceUri()->getUrlAsString();
         $this->absoluteServiceUriWithSlash = rtrim($this->absoluteServiceUri, '/') . '/';
-        $this->_segmentNames = array();
-        $this->_segmentResourceSetWrappers = array();
+        $this->stack = new SegmentStack($request);
         $this->complexTypeInstanceCollection = array();
     }
 
@@ -212,12 +193,9 @@ class ObjectModelSerializerBase
      */
     protected function getCurrentResourceSetWrapper()
     {
-        $count = count($this->_segmentResourceSetWrappers);
-        if ($count == 0) {
-            return $this->getRequest()->getTargetResourceSetWrapper();
-        } else {
-            return $this->_segmentResourceSetWrappers[$count - 1];
-        }
+        $segmentWrappers = $this->getStack()->getSegmentWrappers();
+        $count = count($segmentWrappers);
+        return 0 == $count ? $this->getRequest()->getTargetResourceSetWrapper() : $segmentWrappers[$count - 1];
     }
 
     /**
@@ -228,8 +206,8 @@ class ObjectModelSerializerBase
      */
     protected function isRootResourceSet()
     {
-        return empty($this->_segmentResourceSetWrappers)
-                || count($this->_segmentResourceSetWrappers) == 1;
+        $segmentWrappers = $this->getStack()->getSegmentWrappers();
+        return empty($segmentWrappers) || 1 == count($segmentWrappers);
     }
 
     /**
@@ -305,7 +283,7 @@ class ObjectModelSerializerBase
     protected function pushSegmentForNavigationProperty(ResourceProperty & $resourceProperty)
     {
         if ($resourceProperty->getTypeKind() == ResourceTypeKind::ENTITY) {
-            assert(!empty($this->_segmentNames), 'is_empty($this->_segmentNames');
+            assert(!empty($this->getStack()->getSegmentNames()), 'is_empty($this->_segmentNames');
             $currentResourceSetWrapper = $this->getCurrentResourceSetWrapper();
             $currentResourceType = $currentResourceSetWrapper->getResourceType();
             $currentResourceSetWrapper = $this->getService()
@@ -358,7 +336,8 @@ class ObjectModelSerializerBase
         if (is_null($expandedProjectionNode)) {
             return null;
         } else {
-            $depth = count($this->_segmentNames);
+            $segmentNames = $this->getStack()->getSegmentNames();
+            $depth = count($segmentNames);
             // $depth == 1 means serialization of root entry
             //(the resource identified by resource path) is going on,
             //so control won't get into the below for loop.
@@ -368,7 +347,7 @@ class ObjectModelSerializerBase
             if ($depth != 0) {
                 for ($i = 1; $i < $depth; ++$i) {
                     $expandedProjectionNode
-                        = $expandedProjectionNode->findNode($this->_segmentNames[$i]);
+                        = $expandedProjectionNode->findNode($segmentNames[$i]);
                     assert(!is_null($expandedProjectionNode), 'is_null($expandedProjectionNode)');
                     assert(
                         $expandedProjectionNode instanceof ExpandedProjectionNode,
@@ -416,7 +395,6 @@ class ObjectModelSerializerBase
      */
     private function _pushSegment($segmentName, ResourceSetWrapper & $resourceSetWrapper)
     {
-        $rootProjectionNode = $this->getRequest()->getRootProjectionNode();
         // Even though there is no expand in the request URI, still we need to push
         // the segment information if we need to count
         //the number of entities written.
@@ -426,21 +404,7 @@ class ObjectModelSerializerBase
         // But we will not do this check since library is doing paging and never
         // accumulate entities more than configured.
 
-        // if ((!is_null($rootProjectionNode) && $rootProjectionNode->isExpansionSpecified())
-        //    || ($resourceSetWrapper->getResourceSetPageSize() != 0)
-        //    || ($this->service->getServiceConfiguration()->getMaxResultsPerCollection() != PHP_INT_MAX)
-        //) {}
-
-        if (!is_null($rootProjectionNode)
-            && $rootProjectionNode->isExpansionSpecified()
-        ) {
-            array_push($this->_segmentNames, $segmentName);
-            array_push($this->_segmentResourceSetWrappers, $resourceSetWrapper);
-
-            return true;
-        }
-
-        return false;
+        return $this->getStack()->pushSegment($segmentName, $resourceSetWrapper);
     }
 
     /**
@@ -581,7 +545,7 @@ class ObjectModelSerializerBase
     protected function needNextPageLink($resultSetCount)
     {
         $currentResourceSet = $this->getCurrentResourceSetWrapper();
-        $recursionLevel = count($this->_segmentNames);
+        $recursionLevel = count($this->getStack()->getSegmentNames());
         //$this->assert($recursionLevel != 0, '$recursionLevel != 0');
         $pageSize = $currentResourceSet->getResourceSetPageSize();
 
@@ -610,14 +574,7 @@ class ObjectModelSerializerBase
      */
     protected function popSegment($needPop)
     {
-        if ($needPop) {
-            if (!empty($this->_segmentNames)) {
-                array_pop($this->_segmentNames);
-                array_pop($this->_segmentResourceSetWrappers);
-            } else {
-                throw new InvalidOperationException('Found non-balanced call to _pushSegment and popSegment');
-            }
-        }
+        $this->getStack()->popSegment($needPop);
     }
 
     /**
