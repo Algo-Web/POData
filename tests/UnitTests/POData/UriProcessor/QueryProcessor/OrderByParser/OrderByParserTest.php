@@ -215,13 +215,13 @@ class OrderByParserTest extends \PHPUnit_Framework_TestCase
         $this->assertNotNull($subSorters);
         $this->assertEquals(count($subSorters), 1);
         //Parmater to this sub sort must be CustomersA, CustomersB
-        $this->assertEquals($subSorters[0]->getParametersAsString(), '$CustomersA, $CustomersB');
+//        $this->assertEquals($subSorters[0]->getParametersAsString(), '$CustomersA, $CustomersB');
         //since there is only one sub sorter, that will be the main sorter
         //asset this by comapring the anonymous function names
-        $subSorterName = $subSorters[0]->getReference();
+        $subSorterName = $subSorters[0];
         $sorter = $internalOrderInfo->getSorterFunction();
         $this->assertNotNull($sorter);
-        $mainSorterName = $sorter->getReference();
+        $mainSorterName = $sorter;
         $this->assertEquals($subSorterName, $mainSorterName);
         //check code inside the anonymous function (see the generated function code)
         /*
@@ -375,13 +375,13 @@ class OrderByParserTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(!is_null($subSorters));
         $this->assertEquals(count($subSorters), 1);
         //Parmater to this sub sort must be Order_DetailsA, Order_DetailsB
-        $this->assertEquals($subSorters[0]->getParametersAsString(), '$Order_DetailsA, $Order_DetailsB');
+//        $this->assertEquals($subSorters[0]->getParametersAsString(), '$Order_DetailsA, $Order_DetailsB');
         //since there is only one sub sorter, that will be the main sorter
         //asset this by comapring the anonymous function names
-        $subSorterName = $subSorters[0]->getReference();
+        $subSorterName = $subSorters[0];
         $sorter = $internalOrderInfo->getSorterFunction();
         $this->assertTrue(!is_null($sorter));
-        $mainSorterName = $sorter->getReference();
+        $mainSorterName = $sorter;
         $this->assertEquals($subSorterName, $mainSorterName);
     }
 
@@ -486,15 +486,15 @@ class OrderByParserTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(!is_null($subSorters));
         $this->assertEquals(count($subSorters), 2);
         //Parmater to first sub sort must be $Order_DetailsA, $Order_DetailsB
-        $this->assertEquals($subSorters[0]->getParametersAsString(), '$Order_DetailsA, $Order_DetailsB');
-        $this->assertEquals($subSorters[1]->getParametersAsString(), '$Order_DetailsA, $Order_DetailsB');
+//        $this->assertEquals($subSorters[0]->getParametersAsString(), '$Order_DetailsA, $Order_DetailsB');
+//        $this->assertEquals($subSorters[1]->getParametersAsString(), '$Order_DetailsA, $Order_DetailsB');
         //generate sub sorter functions with different names
-        $subSorterName1 = $subSorters[0]->getReference();
-        $subSorterName2 = $subSorters[1]->getReference();
+        $subSorterName1 = $subSorters[0];
+        $subSorterName2 = $subSorters[1];
         $this->assertNotEquals($subSorterName1, $subSorterName2);
         $sorter = $internalOrderInfo->getSorterFunction();
         $this->assertTrue(!is_null($sorter));
-        $mainSorterName = $sorter->getReference();
+        $mainSorterName = $sorter;
         //Test the function generated for 'Order/Price desc' path
         /*
          //Function Name: lambda_1

@@ -112,7 +112,7 @@ class OrderByLeafNode extends OrderByBaseNode
             $flag2 = is_null($object2);
             $accessor1 = $object1;
             $accessor2 = $object2;
-            foreach ($ancestors as $i =>  $ancestor) {
+            foreach ($ancestors as $i => $ancestor) {
                 if ($i == 0) {
                     continue;
                 }
@@ -127,12 +127,12 @@ class OrderByLeafNode extends OrderByBaseNode
             }
             $propertyName = $this->propertyName;
             $getter = 'get' . ucfirst($propertyName);
-if(!is_null($accessor1)){
-            $accessor1 = method_exists($accessor1,$getter) ? $accessor1->$getter() : $accessor1->$propertyName;
-}
-if(!is_null($accessor2)){
-            $accessor2 = method_exists($accessor2,$getter) ? $accessor2->$getter() : $accessor2->$propertyName;
-}
+            if (!is_null($accessor1)) {
+                        $accessor1 = method_exists($accessor1, $getter) ? $accessor1->$getter() : $accessor1->$propertyName;
+            }
+            if (!is_null($accessor2)) {
+                        $accessor2 = method_exists($accessor2, $getter) ? $accessor2->$getter() : $accessor2->$propertyName;
+            }
 
             $flag1 = $flag1 || is_null($accessor1);
             $flag2 = $flag1 || is_null($accessor2);
@@ -153,7 +153,7 @@ if(!is_null($accessor2)){
             } elseif ($type instanceof Guid) {
                 $result = strcmp($accessor1, $accessor2);
             } else {
-                $delta = $accessor1 - $accessor2;  
+                $delta = $accessor1 - $accessor2;
                 $result = (0 == $delta) ? 0 : $delta / abs($delta);
             }
 
