@@ -91,7 +91,7 @@ class OrderByLeafNode extends OrderByBaseNode
      *
      * @param string[] $ancestors Array of parent properties e.g. array('Orders', 'Customer', 'Customer_Demographics')
      *
-     * @return AnonymousFunction
+     * @return \Closure
      */
     public function buildComparisonFunction($ancestors)
     {
@@ -106,7 +106,7 @@ class OrderByLeafNode extends OrderByBaseNode
         $accessor2 = null;
         $a = $this->_isAscending ? 1 : -1;
 
-        $retVal = function ($object1, $object2) use ($ancestors, $a) {
+        $retVal = function($object1, $object2) use ($ancestors, $a) {
             $accessor1 = $object1;
             $accessor2 = $object2;
             $flag1 = is_null($accessor1);
@@ -121,7 +121,7 @@ class OrderByLeafNode extends OrderByBaseNode
                 $flag2 |= is_null($accessor2);
             }
             $propertyName = $this->propertyName;
-            $getter = 'get'.ucfirst($propertyName);
+            $getter = 'get' . ucfirst($propertyName);
             if (!is_null($accessor1)) {
                 $accessor1 = method_exists($accessor1, $getter) ? $accessor1->$getter() : $accessor1->$propertyName;
             }
@@ -135,9 +135,9 @@ class OrderByLeafNode extends OrderByBaseNode
             if ($flag1 && $flag2) {
                 return 0;
             } elseif ($flag1) {
-                return $a * -1;
+                return $a*-1;
             } elseif ($flag2) {
-                return $a * 1;
+                return $a*1;
             }
             $type = $this->resourceProperty->getInstanceType();
             $result = null;
@@ -149,10 +149,10 @@ class OrderByLeafNode extends OrderByBaseNode
                 $result = strcmp($accessor1, $accessor2);
             } else {
                 $delta = $accessor1 - $accessor2;
-                $result = (0 == $delta) ? 0 : $delta / abs($delta);
+                $result = (0 == $delta) ? 0 : $delta/abs($delta);
             }
 
-            return $a * $result;
+            return $a*$result;
         };
 
         return $retVal;
