@@ -398,15 +398,12 @@ class OrderByParser
     {
         $comparisonFunctionCount = count($this->_comparisonFunctions);
         $this->_assertion($comparisonFunctionCount > 0);
-//        $parameters = $this->_comparisonFunctions[0]->getParameters();
-//	die(var_dump($this->_comparisonFunctions));
-        //$parameters[] = '&$matchLevel = 0';
         if ($comparisonFunctionCount == 1) {
             $this->_topLevelComparisonFunction = $this->_comparisonFunctions[0];
         } else {
-            $code = null;
             $funcList = $this->_comparisonFunctions;
             $BigFunc = function($object1, $object2) use ($funcList) {
+                $ret = 0;
                 foreach ($funcList as $f) {
                     $ret = $f($object1, $object2);
                     if ($ret != 0) {
