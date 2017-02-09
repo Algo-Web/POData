@@ -51,7 +51,7 @@ class ErrorHandler
 
         // At this point all kind of exceptions will be converted
         //to 'ODataException'
-        if ($exception->getStatusCode() == HttpStatus::CODE_NOT_MODIFIED) {
+        if (HttpStatus::CODE_NOT_MODIFIED == $exception->getStatusCode()) {
             $service->getHost()->setResponseStatusCode(HttpStatus::CODE_NOT_MODIFIED);
         } else {
             $service->getHost()->setResponseStatusCode($exception->getStatusCode());

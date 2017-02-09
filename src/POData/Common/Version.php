@@ -118,16 +118,12 @@ class Version
     //Is there a better way to do static const of complex type?
 
     /** @var Version[] */
-    private static $fixedVersion;
+    private static $fixedVersion = null;
 
     private static function fillVersions()
     {
-        if (is_null(self::$fixedVersion)) {
-            self::$fixedVersion = array(
-                1 => new self(1, 0),
-                2 => new self(2, 0),
-                3 => new self(3, 0),
-            );
+        if (null == self::$fixedVersion) {
+            self::$fixedVersion = [1 => new self(1, 0), 2 => new self(2, 0), 3 => new self(3, 0)];
         }
     }
 

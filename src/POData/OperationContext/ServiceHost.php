@@ -118,7 +118,7 @@ class ServiceHost
     public function getAbsoluteRequestUri()
     {
         if (is_null($this->_absoluteRequestUri)) {
-            $this->_absoluteRequestUriAsString = $this->_operationContext->incomingRequest()->getRawUrl();
+            $this->_absoluteRequestUriAsString = $this->getOperationContext()->incomingRequest()->getRawUrl();
             // Validate the uri first
             try {
                 new Url($this->_absoluteRequestUriAsString);
@@ -279,7 +279,7 @@ class ServiceHost
      */
     public function validateQueryParameters()
     {
-        $queryOptions = $this->_operationContext->incomingRequest()->getQueryParameters();
+        $queryOptions = $this->getOperationContext()->incomingRequest()->getQueryParameters();
 
         reset($queryOptions);
         $namesFound = array();
@@ -492,7 +492,7 @@ class ServiceHost
      */
     public function setResponseCacheControl($value)
     {
-        $this->_operationContext->outgoingResponse()->setCacheControl($value);
+        $this->getOperationContext()->outgoingResponse()->setCacheControl($value);
     }
 
     /**
@@ -502,9 +502,7 @@ class ServiceHost
      */
     public function getResponseContentType()
     {
-        return $this->_operationContext
-            ->outgoingResponse()
-            ->getContentType();
+        return $this->getOperationContext()->outgoingResponse()->getContentType();
     }
 
     /**
@@ -514,9 +512,7 @@ class ServiceHost
      */
     public function setResponseContentType($value)
     {
-        $this->_operationContext
-            ->outgoingResponse()
-            ->setContentType($value);
+        $this->getOperationContext()->outgoingResponse()->setContentType($value);
     }
 
     /**
@@ -530,7 +526,7 @@ class ServiceHost
     public function setResponseContentLength($value)
     {
         if (preg_match('/[0-9]+/', $value)) {
-            $this->_operationContext->outgoingResponse()->setContentLength($value);
+            $this->getOperationContext()->outgoingResponse()->setContentLength($value);
         } else {
             throw ODataException::notAcceptableError(
                 "ContentLength:$value is invalid"
@@ -545,7 +541,7 @@ class ServiceHost
      */
     public function getResponseETag()
     {
-        return $this->_operationContext->outgoingResponse()->getETag();
+        return $this->getOperationContext()->outgoingResponse()->getETag();
     }
 
     /**
@@ -555,7 +551,7 @@ class ServiceHost
      */
     public function setResponseETag($value)
     {
-        $this->_operationContext->outgoingResponse()->setETag($value);
+        $this->getOperationContext()->outgoingResponse()->setETag($value);
     }
 
     /**
@@ -565,7 +561,7 @@ class ServiceHost
      */
     public function setResponseLocation($value)
     {
-        $this->_operationContext->outgoingResponse()->setLocation($value);
+        $this->getOperationContext()->outgoingResponse()->setLocation($value);
     }
 
     /**
@@ -582,8 +578,7 @@ class ServiceHost
                 $statusDescription = ' ' . $statusDescription;
             }
 
-            $this->_operationContext
-                ->outgoingResponse()->setStatusCode($value . $statusDescription);
+            $this->getOperationContext()->outgoingResponse()->setStatusCode($value . $statusDescription);
         } else {
             throw ODataException::createInternalServerError(
                 'Invalid Status Code' . $value
@@ -609,7 +604,7 @@ class ServiceHost
      */
     public function setResponseStream(&$value)
     {
-        $this->_operationContext->outgoingResponse()->setStream($value);
+        $this->getOperationContext()->outgoingResponse()->setStream($value);
     }
 
     /**
@@ -619,7 +614,7 @@ class ServiceHost
      */
     public function setResponseVersion($value)
     {
-        $this->_operationContext->outgoingResponse()->setServiceVersion($value);
+        $this->getOperationContext()->outgoingResponse()->setServiceVersion($value);
     }
 
     /**
@@ -629,7 +624,7 @@ class ServiceHost
      */
     public function &getResponseHeaders()
     {
-        return $this->_operationContext->outgoingResponse()->getHeaders();
+        return $this->getOperationContext()->outgoingResponse()->getHeaders();
     }
 
     /**
@@ -640,8 +635,7 @@ class ServiceHost
      */
     public function addResponseHeader($headerName, $headerValue)
     {
-        $this->_operationContext
-            ->outgoingResponse()->addHeader($headerName, $headerValue);
+        $this->getOperationContext()->outgoingResponse()->addHeader($headerName, $headerValue);
     }
 
     /**
