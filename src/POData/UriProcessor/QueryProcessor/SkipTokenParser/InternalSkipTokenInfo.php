@@ -1,4 +1,3 @@
-
 <?php
 
 namespace POData\UriProcessor\QueryProcessor\SkipTokenParser;
