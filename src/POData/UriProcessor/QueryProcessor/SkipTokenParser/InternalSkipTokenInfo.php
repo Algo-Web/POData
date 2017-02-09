@@ -130,7 +130,7 @@ class InternalSkipTokenInfo
         }
 
         $comparer
-            = $this->_internalOrderByInfo->getSorterFunction()->getReference();
+            = $this->_internalOrderByInfo->getSorterFunction();
         //Gets the key object initialized from skiptoken
         $keyObject = $this->getKeyObject();
         $low = 0;

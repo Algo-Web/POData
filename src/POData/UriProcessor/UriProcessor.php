@@ -507,7 +507,7 @@ class UriProcessor
         //Apply (implicit and explicit) $orderby option
         $internalOrderByInfo = $this->getRequest()->getInternalOrderByInfo();
         if (!is_null($internalOrderByInfo)) {
-            $orderByFunction = $internalOrderByInfo->getSorterFunction()->getReference();
+            $orderByFunction = $internalOrderByInfo->getSorterFunction();
             usort($result, $orderByFunction);
         }
 

@@ -5,7 +5,6 @@ namespace POData\UriProcessor\QueryProcessor\OrderByParser;
 use POData\Common\Messages;
 use POData\Common\ODataException;
 use POData\Providers\Metadata\ResourceType;
-use POData\UriProcessor\QueryProcessor\AnonymousFunction;
 
 /**
  * Class InternalOrderByInfo.
@@ -24,14 +23,14 @@ class InternalOrderByInfo
     /**
      * Collection of sub sorter functions corresponding to each orderby path segment.
      *
-     * @var AnonymousFunction[]
+     * @var Callable[]
      */
     private $_subSorterFunctions;
 
     /**
      * The top level anonymous sorter function.
      *
-     * @var AnonymousFunction
+     * @var Callable
      */
     private $_sorterFunction;
 
@@ -58,8 +57,8 @@ class InternalOrderByInfo
      *                                                used in the orderby clause
      *                                                (if any) and orderby path
      *                                                if IDSQP implementation wants to perform sorting
-     * @param AnonymousFunction[] $subSorterFunctions Collection of sub sorter functions corresponding to each orderby path segment
-     * @param AnonymousFunction   $sorterFunction     The top level anonymous sorter function
+     * @param Callable[] $subSorterFunctions Collection of sub sorter functions corresponding to each orderby path segment
+     * @param Callable   $sorterFunction     The top level anonymous sorter function
      * @param mixed               $dummyObject        A dummy object of type
      *                                                of the resource set
      *                                                identified by the
@@ -70,7 +69,7 @@ class InternalOrderByInfo
     public function __construct(
         OrderByInfo $orderByInfo,
         $subSorterFunctions,
-        AnonymousFunction $sorterFunction,
+        Callable  $sorterFunction,
         $dummyObject,
         ResourceType $resourceType
     ) {
@@ -104,7 +103,7 @@ class InternalOrderByInfo
     /**
      * Gets reference to the top level sorter function.
      *
-     * @return AnonymousFunction
+     * @return Callable
      */
     public function getSorterFunction()
     {
@@ -114,7 +113,7 @@ class InternalOrderByInfo
     /**
      * Gets collection of sub sorter functions.
      *
-     * @return AnonymousFunction[]
+     * @return Callable[]
      */
     public function getSubSorterFunctions()
     {

@@ -2,7 +2,6 @@
 
 namespace POData\UriProcessor\QueryProcessor\OrderByParser;
 
-use POData\UriProcessor\QueryProcessor\AnonymousFunction;
 use POData\Providers\Metadata\Type\Guid;
 use POData\Providers\Metadata\Type\StringType;
 use POData\Providers\Metadata\Type\DateTime;
@@ -91,7 +90,7 @@ class OrderByLeafNode extends OrderByBaseNode
      *
      * @param string[] $ancestors Array of parent properties e.g. array('Orders', 'Customer', 'Customer_Demographics')
      *
-     * @return AnonymousFunction
+     * @return \Closure
      */
     public function buildComparisonFunction($ancestors)
     {
@@ -101,64 +100,56 @@ class OrderByLeafNode extends OrderByBaseNode
             );
         }
 
-        $parameterNames = null;
-        $accessor1 = null;
-        $accessor2 = null;
         $a = $this->_isAscending ? 1 : -1;
 
-        foreach ($ancestors as $i => $anscestor) {
-            if ($i == 0) {
-                $parameterNames = array(
-                    '$' . $anscestor . 'A', '$' . $anscestor . 'B',
-                );
-                $accessor1 = $parameterNames[0];
-                $accessor2 = $parameterNames[1];
-                $flag1 = '$flag1 = ' . 'is_null(' . $accessor1 . ') || ';
-                $flag2 = '$flag2 = ' . 'is_null(' . $accessor2 . ') || ';
-            } else {
-                $accessor1 .= '->' . $anscestor;
-                $accessor2 .= '->' . $anscestor;
-                $flag1 .= 'is_null(' . $accessor1 . ')' . ' || ';
-                $flag2 .= 'is_null(' . $accessor2 . ')' . ' || ';
+        $retVal = function($object1, $object2) use ($ancestors, $a) {
+            $accessor1 = $object1;
+            $accessor2 = $object2;
+            $flag1 = is_null($accessor1);
+            $flag2 = is_null($accessor2);
+            foreach ($ancestors as $i => $ancestor) {
+                if ($i == 0) {
+                    continue;
+                }
+                $accessor1 = $accessor1->$ancestor;
+                $accessor2 = $accessor2->$ancestor;
+                $flag1 |= is_null($accessor1);
+                $flag2 |= is_null($accessor2);
             }
-        }
+            $propertyName = $this->propertyName;
+            $getter = 'get' . ucfirst($propertyName);
+            if (!is_null($accessor1)) {
+                $accessor1 = method_exists($accessor1, $getter) ? $accessor1->$getter() : $accessor1->$propertyName;
+            }
+            if (!is_null($accessor2)) {
+                $accessor2 = method_exists($accessor2, $getter) ? $accessor2->$getter() : $accessor2->$propertyName;
+            }
 
-        // $accessor1 .= '->' . $this->propertyName;
-        // $accessor2 .= '->' . $this->propertyName;
-        $propertyName = $this->propertyName;
-        $getter = 'get' . ucfirst($propertyName);
-        $accessor1 = "(method_exists({$accessor1}, '{$getter}') ? {$accessor1}->{$getter}() : {$accessor1}->{$propertyName})";
-        $accessor2 = "(method_exists({$accessor2}, '{$getter}') ? {$accessor2}->{$getter}() : {$accessor2}->{$propertyName})";
+            $flag1 |= is_null($accessor1);
+            $flag2 |= is_null($accessor2);
 
-        $flag1 .= 'is_null(' . $accessor1 . ')';
-        $flag2 .= 'is_null(' . $accessor2 . ')';
+            if ($flag1 && $flag2) {
+                return 0;
+            } elseif ($flag1) {
+                return $a*-1;
+            } elseif ($flag2) {
+                return $a*1;
+            }
+            $type = $this->resourceProperty->getInstanceType();
+            if ($type instanceof DateTime) {
+                $result = strtotime($accessor1) - strtotime($accessor2);
+            } elseif ($type instanceof StringType) {
+                $result = strcmp($accessor1, $accessor2);
+            } elseif ($type instanceof Guid) {
+                $result = strcmp($accessor1, $accessor2);
+            } else {
+                $delta = $accessor1 - $accessor2;
+                $result = (0 == $delta) ? 0 : $delta/abs($delta);
+            }
 
-        $code = "$flag1; 
-             $flag2; 
-             if(\$flag1 && \$flag2) { 
-               return 0;
-             } else if (\$flag1) { 
-                 return $a*-1;
-             } else if (\$flag2) { 
-                 return $a*1;
-             }
-             
-            ";
-        $type = $this->resourceProperty->getInstanceType();
-        if ($type instanceof DateTime) {
-            $code .= " \$result = strtotime($accessor1) - strtotime($accessor2);";
-        } elseif ($type instanceof StringType) {
-            $code .= " \$result = strcmp($accessor1, $accessor2);";
-        } elseif ($type instanceof Guid) {
-            $code .= " \$result = strcmp($accessor1, $accessor2);";
-        } else {
-            $code .= " \$result = (($accessor1 == $accessor2) ? 0 : (($accessor1 > $accessor2) ? 1 : -1));";
-        }
+            return $a*$result;
+        };
 
-        $code .= "
-             return $a*\$result;";
-        $this->_anonymousFunction = new AnonymousFunction($parameterNames, $code);
-
-        return $this->_anonymousFunction;
+        return $retVal;
     }
 }

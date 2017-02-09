@@ -2,7 +2,6 @@
 
 namespace POData\UriProcessor\QueryProcessor\OrderByParser;
 
-use POData\UriProcessor\QueryProcessor\AnonymousFunction;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionLexer;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionTokenId;
 use POData\Providers\ProvidersWrapper;
@@ -32,7 +31,7 @@ class OrderByParser
      * Collection of anonymous sorter function corresponding to
      * each orderby path segment.
      *
-     * @var AnonymousFunction[]
+     * @var Callable[]
      */
     private $_comparisonFunctions = array();
 
@@ -40,7 +39,7 @@ class OrderByParser
      * The top level sorter function generated from orderby path
      * segments.
      *
-     * @var AnonymousFunction
+     * @var Callable
      */
     private $_topLevelComparisonFunction;
 
@@ -117,6 +116,7 @@ class OrderByParser
         }
         $orderByParser->_rootOrderByNode = new OrderByRootNode($resourceSetWrapper, $resourceType);
         $orderByPathSegments = $orderByParser->_readOrderBy($orderBy);
+
         $orderByParser->_buildOrderByTree($orderByPathSegments);
         $orderByParser->_createOrderInfo($orderByPathSegments);
         $orderByParser->_generateTopLevelComparisonFunction();
@@ -397,24 +397,21 @@ class OrderByParser
     {
         $comparisonFunctionCount = count($this->_comparisonFunctions);
         $this->_assertion($comparisonFunctionCount > 0);
-        $parameters = $this->_comparisonFunctions[0]->getParameters();
-        //$parameters[] = '&$matchLevel = 0';
         if ($comparisonFunctionCount == 1) {
             $this->_topLevelComparisonFunction = $this->_comparisonFunctions[0];
         } else {
-            $code = null;
-            for ($i = 0; $i < $comparisonFunctionCount; ++$i) {
-                $subComparisonFunctionName = substr($this->_comparisonFunctions[$i]->getReference(), 1);
-                $code .= "\$result = call_user_func_array(chr(0) . '$subComparisonFunctionName', array($parameters[0], $parameters[1]));";
-                $code .= '
-                         if ($result != 0) {
-                            return $result;
-                         }
-                         ';
-            }
-
-            $code .= 'return $result;';
-            $this->_topLevelComparisonFunction = new AnonymousFunction($parameters, $code);
+            $funcList = $this->_comparisonFunctions;
+            $BigFunc = function($object1, $object2) use ($funcList) {
+                $ret = 0;
+                foreach ($funcList as $f) {
+                    $ret = $f($object1, $object2);
+                    if ($ret != 0) {
+                        return $ret;
+                    }
+                }
+                return $ret;
+            };
+            $this->_topLevelComparisonFunction = $BigFunc;
         }
     }
 
