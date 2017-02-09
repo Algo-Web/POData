@@ -107,7 +107,6 @@ class OrderByLeafNode extends OrderByBaseNode
         $a = $this->_isAscending ? 1 : -1;
 
         $retVal = function ($object1, $object2) use ($ancestors, $a) {
-
             $accessor1 = $object1;
             $accessor2 = $object2;
             $flag1 = is_null($accessor1);
@@ -122,12 +121,12 @@ class OrderByLeafNode extends OrderByBaseNode
                 $flag2 |= is_null($accessor2);
             }
             $propertyName = $this->propertyName;
-            $getter = 'get' . ucfirst($propertyName);
+            $getter = 'get'.ucfirst($propertyName);
             if (!is_null($accessor1)) {
-                        $accessor1 = method_exists($accessor1, $getter) ? $accessor1->$getter() : $accessor1->$propertyName;
+                $accessor1 = method_exists($accessor1, $getter) ? $accessor1->$getter() : $accessor1->$propertyName;
             }
             if (!is_null($accessor2)) {
-                        $accessor2 = method_exists($accessor2, $getter) ? $accessor2->$getter() : $accessor2->$propertyName;
+                $accessor2 = method_exists($accessor2, $getter) ? $accessor2->$getter() : $accessor2->$propertyName;
             }
 
             $flag1 |= is_null($accessor1);
@@ -136,12 +135,12 @@ class OrderByLeafNode extends OrderByBaseNode
             if ($flag1 && $flag2) {
                 return 0;
             } elseif ($flag1) {
-                return $a*-1;
+                return $a * -1;
             } elseif ($flag2) {
-                return $a*1;
+                return $a * 1;
             }
             $type = $this->resourceProperty->getInstanceType();
-            $result  = null;
+            $result = null;
             if ($type instanceof DateTime) {
                 $result = strtotime($accessor1) - strtotime($accessor2);
             } elseif ($type instanceof StringType) {
@@ -153,8 +152,9 @@ class OrderByLeafNode extends OrderByBaseNode
                 $result = (0 == $delta) ? 0 : $delta / abs($delta);
             }
 
-            return $a*$result;
+            return $a * $result;
         };
-        return $retVal ;
+
+        return $retVal;
     }
 }

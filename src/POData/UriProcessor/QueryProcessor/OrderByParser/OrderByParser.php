@@ -408,12 +408,12 @@ class OrderByParser
             $funcList = $this->_comparisonFunctions;
             $BigFunc = function ($object1, $object2) use ($funcList) {
                 foreach ($funcList as $f) {
-                    $ret = $f($object1,$object2);
+                    $ret = $f($object1, $object2);
                     if ($ret != 0) {
                         return $ret;
                     }
                 }
-                        return $ret;
+                return $ret;
             };
             $this->_topLevelComparisonFunction = $BigFunc;
 //            for ($i = 0; $i < $comparisonFunctionCount; ++$i) {
