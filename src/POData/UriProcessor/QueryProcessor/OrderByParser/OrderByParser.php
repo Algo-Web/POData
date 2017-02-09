@@ -2,7 +2,6 @@
 
 namespace POData\UriProcessor\QueryProcessor\OrderByParser;
 
-use POData\UriProcessor\QueryProcessor\AnonymousFunction;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionLexer;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionTokenId;
 use POData\Providers\ProvidersWrapper;
@@ -32,7 +31,7 @@ class OrderByParser
      * Collection of anonymous sorter function corresponding to
      * each orderby path segment.
      *
-     * @var AnonymousFunction[]
+     * @var Callable[]
      */
     private $_comparisonFunctions = array();
 
@@ -40,7 +39,7 @@ class OrderByParser
      * The top level sorter function generated from orderby path
      * segments.
      *
-     * @var AnonymousFunction
+     * @var Callable
      */
     private $_topLevelComparisonFunction;
 
