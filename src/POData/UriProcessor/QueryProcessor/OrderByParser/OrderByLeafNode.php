@@ -2,7 +2,6 @@
 
 namespace POData\UriProcessor\QueryProcessor\OrderByParser;
 
-use POData\UriProcessor\QueryProcessor\AnonymousFunction;
 use POData\Providers\Metadata\Type\Guid;
 use POData\Providers\Metadata\Type\StringType;
 use POData\Providers\Metadata\Type\DateTime;
