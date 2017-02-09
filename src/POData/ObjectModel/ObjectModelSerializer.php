@@ -52,10 +52,6 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
         } else {
             assert($requestTargetSource == TargetSource::PROPERTY, '$requestTargetSource != TargetSource::PROPERTY');
             $resourceProperty = $this->getRequest()->getProjectedProperty();
-            //assert(
-            //$resourceProperty->getKind() == ResourcePropertyKind::RESOURCE_REFERENCE,
-            //'$resourceProperty->getKind() != ResourcePropertyKind::RESOURCE_REFERENCE'
-            //);
             $resourceType = $resourceProperty->getResourceType();
         }
 
@@ -104,6 +100,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
 
         $needPop = $this->pushSegmentForRoot();
         $targetResourceType = $this->getRequest()->getTargetResourceType();
+        assert(null != $targetResourceType, "Target resource type must not be null");
         $this->_writeFeedElements(
             $entryObjects,
             $targetResourceType,
@@ -333,7 +330,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
      */
     private function _writeFeedElements(
         &$entryObjects,
-        ResourceType & $resourceType,
+        ResourceType &$resourceType,
         $title,
         $absoluteUri,
         $relativeUri,

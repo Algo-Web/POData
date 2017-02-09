@@ -262,6 +262,7 @@ class ObjectModelSerializerBase
     {
         $segmentName = $this->getRequest()->getContainerName();
         $segmentResourceSetWrapper = $this->getRequest()->getTargetResourceSetWrapper();
+        assert(null != $segmentResourceSetWrapper, "Segment resource set wrapper must not be null");
 
         return $this->_pushSegment($segmentName, $segmentResourceSetWrapper);
     }
