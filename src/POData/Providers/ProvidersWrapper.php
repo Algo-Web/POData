@@ -839,18 +839,9 @@ class ProvidersWrapper
         // Orders(1234)/Customer/Orders => here if Customer is null then
         // the UriProcessor will throw error.
         if (!is_null($entityInstance)) {
-            $targetResourceType = $targetResourceSet->getResourceType();
-            $entityName = $targetResourceType->getInstanceType()->getName();
-            if (!is_object($entityInstance)
-                || !($entityInstance instanceof $entityName)
-            ) {
-                throw ODataException::createInternalServerError(
-                    Messages::providersWrapperIDSQPMethodReturnsUnExpectedType(
-                        $entityName,
-                        'IQueryProvider::getRelatedResourceReference'
-                    )
-                );
-            }
+            $methodName = 'IQueryProvider::getRelatedResourceReference';
+
+            $targetResourceType = $this->verifyResourceType($methodName, $entityInstance, $targetResourceSet);
             foreach ($targetProperty->getResourceType()->getKeyProperties() as $keyName => $resourceProperty) {
                 try {
                     $keyValue = $targetResourceType->getPropertyValue($entityInstance, $keyName);
@@ -896,18 +887,7 @@ class ProvidersWrapper
             throw ODataException::createResourceNotFoundError($resourceSet->getName());
         }
 
-        $resourceType = $resourceSet->getResourceType();
-        $entityName = $resourceType->getInstanceType()->getName();
-        if (!is_object($entityInstance)
-            || !($entityInstance instanceof $entityName)
-        ) {
-            throw ODataException::createInternalServerError(
-                Messages::providersWrapperIDSQPMethodReturnsUnExpectedType(
-                    $entityName,
-                    $methodName
-                )
-            );
-        }
+        $resourceType = $this->verifyResourceType($methodName, $entityInstance, $resourceSet);
 
         foreach ($keyDescriptor->getValidatedNamedValues() as $keyName => $valueDescription) {
             try {
@@ -997,18 +977,25 @@ class ProvidersWrapper
     }
 
     /**
-     * Assert that the given condition is true.
-     *
-     * @param bool   $condition         Condition to be asserted
-     * @param string $conditionAsString String containing message incase
-     *                                  if assertion fails
-     *
-     * @throws InvalidOperationException Incase if assertion fails
+     * @param $methodName
+     * @param $entityInstance
+     * @param ResourceSet $resourceSet
+     * @return ResourceType
+     * @throws ODataException
      */
-    protected function assert($condition, $conditionAsString)
+    private function verifyResourceType($methodName, $entityInstance, ResourceSet $resourceSet)
     {
-        if (!$condition) {
-            throw new InvalidOperationException("Unexpected state, expecting $conditionAsString");
+        $resourceType = $resourceSet->getResourceType();
+        $entityName = $resourceType->getInstanceType()->getName();
+        if (!is_object($entityInstance) || !($entityInstance instanceof $entityName)
+        ) {
+            throw ODataException::createInternalServerError(
+                Messages::providersWrapperIDSQPMethodReturnsUnExpectedType(
+                    $entityName,
+                    $methodName
+                )
+            );
         }
+        return $resourceType;
     }
 }
