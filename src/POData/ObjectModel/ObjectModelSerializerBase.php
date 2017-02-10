@@ -14,6 +14,7 @@ use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandedProjection
 use POData\Common\InvalidOperationException;
 use POData\Common\ODataException;
 use POData\Common\Messages;
+use POData\UriProcessor\SegmentStack;
 
 /**
  * Class ObjectModelSerializerBase.
@@ -34,33 +35,6 @@ class ObjectModelSerializerBase
      * @var RequestDescription
      */
     protected $request;
-
-    /**
-     * Collection of segment names
-     * Remark: Read 'ObjectModelSerializerNotes.txt' for more
-     * details about segment.
-     *
-     * @var string[]
-     */
-    private $_segmentNames;
-
-    /**
-     * Collection of segment ResourceSetWrapper instances
-     * Remark: Read 'ObjectModelSerializerNotes.txt' for more
-     * details about segment.
-     *
-     * @var ResourceSetWrapper[]
-     */
-    private $_segmentResourceSetWrappers;
-
-    /**
-     * Result counts for segments
-     * Remark: Read 'ObjectModelSerializerNotes.txt' for more
-     * details about segment.
-     *
-     * @var int[]
-     */
-    private $_segmentResultCounts;
 
     /**
      * Collection of complex type instances used for cycle detection.
@@ -84,6 +58,13 @@ class ObjectModelSerializerBase
     protected $absoluteServiceUriWithSlash;
 
     /**
+     * Holds reference to segment stack being processed
+     *
+     * @var SegmentStack
+     */
+    protected $stack;
+
+    /**
      * @param IService           $service Reference to the data service instance
      * @param RequestDescription $request Type instance describing the client submitted request
      */
@@ -93,10 +74,38 @@ class ObjectModelSerializerBase
         $this->request = $request;
         $this->absoluteServiceUri = $service->getHost()->getAbsoluteServiceUri()->getUrlAsString();
         $this->absoluteServiceUriWithSlash = rtrim($this->absoluteServiceUri, '/') . '/';
-        $this->_segmentNames = array();
-        $this->_segmentResourceSetWrappers = array();
-        $this->_segmentResultCounts = array();
+        $this->stack = new SegmentStack($request);
         $this->complexTypeInstanceCollection = array();
+    }
+
+    /**
+     * Gets reference to the request submitted by client.
+     *
+     * @return RequestDescription
+     */
+    public function getRequest()
+    {
+        return $this->request;
+    }
+
+    /**
+     * Gets the data service instance
+     *
+     * @return IService
+     */
+    public function getService()
+    {
+        return $this->service;
+    }
+
+    /**
+     * Gets the segment stack instance
+     *
+     * @return SegmentStack
+     */
+    public function getStack()
+    {
+        return $this->stack;
     }
 
     /**
@@ -117,16 +126,18 @@ class ObjectModelSerializerBase
     protected function getEntryInstanceKey($entityInstance, ResourceType $resourceType, $containerName)
     {
         $keyProperties = $resourceType->getKeyProperties();
-        $this->assert(count($keyProperties) != 0, 'count($keyProperties) != 0');
+        assert(count($keyProperties) != 0, 'count($keyProperties) == 0');
         $keyString = $containerName . '(';
         $comma = null;
         foreach ($keyProperties as $keyName => $resourceProperty) {
             $keyType = $resourceProperty->getInstanceType();
-            $this->assert($keyType instanceof IType, '$keyType instanceof IType');
+            assert($keyType instanceof IType, '$keyType not instanceof IType');
 
             $keyValue = $this->getPropertyValue($entityInstance, $resourceType, $resourceProperty);
             if (is_null($keyValue)) {
-                throw ODataException::createInternalServerError(Messages::badQueryNullKeysAreNotSupported($resourceType->getName(), $keyName));
+                throw ODataException::createInternalServerError(
+                    Messages::badQueryNullKeysAreNotSupported($resourceType->getName(), $keyName)
+                );
             }
 
             $keyValue = $keyType->convertToOData($keyValue);
@@ -182,12 +193,9 @@ class ObjectModelSerializerBase
      */
     protected function getCurrentResourceSetWrapper()
     {
-        $count = count($this->_segmentResourceSetWrappers);
-        if ($count == 0) {
-            return $this->request->getTargetResourceSetWrapper();
-        } else {
-            return $this->_segmentResourceSetWrappers[$count - 1];
-        }
+        $segmentWrappers = $this->getStack()->getSegmentWrappers();
+        $count = count($segmentWrappers);
+        return 0 == $count ? $this->getRequest()->getTargetResourceSetWrapper() : $segmentWrappers[$count - 1];
     }
 
     /**
@@ -198,8 +206,8 @@ class ObjectModelSerializerBase
      */
     protected function isRootResourceSet()
     {
-        return empty($this->_segmentResourceSetWrappers)
-                || count($this->_segmentResourceSetWrappers) == 1;
+        $segmentWrappers = $this->getStack()->getSegmentWrappers();
+        return empty($segmentWrappers) || 1 == count($segmentWrappers);
     }
 
     /**
@@ -219,10 +227,7 @@ class ObjectModelSerializerBase
         $comma = null;
         foreach ($resourceType->getETagProperties() as $eTagProperty) {
             $type = $eTagProperty->getInstanceType();
-            $this->assert(
-                !is_null($type) && $type instanceof IType,
-                '!is_null($type) && $type instanceof IType'
-            );
+            assert(!is_null($type) && $type instanceof IType, 'is_null($type) || $type not instanceof IType');
             $value = $this->getPropertyValue($entryObject, $resourceType, $eTagProperty);
             if (is_null($value)) {
                 $eTag = $eTag . $comma . 'null';
@@ -255,8 +260,9 @@ class ObjectModelSerializerBase
      */
     protected function pushSegmentForRoot()
     {
-        $segmentName = $this->request->getContainerName();
-        $segmentResourceSetWrapper = $this->request->getTargetResourceSetWrapper();
+        $segmentName = $this->getRequest()->getContainerName();
+        $segmentResourceSetWrapper = $this->getRequest()->getTargetResourceSetWrapper();
+        assert(null != $segmentResourceSetWrapper, "Segment resource set wrapper must not be null");
 
         return $this->_pushSegment($segmentName, $segmentResourceSetWrapper);
     }
@@ -277,11 +283,11 @@ class ObjectModelSerializerBase
      */
     protected function pushSegmentForNavigationProperty(ResourceProperty & $resourceProperty)
     {
-        if ($resourceProperty->getTypeKind() == ResourceTypeKind::ENTITY) {
-            $this->assert(!empty($this->_segmentNames), '!is_empty($this->_segmentNames');
+        if (ResourceTypeKind::ENTITY == $resourceProperty->getTypeKind()) {
+            assert(!empty($this->getStack()->getSegmentNames()), 'Segment names should not be empty');
             $currentResourceSetWrapper = $this->getCurrentResourceSetWrapper();
             $currentResourceType = $currentResourceSetWrapper->getResourceType();
-            $currentResourceSetWrapper = $this->service
+            $currentResourceSetWrapper = $this->getService()
                 ->getProvidersWrapper()
                 ->getResourceSetWrapperForNavigationProperty(
                     $currentResourceSetWrapper,
@@ -289,12 +295,11 @@ class ObjectModelSerializerBase
                     $resourceProperty
                 );
 
-            $this->assert(!is_null($currentResourceSetWrapper), '!null($currentResourceSetWrapper)');
+            assert(!is_null($currentResourceSetWrapper), 'is_null($currentResourceSetWrapper)');
 
             return $this->_pushSegment($resourceProperty->getName(), $currentResourceSetWrapper);
-        } else {
-            throw new InvalidOperationException('pushSegmentForNavigationProperty should not be called with non-entity type');
         }
+        throw new InvalidOperationException('pushSegmentForNavigationProperty should not be called with non-entity type');
     }
 
     /**
@@ -310,9 +315,7 @@ class ObjectModelSerializerBase
     protected function getProjectionNodes()
     {
         $expandedProjectionNode = $this->getCurrentExpandedProjectionNode();
-        if (is_null($expandedProjectionNode)
-            || $expandedProjectionNode->canSelectAllProperties()
-        ) {
+        if (is_null($expandedProjectionNode) || $expandedProjectionNode->canSelectAllProperties()) {
             return null;
         }
 
@@ -327,11 +330,12 @@ class ObjectModelSerializerBase
      */
     protected function getCurrentExpandedProjectionNode()
     {
-        $expandedProjectionNode = $this->request->getRootProjectionNode();
+        $expandedProjectionNode = $this->getRequest()->getRootProjectionNode();
         if (is_null($expandedProjectionNode)) {
             return null;
         } else {
-            $depth = count($this->_segmentNames);
+            $segmentNames = $this->getStack()->getSegmentNames();
+            $depth = count($segmentNames);
             // $depth == 1 means serialization of root entry
             //(the resource identified by resource path) is going on,
             //so control won't get into the below for loop.
@@ -341,14 +345,11 @@ class ObjectModelSerializerBase
             if ($depth != 0) {
                 for ($i = 1; $i < $depth; ++$i) {
                     $expandedProjectionNode
-                        = $expandedProjectionNode->findNode($this->_segmentNames[$i]);
-                    $this->assert(
-                        !is_null($expandedProjectionNode),
-                        '!is_null($expandedProjectionNode)'
-                    );
-                    $this->assert(
+                        = $expandedProjectionNode->findNode($segmentNames[$i]);
+                    assert(!is_null($expandedProjectionNode), 'is_null($expandedProjectionNode)');
+                    assert(
                         $expandedProjectionNode instanceof ExpandedProjectionNode,
-                        '$expandedProjectionNode instanceof ExpandedProjectionNode'
+                        '$expandedProjectionNode not instanceof ExpandedProjectionNode'
                     );
                 }
             }
@@ -374,7 +375,8 @@ class ObjectModelSerializerBase
 
         $expandedProjectionNode = $expandedProjectionNode->findNode($navigationPropertyName);
 
-        return !is_null($expandedProjectionNode) && ($expandedProjectionNode instanceof ExpandedProjectionNode);
+        // null is a valid input to an instanceof call as of PHP 5.6 - will always return false
+        return $expandedProjectionNode instanceof ExpandedProjectionNode;
     }
 
     /**
@@ -392,7 +394,6 @@ class ObjectModelSerializerBase
      */
     private function _pushSegment($segmentName, ResourceSetWrapper & $resourceSetWrapper)
     {
-        $rootProjectionNode = $this->request->getRootProjectionNode();
         // Even though there is no expand in the request URI, still we need to push
         // the segment information if we need to count
         //the number of entities written.
@@ -402,22 +403,7 @@ class ObjectModelSerializerBase
         // But we will not do this check since library is doing paging and never
         // accumulate entities more than configured.
 
-        // if ((!is_null($rootProjectionNode) && $rootProjectionNode->isExpansionSpecified())
-        //    || ($resourceSetWrapper->getResourceSetPageSize() != 0)
-        //    || ($this->service->getServiceConfiguration()->getMaxResultsPerCollection() != PHP_INT_MAX)
-        //) {}
-
-        if (!is_null($rootProjectionNode)
-            && $rootProjectionNode->isExpansionSpecified()
-        ) {
-            array_push($this->_segmentNames, $segmentName);
-            array_push($this->_segmentResourceSetWrappers, $resourceSetWrapper);
-            array_push($this->_segmentResultCounts, 0);
-
-            return true;
-        }
-
-        return false;
+        return $this->getStack()->pushSegment($segmentName, $resourceSetWrapper);
     }
 
     /**
@@ -434,7 +420,7 @@ class ObjectModelSerializerBase
         $currentExpandedProjectionNode = $this->getCurrentExpandedProjectionNode();
         $internalOrderByInfo = $currentExpandedProjectionNode->getInternalOrderByInfo();
         $skipToken = $internalOrderByInfo->buildSkipTokenValue($lastObject);
-        $this->assert(!is_null($skipToken), '!is_null($skipToken)');
+        assert(!is_null($skipToken), '!is_null($skipToken)');
         $queryParameterString = null;
         if ($this->isRootResourceSet()) {
             $queryParameterString = $this->getNextPageLinkQueryParametersForRootResourceSet();
@@ -443,11 +429,11 @@ class ObjectModelSerializerBase
         }
 
         $queryParameterString .= '$skip=' . $skipToken;
-        $odalaLink = new ODataLink();
-        $odalaLink->name = ODataConstants::ATOM_LINK_NEXT_ATTRIBUTE_STRING;
-        $odalaLink->url = rtrim($absoluteUri, '/') . '?' . $queryParameterString;
+        $odataLink = new ODataLink();
+        $odataLink->name = ODataConstants::ATOM_LINK_NEXT_ATTRIBUTE_STRING;
+        $odataLink->url = rtrim($absoluteUri, '/') . '?' . $queryParameterString;
 
-        return $odalaLink;
+        return $odataLink;
     }
 
     /**
@@ -462,12 +448,12 @@ class ObjectModelSerializerBase
     protected function getNextPageLinkQueryParametersForRootResourceSet()
     {
         $queryParameterString = null;
-        foreach (array(ODataConstants::HTTPQUERY_STRING_FILTER,
+        foreach ([ODataConstants::HTTPQUERY_STRING_FILTER,
             ODataConstants::HTTPQUERY_STRING_EXPAND,
             ODataConstants::HTTPQUERY_STRING_ORDERBY,
             ODataConstants::HTTPQUERY_STRING_INLINECOUNT,
-            ODataConstants::HTTPQUERY_STRING_SELECT,) as $queryOption) {
-            $value = $this->service->getHost()->getQueryStringItem($queryOption);
+            ODataConstants::HTTPQUERY_STRING_SELECT] as $queryOption) {
+            $value = $this->getService()->getHost()->getQueryStringItem($queryOption);
             if (!is_null($value)) {
                 if (!is_null($queryParameterString)) {
                     $queryParameterString = $queryParameterString . '&';
@@ -477,9 +463,9 @@ class ObjectModelSerializerBase
             }
         }
 
-        $topCountValue = $this->request->getTopOptionCount();
+        $topCountValue = $this->getRequest()->getTopOptionCount();
         if (!is_null($topCountValue)) {
-            $remainingCount = $topCountValue - $this->request->getTopCount();
+            $remainingCount = $topCountValue - $this->getRequest()->getTopCount();
             if (!is_null($queryParameterString)) {
                 $queryParameterString .= '&';
             }
@@ -558,13 +544,13 @@ class ObjectModelSerializerBase
     protected function needNextPageLink($resultSetCount)
     {
         $currentResourceSet = $this->getCurrentResourceSetWrapper();
-        $recursionLevel = count($this->_segmentNames);
+        $recursionLevel = count($this->getStack()->getSegmentNames());
         //$this->assert($recursionLevel != 0, '$recursionLevel != 0');
         $pageSize = $currentResourceSet->getResourceSetPageSize();
 
         if ($recursionLevel == 1) {
             //presence of $top option affect next link for root container
-            $topValueCount = $this->request->getTopOptionCount();
+            $topValueCount = $this->getRequest()->getTopOptionCount();
             if (!is_null($topValueCount) && ($topValueCount <= $pageSize)) {
                 return false;
             }
@@ -587,15 +573,7 @@ class ObjectModelSerializerBase
      */
     protected function popSegment($needPop)
     {
-        if ($needPop) {
-            if (!empty($this->_segmentNames)) {
-                array_pop($this->_segmentNames);
-                array_pop($this->_segmentResourceSetWrappers);
-                array_pop($this->_segmentResultCounts);
-            } else {
-                throw new InvalidOperationException('Found non-balanced call to _pushSegment and popSegment');
-            }
-        }
+        $this->getStack()->popSegment($needPop);
     }
 
     /**
@@ -727,21 +705,5 @@ class ObjectModelSerializerBase
         }
 
         $path .= $segmentToAppend;
-    }
-
-    /**
-     * Assert that the given condition is true.
-     *
-     * @param bool   $condition         Condition to be asserted
-     * @param string $conditionAsString String containing message incase
-     *                                  if assertion fails
-     *
-     * @throws InvalidOperationException Incase if assertion failes
-     */
-    protected function assert($condition, $conditionAsString)
-    {
-        if (!$condition) {
-            throw new InvalidOperationException("Unexpected state, expecting $conditionAsString");
-        }
     }
 }
