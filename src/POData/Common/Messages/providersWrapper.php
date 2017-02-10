@@ -110,7 +110,7 @@ trait providersWrapper
      */
     public static function providersWrapperIDSQPMethodReturnsUnExpectedType($entityTypeName, $methodName)
     {
-        return 'The implementation of the method ' . $methodName . ' must return an instance of type described by resource set\'s type(' . $entityTypeName . ') or null if resource does not exists';
+        return 'The implementation of the method ' . $methodName . ' must return an instance of type described by resource set\'s type(' . $entityTypeName . ') or null if resource does not exist.';
     }
 
     /**
@@ -123,7 +123,7 @@ trait providersWrapper
      */
     public static function providersWrapperIDSQPMethodReturnsInstanceWithNullKeyProperties($methodName)
     {
-        return 'The ' . $methodName . ' implementation returns an entity with null key propert(y|ies)';
+        return 'The ' . $methodName . ' implementation returns an entity with null key propert(y|ies).';
     }
 
     /**
