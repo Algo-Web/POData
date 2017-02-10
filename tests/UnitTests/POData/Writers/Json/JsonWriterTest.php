@@ -235,7 +235,7 @@ class JsonWriterTest extends \PHPUnit_Framework_TestCase
         $writer = new JsonWriter('');
         $result = $writer->writeValue('Mar 3, 2012 11:14:32 AM', 'Edm.DateTime');
         $this->assertSame($result, $writer);
-        $this->assertEquals('"2012-03-03T11:14:32"', $writer->getJsonOutput());
+        $this->assertEquals('"/Date(1330773272000)/"', $writer->getJsonOutput());
     }
 
     public function testWriteValueEdmByte()
@@ -345,7 +345,7 @@ class JsonWriterTest extends \PHPUnit_Framework_TestCase
         $writer->endScope();
         $writer->endScope();
 
-        $expected = "{\n    \"1\":2,\"child\":{\n        \"array\":[\n            \"100.00155\",\"2012-03-03T11:14:32\"\n        ]\n    }\n}";
+        $expected = "{\n    \"1\":2,\"child\":{\n        \"array\":[\n            \"100.00155\",\"/Date(1330773272000)/\"\n        ]\n    }\n}";
         $this->assertEquals($expected, $writer->getJsonOutput());
     }
 }
