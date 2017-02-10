@@ -328,6 +328,8 @@ class ProvidersWrapper
         ResourceProperty $property
     ) {
         $type = $this->getResourceTypeWherePropertyIsDeclared($type, $property);
+        // usage below requires $type to not be null - so kaboom as early as possible
+        assert(null != $type, "Resource type obtained from property must not be null.");
         $cacheKey = $set->getName() . '_' . $type->getName() . '_' . $property->getName();
 
         if (array_key_exists($cacheKey, $this->associationSetCache)) {
@@ -636,7 +638,7 @@ class ProvidersWrapper
 
         if ((QueryType::ENTITIES() == $queryType
              || QueryType::ENTITIES_WITH_COUNT() == $queryType)
-             && !is_array($queryResult->results)) {
+            && !is_array($queryResult->results)) {
             throw ODataException::createInternalServerError(
                 Messages::queryProviderResultsMissing($methodName, $queryType)
             );
@@ -914,18 +916,18 @@ class ProvidersWrapper
             }
         }
     }
-    
-        /**
-         * Updates a resource
-         *
-         * @param ResourceSet      $sourceResourceSet    The entity set containing the source entity
-         * @param object           $sourceEntityInstance The source entity instance
-         * @param KeyDescriptor    $keyDescriptor        The key identifying the entity to fetch
-         * @param object           $data                 The New data for the entity instance.
-         * @param bool             $shouldUpdate        Should undefined values be updated or reset to default
-         *
-         * @return object|null The new resource value if it is assignable or throw exception for null.
-         */
+
+    /**
+     * Updates a resource
+     *
+     * @param ResourceSet      $sourceResourceSet    The entity set containing the source entity
+     * @param object           $sourceEntityInstance The source entity instance
+     * @param KeyDescriptor    $keyDescriptor        The key identifying the entity to fetch
+     * @param object           $data                 The New data for the entity instance.
+     * @param bool             $shouldUpdate        Should undefined values be updated or reset to default
+     *
+     * @return object|null The new resource value if it is assignable or throw exception for null.
+     */
     public function updateResource(
         ResourceSet $sourceResourceSet,
         $sourceEntityInstance,
