@@ -39,18 +39,18 @@ class ProvidersWrapper
     private $metaProvider;
 
     /**
-     * Holds reference to IQueryProvider implementation.
-     *
-     * @var IQueryProvider
-     */
-    private $queryProvider;
-
-    /**
      * Holds reference to IServiceConfiguration implementation.
      *
      * @var ServiceConfiguration
      */
     private $config;
+
+    /*
+     * Holds reference to ProvidersQueryWrapper implementation
+     *
+     * @var ProvidersQueryWrapper
+     */
+    private $providerWrapper;
 
     /**
      * Cache for ResourceProperties of a resource type that belongs to a
@@ -94,8 +94,8 @@ class ProvidersWrapper
     public function __construct(IMetadataProvider $meta, IQueryProvider $query, ServiceConfiguration $config)
     {
         $this->metaProvider = $meta;
-        $this->queryProvider = $query;
         $this->config = $config;
+        $this->providerWrapper = new ProvidersQueryWrapper($query);
         $this->setWrapperCache = array();
         $this->typeCache = array();
         $this->associationSetCache = array();
@@ -580,20 +580,7 @@ class ProvidersWrapper
      */
     public function getExpressionProvider()
     {
-        $expressionProvider = $this->queryProvider->getExpressionProvider();
-        if (is_null($expressionProvider)) {
-            throw ODataException::createInternalServerError(
-                Messages::providersWrapperExpressionProviderMustNotBeNullOrEmpty()
-            );
-        }
-
-        if (!$expressionProvider instanceof IExpressionProvider) {
-            throw ODataException::createInternalServerError(
-                Messages::providersWrapperInvalidExpressionProviderInstance()
-            );
-        }
-
-        return $expressionProvider;
+        return $this->providerWrapper->getExpressionProvider();
     }
 
     /**
@@ -605,44 +592,7 @@ class ProvidersWrapper
      */
     public function handlesOrderedPaging()
     {
-        return $this->queryProvider->handlesOrderedPaging();
-    }
-
-    /**
-     * @param QueryResult $queryResult
-     * @param string      $methodName
-     */
-    private function validateQueryResult($queryResult, QueryType $queryType, $methodName)
-    {
-        if (!$queryResult instanceof QueryResult) {
-            throw ODataException::createInternalServerError(
-                Messages::queryProviderReturnsNonQueryResult($methodName)
-            );
-        }
-
-        if ($queryType == QueryType::COUNT() || $queryType == QueryType::ENTITIES_WITH_COUNT()) {
-            //and the provider is supposed to handle the ordered paging they must return a count!
-            if ($this->queryProvider->handlesOrderedPaging() && !is_numeric($queryResult->count)) {
-                throw ODataException::createInternalServerError(
-                    Messages::queryProviderResultCountMissing($methodName, $queryType)
-                );
-            }
-
-            //If POData is supposed to handle the ordered aging they must return results! (possibly empty)
-            if (!$this->queryProvider->handlesOrderedPaging() && !is_array($queryResult->results)) {
-                throw ODataException::createInternalServerError(
-                    Messages::queryProviderResultsMissing($methodName, $queryType)
-                );
-            }
-        }
-
-        if ((QueryType::ENTITIES() == $queryType
-             || QueryType::ENTITIES_WITH_COUNT() == $queryType)
-            && !is_array($queryResult->results)) {
-            throw ODataException::createInternalServerError(
-                Messages::queryProviderResultsMissing($methodName, $queryType)
-            );
-        }
+        return $this->providerWrapper->handlesOrderedPaging();
     }
 
     /**
@@ -669,7 +619,7 @@ class ProvidersWrapper
         $skip = null,
         InternalSkipTokenInfo $skipToken = null
     ) {
-        $queryResult = $this->queryProvider->getResourceSet(
+        return $this->providerWrapper->getResourceSet(
             $queryType,
             $resourceSet,
             $filterInfo,
@@ -678,10 +628,6 @@ class ProvidersWrapper
             $skip,
             $skipToken
         );
-
-        $this->validateQueryResult($queryResult, $queryType, 'IQueryProvider::getResourceSet');
-
-        return $queryResult;
     }
 
     /**
@@ -694,15 +640,7 @@ class ProvidersWrapper
      */
     public function getResourceFromResourceSet(ResourceSet $resourceSet, KeyDescriptor $keyDescriptor)
     {
-        $entityInstance = $this->queryProvider->getResourceFromResourceSet($resourceSet, $keyDescriptor);
-        $this->_validateEntityInstance(
-            $entityInstance,
-            $resourceSet,
-            $keyDescriptor,
-            'IQueryProvider::getResourceFromResourceSet'
-        );
-
-        return $entityInstance;
+        return $this->providerWrapper->getResourceFromResourceSet($resourceSet, $keyDescriptor);
     }
 
     /**
@@ -718,13 +656,11 @@ class ProvidersWrapper
         KeyDescriptor $keyDescriptor,
         $data
     ) {
-        $queryResult = $this->queryProvider->putResource(
+        return $this->providerWrapper->putResource(
             $resourceSet,
             $keyDescriptor,
             $data
         );
-
-        return $queryResult;
     }
 
     /**
@@ -757,7 +693,7 @@ class ProvidersWrapper
         $top,
         $skip
     ) {
-        $queryResult = $this->queryProvider->getRelatedResourceSet(
+        return $this->providerWrapper->getRelatedResourceSet(
             $queryType,
             $sourceResourceSet,
             $sourceEntity,
@@ -768,10 +704,6 @@ class ProvidersWrapper
             $top,
             $skip
         );
-
-        $this->validateQueryResult($queryResult, $queryType, 'IQueryProvider::getRelatedResourceSet');
-
-        return $queryResult;
     }
 
     /**
@@ -792,22 +724,13 @@ class ProvidersWrapper
         ResourceProperty $targetProperty,
         KeyDescriptor $keyDescriptor
     ) {
-        $entityInstance = $this->queryProvider->getResourceFromRelatedResourceSet(
+        return $this->providerWrapper->getResourceFromRelatedResourceSet(
             $sourceResourceSet,
             $sourceEntity,
             $targetResourceSet,
             $targetProperty,
             $keyDescriptor
         );
-
-        $this->_validateEntityInstance(
-            $entityInstance,
-            $targetResourceSet,
-            $keyDescriptor,
-            'IQueryProvider::getResourceFromRelatedResourceSet'
-        );
-
-        return $entityInstance;
     }
 
     /**
@@ -828,93 +751,12 @@ class ProvidersWrapper
         ResourceSet $targetResourceSet,
         ResourceProperty $targetProperty
     ) {
-        $entityInstance = $this->queryProvider->getRelatedResourceReference(
+        return $this->providerWrapper->getRelatedResourceReference(
             $sourceResourceSet,
             $sourceEntity,
             $targetResourceSet,
             $targetProperty
         );
-
-        // we will not throw error if the resource reference is null
-        // e.g. Orders(1234)/Customer => Customer can be null, this is
-        // allowed if Customer is last segment. consider the following:
-        // Orders(1234)/Customer/Orders => here if Customer is null then
-        // the UriProcessor will throw error.
-        if (!is_null($entityInstance)) {
-            $methodName = 'IQueryProvider::getRelatedResourceReference';
-
-            $targetResourceType = $this->verifyResourceType($methodName, $entityInstance, $targetResourceSet);
-            foreach ($targetProperty->getResourceType()->getKeyProperties() as $keyName => $resourceProperty) {
-                try {
-                    $keyValue = $targetResourceType->getPropertyValue($entityInstance, $keyName);
-                    if (is_null($keyValue)) {
-                        throw ODataException::createInternalServerError(
-                            Messages::providersWrapperIDSQPMethodReturnsInstanceWithNullKeyProperties(
-                                'IDSQP::getRelatedResourceReference'
-                            )
-                        );
-                    }
-                } catch (\ReflectionException $reflectionException) {
-                    //throw ODataException::createInternalServerError(
-                    //    Messages::orderByParserFailedToAccessOrInitializeProperty(
-                    //        $resourceProperty->getName(), $resourceType->getName()
-                    //    )
-                    //);
-                }
-            }
-        }
-
-        return $entityInstance;
-    }
-
-    /**
-     * Validate the given entity instance.
-     *
-     * @param object        $entityInstance Entity instance to validate
-     * @param ResourceSet   &$resourceSet   Resource set to which the entity
-     *                                      instance belongs to
-     * @param KeyDescriptor &$keyDescriptor The key descriptor
-     * @param string        $methodName     Method from which this function
-     *                                      invoked
-     *
-     * @throws ODataException
-     */
-    private function _validateEntityInstance(
-        $entityInstance,
-        ResourceSet & $resourceSet,
-        KeyDescriptor & $keyDescriptor,
-        $methodName
-    ) {
-        if (is_null($entityInstance)) {
-            throw ODataException::createResourceNotFoundError($resourceSet->getName());
-        }
-
-        $resourceType = $this->verifyResourceType($methodName, $entityInstance, $resourceSet);
-
-        foreach ($keyDescriptor->getValidatedNamedValues() as $keyName => $valueDescription) {
-            try {
-                $keyValue = $resourceType->getPropertyValue($entityInstance, $keyName);
-                if (is_null($keyValue)) {
-                    throw ODataException::createInternalServerError(
-                        Messages::providersWrapperIDSQPMethodReturnsInstanceWithNullKeyProperties($methodName)
-                    );
-                }
-
-                $convertedValue
-                    = $valueDescription[1]->convert($valueDescription[0]);
-                if ($keyValue != $convertedValue) {
-                    throw ODataException::createInternalServerError(
-                        Messages::providersWrapperIDSQPMethodReturnsInstanceWithNonMatchingKeys($methodName)
-                    );
-                }
-            } catch (\ReflectionException $reflectionException) {
-                //throw ODataException::createInternalServerError(
-                //  Messages::orderByParserFailedToAccessOrInitializeProperty(
-                //      $resourceProperty->getName(), $resourceType->getName()
-                //  )
-                //);
-            }
-        }
     }
 
     /**
@@ -935,7 +777,7 @@ class ProvidersWrapper
         $data,
         $shouldUpdate = false
     ) {
-        return $this->queryProvider->updateResource(
+        return $this->providerWrapper->updateResource(
             $sourceResourceSet,
             $sourceEntityInstance,
             $keyDescriptor,
@@ -954,7 +796,7 @@ class ProvidersWrapper
         ResourceSet $sourceResourceSet,
         $sourceEntityInstance
     ) {
-        return $this->queryProvider->deleteResource(
+        return $this->providerWrapper->deleteResource(
             $sourceResourceSet,
             $sourceEntityInstance
         );
@@ -971,33 +813,10 @@ class ProvidersWrapper
         $sourceEntityInstance,
         $data
     ) {
-        return $this->queryProvider->createResourceforResourceSet(
+        return $this->providerWrapper->createResourceforResourceSet(
             $resourceSet,
             $sourceEntityInstance,
             $data
         );
-    }
-
-    /**
-     * @param $methodName
-     * @param $entityInstance
-     * @param ResourceSet $resourceSet
-     * @return ResourceType
-     * @throws ODataException
-     */
-    private function verifyResourceType($methodName, $entityInstance, ResourceSet $resourceSet)
-    {
-        $resourceType = $resourceSet->getResourceType();
-        $entityName = $resourceType->getInstanceType()->getName();
-        if (!is_object($entityInstance) || !($entityInstance instanceof $entityName)
-        ) {
-            throw ODataException::createInternalServerError(
-                Messages::providersWrapperIDSQPMethodReturnsUnExpectedType(
-                    $entityName,
-                    $methodName
-                )
-            );
-        }
-        return $resourceType;
     }
 }
