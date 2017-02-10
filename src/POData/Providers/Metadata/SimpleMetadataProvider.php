@@ -204,15 +204,7 @@ class SimpleMetadataProvider implements IMetadataProvider
      */
     public function addEntityType(\ReflectionClass $refClass, $name, $namespace = null)
     {
-        if (array_key_exists($name, $this->resourceTypes)) {
-            throw new InvalidOperationException('Type with same name already added');
-        }
-
-        $entityType = new ResourceType($refClass, ResourceTypeKind::ENTITY, $name, $namespace);
-        $this->resourceTypes[$name] = $entityType;
-        ksort($this->resourceTypes);
-
-        return $entityType;
+        return $this->createResourceType($refClass, $name, $namespace, ResourceTypeKind::ENTITY, null);
     }
 
     /**
@@ -229,15 +221,7 @@ class SimpleMetadataProvider implements IMetadataProvider
      */
     public function addComplexType(\ReflectionClass $refClass, $name, $namespace = null, $baseResourceType = null)
     {
-        if (array_key_exists($name, $this->resourceTypes)) {
-            throw new InvalidOperationException('Type with same name already added');
-        }
-
-        $complexType = new ResourceType($refClass, ResourceTypeKind::COMPLEX, $name, $namespace, $baseResourceType);
-        $this->resourceTypes[$name] = $complexType;
-        ksort($this->resourceTypes);
-
-        return $complexType;
+        return $this->createResourceType($refClass, $name, $namespace, ResourceTypeKind::COMPLEX, $baseResourceType);
     }
 
     /**
@@ -486,5 +470,32 @@ class SimpleMetadataProvider implements IMetadataProvider
             new ResourceAssociationSetEnd($targetResourceSet, $targetResourceSet->getResourceType(), null)
         );
         $this->associationSets[$setKey] = $set;
+    }
+
+    /**
+     * @param \ReflectionClass $refClass
+     * @param $name
+     * @param $namespace
+     * @param $typeKind
+     * @param $baseResourceType
+     * @return ResourceType
+     * @throws InvalidOperationException
+     */
+    private function createResourceType(
+        \ReflectionClass $refClass,
+        $name,
+        $namespace,
+        $typeKind,
+        $baseResourceType
+    ) {
+        if (array_key_exists($name, $this->resourceTypes)) {
+            throw new InvalidOperationException('Type with same name already added');
+        }
+
+        $entityType = new ResourceType($refClass, $typeKind, $name, $namespace, $baseResourceType);
+        $this->resourceTypes[$name] = $entityType;
+        ksort($this->resourceTypes);
+
+        return $entityType;
     }
 }
