@@ -821,7 +821,6 @@ class ResourceType
                     'Binary',
                     'Edm'
                 );
-                break;
             case EdmPrimitiveType::BOOLEAN:
                 return new self(
                     new Boolean(),
@@ -829,7 +828,6 @@ class ResourceType
                     'Boolean',
                     'Edm'
                 );
-                break;
             case EdmPrimitiveType::BYTE:
                 return new self(
                     new Byte(),
@@ -837,7 +835,6 @@ class ResourceType
                     'Byte',
                     'Edm'
                 );
-                break;
             case EdmPrimitiveType::DATETIME:
                 return new self(
                     new DateTime(),
@@ -845,7 +842,6 @@ class ResourceType
                     'DateTime',
                     'Edm'
                 );
-                break;
             case EdmPrimitiveType::DECIMAL:
                 return new self(
                     new Decimal(),
@@ -853,7 +849,6 @@ class ResourceType
                     'Decimal',
                     'Edm'
                 );
-                break;
             case EdmPrimitiveType::DOUBLE:
                 return new self(
                     new Double(),
@@ -861,7 +856,6 @@ class ResourceType
                     'Double',
                     'Edm'
                 );
-                break;
             case EdmPrimitiveType::GUID:
                 return new self(
                     new Guid(),
@@ -869,7 +863,6 @@ class ResourceType
                     'Guid',
                     'Edm'
                 );
-                break;
             case EdmPrimitiveType::INT16:
                 return new self(
                     new Int16(),
@@ -877,7 +870,6 @@ class ResourceType
                     'Int16',
                     'Edm'
                 );
-                break;
             case EdmPrimitiveType::INT32:
                 return new self(
                     new Int32(),
@@ -885,7 +877,6 @@ class ResourceType
                     'Int32',
                     'Edm'
                 );
-                break;
             case EdmPrimitiveType::INT64:
                 return new self(
                     new Int64(),
@@ -893,7 +884,6 @@ class ResourceType
                     'Int64',
                     'Edm'
                 );
-                break;
             case EdmPrimitiveType::SBYTE:
                 return new self(
                     new SByte(),
@@ -901,7 +891,6 @@ class ResourceType
                     'SByte',
                     'Edm'
                 );
-                break;
             case EdmPrimitiveType::SINGLE:
                 return new self(
                     new Single(),
@@ -909,7 +898,6 @@ class ResourceType
                     'Single',
                     'Edm'
                 );
-                break;
             case EdmPrimitiveType::STRING:
                 return new self(
                     new StringType(),
@@ -917,7 +905,6 @@ class ResourceType
                     'String',
                     'Edm'
                 );
-                break;
             default:
                 throw new \InvalidArgumentException(
                     Messages::commonNotValidPrimitiveEDMType(
