@@ -238,7 +238,7 @@ class JsonLightODataWriterFullMetadataTest extends \PHPUnit_Framework_TestCase
 				                "ID": 100,
 				                "Name": "Bread",
 				                "ReleaseDate@odata.type": "Edm.DateTime",
-				                "ReleaseDate" : "1347891433000",
+				                "ReleaseDate" : "/Date(1347891433000)/",
 				                "DiscontinuedDate" : null,
 				                "Price@odata.type": "Edm.Decimal",
 				                "Price" : 2.5
@@ -272,7 +272,7 @@ class JsonLightODataWriterFullMetadataTest extends \PHPUnit_Framework_TestCase
 				                "ID": 100,
 				                "Name": "Bread",
 				                "ReleaseDate@odata.type": "Edm.DateTime",
-				                "ReleaseDate" : "1347891433000",
+				                "ReleaseDate" : "/Date(1347891433000)/",
 				                "DiscontinuedDate" : null,
 				                "Price@odata.type": "Edm.Decimal",
 				                "Price" : 2.5

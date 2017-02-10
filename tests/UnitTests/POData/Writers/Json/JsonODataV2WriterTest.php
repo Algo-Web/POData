@@ -198,7 +198,7 @@ class JsonODataV2WriterTest extends \PHPUnit_Framework_TestCase
 					                },
 					                "ID": 100,
 					                "Name": "Bread",
-					                "ReleaseDate" : "1346990823000",
+					                "ReleaseDate" : "/Date(1346990823000)/",
 					                "DiscontinuedDate" : null,
 					                "Price" : 2.5
 					            }

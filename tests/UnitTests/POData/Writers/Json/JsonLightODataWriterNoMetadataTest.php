@@ -219,7 +219,7 @@ class JsonLightODataWriterNoMetadataTest extends \PHPUnit_Framework_TestCase
 				            {
 				                "ID": 100,
 				                "Name": "Bread",
-				                "ReleaseDate" : "1347891433000",
+				                "ReleaseDate" : "/Date(1347891433000)/",
 				                "DiscontinuedDate" : null,
 				                "Price" : 2.5
 				            }
@@ -245,7 +245,7 @@ class JsonLightODataWriterNoMetadataTest extends \PHPUnit_Framework_TestCase
 				            {
 				                "ID": 100,
 				                "Name": "Bread",
-				                "ReleaseDate" : "1347891433000",
+				                "ReleaseDate" : "/Date(1347891433000)/",
 				                "DiscontinuedDate" : null,
 				                "Price" : 2.5
 				            }
