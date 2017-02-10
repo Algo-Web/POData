@@ -294,11 +294,6 @@ class ProvidersQueryWrapper
                         );
                     }
                 } catch (\ReflectionException $reflectionException) {
-                    //throw ODataException::createInternalServerError(
-                    //    Messages::orderByParserFailedToAccessOrInitializeProperty(
-                    //        $resourceProperty->getName(), $resourceType->getName()
-                    //    )
-                    //);
                 }
             }
         }
@@ -406,7 +401,7 @@ class ProvidersQueryWrapper
     /**
      * Validate the given entity instance.
      *
-     * @param object        $entityInstance Entity instance to validate
+     * @param object|null   $entityInstance Entity instance to validate
      * @param ResourceSet   &$resourceSet   Resource set to which the entity
      *                                      instance belongs to
      * @param KeyDescriptor &$keyDescriptor The key descriptor
@@ -443,11 +438,6 @@ class ProvidersQueryWrapper
                     );
                 }
             } catch (\ReflectionException $reflectionException) {
-                //throw ODataException::createInternalServerError(
-                //  Messages::orderByParserFailedToAccessOrInitializeProperty(
-                //      $resourceProperty->getName(), $resourceType->getName()
-                //  )
-                //);
             }
         }
     }
