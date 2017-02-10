@@ -30,7 +30,7 @@ class DateTime implements IType
      */
     public function isCompatibleWith(IType $type)
     {
-        return $type->getTypeCode() == TypeCode::DATETIME;
+        return TypeCode::DATETIME == $type->getTypeCode();
     }
 
     /**
@@ -213,5 +213,16 @@ class DateTime implements IType
     public static function dateTimeCmp($dateTime1, $dateTime2)
     {
         return strtotime($dateTime1) - strtotime($dateTime2);
+    }
+
+    /**
+     * Gets full name of the type implementing this interface in EDM namespace
+     * Note: implementation of IType::getFullTypeName.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->getFullTypeName();
     }
 }

@@ -45,7 +45,7 @@ class Null1 implements IType
      */
     public function validate($value, &$outValue)
     {
-        if (strcmp($value, 'null') != 0) {
+        if (0 != strcmp($value, 'null')) {
             return false;
         }
 
@@ -74,7 +74,7 @@ class Null1 implements IType
      */
     public function convert($stringValue)
     {
-        if (strcmp($stringValue, 'null') == 0) {
+        if (0 == strcmp($stringValue, 'null')) {
             return null;
         }
 
@@ -91,5 +91,16 @@ class Null1 implements IType
     public function convertToOData($value)
     {
         throw new NotImplementedException();
+    }
+
+    /**
+     * Gets full name of the type implementing this interface in EDM namespace
+     * Note: implementation of IType::getFullTypeName.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->getFullTypeName();
     }
 }

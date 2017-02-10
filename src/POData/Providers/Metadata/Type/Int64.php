@@ -52,7 +52,7 @@ class Int64 implements IType
      */
     public function validate($value, &$outValue)
     {
-        if (preg_match('/^(\-)?\d+[lL]{1}$/', $value) !== 1) {
+        if (1 !== preg_match('/^(\-)?\d+[lL]{1}$/', $value)) {
             return false;
         }
         // In PHP there is no difference b/w int and long int.
@@ -97,5 +97,16 @@ class Int64 implements IType
     public function convertToOData($value)
     {
         return $value . 'L';
+    }
+
+    /**
+     * Gets full name of the type implementing this interface in EDM namespace
+     * Note: implementation of IType::getFullTypeName.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->getFullTypeName();
     }
 }

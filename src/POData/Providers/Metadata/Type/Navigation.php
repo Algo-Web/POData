@@ -28,8 +28,8 @@ class Navigation implements INavigationType
      */
     public function __construct($resourceType)
     {
-        if ($resourceType->getResourceTypeKind() != ResourceTypeKind::COMPLEX
-            && $resourceType->getResourceTypeKind() != ResourceTypeKind::ENTITY
+        if (ResourceTypeKind::COMPLEX != $resourceType->getResourceTypeKind()
+            && ResourceTypeKind::ENTITY != $resourceType->getResourceTypeKind()
         ) {
             throw new \InvalidArgumentException(Messages::navigationInvalidResourceType());
         }
@@ -124,6 +124,17 @@ class Navigation implements INavigationType
     public function convertToOData($value)
     {
         throw new NotImplementedException();
+    }
+
+    /**
+     * Gets full name of the type implementing this interface in EDM namespace
+     * Note: implementation of IType::getFullTypeName.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->getFullTypeName();
     }
 
     //End implementation of IType interface

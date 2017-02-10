@@ -117,10 +117,10 @@ class Char implements IType
     {
         $asciiVal = ord($char);
 
-        return $asciiVal == self::SPACE
-            || $asciiVal == self::TAB
-            || $asciiVal == self::CARRIAGE_RETURN
-            || $asciiVal == self::NEWLINE;
+        return self::SPACE == $asciiVal
+            || self::TAB == $asciiVal
+            || self::CARRIAGE_RETURN == $asciiVal
+            || self::NEWLINE == $asciiVal;
     }
 
     /**
@@ -149,8 +149,7 @@ class Char implements IType
     {
         $asciiVal = ord($char);
 
-        return $asciiVal >= self::ZERO
-            && $asciiVal <= self::NINE;
+        return self::ZERO <= $asciiVal && self::NINE >= $asciiVal;
     }
 
     /**
@@ -163,5 +162,16 @@ class Char implements IType
     public static function isLetterOrDigit($char)
     {
         return self::isDigit($char) || self::isLetter($char);
+    }
+
+    /**
+     * Gets full name of the type implementing this interface in EDM namespace
+     * Note: implementation of IType::getFullTypeName.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->getFullTypeName();
     }
 }

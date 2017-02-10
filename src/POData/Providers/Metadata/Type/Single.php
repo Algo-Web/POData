@@ -56,7 +56,7 @@ class Single implements IType
         // By default all real numbers are considered as 'Double'.
         // To consider a number (real or integer) as 'Single' i.e
         // float, it should postfix with F or f
-        if (preg_match('/^(\-)?\d+(\.{1}\d+)?([Ee]{1}([\+\-]{1})?\d+)?([fF]{1})$/', $value) !== 1) {
+        if (1 !== preg_match('/^(\-)?\d+(\.{1}\d+)?([Ee]{1}([\+\-]{1})?\d+)?([fF]{1})$/', $value)) {
             return false;
         }
 
@@ -100,5 +100,16 @@ class Single implements IType
     public function convertToOData($value)
     {
         return $value . 'F';
+    }
+
+    /**
+     * Gets full name of the type implementing this interface in EDM namespace
+     * Note: implementation of IType::getFullTypeName.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->getFullTypeName();
     }
 }

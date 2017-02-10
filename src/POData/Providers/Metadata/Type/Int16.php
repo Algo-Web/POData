@@ -50,7 +50,7 @@ class Int16 implements IType
      */
     public function validate($value, &$outValue)
     {
-        if (preg_match('/^(\-)?\d+$/', $value) !== 1) {
+        if (1 !== preg_match('/^(\-)?\d+$/', $value)) {
             return false;
         }
 
@@ -94,5 +94,16 @@ class Int16 implements IType
     public function convertToOData($value)
     {
         return $value;
+    }
+
+    /**
+     * Gets full name of the type implementing this interface in EDM namespace
+     * Note: implementation of IType::getFullTypeName.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->getFullTypeName();
     }
 }

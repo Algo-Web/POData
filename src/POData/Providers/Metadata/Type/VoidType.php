@@ -30,7 +30,7 @@ class VoidType implements IType
      */
     public function isCompatibleWith(IType $type)
     {
-        return $type->getTypeCode() == TypeCode::VOID;
+        return TypeCode::VOID == $type->getTypeCode();
     }
 
     /**
@@ -82,5 +82,16 @@ class VoidType implements IType
     public function convertToOData($value)
     {
         throw new NotImplementedException();
+    }
+
+    /**
+     * Gets full name of the type implementing this interface in EDM namespace
+     * Note: implementation of IType::getFullTypeName.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->getFullTypeName();
     }
 }

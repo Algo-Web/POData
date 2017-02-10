@@ -28,7 +28,7 @@ class SByte implements IType
      */
     public function isCompatibleWith(IType $type)
     {
-        return $type->getTypeCode() == TypeCode::SBYTE;
+        return TypeCode::SBYTE == $type->getTypeCode();
     }
 
     /**
@@ -43,7 +43,7 @@ class SByte implements IType
      */
     public function validate($value, &$outValue)
     {
-        if (strlen($value) != 1) {
+        if (1 != strlen($value)) {
             return false;
         }
 
@@ -88,5 +88,16 @@ class SByte implements IType
     public function convertToOData($value)
     {
         return $value;
+    }
+
+    /**
+     * Gets full name of the type implementing this interface in EDM namespace
+     * Note: implementation of IType::getFullTypeName.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->getFullTypeName();
     }
 }

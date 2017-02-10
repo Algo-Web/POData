@@ -204,15 +204,7 @@ class SimpleMetadataProvider implements IMetadataProvider
      */
     public function addEntityType(\ReflectionClass $refClass, $name, $namespace = null)
     {
-        if (array_key_exists($name, $this->resourceTypes)) {
-            throw new InvalidOperationException('Type with same name already added');
-        }
-
-        $entityType = new ResourceType($refClass, ResourceTypeKind::ENTITY, $name, $namespace);
-        $this->resourceTypes[$name] = $entityType;
-        ksort($this->resourceTypes);
-
-        return $entityType;
+        return $this->createResourceType($refClass, $name, $namespace, ResourceTypeKind::ENTITY, null);
     }
 
     /**
@@ -229,15 +221,7 @@ class SimpleMetadataProvider implements IMetadataProvider
      */
     public function addComplexType(\ReflectionClass $refClass, $name, $namespace = null, $baseResourceType = null)
     {
-        if (array_key_exists($name, $this->resourceTypes)) {
-            throw new InvalidOperationException('Type with same name already added');
-        }
-
-        $complexType = new ResourceType($refClass, ResourceTypeKind::COMPLEX, $name, $namespace, $baseResourceType);
-        $this->resourceTypes[$name] = $complexType;
-        ksort($this->resourceTypes);
-
-        return $complexType;
+        return $this->createResourceType($refClass, $name, $namespace, ResourceTypeKind::COMPLEX, $baseResourceType);
     }
 
     /**
@@ -357,16 +341,10 @@ class SimpleMetadataProvider implements IMetadataProvider
         if ($resourceType->getResourceTypeKind() != ResourceTypeKind::ENTITY
             && $resourceType->getResourceTypeKind() != ResourceTypeKind::COMPLEX
         ) {
-            throw new InvalidOperationException('complex property can be added to an entity or another complex type');
+            throw new InvalidOperationException('Complex property can be added to an entity or another complex type');
         }
 
-        if (!$resourceType->getInstanceType()->hasMethod('__get')) {
-            try {
-                $resourceType->getInstanceType()->getProperty($name);
-            } catch (\ReflectionException $ex) {
-                throw new InvalidOperationException('Can\'t add a property which does not exist on the instance type.');
-            }
-        }
+        $this->checkInstanceProperty($name, $resourceType);
 
         $kind = ResourcePropertyKind::COMPLEX_TYPE;
         if ($isBag) {
@@ -391,21 +369,7 @@ class SimpleMetadataProvider implements IMetadataProvider
      */
     private function _addPrimitivePropertyInternal($resourceType, $name, $typeCode, $isKey = false, $isBag = false, $isETagProperty = false)
     {
-        $instance = $resourceType->getInstanceType();
-        $typeName = $instance->getName();
-        $rawInstance = new $typeName(); // avoid clobbering retrieved $instance if we're not in Laravel
-
-        // This check doesn't play well with how Eloquent stores model properties via magic methods,
-        // so skip it for Eloquent models
-        if (!$rawInstance instanceof \Illuminate\Database\Eloquent\Model) {
-            try {
-                $instance->getProperty($name);
-            } catch (\ReflectionException $ex) {
-                throw new InvalidOperationException(
-                    'Can\'t add a property which does not exist on the instance type.'
-                );
-            }
-        }
+        $this->checkInstanceProperty($name, $resourceType);
 
         $primitiveResourceType = ResourceType::getPrimitiveResourceType($typeCode);
 
@@ -449,15 +413,7 @@ class SimpleMetadataProvider implements IMetadataProvider
         ResourceSet $targetResourceSet,
         $resourcePropertyKind
     ) {
-        if (!$resourceType->getInstanceType()->hasMethod('__get')) {
-            try {
-                $resourceType->getInstanceType()->getProperty($name);
-            } catch (\ReflectionException $exception) {
-                throw new InvalidOperationException(
-                    'Can\'t add a property which does not exist on the instance type.'
-                );
-            }
-        }
+        $this->checkInstanceProperty($name, $resourceType);
 
         if (!($resourcePropertyKind == ResourcePropertyKind::RESOURCESET_REFERENCE
             || $resourcePropertyKind == ResourcePropertyKind::RESOURCE_REFERENCE)
@@ -486,5 +442,52 @@ class SimpleMetadataProvider implements IMetadataProvider
             new ResourceAssociationSetEnd($targetResourceSet, $targetResourceSet->getResourceType(), null)
         );
         $this->associationSets[$setKey] = $set;
+    }
+
+    /**
+     * @param \ReflectionClass $refClass
+     * @param $name
+     * @param $namespace
+     * @param $typeKind
+     * @param $baseResourceType
+     * @return ResourceType
+     * @throws InvalidOperationException
+     */
+    private function createResourceType(
+        \ReflectionClass $refClass,
+        $name,
+        $namespace,
+        $typeKind,
+        $baseResourceType
+    ) {
+        if (array_key_exists($name, $this->resourceTypes)) {
+            throw new InvalidOperationException('Type with same name already added');
+        }
+
+        $entityType = new ResourceType($refClass, $typeKind, $name, $namespace, $baseResourceType);
+        $this->resourceTypes[$name] = $entityType;
+        ksort($this->resourceTypes);
+
+        return $entityType;
+    }
+
+    /**
+     * @param $name
+     * @param ResourceType $resourceType
+     * @throws InvalidOperationException
+     */
+    private function checkInstanceProperty($name, ResourceType $resourceType)
+    {
+        $instance = $resourceType->getInstanceType();
+
+        if (!method_exists($instance, '__get')) {
+            try {
+                $instance->getProperty($name);
+            } catch (\ReflectionException $exception) {
+                throw new InvalidOperationException(
+                    'Can\'t add a property which does not exist on the instance type.'
+                );
+            }
+        }
     }
 }
