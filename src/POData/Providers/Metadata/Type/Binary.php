@@ -44,11 +44,10 @@ class Binary implements IType
     public function validate($value, &$outValue)
     {
         $length = strlen($value);
-        if ((strpos($value, 'binary\'') === 0) && ($length > 7)) {
+        if ((0 === strpos($value, 'binary\'')) && (7 < $length)) {
             $value = substr($value, 7, $length - 7);
             $length -= 7;
-        } elseif ((strpos($value, 'X\'') === 0
-            || strpos($value, 'x\'') === 0) && ($length > 2)
+        } elseif ((0 === strpos($value, 'X\'') || 0 === strpos($value, 'x\'')) && (2 < $length)
         ) {
             $value = substr($value, 2, $length - 2);
             $length -= 2;
@@ -56,7 +55,7 @@ class Binary implements IType
             return false;
         }
 
-        if ($value[$length - 1] != '\'') {
+        if ('\'' != $value[$length - 1]) {
             return false;
         }
 
@@ -120,7 +119,7 @@ class Binary implements IType
     public static function validateWithoutPrefix($value, &$outValue)
     {
         $length = strlen($value);
-        if ($length == 0 || $length%2 != 0) {
+        if (0 == $length || 0 != $length % 2) {
             return false;
         }
 
@@ -160,6 +159,17 @@ class Binary implements IType
             return false;
         }
 
-        return strcmp($binary1, $binary2) == 0;
+        return 0 == strcmp($binary1, $binary2);
+    }
+
+    /**
+     * Gets full name of the type implementing this interface in EDM namespace
+     * Note: implementation of IType::getFullTypeName.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->getFullTypeName();
     }
 }

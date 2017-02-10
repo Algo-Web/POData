@@ -102,4 +102,15 @@ class Double implements IType
     {
         return $value . 'D';
     }
+
+    /**
+     * Gets full name of the type implementing this interface in EDM namespace
+     * Note: implementation of IType::getFullTypeName.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->getFullTypeName();
+    }
 }

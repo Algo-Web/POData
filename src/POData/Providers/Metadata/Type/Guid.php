@@ -28,7 +28,7 @@ class Guid implements IType
      */
     public function isCompatibleWith(IType $type)
     {
-        return $type->getTypeCode() == TypeCode::GUID;
+        return TypeCode::GUID == $type->getTypeCode();
     }
 
     /**
@@ -50,11 +50,11 @@ class Guid implements IType
         //4. '/^guid\'\(?([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\)?\')?$/';
 
         $length = strlen($value);
-        if ($length != 38 && $length != 42 && $length != 44) {
+        if (38 != $length && 42 != $length && 44 != $length) {
             return false;
         }
 
-        if (strpos($value, 'guid\'') !== 0 && $value[$length - 1] != '\'') {
+        if (0 !== strpos($value, 'guid\'') && '\'' != $value[$length - 1]) {
             return false;
         }
 
@@ -89,7 +89,7 @@ class Guid implements IType
     public function convert($stringValue)
     {
         $len = strlen($stringValue);
-        if ($len < 2) {
+        if (2 > $len) {
             return $stringValue;
         }
 
@@ -134,7 +134,7 @@ class Guid implements IType
         }
 
         foreach ($patterns as $pattern) {
-            if (preg_match($pattern, $guid) == 1) {
+            if (1 == preg_match($pattern, $guid)) {
                 return true;
             }
         }
@@ -157,6 +157,17 @@ class Guid implements IType
         $guid1 = str_replace(array('{', '}', '(', ')', '-'), '', $guid1);
         $guid2 = str_replace(array('{', '}', '(', ')', '-'), '', $guid2);
 
-        return strcasecmp($guid1, $guid2) === 0;
+        return 0 === strcasecmp($guid1, $guid2);
+    }
+
+    /**
+     * Gets full name of the type implementing this interface in EDM namespace
+     * Note: implementation of IType::getFullTypeName.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->getFullTypeName();
     }
 }

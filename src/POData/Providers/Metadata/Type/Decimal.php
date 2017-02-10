@@ -102,4 +102,15 @@ class Decimal implements IType
     {
         return doubleval($stringValue);
     }
+
+    /**
+     * Gets full name of the type implementing this interface in EDM namespace
+     * Note: implementation of IType::getFullTypeName.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->getFullTypeName();
+    }
 }

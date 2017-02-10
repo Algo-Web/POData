@@ -28,7 +28,7 @@ class EdmString implements IType
      */
     public function isCompatibleWith(IType $type)
     {
-        return $type->getTypeCode() == TypeCode::STRING;
+        return TypeCode::STRING == $type->getTypeCode();
     }
 
     /**
@@ -82,7 +82,7 @@ class EdmString implements IType
         //i.e. 'Antonio Moreno Taquería'
         //to Antonio Moreno Taquería
         $len = strlen($stringValue);
-        if ($len < 2) {
+        if (2 > $len) {
             return $stringValue;
         }
 
@@ -101,5 +101,16 @@ class EdmString implements IType
     public function convertToOData($value)
     {
         return '\'' . str_replace('%27', "''", urlencode(utf8_encode($value))) . '\'';
+    }
+
+    /**
+     * Gets full name of the type implementing this interface in EDM namespace
+     * Note: implementation of IType::getFullTypeName.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->getFullTypeName();
     }
 }

@@ -294,6 +294,7 @@ class ProvidersQueryWrapper
                         );
                     }
                 } catch (\ReflectionException $reflectionException) {
+                    // Left blank - we're simply squashing reflection exceptions
                 }
             }
         }
@@ -438,6 +439,7 @@ class ProvidersQueryWrapper
                     );
                 }
             } catch (\ReflectionException $reflectionException) {
+                // Left blank - we're simply squashing reflection exceptions
             }
         }
     }

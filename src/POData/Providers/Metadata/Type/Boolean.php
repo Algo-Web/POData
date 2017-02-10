@@ -28,7 +28,7 @@ class Boolean implements IType
      */
     public function isCompatibleWith(IType $type)
     {
-        return $type->getTypeCode() == TypeCode::BOOLEAN;
+        return TypeCode::BOOLEAN == $type->getTypeCode();
     }
 
     /**
@@ -43,7 +43,7 @@ class Boolean implements IType
      */
     public function validate($value, &$outValue)
     {
-        if (strcmp($value, 'true') != 0 && strcmp($value, 'false') != 0) {
+        if (0 != strcmp($value, 'true') && 0 != strcmp($value, 'false')) {
             return false;
         }
 
@@ -90,10 +90,21 @@ class Boolean implements IType
      */
     public function convert($stringValue)
     {
-        if (strcmp($stringValue, 'true') == 0) {
+        if (0 == strcmp($stringValue, 'true')) {
             return true;
         }
 
         return false;
+    }
+
+    /**
+     * Gets full name of the type implementing this interface in EDM namespace
+     * Note: implementation of IType::getFullTypeName.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->getFullTypeName();
     }
 }
