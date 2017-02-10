@@ -479,10 +479,8 @@ class SimpleMetadataProvider implements IMetadataProvider
     private function checkInstanceProperty($name, ResourceType $resourceType)
     {
         $instance = $resourceType->getInstanceType();
-        $typeName = $instance->getName();
-        $rawInstance = new $typeName(); // avoid clobbering retrieved $instance if we're not in Laravel
 
-        if (!method_exists($rawInstance, '__get')) {
+        if (!method_exists($instance, '__get')) {
             try {
                 $instance->getProperty($name);
             } catch (\ReflectionException $exception) {

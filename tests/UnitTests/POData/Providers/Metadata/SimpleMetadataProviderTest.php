@@ -9,6 +9,9 @@ use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\ResourceTypeKind;
 use POData\Providers\Metadata\SimpleMetadataProvider;
 use Mockery as m;
+use ReflectionClass;
+use ReflectionException;
+use UnitTests\POData\ObjectModel\reusableEntityClass1;
 use UnitTests\POData\ObjectModel\reusableEntityClass2;
 
 class SimpleMetadataProviderTest extends \PHPUnit_Framework_TestCase
@@ -171,7 +174,46 @@ class SimpleMetadataProviderTest extends \PHPUnit_Framework_TestCase
             $actual = $e->getMessage();
         }
         $this->assertEquals($expected, $actual);
-
     }
 
+    public function testAddComplexPropertyBadEntityTypeThrowException()
+    {
+        $type = m::mock(ResourceType::class);
+        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::PRIMITIVE);
+        $complexType = m::mock(ResourceType::class);
+        $foo = new SimpleMetadataProvider("string", "String");
+
+        $expected = 'Complex property can be added to an entity or another complex type';
+        $actual = null;
+
+        try {
+            $foo->addComplexProperty($type, "Time", $complexType);
+        } catch (InvalidOperationException $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testAddComplexPropertyWithMissingPropertyTypeThowException()
+    {
+        $deflect = m::mock(ReflectionClass::class);
+        $deflect->shouldReceive('getProperty')->andThrow(new ReflectionException('OH NOES!'));
+
+        $type = m::mock(ResourceType::class);
+        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY);
+        $type->shouldReceive('getInstanceType')->andReturn($deflect);
+
+        $complexType = m::mock(ResourceType::class);
+        $foo = new SimpleMetadataProvider("string", "String");
+
+        $expected = 'Can\'t add a property which does not exist on the instance type.';
+        $actual = null;
+
+        try {
+            $foo->addComplexProperty($type, "Time", $complexType);
+        } catch (InvalidOperationException $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
+    }
 }
