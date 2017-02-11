@@ -93,7 +93,7 @@ trait streamProviderWrapper
      */
     public static function streamProviderWrapperInvalidStreamInstance()
     {
-        return 'return \'IServiceProvider.GetService for IStreamProvider returns invalid object.';
+        return 'return \'IServiceProvider.GetService\' for IStreamProvider returns invalid object.';
     }
 
     /**
@@ -104,6 +104,6 @@ trait streamProviderWrapper
      */
     public static function streamProviderWrapperInvalidStream2Instance()
     {
-        return 'return \'IServiceProvider.GetService for IStreamProvider2 returns invalid object.';
+        return 'return \'IServiceProvider.GetService\' for IStreamProvider2 returns invalid object.';
     }
 }
