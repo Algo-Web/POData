@@ -161,6 +161,7 @@ class StreamProviderWrapper
             }
         } else {
             $this->_loadAndValidateStreamProvider2();
+            assert($this->_streamProvider instanceof IStreamProvider2);
             $contentType = $this->_streamProvider->getStreamContentType2($entity, $resourceStreamInfo, $opContext);
         }
 
@@ -198,6 +199,7 @@ class StreamProviderWrapper
             $eTag = $this->_streamProvider->getStreamETag($entity, $opContext);
         } else {
             $this->_loadAndValidateStreamProvider2();
+            assert($this->_streamProvider instanceof IStreamProvider2);
             $eTag = $this->_streamProvider->getStreamETag2($entity, $resourceStreamInfo, $opContext);
         }
 
@@ -247,6 +249,7 @@ class StreamProviderWrapper
             $readStreamUri = $this->_streamProvider->getReadStreamUri($entity, $opContext);
         } else {
             $this->_loadAndValidateStreamProvider2();
+            assert($this->_streamProvider instanceof IStreamProvider2);
             $readStreamUri = $this->_streamProvider->getReadStreamUri2($entity, $resourceStreamInfo, $opContext);
         }
 
@@ -432,9 +435,9 @@ class StreamProviderWrapper
     /**
      * Construct the default edit media uri from the given media link entry uri.
      *
-     * @param string             $mediaLinkEntryUri  Uri to the media link entry
-     * @param ResourceStreamInfo $resourceStreamInfo Stream info instance, if its
-     *                                               null default stream is assumed
+     * @param string                    $mediaLinkEntryUri  Uri to the media link entry
+     * @param ResourceStreamInfo|null   $resourceStreamInfo Stream info instance, if its
+     *                                                      null default stream is assumed
      *
      * @return string Uri to the media resource
      */
