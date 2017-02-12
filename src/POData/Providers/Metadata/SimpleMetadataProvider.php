@@ -3,6 +3,8 @@
 namespace POData\Providers\Metadata;
 
 use POData\Common\InvalidOperationException;
+use POData\Providers\Metadata\Type\TypeCode;
+use ReflectionClass;
 
 /**
  * Class SimpleMetadataProvider.
@@ -374,7 +376,9 @@ class SimpleMetadataProvider implements IMetadataProvider
         $primitiveResourceType = ResourceType::getPrimitiveResourceType($typeCode);
 
         if ($isETagProperty && $isBag) {
-            throw new InvalidOperationException('Only primitve property can be etag property, bag property cannot be etag property');
+            throw new InvalidOperationException(
+                'Only primitve property can be etag property, bag property cannot be etag property.'
+            );
         }
 
         $kind = $isKey ? ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::KEY : ResourcePropertyKind::PRIMITIVE;
@@ -479,8 +483,10 @@ class SimpleMetadataProvider implements IMetadataProvider
     private function checkInstanceProperty($name, ResourceType $resourceType)
     {
         $instance = $resourceType->getInstanceType();
+        assert($instance instanceof \ReflectionClass, get_class($instance));
+        $hasMagicGetter = $instance->hasMethod('__get');
 
-        if (!method_exists($instance, '__get')) {
+        if (!$hasMagicGetter) {
             try {
                 $instance->getProperty($name);
             } catch (\ReflectionException $exception) {

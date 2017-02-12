@@ -43,7 +43,7 @@ class ResourceClassesTest extends \PHPUnit_Framework_TestCase
             ResourceType::getPrimitiveResourceType(TypeCode::VOID);
             $this->fail('An expected InvalidArgumentException for \'EdmPrimitiveType\' has not been raised');
         } catch (\InvalidArgumentException $exception) {
-            $this->assertStringEndsWith('is not a valid EdmPrimitiveType Enum value', $exception->getMessage());
+            $this->assertStringEndsWith('is not a valid EdmPrimitiveType Enum value.', $exception->getMessage());
         }
 
         $int16ResType = new ResourceType(new Int16(), ResourceTypeKind::PRIMITIVE, 'Int16', 'Edm');
