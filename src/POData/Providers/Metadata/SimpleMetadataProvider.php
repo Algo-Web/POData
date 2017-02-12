@@ -483,12 +483,13 @@ class SimpleMetadataProvider implements IMetadataProvider
     private function checkInstanceProperty($name, ResourceType $resourceType)
     {
         $instance = $resourceType->getInstanceType();
-        assert($instance instanceof \ReflectionClass, get_class($instance));
         $hasMagicGetter = $instance->hasMethod('__get');
 
         if (!$hasMagicGetter) {
             try {
-                $instance->getProperty($name);
+                if ($instance instanceof \ReflectionClass) {
+                    $instance->getProperty($name);
+                }
             } catch (\ReflectionException $exception) {
                 throw new InvalidOperationException(
                     'Can\'t add a property which does not exist on the instance type.'
