@@ -2,6 +2,7 @@
 
 namespace UnitTests\POData\Providers\Metadata;
 
+use InvalidArgumentException;
 use POData\Common\InvalidOperationException;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceSet;
@@ -9,6 +10,7 @@ use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\ResourceTypeKind;
 use POData\Providers\Metadata\SimpleMetadataProvider;
 use Mockery as m;
+use POData\Providers\Metadata\Type\TypeCode;
 use ReflectionClass;
 use ReflectionException;
 use UnitTests\POData\ObjectModel\reusableEntityClass1;
@@ -198,6 +200,7 @@ class SimpleMetadataProviderTest extends \PHPUnit_Framework_TestCase
     {
         $deflect = m::mock(ReflectionClass::class);
         $deflect->shouldReceive('getProperty')->andThrow(new ReflectionException('OH NOES!'));
+        $deflect->shouldReceive('hasMethod')->withArgs(['__get'])->andReturn(false)->once();
 
         $type = m::mock(ResourceType::class);
         $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY);
@@ -211,6 +214,49 @@ class SimpleMetadataProviderTest extends \PHPUnit_Framework_TestCase
 
         try {
             $foo->addComplexProperty($type, "Time", $complexType);
+        } catch (InvalidOperationException $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testAddKeyPropertyWithMagicGetterMissingPropertyThrowsInvalidArgException()
+    {
+        $orig = new reusableEntityClass2("foo", "bar");
+        $entity = new \ReflectionClass($orig);
+
+        $foo = new SimpleMetadataProvider("string", "String");
+
+        $keyName = 'id';
+        $complex = $foo->addEntityType(new \ReflectionClass(get_class($orig)), 'table', 'data');
+
+        $expected = 'The argument \'$typeCode\' to getPrimitiveResourceType is not'.
+                    ' a valid EdmPrimitiveType Enum value.';
+        $actual = null;
+
+        try {
+            $foo->addKeyProperty($complex, $keyName, TypeCode::OBJECT);
+        } catch (InvalidArgumentException $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testAddKeyPropertyWithoutMagicGetterMissingPropertyThrowsInvalidOpException()
+    {
+        $orig = new reusableEntityClass1("foo", "bar");
+        $entity = new \ReflectionClass($orig);
+
+        $foo = new SimpleMetadataProvider("string", "String");
+
+        $keyName = 'id';
+        $complex = $foo->addEntityType(new \ReflectionClass(get_class($orig)), 'table', 'data');
+
+        $expected = 'Can\'t add a property which does not exist on the instance type.';
+        $actual = null;
+
+        try {
+            $foo->addKeyProperty($complex, $keyName, TypeCode::OBJECT);
         } catch (InvalidOperationException $e) {
             $actual = $e->getMessage();
         }

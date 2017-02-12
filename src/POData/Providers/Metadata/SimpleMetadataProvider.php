@@ -3,6 +3,9 @@
 namespace POData\Providers\Metadata;
 
 use POData\Common\InvalidOperationException;
+use POData\Providers\Metadata\Type\IType;
+use POData\Providers\Metadata\Type\TypeCode;
+use ReflectionClass;
 
 /**
  * Class SimpleMetadataProvider.
@@ -280,7 +283,7 @@ class SimpleMetadataProvider implements IMetadataProvider
      * @param ResourceType $resourceType resource type to which key property
      *                                   is to be added
      * @param string       $name         name of the property
-     * @param string       $typeCode     type of the etag property
+     * @param TypeCode     $typeCode     type of the etag property
      */
     public function addETagProperty($resourceType, $name, $typeCode)
     {
@@ -374,7 +377,9 @@ class SimpleMetadataProvider implements IMetadataProvider
         $primitiveResourceType = ResourceType::getPrimitiveResourceType($typeCode);
 
         if ($isETagProperty && $isBag) {
-            throw new InvalidOperationException('Only primitve property can be etag property, bag property cannot be etag property');
+            throw new InvalidOperationException(
+                'Only primitve property can be etag property, bag property cannot be etag property.'
+            );
         }
 
         $kind = $isKey ? ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::KEY : ResourcePropertyKind::PRIMITIVE;
@@ -479,10 +484,13 @@ class SimpleMetadataProvider implements IMetadataProvider
     private function checkInstanceProperty($name, ResourceType $resourceType)
     {
         $instance = $resourceType->getInstanceType();
+        $hasMagicGetter = $instance instanceof IType || $instance->hasMethod('__get');
 
-        if (!method_exists($instance, '__get')) {
+        if (!$hasMagicGetter) {
             try {
-                $instance->getProperty($name);
+                if ($instance instanceof \ReflectionClass) {
+                    $instance->getProperty($name);
+                }
             } catch (\ReflectionException $exception) {
                 throw new InvalidOperationException(
                     'Can\'t add a property which does not exist on the instance type.'

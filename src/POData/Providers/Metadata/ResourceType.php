@@ -2,6 +2,7 @@
 
 namespace POData\Providers\Metadata;
 
+use InvalidArgumentException;
 use POData\Providers\Metadata\Type\Binary;
 use POData\Providers\Metadata\Type\Boolean;
 use POData\Providers\Metadata\Type\Byte;
