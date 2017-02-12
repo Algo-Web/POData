@@ -199,7 +199,7 @@ class ObjectModelSerializerBaseTest extends \PHPUnit_Framework_TestCase
         $entity = new reusableEntityClass3("up", "down");
 
         $expected = "objectModelSerializer failed to access or initialize the property String of String,"
-                    ." Please contact provider";
+                    ." Please contact provider.";
         $actual = null;
         try {
             $foo->getPropertyValue($entity, $type, $property);

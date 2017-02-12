@@ -651,11 +651,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
             $odataProperty->value = null;
         } else {
             $resourceType = $resourceProperty->getResourceType();
-            $this->_primitiveToString(
-                $resourceType,
-                $primitiveValue,
-                $odataProperty->value
-            );
+            $this->_primitiveToString($resourceType, $primitiveValue, $odataProperty->value);
         }
     }
 
@@ -815,22 +811,23 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
             }
         }
     }
+
     /**
      * Convert the given primitive value to string.
      * Note: This method will not handle null primitive value.
      *
-     * @param ResourceType &$primtiveResourceType Type of the primitive property
+     * @param ResourceType &$primitiveResourceType Type of the primitive property
      *                                            whose value need to be converted
-     * @param mixed        $primitiveValue        Primitive value to convert
-     * @param string       &$stringValue          On return, this parameter will
+     * @param mixed $primitiveValue Primitive value to convert
+     * @param string &$stringValue On return, this parameter will
      *                                            contain converted value
      */
     private function _primitiveToString(
-        ResourceType & $primtiveResourceType,
+        ResourceType &$primitiveResourceType,
         $primitiveValue,
         &$stringValue
     ) {
-        $type = $primtiveResourceType->getInstanceType();
+        $type = $primitiveResourceType->getInstanceType();
         if ($type instanceof Boolean) {
             $stringValue = ($primitiveValue === true) ? 'true' : 'false';
         } elseif ($type instanceof Binary) {

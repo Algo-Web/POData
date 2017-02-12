@@ -5,6 +5,11 @@ namespace UnitTests\POData\ObjectModel;
 use POData\Common\ODataConstants;
 use POData\Common\InvalidOperationException;
 use POData\ObjectModel\ObjectModelSerializer;
+use POData\ObjectModel\ODataLink;
+use POData\ObjectModel\ODataProperty;
+use POData\ObjectModel\ODataPropertyContent;
+use POData\Providers\Metadata\ResourceSetWrapper;
+use POData\Providers\ProvidersWrapper;
 use POData\Providers\Query\QueryType;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetSource;
 use POData\UriProcessor\RequestDescription;
@@ -19,11 +24,14 @@ use POData\Providers\Metadata\Type\StringType;
 use POData\Providers\Metadata\Type\DateTime;
 use POData\Common\ODataException;
 use POData\Common\Messages;
+use POData\Common\Url;
+
 use Mockery as m;
 
 class ObjectModelSerializerTest extends \PHPUnit_Framework_TestCase
 {
     private $mockRequest;
+    private $mockWrapper;
 
     public function Construct()
     {
@@ -32,6 +40,7 @@ class ObjectModelSerializerTest extends \PHPUnit_Framework_TestCase
         $request = m::mock(RequestDescription::class)->makePartial();
         $wrapper = m::mock(ProvidersWrapper::class)->makePartial();
         $this->mockRequest = $request;
+        $this->mockWrapper = $wrapper;
         $serviceHost = m::mock(\POData\OperationContext\ServiceHost::class)->makePartial();
         $serviceHost->shouldReceive('getAbsoluteServiceUri')->andReturn($AbsoluteServiceURL);
         $wrapper->shouldReceive('getResourceProperties')->andReturn([]);
@@ -148,6 +157,241 @@ class ObjectModelSerializerTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($ret->entries[0]->propertyContent instanceof \POData\ObjectModel\ODataPropertyContent);
         $this->assertTrue($ret->entries[1]->propertyContent instanceof \POData\ObjectModel\ODataPropertyContent);
     }
+
+    public function testWriteNullPrimitive()
+    {
+        $foo = $this->Construct();
+
+        $primVal = null;
+        $property = m::mock(ResourceProperty::class);
+        $property->shouldReceive('getName')->andReturn('name');
+        $property->shouldReceive('getInstanceType->getFullTypeName')->andReturn('typeName');
+
+        $result = $foo->writeTopLevelPrimitive($primVal, $property);
+        $this->assertTrue($result instanceof ODataPropertyContent, get_class($result));
+        $this->assertEquals('name', $result->properties[0]->name);
+        $this->assertEquals('typeName', $result->properties[0]->typeName);
+        $this->assertEquals(null, $result->properties[0]->value);
+    }
+
+    public function testWriteBooleanPrimitive()
+    {
+        $foo = $this->Construct();
+
+        $type = m::mock(ResourceType::class);
+        $type->shouldReceive('getInstanceType')->andReturn(new Boolean());
+
+        $primVal = true;
+        $property = m::mock(ResourceProperty::class);
+        $property->shouldReceive('getName')->andReturn('name');
+        $property->shouldReceive('getInstanceType->getFullTypeName')->andReturn('typeName');
+        $property->shouldReceive('getResourceType')->andReturn($type);
+
+        $result = $foo->writeTopLevelPrimitive($primVal, $property);
+        $this->assertTrue($result instanceof ODataPropertyContent, get_class($result));
+        $this->assertEquals('name', $result->properties[0]->name);
+        $this->assertEquals('typeName', $result->properties[0]->typeName);
+        $this->assertEquals('true', $result->properties[0]->value);
+    }
+
+    public function testWriteBinaryPrimitive()
+    {
+        $foo = $this->Construct();
+
+        $type = m::mock(ResourceType::class);
+        $type->shouldReceive('getInstanceType')->andReturn(new Binary());
+
+        $primVal = 'aybabtu';
+        $property = m::mock(ResourceProperty::class);
+        $property->shouldReceive('getName')->andReturn('name');
+        $property->shouldReceive('getInstanceType->getFullTypeName')->andReturn('typeName');
+        $property->shouldReceive('getResourceType')->andReturn($type);
+
+        $result = $foo->writeTopLevelPrimitive($primVal, $property);
+        $this->assertTrue($result instanceof ODataPropertyContent, get_class($result));
+        $this->assertEquals('name', $result->properties[0]->name);
+        $this->assertEquals('typeName', $result->properties[0]->typeName);
+        $this->assertEquals('YXliYWJ0dQ==', $result->properties[0]->value);
+    }
+
+    public function testWriteDateTimePrimitive()
+    {
+        $foo = $this->Construct();
+
+        $type = m::mock(ResourceType::class);
+        $type->shouldReceive('getInstanceType')->andReturn(new DateTime());
+
+        $primVal = new \DateTime('2016-01-01');
+        $property = m::mock(ResourceProperty::class);
+        $property->shouldReceive('getName')->andReturn('name');
+        $property->shouldReceive('getInstanceType->getFullTypeName')->andReturn('typeName');
+        $property->shouldReceive('getResourceType')->andReturn($type);
+
+        $result = $foo->writeTopLevelPrimitive($primVal, $property);
+        $this->assertTrue($result instanceof ODataPropertyContent, get_class($result));
+        $this->assertEquals('name', $result->properties[0]->name);
+        $this->assertEquals('typeName', $result->properties[0]->typeName);
+        $this->assertEquals('2016-01-01T', substr($result->properties[0]->value, 0, 11));
+    }
+
+    public function testWriteStringPrimitive()
+    {
+        $foo = $this->Construct();
+
+        $type = m::mock(ResourceType::class);
+        $type->shouldReceive('getInstanceType')->andReturn(new StringType());
+
+        $primVal = "Börk, börk, börk!";
+        $property = m::mock(ResourceProperty::class);
+        $property->shouldReceive('getName')->andReturn('name');
+        $property->shouldReceive('getInstanceType->getFullTypeName')->andReturn('typeName');
+        $property->shouldReceive('getResourceType')->andReturn($type);
+
+        $result = $foo->writeTopLevelPrimitive($primVal, $property);
+        $this->assertTrue($result instanceof ODataPropertyContent, get_class($result));
+        $this->assertEquals('name', $result->properties[0]->name);
+        $this->assertEquals('typeName', $result->properties[0]->typeName);
+        $this->assertEquals('BÃ¶rk, bÃ¶rk, bÃ¶rk!', $result->properties[0]->value);
+    }
+
+    public function testWriteNullTypePrimitive()
+    {
+        $foo = $this->Construct();
+
+        $type = m::mock(ResourceType::class);
+        $type->shouldReceive('getInstanceType')->andReturn(null);
+
+        $primVal = "Börk, börk, börk!";
+        $property = m::mock(ResourceProperty::class);
+        $property->shouldReceive('getName')->andReturn('name');
+        $property->shouldReceive('getInstanceType->getFullTypeName')->andReturn('typeName');
+        $property->shouldReceive('getResourceType')->andReturn($type);
+
+        $result = $foo->writeTopLevelPrimitive($primVal, $property);
+        $this->assertTrue($result instanceof ODataPropertyContent, get_class($result));
+        $this->assertEquals('name', $result->properties[0]->name);
+        $this->assertEquals('typeName', $result->properties[0]->typeName);
+        $this->assertEquals("Börk, börk, börk!", $result->properties[0]->value);
+    }
+
+    public function testWriteNullUrlElement()
+    {
+        $foo = $this->Construct();
+
+        $result = $foo->writeUrlElement(null);
+        $this->assertEquals(null, $result->url);
+    }
+
+    public function testWriteNonNullUrlElement()
+    {
+        $type = m::mock(ResourceType::class);
+
+        $wrap = m::mock(ResourceSetWrapper::class);
+        $wrap->shouldReceive('getResourceType')->andReturn($type);
+        $wrap->shouldReceive('getName')->andReturn('resourceWrapper');
+
+        $foo = m::mock(ObjectModelSerializer::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $foo->shouldReceive('getCurrentResourceSetWrapper')->andReturn($wrap);
+        $foo->shouldReceive('getEntryInstanceKey')->andReturn('customer')->once();
+
+        $result = $foo->writeUrlElement('bar');
+        $this->assertEquals('/customer', $result->url);
+    }
+
+    public function testWriteNullUrlCollection()
+    {
+        $foo = $this->Construct();
+        $this->mockRequest->queryType = QueryType::ENTITIES_WITH_COUNT();
+        $this->mockRequest->shouldReceive('getCountValue')->andReturn(1);
+        $result = $foo->writeUrlElements(null);
+        $this->assertEquals(0, count($result->urls));
+        $this->assertNull($result->nextPageLink);
+        $this->assertEquals(1, $result->count);
+    }
+
+    public function testWriteNonNullUrlCollection()
+    {
+        $url = new Url('https://www.example.org/odata.svc');
+
+        $odataLink = new ODataLink();
+        $odataLink->name = ODataConstants::ATOM_LINK_NEXT_ATTRIBUTE_STRING;
+        $odataLink->url = 'https://www.example.org/odata.svc/customer?skipToken=200';
+
+        $resourceWrap = m::mock(ResourceSetWrapper::class);
+
+        $foo = $this->Construct();
+
+        $this->mockRequest->queryType = QueryType::ENTITIES_WITH_COUNT();
+        $this->mockRequest->shouldReceive('getCountValue')->andReturn(2);
+        $this->mockRequest->shouldReceive('getRequestUrl')->andReturn($url);
+        $this->mockRequest->shouldReceive('getTargetResourceSetWrapper')->andReturn($resourceWrap);
+
+        $objects = [ 'customer', 'supplier'];
+
+        $foo = m::mock(ObjectModelSerializer::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $foo->shouldReceive('writeUrlElement')->withArgs(['supplier'])->andReturn('/supplier')->once();
+        $foo->shouldReceive('writeUrlElement')->withArgs(['customer'])->andReturn('/customer')->once();
+        $foo->shouldReceive('getStack->getSegmentWrappers')->andReturn([]);
+        $foo->shouldReceive('getRequest')->andReturn($this->mockRequest);
+        $foo->shouldReceive('needNextPageLink')->andReturn(true)->once();
+        $foo->shouldReceive('getNextLinkUri')->andReturn($odataLink)->once();
+
+        $result = $foo->writeUrlElements($objects);
+        $expectedUrl = $odataLink->url;
+        $this->assertEquals($expectedUrl, $result->nextPageLink->url);
+        $this->assertEquals(2, $result->count);
+    }
+
+    public function testWriteNullComplexValue()
+    {
+        $complexValue = null;
+        $propertyName = 'property';
+        $type = m::mock(ResourceType::class);
+        $type->shouldReceive('getFullName')->andReturn('typeName')->once();
+
+        $foo = $this->Construct();
+        $result = $foo->writeTopLevelComplexObject($complexValue, $propertyName, $type);
+        $this->assertTrue($result instanceof ODataPropertyContent);
+        $this->assertTrue($result->properties[0] instanceof ODataProperty);
+        $this->assertNull($result->properties[0]->value);
+        $this->assertNull($result->properties[0]->attributeExtensions);
+        $this->assertEquals('property', $result->properties[0]->name);
+        $this->assertEquals('typeName', $result->properties[0]->typeName);
+    }
+
+    public function testWriteNonNullComplexValue()
+    {
+        $propType = m::mock(ResourceType::class);
+        $propType->shouldReceive('getFullTypeName')->andReturn('fullName');
+        $propType->shouldReceive('getInstanceType')->andReturn($propType);
+
+        $resProperty = m::mock(ResourceProperty::class);
+        $resProperty->shouldReceive('getKind')->andReturn(24);
+        $resProperty->shouldReceive('getName')->andReturn('name');
+        $resProperty->shouldReceive('getInstanceType')->andReturn($propType);
+        $resProperty->shouldReceive('getResourceType')->andReturn($propType);
+        $resProperty->shouldReceive('isKindOf')->passthru();
+
+        $complexValue = new reusableEntityClass2('2016-12-25', null);
+        $propertyName = 'property';
+        $type = m::mock(ResourceType::class);
+        $type->shouldReceive('getFullName')->andReturn('typeName')->once();
+        $type->shouldReceive('getName')->andReturn('typeName')->once();
+        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::COMPLEX)->once();
+        $type->shouldReceive('getAllProperties')->andReturn([$resProperty]);
+
+        $foo = $this->Construct();
+        $result = $foo->writeTopLevelComplexObject($complexValue, $propertyName, $type);
+        $this->assertTrue($result instanceof ODataPropertyContent);
+        $this->assertTrue($result->properties[0] instanceof ODataProperty);
+        $this->assertNull($result->properties[0]->attributeExtensions);
+        //$this->assertNull($result->properties[0]->value);
+        $this->assertTrue($result->properties[0]->value instanceof ODataPropertyContent);
+        $this->assertTrue($result->properties[0]->value->properties[0] instanceof ODataProperty);
+        $this->assertEquals('name', $result->properties[0]->value->properties[0]->name);
+        $this->assertEquals('fullName', $result->properties[0]->value->properties[0]->typeName);
+    }
+
 }
 
 class reusableEntityClass4

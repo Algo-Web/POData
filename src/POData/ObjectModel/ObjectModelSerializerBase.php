@@ -132,7 +132,6 @@ class ObjectModelSerializerBase
         foreach ($keyProperties as $keyName => $resourceProperty) {
             $keyType = $resourceProperty->getInstanceType();
             assert($keyType instanceof IType, '$keyType not instanceof IType');
-
             $keyValue = $this->getPropertyValue($entityInstance, $resourceType, $resourceProperty);
             if (is_null($keyValue)) {
                 throw ODataException::createInternalServerError(
