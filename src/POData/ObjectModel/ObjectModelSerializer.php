@@ -436,10 +436,11 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
 
             //First write out primitve types
             foreach ($resourceProperties as $name => $resourceProperty) {
-                if ($resourceProperty->getKind() == ResourcePropertyKind::PRIMITIVE
-                    || $resourceProperty->getKind() == (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::KEY)
-                    || $resourceProperty->getKind() == (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::ETAG)
-                    || $resourceProperty->getKind() == (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::KEY | ResourcePropertyKind::ETAG)
+                $resourceKind = $resourceProperty->getKind();
+                if ($resourceKind == ResourcePropertyKind::PRIMITIVE
+                    || $resourceKind == (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::KEY)
+                    || $resourceKind == (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::ETAG)
+                    || $resourceKind == (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::KEY | ResourcePropertyKind::ETAG)
                 ) {
                     $odataProperty = new ODataProperty();
                     $primitiveValue = $this->getPropertyValue($customObject, $resourceType, $resourceProperty);
@@ -463,8 +464,8 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
                         $odataPropertyContent
                     );
                 } else {
-                    $resourcePropertyKind = $resourceProperty->getKind();
-                    if ($resourcePropertyKind == ResourcePropertyKind::COMPLEX_TYPE) {
+                    $resourceKind = $resourceProperty->getKind();
+                    if ($resourceKind == ResourcePropertyKind::COMPLEX_TYPE) {
                         $propertyValue = $this->getPropertyValue($customObject, $resourceType, $resourceProperty);
                         $resourceType1 = $resourceProperty->getResourceType();
                         $this->_writeComplexValue(
@@ -474,18 +475,18 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
                             $relativeUri . '/' . $resourceProperty->getName(),
                             $odataPropertyContent
                         );
-                    } elseif ($resourceProperty->getKind() == ResourcePropertyKind::PRIMITIVE
-                        || $resourceProperty->getKind() == (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::KEY)
-                        || $resourceProperty->getKind() == (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::ETAG)
-                        || $resourceProperty->getKind() == (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::KEY | ResourcePropertyKind::ETAG)
+                    } elseif ($resourceKind == ResourcePropertyKind::PRIMITIVE
+                        || $resourceKind == (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::KEY)
+                        || $resourceKind == (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::ETAG)
+                        || $resourceKind == (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::KEY | ResourcePropertyKind::ETAG)
                     ) {
                         continue;
                     } else {
                         assert(
-                            ($resourcePropertyKind == ResourcePropertyKind::RESOURCE_REFERENCE)
-                             || ($resourcePropertyKind == ResourcePropertyKind::RESOURCESET_REFERENCE),
-                            '($resourcePropertyKind != ResourcePropertyKind::RESOURCE_REFERENCE)
-                             && ($resourcePropertyKind != ResourcePropertyKind::RESOURCESET_REFERENCE)'
+                            ($resourceKind == ResourcePropertyKind::RESOURCE_REFERENCE)
+                             || ($resourceKind == ResourcePropertyKind::RESOURCESET_REFERENCE),
+                            '($resourceKind != ResourcePropertyKind::RESOURCE_REFERENCE)
+                             && ($resourceKind != ResourcePropertyKind::RESOURCESET_REFERENCE)'
                         );
 
                         $navigationProperties[$i] = new NavigationPropertyInfo($resourceProperty, $this->shouldExpandSegment($resourceProperty->getName()));
@@ -870,7 +871,9 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
         $count = count($this->complexTypeInstanceCollection);
         for ($i = 0; $i < $count; ++$i) {
             if ($this->complexTypeInstanceCollection[$i] === $complexValue) {
-                throw new InvalidOperationException(Messages::objectModelSerializerLoopsNotAllowedInComplexTypes($propertyName));
+                throw new InvalidOperationException(
+                    Messages::objectModelSerializerLoopsNotAllowedInComplexTypes($propertyName)
+                );
             }
         }
 
