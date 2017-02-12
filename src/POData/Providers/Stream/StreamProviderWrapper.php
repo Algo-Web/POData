@@ -78,13 +78,14 @@ class StreamProviderWrapper
         $stream = null;
         try {
             $this->_saveContentTypeAndETag();
+            $opContext = $this->_service->getOperationContext();
             if (is_null($resourceStreamInfo)) {
                 $this->_loadAndValidateStreamProvider();
                 $stream = $this->_streamProvider->getReadStream(
                     $entity,
                     $requestETag,
                     $checkETagForEquality,
-                    $this->_service->getOperationContext()
+                    $opContext
                 );
             } else {
                 $this->_loadAndValidateStreamProvider2();
@@ -93,14 +94,14 @@ class StreamProviderWrapper
                     $resourceStreamInfo,
                     $requestETag,
                     $checkETagForEquality,
-                    $this->_service->getOperationContext()
+                    $opContext
                 );
             }
 
             $this->_verifyContentTypeOrETagModified('IDSSP::getReadStream');
         } catch (ODataException $ex) {
             //Check for status code 304 (stream Not Modified)
-            if ($ex->getStatusCode() == 304) {
+            if (304 == $ex->getStatusCode()) {
                 $eTag = $this->getStreamETag($entity, $resourceStreamInfo);
                 if (!is_null($eTag)) {
                     $this->_service->getHost()->setResponseETag($eTag);
@@ -109,18 +110,16 @@ class StreamProviderWrapper
             throw $ex;
         }
 
-        if ($resourceStreamInfo == null) {
-            // For default streams, we always expect getReadStream()
-            // to return a non-null stream.
-            if (is_null($stream)) {
+        if (null == $stream) {
+            if (null == $resourceStreamInfo) {
+                // For default streams, we always expect getReadStream()
+                // to return a non-null stream.  If we reach here, blow up.
                 throw new InvalidOperationException(
                     Messages::streamProviderWrapperInvalidStreamFromGetReadStream()
                 );
-            }
-        } else {
-            // For named streams, getReadStream() can return null to indicate
-            // that the stream has not been created.
-            if (is_null($stream)) {
+            } else {
+                // For named streams, getReadStream() can return null to indicate
+                // that the stream has not been created.
                 // 204 == no content
                 $this->_service->getHost()->setResponseStatusCode(204);
             }
@@ -151,12 +150,10 @@ class StreamProviderWrapper
     {
         $contentType = null;
         $this->_saveContentTypeAndETag();
+        $opContext = $this->_service->getOperationContext();
         if (is_null($resourceStreamInfo)) {
             $this->_loadAndValidateStreamProvider();
-            $contentType = $this->_streamProvider->getStreamContentType(
-                $entity,
-                $this->_service->getOperationContext()
-            );
+            $contentType = $this->_streamProvider->getStreamContentType($entity, $opContext);
             if (is_null($contentType)) {
                 throw new InvalidOperationException(
                     Messages::streamProviderWrapperGetStreamContentTypeReturnsEmptyOrNull()
@@ -164,11 +161,8 @@ class StreamProviderWrapper
             }
         } else {
             $this->_loadAndValidateStreamProvider2();
-            $contentType = $this->_streamProvider->getStreamContentType2(
-                $entity,
-                $resourceStreamInfo,
-                $this->_service->getOperationContext()
-            );
+            assert($this->_streamProvider instanceof IStreamProvider2);
+            $contentType = $this->_streamProvider->getStreamContentType2($entity, $resourceStreamInfo, $opContext);
         }
 
         $this->_verifyContentTypeOrETagModified('IDSSP::getStreamContentType');
@@ -199,19 +193,14 @@ class StreamProviderWrapper
     {
         $eTag = null;
         $this->_saveContentTypeAndETag();
+        $opContext = $this->_service->getOperationContext();
         if (is_null($resourceStreamInfo)) {
             $this->_loadAndValidateStreamProvider();
-            $eTag = $this->_streamProvider->getStreamETag(
-                $entity,
-                $this->_service->getOperationContext()
-            );
+            $eTag = $this->_streamProvider->getStreamETag($entity, $opContext);
         } else {
             $this->_loadAndValidateStreamProvider2();
-            $eTag = $this->_streamProvider->getStreamETag2(
-                $entity,
-                $resourceStreamInfo,
-                $this->_service->getOperationContext()
-            );
+            assert($this->_streamProvider instanceof IStreamProvider2);
+            $eTag = $this->_streamProvider->getStreamETag2($entity, $resourceStreamInfo, $opContext);
         }
 
         $this->_verifyContentTypeOrETagModified('IDSSP::getStreamETag');
@@ -254,19 +243,14 @@ class StreamProviderWrapper
     ) {
         $readStreamUri = null;
         $this->_saveContentTypeAndETag();
+        $opContext = $this->_service->getOperationContext();
         if (is_null($resourceStreamInfo)) {
             $this->_loadAndValidateStreamProvider();
-            $readStreamUri = $this->_streamProvider->getReadStreamUri(
-                $entity,
-                $this->_service->getOperationContext()
-            );
+            $readStreamUri = $this->_streamProvider->getReadStreamUri($entity, $opContext);
         } else {
             $this->_loadAndValidateStreamProvider2();
-            $readStreamUri = $this->_streamProvider->getReadStreamUri2(
-                $entity,
-                $resourceStreamInfo,
-                $this->_service->getOperationContext()
-            );
+            assert($this->_streamProvider instanceof IStreamProvider2);
+            $readStreamUri = $this->_streamProvider->getReadStreamUri2($entity, $resourceStreamInfo, $opContext);
         }
 
         $this->_verifyContentTypeOrETagModified('IDSSP::getReadStreamUri');
@@ -282,11 +266,7 @@ class StreamProviderWrapper
             if (is_null($resourceStreamInfo)) {
                 // For MLEs the content src attribute is
                 //required so we cannot return null.
-                $readStreamUri
-                    = $this->getDefaultStreamEditMediaUri(
-                        $mediaLinkEntryUri,
-                        null
-                    );
+                $readStreamUri = $this->getDefaultStreamEditMediaUri($mediaLinkEntryUri, null);
             }
         }
 
@@ -306,7 +286,7 @@ class StreamProviderWrapper
      */
     public static function isETagValueValid($etag, $allowStrongEtag)
     {
-        if (is_null($etag) || $etag === '*') {
+        if (is_null($etag) || '*' === $etag) {
             return true;
         }
 
@@ -316,12 +296,11 @@ class StreamProviderWrapper
         //   opaque-tag = quoted-string
         $etagValueStartIndex = 1;
         $eTagLength = strlen($etag);
+        $isLastCharDubQuotes = ('"' == $etag[$eTagLength - 1]);
 
-        if (strpos($etag, 'W/"') === 0 && $etag[$eTagLength - 1] == '"') {
+        if (0 === strpos($etag, 'W/"') && $isLastCharDubQuotes) {
             $etagValueStartIndex = 3;
-        } elseif (!$allowStrongEtag || $etag[0] != '"'
-            || $etag[$eTagLength - 1] != '"'
-        ) {
+        } elseif (!$allowStrongEtag || '"' != $etag[0] || !$isLastCharDubQuotes) {
             return false;
         }
 
@@ -332,7 +311,7 @@ class StreamProviderWrapper
             // something like this: W/"etag values", W/"etag values", ...
             // To make sure only one etag is specified, we need to ensure
             // that if " is part of the key value, it needs to be escaped.
-            if ($etag[$i] == '"') {
+            if ('"' == $etag[$i]) {
                 return false;
             }
         }
@@ -402,9 +381,7 @@ class StreamProviderWrapper
      */
     private function _loadAndValidateStreamProvider2()
     {
-        $maxServiceVersion = $this->_service
-            ->getConfiguration()
-            ->getMaxDataServiceVersion();
+        $maxServiceVersion = $this->_service->getConfiguration()->getMaxDataServiceVersion();
         if ($maxServiceVersion->compare(new Version(3, 0)) < 0) {
             throw ODataException::createInternalServerError(
                 Messages::streamProviderWrapperMaxProtocolVersionMustBeV3OrAboveToSupportNamedStreams()
@@ -434,12 +411,10 @@ class StreamProviderWrapper
     private function _loadStreamProvider()
     {
         if (is_null($this->_streamProvider)) {
-            $maxServiceVersion = $this->_service
-                ->getConfiguration()
-                ->getMaxDataServiceVersion();
+            $maxServiceVersion = $this->_service->getConfiguration()->getMaxDataServiceVersion();
             if ($maxServiceVersion->compare(new Version(3, 0)) >= 0) {
                 $this->_streamProvider = $this->_service->getService('IStreamProvider2');
-                if (!is_null($this->_streamProvider) && (!is_object($this->_streamProvider) || !$this->_streamProvider instanceof IStreamProvider2)) {
+                if (!is_null($this->_streamProvider) && (!$this->_streamProvider instanceof IStreamProvider2)) {
                     throw ODataException::createInternalServerError(
                         Messages::streamProviderWrapperInvalidStream2Instance()
                     );
@@ -448,7 +423,7 @@ class StreamProviderWrapper
 
             if (is_null($this->_streamProvider)) {
                 $this->_streamProvider = $this->_service->getService('IStreamProvider');
-                if (!is_null($this->_streamProvider) && (!is_object($this->_streamProvider) || !$this->_streamProvider instanceof IStreamProvider)) {
+                if (!is_null($this->_streamProvider) && (!$this->_streamProvider instanceof IStreamProvider)) {
                     throw ODataException::createInternalServerError(
                         Messages::streamProviderWrapperInvalidStreamInstance()
                     );
@@ -460,19 +435,18 @@ class StreamProviderWrapper
     /**
      * Construct the default edit media uri from the given media link entry uri.
      *
-     * @param string             $mediaLinkEntryUri  Uri to the media link entry
-     * @param ResourceStreamInfo $resourceStreamInfo Stream info instance, if its
-     *                                               null default stream is assumed
+     * @param string                    $mediaLinkEntryUri  Uri to the media link entry
+     * @param ResourceStreamInfo|null   $resourceStreamInfo Stream info instance, if its
+     *                                                      null default stream is assumed
      *
      * @return string Uri to the media resource
      */
     public function getDefaultStreamEditMediaUri($mediaLinkEntryUri, $resourceStreamInfo)
     {
-        if (is_null($resourceStreamInfo)) {
-            return rtrim($mediaLinkEntryUri, '/') . '/' . ODataConstants::URI_VALUE_SEGMENT;
-        } else {
-            return rtrim($mediaLinkEntryUri, '/') . '/' . ltrim($resourceStreamInfo->getName(), '/');
-        }
+        $base = rtrim($mediaLinkEntryUri, '/') . '/';
+        $end = (null == $resourceStreamInfo) ? ODataConstants::URI_VALUE_SEGMENT
+            : ltrim($resourceStreamInfo->getName(), '/');
+        return $base . $end;
     }
 
     /**
