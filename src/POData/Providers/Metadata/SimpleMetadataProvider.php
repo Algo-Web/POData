@@ -282,7 +282,7 @@ class SimpleMetadataProvider implements IMetadataProvider
      * @param ResourceType $resourceType resource type to which key property
      *                                   is to be added
      * @param string       $name         name of the property
-     * @param string       $typeCode     type of the etag property
+     * @param TypeCode     $typeCode     type of the etag property
      */
     public function addETagProperty($resourceType, $name, $typeCode)
     {
