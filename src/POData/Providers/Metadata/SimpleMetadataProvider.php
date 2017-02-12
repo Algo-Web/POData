@@ -3,6 +3,7 @@
 namespace POData\Providers\Metadata;
 
 use POData\Common\InvalidOperationException;
+use POData\Providers\Metadata\Type\IType;
 use POData\Providers\Metadata\Type\TypeCode;
 use ReflectionClass;
 
@@ -483,7 +484,7 @@ class SimpleMetadataProvider implements IMetadataProvider
     private function checkInstanceProperty($name, ResourceType $resourceType)
     {
         $instance = $resourceType->getInstanceType();
-        $hasMagicGetter = $instance->hasMethod('__get');
+        $hasMagicGetter = $instance instanceof IType || $instance->hasMethod('__get');
 
         if (!$hasMagicGetter) {
             try {
