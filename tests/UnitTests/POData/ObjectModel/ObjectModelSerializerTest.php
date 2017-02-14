@@ -5,6 +5,7 @@ namespace UnitTests\POData\ObjectModel;
 use POData\Common\ODataConstants;
 use POData\Common\InvalidOperationException;
 use POData\ObjectModel\ObjectModelSerializer;
+use POData\ObjectModel\ODataBagContent;
 use POData\ObjectModel\ODataLink;
 use POData\ObjectModel\ODataProperty;
 use POData\ObjectModel\ODataPropertyContent;
@@ -390,6 +391,134 @@ class ObjectModelSerializerTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($result->properties[0]->value->properties[0] instanceof ODataProperty);
         $this->assertEquals('name', $result->properties[0]->value->properties[0]->name);
         $this->assertEquals('fullName', $result->properties[0]->value->properties[0]->typeName);
+    }
+
+    public function testWriteTopLevelBagObjectTripAssertion()
+    {
+        $type = m::mock(ResourceType::class);
+        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY)->once();
+
+        $bag = null;
+
+        $foo = $this->Construct();
+
+        $expected = 'assert(): $bagItemResourceTypeKind != ResourceTypeKind::PRIMITIVE &&'
+                    .' $bagItemResourceTypeKind != ResourceTypeKind::COMPLEX failed';
+        $actual = null;
+
+        try {
+            $foo->writeTopLevelBagObject($bag, 'property', $type);
+        } catch (\PHPUnit_Framework_Error_Warning $e) {
+            $actual = $e->getMessage();
+        }
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testWriteTopLevelBagObjectNull()
+    {
+        $type = m::mock(ResourceType::class);
+        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::PRIMITIVE)->once();
+        $type->shouldReceive('getFullName')->andReturn('fullName');
+
+        $bag = null;
+
+        $foo = $this->Construct();
+
+        $result = $foo->writeTopLevelBagObject($bag, 'property', $type);
+        $this->assertTrue($result instanceof ODataPropertyContent);
+        $this->assertTrue($result->properties[0] instanceof ODataProperty);
+        $this->assertNull($result->properties[0]->attributeExtensions);
+        $this->assertNull($result->properties[0]->value);
+        $this->assertEquals('property', $result->properties[0]->name);
+        $this->assertEquals('Collection(fullName)', $result->properties[0]->typeName);
+    }
+
+    public function testWriteTopLevelBagObjectEmptyArray()
+    {
+        $type = m::mock(ResourceType::class);
+        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::PRIMITIVE)->once();
+        $type->shouldReceive('getFullName')->andReturn('fullName');
+
+        $bag = [];
+
+        $foo = $this->Construct();
+
+        $result = $foo->writeTopLevelBagObject($bag, 'property', $type);
+        $this->assertTrue($result instanceof ODataPropertyContent);
+        $this->assertTrue($result->properties[0] instanceof ODataProperty);
+        $this->assertNull($result->properties[0]->attributeExtensions);
+        $this->assertNull($result->properties[0]->value);
+        $this->assertEquals('property', $result->properties[0]->name);
+        $this->assertEquals('Collection(fullName)', $result->properties[0]->typeName);
+    }
+
+    public function testWriteTopLevelBagObjectArrayOfNulls()
+    {
+        $type = m::mock(ResourceType::class);
+        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::PRIMITIVE)->once();
+        $type->shouldReceive('getFullName')->andReturn('fullName');
+
+        $bag = [null, null];
+
+        $foo = $this->Construct();
+
+        $result = $foo->writeTopLevelBagObject($bag, 'property', $type);
+        $this->assertTrue($result instanceof ODataPropertyContent);
+        $this->assertTrue($result->properties[0] instanceof ODataProperty);
+        $this->assertNull($result->properties[0]->attributeExtensions);
+        $this->assertTrue($result->properties[0]->value instanceof ODataBagContent);
+        $this->assertNull($result->properties[0]->value->type);
+        $this->assertNull($result->properties[0]->value->propertyContents);
+        $this->assertEquals('property', $result->properties[0]->name);
+        $this->assertEquals('Collection(fullName)', $result->properties[0]->typeName);
+    }
+
+    public function testWriteTopLevelBagObjectActualObject()
+    {
+        $type = m::mock(ResourceType::class);
+        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::PRIMITIVE)->once();
+        $type->shouldReceive('getFullName')->andReturn('fullName');
+
+        $bag = new \DateTime();
+
+        $foo = $this->Construct();
+
+        $expected = 'assert(): Bag parameter must be null or array failed';
+        $actual = null;
+
+        try {
+            $foo->writeTopLevelBagObject($bag, 'property', $type);
+        } catch (\PHPUnit_Framework_Error_Warning $e) {
+            $actual = $e->getMessage();
+        }
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testWriteTopLevelBagObjectArrayOfPrimitiveObjects()
+    {
+        $type = m::mock(ResourceType::class);
+        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::PRIMITIVE)->once();
+        $type->shouldReceive('getFullName')->andReturn('fullName');
+        $type->shouldReceive('getInstanceType')->andReturn(new \POData\Providers\Metadata\Type\EdmString());
+
+        $bag = [ 'foo', 123];
+        $expected = ['foo', '123'];
+
+        $foo = $this->Construct();
+
+        $result = $foo->writeTopLevelBagObject($bag, 'property', $type);
+        $this->assertTrue($result instanceof ODataPropertyContent);
+        $this->assertTrue($result->properties[0] instanceof ODataProperty);
+        $this->assertNull($result->properties[0]->attributeExtensions);
+        $this->assertTrue($result->properties[0]->value instanceof ODataBagContent);
+        $this->assertNull($result->properties[0]->value->type);
+        $this->assertTrue(is_array($result->properties[0]->value->propertyContents));
+        $this->assertEquals($expected, $result->properties[0]->value->propertyContents);
+        $this->assertEquals('property', $result->properties[0]->name);
+        $this->assertEquals('Collection(fullName)', $result->properties[0]->typeName);
+
     }
 
 }

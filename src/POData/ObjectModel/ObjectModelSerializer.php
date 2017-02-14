@@ -717,39 +717,40 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
         $relativeUri,
         ODataPropertyContent & $odataPropertyContent
     ) {
+        assert(null == $BagValue || is_array($BagValue), "Bag parameter must be null or array");
         $bagItemResourceTypeKind = $resourceType->getResourceTypeKind();
         assert(
             $bagItemResourceTypeKind == ResourceTypeKind::PRIMITIVE
             || $bagItemResourceTypeKind == ResourceTypeKind::COMPLEX,
-            '$bagItemResourceTypeKind != ResourceTypeKind::PRIMITIVE
-            && $bagItemResourceTypeKind != ResourceTypeKind::COMPLEX'
+            '$bagItemResourceTypeKind != ResourceTypeKind::PRIMITIVE'
+            .' && $bagItemResourceTypeKind != ResourceTypeKind::COMPLEX'
         );
 
         $odataProperty = new ODataProperty();
         $odataProperty->name = $propertyName;
         $odataProperty->typeName = 'Collection(' . $resourceType->getFullName() . ')';
+
         if (is_null($BagValue) || (is_array($BagValue) && empty($BagValue))) {
             $odataProperty->value = null;
         } else {
             $odataBagContent = new ODataBagContent();
+            $BagValue = array_diff($BagValue, [null]);
             foreach ($BagValue as $itemValue) {
-                if (!is_null($itemValue)) {
-                    if ($bagItemResourceTypeKind == ResourceTypeKind::PRIMITIVE) {
-                        $primitiveValueAsString = null;
-                        $this->_primitiveToString($resourceType, $itemValue, $primitiveValueAsString);
-                        $odataBagContent->propertyContents[] = $primitiveValueAsString;
-                    } elseif ($bagItemResourceTypeKind == ResourceTypeKind::COMPLEX) {
-                        $complexContent = new ODataPropertyContent();
-                        $actualType = $this->_complexObjectToContent(
-                            $itemValue,
-                            $propertyName,
-                            $resourceType,
-                            $relativeUri,
-                            $complexContent
-                        );
-                        //TODO add type in case of base type
-                        $odataBagContent->propertyContents[] = $complexContent;
-                    }
+                if ($bagItemResourceTypeKind == ResourceTypeKind::PRIMITIVE) {
+                    $primitiveValueAsString = null;
+                    $this->_primitiveToString($resourceType, $itemValue, $primitiveValueAsString);
+                    $odataBagContent->propertyContents[] = $primitiveValueAsString;
+                } elseif ($bagItemResourceTypeKind == ResourceTypeKind::COMPLEX) {
+                    $complexContent = new ODataPropertyContent();
+                    $actualType = $this->_complexObjectToContent(
+                        $itemValue,
+                        $propertyName,
+                        $resourceType,
+                        $relativeUri,
+                        $complexContent
+                    );
+                    //TODO add type in case of base type
+                    $odataBagContent->propertyContents[] = $complexContent;
                 }
             }
 
