@@ -186,7 +186,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
     public function writeTopLevelComplexObject(
         &$complexValue,
         $propertyName,
-        ResourceType & $resourceType
+        ResourceType &$resourceType
     ) {
         $propertyContent = new ODataPropertyContent();
         $this->_writeComplexValue(
@@ -403,8 +403,8 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
         assert(
             (($resourceTypeKind == ResourceTypeKind::ENTITY) && ($odataEntry instanceof ODataEntry))
             || (($resourceTypeKind == ResourceTypeKind::COMPLEX) && is_null($odataEntry)),
-            '!(($resourceTypeKind == ResourceTypeKind::ENTITY) && ($odataEntry instanceof ODataEntry)) 
-            && !(($resourceTypeKind == ResourceTypeKind::COMPLEX) && is_null($odataEntry))'
+            '!(($resourceTypeKind == ResourceTypeKind::ENTITY) && ($odataEntry instanceof ODataEntry))'
+            .' && !(($resourceTypeKind == ResourceTypeKind::COMPLEX) && is_null($odataEntry))'
         );
         $projectionNodes = null;
         $navigationProperties = null;
@@ -414,149 +414,24 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
         }
 
         if (is_null($projectionNodes)) {
-            //This is the code path to handle properties of Complex type
-            //or Entry without projection (i.e. no expansion or selection)
-            $resourceProperties = array();
-            if ($resourceTypeKind == ResourceTypeKind::ENTITY) {
-                // If custom object is an entry then it can contain navigation
-                // properties which are invisible (because the corresponding
-                // resource set is invisible).
-                // IDSMP::getResourceProperties will give collection of properties
-                // which are visible.
-                $currentResourceSetWrapper1 = $this->getCurrentResourceSetWrapper();
-                $resourceProperties = $this->getService()
-                    ->getProvidersWrapper()
-                    ->getResourceProperties(
-                        $currentResourceSetWrapper1,
-                        $resourceType
-                    );
-            } else {
-                $resourceProperties = $resourceType->getAllProperties();
-            }
+            list($odataPropertyContent, $navigationProperties) = $this->writeObjectPropertiesUnexpanded(
+                $customObject,
+                $resourceType,
+                $relativeUri,
+                $odataPropertyContent,
+                $resourceTypeKind,
+                $navigationProperties
+            );
 
-            //First write out primitve types
-            foreach ($resourceProperties as $name => $resourceProperty) {
-                $resourceKind = $resourceProperty->getKind();
-                if ($resourceKind == ResourcePropertyKind::PRIMITIVE
-                    || $resourceKind == (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::KEY)
-                    || $resourceKind == (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::ETAG)
-                    || $resourceKind == (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::KEY | ResourcePropertyKind::ETAG)
-                ) {
-                    $odataProperty = new ODataProperty();
-                    $primitiveValue = $this->getPropertyValue($customObject, $resourceType, $resourceProperty);
-                    $this->_writePrimitiveValue($primitiveValue, $resourceProperty, $odataProperty);
-                    $odataPropertyContent->properties[] = $odataProperty;
-                }
-            }
-
-            //Write out bag and complex type
-            $i = 0;
-            foreach ($resourceProperties as $resourceProperty) {
-                if ($resourceProperty->isKindOf(ResourcePropertyKind::BAG)) {
-                    //Handle Bag Property (Bag of Primitive or complex)
-                    $propertyValue = $this->getPropertyValue($customObject, $resourceType, $resourceProperty);
-                    $resourceType2 = $resourceProperty->getResourceType();
-                    $this->_writeBagValue(
-                        $propertyValue,
-                        $resourceProperty->getName(),
-                        $resourceType2,
-                        $relativeUri . '/' . $resourceProperty->getName(),
-                        $odataPropertyContent
-                    );
-                } else {
-                    $resourceKind = $resourceProperty->getKind();
-                    if ($resourceKind == ResourcePropertyKind::COMPLEX_TYPE) {
-                        $propertyValue = $this->getPropertyValue($customObject, $resourceType, $resourceProperty);
-                        $resourceType1 = $resourceProperty->getResourceType();
-                        $this->_writeComplexValue(
-                            $propertyValue,
-                            $resourceProperty->getName(),
-                            $resourceType1,
-                            $relativeUri . '/' . $resourceProperty->getName(),
-                            $odataPropertyContent
-                        );
-                    } elseif ($resourceKind == ResourcePropertyKind::PRIMITIVE
-                        || $resourceKind == (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::KEY)
-                        || $resourceKind == (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::ETAG)
-                        || $resourceKind == (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::KEY | ResourcePropertyKind::ETAG)
-                    ) {
-                        continue;
-                    } else {
-                        assert(
-                            ($resourceKind == ResourcePropertyKind::RESOURCE_REFERENCE)
-                             || ($resourceKind == ResourcePropertyKind::RESOURCESET_REFERENCE),
-                            '($resourceKind != ResourcePropertyKind::RESOURCE_REFERENCE)
-                             && ($resourceKind != ResourcePropertyKind::RESOURCESET_REFERENCE)'
-                        );
-
-                        $navigationProperties[$i] = new NavigationPropertyInfo($resourceProperty, $this->shouldExpandSegment($resourceProperty->getName()));
-                        if ($navigationProperties[$i]->expanded) {
-                            $navigationProperties[$i]->value = $this->getPropertyValue($customObject, $resourceType, $resourceProperty);
-                        }
-
-                        ++$i;
-                    }
-                }
-            }
         } else { //This is the code path to handle projected properties of Entry
-            $i = 0;
-            foreach ($projectionNodes as $projectionNode) {
-                $propertyName = $projectionNode->getPropertyName();
-                $resourceProperty = $resourceType->resolveProperty($propertyName);
-                assert(!is_null($resourceProperty), 'is_null($resourceProperty)');
-
-                if ($resourceProperty->getTypeKind() == ResourceTypeKind::ENTITY) {
-                    $currentResourceSetWrapper2 = $this->getCurrentResourceSetWrapper();
-                    $resourceProperties = $this->getService()
-                        ->getProvidersWrapper()
-                        ->getResourceProperties(
-                            $currentResourceSetWrapper2,
-                            $resourceType
-                        );
-                    //Check for the visibility of this navigation property
-                    if (array_key_exists($resourceProperty->getName(), $resourceProperties)) {
-                        $navigationProperties[$i] = new NavigationPropertyInfo($resourceProperty, $this->shouldExpandSegment($propertyName));
-                        if ($navigationProperties[$i]->expanded) {
-                            $navigationProperties[$i]->value = $this->getPropertyValue($customObject, $resourceType, $resourceProperty);
-                        }
-
-                        ++$i;
-                        continue;
-                    }
-                }
-
-                //Primitve, complex or bag property
-                $propertyValue = $this->getPropertyValue($customObject, $resourceType, $resourceProperty);
-                $propertyTypeKind = $resourceProperty->getKind();
-                $propertyResourceType = $resourceProperty->getResourceType();
-                assert(!is_null($propertyResourceType), 'is_null($propertyResourceType)');
-                if (ResourceProperty::sIsKindOf($propertyTypeKind, ResourcePropertyKind::BAG)) {
-                    $bagResourceType = $resourceProperty->getResourceType();
-                    $this->_writeBagValue(
-                        $propertyValue,
-                        $propertyName,
-                        $bagResourceType,
-                        $relativeUri . '/' . $propertyName,
-                        $odataPropertyContent
-                    );
-                } elseif (ResourceProperty::sIsKindOf($propertyTypeKind, ResourcePropertyKind::PRIMITIVE)) {
-                    $odataProperty = new ODataProperty();
-                    $this->_writePrimitiveValue($propertyValue, $resourceProperty, $odataProperty);
-                    $odataPropertyContent->properties[] = $odataProperty;
-                } elseif ($propertyTypeKind == ResourcePropertyKind::COMPLEX_TYPE) {
-                    $complexResourceType = $resourceProperty->getResourceType();
-                    $this->_writeComplexValue(
-                        $propertyValue,
-                        $propertyName,
-                        $complexResourceType,
-                        $relativeUri . '/' . $propertyName,
-                        $odataPropertyContent
-                    );
-                } else {
-                    //unexpected
-                    assert(false, '$propertyTypeKind != Primitive or Bag or ComplexType');
-                }
-            }
+            list($navigationProperties, $odataPropertyContent) = $this->writeObjectPropertiesExpanded(
+                $customObject,
+                $resourceType,
+                $relativeUri,
+                $odataPropertyContent,
+                $projectionNodes,
+                $navigationProperties
+            );
         }
 
         if (!is_null($navigationProperties)) {
@@ -651,7 +526,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
             $odataProperty->value = null;
         } else {
             $resourceType = $resourceProperty->getResourceType();
-            $this->_primitiveToString($resourceType, $primitiveValue, $odataProperty->value);
+            $odataProperty->value = $this->_primitiveToString($resourceType, $primitiveValue);
         }
     }
 
@@ -734,12 +609,11 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
             $odataProperty->value = null;
         } else {
             $odataBagContent = new ODataBagContent();
+            // strip out null elements
             $BagValue = array_diff($BagValue, [null]);
             foreach ($BagValue as $itemValue) {
                 if ($bagItemResourceTypeKind == ResourceTypeKind::PRIMITIVE) {
-                    $primitiveValueAsString = null;
-                    $this->_primitiveToString($resourceType, $itemValue, $primitiveValueAsString);
-                    $odataBagContent->propertyContents[] = $primitiveValueAsString;
+                    $odataBagContent->propertyContents[] = $this->_primitiveToString($resourceType, $itemValue);
                 } elseif ($bagItemResourceTypeKind == ResourceTypeKind::COMPLEX) {
                     $complexContent = new ODataPropertyContent();
                     $actualType = $this->_complexObjectToContent(
@@ -820,13 +694,12 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
      * @param ResourceType &$primitiveResourceType Type of the primitive property
      *                                            whose value need to be converted
      * @param mixed $primitiveValue Primitive value to convert
-     * @param string &$stringValue On return, this parameter will
-     *                                            contain converted value
+     * @return string
+
      */
     private function _primitiveToString(
         ResourceType &$primitiveResourceType,
-        $primitiveValue,
-        &$stringValue
+        $primitiveValue
     ) {
         $type = $primitiveResourceType->getInstanceType();
         if ($type instanceof Boolean) {
@@ -840,6 +713,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
         } else {
             $stringValue = strval($primitiveValue);
         }
+        return $stringValue;
     }
 
     /**
@@ -891,5 +765,200 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
         unset($this->complexTypeInstanceCollection[$count]);
 
         return $actualType;
+    }
+
+    /**
+     * @param $customObject
+     * @param ResourceType $resourceType
+     * @param $relativeUri
+     * @param ODataPropertyContent $odataPropertyContent
+     * @param $resourceTypeKind
+     * @param $navigationProperties
+     * @return array
+     * @throws ODataException
+     */
+    private function writeObjectPropertiesUnexpanded(
+        $customObject,
+        ResourceType &$resourceType,
+        $relativeUri,
+        ODataPropertyContent &$odataPropertyContent,
+        $resourceTypeKind,
+        $navigationProperties
+    ) {
+        //This is the code path to handle properties of Complex type
+        //or Entry without projection (i.e. no expansion or selection)
+        $resourceProperties = array();
+        if ($resourceTypeKind == ResourceTypeKind::ENTITY) {
+            // If custom object is an entry then it can contain navigation
+            // properties which are invisible (because the corresponding
+            // resource set is invisible).
+            // IDSMP::getResourceProperties will give collection of properties
+            // which are visible.
+            $currentResourceSetWrapper1 = $this->getCurrentResourceSetWrapper();
+            $resourceProperties = $this->getService()
+                ->getProvidersWrapper()
+                ->getResourceProperties(
+                    $currentResourceSetWrapper1,
+                    $resourceType
+                );
+        } else {
+            $resourceProperties = $resourceType->getAllProperties();
+        }
+
+        //First write out primitive types
+        foreach ($resourceProperties as $name => $resourceProperty) {
+            $resourceKind = $resourceProperty->getKind();
+            if ($resourceKind == ResourcePropertyKind::PRIMITIVE
+                || $resourceKind == (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::KEY)
+                || $resourceKind == (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::ETAG)
+                || $resourceKind == (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::KEY | ResourcePropertyKind::ETAG)
+            ) {
+                $odataProperty = new ODataProperty();
+                $primitiveValue = $this->getPropertyValue($customObject, $resourceType, $resourceProperty);
+                $this->_writePrimitiveValue($primitiveValue, $resourceProperty, $odataProperty);
+                $odataPropertyContent->properties[] = $odataProperty;
+            }
+        }
+
+        //Write out bag and complex type
+        $i = 0;
+        foreach ($resourceProperties as $resourceProperty) {
+            if ($resourceProperty->isKindOf(ResourcePropertyKind::BAG)) {
+                //Handle Bag Property (Bag of Primitive or complex)
+                $propertyValue = $this->getPropertyValue($customObject, $resourceType, $resourceProperty);
+                $resourceType2 = $resourceProperty->getResourceType();
+                $this->_writeBagValue(
+                    $propertyValue,
+                    $resourceProperty->getName(),
+                    $resourceType2,
+                    $relativeUri . '/' . $resourceProperty->getName(),
+                    $odataPropertyContent
+                );
+            } else {
+                $resourceKind = $resourceProperty->getKind();
+                if ($resourceKind == ResourcePropertyKind::COMPLEX_TYPE) {
+                    $propertyValue = $this->getPropertyValue($customObject, $resourceType, $resourceProperty);
+                    $resourceType1 = $resourceProperty->getResourceType();
+                    $this->_writeComplexValue(
+                        $propertyValue,
+                        $resourceProperty->getName(),
+                        $resourceType1,
+                        $relativeUri . '/' . $resourceProperty->getName(),
+                        $odataPropertyContent
+                    );
+                } elseif ($resourceKind == ResourcePropertyKind::PRIMITIVE
+                          || $resourceKind == (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::KEY)
+                          || $resourceKind == (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::ETAG)
+                          || $resourceKind == (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::KEY | ResourcePropertyKind::ETAG)
+                ) {
+                    continue;
+                } else {
+                    assert(
+                        ($resourceKind == ResourcePropertyKind::RESOURCE_REFERENCE)
+                        || ($resourceKind == ResourcePropertyKind::RESOURCESET_REFERENCE),
+                        '($resourceKind != ResourcePropertyKind::RESOURCE_REFERENCE)'
+                        . '&& ($resourceKind != ResourcePropertyKind::RESOURCESET_REFERENCE)'
+                    );
+
+                    $navigationProperties[$i] = new NavigationPropertyInfo(
+                        $resourceProperty, $this->shouldExpandSegment($resourceProperty->getName())
+                    );
+                    if ($navigationProperties[$i]->expanded) {
+                        $navigationProperties[$i]->value = $this->getPropertyValue(
+                            $customObject, $resourceType, $resourceProperty
+                        );
+                    }
+
+                    ++$i;
+                }
+            }
+        }
+        return array($odataPropertyContent, $navigationProperties);
+    }
+
+    /**
+     * @param $customObject
+     * @param ResourceType $resourceType
+     * @param $relativeUri
+     * @param ODataPropertyContent $odataPropertyContent
+     * @param $projectionNodes
+     * @param $navigationProperties
+     * @return array
+     * @throws ODataException
+     */
+    private function writeObjectPropertiesExpanded(
+        $customObject,
+        ResourceType &$resourceType,
+        $relativeUri,
+        ODataPropertyContent &$odataPropertyContent,
+        $projectionNodes,
+        $navigationProperties
+    ) {
+        $i = 0;
+        foreach ($projectionNodes as $projectionNode) {
+            $propertyName = $projectionNode->getPropertyName();
+            $resourceProperty = $resourceType->resolveProperty($propertyName);
+            assert(!is_null($resourceProperty), 'is_null($resourceProperty)');
+
+            if ($resourceProperty->getTypeKind() == ResourceTypeKind::ENTITY) {
+                $currentResourceSetWrapper2 = $this->getCurrentResourceSetWrapper();
+                $resourceProperties = $this->getService()
+                    ->getProvidersWrapper()
+                    ->getResourceProperties(
+                        $currentResourceSetWrapper2,
+                        $resourceType
+                    );
+                //Check for the visibility of this navigation property
+                if (array_key_exists($resourceProperty->getName(), $resourceProperties)) {
+                    $navigationProperties[$i] = new NavigationPropertyInfo(
+                        $resourceProperty,
+                        $this->shouldExpandSegment($propertyName)
+                    );
+                    if ($navigationProperties[$i]->expanded) {
+                        $navigationProperties[$i]->value = $this->getPropertyValue(
+                            $customObject,
+                            $resourceType,
+                            $resourceProperty
+                        );
+                    }
+
+                    ++$i;
+                    continue;
+                }
+            }
+
+            //Primitive, complex or bag property
+            $propertyValue = $this->getPropertyValue($customObject, $resourceType, $resourceProperty);
+            $propertyTypeKind = $resourceProperty->getKind();
+            $propertyResourceType = $resourceProperty->getResourceType();
+            assert(!is_null($propertyResourceType), 'is_null($propertyResourceType)');
+            if ($resourceProperty->isKindOf(ResourcePropertyKind::BAG)) {
+                $bagResourceType = $resourceProperty->getResourceType();
+                $this->_writeBagValue(
+                    $propertyValue,
+                    $propertyName,
+                    $bagResourceType,
+                    $relativeUri . '/' . $propertyName,
+                    $odataPropertyContent
+                );
+            } elseif ($resourceProperty->isKindOf(ResourcePropertyKind::BAG)) {
+                $odataProperty = new ODataProperty();
+                $this->_writePrimitiveValue($propertyValue, $resourceProperty, $odataProperty);
+                $odataPropertyContent->properties[] = $odataProperty;
+            } elseif ($propertyTypeKind == ResourcePropertyKind::COMPLEX_TYPE) {
+                $complexResourceType = $resourceProperty->getResourceType();
+                $this->_writeComplexValue(
+                    $propertyValue,
+                    $propertyName,
+                    $complexResourceType,
+                    $relativeUri . '/' . $propertyName,
+                    $odataPropertyContent
+                );
+            } else {
+                //unexpected
+                assert(false, '$propertyTypeKind != Primitive or Bag or ComplexType');
+            }
+        }
+        return array($navigationProperties, $odataPropertyContent);
     }
 }

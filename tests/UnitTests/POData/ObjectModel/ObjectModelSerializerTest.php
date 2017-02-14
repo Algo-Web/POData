@@ -12,6 +12,7 @@ use POData\ObjectModel\ODataPropertyContent;
 use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\ProvidersWrapper;
 use POData\Providers\Query\QueryType;
+use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandedProjectionNode;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetSource;
 use POData\UriProcessor\RequestDescription;
 use POData\IService;
@@ -28,6 +29,7 @@ use POData\Common\Messages;
 use POData\Common\Url;
 
 use Mockery as m;
+use POData\UriProcessor\SegmentStack;
 
 class ObjectModelSerializerTest extends \PHPUnit_Framework_TestCase
 {
@@ -518,7 +520,143 @@ class ObjectModelSerializerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $result->properties[0]->value->propertyContents);
         $this->assertEquals('property', $result->properties[0]->name);
         $this->assertEquals('Collection(fullName)', $result->properties[0]->typeName);
+    }
 
+    public function testWriteTopLevelBagObjectArrayOfComplexObjects()
+    {
+        $propType = m::mock(ResourceType::class);
+        $propType->shouldReceive('getInstanceType')->andReturn(new \POData\Providers\Metadata\Type\EdmString());
+
+        $property = m::mock(ResourceProperty::class);
+        $property->shouldReceive("getKind")->andReturn(ResourcePropertyKind::PRIMITIVE)->once();
+        $property->shouldReceive('getInstanceType->getFullTypeName')->andReturn('fullTypeName')->once();
+        $property->shouldReceive('getName')->andReturn('propertyName');
+        $property->shouldReceive('getResourceType')->andReturn($propType)->once();
+        $property->shouldReceive('isKindOf')->andReturn(false)->once();
+
+        $type = m::mock(ResourceType::class);
+        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::COMPLEX)->once();
+        $type->shouldReceive('getFullName')->andReturn('fullName');
+        $type->shouldReceive('getInstanceType')->andReturn(new \POData\Providers\Metadata\Type\EdmString());
+        $type->shouldReceive('getAllProperties')->andReturn([$property]);
+
+        $bag = [ 'foo', 123];
+        $expected = ['foo', '123'];
+
+        $foo = m::mock(ObjectModelSerializer::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $foo->shouldReceive('getPropertyValue')->andReturn('foo', 123);
+
+        $result = $foo->writeTopLevelBagObject($bag, 'property', $type);
+        $this->assertTrue($result instanceof ODataPropertyContent);
+        $this->assertTrue($result->properties[0] instanceof ODataProperty);
+        $this->assertNull($result->properties[0]->attributeExtensions);
+        $this->assertTrue($result->properties[0]->value instanceof ODataBagContent);
+        $this->assertNull($result->properties[0]->value->type);
+        $this->assertTrue(is_array($result->properties[0]->value->propertyContents));
+        $firstProp = $result->properties[0]->value->propertyContents[0];
+        $secondProp = $result->properties[0]->value->propertyContents[1];
+        $this->assertEquals("propertyName", $firstProp->properties[0]->name);
+        $this->assertEquals("fullTypeName", $firstProp->properties[0]->typeName);
+        $this->assertEquals(null, $firstProp->properties[0]->attributeExtensions);
+        $this->assertEquals("foo", $firstProp->properties[0]->value);
+        $this->assertEquals("propertyName", $secondProp->properties[0]->name);
+        $this->assertEquals("fullTypeName", $secondProp->properties[0]->typeName);
+        $this->assertEquals(null, $secondProp->properties[0]->attributeExtensions);
+        $this->assertEquals("123", $secondProp->properties[0]->value);
+        $this->assertEquals('property', $result->properties[0]->name);
+        $this->assertEquals('Collection(fullName)', $result->properties[0]->typeName);
+    }
+
+    public function testWriteTopLevelComplexObjectWithExpandedPropertiesTripsComplexObjectLoopException()
+    {
+        $complexValue = new reusableEntityClass2('2016-12-25', null);
+
+        $kidNode1 = m::mock(ExpandedProjectionNode::class);
+        $kidNode1->shouldReceive('getPropertyName')->andReturn('wun');
+        $kidNode1->shouldReceive('getName')->andReturn('wunName');
+        $kidNode1->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::ENTITY);
+        $kidNode2 = m::mock(ExpandedProjectionNode::class);
+        $kidNode2->shouldReceive('getPropertyName')->andReturn('too');
+        $kidNode2->shouldReceive('getName')->andReturn('tooName');
+        $kidNode1->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::COMPLEX);
+
+        $propType = m::mock(ResourceType::class);
+        $propType->shouldReceive('getFullName')->andReturn('fullName');
+        $propType->shouldReceive('getName')->andReturn('name');
+        $propType->shouldReceive('isMediaLinkEntry')->andReturn(false);
+        $propType->shouldReceive('hasNamedStream')->andReturn(false);
+        $propType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY);
+        $propType->shouldReceive('resolveProperty')->withArgs(['wun'])->andReturn($kidNode1);
+        $propType->shouldReceive('resolveProperty')->withArgs(['too'])->andReturn($kidNode2);
+
+        $nuType = m::mock(ResourceType::class);
+        $nuType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::COMPLEX);
+
+        $prop1 = m::mock(ResourceProperty::class);
+        $prop1->shouldReceive('getKind')->andReturn(ResourcePropertyKind::COMPLEX_TYPE)->once();
+        $prop1->shouldReceive('isKindOf')->andReturn(false);
+        $prop1->shouldReceive('getName')->andReturn('type');
+        $prop1->shouldReceive('getResourceType')->andReturn($propType);
+        $prop1->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::ENTITY);
+        $prop2 = m::mock(ResourceProperty::class);
+        $prop2->shouldReceive('getKind')->andReturn(ResourcePropertyKind::RESOURCE_REFERENCE)->once();
+        $prop2->shouldReceive('isKindOf')->andReturn(false);
+        $prop2->shouldReceive('getName')->andReturn('name');
+        $prop2->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::ENTITY);
+
+        $prop3 = m::mock(ResourceProperty::class);
+        $prop3->shouldReceive('getKind')->andReturn(ResourcePropertyKind::COMPLEX_TYPE)->once();
+        $prop3->shouldReceive('isKindOf')->andReturn(false);
+        $prop3->shouldReceive('getResourceType')->andReturn($nuType);
+        $prop3->shouldReceive('getName')->andReturn('type');
+        $prop3->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::COMPLEX);
+        $prop4 = m::mock(ResourceProperty::class);
+        $prop4->shouldReceive('getKind')->andReturn(ResourcePropertyKind::RESOURCE_REFERENCE)->once();
+        $prop4->shouldReceive('isKindOf')->andReturn(false);
+        $prop4->shouldReceive('getName')->andReturn('name');
+        $prop4->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::ENTITY);
+
+        $type = m::mock(ResourceType::class);
+        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::COMPLEX)->once();
+        $type->shouldReceive('getName')->andReturn('nuName');
+        $type->shouldReceive('getAllProperties')->andReturn([$prop1, $prop2]);
+        $propType->shouldReceive('getAllProperties')->andReturn([$prop3, $prop4]);
+
+        $currentNode = m::mock(ExpandedProjectionNode::class);
+        $currentNode->shouldReceive('getChildNodes')->andReturn([$kidNode1, $kidNode2])->once();
+        $currentNode->shouldReceive('canSelectAllProperties')->andReturn(false);
+        $currentNode->shouldReceive('getName')->andReturn('oldName');
+
+        $stack = m::mock(SegmentStack::class);
+        $stack->shouldReceive('getSegmentNames')->andReturn(['foo', 'bar']);
+
+        $resourceWrapper = m::mock(ResourceSetWrapper::class);
+        $resourceWrapper->shouldReceive('getResourceType')->andReturn($propType);
+        $resourceWrapper->shouldReceive('getName')->andReturn('wrapper');
+
+        $provWrapper = m::mock(ProvidersWrapper::class);
+        $provWrapper->shouldReceive('getResourceProperties')->andReturn([]);
+
+        $foo = m::mock(ObjectModelSerializer::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $foo->shouldReceive('getCurrentExpandedProjectionNode')->andReturn($currentNode);
+        $foo->shouldReceive('shouldExpandSegment')->andReturn(true);
+        $foo->shouldReceive('getStack')->andReturn($stack);
+        $foo->shouldReceive('getCurrentResourceSetWrapper')->andReturn($resourceWrapper);
+        $foo->shouldReceive('pushSegmentForNavigationProperty')->andReturn(true);
+        $foo->shouldReceive('getEntryInstanceKey')->andReturn('idle');
+        $foo->shouldReceive('getETagForEntry')->andReturn(null);
+        $foo->shouldReceive('getService->getProvidersWrapper')->andReturn($provWrapper);
+        $foo->shouldReceive('getPropertyValue')->andReturn(['wun', 'too']);
+
+        $expected = 'Internal Server Error. The type \'name\' has inconsistent metadata and runtime type info.';
+        $actual = null;
+
+        try {
+            $foo->writeTopLevelComplexObject($complexValue, 'property', $type);
+        } catch (ODataException $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
     }
 
 }

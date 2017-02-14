@@ -157,7 +157,7 @@ class ResourceProperty
     }
 
     /**
-     * Check once kind is of another kind.
+     * Check one kind is of another kind.
      *
      * @param ResourcePropertyKind $kind1 First kind
      * @param ResourcePropertyKind $kind2 second kind
