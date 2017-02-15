@@ -41,7 +41,7 @@ trait resourceAssociationSet
      */
     public static function resourceAssociationSetEndResourceTypeMustBeAssignableToResourceSet($resourceTypeName, $resourceSetName)
     {
-        return "The resource type $resourceTypeName must be assignable to the resource set $resourceSetName";
+        return "The resource type $resourceTypeName must be assignable to the resource set $resourceSetName.";
     }
 
     /**
@@ -52,7 +52,7 @@ trait resourceAssociationSet
      */
     public static function resourceAssociationSetResourcePropertyCannotBeBothNull()
     {
-        return 'Both the resource property of the association set cannot be null';
+        return 'Both the resource properties of the association set cannot be null.';
     }
 
     /**
@@ -63,6 +63,6 @@ trait resourceAssociationSet
      */
     public static function resourceAssociationSetSelfReferencingAssociationCannotBeBiDirectional()
     {
-        return 'Bidirectional self referencing association is not allowed';
+        return 'Bidirectional self referencing association is not allowed.';
     }
 }
