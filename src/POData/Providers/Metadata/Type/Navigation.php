@@ -64,10 +64,7 @@ class Navigation implements INavigationType
             return false;
         }
 
-        return strcmp(
-            $type->_resourceType->getFullName(),
-            $this->_resourceType->getFullName()
-        ) == 0;
+        return 0 == strcmp($type->_resourceType->getFullName(), $this->_resourceType->getFullName());
     }
 
     /**
