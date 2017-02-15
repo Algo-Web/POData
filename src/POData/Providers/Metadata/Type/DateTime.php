@@ -48,15 +48,21 @@ class DateTime implements IType
         //1. The datetime value present in the $filter option should have
         //   'datetime' prefix.
         //2. Month and day should be two digit
-        if (!preg_match("/^datetime\'(\d{4})-(\d{2})-(\d{2})((\s|T)([0-1][0-9]|2[0-4]):([0-5][0-9])(:([0-5][0-9])([Z])?)?)?\'$/", strval($value), $matches)
-        ) {
+        if (!preg_match(
+            "/^datetime\'(\d{4})-(\d{2})-(\d{2})((\s|T)([0-1][0-9]|2[0-4]):([0-5][0-9])(:([0-5][0-9])([Z])?)?)?\'$/",
+            strval($value),
+            $matches
+        )) {
             return false;
         }
 
         //stripoff prefix, and quotes from both ends
         $value = trim($value, 'datetime\'');
-        //Validate the date using PHP DateTime class
-        if (!self::validateWithoutPreFix($value)) {
+
+        //Validate the date using PHP Carbon class
+        try {
+            new Carbon($value, new \DateTimeZone('UTC'));
+        } catch (\Exception $e) {
             return false;
         }
 
@@ -101,24 +107,6 @@ class DateTime implements IType
     public function convertToOData($value)
     {
         return 'datetime\'' . urlencode($value) . '\'';
-    }
-
-    /**
-     * Checks a value is valid datetime.
-     *
-     * @param string $dateTime value to validate
-     *
-     * @return bool
-     */
-    public static function validateWithoutPreFix($dateTime)
-    {
-        try {
-            $dt = new Carbon($dateTime, new \DateTimeZone('UTC'));
-        } catch (\Exception $e) {
-            return false;
-        }
-
-        return true;
     }
 
     /**
