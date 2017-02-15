@@ -461,10 +461,11 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
                     assert(!is_null($currentResourceSetWrapper), 'is_null($currentResourceSetWrapper)');
                     $link->isExpanded = true;
                     if (!is_null($navigationPropertyInfo->value)) {
+                        $currentResourceType = $currentResourceSetWrapper->getResourceType();
                         if ($navigationPropertyKind == ResourcePropertyKind::RESOURCESET_REFERENCE) {
                             $inlineFeed = new ODataFeed();
                             $link->isCollection = true;
-                            $currentResourceType = $currentResourceSetWrapper->getResourceType();
+
                             $this->_writeFeedElements(
                                 $navigationPropertyInfo->value,
                                 $currentResourceType,
@@ -476,11 +477,9 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
                             $link->expandedResult = $inlineFeed;
                         } else {
                             $link->isCollection = false;
-                            $currentResourceType1 = $currentResourceSetWrapper->getResourceType();
-
                             $link->expandedResult = $this->_writeEntryElement(
                                 $navigationPropertyInfo->value,
-                                $currentResourceType1,
+                                $currentResourceType,
                                 $propertyAbsoluteUri,
                                 $propertyRelativeUri
                             );
@@ -941,7 +940,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
                     $relativeUri . '/' . $propertyName,
                     $odataPropertyContent
                 );
-            } elseif ($resourceProperty->isKindOf(ResourcePropertyKind::BAG)) {
+            } elseif ($resourceProperty->isKindOf(ResourcePropertyKind::PRIMITIVE)) {
                 $odataProperty = new ODataProperty();
                 $this->_writePrimitiveValue($propertyValue, $resourceProperty, $odataProperty);
                 $odataPropertyContent->properties[] = $odataProperty;

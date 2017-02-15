@@ -6,6 +6,7 @@ use POData\Common\ODataConstants;
 use POData\Common\InvalidOperationException;
 use POData\ObjectModel\ObjectModelSerializer;
 use POData\ObjectModel\ODataBagContent;
+use POData\ObjectModel\ODataEntry;
 use POData\ObjectModel\ODataLink;
 use POData\ObjectModel\ODataProperty;
 use POData\ObjectModel\ODataPropertyContent;
@@ -653,6 +654,233 @@ class ObjectModelSerializerTest extends \PHPUnit_Framework_TestCase
 
         try {
             $foo->writeTopLevelComplexObject($complexValue, 'property', $type);
+        } catch (ODataException $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testWriteTopLevelElementWithExpandedProjectionNodes()
+    {
+        $entity = new reusableEntityClass2('2016-12-25', null);
+
+        $url = new Url('https://www.example.org/odata.svc');
+
+        $projNode1 = m::mock(ExpandedProjectionNode::class)->makePartial();
+        $projNode2 = m::mock(ExpandedProjectionNode::class)->makePartial();
+
+        $navType = m::mock(ResourceType::class)->makePartial();
+
+        $resolv = m::mock(ResourceProperty::class)->makePartial();
+        $resolv->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::ENTITY)->once();
+        $resolv->shouldReceive('getResourceType')->andReturn($navType);
+        $resolv->shouldReceive('isKindOf')->withArgs([ResourcePropertyKind::PRIMITIVE])->andReturn(true);
+        $resolv->shouldReceive('isKindOf')->andReturn(false);
+        $resolv->shouldReceive('getInstanceType->getFullTypeName')->andReturn('fullTypeName');
+
+        $type = m::mock(ResourceType::class);
+        $type->shouldReceive('getName')->andReturn('customers');
+        $type->shouldReceive('getFullName')->andReturn('customers');
+        $type->shouldReceive('isMediaLinkEntry')->andReturn(false)->once();
+        $type->shouldReceive('hasNamedStream')->andReturn(false)->once();
+        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY)->once();
+        $type->shouldReceive('resolveProperty')->andReturn($resolv);
+
+        $prop = m::mock(ResourceProperty::class)->makePartial();
+        $prop->shouldReceive('getResourceType')->andReturn($type);
+
+        $wrap = m::mock(ResourceSetWrapper::class)->makePartial();
+        $wrap->shouldReceive('getName')->andReturn('wrapper');
+
+        $navProp = m::mock(ResourceProperty::class)->makePartial();
+
+        $provWrap = m::mock(ProvidersWrapper::class)->makePartial();
+        $provWrap->shouldReceive('getResourceProperties')->andReturn($navProp);
+
+        $request = m::mock(RequestDescription::class)->makePartial();
+        $request->shouldReceive('getTargetSource')->andReturn(TargetSource::PROPERTY);
+        $request->shouldReceive('getProjectedProperty')->andReturn($prop);
+        $request->shouldReceive('getTargetResourceSetWrapper')->andReturn($wrap);
+        $request->shouldReceive('getRequestUrl')->andReturn($url);
+
+        $stack = m::mock(SegmentStack::class)->makePartial();
+        $stack->shouldReceive('pushSegment')->andReturnNull()->once();
+        $stack->shouldReceive('popSegment')->andReturnNull()->once();
+
+        $service = m::mock(IService::class)->makePartial();
+        $service->shouldReceive('getProvidersWrapper')->andReturn($provWrap);
+
+        $foo = m::mock(ObjectModelSerializer::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $foo->shouldReceive('getRequest')->andReturn($request);
+        $foo->shouldReceive('getStack')->andReturn($stack);
+        $foo->shouldReceive('getService')->andReturn($service);
+        $foo->shouldReceive('getCurrentResourceSetWrapper')->andReturn($wrap);
+        $foo->shouldReceive('getEntryInstanceKey')->andReturn('customer');
+        $foo->shouldReceive('getETagForEntry')->andReturn(null);
+        $foo->shouldReceive('getProjectionNodes')->andReturn([$projNode1, $projNode2])->once();
+        $foo->shouldReceive('shouldExpandSegment')->andReturn(true);
+        $foo->shouldReceive('getPropertyValue')->andReturn('propertyValue');
+
+        $result = $foo->writeTopLevelElement($entity);
+        $this->assertTrue($result instanceof ODataEntry);
+        $this->assertEquals('/customer', $result->id);
+        $this->assertEquals('customers', $result->title);
+        $this->assertEquals('customer', $result->editLink);
+        $this->assertEquals('customers', $result->type);
+        $this->assertEquals('wrapper', $result->resourceSetName);
+        $this->assertEquals(0, count($result->links));
+        $this->assertEquals(0, count($result->mediaLinks));
+        $propContent = $result->propertyContent;
+        $this->assertTrue($propContent instanceof ODataPropertyContent);
+        $properties = $propContent->properties;
+        $this->assertEquals(2, count($properties));
+        $this->assertEquals($properties[0], $properties[1]);
+    }
+
+    public function testWriteTopLevelElementWithExpandedProjectionNodesNullTypeKindThrowException()
+    {
+        $entity = new reusableEntityClass2('2016-12-25', null);
+
+        $url = new Url('https://www.example.org/odata.svc');
+
+        $projNode1 = m::mock(ExpandedProjectionNode::class)->makePartial();
+        $projNode2 = m::mock(ExpandedProjectionNode::class)->makePartial();
+
+        $navType = m::mock(ResourceType::class)->makePartial();
+
+        $resolv = m::mock(ResourceProperty::class)->makePartial();
+        $resolv->shouldReceive('getTypeKind')->andReturn(null)->once();
+        $resolv->shouldReceive('getResourceType')->andReturn($navType);
+        $resolv->shouldReceive('isKindOf')->andReturn(false);
+        $resolv->shouldReceive('getInstanceType->getFullTypeName')->andReturn('fullTypeName');
+
+        $type = m::mock(ResourceType::class);
+        $type->shouldReceive('getName')->andReturn('customers');
+        $type->shouldReceive('getFullName')->andReturn('customers');
+        $type->shouldReceive('isMediaLinkEntry')->andReturn(false)->once();
+        $type->shouldReceive('hasNamedStream')->andReturn(false)->once();
+        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY)->once();
+        $type->shouldReceive('resolveProperty')->andReturn($resolv);
+
+        $prop = m::mock(ResourceProperty::class)->makePartial();
+        $prop->shouldReceive('getResourceType')->andReturn($type);
+
+        $wrap = m::mock(ResourceSetWrapper::class)->makePartial();
+        $wrap->shouldReceive('getName')->andReturn('wrapper');
+
+        $navProp = m::mock(ResourceProperty::class)->makePartial();
+
+        $provWrap = m::mock(ProvidersWrapper::class)->makePartial();
+        $provWrap->shouldReceive('getResourceProperties')->andReturn($navProp);
+
+        $request = m::mock(RequestDescription::class)->makePartial();
+        $request->shouldReceive('getTargetSource')->andReturn(TargetSource::PROPERTY);
+        $request->shouldReceive('getProjectedProperty')->andReturn($prop);
+        $request->shouldReceive('getTargetResourceSetWrapper')->andReturn($wrap);
+        $request->shouldReceive('getRequestUrl')->andReturn($url);
+
+        $stack = m::mock(SegmentStack::class)->makePartial();
+        $stack->shouldReceive('pushSegment')->andReturnNull()->once();
+        $stack->shouldReceive('popSegment')->andReturnNull()->once();
+
+        $service = m::mock(IService::class)->makePartial();
+        $service->shouldReceive('getProvidersWrapper')->andReturn($provWrap);
+
+        $foo = m::mock(ObjectModelSerializer::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $foo->shouldReceive('getRequest')->andReturn($request);
+        $foo->shouldReceive('getStack')->andReturn($stack);
+        $foo->shouldReceive('getService')->andReturn($service);
+        $foo->shouldReceive('getCurrentResourceSetWrapper')->andReturn($wrap);
+        $foo->shouldReceive('getEntryInstanceKey')->andReturn('customer');
+        $foo->shouldReceive('getETagForEntry')->andReturn(null);
+        $foo->shouldReceive('getProjectionNodes')->andReturn([$projNode1, $projNode2])->once();
+        $foo->shouldReceive('shouldExpandSegment')->andReturn(true);
+        $foo->shouldReceive('getPropertyValue')->andReturn('propertyValue');
+
+        $expected = 'assert(): $propertyTypeKind != Primitive or Bag or ComplexType failed';
+        $actual = null;
+
+        try {
+            $result = $foo->writeTopLevelElement($entity);
+        } catch (\PHPUnit_Framework_Error_Warning $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testWriteTopLevelElementBagWithExpandedProjectionAndNavigationNodesInconsistentMetadata()
+    {
+        $entity = ['foo', 'bar'];
+
+        $url = new Url('https://www.example.org/odata.svc');
+
+        $projNode1 = m::mock(ExpandedProjectionNode::class)->makePartial();
+        $projNode2 = m::mock(ExpandedProjectionNode::class)->makePartial();
+
+        $navType = m::mock(ResourceType::class)->makePartial();
+        $navType->shouldReceive('getResourcePropertyKind')->andReturn(ResourcePropertyKind::RESOURCE_REFERENCE)->once();
+
+        $resolv = m::mock(ResourceProperty::class)->makePartial();
+        $resolv->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::ENTITY)->once();
+        $resolv->shouldReceive('getResourceType')->andReturn($navType);
+        $resolv->shouldReceive('isKindOf')->withArgs([ResourcePropertyKind::BAG])->andReturn(true);
+        $resolv->shouldReceive('isKindOf')->andReturn(false);
+        $resolv->shouldReceive('getInstanceType->getFullTypeName')->andReturn('fullTypeName');
+        $resolv->shouldReceive('getName')->andReturn('customers');
+        $resolv->shouldReceive('getKind')->andReturn(ResourcePropertyKind::RESOURCE_REFERENCE)->once();
+
+
+        $type = m::mock(ResourceType::class);
+        $type->shouldReceive('getName')->andReturn('customers');
+        $type->shouldReceive('getFullName')->andReturn('customers');
+        $type->shouldReceive('isMediaLinkEntry')->andReturn(false)->once();
+        $type->shouldReceive('hasNamedStream')->andReturn(false)->once();
+        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY)->once();
+        $type->shouldReceive('resolveProperty')->andReturn($resolv);
+
+        $prop = m::mock(ResourceProperty::class)->makePartial();
+        $prop->shouldReceive('getResourceType')->andReturn($type);
+
+        $wrap = m::mock(ResourceSetWrapper::class)->makePartial();
+        $wrap->shouldReceive('getName')->andReturn('wrapper');
+        $wrap->shouldReceive('getResourceType')->andReturn($navType);
+
+        $navProp = m::mock(ResourceProperty::class)->makePartial();
+        $navProp->shouldReceive('getResourcePropertyKind')->andReturn(ResourcePropertyKind::RESOURCE_REFERENCE)->once();
+
+        $provWrap = m::mock(ProvidersWrapper::class)->makePartial();
+        $provWrap->shouldReceive('getResourceProperties')->andReturn(['customers' => $navProp]);
+
+        $request = m::mock(RequestDescription::class)->makePartial();
+        $request->shouldReceive('getTargetSource')->andReturn(TargetSource::PROPERTY);
+        $request->shouldReceive('getProjectedProperty')->andReturn($prop);
+        $request->shouldReceive('getTargetResourceSetWrapper')->andReturn($wrap);
+        $request->shouldReceive('getRequestUrl')->andReturn($url);
+
+        $stack = m::mock(SegmentStack::class)->makePartial();
+        $stack->shouldReceive('pushSegment')->andReturnNull()->once();
+        $stack->shouldReceive('popSegment')->andReturnNull()->once();
+
+        $service = m::mock(IService::class)->makePartial();
+        $service->shouldReceive('getProvidersWrapper')->andReturn($provWrap);
+
+        $foo = m::mock(ObjectModelSerializer::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $foo->shouldReceive('getRequest')->andReturn($request);
+        $foo->shouldReceive('getStack')->andReturn($stack);
+        $foo->shouldReceive('getService')->andReturn($service);
+        $foo->shouldReceive('getCurrentResourceSetWrapper')->andReturn($wrap);
+        $foo->shouldReceive('getEntryInstanceKey')->andReturn('customer');
+        $foo->shouldReceive('getETagForEntry')->andReturn(null);
+        $foo->shouldReceive('getProjectionNodes')->andReturn([$projNode1, $projNode2])->once();
+        $foo->shouldReceive('shouldExpandSegment')->andReturn(true);
+        $foo->shouldReceive('pushSegmentForNavigationProperty')->andReturn(true);
+        $foo->shouldReceive('getPropertyValue')->andReturn('propertyValue');
+
+        $expected = 'Internal Server Error. The type \'\' has inconsistent metadata and runtime type info.';
+        $actual = null;
+
+        try {
+            $result = $foo->writeTopLevelElement($entity);
         } catch (ODataException $e) {
             $actual = $e->getMessage();
         }
