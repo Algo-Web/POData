@@ -13,7 +13,7 @@ trait resourceAssociationSet
      */
     public static function resourceAssociationSetPropertyMustBeNullOrInstanceofResourceProperty($argumentName)
     {
-        return "The argument '$argumentName' must be either null or instance of 'ResourceProperty";
+        return "The argument '$argumentName' must be either null or instance of 'ResourceProperty'.";
     }
 
     /**
