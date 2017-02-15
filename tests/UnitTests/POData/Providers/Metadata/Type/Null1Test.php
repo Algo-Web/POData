@@ -147,6 +147,15 @@ class Null1Test extends \PHPUnit_Framework_TestCase
         $actual = $type->convertToOData($value);
     }
 
+    public function testGetName()
+    {
+        $type = $this->getAsIType();
+
+        $actual = $type->getName();
+
+        $this->assertEquals('System.NULL', $actual);
+    }
+
     /**************
      *
      *  Begin Type Specific Tests

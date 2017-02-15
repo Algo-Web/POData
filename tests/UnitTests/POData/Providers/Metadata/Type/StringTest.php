@@ -53,15 +53,6 @@ class StringTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Edm.String', $actual);
     }
 
-    public function testGetName()
-    {
-        $type = $this->getAsIType();
-
-        $actual = $type->getName();
-
-        $this->assertEquals('Edm.String', $actual);
-    }
-
     public function testGetTypeCode()
     {
         $type = $this->getAsIType();
@@ -152,6 +143,16 @@ class StringTest extends \PHPUnit_Framework_TestCase
         $expected = "'afaefasevaswee'";
         $this->assertEquals($expected, $actual);
     }
+
+    public function testGetName()
+    {
+        $type = $this->getAsIType();
+
+        $actual = $type->getName();
+
+        $this->assertEquals('Edm.String', $actual);
+    }
+
 
     /**************
      *

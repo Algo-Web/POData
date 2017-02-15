@@ -130,6 +130,15 @@ class Int32Test extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $actual);
     }
 
+    public function testGetName()
+    {
+        $type = $this->getAsIType();
+
+        $actual = $type->getName();
+
+        $this->assertEquals('Edm.Int32', $actual);
+    }
+
     /**************
      *
      *  Begin Type Specific Tests

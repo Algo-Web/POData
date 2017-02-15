@@ -116,6 +116,15 @@ class SingleTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $actual);
     }
 
+    public function testGetName()
+    {
+        $type = $this->getAsIType();
+
+        $actual = $type->getName();
+
+        $this->assertEquals('Edm.Single', $actual);
+    }
+
     /**************
      *
      *  Begin Type Specific Tests
