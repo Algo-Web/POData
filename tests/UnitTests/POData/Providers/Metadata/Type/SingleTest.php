@@ -91,7 +91,13 @@ class SingleTest extends \PHPUnit_Framework_TestCase
 
     public function testValidateFailure()
     {
-        $this->markTestSkipped('Too lazy see #64');
+        $type = $this->getAsIType();
+        $value = '-3434.0';
+        $out = '';
+
+        $expected = '';
+        $this->assertFalse($type->validate($value, $out));
+        $this->assertEquals($expected, $out);
     }
 
     public function testConvert()
