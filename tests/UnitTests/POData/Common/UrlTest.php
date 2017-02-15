@@ -64,7 +64,7 @@ class UrlTest extends \PHPUnit_Framework_TestCase
             new Url($urlStr);
             $this->fail('An expected UrlFormatException has not been raised');
         } catch (UrlFormatException $exception) {
-            $this->assertEquals("Bad Request - The url '$urlStr' is malformed", $exception->getMessage());
+            $this->assertEquals("Bad Request - The url '$urlStr' is malformed.", $exception->getMessage());
         }
     }
 
@@ -75,7 +75,7 @@ class UrlTest extends \PHPUnit_Framework_TestCase
             new Url($urlStr);
             $this->fail('An expected UrlFormatException has not been raised');
         } catch (UrlFormatException $exception) {
-            $this->assertEquals("Bad Request - The url '$urlStr' is malformed", $exception->getMessage());
+            $this->assertEquals("Bad Request - The url '$urlStr' is malformed.", $exception->getMessage());
         }
     }
 
@@ -86,7 +86,7 @@ class UrlTest extends \PHPUnit_Framework_TestCase
             new Url($urlStr, false);
             $this->fail('An expected UrlFormatException has not been raised');
         } catch (UrlFormatException $exception) {
-            $this->assertEquals("Bad Request - The url '$urlStr' is malformed", $exception->getMessage());
+            $this->assertEquals("Bad Request - The url '$urlStr' is malformed.", $exception->getMessage());
         }
     }
 

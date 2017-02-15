@@ -55,7 +55,7 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
             SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
             $this->fail('An expected ODataException query syntax error for \'Customers(\ has not been thrown');
         } catch (ODataException $exception) {
-            $this->assertEquals($exception->getMessage(), 'Bad Request - Error in query syntax');
+            $this->assertEquals($exception->getMessage(), 'Bad Request - Error in query syntax.');
         }
     }
 
@@ -72,7 +72,7 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
             SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
             $this->fail('An expected ODataException query syntax error for $metadata(123) has not been thrown');
         } catch (ODataException $exception) {
-            $this->assertEquals($exception->getMessage(), 'Bad Request - Error in query syntax');
+            $this->assertEquals($exception->getMessage(), 'Bad Request - Error in query syntax.');
         }
 
         //Test for $batch option
@@ -84,7 +84,7 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
             SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
             $this->fail('An expected ODataException query syntax error for $batch(\'XYZ\') has not been thrown');
         } catch (ODataException $exception) {
-            $this->assertEquals($exception->getMessage(), 'Bad Request - Error in query syntax');
+            $this->assertEquals($exception->getMessage(), 'Bad Request - Error in query syntax.');
         }
 
         //Test for $links option
@@ -284,7 +284,7 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
             SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
             $this->fail('An expected ODataException bad request for $links(123) has not been thrown');
         } catch (ODataException $exception) {
-            $this->assertEquals('Bad Request - Error in query syntax', $exception->getMessage());
+            $this->assertEquals('Bad Request - Error in query syntax.', $exception->getMessage());
         }
 
         //test for $links with non-navigation property

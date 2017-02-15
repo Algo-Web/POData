@@ -10,7 +10,7 @@ trait navigation
      */
     public static function navigationInvalidResourceType()
     {
-        return 'Only possible Navigation types are Complex and Entity';
+        return 'Only possible Navigation types are Complex and Entity.';
     }
     /**
      * Message to show error when there is a syntax error in the query.
@@ -19,7 +19,7 @@ trait navigation
      */
     public static function syntaxError()
     {
-        return 'Bad Request - Error in query syntax';
+        return 'Bad Request - Error in query syntax.';
     }
 
     /**
@@ -31,6 +31,6 @@ trait navigation
      */
     public static function urlMalformedUrl($url)
     {
-        return "Bad Request - The url '$url' is malformed";
+        return "Bad Request - The url '$url' is malformed.";
     }
 }
