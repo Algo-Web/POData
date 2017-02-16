@@ -4,6 +4,7 @@ namespace POData;
 
 use POData\Common\MimeTypes;
 use POData\Common\Version;
+use POData\ObjectModel\IObjectSerialiser;
 use POData\OperationContext\HTTPRequestMethod;
 use POData\Common\ErrorHandler;
 use POData\Common\Messages;
@@ -84,6 +85,23 @@ abstract class BaseService implements IRequestHandler, IService
      * @var ServiceConfiguration
      */
     private $config;
+
+    /**
+     * Hold reference to object serialiser - bit wot turns PHP objects
+     * into message traffic on wire
+     *
+     * @var IObjectSerialiser
+     */
+    protected $objectSerialiser;
+
+    protected function __construct(IObjectSerialiser $serialiser)
+    {
+        if (null == $serialiser) {
+            $this->objectSerialiser = new ObjectModelSerializer($this, null);
+        } else {
+            $this->objectSerialiser = $serialiser;
+        }
+    }
 
     /**
      * Gets reference to ServiceConfiguration instance so that
@@ -209,8 +227,8 @@ abstract class BaseService implements IRequestHandler, IService
             $this->_serviceHost->validateQueryParameters();
             //$requestMethod = $this->getOperationContext()->incomingRequest()->getMethod();
             //if ($requestMethod != HTTPRequestMethod::GET()) {
-                // Now supporting GET and trying to support PUT
-                //throw ODataException::createNotImplementedError(Messages::onlyReadSupport($requestMethod));
+            // Now supporting GET and trying to support PUT
+            //throw ODataException::createNotImplementedError(Messages::onlyReadSupport($requestMethod));
             //}
 
             $uriProcessor = UriProcessor::process($this);

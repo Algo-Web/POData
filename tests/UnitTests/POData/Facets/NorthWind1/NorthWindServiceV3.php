@@ -16,6 +16,7 @@ class NorthWindServiceV3 extends BaseServiceTestWrapper
      */
     public function initialize(ServiceConfiguration $config)
     {
+        $this->objectSerialiser = new ObjectModelSerializer($this, null);
         $config->setEntitySetPageSize('*', 5);
         $config->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $config->setAcceptCountRequests(true);

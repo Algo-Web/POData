@@ -6,6 +6,7 @@ use POData\Configuration\EntitySetRights;
 use POData\Configuration\ProtocolVersion;
 use POData\Configuration\ServiceConfiguration;
 use POData\BaseService;
+use POData\ObjectModel\ObjectModelSerializer;
 use POData\OperationContext\HTTPRequestMethod;
 use POData\Common\ODataException;
 use POData\Common\Messages;
@@ -25,6 +26,7 @@ class WordPressDataService extends BaseService
      */
     public function initialize(ServiceConfiguration $config)
     {
+        $this->objectSerialiser = new ObjectModelSerializer($this, null);
         $config->setEntitySetPageSize('*', 5);
         $config->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $config->setAcceptCountRequests(true);

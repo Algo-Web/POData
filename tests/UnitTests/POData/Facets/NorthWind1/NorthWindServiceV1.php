@@ -18,6 +18,7 @@ class NorthWindServiceV1 extends BaseServiceTestWrapper
      */
     public function initialize(ServiceConfiguration $config)
     {
+        $this->objectSerialiser = new ObjectModelSerializer($this, null);
         $config->setEntitySetAccessRule('*', EntitySetRights::ALL);
         //we are using V1 protocol, but still we set page size because with
         //a top value which is less than pagesize we can use V1 protocol
