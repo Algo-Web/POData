@@ -127,7 +127,7 @@ trait resourceType
      */
     public static function resourceTypeHasStreamAttributeOnlyAppliesToEntityType()
     {
-        return 'Cannot apply the HasStreamAttribute, HasStreamAttribute is only applicable to entity types';
+        return 'Cannot apply the HasStreamAttribute, HasStreamAttribute is only applicable to entity types.';
     }
 
     /**
@@ -137,7 +137,7 @@ trait resourceType
      */
     public static function resourceTypeNamedStreamsOnlyApplyToEntityType()
     {
-        return 'Named streams can only be added to entity types';
+        return 'Named streams can only be added to entity types.';
     }
 
     /**
