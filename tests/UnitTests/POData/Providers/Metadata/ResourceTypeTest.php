@@ -6,9 +6,13 @@ use POData\Common\InvalidOperationException;
 use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\Providers\Metadata\ResourceStreamInfo;
 use POData\Providers\Metadata\ResourceType;
+use POData\Providers\Metadata\ResourceTypeKind;
 use POData\Providers\Metadata\Type\EdmPrimitiveType;
 
 use Mockery as m;
+use POData\Providers\Metadata\Type\IType;
+use ReflectionClass;
+use UnitTests\POData\ObjectModel\reusableEntityClass2;
 
 class ResourceTypeTest extends \PHPUnit_Framework_TestCase
 {
@@ -75,4 +79,60 @@ class ResourceTypeTest extends \PHPUnit_Framework_TestCase
         }
         $this->assertEquals($expected, $actual);
     }
+
+    public function testHasBagPropertyCheckTwice()
+    {
+        $foo = m::mock(ResourceType::class)->makePartial();
+
+        $bar = [];
+        $this->assertNull($foo->hasBagProperty($bar));
+        $this->assertNull($foo->hasBagProperty($bar));
+    }
+
+    public function testTryResolveNamedStream()
+    {
+        $foo = m::mock(ResourceType::class)->makePartial();
+        $this->assertNull($foo->tryResolveNamedStreamDeclaredOnThisTypeByName('foo'));
+    }
+
+    public function testSleepWakeupRealObjectITypeRoundTrip()
+    {
+        $instanceType = m::mock(IType::class);
+        $resourceTypeKind = ResourceTypeKind::PRIMITIVE;
+        $foo = new ResourceType($instanceType, $resourceTypeKind, 'name');
+
+        $result = $foo->__sleep();
+
+        $expected = [ '_name', '_namespaceName', '_fullName', '_resourceTypeKind', '_abstractType', '_baseType',
+            '_propertiesDeclaredOnThisType', '_namedStreamsDeclaredOnThisType', '_propertyInfosDeclaredOnThisType',
+            '_allProperties', '_allNamedStreams', '_etagProperties', '_keyProperties', '_isMediaLinkEntry',
+            '_hasBagProperty', '_hasNamedStreams', '_type', '_customState', '_arrayToDetectLoopInComplexBag'];
+
+        foreach ($expected as $property) {
+            $this->assertTrue(in_array($property, $result), $property);
+        }
+
+        $foo->__wakeup();
+    }
+
+    public function testSleepWakeupRealObjectReflectableRoundTrip()
+    {
+        $instanceType = new reusableEntityClass2("foo", "bar");
+        $resourceTypeKind = ResourceTypeKind::COMPLEX;
+        $foo = new ResourceType(new ReflectionClass($instanceType), $resourceTypeKind, 'name');
+
+        $result = $foo->__sleep();
+
+        $expected = [ '_name', '_namespaceName', '_fullName', '_resourceTypeKind', '_abstractType', '_baseType',
+            '_propertiesDeclaredOnThisType', '_namedStreamsDeclaredOnThisType', '_propertyInfosDeclaredOnThisType',
+            '_allProperties', '_allNamedStreams', '_etagProperties', '_keyProperties', '_isMediaLinkEntry',
+            '_hasBagProperty', '_hasNamedStreams', '_type', '_customState', '_arrayToDetectLoopInComplexBag'];
+
+        foreach ($expected as $property) {
+            $this->assertTrue(in_array($property, $result), $property);
+        }
+
+        $foo->__wakeup();
+    }
+
 }
