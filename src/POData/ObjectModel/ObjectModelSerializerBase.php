@@ -89,6 +89,16 @@ class ObjectModelSerializerBase
     }
 
     /**
+     * Sets reference to the request submitted by client.
+     * @param RequestDescription $request
+     *
+     */
+    public function setRequest(RequestDescription $request)
+    {
+        $this->request = $request;
+    }
+
+    /**
      * Gets the data service instance
      *
      * @return IService

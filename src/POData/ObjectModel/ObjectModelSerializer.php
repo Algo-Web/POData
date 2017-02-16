@@ -22,7 +22,7 @@ use POData\Common\Messages;
 /**
  * Class ObjectModelSerializer.
  */
-class ObjectModelSerializer extends ObjectModelSerializerBase
+class ObjectModelSerializer extends ObjectModelSerializerBase implements IObjectSerialiser
 {
     /**
      * Creates new instance of ObjectModelSerializer.

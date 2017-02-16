@@ -5,6 +5,7 @@ namespace POData;
 use POData\Configuration\IServiceConfiguration;
 use POData\Configuration\ServiceConfiguration;
 use POData\Configuration\EntitySetRights;
+use POData\Providers\Stream\IStreamProvider;
 use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\Query\IQueryProvider;
 use POData\Providers\Metadata\SimpleMetadataProvider;
@@ -58,7 +59,7 @@ class SimpleDataService extends BaseService implements IService
         return $this->metaProvider;
     }
     /**
-     * @return PODataProvidersStreamIStreamProvider
+     * @return \POData\Providers\Stream\IStreamProvider
      */
     public function getStreamProviderX()
     {
