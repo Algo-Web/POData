@@ -56,7 +56,7 @@ class ResourceProperty
     {
         if (!$this->_isValidPropertyName($name)) {
             throw new InvalidArgumentException(
-                'Property name violates OData specification'
+                'Property name violates OData specification.'
             );
         }
 
@@ -181,7 +181,7 @@ class ResourceProperty
         if (!isset($name) || !is_string($name) || empty($name)) {
             return false;
         }
-        if ('_' == substr($name, 0)) {
+        if ('_' == substr($name, 0, 1)) {
             return false;
         }
         return true;

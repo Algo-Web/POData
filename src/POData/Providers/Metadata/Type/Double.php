@@ -55,9 +55,8 @@ class Double implements IType
     public function validate($value, &$outValue)
     {
         // By default all real numbers are considered as 'Double'.
-        // One can explicity make an
-        // integral value to 'Double' with D or d postfix
-        if (preg_match('/^(\-)?\d+(\.{1}\d+)?([Ee]{1}([\+\-]{1})?\d+)?([dD]{1})?$/', $value) !== 1) {
+        // One can explicitly force an integral value to 'Double' with D or d postfix
+        if (1 !== preg_match('/^(\-)?\d+(\.{1}\d+)?([Ee]{1}([\+\-]{1})?\d+)?([dD]{1})?$/', $value)) {
             return false;
         }
 

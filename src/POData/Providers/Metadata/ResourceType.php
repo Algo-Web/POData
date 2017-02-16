@@ -514,9 +514,9 @@ class ResourceType
      */
     public function hasETagProperties()
     {
-        $this->getETagProperties();
+        $properties = $this->getETagProperties();
 
-        return !empty($this->_etagProperties);
+        return !empty($properties);
     }
 
     /**

@@ -144,6 +144,16 @@ class StringTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $actual);
     }
 
+    public function testGetName()
+    {
+        $type = $this->getAsIType();
+
+        $actual = $type->getName();
+
+        $this->assertEquals('Edm.String', $actual);
+    }
+
+
     /**************
      *
      *  Begin Type Specific Tests

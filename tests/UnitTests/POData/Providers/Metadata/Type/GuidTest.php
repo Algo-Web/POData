@@ -97,20 +97,54 @@ class GuidTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('', $out);
     }
 
-    public function testValidateFailure()
+    public function testValidateFailureTooShort()
     {
-        $this->markTestSkipped('Too lazy for now see #62');
-
         $type = $this->getAsIType();
 
         $in = '';
         $out = null;
         $this->assertFalse($type->validate($in, $out));
+        $this->assertEquals(null, $out);
     }
 
-    public function testConvert()
+    public function testValidateFailureNoLeadingGuidTag()
     {
-        $this->markTestSkipped('See #63');
+        $type = $this->getAsIType();
+
+        $in = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKL';
+        $out = null;
+        $this->assertFalse($type->validate($in, $out));
+        $this->assertEquals(null, $out);
+    }
+
+    public function testValidateFailureNoTrailingQuote()
+    {
+        $type = $this->getAsIType();
+
+        $in = 'guid\'fghijklmnopqrstuvwxyzABCDEFGHIJKL';
+        $out = null;
+        $this->assertFalse($type->validate($in, $out));
+        $this->assertEquals(null, $out);
+    }
+
+    public function testValidateFailureBadData()
+    {
+        $type = $this->getAsIType();
+
+        $in = 'guid\'fghijklmnopqrstuvwxyzABCDEFGHIJK\'';
+        $out = null;
+        $this->assertFalse($type->validate($in, $out));
+        $this->assertEquals(null, $out);
+    }
+
+    public function testConvertShortString()
+    {
+        $type = $this->getAsIType();
+
+        $expected = 'a';
+        $data = 'a';
+        $result = $type->convert($data);
+        $this->assertEquals($expected, $result);
     }
 
     public function testConvertToOData()
@@ -124,9 +158,24 @@ class GuidTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $actual);
     }
 
+    public function testGetName()
+    {
+        $type = $this->getAsIType();
+
+        $actual = $type->getName();
+
+        $this->assertEquals('Edm.Guid', $actual);
+    }
+
     /**************
      *
      *  Begin Type Specific Tests
      *
      */
+
+    public function testValidateWithoutPrefixWithoutQuotes()
+    {
+        $value = '00000000000000000000000000000000';
+        $this->assertTrue(Guid::validateWithoutPrefix($value));
+    }
 }

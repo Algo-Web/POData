@@ -86,12 +86,13 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
 
     public function testValidateSuccess()
     {
-        $this->markTestSkipped('Too lazy see #67');
-    }
+        $date = 'datetime\'2399-12-31T24:51:51\'';
+        $type = $this->getAsIType();
 
-    public function testValidateFailure()
-    {
-        $this->markTestSkipped('Too lazy see #67');
+        $expected = '\'2399-12-31T24:51:51\'';
+        $out = '';
+        $this->assertTrue($type->validate($date, $out));
+        $this->assertEquals($expected, $out);
     }
 
     public function testConvert()
@@ -116,9 +117,60 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $actual);
     }
 
+    public function testGetName()
+    {
+        $type = $this->getAsIType();
+
+        $actual = $type->getName();
+
+        $this->assertEquals('Edm.DateTime', $actual);
+    }
+
     /**************
      *
      *  Begin Type Specific Tests
      *
      */
+
+    public function testYear()
+    {
+        $date = '2399-12-31T24:51:51';
+        $result = DateTime::year($date);
+        $this->assertEquals('2400', $result);
+    }
+
+    public function testMonth()
+    {
+        $date = '2399-12-31T24:51:51';
+        $result = DateTime::month($date);
+        $this->assertEquals('01', $result);
+    }
+
+    public function testDay()
+    {
+        $date = '2399-12-31T24:51:51';
+        $result = DateTime::day($date);
+        $this->assertEquals('01', $result);
+    }
+
+    public function testHour()
+    {
+        $date = '2399-12-31T24:51:51';
+        $result = DateTime::hour($date);
+        $this->assertEquals('00', $result);
+    }
+
+    public function testMinute()
+    {
+        $date = '2399-12-31T24:51:51';
+        $result = DateTime::minute($date);
+        $this->assertEquals('51', $result);
+    }
+
+    public function testSecond()
+    {
+        $date = '2399-12-31T24:51:51';
+        $result = DateTime::second($date);
+        $this->assertEquals('51', $result);
+    }
 }

@@ -23,7 +23,7 @@ trait uriProcessor
      */
     public static function uriProcessorForbidden()
     {
-        return 'Forbidden';
+        return 'Forbidden.';
     }
     /**
      * Format a message to show error when the requested uri is not

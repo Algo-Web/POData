@@ -85,7 +85,7 @@ class ResourceAssociationTypeEnd
         ) {
             throw new \InvalidArgumentException(
                 Messages::resourceAssociationTypeEndPropertyMustBeNullOrInstanceofResourceProperty(
-                    '$$resourceProperty'
+                    '$resourceProperty'
                 )
             );
         }

@@ -9,7 +9,7 @@ class ODataExceptionTest extends \PHPUnit_Framework_TestCase
     public function testCreateForbiddenODataException()
     {
         $foo = ODataException::createForbiddenError();
-        $expected = 'Forbidden';
+        $expected = 'Forbidden.';
         $actual = $foo->getMessage();
         $this->assertEquals($expected, $actual);
         $this->assertEquals(403, $foo->getStatusCode());

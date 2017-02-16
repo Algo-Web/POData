@@ -86,12 +86,58 @@ class BinaryTest extends \PHPUnit_Framework_TestCase
 
     public function testValidateSuccess()
     {
-        $this->markTestSkipped('Too lazy see #65');
+        $type = $this->getAsIType();
+
+        $expected = [327680];
+        $out = '';
+
+        $this->assertTrue($type->validate('x\'ab\'', $out));
+        $this->assertEquals($expected, $out);
     }
 
-    public function testValidateFailure()
+    public function testValidateFailureBadStart()
     {
-        $this->markTestSkipped('Too lazy see #65');
+        $type = $this->getAsIType();
+
+        $out = '';
+
+        $this->assertFalse($type->validate('a', $out));
+    }
+
+    public function testValidateFailureBadBinaryStart()
+    {
+        $type = $this->getAsIType();
+
+        $out = '';
+
+        $this->assertFalse($type->validate('binary\'c', $out));
+    }
+
+    public function testValidateFailureBadCapitalXStart()
+    {
+        $type = $this->getAsIType();
+
+        $out = '';
+
+        $this->assertFalse($type->validate('X\'c', $out));
+    }
+
+    public function testValidateFailureBadXStart()
+    {
+        $type = $this->getAsIType();
+
+        $out = '';
+
+        $this->assertFalse($type->validate('x\'c', $out));
+    }
+
+    public function testValidateFailureOddLengthAfterPrefix()
+    {
+        $type = $this->getAsIType();
+
+        $out = '';
+
+        $this->assertFalse($type->validate('x\'abc\'', $out));
     }
 
     public function testConvert()
@@ -157,8 +203,33 @@ class BinaryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $out);
 
         $input = '1234567890abcdefABCDXX';
-        $this->assertFalse(Binary::validateWithoutPrefix($input, $out), 'Invalid character X anywhere in string should fail');
+        $this->assertFalse(
+            Binary::validateWithoutPrefix($input, $out),
+            'Invalid character X anywhere in string should fail'
+        );
         //Expect values for each individual byte
         $this->assertNull($out);
+    }
+
+    public function testStaticBinaryEqualAtLeastOneNull()
+    {
+        $this->assertFalse(Binary::binaryEqual(null, null));
+        $this->assertFalse(Binary::binaryEqual('ab', null));
+        $this->assertFalse(Binary::binaryEqual(null, 'cd'));
+    }
+
+    public function testStaticBinaryEqualNoneNull()
+    {
+        $this->assertFalse(Binary::binaryEqual('true', 'false'));
+        $this->assertTrue(Binary::binaryEqual('false', 'false'));
+    }
+
+    public function testGetName()
+    {
+        $type = $this->getAsIType();
+
+        $actual = $type->getName();
+
+        $this->assertEquals('Edm.Binary', $actual);
     }
 }

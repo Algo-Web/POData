@@ -131,6 +131,15 @@ class CharTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $actual);
     }
 
+    public function testGetName()
+    {
+        $type = $this->getAsIType();
+
+        $actual = $type->getName();
+
+        $this->assertEquals('System.Char', $actual);
+    }
+
     /**************
      *
      *  Begin Type Specific Tests

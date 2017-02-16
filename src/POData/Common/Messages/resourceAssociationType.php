@@ -13,7 +13,7 @@ trait resourceAssociationType
      */
     public static function resourceAssociationTypeEndPropertyMustBeNullOrInstanceofResourceProperty($argumentName)
     {
-        return "The argument '$argumentName' must be either null or instance of 'ResourceProperty";
+        return "The argument '".$argumentName."' must be either null or instance of 'ResourceProperty'.";
     }
 
     /**
@@ -23,6 +23,6 @@ trait resourceAssociationType
      */
     public static function resourceAssociationTypeEndBothPropertyCannotBeNull()
     {
-        return 'Both to and from property argument to ResourceAssociationTypeEnd constructor cannot be null';
+        return 'Both to and from property argument to ResourceAssociationTypeEnd constructor cannot be null.';
     }
 }
