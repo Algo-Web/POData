@@ -595,7 +595,7 @@ class ObjectModelSerializerTest extends TestCase
         $nuType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::COMPLEX);
 
         $prop1 = m::mock(ResourceProperty::class);
-        $prop1->shouldReceive('getKind')->andReturn(ResourcePropertyKind::COMPLEX_TYPE)->once();
+        $prop1->shouldReceive('getKind')->andReturn(ResourcePropertyKind::COMPLEX_TYPE)->twice();
         $prop1->shouldReceive('isKindOf')->andReturn(false);
         $prop1->shouldReceive('getName')->andReturn('type');
         $prop1->shouldReceive('getResourceType')->andReturn($propType);
@@ -607,13 +607,13 @@ class ObjectModelSerializerTest extends TestCase
         $prop2->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::ENTITY);
 
         $prop3 = m::mock(ResourceProperty::class);
-        $prop3->shouldReceive('getKind')->andReturn(ResourcePropertyKind::COMPLEX_TYPE)->once();
+        $prop3->shouldReceive('getKind')->andReturn(ResourcePropertyKind::COMPLEX_TYPE)->never();
         $prop3->shouldReceive('isKindOf')->andReturn(false);
         $prop3->shouldReceive('getResourceType')->andReturn($nuType);
         $prop3->shouldReceive('getName')->andReturn('type');
         $prop3->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::COMPLEX);
         $prop4 = m::mock(ResourceProperty::class);
-        $prop4->shouldReceive('getKind')->andReturn(ResourcePropertyKind::RESOURCE_REFERENCE)->once();
+        $prop4->shouldReceive('getKind')->andReturn(ResourcePropertyKind::RESOURCE_REFERENCE)->never();
         $prop4->shouldReceive('isKindOf')->andReturn(false);
         $prop4->shouldReceive('getName')->andReturn('name');
         $prop4->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::ENTITY);
@@ -625,7 +625,7 @@ class ObjectModelSerializerTest extends TestCase
         $propType->shouldReceive('getAllProperties')->andReturn([$prop3, $prop4]);
 
         $currentNode = m::mock(ExpandedProjectionNode::class);
-        $currentNode->shouldReceive('getChildNodes')->andReturn([$kidNode1, $kidNode2])->once();
+        $currentNode->shouldReceive('getChildNodes')->andReturn([$kidNode1, $kidNode2])->never();
         $currentNode->shouldReceive('canSelectAllProperties')->andReturn(false);
         $currentNode->shouldReceive('getName')->andReturn('oldName');
 

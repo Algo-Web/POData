@@ -680,17 +680,17 @@ class StreamProviderWrapperTest extends TestCase
         $host->shouldReceive('getRequestIfNoneMatch')->andReturn("electric-rave");
         $host->shouldReceive('getResponseContentType')->andReturn('application/json');
         $host->shouldReceive('getResponseETag')->andReturn('W/"electric-rave"');
-        $host->shouldReceive('setResponseETag')->andReturn('W/"electric-rave"')->once();
+        $host->shouldReceive('setResponseETag')->withArgs(['W/"electric-rave"'])->never();
 
         $service = m::mock(IService::class);
         $service->shouldReceive('getOperationContext')->andReturn($context);
         $service->shouldReceive('getHost')->andReturn($host);
         $service->shouldReceive('getConfiguration->getMaxDataServiceVersion')->andReturn(new Version(3, 0));
-        $service->shouldReceive('getService')->withArgs(['IStreamProvider'])->andReturn(null)->once();
+        $service->shouldReceive('getService')->withArgs(['IStreamProvider'])->andReturn(null)->never();
         $service->shouldReceive('getService')->withArgs(['IStreamProvider2'])->andReturn($streamProv)->once();
 
         $foo = m::mock(StreamProviderWrapper::class)->makePartial();
-        $foo->shouldReceive('getDefaultStreamEditMediaUri')->andReturn('https://www.example.org')->never();
+        $foo->shouldReceive('getDefaultStreamEditMediaUri')->andReturn('https://www.example.org')->once();
         $streamInfo = m::mock(ResourceStreamInfo::class);
         $foo->setService($service);
 

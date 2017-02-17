@@ -94,8 +94,8 @@ class ErrorHandlerTest extends TestCase
         $outgoing = m::mock(OutgoingResponse::class);
         $outgoing->shouldReceive('setServiceVersion')
             ->withArgs([ODataConstants::DATASERVICEVERSION_1_DOT_0 . ';'])->andReturnNull()->once();
-        $outgoing->shouldReceive('setStatusCode')->withArgs(['304 Not Modified'])->andReturnNull()->once();
-        $outgoing->shouldReceive('setContentType')->withArgs(['application/json'])->andReturnNull()->once();
+        $outgoing->shouldReceive('setStatusCode')->withArgs(['304 Not Modified'])->andReturnNull()->never();
+        $outgoing->shouldReceive('setContentType')->withArgs(['application/json'])->andReturnNull()->never();
         $outgoing->shouldReceive('setStream')->passthru();
         $outgoing->shouldReceive('getStream')->passthru();
 
