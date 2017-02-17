@@ -116,13 +116,13 @@ class RequestExpanderTest extends TestCase
         $wrap->shouldReceive('getResourceSet')->andReturn($resource);
 
         $stack = m::mock(SegmentStack::class);
-        $stack->shouldReceive('pushSegment')->andReturnNull()->once();
+        $stack->shouldReceive('pushSegment')->andReturn(true)->once();
         $stack->shouldReceive('popSegment')->andReturnNull()->once();
         $stack->shouldReceive('getSegmentWrappers')->andReturn([])->once();
 
         $node = m::mock(RootProjectionNode::class);
         $node->shouldReceive('isExpansionSpecified')->andReturn(true);
-        $node->shouldReceive('getChildNodes')->andReturn([])->once();
+        $node->shouldReceive('getChildNodes')->andReturn([])->never();
 
         $resProperty = m::mock(ResourceProperty::class);
         $resProperty->shouldReceive('getKind')->andReturn(ResourcePropertyKind::RESOURCE_REFERENCE);
@@ -132,7 +132,7 @@ class RequestExpanderTest extends TestCase
         $type->shouldReceive('setPropertyValue')->withAnyArgs()->andReturnNull()->once();
 
         $nuNode = m::mock(RootProjectionNode::class);
-        $nuNode->shouldReceive('getChildNodes')->andReturn([])->once();
+        $nuNode->shouldReceive('getChildNodes')->andReturn([])->never();
         $nuNode->shouldReceive('getResourceType')->andReturn($type);
         $nuNode->shouldReceive('getResourceProperty')->andReturn($resProperty);
         $nuNode->shouldReceive('getResourceSetWrapper')->andReturn($wrap);
@@ -176,19 +176,19 @@ class RequestExpanderTest extends TestCase
         $wrap->shouldReceive('getResourceType')->andReturn($type);
 
         $providers = m::mock(ProvidersWrapper::class);
-        $providers->shouldReceive('getRelatedResourceReference')->andReturnNull()->once();
+        $providers->shouldReceive('getRelatedResourceReference')->andReturnNull()->never();
         $providers->shouldReceive('getRelatedResourceSet')->andReturn($resource)->once();
         $providers->shouldReceive('getResourceSetWrapperForNavigationProperty')->andReturn($wrap)->once();
 
         $stack = m::mock(SegmentStack::class);
-        $stack->shouldReceive('pushSegment')->andReturnNull()->once();
-        $stack->shouldReceive('popSegment')->andReturnNull()->once();
-        $stack->shouldReceive('getSegmentWrappers')->andReturn([])->once();
+        $stack->shouldReceive('pushSegment')->andReturnNull()->times(2);
+        $stack->shouldReceive('popSegment')->andReturnNull()->times(2);
+        $stack->shouldReceive('getSegmentWrappers')->andReturn([])->times(2);
         $stack->shouldReceive('getSegmentNames')->andReturn(['time'])->once();
 
         $node = m::mock(RootProjectionNode::class);
         $node->shouldReceive('isExpansionSpecified')->andReturn(true);
-        $node->shouldReceive('getChildNodes')->andReturn([])->once();
+        $node->shouldReceive('getChildNodes')->andReturn([])->never();
 
         $resProperty = m::mock(ResourceProperty::class);
         $resProperty->shouldReceive('getKind')->andReturn(ResourcePropertyKind::RESOURCESET_REFERENCE);
@@ -197,7 +197,7 @@ class RequestExpanderTest extends TestCase
 
 
         $nuNode = m::mock(RootProjectionNode::class);
-        $nuNode->shouldReceive('getChildNodes')->andReturn([])->once();
+        $nuNode->shouldReceive('getChildNodes')->andReturn([])->never();
         $nuNode->shouldReceive('getResourceType')->andReturn($type);
         $nuNode->shouldReceive('getResourceProperty')->andReturn($resProperty);
         $nuNode->shouldReceive('getResourceSetWrapper')->andReturn($wrap);
@@ -298,8 +298,8 @@ class RequestExpanderTest extends TestCase
         $node->shouldReceive('getInternalOrderByInfo')->andReturn(null);
 
         $stack = m::mock(SegmentStack::class);
-        $stack->shouldReceive('pushSegment')->andReturnNull()->once();
-        $stack->shouldReceive('popSegment')->andReturnNull()->once();
+        $stack->shouldReceive('pushSegment')->andReturn(true)->once();
+        $stack->shouldReceive('popSegment')->andReturnNull()->never();
         $stack->shouldReceive('getSegmentWrappers')->andReturn([])->once();
         $stack->shouldReceive('getSegmentNames')->andReturn([])->once();
 
