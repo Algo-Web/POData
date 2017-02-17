@@ -7,6 +7,7 @@ use POData\Configuration\ServiceConfiguration;
 use POData\Configuration\EntitySetRights;
 use POData\ObjectModel\IObjectSerialiser;
 use POData\ObjectModel\ObjectModelSerializer;
+use POData\OperationContext\ServiceHost;
 use POData\Providers\Stream\IStreamProvider;
 use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\Query\IQueryProvider;
@@ -27,8 +28,12 @@ class SimpleDataService extends BaseService implements IService
     protected $queryProvider;
     public $maxPageSize = 200;
 
-    public function __construct($db, SimpleMetadataProvider $metaProvider, IObjectSerialiser $serialiser = null)
-    {
+    public function __construct(
+        $db,
+        SimpleMetadataProvider $metaProvider,
+        ServiceHost $host,
+        IObjectSerialiser $serialiser = null
+    ) {
         $this->metaProvider = $metaProvider;
         if ($db instanceof IQueryProvider) {
             $this->queryProvider = $db;
@@ -38,6 +43,7 @@ class SimpleDataService extends BaseService implements IService
         } else {
             $this->queryProvider = new QueryProvider($db);
         }
+        $this->setHost($host);
         parent::__construct($serialiser);
     }
 
