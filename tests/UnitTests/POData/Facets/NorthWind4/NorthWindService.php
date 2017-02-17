@@ -6,16 +6,25 @@ use POData\Configuration\EntitySetRights;
 use POData\Configuration\ProtocolVersion;
 use POData\Configuration\ServiceConfiguration;
 use POData\BaseService;
+use POData\IService;
 use POData\OperationContext\HTTPRequestMethod;
 use POData\Common\ODataException;
 use POData\Common\Messages;
+use POData\OperationContext\ServiceHost;
 use POData\UriProcessor\UriProcessor;
 
 class NorthWindService extends BaseService
 {
     private $_northWindMetadata = null;
     private $_northWindQueryProvider = null;
-    private $_serviceHost;
+    //private $_serviceHost;
+
+
+    public function __construct(ServiceHost $serviceHost)
+    {
+        $this->setHost($serviceHost);
+        parent::__construct(null);
+    }
 
     /**
      * This method is called only once to initialize service-wide policies.
@@ -64,13 +73,16 @@ class NorthWindService extends BaseService
     // so we are using getHost() below.
     public function handleRequest()
     {
+        $request = $this->getOperationContext()->incomingRequest();
         $this->createProviders();
         $this->getHost()->validateQueryParameters();
-        $requestMethod = $this->getOperationContext()->incomingRequest()->getMethod();
+        $requestMethod = $request->getMethod();
         if ($requestMethod != HTTPRequestMethod::GET()) {
             throw ODataException::createNotImplementedError(Messages::onlyReadSupport($requestMethod));
         }
 
-        return UriProcessor::process($this);
+        $result = UriProcessor::process($this);
+        $this->objectSerialiser->setRequest($result->getRequest());
+        return $result;
     }
 }

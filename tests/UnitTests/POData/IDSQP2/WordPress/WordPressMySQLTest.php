@@ -27,7 +27,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new WordPressDataService();
+        $dataService = new WordPressDataService($host);
         $dataService->setHost($host);
 
         $uriProcessor = $dataService->handleRequest();
@@ -60,8 +60,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new WordPressDataService();
-        $dataService->setHost($host);
+        $dataService = new WordPressDataService($host);
 
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
@@ -93,8 +92,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new WordPressDataService();
-        $dataService->setHost($host);
+        $dataService = new WordPressDataService($host);
 
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
@@ -126,8 +124,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new WordPressDataService();
-        $dataService->setHost($host);
+        $dataService = new WordPressDataService($host);
 
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
@@ -159,8 +156,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new WordPressDataService();
-        $dataService->setHost($host);
+        $dataService = new WordPressDataService($host);
 
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
@@ -192,8 +188,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new WordPressDataService();
-        $dataService->setHost($host);
+        $dataService = new WordPressDataService($host);
 
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
@@ -225,8 +220,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new WordPressDataService();
-        $dataService->setHost($host);
+        $dataService = new WordPressDataService($host);
 
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
@@ -258,8 +252,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new WordPressDataService();
-        $dataService->setHost($host);
+        $dataService = new WordPressDataService($host);
 
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
@@ -291,8 +284,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new WordPressDataService();
-        $dataService->setHost($host);
+        $dataService = new WordPressDataService($host);
 
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
@@ -324,8 +316,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new WordPressDataService();
-        $dataService->setHost($host);
+        $dataService = new WordPressDataService($host);
 
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
@@ -357,8 +348,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new WordPressDataService();
-        $dataService->setHost($host);
+        $dataService = new WordPressDataService($host);
 
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
@@ -390,8 +380,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
             );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new WordPressDataService();
-        $dataService->setHost($host);
+        $dataService = new WordPressDataService($host);
 
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
@@ -423,8 +412,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new WordPressDataService();
-        $dataService->setHost($host);
+        $dataService = new WordPressDataService($host);
 
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
@@ -456,8 +444,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new WordPressDataService();
-        $dataService->setHost($host);
+        $dataService = new WordPressDataService($host);
 
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
@@ -489,8 +476,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new WordPressDataService();
-        $dataService->setHost($host);
+        $dataService = new WordPressDataService($host);
 
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
@@ -522,8 +508,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new WordPressDataService();
-        $dataService->setHost($host);
+        $dataService = new WordPressDataService($host);
 
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
@@ -555,8 +540,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new WordPressDataService();
-        $dataService->setHost($host);
+        $dataService = new WordPressDataService($host);
 
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
@@ -588,8 +572,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new WordPressDataService();
-        $dataService->setHost($host);
+        $dataService = new WordPressDataService($host);
 
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
@@ -621,8 +604,7 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new WordPressDataService();
-        $dataService->setHost($host);
+        $dataService = new WordPressDataService($host);
 
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
@@ -654,8 +636,8 @@ class WordPressMySQLTest extends \PHPUnit_Framework_testCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new WordPressDataService();
-        $dataService->setHost($host);
+        $dataService = new WordPressDataService($host);
+
         $uriProcessor = $dataService->handleRequest();
         $check = !is_null($uriProcessor);
         $this->assertTrue($check);

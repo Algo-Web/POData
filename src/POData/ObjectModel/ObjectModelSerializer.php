@@ -30,7 +30,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
      * @param IService           $service
      * @param RequestDescription $request the  request submitted by the client
      */
-    public function __construct(IService $service, RequestDescription $request)
+    public function __construct(IService $service, RequestDescription $request = null)
     {
         parent::__construct($service, $request);
     }

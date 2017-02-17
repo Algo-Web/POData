@@ -68,7 +68,7 @@ class ObjectModelSerializerBase
      * @param IService           $service Reference to the data service instance
      * @param RequestDescription $request Type instance describing the client submitted request
      */
-    protected function __construct(IService $service, RequestDescription $request)
+    protected function __construct(IService $service, RequestDescription $request = null)
     {
         $this->service = $service;
         $this->request = $request;
@@ -85,6 +85,7 @@ class ObjectModelSerializerBase
      */
     public function getRequest()
     {
+        assert(null != $this->request, "Request not yet set");
         return $this->request;
     }
 
@@ -96,6 +97,7 @@ class ObjectModelSerializerBase
     public function setRequest(RequestDescription $request)
     {
         $this->request = $request;
+        $this->stack->setRequest($request);
     }
 
     /**
