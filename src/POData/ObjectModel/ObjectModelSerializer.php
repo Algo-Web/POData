@@ -22,7 +22,7 @@ use POData\Common\Messages;
 /**
  * Class ObjectModelSerializer.
  */
-class ObjectModelSerializer extends ObjectModelSerializerBase
+class ObjectModelSerializer extends ObjectModelSerializerBase implements IObjectSerialiser
 {
     /**
      * Creates new instance of ObjectModelSerializer.
@@ -30,7 +30,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
      * @param IService           $service
      * @param RequestDescription $request the  request submitted by the client
      */
-    public function __construct(IService $service, RequestDescription $request)
+    public function __construct(IService $service, RequestDescription $request = null)
     {
         parent::__construct($service, $request);
     }

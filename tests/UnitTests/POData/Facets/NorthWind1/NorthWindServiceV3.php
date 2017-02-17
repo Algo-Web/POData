@@ -5,10 +5,17 @@ namespace UnitTests\POData\Facets\NorthWind1;
 use POData\Configuration\EntitySetRights;
 use POData\Configuration\ProtocolVersion;
 use POData\Configuration\ServiceConfiguration;
+use POData\OperationContext\ServiceHost;
 use UnitTests\POData\Facets\BaseServiceTestWrapper;
 
 class NorthWindServiceV3 extends BaseServiceTestWrapper
 {
+    public function __construct(ServiceHost $serviceHost)
+    {
+        $this->setHost($serviceHost);
+        parent::__construct(null);
+    }
+
     /**
      * This method is called only once to initialize service-wide policies.
      *

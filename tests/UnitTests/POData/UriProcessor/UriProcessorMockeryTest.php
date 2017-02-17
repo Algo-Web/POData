@@ -122,8 +122,7 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
             'QueryString' => null,
         );
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService2();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService2($host);
 
         $uriProcessor = $dataService->handleRequest();
         $requestDescription = $uriProcessor->getRequest();
@@ -138,8 +137,7 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService2();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService2($host);
 
         $uriProcessor = $dataService->handleRequest();
         $requestDescription = $uriProcessor->getRequest();
@@ -153,8 +151,7 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
             'QueryString' => null,
         );
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService2();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService2($host);
 
         $uriProcessor = $dataService->handleRequest();
         $requestDescription = $uriProcessor->getRequest();
@@ -178,8 +175,7 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService2();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService2($host);
 
         try {
             $dataService->handleRequest();
@@ -202,9 +198,7 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService2();
-        $dataService->setHost($host);
-
+        $dataService = new NorthWindService2($host);
         try {
             $dataService->handleRequest();
             $this->fail(
@@ -233,8 +227,7 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindServiceV1();
-        $dataService->setHost($host);
+        $dataService = new NorthWindServiceV1($host);
 
         try {
             $dataService->handleRequest();
@@ -271,8 +264,7 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService2();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService2($host);
 
         $uriProcessor = $dataService->handleRequest();
         $requestDescription = $uriProcessor->getRequest();
@@ -296,8 +288,7 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService2();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService2($host);
 
         $uriProcessor = $dataService->handleRequest();
         $requestDescription = $uriProcessor->getRequest();
@@ -328,8 +319,7 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService2();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService2($host);
 
         $uriProcessor = $dataService->handleRequest();
         $requestDescription = $uriProcessor->getRequest();
@@ -362,8 +352,7 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService2();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService2($host);
 
         $uriProcessor = $dataService->handleRequest();
         $requestDescription = $uriProcessor->getRequest();
@@ -424,8 +413,7 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService2();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService2($host);
 
         try {
             $dataService->handleRequest();
@@ -454,8 +442,7 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService2();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService2($host);
 
         $uriProcessor = $dataService->handleRequest();
         $requestDescription = $uriProcessor->getRequest();
@@ -490,8 +477,7 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService2();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService2($host);
 
         $uriProcessor = $dataService->handleRequest();
         $requestDescription = $uriProcessor->getRequest();
@@ -526,8 +512,7 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService2();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService2($host);
 
         try {
             $dataService->handleRequest();
@@ -561,8 +546,7 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService2();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService2($host);
 
         $uriProcessor = $dataService->handleRequest();
         $requestDescription = $uriProcessor->getRequest();
@@ -621,8 +605,7 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService2();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService2($host);
 
         try {
             $dataService->handleRequest();
@@ -655,8 +638,7 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService2();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService2($host);
 
         $uriProcessor = $dataService->handleRequest();
         $requestDescription = $uriProcessor->getRequest();
@@ -690,8 +672,7 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService2();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService2($host);
 
         $uriProcessor = $dataService->handleRequest();
 
@@ -735,8 +716,7 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService2();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService2($host);
 
         $uriProcessor = $dataService->handleRequest();
         $requestDescription = $uriProcessor->getRequest();
@@ -804,8 +784,7 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService2();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService2($host);
 
         $uriProcessor = $dataService->handleRequest();
 
@@ -864,8 +843,7 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
             'MaxDataServiceVersion' => new Version(2, 0),
         );
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService2();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService2($host);
 
         $uriProcessor = $dataService->handleRequest();
         $requestDescription = $uriProcessor->getRequest();
@@ -944,8 +922,8 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService2();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService2($host);
+
         $uriProcessor = $dataService->handleRequest();
 
         $requestDescription = $uriProcessor->getRequest();
@@ -988,8 +966,8 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService2();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService2($host);
+
         $uriProcessor = $dataService->handleRequest();
 
         $requestDescription = $uriProcessor->getRequest();
@@ -1049,8 +1027,8 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService2();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService2($host);
+
         $uriProcessor = $dataService->handleRequest();
 
         $requestDescription = $uriProcessor->getRequest();
@@ -1087,8 +1065,7 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService2();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService2($host);
 
         $uriProcessor = $dataService->handleRequest();
         $requestDescription = $uriProcessor->getRequest();
@@ -1129,8 +1106,7 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService2();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService2($host);
 
         $uriProcessor = $dataService->handleRequest();
         $requestDescription = $uriProcessor->getRequest();
@@ -1162,8 +1138,7 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService2();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService2($host);
 
         $uriProcessor = $dataService->handleRequest();
         $requestDescription = $uriProcessor->getRequest();
@@ -1199,8 +1174,7 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService2();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService2($host);
 
         $uriProcessor = $dataService->handleRequest();
         $requestDescription = $uriProcessor->getRequest();
@@ -1241,8 +1215,7 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
             'MaxDataServiceVersion' => new Version(2, 0),
         );
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService2();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService2($host);
 
         try {
             $dataService->handleRequest();
@@ -1264,8 +1237,7 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
             'MaxDataServiceVersion' => new Version(2, 0),
         );
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService2();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService2($host);
 
         try {
             $dataService->handleRequest();
@@ -1293,8 +1265,7 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
             'MaxDataServiceVersion' => new Version(2, 0),
         );
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService2();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService2($host);
 
         try {
             $dataService->handleRequest();
@@ -1323,8 +1294,7 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService2();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService2($host);
 
         try {
             $dataService->handleRequest();
@@ -1347,8 +1317,7 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService2();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService2($host);
 
         try {
             $dataService->handleRequest();
@@ -1377,8 +1346,7 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService2();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService2($host);
 
         try {
             $dataService->handleRequest();
@@ -1406,8 +1374,7 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
             'MaxDataServiceVersion' => new Version(2, 0),
         );
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService2();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService2($host);
 
         try {
             $dataService->handleRequest();
@@ -1429,8 +1396,7 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
             'MaxDataServiceVersion' => new Version(2, 0),
         );
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService2();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService2($host);
 
         try {
             $dataService->handleRequest();
@@ -1476,8 +1442,7 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindServiceV1();
-        $dataService->setHost($host);
+        $dataService = new NorthWindServiceV1($host);
 
         try {
             $dataService->handleRequest();
@@ -1507,8 +1472,7 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
             'MaxDataServiceVersion' => new Version(2, 0),
         );
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService2();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService2($host);
 
         try {
             $dataService->handleRequest();
@@ -1538,8 +1502,7 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
             'MaxDataServiceVersion' => new Version(1, 0),
         );
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService2();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService2($host);
 
         try {
             $dataService->handleRequest();
@@ -1569,8 +1532,7 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
             'MaxDataServiceVersion' => new Version(2, 0),
         );
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService2();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService2($host);
 
         try {
             $dataService->handleRequest();
@@ -1598,8 +1560,7 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
             'MaxDataServiceVersion' => new Version(1, 0),
         );
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService2();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService2($host);
 
         $uriProcessor = $dataService->handleRequest();
         $requestDescription = $uriProcessor->getRequest();
@@ -1636,8 +1597,7 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService2();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService2($host);
 
         try {
             $dataService->handleRequest();
@@ -1666,8 +1626,7 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
         );
         $host = new ServiceHostTestFake($hostInfo);
         //Note we are using V3 data service
-        $dataService = new NorthWindServiceV3();
-        $dataService->setHost($host);
+        $dataService = new NorthWindServiceV3($host);
 
         try {
             $dataService->handleRequest();
@@ -1695,8 +1654,7 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
             'MaxDataServiceVersion' => new Version(1, 0),
         );
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService2();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService2($host);
 
         try {
             $dataService->handleRequest();
@@ -1724,8 +1682,7 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
             'MaxDataServiceVersion' => new Version(2, 0),
         );
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService2();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService2($host);
 
         try {
             $dataService->handleRequest();
@@ -1755,8 +1712,7 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
             'MaxDataServiceVersion' => new Version(3, 0),
         );
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService2();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService2($host);
 
         try {
             $dataService->handleRequest();
@@ -1786,8 +1742,7 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
             'MaxDataServiceVersion' => new Version(1, 0),
         );
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindServiceV3();
-        $dataService->setHost($host);
+        $dataService = new NorthWindServiceV3($host);
 
         try {
             $dataService->handleRequest();
@@ -1824,8 +1779,7 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
             'MaxDataServiceVersion' => new Version(1, 0),
         );
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService2();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService2($host);
 
         try {
             $dataService->handleRequest();
@@ -1861,8 +1815,7 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService2();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService2($host);
 
         try {
             $dataService->handleRequest();
@@ -1892,8 +1845,7 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
             'MaxDataServiceVersion' => new Version(1, 0),
         );
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService2();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService2($host);
 
         try {
             $dataService->handleRequest();
@@ -1919,8 +1871,7 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
             'MaxDataServiceVersion' => new Version(1, 0),
         );
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService2();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService2($host);
 
         $uriProcessor = $dataService->handleRequest();
         $requestDescription = $uriProcessor->getRequest();
@@ -1972,8 +1923,7 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
             'MaxDataServiceVersion' => new Version(1, 0),
         );
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService2();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService2($host);
 
         try {
             $dataService->handleRequest();
@@ -2010,8 +1960,7 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService2();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService2($host);
 
         $uriProcessor = $dataService->handleRequest();
         $requestDescription = $uriProcessor->getRequest();
@@ -2066,8 +2015,7 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
             'MaxDataServiceVersion' => new Version(2, 0),
         );
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService2();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService2($host);
 
         try {
             $dataService->handleRequest();
@@ -2092,8 +2040,8 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService2();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService2($host);
+
         try {
             $dataService->handleRequest();
             $this->fail(
@@ -2124,8 +2072,7 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
             'MaxDataServiceVersion' => new Version(2, 0),
         );
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService2();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService2($host);
 
         try {
             $dataService->handleRequest();
@@ -2145,9 +2092,7 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService2();
-        $dataService->setHost($host);
-
+        $dataService = new NorthWindService2($host);
         try {
             $dataService->handleRequest();
             $this->fail('An expected ODataException for incorrect $top value has not been thrown');
@@ -2165,8 +2110,7 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
             'MaxDataServiceVersion' => new Version(2, 0),
         );
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService2();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService2($host);
 
         try {
             $dataService->handleRequest();
@@ -2185,9 +2129,7 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
             'MaxDataServiceVersion' => new Version(2, 0),
         );
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService2();
-        $dataService->setHost($host);
-
+        $dataService = new NorthWindService2($host);
         try {
             $dataService->handleRequest();
             $this->fail('An expected ODataException for incorrect $skip value has not been thrown');
@@ -2212,8 +2154,7 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService2();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService2($host);
 
         $uriProcessor = $dataService->handleRequest();
         $requestDescription = $uriProcessor->getRequest();
@@ -2240,8 +2181,7 @@ class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService2();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService2($host);
         $uriProcessor = $dataService->handleRequest();
 
         $requestDescription = $uriProcessor->getRequest();

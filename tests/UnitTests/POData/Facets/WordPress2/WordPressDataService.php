@@ -6,9 +6,11 @@ use POData\Configuration\EntitySetRights;
 use POData\Configuration\ProtocolVersion;
 use POData\Configuration\ServiceConfiguration;
 use POData\BaseService;
+use POData\ObjectModel\ObjectModelSerializer;
 use POData\OperationContext\HTTPRequestMethod;
 use POData\Common\ODataException;
 use POData\Common\Messages;
+use POData\OperationContext\ServiceHost;
 use POData\UriProcessor\UriProcessor;
 use Symfony\Component\Config\Definition\Exception\Exception;
 
@@ -17,6 +19,12 @@ class WordPressDataService extends BaseService
     private $_wordPressMetadata = null;
     private $_wordPressQueryProvider = null;
     private $_wordPressExpressionProvider = null;
+
+    public function __construct(ServiceHost $serviceHost)
+    {
+        $this->setHost($serviceHost);
+        parent::__construct(null);
+    }
 
     /**
      * This method is called only once to initialize service-wide policies.
@@ -77,6 +85,8 @@ class WordPressDataService extends BaseService
             throw ODataException::createNotImplementedError(Messages::onlyReadSupport($requestMethod));
         }
 
-        return UriProcessor::process($this);
+        $result = UriProcessor::process($this);
+        $this->objectSerialiser->setRequest($result->getRequest());
+        return $result;
     }
 }

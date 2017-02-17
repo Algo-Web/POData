@@ -27,7 +27,7 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService();
+        $dataService = new NorthWindService($host);
         $dataService->setHost($host);
 
         $uriProcessor = $dataService->handleRequest();
@@ -60,8 +60,7 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService($host);
 
         $uriProcessor = $dataService->handleRequest();
         $check = !is_null($uriProcessor);
@@ -94,8 +93,7 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService($host);
 
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
@@ -127,8 +125,7 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService($host);
 
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
@@ -160,8 +157,7 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService($host);
 
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
@@ -193,8 +189,7 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService($host);
 
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
@@ -226,8 +221,7 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService($host);
 
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
@@ -259,8 +253,7 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService($host);
 
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
@@ -292,8 +285,7 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService($host);
 
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
@@ -325,8 +317,7 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService($host);
 
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
@@ -358,8 +349,7 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService($host);
 
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
@@ -391,8 +381,7 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService($host);
 
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
@@ -424,8 +413,7 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService($host);
 
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
@@ -457,8 +445,7 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService($host);
 
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
@@ -490,8 +477,7 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService($host);
 
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
@@ -523,8 +509,7 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService($host);
 
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
@@ -556,8 +541,7 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService($host);
 
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
@@ -589,8 +573,7 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService($host);
 
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
@@ -622,8 +605,7 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService($host);
 
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
@@ -655,8 +637,7 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService($host);
 
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
@@ -688,8 +669,7 @@ class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
         );
 
         $host = new ServiceHostTestFake($hostInfo);
-        $dataService = new NorthWindService();
-        $dataService->setHost($host);
+        $dataService = new NorthWindService($host);
 
         $uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);

@@ -30,7 +30,7 @@ class SegmentStack
 
     private $mismatch = "Mismatch between size of names array and wrappers array";
 
-    public function __construct(RequestDescription $request)
+    public function __construct(RequestDescription $request = null)
     {
         $this->request = $request;
         $this->segmentNames = [];
@@ -121,6 +121,17 @@ class SegmentStack
      */
     public function getRequest()
     {
+        assert(null != $this->request, "Request must not be null");
         return $this->request;
+    }
+
+    /**
+     * Sets reference to the request submitted by client.
+     * @param RequestDescription $request
+     *
+     */
+    public function setRequest(RequestDescription $request)
+    {
+        $this->request = $request;
     }
 }

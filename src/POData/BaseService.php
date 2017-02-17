@@ -4,6 +4,7 @@ namespace POData;
 
 use POData\Common\MimeTypes;
 use POData\Common\Version;
+use POData\ObjectModel\IObjectSerialiser;
 use POData\OperationContext\HTTPRequestMethod;
 use POData\Common\ErrorHandler;
 use POData\Common\Messages;
@@ -84,6 +85,23 @@ abstract class BaseService implements IRequestHandler, IService
      * @var ServiceConfiguration
      */
     private $config;
+
+    /**
+     * Hold reference to object serialiser - bit wot turns PHP objects
+     * into message traffic on wire
+     *
+     * @var IObjectSerialiser
+     */
+    protected $objectSerialiser;
+
+    protected function __construct(IObjectSerialiser $serialiser = null)
+    {
+        if (null == $serialiser) {
+            $this->objectSerialiser = new ObjectModelSerializer($this, null);
+        } else {
+            $this->objectSerialiser = $serialiser;
+        }
+    }
 
     /**
      * Gets reference to ServiceConfiguration instance so that
@@ -209,8 +227,8 @@ abstract class BaseService implements IRequestHandler, IService
             $this->_serviceHost->validateQueryParameters();
             //$requestMethod = $this->getOperationContext()->incomingRequest()->getMethod();
             //if ($requestMethod != HTTPRequestMethod::GET()) {
-                // Now supporting GET and trying to support PUT
-                //throw ODataException::createNotImplementedError(Messages::onlyReadSupport($requestMethod));
+            // Now supporting GET and trying to support PUT
+            //throw ODataException::createNotImplementedError(Messages::onlyReadSupport($requestMethod));
             //}
 
             $uriProcessor = UriProcessor::process($this);
@@ -365,23 +383,20 @@ abstract class BaseService implements IRequestHandler, IService
             if (!$request->isSingleResult() && $method) {
                 // Code path for collection (feed or links)
                 $entryObjects = $request->getTargetResult();
-                self::assert(
-                    !is_null($entryObjects) && is_array($entryObjects),
-                    '!is_null($entryObjects) && is_array($entryObjects)'
-                );
+                assert(is_array($entryObjects), '!is_array($entryObjects)');
                 // If related resource set is empty for an entry then we should
                 // not throw error instead response must be empty feed or empty links
                 if ($request->isLinkUri()) {
                     $odataModelInstance = $objectModelSerializer->writeUrlElements($entryObjects);
-                    self::assert(
+                    assert(
                         $odataModelInstance instanceof \POData\ObjectModel\ODataURLCollection,
-                        '$odataModelInstance instanceof ODataURLCollection'
+                        '!$odataModelInstance instanceof ODataURLCollection'
                     );
                 } else {
                     $odataModelInstance = $objectModelSerializer->writeTopLevelElements($entryObjects);
-                    self::assert(
+                    assert(
                         $odataModelInstance instanceof \POData\ObjectModel\ODataFeed,
-                        '$odataModelInstance instanceof ODataFeed'
+                        '!$odataModelInstance instanceof ODataFeed'
                     );
                 }
             } else {
@@ -463,7 +478,7 @@ abstract class BaseService implements IRequestHandler, IService
                     // Employees(1)/Photo/$value => binary stream
                     // Customers/$count => string
                 } else {
-                    self::assert(false, 'Unexpected resource target kind');
+                    assert(false, 'Unexpected resource target kind');
                 }
             }
         }
@@ -557,15 +572,9 @@ abstract class BaseService implements IRequestHandler, IService
 
                 if ($request->getIdentifier() != '$count') {
                     $projectedProperty = $request->getProjectedProperty();
-                    self::assert(
-                        !is_null($projectedProperty),
-                        '!is_null($projectedProperty)'
-                    );
+                    assert(!is_null($projectedProperty), 'is_null($projectedProperty)');
                     $type = $projectedProperty->getInstanceType();
-                    self::assert(
-                        !is_null($type) && $type instanceof IType,
-                        '!is_null($type) && $type instanceof IType'
-                    );
+                    assert($type instanceof IType, '!$type instanceof IType');
                     if ($type instanceof Binary) {
                         $supportedResponseMimeTypes = array(MimeTypes::MIME_APPLICATION_OCTETSTREAM);
                     }
@@ -759,10 +768,7 @@ abstract class BaseService implements IRequestHandler, IService
         $comma = null;
         foreach ($resourceType->getETagProperties() as $eTagProperty) {
             $type = $eTagProperty->getInstanceType();
-            self::assert(
-                !is_null($type) && $type instanceof IType,
-                '!is_null($type) && $type instanceof IType'
-            );
+            assert($type instanceof IType, '!$type instanceof IType');
 
             $value = null;
             try {
@@ -878,22 +884,5 @@ abstract class BaseService implements IRequestHandler, IService
      */
     protected function handleDELETEOperation()
     {
-    }
-
-    /**
-     * Assert that the given condition is true.
-     *
-     * @param bool   $condition         The condtion to check
-     * @param string $conditionAsString Message to show if assertion fails
-     *
-     * @throws InvalidOperationException
-     */
-    protected static function assert($condition, $conditionAsString)
-    {
-        if (!$condition) {
-            throw new InvalidOperationException(
-                "Unexpected state, expecting $conditionAsString"
-            );
-        }
     }
 }
