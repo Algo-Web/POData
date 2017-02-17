@@ -27,7 +27,7 @@ class SimpleDataService extends BaseService implements IService
     protected $queryProvider;
     public $maxPageSize = 200;
 
-    public function __construct($db, SimpleMetadataProvider $metaProvider, IObjectSerialiser $serialiser)
+    public function __construct($db, SimpleMetadataProvider $metaProvider, IObjectSerialiser $serialiser = null)
     {
         $this->metaProvider = $metaProvider;
         if ($db instanceof IQueryProvider) {
@@ -40,6 +40,7 @@ class SimpleDataService extends BaseService implements IService
         }
         parent::__construct($serialiser);
     }
+
     public function initialize(ServiceConfiguration $config)
     {
         $config->setEntitySetPageSize('*', $this->maxPageSize);
