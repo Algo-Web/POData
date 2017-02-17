@@ -7,8 +7,9 @@ use POData\Providers\Metadata\ResourceProperty;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionParser2;
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 use POData\Providers\Metadata\IMetadataProvider;
+use UnitTests\POData\TestCase;
 
-class ExpressionParser2Test extends \PHPUnit_Framework_TestCase
+class ExpressionParser2Test extends TestCase
 {
     /**
      * @var IMetadataProvider
@@ -62,7 +63,7 @@ class ExpressionParser2Test extends \PHPUnit_Framework_TestCase
         $this->assertTrue(is_object($navigationsUsed[1][0]));
         $this->assertTrue($navigationsUsed[1][0] instanceof ResourceProperty);
         $this->assertEquals($navigationsUsed[1][0]->getName(), 'Product');
-
+        
         $filterExpression = 'Customer/Address/LineNumber add 4 eq 8';
         $resourceType = $this->_northWindMetadata->resolveResourceSet('Orders')->getResourceType();
         $filterInfo = ExpressionParser2::parseExpression2($filterExpression, $resourceType, $expressionProvider);

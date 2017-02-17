@@ -2,8 +2,9 @@
 namespace UnitTests\POData\UriProcessor;
 
 use POData\UriProcessor\XML2Array;
+use UnitTests\POData\TestCase;
 
-class XML2ArrayTest extends \PHPUnit_Framework_TestCase
+class XML2ArrayTest extends TestCase
 {
     public function provideInvalidObjects()
     {
@@ -20,13 +21,14 @@ class XML2ArrayTest extends \PHPUnit_Framework_TestCase
     }
     
     public function provideEmptyTypes()
-        {
+    {
         return [
             [0],
             [null],
             [false],
         ];
     }
+
     public function provideInvalidXML()
     {
         return [
@@ -34,6 +36,7 @@ class XML2ArrayTest extends \PHPUnit_Framework_TestCase
             ['<?xml version="1.0" encoding="UTF-8"?><root><head>'],
         ];
     }
+    
     /**
      * @param object $invalidObject
      *

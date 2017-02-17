@@ -15,12 +15,13 @@ use POData\Writers\Atom\AtomODataWriter;
 use POData\Providers\ProvidersWrapper;
 use POData\Common\Version;
 use POData\Common\MimeTypes;
+use UnitTests\POData\TestCase;
 
 use Mockery as m;
 
 use Carbon\Carbon as Carbon;
 
-class AtomODataWriterTest extends \PHPUnit_Framework_TestCase
+class AtomODataWriterTest extends TestCase
 {
     public function setUp()
     {

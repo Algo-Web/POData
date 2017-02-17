@@ -6,8 +6,9 @@ use Mockery as m;
 use POData\Configuration\ServiceConfiguration;
 use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\Metadata\ResourceSet;
+use UnitTests\POData\TestCase;
 
-class ServiceConfigurationTest extends \PHPUnit_Framework_TestCase
+class ServiceConfigurationTest extends TestCase
 {
     public function testUseVerboseErrorsRoundTrip()
     {

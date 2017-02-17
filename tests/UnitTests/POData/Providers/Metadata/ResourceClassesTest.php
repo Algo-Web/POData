@@ -19,8 +19,9 @@ use POData\Providers\Metadata\Type\Int32;
 use POData\Providers\Metadata\Type\Int16;
 use POData\Common\InvalidOperationException;
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
+use UnitTests\POData\TestCase;
 
-class ResourceClassesTest extends \PHPUnit_Framework_TestCase
+class ResourceClassesTest extends TestCase
 {
     protected function setUp()
     {
@@ -29,8 +30,9 @@ class ResourceClassesTest extends \PHPUnit_Framework_TestCase
         $x = NorthWindMetadata::Create();
     }
 
-    protected function tearDown()
+    public function tearDown()
     {
+        parent::tearDown();
     }
 
     /**

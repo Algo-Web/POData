@@ -6,9 +6,10 @@ use POData\Providers\Metadata\ResourceAssociationSetEnd;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\ResourceType;
+use UnitTests\POData\TestCase;
 use Mockery as m;
 
-class ResourceAssociationSetEndTest extends \PHPUnit_Framework_TestCase
+class ResourceAssociationSetEndTest extends TestCase
 {
     public function testConstructorResourcePropertyBadInstanceThrowException()
     {

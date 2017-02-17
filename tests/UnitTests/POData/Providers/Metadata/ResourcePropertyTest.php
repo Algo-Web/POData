@@ -7,8 +7,9 @@ use Mockery as m;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\Providers\Metadata\ResourceType;
+use UnitTests\POData\TestCase;
 
-class ResourcePropertyTest extends \PHPUnit_Framework_TestCase
+class ResourcePropertyTest extends TestCase
 {
     public function testConstructorNullNameThrowsException()
     {

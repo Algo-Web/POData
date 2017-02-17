@@ -7,8 +7,9 @@ use POData\Common\Url;
 use POData\Common\Version;
 use UnitTests\POData\Facets\ServiceHostTestFake;
 use UnitTests\POData\Facets\WordPress2\WordPressDataService;
+use UnitTests\POData\TestCase;
 
-class WordPressMySQLTest extends \PHPUnit_Framework_testCase
+class WordPressMySQLTest extends TestCase
 {
     /**
      * test the generated string comparison expression in mysql.

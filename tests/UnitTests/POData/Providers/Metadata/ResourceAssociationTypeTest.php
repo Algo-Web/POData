@@ -6,9 +6,10 @@ use POData\Providers\Metadata\ResourceAssociationType;
 use POData\Providers\Metadata\ResourceAssociationTypeEnd;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceType;
+use UnitTests\POData\TestCase;
 use Mockery as m;
 
-class ResourceAssociationTypeTest extends \PHPUnit_Framework_TestCase
+class ResourceAssociationTypeTest extends TestCase
 {
     public function testGetResourceAssociationTypeEndFirst()
     {

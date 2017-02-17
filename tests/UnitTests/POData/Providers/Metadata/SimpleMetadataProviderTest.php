@@ -15,8 +15,9 @@ use ReflectionClass;
 use ReflectionException;
 use UnitTests\POData\ObjectModel\reusableEntityClass1;
 use UnitTests\POData\ObjectModel\reusableEntityClass2;
+use UnitTests\POData\TestCase;
 
-class SimpleMetadataProviderTest extends \PHPUnit_Framework_TestCase
+class SimpleMetadataProviderTest extends TestCase
 {
     public function testAddResourceSetThenGoAroundAgainAndThrowException()
     {

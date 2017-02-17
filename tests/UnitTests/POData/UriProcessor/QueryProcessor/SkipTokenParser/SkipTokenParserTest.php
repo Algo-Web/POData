@@ -18,8 +18,9 @@ use UnitTests\POData\Facets\NorthWind1\Address4;
 use UnitTests\POData\Facets\NorthWind1\Customer2;
 use UnitTests\POData\Facets\NorthWind1\Order2;
 use POData\Providers\Query\IQueryProvider;
+use UnitTests\POData\TestCase;
 
-class SkipTokenParserTest extends \PHPUnit_Framework_TestCase
+class SkipTokenParserTest extends TestCase
 {
     /** @var IQueryProvider */
     protected $mockQueryProvider;
@@ -29,8 +30,9 @@ class SkipTokenParserTest extends \PHPUnit_Framework_TestCase
         $this->mockQueryProvider = m::mock('POData\Providers\Query\IQueryProvider');
     }
 
-    protected function tearDown()
+    public function tearDown()
     {
+        parent::tearDown();
     }
 
     /**

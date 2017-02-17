@@ -10,8 +10,9 @@ use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandProjectionPa
 use POData\Common\ODataException;
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 use UnitTests\POData\Facets\NorthWind1\NorthWindQueryProvider;
+use UnitTests\POData\TestCase;
 
-class ExpandTest extends \PHPUnit_Framework_TestCase
+class ExpandTest extends TestCase
 {
     protected function setUp()
     {
@@ -534,7 +535,8 @@ class ExpandTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    protected function tearDown()
+    public function tearDown()
     {
+        parent::tearDown();
     }
 }

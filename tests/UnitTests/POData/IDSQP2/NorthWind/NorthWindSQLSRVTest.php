@@ -7,8 +7,9 @@ use POData\Common\Url;
 use POData\Common\Version;
 use UnitTests\POData\Facets\ServiceHostTestFake;
 use UnitTests\POData\Facets\NorthWind4\NorthWindService;
+use UnitTests\POData\TestCase;
 
-class NorthWindSQLSRVTest extends \PHPUnit_Framework_TestCase
+class NorthWindSQLSRVTest extends TestCase
 {
     /**
      * Test the generated string comparison expression in sql server.

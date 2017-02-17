@@ -19,8 +19,9 @@ use POData\Common\Messages;
 use Mockery as m;
 use POData\UriProcessor\SegmentStack;
 use ReflectionException;
+use UnitTests\POData\TestCase;
 
-class ObjectModelSerializerBaseTest extends \PHPUnit_Framework_TestCase
+class ObjectModelSerializerBaseTest extends TestCase
 {
     private $mockRequest;
     private $service;
@@ -348,7 +349,7 @@ class ObjectModelSerializerBaseTest extends \PHPUnit_Framework_TestCase
     public function testShouldExpandSegmentWithCurrentExpandedNodeNotMatchingProperty()
     {
         $node = m::mock(ExpandedProjectionNode::class);
-        $node->shouldReceive('getChildNodes')->andReturn([])->once();
+        $node->shouldReceive('getChildNodes')->never();
         $node->shouldReceive('findNode')->withArgs(['abc'])->andReturnNull()->once();
 
         $foo = m::mock(ObjectModelSerializerDummy::class)->makePartial()->shouldAllowMockingProtectedMethods();
@@ -360,7 +361,7 @@ class ObjectModelSerializerBaseTest extends \PHPUnit_Framework_TestCase
     public function testShouldExpandSegmentWithCurrentExpandedNodeIsMatchingProperty()
     {
         $node = m::mock(ExpandedProjectionNode::class);
-        $node->shouldReceive('getChildNodes')->andReturn([])->once();
+        $node->shouldReceive('getChildNodes')->never();
         $node->shouldReceive('findNode')->withArgs(['abc'])->andReturn($node)->once();
 
         $foo = m::mock(ObjectModelSerializerDummy::class)->makePartial()->shouldAllowMockingProtectedMethods();

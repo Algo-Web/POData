@@ -281,7 +281,7 @@ class RequestExpander
      */
     private function pushSegment($segmentName, ResourceSetWrapper &$resourceSetWrapper)
     {
-        $this->getStack()->pushSegment($segmentName, $resourceSetWrapper);
+        return $this->getStack()->pushSegment($segmentName, $resourceSetWrapper);
     }
 
     /**

@@ -16,8 +16,9 @@ use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 use UnitTests\POData\ObjectModel\reusableEntityClass1;
 use UnitTests\POData\ObjectModel\reusableEntityClass2;
+use UnitTests\POData\TestCase;
 
-class ProvidersQueryWrapperTest extends \PHPUnit_Framework_TestCase
+class ProvidersQueryWrapperTest extends TestCase
 {
     private $queryType;
     private $sourceResourceSet;

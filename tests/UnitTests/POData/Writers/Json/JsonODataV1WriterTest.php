@@ -15,10 +15,11 @@ use POData\Writers\Json\JsonODataV1Writer;
 use POData\Providers\ProvidersWrapper;
 use POData\Common\Version;
 use POData\Common\MimeTypes;
+use UnitTests\POData\TestCase;
 
 use Mockery as m;
 
-class JsonODataV1WriterTest extends \PHPUnit_Framework_TestCase
+class JsonODataV1WriterTest extends TestCase
 {
     public function setUp()
     {

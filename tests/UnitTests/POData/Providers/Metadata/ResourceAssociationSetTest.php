@@ -8,8 +8,9 @@ use POData\Providers\Metadata\ResourceAssociationSetEnd;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\ResourceType;
+use UnitTests\POData\TestCase;
 
-class ResourceAssociationSetTest extends \PHPUnit_Framework_TestCase
+class ResourceAssociationSetTest extends TestCase
 {
     public function testConstructorBothPropertiesNullThrowException()
     {
@@ -35,7 +36,7 @@ class ResourceAssociationSetTest extends \PHPUnit_Framework_TestCase
         $end1->shouldReceive('getResourceProperty')->andReturn('foo')->twice();
         $end1->shouldReceive('getResourceType')->andReturn('bar')->once();
         $end2 = m::mock(ResourceAssociationSetEnd::class);
-        $end2->shouldReceive('getResourceProperty')->andReturn('foo')->twice();
+        $end2->shouldReceive('getResourceProperty')->andReturn('foo')->times(1);
         $end2->shouldReceive('getResourceType')->andReturn('bar')->once();
 
         $expected = 'Bidirectional self referencing association is not allowed.';
@@ -56,11 +57,11 @@ class ResourceAssociationSetTest extends \PHPUnit_Framework_TestCase
         $property = m::mock(ResourceProperty::class);
 
         $end1 = m::mock(ResourceAssociationSetEnd::class);
-        $end1->shouldReceive('getResourceProperty')->andReturn('foo')->times(3);
+        $end1->shouldReceive('getResourceProperty')->andReturn('foo')->times(2);
         $end1->shouldReceive('getResourceType')->andReturn('bar')->once();
         $end1->shouldReceive('isBelongsTo')->withAnyArgs()->andReturn(true)->once();
         $end2 = m::mock(ResourceAssociationSetEnd::class);
-        $end2->shouldReceive('getResourceProperty')->andReturn('bar')->twice();
+        $end2->shouldReceive('getResourceProperty')->andReturn('bar')->never();
         $end2->shouldReceive('getResourceType')->andReturn('foo')->once();
         $end2->shouldReceive('isBelongsTo')->withAnyArgs()->andReturn(true)->never();
 
@@ -77,11 +78,11 @@ class ResourceAssociationSetTest extends \PHPUnit_Framework_TestCase
         $property = m::mock(ResourceProperty::class);
 
         $end1 = m::mock(ResourceAssociationSetEnd::class);
-        $end1->shouldReceive('getResourceProperty')->andReturn('foo')->twice();
+        $end1->shouldReceive('getResourceProperty')->andReturn('foo')->once();
         $end1->shouldReceive('getResourceType')->andReturn('bar')->once();
         $end1->shouldReceive('isBelongsTo')->withAnyArgs()->andReturn(false)->once();
         $end2 = m::mock(ResourceAssociationSetEnd::class);
-        $end2->shouldReceive('getResourceProperty')->andReturn('bar')->times(3);
+        $end2->shouldReceive('getResourceProperty')->andReturn('bar')->once();
         $end2->shouldReceive('getResourceType')->andReturn('foo')->once();
         $end2->shouldReceive('isBelongsTo')->withAnyArgs()->andReturn(true)->once();
 
@@ -98,11 +99,11 @@ class ResourceAssociationSetTest extends \PHPUnit_Framework_TestCase
         $property = m::mock(ResourceProperty::class);
 
         $end1 = m::mock(ResourceAssociationSetEnd::class);
-        $end1->shouldReceive('getResourceProperty')->andReturn('foo')->twice();
+        $end1->shouldReceive('getResourceProperty')->andReturn('foo')->times(1);
         $end1->shouldReceive('getResourceType')->andReturn('bar')->once();
         $end1->shouldReceive('isBelongsTo')->withAnyArgs()->andReturn(false)->once();
         $end2 = m::mock(ResourceAssociationSetEnd::class);
-        $end2->shouldReceive('getResourceProperty')->andReturn('bar')->twice();
+        $end2->shouldReceive('getResourceProperty')->andReturn('bar')->never();
         $end2->shouldReceive('getResourceType')->andReturn('foo')->once();
         $end2->shouldReceive('isBelongsTo')->withAnyArgs()->andReturn(false)->once();
 
@@ -118,11 +119,11 @@ class ResourceAssociationSetTest extends \PHPUnit_Framework_TestCase
         $property = m::mock(ResourceProperty::class);
 
         $end1 = m::mock(ResourceAssociationSetEnd::class);
-        $end1->shouldReceive('getResourceProperty')->andReturn('foo')->twice();
+        $end1->shouldReceive('getResourceProperty')->andReturn('foo')->times(1);
         $end1->shouldReceive('getResourceType')->andReturn('bar')->once();
         $end1->shouldReceive('isBelongsTo')->withAnyArgs()->andReturn(true)->once();
         $end2 = m::mock(ResourceAssociationSetEnd::class);
-        $end2->shouldReceive('getResourceProperty')->andReturn('bar')->times(3);
+        $end2->shouldReceive('getResourceProperty')->andReturn('bar')->times(1);
         $end2->shouldReceive('getResourceType')->andReturn('foo')->once();
         $end2->shouldReceive('isBelongsTo')->withAnyArgs()->andReturn(true)->never();
 
@@ -139,11 +140,11 @@ class ResourceAssociationSetTest extends \PHPUnit_Framework_TestCase
         $property = m::mock(ResourceProperty::class);
 
         $end1 = m::mock(ResourceAssociationSetEnd::class);
-        $end1->shouldReceive('getResourceProperty')->andReturn('foo')->times(3);
+        $end1->shouldReceive('getResourceProperty')->andReturn('foo')->atLeast(2);
         $end1->shouldReceive('getResourceType')->andReturn('bar')->once();
         $end1->shouldReceive('isBelongsTo')->withAnyArgs()->andReturn(false)->once();
         $end2 = m::mock(ResourceAssociationSetEnd::class);
-        $end2->shouldReceive('getResourceProperty')->andReturn('bar')->twice();
+        $end2->shouldReceive('getResourceProperty')->andReturn('bar');
         $end2->shouldReceive('getResourceType')->andReturn('foo')->once();
         $end2->shouldReceive('isBelongsTo')->withAnyArgs()->andReturn(true)->once();
 
@@ -160,11 +161,11 @@ class ResourceAssociationSetTest extends \PHPUnit_Framework_TestCase
         $property = m::mock(ResourceProperty::class);
 
         $end1 = m::mock(ResourceAssociationSetEnd::class);
-        $end1->shouldReceive('getResourceProperty')->andReturn('foo')->twice();
+        $end1->shouldReceive('getResourceProperty')->andReturn('foo')->times(1);
         $end1->shouldReceive('getResourceType')->andReturn('bar')->once();
         $end1->shouldReceive('isBelongsTo')->withAnyArgs()->andReturn(false)->once();
         $end2 = m::mock(ResourceAssociationSetEnd::class);
-        $end2->shouldReceive('getResourceProperty')->andReturn('bar')->twice();
+        $end2->shouldReceive('getResourceProperty')->andReturn('bar')->never();
         $end2->shouldReceive('getResourceType')->andReturn('foo')->once();
         $end2->shouldReceive('isBelongsTo')->withAnyArgs()->andReturn(false)->once();
 

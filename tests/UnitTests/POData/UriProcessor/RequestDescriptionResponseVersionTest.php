@@ -11,6 +11,7 @@ use POData\UriProcessor\ResourcePathProcessor\SegmentParser\SegmentDescriptor;
 use POData\Common\Url;
 use POData\Common\Version;
 use POData\Common\ODataException;
+use UnitTests\POData\TestCase;
 
 use Mockery as m;
 
@@ -32,7 +33,7 @@ use Symfony\Component\EventDispatcher\Tests\Service;
 // see http://www.odata.org/documentation/odata-v3-documentation/odata-core/#5_Versioning
 // in V3, the default is to return everything as v3 unless the max doesn't allow it
 
-class RequestDescriptionResponseVersionTest extends \PHPUnit_Framework_TestCase
+class RequestDescriptionResponseVersionTest extends TestCase
 {
     /** @var IService */
     protected $mockService;

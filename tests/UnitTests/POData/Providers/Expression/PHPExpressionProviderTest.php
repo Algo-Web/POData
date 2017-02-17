@@ -10,8 +10,9 @@ use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\PropertyAcce
 use POData\UriProcessor\QueryProcessor\FunctionDescription;
 use POData\Providers\Expression\PHPExpressionProvider;
 use Mockery as m;
+use UnitTests\POData\TestCase;
 
-class PHPExpressionProviderTest extends \PHPUnit_Framework_TestCase
+class PHPExpressionProviderTest extends TestCase
 {
     public function testGetIteratorName()
     {

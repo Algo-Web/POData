@@ -14,8 +14,9 @@ use POData\OperationContext\ServiceHost;
 use POData\Common\Version;
 
 use Mockery as m;
+use UnitTests\POData\TestCase;
 
-class BaseServiceGetResponseContentTest extends \PHPUnit_Framework_TestCase
+class BaseServiceGetResponseContentTest extends TestCase
 {
     /** @var RequestDescription */
     protected $mockRequest;

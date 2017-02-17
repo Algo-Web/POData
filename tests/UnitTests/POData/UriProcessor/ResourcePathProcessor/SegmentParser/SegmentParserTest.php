@@ -14,8 +14,9 @@ use Mockery as m;
 
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 use POData\Providers\Query\IQueryProvider;
+use UnitTests\POData\TestCase;
 
-class SegmentParserTest extends \PHPUnit_Framework_TestCase
+class SegmentParserTest extends TestCase
 {
     private $_metadataProvider;
     private $providersWrapper;
@@ -769,7 +770,8 @@ class SegmentParserTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    protected function tearDown()
+    public function tearDown()
     {
+        parent::tearDown();
     }
 }

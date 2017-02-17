@@ -11,8 +11,9 @@ use POData\Providers\Metadata\Type\Navigation;
 use Mockery as m;
 use POData\Providers\Metadata\Type\StringType;
 use POData\Providers\Metadata\Type\TypeCode;
+use UnitTests\POData\TestCase;
 
-class NavigationTest extends \PHPUnit_Framework_TestCase
+class NavigationTest extends TestCase
 {
     protected $resource;
 

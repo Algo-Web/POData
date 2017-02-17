@@ -16,10 +16,11 @@ use POData\Writers\Json\JsonLightODataWriter;
 use POData\Providers\ProvidersWrapper;
 use POData\Common\Version;
 use POData\Common\MimeTypes;
+use UnitTests\POData\TestCase;
 
 use Mockery as m;
 
-class JsonLightODataWriterNoMetadataTest extends \PHPUnit_Framework_TestCase
+class JsonLightODataWriterNoMetadataTest extends TestCase
 {
     protected $serviceBase = 'this should not be used for minimal metadata';
 

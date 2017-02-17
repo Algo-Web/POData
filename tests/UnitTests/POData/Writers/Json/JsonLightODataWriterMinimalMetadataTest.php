@@ -16,10 +16,11 @@ use POData\Writers\Json\JsonLightODataWriter;
 use POData\Providers\ProvidersWrapper;
 use POData\Common\Version;
 use POData\Common\MimeTypes;
+use UnitTests\POData\TestCase;
 
 use Mockery as m;
 
-class JsonLightODataWriterMinimalMetadataTest extends \PHPUnit_Framework_TestCase
+class JsonLightODataWriterMinimalMetadataTest extends TestCase
 {
     protected $serviceBase = 'http://services.odata.org/OData/OData.svc';
 

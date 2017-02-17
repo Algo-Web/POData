@@ -5,8 +5,9 @@ namespace UnitTests\POData\OperationContext\Web;
 use POData\OperationContext\ServiceHost;
 use POData\Common\ODataConstants;
 use POData\Common\Version;
+use UnitTests\POData\TestCase;
 
-class ServiceHostTest extends \PHPUnit_Framework_TestCase
+class ServiceHostTest extends TestCase
 {
     //TOOD: should i use MimeTypes constants for these?
     //TODO: should i use the data generator instead of all these tests?

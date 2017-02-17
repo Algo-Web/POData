@@ -7,10 +7,11 @@ use POData\UriProcessor\RequestDescription;
 use POData\UriProcessor\SegmentStack;
 use POData\Common\InvalidOperationException;
 use POData\Providers\Metadata\ResourceSetWrapper;
+use UnitTests\POData\TestCase;
 
 use Mockery as m;
 
-class SegmentStackTest extends \PHPUnit_Framework_TestCase
+class SegmentStackTest extends TestCase
 {
     public function testConstructor()
     {

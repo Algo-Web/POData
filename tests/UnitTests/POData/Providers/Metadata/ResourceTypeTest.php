@@ -13,8 +13,9 @@ use Mockery as m;
 use POData\Providers\Metadata\Type\IType;
 use ReflectionClass;
 use UnitTests\POData\ObjectModel\reusableEntityClass2;
+use UnitTests\POData\TestCase;
 
-class ResourceTypeTest extends \PHPUnit_Framework_TestCase
+class ResourceTypeTest extends TestCase
 {
     public function testGetPrimitiveResourceTypeByte()
     {

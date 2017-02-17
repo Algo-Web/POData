@@ -3,8 +3,9 @@
 namespace UnitTests\POData\Common;
 
 use POData\Common\ODataException;
+use UnitTests\POData\TestCase;
 
-class ODataExceptionTest extends \PHPUnit_Framework_TestCase
+class ODataExceptionTest extends TestCase
 {
     public function testCreateForbiddenODataException()
     {

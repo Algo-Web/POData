@@ -4,8 +4,9 @@ namespace UnitTests\POData\Providers\Metadata;
 
 use POData\Providers\Metadata\ResourceStreamInfo;
 use UnitTests\POData\ObjectModel\reusableEntityClass2;
+use UnitTests\POData\TestCase;
 
-class ResourceStreamInfoTest extends \PHPUnit_Framework_TestCase
+class ResourceStreamInfoTest extends TestCase
 {
     public function testGetSetCustomStateRoundTrip()
     {

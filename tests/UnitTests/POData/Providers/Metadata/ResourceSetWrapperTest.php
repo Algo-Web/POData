@@ -10,8 +10,9 @@ use POData\Providers\Metadata\ResourceSetWrapper;
 use Mockery as m;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\ProvidersWrapper;
+use UnitTests\POData\TestCase;
 
-class ResourceSetWrapperTest extends \PHPUnit_Framework_TestCase
+class ResourceSetWrapperTest extends TestCase
 {
     public function testHasNamedStreamsYes()
     {
