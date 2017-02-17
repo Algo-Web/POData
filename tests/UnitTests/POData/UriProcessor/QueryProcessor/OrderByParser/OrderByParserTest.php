@@ -21,8 +21,9 @@ use UnitTests\POData\Facets\NorthWind1\Order2;
 use UnitTests\POData\Facets\NorthWind1\Order_Details2;
 use UnitTests\POData\Facets\NorthWind1\Product2;
 use POData\Providers\Query\IQueryProvider;
+use UnitTests\POData\TestCase;
 
-class OrderByParserTest extends \PHPUnit_Framework_TestCase
+class OrderByParserTest extends TestCase
 {
     /** @var IQueryProvider */
     protected $mockQueryProvider;
@@ -649,7 +650,8 @@ class OrderByParserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(count($orderByPathSegments), 2);
     }
 
-    protected function tearDown()
+    public function tearDown()
     {
+        parent::tearDown();
     }
 }

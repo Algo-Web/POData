@@ -6,8 +6,9 @@ use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 use POData\Common\InvalidOperationException;
 use POData\Common\ODataException;
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
+use UnitTests\POData\TestCase;
 
-class KeyDescriptorTest extends \PHPUnit_Framework_TestCase
+class KeyDescriptorTest extends TestCase
 {
     protected function setUp()
     {
@@ -221,7 +222,8 @@ class KeyDescriptorTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    protected function tearDown()
+    public function tearDown()
     {
+        parent::tearDown();
     }
 }

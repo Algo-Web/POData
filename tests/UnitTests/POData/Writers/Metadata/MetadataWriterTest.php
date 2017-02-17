@@ -13,8 +13,9 @@ use Mockery as m;
 
 use UnitTests\POData\Facets\NorthWind2\NorthWindMetadata;
 use POData\Providers\Query\IQueryProvider;
+use UnitTests\POData\TestCase;
 
-class MetadataWriterTest extends \PHPUnit_Framework_TestCase
+class MetadataWriterTest extends TestCase
 {
     /** @var IQueryProvider */
     protected $mockQueryProvider;

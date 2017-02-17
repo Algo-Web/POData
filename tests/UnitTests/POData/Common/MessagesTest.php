@@ -2,7 +2,9 @@
 
 namespace UnitTests\POData\Common;
 
-class MessagesTest extends \PHPUnit_Framework_TestCase
+use UnitTests\POData\TestCase;
+
+class MessagesTest extends TestCase
 {
     public function testVerifyMessageList()
     {

@@ -5,8 +5,9 @@ namespace UnitTests\POData\Providers\Metadata;
 use Mockery as m;
 use POData\Providers\Metadata\ResourceAssociationTypeEnd;
 use POData\Providers\Metadata\ResourceType;
+use UnitTests\POData\TestCase;
 
-class ResourceAssociationTypeEndTest extends \PHPUnit_Framework_TestCase
+class ResourceAssociationTypeEndTest extends TestCase
 {
     public function testConstructorWithBothPropertiesNullThrowException()
     {

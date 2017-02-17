@@ -11,8 +11,9 @@ use POData\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenParser;
 use POData\Providers\Query\IQueryProvider;
 use UnitTests\POData\Facets\NorthWind2\NorthWindMetadata;
 use Mockery as m;
+use UnitTests\POData\TestCase;
 
-class SkipTokenParser2Test extends \PHPUnit_Framework_TestCase
+class SkipTokenParser2Test extends TestCase
 {
     /** @var IQueryProvider */
     protected $mockQueryProvider;

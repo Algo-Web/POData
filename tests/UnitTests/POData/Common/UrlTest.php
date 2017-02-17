@@ -4,8 +4,9 @@ namespace UnitTests\POData\Common;
 
 use POData\Common\Url;
 use POData\Common\UrlFormatException;
+use UnitTests\POData\TestCase;
 
-class UrlTest extends \PHPUnit_Framework_TestCase
+class UrlTest extends TestCase
 {
     public function testAbsoluteUrl()
     {

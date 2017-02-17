@@ -19,8 +19,9 @@ use POData\UriProcessor\RequestExpander;
 
 use Mockery as m;
 use POData\UriProcessor\SegmentStack;
+use UnitTests\POData\TestCase;
 
-class RequestExpanderTest extends \PHPUnit_Framework_TestCase
+class RequestExpanderTest extends TestCase
 {
     public function testConstructorTest()
     {

@@ -40,8 +40,9 @@ use POData\Common\ODataConstants;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\OperationContext\HTTPRequestMethod;
 use POData\OperationContext\IOperationContext;
+use UnitTests\POData\TestCase;
 
-class UriProcessorMockeryTest extends \PHPUnit_Framework_TestCase
+class UriProcessorMockeryTest extends TestCase
 {
     public function testUriProcessorWithNoSuppliedOperationContext()
     {

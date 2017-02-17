@@ -21,10 +21,11 @@ use POData\Providers\Query\IQueryProvider;
 use POData\Providers\Query\QueryType;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
 use POData\Providers\Query\QueryResult;
+use UnitTests\POData\TestCase;
 
 use Mockery as m;
 
-class ProvidersWrapperTest extends \PHPUnit_Framework_TestCase
+class ProvidersWrapperTest extends TestCase
 {
     /** @var IQueryProvider */
     protected $mockQueryProvider;

@@ -24,8 +24,9 @@ use POData\Providers\Query\IQueryProvider;
 use POData\Providers\Query\QueryType;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
 use POData\Providers\Query\QueryResult;
+use UnitTests\POData\TestCase;
 
-class ProvidersWrapperTestMockery extends \PHPUnit_Framework_TestCase
+class ProvidersWrapperTestMockery extends TestCase
 {
     public function testGetResourceSetsByMatchingName()
     {

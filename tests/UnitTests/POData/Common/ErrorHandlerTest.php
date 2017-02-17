@@ -12,8 +12,9 @@ use POData\IService;
 use POData\OperationContext\IOperationContext;
 use POData\OperationContext\ServiceHost;
 use POData\OperationContext\Web\OutgoingResponse;
+use UnitTests\POData\TestCase;
 
-class ErrorHandlerTest extends \PHPUnit_Framework_TestCase
+class ErrorHandlerTest extends TestCase
 {
     public function testHandleODataException()
     {

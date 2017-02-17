@@ -19,8 +19,9 @@ use POData\Common\Messages;
 use Mockery as m;
 use POData\UriProcessor\SegmentStack;
 use ReflectionException;
+use UnitTests\POData\TestCase;
 
-class ObjectModelSerializerBaseTest extends \PHPUnit_Framework_TestCase
+class ObjectModelSerializerBaseTest extends TestCase
 {
     private $mockRequest;
     private $service;

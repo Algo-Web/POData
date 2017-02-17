@@ -3,8 +3,9 @@
 namespace UnitTests\POData\Common;
 
 use POData\Common\HttpStatus;
+use UnitTests\POData\TestCase;
 
-class HttpStatusTest extends \PHPUnit_Framework_TestCase
+class HttpStatusTest extends TestCase
 {
     public function codeDataProvider()
     {

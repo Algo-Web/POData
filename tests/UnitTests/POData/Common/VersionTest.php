@@ -3,8 +3,9 @@
 namespace UnitTests\POData\Common;
 
 use POData\Common\Version;
+use UnitTests\POData\TestCase;
 
-class VersionTest extends \PHPUnit_Framework_TestCase
+class VersionTest extends TestCase
 {
     public function testCompareSame()
     {

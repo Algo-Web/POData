@@ -11,8 +11,9 @@ use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandProjectionPa
 use POData\Common\ODataException;
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 use UnitTests\POData\Facets\NorthWind1\NorthWindQueryProvider;
+use UnitTests\POData\TestCase;
 
-class SelectTest extends \PHPUnit_Framework_TestCase
+class SelectTest extends TestCase
 {
     protected function setUp()
     {
@@ -610,7 +611,8 @@ class SelectTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($childNodes['UnitPrice'] instanceof ProjectionNode);
     }
 
-    protected function tearDown()
+    public function tearDown()
     {
+        parent::tearDown();
     }
 }

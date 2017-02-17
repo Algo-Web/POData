@@ -15,8 +15,9 @@ use POData\Providers\Stream\IStreamProvider;
 use POData\Providers\Stream\IStreamProvider2;
 use POData\Providers\Stream\StreamProviderWrapper;
 use UnitTests\POData\ObjectModel\reusableEntityClass2;
+use UnitTests\POData\TestCase;
 
-class StreamProviderWrapperTest extends \PHPUnit_Framework_TestCase
+class StreamProviderWrapperTest extends TestCase
 {
     public function testGetDefaultMediaStreamUriWithNullStreamInfo()
     {

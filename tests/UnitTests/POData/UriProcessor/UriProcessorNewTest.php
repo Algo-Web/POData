@@ -21,8 +21,9 @@ use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\SegmentDescriptor;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
 use POData\UriProcessor\UriProcessor;
+use UnitTests\POData\TestCase;
 
-class UriProcessorNewTest extends \PHPUnit_Framework_TestCase
+class UriProcessorNewTest extends TestCase
 {
     public function testTripExceptionInFactoryMethod()
     {

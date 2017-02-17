@@ -35,6 +35,7 @@ use POData\Providers\Metadata\IMetadataProvider;
 use POData\Common\Messages;
 use POData\Common\ODataConstants;
 use POData\Providers\Metadata\ResourceProperty;
+use UnitTests\POData\TestCase;
 
 use Mockery as m;
 use POData\IService;
@@ -43,7 +44,7 @@ use POData\IService;
 //TODO: move to own class files
 use UnitTests\POData\Facets\NorthWind1\Customer2;
 
-class UriProcessorTest extends \PHPUnit_Framework_TestCase
+class UriProcessorTest extends TestCase
 {
     /** @var IService */
     protected $mockService;

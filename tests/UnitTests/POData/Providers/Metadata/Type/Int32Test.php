@@ -20,8 +20,9 @@ use POData\Providers\Metadata\Type\Single;
 use POData\Providers\Metadata\Type\StringType;
 use POData\Providers\Metadata\Type\TypeCode;
 use POData\Providers\Metadata\Type\VoidType;
+use UnitTests\POData\TestCase;
 
-class Int32Test extends \PHPUnit_Framework_TestCase
+class Int32Test extends TestCase
 {
     /**
      * @return IType

@@ -31,8 +31,9 @@ use POData\Common\Url;
 
 use Mockery as m;
 use POData\UriProcessor\SegmentStack;
+use UnitTests\POData\TestCase;
 
-class ObjectModelSerializerTest extends \PHPUnit_Framework_TestCase
+class ObjectModelSerializerTest extends TestCase
 {
     private $mockRequest;
     private $mockWrapper;

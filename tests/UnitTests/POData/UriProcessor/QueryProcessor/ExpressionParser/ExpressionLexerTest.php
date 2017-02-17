@@ -5,8 +5,9 @@ namespace UnitTests\POData\UriProcessor\QueryProcessor\ExpressionParser;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionTokenId;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionLexer;
 use POData\Common\ODataException;
+use UnitTests\POData\TestCase;
 
-class ExpressionLexerTest extends \PHPUnit_Framework_TestCase
+class ExpressionLexerTest extends TestCase
 {
     protected function setUp()
     {
@@ -768,7 +769,8 @@ class ExpressionLexerTest extends \PHPUnit_Framework_TestCase
         $this->AssertEquals($token->Position, 37);
     }
 
-    protected function tearDown()
+    public function tearDown()
     {
+        parent::tearDown();
     }
 }

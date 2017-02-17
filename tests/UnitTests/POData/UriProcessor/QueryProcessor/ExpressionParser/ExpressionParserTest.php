@@ -25,8 +25,9 @@ use POData\Common\ODataException;
 use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\Metadata\ResourceType;
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
+use UnitTests\POData\TestCase;
 
-class ExpressionParserTest extends \PHPUnit_Framework_TestCase
+class ExpressionParserTest extends TestCase
 {
     /** @var IMetadataProvider */
     private $northWindMetadata;

@@ -3,8 +3,9 @@
 namespace UnitTests\POData\Providers\Metadata;
 
 use POData\Providers\Query\QueryResult;
+use UnitTests\POData\TestCase;
 
-class QueryResultTest extends \PHPUnit_Framework_TestCase
+class QueryResultTest extends TestCase
 {
     /**
      * @dataProvider provider

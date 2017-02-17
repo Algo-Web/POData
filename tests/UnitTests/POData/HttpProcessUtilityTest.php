@@ -4,8 +4,9 @@ namespace UnitTests\POData\Common;
 
 use POData\HttpProcessUtility;
 use POData\Common\MimeTypes;
+use UnitTests\POData\TestCase;
 
-class HttpProcessUtilityTest extends \PHPUnit_Framework_TestCase
+class HttpProcessUtilityTest extends TestCase
 {
     public function testSelectMimeTypeEmptyAvailableTypes()
     {

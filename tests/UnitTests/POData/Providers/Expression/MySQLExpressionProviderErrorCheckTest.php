@@ -10,8 +10,9 @@ use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\PropertyAcce
 use POData\UriProcessor\QueryProcessor\FunctionDescription;
 use POData\Providers\Expression\MySQLExpressionProvider;
 use Mockery as m;
+use UnitTests\POData\TestCase;
 
-class MySQLExpressionProviderErrorCheckTest extends \PHPUnit_Framework_TestCase
+class MySQLExpressionProviderErrorCheckTest extends TestCase
 {
     public function testonPropertyAccessExpressionNullExpression()
     {

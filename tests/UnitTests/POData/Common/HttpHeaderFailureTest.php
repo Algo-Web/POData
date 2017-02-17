@@ -3,8 +3,9 @@
 namespace UnitTests\POData\Common;
 
 use POData\Common\HttpHeaderFailure;
+use UnitTests\POData\TestCase;
 
-class HttpHeaderFailureTest extends \PHPUnit_Framework_TestCase
+class HttpHeaderFailureTest extends TestCase
 {
     public function testGetStatusCode()
     {
