@@ -349,7 +349,7 @@ class ObjectModelSerializerBaseTest extends TestCase
     public function testShouldExpandSegmentWithCurrentExpandedNodeNotMatchingProperty()
     {
         $node = m::mock(ExpandedProjectionNode::class);
-        $node->shouldReceive('getChildNodes')->andReturn([])->once();
+        $node->shouldReceive('getChildNodes')->never();
         $node->shouldReceive('findNode')->withArgs(['abc'])->andReturnNull()->once();
 
         $foo = m::mock(ObjectModelSerializerDummy::class)->makePartial()->shouldAllowMockingProtectedMethods();
@@ -361,7 +361,7 @@ class ObjectModelSerializerBaseTest extends TestCase
     public function testShouldExpandSegmentWithCurrentExpandedNodeIsMatchingProperty()
     {
         $node = m::mock(ExpandedProjectionNode::class);
-        $node->shouldReceive('getChildNodes')->andReturn([])->once();
+        $node->shouldReceive('getChildNodes')->never();
         $node->shouldReceive('findNode')->withArgs(['abc'])->andReturn($node)->once();
 
         $foo = m::mock(ObjectModelSerializerDummy::class)->makePartial()->shouldAllowMockingProtectedMethods();

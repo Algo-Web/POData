@@ -381,7 +381,7 @@ class ObjectModelSerializerTest extends TestCase
         $propertyName = 'property';
         $type = m::mock(ResourceType::class);
         $type->shouldReceive('getFullName')->andReturn('typeName')->once();
-        $type->shouldReceive('getName')->andReturn('typeName')->once();
+        $type->shouldReceive('getName')->andReturn('typeName')->never();
         $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::COMPLEX)->once();
         $type->shouldReceive('getAllProperties')->andReturn([$resProperty]);
 
@@ -481,7 +481,7 @@ class ObjectModelSerializerTest extends TestCase
     public function testWriteTopLevelBagObjectActualObject()
     {
         $type = m::mock(ResourceType::class);
-        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::PRIMITIVE)->once();
+        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::PRIMITIVE)->never();
         $type->shouldReceive('getFullName')->andReturn('fullName');
 
         $bag = new \DateTime();
@@ -530,14 +530,14 @@ class ObjectModelSerializerTest extends TestCase
         $propType->shouldReceive('getInstanceType')->andReturn(new \POData\Providers\Metadata\Type\EdmString());
 
         $property = m::mock(ResourceProperty::class);
-        $property->shouldReceive("getKind")->andReturn(ResourcePropertyKind::PRIMITIVE)->once();
-        $property->shouldReceive('getInstanceType->getFullTypeName')->andReturn('fullTypeName')->once();
+        $property->shouldReceive("getKind")->andReturn(ResourcePropertyKind::PRIMITIVE)->times(4);
+        $property->shouldReceive('getInstanceType->getFullTypeName')->andReturn('fullTypeName')->twice();
         $property->shouldReceive('getName')->andReturn('propertyName');
-        $property->shouldReceive('getResourceType')->andReturn($propType)->once();
-        $property->shouldReceive('isKindOf')->andReturn(false)->once();
+        $property->shouldReceive('getResourceType')->andReturn($propType)->twice();
+        $property->shouldReceive('isKindOf')->andReturn(false)->twice();
 
         $type = m::mock(ResourceType::class);
-        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::COMPLEX)->once();
+        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::COMPLEX)->times(3);
         $type->shouldReceive('getFullName')->andReturn('fullName');
         $type->shouldReceive('getInstanceType')->andReturn(new \POData\Providers\Metadata\Type\EdmString());
         $type->shouldReceive('getAllProperties')->andReturn([$property]);
@@ -673,7 +673,7 @@ class ObjectModelSerializerTest extends TestCase
         $navType = m::mock(ResourceType::class)->makePartial();
 
         $resolv = m::mock(ResourceProperty::class)->makePartial();
-        $resolv->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::ENTITY)->once();
+        $resolv->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::ENTITY)->twice();
         $resolv->shouldReceive('getResourceType')->andReturn($navType);
         $resolv->shouldReceive('isKindOf')->withArgs([ResourcePropertyKind::PRIMITIVE])->andReturn(true);
         $resolv->shouldReceive('isKindOf')->andReturn(false);
@@ -781,8 +781,8 @@ class ObjectModelSerializerTest extends TestCase
         $request->shouldReceive('getRequestUrl')->andReturn($url);
 
         $stack = m::mock(SegmentStack::class)->makePartial();
-        $stack->shouldReceive('pushSegment')->andReturnNull()->once();
-        $stack->shouldReceive('popSegment')->andReturnNull()->once();
+        $stack->shouldReceive('pushSegment')->andReturn(true)->once();
+        $stack->shouldReceive('popSegment')->andReturnNull()->never();
 
         $service = m::mock(IService::class)->makePartial();
         $service->shouldReceive('getProvidersWrapper')->andReturn($provWrap);
@@ -819,16 +819,16 @@ class ObjectModelSerializerTest extends TestCase
         $projNode2 = m::mock(ExpandedProjectionNode::class)->makePartial();
 
         $navType = m::mock(ResourceType::class)->makePartial();
-        $navType->shouldReceive('getResourcePropertyKind')->andReturn(ResourcePropertyKind::RESOURCE_REFERENCE)->once();
+        $navType->shouldReceive('getResourcePropertyKind')->andReturn(ResourcePropertyKind::RESOURCE_REFERENCE)->never();
 
         $resolv = m::mock(ResourceProperty::class)->makePartial();
-        $resolv->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::ENTITY)->once();
+        $resolv->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::ENTITY)->twice();
         $resolv->shouldReceive('getResourceType')->andReturn($navType);
         $resolv->shouldReceive('isKindOf')->withArgs([ResourcePropertyKind::BAG])->andReturn(true);
         $resolv->shouldReceive('isKindOf')->andReturn(false);
         $resolv->shouldReceive('getInstanceType->getFullTypeName')->andReturn('fullTypeName');
         $resolv->shouldReceive('getName')->andReturn('customers');
-        $resolv->shouldReceive('getKind')->andReturn(ResourcePropertyKind::RESOURCE_REFERENCE)->once();
+        $resolv->shouldReceive('getKind')->andReturn(ResourcePropertyKind::RESOURCE_REFERENCE)->twice();
 
 
         $type = m::mock(ResourceType::class);
@@ -847,7 +847,8 @@ class ObjectModelSerializerTest extends TestCase
         $wrap->shouldReceive('getResourceType')->andReturn($navType);
 
         $navProp = m::mock(ResourceProperty::class)->makePartial();
-        $navProp->shouldReceive('getResourcePropertyKind')->andReturn(ResourcePropertyKind::RESOURCE_REFERENCE)->once();
+        $navProp->shouldReceive('getResourcePropertyKind')
+            ->andReturn(ResourcePropertyKind::RESOURCE_REFERENCE)->never();
 
         $provWrap = m::mock(ProvidersWrapper::class)->makePartial();
         $provWrap->shouldReceive('getResourceProperties')->andReturn(['customers' => $navProp]);
@@ -859,8 +860,8 @@ class ObjectModelSerializerTest extends TestCase
         $request->shouldReceive('getRequestUrl')->andReturn($url);
 
         $stack = m::mock(SegmentStack::class)->makePartial();
-        $stack->shouldReceive('pushSegment')->andReturnNull()->once();
-        $stack->shouldReceive('popSegment')->andReturnNull()->once();
+        $stack->shouldReceive('pushSegment')->andReturn(true)->once();
+        $stack->shouldReceive('popSegment')->andReturnNull()->never();
 
         $service = m::mock(IService::class)->makePartial();
         $service->shouldReceive('getProvidersWrapper')->andReturn($provWrap);
