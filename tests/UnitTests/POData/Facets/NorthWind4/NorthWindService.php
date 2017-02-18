@@ -3,6 +3,7 @@
 namespace UnitTests\POData\Facets\NorthWind4;
 
 use POData\Configuration\EntitySetRights;
+use POData\Configuration\IServiceConfiguration;
 use POData\Configuration\ProtocolVersion;
 use POData\Configuration\ServiceConfiguration;
 use POData\BaseService;
@@ -29,9 +30,9 @@ class NorthWindService extends BaseService
     /**
      * This method is called only once to initialize service-wide policies.
      *
-     * @param ServiceConfiguration $config Data service configuration object
+     * @param IServiceConfiguration $config Data service configuration object
      */
-    public function initialize(ServiceConfiguration $config)
+    public function initialize(IServiceConfiguration $config)
     {
         $config->setEntitySetPageSize('*', 5);
         $config->setEntitySetAccessRule('*', EntitySetRights::ALL);

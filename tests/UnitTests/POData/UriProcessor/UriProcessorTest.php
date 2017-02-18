@@ -2,6 +2,7 @@
 
 namespace UnitTests\POData\UriProcessor;
 
+use POData\Configuration\IServiceConfiguration;
 use POData\Configuration\ServiceConfiguration;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Query\QueryResult;
@@ -52,7 +53,7 @@ class UriProcessorTest extends TestCase
     /** @var ServiceHost */
     protected $mockServiceHost;
 
-    /** @var ServiceConfiguration */
+    /** @var IServiceConfiguration */
     protected $fakeServiceConfig;
 
     /** @var IMetadataProvider */

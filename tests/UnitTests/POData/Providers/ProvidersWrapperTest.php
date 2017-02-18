@@ -2,6 +2,7 @@
 
 namespace UnitTests\POData\Providers\Metadata;
 
+use POData\Configuration\IServiceConfiguration;
 use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Metadata\ResourceType;
@@ -34,7 +35,7 @@ class ProvidersWrapperTest extends TestCase
     protected $mockMetadataProvider;
 
     /**
-     * @var ServiceConfiguration
+     * @var IServiceConfiguration
      */
     protected $mockServiceConfig;
 

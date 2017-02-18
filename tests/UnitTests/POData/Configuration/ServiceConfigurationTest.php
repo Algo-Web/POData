@@ -2,6 +2,7 @@
 
 namespace UnitTests\POData\Configuration;
 
+use POData\Configuration\IServiceConfiguration;
 use POData\Configuration\ServiceConfiguration;
 use POData\Configuration\EntitySetRights;
 use POData\Common\InvalidOperationException;
@@ -14,7 +15,7 @@ class ServiceConfigurationTest extends TestCase
     /** @var IMetadataProvider */
     private $_northWindMetadata;
 
-    /** @var ServiceConfiguration */
+    /** @var IServiceConfiguration */
     private $_dataServiceConfiguration;
 
     protected function setUp()

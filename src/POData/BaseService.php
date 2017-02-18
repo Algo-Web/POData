@@ -4,6 +4,7 @@ namespace POData;
 
 use POData\Common\MimeTypes;
 use POData\Common\Version;
+use POData\Configuration\IServiceConfiguration;
 use POData\ObjectModel\IObjectSerialiser;
 use POData\OperationContext\HTTPRequestMethod;
 use POData\Common\ErrorHandler;
@@ -78,7 +79,7 @@ abstract class BaseService implements IRequestHandler, IService
      * service specific rules (page limit, resource set access rights
      * etc...) are defined.
      *
-     * @var ServiceConfiguration
+     * @var IServiceConfiguration
      */
     private $config;
 
@@ -100,7 +101,7 @@ abstract class BaseService implements IRequestHandler, IService
      * service specific rules defined by the developer can be
      * accessed.
      *
-     * @return ServiceConfiguration
+     * @return IServiceConfiguration
      */
     public function getConfiguration()
     {
