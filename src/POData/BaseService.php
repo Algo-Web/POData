@@ -373,6 +373,8 @@ abstract class BaseService implements IRequestHandler, IService
 
             $this->objectSerialiser->setRequest($request);
             $objectModelSerializer = $this->objectSerialiser;
+            $targetResourceType = $request->getTargetResourceType();
+            assert(null != $targetResourceType, "Target resource type cannot be null");
 
             $method = (HTTPRequestMethod::POST() != $method);
             if (!$request->isSingleResult() && $method) {
@@ -419,7 +421,6 @@ abstract class BaseService implements IRequestHandler, IService
                     }
                     // handle entry resource
                     $needToSerializeResponse = true;
-                    $targetResourceType = $request->getTargetResourceType();
                     $eTag = $this->compareETag(
                         $result,
                         $targetResourceType,
@@ -451,13 +452,13 @@ abstract class BaseService implements IRequestHandler, IService
                     $odataModelInstance = $objectModelSerializer->writeTopLevelComplexObject(
                         $result,
                         $request->getProjectedProperty()->getName(),
-                        $request->getTargetResourceType()
+                        $targetResourceType
                     );
                 } elseif (TargetKind::BAG() == $requestTargetKind) {
                     $odataModelInstance = $objectModelSerializer->writeTopLevelBagObject(
                         $result,
                         $request->getProjectedProperty()->getName(),
-                        $request->getTargetResourceType(),
+                        $targetResourceType,
                         $odataModelInstance
                     );
                 } elseif (TargetKind::PRIMITIVE() == $requestTargetKind) {
