@@ -175,18 +175,7 @@ class ObjectModelSerializerBase
     protected function getPropertyValue($entity, ResourceType $resourceType, ResourceProperty $resourceProperty)
     {
         try {
-            //Is this slow?  See #88
-                // If a magic method for properties exists (eg Eloquent), dive into it directly and return value
-            if (method_exists($entity, '__get')) {
-                $targProperty = $resourceProperty->getName();
-
-                return $entity->$targProperty;
-            }
-            $reflectionClass = new \ReflectionClass(get_class($entity));
-            $reflectionProperty = $reflectionClass->getProperty($resourceProperty->getName());
-            $reflectionProperty->setAccessible(true);
-
-            return $reflectionProperty->getValue($entity);
+            return \POData\Common\ReflectionHandler::getProperty($entity, $resourceProperty->getName());
         } catch (\ReflectionException $reflectionException) {
             throw ODataException::createInternalServerError(
                 Messages::objectModelSerializerFailedToAccessProperty(

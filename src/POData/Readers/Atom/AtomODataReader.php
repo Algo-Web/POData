@@ -189,16 +189,14 @@ class AtomODataReader
 
         foreach ($feeds as $feed) {
             $entryCollection = $this->EnumerateFeed($feed, $feedType, $object);
-            $property = new ReflectionProperty($object, $feedType);
-            $property->setValue($object, $entryCollection);
+            \POData\Common\ReflectionHandler::setProperty($object, $feedType, $entryCollection);
         }
 
         $entries = $xPath->query(self::$QUERY_INLINE_ENTRY);
         if ($entries->length) {
             $entry = $this->EnumerateEntry($entries->item(0), $entryType, $object);
             $entry = array($entry);
-            $property = new ReflectionProperty($object, $entryType);
-            $property->setValue($object, $entry);
+            \POData\Common\ReflectionHandler::setProperty($object, $entryType, $entry);
         }
     }
 
@@ -264,15 +262,12 @@ class AtomODataReader
 
         $value = $property->nodeValue;
         try {
-            $property = new ReflectionProperty($object, $name);
-
             //Do Atom format to PHP format conversion if required for property value ex:
             //if (strpos($property->getDocComment(), 'Edm.DateTime') == TRUE)
             //{
             //    $value = AtomDateToPHPDate()
             //}
-
-            $property->setValue($object, $value);
+            \POData\Common\ReflectionHandler::setProperty($object, $name, $value);
         } catch (ReflectionException $ex) {
             // Ignore the error at the moment. TBD later.
         }
@@ -367,8 +362,7 @@ class AtomODataReader
                             }
                         }
 
-                        $property = new ReflectionProperty($object, $propertyName);
-                        $property->setValue($object, $value);
+                        \POData\Common\ReflectionHandler::setProperty($entity, $propertyName, $value);
                     } else {
                         //NOTE: Atom Entry not contains $targetQuery node its
                         //an error, becase in the case of projection also
@@ -390,9 +384,18 @@ class AtomODataReader
                strpos($propertyAttributes['EdmType'], 'Edm.') !== 0) {
                 $complexPropertyObject = null;
                 $complexPropertyName = '';
-                if ($this->CheckAndProcessComplexType($xPath, $propertyQuery, $propertyName, $complexPropertyName, $complexPropertyObject)) {
-                    $property = new ReflectionProperty($object, $complexPropertyName);
-                    $property->setValue($object, $complexPropertyObject);
+                if ($this->CheckAndProcessComplexType(
+                    $xPath,
+                    $propertyQuery,
+                    $propertyName,
+                    $complexPropertyName,
+                    $complexPropertyObject
+                )) {
+                    \POData\Common\ReflectionHandler::setProperty(
+                        $object,
+                        $complexPropertyName,
+                        $complexPropertyObject
+                    );
                     continue;
                 }
             }
@@ -401,8 +404,7 @@ class AtomODataReader
             $nodes = $xPath->Query($query);
             if ($nodes->length) {
                 $value = $nodes->item(0)->nodeValue;
-                $property = new ReflectionProperty($object, $propertyName);
-                $property->setValue($object, $value);
+                \POData\Common\ReflectionHandler::setProperty($object, $propertyName, $value);
             } else {
                 //NOTE: Atom Entry not contains the required property
                 //not a bug projection can lead to this case
@@ -520,8 +522,7 @@ class AtomODataReader
             $properties = $xPath->query(self::$QUERY_PROPERTY2 . $keyPropertyName);
             if ($properties->length) {
                 $value = $properties->item(0)->nodeValue;
-                $refProp = new ReflectionProperty($object, $keyPropertyName);
-                $refProp->setValue($object, $value);
+                \POData\Common\ReflectionHandler::setProperty($object, $keyPropertyName, $value);
             }
         }
     }

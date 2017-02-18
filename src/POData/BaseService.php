@@ -3,6 +3,7 @@
 namespace POData;
 
 use POData\Common\MimeTypes;
+use POData\Common\ReflectionHandler;
 use POData\Common\Version;
 use POData\Configuration\IServiceConfiguration;
 use POData\ObjectModel\IObjectSerialiser;
@@ -766,13 +767,7 @@ abstract class BaseService implements IRequestHandler, IService
             $property = $eTagProperty->getName();
             try {
                 //TODO #88...also this seems like dupe work
-                if (method_exists($entryObject, '__get')) {
-                    $value = $entryObject->$property;
-                } else {
-                    $reflectionProperty = new \ReflectionProperty(get_class($entryObject), $property);
-                    $reflectionProperty->setAccessible(true);
-                    $value = $reflectionProperty->getValue($entryObject);
-                }
+                $value = ReflectionHandler::getProperty($entryObject, $property);
             } catch (\ReflectionException $reflectionException) {
                 throw ODataException::createInternalServerError(
                     Messages::failedToAccessProperty($property, $resourceType->getName())
