@@ -7,6 +7,7 @@ use POData\Configuration\IServiceConfiguration;
 use POData\ObjectModel\IObjectSerialiser;
 use POData\OperationContext\ServiceHost;
 use POData\Providers\Metadata\IMetadataProvider;
+use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\SimpleMetadataProvider;
 use POData\Providers\Query\IQueryProvider;
 use POData\Providers\Stream\StreamProviderWrapper;
@@ -80,5 +81,18 @@ class BaseServiceDummy extends BaseServiceTestWrapper
         parent::handleRequest();
         $outbound = $this->getHost()->getOperationContext()->outgoingResponse();
         return $outbound->getStream();
+    }
+
+    public function compareETag(
+        &$entryObject,
+        ResourceType &$resourceType,
+        &$needToSerializeResponse
+    ) {
+        return parent::compareETag($entryObject, $resourceType, $needToSerializeResponse);
+    }
+
+    public function getETagForEntry(&$entryObject, ResourceType &$resourceType)
+    {
+        return parent::getETagForEntry($entryObject, $resourceType);
     }
 }

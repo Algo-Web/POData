@@ -12,12 +12,18 @@ use POData\ObjectModel\IObjectSerialiser;
 use POData\OperationContext\ServiceHost;
 use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\Metadata\ResourceProperty;
+use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\Type\Binary;
+use POData\Providers\Metadata\Type\IType;
+use POData\Providers\Metadata\Type\StringType;
 use POData\Providers\Query\IQueryProvider;
 use POData\Providers\Stream\StreamProviderWrapper;
 use POData\UriProcessor\RequestDescription;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
 use POData\UriProcessor\UriProcessor;
+use UnitTests\POData\ObjectModel\reusableEntityClass1;
+use UnitTests\POData\ObjectModel\reusableEntityClass2;
+use UnitTests\POData\ObjectModel\reusableEntityClass3;
 use UnitTests\POData\TestCase;
 
 class BaseServiceNewTest extends TestCase
@@ -330,5 +336,131 @@ class BaseServiceNewTest extends TestCase
 
         $result = BaseServiceDummy::getResponseContentType($request, $proc, $service);
         $this->assertEquals('text/xml', $result);
+    }
+
+    public function testGetEtagForEntryNoProperties()
+    {
+        $host = m::mock(ServiceHost::class);
+        $cereal = m::mock(IObjectSerialiser::class);
+
+        $stream = m::mock(StreamProviderWrapper::class);
+        $stream->shouldReceive('setService')->andReturnNull()->once();
+
+        $type = m::mock(ResourceType::class);
+        $type->shouldReceive('getETagProperties')->andReturn([]);
+        $object = null;
+
+        $foo = new BaseServiceDummy(null, $host, $cereal, $stream, null);
+
+        $result = $foo->getETagForEntry($object, $type);
+        $this->assertNull($result);
+    }
+
+    public function testGetEtagForEntrySinglePropertyBadInstanceTypeThrowException()
+    {
+        $property = m::mock(ResourceProperty::class);
+        $property->shouldReceive('getInstanceType')->andReturnNull()->once();
+
+        $host = m::mock(ServiceHost::class);
+        $cereal = m::mock(IObjectSerialiser::class);
+
+        $stream = m::mock(StreamProviderWrapper::class);
+        $stream->shouldReceive('setService')->andReturnNull()->once();
+
+        $type = m::mock(ResourceType::class);
+        $type->shouldReceive('getETagProperties')->andReturn([$property]);
+        $object = null;
+
+        $foo = new BaseServiceDummy(null, $host, $cereal, $stream, null);
+
+        $expected = 'assert(): !$type instanceof IType failed';
+        $actual = null;
+
+        try {
+            $foo->getETagForEntry($object, $type);
+        } catch (\PHPUnit_Framework_Error_Warning $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testGetEtagForEntrySinglePropertyBadPropertyNameThrowException()
+    {
+        $instanceType = m::mock(IType::class);
+
+        $property = m::mock(ResourceProperty::class);
+        $property->shouldReceive('getInstanceType')->andReturn($instanceType)->once();
+        $property->shouldReceive('getName')->andReturn('name');
+
+        $host = m::mock(ServiceHost::class);
+        $cereal = m::mock(IObjectSerialiser::class);
+
+        $stream = m::mock(StreamProviderWrapper::class);
+        $stream->shouldReceive('setService')->andReturnNull()->once();
+
+        $type = m::mock(ResourceType::class);
+        $type->shouldReceive('getETagProperties')->andReturn([$property]);
+        $type->shouldReceive('getName')->andReturn('type');
+        $object = null;
+
+        $foo = new BaseServiceDummy(null, $host, $cereal, $stream, null);
+
+        $expected = 'Data Service failed to access or initialize the property name of type.';
+        $actual = null;
+
+        try {
+            $foo->getETagForEntry($object, $type);
+        } catch (ODataException $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testGetEtagForEntryObjectWithMagicGetter()
+    {
+        $instanceType = new StringType();
+
+        $property = m::mock(ResourceProperty::class);
+        $property->shouldReceive('getInstanceType')->andReturn($instanceType)->twice();
+        $property->shouldReceive('getName')->andReturn('name', 'type');
+
+        $host = m::mock(ServiceHost::class);
+        $cereal = m::mock(IObjectSerialiser::class);
+
+        $stream = m::mock(StreamProviderWrapper::class);
+        $stream->shouldReceive('setService')->andReturnNull()->once();
+
+        $type = m::mock(ResourceType::class);
+        $type->shouldReceive('getETagProperties')->andReturn([$property, $property]);
+        $type->shouldReceive('getName')->andReturn('type');
+        $object = new reusableEntityClass2('hammer', 'time!');
+
+        $foo = new BaseServiceDummy(null, $host, $cereal, $stream, null);
+        $result = $foo->getETagForEntry($object, $type);
+        $this->assertEquals("'hammer','time!'", $result);
+    }
+
+    public function testGetEtagForEntryObjectWithoutMagicGetter()
+    {
+        $instanceType = new StringType();
+
+        $property = m::mock(ResourceProperty::class);
+        $property->shouldReceive('getInstanceType')->andReturn($instanceType)->twice();
+        $property->shouldReceive('getName')->andReturn('name', 'type');
+
+        $host = m::mock(ServiceHost::class);
+        $cereal = m::mock(IObjectSerialiser::class);
+
+        $stream = m::mock(StreamProviderWrapper::class);
+        $stream->shouldReceive('setService')->andReturnNull()->once();
+
+        $type = m::mock(ResourceType::class);
+        $type->shouldReceive('getETagProperties')->andReturn([$property, $property]);
+        $type->shouldReceive('getName')->andReturn('type');
+        $object = new reusableEntityClass3('hammer', 'time!');
+
+        $foo = new BaseServiceDummy(null, $host, $cereal, $stream, null);
+        $result = $foo->getETagForEntry($object, $type);
+        $this->assertEquals("'hammer','time!'", $result);
     }
 }

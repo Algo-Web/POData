@@ -763,13 +763,19 @@ abstract class BaseService implements IRequestHandler, IService
             assert($type instanceof IType, '!$type instanceof IType');
 
             $value = null;
+            $property = $eTagProperty->getName();
             try {
                 //TODO #88...also this seems like dupe work
-                $reflectionProperty = new \ReflectionProperty($entryObject, $eTagProperty->getName());
-                $value = $reflectionProperty->getValue($entryObject);
+                if (method_exists($entryObject, '__get')) {
+                    $value = $entryObject->$property;
+                } else {
+                    $reflectionProperty = new \ReflectionProperty(get_class($entryObject), $property);
+                    $reflectionProperty->setAccessible(true);
+                    $value = $reflectionProperty->getValue($entryObject);
+                }
             } catch (\ReflectionException $reflectionException) {
                 throw ODataException::createInternalServerError(
-                    Messages::failedToAccessProperty($eTagProperty->getName(), $resourceType->getName())
+                    Messages::failedToAccessProperty($property, $resourceType->getName())
                 );
             }
 
