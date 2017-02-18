@@ -63,7 +63,7 @@ abstract class BaseService implements IRequestHandler, IService
      *
      * @var StreamProviderWrapper
      */
-    private $_streamProvider;
+    protected $streamProvider;
 
     /**
      * Hold reference to the ServiceHost instance created by dispatcher,
@@ -105,6 +105,7 @@ abstract class BaseService implements IRequestHandler, IService
      */
     public function getConfiguration()
     {
+        assert(null != $this->config);
         return $this->config;
     }
 
@@ -126,7 +127,7 @@ abstract class BaseService implements IRequestHandler, IService
      */
     public function getStreamProviderWrapper()
     {
-        return $this->_streamProvider;
+        return $this->streamProvider;
     }
 
     /**
@@ -136,6 +137,7 @@ abstract class BaseService implements IRequestHandler, IService
      */
     public function getHost()
     {
+        assert(null != $this->_serviceHost);
         return $this->_serviceHost;
     }
 
@@ -158,7 +160,7 @@ abstract class BaseService implements IRequestHandler, IService
      */
     public function getOperationContext()
     {
-        return $this->_serviceHost->getOperationContext();
+        return $this->getHost()->getOperationContext();
     }
 
     /**
@@ -169,12 +171,12 @@ abstract class BaseService implements IRequestHandler, IService
      */
     public function getStreamProvider()
     {
-        if (is_null($this->_streamProvider)) {
-            $this->_streamProvider = new StreamProviderWrapper();
-            $this->_streamProvider->setService($this);
+        if (is_null($this->streamProvider)) {
+            $this->streamProvider = new StreamProviderWrapper();
+            $this->streamProvider->setService($this);
         }
 
-        return $this->_streamProvider;
+        return $this->streamProvider;
     }
 
     /**
@@ -217,7 +219,7 @@ abstract class BaseService implements IRequestHandler, IService
     {
         try {
             $this->createProviders();
-            $this->_serviceHost->validateQueryParameters();
+            $this->getHost()->validateQueryParameters();
             //$requestMethod = $this->getOperationContext()->incomingRequest()->getMethod();
             //if ($requestMethod != HTTPRequestMethod::GET()) {
             // Now supporting GET and trying to support PUT
@@ -285,10 +287,6 @@ abstract class BaseService implements IRequestHandler, IService
             throw ODataException::createInternalServerError(Messages::providersWrapperNull());
         }
 
-        if (!is_object($queryProvider)) {
-            throw ODataException::createInternalServerError(Messages::invalidQueryInstance());
-        }
-
         if (!$queryProvider instanceof IQueryProvider) {
             throw ODataException::createInternalServerError(Messages::invalidQueryInstance());
         }
@@ -338,9 +336,9 @@ abstract class BaseService implements IRequestHandler, IService
     protected function serializeResult(RequestDescription $request, UriProcessor $uriProcessor)
     {
         $isETagHeaderAllowed = $request->isETagHeaderAllowed();
-        if ($this->config->getValidateETagHeader() && !$isETagHeaderAllowed) {
-            if (!is_null($this->_serviceHost->getRequestIfMatch())
-                || !is_null($this->_serviceHost->getRequestIfNoneMatch())
+        if ($this->getConfiguration()->getValidateETagHeader() && !$isETagHeaderAllowed) {
+            if (!is_null($this->getHost()->getRequestIfMatch())
+                || !is_null($this->getHost()->getRequestIfNoneMatch())
             ) {
                 throw ODataException::createBadRequestError(
                     Messages::eTagCannotBeSpecified($this->getHost()->getAbsoluteRequestUri()->getUrlAsString())
@@ -365,10 +363,10 @@ abstract class BaseService implements IRequestHandler, IService
         // (2) metadata - internal resource
         // (3) service directory - internal resource
         if ($request->needExecution()) {
-            $method = $this->_serviceHost->getOperationContext()->incomingRequest()->getMethod();
+            $method = $this->getHost()->getOperationContext()->incomingRequest()->getMethod();
             $uriProcessor->execute();
             if (HTTPRequestMethod::DELETE() == $method) {
-                $this->_serviceHost->setResponseStatusCode(HttpStatus::CODE_OK);
+                $this->getHost()->setResponseStatusCode(HttpStatus::CODE_OK);
                 return;
             }
 
@@ -411,8 +409,8 @@ abstract class BaseService implements IRequestHandler, IService
 
                     $odataModelInstance = $objectModelSerializer->writeUrlElement($result);
                 } elseif (TargetKind::RESOURCE() == $requestTargetKind) {
-                    if (!is_null($this->_serviceHost->getRequestIfMatch())
-                        && !is_null($this->_serviceHost->getRequestIfNoneMatch())
+                    if (!is_null($this->getHost()->getRequestIfMatch())
+                        && !is_null($this->getHost()->getRequestIfNoneMatch())
                     ) {
                         throw ODataException::createBadRequestError(
                             Messages::bothIfMatchAndIfNoneMatchHeaderSpecified()
@@ -432,7 +430,7 @@ abstract class BaseService implements IRequestHandler, IService
                             // In the query 'Orders(1245)/Customer', the targeted
                             // Customer might be null
                             // set status code to 204 => 'No Content'
-                            $this->_serviceHost->setResponseStatusCode(HttpStatus::CODE_NOCONTENT);
+                            $this->getHost()->setResponseStatusCode(HttpStatus::CODE_NOCONTENT);
                             $hasResponseBody = false;
                         } else {
                             $odataModelInstance = $objectModelSerializer->writeTopLevelElement($result);
@@ -440,13 +438,13 @@ abstract class BaseService implements IRequestHandler, IService
                     } else {
                         // Resource is not modified so set status code
                         // to 304 => 'Not Modified'
-                        $this->_serviceHost->setResponseStatusCode(HttpStatus::CODE_NOT_MODIFIED);
+                        $this->getHost()->setResponseStatusCode(HttpStatus::CODE_NOT_MODIFIED);
                         $hasResponseBody = false;
                     }
 
                     // if resource has eTagProperty then eTag header needs to written
                     if (!is_null($eTag)) {
-                        $this->_serviceHost->setResponseETag($eTag);
+                        $this->getHost()->setResponseETag($eTag);
                     }
                 } elseif (TargetKind::COMPLEX_OBJECT() == $requestTargetKind) {
                     $odataModelInstance = $objectModelSerializer->writeTopLevelComplexObject(
@@ -520,6 +518,14 @@ abstract class BaseService implements IRequestHandler, IService
         IService $service
     ) {
 
+        $baseMimeTypes = [
+            MimeTypes::MIME_APPLICATION_JSON,
+            MimeTypes::MIME_APPLICATION_JSON_FULL_META,
+            MimeTypes::MIME_APPLICATION_JSON_NO_META,
+            MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META,
+            MimeTypes::MIME_APPLICATION_JSON_VERBOSE];
+
+
         // The Accept request-header field specifies media types which are acceptable for the response
 
         $host = $service->getHost();
@@ -553,15 +559,10 @@ abstract class BaseService implements IRequestHandler, IService
             case TargetKind::SERVICE_DIRECTORY():
                 return HttpProcessUtility::selectMimeType(
                     $requestAcceptText,
-                    array(
-                        MimeTypes::MIME_APPLICATION_ATOMSERVICE,
-                        MimeTypes::MIME_APPLICATION_XML,
-                        MimeTypes::MIME_APPLICATION_JSON,
-                        MimeTypes::MIME_APPLICATION_JSON_FULL_META,
-                        MimeTypes::MIME_APPLICATION_JSON_NO_META,
-                        MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META,
-                        MimeTypes::MIME_APPLICATION_JSON_VERBOSE,
-
+                    array_merge(
+                        [MimeTypes::MIME_APPLICATION_ATOMSERVICE,
+                        MimeTypes::MIME_APPLICATION_XML],
+                        $baseMimeTypes
                     )
                 );
 
@@ -589,27 +590,19 @@ abstract class BaseService implements IRequestHandler, IService
             case TargetKind::LINK():
                 return HttpProcessUtility::selectMimeType(
                     $requestAcceptText,
-                    array(
-                        MimeTypes::MIME_APPLICATION_XML,
-                        MimeTypes::MIME_TEXTXML,
-                        MimeTypes::MIME_APPLICATION_JSON,
-                        MimeTypes::MIME_APPLICATION_JSON_FULL_META,
-                        MimeTypes::MIME_APPLICATION_JSON_NO_META,
-                        MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META,
-                        MimeTypes::MIME_APPLICATION_JSON_VERBOSE,
+                    array_merge(
+                        [MimeTypes::MIME_APPLICATION_XML,
+                        MimeTypes::MIME_TEXTXML],
+                        $baseMimeTypes
                     )
                 );
 
             case TargetKind::RESOURCE():
                 return HttpProcessUtility::selectMimeType(
                     $requestAcceptText,
-                    array(
-                        MimeTypes::MIME_APPLICATION_ATOM,
-                        MimeTypes::MIME_APPLICATION_JSON,
-                        MimeTypes::MIME_APPLICATION_JSON_FULL_META,
-                        MimeTypes::MIME_APPLICATION_JSON_NO_META,
-                        MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META,
-                        MimeTypes::MIME_APPLICATION_JSON_VERBOSE,
+                    array_merge(
+                        [MimeTypes::MIME_APPLICATION_ATOM],
+                        $baseMimeTypes
                     )
                 );
 
@@ -673,8 +666,8 @@ abstract class BaseService implements IRequestHandler, IService
     ) {
         $needToSerializeResponse = true;
         $eTag = null;
-        $ifMatch = $this->_serviceHost->getRequestIfMatch();
-        $ifNoneMatch = $this->_serviceHost->getRequestIfNoneMatch();
+        $ifMatch = $this->getHost()->getRequestIfMatch();
+        $ifNoneMatch = $this->getHost()->getRequestIfNoneMatch();
         if (is_null($entryObject)) {
             if (!is_null($ifMatch)) {
                 throw ODataException::createPreConditionFailedError(
@@ -685,7 +678,7 @@ abstract class BaseService implements IRequestHandler, IService
             return null;
         }
 
-        if ($this->config->getValidateETagHeader() && !$resourceType->hasETagProperties()) {
+        if ($this->getConfiguration()->getValidateETagHeader() && !$resourceType->hasETagProperties()) {
             if (!is_null($ifMatch) || !is_null($ifNoneMatch)) {
                 // No eTag properties but request has eTag headers, bad request
                 throw ODataException::createBadRequestError(
@@ -697,7 +690,7 @@ abstract class BaseService implements IRequestHandler, IService
             return null;
         }
 
-        if (!$this->config->getValidateETagHeader()) {
+        if (!$this->getConfiguration()->getValidateETagHeader()) {
             // Configuration says do not validate ETag, so we will not write ETag header in the
             // response even though the requested resource support it
             return null;
@@ -706,9 +699,9 @@ abstract class BaseService implements IRequestHandler, IService
         if (is_null($ifMatch) && is_null($ifNoneMatch)) {
             // No request eTag header, we need to write the response
             // and eTag header
-        } elseif (0 == strcmp($ifMatch, '*')) {
+        } elseif (0 === strcmp($ifMatch, '*')) {
             // If-Match:* => we need to write the response and eTag header
-        } elseif (0 == strcmp($ifNoneMatch, '*')) {
+        } elseif (0 === strcmp($ifNoneMatch, '*')) {
             // if-None-Match:* => Do not write the response (304 not modified),
             // but write eTag header
             $needToSerializeResponse = false;
@@ -729,7 +722,7 @@ abstract class BaseService implements IRequestHandler, IService
                         Messages::eTagValueDoesNotMatch()
                     );
                 }
-            } elseif (0 == strcmp($eTag, $ifNoneMatch)) {
+            } elseif (0 === strcmp($eTag, $ifNoneMatch)) {
                 //304 not modified, but in write eTag header
                 $needToSerializeResponse = false;
             }
