@@ -92,11 +92,7 @@ abstract class BaseService implements IRequestHandler, IService
 
     protected function __construct(IObjectSerialiser $serialiser = null)
     {
-        if (null == $serialiser) {
-            $this->objectSerialiser = new ObjectModelSerializer($this, null);
-        } else {
-            $this->objectSerialiser = $serialiser;
-        }
+        $this->objectSerialiser = (null == $serialiser) ? new ObjectModelSerializer($this, null) : $serialiser;
     }
 
     /**
@@ -154,7 +150,7 @@ abstract class BaseService implements IRequestHandler, IService
 
     /**
      * To get reference to operation context where we have direct access to
-     * headers and body of Http Request we have received and the Http Response
+     * headers and body of Http Request, we have received and the Http Response
      * We are going to send.
      *
      * @return IOperationContext
@@ -269,7 +265,6 @@ abstract class BaseService implements IRequestHandler, IService
      * This method will query and validates for IMetadataProvider and IQueryProvider implementations, invokes
      * BaseService::Initialize to initialize service specific policies.
      *
-     *
      * @throws ODataException
      */
     protected function createProviders()
@@ -279,7 +274,7 @@ abstract class BaseService implements IRequestHandler, IService
             throw ODataException::createInternalServerError(Messages::providersWrapperNull());
         }
 
-        if (!is_object($metadataProvider) || !$metadataProvider instanceof IMetadataProvider) {
+        if (!$metadataProvider instanceof IMetadataProvider) {
             throw ODataException::createInternalServerError(Messages::invalidMetadataInstance());
         }
 
@@ -322,11 +317,11 @@ abstract class BaseService implements IRequestHandler, IService
         $registry->register(new JsonODataV1Writer());
         $registry->register(new AtomODataWriter($serviceURI));
 
-        if ($serviceVersion->compare(Version::v2()) > -1) {
+        if (-1 < $serviceVersion->compare(Version::v2())) {
             $registry->register(new JsonODataV2Writer());
         }
 
-        if ($serviceVersion->compare(Version::v3()) > -1) {
+        if (-1 < $serviceVersion->compare(Version::v3())) {
             $registry->register(new JsonLightODataWriter(JsonLightMetadataLevel::NONE(), $serviceURI));
             $registry->register(new JsonLightODataWriter(JsonLightMetadataLevel::MINIMAL(), $serviceURI));
             $registry->register(new JsonLightODataWriter(JsonLightMetadataLevel::FULL(), $serviceURI));
@@ -355,27 +350,31 @@ abstract class BaseService implements IRequestHandler, IService
         $responseContentType = self::getResponseContentType($request, $uriProcessor, $this);
 
         if (is_null($responseContentType) && $request->getTargetKind() != TargetKind::MEDIA_RESOURCE()) {
-            //the responseContentType can ONLY be null if it's a stream (media resource) and that stream is storing null as the content type
+            //the responseContentType can ONLY be null if it's a stream (media resource) and
+            // that stream is storing null as the content type
             throw new ODataException(Messages::unsupportedMediaType(), 415);
         }
 
         $odataModelInstance = null;
         $hasResponseBody = true;
-        // Execution required at this point if request target to any resource other than
+        // Execution required at this point if request points to any resource other than
 
-        // (1) media resource - For Media resource 'getResponseContentType' already performed execution as it needs to know the mime type of the stream
+        // (1) media resource - For Media resource 'getResponseContentType' already performed execution as
+        // it needs to know the mime type of the stream
         // (2) metadata - internal resource
         // (3) service directory - internal resource
         if ($request->needExecution()) {
             $method = $this->_serviceHost->getOperationContext()->incomingRequest()->getMethod();
             $uriProcessor->execute();
-            if ($method == HTTPRequestMethod::DELETE()) {
+            if (HTTPRequestMethod::DELETE() == $method) {
                 $this->_serviceHost->setResponseStatusCode(HttpStatus::CODE_OK);
                 return;
             }
 
-            $objectModelSerializer = new ObjectModelSerializer($this, $request);
-            $method = ($method != HTTPRequestMethod::POST());
+            $this->objectSerialiser->setRequest($request);
+            $objectModelSerializer = $this->objectSerialiser;
+
+            $method = (HTTPRequestMethod::POST() != $method);
             if (!$request->isSingleResult() && $method) {
                 // Code path for collection (feed or links)
                 $entryObjects = $request->getTargetResult();
@@ -410,7 +409,7 @@ abstract class BaseService implements IRequestHandler, IService
                     }
 
                     $odataModelInstance = $objectModelSerializer->writeUrlElement($result);
-                } elseif ($requestTargetKind == TargetKind::RESOURCE()) {
+                } elseif (TargetKind::RESOURCE() == $requestTargetKind) {
                     if (!is_null($this->_serviceHost->getRequestIfMatch())
                         && !is_null($this->_serviceHost->getRequestIfNoneMatch())
                     ) {
@@ -448,26 +447,26 @@ abstract class BaseService implements IRequestHandler, IService
                     if (!is_null($eTag)) {
                         $this->_serviceHost->setResponseETag($eTag);
                     }
-                } elseif ($requestTargetKind == TargetKind::COMPLEX_OBJECT()) {
+                } elseif (TargetKind::COMPLEX_OBJECT() == $requestTargetKind) {
                     $odataModelInstance = $objectModelSerializer->writeTopLevelComplexObject(
                         $result,
                         $request->getProjectedProperty()->getName(),
                         $request->getTargetResourceType()
                     );
-                } elseif ($requestTargetKind == TargetKind::BAG()) {
+                } elseif (TargetKind::BAG() == $requestTargetKind) {
                     $odataModelInstance = $objectModelSerializer->writeTopLevelBagObject(
                         $result,
                         $request->getProjectedProperty()->getName(),
                         $request->getTargetResourceType(),
                         $odataModelInstance
                     );
-                } elseif ($requestTargetKind == TargetKind::PRIMITIVE()) {
+                } elseif (TargetKind::PRIMITIVE() == $requestTargetKind) {
                     $odataModelInstance = $objectModelSerializer->writeTopLevelPrimitive(
                         $result,
                         $request->getProjectedProperty(),
                         $odataModelInstance
                     );
-                } elseif ($requestTargetKind == TargetKind::PRIMITIVE_VALUE()) {
+                } elseif (TargetKind::PRIMITIVE_VALUE() == $requestTargetKind) {
                     // Code path for primitive value (Since its primitve no need for
                     // object model serialization)
                     // Customers('ANU')/CompanyName/$value => string
@@ -481,10 +480,12 @@ abstract class BaseService implements IRequestHandler, IService
 
         //Note: Response content type can be null for named stream
         if ($hasResponseBody && !is_null($responseContentType)) {
-            if ($request->getTargetKind() != TargetKind::MEDIA_RESOURCE() && $responseContentType != MimeTypes::MIME_APPLICATION_OCTETSTREAM) {
+            if (TargetKind::MEDIA_RESOURCE() != $request->getTargetKind()
+                && MimeTypes::MIME_APPLICATION_OCTETSTREAM != $responseContentType) {
                 //append charset for everything except:
                 //stream resources as they have their own content type
-                //binary properties (they content type will be App Octet for those...is this a good way? we could also decide based upon the projected property
+                //binary properties (they content type will be App Octet for those...is this a good way?
+                //we could also decide based upon the projected property
 
                 $responseContentType .= ';charset=utf-8';
             }
@@ -528,7 +529,7 @@ abstract class BaseService implements IRequestHandler, IService
         $format = $host->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_FORMAT);
         if (!is_null($format)) {
             //There's a strange edge case..if application/json is supplied and it's V3
-            if ($format == MimeTypes::MIME_APPLICATION_JSON && $requestVersion == Version::v3()) {
+            if (MimeTypes::MIME_APPLICATION_JSON == $format && Version::v3() == $requestVersion) {
                 //then it's actual minimalmetadata
                 //TODO: should this be done with the header text too?
                 $format = MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META;
@@ -566,7 +567,7 @@ abstract class BaseService implements IRequestHandler, IService
             case TargetKind::PRIMITIVE_VALUE():
                 $supportedResponseMimeTypes = array(MimeTypes::MIME_TEXTPLAIN);
 
-                if ($request->getIdentifier() != '$count') {
+                if ('$count' != $request->getIdentifier()) {
                     $projectedProperty = $request->getProjectedProperty();
                     assert(!is_null($projectedProperty), 'is_null($projectedProperty)');
                     $type = $projectedProperty->getInstanceType();
@@ -632,7 +633,8 @@ abstract class BaseService implements IRequestHandler, IService
                     );
 
                 // Note StreamWrapper::getStreamContentType can return NULL if the requested named stream has not
-                // yet been uploaded. But for an MLE if IDSSP::getStreamContentType returns NULL then StreamWrapper will throw error
+                // yet been uploaded. But for an MLE if IDSSP::getStreamContentType returns NULL
+                // then StreamWrapper will throw error
                 if (!is_null($responseContentType)) {
                     $responseContentType = HttpProcessUtility::selectMimeType(
                         $requestAcceptText,
@@ -648,8 +650,8 @@ abstract class BaseService implements IRequestHandler, IService
     }
 
     /**
-     * For the given entry object compare it's eTag (if it has eTag properties)
-     * with current eTag request headers (if it present).
+     * For the given entry object compare its eTag (if it has eTag properties)
+     * with current eTag request headers (if present).
      *
      * @param mixed        &$entryObject             entity resource for which etag
      *                                               needs to be checked
@@ -695,7 +697,7 @@ abstract class BaseService implements IRequestHandler, IService
         }
 
         if (!$this->config->getValidateETagHeader()) {
-            // Configuration says do not validate ETag so we will not write ETag header in the
+            // Configuration says do not validate ETag, so we will not write ETag header in the
             // response even though the requested resource support it
             return null;
         }
@@ -703,9 +705,9 @@ abstract class BaseService implements IRequestHandler, IService
         if (is_null($ifMatch) && is_null($ifNoneMatch)) {
             // No request eTag header, we need to write the response
             // and eTag header
-        } elseif (strcmp($ifMatch, '*') == 0) {
+        } elseif (0 == strcmp($ifMatch, '*')) {
             // If-Match:* => we need to write the response and eTag header
-        } elseif (strcmp($ifNoneMatch, '*') == 0) {
+        } elseif (0 == strcmp($ifNoneMatch, '*')) {
             // if-None-Match:* => Do not write the response (304 not modified),
             // but write eTag header
             $needToSerializeResponse = false;
@@ -718,7 +720,7 @@ abstract class BaseService implements IRequestHandler, IService
             // Need to follow up PHP core devs for this.
             $eTag = ODataConstants::HTTP_WEAK_ETAG_PREFIX . $eTag . '"';
             if (!is_null($ifMatch)) {
-                if (strcmp($eTag, $ifMatch) != 0) {
+                if (0 != strcmp($eTag, $ifMatch)) {
                     // Requested If-Match value does not match with current
                     // eTag Value then pre-condition error
                     // http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html
@@ -726,7 +728,7 @@ abstract class BaseService implements IRequestHandler, IService
                         Messages::eTagValueDoesNotMatch()
                     );
                 }
-            } elseif (strcmp($eTag, $ifNoneMatch) == 0) {
+            } elseif (0 == strcmp($eTag, $ifNoneMatch)) {
                 //304 not modified, but in write eTag header
                 $needToSerializeResponse = false;
             }
@@ -748,7 +750,7 @@ abstract class BaseService implements IRequestHandler, IService
     /**
      * Returns the etag for the given resource.
      * Note: This function will not add W\" prefix and " suffix, its callers
-     * repsonsability.
+     * repsonsibility.
      *
      * @param mixed        &$entryObject  Resource for which etag value needs to
      *                                    be returned
@@ -777,11 +779,8 @@ abstract class BaseService implements IRequestHandler, IService
                 );
             }
 
-            if (is_null($value)) {
-                $eTag = $eTag . $comma . 'null';
-            } else {
-                $eTag = $eTag . $comma . $type->convertToOData($value);
-            }
+            $eTagBase = $eTag . $comma;
+            $eTag = $eTagBase . ((null == $value) ? 'null' : $type->convertToOData($value));
 
             $comma = ',';
         }
@@ -848,7 +847,7 @@ abstract class BaseService implements IRequestHandler, IService
      * Serialize the result in the current request description using
      * appropriate odata writer (AtomODataWriter/JSONODataWriter).
      */
-    protected function serializeReultForResponseBody()
+    protected function serializeResultForResponseBody()
     {
     }
 
