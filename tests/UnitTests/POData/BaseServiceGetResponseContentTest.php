@@ -14,6 +14,7 @@ use POData\OperationContext\ServiceHost;
 use POData\Common\Version;
 
 use Mockery as m;
+use UnitTests\POData\BaseServiceDummy;
 use UnitTests\POData\TestCase;
 
 class BaseServiceGetResponseContentTest extends TestCase
@@ -36,7 +37,7 @@ class BaseServiceGetResponseContentTest extends TestCase
 
         $this->mockUriProcessor = m::mock(UriProcessor::class)->makePartial();
         $this->mockHost = m::mock(ServiceHost::class)->makePartial();
-        $this->mockService = m::mock(IService::class)->makePartial();
+        $this->mockService = m::mock(BaseServiceDummy::class)->makePartial();
         $this->mockService->shouldReceive('getHost')->andReturn($this->mockHost);
 
         $this->mockRequest = m::mock(RequestDescription::class)->makePartial();
@@ -61,7 +62,11 @@ class BaseServiceGetResponseContentTest extends TestCase
         $this->mockHost->shouldReceive('getQueryStringItem')
             ->withArgs([ODataConstants::HTTPQUERY_STRING_FORMAT])->andReturn($format);
 
-        $actual = BaseService::getResponseContentType($this->mockRequest, $this->mockUriProcessor, $this->mockService);
+        $actual = $this->mockService->getResponseContentType(
+            $this->mockRequest,
+            $this->mockUriProcessor,
+            $this->mockService
+        );
 
         //accepts doesn't match any possibles actual for that format..so it should return null
         $this->assertEquals($expectedValue, $actual, $id);

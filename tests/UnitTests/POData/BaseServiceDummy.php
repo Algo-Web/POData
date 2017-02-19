@@ -11,6 +11,8 @@ use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\SimpleMetadataProvider;
 use POData\Providers\Query\IQueryProvider;
 use POData\Providers\Stream\StreamProviderWrapper;
+use POData\UriProcessor\RequestDescription;
+use POData\UriProcessor\UriProcessor;
 use UnitTests\POData\Facets\BaseServiceTestWrapper;
 
 class BaseServiceDummy extends BaseServiceTestWrapper
@@ -96,5 +98,10 @@ class BaseServiceDummy extends BaseServiceTestWrapper
     public function getETagForEntry(&$entryObject, ResourceType &$resourceType)
     {
         return parent::getETagForEntry($entryObject, $resourceType);
+    }
+
+    public function serializeResult(RequestDescription $request, UriProcessor $uriProcessor)
+    {
+        return parent::serializeResult($request, $uriProcessor);
     }
 }

@@ -119,7 +119,7 @@ class BaseServiceNewTest extends TestCase
         $request->shouldReceive('isLinkUri')->andReturn(false);
         $request->shouldReceive('getTargetKind')->andReturn(null);
 
-        $service = m::mock(IService::class);
+        $service = m::mock(BaseServiceDummy::class)->makePartial();
         $service->shouldReceive('getHost')->andReturn($host);
 
         $proc = m::mock(UriProcessor::class);
@@ -128,7 +128,7 @@ class BaseServiceNewTest extends TestCase
         $actual = null;
 
         try {
-            BaseServiceDummy::getResponseContentType($request, $proc, $service);
+            $service->getResponseContentType($request, $proc);
         } catch (ODataException $e) {
             $actual = $e->getMessage();
         }
@@ -148,7 +148,7 @@ class BaseServiceNewTest extends TestCase
         $request->shouldReceive('getIdentifier')->andReturn('entity');
         $request->shouldReceive('getProjectedProperty')->andReturn(null);
 
-        $service = m::mock(IService::class);
+        $service = m::mock(BaseServiceDummy::class)->makePartial();
         $service->shouldReceive('getHost')->andReturn($host);
 
         $proc = m::mock(UriProcessor::class);
@@ -157,7 +157,7 @@ class BaseServiceNewTest extends TestCase
         $actual = null;
 
         try {
-            BaseServiceDummy::getResponseContentType($request, $proc, $service);
+            $result = $service->getResponseContentType($request, $proc);
         } catch (\PHPUnit_Framework_Error_Warning $e) {
             $actual = $e->getMessage();
         }
@@ -180,7 +180,7 @@ class BaseServiceNewTest extends TestCase
         $request->shouldReceive('getIdentifier')->andReturn('entity');
         $request->shouldReceive('getProjectedProperty')->andReturn($property);
 
-        $service = m::mock(IService::class);
+        $service = m::mock(BaseServiceDummy::class)->makePartial();
         $service->shouldReceive('getHost')->andReturn($host);
 
         $proc = m::mock(UriProcessor::class);
@@ -189,7 +189,7 @@ class BaseServiceNewTest extends TestCase
         $actual = null;
 
         try {
-            BaseServiceDummy::getResponseContentType($request, $proc, $service);
+            $result = $service->getResponseContentType($request, $proc);
         } catch (\PHPUnit_Framework_Error_Warning $e) {
             $actual = $e->getMessage();
         }
@@ -214,13 +214,13 @@ class BaseServiceNewTest extends TestCase
         $request->shouldReceive('getIdentifier')->andReturn('entity');
         $request->shouldReceive('getProjectedProperty')->andReturn($property);
 
-        $service = m::mock(IService::class);
+        $service = m::mock(BaseServiceDummy::class)->makePartial();
         $service->shouldReceive('getHost')->andReturn($host);
 
         $proc = m::mock(UriProcessor::class);
 
         $expected = 'application/octet-stream';
-        $result = BaseServiceDummy::getResponseContentType($request, $proc, $service);
+        $result = $service->getResponseContentType($request, $proc);
 
         $this->assertEquals($expected, $result);
     }
@@ -248,7 +248,7 @@ class BaseServiceNewTest extends TestCase
         $request->shouldReceive('isNamedStream')->andReturn(false);
         $request->shouldReceive('getTargetResourceType->isMediaLinkEntry')->andReturn(false);
 
-        $service = m::mock(IService::class);
+        $service = m::mock(BaseServiceDummy::class)->makePartial();
         $service->shouldReceive('getHost')->andReturn($host);
 
         $proc = m::mock(UriProcessor::class);
@@ -258,7 +258,7 @@ class BaseServiceNewTest extends TestCase
         $actual = null;
 
         try {
-            BaseServiceDummy::getResponseContentType($request, $proc, $service);
+            $service->getResponseContentType($request, $proc);
         } catch (ODataException $e) {
             $actual = $e->getMessage();
         }
@@ -291,14 +291,14 @@ class BaseServiceNewTest extends TestCase
         $request->shouldReceive('getTargetResult')->andReturnNull()->once();
         $request->shouldReceive('getResourceStreamInfo')->andReturnNull()->once();
 
-        $service = m::mock(IService::class);
+        $service = m::mock(BaseServiceDummy::class)->makePartial();
         $service->shouldReceive('getHost')->andReturn($host);
         $service->shouldReceive('getStreamProviderWrapper->getStreamContentType')->andReturnNull()->once();
 
         $proc = m::mock(UriProcessor::class);
         $proc->shouldReceive('execute')->andReturnNull()->once();
 
-        $result = BaseServiceDummy::getResponseContentType($request, $proc, $service);
+        $result = $service->getResponseContentType($request, $proc);
         $this->assertNull($result);
     }
 
@@ -328,7 +328,7 @@ class BaseServiceNewTest extends TestCase
         $request->shouldReceive('getTargetResult')->andReturnNull()->once();
         $request->shouldReceive('getResourceStreamInfo')->andReturnNull()->once();
 
-        $service = m::mock(IService::class);
+        $service = m::mock(BaseServiceDummy::class)->makePartial();
         $service->shouldReceive('getHost')->andReturn($host);
         $service->shouldReceive('getStreamProviderWrapper->getStreamContentType')
             ->andReturn(MimeTypes::MIME_TEXTXML)->once();
@@ -336,7 +336,7 @@ class BaseServiceNewTest extends TestCase
         $proc = m::mock(UriProcessor::class);
         $proc->shouldReceive('execute')->andReturnNull()->once();
 
-        $result = BaseServiceDummy::getResponseContentType($request, $proc, $service);
+        $result = $service->getResponseContentType($request, $proc);
         $this->assertEquals('text/xml', $result);
     }
 
@@ -783,5 +783,44 @@ class BaseServiceNewTest extends TestCase
 
         $result = $foo->getStreamProvider();
         $this->assertTrue($result instanceof StreamProviderWrapper);
+    }
+
+    public function testSerializeResultETagNotSpecifiedThrowException()
+    {
+        $url = new Url('https://www.example.org/odata.svc');
+
+        $type = m::mock(ResourceType::class);
+
+        $config = m::mock(IServiceConfiguration::class);
+        $config->shouldReceive('getValidateETagHeader')->andReturn(true);
+
+        $host = m::mock(ServiceHost::class);
+        $host->shouldReceive('getRequestIfMatch')->andReturn('a');
+        $host->shouldReceive('getRequestIfNoneMatch')->andReturn('b');
+        $host->shouldReceive('getAbsoluteRequestUri')->andReturn($url);
+
+        $cereal = m::mock(IObjectSerialiser::class);
+
+        $stream = m::mock(StreamProviderWrapper::class);
+        $stream->shouldReceive('setService')->andReturnNull()->once();
+
+        $foo = new BaseServiceDummy(null, $host, $cereal, $stream, null, $config);
+
+        $request = m::mock(RequestDescription::class);
+        $request->shouldReceive('isETagHeaderAllowed')->andReturn(false);
+
+        $uriProc = m::mock(UriProcessor::class);
+
+        $expected = 'If-Match or If-None-Match HTTP headers cannot be specified since the'
+                    .' URI \'https://www.example.org/odata.svc\' refers to a collection of resources or has'
+                    .' a $count or $link segment or has a $expand as one of the query parameters.';
+        $actual = null;
+
+        try {
+            $foo->serializeResult($request, $uriProc);
+        } catch (ODataException $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
     }
 }

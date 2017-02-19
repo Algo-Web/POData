@@ -347,7 +347,7 @@ abstract class BaseService implements IRequestHandler, IService
             }
         }
 
-        $responseContentType = self::getResponseContentType($request, $uriProcessor, $this);
+        $responseContentType = $this->getResponseContentType($request, $uriProcessor);
 
         if (is_null($responseContentType) && $request->getTargetKind() != TargetKind::MEDIA_RESOURCE()) {
             //the responseContentType can ONLY be null if it's a stream (media resource) and
@@ -507,17 +507,15 @@ abstract class BaseService implements IRequestHandler, IService
      *
      * @param RequestDescription $request      The request submitted by client and it's execution result
      * @param UriProcessor       $uriProcessor The reference to the UriProcessor
-     * @param IService           $service      Reference to the service implementation instance
      *
      * @return string the response content-type, a null value means the requested resource
      *                is named stream and IDSSP2::getStreamContentType returned null
      *
      * @throws ODataException, HttpHeaderFailure
      */
-    public static function getResponseContentType(
+    public function getResponseContentType(
         RequestDescription $request,
-        UriProcessor $uriProcessor,
-        IService $service
+        UriProcessor $uriProcessor
     ) {
 
         $baseMimeTypes = [
@@ -530,7 +528,7 @@ abstract class BaseService implements IRequestHandler, IService
 
         // The Accept request-header field specifies media types which are acceptable for the response
 
-        $host = $service->getHost();
+        $host = $this->getHost();
         $requestAcceptText = $host->getRequestAccept();
         $requestVersion = $request->getResponseVersion();
 
@@ -563,7 +561,7 @@ abstract class BaseService implements IRequestHandler, IService
                     $requestAcceptText,
                     array_merge(
                         [MimeTypes::MIME_APPLICATION_ATOMSERVICE,
-                        MimeTypes::MIME_APPLICATION_XML],
+                            MimeTypes::MIME_APPLICATION_XML],
                         $baseMimeTypes
                     )
                 );
@@ -594,7 +592,7 @@ abstract class BaseService implements IRequestHandler, IService
                     $requestAcceptText,
                     array_merge(
                         [MimeTypes::MIME_APPLICATION_XML,
-                        MimeTypes::MIME_TEXTXML],
+                            MimeTypes::MIME_TEXTXML],
                         $baseMimeTypes
                     )
                 );
@@ -622,7 +620,7 @@ abstract class BaseService implements IRequestHandler, IService
                 // DSSW::getStreamContentType can throw error in 2 cases
                 // 1. If the required stream implementation not found
                 // 2. If IDSSP::getStreamContentType returns NULL for MLE
-                $responseContentType = $service->getStreamProviderWrapper()
+                $responseContentType = $this->getStreamProviderWrapper()
                     ->getStreamContentType(
                         $request->getTargetResult(),
                         $request->getResourceStreamInfo()
