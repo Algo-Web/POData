@@ -32,13 +32,15 @@ class BaseServiceDummy extends BaseServiceTestWrapper
         ServiceHost $host = null,
         IObjectSerialiser $serialiser = null,
         StreamProviderWrapper $provider = null,
-        IMetadataProvider $metaProvider = null
+        IMetadataProvider $metaProvider = null,
+        IServiceConfiguration $config = null
     ) {
         $this->metaProvider = $metaProvider;
         $this->queryProvider = $db;
         $provider->setService($this);
         $this->streamProvider = $provider;
         $this->setHost($host);
+        $this->config = $config;
         parent::__construct($serialiser);
     }
 

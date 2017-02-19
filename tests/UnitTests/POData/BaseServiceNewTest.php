@@ -7,6 +7,7 @@ use POData\Common\MimeTypes;
 use POData\Common\ODataException;
 use POData\Common\Url;
 use POData\Common\Version;
+use POData\Configuration\IServiceConfiguration;
 use POData\IService;
 use POData\ObjectModel\IObjectSerialiser;
 use POData\OperationContext\ServiceHost;
@@ -18,6 +19,7 @@ use POData\Providers\Metadata\Type\IType;
 use POData\Providers\Metadata\Type\StringType;
 use POData\Providers\Query\IQueryProvider;
 use POData\Providers\Stream\StreamProviderWrapper;
+use POData\SimpleDataService;
 use POData\UriProcessor\RequestDescription;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
 use POData\UriProcessor\UriProcessor;
@@ -462,5 +464,324 @@ class BaseServiceNewTest extends TestCase
         $foo = new BaseServiceDummy(null, $host, $cereal, $stream, null);
         $result = $foo->getETagForEntry($object, $type);
         $this->assertEquals("'hammer','time!'", $result);
+    }
+
+    public function testCompareETagNonExistentResourceThrowException()
+    {
+        $type = m::mock(ResourceType::class);
+
+        $host = m::mock(ServiceHost::class);
+        $host->shouldReceive('getRequestIfMatch')->andReturn('a');
+        $host->shouldReceive('getRequestIfNoneMatch')->andReturn('b');
+        $cereal = m::mock(IObjectSerialiser::class);
+
+        $stream = m::mock(StreamProviderWrapper::class);
+        $stream->shouldReceive('setService')->andReturnNull()->once();
+        $type = m::mock(ResourceType::class);
+
+        $foo = new BaseServiceDummy(null, $host, $cereal, $stream, null);
+
+        $expected = 'The resource targeted by the request does not exists, eTag header is not allowed'
+                    .' for non-existing resource.';
+        $actual = null;
+        $needtoSerialise = false;
+        $object = null;
+
+        try {
+            $foo->compareETag($object, $type, $needtoSerialise);
+        } catch (ODataException $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testCompareETagNonExistentResourceReturnNull()
+    {
+        $type = m::mock(ResourceType::class);
+
+        $host = m::mock(ServiceHost::class);
+        $host->shouldReceive('getRequestIfMatch')->andReturn(null);
+        $host->shouldReceive('getRequestIfNoneMatch')->andReturn(null);
+        $cereal = m::mock(IObjectSerialiser::class);
+
+        $stream = m::mock(StreamProviderWrapper::class);
+        $stream->shouldReceive('setService')->andReturnNull()->once();
+        $type = m::mock(ResourceType::class);
+
+        $foo = new BaseServiceDummy(null, $host, $cereal, $stream, null);
+
+        $needtoSerialise = false;
+        $object = null;
+
+        $result = $foo->compareETag($object, $type, $needtoSerialise);
+        $this->assertNull($result);
+    }
+
+    public function testCompareETagPropertyHeaderMismatchThrowException()
+    {
+        $type = m::mock(ResourceType::class);
+        $type->shouldReceive('hasETagProperties')->andReturn(false);
+
+        $config = m::mock(IServiceConfiguration::class);
+        $config->shouldReceive('getValidateETagHeader')->andReturn(true);
+
+        $host = m::mock(ServiceHost::class);
+        $host->shouldReceive('getRequestIfMatch')->andReturn('a');
+        $host->shouldReceive('getRequestIfNoneMatch')->andReturn('b');
+        $cereal = m::mock(IObjectSerialiser::class);
+
+        $stream = m::mock(StreamProviderWrapper::class);
+        $stream->shouldReceive('setService')->andReturnNull()->once();
+
+        $foo = new BaseServiceDummy(null, $host, $cereal, $stream, null, $config);
+
+        $expected = 'If-Match or If-None-Match headers cannot be specified if the target type does not'
+                    .' have etag properties defined.';
+        $actual = null;
+        $needtoSerialise = false;
+        $object = 'abc';
+
+        try {
+            $foo->compareETag($object, $type, $needtoSerialise);
+        } catch (ODataException $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testCompareETagPropertyHeaderMismatchReturnNull()
+    {
+        $type = m::mock(ResourceType::class);
+        $type->shouldReceive('hasETagProperties')->andReturn(false);
+
+        $config = m::mock(IServiceConfiguration::class);
+        $config->shouldReceive('getValidateETagHeader')->andReturn(true);
+
+        $host = m::mock(ServiceHost::class);
+        $host->shouldReceive('getRequestIfMatch')->andReturn(null);
+        $host->shouldReceive('getRequestIfNoneMatch')->andReturn(null);
+        $cereal = m::mock(IObjectSerialiser::class);
+
+        $stream = m::mock(StreamProviderWrapper::class);
+        $stream->shouldReceive('setService')->andReturnNull()->once();
+
+        $foo = new BaseServiceDummy(null, $host, $cereal, $stream, null, $config);
+
+        $needtoSerialise = false;
+        $object = 'abc';
+
+        $result = $foo->compareETag($object, $type, $needtoSerialise);
+        $this->assertNull($result);
+        $this->assertTrue($needtoSerialise);
+    }
+
+    public function testCompareETagPropertyNotValidatingReturnNull()
+    {
+        $type = m::mock(ResourceType::class);
+        $type->shouldReceive('hasETagProperties')->andReturn(false);
+
+        $config = m::mock(IServiceConfiguration::class);
+        $config->shouldReceive('getValidateETagHeader')->andReturn(false);
+
+        $host = m::mock(ServiceHost::class);
+        $host->shouldReceive('getRequestIfMatch')->andReturn(null);
+        $host->shouldReceive('getRequestIfNoneMatch')->andReturn(null);
+        $cereal = m::mock(IObjectSerialiser::class);
+
+        $stream = m::mock(StreamProviderWrapper::class);
+        $stream->shouldReceive('setService')->andReturnNull()->once();
+
+        $foo = new BaseServiceDummy(null, $host, $cereal, $stream, null, $config);
+
+        $needtoSerialise = false;
+        $object = 'abc';
+
+        $result = $foo->compareETag($object, $type, $needtoSerialise);
+        $this->assertNull($result);
+        $this->assertTrue($needtoSerialise);
+    }
+
+    public function testCompareETagPropertyValidateEtagHeadersNoRequestMatching()
+    {
+        $itype = new StringType();
+        $resProp = m::mock(ResourceProperty::class);
+        $resProp->shouldReceive('getInstanceType')->andReturn($itype);
+        $resProp->shouldReceive('getName')->andReturn('type');
+
+        $type = m::mock(ResourceType::class);
+        $type->shouldReceive('hasETagProperties')->andReturn(true);
+        $type->shouldReceive('getETagProperties')->andReturn([$resProp]);
+
+        $config = m::mock(IServiceConfiguration::class);
+        $config->shouldReceive('getValidateETagHeader')->andReturn(true);
+
+        $host = m::mock(ServiceHost::class);
+        $host->shouldReceive('getRequestIfMatch')->andReturn(null);
+        $host->shouldReceive('getRequestIfNoneMatch')->andReturn(null);
+        $cereal = m::mock(IObjectSerialiser::class);
+
+        $stream = m::mock(StreamProviderWrapper::class);
+        $stream->shouldReceive('setService')->andReturnNull()->once();
+
+        $foo = new BaseServiceDummy(null, $host, $cereal, $stream, null, $config);
+
+        $needtoSerialise = false;
+        $object = new reusableEntityClass2("foo", "bar");
+
+        $expected = 'W/"\'bar\'"';
+
+        $result = $foo->compareETag($object, $type, $needtoSerialise);
+        $this->assertEquals($expected, $result);
+        $this->assertTrue($needtoSerialise);
+    }
+
+    public function testCompareETagPropertyValidateEtagHeadersIfNoneMatchAll()
+    {
+        $itype = new StringType();
+        $resProp = m::mock(ResourceProperty::class);
+        $resProp->shouldReceive('getInstanceType')->andReturn($itype);
+        $resProp->shouldReceive('getName')->andReturn('type');
+
+        $type = m::mock(ResourceType::class);
+        $type->shouldReceive('hasETagProperties')->andReturn(true);
+        $type->shouldReceive('getETagProperties')->andReturn([$resProp]);
+
+        $config = m::mock(IServiceConfiguration::class);
+        $config->shouldReceive('getValidateETagHeader')->andReturn(true);
+
+        $host = m::mock(ServiceHost::class);
+        $host->shouldReceive('getRequestIfMatch')->andReturn(null);
+        $host->shouldReceive('getRequestIfNoneMatch')->andReturn('*');
+        $cereal = m::mock(IObjectSerialiser::class);
+
+        $stream = m::mock(StreamProviderWrapper::class);
+        $stream->shouldReceive('setService')->andReturnNull()->once();
+
+        $foo = new BaseServiceDummy(null, $host, $cereal, $stream, null, $config);
+
+        $needtoSerialise = false;
+        $object = new reusableEntityClass2("foo", "bar");
+
+        $expected = 'W/"\'bar\'"';
+
+        $result = $foo->compareETag($object, $type, $needtoSerialise);
+        $this->assertEquals($expected, $result);
+        $this->assertFalse($needtoSerialise);
+    }
+
+    public function testCompareETagPropertyValidateEtagHeadersIfNoneMatchSome()
+    {
+        $itype = new StringType();
+        $resProp = m::mock(ResourceProperty::class);
+        $resProp->shouldReceive('getInstanceType')->andReturn($itype);
+        $resProp->shouldReceive('getName')->andReturn('type');
+
+        $type = m::mock(ResourceType::class);
+        $type->shouldReceive('hasETagProperties')->andReturn(true);
+        $type->shouldReceive('getETagProperties')->andReturn([$resProp]);
+
+        $config = m::mock(IServiceConfiguration::class);
+        $config->shouldReceive('getValidateETagHeader')->andReturn(true);
+
+        $host = m::mock(ServiceHost::class);
+        $host->shouldReceive('getRequestIfMatch')->andReturn(null);
+        $host->shouldReceive('getRequestIfNoneMatch')->andReturn('abc');
+        $cereal = m::mock(IObjectSerialiser::class);
+
+        $stream = m::mock(StreamProviderWrapper::class);
+        $stream->shouldReceive('setService')->andReturnNull()->once();
+
+        $foo = new BaseServiceDummy(null, $host, $cereal, $stream, null, $config);
+
+        $needtoSerialise = false;
+        $object = new reusableEntityClass2("foo", "bar");
+
+        $expected = 'W/"\'bar\'"';
+
+        $result = $foo->compareETag($object, $type, $needtoSerialise);
+        $this->assertEquals($expected, $result);
+        $this->assertTrue($needtoSerialise);
+    }
+
+    public function testCompareETagPropertyValidateEtagHeadersIfNoneMatchEtag()
+    {
+        $itype = new StringType();
+        $resProp = m::mock(ResourceProperty::class);
+        $resProp->shouldReceive('getInstanceType')->andReturn($itype);
+        $resProp->shouldReceive('getName')->andReturn('type');
+
+        $type = m::mock(ResourceType::class);
+        $type->shouldReceive('hasETagProperties')->andReturn(true);
+        $type->shouldReceive('getETagProperties')->andReturn([$resProp]);
+
+        $config = m::mock(IServiceConfiguration::class);
+        $config->shouldReceive('getValidateETagHeader')->andReturn(true);
+
+        $host = m::mock(ServiceHost::class);
+        $host->shouldReceive('getRequestIfMatch')->andReturn(null);
+        $host->shouldReceive('getRequestIfNoneMatch')->andReturn('W/"\'bar\'"');
+        $cereal = m::mock(IObjectSerialiser::class);
+
+        $stream = m::mock(StreamProviderWrapper::class);
+        $stream->shouldReceive('setService')->andReturnNull()->once();
+
+        $foo = new BaseServiceDummy(null, $host, $cereal, $stream, null, $config);
+
+        $needtoSerialise = false;
+        $object = new reusableEntityClass2("foo", "bar");
+
+        $expected = 'W/"\'bar\'"';
+
+        $result = $foo->compareETag($object, $type, $needtoSerialise);
+        $this->assertEquals($expected, $result);
+        $this->assertFalse($needtoSerialise);
+    }
+
+    public function testCompareETagPropertyValidateEtagHeadersPreconditionFailure()
+    {
+        $itype = new StringType();
+        $resProp = m::mock(ResourceProperty::class);
+        $resProp->shouldReceive('getInstanceType')->andReturn($itype);
+        $resProp->shouldReceive('getName')->andReturn('type');
+
+        $type = m::mock(ResourceType::class);
+        $type->shouldReceive('hasETagProperties')->andReturn(true);
+        $type->shouldReceive('getETagProperties')->andReturn([$resProp]);
+
+        $config = m::mock(IServiceConfiguration::class);
+        $config->shouldReceive('getValidateETagHeader')->andReturn(true);
+
+        $host = m::mock(ServiceHost::class);
+        $host->shouldReceive('getRequestIfMatch')->andReturn('abc');
+        $host->shouldReceive('getRequestIfNoneMatch')->andReturn('W/"\'bar\'"');
+        $cereal = m::mock(IObjectSerialiser::class);
+
+        $stream = m::mock(StreamProviderWrapper::class);
+        $stream->shouldReceive('setService')->andReturnNull()->once();
+
+        $foo = new BaseServiceDummy(null, $host, $cereal, $stream, null, $config);
+
+        $needtoSerialise = false;
+        $object = new reusableEntityClass2("foo", "bar");
+
+        $expected = 'W/"\'bar\'"';
+
+        $expected = 'The etag value in the request header does not match with the current etag value of the object.';
+        $actual = null;
+
+        try {
+            $foo->compareETag($object, $type, $needtoSerialise);
+        } catch (ODataException $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testGetStreamProvider()
+    {
+        $foo = m::mock(SimpleDataService::class)->makePartial();
+
+        $result = $foo->getStreamProvider();
+        $this->assertTrue($result instanceof StreamProviderWrapper);
     }
 }

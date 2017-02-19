@@ -82,7 +82,7 @@ abstract class BaseService implements IRequestHandler, IService
      *
      * @var IServiceConfiguration
      */
-    private $config;
+    protected $config;
 
     /**
      * Hold reference to object serialiser - bit wot turns PHP objects
