@@ -12,11 +12,11 @@ class SimpleStreamProvider implements IStreamProvider2
         $entity,
         $eTag,
         $checkETagForEquality,
-        $operationContext
+        IOperationContext $operationContext
     ) {
          return null; // TODO: find default stream and return.
       }
-    public function getStreamContentType($entity, $operationContext)
+    public function getStreamContentType($entity,IOperationContext $operationContext)
     {
         return 'application/octet-stream';
     }
@@ -25,7 +25,7 @@ class SimpleStreamProvider implements IStreamProvider2
         return null; // TODO: find default stream and return.
     }
 
-    public function getReadStreamUri($entity, $operationContext)
+    public function getReadStreamUri($entity, IOperationContext $operationContext)
     {
         //let library creates default media url.
         return null;
