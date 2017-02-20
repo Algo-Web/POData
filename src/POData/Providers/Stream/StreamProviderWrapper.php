@@ -363,6 +363,7 @@ class StreamProviderWrapper
     private function _loadAndValidateStreamProvider()
     {
         if (is_null($this->_streamProvider)) {
+
             $this->_loadStreamProvider();
             if (is_null($this->_streamProvider)) {
                 throw ODataException::createInternalServerError(
@@ -411,23 +412,11 @@ class StreamProviderWrapper
     private function _loadStreamProvider()
     {
         if (is_null($this->_streamProvider)) {
-            $maxServiceVersion = $this->_service->getConfiguration()->getMaxDataServiceVersion();
-            if ($maxServiceVersion->compare(new Version(3, 0)) >= 0) {
-                $this->_streamProvider = $this->_service->getService('IStreamProvider2');
-                if (!is_null($this->_streamProvider) && (!$this->_streamProvider instanceof IStreamProvider2)) {
-                    throw ODataException::createInternalServerError(
-                        Messages::streamProviderWrapperInvalidStream2Instance()
-                    );
-                }
-            }
-
-            if (is_null($this->_streamProvider)) {
-                $this->_streamProvider = $this->_service->getService('IStreamProvider');
-                if (!is_null($this->_streamProvider) && (!$this->_streamProvider instanceof IStreamProvider)) {
-                    throw ODataException::createInternalServerError(
-                        Messages::streamProviderWrapperInvalidStreamInstance()
-                    );
-                }
+            $this->_streamProvider = $this->_service->getStreamProviderX();
+            if (!is_null($this->_streamProvider) && (!$this->_streamProvider instanceof IStreamProvider2)) {
+                throw ODataException::createInternalServerError(
+                    Messages::streamProviderWrapperInvalidStream2Instance()
+                );
             }
         }
     }
