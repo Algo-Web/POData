@@ -91,7 +91,6 @@ class JsonLightODataWriter extends JsonODataV2Writer
         } elseif ($model instanceof ODataFeed) {
             $this->writeTopLevelMeta($model->title);
             $this->writeRowCount($model->rowCount);
-            $this->writeNextPageLink($model->nextPageLink);
             $this->_writer
                 ->writeName($this->dataArrayName)
                 ->startArrayScope();
