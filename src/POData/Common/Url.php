@@ -33,11 +33,11 @@ class Url
             }
         }
 
-        $this->_parts = parse_url($url);
+        $p = parse_url($url);
         if ($this->_parts === false) {
             throw new UrlFormatException(Messages::urlMalformedUrl($url));
         }
-
+        $this->_parts = $p;
         $path = $this->getPath();
         if ($path != null) {
             $this->_segments = explode('/', trim($path, '/'));
