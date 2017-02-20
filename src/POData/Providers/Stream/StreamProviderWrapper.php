@@ -413,7 +413,7 @@ class StreamProviderWrapper
         if (is_null($this->_streamProvider)) {
             $maxServiceVersion = $this->_service->getConfiguration()->getMaxDataServiceVersion();
             if ($maxServiceVersion->compare(new Version(3, 0)) >= 0) {
-                $this->_streamProvider = $this->_service->getService('IStreamProvider2');
+                $this->_streamProvider = $this->_service->getStreamProviderX();
                 if (!is_null($this->_streamProvider) && (!$this->_streamProvider instanceof IStreamProvider2)) {
                     throw ODataException::createInternalServerError(
                         Messages::streamProviderWrapperInvalidStream2Instance()
@@ -422,7 +422,7 @@ class StreamProviderWrapper
             }
 
             if (is_null($this->_streamProvider)) {
-                $this->_streamProvider = $this->_service->getService('IStreamProvider');
+                $this->_streamProvider = $this->_service->getStreamProviderX();
                 if (!is_null($this->_streamProvider) && (!$this->_streamProvider instanceof IStreamProvider)) {
                     throw ODataException::createInternalServerError(
                         Messages::streamProviderWrapperInvalidStreamInstance()
