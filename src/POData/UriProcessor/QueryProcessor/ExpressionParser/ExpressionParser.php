@@ -310,7 +310,7 @@ class ExpressionParser
                 && (ExpressionLexer::isNumeric($this->_getCurrentToken()->Id))
             ) {
                 $numberLiteral = $this->_getCurrentToken();
-                $numberLiteral->Text = '-'.$numberLiteral->Text;
+                $numberLiteral->Text = '-' . $numberLiteral->Text;
                 $numberLiteral->Position = $op->Position;
                 $v = $this->_getCurrentToken();
                 $this->_setCurrentToken($numberLiteral);

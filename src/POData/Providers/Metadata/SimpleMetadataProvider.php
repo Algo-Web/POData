@@ -167,11 +167,11 @@ class SimpleMetadataProvider implements IMetadataProvider
 
         $targetResourceSet = $targetResourceProperty->getResourceType()->getCustomState();
         if (is_null($targetResourceSet)) {
-            throw new InvalidOperationException('Failed to retrieve the custom state from '.$targetResourceProperty->getResourceType()->getName());
+            throw new InvalidOperationException('Failed to retrieve the custom state from ' . $targetResourceProperty->getResourceType()->getName());
         }
 
         //Customer_Orders_Orders, Order_Customer_Customers
-        $key = $sourceResourceType->getName().'_'.$targetResourceProperty->getName().'_'.$targetResourceSet->getName();
+        $key = $sourceResourceType->getName() . '_' . $targetResourceProperty->getName() . '_' . $targetResourceSet->getName();
         if (array_key_exists($key, $this->associationSets)) {
             return $this->associationSets[$key];
         }
@@ -430,12 +430,12 @@ class SimpleMetadataProvider implements IMetadataProvider
         //Create instance of AssociationSet for this relationship
         $sourceResourceSet = $resourceType->getCustomState();
         if (is_null($sourceResourceSet)) {
-            throw new InvalidOperationException('Failed to retrieve the custom state from '.$resourceType->getName());
+            throw new InvalidOperationException('Failed to retrieve the custom state from ' . $resourceType->getName());
         }
 
         //Customer_Orders_Orders, Order_Customer_Customers
         //(source type::name _ source property::name _ target set::name)
-        $setKey = $resourceType->getName().'_'.$name.'_'.$targetResourceSet->getName();
+        $setKey = $resourceType->getName() . '_' . $name . '_' . $targetResourceSet->getName();
         $set = new ResourceAssociationSet(
             $setKey,
             new ResourceAssociationSetEnd($sourceResourceSet, $resourceType, $resourceProperty),
@@ -446,10 +446,10 @@ class SimpleMetadataProvider implements IMetadataProvider
 
     /**
      * @param \ReflectionClass $refClass
-     * @param $name
-     * @param $namespace
+     * @param string $name
+     * @param string|null $namespace
      * @param $typeKind
-     * @param $baseResourceType
+     * @param null|ResourceType $baseResourceType
      *
      * @throws InvalidOperationException
      *
@@ -474,7 +474,7 @@ class SimpleMetadataProvider implements IMetadataProvider
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @param ResourceType $resourceType
      *
      * @throws InvalidOperationException

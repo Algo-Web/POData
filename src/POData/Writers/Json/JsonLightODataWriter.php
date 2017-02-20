@@ -97,7 +97,7 @@ class JsonLightODataWriter extends JsonODataV2Writer
             $this->writeFeed($model);
             $this->_writer->endScope();
         } elseif ($model instanceof ODataEntry) {
-            $this->writeTopLevelMeta($model->resourceSetName.'/@Element');
+            $this->writeTopLevelMeta($model->resourceSetName . '/@Element');
             $this->writeEntry($model);
         }
 
@@ -144,7 +144,7 @@ class JsonLightODataWriter extends JsonODataV2Writer
 
         $this->_writer
             ->writeName(ODataConstants::JSON_LIGHT_METADATA_STRING)
-            ->writeValue($this->baseUri.'/'.ODataConstants::URI_METADATA_SEGMENT.'#'.$fragment);
+            ->writeValue($this->baseUri . '/' . ODataConstants::URI_METADATA_SEGMENT . '#' . $fragment);
     }
 
     protected function writePropertyMeta(ODataProperty $property)
@@ -166,7 +166,7 @@ class JsonLightODataWriter extends JsonODataV2Writer
             case 'Edm.Decimal':
             case 'Edm.DateTime':
                 $this->_writer
-                    ->writeName($property->name.ODataConstants::JSON_LIGHT_METADATA_PROPERTY_TYPE_SUFFIX_STRING)
+                    ->writeName($property->name . ODataConstants::JSON_LIGHT_METADATA_PROPERTY_TYPE_SUFFIX_STRING)
                     ->writeValue($property->typeName);
         }
 
@@ -208,7 +208,7 @@ class JsonLightODataWriter extends JsonODataV2Writer
         if ($this->metadataLevel == JsonLightMetadataLevel::FULL()) {
             //Interestingly the fullmetadata outputs this metadata..even if the thing is expanded
             $this->_writer
-                ->writeName($link->title.ODataConstants::JSON_LIGHT_METADATA_LINK_NAVIGATION_SUFFIX_STRING)
+                ->writeName($link->title . ODataConstants::JSON_LIGHT_METADATA_LINK_NAVIGATION_SUFFIX_STRING)
                 ->writeValue($link->url);
         }
 

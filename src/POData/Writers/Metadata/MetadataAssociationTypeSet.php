@@ -244,7 +244,7 @@ class MetadataAssociationTypeSet extends MetadataBase
      */
     private function _getResourceAssociationSet(ResourceSetWrapper $resourceSet, ResourceType $resourceType, ResourceProperty $navigationProperty)
     {
-        $associationSetLookupKey = $resourceSet->getName().'_'.$resourceType->getFullName().'_'.$navigationProperty->getName();
+        $associationSetLookupKey = $resourceSet->getName() . '_' . $resourceType->getFullName() . '_' . $navigationProperty->getName();
         if (array_key_exists($associationSetLookupKey, $this->_resourceAssociationSets)) {
             return $this->_resourceAssociationSets[$associationSetLookupKey];
         }
@@ -283,9 +283,9 @@ class MetadataAssociationTypeSet extends MetadataBase
 
         $reverseAssociationSetLookupKey = null;
         if (!is_null($relatedEnd->getResourceProperty())) {
-            $reverseAssociationSetLookupKey = $relatedEnd->getResourceSet()->getName().'_'.$relatedEnd->getResourceProperty()->getResourceType()->getFullName().'_'.$relatedEnd->getResourceProperty()->getName();
+            $reverseAssociationSetLookupKey = $relatedEnd->getResourceSet()->getName() . '_' . $relatedEnd->getResourceProperty()->getResourceType()->getFullName() . '_' . $relatedEnd->getResourceProperty()->getName();
         } else {
-            $reverseAssociationSetLookupKey = $relatedEnd->getResourceSet()->getName().'_Null_'.$resourceType->getFullName().'_'.$navigationProperty->getName();
+            $reverseAssociationSetLookupKey = $relatedEnd->getResourceSet()->getName() . '_Null_' . $resourceType->getFullName() . '_' . $navigationProperty->getName();
         }
 
         if (array_key_exists($reverseAssociationSetLookupKey, $this->_resourceAssociationSets)) {
@@ -324,7 +324,7 @@ class MetadataAssociationTypeSet extends MetadataBase
     {
         $resourceTypeNamespace = $this->getResourceTypeNamespace($resourceType);
         $resourceAssociationTypesInNamespace = &$this->getResourceAssociationTypesForNamespace($resourceTypeNamespace);
-        $associationTypeLookupKey = $resourceType->getName().'_'.$navigationProperty->getName();
+        $associationTypeLookupKey = $resourceType->getName() . '_' . $navigationProperty->getName();
         if (array_key_exists($associationTypeLookupKey, $resourceAssociationTypesInNamespace)) {
             return $resourceAssociationTypesInNamespace[$associationTypeLookupKey];
         }
@@ -334,8 +334,8 @@ class MetadataAssociationTypeSet extends MetadataBase
         $associationTypeEnd1Name = $associationTypeEnd2Name = null;
         $isBiDirectional = $resourceAssociationSet->isBidirectional();
         if ($isBiDirectional) {
-            $associationTypeEnd1Name = $resourceAssociationSet->getEnd1()->getResourceType()->getName().'_'.$resourceAssociationSet->getEnd1()->getResourceProperty()->getName();
-            $associationTypeEnd2Name = $resourceAssociationSet->getEnd2()->getResourceType()->getName().'_'.$resourceAssociationSet->getEnd2()->getResourceProperty()->getName();
+            $associationTypeEnd1Name = $resourceAssociationSet->getEnd1()->getResourceType()->getName() . '_' . $resourceAssociationSet->getEnd1()->getResourceProperty()->getName();
+            $associationTypeEnd2Name = $resourceAssociationSet->getEnd2()->getResourceType()->getName() . '_' . $resourceAssociationSet->getEnd2()->getResourceProperty()->getName();
         } else {
             if (!is_null($resourceAssociationSet->getEnd1()->getResourceProperty())) {
                 $associationTypeEnd1Name = $resourceAssociationSet->getEnd1()->getResourceType()->getName();
@@ -370,7 +370,7 @@ class MetadataAssociationTypeSet extends MetadataBase
         $resourceAssociationTypesInNamespace[$associationTypeLookupKey] = $resourceAssociationType;
         if ($isBiDirectional) {
             $relatedAssociationSetEnd = $resourceAssociationSet->getRelatedResourceAssociationSetEnd($resourceSet->getResourceSet(), $resourceType, $navigationProperty);
-            $relatedEndLookupKey = $relatedAssociationSetEnd->getResourceType()->getName().'_'.$relatedAssociationSetEnd->getResourceProperty()->getName();
+            $relatedEndLookupKey = $relatedAssociationSetEnd->getResourceType()->getName() . '_' . $relatedAssociationSetEnd->getResourceProperty()->getName();
             $resourceAssociationTypesInNamespace[$relatedEndLookupKey] = $resourceAssociationType;
         }
 
@@ -394,10 +394,10 @@ class MetadataAssociationTypeSet extends MetadataBase
                     $resourceAssociationSet->getEnd1() : $resourceAssociationSet->getEnd2();
         $end2 = $resourceAssociationSet->getRelatedResourceAssociationSetEnd($end1->getResourceSet(), $end1->getResourceType(), $end1->getResourceProperty());
         //e.g. Customer_Orders (w.r.t Northwind DB)
-        $associationTypeName = $end1->getResourceType()->getName().'_'.$end1->getResourceProperty()->getName();
+        $associationTypeName = $end1->getResourceType()->getName() . '_' . $end1->getResourceProperty()->getName();
         if (!is_null($end2->getResourceProperty())) {
             //Customer_Orders_Order_Customer
-            $associationTypeName .= '_'.$end2->getResourceType()->getName().'_'.$end2->getResourceProperty()->getName();
+            $associationTypeName .= '_' . $end2->getResourceType()->getName() . '_' . $end2->getResourceProperty()->getName();
         }
 
         return $associationTypeName;

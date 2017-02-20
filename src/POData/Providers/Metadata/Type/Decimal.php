@@ -77,7 +77,7 @@ class Decimal implements IType
      */
     public function convertToOData($value)
     {
-        return $value.'M';
+        return $value . 'M';
     }
 
     /**

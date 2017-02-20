@@ -665,7 +665,7 @@ abstract class BaseService implements IRequestHandler, IService
      */
     protected function compareETag(
         &$entryObject,
-        ResourceType &$resourceType,
+        ResourceType & $resourceType,
         &$needToSerializeResponse
     ) {
         $needToSerializeResponse = true;
@@ -716,7 +716,7 @@ abstract class BaseService implements IRequestHandler, IService
             // but that is causing an issue in Linux env where the
             // firefix browser is unable to parse the ETag in this case.
             // Need to follow up PHP core devs for this.
-            $eTag = ODataConstants::HTTP_WEAK_ETAG_PREFIX.$eTag.'"';
+            $eTag = ODataConstants::HTTP_WEAK_ETAG_PREFIX . $eTag . '"';
             if (!is_null($ifMatch)) {
                 if (0 != strcmp($eTag, $ifMatch)) {
                     // Requested If-Match value does not match with current
@@ -739,7 +739,7 @@ abstract class BaseService implements IRequestHandler, IService
             // but that is causing an issue in Linux env where the
             // firefix browser is unable to parse the ETag in this case.
             // Need to follow up PHP core devs for this.
-            $eTag = ODataConstants::HTTP_WEAK_ETAG_PREFIX.$eTag.'"';
+            $eTag = ODataConstants::HTTP_WEAK_ETAG_PREFIX . $eTag . '"';
         }
 
         return $eTag;
@@ -758,7 +758,7 @@ abstract class BaseService implements IRequestHandler, IService
      *                     for use in a URI) there are etag properties, NULL if
      *                     there is no etag property
      */
-    protected function getETagForEntry(&$entryObject, ResourceType &$resourceType)
+    protected function getETagForEntry(&$entryObject, ResourceType & $resourceType)
     {
         $eTag = null;
         $comma = null;
@@ -777,8 +777,8 @@ abstract class BaseService implements IRequestHandler, IService
                 );
             }
 
-            $eTagBase = $eTag.$comma;
-            $eTag = $eTagBase.((null == $value) ? 'null' : $type->convertToOData($value));
+            $eTagBase = $eTag . $comma;
+            $eTag = $eTagBase . ((null == $value) ? 'null' : $type->convertToOData($value));
 
             $comma = ',';
         }

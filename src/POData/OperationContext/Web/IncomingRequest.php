@@ -131,7 +131,7 @@ class IncomingRequest implements IHTTPRequest
                 $this->_rawUrl = ODataConstants::HTTPREQUEST_PROTOCOL_HTTPS;
             }
 
-            $this->_rawUrl .= '://'.$_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)];
+            $this->_rawUrl .= '://' . $_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)];
             $this->_rawUrl .= utf8_decode(urldecode($_SERVER[ODataConstants::HTTPREQUEST_URI]));
         }
 

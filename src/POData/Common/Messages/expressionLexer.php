@@ -14,7 +14,7 @@ trait expressionLexer
      */
     public static function expressionLexerUnterminatedStringLiteral($pos, $text)
     {
-        return 'Unterminated string literal at position '.$pos.' in '.$text;
+        return 'Unterminated string literal at position ' . $pos . ' in ' . $text;
     }
 
     /**
@@ -26,7 +26,7 @@ trait expressionLexer
      */
     public static function expressionLexerDigitExpected($pos)
     {
-        return 'Digit expected at position '.$pos;
+        return 'Digit expected at position ' . $pos;
     }
 
     /**
@@ -38,7 +38,7 @@ trait expressionLexer
      */
     public static function expressionLexerSyntaxError($pos)
     {
-        return 'Syntax Error at position '.$pos;
+        return 'Syntax Error at position ' . $pos;
     }
 
     /**

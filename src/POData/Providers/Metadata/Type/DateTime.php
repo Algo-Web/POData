@@ -66,7 +66,7 @@ class DateTime implements IType
             return false;
         }
 
-        $outValue = "'".$value."'";
+        $outValue = "'" . $value . "'";
 
         return true;
     }
@@ -106,7 +106,7 @@ class DateTime implements IType
      */
     public function convertToOData($value)
     {
-        return 'datetime\''.urlencode($value).'\'';
+        return 'datetime\'' . urlencode($value) . '\'';
     }
 
     /**

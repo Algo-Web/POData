@@ -64,13 +64,13 @@ class FunctionDescription
      */
     public function getPrototypeAsString()
     {
-        $str = $this->returnType->getFullTypeName().' '.$this->name.'(';
+        $str = $this->returnType->getFullTypeName() . ' ' . $this->name . '(';
 
         foreach ($this->argumentTypes as $argumentType) {
-            $str .= $argumentType->getFullTypeName().', ';
+            $str .= $argumentType->getFullTypeName() . ', ';
         }
 
-        return rtrim($str, ', ').')';
+        return rtrim($str, ', ') . ')';
     }
 
     /**
@@ -484,7 +484,7 @@ class FunctionDescription
     {
         $string = null;
         foreach ($argExpressions as $argExpression) {
-            $string .= $argExpression->getType()->getFullTypeName().', ';
+            $string .= $argExpression->getType()->getFullTypeName() . ', ';
         }
 
         $string = rtrim($string, ', ');
@@ -719,7 +719,7 @@ class FunctionDescription
         if ($function == null) {
             $protoTypes = null;
             foreach ($functions as $function) {
-                $protoTypes .= $function->getPrototypeAsString().'; ';
+                $protoTypes .= $function->getPrototypeAsString() . '; ';
             }
 
             throw ODataException::createSyntaxError(

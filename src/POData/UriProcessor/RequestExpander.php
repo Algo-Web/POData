@@ -194,7 +194,7 @@ class RequestExpander
      *
      * @return bool true if a segment was pushed, false otherwise
      */
-    private function pushSegmentForNavigationProperty(ResourceProperty &$resourceProperty)
+    private function pushSegmentForNavigationProperty(ResourceProperty & $resourceProperty)
     {
         if ($resourceProperty->getTypeKind() == ResourceTypeKind::ENTITY) {
             assert(!empty($this->getStack()->getSegmentNames()), '!is_empty($this->getStack()->getSegmentNames())');
@@ -279,7 +279,7 @@ class RequestExpander
      *
      * @return bool true if the segment was push, false otherwise
      */
-    private function pushSegment($segmentName, ResourceSetWrapper &$resourceSetWrapper)
+    private function pushSegment($segmentName, ResourceSetWrapper & $resourceSetWrapper)
     {
         return $this->getStack()->pushSegment($segmentName, $resourceSetWrapper);
     }
@@ -301,7 +301,7 @@ class RequestExpander
     }
 
     /**
-     * @param $expandedProjectionNode
+     * @param ExpandedProjectionNode $expandedProjectionNode
      * @param $entry
      *
      * @return null|\object[]
@@ -329,10 +329,10 @@ class RequestExpander
     }
 
     /**
-     * @param $expandedProjectionNode
+     * @param ExpandedProjectionNode $expandedProjectionNode
      * @param $entry
-     * @param $resourceType
-     * @param $expandedPropertyName
+     * @param \POData\Providers\Metadata\ResourceType $resourceType
+     * @param string $expandedPropertyName
      *
      * @throws InvalidOperationException
      * @throws \POData\Common\ODataException
@@ -363,9 +363,9 @@ class RequestExpander
     /**
      * @param $entry
      * @param $result
-     * @param $expandedProjectionNode
-     * @param $resourceType
-     * @param $expandedPropertyName
+     * @param ExpandedProjectionNode $expandedProjectionNode
+     * @param \POData\Providers\Metadata\ResourceType $resourceType
+     * @param string $expandedPropertyName
      *
      * @throws InvalidOperationException
      */

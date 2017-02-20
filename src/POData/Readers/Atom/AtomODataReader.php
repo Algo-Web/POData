@@ -254,7 +254,7 @@ class AtomODataReader
         $name = $property->nodeName;
 
         if ($prefix != 'default') {
-            $prefix = $prefix.':';
+            $prefix = $prefix . ':';
             $pos = (false === ($index = strpos($name, $prefix))) ? 0 : $index + strlen($prefix);
             $name = substr($name, $pos);
         }
@@ -331,7 +331,7 @@ class AtomODataReader
 
                     if ($nodes->length) {
                         if (isset($attributes['NodeAttribute'])) {
-                            $attribute = $attributes['FC_NsPrefix'].':'.$attributes['NodeAttribute'];
+                            $attribute = $attributes['FC_NsPrefix'] . ':' . $attributes['NodeAttribute'];
                             $value = self::GetAttribute($nodes->item(0), $attribute);
                             if ((is_null($value) &&
                                 (isset($attributes['EdmType']) &&
@@ -348,7 +348,7 @@ class AtomODataReader
                             }
 
                             if (empty($value)) {
-                                $query1 = $propertyQuery.$propertyName;
+                                $query1 = $propertyQuery . $propertyName;
                                 $nodes1 = $xPath->Query($query1);
                                 if ($nodes1->length) {
                                     $value1 = self::GetAttribute($nodes1->item(0), 'm:null');
@@ -397,7 +397,7 @@ class AtomODataReader
                 }
             }
 
-            $query = $propertyQuery.$propertyName;
+            $query = $propertyQuery . $propertyName;
             $nodes = $xPath->Query($query);
             if ($nodes->length) {
                 $value = $nodes->item(0)->nodeValue;
@@ -427,7 +427,7 @@ class AtomODataReader
         //Check and Process Complex Type
         //
         //make query string ex: "/m:properties/d:BoxArt"
-        $query = $propertyQuery.$propertyName;
+        $query = $propertyQuery . $propertyName;
         $nodes = $xPath->Query($query);
         if (!$nodes->length) {
             return false;
@@ -517,7 +517,7 @@ class AtomODataReader
         $type = ClientType::Create(get_class($object));
         $keyPropertyNames = $type->geyKeyProperties();
         foreach ($keyPropertyNames as $keyPropertyName) {
-            $properties = $xPath->query(self::$QUERY_PROPERTY2.$keyPropertyName);
+            $properties = $xPath->query(self::$QUERY_PROPERTY2 . $keyPropertyName);
             if ($properties->length) {
                 $value = $properties->item(0)->nodeValue;
                 \POData\Common\ReflectionHandler::setProperty($object, $keyPropertyName, $value);

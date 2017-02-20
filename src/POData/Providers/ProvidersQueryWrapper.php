@@ -412,8 +412,8 @@ class ProvidersQueryWrapper
      */
     private function validateEntityInstance(
         $entityInstance,
-        ResourceSet &$resourceSet,
-        KeyDescriptor &$keyDescriptor,
+        ResourceSet & $resourceSet,
+        KeyDescriptor & $keyDescriptor,
         $methodName
     ) {
         if (is_null($entityInstance)) {
@@ -444,7 +444,7 @@ class ProvidersQueryWrapper
     }
 
     /**
-     * @param $methodName
+     * @param string $methodName
      * @param $entityInstance
      * @param ResourceSet $resourceSet
      *

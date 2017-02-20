@@ -99,7 +99,7 @@ class Double implements IType
      */
     public function convertToOData($value)
     {
-        return $value.'D';
+        return $value . 'D';
     }
 
     /**

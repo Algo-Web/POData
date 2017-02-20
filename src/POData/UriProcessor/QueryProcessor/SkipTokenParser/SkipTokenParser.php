@@ -41,8 +41,8 @@ class SkipTokenParser
      * @return InternalSkipTokenInfo
      */
     public static function parseSkipTokenClause(
-        ResourceType &$resourceType,
-        InternalOrderByInfo &$internalOrderByInfo,
+        ResourceType & $resourceType,
+        InternalOrderByInfo & $internalOrderByInfo,
         $skipToken
     ) {
         $tokenValueDescriptor = null;

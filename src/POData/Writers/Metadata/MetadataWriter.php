@@ -98,7 +98,7 @@ class MetadataWriter
         $resourceTypesInContainerNamespace = [];
         $containerNamespace = $this->providersWrapper->getContainerNamespace();
         foreach ($this->_metadataManager->getResourceTypesAlongWithNamespace()
-                 as $resourceTypeNamespace => $resourceTypesWithName) {
+                    as $resourceTypeNamespace => $resourceTypesWithName) {
             if ($resourceTypeNamespace == $containerNamespace) {
                 foreach ($resourceTypesWithName as $resourceTypeName => $resourceType) {
                     $resourceTypesInContainerNamespace[] = $resourceType;
@@ -279,7 +279,7 @@ class MetadataWriter
     private function _writeProperties(ResourceType $resourceType, $associationTypesInResourceTypeNamespace)
     {
         foreach ($this->_metadataManager->getAllVisiblePropertiesDeclaredOnThisType($resourceType)
-                 as $resourceProperty) {
+                    as $resourceProperty) {
             if ($resourceProperty->isKindOf(ResourcePropertyKind::BAG)) {
                 $this->_writeBagProperty($resourceProperty);
             } elseif ($resourceProperty->isKindOf(ResourcePropertyKind::PRIMITIVE)) {
@@ -366,7 +366,7 @@ class MetadataWriter
      */
     private function _writeNavigationProperty(ResourceType $resourceType, $associationTypesInResourceTypeNamespace, ResourceProperty $navigationProperty)
     {
-        $associationTypeLookupName = $resourceType->getName().'_'.$navigationProperty->getName();
+        $associationTypeLookupName = $resourceType->getName() . '_' . $navigationProperty->getName();
         if (!array_key_exists($associationTypeLookupName, $associationTypesInResourceTypeNamespace)) {
             throw new InvalidOperationException(Messages::metadataWriterNoResourceAssociationSetForNavigationProperty($navigationProperty->getName(), $resourceType->getName()));
         }

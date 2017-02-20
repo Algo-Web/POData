@@ -660,7 +660,7 @@ class RequestDescription
      *
      * @param InternalOrderByInfo &$internalOrderByInfo The sorting information
      */
-    public function setInternalOrderByInfo(InternalOrderByInfo &$internalOrderByInfo)
+    public function setInternalOrderByInfo(InternalOrderByInfo & $internalOrderByInfo)
     {
         $this->internalOrderByInfo = $internalOrderByInfo;
     }
@@ -681,7 +681,7 @@ class RequestDescription
      * @param InternalSkipTokenInfo &$internalSkipTokenInfo The paging information
      */
     public function setInternalSkipTokenInfo(
-        InternalSkipTokenInfo &$internalSkipTokenInfo
+        InternalSkipTokenInfo & $internalSkipTokenInfo
     ) {
         $this->_internalSkipTokenInfo = $internalSkipTokenInfo;
     }
@@ -707,7 +707,7 @@ class RequestDescription
      *
      * @param RootProjectionNode &$rootProjectionNode Root of the projection tree
      */
-    public function setRootProjectionNode(RootProjectionNode &$rootProjectionNode)
+    public function setRootProjectionNode(RootProjectionNode & $rootProjectionNode)
     {
         $this->_rootProjectionNode = $rootProjectionNode;
     }
@@ -996,7 +996,7 @@ class RequestDescription
         if (!$isSupportedVersion) {
             $availableVersions = null;
             foreach (self::getKnownDataServiceVersions() as $version1) {
-                $availableVersions .= $version1->toString().', ';
+                $availableVersions .= $version1->toString() . ', ';
             }
 
             $availableVersions = rtrim($availableVersions, ', ');

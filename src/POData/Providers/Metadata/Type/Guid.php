@@ -107,7 +107,7 @@ class Guid implements IType
      */
     public function convertToOData($value)
     {
-        return 'guid\''.urlencode($value).'\'';
+        return 'guid\'' . urlencode($value) . '\'';
     }
 
     /**

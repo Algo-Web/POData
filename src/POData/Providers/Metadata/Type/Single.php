@@ -99,7 +99,7 @@ class Single implements IType
      */
     public function convertToOData($value)
     {
-        return $value.'F';
+        return $value . 'F';
     }
 
     /**

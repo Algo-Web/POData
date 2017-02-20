@@ -273,7 +273,7 @@ class KeyDescriptor
                 if (!array_key_exists($keyName, $this->_namedValues)) {
                     $keysAsString = null;
                     foreach (array_keys($keyProperties) as $key) {
-                        $keysAsString .= $key.', ';
+                        $keysAsString .= $key . ', ';
                     }
 
                     $keysAsString = rtrim($keysAsString, ' ,');

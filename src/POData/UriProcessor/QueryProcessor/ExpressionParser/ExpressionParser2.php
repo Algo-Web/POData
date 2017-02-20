@@ -516,7 +516,7 @@ class ExpressionParser2 extends ExpressionParser
             $parent = $nullCheckExpTree;
             $key = null;
             do {
-                $key = $parent->getResourceProperty()->getName().'_'.$key;
+                $key = $parent->getResourceProperty()->getName() . '_' . $key;
                 $parent = $parent->getParent();
             } while ($parent != null);
 

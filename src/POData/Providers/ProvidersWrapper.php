@@ -330,7 +330,7 @@ class ProvidersWrapper
         $type = $this->getResourceTypeWherePropertyIsDeclared($type, $property);
         // usage below requires $type to not be null - so kaboom as early as possible
         assert(null != $type, 'Resource type obtained from property must not be null.');
-        $cacheKey = $set->getName().'_'.$type->getName().'_'.$property->getName();
+        $cacheKey = $set->getName() . '_' . $type->getName() . '_' . $property->getName();
 
         if (array_key_exists($cacheKey, $this->associationSetCache)) {
             return $this->associationSetCache[$cacheKey];
@@ -442,7 +442,7 @@ class ProvidersWrapper
             return $resourceType->getAllProperties();
         }
         //TODO: move this to doctrine annotations
-        $cacheKey = $setWrapper->getName().'_'.$resourceType->getFullName();
+        $cacheKey = $setWrapper->getName() . '_' . $resourceType->getFullName();
         if (!array_key_exists($cacheKey, $this->propertyCache)) {
             //Fill the cache
             $this->propertyCache[$cacheKey] = [];

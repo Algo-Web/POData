@@ -431,11 +431,11 @@ class StreamProviderWrapper
      */
     public function getDefaultStreamEditMediaUri($mediaLinkEntryUri, $resourceStreamInfo)
     {
-        $base = rtrim($mediaLinkEntryUri, '/').'/';
+        $base = rtrim($mediaLinkEntryUri, '/') . '/';
         $end = (null == $resourceStreamInfo) ? ODataConstants::URI_VALUE_SEGMENT
             : ltrim($resourceStreamInfo->getName(), '/');
 
-        return $base.$end;
+        return $base . $end;
     }
 
     /**

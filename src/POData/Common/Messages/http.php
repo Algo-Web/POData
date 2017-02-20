@@ -33,7 +33,7 @@ trait http
      */
     public static function hostRequestUriIsNotBasedOnRelativeUriInConfig($requestUri, $relativeUri)
     {
-        return 'The request uri '.$requestUri.' is not valid as it is not based on the configured relative uri '.$relativeUri;
+        return 'The request uri ' . $requestUri . ' is not valid as it is not based on the configured relative uri ' . $relativeUri;
     }
 
     /**

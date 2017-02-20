@@ -52,7 +52,7 @@ class ResourceAssociationType
     ) {
         $this->_name = $name;
         $this->_fullName = !is_null($namespaceName)
-                          ? $namespaceName.'.'.$name : $name;
+                          ? $namespaceName . '.' . $name : $name;
         $this->_end1 = $end1;
         $this->_end2 = $end2;
     }

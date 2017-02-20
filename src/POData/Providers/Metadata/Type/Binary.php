@@ -105,7 +105,7 @@ class Binary implements IType
      */
     public function convertToOData($value)
     {
-        return 'binary\''.bin2hex($value).'\'';
+        return 'binary\'' . bin2hex($value) . '\'';
     }
 
     /**
@@ -119,7 +119,7 @@ class Binary implements IType
     public static function validateWithoutPrefix($value, &$outValue)
     {
         $length = strlen($value);
-        if (0 == $length || 0 != $length % 2) {
+        if (0 == $length || 0 != $length%2) {
             return false;
         }
 

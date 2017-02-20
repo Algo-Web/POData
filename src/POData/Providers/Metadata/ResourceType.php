@@ -229,7 +229,7 @@ class ResourceType
         $this->_name = $name;
         $this->_baseType = $baseType;
         $this->_namespaceName = $namespaceName;
-        $this->_fullName = is_null($namespaceName) ? $name : $namespaceName.'.'.$name;
+        $this->_fullName = is_null($namespaceName) ? $name : $namespaceName . '.' . $name;
         $this->_abstractType = $isAbstract;
         $this->_isMediaLinkEntry = false;
         $this->_customState = null;

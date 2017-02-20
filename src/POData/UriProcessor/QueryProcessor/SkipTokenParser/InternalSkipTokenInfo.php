@@ -67,9 +67,9 @@ class InternalSkipTokenInfo
      * @param ResourceType                  &$resourceType            Reference to the type of the resource pointed by the request uri
      */
     public function __construct(
-        InternalOrderByInfo &$internalOrderByInfo,
+        InternalOrderByInfo & $internalOrderByInfo,
         $orderByValuesInSkipToken,
-        ResourceType &$resourceType
+        ResourceType & $resourceType
     ) {
         $this->_internalOrderByInfo = $internalOrderByInfo;
         $this->_orderByValuesInSkipToken = $orderByValuesInSkipToken;
@@ -139,7 +139,7 @@ class InternalSkipTokenInfo
         $high = $searcArraySize;
         do {
             $matchLevel = 0;
-            $mid = $low + round(($high - $low) / 2);
+            $mid = $low + round(($high - $low)/2);
             $result = $comparer($keyObject, $searchArray[$mid]);
             if ($result > 0) {
                 $low = $mid + 1;
@@ -265,7 +265,7 @@ class InternalSkipTokenInfo
                     } elseif ($isLastSegment) {
                         $type = $subPathSegment->getInstanceType();
                         $value = $type->convertToOData($currentObject);
-                        $nextPageLink .= $value.', ';
+                        $nextPageLink .= $value . ', ';
                     }
                 } catch (\ReflectionException $reflectionException) {
                     throw ODataException::createInternalServerError(

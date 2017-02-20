@@ -78,7 +78,7 @@ class ResponseWriter
 
         $service->getHost()->setResponseStatusCode(HttpStatus::CODE_OK);
         $service->getHost()->setResponseContentType($responseContentType);
-        $service->getHost()->setResponseVersion($dataServiceVersion->toString().';');
+        $service->getHost()->setResponseVersion($dataServiceVersion->toString() . ';');
         $service->getHost()->setResponseCacheControl(ODataConstants::HTTPRESPONSE_HEADER_CACHECONTROL_NOCACHE);
         $service->getHost()->getOperationContext()->outgoingResponse()->setStream($responseBody);
     }

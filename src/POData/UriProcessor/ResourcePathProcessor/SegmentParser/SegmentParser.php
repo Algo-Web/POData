@@ -315,7 +315,7 @@ class SegmentParser
                 if ($hasPredicate) {
                     $this->_assertion(!$current->isSingleResult());
                     $keyDescriptor = $this->_createKeyDescriptor(
-                        $identifier.'('.$keyPredicate.')',
+                        $identifier . '(' . $keyPredicate . ')',
                         $projectedProperty->getResourceType(),
                         $keyPredicate
                     );
@@ -394,7 +394,7 @@ class SegmentParser
         $descriptor->setTargetKind(TargetKind::RESOURCE());
         if ($keyPredicate !== null) {
             $keyDescriptor = $this->_createKeyDescriptor(
-                $segmentIdentifier.'('.$keyPredicate.')',
+                $segmentIdentifier . '(' . $keyPredicate . ')',
                 $resourceSetWrapper->getResourceType(),
                 $keyPredicate
             );

@@ -212,7 +212,7 @@ class MetadataManager
      *                                            edm schema version for the metadata
      * @param EdmSchemaVersion $edmSchemaVersion
      */
-    public function getDataServiceAndEdmSchemaVersions(Version &$dsVersion, &$edmSchemaVersion)
+    public function getDataServiceAndEdmSchemaVersions(Version & $dsVersion, &$edmSchemaVersion)
     {
         if ($this->_metadataResourceTypeSet->hasNamedStreams()) {
             $dsVersion->raiseVersion(3, 0);

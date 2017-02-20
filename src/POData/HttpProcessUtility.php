@@ -58,7 +58,7 @@ class MediaType
      */
     public function getMimeType()
     {
-        return $this->_type.'/'.$this->_subType;
+        return $this->_type . '/' . $this->_subType;
     }
 
     /**
@@ -707,7 +707,7 @@ class HttpProcessUtility
             case 'ACCEPT_LANGUAGE':
             case 'DATASERVICEVERSION':
             case 'MAXDATASERVICEVERSION':
-                return 'HTTP_'.$name;
+                return 'HTTP_' . $name;
         }
 
         return $name;

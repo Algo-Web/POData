@@ -47,7 +47,7 @@ class ErrorHandler
             $exception = new ODataException($exception->getMessage(), HttpStatus::CODE_INTERNAL_SERVER_ERROR);
         }
 
-        $service->getHost()->setResponseVersion(ODataConstants::DATASERVICEVERSION_1_DOT_0.';');
+        $service->getHost()->setResponseVersion(ODataConstants::DATASERVICEVERSION_1_DOT_0 . ';');
 
         // At this point all kind of exceptions will be converted
         //to 'ODataException'
