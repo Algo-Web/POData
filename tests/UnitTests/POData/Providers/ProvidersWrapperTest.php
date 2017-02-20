@@ -2,29 +2,28 @@
 
 namespace UnitTests\POData\Providers\Metadata;
 
+use Mockery as m;
+use POData\Common\InvalidOperationException;
+use POData\Common\Messages;
+use POData\Common\ODataException;
+use POData\Configuration\EntitySetRights;
 use POData\Configuration\IServiceConfiguration;
+use POData\Configuration\ServiceConfiguration;
+use POData\Providers\Metadata\IMetadataProvider;
+use POData\Providers\Metadata\ResourceAssociationSet;
+use POData\Providers\Metadata\ResourceAssociationSetEnd;
+use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Metadata\ResourceType;
-use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceTypeKind;
-use POData\Providers\ProvidersWrapper;
-use POData\Configuration\ServiceConfiguration;
-use POData\Configuration\EntitySetRights;
-use POData\Providers\Metadata\IMetadataProvider;
-use POData\Common\ODataException;
-use POData\Common\Messages;
 use POData\Providers\Metadata\Type\StringType;
-use POData\Common\InvalidOperationException;
-use POData\Providers\Metadata\ResourceAssociationSet;
-use POData\Providers\Metadata\ResourceAssociationSetEnd;
+use POData\Providers\ProvidersWrapper;
 use POData\Providers\Query\IQueryProvider;
+use POData\Providers\Query\QueryResult;
 use POData\Providers\Query\QueryType;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
-use POData\Providers\Query\QueryResult;
 use UnitTests\POData\TestCase;
-
-use Mockery as m;
 
 class ProvidersWrapperTest extends TestCase
 {
@@ -73,7 +72,6 @@ class ProvidersWrapperTest extends TestCase
         $this->mockResourceAssociationSet = m::mock(ResourceAssociationSet::class)->makePartial();
         $this->mockResourceAssociationSetEnd = m::mock(ResourceAssociationSetEnd::class)->makePartial();
     }
-
 
     /**
      * @return ProvidersWrapper
@@ -295,12 +293,12 @@ class ProvidersWrapperTest extends TestCase
         $this->mockResourceType->shouldReceive('getName')->andReturn($fakeName);
 
         $this->mockMetadataProvider->shouldReceive('getDerivedTypes')->withArgs([$this->mockResourceType])
-            ->andReturn(array($this->mockResourceType2));
+            ->andReturn([$this->mockResourceType2]);
 
         $wrapper = $this->getMockedWrapper();
 
         $actual = $wrapper->getDerivedTypes($this->mockResourceType);
-        $this->assertEquals(array($this->mockResourceType2), $actual);
+        $this->assertEquals([$this->mockResourceType2], $actual);
     }
 
     public function testHasDerivedTypes()
@@ -415,9 +413,9 @@ class ProvidersWrapperTest extends TestCase
 
     public function testGetResourceSets()
     {
-        $fakeSets = array(
+        $fakeSets = [
             $this->mockResourceSet,
-        );
+        ];
 
         $this->mockMetadataProvider->shouldReceive('getResourceSets')->andReturn($fakeSets);
         $this->mockResourceSet->shouldReceive('getResourceType')->andReturn($this->mockResourceType);
@@ -429,18 +427,18 @@ class ProvidersWrapperTest extends TestCase
 
         $actual = $wrapper->getResourceSets();
 
-        $expected = array(
+        $expected = [
             new ResourceSetWrapper($this->mockResourceSet, $this->mockServiceConfig),
-        );
+        ];
         $this->assertEquals($expected, $actual);
     }
 
     public function testGetResourceSetsDuplicateNames()
     {
-        $fakeSets = array(
+        $fakeSets = [
             $this->mockResourceSet,
             $this->mockResourceSet,
-        );
+        ];
 
         $fakeName = 'Fake Set 1';
 
@@ -464,10 +462,10 @@ class ProvidersWrapperTest extends TestCase
 
     public function testGetResourceSetsSecondOneIsNotVisible()
     {
-        $fakeSets = array(
+        $fakeSets = [
             $this->mockResourceSet,
             $this->mockResourceSet2,
-        );
+        ];
 
         $this->mockMetadataProvider->shouldReceive('getResourceSets')->andReturn($fakeSets);
         $this->mockResourceSet->shouldReceive('getResourceType')->andReturn($this->mockResourceType);
@@ -485,17 +483,17 @@ class ProvidersWrapperTest extends TestCase
 
         $actual = $wrapper->getResourceSets();
 
-        $expected = array(
+        $expected = [
             new ResourceSetWrapper($this->mockResourceSet2, $this->mockServiceConfig),
-        );
+        ];
         $this->assertEquals($expected, $actual);
     }
 
     public function testGetTypes()
     {
-        $fakeTypes = array(
+        $fakeTypes = [
             new ResourceType(new StringType(), ResourceTypeKind::PRIMITIVE, 'FakeType1'),
-        );
+        ];
 
         $this->mockMetadataProvider->shouldReceive('getTypes')->andReturn($fakeTypes);
 
@@ -506,10 +504,10 @@ class ProvidersWrapperTest extends TestCase
 
     public function testGetTypesDuplicateNames()
     {
-        $fakeTypes = array(
+        $fakeTypes = [
             new ResourceType(new StringType(), ResourceTypeKind::PRIMITIVE, 'FakeType1'),
             new ResourceType(new StringType(), ResourceTypeKind::PRIMITIVE, 'FakeType1'),
-        );
+        ];
 
         $this->mockMetadataProvider->shouldReceive('getTypes')->andReturn($fakeTypes);
 
@@ -534,7 +532,7 @@ class ProvidersWrapperTest extends TestCase
         $skip = 10;
 
         $fakeQueryResult = new QueryResult();
-        $fakeQueryResult->results = array();
+        $fakeQueryResult->results = [];
 
         /* TODO: Audit this and see if it still applies
         * $this->mockQueryProvider->shouldReceive('getResourceSet')->withArgs([
@@ -830,7 +828,6 @@ class ProvidersWrapperTest extends TestCase
         */
         $this->mockQueryProvider->shouldReceive('getResourceSet')->andReturn($fakeQueryResult);
 
-
         $wrapper = $this->getMockedWrapper();
 
         try {
@@ -856,7 +853,7 @@ class ProvidersWrapperTest extends TestCase
         $skip = 10;
 
         $fakeQueryResult = new QueryResult();
-        $fakeQueryResult->results = array();
+        $fakeQueryResult->results = [];
 
         $fakeSourceEntity = new \stdClass();
 

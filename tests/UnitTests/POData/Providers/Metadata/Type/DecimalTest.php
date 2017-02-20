@@ -38,9 +38,9 @@ class DecimalTest extends TestCase
 
         $actual = get_object_vars($type);
 
-        $expected = array(
+        $expected = [
 
-        );
+        ];
 
         $this->assertEquals($expected, $actual);
     }
@@ -99,7 +99,6 @@ class DecimalTest extends TestCase
         $expected = '';
         $this->assertFalse($type->validate($value, $out));
         $this->assertEquals($expected, $out);
-
     }
 
     public function testConvert()

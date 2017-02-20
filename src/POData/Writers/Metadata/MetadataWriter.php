@@ -2,20 +2,20 @@
 
 namespace POData\Writers\Metadata;
 
+use POData\Common\InvalidOperationException;
+use POData\Common\Messages;
+use POData\Common\ODataConstants;
+use POData\Common\ODataException;
+use POData\Common\Version;
+use POData\Providers\Metadata\EdmSchemaVersion;
 use POData\Providers\Metadata\ResourceAssociationSet;
+use POData\Providers\Metadata\ResourceAssociationType;
 use POData\Providers\Metadata\ResourceAssociationTypeEnd;
-use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\Providers\Metadata\ResourceProperty;
+use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\ResourceTypeKind;
 use POData\Providers\ProvidersWrapper;
-use POData\Common\Version;
-use POData\Common\ODataConstants;
-use POData\Common\Messages;
-use POData\Common\ODataException;
-use POData\Common\InvalidOperationException;
-use POData\Providers\Metadata\ResourceAssociationType;
-use POData\Providers\Metadata\EdmSchemaVersion;
 
 /**
  * Class MetadataWriter.
@@ -95,7 +95,7 @@ class MetadataWriter
         $this->_xmlWriter->openMemory();
         $this->_xmlWriter->setIndent(4);
         $this->_writeTopLevelElements($this->_dataServiceVersion->toString());
-        $resourceTypesInContainerNamespace = array();
+        $resourceTypesInContainerNamespace = [];
         $containerNamespace = $this->providersWrapper->getContainerNamespace();
         foreach ($this->_metadataManager->getResourceTypesAlongWithNamespace()
                  as $resourceTypeNamespace => $resourceTypesWithName) {
@@ -207,10 +207,10 @@ class MetadataWriter
     /**
      * Write an entity type and associated attributes.
      *
-     * @param ResourceType $resourceType                            Resource type
-     * @param ResourceAssociationType[]        $associationTypesInResourceTypeNamespace Collection of
-     *                                                              association types for the given resource types
-     *                                                              array(string, AssociationType)
+     * @param ResourceType              $resourceType                            Resource type
+     * @param ResourceAssociationType[] $associationTypesInResourceTypeNamespace Collection of
+     *                                                                           association types for the given resource types
+     *                                                                           array(string, AssociationType)
      */
     private function _writeEntityType(ResourceType $resourceType, $associationTypesInResourceTypeNamespace)
     {
@@ -366,7 +366,7 @@ class MetadataWriter
      */
     private function _writeNavigationProperty(ResourceType $resourceType, $associationTypesInResourceTypeNamespace, ResourceProperty $navigationProperty)
     {
-        $associationTypeLookupName = $resourceType->getName() . '_' . $navigationProperty->getName();
+        $associationTypeLookupName = $resourceType->getName().'_'.$navigationProperty->getName();
         if (!array_key_exists($associationTypeLookupName, $associationTypesInResourceTypeNamespace)) {
             throw new InvalidOperationException(Messages::metadataWriterNoResourceAssociationSetForNavigationProperty($navigationProperty->getName(), $resourceType->getName()));
         }

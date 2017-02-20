@@ -2,12 +2,12 @@
 
 namespace UnitTests\POData\Providers\Metadata;
 
+use Mockery as m;
 use POData\Providers\Metadata\ResourceAssociationSetEnd;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\ResourceType;
 use UnitTests\POData\TestCase;
-use Mockery as m;
 
 class ResourceAssociationSetEndTest extends TestCase
 {
@@ -40,7 +40,6 @@ class ResourceAssociationSetEndTest extends TestCase
         $set->shouldReceive('getResourceType')->andReturn($middleType);
 
         $middleType->shouldReceive('isAssignableFrom')->andReturn(false)->once();
-
 
         $expected = 'The resource type fakeType must be assignable to the resource set fakeSet.';
         $actual = null;

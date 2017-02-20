@@ -100,7 +100,7 @@ class IncomingRequest implements IHTTPRequest
     private function getHeaders()
     {
         if (is_null($this->_headers)) {
-            $this->_headers = array();
+            $this->_headers = [];
 
             foreach ($_SERVER as $key => $value) {
                 if ((strpos($key, 'HTTP_') === 0)
@@ -131,7 +131,7 @@ class IncomingRequest implements IHTTPRequest
                 $this->_rawUrl = ODataConstants::HTTPREQUEST_PROTOCOL_HTTPS;
             }
 
-            $this->_rawUrl .= '://' . $_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)];
+            $this->_rawUrl .= '://'.$_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)];
             $this->_rawUrl .= utf8_decode(urldecode($_SERVER[ODataConstants::HTTPREQUEST_URI]));
         }
 
@@ -156,8 +156,6 @@ class IncomingRequest implements IHTTPRequest
         if (array_key_exists($trimmedKey, $this->_headers)) {
             return $this->_headers[$trimmedKey];
         }
-
-        return null;
     }
 
     /**
@@ -184,7 +182,7 @@ class IncomingRequest implements IHTTPRequest
     {
         if (is_null($this->_queryOptions)) {
             $queryString = $this->getQueryString();
-            $this->_queryOptions = array();
+            $this->_queryOptions = [];
 
             foreach (explode('&', $queryString) as $queryOptionAsString) {
                 $queryOptionAsString = trim($queryOptionAsString);
@@ -193,10 +191,10 @@ class IncomingRequest implements IHTTPRequest
                     $isNamedOptions = count($result) == 2;
                     if ($isNamedOptions) {
                         $this->_queryOptions[]
-                            = array(rawurldecode($result[0]) => trim(rawurldecode($result[1])));
+                            = [rawurldecode($result[0]) => trim(rawurldecode($result[1]))];
                     } else {
                         $this->_queryOptions[]
-                            = array(null => trim(rawurldecode($result[0])));
+                            = [null => trim(rawurldecode($result[0]))];
                     }
                 }
             }
@@ -219,6 +217,6 @@ class IncomingRequest implements IHTTPRequest
 
     public function getAllInput()
     {
-        return file_get_contents("php://input");
+        return file_get_contents('php://input');
     }
 }

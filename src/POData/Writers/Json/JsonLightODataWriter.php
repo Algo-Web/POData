@@ -2,17 +2,17 @@
 
 namespace POData\Writers\Json;
 
-use POData\ObjectModel\ODataFeed;
-use POData\ObjectModel\ODataEntry;
-use POData\ObjectModel\ODataURLCollection;
-use POData\ObjectModel\ODataURL;
-use POData\ObjectModel\ODataLink;
-use POData\ObjectModel\ODataPropertyContent;
-use POData\ObjectModel\ODataBagContent;
-use POData\ObjectModel\ODataProperty;
-use POData\Common\Version;
-use POData\Common\ODataConstants;
 use POData\Common\MimeTypes;
+use POData\Common\ODataConstants;
+use POData\Common\Version;
+use POData\ObjectModel\ODataBagContent;
+use POData\ObjectModel\ODataEntry;
+use POData\ObjectModel\ODataFeed;
+use POData\ObjectModel\ODataLink;
+use POData\ObjectModel\ODataProperty;
+use POData\ObjectModel\ODataPropertyContent;
+use POData\ObjectModel\ODataURL;
+use POData\ObjectModel\ODataURLCollection;
 
 /**
  * Class JsonLightODataWriter is a writer for the json format in OData V3 also known as JSON Light.
@@ -98,7 +98,7 @@ class JsonLightODataWriter extends JsonODataV2Writer
             $this->writeFeed($model);
             $this->_writer->endScope();
         } elseif ($model instanceof ODataEntry) {
-            $this->writeTopLevelMeta($model->resourceSetName . '/@Element');
+            $this->writeTopLevelMeta($model->resourceSetName.'/@Element');
             $this->writeEntry($model);
         }
 
@@ -145,7 +145,7 @@ class JsonLightODataWriter extends JsonODataV2Writer
 
         $this->_writer
             ->writeName(ODataConstants::JSON_LIGHT_METADATA_STRING)
-            ->writeValue($this->baseUri . '/' . ODataConstants::URI_METADATA_SEGMENT . '#' . $fragment);
+            ->writeValue($this->baseUri.'/'.ODataConstants::URI_METADATA_SEGMENT.'#'.$fragment);
     }
 
     protected function writePropertyMeta(ODataProperty $property)
@@ -167,7 +167,7 @@ class JsonLightODataWriter extends JsonODataV2Writer
             case 'Edm.Decimal':
             case 'Edm.DateTime':
                 $this->_writer
-                    ->writeName($property->name . ODataConstants::JSON_LIGHT_METADATA_PROPERTY_TYPE_SUFFIX_STRING)
+                    ->writeName($property->name.ODataConstants::JSON_LIGHT_METADATA_PROPERTY_TYPE_SUFFIX_STRING)
                     ->writeValue($property->typeName);
         }
 
@@ -194,8 +194,7 @@ class JsonLightODataWriter extends JsonODataV2Writer
             ->writeName(ODataConstants::JSON_LIGHT_METADATA_ETAG_STRING)
             ->writeValue($entry->eTag)
             ->writeName(ODataConstants::JSON_LIGHT_METADATA_EDIT_LINK_STRING)
-            ->writeValue($entry->editLink)
-        ;
+            ->writeValue($entry->editLink);
 
         return $this;
     }
@@ -210,7 +209,7 @@ class JsonLightODataWriter extends JsonODataV2Writer
         if ($this->metadataLevel == JsonLightMetadataLevel::FULL()) {
             //Interestingly the fullmetadata outputs this metadata..even if the thing is expanded
             $this->_writer
-                ->writeName($link->title . ODataConstants::JSON_LIGHT_METADATA_LINK_NAVIGATION_SUFFIX_STRING)
+                ->writeName($link->title.ODataConstants::JSON_LIGHT_METADATA_LINK_NAVIGATION_SUFFIX_STRING)
                 ->writeValue($link->url);
         }
 

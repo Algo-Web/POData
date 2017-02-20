@@ -2,14 +2,13 @@
 
 namespace UnitTests\POData\Providers\Metadata;
 
+use Mockery as m;
 use POData\Common\InvalidOperationException;
 use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\Providers\Metadata\ResourceStreamInfo;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\ResourceTypeKind;
 use POData\Providers\Metadata\Type\EdmPrimitiveType;
-
-use Mockery as m;
 use POData\Providers\Metadata\Type\IType;
 use ReflectionClass;
 use UnitTests\POData\ObjectModel\reusableEntityClass2;
@@ -22,9 +21,9 @@ class ResourceTypeTest extends TestCase
         $type = EdmPrimitiveType::BYTE;
         $result = ResourceType::getPrimitiveResourceType($type);
         $this->assertTrue($result instanceof ResourceType);
-        $this->assertEquals("Byte", $result->getName());
-        $this->assertEquals("Edm", $result->getNamespace());
-        $this->assertEquals("Edm.Byte", $result->getFullName());
+        $this->assertEquals('Byte', $result->getName());
+        $this->assertEquals('Edm', $result->getNamespace());
+        $this->assertEquals('Edm.Byte', $result->getFullName());
     }
 
     public function testGetPrimitiveResourceTypeSByte()
@@ -32,9 +31,9 @@ class ResourceTypeTest extends TestCase
         $type = EdmPrimitiveType::SBYTE;
         $result = ResourceType::getPrimitiveResourceType($type);
         $this->assertTrue($result instanceof ResourceType);
-        $this->assertEquals("SByte", $result->getName());
-        $this->assertEquals("Edm", $result->getNamespace());
-        $this->assertEquals("Edm.SByte", $result->getFullName());
+        $this->assertEquals('SByte', $result->getName());
+        $this->assertEquals('Edm', $result->getNamespace());
+        $this->assertEquals('Edm.SByte', $result->getFullName());
     }
 
     public function testHasETagPropertiesYes()
@@ -104,10 +103,10 @@ class ResourceTypeTest extends TestCase
 
         $result = $foo->__sleep();
 
-        $expected = [ '_name', '_namespaceName', '_fullName', '_resourceTypeKind', '_abstractType', '_baseType',
+        $expected = ['_name', '_namespaceName', '_fullName', '_resourceTypeKind', '_abstractType', '_baseType',
             '_propertiesDeclaredOnThisType', '_namedStreamsDeclaredOnThisType', '_propertyInfosDeclaredOnThisType',
             '_allProperties', '_allNamedStreams', '_etagProperties', '_keyProperties', '_isMediaLinkEntry',
-            '_hasBagProperty', '_hasNamedStreams', '_type', '_customState', '_arrayToDetectLoopInComplexBag'];
+            '_hasBagProperty', '_hasNamedStreams', '_type', '_customState', '_arrayToDetectLoopInComplexBag', ];
 
         foreach ($expected as $property) {
             $this->assertTrue(in_array($property, $result), $property);
@@ -118,16 +117,16 @@ class ResourceTypeTest extends TestCase
 
     public function testSleepWakeupRealObjectReflectableRoundTrip()
     {
-        $instanceType = new reusableEntityClass2("foo", "bar");
+        $instanceType = new reusableEntityClass2('foo', 'bar');
         $resourceTypeKind = ResourceTypeKind::COMPLEX;
         $foo = new ResourceType(new ReflectionClass($instanceType), $resourceTypeKind, 'name');
 
         $result = $foo->__sleep();
 
-        $expected = [ '_name', '_namespaceName', '_fullName', '_resourceTypeKind', '_abstractType', '_baseType',
+        $expected = ['_name', '_namespaceName', '_fullName', '_resourceTypeKind', '_abstractType', '_baseType',
             '_propertiesDeclaredOnThisType', '_namedStreamsDeclaredOnThisType', '_propertyInfosDeclaredOnThisType',
             '_allProperties', '_allNamedStreams', '_etagProperties', '_keyProperties', '_isMediaLinkEntry',
-            '_hasBagProperty', '_hasNamedStreams', '_type', '_customState', '_arrayToDetectLoopInComplexBag'];
+            '_hasBagProperty', '_hasNamedStreams', '_type', '_customState', '_arrayToDetectLoopInComplexBag', ];
 
         foreach ($expected as $property) {
             $this->assertTrue(in_array($property, $result), $property);
@@ -135,5 +134,4 @@ class ResourceTypeTest extends TestCase
 
         $foo->__wakeup();
     }
-
 }

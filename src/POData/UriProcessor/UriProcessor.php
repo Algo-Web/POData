@@ -2,26 +2,20 @@
 
 namespace POData\UriProcessor;
 
-use Illuminate\Support\Str;
-use POData\Providers\ProvidersWrapper;
+use POData\Common\Messages;
+use POData\Common\ODataConstants;
+use POData\Common\ODataException;
+use POData\IService;
+use POData\OperationContext\HTTPRequestMethod;
 use POData\Providers\Metadata\ResourcePropertyKind;
-use POData\Providers\Metadata\ResourceTypeKind;
-use POData\Providers\Metadata\ResourceSetWrapper;
-use POData\Providers\Metadata\ResourceProperty;
+use POData\Providers\ProvidersWrapper;
+use POData\Providers\Query\QueryResult;
 use POData\Providers\Query\QueryType;
 use POData\UriProcessor\QueryProcessor\QueryProcessor;
-use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandedProjectionNode;
 use POData\UriProcessor\ResourcePathProcessor\ResourcePathProcessor;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\SegmentDescriptor;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetSource;
-use POData\IService;
-use POData\Common\Messages;
-use POData\Common\ODataException;
-use POData\Common\InvalidOperationException;
-use POData\Common\ODataConstants;
-use POData\Providers\Query\QueryResult;
-use POData\OperationContext\HTTPRequestMethod;
 
 /**
  * Class UriProcessor.
@@ -56,7 +50,7 @@ class UriProcessor
     private $providers;
 
     /**
-     * Holds reference to request expander
+     * Holds reference to request expander.
      *
      * @var RequestExpander
      */
@@ -78,9 +72,9 @@ class UriProcessor
      *
      * @param IService $service Reference to the data service instance
      *
-     * @return URIProcessor
-     *
      * @throws ODataException
+     *
+     * @return URIProcessor
      */
     public static function process(IService $service)
     {
@@ -134,7 +128,7 @@ class UriProcessor
     }
 
     /**
-     * Gets the data service instance
+     * Gets the data service instance.
      *
      * @return IService
      */
@@ -144,7 +138,7 @@ class UriProcessor
     }
 
     /**
-     * Gets the request expander instance
+     * Gets the request expander instance.
      *
      * @return RequestExpander
      */
@@ -228,7 +222,7 @@ class UriProcessor
      */
     protected function executePut()
     {
-        return $this->executeBase(function($uriProcessor, $segment) {
+        return $this->executeBase(function ($uriProcessor, $segment) {
             $requestMethod = $uriProcessor->getService()->getOperationContext()->incomingRequest()->getMethod();
             $resourceSet = $segment->getTargetResourceSetWrapper();
             $keyDescriptor = $segment->getKeyDescriptor();
@@ -251,6 +245,7 @@ class UriProcessor
                 false
             );
             $segment->setResult($queryResult);
+
             return $queryResult;
         });
     }
@@ -260,7 +255,7 @@ class UriProcessor
      */
     protected function executeDelete()
     {
-        return $this->executeBase(function($uriProcessor, $segment) {
+        return $this->executeBase(function ($uriProcessor, $segment) {
             $requestMethod = $uriProcessor->getService()->getOperationContext()->incomingRequest()->getMethod();
             $resourceSet = $segment->getTargetResourceSetWrapper();
             $keyDescriptor = $segment->getKeyDescriptor();
@@ -270,6 +265,7 @@ class UriProcessor
                     Messages::badRequestInvalidUriForThisVerb($url, $requestMethod)
                 );
             }
+
             return $uriProcessor->getProviders()->deleteResource($resourceSet, $segment->getResult());
         });
     }
@@ -330,7 +326,6 @@ class UriProcessor
                             //see #88
                             $value = \POData\Common\ReflectionHandler::getProperty($value, $segment->getIdentifier());
                         } catch (\ReflectionException $reflectionException) {
-
                         }
                     }
 
@@ -374,7 +369,7 @@ class UriProcessor
             $segment->setResult($entityInstance);
         } else {
             $skip = (null == $this->getRequest()) ? 0 : $this->getRequest()->getSkipCount();
-            $skip = (null == $skip) ? 0 :$skip;
+            $skip = (null == $skip) ? 0 : $skip;
             $queryResult = $this->getProviders()->getResourceSet(
                 $this->getRequest()->queryType,
                 $segment->getTargetResourceSetWrapper(),
@@ -428,7 +423,6 @@ class UriProcessor
                 $segment->setResult($queryResult);
             }
         } elseif ($projectedPropertyKind == ResourcePropertyKind::RESOURCE_REFERENCE) {
-
             $entityInstance = $this->getProviders()->getRelatedResourceReference(
                 $segment->getPrevious()->getTargetResourceSetWrapper(),
                 $segment->getPrevious()->getResult(),

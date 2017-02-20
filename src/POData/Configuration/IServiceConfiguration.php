@@ -80,7 +80,7 @@ interface IServiceConfiguration
     /**
      * sets the access rights on the specified resource set.
      *
-     * @param string $name Name of resource set to set; '*' to indicate all
+     * @param string          $name   Name of resource set to set; '*' to indicate all
      * @param EntitySetRights $rights Rights to be granted to this resource
      *
      * @throws \InvalidArgumentException when the entity set rights are not known or the resource set is not known
@@ -99,9 +99,9 @@ interface IServiceConfiguration
     /**
      * Sets the maximum page size for an entity set resource.
      *
-     * @param string $name Name of entity set resource for which to set
+     * @param string $name     Name of entity set resource for which to set
      *                         the page size
-     * @param int $pageSize Page size for the entity set resource that is
+     * @param int    $pageSize Page size for the entity set resource that is
      *                         specified in name
      *
      * @throws InvalidOperationException

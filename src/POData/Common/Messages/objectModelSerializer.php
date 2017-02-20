@@ -1,4 +1,5 @@
 <?php
+
 namespace POData\Common\Messages;
 
 trait objectModelSerializer
@@ -56,6 +57,6 @@ trait objectModelSerializer
      */
     public static function objectModelSerializerLoopsNotAllowedInComplexTypes($complexPropertyName)
     {
-        return 'A circular loop was detected while serializing the property \'' . $complexPropertyName . '\'. You must make sure that loops are not present in properties that return a bag or complex type.';
+        return 'A circular loop was detected while serializing the property \''.$complexPropertyName.'\'. You must make sure that loops are not present in properties that return a bag or complex type.';
     }
 }

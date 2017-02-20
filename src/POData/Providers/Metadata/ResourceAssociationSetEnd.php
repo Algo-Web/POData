@@ -108,8 +108,7 @@ class ResourceAssociationSetEnd
         return strcmp($resourceSet->getName(), $this->_resourceSet->getName()) == 0
             && $this->_resourceType->isAssignableFrom($resourceType)
             && ((is_null($resourceProperty) && is_null($this->_resourceProperty)) ||
-                  (!is_null($resourceProperty) && !is_null($this->_resourceProperty) && (strcmp($resourceProperty->getName(), $this->_resourceProperty->getName()) == 0)))
-        ;
+                  (!is_null($resourceProperty) && !is_null($this->_resourceProperty) && (strcmp($resourceProperty->getName(), $this->_resourceProperty->getName()) == 0)));
     }
 
     /**

@@ -2,8 +2,8 @@
 
 namespace POData\Writers\Metadata;
 
-use POData\Common\Messages;
 use POData\Common\InvalidOperationException;
+use POData\Common\Messages;
 use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Metadata\ResourceType;
@@ -38,7 +38,7 @@ class MetadataResourceTypeSet extends MetadataBase
      *
      * @var array(string, array(string, ResourceType))
      */
-    private $_resourceTypes = array();
+    private $_resourceTypes = [];
 
     /**
      * Array of all resource types.
@@ -126,7 +126,7 @@ class MetadataResourceTypeSet extends MetadataBase
     public function &getResourceTypesForNamespace($namespace)
     {
         if (!array_key_exists($namespace, $this->_resourceTypes)) {
-            $this->_resourceTypes[$namespace] = array();
+            $this->_resourceTypes[$namespace] = [];
         }
 
         return $this->_resourceTypes[$namespace];
@@ -150,7 +150,7 @@ class MetadataResourceTypeSet extends MetadataBase
     public function getResourceTypes()
     {
         if (is_null($this->_resourceTypesNoNamespace)) {
-            $this->_resourceTypesNoNamespace = array();
+            $this->_resourceTypesNoNamespace = [];
             foreach ($this->_resourceTypes as $nameSpace => $resourceTypeWithName) {
                 foreach ($resourceTypeWithName as $typeName => $resourceType) {
                     $this->_resourceTypesNoNamespace[] = $resourceType;
@@ -170,13 +170,13 @@ class MetadataResourceTypeSet extends MetadataBase
      */
     public function getAllVisiblePropertiesDeclaredOnThisType(ResourceType $resourceType)
     {
-        $visibleProperties = array();
+        $visibleProperties = [];
         foreach ($resourceType->getPropertiesDeclaredOnThisType() as $name => $resourceProperty) {
             if ($resourceProperty->getTypeKind() == ResourceTypeKind::ENTITY) {
                 $resourceType = $resourceProperty->getResourceType();
                 $resourceTypeNamespace = $this->getResourceTypeNamespace($resourceType);
                 $resourceTypesInNamespace = $this->getResourceTypesForNamespace($resourceTypeNamespace);
-                if (!array_key_exists($resourceTypeNamespace . '.' . $resourceType->getName(), $resourceTypesInNamespace)) {
+                if (!array_key_exists($resourceTypeNamespace.'.'.$resourceType->getName(), $resourceTypesInNamespace)) {
                     continue;
                 }
             }
@@ -237,7 +237,7 @@ class MetadataResourceTypeSet extends MetadataBase
     {
         $resourceTypeNamespace = $this->getResourceTypeNamespace($resourceType);
         $resourceTypesInNamespace = &$this->getResourceTypesForNamespace($resourceTypeNamespace);
-        $resourceNameWithNamespace = $resourceTypeNamespace . '.' . $resourceType->getName();
+        $resourceNameWithNamespace = $resourceTypeNamespace.'.'.$resourceType->getName();
         if (!array_key_exists($resourceNameWithNamespace, $resourceTypesInNamespace)) {
             if ($resourceType->isMediaLinkEntry()) {
                 $this->_hasVisibleMediaLinkEntry = true;
@@ -247,7 +247,7 @@ class MetadataResourceTypeSet extends MetadataBase
                 $this->_hasVisibleNamedStreams = true;
             }
 
-            $arrayToDetectLoop = array();
+            $arrayToDetectLoop = [];
             if ($resourceType->hasBagProperty($arrayToDetectLoop)) {
                 $this->_hasBagProperty = true;
             }

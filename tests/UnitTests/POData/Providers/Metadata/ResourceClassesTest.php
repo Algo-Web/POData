@@ -2,22 +2,22 @@
 
 namespace UnitTests\POData\Providers\Metadata;
 
+use POData\Common\InvalidOperationException;
+use POData\Common\ODataConstants;
 use POData\Providers\Metadata\ResourceAssociationSet;
 use POData\Providers\Metadata\ResourceAssociationSetEnd;
 use POData\Providers\Metadata\ResourceAssociationType;
-use POData\Common\ODataConstants;
 use POData\Providers\Metadata\ResourceAssociationTypeEnd;
-use POData\Providers\Metadata\ResourceSet;
-use POData\Providers\Metadata\Type\TypeCode;
-use POData\Providers\Metadata\ResourceStreamInfo;
-use POData\Providers\Metadata\ResourceTypeKind;
-use POData\Providers\Metadata\ResourceType;
-use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\Providers\Metadata\ResourceProperty;
+use POData\Providers\Metadata\ResourcePropertyKind;
+use POData\Providers\Metadata\ResourceSet;
+use POData\Providers\Metadata\ResourceStreamInfo;
+use POData\Providers\Metadata\ResourceType;
+use POData\Providers\Metadata\ResourceTypeKind;
 use POData\Providers\Metadata\Type\EdmPrimitiveType;
-use POData\Providers\Metadata\Type\Int32;
 use POData\Providers\Metadata\Type\Int16;
-use POData\Common\InvalidOperationException;
+use POData\Providers\Metadata\Type\Int32;
+use POData\Providers\Metadata\Type\TypeCode;
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 use UnitTests\POData\TestCase;
 
@@ -147,13 +147,13 @@ class ResourceClassesTest extends TestCase
         $this->AssertEquals(count($customerProperties), 4);
         $customerAllProperties = $customerResType->getAllProperties();
         $this->AssertEquals(count($customerProperties), count($customerAllProperties));
-        $keys = array('CustomerID', 'CustomerName', 'Rating', 'Address');
+        $keys = ['CustomerID', 'CustomerName', 'Rating', 'Address'];
         $i = 0;
         foreach ($customerAllProperties as $key => $customerProperty) {
             $this->AssertEquals($key, $keys[$i++]);
         }
 
-        $entityKeys = array('CustomerID');
+        $entityKeys = ['CustomerID'];
         $customerKeyProperties = $customerResType->getKeyProperties();
         $i = 0;
         foreach ($customerKeyProperties as $key => $customerKeyProperty) {
@@ -180,7 +180,7 @@ class ResourceClassesTest extends TestCase
         }
 
         $this->AssertEquals($employeeResType->hasNamedStream(), true);
-        $b = array();
+        $b = [];
         $this->AssertEquals($employeeResType->hasBagProperty($b), true);
 
         $namedStreams = $employeeResType->getAllNamedStreams();
@@ -254,10 +254,10 @@ class ResourceClassesTest extends TestCase
         $this->assertEquals($customerResourceSet->getResourceType()->getName(), 'Customer');
     }
 
-  /**
-   * Test ResourceAssociationTypeEnd class
-   * Note: ResourceAssociationTypeEnd is an internal class used for metadata generation, not suppose to used by the developers.
-   */
+    /**
+     * Test ResourceAssociationTypeEnd class
+     * Note: ResourceAssociationTypeEnd is an internal class used for metadata generation, not suppose to used by the developers.
+     */
     public function testResourceAssociationTypeEnd()
     {
         $customerResType = $this->_getCustomerResourceType();

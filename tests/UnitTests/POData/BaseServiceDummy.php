@@ -2,13 +2,11 @@
 
 namespace UnitTests\POData;
 
-use POData\BaseService;
 use POData\Configuration\IServiceConfiguration;
 use POData\ObjectModel\IObjectSerialiser;
 use POData\OperationContext\ServiceHost;
 use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\Metadata\ResourceType;
-use POData\Providers\Metadata\SimpleMetadataProvider;
 use POData\Providers\Query\IQueryProvider;
 use POData\Providers\Stream\StreamProviderWrapper;
 use POData\UriProcessor\RequestDescription;
@@ -85,6 +83,7 @@ class BaseServiceDummy extends BaseServiceTestWrapper
     {
         parent::handleRequest();
         $outbound = $this->getHost()->getOperationContext()->outgoingResponse();
+
         return $outbound->getStream();
     }
 

@@ -112,7 +112,7 @@ class Version
      */
     public function toString()
     {
-        return $this->major . '.' . $this->minor;
+        return $this->major.'.'.$this->minor;
     }
 
     //Is there a better way to do static const of complex type?

@@ -2,14 +2,14 @@
 
 namespace UnitTests\POData\Providers\Expression;
 
-use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ExpressionType;
-use POData\Providers\Metadata\Type\IType;
+use Mockery as m;
 use POData\Common\ODataConstants;
+use POData\Providers\Expression\PHPExpressionProvider;
 use POData\Providers\Metadata\ResourceType;
+use POData\Providers\Metadata\Type\IType;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ExpressionType;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\PropertyAccessExpression;
 use POData\UriProcessor\QueryProcessor\FunctionDescription;
-use POData\Providers\Expression\PHPExpressionProvider;
-use Mockery as m;
 use UnitTests\POData\TestCase;
 
 class PHPExpressionProviderTest extends TestCase
@@ -25,7 +25,7 @@ class PHPExpressionProviderTest extends TestCase
         return [
             [ExpressionType::AND_LOGICAL, "Title = 'PHB'", 'Clue > 0', "(Title = 'PHB' && Clue > 0)"],
             [ExpressionType::OR_LOGICAL, "BeardColour = 'Grey'", 'WizardFlag = TRUE',
-                "(BeardColour = 'Grey' || WizardFlag = TRUE)"]
+                "(BeardColour = 'Grey' || WizardFlag = TRUE)", ],
         ];
     }
 
@@ -46,7 +46,7 @@ class PHPExpressionProviderTest extends TestCase
         $expected = 'onLogicalExpression';
         $actual = null;
         try {
-            $foo->onLogicalExpression(ExpressionType::CONSTANT, "", "");
+            $foo->onLogicalExpression(ExpressionType::CONSTANT, '', '');
         } catch (\InvalidArgumentException $e) {
             $actual = $e->getMessage();
         }
@@ -56,11 +56,11 @@ class PHPExpressionProviderTest extends TestCase
     public function onArithmeticExpressionProvider()
     {
         return [
-            [ ExpressionType::MULTIPLY, '2', '1', '(2 * 1)'],
-            [ ExpressionType::DIVIDE, '4', '2', '(4 / 2)'],
-            [ ExpressionType::MODULO, '6', '3', '(6 % 3)'],
-            [ ExpressionType::ADD, '8', '4', '(8 + 4)'],
-            [ ExpressionType::SUBTRACT, '10', '5', '(10 - 5)'],
+            [ExpressionType::MULTIPLY, '2', '1', '(2 * 1)'],
+            [ExpressionType::DIVIDE, '4', '2', '(4 / 2)'],
+            [ExpressionType::MODULO, '6', '3', '(6 % 3)'],
+            [ExpressionType::ADD, '8', '4', '(8 + 4)'],
+            [ExpressionType::SUBTRACT, '10', '5', '(10 - 5)'],
         ];
     }
 
@@ -81,7 +81,7 @@ class PHPExpressionProviderTest extends TestCase
         $expected = 'onArithmeticExpression';
         $actual = null;
         try {
-            $foo->onArithmeticExpression(ExpressionType::NOT_LOGICAL, "", "");
+            $foo->onArithmeticExpression(ExpressionType::NOT_LOGICAL, '', '');
         } catch (\InvalidArgumentException $e) {
             $actual = $e->getMessage();
         }
@@ -91,12 +91,12 @@ class PHPExpressionProviderTest extends TestCase
     public function onRelationalExpressionProvider()
     {
         return [
-            [ ExpressionType::GREATERTHAN, '2', '1', '(2 > 1)'],
-            [ ExpressionType::GREATERTHAN_OR_EQUAL, '4', '2', '(4 >= 2)'],
-            [ ExpressionType::EQUAL, '6', '3', '(6 == 3)'],
-            [ ExpressionType::NOTEQUAL, '6', '3', '(6 != 3)'],
-            [ ExpressionType::LESSTHAN, '8', '4', '(8 < 4)'],
-            [ ExpressionType::LESSTHAN_OR_EQUAL, '10', '5', '(10 <= 5)'],
+            [ExpressionType::GREATERTHAN, '2', '1', '(2 > 1)'],
+            [ExpressionType::GREATERTHAN_OR_EQUAL, '4', '2', '(4 >= 2)'],
+            [ExpressionType::EQUAL, '6', '3', '(6 == 3)'],
+            [ExpressionType::NOTEQUAL, '6', '3', '(6 != 3)'],
+            [ExpressionType::LESSTHAN, '8', '4', '(8 < 4)'],
+            [ExpressionType::LESSTHAN_OR_EQUAL, '10', '5', '(10 <= 5)'],
         ];
     }
 
@@ -117,7 +117,7 @@ class PHPExpressionProviderTest extends TestCase
         $expected = 'onRelationalExpression';
         $actual = null;
         try {
-            $foo->onRelationalExpression(ExpressionType::NOT_LOGICAL, "", "");
+            $foo->onRelationalExpression(ExpressionType::NOT_LOGICAL, '', '');
         } catch (\InvalidArgumentException $e) {
             $actual = $e->getMessage();
         }
@@ -127,8 +127,8 @@ class PHPExpressionProviderTest extends TestCase
     public function onUnaryExpressionProvider()
     {
         return [
-            [ ExpressionType::NEGATE, '4 - 2', '-(4 - 2)'],
-            [ ExpressionType::NOT_LOGICAL, '4', '!(4)'],
+            [ExpressionType::NEGATE, '4 - 2', '-(4 - 2)'],
+            [ExpressionType::NOT_LOGICAL, '4', '!(4)'],
         ];
     }
 
@@ -149,7 +149,7 @@ class PHPExpressionProviderTest extends TestCase
         $expected = 'onUnaryExpression';
         $actual = null;
         try {
-            $foo->onUnaryExpression(ExpressionType::ADD, "");
+            $foo->onUnaryExpression(ExpressionType::ADD, '');
         } catch (\InvalidArgumentException $e) {
             $actual = $e->getMessage();
         }
@@ -161,7 +161,7 @@ class PHPExpressionProviderTest extends TestCase
         return [
             [ODataConstants::STRFUN_COMPARE, ['eins', 'zwei'], 'strcmp(eins, zwei)'],
             [ODataConstants::STRFUN_ENDSWITH, ['eins', 'zwei'],
-                '(strcmp(substr(eins, strlen(eins) - strlen(zwei)), zwei) === 0)'],
+                '(strcmp(substr(eins, strlen(eins) - strlen(zwei)), zwei) === 0)', ],
             [ODataConstants::STRFUN_INDEXOF, ['eins', 'zwei'], 'strpos(eins, zwei)'],
             [ODataConstants::STRFUN_REPLACE, ['eins', 'zwei', 'polizei'], 'str_replace(zwei, polizei, eins)'],
             [ODataConstants::STRFUN_STARTSWITH, ['eins', 'zwei'], '(strpos(eins, zwei) === 0)'],
@@ -174,25 +174,25 @@ class PHPExpressionProviderTest extends TestCase
             [ODataConstants::STRFUN_CONCAT, ['eins', 'zwei'], 'eins . zwei'],
             [ODataConstants::STRFUN_LENGTH, ['eins'], 'strlen(eins)'],
             [ODataConstants::GUIDFUN_EQUAL, ['eins', 'zwei'],
-                'POData\Providers\Metadata\Type\Guid::guidEqual(eins, zwei)'],
+                'POData\Providers\Metadata\Type\Guid::guidEqual(eins, zwei)', ],
             [ODataConstants::DATETIME_COMPARE, ['2014-10-11 12:02:02', '2014-10-11 12:02:02'],
-                'POData\Providers\Metadata\Type\DateTime::dateTimeCmp(2014-10-11 12:02:02, 2014-10-11 12:02:02)'],
+                'POData\Providers\Metadata\Type\DateTime::dateTimeCmp(2014-10-11 12:02:02, 2014-10-11 12:02:02)', ],
             [ODataConstants::DATETIME_YEAR, ['2014-10-11 12:02:02'],
-                'POData\Providers\Metadata\Type\DateTime::year(2014-10-11 12:02:02)'],
+                'POData\Providers\Metadata\Type\DateTime::year(2014-10-11 12:02:02)', ],
             [ODataConstants::DATETIME_MONTH, ['2014-10-11 12:02:02'],
-                'POData\Providers\Metadata\Type\DateTime::month(2014-10-11 12:02:02)'],
+                'POData\Providers\Metadata\Type\DateTime::month(2014-10-11 12:02:02)', ],
             [ODataConstants::DATETIME_DAY, ['2014-10-11 12:02:02'],
-                'POData\Providers\Metadata\Type\DateTime::day(2014-10-11 12:02:02)'],
+                'POData\Providers\Metadata\Type\DateTime::day(2014-10-11 12:02:02)', ],
             [ODataConstants::DATETIME_HOUR, ['2014-10-11 12:02:02'],
-                'POData\Providers\Metadata\Type\DateTime::hour(2014-10-11 12:02:02)'],
+                'POData\Providers\Metadata\Type\DateTime::hour(2014-10-11 12:02:02)', ],
             [ODataConstants::DATETIME_MINUTE, ['2014-10-11 12:02:02'],
-                'POData\Providers\Metadata\Type\DateTime::minute(2014-10-11 12:02:02)'],
+                'POData\Providers\Metadata\Type\DateTime::minute(2014-10-11 12:02:02)', ],
             [ODataConstants::DATETIME_SECOND, ['2014-10-11 12:02:02'],
-                'POData\Providers\Metadata\Type\DateTime::second(2014-10-11 12:02:02)'],
+                'POData\Providers\Metadata\Type\DateTime::second(2014-10-11 12:02:02)', ],
             [ODataConstants::MATHFUN_ROUND, ['42.2'], 'round(42.2)'],
             [ODataConstants::MATHFUN_CEILING, ['42.2'], 'ceil(42.2)'],
             [ODataConstants::BINFUL_EQUAL, ['eins', 'zwei'],
-                'POData\Providers\Metadata\Type\Binary::binaryEqual(eins, zwei)'],
+                'POData\Providers\Metadata\Type\Binary::binaryEqual(eins, zwei)', ],
             [ODataConstants::MATHFUN_FLOOR, ['42.2'], 'floor(42.2)'],
             ['is_null', ['42.2'], 'is_null(42.2)'],
         ];
@@ -230,13 +230,13 @@ class PHPExpressionProviderTest extends TestCase
     public function testonPropertyAccessExpression()
     {
         $property = m::mock(PropertyAccessExpression::class)->makePartial();
-        $property->shouldReceive('getResourceProperty->getName')->andReturn("HAMMER TIME!");
+        $property->shouldReceive('getResourceProperty->getName')->andReturn('HAMMER TIME!');
         $res = m::mock(ResourceType::class)->makePartial();
         $res->shouldReceive('getName')->andReturn('OH NOES!');
         $foo = new PHPExpressionProvider('abc');
         $foo->setResourceType($res);
 
-        $expected = "abc->HAMMER TIME!";
+        $expected = 'abc->HAMMER TIME!';
         $result = $foo->onPropertyAccessExpression($property);
         $this->assertEquals($expected, $result);
     }

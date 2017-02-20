@@ -2,21 +2,21 @@
 
 namespace POData\Writers\Atom;
 
-use POData\Common\Version;
-use POData\ObjectModel\ODataFeed;
-use POData\ObjectModel\ODataEntry;
-use POData\ObjectModel\ODataURLCollection;
-use POData\ObjectModel\ODataURL;
-use POData\ObjectModel\ODataLink;
-use POData\ObjectModel\ODataPropertyContent;
-use POData\ObjectModel\ODataBagContent;
-use POData\ObjectModel\ODataProperty;
-use POData\Writers\IODataWriter;
-use POData\Common\ODataConstants;
-use POData\Common\MimeTypes;
-use POData\Common\ODataException;
-use POData\Providers\ProvidersWrapper;
 use Carbon\Carbon as Carbon;
+use POData\Common\MimeTypes;
+use POData\Common\ODataConstants;
+use POData\Common\ODataException;
+use POData\Common\Version;
+use POData\ObjectModel\ODataBagContent;
+use POData\ObjectModel\ODataEntry;
+use POData\ObjectModel\ODataFeed;
+use POData\ObjectModel\ODataLink;
+use POData\ObjectModel\ODataProperty;
+use POData\ObjectModel\ODataPropertyContent;
+use POData\ObjectModel\ODataURL;
+use POData\ObjectModel\ODataURLCollection;
+use POData\Providers\ProvidersWrapper;
+use POData\Writers\IODataWriter;
 
 /**
  * Class AtomODataWriter.

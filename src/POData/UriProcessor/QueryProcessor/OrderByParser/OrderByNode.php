@@ -25,7 +25,7 @@ class OrderByNode extends OrderByBaseNode
      *
      * @var array(OrderByNode/OrderByLeafNode)
      */
-    private $_childNodes = array();
+    private $_childNodes = [];
 
     /**
      * Construct a new instance of OrderByNode.
@@ -116,8 +116,6 @@ class OrderByNode extends OrderByBaseNode
         if (array_key_exists($propertyName, $this->_childNodes)) {
             return $this->_childNodes[$propertyName];
         }
-
-        return null;
     }
 
     /**

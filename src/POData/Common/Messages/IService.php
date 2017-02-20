@@ -1,4 +1,5 @@
 <?php
+
 namespace POData\Common\Messages;
 
 trait IService

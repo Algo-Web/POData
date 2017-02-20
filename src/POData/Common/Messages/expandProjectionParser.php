@@ -1,4 +1,5 @@
 <?php
+
 namespace POData\Common\Messages;
 
 trait expandProjectionParser
@@ -115,6 +116,6 @@ trait expandProjectionParser
      */
     public static function expandProjectionParserPropertyWithoutMatchingExpand($propertyName)
     {
-        return 'Only navigation properties specified in expand option can be travered in select option,In order to treaverse the navigation property \'' . $propertyName . '\', it should be first expanded';
+        return 'Only navigation properties specified in expand option can be travered in select option,In order to treaverse the navigation property \''.$propertyName.'\', it should be first expanded';
     }
 }

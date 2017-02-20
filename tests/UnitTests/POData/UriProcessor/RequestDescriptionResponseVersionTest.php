@@ -2,21 +2,19 @@
 
 namespace UnitTests\POData\UriProcessor;
 
-use POData\Configuration\IServiceConfiguration;
-use POData\IService;
-use POData\OperationContext\ServiceHost;
-use POData\Configuration\ServiceConfiguration;
+use Mockery as m;
 use POData\Common\Messages;
-use POData\UriProcessor\RequestDescription;
-use POData\UriProcessor\ResourcePathProcessor\SegmentParser\SegmentDescriptor;
+use POData\Common\ODataException;
 use POData\Common\Url;
 use POData\Common\Version;
-use POData\Common\ODataException;
-use UnitTests\POData\TestCase;
-
-use Mockery as m;
-
+use POData\Configuration\IServiceConfiguration;
+use POData\Configuration\ServiceConfiguration;
+use POData\IService;
+use POData\OperationContext\ServiceHost;
+use POData\UriProcessor\RequestDescription;
+use POData\UriProcessor\ResourcePathProcessor\SegmentParser\SegmentDescriptor;
 use Symfony\Component\EventDispatcher\Tests\Service;
+use UnitTests\POData\TestCase;
 
 //OData has some interesting version negotiations
 //from http://www.odata.org/documentation/odata-v2-documentation/overview/#ProtocolVersioning
@@ -70,9 +68,9 @@ class RequestDescriptionResponseVersionTest extends TestCase
         $this->mockServiceConfiguration->shouldReceive('getMaxDataServiceVersion')->andReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url('http://host/service.svc/Collection');
-        $fakeSegments = array(
+        $fakeSegments = [
             new SegmentDescriptor(),
-        );
+        ];
 
         $request = new RequestDescription(
             $fakeSegments,
@@ -109,9 +107,9 @@ class RequestDescriptionResponseVersionTest extends TestCase
         $this->mockServiceConfiguration->shouldReceive('getMaxDataServiceVersion')->andReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url('http://host/service.svc/Collection');
-        $fakeSegments = array(
+        $fakeSegments = [
             new SegmentDescriptor(),
-        );
+        ];
 
         $request = new RequestDescription(
             $fakeSegments,
@@ -148,9 +146,9 @@ class RequestDescriptionResponseVersionTest extends TestCase
         $this->mockServiceConfiguration->shouldReceive('getMaxDataServiceVersion')->andReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url('http://host/service.svc/Collection');
-        $fakeSegments = array(
+        $fakeSegments = [
             new SegmentDescriptor(),
-        );
+        ];
 
         $request = new RequestDescription(
             $fakeSegments,
@@ -187,9 +185,9 @@ class RequestDescriptionResponseVersionTest extends TestCase
         $this->mockServiceConfiguration->shouldReceive('getMaxDataServiceVersion')->andReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url('http://host/service.svc/Collection');
-        $fakeSegments = array(
+        $fakeSegments = [
             new SegmentDescriptor(),
-        );
+        ];
 
         $request = new RequestDescription(
             $fakeSegments,
@@ -230,9 +228,9 @@ class RequestDescriptionResponseVersionTest extends TestCase
         $this->mockServiceConfiguration->shouldReceive('getMaxDataServiceVersion')->andReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url('http://host/service.svc/Collection');
-        $fakeSegments = array(
+        $fakeSegments = [
             new SegmentDescriptor(),
-        );
+        ];
 
         $request = new RequestDescription(
             $fakeSegments,
@@ -268,9 +266,9 @@ class RequestDescriptionResponseVersionTest extends TestCase
         $this->mockServiceConfiguration->shouldReceive('getMaxDataServiceVersion')->andReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url('http://host/service.svc/Collection');
-        $fakeSegments = array(
+        $fakeSegments = [
             new SegmentDescriptor(),
-        );
+        ];
 
         $request = new RequestDescription(
             $fakeSegments,
@@ -313,9 +311,9 @@ class RequestDescriptionResponseVersionTest extends TestCase
         $this->mockServiceConfiguration->shouldReceive('getMaxDataServiceVersion')->andReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url('http://host/service.svc/Collection');
-        $fakeSegments = array(
+        $fakeSegments = [
             new SegmentDescriptor(),
-        );
+        ];
 
         $request = new RequestDescription(
             $fakeSegments,
@@ -353,9 +351,9 @@ class RequestDescriptionResponseVersionTest extends TestCase
         $this->mockServiceConfiguration->shouldReceive('getMaxDataServiceVersion')->andReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url('http://host/service.svc/Collection');
-        $fakeSegments = array(
+        $fakeSegments = [
             new SegmentDescriptor(),
-        );
+        ];
 
         $request = new RequestDescription(
             $fakeSegments,
@@ -393,9 +391,9 @@ class RequestDescriptionResponseVersionTest extends TestCase
         $this->mockServiceConfiguration->shouldReceive('getMaxDataServiceVersion')->andReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url('http://host/service.svc/Collection');
-        $fakeSegments = array(
+        $fakeSegments = [
             new SegmentDescriptor(),
-        );
+        ];
 
         $request = new RequestDescription(
             $fakeSegments,
@@ -440,9 +438,9 @@ class RequestDescriptionResponseVersionTest extends TestCase
         $this->mockServiceConfiguration->shouldReceive('getMaxDataServiceVersion')->andReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url('http://host/service.svc/Collection');
-        $fakeSegments = array(
+        $fakeSegments = [
             new SegmentDescriptor(),
-        );
+        ];
 
         $request = new RequestDescription(
             $fakeSegments,
@@ -487,9 +485,9 @@ class RequestDescriptionResponseVersionTest extends TestCase
         $this->mockServiceConfiguration->shouldReceive('getMaxDataServiceVersion')->andReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url('http://host/service.svc/Collection');
-        $fakeSegments = array(
+        $fakeSegments = [
             new SegmentDescriptor(),
-        );
+        ];
 
         $request = new RequestDescription(
             $fakeSegments,
@@ -536,9 +534,9 @@ class RequestDescriptionResponseVersionTest extends TestCase
         $this->mockServiceConfiguration->shouldReceive('getMaxDataServiceVersion')->andReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url('http://host/service.svc/Collection');
-        $fakeSegments = array(
+        $fakeSegments = [
             new SegmentDescriptor(),
-        );
+        ];
 
         $request = new RequestDescription(
             $fakeSegments,
@@ -576,9 +574,9 @@ class RequestDescriptionResponseVersionTest extends TestCase
         $this->mockServiceConfiguration->shouldReceive('getMaxDataServiceVersion')->andReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url('http://host/service.svc/Collection');
-        $fakeSegments = array(
+        $fakeSegments = [
             new SegmentDescriptor(),
-        );
+        ];
 
         $request = new RequestDescription(
             $fakeSegments,
@@ -623,9 +621,9 @@ class RequestDescriptionResponseVersionTest extends TestCase
         $this->mockServiceConfiguration->shouldReceive('getMaxDataServiceVersion')->andReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url('http://host/service.svc/Collection');
-        $fakeSegments = array(
+        $fakeSegments = [
             new SegmentDescriptor(),
-        );
+        ];
 
         $request = new RequestDescription(
             $fakeSegments,
@@ -670,9 +668,9 @@ class RequestDescriptionResponseVersionTest extends TestCase
         $this->mockServiceConfiguration->shouldReceive('getMaxDataServiceVersion')->andReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url('http://host/service.svc/Collection');
-        $fakeSegments = array(
+        $fakeSegments = [
             new SegmentDescriptor(),
-        );
+        ];
 
         $request = new RequestDescription(
             $fakeSegments,
@@ -720,9 +718,9 @@ class RequestDescriptionResponseVersionTest extends TestCase
         $this->mockServiceConfiguration->shouldReceive('getMaxDataServiceVersion')->andReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url('http://host/service.svc/Collection');
-        $fakeSegments = array(
+        $fakeSegments = [
             new SegmentDescriptor(),
-        );
+        ];
 
         $request = new RequestDescription(
             $fakeSegments,
@@ -760,9 +758,9 @@ class RequestDescriptionResponseVersionTest extends TestCase
         $this->mockServiceConfiguration->shouldReceive('getMaxDataServiceVersion')->andReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url('http://host/service.svc/Collection');
-        $fakeSegments = array(
+        $fakeSegments = [
             new SegmentDescriptor(),
-        );
+        ];
 
         $request = new RequestDescription(
             $fakeSegments,
@@ -808,9 +806,9 @@ class RequestDescriptionResponseVersionTest extends TestCase
         $this->mockServiceConfiguration->shouldReceive('getMaxDataServiceVersion')->andReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url('http://host/service.svc/Collection');
-        $fakeSegments = array(
+        $fakeSegments = [
             new SegmentDescriptor(),
-        );
+        ];
 
         $request = new RequestDescription(
             $fakeSegments,
@@ -862,9 +860,9 @@ class RequestDescriptionResponseVersionTest extends TestCase
         $this->mockServiceConfiguration->shouldReceive('getMaxDataServiceVersion')->andReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url('http://host/service.svc/Collection');
-        $fakeSegments = array(
+        $fakeSegments = [
             new SegmentDescriptor(),
-        );
+        ];
 
         $request = new RequestDescription(
             $fakeSegments,
@@ -894,9 +892,9 @@ class RequestDescriptionResponseVersionTest extends TestCase
         $this->mockServiceConfiguration->shouldReceive('getMaxDataServiceVersion')->andReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url('http://host/service.svc/Collection');
-        $fakeSegments = array(
+        $fakeSegments = [
             new SegmentDescriptor(),
-        );
+        ];
 
         $request = new RequestDescription(
             $fakeSegments,
@@ -934,9 +932,9 @@ class RequestDescriptionResponseVersionTest extends TestCase
         $this->mockServiceConfiguration->shouldReceive('getMaxDataServiceVersion')->andReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url('http://host/service.svc/Collection');
-        $fakeSegments = array(
+        $fakeSegments = [
             new SegmentDescriptor(),
-        );
+        ];
 
         $request = new RequestDescription(
             $fakeSegments,
@@ -977,9 +975,9 @@ class RequestDescriptionResponseVersionTest extends TestCase
         $this->mockServiceConfiguration->shouldReceive('getMaxDataServiceVersion')->andReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url('http://host/service.svc/Collection');
-        $fakeSegments = array(
+        $fakeSegments = [
             new SegmentDescriptor(),
-        );
+        ];
 
         $request = new RequestDescription(
             $fakeSegments,
@@ -1008,9 +1006,9 @@ class RequestDescriptionResponseVersionTest extends TestCase
         $this->mockServiceConfiguration->shouldReceive('getMaxDataServiceVersion')->andReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url('http://host/service.svc/Collection');
-        $fakeSegments = array(
+        $fakeSegments = [
             new SegmentDescriptor(),
-        );
+        ];
 
         $request = new RequestDescription(
             $fakeSegments,
@@ -1040,9 +1038,9 @@ class RequestDescriptionResponseVersionTest extends TestCase
         $this->mockServiceConfiguration->shouldReceive('getMaxDataServiceVersion')->andReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url('http://host/service.svc/Collection');
-        $fakeSegments = array(
+        $fakeSegments = [
             new SegmentDescriptor(),
-        );
+        ];
 
         $request = new RequestDescription(
             $fakeSegments,
@@ -1080,9 +1078,9 @@ class RequestDescriptionResponseVersionTest extends TestCase
         $this->mockServiceConfiguration->shouldReceive('getMaxDataServiceVersion')->andReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url('http://host/service.svc/Collection');
-        $fakeSegments = array(
+        $fakeSegments = [
             new SegmentDescriptor(),
-        );
+        ];
 
         $request = new RequestDescription(
             $fakeSegments,
@@ -1123,9 +1121,9 @@ class RequestDescriptionResponseVersionTest extends TestCase
         $this->mockServiceConfiguration->shouldReceive('getMaxDataServiceVersion')->andReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url('http://host/service.svc/Collection');
-        $fakeSegments = array(
+        $fakeSegments = [
             new SegmentDescriptor(),
-        );
+        ];
 
         $request = new RequestDescription(
             $fakeSegments,
@@ -1154,9 +1152,9 @@ class RequestDescriptionResponseVersionTest extends TestCase
         $this->mockServiceConfiguration->shouldReceive('getMaxDataServiceVersion')->andReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url('http://host/service.svc/Collection');
-        $fakeSegments = array(
+        $fakeSegments = [
             new SegmentDescriptor(),
-        );
+        ];
 
         $request = new RequestDescription(
             $fakeSegments,
@@ -1186,9 +1184,9 @@ class RequestDescriptionResponseVersionTest extends TestCase
         $this->mockServiceConfiguration->shouldReceive('getMaxDataServiceVersion')->andReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url('http://host/service.svc/Collection');
-        $fakeSegments = array(
+        $fakeSegments = [
             new SegmentDescriptor(),
-        );
+        ];
 
         $request = new RequestDescription(
             $fakeSegments,
@@ -1226,9 +1224,9 @@ class RequestDescriptionResponseVersionTest extends TestCase
         $this->mockServiceConfiguration->shouldReceive('getMaxDataServiceVersion')->andReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url('http://host/service.svc/Collection');
-        $fakeSegments = array(
+        $fakeSegments = [
             new SegmentDescriptor(),
-        );
+        ];
 
         $request = new RequestDescription(
             $fakeSegments,
@@ -1269,9 +1267,9 @@ class RequestDescriptionResponseVersionTest extends TestCase
         $this->mockServiceConfiguration->shouldReceive('getMaxDataServiceVersion')->andReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url('http://host/service.svc/Collection');
-        $fakeSegments = array(
+        $fakeSegments = [
             new SegmentDescriptor(),
-        );
+        ];
 
         $request = new RequestDescription(
             $fakeSegments,
@@ -1300,9 +1298,9 @@ class RequestDescriptionResponseVersionTest extends TestCase
         $this->mockServiceConfiguration->shouldReceive('getMaxDataServiceVersion')->andReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url('http://host/service.svc/Collection');
-        $fakeSegments = array(
+        $fakeSegments = [
             new SegmentDescriptor(),
-        );
+        ];
 
         $request = new RequestDescription(
             $fakeSegments,
@@ -1332,9 +1330,9 @@ class RequestDescriptionResponseVersionTest extends TestCase
         $this->mockServiceConfiguration->shouldReceive('getMaxDataServiceVersion')->andReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url('http://host/service.svc/Collection');
-        $fakeSegments = array(
+        $fakeSegments = [
             new SegmentDescriptor(),
-        );
+        ];
 
         $request = new RequestDescription(
             $fakeSegments,
@@ -1372,9 +1370,9 @@ class RequestDescriptionResponseVersionTest extends TestCase
         $this->mockServiceConfiguration->shouldReceive('getMaxDataServiceVersion')->andReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url('http://host/service.svc/Collection');
-        $fakeSegments = array(
+        $fakeSegments = [
             new SegmentDescriptor(),
-        );
+        ];
 
         $request = new RequestDescription(
             $fakeSegments,
@@ -1415,9 +1413,9 @@ class RequestDescriptionResponseVersionTest extends TestCase
         $this->mockServiceConfiguration->shouldReceive('getMaxDataServiceVersion')->andReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url('http://host/service.svc/Collection');
-        $fakeSegments = array(
+        $fakeSegments = [
             new SegmentDescriptor(),
-        );
+        ];
 
         $request = new RequestDescription(
             $fakeSegments,

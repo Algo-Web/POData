@@ -9,7 +9,7 @@ ob_start();
  *
  */
 use POData\Common\ODataConstants;
- use POData\HttpProcessUtility;
+use POData\HttpProcessUtility;
 
 class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
 {

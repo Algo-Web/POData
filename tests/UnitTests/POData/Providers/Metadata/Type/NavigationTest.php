@@ -2,13 +2,12 @@
 
 namespace UnitTests\POData\Providers\Metadata\Type;
 
+use Mockery as m;
 use POData\Common\NotImplementedException;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\ResourceTypeKind;
 use POData\Providers\Metadata\Type\IType;
 use POData\Providers\Metadata\Type\Navigation;
-
-use Mockery as m;
 use POData\Providers\Metadata\Type\StringType;
 use POData\Providers\Metadata\Type\TypeCode;
 use UnitTests\POData\TestCase;
@@ -28,6 +27,7 @@ class NavigationTest extends TestCase
     public function getAsIType($kind = ResourceTypeKind::COMPLEX)
     {
         $this->resource->shouldReceive('getResourceTypeKind')->andReturn($kind);
+
         return new Navigation($this->resource);
     }
 

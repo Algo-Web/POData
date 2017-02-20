@@ -2,8 +2,8 @@
 
 namespace POData\UriProcessor\QueryProcessor\OrderByParser;
 
-use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\ResourceSetWrapper;
+use POData\Providers\Metadata\ResourceType;
 
 /**
  * Class OrderByRootNode.

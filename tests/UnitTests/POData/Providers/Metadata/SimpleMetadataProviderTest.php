@@ -3,13 +3,13 @@
 namespace UnitTests\POData\Providers\Metadata;
 
 use InvalidArgumentException;
+use Mockery as m;
 use POData\Common\InvalidOperationException;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\ResourceTypeKind;
 use POData\Providers\Metadata\SimpleMetadataProvider;
-use Mockery as m;
 use POData\Providers\Metadata\Type\TypeCode;
 use ReflectionClass;
 use ReflectionException;
@@ -21,8 +21,8 @@ class SimpleMetadataProviderTest extends TestCase
 {
     public function testAddResourceSetThenGoAroundAgainAndThrowException()
     {
-        $foo = new SimpleMetadataProvider("string", "String");
-        $name = "Hammer";
+        $foo = new SimpleMetadataProvider('string', 'String');
+        $name = 'Hammer';
         $type = m::mock(ResourceType::class);
         $type->shouldReceive('setCustomState')->andReturnNull()->once();
         $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY);
@@ -43,7 +43,7 @@ class SimpleMetadataProviderTest extends TestCase
 
     public function testGetResourceSetsNotArrayThrowException()
     {
-        $foo = new SimpleMetadataProvider("string", "String");
+        $foo = new SimpleMetadataProvider('string', 'String');
 
         $expected = 'Input parameter must be absent, null, string or array';
         $actual = null;
@@ -58,8 +58,8 @@ class SimpleMetadataProviderTest extends TestCase
 
     public function testGetResourceSetsOnlyOneExists()
     {
-        $foo = new SimpleMetadataProvider("string", "String");
-        $name = "Hammer";
+        $foo = new SimpleMetadataProvider('string', 'String');
+        $name = 'Hammer';
         $type = m::mock(ResourceType::class);
         $type->shouldReceive('setCustomState')->andReturnNull()->once();
         $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY);
@@ -75,7 +75,7 @@ class SimpleMetadataProviderTest extends TestCase
 
     public function testGetResourceSetsByStringNoneExist()
     {
-        $foo = new SimpleMetadataProvider("string", "String");
+        $foo = new SimpleMetadataProvider('string', 'String');
         $parms = 'Hammer';
         $result = $foo->getResourceSets($parms);
         $this->assertTrue(is_array($result));
@@ -84,7 +84,7 @@ class SimpleMetadataProviderTest extends TestCase
 
     public function testGetTypesOnEmpty()
     {
-        $foo = new SimpleMetadataProvider("string", "String");
+        $foo = new SimpleMetadataProvider('string', 'String');
 
         $result = $foo->getTypes();
         $this->assertTrue(is_array($result));
@@ -93,9 +93,9 @@ class SimpleMetadataProviderTest extends TestCase
 
     public function testResolveResourceTypeOnEmpty()
     {
-        $foo = new SimpleMetadataProvider("string", "String");
+        $foo = new SimpleMetadataProvider('string', 'String');
 
-        $result = $foo->resolveResourceType("Hammer");
+        $result = $foo->resolveResourceType('Hammer');
         $this->assertNull($result);
     }
 
@@ -104,7 +104,7 @@ class SimpleMetadataProviderTest extends TestCase
         $type = m::mock(ResourceType::class);
         $this->assertTrue($type instanceof ResourceType);
 
-        $foo = new SimpleMetadataProvider("string", "String");
+        $foo = new SimpleMetadataProvider('string', 'String');
 
         $result = $foo->hasDerivedTypes($type);
         $this->assertFalse($result);
@@ -120,7 +120,7 @@ class SimpleMetadataProviderTest extends TestCase
         $property = m::mock(ResourceProperty::class);
         $property->shouldReceive('getResourceType')->andReturn($targType);
 
-        $foo = new SimpleMetadataProvider("string", "String");
+        $foo = new SimpleMetadataProvider('string', 'String');
 
         $expected = 'Failed to retrieve the custom state from Hammer';
         $actual = null;
@@ -147,7 +147,7 @@ class SimpleMetadataProviderTest extends TestCase
         $property->shouldReceive('getResourceType')->andReturn($targType);
         $property->shouldReceive('getName')->andReturn('Hammer');
 
-        $foo = new SimpleMetadataProvider("string", "String");
+        $foo = new SimpleMetadataProvider('string', 'String');
 
         $result = $foo->getResourceAssociationSet($set, $type, $property);
         $this->assertNull($result);
@@ -159,20 +159,20 @@ class SimpleMetadataProviderTest extends TestCase
         $type = m::mock(ResourceType::class);
         $property = m::mock(ResourceProperty::class);
 
-        $orig = new reusableEntityClass2("foo", "bar");
+        $orig = new reusableEntityClass2('foo', 'bar');
         $entity = new \ReflectionClass($orig);
 
-        $foo = new SimpleMetadataProvider("string", "String");
+        $foo = new SimpleMetadataProvider('string', 'String');
 
-        $result = $foo->addEntityType($entity, "Hammer");
+        $result = $foo->addEntityType($entity, 'Hammer');
         $this->assertTrue($result instanceof ResourceType);
-        $this->assertEquals("Hammer", $result->getName());
+        $this->assertEquals('Hammer', $result->getName());
 
         $expected = 'Type with same name already added';
         $actual = null;
 
         try {
-            $foo->addEntityType($entity, "Hammer");
+            $foo->addEntityType($entity, 'Hammer');
         } catch (InvalidOperationException $e) {
             $actual = $e->getMessage();
         }
@@ -184,13 +184,13 @@ class SimpleMetadataProviderTest extends TestCase
         $type = m::mock(ResourceType::class);
         $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::PRIMITIVE);
         $complexType = m::mock(ResourceType::class);
-        $foo = new SimpleMetadataProvider("string", "String");
+        $foo = new SimpleMetadataProvider('string', 'String');
 
         $expected = 'Complex property can be added to an entity or another complex type';
         $actual = null;
 
         try {
-            $foo->addComplexProperty($type, "Time", $complexType);
+            $foo->addComplexProperty($type, 'Time', $complexType);
         } catch (InvalidOperationException $e) {
             $actual = $e->getMessage();
         }
@@ -208,13 +208,13 @@ class SimpleMetadataProviderTest extends TestCase
         $type->shouldReceive('getInstanceType')->andReturn($deflect);
 
         $complexType = m::mock(ResourceType::class);
-        $foo = new SimpleMetadataProvider("string", "String");
+        $foo = new SimpleMetadataProvider('string', 'String');
 
         $expected = 'Can\'t add a property which does not exist on the instance type.';
         $actual = null;
 
         try {
-            $foo->addComplexProperty($type, "Time", $complexType);
+            $foo->addComplexProperty($type, 'Time', $complexType);
         } catch (InvalidOperationException $e) {
             $actual = $e->getMessage();
         }
@@ -223,10 +223,10 @@ class SimpleMetadataProviderTest extends TestCase
 
     public function testAddKeyPropertyWithMagicGetterMissingPropertyThrowsInvalidArgException()
     {
-        $orig = new reusableEntityClass2("foo", "bar");
+        $orig = new reusableEntityClass2('foo', 'bar');
         $entity = new \ReflectionClass($orig);
 
-        $foo = new SimpleMetadataProvider("string", "String");
+        $foo = new SimpleMetadataProvider('string', 'String');
 
         $keyName = 'id';
         $complex = $foo->addEntityType(new \ReflectionClass(get_class($orig)), 'table', 'data');
@@ -245,10 +245,10 @@ class SimpleMetadataProviderTest extends TestCase
 
     public function testAddKeyPropertyWithoutMagicGetterMissingPropertyThrowsInvalidOpException()
     {
-        $orig = new reusableEntityClass1("foo", "bar");
+        $orig = new reusableEntityClass1('foo', 'bar');
         $entity = new \ReflectionClass($orig);
 
-        $foo = new SimpleMetadataProvider("string", "String");
+        $foo = new SimpleMetadataProvider('string', 'String');
 
         $keyName = 'id';
         $complex = $foo->addEntityType(new \ReflectionClass(get_class($orig)), 'table', 'data');

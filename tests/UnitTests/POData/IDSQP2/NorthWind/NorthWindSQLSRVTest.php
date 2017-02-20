@@ -2,11 +2,11 @@
 
 namespace UnitTests\POData\IDSQP2\NorthWind;
 
-use POData\Providers\Metadata\Type\DateTime;
 use POData\Common\Url;
 use POData\Common\Version;
-use UnitTests\POData\Facets\ServiceHostTestFake;
+use POData\Providers\Metadata\Type\DateTime;
 use UnitTests\POData\Facets\NorthWind4\NorthWindService;
+use UnitTests\POData\Facets\ServiceHostTestFake;
 use UnitTests\POData\TestCase;
 
 class NorthWindSQLSRVTest extends TestCase
@@ -19,13 +19,13 @@ class NorthWindSQLSRVTest extends TestCase
         $serviceUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Customers';
         $requestUri = $serviceUri.$resourcePath;
-        $hostInfo = array(
-            'AbsoluteServiceUri' => new Url($serviceUri),
-            'AbsoluteRequestUri' => new Url($requestUri),
-            'QueryString' => '$filter=CustomerID gt \'ALFKI\'',
-            'DataServiceVersion' => new Version(3, 0),
+        $hostInfo = [
+            'AbsoluteServiceUri'    => new Url($serviceUri),
+            'AbsoluteRequestUri'    => new Url($requestUri),
+            'QueryString'           => '$filter=CustomerID gt \'ALFKI\'',
+            'DataServiceVersion'    => new Version(3, 0),
             'MaxDataServiceVersion' => new Version(3, 0),
-        );
+        ];
 
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService($host);
@@ -52,13 +52,13 @@ class NorthWindSQLSRVTest extends TestCase
         $serviceUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Customers';
         $requestUri = $serviceUri.$resourcePath;
-        $hostInfo = array(
-            'AbsoluteServiceUri' => new Url($serviceUri),
-            'AbsoluteRequestUri' => new Url($requestUri),
-            'QueryString' => '$filter=replace(CustomerID, \'LFK\', \'RTT\') eq \'ARTTI\'',
-            'DataServiceVersion' => new Version(3, 0),
+        $hostInfo = [
+            'AbsoluteServiceUri'    => new Url($serviceUri),
+            'AbsoluteRequestUri'    => new Url($requestUri),
+            'QueryString'           => '$filter=replace(CustomerID, \'LFK\', \'RTT\') eq \'ARTTI\'',
+            'DataServiceVersion'    => new Version(3, 0),
             'MaxDataServiceVersion' => new Version(3, 0),
-        );
+        ];
 
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService($host);
@@ -85,13 +85,13 @@ class NorthWindSQLSRVTest extends TestCase
         $serviceUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Customers';
         $requestUri = $serviceUri.$resourcePath;
-        $hostInfo = array(
-            'AbsoluteServiceUri' => new Url($serviceUri),
-            'AbsoluteRequestUri' => new Url($requestUri),
-            'QueryString' => '$filter=CustomerID eq null',
-            'DataServiceVersion' => new Version(3, 0),
+        $hostInfo = [
+            'AbsoluteServiceUri'    => new Url($serviceUri),
+            'AbsoluteRequestUri'    => new Url($requestUri),
+            'QueryString'           => '$filter=CustomerID eq null',
+            'DataServiceVersion'    => new Version(3, 0),
             'MaxDataServiceVersion' => new Version(3, 0),
-        );
+        ];
 
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService($host);
@@ -117,13 +117,13 @@ class NorthWindSQLSRVTest extends TestCase
         $serviceUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Orders';
         $requestUri = $serviceUri.$resourcePath;
-        $hostInfo = array(
-            'AbsoluteServiceUri' => new Url($serviceUri),
-            'AbsoluteRequestUri' => new Url($requestUri),
-            'QueryString' => '$filter=-OrderID eq -10248',
-            'DataServiceVersion' => new Version(3, 0),
+        $hostInfo = [
+            'AbsoluteServiceUri'    => new Url($serviceUri),
+            'AbsoluteRequestUri'    => new Url($requestUri),
+            'QueryString'           => '$filter=-OrderID eq -10248',
+            'DataServiceVersion'    => new Version(3, 0),
             'MaxDataServiceVersion' => new Version(3, 0),
-        );
+        ];
 
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService($host);
@@ -149,13 +149,13 @@ class NorthWindSQLSRVTest extends TestCase
         $serviceUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Orders';
         $requestUri = $serviceUri.$resourcePath;
-        $hostInfo = array(
-            'AbsoluteServiceUri' => new Url($serviceUri),
-            'AbsoluteRequestUri' => new Url($requestUri),
-            'QueryString' => '$filter=OrderDate eq datetime\'1996-07-04\'',
-            'DataServiceVersion' => new Version(3, 0),
+        $hostInfo = [
+            'AbsoluteServiceUri'    => new Url($serviceUri),
+            'AbsoluteRequestUri'    => new Url($requestUri),
+            'QueryString'           => '$filter=OrderDate eq datetime\'1996-07-04\'',
+            'DataServiceVersion'    => new Version(3, 0),
             'MaxDataServiceVersion' => new Version(3, 0),
-        );
+        ];
 
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService($host);
@@ -181,13 +181,13 @@ class NorthWindSQLSRVTest extends TestCase
         $serviceUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Orders';
         $requestUri = $serviceUri.$resourcePath;
-        $hostInfo = array(
-            'AbsoluteServiceUri' => new Url($serviceUri),
-            'AbsoluteRequestUri' => new Url($requestUri),
-            'QueryString' => '$filter=year(OrderDate) eq  year(datetime\'1996-07-09\')',
-            'DataServiceVersion' => new Version(3, 0),
+        $hostInfo = [
+            'AbsoluteServiceUri'    => new Url($serviceUri),
+            'AbsoluteRequestUri'    => new Url($requestUri),
+            'QueryString'           => '$filter=year(OrderDate) eq  year(datetime\'1996-07-09\')',
+            'DataServiceVersion'    => new Version(3, 0),
             'MaxDataServiceVersion' => new Version(3, 0),
-        );
+        ];
 
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService($host);
@@ -213,13 +213,13 @@ class NorthWindSQLSRVTest extends TestCase
         $serviceUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Orders';
         $requestUri = $serviceUri.$resourcePath;
-        $hostInfo = array(
-            'AbsoluteServiceUri' => new Url($serviceUri),
-            'AbsoluteRequestUri' => new Url($requestUri),
-            'QueryString' => '$filter=year(OrderDate) add 2 eq 1998',
-            'DataServiceVersion' => new Version(3, 0),
+        $hostInfo = [
+            'AbsoluteServiceUri'    => new Url($serviceUri),
+            'AbsoluteRequestUri'    => new Url($requestUri),
+            'QueryString'           => '$filter=year(OrderDate) add 2 eq 1998',
+            'DataServiceVersion'    => new Version(3, 0),
             'MaxDataServiceVersion' => new Version(3, 0),
-        );
+        ];
 
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService($host);
@@ -245,13 +245,13 @@ class NorthWindSQLSRVTest extends TestCase
         $serviceUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Orders';
         $requestUri = $serviceUri.$resourcePath;
-        $hostInfo = array(
-            'AbsoluteServiceUri' => new Url($serviceUri),
-            'AbsoluteRequestUri' => new Url($requestUri),
-            'QueryString' => '$filter=ceiling(floor(Freight)) eq 32',
-            'DataServiceVersion' => new Version(3, 0),
+        $hostInfo = [
+            'AbsoluteServiceUri'    => new Url($serviceUri),
+            'AbsoluteRequestUri'    => new Url($requestUri),
+            'QueryString'           => '$filter=ceiling(floor(Freight)) eq 32',
+            'DataServiceVersion'    => new Version(3, 0),
             'MaxDataServiceVersion' => new Version(3, 0),
-        );
+        ];
 
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService($host);
@@ -277,13 +277,13 @@ class NorthWindSQLSRVTest extends TestCase
         $serviceUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Orders';
         $requestUri = $serviceUri.$resourcePath;
-        $hostInfo = array(
-            'AbsoluteServiceUri' => new Url($serviceUri),
-            'AbsoluteRequestUri' => new Url($requestUri),
-            'QueryString' => '$filter=round(Freight) eq 34',
-            'DataServiceVersion' => new Version(3, 0),
+        $hostInfo = [
+            'AbsoluteServiceUri'    => new Url($serviceUri),
+            'AbsoluteRequestUri'    => new Url($requestUri),
+            'QueryString'           => '$filter=round(Freight) eq 34',
+            'DataServiceVersion'    => new Version(3, 0),
             'MaxDataServiceVersion' => new Version(3, 0),
-        );
+        ];
 
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService($host);
@@ -309,13 +309,13 @@ class NorthWindSQLSRVTest extends TestCase
         $serviceUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Orders';
         $requestUri = $serviceUri.$resourcePath;
-        $hostInfo = array(
-            'AbsoluteServiceUri' => new Url($serviceUri),
-            'AbsoluteRequestUri' => new Url($requestUri),
-            'QueryString' => '$filter=Freight mod 10 eq 2.38',
-            'DataServiceVersion' => new Version(3, 0),
+        $hostInfo = [
+            'AbsoluteServiceUri'    => new Url($serviceUri),
+            'AbsoluteRequestUri'    => new Url($requestUri),
+            'QueryString'           => '$filter=Freight mod 10 eq 2.38',
+            'DataServiceVersion'    => new Version(3, 0),
             'MaxDataServiceVersion' => new Version(3, 0),
-        );
+        ];
 
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService($host);
@@ -341,13 +341,13 @@ class NorthWindSQLSRVTest extends TestCase
         $serviceUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Customers';
         $requestUri = $serviceUri.$resourcePath;
-        $hostInfo = array(
-            'AbsoluteServiceUri' => new Url($serviceUri),
-            'AbsoluteRequestUri' => new Url($requestUri),
-            'QueryString' => '$filter=substring(CompanyName, 1) eq \'lfreds Futterkiste\'',
-            'DataServiceVersion' => new Version(3, 0),
+        $hostInfo = [
+            'AbsoluteServiceUri'    => new Url($serviceUri),
+            'AbsoluteRequestUri'    => new Url($requestUri),
+            'QueryString'           => '$filter=substring(CompanyName, 1) eq \'lfreds Futterkiste\'',
+            'DataServiceVersion'    => new Version(3, 0),
             'MaxDataServiceVersion' => new Version(3, 0),
-        );
+        ];
 
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService($host);
@@ -373,13 +373,13 @@ class NorthWindSQLSRVTest extends TestCase
         $serviceUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Customers';
         $requestUri = $serviceUri.$resourcePath;
-        $hostInfo = array(
-            'AbsoluteServiceUri' => new Url($serviceUri),
-            'AbsoluteRequestUri' => new Url($requestUri),
-            'QueryString' => '$filter=substring(CompanyName, 1, 6) eq \'lfreds\'',
-            'DataServiceVersion' => new Version(3, 0),
+        $hostInfo = [
+            'AbsoluteServiceUri'    => new Url($serviceUri),
+            'AbsoluteRequestUri'    => new Url($requestUri),
+            'QueryString'           => '$filter=substring(CompanyName, 1, 6) eq \'lfreds\'',
+            'DataServiceVersion'    => new Version(3, 0),
             'MaxDataServiceVersion' => new Version(3, 0),
-        );
+        ];
 
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService($host);
@@ -405,13 +405,13 @@ class NorthWindSQLSRVTest extends TestCase
         $serviceUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Customers';
         $requestUri = $serviceUri.$resourcePath;
-        $hostInfo = array(
-            'AbsoluteServiceUri' => new Url($serviceUri),
-            'AbsoluteRequestUri' => new Url($requestUri),
-            'QueryString' => '$filter=trim(\'  ALFKI  \') eq CustomerID',
-            'DataServiceVersion' => new Version(3, 0),
+        $hostInfo = [
+            'AbsoluteServiceUri'    => new Url($serviceUri),
+            'AbsoluteRequestUri'    => new Url($requestUri),
+            'QueryString'           => '$filter=trim(\'  ALFKI  \') eq CustomerID',
+            'DataServiceVersion'    => new Version(3, 0),
             'MaxDataServiceVersion' => new Version(3, 0),
-        );
+        ];
 
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService($host);
@@ -437,13 +437,13 @@ class NorthWindSQLSRVTest extends TestCase
         $serviceUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Customers';
         $requestUri = $serviceUri.$resourcePath;
-        $hostInfo = array(
-            'AbsoluteServiceUri' => new Url($serviceUri),
-            'AbsoluteRequestUri' => new Url($requestUri),
-            'QueryString' => '$filter=endswith(CustomerID, \'KI\')',
-            'DataServiceVersion' => new Version(3, 0),
+        $hostInfo = [
+            'AbsoluteServiceUri'    => new Url($serviceUri),
+            'AbsoluteRequestUri'    => new Url($requestUri),
+            'QueryString'           => '$filter=endswith(CustomerID, \'KI\')',
+            'DataServiceVersion'    => new Version(3, 0),
             'MaxDataServiceVersion' => new Version(3, 0),
-        );
+        ];
 
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService($host);
@@ -469,13 +469,13 @@ class NorthWindSQLSRVTest extends TestCase
         $serviceUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Customers';
         $requestUri = $serviceUri.$resourcePath;
-        $hostInfo = array(
-            'AbsoluteServiceUri' => new Url($serviceUri),
-            'AbsoluteRequestUri' => new Url($requestUri),
-            'QueryString' => '$filter=startswith(CustomerID, \'AL\')',
-            'DataServiceVersion' => new Version(3, 0),
+        $hostInfo = [
+            'AbsoluteServiceUri'    => new Url($serviceUri),
+            'AbsoluteRequestUri'    => new Url($requestUri),
+            'QueryString'           => '$filter=startswith(CustomerID, \'AL\')',
+            'DataServiceVersion'    => new Version(3, 0),
             'MaxDataServiceVersion' => new Version(3, 0),
-        );
+        ];
 
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService($host);
@@ -501,13 +501,13 @@ class NorthWindSQLSRVTest extends TestCase
         $serviceUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Customers';
         $requestUri = $serviceUri.$resourcePath;
-        $hostInfo = array(
-            'AbsoluteServiceUri' => new Url($serviceUri),
-            'AbsoluteRequestUri' => new Url($requestUri),
-            'QueryString' => '$filter=indexof(CustomerID, \'FKI\') eq 2',
-            'DataServiceVersion' => new Version(3, 0),
+        $hostInfo = [
+            'AbsoluteServiceUri'    => new Url($serviceUri),
+            'AbsoluteRequestUri'    => new Url($requestUri),
+            'QueryString'           => '$filter=indexof(CustomerID, \'FKI\') eq 2',
+            'DataServiceVersion'    => new Version(3, 0),
             'MaxDataServiceVersion' => new Version(3, 0),
-        );
+        ];
 
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService($host);
@@ -533,13 +533,13 @@ class NorthWindSQLSRVTest extends TestCase
         $serviceUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Customers';
         $requestUri = $serviceUri.$resourcePath;
-        $hostInfo = array(
-            'AbsoluteServiceUri' => new Url($serviceUri),
-            'AbsoluteRequestUri' => new Url($requestUri),
-            'QueryString' => '$filter=replace(CompanyName, \' \', \'\') eq \'AlfredsFutterkiste\'',
-            'DataServiceVersion' => new Version(3, 0),
+        $hostInfo = [
+            'AbsoluteServiceUri'    => new Url($serviceUri),
+            'AbsoluteRequestUri'    => new Url($requestUri),
+            'QueryString'           => '$filter=replace(CompanyName, \' \', \'\') eq \'AlfredsFutterkiste\'',
+            'DataServiceVersion'    => new Version(3, 0),
             'MaxDataServiceVersion' => new Version(3, 0),
-        );
+        ];
 
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService($host);
@@ -565,13 +565,13 @@ class NorthWindSQLSRVTest extends TestCase
         $serviceUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Customers';
         $requestUri = $serviceUri.$resourcePath;
-        $hostInfo = array(
-            'AbsoluteServiceUri' => new Url($serviceUri),
-            'AbsoluteRequestUri' => new Url($requestUri),
-            'QueryString' => '$filter=substringof(\'Alfreds\', CompanyName)',
-            'DataServiceVersion' => new Version(3, 0),
+        $hostInfo = [
+            'AbsoluteServiceUri'    => new Url($serviceUri),
+            'AbsoluteRequestUri'    => new Url($requestUri),
+            'QueryString'           => '$filter=substringof(\'Alfreds\', CompanyName)',
+            'DataServiceVersion'    => new Version(3, 0),
             'MaxDataServiceVersion' => new Version(3, 0),
-        );
+        ];
 
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService($host);
@@ -597,13 +597,13 @@ class NorthWindSQLSRVTest extends TestCase
         $serviceUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Customers';
         $requestUri = $serviceUri.$resourcePath;
-        $hostInfo = array(
-            'AbsoluteServiceUri' => new Url($serviceUri),
-            'AbsoluteRequestUri' => new Url($requestUri),
-            'QueryString' => '$filter=substringof(\'Alfreds\', CompanyName) and indexof(CustomerID, \'FKI\') eq 2',
-            'DataServiceVersion' => new Version(3, 0),
+        $hostInfo = [
+            'AbsoluteServiceUri'    => new Url($serviceUri),
+            'AbsoluteRequestUri'    => new Url($requestUri),
+            'QueryString'           => '$filter=substringof(\'Alfreds\', CompanyName) and indexof(CustomerID, \'FKI\') eq 2',
+            'DataServiceVersion'    => new Version(3, 0),
             'MaxDataServiceVersion' => new Version(3, 0),
-        );
+        ];
 
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService($host);
@@ -629,13 +629,13 @@ class NorthWindSQLSRVTest extends TestCase
         $serviceUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Customers';
         $requestUri = $serviceUri.$resourcePath;
-        $hostInfo = array(
-            'AbsoluteServiceUri' => new Url($serviceUri),
-            'AbsoluteRequestUri' => new Url($requestUri),
-            'QueryString' => '$filter=concat(concat(CustomerID, \', \'), ContactName) eq \'ALFKI, Maria Anders\'',
-            'DataServiceVersion' => new Version(3, 0),
+        $hostInfo = [
+            'AbsoluteServiceUri'    => new Url($serviceUri),
+            'AbsoluteRequestUri'    => new Url($requestUri),
+            'QueryString'           => '$filter=concat(concat(CustomerID, \', \'), ContactName) eq \'ALFKI, Maria Anders\'',
+            'DataServiceVersion'    => new Version(3, 0),
             'MaxDataServiceVersion' => new Version(3, 0),
-        );
+        ];
 
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService($host);
@@ -661,13 +661,13 @@ class NorthWindSQLSRVTest extends TestCase
         $serviceUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Customers';
         $requestUri = $serviceUri.$resourcePath;
-        $hostInfo = array(
-            'AbsoluteServiceUri' => new Url($serviceUri),
-            'AbsoluteRequestUri' => new Url($requestUri),
-            'QueryString' => '$filter=Address/Country eq \'USA\'',
-            'DataServiceVersion' => new Version(3, 0),
+        $hostInfo = [
+            'AbsoluteServiceUri'    => new Url($serviceUri),
+            'AbsoluteRequestUri'    => new Url($requestUri),
+            'QueryString'           => '$filter=Address/Country eq \'USA\'',
+            'DataServiceVersion'    => new Version(3, 0),
             'MaxDataServiceVersion' => new Version(3, 0),
-        );
+        ];
 
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService($host);

@@ -85,7 +85,7 @@ class IncomingIlluminateRequest implements IHTTPRequest
         $result = $this->request->header($key);
         //Zend returns false for a missing header...POData needs a null
         if ($result === false || $result === '') {
-            return null;
+            return;
         }
 
         return $result;

@@ -10,7 +10,7 @@ use POData\Common\Version;
 class ODataWriterRegistry
 {
     /** @var IODataWriter[] */
-    private $writers = array();
+    private $writers = [];
 
     public function register(IODataWriter $writer)
     {
@@ -19,7 +19,7 @@ class ODataWriterRegistry
 
     public function reset()
     {
-        $this->writers = array();
+        $this->writers = [];
     }
 
     /**
@@ -35,7 +35,5 @@ class ODataWriterRegistry
                 return $writer;
             }
         }
-
-        return null;
     }
 }

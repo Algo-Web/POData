@@ -3,11 +3,10 @@
 namespace POData;
 
 use POData\Configuration\IServiceConfiguration;
+use POData\OperationContext\IOperationContext;
 use POData\OperationContext\ServiceHost;
 use POData\Providers\ProvidersWrapper;
-use POData\Configuration\ServiceConfiguration;
 use POData\Providers\Stream\StreamProviderWrapper;
-use POData\OperationContext\IOperationContext;
 use POData\Writers\ODataWriterRegistry;
 
 interface IService

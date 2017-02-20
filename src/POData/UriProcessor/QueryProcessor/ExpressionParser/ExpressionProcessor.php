@@ -5,11 +5,11 @@ namespace POData\UriProcessor\QueryProcessor\ExpressionParser;
 use POData\Providers\Expression\IExpressionProvider;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\AbstractExpression;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ArithmeticExpression;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\LogicalExpression;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\RelationalExpression;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ConstantExpression;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\PropertyAccessExpression;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\FunctionCallExpression;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\LogicalExpression;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\PropertyAccessExpression;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\RelationalExpression;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\UnaryExpression;
 
 /**
@@ -101,7 +101,7 @@ class ExpressionProcessor
         }
 
         if ($expression instanceof FunctionCallExpression) {
-            $params = array();
+            $params = [];
             foreach ($expression->getParamExpressions() as $paramExpression) {
                 $params[] = $this->_processExpressionNode($paramExpression);
             }

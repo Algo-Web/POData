@@ -2,48 +2,30 @@
 
 namespace UnitTests\POData\UriProcessor;
 
-use POData\Configuration\IServiceConfiguration;
-use POData\Configuration\ServiceConfiguration;
-use POData\Providers\Metadata\ResourceType;
-use POData\Providers\Query\QueryResult;
-use POData\Providers\Query\QueryType;
-use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ProjectionNode;
-use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandedProjectionNode;
-use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\RootProjectionNode;
-use POData\UriProcessor\QueryProcessor\OrderByParser\OrderBySubPathSegment;
-use POData\UriProcessor\QueryProcessor\OrderByParser\OrderByPathSegment;
-use POData\UriProcessor\QueryProcessor\SkipTokenParser\InternalSkipTokenInfo;
-use POData\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenInfo;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
-use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
-use POData\Configuration\ProtocolVersion;
-use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
-use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetSource;
-use POData\Providers\Metadata\Type\Int32;
-use POData\Providers\Metadata\Type\DateTime;
-use POData\Common\Url;
-use POData\Common\Version;
-use POData\Common\ODataException;
-use POData\OperationContext\ServiceHost;
-use POData\UriProcessor\UriProcessor;
-use UnitTests\POData\Facets\ServiceHostTestFake;
-use UnitTests\POData\Facets\NorthWind1\NorthWindService2;
-use UnitTests\POData\Facets\NorthWind1\NorthWindServiceV1;
-use UnitTests\POData\Facets\NorthWind1\NorthWindServiceV3;
-use POData\Providers\ProvidersWrapper;
-use POData\Providers\Metadata\ResourceSetWrapper;
-use POData\Providers\Metadata\IMetadataProvider;
+use Mockery as m;
 use POData\Common\Messages;
 use POData\Common\ODataConstants;
-use POData\Providers\Metadata\ResourceProperty;
-use UnitTests\POData\TestCase;
-
-use Mockery as m;
+use POData\Common\ODataException;
+use POData\Common\Url;
+use POData\Common\Version;
+use POData\Configuration\IServiceConfiguration;
+use POData\Configuration\ProtocolVersion;
+use POData\Configuration\ServiceConfiguration;
 use POData\IService;
+use POData\OperationContext\ServiceHost;
+use POData\Providers\Metadata\IMetadataProvider;
+use POData\Providers\Metadata\ResourceProperty;
+use POData\Providers\Metadata\ResourceSetWrapper;
+use POData\Providers\Metadata\ResourceType;
+use POData\Providers\Metadata\Type\Int32;
+use POData\Providers\ProvidersWrapper;
+use POData\Providers\Query\QueryResult;
+use POData\Providers\Query\QueryType;
+use POData\UriProcessor\UriProcessor;
+use UnitTests\POData\TestCase;
 
 //These are in the file loaded by above use statement
 //TODO: move to own class files
-use UnitTests\POData\Facets\NorthWind1\Customer2;
 
 class UriProcessorTest extends TestCase
 {
@@ -82,7 +64,6 @@ class UriProcessorTest extends TestCase
 
     /** @var ResourceProperty */
     protected $mockRelatedCollectionKeyProperty;
-
 
     public function setUp()
     {
@@ -139,7 +120,6 @@ class UriProcessorTest extends TestCase
         $this->mockService->shouldReceive('getConfiguration')->andReturn($this->fakeServiceConfig);
     }
 
-
     public function testProcessRequestForCollection()
     {
         $this->fakeServiceConfig->setMaxDataServiceVersion(ProtocolVersion::V2());
@@ -147,8 +127,8 @@ class UriProcessorTest extends TestCase
         $requestURI = new Url('http://host.com/data.svc/Collection');
         $this->mockService->shouldReceive('getOperationContext')->andReturnNull();
         $this->mockServiceHost->shouldReceive('getAbsoluteRequestUri')->andReturn($requestURI);
-        $this->mockServiceHost->shouldReceive('getRequestVersion')->andReturn("2.0");
-        $this->mockServiceHost->shouldReceive('getRequestMaxVersion')->andReturn("2.0");
+        $this->mockServiceHost->shouldReceive('getRequestVersion')->andReturn('2.0');
+        $this->mockServiceHost->shouldReceive('getRequestMaxVersion')->andReturn('2.0');
         $this->mockServiceHost->shouldReceive('getQueryStringItem')->andReturn(null);
         $this->mockCollectionResourceSetWrapper->shouldReceive('checkResourceSetRightsForRead')->andReturnNull();
         $this->mockCollectionResourceSetWrapper->shouldReceive('hasNamedStreams')->andReturn(false);
@@ -158,7 +138,7 @@ class UriProcessorTest extends TestCase
         $uriProcessor = UriProcessor::process($this->mockService);
 
         $fakeQueryResult = new QueryResult();
-        $fakeQueryResult->results = array(1, 2, 3);
+        $fakeQueryResult->results = [1, 2, 3];
 
         /* TODO: Figure out why this doesn't work when it should
         $this->mockProvidersWrapper->shouldReceive('getResourceSet')->withArgs([
@@ -177,7 +157,7 @@ class UriProcessorTest extends TestCase
 
         $actual = $request->getTargetResult();
 
-        $this->assertEquals(array(1, 2, 3), $actual);
+        $this->assertEquals([1, 2, 3], $actual);
     }
 
     public function testProcessRequestForCollectionCountThrowsWhenServiceVersionIs10()
@@ -185,8 +165,8 @@ class UriProcessorTest extends TestCase
         $requestURI = new Url('http://host.com/data.svc/Collection/$count');
         $this->mockService->shouldReceive('getOperationContext')->andReturnNull();
         $this->mockServiceHost->shouldReceive('getAbsoluteRequestUri')->andReturn($requestURI);
-        $this->mockServiceHost->shouldReceive('getRequestVersion')->andReturn("1.0");
-        $this->mockServiceHost->shouldReceive('getRequestMaxVersion')->andReturn("1.0");
+        $this->mockServiceHost->shouldReceive('getRequestVersion')->andReturn('1.0');
+        $this->mockServiceHost->shouldReceive('getRequestMaxVersion')->andReturn('1.0');
         $this->mockCollectionResourceSetWrapper->shouldReceive('checkResourceSetRightsForRead')->andReturnNull();
 
         $this->fakeServiceConfig->setAcceptCountRequests(true);
@@ -207,8 +187,8 @@ class UriProcessorTest extends TestCase
 
         $this->mockService->shouldReceive('getOperationContext')->andReturnNull();
         $this->mockServiceHost->shouldReceive('getAbsoluteRequestUri')->andReturn($requestURI);
-        $this->mockServiceHost->shouldReceive('getRequestVersion')->andReturn("2.0");
-        $this->mockServiceHost->shouldReceive('getRequestMaxVersion')->andReturn("2.0");
+        $this->mockServiceHost->shouldReceive('getRequestVersion')->andReturn('2.0');
+        $this->mockServiceHost->shouldReceive('getRequestMaxVersion')->andReturn('2.0');
         $this->mockCollectionResourceSetWrapper->shouldReceive('checkResourceSetRightsForRead')->andReturnNull();
 
         $this->fakeServiceConfig->setAcceptCountRequests(false);
@@ -227,8 +207,8 @@ class UriProcessorTest extends TestCase
         $requestURI = new Url('http://host.com/data.svc/Collection/$count');
         $this->mockService->shouldReceive('getOperationContext')->andReturnNull();
         $this->mockServiceHost->shouldReceive('getAbsoluteRequestUri')->andReturn($requestURI);
-        $this->mockServiceHost->shouldReceive('getRequestVersion')->andReturn("2.0");
-        $this->mockServiceHost->shouldReceive('getRequestMaxVersion')->andReturn("2.0");
+        $this->mockServiceHost->shouldReceive('getRequestVersion')->andReturn('2.0');
+        $this->mockServiceHost->shouldReceive('getRequestMaxVersion')->andReturn('2.0');
 
         $this->fakeServiceConfig->setAcceptCountRequests(true);
         $this->fakeServiceConfig->setMaxDataServiceVersion(ProtocolVersion::V2());
@@ -239,7 +219,7 @@ class UriProcessorTest extends TestCase
         $uriProcessor = UriProcessor::process($this->mockService);
 
         $fakeQueryResult = new QueryResult();
-        $fakeQueryResult->results = array(1, 2, 3);
+        $fakeQueryResult->results = [1, 2, 3];
 
         /* TODO: Figure out why commented version loses plot while anyArgs version passes - with same
         $this->mockProvidersWrapper->shouldReceive('getResourceSet')->withArgs([
@@ -270,8 +250,8 @@ class UriProcessorTest extends TestCase
 
         $this->mockService->shouldReceive('getOperationContext')->andReturnNull();
         $this->mockServiceHost->shouldReceive('getAbsoluteRequestUri')->andReturn($requestURI);
-        $this->mockServiceHost->shouldReceive('getRequestVersion')->andReturn("2.0");
-        $this->mockServiceHost->shouldReceive('getRequestMaxVersion')->andReturn("2.0");
+        $this->mockServiceHost->shouldReceive('getRequestVersion')->andReturn('2.0');
+        $this->mockServiceHost->shouldReceive('getRequestMaxVersion')->andReturn('2.0');
         $this->mockCollectionResourceSetWrapper->shouldReceive('checkResourceSetRightsForRead')->andReturnNull();
         $this->mockServiceHost->shouldReceive('getQueryStringItem')->andReturn(null);
 
@@ -281,7 +261,7 @@ class UriProcessorTest extends TestCase
         $uriProcessor = UriProcessor::process($this->mockService);
 
         $fakeQueryResult = new QueryResult();
-        $fakeQueryResult->results = array(1, 2, 3);
+        $fakeQueryResult->results = [1, 2, 3];
         $fakeQueryResult->count = 10; //note this differs from the size of the results array
 
         /* TODO: Figure out why commented version loses plot while anyArgs version passes
@@ -312,8 +292,8 @@ class UriProcessorTest extends TestCase
         $requestURI = new Url('http://host.com/data.svc/Collection/?$inlinecount=allpages');
         $this->mockService->shouldReceive('getOperationContext')->andReturnNull();
         $this->mockServiceHost->shouldReceive('getAbsoluteRequestUri')->andReturn($requestURI);
-        $this->mockServiceHost->shouldReceive('getRequestVersion')->andReturn("2.0");
-        $this->mockServiceHost->shouldReceive('getRequestMaxVersion')->andReturn("2.0");
+        $this->mockServiceHost->shouldReceive('getRequestVersion')->andReturn('2.0');
+        $this->mockServiceHost->shouldReceive('getRequestMaxVersion')->andReturn('2.0');
         $this->mockCollectionResourceSetWrapper->shouldReceive('checkResourceSetRightsForRead')->andReturnNull();
         $this->mockCollectionResourceSetWrapper->shouldReceive('hasNamedStreams')->andReturn(false);
         $this->mockCollectionResourceSetWrapper->shouldReceive('hasBagProperty')->andReturn(false);
@@ -343,8 +323,8 @@ class UriProcessorTest extends TestCase
         $this->mockServiceHost->shouldReceive('getAbsoluteRequestUri')->andReturn($requestURI);
 
         $this->mockService->shouldReceive('getOperationContext')->andReturnNull();
-        $this->mockServiceHost->shouldReceive('getRequestVersion')->andReturn("1.0");
-        $this->mockServiceHost->shouldReceive('getRequestMaxVersion')->andReturn("1.0");
+        $this->mockServiceHost->shouldReceive('getRequestVersion')->andReturn('1.0');
+        $this->mockServiceHost->shouldReceive('getRequestMaxVersion')->andReturn('1.0');
         $this->mockServiceHost->shouldReceive('getQueryStringItem')->andReturn(null);
         $this->mockCollectionResourceSetWrapper->shouldReceive('checkResourceSetRightsForRead')->andReturnNull();
         $this->mockCollectionResourceSetWrapper->shouldReceive('hasNamedStreams')->andReturn(true);
@@ -378,13 +358,13 @@ class UriProcessorTest extends TestCase
         $requestURI = new Url('http://host.com/data.svc/Collection/?$inlinecount=none');
         $this->mockService->shouldReceive('getOperationContext')->andReturnNull();
         $this->mockServiceHost->shouldReceive('getAbsoluteRequestUri')->andReturn($requestURI);
-        $this->mockServiceHost->shouldReceive('getRequestVersion')->andReturn("1.0");
-        $this->mockServiceHost->shouldReceive('getRequestMaxVersion')->andReturn("1.0");
+        $this->mockServiceHost->shouldReceive('getRequestVersion')->andReturn('1.0');
+        $this->mockServiceHost->shouldReceive('getRequestMaxVersion')->andReturn('1.0');
         $this->mockServiceHost->shouldReceive('getQueryStringItem')->andReturn(null);
         $this->mockCollectionResourceSetWrapper->shouldReceive('checkResourceSetRightsForRead')->andReturnNull();
         $this->mockCollectionResourceSetWrapper->shouldReceive('hasNamedStreams')->andReturn(false);
         $this->mockCollectionResourceSetWrapper->shouldReceive('hasBagProperty')->andReturn(false);
-        $this->mockCollectionResourceSetWrapper->shouldReceive('getName')->andReturn("HAMMER TIME!");
+        $this->mockCollectionResourceSetWrapper->shouldReceive('getName')->andReturn('HAMMER TIME!');
 
         //mock inline count as all pages
         $this->mockServiceHost->shouldReceive('getQueryStringItem')
@@ -400,7 +380,7 @@ class UriProcessorTest extends TestCase
         $uriProcessor = UriProcessor::process($this->mockService);
 
         $fakeQueryResult = new QueryResult();
-        $fakeQueryResult->results = array(1, 2, 3);
+        $fakeQueryResult->results = [1, 2, 3];
         $fakeQueryResult->count = 10; //note this is different than the size of the array
 
         /* TODO: Figure out why commented version loses plot while anyArgs version passes
@@ -423,7 +403,7 @@ class UriProcessorTest extends TestCase
 
         $actual = $request->getTargetResult();
 
-        $this->assertEquals(array(1, 2, 3), $actual);
+        $this->assertEquals([1, 2, 3], $actual);
         $this->assertNull($request->getCountValue(), 'Since $inlinecount is specified as none, there should be no count set');
     }
 
@@ -432,12 +412,12 @@ class UriProcessorTest extends TestCase
         $requestURI = new Url('http://host.com/data.svc/Collection/?$inlinecount=allpages');
         $this->mockService->shouldReceive('getOperationContext')->andReturnNull();
         $this->mockServiceHost->shouldReceive('getAbsoluteRequestUri')->andReturn($requestURI);
-        $this->mockServiceHost->shouldReceive('getRequestVersion')->andReturn("2.0");
-        $this->mockServiceHost->shouldReceive('getRequestMaxVersion')->andReturn("2.0");
+        $this->mockServiceHost->shouldReceive('getRequestVersion')->andReturn('2.0');
+        $this->mockServiceHost->shouldReceive('getRequestMaxVersion')->andReturn('2.0');
         $this->mockCollectionResourceSetWrapper->shouldReceive('checkResourceSetRightsForRead')->andReturnNull();
         $this->mockCollectionResourceSetWrapper->shouldReceive('hasNamedStreams')->andReturn(false);
         $this->mockCollectionResourceSetWrapper->shouldReceive('hasBagProperty')->andReturn(false);
-        $this->mockCollectionResourceSetWrapper->shouldReceive('getName')->andReturn("HAMMER TIME!");
+        $this->mockCollectionResourceSetWrapper->shouldReceive('getName')->andReturn('HAMMER TIME!');
 
         //mock inline count as all pages
         $this->mockServiceHost->shouldReceive('getQueryStringItem')
@@ -453,7 +433,7 @@ class UriProcessorTest extends TestCase
         $uriProcessor = UriProcessor::process($this->mockService);
 
         $fakeQueryResult = new QueryResult();
-        $fakeQueryResult->results = array(1, 2, 3);
+        $fakeQueryResult->results = [1, 2, 3];
         $fakeQueryResult->count = 10; //note this is different than the size of the array
 
         /* TODO: Figure out why commented version loses plot while anyArgs version passes
@@ -476,7 +456,7 @@ class UriProcessorTest extends TestCase
 
         $actual = $request->getTargetResult();
 
-        $this->assertEquals(array(1, 2, 3), $actual);
+        $this->assertEquals([1, 2, 3], $actual);
         $this->assertEquals(3, $request->getCountValue());
     }
 
@@ -485,8 +465,8 @@ class UriProcessorTest extends TestCase
         $requestURI = new Url('http://host.com/data.svc/Collection/?$inlinecount=allpages');
         $this->mockServiceHost->shouldReceive('getAbsoluteRequestUri')->andReturn($requestURI);
         $this->mockService->shouldReceive('getOperationContext')->andReturnNull();
-        $this->mockServiceHost->shouldReceive('getRequestVersion')->andReturn("3.0");
-        $this->mockServiceHost->shouldReceive('getRequestMaxVersion')->andReturn("3.0");
+        $this->mockServiceHost->shouldReceive('getRequestVersion')->andReturn('3.0');
+        $this->mockServiceHost->shouldReceive('getRequestMaxVersion')->andReturn('3.0');
         $this->mockCollectionResourceSetWrapper->shouldReceive('checkResourceSetRightsForRead')->andReturnNull();
         $this->mockCollectionResourceSetWrapper->shouldReceive('hasNamedStreams')->andReturn(true);
         $this->mockCollectionResourceSetWrapper->shouldReceive('hasBagProperty')->andReturn(true);
@@ -503,7 +483,7 @@ class UriProcessorTest extends TestCase
         $this->fakeServiceConfig->setMaxDataServiceVersion(ProtocolVersion::V3());
 
         $fakeQueryResult = new QueryResult();
-        $fakeQueryResult->results = array(1, 2, 3);
+        $fakeQueryResult->results = [1, 2, 3];
         $fakeQueryResult->count = 10;
 
         /* TODO: Figure out why commented version loses plot while anyArgs version passes
@@ -528,7 +508,7 @@ class UriProcessorTest extends TestCase
 
         $actual = $request->getTargetResult();
 
-        $this->assertEquals(array(1, 2, 3), $actual);
+        $this->assertEquals([1, 2, 3], $actual);
         $this->assertEquals(10, $request->getCountValue());
     }
 

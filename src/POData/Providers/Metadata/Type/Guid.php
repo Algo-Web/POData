@@ -107,7 +107,7 @@ class Guid implements IType
      */
     public function convertToOData($value)
     {
-        return 'guid\'' . urlencode($value) . '\'';
+        return 'guid\''.urlencode($value).'\'';
     }
 
     /**
@@ -122,15 +122,15 @@ class Guid implements IType
     {
         $patterns = null;
         if ($withQuotes) {
-            $patterns = array('/^(\'[0-9a-fA-F]{32}\')?$/',
+            $patterns = ['/^(\'[0-9a-fA-F]{32}\')?$/',
                             '/^(\'[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\')?$/',
                             '/^\'\{?([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\}?\')?$/',
-                            '/^\'\(?([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\)?\')?$/',);
+                            '/^\'\(?([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\)?\')?$/', ];
         } else {
-            $patterns = array('/^([0-9a-fA-F]{32})?$/',
+            $patterns = ['/^([0-9a-fA-F]{32})?$/',
                             '/^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})?$/',
                             '/^\{?([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\}?)?$/',
-                            '/^\(?([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\)?)?$/',);
+                            '/^\(?([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\)?)?$/', ];
         }
 
         foreach ($patterns as $pattern) {
@@ -154,8 +154,8 @@ class Guid implements IType
      */
     public static function guidEqual($guid1, $guid2)
     {
-        $guid1 = str_replace(array('{', '}', '(', ')', '-'), '', $guid1);
-        $guid2 = str_replace(array('{', '}', '(', ')', '-'), '', $guid2);
+        $guid1 = str_replace(['{', '}', '(', ')', '-'], '', $guid1);
+        $guid2 = str_replace(['{', '}', '(', ')', '-'], '', $guid2);
 
         return 0 === strcasecmp($guid1, $guid2);
     }

@@ -2,9 +2,9 @@
 
 namespace UnitTests\POData\Facets\NorthWind4;
 
+use POData\Common\ODataException;
 use POData\Providers\Metadata\ResourceStreamInfo;
 use POData\Providers\Stream\IStreamProvider2;
-use POData\Common\ODataException;
 
 class NorthWindStreamProvider4 implements IStreamProvider2
 {
@@ -43,11 +43,11 @@ class NorthWindStreamProvider4 implements IStreamProvider2
      * @param WebOperationContext $operationContext     A reference to the context
      *                                                  for the current operation
      *
-     * @return mixed A valid  default stream which is associated with the entity,
-     *               Null should never be returned from this method
-     *
      * @throws ODataException if a valid stream cannot be returned.
      *                        Null should never be returned from this method
+     *
+     * @return mixed A valid  default stream which is associated with the entity,
+     *               Null should never be returned from this method
      */
     public function getReadStream(
         $entity,
@@ -104,11 +104,11 @@ class NorthWindStreamProvider4 implements IStreamProvider2
      * @param WebOperationContext $operationContext A reference to the context
      *                                              for the current operation
      *
-     * @return string Valid Content-Type string for the stream
-     *                associated with the entity
-     *
      * @throws ODataException if a valid stream content type
      *                        associated with the entity specified could not be returned
+     *
+     * @return string Valid Content-Type string for the stream
+     *                associated with the entity
      */
     public function getStreamContentType($entity, $operationContext)
     {
@@ -155,7 +155,7 @@ class NorthWindStreamProvider4 implements IStreamProvider2
             $lastModifiedTime = date('"m-d-Y H:i:s"', filemtime($filePath));
         } else {
             // The no stream associated the the requested enttiy, so no eTag
-            return null;
+            return;
         }
 
         return $lastModifiedTime;
@@ -183,12 +183,12 @@ class NorthWindStreamProvider4 implements IStreamProvider2
     public function getReadStreamUri($entity, $operationContext)
     {
         //let library creates default media url.
-        return null;
     }
 
     //End IStreamProvider methods implementation
 
     //Begin IStreamProvider2 methods implementation
+
     /**
      * This method is invoked by the data services framework to retrieve the named stream
      * associated with the entity instance specified by the entity parameter.
@@ -210,12 +210,12 @@ class NorthWindStreamProvider4 implements IStreamProvider2
      *                                                  conditional request
      * @param WebOperationContext $operationContext     A reference to the context for the current operation
      *
+     * @throws ODataException if a valid stream or null cannot be returned for the given arguments
+     *
      * @return mixed A valid stream the data service use to query/read a named stream which is
      *               associated with the $entity. Null may be returned from this method if the requested named
      *               stream has not been created since the creation of $entity. The data service will respond
      *               with 204 if this method returns null
-     *
-     * @throws ODataException if a valid stream or null cannot be returned for the given arguments
      */
     public function getReadStream2(
         $entity,
@@ -301,7 +301,6 @@ class NorthWindStreamProvider4 implements IStreamProvider2
         ResourceStreamInfo $resourceStreamInfo,
         $operationContext
     ) {
-        return null;
     }
 
     /**
@@ -326,7 +325,6 @@ class NorthWindStreamProvider4 implements IStreamProvider2
         ResourceStreamInfo $resourceStreamInfo,
         $operationContext
     ) {
-        return null;
     }
 
     //End IStreamProvider2 methods implementation

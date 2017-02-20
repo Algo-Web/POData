@@ -100,7 +100,7 @@ class EdmString implements IType
      */
     public function convertToOData($value)
     {
-        return '\'' . str_replace('%27', "''", urlencode(utf8_encode($value))) . '\'';
+        return '\''.str_replace('%27', "''", urlencode(utf8_encode($value))).'\'';
     }
 
     /**

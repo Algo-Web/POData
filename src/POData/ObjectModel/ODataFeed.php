@@ -42,5 +42,5 @@ class ODataFeed
      *
      * @var ODataEntry[]
      */
-    public $entries = array();
+    public $entries = [];
 }

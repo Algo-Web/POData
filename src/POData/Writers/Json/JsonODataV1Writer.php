@@ -2,20 +2,20 @@
 
 namespace POData\Writers\Json;
 
-use POData\ObjectModel\ODataFeed;
-use POData\ObjectModel\ODataEntry;
-use POData\ObjectModel\ODataURLCollection;
-use POData\ObjectModel\ODataURL;
-use POData\ObjectModel\ODataLink;
-use POData\ObjectModel\ODataPropertyContent;
-use POData\ObjectModel\ODataBagContent;
-use POData\ObjectModel\ODataProperty;
-use POData\Writers\IODataWriter;
-use POData\Common\Version;
-use POData\Common\ODataConstants;
 use POData\Common\MimeTypes;
+use POData\Common\ODataConstants;
 use POData\Common\ODataException;
+use POData\Common\Version;
+use POData\ObjectModel\ODataBagContent;
+use POData\ObjectModel\ODataEntry;
+use POData\ObjectModel\ODataFeed;
+use POData\ObjectModel\ODataLink;
+use POData\ObjectModel\ODataProperty;
+use POData\ObjectModel\ODataPropertyContent;
+use POData\ObjectModel\ODataURL;
+use POData\ObjectModel\ODataURLCollection;
 use POData\Providers\ProvidersWrapper;
+use POData\Writers\IODataWriter;
 
 /**
  * Class JsonODataV1Writer is a writer for the json format in OData V1.
@@ -272,8 +272,7 @@ class JsonODataV1Writer implements IODataWriter
                 ->writeName($this->urlKey)
                 ->writeValue($link->url)
                 ->endScope()
-                ->endScope()
-            ;
+                ->endScope();
         }
 
         return $this;
@@ -457,7 +456,7 @@ class JsonODataV1Writer implements IODataWriter
             ->startObjectScope() // {
             ->writeName(ODataConstants::ENTITY_SET) // "EntitySets"
             ->startArrayScope() // [
-        ;
+;
 
         foreach ($providers->getResourceSets() as $resourceSetWrapper) {
             $writer->writeValue($resourceSetWrapper->getName());
@@ -467,7 +466,7 @@ class JsonODataV1Writer implements IODataWriter
             ->endScope() // ]
             ->endScope() // }
             ->endScope() // }
-        ;
+;
 
         return $this;
     }

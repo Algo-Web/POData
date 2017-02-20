@@ -22,7 +22,7 @@ class StreamProviderWrapperTest extends TestCase
 {
     public function testGetDefaultMediaStreamUriWithNullStreamInfo()
     {
-        $mediaUrl = "https://www.example.org/media/";
+        $mediaUrl = 'https://www.example.org/media/';
         $foo = new StreamProviderWrapper();
         $streamInfo = null;
 
@@ -33,7 +33,7 @@ class StreamProviderWrapperTest extends TestCase
 
     public function testGetDefaultMediaStreamUriWithNonNullStreamInfo()
     {
-        $mediaUrl = "https://www.example.org/media/";
+        $mediaUrl = 'https://www.example.org/media/';
         $foo = new StreamProviderWrapper();
         $streamInfo = m::mock(ResourceStreamInfo::class);
         $streamInfo->shouldReceive('getName')->andReturn('$size');
@@ -99,7 +99,7 @@ class StreamProviderWrapperTest extends TestCase
 
     public function testGetStreamContentTypeWithNullResourceStreamInfoV2()
     {
-        $data = new reusableEntityClass2("hammer", "time!");
+        $data = new reusableEntityClass2('hammer', 'time!');
 
         $opContext = m::mock(IOperationContext::class);
 
@@ -110,7 +110,7 @@ class StreamProviderWrapperTest extends TestCase
         $service = m::mock(IService::class);
         $service->shouldReceive('getHost')->andReturn($host);
         $service->shouldReceive('getConfiguration->getMaxDataServiceVersion')->andReturn(new Version(2, 0));
-        $service->shouldReceive('getStreamProviderX')->andReturn("electric-rave")->once();
+        $service->shouldReceive('getStreamProviderX')->andReturn('electric-rave')->once();
         $service->shouldReceive('getOperationContext')->andReturn($opContext)->once();
 
         $foo = new StreamProviderWrapper();
@@ -130,7 +130,7 @@ class StreamProviderWrapperTest extends TestCase
 
     public function testGetStreamContentTypeWithNullResourceStreamInfoV3()
     {
-        $data = new reusableEntityClass2("hammer", "time!");
+        $data = new reusableEntityClass2('hammer', 'time!');
 
         $opContext = m::mock(IOperationContext::class);
 
@@ -141,7 +141,7 @@ class StreamProviderWrapperTest extends TestCase
         $service = m::mock(IService::class);
         $service->shouldReceive('getHost')->andReturn($host);
         $service->shouldReceive('getConfiguration->getMaxDataServiceVersion')->andReturn(new Version(3, 0));
-        $service->shouldReceive('getStreamProviderX')->andReturn("electric-rave")->once();
+        $service->shouldReceive('getStreamProviderX')->andReturn('electric-rave')->once();
         $service->shouldReceive('getOperationContext')->andReturn($opContext)->once();
 
         $foo = new StreamProviderWrapper();
@@ -161,7 +161,7 @@ class StreamProviderWrapperTest extends TestCase
 
     public function testGetStreamContentTypeNullStreamInfoFallbackToV2AndReturnsNullContent()
     {
-        $data = new reusableEntityClass2("hammer", "time!");
+        $data = new reusableEntityClass2('hammer', 'time!');
 
         $opContext = m::mock(IOperationContext::class);
 
@@ -195,7 +195,7 @@ class StreamProviderWrapperTest extends TestCase
 
     public function testGetStreamContentTypeHasStreamInfoV3AndReturnsNullContent()
     {
-        $data = new reusableEntityClass2("hammer", "time!");
+        $data = new reusableEntityClass2('hammer', 'time!');
 
         $opContext = m::mock(IOperationContext::class);
 
@@ -222,7 +222,7 @@ class StreamProviderWrapperTest extends TestCase
 
     public function testGetStreamContentTypeHasStreamInfoV3AndReturnsNullProvider()
     {
-        $data = new reusableEntityClass2("hammer", "time!");
+        $data = new reusableEntityClass2('hammer', 'time!');
 
         $opContext = m::mock(IOperationContext::class);
 
@@ -254,7 +254,7 @@ class StreamProviderWrapperTest extends TestCase
 
     public function testGetStreamContentTypeHasStreamInfoFallbackToV2AndReturnsNullContent()
     {
-        $data = new reusableEntityClass2("hammer", "time!");
+        $data = new reusableEntityClass2('hammer', 'time!');
 
         $opContext = m::mock(IOperationContext::class);
 
@@ -292,7 +292,7 @@ class StreamProviderWrapperTest extends TestCase
 
     public function testGetStreamContentTypeHasStreamInfoV3AndReturnsActualData()
     {
-        $data = new reusableEntityClass2("hammer", "time!");
+        $data = new reusableEntityClass2('hammer', 'time!');
 
         $opContext = m::mock(IOperationContext::class);
 
@@ -319,11 +319,11 @@ class StreamProviderWrapperTest extends TestCase
 
     public function testGetReadStreamAndThrowODataExceptionCode304()
     {
-        $data = new reusableEntityClass2("hammer", "time!");
+        $data = new reusableEntityClass2('hammer', 'time!');
         $exception = new ODataException('Inner universe', 304);
 
         $host = m::mock(ServiceHost::class);
-        $host->shouldReceive('getRequestIfMatch')->andReturn("electric-rave");
+        $host->shouldReceive('getRequestIfMatch')->andReturn('electric-rave');
         $host->shouldReceive('getResponseContentType')->andReturn('application/json');
         $host->shouldReceive('getResponseETag')->andReturn('W/"electric-rave"');
         $host->shouldReceive('setResponseETag')->andReturn('W/"electric-rave"')->once();
@@ -350,7 +350,7 @@ class StreamProviderWrapperTest extends TestCase
 
     public function testGetReadStreamNullStreamNoStreamInfoThrowException()
     {
-        $data = new reusableEntityClass2("hammer", "time!");
+        $data = new reusableEntityClass2('hammer', 'time!');
 
         $streamProv = m::mock(IStreamProvider2::class);
         $streamProv->shouldReceive('getStreamContentType2')->andReturn('electric-rave')->never();
@@ -359,7 +359,7 @@ class StreamProviderWrapperTest extends TestCase
         $context = m::mock(IOperationContext::class);
 
         $host = m::mock(ServiceHost::class);
-        $host->shouldReceive('getRequestIfMatch')->andReturn("electric-rave");
+        $host->shouldReceive('getRequestIfMatch')->andReturn('electric-rave');
         $host->shouldReceive('getResponseContentType')->andReturn('application/json');
         $host->shouldReceive('getResponseETag')->andReturn('W/"electric-rave"');
         $host->shouldReceive('setResponseETag')->withArgs(['W/"electric-rave"'])->never();
@@ -388,7 +388,7 @@ class StreamProviderWrapperTest extends TestCase
 
     public function testGetReadStreamNullStreamNoStreamInfoReturnNotNull()
     {
-        $data = new reusableEntityClass2("hammer", "time!");
+        $data = new reusableEntityClass2('hammer', 'time!');
 
         $streamProv = m::mock(IStreamProvider2::class);
         $streamProv->shouldReceive('getStreamContentType2')->andReturn('electric-rave')->once();
@@ -397,7 +397,7 @@ class StreamProviderWrapperTest extends TestCase
         $context = m::mock(IOperationContext::class);
 
         $host = m::mock(ServiceHost::class);
-        $host->shouldReceive('getRequestIfMatch')->andReturn("electric-rave");
+        $host->shouldReceive('getRequestIfMatch')->andReturn('electric-rave');
         $host->shouldReceive('getResponseContentType')->andReturn('application/json');
         $host->shouldReceive('getResponseETag')->andReturn('W/"electric-rave"');
         $host->shouldReceive('setResponseETag')->withArgs(['W/"electric-rave"'])->never();
@@ -420,7 +420,7 @@ class StreamProviderWrapperTest extends TestCase
 
     public function testGetReadStreamNullStreamHasStreamInfoReturnNull()
     {
-        $data = new reusableEntityClass2("hammer", "time!");
+        $data = new reusableEntityClass2('hammer', 'time!');
 
         $streamProv = m::mock(IStreamProvider2::class);
         $streamProv->shouldReceive('getStreamContentType2')->andReturn('electric-rave')->never();
@@ -429,7 +429,7 @@ class StreamProviderWrapperTest extends TestCase
         $context = m::mock(IOperationContext::class);
 
         $host = m::mock(ServiceHost::class);
-        $host->shouldReceive('getRequestIfMatch')->andReturn("electric-rave");
+        $host->shouldReceive('getRequestIfMatch')->andReturn('electric-rave');
         $host->shouldReceive('getResponseContentType')->andReturn('application/json');
         $host->shouldReceive('getResponseETag')->andReturn('W/"electric-rave"');
         $host->shouldReceive('setResponseETag')->withArgs(['W/"electric-rave"'])->never();
@@ -452,7 +452,7 @@ class StreamProviderWrapperTest extends TestCase
 
     public function testGetStreamETagNoStreamInfoAndGetsNullStreamProviderThrowsException()
     {
-        $data = new reusableEntityClass2("hammer", "time!");
+        $data = new reusableEntityClass2('hammer', 'time!');
 
         $streamProv = m::mock(IStreamProvider2::class);
         $streamProv->shouldReceive('getStreamContentType2')->andReturn('electric-rave')->never();
@@ -461,7 +461,7 @@ class StreamProviderWrapperTest extends TestCase
         $context = m::mock(IOperationContext::class);
 
         $host = m::mock(ServiceHost::class);
-        $host->shouldReceive('getRequestIfMatch')->andReturn("electric-rave");
+        $host->shouldReceive('getRequestIfMatch')->andReturn('electric-rave');
         $host->shouldReceive('getResponseContentType')->andReturn('application/json');
         $host->shouldReceive('getResponseETag')->andReturn('W/"electric-rave"');
         $host->shouldReceive('setResponseETag')->withArgs(['W/"electric-rave"'])->never();
@@ -489,7 +489,7 @@ class StreamProviderWrapperTest extends TestCase
 
     public function testGetStreamETagNoStreamInfoValidStreamProviderBadETagThrowsException()
     {
-        $data = new reusableEntityClass2("hammer", "time!");
+        $data = new reusableEntityClass2('hammer', 'time!');
 
         $streamProv = m::mock(IStreamProvider2::class);
         $streamProv->shouldReceive('getStreamContentType2')->andReturn('electric-rave')->never();
@@ -500,7 +500,7 @@ class StreamProviderWrapperTest extends TestCase
         $context = m::mock(IOperationContext::class);
 
         $host = m::mock(ServiceHost::class);
-        $host->shouldReceive('getRequestIfMatch')->andReturn("electric-rave");
+        $host->shouldReceive('getRequestIfMatch')->andReturn('electric-rave');
         $host->shouldReceive('getResponseContentType')->andReturn('application/json');
         $host->shouldReceive('getResponseETag')->andReturn('W/"elect"ric-rave"');
         $host->shouldReceive('setResponseETag')->andReturn('W/"elect"ric-rave"')->never();
@@ -528,7 +528,7 @@ class StreamProviderWrapperTest extends TestCase
 
     public function testGetStreamETagHasStreamInfoValidStreamProviderGoodETag()
     {
-        $data = new reusableEntityClass2("hammer", "time!");
+        $data = new reusableEntityClass2('hammer', 'time!');
 
         $streamProv = m::mock(IStreamProvider2::class);
         $streamProv->shouldReceive('getStreamContentType2')->andReturn('electric-rave')->never();
@@ -539,7 +539,7 @@ class StreamProviderWrapperTest extends TestCase
         $context = m::mock(IOperationContext::class);
 
         $host = m::mock(ServiceHost::class);
-        $host->shouldReceive('getRequestIfMatch')->andReturn("electric-rave");
+        $host->shouldReceive('getRequestIfMatch')->andReturn('electric-rave');
         $host->shouldReceive('getResponseContentType')->andReturn('application/json');
         $host->shouldReceive('getResponseETag')->andReturn('W/"electric-rave"');
         $host->shouldReceive('setResponseETag')->withArgs(['W/"electric-rave"'])->never();
@@ -560,7 +560,7 @@ class StreamProviderWrapperTest extends TestCase
 
     public function testGetReadStreamUriNoStreamInfo()
     {
-        $data = new reusableEntityClass2("hammer", "time!");
+        $data = new reusableEntityClass2('hammer', 'time!');
 
         $streamProv = m::mock(IStreamProvider2::class);
         $streamProv->shouldReceive('getReadStreamUri')->andReturn('https://www.example.org')->once();
@@ -568,7 +568,7 @@ class StreamProviderWrapperTest extends TestCase
         $context = m::mock(IOperationContext::class);
 
         $host = m::mock(ServiceHost::class);
-        $host->shouldReceive('getRequestIfMatch')->andReturn("electric-rave");
+        $host->shouldReceive('getRequestIfMatch')->andReturn('electric-rave');
         $host->shouldReceive('getResponseContentType')->andReturn('application/json');
         $host->shouldReceive('getResponseETag')->andReturn('W/"electric-rave"');
         $host->shouldReceive('setResponseETag')->withArgs(['W/"electric-rave"'])->never();
@@ -589,7 +589,7 @@ class StreamProviderWrapperTest extends TestCase
 
     public function testGetReadStreamUriNoStreamInfoBadUriThrowException()
     {
-        $data = new reusableEntityClass2("hammer", "time!");
+        $data = new reusableEntityClass2('hammer', 'time!');
 
         $streamProv = m::mock(IStreamProvider2::class);
         $streamProv->shouldReceive('getReadStreamUri')->andReturn('FAIL')->once();
@@ -597,7 +597,7 @@ class StreamProviderWrapperTest extends TestCase
         $context = m::mock(IOperationContext::class);
 
         $host = m::mock(ServiceHost::class);
-        $host->shouldReceive('getRequestIfMatch')->andReturn("electric-rave");
+        $host->shouldReceive('getRequestIfMatch')->andReturn('electric-rave');
         $host->shouldReceive('getResponseContentType')->andReturn('application/json');
         $host->shouldReceive('getResponseETag')->andReturn('W/"electric-rave"');
         $host->shouldReceive('setResponseETag')->withArgs(['W/"electric-rave"'])->never();
@@ -625,7 +625,7 @@ class StreamProviderWrapperTest extends TestCase
 
     public function testGetReadStreamUriHasStreamInfoFallBackToDefault()
     {
-        $data = new reusableEntityClass2("hammer", "time!");
+        $data = new reusableEntityClass2('hammer', 'time!');
 
         $streamProv = m::mock(IStreamProvider2::class);
         $streamProv->shouldReceive('getReadStreamUri2')->andReturn(null)->once();
@@ -633,7 +633,7 @@ class StreamProviderWrapperTest extends TestCase
         $context = m::mock(IOperationContext::class);
 
         $host = m::mock(ServiceHost::class);
-        $host->shouldReceive('getRequestIfMatch')->andReturn("electric-rave");
+        $host->shouldReceive('getRequestIfMatch')->andReturn('electric-rave');
         $host->shouldReceive('getResponseContentType')->andReturn('application/json');
         $host->shouldReceive('getResponseETag')->andReturn('W/"electric-rave"');
         $host->shouldReceive('setResponseETag')->andReturn('W/"electric-rave"')->never();
@@ -655,7 +655,7 @@ class StreamProviderWrapperTest extends TestCase
 
     public function testGetReadStreamUriNoStreamInfoFallBackToDefault()
     {
-        $data = new reusableEntityClass2("hammer", "time!");
+        $data = new reusableEntityClass2('hammer', 'time!');
 
         $streamProv = m::mock(IStreamProvider2::class);
         $streamProv->shouldReceive('getReadStreamUri')->andReturn(null)->once();
@@ -664,7 +664,7 @@ class StreamProviderWrapperTest extends TestCase
 
         $host = m::mock(ServiceHost::class);
         $host->shouldReceive('getRequestIfMatch')->andReturn(null);
-        $host->shouldReceive('getRequestIfNoneMatch')->andReturn("electric-rave");
+        $host->shouldReceive('getRequestIfNoneMatch')->andReturn('electric-rave');
         $host->shouldReceive('getResponseContentType')->andReturn('application/json');
         $host->shouldReceive('getResponseETag')->andReturn('W/"electric-rave"');
         $host->shouldReceive('setResponseETag')->withArgs(['W/"electric-rave"'])->never();

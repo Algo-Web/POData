@@ -3,14 +3,14 @@
 namespace POData\OperationContext;
 
 use Illuminate\Http\Request;
-use POData\Common\Messages;
 use POData\Common\HttpStatus;
+use POData\Common\Messages;
+use POData\Common\MimeTypes;
 use POData\Common\ODataConstants;
+use POData\Common\ODataException;
 use POData\Common\Url;
 use POData\Common\UrlFormatException;
-use POData\Common\ODataException;
 use POData\Common\Version;
-use POData\Common\MimeTypes;
 use POData\OperationContext\Web\Illuminate\IlluminateOperationContext;
 
 /**
@@ -231,11 +231,11 @@ class ServiceHost
                 if (($requestUriScheme == 'http' && $requestUriPort != '80') ||
                     ($requestUriScheme == 'https' && $requestUriPort != '443')
                 ) {
-                    $serviceUri .= ':' . $requestUriPort;
+                    $serviceUri .= ':'.$requestUriPort;
                 }
 
                 for ($l = 0; $l <= $k; ++$l) {
-                    $serviceUri .= '/' . $requestUriSegments[$l];
+                    $serviceUri .= '/'.$requestUriSegments[$l];
                 }
 
                 $this->_absoluteServiceUri = new Url($serviceUri);
@@ -282,7 +282,7 @@ class ServiceHost
         $queryOptions = $this->getOperationContext()->incomingRequest()->getQueryParameters();
 
         reset($queryOptions);
-        $namesFound = array();
+        $namesFound = [];
         while ($queryOption = current($queryOptions)) {
             $optionName = key($queryOption);
             $optionValue = current($queryOption);
@@ -397,8 +397,6 @@ class ServiceHost
                 return $queryOption[$item];
             }
         }
-
-        return null;
     }
 
     /**
@@ -571,17 +569,17 @@ class ServiceHost
      */
     public function setResponseStatusCode($value)
     {
-        $floor = floor($value/100);
+        $floor = floor($value / 100);
         if ($floor >= 1 && $floor <= 5) {
             $statusDescription = HttpStatus::getStatusDescription($value);
             if (!is_null($statusDescription)) {
-                $statusDescription = ' ' . $statusDescription;
+                $statusDescription = ' '.$statusDescription;
             }
 
-            $this->getOperationContext()->outgoingResponse()->setStatusCode($value . $statusDescription);
+            $this->getOperationContext()->outgoingResponse()->setStatusCode($value.$statusDescription);
         } else {
             throw ODataException::createInternalServerError(
-                'Invalid Status Code' . $value
+                'Invalid Status Code'.$value
             );
         }
     }
@@ -675,6 +673,6 @@ class ServiceHost
                 break;
         }
 
-        return $format . ';q=1.0';
+        return $format.';q=1.0';
     }
 }

@@ -2,22 +2,22 @@
 
 namespace POData\UriProcessor\QueryProcessor;
 
-use POData\Common\ODataException;
 use POData\Common\Messages;
 use POData\Common\ODataConstants;
-use POData\Providers\Metadata\Type\Null1;
-use POData\Providers\Metadata\Type\Int64;
-use POData\Providers\Metadata\Type\Int16;
-use POData\Providers\Metadata\Type\Guid;
-use POData\Providers\Metadata\Type\Single;
-use POData\Providers\Metadata\Type\Double;
-use POData\Providers\Metadata\Type\Decimal;
-use POData\Providers\Metadata\Type\DateTime;
-use POData\Providers\Metadata\Type\Int32;
-use POData\Providers\Metadata\Type\StringType;
-use POData\Providers\Metadata\Type\Boolean;
+use POData\Common\ODataException;
 use POData\Providers\Metadata\Type\Binary;
+use POData\Providers\Metadata\Type\Boolean;
+use POData\Providers\Metadata\Type\DateTime;
+use POData\Providers\Metadata\Type\Decimal;
+use POData\Providers\Metadata\Type\Double;
+use POData\Providers\Metadata\Type\Guid;
+use POData\Providers\Metadata\Type\Int16;
+use POData\Providers\Metadata\Type\Int32;
+use POData\Providers\Metadata\Type\Int64;
 use POData\Providers\Metadata\Type\IType;
+use POData\Providers\Metadata\Type\Null1;
+use POData\Providers\Metadata\Type\Single;
+use POData\Providers\Metadata\Type\StringType;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\AbstractExpression;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionToken;
 
@@ -64,13 +64,13 @@ class FunctionDescription
      */
     public function getPrototypeAsString()
     {
-        $str = $this->returnType->getFullTypeName() . ' ' . $this->name . '(';
+        $str = $this->returnType->getFullTypeName().' '.$this->name.'(';
 
         foreach ($this->argumentTypes as $argumentType) {
-            $str .= $argumentType->getFullTypeName() . ', ';
+            $str .= $argumentType->getFullTypeName().', ';
         }
 
-        return rtrim($str, ', ') . ')';
+        return rtrim($str, ', ').')';
     }
 
     /**
@@ -82,172 +82,172 @@ class FunctionDescription
      */
     public static function filterFunctionDescriptions()
     {
-        $functions = array(
+        $functions = [
             //EdmString Functions
-            'endswith' => array(
+            'endswith' => [
                     new self(
                         'endswith',
                         new Boolean(),
-                        array(new StringType(), new StringType())
+                        [new StringType(), new StringType()]
                     ),
-                ),
-            'indexof' => array(
+                ],
+            'indexof' => [
                     new self(
                         'indexof',
                         new Int32(),
-                        array(new StringType(), new StringType())
+                        [new StringType(), new StringType()]
                     ),
-                ),
-            'replace' => array(
+                ],
+            'replace' => [
                     new self(
                         'replace',
                         new StringType(),
-                        array(new StringType(), new StringType(), new StringType())
+                        [new StringType(), new StringType(), new StringType()]
                     ),
-                ),
-            'startswith' => array(
+                ],
+            'startswith' => [
                     new self(
                         'startswith',
                         new Boolean(),
-                        array(new StringType(), new StringType())
+                        [new StringType(), new StringType()]
                     ),
-                ),
-            'tolower' => array(
+                ],
+            'tolower' => [
                     new self(
                         'tolower',
                         new StringType(),
-                        array(new StringType())
+                        [new StringType()]
                     ),
-                ),
-            'toupper' => array(
+                ],
+            'toupper' => [
                     new self(
                         'toupper',
                         new StringType(),
-                        array(new StringType())
+                        [new StringType()]
                     ),
-                ),
-            'trim' => array(
+                ],
+            'trim' => [
                     new self(
                         'trim',
                         new StringType(),
-                        array(new StringType())
+                        [new StringType()]
                     ),
-                ),
-            'substring' => array(
+                ],
+            'substring' => [
                     new self(
 
                         'substring',
                         new StringType(),
-                        array(new StringType(), new Int32())
+                        [new StringType(), new Int32()]
                     ),
                     new self(
                         'substring',
                         new StringType(),
-                        array(new StringType(), new Int32(), new Int32())
+                        [new StringType(), new Int32(), new Int32()]
                     ),
-                ),
-            'substringof' => array(
+                ],
+            'substringof' => [
                     new self(
                         'substringof',
                         new Boolean(),
-                        array(new StringType(), new StringType())
+                        [new StringType(), new StringType()]
                     ),
-                ),
-            'concat' => array(
+                ],
+            'concat' => [
                     new self(
                         'concat',
                         new StringType(),
-                        array(new StringType(), new StringType())
+                        [new StringType(), new StringType()]
                     ),
-                ),
-            'length' => array(
+                ],
+            'length' => [
                     new self(
                         'length',
                         new Int32(),
-                        array(new StringType())
+                        [new StringType()]
                     ),
-                ),
+                ],
             //DateTime functions
-            'year' => array(
+            'year' => [
                     new self(
                         'year',
                         new Int32(),
-                        array(new DateTime())
+                        [new DateTime()]
                     ),
-                ),
-            'month' => array(
+                ],
+            'month' => [
                     new self(
                         'month',
                         new Int32(),
-                        array(new DateTime())
+                        [new DateTime()]
                     ),
-                ),
-            'day' => array(
+                ],
+            'day' => [
                     new self(
                         'day',
                         new Int32(),
-                        array(new DateTime())
+                        [new DateTime()]
                     ),
-                ),
-            'hour' => array(
+                ],
+            'hour' => [
                     new self(
                         'hour',
                         new Int32(),
-                        array(new DateTime())
+                        [new DateTime()]
                     ),
-                ),
-            'minute' => array(
+                ],
+            'minute' => [
                     new self(
                         'minute',
                         new Int32(),
-                        array(new DateTime())
+                        [new DateTime()]
                     ),
-                ),
-            'second' => array(
+                ],
+            'second' => [
                     new self(
                         'second',
                         new Int32(),
-                        array(new DateTime())
+                        [new DateTime()]
                     ),
-                ),
+                ],
             //Math Functions
-            'round' => array(
+            'round' => [
                     new self(
                         'round',
                         new Decimal(),
-                        array(new Decimal())
+                        [new Decimal()]
                     ),
                     new self(
                         'round',
                         new Double(),
-                        array(new Double())
+                        [new Double()]
                     ),
-                ),
-            'ceiling' => array(
+                ],
+            'ceiling' => [
                     new self(
                         'ceiling',
                         new Decimal(),
-                        array(new Decimal())
+                        [new Decimal()]
                     ),
                     new self(
                         'ceiling',
                         new Double(),
-                        array(new Double())
+                        [new Double()]
                     ),
-                ),
-            'floor' => array(
+                ],
+            'floor' => [
                     new self(
                         'floor',
                         new Decimal(),
-                        array(new Decimal())
+                        [new Decimal()]
                     ),
                     new self(
                         'floor',
                         new Double(),
-                        array(new Double())
+                        [new Double()]
                     ),
-                ),
-            );
+                ],
+            ];
 
         return $functions;
     }
@@ -259,13 +259,13 @@ class FunctionDescription
      */
     public static function stringComparisonFunctions()
     {
-        return array(
+        return [
             new self(
                 'strcmp',
                 new Int32(),
-                array(new StringType(), new StringType())
+                [new StringType(), new StringType()]
             ),
-        );
+        ];
     }
 
     /**
@@ -275,13 +275,13 @@ class FunctionDescription
      */
     public static function dateTimeComparisonFunctions()
     {
-        return array(
+        return [
             new self(
                 'dateTimeCmp',
                 new Int32(),
-                array(new DateTime(), new DateTime())
+                [new DateTime(), new DateTime()]
             ),
-        );
+        ];
     }
 
     /**
@@ -291,13 +291,13 @@ class FunctionDescription
      */
     public static function guidEqualityFunctions()
     {
-        return array(
+        return [
             new self(
                 'guidEqual',
                 new Boolean(),
-                array(new Guid(), new Guid())
+                [new Guid(), new Guid()]
             ),
-        );
+        ];
     }
 
     /**
@@ -307,13 +307,13 @@ class FunctionDescription
      */
     public static function binaryEqualityFunctions()
     {
-        return array(
+        return [
             new self(
                 'binaryEqual',
                 new Boolean(),
-                array(new Binary(), new Binary())
+                [new Binary(), new Binary()]
             ),
-        );
+        ];
     }
 
     /**
@@ -323,38 +323,38 @@ class FunctionDescription
      */
     public static function arithmeticOperationFunctions()
     {
-        return array(
+        return [
             new self(
                 'F',
                 new int16(),
-                array(new int16(), new int16())
+                [new int16(), new int16()]
             ),
             new self(
                 'F',
                 new int32(),
-                array(new int32(), new int32())
+                [new int32(), new int32()]
             ),
             new self(
                 'F',
                 new int64(),
-                array(new int64(), new int64())
+                [new int64(), new int64()]
             ),
             new self(
                 'F',
                 new Single(),
-                array(new Single(), new Single())
+                [new Single(), new Single()]
             ),
             new self(
                 'F',
                 new Double(),
-                array(new Double(), new Double())
+                [new Double(), new Double()]
             ),
             new self(
                 'F',
                 new Decimal(),
-                array(new Decimal(), new Decimal())
+                [new Decimal(), new Decimal()]
             ),
-        );
+        ];
     }
 
     /**
@@ -384,13 +384,13 @@ class FunctionDescription
      */
     public static function logicalOperationFunctions()
     {
-        return array(
+        return [
             new self(
                 'F',
                 new Boolean(),
-                array(new Boolean(), new Boolean())
+                [new Boolean(), new Boolean()]
             ),
-        );
+        ];
     }
 
     /**
@@ -402,28 +402,28 @@ class FunctionDescription
     {
         return array_merge(
             self::arithmeticOperationFunctions(),
-            array(
+            [
                 new self(
                     'F',
                     new Boolean(),
-                    array(new Boolean(), new Boolean())
+                    [new Boolean(), new Boolean()]
                 ),
                 new self(
                     'F',
                     new DateTime(),
-                    array(new DateTime(), new DateTime())
+                    [new DateTime(), new DateTime()]
                 ),
                 new self(
                     'F',
                     new Guid(),
-                    array(new Guid(), new Guid())
+                    [new Guid(), new Guid()]
                 ),
                 new self(
                     'F',
                     new Boolean(),
-                    array(new Binary(), new Binary())
+                    [new Binary(), new Binary()]
                 ),
-            )
+            ]
         );
     }
 
@@ -434,13 +434,13 @@ class FunctionDescription
      */
     public static function notOperationFunctions()
     {
-        return array(
+        return [
             new self(
                 'F',
                 new Boolean(),
-                array(new Boolean())
+                [new Boolean()]
             ),
-        );
+        ];
     }
 
     /**
@@ -452,7 +452,7 @@ class FunctionDescription
      */
     public static function isNullCheckFunction(IType $type)
     {
-        return new self('is_null', new Boolean(), array($type));
+        return new self('is_null', new Boolean(), [$type]);
     }
 
     /**
@@ -462,14 +462,14 @@ class FunctionDescription
      */
     public static function negateOperationFunctions()
     {
-        return array(
-            new self('F', new Int16(), array(new Int16())),
-            new self('F', new Int32(), array(new Int32())),
-            new self('F', new Int64(), array(new Int64())),
-            new self('F', new Single(), array(new Single())),
-            new self('F', new Double(), array(new Double())),
-            new self('F', new Decimal(), array(new Decimal())),
-        );
+        return [
+            new self('F', new Int16(), [new Int16()]),
+            new self('F', new Int32(), [new Int32()]),
+            new self('F', new Int64(), [new Int64()]),
+            new self('F', new Single(), [new Single()]),
+            new self('F', new Double(), [new Double()]),
+            new self('F', new Decimal(), [new Decimal()]),
+        ];
     }
 
     /**
@@ -484,7 +484,7 @@ class FunctionDescription
     {
         $string = null;
         foreach ($argExpressions as $argExpression) {
-            $string .= $argExpression->getType()->getFullTypeName() . ', ';
+            $string .= $argExpression->getType()->getFullTypeName().', ';
         }
 
         $string = rtrim($string, ', ');
@@ -519,12 +519,12 @@ class FunctionDescription
         $function
             = self::findFunctionWithPromotion(
                 self::arithmeticOperationFunctions(),
-                array($leftArgument, $rightArgument)
+                [$leftArgument, $rightArgument]
             );
         if ($function == null) {
             self::incompatibleError(
                 $expressionToken,
-                array($leftArgument, $rightArgument)
+                [$leftArgument, $rightArgument]
             );
         }
 
@@ -547,13 +547,13 @@ class FunctionDescription
     ) {
         $function = self::findFunctionWithPromotion(
             self::logicalOperationFunctions(),
-            array($leftArgument, $rightArgument),
+            [$leftArgument, $rightArgument],
             false
         );
         if ($function == null) {
             self::incompatibleError(
                 $expressionToken,
-                array($leftArgument, $rightArgument)
+                [$leftArgument, $rightArgument]
             );
         }
     }
@@ -630,13 +630,13 @@ class FunctionDescription
         );
         $function = self::findFunctionWithPromotion(
             $functions,
-            array($leftArgument, $rightArgument),
+            [$leftArgument, $rightArgument],
             false
         );
         if ($function == null) {
             self::incompatibleError(
                 $expressionToken,
-                array($leftArgument, $rightArgument)
+                [$leftArgument, $rightArgument]
             );
         }
     }
@@ -655,10 +655,10 @@ class FunctionDescription
         if (strcmp($expressionToken->Text, ODataConstants::KEYWORD_NOT) == 0) {
             $function = self::findFunctionWithPromotion(
                 self::notOperationFunctions(),
-                array($argExpression)
+                [$argExpression]
             );
             if ($function == null) {
-                self::incompatibleError($expressionToken, array($argExpression));
+                self::incompatibleError($expressionToken, [$argExpression]);
             }
 
             return;
@@ -666,8 +666,8 @@ class FunctionDescription
 
         //Unary minus (negation)
         if (strcmp($expressionToken->Text, '-') == 0) {
-            if (self::findFunctionWithPromotion(self::negateOperationFunctions(), array($argExpression)) == null) {
-                self::incompatibleError($expressionToken, array($argExpression));
+            if (self::findFunctionWithPromotion(self::negateOperationFunctions(), [$argExpression]) == null) {
+                self::incompatibleError($expressionToken, [$argExpression]);
             }
         }
     }
@@ -719,7 +719,7 @@ class FunctionDescription
         if ($function == null) {
             $protoTypes = null;
             foreach ($functions as $function) {
-                $protoTypes .= $function->getPrototypeAsString() . '; ';
+                $protoTypes .= $function->getPrototypeAsString().'; ';
             }
 
             throw ODataException::createSyntaxError(
@@ -751,7 +751,7 @@ class FunctionDescription
         $promoteArguments = true
     ) {
         $argCount = count($argExpressions);
-        $applicableFunctions = array();
+        $applicableFunctions = [];
         foreach ($functionDescriptions as $functionDescription) {
             if (count($functionDescription->argumentTypes) == $argCount) {
                 $applicableFunctions[] = $functionDescription;
@@ -759,7 +759,7 @@ class FunctionDescription
         }
 
         if (empty($applicableFunctions)) {
-            return null;
+            return;
         }
 
         //Check for exact match
@@ -779,10 +779,10 @@ class FunctionDescription
         }
 
         //Check match with promotion
-        $promotedTypes = array();
+        $promotedTypes = [];
         foreach ($applicableFunctions as $function) {
             $i = 0;
-            $promotedTypes = array();
+            $promotedTypes = [];
             foreach ($function->argumentTypes as $argumentType) {
                 if (!$argumentType->isCompatibleWith($argExpressions[$i]->getType())) {
                     break;
@@ -804,7 +804,5 @@ class FunctionDescription
                 return $function;
             }
         }
-
-        return null;
     }
 }

@@ -2,7 +2,6 @@
 
 namespace POData\Writers\Json;
 
-use POData\Writers\Json\IndentedTextWriter;
 use Carbon\Carbon;
 
 /**
@@ -23,12 +22,12 @@ class JsonWriter
     /**
      * scope of the json text - object, array, etc.
      */
-    private $_scopes = array();
+    private $_scopes = [];
 
     /**
      * Various scope types for Json writer.
      */
-    private $_scopeType = array('Array' => 0, 'Object' => 1);
+    private $_scopeType = ['Array' => 0, 'Object' => 1];
 
     /**
      * Creates a new instance of Json writer.
@@ -197,11 +196,11 @@ class JsonWriter
     private function _quoteJScriptString($string)
     {
         // Escape ( " \ / \n \r \t \b \f) characters with a backslash.
-        $search = array('\\', "\n", "\t", "\r", "\b", "\f", '"');
-        $replace = array('\\\\', '\\n', '\\t', '\\r', '\\b', '\\f', '\"');
+        $search = ['\\', "\n", "\t", "\r", "\b", "\f", '"'];
+        $replace = ['\\\\', '\\n', '\\t', '\\r', '\\b', '\\f', '\"'];
         $processedString = str_replace($search, $replace, $string);
         // Escape some ASCII characters(0x08, 0x0c)
-        $processedString = str_replace(array(chr(0x08), chr(0x0C)), array('\b', '\f'), $processedString);
+        $processedString = str_replace([chr(0x08), chr(0x0C)], ['\b', '\f'], $processedString);
 
         return $processedString;
     }

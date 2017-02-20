@@ -2,18 +2,18 @@
 
 namespace POData\ObjectModel;
 
-use POData\Common\ODataConstants;
-use POData\IService;
-use POData\Providers\Metadata\ResourceSetWrapper;
-use POData\Providers\Metadata\ResourceProperty;
-use POData\Providers\Metadata\ResourceTypeKind;
-use POData\Providers\Metadata\ResourceType;
-use POData\Providers\Metadata\Type\IType;
-use POData\UriProcessor\RequestDescription;
-use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandedProjectionNode;
 use POData\Common\InvalidOperationException;
-use POData\Common\ODataException;
 use POData\Common\Messages;
+use POData\Common\ODataConstants;
+use POData\Common\ODataException;
+use POData\IService;
+use POData\Providers\Metadata\ResourceProperty;
+use POData\Providers\Metadata\ResourceSetWrapper;
+use POData\Providers\Metadata\ResourceType;
+use POData\Providers\Metadata\ResourceTypeKind;
+use POData\Providers\Metadata\Type\IType;
+use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandedProjectionNode;
+use POData\UriProcessor\RequestDescription;
 use POData\UriProcessor\SegmentStack;
 
 /**
@@ -58,7 +58,7 @@ class ObjectModelSerializerBase
     protected $absoluteServiceUriWithSlash;
 
     /**
-     * Holds reference to segment stack being processed
+     * Holds reference to segment stack being processed.
      *
      * @var SegmentStack
      */
@@ -73,9 +73,9 @@ class ObjectModelSerializerBase
         $this->service = $service;
         $this->request = $request;
         $this->absoluteServiceUri = $service->getHost()->getAbsoluteServiceUri()->getUrlAsString();
-        $this->absoluteServiceUriWithSlash = rtrim($this->absoluteServiceUri, '/') . '/';
+        $this->absoluteServiceUriWithSlash = rtrim($this->absoluteServiceUri, '/').'/';
         $this->stack = new SegmentStack($request);
-        $this->complexTypeInstanceCollection = array();
+        $this->complexTypeInstanceCollection = [];
     }
 
     /**
@@ -85,14 +85,15 @@ class ObjectModelSerializerBase
      */
     public function getRequest()
     {
-        assert(null != $this->request, "Request not yet set");
+        assert(null != $this->request, 'Request not yet set');
+
         return $this->request;
     }
 
     /**
      * Sets reference to the request submitted by client.
-     * @param RequestDescription $request
      *
+     * @param RequestDescription $request
      */
     public function setRequest(RequestDescription $request)
     {
@@ -101,7 +102,7 @@ class ObjectModelSerializerBase
     }
 
     /**
-     * Gets the data service instance
+     * Gets the data service instance.
      *
      * @return IService
      */
@@ -111,7 +112,7 @@ class ObjectModelSerializerBase
     }
 
     /**
-     * Gets the segment stack instance
+     * Gets the segment stack instance.
      *
      * @return SegmentStack
      */
@@ -139,7 +140,7 @@ class ObjectModelSerializerBase
     {
         $keyProperties = $resourceType->getKeyProperties();
         assert(count($keyProperties) != 0, 'count($keyProperties) == 0');
-        $keyString = $containerName . '(';
+        $keyString = $containerName.'(';
         $comma = null;
         foreach ($keyProperties as $keyName => $resourceProperty) {
             $keyType = $resourceProperty->getInstanceType();
@@ -152,7 +153,7 @@ class ObjectModelSerializerBase
             }
 
             $keyValue = $keyType->convertToOData($keyValue);
-            $keyString .= $comma . $keyName . '=' . $keyValue;
+            $keyString .= $comma.$keyName.'='.$keyValue;
             $comma = ',';
         }
 
@@ -168,9 +169,9 @@ class ObjectModelSerializerBase
      * @param ResourceType     $resourceType     Resource type instance containing metadata about the instance
      * @param ResourceProperty $resourceProperty Resource property instance containing metadata about the property whose value to be retrieved
      *
-     * @return mixed The value of the given property
-     *
      * @throws ODataException If reflection exception occurred while trying to access the property
+     *
+     * @return mixed The value of the given property
      */
     protected function getPropertyValue($entity, ResourceType $resourceType, ResourceProperty $resourceProperty)
     {
@@ -195,6 +196,7 @@ class ObjectModelSerializerBase
     {
         $segmentWrappers = $this->getStack()->getSegmentWrappers();
         $count = count($segmentWrappers);
+
         return 0 == $count ? $this->getRequest()->getTargetResourceSetWrapper() : $segmentWrappers[$count - 1];
     }
 
@@ -207,6 +209,7 @@ class ObjectModelSerializerBase
     protected function isRootResourceSet()
     {
         $segmentWrappers = $this->getStack()->getSegmentWrappers();
+
         return empty($segmentWrappers) || 1 == count($segmentWrappers);
     }
 
@@ -230,9 +233,9 @@ class ObjectModelSerializerBase
             assert(!is_null($type) && $type instanceof IType, 'is_null($type) || $type not instanceof IType');
             $value = $this->getPropertyValue($entryObject, $resourceType, $eTagProperty);
             if (is_null($value)) {
-                $eTag = $eTag . $comma . 'null';
+                $eTag = $eTag.$comma.'null';
             } else {
-                $eTag = $eTag . $comma . $type->convertToOData($value);
+                $eTag = $eTag.$comma.$type->convertToOData($value);
             }
 
             $comma = ',';
@@ -244,10 +247,8 @@ class ObjectModelSerializerBase
             // want this for eTag value.
             $eTag = urldecode(utf8_decode($eTag));
 
-            return ODataConstants::HTTP_WEAK_ETAG_PREFIX . rtrim($eTag, ',') . '"';
+            return ODataConstants::HTTP_WEAK_ETAG_PREFIX.rtrim($eTag, ',').'"';
         }
-
-        return null;
     }
 
     /**
@@ -262,7 +263,7 @@ class ObjectModelSerializerBase
     {
         $segmentName = $this->getRequest()->getContainerName();
         $segmentResourceSetWrapper = $this->getRequest()->getTargetResourceSetWrapper();
-        assert(null != $segmentResourceSetWrapper, "Segment resource set wrapper must not be null");
+        assert(null != $segmentResourceSetWrapper, 'Segment resource set wrapper must not be null');
 
         return $this->_pushSegment($segmentName, $segmentResourceSetWrapper);
     }
@@ -276,12 +277,12 @@ class ObjectModelSerializerBase
      * @param ResourceProperty &$resourceProperty The current navigation property
      *                                            being written out
      *
-     * @return bool true if a segment was pushed, false otherwise
-     *
      * @throws InvalidOperationException If this function invoked with non-navigation
      *                                   property instance
+     *
+     * @return bool true if a segment was pushed, false otherwise
      */
-    protected function pushSegmentForNavigationProperty(ResourceProperty & $resourceProperty)
+    protected function pushSegmentForNavigationProperty(ResourceProperty &$resourceProperty)
     {
         if (ResourceTypeKind::ENTITY == $resourceProperty->getTypeKind()) {
             assert(!empty($this->getStack()->getSegmentNames()), 'Segment names should not be empty');
@@ -316,7 +317,7 @@ class ObjectModelSerializerBase
     {
         $expandedProjectionNode = $this->getCurrentExpandedProjectionNode();
         if (is_null($expandedProjectionNode) || $expandedProjectionNode->canSelectAllProperties()) {
-            return null;
+            return;
         }
 
         return $expandedProjectionNode->getChildNodes();
@@ -332,7 +333,7 @@ class ObjectModelSerializerBase
     {
         $expandedProjectionNode = $this->getRequest()->getRootProjectionNode();
         if (is_null($expandedProjectionNode)) {
-            return null;
+            return;
         } else {
             $segmentNames = $this->getStack()->getSegmentNames();
             $depth = count($segmentNames);
@@ -392,7 +393,7 @@ class ObjectModelSerializerBase
      *
      * @return bool true if the segment was push, false otherwise
      */
-    private function _pushSegment($segmentName, ResourceSetWrapper & $resourceSetWrapper)
+    private function _pushSegment($segmentName, ResourceSetWrapper &$resourceSetWrapper)
     {
         // Even though there is no expand in the request URI, still we need to push
         // the segment information if we need to count
@@ -428,10 +429,10 @@ class ObjectModelSerializerBase
             $queryParameterString = $this->getNextPageLinkQueryParametersForExpandedResourceSet();
         }
 
-        $queryParameterString .= '$skip=' . $skipToken;
+        $queryParameterString .= '$skip='.$skipToken;
         $odataLink = new ODataLink();
         $odataLink->name = ODataConstants::ATOM_LINK_NEXT_ATTRIBUTE_STRING;
-        $odataLink->url = rtrim($absoluteUri, '/') . '?' . $queryParameterString;
+        $odataLink->url = rtrim($absoluteUri, '/').'?'.$queryParameterString;
 
         return $odataLink;
     }
@@ -452,14 +453,14 @@ class ObjectModelSerializerBase
             ODataConstants::HTTPQUERY_STRING_EXPAND,
             ODataConstants::HTTPQUERY_STRING_ORDERBY,
             ODataConstants::HTTPQUERY_STRING_INLINECOUNT,
-            ODataConstants::HTTPQUERY_STRING_SELECT] as $queryOption) {
+            ODataConstants::HTTPQUERY_STRING_SELECT, ] as $queryOption) {
             $value = $this->getService()->getHost()->getQueryStringItem($queryOption);
             if (!is_null($value)) {
                 if (!is_null($queryParameterString)) {
-                    $queryParameterString = $queryParameterString . '&';
+                    $queryParameterString = $queryParameterString.'&';
                 }
 
-                $queryParameterString .= $queryOption . '=' . $value;
+                $queryParameterString .= $queryOption.'='.$value;
             }
         }
 
@@ -470,7 +471,7 @@ class ObjectModelSerializerBase
                 $queryParameterString .= '&';
             }
 
-            $queryParameterString .= ODataConstants::HTTPQUERY_STRING_TOP . '=' . $remainingCount;
+            $queryParameterString .= ODataConstants::HTTPQUERY_STRING_TOP.'='.$remainingCount;
         }
 
         if (!is_null($queryParameterString)) {
@@ -494,7 +495,7 @@ class ObjectModelSerializerBase
         $queryParameterString = null;
         $expandedProjectionNode = $this->getCurrentExpandedProjectionNode();
         if (!is_null($expandedProjectionNode)) {
-            $pathSegments = array();
+            $pathSegments = [];
             $selectionPaths = null;
             $expansionPaths = null;
             $foundSelections = false;
@@ -513,7 +514,7 @@ class ObjectModelSerializerBase
             }
 
             if (!is_null($selectionPaths)) {
-                $queryParameterString = '$select=' . $selectionPaths;
+                $queryParameterString = '$select='.$selectionPaths;
             }
 
             if (!is_null($expansionPaths)) {
@@ -521,7 +522,7 @@ class ObjectModelSerializerBase
                     $queryParameterString .= '&';
                 }
 
-                $queryParameterString = '$expand=' . $expansionPaths;
+                $queryParameterString = '$expand='.$expansionPaths;
             }
 
             if (!is_null($queryParameterString)) {
@@ -623,7 +624,7 @@ class ObjectModelSerializerBase
         &$parentPathSegments,
         &$selectionPaths,
         &$expansionPaths,
-        ExpandedProjectionNode & $expandedProjectionNode,
+        ExpandedProjectionNode &$expandedProjectionNode,
         &$foundSelections,
         &$foundExpansions
     ) {
@@ -631,7 +632,7 @@ class ObjectModelSerializerBase
         $foundExpansions = false;
         $foundSelectionOnChild = false;
         $foundExpansionOnChild = false;
-        $expandedChildrenNeededToBeSelected = array();
+        $expandedChildrenNeededToBeSelected = [];
         foreach ($expandedProjectionNode->getChildNodes() as $childNode) {
             if (!($childNode instanceof ExpandedProjectionNode)) {
                 $foundSelections = true;
@@ -657,7 +658,7 @@ class ObjectModelSerializerBase
                         $this->_appendSelectionOrExpandPath(
                             $selectionPaths,
                             $parentPathSegments,
-                            $childNode->getPropertyName() . '/*'
+                            $childNode->getPropertyName().'/*'
                         );
                     } else {
                         $expandedChildrenNeededToBeSelected[] = $childNode;
@@ -701,7 +702,7 @@ class ObjectModelSerializerBase
         }
 
         foreach ($parentPathSegments as $parentPathSegment) {
-            $path .= $parentPathSegment . '/';
+            $path .= $parentPathSegment.'/';
         }
 
         $path .= $segmentToAppend;

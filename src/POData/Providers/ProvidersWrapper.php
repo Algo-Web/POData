@@ -2,27 +2,26 @@
 
 namespace POData\Providers;
 
+use POData\Common\InvalidOperationException;
+use POData\Common\Messages;
+use POData\Common\ODataException;
 use POData\Configuration\IServiceConfiguration;
-use POData\Providers\Metadata\ResourceTypeKind;
-use POData\Providers\Metadata\ResourceSetWrapper;
-use POData\Providers\Metadata\ResourceType;
+use POData\Providers\Expression\IExpressionProvider;
+use POData\Providers\Metadata\EdmSchemaVersion;
+use POData\Providers\Metadata\IMetadataProvider;
+use POData\Providers\Metadata\ResourceAssociationSet;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceSet;
-use POData\Providers\Metadata\ResourceAssociationSet;
-use POData\Configuration\ServiceConfiguration;
-use POData\UriProcessor\QueryProcessor\SkipTokenParser\InternalSkipTokenInfo;
-use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
-use POData\Common\ODataException;
-use POData\Common\Messages;
-use POData\Providers\Metadata\EdmSchemaVersion;
+use POData\Providers\Metadata\ResourceSetWrapper;
+use POData\Providers\Metadata\ResourceType;
+use POData\Providers\Metadata\ResourceTypeKind;
 use POData\Providers\Query\IQueryProvider;
-use POData\Providers\Metadata\IMetadataProvider;
-use POData\Providers\Expression\IExpressionProvider;
-use POData\Common\InvalidOperationException;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
-use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
 use POData\Providers\Query\QueryResult;
 use POData\Providers\Query\QueryType;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
+use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
+use POData\UriProcessor\QueryProcessor\SkipTokenParser\InternalSkipTokenInfo;
+use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 
 /**
  * Class ProvidersWrapper.
@@ -88,8 +87,8 @@ class ProvidersWrapper
     /**
      * Creates a new instance of ProvidersWrapper.
      *
-     * @param IMetadataProvider $meta Reference to IMetadataProvider implementation
-     * @param IQueryProvider $query Reference to IQueryProvider implementation
+     * @param IMetadataProvider     $meta   Reference to IMetadataProvider implementation
+     * @param IQueryProvider        $query  Reference to IQueryProvider implementation
      * @param IServiceConfiguration $config Reference to IServiceConfiguration implementation
      */
     public function __construct(IMetadataProvider $meta, IQueryProvider $query, IServiceConfiguration $config)
@@ -97,10 +96,10 @@ class ProvidersWrapper
         $this->metaProvider = $meta;
         $this->config = $config;
         $this->providerWrapper = new ProvidersQueryWrapper($query);
-        $this->setWrapperCache = array();
-        $this->typeCache = array();
-        $this->associationSetCache = array();
-        $this->propertyCache = array();
+        $this->setWrapperCache = [];
+        $this->typeCache = [];
+        $this->associationSetCache = [];
+        $this->propertyCache = [];
     }
 
     //Wrappers for IMetadataProvider methods
@@ -110,9 +109,9 @@ class ProvidersWrapper
      * Note: Wrapper for IMetadataProvider::getContainerName method
      * implementation.
      *
-     * @return string that contains the name of the container
-     *
      * @throws ODataException Exception if implementation returns empty container name
+     *
+     * @return string that contains the name of the container
      */
     public function getContainerName()
     {
@@ -131,9 +130,9 @@ class ProvidersWrapper
      * To get Namespace name for the data source,
      * Note: Wrapper for IMetadataProvider::getContainerNamespace method implementation.
      *
-     * @return string that contains the namespace name
-     *
      * @throws ODataException Exception if implementation returns empty container namespace
+     *
+     * @return string that contains the namespace name
      */
     public function getContainerNamespace()
     {
@@ -164,15 +163,15 @@ class ProvidersWrapper
      *  This method returns array of ResourceSetWrapper instances but the corresponding IDSMP method
      *  returns array of ResourceSet instances.
      *
-     *  @return ResourceSetWrapper[] The ResourceSetWrappers for the visible ResourceSets
-     *
      *  @throws ODataException when two resource sets with the same name are encountered
+     *
+     *  @return ResourceSetWrapper[] The ResourceSetWrappers for the visible ResourceSets
      */
     public function getResourceSets()
     {
         $resourceSets = $this->metaProvider->getResourceSets();
-        $resourceSetWrappers = array();
-        $resourceSetNames = array();
+        $resourceSetWrappers = [];
+        $resourceSetNames = [];
         foreach ($resourceSets as $resourceSet) {
             $name = $resourceSet->getName();
             if (in_array($name, $resourceSetNames)) {
@@ -198,7 +197,7 @@ class ProvidersWrapper
     public function getTypes()
     {
         $resourceTypes = $this->metaProvider->getTypes();
-        $resourceTypeNames = array();
+        $resourceTypeNames = [];
         foreach ($resourceTypes as $resourceType) {
             if (in_array($resourceType->getName(), $resourceTypeNames)) {
                 throw new ODataException(
@@ -233,7 +232,7 @@ class ProvidersWrapper
 
         $resourceSet = $this->metaProvider->resolveResourceSet($name);
         if (is_null($resourceSet)) {
-            return null;
+            return;
         }
 
         return $this->_validateResourceSetAndGetWrapper($resourceSet);
@@ -246,15 +245,15 @@ class ProvidersWrapper
      *
      * @param string $name Name of the resource set
      *
-     * @return ResourceType|null resource type with the given resource set name if found else NULL
-     *
      * @throws ODataException If the ResourceType is invalid
+     *
+     * @return ResourceType|null resource type with the given resource set name if found else NULL
      */
     public function resolveResourceType($name)
     {
         $resourceType = $this->metaProvider->resolveResourceType($name);
         if (is_null($resourceType)) {
-            return null;
+            return;
         }
 
         return $this->validateResourceType($resourceType);
@@ -269,9 +268,9 @@ class ProvidersWrapper
      *
      * @param ResourceType $resourceType Resource to get derived resource types from
      *
-     * @return ResourceType[]
-     *
      * @throws InvalidOperationException when the meat provider doesn't return an array
+     *
+     * @return ResourceType[]
      */
     public function getDerivedTypes(ResourceType $resourceType)
     {
@@ -298,9 +297,9 @@ class ProvidersWrapper
      * @param ResourceType $resourceType Resource to check for derived resource
      *                                   types
      *
-     * @return bool
-     *
      * @throws ODataException If the ResourceType is invalid
+     *
+     * @return bool
      */
     public function hasDerivedTypes(ResourceType $resourceType)
     {
@@ -330,8 +329,8 @@ class ProvidersWrapper
     ) {
         $type = $this->getResourceTypeWherePropertyIsDeclared($type, $property);
         // usage below requires $type to not be null - so kaboom as early as possible
-        assert(null != $type, "Resource type obtained from property must not be null.");
-        $cacheKey = $set->getName() . '_' . $type->getName() . '_' . $property->getName();
+        assert(null != $type, 'Resource type obtained from property must not be null.');
+        $cacheKey = $set->getName().'_'.$type->getName().'_'.$property->getName();
 
         if (array_key_exists($cacheKey, $this->associationSetCache)) {
             return $this->associationSetCache[$cacheKey];
@@ -425,8 +424,6 @@ class ProvidersWrapper
                 $relatedAssociationSetEnd->getResourceSet()
             );
         }
-
-        return null;
     }
 
     /**
@@ -445,10 +442,10 @@ class ProvidersWrapper
             return $resourceType->getAllProperties();
         }
         //TODO: move this to doctrine annotations
-        $cacheKey = $setWrapper->getName() . '_' . $resourceType->getFullName();
+        $cacheKey = $setWrapper->getName().'_'.$resourceType->getFullName();
         if (!array_key_exists($cacheKey, $this->propertyCache)) {
             //Fill the cache
-            $this->propertyCache[$cacheKey] = array();
+            $this->propertyCache[$cacheKey] = [];
             foreach ($resourceType->getAllProperties() as $resourceProperty) {
                 //Check whether this is a visible navigation property
                 //TODO: is this broken?? see #87
@@ -529,9 +526,9 @@ class ProvidersWrapper
      *
      * @param ResourceType $resourceType The ResourceType to validate
      *
-     * @return ResourceType
-     *
      * @throws ODataException Exception if $resourceType is invalid
+     *
+     * @return ResourceType
      */
     private function validateResourceType(ResourceType $resourceType)
     {
@@ -679,9 +676,9 @@ class ProvidersWrapper
      * @param int              $top               number of records which  need to be skip
      * @param string           $skip              value indicating what records to skip
      *
-     * @return QueryResult
-     *
      * @throws ODataException
+     *
+     * @return QueryResult
      */
     public function getRelatedResourceSet(
         QueryType $queryType,
@@ -761,13 +758,13 @@ class ProvidersWrapper
     }
 
     /**
-     * Updates a resource
+     * Updates a resource.
      *
-     * @param ResourceSet      $sourceResourceSet    The entity set containing the source entity
-     * @param object           $sourceEntityInstance The source entity instance
-     * @param KeyDescriptor    $keyDescriptor        The key identifying the entity to fetch
-     * @param object           $data                 The New data for the entity instance.
-     * @param bool             $shouldUpdate        Should undefined values be updated or reset to default
+     * @param ResourceSet   $sourceResourceSet    The entity set containing the source entity
+     * @param object        $sourceEntityInstance The source entity instance
+     * @param KeyDescriptor $keyDescriptor        The key identifying the entity to fetch
+     * @param object        $data                 The New data for the entity instance.
+     * @param bool          $shouldUpdate         Should undefined values be updated or reset to default
      *
      * @return object|null The new resource value if it is assignable or throw exception for null.
      */
@@ -786,10 +783,12 @@ class ProvidersWrapper
             $shouldUpdate
         );
     }
+
     /**
      * Delete resource from a resource set.
+     *
      * @param ResourceSet $sourceResourceSet
-     * @param object           $sourceEntityInstance
+     * @param object      $sourceEntityInstance
      *
      * return bool true if resources sucessfully deteled, otherwise false.
      */
@@ -802,10 +801,11 @@ class ProvidersWrapper
             $sourceEntityInstance
         );
     }
+
     /**
-     * @param ResourceSet      $resourceSet   The entity set containing the entity to fetch
-     * @param object           $sourceEntityInstance The source entity instance
-     * @param object           $data                 The New data for the entity instance.
+     * @param ResourceSet $resourceSet          The entity set containing the entity to fetch
+     * @param object      $sourceEntityInstance The source entity instance
+     * @param object      $data                 The New data for the entity instance.
      *
      * returns object|null returns the newly created model if sucessful or null if model creation failed.
      */

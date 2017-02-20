@@ -1,4 +1,5 @@
 <?php
+
 namespace UnitTests\POData\UriProcessor;
 
 use POData\UriProcessor\XML2Array;
@@ -12,6 +13,7 @@ class XML2ArrayTest extends TestCase
             [new \stdClass()],
         ];
     }
+
     public function provideInvalidTypes()
     {
         return [
@@ -19,7 +21,7 @@ class XML2ArrayTest extends TestCase
             [true],
         ];
     }
-    
+
     public function provideEmptyTypes()
     {
         return [
@@ -36,7 +38,7 @@ class XML2ArrayTest extends TestCase
             ['<?xml version="1.0" encoding="UTF-8"?><root><head>'],
         ];
     }
-    
+
     /**
      * @param object $invalidObject
      *
@@ -49,6 +51,7 @@ class XML2ArrayTest extends TestCase
     {
         XML2Array::createArray($invalidObject);
     }
+
     /**
      * @param mixed $invalidType
      *
@@ -61,7 +64,7 @@ class XML2ArrayTest extends TestCase
     {
         XML2Array::createArray($invalidType);
     }
-    
+
     /**
      * @param mixed $invalidType
      *
@@ -71,6 +74,7 @@ class XML2ArrayTest extends TestCase
     {
         $this->assertEquals(0, count(XML2Array::createArray($emptyType)));
     }
+
     /**
      * @param string $invalidXML
      *

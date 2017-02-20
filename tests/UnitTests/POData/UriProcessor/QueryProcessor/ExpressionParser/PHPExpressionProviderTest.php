@@ -2,24 +2,21 @@
 
 namespace UnitTests\POData\UriProcessor\QueryProcessor\ExpressionParser;
 
+use Mockery as m;
+use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\Metadata\Type\DateTime;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionParser2;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionProcessor;
-use POData\Providers\Expression\PHPExpressionProvider;
-use POData\Providers\Metadata\IMetadataProvider;
-
-use Mockery as m;
-
-use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
+use UnitTests\POData\Facets\NorthWind1\Address2;
 //These are in the file loaded by above use statement
 //TODO: move to own class files
-use UnitTests\POData\Facets\NorthWind1\Address2;
 use UnitTests\POData\Facets\NorthWind1\Address4;
 use UnitTests\POData\Facets\NorthWind1\Customer2;
+use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 use UnitTests\POData\Facets\NorthWind1\Order2;
 use UnitTests\POData\TestCase;
 
-class PHPExpressionProviderParserTest extends TestCase
+class PHPExpressionProviderTest extends TestCase
 {
     /**
      * @var IMetadataProvider
@@ -482,7 +479,7 @@ class PHPExpressionProviderParserTest extends TestCase
             $data['Orders']
         );
         foreach ($result as $order) {
-            $this->assertContains($order->OrderDate, array(1999, 1995));
+            $this->assertContains($order->OrderDate, [1999, 1995]);
         }
 
         //Query for Orders with date greater than 2000-11-11
@@ -558,7 +555,7 @@ class PHPExpressionProviderParserTest extends TestCase
         $phpExpression = $expressionProcessor->processExpression($expressionTree);
         //create an anonymous function with the generated PHP expression in if condition
         $fun = create_function('$lt', 'if('.$phpExpression.') { return true; } else { return false;}');
-        $result = array();
+        $result = [];
         foreach ($entries as $lt) {
             //Filter out only the entries which satisfies the condition
             if ($fun($lt)) {
@@ -592,8 +589,8 @@ class PHPExpressionProviderParserTest extends TestCase
      */
     private function createTestData()
     {
-        $customers = array();
-        $orders = array();
+        $customers = [];
+        $orders = [];
 
         $customer = $this->createCustomer(
             'ALFKI',
@@ -645,7 +642,7 @@ class PHPExpressionProviderParserTest extends TestCase
         );
         $customers[] = $customer;
 
-        return array('Customers' => $customers, 'Orders' => $orders);
+        return ['Customers' => $customers, 'Orders' => $orders];
     }
 
     private function createAddress($houseNumber, $lineNumber, $lineNumber2, $streetName, $isValid, $isPrimary)
@@ -693,7 +690,7 @@ class PHPExpressionProviderParserTest extends TestCase
     private function setCustomerOrder($customer, $order)
     {
         if (is_null($customer->Orders)) {
-            $customer->Orders = array();
+            $customer->Orders = [];
         }
 
         $customer->Orders[] = $order;

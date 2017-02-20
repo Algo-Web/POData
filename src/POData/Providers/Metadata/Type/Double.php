@@ -85,7 +85,7 @@ class Double implements IType
      */
     public function convert($stringValue)
     {
-        return doubleval($stringValue);
+        return floatval($stringValue);
     }
 
     /**
@@ -99,7 +99,7 @@ class Double implements IType
      */
     public function convertToOData($value)
     {
-        return $value . 'D';
+        return $value.'D';
     }
 
     /**

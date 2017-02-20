@@ -2,9 +2,9 @@
 
 namespace POData\Providers\Metadata;
 
+use InvalidArgumentException;
 use POData\Common\Messages;
 use POData\Providers\Metadata\Type\IType;
-use InvalidArgumentException;
 
 class ResourceProperty
 {
@@ -170,9 +170,9 @@ class ResourceProperty
     }
 
     /**
-     * Checks whether supplied name meets OData specification
+     * Checks whether supplied name meets OData specification.
      *
-     * @param string $name  Field name to be validated
+     * @param string $name Field name to be validated
      *
      * @return bool
      */
@@ -184,6 +184,7 @@ class ResourceProperty
         if ('_' == substr($name, 0, 1)) {
             return false;
         }
+
         return true;
     }
 

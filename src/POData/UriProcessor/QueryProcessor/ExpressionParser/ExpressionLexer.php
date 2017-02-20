@@ -3,8 +3,8 @@
 namespace POData\UriProcessor\QueryProcessor\ExpressionParser;
 
 use POData\Common\Messages;
-use POData\Common\ODataException;
 use POData\Common\ODataConstants;
+use POData\Common\ODataException;
 use POData\Providers\Metadata\Type\Char;
 
 /**
@@ -345,7 +345,7 @@ class ExpressionLexer
         while ($this->_token->Id == ExpressionTokenId::DOT) {
             $this->nextToken();
             $this->validateToken(ExpressionTokenId::IDENTIFIER);
-            $identifier = $identifier . '.' . $this->_token->Text;
+            $identifier = $identifier.'.'.$this->_token->Text;
             $this->nextToken();
         }
 

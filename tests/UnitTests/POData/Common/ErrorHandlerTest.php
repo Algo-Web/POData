@@ -2,12 +2,12 @@
 
 namespace UnitTests\POData\Common;
 
+use Mockery as m;
 use POData\Common\ErrorHandler;
 use POData\Common\HttpStatus;
 use POData\Common\MimeTypes;
 use POData\Common\ODataConstants;
 use POData\Common\ODataException;
-use Mockery as m;
 use POData\IService;
 use POData\OperationContext\IOperationContext;
 use POData\OperationContext\ServiceHost;
@@ -18,11 +18,11 @@ class ErrorHandlerTest extends TestCase
 {
     public function testHandleODataException()
     {
-        $exception = new ODataException("FAIL", "FAIL", 500);
+        $exception = new ODataException('FAIL', 'FAIL', 500);
 
         $outgoing = m::mock(OutgoingResponse::class);
         $outgoing->shouldReceive('setServiceVersion')
-            ->withArgs([ODataConstants::DATASERVICEVERSION_1_DOT_0 . ';'])->andReturnNull()->once();
+            ->withArgs([ODataConstants::DATASERVICEVERSION_1_DOT_0.';'])->andReturnNull()->once();
         $outgoing->shouldReceive('setStatusCode')->withArgs(['500 Internal Server Error'])->andReturnNull()->once();
         $outgoing->shouldReceive('setContentType')->withArgs(['application/xml'])->andReturnNull()->once();
         $outgoing->shouldReceive('setStream')->passthru();
@@ -34,7 +34,6 @@ class ErrorHandlerTest extends TestCase
         $host = m::mock(ServiceHost::class)->makePartial();
         $host->shouldReceive('getRequestAccept')->andReturn([MimeTypes::MIME_APPLICATION_HTTP]);
         $host->shouldReceive('getOperationContext')->andReturn($context);
-
 
         $service = m::mock(IService::class);
         $service->shouldReceive('getHost')->andReturn($host);
@@ -53,11 +52,11 @@ class ErrorHandlerTest extends TestCase
 
     public function testHandleODataExceptionJson()
     {
-        $exception = new ODataException("FAIL", 500);
+        $exception = new ODataException('FAIL', 500);
 
         $outgoing = m::mock(OutgoingResponse::class);
         $outgoing->shouldReceive('setServiceVersion')
-            ->withArgs([ODataConstants::DATASERVICEVERSION_1_DOT_0 . ';'])->andReturnNull()->once();
+            ->withArgs([ODataConstants::DATASERVICEVERSION_1_DOT_0.';'])->andReturnNull()->once();
         $outgoing->shouldReceive('setStatusCode')->withArgs(['500 Internal Server Error'])->andReturnNull()->once();
         $outgoing->shouldReceive('setContentType')->withArgs(['application/json'])->andReturnNull()->once();
         $outgoing->shouldReceive('setStream')->passthru();
@@ -69,7 +68,6 @@ class ErrorHandlerTest extends TestCase
         $host = m::mock(ServiceHost::class)->makePartial();
         $host->shouldReceive('getRequestAccept')->andReturn(MimeTypes::MIME_APPLICATION_JSON);
         $host->shouldReceive('getOperationContext')->andReturn($context);
-
 
         $service = m::mock(IService::class);
         $service->shouldReceive('getHost')->andReturn($host);
@@ -89,11 +87,11 @@ class ErrorHandlerTest extends TestCase
 
     public function testHandleODataExceptionStatusCodeNotModified()
     {
-        $exception = new ODataException("FAIL", HttpStatus::CODE_NOT_MODIFIED);
+        $exception = new ODataException('FAIL', HttpStatus::CODE_NOT_MODIFIED);
 
         $outgoing = m::mock(OutgoingResponse::class);
         $outgoing->shouldReceive('setServiceVersion')
-            ->withArgs([ODataConstants::DATASERVICEVERSION_1_DOT_0 . ';'])->andReturnNull()->once();
+            ->withArgs([ODataConstants::DATASERVICEVERSION_1_DOT_0.';'])->andReturnNull()->once();
         $outgoing->shouldReceive('setStatusCode')->withArgs(['304 Not Modified'])->andReturnNull()->never();
         $outgoing->shouldReceive('setContentType')->withArgs(['application/json'])->andReturnNull()->never();
         $outgoing->shouldReceive('setStream')->passthru();
@@ -107,7 +105,6 @@ class ErrorHandlerTest extends TestCase
         $host->shouldReceive('getOperationContext')->andReturn($context);
         $host->shouldReceive('setResponseStatusCode')
             ->withArgs([HttpStatus::CODE_NOT_MODIFIED])->andReturnNull()->once();
-
 
         $service = m::mock(IService::class);
         $service->shouldReceive('getHost')->andReturn($host);

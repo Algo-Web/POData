@@ -1,4 +1,5 @@
 <?php
+
 namespace POData\Common\Messages;
 
 trait resourceProperty
@@ -14,6 +15,7 @@ trait resourceProperty
     {
         return "The argument '$argumentName' is not a valid ResourcePropertyKind enum value or valid combination of ResourcePropertyKind enum values";
     }
+
     /**
      * Format a message to show error when ResourcePropertyKind and ResourceType's ResourceTypeKind mismatches.
      *

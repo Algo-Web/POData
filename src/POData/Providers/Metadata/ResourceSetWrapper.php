@@ -3,9 +3,9 @@
 namespace POData\Providers\Metadata;
 
 use POData\Common\ODataException;
+use POData\Configuration\EntitySetRights;
 use POData\Configuration\IServiceConfiguration;
 use POData\Configuration\ServiceConfiguration;
-use POData\Configuration\EntitySetRights;
 use POData\Providers\ProvidersWrapper;
 
 /**
@@ -41,7 +41,7 @@ class ResourceSetWrapper extends ResourceSet
     /**
      * Constructs a new instance of ResourceSetWrapper.
      *
-     * @param ResourceSet $resourceSet The resource set to wrap
+     * @param ResourceSet           $resourceSet   The resource set to wrap
      * @param IServiceConfiguration $configuration Configuration to take settings specific to wrapped resource set
      */
     public function __construct(ResourceSet $resourceSet, IServiceConfiguration $configuration)
@@ -147,7 +147,7 @@ class ResourceSetWrapper extends ResourceSet
      */
     public function hasBagProperty(ProvidersWrapper $provider)
     {
-        $arrayToDetectLoop = array();
+        $arrayToDetectLoop = [];
         $hasBagProperty = $this->_resourceSet->getResourceType()->hasBagProperty($arrayToDetectLoop);
         unset($arrayToDetectLoop);
         // This will check only the resource type associated with
@@ -156,7 +156,7 @@ class ResourceSetWrapper extends ResourceSet
         if (!$hasBagProperty) {
             $derivedTypes = $provider->getDerivedTypes($this->_resourceSet->getResourceType());
             foreach ($derivedTypes as $derivedType) {
-                $arrayToDetectLoop = array();
+                $arrayToDetectLoop = [];
                 if ($derivedType->hasBagProperty($arrayToDetectLoop)) {
                     return true;
                 }

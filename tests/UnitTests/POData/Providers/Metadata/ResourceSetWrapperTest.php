@@ -2,12 +2,12 @@
 
 namespace UnitTests\POData\Providers\Metadata;
 
+use Mockery as m;
 use POData\Common\ODataException;
 use POData\Configuration\EntitySetRights;
 use POData\Configuration\ServiceConfiguration;
 use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\ResourceSetWrapper;
-use Mockery as m;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\ProvidersWrapper;
 use UnitTests\POData\TestCase;
@@ -26,7 +26,7 @@ class ResourceSetWrapperTest extends TestCase
         $config->shouldReceive('getEntitySetAccessRule')->andReturnNull();
 
         $derived = m::mock(ResourceType::class);
-        $derived->shouldReceive("hasNamedStream")->andReturn(true)->once();
+        $derived->shouldReceive('hasNamedStream')->andReturn(true)->once();
 
         $wrap = m::mock(ProvidersWrapper::class);
         $wrap->shouldReceive('getDerivedTypes')->withAnyArgs()->andReturn([$derived]);
@@ -58,7 +58,7 @@ class ResourceSetWrapperTest extends TestCase
         $config->shouldReceive('getEntitySetAccessRule')->andReturnNull();
 
         $derived = m::mock(ResourceType::class);
-        $derived->shouldReceive("hasBagProperty")->andReturn(true)->once();
+        $derived->shouldReceive('hasBagProperty')->andReturn(true)->once();
 
         $wrap = m::mock(ProvidersWrapper::class);
         $wrap->shouldReceive('getDerivedTypes')->withAnyArgs()->andReturn([$derived]);

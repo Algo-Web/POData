@@ -2,9 +2,9 @@
 
 namespace UnitTests\POData\UriProcessor\QueryProcessor\ExpressionParser;
 
-use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionTokenId;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionLexer;
 use POData\Common\ODataException;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionLexer;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionTokenId;
 use UnitTests\POData\TestCase;
 
 class ExpressionLexerTest extends TestCase

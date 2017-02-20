@@ -3,23 +3,23 @@
 namespace POData\Providers\Metadata;
 
 use InvalidArgumentException;
+use POData\Common\InvalidOperationException;
+use POData\Common\Messages;
 use POData\Providers\Metadata\Type\Binary;
 use POData\Providers\Metadata\Type\Boolean;
 use POData\Providers\Metadata\Type\Byte;
 use POData\Providers\Metadata\Type\DateTime;
 use POData\Providers\Metadata\Type\Decimal;
 use POData\Providers\Metadata\Type\Double;
+use POData\Providers\Metadata\Type\EdmPrimitiveType;
 use POData\Providers\Metadata\Type\Guid;
 use POData\Providers\Metadata\Type\Int16;
 use POData\Providers\Metadata\Type\Int32;
 use POData\Providers\Metadata\Type\Int64;
+use POData\Providers\Metadata\Type\IType;
 use POData\Providers\Metadata\Type\SByte;
 use POData\Providers\Metadata\Type\Single;
 use POData\Providers\Metadata\Type\StringType;
-use POData\Providers\Metadata\Type\EdmPrimitiveType;
-use POData\Providers\Metadata\Type\IType;
-use POData\Common\Messages;
-use POData\Common\InvalidOperationException;
 
 /**
  * Class ResourceType.
@@ -77,7 +77,7 @@ class ResourceType
      *
      * @var ResourceProperty[] indexed by name
      */
-    private $_propertiesDeclaredOnThisType = array();
+    private $_propertiesDeclaredOnThisType = [];
 
     /**
      * Collection of ResourceStreamInfo for all named streams declared on
@@ -86,7 +86,7 @@ class ResourceType
      *
      * @var ResourceStreamInfo[] indexed by name
      */
-    private $_namedStreamsDeclaredOnThisType = array();
+    private $_namedStreamsDeclaredOnThisType = [];
 
     /**
      * Collection of ReflectionProperty instances for each property declared
@@ -94,7 +94,7 @@ class ResourceType
      *
      * @var array(ResourceProperty, ReflectionProperty)
      */
-    private $_propertyInfosDeclaredOnThisType = array();
+    private $_propertyInfosDeclaredOnThisType = [];
 
     /**
      * Collection of ResourceProperty for all properties declared on this type.
@@ -102,7 +102,7 @@ class ResourceType
      *
      * @var ResourceProperty[] indexed by name
      */
-    private $_allProperties = array();
+    private $_allProperties = [];
 
     /**
      * Collection of ResourceStreamInfo for all named streams declared on this type.
@@ -110,21 +110,21 @@ class ResourceType
      *
      * @var ResourceStreamInfo[]
      */
-    private $_allNamedStreams = array();
+    private $_allNamedStreams = [];
 
     /**
      * Collection of properties which has etag defined subset of $_allProperties.
      *
      * @var ResourceProperty[]
      */
-    private $_etagProperties = array();
+    private $_etagProperties = [];
 
     /**
      * Collection of key properties subset of $_allProperties.
      *
      * @var ResourceProperty[]
      */
-    private $_keyProperties = array();
+    private $_keyProperties = [];
 
     /**
      * Whether the resource type described by this class instance is a MLE or not.
@@ -229,11 +229,11 @@ class ResourceType
         $this->_name = $name;
         $this->_baseType = $baseType;
         $this->_namespaceName = $namespaceName;
-        $this->_fullName = is_null($namespaceName) ? $name : $namespaceName . '.' . $name;
+        $this->_fullName = is_null($namespaceName) ? $name : $namespaceName.'.'.$name;
         $this->_abstractType = $isAbstract;
         $this->_isMediaLinkEntry = false;
         $this->_customState = null;
-        $this->_arrayToDetectLoopInComplexBag = array();
+        $this->_arrayToDetectLoopInComplexBag = [];
         //TODO: Set MLE if base type has MLE Set
     }
 
@@ -289,6 +289,7 @@ class ResourceType
         if (is_string($this->_type)) {
             $this->__wakeup();
         }
+
         return $this->_type;
     }
 
@@ -427,7 +428,7 @@ class ResourceType
         // so if addProperty is called after calling getAllProperties then the
         // property just added will not be reflected in $this->_allProperties
         unset($this->_allProperties);
-        $this->_allProperties = array();
+        $this->_allProperties = [];
     }
 
     /**
@@ -532,8 +533,6 @@ class ResourceType
         if (array_key_exists($propertyName, $this->_propertiesDeclaredOnThisType)) {
             return $this->_propertiesDeclaredOnThisType[$propertyName];
         }
-
-        return null;
     }
 
     /**
@@ -549,8 +548,6 @@ class ResourceType
         if (array_key_exists($propertyName, $this->getAllProperties())) {
             return $this->_allProperties[$propertyName];
         }
-
-        return null;
     }
 
     /**
@@ -587,7 +584,7 @@ class ResourceType
         // so if addNamedStream is called after calling getAllNamedStreams then the
         // property just added will not be reflected in $this->_allNamedStreams
         unset($this->_allNamedStreams);
-        $this->_allNamedStreams = array();
+        $this->_allNamedStreams = [];
     }
 
     /**
@@ -637,8 +634,6 @@ class ResourceType
         if (array_key_exists($namedStreamName, $this->_namedStreamsDeclaredOnThisType)) {
             return $this->_namedStreamsDeclaredOnThisType[$namedStreamName];
         }
-
-        return null;
     }
 
     /**
@@ -654,8 +649,6 @@ class ResourceType
         if (array_key_exists($namedStreamName, $this->getAllNamedStreams())) {
             return $this->_allNamedStreams[$namedStreamName];
         }
-
-        return null;
     }
 
     /**
@@ -808,9 +801,9 @@ class ResourceType
      *
      * @param EdmPrimitiveType $typeCode Typecode of primitive type
      *
-     * @return ResourceType
-     *
      * @throws InvalidArgumentException
+     *
+     * @return ResourceType
      */
     public static function getPrimitiveResourceType($typeCode)
     {
@@ -938,6 +931,7 @@ class ResourceType
         }
         $this->_type = $this->_type->getName();
         $result = array_keys(get_object_vars($this));
+
         return $result;
     }
 
@@ -949,7 +943,7 @@ class ResourceType
 
         assert(
             $this->_type instanceof \ReflectionClass || $this->_type instanceof IType,
-            "_type neither instance of reflection class nor IType"
+            '_type neither instance of reflection class nor IType'
         );
     }
 }

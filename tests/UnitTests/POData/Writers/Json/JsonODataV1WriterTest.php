@@ -2,22 +2,21 @@
 
 namespace UnitTests\POData\Writers\Json;
 
-use POData\ObjectModel\ODataURL;
-use POData\ObjectModel\ODataURLCollection;
-use POData\ObjectModel\ODataFeed;
+use Mockery as m;
+use POData\Common\MimeTypes;
+use POData\Common\Version;
+use POData\ObjectModel\ODataBagContent;
 use POData\ObjectModel\ODataEntry;
+use POData\ObjectModel\ODataFeed;
 use POData\ObjectModel\ODataLink;
 use POData\ObjectModel\ODataMediaLink;
-use POData\ObjectModel\ODataPropertyContent;
 use POData\ObjectModel\ODataProperty;
-use POData\ObjectModel\ODataBagContent;
-use POData\Writers\Json\JsonODataV1Writer;
+use POData\ObjectModel\ODataPropertyContent;
+use POData\ObjectModel\ODataURL;
+use POData\ObjectModel\ODataURLCollection;
 use POData\Providers\ProvidersWrapper;
-use POData\Common\Version;
-use POData\Common\MimeTypes;
+use POData\Writers\Json\JsonODataV1Writer;
 use UnitTests\POData\TestCase;
-
-use Mockery as m;
 
 class JsonODataV1WriterTest extends TestCase
 {
@@ -39,7 +38,7 @@ class JsonODataV1WriterTest extends TestCase
 
         $expected = '{ "d" : {"uri": "http://services.odata.org/OData/OData.svc/Suppliers(0)"} }';
         $expected = json_decode($expected);
-        $this->assertEquals(array($expected), array($actual), 'raw JSON is: '.$writer->getOutput());
+        $this->assertEquals([$expected], [$actual], 'raw JSON is: '.$writer->getOutput());
     }
 
     public function testWriteURLCollection()
@@ -51,10 +50,10 @@ class JsonODataV1WriterTest extends TestCase
         $oDataUrl2->url = 'http://services.odata.org/OData/OData.svc/Products(7)';
         $oDataUrl3 = new ODataURL();
         $oDataUrl3->url = 'http://services.odata.org/OData/OData.svc/Products(8)';
-        $oDataUrlCollection->urls = array($oDataUrl1,
+        $oDataUrlCollection->urls = [$oDataUrl1,
                                                $oDataUrl2,
                                                $oDataUrl3,
-                                              );
+                                              ];
         $oDataUrlCollection->count = 3;
         $writer = new JsonODataV1Writer();
         $result = $writer->write($oDataUrlCollection);
@@ -79,7 +78,7 @@ class JsonODataV1WriterTest extends TestCase
 
         $expected = json_decode($expected);
 
-        $this->assertEquals(array($expected), array($actual), 'raw JSON is: '.$writer->getOutput());
+        $this->assertEquals([$expected], [$actual], 'raw JSON is: '.$writer->getOutput());
     }
 
     public function testWriteFeed()
@@ -140,13 +139,13 @@ class JsonODataV1WriterTest extends TestCase
         $entry1Prop5->value = 2.5;
 
         $entry1PropContent = new ODataPropertyContent();
-        $entry1PropContent->properties = array(
+        $entry1PropContent->properties = [
             $entry1Prop1,
             $entry1Prop2,
             $entry1Prop3,
             $entry1Prop4,
             $entry1Prop5,
-        ); //entry 1 property content end
+        ]; //entry 1 property content end
 
         $entry1->propertyContent = $entry1PropContent;
 
@@ -160,11 +159,11 @@ class JsonODataV1WriterTest extends TestCase
         $link1->title = 'Categories';
         $link1->url = 'http://services.odata.org/OData/OData.svc/Products(0)/Categories';
 
-        $entry1->links = array($link1);
+        $entry1->links = [$link1];
         //entry 1 links end
 
         //entry 1 end
-        $oDataFeed->entries = array($entry1);
+        $oDataFeed->entries = [$entry1];
 
         $writer = new JsonODataV1Writer();
         $result = $writer->write($oDataFeed);
@@ -194,7 +193,7 @@ class JsonODataV1WriterTest extends TestCase
 					}';
         $expected = json_decode($expected);
 
-        $this->assertEquals(array($expected), array($actual), 'raw JSON is: '.$writer->getOutput());
+        $this->assertEquals([$expected], [$actual], 'raw JSON is: '.$writer->getOutput());
     }
 
     public function testWriteFeedWithEntriesWithComplexProperty()
@@ -267,11 +266,11 @@ class JsonODataV1WriterTest extends TestCase
         $compForEntry1Prop3Prop5->typeName = 'Edm.String';
         $compForEntry1Prop3Prop5->value = 'USA';
 
-        $compForEntry1Prop3->properties = array($compForEntry1Prop3Prop1,
+        $compForEntry1Prop3->properties = [$compForEntry1Prop3Prop1,
                                                    $compForEntry1Prop3Prop2,
                                                    $compForEntry1Prop3Prop3,
                                                    $compForEntry1Prop3Prop4,
-                                                   $compForEntry1Prop3Prop5, );
+                                                   $compForEntry1Prop3Prop5, ];
 
         $entry1Prop3 = new ODataProperty();
         $entry1Prop3->name = 'Address';
@@ -283,7 +282,7 @@ class JsonODataV1WriterTest extends TestCase
         $entry1Prop4->typeName = 'Edm.Int16';
         $entry1Prop4->value = (string) 0;
 
-        $entry1PropContent->properties = array($entry1Prop1, $entry1Prop2, $entry1Prop3, $entry1Prop4);
+        $entry1PropContent->properties = [$entry1Prop1, $entry1Prop2, $entry1Prop3, $entry1Prop4];
         //entry 1 property content end
 
         $entry1->propertyContent = $entry1PropContent;
@@ -298,7 +297,7 @@ class JsonODataV1WriterTest extends TestCase
         $link1->title = 'Products';
         $link1->url = 'http://services.odata.org/OData/OData.svc/Suppliers(0)/Products';
 
-        $entry1->links = array($link1);
+        $entry1->links = [$link1];
         //entry 1 links end
 
         //entry 1 end
@@ -351,11 +350,11 @@ class JsonODataV1WriterTest extends TestCase
         $compForEntry2Prop3Prop5->typeName = 'Edm.String';
         $compForEntry2Prop3Prop5->value = 'USA';
 
-        $compForEntry2Prop3->properties = array($compForEntry2Prop3Prop1,
+        $compForEntry2Prop3->properties = [$compForEntry2Prop3Prop1,
                                                    $compForEntry2Prop3Prop2,
                                                    $compForEntry2Prop3Prop3,
                                                    $compForEntry2Prop3Prop4,
-                                                   $compForEntry2Prop3Prop5, );
+                                                   $compForEntry2Prop3Prop5, ];
 
         $entry2Prop3 = new ODataProperty();
         $entry2Prop3->name = 'Address';
@@ -367,7 +366,7 @@ class JsonODataV1WriterTest extends TestCase
         $entry2Prop4->typeName = 'Edm.Int16';
         $entry2Prop4->value = (string) 0;
 
-        $entry2PropContent->properties = array($entry2Prop1, $entry2Prop2, $entry2Prop3, $entry2Prop4);
+        $entry2PropContent->properties = [$entry2Prop1, $entry2Prop2, $entry2Prop3, $entry2Prop4];
         //entry 2 property content end
 
         $entry2->propertyContent = $entry2PropContent;
@@ -382,12 +381,12 @@ class JsonODataV1WriterTest extends TestCase
         $link1->title = 'Products';
         $link1->url = 'http://services.odata.org/OData/OData.svc/Suppliers(1)/Products';
 
-        $entry2->links = array($link1);
+        $entry2->links = [$link1];
         //entry 2 links end
 
         //entry 2 end
 
-        $oDataFeed->entries = array($entry1, $entry2);
+        $oDataFeed->entries = [$entry1, $entry2];
 
         $writer = new JsonODataV1Writer();
         $result = $writer->write($oDataFeed);
@@ -449,7 +448,7 @@ class JsonODataV1WriterTest extends TestCase
 					}';
         $expected = json_decode($expected);
 
-        $this->assertEquals(array($expected), array($actual), 'raw JSON is: '.$writer->getOutput());
+        $this->assertEquals([$expected], [$actual], 'raw JSON is: '.$writer->getOutput());
     }
 
     public function testWriteEntry()
@@ -475,7 +474,7 @@ class JsonODataV1WriterTest extends TestCase
         $entryProp2->typeName = 'Edm.String';
         $entryProp2->value = 'Food';
 
-        $entryPropContent->properties = array($entryProp1, $entryProp2);
+        $entryPropContent->properties = [$entryProp1, $entryProp2];
 
         $entry->propertyContent = $entryPropContent;
 
@@ -485,7 +484,7 @@ class JsonODataV1WriterTest extends TestCase
         $link->title = 'Products';
         $link->url = 'http://services.odata.org/OData/OData.svc/Categories(0)/Products';
 
-        $entry->links = array($link);
+        $entry->links = [$link];
 
         $writer = new JsonODataV1Writer();
         $result = $writer->write($entry);
@@ -510,7 +509,7 @@ class JsonODataV1WriterTest extends TestCase
 					}';
         $expected = json_decode($expected);
 
-        $this->assertEquals(array($expected), array($actual), 'raw JSON is: '.$writer->getOutput());
+        $this->assertEquals([$expected], [$actual], 'raw JSON is: '.$writer->getOutput());
     }
 
     public function testWriteComplexProperty()
@@ -544,20 +543,20 @@ class JsonODataV1WriterTest extends TestCase
 
         //property
         $compProp = new ODataPropertyContent();
-        $compProp->properties = array(
+        $compProp->properties = [
             $compProp1,
             $compProp2,
             $compProp3,
             $compProp4,
             $compProp5,
-        );
+        ];
 
         $prop1 = new ODataProperty();
         $prop1->name = 'Address';
         $prop1->typeName = 'ODataDemo.Address';
         $prop1->value = $compProp;
 
-        $propContent->properties = array($prop1);
+        $propContent->properties = [$prop1];
 
         $writer = new JsonODataV1Writer();
         $result = $writer->write($propContent);
@@ -582,7 +581,7 @@ class JsonODataV1WriterTest extends TestCase
 					}';
         $expected = json_decode($expected);
 
-        $this->assertEquals(array($expected), array($actual), 'raw JSON is: '.$writer->getOutput());
+        $this->assertEquals([$expected], [$actual], 'raw JSON is: '.$writer->getOutput());
     }
 
     public function testEntryWithBagProperty()
@@ -614,9 +613,9 @@ class JsonODataV1WriterTest extends TestCase
         //bag property for property 3
         $bagEntryProp3 = new ODataBagContent();
 
-        $bagEntryProp3->propertyContents = array(
+        $bagEntryProp3->propertyContents = [
                                       'mike@foo.com',
-                                      'mike2@foo.com', );
+                                      'mike2@foo.com', ];
         $bagEntryProp3->type = 'Bag(Edm.String)'; //TODO: this might not be what really happens in the code..#61
 
         $entryProp3 = new ODataProperty();
@@ -641,8 +640,8 @@ class JsonODataV1WriterTest extends TestCase
         $bagEntryProp4ContentProp1ContentProp2->typeName = 'Edm.String';
         $bagEntryProp4ContentProp1ContentProp2->value = '508';
 
-        $bagEntryProp4ContentProp1Content->properties = array($bagEntryProp4ContentProp1ContentProp1,
-                                                                 $bagEntryProp4ContentProp1ContentProp2, );
+        $bagEntryProp4ContentProp1Content->properties = [$bagEntryProp4ContentProp1ContentProp1,
+                                                                 $bagEntryProp4ContentProp1ContentProp2, ];
 
         //end property content for bagEntryProp4ContentProp1
 
@@ -659,14 +658,14 @@ class JsonODataV1WriterTest extends TestCase
         $bagEntryProp4ContentProp1Content2Prop2->typeName = 'Edm.String';
         $bagEntryProp4ContentProp1Content2Prop2->value = '102';
 
-        $bagEntryProp4ContentProp1Content2->properties = array($bagEntryProp4ContentProp1Content2Prop1,
-                                                                 $bagEntryProp4ContentProp1Content2Prop2, );
+        $bagEntryProp4ContentProp1Content2->properties = [$bagEntryProp4ContentProp1Content2Prop1,
+                                                                 $bagEntryProp4ContentProp1Content2Prop2, ];
 
         //end property content for bagEntryProp4ContentProp1
 
-        $bagEntryProp4->propertyContents = array($bagEntryProp4ContentProp1Content,
+        $bagEntryProp4->propertyContents = [$bagEntryProp4ContentProp1Content,
                                                  $bagEntryProp4ContentProp1Content2,
-                                                );
+                                                ];
         $bagEntryProp4->type = 'Bag(SampleModel.Address)'; //TODO: this might not be what really happens in the code..#61
 
         $entryProp4 = new ODataProperty();
@@ -675,7 +674,7 @@ class JsonODataV1WriterTest extends TestCase
         $entryProp4->value = $bagEntryProp4;
         //property 4 ends
 
-        $entryPropContent->properties = array($entryProp1, $entryProp2, $entryProp3, $entryProp4);
+        $entryPropContent->properties = [$entryProp1, $entryProp2, $entryProp3, $entryProp4];
 
         $entry->propertyContent = $entryPropContent;
 
@@ -721,7 +720,7 @@ class JsonODataV1WriterTest extends TestCase
 					}';
         $expected = json_decode($expected);
 
-        $this->assertEquals(array($expected), array($actual), 'raw JSON is: '.$writer->getOutput());
+        $this->assertEquals([$expected], [$actual], 'raw JSON is: '.$writer->getOutput());
     }
 
     public function testPrimitiveProperty()
@@ -732,7 +731,7 @@ class JsonODataV1WriterTest extends TestCase
         $property->value = 56;
 
         $content = new ODataPropertyContent();
-        $content->properties = array($property);
+        $content->properties = [$property];
 
         $writer = new JsonODataV1Writer();
         $result = $writer->write($content);
@@ -748,7 +747,7 @@ class JsonODataV1WriterTest extends TestCase
 					}';
         $expected = json_decode($expected);
 
-        $this->assertEquals(array($expected), array($actual), 'raw JSON is: '.$writer->getOutput());
+        $this->assertEquals([$expected], [$actual], 'raw JSON is: '.$writer->getOutput());
     }
 
     public function testWriteEntryWithExpandedEntry()
@@ -761,7 +760,7 @@ class JsonODataV1WriterTest extends TestCase
         $expandedEntry->editLink = 'Edit Link URL';
         $expandedEntry->selfLink = 'Self Link URL';
 
-        $expandedEntry->mediaLinks = array(
+        $expandedEntry->mediaLinks = [
             new ODataMediaLink(
                 'Media Link Name',
                 'Edit Media link',
@@ -776,9 +775,9 @@ class JsonODataV1WriterTest extends TestCase
                 'Media Content Type2',
                 'Media ETag2'
             ),
-        );
+        ];
 
-        $expandedEntry->links = array();
+        $expandedEntry->links = [];
         $expandedEntry->eTag = 'Entry ETag';
         $expandedEntry->isMediaLinkEntry = false;
 
@@ -793,7 +792,7 @@ class JsonODataV1WriterTest extends TestCase
         $pr2->value = 'Kothari';
 
         $propCon1 = new ODataPropertyContent();
-        $propCon1->properties = array($pr1, $pr2);
+        $propCon1->properties = [$pr1, $pr2];
 
         $expandedEntryComplexProperty = new ODataProperty();
         $expandedEntryComplexProperty->name = 'Expanded Entry Complex Property';
@@ -811,11 +810,11 @@ class JsonODataV1WriterTest extends TestCase
         $expandedEntryProperty2->value = 'Gujarat';
 
         $expandedEntry->propertyContent = new ODataPropertyContent();
-        $expandedEntry->propertyContent->properties = array(
+        $expandedEntry->propertyContent->properties = [
             $expandedEntryComplexProperty,
             $expandedEntryProperty1,
             $expandedEntryProperty2,
-        );
+        ];
         //End the expanded entry
 
         //build up the main entry
@@ -826,7 +825,7 @@ class JsonODataV1WriterTest extends TestCase
         $entry->type = 'Main.Type';
         $entry->editLink = 'Edit Link URL';
         $entry->selfLink = 'Self Link URL';
-        $entry->mediaLinks = array(
+        $entry->mediaLinks = [
             new ODataMediaLink(
                 'Media Link Name',
                 'Edit Media link',
@@ -841,7 +840,7 @@ class JsonODataV1WriterTest extends TestCase
                 'Media Content Type2',
                 'Media ETag2'
             ),
-        );
+        ];
 
         $entry->eTag = 'Entry ETag';
         $entry->isMediaLinkEntry = false;
@@ -857,7 +856,7 @@ class JsonODataV1WriterTest extends TestCase
         $entryProperty2->value = 'Kothari';
 
         $entry->propertyContent = new ODataPropertyContent();
-        $entry->propertyContent->properties = array($entryProperty1, $entryProperty2);
+        $entry->propertyContent->properties = [$entryProperty1, $entryProperty2];
         //End of main entry
 
         //Now link the expanded entry to the main entry
@@ -867,7 +866,7 @@ class JsonODataV1WriterTest extends TestCase
         $expandLink->title = 'Expanded Property';
         $expandLink->url = 'ExpandedURL';
         $expandLink->expandedResult = $expandedEntry;
-        $entry->links = array($expandLink);
+        $entry->links = [$expandLink];
 
         $writer = new JsonODataV1Writer();
         $result = $writer->write($entry);
@@ -905,7 +904,7 @@ class JsonODataV1WriterTest extends TestCase
 }';
         $expected = json_decode($expected);
 
-        $this->assertEquals(array($expected), array($actual), 'raw JSON is: '.$writer->getOutput());
+        $this->assertEquals([$expected], [$actual], 'raw JSON is: '.$writer->getOutput());
     }
 
     public function testWriteEntryWithExpandedEntryThatIsNull()
@@ -919,7 +918,7 @@ class JsonODataV1WriterTest extends TestCase
         $entry->type = 'Main.Type';
         $entry->editLink = 'Edit Link URL';
         $entry->selfLink = 'Self Link URL';
-        $entry->mediaLinks = array(
+        $entry->mediaLinks = [
             new ODataMediaLink(
                 'Media Link Name',
                 'Edit Media link',
@@ -934,7 +933,7 @@ class JsonODataV1WriterTest extends TestCase
                 'Media Content Type2',
                 'Media ETag2'
             ),
-        );
+        ];
 
         $entry->eTag = 'Entry ETag';
         $entry->isMediaLinkEntry = false;
@@ -950,7 +949,7 @@ class JsonODataV1WriterTest extends TestCase
         $entryProperty2->value = 'Kothari';
 
         $entry->propertyContent = new ODataPropertyContent();
-        $entry->propertyContent->properties = array($entryProperty1, $entryProperty2);
+        $entry->propertyContent->properties = [$entryProperty1, $entryProperty2];
         //End of main entry
 
         //Now link the expanded entry to the main entry
@@ -960,7 +959,7 @@ class JsonODataV1WriterTest extends TestCase
         $expandLink->title = 'Expanded Property';
         $expandLink->url = 'ExpandedURL';
         $expandLink->expandedResult = null; //<--key part
-        $entry->links = array($expandLink);
+        $entry->links = [$expandLink];
 
         $writer = new JsonODataV1Writer();
         $result = $writer->write($entry);
@@ -983,7 +982,7 @@ class JsonODataV1WriterTest extends TestCase
 }';
         $expected = json_decode($expected);
 
-        $this->assertEquals(array($expected), array($actual), 'raw JSON is: '.$writer->getOutput());
+        $this->assertEquals([$expected], [$actual], 'raw JSON is: '.$writer->getOutput());
     }
 
     public function testWriteEntryWithExpandedFeed()
@@ -996,7 +995,7 @@ class JsonODataV1WriterTest extends TestCase
         $expandedEntry1->editLink = 'Edit Link URL';
         $expandedEntry1->selfLink = 'Self Link URL';
 
-        $expandedEntry1->mediaLinks = array(
+        $expandedEntry1->mediaLinks = [
             new ODataMediaLink(
                 'Media Link Name',
                 'Edit Media link',
@@ -1011,9 +1010,9 @@ class JsonODataV1WriterTest extends TestCase
                 'Media Content Type2',
                 'Media ETag2'
             ),
-        );
+        ];
 
-        $expandedEntry1->links = array();
+        $expandedEntry1->links = [];
         $expandedEntry1->eTag = 'Entry ETag';
         $expandedEntry1->isMediaLinkEntry = false;
 
@@ -1031,7 +1030,7 @@ class JsonODataV1WriterTest extends TestCase
         $expandedEntry1ComplexProperty->name = 'Expanded Entry Complex Property';
         $expandedEntry1ComplexProperty->typeName = 'Full Name';
         $expandedEntry1ComplexProperty->value = new ODataPropertyContent();
-        $expandedEntry1ComplexProperty->value->properties = array($pr1, $pr2);
+        $expandedEntry1ComplexProperty->value->properties = [$pr1, $pr2];
 
         $expandedEntry1Property1 = new ODataProperty();
         $expandedEntry1Property1->name = 'Expanded Entry City Property';
@@ -1044,11 +1043,11 @@ class JsonODataV1WriterTest extends TestCase
         $expandedEntry1Property2->value = 'Entry 1 State Value';
 
         $expandedEntry1->propertyContent = new ODataPropertyContent();
-        $expandedEntry1->propertyContent->properties = array(
+        $expandedEntry1->propertyContent->properties = [
             $expandedEntry1ComplexProperty,
             $expandedEntry1Property1,
             $expandedEntry1Property2,
-        );
+        ];
         //End the expanded entry 1
 
         //First build up the expanded entry 2
@@ -1059,7 +1058,7 @@ class JsonODataV1WriterTest extends TestCase
         $expandedEntry2->editLink = 'Edit Link URL';
         $expandedEntry2->selfLink = 'Self Link URL';
 
-        $expandedEntry2->mediaLinks = array(
+        $expandedEntry2->mediaLinks = [
             new ODataMediaLink(
                 'Media Link Name',
                 'Edit Media link',
@@ -1074,9 +1073,9 @@ class JsonODataV1WriterTest extends TestCase
                 'Media Content Type2',
                 'Media ETag2'
             ),
-        );
+        ];
 
-        $expandedEntry2->links = array();
+        $expandedEntry2->links = [];
         $expandedEntry2->eTag = 'Entry ETag';
         $expandedEntry2->isMediaLinkEntry = false;
 
@@ -1094,7 +1093,7 @@ class JsonODataV1WriterTest extends TestCase
         $expandedEntry2ComplexProperty->name = 'Expanded Entry Complex Property';
         $expandedEntry2ComplexProperty->typeName = 'Full Name';
         $expandedEntry2ComplexProperty->value = new ODataPropertyContent();
-        $expandedEntry2ComplexProperty->value->properties = array($pr1, $pr2);
+        $expandedEntry2ComplexProperty->value->properties = [$pr1, $pr2];
 
         $expandedEntry2Property1 = new ODataProperty();
         $expandedEntry2Property1->name = 'Expanded Entry City Property';
@@ -1107,11 +1106,11 @@ class JsonODataV1WriterTest extends TestCase
         $expandedEntry2Property2->value = 'Entry 2 State Value';
 
         $expandedEntry2->propertyContent = new ODataPropertyContent();
-        $expandedEntry2->propertyContent->properties = array(
+        $expandedEntry2->propertyContent->properties = [
             $expandedEntry2ComplexProperty,
             $expandedEntry2Property1,
             $expandedEntry2Property2,
-        );
+        ];
         //End the expanded entry 2
 
         //build up the main entry
@@ -1122,7 +1121,7 @@ class JsonODataV1WriterTest extends TestCase
         $entry->type = 'Main.Type';
         $entry->editLink = 'Edit Link URL';
         $entry->selfLink = 'Self Link URL';
-        $entry->mediaLinks = array(
+        $entry->mediaLinks = [
             new ODataMediaLink(
                 'Media Link Name',
                 'Edit Media link',
@@ -1137,7 +1136,7 @@ class JsonODataV1WriterTest extends TestCase
                 'Media Content Type2',
                 'Media ETag2'
             ),
-        );
+        ];
 
         $entry->eTag = 'Entry ETag';
         $entry->isMediaLinkEntry = false;
@@ -1153,14 +1152,14 @@ class JsonODataV1WriterTest extends TestCase
         $entryProperty2->value = 'Kothari';
 
         $entry->propertyContent = new ODataPropertyContent();
-        $entry->propertyContent->properties = array($entryProperty1, $entryProperty2);
+        $entry->propertyContent->properties = [$entryProperty1, $entryProperty2];
         //End of main entry
 
         //Create a the expanded feed
         $expandedFeed = new ODataFeed();
         $expandedFeed->id = 'expanded feed id';
         $expandedFeed->title = 'SubCollection';
-        $expandedFeed->entries = array($expandedEntry1, $expandedEntry2);
+        $expandedFeed->entries = [$expandedEntry1, $expandedEntry2];
 
         $expandedFeedSelfLink = new ODataLink();
         $expandedFeedSelfLink->name = 'self';
@@ -1176,7 +1175,7 @@ class JsonODataV1WriterTest extends TestCase
         $expandLink->title = 'SubCollection';
         $expandLink->url = 'SubCollectionURL';
         $expandLink->expandedResult = $expandedFeed;
-        $entry->links = array($expandLink);
+        $entry->links = [$expandLink];
 
         $writer = new JsonODataV1Writer();
         $result = $writer->write($entry);
@@ -1232,7 +1231,7 @@ class JsonODataV1WriterTest extends TestCase
 }';
         $expected = json_decode($expected);
 
-        $this->assertEquals(array($expected), array($actual), 'raw JSON is: '.$writer->getOutput());
+        $this->assertEquals([$expected], [$actual], 'raw JSON is: '.$writer->getOutput());
     }
 
     /**
@@ -1261,10 +1260,10 @@ class JsonODataV1WriterTest extends TestCase
         //TODO: this certainly doesn't seem right...see #73
         $fakeResourceSet2->shouldReceive('getName')->andReturn("XML escaped stuff \" ' <> & ?");
 
-        $fakeResourceSets = array(
+        $fakeResourceSets = [
             $fakeResourceSet1,
             $fakeResourceSet2,
-        );
+        ];
 
         $this->mockProvider->shouldReceive('getResourceSets')->andReturn($fakeResourceSets);
 
@@ -1290,32 +1289,32 @@ class JsonODataV1WriterTest extends TestCase
 
     public function canHandleProvider()
     {
-        return array(
-            array(100, Version::v1(), MimeTypes::MIME_APPLICATION_ATOMSERVICE, false),
-            array(101, Version::v2(), MimeTypes::MIME_APPLICATION_ATOMSERVICE, false),
-            array(102, Version::v3(), MimeTypes::MIME_APPLICATION_ATOMSERVICE, false),
+        return [
+            [100, Version::v1(), MimeTypes::MIME_APPLICATION_ATOMSERVICE, false],
+            [101, Version::v2(), MimeTypes::MIME_APPLICATION_ATOMSERVICE, false],
+            [102, Version::v3(), MimeTypes::MIME_APPLICATION_ATOMSERVICE, false],
 
-            array(200, Version::v1(), MimeTypes::MIME_APPLICATION_JSON, true),
-            array(201, Version::v2(), MimeTypes::MIME_APPLICATION_JSON, false),
-            array(202, Version::v3(), MimeTypes::MIME_APPLICATION_JSON, false),
+            [200, Version::v1(), MimeTypes::MIME_APPLICATION_JSON, true],
+            [201, Version::v2(), MimeTypes::MIME_APPLICATION_JSON, false],
+            [202, Version::v3(), MimeTypes::MIME_APPLICATION_JSON, false],
 
             //TODO: is this first one right?  this should NEVER come up, but should we claim to handle this format when
             //it's invalid for V1? Ditto first of the next sections
-            array(300, Version::v1(), MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META, true),
-            array(301, Version::v2(), MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META, false),
-            array(302, Version::v3(), MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META, false),
+            [300, Version::v1(), MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META, true],
+            [301, Version::v2(), MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META, false],
+            [302, Version::v3(), MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META, false],
 
-            array(400, Version::v1(), MimeTypes::MIME_APPLICATION_JSON_NO_META, true),
-            array(401, Version::v2(), MimeTypes::MIME_APPLICATION_JSON_NO_META, false),
-            array(402, Version::v3(), MimeTypes::MIME_APPLICATION_JSON_NO_META, false),
+            [400, Version::v1(), MimeTypes::MIME_APPLICATION_JSON_NO_META, true],
+            [401, Version::v2(), MimeTypes::MIME_APPLICATION_JSON_NO_META, false],
+            [402, Version::v3(), MimeTypes::MIME_APPLICATION_JSON_NO_META, false],
 
-            array(500, Version::v1(), MimeTypes::MIME_APPLICATION_JSON_FULL_META, true),
-            array(501, Version::v2(), MimeTypes::MIME_APPLICATION_JSON_FULL_META, false),
-            array(502, Version::v3(), MimeTypes::MIME_APPLICATION_JSON_FULL_META, false),
+            [500, Version::v1(), MimeTypes::MIME_APPLICATION_JSON_FULL_META, true],
+            [501, Version::v2(), MimeTypes::MIME_APPLICATION_JSON_FULL_META, false],
+            [502, Version::v3(), MimeTypes::MIME_APPLICATION_JSON_FULL_META, false],
 
-            array(600, Version::v1(), MimeTypes::MIME_APPLICATION_JSON_VERBOSE, true), //this one seems especially wrong
-            array(601, Version::v2(), MimeTypes::MIME_APPLICATION_JSON_VERBOSE, false),
-            array(602, Version::v3(), MimeTypes::MIME_APPLICATION_JSON_VERBOSE, false),
-        );
+            [600, Version::v1(), MimeTypes::MIME_APPLICATION_JSON_VERBOSE, true], //this one seems especially wrong
+            [601, Version::v2(), MimeTypes::MIME_APPLICATION_JSON_VERBOSE, false],
+            [602, Version::v3(), MimeTypes::MIME_APPLICATION_JSON_VERBOSE, false],
+        ];
     }
 }

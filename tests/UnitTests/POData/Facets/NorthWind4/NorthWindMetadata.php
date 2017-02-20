@@ -2,11 +2,11 @@
 
 namespace UnitTests\POData\Facets\NorthWind4;
 
-use POData\Providers\Metadata\ResourceStreamInfo;
-use POData\Providers\Metadata\Type\EdmPrimitiveType;
 use POData\Common\InvalidOperationException;
-use POData\Providers\Metadata\SimpleMetadataProvider;
 use POData\Providers\Metadata\IMetadataProvider;
+use POData\Providers\Metadata\ResourceStreamInfo;
+use POData\Providers\Metadata\SimpleMetadataProvider;
+use POData\Providers\Metadata\Type\EdmPrimitiveType;
 
 //Begin Resource Classes
 

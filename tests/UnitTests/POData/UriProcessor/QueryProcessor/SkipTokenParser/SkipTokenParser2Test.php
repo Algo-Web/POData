@@ -2,15 +2,15 @@
 
 namespace UnitTests\POData\UriProcessor\QueryProcessor\SkipTokenParser;
 
-use POData\Configuration\EntitySetRights;
-use POData\Providers\ProvidersWrapper;
-use POData\Configuration\ServiceConfiguration;
+use Mockery as m;
 use POData\Common\ODataException;
+use POData\Configuration\EntitySetRights;
+use POData\Configuration\ServiceConfiguration;
+use POData\Providers\ProvidersWrapper;
+use POData\Providers\Query\IQueryProvider;
 use POData\UriProcessor\QueryProcessor\OrderByParser\OrderByParser;
 use POData\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenParser;
-use POData\Providers\Query\IQueryProvider;
 use UnitTests\POData\Facets\NorthWind2\NorthWindMetadata;
-use Mockery as m;
 use UnitTests\POData\TestCase;
 
 class SkipTokenParser2Test extends TestCase

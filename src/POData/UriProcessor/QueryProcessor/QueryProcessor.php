@@ -2,20 +2,20 @@
 
 namespace POData\UriProcessor\QueryProcessor;
 
-use POData\Providers\Metadata\Type\Int32;
+use POData\Common\Messages;
+use POData\Common\ODataConstants;
+use POData\Common\ODataException;
+use POData\IService;
 use POData\Providers\Metadata\ResourceTypeKind;
+use POData\Providers\Metadata\Type\Int32;
+use POData\Providers\Query\QueryType;
+use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandProjectionParser;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionParser2;
+use POData\UriProcessor\QueryProcessor\OrderByParser\OrderByParser;
+use POData\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenParser;
 use POData\UriProcessor\RequestDescription;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetSource;
-use POData\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenParser;
-use POData\UriProcessor\QueryProcessor\OrderByParser\OrderByParser;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionParser2;
-use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandProjectionParser;
-use POData\Common\Messages;
-use POData\Common\ODataException;
-use POData\Common\ODataConstants;
-use POData\IService;
-use POData\Providers\Query\QueryType;
 
 /**
  * Class QueryProcessor.
@@ -208,11 +208,11 @@ class QueryProcessor
          *
          */
         if (!is_null($this->request->getSkipCount()) || !is_null($this->request->getTopCount())) {
-            $orderBy = !is_null($orderBy) ? $orderBy . ', ' : null;
+            $orderBy = !is_null($orderBy) ? $orderBy.', ' : null;
             $keys = array_keys($targetResourceType->getKeyProperties());
             //assert(!empty($keys))
             foreach ($keys as $key) {
-                $orderBy = $orderBy . $key . ', ';
+                $orderBy = $orderBy.$key.', ';
             }
 
             $orderBy = rtrim($orderBy, ', ');
@@ -453,12 +453,12 @@ class QueryProcessor
      *                          argument will holds that integer value
      *                          otherwise holds zero
      *
+     * @throws ODataException Throws syntax error if the requested argument
+     *                        is present and it is not an integer
+     *
      * @return bool True     If the requested query item with valid integer
      *              value is present in the request, false query
      *              item is absent in the request uri
-     *
-     * @throws ODataException Throws syntax error if the requested argument
-     *                        is present and it is not an integer
      */
     private function _readSkipOrTopOption($queryItem, &$value)
     {

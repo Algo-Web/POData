@@ -5,21 +5,21 @@ namespace POData\Providers\Metadata;
 use POData\Common\InvalidOperationException;
 use POData\Providers\Metadata\Type\IType;
 use POData\Providers\Metadata\Type\TypeCode;
-use ReflectionClass;
 
 /**
  * Class SimpleMetadataProvider.
  */
 class SimpleMetadataProvider implements IMetadataProvider
 {
-    protected $resourceSets = array();
-    protected $resourceTypes = array();
-    protected $associationSets = array();
+    protected $resourceSets = [];
+    protected $resourceTypes = [];
+    protected $associationSets = [];
     protected $containerName;
     protected $namespaceName;
     public $mappedDetails = null;
 
     //Begin Implementation of IMetadataProvider
+
     /**
      * get the Container name for the data source.
      *
@@ -69,6 +69,7 @@ class SimpleMetadataProvider implements IMetadataProvider
             }
         }
         assert($counter == count($return));
+
         return $return;
     }
 
@@ -94,8 +95,6 @@ class SimpleMetadataProvider implements IMetadataProvider
         if (array_key_exists($name, $this->resourceSets)) {
             return $this->resourceSets[$name];
         }
-
-        return null;
     }
 
     /**
@@ -110,8 +109,6 @@ class SimpleMetadataProvider implements IMetadataProvider
         if (array_key_exists($name, $this->resourceTypes)) {
             return $this->resourceTypes[$name];
         }
-
-        return null;
     }
 
     /**
@@ -125,7 +122,7 @@ class SimpleMetadataProvider implements IMetadataProvider
      */
     public function getDerivedTypes(ResourceType $resourceType)
     {
-        return array();
+        return [];
     }
 
     /**
@@ -170,16 +167,14 @@ class SimpleMetadataProvider implements IMetadataProvider
 
         $targetResourceSet = $targetResourceProperty->getResourceType()->getCustomState();
         if (is_null($targetResourceSet)) {
-            throw new InvalidOperationException('Failed to retrieve the custom state from ' . $targetResourceProperty->getResourceType()->getName());
+            throw new InvalidOperationException('Failed to retrieve the custom state from '.$targetResourceProperty->getResourceType()->getName());
         }
 
         //Customer_Orders_Orders, Order_Customer_Customers
-        $key = $sourceResourceType->getName() . '_' . $targetResourceProperty->getName() . '_' . $targetResourceSet->getName();
+        $key = $sourceResourceType->getName().'_'.$targetResourceProperty->getName().'_'.$targetResourceSet->getName();
         if (array_key_exists($key, $this->associationSets)) {
             return $this->associationSets[$key];
         }
-
-        return null;
     }
 
     //End Implementation of IMetadataProvider
@@ -201,9 +196,9 @@ class SimpleMetadataProvider implements IMetadataProvider
      * @param string           $name      name of the entity
      * @param string           $namespace namespace of the data source
      *
-     * @return ResourceType
-     *
      * @throws InvalidOperationException when the name is already in use
+     *
+     * @return ResourceType
      */
     public function addEntityType(\ReflectionClass $refClass, $name, $namespace = null)
     {
@@ -218,9 +213,9 @@ class SimpleMetadataProvider implements IMetadataProvider
      * @param string           $namespace        namespace of the data source
      * @param ResourceType     $baseResourceType base resource type
      *
-     * @return ResourceType
-     *
      * @throws InvalidOperationException when the name is already in use
+     *
+     * @return ResourceType
      */
     public function addComplexType(\ReflectionClass $refClass, $name, $namespace = null, $baseResourceType = null)
     {
@@ -435,12 +430,12 @@ class SimpleMetadataProvider implements IMetadataProvider
         //Create instance of AssociationSet for this relationship
         $sourceResourceSet = $resourceType->getCustomState();
         if (is_null($sourceResourceSet)) {
-            throw new InvalidOperationException('Failed to retrieve the custom state from ' . $resourceType->getName());
+            throw new InvalidOperationException('Failed to retrieve the custom state from '.$resourceType->getName());
         }
 
         //Customer_Orders_Orders, Order_Customer_Customers
         //(source type::name _ source property::name _ target set::name)
-        $setKey = $resourceType->getName() . '_' . $name . '_' . $targetResourceSet->getName();
+        $setKey = $resourceType->getName().'_'.$name.'_'.$targetResourceSet->getName();
         $set = new ResourceAssociationSet(
             $setKey,
             new ResourceAssociationSetEnd($sourceResourceSet, $resourceType, $resourceProperty),
@@ -455,8 +450,10 @@ class SimpleMetadataProvider implements IMetadataProvider
      * @param $namespace
      * @param $typeKind
      * @param $baseResourceType
-     * @return ResourceType
+     *
      * @throws InvalidOperationException
+     *
+     * @return ResourceType
      */
     private function createResourceType(
         \ReflectionClass $refClass,
@@ -479,6 +476,7 @@ class SimpleMetadataProvider implements IMetadataProvider
     /**
      * @param $name
      * @param ResourceType $resourceType
+     *
      * @throws InvalidOperationException
      */
     private function checkInstanceProperty($name, ResourceType $resourceType)

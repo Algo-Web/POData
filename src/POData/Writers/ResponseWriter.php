@@ -3,8 +3,8 @@
 namespace POData\Writers;
 
 use POData\Common\HttpStatus;
-use POData\Common\ODataConstants;
 use POData\Common\MimeTypes;
+use POData\Common\ODataConstants;
 use POData\IService;
 use POData\UriProcessor\RequestDescription;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
@@ -78,7 +78,7 @@ class ResponseWriter
 
         $service->getHost()->setResponseStatusCode(HttpStatus::CODE_OK);
         $service->getHost()->setResponseContentType($responseContentType);
-        $service->getHost()->setResponseVersion($dataServiceVersion->toString() . ';');
+        $service->getHost()->setResponseVersion($dataServiceVersion->toString().';');
         $service->getHost()->setResponseCacheControl(ODataConstants::HTTPRESPONSE_HEADER_CACHECONTROL_NOCACHE);
         $service->getHost()->getOperationContext()->outgoingResponse()->setStream($responseBody);
     }

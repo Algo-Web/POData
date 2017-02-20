@@ -2,20 +2,18 @@
 
 namespace UnitTests\POData\Common;
 
-use Hamcrest\Core\IsTypeOf;
+use Mockery as m;
 use POData\BaseService;
 use POData\Common\Url;
 use POData\Configuration\ProtocolVersion;
+use POData\Configuration\ServiceConfiguration;
+use POData\OperationContext\ServiceHost;
+use POData\Providers\Metadata\IMetadataProvider;
 use POData\SimpleDataService;
 use POData\UriProcessor\RequestDescription;
 use POData\UriProcessor\UriProcessor;
-use POData\OperationContext\ServiceHost;
-use POData\Configuration\ServiceConfiguration;
-use POData\Providers\Metadata\IMetadataProvider;
 use POData\Writers\Atom\AtomODataWriter;
 use POData\Writers\ODataWriterRegistry;
-
-use Mockery as m;
 use UnitTests\POData\TestCase;
 
 class BaseServiceTest extends TestCase
@@ -26,13 +24,13 @@ class BaseServiceTest extends TestCase
     /** @var UriProcessor */
     protected $mockUriProcessor;
 
-    /** @var  ODataWriterRegistry */
+    /** @var ODataWriterRegistry */
     protected $mockRegistry;
 
-    /** @var  IMetadataProvider */
+    /** @var IMetadataProvider */
     protected $mockMetaProvider;
 
-    /** @var  ServiceHost */
+    /** @var ServiceHost */
     protected $mockHost;
 
     public function setUp()
@@ -44,13 +42,13 @@ class BaseServiceTest extends TestCase
 
     public function testRegisterWritersV1()
     {
-    /** @var BaseService $service */
+        /** @var BaseService $service */
         $service = m::mock(SimpleDataService::class)->makePartial();
 
         $this->mockRegistry->shouldReceive('register')->withAnyArgs()->times(2);
 
         //fake the service url
-        $fakeUrl = "http://host/service.svc/Collection";
+        $fakeUrl = 'http://host/service.svc/Collection';
         $this->mockHost->shouldReceive('getAbsoluteServiceUri')->andReturn(new Url($fakeUrl));
 
         $service->setHost($this->mockHost);
@@ -84,7 +82,7 @@ class BaseServiceTest extends TestCase
             ->with(anInstanceOf('\POData\Writers\Json\JsonODataV2Writer'))->passthru()->times(1);*/
 
         //fake the service url
-        $fakeUrl = "http://host/service.svc/Collection";
+        $fakeUrl = 'http://host/service.svc/Collection';
         $this->mockHost->shouldReceive('getAbsoluteServiceUri')->andReturn(new Url($fakeUrl));
 
         //TODO: have to do this since the registry & config is actually only instantiated during a handleRequest
@@ -118,7 +116,6 @@ class BaseServiceTest extends TestCase
         $this->mockRegistry->shouldReceive('register')
             ->with(anInstanceOf('\POData\Writers\Json\JsonLightODataWriter'))->passthru()->times(3);*/
 
-
         //TODO: have to do this since the registry & config is actually only instantiated during a handleRequest
         //will change this once that request pipeline is cleaned up
         $service->shouldReceive('getODataWriterRegistry')->andReturn($this->mockRegistry);
@@ -127,7 +124,7 @@ class BaseServiceTest extends TestCase
         $service->shouldReceive('getConfiguration')->andReturn($fakeConfig);
 
         //fake the service url
-        $fakeUrl = "http://host/service.svc/Collection";
+        $fakeUrl = 'http://host/service.svc/Collection';
         $this->mockHost->shouldReceive('getAbsoluteServiceUri')->andReturn(new Url($fakeUrl));
 
         $service->registerWriters();

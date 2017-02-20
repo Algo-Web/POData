@@ -2,10 +2,10 @@
 
 namespace UnitTests\POData\Configuration;
 
+use POData\Common\InvalidOperationException;
+use POData\Configuration\EntitySetRights;
 use POData\Configuration\IServiceConfiguration;
 use POData\Configuration\ServiceConfiguration;
-use POData\Configuration\EntitySetRights;
-use POData\Common\InvalidOperationException;
 use POData\Providers\Metadata\IMetadataProvider;
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 use UnitTests\POData\TestCase;

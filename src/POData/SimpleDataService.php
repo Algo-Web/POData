@@ -2,16 +2,13 @@
 
 namespace POData;
 
-use POData\Configuration\IServiceConfiguration;
-use POData\Configuration\ServiceConfiguration;
 use POData\Configuration\EntitySetRights;
+use POData\Configuration\IServiceConfiguration;
 use POData\ObjectModel\IObjectSerialiser;
-use POData\ObjectModel\ObjectModelSerializer;
 use POData\OperationContext\ServiceHost;
-use POData\Providers\Stream\IStreamProvider;
 use POData\Providers\Metadata\IMetadataProvider;
-use POData\Providers\Query\IQueryProvider;
 use POData\Providers\Metadata\SimpleMetadataProvider;
+use POData\Providers\Query\IQueryProvider;
 
 /**
  * DataService that implements IServiceProvider.
@@ -54,6 +51,7 @@ class SimpleDataService extends BaseService implements IService
         $config->setAcceptCountRequests(true);
         $config->setAcceptProjectionRequests(true);
     }
+
     /**
      * @return IQueryProvider
      */
@@ -61,6 +59,7 @@ class SimpleDataService extends BaseService implements IService
     {
         return $this->queryProvider;
     }
+
     /**
      * @return IMetadataProvider
      */
@@ -68,6 +67,7 @@ class SimpleDataService extends BaseService implements IService
     {
         return $this->metaProvider;
     }
+
     /**
      * @return \POData\Providers\Stream\IStreamProvider
      */
@@ -75,6 +75,7 @@ class SimpleDataService extends BaseService implements IService
     {
         // TODO: Implement getStreamProviderX() method.
     }
+
     /**
      * This method is called only once to initialize service-wide policies.
      *

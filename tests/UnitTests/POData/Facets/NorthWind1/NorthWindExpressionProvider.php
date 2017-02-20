@@ -2,11 +2,11 @@
 
 namespace UnitTests\POData\Facets\NorthWind1;
 
+use POData\Providers\Expression\IExpressionProvider;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\Type\IType;
-use POData\Providers\Expression\IExpressionProvider;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\PropertyAccessExpression;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ExpressionType;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\PropertyAccessExpression;
 
 class NorthWindExpressionProvider implements IExpressionProvider
 {

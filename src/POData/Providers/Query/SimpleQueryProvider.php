@@ -2,12 +2,12 @@
 
 namespace POData\Providers\Query;
 
+use POData\Providers\Expression\MySQLExpressionProvider;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceSet;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
 use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
-use POData\Providers\Expression\MySQLExpressionProvider;
 
 abstract class SimpleQueryProvider implements IQueryProvider
 {
@@ -15,10 +15,12 @@ abstract class SimpleQueryProvider implements IQueryProvider
      * @var Connection
      */
     protected $db;
+
     public function __construct($db)
     {
         $this->db = $db;
     }
+
     /**
      * Query all data from DB.
      *
@@ -28,6 +30,7 @@ abstract class SimpleQueryProvider implements IQueryProvider
      * @return array[]|null Array of associated arrays (column name => column value)
      */
     abstract protected function queryAll($sql, $parameters = null);
+
     /**
      * Query one value from DB.
      *
@@ -37,19 +40,23 @@ abstract class SimpleQueryProvider implements IQueryProvider
      * @return mixed Value
      */
     abstract protected function queryScalar($sql, $parameters = null);
+
     /* Stubbed Implementaiton Here */
     public function getQueryProvider()
     {
         return new QueryProvider();
     }
+
     public function handlesOrderedPaging()
     {
         return true;
     }
+
     public function getExpressionProvider()
     {
         return new MySQLExpressionProvider();
     }
+
     /**
      * Get entity name by class name.
      *
@@ -66,6 +73,7 @@ abstract class SimpleQueryProvider implements IQueryProvider
 
         return $entityClassName;
     }
+
     /**
      * Get table name by entity name.
      *
@@ -83,6 +91,7 @@ abstract class SimpleQueryProvider implements IQueryProvider
 
         return strtolower($tableName);
     }
+
     /**
      * Get part of SQL query with ORDER BY condition.
      *
@@ -103,6 +112,7 @@ abstract class SimpleQueryProvider implements IQueryProvider
 
         return $result;
     }
+
     /**
      * Common method for getResourceFromRelatedResourceSet() and getResourceFromResourceSet().
      *
@@ -121,20 +131,20 @@ abstract class SimpleQueryProvider implements IQueryProvider
                 ++$index;
                 //Keys have already been validated, so this is not a SQL injection surface
                 $where .= $where ? ' AND ' : '';
-                $where .= $key . ' = :param' . $index;
-                $parameters[':param' . $index] = $value[0];
+                $where .= $key.' = :param'.$index;
+                $parameters[':param'.$index] = $value[0];
             }
         }
         foreach ($whereCondition as $fieldName => $fieldValue) {
             ++$index;
             $where .= $where ? ' AND ' : '';
-            $where .= $fieldName . ' = :param' . $index;
-            $parameters[':param' . $index] = $fieldValue;
+            $where .= $fieldName.' = :param'.$index;
+            $parameters[':param'.$index] = $fieldValue;
         }
-        $where = $where ? ' WHERE ' . $where : '';
+        $where = $where ? ' WHERE '.$where : '';
         $entityClassName = $resourceSet->getResourceType()->getInstanceType()->name;
         $entityName = $this->getEntityName($entityClassName);
-        $sql = 'SELECT * FROM ' . $this->getTableName($entityName) . $where . ' LIMIT 1';
+        $sql = 'SELECT * FROM '.$this->getTableName($entityName).$where.' LIMIT 1';
         $result = $this->queryAll($sql, $parameters);
         if ($result) {
             $result = $result[0];
@@ -142,6 +152,7 @@ abstract class SimpleQueryProvider implements IQueryProvider
 
         return $entityClassName::fromRecord($result);
     }
+
     /**
      * For queries like http://localhost/NorthWind.svc/Customers.
      */
@@ -162,12 +173,12 @@ abstract class SimpleQueryProvider implements IQueryProvider
             //tell mysql we want to know the count prior to the LIMIT
             //$option = 'SQL_CALC_FOUND_ROWS';
         }
-        $where = $filterInfo ? ' WHERE ' . $filterInfo->getExpressionAsString() : '';
-        $order = $orderBy ? ' ORDER BY ' . $this->getOrderByExpressionAsString($orderBy) : '';
-        $sqlCount = 'SELECT COUNT(*) FROM ' . $tableName . $where;
+        $where = $filterInfo ? ' WHERE '.$filterInfo->getExpressionAsString() : '';
+        $order = $orderBy ? ' ORDER BY '.$this->getOrderByExpressionAsString($orderBy) : '';
+        $sqlCount = 'SELECT COUNT(*) FROM '.$tableName.$where;
         if ($queryType == QueryType::ENTITIES() || $queryType == QueryType::ENTITIES_WITH_COUNT()) {
-            $sql = 'SELECT ' . $option . ' * FROM ' . $tableName . $where . $order
-                    .($top ? ' LIMIT ' . $top : '') . ($skip ? ' OFFSET ' . $skip : '');
+            $sql = 'SELECT '.$option.' * FROM '.$tableName.$where.$order
+                    .($top ? ' LIMIT '.$top : '').($skip ? ' OFFSET '.$skip : '');
             $data = $this->queryAll($sql);
 
             if ($queryType == QueryType::ENTITIES_WITH_COUNT()) {
@@ -175,7 +186,7 @@ abstract class SimpleQueryProvider implements IQueryProvider
                 //$result->count = $this->queryScalar('SELECT FOUND_ROWS()');
                 $result->count = $this->queryScalar($sqlCount);
             }
-            $result->results = array_map($entityClassName . '::fromRecord', $data);
+            $result->results = array_map($entityClassName.'::fromRecord', $data);
         } elseif ($queryType == QueryType::COUNT()) {
             $result->count = QueryResult::adjustCountForPaging(
                 $this->queryScalar($sqlCount),
@@ -186,6 +197,7 @@ abstract class SimpleQueryProvider implements IQueryProvider
 
         return $result;
     }
+
     /**
      * For queries like http://localhost/NorthWind.svc/Customers(‘ALFKI’).
      */
@@ -195,6 +207,7 @@ abstract class SimpleQueryProvider implements IQueryProvider
     ) {
         return $this->getResource($resourceSet, $keyDescriptor);
     }
+
     /**
      * For queries like http://localhost/NorthWind.svc/Customers(‘ALFKI’)/Orders.
      */
@@ -211,7 +224,7 @@ abstract class SimpleQueryProvider implements IQueryProvider
     ) {
         // Correct filter
         $srcClass = get_class($sourceEntityInstance);
-        $filterFieldName = $this->getTableName($this->getEntityName($srcClass)) . '_id';
+        $filterFieldName = $this->getTableName($this->getEntityName($srcClass)).'_id';
         $navigationPropertiesUsedInTheFilterClause = null;
         $filterExpAsDataSourceExp = '';
         if ($filterInfo) {
@@ -219,11 +232,12 @@ abstract class SimpleQueryProvider implements IQueryProvider
             $filterExpAsDataSourceExp = $filterInfo->getExpressionAsString();
         }
         $filterExpAsDataSourceExp .= $filterExpAsDataSourceExp ? ' AND ' : '';
-        $filterExpAsDataSourceExp .= $filterFieldName . ' = ' . $sourceEntityInstance->id;
+        $filterExpAsDataSourceExp .= $filterFieldName.' = '.$sourceEntityInstance->id;
         $completeFilterInfo = new FilterInfo($navigationPropertiesUsedInTheFilterClause, $filterExpAsDataSourceExp);
 
         return $this->getResourceSet($queryType, $targetResourceSet, $completeFilterInfo, $orderBy, $top, $skip);
     }
+
     /**
      * For queries like http://localhost/NorthWind.svc/Customers(‘ALFKI’)/Orders(10643).
      */
@@ -236,12 +250,13 @@ abstract class SimpleQueryProvider implements IQueryProvider
     ) {
         $entityClassName = $sourceResourceSet->getResourceType()->getInstanceType()->name;
         $entityName = $this->getEntityName($entityClassName);
-        $fieldName = $this->getTableName($entityName) . '_id';
+        $fieldName = $this->getTableName($entityName).'_id';
 
         return $this->getResource($targetResourceSet, $keyDescriptor, [
             $fieldName => $sourceEntityInstance->id,
         ]);
     }
+
     /**
      * For queries like http://localhost/NorthWind.svc/Orders(10643)/Customer.
      */
@@ -253,7 +268,7 @@ abstract class SimpleQueryProvider implements IQueryProvider
     ) {
         $entityClassName = $targetResourceSet->getResourceType()->getInstanceType()->name;
         $entityName = $this->getEntityName($entityClassName);
-        $fieldName = $this->getTableName($entityName) . '_id';
+        $fieldName = $this->getTableName($entityName).'_id';
 
         return $this->getResource($targetResourceSet, null, [
             'id' => $sourceEntityInstance->$fieldName,

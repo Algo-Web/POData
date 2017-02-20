@@ -2,28 +2,7 @@
 
 namespace UnitTests\POData\Providers\Metadata;
 
-use \Mockery\Mockery;
-
-use POData\Providers\Metadata\ResourceSet;
-use POData\Providers\Metadata\ResourceSetWrapper;
-use POData\Providers\Metadata\ResourceType;
-use POData\Providers\Metadata\ResourceProperty;
-use POData\Providers\Metadata\ResourceTypeKind;
-use POData\Providers\ProvidersWrapper;
-use POData\Configuration\ServiceConfiguration;
-use POData\Configuration\EntitySetRights;
-use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\Metadata\SimpleMetadataProvider;
-use POData\Common\ODataException;
-use POData\Common\Messages;
-use POData\Providers\Metadata\Type\StringType;
-use POData\Common\InvalidOperationException;
-use POData\Providers\Metadata\ResourceAssociationSet;
-use POData\Providers\Metadata\ResourceAssociationSetEnd;
-use POData\Providers\Query\IQueryProvider;
-use POData\Providers\Query\QueryType;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
-use POData\Providers\Query\QueryResult;
 use UnitTests\POData\TestCase;
 
 class ProvidersWrapperTestMockery extends TestCase
@@ -31,10 +10,10 @@ class ProvidersWrapperTestMockery extends TestCase
     public function testGetResourceSetsByMatchingName()
     {
         $resource1 = \Mockery::mock('POData\Providers\Metadata\ResourceSet');
-        $resource1->shouldReceive('getName')->withNoArgs()->andReturn("cheese");
+        $resource1->shouldReceive('getName')->withNoArgs()->andReturn('cheese');
 
         $resource2 = \Mockery::mock('POData\Providers\Metadata\ResourceSet');
-        $resource2->shouldReceive('getName')->withNoArgs()->andReturn("biscuits");
+        $resource2->shouldReceive('getName')->withNoArgs()->andReturn('biscuits');
 
         $foo = new SimpleMetadataProvider('foobar', 'barfoo');
 
@@ -49,10 +28,10 @@ class ProvidersWrapperTestMockery extends TestCase
     public function testGetResourceSetsByOverlappingArray()
     {
         $resource1 = \Mockery::mock('POData\Providers\Metadata\ResourceSet');
-        $resource1->shouldReceive('getName')->withNoArgs()->andReturn("cheese");
+        $resource1->shouldReceive('getName')->withNoArgs()->andReturn('cheese');
 
         $resource2 = \Mockery::mock('POData\Providers\Metadata\ResourceSet');
-        $resource2->shouldReceive('getName')->withNoArgs()->andReturn("biscuits");
+        $resource2->shouldReceive('getName')->withNoArgs()->andReturn('biscuits');
 
         $foo = new SimpleMetadataProvider('foobar', 'barfoo');
 
@@ -67,10 +46,10 @@ class ProvidersWrapperTestMockery extends TestCase
     public function testGetResourceSetsByDisjointArray()
     {
         $resource1 = \Mockery::mock('POData\Providers\Metadata\ResourceSet');
-        $resource1->shouldReceive('getName')->withNoArgs()->andReturn("cheese");
+        $resource1->shouldReceive('getName')->withNoArgs()->andReturn('cheese');
 
         $resource2 = \Mockery::mock('POData\Providers\Metadata\ResourceSet');
-        $resource2->shouldReceive('getName')->withNoArgs()->andReturn("biscuits");
+        $resource2->shouldReceive('getName')->withNoArgs()->andReturn('biscuits');
 
         $foo = new SimpleMetadataProvider('foobar', 'barfoo');
 
@@ -84,10 +63,10 @@ class ProvidersWrapperTestMockery extends TestCase
     public function testGetResourceSetsDefault()
     {
         $resource1 = \Mockery::mock('POData\Providers\Metadata\ResourceSet');
-        $resource1->shouldReceive('getName')->withNoArgs()->andReturn("cheese");
+        $resource1->shouldReceive('getName')->withNoArgs()->andReturn('cheese');
 
         $resource2 = \Mockery::mock('POData\Providers\Metadata\ResourceSet');
-        $resource2->shouldReceive('getName')->withNoArgs()->andReturn("biscuits");
+        $resource2->shouldReceive('getName')->withNoArgs()->andReturn('biscuits');
 
         $targNames = ['cheese', 'biscuits'];
 

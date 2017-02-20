@@ -2,8 +2,8 @@
 
 namespace UnitTests\POData\Common;
 
-use POData\HttpProcessUtility;
 use POData\Common\MimeTypes;
+use POData\HttpProcessUtility;
 use UnitTests\POData\TestCase;
 
 class HttpProcessUtilityTest extends TestCase
@@ -12,9 +12,9 @@ class HttpProcessUtilityTest extends TestCase
     {
         $actual = HttpProcessUtility::selectMimeType(
             MimeTypes::MIME_APPLICATION_ATOM,
-            array(
+            [
 
-            )
+            ]
         );
 
         $this->assertNull($actual);
@@ -24,9 +24,9 @@ class HttpProcessUtilityTest extends TestCase
     {
         $actual = HttpProcessUtility::selectMimeType(
             MimeTypes::MIME_APPLICATION_ATOM,
-            array(
+            [
                 MimeTypes::MIME_APPLICATION_ATOM,
-            )
+            ]
         );
 
         $this->assertEquals(MimeTypes::MIME_APPLICATION_ATOM, $actual);
@@ -36,10 +36,10 @@ class HttpProcessUtilityTest extends TestCase
     {
         $actual = HttpProcessUtility::selectMimeType(
             MimeTypes::MIME_APPLICATION_ATOM,
-            array(
+            [
                 MimeTypes::MIME_APPLICATION_ATOM,
                 MimeTypes::MIME_APPLICATION_ATOMSERVICE,
-            )
+            ]
         );
 
         $this->assertEquals(MimeTypes::MIME_APPLICATION_ATOM, $actual);
@@ -49,10 +49,10 @@ class HttpProcessUtilityTest extends TestCase
     {
         $actual = HttpProcessUtility::selectMimeType(
             MimeTypes::MIME_APPLICATION_ATOM.';q=1.0',
-            array(
+            [
                 MimeTypes::MIME_APPLICATION_ATOM,
                 MimeTypes::MIME_APPLICATION_ATOMSERVICE,
-            )
+            ]
         );
 
         $this->assertEquals(MimeTypes::MIME_APPLICATION_ATOM, $actual);
@@ -62,10 +62,10 @@ class HttpProcessUtilityTest extends TestCase
     {
         $actual = HttpProcessUtility::selectMimeType(
             MimeTypes::MIME_APPLICATION_ATOM.';q=0.0',
-            array(
+            [
                 MimeTypes::MIME_APPLICATION_ATOM,
                 MimeTypes::MIME_APPLICATION_ATOMSERVICE,
-            )
+            ]
         );
 
         $this->assertNull($actual);
@@ -75,10 +75,10 @@ class HttpProcessUtilityTest extends TestCase
     {
         $actual = HttpProcessUtility::selectMimeType(
             MimeTypes::MIME_APPLICATION_ATOM.';q=0.5',
-            array(
+            [
                 MimeTypes::MIME_APPLICATION_ATOM,
                 MimeTypes::MIME_APPLICATION_ATOMSERVICE,
-            )
+            ]
         );
 
         $this->assertEquals(MimeTypes::MIME_APPLICATION_ATOM, $actual);
@@ -88,10 +88,10 @@ class HttpProcessUtilityTest extends TestCase
     {
         $actual = HttpProcessUtility::selectMimeType(
             MimeTypes::MIME_APPLICATION_ATOM.';q=0.5, '.MimeTypes::MIME_APPLICATION_ATOMSERVICE.';q=0.5',
-            array(
+            [
                 MimeTypes::MIME_APPLICATION_ATOM,
                 MimeTypes::MIME_APPLICATION_ATOMSERVICE,
-            )
+            ]
         );
 
         $this->assertEquals(MimeTypes::MIME_APPLICATION_ATOM, $actual);
@@ -101,10 +101,10 @@ class HttpProcessUtilityTest extends TestCase
     {
         $actual = HttpProcessUtility::selectMimeType(
             MimeTypes::MIME_APPLICATION_ATOMSERVICE.';q=0.5, '.MimeTypes::MIME_APPLICATION_ATOM.';q=0.5',
-            array(
+            [
                 MimeTypes::MIME_APPLICATION_ATOM,
                 MimeTypes::MIME_APPLICATION_ATOMSERVICE,
-            )
+            ]
         );
 
         $this->assertEquals(MimeTypes::MIME_APPLICATION_ATOM, $actual);
@@ -114,10 +114,10 @@ class HttpProcessUtilityTest extends TestCase
     {
         $actual = HttpProcessUtility::selectMimeType(
             MimeTypes::MIME_APPLICATION_ATOMSERVICE.';q=0.5, '.MimeTypes::MIME_APPLICATION_ATOM.';q=1.0',
-            array(
+            [
                 MimeTypes::MIME_APPLICATION_ATOM,
                 MimeTypes::MIME_APPLICATION_ATOMSERVICE,
-            )
+            ]
         );
 
         $this->assertEquals(MimeTypes::MIME_APPLICATION_ATOM, $actual);
@@ -127,10 +127,10 @@ class HttpProcessUtilityTest extends TestCase
     {
         $actual = HttpProcessUtility::selectMimeType(
             MimeTypes::MIME_APPLICATION_ATOMSERVICE.';q=1.0, '.MimeTypes::MIME_APPLICATION_ATOM.';q=0.5',
-            array(
+            [
                 MimeTypes::MIME_APPLICATION_ATOM,
                 MimeTypes::MIME_APPLICATION_ATOMSERVICE,
-            )
+            ]
         );
 
         $this->assertEquals(MimeTypes::MIME_APPLICATION_ATOMSERVICE, $actual);
@@ -141,10 +141,10 @@ class HttpProcessUtilityTest extends TestCase
         $actual = HttpProcessUtility::selectMimeType(
             MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META
             .';q=1.0, '.MimeTypes::MIME_APPLICATION_JSON_FULL_META.';q=0.5',
-            array(
+            [
                 MimeTypes::MIME_APPLICATION_ATOM,
                 MimeTypes::MIME_APPLICATION_ATOMSERVICE,
-            )
+            ]
         );
 
         $this->assertNull($actual);
@@ -155,10 +155,10 @@ class HttpProcessUtilityTest extends TestCase
         $actual = HttpProcessUtility::selectMimeType(
             MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META
             .';q=1.0, '.MimeTypes::MIME_APPLICATION_JSON_FULL_META.';q=0.5',
-            array(
+            [
                 MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META,
                 MimeTypes::MIME_APPLICATION_JSON_FULL_META,
-            )
+            ]
         );
 
         $this->assertEquals(MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META, $actual);
@@ -169,9 +169,9 @@ class HttpProcessUtilityTest extends TestCase
         $actual = HttpProcessUtility::selectMimeType(
             MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META
             .';q=1.0, '.MimeTypes::MIME_APPLICATION_JSON_FULL_META.';q=0.5',
-            array(
+            [
                 MimeTypes::MIME_APPLICATION_JSON,
-            )
+            ]
         );
 
         $this->assertNull($actual);
@@ -182,10 +182,10 @@ class HttpProcessUtilityTest extends TestCase
         $actual = HttpProcessUtility::selectMimeType(
             MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META
             .';q=1.0, '.MimeTypes::MIME_APPLICATION_JSON_FULL_META.';q=0.5',
-            array(
+            [
                 MimeTypes::MIME_APPLICATION_JSON,
                 MimeTypes::MIME_APPLICATION_JSON_FULL_META,
-            )
+            ]
         );
 
         $this->assertEquals(MimeTypes::MIME_APPLICATION_JSON_FULL_META, $actual);

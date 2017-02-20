@@ -2,25 +2,23 @@
 
 namespace UnitTests\POData\UriProcessor\QueryProcessor\OrderByParser;
 
-use POData\Providers\Metadata\ResourceProperty;
-use POData\Configuration\EntitySetRights;
-use POData\Providers\ProvidersWrapper;
-use POData\Configuration\ServiceConfiguration;
-use POData\Common\ODataException;
-use POData\UriProcessor\QueryProcessor\OrderByParser\OrderByParser;
-
 use Mockery as m;
-
-use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
+use POData\Common\ODataException;
+use POData\Configuration\EntitySetRights;
+use POData\Configuration\ServiceConfiguration;
+use POData\Providers\Metadata\ResourceProperty;
+use POData\Providers\ProvidersWrapper;
+use POData\Providers\Query\IQueryProvider;
+use POData\UriProcessor\QueryProcessor\OrderByParser\OrderByParser;
 //These are in the file loaded by above use statement
 //TODO: move to own class files
 use UnitTests\POData\Facets\NorthWind1\Address2;
 use UnitTests\POData\Facets\NorthWind1\Address4;
 use UnitTests\POData\Facets\NorthWind1\Customer2;
+use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 use UnitTests\POData\Facets\NorthWind1\Order2;
 use UnitTests\POData\Facets\NorthWind1\Order_Details2;
 use UnitTests\POData\Facets\NorthWind1\Product2;
-use POData\Providers\Query\IQueryProvider;
 use UnitTests\POData\TestCase;
 
 class OrderByParserTest extends TestCase

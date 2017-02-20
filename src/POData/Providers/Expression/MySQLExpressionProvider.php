@@ -2,10 +2,10 @@
 
 namespace POData\Providers\Expression;
 
-use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ExpressionType;
-use POData\Providers\Metadata\Type\IType;
 use POData\Common\ODataConstants;
 use POData\Providers\Metadata\ResourceType;
+use POData\Providers\Metadata\Type\IType;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ExpressionType;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\PropertyAccessExpression;
 use POData\UriProcessor\QueryProcessor\FunctionDescription;
 
@@ -45,7 +45,7 @@ class MySQLExpressionProvider implements IExpressionProvider
      */
     public function __construct()
     {
-        $this->entityMapping = array();
+        $this->entityMapping = [];
     }
 
     /**
@@ -55,7 +55,6 @@ class MySQLExpressionProvider implements IExpressionProvider
      */
     public function getIteratorName()
     {
-        return null;
     }
 
     /**
@@ -293,22 +292,22 @@ class MySQLExpressionProvider implements IExpressionProvider
                 return "DATETIMECMP($params[0]; $params[1])";
 
             case ODataConstants::DATETIME_YEAR:
-                return 'EXTRACT(YEAR from ' . $params[0] . ')';
+                return 'EXTRACT(YEAR from '.$params[0].')';
 
             case ODataConstants::DATETIME_MONTH:
-                return 'EXTRACT(MONTH from ' . $params[0] . ')';
+                return 'EXTRACT(MONTH from '.$params[0].')';
 
             case ODataConstants::DATETIME_DAY:
-                return 'EXTRACT(DAY from ' . $params[0] . ')';
+                return 'EXTRACT(DAY from '.$params[0].')';
 
             case ODataConstants::DATETIME_HOUR:
-                return 'EXTRACT(HOUR from ' . $params[0] . ')';
+                return 'EXTRACT(HOUR from '.$params[0].')';
 
             case ODataConstants::DATETIME_MINUTE:
-                return 'EXTRACT(MINUTE from ' . $params[0] . ')';
+                return 'EXTRACT(MINUTE from '.$params[0].')';
 
             case ODataConstants::DATETIME_SECOND:
-                return 'EXTRACT(SECOND from ' . $params[0] . ')';
+                return 'EXTRACT(SECOND from '.$params[0].')';
 
             case ODataConstants::MATHFUN_ROUND:
                 return "ROUND($params[0])";
@@ -347,11 +346,11 @@ class MySQLExpressionProvider implements IExpressionProvider
             $str[0] = str_replace('DATETIMECMP', '', $str[0]);
 
             return self::OPEN_BRACKET
-                .$str[0] . ' ' . $operator
-                .' ' . $str[1] . self::CLOSE_BRACKET;
+                .$str[0].' '.$operator
+                .' '.$str[1].self::CLOSE_BRACKET;
         }
 
-        return self::OPEN_BRACKET . $left . ' ' . $operator . ' ' . $right . self::CLOSE_BRACKET;
+        return self::OPEN_BRACKET.$left.' '.$operator.' '.$right.self::CLOSE_BRACKET;
     }
 
     /**
@@ -364,6 +363,6 @@ class MySQLExpressionProvider implements IExpressionProvider
      */
     private function _prepareUnaryExpression($operator, $child)
     {
-        return $operator . self::OPEN_BRACKET . $child . self::CLOSE_BRACKET;
+        return $operator.self::OPEN_BRACKET.$child.self::CLOSE_BRACKET;
     }
 }

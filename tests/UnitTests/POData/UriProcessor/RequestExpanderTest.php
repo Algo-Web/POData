@@ -2,6 +2,7 @@
 
 namespace UnitTests\POData\UriProcessor;
 
+use Mockery as m;
 use POData\Common\InvalidOperationException;
 use POData\IService;
 use POData\Providers\Metadata\ResourceProperty;
@@ -16,8 +17,6 @@ use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\RootProjectionNode
 use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
 use POData\UriProcessor\RequestDescription;
 use POData\UriProcessor\RequestExpander;
-
-use Mockery as m;
 use POData\UriProcessor\SegmentStack;
 use UnitTests\POData\TestCase;
 
@@ -194,7 +193,6 @@ class RequestExpanderTest extends TestCase
         $resProperty->shouldReceive('getKind')->andReturn(ResourcePropertyKind::RESOURCESET_REFERENCE);
         $resProperty->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::ENTITY);
         $resProperty->shouldReceive('getName')->andReturn('resourceProperty');
-
 
         $nuNode = m::mock(RootProjectionNode::class);
         $nuNode->shouldReceive('getChildNodes')->andReturn([])->never();

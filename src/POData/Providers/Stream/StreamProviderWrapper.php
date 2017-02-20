@@ -2,14 +2,14 @@
 
 namespace POData\Providers\Stream;
 
-use POData\IService;
-use POData\Providers\Metadata\ResourceStreamInfo;
-use POData\OperationContext\ServiceHost;
-use POData\Common\Version;
-use POData\Common\ODataException;
-use POData\Common\ODataConstants;
-use POData\Common\Messages;
 use POData\Common\InvalidOperationException;
+use POData\Common\Messages;
+use POData\Common\ODataConstants;
+use POData\Common\ODataException;
+use POData\Common\Version;
+use POData\IService;
+use POData\OperationContext\ServiceHost;
+use POData\Providers\Metadata\ResourceStreamInfo;
 
 /**
  * Class StreamProviderWrapper Wrapper over IDSSP and IDSSP2 implementations.
@@ -232,9 +232,9 @@ class StreamProviderWrapper
      *                                               details of named stream
      * @param string             $mediaLinkEntryUri  MLE uri
      *
-     * @return string
-     *
      * @throws InvalidOperationException
+     *
+     * @return string
      */
     public function getReadStreamUri(
         $entity,
@@ -363,7 +363,6 @@ class StreamProviderWrapper
     private function _loadAndValidateStreamProvider()
     {
         if (is_null($this->_streamProvider)) {
-
             $this->_loadStreamProvider();
             if (is_null($this->_streamProvider)) {
                 throw ODataException::createInternalServerError(
@@ -424,18 +423,19 @@ class StreamProviderWrapper
     /**
      * Construct the default edit media uri from the given media link entry uri.
      *
-     * @param string                    $mediaLinkEntryUri  Uri to the media link entry
-     * @param ResourceStreamInfo|null   $resourceStreamInfo Stream info instance, if its
-     *                                                      null default stream is assumed
+     * @param string                  $mediaLinkEntryUri  Uri to the media link entry
+     * @param ResourceStreamInfo|null $resourceStreamInfo Stream info instance, if its
+     *                                                    null default stream is assumed
      *
      * @return string Uri to the media resource
      */
     public function getDefaultStreamEditMediaUri($mediaLinkEntryUri, $resourceStreamInfo)
     {
-        $base = rtrim($mediaLinkEntryUri, '/') . '/';
+        $base = rtrim($mediaLinkEntryUri, '/').'/';
         $end = (null == $resourceStreamInfo) ? ODataConstants::URI_VALUE_SEGMENT
             : ltrim($resourceStreamInfo->getName(), '/');
-        return $base . $end;
+
+        return $base.$end;
     }
 
     /**

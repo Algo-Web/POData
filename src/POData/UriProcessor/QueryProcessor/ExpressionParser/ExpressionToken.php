@@ -2,8 +2,8 @@
 
 namespace POData\UriProcessor\QueryProcessor\ExpressionParser;
 
-use POData\Common\ODataException;
 use POData\Common\ODataConstants;
+use POData\Common\ODataException;
 
 /**
  * Class ExpressionToken.
@@ -83,7 +83,7 @@ class ExpressionToken
     {
         if ($this->Id != ExpressionTokenId::IDENTIFIER) {
             throw ODataException::createSyntaxError(
-                'Identifier expected at position ' . $this->Position
+                'Identifier expected at position '.$this->Position
             );
         }
 

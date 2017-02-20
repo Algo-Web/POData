@@ -38,9 +38,9 @@ class ByteTest extends TestCase
 
         $actual = get_object_vars($type);
 
-        $expected = array(
+        $expected = [
 
-        );
+        ];
 
         $this->assertEquals($expected, $actual);
     }

@@ -2,10 +2,10 @@
 
 namespace POData\Providers\Expression;
 
-use POData\Providers\Metadata\ResourceType;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ExpressionType;
-use POData\Providers\Metadata\Type\IType;
 use POData\Common\ODataConstants;
+use POData\Providers\Metadata\ResourceType;
+use POData\Providers\Metadata\Type\IType;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ExpressionType;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\PropertyAccessExpression;
 
 /**
@@ -236,12 +236,12 @@ class PHPExpressionProvider implements IExpressionProvider
         $variable = null;
 
         do {
-            $variable = $parent->getResourceProperty()->getName() . self::MEMBER_ACCESS . $variable;
+            $variable = $parent->getResourceProperty()->getName().self::MEMBER_ACCESS.$variable;
             $parent = $parent->getParent();
         } while ($parent != null);
 
         $variable = rtrim($variable, self::MEMBER_ACCESS);
-        $variable = $this->getIteratorName() . self::MEMBER_ACCESS . $variable;
+        $variable = $this->getIteratorName().self::MEMBER_ACCESS.$variable;
 
         return $variable;
     }
@@ -289,34 +289,34 @@ class PHPExpressionProvider implements IExpressionProvider
                 return "(strpos($params[1], $params[0]) !== false)";
 
             case ODataConstants::STRFUN_CONCAT:
-                return $params[0] . ' . ' . $params[1];
+                return $params[0].' . '.$params[1];
 
             case ODataConstants::STRFUN_LENGTH:
                 return "strlen($params[0])";
 
             case ODataConstants::GUIDFUN_EQUAL:
-                return self::TYPE_NAMESPACE . "Guid::guidEqual($params[0], $params[1])";
+                return self::TYPE_NAMESPACE."Guid::guidEqual($params[0], $params[1])";
 
             case ODataConstants::DATETIME_COMPARE:
-                return self::TYPE_NAMESPACE . "DateTime::dateTimeCmp($params[0], $params[1])";
+                return self::TYPE_NAMESPACE."DateTime::dateTimeCmp($params[0], $params[1])";
 
             case ODataConstants::DATETIME_YEAR:
-                return self::TYPE_NAMESPACE . "DateTime::year($params[0])";
+                return self::TYPE_NAMESPACE."DateTime::year($params[0])";
 
             case ODataConstants::DATETIME_MONTH:
-                return self::TYPE_NAMESPACE . "DateTime::month($params[0])";
+                return self::TYPE_NAMESPACE."DateTime::month($params[0])";
 
             case ODataConstants::DATETIME_DAY:
-                return self::TYPE_NAMESPACE . "DateTime::day($params[0])";
+                return self::TYPE_NAMESPACE."DateTime::day($params[0])";
 
             case ODataConstants::DATETIME_HOUR:
-                return self::TYPE_NAMESPACE . "DateTime::hour($params[0])";
+                return self::TYPE_NAMESPACE."DateTime::hour($params[0])";
 
             case ODataConstants::DATETIME_MINUTE:
-                return self::TYPE_NAMESPACE . "DateTime::minute($params[0])";
+                return self::TYPE_NAMESPACE."DateTime::minute($params[0])";
 
             case ODataConstants::DATETIME_SECOND:
-                return self::TYPE_NAMESPACE . "DateTime::second($params[0])";
+                return self::TYPE_NAMESPACE."DateTime::second($params[0])";
 
             case ODataConstants::MATHFUN_ROUND:
                 return "round($params[0])";
@@ -328,7 +328,7 @@ class PHPExpressionProvider implements IExpressionProvider
                 return "floor($params[0])";
 
             case ODataConstants::BINFUL_EQUAL:
-                return self::TYPE_NAMESPACE . "Binary::binaryEqual($params[0], $params[1])";
+                return self::TYPE_NAMESPACE."Binary::binaryEqual($params[0], $params[1])";
 
             case 'is_null':
                 return "is_null($params[0])";
@@ -350,7 +350,7 @@ class PHPExpressionProvider implements IExpressionProvider
     private function _prepareBinaryExpression($operator, $left, $right)
     {
         return
-            self::OPEN_BRACKET . $left . ' ' . $operator . ' ' . $right . self::CLOSE_BRACKET;
+            self::OPEN_BRACKET.$left.' '.$operator.' '.$right.self::CLOSE_BRACKET;
     }
 
     /**
@@ -363,6 +363,6 @@ class PHPExpressionProvider implements IExpressionProvider
      */
     private function _prepareUnaryExpression($operator, $child)
     {
-        return $operator . self::OPEN_BRACKET . $child . self::CLOSE_BRACKET;
+        return $operator.self::OPEN_BRACKET.$child.self::CLOSE_BRACKET;
     }
 }

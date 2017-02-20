@@ -4,10 +4,10 @@ namespace POData\Common;
 
 class ReflectionHandler
 {
-
     /**
      * @param $entryObject
      * @param $property
+     *
      * @return mixed
      */
     public static function getProperty(&$entryObject, $property)
@@ -20,6 +20,7 @@ class ReflectionHandler
             $reflectionProperty->setAccessible(true);
             $value = $reflectionProperty->getValue($entryObject);
         }
+
         return $value;
     }
 

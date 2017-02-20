@@ -2,10 +2,10 @@
 
 namespace POData\Common;
 
-use POData\Writers\Json\JsonODataV2Writer;
-use POData\Writers\Atom\AtomODataWriter;
 use POData\HttpProcessUtility;
 use POData\IService;
+use POData\Writers\Atom\AtomODataWriter;
+use POData\Writers\Json\JsonODataV2Writer;
 
 /**
  * Class ErrorHandler.
@@ -25,10 +25,10 @@ class ErrorHandler
         try {
             $responseContentType = HttpProcessUtility::selectMimeType(
                 $acceptTypesText,
-                array(
+                [
                     MimeTypes::MIME_APPLICATION_XML,
                     MimeTypes::MIME_APPLICATION_JSON,
-                )
+                ]
             );
         } catch (HttpHeaderFailure $exception) {
             $exception = new ODataException(
@@ -47,7 +47,7 @@ class ErrorHandler
             $exception = new ODataException($exception->getMessage(), HttpStatus::CODE_INTERNAL_SERVER_ERROR);
         }
 
-        $service->getHost()->setResponseVersion(ODataConstants::DATASERVICEVERSION_1_DOT_0 . ';');
+        $service->getHost()->setResponseVersion(ODataConstants::DATASERVICEVERSION_1_DOT_0.';');
 
         // At this point all kind of exceptions will be converted
         //to 'ODataException'

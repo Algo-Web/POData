@@ -2,11 +2,11 @@
 
 namespace POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions;
 
-use POData\UriProcessor\QueryProcessor\FunctionDescription;
-use POData\Providers\Metadata\ResourceTypeKind;
 use POData\Providers\Metadata\ResourceProperty;
-use POData\Providers\Metadata\Type\Navigation;
+use POData\Providers\Metadata\ResourceTypeKind;
 use POData\Providers\Metadata\Type\Boolean;
+use POData\Providers\Metadata\Type\Navigation;
+use POData\UriProcessor\QueryProcessor\FunctionDescription;
 
 /**
  * Class PropertyAccessExpression.
@@ -124,7 +124,7 @@ class PropertyAccessExpression extends AbstractExpression
             $basePropertyExpression = $basePropertyExpression->parent;
         }
 
-        $navigationPropertiesInThePath = array();
+        $navigationPropertiesInThePath = [];
         while ($basePropertyExpression) {
             $resourceTypeKind
                 = $basePropertyExpression->getResourceType()->getResourceTypeKind();
@@ -170,14 +170,14 @@ class PropertyAccessExpression extends AbstractExpression
                         FunctionDescription::isNullCheckFunction(
                             $basePropertyExpression->getType()
                         ),
-                        array($basePropertyExpression)
+                        [$basePropertyExpression]
                     ),
                     ExpressionType::NOT_LOGICAL,
                     new Boolean()
                 );
             }
 
-            return null;
+            return;
         }
 
         //This property is a property of a complex type or resource reference
@@ -190,7 +190,7 @@ class PropertyAccessExpression extends AbstractExpression
                 FunctionDescription::isNullCheckFunction(
                     $basePropertyExpression->getType()
                 ),
-                array($basePropertyExpression)
+                [$basePropertyExpression]
             ),
             ExpressionType::NOT_LOGICAL,
             new Boolean()
@@ -203,7 +203,7 @@ class PropertyAccessExpression extends AbstractExpression
                     FunctionDescription::isNullCheckFunction(
                         $basePropertyExpression->getType()
                     ),
-                    array($basePropertyExpression)
+                    [$basePropertyExpression]
                 ),
                 ExpressionType::NOT_LOGICAL,
                 new Boolean()
@@ -222,7 +222,7 @@ class PropertyAccessExpression extends AbstractExpression
                     FunctionDescription::isNullCheckFunction(
                         $basePropertyExpression->getType()
                     ),
-                    array($basePropertyExpression)
+                    [$basePropertyExpression]
                 ),
                 ExpressionType::NOT_LOGICAL,
                 new Boolean()

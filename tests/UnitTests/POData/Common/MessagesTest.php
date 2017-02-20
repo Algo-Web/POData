@@ -11,7 +11,7 @@ class MessagesTest extends TestCase
         //This test is here to fail if someone adds a message but not a test
         $actual = get_class_methods('POData\Common\Messages');
 
-        $expected = array(
+        $expected = [
             'expressionLexerUnterminatedStringLiteral',
             'expressionLexerDigitExpected',
             'expressionLexerSyntaxError',
@@ -192,11 +192,11 @@ class MessagesTest extends TestCase
             'hostODataQueryOptionCannotBeSpecifiedMoreThanOnce',
             'hostMalFormedBaseUriInConfig',
             'hostRequestUriIsNotBasedOnRelativeUriInConfig',
-        );
+        ];
 
         $this->assertEquals(sort($expected), sort($actual), 'You probably added a message without a corresponding test!');
         foreach ($actual as $funcName) {
-            $param = array();
+            $param = [];
             $fct = new \ReflectionMethod('POData\Common\Messages', $funcName);
             if ($fct->getNumberOfRequiredParameters() == 0) {
                 $r = $fct->invokeArgs(null, $param);
@@ -205,9 +205,9 @@ class MessagesTest extends TestCase
                 continue;
             }
             $p = $fct->getParameters();
-            if (phpversion() <7) {
+            if (phpversion() < 7) {
                 for ($i = 0; $i < $fct->getNumberOfRequiredParameters(); $i++) {
-                    $param[] = "the dingus TestString";
+                    $param[] = 'the dingus TestString';
                 }
                 //Done this way due to php framework limitation
                 try {
@@ -219,7 +219,7 @@ class MessagesTest extends TestCase
                 continue;
             }
             for ($i = 0; $i < $fct->getNumberOfParameters(); $i++) {
-                $param[] = "the dingus TestString";
+                $param[] = 'the dingus TestString';
                 if ($p[$i]->hasType()) {
                     continue 2;
                 }

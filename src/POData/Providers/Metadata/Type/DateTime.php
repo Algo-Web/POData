@@ -66,7 +66,7 @@ class DateTime implements IType
             return false;
         }
 
-        $outValue = "'" . $value . "'";
+        $outValue = "'".$value."'";
 
         return true;
     }
@@ -106,7 +106,7 @@ class DateTime implements IType
      */
     public function convertToOData($value)
     {
-        return 'datetime\'' . urlencode($value) . '\'';
+        return 'datetime\''.urlencode($value).'\'';
     }
 
     /**
@@ -119,7 +119,8 @@ class DateTime implements IType
     public static function year($dateTime)
     {
         $date = new Carbon($dateTime);
-        return $date->format("Y");
+
+        return $date->format('Y');
     }
 
     /**
@@ -132,7 +133,8 @@ class DateTime implements IType
     public static function month($dateTime)
     {
         $date = new Carbon($dateTime);
-        return $date->format("m");
+
+        return $date->format('m');
     }
 
     /**
@@ -145,7 +147,8 @@ class DateTime implements IType
     public static function day($dateTime)
     {
         $date = new Carbon($dateTime);
-        return $date->format("d");
+
+        return $date->format('d');
     }
 
     /**
@@ -158,7 +161,8 @@ class DateTime implements IType
     public static function hour($dateTime)
     {
         $date = new Carbon($dateTime);
-        return $date->format("H");
+
+        return $date->format('H');
     }
 
     /**
@@ -171,7 +175,8 @@ class DateTime implements IType
     public static function minute($dateTime)
     {
         $date = new Carbon($dateTime);
-        return $date->format("i");
+
+        return $date->format('i');
     }
 
     /**
@@ -184,7 +189,8 @@ class DateTime implements IType
     public static function second($dateTime)
     {
         $date = new Carbon($dateTime);
-        return $date->format("s");
+
+        return $date->format('s');
     }
 
     /**

@@ -105,7 +105,7 @@ class Binary implements IType
      */
     public function convertToOData($value)
     {
-        return 'binary\'' . bin2hex($value) . '\'';
+        return 'binary\''.bin2hex($value).'\'';
     }
 
     /**
@@ -129,7 +129,7 @@ class Binary implements IType
             return false;
         }
 
-        $outValue = array();
+        $outValue = [];
         $outValIndex = 0;
         $valueIndex = 0;
         while ($valueIndex < $length) {

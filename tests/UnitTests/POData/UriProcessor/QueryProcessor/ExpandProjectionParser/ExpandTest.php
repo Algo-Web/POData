@@ -2,12 +2,12 @@
 
 namespace UnitTests\POData\UriProcessor\QueryProcessor\ExpandProjectionParser;
 
-use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandedProjectionNode;
-use POData\Configuration\EntitySetRights;
-use POData\Providers\ProvidersWrapper;
-use POData\Configuration\ServiceConfiguration;
-use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandProjectionParser;
 use POData\Common\ODataException;
+use POData\Configuration\EntitySetRights;
+use POData\Configuration\ServiceConfiguration;
+use POData\Providers\ProvidersWrapper;
+use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandedProjectionNode;
+use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandProjectionParser;
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 use UnitTests\POData\Facets\NorthWind1\NorthWindQueryProvider;
 use UnitTests\POData\TestCase;

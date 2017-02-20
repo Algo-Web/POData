@@ -8,8 +8,8 @@ namespace POData\Common;
 class Url
 {
     private $_urlAsString = null;
-    private $_parts = array();
-    private $_segments = array();
+    private $_parts = [];
+    private $_segments = [];
     const ABS_URL_REGEXP = '/^(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/';
     const REL_URL_REGEXP = '/^(\/|\/([\w#!:.?+=&%@!\-\/]))?/';
 

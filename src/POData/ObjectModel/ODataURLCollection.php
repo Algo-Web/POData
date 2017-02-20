@@ -12,7 +12,7 @@ class ODataURLCollection
      *
      * @var ODataURL[]
      */
-    public $urls = array();
+    public $urls = [];
     /**
      * Enter URL to next page, if pagination is enabled.
      *

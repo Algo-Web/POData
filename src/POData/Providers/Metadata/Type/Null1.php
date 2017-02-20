@@ -75,7 +75,7 @@ class Null1 implements IType
     public function convert($stringValue)
     {
         if (0 == strcmp($stringValue, 'null')) {
-            return null;
+            return;
         }
 
         return $stringValue;

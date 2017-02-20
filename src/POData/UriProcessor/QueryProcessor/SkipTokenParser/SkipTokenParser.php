@@ -2,12 +2,12 @@
 
 namespace POData\UriProcessor\QueryProcessor\SkipTokenParser;
 
-use POData\Common\ODataException;
 use POData\Common\Messages;
-use POData\Providers\Metadata\Type\Null1;
+use POData\Common\ODataException;
 use POData\Providers\Metadata\ResourceType;
-use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
+use POData\Providers\Metadata\Type\Null1;
 use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
+use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 
 /**
  * Class SkipTokenParser.
@@ -36,13 +36,13 @@ class SkipTokenParser
      * @param InternalOrderByInfo &$internalOrderByInfo The $orderby details
      * @param string              $skipToken            The $skiptoken value
      *
-     * @return InternalSkipTokenInfo
-     *
      * @throws ODataException
+     *
+     * @return InternalSkipTokenInfo
      */
     public static function parseSkipTokenClause(
-        ResourceType & $resourceType,
-        InternalOrderByInfo & $internalOrderByInfo,
+        ResourceType &$resourceType,
+        InternalOrderByInfo &$internalOrderByInfo,
         $skipToken
     ) {
         $tokenValueDescriptor = null;
