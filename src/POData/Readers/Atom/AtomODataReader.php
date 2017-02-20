@@ -360,12 +360,11 @@ class AtomODataReader
                         }
 
                         \POData\Common\ReflectionHandler::setProperty($entity, $propertyName, $value);
-                    } else {
+                    }
                         //NOTE: Atom Entry not contains $targetQuery node its
                         //an error, because in the case of projection also
                         //customisable feeds will be there.
                         //
-                    }
                 }
             }
         }
@@ -403,10 +402,9 @@ class AtomODataReader
             if ($nodes->length) {
                 $value = $nodes->item(0)->nodeValue;
                 \POData\Common\ReflectionHandler::setProperty($object, $propertyName, $value);
-            } else {
+            }
                 //NOTE: Atom Entry not contains the required property
                 //not a bug projection can lead to this case
-            }
         }
     }
 
