@@ -102,7 +102,7 @@ class OrderByLeafNode extends OrderByBaseNode
 
         $a = $this->_isAscending ? 1 : -1;
 
-        $retVal = function($object1, $object2) use ($ancestors, $a) {
+        $retVal = function ($object1, $object2) use ($ancestors, $a) {
             $accessor1 = $object1;
             $accessor2 = $object2;
             $flag1 = is_null($accessor1);

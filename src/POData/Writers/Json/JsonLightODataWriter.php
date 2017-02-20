@@ -259,7 +259,6 @@ class JsonLightODataWriter extends JsonODataV2Writer
      */
     protected function writeComplexProperty(ODataProperty $property)
     {
-
         $this->_writer->startObjectScope();
 
         $this->writeComplexPropertyMeta($property)
