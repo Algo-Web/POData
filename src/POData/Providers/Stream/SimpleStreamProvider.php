@@ -30,13 +30,9 @@ class SimpleStreamProvider implements IStreamProvider2
         //let library creates default media url.
         return null;
     }
-    public function getReadStream2(
-        $entity,
-        ResourceStreamInfo $resourceStreamInfo,
-        $eTag,
-        $checkETagForEquality,
-        POData\OperationContext\IOperationContext $operationContext
-    ) {
+    public function getReadStream2($entity, ResourceStreamInfo $resourceStreamInfo, $eTag, $checkETagForEquality, IOperationContext $operationContext)
+    {
+
         $name = $resourceStreamInfo->getName();
         return $entity->$name;
     }
