@@ -3,6 +3,7 @@
 namespace POData\Providers\Metadata;
 
 use POData\Common\ODataException;
+use POData\Configuration\IServiceConfiguration;
 use POData\Configuration\ServiceConfiguration;
 use POData\Configuration\EntitySetRights;
 use POData\Providers\ProvidersWrapper;
@@ -40,10 +41,10 @@ class ResourceSetWrapper extends ResourceSet
     /**
      * Constructs a new instance of ResourceSetWrapper.
      *
-     * @param ResourceSet          $resourceSet   The resource set to wrap
-     * @param ServiceConfiguration $configuration Configuration to take settings specific to wrapped resource set
+     * @param ResourceSet $resourceSet The resource set to wrap
+     * @param IServiceConfiguration $configuration Configuration to take settings specific to wrapped resource set
      */
-    public function __construct(ResourceSet $resourceSet, ServiceConfiguration $configuration)
+    public function __construct(ResourceSet $resourceSet, IServiceConfiguration $configuration)
     {
         $this->_resourceSet = $resourceSet;
         $this->_resourceSetRights = $configuration->getEntitySetAccessRule($resourceSet);

@@ -328,8 +328,7 @@ class UriProcessor
                         // ResourceType::getPropertyValue... somehow
                         try {
                             //see #88
-                            $property = new \ReflectionProperty($value, $segment->getIdentifier());
-                            $value = $property->getValue($value);
+                            $value = \POData\Common\ReflectionHandler::getProperty($value, $segment->getIdentifier());
                         } catch (\ReflectionException $reflectionException) {
 
                         }

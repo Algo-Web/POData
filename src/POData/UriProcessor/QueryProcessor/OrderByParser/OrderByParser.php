@@ -271,8 +271,7 @@ class OrderByParser
                             $resourceProperty,
                             $ascending
                         );
-                        $this->_comparisonFunctions[]
-                            = $node->buildComparisonFunction($ancestors);
+                        $this->_comparisonFunctions[] = $node->buildComparisonFunction($ancestors);
                     } elseif ($resourceProperty->getKind() == ResourcePropertyKind::RESOURCE_REFERENCE) {
                         $node = new OrderByNode(
                             $orderBySubPathSegment,

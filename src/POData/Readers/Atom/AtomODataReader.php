@@ -4,6 +4,7 @@ namespace POData\Readers\Atom;
 use DOMXPath;
 use DOMDocument;
 use ReflectionClass;
+use ReflectionException;
 use ReflectionProperty;
 
 class AtomODataReader
@@ -68,7 +69,6 @@ class AtomODataReader
             if (!$entries->length) {
                 throw new InternalError(Resource::XMLWithoutFeedorEntry);
             }
-            $entityType;
             $result[] = self::EnumerateEntry($entries->item(0), $entityType);
             $this->_objectIDToNextLinkUri[0] = null;
         } else {
@@ -102,7 +102,7 @@ class AtomODataReader
             $entryCollection[] = $this->EnumerateEntry($entry, $entityType, $parentObject);
         }
 
-        if ($parentObject == null) {
+        if (null == $parentObject) {
             $this->_objectIDToNextLinkUri[0] = $nextLinkHref;
             $inlineCount = $xPath->query(self::$QUERY_INLINECOUNT);
             if ($inlineCount->length) {
@@ -133,7 +133,7 @@ class AtomODataReader
         if ($editLinks->length) {
             $href = $this->GetAttribute($editLinks->item(0), 'href');
             if ($href) {
-                if (($pos = strpos($href, '(')) !== false) {
+                if (false !== ($pos = strpos($href, '('))) {
                     $entitySet = substr($href, 0, $pos);
                 }
             }
@@ -154,7 +154,7 @@ class AtomODataReader
 
         $object = $this->objectContext->AddToObjectToResource($entityType, $atomEntry);
 
-        if ($parentObject != null) {
+        if (null != $parentObject) {
             $this->objectContext->AddToBindings($parentObject, $entitySet, $object);
         }
 
@@ -189,16 +189,14 @@ class AtomODataReader
 
         foreach ($feeds as $feed) {
             $entryCollection = $this->EnumerateFeed($feed, $feedType, $object);
-            $property = new ReflectionProperty($object, $feedType);
-            $property->setValue($object, $entryCollection);
+            \POData\Common\ReflectionHandler::setProperty($object, $feedType, $entryCollection);
         }
 
         $entries = $xPath->query(self::$QUERY_INLINE_ENTRY);
         if ($entries->length) {
             $entry = $this->EnumerateEntry($entries->item(0), $entryType, $object);
             $entry = array($entry);
-            $property = new ReflectionProperty($object, $entryType);
-            $property->setValue($object, $entry);
+            \POData\Common\ReflectionHandler::setProperty($object, $entryType, $entry);
         }
     }
 
@@ -210,7 +208,7 @@ class AtomODataReader
         $relLinks = array();
         foreach ($links as $link) {
             $feedNode = $link->getElementsByTagNameNS(self::$namespaces['default'], 'feed');
-            if ($feedNode->item(0) === null) {
+            if (null === $feedNode->item(0)) {
                 $relUri = self::GetAttribute($link, "href");
                 $index = Utility::reverseFind($relUri, '/');
                 $entityName = substr($relUri, $index + 1, strlen($relUri) - $index);
@@ -230,7 +228,7 @@ class AtomODataReader
         if ($edit_media_links->length) {
             $edit_media_link = $edit_media_links->item(0);
             $atomEntry->EditMediaLink = self::GetAttribute($edit_media_link, 'href');
-            if ($atomEntry->EditMediaLink == null) {
+            if (null == $atomEntry->EditMediaLink) {
                 throw new InternalError(Resource::MissingEditMediaLinkInResponseBody);
             }
             $atomEntry->StreamETag = self::GetAttribute($edit_media_link, 'm:etag');
@@ -242,7 +240,7 @@ class AtomODataReader
             $streamUri = null;
             $streamUri = self::GetAttribute($content, 'src');
             if ($streamUri != null) {
-                if ($content->nodeValue != null) {
+                if (null != $content->nodeValue) {
                     throw new InternalError(Resource::ExpectedEmptyMediaLinkEntryContent);
                 }
                 $atomEntry->MediaLinkEntry = true;
@@ -258,21 +256,18 @@ class AtomODataReader
 
         if ($prefix != "default") {
             $prefix = $prefix . ":";
-            $pos = (($index = strpos($name, $prefix)) === false) ? 0 : $index + strlen($prefix);
+            $pos = (false === ($index = strpos($name, $prefix))) ? 0 : $index + strlen($prefix);
             $name = substr($name, $pos);
         }
 
         $value = $property->nodeValue;
         try {
-            $property = new ReflectionProperty($object, $name);
-
             //Do Atom format to PHP format conversion if required for property value ex:
             //if (strpos($property->getDocComment(), 'Edm.DateTime') == TRUE)
             //{
             //    $value = AtomDateToPHPDate()
             //}
-
-            $property->setValue($object, $value);
+            \POData\Common\ReflectionHandler::setProperty($object, $name, $value);
         } catch (ReflectionException $ex) {
             // Ignore the error at the moment. TBD later.
         }
@@ -336,7 +331,6 @@ class AtomODataReader
                     $nodes = $xPath->Query($targetQuery);
 
                     if ($nodes->length) {
-                        $value = null;
                         if (isset($attributes['NodeAttribute'])) {
                             $attribute = $attributes['FC_NsPrefix'] . ":" . $attributes['NodeAttribute'];
                             $value = self::GetAttribute($nodes->item(0), $attribute);
@@ -348,7 +342,6 @@ class AtomODataReader
                                     $value = '0';
                             }
                         } else {
-                            $value = null;
                             if ($nodes->item(0)->hasChildNodes()) {
                                 $value = $nodes->item(0)->firstChild->textContent;
                             } else {
@@ -360,19 +353,18 @@ class AtomODataReader
                                 $nodes1 = $xPath->Query($query1);
                                 if ($nodes1->length) {
                                     $value1 = self::GetAttribute($nodes1->item(0), "m:null");
-                                    if ($value1 == 'true') {
+                                    if ('true' == $value1) {
                                         $value = null;
                                     }
                                 }
                             }
                         }
 
-                        $property = new ReflectionProperty($object, $propertyName);
-                        $property->setValue($object, $value);
+                        \POData\Common\ReflectionHandler::setProperty($entity, $propertyName, $value);
                     } else {
                         //NOTE: Atom Entry not contains $targetQuery node its
-                        //an error, becase in the case of projection also
-                        //custmerizable feeds will be there.
+                        //an error, because in the case of projection also
+                        //customisable feeds will be there.
                         //
                     }
                 }
@@ -387,12 +379,22 @@ class AtomODataReader
             //Now check for complex type. If type not start with 'Edm.'
             //it can be a complex type.
             if (isset($propertyAttributes['EdmType']) &&
-               strpos($propertyAttributes['EdmType'], 'Edm.') !== 0) {
+                0 !== strpos($propertyAttributes['EdmType'], 'Edm.')
+            ) {
                 $complexPropertyObject = null;
                 $complexPropertyName = '';
-                if ($this->CheckAndProcessComplexType($xPath, $propertyQuery, $propertyName, $complexPropertyName, $complexPropertyObject)) {
-                    $property = new ReflectionProperty($object, $complexPropertyName);
-                    $property->setValue($object, $complexPropertyObject);
+                if ($this->CheckAndProcessComplexType(
+                    $xPath,
+                    $propertyQuery,
+                    $propertyName,
+                    $complexPropertyName,
+                    $complexPropertyObject
+                )) {
+                    \POData\Common\ReflectionHandler::setProperty(
+                        $object,
+                        $complexPropertyName,
+                        $complexPropertyObject
+                    );
                     continue;
                 }
             }
@@ -401,8 +403,7 @@ class AtomODataReader
             $nodes = $xPath->Query($query);
             if ($nodes->length) {
                 $value = $nodes->item(0)->nodeValue;
-                $property = new ReflectionProperty($object, $propertyName);
-                $property->setValue($object, $value);
+                \POData\Common\ReflectionHandler::setProperty($object, $propertyName, $value);
             } else {
                 //NOTE: Atom Entry not contains the required property
                 //not a bug projection can lead to this case
@@ -520,8 +521,7 @@ class AtomODataReader
             $properties = $xPath->query(self::$QUERY_PROPERTY2 . $keyPropertyName);
             if ($properties->length) {
                 $value = $properties->item(0)->nodeValue;
-                $refProp = new ReflectionProperty($object, $keyPropertyName);
-                $refProp->setValue($object, $value);
+                \POData\Common\ReflectionHandler::setProperty($object, $keyPropertyName, $value);
             }
         }
     }
@@ -548,7 +548,7 @@ class AtomODataReader
      */
     public static function GetErrorDetails($errorXML, &$outerError, &$innnerError)
     {
-        if (strstr($errorXML, self::$ERROR_TAG) === false) {
+        if (false === strstr($errorXML, self::$ERROR_TAG)) {
             $innerError = "";
             $outerError = $errorXML;
         } else {

@@ -47,7 +47,7 @@ class SimpleDataService extends BaseService implements IService
         parent::__construct($serialiser);
     }
 
-    public function initialize(ServiceConfiguration $config)
+    public function initialize(IServiceConfiguration $config)
     {
         $config->setEntitySetPageSize('*', $this->maxPageSize);
         $config->setEntitySetAccessRule('*', EntitySetRights::ALL);

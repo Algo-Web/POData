@@ -2,6 +2,7 @@
 
 namespace POData\Providers;
 
+use POData\Configuration\IServiceConfiguration;
 use POData\Providers\Metadata\ResourceTypeKind;
 use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Metadata\ResourceType;
@@ -41,7 +42,7 @@ class ProvidersWrapper
     /**
      * Holds reference to IServiceConfiguration implementation.
      *
-     * @var ServiceConfiguration
+     * @var IServiceConfiguration
      */
     private $config;
 
@@ -87,11 +88,11 @@ class ProvidersWrapper
     /**
      * Creates a new instance of ProvidersWrapper.
      *
-     * @param IMetadataProvider     $meta   Reference to IMetadataProvider implementation
-     * @param IQueryProvider        $query  Reference to IQueryProvider implementation
-     * @param ServiceConfiguration  $config Reference to IServiceConfiguration implementation
+     * @param IMetadataProvider $meta Reference to IMetadataProvider implementation
+     * @param IQueryProvider $query Reference to IQueryProvider implementation
+     * @param IServiceConfiguration $config Reference to IServiceConfiguration implementation
      */
-    public function __construct(IMetadataProvider $meta, IQueryProvider $query, ServiceConfiguration $config)
+    public function __construct(IMetadataProvider $meta, IQueryProvider $query, IServiceConfiguration $config)
     {
         $this->metaProvider = $meta;
         $this->config = $config;
@@ -150,7 +151,7 @@ class ProvidersWrapper
     /**
      * To get the data service configuration.
      *
-     * @return ServiceConfiguration
+     * @return IServiceConfiguration
      */
     public function getConfiguration()
     {

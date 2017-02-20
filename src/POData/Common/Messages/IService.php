@@ -10,7 +10,7 @@ trait IService
      */
     public static function invalidMetadataInstance()
     {
-        return '	.GetMetdataProvider returns invalid object.';
+        return 'IService.getMetdataProvider returns invalid object.';
     }
 
     /**

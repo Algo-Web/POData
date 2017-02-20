@@ -921,35 +921,14 @@ class ResourceType
      */
     public function setPropertyValue($entity, $property, $value)
     {
-        // If magic method exists, try that first, else try property directly
-        if (method_exists($entity, '__set')) {
-            $entity->$property = $value;
-            return $this;
-        }
-        if (is_object($entity) && property_exists($entity, $property)) {
-            $entity->$property = $value;
-            return $this;
-        }
-        $reflect = new \ReflectionProperty($entity, $property);
-        $reflect->setValue($entity, $value);
+        \POData\Common\ReflectionHandler::setProperty($entity, $property, $value);
 
         return $this;
     }
 
     public function getPropertyValue($entity, $property)
     {
-        // If magic method exists, try that first, else try property directly
-        if (method_exists($entity, '__get')) {
-            return $entity->$property;
-        }
-        if (is_object($entity) && property_exists($entity, $property)) {
-            return $entity->$property;
-        }
-        // Else drop through to reflection
-        // Issue #88 - is this too slow?
-        $reflect = new \ReflectionProperty($entity, $property);
-
-        return $reflect->getValue($entity);
+        return \POData\Common\ReflectionHandler::getProperty($entity, $property);
     }
 
     public function __sleep()

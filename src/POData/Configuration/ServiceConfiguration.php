@@ -8,7 +8,7 @@ use POData\Common\Messages;
 use POData\Common\Version;
 use POData\Common\InvalidOperationException;
 
-class ServiceConfiguration
+class ServiceConfiguration implements IServiceConfiguration
 {
     /**
      * Maximum number of segments to be expanded allowed in a request.

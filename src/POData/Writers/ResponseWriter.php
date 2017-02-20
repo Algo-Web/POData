@@ -66,7 +66,7 @@ class ResponseWriter
             $writer = $service->getODataWriterRegistry()->getWriter($request->getResponseVersion(), $responseContentType);
             //TODO: move ot Messages
             if (is_null($writer)) {
-                throw new \Exception('no writer can handle the request');
+                throw new \Exception('No writer can handle the request.');
             }
 
             if (is_null($entityModel)) {  //TODO: this seems like a weird way to know that the request is for a service document..i'd think we know this some other way

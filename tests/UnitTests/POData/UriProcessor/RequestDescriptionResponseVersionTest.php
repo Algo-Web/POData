@@ -2,6 +2,7 @@
 
 namespace UnitTests\POData\UriProcessor;
 
+use POData\Configuration\IServiceConfiguration;
 use POData\IService;
 use POData\OperationContext\ServiceHost;
 use POData\Configuration\ServiceConfiguration;
@@ -42,7 +43,7 @@ class RequestDescriptionResponseVersionTest extends TestCase
     protected $mockServiceHost;
 
     /**
-     * @var ServiceConfiguration
+     * @var IServiceConfiguration
      */
     protected $mockServiceConfiguration;
 

@@ -3,6 +3,7 @@
 namespace UnitTests\POData\Facets\NorthWind1;
 
 use POData\Configuration\EntitySetRights;
+use POData\Configuration\IServiceConfiguration;
 use POData\Configuration\ProtocolVersion;
 use POData\Configuration\ServiceConfiguration;
 use POData\OperationContext\ServiceHost;
@@ -21,9 +22,9 @@ class NorthWindServiceV1 extends BaseServiceTestWrapper
     /**
      * This method is called only once to initialize service-wide policies.
      *
-     * @param ServiceConfiguration $config
+     * @param IServiceConfiguration $config
      */
-    public function initialize(ServiceConfiguration $config)
+    public function initialize(IServiceConfiguration $config)
     {
         $config->setEntitySetAccessRule('*', EntitySetRights::ALL);
         //we are using V1 protocol, but still we set page size because with
