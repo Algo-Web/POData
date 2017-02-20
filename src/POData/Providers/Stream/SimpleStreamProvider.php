@@ -20,7 +20,7 @@ class SimpleStreamProvider implements IStreamProvider2
     {
         return 'application/octet-stream';
     }
-     public function getStreamETag($entity, $operationContext)
+     public function getStreamETag($entity, IOperationContext $operationContext)
     {
         return null; // TODO: find default stream and return.
     }
