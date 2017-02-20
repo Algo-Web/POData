@@ -788,7 +788,6 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
     ) {
         //This is the code path to handle properties of Complex type
         //or Entry without projection (i.e. no expansion or selection)
-        $resourceProperties = [];
         if ($resourceTypeKind == ResourceTypeKind::ENTITY) {
             // If custom object is an entry then it can contain navigation
             // properties which are invisible (because the corresponding
