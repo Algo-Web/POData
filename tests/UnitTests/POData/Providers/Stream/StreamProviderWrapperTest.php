@@ -109,7 +109,7 @@ class StreamProviderWrapperTest extends TestCase
         $service = m::mock(IService::class);
         $service->shouldReceive('getHost')->andReturn($host);
         $service->shouldReceive('getConfiguration->getMaxDataServiceVersion')->andReturn(new Version(2, 0));
-        $service->shouldReceive('getService')->withArgs(['IStreamProvider'])->andReturn("electric-rave")->once();
+        $service->shouldReceive('getStreamProviderX')->andReturn("electric-rave")->once();
         $service->shouldReceive('getOperationContext')->andReturn($opContext)->once();
 
         $foo = new StreamProviderWrapper();
@@ -140,7 +140,7 @@ class StreamProviderWrapperTest extends TestCase
         $service = m::mock(IService::class);
         $service->shouldReceive('getHost')->andReturn($host);
         $service->shouldReceive('getConfiguration->getMaxDataServiceVersion')->andReturn(new Version(3, 0));
-        $service->shouldReceive('getService')->withArgs(['IStreamProvider2'])->andReturn("electric-rave")->once();
+        $service->shouldReceive('getStreamProviderX')->andReturn("electric-rave")->once();
         $service->shouldReceive('getOperationContext')->andReturn($opContext)->once();
 
         $foo = new StreamProviderWrapper();
@@ -174,8 +174,7 @@ class StreamProviderWrapperTest extends TestCase
         $service = m::mock(IService::class);
         $service->shouldReceive('getHost')->andReturn($host);
         $service->shouldReceive('getConfiguration->getMaxDataServiceVersion')->andReturn(new Version(3, 0));
-        $service->shouldReceive('getService')->withArgs(['IStreamProvider2'])->andReturn(null)->once();
-        $service->shouldReceive('getService')->withArgs(['IStreamProvider'])->andReturn($streamProv)->once();
+        $service->shouldReceive('getStreamProviderX')->andReturn($streamProv)->once();
         $service->shouldReceive('getOperationContext')->andReturn($opContext)->once();
 
         $foo = new StreamProviderWrapper();
@@ -209,8 +208,7 @@ class StreamProviderWrapperTest extends TestCase
         $service = m::mock(IService::class);
         $service->shouldReceive('getHost')->andReturn($host);
         $service->shouldReceive('getConfiguration->getMaxDataServiceVersion')->andReturn(new Version(3, 0));
-        $service->shouldReceive('getService')->withArgs(['IStreamProvider2'])->andReturn(null)->once();
-        $service->shouldReceive('getService')->withArgs(['IStreamProvider'])->andReturn($streamProv)->once();
+        $service->shouldReceive('getStreamProviderX')->andReturn($streamProv)->once();
         $service->shouldReceive('getOperationContext')->andReturn($opContext)->once();
 
         $foo = new StreamProviderWrapper();
@@ -241,8 +239,7 @@ class StreamProviderWrapperTest extends TestCase
         $service = m::mock(IService::class);
         $service->shouldReceive('getHost')->andReturn($host);
         $service->shouldReceive('getConfiguration->getMaxDataServiceVersion')->andReturn(new Version(3, 0));
-        $service->shouldReceive('getService')->withArgs(['IStreamProvider2'])->andReturn(null)->once();
-        $service->shouldReceive('getService')->withArgs(['IStreamProvider'])->andReturn(null)->once();
+        $service->shouldReceive('getStreamProviderX')->andReturn(null)->times(2);
         $service->shouldReceive('getOperationContext')->andReturn($opContext)->once();
 
         $foo = new StreamProviderWrapper();
@@ -277,8 +274,7 @@ class StreamProviderWrapperTest extends TestCase
         $service = m::mock(IService::class);
         $service->shouldReceive('getHost')->andReturn($host);
         $service->shouldReceive('getConfiguration->getMaxDataServiceVersion')->andReturn(new Version(2, 0));
-        $service->shouldReceive('getService')->withArgs(['IStreamProvider2'])->andReturn(null)->never();
-        $service->shouldReceive('getService')->withArgs(['IStreamProvider'])->andReturn($streamProv)->never();
+        $service->shouldReceive('getStreamProviderX')->andReturn($streamProv)->never();
         $service->shouldReceive('getOperationContext')->andReturn($opContext)->once();
 
         $foo = new StreamProviderWrapper();
@@ -313,7 +309,7 @@ class StreamProviderWrapperTest extends TestCase
         $service = m::mock(IService::class);
         $service->shouldReceive('getHost')->andReturn($host);
         $service->shouldReceive('getConfiguration->getMaxDataServiceVersion')->andReturn(new Version(3, 0));
-        $service->shouldReceive('getService')->withArgs(['IStreamProvider2'])->andReturn($streamProv)->once();
+        $service->shouldReceive('getStreamProviderX')->andReturn($streamProv)->once();
         $service->shouldReceive('getOperationContext')->andReturn($opContext)->once();
 
         $foo = new StreamProviderWrapper();
@@ -375,7 +371,7 @@ class StreamProviderWrapperTest extends TestCase
         $service->shouldReceive('getOperationContext')->andReturn($context)->once();
         $service->shouldReceive('getHost')->andReturn($host);
         $service->shouldReceive('getConfiguration->getMaxDataServiceVersion')->andReturn(new Version(3, 0));
-        $service->shouldReceive('getService')->withArgs(['IStreamProvider2'])->andReturn($streamProv)->once();
+        $service->shouldReceive('getStreamProviderX')->andReturn($streamProv)->once();
 
         $foo = m::mock(StreamProviderWrapper::class)->makePartial();
         $foo->shouldReceive('getStreamETag')->andReturn('W/"electric-rave"')->never();
@@ -414,7 +410,7 @@ class StreamProviderWrapperTest extends TestCase
         $service->shouldReceive('getOperationContext')->andReturn($context)->once();
         $service->shouldReceive('getHost')->andReturn($host);
         $service->shouldReceive('getConfiguration->getMaxDataServiceVersion')->andReturn(new Version(3, 0));
-        $service->shouldReceive('getService')->withArgs(['IStreamProvider2'])->andReturn($streamProv)->once();
+        $service->shouldReceive('getStreamProviderX')->andReturn($streamProv)->once();
 
         $foo = m::mock(StreamProviderWrapper::class)->makePartial();
         $foo->shouldReceive('getStreamETag')->andReturn('W/"electric-rave"')->never();
@@ -446,7 +442,7 @@ class StreamProviderWrapperTest extends TestCase
         $service->shouldReceive('getOperationContext')->andReturn($context)->once();
         $service->shouldReceive('getHost')->andReturn($host);
         $service->shouldReceive('getConfiguration->getMaxDataServiceVersion')->andReturn(new Version(3, 0));
-        $service->shouldReceive('getService')->withArgs(['IStreamProvider2'])->andReturn($streamProv)->once();
+        $service->shouldReceive('getStreamProviderX')->andReturn($streamProv)->once();
 
         $foo = m::mock(StreamProviderWrapper::class)->makePartial();
         $foo->shouldReceive('getStreamETag')->andReturn('W/"electric-rave"')->never();
@@ -477,8 +473,7 @@ class StreamProviderWrapperTest extends TestCase
         $service->shouldReceive('getOperationContext')->andReturn($context)->once();
         $service->shouldReceive('getHost')->andReturn($host);
         $service->shouldReceive('getConfiguration->getMaxDataServiceVersion')->andReturn(new Version(3, 0));
-        $service->shouldReceive('getService')->withArgs(['IStreamProvider'])->andReturn(null)->once();
-        $service->shouldReceive('getService')->withArgs(['IStreamProvider2'])->andReturn(null)->once();
+        $service->shouldReceive('getStreamProviderX')->andReturn(null)->times(2);;
 
         $foo = m::mock(StreamProviderWrapper::class)->makePartial();
         $streamInfo = m::mock(ResourceStreamInfo::class);
@@ -517,8 +512,7 @@ class StreamProviderWrapperTest extends TestCase
         $service->shouldReceive('getOperationContext')->andReturn($context)->once();
         $service->shouldReceive('getHost')->andReturn($host);
         $service->shouldReceive('getConfiguration->getMaxDataServiceVersion')->andReturn(new Version(3, 0));
-        $service->shouldReceive('getService')->withArgs(['IStreamProvider'])->andReturn(null)->never();
-        $service->shouldReceive('getService')->withArgs(['IStreamProvider2'])->andReturn($streamProv)->once();
+        $service->shouldReceive('getStreamProviderX')->andReturn($streamProv)->once();
 
         $foo = m::mock(StreamProviderWrapper::class)->makePartial();
         $streamInfo = m::mock(ResourceStreamInfo::class);
@@ -557,8 +551,7 @@ class StreamProviderWrapperTest extends TestCase
         $service->shouldReceive('getOperationContext')->andReturn($context)->once();
         $service->shouldReceive('getHost')->andReturn($host);
         $service->shouldReceive('getConfiguration->getMaxDataServiceVersion')->andReturn(new Version(3, 0));
-        $service->shouldReceive('getService')->withArgs(['IStreamProvider'])->andReturn(null)->never();
-        $service->shouldReceive('getService')->withArgs(['IStreamProvider2'])->andReturn($streamProv)->once();
+        $service->shouldReceive('getStreamProviderX')->andReturn($streamProv)->once();
 
         $foo = m::mock(StreamProviderWrapper::class)->makePartial();
         $streamInfo = m::mock(ResourceStreamInfo::class);
@@ -587,8 +580,7 @@ class StreamProviderWrapperTest extends TestCase
         $service->shouldReceive('getOperationContext')->andReturn($context);
         $service->shouldReceive('getHost')->andReturn($host);
         $service->shouldReceive('getConfiguration->getMaxDataServiceVersion')->andReturn(new Version(3, 0));
-        $service->shouldReceive('getService')->withArgs(['IStreamProvider'])->andReturn(null)->never();
-        $service->shouldReceive('getService')->withArgs(['IStreamProvider2'])->andReturn($streamProv)->once();
+        $service->shouldReceive('getStreamProviderX')->andReturn($streamProv)->once();
 
         $foo = m::mock(StreamProviderWrapper::class)->makePartial();
         $streamInfo = m::mock(ResourceStreamInfo::class);
@@ -617,8 +609,7 @@ class StreamProviderWrapperTest extends TestCase
         $service->shouldReceive('getOperationContext')->andReturn($context);
         $service->shouldReceive('getHost')->andReturn($host);
         $service->shouldReceive('getConfiguration->getMaxDataServiceVersion')->andReturn(new Version(3, 0));
-        $service->shouldReceive('getService')->withArgs(['IStreamProvider'])->andReturn(null)->never();
-        $service->shouldReceive('getService')->withArgs(['IStreamProvider2'])->andReturn($streamProv)->once();
+        $service->shouldReceive('getStreamProviderX')->andReturn($streamProv)->once();
 
         $foo = m::mock(StreamProviderWrapper::class)->makePartial();
         $streamInfo = m::mock(ResourceStreamInfo::class);
@@ -654,8 +645,7 @@ class StreamProviderWrapperTest extends TestCase
         $service->shouldReceive('getOperationContext')->andReturn($context);
         $service->shouldReceive('getHost')->andReturn($host);
         $service->shouldReceive('getConfiguration->getMaxDataServiceVersion')->andReturn(new Version(3, 0));
-        $service->shouldReceive('getService')->withArgs(['IStreamProvider'])->andReturn(null)->never();
-        $service->shouldReceive('getService')->withArgs(['IStreamProvider2'])->andReturn($streamProv)->once();
+        $service->shouldReceive('getStreamProviderX')->andReturn($streamProv)->once();
 
         $foo = m::mock(StreamProviderWrapper::class)->makePartial();
         $foo->shouldReceive('getDefaultStreamEditMediaUri')->andReturn('https://www.example.org')->never();
@@ -686,8 +676,7 @@ class StreamProviderWrapperTest extends TestCase
         $service->shouldReceive('getOperationContext')->andReturn($context);
         $service->shouldReceive('getHost')->andReturn($host);
         $service->shouldReceive('getConfiguration->getMaxDataServiceVersion')->andReturn(new Version(3, 0));
-        $service->shouldReceive('getService')->withArgs(['IStreamProvider'])->andReturn(null)->never();
-        $service->shouldReceive('getService')->withArgs(['IStreamProvider2'])->andReturn($streamProv)->once();
+        $service->shouldReceive('getStreamProviderX')->andReturn($streamProv)->once();
 
         $foo = m::mock(StreamProviderWrapper::class)->makePartial();
         $foo->shouldReceive('getDefaultStreamEditMediaUri')->andReturn('https://www.example.org')->once();
