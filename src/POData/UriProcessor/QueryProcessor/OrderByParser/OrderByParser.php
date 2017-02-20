@@ -400,7 +400,7 @@ class OrderByParser
             $this->_topLevelComparisonFunction = $this->_comparisonFunctions[0];
         } else {
             $funcList = $this->_comparisonFunctions;
-            $BigFunc = function ($object1, $object2) use ($funcList) {
+            $this->_topLevelComparisonFunction = function ($object1, $object2) use ($funcList) {
                 $ret = 0;
                 foreach ($funcList as $f) {
                     $ret = $f($object1, $object2);
@@ -408,10 +408,8 @@ class OrderByParser
                         return $ret;
                     }
                 }
-
                 return $ret;
             };
-            $this->_topLevelComparisonFunction = $BigFunc;
         }
     }
 
