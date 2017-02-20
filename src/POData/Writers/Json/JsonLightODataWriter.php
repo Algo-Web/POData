@@ -248,7 +248,6 @@ class JsonLightODataWriter extends JsonODataV2Writer
      */
     protected function writeNextPageLink(ODataLink $nextPageLinkUri = null)
     {
-        /*
         // "__next" : uri
         if ($nextPageLinkUri != null) {
             $this->_writer
@@ -257,7 +256,6 @@ class JsonLightODataWriter extends JsonODataV2Writer
         }
 
         return $this;
-        */
     }
 
     /**
@@ -270,7 +268,6 @@ class JsonLightODataWriter extends JsonODataV2Writer
     protected function writeComplexProperty(ODataProperty $property)
     {
 
-        // {
         $this->_writer->startObjectScope();
 
         $this->writeComplexPropertyMeta($property)
@@ -294,18 +291,7 @@ class JsonLightODataWriter extends JsonODataV2Writer
 
     protected function writeBagContent(ODataBagContent $bag)
     {
-        $this->_writer
-
-            /*
-            ->writeName(ODataConstants::JSON_METADATA_STRING) //__metadata : { Type : "typename" }
-            ->startObjectScope()
-
-            ->writeName(ODataConstants::JSON_TYPE_STRING)
-            ->writeValue($bag->type)
-            ->endScope()  // }
-            */
-
-            ->startArrayScope(); // [
+        $this->_writer->startArrayScope();
 
         foreach ($bag->propertyContents as $content) {
             if ($content instanceof ODataPropertyContent) {
@@ -320,7 +306,7 @@ class JsonLightODataWriter extends JsonODataV2Writer
             }
         }
 
-        $this->_writer->endScope(); // ]
+        $this->_writer->endScope();
         return $this;
     }
 }
