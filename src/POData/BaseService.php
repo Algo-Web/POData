@@ -7,6 +7,8 @@ use POData\Common\ReflectionHandler;
 use POData\Common\Version;
 use POData\Configuration\IServiceConfiguration;
 use POData\ObjectModel\IObjectSerialiser;
+use POData\ObjectModel\ODataFeed;
+use POData\ObjectModel\ODataURLCollection;
 use POData\OperationContext\HTTPRequestMethod;
 use POData\Common\ErrorHandler;
 use POData\Common\Messages;
@@ -91,6 +93,18 @@ abstract class BaseService implements IRequestHandler, IService
      * @var IObjectSerialiser
      */
     protected $objectSerialiser;
+
+    /**
+     * Get reference to object serialiser - bit wot turns PHP objects
+     * into message traffic on wire
+     *
+     * @var IObjectSerialiser
+     */
+    public function getObjectSerialiser()
+    {
+        assert(null != $this->objectSerialiser);
+        return $this->objectSerialiser;
+    }
 
     protected function __construct(IObjectSerialiser $serialiser = null)
     {
@@ -253,7 +267,7 @@ abstract class BaseService implements IRequestHandler, IService
     abstract public function getStreamProviderX();
 
     /** @var ODataWriterRegistry */
-    private $writerRegistry;
+    protected $writerRegistry;
 
     /**
      * Returns the ODataWriterRegistry to use when writing the response to a service document or resource request.
@@ -262,6 +276,7 @@ abstract class BaseService implements IRequestHandler, IService
      */
     public function getODataWriterRegistry()
     {
+        assert(null != $this->writerRegistry);
         return $this->writerRegistry;
     }
 
@@ -371,8 +386,9 @@ abstract class BaseService implements IRequestHandler, IService
                 return;
             }
 
-            $this->objectSerialiser->setRequest($request);
-            $objectModelSerializer = $this->objectSerialiser;
+            $objectModelSerializer = $this->getObjectSerialiser();
+            $objectModelSerializer->setRequest($request);
+
             $targetResourceType = $request->getTargetResourceType();
             assert(null != $targetResourceType, "Target resource type cannot be null");
 
@@ -386,15 +402,12 @@ abstract class BaseService implements IRequestHandler, IService
                 if ($request->isLinkUri()) {
                     $odataModelInstance = $objectModelSerializer->writeUrlElements($entryObjects);
                     assert(
-                        $odataModelInstance instanceof \POData\ObjectModel\ODataURLCollection,
+                        $odataModelInstance instanceof ODataURLCollection,
                         '!$odataModelInstance instanceof ODataURLCollection'
                     );
                 } else {
                     $odataModelInstance = $objectModelSerializer->writeTopLevelElements($entryObjects);
-                    assert(
-                        $odataModelInstance instanceof \POData\ObjectModel\ODataFeed,
-                        '!$odataModelInstance instanceof ODataFeed'
-                    );
+                    assert($odataModelInstance instanceof ODataFeed, '!$odataModelInstance instanceof ODataFeed');
                 }
             } else {
                 // Code path for entry, complex, bag, resource reference link,
@@ -405,9 +418,7 @@ abstract class BaseService implements IRequestHandler, IService
                     // In the query 'Orders(1245)/$links/Customer', the targeted
                     // Customer might be null
                     if (is_null($result)) {
-                        throw ODataException::createResourceNotFoundError(
-                            $request->getIdentifier()
-                        );
+                        throw ODataException::createResourceNotFoundError($request->getIdentifier());
                     }
 
                     $odataModelInstance = $objectModelSerializer->writeUrlElement($result);
@@ -421,11 +432,7 @@ abstract class BaseService implements IRequestHandler, IService
                     }
                     // handle entry resource
                     $needToSerializeResponse = true;
-                    $eTag = $this->compareETag(
-                        $result,
-                        $targetResourceType,
-                        $needToSerializeResponse
-                    );
+                    $eTag = $this->compareETag($result, $targetResourceType, $needToSerializeResponse);
 
                     if ($needToSerializeResponse) {
                         if (is_null($result)) {
@@ -493,12 +500,7 @@ abstract class BaseService implements IRequestHandler, IService
         }
 
         if ($hasResponseBody) {
-            ResponseWriter::write(
-                $this,
-                $request,
-                $odataModelInstance,
-                $responseContentType
-            );
+            ResponseWriter::write($this, $request, $odataModelInstance, $responseContentType);
         }
     }
 

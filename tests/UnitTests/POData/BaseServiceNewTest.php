@@ -3,13 +3,18 @@
 namespace UnitTests\POData;
 
 use Mockery as m;
+use POData\Common\HttpStatus;
 use POData\Common\MimeTypes;
+use POData\Common\ODataConstants;
 use POData\Common\ODataException;
 use POData\Common\Url;
 use POData\Common\Version;
 use POData\Configuration\IServiceConfiguration;
 use POData\IService;
 use POData\ObjectModel\IObjectSerialiser;
+use POData\OperationContext\HTTPRequestMethod;
+use POData\OperationContext\IHTTPRequest;
+use POData\OperationContext\IOperationContext;
 use POData\OperationContext\ServiceHost;
 use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\Metadata\ResourceProperty;
@@ -23,6 +28,7 @@ use POData\SimpleDataService;
 use POData\UriProcessor\RequestDescription;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
 use POData\UriProcessor\UriProcessor;
+use POData\Writers\ODataWriterRegistry;
 use UnitTests\POData\ObjectModel\reusableEntityClass1;
 use UnitTests\POData\ObjectModel\reusableEntityClass2;
 use UnitTests\POData\ObjectModel\reusableEntityClass3;
@@ -30,6 +36,28 @@ use UnitTests\POData\TestCase;
 
 class BaseServiceNewTest extends TestCase
 {
+    public function testRattleStubMethods()
+    {
+        $db = m::mock(IQueryProvider::class);
+        $host = m::mock(ServiceHost::class)->makePartial();
+        $cereal = m::mock(IObjectSerialiser::class);
+        $wrap = m::mock(StreamProviderWrapper::class)->makePartial();
+
+        $foo = new BaseServiceDummy($db, $host, $cereal, $wrap, null);
+
+        $foo->handleRequest2();
+        $foo->delegateRequestProcessing();
+        $foo->serializeResultForResponseBody();
+        $foo->handlePOSTOperation();
+        $foo->handlePUTOperation();
+        $foo->handleDELETEOperation();
+
+        $cereal = $foo->getObjectSerialiser();
+        $this->assertTrue($cereal instanceof IObjectSerialiser);
+        $rebar = $foo->getStreamProviderWrapper();
+        $this->assertTrue($rebar instanceof StreamProviderWrapper);
+    }
+
     public function testGetResultWithNullMetadataProviderThrowException()
     {
         $db = m::mock(IQueryProvider::class);
@@ -819,6 +847,569 @@ class BaseServiceNewTest extends TestCase
         try {
             $foo->serializeResult($request, $uriProc);
         } catch (ODataException $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testSerializeResultNullContentTypeWhenNotMediaResourceThrowException()
+    {
+        $url = new Url('https://www.example.org/odata.svc');
+
+        $config = m::mock(IServiceConfiguration::class);
+        $config->shouldReceive('getValidateETagHeader')->withAnyArgs()->andReturn(true);
+
+        $host = m::mock(ServiceHost::class);
+        $host->shouldReceive('getRequestIfMatch')->andReturn('a');
+        $host->shouldReceive('getRequestIfNoneMatch')->andReturn('b');
+        $host->shouldReceive('getAbsoluteRequestUri')->andReturn($url);
+
+        $cereal = m::mock(IObjectSerialiser::class);
+
+        $stream = m::mock(StreamProviderWrapper::class);
+        $stream->shouldReceive('setService')->andReturnNull()->once();
+
+        $bar = new BaseServiceDummy(null, $host, $cereal, $stream, null, $config);
+        $foo = m::mock(BaseServiceDummy::class)->makePartial();
+        $foo->shouldReceive('getConfiguration')->andReturn($config);
+        $foo->shouldReceive('getResponseContentType')->andReturn(null);
+
+        $request = m::mock(RequestDescription::class);
+        $request->shouldReceive('isETagHeaderAllowed')->andReturn(true);
+        $request->shouldReceive('getTargetKind')->andReturn(TargetKind::BAG());
+
+        $uriProc = m::mock(UriProcessor::class);
+
+        $expected = 'Unsupported media type requested.';
+        $actual = null;
+
+        try {
+            $foo->serializeResult($request, $uriProc);
+        } catch (ODataException $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testSerializeResultWithRequestNotExecuted()
+    {
+        $url = new Url('https://www.example.org/odata.svc');
+
+        $type = m::mock(ResourceType::class);
+
+        $config = m::mock(IServiceConfiguration::class);
+        $config->shouldReceive('getValidateETagHeader')->andReturn(true);
+
+        $host = m::mock(ServiceHost::class);
+        $host->shouldReceive('getRequestIfMatch')->andReturn('a');
+        $host->shouldReceive('getRequestIfNoneMatch')->andReturn('b');
+        $host->shouldReceive('getAbsoluteRequestUri')->andReturn($url);
+        $host->shouldReceive('getRequestAccept')->andReturn(null);
+        $host->shouldReceive('getQueryStringItem')->andReturn(null);
+        $host->shouldReceive('setResponseStatusCode')->withArgs([HttpStatus::CODE_OK])->andReturnNull()->once();
+        $host->shouldReceive('setResponseContentType')->withArgs(['application/xml;charset=utf-8'])
+            ->andReturnNull()->once();
+        $host->shouldReceive('setResponseVersion')->withArgs(["3.0;"])->andReturnNull()->once();
+        $host->shouldReceive('setResponseCacheControl')
+            ->withArgs([ODataConstants::HTTPRESPONSE_HEADER_CACHECONTROL_NOCACHE])->andReturnNull()->once();
+        $host->shouldReceive('getOperationContext->outgoingResponse->setStream')
+            ->withArgs(["ScatmanJohn"])->andReturnNull()->once();
+
+        $cereal = m::mock(IObjectSerialiser::class);
+
+        $stream = m::mock(StreamProviderWrapper::class);
+        $stream->shouldReceive('setService')->andReturnNull()->once();
+
+        $foo = new BaseServiceDummy(null, $host, $cereal, $stream, null, $config);
+
+        $request = m::mock(RequestDescription::class);
+        $request->shouldReceive('isETagHeaderAllowed')->andReturn(true);
+        $request->shouldReceive('getTargetKind')->andReturn(TargetKind::METADATA(), TargetKind::PRIMITIVE_VALUE());
+        $request->shouldReceive('needExecution')->andReturn(false)->once();
+        $request->shouldReceive('getResponseVersion')->andReturn(Version::v3());
+        $request->shouldReceive('isLinkUri')->andReturn(false);
+        $request->shouldReceive('getTargetResult')->andReturn('ScatmanJohn');
+
+        $uriProc = m::mock(UriProcessor::class);
+
+        $foo->serializeResult($request, $uriProc);
+    }
+
+    public function testSerializeResultWithDeleteRequestExecuted()
+    {
+        $url = new Url('https://www.example.org/odata.svc');
+
+        $type = m::mock(ResourceType::class);
+
+        $req = m::mock(IHTTPRequest::class);
+        $req->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::DELETE())->once();
+
+        $config = m::mock(IServiceConfiguration::class);
+        $config->shouldReceive('getValidateETagHeader')->andReturn(true);
+
+        $context = m::mock(IOperationContext::class);
+        $context->shouldReceive('outgoingResponse->setStream')->withAnyArgs()->andReturnNull()->never();
+        $context->shouldReceive('incomingRequest')->andReturn($req);
+
+        $host = m::mock(ServiceHost::class);
+        $host->shouldReceive('getRequestIfMatch')->andReturn('a');
+        $host->shouldReceive('getRequestIfNoneMatch')->andReturn('b');
+        $host->shouldReceive('getAbsoluteRequestUri')->andReturn($url);
+        $host->shouldReceive('getRequestAccept')->andReturn(null);
+        $host->shouldReceive('getQueryStringItem')->andReturn(null);
+        $host->shouldReceive('setResponseStatusCode')->withArgs([HttpStatus::CODE_OK])->andReturnNull()->once();
+        $host->shouldReceive('setResponseContentType')->withAnyArgs()->andReturnNull()->never();
+        $host->shouldReceive('setResponseVersion')->withAnyArgs()->andReturnNull()->never();
+        $host->shouldReceive('setResponseCacheControl')->withAnyArgs()->andReturnNull()->never();
+        $host->shouldReceive('getOperationContext')->andReturn($context);
+
+        $cereal = m::mock(IObjectSerialiser::class);
+
+        $stream = m::mock(StreamProviderWrapper::class);
+        $stream->shouldReceive('setService')->andReturnNull()->once();
+
+        $foo = new BaseServiceDummy(null, $host, $cereal, $stream, null, $config);
+
+        $request = m::mock(RequestDescription::class);
+        $request->shouldReceive('isETagHeaderAllowed')->andReturn(true);
+        $request->shouldReceive('getTargetKind')->andReturn(TargetKind::METADATA(), TargetKind::PRIMITIVE_VALUE());
+        $request->shouldReceive('needExecution')->andReturn(true)->once();
+        $request->shouldReceive('getResponseVersion')->andReturn(Version::v3());
+        $request->shouldReceive('isLinkUri')->andReturn(false);
+        $request->shouldReceive('getTargetResult')->andReturn('ScatmanJohn');
+
+        $uriProc = m::mock(UriProcessor::class);
+        $uriProc->shouldReceive('execute')->andReturnNull()->once();
+
+        $foo->serializeResult($request, $uriProc);
+    }
+
+    public function testSerializeResultWithNonDeleteRequestAndTripAssertion()
+    {
+        $url = new Url('https://www.example.org/odata.svc');
+
+        $type = m::mock(ResourceType::class);
+
+        $req = m::mock(IHTTPRequest::class);
+        $req->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::PUT())->once();
+
+        $config = m::mock(IServiceConfiguration::class);
+        $config->shouldReceive('getValidateETagHeader')->andReturn(true);
+
+        $context = m::mock(IOperationContext::class);
+        $context->shouldReceive('outgoingResponse->setStream')->withAnyArgs()->andReturnNull()->never();
+        $context->shouldReceive('incomingRequest')->andReturn($req);
+
+        $host = m::mock(ServiceHost::class);
+        $host->shouldReceive('getRequestIfMatch')->andReturn('a');
+        $host->shouldReceive('getRequestIfNoneMatch')->andReturn('b');
+        $host->shouldReceive('getAbsoluteRequestUri')->andReturn($url);
+        $host->shouldReceive('getRequestAccept')->andReturn(null);
+        $host->shouldReceive('getQueryStringItem')->andReturn(null);
+        $host->shouldReceive('setResponseStatusCode')->withAnyArgs()->andReturnNull()->never();
+        $host->shouldReceive('setResponseContentType')->withAnyArgs()->andReturnNull()->never();
+        $host->shouldReceive('setResponseVersion')->withAnyArgs()->andReturnNull()->never();
+        $host->shouldReceive('setResponseCacheControl')->withAnyArgs()->andReturnNull()->never();
+        $host->shouldReceive('getOperationContext')->andReturn($context);
+
+        $cereal = m::mock(IObjectSerialiser::class);
+        $cereal->shouldReceive('setRequest')->andReturnNull()->once();
+
+        $stream = m::mock(StreamProviderWrapper::class);
+        $stream->shouldReceive('setService')->andReturnNull()->once();
+
+        $foo = new BaseServiceDummy(null, $host, $cereal, $stream, null, $config);
+
+        $request = m::mock(RequestDescription::class);
+        $request->shouldReceive('isETagHeaderAllowed')->andReturn(true);
+        $request->shouldReceive('getTargetKind')->andReturn(TargetKind::METADATA(), TargetKind::PRIMITIVE_VALUE());
+        $request->shouldReceive('needExecution')->andReturn(true)->once();
+        $request->shouldReceive('getResponseVersion')->andReturn(Version::v3());
+        $request->shouldReceive('isLinkUri')->andReturn(false);
+        $request->shouldReceive('getTargetResult')->andReturn('ScatmanJohn');
+        $request->shouldReceive('getTargetResourceType')->andReturnNull()->once();
+
+        $uriProc = m::mock(UriProcessor::class);
+        $uriProc->shouldReceive('execute')->andReturnNull()->once();
+
+        $expected = 'assert(): Target resource type cannot be null failed';
+        $actual = null;
+
+        try {
+            $foo->serializeResult($request, $uriProc);
+        } catch (\PHPUnit_Framework_Error_Warning $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testSerializeResultWithNonDeleteRequestAndNonSingleResultTripAssertion()
+    {
+        $url = new Url('https://www.example.org/odata.svc');
+
+        $type = m::mock(ResourceType::class);
+
+        $req = m::mock(IHTTPRequest::class);
+        $req->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::PUT())->once();
+
+        $config = m::mock(IServiceConfiguration::class);
+        $config->shouldReceive('getValidateETagHeader')->andReturn(true);
+
+        $context = m::mock(IOperationContext::class);
+        $context->shouldReceive('outgoingResponse->setStream')->withAnyArgs()->andReturnNull()->never();
+        $context->shouldReceive('incomingRequest')->andReturn($req);
+
+        $host = m::mock(ServiceHost::class);
+        $host->shouldReceive('getRequestIfMatch')->andReturn('a');
+        $host->shouldReceive('getRequestIfNoneMatch')->andReturn('b');
+        $host->shouldReceive('getAbsoluteRequestUri')->andReturn($url);
+        $host->shouldReceive('getRequestAccept')->andReturn(null);
+        $host->shouldReceive('getQueryStringItem')->andReturn(null);
+        $host->shouldReceive('setResponseStatusCode')->withAnyArgs()->andReturnNull()->never();
+        $host->shouldReceive('setResponseContentType')->withAnyArgs()->andReturnNull()->never();
+        $host->shouldReceive('setResponseVersion')->withAnyArgs()->andReturnNull()->never();
+        $host->shouldReceive('setResponseCacheControl')->withAnyArgs()->andReturnNull()->never();
+        $host->shouldReceive('getOperationContext')->andReturn($context);
+
+        $cereal = m::mock(IObjectSerialiser::class);
+        $cereal->shouldReceive('setRequest')->andReturnNull()->once();
+
+        $stream = m::mock(StreamProviderWrapper::class);
+        $stream->shouldReceive('setService')->andReturnNull()->once();
+
+        $foo = new BaseServiceDummy(null, $host, $cereal, $stream, null, $config);
+
+        $request = m::mock(RequestDescription::class);
+        $request->shouldReceive('isETagHeaderAllowed')->andReturn(true);
+        $request->shouldReceive('getTargetKind')->andReturn(TargetKind::METADATA(), TargetKind::PRIMITIVE_VALUE());
+        $request->shouldReceive('needExecution')->andReturn(true)->once();
+        $request->shouldReceive('getResponseVersion')->andReturn(Version::v3());
+        $request->shouldReceive('isLinkUri')->andReturn(false);
+        $request->shouldReceive('getTargetResult')->andReturn('ScatmanJohn');
+        $request->shouldReceive('getTargetResourceType')->andReturn($type)->once();
+        $request->shouldReceive('isSingleResult')->andReturn(false)->once();
+
+        $uriProc = m::mock(UriProcessor::class);
+        $uriProc->shouldReceive('execute')->andReturnNull()->once();
+
+        $expected = 'assert(): !is_array($entryObjects) failed';
+        $actual = null;
+
+        try {
+            $foo->serializeResult($request, $uriProc);
+        } catch (\PHPUnit_Framework_Error_Warning $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testSerializeResultWithNonDeleteRequestAndNonSingleResultIsLinkTripAssertion()
+    {
+        $url = new Url('https://www.example.org/odata.svc');
+
+        $type = m::mock(ResourceType::class);
+
+        $req = m::mock(IHTTPRequest::class);
+        $req->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::PUT())->once();
+
+        $config = m::mock(IServiceConfiguration::class);
+        $config->shouldReceive('getValidateETagHeader')->andReturn(true);
+
+        $context = m::mock(IOperationContext::class);
+        $context->shouldReceive('outgoingResponse->setStream')->withAnyArgs()->andReturnNull()->never();
+        $context->shouldReceive('incomingRequest')->andReturn($req);
+
+        $host = m::mock(ServiceHost::class);
+        $host->shouldReceive('getRequestIfMatch')->andReturn('a');
+        $host->shouldReceive('getRequestIfNoneMatch')->andReturn('b');
+        $host->shouldReceive('getAbsoluteRequestUri')->andReturn($url);
+        $host->shouldReceive('getRequestAccept')->andReturn(null);
+        $host->shouldReceive('getQueryStringItem')->andReturn(null);
+        $host->shouldReceive('setResponseStatusCode')->withAnyArgs()->andReturnNull()->never();
+        $host->shouldReceive('setResponseContentType')->withAnyArgs()->andReturnNull()->never();
+        $host->shouldReceive('setResponseVersion')->withAnyArgs()->andReturnNull()->never();
+        $host->shouldReceive('setResponseCacheControl')->withAnyArgs()->andReturnNull()->never();
+        $host->shouldReceive('getOperationContext')->andReturn($context);
+
+        $cereal = m::mock(IObjectSerialiser::class);
+        $cereal->shouldReceive('setRequest')->andReturnNull()->once();
+        $cereal->shouldReceive('writeUrlElements')->andReturnNull()->once();
+
+        $stream = m::mock(StreamProviderWrapper::class);
+        $stream->shouldReceive('setService')->andReturnNull()->once();
+
+        $foo = new BaseServiceDummy(null, $host, $cereal, $stream, null, $config);
+
+        $request = m::mock(RequestDescription::class);
+        $request->shouldReceive('isETagHeaderAllowed')->andReturn(true);
+        $request->shouldReceive('getTargetKind')->andReturn(TargetKind::METADATA(), TargetKind::PRIMITIVE_VALUE());
+        $request->shouldReceive('needExecution')->andReturn(true)->once();
+        $request->shouldReceive('getResponseVersion')->andReturn(Version::v3());
+        $request->shouldReceive('isLinkUri')->andReturn(true);
+        $request->shouldReceive('getTargetResult')->andReturn(['ScatmanJohn']);
+        $request->shouldReceive('getTargetResourceType')->andReturn($type)->once();
+        $request->shouldReceive('isSingleResult')->andReturn(false)->once();
+
+        $uriProc = m::mock(UriProcessor::class);
+        $uriProc->shouldReceive('execute')->andReturnNull()->once();
+
+        $expected = 'assert(): !$odataModelInstance instanceof ODataURLCollection failed';
+        $actual = null;
+
+        try {
+            $foo->serializeResult($request, $uriProc);
+        } catch (\PHPUnit_Framework_Error_Warning $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testSerializeResultWithNonDeleteRequestAndNonSingleResultIsNotLinkTripAssertion()
+    {
+        $url = new Url('https://www.example.org/odata.svc');
+
+        $type = m::mock(ResourceType::class);
+
+        $req = m::mock(IHTTPRequest::class);
+        $req->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::PUT())->once();
+
+        $config = m::mock(IServiceConfiguration::class);
+        $config->shouldReceive('getValidateETagHeader')->andReturn(true);
+
+        $context = m::mock(IOperationContext::class);
+        $context->shouldReceive('outgoingResponse->setStream')->withAnyArgs()->andReturnNull()->never();
+        $context->shouldReceive('incomingRequest')->andReturn($req);
+
+        $host = m::mock(ServiceHost::class);
+        $host->shouldReceive('getRequestIfMatch')->andReturn('a');
+        $host->shouldReceive('getRequestIfNoneMatch')->andReturn('b');
+        $host->shouldReceive('getAbsoluteRequestUri')->andReturn($url);
+        $host->shouldReceive('getRequestAccept')->andReturn(null);
+        $host->shouldReceive('getQueryStringItem')->andReturn(null);
+        $host->shouldReceive('setResponseStatusCode')->withAnyArgs()->andReturnNull()->never();
+        $host->shouldReceive('setResponseContentType')->withAnyArgs()->andReturnNull()->never();
+        $host->shouldReceive('setResponseVersion')->withAnyArgs()->andReturnNull()->never();
+        $host->shouldReceive('setResponseCacheControl')->withAnyArgs()->andReturnNull()->never();
+        $host->shouldReceive('getOperationContext')->andReturn($context);
+
+        $cereal = m::mock(IObjectSerialiser::class);
+        $cereal->shouldReceive('setRequest')->andReturnNull()->once();
+        $cereal->shouldReceive('writeTopLevelElements')->andReturnNull()->once();
+
+        $stream = m::mock(StreamProviderWrapper::class);
+        $stream->shouldReceive('setService')->andReturnNull()->once();
+
+        $foo = new BaseServiceDummy(null, $host, $cereal, $stream, null, $config);
+
+        $request = m::mock(RequestDescription::class);
+        $request->shouldReceive('isETagHeaderAllowed')->andReturn(true);
+        $request->shouldReceive('getTargetKind')->andReturn(TargetKind::METADATA(), TargetKind::PRIMITIVE_VALUE());
+        $request->shouldReceive('needExecution')->andReturn(true)->once();
+        $request->shouldReceive('getResponseVersion')->andReturn(Version::v3());
+        $request->shouldReceive('isLinkUri')->andReturn(false);
+        $request->shouldReceive('getTargetResult')->andReturn(['ScatmanJohn']);
+        $request->shouldReceive('getTargetResourceType')->andReturn($type)->once();
+        $request->shouldReceive('isSingleResult')->andReturn(false)->once();
+
+        $uriProc = m::mock(UriProcessor::class);
+        $uriProc->shouldReceive('execute')->andReturnNull()->once();
+
+        $expected = 'assert(): !$odataModelInstance instanceof ODataFeed failed';
+        $actual = null;
+
+        try {
+            $foo->serializeResult($request, $uriProc);
+        } catch (\PHPUnit_Framework_Error_Warning $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testSerializeResultWithNonDeleteRequestAndIsLinkSingleResultNotFoundTripAssertion()
+    {
+        $url = new Url('https://www.example.org/odata.svc');
+
+        $type = m::mock(ResourceType::class);
+
+        $req = m::mock(IHTTPRequest::class);
+        $req->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::PUT())->once();
+
+        $config = m::mock(IServiceConfiguration::class);
+        $config->shouldReceive('getValidateETagHeader')->andReturn(true);
+
+        $context = m::mock(IOperationContext::class);
+        $context->shouldReceive('outgoingResponse->setStream')->withAnyArgs()->andReturnNull()->never();
+        $context->shouldReceive('incomingRequest')->andReturn($req);
+
+        $host = m::mock(ServiceHost::class);
+        $host->shouldReceive('getRequestIfMatch')->andReturn('a');
+        $host->shouldReceive('getRequestIfNoneMatch')->andReturn('b');
+        $host->shouldReceive('getAbsoluteRequestUri')->andReturn($url);
+        $host->shouldReceive('getRequestAccept')->andReturn(null);
+        $host->shouldReceive('getQueryStringItem')->andReturn(null);
+        $host->shouldReceive('setResponseStatusCode')->withAnyArgs()->andReturnNull()->never();
+        $host->shouldReceive('setResponseContentType')->withAnyArgs()->andReturnNull()->never();
+        $host->shouldReceive('setResponseVersion')->withAnyArgs()->andReturnNull()->never();
+        $host->shouldReceive('setResponseCacheControl')->withAnyArgs()->andReturnNull()->never();
+        $host->shouldReceive('getOperationContext')->andReturn($context);
+
+        $cereal = m::mock(IObjectSerialiser::class);
+        $cereal->shouldReceive('setRequest')->andReturnNull()->once();
+
+        $stream = m::mock(StreamProviderWrapper::class);
+        $stream->shouldReceive('setService')->andReturnNull()->once();
+
+        $foo = new BaseServiceDummy(null, $host, $cereal, $stream, null, $config);
+
+        $request = m::mock(RequestDescription::class);
+        $request->shouldReceive('isETagHeaderAllowed')->andReturn(true);
+        $request->shouldReceive('getTargetKind')->andReturn(null);
+        $request->shouldReceive('needExecution')->andReturn(true)->once();
+        $request->shouldReceive('getResponseVersion')->andReturn(Version::v3());
+        $request->shouldReceive('isLinkUri')->andReturn(true);
+        $request->shouldReceive('getTargetResult')->andReturn(null);
+        $request->shouldReceive('getTargetResourceType')->andReturn($type)->once();
+        $request->shouldReceive('isSingleResult')->andReturn(true)->once();
+        $request->shouldReceive('getIdentifier')->andReturn('FNORD')->once();
+
+        $uriProc = m::mock(UriProcessor::class);
+        $uriProc->shouldReceive('execute')->andReturnNull()->once();
+
+        $expected = 'Resource not found for the segment \'FNORD\'.';
+        $actual = null;
+
+        try {
+            $foo->serializeResult($request, $uriProc);
+        } catch (ODataException $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testSerializeResultWithNonDeleteRequestAndIsLinkSingleResultIsFoundNoWriterThrowException()
+    {
+        $url = new Url('https://www.example.org/odata.svc');
+
+        $type = m::mock(ResourceType::class);
+
+        $req = m::mock(IHTTPRequest::class);
+        $req->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::PUT())->once();
+
+        $config = m::mock(IServiceConfiguration::class);
+        $config->shouldReceive('getValidateETagHeader')->andReturn(true);
+
+        $context = m::mock(IOperationContext::class);
+        $context->shouldReceive('outgoingResponse->setStream')->withAnyArgs()->andReturnNull()->never();
+        $context->shouldReceive('incomingRequest')->andReturn($req);
+
+        $host = m::mock(ServiceHost::class);
+        $host->shouldReceive('getRequestIfMatch')->andReturn('a');
+        $host->shouldReceive('getRequestIfNoneMatch')->andReturn('b');
+        $host->shouldReceive('getAbsoluteRequestUri')->andReturn($url);
+        $host->shouldReceive('getRequestAccept')->andReturn(null);
+        $host->shouldReceive('getQueryStringItem')->andReturn(null);
+        $host->shouldReceive('setResponseStatusCode')->withAnyArgs()->andReturnNull()->never();
+        $host->shouldReceive('setResponseContentType')->withAnyArgs()->andReturnNull()->never();
+        $host->shouldReceive('setResponseVersion')->withAnyArgs()->andReturnNull()->never();
+        $host->shouldReceive('setResponseCacheControl')->withAnyArgs()->andReturnNull()->never();
+        $host->shouldReceive('getOperationContext')->andReturn($context);
+
+        $cereal = m::mock(IObjectSerialiser::class);
+        $cereal->shouldReceive('setRequest')->andReturnNull()->once();
+        $cereal->shouldReceive('writeUrlElement')->andReturnNull()->once();
+
+        $stream = m::mock(StreamProviderWrapper::class);
+        $stream->shouldReceive('setService')->andReturnNull()->once();
+
+        $rego = m::mock(ODataWriterRegistry::class);
+        $rego->shouldReceive('getWriter')->withAnyArgs()->andReturnNull()->once();
+
+        $foo = new BaseServiceDummy(null, $host, $cereal, $stream, null, $config);
+        $foo->setODataWriterRegistry($rego);
+
+        $request = m::mock(RequestDescription::class);
+        $request->shouldReceive('isETagHeaderAllowed')->andReturn(true);
+        $request->shouldReceive('getTargetKind')->andReturn(null);
+        $request->shouldReceive('needExecution')->andReturn(true)->once();
+        $request->shouldReceive('getResponseVersion')->andReturn(Version::v3());
+        $request->shouldReceive('isLinkUri')->andReturn(true);
+        $request->shouldReceive('getTargetResult')->andReturn('ad astra per fnordua');
+        $request->shouldReceive('getTargetResourceType')->andReturn($type)->once();
+        $request->shouldReceive('isSingleResult')->andReturn(true)->once();
+
+        $uriProc = m::mock(UriProcessor::class);
+        $uriProc->shouldReceive('execute')->andReturnNull()->once();
+
+        $expected = 'No writer can handle the request.';
+        $actual = null;
+
+        try {
+            $foo->serializeResult($request, $uriProc);
+        } catch (\Exception $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testSerializeResultWithNonDeleteRequestAndIsNotLinkSingleResultNullTypeTripAssertion()
+    {
+        $url = new Url('https://www.example.org/odata.svc');
+
+        $type = m::mock(ResourceType::class);
+
+        $req = m::mock(IHTTPRequest::class);
+        $req->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::PUT())->once();
+
+        $config = m::mock(IServiceConfiguration::class);
+        $config->shouldReceive('getValidateETagHeader')->andReturn(true);
+
+        $context = m::mock(IOperationContext::class);
+        $context->shouldReceive('outgoingResponse->setStream')->withAnyArgs()->andReturnNull()->never();
+        $context->shouldReceive('incomingRequest')->andReturn($req);
+
+        $host = m::mock(ServiceHost::class);
+        $host->shouldReceive('getRequestIfMatch')->andReturn('a');
+        $host->shouldReceive('getRequestIfNoneMatch')->andReturn('b');
+        $host->shouldReceive('getAbsoluteRequestUri')->andReturn($url);
+        $host->shouldReceive('getRequestAccept')->andReturn(null);
+        $host->shouldReceive('getQueryStringItem')->andReturn(null);
+        $host->shouldReceive('setResponseStatusCode')->withAnyArgs()->andReturnNull()->never();
+        $host->shouldReceive('setResponseContentType')->withAnyArgs()->andReturnNull()->never();
+        $host->shouldReceive('setResponseVersion')->withAnyArgs()->andReturnNull()->never();
+        $host->shouldReceive('setResponseCacheControl')->withAnyArgs()->andReturnNull()->never();
+        $host->shouldReceive('getOperationContext')->andReturn($context);
+
+        $cereal = m::mock(IObjectSerialiser::class);
+        $cereal->shouldReceive('setRequest')->andReturnNull()->once();
+
+        $stream = m::mock(StreamProviderWrapper::class);
+        $stream->shouldReceive('setService')->andReturnNull()->once();
+
+        $rego = m::mock(ODataWriterRegistry::class);
+
+        $foo = new BaseServiceDummy(null, $host, $cereal, $stream, null, $config);
+        $foo->setODataWriterRegistry($rego);
+
+        $request = m::mock(RequestDescription::class);
+        $request->shouldReceive('isETagHeaderAllowed')->andReturn(true);
+        $request->shouldReceive('getTargetKind')->andReturn(TargetKind::METADATA(), null);
+        $request->shouldReceive('needExecution')->andReturn(true)->once();
+        $request->shouldReceive('getResponseVersion')->andReturn(Version::v3());
+        $request->shouldReceive('isLinkUri')->andReturn(false);
+        $request->shouldReceive('getTargetResult')->andReturn('ad astra per fnordua');
+        $request->shouldReceive('getTargetResourceType')->andReturn($type)->once();
+        $request->shouldReceive('isSingleResult')->andReturn(true)->once();
+        $request->shouldReceive('setExecuted')->andReturnNull()->never();
+
+        $uriProc = m::mock(UriProcessor::class);
+        $uriProc->shouldReceive('execute')->andReturnNull()->once();
+
+        $expected = 'assert(): Unexpected resource target kind failed';
+        $actual = null;
+
+        try {
+            $foo->serializeResult($request, $uriProc);
+        } catch (\PHPUnit_Framework_Error_Warning $e) {
             $actual = $e->getMessage();
         }
         $this->assertEquals($expected, $actual);

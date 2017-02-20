@@ -13,6 +13,7 @@ use POData\Providers\Query\IQueryProvider;
 use POData\Providers\Stream\StreamProviderWrapper;
 use POData\UriProcessor\RequestDescription;
 use POData\UriProcessor\UriProcessor;
+use POData\Writers\ODataWriterRegistry;
 use UnitTests\POData\Facets\BaseServiceTestWrapper;
 
 class BaseServiceDummy extends BaseServiceTestWrapper
@@ -103,5 +104,40 @@ class BaseServiceDummy extends BaseServiceTestWrapper
     public function serializeResult(RequestDescription $request, UriProcessor $uriProcessor)
     {
         return parent::serializeResult($request, $uriProcessor);
+    }
+
+    public function handleRequest2()
+    {
+        parent::handleRequest2();
+    }
+
+    public function delegateRequestProcessing()
+    {
+        parent::delegateRequestProcessing();
+    }
+
+    public function serializeResultForResponseBody()
+    {
+        parent::serializeResultForResponseBody();
+    }
+
+    public function handlePOSTOperation()
+    {
+        parent::handlePOSTOperation();
+    }
+
+    public function handlePUTOperation()
+    {
+        parent::handlePUTOperation();
+    }
+
+    public function handleDELETEOperation()
+    {
+        parent::handleDELETEOperation();
+    }
+
+    public function setODataWriterRegistry(ODataWriterRegistry $registry)
+    {
+        $this->writerRegistry = $registry;
     }
 }
