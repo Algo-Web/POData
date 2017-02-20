@@ -50,7 +50,7 @@ trait streamProviderWrapper
      */
     public static function streamProviderWrapperMustImplementIStreamProviderToSupportStreaming()
     {
-        return 'To support streaming, the data service must implement IServiceProvider::GetService() to return an implementation of IStreamProvider or IStreamProvider2';
+        return 'To support streaming, the data service must implement IService::getStreamProviderX() to return an implementation of IStreamProvider or IStreamProvider2';
     }
 
     /**
