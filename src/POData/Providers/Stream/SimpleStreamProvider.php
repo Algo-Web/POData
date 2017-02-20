@@ -36,7 +36,7 @@ class SimpleStreamProvider implements IStreamProvider2
         $name = $resourceStreamInfo->getName();
         return $entity->$name;
     }
-    public function getStreamContentType2($entity, ResourceStreamInfo $resourceStreamInfo, IOperationContext $operationContext);
+    public function getStreamContentType2($entity, ResourceStreamInfo $resourceStreamInfo, IOperationContext $operationContext)
     {
         return 'application/octet-stream';
     }
