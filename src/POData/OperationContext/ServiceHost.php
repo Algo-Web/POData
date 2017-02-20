@@ -618,7 +618,7 @@ class ServiceHost
     /**
      * Get the response headers.
      *
-     * @return array<headername, headerValue>
+     * @return Array
      */
     public function &getResponseHeaders()
     {
