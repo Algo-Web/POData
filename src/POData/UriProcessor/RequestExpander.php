@@ -393,7 +393,7 @@ class RequestExpander
 
     /**
      * @param $result
-     * @param $expandedProjectionNode
+     * @param ExpandedProjectionNode $expandedProjectionNode
      *
      * @throws InvalidOperationException
      */
