@@ -35,7 +35,7 @@ class SimpleStreamProvider implements IStreamProvider2
         ResourceStreamInfo $resourceStreamInfo,
         $eTag,
         $checkETagForEquality,
-        $operationContext
+        POData\OperationContext\IOperationContext $operationContext
     ) {
         $name = $resourceStreamInfo->getName();
         return $entity->$name;
