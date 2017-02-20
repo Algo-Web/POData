@@ -34,7 +34,7 @@ class Url
         }
 
         $p = parse_url($url);
-        if ($this->_parts === false) {
+        if ($p === false) {
             throw new UrlFormatException(Messages::urlMalformedUrl($url));
         }
         $this->_parts = $p;
