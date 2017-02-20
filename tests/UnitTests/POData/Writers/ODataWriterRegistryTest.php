@@ -2,11 +2,11 @@
 
 namespace UnitTests\POData\Writers;
 
-use POData\Common\Version;
-use POData\Common\MimeTypes;
-use POData\Writers\ODataWriterRegistry;
-use POData\Writers\IODataWriter;
 use Mockery as m;
+use POData\Common\MimeTypes;
+use POData\Common\Version;
+use POData\Writers\IODataWriter;
+use POData\Writers\ODataWriterRegistry;
 use UnitTests\POData\TestCase;
 
 class ODataWriterRegistryTest extends TestCase

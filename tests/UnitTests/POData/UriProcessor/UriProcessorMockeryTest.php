@@ -2,44 +2,30 @@
 
 namespace UnitTests\POData\UriProcessor;
 
-use \Mockery\Mockery;
-
-use POData\Configuration\ServiceConfiguration;
-use POData\Providers\Metadata\ResourceType;
-use POData\Providers\Query\QueryResult;
-use POData\Providers\Query\QueryType;
-use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ProjectionNode;
-use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandedProjectionNode;
-use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\RootProjectionNode;
-use POData\UriProcessor\QueryProcessor\OrderByParser\OrderBySubPathSegment;
-use POData\UriProcessor\QueryProcessor\OrderByParser\OrderByPathSegment;
-use POData\UriProcessor\QueryProcessor\SkipTokenParser\InternalSkipTokenInfo;
-use POData\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenInfo;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
-use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
-use POData\Configuration\ProtocolVersion;
-use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
-use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetSource;
-use POData\Providers\Metadata\Type\Int32;
-use POData\Providers\Metadata\Type\DateTime;
+use POData\Common\ODataException;
 use POData\Common\Url;
 use POData\Common\Version;
-use POData\Common\ODataException;
-use POData\OperationContext\ServiceHost;
-use POData\UriProcessor\UriProcessor;
-use UnitTests\POData\Facets\ServiceHostTestFake;
+use POData\OperationContext\HTTPRequestMethod;
+use POData\OperationContext\IOperationContext;
+use POData\Providers\Metadata\Type\DateTime;
+use POData\Providers\Metadata\Type\Int32;
+use POData\Providers\Query\QueryType;
+use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandedProjectionNode;
+use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ProjectionNode;
+use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\RootProjectionNode;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
+use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
+use POData\UriProcessor\QueryProcessor\OrderByParser\OrderByPathSegment;
+use POData\UriProcessor\QueryProcessor\OrderByParser\OrderBySubPathSegment;
+use POData\UriProcessor\QueryProcessor\SkipTokenParser\InternalSkipTokenInfo;
+use POData\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenInfo;
+use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
+use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetSource;
+use UnitTests\POData\Facets\NorthWind1\Customer2;
 use UnitTests\POData\Facets\NorthWind1\NorthWindService2;
 use UnitTests\POData\Facets\NorthWind1\NorthWindServiceV1;
 use UnitTests\POData\Facets\NorthWind1\NorthWindServiceV3;
-use UnitTests\POData\Facets\NorthWind1\Customer2;
-use POData\Providers\ProvidersWrapper;
-use POData\Providers\Metadata\ResourceSetWrapper;
-use POData\Providers\Metadata\IMetadataProvider;
-use POData\Common\Messages;
-use POData\Common\ODataConstants;
-use POData\Providers\Metadata\ResourceProperty;
-use POData\OperationContext\HTTPRequestMethod;
-use POData\OperationContext\IOperationContext;
+use UnitTests\POData\Facets\ServiceHostTestFake;
 use UnitTests\POData\TestCase;
 
 class UriProcessorMockeryTest extends TestCase
@@ -117,11 +103,11 @@ class UriProcessorMockeryTest extends TestCase
     {
 
         //Request for service directory
-        $hostInfo = array(
+        $hostInfo = [
             'AbsoluteRequestUri' => new Url('http://localhost:8083/NorthWindDataService.svc'),
             'AbsoluteServiceUri' => new Url('http://localhost:8083/NorthWindDataService.svc'),
-            'QueryString' => null,
-        );
+            'QueryString'        => null,
+        ];
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService2($host);
 
@@ -131,11 +117,11 @@ class UriProcessorMockeryTest extends TestCase
         $this->assertEquals($requestDescription->getTargetKind(), TargetKind::SERVICE_DIRECTORY());
 
         //Request for metadata
-        $hostInfo = array(
+        $hostInfo = [
             'AbsoluteRequestUri' => new Url('http://localhost:8083/NorthWindDataService.svc/$metadata'),
             'AbsoluteServiceUri' => new Url('http://localhost:8083/NorthWindDataService.svc'),
-            'QueryString' => null,
-        );
+            'QueryString'        => null,
+        ];
 
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService2($host);
@@ -146,11 +132,11 @@ class UriProcessorMockeryTest extends TestCase
         $this->assertEquals($requestDescription->getTargetKind(), TargetKind::METADATA());
 
         //Request for batch
-        $hostInfo = array(
+        $hostInfo = [
             'AbsoluteRequestUri' => new Url('http://localhost:8083/NorthWindDataService.svc/$batch'),
             'AbsoluteServiceUri' => new Url('http://localhost:8083/NorthWindDataService.svc'),
-            'QueryString' => null,
-        );
+            'QueryString'        => null,
+        ];
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService2($host);
 
@@ -167,13 +153,13 @@ class UriProcessorMockeryTest extends TestCase
     public function testUriProcessorForCountRequest1()
     {
         //Test $count with DataServiceVersion < 2.0
-        $hostInfo = array(
-            'AbsoluteRequestUri' => new Url('http://localhost:8083/NorthWindDataService.svc/Customers/$count'),
-            'AbsoluteServiceUri' => new Url('http://localhost:8083/NorthWindDataService.svc'),
-            'QueryString' => null,
-            'DataServiceVersion' => new Version(1, 0),
+        $hostInfo = [
+            'AbsoluteRequestUri'    => new Url('http://localhost:8083/NorthWindDataService.svc/Customers/$count'),
+            'AbsoluteServiceUri'    => new Url('http://localhost:8083/NorthWindDataService.svc'),
+            'QueryString'           => null,
+            'DataServiceVersion'    => new Version(1, 0),
             'MaxDataServiceVersion' => new Version(2, 0),
-        );
+        ];
 
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService2($host);
@@ -190,13 +176,13 @@ class UriProcessorMockeryTest extends TestCase
         }
 
         //Test $count with MaxDataServiceVersion < 2.0
-        $hostInfo = array(
-            'AbsoluteRequestUri' => new Url('http://localhost:8083/NorthWindDataService.svc/Customers/$count'),
-            'AbsoluteServiceUri' => new Url('http://localhost:8083/NorthWindDataService.svc'),
-            'QueryString' => null,
-            'DataServiceVersion' => new Version(2, 0),
+        $hostInfo = [
+            'AbsoluteRequestUri'    => new Url('http://localhost:8083/NorthWindDataService.svc/Customers/$count'),
+            'AbsoluteServiceUri'    => new Url('http://localhost:8083/NorthWindDataService.svc'),
+            'QueryString'           => null,
+            'DataServiceVersion'    => new Version(2, 0),
             'MaxDataServiceVersion' => new Version(1, 0),
-        );
+        ];
 
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService2($host);
@@ -219,13 +205,13 @@ class UriProcessorMockeryTest extends TestCase
      */
     public function testUriProcessorForCountRequest2()
     {
-        $hostInfo = array(
-            'AbsoluteRequestUri' => new Url('http://localhost:8083/NorthWindDataService.svc/Customers/$count'),
-            'AbsoluteServiceUri' => new Url('http://localhost:8083/NorthWindDataService.svc'),
-            'QueryString' => null,
-            'DataServiceVersion' => new Version(2, 0),
+        $hostInfo = [
+            'AbsoluteRequestUri'    => new Url('http://localhost:8083/NorthWindDataService.svc/Customers/$count'),
+            'AbsoluteServiceUri'    => new Url('http://localhost:8083/NorthWindDataService.svc'),
+            'QueryString'           => null,
+            'DataServiceVersion'    => new Version(2, 0),
             'MaxDataServiceVersion' => new Version(2, 0),
-        );
+        ];
 
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindServiceV1($host);
@@ -256,13 +242,13 @@ class UriProcessorMockeryTest extends TestCase
      */
     public function testUriProcessorForCountRequest3()
     {
-        $hostInfo = array(
-            'AbsoluteRequestUri' => new Url('http://localhost:8083/NorthWindDataService.svc/Customers/$count'),
-            'AbsoluteServiceUri' => new Url('http://localhost:8083/NorthWindDataService.svc'),
-            'QueryString' => null,
-            'DataServiceVersion' => new Version(2, 0),
+        $hostInfo = [
+            'AbsoluteRequestUri'    => new Url('http://localhost:8083/NorthWindDataService.svc/Customers/$count'),
+            'AbsoluteServiceUri'    => new Url('http://localhost:8083/NorthWindDataService.svc'),
+            'QueryString'           => null,
+            'DataServiceVersion'    => new Version(2, 0),
             'MaxDataServiceVersion' => new Version(2, 0),
-        );
+        ];
 
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService2($host);
@@ -280,13 +266,13 @@ class UriProcessorMockeryTest extends TestCase
      */
     public function testUriProcessorForCountRequest4()
     {
-        $hostInfo = array(
-            'AbsoluteRequestUri' => new Url('http://localhost:8083/NorthWindDataService.svc/Customers/$count'),
-            'AbsoluteServiceUri' => new Url('http://localhost:8083/NorthWindDataService.svc'),
-            'QueryString' => '$orderby=Country',
-            'DataServiceVersion' => new Version(2, 0),
+        $hostInfo = [
+            'AbsoluteRequestUri'    => new Url('http://localhost:8083/NorthWindDataService.svc/Customers/$count'),
+            'AbsoluteServiceUri'    => new Url('http://localhost:8083/NorthWindDataService.svc'),
+            'QueryString'           => '$orderby=Country',
+            'DataServiceVersion'    => new Version(2, 0),
             'MaxDataServiceVersion' => new Version(2, 0),
-        );
+        ];
 
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService2($host);
@@ -311,13 +297,13 @@ class UriProcessorMockeryTest extends TestCase
      */
     public function testUriProcessorForCountRequest5()
     {
-        $hostInfo = array(
-            'AbsoluteRequestUri' => new Url('http://localhost:8083/NorthWindDataService.svc/Customers/$count'),
-            'AbsoluteServiceUri' => new Url('http://localhost:8083/NorthWindDataService.svc'),
-            'QueryString' => '$skip=2&$top=4',
-            'DataServiceVersion' => new Version(2, 0),
+        $hostInfo = [
+            'AbsoluteRequestUri'    => new Url('http://localhost:8083/NorthWindDataService.svc/Customers/$count'),
+            'AbsoluteServiceUri'    => new Url('http://localhost:8083/NorthWindDataService.svc'),
+            'QueryString'           => '$skip=2&$top=4',
+            'DataServiceVersion'    => new Version(2, 0),
             'MaxDataServiceVersion' => new Version(2, 0),
-        );
+        ];
 
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService2($host);
@@ -344,13 +330,13 @@ class UriProcessorMockeryTest extends TestCase
      */
     public function testUriProcessorForCountRequest6()
     {
-        $hostInfo = array(
-            'AbsoluteRequestUri' => new Url('http://localhost:8083/NorthWindDataService.svc/Customers/$count'),
-            'AbsoluteServiceUri' => new Url('http://localhost:8083/NorthWindDataService.svc'),
-            'QueryString' => '$skip=2&$top=4&$orderby=Country',
-            'DataServiceVersion' => new Version(2, 0),
+        $hostInfo = [
+            'AbsoluteRequestUri'    => new Url('http://localhost:8083/NorthWindDataService.svc/Customers/$count'),
+            'AbsoluteServiceUri'    => new Url('http://localhost:8083/NorthWindDataService.svc'),
+            'QueryString'           => '$skip=2&$top=4&$orderby=Country',
+            'DataServiceVersion'    => new Version(2, 0),
             'MaxDataServiceVersion' => new Version(2, 0),
-        );
+        ];
 
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService2($host);
@@ -405,13 +391,13 @@ class UriProcessorMockeryTest extends TestCase
      */
     public function testUriProcessorForCountRequest7()
     {
-        $hostInfo = array(
-            'AbsoluteRequestUri' => new Url('http://localhost:8083/NorthWindDataService.svc/Customers/$count'),
-            'AbsoluteServiceUri' => new Url('http://localhost:8083/NorthWindDataService.svc'),
-            'QueryString' => '$top=1&$skiptoken=\'ALFKI\',guid\'05b242e752eb46bd8f0e6568b72cd9a5\'',
-            'DataServiceVersion' => new Version(2, 0),
+        $hostInfo = [
+            'AbsoluteRequestUri'    => new Url('http://localhost:8083/NorthWindDataService.svc/Customers/$count'),
+            'AbsoluteServiceUri'    => new Url('http://localhost:8083/NorthWindDataService.svc'),
+            'QueryString'           => '$top=1&$skiptoken=\'ALFKI\',guid\'05b242e752eb46bd8f0e6568b72cd9a5\'',
+            'DataServiceVersion'    => new Version(2, 0),
             'MaxDataServiceVersion' => new Version(2, 0),
-        );
+        ];
 
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService2($host);
@@ -434,13 +420,13 @@ class UriProcessorMockeryTest extends TestCase
      */
     public function testUriProcessorForCountRequest8()
     {
-        $hostInfo = array(
-            'AbsoluteRequestUri' => new Url('http://localhost:8083/NorthWindDataService.svc/Customers/$count'),
-            'AbsoluteServiceUri' => new Url('http://localhost:8083/NorthWindDataService.svc'),
-            'QueryString' => '$filter=Country eq \'USA\'',
-            'DataServiceVersion' => new Version(2, 0),
+        $hostInfo = [
+            'AbsoluteRequestUri'    => new Url('http://localhost:8083/NorthWindDataService.svc/Customers/$count'),
+            'AbsoluteServiceUri'    => new Url('http://localhost:8083/NorthWindDataService.svc'),
+            'QueryString'           => '$filter=Country eq \'USA\'',
+            'DataServiceVersion'    => new Version(2, 0),
             'MaxDataServiceVersion' => new Version(2, 0),
-        );
+        ];
 
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService2($host);
@@ -452,7 +438,7 @@ class UriProcessorMockeryTest extends TestCase
         $filterInfo = $requestDescription->getFilterInfo();
         $this->assertNotNull($filterInfo);
 
-        $this->assertEquals(array(), $filterInfo->getNavigationPropertiesUsed());
+        $this->assertEquals([], $filterInfo->getNavigationPropertiesUsed());
 
         $this->assertEquals(
             '',
@@ -469,13 +455,13 @@ class UriProcessorMockeryTest extends TestCase
      */
     public function testUriProcessorForCountRequest9()
     {
-        $hostInfo = array(
-            'AbsoluteRequestUri' => new Url('http://localhost:8083/NorthWindDataService.svc/Customers/$count'),
-            'AbsoluteServiceUri' => new Url('http://localhost:8083/NorthWindDataService.svc'),
-            'QueryString' => '$select=Country&$expand=Orders',
-            'DataServiceVersion' => new Version(2, 0),
+        $hostInfo = [
+            'AbsoluteRequestUri'    => new Url('http://localhost:8083/NorthWindDataService.svc/Customers/$count'),
+            'AbsoluteServiceUri'    => new Url('http://localhost:8083/NorthWindDataService.svc'),
+            'QueryString'           => '$select=Country&$expand=Orders',
+            'DataServiceVersion'    => new Version(2, 0),
             'MaxDataServiceVersion' => new Version(2, 0),
-        );
+        ];
 
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService2($host);
@@ -504,13 +490,13 @@ class UriProcessorMockeryTest extends TestCase
      */
     public function testUriProcessorForCountWithInline()
     {
-        $hostInfo = array(
-            'AbsoluteRequestUri' => new Url('http://localhost:8083/NorthWindDataService.svc/Customers/$count'),
-            'AbsoluteServiceUri' => new Url('http://localhost:8083/NorthWindDataService.svc'),
-            'QueryString' => '$inlinecount=allpages',
-            'DataServiceVersion' => new Version(2, 0),
+        $hostInfo = [
+            'AbsoluteRequestUri'    => new Url('http://localhost:8083/NorthWindDataService.svc/Customers/$count'),
+            'AbsoluteServiceUri'    => new Url('http://localhost:8083/NorthWindDataService.svc'),
+            'QueryString'           => '$inlinecount=allpages',
+            'DataServiceVersion'    => new Version(2, 0),
             'MaxDataServiceVersion' => new Version(2, 0),
-        );
+        ];
 
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService2($host);
@@ -538,13 +524,13 @@ class UriProcessorMockeryTest extends TestCase
     {
         //Test for generation of orderinfo for resource set
         //with request DataServiceVersion 1.0
-        $hostInfo = array(
-            'AbsoluteRequestUri' => new Url('http://localhost:8083/NorthWindDataService.svc/Customers'),
-            'AbsoluteServiceUri' => new Url('http://localhost:8083/NorthWindDataService.svc'),
-            'QueryString' => null,
-            'DataServiceVersion' => new Version(1, 0),
+        $hostInfo = [
+            'AbsoluteRequestUri'    => new Url('http://localhost:8083/NorthWindDataService.svc/Customers'),
+            'AbsoluteServiceUri'    => new Url('http://localhost:8083/NorthWindDataService.svc'),
+            'QueryString'           => null,
+            'DataServiceVersion'    => new Version(1, 0),
             'MaxDataServiceVersion' => new Version(2, 0),
-        );
+        ];
 
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService2($host);
@@ -597,13 +583,13 @@ class UriProcessorMockeryTest extends TestCase
     {
         //Test for generation of orderinfo for resource set
         //with request DataServiceVersion 1.0
-        $hostInfo = array(
-            'AbsoluteRequestUri' => new Url('http://localhost:8083/NorthWindDataService.svc/Customers'),
-            'AbsoluteServiceUri' => new Url('http://localhost:8083/NorthWindDataService.svc'),
-            'QueryString' => null,
-            'DataServiceVersion' => new Version(1, 0),
+        $hostInfo = [
+            'AbsoluteRequestUri'    => new Url('http://localhost:8083/NorthWindDataService.svc/Customers'),
+            'AbsoluteServiceUri'    => new Url('http://localhost:8083/NorthWindDataService.svc'),
+            'QueryString'           => null,
+            'DataServiceVersion'    => new Version(1, 0),
             'MaxDataServiceVersion' => new Version(1, 0),
-        );
+        ];
 
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService2($host);
@@ -630,13 +616,13 @@ class UriProcessorMockeryTest extends TestCase
 
         //Test for generation of orderinfo for resource set
         //with request DataServiceVersion 1.0
-        $hostInfo = array(
-            'AbsoluteRequestUri' => new Url('http://localhost:8083/NorthWindDataService.svc/Orders(123)'),
-            'AbsoluteServiceUri' => new Url('http://localhost:8083/NorthWindDataService.svc'),
-            'QueryString' => null,
-            'DataServiceVersion' => new Version(1, 0),
+        $hostInfo = [
+            'AbsoluteRequestUri'    => new Url('http://localhost:8083/NorthWindDataService.svc/Orders(123)'),
+            'AbsoluteServiceUri'    => new Url('http://localhost:8083/NorthWindDataService.svc'),
+            'QueryString'           => null,
+            'DataServiceVersion'    => new Version(1, 0),
             'MaxDataServiceVersion' => new Version(2, 0),
-        );
+        ];
 
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService2($host);
@@ -664,13 +650,13 @@ class UriProcessorMockeryTest extends TestCase
         //Test for generation of orderinfo for resource set in $links query
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Customers(CustomerID=\'ALFKI\', CustomerGuid=guid\'05b242e752eb46bd8f0e6568b72cd9a5\')/$links/Orders';
-        $hostInfo = array(
-            'AbsoluteRequestUri' => new Url($baseUri.$resourcePath),
-            'AbsoluteServiceUri' => new Url($baseUri),
-            'QueryString' => null,
-            'DataServiceVersion' => new Version(1, 0),
+        $hostInfo = [
+            'AbsoluteRequestUri'    => new Url($baseUri.$resourcePath),
+            'AbsoluteServiceUri'    => new Url($baseUri),
+            'QueryString'           => null,
+            'DataServiceVersion'    => new Version(1, 0),
             'MaxDataServiceVersion' => new Version(2, 0),
-        );
+        ];
 
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService2($host);
@@ -708,13 +694,13 @@ class UriProcessorMockeryTest extends TestCase
     {
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Customers(CustomerID=\'ALFKI\', CustomerGuid=guid\'05b242e752eb46bd8f0e6568b72cd9a5\')/$links/Orders';
-        $hostInfo = array(
-            'AbsoluteRequestUri' => new Url($baseUri.$resourcePath),
-            'AbsoluteServiceUri' => new Url($baseUri),
-            'QueryString' => '$orderby=ShipName asc, OrderDate desc',
-            'DataServiceVersion' => new Version(2, 0),
+        $hostInfo = [
+            'AbsoluteRequestUri'    => new Url($baseUri.$resourcePath),
+            'AbsoluteServiceUri'    => new Url($baseUri),
+            'QueryString'           => '$orderby=ShipName asc, OrderDate desc',
+            'DataServiceVersion'    => new Version(2, 0),
             'MaxDataServiceVersion' => new Version(2, 0),
-        );
+        ];
 
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService2($host);
@@ -776,13 +762,13 @@ class UriProcessorMockeryTest extends TestCase
         //Test with skiptoken that corrosponds to default ordering key
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Customers(CustomerID=\'ALFKI\', CustomerGuid=guid\'05b242e752eb46bd8f0e6568b72cd9a5\')/$links/Orders';
-        $hostInfo = array(
-            'AbsoluteRequestUri' => new Url($baseUri.$resourcePath),
-            'AbsoluteServiceUri' => new Url($baseUri),
-            'QueryString' => '$skiptoken=123',
-            'DataServiceVersion' => new Version(2, 0),
+        $hostInfo = [
+            'AbsoluteRequestUri'    => new Url($baseUri.$resourcePath),
+            'AbsoluteServiceUri'    => new Url($baseUri),
+            'QueryString'           => '$skiptoken=123',
+            'DataServiceVersion'    => new Version(2, 0),
             'MaxDataServiceVersion' => new Version(2, 0),
-        );
+        ];
 
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService2($host);
@@ -836,13 +822,13 @@ class UriProcessorMockeryTest extends TestCase
         //Test with skiptoken that corresponds to explict ordering keys
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Customers(CustomerID=\'ALFKI\', CustomerGuid=guid\'05b242e752eb46bd8f0e6568b72cd9a5\')/$links/Orders';
-        $hostInfo = array(
-            'AbsoluteRequestUri' => new Url($baseUri.$resourcePath),
-            'AbsoluteServiceUri' => new Url($baseUri),
-            'QueryString' => '$orderby=OrderID asc, OrderDate desc&$skiptoken=123, datetime\'2000-11-11\'',
-            'DataServiceVersion' => new Version(2, 0),
+        $hostInfo = [
+            'AbsoluteRequestUri'    => new Url($baseUri.$resourcePath),
+            'AbsoluteServiceUri'    => new Url($baseUri),
+            'QueryString'           => '$orderby=OrderID asc, OrderDate desc&$skiptoken=123, datetime\'2000-11-11\'',
+            'DataServiceVersion'    => new Version(2, 0),
             'MaxDataServiceVersion' => new Version(2, 0),
-        );
+        ];
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService2($host);
 
@@ -914,13 +900,13 @@ class UriProcessorMockeryTest extends TestCase
         //TODO: split into separate tests
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Customers(CustomerID=\'ALFKI\', CustomerGuid=guid\'05b242e752eb46bd8f0e6568b72cd9a5\')/$links/Orders';
-        $hostInfo = array(
-            'AbsoluteRequestUri' => new Url($baseUri.$resourcePath),
-            'AbsoluteServiceUri' => new Url($baseUri),
-            'QueryString' => '$skip=1',
-            'DataServiceVersion' => new Version(2, 0),
+        $hostInfo = [
+            'AbsoluteRequestUri'    => new Url($baseUri.$resourcePath),
+            'AbsoluteServiceUri'    => new Url($baseUri),
+            'QueryString'           => '$skip=1',
+            'DataServiceVersion'    => new Version(2, 0),
             'MaxDataServiceVersion' => new Version(2, 0),
-        );
+        ];
 
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService2($host);
@@ -958,13 +944,13 @@ class UriProcessorMockeryTest extends TestCase
 
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Customers(CustomerID=\'ALFKI\', CustomerGuid=guid\'05b242e752eb46bd8f0e6568b72cd9a5\')/$links/Orders';
-        $hostInfo = array(
-            'AbsoluteRequestUri' => new Url($baseUri.$resourcePath),
-            'AbsoluteServiceUri' => new Url($baseUri),
-            'QueryString' => '$top=4&$skiptoken=1234',
-            'DataServiceVersion' => new Version(2, 0),
+        $hostInfo = [
+            'AbsoluteRequestUri'    => new Url($baseUri.$resourcePath),
+            'AbsoluteServiceUri'    => new Url($baseUri),
+            'QueryString'           => '$top=4&$skiptoken=1234',
+            'DataServiceVersion'    => new Version(2, 0),
             'MaxDataServiceVersion' => new Version(2, 0),
-        );
+        ];
 
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService2($host);
@@ -1019,13 +1005,13 @@ class UriProcessorMockeryTest extends TestCase
         //specification of a $top value greater than pagesize
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Customers(CustomerID=\'ALFKI\', CustomerGuid=guid\'05b242e752eb46bd8f0e6568b72cd9a5\')/$links/Orders';
-        $hostInfo = array(
-            'AbsoluteRequestUri' => new Url($baseUri.$resourcePath),
-            'AbsoluteServiceUri' => new Url($baseUri),
-            'QueryString' => '$top=10&$skiptoken=1234',
-            'DataServiceVersion' => new Version(2, 0),
+        $hostInfo = [
+            'AbsoluteRequestUri'    => new Url($baseUri.$resourcePath),
+            'AbsoluteServiceUri'    => new Url($baseUri),
+            'QueryString'           => '$top=10&$skiptoken=1234',
+            'DataServiceVersion'    => new Version(2, 0),
             'MaxDataServiceVersion' => new Version(2, 0),
-        );
+        ];
 
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService2($host);
@@ -1057,13 +1043,13 @@ class UriProcessorMockeryTest extends TestCase
         $this->markTestSkipped("This test checks that POData will generate a filter function for providers that don't handle filtering...but i temporarily removed that functionality by elimination IDataServiceQueryProvider1.  Need to make this service provider use PHPExpressionProvider, then re-enable tests");
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Customers(CustomerID=\'ALFKI\', CustomerGuid=guid\'05b242e752eb46bd8f0e6568b72cd9a5\')/$links/Orders';
-        $hostInfo = array(
-            'AbsoluteRequestUri' => new Url($baseUri.$resourcePath),
-            'AbsoluteServiceUri' => new Url($baseUri),
-            'QueryString' => '$filter=OrderID eq 123 and OrderDate le datetime\'2000-11-11\'',
-            'DataServiceVersion' => new Version(2, 0),
+        $hostInfo = [
+            'AbsoluteRequestUri'    => new Url($baseUri.$resourcePath),
+            'AbsoluteServiceUri'    => new Url($baseUri),
+            'QueryString'           => '$filter=OrderID eq 123 and OrderDate le datetime\'2000-11-11\'',
+            'DataServiceVersion'    => new Version(2, 0),
             'MaxDataServiceVersion' => new Version(2, 0),
-        );
+        ];
 
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService2($host);
@@ -1098,13 +1084,13 @@ class UriProcessorMockeryTest extends TestCase
     {
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Customers(CustomerID=\'ALFKI\', CustomerGuid=guid\'05b242e752eb46bd8f0e6568b72cd9a5\')/$links/Orders';
-        $hostInfo = array(
-            'AbsoluteRequestUri' => new Url($baseUri.$resourcePath),
-            'AbsoluteServiceUri' => new Url($baseUri),
-            'QueryString' => '$inlinecount=allpages',
-            'DataServiceVersion' => new Version(2, 0),
+        $hostInfo = [
+            'AbsoluteRequestUri'    => new Url($baseUri.$resourcePath),
+            'AbsoluteServiceUri'    => new Url($baseUri),
+            'QueryString'           => '$inlinecount=allpages',
+            'DataServiceVersion'    => new Version(2, 0),
             'MaxDataServiceVersion' => new Version(2, 0),
-        );
+        ];
 
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService2($host);
@@ -1130,13 +1116,13 @@ class UriProcessorMockeryTest extends TestCase
         $this->markTestSkipped("This test checks that POData will generate a filter function for providers that don't handle filtering...but i temporarily removed that functionality by elimination IDataServiceQueryProvider1.  Need to make this service provider use PHPExpressionProvider, then re-enable tests");
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Customers(CustomerID=\'ALFKI\', CustomerGuid=guid\'05b242e752eb46bd8f0e6568b72cd9a5\')/$links/Orders(123)';
-        $hostInfo = array(
-            'AbsoluteRequestUri' => new Url($baseUri.$resourcePath),
-            'AbsoluteServiceUri' => new Url($baseUri),
-            'QueryString' => '$filter=OrderID eq 123 and OrderDate le datetime\'2000-11-11\'',
-            'DataServiceVersion' => new Version(2, 0),
+        $hostInfo = [
+            'AbsoluteRequestUri'    => new Url($baseUri.$resourcePath),
+            'AbsoluteServiceUri'    => new Url($baseUri),
+            'QueryString'           => '$filter=OrderID eq 123 and OrderDate le datetime\'2000-11-11\'',
+            'DataServiceVersion'    => new Version(2, 0),
             'MaxDataServiceVersion' => new Version(2, 0),
-        );
+        ];
 
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService2($host);
@@ -1166,13 +1152,13 @@ class UriProcessorMockeryTest extends TestCase
 
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Orders(1234)/$links/Customer';
-        $hostInfo = array(
-            'AbsoluteRequestUri' => new Url($baseUri.$resourcePath),
-            'AbsoluteServiceUri' => new Url($baseUri),
-            'QueryString' => '$filter=true',
-            'DataServiceVersion' => new Version(2, 0),
+        $hostInfo = [
+            'AbsoluteRequestUri'    => new Url($baseUri.$resourcePath),
+            'AbsoluteServiceUri'    => new Url($baseUri),
+            'QueryString'           => '$filter=true',
+            'DataServiceVersion'    => new Version(2, 0),
             'MaxDataServiceVersion' => new Version(2, 0),
-        );
+        ];
 
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService2($host);
@@ -1208,13 +1194,13 @@ class UriProcessorMockeryTest extends TestCase
     {
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Customers(CustomerID=\'ALFKI\', CustomerGuid=guid\'05b242e752eb46bd8f0e6568b72cd9a5\')/$links/Orders(123)';
-        $hostInfo = array(
-            'AbsoluteRequestUri' => new Url($baseUri.$resourcePath),
-            'AbsoluteServiceUri' => new Url($baseUri),
-            'QueryString' => '$orderby=OrderID',
-            'DataServiceVersion' => new Version(2, 0),
+        $hostInfo = [
+            'AbsoluteRequestUri'    => new Url($baseUri.$resourcePath),
+            'AbsoluteServiceUri'    => new Url($baseUri),
+            'QueryString'           => '$orderby=OrderID',
+            'DataServiceVersion'    => new Version(2, 0),
             'MaxDataServiceVersion' => new Version(2, 0),
-        );
+        ];
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService2($host);
 
@@ -1230,13 +1216,13 @@ class UriProcessorMockeryTest extends TestCase
 
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Orders(1234)/$links/Customer';
-        $hostInfo = array(
-            'AbsoluteRequestUri' => new Url($baseUri.$resourcePath),
-            'AbsoluteServiceUri' => new Url($baseUri),
-            'QueryString' => '$orderby=CustomerID',
-            'DataServiceVersion' => new Version(2, 0),
+        $hostInfo = [
+            'AbsoluteRequestUri'    => new Url($baseUri.$resourcePath),
+            'AbsoluteServiceUri'    => new Url($baseUri),
+            'QueryString'           => '$orderby=CustomerID',
+            'DataServiceVersion'    => new Version(2, 0),
             'MaxDataServiceVersion' => new Version(2, 0),
-        );
+        ];
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService2($host);
 
@@ -1258,13 +1244,13 @@ class UriProcessorMockeryTest extends TestCase
     {
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Customers(CustomerID=\'ALFKI\', CustomerGuid=guid\'05b242e752eb46bd8f0e6568b72cd9a5\')/$links/Orders(123)';
-        $hostInfo = array(
-            'AbsoluteRequestUri' => new Url($baseUri.$resourcePath),
-            'AbsoluteServiceUri' => new Url($baseUri),
-            'QueryString' => '$skiptoken=345',
-            'DataServiceVersion' => new Version(2, 0),
+        $hostInfo = [
+            'AbsoluteRequestUri'    => new Url($baseUri.$resourcePath),
+            'AbsoluteServiceUri'    => new Url($baseUri),
+            'QueryString'           => '$skiptoken=345',
+            'DataServiceVersion'    => new Version(2, 0),
             'MaxDataServiceVersion' => new Version(2, 0),
-        );
+        ];
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService2($host);
 
@@ -1286,13 +1272,13 @@ class UriProcessorMockeryTest extends TestCase
     {
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Customers(CustomerID=\'ALFKI\', CustomerGuid=guid\'05b242e752eb46bd8f0e6568b72cd9a5\')/$links/Orders(123)';
-        $hostInfo = array(
-            'AbsoluteRequestUri' => new Url($baseUri.$resourcePath),
-            'AbsoluteServiceUri' => new Url($baseUri),
-            'QueryString' => '$skip=1',
-            'DataServiceVersion' => new Version(2, 0),
+        $hostInfo = [
+            'AbsoluteRequestUri'    => new Url($baseUri.$resourcePath),
+            'AbsoluteServiceUri'    => new Url($baseUri),
+            'QueryString'           => '$skip=1',
+            'DataServiceVersion'    => new Version(2, 0),
             'MaxDataServiceVersion' => new Version(2, 0),
-        );
+        ];
 
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService2($host);
@@ -1309,13 +1295,13 @@ class UriProcessorMockeryTest extends TestCase
 
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Customers(CustomerID=\'ALFKI\', CustomerGuid=guid\'05b242e752eb46bd8f0e6568b72cd9a5\')/$links/Orders(234)';
-        $hostInfo = array(
-            'AbsoluteRequestUri' => new Url($baseUri.$resourcePath),
-            'AbsoluteServiceUri' => new Url($baseUri),
-            'QueryString' => '$top=4',
-            'DataServiceVersion' => new Version(2, 0),
+        $hostInfo = [
+            'AbsoluteRequestUri'    => new Url($baseUri.$resourcePath),
+            'AbsoluteServiceUri'    => new Url($baseUri),
+            'QueryString'           => '$top=4',
+            'DataServiceVersion'    => new Version(2, 0),
             'MaxDataServiceVersion' => new Version(2, 0),
-        );
+        ];
 
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService2($host);
@@ -1338,13 +1324,13 @@ class UriProcessorMockeryTest extends TestCase
     {
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Customers(CustomerID=\'ALFKI\', CustomerGuid=guid\'05b242e752eb46bd8f0e6568b72cd9a5\')/$links/Orders(123)';
-        $hostInfo = array(
-            'AbsoluteRequestUri' => new Url($baseUri.$resourcePath),
-            'AbsoluteServiceUri' => new Url($baseUri),
-            'QueryString' => '$inlinecount=allpages',
-            'DataServiceVersion' => new Version(2, 0),
+        $hostInfo = [
+            'AbsoluteRequestUri'    => new Url($baseUri.$resourcePath),
+            'AbsoluteServiceUri'    => new Url($baseUri),
+            'QueryString'           => '$inlinecount=allpages',
+            'DataServiceVersion'    => new Version(2, 0),
             'MaxDataServiceVersion' => new Version(2, 0),
-        );
+        ];
 
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService2($host);
@@ -1367,13 +1353,13 @@ class UriProcessorMockeryTest extends TestCase
     {
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Customers(CustomerID=\'ALFKI\', CustomerGuid=guid\'05b242e752eb46bd8f0e6568b72cd9a5\')/$links/Orders(123)';
-        $hostInfo = array(
-            'AbsoluteRequestUri' => new Url($baseUri.$resourcePath),
-            'AbsoluteServiceUri' => new Url($baseUri),
-            'QueryString' => '$expand=Order_Details',
-            'DataServiceVersion' => new Version(2, 0),
+        $hostInfo = [
+            'AbsoluteRequestUri'    => new Url($baseUri.$resourcePath),
+            'AbsoluteServiceUri'    => new Url($baseUri),
+            'QueryString'           => '$expand=Order_Details',
+            'DataServiceVersion'    => new Version(2, 0),
             'MaxDataServiceVersion' => new Version(2, 0),
-        );
+        ];
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService2($host);
 
@@ -1389,13 +1375,13 @@ class UriProcessorMockeryTest extends TestCase
 
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Customers(CustomerID=\'ALFKI\', CustomerGuid=guid\'05b242e752eb46bd8f0e6568b72cd9a5\')/$links/Orders(123)';
-        $hostInfo = array(
-            'AbsoluteRequestUri' => new Url($baseUri.$resourcePath),
-            'AbsoluteServiceUri' => new Url($baseUri),
-            'QueryString' => '$select=OrderID',
-            'DataServiceVersion' => new Version(2, 0),
+        $hostInfo = [
+            'AbsoluteRequestUri'    => new Url($baseUri.$resourcePath),
+            'AbsoluteServiceUri'    => new Url($baseUri),
+            'QueryString'           => '$select=OrderID',
+            'DataServiceVersion'    => new Version(2, 0),
             'MaxDataServiceVersion' => new Version(2, 0),
-        );
+        ];
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService2($host);
 
@@ -1417,7 +1403,7 @@ class UriProcessorMockeryTest extends TestCase
     {
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Products(11)/Order_Details';
-        $hostInfo = array(
+        $hostInfo = [
             'AbsoluteRequestUri' => new Url($baseUri.$resourcePath),
             'AbsoluteServiceUri' => new Url($baseUri),
             //Paging is enabled this cause skiptoken to be included
@@ -1437,10 +1423,10 @@ class UriProcessorMockeryTest extends TestCase
             //We are adding a $top value (< pagesize) with $inlinecount so that
             //version error will be thrown from ProcessCount instead of from
             //ProcessSkipAndTopCount
-            'QueryString' => '$inlinecount=allpages&$top=3',
-            'DataServiceVersion' => new Version(2, 0),
+            'QueryString'           => '$inlinecount=allpages&$top=3',
+            'DataServiceVersion'    => new Version(2, 0),
             'MaxDataServiceVersion' => new Version(2, 0),
-        );
+        ];
 
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindServiceV1($host);
@@ -1465,13 +1451,13 @@ class UriProcessorMockeryTest extends TestCase
     {
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Products(11)/Order_Details';
-        $hostInfo = array(
-            'AbsoluteRequestUri' => new Url($baseUri.$resourcePath),
-            'AbsoluteServiceUri' => new Url($baseUri),
-            'QueryString' => '$inlinecount=allpages',
-            'DataServiceVersion' => new Version(1, 0),
+        $hostInfo = [
+            'AbsoluteRequestUri'    => new Url($baseUri.$resourcePath),
+            'AbsoluteServiceUri'    => new Url($baseUri),
+            'QueryString'           => '$inlinecount=allpages',
+            'DataServiceVersion'    => new Version(1, 0),
             'MaxDataServiceVersion' => new Version(2, 0),
-        );
+        ];
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService2($host);
 
@@ -1495,13 +1481,13 @@ class UriProcessorMockeryTest extends TestCase
     {
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Products(11)/Order_Details';
-        $hostInfo = array(
-            'AbsoluteRequestUri' => new Url($baseUri.$resourcePath),
-            'AbsoluteServiceUri' => new Url($baseUri),
-            'QueryString' => '$inlinecount=allpages',
-            'DataServiceVersion' => new Version(2, 0),
+        $hostInfo = [
+            'AbsoluteRequestUri'    => new Url($baseUri.$resourcePath),
+            'AbsoluteServiceUri'    => new Url($baseUri),
+            'QueryString'           => '$inlinecount=allpages',
+            'DataServiceVersion'    => new Version(2, 0),
             'MaxDataServiceVersion' => new Version(1, 0),
-        );
+        ];
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService2($host);
 
@@ -1525,13 +1511,13 @@ class UriProcessorMockeryTest extends TestCase
     {
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Products(11)/Order_Details';
-        $hostInfo = array(
-            'AbsoluteRequestUri' => new Url($baseUri.$resourcePath),
-            'AbsoluteServiceUri' => new Url($baseUri),
-            'QueryString' => '$inlinecount=partialpages',
-            'DataServiceVersion' => new Version(2, 0),
+        $hostInfo = [
+            'AbsoluteRequestUri'    => new Url($baseUri.$resourcePath),
+            'AbsoluteServiceUri'    => new Url($baseUri),
+            'QueryString'           => '$inlinecount=partialpages',
+            'DataServiceVersion'    => new Version(2, 0),
             'MaxDataServiceVersion' => new Version(2, 0),
-        );
+        ];
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService2($host);
 
@@ -1553,13 +1539,13 @@ class UriProcessorMockeryTest extends TestCase
     {
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Orders(123)/Customer/Address';
-        $hostInfo = array(
-            'AbsoluteRequestUri' => new Url($baseUri.$resourcePath),
-            'AbsoluteServiceUri' => new Url($baseUri),
-            'QueryString' => '$filter=HouseNumber eq null',
-            'DataServiceVersion' => new Version(1, 0),
+        $hostInfo = [
+            'AbsoluteRequestUri'    => new Url($baseUri.$resourcePath),
+            'AbsoluteServiceUri'    => new Url($baseUri),
+            'QueryString'           => '$filter=HouseNumber eq null',
+            'DataServiceVersion'    => new Version(1, 0),
             'MaxDataServiceVersion' => new Version(1, 0),
-        );
+        ];
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService2($host);
 
@@ -1589,13 +1575,13 @@ class UriProcessorMockeryTest extends TestCase
     {
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Products(11)/ProductID';
-        $hostInfo = array(
-            'AbsoluteRequestUri' => new Url($baseUri.$resourcePath),
-            'AbsoluteServiceUri' => new Url($baseUri),
-            'QueryString' => '$filter=true',
-            'DataServiceVersion' => new Version(1, 0),
+        $hostInfo = [
+            'AbsoluteRequestUri'    => new Url($baseUri.$resourcePath),
+            'AbsoluteServiceUri'    => new Url($baseUri),
+            'QueryString'           => '$filter=true',
+            'DataServiceVersion'    => new Version(1, 0),
             'MaxDataServiceVersion' => new Version(1, 0),
-        );
+        ];
 
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService2($host);
@@ -1618,13 +1604,13 @@ class UriProcessorMockeryTest extends TestCase
     {
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Employees(\'EMP1\')/Emails';
-        $hostInfo = array(
-            'AbsoluteRequestUri' => new Url($baseUri.$resourcePath),
-            'AbsoluteServiceUri' => new Url($baseUri),
-            'QueryString' => '$filter=true',
-            'DataServiceVersion' => new Version(3, 0),
+        $hostInfo = [
+            'AbsoluteRequestUri'    => new Url($baseUri.$resourcePath),
+            'AbsoluteServiceUri'    => new Url($baseUri),
+            'QueryString'           => '$filter=true',
+            'DataServiceVersion'    => new Version(3, 0),
             'MaxDataServiceVersion' => new Version(3, 0),
-        );
+        ];
         $host = new ServiceHostTestFake($hostInfo);
         //Note we are using V3 data service
         $dataService = new NorthWindServiceV3($host);
@@ -1647,13 +1633,13 @@ class UriProcessorMockeryTest extends TestCase
     {
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Orders(11)/Customer/CustomerID/$value';
-        $hostInfo = array(
-            'AbsoluteRequestUri' => new Url($baseUri.$resourcePath),
-            'AbsoluteServiceUri' => new Url($baseUri),
-            'QueryString' => '$filter=true',
-            'DataServiceVersion' => new Version(1, 0),
+        $hostInfo = [
+            'AbsoluteRequestUri'    => new Url($baseUri.$resourcePath),
+            'AbsoluteServiceUri'    => new Url($baseUri),
+            'QueryString'           => '$filter=true',
+            'DataServiceVersion'    => new Version(1, 0),
             'MaxDataServiceVersion' => new Version(1, 0),
-        );
+        ];
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService2($host);
 
@@ -1675,13 +1661,13 @@ class UriProcessorMockeryTest extends TestCase
     {
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Employees(\'EMP1\')/Emails';
-        $hostInfo = array(
-            'AbsoluteRequestUri' => new Url($baseUri.$resourcePath),
-            'AbsoluteServiceUri' => new Url($baseUri),
-            'QueryString' => null,
-            'DataServiceVersion' => new Version(2, 0),
+        $hostInfo = [
+            'AbsoluteRequestUri'    => new Url($baseUri.$resourcePath),
+            'AbsoluteServiceUri'    => new Url($baseUri),
+            'QueryString'           => null,
+            'DataServiceVersion'    => new Version(2, 0),
             'MaxDataServiceVersion' => new Version(2, 0),
-        );
+        ];
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService2($host);
 
@@ -1705,13 +1691,13 @@ class UriProcessorMockeryTest extends TestCase
     {
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Employees(\'EMP1\')/Emails';
-        $hostInfo = array(
-            'AbsoluteRequestUri' => new Url($baseUri.$resourcePath),
-            'AbsoluteServiceUri' => new Url($baseUri),
-            'QueryString' => null,
-            'DataServiceVersion' => new Version(3, 0),
+        $hostInfo = [
+            'AbsoluteRequestUri'    => new Url($baseUri.$resourcePath),
+            'AbsoluteServiceUri'    => new Url($baseUri),
+            'QueryString'           => null,
+            'DataServiceVersion'    => new Version(3, 0),
             'MaxDataServiceVersion' => new Version(3, 0),
-        );
+        ];
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService2($host);
 
@@ -1735,13 +1721,13 @@ class UriProcessorMockeryTest extends TestCase
     {
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Orders(11)/Customer';
-        $hostInfo = array(
-            'AbsoluteRequestUri' => new Url($baseUri.$resourcePath),
-            'AbsoluteServiceUri' => new Url($baseUri),
-            'QueryString' => '$expand=Orders&$select=CustomerID,Orders',
-            'DataServiceVersion' => new Version(1, 0),
+        $hostInfo = [
+            'AbsoluteRequestUri'    => new Url($baseUri.$resourcePath),
+            'AbsoluteServiceUri'    => new Url($baseUri),
+            'QueryString'           => '$expand=Orders&$select=CustomerID,Orders',
+            'DataServiceVersion'    => new Version(1, 0),
             'MaxDataServiceVersion' => new Version(1, 0),
-        );
+        ];
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindServiceV3($host);
 
@@ -1761,8 +1747,9 @@ class UriProcessorMockeryTest extends TestCase
     /**
      * select and expand can be applied to request url identifying resource set.
      */
+
     /** public function testUriProcessorForSelelctExpandOnResourceSet()
-    /**
+     /**
      * $select is a V2 feature so client should request with  'DataServiceVersion' 2.0
      * but the response of select can be handled by V1 client so a value of 1.0 for MaxDataServiceVersion
      * will work.
@@ -1771,14 +1758,14 @@ class UriProcessorMockeryTest extends TestCase
     {
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Orders(11)/Customer';
-        $hostInfo = array(
+        $hostInfo = [
             'AbsoluteRequestUri' => new Url($baseUri.$resourcePath),
             'AbsoluteServiceUri' => new Url($baseUri),
-            'QueryString' => '$expand=Orders&$select=CustomerID,Orders',
+            'QueryString'        => '$expand=Orders&$select=CustomerID,Orders',
             //use of $select requires this header to 2.0
-            'DataServiceVersion' => new Version(1, 0),
+            'DataServiceVersion'    => new Version(1, 0),
             'MaxDataServiceVersion' => new Version(1, 0),
-        );
+        ];
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService2($host);
 
@@ -1807,13 +1794,13 @@ class UriProcessorMockeryTest extends TestCase
         //so MaxDataServiceVersion 1.0 will not work
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Orders';
-        $hostInfo = array(
-            'AbsoluteRequestUri' => new Url($baseUri.$resourcePath),
-            'AbsoluteServiceUri' => new Url($baseUri),
-            'QueryString' => '$top=10&$expand=Customer',
-            'DataServiceVersion' => new Version(1, 0),
+        $hostInfo = [
+            'AbsoluteRequestUri'    => new Url($baseUri.$resourcePath),
+            'AbsoluteServiceUri'    => new Url($baseUri),
+            'QueryString'           => '$top=10&$expand=Customer',
+            'DataServiceVersion'    => new Version(1, 0),
             'MaxDataServiceVersion' => new Version(1, 0),
-        );
+        ];
 
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService2($host);
@@ -1834,7 +1821,7 @@ class UriProcessorMockeryTest extends TestCase
         //so MaxDataServiceVersion 1.0 will not work
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Orders';
-        $hostInfo = array(
+        $hostInfo = [
             'AbsoluteRequestUri' => new Url($baseUri.$resourcePath),
             'AbsoluteServiceUri' => new Url($baseUri),
             //error will be thrown from processskipAndTopOption before processor process expand
@@ -1844,7 +1831,7 @@ class UriProcessorMockeryTest extends TestCase
             //But MaxDataServiceVersion must be 2.0 as respose will include
             //a nextlink for expanded 'Orders' property
             'MaxDataServiceVersion' => new Version(1, 0),
-        );
+        ];
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService2($host);
 
@@ -1864,13 +1851,13 @@ class UriProcessorMockeryTest extends TestCase
         //so MaxDataServiceVersion 1.0 will work
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Orders';
-        $hostInfo = array(
-            'AbsoluteRequestUri' => new Url($baseUri.$resourcePath),
-            'AbsoluteServiceUri' => new Url($baseUri),
-            'QueryString' => '$top=2&$expand=Customer',
-            'DataServiceVersion' => new Version(1, 0),
+        $hostInfo = [
+            'AbsoluteRequestUri'    => new Url($baseUri.$resourcePath),
+            'AbsoluteServiceUri'    => new Url($baseUri),
+            'QueryString'           => '$top=2&$expand=Customer',
+            'DataServiceVersion'    => new Version(1, 0),
             'MaxDataServiceVersion' => new Version(1, 0),
-        );
+        ];
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService2($host);
 
@@ -1913,16 +1900,16 @@ class UriProcessorMockeryTest extends TestCase
     {
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Orders(11)/Customer';
-        $hostInfo = array(
+        $hostInfo = [
             'AbsoluteRequestUri' => new Url($baseUri.$resourcePath),
             'AbsoluteServiceUri' => new Url($baseUri),
-            'QueryString' => '$expand=Orders',
+            'QueryString'        => '$expand=Orders',
             //DataServiceVersion can be 1.0 no issue
             'DataServiceVersion' => new Version(1, 0),
             //But MaxDataServiceVersion must be 2.0 as respose will include
             //a nextlink for expanded 'Orders' property
             'MaxDataServiceVersion' => new Version(1, 0),
-        );
+        ];
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService2($host);
 
@@ -1949,16 +1936,16 @@ class UriProcessorMockeryTest extends TestCase
     {
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Orders(11)/Customer';
-        $hostInfo = array(
+        $hostInfo = [
             'AbsoluteRequestUri' => new Url($baseUri.$resourcePath),
             'AbsoluteServiceUri' => new Url($baseUri),
-            'QueryString' => '$expand=Orders&$select=CustomerID,Orders',
+            'QueryString'        => '$expand=Orders&$select=CustomerID,Orders',
             //use of $select requires this header to 1.0
             'DataServiceVersion' => new Version(2, 0),
             //The expanded property will be paged, so skiptoken will be there
             //client says i can handle it
             'MaxDataServiceVersion' => new Version(2, 0),
-        );
+        ];
 
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService2($host);
@@ -2008,13 +1995,13 @@ class UriProcessorMockeryTest extends TestCase
     {
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Orders(123)/Customer/Address';
-        $hostInfo = array(
-            'AbsoluteRequestUri' => new Url($baseUri.$resourcePath),
-            'AbsoluteServiceUri' => new Url($baseUri),
-            'QueryString' => '$expand=Address2',
-            'DataServiceVersion' => new Version(2, 0),
+        $hostInfo = [
+            'AbsoluteRequestUri'    => new Url($baseUri.$resourcePath),
+            'AbsoluteServiceUri'    => new Url($baseUri),
+            'QueryString'           => '$expand=Address2',
+            'DataServiceVersion'    => new Version(2, 0),
             'MaxDataServiceVersion' => new Version(2, 0),
-        );
+        ];
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService2($host);
 
@@ -2032,13 +2019,13 @@ class UriProcessorMockeryTest extends TestCase
 
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Orders(123)/Customer/Address';
-        $hostInfo = array(
-            'AbsoluteRequestUri' => new Url($baseUri.$resourcePath),
-            'AbsoluteServiceUri' => new Url($baseUri),
-            'QueryString' => '$select=LineNumber',
-            'DataServiceVersion' => new Version(2, 0),
+        $hostInfo = [
+            'AbsoluteRequestUri'    => new Url($baseUri.$resourcePath),
+            'AbsoluteServiceUri'    => new Url($baseUri),
+            'QueryString'           => '$select=LineNumber',
+            'DataServiceVersion'    => new Version(2, 0),
             'MaxDataServiceVersion' => new Version(2, 0),
-        );
+        ];
 
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService2($host);
@@ -2065,13 +2052,13 @@ class UriProcessorMockeryTest extends TestCase
 
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Orders';
-        $hostInfo = array(
-            'AbsoluteRequestUri' => new Url($baseUri.$resourcePath),
-            'AbsoluteServiceUri' => new Url($baseUri),
-            'QueryString' => '$top=\'ABC\'',
-            'DataServiceVersion' => new Version(2, 0),
+        $hostInfo = [
+            'AbsoluteRequestUri'    => new Url($baseUri.$resourcePath),
+            'AbsoluteServiceUri'    => new Url($baseUri),
+            'QueryString'           => '$top=\'ABC\'',
+            'DataServiceVersion'    => new Version(2, 0),
             'MaxDataServiceVersion' => new Version(2, 0),
-        );
+        ];
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService2($host);
 
@@ -2084,13 +2071,13 @@ class UriProcessorMockeryTest extends TestCase
 
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Orders';
-        $hostInfo = array(
-            'AbsoluteRequestUri' => new Url($baseUri.$resourcePath),
-            'AbsoluteServiceUri' => new Url($baseUri),
-            'QueryString' => '$top=-123',
-            'DataServiceVersion' => new Version(2, 0),
+        $hostInfo = [
+            'AbsoluteRequestUri'    => new Url($baseUri.$resourcePath),
+            'AbsoluteServiceUri'    => new Url($baseUri),
+            'QueryString'           => '$top=-123',
+            'DataServiceVersion'    => new Version(2, 0),
             'MaxDataServiceVersion' => new Version(2, 0),
-        );
+        ];
 
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService2($host);
@@ -2103,13 +2090,13 @@ class UriProcessorMockeryTest extends TestCase
 
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Orders';
-        $hostInfo = array(
-            'AbsoluteRequestUri' => new Url($baseUri.$resourcePath),
-            'AbsoluteServiceUri' => new Url($baseUri),
-            'QueryString' => '$skip=\'ABC\'',
-            'DataServiceVersion' => new Version(2, 0),
+        $hostInfo = [
+            'AbsoluteRequestUri'    => new Url($baseUri.$resourcePath),
+            'AbsoluteServiceUri'    => new Url($baseUri),
+            'QueryString'           => '$skip=\'ABC\'',
+            'DataServiceVersion'    => new Version(2, 0),
             'MaxDataServiceVersion' => new Version(2, 0),
-        );
+        ];
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService2($host);
 
@@ -2122,13 +2109,13 @@ class UriProcessorMockeryTest extends TestCase
 
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Orders';
-        $hostInfo = array(
-            'AbsoluteRequestUri' => new Url($baseUri.$resourcePath),
-            'AbsoluteServiceUri' => new Url($baseUri),
-            'QueryString' => '$skip=-123',
-            'DataServiceVersion' => new Version(2, 0),
+        $hostInfo = [
+            'AbsoluteRequestUri'    => new Url($baseUri.$resourcePath),
+            'AbsoluteServiceUri'    => new Url($baseUri),
+            'QueryString'           => '$skip=-123',
+            'DataServiceVersion'    => new Version(2, 0),
             'MaxDataServiceVersion' => new Version(2, 0),
-        );
+        ];
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService2($host);
         try {
@@ -2146,13 +2133,13 @@ class UriProcessorMockeryTest extends TestCase
     {
         $baseUri = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Orders(123)/Customer/Orders';
-        $hostInfo = array(
-            'AbsoluteRequestUri' => new Url($baseUri.$resourcePath),
-            'AbsoluteServiceUri' => new Url($baseUri),
-            'QueryString' => '$expand=Customer&$select=Customer,OrderDate&$filter=OrderID eq 123&$orderby=OrderDate&top=6&$skip=10&$skiptoken=datetime\'2000-11-11\',567',
-            'DataServiceVersion' => new Version(2, 0),
+        $hostInfo = [
+            'AbsoluteRequestUri'    => new Url($baseUri.$resourcePath),
+            'AbsoluteServiceUri'    => new Url($baseUri),
+            'QueryString'           => '$expand=Customer&$select=Customer,OrderDate&$filter=OrderID eq 123&$orderby=OrderDate&top=6&$skip=10&$skiptoken=datetime\'2000-11-11\',567',
+            'DataServiceVersion'    => new Version(2, 0),
             'MaxDataServiceVersion' => new Version(2, 0),
-        );
+        ];
 
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService2($host);
@@ -2173,13 +2160,13 @@ class UriProcessorMockeryTest extends TestCase
      */
     public function testRequestDescription()
     {
-        $hostInfo = array(
-            'AbsoluteRequestUri' => new Url('http://localhost:8083/NorthWindDataService.svc/Orders'),
-            'AbsoluteServiceUri' => new Url('http://localhost:8083/NorthWindDataService.svc'),
-            'QueryString' => null,
-            'DataServiceVersion' => new Version(1, 0),
+        $hostInfo = [
+            'AbsoluteRequestUri'    => new Url('http://localhost:8083/NorthWindDataService.svc/Orders'),
+            'AbsoluteServiceUri'    => new Url('http://localhost:8083/NorthWindDataService.svc'),
+            'QueryString'           => null,
+            'DataServiceVersion'    => new Version(1, 0),
             'MaxDataServiceVersion' => new Version(2, 0),
-        );
+        ];
 
         $host = new ServiceHostTestFake($hostInfo);
         $dataService = new NorthWindService2($host);

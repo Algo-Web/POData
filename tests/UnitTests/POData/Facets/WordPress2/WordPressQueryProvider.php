@@ -7,14 +7,14 @@ namespace UnitTests\POData\Facets\WordPress2;
  *
  */
 
+use POData\Providers\Expression\IExpressionProvider;
+use POData\Providers\Metadata\ResourceProperty;
+use POData\Providers\Metadata\ResourceSet;
+use POData\Providers\Query\IQueryProvider;
 use POData\Providers\Query\QueryResult;
 use POData\Providers\Query\QueryType;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
-use POData\Providers\Metadata\ResourceSet;
-use POData\Providers\Metadata\ResourceProperty;
-use POData\Providers\Query\IQueryProvider;
-use POData\Providers\Expression\IExpressionProvider;
 
 /* The name of the database for WordPress */
 define('DB_NAME', 'wordpress');
@@ -185,20 +185,22 @@ class WordPressQueryProvider implements IQueryProvider
     ) {
         // TODO: Implement getRelatedResourceReference() method.
     }
-            /**
-     * Updates a resource
+
+    /**
+     * Updates a resource.
      *
-     * @param ResourceSet      $sourceResourceSet    The entity set containing the source entity
-     * @param object           $sourceEntityInstance The source entity instance
-     * @param KeyDescriptor    $keyDescriptor        The key identifying the entity to fetch
-     * @param object           $data                 The New data for the entity instance.
-     * @param bool             $shouldUpdate        Should undefined values be updated or reset to default
+     * @param ResourceSet   $sourceResourceSet    The entity set containing the source entity
+     * @param object        $sourceEntityInstance The source entity instance
+     * @param KeyDescriptor $keyDescriptor        The key identifying the entity to fetch
+     * @param object        $data                 The New data for the entity instance.
+     * @param bool          $shouldUpdate         Should undefined values be updated or reset to default
      *
      * @return object|null The new resource value if it is assignable or throw exception for null.
      */
     public function updateResource(ResourceSet $sourceResourceSet, $sourceEntityInstance, KeyDescriptor $keyDescriptor, $data, $shouldUpdate = false)
     {
     }
+
     /*
      * Delete resource from a resource set.
      * @param ResourceSet|null $resourceSet
@@ -211,11 +213,12 @@ class WordPressQueryProvider implements IQueryProvider
         $sourceEntityInstance
     ) {
     }
+
     /*
      * @param ResourceSet      $resourceSet   The entity set containing the entity to fetch
      * @param object           $sourceEntityInstance The source entity instance
      * @param object           $data                 The New data for the entity instance.
-     * 
+     *
      * returns object|null returns the newly created model if sucessful or null if model creation failed.
      */
     public function createResourceforResourceSet(
@@ -228,7 +231,7 @@ class WordPressQueryProvider implements IQueryProvider
     /**
      * Puts an entity instance to entity set identified by a key.
      *
-     * @param ResourceSet $resourceSet The entity set containing the entity to update
+     * @param ResourceSet   $resourceSet   The entity set containing the entity to update
      * @param KeyDescriptor $keyDescriptor The key identifying the entity to update
      * @param $data
      *

@@ -8,8 +8,8 @@ namespace POData\Common;
 class Url
 {
     private $_urlAsString = null;
-    private $_parts = array();
-    private $_segments = array();
+    private $_parts = [];
+    private $_segments = [];
     const ABS_URL_REGEXP = '/^(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/';
     const REL_URL_REGEXP = '/^(\/|\/([\w#!:.?+=&%@!\-\/]))?/';
 
@@ -33,11 +33,11 @@ class Url
             }
         }
 
-        $this->_parts = parse_url($url);
-        if ($this->_parts === false) {
+        $p = parse_url($url);
+        if ($p === false) {
             throw new UrlFormatException(Messages::urlMalformedUrl($url));
         }
-
+        $this->_parts = $p;
         $path = $this->getPath();
         if ($path != null) {
             $this->_segments = explode('/', trim($path, '/'));

@@ -2,42 +2,41 @@
 
 namespace POData;
 
+use POData\Common\ErrorHandler;
+use POData\Common\HttpStatus;
+use POData\Common\Messages;
 use POData\Common\MimeTypes;
+use POData\Common\NotImplementedException;
+use POData\Common\ODataConstants;
+use POData\Common\ODataException;
 use POData\Common\ReflectionHandler;
 use POData\Common\Version;
 use POData\Configuration\IServiceConfiguration;
+use POData\Configuration\ServiceConfiguration;
 use POData\ObjectModel\IObjectSerialiser;
+use POData\ObjectModel\ObjectModelSerializer;
 use POData\ObjectModel\ODataFeed;
 use POData\ObjectModel\ODataURLCollection;
 use POData\OperationContext\HTTPRequestMethod;
-use POData\Common\ErrorHandler;
-use POData\Common\Messages;
-use POData\Common\ODataException;
-use POData\Common\ODataConstants;
-use POData\Common\NotImplementedException;
-use POData\Common\InvalidOperationException;
-use POData\Common\HttpStatus;
-use POData\Providers\Metadata\Type\IType;
-use POData\Providers\ProvidersWrapper;
-use POData\Providers\Stream\StreamProviderWrapper;
-use POData\Configuration\ServiceConfiguration;
-use POData\UriProcessor\UriProcessor;
-use POData\UriProcessor\RequestDescription;
-use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
+use POData\OperationContext\IOperationContext;
 use POData\OperationContext\ServiceHost;
+use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\Type\Binary;
-use POData\ObjectModel\ObjectModelSerializer;
+use POData\Providers\Metadata\Type\IType;
+use POData\Providers\ProvidersWrapper;
+use POData\Providers\Query\IQueryProvider;
+use POData\Providers\Stream\StreamProviderWrapper;
+use POData\UriProcessor\RequestDescription;
+use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
+use POData\UriProcessor\UriProcessor;
 use POData\Writers\Atom\AtomODataWriter;
 use POData\Writers\Json\JsonLightMetadataLevel;
 use POData\Writers\Json\JsonLightODataWriter;
 use POData\Writers\Json\JsonODataV1Writer;
 use POData\Writers\Json\JsonODataV2Writer;
-use POData\Writers\ResponseWriter;
-use POData\Providers\Query\IQueryProvider;
-use POData\Providers\Metadata\IMetadataProvider;
-use POData\OperationContext\IOperationContext;
 use POData\Writers\ODataWriterRegistry;
+use POData\Writers\ResponseWriter;
 
 /**
  * Class BaseService.
@@ -51,7 +50,6 @@ use POData\Writers\ODataWriterRegistry;
  *      Force BaseService class to implement functions for custom
  *      data service providers
  */
-
 abstract class BaseService implements IRequestHandler, IService
 {
     /**
@@ -88,7 +86,7 @@ abstract class BaseService implements IRequestHandler, IService
 
     /**
      * Hold reference to object serialiser - bit wot turns PHP objects
-     * into message traffic on wire
+     * into message traffic on wire.
      *
      * @var IObjectSerialiser
      */
@@ -96,13 +94,14 @@ abstract class BaseService implements IRequestHandler, IService
 
     /**
      * Get reference to object serialiser - bit wot turns PHP objects
-     * into message traffic on wire
+     * into message traffic on wire.
      *
      * @var IObjectSerialiser
      */
     public function getObjectSerialiser()
     {
         assert(null != $this->objectSerialiser);
+
         return $this->objectSerialiser;
     }
 
@@ -121,10 +120,12 @@ abstract class BaseService implements IRequestHandler, IService
     public function getConfiguration()
     {
         assert(null != $this->config);
+
         return $this->config;
     }
 
     //TODO: shouldn't we hide this from the interface..if we need it at all.
+
     /**
      * Get the wrapper over developer's IQueryProvider and IMetadataProvider implementation.
      *
@@ -153,6 +154,7 @@ abstract class BaseService implements IRequestHandler, IService
     public function getHost()
     {
         assert(null != $this->_serviceHost);
+
         return $this->_serviceHost;
     }
 
@@ -277,6 +279,7 @@ abstract class BaseService implements IRequestHandler, IService
     public function getODataWriterRegistry()
     {
         assert(null != $this->writerRegistry);
+
         return $this->writerRegistry;
     }
 
@@ -383,6 +386,7 @@ abstract class BaseService implements IRequestHandler, IService
             $uriProcessor->execute();
             if (HTTPRequestMethod::DELETE() == $method) {
                 $this->getHost()->setResponseStatusCode(HttpStatus::CODE_OK);
+
                 return;
             }
 
@@ -390,7 +394,7 @@ abstract class BaseService implements IRequestHandler, IService
             $objectModelSerializer->setRequest($request);
 
             $targetResourceType = $request->getTargetResourceType();
-            assert(null != $targetResourceType, "Target resource type cannot be null");
+            assert(null != $targetResourceType, 'Target resource type cannot be null');
 
             $method = (HTTPRequestMethod::POST() != $method);
             if (!$request->isSingleResult() && $method) {
@@ -510,23 +514,21 @@ abstract class BaseService implements IRequestHandler, IService
      * @param RequestDescription $request      The request submitted by client and it's execution result
      * @param UriProcessor       $uriProcessor The reference to the UriProcessor
      *
+     * @throws ODataException, HttpHeaderFailure
+     *
      * @return string the response content-type, a null value means the requested resource
      *                is named stream and IDSSP2::getStreamContentType returned null
-     *
-     * @throws ODataException, HttpHeaderFailure
      */
     public function getResponseContentType(
         RequestDescription $request,
         UriProcessor $uriProcessor
     ) {
-
         $baseMimeTypes = [
             MimeTypes::MIME_APPLICATION_JSON,
             MimeTypes::MIME_APPLICATION_JSON_FULL_META,
             MimeTypes::MIME_APPLICATION_JSON_NO_META,
             MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META,
-            MimeTypes::MIME_APPLICATION_JSON_VERBOSE];
-
+            MimeTypes::MIME_APPLICATION_JSON_VERBOSE, ];
 
         // The Accept request-header field specifies media types which are acceptable for the response
 
@@ -555,7 +557,7 @@ abstract class BaseService implements IRequestHandler, IService
             case TargetKind::METADATA():
                 return HttpProcessUtility::selectMimeType(
                     $requestAcceptText,
-                    array(MimeTypes::MIME_APPLICATION_XML)
+                    [MimeTypes::MIME_APPLICATION_XML]
                 );
 
             case TargetKind::SERVICE_DIRECTORY():
@@ -563,13 +565,13 @@ abstract class BaseService implements IRequestHandler, IService
                     $requestAcceptText,
                     array_merge(
                         [MimeTypes::MIME_APPLICATION_ATOMSERVICE,
-                            MimeTypes::MIME_APPLICATION_XML],
+                            MimeTypes::MIME_APPLICATION_XML, ],
                         $baseMimeTypes
                     )
                 );
 
             case TargetKind::PRIMITIVE_VALUE():
-                $supportedResponseMimeTypes = array(MimeTypes::MIME_TEXTPLAIN);
+                $supportedResponseMimeTypes = [MimeTypes::MIME_TEXTPLAIN];
 
                 if ('$count' != $request->getIdentifier()) {
                     $projectedProperty = $request->getProjectedProperty();
@@ -577,7 +579,7 @@ abstract class BaseService implements IRequestHandler, IService
                     $type = $projectedProperty->getInstanceType();
                     assert($type instanceof IType, '!$type instanceof IType');
                     if ($type instanceof Binary) {
-                        $supportedResponseMimeTypes = array(MimeTypes::MIME_APPLICATION_OCTETSTREAM);
+                        $supportedResponseMimeTypes = [MimeTypes::MIME_APPLICATION_OCTETSTREAM];
                     }
                 }
 
@@ -594,7 +596,7 @@ abstract class BaseService implements IRequestHandler, IService
                     $requestAcceptText,
                     array_merge(
                         [MimeTypes::MIME_APPLICATION_XML,
-                            MimeTypes::MIME_TEXTXML],
+                            MimeTypes::MIME_TEXTXML, ],
                         $baseMimeTypes
                     )
                 );
@@ -634,7 +636,7 @@ abstract class BaseService implements IRequestHandler, IService
                 if (!is_null($responseContentType)) {
                     $responseContentType = HttpProcessUtility::selectMimeType(
                         $requestAcceptText,
-                        array($responseContentType)
+                        [$responseContentType]
                     );
                 }
 
@@ -677,7 +679,7 @@ abstract class BaseService implements IRequestHandler, IService
                 );
             }
 
-            return null;
+            return;
         }
 
         if ($this->getConfiguration()->getValidateETagHeader() && !$resourceType->hasETagProperties()) {
@@ -689,13 +691,13 @@ abstract class BaseService implements IRequestHandler, IService
             }
 
             // We need write the response but no eTag header
-            return null;
+            return;
         }
 
         if (!$this->getConfiguration()->getValidateETagHeader()) {
             // Configuration says do not validate ETag, so we will not write ETag header in the
             // response even though the requested resource support it
-            return null;
+            return;
         }
 
         if (is_null($ifMatch) && is_null($ifNoneMatch)) {
@@ -789,8 +791,6 @@ abstract class BaseService implements IRequestHandler, IService
 
             return rtrim($eTag, ',');
         }
-
-        return null;
     }
 
     /**

@@ -1,4 +1,5 @@
 <?php
+
 namespace POData\Common\Messages;
 
 trait uriProcessor
@@ -25,6 +26,7 @@ trait uriProcessor
     {
         return 'Forbidden.';
     }
+
     /**
      * Format a message to show error when the requested uri is not
      * based on the configured base service uri.

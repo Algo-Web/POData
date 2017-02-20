@@ -3,8 +3,8 @@
 namespace POData\UriProcessor\QueryProcessor\ExpressionParser;
 
 use POData\Common\Messages;
-use POData\Common\ODataException;
 use POData\Common\ODataConstants;
+use POData\Common\ODataException;
 use POData\Providers\Metadata\Type\Char;
 
 /**

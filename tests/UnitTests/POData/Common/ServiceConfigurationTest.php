@@ -39,5 +39,4 @@ class ServiceConfigurationTest extends TestCase
         $foo->setValidateETagHeader(true);
         $this->assertTrue($foo->getValidateETagHeader());
     }
-
 }

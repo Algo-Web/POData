@@ -5,9 +5,9 @@
  * 1. This test case requires the service 'NorthWind' to be
  *    accessed using http://localhost:8086/NorthWind.svc.
  */
-use POData\Common\ODataConstants;
 use POData\Common\HttpStatus;
 use POData\Common\MimeTypes;
+use POData\Common\ODataConstants;
 
 class TestETag extends PHPUnit_Framework_TestCase
 {
@@ -25,7 +25,7 @@ class TestETag extends PHPUnit_Framework_TestCase
 
         // Atom service document
         $ch = curl_init();
-        $headers = array();
+        $headers = [];
         curl_setopt($ch, CURLOPT_URL, self::BASE_SERIVE_URL);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -37,7 +37,7 @@ class TestETag extends PHPUnit_Framework_TestCase
 
         // JSON service document
         $ch = curl_init();
-        $headers = array();
+        $headers = [];
         curl_setopt($ch, CURLOPT_URL, self::BASE_SERIVE_URL.'?$format=json');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -56,7 +56,7 @@ class TestETag extends PHPUnit_Framework_TestCase
 
         // Atom metadata document
         $ch = curl_init();
-        $headers = array();
+        $headers = [];
         curl_setopt($ch, CURLOPT_URL, self::BASE_SERIVE_URL.'/$metadata');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -68,7 +68,7 @@ class TestETag extends PHPUnit_Framework_TestCase
 
         // request unsupported content type (metadata cannot be in json format)
         $ch = curl_init();
-        $headers = array(ODataConstants::HTTP_REQUEST_ACCEPT.':'.MimeTypes::MIME_APPLICATION_JSON);
+        $headers = [ODataConstants::HTTP_REQUEST_ACCEPT.':'.MimeTypes::MIME_APPLICATION_JSON];
         curl_setopt($ch, CURLOPT_URL, self::BASE_SERIVE_URL.'/$metadata');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -90,7 +90,7 @@ class TestETag extends PHPUnit_Framework_TestCase
 
         // Request feed in atom format
         $ch = curl_init();
-        $headers = array();
+        $headers = [];
         curl_setopt($ch, CURLOPT_URL, self::BASE_SERIVE_URL.'/Customers');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -102,7 +102,7 @@ class TestETag extends PHPUnit_Framework_TestCase
 
         // Request feed in json format
         $ch = curl_init();
-        $headers = array(ODataConstants::HTTP_REQUEST_ACCEPT.':'.MimeTypes::MIME_APPLICATION_JSON);
+        $headers = [ODataConstants::HTTP_REQUEST_ACCEPT.':'.MimeTypes::MIME_APPLICATION_JSON];
         curl_setopt($ch, CURLOPT_URL, self::BASE_SERIVE_URL.'/Customers');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -121,7 +121,7 @@ class TestETag extends PHPUnit_Framework_TestCase
 
         // Request feed in atom format
         $ch = curl_init();
-        $headers = array();
+        $headers = [];
         curl_setopt($ch, CURLOPT_URL, self::BASE_SERIVE_URL.'/Customers(\'ALFKI\')');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -133,7 +133,7 @@ class TestETag extends PHPUnit_Framework_TestCase
 
         // Request feed in json format
         $ch = curl_init();
-        $headers = array(ODataConstants::HTTP_REQUEST_ACCEPT.':'.MimeTypes::MIME_APPLICATION_JSON);
+        $headers = [ODataConstants::HTTP_REQUEST_ACCEPT.':'.MimeTypes::MIME_APPLICATION_JSON];
         curl_setopt($ch, CURLOPT_URL, self::BASE_SERIVE_URL.'/Customers(\'ALFKI\')');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -152,7 +152,7 @@ class TestETag extends PHPUnit_Framework_TestCase
 
         // Request for count
         $ch = curl_init();
-        $headers = array();
+        $headers = [];
         curl_setopt($ch, CURLOPT_URL, self::BASE_SERIVE_URL.'/Customers/$count');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -164,7 +164,7 @@ class TestETag extends PHPUnit_Framework_TestCase
 
         // Request for count in json format, this iwll cause service to thow error
         $ch = curl_init();
-        $headers = array(ODataConstants::HTTP_REQUEST_ACCEPT.':'.MimeTypes::MIME_APPLICATION_JSON);
+        $headers = [ODataConstants::HTTP_REQUEST_ACCEPT.':'.MimeTypes::MIME_APPLICATION_JSON];
         curl_setopt($ch, CURLOPT_URL, self::BASE_SERIVE_URL.'/Customers/$count');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -179,7 +179,7 @@ class TestETag extends PHPUnit_Framework_TestCase
 
         // Request for count in atom format, this iwll cause service to thow error
         $ch = curl_init();
-        $headers = array(ODataConstants::HTTP_REQUEST_ACCEPT.':'.MimeTypes::MIME_APPLICATION_ATOM);
+        $headers = [ODataConstants::HTTP_REQUEST_ACCEPT.':'.MimeTypes::MIME_APPLICATION_ATOM];
         curl_setopt($ch, CURLOPT_URL, self::BASE_SERIVE_URL.'/Customers/$count');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -201,7 +201,7 @@ class TestETag extends PHPUnit_Framework_TestCase
 
         // Request for count
         $ch = curl_init();
-        $headers = array();
+        $headers = [];
         curl_setopt($ch, CURLOPT_URL, self::BASE_SERIVE_URL.'/Customers(\'ALFKI\')/$links/Orders');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -213,7 +213,7 @@ class TestETag extends PHPUnit_Framework_TestCase
 
         // Request for $links in json format, is allowed
         $ch = curl_init();
-        $headers = array(ODataConstants::HTTP_REQUEST_ACCEPT.':'.MimeTypes::MIME_APPLICATION_JSON);
+        $headers = [ODataConstants::HTTP_REQUEST_ACCEPT.':'.MimeTypes::MIME_APPLICATION_JSON];
         curl_setopt($ch, CURLOPT_URL, self::BASE_SERIVE_URL.'/Customers(\'ALFKI\')/$links/Orders');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -227,7 +227,7 @@ class TestETag extends PHPUnit_Framework_TestCase
 
         // Request for $links in atom format, does not support
         $ch = curl_init();
-        $headers = array(ODataConstants::HTTP_REQUEST_ACCEPT.':'.MimeTypes::MIME_APPLICATION_ATOM);
+        $headers = [ODataConstants::HTTP_REQUEST_ACCEPT.':'.MimeTypes::MIME_APPLICATION_ATOM];
         curl_setopt($ch, CURLOPT_URL, self::BASE_SERIVE_URL.'/Customers(\'ALFKI\')/$links/Orders');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -249,7 +249,7 @@ class TestETag extends PHPUnit_Framework_TestCase
 
         // Request for complex
         $ch = curl_init();
-        $headers = array();
+        $headers = [];
         curl_setopt($ch, CURLOPT_URL, self::BASE_SERIVE_URL.'/Customers(\'ALFKI\')/Address');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -261,7 +261,7 @@ class TestETag extends PHPUnit_Framework_TestCase
 
         // Request for complex in json format, is allowed
         $ch = curl_init();
-        $headers = array(ODataConstants::HTTP_REQUEST_ACCEPT.':'.MimeTypes::MIME_APPLICATION_JSON);
+        $headers = [ODataConstants::HTTP_REQUEST_ACCEPT.':'.MimeTypes::MIME_APPLICATION_JSON];
         curl_setopt($ch, CURLOPT_URL, self::BASE_SERIVE_URL.'/Customers(\'ALFKI\')/Address');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -275,7 +275,7 @@ class TestETag extends PHPUnit_Framework_TestCase
 
         // Request for $links in atom format, does not support
         $ch = curl_init();
-        $headers = array(ODataConstants::HTTP_REQUEST_ACCEPT.':'.MimeTypes::MIME_APPLICATION_ATOM);
+        $headers = [ODataConstants::HTTP_REQUEST_ACCEPT.':'.MimeTypes::MIME_APPLICATION_ATOM];
         curl_setopt($ch, CURLOPT_URL, self::BASE_SERIVE_URL.'/Customers(\'ALFKI\')/Address');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -300,7 +300,7 @@ class TestETag extends PHPUnit_Framework_TestCase
 
         //Get the same entry without if-Match or If-None-Match header
         $ch = curl_init();
-        $headers = array();
+        $headers = [];
         curl_setopt($ch, CURLOPT_URL, self::BASE_SERIVE_URL.'/Orders(OrderID=10248)');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -309,7 +309,7 @@ class TestETag extends PHPUnit_Framework_TestCase
 
         //Get the same entry with correct if-Match value
         $ch = curl_init();
-        $headers = array('If-Match:'.$eTag);
+        $headers = ['If-Match:'.$eTag];
         curl_setopt($ch, CURLOPT_URL, self::BASE_SERIVE_URL.'/Orders(OrderID=10248)');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -326,7 +326,7 @@ class TestETag extends PHPUnit_Framework_TestCase
 
         //Try to get the same entry with incorrect if-Match value
         $ch = curl_init();
-        $headers = array('If-Match:'.'ABC');
+        $headers = ['If-Match:'.'ABC'];
         curl_setopt($ch, CURLOPT_URL, self::BASE_SERIVE_URL.'/Orders(OrderID=10248)');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -348,7 +348,7 @@ class TestETag extends PHPUnit_Framework_TestCase
         // Server will give entry only if eTag does not match, we are trying wih
         // matching etag so server should not give response body.
         $ch = curl_init();
-        $headers = array('If-None-Match:'.$eTag);
+        $headers = ['If-None-Match:'.$eTag];
         curl_setopt($ch, CURLOPT_URL, self::BASE_SERIVE_URL.'/Orders(OrderID=10248)');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -365,7 +365,7 @@ class TestETag extends PHPUnit_Framework_TestCase
 
         // If-Match/If-None-Match allowed only for entry with etag properties
         $ch = curl_init();
-        $headers = array('If-None-Match:'.'AAA');
+        $headers = ['If-None-Match:'.'AAA'];
         curl_setopt($ch, CURLOPT_URL, self::BASE_SERIVE_URL.'/Customers(\'ALFKI\')');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -382,7 +382,7 @@ class TestETag extends PHPUnit_Framework_TestCase
 
         // If-Match/If-None-Match allowed only for entry with etag properties
         $ch = curl_init();
-        $headers = array('If-None-Match:'.'AAA');
+        $headers = ['If-None-Match:'.'AAA'];
         curl_setopt($ch, CURLOPT_URL, self::BASE_SERIVE_URL.'/Customers');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);

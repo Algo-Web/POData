@@ -2,13 +2,13 @@
 
 namespace POData\Writers;
 
+use POData\Common\Version;
+use POData\ObjectModel\ODataEntry;
+use POData\ObjectModel\ODataFeed;
+use POData\ObjectModel\ODataPropertyContent;
 use POData\ObjectModel\ODataURL;
 use POData\ObjectModel\ODataURLCollection;
-use POData\ObjectModel\ODataFeed;
-use POData\ObjectModel\ODataEntry;
-use POData\ObjectModel\ODataPropertyContent;
 use POData\Providers\ProvidersWrapper;
-use POData\Common\Version;
 
 /**
  * Class IODataWriter.

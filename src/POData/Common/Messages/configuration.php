@@ -1,4 +1,5 @@
 <?php
+
 namespace POData\Common\Messages;
 
 trait configuration
@@ -51,7 +52,6 @@ trait configuration
     {
         return 'The ability of the data service to return row count information is disabled. To enable this functionality, set the ServiceConfiguration.AcceptCountRequests property to true.';
     }
-
 
     /**
      * Message to show error when query processor found $select clause but which is

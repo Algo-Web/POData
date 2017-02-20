@@ -2,14 +2,14 @@
 
 namespace UnitTests\POData\Providers\Expression;
 
-use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ExpressionType;
-use POData\Providers\Metadata\Type\IType;
+use Mockery as m;
 use POData\Common\ODataConstants;
+use POData\Providers\Expression\MySQLExpressionProvider;
 use POData\Providers\Metadata\ResourceType;
+use POData\Providers\Metadata\Type\IType;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ExpressionType;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\PropertyAccessExpression;
 use POData\UriProcessor\QueryProcessor\FunctionDescription;
-use POData\Providers\Expression\MySQLExpressionProvider;
-use Mockery as m;
 use UnitTests\POData\TestCase;
 
 class MySQLExpressionProviderTest extends TestCase
@@ -25,7 +25,7 @@ class MySQLExpressionProviderTest extends TestCase
         return [
             [ExpressionType::AND_LOGICAL, "Title = 'PHB'", 'Clue > 0', "(Title = 'PHB' && Clue > 0)"],
             [ExpressionType::OR_LOGICAL, "BeardColour = 'Grey'", 'WizardFlag = TRUE',
-                "(BeardColour = 'Grey' || WizardFlag = TRUE)"]
+                "(BeardColour = 'Grey' || WizardFlag = TRUE)", ],
         ];
     }
 
@@ -46,7 +46,7 @@ class MySQLExpressionProviderTest extends TestCase
         $expected = 'onLogicalExpression';
         $actual = null;
         try {
-            $foo->onLogicalExpression(ExpressionType::CONSTANT, "", "");
+            $foo->onLogicalExpression(ExpressionType::CONSTANT, '', '');
         } catch (\InvalidArgumentException $e) {
             $actual = $e->getMessage();
         }
@@ -56,11 +56,11 @@ class MySQLExpressionProviderTest extends TestCase
     public function onArithmeticExpressionProvider()
     {
         return [
-            [ ExpressionType::MULTIPLY, '2', '1', '(2 * 1)'],
-            [ ExpressionType::DIVIDE, '4', '2', '(4 / 2)'],
-            [ ExpressionType::MODULO, '6', '3', '(6 % 3)'],
-            [ ExpressionType::ADD, '8', '4', '(8 + 4)'],
-            [ ExpressionType::SUBTRACT, '10', '5', '(10 - 5)'],
+            [ExpressionType::MULTIPLY, '2', '1', '(2 * 1)'],
+            [ExpressionType::DIVIDE, '4', '2', '(4 / 2)'],
+            [ExpressionType::MODULO, '6', '3', '(6 % 3)'],
+            [ExpressionType::ADD, '8', '4', '(8 + 4)'],
+            [ExpressionType::SUBTRACT, '10', '5', '(10 - 5)'],
         ];
     }
 
@@ -81,7 +81,7 @@ class MySQLExpressionProviderTest extends TestCase
         $expected = 'onArithmeticExpression';
         $actual = null;
         try {
-            $foo->onArithmeticExpression(ExpressionType::NOT_LOGICAL, "", "");
+            $foo->onArithmeticExpression(ExpressionType::NOT_LOGICAL, '', '');
         } catch (\InvalidArgumentException $e) {
             $actual = $e->getMessage();
         }
@@ -91,12 +91,12 @@ class MySQLExpressionProviderTest extends TestCase
     public function onRelationalExpressionProvider()
     {
         return [
-            [ ExpressionType::GREATERTHAN, '2', '1', '(2 > 1)'],
-            [ ExpressionType::GREATERTHAN_OR_EQUAL, '4', '2', '(4 >= 2)'],
-            [ ExpressionType::EQUAL, '6', '3', '(6 = 3)'],
-            [ ExpressionType::NOTEQUAL, '6', '3', '(6 != 3)'],
-            [ ExpressionType::LESSTHAN, '8', '4', '(8 < 4)'],
-            [ ExpressionType::LESSTHAN_OR_EQUAL, '10', '5', '(10 <= 5)'],
+            [ExpressionType::GREATERTHAN, '2', '1', '(2 > 1)'],
+            [ExpressionType::GREATERTHAN_OR_EQUAL, '4', '2', '(4 >= 2)'],
+            [ExpressionType::EQUAL, '6', '3', '(6 = 3)'],
+            [ExpressionType::NOTEQUAL, '6', '3', '(6 != 3)'],
+            [ExpressionType::LESSTHAN, '8', '4', '(8 < 4)'],
+            [ExpressionType::LESSTHAN_OR_EQUAL, '10', '5', '(10 <= 5)'],
         ];
     }
 
@@ -117,7 +117,7 @@ class MySQLExpressionProviderTest extends TestCase
         $expected = 'onRelationalExpression';
         $actual = null;
         try {
-            $foo->onRelationalExpression(ExpressionType::NOT_LOGICAL, "", "");
+            $foo->onRelationalExpression(ExpressionType::NOT_LOGICAL, '', '');
         } catch (\InvalidArgumentException $e) {
             $actual = $e->getMessage();
         }
@@ -127,8 +127,8 @@ class MySQLExpressionProviderTest extends TestCase
     public function onUnaryExpressionProvider()
     {
         return [
-            [ ExpressionType::NEGATE, '4 - 2', '-(4 - 2)'],
-            [ ExpressionType::NOT_LOGICAL, '4', '!(4)'],
+            [ExpressionType::NEGATE, '4 - 2', '-(4 - 2)'],
+            [ExpressionType::NOT_LOGICAL, '4', '!(4)'],
         ];
     }
 
@@ -149,7 +149,7 @@ class MySQLExpressionProviderTest extends TestCase
         $expected = 'onUnaryExpression';
         $actual = null;
         try {
-            $foo->onUnaryExpression(ExpressionType::ADD, "");
+            $foo->onUnaryExpression(ExpressionType::ADD, '');
         } catch (\InvalidArgumentException $e) {
             $actual = $e->getMessage();
         }
@@ -174,7 +174,7 @@ class MySQLExpressionProviderTest extends TestCase
             [ODataConstants::STRFUN_LENGTH, ['eins'], 'LENGTH(eins)'],
             [ODataConstants::GUIDFUN_EQUAL, ['eins', 'zwei'], 'STRCMP(eins, zwei)'],
             [ODataConstants::DATETIME_COMPARE, ['2014-10-11 12:02:02', '2014-10-11 12:02:02'],
-                'DATETIMECMP(2014-10-11 12:02:02; 2014-10-11 12:02:02)'],
+                'DATETIMECMP(2014-10-11 12:02:02; 2014-10-11 12:02:02)', ],
             [ODataConstants::DATETIME_YEAR, ['2014-10-11 12:02:02'], 'EXTRACT(YEAR from 2014-10-11 12:02:02)'],
             [ODataConstants::DATETIME_MONTH, ['2014-10-11 12:02:02'], 'EXTRACT(MONTH from 2014-10-11 12:02:02)'],
             [ODataConstants::DATETIME_DAY, ['2014-10-11 12:02:02'], 'EXTRACT(DAY from 2014-10-11 12:02:02)'],
@@ -221,13 +221,13 @@ class MySQLExpressionProviderTest extends TestCase
     public function testonPropertyAccessExpression()
     {
         $property = m::mock(PropertyAccessExpression::class)->makePartial();
-        $property->shouldReceive('getResourceProperty->getName')->andReturn("HAMMER TIME!");
+        $property->shouldReceive('getResourceProperty->getName')->andReturn('HAMMER TIME!');
         $res = m::mock(ResourceType::class)->makePartial();
         $res->shouldReceive('getName')->andReturn('OH NOES!');
         $foo = new MySQLExpressionProvider();
         $foo->setResourceType($res);
 
-        $expected = "HAMMER TIME!";
+        $expected = 'HAMMER TIME!';
         $result = $foo->onPropertyAccessExpression($property);
         $this->assertEquals($expected, $result);
     }

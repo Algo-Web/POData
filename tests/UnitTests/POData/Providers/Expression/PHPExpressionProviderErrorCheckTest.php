@@ -2,14 +2,10 @@
 
 namespace UnitTests\POData\Providers\Expression;
 
-use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ExpressionType;
-use POData\Providers\Metadata\Type\IType;
-use POData\Common\ODataConstants;
+use Mockery as m;
+use POData\Providers\Expression\PHPExpressionProvider;
 use POData\Providers\Metadata\ResourceType;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\PropertyAccessExpression;
-use POData\UriProcessor\QueryProcessor\FunctionDescription;
-use POData\Providers\Expression\PHPExpressionProvider;
-use Mockery as m;
 use UnitTests\POData\TestCase;
 
 class PHPExpressionProviderErrorCheckTest extends TestCase

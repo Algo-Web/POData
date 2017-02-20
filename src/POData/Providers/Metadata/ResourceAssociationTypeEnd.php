@@ -2,8 +2,8 @@
 
 namespace POData\Providers\Metadata;
 
-use POData\Common\ODataConstants;
 use POData\Common\Messages;
+use POData\Common\ODataConstants;
 
 /**
  * Class ResourceAssociationTypeEnd represents association (relationship) end.

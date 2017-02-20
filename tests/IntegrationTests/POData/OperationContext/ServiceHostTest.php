@@ -3,10 +3,10 @@
  * Mainly test ServiceHost class.
  */
 ob_start();
-use POData\Common\ODataConstants;
-use POData\OperationContext\ServiceHost;
 use POData\Common\MimeTypes;
+use POData\Common\ODataConstants;
 use POData\HttpProcessUtility;
+use POData\OperationContext\ServiceHost;
 
 class ServiceHostTest extends PHPUnit_Framework_TestCase
 {

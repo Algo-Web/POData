@@ -2,25 +2,25 @@
 
 namespace POData\UriProcessor;
 
-use POData\Common\Url;
-use POData\Common\ODataConstants;
 use POData\Common\Messages;
 use POData\Common\MimeTypes;
-use POData\Common\Version;
+use POData\Common\ODataConstants;
 use POData\Common\ODataException;
+use POData\Common\Url;
+use POData\Common\Version;
+use POData\OperationContext\IHTTPRequest;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Metadata\ResourceStreamInfo;
-use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetSource;
-use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
-use POData\UriProcessor\ResourcePathProcessor\SegmentParser\SegmentDescriptor;
-use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
-use POData\UriProcessor\QueryProcessor\SkipTokenParser\InternalSkipTokenInfo;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
-use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\RootProjectionNode;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Query\QueryType;
-use POData\OperationContext\IHTTPRequest;
+use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\RootProjectionNode;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
+use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
+use POData\UriProcessor\QueryProcessor\SkipTokenParser\InternalSkipTokenInfo;
+use POData\UriProcessor\ResourcePathProcessor\SegmentParser\SegmentDescriptor;
+use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
+use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetSource;
 
 /**
  * Class RequestDescription.
@@ -810,8 +810,6 @@ class RequestDescription
                     $this->lastSegment->getIdentifier()
                 );
         }
-
-        return null;
     }
 
     /**
@@ -859,11 +857,11 @@ class RequestDescription
     public static function getKnownDataServiceVersions()
     {
         if (is_null(self::$_knownDataServiceVersions)) {
-            self::$_knownDataServiceVersions = array(
+            self::$_knownDataServiceVersions = [
                 new Version(1, 0),
                 new Version(2, 0),
                 new Version(3, 0),
-            );
+            ];
         }
 
         return self::$_knownDataServiceVersions;
@@ -927,9 +925,9 @@ class RequestDescription
      * @param string $versionHeader The DataServiceVersion or MaxDataServiceVersion header value
      * @param string $headerName    The name of the header
      *
-     * @return Version
-     *
      * @throws ODataException If the version is malformed or not supported
+     *
+     * @return Version
      */
     private static function parseVersionHeader($versionHeader, $headerName)
     {
@@ -1010,7 +1008,6 @@ class RequestDescription
                 )
             );
         }
-        
 
         return $version;
     }

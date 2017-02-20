@@ -37,7 +37,7 @@ class OutgoingResponse
      */
     public function __construct()
     {
-        $this->_headers = array();
+        $this->_headers = [];
         $this->_initializeResponseHeaders();
     }
 

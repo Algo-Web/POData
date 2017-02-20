@@ -119,7 +119,7 @@ class Binary implements IType
     public static function validateWithoutPrefix($value, &$outValue)
     {
         $length = strlen($value);
-        if (0 == $length || 0 != $length % 2) {
+        if (0 == $length || 0 != $length%2) {
             return false;
         }
 
@@ -129,7 +129,7 @@ class Binary implements IType
             return false;
         }
 
-        $outValue = array();
+        $outValue = [];
         $outValIndex = 0;
         $valueIndex = 0;
         while ($valueIndex < $length) {

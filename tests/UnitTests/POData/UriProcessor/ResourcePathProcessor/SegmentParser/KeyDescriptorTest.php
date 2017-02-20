@@ -2,9 +2,9 @@
 
 namespace UnitTests\POData\UriProcessor\ResourcePathProcessor\SegmentParser;
 
-use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 use POData\Common\InvalidOperationException;
 use POData\Common\ODataException;
+use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 use UnitTests\POData\TestCase;
 

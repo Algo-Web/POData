@@ -50,7 +50,7 @@ class ODataEntry
      *
      * @var array<ODataMediaLink>
      */
-    public $mediaLinks = array();
+    public $mediaLinks = [];
     /**
      * media link entry (MLE Link).
      *
@@ -62,7 +62,7 @@ class ODataEntry
      *
      * @var array<ODataLink>
      */
-    public $links = array();
+    public $links = [];
     /**
      * Entry ETag.
      *

@@ -2,15 +2,13 @@
 
 namespace UnitTests\POData\Facets\NorthWind4;
 
+use POData\BaseService;
+use POData\Common\Messages;
+use POData\Common\ODataException;
 use POData\Configuration\EntitySetRights;
 use POData\Configuration\IServiceConfiguration;
 use POData\Configuration\ProtocolVersion;
-use POData\Configuration\ServiceConfiguration;
-use POData\BaseService;
-use POData\IService;
 use POData\OperationContext\HTTPRequestMethod;
-use POData\Common\ODataException;
-use POData\Common\Messages;
 use POData\OperationContext\ServiceHost;
 use POData\UriProcessor\UriProcessor;
 
@@ -19,7 +17,6 @@ class NorthWindService extends BaseService
     private $_northWindMetadata = null;
     private $_northWindQueryProvider = null;
     //private $_serviceHost;
-
 
     public function __construct(ServiceHost $serviceHost)
     {
@@ -84,6 +81,7 @@ class NorthWindService extends BaseService
 
         $result = UriProcessor::process($this);
         $this->objectSerialiser->setRequest($result->getRequest());
+
         return $result;
     }
 }

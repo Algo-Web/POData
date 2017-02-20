@@ -7,10 +7,12 @@ use POData\OperationContext\Web\IncomingRequest;
 class SimpleRequestAdapter extends IncomingRequest implements IHTTPRequest
 {
     protected $request;
+
     public function __construct($request)
     {
         $this->request = $request;
     }
+
     /**
      * get the raw incoming url.
      *
@@ -20,6 +22,7 @@ class SimpleRequestAdapter extends IncomingRequest implements IHTTPRequest
     {
         return $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/' . $_SERVER['REQUEST_URI'];
     }
+
     /**
      * Returns the Query String Parameters (QSPs) as an array of KEY-VALUE pairs.  If a QSP appears twice
      * it will have two entries in this array.
@@ -37,6 +40,7 @@ class SimpleRequestAdapter extends IncomingRequest implements IHTTPRequest
 
         return $data;
     }
+
     /**
      * Get the HTTP method/verb of the HTTP Request.
      *

@@ -2,11 +2,11 @@
 
 namespace POData\Configuration;
 
-use POData\Providers\Metadata\IMetadataProvider;
-use POData\Providers\Metadata\ResourceSet;
+use POData\Common\InvalidOperationException;
 use POData\Common\Messages;
 use POData\Common\Version;
-use POData\Common\InvalidOperationException;
+use POData\Providers\Metadata\IMetadataProvider;
+use POData\Providers\Metadata\ResourceSet;
 
 class ServiceConfiguration implements IServiceConfiguration
 {
@@ -102,8 +102,8 @@ class ServiceConfiguration implements IServiceConfiguration
         $this->_provider = $metadataProvider;
         $this->_defaultResourceSetRight = EntitySetRights::NONE;
         $this->_defaultPageSize = 0;
-        $this->_resourceRights = array();
-        $this->_pageSizes = array();
+        $this->_resourceRights = [];
+        $this->_pageSizes = [];
         $this->_useVerboseErrors = false;
         $this->_acceptCountRequest = false;
         $this->_acceptProjectionRequest = false;
@@ -385,25 +385,25 @@ class ServiceConfiguration implements IServiceConfiguration
         $this->maxVersion = $version;
     }
 
-        /**
-         * Specify whether to validate the ETag or not.
-         *
-         * @param bool $validate True if ETag needs to validated, false otherwise
-         */
+    /**
+     * Specify whether to validate the ETag or not.
+     *
+     * @param bool $validate True if ETag needs to validated, false otherwise
+     */
     public function setValidateETagHeader($validate)
     {
         $this->_validateETagHeader = $validate;
     }
 
-        /**
-         * Gets whether to validate the ETag or not.
-         *
-         * @return bool True if ETag needs to validated, false
-         *              if its not to be validated, Note that in case
-         *              of false library will not write the ETag header
-         *              in the response even though the requested resource
-         *              support ETag
-         */
+    /**
+     * Gets whether to validate the ETag or not.
+     *
+     * @return bool True if ETag needs to validated, false
+     *              if its not to be validated, Note that in case
+     *              of false library will not write the ETag header
+     *              in the response even though the requested resource
+     *              support ETag
+     */
     public function getValidateETagHeader()
     {
         return $this->_validateETagHeader;

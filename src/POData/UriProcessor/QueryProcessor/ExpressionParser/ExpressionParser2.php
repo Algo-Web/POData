@@ -4,20 +4,20 @@ namespace POData\UriProcessor\QueryProcessor\ExpressionParser;
 
 use POData\Common\Messages;
 use POData\Common\ODataException;
+use POData\Providers\Expression\IExpressionProvider;
 use POData\Providers\Expression\PHPExpressionProvider;
-use POData\Providers\Metadata\Type\Boolean;
 use POData\Providers\Metadata\ResourceType;
+use POData\Providers\Metadata\Type\Boolean;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\AbstractExpression;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ArithmeticExpression;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\LogicalExpression;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\RelationalExpression;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ConstantExpression;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\PropertyAccessExpression;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\FunctionCallExpression;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\UnaryExpression;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ExpressionType;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\FunctionCallExpression;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\LogicalExpression;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\PropertyAccessExpression;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\RelationalExpression;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\UnaryExpression;
 use POData\UriProcessor\QueryProcessor\FunctionDescription;
-use POData\Providers\Expression\IExpressionProvider;
 
 /**
  * Class ExpressionParser2.
@@ -56,10 +56,9 @@ class ExpressionParser2 extends ExpressionParser
      *                                              implemented by user, False otherwise
      */
     public function __construct($text, ResourceType $resourceType, $isPHPExpressionProvider
-    )
-    {
+    ) {
         parent::__construct($text, $resourceType, $isPHPExpressionProvider);
-        $this->_navigationPropertiesUsedInTheExpression = array();
+        $this->_navigationPropertiesUsedInTheExpression = [];
         $this->_isPHPExpressionProvider = $isPHPExpressionProvider;
     }
 
@@ -71,9 +70,9 @@ class ExpressionParser2 extends ExpressionParser
      * @param ResourceType        $resourceType       The resource type in which
      * @param IExpressionProvider $expressionProvider Implementation of IExpressionProvider
      *
-     * @return FilterInfo
-     *
      * @throws ODataException If any error occurs while parsing the odata expression or building the php/custom expression
+     *
+     * @return FilterInfo
      */
     public static function parseExpression2($text, ResourceType $resourceType, \POData\Providers\Expression\IExpressionProvider $expressionProvider)
     {
@@ -102,9 +101,9 @@ class ExpressionParser2 extends ExpressionParser
      *
      * @see library/POData/QueryProcessor/ExpressionParser::parseFilter()
      *
-     * @return AbstractExpression
-     *
      * @throws ODataException
+     *
+     * @return AbstractExpression
      */
     public function parseFilter()
     {
@@ -131,9 +130,9 @@ class ExpressionParser2 extends ExpressionParser
      * @param AbstractExpression $parentExpression      The parent expression of expression node to process
      * @param bool               $checkNullForMostChild whether to include null check for current property
      *
-     * @return AbstractExpression New expression tree with nullability check
-     *
      * @throws ODataException
+     *
+     * @return AbstractExpression New expression tree with nullability check
      */
     private function _processNodeForNullability(
         $expression,
@@ -143,7 +142,7 @@ class ExpressionParser2 extends ExpressionParser
         if ($expression instanceof ArithmeticExpression) {
             return $this->_processArithmeticNode($expression);
         } elseif ($expression instanceof ConstantExpression) {
-            return null;
+            return;
         } elseif ($expression instanceof FunctionCallExpression) {
             return $this->_processFunctionCallNode($expression, $parentExpression);
         } elseif ($expression instanceof LogicalExpression) {
@@ -235,7 +234,7 @@ class ExpressionParser2 extends ExpressionParser
         }
 
         if ($resultExpression == null) {
-            return null;
+            return;
         }
 
         if ($parentExpression == null) {
@@ -290,7 +289,7 @@ class ExpressionParser2 extends ExpressionParser
                 $expression->setRight($resultExpression);
             }
 
-            return null;
+            return;
         }
 
         $resultExpression = null;
@@ -305,7 +304,7 @@ class ExpressionParser2 extends ExpressionParser
         }
 
         if ($resultExpression == null) {
-            return null;
+            return;
         }
 
         if ($parentExpression == null) {
@@ -388,7 +387,7 @@ class ExpressionParser2 extends ExpressionParser
         }
 
         if ($resultExpression == null) {
-            return null;
+            return;
         }
 
         if ($parentExpression == null) {
@@ -429,7 +428,7 @@ class ExpressionParser2 extends ExpressionParser
                 $expression
             );
             if ($resultExpression == null) {
-                return null;
+                return;
             }
 
             if ($parentExpression == null) {
@@ -460,7 +459,7 @@ class ExpressionParser2 extends ExpressionParser
         $nullCheckExpTree1,
         $nullCheckExpTree2
     ) {
-        $this->_mapTable = array();
+        $this->_mapTable = [];
         $this->_map($nullCheckExpTree1);
         $this->_map($nullCheckExpTree2);
         $expression = null;
@@ -470,7 +469,7 @@ class ExpressionParser2 extends ExpressionParser
                 $expression = new UnaryExpression(
                     new FunctionCallExpression(
                         FunctionDescription::isNullCheckFunction($node->getType()),
-                        array($node)
+                        [$node]
                     ),
                     ExpressionType::NOT_LOGICAL,
                     new Boolean()
@@ -483,7 +482,7 @@ class ExpressionParser2 extends ExpressionParser
                             FunctionDescription::isNullCheckFunction(
                                 $node->getType()
                             ),
-                            array($node)
+                            [$node]
                         ),
                         ExpressionType::NOT_LOGICAL,
                         new Boolean()

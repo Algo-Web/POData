@@ -2,8 +2,8 @@
 
 namespace POData;
 
-use POData\Common\Messages;
 use POData\Common\HttpHeaderFailure;
+use POData\Common\Messages;
 use POData\Providers\Metadata\Type\Char;
 
 /**
@@ -142,8 +142,6 @@ class MediaType
                 }
             }
         }
-
-        return null;
     }
 
     /**
@@ -263,9 +261,9 @@ class HttpProcessUtility
      * @param string   $acceptTypesText Text for Accepts header
      * @param string[] $availableTypes  Types that the server is willing to return, in descending order of preference
      *
-     * @return string The best MIME type for the client
-     *
      * @throws HttpHeaderFailure
+     *
+     * @return string The best MIME type for the client
      */
     public static function selectMimeType($acceptTypesText, array $availableTypes)
     {
@@ -327,20 +325,20 @@ class HttpProcessUtility
      *
      * @param string $text Text as it appears on an HTTP Accepts header
      *
-     * @return MediaType[] Array of media (MIME) type description
-     *
      * @throws HttpHeaderFailure If found any syntax error in the given text
+     *
+     * @return MediaType[] Array of media (MIME) type description
      */
     public static function mimeTypesFromAcceptHeaders($text)
     {
-        $mediaTypes = array();
+        $mediaTypes = [];
         $textIndex = 0;
         while (!self::skipWhitespace($text, $textIndex)) {
             $type = null;
             $subType = null;
             self::readMediaTypeAndSubtype($text, $textIndex, $type, $subType);
 
-            $parameters = array();
+            $parameters = [];
             while (!self::skipWhitespace($text, $textIndex)) {
                 if ($text[$textIndex] == ',') {
                     ++$textIndex;
@@ -514,7 +512,7 @@ class HttpProcessUtility
         ++$textIndex;
         $parameterValue
             = self::readQuotedParameterValue($parameterName, $text, $textIndex);
-        $parameters[] = array($parameterName => $parameterValue);
+        $parameters[] = [$parameterName => $parameterValue];
     }
 
     /**
@@ -525,16 +523,16 @@ class HttpProcessUtility
      * @param string $text          Header text
      * @param int    &$textIndex    Parsing index in $text
      *
-     * @return string String representing the value of the $parameterName parameter
-     *
      * @throws HttpHeaderFailure
+     *
+     * @return string String representing the value of the $parameterName parameter
      */
     public static function readQuotedParameterValue(
         $parameterName,
         $text,
         &$textIndex
     ) {
-        $parameterValue = array();
+        $parameterValue = [];
         $textLen = strlen($text);
         $valueIsQuoted = false;
         if ($textIndex < $textLen) {
@@ -654,10 +652,10 @@ class HttpProcessUtility
      *
      * @param string $c Character to convert
      *
-     * @return int The Int32 value for $c, or -1 if it is an element separator
-     *
      * @throws HttpHeaderFailure If $c is not ASCII value for digit or element
      *                           seperator
+     *
+     * @return int The Int32 value for $c, or -1 if it is an element separator
      */
     public static function digitToInt32($c)
     {

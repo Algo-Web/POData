@@ -2,15 +2,15 @@
 
 namespace POData\Writers\Json;
 
-use POData\ObjectModel\ODataFeed;
+use POData\Common\MimeTypes;
+use POData\Common\ODataConstants;
+use POData\Common\Version;
 use POData\ObjectModel\ODataEntry;
-use POData\ObjectModel\ODataURLCollection;
-use POData\ObjectModel\ODataURL;
+use POData\ObjectModel\ODataFeed;
 use POData\ObjectModel\ODataLink;
 use POData\ObjectModel\ODataPropertyContent;
-use POData\Common\MimeTypes;
-use POData\Common\Version;
-use POData\Common\ODataConstants;
+use POData\ObjectModel\ODataURL;
+use POData\ObjectModel\ODataURLCollection;
 
 /**
  * Class JsonODataV2Writer is a writer for the json format in OData V2 AKA JSON Verbose.

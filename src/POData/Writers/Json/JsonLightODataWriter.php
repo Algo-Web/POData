@@ -2,17 +2,17 @@
 
 namespace POData\Writers\Json;
 
-use POData\ObjectModel\ODataFeed;
-use POData\ObjectModel\ODataEntry;
-use POData\ObjectModel\ODataURLCollection;
-use POData\ObjectModel\ODataURL;
-use POData\ObjectModel\ODataLink;
-use POData\ObjectModel\ODataPropertyContent;
-use POData\ObjectModel\ODataBagContent;
-use POData\ObjectModel\ODataProperty;
-use POData\Common\Version;
-use POData\Common\ODataConstants;
 use POData\Common\MimeTypes;
+use POData\Common\ODataConstants;
+use POData\Common\Version;
+use POData\ObjectModel\ODataBagContent;
+use POData\ObjectModel\ODataEntry;
+use POData\ObjectModel\ODataFeed;
+use POData\ObjectModel\ODataLink;
+use POData\ObjectModel\ODataProperty;
+use POData\ObjectModel\ODataPropertyContent;
+use POData\ObjectModel\ODataURL;
+use POData\ObjectModel\ODataURLCollection;
 
 /**
  * Class JsonLightODataWriter is a writer for the json format in OData V3 also known as JSON Light.
@@ -91,7 +91,6 @@ class JsonLightODataWriter extends JsonODataV2Writer
         } elseif ($model instanceof ODataFeed) {
             $this->writeTopLevelMeta($model->title);
             $this->writeRowCount($model->rowCount);
-            $this->writeNextPageLink($model->nextPageLink);
             $this->_writer
                 ->writeName($this->dataArrayName)
                 ->startArrayScope();
@@ -194,8 +193,7 @@ class JsonLightODataWriter extends JsonODataV2Writer
             ->writeName(ODataConstants::JSON_LIGHT_METADATA_ETAG_STRING)
             ->writeValue($entry->eTag)
             ->writeName(ODataConstants::JSON_LIGHT_METADATA_EDIT_LINK_STRING)
-            ->writeValue($entry->editLink)
-        ;
+            ->writeValue($entry->editLink);
 
         return $this;
     }
@@ -249,16 +247,7 @@ class JsonLightODataWriter extends JsonODataV2Writer
      */
     protected function writeNextPageLink(ODataLink $nextPageLinkUri = null)
     {
-        /*
-        // "__next" : uri
-        if ($nextPageLinkUri != null) {
-            $this->_writer
-                ->writeName(ODataConstants::JSON_NEXT_STRING)
-                ->writeValue($nextPageLinkUri->url);
-        }
-
-        return $this;
-        */
+        return;
     }
 
     /**
@@ -270,8 +259,6 @@ class JsonLightODataWriter extends JsonODataV2Writer
      */
     protected function writeComplexProperty(ODataProperty $property)
     {
-
-        // {
         $this->_writer->startObjectScope();
 
         $this->writeComplexPropertyMeta($property)
@@ -295,18 +282,7 @@ class JsonLightODataWriter extends JsonODataV2Writer
 
     protected function writeBagContent(ODataBagContent $bag)
     {
-        $this->_writer
-
-            /*
-            ->writeName(ODataConstants::JSON_METADATA_STRING) //__metadata : { Type : "typename" }
-            ->startObjectScope()
-
-            ->writeName(ODataConstants::JSON_TYPE_STRING)
-            ->writeValue($bag->type)
-            ->endScope()  // }
-            */
-
-            ->startArrayScope(); // [
+        $this->_writer->startArrayScope();
 
         foreach ($bag->propertyContents as $content) {
             if ($content instanceof ODataPropertyContent) {
@@ -321,7 +297,7 @@ class JsonLightODataWriter extends JsonODataV2Writer
             }
         }
 
-        $this->_writer->endScope(); // ]
+        $this->_writer->endScope();
         return $this;
     }
 }

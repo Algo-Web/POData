@@ -85,7 +85,7 @@ class Double implements IType
      */
     public function convert($stringValue)
     {
-        return doubleval($stringValue);
+        return floatval($stringValue);
     }
 
     /**

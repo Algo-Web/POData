@@ -4,8 +4,8 @@ namespace POData\Providers\Metadata\Type;
 
 use POData\Common\Messages;
 use POData\Common\NotImplementedException;
-use POData\Providers\Metadata\ResourceTypeKind;
 use POData\Providers\Metadata\ResourceType;
+use POData\Providers\Metadata\ResourceTypeKind;
 
 /**
  * Class Navigation.

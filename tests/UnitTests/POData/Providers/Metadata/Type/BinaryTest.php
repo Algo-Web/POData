@@ -38,9 +38,9 @@ class BinaryTest extends TestCase
 
         $actual = get_object_vars($type);
 
-        $expected = array(
+        $expected = [
 
-        );
+        ];
 
         $this->assertEquals($expected, $actual);
     }
@@ -187,7 +187,7 @@ class BinaryTest extends TestCase
         $input = '1234567890abcdefABCDEF';
         $this->assertTrue(Binary::validateWithoutPrefix($input, $out), 'These characters should work');
         //Expect values for each individual byte
-        $expected = array(
+        $expected = [
             hexdec('1') << 4 + hexdec('2'),
             hexdec('3') << 4 + hexdec('4'),
             hexdec('5') << 4 + hexdec('6'),
@@ -200,7 +200,7 @@ class BinaryTest extends TestCase
             hexdec('C') << 4 + hexdec('D'),
             hexdec('E') << 4 + hexdec('F'),
 
-        );
+        ];
         $this->assertEquals($expected, $out);
 
         $input = '1234567890abcdefABCDXX';

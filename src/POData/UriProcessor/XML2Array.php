@@ -1,4 +1,5 @@
 <?php
+
 namespace POData\UriProcessor;
 
 class XML2Array
@@ -11,14 +12,15 @@ class XML2Array
      * @var \DOMDocument
      */
     private static $xml = null;
+
     /**
      * Convert an XML to Array.
      *
      * @param string $input_xml
      *
-     * @return array
-     *
      * @throws \Exception
+     *
+     * @return array
      */
     public static function createArray($input_xml)
     {
@@ -47,6 +49,7 @@ class XML2Array
         self::$xml = null; // clear the xml node in the class for 2nd time use.
         return $array;
     }
+
     /**
      * Initialize the root XML node [optional].
      *
@@ -62,6 +65,7 @@ class XML2Array
         self::$xml->formatOutput = $format_output;
         self::$encoding = $encoding;
     }
+
     /**
      * Convert an Array to XML.
      *
@@ -124,8 +128,10 @@ class XML2Array
                 }
                 break;
         }
+
         return $output;
     }
+
     /**
      * Get the root XML node, if there isn't one, create it.
      *
@@ -136,6 +142,7 @@ class XML2Array
         if (empty(self::$xml)) {
             self::init();
         }
+
         return self::$xml;
     }
 }

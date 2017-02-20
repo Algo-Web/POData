@@ -29,10 +29,8 @@ use POData\UriProcessor\RequestDescription;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
 use POData\UriProcessor\UriProcessor;
 use POData\Writers\ODataWriterRegistry;
-use UnitTests\POData\ObjectModel\reusableEntityClass1;
 use UnitTests\POData\ObjectModel\reusableEntityClass2;
 use UnitTests\POData\ObjectModel\reusableEntityClass3;
-use UnitTests\POData\TestCase;
 
 class BaseServiceNewTest extends TestCase
 {
@@ -654,7 +652,7 @@ class BaseServiceNewTest extends TestCase
         $foo = new BaseServiceDummy(null, $host, $cereal, $stream, null, $config);
 
         $needtoSerialise = false;
-        $object = new reusableEntityClass2("foo", "bar");
+        $object = new reusableEntityClass2('foo', 'bar');
 
         $expected = 'W/"\'bar\'"';
 
@@ -688,7 +686,7 @@ class BaseServiceNewTest extends TestCase
         $foo = new BaseServiceDummy(null, $host, $cereal, $stream, null, $config);
 
         $needtoSerialise = false;
-        $object = new reusableEntityClass2("foo", "bar");
+        $object = new reusableEntityClass2('foo', 'bar');
 
         $expected = 'W/"\'bar\'"';
 
@@ -722,7 +720,7 @@ class BaseServiceNewTest extends TestCase
         $foo = new BaseServiceDummy(null, $host, $cereal, $stream, null, $config);
 
         $needtoSerialise = false;
-        $object = new reusableEntityClass2("foo", "bar");
+        $object = new reusableEntityClass2('foo', 'bar');
 
         $expected = 'W/"\'bar\'"';
 
@@ -756,7 +754,7 @@ class BaseServiceNewTest extends TestCase
         $foo = new BaseServiceDummy(null, $host, $cereal, $stream, null, $config);
 
         $needtoSerialise = false;
-        $object = new reusableEntityClass2("foo", "bar");
+        $object = new reusableEntityClass2('foo', 'bar');
 
         $expected = 'W/"\'bar\'"';
 
@@ -790,7 +788,7 @@ class BaseServiceNewTest extends TestCase
         $foo = new BaseServiceDummy(null, $host, $cereal, $stream, null, $config);
 
         $needtoSerialise = false;
-        $object = new reusableEntityClass2("foo", "bar");
+        $object = new reusableEntityClass2('foo', 'bar');
 
         $expected = 'W/"\'bar\'"';
 
@@ -909,11 +907,11 @@ class BaseServiceNewTest extends TestCase
         $host->shouldReceive('setResponseStatusCode')->withArgs([HttpStatus::CODE_OK])->andReturnNull()->once();
         $host->shouldReceive('setResponseContentType')->withArgs(['application/xml;charset=utf-8'])
             ->andReturnNull()->once();
-        $host->shouldReceive('setResponseVersion')->withArgs(["3.0;"])->andReturnNull()->once();
+        $host->shouldReceive('setResponseVersion')->withArgs(['3.0;'])->andReturnNull()->once();
         $host->shouldReceive('setResponseCacheControl')
             ->withArgs([ODataConstants::HTTPRESPONSE_HEADER_CACHECONTROL_NOCACHE])->andReturnNull()->once();
         $host->shouldReceive('getOperationContext->outgoingResponse->setStream')
-            ->withArgs(["ScatmanJohn"])->andReturnNull()->once();
+            ->withArgs(['ScatmanJohn'])->andReturnNull()->once();
 
         $cereal = m::mock(IObjectSerialiser::class);
 

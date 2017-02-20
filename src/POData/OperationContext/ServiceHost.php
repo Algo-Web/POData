@@ -3,14 +3,14 @@
 namespace POData\OperationContext;
 
 use Illuminate\Http\Request;
-use POData\Common\Messages;
 use POData\Common\HttpStatus;
+use POData\Common\Messages;
+use POData\Common\MimeTypes;
 use POData\Common\ODataConstants;
+use POData\Common\ODataException;
 use POData\Common\Url;
 use POData\Common\UrlFormatException;
-use POData\Common\ODataException;
 use POData\Common\Version;
-use POData\Common\MimeTypes;
 use POData\OperationContext\Web\Illuminate\IlluminateOperationContext;
 
 /**
@@ -282,7 +282,7 @@ class ServiceHost
         $queryOptions = $this->getOperationContext()->incomingRequest()->getQueryParameters();
 
         reset($queryOptions);
-        $namesFound = array();
+        $namesFound = [];
         while ($queryOption = current($queryOptions)) {
             $optionName = key($queryOption);
             $optionValue = current($queryOption);
@@ -397,8 +397,6 @@ class ServiceHost
                 return $queryOption[$item];
             }
         }
-
-        return null;
     }
 
     /**
@@ -620,7 +618,7 @@ class ServiceHost
     /**
      * Get the response headers.
      *
-     * @return array<headername, headerValue>
+     * @return Array
      */
     public function &getResponseHeaders()
     {

@@ -2,15 +2,15 @@
 
 namespace UnitTests\POData\Facets\NorthWind4;
 
-use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ExpressionType;
-use POData\Providers\Metadata\Type\IType;
 use POData\Common\NotImplementedException;
 use POData\Common\ODataConstants;
 use POData\Providers\Expression\IExpressionProvider;
 use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\Providers\Metadata\ResourceType;
-use POData\UriProcessor\QueryProcessor\FunctionDescription;
+use POData\Providers\Metadata\Type\IType;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ExpressionType;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\PropertyAccessExpression;
+use POData\UriProcessor\QueryProcessor\FunctionDescription;
 
 class NorthWindDSExpressionProvider4 implements IExpressionProvider
 {
@@ -50,7 +50,6 @@ class NorthWindDSExpressionProvider4 implements IExpressionProvider
      */
     public function getIteratorName()
     {
-        return null;
     }
 
     /**

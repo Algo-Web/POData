@@ -2,15 +2,15 @@
 
 namespace POData\UriProcessor\QueryProcessor\OrderByParser;
 
-use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionLexer;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionTokenId;
-use POData\Providers\ProvidersWrapper;
-use POData\Providers\Metadata\Type\Binary;
+use POData\Common\Messages;
+use POData\Common\ODataException;
+use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Metadata\ResourceType;
-use POData\Providers\Metadata\ResourcePropertyKind;
-use POData\Common\ODataException;
-use POData\Common\Messages;
+use POData\Providers\Metadata\Type\Binary;
+use POData\Providers\ProvidersWrapper;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionLexer;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionTokenId;
 
 /**
  * Class OrderByParser.
@@ -31,15 +31,15 @@ class OrderByParser
      * Collection of anonymous sorter function corresponding to
      * each orderby path segment.
      *
-     * @var Callable[]
+     * @var callable[]
      */
-    private $_comparisonFunctions = array();
+    private $_comparisonFunctions = [];
 
     /**
      * The top level sorter function generated from orderby path
      * segments.
      *
-     * @var Callable
+     * @var callable
      */
     private $_topLevelComparisonFunction;
 
@@ -98,9 +98,9 @@ class OrderByParser
      * @param string             $orderBy            The orderby clause
      * @param ProvidersWrapper   $providerWrapper    Reference to the wrapper for IDSQP and IDSMP impl
      *
-     * @return InternalOrderByInfo
-     *
      * @throws ODataException If any error occur while parsing orderby clause
+     *
+     * @return InternalOrderByInfo
      */
     public static function parseOrderByClause(
         ResourceSetWrapper $resourceSetWrapper,
@@ -173,7 +173,7 @@ class OrderByParser
                 }
             }
 
-            $ancestors = array($this->_rootOrderByNode->getResourceSetWrapper()->getName());
+            $ancestors = [$this->_rootOrderByNode->getResourceSetWrapper()->getName()];
             foreach ($orderBySubPathSegments as $index2 => $orderBySubPathSegment) {
                 $isLastSegment = ($index2 == $subPathCount - 1);
                 $resourceSetWrapper = null;
@@ -353,25 +353,25 @@ class OrderByParser
      *
      * @param array(array) $orderByPaths The orderby paths
      *
-     * @return OrderByInfo
-     *
      * @throws ODataException In case parser found any tree inconsisitent
      *                        state, throws unexpected state error
+     *
+     * @return OrderByInfo
      */
     private function _createOrderInfo($orderByPaths)
     {
-        $orderByPathSegments = array();
-        $navigationPropertiesInThePath = array();
+        $orderByPathSegments = [];
+        $navigationPropertiesInThePath = [];
         foreach ($orderByPaths as $index => $orderBySubPaths) {
             $currentNode = $this->_rootOrderByNode;
-            $orderBySubPathSegments = array();
+            $orderBySubPathSegments = [];
             foreach ($orderBySubPaths as $orderBySubPath) {
                 $node = $currentNode->findNode($orderBySubPath);
                 $this->_assertion(!is_null($node));
                 $resourceProperty = $node->getResourceProperty();
                 if ($node instanceof OrderByNode && !is_null($node->getResourceSetWrapper())) {
                     if (!array_key_exists($index, $navigationPropertiesInThePath)) {
-                        $navigationPropertiesInThePath[$index] = array();
+                        $navigationPropertiesInThePath[$index] = [];
                     }
 
                     $navigationPropertiesInThePath[$index][] = $resourceProperty;
@@ -400,7 +400,7 @@ class OrderByParser
             $this->_topLevelComparisonFunction = $this->_comparisonFunctions[0];
         } else {
             $funcList = $this->_comparisonFunctions;
-            $BigFunc = function($object1, $object2) use ($funcList) {
+            $this->_topLevelComparisonFunction = function ($object1, $object2) use ($funcList) {
                 $ret = 0;
                 foreach ($funcList as $f) {
                     $ret = $f($object1, $object2);
@@ -410,7 +410,6 @@ class OrderByParser
                 }
                 return $ret;
             };
-            $this->_topLevelComparisonFunction = $BigFunc;
         }
     }
 
@@ -419,20 +418,20 @@ class OrderByParser
      *
      * @param string $value orderby clause to read
      *
+     * @throws ODataException If any syntax error found while reading the clause
+     *
      * @return array(array) An array of 'OrderByPathSegment's, each of which
      *                      is array of 'OrderBySubPathSegment's
-     *
-     * @throws ODataException If any syntax error found while reading the clause
      */
     private function _readOrderBy($value)
     {
-        $orderByPathSegments = array();
+        $orderByPathSegments = [];
         $lexer = new ExpressionLexer($value);
         $i = 0;
         while ($lexer->getCurrentToken()->Id != ExpressionTokenId::END) {
             $orderBySubPathSegment = $lexer->readDottedIdentifier();
             if (!array_key_exists($i, $orderByPathSegments)) {
-                $orderByPathSegments[$i] = array();
+                $orderByPathSegments[$i] = [];
             }
 
             $orderByPathSegments[$i][] = $orderBySubPathSegment;

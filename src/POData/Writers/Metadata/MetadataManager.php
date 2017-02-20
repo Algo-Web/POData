@@ -3,12 +3,12 @@
 namespace POData\Writers\Metadata;
 
 use POData\Common\Version;
-use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\EdmSchemaVersion;
-use POData\Providers\ProvidersWrapper;
-use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Metadata\ResourceAssociationType;
 use POData\Providers\Metadata\ResourceProperty;
+use POData\Providers\Metadata\ResourceSetWrapper;
+use POData\Providers\Metadata\ResourceType;
+use POData\Providers\ProvidersWrapper;
 
 /**
  * Class MetadataManager.
@@ -67,10 +67,10 @@ class MetadataManager
      * @param ProvidersWrapper $provider Reference to the
      *                                   service metadata and query provider wrapper
      *
-     * @return MetadataManager
-     *
      * @throws InvalidOperationException
      * @throws ODataException
+     *
+     * @return MetadataManager
      */
     public static function create(ProvidersWrapper $provider)
     {

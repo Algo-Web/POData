@@ -2,12 +2,12 @@
 
 namespace UnitTests\POData\Providers\Metadata;
 
+use Mockery as m;
 use POData\Providers\Metadata\ResourceAssociationType;
 use POData\Providers\Metadata\ResourceAssociationTypeEnd;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceType;
 use UnitTests\POData\TestCase;
-use Mockery as m;
 
 class ResourceAssociationTypeTest extends TestCase
 {
@@ -116,5 +116,4 @@ class ResourceAssociationTypeTest extends TestCase
         $result = $foo->getRelatedResourceAssociationSetEnd($type, $property);
         $this->assertNull($result);
     }
-
 }

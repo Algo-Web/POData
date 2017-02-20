@@ -2,20 +2,20 @@
 
 namespace POData\Writers\Metadata;
 
+use POData\Common\InvalidOperationException;
+use POData\Common\Messages;
+use POData\Common\ODataConstants;
+use POData\Common\ODataException;
+use POData\Common\Version;
+use POData\Providers\Metadata\EdmSchemaVersion;
 use POData\Providers\Metadata\ResourceAssociationSet;
+use POData\Providers\Metadata\ResourceAssociationType;
 use POData\Providers\Metadata\ResourceAssociationTypeEnd;
-use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\Providers\Metadata\ResourceProperty;
+use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\ResourceTypeKind;
 use POData\Providers\ProvidersWrapper;
-use POData\Common\Version;
-use POData\Common\ODataConstants;
-use POData\Common\Messages;
-use POData\Common\ODataException;
-use POData\Common\InvalidOperationException;
-use POData\Providers\Metadata\ResourceAssociationType;
-use POData\Providers\Metadata\EdmSchemaVersion;
 
 /**
  * Class MetadataWriter.
@@ -95,10 +95,10 @@ class MetadataWriter
         $this->_xmlWriter->openMemory();
         $this->_xmlWriter->setIndent(4);
         $this->_writeTopLevelElements($this->_dataServiceVersion->toString());
-        $resourceTypesInContainerNamespace = array();
+        $resourceTypesInContainerNamespace = [];
         $containerNamespace = $this->providersWrapper->getContainerNamespace();
         foreach ($this->_metadataManager->getResourceTypesAlongWithNamespace()
-                 as $resourceTypeNamespace => $resourceTypesWithName) {
+                    as $resourceTypeNamespace => $resourceTypesWithName) {
             if ($resourceTypeNamespace == $containerNamespace) {
                 foreach ($resourceTypesWithName as $resourceTypeName => $resourceType) {
                     $resourceTypesInContainerNamespace[] = $resourceType;
@@ -207,10 +207,10 @@ class MetadataWriter
     /**
      * Write an entity type and associated attributes.
      *
-     * @param ResourceType $resourceType                            Resource type
-     * @param ResourceAssociationType[]        $associationTypesInResourceTypeNamespace Collection of
-     *                                                              association types for the given resource types
-     *                                                              array(string, AssociationType)
+     * @param ResourceType              $resourceType                            Resource type
+     * @param ResourceAssociationType[] $associationTypesInResourceTypeNamespace Collection of
+     *                                                                           association types for the given resource types
+     *                                                                           array(string, AssociationType)
      */
     private function _writeEntityType(ResourceType $resourceType, $associationTypesInResourceTypeNamespace)
     {
@@ -279,7 +279,7 @@ class MetadataWriter
     private function _writeProperties(ResourceType $resourceType, $associationTypesInResourceTypeNamespace)
     {
         foreach ($this->_metadataManager->getAllVisiblePropertiesDeclaredOnThisType($resourceType)
-                 as $resourceProperty) {
+                    as $resourceProperty) {
             if ($resourceProperty->isKindOf(ResourcePropertyKind::BAG)) {
                 $this->_writeBagProperty($resourceProperty);
             } elseif ($resourceProperty->isKindOf(ResourcePropertyKind::PRIMITIVE)) {

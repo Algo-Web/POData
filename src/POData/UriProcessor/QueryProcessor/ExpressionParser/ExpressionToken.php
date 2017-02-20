@@ -2,8 +2,8 @@
 
 namespace POData\UriProcessor\QueryProcessor\ExpressionParser;
 
-use POData\Common\ODataException;
 use POData\Common\ODataConstants;
+use POData\Common\ODataException;
 
 /**
  * Class ExpressionToken.

@@ -280,7 +280,7 @@ class UriProcessorNewTest extends TestCase
         $seg1->shouldReceive('setResult')->andReturnNull()->once();
         $seg1->shouldReceive('getTargetResourceSetWrapper')->andReturn($resourceSet);
 
-        $url1 = new \POData\Common\Url("http://192.168.2.1/abm-master/public/odata.svc/Entity(1)");
+        $url1 = new \POData\Common\Url('http://192.168.2.1/abm-master/public/odata.svc/Entity(1)');
 
         $projNode = m::mock(RootProjectionNode::class);
         $projNode->shouldReceive('isExpansionSpecified')->andReturn(true);
@@ -338,7 +338,7 @@ class UriProcessorNewTest extends TestCase
 
     public function testExecutePutBadRequestInvalidUriException()
     {
-        $url1 = new \POData\Common\Url("http://192.168.2.1/abm-master/public/odata.svc/Entity(1)");
+        $url1 = new \POData\Common\Url('http://192.168.2.1/abm-master/public/odata.svc/Entity(1)');
 
         $resourceSet = m::mock(ResourceSet::class);
 
@@ -397,7 +397,7 @@ class UriProcessorNewTest extends TestCase
 
     public function testExecutePutBadRequestNoDataException()
     {
-        $url1 = new \POData\Common\Url("http://192.168.2.1/abm-master/public/odata.svc/Entity(1)");
+        $url1 = new \POData\Common\Url('http://192.168.2.1/abm-master/public/odata.svc/Entity(1)');
 
         $resourceSet = m::mock(ResourceSet::class);
         $resourceSetWrapper = m::mock(ResourceSetWrapper::class);
@@ -459,7 +459,7 @@ class UriProcessorNewTest extends TestCase
 
     public function testExecutePutRequestGoodData()
     {
-        $url1 = new \POData\Common\Url("http://192.168.2.1/abm-master/public/odata.svc/Entity(1)");
+        $url1 = new \POData\Common\Url('http://192.168.2.1/abm-master/public/odata.svc/Entity(1)');
 
         $resourceSet = m::mock(ResourceSet::class);
         $resourceSetWrapper = m::mock(ResourceSetWrapper::class);

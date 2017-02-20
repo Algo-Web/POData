@@ -2,8 +2,8 @@
 
 namespace POData\OperationContext\Web;
 
-use POData\OperationContext\IOperationContext;
 use POData\OperationContext\IHTTPRequest;
+use POData\OperationContext\IOperationContext;
 
 /**
  * Class WebOperationContext

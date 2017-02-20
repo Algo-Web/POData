@@ -2,8 +2,8 @@
 
 namespace POData\UriProcessor\QueryProcessor\ExpandProjectionParser;
 
-use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\ResourceSetWrapper;
+use POData\Providers\Metadata\ResourceType;
 use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
 
 /**

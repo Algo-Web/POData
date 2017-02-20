@@ -25,11 +25,10 @@ class ProvidersQueryWrapper
      */
     private $queryProvider;
 
-
     /**
      * Creates a new instance of ProvidersWrapper.
      *
-     * @param IQueryProvider        $query  Reference to IQueryProvider implementation
+     * @param IQueryProvider $query Reference to IQueryProvider implementation
      */
     public function __construct(IQueryProvider $query)
     {
@@ -51,9 +50,9 @@ class ProvidersQueryWrapper
      * @param int              $top               number of records which  need to be skip
      * @param string           $skip              value indicating what records to skip
      *
-     * @return QueryResult
-     *
      * @throws ODataException
+     *
+     * @return QueryResult
      */
     public function getRelatedResourceSet(
         QueryType $queryType,
@@ -122,7 +121,6 @@ class ProvidersQueryWrapper
         return $queryResult;
     }
 
-
     /**
      * Puts an entity instance to entity set identified by a key.
      *
@@ -162,9 +160,9 @@ class ProvidersQueryWrapper
      * Gets the underlying custom expression provider, the end developer is
      * responsible for implementing IExpressionProvider if he choose for.
      *
-     * @return IExpressionProvider Instance of IExpressionProvider implementation
-     *
      * @throws ODataException
+     *
+     * @return IExpressionProvider Instance of IExpressionProvider implementation
      */
     public function getExpressionProvider()
     {
@@ -185,9 +183,9 @@ class ProvidersQueryWrapper
     }
 
     /**
-     * @param ResourceSet      $resourceSet   The entity set containing the entity to fetch
-     * @param object           $sourceEntityInstance The source entity instance
-     * @param object           $data                 The New data for the entity instance.
+     * @param ResourceSet $resourceSet          The entity set containing the entity to fetch
+     * @param object      $sourceEntityInstance The source entity instance
+     * @param object      $data                 The New data for the entity instance.
      *
      * returns object|null returns the newly created model if sucessful or null if model creation failed.
      */
@@ -205,8 +203,9 @@ class ProvidersQueryWrapper
 
     /**
      * Delete resource from a resource set.
+     *
      * @param ResourceSet $sourceResourceSet
-     * @param object           $sourceEntityInstance
+     * @param object      $sourceEntityInstance
      *
      * return bool true if resources sucessfully deteled, otherwise false.
      */
@@ -221,13 +220,13 @@ class ProvidersQueryWrapper
     }
 
     /**
-     * Updates a resource
+     * Updates a resource.
      *
-     * @param ResourceSet      $sourceResourceSet    The entity set containing the source entity
-     * @param object           $sourceEntityInstance The source entity instance
-     * @param KeyDescriptor    $keyDescriptor        The key identifying the entity to fetch
-     * @param object           $data                 The New data for the entity instance.
-     * @param bool             $shouldUpdate        Should undefined values be updated or reset to default
+     * @param ResourceSet   $sourceResourceSet    The entity set containing the source entity
+     * @param object        $sourceEntityInstance The source entity instance
+     * @param KeyDescriptor $keyDescriptor        The key identifying the entity to fetch
+     * @param object        $data                 The New data for the entity instance.
+     * @param bool          $shouldUpdate         Should undefined values be updated or reset to default
      *
      * @return object|null The new resource value if it is assignable or throw exception for null.
      */
@@ -257,9 +256,9 @@ class ProvidersQueryWrapper
      * @param ResourceProperty $targetProperty    The navigation property to be
      *                                            retrieved
      *
-     * @return object|null The related resource if exists else null
-     *
      * @throws ODataException
+     *
+     * @return object|null The related resource if exists else null
      */
     public function getRelatedResourceReference(
         ResourceSet $sourceResourceSet,
@@ -445,12 +444,13 @@ class ProvidersQueryWrapper
     }
 
     /**
-     * @param $methodName
+     * @param string $methodName
      * @param $entityInstance
      * @param ResourceSet $resourceSet
-     * @return ResourceType
      *
      * @throws ODataException
+     *
+     * @return ResourceType
      */
     private function verifyResourceType($methodName, $entityInstance, ResourceSet $resourceSet)
     {
@@ -464,6 +464,7 @@ class ProvidersQueryWrapper
                 )
             );
         }
+
         return $resourceType;
     }
 }

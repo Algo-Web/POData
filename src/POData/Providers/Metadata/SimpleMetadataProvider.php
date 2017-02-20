@@ -5,21 +5,21 @@ namespace POData\Providers\Metadata;
 use POData\Common\InvalidOperationException;
 use POData\Providers\Metadata\Type\IType;
 use POData\Providers\Metadata\Type\TypeCode;
-use ReflectionClass;
 
 /**
  * Class SimpleMetadataProvider.
  */
 class SimpleMetadataProvider implements IMetadataProvider
 {
-    protected $resourceSets = array();
-    protected $resourceTypes = array();
-    protected $associationSets = array();
+    protected $resourceSets = [];
+    protected $resourceTypes = [];
+    protected $associationSets = [];
     protected $containerName;
     protected $namespaceName;
     public $mappedDetails = null;
 
     //Begin Implementation of IMetadataProvider
+
     /**
      * get the Container name for the data source.
      *
@@ -69,6 +69,7 @@ class SimpleMetadataProvider implements IMetadataProvider
             }
         }
         assert($counter == count($return));
+
         return $return;
     }
 
@@ -94,8 +95,6 @@ class SimpleMetadataProvider implements IMetadataProvider
         if (array_key_exists($name, $this->resourceSets)) {
             return $this->resourceSets[$name];
         }
-
-        return null;
     }
 
     /**
@@ -110,8 +109,6 @@ class SimpleMetadataProvider implements IMetadataProvider
         if (array_key_exists($name, $this->resourceTypes)) {
             return $this->resourceTypes[$name];
         }
-
-        return null;
     }
 
     /**
@@ -125,7 +122,7 @@ class SimpleMetadataProvider implements IMetadataProvider
      */
     public function getDerivedTypes(ResourceType $resourceType)
     {
-        return array();
+        return [];
     }
 
     /**
@@ -178,8 +175,6 @@ class SimpleMetadataProvider implements IMetadataProvider
         if (array_key_exists($key, $this->associationSets)) {
             return $this->associationSets[$key];
         }
-
-        return null;
     }
 
     //End Implementation of IMetadataProvider
@@ -201,9 +196,9 @@ class SimpleMetadataProvider implements IMetadataProvider
      * @param string           $name      name of the entity
      * @param string           $namespace namespace of the data source
      *
-     * @return ResourceType
-     *
      * @throws InvalidOperationException when the name is already in use
+     *
+     * @return ResourceType
      */
     public function addEntityType(\ReflectionClass $refClass, $name, $namespace = null)
     {
@@ -218,9 +213,9 @@ class SimpleMetadataProvider implements IMetadataProvider
      * @param string           $namespace        namespace of the data source
      * @param ResourceType     $baseResourceType base resource type
      *
-     * @return ResourceType
-     *
      * @throws InvalidOperationException when the name is already in use
+     *
+     * @return ResourceType
      */
     public function addComplexType(\ReflectionClass $refClass, $name, $namespace = null, $baseResourceType = null)
     {
@@ -451,12 +446,14 @@ class SimpleMetadataProvider implements IMetadataProvider
 
     /**
      * @param \ReflectionClass $refClass
-     * @param $name
-     * @param $namespace
+     * @param string $name
+     * @param string|null $namespace
      * @param $typeKind
-     * @param $baseResourceType
-     * @return ResourceType
+     * @param null|ResourceType $baseResourceType
+     *
      * @throws InvalidOperationException
+     *
+     * @return ResourceType
      */
     private function createResourceType(
         \ReflectionClass $refClass,
@@ -477,8 +474,9 @@ class SimpleMetadataProvider implements IMetadataProvider
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @param ResourceType $resourceType
+     *
      * @throws InvalidOperationException
      */
     private function checkInstanceProperty($name, ResourceType $resourceType)

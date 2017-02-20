@@ -10,13 +10,12 @@ class ResourceStreamInfoTest extends TestCase
 {
     public function testGetSetCustomStateRoundTrip()
     {
-        $foo = new ResourceStreamInfo("name");
-        $object = new reusableEntityClass2("foo", "bar");
+        $foo = new ResourceStreamInfo('name');
+        $object = new reusableEntityClass2('foo', 'bar');
 
         $foo->setCustomState($object);
         $result = $foo->getCustomState();
-        $this->assertEquals("foo", $result->name);
-        $this->assertEquals("bar", $result->type);
+        $this->assertEquals('foo', $result->name);
+        $this->assertEquals('bar', $result->type);
     }
-
 }

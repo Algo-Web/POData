@@ -3,8 +3,8 @@
 namespace POData\Writers;
 
 use POData\Common\HttpStatus;
-use POData\Common\ODataConstants;
 use POData\Common\MimeTypes;
+use POData\Common\ODataConstants;
 use POData\IService;
 use POData\UriProcessor\RequestDescription;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;

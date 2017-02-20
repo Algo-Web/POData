@@ -2,21 +2,18 @@
 
 namespace UnitTests\POData\ObjectModel;
 
-use POData\Common\ODataConstants;
-use POData\IService;
-use POData\ObjectModel\ObjectModelSerializerBase;
-use POData\Providers\Metadata\ResourceSetWrapper;
-use POData\Providers\Metadata\ResourceProperty;
-use POData\Providers\Metadata\ResourceTypeKind;
-use POData\Providers\Metadata\ResourceType;
-use POData\Providers\Metadata\Type\IType;
-use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
-use POData\UriProcessor\RequestDescription;
-use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandedProjectionNode;
+use Mockery as m;
 use POData\Common\InvalidOperationException;
 use POData\Common\ODataException;
-use POData\Common\Messages;
-use Mockery as m;
+use POData\IService;
+use POData\ObjectModel\ObjectModelSerializerBase;
+use POData\Providers\Metadata\ResourceProperty;
+use POData\Providers\Metadata\ResourceSetWrapper;
+use POData\Providers\Metadata\ResourceType;
+use POData\Providers\Metadata\ResourceTypeKind;
+use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandedProjectionNode;
+use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
+use POData\UriProcessor\RequestDescription;
 use POData\UriProcessor\SegmentStack;
 use ReflectionException;
 use UnitTests\POData\TestCase;
@@ -29,7 +26,7 @@ class ObjectModelSerializerBaseTest extends TestCase
 
     public function Construct()
     {
-        $AbsoluteServiceURL = new \POData\Common\Url("http://192.168.2.1/abm-master/public/odata.svc");
+        $AbsoluteServiceURL = new \POData\Common\Url('http://192.168.2.1/abm-master/public/odata.svc');
         $service = m::mock(IService::class);
         $request = m::mock(RequestDescription::class)->makePartial();
         $serviceHost = m::mock(\POData\OperationContext\ServiceHost::class)->makePartial();
@@ -37,8 +34,9 @@ class ObjectModelSerializerBaseTest extends TestCase
         $service->shouldReceive('getHost')->andReturn($serviceHost);
         $this->mockRequest = $request;
         $this->service = $service;
-        $this->serviceHost= $serviceHost;
+        $this->serviceHost = $serviceHost;
         $foo = new ObjectModelSerializerDummy($service, $request);
+
         return $foo;
     }
 
@@ -53,21 +51,21 @@ class ObjectModelSerializerBaseTest extends TestCase
         $resourceType = m::mock(ResourceType::class)->makePartial();
 
         $resourceProperty = m::mock(\POData\Providers\Metadata\ResourceProperty::class)->makePartial();
-        $resourceProperty->shouldReceive('getName')->andReturn("name");
+        $resourceProperty->shouldReceive('getName')->andReturn('name');
         $resourceProperty->shouldReceive('getInstanceType')->andReturn(new \POData\Providers\Metadata\Type\EdmString());
 
         $resourceProperty2 = m::mock(\POData\Providers\Metadata\ResourceProperty::class)->makePartial();
-        $resourceProperty2->shouldReceive('getName')->andReturn("type");
+        $resourceProperty2->shouldReceive('getName')->andReturn('type');
         $resourceProperty2->shouldReceive('getInstanceType')->andReturn(new \POData\Providers\Metadata\Type\Int32());
 
-        $keysProperty = array("name" => $resourceProperty, "type"=>$resourceProperty2);
+        $keysProperty = ['name' => $resourceProperty, 'type'=>$resourceProperty2];
         $resourceType->shouldReceive('getKeyProperties')->andReturn($keysProperty);
 
         $foo = $this->Construct();
         $entity = new reUsableentityClass1();
-        $entity->name = "bilbo";
+        $entity->name = 'bilbo';
         $entity->type = 2;
-        $ret = $foo->getEntryInstanceKey($entity, $resourceType, "Data");
+        $ret = $foo->getEntryInstanceKey($entity, $resourceType, 'Data');
         $this->assertEquals("Data(name='bilbo',type=2)", $ret);
     }
 
@@ -76,19 +74,19 @@ class ObjectModelSerializerBaseTest extends TestCase
         $resourceType = m::mock(ResourceType::class)->makePartial();
 
         $resourceProperty = m::mock(\POData\Providers\Metadata\ResourceProperty::class)->makePartial();
-        $resourceProperty->shouldReceive('getName')->andReturn("name");
+        $resourceProperty->shouldReceive('getName')->andReturn('name');
         $resourceProperty->shouldReceive('getInstanceType')->andReturn(new \POData\Providers\Metadata\Type\EdmString());
 
         $resourceProperty2 = m::mock(\POData\Providers\Metadata\ResourceProperty::class)->makePartial();
-        $resourceProperty2->shouldReceive('getName')->andReturn("type");
+        $resourceProperty2->shouldReceive('getName')->andReturn('type');
         $resourceProperty2->shouldReceive('getInstanceType')->andReturn(new \POData\Providers\Metadata\Type\Int32());
 
-        $keysProperty = array("name" => $resourceProperty, "type"=>$resourceProperty2);
+        $keysProperty = ['name' => $resourceProperty, 'type'=>$resourceProperty2];
         $resourceType->shouldReceive('getKeyProperties')->andReturn($keysProperty);
 
         $foo = $this->Construct();
-        $entity = new reUsableentityClass2("bilbo", 2);
-        $ret = $foo->getEntryInstanceKey($entity, $resourceType, "Data");
+        $entity = new reUsableentityClass2('bilbo', 2);
+        $ret = $foo->getEntryInstanceKey($entity, $resourceType, 'Data');
         $this->assertEquals("Data(name='bilbo',type=2)", $ret);
     }
 
@@ -97,19 +95,19 @@ class ObjectModelSerializerBaseTest extends TestCase
         $resourceType = m::mock(ResourceType::class)->makePartial();
 
         $resourceProperty = m::mock(\POData\Providers\Metadata\ResourceProperty::class)->makePartial();
-        $resourceProperty->shouldReceive('getName')->andReturn("name");
+        $resourceProperty->shouldReceive('getName')->andReturn('name');
         $resourceProperty->shouldReceive('getInstanceType')->andReturn(new \POData\Providers\Metadata\Type\EdmString());
 
         $resourceProperty2 = m::mock(\POData\Providers\Metadata\ResourceProperty::class)->makePartial();
-        $resourceProperty2->shouldReceive('getName')->andReturn("type");
+        $resourceProperty2->shouldReceive('getName')->andReturn('type');
         $resourceProperty2->shouldReceive('getInstanceType')->andReturn(new \POData\Providers\Metadata\Type\Int32());
 
-        $keysProperty = array("name" => $resourceProperty, "type"=>$resourceProperty2);
+        $keysProperty = ['name' => $resourceProperty, 'type'=>$resourceProperty2];
         $resourceType->shouldReceive('getKeyProperties')->andReturn($keysProperty);
 
         $foo = $this->Construct();
-        $entity = new reUsableentityClass3("bilbo", 2);
-        $ret = $foo->getEntryInstanceKey($entity, $resourceType, "Data");
+        $entity = new reUsableentityClass3('bilbo', 2);
+        $ret = $foo->getEntryInstanceKey($entity, $resourceType, 'Data');
         $this->assertEquals("Data(name='bilbo',type=2)", $ret);
     }
 
@@ -118,14 +116,14 @@ class ObjectModelSerializerBaseTest extends TestCase
         $resourceType = m::mock(ResourceType::class)->makePartial();
 
         $resourceProperty = m::mock(\POData\Providers\Metadata\ResourceProperty::class)->makePartial();
-        $resourceProperty->shouldReceive('getName')->andReturn("name");
+        $resourceProperty->shouldReceive('getName')->andReturn('name');
         $resourceProperty->shouldReceive('getInstanceType')->andReturn(new \POData\Providers\Metadata\Type\EdmString());
 
         $resourceProperty2 = m::mock(\POData\Providers\Metadata\ResourceProperty::class)->makePartial();
-        $resourceProperty2->shouldReceive('getName')->andReturn("type");
+        $resourceProperty2->shouldReceive('getName')->andReturn('type');
         $resourceProperty2->shouldReceive('getInstanceType')->andReturn(new \POData\Providers\Metadata\Type\Int32());
 
-        $keysProperty = array("name" => $resourceProperty, "type"=>$resourceProperty2);
+        $keysProperty = ['name' => $resourceProperty, 'type'=>$resourceProperty2];
         $resourceType->shouldReceive('getKeyProperties')->andReturn($keysProperty);
         $resourceType->shouldReceive('getName')->andReturn('ComplexString');
 
@@ -134,7 +132,7 @@ class ObjectModelSerializerBaseTest extends TestCase
         $foo = $this->Construct();
 
         $expected = "The serialized resource of type ComplexString has a null value in key member 'name'. Null"
-                    ." values are not supported in key members.";
+                    .' values are not supported in key members.';
         $actual = null;
         try {
             $foo->getEntryInstanceKey($entity, $resourceType, 'container');
@@ -156,7 +154,7 @@ class ObjectModelSerializerBaseTest extends TestCase
     {
         $foo = $this->Construct();
         $ret = $foo->isRootResourceSet();
-        $this->assertEquals(true, $ret, "isRootResourceSet 1");
+        $this->assertEquals(true, $ret, 'isRootResourceSet 1');
     }
 
     public function testGetPropertyValueFromMagicMethod()
@@ -166,9 +164,9 @@ class ObjectModelSerializerBaseTest extends TestCase
         $property->shouldReceive('getName')->andReturn('type');
 
         $foo = $this->Construct();
-        $entity = new reusableEntityClass2("up", "down");
+        $entity = new reusableEntityClass2('up', 'down');
 
-        $expected = "down";
+        $expected = 'down';
         $actual = $foo->getPropertyValue($entity, $type, $property);
         $this->assertEquals($expected, $actual);
     }
@@ -180,9 +178,9 @@ class ObjectModelSerializerBaseTest extends TestCase
         $property->shouldReceive('getName')->andReturn('type');
 
         $foo = $this->Construct();
-        $entity = new reusableEntityClass3("up", "down");
+        $entity = new reusableEntityClass3('up', 'down');
 
-        $expected = "down";
+        $expected = 'down';
         $actual = $foo->getPropertyValue($entity, $type, $property);
         $this->assertEquals($expected, $actual);
     }
@@ -197,10 +195,10 @@ class ObjectModelSerializerBaseTest extends TestCase
         $property->shouldReceive('getName')->withAnyArgs()->andReturn('String')->ordered();
 
         $foo = $this->Construct();
-        $entity = new reusableEntityClass3("up", "down");
+        $entity = new reusableEntityClass3('up', 'down');
 
-        $expected = "objectModelSerializer failed to access or initialize the property String of String,"
-                    ." Please contact provider.";
+        $expected = 'objectModelSerializer failed to access or initialize the property String of String,'
+                    .' Please contact provider.';
         $actual = null;
         try {
             $foo->getPropertyValue($entity, $type, $property);
@@ -243,7 +241,6 @@ class ObjectModelSerializerBaseTest extends TestCase
         $type = m::mock(ResourceType::class);
         $type->shouldReceive('getName')->andReturn('String');
         $type->shouldReceive('getETagProperties')->andReturn([$prop1, $prop2]);
-
 
         $entity = new reusableEntityClass2('2016-12-25', null);
 
@@ -294,7 +291,6 @@ class ObjectModelSerializerBaseTest extends TestCase
 
     public function testPushSegmentForNavigationSuccess()
     {
-
         $resourceType = m::mock(ResourceType::class)->makePartial();
 
         $prop2 = m::mock(ResourceProperty::class);
@@ -431,7 +427,7 @@ class ObjectModelSerializerBaseTest extends TestCase
 
     public function testGetNextLinkUriIsRootResourceSet()
     {
-        $url = new \POData\Common\Url("http://192.168.2.1/abm-master/public/odata.svc");
+        $url = new \POData\Common\Url('http://192.168.2.1/abm-master/public/odata.svc');
 
         $orderInfo = m::mock(InternalOrderByInfo::class);
         $orderInfo->shouldReceive('buildSkipTokenValue')->andReturn('skippage')->once();
@@ -458,7 +454,7 @@ class ObjectModelSerializerBaseTest extends TestCase
 
     public function testGetNextLinkUriIsNotRootResourceSet()
     {
-        $url = new \POData\Common\Url("http://192.168.2.1/abm-master/public/odata.svc");
+        $url = new \POData\Common\Url('http://192.168.2.1/abm-master/public/odata.svc');
 
         $orderInfo = m::mock(InternalOrderByInfo::class);
         $orderInfo->shouldReceive('buildSkipTokenValue')->andReturn('skippage')->once();
@@ -500,7 +496,6 @@ class ObjectModelSerializerBaseTest extends TestCase
     }
 }
 
-
 class reusableEntityClass1
 {
     public $name;
@@ -535,7 +530,6 @@ class reusableEntityClass3
         $this->type = $t;
     }
 }
-
 
 class ObjectModelSerializerDummy extends ObjectModelSerializerBase
 {
@@ -585,7 +579,7 @@ class ObjectModelSerializerDummy extends ObjectModelSerializerBase
         return parent::getETagForEntry($entryObject, $resourceType);
     }
 
-    public function pushSegmentForNavigationProperty(ResourceProperty & $resourceProperty)
+    public function pushSegmentForNavigationProperty(ResourceProperty &$resourceProperty)
     {
         return parent::pushSegmentForNavigationProperty($resourceProperty);
     }

@@ -3,33 +3,33 @@
 namespace POData\UriProcessor\QueryProcessor\ExpressionParser;
 
 use POData\Common\Messages;
+use POData\Common\NotImplementedException;
 use POData\Common\ODataConstants;
 use POData\Common\ODataException;
+use POData\Providers\Metadata\ResourcePropertyKind;
+use POData\Providers\Metadata\ResourceType;
+use POData\Providers\Metadata\Type\Binary;
 use POData\Providers\Metadata\Type\Boolean;
 use POData\Providers\Metadata\Type\DateTime;
 use POData\Providers\Metadata\Type\Decimal;
-use POData\Providers\Metadata\Type\StringType;
-use POData\Providers\Metadata\Type\Int64;
-use POData\Providers\Metadata\Type\Int32;
 use POData\Providers\Metadata\Type\Double;
-use POData\Providers\Metadata\Type\Single;
 use POData\Providers\Metadata\Type\Guid;
-use POData\Providers\Metadata\Type\Binary;
-use POData\Providers\Metadata\Type\Null1;
+use POData\Providers\Metadata\Type\Int32;
+use POData\Providers\Metadata\Type\Int64;
 use POData\Providers\Metadata\Type\IType;
-use POData\Providers\Metadata\ResourceType;
-use POData\Providers\Metadata\ResourcePropertyKind;
+use POData\Providers\Metadata\Type\Null1;
+use POData\Providers\Metadata\Type\Single;
+use POData\Providers\Metadata\Type\StringType;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\AbstractExpression;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\PropertyAccessExpression;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ArithmeticExpression;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\RelationalExpression;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\LogicalExpression;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\FunctionCallExpression;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\UnaryExpression;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ConstantExpression;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ExpressionType;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\FunctionCallExpression;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\LogicalExpression;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\PropertyAccessExpression;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\RelationalExpression;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\UnaryExpression;
 use POData\UriProcessor\QueryProcessor\FunctionDescription;
-use POData\Common\NotImplementedException;
 
 /**
  * Class ExpressionParser.
@@ -493,9 +493,9 @@ class ExpressionParser
      * Try to parse an identifier which is followed by an opern bracket as
      * astoria URI function call.
      *
-     * @return AbstractExpression
-     *
      * @throws ODataException
+     *
+     * @return AbstractExpression
      */
     private function _parseIdentifierAsFunction()
     {
@@ -526,7 +526,7 @@ class ExpressionParser
         $this->_lexer->nextToken();
         $args
             = $this->_getCurrentToken()->Id != ExpressionTokenId::CLOSEPARAM
-             ? $this->_parseArguments() : array();
+             ? $this->_parseArguments() : [];
         if ($this->_getCurrentToken()->Id != ExpressionTokenId::CLOSEPARAM) {
             throw ODataException::createSyntaxError('Close parenthesis expected.');
         }
@@ -543,7 +543,7 @@ class ExpressionParser
      */
     private function _parseArguments()
     {
-        $argList = array();
+        $argList = [];
         while (true) {
             $argList[] = $this->_parseExpression();
             if ($this->_getCurrentToken()->Id != ExpressionTokenId::COMMA) {
@@ -561,9 +561,9 @@ class ExpressionParser
      *
      * @param IType $targetType Expected type of the current literal
      *
-     * @return AbstractExpression
-     *
      * @throws ODataException
+     *
+     * @return AbstractExpression
      */
     private function _parseTypedLiteral(IType $targetType)
     {
@@ -672,28 +672,28 @@ class ExpressionParser
         $string = new StringType();
         if ($left->typeIs($string) && $right->typeIs($string)) {
             $strcmpFunctions = FunctionDescription::stringComparisonFunctions();
-            $left = new FunctionCallExpression($strcmpFunctions[0], array($left, $right));
+            $left = new FunctionCallExpression($strcmpFunctions[0], [$left, $right]);
             $right = new ConstantExpression(0, new Int32());
         }
 
         $dateTime = new DateTime();
         if ($left->typeIs($dateTime) && $right->typeIs($dateTime)) {
             $dateTimeCmpFunctions = FunctionDescription::dateTimeComparisonFunctions();
-            $left = new FunctionCallExpression($dateTimeCmpFunctions[0], array($left, $right));
+            $left = new FunctionCallExpression($dateTimeCmpFunctions[0], [$left, $right]);
             $right = new ConstantExpression(0, new Int32());
         }
 
         $guid = new Guid();
         if ($left->typeIs($guid) && $right->typeIs($guid)) {
             $guidEqualityFunctions = FunctionDescription::guidEqualityFunctions();
-            $left = new FunctionCallExpression($guidEqualityFunctions[0], array($left, $right));
+            $left = new FunctionCallExpression($guidEqualityFunctions[0], [$left, $right]);
             $right = new ConstantExpression(true, new Boolean());
         }
 
         $binary = new Binary();
         if ($left->typeIs($binary) && $right->typeIs($binary)) {
             $binaryEqualityFunctions = FunctionDescription::binaryEqualityFunctions();
-            $left = new FunctionCallExpression($binaryEqualityFunctions[0], array($left, $right));
+            $left = new FunctionCallExpression($binaryEqualityFunctions[0], [$left, $right]);
             $right = new ConstantExpression(true, new Boolean());
         }
 
@@ -731,15 +731,15 @@ class ExpressionParser
 
             if ($isPHPExpressionProvider) {
                 $arg = $left->typeIs($null) ? $right : $left;
-                $isNullFunctionDescription = new FunctionDescription('is_null', new Boolean(), array($arg->getType()));
+                $isNullFunctionDescription = new FunctionDescription('is_null', new Boolean(), [$arg->getType()]);
                 switch ($expressionToken->Text) {
                     case ODataConstants::KEYWORD_EQUAL:
-                        return new FunctionCallExpression($isNullFunctionDescription, array($arg));
+                        return new FunctionCallExpression($isNullFunctionDescription, [$arg]);
                         break;
 
                     case ODataConstants::KEYWORD_NOT_EQUAL:
                         return new UnaryExpression(
-                            new FunctionCallExpression($isNullFunctionDescription, array($arg)),
+                            new FunctionCallExpression($isNullFunctionDescription, [$arg]),
                             ExpressionType::NOT_LOGICAL,
                             new Boolean()
                         );

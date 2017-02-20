@@ -8,10 +8,10 @@ namespace UnitTests\POData\Facets\WordPress2;
  *
  */
 
-use POData\Providers\Metadata\Type\EdmPrimitiveType;
 use POData\Common\InvalidOperationException;
 use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\Metadata\SimpleMetadataProvider;
+use POData\Providers\Metadata\Type\EdmPrimitiveType;
 
 //Begin Resource Classes
 
@@ -167,7 +167,7 @@ class User
 
 class WordPressMetadata
 {
-    private static $_entityMapping = array();
+    private static $_entityMapping = [];
 
     /**
      * create metadata.
@@ -276,50 +276,50 @@ class WordPressMetadata
     public static function getEntityMapping()
     {
         if (!is_null(self::$_entityMapping)) {
-            self::$_entityMapping = array(
-            'Post' => array(
-                '$MappedTable$' => 'wp_posts',
-                'PostID' => 'ID',
-                'Author' => 'post_author',
-                'Date' => 'post_date',
-                'DateGmt' => 'post_date_gmt',
-                'Content' => 'post_content',
-                'Title' => 'post_title',
-                'Excerpt' => 'post_excerpt',
-                'Status' => 'post_status',
-                'CommentStatus' => 'comment_status',
-                'PingStatus' => 'ping_status',
-                'Password' => 'post_password',
-                'Name' => 'post_name',
-                'ToPing' => 'to_ping',
-                'Pinged' => 'pinged',
-                'ModifiedGmt' => 'post_modified_gmt',
+            self::$_entityMapping = [
+            'Post' => [
+                '$MappedTable$'   => 'wp_posts',
+                'PostID'          => 'ID',
+                'Author'          => 'post_author',
+                'Date'            => 'post_date',
+                'DateGmt'         => 'post_date_gmt',
+                'Content'         => 'post_content',
+                'Title'           => 'post_title',
+                'Excerpt'         => 'post_excerpt',
+                'Status'          => 'post_status',
+                'CommentStatus'   => 'comment_status',
+                'PingStatus'      => 'ping_status',
+                'Password'        => 'post_password',
+                'Name'            => 'post_name',
+                'ToPing'          => 'to_ping',
+                'Pinged'          => 'pinged',
+                'ModifiedGmt'     => 'post_modified_gmt',
                 'ContentFiltered' => 'post_content_filtered',
-                'ParentID' => 'post_parent',
-                'Guid' => 'guid',
-                'MenuOrder' => 'menu_order',
-                'Type' => 'post_type',
-                'MimeType' => 'post_mime_type',
-                'CommentCount' => 'comment_count',
-              ),
+                'ParentID'        => 'post_parent',
+                'Guid'            => 'guid',
+                'MenuOrder'       => 'menu_order',
+                'Type'            => 'post_type',
+                'MimeType'        => 'post_mime_type',
+                'CommentCount'    => 'comment_count',
+              ],
 
-            'Tag' => array(
+            'Tag' => [
                 '$MappedTable$' => 'wp_terms',
-                'TagID' => 't.term_id',
-                'Name' => 't.name',
-                'Slug' => 't.slug',
-                'Description' => 'tt.description',
-            ),
+                'TagID'         => 't.term_id',
+                'Name'          => 't.name',
+                'Slug'          => 't.slug',
+                'Description'   => 'tt.description',
+            ],
 
-            'Category' => array(
+            'Category' => [
                 '$MappedTable$' => 'wp_terms',
-                'CategoryID' => 't.term_id',
-                'Name' => 't.name',
-                'Slug' => 't.slug',
-                'Description' => 'tt.description',
-            ),
+                'CategoryID'    => 't.term_id',
+                'Name'          => 't.name',
+                'Slug'          => 't.slug',
+                'Description'   => 'tt.description',
+            ],
 
-            'Comment' => array(
+            'Comment' => [
                 '$MappedTable$' => 'wp_comments',
                 'CommentID', 'comment_id',
                 'PostID', 'comment_post_id',
@@ -335,20 +335,20 @@ class WordPressMetadata
                 'Type', 'comment_type',
                 'ParentID', 'comment_parent',
                 'UserID', 'user_id',
-            ),
+            ],
 
-            'User' => array(
+            'User' => [
                 '$MappedTable$' => 'wp_users',
-                'UserID' => 'ID',
-                'Login' => 'user_login',
-                'Nicename' => 'user_nicename',
-                'Email' => 'user_email',
-                'Url' => 'user_url',
-                'Registered' => 'user_registered',
-                'Status' => 'user_status',
-                'DisplayName' => 'display_name',
-            ),
-            );
+                'UserID'        => 'ID',
+                'Login'         => 'user_login',
+                'Nicename'      => 'user_nicename',
+                'Email'         => 'user_email',
+                'Url'           => 'user_url',
+                'Registered'    => 'user_registered',
+                'Status'        => 'user_status',
+                'DisplayName'   => 'display_name',
+            ],
+            ];
         }
 
         return self::$_entityMapping;

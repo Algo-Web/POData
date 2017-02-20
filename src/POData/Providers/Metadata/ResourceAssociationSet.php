@@ -98,8 +98,6 @@ class ResourceAssociationSet
         if ($this->_end2->isBelongsTo($resourceSet, $resourceType, $resourceProperty)) {
             return $this->_end2;
         }
-
-        return null;
     }
 
     /**
@@ -124,8 +122,6 @@ class ResourceAssociationSet
         if ($this->_end2->isBelongsTo($resourceSet, $resourceType, $resourceProperty)) {
             return $this->_end1;
         }
-
-        return null;
     }
 
     /**
@@ -167,7 +163,6 @@ class ResourceAssociationSet
     public function isBidirectional()
     {
         return !is_null($this->_end1->getResourceProperty())
-            && !is_null($this->_end2->getResourceProperty())
-        ;
+            && !is_null($this->_end2->getResourceProperty());
     }
 }

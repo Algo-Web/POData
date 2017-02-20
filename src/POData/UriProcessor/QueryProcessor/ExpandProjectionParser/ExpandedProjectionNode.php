@@ -2,11 +2,11 @@
 
 namespace POData\UriProcessor\QueryProcessor\ExpandProjectionParser;
 
-use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
-use POData\Providers\Metadata\ResourceType;
-use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Common\Messages;
 use POData\Providers\Metadata\ResourceProperty;
+use POData\Providers\Metadata\ResourceSetWrapper;
+use POData\Providers\Metadata\ResourceType;
+use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
 
 /**
  * Class ExpandedProjectionNode.
@@ -92,7 +92,7 @@ class ExpandedProjectionNode extends ProjectionNode
      *
      * @var ProjectionNode[]
      */
-    private $_childNodes = array();
+    private $_childNodes = [];
 
     /**
      * When we have seen a $select path including this expanded property then
@@ -373,8 +373,6 @@ class ExpandedProjectionNode extends ProjectionNode
         if (array_key_exists($propertyName, $this->_childNodes)) {
             return $this->_childNodes[$propertyName];
         }
-
-        return null;
     }
 
     /**
@@ -497,7 +495,7 @@ class ExpandedProjectionNode extends ProjectionNode
             // more than 1 child
             if (count($this->_childNodes) > 1) {
                 $existingNodes = $this->_childNodes;
-                $this->_childNodes = array();
+                $this->_childNodes = [];
                 foreach ($this->getResourceType()->getAllProperties()
     as $resourceProperty) {
                     $propertyName = $resourceProperty->getName();

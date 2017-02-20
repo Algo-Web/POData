@@ -28,7 +28,7 @@ class SegmentStack
      */
     private $request;
 
-    private $mismatch = "Mismatch between size of names array and wrappers array";
+    private $mismatch = 'Mismatch between size of names array and wrappers array';
 
     public function __construct(RequestDescription $request = null)
     {
@@ -37,7 +37,6 @@ class SegmentStack
         $this->segmentResourceSetWrappers = [];
         assert(count($this->segmentNames) == count($this->segmentResourceSetWrappers), $this->mismatch);
     }
-
 
     /**
      * Pushes information about the segment whose instance is going to be
@@ -95,7 +94,7 @@ class SegmentStack
     }
 
     /**
-     * Retrieve stored segment names
+     * Retrieve stored segment names.
      *
      * @return \string[]
      */
@@ -105,7 +104,7 @@ class SegmentStack
     }
 
     /**
-     * Retrieve stored segment wrappers
+     * Retrieve stored segment wrappers.
      *
      * @return ResourceSetWrapper[]
      */
@@ -121,14 +120,15 @@ class SegmentStack
      */
     public function getRequest()
     {
-        assert(null != $this->request, "Request must not be null");
+        assert(null != $this->request, 'Request must not be null');
+
         return $this->request;
     }
 
     /**
      * Sets reference to the request submitted by client.
-     * @param RequestDescription $request
      *
+     * @param RequestDescription $request
      */
     public function setRequest(RequestDescription $request)
     {

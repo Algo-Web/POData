@@ -2,9 +2,9 @@
 
 namespace UnitTests\POData\OperationContext\Web;
 
-use POData\OperationContext\ServiceHost;
 use POData\Common\ODataConstants;
 use POData\Common\Version;
+use POData\OperationContext\ServiceHost;
 use UnitTests\POData\TestCase;
 
 class ServiceHostTest extends TestCase

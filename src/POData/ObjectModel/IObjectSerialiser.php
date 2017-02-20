@@ -53,9 +53,9 @@ interface IObjectSerialiser
     /**
      * Write top level complex resource.
      *
-     * @param mixed &$complexValue The complex object to be
+     * @param mixed        &$complexValue The complex object to be
      *                                    written
-     * @param string $propertyName The name of the
+     * @param string       $propertyName  The name of the
      *                                    complex property
      * @param ResourceType &$resourceType Describes the type of
      *                                    complex object
@@ -67,9 +67,9 @@ interface IObjectSerialiser
     /**
      * Write top level bag resource.
      *
-     * @param mixed &$BagValue The bag object to be
+     * @param mixed        &$BagValue     The bag object to be
      *                                    written
-     * @param string $propertyName The name of the
+     * @param string       $propertyName  The name of the
      *                                    bag property
      * @param ResourceType &$resourceType Describes the type of
      *                                    bag object
@@ -81,7 +81,7 @@ interface IObjectSerialiser
     /**
      * Write top level primitive value.
      *
-     * @param mixed &$primitiveValue The primitve value to be
+     * @param mixed            &$primitiveValue   The primitve value to be
      *                                            written
      * @param ResourceProperty &$resourceProperty Resource property
      *                                            describing the
@@ -101,20 +101,20 @@ interface IObjectSerialiser
 
     /**
      * Sets reference to the request submitted by client.
-     * @param RequestDescription $request
      *
+     * @param RequestDescription $request
      */
     public function setRequest(RequestDescription $request);
 
     /**
-     * Gets the data service instance
+     * Gets the data service instance.
      *
      * @return IService
      */
     public function getService();
 
     /**
-     * Gets the segment stack instance
+     * Gets the segment stack instance.
      *
      * @return SegmentStack
      */

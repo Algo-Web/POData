@@ -2,15 +2,13 @@
 
 namespace UnitTests\POData\Facets\WordPress2;
 
+use POData\BaseService;
+use POData\Common\Messages;
+use POData\Common\ODataException;
 use POData\Configuration\EntitySetRights;
 use POData\Configuration\IServiceConfiguration;
 use POData\Configuration\ProtocolVersion;
-use POData\Configuration\ServiceConfiguration;
-use POData\BaseService;
-use POData\ObjectModel\ObjectModelSerializer;
 use POData\OperationContext\HTTPRequestMethod;
-use POData\Common\ODataException;
-use POData\Common\Messages;
 use POData\OperationContext\ServiceHost;
 use POData\UriProcessor\UriProcessor;
 use Symfony\Component\Config\Definition\Exception\Exception;
@@ -88,6 +86,7 @@ class WordPressDataService extends BaseService
 
         $result = UriProcessor::process($this);
         $this->objectSerialiser->setRequest($result->getRequest());
+
         return $result;
     }
 }

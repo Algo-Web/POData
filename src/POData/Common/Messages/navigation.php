@@ -1,4 +1,5 @@
 <?php
+
 namespace POData\Common\Messages;
 
 trait navigation
@@ -12,6 +13,7 @@ trait navigation
     {
         return 'Only possible Navigation types are Complex and Entity.';
     }
+
     /**
      * Message to show error when there is a syntax error in the query.
      *

@@ -2,15 +2,15 @@
 
 namespace POData\UriProcessor\ResourcePathProcessor;
 
+use POData\Common\Messages;
+use POData\Common\ODataConstants;
+use POData\Common\ODataException;
+use POData\IService;
+use POData\OperationContext\HTTPRequestMethod;
 use POData\Providers\Query\QueryType;
+use POData\UriProcessor\RequestDescription;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\SegmentParser;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
-use POData\UriProcessor\RequestDescription;
-use POData\IService;
-use POData\Common\ODataConstants;
-use POData\Common\Messages;
-use POData\Common\ODataException;
-use POData\OperationContext\HTTPRequestMethod;
 
 /**
  * Class ResourcePathProcessor.
@@ -23,10 +23,10 @@ class ResourcePathProcessor
      *
      * @param IService $service Reference to the data service instance
      *
-     * @return RequestDescription
-     *
      * @throws ODataException If any exception occurs while processing the segments
      *                        or in case of any version incompatibility
+     *
+     * @return RequestDescription
      */
     public static function process(IService $service)
     {

@@ -2,17 +2,17 @@
 
 namespace POData\Writers\Metadata;
 
-use POData\Common\Messages;
 use POData\Common\InvalidOperationException;
-use POData\Providers\Metadata\ResourceTypeKind;
-use POData\Providers\Metadata\ResourceAssociationTypeEnd;
-use POData\Providers\ProvidersWrapper;
-use POData\Providers\Metadata\ResourceAssociationType;
+use POData\Common\Messages;
 use POData\Providers\Metadata\ResourceAssociationSet;
 use POData\Providers\Metadata\ResourceAssociationSetEnd;
-use POData\Providers\Metadata\ResourceType;
+use POData\Providers\Metadata\ResourceAssociationType;
+use POData\Providers\Metadata\ResourceAssociationTypeEnd;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceSetWrapper;
+use POData\Providers\Metadata\ResourceType;
+use POData\Providers\Metadata\ResourceTypeKind;
+use POData\Providers\ProvidersWrapper;
 
 /**
  * Class MetadataAssociationTypeSet.
@@ -43,7 +43,7 @@ class MetadataAssociationTypeSet extends MetadataBase
      *
      * @var array(string, array(string, ResourceAssociationType))
      */
-    private $_resourceAssociationTypes = array();
+    private $_resourceAssociationTypes = [];
 
     /**
      * Array of unique 'ResourceAssociationType'
@@ -63,7 +63,7 @@ class MetadataAssociationTypeSet extends MetadataBase
      *
      * @var ResourceAssociationSet[]
      */
-    private $_resourceAssociationSets = array();
+    private $_resourceAssociationSets = [];
 
     /**
      * Array of unique 'ResourceAssociationSet'
@@ -97,7 +97,7 @@ class MetadataAssociationTypeSet extends MetadataBase
     public function getAssociationSets()
     {
         if (is_null($this->_uniqueResourceAssociationSets)) {
-            $this->_uniqueResourceAssociationSets = array();
+            $this->_uniqueResourceAssociationSets = [];
             foreach ($this->_resourceAssociationSets as $lookupName => $resourceAssociationSet) {
                 $resourceAssociationSetName = $resourceAssociationSet->getName();
                 if (!array_key_exists($resourceAssociationSetName, $this->_uniqueResourceAssociationSets)) {
@@ -125,7 +125,7 @@ class MetadataAssociationTypeSet extends MetadataBase
     public function &getResourceAssociationTypesForNamespace($namespace)
     {
         if (!array_key_exists($namespace, $this->_resourceAssociationTypes)) {
-            $this->_resourceAssociationTypes[$namespace] = array();
+            $this->_resourceAssociationTypes[$namespace] = [];
         }
 
         return $this->_resourceAssociationTypes[$namespace];
@@ -145,9 +145,9 @@ class MetadataAssociationTypeSet extends MetadataBase
     public function getUniqueResourceAssociationTypesForNamespace($namespace)
     {
         if (is_null($this->_uniqueResourceAssociationTypes)) {
-            $this->_uniqueResourceAssociationTypes = array();
+            $this->_uniqueResourceAssociationTypes = [];
             foreach ($this->_resourceAssociationTypes as $nameSpaceName => $resourceAssociationTypesWithLookupKey) {
-                $this->_uniqueResourceAssociationTypes[$nameSpaceName] = array();
+                $this->_uniqueResourceAssociationTypes[$nameSpaceName] = [];
                 foreach ($resourceAssociationTypesWithLookupKey as $lookupKey => $resourceAssociationType) {
                     $resourceAssociationTypeName = $resourceAssociationType->getName();
                     if (!array_key_exists($resourceAssociationTypeName, $this->_uniqueResourceAssociationTypes[$nameSpaceName])) {
@@ -161,7 +161,7 @@ class MetadataAssociationTypeSet extends MetadataBase
             return array_values($this->_uniqueResourceAssociationTypes[$namespace]);
         }
 
-        return array();
+        return [];
     }
 
     /**
@@ -230,6 +230,10 @@ class MetadataAssociationTypeSet extends MetadataBase
      * @param ResourceProperty   $navigationProperty Resource property of the
      *                                               source association end
      *
+     * @throws InvalidOperationException If validation of AssociationSet fails
+     * @throws ODataException            If validation fails at
+     *                                   ProvidersWrapper::getResourceAssociationSet
+     *
      * @return ResourceAssociationSet|null The association set instance for the
      *                                     given association set end,
      *                                     NULL if the metadata wrapper
@@ -237,10 +241,6 @@ class MetadataAssociationTypeSet extends MetadataBase
      *                                     (either IDSMP implementation
      *                                     returns null or
      *                                     target resource set is invisible)
-     *
-     * @throws InvalidOperationException If validation of AssociationSet fails
-     * @throws ODataException            If validation fails at
-     *                                   ProvidersWrapper::getResourceAssociationSet
      */
     private function _getResourceAssociationSet(ResourceSetWrapper $resourceSet, ResourceType $resourceType, ResourceProperty $navigationProperty)
     {
@@ -252,7 +252,7 @@ class MetadataAssociationTypeSet extends MetadataBase
         $resourceAssociationSet = $this->providersWrapper->getResourceAssociationSet($resourceSet, $resourceType, $navigationProperty);
         if (is_null($resourceAssociationSet)) {
             //Either the related ResourceSet is invisible or IDSMP implementation returns null
-            return null;
+            return;
         }
 
         /*

@@ -3,21 +3,21 @@
 namespace POData\UriProcessor\ResourcePathProcessor\SegmentParser;
 
 use POData\Common\InvalidOperationException;
+use POData\Common\Messages;
 use POData\Common\ODataException;
 use POData\Providers\Metadata\ResourceType;
-use POData\Providers\Metadata\Type\Single;
-use POData\Providers\Metadata\Type\Int64;
-use POData\Providers\Metadata\Type\Double;
-use POData\Providers\Metadata\Type\Decimal;
-use POData\Providers\Metadata\Type\StringType;
-use POData\Providers\Metadata\Type\Guid;
-use POData\Providers\Metadata\Type\DateTime;
 use POData\Providers\Metadata\Type\Boolean;
+use POData\Providers\Metadata\Type\DateTime;
+use POData\Providers\Metadata\Type\Decimal;
+use POData\Providers\Metadata\Type\Double;
+use POData\Providers\Metadata\Type\Guid;
 use POData\Providers\Metadata\Type\Int32;
+use POData\Providers\Metadata\Type\Int64;
 use POData\Providers\Metadata\Type\Null1;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionTokenId;
+use POData\Providers\Metadata\Type\Single;
+use POData\Providers\Metadata\Type\StringType;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionLexer;
-use POData\Common\Messages;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionTokenId;
 
 /**
  * Class KeyDescriptor.
@@ -136,11 +136,11 @@ class KeyDescriptor
      * Gets validated named key values, this array will be populated
      * in validate function.
      *
-     * @return array(string, array(string, IType))
-     *
      * @throws InvalidOperationException if this function invoked
      *                                   before invoking validate
      *                                   function
+     *
+     * @return array(string, array(string, IType))
      */
     public function getValidatedNamedValues()
     {
@@ -251,7 +251,7 @@ class KeyDescriptor
     public function validate($segmentAsString, ResourceType $resourceType)
     {
         if ($this->isEmpty()) {
-            $this->_validatedNamedValues = array();
+            $this->_validatedNamedValues = [];
 
             return;
         }
@@ -367,13 +367,13 @@ class KeyDescriptor
 
         //Check for empty predicate e.g. Customers(  )
         if ($currentToken->Id == ExpressionTokenId::END) {
-            $keyDescriptor = new self(array(), array());
+            $keyDescriptor = new self([], []);
 
             return true;
         }
 
-        $namedValues = array();
-        $positionalValues = array();
+        $namedValues = [];
+        $positionalValues = [];
 
         do {
             if (($currentToken->Id == ExpressionTokenId::IDENTIFIER)
@@ -416,7 +416,7 @@ class KeyDescriptor
                     return false;
                 }
 
-                $namedValues[$identifier] = array($outValue, $outType);
+                $namedValues[$identifier] = [$outValue, $outType];
             } elseif ($currentToken->isKeyValueToken()
                 || ($currentToken->Id == ExpressionTokenId::NULL_LITERAL && $allowNull)
             ) {
@@ -437,7 +437,7 @@ class KeyDescriptor
                     return false;
                 }
 
-                $positionalValues[] = array($outValue, $outType);
+                $positionalValues[] = [$outValue, $outType];
             } else {
                 return false;
             }

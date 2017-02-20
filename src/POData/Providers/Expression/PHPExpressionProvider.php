@@ -2,10 +2,10 @@
 
 namespace POData\Providers\Expression;
 
-use POData\Providers\Metadata\ResourceType;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ExpressionType;
-use POData\Providers\Metadata\Type\IType;
 use POData\Common\ODataConstants;
+use POData\Providers\Metadata\ResourceType;
+use POData\Providers\Metadata\Type\IType;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ExpressionType;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\PropertyAccessExpression;
 
 /**

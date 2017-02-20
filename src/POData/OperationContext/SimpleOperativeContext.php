@@ -11,6 +11,7 @@ class SimpleOperativeContext implements IOperationContext
      */
     protected $request;
     protected $response;
+
     /**
      * @param yii\base\Request $request
      */
@@ -19,6 +20,7 @@ class SimpleOperativeContext implements IOperationContext
         $this->request = new RequestAdapter($request);
         $this->response = new OutgoingResponse();
     }
+
     /**
      * Gets the Web request context for the request being sent.
      *
@@ -28,6 +30,7 @@ class SimpleOperativeContext implements IOperationContext
     {
         return $this->response;
     }
+
     /**
      * Gets the Web request context for the request being received.
      *

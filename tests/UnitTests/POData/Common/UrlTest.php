@@ -29,11 +29,11 @@ class UrlTest extends TestCase
 
         $actual = $url->getSegments();
 
-        $expected = array(
+        $expected = [
             'NorthwindService.svc',
             "Customers('ALFKI')",
             'Orders',
-        );
+        ];
 
         $this->assertEquals($expected, $actual);
     }
@@ -47,14 +47,14 @@ class UrlTest extends TestCase
         $url = new Url($urlStr);
         $actual = $url->getSegments();
 
-        $expected = array(
+        $expected = [
             'NorthwindService.svc',
             '@',
             '.',
             '!',
             "Customers('ALFKI')",
             'Orders',
-        );
+        ];
         $this->assertEquals($expected, $actual);
     }
 

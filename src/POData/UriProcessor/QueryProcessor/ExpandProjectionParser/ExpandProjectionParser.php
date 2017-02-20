@@ -2,17 +2,17 @@
 
 namespace POData\UriProcessor\QueryProcessor\ExpandProjectionParser;
 
-use POData\Common\ODataException;
 use POData\Common\Messages;
-use POData\Providers\Metadata\ResourceTypeKind;
-use POData\Providers\Metadata\ResourceType;
-use POData\Providers\Metadata\ResourceSetWrapper;
-use POData\Providers\ProvidersWrapper;
+use POData\Common\ODataException;
 use POData\Providers\Metadata\ResourcePropertyKind;
+use POData\Providers\Metadata\ResourceSetWrapper;
+use POData\Providers\Metadata\ResourceType;
+use POData\Providers\Metadata\ResourceTypeKind;
+use POData\Providers\ProvidersWrapper;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionLexer;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionTokenId;
-use POData\UriProcessor\QueryProcessor\OrderByParser\OrderByParser;
 use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
+use POData\UriProcessor\QueryProcessor\OrderByParser\OrderByParser;
 
 /**
  * Class ExpandProjectionParser.
@@ -90,9 +90,9 @@ class ExpandProjectionParser
      * @param string              $select             The value of $select clause
      * @param ProvidersWrapper    $providerWrapper    Reference to metadata and query provider wrapper
      *
-     * @return RootProjectionNode Returns root of the 'Projection Tree'
-     *
      * @throws ODataException If any error occur while parsing expand and/or select clause
+     *
+     * @return RootProjectionNode Returns root of the 'Projection Tree'
      */
     public static function parseExpandAndSelectClause(
         ResourceSetWrapper $resourceSetWrapper,
@@ -376,7 +376,7 @@ class ExpandProjectionParser
      */
     private function _readExpandOrSelect($value, $isSelect)
     {
-        $pathSegments = array();
+        $pathSegments = [];
         $lexer = new ExpressionLexer($value);
         $i = 0;
         while ($lexer->getCurrentToken()->Id != ExpressionTokenId::END) {
@@ -392,7 +392,7 @@ class ExpandProjectionParser
             }
 
             if (!array_key_exists($i, $pathSegments)) {
-                $pathSegments[$i] = array();
+                $pathSegments[$i] = [];
             }
 
             $pathSegments[$i][] = $subPathSegment;

@@ -2,13 +2,13 @@
 
 namespace POData\UriProcessor\ResourcePathProcessor\SegmentParser;
 
+use POData\Common\Messages;
+use POData\Common\ODataConstants;
+use POData\Common\ODataException;
+use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\ResourceTypeKind;
-use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\Providers\ProvidersWrapper;
-use POData\Common\ODataConstants;
-use POData\Common\Messages;
-use POData\Common\ODataException;
 
 /**
  * Class SegmentParser.
@@ -40,7 +40,7 @@ class SegmentParser
      *
      * @var SegmentDescriptor[]
      */
-    private $_segmentDescriptors = array();
+    private $_segmentDescriptors = [];
 
     /**
      * Constructs a new instance of SegmentParser.
@@ -59,9 +59,9 @@ class SegmentParser
      * @param ProvidersWrapper $providerWrapper Reference to metadata and query provider wrapper
      * @param bool             $checkForRights  Whether to check for rights on the resource sets in the segments
      *
-     * @return SegmentDescriptor[]
-     *
      * @throws ODataException If any error occurs while processing segment
+     *
+     * @return SegmentDescriptor[]
      */
     public static function parseRequestUriSegments($segments, ProvidersWrapper $providerWrapper, $checkForRights = true)
     {
@@ -76,7 +76,7 @@ class SegmentParser
      *
      * @param string $segment       The segment from which identifier and key
      * @param string &$identifier   On return, this parameter will contain identifier part of the segment
-     * @param string &$keyPredicate On return, this parameter will contain key predicate part of the segment, 
+     * @param string &$keyPredicate On return, this parameter will contain key predicate part of the segment,
      *                              null if predicate is absent
      *
      * @throws ODataException If any error occurs while processing segment
@@ -344,9 +344,9 @@ class SegmentParser
      * @param string $keyPredicate      The predicate part of the first segment if any else NULL
      * @param bool   $checkRights       Whether to check the rights on this segment
      *
-     * @return SegmentDescriptor Descriptor for the first segment
-     *
      * @throws ODataException Exception if any validation fails
+     *
+     * @return SegmentDescriptor Descriptor for the first segment
      */
     private function _createFirstSegmentDescriptor($segmentIdentifier, $keyPredicate, $checkRights)
     {
@@ -424,10 +424,10 @@ class SegmentParser
      * @param string       $keyPredicate The key predicate to parse and generate
      *                                   KeyDescriptor for
      *
-     * @return KeyDescriptor Describes the key values in the $keyPredicate
-     *
      * @throws ODataException Exception if any error occurs while parsing and
      *                        validating the key predicate
+     *
+     * @return KeyDescriptor Describes the key values in the $keyPredicate
      */
     private function _createKeyDescriptor($segment, ResourceType $resourceType, $keyPredicate)
     {

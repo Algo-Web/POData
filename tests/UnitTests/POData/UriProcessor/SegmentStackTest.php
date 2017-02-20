@@ -2,14 +2,13 @@
 
 namespace UnitTests\POData\UriProcessor;
 
+use Mockery as m;
+use POData\Common\InvalidOperationException;
+use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\RootProjectionNode;
 use POData\UriProcessor\RequestDescription;
 use POData\UriProcessor\SegmentStack;
-use POData\Common\InvalidOperationException;
-use POData\Providers\Metadata\ResourceSetWrapper;
 use UnitTests\POData\TestCase;
-
-use Mockery as m;
 
 class SegmentStackTest extends TestCase
 {

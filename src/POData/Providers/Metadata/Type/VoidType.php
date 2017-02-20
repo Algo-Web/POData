@@ -5,7 +5,7 @@ namespace POData\Providers\Metadata\Type;
 use POData\Common\NotImplementedException;
 
 /**
- * Class VoidType. Named so as to avoid issues with php71
+ * Class VoidType. Named so as to avoid issues with php71.
  */
 class VoidType implements IType
 {

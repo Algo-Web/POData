@@ -117,8 +117,6 @@ class ResourceAssociationType
         if ($this->_end2->isBelongsTo($resourceType, $resourceProperty)) {
             return $this->_end2;
         }
-
-        return null;
     }
 
     /**
@@ -141,7 +139,5 @@ class ResourceAssociationType
         if ($this->_end2->isBelongsTo($resourceType, $resourceProperty)) {
             return $this->_end1;
         }
-
-        return null;
     }
 }

@@ -1,21 +1,21 @@
 <?php
+
 namespace POData\Readers\Atom;
 
-use DOMXPath;
 use DOMDocument;
+use DOMXPath;
 use ReflectionClass;
 use ReflectionException;
-use ReflectionProperty;
 
 class AtomODataReader
 {
     protected $objectContext;
     protected $domDocument;
-    protected static $namespaces = array(
+    protected static $namespaces = [
                                     'default' => 'http://www.w3.org/2005/Atom',
-                                    'd' => 'http://schemas.microsoft.com/ado/2007/08/dataservices',
-                                    'm' => 'http://schemas.microsoft.com/ado/2007/08/dataservices/metadata'
-                                    );
+                                    'd'       => 'http://schemas.microsoft.com/ado/2007/08/dataservices',
+                                    'm'       => 'http://schemas.microsoft.com/ado/2007/08/dataservices/metadata',
+                                    ];
     protected static $QUERY_ROOT_FEED = '/default:feed';
     protected static $QUERY_ROOT_ENTRY = '/default:entry';
     protected static $QUERY_TITLE = 'default:title';
@@ -39,12 +39,12 @@ class AtomODataReader
     protected static $QUERY_NEXTLINK = 'default:link[@rel="next"]';
     protected static $QUERY_INLINECOUNT = 'm:count';
     protected static $QUERY_TYPE = 'm:type';
-    protected static $ERROR_TAG = "<error xmlns=\"http://schemas.microsoft.com/ado/2007/08/dataservices/metadata\">";
-    protected $_objectIDToNextLinkUri = array();
+    protected static $ERROR_TAG = '<error xmlns="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">';
+    protected $_objectIDToNextLinkUri = [];
     protected $_inlineCount = -1;
 
     /**
-     * @param string $xml
+     * @param string        $xml
      * @param ObjectContext $objectContext
      */
     public function AtomParser($xml, $objectContext)
@@ -59,7 +59,7 @@ class AtomODataReader
      */
     public function EnumerateObjects(&$queryOperationResponse)
     {
-        $result = array();
+        $result = [];
         $xPath = new DOMXPath($this->domDocument);
         self::ApplyNamespace($xPath);
         $feeds = $xPath->query(self::$QUERY_ROOT_FEED);
@@ -85,7 +85,7 @@ class AtomODataReader
      */
     protected function EnumerateFeed($feed, &$feedType, $parentObject = null)
     {
-        $entryCollection = array();
+        $entryCollection = [];
         $xPath = self::GetXPathForNode($feed);
 
         $titles = $xPath->query(self::$QUERY_TITLE);
@@ -93,9 +93,8 @@ class AtomODataReader
         $nextLinks = $xPath->query(self::$QUERY_NEXTLINK);
         $nextLinkHref = null;
         foreach ($nextLinks as $nextLink) {
-            $nextLinkHref = self::GetAttribute($nextLink, "href");
+            $nextLinkHref = self::GetAttribute($nextLink, 'href');
         }
-
 
         $entries = $xPath->query(self::$QUERY_ENTRY);
         foreach ($entries as $entry) {
@@ -168,8 +167,6 @@ class AtomODataReader
         $method = $class->getMethod('setRelatedLinks');
         $method->invoke($object, $relLinks);
 
-
-
         $queryProperties = self::$QUERY_PROPERTIES1;
         $queryProperty = self::$QUERY_PROPERTY1;
         if ($atomEntry->MediaLinkEntry) {
@@ -179,6 +176,7 @@ class AtomODataReader
 
         $clientType = ClientType::Create($entityType);
         self::HandleProperties($xPath, $queryProperty, $clientType, $object);
+
         return $object;
     }
 
@@ -195,7 +193,7 @@ class AtomODataReader
         $entries = $xPath->query(self::$QUERY_INLINE_ENTRY);
         if ($entries->length) {
             $entry = $this->EnumerateEntry($entries->item(0), $entryType, $object);
-            $entry = array($entry);
+            $entry = [$entry];
             \POData\Common\ReflectionHandler::setProperty($object, $entryType, $entry);
         }
     }
@@ -205,21 +203,22 @@ class AtomODataReader
      */
     protected function GetRelatedLinks($links)
     {
-        $relLinks = array();
+        $relLinks = [];
         foreach ($links as $link) {
             $feedNode = $link->getElementsByTagNameNS(self::$namespaces['default'], 'feed');
             if (null === $feedNode->item(0)) {
-                $relUri = self::GetAttribute($link, "href");
+                $relUri = self::GetAttribute($link, 'href');
                 $index = Utility::reverseFind($relUri, '/');
                 $entityName = substr($relUri, $index + 1, strlen($relUri) - $index);
                 $relLinks[$entityName] = $relUri;
             }
         }
+
         return $relLinks;
     }
 
     /**
-     * @param DOMXPath $xPath
+     * @param DOMXPath  $xPath
      * @param AtomEntry $atomEntry
      */
     protected static function CheckAndProcessMediaLinkEntryData($xPath, &$atomEntry)
@@ -254,8 +253,8 @@ class AtomODataReader
         $prefix = $property->prefix;
         $name = $property->nodeName;
 
-        if ($prefix != "default") {
-            $prefix = $prefix . ":";
+        if ($prefix != 'default') {
+            $prefix = $prefix . ':';
             $pos = (false === ($index = strpos($name, $prefix))) ? 0 : $index + strlen($prefix);
             $name = substr($name, $pos);
         }
@@ -278,6 +277,7 @@ class AtomODataReader
         $domDocument = self::GetDomDocumentFromNode($node);
         $xPath = new DOMXPath($domDocument);
         self::ApplyNamespace($xPath);
+
         return $xPath;
     }
 
@@ -286,12 +286,13 @@ class AtomODataReader
         $domDocument_From_Node = new DomDocument();
         $domNode = $domDocument_From_Node->importNode($node, true);
         $domDocument_From_Node->appendChild($domNode);
+
         return $domDocument_From_Node;
     }
 
     /**
      * @param \DOMNode $node
-     * @param string $attributeName
+     * @param string   $attributeName
      */
     protected static function GetAttribute($node, $attributeName)
     {
@@ -302,16 +303,14 @@ class AtomODataReader
             }
         }
         //return "";
-        return null;
     }
 
     /**
      * @param DOMXPath $xPath
-     * @param string $propertyQuery
+     * @param string   $propertyQuery
      */
     protected function HandleProperties($xPath, $propertyQuery, $clientType, $object)
     {
-
         if ($clientType->hasEPM()) {
             $epmProperties = $clientType->getRawEPMProperties();
             foreach ($epmProperties as $epmProperty) {
@@ -332,14 +331,14 @@ class AtomODataReader
 
                     if ($nodes->length) {
                         if (isset($attributes['NodeAttribute'])) {
-                            $attribute = $attributes['FC_NsPrefix'] . ":" . $attributes['NodeAttribute'];
+                            $attribute = $attributes['FC_NsPrefix'] . ':' . $attributes['NodeAttribute'];
                             $value = self::GetAttribute($nodes->item(0), $attribute);
                             if ((is_null($value) &&
                                 (isset($attributes['EdmType']) &&
                                  ($attributes['EdmType'] == 'Edm.Int16' ||
                                   $attributes['EdmType'] == 'Edm.Int32' ||
                                   $attributes['EdmType'] == 'Edm.Int64')))) {
-                                    $value = '0';
+                                $value = '0';
                             }
                         } else {
                             if ($nodes->item(0)->hasChildNodes()) {
@@ -352,7 +351,7 @@ class AtomODataReader
                                 $query1 = $propertyQuery . $propertyName;
                                 $nodes1 = $xPath->Query($query1);
                                 if ($nodes1->length) {
-                                    $value1 = self::GetAttribute($nodes1->item(0), "m:null");
+                                    $value1 = self::GetAttribute($nodes1->item(0), 'm:null');
                                     if ('true' == $value1) {
                                         $value = null;
                                     }
@@ -361,12 +360,11 @@ class AtomODataReader
                         }
 
                         \POData\Common\ReflectionHandler::setProperty($entity, $propertyName, $value);
-                    } else {
+                    }
                         //NOTE: Atom Entry not contains $targetQuery node its
                         //an error, because in the case of projection also
                         //customisable feeds will be there.
                         //
-                    }
                 }
             }
         }
@@ -404,10 +402,9 @@ class AtomODataReader
             if ($nodes->length) {
                 $value = $nodes->item(0)->nodeValue;
                 \POData\Common\ReflectionHandler::setProperty($object, $propertyName, $value);
-            } else {
+            }
                 //NOTE: Atom Entry not contains the required property
                 //not a bug projection can lead to this case
-            }
         }
     }
 
@@ -415,12 +412,14 @@ class AtomODataReader
      * Check whether the in $xPath (which represents an entity), the
      * $propertyQuery.$propertyName represents a complex, if so
      * create an object of that type, polpulate it and return it.
-     * @param DOMXPath $xPath
-     * @param string $propertyQuery
-     * @param string $propertyName
+     *
+     * @param DOMXPath   $xPath
+     * @param string     $propertyQuery
+     * @param string     $propertyName
      * @param type [out] $complexPropertyName
      * @param type [out] $complexPropertyObject
-     * @param string $complexPropertyName
+     * @param string     $complexPropertyName
+     *
      * @return bool
      */
     protected function CheckAndProcessComplexType($xPath, $propertyQuery, $propertyName, &$complexPropertyName, &$complexPropertyObject)
@@ -501,7 +500,7 @@ class AtomODataReader
         }
 
         $atomEntry = new AtomEntry();
-        ;
+
         self::CheckAndProcessMediaLinkEntryData($xPath, $atomEntry);
     }
 
@@ -539,8 +538,6 @@ class AtomODataReader
         if ($entries->length) {
             return self::GetAttribute($entries->item(0), 'm:etag');
         }
-
-        return null;
     }
 
     /**
@@ -549,10 +546,10 @@ class AtomODataReader
     public static function GetErrorDetails($errorXML, &$outerError, &$innnerError)
     {
         if (false === strstr($errorXML, self::$ERROR_TAG)) {
-            $innerError = "";
+            $innerError = '';
             $outerError = $errorXML;
         } else {
-            $errorXML = str_replace("innererror xmlns=\"xmlns\"", "innererror", $errorXML);
+            $errorXML = str_replace('innererror xmlns="xmlns"', 'innererror', $errorXML);
             $domDocument = new DOMDocument();
             $domDocument->loadXML($errorXML);
 

@@ -2,12 +2,12 @@
 
 namespace POData\Providers\Query;
 
+use POData\Providers\Expression\MySQLExpressionProvider;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceSet;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
 use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
-use POData\Providers\Expression\MySQLExpressionProvider;
 
 abstract class SimpleQueryProvider implements IQueryProvider
 {
@@ -15,10 +15,12 @@ abstract class SimpleQueryProvider implements IQueryProvider
      * @var Connection
      */
     protected $db;
+
     public function __construct($db)
     {
         $this->db = $db;
     }
+
     /**
      * Query all data from DB.
      *
@@ -28,6 +30,7 @@ abstract class SimpleQueryProvider implements IQueryProvider
      * @return array[]|null Array of associated arrays (column name => column value)
      */
     abstract protected function queryAll($sql, $parameters = null);
+
     /**
      * Query one value from DB.
      *
@@ -37,19 +40,23 @@ abstract class SimpleQueryProvider implements IQueryProvider
      * @return mixed Value
      */
     abstract protected function queryScalar($sql, $parameters = null);
+
     /* Stubbed Implementaiton Here */
     public function getQueryProvider()
     {
         return new QueryProvider();
     }
+
     public function handlesOrderedPaging()
     {
         return true;
     }
+
     public function getExpressionProvider()
     {
         return new MySQLExpressionProvider();
     }
+
     /**
      * Get entity name by class name.
      *
@@ -66,6 +73,7 @@ abstract class SimpleQueryProvider implements IQueryProvider
 
         return $entityClassName;
     }
+
     /**
      * Get table name by entity name.
      *
@@ -83,6 +91,7 @@ abstract class SimpleQueryProvider implements IQueryProvider
 
         return strtolower($tableName);
     }
+
     /**
      * Get part of SQL query with ORDER BY condition.
      *
@@ -103,6 +112,7 @@ abstract class SimpleQueryProvider implements IQueryProvider
 
         return $result;
     }
+
     /**
      * Common method for getResourceFromRelatedResourceSet() and getResourceFromResourceSet().
      *
@@ -142,6 +152,7 @@ abstract class SimpleQueryProvider implements IQueryProvider
 
         return $entityClassName::fromRecord($result);
     }
+
     /**
      * For queries like http://localhost/NorthWind.svc/Customers.
      */
@@ -186,6 +197,7 @@ abstract class SimpleQueryProvider implements IQueryProvider
 
         return $result;
     }
+
     /**
      * For queries like http://localhost/NorthWind.svc/Customers(‘ALFKI’).
      */
@@ -195,6 +207,7 @@ abstract class SimpleQueryProvider implements IQueryProvider
     ) {
         return $this->getResource($resourceSet, $keyDescriptor);
     }
+
     /**
      * For queries like http://localhost/NorthWind.svc/Customers(‘ALFKI’)/Orders.
      */
@@ -224,6 +237,7 @@ abstract class SimpleQueryProvider implements IQueryProvider
 
         return $this->getResourceSet($queryType, $targetResourceSet, $completeFilterInfo, $orderBy, $top, $skip);
     }
+
     /**
      * For queries like http://localhost/NorthWind.svc/Customers(‘ALFKI’)/Orders(10643).
      */
@@ -242,6 +256,7 @@ abstract class SimpleQueryProvider implements IQueryProvider
             $fieldName => $sourceEntityInstance->id,
         ]);
     }
+
     /**
      * For queries like http://localhost/NorthWind.svc/Orders(10643)/Customer.
      */

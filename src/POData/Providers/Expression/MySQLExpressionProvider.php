@@ -2,10 +2,10 @@
 
 namespace POData\Providers\Expression;
 
-use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ExpressionType;
-use POData\Providers\Metadata\Type\IType;
 use POData\Common\ODataConstants;
 use POData\Providers\Metadata\ResourceType;
+use POData\Providers\Metadata\Type\IType;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ExpressionType;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\PropertyAccessExpression;
 use POData\UriProcessor\QueryProcessor\FunctionDescription;
 
@@ -45,7 +45,7 @@ class MySQLExpressionProvider implements IExpressionProvider
      */
     public function __construct()
     {
-        $this->entityMapping = array();
+        $this->entityMapping = [];
     }
 
     /**
@@ -55,7 +55,6 @@ class MySQLExpressionProvider implements IExpressionProvider
      */
     public function getIteratorName()
     {
-        return null;
     }
 
     /**

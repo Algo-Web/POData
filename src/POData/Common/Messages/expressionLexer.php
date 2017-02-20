@@ -1,4 +1,5 @@
 <?php
+
 namespace POData\Common\Messages;
 
 trait expressionLexer
@@ -52,7 +53,6 @@ trait expressionLexer
     {
         return "Invalid character '$ch' at position $pos";
     }
-
 
     /**
      * Format message for not applicable function error.

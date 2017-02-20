@@ -19,17 +19,17 @@ class QueryResultTest extends TestCase
 
     public function provider()
     {
-        return array(
+        return [
                         //count //top   //skip  //expected
-            array(101,  0,      null,   null,   0),
-            array(102,  1,      null,   null,   1),
-            array(103,  10,     1,      null,   1),
-            array(104,  0,      1,      null,   0),
-            array(105,  0,      null,   1,      0),
-            array(105,  0,      1,      1,      0),
-            array(106,  10,     5,      5,      5),
-            array(107,  10,     5,      7,      3),
-            array(107,  10,     15,     7,      3),
-        );
+            [101,  0,      null,   null,   0],
+            [102,  1,      null,   null,   1],
+            [103,  10,     1,      null,   1],
+            [104,  0,      1,      null,   0],
+            [105,  0,      null,   1,      0],
+            [105,  0,      1,      1,      0],
+            [106,  10,     5,      5,      5],
+            [107,  10,     5,      7,      3],
+            [107,  10,     15,     7,      3],
+        ];
     }
 }

@@ -2,28 +2,28 @@
 
 namespace UnitTests\POData\UriProcessor\QueryProcessor\ExpressionParser;
 
-use POData\Providers\Metadata\Type\Int32;
-use POData\Providers\Metadata\Type\Int64;
-use POData\Providers\Metadata\Type\Double;
-use POData\Providers\Metadata\Type\Single;
-use POData\Providers\Metadata\Type\Decimal;
-use POData\Providers\Metadata\Type\DateTime;
-use POData\Providers\Metadata\Type\Binary;
-use POData\Providers\Metadata\Type\StringType;
-use POData\Providers\Metadata\Type\Navigation;
-use POData\Providers\Metadata\Type\Boolean;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\PropertyAccessExpression;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ConstantExpression;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ArithmeticExpression;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\LogicalExpression;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\RelationalExpression;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\FunctionCallExpression;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\UnaryExpression;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ExpressionType;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionParser;
 use POData\Common\ODataException;
 use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\Metadata\ResourceType;
+use POData\Providers\Metadata\Type\Binary;
+use POData\Providers\Metadata\Type\Boolean;
+use POData\Providers\Metadata\Type\DateTime;
+use POData\Providers\Metadata\Type\Decimal;
+use POData\Providers\Metadata\Type\Double;
+use POData\Providers\Metadata\Type\Int32;
+use POData\Providers\Metadata\Type\Int64;
+use POData\Providers\Metadata\Type\Navigation;
+use POData\Providers\Metadata\Type\Single;
+use POData\Providers\Metadata\Type\StringType;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionParser;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ArithmeticExpression;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ConstantExpression;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ExpressionType;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\FunctionCallExpression;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\LogicalExpression;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\PropertyAccessExpression;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\RelationalExpression;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\UnaryExpression;
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 use UnitTests\POData\TestCase;
 

@@ -1,18 +1,16 @@
 <?php
 
-use POData\Providers\Metadata\ResourceTypeKind;
-use POData\Providers\ProvidersWrapper;
-use POData\Configuration\ServiceConfiguration;
+use Mockery as m;
+use POData\Common\Version;
 use POData\Configuration\EntitySetRights;
 use POData\Configuration\ProtocolVersion;
+use POData\Configuration\ServiceConfiguration;
 use POData\Providers\Metadata\IMetadataProvider;
-use POData\Writers\Metadata\MetadataWriter;
-use POData\Common\Version;
-
-use Mockery as m;
-
-use UnitTests\POData\Facets\NorthWind2\NorthWindMetadata;
+use POData\Providers\Metadata\ResourceTypeKind;
+use POData\Providers\ProvidersWrapper;
 use POData\Providers\Query\IQueryProvider;
+use POData\Writers\Metadata\MetadataWriter;
+use UnitTests\POData\Facets\NorthWind2\NorthWindMetadata;
 use UnitTests\POData\TestCase;
 
 class MetadataWriterTest extends TestCase

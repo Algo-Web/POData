@@ -14,7 +14,6 @@ use POData\Providers\Query\QueryResult;
 use POData\Providers\Query\QueryType;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
-use UnitTests\POData\ObjectModel\reusableEntityClass1;
 use UnitTests\POData\ObjectModel\reusableEntityClass2;
 use UnitTests\POData\TestCase;
 
@@ -68,7 +67,7 @@ class ProvidersQueryWrapperTest extends TestCase
     {
         $this->queryType = QueryType::ENTITIES_WITH_COUNT();
         $result = m::mock(QueryResult::class)->makePartial();
-        $result->count = "BORK BORK BORK!";
+        $result->count = 'BORK BORK BORK!';
 
         $query = m::mock(IQueryProvider::class);
         $query->shouldReceive('getRelatedResourceSet')->andReturn($result)->once();
@@ -102,7 +101,7 @@ class ProvidersQueryWrapperTest extends TestCase
     {
         $this->queryType = QueryType::ENTITIES_WITH_COUNT();
         $result = m::mock(QueryResult::class)->makePartial();
-        $result->results = "BORK BORK BORK!";
+        $result->results = 'BORK BORK BORK!';
 
         $query = m::mock(IQueryProvider::class);
         $query->shouldReceive('getRelatedResourceSet')->andReturn($result)->once();
@@ -136,7 +135,7 @@ class ProvidersQueryWrapperTest extends TestCase
     {
         $this->queryType = QueryType::ENTITIES();
         $result = m::mock(QueryResult::class)->makePartial();
-        $result->results = "BORK BORK BORK!";
+        $result->results = 'BORK BORK BORK!';
 
         $query = m::mock(IQueryProvider::class);
         $query->shouldReceive('getRelatedResourceSet')->andReturn($result)->once();
@@ -170,7 +169,7 @@ class ProvidersQueryWrapperTest extends TestCase
     {
         $this->queryType = QueryType::ENTITIES();
         $result = m::mock(QueryResult::class)->makePartial();
-        $result->results = ["BORK BORK BORK!"];
+        $result->results = ['BORK BORK BORK!'];
 
         $query = m::mock(IQueryProvider::class);
         $query->shouldReceive('getRelatedResourceSet')->andReturn($result)->once();
@@ -192,14 +191,14 @@ class ProvidersQueryWrapperTest extends TestCase
         $this->assertTrue($result instanceof QueryResult);
         $this->assertTrue(is_array($result->results));
         $this->assertEquals(1, count($result->results));
-        $this->assertEquals("BORK BORK BORK!", $result->results[0]);
+        $this->assertEquals('BORK BORK BORK!', $result->results[0]);
     }
 
     public function testGetResourceSetHandlesPagingAndArrayResult()
     {
         $this->queryType = QueryType::ENTITIES();
         $result = m::mock(QueryResult::class)->makePartial();
-        $result->results = ["BORK BORK BORK!"];
+        $result->results = ['BORK BORK BORK!'];
 
         $query = m::mock(IQueryProvider::class);
         $query->shouldReceive('getResourceSet')->andReturn($result)->once();
@@ -211,7 +210,7 @@ class ProvidersQueryWrapperTest extends TestCase
         $this->assertTrue($result instanceof QueryResult);
         $this->assertTrue(is_array($result->results));
         $this->assertEquals(1, count($result->results));
-        $this->assertEquals("BORK BORK BORK!", $result->results[0]);
+        $this->assertEquals('BORK BORK BORK!', $result->results[0]);
     }
 
     public function testPutResource()
@@ -219,7 +218,7 @@ class ProvidersQueryWrapperTest extends TestCase
         $key = m::mock(KeyDescriptor::class);
 
         $result = m::mock(QueryResult::class)->makePartial();
-        $result->results = ["BORK BORK BORK!"];
+        $result->results = ['BORK BORK BORK!'];
 
         $query = m::mock(IQueryProvider::class);
         $query->shouldReceive('putResource')->andReturn($result)->once();
@@ -230,7 +229,7 @@ class ProvidersQueryWrapperTest extends TestCase
         $this->assertTrue($result instanceof QueryResult);
         $this->assertTrue(is_array($result->results));
         $this->assertEquals(1, count($result->results));
-        $this->assertEquals("BORK BORK BORK!", $result->results[0]);
+        $this->assertEquals('BORK BORK BORK!', $result->results[0]);
     }
 
     public function testGetNullExpressionProviderThrowException()
@@ -289,7 +288,7 @@ class ProvidersQueryWrapperTest extends TestCase
     {
         $key = m::mock(KeyDescriptor::class);
 
-        $data = new reusableEntityClass2("hammer", "time!");
+        $data = new reusableEntityClass2('hammer', 'time!');
 
         $query = m::mock(IQueryProvider::class);
         $query->shouldReceive('createResourceforResourceSet')->andReturn($data)->once();
@@ -298,13 +297,13 @@ class ProvidersQueryWrapperTest extends TestCase
         $foo = new ProvidersQueryWrapper($query);
         $result = $foo->createResourceforResourceSet($this->sourceResourceSet, $data, $key);
         $this->assertTrue($result instanceof reusableEntityClass2);
-        $this->assertEquals("hammer", $data->name);
-        $this->assertEquals("time!", $data->type);
+        $this->assertEquals('hammer', $data->name);
+        $this->assertEquals('time!', $data->type);
     }
 
     public function testDeleteResource()
     {
-        $data = new reusableEntityClass2("hammer", "time!");
+        $data = new reusableEntityClass2('hammer', 'time!');
 
         $query = m::mock(IQueryProvider::class);
         $query->shouldReceive('deleteResource')->andReturn(true)->once();
@@ -319,7 +318,7 @@ class ProvidersQueryWrapperTest extends TestCase
     {
         $key = m::mock(KeyDescriptor::class);
 
-        $data = new reusableEntityClass2("hammer", "time!");
+        $data = new reusableEntityClass2('hammer', 'time!');
 
         $query = m::mock(IQueryProvider::class);
         $query->shouldReceive('updateResource')->andReturn($data)->once();
@@ -328,8 +327,8 @@ class ProvidersQueryWrapperTest extends TestCase
         $foo = new ProvidersQueryWrapper($query);
         $result = $foo->updateResource($this->sourceResourceSet, $data, $key, $data, false);
         $this->assertTrue($result instanceof reusableEntityClass2);
-        $this->assertEquals("hammer", $data->name);
-        $this->assertEquals("time!", $data->type);
+        $this->assertEquals('hammer', $data->name);
+        $this->assertEquals('time!', $data->type);
     }
 
     public function testGetRelatedResourceReferenceResourceTypeMismatchThrowException()
@@ -339,7 +338,7 @@ class ProvidersQueryWrapperTest extends TestCase
 
         $key = m::mock(KeyDescriptor::class);
 
-        $data = new reusableEntityClass2("hammer", "time!");
+        $data = new reusableEntityClass2('hammer', 'time!');
 
         $query = m::mock(IQueryProvider::class);
         $query->shouldReceive('getRelatedResourceReference')->andReturn($data)->once();
@@ -369,7 +368,7 @@ class ProvidersQueryWrapperTest extends TestCase
 
     public function testGetRelatedResourceReferenceResourceNullKeysThrowException()
     {
-        $data = new reusableEntityClass2("hammer", "time!");
+        $data = new reusableEntityClass2('hammer', 'time!');
         $type = m::mock(ResourceType::class);
         $type->shouldReceive('getInstanceType->getName')->andReturn(get_class($data))->once();
         $type->shouldReceive('getPropertyValue')->andReturnNull()->once();
@@ -406,7 +405,7 @@ class ProvidersQueryWrapperTest extends TestCase
 
     public function testGetRelatedResourceReferenceResourceNonNullKey()
     {
-        $data = new reusableEntityClass2("hammer", "time!");
+        $data = new reusableEntityClass2('hammer', 'time!');
         $type = m::mock(ResourceType::class);
         $type->shouldReceive('getInstanceType->getName')->andReturn(get_class($data))->once();
         $type->shouldReceive('getPropertyValue')->andReturn('M.C.')->once();
@@ -431,13 +430,13 @@ class ProvidersQueryWrapperTest extends TestCase
             $this->targProperty
         );
         $this->assertTrue($result instanceof reusableEntityClass2);
-        $this->assertEquals("hammer", $data->name);
-        $this->assertEquals("time!", $data->type);
+        $this->assertEquals('hammer', $data->name);
+        $this->assertEquals('time!', $data->type);
     }
 
     public function testGetResourceFromRelatedResourceSetNullInstanceThrowException()
     {
-        $data = new reusableEntityClass2("hammer", "time!");
+        $data = new reusableEntityClass2('hammer', 'time!');
         $type = m::mock(ResourceType::class);
         $property = m::mock(ResourceProperty::class);
 
@@ -470,7 +469,7 @@ class ProvidersQueryWrapperTest extends TestCase
 
     public function testGetResourceFromRelatedResourceSetNullKeysThrowException()
     {
-        $data = new reusableEntityClass2("hammer", "time!");
+        $data = new reusableEntityClass2('hammer', 'time!');
         $type = m::mock(ResourceType::class);
         $type->shouldReceive('getInstanceType->getName')->andReturn(get_class($data))->once();
         $type->shouldReceive('getPropertyValue')->andReturnNull()->once();
@@ -481,7 +480,6 @@ class ProvidersQueryWrapperTest extends TestCase
 
         $key = m::mock(KeyDescriptor::class);
         $key->shouldReceive('getValidatedNamedValues')->andReturn($keyProperties);
-
 
         $this->targProperty->shouldReceive('getResourceType->getKeyProperties')->andReturn($keyProperties);
 
@@ -511,5 +509,4 @@ class ProvidersQueryWrapperTest extends TestCase
         }
         $this->assertEquals($expected, $actual);
     }
-
 }

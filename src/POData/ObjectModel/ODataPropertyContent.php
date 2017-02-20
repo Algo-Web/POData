@@ -12,5 +12,5 @@ class ODataPropertyContent
      *
      * @var ODataProperty[]
      */
-    public $properties = array();
+    public $properties = [];
 }

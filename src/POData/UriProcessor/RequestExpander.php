@@ -36,12 +36,11 @@ class RequestExpander
     private $providers;
 
     /**
-     * Holds reference to segment stack being processed
+     * Holds reference to segment stack being processed.
      *
      * @var SegmentStack
      */
     private $stack;
-
 
     public function __construct(RequestDescription $request, IService $service, ProvidersWrapper $wrapper)
     {
@@ -72,7 +71,7 @@ class RequestExpander
     }
 
     /**
-     * Gets the data service instance
+     * Gets the data service instance.
      *
      * @return IService
      */
@@ -82,7 +81,7 @@ class RequestExpander
     }
 
     /**
-     * Gets the segment stack instance
+     * Gets the segment stack instance.
      *
      * @return SegmentStack
      */
@@ -139,7 +138,7 @@ class RequestExpander
                             $expandedPropertyName
                         );
                     } else {
-                        $resultSet = $originalIsArray ? array() : $result1;
+                        $resultSet = $originalIsArray ? [] : $result1;
                         $resourceType->setPropertyValue($entry, $expandedPropertyName, $resultSet);
                     }
                 } else {
@@ -163,6 +162,7 @@ class RequestExpander
     {
         $wraps = $this->getStack()->getSegmentWrappers();
         $count = count($wraps);
+
         return 0 == $count ? $this->getRequest()->getTargetResourceSetWrapper() : $wraps[$count - 1];
     }
 
@@ -189,12 +189,12 @@ class RequestExpander
      * @param ResourceProperty &$resourceProperty Current navigation property
      *                                            being written out
      *
-     * @return bool true if a segment was pushed, false otherwise
-     *
      * @throws InvalidOperationException If this function invoked with non-navigation
      *                                   property instance
+     *
+     * @return bool true if a segment was pushed, false otherwise
      */
-    private function pushSegmentForNavigationProperty(ResourceProperty &$resourceProperty)
+    private function pushSegmentForNavigationProperty(ResourceProperty & $resourceProperty)
     {
         if ($resourceProperty->getTypeKind() == ResourceTypeKind::ENTITY) {
             assert(!empty($this->getStack()->getSegmentNames()), '!is_empty($this->getStack()->getSegmentNames())');
@@ -229,7 +229,7 @@ class RequestExpander
     protected function getExpandedProjectionNodes()
     {
         $expandedProjectionNode = $this->getCurrentExpandedProjectionNode();
-        $expandedProjectionNodes = array();
+        $expandedProjectionNodes = [];
         if (!is_null($expandedProjectionNode)) {
             foreach ($expandedProjectionNode->getChildNodes() as $node) {
                 if ($node instanceof ExpandedProjectionNode) {
@@ -279,7 +279,7 @@ class RequestExpander
      *
      * @return bool true if the segment was push, false otherwise
      */
-    private function pushSegment($segmentName, ResourceSetWrapper &$resourceSetWrapper)
+    private function pushSegment($segmentName, ResourceSetWrapper & $resourceSetWrapper)
     {
         return $this->getStack()->pushSegment($segmentName, $resourceSetWrapper);
     }
@@ -301,8 +301,9 @@ class RequestExpander
     }
 
     /**
-     * @param $expandedProjectionNode
+     * @param ExpandedProjectionNode $expandedProjectionNode
      * @param $entry
+     *
      * @return null|\object[]
      */
     private function executeCollectionExpansionGetRelated($expandedProjectionNode, $entry)
@@ -323,14 +324,16 @@ class RequestExpander
             null, // $top
             null  // $skip
         )->results;
+
         return $result;
     }
 
     /**
-     * @param $expandedProjectionNode
+     * @param ExpandedProjectionNode $expandedProjectionNode
      * @param $entry
-     * @param $resourceType
-     * @param $expandedPropertyName
+     * @param \POData\Providers\Metadata\ResourceType $resourceType
+     * @param string $expandedPropertyName
+     *
      * @throws InvalidOperationException
      * @throws \POData\Common\ODataException
      */
@@ -360,9 +363,10 @@ class RequestExpander
     /**
      * @param $entry
      * @param $result
-     * @param $expandedProjectionNode
-     * @param $resourceType
-     * @param $expandedPropertyName
+     * @param ExpandedProjectionNode $expandedProjectionNode
+     * @param \POData\Providers\Metadata\ResourceType $resourceType
+     * @param string $expandedPropertyName
+     *
      * @throws InvalidOperationException
      */
     private function executeCollectionExpansionProcessExpansion(
@@ -373,9 +377,8 @@ class RequestExpander
         $expandedPropertyName
     ) {
         $internalOrderByInfo = $expandedProjectionNode->getInternalOrderByInfo();
-        // TODO: Get someome who ain't me to review this
         if (!is_null($internalOrderByInfo)) {
-            $orderByFunction = $internalOrderByInfo->getSorterFunction()->getReference();
+            $orderByFunction = $internalOrderByInfo->getSorterFunction();
             usort($result, $orderByFunction);
             unset($internalOrderByInfo);
             $takeCount = $expandedProjectionNode->getTakeCount();
@@ -390,7 +393,8 @@ class RequestExpander
 
     /**
      * @param $result
-     * @param $expandedProjectionNode
+     * @param ExpandedProjectionNode $expandedProjectionNode
+     *
      * @throws InvalidOperationException
      */
     private function pushPropertyToNavigation($result, $expandedProjectionNode)
