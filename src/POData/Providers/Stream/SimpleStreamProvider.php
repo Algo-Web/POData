@@ -36,17 +36,14 @@ class SimpleStreamProvider implements IStreamProvider2
         $name = $resourceStreamInfo->getName();
         return $entity->$name;
     }
-    public function getStreamContentType2(
-        $entity,
-        ResourceStreamInfo $resourceStreamInfo,
-        $operationContext
-    ) {
+    public function getStreamContentType2($entity, ResourceStreamInfo $resourceStreamInfo, IOperationContext $operationContext);
+    {
         return 'application/octet-stream';
     }
     public function getStreamETag2(
         $entity,
         ResourceStreamInfo $resourceStreamInfo,
-        $operationContext
+        IOperationContext $operationContext
     ) {
         $name = $resourceStreamInfo->getName();
         return sha1($entity->$name);
@@ -54,7 +51,7 @@ class SimpleStreamProvider implements IStreamProvider2
     public function getReadStreamUri2(
         $entity,
         ResourceStreamInfo $resourceStreamInfo,
-        $operationContext
+        IOperationContext $operationContext
     ) {
         //let library creates default media url.
         return null;
