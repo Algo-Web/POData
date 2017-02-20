@@ -377,9 +377,8 @@ class RequestExpander
         $expandedPropertyName
     ) {
         $internalOrderByInfo = $expandedProjectionNode->getInternalOrderByInfo();
-        // TODO: Get someome who ain't me to review this
         if (!is_null($internalOrderByInfo)) {
-            $orderByFunction = $internalOrderByInfo->getSorterFunction()->getReference();
+            $orderByFunction = $internalOrderByInfo->getSorterFunction();
             usort($result, $orderByFunction);
             unset($internalOrderByInfo);
             $takeCount = $expandedProjectionNode->getTakeCount();
