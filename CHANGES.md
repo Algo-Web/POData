@@ -1,3 +1,5 @@
+This file is now obsolete - look in CHANGELOG.md for details post-fork
+
 ## 1.1
 
 * Removed stdClass restrictions (see [#113](https://github.com/POData/POData/issues/113))
