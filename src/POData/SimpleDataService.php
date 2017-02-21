@@ -46,7 +46,7 @@ class SimpleDataService extends BaseService implements IService
         } else {
             $this->queryProvider = new QueryProvider($db);
         }
-        $this->setStreamProvider($streamProvider)
+        $this->setStreamProvider($streamProvider);
         
         $this->setHost($host);
         parent::__construct($serialiser);
