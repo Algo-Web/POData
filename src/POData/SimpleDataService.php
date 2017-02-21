@@ -76,7 +76,7 @@ class SimpleDataService extends BaseService implements IService
         return $this->metaProvider;
     }
 
-    public function setStreamProvider(IStreamProvider2 $Sp)
+    public function setStreamProvider($Sp)
     {
         if(null == $Sp){
             $Sp = new POData\Providers\Stream\SimpleStreamProvider();
