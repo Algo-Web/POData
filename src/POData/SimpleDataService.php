@@ -9,7 +9,7 @@ use POData\OperationContext\ServiceHost;
 use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\Metadata\SimpleMetadataProvider;
 use POData\Providers\Query\IQueryProvider;
-
+use \POData\Providers\Stream\IStreamProvider2;
 /**
  * DataService that implements IServiceProvider.
  **/
@@ -23,13 +23,19 @@ class SimpleDataService extends BaseService implements IService
      * @var IQueryProvider
      */
     protected $queryProvider;
+    
+    /**
+     * @var IStreamProvider2;
+     */
+    protected $streamProvider;
     public $maxPageSize = 200;
 
     public function __construct(
         $db,
         SimpleMetadataProvider $metaProvider,
         ServiceHost $host,
-        IObjectSerialiser $serialiser = null
+        IObjectSerialiser $serialiser = null,
+        IStreamProvider2 $stramProvider = null
     ) {
         $this->metaProvider = $metaProvider;
         if ($db instanceof IQueryProvider) {
@@ -40,6 +46,11 @@ class SimpleDataService extends BaseService implements IService
         } else {
             $this->queryProvider = new QueryProvider($db);
         }
+        if(null == $stramProvider){
+            $stramProvider = new POData\Providers\Stream\SimpleStreamProvider();
+        }
+        $this->stramProvider = $stramProvider;
+        
         $this->setHost($host);
         parent::__construct($serialiser);
     }
@@ -73,7 +84,7 @@ class SimpleDataService extends BaseService implements IService
      */
     public function getStreamProviderX()
     {
-        return new POData\Providers\Stream\SimpleStreamProvider();
+        return $this->stramProvider;
     }
 
     /**
