@@ -8,8 +8,11 @@ use POData\Providers\Metadata\ResourceType;
 
 class SimpleStreamProvider implements IStreamProvider2
 {
-    public function getReadStream2($entity, ResourceStreamInfo $resourceStreamInfo, $eTag, $checkETagForEquality, IOperationContext $operationContext)
+    public function getReadStream2($entity, ResourceStreamInfo $resourceStreamInfo = null, $eTag, $checkETagForEquality, IOperationContext $operationContext)
     {
+        if(null == $resourceStreamInfo){
+            return "stream for " . get_class ($entity);
+        }
         $name = $resourceStreamInfo->getName();
         return $entity->$name;
     }
@@ -18,12 +21,15 @@ class SimpleStreamProvider implements IStreamProvider2
        if(null == $resourceStreamInfo){
           return $relativeUri . '/$value';
        }
-        return  $resourceStreamInfo->getName();
+        return $relativeUri . '/' . $resourceStreamInfo->getName();
 
     }
 
     public function getStreamContentType2($entity, ResourceStreamInfo $resourceStreamInfo = null, IOperationContext $operationContext)
     {
+        if(null == $resourceStreamInfo){
+            return "*/*";
+        }
         return 'application/octet-stream';
     }
 
