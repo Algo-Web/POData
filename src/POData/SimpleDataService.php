@@ -46,10 +46,7 @@ class SimpleDataService extends BaseService implements IService
         } else {
             $this->queryProvider = new QueryProvider($db);
         }
-        if(null == $streamProvider){
-            $streamProvider = new POData\Providers\Stream\SimpleStreamProvider();
-        }
-        $this->streamProvider = $streamProvider;
+        $this->setStreamProvider($streamProvider)
         
         $this->setHost($host);
         parent::__construct($serialiser);
@@ -62,7 +59,7 @@ class SimpleDataService extends BaseService implements IService
         $config->setAcceptCountRequests(true);
         $config->setAcceptProjectionRequests(true);
     }
-
+    
     /**
      * @return IQueryProvider
      */
@@ -79,6 +76,13 @@ class SimpleDataService extends BaseService implements IService
         return $this->metaProvider;
     }
 
+    public function setStreamProvider(IStreamProvider2 $Sp)
+    {
+        if(null == $Sp){
+            $Sp = new POData\Providers\Stream\SimpleStreamProvider();
+        }
+        $this->streamProvider = $Sp;
+    }
     /**
      * @return \POData\Providers\Stream\IStreamProvider2
      */
