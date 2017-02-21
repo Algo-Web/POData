@@ -264,7 +264,7 @@ abstract class BaseService implements IRequestHandler, IService
     abstract public function getMetadataProvider();
 
     /**
-     * @return \POData\Providers\Stream\IStreamProvider
+     *  @return \POData\Providers\Stream\IStreamProvider2
      */
     abstract public function getStreamProviderX();
 
