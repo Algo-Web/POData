@@ -271,6 +271,22 @@ class AtomODataWriter implements IODataWriter
         $this->xmlWriter->startElement(ODataConstants::ATOM_NAME_ELEMENT_NAME);
         $this->xmlWriter->endElement();
         $this->xmlWriter->endElement();
+
+
+            $this->xmlWriter->startElement(ODataConstants::ATOM_LINK_ELEMENT_NAME);
+            $this->xmlWriter->startAttribute(ODataConstants::ATOM_LINK_RELATION_ATTRIBUTE_NAME);
+            $this->xmlWriter->text(ODataConstants::ATOM_EDIT_RELATION_ATTRIBUTE_VALUE);
+            $this->xmlWriter->endAttribute();
+            $this->xmlWriter->startAttribute(ODataConstants::ATOM_TITLE_ELELMET_NAME);
+            $this->xmlWriter->text($entry->title);
+            $this->xmlWriter->endAttribute();
+            $this->xmlWriter->startAttribute(ODataConstants::ATOM_HREF_ATTRIBUTE_NAME);
+            $this->xmlWriter->text($entry->editLink);
+            $this->xmlWriter->endAttribute();
+
+            $this->xmlWriter->endElement();
+
+
         if ($entry->isMediaLinkEntry) {
             $this->xmlWriter->startElement(ODataConstants::ATOM_LINK_ELEMENT_NAME);
             if ($entry->mediaLink->eTag != null) {
@@ -300,6 +316,7 @@ class AtomODataWriter implements IODataWriter
             $this->xmlWriter->text($entry->mediaLink->editLink);
             $this->xmlWriter->endAttribute();
             $this->xmlWriter->endElement();
+
 
             foreach ($entry->mediaLinks as $mediaLink) {
                 $this->xmlWriter->startElement(ODataConstants::ATOM_LINK_ELEMENT_NAME);
