@@ -80,7 +80,7 @@ class SimpleDataService extends BaseService implements IService
     }
 
     /**
-     * @return \POData\Providers\Stream\IStreamProvider
+     * @return \POData\Providers\Stream\IStreamProvider2
      */
     public function getStreamProviderX()
     {
