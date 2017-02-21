@@ -73,7 +73,7 @@ class SimpleDataService extends BaseService implements IService
      */
     public function getStreamProviderX()
     {
-        return new POData\Providers\StreamSimpleStreamProvider();
+        return new POData\Providers\Stream\SimpleStreamProvider();
     }
 
     /**
