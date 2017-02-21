@@ -35,7 +35,7 @@ class SimpleDataService extends BaseService implements IService
         SimpleMetadataProvider $metaProvider,
         ServiceHost $host,
         IObjectSerialiser $serialiser = null,
-        IStreamProvider2 $stramProvider = null
+        IStreamProvider2 $streamProvider = null
     ) {
         $this->metaProvider = $metaProvider;
         if ($db instanceof IQueryProvider) {
@@ -46,10 +46,10 @@ class SimpleDataService extends BaseService implements IService
         } else {
             $this->queryProvider = new QueryProvider($db);
         }
-        if(null == $stramProvider){
-            $stramProvider = new POData\Providers\Stream\SimpleStreamProvider();
+        if(null == $streamProvider){
+            $streamProvider = new POData\Providers\Stream\SimpleStreamProvider();
         }
-        $this->stramProvider = $stramProvider;
+        $this->streamProvider = $streamProvider;
         
         $this->setHost($host);
         parent::__construct($serialiser);
@@ -84,7 +84,7 @@ class SimpleDataService extends BaseService implements IService
      */
     public function getStreamProviderX()
     {
-        return $this->stramProvider;
+        return $this->streamProvider;
     }
 
     /**
