@@ -49,9 +49,9 @@ class ResponseWriter
                 $result = $request->getTargetResult();
                 $streamInfo = $request->getResourceStreamInfo();
                 $provider = $service->getStreamProviderWrapper();
-                $eTag = $provider->getStreamETag($result, $streamInfo);
+                $eTag = $provider->getStreamETag2($result, $streamInfo,$service->getOperationContext());
                 $service->getHost()->setResponseETag($eTag);
-                $responseBody = $provider->getReadStream($result, $streamInfo);
+                $responseBody = $provider->getReadStream2($result, $streamInfo,null,null,$service->getOperationContext());
             } else {
                 $responseBody = $request->getTargetResult();
             }

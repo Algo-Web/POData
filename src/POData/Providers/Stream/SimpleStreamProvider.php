@@ -11,7 +11,6 @@ class SimpleStreamProvider implements IStreamProvider2
     public function getReadStream2($entity, ResourceStreamInfo $resourceStreamInfo, $eTag, $checkETagForEquality, IOperationContext $operationContext)
     {
         $name = $resourceStreamInfo->getName();
-
         return $entity->$name;
     }
 
