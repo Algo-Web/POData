@@ -3,6 +3,7 @@
 namespace UnitTests\POData;
 
 use Mockery as m;
+use phpDocumentor\Reflection\Types\Resource;
 use POData\Common\HttpStatus;
 use POData\Common\MimeTypes;
 use POData\Common\ODataConstants;
@@ -1259,6 +1260,8 @@ class BaseServiceNewTest extends TestCase
 
         $foo = new BaseServiceDummy(null, $host, $cereal, $stream, null, $config);
 
+        $property = m::mock(ResourceProperty::class);
+
         $request = m::mock(RequestDescription::class);
         $request->shouldReceive('isETagHeaderAllowed')->andReturn(true);
         $request->shouldReceive('getTargetKind')->andReturn(null);
@@ -1269,6 +1272,7 @@ class BaseServiceNewTest extends TestCase
         $request->shouldReceive('getTargetResourceType')->andReturn($type)->once();
         $request->shouldReceive('isSingleResult')->andReturn(true)->once();
         $request->shouldReceive('getIdentifier')->andReturn('FNORD')->once();
+        $request->shouldReceive('getProjectedProperty')->andReturn($property)->once();
 
         $uriProc = m::mock(UriProcessor::class);
         $uriProc->shouldReceive('execute')->andReturnNull()->once();
@@ -1325,6 +1329,8 @@ class BaseServiceNewTest extends TestCase
         $foo = new BaseServiceDummy(null, $host, $cereal, $stream, null, $config);
         $foo->setODataWriterRegistry($rego);
 
+        $property = m::mock(ResourceProperty::class);
+
         $request = m::mock(RequestDescription::class);
         $request->shouldReceive('isETagHeaderAllowed')->andReturn(true);
         $request->shouldReceive('getTargetKind')->andReturn(null);
@@ -1334,6 +1340,7 @@ class BaseServiceNewTest extends TestCase
         $request->shouldReceive('getTargetResult')->andReturn('ad astra per fnordua');
         $request->shouldReceive('getTargetResourceType')->andReturn($type)->once();
         $request->shouldReceive('isSingleResult')->andReturn(true)->once();
+        $request->shouldReceive('getProjectedProperty')->andReturn($property)->once();
 
         $uriProc = m::mock(UriProcessor::class);
         $uriProc->shouldReceive('execute')->andReturnNull()->once();
@@ -1388,6 +1395,8 @@ class BaseServiceNewTest extends TestCase
         $foo = new BaseServiceDummy(null, $host, $cereal, $stream, null, $config);
         $foo->setODataWriterRegistry($rego);
 
+        $property = m::mock(ResourceProperty::class);
+
         $request = m::mock(RequestDescription::class);
         $request->shouldReceive('isETagHeaderAllowed')->andReturn(true);
         $request->shouldReceive('getTargetKind')->andReturn(TargetKind::METADATA(), null);
@@ -1398,6 +1407,7 @@ class BaseServiceNewTest extends TestCase
         $request->shouldReceive('getTargetResourceType')->andReturn($type)->once();
         $request->shouldReceive('isSingleResult')->andReturn(true)->once();
         $request->shouldReceive('setExecuted')->andReturnNull()->never();
+        $request->shouldReceive('getProjectedProperty')->andReturn($property)->once();
 
         $uriProc = m::mock(UriProcessor::class);
         $uriProc->shouldReceive('execute')->andReturnNull()->once();
@@ -1665,7 +1675,7 @@ class BaseServiceNewTest extends TestCase
         $request->shouldReceive('getTargetResult')->andReturn('ad astra per fnordua');
         $request->shouldReceive('getTargetResourceType')->andReturn($type)->once();
         $request->shouldReceive('isSingleResult')->andReturn(true)->once();
-        $request->shouldReceive('getProjectedProperty')->andReturn($prop)->never();
+        $request->shouldReceive('getProjectedProperty')->andReturn($prop)->once();
 
         $uriProc = m::mock(UriProcessor::class);
         $uriProc->shouldReceive('execute')->andReturnNull()->once();
