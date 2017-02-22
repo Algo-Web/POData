@@ -418,6 +418,7 @@ abstract class BaseService implements IRequestHandler, IService
                 // primitive type or primitive value
                 $result = $request->getTargetResult();
                 $requestTargetKind = $request->getTargetKind();
+                $requestProperty = $request->getProjectedProperty();
                 if ($request->isLinkUri()) {
                     // In the query 'Orders(1245)/$links/Customer', the targeted
                     // Customer might be null
@@ -462,20 +463,20 @@ abstract class BaseService implements IRequestHandler, IService
                 } elseif (TargetKind::COMPLEX_OBJECT() == $requestTargetKind) {
                     $odataModelInstance = $objectModelSerializer->writeTopLevelComplexObject(
                         $result,
-                        $request->getProjectedProperty()->getName(),
+                        $requestProperty->getName(),
                         $targetResourceType
                     );
                 } elseif (TargetKind::BAG() == $requestTargetKind) {
                     $odataModelInstance = $objectModelSerializer->writeTopLevelBagObject(
                         $result,
-                        $request->getProjectedProperty()->getName(),
+                        $requestProperty->getName(),
                         $targetResourceType,
                         $odataModelInstance
                     );
                 } elseif (TargetKind::PRIMITIVE() == $requestTargetKind) {
                     $odataModelInstance = $objectModelSerializer->writeTopLevelPrimitive(
                         $result,
-                        $request->getProjectedProperty(),
+                        $requestProperty,
                         $odataModelInstance
                     );
                 } elseif (TargetKind::PRIMITIVE_VALUE() == $requestTargetKind) {
