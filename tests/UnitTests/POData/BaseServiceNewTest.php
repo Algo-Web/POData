@@ -1412,4 +1412,273 @@ class BaseServiceNewTest extends TestCase
         }
         $this->assertEquals($expected, $actual);
     }
+
+    public function testSerializeResultWithPutRequestAndIsLinkComplexObjectNoWriterThrowException()
+    {
+        $url = new Url('https://www.example.org/odata.svc');
+
+        $type = m::mock(ResourceType::class);
+
+        $req = m::mock(IHTTPRequest::class);
+        $req->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::PUT())->once();
+
+        $config = m::mock(IServiceConfiguration::class);
+        $config->shouldReceive('getValidateETagHeader')->andReturn(true);
+
+        $context = m::mock(IOperationContext::class);
+        $context->shouldReceive('outgoingResponse->setStream')->withAnyArgs()->andReturnNull()->never();
+        $context->shouldReceive('incomingRequest')->andReturn($req);
+
+        $host = m::mock(ServiceHost::class);
+        $host->shouldReceive('getRequestIfMatch')->andReturn('a');
+        $host->shouldReceive('getRequestIfNoneMatch')->andReturn('b');
+        $host->shouldReceive('getAbsoluteRequestUri')->andReturn($url);
+        $host->shouldReceive('getRequestAccept')->andReturn(null);
+        $host->shouldReceive('getQueryStringItem')->andReturn(null);
+        $host->shouldReceive('setResponseStatusCode')->withAnyArgs()->andReturnNull()->never();
+        $host->shouldReceive('setResponseContentType')->withAnyArgs()->andReturnNull()->never();
+        $host->shouldReceive('setResponseVersion')->withAnyArgs()->andReturnNull()->never();
+        $host->shouldReceive('setResponseCacheControl')->withAnyArgs()->andReturnNull()->never();
+        $host->shouldReceive('getOperationContext')->andReturn($context);
+
+        $cereal = m::mock(IObjectSerialiser::class);
+        $cereal->shouldReceive('setRequest')->andReturnNull()->once();
+        $cereal->shouldReceive('writeTopLevelComplexObject')->andReturnNull()->once();
+
+        $stream = m::mock(StreamProviderWrapper::class);
+        $stream->shouldReceive('setService')->andReturnNull()->once();
+
+        $rego = m::mock(ODataWriterRegistry::class);
+        $rego->shouldReceive('getWriter')->withAnyArgs()->andReturnNull()->once();
+
+        $foo = new BaseServiceDummy(null, $host, $cereal, $stream, null, $config);
+        $foo->setODataWriterRegistry($rego);
+
+        $request = m::mock(RequestDescription::class);
+        $request->shouldReceive('isETagHeaderAllowed')->andReturn(true);
+        $request->shouldReceive('getTargetKind')->andReturn(TargetKind::COMPLEX_OBJECT());
+        $request->shouldReceive('needExecution')->andReturn(true)->once();
+        $request->shouldReceive('getResponseVersion')->andReturn(Version::v3());
+        $request->shouldReceive('isLinkUri')->andReturn(false);
+        $request->shouldReceive('getTargetResult')->andReturn('ad astra per fnordua');
+        $request->shouldReceive('getTargetResourceType')->andReturn($type)->once();
+        $request->shouldReceive('isSingleResult')->andReturn(true)->once();
+        $request->shouldReceive('getProjectedProperty->getName')->andReturn('name')->once();
+
+        $uriProc = m::mock(UriProcessor::class);
+        $uriProc->shouldReceive('execute')->andReturnNull()->once();
+
+        $expected = 'No writer can handle the request.';
+        $actual = null;
+
+        try {
+            $foo->serializeResult($request, $uriProc);
+        } catch (\Exception $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testSerializeResultWithPutRequestAndIsNotLinkBagNoWriterThrowException()
+    {
+        $url = new Url('https://www.example.org/odata.svc');
+
+        $type = m::mock(ResourceType::class);
+
+        $req = m::mock(IHTTPRequest::class);
+        $req->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::PUT())->once();
+
+        $config = m::mock(IServiceConfiguration::class);
+        $config->shouldReceive('getValidateETagHeader')->andReturn(true);
+
+        $context = m::mock(IOperationContext::class);
+        $context->shouldReceive('outgoingResponse->setStream')->withAnyArgs()->andReturnNull()->never();
+        $context->shouldReceive('incomingRequest')->andReturn($req);
+
+        $host = m::mock(ServiceHost::class);
+        $host->shouldReceive('getRequestIfMatch')->andReturn('a');
+        $host->shouldReceive('getRequestIfNoneMatch')->andReturn('b');
+        $host->shouldReceive('getAbsoluteRequestUri')->andReturn($url);
+        $host->shouldReceive('getRequestAccept')->andReturn(null);
+        $host->shouldReceive('getQueryStringItem')->andReturn(null);
+        $host->shouldReceive('setResponseStatusCode')->withAnyArgs()->andReturnNull()->never();
+        $host->shouldReceive('setResponseContentType')->withAnyArgs()->andReturnNull()->never();
+        $host->shouldReceive('setResponseVersion')->withAnyArgs()->andReturnNull()->never();
+        $host->shouldReceive('setResponseCacheControl')->withAnyArgs()->andReturnNull()->never();
+        $host->shouldReceive('getOperationContext')->andReturn($context);
+
+        $cereal = m::mock(IObjectSerialiser::class);
+        $cereal->shouldReceive('setRequest')->andReturnNull()->once();
+        $cereal->shouldReceive('writeTopLevelBagObject')->andReturnNull()->once();
+
+        $stream = m::mock(StreamProviderWrapper::class);
+        $stream->shouldReceive('setService')->andReturnNull()->once();
+
+        $rego = m::mock(ODataWriterRegistry::class);
+        $rego->shouldReceive('getWriter')->withAnyArgs()->andReturnNull()->once();
+
+        $foo = new BaseServiceDummy(null, $host, $cereal, $stream, null, $config);
+        $foo->setODataWriterRegistry($rego);
+
+        $request = m::mock(RequestDescription::class);
+        $request->shouldReceive('isETagHeaderAllowed')->andReturn(true);
+        $request->shouldReceive('getTargetKind')->andReturn(TargetKind::BAG());
+        $request->shouldReceive('needExecution')->andReturn(true)->once();
+        $request->shouldReceive('getResponseVersion')->andReturn(Version::v3());
+        $request->shouldReceive('isLinkUri')->andReturn(false);
+        $request->shouldReceive('getTargetResult')->andReturn('ad astra per fnordua');
+        $request->shouldReceive('getTargetResourceType')->andReturn($type)->once();
+        $request->shouldReceive('isSingleResult')->andReturn(true)->once();
+        $request->shouldReceive('getProjectedProperty->getName')->andReturn('name')->once();
+
+        $uriProc = m::mock(UriProcessor::class);
+        $uriProc->shouldReceive('execute')->andReturnNull()->once();
+
+        $expected = 'No writer can handle the request.';
+        $actual = null;
+
+        try {
+            $foo->serializeResult($request, $uriProc);
+        } catch (\Exception $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testSerializeResultWithPutRequestAndIsNotLinkPrimitiveNoWriterThrowException()
+    {
+        $url = new Url('https://www.example.org/odata.svc');
+
+        $prop = m::mock(ResourceProperty::class);
+
+        $type = m::mock(ResourceType::class);
+
+        $req = m::mock(IHTTPRequest::class);
+        $req->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::PUT())->once();
+
+        $config = m::mock(IServiceConfiguration::class);
+        $config->shouldReceive('getValidateETagHeader')->andReturn(true);
+
+        $context = m::mock(IOperationContext::class);
+        $context->shouldReceive('outgoingResponse->setStream')->withAnyArgs()->andReturnNull()->never();
+        $context->shouldReceive('incomingRequest')->andReturn($req);
+
+        $host = m::mock(ServiceHost::class);
+        $host->shouldReceive('getRequestIfMatch')->andReturn('a');
+        $host->shouldReceive('getRequestIfNoneMatch')->andReturn('b');
+        $host->shouldReceive('getAbsoluteRequestUri')->andReturn($url);
+        $host->shouldReceive('getRequestAccept')->andReturn(null);
+        $host->shouldReceive('getQueryStringItem')->andReturn(null);
+        $host->shouldReceive('setResponseStatusCode')->withAnyArgs()->andReturnNull()->never();
+        $host->shouldReceive('setResponseContentType')->withAnyArgs()->andReturnNull()->never();
+        $host->shouldReceive('setResponseVersion')->withAnyArgs()->andReturnNull()->never();
+        $host->shouldReceive('setResponseCacheControl')->withAnyArgs()->andReturnNull()->never();
+        $host->shouldReceive('getOperationContext')->andReturn($context);
+
+        $cereal = m::mock(IObjectSerialiser::class);
+        $cereal->shouldReceive('setRequest')->andReturnNull()->once();
+        $cereal->shouldReceive('writeTopLevelPrimitive')->andReturnNull()->once();
+
+        $stream = m::mock(StreamProviderWrapper::class);
+        $stream->shouldReceive('setService')->andReturnNull()->once();
+
+        $rego = m::mock(ODataWriterRegistry::class);
+        $rego->shouldReceive('getWriter')->withAnyArgs()->andReturnNull()->once();
+
+        $foo = new BaseServiceDummy(null, $host, $cereal, $stream, null, $config);
+        $foo->setODataWriterRegistry($rego);
+
+        $request = m::mock(RequestDescription::class);
+        $request->shouldReceive('isETagHeaderAllowed')->andReturn(true);
+        $request->shouldReceive('getTargetKind')->andReturn(TargetKind::PRIMITIVE());
+        $request->shouldReceive('needExecution')->andReturn(true)->once();
+        $request->shouldReceive('getResponseVersion')->andReturn(Version::v3());
+        $request->shouldReceive('isLinkUri')->andReturn(false);
+        $request->shouldReceive('getTargetResult')->andReturn('ad astra per fnordua');
+        $request->shouldReceive('getTargetResourceType')->andReturn($type)->once();
+        $request->shouldReceive('isSingleResult')->andReturn(true)->once();
+        $request->shouldReceive('getProjectedProperty')->andReturn($prop)->once();
+
+        $uriProc = m::mock(UriProcessor::class);
+        $uriProc->shouldReceive('execute')->andReturnNull()->once();
+
+        $expected = 'No writer can handle the request.';
+        $actual = null;
+
+        try {
+            $foo->serializeResult($request, $uriProc);
+        } catch (\Exception $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testSerializeResultWithPutRequestAndIsNotLinkResourceIfAndIfNoneSetThrowException()
+    {
+        $url = new Url('https://www.example.org/odata.svc');
+
+        $prop = m::mock(ResourceProperty::class);
+
+        $type = m::mock(ResourceType::class);
+
+        $req = m::mock(IHTTPRequest::class);
+        $req->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::PUT())->once();
+
+        $config = m::mock(IServiceConfiguration::class);
+        $config->shouldReceive('getValidateETagHeader')->andReturn(true);
+
+        $context = m::mock(IOperationContext::class);
+        $context->shouldReceive('outgoingResponse->setStream')->withAnyArgs()->andReturnNull()->never();
+        $context->shouldReceive('incomingRequest')->andReturn($req);
+
+        $host = m::mock(ServiceHost::class);
+        $host->shouldReceive('getRequestIfMatch')->andReturn('a');
+        $host->shouldReceive('getRequestIfNoneMatch')->andReturn('b');
+        $host->shouldReceive('getAbsoluteRequestUri')->andReturn($url);
+        $host->shouldReceive('getRequestAccept')->andReturn(null);
+        $host->shouldReceive('getQueryStringItem')->andReturn(null);
+        $host->shouldReceive('setResponseStatusCode')->withAnyArgs()->andReturnNull()->never();
+        $host->shouldReceive('setResponseContentType')->withAnyArgs()->andReturnNull()->never();
+        $host->shouldReceive('setResponseVersion')->withAnyArgs()->andReturnNull()->never();
+        $host->shouldReceive('setResponseCacheControl')->withAnyArgs()->andReturnNull()->never();
+        $host->shouldReceive('getOperationContext')->andReturn($context);
+
+        $cereal = m::mock(IObjectSerialiser::class);
+        $cereal->shouldReceive('setRequest')->andReturnNull()->once();
+        $cereal->shouldReceive('writeTopLevelElement')->andReturnNull()->never();
+
+        $stream = m::mock(StreamProviderWrapper::class);
+        $stream->shouldReceive('setService')->andReturnNull()->once();
+
+        $rego = m::mock(ODataWriterRegistry::class);
+        $rego->shouldReceive('getWriter')->withAnyArgs()->andReturnNull()->never();
+
+        $foo = new BaseServiceDummy(null, $host, $cereal, $stream, null, $config);
+        $foo->setODataWriterRegistry($rego);
+
+        $request = m::mock(RequestDescription::class);
+        $request->shouldReceive('isETagHeaderAllowed')->andReturn(true);
+        $request->shouldReceive('getTargetKind')->andReturn(TargetKind::RESOURCE());
+        $request->shouldReceive('needExecution')->andReturn(true)->once();
+        $request->shouldReceive('getResponseVersion')->andReturn(Version::v3());
+        $request->shouldReceive('isLinkUri')->andReturn(false);
+        $request->shouldReceive('getTargetResult')->andReturn('ad astra per fnordua');
+        $request->shouldReceive('getTargetResourceType')->andReturn($type)->once();
+        $request->shouldReceive('isSingleResult')->andReturn(true)->once();
+        $request->shouldReceive('getProjectedProperty')->andReturn($prop)->never();
+
+        $uriProc = m::mock(UriProcessor::class);
+        $uriProc->shouldReceive('execute')->andReturnNull()->once();
+
+        $expected = 'Both If-Match and If-None-Match HTTP headers cannot be specified at the same time.'
+                    .' Please specify either one of the headers or none of them.';
+        $actual = null;
+
+        try {
+            $foo->serializeResult($request, $uriProc);
+        } catch (\Exception $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
+    }
 }
