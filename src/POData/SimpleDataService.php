@@ -10,6 +10,7 @@ use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\Metadata\SimpleMetadataProvider;
 use POData\Providers\Query\IQueryProvider;
 use \POData\Providers\Stream\IStreamProvider2;
+
 /**
  * DataService that implements IServiceProvider.
  **/

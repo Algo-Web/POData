@@ -1219,6 +1219,5 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 ';
         $actual = AtomODataWriter::serializeException($foo, true);
         $this->assertEquals($expected, $actual);
-
     }
 }
