@@ -13,6 +13,7 @@ use POData\ObjectModel\ODataEntry;
 use POData\ObjectModel\ODataLink;
 use POData\ObjectModel\ODataProperty;
 use POData\ObjectModel\ODataPropertyContent;
+use POData\OperationContext\IOperationContext;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\Providers\Metadata\ResourceSetWrapper;
@@ -34,6 +35,7 @@ class ObjectModelSerializerTest extends TestCase
 {
     private $mockRequest;
     private $mockWrapper;
+    private $serviceHost;
 
     public function Construct()
     {
@@ -41,12 +43,14 @@ class ObjectModelSerializerTest extends TestCase
         $service = m::mock(IService::class);
         $request = m::mock(RequestDescription::class)->makePartial();
         $wrapper = m::mock(ProvidersWrapper::class)->makePartial();
+        $context = m::mock(IOperationContext::class)->makePartial();
         $this->mockRequest = $request;
         $this->mockWrapper = $wrapper;
-        $serviceHost = m::mock(\POData\OperationContext\ServiceHost::class)->makePartial();
-        $serviceHost->shouldReceive('getAbsoluteServiceUri')->andReturn($AbsoluteServiceURL);
+        $this->serviceHost = m::mock(\POData\OperationContext\ServiceHost::class)->makePartial();
+        $this->serviceHost->shouldReceive('getAbsoluteServiceUri')->andReturn($AbsoluteServiceURL);
+        $service->shouldReceive('getOperationContext')->andReturn($context);
         $wrapper->shouldReceive('getResourceProperties')->andReturn([]);
-        $service->shouldReceive('getHost')->andReturn($serviceHost);
+        $service->shouldReceive('getHost')->andReturn($this->serviceHost);
         $service->shouldReceive('getProvidersWrapper')->andReturn($wrapper);
         $foo = new ObjectModelSerializer($service, $request);
 
@@ -706,8 +710,11 @@ class ObjectModelSerializerTest extends TestCase
         $stack->shouldReceive('pushSegment')->andReturnNull()->once();
         $stack->shouldReceive('popSegment')->andReturnNull()->once();
 
+        $context = m::mock(IOperationContext::class)->makePartial();
+
         $service = m::mock(IService::class)->makePartial();
         $service->shouldReceive('getProvidersWrapper')->andReturn($provWrap);
+        $service->shouldReceive('getOperationContext')->andReturn($context);
 
         $foo = m::mock(ObjectModelSerializer::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $foo->shouldReceive('getRequest')->andReturn($request);
@@ -782,8 +789,11 @@ class ObjectModelSerializerTest extends TestCase
         $stack->shouldReceive('pushSegment')->andReturn(true)->once();
         $stack->shouldReceive('popSegment')->andReturnNull()->never();
 
+        $context = m::mock(IOperationContext::class)->makePartial();
+
         $service = m::mock(IService::class)->makePartial();
         $service->shouldReceive('getProvidersWrapper')->andReturn($provWrap);
+        $service->shouldReceive('getOperationContext')->andReturn($context);
 
         $foo = m::mock(ObjectModelSerializer::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $foo->shouldReceive('getRequest')->andReturn($request);
@@ -860,8 +870,12 @@ class ObjectModelSerializerTest extends TestCase
         $stack->shouldReceive('pushSegment')->andReturn(true)->once();
         $stack->shouldReceive('popSegment')->andReturnNull()->never();
 
+        $context = m::mock(IOperationContext::class)->makePartial();
+
         $service = m::mock(IService::class)->makePartial();
         $service->shouldReceive('getProvidersWrapper')->andReturn($provWrap);
+        $service->shouldReceive('getOperationContext')->andReturn($context);
+
 
         $foo = m::mock(ObjectModelSerializer::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $foo->shouldReceive('getRequest')->andReturn($request);
