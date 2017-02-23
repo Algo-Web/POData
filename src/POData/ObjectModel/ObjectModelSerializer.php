@@ -1,4 +1,4 @@
-<?php
+#<?php
 
 namespace POData\ObjectModel;
 
@@ -670,7 +670,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
 
         if ($resourceType->hasNamedStream()) {
             foreach ($resourceType->getAllNamedStreams() as $title => $resourceStreamInfo) {
-                $eTag = $streamProvider->getStreamETag2($entryObject, $resourceStreamInfo,$this->operationContext);
+                $eTag = $streamProvider->getStreamETag2($entryObject, $resourceStreamInfo,$operationContext);
                 $readStreamUri = $streamProvider->getReadStreamUri2($entryObject, $resourceStreamInfo, $operationContext, $relativeUri);
                 $mediaContentType = $streamProvider->getStreamContentType2($entryObject, $resourceStreamInfo,$operationContext);
                 $mediaLink = new ODataMediaLink(
