@@ -268,6 +268,76 @@ class RequestExpanderTest extends TestCase
         $foo->handleExpansion();
     }
 
+    public function testExpandCollectionWithSomethingRelatedNullNavigationWrapperTripAssertion()
+    {
+        $closure = function ($a, $b) {
+            return 0;
+        };
+
+        $resource = m::mock(ResourceSet::class)->makePartial();
+        $resource->results = ['foo', 'bar'];
+
+        $resProperty = m::mock(ResourceProperty::class);
+        $resProperty->shouldReceive('getKind')->andReturn(ResourcePropertyKind::RESOURCESET_REFERENCE);
+        $resProperty->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::ENTITY);
+        $resProperty->shouldReceive('getName')->andReturn('resourceProperty');
+
+        $type = m::mock(ResourceType::class);
+        $type->shouldReceive('setPropertyValue')->withAnyArgs()->andReturnNull()->once();
+
+        $wrap = m::mock(ResourceSetWrapper::class);
+        $wrap->shouldReceive('getResourceSet')->andReturn($resource);
+        $wrap->shouldReceive('getResourceType')->andReturn($type);
+
+        $info = m::mock(InternalOrderByInfo::class);
+        $info->shouldReceive('getSorterFunction')->andReturn($closure);
+
+        $node = m::mock(RootProjectionNode::class);
+        $node->shouldReceive('isExpansionSpecified')->andReturn(true);
+        $node->shouldReceive('getChildNodes')->andReturn([$node])->once();
+        $node->shouldReceive('findNode')->andReturn($node)->once();
+        $node->shouldReceive('getResourceType')->andReturn($type);
+        $node->shouldReceive('getResourceProperty')->andReturn($resProperty);
+        $node->shouldReceive('getResourceSetWrapper')->andReturn($wrap);
+        $node->shouldReceive('getInternalOrderByInfo')->andReturn($info);
+        $node->shouldReceive('getTakeCount')->andReturn(2)->once();
+
+        $stack = m::mock(SegmentStack::class);
+        $stack->shouldReceive('pushSegment')->andReturnNull()->once();
+        $stack->shouldReceive('popSegment')->andReturnNull()->never();
+        $stack->shouldReceive('getSegmentWrappers')->andReturn([])->twice();
+        $stack->shouldReceive('getSegmentNames')->andReturn(['hammer', 'time'])->twice();
+
+        $providers = m::mock(ProvidersWrapper::class);
+        $providers->shouldReceive('getRelatedResourceSet')->andReturn($resource)->once();
+        $providers->shouldReceive('getResourceSetWrapperForNavigationProperty')->andReturn(null)->once();
+
+        $request = m::mock(RequestDescription::class);
+        $request->shouldReceive('getRootProjectionNode')->andReturn($node);
+        $request->shouldReceive('getContainerName')->andReturn('request');
+        $request->shouldReceive('getTargetResult')->andReturn([['hammer']]);
+        $request->shouldReceive('getTargetResourceSetWrapper')->andReturn($wrap);
+
+        $service = m::mock(IService::class);
+        $service->shouldReceive('getProvidersWrapper')->andReturn($providers);
+
+        $foo = m::mock(RequestExpander::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $foo->shouldReceive('getRequest')->andReturn($request);
+        $foo->shouldReceive('getStack')->andReturn($stack);
+        $foo->shouldReceive('getProviders')->andReturn($providers);
+        $foo->shouldReceive('getService')->andReturn($service);
+
+        $expected = 'assert(): !null($currentResourceSetWrapper) failed';
+        $actual = null;
+
+        try {
+            $foo->handleExpansion();
+        } catch (\PHPUnit_Framework_Error_Warning $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
+    }
+
     public function testExpandSingletonAndThrowExceptionOnNavigation()
     {
         $queryResult = m::mock(QueryResult::class);

@@ -13,7 +13,7 @@ use POData\Providers\Metadata\ResourceStreamInfo;
  * data services framework server component and a data source's and a data
  * source's named stream implementation (ie. a stream provider).
  */
-interface IStreamProvider2 extends IStreamProvider
+interface IStreamProvider2
 {
     /**
      * This method is invoked by the data services framework to retrieve the named stream
