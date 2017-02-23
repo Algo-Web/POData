@@ -5,6 +5,7 @@ namespace UnitTests\POData\Writers\Atom;
 use Carbon\Carbon as Carbon;
 use Mockery as m;
 use POData\Common\MimeTypes;
+use POData\Common\ODataException;
 use POData\Common\Version;
 use POData\ObjectModel\ODataBagContent;
 use POData\ObjectModel\ODataEntry;
@@ -1204,5 +1205,20 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
             [301, Version::v2(), MimeTypes::MIME_APPLICATION_ATOM, true],
             [302, Version::v3(), MimeTypes::MIME_APPLICATION_ATOM, true],
         ];
+    }
+
+    public function testSerializeExceptionWithCodeSet()
+    {
+        $foo = new ODataException('message', 400);
+
+        $expected = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<error xmlns="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
+ <code>400</code>
+ <message>message</message>
+</error>
+';
+        $actual = AtomODataWriter::serializeException($foo, true);
+        $this->assertEquals($expected, $actual);
+
     }
 }

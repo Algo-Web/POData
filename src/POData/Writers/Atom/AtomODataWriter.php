@@ -643,8 +643,8 @@ class AtomODataWriter implements IODataWriter
         );
         $xmlWriter->endAttribute();
         $xmlWriter->startElement(ODataConstants::XML_ERROR_CODE_ELEMENT_NAME);
-        if ($exception->getCode() != null) {
-            $xmlWriter->text($exception->getCode());
+        if (null != $exception->getStatusCode()) {
+            $xmlWriter->text($exception->getStatusCode());
         }
         $xmlWriter->endElement();
         $xmlWriter->startElement(ODataConstants::XML_ERROR_MESSAGE_ELEMENT_NAME);
