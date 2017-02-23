@@ -33,25 +33,29 @@ class ResponseWriter
         $dataServiceVersion = $request->getResponseVersion();
         $targetKind = $request->getTargetKind();
 
-        if ($targetKind == TargetKind::METADATA()) {
+        if (TargetKind::METADATA() == $targetKind) {
             // /$metadata
             $writer = new MetadataWriter($service->getProvidersWrapper());
             $responseBody = $writer->writeMetadata();
             $dataServiceVersion = $writer->getDataServiceVersion();
-        } elseif ($targetKind == TargetKind::PRIMITIVE_VALUE() && $responseContentType != MimeTypes::MIME_APPLICATION_OCTETSTREAM) {
+        } elseif (TargetKind::PRIMITIVE_VALUE() == $targetKind
+                  && $responseContentType != MimeTypes::MIME_APPLICATION_OCTETSTREAM) {
             //This second part is to exclude binary properties
             // /Customer('ALFKI')/CompanyName/$value
             // /Customers/$count
             $responseBody = utf8_encode($request->getTargetResult());
-        } elseif ($responseContentType == MimeTypes::MIME_APPLICATION_OCTETSTREAM || $targetKind == TargetKind::MEDIA_RESOURCE()) {
+        } elseif (MimeTypes::MIME_APPLICATION_OCTETSTREAM == $responseContentType
+                  || TargetKind::MEDIA_RESOURCE() == $targetKind
+        ) {
             // Binary property or media resource
-            if ($request->getTargetKind() == TargetKind::MEDIA_RESOURCE()) {
+            $context = $service->getOperationContext();
+            if (TargetKind::MEDIA_RESOURCE() == $request->getTargetKind()) {
                 $result = $request->getTargetResult();
                 $streamInfo = $request->getResourceStreamInfo();
                 $provider = $service->getStreamProviderWrapper();
-                $eTag = $provider->getStreamETag2($result, $streamInfo,$service->getOperationContext());
+                $eTag = $provider->getStreamETag2($result, $streamInfo, $context);
                 $service->getHost()->setResponseETag($eTag);
-                $responseBody = $provider->getReadStream2($result, $streamInfo ,null,null,$service->getOperationContext());
+                $responseBody = $provider->getReadStream2($result, $streamInfo, null, null, $context);
             } else {
                 $responseBody = $request->getTargetResult();
             }
@@ -63,13 +67,18 @@ class ResponseWriter
             $responsePieces = explode(';', $responseContentType);
             $responseContentType = $responsePieces[0];
 
-            $writer = $service->getODataWriterRegistry()->getWriter($request->getResponseVersion(), $responseContentType);
+            $writer = $service->getODataWriterRegistry()->getWriter(
+                $request->getResponseVersion(),
+                $responseContentType
+            );
             //TODO: move ot Messages
             if (is_null($writer)) {
                 throw new \Exception('No writer can handle the request.');
             }
 
-            if (is_null($entityModel)) {  //TODO: this seems like a weird way to know that the request is for a service document..i'd think we know this some other way
+            //TODO: this seems like a weird way to know that the request is for a service document..
+            //i'd think we know this some other way
+            if (is_null($entityModel)) {
                 $responseBody = $writer->writeServiceDocument($service->getProvidersWrapper())->getOutput();
             } else {
                 $responseBody = $writer->write($entityModel)->getOutput();

@@ -628,7 +628,7 @@ abstract class BaseService implements IRequestHandler, IService
                 $responseContentType = $this->getStreamProviderWrapper()
                     ->getStreamContentType2(
                         $request->getTargetResult(),
-                        $request->getResourceStreamInfo(),$this->getOperationContext()
+                        $request->getResourceStreamInfo(), $this->getOperationContext()
                     );
 
                 // Note StreamWrapper::getStreamContentType can return NULL if the requested named stream has not

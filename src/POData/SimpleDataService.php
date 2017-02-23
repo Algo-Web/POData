@@ -78,7 +78,7 @@ class SimpleDataService extends BaseService implements IService
 
     public function setStreamProvider($Sp)
     {
-        if(null == $Sp){
+        if (null == $Sp) {
             $Sp = new \POData\Providers\Stream\SimpleStreamProvider();
         }
         $this->streamProvider = $Sp;

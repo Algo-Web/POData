@@ -10,24 +10,24 @@ class SimpleStreamProvider implements IStreamProvider2
 {
     public function getReadStream2($entity, ResourceStreamInfo $resourceStreamInfo = null, $eTag, $checkETagForEquality, IOperationContext $operationContext)
     {
-        if(null == $resourceStreamInfo){
-            return "stream for " . get_class ($entity);
+        if (null == $resourceStreamInfo) {
+            return "stream for " . get_class($entity);
         }
         $name = $resourceStreamInfo->getName();
         return $entity->$name;
     }
 
-    public function getDefaultStreamEditMediaUri($entity, ResourceType $resourceType, ResourceStreamInfo $resourceStreamInfo = null, IOperationContext $operationContext, $relativeUri = null){
-       if(null == $resourceStreamInfo){
-          return $relativeUri . '/$value';
-       }
+    public function getDefaultStreamEditMediaUri($entity, ResourceType $resourceType, ResourceStreamInfo $resourceStreamInfo = null, IOperationContext $operationContext, $relativeUri = null)
+    {
+        if (null == $resourceStreamInfo) {
+            return $relativeUri . '/$value';
+        }
         return $relativeUri . '/' . $resourceStreamInfo->getName();
-
     }
 
     public function getStreamContentType2($entity, ResourceStreamInfo $resourceStreamInfo = null, IOperationContext $operationContext)
     {
-        if(null == $resourceStreamInfo){
+        if (null == $resourceStreamInfo) {
             return "*/*";
         }
         return 'application/octet-stream';
@@ -38,7 +38,7 @@ class SimpleStreamProvider implements IStreamProvider2
         ResourceStreamInfo $resourceStreamInfo = null,
         IOperationContext $operationContext
     ) {
-        if(null == $resourceStreamInfo){
+        if (null == $resourceStreamInfo) {
             return spl_object_hash($entity);
         }
         $name = $resourceStreamInfo->getName();
@@ -49,9 +49,10 @@ class SimpleStreamProvider implements IStreamProvider2
     public function getReadStreamUri2(
         $entity,
         ResourceStreamInfo $resourceStreamInfo = null,
-        IOperationContext $operationContext,$relativeUri=null
+        IOperationContext $operationContext,
+        $relativeUri = null
     ) {
-        if(null == $resourceStreamInfo){
+        if (null == $resourceStreamInfo) {
             return $relativeUri . '/$value';
         }
         return $relativeUri . '/' . $resourceStreamInfo->getName();
