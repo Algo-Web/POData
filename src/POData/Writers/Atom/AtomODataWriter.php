@@ -273,18 +273,22 @@ class AtomODataWriter implements IODataWriter
         $this->xmlWriter->endElement();
 
 
-            $this->xmlWriter->startElement(ODataConstants::ATOM_LINK_ELEMENT_NAME);
-            $this->xmlWriter->startAttribute(ODataConstants::ATOM_LINK_RELATION_ATTRIBUTE_NAME);
-            $this->xmlWriter->text(ODataConstants::ATOM_EDIT_RELATION_ATTRIBUTE_VALUE);
-            $this->xmlWriter->endAttribute();
-            $this->xmlWriter->startAttribute(ODataConstants::ATOM_TITLE_ELELMET_NAME);
-            $this->xmlWriter->text($entry->title);
-            $this->xmlWriter->endAttribute();
-            $this->xmlWriter->startAttribute(ODataConstants::ATOM_HREF_ATTRIBUTE_NAME);
+        $this->xmlWriter->startElement(ODataConstants::ATOM_LINK_ELEMENT_NAME);
+        $this->xmlWriter->startAttribute(ODataConstants::ATOM_LINK_RELATION_ATTRIBUTE_NAME);
+        $this->xmlWriter->text(ODataConstants::ATOM_EDIT_RELATION_ATTRIBUTE_VALUE);
+        $this->xmlWriter->endAttribute();
+        $this->xmlWriter->startAttribute(ODataConstants::ATOM_TITLE_ELELMET_NAME);
+        $this->xmlWriter->text($entry->title);
+        $this->xmlWriter->endAttribute();
+        $this->xmlWriter->startAttribute(ODataConstants::ATOM_HREF_ATTRIBUTE_NAME);
+        if (is_string($entry->editLink)) {
             $this->xmlWriter->text($entry->editLink);
-            $this->xmlWriter->endAttribute();
+        } else {
+            $this->xmlWriter->text($entry->editLink->url);
+        }
+        $this->xmlWriter->endAttribute();
 
-            $this->xmlWriter->endElement();
+        $this->xmlWriter->endElement();
 
 
         if ($entry->isMediaLinkEntry) {

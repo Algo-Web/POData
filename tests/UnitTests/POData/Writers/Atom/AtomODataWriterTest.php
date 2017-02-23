@@ -252,6 +252,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
   <author>
    <name/>
   </author>
+  <link rel="edit" title="Entry Title" href="Edit Link URL"/>
   <category term="" scheme="http://schemas.microsoft.com/ado/2007/08/dataservices/scheme"/>
   <content type="application/xml">
    <m:properties>
@@ -312,13 +313,13 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
             'Media Content Type',
             'Media ETag'
         ),
-                                            new ODataMediaLink(
-                                                'Media Link Name2',
-                                                'Edit Media link2',
-                                                'Src Media Link2',
-                                                'Media Content Type2',
-                                                'Media ETag2'
-                                            ), ];
+            new ODataMediaLink(
+                'Media Link Name2',
+                'Edit Media link2',
+                'Src Media Link2',
+                'Media Content Type2',
+                'Media ETag2'
+            ), ];
 
         $entry1->links = [];
 
@@ -826,6 +827,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
  <author>
   <name/>
  </author>
+ <link rel="edit" title="Entry Title" href="Edit Link URL"/>
  <link rel="" href="">
   <m:inline>
    <entry m:etag="Entry ETag">
@@ -835,6 +837,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
     <author>
      <name/>
     </author>
+    <link rel="edit" title="Entry Title" href="Edit Link URL"/>
     <category term="" scheme="http://schemas.microsoft.com/ado/2007/08/dataservices/scheme"/>
     <content type="application/xml">
      <m:properties>
@@ -1056,6 +1059,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
  <author>
   <name/>
  </author>
+ <link rel="edit" title="title of entry 2" href="edit link of entry 2"/>
  <category term="SampleModel.Customer" scheme="http://schemas.microsoft.com/ado/2007/08/dataservices/scheme"/>
  <content type="application/xml">
   <m:properties>
