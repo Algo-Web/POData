@@ -886,12 +886,15 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
                         .'&& ($resourceKind != ResourcePropertyKind::RESOURCESET_REFERENCE)'
                     );
 
-                    $navigationProperties[$i] = new NavigationPropertyInfo(
-                        $resourceProperty, $this->shouldExpandSegment($resourceProperty->getName())
+                    $navigationProperties[$i] = new ODataNavigationPropertyInfo(
+                        $resourceProperty,
+                        $this->shouldExpandSegment($resourceProperty->getName())
                     );
                     if ($navigationProperties[$i]->expanded) {
                         $navigationProperties[$i]->value = $this->getPropertyValue(
-                            $customObject, $resourceType, $resourceProperty
+                            $customObject,
+                            $resourceType,
+                            $resourceProperty
                         );
                     }
 
@@ -939,7 +942,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
                     );
                 //Check for the visibility of this navigation property
                 if (array_key_exists($resourceProperty->getName(), $resourceProperties)) {
-                    $navigationProperties[$i] = new NavigationPropertyInfo(
+                    $navigationProperties[$i] = new ODataNavigationPropertyInfo(
                         $resourceProperty,
                         $this->shouldExpandSegment($propertyName)
                     );
