@@ -165,4 +165,11 @@ class ResourceAssociationSet
         return !is_null($this->_end1->getResourceProperty())
             && !is_null($this->_end2->getResourceProperty());
     }
+
+
+    public static function keyName(ResourceType $sourceType, $linkName, ResourceSet $targetResourceSet)
+    {
+        return $sourceType->getName() . '_' . $linkName . '_' . $targetResourceSet->getName();
+    }
+
 }
