@@ -83,7 +83,7 @@ class ResourceAssociationSet
      * @param ResourceType     $resourceType     Resource type for the end
      * @param ResourceProperty $resourceProperty Resource property for the end
      *
-     * @return ResourceAssociationSetEnd Resource association set end for the
+     * @return ResourceAssociationSetEnd|null Resource association set end for the
      *                                   given parameters
      */
     public function getResourceAssociationSetEnd(
@@ -98,6 +98,7 @@ class ResourceAssociationSet
         if ($this->_end2->isBelongsTo($resourceSet, $resourceType, $resourceProperty)) {
             return $this->_end2;
         }
+        return null;
     }
 
     /**
@@ -107,7 +108,7 @@ class ResourceAssociationSet
      * @param ResourceType     $resourceType     Resource type for the end
      * @param ResourceProperty $resourceProperty Resource property for the end
      *
-     * @return ResourceAssociationSetEnd Related resource association set end
+     * @return ResourceAssociationSetEnd|null Related resource association set end
      *                                   for the given parameters
      */
     public function getRelatedResourceAssociationSetEnd(
@@ -122,6 +123,7 @@ class ResourceAssociationSet
         if ($this->_end2->isBelongsTo($resourceSet, $resourceType, $resourceProperty)) {
             return $this->_end1;
         }
+        return null;
     }
 
     /**
@@ -171,5 +173,4 @@ class ResourceAssociationSet
     {
         return $sourceType->getName() . '_' . $linkName . '_' . $targetResourceSet->getResourceType()->getName();
     }
-
 }
