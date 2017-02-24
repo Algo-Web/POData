@@ -464,7 +464,7 @@ class SimpleMetadataProvider implements IMetadataProvider
         $set = new ResourceAssociationSet(
             $setKey,
             new ResourceAssociationSetEnd($sourceResourceSet, $resourceType, $resourceProperty),
-            new ResourceAssociationSetEnd($targetResourceSet, $targetResourceSet->getResourceType(), null)
+            new ResourceAssociationSetEnd($targetResourceSet, $targetResourceType, null)
         );
         $this->associationSets[$setKey] = $set;
     }

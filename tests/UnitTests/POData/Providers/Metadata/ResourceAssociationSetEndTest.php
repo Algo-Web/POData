@@ -11,23 +11,6 @@ use UnitTests\POData\TestCase;
 
 class ResourceAssociationSetEndTest extends TestCase
 {
-    public function testConstructorResourcePropertyBadInstanceThrowException()
-    {
-        $set = m::mock(ResourceSet::class);
-        $type = m::mock(ResourceType::class);
-        $property = m::mock(ResourceProperty::class);
-
-        $expected = 'The argument \'$resourceProperty\' must be either null or instance of \'ResourceProperty\'.';
-        $actual = null;
-
-        try {
-            $foo = new ResourceAssociationSetEnd($set, $type, $type);
-        } catch (\InvalidArgumentException $e) {
-            $actual = $e->getMessage();
-        }
-        $this->assertEquals($expected, $actual);
-    }
-
     public function testConstructorNullResourcePropertyTypeNotAssignableToSetThrowException()
     {
         $middleType = m::mock(ResourceType::class);
