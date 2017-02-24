@@ -46,7 +46,7 @@ class ResourceAssociationSetEnd
     public function __construct(
         ResourceSet $resourceSet,
         ResourceType $resourceType,
-        $resourceProperty
+        ResourceProperty $resourceProperty = null
     ) {
         if (!is_null($resourceProperty)
             && !($resourceProperty instanceof ResourceProperty)
