@@ -98,16 +98,30 @@ class SimpleMetadataProvider implements IMetadataProvider
     }
 
     /**
-     * get a resource type based on the resource set name.
+     * get a resource type based on the resource type name.
      *
-     * @param string $name Name of the resource set
+     * @param string $name Name of the resource type
      *
-     * @return ResourceType|null resource type with the given resource set name if found else NULL
+     * @return ResourceType|null resource type with the given resource type name if found else NULL
      */
     public function resolveResourceType($name)
     {
         if (array_key_exists($name, $this->resourceTypes)) {
             return $this->resourceTypes[$name];
+        }
+    }
+
+    /**
+     * get a resource set based on the specified resource association set name.
+     *
+     * @param string $name Name of the resource assocation set
+     *
+     * @return ResourceAssociationSet|null resource association set with the given name if found else NULL
+     */
+    public function resolveAssociationSet($name)
+    {
+        if (array_key_exists($name, $this->associationSets)) {
+            return $this->associationSets[$name];
         }
     }
 
@@ -414,7 +428,7 @@ class SimpleMetadataProvider implements IMetadataProvider
      *                                                   resource reference
      *                                                   or reference
      *                                                   set property
-     *                                                   ponits to
+     *                                                   points to
      * @param ResourcePropertyKind $resourcePropertyKind The property kind
      */
     private function _addReferencePropertyInternal(
@@ -446,6 +460,7 @@ class SimpleMetadataProvider implements IMetadataProvider
         //Customer_Orders_Orders, Order_Customer_Customers
         //(source type::name _ source property::name _ target set::name)
         $setKey = ResourceAssociationSet::keyName($resourceType, $name, $targetResourceSet);
+        //$setKey = $resourceType->getName() . '_' . $name . '_' . $targetResourceType->getName();
         $set = new ResourceAssociationSet(
             $setKey,
             new ResourceAssociationSetEnd($sourceResourceSet, $resourceType, $resourceProperty),

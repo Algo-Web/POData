@@ -169,7 +169,7 @@ class ResourceAssociationSet
 
     public static function keyName(ResourceType $sourceType, $linkName, ResourceSet $targetResourceSet)
     {
-        return $sourceType->getName() . '_' . $linkName . '_' . $targetResourceSet->getName();
+        return $sourceType->getName() . '_' . $linkName . '_' . $targetResourceSet->getResourceType()->getName();
     }
 
 }
