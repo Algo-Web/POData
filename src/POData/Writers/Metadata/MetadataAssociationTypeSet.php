@@ -331,19 +331,12 @@ class MetadataAssociationTypeSet extends MetadataBase
 
         //Generate resource association type end names
         //Refer ./AssociationSetAndTypeNamingRules.txt
-        $associationTypeEnd1Name = $associationTypeEnd2Name = null;
         $isBiDirectional = $resourceAssociationSet->isBidirectional();
+        $associationTypeEnd1Name = $resourceAssociationSet->getEnd1()->getResourceType()->getName();
+        $associationTypeEnd2Name = $resourceAssociationSet->getEnd2()->getResourceType()->getName();
         if ($isBiDirectional) {
-            $associationTypeEnd1Name = $resourceAssociationSet->getEnd1()->getResourceType()->getName() . '_' . $resourceAssociationSet->getEnd1()->getResourceProperty()->getName();
-            $associationTypeEnd2Name = $resourceAssociationSet->getEnd2()->getResourceType()->getName() . '_' . $resourceAssociationSet->getEnd2()->getResourceProperty()->getName();
-        } else {
-            if (!is_null($resourceAssociationSet->getEnd1()->getResourceProperty())) {
-                $associationTypeEnd1Name = $resourceAssociationSet->getEnd1()->getResourceType()->getName();
-                $associationTypeEnd2Name = $resourceAssociationSet->getEnd1()->getResourceProperty()->getName();
-            } else {
-                $associationTypeEnd1Name = $resourceAssociationSet->getEnd2()->getResourceProperty()->getName();
-                $associationTypeEnd2Name = $resourceAssociationSet->getEnd2()->getResourceType()->getName();
-            }
+            $associationTypeEnd1Name .= '_' . $resourceAssociationSet->getEnd1()->getResourceProperty()->getName();
+            $associationTypeEnd2Name .= '_' . $resourceAssociationSet->getEnd2()->getResourceProperty()->getName();
         }
 
         //Generate resource association type name
