@@ -98,7 +98,6 @@ class ProvidersWrapper
         $this->providerWrapper = new ProvidersQueryWrapper($query);
         $this->setWrapperCache = [];
         $this->typeCache = [];
-        $this->associationSetCache = [];
         $this->propertyCache = [];
     }
 
@@ -330,11 +329,6 @@ class ProvidersWrapper
         $type = $this->getResourceTypeWherePropertyIsDeclared($type, $property);
         // usage below requires $type to not be null - so kaboom as early as possible
         assert(null != $type, 'Resource type obtained from property must not be null.');
-        $cacheKey = $set->getName() . '_' . $type->getName() . '_' . $property->getName();
-
-        if (array_key_exists($cacheKey, $this->associationSetCache)) {
-            return $this->associationSetCache[$cacheKey];
-        }
 
         $associationSet = $this->metaProvider->getResourceAssociationSet(
             $set,
@@ -390,8 +384,6 @@ class ProvidersWrapper
             null == $associationSet || $associationSet instanceof ResourceAssociationSet,
             "Retrieved resource assocation must be either null or an instance of ResourceAssociationSet"
         );
-
-        $this->associationSetCache[$cacheKey] = $associationSet;
 
         return $associationSet;
     }
