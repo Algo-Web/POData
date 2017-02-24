@@ -651,9 +651,10 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
         ODataEntry & $odataEntry
     ) {
         $operationContext = $this->getService()->getOperationContext();
+        $streamProvider = $this->getService()->getStreamProviderWrapper();
+        assert(null != $streamProvider, "Retrieved stream provider must not be null");
         if ($resourceType->isMediaLinkEntry()) {
             $odataEntry->isMediaLinkEntry = true;
-            $streamProvider = $this->getService()->getStreamProvider();
             $eTag = $streamProvider->getStreamETag2($entryObject, null, $operationContext);
             $readStreamUri = $streamProvider->getReadStreamUri2($entryObject, null, $operationContext, $relativeUri);
             $mediaContentType = $streamProvider->getStreamContentType2($entryObject, null, $operationContext);

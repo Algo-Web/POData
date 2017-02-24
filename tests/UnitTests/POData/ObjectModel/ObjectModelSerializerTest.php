@@ -25,6 +25,7 @@ use POData\Providers\Metadata\Type\DateTime;
 use POData\Providers\Metadata\Type\StringType;
 use POData\Providers\ProvidersWrapper;
 use POData\Providers\Query\QueryType;
+use POData\Providers\Stream\StreamProviderWrapper;
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandedProjectionNode;
 use POData\UriProcessor\RequestDescription;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetSource;
@@ -36,6 +37,8 @@ class ObjectModelSerializerTest extends TestCase
     private $mockRequest;
     private $mockWrapper;
     private $serviceHost;
+    private $mockService;
+    private $mockStreamWrapper;
 
     public function Construct()
     {
@@ -44,6 +47,8 @@ class ObjectModelSerializerTest extends TestCase
         $request = m::mock(RequestDescription::class)->makePartial();
         $wrapper = m::mock(ProvidersWrapper::class)->makePartial();
         $context = m::mock(IOperationContext::class)->makePartial();
+        $this->mockStreamWrapper = m::mock(StreamProviderWrapper::class);
+        $this->mockService = $service;
         $this->mockRequest = $request;
         $this->mockWrapper = $wrapper;
         $this->serviceHost = m::mock(\POData\OperationContext\ServiceHost::class)->makePartial();
@@ -52,6 +57,7 @@ class ObjectModelSerializerTest extends TestCase
         $wrapper->shouldReceive('getResourceProperties')->andReturn([]);
         $service->shouldReceive('getHost')->andReturn($this->serviceHost);
         $service->shouldReceive('getProvidersWrapper')->andReturn($wrapper);
+        $service->shouldReceive('getStreamProviderWrapper')->andReturn($this->mockStreamWrapper);
         $foo = new ObjectModelSerializer($service, $request);
 
         return $foo;
@@ -712,9 +718,12 @@ class ObjectModelSerializerTest extends TestCase
 
         $context = m::mock(IOperationContext::class)->makePartial();
 
+        $streamWrap = m::mock(StreamProviderWrapper::class)->makePartial();
+
         $service = m::mock(IService::class)->makePartial();
         $service->shouldReceive('getProvidersWrapper')->andReturn($provWrap);
         $service->shouldReceive('getOperationContext')->andReturn($context);
+        $service->shouldReceive('getStreamProviderWrapper')->andReturn($streamWrap);
 
         $foo = m::mock(ObjectModelSerializer::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $foo->shouldReceive('getRequest')->andReturn($request);
@@ -791,9 +800,12 @@ class ObjectModelSerializerTest extends TestCase
 
         $context = m::mock(IOperationContext::class)->makePartial();
 
+        $streamWrap = m::mock(StreamProviderWrapper::class)->makePartial();
+
         $service = m::mock(IService::class)->makePartial();
         $service->shouldReceive('getProvidersWrapper')->andReturn($provWrap);
         $service->shouldReceive('getOperationContext')->andReturn($context);
+        $service->shouldReceive('getStreamProviderWrapper')->andReturn($streamWrap);
 
         $foo = m::mock(ObjectModelSerializer::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $foo->shouldReceive('getRequest')->andReturn($request);
@@ -872,10 +884,12 @@ class ObjectModelSerializerTest extends TestCase
 
         $context = m::mock(IOperationContext::class)->makePartial();
 
+        $streamWrap = m::mock(StreamProviderWrapper::class)->makePartial();
+
         $service = m::mock(IService::class)->makePartial();
         $service->shouldReceive('getProvidersWrapper')->andReturn($provWrap);
         $service->shouldReceive('getOperationContext')->andReturn($context);
-
+        $service->shouldReceive('getStreamProviderWrapper')->andReturn($streamWrap);
 
         $foo = m::mock(ObjectModelSerializer::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $foo->shouldReceive('getRequest')->andReturn($request);
