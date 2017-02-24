@@ -341,6 +341,10 @@ class ProvidersWrapper
             $type,
             $property
         );
+        assert(
+            null == $associationSet || $associationSet instanceof ResourceAssociationSet,
+            "Retrieved resource assocation must be either null or an instance of ResourceAssociationSet"
+        );
 
         if (!is_null($associationSet)) {
             $thisAssociationSetEnd = $associationSet->getResourceAssociationSetEnd(
@@ -382,6 +386,10 @@ class ProvidersWrapper
                 $this->validateResourceType($relatedAssociationSetEnd->getResourceType());
             }
         }
+        assert(
+            null == $associationSet || $associationSet instanceof ResourceAssociationSet,
+            "Retrieved resource assocation must be either null or an instance of ResourceAssociationSet"
+        );
 
         $this->associationSetCache[$cacheKey] = $associationSet;
 
