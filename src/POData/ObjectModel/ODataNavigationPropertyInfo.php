@@ -5,16 +5,16 @@ namespace POData\ObjectModel;
 use POData\Providers\Metadata\ResourceProperty;
 
 /**
- * Class NavigationPropertyInfo A type to hold navigation information.
+ * Class ODataNavigationPropertyInfo A type to hold navigation information.
  */
-class NavigationPropertyInfo
+class ODataNavigationPropertyInfo
 {
     public $resourceProperty;
     public $expanded;
     public $value;
 
     /**
-     * Constructs a new instance of NavigationPropertyInfo.
+     * Constructs a new instance of ODataNavigationPropertyInfo.
      *
      * @param ResourceProperty &$resourceProperty Metadata of the
      *                                            navigation property

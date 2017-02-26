@@ -651,9 +651,10 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
         ODataEntry & $odataEntry
     ) {
         $operationContext = $this->getService()->getOperationContext();
+        $streamProvider = $this->getService()->getStreamProviderWrapper();
+        assert(null != $streamProvider, "Retrieved stream provider must not be null");
         if ($resourceType->isMediaLinkEntry()) {
             $odataEntry->isMediaLinkEntry = true;
-            $streamProvider = $this->getService()->getStreamProvider();
             $eTag = $streamProvider->getStreamETag2($entryObject, null, $operationContext);
             $readStreamUri = $streamProvider->getReadStreamUri2($entryObject, null, $operationContext, $relativeUri);
             $mediaContentType = $streamProvider->getStreamContentType2($entryObject, null, $operationContext);
@@ -885,12 +886,15 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
                         .'&& ($resourceKind != ResourcePropertyKind::RESOURCESET_REFERENCE)'
                     );
 
-                    $navigationProperties[$i] = new NavigationPropertyInfo(
-                        $resourceProperty, $this->shouldExpandSegment($resourceProperty->getName())
+                    $navigationProperties[$i] = new ODataNavigationPropertyInfo(
+                        $resourceProperty,
+                        $this->shouldExpandSegment($resourceProperty->getName())
                     );
                     if ($navigationProperties[$i]->expanded) {
                         $navigationProperties[$i]->value = $this->getPropertyValue(
-                            $customObject, $resourceType, $resourceProperty
+                            $customObject,
+                            $resourceType,
+                            $resourceProperty
                         );
                     }
 
@@ -938,7 +942,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
                     );
                 //Check for the visibility of this navigation property
                 if (array_key_exists($resourceProperty->getName(), $resourceProperties)) {
-                    $navigationProperties[$i] = new NavigationPropertyInfo(
+                    $navigationProperties[$i] = new ODataNavigationPropertyInfo(
                         $resourceProperty,
                         $this->shouldExpandSegment($propertyName)
                     );

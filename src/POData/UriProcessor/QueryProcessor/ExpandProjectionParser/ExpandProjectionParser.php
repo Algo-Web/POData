@@ -5,6 +5,7 @@ namespace POData\UriProcessor\QueryProcessor\ExpandProjectionParser;
 use POData\Common\Messages;
 use POData\Common\ODataException;
 use POData\Providers\Metadata\ResourcePropertyKind;
+use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\ResourceTypeKind;
@@ -206,6 +207,7 @@ class ExpandProjectionParser
                         $resourceType,
                         $resourceProperty
                     );
+
                 if (is_null($resourceSetWrapper)) {
                     throw ODataException::createBadRequestError(
                         Messages::badRequestInvalidPropertyNameSpecified(

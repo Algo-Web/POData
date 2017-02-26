@@ -5,6 +5,7 @@ namespace UnitTests\POData\Providers\Metadata;
 use InvalidArgumentException;
 use Mockery as m;
 use POData\Common\InvalidOperationException;
+use POData\Providers\Metadata\ResourceAssociationSet;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\ResourceType;
@@ -137,7 +138,7 @@ class SimpleMetadataProviderTest extends TestCase
     {
         $set = m::mock(ResourceSet::class);
         $targSet = m::mock(ResourceSet::class);
-        $targSet->shouldReceive('getName')->andReturn('M.C.');
+        $targSet->shouldReceive('getResourceType->getName')->andReturn('M.C.');
         $type = m::mock(ResourceType::class);
         $type->shouldReceive('getName')->andReturn('Hawking');
         $targType = m::mock(ResourceType::class);
@@ -262,5 +263,75 @@ class SimpleMetadataProviderTest extends TestCase
             $actual = $e->getMessage();
         }
         $this->assertEquals($expected, $actual);
+    }
+
+    public function testAddResourceReferenceCheckSane()
+    {
+        $forward = new reusableEntityClass4('foo', 'bar');
+        $back = new reusableEntityClass5('foo', 'bar');
+
+        $foo = new SimpleMetadataProvider('string', 'String');
+
+        $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore', 'Data');
+        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft', 'Data');
+        $this->assertTrue($fore instanceof ResourceType);
+        $this->assertTrue($aft instanceof ResourceType);
+
+        $foreSet = $foo->addResourceSet('foreSet', $fore);
+        $aftSet = $foo->addResourceSet('aftSet', $aft);
+        $this->assertTrue($foreSet instanceof ResourceSet);
+        $this->assertTrue($aftSet instanceof ResourceSet);
+
+        $foo->addResourceReferenceProperty($fore, 'relation', $aftSet);
+        $foo->addResourceReferenceProperty($aft, 'backRelation', $foreSet);
+
+        // now dig out expected results
+        $firstExpectedKey = 'fore_relation_aft';
+        $secondExpectedKey = 'aft_backRelation_fore';
+
+        $result = $foo->resolveAssociationSet($firstExpectedKey);
+        $this->assertNotNull($result, "First association set is null");
+        $this->assertTrue($result instanceof ResourceAssociationSet, get_class($result));
+        $this->assertEquals($firstExpectedKey, $result->getName());
+        $result = $foo->resolveAssociationSet($secondExpectedKey);
+        $this->assertNotNull($result, "Second association set is null");
+        $this->assertTrue($result instanceof ResourceAssociationSet, get_class($result));
+        $this->assertEquals($secondExpectedKey, $result->getName());
+    }
+}
+
+class reusableEntityClass4
+{
+    private $name;
+    private $type;
+    private $relation;
+
+    public function __construct($n, $t)
+    {
+        $this->name = $n;
+        $this->type = $t;
+    }
+
+    public function __get($name)
+    {
+        return $this->$name;
+    }
+}
+
+class reusableEntityClass5
+{
+    private $name;
+    private $type;
+    private $backRelation;
+
+    public function __construct($n, $t)
+    {
+        $this->name = $n;
+        $this->type = $t;
+    }
+
+    public function __get($name)
+    {
+        return $this->$name;
     }
 }
