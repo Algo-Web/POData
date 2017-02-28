@@ -828,11 +828,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
         //First write out primitive types
         foreach ($resourceProperties as $name => $resourceProperty) {
             $resourceKind = $resourceProperty->getKind();
-            if ($resourceKind == ResourcePropertyKind::PRIMITIVE
-                || $resourceKind == (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::KEY)
-                || $resourceKind == (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::ETAG)
-                || $resourceKind == (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::KEY | ResourcePropertyKind::ETAG)
-            ) {
+            if (ObjectModelSerializer::isMatchPrimitive($resourceKind)) {
                 $odataProperty = new ODataProperty();
                 $primitiveValue = $this->getPropertyValue($customObject, $resourceType, $resourceProperty);
                 $this->_writePrimitiveValue($primitiveValue, $resourceProperty, $odataProperty);
@@ -866,11 +862,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
                         $relativeUri . '/' . $resourceProperty->getName(),
                         $odataPropertyContent
                     );
-                } elseif ($resourceKind == ResourcePropertyKind::PRIMITIVE
-                          || $resourceKind == (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::KEY)
-                          || $resourceKind == (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::ETAG)
-                          || $resourceKind == (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::KEY | ResourcePropertyKind::ETAG)
-                ) {
+                } elseif (ObjectModelSerializer::isMatchPrimitive($resourceKind)) {
                     continue;
                 } else {
                     assert(
@@ -902,10 +894,13 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
 
     public static function isMatchPrimitive($resourceKind)
     {
-        return $resourceKind == ResourcePropertyKind::PRIMITIVE
-               || $resourceKind == (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::KEY)
-               || $resourceKind == (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::ETAG)
-               || $resourceKind == (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::KEY | ResourcePropertyKind::ETAG);
+        if (16 > $resourceKind) {
+            return false;
+        }
+        if (28 < $resourceKind) {
+            return false;
+        }
+        return 0 == ($resourceKind % 4);
     }
 
 
