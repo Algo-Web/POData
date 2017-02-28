@@ -419,6 +419,7 @@ abstract class BaseService implements IRequestHandler, IService
                 $result = $request->getTargetResult();
                 $requestTargetKind = $request->getTargetKind();
                 $requestProperty = $request->getProjectedProperty();
+                assert(null != $requestProperty, 'Projected request property cannot be null');
                 if ($request->isLinkUri()) {
                     // In the query 'Orders(1245)/$links/Customer', the targeted
                     // Customer might be null
@@ -626,9 +627,9 @@ abstract class BaseService implements IRequestHandler, IService
                 // 1. If the required stream implementation not found
                 // 2. If IDSSP::getStreamContentType returns NULL for MLE
                 $responseContentType = $this->getStreamProviderWrapper()
-                    ->getStreamContentType2(
+                    ->getStreamContentType(
                         $request->getTargetResult(),
-                        $request->getResourceStreamInfo(), $this->getOperationContext()
+                        $request->getResourceStreamInfo()
                     );
 
                 // Note StreamWrapper::getStreamContentType can return NULL if the requested named stream has not

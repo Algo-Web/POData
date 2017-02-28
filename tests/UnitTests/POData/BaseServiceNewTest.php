@@ -24,6 +24,7 @@ use POData\Providers\Metadata\Type\Binary;
 use POData\Providers\Metadata\Type\IType;
 use POData\Providers\Metadata\Type\StringType;
 use POData\Providers\Query\IQueryProvider;
+use POData\Providers\Stream\IStreamProvider2;
 use POData\Providers\Stream\StreamProviderWrapper;
 use POData\SimpleDataService;
 use POData\UriProcessor\RequestDescription;
@@ -305,6 +306,8 @@ class BaseServiceNewTest extends TestCase
         $host->shouldReceive('getQueryStringItem')->andReturn(null);
         $host->shouldReceive('getRequestAccept')->andReturn(null);
         $host->shouldReceive('getAbsoluteRequestUri')->andReturn($url);
+        $host->shouldReceive('getResponseContentType')->andReturn('application/xml')->times(2);
+        $host->shouldReceive('getResponseETag')->andReturn('electric-rave')->times(2);
 
         $request = m::mock(RequestDescription::class);
         $request->shouldReceive('getResponseVersion')->andReturn(Version::v3());
@@ -321,18 +324,23 @@ class BaseServiceNewTest extends TestCase
         $context = m::mock(IOperationContext::class)->makePartial();
 
         $provWrap = m::mock(StreamProviderWrapper::class)->makePartial();
-        $provWrap->shouldReceive('getStreamContentType2')->andReturnNull()->once();
+        //$provWrap->shouldReceive('getStreamContentType2')->andReturnNull()->once();
+
+        $stream = m::mock(IStreamProvider2::class);
+        $stream->shouldReceive('getStreamContentType2')->andReturn('application/xml')->once();
 
         $service = m::mock(BaseServiceDummy::class)->makePartial();
         $service->shouldReceive('getHost')->andReturn($host);
         $service->shouldReceive('getStreamProviderWrapper')->andReturn($provWrap);
         $service->shouldReceive('getOperationContext')->andReturn($context);
+        $service->shouldReceive('getStreamProviderX')->andReturn($stream);
+        $provWrap->setService($service);
 
         $proc = m::mock(UriProcessor::class);
         $proc->shouldReceive('execute')->andReturnNull()->once();
 
         $result = $service->getResponseContentType($request, $proc);
-        $this->assertNull($result);
+        $this->assertEquals('application/xml', $result);
     }
 
     public function testGetContentTypeIsMediaResourceNonNullContentType()
@@ -365,7 +373,7 @@ class BaseServiceNewTest extends TestCase
 
         $service = m::mock(BaseServiceDummy::class)->makePartial();
         $service->shouldReceive('getHost')->andReturn($host);
-        $service->shouldReceive('getStreamProviderWrapper->getStreamContentType2')
+        $service->shouldReceive('getStreamProviderWrapper->getStreamContentType')
             ->andReturn(MimeTypes::MIME_TEXTXML)->once();
         $service->shouldReceive('getOperationContext')->andReturn($context);
 
