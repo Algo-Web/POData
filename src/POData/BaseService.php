@@ -626,9 +626,9 @@ abstract class BaseService implements IRequestHandler, IService
                 // 1. If the required stream implementation not found
                 // 2. If IDSSP::getStreamContentType returns NULL for MLE
                 $responseContentType = $this->getStreamProviderWrapper()
-                    ->getStreamContentType(
+                    ->getStreamContentType2(
                         $request->getTargetResult(),
-                        $request->getResourceStreamInfo()
+                        $request->getResourceStreamInfo(), $this->getOperationContext()
                     );
 
                 // Note StreamWrapper::getStreamContentType can return NULL if the requested named stream has not

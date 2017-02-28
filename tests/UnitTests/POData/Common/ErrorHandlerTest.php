@@ -42,7 +42,7 @@ class ErrorHandlerTest extends TestCase
 
         $expected = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <error xmlns="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
- <code/>
+ <code>500</code>
  <message>strlen() expects parameter 1 to be string, array given</message>
 </error>
 ';

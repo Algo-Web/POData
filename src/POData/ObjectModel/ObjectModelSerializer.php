@@ -650,15 +650,23 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
         $relativeUri,
         ODataEntry & $odataEntry
     ) {
+        $operationContext = $this->getService()->getOperationContext();
+        $streamProvider = $this->getService()->getStreamProviderWrapper();
+        assert(null != $streamProvider, "Retrieved stream provider must not be null");
         if ($resourceType->isMediaLinkEntry()) {
             $odataEntry->isMediaLinkEntry = true;
-            $streamProvider = $this->getService()->getStreamProvider();
-            $eTag = $streamProvider->getStreamETag($entryObject, null);
-            $readStreamUri = $streamProvider->getReadStreamUri($entryObject, null, $relativeUri);
-            $mediaContentType = $streamProvider->getStreamContentType($entryObject, null);
+            $eTag = $streamProvider->getStreamETag2($entryObject, null, $operationContext);
+            $readStreamUri = $streamProvider->getReadStreamUri2($entryObject, null, $operationContext, $relativeUri);
+            $mediaContentType = $streamProvider->getStreamContentType2($entryObject, null, $operationContext);
             $mediaLink = new ODataMediaLink(
                 $title,
-                $streamProvider->getDefaultStreamEditMediaUri($relativeUri, null),
+                $streamProvider->getDefaultStreamEditMediaUri(
+                    $entryObject,
+                    $resourceType,
+                    null,
+                    $operationContext,
+                    $relativeUri
+                ),
                 $readStreamUri,
                 $mediaContentType,
                 $eTag
@@ -669,12 +677,30 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
 
         if ($resourceType->hasNamedStream()) {
             foreach ($resourceType->getAllNamedStreams() as $title => $resourceStreamInfo) {
-                $eTag = $streamProvider->getStreamETag($entryObject, $resourceStreamInfo);
-                $readStreamUri = $streamProvider->getReadStreamUri($entryObject, $resourceStreamInfo, $relativeUri);
-                $mediaContentType = $streamProvider->getStreamContentType($entryObject, $resourceStreamInfo);
+                $eTag = $streamProvider->getStreamETag2(
+                    $entryObject,
+                    $resourceStreamInfo,
+                    $operationContext
+                );
+                $readStreamUri = $streamProvider->getReadStreamUri2(
+                    $entryObject,
+                    $resourceStreamInfo,
+                    $operationContext,
+                    $relativeUri
+                );
+                $mediaContentType = $streamProvider->getStreamContentType2(
+                    $entryObject,
+                    $resourceStreamInfo,
+                    $operationContext
+                );
                 $mediaLink = new ODataMediaLink(
                     $title,
-                    $streamProvider->getDefaultStreamEditMediaUri($relativeUri, $resourceStreamInfo),
+                    $streamProvider->getReadStreamUri2(
+                        $relativeUri,
+                        $resourceStreamInfo,
+                        $operationContext,
+                        $relativeUri
+                    ),
                     $readStreamUri,
                     $mediaContentType,
                     $eTag
@@ -860,12 +886,15 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
                         .'&& ($resourceKind != ResourcePropertyKind::RESOURCESET_REFERENCE)'
                     );
 
-                    $navigationProperties[$i] = new NavigationPropertyInfo(
-                        $resourceProperty, $this->shouldExpandSegment($resourceProperty->getName())
+                    $navigationProperties[$i] = new ODataNavigationPropertyInfo(
+                        $resourceProperty,
+                        $this->shouldExpandSegment($resourceProperty->getName())
                     );
                     if ($navigationProperties[$i]->expanded) {
                         $navigationProperties[$i]->value = $this->getPropertyValue(
-                            $customObject, $resourceType, $resourceProperty
+                            $customObject,
+                            $resourceType,
+                            $resourceProperty
                         );
                     }
 
@@ -913,7 +942,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
                     );
                 //Check for the visibility of this navigation property
                 if (array_key_exists($resourceProperty->getName(), $resourceProperties)) {
-                    $navigationProperties[$i] = new NavigationPropertyInfo(
+                    $navigationProperties[$i] = new ODataNavigationPropertyInfo(
                         $resourceProperty,
                         $this->shouldExpandSegment($propertyName)
                     );

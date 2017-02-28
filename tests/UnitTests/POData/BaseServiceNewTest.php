@@ -318,9 +318,15 @@ class BaseServiceNewTest extends TestCase
         $request->shouldReceive('getTargetResult')->andReturnNull()->once();
         $request->shouldReceive('getResourceStreamInfo')->andReturnNull()->once();
 
+        $context = m::mock(IOperationContext::class)->makePartial();
+
+        $provWrap = m::mock(StreamProviderWrapper::class)->makePartial();
+        $provWrap->shouldReceive('getStreamContentType2')->andReturnNull()->once();
+
         $service = m::mock(BaseServiceDummy::class)->makePartial();
         $service->shouldReceive('getHost')->andReturn($host);
-        $service->shouldReceive('getStreamProviderWrapper->getStreamContentType')->andReturnNull()->once();
+        $service->shouldReceive('getStreamProviderWrapper')->andReturn($provWrap);
+        $service->shouldReceive('getOperationContext')->andReturn($context);
 
         $proc = m::mock(UriProcessor::class);
         $proc->shouldReceive('execute')->andReturnNull()->once();
@@ -355,10 +361,13 @@ class BaseServiceNewTest extends TestCase
         $request->shouldReceive('getTargetResult')->andReturnNull()->once();
         $request->shouldReceive('getResourceStreamInfo')->andReturnNull()->once();
 
+        $context = m::mock(IOperationContext::class)->makePartial();
+
         $service = m::mock(BaseServiceDummy::class)->makePartial();
         $service->shouldReceive('getHost')->andReturn($host);
-        $service->shouldReceive('getStreamProviderWrapper->getStreamContentType')
+        $service->shouldReceive('getStreamProviderWrapper->getStreamContentType2')
             ->andReturn(MimeTypes::MIME_TEXTXML)->once();
+        $service->shouldReceive('getOperationContext')->andReturn($context);
 
         $proc = m::mock(UriProcessor::class);
         $proc->shouldReceive('execute')->andReturnNull()->once();

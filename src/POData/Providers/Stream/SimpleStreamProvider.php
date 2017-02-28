@@ -4,50 +4,43 @@ namespace POData\Providers\Stream;
 
 use POData\OperationContext\IOperationContext;
 use POData\Providers\Metadata\ResourceStreamInfo;
+use POData\Providers\Metadata\ResourceType;
 
 class SimpleStreamProvider implements IStreamProvider2
 {
-    public function getReadStream(
-        $entity,
-        $eTag,
-        $checkETagForEquality,
-        IOperationContext $operationContext
-    ) {
-        // TODO: find default stream and return.
-    }
-
-    public function getStreamContentType($entity, IOperationContext $operationContext)
+    public function getReadStream2($entity, ResourceStreamInfo $resourceStreamInfo = null, $eTag, $checkETagForEquality, IOperationContext $operationContext)
     {
-        return 'application/octet-stream';
-    }
-
-    public function getStreamETag($entity, IOperationContext $operationContext)
-    {
-        // TODO: find default stream and return.
-    }
-
-    public function getReadStreamUri($entity, IOperationContext $operationContext)
-    {
-        //let library creates default media url.
-    }
-
-    public function getReadStream2($entity, ResourceStreamInfo $resourceStreamInfo, $eTag, $checkETagForEquality, IOperationContext $operationContext)
-    {
+        if (null == $resourceStreamInfo) {
+            return "stream for " . get_class($entity);
+        }
         $name = $resourceStreamInfo->getName();
-
         return $entity->$name;
     }
 
-    public function getStreamContentType2($entity, ResourceStreamInfo $resourceStreamInfo, IOperationContext $operationContext)
+    public function getDefaultStreamEditMediaUri($entity, ResourceType $resourceType, ResourceStreamInfo $resourceStreamInfo = null, IOperationContext $operationContext, $relativeUri = null)
     {
+        if (null == $resourceStreamInfo) {
+            return $relativeUri . '/$value';
+        }
+        return $relativeUri . '/' . $resourceStreamInfo->getName();
+    }
+
+    public function getStreamContentType2($entity, ResourceStreamInfo $resourceStreamInfo = null, IOperationContext $operationContext)
+    {
+        if (null == $resourceStreamInfo) {
+            return "*/*";
+        }
         return 'application/octet-stream';
     }
 
     public function getStreamETag2(
         $entity,
-        ResourceStreamInfo $resourceStreamInfo,
+        ResourceStreamInfo $resourceStreamInfo = null,
         IOperationContext $operationContext
     ) {
+        if (null == $resourceStreamInfo) {
+            return spl_object_hash($entity);
+        }
         $name = $resourceStreamInfo->getName();
 
         return sha1($entity->$name);
@@ -55,9 +48,14 @@ class SimpleStreamProvider implements IStreamProvider2
 
     public function getReadStreamUri2(
         $entity,
-        ResourceStreamInfo $resourceStreamInfo,
-        IOperationContext $operationContext
+        ResourceStreamInfo $resourceStreamInfo = null,
+        IOperationContext $operationContext,
+        $relativeUri = null
     ) {
+        if (null == $resourceStreamInfo) {
+            return $relativeUri . '/$value';
+        }
+        return $relativeUri . '/' . $resourceStreamInfo->getName();
         //let library creates default media url.
     }
 }

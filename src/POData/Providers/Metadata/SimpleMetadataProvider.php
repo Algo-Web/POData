@@ -98,16 +98,30 @@ class SimpleMetadataProvider implements IMetadataProvider
     }
 
     /**
-     * get a resource type based on the resource set name.
+     * get a resource type based on the resource type name.
      *
-     * @param string $name Name of the resource set
+     * @param string $name Name of the resource type
      *
-     * @return ResourceType|null resource type with the given resource set name if found else NULL
+     * @return ResourceType|null resource type with the given resource type name if found else NULL
      */
     public function resolveResourceType($name)
     {
         if (array_key_exists($name, $this->resourceTypes)) {
             return $this->resourceTypes[$name];
+        }
+    }
+
+    /**
+     * get a resource set based on the specified resource association set name.
+     *
+     * @param string $name Name of the resource assocation set
+     *
+     * @return ResourceAssociationSet|null resource association set with the given name if found else NULL
+     */
+    public function resolveAssociationSet($name)
+    {
+        if (array_key_exists($name, $this->associationSets)) {
+            return $this->associationSets[$name];
         }
     }
 
@@ -148,7 +162,7 @@ class SimpleMetadataProvider implements IMetadataProvider
      *                                                 the source
      *                                                 association end
      *
-     * @return ResourceAssociationSet
+     * @return ResourceAssociationSet|null
      */
     public function getResourceAssociationSet(ResourceSet $sourceResourceSet, ResourceType $sourceResourceType, ResourceProperty $targetResourceProperty)
     {
@@ -167,14 +181,24 @@ class SimpleMetadataProvider implements IMetadataProvider
 
         $targetResourceSet = $targetResourceProperty->getResourceType()->getCustomState();
         if (is_null($targetResourceSet)) {
-            throw new InvalidOperationException('Failed to retrieve the custom state from ' . $targetResourceProperty->getResourceType()->getName());
+            throw new InvalidOperationException(
+                'Failed to retrieve the custom state from ' . $targetResourceProperty->getResourceType()->getName()
+            );
         }
 
         //Customer_Orders_Orders, Order_Customer_Customers
-        $key = $sourceResourceType->getName() . '_' . $targetResourceProperty->getName() . '_' . $targetResourceSet->getName();
-        if (array_key_exists($key, $this->associationSets)) {
-            return $this->associationSets[$key];
-        }
+        $key = ResourceAssociationSet::keyName(
+            $sourceResourceType,
+            $targetResourceProperty->getName(),
+            $targetResourceSet
+        );
+
+        $associationSet = array_key_exists($key, $this->associationSets) ? $this->associationSets[$key] : null;
+        assert(
+            null == $associationSet || $associationSet instanceof ResourceAssociationSet,
+            "Retrieved resource assocation must be either null or an instance of ResourceAssociationSet"
+        );
+        return $associationSet;
     }
 
     //End Implementation of IMetadataProvider
@@ -404,7 +428,7 @@ class SimpleMetadataProvider implements IMetadataProvider
      *                                                   resource reference
      *                                                   or reference
      *                                                   set property
-     *                                                   ponits to
+     *                                                   points to
      * @param ResourcePropertyKind $resourcePropertyKind The property kind
      */
     private function _addReferencePropertyInternal(
@@ -435,11 +459,12 @@ class SimpleMetadataProvider implements IMetadataProvider
 
         //Customer_Orders_Orders, Order_Customer_Customers
         //(source type::name _ source property::name _ target set::name)
-        $setKey = $resourceType->getName() . '_' . $name . '_' . $targetResourceSet->getName();
+        $setKey = ResourceAssociationSet::keyName($resourceType, $name, $targetResourceSet);
+        //$setKey = $resourceType->getName() . '_' . $name . '_' . $targetResourceType->getName();
         $set = new ResourceAssociationSet(
             $setKey,
             new ResourceAssociationSetEnd($sourceResourceSet, $resourceType, $resourceProperty),
-            new ResourceAssociationSetEnd($targetResourceSet, $targetResourceSet->getResourceType(), null)
+            new ResourceAssociationSetEnd($targetResourceSet, $targetResourceType, null)
         );
         $this->associationSets[$setKey] = $set;
     }
