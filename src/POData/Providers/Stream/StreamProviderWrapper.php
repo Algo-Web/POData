@@ -70,7 +70,7 @@ class StreamProviderWrapper
      *
      * @return string|null
      */
-    public function getReadStream($entity, $resourceStreamInfo)
+    public function getReadStream($entity, ResourceStreamInfo $resourceStreamInfo = null)
     {
         $requestETag = null;
         $checkETagForEquality = null;
@@ -146,7 +146,7 @@ class StreamProviderWrapper
      *
      * @return string|null
      */
-    public function getStreamContentType($entity, $resourceStreamInfo)
+    public function getStreamContentType($entity, ResourceStreamInfo $resourceStreamInfo = null)
     {
         $contentType = null;
         $this->_saveContentTypeAndETag();
@@ -189,7 +189,7 @@ class StreamProviderWrapper
      *
      * @return string Etag
      */
-    public function getStreamETag($entity, $resourceStreamInfo)
+    public function getStreamETag($entity, ResourceStreamInfo $resourceStreamInfo = null)
     {
         $eTag = null;
         $this->_saveContentTypeAndETag();
@@ -238,7 +238,7 @@ class StreamProviderWrapper
      */
     public function getReadStreamUri(
         $entity,
-        $resourceStreamInfo,
+        ResourceStreamInfo $resourceStreamInfo = null,
         $mediaLinkEntryUri
     ) {
         $readStreamUri = null;
@@ -429,7 +429,7 @@ class StreamProviderWrapper
      *
      * @return string Uri to the media resource
      */
-    public function getDefaultStreamEditMediaUri($mediaLinkEntryUri, $resourceStreamInfo)
+    public function getDefaultStreamEditMediaUri($mediaLinkEntryUri, ResourceStreamInfo $resourceStreamInfo = null)
     {
         $base = rtrim($mediaLinkEntryUri, '/') . '/';
         $end = (null == $resourceStreamInfo) ? ODataConstants::URI_VALUE_SEGMENT

@@ -11,6 +11,7 @@ use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\ResourceTypeKind;
+use POData\Providers\Metadata\ResourceStreamInfo;
 use POData\Providers\Metadata\Type\Binary;
 use POData\Providers\Metadata\Type\Boolean;
 use POData\Providers\Metadata\Type\DateTime;
@@ -651,16 +652,16 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
         ODataEntry & $odataEntry
     ) {
         $operationContext = $this->getService()->getOperationContext();
-        $streamProvider = $this->getService()->getStreamProviderWrapper();
-        assert(null != $streamProvider, "Retrieved stream provider must not be null");
+        $streamProviderWrapper = $this->getService()->getStreamProviderWrapper();
+        assert(null != $streamProviderWrapper, "Retrieved stream provider must not be null");
         if ($resourceType->isMediaLinkEntry()) {
             $odataEntry->isMediaLinkEntry = true;
-            $eTag = $streamProvider->getStreamETag2($entryObject, null, $operationContext);
-            $readStreamUri = $streamProvider->getReadStreamUri2($entryObject, null, $operationContext, $relativeUri);
-            $mediaContentType = $streamProvider->getStreamContentType2($entryObject, null, $operationContext);
+            $eTag = $streamProviderWrapper->getStreamETag($entryObject, null);
+            $readStreamUri = $streamProviderWrapper->getReadStreamUri($entryObject, null, $relativeUri);
+            $mediaContentType = $streamProviderWrapper->getStreamContentType($entryObject, null);
             $mediaLink = new ODataMediaLink(
                 $title,
-                $streamProvider->getDefaultStreamEditMediaUri(
+                $streamProviderWrapper->getDefaultStreamEditMediaUri(
                     $entryObject,
                     $resourceType,
                     null,
@@ -677,28 +678,24 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
 
         if ($resourceType->hasNamedStream()) {
             foreach ($resourceType->getAllNamedStreams() as $title => $resourceStreamInfo) {
-                $eTag = $streamProvider->getStreamETag2(
+                $eTag = $streamProviderWrapper->getStreamETag(
                     $entryObject,
-                    $resourceStreamInfo,
-                    $operationContext
+                    $resourceStreamInfo
                 );
-                $readStreamUri = $streamProvider->getReadStreamUri2(
+                $readStreamUri = $streamProviderWrapper->getReadStreamUri(
                     $entryObject,
                     $resourceStreamInfo,
-                    $operationContext,
                     $relativeUri
                 );
-                $mediaContentType = $streamProvider->getStreamContentType2(
+                $mediaContentType = $streamProviderWrapper->getStreamContentType(
                     $entryObject,
-                    $resourceStreamInfo,
-                    $operationContext
+                    $resourceStreamInfo
                 );
                 $mediaLink = new ODataMediaLink(
                     $title,
-                    $streamProvider->getReadStreamUri2(
+                    $streamProviderWrapper->getReadStreamUri(
                         $relativeUri,
                         $resourceStreamInfo,
-                        $operationContext,
                         $relativeUri
                     ),
                     $readStreamUri,
