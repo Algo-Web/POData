@@ -48,14 +48,13 @@ class ResponseWriter
                   || TargetKind::MEDIA_RESOURCE() == $targetKind
         ) {
             // Binary property or media resource
-            $context = $service->getOperationContext();
             if (TargetKind::MEDIA_RESOURCE() == $request->getTargetKind()) {
                 $result = $request->getTargetResult();
                 $streamInfo = $request->getResourceStreamInfo();
                 $provider = $service->getStreamProviderWrapper();
-                $eTag = $provider->getStreamETag2($result, $streamInfo, $context);
+                $eTag = $provider->getStreamETag($result, $streamInfo);
                 $service->getHost()->setResponseETag($eTag);
-                $responseBody = $provider->getReadStream2($result, $streamInfo, null, null, $context);
+                $responseBody = $provider->getReadStream($result, $streamInfo);
             } else {
                 $responseBody = $request->getTargetResult();
             }
