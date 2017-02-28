@@ -662,11 +662,8 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
             $mediaLink = new ODataMediaLink(
                 $title,
                 $streamProviderWrapper->getDefaultStreamEditMediaUri(
-                    $entryObject,
-                    $resourceType,
-                    null,
-                    $operationContext,
-                    $relativeUri
+                    $relativeUri,
+                    null
                 ),
                 $readStreamUri,
                 $mediaContentType,
@@ -903,6 +900,15 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
         return [$odataPropertyContent, $navigationProperties];
     }
 
+    public static function isMatchPrimitive($resourceKind)
+    {
+        return $resourceKind == ResourcePropertyKind::PRIMITIVE
+               || $resourceKind == (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::KEY)
+               || $resourceKind == (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::ETAG)
+               || $resourceKind == (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::KEY | ResourcePropertyKind::ETAG);
+    }
+
+
     /**
      * @param $customObject
      * @param ResourceType $resourceType
@@ -991,4 +997,5 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
 
         return [$navigationProperties, $odataPropertyContent];
     }
+
 }
