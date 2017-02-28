@@ -82,7 +82,13 @@ interface IStreamProvider2
      *               stream has not been created since the creation of $entity. The data service will respond
      *               with 204 if this method returns null
      */
-    public function getReadStream2($entity, ResourceStreamInfo $resourceStreamInfo, $eTag, $checkETagForEquality, IOperationContext $operationContext);
+    public function getReadStream2(
+        $entity,
+        ResourceStreamInfo $resourceStreamInfo = null,
+        $eTag,
+        $checkETagForEquality,
+        IOperationContext $operationContext
+    );
 
     /**
      * This method is invoked by the data services framework to obtain the IANA content type
@@ -111,7 +117,11 @@ interface IStreamProvider2
      *
      * @return string Valid Content-Type string for the named stream associated with the entity
      */
-    public function getStreamContentType2($entity, ResourceStreamInfo $resourceStreamInfo, IOperationContext $operationContext);
+    public function getStreamContentType2(
+        $entity,
+        ResourceStreamInfo $resourceStreamInfo = null,
+        IOperationContext $operationContext
+    );
 
     /**
      * This method is invoked by the data services framework to obtain the ETag of the
@@ -136,7 +146,10 @@ interface IStreamProvider2
      *
      * @return string ETag of the named stream associated with the entity specified
      */
-    public function getStreamETag2($entity, ResourceStreamInfo $resourceStreamInfo, IOperationContext $operationContext);
+    public function getStreamETag2($entity,
+        ResourceStreamInfo $resourceStreamInfo = null,
+        IOperationContext $operationContext
+    );
 
     /**
      * This method is invoked by the data services framework to obtain the URI clients should
@@ -171,8 +184,11 @@ interface IStreamProvider2
      * @return string The URI clients should use when making retrieve (ie. GET) requests to
      *                the stream(ie. Media Resource)
      */
-    public function getReadStreamUri2($entity, ResourceStreamInfo $resourceStreamInfo, IOperationContext $operationContext);
-
+    public function getReadStreamUri2(
+        $entity,
+        ResourceStreamInfo $resourceStreamInfo = null,
+        IOperationContext $operationContext
+    );
 
     /**
      * @param $entity

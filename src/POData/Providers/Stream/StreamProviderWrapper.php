@@ -81,8 +81,9 @@ class StreamProviderWrapper
             $opContext = $this->_service->getOperationContext();
             if (is_null($resourceStreamInfo)) {
                 $this->_loadAndValidateStreamProvider();
-                $stream = $this->_streamProvider->getReadStream(
+                $stream = $this->_streamProvider->getReadStream2(
                     $entity,
+                    null,
                     $requestETag,
                     $checkETagForEquality,
                     $opContext
@@ -153,7 +154,7 @@ class StreamProviderWrapper
         $opContext = $this->_service->getOperationContext();
         if (is_null($resourceStreamInfo)) {
             $this->_loadAndValidateStreamProvider();
-            $contentType = $this->_streamProvider->getStreamContentType($entity, $opContext);
+            $contentType = $this->_streamProvider->getStreamContentType2($entity, null, $opContext);
             if (is_null($contentType)) {
                 throw new InvalidOperationException(
                     Messages::streamProviderWrapperGetStreamContentTypeReturnsEmptyOrNull()
@@ -196,7 +197,7 @@ class StreamProviderWrapper
         $opContext = $this->_service->getOperationContext();
         if (is_null($resourceStreamInfo)) {
             $this->_loadAndValidateStreamProvider();
-            $eTag = $this->_streamProvider->getStreamETag($entity, $opContext);
+            $eTag = $this->_streamProvider->getStreamETag2($entity, null, $opContext);
         } else {
             $this->_loadAndValidateStreamProvider2();
             assert($this->_streamProvider instanceof IStreamProvider2);
@@ -246,7 +247,7 @@ class StreamProviderWrapper
         $opContext = $this->_service->getOperationContext();
         if (is_null($resourceStreamInfo)) {
             $this->_loadAndValidateStreamProvider();
-            $readStreamUri = $this->_streamProvider->getReadStreamUri($entity, $opContext);
+            $readStreamUri = $this->_streamProvider->getReadStreamUri2($entity, null, $opContext);
         } else {
             $this->_loadAndValidateStreamProvider2();
             assert($this->_streamProvider instanceof IStreamProvider2);
