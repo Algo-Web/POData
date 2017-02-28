@@ -694,7 +694,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
                 $mediaLink = new ODataMediaLink(
                     $title,
                     $streamProviderWrapper->getReadStreamUri(
-                        $relativeUri,
+                        $entryObject,
                         $resourceStreamInfo,
                         $relativeUri
                     ),
