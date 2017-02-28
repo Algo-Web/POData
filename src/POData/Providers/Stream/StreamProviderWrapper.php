@@ -24,10 +24,10 @@ class StreamProviderWrapper
     private $_service;
 
     /**
-     * Holds reference to the implementation of IStreamProvider or IStreamProvider2.
+     * Holds reference to the implementation of IStreamProvider2.
      *
      *
-     * @var IStreamProvider|IStreamProvider2
+     * @var IStreamProvider2
      */
     private $_streamProvider;
 

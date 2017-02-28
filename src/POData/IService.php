@@ -42,6 +42,11 @@ interface IService
     public function getStreamProviderWrapper();
 
     /**
+     * @return \POData\Providers\Stream\IStreamProvider2
+     */
+    public function getStreamProviderX();
+
+    /**
      * To set reference to the ServiceHost instance created by the dispatcher.
      *
      * @param ServiceHost $serviceHost data service host
