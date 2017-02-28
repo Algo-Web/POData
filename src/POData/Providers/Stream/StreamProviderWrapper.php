@@ -149,7 +149,6 @@ class StreamProviderWrapper
      */
     public function getStreamContentType($entity, ResourceStreamInfo $resourceStreamInfo = null)
     {
-        $contentType = null;
         $this->_saveContentTypeAndETag();
         $opContext = $this->_service->getOperationContext();
         if (is_null($resourceStreamInfo)) {
@@ -192,7 +191,6 @@ class StreamProviderWrapper
      */
     public function getStreamETag($entity, ResourceStreamInfo $resourceStreamInfo = null)
     {
-        $eTag = null;
         $this->_saveContentTypeAndETag();
         $opContext = $this->_service->getOperationContext();
         if (is_null($resourceStreamInfo)) {
@@ -242,7 +240,6 @@ class StreamProviderWrapper
         ResourceStreamInfo $resourceStreamInfo = null,
         $mediaLinkEntryUri
     ) {
-        $readStreamUri = null;
         $this->_saveContentTypeAndETag();
         $opContext = $this->_service->getOperationContext();
         if (is_null($resourceStreamInfo)) {

@@ -47,7 +47,6 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
     {
         $requestTargetSource = $this->getRequest()->getTargetSource();
 
-        $resourceType = null;
         if ($requestTargetSource == TargetSource::ENTITY_SET) {
             $resourceType = $this->getRequest()->getTargetResourceType();
         } else {
@@ -79,7 +78,6 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
     {
         assert(is_array($entryObjects), '!is_array($entryObjects)');
         $requestTargetSource = $this->getRequest()->getTargetSource();
-        $title = null;
         if ($requestTargetSource == TargetSource::ENTITY_SET) {
             $title = $this->getRequest()->getContainerName();
         } else {
@@ -615,7 +613,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
                     $odataBagContent->propertyContents[] = $this->_primitiveToString($resourceType, $itemValue);
                 } elseif ($bagItemResourceTypeKind == ResourceTypeKind::COMPLEX) {
                     $complexContent = new ODataPropertyContent();
-                    $actualType = $this->_complexObjectToContent(
+                    $this->_complexObjectToContent(
                         $itemValue,
                         $propertyName,
                         $resourceType,
