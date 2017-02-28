@@ -5,6 +5,7 @@ namespace POData\Providers\Stream;
 use POData\Common\ODataException;
 use POData\OperationContext\IOperationContext;
 use POData\Providers\Metadata\ResourceStreamInfo;
+use POData\Providers\Metadata\ResourceType;
 
 /**
  * Class IStreamProvider2.
@@ -171,4 +172,21 @@ interface IStreamProvider2
      *                the stream(ie. Media Resource)
      */
     public function getReadStreamUri2($entity, ResourceStreamInfo $resourceStreamInfo, IOperationContext $operationContext);
+
+
+    /**
+     * @param $entity
+     * @param ResourceType $resourceType
+     * @param ResourceStreamInfo|null $resourceStreamInfo
+     * @param IOperationContext $operationContext
+     * @param null $relativeUri
+     * @return mixed
+     */
+    public function getDefaultStreamEditMediaUri(
+        $entity,
+        ResourceType $resourceType,
+        ResourceStreamInfo $resourceStreamInfo = null,
+        IOperationContext $operationContext,
+        $relativeUri = null
+    );
 }

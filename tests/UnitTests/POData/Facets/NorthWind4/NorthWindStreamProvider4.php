@@ -3,7 +3,10 @@
 namespace UnitTests\POData\Facets\NorthWind4;
 
 use POData\Common\ODataException;
+use POData\OperationContext\IOperationContext;
+use POData\OperationContext\Web\WebOperationContext;
 use POData\Providers\Metadata\ResourceStreamInfo;
+use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Stream\IStreamProvider2;
 
 class NorthWindStreamProvider4 implements IStreamProvider2
@@ -222,7 +225,7 @@ class NorthWindStreamProvider4 implements IStreamProvider2
         ResourceStreamInfo $resourceStreamInfo,
         $eTag,
         $checkETagForEquality,
-        $operationContext
+        IOperationContext $operationContext
     ) {
         /*
         if (!is_null($checkETagForEquality)) {
@@ -272,7 +275,7 @@ class NorthWindStreamProvider4 implements IStreamProvider2
     public function getStreamContentType2(
         $entity,
         ResourceStreamInfo $resourceStreamInfo,
-        $operationContext
+        IOperationContext $operationContext
     ) {
         if (!($entity instanceof Employee)) {
             throw new ODataException('Internal Server Error.', 500);
@@ -299,7 +302,7 @@ class NorthWindStreamProvider4 implements IStreamProvider2
     public function getStreamETag2(
         $entity,
         ResourceStreamInfo $resourceStreamInfo,
-        $operationContext
+        IOperationContext $operationContext
     ) {
     }
 
@@ -323,9 +326,26 @@ class NorthWindStreamProvider4 implements IStreamProvider2
     public function getReadStreamUri2(
         $entity,
         ResourceStreamInfo $resourceStreamInfo,
-        $operationContext
+        IOperationContext $operationContext
     ) {
     }
 
     //End IStreamProvider2 methods implementation
+    /**
+     * @param $entity
+     * @param ResourceType $resourceType
+     * @param ResourceStreamInfo|null $resourceStreamInfo
+     * @param IOperationContext $operationContext
+     * @param null $relativeUri
+     * @return mixed
+     */
+    public function getDefaultStreamEditMediaUri(
+        $entity,
+        ResourceType $resourceType,
+        ResourceStreamInfo $resourceStreamInfo = null,
+        IOperationContext $operationContext,
+        $relativeUri = null
+    ) {
+        // TODO: Implement getDefaultStreamEditMediaUri() method.
+    }
 }
