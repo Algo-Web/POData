@@ -11,6 +11,7 @@ use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\ResourceTypeKind;
+use POData\Providers\Metadata\ResourceStreamInfo;
 use POData\Providers\Metadata\Type\Binary;
 use POData\Providers\Metadata\Type\Boolean;
 use POData\Providers\Metadata\Type\DateTime;
@@ -46,7 +47,6 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
     {
         $requestTargetSource = $this->getRequest()->getTargetSource();
 
-        $resourceType = null;
         if ($requestTargetSource == TargetSource::ENTITY_SET) {
             $resourceType = $this->getRequest()->getTargetResourceType();
         } else {
@@ -78,7 +78,6 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
     {
         assert(is_array($entryObjects), '!is_array($entryObjects)');
         $requestTargetSource = $this->getRequest()->getTargetSource();
-        $title = null;
         if ($requestTargetSource == TargetSource::ENTITY_SET) {
             $title = $this->getRequest()->getContainerName();
         } else {
@@ -614,7 +613,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
                     $odataBagContent->propertyContents[] = $this->_primitiveToString($resourceType, $itemValue);
                 } elseif ($bagItemResourceTypeKind == ResourceTypeKind::COMPLEX) {
                     $complexContent = new ODataPropertyContent();
-                    $actualType = $this->_complexObjectToContent(
+                    $this->_complexObjectToContent(
                         $itemValue,
                         $propertyName,
                         $resourceType,
@@ -650,22 +649,18 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
         $relativeUri,
         ODataEntry & $odataEntry
     ) {
-        $operationContext = $this->getService()->getOperationContext();
-        $streamProvider = $this->getService()->getStreamProviderWrapper();
-        assert(null != $streamProvider, "Retrieved stream provider must not be null");
+        $streamProviderWrapper = $this->getService()->getStreamProviderWrapper();
+        assert(null != $streamProviderWrapper, "Retrieved stream provider must not be null");
         if ($resourceType->isMediaLinkEntry()) {
             $odataEntry->isMediaLinkEntry = true;
-            $eTag = $streamProvider->getStreamETag2($entryObject, null, $operationContext);
-            $readStreamUri = $streamProvider->getReadStreamUri2($entryObject, null, $operationContext, $relativeUri);
-            $mediaContentType = $streamProvider->getStreamContentType2($entryObject, null, $operationContext);
+            $eTag = $streamProviderWrapper->getStreamETag($entryObject, null);
+            $readStreamUri = $streamProviderWrapper->getReadStreamUri($entryObject, null, $relativeUri);
+            $mediaContentType = $streamProviderWrapper->getStreamContentType($entryObject, null);
             $mediaLink = new ODataMediaLink(
                 $title,
-                $streamProvider->getDefaultStreamEditMediaUri(
-                    $entryObject,
-                    $resourceType,
-                    null,
-                    $operationContext,
-                    $relativeUri
+                $streamProviderWrapper->getDefaultStreamEditMediaUri(
+                    $relativeUri,
+                    null
                 ),
                 $readStreamUri,
                 $mediaContentType,
@@ -677,28 +672,24 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
 
         if ($resourceType->hasNamedStream()) {
             foreach ($resourceType->getAllNamedStreams() as $title => $resourceStreamInfo) {
-                $eTag = $streamProvider->getStreamETag2(
+                $eTag = $streamProviderWrapper->getStreamETag(
                     $entryObject,
-                    $resourceStreamInfo,
-                    $operationContext
+                    $resourceStreamInfo
                 );
-                $readStreamUri = $streamProvider->getReadStreamUri2(
+                $readStreamUri = $streamProviderWrapper->getReadStreamUri(
                     $entryObject,
                     $resourceStreamInfo,
-                    $operationContext,
                     $relativeUri
                 );
-                $mediaContentType = $streamProvider->getStreamContentType2(
+                $mediaContentType = $streamProviderWrapper->getStreamContentType(
                     $entryObject,
-                    $resourceStreamInfo,
-                    $operationContext
+                    $resourceStreamInfo
                 );
                 $mediaLink = new ODataMediaLink(
                     $title,
-                    $streamProvider->getReadStreamUri2(
-                        $relativeUri,
+                    $streamProviderWrapper->getReadStreamUri(
+                        $entryObject,
                         $resourceStreamInfo,
-                        $operationContext,
                         $relativeUri
                     ),
                     $readStreamUri,
@@ -834,11 +825,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
         //First write out primitive types
         foreach ($resourceProperties as $name => $resourceProperty) {
             $resourceKind = $resourceProperty->getKind();
-            if ($resourceKind == ResourcePropertyKind::PRIMITIVE
-                || $resourceKind == (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::KEY)
-                || $resourceKind == (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::ETAG)
-                || $resourceKind == (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::KEY | ResourcePropertyKind::ETAG)
-            ) {
+            if (ObjectModelSerializer::isMatchPrimitive($resourceKind)) {
                 $odataProperty = new ODataProperty();
                 $primitiveValue = $this->getPropertyValue($customObject, $resourceType, $resourceProperty);
                 $this->_writePrimitiveValue($primitiveValue, $resourceProperty, $odataProperty);
@@ -872,11 +859,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
                         $relativeUri . '/' . $resourceProperty->getName(),
                         $odataPropertyContent
                     );
-                } elseif ($resourceKind == ResourcePropertyKind::PRIMITIVE
-                          || $resourceKind == (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::KEY)
-                          || $resourceKind == (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::ETAG)
-                          || $resourceKind == (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::KEY | ResourcePropertyKind::ETAG)
-                ) {
+                } elseif (ObjectModelSerializer::isMatchPrimitive($resourceKind)) {
                     continue;
                 } else {
                     assert(
@@ -905,6 +888,18 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
 
         return [$odataPropertyContent, $navigationProperties];
     }
+
+    public static function isMatchPrimitive($resourceKind)
+    {
+        if (16 > $resourceKind) {
+            return false;
+        }
+        if (28 < $resourceKind) {
+            return false;
+        }
+        return 0 == ($resourceKind % 4);
+    }
+
 
     /**
      * @param $customObject
@@ -994,4 +989,5 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
 
         return [$navigationProperties, $odataPropertyContent];
     }
+
 }

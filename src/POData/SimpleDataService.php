@@ -2,6 +2,7 @@
 
 namespace POData;
 
+use POData\Common\ODataException;
 use POData\Configuration\EntitySetRights;
 use POData\Configuration\IServiceConfiguration;
 use POData\ObjectModel\IObjectSerialiser;
@@ -9,6 +10,7 @@ use POData\OperationContext\ServiceHost;
 use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\Metadata\SimpleMetadataProvider;
 use POData\Providers\Query\IQueryProvider;
+use POData\Providers\Query\SimpleQueryProvider;
 use \POData\Providers\Stream\IStreamProvider2;
 
 /**
@@ -45,10 +47,10 @@ class SimpleDataService extends BaseService implements IService
             $queryProviderClassName = $db->queryProviderClassName;
             $this->queryProvider = new $queryProviderClassName($db);
         } else {
-            $this->queryProvider = new QueryProvider($db);
+            throw new ODataException('Invalid query provider supplied', 500);
         }
         $this->setStreamProvider($streamProvider);
-        
+
         $this->setHost($host);
         parent::__construct($serialiser);
     }

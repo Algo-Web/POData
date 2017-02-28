@@ -24,10 +24,10 @@ class StreamProviderWrapper
     private $_service;
 
     /**
-     * Holds reference to the implementation of IStreamProvider or IStreamProvider2.
+     * Holds reference to the implementation of IStreamProvider2.
      *
      *
-     * @var IStreamProvider|IStreamProvider2
+     * @var IStreamProvider2
      */
     private $_streamProvider;
 
@@ -70,7 +70,7 @@ class StreamProviderWrapper
      *
      * @return string|null
      */
-    public function getReadStream($entity, $resourceStreamInfo)
+    public function getReadStream($entity, ResourceStreamInfo $resourceStreamInfo = null)
     {
         $requestETag = null;
         $checkETagForEquality = null;
@@ -81,8 +81,9 @@ class StreamProviderWrapper
             $opContext = $this->_service->getOperationContext();
             if (is_null($resourceStreamInfo)) {
                 $this->_loadAndValidateStreamProvider();
-                $stream = $this->_streamProvider->getReadStream(
+                $stream = $this->_streamProvider->getReadStream2(
                     $entity,
+                    null,
                     $requestETag,
                     $checkETagForEquality,
                     $opContext
@@ -146,14 +147,13 @@ class StreamProviderWrapper
      *
      * @return string|null
      */
-    public function getStreamContentType($entity, $resourceStreamInfo)
+    public function getStreamContentType($entity, ResourceStreamInfo $resourceStreamInfo = null)
     {
-        $contentType = null;
         $this->_saveContentTypeAndETag();
         $opContext = $this->_service->getOperationContext();
         if (is_null($resourceStreamInfo)) {
             $this->_loadAndValidateStreamProvider();
-            $contentType = $this->_streamProvider->getStreamContentType($entity, $opContext);
+            $contentType = $this->_streamProvider->getStreamContentType2($entity, null, $opContext);
             if (is_null($contentType)) {
                 throw new InvalidOperationException(
                     Messages::streamProviderWrapperGetStreamContentTypeReturnsEmptyOrNull()
@@ -189,14 +189,13 @@ class StreamProviderWrapper
      *
      * @return string Etag
      */
-    public function getStreamETag($entity, $resourceStreamInfo)
+    public function getStreamETag($entity, ResourceStreamInfo $resourceStreamInfo = null)
     {
-        $eTag = null;
         $this->_saveContentTypeAndETag();
         $opContext = $this->_service->getOperationContext();
         if (is_null($resourceStreamInfo)) {
             $this->_loadAndValidateStreamProvider();
-            $eTag = $this->_streamProvider->getStreamETag($entity, $opContext);
+            $eTag = $this->_streamProvider->getStreamETag2($entity, null, $opContext);
         } else {
             $this->_loadAndValidateStreamProvider2();
             assert($this->_streamProvider instanceof IStreamProvider2);
@@ -238,15 +237,14 @@ class StreamProviderWrapper
      */
     public function getReadStreamUri(
         $entity,
-        $resourceStreamInfo,
+        ResourceStreamInfo $resourceStreamInfo = null,
         $mediaLinkEntryUri
     ) {
-        $readStreamUri = null;
         $this->_saveContentTypeAndETag();
         $opContext = $this->_service->getOperationContext();
         if (is_null($resourceStreamInfo)) {
             $this->_loadAndValidateStreamProvider();
-            $readStreamUri = $this->_streamProvider->getReadStreamUri($entity, $opContext);
+            $readStreamUri = $this->_streamProvider->getReadStreamUri2($entity, null, $opContext);
         } else {
             $this->_loadAndValidateStreamProvider2();
             assert($this->_streamProvider instanceof IStreamProvider2);
@@ -429,7 +427,7 @@ class StreamProviderWrapper
      *
      * @return string Uri to the media resource
      */
-    public function getDefaultStreamEditMediaUri($mediaLinkEntryUri, $resourceStreamInfo)
+    public function getDefaultStreamEditMediaUri($mediaLinkEntryUri, ResourceStreamInfo $resourceStreamInfo = null)
     {
         $base = rtrim($mediaLinkEntryUri, '/') . '/';
         $end = (null == $resourceStreamInfo) ? ODataConstants::URI_VALUE_SEGMENT
