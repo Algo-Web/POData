@@ -1,7 +1,8 @@
 
-Unreleased
-----------
-   * Correct issues to better provider streamable data.  (see [#68] (https://github.com/Algo-Web/POData/pull/68))
+0.2.0 (2017-03-02)
+------------------
+   * Correct issues to better provide streamable data.  (see [#68] (https://github.com/Algo-Web/POData/pull/68))
+   * Fix set expansion.  **cdcampos** rides again!  (see [#66](https://github.com/Algo-Web/POData/issues/66) and [#67](https://github.com/Algo-Web/POData/pull/67) )
    * Bring test coverage up to 80% of production codebase, not just covered files.  This has rumbled small bugfixen, cleanups, etc that are too numerous to list here.
    * Unify property get/set calls into specialist class.  (see [#61](https://github.com/Algo-Web/POData/pull/61))
    * Refactor base service class to enable serialiser injection in constructor.  (see [#57](https://github.com/Algo-Web/POData/pull/57))
