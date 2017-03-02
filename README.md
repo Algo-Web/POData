@@ -26,17 +26,13 @@ Long term goals include:
 
 * OData v4 Support
 * Transaction support
-* Convince WordPress & MediaWiki to change their entire API to OData
 
 MVC Integrations
 =================
-It's likley POData will execute in the context of an Web MVC Framework.  As such, the framework has probably already done a lot of the parsing for you and it makes no sense to have POData reinvent the wheel.  As such, some MVC adapters are provided to bridge the MVC framework to POData.
+It's likely POData will execute in the context of an Web MVC Framework.  As such, the framework has probably already done a lot of the parsing for you and it makes no sense to have POData reinvent the wheel.  As such, some MVC adapters are available to bridge the MVC framework to POData.
 * ZendFramework 1 - [POData-ZF1](https://github.com/POData/POData-ZF1)
 * Laravel 5.1+ - [POData-Laravel](https://github.com/Algo-Web/POData-Laravel)
-
-Getting Started
-================
-Check the Wiki for a [step by step getting started guide](https://github.com/POData/POData/wiki#getting-started-guide)
+* Lumen 5.4+ - [OData-Lumen](https://github.com/AnitaYip/OData-Lumen)
 
 Contact
 ============
