@@ -90,7 +90,7 @@ interface IObjectSerialiser
      *
      * @return ODataPropertyContent
      */
-    public function writeTopLevelPrimitive(&$primitiveValue, ResourceProperty &$resourceProperty);
+    public function writeTopLevelPrimitive(&$primitiveValue, ResourceProperty &$resourceProperty = null);
 
     /**
      * Gets reference to the request submitted by client.

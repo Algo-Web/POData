@@ -242,7 +242,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
      */
     public function writeTopLevelPrimitive(
         &$primitiveValue,
-        ResourceProperty & $resourceProperty
+        ResourceProperty & $resourceProperty = null
     ) {
         $propertyContent = new ODataPropertyContent();
         $propertyContent->properties[] = new ODataProperty();
