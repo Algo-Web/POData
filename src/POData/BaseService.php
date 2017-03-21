@@ -419,7 +419,6 @@ abstract class BaseService implements IRequestHandler, IService
                 $result = $request->getTargetResult();
                 $requestTargetKind = $request->getTargetKind();
                 $requestProperty = $request->getProjectedProperty();
-                assert(null != $requestProperty, 'Projected request property cannot be null');
                 if ($request->isLinkUri()) {
                     // In the query 'Orders(1245)/$links/Customer', the targeted
                     // Customer might be null
@@ -462,12 +461,14 @@ abstract class BaseService implements IRequestHandler, IService
                         $this->getHost()->setResponseETag($eTag);
                     }
                 } elseif (TargetKind::COMPLEX_OBJECT() == $requestTargetKind) {
+                    assert(null != $requestProperty, 'Projected request property cannot be null');
                     $odataModelInstance = $objectModelSerializer->writeTopLevelComplexObject(
                         $result,
                         $requestProperty->getName(),
                         $targetResourceType
                     );
                 } elseif (TargetKind::BAG() == $requestTargetKind) {
+                    assert(null != $requestProperty, 'Projected request property cannot be null');
                     $odataModelInstance = $objectModelSerializer->writeTopLevelBagObject(
                         $result,
                         $requestProperty->getName(),

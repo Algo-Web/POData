@@ -242,14 +242,14 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
      */
     public function writeTopLevelPrimitive(
         &$primitiveValue,
-        ResourceProperty & $resourceProperty
+        ResourceProperty & $resourceProperty = null
     ) {
         $propertyContent = new ODataPropertyContent();
         $propertyContent->properties[] = new ODataProperty();
         $this->_writePrimitiveValue(
             $primitiveValue,
-            $resourceProperty,
-            $propertyContent->properties[0]
+            $propertyContent->properties[0],
+            $resourceProperty
         );
 
         return $propertyContent;
@@ -498,19 +498,18 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
      * Writes a primitive value and related information to the given
      * ODataProperty instance.
      *
-     * @param mixed            &$primitiveValue   The primitive value to write
-     * @param ResourceProperty &$resourceProperty The metadata of the primitive
-     *                                            property value
-     * @param ODataProperty    &$odataProperty    ODataProperty instance to which
+     * @param mixed &$primitiveValue The primitive value to write
+     * @param ODataProperty &$odataProperty ODataProperty instance to which
      *                                            the primitive value and related
      *                                            information to write out
      *
-     * @throws ODataException If given value is not primitive
+     * @param ResourceProperty|null &$resourceProperty The metadata of the primitive
+     *                                            property value
      */
     private function _writePrimitiveValue(
         &$primitiveValue,
-        ResourceProperty & $resourceProperty,
-        ODataProperty & $odataProperty
+        ODataProperty &$odataProperty,
+        ResourceProperty &$resourceProperty = null
     ) {
         if (is_object($primitiveValue)) {
             //TODO ERROR: The property 'PropertyName'
@@ -828,7 +827,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
             if (ObjectModelSerializer::isMatchPrimitive($resourceKind)) {
                 $odataProperty = new ODataProperty();
                 $primitiveValue = $this->getPropertyValue($customObject, $resourceType, $resourceProperty);
-                $this->_writePrimitiveValue($primitiveValue, $resourceProperty, $odataProperty);
+                $this->_writePrimitiveValue($primitiveValue, $odataProperty, $resourceProperty);
                 $odataPropertyContent->properties[] = $odataProperty;
             }
         }
@@ -970,7 +969,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
                 );
             } elseif ($resourceProperty->isKindOf(ResourcePropertyKind::PRIMITIVE)) {
                 $odataProperty = new ODataProperty();
-                $this->_writePrimitiveValue($propertyValue, $resourceProperty, $odataProperty);
+                $this->_writePrimitiveValue($propertyValue, $odataProperty, $resourceProperty);
                 $odataPropertyContent->properties[] = $odataProperty;
             } elseif ($propertyTypeKind == ResourcePropertyKind::COMPLEX_TYPE) {
                 $complexResourceType = $resourceProperty->getResourceType();
