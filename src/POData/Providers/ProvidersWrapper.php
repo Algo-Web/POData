@@ -670,7 +670,7 @@ class ProvidersWrapper
      * @param object           $sourceEntity      The source entity instance
      * @param ResourceSet      $targetResourceSet The resource set of containing the target of the navigation property
      * @param ResourceProperty $targetProperty    The navigation property to retrieve
-     * @param FilterInfo       $filterInfo        Represents the $filter parameter of the OData query.
+     * @param FilterInfo|null  $filterInfo        Represents the $filter parameter of the OData query.
      *                                            NULL if no $filter specified
      * @param mixed            $orderBy           sorted order if we want to get the data in some specific order
      * @param int              $top               number of records which  need to be skip
@@ -686,7 +686,7 @@ class ProvidersWrapper
         $sourceEntity,
         ResourceSet $targetResourceSet,
         ResourceProperty $targetProperty,
-        $filterInfo,
+        $filterInfo = null,
         $orderBy,
         $top,
         $skip

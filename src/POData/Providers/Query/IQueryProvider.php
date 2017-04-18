@@ -146,7 +146,13 @@ interface IQueryProvider
      *
      * @return object|null The new resource value if it is assignable or throw exception for null.
      */
-    public function updateResource(ResourceSet $sourceResourceSet, $sourceEntityInstance, KeyDescriptor $keyDescriptor, $data, $shouldUpdate = false);
+    public function updateResource(
+        ResourceSet $sourceResourceSet,
+        $sourceEntityInstance,
+        KeyDescriptor $keyDescriptor,
+        $data,
+        $shouldUpdate = false
+    );
 
     /**
      * Puts an entity instance to entity set identified by a key.
@@ -176,7 +182,7 @@ interface IQueryProvider
     );
 
     /*
-     * @param ResourceSet      $resourceSet   The entity set containing the entity to fetch
+     * @param ResourceSet      $sourceResourceSet    The entity set containing the entity to fetch
      * @param object           $keyDescriptor
      * @param object           $data                 The New data for the entity instance.
      *
