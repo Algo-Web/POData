@@ -49,16 +49,6 @@ class ResourceAssociationSetEnd
         ResourceProperty $resourceProperty = null
     ) {
         if (!is_null($resourceProperty)
-            && !($resourceProperty instanceof ResourceProperty)
-        ) {
-            throw new \InvalidArgumentException(
-                Messages::resourceAssociationSetPropertyMustBeNullOrInstanceofResourceProperty(
-                    '$resourceProperty'
-                )
-            );
-        }
-
-        if (!is_null($resourceProperty)
             && (is_null($resourceType->resolveProperty($resourceProperty->getName()))
                 || (($resourceProperty->getKind() != ResourcePropertyKind::RESOURCE_REFERENCE)
                     && ($resourceProperty->getKind() != ResourcePropertyKind::RESOURCESET_REFERENCE)))

@@ -95,6 +95,7 @@ class SimpleMetadataProvider implements IMetadataProvider
         if (array_key_exists($name, $this->resourceSets)) {
             return $this->resourceSets[$name];
         }
+        return null;
     }
 
     /**
@@ -123,6 +124,7 @@ class SimpleMetadataProvider implements IMetadataProvider
         if (array_key_exists($name, $this->associationSets)) {
             return $this->associationSets[$name];
         }
+        return null;
     }
 
     /**
@@ -164,8 +166,11 @@ class SimpleMetadataProvider implements IMetadataProvider
      *
      * @return ResourceAssociationSet|null
      */
-    public function getResourceAssociationSet(ResourceSet $sourceResourceSet, ResourceType $sourceResourceType, ResourceProperty $targetResourceProperty)
-    {
+    public function getResourceAssociationSet(
+        ResourceSet $sourceResourceSet,
+        ResourceType $sourceResourceType,
+        ResourceProperty $targetResourceProperty
+    ) {
         //e.g.
         //ResourceSet => Representing 'Customers' entity set
         //ResourceType => Representing'Customer' entity type
@@ -270,7 +275,7 @@ class SimpleMetadataProvider implements IMetadataProvider
     }
 
     /**
-     * To add a Key-primitive property to a resouce (Complex/Entuty).
+     * To add a Key-primitive property to a resource (Complex/Entity).
      *
      * @param ResourceType $resourceType resource type to which key property
      *                                   is to be added
@@ -366,6 +371,13 @@ class SimpleMetadataProvider implements IMetadataProvider
             throw new InvalidOperationException('Complex property can be added to an entity or another complex type');
         }
 
+        // check that property and resource name don't up and collide - would violate OData spec
+        if (strtolower($name) == strtolower($resourceType->getName())) {
+            throw new InvalidOperationException(
+                'Property name must be different from resource name.'
+            );
+        }
+
         $this->checkInstanceProperty($name, $resourceType);
 
         $kind = ResourcePropertyKind::COMPLEX_TYPE;
@@ -389,9 +401,22 @@ class SimpleMetadataProvider implements IMetadataProvider
      * @param bool         $isBag          property is bag or not
      * @param bool         $isETagProperty property is etag or not
      */
-    private function _addPrimitivePropertyInternal($resourceType, $name, $typeCode, $isKey = false, $isBag = false, $isETagProperty = false)
-    {
+    private function _addPrimitivePropertyInternal(
+        $resourceType,
+        $name,
+        $typeCode,
+        $isKey = false,
+        $isBag = false,
+        $isETagProperty = false
+    ) {
         $this->checkInstanceProperty($name, $resourceType);
+
+        // check that property and resource name don't up and collide - would violate OData spec
+        if (strtolower($name) == strtolower($resourceType->getName())) {
+            throw new InvalidOperationException(
+                'Property name must be different from resource name.'
+            );
+        }
 
         $primitiveResourceType = ResourceType::getPrimitiveResourceType($typeCode);
 
@@ -438,6 +463,13 @@ class SimpleMetadataProvider implements IMetadataProvider
         $resourcePropertyKind
     ) {
         $this->checkInstanceProperty($name, $resourceType);
+
+        // check that property and resource name don't up and collide - would violate OData spec
+        if (strtolower($name) == strtolower($resourceType->getName())) {
+            throw new InvalidOperationException(
+                'Property name must be different from resource name.'
+            );
+        }
 
         if (!($resourcePropertyKind == ResourcePropertyKind::RESOURCESET_REFERENCE
             || $resourcePropertyKind == ResourcePropertyKind::RESOURCE_REFERENCE)

@@ -100,6 +100,22 @@ class SimpleMetadataProviderTest extends TestCase
         $this->assertNull($result);
     }
 
+    public function testResolveResourceSetOnEmpty()
+    {
+        $foo = new SimpleMetadataProvider('string', 'String');
+
+        $result = $foo->resolveResourceSet('Hammer');
+        $this->assertNull($result);
+    }
+
+    public function testResolveAssociationSetOnEmpty()
+    {
+        $foo = new SimpleMetadataProvider('string', 'String');
+
+        $result = $foo->resolveAssociationSet('Hammer');
+        $this->assertNull($result);
+    }
+
     public function testHasDerivedTypes()
     {
         $type = m::mock(ResourceType::class);
@@ -207,6 +223,7 @@ class SimpleMetadataProviderTest extends TestCase
         $type = m::mock(ResourceType::class);
         $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY);
         $type->shouldReceive('getInstanceType')->andReturn($deflect);
+        $type->shouldReceive('getName')->andReturn('outaTime');
 
         $complexType = m::mock(ResourceType::class);
         $foo = new SimpleMetadataProvider('string', 'String');
@@ -216,6 +233,31 @@ class SimpleMetadataProviderTest extends TestCase
 
         try {
             $foo->addComplexProperty($type, 'Time', $complexType);
+        } catch (InvalidOperationException $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testAddComplexPropertyWithResourceNameCollision()
+    {
+        $deflect = m::mock(ReflectionClass::class);
+        $deflect->shouldReceive('getProperty')->andThrow(new ReflectionException('OH NOES!'));
+        $deflect->shouldReceive('hasMethod')->withArgs(['__get'])->andReturn(true)->never();
+
+        $type = m::mock(ResourceType::class);
+        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY);
+        $type->shouldReceive('getInstanceType')->andReturn($deflect);
+        $type->shouldReceive('getName')->andReturn('time');
+
+        $complexType = m::mock(ResourceType::class);
+        $foo = new SimpleMetadataProvider('string', 'String');
+
+        $expected = 'Property name must be different from resource name.';
+        $actual = null;
+
+        try {
+            $foo->addComplexProperty($type, 'time', $complexType);
         } catch (InvalidOperationException $e) {
             $actual = $e->getMessage();
         }
@@ -259,6 +301,54 @@ class SimpleMetadataProviderTest extends TestCase
 
         try {
             $foo->addKeyProperty($complex, $keyName, TypeCode::OBJECT);
+        } catch (InvalidOperationException $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testAddPrimitivePropertyWithNameCollision()
+    {
+        $deflect = m::mock(ReflectionClass::class);
+        $deflect->shouldReceive('hasMethod')->withArgs(['__get'])->andReturn(true)->once();
+
+        $type = m::mock(ResourceType::class);
+        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY);
+        $type->shouldReceive('getInstanceType')->andReturn($deflect);
+        $type->shouldReceive('getName')->andReturn('time');
+
+        $foo = new SimpleMetadataProvider('string', 'String');
+
+        $expected = 'Property name must be different from resource name.';
+        $actual = null;
+
+        try {
+            $foo->addPrimitiveProperty($type, 'time', TypeCode::OBJECT);
+        } catch (InvalidOperationException $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testAddResourceReferenceNameCollision()
+    {
+        $deflect = m::mock(ReflectionClass::class);
+        $deflect->shouldReceive('hasMethod')->withArgs(['__get'])->andReturn(true)->once();
+
+        $type = m::mock(ResourceType::class);
+        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY);
+        $type->shouldReceive('getInstanceType')->andReturn($deflect);
+        $type->shouldReceive('getName')->andReturn('time');
+
+        $resourceSet = m::mock(ResourceSet::class);
+
+        $foo = new SimpleMetadataProvider('string', 'String');
+
+        $expected = 'Property name must be different from resource name.';
+        $actual = null;
+
+        try {
+            $foo->addResourceReferenceProperty($type, 'time', $resourceSet);
         } catch (InvalidOperationException $e) {
             $actual = $e->getMessage();
         }

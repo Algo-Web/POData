@@ -34,4 +34,35 @@ class ResourceAssociationSetEndTest extends TestCase
         }
         $this->assertEquals($expected, $actual);
     }
+
+    public function testConstructorWithBadResourceProperty()
+    {
+        $set = m::mock(ResourceSet::class);
+        $type = m::mock(ResourceType::class);
+
+        $property = new \StdClass();
+
+        // Type-hint mismatch error message is slightly different in PHP 7.1
+        $expected = "Argument 3 passed to POData\\Providers\\Metadata\\ResourceAssociationSetEnd::__construct() must be"
+                    ." an instance of POData\\Providers\\Metadata\\ResourceProperty, instance of stdClass given,";
+        $expected71 = "Argument 3 passed to POData\\Providers\\Metadata\\ResourceAssociationSetEnd::__construct() must"
+                      ." be an instance of POData\\Providers\\Metadata\\ResourceProperty or null, instance of stdClass"
+                      ." given,";
+        $actual = null;
+
+        try {
+            $foo = new ResourceAssociationSetEnd($set, $type, $property);
+        } catch (\Exception $e) {
+            // PHP 5.6
+            $actual = $e->getMessage();
+        } catch (\Error $e) {
+            // PHP 7.x
+            $actual = $e->getMessage();
+        }
+
+        // If we're running under PHP 7.1 or later, use "or null" expectation
+        $targ = version_compare(phpversion(), "7.1", ">=") ? $expected71 : $expected;
+
+        $this->assertStringStartsWith($targ, $actual);
+    }
 }
