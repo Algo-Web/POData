@@ -524,7 +524,9 @@ class SimpleMetadataProvider implements IMetadataProvider
         if (array_key_exists($name, $this->resourceTypes)) {
             throw new InvalidOperationException('Type with same name already added');
         }
-
+        if($typeKind ==  ResourceTypeKind::ENTITY){
+            $this->metadataManager->addEntityType($name);
+        }
         $entityType = new ResourceType($refClass, $typeKind, $name, $namespace, $baseResourceType);
         $this->resourceTypes[$name] = $entityType;
         ksort($this->resourceTypes);
