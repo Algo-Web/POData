@@ -17,7 +17,7 @@ class SimpleMetadataProvider implements IMetadataProvider
     protected $associationSets = [];
     protected $containerName;
     protected $namespaceName;
-    public $mappedDetails = null;
+    public $OdataEntityMap = [];
 
     //Begin Implementation of IMetadataProvider
 
@@ -439,6 +439,9 @@ class SimpleMetadataProvider implements IMetadataProvider
 
         $resourceProperty = new ResourceProperty($name, null, $kind, $primitiveResourceType);
         $resourceType->addProperty($resourceProperty);
+        if(array_key_exists($resourceType, $this->OdataEntityMap)){
+            $this->metadataManager->addPropertyToEntityType(OdataEntityMap[$resourceType],$name,$primitiveResourceType->getFullName(),null,false,$isKey);
+        }
     }
 
     /**
@@ -524,12 +527,16 @@ class SimpleMetadataProvider implements IMetadataProvider
         if (array_key_exists($name, $this->resourceTypes)) {
             throw new InvalidOperationException('Type with same name already added');
         }
-        if($typeKind ==  ResourceTypeKind::ENTITY){
-            $this->metadataManager->addEntityType($name);
-        }
+
         $entityType = new ResourceType($refClass, $typeKind, $name, $namespace, $baseResourceType);
         $this->resourceTypes[$name] = $entityType;
         ksort($this->resourceTypes);
+
+        if($typeKind ==  ResourceTypeKind::ENTITY){
+            $this->OdataEntityMap[$entityType] = $this->metadataManager->addEntityType($name);
+        }
+
+
 
         return $entityType;
     }
