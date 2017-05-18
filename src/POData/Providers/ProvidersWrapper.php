@@ -419,8 +419,7 @@ class ProvidersWrapper
         ResourceSetWrapper $resourceSetWrapper,
         ResourceType $resourceType,
         ResourceProperty $navigationResourceProperty
-    )
-    {
+    ) {
         $associationSet = $this->getResourceAssociationSet(
             $resourceSetWrapper,
             $resourceType,

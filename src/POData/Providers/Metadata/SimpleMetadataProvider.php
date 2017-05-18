@@ -259,8 +259,7 @@ class SimpleMetadataProvider implements IMetadataProvider
         $namespace,
         $typeKind,
         $baseResourceType
-    )
-    {
+    ) {
         if (array_key_exists($name, $this->resourceTypes)) {
             throw new InvalidOperationException('Type with same name already added');
         }

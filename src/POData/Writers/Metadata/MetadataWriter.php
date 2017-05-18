@@ -57,6 +57,4 @@ class MetadataWriter
     {
         return $this->_dataServiceVersion;
     }
-
-
 }
