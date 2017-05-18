@@ -503,6 +503,12 @@ class SimpleMetadataProvider implements IMetadataProvider
             new ResourceAssociationSetEnd($sourceResourceSet, $resourceType, $resourceProperty),
             new ResourceAssociationSetEnd($targetResourceSet, $targetResourceType, null)
         );
+        if($resourcePropertyKind == ResourcePropertyKind::RESOURCESET_REFERENCE){
+
+            $this->metadataManager->addNavigationPropertyToEntityType($this->OdataEntityMap[$resourceType],"*",$name,$targetResourceType,"*");
+        }else{
+            $this->metadataManager->addNavigationPropertyToEntityType($this->OdataEntityMap[$resourceType],"0..1",$name,$this->OdataEntityMap[$targetResourceType],"0..1");
+        }
         $this->associationSets[$setKey] = $set;
     }
 
