@@ -439,8 +439,9 @@ class SimpleMetadataProvider implements IMetadataProvider
 
         $resourceProperty = new ResourceProperty($name, null, $kind, $primitiveResourceType);
         $resourceType->addProperty($resourceProperty);
-        if(array_key_exists($resourceType, $this->OdataEntityMap)){
-            $this->metadataManager->addPropertyToEntityType($this->OdataEntityMap[$resourceType],$name,$primitiveResourceType->getFullName(),null,false,$isKey);
+        //if(array_key_exists($resourceType, $this->OdataEntityMap)){
+        if(null == $this->OdataEntityMap[$resourceType->getFullName()]) {
+            $this->metadataManager->addPropertyToEntityType($this->OdataEntityMap[$resourceType->getFullName()],$name,$primitiveResourceType->getFullName(),null,false,$isKey);
         }
     }
 
@@ -505,9 +506,9 @@ class SimpleMetadataProvider implements IMetadataProvider
         );
         if($resourcePropertyKind == ResourcePropertyKind::RESOURCESET_REFERENCE){
 
-            $this->metadataManager->addNavigationPropertyToEntityType($this->OdataEntityMap[$resourceType],"*",$name,$targetResourceType,"*");
+            $this->metadataManager->addNavigationPropertyToEntityType($this->OdataEntityMap[$resourceType->getFullName()],"*",$name,$this->OdataEntityMap[$targetResourceType->getFullName()],"*");
         }else{
-            $this->metadataManager->addNavigationPropertyToEntityType($this->OdataEntityMap[$resourceType],"0..1",$name,$this->OdataEntityMap[$targetResourceType],"0..1");
+            $this->metadataManager->addNavigationPropertyToEntityType($this->OdataEntityMap[$resourceType->getFullName],"0..1",$name,$this->OdataEntityMap[$targetResourceType->getFullName()],"0..1");
         }
         $this->associationSets[$setKey] = $set;
     }
@@ -539,7 +540,7 @@ class SimpleMetadataProvider implements IMetadataProvider
         ksort($this->resourceTypes);
 
         if($typeKind ==  ResourceTypeKind::ENTITY){
-            $this->OdataEntityMap[$entityType] = $this->metadataManager->addEntityType($name);
+            $this->OdataEntityMap[$entityType->getFullName()] = $this->metadataManager->addEntityType($name);
         }
 
 
