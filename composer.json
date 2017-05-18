@@ -23,13 +23,14 @@
     }
   ],
 
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "require": {
         "myclabs/php-enum": "1.2.0",
         "verdant/xml2array": "dev-master",
         "php": ">=5.6.4",
         "illuminate/http": ">=5.1",
-        "nesbot/carbon": "^1.21"
+        "nesbot/carbon": "^1.21",
+        "algo-web/o-data-metadata": "dev-master"
     },
     "require-dev": {
         "doctrine/annotations": "1.*",

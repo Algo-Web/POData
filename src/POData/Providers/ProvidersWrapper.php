@@ -188,6 +188,59 @@ class ProvidersWrapper
     }
 
     /**
+     * This function perform the following operations
+     *  (1) If the cache contain an entry [key, value] for the resourceset then
+     *      return the entry-value
+     *  (2) If the cache not contain an entry for the resourceset then validate
+     *      the resourceset
+     *            (a) If valid add entry as [resouceset_name, resourceSetWrapper]
+     *            (b) if not valid add entry as [resouceset_name, null]
+     *  Note: validating a resourceset means checking the resourceset is visible
+     *  or not using configuration.
+     *
+     * @param ResourceSet $resourceSet The resourceset to validate and get the
+     *                                 wrapper for
+     *
+     * @return ResourceSetWrapper|null Returns an instance if a resource set with the given name is visible
+     */
+    private function _validateResourceSetAndGetWrapper(ResourceSet $resourceSet)
+    {
+        $cacheKey = $resourceSet->getName();
+        if (array_key_exists($cacheKey, $this->setWrapperCache)) {
+            return $this->setWrapperCache[$cacheKey];
+        }
+
+        $this->validateResourceType($resourceSet->getResourceType());
+        $wrapper = new ResourceSetWrapper($resourceSet, $this->config);
+        $nuVal = $wrapper->isVisible() ? $wrapper : null;
+        $this->setWrapperCache[$cacheKey] = $nuVal;
+
+        return $this->setWrapperCache[$cacheKey];
+    }
+
+    /**
+     * Validates the given instance of ResourceType.
+     *
+     * @param ResourceType $resourceType The ResourceType to validate
+     *
+     * @throws ODataException Exception if $resourceType is invalid
+     *
+     * @return ResourceType
+     */
+    private function validateResourceType(ResourceType $resourceType)
+    {
+        $cacheKey = $resourceType->getName();
+        if (array_key_exists($cacheKey, $this->typeCache)) {
+            return $this->typeCache[$cacheKey];
+        }
+
+        //TODO: Do validation if any for the ResourceType
+        $this->typeCache[$cacheKey] = $resourceType;
+
+        return $resourceType;
+    }
+
+    /**
      * To get all resource types in the data source,
      * Note: Wrapper for IMetadataProvider::getTypes method implementation.
      *
@@ -308,6 +361,85 @@ class ProvidersWrapper
     }
 
     /**
+     * Gets the visible resource properties for the given resource type from the given resource set wrapper.
+     *
+     * @param ResourceSetWrapper $setWrapper Resource set wrapper in question
+     * @param ResourceType $resourceType Resource type in question
+     *
+     * @return ResourceProperty[] Collection of visible resource properties from the given resource set wrapper
+     *                            and resource type
+     */
+    public function getResourceProperties(ResourceSetWrapper $setWrapper, ResourceType $resourceType)
+    {
+        if ($resourceType->getResourceTypeKind() != ResourceTypeKind::ENTITY) {
+            //Complex resource type
+            return $resourceType->getAllProperties();
+        }
+        //TODO: move this to doctrine annotations
+        $cacheKey = $setWrapper->getName() . '_' . $resourceType->getFullName();
+        if (!array_key_exists($cacheKey, $this->propertyCache)) {
+            //Fill the cache
+            $this->propertyCache[$cacheKey] = [];
+            foreach ($resourceType->getAllProperties() as $resourceProperty) {
+                //Check whether this is a visible navigation property
+                //TODO: is this broken?? see #87
+                if ($resourceProperty->getTypeKind() == ResourceTypeKind::ENTITY
+                    && !is_null($this->getResourceSetWrapperForNavigationProperty(
+                        $setWrapper,
+                        $resourceType,
+                        $resourceProperty
+                    ))
+                ) {
+                    $this->propertyCache[$cacheKey][$resourceProperty->getName()] = $resourceProperty;
+                } else {
+                    //primitive, bag or complex property
+                    $this->propertyCache[$cacheKey][$resourceProperty->getName()] = $resourceProperty;
+                }
+            }
+        }
+
+        return $this->propertyCache[$cacheKey];
+    }
+
+    /**
+     * Gets the target resource set wrapper for the given navigation property,
+     * source resource set wrapper and the source resource type.
+     *
+     * @param ResourceSetWrapper $resourceSetWrapper Source resource set
+     * @param ResourceType $resourceType Source resource type
+     * @param ResourceProperty $navigationResourceProperty Navigation property
+     *
+     * @return ResourceSetWrapper|null Returns instance of ResourceSetWrapper
+     *                                 (describes the entity set and associated configuration) for the
+     *                                 given navigation property. returns NULL if resourceset for the
+     *                                 navigation property is invisible or if metadata provider returns
+     *                                 null resource association set
+     */
+    public function getResourceSetWrapperForNavigationProperty(
+        ResourceSetWrapper $resourceSetWrapper,
+        ResourceType $resourceType,
+        ResourceProperty $navigationResourceProperty
+    ) {
+        $associationSet = $this->getResourceAssociationSet(
+            $resourceSetWrapper,
+            $resourceType,
+            $navigationResourceProperty
+        );
+
+        if (!is_null($associationSet)) {
+            $relatedAssociationSetEnd = $associationSet->getRelatedResourceAssociationSetEnd(
+                $resourceSetWrapper->getResourceSet(),
+                $resourceType,
+                $navigationResourceProperty
+            );
+
+            return $this->_validateResourceSetAndGetWrapper(
+                $relatedAssociationSetEnd->getResourceSet()
+            );
+        }
+    }
+
+    /**
      * Gets the ResourceAssociationSet instance for the given source association end,
      * Note: Wrapper for IMetadataProvider::getResourceAssociationSet
      * method implementation.
@@ -389,161 +521,6 @@ class ProvidersWrapper
     }
 
     /**
-     * Gets the target resource set wrapper for the given navigation property,
-     * source resource set wrapper and the source resource type.
-     *
-     * @param ResourceSetWrapper $resourceSetWrapper         Source resource set
-     * @param ResourceType       $resourceType               Source resource type
-     * @param ResourceProperty   $navigationResourceProperty Navigation property
-     *
-     * @return ResourceSetWrapper|null Returns instance of ResourceSetWrapper
-     *                                 (describes the entity set and associated configuration) for the
-     *                                 given navigation property. returns NULL if resourceset for the
-     *                                 navigation property is invisible or if metadata provider returns
-     *                                 null resource association set
-     */
-    public function getResourceSetWrapperForNavigationProperty(
-        ResourceSetWrapper $resourceSetWrapper,
-        ResourceType $resourceType,
-        ResourceProperty $navigationResourceProperty
-    ) {
-        $associationSet = $this->getResourceAssociationSet(
-            $resourceSetWrapper,
-            $resourceType,
-            $navigationResourceProperty
-        );
-
-        if (!is_null($associationSet)) {
-            $relatedAssociationSetEnd = $associationSet->getRelatedResourceAssociationSetEnd(
-                $resourceSetWrapper->getResourceSet(),
-                $resourceType,
-                $navigationResourceProperty
-            );
-
-            return $this->_validateResourceSetAndGetWrapper(
-                $relatedAssociationSetEnd->getResourceSet()
-            );
-        }
-    }
-
-    /**
-     * Gets the visible resource properties for the given resource type from the given resource set wrapper.
-     *
-     * @param ResourceSetWrapper $setWrapper   Resource set wrapper in question
-     * @param ResourceType       $resourceType Resource type in question
-     *
-     * @return ResourceProperty[] Collection of visible resource properties from the given resource set wrapper
-     *                            and resource type
-     */
-    public function getResourceProperties(ResourceSetWrapper $setWrapper, ResourceType $resourceType)
-    {
-        if ($resourceType->getResourceTypeKind() != ResourceTypeKind::ENTITY) {
-            //Complex resource type
-            return $resourceType->getAllProperties();
-        }
-        //TODO: move this to doctrine annotations
-        $cacheKey = $setWrapper->getName() . '_' . $resourceType->getFullName();
-        if (!array_key_exists($cacheKey, $this->propertyCache)) {
-            //Fill the cache
-            $this->propertyCache[$cacheKey] = [];
-            foreach ($resourceType->getAllProperties() as $resourceProperty) {
-                //Check whether this is a visible navigation property
-                //TODO: is this broken?? see #87
-                if ($resourceProperty->getTypeKind() == ResourceTypeKind::ENTITY
-                    && !is_null($this->getResourceSetWrapperForNavigationProperty(
-                        $setWrapper,
-                        $resourceType,
-                        $resourceProperty
-                    ))
-                ) {
-                    $this->propertyCache[$cacheKey][$resourceProperty->getName()] = $resourceProperty;
-                } else {
-                    //primitive, bag or complex property
-                    $this->propertyCache[$cacheKey][$resourceProperty->getName()] = $resourceProperty;
-                }
-            }
-        }
-
-        return $this->propertyCache[$cacheKey];
-    }
-
-    /**
-     * Wrapper function over _validateResourceSetAndGetWrapper function.
-     *
-     * @param ResourceSet $resourceSet see the comments of _validateResourceSetAndGetWrapper
-     *
-     * @return ResourceSetWrapper|null see the comments of _validateResourceSetAndGetWrapper
-     */
-    public function validateResourceSetAndGetWrapper(ResourceSet $resourceSet)
-    {
-        return $this->_validateResourceSetAndGetWrapper($resourceSet);
-    }
-
-    /**
-     * Gets the Edm Schema version compliance to the metadata.
-     *
-     * @return EdmSchemaVersion
-     */
-    public function getEdmSchemaVersion()
-    {
-        //The minimal schema version for custom provider is 1.1
-        return EdmSchemaVersion::VERSION_1_DOT_1;
-    }
-
-    /**
-     * This function perform the following operations
-     *  (1) If the cache contain an entry [key, value] for the resourceset then
-     *      return the entry-value
-     *  (2) If the cache not contain an entry for the resourceset then validate
-     *      the resourceset
-     *            (a) If valid add entry as [resouceset_name, resourceSetWrapper]
-     *            (b) if not valid add entry as [resouceset_name, null]
-     *  Note: validating a resourceset means checking the resourceset is visible
-     *  or not using configuration.
-     *
-     * @param ResourceSet $resourceSet The resourceset to validate and get the
-     *                                 wrapper for
-     *
-     * @return ResourceSetWrapper|null Returns an instance if a resource set with the given name is visible
-     */
-    private function _validateResourceSetAndGetWrapper(ResourceSet $resourceSet)
-    {
-        $cacheKey = $resourceSet->getName();
-        if (array_key_exists($cacheKey, $this->setWrapperCache)) {
-            return $this->setWrapperCache[$cacheKey];
-        }
-
-        $this->validateResourceType($resourceSet->getResourceType());
-        $wrapper = new ResourceSetWrapper($resourceSet, $this->config);
-        $nuVal = $wrapper->isVisible() ? $wrapper : null;
-        $this->setWrapperCache[$cacheKey] = $nuVal;
-
-        return $this->setWrapperCache[$cacheKey];
-    }
-
-    /**
-     * Validates the given instance of ResourceType.
-     *
-     * @param ResourceType $resourceType The ResourceType to validate
-     *
-     * @throws ODataException Exception if $resourceType is invalid
-     *
-     * @return ResourceType
-     */
-    private function validateResourceType(ResourceType $resourceType)
-    {
-        $cacheKey = $resourceType->getName();
-        if (array_key_exists($cacheKey, $this->typeCache)) {
-            return $this->typeCache[$cacheKey];
-        }
-
-        //TODO: Do validation if any for the ResourceType
-        $this->typeCache[$cacheKey] = $resourceType;
-
-        return $resourceType;
-    }
-
-    /**
      * Gets the resource type on which the resource property is declared on,
      * If property is not declared in the given resource type, then this
      * function drill down to the inheritance hierarchy of the given resource
@@ -568,6 +545,29 @@ class ProvidersWrapper
         }
 
         return $type;
+    }
+
+    /**
+     * Wrapper function over _validateResourceSetAndGetWrapper function.
+     *
+     * @param ResourceSet $resourceSet see the comments of _validateResourceSetAndGetWrapper
+     *
+     * @return ResourceSetWrapper|null see the comments of _validateResourceSetAndGetWrapper
+     */
+    public function validateResourceSetAndGetWrapper(ResourceSet $resourceSet)
+    {
+        return $this->_validateResourceSetAndGetWrapper($resourceSet);
+    }
+
+    /**
+     * Gets the Edm Schema version compliance to the metadata.
+     *
+     * @return EdmSchemaVersion
+     */
+    public function getEdmSchemaVersion()
+    {
+        //The minimal schema version for custom provider is 1.1
+        return EdmSchemaVersion::VERSION_1_DOT_1;
     }
 
     /**
@@ -819,5 +819,10 @@ class ProvidersWrapper
             $sourceEntityInstance,
             $data
         );
+    }
+
+    public function GetMetadataXML()
+    {
+        return $this->metaProvider->getXML();
     }
 }
