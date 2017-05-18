@@ -1,11 +1,9 @@
 <?php
 
 use Mockery as m;
-use POData\Common\Version;
 use POData\Configuration\EntitySetRights;
 use POData\Configuration\ProtocolVersion;
 use POData\Configuration\ServiceConfiguration;
-use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\Metadata\ResourceTypeKind;
 use POData\Providers\ProvidersWrapper;
 use POData\Providers\Query\IQueryProvider;
@@ -17,11 +15,6 @@ class MetadataWriterTest extends TestCase
 {
     /** @var IQueryProvider */
     protected $mockQueryProvider;
-
-    protected function setUp()
-    {
-        $this->mockQueryProvider = m::mock('POData\Providers\Query\IQueryProvider');
-    }
 
     public function testWriteMetadata()
     {
@@ -43,7 +36,8 @@ class MetadataWriterTest extends TestCase
         $this->assertEquals($providersWrapper->getContainerName(), 'NorthWindEntities');
         $this->assertEquals($providersWrapper->getContainerNamespace(), 'NorthWind');
 
-        $this->assertStringStartsWith('<edmx:Edmx Version="1.0"', $metadata);
+        $this->assertStringStartsWith('<?xml version="1.0" encoding="UTF-8"?>
+<Edmx', $metadata);
 
         $customerResourceSet = $providersWrapper->resolveResourceSet('Customers');
         $this->assertEquals($customerResourceSet->getName(), 'Customers');
@@ -51,5 +45,10 @@ class MetadataWriterTest extends TestCase
 
         $customerEntityType = $providersWrapper->resolveResourceType('Customer');
         $this->assertEquals($customerEntityType->getResourceTypeKind(), ResourceTypeKind::ENTITY);
+    }
+
+    protected function setUp()
+    {
+        $this->mockQueryProvider = m::mock('POData\Providers\Query\IQueryProvider');
     }
 }
