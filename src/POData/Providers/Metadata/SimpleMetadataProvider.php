@@ -507,7 +507,7 @@ class SimpleMetadataProvider implements IMetadataProvider
 
             $this->metadataManager->addNavigationPropertyToEntityType($this->OdataEntityMap[$resourceType->getFullName()],"*",$name,$this->OdataEntityMap[$targetResourceType->getFullName()],"*");
         }else{
-            $this->metadataManager->addNavigationPropertyToEntityType($this->OdataEntityMap[$resourceType->getFullName],"0..1",$name,$this->OdataEntityMap[$targetResourceType->getFullName()],"0..1");
+            $this->metadataManager->addNavigationPropertyToEntityType($this->OdataEntityMap[$resourceType->getFullName()],"0..1",$name,$this->OdataEntityMap[$targetResourceType->getFullName()],"0..1");
         }
         $this->associationSets[$setKey] = $set;
     }
