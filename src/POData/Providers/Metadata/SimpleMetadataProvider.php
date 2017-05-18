@@ -5,12 +5,13 @@ namespace POData\Providers\Metadata;
 use POData\Common\InvalidOperationException;
 use POData\Providers\Metadata\Type\IType;
 use POData\Providers\Metadata\Type\TypeCode;
-
+use AlgoWeb\ODataMetadata\MetadataManager;
 /**
  * Class SimpleMetadataProvider.
  */
 class SimpleMetadataProvider implements IMetadataProvider
 {
+    private $metadataManager;
     protected $resourceSets = [];
     protected $resourceTypes = [];
     protected $associationSets = [];
@@ -216,6 +217,7 @@ class SimpleMetadataProvider implements IMetadataProvider
     {
         $this->containerName = $containerName;
         $this->namespaceName = $namespaceName;
+        $this->metadataManager = new MetadataManager($namespaceName,$containerName);
     }
 
     /**
