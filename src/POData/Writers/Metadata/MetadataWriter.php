@@ -85,62 +85,7 @@ class MetadataWriter
      */
     public function writeMetadata()
     {
-        $this->_metadataManager = MetadataManager::create($this->providersWrapper);
-        $conf = $this->providersWrapper->getConfiguration();
-
-        $this->_dataServiceVersion = $conf->getMaxDataServiceVersion();
-        $edmSchemaVersion = $this->providersWrapper->getEdmSchemaVersion();
-        $this->_metadataManager->getDataServiceAndEdmSchemaVersions($this->_dataServiceVersion, $edmSchemaVersion);
-        $this->_xmlWriter = new \XMLWriter();
-        $this->_xmlWriter->openMemory();
-        $this->_xmlWriter->setIndent(4);
-        $this->_writeTopLevelElements($this->_dataServiceVersion->toString());
-        $resourceTypesInContainerNamespace = [];
-        $containerNamespace = $this->providersWrapper->getContainerNamespace();
-        foreach ($this->_metadataManager->getResourceTypesAlongWithNamespace()
-                    as $resourceTypeNamespace => $resourceTypesWithName) {
-            if ($resourceTypeNamespace == $containerNamespace) {
-                foreach ($resourceTypesWithName as $resourceTypeName => $resourceType) {
-                    $resourceTypesInContainerNamespace[] = $resourceType;
-                }
-            } else {
-                $associationsInThisNamespace =
-                    $this->_metadataManager->getResourceAssociationTypesForNamespace($resourceTypeNamespace);
-                $this->_writeSchemaElement($resourceTypeNamespace, $edmSchemaVersion);
-                $uniqueAssociationsInThisNamespace =
-                    $this->_metadataManager->getUniqueResourceAssociationTypesForNamespace($resourceTypeNamespace);
-                $this->_writeResourceTypes(array_values($resourceTypesWithName), $associationsInThisNamespace);
-                $this->_writeAssociationTypes($uniqueAssociationsInThisNamespace);
-            }
-        }
-
-        //write Container schema node and define required namespaces
-        $this->_writeSchemaElement($resourceTypeNamespace, $edmSchemaVersion);
-        if (!empty($resourceTypesInContainerNamespace)) {
-            //Get assocation types in container namespace as array of
-            //key-value pairs (with key as association type
-            //lookup key i.e. ResourceType::Name_NavigationProperty::Name.
-            //Same association will appear twice for di-directional relationship
-            //(duplicate value will be there in this case)
-            $associationsInThisNamespace =
-                $this->_metadataManager->getResourceAssociationTypesForNamespace($containerNamespace);
-            //Get association type in container namespace as array of unique values
-            $uniqueAssociationsInThisNamespace =
-                $this->_metadataManager->getUniqueResourceAssociationTypesForNamespace($containerNamespace);
-            $this->_writeResourceTypes($resourceTypesInContainerNamespace, $associationsInThisNamespace);
-            $this->_writeAssociationTypes($uniqueAssociationsInThisNamespace);
-        }
-
-        $this->_writeEntityContainer();
-        //End container Schema node
-        $this->_xmlWriter->endElement();
-
-        //End edmx:Edmx and edmx:DataServices nodes
-        $this->_xmlWriter->endElement();
-        $this->_xmlWriter->endElement();
-        $metadataInCsdl = $this->_xmlWriter->outputMemory(true);
-
-        return $metadataInCsdl;
+        return $this->providersWrapper->GetMetadataXML();
     }
 
     /**
@@ -179,6 +124,37 @@ class MetadataWriter
         $this->_xmlWriter->writeAttribute(ODataConstants::NAMESPACE1, $schemaNamespace);
         $this->_xmlWriter->writeAttributeNs(ODataConstants::XMLNS_NAMESPACE_PREFIX, ODataConstants::ODATA_NAMESPACE_PREFIX, null, ODataConstants::ODATA_NAMESPACE);
         $this->_xmlWriter->writeAttributeNs(ODataConstants::XMLNS_NAMESPACE_PREFIX, ODataConstants::ODATA_METADATA_NAMESPACE_PREFIX, null, ODataConstants::ODATA_METADATA_NAMESPACE);
+    }
+
+    /**
+     * Gets the edmx schema namespace uri for the given schema version.
+     *
+     * @param EdmSchemaVersion $edmSchemaVersion metadata edm
+     *                                           schema version
+     *
+     * @return string The schema namespace uri
+     */
+    private function _getSchemaNamespaceUri($edmSchemaVersion)
+    {
+        switch ($edmSchemaVersion) {
+            case EdmSchemaVersion::VERSION_1_DOT_0:
+                return ODataConstants::CSDL_VERSION_1_0;
+
+            case EdmSchemaVersion::VERSION_1_DOT_1:
+                return ODataConstants::CSDL_VERSION_1_1;
+
+            case EdmSchemaVersion::VERSION_1_DOT_2:
+                return ODataConstants::CSDL_VERSION_1_2;
+
+            case EdmSchemaVersion::VERSION_2_DOT_0:
+                return ODataConstants::CSDL_VERSION_2_0;
+
+            case EdmSchemaVersion::VERSION_2_DOT_2:
+                return ODataConstants::CSDL_VERSION_2_2;
+
+            default:
+                return ODataConstants::CSDL_VERSION_2_2;
+        }
     }
 
     /**
@@ -247,19 +223,6 @@ class MetadataWriter
 
         $this->_writeProperties($resourceType, $associationTypesInResourceTypeNamespace);
         $this->_writeNamedStreams($resourceType);
-        $this->_xmlWriter->endElement();
-    }
-
-    /**
-     * Write a complex type and associated attributes.
-     *
-     * @param ResourceType $complexType resource type
-     */
-    private function _writeComplexType(ResourceType $complexType)
-    {
-        $this->_xmlWriter->startElement(ODataConstants::COMPLEX_TYPE);
-        $this->_xmlWriter->writeAttribute(ODataConstants::NAME, $complexType->getName());
-        $this->_writeProperties($complexType, null);
         $this->_xmlWriter->endElement();
     }
 
@@ -342,6 +305,21 @@ class MetadataWriter
     }
 
     /**
+     * Write primitive property facets.
+     *
+     * @param ResourceProperty $primitveProperty primitive property
+     */
+    private function _writePrimitivePropertyFacets(ResourceProperty $primitveProperty)
+    {
+        $nullable = true;
+        if ($primitveProperty->isKindOf(ResourcePropertyKind::KEY)) {
+            $nullable = false;
+        }
+
+        $this->_xmlWriter->writeAttribute(ODataConstants::NULLABLE, $nullable ? 'true' : 'false');
+    }
+
+    /**
      * Write a complex property and associated attributes.
      *
      * @param ResourceProperty $complexProperty complex property
@@ -384,21 +362,6 @@ class MetadataWriter
     }
 
     /**
-     * Write primitive property facets.
-     *
-     * @param ResourceProperty $primitveProperty primitive property
-     */
-    private function _writePrimitivePropertyFacets(ResourceProperty $primitveProperty)
-    {
-        $nullable = true;
-        if ($primitveProperty->isKindOf(ResourcePropertyKind::KEY)) {
-            $nullable = false;
-        }
-
-        $this->_xmlWriter->writeAttribute(ODataConstants::NULLABLE, $nullable ? 'true' : 'false');
-    }
-
-    /**
      * Write all named streams in the given entity type.
      *
      * @param ResourceType $resourceType resource type
@@ -416,6 +379,19 @@ class MetadataWriter
 
             $this->_xmlWriter->endElement();
         }
+    }
+
+    /**
+     * Write a complex type and associated attributes.
+     *
+     * @param ResourceType $complexType resource type
+     */
+    private function _writeComplexType(ResourceType $complexType)
+    {
+        $this->_xmlWriter->startElement(ODataConstants::COMPLEX_TYPE);
+        $this->_xmlWriter->writeAttribute(ODataConstants::NAME, $complexType->getName());
+        $this->_writeProperties($complexType, null);
+        $this->_xmlWriter->endElement();
     }
 
     /**
@@ -499,36 +475,5 @@ class MetadataWriter
         $this->_xmlWriter->writeAttribute(ODataConstants::ROLE, $associationTypeEnd2->getName());
         $this->_xmlWriter->writeAttribute(ODataConstants::ENTITY_SET, $associationSet->getEnd2()->getResourceSet()->getName());
         $this->_xmlWriter->endElement();
-    }
-
-    /**
-     * Gets the edmx schema namespace uri for the given schema version.
-     *
-     * @param EdmSchemaVersion $edmSchemaVersion metadata edm
-     *                                           schema version
-     *
-     * @return string The schema namespace uri
-     */
-    private function _getSchemaNamespaceUri($edmSchemaVersion)
-    {
-        switch ($edmSchemaVersion) {
-            case EdmSchemaVersion::VERSION_1_DOT_0:
-                return ODataConstants::CSDL_VERSION_1_0;
-
-            case EdmSchemaVersion::VERSION_1_DOT_1:
-                return ODataConstants::CSDL_VERSION_1_1;
-
-            case EdmSchemaVersion::VERSION_1_DOT_2:
-                return ODataConstants::CSDL_VERSION_1_2;
-
-            case EdmSchemaVersion::VERSION_2_DOT_0:
-                return ODataConstants::CSDL_VERSION_2_0;
-
-            case EdmSchemaVersion::VERSION_2_DOT_2:
-                return ODataConstants::CSDL_VERSION_2_2;
-
-            default:
-                return ODataConstants::CSDL_VERSION_2_2;
-        }
     }
 }
