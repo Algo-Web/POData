@@ -439,8 +439,7 @@ class SimpleMetadataProvider implements IMetadataProvider
 
         $resourceProperty = new ResourceProperty($name, null, $kind, $primitiveResourceType);
         $resourceType->addProperty($resourceProperty);
-        //if(array_key_exists($resourceType, $this->OdataEntityMap)){
-        if(null == $this->OdataEntityMap[$resourceType->getFullName()]) {
+        if(array_key_exists($resourceType->getFullName(), $this->OdataEntityMap)){
             $this->metadataManager->addPropertyToEntityType($this->OdataEntityMap[$resourceType->getFullName()],$name,$primitiveResourceType->getFullName(),null,false,$isKey);
         }
     }
