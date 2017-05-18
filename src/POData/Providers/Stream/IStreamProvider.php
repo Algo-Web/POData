@@ -215,5 +215,4 @@ interface IStreamProvider
      *                (ie. GET) requests to the stream(ie. Media Resource)
      */
     public function getReadStreamUri($entity, IOperationContext $operationContext);
-
 }

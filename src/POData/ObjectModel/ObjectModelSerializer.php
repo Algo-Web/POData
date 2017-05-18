@@ -988,5 +988,4 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
 
         return [$navigationProperties, $odataPropertyContent];
     }
-
 }

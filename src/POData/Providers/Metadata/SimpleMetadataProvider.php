@@ -6,6 +6,7 @@ use POData\Common\InvalidOperationException;
 use POData\Providers\Metadata\Type\IType;
 use POData\Providers\Metadata\Type\TypeCode;
 use AlgoWeb\ODataMetadata\MetadataManager;
+
 /**
  * Class SimpleMetadataProvider.
  */
@@ -217,7 +218,7 @@ class SimpleMetadataProvider implements IMetadataProvider
     {
         $this->containerName = $containerName;
         $this->namespaceName = $namespaceName;
-        $this->metadataManager = new MetadataManager($namespaceName,$containerName);
+        $this->metadataManager = new MetadataManager($namespaceName, $containerName);
     }
 
     /**
@@ -439,8 +440,8 @@ class SimpleMetadataProvider implements IMetadataProvider
 
         $resourceProperty = new ResourceProperty($name, null, $kind, $primitiveResourceType);
         $resourceType->addProperty($resourceProperty);
-        if(array_key_exists($resourceType->getFullName(), $this->OdataEntityMap)){
-            $this->metadataManager->addPropertyToEntityType($this->OdataEntityMap[$resourceType->getFullName()],$name,$primitiveResourceType->getFullName(),null,false,$isKey);
+        if (array_key_exists($resourceType->getFullName(), $this->OdataEntityMap)) {
+            $this->metadataManager->addPropertyToEntityType($this->OdataEntityMap[$resourceType->getFullName()], $name, $primitiveResourceType->getFullName(), null, false, $isKey);
         }
     }
 
@@ -503,11 +504,10 @@ class SimpleMetadataProvider implements IMetadataProvider
             new ResourceAssociationSetEnd($sourceResourceSet, $resourceType, $resourceProperty),
             new ResourceAssociationSetEnd($targetResourceSet, $targetResourceType, null)
         );
-        if($resourcePropertyKind == ResourcePropertyKind::RESOURCESET_REFERENCE){
-
-            $this->metadataManager->addNavigationPropertyToEntityType($this->OdataEntityMap[$resourceType->getFullName()],"*",$name,$this->OdataEntityMap[$targetResourceType->getFullName()],"*");
-        }else{
-            $this->metadataManager->addNavigationPropertyToEntityType($this->OdataEntityMap[$resourceType->getFullName()],"0..1",$name,$this->OdataEntityMap[$targetResourceType->getFullName()],"0..1");
+        if ($resourcePropertyKind == ResourcePropertyKind::RESOURCESET_REFERENCE) {
+            $this->metadataManager->addNavigationPropertyToEntityType($this->OdataEntityMap[$resourceType->getFullName()], "*", $name, $this->OdataEntityMap[$targetResourceType->getFullName()], "*");
+        } else {
+            $this->metadataManager->addNavigationPropertyToEntityType($this->OdataEntityMap[$resourceType->getFullName()], "0..1", $name, $this->OdataEntityMap[$targetResourceType->getFullName()], "0..1");
         }
         $this->associationSets[$setKey] = $set;
     }
@@ -538,7 +538,7 @@ class SimpleMetadataProvider implements IMetadataProvider
         $this->resourceTypes[$name] = $entityType;
         ksort($this->resourceTypes);
 
-        if($typeKind ==  ResourceTypeKind::ENTITY){
+        if ($typeKind ==  ResourceTypeKind::ENTITY) {
             $this->OdataEntityMap[$entityType->getFullName()] = $this->metadataManager->addEntityType($name);
         }
 
