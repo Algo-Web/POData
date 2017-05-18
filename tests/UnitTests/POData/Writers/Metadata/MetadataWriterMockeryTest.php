@@ -36,7 +36,7 @@ class MetadataWriterMockeryTest extends TestCase
         $this->assertEquals($providersWrapper->getContainerNamespace(), 'NorthWind');
 
         $this->assertStringStartsWith('<?xml version="1.0" encoding="UTF-8"?>
-<Edmx"', $metadata);
+<Edmx', $metadata);
         $versionString = 'DataServiceVersion="3.0"';
         $hasVersionString = false != strpos($metadata, $versionString);
         $this->assertTrue($hasVersionString);
