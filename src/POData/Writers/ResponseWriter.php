@@ -35,9 +35,7 @@ class ResponseWriter
 
         if (TargetKind::METADATA() == $targetKind) {
             // /$metadata
-            $writer = new MetadataWriter($service->getProvidersWrapper());
-            $responseBody = $writer->writeMetadata();
-            $dataServiceVersion = $writer->getDataServiceVersion();
+            $responseBody = $service->getProvidersWrapper()->GetMetadataXML();
         } elseif (TargetKind::PRIMITIVE_VALUE() == $targetKind
                   && $responseContentType != MimeTypes::MIME_APPLICATION_OCTETSTREAM) {
             //This second part is to exclude binary properties
