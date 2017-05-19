@@ -47,16 +47,16 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
     {
         $requestTargetSource = $this->getRequest()->getTargetSource();
 
-        if ($requestTargetSource == TargetSource::ENTITY_SET) {
+        if (TargetSource::ENTITY_SET == $requestTargetSource) {
             $resourceType = $this->getRequest()->getTargetResourceType();
         } else {
-            assert($requestTargetSource == TargetSource::PROPERTY, '$requestTargetSource != TargetSource::PROPERTY');
+            assert(TargetSource::PROPERTY == $requestTargetSource, '$requestTargetSource != TargetSource::PROPERTY');
             $resourceProperty = $this->getRequest()->getProjectedProperty();
             $resourceType = $resourceProperty->getResourceType();
         }
 
         $needPop = $this->pushSegmentForRoot();
-        $entry = $this->_writeEntryElement(
+        $entry = $this->writeEntryElement(
             $entryObject,
             $resourceType,
             $this->getRequest()->getRequestUrl()->getUrlAsString(),
@@ -78,13 +78,13 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
     {
         assert(is_array($entryObjects), '!is_array($entryObjects)');
         $requestTargetSource = $this->getRequest()->getTargetSource();
-        if ($requestTargetSource == TargetSource::ENTITY_SET) {
+        if (TargetSource::ENTITY_SET == $requestTargetSource) {
             $title = $this->getRequest()->getContainerName();
         } else {
-            assert($requestTargetSource == TargetSource::PROPERTY, '$requestTargetSource != TargetSource::PROPERTY');
+            assert(TargetSource::PROPERTY == $requestTargetSource, '$requestTargetSource != TargetSource::PROPERTY');
             $resourceProperty = $this->getRequest()->getProjectedProperty();
             assert(
-                $resourceProperty->getKind() == ResourcePropertyKind::RESOURCESET_REFERENCE,
+                ResourcePropertyKind::RESOURCESET_REFERENCE == $resourceProperty->getKind(),
                 '$resourceProperty->getKind() != ResourcePropertyKind::RESOURCESET_REFERENCE'
             );
             $title = $resourceProperty->getName();
@@ -100,7 +100,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
         $needPop = $this->pushSegmentForRoot();
         $targetResourceType = $this->getRequest()->getTargetResourceType();
         assert(null != $targetResourceType, 'Target resource type must not be null');
-        $this->_writeFeedElements(
+        $this->writeFeedElements(
             $entryObjects,
             $targetResourceType,
             $title,
@@ -188,7 +188,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
         ResourceType & $resourceType
     ) {
         $propertyContent = new ODataPropertyContent();
-        $this->_writeComplexValue(
+        $this->writeComplexValue(
             $complexValue,
             $propertyName,
             $resourceType,
@@ -217,7 +217,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
         ResourceType & $resourceType
     ) {
         $propertyContent = new ODataPropertyContent();
-        $this->_writeBagValue(
+        $this->writeBagValue(
             $BagValue,
             $propertyName,
             $resourceType,
@@ -246,7 +246,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
     ) {
         $propertyContent = new ODataPropertyContent();
         $propertyContent->properties[] = new ODataProperty();
-        $this->_writePrimitiveValue(
+        $this->writePrimitiveValue(
             $primitiveValue,
             $propertyContent->properties[0],
             $resourceProperty
@@ -265,7 +265,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
      *
      * @return ODataEntry
      */
-    private function _writeEntryElement(
+    private function writeEntryElement(
         $entryObject,
         ResourceType $resourceType,
         $absoluteUri,
@@ -288,7 +288,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
             $title = $resourceType->getName();
             //TODO Resolve actual resource type
             $actualResourceType = $resourceType;
-            $this->_writeMediaResourceMetadata(
+            $this->writeMediaResourceMetadata(
                 $entryObject,
                 $actualResourceType,
                 $title,
@@ -302,7 +302,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
             $entry->editLink = $relativeUri;
             $entry->type = $actualResourceType->getFullName();
             $odataPropertyContent = new ODataPropertyContent();
-            $this->_writeObjectProperties(
+            $this->writeObjectProperties(
                 $entryObject,
                 $actualResourceType,
                 $absoluteUri,
@@ -327,13 +327,13 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
      * @param string       $relativeUri   Relative uri representing the feed element
      * @param ODataFeed    &$feed         Feed to write to
      */
-    private function _writeFeedElements(
+    private function writeFeedElements(
         &$entryObjects,
-        ResourceType & $resourceType,
+        ResourceType &$resourceType,
         $title,
         $absoluteUri,
         $relativeUri,
-        ODataFeed & $feed
+        ODataFeed &$feed
     ) {
         assert(is_array($entryObjects), '!_writeFeedElements::is_array($entryObjects)');
         $feed->id = $absoluteUri;
@@ -348,7 +348,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
             //then the feed should have at least one Author tag
         } else {
             foreach ($entryObjects as $entryObject) {
-                $feed->entries[] = $this->_writeEntryElement($entryObject, $resourceType, null, null);
+                $feed->entries[] = $this->writeEntryElement($entryObject, $resourceType, null, null);
             }
 
             if ($this->needNextPageLink(count($entryObjects))) {
@@ -381,16 +381,16 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
      *                                                    instance in which
      *                                                    to place the values
      */
-    private function _writeObjectProperties(
+    private function writeObjectProperties(
         $customObject,
-        ResourceType & $resourceType,
+        ResourceType &$resourceType,
         $absoluteUri,
         $relativeUri,
         &$odataEntry,
-        ODataPropertyContent & $odataPropertyContent
+        ODataPropertyContent &$odataPropertyContent
     ) {
         $resourceTypeKind = $resourceType->getResourceTypeKind();
-        if (is_null($absoluteUri) == ($resourceTypeKind == ResourceTypeKind::ENTITY)
+        if (is_null($absoluteUri) == (ResourceTypeKind::ENTITY == $resourceTypeKind)
         ) {
             throw ODataException::createInternalServerError(
                 Messages::badProviderInconsistentEntityOrComplexTypeUsage(
@@ -400,14 +400,14 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
         }
 
         assert(
-            (($resourceTypeKind == ResourceTypeKind::ENTITY) && ($odataEntry instanceof ODataEntry))
-            || (($resourceTypeKind == ResourceTypeKind::COMPLEX) && is_null($odataEntry)),
+            ((ResourceTypeKind::ENTITY == $resourceTypeKind) && ($odataEntry instanceof ODataEntry))
+            || ((ResourceTypeKind::COMPLEX == $resourceTypeKind) && is_null($odataEntry)),
             '!(($resourceTypeKind == ResourceTypeKind::ENTITY) && ($odataEntry instanceof ODataEntry))'
             .' && !(($resourceTypeKind == ResourceTypeKind::COMPLEX) && is_null($odataEntry))'
         );
         $projectionNodes = null;
         $navigationProperties = null;
-        if ($resourceTypeKind == ResourceTypeKind::ENTITY) {
+        if (ResourceTypeKind::ENTITY == $resourceTypeKind) {
             $projectionNodes = $this->getProjectionNodes();
             $navigationProperties = [];
         }
@@ -436,7 +436,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
             //Write out navigation properties (deferred or inline)
             foreach ($navigationProperties as $navigationPropertyInfo) {
                 $propertyName = $navigationPropertyInfo->resourceProperty->getName();
-                $type = $navigationPropertyInfo->resourceProperty->getKind() == ResourcePropertyKind::RESOURCE_REFERENCE ?
+                $type = ResourcePropertyKind::RESOURCE_REFERENCE == $navigationPropertyInfo->resourceProperty->getKind() ?
                     'application/atom+xml;type=entry' : 'application/atom+xml;type=feed';
                 $link = new ODataLink();
                 $link->name = ODataConstants::ODATA_RELATED_NAMESPACE . $propertyName;
@@ -450,8 +450,8 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
                     $needPop = $this->pushSegmentForNavigationProperty($navigationPropertyInfo->resourceProperty);
                     $navigationPropertyKind = $navigationPropertyInfo->resourceProperty->getKind();
                     assert(
-                        $navigationPropertyKind == ResourcePropertyKind::RESOURCESET_REFERENCE
-                        || $navigationPropertyKind == ResourcePropertyKind::RESOURCE_REFERENCE,
+                        ResourcePropertyKind::RESOURCESET_REFERENCE == $navigationPropertyKind
+                        || ResourcePropertyKind::RESOURCE_REFERENCE == $navigationPropertyKind,
                         '$navigationPropertyKind != ResourcePropertyKind::RESOURCESET_REFERENCE 
                         && $navigationPropertyKind != ResourcePropertyKind::RESOURCE_REFERENCE'
                     );
@@ -460,11 +460,11 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
                     $link->isExpanded = true;
                     if (!is_null($navigationPropertyInfo->value)) {
                         $currentResourceType = $currentResourceSetWrapper->getResourceType();
-                        if ($navigationPropertyKind == ResourcePropertyKind::RESOURCESET_REFERENCE) {
+                        if (ResourcePropertyKind::RESOURCESET_REFERENCE == $navigationPropertyKind) {
                             $inlineFeed = new ODataFeed();
                             $link->isCollection = true;
 
-                            $this->_writeFeedElements(
+                            $this->writeFeedElements(
                                 $navigationPropertyInfo->value,
                                 $currentResourceType,
                                 $propertyName,
@@ -475,7 +475,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
                             $link->expandedResult = $inlineFeed;
                         } else {
                             $link->isCollection = false;
-                            $link->expandedResult = $this->_writeEntryElement(
+                            $link->expandedResult = $this->writeEntryElement(
                                 $navigationPropertyInfo->value,
                                 $currentResourceType,
                                 $propertyAbsoluteUri,
@@ -506,10 +506,10 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
      * @param ResourceProperty|null &$resourceProperty The metadata of the primitive
      *                                            property value
      */
-    private function _writePrimitiveValue(
+    private function writePrimitiveValue(
         &$primitiveValue,
         ODataProperty &$odataProperty,
-        ResourceProperty &$resourceProperty = null
+        ResourceProperty &$resourceProperty
     ) {
         if (is_object($primitiveValue)) {
             //TODO ERROR: The property 'PropertyName'
@@ -522,7 +522,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
             $odataProperty->value = null;
         } else {
             $resourceType = $resourceProperty->getResourceType();
-            $odataProperty->value = $this->_primitiveToString($resourceType, $primitiveValue);
+            $odataProperty->value = $this->primitiveToString($resourceType, $primitiveValue);
         }
     }
 
@@ -540,12 +540,12 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
      *                                                    complex type element
      * @param ODataPropertyContent &$odataPropertyContent Content to write to
      */
-    private function _writeComplexValue(
+    private function writeComplexValue(
         &$complexValue,
         $propertyName,
-        ResourceType & $resourceType,
+        ResourceType &$resourceType,
         $relativeUri,
-        ODataPropertyContent & $odataPropertyContent
+        ODataPropertyContent &$odataPropertyContent
     ) {
         $odataProperty = new ODataProperty();
         $odataProperty->name = $propertyName;
@@ -554,7 +554,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
             $odataProperty->typeName = $resourceType->getFullName();
         } else {
             $content = new ODataPropertyContent();
-            $actualType = $this->_complexObjectToContent(
+            $actualType = $this->complexObjectToContent(
                 $complexValue,
                 $propertyName,
                 $resourceType,
@@ -581,18 +581,18 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
      *                                                    will hold bag value which
      *                                                    can be used by writers
      */
-    private function _writeBagValue(
+    private function writeBagValue(
         &$BagValue,
         $propertyName,
-        ResourceType & $resourceType,
+        ResourceType &$resourceType,
         $relativeUri,
-        ODataPropertyContent & $odataPropertyContent
+        ODataPropertyContent &$odataPropertyContent
     ) {
         assert(null == $BagValue || is_array($BagValue), 'Bag parameter must be null or array');
         $bagItemResourceTypeKind = $resourceType->getResourceTypeKind();
         assert(
-            $bagItemResourceTypeKind == ResourceTypeKind::PRIMITIVE
-            || $bagItemResourceTypeKind == ResourceTypeKind::COMPLEX,
+            ResourceTypeKind::PRIMITIVE == $bagItemResourceTypeKind
+            || ResourceTypeKind::COMPLEX == $bagItemResourceTypeKind,
             '$bagItemResourceTypeKind != ResourceTypeKind::PRIMITIVE'
             .' && $bagItemResourceTypeKind != ResourceTypeKind::COMPLEX'
         );
@@ -608,11 +608,11 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
             // strip out null elements
             $BagValue = array_diff($BagValue, [null]);
             foreach ($BagValue as $itemValue) {
-                if ($bagItemResourceTypeKind == ResourceTypeKind::PRIMITIVE) {
-                    $odataBagContent->propertyContents[] = $this->_primitiveToString($resourceType, $itemValue);
-                } elseif ($bagItemResourceTypeKind == ResourceTypeKind::COMPLEX) {
+                if (ResourceTypeKind::PRIMITIVE == $bagItemResourceTypeKind) {
+                    $odataBagContent->propertyContents[] = $this->primitiveToString($resourceType, $itemValue);
+                } elseif (ResourceTypeKind::COMPLEX == $bagItemResourceTypeKind) {
                     $complexContent = new ODataPropertyContent();
-                    $this->_complexObjectToContent(
+                    $this->complexObjectToContent(
                         $itemValue,
                         $propertyName,
                         $resourceType,
@@ -641,12 +641,12 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
      *                                    current entry instance
      * @param ODataEntry   &$odataEntry   OData entry to write to
      */
-    private function _writeMediaResourceMetadata(
+    private function writeMediaResourceMetadata(
         $entryObject,
-        ResourceType & $resourceType,
+        ResourceType &$resourceType,
         $title,
         $relativeUri,
-        ODataEntry & $odataEntry
+        ODataEntry &$odataEntry
     ) {
         $streamProviderWrapper = $this->getService()->getStreamProviderWrapper();
         assert(null != $streamProviderWrapper, "Retrieved stream provider must not be null");
@@ -711,8 +711,8 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
      *
      * @return string
      */
-    private function _primitiveToString(
-        ResourceType & $primitiveResourceType,
+    private function primitiveToString(
+        ResourceType &$primitiveResourceType,
         $primitiveValue
     ) {
         $type = $primitiveResourceType->getInstanceType();
@@ -748,12 +748,12 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
      *
      * @return ResourceType The actual type of the complex object
      */
-    private function _complexObjectToContent(
+    private function complexObjectToContent(
         &$complexValue,
         $propertyName,
-        ResourceType & $resourceType,
+        ResourceType &$resourceType,
         $relativeUri,
-        ODataPropertyContent & $odataPropertyContent
+        ODataPropertyContent &$odataPropertyContent
     ) {
         $count = count($this->complexTypeInstanceCollection);
         for ($i = 0; $i < $count; ++$i) {
@@ -769,7 +769,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
         //TODO function to resolve actual type from $resourceType
         $actualType = $resourceType;
         $odataEntry = null;
-        $this->_writeObjectProperties(
+        $this->writeObjectProperties(
             $complexValue,
             $actualType,
             null,
@@ -796,15 +796,15 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
      */
     private function writeObjectPropertiesUnexpanded(
         $customObject,
-        ResourceType & $resourceType,
+        ResourceType &$resourceType,
         $relativeUri,
-        ODataPropertyContent & $odataPropertyContent,
+        ODataPropertyContent &$odataPropertyContent,
         $resourceTypeKind,
         $navigationProperties
     ) {
         //This is the code path to handle properties of Complex type
         //or Entry without projection (i.e. no expansion or selection)
-        if ($resourceTypeKind == ResourceTypeKind::ENTITY) {
+        if (ResourceTypeKind::ENTITY == $resourceTypeKind) {
             // If custom object is an entry then it can contain navigation
             // properties which are invisible (because the corresponding
             // resource set is invisible).
@@ -827,7 +827,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
             if (ObjectModelSerializer::isMatchPrimitive($resourceKind)) {
                 $odataProperty = new ODataProperty();
                 $primitiveValue = $this->getPropertyValue($customObject, $resourceType, $resourceProperty);
-                $this->_writePrimitiveValue($primitiveValue, $odataProperty, $resourceProperty);
+                $this->writePrimitiveValue($primitiveValue, $odataProperty, $resourceProperty);
                 $odataPropertyContent->properties[] = $odataProperty;
             }
         }
@@ -839,7 +839,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
                 //Handle Bag Property (Bag of Primitive or complex)
                 $propertyValue = $this->getPropertyValue($customObject, $resourceType, $resourceProperty);
                 $resourceType2 = $resourceProperty->getResourceType();
-                $this->_writeBagValue(
+                $this->writeBagValue(
                     $propertyValue,
                     $resourceProperty->getName(),
                     $resourceType2,
@@ -848,10 +848,10 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
                 );
             } else {
                 $resourceKind = $resourceProperty->getKind();
-                if ($resourceKind == ResourcePropertyKind::COMPLEX_TYPE) {
+                if (ResourcePropertyKind::COMPLEX_TYPE == $resourceKind) {
                     $propertyValue = $this->getPropertyValue($customObject, $resourceType, $resourceProperty);
                     $resourceType1 = $resourceProperty->getResourceType();
-                    $this->_writeComplexValue(
+                    $this->writeComplexValue(
                         $propertyValue,
                         $resourceProperty->getName(),
                         $resourceType1,
@@ -862,8 +862,8 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
                     continue;
                 } else {
                     assert(
-                        ($resourceKind == ResourcePropertyKind::RESOURCE_REFERENCE)
-                        || ($resourceKind == ResourcePropertyKind::RESOURCESET_REFERENCE),
+                        (ResourcePropertyKind::RESOURCE_REFERENCE == $resourceKind)
+                        || (ResourcePropertyKind::RESOURCESET_REFERENCE == $resourceKind),
                         '($resourceKind != ResourcePropertyKind::RESOURCE_REFERENCE)'
                         .'&& ($resourceKind != ResourcePropertyKind::RESOURCESET_REFERENCE)'
                     );
@@ -914,9 +914,9 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
      */
     private function writeObjectPropertiesExpanded(
         $customObject,
-        ResourceType & $resourceType,
+        ResourceType &$resourceType,
         $relativeUri,
-        ODataPropertyContent & $odataPropertyContent,
+        ODataPropertyContent &$odataPropertyContent,
         $projectionNodes,
         $navigationProperties
     ) {
@@ -926,7 +926,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
             $resourceProperty = $resourceType->resolveProperty($propertyName);
             assert(!is_null($resourceProperty), 'is_null($resourceProperty)');
 
-            if ($resourceProperty->getTypeKind() == ResourceTypeKind::ENTITY) {
+            if (ResourceTypeKind::ENTITY == $resourceProperty->getTypeKind()) {
                 $currentResourceSetWrapper2 = $this->getCurrentResourceSetWrapper();
                 $resourceProperties = $this->getService()
                     ->getProvidersWrapper()
@@ -960,7 +960,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
             assert(!is_null($propertyResourceType), 'is_null($propertyResourceType)');
             if ($resourceProperty->isKindOf(ResourcePropertyKind::BAG)) {
                 $bagResourceType = $resourceProperty->getResourceType();
-                $this->_writeBagValue(
+                $this->writeBagValue(
                     $propertyValue,
                     $propertyName,
                     $bagResourceType,
@@ -969,11 +969,11 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
                 );
             } elseif ($resourceProperty->isKindOf(ResourcePropertyKind::PRIMITIVE)) {
                 $odataProperty = new ODataProperty();
-                $this->_writePrimitiveValue($propertyValue, $odataProperty, $resourceProperty);
+                $this->writePrimitiveValue($propertyValue, $odataProperty, $resourceProperty);
                 $odataPropertyContent->properties[] = $odataProperty;
-            } elseif ($propertyTypeKind == ResourcePropertyKind::COMPLEX_TYPE) {
+            } elseif (ResourcePropertyKind::COMPLEX_TYPE == $propertyTypeKind) {
                 $complexResourceType = $resourceProperty->getResourceType();
-                $this->_writeComplexValue(
+                $this->writeComplexValue(
                     $propertyValue,
                     $propertyName,
                     $complexResourceType,
