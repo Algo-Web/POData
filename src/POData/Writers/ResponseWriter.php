@@ -8,6 +8,7 @@ use POData\Common\ODataConstants;
 use POData\IService;
 use POData\UriProcessor\RequestDescription;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
+
 /**
  * Class ResponseWriter.
  */
