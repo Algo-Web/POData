@@ -89,7 +89,7 @@ class ExpressionParser2 extends ExpressionParser
         } catch (\InvalidArgumentException $invalidArgumentException) {
             throw ODataException::createInternalServerError($invalidArgumentException->getMessage());
         }
-
+        $expressionAsString = (null != $expressionAsString) ? $expressionAsString : "";
         return new FilterInfo(
             $expressionParser2->_navigationPropertiesUsedInTheExpression,
             $expressionAsString

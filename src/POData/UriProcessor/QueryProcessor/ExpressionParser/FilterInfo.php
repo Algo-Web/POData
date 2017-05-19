@@ -19,7 +19,7 @@ class FilterInfo
      *
      * @var array(array(ResourceProperty))/NULL
      */
-    private $_navigationPropertiesUsedInTheFilterClause;
+    private $navigationPropertiesUsedInTheFilterClause;
 
     /**
      * The translated expression based on the Expression provider, if the end developer
@@ -31,21 +31,25 @@ class FilterInfo
      *
      * @var string
      */
-    private $_filterExpressionAsDataSourceExpression;
+    private $filterExpressionAsDataSourceExpression;
 
     /**
      * @param array  $navigationPropertiesUsedInTheFilterClause navigation properties in the $filter clause
-     * @param string $filterExpAsDataSourceExp                  The $filter expression as expression specific to data source
+     * @param string $filterExpAsDataSourceExp                  The $filter expression, specific to data source
      */
-    public function __construct($navigationPropertiesUsedInTheFilterClause, $filterExpAsDataSourceExp)
+    public function __construct(array $navigationPropertiesUsedInTheFilterClause, $filterExpAsDataSourceExp)
     {
-        $this->_navigationPropertiesUsedInTheFilterClause = $navigationPropertiesUsedInTheFilterClause;
-        $this->_filterExpressionAsDataSourceExpression = $filterExpAsDataSourceExp;
+        assert(
+            is_string($filterExpAsDataSourceExp),
+            "Filter expression must be a string"
+        );
+        $this->navigationPropertiesUsedInTheFilterClause = $navigationPropertiesUsedInTheFilterClause;
+        $this->filterExpressionAsDataSourceExpression = $filterExpAsDataSourceExp;
     }
 
     public function getNavigationPropertiesUsed()
     {
-        return $this->_navigationPropertiesUsedInTheFilterClause;
+        return $this->navigationPropertiesUsedInTheFilterClause;
     }
 
     /**
@@ -55,6 +59,6 @@ class FilterInfo
      */
     public function getExpressionAsString()
     {
-        return $this->_filterExpressionAsDataSourceExpression;
+        return $this->filterExpressionAsDataSourceExpression;
     }
 }
