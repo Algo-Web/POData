@@ -236,7 +236,6 @@ class QueryProcessor
                 $internalOrderByInfo
             );
         }
-
     }
 
     /**

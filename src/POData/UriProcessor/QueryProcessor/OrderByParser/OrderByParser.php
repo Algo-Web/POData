@@ -333,7 +333,6 @@ class OrderByParser
                         $reflectionProperty = $reflectionClass->getProperty($resourceProperty->getName());
                         $reflectionProperty->setAccessible(true);
                         $currentObject = $reflectionProperty->getValue($currentObject);
-
                     } catch (\ReflectionException $reflectionException) {
                         throw ODataException::createInternalServerError(
                             Messages::orderByParserFailedToAccessOrInitializeProperty(
