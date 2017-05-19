@@ -10,30 +10,33 @@ class ODataException extends \Exception
     /**
      * The error code.
      *
-     * @var int
+     * @var string
      */
-    private $_errorCode;
+    private $errorCode;
 
     /**
      * The HTTP status code.
      *
      * @var int
      */
-    private $_statusCode;
+    private $statusCode;
 
     /**
      * Create new instance of ODataException.
      *
      * @param string $message    The error message
-     * @param string $statusCode The status code
+     * @param int    $statusCode The status code
      * @param string $errorCode  The error code
      *
      * @return ODataException
      */
     public function __construct($message, $statusCode, $errorCode = null)
     {
-        $this->_errorCode = $errorCode;
-        $this->_statusCode = $statusCode;
+        assert(is_int($statusCode) && 0 < $statusCode, "Status code must be integer and positive");
+        assert(is_string($message), "Message must be a string");
+        assert(null == $errorCode || is_string($errorCode), "Error code must be null or a string");
+        $this->errorCode = $errorCode;
+        $this->statusCode = $statusCode;
         parent::__construct($message, $errorCode);
     }
 
@@ -44,7 +47,7 @@ class ODataException extends \Exception
      */
     public function getStatusCode()
     {
-        return $this->_statusCode;
+        return $this->statusCode;
     }
 
     /**
