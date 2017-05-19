@@ -74,13 +74,16 @@ class QueryProcessor
         //$top, $skip, $order, $inlinecount & $count are only applicable if:
         //The query targets a resource collection
         $this->_setQueryApplicable = ($request->getTargetKind() == TargetKind::RESOURCE() && !$isSingleResult);
-        //Or it's a $count resource (although $inlinecount isn't applicable in this case..but there's a check somewhere else for this
+        //Or it's a $count resource (although $inlinecount isn't applicable in this case..
+        //but there's a check somewhere else for this
         $this->_setQueryApplicable |= $request->queryType == QueryType::COUNT();
 
         //Paging is allowed if
         //The request targets a resource collection
         //and the request isn't for a $count segment
-        $this->_pagingApplicable = $this->request->getTargetKind() == TargetKind::RESOURCE() && !$isSingleResult && ($request->queryType != QueryType::COUNT());
+        $this->_pagingApplicable = $this->request->getTargetKind() == TargetKind::RESOURCE()
+                                   && !$isSingleResult
+                                   && ($request->queryType != QueryType::COUNT());
 
         $targetResourceType = $this->request->getTargetResourceType();
         $targetResourceSetWrapper = $this->request->getTargetResourceSetWrapper();
@@ -113,7 +116,8 @@ class QueryProcessor
     }
 
     /**
-     * Processes the odata query options in the request uri and update the request description instance with processed details.
+     * Processes the odata query options in the request uri and update the request description
+     * instance with processed details.
      *
      * @throws ODataException If any error occured while processing the query options
      */
@@ -193,7 +197,7 @@ class QueryProcessor
         }
 
         $targetResourceType = $this->request->getTargetResourceType();
-        //assert($targetResourceType != null)
+        assert($targetResourceType != null, "Request target resource type must not be null");
         /*
          * We need to do sorting in the folowing cases, irrespective of
          * $orderby clause is present or not.
@@ -219,8 +223,10 @@ class QueryProcessor
         }
 
         if (!is_null($orderBy)) {
+            $setWrapper = $this->request->getTargetResourceSetWrapper();
+            assert(null != $setWrapper, "Target resource set wrapper must not be null");
             $internalOrderByInfo = OrderByParser::parseOrderByClause(
-                $this->request->getTargetResourceSetWrapper(),
+                $setWrapper,
                 $targetResourceType,
                 $orderBy,
                 $this->service->getProvidersWrapper()
@@ -230,6 +236,7 @@ class QueryProcessor
                 $internalOrderByInfo
             );
         }
+
     }
 
     /**
@@ -351,14 +358,16 @@ class QueryProcessor
 
         if (!$this->_isSSPagingRequired()) {
             throw ODataException::createBadRequestError(
-                Messages::queryProcessorSkipTokenCannotBeAppliedForNonPagedResourceSet($this->request->getTargetResourceSetWrapper())
+                Messages::queryProcessorSkipTokenCannotBeAppliedForNonPagedResourceSet(
+                    $this->request->getTargetResourceSetWrapper()
+                )
             );
         }
 
         $internalOrderByInfo = $this->request->getInternalOrderByInfo();
-        //assert($internalOrderByInfo != null)
+        assert($internalOrderByInfo != null, "Internal order info must not be null");
         $targetResourceType = $this->request->getTargetResourceType();
-        //assert($targetResourceType != null)
+        assert($targetResourceType != null, "Request target resource type must not be null");
 
         $internalSkipTokenInfo = SkipTokenParser::parseSkipTokenClause(
             $targetResourceType,
@@ -436,7 +445,7 @@ class QueryProcessor
         if ($this->_pagingApplicable) {
             $targetResourceSetWrapper = $this->request->getTargetResourceSetWrapper();
             //assert($targetResourceSetWrapper != NULL)
-            return $targetResourceSetWrapper->getResourceSetPageSize() != 0;
+            return 0 != $targetResourceSetWrapper->getResourceSetPageSize();
         }
 
         return false;
@@ -475,7 +484,7 @@ class QueryProcessor
             }
 
             $value = intval($value);
-            if ($value < 0) {
+            if (0 > $value) {
                 throw ODataException::createSyntaxError(
                     Messages::queryProcessorIncorrectArgumentFormat(
                         $queryItem,
@@ -522,7 +531,8 @@ class QueryProcessor
      * or $top is applicable for the current requested resource.
      *
      *
-     * @throws ODataException Throws bad request error if any of the query options $orderby, $inlinecount, $skip or $top cannot be applied to the requested resource
+     * @throws ODataException Throws bad request error if any of the query options $orderby, $inlinecount,
+     * $skip or $top cannot be applied to the requested resource
      */
     private function _checkSetQueryApplicable()
     {
