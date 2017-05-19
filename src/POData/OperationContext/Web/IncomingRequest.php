@@ -19,28 +19,28 @@ class IncomingRequest implements IHTTPRequest
      *
      * @var array
      */
-    private $_headers;
+    private $headers;
 
     /**
      * The incoming url in raw format.
      *
      * @var string
      */
-    private $_rawUrl = null;
+    private $rawUrl = null;
 
     /**
      * The request method (GET, POST, PUT, DELETE or MERGE).
      *
      * @var HTTPRequestMethod HttpVerb
      */
-    private $_method;
+    private $method;
 
     /**
      * The query options as key value.
      *
      * @var array(string, string);
      */
-    private $_queryOptions;
+    private $queryOptions;
 
     /**
      * A collection that represents mapping between query
@@ -48,17 +48,17 @@ class IncomingRequest implements IHTTPRequest
      *
      * @var array(string, int)
      */
-    private $_queryOptionsCount;
+    private $queryOptionsCount;
 
     /**
      * Initialize a new instance of IncomingWebRequestContext.
      */
     public function __construct()
     {
-        $this->_method = new HTTPRequestMethod($_SERVER['REQUEST_METHOD']);
-        $this->_queryOptions = null;
-        $this->_queryOptionsCount = null;
-        $this->_headers = null;
+        $this->method = new HTTPRequestMethod($_SERVER['REQUEST_METHOD']);
+        $this->queryOptions = [];
+        $this->queryOptionsCount = [];
+        $this->headers = [];
         $this->getHeaders();
     }
 
@@ -99,22 +99,22 @@ class IncomingRequest implements IHTTPRequest
      */
     private function getHeaders()
     {
-        if (is_null($this->_headers)) {
-            $this->_headers = [];
+        if (0 == count($this->headers)) {
+            $this->headers = [];
 
             foreach ($_SERVER as $key => $value) {
-                if ((strpos($key, 'HTTP_') === 0)
-                    || (strpos($key, 'REQUEST_') === 0)
-                    || (strpos($key, 'SERVER_') === 0)
-                    || (strpos($key, 'CONTENT_') === 0)
+                if ((0 === strpos($key, 'HTTP_'))
+                    || (0 === strpos($key, 'REQUEST_'))
+                    || (0 === strpos($key, 'SERVER_'))
+                    || (0 === strpos($key, 'CONTENT_'))
                 ) {
                     $trimmedValue = trim($value);
-                    $this->_headers[$key] = isset($trimmedValue) ? $trimmedValue : null;
+                    $this->headers[$key] = isset($trimmedValue) ? $trimmedValue : null;
                 }
             }
         }
 
-        return $this->_headers;
+        return $this->headers;
     }
 
     /**
@@ -124,18 +124,19 @@ class IncomingRequest implements IHTTPRequest
      */
     public function getRawUrl()
     {
-        if (is_null($this->_rawUrl)) {
+        if (is_null($this->rawUrl)) {
             if (!preg_match('/^HTTTPS/', $_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL])) {
-                $this->_rawUrl = ODataConstants::HTTPREQUEST_PROTOCOL_HTTP;
+                $this->rawUrl = ODataConstants::HTTPREQUEST_PROTOCOL_HTTP;
             } else {
-                $this->_rawUrl = ODataConstants::HTTPREQUEST_PROTOCOL_HTTPS;
+                $this->rawUrl = ODataConstants::HTTPREQUEST_PROTOCOL_HTTPS;
             }
 
-            $this->_rawUrl .= '://' . $_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)];
-            $this->_rawUrl .= utf8_decode(urldecode($_SERVER[ODataConstants::HTTPREQUEST_URI]));
+            $this->rawUrl .= '://' .
+                              $_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)];
+            $this->rawUrl .= utf8_decode(urldecode($_SERVER[ODataConstants::HTTPREQUEST_URI]));
         }
 
-        return $this->_rawUrl;
+        return $this->rawUrl;
     }
 
     /**
@@ -147,15 +148,16 @@ class IncomingRequest implements IHTTPRequest
      */
     public function getRequestHeader($key)
     {
-        if (!$this->_headers) {
+        if (0 == count($this->headers)) {
             $this->getHeaders();
         }
         //PHP normalizes header keys
         $trimmedKey = HttpProcessUtility::headerToServerKey(trim($key));
 
-        if (array_key_exists($trimmedKey, $this->_headers)) {
-            return $this->_headers[$trimmedKey];
+        if (array_key_exists($trimmedKey, $this->headers)) {
+            return $this->headers[$trimmedKey];
         }
+        return null;
     }
 
     /**
@@ -180,27 +182,28 @@ class IncomingRequest implements IHTTPRequest
      */
     public function getQueryParameters()
     {
-        if (is_null($this->_queryOptions)) {
+        if (0 == count($this->queryOptions)) {
             $queryString = $this->getQueryString();
-            $this->_queryOptions = [];
+            $this->queryOptions = [];
 
             foreach (explode('&', $queryString) as $queryOptionAsString) {
                 $queryOptionAsString = trim($queryOptionAsString);
                 if (!empty($queryOptionAsString)) {
                     $result = explode('=', $queryOptionAsString, 2);
-                    $isNamedOptions = count($result) == 2;
+                    $isNamedOptions = 2 == count($result);
+                    $rawUrl = rawurldecode($result[0]);
                     if ($isNamedOptions) {
-                        $this->_queryOptions[]
-                            = [rawurldecode($result[0]) => trim(rawurldecode($result[1]))];
+                        $this->queryOptions[]
+                            = [$rawUrl => trim(rawurldecode($result[1]))];
                     } else {
-                        $this->_queryOptions[]
-                            = [null => trim(rawurldecode($result[0]))];
+                        $this->queryOptions[]
+                            = [null => trim($rawUrl)];
                     }
                 }
             }
         }
 
-        return $this->_queryOptions;
+        return $this->queryOptions;
     }
 
     /**
@@ -212,7 +215,7 @@ class IncomingRequest implements IHTTPRequest
      */
     public function getMethod()
     {
-        return $this->_method;
+        return $this->method;
     }
 
     public function getAllInput()
