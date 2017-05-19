@@ -436,8 +436,9 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
         if (!is_null($navigationProperties)) {
             //Write out navigation properties (deferred or inline)
             foreach ($navigationProperties as $navigationPropertyInfo) {
-                $propertyName = $navigationPropertyInfo->resourceProperty->getName();
-                $type = ResourcePropertyKind::RESOURCE_REFERENCE == $navigationPropertyInfo->resourceProperty->getKind() ?
+                $navResource = $navigationPropertyInfo->resourceProperty;
+                $propertyName = $navResource->getName();
+                $type = ResourcePropertyKind::RESOURCE_REFERENCE == $navResource->getKind() ?
                     'application/atom+xml;type=entry' : 'application/atom+xml;type=feed';
                 $link = new ODataLink();
                 $link->name = ODataConstants::ODATA_RELATED_NAMESPACE . $propertyName;
@@ -448,8 +449,8 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
                 if ($navigationPropertyInfo->expanded) {
                     $propertyRelativeUri = $relativeUri . '/' . $propertyName;
                     $propertyAbsoluteUri = trim($absoluteUri, '/') . '/' . $propertyName;
-                    $needPop = $this->pushSegmentForNavigationProperty($navigationPropertyInfo->resourceProperty);
-                    $navigationPropertyKind = $navigationPropertyInfo->resourceProperty->getKind();
+                    $needPop = $this->pushSegmentForNavigationProperty($navResource);
+                    $navigationPropertyKind = $navResource->getKind();
                     assert(
                         ResourcePropertyKind::RESOURCESET_REFERENCE == $navigationPropertyKind
                         || ResourcePropertyKind::RESOURCE_REFERENCE == $navigationPropertyKind,
