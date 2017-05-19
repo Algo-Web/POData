@@ -67,6 +67,13 @@ class OrderByParser
      */
     private $_dummyObject;
 
+    /*
+     * Root node for tree ordering
+     *
+     * @var mixed
+     */
+    private $_rootOrderByNode;
+
     /**
      * Creates new instance of OrderByParser.
      *
@@ -163,11 +170,11 @@ class OrderByParser
             // Check sort order is specified in the path, if so set a
             // flag and remove that segment
             if ($subPathCount > 1) {
-                if ($orderBySubPathSegments[$subPathCount - 1] === '*desc') {
+                if ('*desc' === $orderBySubPathSegments[$subPathCount - 1]) {
                     $ascending = false;
                     unset($orderBySubPathSegments[$subPathCount - 1]);
                     --$subPathCount;
-                } elseif ($orderBySubPathSegments[$subPathCount - 1] === '*asc') {
+                } elseif ('*asc' === $orderBySubPathSegments[$subPathCount - 1]) {
                     unset($orderBySubPathSegments[$subPathCount - 1]);
                     --$subPathCount;
                 }
@@ -205,7 +212,9 @@ class OrderByParser
 
                     $type = $resourceProperty->getInstanceType();
                     if ($type instanceof Binary) {
-                        throw ODataException::createBadRequestError(Messages::orderByParserSortByBinaryPropertyNotAllowed($resourceProperty->getName()));
+                        throw ODataException::createBadRequestError(
+                            Messages::orderByParserSortByBinaryPropertyNotAllowed($resourceProperty->getName())
+                        );
                     }
                 } elseif ($resourceProperty->getKind() == ResourcePropertyKind::RESOURCESET_REFERENCE
                     || $resourceProperty->getKind() == ResourcePropertyKind::RESOURCE_REFERENCE
@@ -324,10 +333,6 @@ class OrderByParser
                         $reflectionProperty->setAccessible(true);
                         $currentObject = $reflectionProperty->getValue($currentObject);
 
-                        //$dummyProperty = new \ReflectionProperty(
-                        //    $currentObject, $resourceProperty->getName()
-                        //);
-                        //$currentObject = $dummyProperty->getValue($currentObject);
                     } catch (\ReflectionException $reflectionException) {
                         throw ODataException::createInternalServerError(
                             Messages::orderByParserFailedToAccessOrInitializeProperty(
@@ -346,6 +351,7 @@ class OrderByParser
                 $currentNode = $node;
             }
         }
+        return null;
     }
 
     /**
@@ -386,7 +392,10 @@ class OrderByParser
             unset($orderBySubPathSegments);
         }
 
-        $this->_orderByInfo = new OrderByInfo($orderByPathSegments, empty($navigationPropertiesInThePath) ? null : $navigationPropertiesInThePath);
+        $this->_orderByInfo = new OrderByInfo(
+            $orderByPathSegments,
+            empty($navigationPropertiesInThePath) ? null : $navigationPropertiesInThePath
+        );
     }
 
     /**
