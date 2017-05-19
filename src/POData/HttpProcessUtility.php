@@ -21,21 +21,21 @@ class MediaType
      *
      * @var string
      */
-    private $_type;
+    private $type;
 
     /**
      * The sub-type part of media type.
      *
      * @var string
      */
-    private $_subType;
+    private $subType;
 
     /**
      * The parameters associated with the media type.
      *
      * @var array(array(string, string))
      */
-    private $_parameters;
+    private $parameters;
 
     /**
      * Constructs a new instance of Media Type.
@@ -46,9 +46,9 @@ class MediaType
      */
     public function __construct($type, $subType, $parameters)
     {
-        $this->_type = $type;
-        $this->_subType = $subType;
-        $this->_parameters = $parameters;
+        $this->type = $type;
+        $this->subType = $subType;
+        $this->parameters = $parameters;
     }
 
     /**
@@ -58,7 +58,7 @@ class MediaType
      */
     public function getMimeType()
     {
-        return $this->_type . '/' . $this->_subType;
+        return $this->type . '/' . $this->subType;
     }
 
     /**
@@ -68,7 +68,7 @@ class MediaType
      */
     public function getParameters()
     {
-        return $this->_parameters;
+        return $this->parameters;
     }
 
     /**
@@ -106,21 +106,21 @@ class MediaType
                 return -1;
             }
 
-            if ($this->_type == '*') {
+            if ('*' == $this->type) {
                 $result = 0;
             } else {
                 $separatorIdx = strpos($candidate, '/');
                 if ($separatorIdx !== false) {
                     //if there's a subtype..look further
                     $candidateType = substr($candidate, 0, $separatorIdx);
-                    if (strcasecmp($this->_type, $candidateType) == 0) {
+                    if (0 == strcasecmp($this->type, $candidateType)) {
                         //If main type matches
-                        if ($this->_subType == '*') {
+                        if ('*' == $this->subType) {
                             //and sub type matches with wildcard
                             $result = 1;
                         } else {
                             $candidateSubType = substr($candidate, strlen($candidateType) + 1);
-                            if (strcasecmp($this->_subType, $candidateSubType) == 0) {
+                            if (0 == strcasecmp($this->subType, $candidateSubType)) {
                                 //if sub type matches
                                 $result = 2;
                             }
@@ -135,9 +135,9 @@ class MediaType
 
     public function getODataValue()
     {
-        foreach ($this->_parameters as $parameter) {
+        foreach ($this->parameters as $parameter) {
             foreach ($parameter as $key => $value) {
-                if (strcasecmp($key, 'odata') === 0) {
+                if (0 === strcasecmp($key, 'odata')) {
                     return $value;
                 }
             }
@@ -152,11 +152,11 @@ class MediaType
      */
     public function getQualityValue()
     {
-        foreach ($this->_parameters as $parameter) {
+        foreach ($this->parameters as $parameter) {
             foreach ($parameter as $key => $value) {
-                if (strcasecmp($key, 'q') === 0) {
+                if (0 === strcasecmp($key, 'q')) {
                     $textIndex = 0;
-                    $result;
+                    $result = null;
                     HttpProcessUtility::readQualityValue(
                         $value,
                         $textIndex,
@@ -182,7 +182,8 @@ class HttpProcessUtility
      *
      * @param string   $acceptTypesText    Text as it appears in an HTTP
      *                                     Accepts header
-     * @param string[] $exactContentTypes  Preferred content type to match if an exact media type is given - this is in descending order of preference
+     * @param string[] $exactContentTypes  Preferred content type to match if an exact media type is given -
+     *                                     this is in descending order of preference
      * @param string   $inexactContentType Preferred fallback content type for inexact matches
      *
      * @return string One of exactContentType or inexactContentType
@@ -204,7 +205,7 @@ class HttpProcessUtility
             foreach ($acceptTypes as $acceptType) {
                 $acceptTypesEmpty = false;
                 foreach ($exactContentTypes as $exactContentType) {
-                    if (strcasecmp($acceptType->getMimeType(), $exactContentType) == 0) {
+                    if (0 == strcasecmp($acceptType->getMimeType(), $exactContentType)) {
                         $selectedContentType = $exactContentType;
                         $selectedQualityValue = $acceptType->getQualityValue();
                         $acceptable = $selectedQualityValue != 0;
@@ -228,14 +229,14 @@ class HttpProcessUtility
                     $selectedContentType = $inexactContentType;
                     $selectedMatchingParts = $matchingParts;
                     $selectedQualityValue = $acceptType->getQualityValue();
-                    $acceptable = $selectedQualityValue != 0;
+                    $acceptable = 0 != $selectedQualityValue;
                 } elseif ($matchingParts == $selectedMatchingParts) {
                     // A type with a higher q-value wins.
                     $candidateQualityValue = $acceptType->getQualityValue();
                     if ($candidateQualityValue > $selectedQualityValue) {
                         $selectedContentType = $inexactContentType;
                         $selectedQualityValue = $candidateQualityValue;
-                        $acceptable = $selectedQualityValue != 0;
+                        $acceptable = 0 != $selectedQualityValue;
                     }
                 }
             }
@@ -333,13 +334,13 @@ class HttpProcessUtility
     {
         $mediaTypes = [];
         $textIndex = 0;
-        while (!self::skipWhitespace($text, $textIndex)) {
+        while (!self::skipWhiteSpace($text, $textIndex)) {
             $type = null;
             $subType = null;
             self::readMediaTypeAndSubtype($text, $textIndex, $type, $subType);
 
             $parameters = [];
-            while (!self::skipWhitespace($text, $textIndex)) {
+            while (!self::skipWhiteSpace($text, $textIndex)) {
                 if ($text[$textIndex] == ',') {
                     ++$textIndex;
                     break;
@@ -353,7 +354,7 @@ class HttpProcessUtility
                 }
 
                 ++$textIndex;
-                if (self::skipWhitespace($text, $textIndex)) {
+                if (self::skipWhiteSpace($text, $textIndex)) {
                     break;
                 }
 

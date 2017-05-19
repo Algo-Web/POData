@@ -772,7 +772,7 @@ class RequestDescription
      */
     public function isLinkUri()
     {
-        return ($this->segmentCount > 2)
+        return (2 < $this->segmentCount)
                && isset($this->segments[$this->segmentCount - 2])
                && ($this->segments[$this->segmentCount - 2]->getTargetKind() == TargetKind::LINK());
     }
