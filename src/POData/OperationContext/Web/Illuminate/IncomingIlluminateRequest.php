@@ -20,28 +20,28 @@ class IncomingIlluminateRequest implements IHTTPRequest
      *
      * @var array
      */
-    private $_headers;
+    private $headers = [];
 
     /**
      * The incoming url in raw format.
      *
      * @var string
      */
-    private $_rawUrl = null;
+    private $rawUrl = null;
 
     /**
      * The request method (GET, POST, PUT, DELETE or MERGE).
      *
      * @var HTTPRequestMethod HttpVerb
      */
-    private $_method;
+    private $method;
 
     /**
      * The query options as key value.
      *
      * @var array(string, string);
      */
-    private $_queryOptions;
+    private $queryOptions = [];
 
     /**
      * A collection that represents mapping between query
@@ -49,7 +49,7 @@ class IncomingIlluminateRequest implements IHTTPRequest
      *
      * @var array(string, int)
      */
-    private $_queryOptionsCount;
+    private $queryOptionsCount = [];
 
     /**
      * IncomingIlluminateRequest constructor.
@@ -59,10 +59,10 @@ class IncomingIlluminateRequest implements IHTTPRequest
     public function __construct(Request $request)
     {
         $this->request = $request;
-        $this->_headers = null;
-        $this->_queryOptions = null;
-        $this->_queryOptionsCount = null;
-        $this->_method = new HTTPRequestMethod($this->request->getMethod());
+        $this->headers = [];
+        $this->queryOptions = [];
+        $this->queryOptionsCount = [];
+        $this->method = new HTTPRequestMethod($this->request->getMethod());
     }
 
     /**
@@ -70,9 +70,9 @@ class IncomingIlluminateRequest implements IHTTPRequest
      */
     public function getRawUrl()
     {
-        $this->_rawUrl = $this->request->fullUrl();
+        $this->rawUrl = $this->request->fullUrl();
 
-        return $this->_rawUrl;
+        return $this->rawUrl;
     }
 
     /**
@@ -84,8 +84,8 @@ class IncomingIlluminateRequest implements IHTTPRequest
     {
         $result = $this->request->header($key);
         //Zend returns false for a missing header...POData needs a null
-        if ($result === false || $result === '') {
-            return;
+        if (false === $result || '' === $result) {
+            return null;
         }
 
         return $result;
@@ -106,14 +106,19 @@ class IncomingIlluminateRequest implements IHTTPRequest
         //this makes this request a bit non compliant as it doesn't expose duplicate keys, something POData will check for
         //instead whatever parameter was last in the query string is set.  IE
         //odata.svc/?$format=xml&$format=json the format will be json
-        $this->_queryOptions = [];
-        $this->_queryOptionsCount = 0;
+        $this->queryOptions = [];
+        $this->queryOptionsCount = [];
+
         foreach ($this->request->all() as $key => $value) {
-            $this->_queryOptions[] = [$key => $value];
-            ++$this->_queryOptionsCount;
+            $this->queryOptions[] = [$key => $value];
+            if (!array_key_exists($key, $this->queryOptionsCount)) {
+                $this->queryOptionsCount[$key] = 1;
+            } else {
+                $this->queryOptionsCount[$key]++;
+            }
         }
 
-        return $this->_queryOptions;
+        return $this->queryOptions;
     }
 
     /**
@@ -121,7 +126,7 @@ class IncomingIlluminateRequest implements IHTTPRequest
      */
     public function getMethod()
     {
-        return $this->_method;
+        return $this->method;
     }
 
     /**
