@@ -207,7 +207,7 @@ class UriProcessor
                     );
                 }
                 $data = $this->getRequest()->getData();
-                if (!$data) {
+                if (empty($data)) {
                     throw ODataException::createBadRequestError(Messages::noDataForThisVerb($requestMethod));
                 }
                 $queryResult = $this->getProviders()->createResourceforResourceSet($resourceSet, $keyDescriptor, $data);
@@ -290,7 +290,7 @@ class UriProcessor
                         $segment->getPrevious()->getIdentifier()
                     );
                 }
-                $this->_handleSegmentTargetsToRelatedResource($segment);
+                $this->handleSegmentTargetsToRelatedResource($segment);
             } elseif ($requestTargetKind == TargetKind::LINK()) {
                 $segment->setResult($segment->getPrevious()->getResult());
             } elseif ($segment->getIdentifier() == ODataConstants::URI_COUNT_SEGMENT) {
@@ -390,7 +390,7 @@ class UriProcessor
      * @param SegmentDescriptor &$segment Describes the related resource
      *                                    to query
      */
-    private function _handleSegmentTargetsToRelatedResource(SegmentDescriptor $segment)
+    private function handleSegmentTargetsToRelatedResource(SegmentDescriptor $segment)
     {
         $projectedProperty = $segment->getProjectedProperty();
         $projectedPropertyKind = $projectedProperty->getKind();
