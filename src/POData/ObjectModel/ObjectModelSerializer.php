@@ -214,7 +214,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
     public function writeTopLevelBagObject(
         &$BagValue,
         $propertyName,
-        ResourceType & $resourceType
+        ResourceType &$resourceType
     ) {
         $propertyContent = new ODataPropertyContent();
         $this->writeBagValue(
@@ -242,8 +242,9 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
      */
     public function writeTopLevelPrimitive(
         &$primitiveValue,
-        ResourceProperty & $resourceProperty = null
+        ResourceProperty &$resourceProperty = null
     ) {
+        assert(null != $resourceProperty, "Resource property must not be null");
         $propertyContent = new ODataPropertyContent();
         $propertyContent->properties[] = new ODataProperty();
         $this->writePrimitiveValue(
