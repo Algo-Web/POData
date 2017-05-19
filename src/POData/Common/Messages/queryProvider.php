@@ -24,7 +24,8 @@ trait queryProvider
      */
     public static function queryProviderResultCountMissing($methodName, QueryType $queryType)
     {
-        return "The implementation of the method $methodName must return a QueryResult instance with a count for queries of type $queryType.";
+        return "The implementation of the method $methodName must return a QueryResult instance"
+               ." with a count for queries of type $queryType.";
     }
 
     /**
@@ -35,6 +36,7 @@ trait queryProvider
      */
     public static function queryProviderResultsMissing($methodName, QueryType $queryType)
     {
-        return "The implementation of the method $methodName must return a QueryResult instance with an array of results for queries of type $queryType.";
+        return "The implementation of the method $methodName must return a QueryResult instance with"
+               ." an array of results for queries of type $queryType.";
     }
 }

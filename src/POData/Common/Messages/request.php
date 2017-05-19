@@ -16,7 +16,9 @@ trait request
      */
     public static function requestVersionTooLow($requestedVersion, $requiredVersion)
     {
-        return "Request version '$requestedVersion' is not supported for the request payload. The only supported version is '$requiredVersion'.";
+        $msg = "Request version '$requestedVersion' is not supported for the request payload."
+               ." The only supported version is '$requiredVersion'.";
+        return $msg;
     }
 
     /**
@@ -30,7 +32,9 @@ trait request
      */
     public static function requestVersionIsBiggerThanProtocolVersion($requiredVersion, $configuredVersion)
     {
-        return "The response requires that version $requiredVersion of the protocol be used, but the MaxProtocolVersion of the data service is set to $configuredVersion.";
+        $msg = "The response requires that version $requiredVersion of the protocol be used, but the"
+               ." MaxProtocolVersion of the data service is set to $configuredVersion.";
+        return $msg;
     }
 
     /**
@@ -57,8 +61,13 @@ trait request
      *
      * @return string The formatted message
      */
-    public static function requestDescriptionUnSupportedVersion($requestHeaderName, $requestedVersion, $availableVersions)
-    {
-        return "The version value $requestedVersion in the header $requestHeaderName is not supported, available versions are $availableVersions";
+    public static function requestDescriptionUnSupportedVersion(
+        $requestHeaderName,
+        $requestedVersion,
+        $availableVersions
+    ) {
+        $msg = "The version value $requestedVersion in the header $requestHeaderName is not supported,"
+               ." available versions are $availableVersions";
+        return $msg;
     }
 }

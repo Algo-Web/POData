@@ -91,7 +91,10 @@ trait common
      */
     public static function badRequestInvalidPropertyNameSpecified($resourceTypeName, $propertyName)
     {
-        return "Error processing request stream. The property name '$propertyName' specified for type '$resourceTypeName' is not valid. (Check the resource set of the navigation property '$propertyName' is visible)";
+        $msg = "Error processing request stream. The property name '$propertyName' specified for"
+               ." type '$resourceTypeName' is not valid. (Check the resource set of the navigation"
+               ." property '$propertyName' is visible)";
+        return $msg;
     }
 
     /**
