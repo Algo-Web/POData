@@ -115,6 +115,7 @@ class OrderByParser
         $orderBy,
         ProvidersWrapper $providerWrapper
     ) {
+        assert(is_string($orderBy), "OrderBy clause must be a string");
         $orderByParser = new self($providerWrapper);
         try {
             $orderByParser->dummyObject = $resourceType->getInstanceType()->newInstance();
