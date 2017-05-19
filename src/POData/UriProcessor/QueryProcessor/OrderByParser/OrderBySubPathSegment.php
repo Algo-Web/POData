@@ -3,6 +3,7 @@
 namespace POData\UriProcessor\QueryProcessor\OrderByParser;
 
 use POData\Providers\Metadata\ResourceProperty;
+use POData\Providers\Metadata\Type\IType;
 
 /**
  * Class OrderBySubPathSegment.
@@ -21,7 +22,7 @@ class OrderBySubPathSegment
      *
      * @var ResourceProperty
      */
-    private $_resourceProperty;
+    private $resourceProperty;
 
     /**
      * Constructs a new instance of OrderBySubPathSegment.
@@ -32,7 +33,7 @@ class OrderBySubPathSegment
      */
     public function __construct(ResourceProperty $resourceProperty)
     {
-        $this->_resourceProperty = $resourceProperty;
+        $this->resourceProperty = $resourceProperty;
     }
 
     /**
@@ -42,7 +43,7 @@ class OrderBySubPathSegment
      */
     public function getName()
     {
-        return $this->_resourceProperty->getName();
+        return $this->resourceProperty->getName();
     }
 
     /**
@@ -53,7 +54,7 @@ class OrderBySubPathSegment
      */
     public function getResourceProperty()
     {
-        return $this->_resourceProperty;
+        return $this->resourceProperty;
     }
 
     /**
@@ -61,10 +62,10 @@ class OrderBySubPathSegment
      * this sub path segment If this sub path segment is last segment then
      * this function returns 'IType' otherwise 'ReflectionClass'.
      *
-     * @return ReflectionClass|IType
+     * @return \ReflectionClass|IType
      */
     public function getInstanceType()
     {
-        return $this->_resourceProperty->getInstanceType();
+        return $this->resourceProperty->getInstanceType();
     }
 }

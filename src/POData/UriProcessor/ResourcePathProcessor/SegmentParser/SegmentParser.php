@@ -18,7 +18,8 @@ use POData\Providers\ProvidersWrapper;
  * e.g. Customers('ALFKI')/Orders(2134)/Order_Details/Product
  *
  * Syntax of an OData segment is:
- * Segment       : identifier[(keyPredicate)]?            : e.g. Customers, Customers('ALFKI'), Order_Details(OrderID=123, ProductID=11)
+ * Segment       : identifier[(keyPredicate)]?            : e.g. Customers, Customers('ALFKI'),
+ *                                                          Order_Details(OrderID=123, ProductID=11)
  * keyPredicate  : keyValue | NamedKeyValue
  * NamedKeyValue : keyName=keyValue [, keyName=keyValue]* : e.g. OrderID=123, ProductID=11
  * keyValue      : quotedValue | unquotedValue            : e.g. 'ALFKI'
@@ -40,7 +41,7 @@ class SegmentParser
      *
      * @var SegmentDescriptor[]
      */
-    private $_segmentDescriptors = [];
+    private $segmentDescriptors = [];
 
     /**
      * Constructs a new instance of SegmentParser.
@@ -68,7 +69,7 @@ class SegmentParser
         $segmentParser = new self($providerWrapper);
         $segmentParser->createSegmentDescriptors($segments, $checkForRights);
 
-        return $segmentParser->_segmentDescriptors;
+        return $segmentParser->segmentDescriptors;
     }
 
     /**
@@ -84,7 +85,7 @@ class SegmentParser
     private function extractSegmentIdentifierAndKeyPredicate($segment, &$identifier, &$keyPredicate)
     {
         $predicateStart = strpos($segment, '(');
-        if ($predicateStart === false) {
+        if (false === $predicateStart) {
             $identifier = $segment;
             $keyPredicate = null;
 
@@ -115,7 +116,7 @@ class SegmentParser
             //If there's no segments, then it's the service root
             $descriptor = new SegmentDescriptor();
             $descriptor->setTargetKind(TargetKind::SERVICE_DIRECTORY());
-            $this->_segmentDescriptors[] = $descriptor;
+            $this->segmentDescriptors[] = $descriptor;
 
             return;
         }
@@ -123,13 +124,13 @@ class SegmentParser
         $segmentCount = count($segments);
         $identifier = $keyPredicate = null;
         $this->extractSegmentIdentifierAndKeyPredicate($segments[0], $identifier, $keyPredicate);
-        $previous = $this->_createFirstSegmentDescriptor(
+        $previous = $this->createFirstSegmentDescriptor(
             $identifier,
             $keyPredicate,
             $checkRights
         );
         assert($previous instanceof SegmentDescriptor, get_class($previous));
-        $this->_segmentDescriptors[0] = $previous;
+        $this->segmentDescriptors[0] = $previous;
 
         for ($i = 1; $i < $segmentCount; ++$i) {
             $thisSegment = $segments[$i];
@@ -137,7 +138,7 @@ class SegmentParser
 
             $current->setPrevious($previous);
             $previous->setNext($current);
-            $this->_segmentDescriptors[] = $current;
+            $this->segmentDescriptors[] = $current;
             $previous = $current;
         }
 
@@ -180,7 +181,7 @@ class SegmentParser
                 );
             }
 
-            $this->_assertion(!$hasPredicate);
+            $this->assertion(!$hasPredicate);
             $current = SegmentDescriptor::createFrom($previous);
             $current->setIdentifier(ODataConstants::URI_VALUE_SEGMENT);
             $current->setTargetKind(TargetKind::PRIMITIVE_VALUE());
@@ -195,7 +196,7 @@ class SegmentParser
             && $previous->isSingleResult()
             && $identifier === ODataConstants::URI_LINK_SEGMENT
         ) {
-            $this->_assertion(!$hasPredicate);
+            $this->assertion(!$hasPredicate);
             $current = SegmentDescriptor::createFrom($previous);
             $current->setIdentifier(ODataConstants::URI_LINK_SEGMENT);
             $current->setTargetKind(TargetKind::LINK());
@@ -313,8 +314,8 @@ class SegmentParser
                 }
 
                 if ($hasPredicate) {
-                    $this->_assertion(!$current->isSingleResult());
-                    $keyDescriptor = $this->_createKeyDescriptor(
+                    $this->assertion(!$current->isSingleResult());
+                    $keyDescriptor = $this->createKeyDescriptor(
                         $identifier . '(' . $keyPredicate . ')',
                         $projectedProperty->getResourceType(),
                         $keyPredicate
@@ -348,20 +349,20 @@ class SegmentParser
      *
      * @return SegmentDescriptor Descriptor for the first segment
      */
-    private function _createFirstSegmentDescriptor($segmentIdentifier, $keyPredicate, $checkRights)
+    private function createFirstSegmentDescriptor($segmentIdentifier, $keyPredicate, $checkRights)
     {
         $descriptor = new SegmentDescriptor();
         $descriptor->setIdentifier($segmentIdentifier);
 
         if ($segmentIdentifier === ODataConstants::URI_METADATA_SEGMENT) {
-            $this->_assertion(is_null($keyPredicate));
+            $this->assertion(is_null($keyPredicate));
             $descriptor->setTargetKind(TargetKind::METADATA());
 
             return $descriptor;
         }
 
         if ($segmentIdentifier === ODataConstants::URI_BATCH_SEGMENT) {
-            $this->_assertion(is_null($keyPredicate));
+            $this->assertion(is_null($keyPredicate));
             $descriptor->setTargetKind(TargetKind::BATCH());
 
             return $descriptor;
@@ -393,7 +394,7 @@ class SegmentParser
         $descriptor->setTargetSource(TargetSource::ENTITY_SET);
         $descriptor->setTargetKind(TargetKind::RESOURCE());
         if ($keyPredicate !== null) {
-            $keyDescriptor = $this->_createKeyDescriptor(
+            $keyDescriptor = $this->createKeyDescriptor(
                 $segmentIdentifier . '(' . $keyPredicate . ')',
                 $resourceSetWrapper->getResourceType(),
                 $keyPredicate
@@ -429,7 +430,7 @@ class SegmentParser
      *
      * @return KeyDescriptor Describes the key values in the $keyPredicate
      */
-    private function _createKeyDescriptor($segment, ResourceType $resourceType, $keyPredicate)
+    private function createKeyDescriptor($segment, ResourceType $resourceType, $keyPredicate)
     {
         /**
          * @var KeyDescriptor
@@ -443,7 +444,7 @@ class SegmentParser
         // 'Positional values' so Order_Details(10248, 11) is not valid
         if (!$keyDescriptor->isEmpty()
             && !$keyDescriptor->areNamedValues()
-            && $keyDescriptor->valueCount() > 1
+            && 1 < $keyDescriptor->valueCount()
         ) {
             throw ODataException::createSyntaxError(
                 Messages::segmentParserKeysMustBeNamed($segment)
@@ -463,7 +464,7 @@ class SegmentParser
      *
      * @throws ODataException
      */
-    private function _assertion($condition)
+    private function assertion($condition)
     {
         if (!$condition) {
             throw ODataException::createSyntaxError(Messages::syntaxError());

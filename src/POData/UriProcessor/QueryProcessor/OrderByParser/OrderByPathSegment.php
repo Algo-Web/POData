@@ -21,19 +21,20 @@ class OrderByPathSegment
      *
      * @var OrderBySubPathSegment[]
      */
-    private $_orderBySubPathSegments;
+    private $orderBySubPathSegments;
 
     /**
      * Flag indicates order of sorting, ascending or descending, default is ascending.
      *
      * @var bool
      */
-    private $_isAscending;
+    private $isAscending;
 
     /**
      * Constructs a new instance of OrderByPathSegment.
      *
-     * @param OrderBySubPathSegment[] $orderBySubPathSegments Collection of orderby sub path segments for this path segment
+     * @param OrderBySubPathSegment[] $orderBySubPathSegments Collection of orderby sub path segments for this path
+     *                                                        segment
      * @param bool                    $isAscending            sort order,
      *                                                        True for
      *                                                        ascending and
@@ -54,8 +55,8 @@ class OrderByPathSegment
             );
         }
 
-        $this->_orderBySubPathSegments = $orderBySubPathSegments;
-        $this->_isAscending = $isAscending;
+        $this->orderBySubPathSegments = $orderBySubPathSegments;
+        $this->isAscending = $isAscending;
     }
 
     /**
@@ -65,7 +66,7 @@ class OrderByPathSegment
      */
     public function getSubPathSegments()
     {
-        return $this->_orderBySubPathSegments;
+        return $this->orderBySubPathSegments;
     }
 
     /**
@@ -75,6 +76,6 @@ class OrderByPathSegment
      */
     public function isAscending()
     {
-        return $this->_isAscending;
+        return $this->isAscending;
     }
 }

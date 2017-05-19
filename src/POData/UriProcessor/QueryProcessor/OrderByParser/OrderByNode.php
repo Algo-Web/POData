@@ -2,6 +2,7 @@
 
 namespace POData\UriProcessor\QueryProcessor\OrderByParser;
 
+use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceSetWrapper;
 
 /**
@@ -18,14 +19,14 @@ class OrderByNode extends OrderByBaseNode
      *
      * @var ResourceSetWrapper
      */
-    private $_resourceSetWrapper;
+    private $resourceSetWrapper;
 
     /**
      * list of child nodes.
      *
      * @var array(OrderByNode/OrderByLeafNode)
      */
-    private $_childNodes = [];
+    private $childNodes = [];
 
     /**
      * Construct a new instance of OrderByNode.
@@ -65,7 +66,7 @@ class OrderByNode extends OrderByBaseNode
         //    assert($resourceSetWrapper != null)
         //}
         parent::__construct($propertyName, $resourceProperty);
-        $this->_resourceSetWrapper = $resourceSetWrapper;
+        $this->resourceSetWrapper = $resourceSetWrapper;
     }
 
     /**
@@ -75,7 +76,7 @@ class OrderByNode extends OrderByBaseNode
      */
     public function free()
     {
-        foreach ($this->_childNodes as $childNode) {
+        foreach ($this->childNodes as $childNode) {
             $childNode->free();
         }
     }
@@ -100,7 +101,7 @@ class OrderByNode extends OrderByBaseNode
      */
     public function getResourceSetWrapper()
     {
-        return $this->_resourceSetWrapper;
+        return $this->resourceSetWrapper;
     }
 
     /**
@@ -113,9 +114,10 @@ class OrderByNode extends OrderByBaseNode
      */
     public function findNode($propertyName)
     {
-        if (array_key_exists($propertyName, $this->_childNodes)) {
-            return $this->_childNodes[$propertyName];
+        if (array_key_exists($propertyName, $this->childNodes)) {
+            return $this->childNodes[$propertyName];
         }
+        return null;
     }
 
     /**
@@ -123,7 +125,7 @@ class OrderByNode extends OrderByBaseNode
      *
      * @param OrderByNode/OrderByLeafNode $node The child node
      *
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
     public function addNode($node)
     {
@@ -133,6 +135,6 @@ class OrderByNode extends OrderByBaseNode
             //Error
         // }
 
-        $this->_childNodes[$node->getPropertyName()] = $node;
+        $this->childNodes[$node->getPropertyName()] = $node;
     }
 }
