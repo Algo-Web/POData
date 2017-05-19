@@ -686,7 +686,7 @@ class ProvidersWrapper
         $sourceEntity,
         ResourceSet $targetResourceSet,
         ResourceProperty $targetProperty,
-        $filterInfo = null,
+        $filterInfo,
         $orderBy,
         $top,
         $skip
@@ -821,7 +821,7 @@ class ProvidersWrapper
         );
     }
 
-    public function GetMetadataXML()
+    public function getMetadataXML()
     {
         return $this->metaProvider->getXML();
     }

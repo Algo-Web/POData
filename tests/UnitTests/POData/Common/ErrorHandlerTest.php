@@ -18,7 +18,7 @@ class ErrorHandlerTest extends TestCase
 {
     public function testHandleODataException()
     {
-        $exception = new ODataException('FAIL', 'FAIL', 500);
+        $exception = new ODataException('FAIL', 500);
 
         $outgoing = m::mock(OutgoingResponse::class);
         $outgoing->shouldReceive('setServiceVersion')
