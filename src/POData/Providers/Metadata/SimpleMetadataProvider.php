@@ -582,21 +582,6 @@ class SimpleMetadataProvider implements IMetadataProvider
         $sourcePropertyKind,
         $targetPropertyKind
     ) {
-        if (!($sourcePropertyKind == ResourcePropertyKind::RESOURCESET_REFERENCE
-              || $sourcePropertyKind == ResourcePropertyKind::RESOURCE_REFERENCE)
-        ) {
-            throw new InvalidOperationException(
-                'Source property kind should be ResourceSetReference or ResourceReference'
-            );
-        }
-        if (!($targetPropertyKind == ResourcePropertyKind::RESOURCESET_REFERENCE
-              || $targetPropertyKind == ResourcePropertyKind::RESOURCE_REFERENCE)
-        ) {
-            throw new InvalidOperationException(
-                'Target property kind should be ResourceSetReference or ResourceReference'
-            );
-        }
-
         if (!is_string($sourceProperty) || !is_string($targetProperty)) {
             throw new InvalidOperationException("Source and target properties must both be strings");
         }
@@ -616,26 +601,26 @@ class SimpleMetadataProvider implements IMetadataProvider
             );
         }
 
-        $sourceResourceProperty = new ResourceProperty($sourceProperty, null, $sourcePropertyKind, $targetResourceType);
-        $sourceResourceType->addProperty($sourceResourceProperty);
-        $targetResourceProperty = new ResourceProperty($sourceProperty, null, $targetPropertyKind, $sourceResourceType);
-        $targetResourceType->addProperty($targetResourceProperty);
-
         //Create instance of AssociationSet for this relationship
         $sourceResourceSet = $sourceResourceType->getCustomState();
-        if (is_null($sourceResourceSet) || !$sourceResourceSet instanceof ResourceSet) {
+        if (!$sourceResourceSet instanceof ResourceSet) {
             throw new InvalidOperationException(
                 'Failed to retrieve the custom state from '
                 . $sourceResourceType->getName()
             );
         }
         $targetResourceSet = $targetResourceType->getCustomState();
-        if (is_null($targetResourceSet) || !$targetResourceSet instanceof ResourceSet) {
+        if (!$targetResourceSet instanceof ResourceSet) {
             throw new InvalidOperationException(
                 'Failed to retrieve the custom state from '
                 . $targetResourceType->getName()
             );
         }
+
+        $sourceResourceProperty = new ResourceProperty($sourceProperty, null, $sourcePropertyKind, $targetResourceType);
+        $sourceResourceType->addProperty($sourceResourceProperty);
+        $targetResourceProperty = new ResourceProperty($targetProperty, null, $targetPropertyKind, $sourceResourceType);
+        $targetResourceType->addProperty($targetResourceProperty);
 
         //Customer_Orders_Orders, Order_Customer_Customers
         //(source type::name _ source property::name _ target set::name)

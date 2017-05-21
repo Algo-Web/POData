@@ -388,6 +388,269 @@ class SimpleMetadataProviderTest extends TestCase
         $this->assertTrue($result instanceof ResourceAssociationSet, get_class($result));
         $this->assertEquals($secondExpectedKey, $result->getName());
     }
+
+    public function testAddResourceReferenceBidirectionalBadPropertyNames()
+    {
+        $forward = new reusableEntityClass4('foo', 'bar');
+        $back = new reusableEntityClass5('foo', 'bar');
+
+        $foo = new SimpleMetadataProvider('string', 'String');
+
+        $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore', 'Data');
+        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft', 'Data');
+        $this->assertTrue($fore instanceof ResourceType);
+        $this->assertTrue($aft instanceof ResourceType);
+
+        $expected = "Source and target properties must both be strings";
+        $actual = null;
+
+        try {
+            $foo->addResourceReferencePropertyBidirectional($fore, $aft, null, null);
+        } catch (InvalidOperationException $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testAddResourceSetReferenceBidirectionalFirstBadPropertyName()
+    {
+        $forward = new reusableEntityClass4('foo', 'bar');
+        $back = new reusableEntityClass5('foo', 'bar');
+
+        $foo = new SimpleMetadataProvider('string', 'String');
+
+        $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore', 'Data');
+        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft', 'Data');
+        $this->assertTrue($fore instanceof ResourceType);
+        $this->assertTrue($aft instanceof ResourceType);
+
+        $expected = "Source and target properties must both be strings";
+        $actual = null;
+
+        try {
+            $foo->addResourceSetReferencePropertyBidirectional($fore, $aft, null, 'property');
+        } catch (InvalidOperationException $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testAddResourceReferenceSingleBidirectionalSecondBadPropertyName()
+    {
+        $forward = new reusableEntityClass4('foo', 'bar');
+        $back = new reusableEntityClass5('foo', 'bar');
+
+        $foo = new SimpleMetadataProvider('string', 'String');
+
+        $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore', 'Data');
+        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft', 'Data');
+        $this->assertTrue($fore instanceof ResourceType);
+        $this->assertTrue($aft instanceof ResourceType);
+
+        $expected = "Source and target properties must both be strings";
+        $actual = null;
+
+        try {
+            $foo->addResourceReferenceSinglePropertyBidirectional($fore, $aft, 'property', null);
+        } catch (InvalidOperationException $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testAddResourceReferenceBidirectionalFirstPropertyNameCollision()
+    {
+        $forward = new reusableEntityClass4('foo', 'bar');
+        $back = new reusableEntityClass5('foo', 'bar');
+
+        $foo = new SimpleMetadataProvider('string', 'String');
+
+        $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore', 'Data');
+        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft', 'Data');
+        $this->assertTrue($fore instanceof ResourceType);
+        $this->assertTrue($aft instanceof ResourceType);
+
+        $expected = "Source property name must be different from source resource name.";
+        $actual = null;
+
+        try {
+            $foo->addResourceReferencePropertyBidirectional($fore, $aft, $fore->getName(), 'property');
+        } catch (InvalidOperationException $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testAddResourceReferenceBidirectionalSecondPropertyNameCollision()
+    {
+        $forward = new reusableEntityClass4('foo', 'bar');
+        $back = new reusableEntityClass5('foo', 'bar');
+
+        $foo = new SimpleMetadataProvider('string', 'String');
+
+        $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore', 'Data');
+        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft', 'Data');
+        $this->assertTrue($fore instanceof ResourceType);
+        $this->assertTrue($aft instanceof ResourceType);
+
+        $expected = "Target property name must be different from target resource name.";
+        $actual = null;
+
+        try {
+            $foo->addResourceReferencePropertyBidirectional($fore, $aft, 'property', $aft->getName());
+        } catch (InvalidOperationException $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testAddResourceSetReferenceBidirectionalFirstNoCustomStage()
+    {
+        $forward = new reusableEntityClass4('foo', 'bar');
+        $back = new reusableEntityClass5('foo', 'bar');
+
+        $foo = new SimpleMetadataProvider('string', 'String');
+
+        $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore', 'Data');
+        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft', 'Data');
+        $this->assertTrue($fore instanceof ResourceType);
+        $this->assertTrue($aft instanceof ResourceType);
+
+        $expected = "Failed to retrieve the custom state from fore";
+        $actual = null;
+
+        try {
+            $foo->addResourceSetReferencePropertyBidirectional($fore, $aft, 'property', 'property');
+        } catch (InvalidOperationException $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testAddResourceSetReferenceBidirectionalSecondNoCustomStage()
+    {
+        $forwardSet = m::mock(ResourceSet::class);
+
+        $forward = new reusableEntityClass4('foo', 'bar');
+        $back = new reusableEntityClass5('foo', 'bar');
+
+        $foo = new SimpleMetadataProvider('string', 'String');
+
+        $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore', 'Data');
+        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft', 'Data');
+        $this->assertTrue($fore instanceof ResourceType);
+        $this->assertTrue($aft instanceof ResourceType);
+        $fore->setCustomState($forwardSet);
+
+        $expected = "Failed to retrieve the custom state from aft";
+        $actual = null;
+
+        try {
+            $foo->addResourceSetReferencePropertyBidirectional($fore, $aft, 'property', 'property');
+        } catch (InvalidOperationException $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testAddResourceReferenceBidirectionalCheckSane()
+    {
+        $forward = new reusableEntityClass4('foo', 'bar');
+        $back = new reusableEntityClass5('foo', 'bar');
+
+        $foo = new SimpleMetadataProvider('string', 'String');
+
+        $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore', 'Data');
+        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft', 'Data');
+        $this->assertTrue($fore instanceof ResourceType);
+        $this->assertTrue($aft instanceof ResourceType);
+
+        $foreSet = $foo->addResourceSet('foreSet', $fore);
+        $aftSet = $foo->addResourceSet('aftSet', $aft);
+        $this->assertTrue($foreSet instanceof ResourceSet);
+        $this->assertTrue($aftSet instanceof ResourceSet);
+
+        $foo->addResourceReferencePropertyBidirectional($fore, $aft, 'relation', 'backRelation');
+
+        // now dig out expected results
+        $firstExpectedKey = 'fore_relation_aft';
+        $secondExpectedKey = 'aft_backRelation_fore';
+
+        $result = $foo->resolveAssociationSet($firstExpectedKey);
+        $this->assertNotNull($result, "First association set is null");
+        $this->assertTrue($result instanceof ResourceAssociationSet, get_class($result));
+        $this->assertEquals($firstExpectedKey, $result->getName());
+        $result = $foo->resolveAssociationSet($secondExpectedKey);
+        $this->assertNotNull($result, "Second association set is null");
+        $this->assertTrue($result instanceof ResourceAssociationSet, get_class($result));
+        $this->assertEquals($secondExpectedKey, $result->getName());
+    }
+
+    public function testAddResourceSetReferenceBidirectionalCheckSane()
+    {
+        $forward = new reusableEntityClass4('foo', 'bar');
+        $back = new reusableEntityClass5('foo', 'bar');
+
+        $foo = new SimpleMetadataProvider('string', 'String');
+
+        $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore', 'Data');
+        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft', 'Data');
+        $this->assertTrue($fore instanceof ResourceType);
+        $this->assertTrue($aft instanceof ResourceType);
+
+        $foreSet = $foo->addResourceSet('foreSet', $fore);
+        $aftSet = $foo->addResourceSet('aftSet', $aft);
+        $this->assertTrue($foreSet instanceof ResourceSet);
+        $this->assertTrue($aftSet instanceof ResourceSet);
+
+        $foo->addResourceSetReferencePropertyBidirectional($fore, $aft, 'relation', 'backRelation');
+
+        // now dig out expected results
+        $firstExpectedKey = 'fore_relation_aft';
+        $secondExpectedKey = 'aft_backRelation_fore';
+
+        $result = $foo->resolveAssociationSet($firstExpectedKey);
+        $this->assertNotNull($result, "First association set is null");
+        $this->assertTrue($result instanceof ResourceAssociationSet, get_class($result));
+        $this->assertEquals($firstExpectedKey, $result->getName());
+        $result = $foo->resolveAssociationSet($secondExpectedKey);
+        $this->assertNotNull($result, "Second association set is null");
+        $this->assertTrue($result instanceof ResourceAssociationSet, get_class($result));
+        $this->assertEquals($secondExpectedKey, $result->getName());
+    }
+
+    public function testAddResourceReferenceSingleBidirectionalCheckSane()
+    {
+        $forward = new reusableEntityClass4('foo', 'bar');
+        $back = new reusableEntityClass5('foo', 'bar');
+
+        $foo = new SimpleMetadataProvider('string', 'String');
+
+        $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore', 'Data');
+        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft', 'Data');
+        $this->assertTrue($fore instanceof ResourceType);
+        $this->assertTrue($aft instanceof ResourceType);
+
+        $foreSet = $foo->addResourceSet('foreSet', $fore);
+        $aftSet = $foo->addResourceSet('aftSet', $aft);
+        $this->assertTrue($foreSet instanceof ResourceSet);
+        $this->assertTrue($aftSet instanceof ResourceSet);
+
+        $foo->addResourceReferenceSinglePropertyBidirectional($fore, $aft, 'relation', 'backRelation');
+
+        // now dig out expected results
+        $firstExpectedKey = 'fore_relation_aft';
+        $secondExpectedKey = 'aft_backRelation_fore';
+
+        $result = $foo->resolveAssociationSet($firstExpectedKey);
+        $this->assertNotNull($result, "First association set is null");
+        $this->assertTrue($result instanceof ResourceAssociationSet, get_class($result));
+        $this->assertEquals($firstExpectedKey, $result->getName());
+        $result = $foo->resolveAssociationSet($secondExpectedKey);
+        $this->assertNotNull($result, "Second association set is null");
+        $this->assertTrue($result instanceof ResourceAssociationSet, get_class($result));
+        $this->assertEquals($secondExpectedKey, $result->getName());
+    }
 }
 
 class reusableEntityClass4
