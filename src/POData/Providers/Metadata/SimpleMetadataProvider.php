@@ -451,6 +451,31 @@ class SimpleMetadataProvider implements IMetadataProvider
     }
 
     /**
+     * To add a resource reference property.
+     *
+     * @param ResourceType $resourceType The resource type to add the resource
+     *                                        reference property to
+     * @param string $name The name of the property to add
+     * @param ResourceSet $targetResourceSet The resource set the resource reference
+     *                                        property points to
+     */
+    public function addResourceReferencePropertyBidirectional(
+        ResourceType $sourceResourceType,
+        ResourceType $targetResourceType,
+        $sourceProperty,
+        $targetProperty
+    ) {
+        $this->_addReferencePropertyInternalBidirectional(
+            $sourceResourceType,
+            $targetResourceType,
+            $sourceProperty,
+            $targetProperty,
+            ResourcePropertyKind::RESOURCE_REFERENCE,
+            ResourcePropertyKind::RESOURCESET_REFERENCE
+        );
+    }
+
+    /**
      * To add a navigation property (resource set or resource reference)
      * to a resource type.
      *
@@ -533,6 +558,117 @@ class SimpleMetadataProvider implements IMetadataProvider
     }
 
     /**
+     * To add a navigation property (resource set or resource reference)
+     * to a resource type.
+     *
+     * @param ResourceType         $resourceType         The resource type to add
+     *                                                   the resource reference
+     *                                                   or resource
+     *                                                   reference set property to
+     * @param string               $name                 The name of the
+     *                                                   property to add
+     * @param ResourceSet          $targetResourceSet    The resource set the
+     *                                                   resource reference
+     *                                                   or reference
+     *                                                   set property
+     *                                                   points to
+     * @param ResourcePropertyKind $resourcePropertyKind The property kind
+     */
+    private function _addReferencePropertyInternalBidirectional(
+        ResourceType $sourceResourceType,
+        ResourceType $targetResourceType,
+        $sourceProperty,
+        $targetProperty,
+        $sourcePropertyKind,
+        $targetPropertyKind
+    ) {
+        if (!($sourcePropertyKind == ResourcePropertyKind::RESOURCESET_REFERENCE
+              || $sourcePropertyKind == ResourcePropertyKind::RESOURCE_REFERENCE)
+        ) {
+            throw new InvalidOperationException(
+                'Source property kind should be ResourceSetReference or ResourceReference'
+            );
+        }
+        if (!($targetPropertyKind == ResourcePropertyKind::RESOURCESET_REFERENCE
+              || $targetPropertyKind == ResourcePropertyKind::RESOURCE_REFERENCE)
+        ) {
+            throw new InvalidOperationException(
+                'Target property kind should be ResourceSetReference or ResourceReference'
+            );
+        }
+
+        if (!is_string($sourceProperty) || !is_string($targetProperty)) {
+            throw new InvalidOperationException("Source and target properties must both be strings");
+        }
+
+        $this->checkInstanceProperty($sourceProperty, $sourceResourceType);
+        $this->checkInstanceProperty($targetProperty, $targetResourceType);
+
+        // check that property and resource name don't up and collide - would violate OData spec
+        if (strtolower($sourceProperty) == strtolower($sourceResourceType->getName())) {
+            throw new InvalidOperationException(
+                'Source property name must be different from source resource name.'
+            );
+        }
+        if (strtolower($targetProperty) == strtolower($targetResourceType->getName())) {
+            throw new InvalidOperationException(
+                'Target property name must be different from target resource name.'
+            );
+        }
+
+        $sourceResourceProperty = new ResourceProperty($sourceProperty, null, $sourcePropertyKind, $targetResourceType);
+        $sourceResourceType->addProperty($sourceResourceProperty);
+        $targetResourceProperty = new ResourceProperty($sourceProperty, null, $targetPropertyKind, $sourceResourceType);
+        $targetResourceType->addProperty($targetResourceProperty);
+
+        //Create instance of AssociationSet for this relationship
+        $sourceResourceSet = $sourceResourceType->getCustomState();
+        if (is_null($sourceResourceSet) || !$sourceResourceSet instanceof ResourceSet) {
+            throw new InvalidOperationException(
+                'Failed to retrieve the custom state from '
+                . $sourceResourceType->getName()
+            );
+        }
+        $targetResourceSet = $targetResourceType->getCustomState();
+        if (is_null($targetResourceSet) || !$targetResourceSet instanceof ResourceSet) {
+            throw new InvalidOperationException(
+                'Failed to retrieve the custom state from '
+                . $targetResourceType->getName()
+            );
+        }
+
+        //Customer_Orders_Orders, Order_Customer_Customers
+        //(source type::name _ source property::name _ target set::name)
+        $fwdSetKey = ResourceAssociationSet::keyName($sourceResourceType, $sourceProperty, $targetResourceSet);
+        $revSetKey = ResourceAssociationSet::keyName($targetResourceType, $targetProperty, $sourceResourceSet);
+        //$setKey = $sourceResourceType->getName() . '_' . $name . '_' . $targetResourceType->getName();
+        $fwdSet = new ResourceAssociationSet(
+            $fwdSetKey,
+            new ResourceAssociationSetEnd($sourceResourceSet, $sourceResourceType, $sourceResourceProperty),
+            new ResourceAssociationSetEnd($targetResourceSet, $targetResourceType, $targetResourceProperty)
+        );
+        $revSet = new ResourceAssociationSet(
+            $revSetKey,
+            new ResourceAssociationSetEnd($targetResourceSet, $targetResourceType, $targetResourceProperty),
+            new ResourceAssociationSetEnd($sourceResourceSet, $sourceResourceType, $sourceResourceProperty)
+        );
+        $sourceName = $sourceResourceType->getFullName();
+        $targetName = $targetResourceType->getFullName();
+        $sourceMult = $sourcePropertyKind == ResourcePropertyKind::RESOURCESET_REFERENCE ? '*' : '0..1';
+        $targetMult = $targetPropertyKind == ResourcePropertyKind::RESOURCESET_REFERENCE ? '*' : '0..1';
+        $this->metadataManager->addNavigationPropertyToEntityType(
+            $this->OdataEntityMap[$sourceName],
+            $sourceMult,
+            $sourceProperty,
+            $this->OdataEntityMap[$targetName],
+            $targetMult,
+            $targetProperty
+        );
+        $this->associationSets[$fwdSetKey] = $fwdSet;
+        $this->associationSets[$revSetKey] = $revSet;
+    }
+
+    /**
      * To add a resource set reference property.
      *
      * @param ResourceType $resourceType The resource type to add the
@@ -548,6 +684,56 @@ class SimpleMetadataProvider implements IMetadataProvider
             $name,
             $targetResourceSet,
             ResourcePropertyKind::RESOURCESET_REFERENCE
+        );
+    }
+
+    /**
+     * To add a resource reference property.
+     *
+     * @param ResourceType $resourceType The resource type to add the resource
+     *                                        reference property to
+     * @param string $name The name of the property to add
+     * @param ResourceSet $targetResourceSet The resource set the resource reference
+     *                                        property points to
+     */
+    public function addResourceSetReferencePropertyBidirectional(
+        ResourceType $sourceResourceType,
+        ResourceType $targetResourceType,
+        $sourceProperty,
+        $targetProperty
+    ) {
+        $this->_addReferencePropertyInternalBidirectional(
+            $sourceResourceType,
+            $targetResourceType,
+            $sourceProperty,
+            $targetProperty,
+            ResourcePropertyKind::RESOURCESET_REFERENCE,
+            ResourcePropertyKind::RESOURCESET_REFERENCE
+        );
+    }
+
+    /**
+     * To add a resource reference property.
+     *
+     * @param ResourceType $resourceType The resource type to add the resource
+     *                                        reference property to
+     * @param string $name The name of the property to add
+     * @param ResourceSet $targetResourceSet The resource set the resource reference
+     *                                        property points to
+     */
+    public function addResourceReferenceSinglePropertyBidirectional(
+        ResourceType $sourceResourceType,
+        ResourceType $targetResourceType,
+        $sourceProperty,
+        $targetProperty
+    ) {
+        $this->_addReferencePropertyInternalBidirectional(
+            $sourceResourceType,
+            $targetResourceType,
+            $sourceProperty,
+            $targetProperty,
+            ResourcePropertyKind::RESOURCE_REFERENCE,
+            ResourcePropertyKind::RESOURCE_REFERENCE
         );
     }
 
