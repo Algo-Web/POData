@@ -468,15 +468,15 @@ class SimpleMetadataProvider implements IMetadataProvider
      * @param ResourcePropertyKind $resourcePropertyKind The property kind
      */
     private function _addReferencePropertyInternal(
-        ResourceType $resourceType,
+        ResourceType $sourceResourceType,
         $name,
         ResourceSet $targetResourceSet,
         $resourcePropertyKind
     ) {
-        $this->checkInstanceProperty($name, $resourceType);
+        $this->checkInstanceProperty($name, $sourceResourceType);
 
         // check that property and resource name don't up and collide - would violate OData spec
-        if (strtolower($name) == strtolower($resourceType->getName())) {
+        if (strtolower($name) == strtolower($sourceResourceType->getName())) {
             throw new InvalidOperationException(
                 'Property name must be different from resource name.'
             );
@@ -491,28 +491,43 @@ class SimpleMetadataProvider implements IMetadataProvider
         }
 
         $targetResourceType = $targetResourceSet->getResourceType();
-        $resourceProperty = new ResourceProperty($name, null, $resourcePropertyKind, $targetResourceType);
-        $resourceType->addProperty($resourceProperty);
+        $sourceResourceProperty = new ResourceProperty($name, null, $resourcePropertyKind, $targetResourceType);
+        $sourceResourceType->addProperty($sourceResourceProperty);
 
         //Create instance of AssociationSet for this relationship
-        $sourceResourceSet = $resourceType->getCustomState();
+        $sourceResourceSet = $sourceResourceType->getCustomState();
         if (is_null($sourceResourceSet)) {
-            throw new InvalidOperationException('Failed to retrieve the custom state from ' . $resourceType->getName());
+            throw new InvalidOperationException(
+                'Failed to retrieve the custom state from '
+                . $sourceResourceType->getName()
+            );
         }
 
         //Customer_Orders_Orders, Order_Customer_Customers
         //(source type::name _ source property::name _ target set::name)
-        $setKey = ResourceAssociationSet::keyName($resourceType, $name, $targetResourceSet);
-        //$setKey = $resourceType->getName() . '_' . $name . '_' . $targetResourceType->getName();
+        $setKey = ResourceAssociationSet::keyName($sourceResourceType, $name, $targetResourceSet);
+        //$setKey = $sourceResourceType->getName() . '_' . $name . '_' . $targetResourceType->getName();
         $set = new ResourceAssociationSet(
             $setKey,
-            new ResourceAssociationSetEnd($sourceResourceSet, $resourceType, $resourceProperty),
+            new ResourceAssociationSetEnd($sourceResourceSet, $sourceResourceType, $sourceResourceProperty),
             new ResourceAssociationSetEnd($targetResourceSet, $targetResourceType, null)
         );
         if ($resourcePropertyKind == ResourcePropertyKind::RESOURCESET_REFERENCE) {
-            $this->metadataManager->addNavigationPropertyToEntityType($this->OdataEntityMap[$resourceType->getFullName()], "*", $name, $this->OdataEntityMap[$targetResourceType->getFullName()], "*");
+            $this->metadataManager->addNavigationPropertyToEntityType(
+                $this->OdataEntityMap[$sourceResourceType->getFullName()],
+                "*",
+                $name,
+                $this->OdataEntityMap[$targetResourceType->getFullName()],
+                "*"
+            );
         } else {
-            $this->metadataManager->addNavigationPropertyToEntityType($this->OdataEntityMap[$resourceType->getFullName()], "0..1", $name, $this->OdataEntityMap[$targetResourceType->getFullName()], "0..1");
+            $this->metadataManager->addNavigationPropertyToEntityType(
+                $this->OdataEntityMap[$sourceResourceType->getFullName()],
+                "0..1",
+                $name,
+                $this->OdataEntityMap[$targetResourceType->getFullName()],
+                "0..1"
+            );
         }
         $this->associationSets[$setKey] = $set;
     }
