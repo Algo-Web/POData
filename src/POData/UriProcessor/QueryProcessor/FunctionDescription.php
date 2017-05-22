@@ -135,7 +135,6 @@ class FunctionDescription
                 ],
             'substring' => [
                     new self(
-
                         'substring',
                         new StringType(),
                         [new StringType(), new Int32()]
@@ -326,18 +325,18 @@ class FunctionDescription
         return [
             new self(
                 'F',
-                new int16(),
-                [new int16(), new int16()]
+                new Int16(),
+                [new Int16(), new Int16()]
             ),
             new self(
                 'F',
-                new int32(),
-                [new int32(), new int32()]
+                new Int32(),
+                [new Int32(), new Int32()]
             ),
             new self(
                 'F',
-                new int64(),
-                [new int64(), new int64()]
+                new Int64(),
+                [new Int64(), new Int64()]
             ),
             new self(
                 'F',
@@ -652,7 +651,7 @@ class FunctionDescription
     public static function validateUnaryOpArguments($expressionToken, $argExpression)
     {
         //Unary not
-        if (strcmp($expressionToken->Text, ODataConstants::KEYWORD_NOT) == 0) {
+        if (0 == strcmp($expressionToken->Text, ODataConstants::KEYWORD_NOT)) {
             $function = self::findFunctionWithPromotion(
                 self::notOperationFunctions(),
                 [$argExpression]
@@ -661,15 +660,16 @@ class FunctionDescription
                 self::incompatibleError($expressionToken, [$argExpression]);
             }
 
-            return;
+            return null;
         }
 
         //Unary minus (negation)
-        if (strcmp($expressionToken->Text, '-') == 0) {
+        if (0 == strcmp($expressionToken->Text, '-')) {
             if (self::findFunctionWithPromotion(self::negateOperationFunctions(), [$argExpression]) == null) {
                 self::incompatibleError($expressionToken, [$argExpression]);
             }
         }
+        return null;
     }
 
     /**
@@ -714,9 +714,8 @@ class FunctionDescription
         $argExpressions,
         $expressionToken
     ) {
-        $function
-            = self::findFunctionWithPromotion($functions, $argExpressions, false);
-        if ($function == null) {
+        $function = self::findFunctionWithPromotion($functions, $argExpressions, false);
+        if (null == $function) {
             $protoTypes = null;
             foreach ($functions as $function) {
                 $protoTypes .= $function->getPrototypeAsString() . '; ';
@@ -739,7 +738,8 @@ class FunctionDescription
      * with types of expressions.
      *
      * @param \POData\UriProcessor\QueryProcessor\FunctionDescription[] $functionDescriptions List of functions
-     * @param AbstractExpression[]                                      $argExpressions       Function argument expressions
+     * @param AbstractExpression[]                                      $argExpressions       Function argument
+     *                                                                                        expressions
      * @param bool                                                      $promoteArguments     Function argument
      *
      * @return \POData\UriProcessor\QueryProcessor\FunctionDescription|null Reference to the matching function if
@@ -759,7 +759,7 @@ class FunctionDescription
         }
 
         if (empty($applicableFunctions)) {
-            return;
+            return null;
         }
 
         //Check for exact match
@@ -804,5 +804,7 @@ class FunctionDescription
                 return $function;
             }
         }
+
+        return null;
     }
 }

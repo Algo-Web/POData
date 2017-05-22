@@ -229,7 +229,9 @@ class UriProcessor
 
             if (!$resourceSet || !$keyDescriptor) {
                 $url = $uriProcessor->getService()->getHost()->getAbsoluteRequestUri()->getUrlAsString();
-                throw ODataException::createBadRequestError(Messages::badRequestInvalidUriForThisVerb($url, $requestMethod));
+                throw ODataException::createBadRequestError(
+                    Messages::badRequestInvalidUriForThisVerb($url, $requestMethod)
+                );
             }
 
             $data = $uriProcessor->getRequest()->getData();

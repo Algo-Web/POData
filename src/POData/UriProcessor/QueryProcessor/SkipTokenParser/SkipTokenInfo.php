@@ -18,7 +18,7 @@ class SkipTokenInfo
      *
      * @var OrderByInfo
      */
-    private $_orderByInfo;
+    private $orderByInfo;
 
     /**
      * Holds collection of values in the skiptoken corrosponds to the orderby
@@ -26,20 +26,21 @@ class SkipTokenInfo
      *
      * @var array(int (array(string, IType)
      */
-    private $_orderByValuesInSkipToken;
+    private $orderByValuesInSkipToken;
 
     /**
      * Constructs a new instance of SkipTokenInfo.
      *
-     * @param OrderByInfo                      &$orderByInfo             Type holding information about the navigation properties
-     *                                                                   used in the orderby clause (if any) and orderby path
-     * @param array(int,(array(string,IType))) $orderByValuesInSkipToken Collection of values in the skiptoken corrosponds
-     *                                                                   to the orderby path segments
+     * @param OrderByInfo                      &$orderByInfo             Type holding information about the navigation
+     *                                                                   properties used in the orderby clause (if any)
+     *                                                                   and orderby path
+     * @param array(int,(array(string,IType))) $orderByValuesInSkipToken Collection of values in the skiptoken
+     *                                                                   corresponds to the orderby path segments
      */
     public function __construct(OrderByInfo & $orderByInfo, $orderByValuesInSkipToken)
     {
-        $this->_orderByInfo = $orderByInfo;
-        $this->_orderByValuesInSkipToken = $orderByValuesInSkipToken;
+        $this->orderByInfo = $orderByInfo;
+        $this->orderByValuesInSkipToken = $orderByValuesInSkipToken;
     }
 
     /**
@@ -50,7 +51,7 @@ class SkipTokenInfo
      */
     public function getOrderByInfo()
     {
-        return $this->_orderByInfo;
+        return $this->orderByInfo;
     }
 
     /**
@@ -61,6 +62,6 @@ class SkipTokenInfo
      */
     public function getOrderByKeysInToken()
     {
-        return $this->_orderByValuesInSkipToken;
+        return $this->orderByValuesInSkipToken;
     }
 }

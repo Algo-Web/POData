@@ -20,7 +20,7 @@ use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\UnaryExpress
  */
 class ExpressionProcessor
 {
-    private $_expressionProvider;
+    private $expressionProvider;
 
     /**
      * Construct new instance of ExpressionProcessor.
@@ -29,7 +29,7 @@ class ExpressionProcessor
      */
     public function __construct(IExpressionProvider $expressionProvider)
     {
-        $this->_expressionProvider = $expressionProvider;
+        $this->expressionProvider = $expressionProvider;
     }
 
     /**
@@ -42,7 +42,7 @@ class ExpressionProcessor
      */
     public function processExpression(AbstractExpression $rootExpression)
     {
-        return $this->_processExpressionNode($rootExpression);
+        return $this->processExpressionNode($rootExpression);
     }
 
     /**
@@ -52,13 +52,13 @@ class ExpressionProcessor
      *
      * @return string The language specific expression
      */
-    private function _processExpressionNode(AbstractExpression $expression)
+    private function processExpressionNode(AbstractExpression $expression)
     {
         if ($expression instanceof ArithmeticExpression) {
-            $left = $this->_processExpressionNode($expression->getLeft());
-            $right = $this->_processExpressionNode($expression->getRight());
+            $left = $this->processExpressionNode($expression->getLeft());
+            $right = $this->processExpressionNode($expression->getRight());
 
-            return $this->_expressionProvider->onArithmeticExpression(
+            return $this->expressionProvider->onArithmeticExpression(
                 $expression->getNodeType(),
                 $left,
                 $right
@@ -66,10 +66,10 @@ class ExpressionProcessor
         }
 
         if ($expression instanceof LogicalExpression) {
-            $left = $this->_processExpressionNode($expression->getLeft());
-            $right = $this->_processExpressionNode($expression->getRight());
+            $left = $this->processExpressionNode($expression->getLeft());
+            $right = $this->processExpressionNode($expression->getRight());
 
-            return $this->_expressionProvider->onLogicalExpression(
+            return $this->expressionProvider->onLogicalExpression(
                 $expression->getNodeType(),
                 $left,
                 $right
@@ -77,10 +77,10 @@ class ExpressionProcessor
         }
 
         if ($expression instanceof RelationalExpression) {
-            $left = $this->_processExpressionNode($expression->getLeft());
-            $right = $this->_processExpressionNode($expression->getRight());
+            $left = $this->processExpressionNode($expression->getLeft());
+            $right = $this->processExpressionNode($expression->getRight());
 
-            return $this->_expressionProvider->onRelationalExpression(
+            return $this->expressionProvider->onRelationalExpression(
                 $expression->getNodeType(),
                 $left,
                 $right
@@ -88,14 +88,14 @@ class ExpressionProcessor
         }
 
         if ($expression instanceof ConstantExpression) {
-            return $this->_expressionProvider->onConstantExpression(
+            return $this->expressionProvider->onConstantExpression(
                 $expression->getType(),
                 $expression->getValue()
             );
         }
 
         if ($expression instanceof PropertyAccessExpression) {
-            return $this->_expressionProvider->onPropertyAccessExpression(
+            return $this->expressionProvider->onPropertyAccessExpression(
                 $expression
             );
         }
@@ -103,19 +103,19 @@ class ExpressionProcessor
         if ($expression instanceof FunctionCallExpression) {
             $params = [];
             foreach ($expression->getParamExpressions() as $paramExpression) {
-                $params[] = $this->_processExpressionNode($paramExpression);
+                $params[] = $this->processExpressionNode($paramExpression);
             }
 
-            return $this->_expressionProvider->onFunctionCallExpression(
+            return $this->expressionProvider->onFunctionCallExpression(
                 $expression->getFunctionDescription(),
                 $params
             );
         }
 
         if ($expression instanceof UnaryExpression) {
-            $child = $this->_processExpressionNode($expression->getChild());
+            $child = $this->processExpressionNode($expression->getChild());
 
-            return $this->_expressionProvider->onUnaryExpression(
+            return $this->expressionProvider->onUnaryExpression(
                 $expression->getNodeType(),
                 $child
             );

@@ -68,7 +68,9 @@ trait expressionLexer
         $protoTypes,
         $position
     ) {
-        return "No applicable function found for '$functionName' at position $position with the specified arguments. The functions considered are: $protoTypes";
+        $msg  ="No applicable function found for '$functionName' at position $position with the specified"
+               ." arguments. The functions considered are: $protoTypes";
+        return $msg;
     }
 
     /**

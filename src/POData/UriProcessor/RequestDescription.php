@@ -80,7 +80,7 @@ class RequestDescription
      *
      * @var Version[]
      */
-    private static $_knownDataServiceVersions = null;
+    private static $knownDataServiceVersions = null;
 
     /**
      * @var Url
@@ -107,7 +107,7 @@ class RequestDescription
      *
      * @var string|null
      */
-    private $_containerName;
+    private $containerName;
 
     /**
      * The count option specified in the request.
@@ -121,7 +121,7 @@ class RequestDescription
      *
      * @var int
      */
-    private $_segmentCount;
+    private $segmentCount;
 
     /**
      * Holds the value of $skip query option, if no $skip option
@@ -129,7 +129,7 @@ class RequestDescription
      *
      * @var int|null
      */
-    private $_skipCount;
+    private $skipCount;
 
     /**
      * Holds the value of take count, this value is depends on
@@ -137,7 +137,7 @@ class RequestDescription
      *
      * @var int|null
      */
-    private $_topCount;
+    private $topCount;
 
     /**
      * Holds the value of $top query option, if no $top option
@@ -145,7 +145,7 @@ class RequestDescription
      *
      * @var int|null
      */
-    private $_topOptionCount;
+    private $topOptionCount;
 
     /**
      * Holds the parsed details for sorting, this will
@@ -165,14 +165,14 @@ class RequestDescription
      *
      * @var InternalSkipTokenInfo|null
      */
-    private $_internalSkipTokenInfo;
+    private $internalSkipTokenInfo;
 
     /**
      * Holds the parsed details for $filter option, this will be NULL if $filter option is absent.
      *
      * @var FilterInfo|null
      */
-    private $_filterInfo;
+    private $filterInfo;
 
     /**
      * Holds reference to the root of the tree describing expand
@@ -181,7 +181,7 @@ class RequestDescription
      *
      * @var RootProjectionNode|null
      */
-    private $_rootProjectionNode;
+    private $rootProjectionNode;
 
     /**
      * Holds number of entities in the result set, if either $count or
@@ -190,28 +190,28 @@ class RequestDescription
      *
      * @var int|null
      */
-    private $_countValue;
+    private $countValue;
 
     /**
      * Data of request from request body.
      *
      * @var array|null
      */
-    private $_data;
+    private $data;
 
     /**
      * Flag indicating status of query execution.
      *
      * @var bool
      */
-    private $_isExecuted;
+    private $isExecuted;
 
     /**
      * Reference to Uri processor.
      *
      * @var UriProcessor
      */
-    private $_uriProcessor;
+    private $uriProcessor;
 
     /**
      * @param SegmentDescriptor[] $segmentDescriptors Description of segments in the resource path
@@ -231,9 +231,9 @@ class RequestDescription
         IHTTPRequest $payload = null
     ) {
         $this->segments = $segmentDescriptors;
-        $this->_segmentCount = count($this->segments);
+        $this->segmentCount = count($this->segments);
         $this->requestUrl = $requestUri;
-        $this->lastSegment = $segmentDescriptors[$this->_segmentCount - 1];
+        $this->lastSegment = $segmentDescriptors[$this->segmentCount - 1];
         $this->queryType = QueryType::ENTITIES();
 
         //we use this for validation checks down in validateVersions...
@@ -269,21 +269,21 @@ class RequestDescription
             $this->requiredMinResponseVersion = clone $this->requestMaxVersion;
         }
 
-        $this->_containerName = null;
-        $this->_skipCount = null;
-        $this->_topCount = null;
-        $this->_topOptionCount = null;
+        $this->containerName = null;
+        $this->skipCount = null;
+        $this->topCount = null;
+        $this->topOptionCount = null;
         $this->internalOrderByInfo = null;
-        $this->_internalSkipTokenInfo = null;
+        $this->internalSkipTokenInfo = null;
 
-        $this->_filterInfo = null;
-        $this->_countValue = null;
-        $this->_isExecuted = false;
-        $this->_data = isset($payload) ? $payload->getAllInput() : null;
+        $this->filterInfo = null;
+        $this->countValue = null;
+        $this->isExecuted = false;
+        $this->data = isset($payload) ? $payload->getAllInput() : null;
 
         // Define data from request body
         if ($dataType) {
-            $this->_readData($dataType);
+            $this->readData($dataType);
         }
     }
 
@@ -292,9 +292,9 @@ class RequestDescription
      *
      * @param string $dataType
      */
-    private function _readData($dataType)
+    private function readData($dataType)
     {
-        $string = $this->_data;
+        $string = $this->data;
         if ($dataType === MimeTypes::MIME_APPLICATION_XML) {
             if (is_array($string) && 1 == count($string)) {
                 $string = $string[0];
@@ -304,13 +304,13 @@ class RequestDescription
                 $clearData = $data['entry']['content']['m:properties'];
                 if (is_array($clearData)) {
                     foreach ($clearData as $key => $value) {
-                        $this->_data[substr($key, 2)] = $value['@value'];
+                        $this->data[substr($key, 2)] = $value['@value'];
                     }
                 }
             }
         } elseif ($dataType === MimeTypes::MIME_APPLICATION_JSON) {
             $data = !is_array($string) ? json_decode($string, true) : $string;
-            $this->_data = $data;
+            $this->data = $data;
         }
     }
 
@@ -319,7 +319,7 @@ class RequestDescription
      */
     public function getData()
     {
-        return $this->_data;
+        return $this->data;
     }
 
     /**
@@ -537,7 +537,7 @@ class RequestDescription
      */
     public function getContainerName()
     {
-        return $this->_containerName;
+        return $this->containerName;
     }
 
     /**
@@ -547,7 +547,7 @@ class RequestDescription
      */
     public function setContainerName($containerName)
     {
-        $this->_containerName = $containerName;
+        $this->containerName = $containerName;
     }
 
     /**
@@ -587,7 +587,7 @@ class RequestDescription
      */
     public function getSkipCount()
     {
-        return $this->_skipCount;
+        return $this->skipCount;
     }
 
     /**
@@ -597,7 +597,7 @@ class RequestDescription
      */
     public function setSkipCount($skipCount)
     {
-        $this->_skipCount = $skipCount;
+        $this->skipCount = $skipCount;
     }
 
     /**
@@ -607,7 +607,7 @@ class RequestDescription
      */
     public function getTopCount()
     {
-        return $this->_topCount;
+        return $this->topCount;
     }
 
     /**
@@ -617,7 +617,7 @@ class RequestDescription
      */
     public function setTopCount($topCount)
     {
-        $this->_topCount = $topCount;
+        $this->topCount = $topCount;
     }
 
     /**
@@ -627,7 +627,7 @@ class RequestDescription
      */
     public function getTopOptionCount()
     {
-        return $this->_topOptionCount;
+        return $this->topOptionCount;
     }
 
     /**
@@ -637,7 +637,7 @@ class RequestDescription
      */
     public function setTopOptionCount($topOptionCount)
     {
-        $this->_topOptionCount = $topOptionCount;
+        $this->topOptionCount = $topOptionCount;
     }
 
     /**
@@ -672,7 +672,7 @@ class RequestDescription
      */
     public function getInternalSkipTokenInfo()
     {
-        return $this->_internalSkipTokenInfo;
+        return $this->internalSkipTokenInfo;
     }
 
     /**
@@ -683,7 +683,7 @@ class RequestDescription
     public function setInternalSkipTokenInfo(
         InternalSkipTokenInfo & $internalSkipTokenInfo
     ) {
-        $this->_internalSkipTokenInfo = $internalSkipTokenInfo;
+        $this->internalSkipTokenInfo = $internalSkipTokenInfo;
     }
 
     /**
@@ -691,7 +691,7 @@ class RequestDescription
      */
     public function getFilterInfo()
     {
-        return $this->_filterInfo;
+        return $this->filterInfo;
     }
 
     /**
@@ -699,7 +699,7 @@ class RequestDescription
      */
     public function setFilterInfo(FilterInfo $filterInfo)
     {
-        $this->_filterInfo = $filterInfo;
+        $this->filterInfo = $filterInfo;
     }
 
     /**
@@ -709,7 +709,7 @@ class RequestDescription
      */
     public function setRootProjectionNode(RootProjectionNode & $rootProjectionNode)
     {
-        $this->_rootProjectionNode = $rootProjectionNode;
+        $this->rootProjectionNode = $rootProjectionNode;
     }
 
     /**
@@ -721,7 +721,7 @@ class RequestDescription
      */
     public function getRootProjectionNode()
     {
-        return $this->_rootProjectionNode;
+        return $this->rootProjectionNode;
     }
 
     /**
@@ -732,7 +732,7 @@ class RequestDescription
      */
     public function getCountValue()
     {
-        return $this->_countValue;
+        return $this->countValue;
     }
 
     /**
@@ -742,7 +742,7 @@ class RequestDescription
      */
     public function setCountValue($countValue)
     {
-        $this->_countValue = $countValue;
+        $this->countValue = $countValue;
     }
 
     /**
@@ -750,7 +750,7 @@ class RequestDescription
      */
     public function setExecuted()
     {
-        $this->_isExecuted = true;
+        $this->isExecuted = true;
     }
 
     /**
@@ -760,7 +760,7 @@ class RequestDescription
      */
     public function needExecution()
     {
-        return !$this->_isExecuted
+        return !$this->isExecuted
             && ($this->lastSegment->getTargetKind() != TargetKind::METADATA())
             && ($this->lastSegment->getTargetKind() != TargetKind::SERVICE_DIRECTORY());
     }
@@ -772,7 +772,9 @@ class RequestDescription
      */
     public function isLinkUri()
     {
-        return ($this->_segmentCount > 2) && ($this->segments[$this->_segmentCount - 2]->getTargetKind() == TargetKind::LINK());
+        return (2 < $this->segmentCount)
+               && isset($this->segments[$this->segmentCount - 2])
+               && ($this->segments[$this->segmentCount - 2]->getTargetKind() == TargetKind::LINK());
     }
 
     /**
@@ -810,6 +812,7 @@ class RequestDescription
                     $this->lastSegment->getIdentifier()
                 );
         }
+        return null;
     }
 
     /**
@@ -844,8 +847,8 @@ class RequestDescription
         return $this->lastSegment->isSingleResult()
             && ($this->queryType != QueryType::COUNT())
             && !$this->isLinkUri()
-            && (is_null($this->_rootProjectionNode)
-                || !($this->_rootProjectionNode->isExpansionSpecified())
+            && (is_null($this->rootProjectionNode)
+                || !($this->rootProjectionNode->isExpansionSpecified())
                 );
     }
 
@@ -856,15 +859,15 @@ class RequestDescription
      */
     public static function getKnownDataServiceVersions()
     {
-        if (is_null(self::$_knownDataServiceVersions)) {
-            self::$_knownDataServiceVersions = [
+        if (is_null(self::$knownDataServiceVersions)) {
+            self::$knownDataServiceVersions = [
                 new Version(1, 0),
                 new Version(2, 0),
                 new Version(3, 0),
             ];
         }
 
-        return self::$_knownDataServiceVersions;
+        return self::$knownDataServiceVersions;
     }
 
     /**
@@ -908,7 +911,8 @@ class RequestDescription
             );
         }
 
-        //If the max version supported by the service is below the version required to fulfill the response..throw an exception
+        //If the max version supported by the service is below the version required to fulfill the response..
+        //throw an exception
         if ($this->maxServiceVersion->compare($this->requiredMinResponseVersion) < 0) {
             throw ODataException::createBadRequestError(
                 Messages::requestVersionIsBiggerThanProtocolVersion(
@@ -1019,7 +1023,7 @@ class RequestDescription
      */
     public function getUriProcessor()
     {
-        return $this->_uriProcessor;
+        return $this->uriProcessor;
     }
 
     /**
@@ -1029,6 +1033,6 @@ class RequestDescription
      */
     public function setUriProcessor(UriProcessor $uriProcessor)
     {
-        $this->_uriProcessor = $uriProcessor;
+        $this->uriProcessor = $uriProcessor;
     }
 }

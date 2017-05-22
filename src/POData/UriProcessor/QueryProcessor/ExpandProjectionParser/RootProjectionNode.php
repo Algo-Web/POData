@@ -37,7 +37,7 @@ class RootProjectionNode extends ExpandedProjectionNode
      *
      * @var bool
      */
-    private $_hasPagedExpandedResult = false;
+    private $hasPagedExpandedResult = false;
 
     /**
      * The base resource type of entities identified by the resource path uri,
@@ -47,7 +47,7 @@ class RootProjectionNode extends ExpandedProjectionNode
      *
      * @var ResourceType
      */
-    private $_baseResourceType;
+    private $baseResourceType;
 
     /**
      * Constructs a new instance of 'RootProjectionNode' representing root
@@ -83,7 +83,7 @@ class RootProjectionNode extends ExpandedProjectionNode
         $maxResultCount,
         ResourceType $baseResourceType
     ) {
-        $this->_baseResourceType = $baseResourceType;
+        $this->baseResourceType = $baseResourceType;
         parent::__construct(
             null,
             null,
@@ -105,7 +105,7 @@ class RootProjectionNode extends ExpandedProjectionNode
      */
     public function getResourceType()
     {
-        return $this->_baseResourceType;
+        return $this->baseResourceType;
     }
 
     /**
@@ -157,7 +157,7 @@ class RootProjectionNode extends ExpandedProjectionNode
      */
     public function setPagedExpandedResult($hasPagedExpandedResult = true)
     {
-        $this->_hasPagedExpandedResult = $hasPagedExpandedResult;
+        $this->hasPagedExpandedResult = $hasPagedExpandedResult;
     }
 
     /**
@@ -167,6 +167,6 @@ class RootProjectionNode extends ExpandedProjectionNode
      */
     public function hasPagedExpandedResult()
     {
-        return $this->_hasPagedExpandedResult;
+        return $this->hasPagedExpandedResult;
     }
 }

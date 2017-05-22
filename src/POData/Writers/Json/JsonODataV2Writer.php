@@ -64,7 +64,7 @@ class JsonODataV2Writer extends JsonODataV1Writer
     public function write($model)
     {
         // { "d" :
-        $this->_writer
+        $this->writer
             ->startObjectScope()
             ->writeName('d')
             ->startObjectScope();
@@ -80,17 +80,17 @@ class JsonODataV2Writer extends JsonODataV1Writer
             // "results":
             $this->writeRowCount($model->rowCount);
             $this->writeNextPageLink($model->nextPageLink);
-            $this->_writer
+            $this->writer
                 ->writeName($this->dataArrayName)
                 ->startArrayScope();
             $this->writeFeed($model);
-            $this->_writer->endScope();
+            $this->writer->endScope();
         } elseif ($model instanceof ODataEntry) {
             $this->writeEntry($model);
         }
 
-        $this->_writer->endScope();
-        $this->_writer->endScope();
+        $this->writer->endScope();
+        $this->writer->endScope();
 
         return $this;
     }
@@ -109,13 +109,13 @@ class JsonODataV2Writer extends JsonODataV1Writer
 
         // Json Format V2:
         // "results":
-        $this->_writer
+        $this->writer
             ->writeName($this->dataArrayName)
             ->startArrayScope();
 
         parent::writeUrlCollection($urls);
 
-        $this->_writer->endScope();
+        $this->writer->endScope();
 
         return $this;
     }
@@ -129,9 +129,9 @@ class JsonODataV2Writer extends JsonODataV1Writer
      */
     protected function writeRowCount($count)
     {
-        if ($count != null) {
-            $this->_writer->writeName($this->rowCountName);
-            $this->_writer->writeValue($count);
+        if (null != $count) {
+            $this->writer->writeName($this->rowCountName);
+            $this->writer->writeValue($count);
         }
 
         return $this;
@@ -147,8 +147,8 @@ class JsonODataV2Writer extends JsonODataV1Writer
     protected function writeNextPageLink(ODataLink $nextPageLinkUri = null)
     {
         // "__next" : uri
-        if ($nextPageLinkUri != null) {
-            $this->_writer
+        if (null != $nextPageLinkUri) {
+            $this->writer
                 ->writeName($this->nextLinkName)
                 ->writeValue($nextPageLinkUri->url);
         }
@@ -159,18 +159,18 @@ class JsonODataV2Writer extends JsonODataV1Writer
     protected function writeExpandedLink(ODataLink $link)
     {
         //Difference from v1 is that expanded collection have a result: wrapper to allow for metadata to exist
-        $this->_writer->startObjectScope();
+        $this->writer->startObjectScope();
 
         if ($link->isCollection) {
-            $this->_writer
+            $this->writer
                 ->writeName($this->dataArrayName)
                 ->startArrayScope();
             $this->writeFeed($link->expandedResult);
-            $this->_writer->endScope();
+            $this->writer->endScope();
         } else {
             $this->writeEntry($link->expandedResult);
         }
 
-        $this->_writer->endScope();
+        $this->writer->endScope();
     }
 }

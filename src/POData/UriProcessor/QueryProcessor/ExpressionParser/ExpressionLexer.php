@@ -46,35 +46,35 @@ class ExpressionLexer
      *
      * @var char[]
      */
-    private $_text;
+    private $text;
 
     /**
      * Length of text being parsed.
      *
      * @var int
      */
-    private $_textLen;
+    private $textLen;
 
     /**
      * Position on text being parsed.
      *
      * @var int
      */
-    private $_textPos;
+    private $textPos;
 
     /**
      * Character being processed.
      *
      * @var char
      */
-    private $_ch;
+    private $ch;
 
     /**
      * ExpressionToken being processed.
      *
      * @var ExpressionToken
      */
-    private $_token;
+    private $token;
 
     /**
      * Initialize a new instance of ExpressionLexer.
@@ -83,10 +83,10 @@ class ExpressionLexer
      */
     public function __construct($expression)
     {
-        $this->_text = $expression;
-        $this->_textLen = strlen($this->_text);
-        $this->_token = new ExpressionToken();
-        $this->_setTextPos(0);
+        $this->text = $expression;
+        $this->textLen = strlen($this->text);
+        $this->token = new ExpressionToken();
+        $this->setTextPos(0);
         $this->nextToken();
     }
 
@@ -97,7 +97,7 @@ class ExpressionLexer
      */
     public function getCurrentToken()
     {
-        return $this->_token;
+        return $this->token;
     }
 
     /**
@@ -107,7 +107,7 @@ class ExpressionLexer
      */
     public function setCurrentToken($token)
     {
-        $this->_token = $token;
+        $this->token = $token;
     }
 
     /**
@@ -117,7 +117,7 @@ class ExpressionLexer
      */
     public function getExpressionText()
     {
-        return $this->_text;
+        return $this->text;
     }
 
     /**
@@ -127,7 +127,7 @@ class ExpressionLexer
      */
     public function getPosition()
     {
-        return $this->_token->Position;
+        return $this->token->Position;
     }
 
     /**
@@ -152,141 +152,141 @@ class ExpressionLexer
      */
     public function nextToken()
     {
-        while (Char::isWhiteSpace($this->_ch)) {
-            $this->_nextChar();
+        while (Char::isWhiteSpace($this->ch)) {
+            $this->nextChar();
         }
 
         $t = null;
-        $tokenPos = $this->_textPos;
-        switch ($this->_ch) {
+        $tokenPos = $this->textPos;
+        switch ($this->ch) {
             case '(':
-                $this->_nextChar();
+                $this->nextChar();
                 $t = ExpressionTokenId::OPENPARAM;
                 break;
             case ')':
-                $this->_nextChar();
+                $this->nextChar();
                 $t = ExpressionTokenId::CLOSEPARAM;
                 break;
             case ',':
-                $this->_nextChar();
+                $this->nextChar();
                 $t = ExpressionTokenId::COMMA;
                 break;
             case '-':
-                $hasNext = $this->_textPos + 1 < $this->_textLen;
-                if ($hasNext && Char::isDigit($this->_text[$this->_textPos + 1])) {
-                    $this->_nextChar();
-                    $t = $this->_parseFromDigit();
+                $hasNext = $this->textPos + 1 < $this->textLen;
+                if ($hasNext && Char::isDigit($this->text[$this->textPos + 1])) {
+                    $this->nextChar();
+                    $t = $this->parseFromDigit();
                     if (self::isNumeric($t)) {
                         break;
                     }
 
-                    $this->_setTextPos($tokenPos);
-                } elseif ($hasNext && $this->_text[$tokenPos + 1] == 'I') {
-                    $this->_nextChar();
-                    $this->_parseIdentifier();
-                    $currentIdentifier = substr($this->_text, $tokenPos + 1, $this->_textPos - $tokenPos - 1);
+                    $this->setTextPos($tokenPos);
+                } elseif ($hasNext && $this->text[$tokenPos + 1] == 'I') {
+                    $this->nextChar();
+                    $this->parseIdentifier();
+                    $currentIdentifier = substr($this->text, $tokenPos + 1, $this->textPos - $tokenPos - 1);
 
-                    if (self::_isInfinityLiteralDouble($currentIdentifier)) {
+                    if (self::isInfinityLiteralDouble($currentIdentifier)) {
                         $t = ExpressionTokenId::DOUBLE_LITERAL;
                         break;
-                    } elseif (self::_isInfinityLiteralSingle($currentIdentifier)) {
+                    } elseif (self::isInfinityLiteralSingle($currentIdentifier)) {
                         $t = ExpressionTokenId::SINGLE_LITERAL;
                         break;
                     }
 
                     // If it looked like '-INF' but wasn't we'll rewind and fall
                     // through to a simple '-' token.
-                    $this->_setTextPos($tokenPos);
+                    $this->setTextPos($tokenPos);
                 }
 
-                $this->_nextChar();
+                $this->nextChar();
                 $t = ExpressionTokenId::MINUS;
                 break;
             case '=':
-                $this->_nextChar();
+                $this->nextChar();
                 $t = ExpressionTokenId::EQUAL;
                 break;
             case '/':
-                $this->_nextChar();
+                $this->nextChar();
                 $t = ExpressionTokenId::SLASH;
                 break;
             case '?':
-                $this->_nextChar();
+                $this->nextChar();
                 $t = ExpressionTokenId::QUESTION;
                 break;
             case '.':
-                $this->_nextChar();
+                $this->nextChar();
                 $t = ExpressionTokenId::DOT;
                 break;
             case '\'':
-                $quote = $this->_ch;
+                $quote = $this->ch;
                 do {
-                    $this->_nextChar();
-                    while ($this->_textPos < $this->_textLen && $this->_ch != $quote) {
-                        $this->_nextChar();
+                    $this->nextChar();
+                    while ($this->textPos < $this->textLen && $this->ch != $quote) {
+                        $this->nextChar();
                     }
 
-                    if ($this->_textPos == $this->_textLen) {
-                        $this->_parseError(
+                    if ($this->textPos == $this->textLen) {
+                        $this->parseError(
                             Messages::expressionLexerUnterminatedStringLiteral(
-                                $this->_textPos,
-                                $this->_text
+                                $this->textPos,
+                                $this->text
                             )
                         );
                     }
 
-                    $this->_nextChar();
-                } while ($this->_ch == $quote);
+                    $this->nextChar();
+                } while ($this->ch == $quote);
                 $t = ExpressionTokenId::STRING_LITERAL;
                 break;
             case '*':
-                $this->_nextChar();
+                $this->nextChar();
                 $t = ExpressionTokenId::STAR;
                 break;
             default:
-                if (Char::isLetter($this->_ch) || $this->_ch == '_') {
-                    $this->_parseIdentifier();
+                if (Char::isLetter($this->ch) || $this->ch == '_') {
+                    $this->parseIdentifier();
                     $t = ExpressionTokenId::IDENTIFIER;
                     break;
                 }
 
-                if (Char::isDigit($this->_ch)) {
-                    $t = $this->_parseFromDigit();
+                if (Char::isDigit($this->ch)) {
+                    $t = $this->parseFromDigit();
                     break;
                 }
 
-                if ($this->_textPos == $this->_textLen) {
+                if ($this->textPos == $this->textLen) {
                     $t = ExpressionTokenId::END;
                     break;
                 }
 
-                $this->_parseError(
+                $this->parseError(
                     Messages::expressionLexerInvalidCharacter(
-                        $this->_ch,
-                        $this->_textPos
+                        $this->ch,
+                        $this->textPos
                     )
                 );
         }
 
-        $this->_token->Id = $t;
-        $this->_token->Text = substr($this->_text, $tokenPos, $this->_textPos - $tokenPos);
-        $this->_token->Position = $tokenPos;
+        $this->token->Id = $t;
+        $this->token->Text = substr($this->text, $tokenPos, $this->textPos - $tokenPos);
+        $this->token->Position = $tokenPos;
 
         // Handle type-prefixed literals such as binary, datetime or guid.
-        $this->_handleTypePrefixedLiterals();
+        $this->handleTypePrefixedLiterals();
 
         // Handle keywords.
-        if ($this->_token->Id == ExpressionTokenId::IDENTIFIER) {
-            if (self::_isInfinityOrNaNDouble($this->_token->Text)) {
-                $this->_token->Id = ExpressionTokenId::DOUBLE_LITERAL;
-            } elseif (self::_isInfinityOrNanSingle($this->_token->Text)) {
-                $this->_token->Id = ExpressionTokenId::SINGLE_LITERAL;
-            } elseif ($this->_token->Text == ODataConstants::KEYWORD_TRUE
-                || $this->_token->Text == ODataConstants::KEYWORD_FALSE
+        if ($this->token->Id == ExpressionTokenId::IDENTIFIER) {
+            if (self::isInfinityOrNaNDouble($this->token->Text)) {
+                $this->token->Id = ExpressionTokenId::DOUBLE_LITERAL;
+            } elseif (self::isInfinityOrNanSingle($this->token->Text)) {
+                $this->token->Id = ExpressionTokenId::SINGLE_LITERAL;
+            } elseif ($this->token->Text == ODataConstants::KEYWORD_TRUE
+                || $this->token->Text == ODataConstants::KEYWORD_FALSE
             ) {
-                $this->_token->Id = ExpressionTokenId::BOOLEAN_LITERAL;
-            } elseif ($this->_token->Text == ODataConstants::KEYWORD_NULL) {
-                $this->_token->Id = ExpressionTokenId::NULL_LITERAL;
+                $this->token->Id = ExpressionTokenId::BOOLEAN_LITERAL;
+            } elseif ($this->token->Text == ODataConstants::KEYWORD_NULL) {
+                $this->token->Id = ExpressionTokenId::NULL_LITERAL;
             }
         }
     }
@@ -298,16 +298,16 @@ class ExpressionLexer
      */
     public function peekNextToken()
     {
-        $savedTextPos = $this->_textPos;
-        $savedChar = $this->_ch;
-        $savedToken = clone $this->_token;
+        $savedTextPos = $this->textPos;
+        $savedChar = $this->ch;
+        $savedToken = clone $this->token;
         $this->nextToken();
-        $result = clone $this->_token;
-        $this->_textPos = $savedTextPos;
-        $this->_ch = $savedChar;
-        $this->_token->Id = $savedToken->Id;
-        $this->_token->Position = $savedToken->Position;
-        $this->_token->Text = $savedToken->Text;
+        $result = clone $this->token;
+        $this->textPos = $savedTextPos;
+        $this->ch = $savedChar;
+        $this->token->Id = $savedToken->Id;
+        $this->token->Position = $savedToken->Position;
+        $this->token->Text = $savedToken->Text;
 
         return $result;
     }
@@ -322,10 +322,10 @@ class ExpressionLexer
      */
     public function validateToken($tokenId)
     {
-        if ($this->_token->Id != $tokenId) {
-            $this->_parseError(
+        if ($this->token->Id != $tokenId) {
+            $this->parseError(
                 Messages::expressionLexerSyntaxError(
-                    $this->_textPos
+                    $this->textPos
                 )
             );
         }
@@ -340,12 +340,12 @@ class ExpressionLexer
     public function readDottedIdentifier()
     {
         $this->validateToken(ExpressionTokenId::IDENTIFIER);
-        $identifier = $this->_token->Text;
+        $identifier = $this->token->Text;
         $this->nextToken();
-        while ($this->_token->Id == ExpressionTokenId::DOT) {
+        while ($this->token->Id == ExpressionTokenId::DOT) {
             $this->nextToken();
             $this->validateToken(ExpressionTokenId::IDENTIFIER);
-            $identifier = $identifier . '.' . $this->_token->Text;
+            $identifier = $identifier . '.' . $this->token->Text;
             $this->nextToken();
         }
 
@@ -359,13 +359,13 @@ class ExpressionLexer
      *
      * @return bool true if match found, false otherwise
      */
-    private static function _isInfinityOrNaNDouble($tokenText)
+    private static function isInfinityOrNaNDouble($tokenText)
     {
-        if (strlen($tokenText) == 3) {
-            if ($tokenText[0] == 'I') {
-                return self::_isInfinityLiteralDouble($tokenText);
-            } elseif ($tokenText[0] == 'N') {
-                return strncmp($tokenText, ODataConstants::XML_NAN_LITERAL, 3) == 0;
+        if (3 == strlen($tokenText)) {
+            if ('I' == $tokenText[0]) {
+                return self::isInfinityLiteralDouble($tokenText);
+            } elseif ('N' == $tokenText[0]) {
+                return 0 == strncmp($tokenText, ODataConstants::XML_NAN_LITERAL, 3);
             }
         }
 
@@ -379,9 +379,9 @@ class ExpressionLexer
      *
      * @return bool true if match found, false otherwise
      */
-    private static function _isInfinityLiteralDouble($text)
+    private static function isInfinityLiteralDouble($text)
     {
-        return strcmp($text, ODataConstants::XML_INFINITY_LITERAL) == 0;
+        return 0 == strcmp($text, ODataConstants::XML_INFINITY_LITERAL);
     }
 
     /**
@@ -391,15 +391,15 @@ class ExpressionLexer
      *
      * @return bool true if match found, false otherwise
      */
-    private static function _isInfinityOrNanSingle($tokenText)
+    private static function isInfinityOrNanSingle($tokenText)
     {
-        if (strlen($tokenText) == 4) {
-            if ($tokenText[0] == 'I') {
-                return self::_isInfinityLiteralSingle($tokenText);
-            } elseif ($tokenText[0] == 'N') {
+        if (4 == strlen($tokenText)) {
+            if ('I' == $tokenText[0]) {
+                return self::isInfinityLiteralSingle($tokenText);
+            } elseif ('N' == $tokenText[0]) {
                 return ($tokenText[3] == self::SINGLE_SUFFIX_LOWER
                     || $tokenText[3] == self::SINGLE_SUFFIX_UPPER)
-                    && strncmp($tokenText, ODataConstants::XML_NAN_LITERAL, 3) == 0;
+                    && 0 == strncmp($tokenText, ODataConstants::XML_NAN_LITERAL, 3);
             }
         }
 
@@ -414,7 +414,7 @@ class ExpressionLexer
      * @return bool true if the substring is equal using an ordinal comparison;
      *              false otherwise
      */
-    private static function _isInfinityLiteralSingle($text)
+    private static function isInfinityLiteralSingle($text)
     {
         return strlen($text) == 4
             && ($text[3] == self::SINGLE_SUFFIX_LOWER
@@ -429,19 +429,19 @@ class ExpressionLexer
      *
      * @throws ODataException
      */
-    private function _handleTypePrefixedLiterals()
+    private function handleTypePrefixedLiterals()
     {
-        $id = $this->_token->Id;
+        $id = $this->token->Id;
         if ($id != ExpressionTokenId::IDENTIFIER) {
             return;
         }
 
-        $quoteFollows = $this->_ch == '\'';
+        $quoteFollows = $this->ch == '\'';
         if (!$quoteFollows) {
             return;
         }
 
-        $tokenText = $this->_token->Text;
+        $tokenText = $this->token->Text;
 
         if (strcasecmp('datetime', $tokenText) == 0) {
             $id = ExpressionTokenId::DATETIME_LITERAL;
@@ -456,24 +456,24 @@ class ExpressionLexer
             return;
         }
 
-        $tokenPos = $this->_token->Position;
+        $tokenPos = $this->token->Position;
         do {
-            $this->_nextChar();
-        } while ($this->_ch != '\0' && $this->_ch != '\'');
+            $this->nextChar();
+        } while ($this->ch != '\0' && $this->ch != '\'');
 
-        if ($this->_ch == '\0') {
-            $this->_parseError(
+        if ($this->ch == '\0') {
+            $this->parseError(
                 Messages::expressionLexerUnterminatedStringLiteral(
-                    $this->_textPos,
-                    $this->_text
+                    $this->textPos,
+                    $this->text
                 )
             );
         }
 
-        $this->_nextChar();
-        $this->_token->Id = $id;
-        $this->_token->Text
-            = substr($this->_text, $tokenPos, $this->_textPos - $tokenPos);
+        $this->nextChar();
+        $this->token->Id = $id;
+        $this->token->Text
+            = substr($this->text, $tokenPos, $this->textPos - $tokenPos);
     }
 
     /**
@@ -481,57 +481,57 @@ class ExpressionLexer
      *
      * @return ExpressionTokenId The kind of token recognized
      */
-    private function _parseFromDigit()
+    private function parseFromDigit()
     {
         $result = null;
-        $startChar = $this->_ch;
-        $this->_nextChar();
-        if ($startChar == '0' && $this->_ch == 'x' || $this->_ch == 'X') {
+        $startChar = $this->ch;
+        $this->nextChar();
+        if ($startChar == '0' && $this->ch == 'x' || $this->ch == 'X') {
             $result = ExpressionTokenId::BINARY_LITERAL;
             do {
-                $this->_nextChar();
-            } while (ctype_xdigit($this->_ch));
+                $this->nextChar();
+            } while (ctype_xdigit($this->ch));
         } else {
             $result = ExpressionTokenId::INTEGER_LITERAL;
-            while (Char::isDigit($this->_ch)) {
-                $this->_nextChar();
+            while (Char::isDigit($this->ch)) {
+                $this->nextChar();
             }
 
-            if ($this->_ch == '.') {
+            if ($this->ch == '.') {
                 $result = ExpressionTokenId::DOUBLE_LITERAL;
-                $this->_nextChar();
-                $this->_validateDigit();
+                $this->nextChar();
+                $this->validateDigit();
 
                 do {
-                    $this->_nextChar();
-                } while (Char::isDigit($this->_ch));
+                    $this->nextChar();
+                } while (Char::isDigit($this->ch));
             }
 
-            if ($this->_ch == 'E' || $this->_ch == 'e') {
+            if ($this->ch == 'E' || $this->ch == 'e') {
                 $result = ExpressionTokenId::DOUBLE_LITERAL;
-                $this->_nextChar();
-                if ($this->_ch == '+' || $this->_ch == '-') {
-                    $this->_nextChar();
+                $this->nextChar();
+                if ($this->ch == '+' || $this->ch == '-') {
+                    $this->nextChar();
                 }
 
-                $this->_validateDigit();
+                $this->validateDigit();
                 do {
-                    $this->_nextChar();
-                } while (Char::isDigit($this->_ch));
+                    $this->nextChar();
+                } while (Char::isDigit($this->ch));
             }
 
-            if ($this->_ch == 'M' || $this->_ch == 'm') {
+            if ($this->ch == 'M' || $this->ch == 'm') {
                 $result = ExpressionTokenId::DECIMAL_LITERAL;
-                $this->_nextChar();
-            } elseif ($this->_ch == 'd' || $this->_ch == 'D') {
+                $this->nextChar();
+            } elseif ($this->ch == 'd' || $this->ch == 'D') {
                 $result = ExpressionTokenId::DOUBLE_LITERAL;
-                $this->_nextChar();
-            } elseif ($this->_ch == 'L' || $this->_ch == 'l') {
+                $this->nextChar();
+            } elseif ($this->ch == 'L' || $this->ch == 'l') {
                 $result = ExpressionTokenId::INT64_LITERAL;
-                $this->_nextChar();
-            } elseif ($this->_ch == 'f' || $this->_ch == 'F') {
+                $this->nextChar();
+            } elseif ($this->ch == 'f' || $this->ch == 'F') {
                 $result = ExpressionTokenId::SINGLE_LITERAL;
-                $this->_nextChar();
+                $this->nextChar();
             }
         }
 
@@ -541,25 +541,25 @@ class ExpressionLexer
     /**
      * Parses an identifier by advancing the current character.
      */
-    private function _parseIdentifier()
+    private function parseIdentifier()
     {
         do {
-            $this->_nextChar();
-        } while (Char::isLetterOrDigit($this->_ch) || $this->_ch == '_');
+            $this->nextChar();
+        } while (Char::isLetterOrDigit($this->ch) || $this->ch == '_');
     }
 
     /**
      * Advance to next character.
      */
-    private function _nextChar()
+    private function nextChar()
     {
-        if ($this->_textPos < $this->_textLen) {
-            ++$this->_textPos;
+        if ($this->textPos < $this->textLen) {
+            ++$this->textPos;
         }
 
-        $this->_ch
-            = $this->_textPos < $this->_textLen
-             ? $this->_text[$this->_textPos] : '\0';
+        $this->ch
+            = $this->textPos < $this->textLen
+             ? $this->text[$this->textPos] : '\0';
     }
 
     /**
@@ -567,23 +567,23 @@ class ExpressionLexer
      *
      * @param int $pos Value to position
      */
-    private function _setTextPos($pos)
+    private function setTextPos($pos)
     {
-        $this->_textPos = $pos;
-        $this->_ch
-            = $this->_textPos < $this->_textLen
-             ? $this->_text[$this->_textPos] : '\0';
+        $this->textPos = $pos;
+        $this->ch
+            = $this->textPos < $this->textLen
+             ? $this->text[$this->textPos] : '\0';
     }
 
     /**
      * Validate current character is a digit.
      */
-    private function _validateDigit()
+    private function validateDigit()
     {
-        if (!Char::isDigit($this->_ch)) {
-            $this->_parseError(
+        if (!Char::isDigit($this->ch)) {
+            $this->parseError(
                 Messages::expressionLexerDigitExpected(
-                    $this->_textPos
+                    $this->textPos
                 )
             );
         }
@@ -596,7 +596,7 @@ class ExpressionLexer
      *
      * @throws ODataException
      */
-    private function _parseError($message)
+    private function parseError($message)
     {
         throw ODataException::createSyntaxError($message);
     }

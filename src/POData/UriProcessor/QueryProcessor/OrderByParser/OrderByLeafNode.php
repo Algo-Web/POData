@@ -22,9 +22,9 @@ class OrderByLeafNode extends OrderByBaseNode
      *
      * @var bool
      */
-    private $_isAscending;
+    private $isAscending;
 
-    private $_anonymousFunction;
+    private $anonymousFunction;
 
     /**
      * Constructs new instance of OrderByLeafNode.
@@ -47,7 +47,7 @@ class OrderByLeafNode extends OrderByBaseNode
         $isAscending
     ) {
         parent::__construct($propertyName, $resourceProperty);
-        $this->_isAscending = $isAscending;
+        $this->isAscending = $isAscending;
     }
 
     /**
@@ -59,8 +59,8 @@ class OrderByLeafNode extends OrderByBaseNode
     {
         // By the time we call this function, the top level sorter function
         // will be already generated so we can free
-        unset($this->_anonymousFunction);
-        $this->_anonymousFunction = null;
+        unset($this->anonymousFunction);
+        $this->anonymousFunction = null;
     }
 
     /**
@@ -82,7 +82,7 @@ class OrderByLeafNode extends OrderByBaseNode
      */
     public function isAscending()
     {
-        return $this->_isAscending;
+        return $this->isAscending;
     }
 
     /**
@@ -100,7 +100,7 @@ class OrderByLeafNode extends OrderByBaseNode
             );
         }
 
-        $a = $this->_isAscending ? 1 : -1;
+        $a = $this->isAscending ? 1 : -1;
 
         $retVal = function ($object1, $object2) use ($ancestors, $a) {
             $accessor1 = $object1;
@@ -108,7 +108,7 @@ class OrderByLeafNode extends OrderByBaseNode
             $flag1 = is_null($accessor1);
             $flag2 = is_null($accessor2);
             foreach ($ancestors as $i => $ancestor) {
-                if ($i == 0) {
+                if (0 == $i) {
                     continue;
                 }
                 $accessor1 = $accessor1->$ancestor;
@@ -131,9 +131,9 @@ class OrderByLeafNode extends OrderByBaseNode
             if ($flag1 && $flag2) {
                 return 0;
             } elseif ($flag1) {
-                return $a*-1;
+                return $a * -1;
             } elseif ($flag2) {
-                return $a*1;
+                return $a * 1;
             }
             $type = $this->resourceProperty->getInstanceType();
             if ($type instanceof DateTime) {
@@ -147,7 +147,7 @@ class OrderByLeafNode extends OrderByBaseNode
                 $result = (0 == $delta) ? 0 : $delta/abs($delta);
             }
 
-            return $a*$result;
+            return $a * $result;
         };
 
         return $retVal;

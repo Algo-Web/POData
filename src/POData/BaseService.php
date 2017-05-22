@@ -73,7 +73,7 @@ abstract class BaseService implements IRequestHandler, IService
      *
      * @var ServiceHost
      */
-    private $_serviceHost;
+    private $serviceHost;
 
     /**
      * To hold reference to ServiceConfiguration instance where the
@@ -153,9 +153,9 @@ abstract class BaseService implements IRequestHandler, IService
      */
     public function getHost()
     {
-        assert(null != $this->_serviceHost);
+        assert(null != $this->serviceHost);
 
-        return $this->_serviceHost;
+        return $this->serviceHost;
     }
 
     /**
@@ -165,7 +165,7 @@ abstract class BaseService implements IRequestHandler, IService
      */
     public function setHost(ServiceHost $serviceHost)
     {
-        $this->_serviceHost = $serviceHost;
+        $this->serviceHost = $serviceHost;
     }
 
     /**

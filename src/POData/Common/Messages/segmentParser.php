@@ -14,7 +14,8 @@ trait segmentParser
      */
     public static function segmentParserKeysMustBeNamed($segment)
     {
-        return "Segments with multiple key values must specify them in 'name=value' form. For the segment $segment use named keys";
+        return "Segments with multiple key values must specify them in 'name=value' form. For the"
+               ." segment $segment use named keys";
     }
 
     /**
@@ -28,7 +29,9 @@ trait segmentParser
      */
     public static function segmentParserMustBeLeafSegment($leafSegment)
     {
-        return "The request URI is not valid. The segment '$leafSegment' must be the last segment in the URI because it is one of the following: \$batch, \$value, \$metadata, \$count, a bag property, a named media resource, or a service operation that does not return a value.";
+        return "The request URI is not valid. The segment '$leafSegment' must be the last segment in"
+               ." the URI because it is one of the following: \$batch, \$value, \$metadata, \$count,"
+               ." a bag property, a named media resource, or a service operation that does not return a value.";
     }
 
     /**
@@ -40,7 +43,8 @@ trait segmentParser
      */
     public static function segmentParserNoSegmentAllowedAfterPostLinkSegment($postPostLinkSegment)
     {
-        return "The request URI is not valid. The segment '$postPostLinkSegment' is not valid. Since the uri contains the \$links segment, there must be only one segment specified after that.";
+        return "The request URI is not valid. The segment '$postPostLinkSegment' is not valid. Since"
+               ." the uri contains the \$links segment, there must be only one segment specified after that.";
     }
 
     /**
@@ -53,9 +57,12 @@ trait segmentParser
      *
      * @return string The formatted message
      */
-    public static function segmentParserOnlyValueSegmentAllowedAfterPrimitivePropertySegment($segment, $primitivePropertySegment)
-    {
-        return "The segment '$segment' in the request URI is not valid. Since the segment '$primitivePropertySegment' refers to a primitive type property, the only supported value from the next segment is '\$value'.";
+    public static function segmentParserOnlyValueSegmentAllowedAfterPrimitivePropertySegment(
+        $segment,
+        $primitivePropertySegment
+    ) {
+        return "The segment '$segment' in the request URI is not valid. Since the segment '$primitivePropertySegment'"
+               ." refers to a primitive type property, the only supported value from the next segment is '\$value'.";
     }
 
     /**
@@ -67,7 +74,9 @@ trait segmentParser
      */
     public static function segmentParserCannotQueryCollection($collectionSegment)
     {
-        return "The request URI is not valid. Since the segment '$collectionSegment' refers to a collection, this must be the last segment in the request URI. All intermediate segments must refer to a single resource.";
+        return "The request URI is not valid. Since the segment '$collectionSegment' refers to a collection,"
+               ." this must be the last segment in the request URI. All intermediate segments must refer to"
+               ." a single resource.";
     }
 
     /**
@@ -79,7 +88,8 @@ trait segmentParser
      */
     public static function segmentParserCountCannotFollowSingleton($segment)
     {
-        return "The request URI is not valid, since the segment '$segment' refers to a singleton, and the segment '\$count' can only follow a resource collection.";
+        return "The request URI is not valid, since the segment '$segment' refers to a singleton, and the"
+               ." segment '\$count' can only follow a resource collection.";
     }
 
     /**
@@ -92,7 +102,8 @@ trait segmentParser
      */
     public static function segmentParserLinkSegmentMustBeFollowedByEntitySegment($segment)
     {
-        return "The request URI is not valid. The segment '$segment' must refer to a navigation property since the previous segment identifier is '\$links'.";
+        return "The request URI is not valid. The segment '$segment' must refer to a navigation property"
+               ." since the previous segment identifier is '\$links'.";
     }
 
     /**
@@ -102,7 +113,8 @@ trait segmentParser
      */
     public static function segmentParserMissingSegmentAfterLink()
     {
-        return "The request URI is not valid. There must a segment specified after the '\$links' segment and the segment must refer to a entity resource.";
+        return "The request URI is not valid. There must a segment specified after the '\$links' segment"
+               ." and the segment must refer to a entity resource.";
     }
 
     /**
@@ -115,7 +127,8 @@ trait segmentParser
      */
     public static function segmentParserSegmentNotAllowedOnRoot($segment)
     {
-        return "The request URI is not valid, the segment '$segment' cannot be applied to the root of the service";
+        return "The request URI is not valid, the segment '$segment' cannot be applied to the root of"
+               ." the service";
     }
 
     /**
@@ -150,6 +163,7 @@ trait segmentParser
      */
     public static function segmentParserCountCannotBeApplied($segment)
     {
-        return "The request URI is not valid, \$count cannot be applied to the segment '$segment' since \$count can only follow a resource segment.";
+        return "The request URI is not valid, \$count cannot be applied to the segment '$segment' "
+               ."since \$count can only follow a resource segment.";
     }
 }

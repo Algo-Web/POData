@@ -16,8 +16,10 @@ trait skipTokenInfo
      *
      * @return string The formatted message
      */
-    public static function skipTokenInfoBothOrderByPathAndOrderByValuesShouldBeSetOrNotSet($orderByPathsVarName, $orderByValuesVarName)
-    {
+    public static function skipTokenInfoBothOrderByPathAndOrderByValuesShouldBeSetOrNotSet(
+        $orderByPathsVarName,
+        $orderByValuesVarName
+    ) {
         return "Either both the arguments $orderByPathsVarName and $orderByValuesVarName should be null or not-null";
     }
 

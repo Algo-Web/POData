@@ -18,35 +18,35 @@ class InternalOrderByInfo
      *
      * @var OrderByInfo
      */
-    private $_orderByInfo;
+    private $orderByInfo;
 
     /**
      * Collection of sub sorter functions corresponding to each orderby path segment.
      *
      * @var callable[]
      */
-    private $_subSorterFunctions;
+    private $subSorterFunctions;
 
     /**
      * The top level anonymous sorter function.
      *
      * @var callable
      */
-    private $_sorterFunction;
+    private $sorterFunction;
 
     /**
      * This object will be of type of the resource set identified by the request uri.
      *
      * @var mixed
      */
-    private $_dummyObject;
+    private $dummyObject;
 
     /**
      * The ResourceType for the resource targeted by resource path.
      *
      * @var ResourceType
      */
-    private $_resourceType;
+    private $resourceType;
 
     /**
      * Creates new instance of InternalOrderByInfo.
@@ -57,7 +57,8 @@ class InternalOrderByInfo
      *                                         used in the orderby clause
      *                                         (if any) and orderby path
      *                                         if IDSQP implementation wants to perform sorting
-     * @param callable[]   $subSorterFunctions Collection of sub sorter functions corresponding to each orderby path segment
+     * @param callable[]   $subSorterFunctions Collection of sub sorter functions corresponding to each orderby
+     *                                         path segment
      * @param callable     $sorterFunction     The top level anonymous sorter function
      * @param mixed        $dummyObject        A dummy object of type
      *                                         of the resource set
@@ -73,11 +74,11 @@ class InternalOrderByInfo
         $dummyObject,
         ResourceType $resourceType
     ) {
-        $this->_orderByInfo = $orderByInfo;
-        $this->_sorterFunction = $sorterFunction;
-        $this->_subSorterFunctions = $subSorterFunctions;
-        $this->_dummyObject = $dummyObject;
-        $this->_resourceType = $resourceType;
+        $this->orderByInfo = $orderByInfo;
+        $this->sorterFunction = $sorterFunction;
+        $this->subSorterFunctions = $subSorterFunctions;
+        $this->dummyObject = $dummyObject;
+        $this->resourceType = $resourceType;
     }
 
     /**
@@ -87,7 +88,7 @@ class InternalOrderByInfo
      */
     public function getOrderByInfo()
     {
-        return $this->_orderByInfo;
+        return $this->orderByInfo;
     }
 
     /**
@@ -97,7 +98,7 @@ class InternalOrderByInfo
      */
     public function getOrderByPathSegments()
     {
-        return $this->_orderByInfo->getOrderByPathSegments();
+        return $this->orderByInfo->getOrderByPathSegments();
     }
 
     /**
@@ -107,7 +108,7 @@ class InternalOrderByInfo
      */
     public function getSorterFunction()
     {
-        return $this->_sorterFunction;
+        return $this->sorterFunction;
     }
 
     /**
@@ -117,7 +118,7 @@ class InternalOrderByInfo
      */
     public function getSubSorterFunctions()
     {
-        return $this->_subSorterFunctions;
+        return $this->subSorterFunctions;
     }
 
     /**
@@ -127,7 +128,7 @@ class InternalOrderByInfo
      */
     public function &getDummyObject()
     {
-        return $this->_dummyObject;
+        return $this->dummyObject;
     }
 
     /**
@@ -153,7 +154,7 @@ class InternalOrderByInfo
             foreach ($subPathSegments as &$subPathSegment) {
                 $isLastSegment = ($index == $subPathCount - 1);
                 try {
-                    $currentObject = $this->_resourceType->getPropertyValue($currentObject, $subPathSegment->getName());
+                    $currentObject = $this->resourceType->getPropertyValue($currentObject, $subPathSegment->getName());
                     if (is_null($currentObject)) {
                         $nextPageLink .= 'null, ';
                         break;
