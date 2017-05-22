@@ -104,9 +104,9 @@ class ResourceTypeTest extends TestCase
         $result = $foo->__sleep();
 
         $expected = ['name', 'namespaceName', 'fullName', 'resourceTypeKind', 'abstractType', 'baseType',
-            'propertiesDeclaredOnThisType', 'namedStreamsDeclaredOnThisType', 'propertyInfosDeclaredOnThisType',
-            'allProperties', 'allNamedStreams', 'eTagProperties', 'keyProperties', 'isMediaLinkEntry',
-            'hasBagProperty', 'hasNamedStreams', 'type', 'customState', 'arrayToDetectLoopInComplexBag', ];
+            'propertiesDeclaredOnThisType', 'namedStreamsDeclaredOnThisType', 'allProperties', 'allNamedStreams',
+            'eTagProperties', 'keyProperties', 'isMediaLinkEntry', 'hasBagProperty', 'hasNamedStreams', 'type',
+            'customState', 'arrayToDetectLoopInComplexBag', ];
 
         foreach ($expected as $property) {
             $this->assertTrue(in_array($property, $result), $property);
@@ -124,9 +124,9 @@ class ResourceTypeTest extends TestCase
         $result = $foo->__sleep();
 
         $expected = ['name', 'namespaceName', 'fullName', 'resourceTypeKind', 'abstractType', 'baseType',
-            'propertiesDeclaredOnThisType', 'namedStreamsDeclaredOnThisType', 'propertyInfosDeclaredOnThisType',
-            'allProperties', 'allNamedStreams', 'eTagProperties', 'keyProperties', 'isMediaLinkEntry',
-            'hasBagProperty', 'hasNamedStreams', 'type', 'customState', 'arrayToDetectLoopInComplexBag', ];
+            'propertiesDeclaredOnThisType', 'namedStreamsDeclaredOnThisType', 'allProperties', 'allNamedStreams',
+            'eTagProperties', 'keyProperties', 'isMediaLinkEntry', 'hasBagProperty', 'hasNamedStreams', 'type',
+            'customState', 'arrayToDetectLoopInComplexBag', ];
 
         foreach ($expected as $property) {
             $this->assertTrue(in_array($property, $result), $property);

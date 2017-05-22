@@ -480,7 +480,7 @@ class SimpleMetadataProvider implements IMetadataProvider
      * To add a navigation property (resource set or resource reference)
      * to a resource type.
      *
-     * @param ResourceType         $resourceType         The resource type to add
+     * @param ResourceType         $sourceResourceType   The resource type to add
      *                                                   the resource reference
      *                                                   or resource
      *                                                   reference set property to
@@ -607,10 +607,8 @@ class SimpleMetadataProvider implements IMetadataProvider
         $targetResourceType->addProperty($targetResourceProperty, false);
 
         //Customer_Orders_Orders, Order_Customer_Customers
-        //(source type::name _ source property::name _ target set::name)
         $fwdSetKey = ResourceAssociationSet::keyName($sourceResourceType, $sourceProperty, $targetResourceSet);
         $revSetKey = ResourceAssociationSet::keyName($targetResourceType, $targetProperty, $sourceResourceSet);
-        //$setKey = $sourceResourceType->getName() . '_' . $name . '_' . $targetResourceType->getName();
         $fwdSet = new ResourceAssociationSet(
             $fwdSetKey,
             new ResourceAssociationSetEnd($sourceResourceSet, $sourceResourceType, $sourceResourceProperty),

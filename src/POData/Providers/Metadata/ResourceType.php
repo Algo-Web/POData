@@ -89,14 +89,6 @@ class ResourceType
     private $namedStreamsDeclaredOnThisType = [];
 
     /**
-     * Collection of ReflectionProperty instances for each property declared
-     * on this type.
-     *
-     * @var array(ResourceProperty, ReflectionProperty)
-     */
-    private $propertyInfosDeclaredOnThisType = [];
-
-    /**
      * Collection of ResourceProperty for all properties declared on this type.
      * and base types.
      *
