@@ -686,6 +686,27 @@ class SimpleMetadataProviderTest extends TestCase
         $this->assertTrue($result instanceof ResourceAssociationSet, get_class($result));
         $this->assertEquals($secondExpectedKey, $result->getName());
     }
+
+    public function testAddResourceReferenceSingleBidirectionalForwardAndReverse()
+    {
+        $forward = new reusableEntityClass4('foo', 'bar');
+        $back = new reusableEntityClass5('foo', 'bar');
+
+        $foo = new SimpleMetadataProvider('string', 'String');
+
+        $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore', 'Data');
+        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft', 'Data');
+        $this->assertTrue($fore instanceof ResourceType);
+        $this->assertTrue($aft instanceof ResourceType);
+
+        $foreSet = $foo->addResourceSet('foreSet', $fore);
+        $aftSet = $foo->addResourceSet('aftSet', $aft);
+        $this->assertTrue($foreSet instanceof ResourceSet);
+        $this->assertTrue($aftSet instanceof ResourceSet);
+
+        $foo->addResourceReferenceSinglePropertyBidirectional($fore, $aft, 'relation', 'backRelation');
+        $foo->addResourceReferenceSinglePropertyBidirectional($aft, $fore, 'backRelation', 'relation');
+    }
 }
 
 class reusableEntityClass4

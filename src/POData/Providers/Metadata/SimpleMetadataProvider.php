@@ -601,9 +601,9 @@ class SimpleMetadataProvider implements IMetadataProvider
         }
 
         $sourceResourceProperty = new ResourceProperty($sourceProperty, null, $sourcePropertyKind, $targetResourceType);
-        $sourceResourceType->addProperty($sourceResourceProperty);
+        $sourceResourceType->addProperty($sourceResourceProperty, false);
         $targetResourceProperty = new ResourceProperty($targetProperty, null, $targetPropertyKind, $sourceResourceType);
-        $targetResourceType->addProperty($targetResourceProperty);
+        $targetResourceType->addProperty($targetResourceProperty, false);
 
         //Customer_Orders_Orders, Order_Customer_Customers
         //(source type::name _ source property::name _ target set::name)
