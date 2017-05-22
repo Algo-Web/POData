@@ -20,6 +20,13 @@ use UnitTests\POData\TestCase;
 
 class SimpleMetadataProviderTest extends TestCase
 {
+    public function testGetContainerNameAndNamespace()
+    {
+        $foo = new SimpleMetadataProvider('string', 'number');
+        $this->assertEquals('string', $foo->getContainerName());
+        $this->assertEquals('number', $foo->getContainerNamespace());
+    }
+
     public function testAddResourceSetThenGoAroundAgainAndThrowException()
     {
         $foo = new SimpleMetadataProvider('string', 'String');
@@ -349,6 +356,34 @@ class SimpleMetadataProviderTest extends TestCase
 
         try {
             $foo->addResourceReferenceProperty($type, 'time', $resourceSet);
+        } catch (InvalidOperationException $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testAddResourceReferenceBadCustomState()
+    {
+        $deflect = m::mock(ReflectionClass::class);
+        $deflect->shouldReceive('hasMethod')->withArgs(['__get'])->andReturn(true)->once();
+
+        $type = m::mock(ResourceType::class);
+        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY);
+        $type->shouldReceive('getInstanceType')->andReturn($deflect);
+        $type->shouldReceive('getName')->andReturn('time');
+        $type->shouldReceive('addProperty')->andReturn(null)->once();
+        $type->shouldReceive('getCustomState')->andReturn(null)->once();
+
+        $resourceSet = m::mock(ResourceSet::class);
+        $resourceSet->shouldReceive('getResourceType')->andReturn($type)->once();
+
+        $foo = new SimpleMetadataProvider('string', 'String');
+
+        $expected = 'Failed to retrieve the custom state from time';
+        $actual = null;
+
+        try {
+            $foo->addResourceReferenceProperty($type, 'date', $resourceSet);
         } catch (InvalidOperationException $e) {
             $actual = $e->getMessage();
         }

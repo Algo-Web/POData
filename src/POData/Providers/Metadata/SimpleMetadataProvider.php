@@ -507,21 +507,13 @@ class SimpleMetadataProvider implements IMetadataProvider
             );
         }
 
-        if (!($resourcePropertyKind == ResourcePropertyKind::RESOURCESET_REFERENCE
-            || $resourcePropertyKind == ResourcePropertyKind::RESOURCE_REFERENCE)
-        ) {
-            throw new InvalidOperationException(
-                'Property kind should be ResourceSetReference or ResourceReference'
-            );
-        }
-
         $targetResourceType = $targetResourceSet->getResourceType();
         $sourceResourceProperty = new ResourceProperty($name, null, $resourcePropertyKind, $targetResourceType);
         $sourceResourceType->addProperty($sourceResourceProperty);
 
         //Create instance of AssociationSet for this relationship
         $sourceResourceSet = $sourceResourceType->getCustomState();
-        if (is_null($sourceResourceSet)) {
+        if (!$sourceResourceSet instanceof ResourceSet) {
             throw new InvalidOperationException(
                 'Failed to retrieve the custom state from '
                 . $sourceResourceType->getName()
@@ -537,23 +529,14 @@ class SimpleMetadataProvider implements IMetadataProvider
             new ResourceAssociationSetEnd($sourceResourceSet, $sourceResourceType, $sourceResourceProperty),
             new ResourceAssociationSetEnd($targetResourceSet, $targetResourceType, null)
         );
-        if ($resourcePropertyKind == ResourcePropertyKind::RESOURCESET_REFERENCE) {
-            $this->metadataManager->addNavigationPropertyToEntityType(
-                $this->OdataEntityMap[$sourceResourceType->getFullName()],
-                "*",
-                $name,
-                $this->OdataEntityMap[$targetResourceType->getFullName()],
-                "*"
-            );
-        } else {
-            $this->metadataManager->addNavigationPropertyToEntityType(
-                $this->OdataEntityMap[$sourceResourceType->getFullName()],
-                "0..1",
-                $name,
-                $this->OdataEntityMap[$targetResourceType->getFullName()],
-                "0..1"
-            );
-        }
+        $mult = $resourcePropertyKind == ResourcePropertyKind::RESOURCESET_REFERENCE ? "*" : "0..1";
+        $this->metadataManager->addNavigationPropertyToEntityType(
+            $this->OdataEntityMap[$sourceResourceType->getFullName()],
+            $mult,
+            $name,
+            $this->OdataEntityMap[$targetResourceType->getFullName()],
+            $mult
+        );
         $this->associationSets[$setKey] = $set;
     }
 
