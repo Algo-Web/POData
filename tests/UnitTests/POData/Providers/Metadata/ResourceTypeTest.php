@@ -103,10 +103,10 @@ class ResourceTypeTest extends TestCase
 
         $result = $foo->__sleep();
 
-        $expected = ['_name', '_namespaceName', '_fullName', '_resourceTypeKind', '_abstractType', '_baseType',
-            '_propertiesDeclaredOnThisType', '_namedStreamsDeclaredOnThisType', '_propertyInfosDeclaredOnThisType',
-            '_allProperties', '_allNamedStreams', '_etagProperties', '_keyProperties', '_isMediaLinkEntry',
-            '_hasBagProperty', '_hasNamedStreams', '_type', '_customState', '_arrayToDetectLoopInComplexBag', ];
+        $expected = ['name', 'namespaceName', 'fullName', 'resourceTypeKind', 'abstractType', 'baseType',
+            'propertiesDeclaredOnThisType', 'namedStreamsDeclaredOnThisType', 'propertyInfosDeclaredOnThisType',
+            'allProperties', 'allNamedStreams', 'eTagProperties', 'keyProperties', 'isMediaLinkEntry',
+            'hasBagProperty', 'hasNamedStreams', 'type', 'customState', 'arrayToDetectLoopInComplexBag', ];
 
         foreach ($expected as $property) {
             $this->assertTrue(in_array($property, $result), $property);
@@ -123,10 +123,10 @@ class ResourceTypeTest extends TestCase
 
         $result = $foo->__sleep();
 
-        $expected = ['_name', '_namespaceName', '_fullName', '_resourceTypeKind', '_abstractType', '_baseType',
-            '_propertiesDeclaredOnThisType', '_namedStreamsDeclaredOnThisType', '_propertyInfosDeclaredOnThisType',
-            '_allProperties', '_allNamedStreams', '_etagProperties', '_keyProperties', '_isMediaLinkEntry',
-            '_hasBagProperty', '_hasNamedStreams', '_type', '_customState', '_arrayToDetectLoopInComplexBag', ];
+        $expected = ['name', 'namespaceName', 'fullName', 'resourceTypeKind', 'abstractType', 'baseType',
+            'propertiesDeclaredOnThisType', 'namedStreamsDeclaredOnThisType', 'propertyInfosDeclaredOnThisType',
+            'allProperties', 'allNamedStreams', 'eTagProperties', 'keyProperties', 'isMediaLinkEntry',
+            'hasBagProperty', 'hasNamedStreams', 'type', 'customState', 'arrayToDetectLoopInComplexBag', ];
 
         foreach ($expected as $property) {
             $this->assertTrue(in_array($property, $result), $property);

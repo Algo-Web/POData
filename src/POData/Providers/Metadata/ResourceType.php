@@ -33,7 +33,7 @@ class ResourceType
      *
      * @var string
      */
-    private $_name;
+    private $name;
 
     /**
      * Namespace name in which resource described by this class instance
@@ -41,14 +41,14 @@ class ResourceType
      *
      * @var string
      */
-    private $_namespaceName;
+    private $namespaceName;
 
     /**
      * The fully qualified name of the resource described by this class instance.
      *
      * @var string
      */
-    private $_fullName;
+    private $fullName;
 
     /**
      * The type the resource described by this class instance.
@@ -56,19 +56,19 @@ class ResourceType
      *
      * @var ResourceTypeKind
      */
-    private $_resourceTypeKind;
+    private $resourceTypeKind;
 
     /**
      * @var bool
      */
-    private $_abstractType;
+    private $abstractType;
 
     /**
      * Refrence to ResourceType instance for base type, if any.
      *
      * @var ResourceType
      */
-    private $_baseType;
+    private $baseType;
 
     /**
      * Collection of ResourceProperty for all properties declared on the
@@ -77,7 +77,7 @@ class ResourceType
      *
      * @var ResourceProperty[] indexed by name
      */
-    private $_propertiesDeclaredOnThisType = [];
+    private $propertiesDeclaredOnThisType = [];
 
     /**
      * Collection of ResourceStreamInfo for all named streams declared on
@@ -86,7 +86,7 @@ class ResourceType
      *
      * @var ResourceStreamInfo[] indexed by name
      */
-    private $_namedStreamsDeclaredOnThisType = [];
+    private $namedStreamsDeclaredOnThisType = [];
 
     /**
      * Collection of ReflectionProperty instances for each property declared
@@ -94,7 +94,7 @@ class ResourceType
      *
      * @var array(ResourceProperty, ReflectionProperty)
      */
-    private $_propertyInfosDeclaredOnThisType = [];
+    private $propertyInfosDeclaredOnThisType = [];
 
     /**
      * Collection of ResourceProperty for all properties declared on this type.
@@ -102,7 +102,7 @@ class ResourceType
      *
      * @var ResourceProperty[] indexed by name
      */
-    private $_allProperties = [];
+    private $allProperties = [];
 
     /**
      * Collection of ResourceStreamInfo for all named streams declared on this type.
@@ -110,28 +110,28 @@ class ResourceType
      *
      * @var ResourceStreamInfo[]
      */
-    private $_allNamedStreams = [];
+    private $allNamedStreams = [];
 
     /**
      * Collection of properties which has etag defined subset of $_allProperties.
      *
      * @var ResourceProperty[]
      */
-    private $_etagProperties = [];
+    private $eTagProperties = [];
 
     /**
      * Collection of key properties subset of $_allProperties.
      *
      * @var ResourceProperty[]
      */
-    private $_keyProperties = [];
+    private $keyProperties = [];
 
     /**
      * Whether the resource type described by this class instance is a MLE or not.
      *
      * @var bool
      */
-    private $_isMediaLinkEntry = false;
+    private $isMediaLinkEntry = false;
 
     /**
      * Whether the resource type described by this class instance has bag properties
@@ -140,7 +140,7 @@ class ResourceType
      *
      * @var bool
      */
-    private $_hasBagProperty = null;
+    private $hasBagProperty = null;
 
     /**
      * Whether the resource type described by this class instance has named streams
@@ -149,7 +149,7 @@ class ResourceType
      *
      * @var bool
      */
-    private $_hasNamedStreams = null;
+    private $hasNamedStreams = null;
 
     /**
      * ReflectionClass (for complex/Entity) or IType (for Primitive) instance for
@@ -157,21 +157,21 @@ class ResourceType
      *
      * @var \ReflectionClass|IType
      */
-    private $_type;
+    private $type;
 
     /**
      * To store any custom information related to this class instance.
      *
      * @var object
      */
-    private $_customState;
+    private $customState;
 
     /**
      * Array to detect looping in bag's complex type.
      *
      * @var array
      */
-    private $_arrayToDetectLoopInComplexBag;
+    private $arrayToDetectLoopInComplexBag;
 
     /**
      * Create new instance of ResourceType.
@@ -198,9 +198,9 @@ class ResourceType
         ResourceType $baseType = null,
         $isAbstract = false
     ) {
-        $this->_type = $instanceType;
+        $this->type = $instanceType;
         if ($resourceTypeKind == ResourceTypeKind::PRIMITIVE) {
-            if ($baseType != null) {
+            if (null != $baseType) {
                 throw new \InvalidArgumentException(
                     Messages::resourceTypeNoBaseTypeForPrimitive()
                 );
@@ -225,15 +225,15 @@ class ResourceType
             }
         }
 
-        $this->_resourceTypeKind = $resourceTypeKind;
-        $this->_name = $name;
-        $this->_baseType = $baseType;
-        $this->_namespaceName = $namespaceName;
-        $this->_fullName = is_null($namespaceName) ? $name : $namespaceName . '.' . $name;
-        $this->_abstractType = $isAbstract;
-        $this->_isMediaLinkEntry = false;
-        $this->_customState = null;
-        $this->_arrayToDetectLoopInComplexBag = [];
+        $this->resourceTypeKind = $resourceTypeKind;
+        $this->name = $name;
+        $this->baseType = $baseType;
+        $this->namespaceName = $namespaceName;
+        $this->fullName = is_null($namespaceName) ? $name : $namespaceName . '.' . $name;
+        $this->abstractType = $isAbstract;
+        $this->isMediaLinkEntry = false;
+        $this->customState = null;
+        $this->arrayToDetectLoopInComplexBag = [];
         //TODO: Set MLE if base type has MLE Set
     }
 
@@ -244,7 +244,7 @@ class ResourceType
      */
     public function getBaseType()
     {
-        return $this->_baseType;
+        return $this->baseType;
     }
 
     /**
@@ -254,7 +254,7 @@ class ResourceType
      */
     public function hasBaseType()
     {
-        return !is_null($this->_baseType);
+        return !is_null($this->baseType);
     }
 
     /**
@@ -264,7 +264,7 @@ class ResourceType
      */
     public function getCustomState()
     {
-        return $this->_customState;
+        return $this->customState;
     }
 
     /**
@@ -274,7 +274,7 @@ class ResourceType
      */
     public function setCustomState($object)
     {
-        $this->_customState = $object;
+        $this->customState = $object;
     }
 
     /**
@@ -286,11 +286,11 @@ class ResourceType
      */
     public function getInstanceType()
     {
-        if (is_string($this->_type)) {
-            $this->__wakeup();
+        if (is_string($this->type)) {
+            $this->_wakeup();
         }
 
-        return $this->_type;
+        return $this->type;
     }
 
     /**
@@ -300,7 +300,7 @@ class ResourceType
      */
     public function getName()
     {
-        return $this->_name;
+        return $this->name;
     }
 
     /**
@@ -311,7 +311,7 @@ class ResourceType
      */
     public function getNamespace()
     {
-        return $this->_namespaceName;
+        return $this->namespaceName;
     }
 
     /**
@@ -322,7 +322,7 @@ class ResourceType
      */
     public function getFullName()
     {
-        return $this->_fullName;
+        return $this->fullName;
     }
 
     /**
@@ -332,7 +332,7 @@ class ResourceType
      */
     public function isAbstract()
     {
-        return $this->_abstractType;
+        return $this->abstractType;
     }
 
     /**
@@ -342,7 +342,7 @@ class ResourceType
      */
     public function getResourceTypeKind()
     {
-        return $this->_resourceTypeKind;
+        return $this->resourceTypeKind;
     }
 
     /**
@@ -352,7 +352,7 @@ class ResourceType
      */
     public function isMediaLinkEntry()
     {
-        return $this->_isMediaLinkEntry;
+        return $this->isMediaLinkEntry;
     }
 
     /**
@@ -362,50 +362,54 @@ class ResourceType
      */
     public function setMediaLinkEntry($isMLE)
     {
-        if ($this->_resourceTypeKind != ResourceTypeKind::ENTITY) {
+        if (ResourceTypeKind::ENTITY != $this->resourceTypeKind) {
             throw new InvalidOperationException(
                 Messages::resourceTypeHasStreamAttributeOnlyAppliesToEntityType()
             );
         }
 
-        $this->_isMediaLinkEntry = $isMLE;
+        $this->isMediaLinkEntry = $isMLE;
     }
 
     /**
      * Add a property belongs to this resource type instance.
      *
      * @param ResourceProperty $property Property to add
+     * @param bool             $throw    Throw exception on name collision?
      *
      * @throws InvalidOperationException
      */
-    public function addProperty(ResourceProperty $property)
+    public function addProperty(ResourceProperty $property, $throw = true)
     {
-        if ($this->_resourceTypeKind == ResourceTypeKind::PRIMITIVE) {
+        if (ResourceTypeKind::PRIMITIVE == $this->resourceTypeKind) {
             throw new InvalidOperationException(
                 Messages::resourceTypeNoAddPropertyForPrimitive()
             );
         }
 
         $name = $property->getName();
-        foreach (array_keys($this->_propertiesDeclaredOnThisType) as $propertyName) {
-            if (strcasecmp($propertyName, $name) == 0) {
+        foreach (array_keys($this->propertiesDeclaredOnThisType) as $propertyName) {
+            if (0 == strcasecmp($propertyName, $name)) {
+                if (false === $throw) {
+                    return;
+                }
                 throw new InvalidOperationException(
                     Messages::resourceTypePropertyWithSameNameAlreadyExists(
                         $propertyName,
-                        $this->_name
+                        $this->name
                     )
                 );
             }
         }
 
         if ($property->isKindOf(ResourcePropertyKind::KEY)) {
-            if ($this->_resourceTypeKind != ResourceTypeKind::ENTITY) {
+            if (ResourceTypeKind::ENTITY != $this->resourceTypeKind) {
                 throw new InvalidOperationException(
                     Messages::resourceTypeKeyPropertiesOnlyOnEntityTypes()
                 );
             }
 
-            if ($this->_baseType != null) {
+            if (null != $this->baseType) {
                 throw new InvalidOperationException(
                     Messages::resourceTypeNoKeysInDerivedTypes()
                 );
@@ -413,7 +417,7 @@ class ResourceType
         }
 
         if ($property->isKindOf(ResourcePropertyKind::ETAG)
-            && ($this->_resourceTypeKind != ResourceTypeKind::ENTITY)
+            && (ResourceTypeKind::ENTITY != $this->resourceTypeKind)
         ) {
             throw new InvalidOperationException(
                 Messages::resourceTypeETagPropertiesOnlyOnEntityTypes()
@@ -421,14 +425,14 @@ class ResourceType
         }
 
         //Check for Base class properties
-        $this->_propertiesDeclaredOnThisType[$name] = $property;
-        // Set $this->_allProperties to null, this is very important because the
-        // first call to getAllProperties will initilaize $this->_allProperties,
+        $this->propertiesDeclaredOnThisType[$name] = $property;
+        // Set $this->allProperties to null, this is very important because the
+        // first call to getAllProperties will initilaize $this->allProperties,
         // further call to getAllProperties will not reinitialize _allProperties
         // so if addProperty is called after calling getAllProperties then the
-        // property just added will not be reflected in $this->_allProperties
-        unset($this->_allProperties);
-        $this->_allProperties = [];
+        // property just added will not be reflected in $this->allProperties
+        unset($this->allProperties);
+        $this->allProperties = [];
     }
 
     /**
@@ -440,7 +444,7 @@ class ResourceType
      */
     public function getPropertiesDeclaredOnThisType()
     {
-        return $this->_propertiesDeclaredOnThisType;
+        return $this->propertiesDeclaredOnThisType;
     }
 
     /**
@@ -452,17 +456,17 @@ class ResourceType
      */
     public function getAllProperties()
     {
-        if (empty($this->_allProperties)) {
-            if ($this->_baseType != null) {
-                $this->_allProperties = $this->_baseType->getAllProperties();
+        if (empty($this->allProperties)) {
+            if (null != $this->baseType) {
+                $this->allProperties = $this->baseType->getAllProperties();
             }
 
-            $this->_allProperties = array_merge(
-                $this->_allProperties, $this->_propertiesDeclaredOnThisType
+            $this->allProperties = array_merge(
+                $this->allProperties, $this->propertiesDeclaredOnThisType
             );
         }
 
-        return $this->_allProperties;
+        return $this->allProperties;
     }
 
     /**
@@ -474,20 +478,20 @@ class ResourceType
      */
     public function getKeyProperties()
     {
-        if (empty($this->_keyProperties)) {
+        if (empty($this->keyProperties)) {
             $baseType = $this;
-            while ($baseType->_baseType != null) {
-                $baseType = $baseType->_baseType;
+            while (null != $baseType->baseType) {
+                $baseType = $baseType->baseType;
             }
 
-            foreach ($baseType->_propertiesDeclaredOnThisType as $propertyName => $resourceProperty) {
+            foreach ($baseType->propertiesDeclaredOnThisType as $propertyName => $resourceProperty) {
                 if ($resourceProperty->isKindOf(ResourcePropertyKind::KEY)) {
-                    $this->_keyProperties[$propertyName] = $resourceProperty;
+                    $this->keyProperties[$propertyName] = $resourceProperty;
                 }
             }
         }
 
-        return $this->_keyProperties;
+        return $this->keyProperties;
     }
 
     /**
@@ -497,15 +501,15 @@ class ResourceType
      */
     public function getETagProperties()
     {
-        if (empty($this->_etagProperties)) {
+        if (empty($this->eTagProperties)) {
             foreach ($this->getAllProperties() as $propertyName => $resourceProperty) {
                 if ($resourceProperty->isKindOf(ResourcePropertyKind::ETAG)) {
-                    $this->_etagProperties[$propertyName] = $resourceProperty;
+                    $this->eTagProperties[$propertyName] = $resourceProperty;
                 }
             }
         }
 
-        return $this->_etagProperties;
+        return $this->eTagProperties;
     }
 
     /**
@@ -530,9 +534,10 @@ class ResourceType
      */
     public function resolvePropertyDeclaredOnThisType($propertyName)
     {
-        if (array_key_exists($propertyName, $this->_propertiesDeclaredOnThisType)) {
-            return $this->_propertiesDeclaredOnThisType[$propertyName];
+        if (array_key_exists($propertyName, $this->propertiesDeclaredOnThisType)) {
+            return $this->propertiesDeclaredOnThisType[$propertyName];
         }
+        return null;
     }
 
     /**
@@ -546,8 +551,9 @@ class ResourceType
     public function resolveProperty($propertyName)
     {
         if (array_key_exists($propertyName, $this->getAllProperties())) {
-            return $this->_allProperties[$propertyName];
+            return $this->allProperties[$propertyName];
         }
+        return null;
     }
 
     /**
@@ -559,32 +565,32 @@ class ResourceType
      */
     public function addNamedStream(ResourceStreamInfo $namedStream)
     {
-        if ($this->_resourceTypeKind != ResourceTypeKind::ENTITY) {
+        if ($this->resourceTypeKind != ResourceTypeKind::ENTITY) {
             throw new InvalidOperationException(
                 Messages::resourceTypeNamedStreamsOnlyApplyToEntityType()
             );
         }
 
         $name = $namedStream->getName();
-        foreach (array_keys($this->_namedStreamsDeclaredOnThisType) as $namedStreamName) {
-            if (strcasecmp($namedStreamName, $name) == 0) {
+        foreach (array_keys($this->namedStreamsDeclaredOnThisType) as $namedStreamName) {
+            if (0 == strcasecmp($namedStreamName, $name)) {
                 throw new InvalidOperationException(
                     Messages::resourceTypeNamedStreamWithSameNameAlreadyExists(
                         $name,
-                        $this->_name
+                        $this->name
                     )
                 );
             }
         }
 
-        $this->_namedStreamsDeclaredOnThisType[$name] = $namedStream;
-        // Set $this->_allNamedStreams to null, the first call to getAllNamedStreams
-        // will initialize $this->_allNamedStreams, further call to
+        $this->namedStreamsDeclaredOnThisType[$name] = $namedStream;
+        // Set $this->allNamedStreams to null, the first call to getAllNamedStreams
+        // will initialize $this->allNamedStreams, further call to
         // getAllNamedStreams will not reinitialize _allNamedStreams
         // so if addNamedStream is called after calling getAllNamedStreams then the
-        // property just added will not be reflected in $this->_allNamedStreams
-        unset($this->_allNamedStreams);
-        $this->_allNamedStreams = [];
+        // property just added will not be reflected in $this->allNamedStreams
+        unset($this->allNamedStreams);
+        $this->allNamedStreams = [];
     }
 
     /**
@@ -595,7 +601,7 @@ class ResourceType
      */
     public function getNamedStreamsDeclaredOnThisType()
     {
-        return $this->_namedStreamsDeclaredOnThisType;
+        return $this->namedStreamsDeclaredOnThisType;
     }
 
     /**
@@ -606,19 +612,19 @@ class ResourceType
      */
     public function getAllNamedStreams()
     {
-        if (empty($this->_allNamedStreams)) {
-            if ($this->_baseType != null) {
-                $this->_allNamedStreams = $this->_baseType->getAllNamedStreams();
+        if (empty($this->allNamedStreams)) {
+            if (null != $this->baseType) {
+                $this->allNamedStreams = $this->baseType->getAllNamedStreams();
             }
 
-            $this->_allNamedStreams
+            $this->allNamedStreams
                 = array_merge(
-                    $this->_allNamedStreams,
-                    $this->_namedStreamsDeclaredOnThisType
+                    $this->allNamedStreams,
+                    $this->namedStreamsDeclaredOnThisType
                 );
         }
 
-        return $this->_allNamedStreams;
+        return $this->allNamedStreams;
     }
 
     /**
@@ -631,9 +637,10 @@ class ResourceType
      */
     public function tryResolveNamedStreamDeclaredOnThisTypeByName($namedStreamName)
     {
-        if (array_key_exists($namedStreamName, $this->_namedStreamsDeclaredOnThisType)) {
-            return $this->_namedStreamsDeclaredOnThisType[$namedStreamName];
+        if (array_key_exists($namedStreamName, $this->namedStreamsDeclaredOnThisType)) {
+            return $this->namedStreamsDeclaredOnThisType[$namedStreamName];
         }
+        return null;
     }
 
     /**
@@ -647,8 +654,9 @@ class ResourceType
     public function tryResolveNamedStreamByName($namedStreamName)
     {
         if (array_key_exists($namedStreamName, $this->getAllNamedStreams())) {
-            return $this->_allNamedStreams[$namedStreamName];
+            return $this->allNamedStreams[$namedStreamName];
         }
+        return null;
     }
 
     /**
@@ -664,12 +672,12 @@ class ResourceType
         // from null depending on the current state of _allNamedStreams
         // array, so method should be called only after adding all
         // named streams
-        if (is_null($this->_hasNamedStreams)) {
+        if (is_null($this->hasNamedStreams)) {
             $this->getAllNamedStreams();
-            $this->_hasNamedStreams = !empty($this->_allNamedStreams);
+            $this->hasNamedStreams = !empty($this->allNamedStreams);
         }
 
-        return $this->_hasNamedStreams;
+        return $this->hasNamedStreams;
     }
 
     /**
@@ -687,14 +695,14 @@ class ResourceType
         // from null depending on the current state of
         // _propertiesDeclaredOnThisType array, so method
         // should be called only after adding all properties
-        if (!is_null($this->_hasBagProperty)) {
-            return $this->_hasBagProperty;
+        if (!is_null($this->hasBagProperty)) {
+            return $this->hasBagProperty;
         }
 
-        if ($this->_baseType != null && $this->_baseType->hasBagProperty($arrayToDetectLoopInComplexType)) {
-            $this->_hasBagProperty = true;
+        if (null != $this->baseType && $this->baseType->hasBagProperty($arrayToDetectLoopInComplexType)) {
+            $this->hasBagProperty = true;
         } else {
-            foreach ($this->_propertiesDeclaredOnThisType as $resourceProperty) {
+            foreach ($this->propertiesDeclaredOnThisType as $resourceProperty) {
                 $hasBagInComplex = false;
                 if ($resourceProperty->isKindOf(ResourcePropertyKind::COMPLEX_TYPE)) {
                     //We can say current ResouceType ("this")
@@ -746,13 +754,13 @@ class ResourceType
                 }
 
                 if ($resourceProperty->isKindOf(ResourcePropertyKind::BAG) || $hasBagInComplex) {
-                    $this->_hasBagProperty = true;
+                    $this->hasBagProperty = true;
                     break;
                 }
             }
         }
 
-        return $this->_hasBagProperty;
+        return $this->hasBagProperty;
     }
 
     /**
@@ -764,7 +772,7 @@ class ResourceType
     public function validateType()
     {
         $keyProperties = $this->getKeyProperties();
-        if (($this->_resourceTypeKind == ResourceTypeKind::ENTITY) && empty($keyProperties)) {
+        if (($this->resourceTypeKind == ResourceTypeKind::ENTITY) && empty($keyProperties)) {
             throw new InvalidOperationException(
                 Messages::resourceTypeMissingKeyPropertiesForEntity(
                     $this->getFullName()
@@ -785,12 +793,12 @@ class ResourceType
     public function isAssignableFrom(ResourceType $resourceType)
     {
         $base = $this;
-        while ($base != null) {
+        while (null != $base) {
             if ($resourceType == $base) {
                 return true;
             }
 
-            $base = $base->_baseType;
+            $base = $base->baseType;
         }
 
         return false;
@@ -926,10 +934,10 @@ class ResourceType
 
     public function __sleep()
     {
-        if (null == $this->_type || $this->_type instanceof \POData\Providers\Metadata\Type\IType) {
+        if (null == $this->type || $this->type instanceof \POData\Providers\Metadata\Type\IType) {
             return array_keys(get_object_vars($this));
         }
-        $this->_type = $this->_type->getName();
+        $this->type = $this->type->getName();
         $result = array_keys(get_object_vars($this));
 
         return $result;
@@ -937,12 +945,12 @@ class ResourceType
 
     public function __wakeup()
     {
-        if (is_string($this->_type)) {
-            $this->_type = new \ReflectionClass($this->_type);
+        if (is_string($this->type)) {
+            $this->type = new \ReflectionClass($this->type);
         }
 
         assert(
-            $this->_type instanceof \ReflectionClass || $this->_type instanceof IType,
+            $this->type instanceof \ReflectionClass || $this->type instanceof IType,
             '_type neither instance of reflection class nor IType'
         );
     }
