@@ -155,7 +155,7 @@ class ResourceType
      * ReflectionClass (for complex/Entity) or IType (for Primitive) instance for
      * the resource (type) described by this class instance.
      *
-     * @var \ReflectionClass|IType
+     * @var \ReflectionClass|IType|string
      */
     private $type;
 
@@ -287,7 +287,7 @@ class ResourceType
     public function getInstanceType()
     {
         if (is_string($this->type)) {
-            $this->_wakeup();
+            $this->__wakeup();
         }
 
         return $this->type;
@@ -937,7 +937,7 @@ class ResourceType
         if (null == $this->type || $this->type instanceof \POData\Providers\Metadata\Type\IType) {
             return array_keys(get_object_vars($this));
         }
-        $this->type = $this->type->getName();
+        $this->type = $this->type->name;
         $result = array_keys(get_object_vars($this));
 
         return $result;

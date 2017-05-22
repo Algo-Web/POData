@@ -451,13 +451,14 @@ class SimpleMetadataProvider implements IMetadataProvider
     }
 
     /**
-     * To add a resource reference property.
+     * To add a 1:N resource reference property.
      *
-     * @param ResourceType $resourceType The resource type to add the resource
-     *                                        reference property to
-     * @param string $name The name of the property to add
-     * @param ResourceSet $targetResourceSet The resource set the resource reference
-     *                                        property points to
+     * @param ResourceType $sourceResourceType  The resource type to add the resource
+     *                                          reference property from
+     * @param ResourceType $targetResourceType  The resource type to add the resource
+     *                                          reference property to
+     * @param string $sourceProperty            The name of the property to add, on source type
+     * @param string $targetProperty            The name of the property to add, on target type
      */
     public function addResourceReferencePropertyBidirectional(
         ResourceType $sourceResourceType,
@@ -544,18 +545,18 @@ class SimpleMetadataProvider implements IMetadataProvider
      * To add a navigation property (resource set or resource reference)
      * to a resource type.
      *
-     * @param ResourceType         $resourceType         The resource type to add
+     * @param ResourceType         $sourceResourceType   The source resource type to add
      *                                                   the resource reference
-     *                                                   or resource
-     *                                                   reference set property to
-     * @param string               $name                 The name of the
-     *                                                   property to add
-     * @param ResourceSet          $targetResourceSet    The resource set the
-     *                                                   resource reference
-     *                                                   or reference
-     *                                                   set property
-     *                                                   points to
-     * @param ResourcePropertyKind $resourcePropertyKind The property kind
+     *                                                   or resource reference set property to
+     * @param ResourceType         $targetResourceType   The target resource type to add
+     *                                                   the resource reference
+     *                                                   or resource reference set property to
+     * @param string               $sourceProperty       The name of the
+     *                                                   property to add to source type
+     * @param string               $targetProperty       The name of the
+     *                                                   property to add to target type
+     * @param ResourcePropertyKind $sourcePropertyKind   The property kind on the source type
+     * @param ResourcePropertyKind $targetPropertyKind   The property kind on the target type
      */
     private function _addReferencePropertyInternalBidirectional(
         ResourceType $sourceResourceType,
@@ -656,13 +657,14 @@ class SimpleMetadataProvider implements IMetadataProvider
     }
 
     /**
-     * To add a resource reference property.
+     * To add a M:N resource reference property.
      *
-     * @param ResourceType $resourceType The resource type to add the resource
-     *                                        reference property to
-     * @param string $name The name of the property to add
-     * @param ResourceSet $targetResourceSet The resource set the resource reference
-     *                                        property points to
+     * @param ResourceType $sourceResourceType  The resource type to add the resource
+     *                                          reference property from
+     * @param ResourceType $targetResourceType  The resource type to add the resource
+     *                                          reference property to
+     * @param string $sourceProperty            The name of the property to add, on source type
+     * @param string $targetProperty            The name of the property to add, on target type
      */
     public function addResourceSetReferencePropertyBidirectional(
         ResourceType $sourceResourceType,
@@ -681,13 +683,14 @@ class SimpleMetadataProvider implements IMetadataProvider
     }
 
     /**
-     * To add a resource reference property.
+     * To add a 1-1 resource reference.
      *
-     * @param ResourceType $resourceType The resource type to add the resource
-     *                                        reference property to
-     * @param string $name The name of the property to add
-     * @param ResourceSet $targetResourceSet The resource set the resource reference
-     *                                        property points to
+     * @param ResourceType $sourceResourceType  The resource type to add the resource
+     *                                          reference property from
+     * @param ResourceType $targetResourceType  The resource type to add the resource
+     *                                          reference property to
+     * @param string $sourceProperty            The name of the property to add, on source type
+     * @param string $targetProperty            The name of the property to add, on target type
      */
     public function addResourceReferenceSinglePropertyBidirectional(
         ResourceType $sourceResourceType,
