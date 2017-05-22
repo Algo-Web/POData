@@ -7,6 +7,7 @@ use Mockery as m;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\Providers\Metadata\ResourceType;
+use POData\Providers\Metadata\ResourceTypeKind;
 use UnitTests\POData\TestCase;
 
 class ResourcePropertyTest extends TestCase
@@ -77,6 +78,59 @@ class ResourcePropertyTest extends TestCase
 
         try {
             new ResourceProperty($name, $mimeName, $kind, $type);
+        } catch (InvalidArgumentException $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testGetMimeType()
+    {
+        $name = "name";
+        $mimeName = "foo";
+        $kind = ResourcePropertyKind::RESOURCE_REFERENCE;
+        $entKind = ResourceTypeKind::ENTITY;
+        $type = m::mock(ResourceType::class);
+        $type->shouldReceive('getResourceTypeKind')->andReturn($entKind);
+
+        $foo = new ResourceProperty($name, $mimeName, $kind, $type);
+        $this->assertEquals($mimeName, $foo->getMIMEType());
+    }
+
+    public function testResourceTypePropertyMismatchOnPrimitive()
+    {
+        $name = "name";
+        $mimeName = "foo";
+        $kind = ResourcePropertyKind::PRIMITIVE;
+        $entKind = ResourceTypeKind::ENTITY;
+        $type = m::mock(ResourceType::class);
+        $type->shouldReceive('getResourceTypeKind')->andReturn($entKind);
+
+        $expected = 'The \'$kind\' parameter does not match with the type of the resource '
+                    .'type in parameter \'$propertyResourceType\'';
+        $actual = null;
+        try {
+            $foo = new ResourceProperty($name, $mimeName, $kind, $type);
+        } catch (InvalidArgumentException $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testResourceTypePropertyMismatchOnResource()
+    {
+        $name = "name";
+        $mimeName = "foo";
+        $kind = ResourcePropertyKind::RESOURCE_REFERENCE;
+        $entKind = ResourceTypeKind::PRIMITIVE;
+        $type = m::mock(ResourceType::class);
+        $type->shouldReceive('getResourceTypeKind')->andReturn($entKind);
+
+        $expected = 'The \'$kind\' parameter does not match with the type of the resource '
+                    .'type in parameter \'$propertyResourceType\'';
+        $actual = null;
+        try {
+            $foo = new ResourceProperty($name, $mimeName, $kind, $type);
         } catch (InvalidArgumentException $e) {
             $actual = $e->getMessage();
         }
