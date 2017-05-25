@@ -1844,4 +1844,48 @@ class BaseServiceNewTest extends TestCase
         }
         $this->assertEquals($expected, $actual);
     }
+
+    public function testGetResponseTypeForMetadata()
+    {
+        $db = m::mock(IQueryProvider::class);
+        $host = m::mock(ServiceHost::class)->makePartial();
+        $host->shouldReceive('getRequestAccept')->andReturn('application/xml, application/atomsvc+xml');
+        $host->shouldReceive('getQueryStringItem')->andReturn(null)->once();
+        $cereal = m::mock(IObjectSerialiser::class);
+        $wrap = m::mock(StreamProviderWrapper::class)->makePartial();
+
+        $foo = new BaseServiceDummy($db, $host, $cereal, $wrap, null);
+
+        $uriProc = m::mock(UriProcessor::class)->makePartial();
+        $request = m::mock(RequestDescription::class);
+        $request->shouldReceive('getResponseVersion')->andReturn(Version::v3())->once();
+        $request->shouldReceive('isLinkUri')->andReturn(false)->once();
+        $request->shouldReceive('getTargetKind')->andReturn(TargetKind::METADATA());
+
+        $expected = 'application/xml';
+        $actual = $foo->getResponseContentType($request, $uriProc);
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testGetResponseTypeForServiceDirectory()
+    {
+        $db = m::mock(IQueryProvider::class);
+        $host = m::mock(ServiceHost::class)->makePartial();
+        $host->shouldReceive('getRequestAccept')->andReturn('application/xml, application/atomsvc+xml');
+        $host->shouldReceive('getQueryStringItem')->andReturn(null)->once();
+        $cereal = m::mock(IObjectSerialiser::class);
+        $wrap = m::mock(StreamProviderWrapper::class)->makePartial();
+
+        $foo = new BaseServiceDummy($db, $host, $cereal, $wrap, null);
+
+        $uriProc = m::mock(UriProcessor::class)->makePartial();
+        $request = m::mock(RequestDescription::class);
+        $request->shouldReceive('getResponseVersion')->andReturn(Version::v3())->once();
+        $request->shouldReceive('isLinkUri')->andReturn(false)->once();
+        $request->shouldReceive('getTargetKind')->andReturn(TargetKind::SERVICE_DIRECTORY());
+
+        $expected = 'application/atomsvc+xml';
+        $actual = $foo->getResponseContentType($request, $uriProc);
+        $this->assertEquals($expected, $actual);
+    }
 }
