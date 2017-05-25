@@ -376,7 +376,14 @@ class SimpleMetadataProvider implements IMetadataProvider
         $resourceProperty = new ResourceProperty($name, null, $kind, $primitiveResourceType);
         $resourceType->addProperty($resourceProperty);
         if (array_key_exists($resourceType->getFullName(), $this->OdataEntityMap)) {
-            $this->metadataManager->addPropertyToEntityType($this->OdataEntityMap[$resourceType->getFullName()], $name, $primitiveResourceType->getFullName(), null, false, $isKey);
+            $this->metadataManager->addPropertyToEntityType(
+                $this->OdataEntityMap[$resourceType->getFullName()],
+                $name,
+                $primitiveResourceType->getFullName(),
+                null,
+                false,
+                $isKey
+            );
         }
     }
 
@@ -601,14 +608,19 @@ class SimpleMetadataProvider implements IMetadataProvider
             );
         }
 
+        //Customer_Orders_Orders, Order_Customer_Customers
+        $fwdSetKey = ResourceAssociationSet::keyName($sourceResourceType, $sourceProperty, $targetResourceSet);
+        $revSetKey = ResourceAssociationSet::keyName($targetResourceType, $targetProperty, $sourceResourceSet);
+        if (isset($this->associationSets[$fwdSetKey]) && $this->associationSets[$revSetKey]) {
+            return;
+        }
+
         $sourceResourceProperty = new ResourceProperty($sourceProperty, null, $sourcePropertyKind, $targetResourceType);
         $sourceResourceType->addProperty($sourceResourceProperty, false);
         $targetResourceProperty = new ResourceProperty($targetProperty, null, $targetPropertyKind, $sourceResourceType);
         $targetResourceType->addProperty($targetResourceProperty, false);
 
-        //Customer_Orders_Orders, Order_Customer_Customers
-        $fwdSetKey = ResourceAssociationSet::keyName($sourceResourceType, $sourceProperty, $targetResourceSet);
-        $revSetKey = ResourceAssociationSet::keyName($targetResourceType, $targetProperty, $sourceResourceSet);
+
         $fwdSet = new ResourceAssociationSet(
             $fwdSetKey,
             new ResourceAssociationSetEnd($sourceResourceSet, $sourceResourceType, $sourceResourceProperty),
