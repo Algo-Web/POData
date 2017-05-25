@@ -704,8 +704,11 @@ class SimpleMetadataProviderTest extends TestCase
         $this->assertTrue($foreSet instanceof ResourceSet);
         $this->assertTrue($aftSet instanceof ResourceSet);
 
+        $this->assertEquals(0, $foo->getAssociationCount());
         $foo->addResourceReferenceSinglePropertyBidirectional($fore, $aft, 'relation', 'backRelation');
+        $this->assertEquals(2, $foo->getAssociationCount());
         $foo->addResourceReferenceSinglePropertyBidirectional($aft, $fore, 'backRelation', 'relation');
+        $this->assertEquals(2, $foo->getAssociationCount());
     }
 }
 
