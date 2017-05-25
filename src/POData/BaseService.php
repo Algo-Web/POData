@@ -567,8 +567,7 @@ abstract class BaseService implements IRequestHandler, IService
                 return HttpProcessUtility::selectMimeType(
                     $requestAcceptText,
                     array_merge(
-                        [MimeTypes::MIME_APPLICATION_ATOMSERVICE,
-                            MimeTypes::MIME_APPLICATION_XML, ],
+                        [MimeTypes::MIME_APPLICATION_ATOMSERVICE],
                         $baseMimeTypes
                     )
                 );
