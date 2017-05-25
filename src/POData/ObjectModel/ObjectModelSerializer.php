@@ -651,16 +651,19 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
     ) {
         $streamProviderWrapper = $this->getService()->getStreamProviderWrapper();
         assert(null != $streamProviderWrapper, "Retrieved stream provider must not be null");
+        $context = $this->getService()->getOperationContext();
         if ($resourceType->isMediaLinkEntry()) {
             $odataEntry->isMediaLinkEntry = true;
-            $eTag = $streamProviderWrapper->getStreamETag($entryObject, null);
-            $readStreamUri = $streamProviderWrapper->getReadStreamUri($entryObject, null, $relativeUri);
-            $mediaContentType = $streamProviderWrapper->getStreamContentType($entryObject, null);
+            $eTag = $streamProviderWrapper->getStreamETag2($entryObject, null, $context);
+            $readStreamUri = $streamProviderWrapper->getReadStreamUri2($entryObject, null, $context, $relativeUri);
+            $mediaContentType = $streamProviderWrapper->getStreamContentType2($entryObject, null, $context);
             $mediaLink = new ODataMediaLink(
                 $title,
                 $streamProviderWrapper->getDefaultStreamEditMediaUri(
                     $relativeUri,
-                    null
+                    $resourceType,
+                    null,
+                    $context
                 ),
                 $readStreamUri,
                 $mediaContentType,
@@ -672,24 +675,28 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
 
         if ($resourceType->hasNamedStream()) {
             foreach ($resourceType->getAllNamedStreams() as $title => $resourceStreamInfo) {
-                $eTag = $streamProviderWrapper->getStreamETag(
-                    $entryObject,
-                    $resourceStreamInfo
-                );
-                $readStreamUri = $streamProviderWrapper->getReadStreamUri(
+                $eTag = $streamProviderWrapper->getStreamETag2(
                     $entryObject,
                     $resourceStreamInfo,
+                    $context
+                );
+                $readStreamUri = $streamProviderWrapper->getReadStreamUri2(
+                    $entryObject,
+                    $resourceStreamInfo,
+                    $context,
                     $relativeUri
                 );
-                $mediaContentType = $streamProviderWrapper->getStreamContentType(
+                $mediaContentType = $streamProviderWrapper->getStreamContentType2(
                     $entryObject,
-                    $resourceStreamInfo
+                    $resourceStreamInfo,
+                    $context
                 );
                 $mediaLink = new ODataMediaLink(
                     $title,
-                    $streamProviderWrapper->getReadStreamUri(
+                    $streamProviderWrapper->getReadStreamUri2(
                         $entryObject,
                         $resourceStreamInfo,
+                        $context,
                         $relativeUri
                     ),
                     $readStreamUri,
