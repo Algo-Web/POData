@@ -1146,7 +1146,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $writer = new AtomODataWriter($fakeBaseURL);
         $actual = $writer->writeServiceDocument($this->mockProvider)->getOutput();
 
-        $expected = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<service xml:base=\"{$fakeBaseURL}\" xmlns:atom=\"http://www.w3.org/2005/Atom\" xmlns:app=\"http://www.w3.org/2007/app\" xmlns=\"http://www.w3.org/2007/app\">\n <workspace>\n  <atom:title>Default</atom:title>\n </workspace>\n</service>\n";
+        $expected = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<service xml:base=\"{$fakeBaseURL}/\" xmlns:atom=\"http://www.w3.org/2005/Atom\" xmlns=\"http://www.w3.org/2007/app\">\n <workspace>\n  <atom:title>Default</atom:title>\n </workspace>\n</service>\n";
 
         $this->assertEquals($expected, $actual);
     }
@@ -1172,7 +1172,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $writer = new AtomODataWriter($fakeBaseURL);
         $actual = $writer->writeServiceDocument($this->mockProvider)->getOutput();
 
-        $expected = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<service xml:base=\"{$fakeBaseURL}\" xmlns:atom=\"http://www.w3.org/2005/Atom\" xmlns:app=\"http://www.w3.org/2007/app\" xmlns=\"http://www.w3.org/2007/app\">\n <workspace>\n  <atom:title>Default</atom:title>\n  <collection href=\"Name 1\">\n   <atom:title>Name 1</atom:title>\n  </collection>\n  <collection href=\"XML escaped stuff &quot; ' &lt;&gt; &amp; ?\">\n   <atom:title>XML escaped stuff &quot; ' &lt;&gt; &amp; ?</atom:title>\n  </collection>\n </workspace>\n</service>\n";
+        $expected = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<service xml:base=\"{$fakeBaseURL}/\" xmlns:atom=\"http://www.w3.org/2005/Atom\" xmlns=\"http://www.w3.org/2007/app\">\n <workspace>\n  <atom:title>Default</atom:title>\n  <collection href=\"Name 1\">\n   <atom:title>Name 1</atom:title>\n  </collection>\n  <collection href=\"XML escaped stuff &quot; ' &lt;&gt; &amp; ?\">\n   <atom:title>XML escaped stuff &quot; ' &lt;&gt; &amp; ?</atom:title>\n  </collection>\n </workspace>\n</service>\n";
 
         $this->assertEquals($expected, $actual);
     }
