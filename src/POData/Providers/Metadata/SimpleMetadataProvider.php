@@ -128,6 +128,7 @@ class SimpleMetadataProvider implements IMetadataProvider
         if (array_key_exists($name, $this->resourceTypes)) {
             return $this->resourceTypes[$name];
         }
+        return null;
     }
 
     /**
@@ -143,6 +144,14 @@ class SimpleMetadataProvider implements IMetadataProvider
             return $this->associationSets[$name];
         }
         return null;
+    }
+
+    /*
+     * Get number of association sets hooked up
+     */
+    public function getAssociationCount()
+    {
+        return count($this->associationSets);
     }
 
     /**
