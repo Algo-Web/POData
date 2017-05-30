@@ -56,7 +56,7 @@ class ResourceType
      *
      * @var ResourceTypeKind
      */
-    private $resourceTypeKind;
+    protected $resourceTypeKind;
 
     /**
      * @var bool
