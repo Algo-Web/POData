@@ -4,6 +4,7 @@ namespace POData\Providers\Metadata;
 
 use AlgoWeb\ODataMetadata\MetadataManager;
 use AlgoWeb\ODataMetadata\MetadataV3\edm\TComplexTypeType;
+use AlgoWeb\ODataMetadata\MetadataV3\edm\TEntityTypeType;
 use POData\Common\InvalidOperationException;
 use POData\Common\NotImplementedException;
 use POData\Providers\Metadata\Type\IType;
@@ -250,26 +251,23 @@ class SimpleMetadataProvider implements IMetadataProvider
      */
     public function addEntityType(\ReflectionClass $refClass, $name, $namespace = null)
     {
-        return $this->createResourceType($refClass, $name, $namespace, ResourceTypeKind::ENTITY, null);
+        return $this->createResourceType($refClass, $name, ResourceTypeKind::ENTITY);
     }
 
     /**
      * @param \ReflectionClass $refClass
      * @param string $name
-     * @param string|null $namespace
      * @param $typeKind
-     * @param null|ResourceType $baseResourceType
-     *
-     * @throws InvalidOperationException
-     *
      * @return ResourceType
+     * @throws InvalidOperationException
+     * @internal param null|string $namespace
+     * @internal param null|ResourceType $baseResourceType
+     *
      */
     private function createResourceType(
         \ReflectionClass $refClass,
         $name,
-        $namespace,
-        $typeKind,
-        $baseResourceType
+        $typeKind
     ) {
         if (array_key_exists($name, $this->resourceTypes)) {
             throw new InvalidOperationException('Type with same name already added');
@@ -278,6 +276,7 @@ class SimpleMetadataProvider implements IMetadataProvider
         $type = null;
         if ($typeKind == ResourceTypeKind::ENTITY) {
             $oet = $this->metadataManager->addEntityType($name);
+            assert($oet instanceof TEntityTypeType, "Entity type ".$name. " not successfully added");
             $type = new ResourceEntityType($refClass, $oet, $this);
             $this->OdataEntityMap[$type->getFullName()] = $oet;
         } elseif ($typeKind == ResourceTypeKind::COMPLEX) {
@@ -307,7 +306,7 @@ class SimpleMetadataProvider implements IMetadataProvider
      */
     public function addComplexType(\ReflectionClass $refClass, $name, $namespace = null, $baseResourceType = null)
     {
-        return $this->createResourceType($refClass, $name, $namespace, ResourceTypeKind::COMPLEX, $baseResourceType);
+        return $this->createResourceType($refClass, $name, ResourceTypeKind::COMPLEX);
     }
 
     /**
