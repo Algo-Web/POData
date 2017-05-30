@@ -12,13 +12,14 @@ class ResourcePrimitiveType extends ResourceType
      *
      * @throws \InvalidArgumentException
      */
-    public function __construct(IType $primitive) {
+    public function __construct(IType $primitive)
+    {
         $resourceTypeKind = ResourceTypeKind::PRIMITIVE;
         $bitz = explode('.', $primitive->getName());
         $name = array_pop($bitz);
         $namespaceName = null;
         if (0 < count($bitz)) {
-            $namespaceName = implode('.',$bitz);
+            $namespaceName = implode('.', $bitz);
         }
         $baseType = null;
         $isAbstract = false;
