@@ -6,6 +6,8 @@ use InvalidArgumentException;
 use Mockery as m;
 use POData\Common\InvalidOperationException;
 use POData\Providers\Metadata\ResourceAssociationSet;
+use POData\Providers\Metadata\ResourceComplexType;
+use POData\Providers\Metadata\ResourcePrimitiveType;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\ResourceType;
@@ -207,7 +209,7 @@ class SimpleMetadataProviderTest extends TestCase
     {
         $type = m::mock(ResourceType::class);
         $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::PRIMITIVE);
-        $complexType = m::mock(ResourceType::class);
+        $complexType = m::mock(ResourceComplexType::class);
         $foo = new SimpleMetadataProvider('string', 'String');
 
         $expected = 'Complex property can be added to an entity or another complex type';
@@ -232,7 +234,7 @@ class SimpleMetadataProviderTest extends TestCase
         $type->shouldReceive('getInstanceType')->andReturn($deflect);
         $type->shouldReceive('getName')->andReturn('outaTime');
 
-        $complexType = m::mock(ResourceType::class);
+        $complexType = m::mock(ResourceComplexType::class);
         $foo = new SimpleMetadataProvider('string', 'String');
 
         $expected = 'Can\'t add a property which does not exist on the instance type.';
@@ -257,7 +259,7 @@ class SimpleMetadataProviderTest extends TestCase
         $type->shouldReceive('getInstanceType')->andReturn($deflect);
         $type->shouldReceive('getName')->andReturn('time');
 
-        $complexType = m::mock(ResourceType::class);
+        $complexType = m::mock(ResourceComplexType::class);
         $foo = new SimpleMetadataProvider('string', 'String');
 
         $expected = 'Property name must be different from resource name.';

@@ -12,6 +12,7 @@ use POData\Configuration\ServiceConfiguration;
 use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\Metadata\ResourceAssociationSet;
 use POData\Providers\Metadata\ResourceAssociationSetEnd;
+use POData\Providers\Metadata\ResourcePrimitiveType;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\ResourceSetWrapper;
@@ -492,7 +493,7 @@ class ProvidersWrapperTest extends TestCase
     public function testGetTypes()
     {
         $fakeTypes = [
-            new ResourceType(new StringType(), ResourceTypeKind::PRIMITIVE, 'FakeType1'),
+            new ResourcePrimitiveType(new StringType())
         ];
 
         $this->mockMetadataProvider->shouldReceive('getTypes')->andReturn($fakeTypes);
@@ -505,8 +506,8 @@ class ProvidersWrapperTest extends TestCase
     public function testGetTypesDuplicateNames()
     {
         $fakeTypes = [
-            new ResourceType(new StringType(), ResourceTypeKind::PRIMITIVE, 'FakeType1'),
-            new ResourceType(new StringType(), ResourceTypeKind::PRIMITIVE, 'FakeType1'),
+            new ResourcePrimitiveType(new StringType()),
+            new ResourcePrimitiveType(new StringType())
         ];
 
         $this->mockMetadataProvider->shouldReceive('getTypes')->andReturn($fakeTypes);
@@ -517,7 +518,10 @@ class ProvidersWrapperTest extends TestCase
             $wrapper->getTypes();
             $this->fail('An expected ODataException for entity type name repetition has not been thrown');
         } catch (ODataException $exception) {
-            $this->assertEquals(Messages::providersWrapperEntityTypeNameShouldBeUnique('FakeType1'), $exception->getMessage());
+            $this->assertEquals(
+                Messages::providersWrapperEntityTypeNameShouldBeUnique('String'),
+                $exception->getMessage()
+            );
             $this->assertEquals(500, $exception->getStatusCode());
         }
     }

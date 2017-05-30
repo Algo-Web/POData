@@ -3,7 +3,9 @@
 namespace POData\Providers\Metadata;
 
 use AlgoWeb\ODataMetadata\MetadataManager;
+use AlgoWeb\ODataMetadata\MetadataV3\edm\TComplexTypeType;
 use POData\Common\InvalidOperationException;
+use POData\Common\NotImplementedException;
 use POData\Providers\Metadata\Type\IType;
 use POData\Providers\Metadata\Type\TypeCode;
 
@@ -273,16 +275,22 @@ class SimpleMetadataProvider implements IMetadataProvider
             throw new InvalidOperationException('Type with same name already added');
         }
 
-        $entityType = new ResourceType($refClass, $typeKind, $name, $namespace, $baseResourceType);
-        $this->resourceTypes[$name] = $entityType;
+        $type = null;
+        if ($typeKind == ResourceTypeKind::ENTITY) {
+            $oet = $this->metadataManager->addEntityType($name);
+            $type = new ResourceEntityType($refClass, $oet, $this);
+            $this->OdataEntityMap[$type->getFullName()] = $oet;
+        } elseif ($typeKind == ResourceTypeKind::COMPLEX) {
+            $complex = new TComplexTypeType();
+            $complex->setName($name);
+            $type = new ResourceComplexType($refClass, $complex);
+        }
+        assert(null != $type, "Type variable must not be null");
+
+        $this->resourceTypes[$name] = $type;
         ksort($this->resourceTypes);
 
-        if ($typeKind == ResourceTypeKind::ENTITY) {
-            $this->OdataEntityMap[$entityType->getFullName()] = $this->metadataManager->addEntityType($name);
-        }
-
-
-        return $entityType;
+        return $type;
     }
 
     /**
@@ -730,30 +738,33 @@ class SimpleMetadataProvider implements IMetadataProvider
     /**
      * To add a complex property to entity or complex type.
      *
-     * @param ResourceType $resourceType The resource type to which the
-     *                                          complex property needs to add
-     * @param string $name name of the complex property
-     * @param ResourceType $complexResourceType complex resource type
-     * @param bool $isBag complex type is bag or not
+     * @param ResourceType          $targetResourceType     The resource type to which the complex property needs to add
+     * @param string                $name                   name of the complex property
+     * @param ResourceComplexType   $complexResourceType    complex resource type
+     * @param bool                  $isBag                  complex type is bag or not
      *
      * @return ResourceProperty
      */
-    public function addComplexProperty($resourceType, $name, $complexResourceType, $isBag = false)
-    {
-        if ($resourceType->getResourceTypeKind() != ResourceTypeKind::ENTITY
-            && $resourceType->getResourceTypeKind() != ResourceTypeKind::COMPLEX
+    public function addComplexProperty(
+        $targetResourceType,
+        $name,
+        ResourceComplexType $complexResourceType,
+        $isBag = false
+    ) {
+        if ($targetResourceType->getResourceTypeKind() != ResourceTypeKind::ENTITY
+            && $targetResourceType->getResourceTypeKind() != ResourceTypeKind::COMPLEX
         ) {
             throw new InvalidOperationException('Complex property can be added to an entity or another complex type');
         }
 
         // check that property and resource name don't up and collide - would violate OData spec
-        if (strtolower($name) == strtolower($resourceType->getName())) {
+        if (strtolower($name) == strtolower($targetResourceType->getName())) {
             throw new InvalidOperationException(
                 'Property name must be different from resource name.'
             );
         }
 
-        $this->checkInstanceProperty($name, $resourceType);
+        $this->checkInstanceProperty($name, $targetResourceType);
 
         $kind = ResourcePropertyKind::COMPLEX_TYPE;
         if ($isBag) {
@@ -761,7 +772,7 @@ class SimpleMetadataProvider implements IMetadataProvider
         }
 
         $resourceProperty = new ResourceProperty($name, null, $kind, $complexResourceType);
-        $resourceType->addProperty($resourceProperty);
+        $targetResourceType->addProperty($resourceProperty);
 
         return $resourceProperty;
     }

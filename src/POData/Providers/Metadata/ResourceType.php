@@ -26,7 +26,7 @@ use POData\Providers\Metadata\Type\StringType;
  *
  * A type to describe an entity type, complex type or primitive type.
  */
-class ResourceType
+abstract class ResourceType
 {
     /**
      * Name of the resource described by this class instance.
@@ -182,7 +182,7 @@ class ResourceType
      *
      * @throws \InvalidArgumentException
      */
-    public function __construct(
+    protected function __construct(
         $instanceType,
         $resourceTypeKind,
         $name,
@@ -809,96 +809,31 @@ class ResourceType
     {
         switch ($typeCode) {
             case EdmPrimitiveType::BINARY:
-                return new self(
-                    new Binary(),
-                    ResourceTypeKind::PRIMITIVE,
-                    'Binary',
-                    'Edm'
-                );
+                return new ResourcePrimitiveType(new Binary());
             case EdmPrimitiveType::BOOLEAN:
-                return new self(
-                    new Boolean(),
-                    ResourceTypeKind::PRIMITIVE,
-                    'Boolean',
-                    'Edm'
-                );
+                return new ResourcePrimitiveType(new Boolean());
             case EdmPrimitiveType::BYTE:
-                return new self(
-                    new Byte(),
-                    ResourceTypeKind::PRIMITIVE,
-                    'Byte',
-                    'Edm'
-                );
+                return new ResourcePrimitiveType(new Byte());
             case EdmPrimitiveType::DATETIME:
-                return new self(
-                    new DateTime(),
-                    ResourceTypeKind::PRIMITIVE,
-                    'DateTime',
-                    'Edm'
-                );
+                return new ResourcePrimitiveType(new DateTime());
             case EdmPrimitiveType::DECIMAL:
-                return new self(
-                    new Decimal(),
-                    ResourceTypeKind::PRIMITIVE,
-                    'Decimal',
-                    'Edm'
-                );
+                return new ResourcePrimitiveType(new Decimal());
             case EdmPrimitiveType::DOUBLE:
-                return new self(
-                    new Double(),
-                    ResourceTypeKind::PRIMITIVE,
-                    'Double',
-                    'Edm'
-                );
+                return new ResourcePrimitiveType(new Double());
             case EdmPrimitiveType::GUID:
-                return new self(
-                    new Guid(),
-                    ResourceTypeKind::PRIMITIVE,
-                    'Guid',
-                    'Edm'
-                );
+                return new ResourcePrimitiveType(new Guid());
             case EdmPrimitiveType::INT16:
-                return new self(
-                    new Int16(),
-                    ResourceTypeKind::PRIMITIVE,
-                    'Int16',
-                    'Edm'
-                );
+                return new ResourcePrimitiveType(new Int16());
             case EdmPrimitiveType::INT32:
-                return new self(
-                    new Int32(),
-                    ResourceTypeKind::PRIMITIVE,
-                    'Int32',
-                    'Edm'
-                );
+                return new ResourcePrimitiveType(new Int32());
             case EdmPrimitiveType::INT64:
-                return new self(
-                    new Int64(),
-                    ResourceTypeKind::PRIMITIVE,
-                    'Int64',
-                    'Edm'
-                );
+                return new ResourcePrimitiveType(new Int64());
             case EdmPrimitiveType::SBYTE:
-                return new self(
-                    new SByte(),
-                    ResourceTypeKind::PRIMITIVE,
-                    'SByte',
-                    'Edm'
-                );
+                return new ResourcePrimitiveType(new SByte());
             case EdmPrimitiveType::SINGLE:
-                return new self(
-                    new Single(),
-                    ResourceTypeKind::PRIMITIVE,
-                    'Single',
-                    'Edm'
-                );
+                return new ResourcePrimitiveType(new Single());
             case EdmPrimitiveType::STRING:
-                return new self(
-                    new StringType(),
-                    ResourceTypeKind::PRIMITIVE,
-                    'String',
-                    'Edm'
-                );
+                return new ResourcePrimitiveType(new StringType());
             default:
                 throw new \InvalidArgumentException(
                     Messages::commonNotValidPrimitiveEDMType(
