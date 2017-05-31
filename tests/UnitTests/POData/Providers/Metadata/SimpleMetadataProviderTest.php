@@ -128,7 +128,7 @@ class SimpleMetadataProviderTest extends TestCase
 
     public function testHasDerivedTypes()
     {
-        $type = m::mock(ResourceType::class);
+        $type = m::mock(ResourceEntityType::class);
         $this->assertTrue($type instanceof ResourceType);
 
         $foo = new SimpleMetadataProvider('string', 'String');
@@ -140,8 +140,8 @@ class SimpleMetadataProviderTest extends TestCase
     public function testGetResourceAssociationSetCustomStateNullThrowException()
     {
         $set = m::mock(ResourceSet::class);
-        $type = m::mock(ResourceType::class);
-        $targType = m::mock(ResourceType::class);
+        $type = m::mock(ResourceEntityType::class);
+        $targType = m::mock(ResourceEntityType::class);
         $targType->shouldReceive('getCustomState')->andReturnNull()->once();
         $targType->shouldReceive('getName')->andReturn('Hammer');
         $property = m::mock(ResourceProperty::class);
@@ -345,7 +345,7 @@ class SimpleMetadataProviderTest extends TestCase
         $deflect = m::mock(ReflectionClass::class);
         $deflect->shouldReceive('hasMethod')->withArgs(['__get'])->andReturn(true)->once();
 
-        $type = m::mock(ResourceType::class);
+        $type = m::mock(ResourceEntityType::class);
         $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY);
         $type->shouldReceive('getInstanceType')->andReturn($deflect);
         $type->shouldReceive('getName')->andReturn('time');
@@ -370,7 +370,7 @@ class SimpleMetadataProviderTest extends TestCase
         $deflect = m::mock(ReflectionClass::class);
         $deflect->shouldReceive('hasMethod')->withArgs(['__get'])->andReturn(true)->once();
 
-        $type = m::mock(ResourceType::class);
+        $type = m::mock(ResourceEntityType::class);
         $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY);
         $type->shouldReceive('getInstanceType')->andReturn($deflect);
         $type->shouldReceive('getName')->andReturn('time');

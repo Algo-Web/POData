@@ -5,6 +5,7 @@ namespace UnitTests\POData\UriProcessor;
 use Mockery as m;
 use POData\Common\InvalidOperationException;
 use POData\IService;
+use POData\Providers\Metadata\ResourceEntityType;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\Providers\Metadata\ResourceSet;
@@ -166,7 +167,7 @@ class RequestExpanderTest extends TestCase
         $resource = m::mock(ResourceSet::class)->makePartial();
         $resource->results = $queryResult;
 
-        $type = m::mock(ResourceType::class);
+        $type = m::mock(ResourceEntityType::class);
         $type->shouldReceive('setPropertyValue')->withAnyArgs()->andReturnNull()->once();
 
         $wrap = m::mock(ResourceSetWrapper::class);
@@ -282,7 +283,7 @@ class RequestExpanderTest extends TestCase
         $resProperty->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::ENTITY);
         $resProperty->shouldReceive('getName')->andReturn('resourceProperty');
 
-        $type = m::mock(ResourceType::class);
+        $type = m::mock(ResourceEntityType::class);
         $type->shouldReceive('setPropertyValue')->withAnyArgs()->andReturnNull()->once();
 
         $wrap = m::mock(ResourceSetWrapper::class);

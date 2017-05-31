@@ -61,35 +61,35 @@ interface IMetadataProvider
      * $resourceType The collection returned should NOT include the type
      * passed in as a parameter.
      *
-     * @param ResourceType $resourceType Resource to get derived resource types from
+     * @param ResourceEntityType    $resourceType   Resource to get derived resource types from
      *
      * @return ResourceType[]
      */
-    public function getDerivedTypes(ResourceType $resourceType);
+    public function getDerivedTypes(ResourceEntityType $resourceType);
 
     /**
-     * @param ResourceType $resourceType Resource to check for derived resource types
+     * @param ResourceEntityType    $resourceType   Resource to check for derived resource types
      *
      * @return bool true if $resourceType represents an Entity Type which has derived Entity Types, else false
      */
-    public function hasDerivedTypes(ResourceType $resourceType);
+    public function hasDerivedTypes(ResourceEntityType $resourceType);
 
     /**
      * Gets the ResourceAssociationSet instance for the given source
      * association end.
      *
-     * @param ResourceSet      $resourceSet      Resource set of the source
-     *                                           association end
-     * @param ResourceType     $resourceType     Resource type of the source
-     *                                           association end
-     * @param ResourceProperty $resourceProperty Resource property of the source
-     *                                           association end
+     * @param ResourceSet           $resourceSet        Resource set of the source
+     *                                                  association end
+     * @param ResourceEntityType    $resourceType       Resource type of the source
+     *                                                  association end
+     * @param ResourceProperty      $resourceProperty   Resource property of the source
+     *                                                  association end
      *
      * @return ResourceAssociationSet
      */
     public function getResourceAssociationSet(
         ResourceSet $resourceSet,
-        ResourceType $resourceType,
+        ResourceEntityType $resourceType,
         ResourceProperty $resourceProperty
     );
 }

@@ -10,6 +10,7 @@ use POData\Providers\Expression\IExpressionProvider;
 use POData\Providers\Metadata\EdmSchemaVersion;
 use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\Metadata\ResourceAssociationSet;
+use POData\Providers\Metadata\ResourceEntityType;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\ResourceSetWrapper;
@@ -406,8 +407,8 @@ class ProvidersWrapper
      * source resource set wrapper and the source resource type.
      *
      * @param ResourceSetWrapper $resourceSetWrapper Source resource set
-     * @param ResourceType $resourceType Source resource type
-     * @param ResourceProperty $navigationResourceProperty Navigation property
+     * @param ResourceEntityType $resourceType Source resource type
+     * @param ResourceProperty   $navigationResourceProperty Navigation property
      *
      * @return ResourceSetWrapper|null Returns instance of ResourceSetWrapper
      *                                 (describes the entity set and associated configuration) for the
@@ -417,7 +418,7 @@ class ProvidersWrapper
      */
     public function getResourceSetWrapperForNavigationProperty(
         ResourceSetWrapper $resourceSetWrapper,
-        ResourceType $resourceType,
+        ResourceEntityType $resourceType,
         ResourceProperty $navigationResourceProperty
     ) {
         $associationSet = $this->getResourceAssociationSet(
@@ -437,6 +438,7 @@ class ProvidersWrapper
                 $relatedAssociationSetEnd->getResourceSet()
             );
         }
+        return null;
     }
 
     /**
@@ -444,9 +446,9 @@ class ProvidersWrapper
      * Note: Wrapper for IMetadataProvider::getResourceAssociationSet
      * method implementation.
      *
-     * @param ResourceSet      $set      Resource set of the source association end
-     * @param ResourceType     $type     Resource type of the source association end
-     * @param ResourceProperty $property Resource property of the source association end
+     * @param ResourceSet           $set      Resource set of the source association end
+     * @param ResourceEntityType    $type     Resource type of the source association end
+     * @param ResourceProperty      $property Resource property of the source association end
      *
      * @return ResourceAssociationSet|null Returns ResourceAssociationSet for the source
      *                                     association end, NULL if no such
@@ -455,7 +457,7 @@ class ProvidersWrapper
      */
     public function getResourceAssociationSet(
         ResourceSet $set,
-        ResourceType $type,
+        ResourceEntityType $type,
         ResourceProperty $property
     ) {
         $type = $this->getResourceTypeWherePropertyIsDeclared($type, $property);
