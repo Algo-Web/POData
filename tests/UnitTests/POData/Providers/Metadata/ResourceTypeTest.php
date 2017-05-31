@@ -140,4 +140,33 @@ class ResourceTypeTest extends TestCase
 
         $foo->__wakeup();
     }
+
+    public function testGetBaseTypeOnResourcePrimitiveType()
+    {
+        $foo = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::BINARY);
+        $this->assertFalse($foo->hasBaseType());
+        $this->assertNull($foo->getBaseType());
+        $this->assertFalse($foo->isAbstract());
+    }
+
+    public function testPrimitiveTypeAssignableFromOtherPrimitiveType()
+    {
+        $foo = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::BINARY);
+        $bar = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::STRING);
+        $this->assertFalse($foo->isAssignableFrom($bar));
+    }
+
+    public function testGetNamedStreamsOnPrimitiveType()
+    {
+        $foo = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::BINARY);
+        $result = $foo->getNamedStreamsDeclaredOnThisType();
+        $this->assertTrue(is_array($result));
+        $this->assertEquals(0, count($result));
+    }
+
+    public function testResolvePropertyOnPrimitiveType()
+    {
+        $foo = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::BINARY);
+        $this->assertNull($foo->resolvePropertyDeclaredOnThisType(null));
+    }
 }

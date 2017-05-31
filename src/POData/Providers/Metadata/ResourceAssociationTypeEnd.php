@@ -112,21 +112,14 @@ class ResourceAssociationTypeEnd
             return false;
         }
 
-        if ($flag1 === true) {
-            return strcmp(
-                $resourceType->getFullName(),
-                $this->_resourceType->getFullName()
-            ) == 0;
+        $typeNameMatch = 0 == strcmp($resourceType->getFullName(), $this->_resourceType->getFullName());
+
+        if (true === $flag1) {
+            return $typeNameMatch;
         }
 
-        return strcmp(
-            $resourceType->getFullName(),
-            $this->_resourceType->getFullName()
-        ) == 0
-        && (strcmp(
-            $resourceProperty->getName(),
-            $this->_resourceProperty->getName()
-        ) == 0);
+        $propertyNameMatch = 0 == strcmp($resourceProperty->getName(), $this->_resourceProperty->getName());
+        return $typeNameMatch && $propertyNameMatch;
     }
 
     /**

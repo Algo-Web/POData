@@ -191,32 +191,6 @@ abstract class ResourceType
         $isAbstract = false
     ) {
         $this->type = $instanceType;
-        if ($resourceTypeKind == ResourceTypeKind::PRIMITIVE) {
-            if (null != $baseType) {
-                throw new \InvalidArgumentException(
-                    Messages::resourceTypeNoBaseTypeForPrimitive()
-                );
-            }
-
-            if ($isAbstract) {
-                throw new \InvalidArgumentException(
-                    Messages::resourceTypeNoAbstractForPrimitive()
-                );
-            }
-
-            if (!($instanceType instanceof IType)) {
-                throw new \InvalidArgumentException(
-                    Messages::resourceTypeTypeShouldImplementIType('$instanceType')
-                );
-            }
-        } else {
-            if (!($instanceType instanceof \ReflectionClass)) {
-                throw new \InvalidArgumentException(
-                    Messages::resourceTypeTypeShouldReflectionClass('$instanceType')
-                );
-            }
-        }
-
         $this->resourceTypeKind = $resourceTypeKind;
         $this->name = $name;
         $this->baseType = $baseType;

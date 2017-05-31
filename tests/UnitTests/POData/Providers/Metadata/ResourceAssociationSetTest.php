@@ -173,4 +173,43 @@ class ResourceAssociationSetTest extends TestCase
         $result = $foo->getRelatedResourceAssociationSetEnd($set, $type, $property);
         $this->assertNull($result);
     }
+
+    public function testIsBidirectionalBothEndsHaveResourcen()
+    {
+        $end1 = m::mock(ResourceAssociationSetEnd::class);
+        $end1->shouldReceive('getResourceProperty')->andReturn('foo')->times(2);
+        $end1->shouldReceive('getResourceType')->andReturn('bar')->once();
+        $end2 = m::mock(ResourceAssociationSetEnd::class);
+        $end2->shouldReceive('getResourceProperty')->andReturn('bar')->once();
+        $end2->shouldReceive('getResourceType')->andReturn('foo')->once();
+
+        $foo = new ResourceAssociationSet('name', $end1, $end2);
+        $this->assertTrue($foo->isBidirectional());
+    }
+
+    public function testIsBidirectionalLeftEndHasResourcen()
+    {
+        $end1 = m::mock(ResourceAssociationSetEnd::class);
+        $end1->shouldReceive('getResourceProperty')->andReturn('foo')->times(2);
+        $end1->shouldReceive('getResourceType')->andReturn('bar')->once();
+        $end2 = m::mock(ResourceAssociationSetEnd::class);
+        $end2->shouldReceive('getResourceProperty')->andReturn(null)->once();
+        $end2->shouldReceive('getResourceType')->andReturn('foo')->once();
+
+        $foo = new ResourceAssociationSet('name', $end1, $end2);
+        $this->assertFalse($foo->isBidirectional());
+    }
+
+    public function testIsBidirectionalRightEndHasResourcen()
+    {
+        $end1 = m::mock(ResourceAssociationSetEnd::class);
+        $end1->shouldReceive('getResourceProperty')->andReturn(null)->times(2);
+        $end1->shouldReceive('getResourceType')->andReturn('bar')->once();
+        $end2 = m::mock(ResourceAssociationSetEnd::class);
+        $end2->shouldReceive('getResourceProperty')->andReturn('bar')->once();
+        $end2->shouldReceive('getResourceType')->andReturn('foo')->once();
+
+        $foo = new ResourceAssociationSet('name', $end1, $end2);
+        $this->assertFalse($foo->isBidirectional());
+    }
 }
