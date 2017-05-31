@@ -14,21 +14,21 @@ class ResourceAssociationSet
      *
      * @var string
      */
-    private $_name;
+    private $name;
 
     /**
      * End1 of association set.
      *
      * @var ResourceAssociationSetEnd
      */
-    private $_end1;
+    private $end1;
 
     /**
      * End2 of association set.
      *
      * @var ResourceAssociationSetEnd
      */
-    private $_end2;
+    private $end2;
 
     /**
      * Note: This property will be populated by the library,
@@ -71,32 +71,32 @@ class ResourceAssociationSet
             );
         }
 
-        $this->_name = $name;
-        $this->_end1 = $end1;
-        $this->_end2 = $end2;
+        $this->name = $name;
+        $this->end1 = $end1;
+        $this->end2 = $end2;
     }
 
     /**
      * Retrieve the end for the given resource set, type and property.
      *
-     * @param ResourceSet      $resourceSet      Resource set for the end
-     * @param ResourceType     $resourceType     Resource type for the end
-     * @param ResourceProperty $resourceProperty Resource property for the end
+     * @param ResourceSet           $resourceSet      Resource set for the end
+     * @param ResourceEntityType    $resourceType     Resource type for the end
+     * @param ResourceProperty      $resourceProperty Resource property for the end
      *
      * @return ResourceAssociationSetEnd|null Resource association set end for the
      *                                   given parameters
      */
     public function getResourceAssociationSetEnd(
         ResourceSet $resourceSet,
-        ResourceType $resourceType,
+        ResourceEntityType $resourceType,
         ResourceProperty $resourceProperty
     ) {
-        if ($this->_end1->isBelongsTo($resourceSet, $resourceType, $resourceProperty)) {
-            return $this->_end1;
+        if ($this->end1->isBelongsTo($resourceSet, $resourceType, $resourceProperty)) {
+            return $this->end1;
         }
 
-        if ($this->_end2->isBelongsTo($resourceSet, $resourceType, $resourceProperty)) {
-            return $this->_end2;
+        if ($this->end2->isBelongsTo($resourceSet, $resourceType, $resourceProperty)) {
+            return $this->end2;
         }
         return null;
     }
@@ -104,24 +104,24 @@ class ResourceAssociationSet
     /**
      * Retrieve the related end for the given resource set, type and property.
      *
-     * @param ResourceSet      $resourceSet      Resource set for the end
-     * @param ResourceType     $resourceType     Resource type for the end
-     * @param ResourceProperty $resourceProperty Resource property for the end
+     * @param ResourceSet           $resourceSet      Resource set for the end
+     * @param ResourceEntityType    $resourceType     Resource type for the end
+     * @param ResourceProperty      $resourceProperty Resource property for the end
      *
      * @return ResourceAssociationSetEnd|null Related resource association set end
      *                                   for the given parameters
      */
     public function getRelatedResourceAssociationSetEnd(
         ResourceSet $resourceSet,
-        ResourceType $resourceType,
+        ResourceEntityType $resourceType,
         ResourceProperty $resourceProperty
     ) {
-        if ($this->_end1->isBelongsTo($resourceSet, $resourceType, $resourceProperty)) {
-            return $this->_end2;
+        if ($this->end1->isBelongsTo($resourceSet, $resourceType, $resourceProperty)) {
+            return $this->end2;
         }
 
-        if ($this->_end2->isBelongsTo($resourceSet, $resourceType, $resourceProperty)) {
-            return $this->_end1;
+        if ($this->end2->isBelongsTo($resourceSet, $resourceType, $resourceProperty)) {
+            return $this->end1;
         }
         return null;
     }
@@ -133,7 +133,7 @@ class ResourceAssociationSet
      */
     public function getName()
     {
-        return $this->_name;
+        return $this->name;
     }
 
     /**
@@ -143,7 +143,7 @@ class ResourceAssociationSet
      */
     public function getEnd1()
     {
-        return $this->_end1;
+        return $this->end1;
     }
 
     /**
@@ -153,7 +153,7 @@ class ResourceAssociationSet
      */
     public function getEnd2()
     {
-        return $this->_end2;
+        return $this->end2;
     }
 
     /**
@@ -164,12 +164,12 @@ class ResourceAssociationSet
      */
     public function isBidirectional()
     {
-        return !is_null($this->_end1->getResourceProperty())
-            && !is_null($this->_end2->getResourceProperty());
+        return !is_null($this->end1->getResourceProperty())
+            && !is_null($this->end2->getResourceProperty());
     }
 
 
-    public static function keyName(ResourceType $sourceType, $linkName, ResourceSet $targetResourceSet)
+    public static function keyName(ResourceEntityType $sourceType, $linkName, ResourceSet $targetResourceSet)
     {
         return $sourceType->getName() . '_' . $linkName . '_' . $targetResourceSet->getResourceType()->getName();
     }
