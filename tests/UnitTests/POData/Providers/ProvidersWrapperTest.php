@@ -12,6 +12,8 @@ use POData\Configuration\ServiceConfiguration;
 use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\Metadata\ResourceAssociationSet;
 use POData\Providers\Metadata\ResourceAssociationSetEnd;
+use POData\Providers\Metadata\ResourceEntityType;
+use POData\Providers\Metadata\ResourcePrimitiveType;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\ResourceSetWrapper;
@@ -44,7 +46,7 @@ class ProvidersWrapperTest extends TestCase
     /** @var ResourceSet */
     protected $mockResourceSet2;
 
-    /** @var ResourceType */
+    /** @var ResourceEntityType */
     protected $mockResourceType;
 
     /** @var ResourceType */
@@ -64,7 +66,7 @@ class ProvidersWrapperTest extends TestCase
         $this->mockMetadataProvider = m::mock(IMetadataProvider::class)->makePartial();
         $this->mockResourceSet = m::mock(ResourceSet::class)->makePartial();
         $this->mockResourceSet2 = m::mock(ResourceSet::class)->makePartial();
-        $this->mockResourceType = m::mock(ResourceType::class)->makePartial();
+        $this->mockResourceType = m::mock(ResourceEntityType::class)->makePartial();
         $this->mockResourceType2 = m::mock(ResourceType::class)->makePartial();
         $this->mockQueryProvider = m::mock(IQueryProvider::class)->makePartial();
         $this->mockServiceConfig = m::mock(ServiceConfiguration::class)->makePartial();
@@ -492,7 +494,7 @@ class ProvidersWrapperTest extends TestCase
     public function testGetTypes()
     {
         $fakeTypes = [
-            new ResourceType(new StringType(), ResourceTypeKind::PRIMITIVE, 'FakeType1'),
+            new ResourcePrimitiveType(new StringType())
         ];
 
         $this->mockMetadataProvider->shouldReceive('getTypes')->andReturn($fakeTypes);
@@ -505,8 +507,8 @@ class ProvidersWrapperTest extends TestCase
     public function testGetTypesDuplicateNames()
     {
         $fakeTypes = [
-            new ResourceType(new StringType(), ResourceTypeKind::PRIMITIVE, 'FakeType1'),
-            new ResourceType(new StringType(), ResourceTypeKind::PRIMITIVE, 'FakeType1'),
+            new ResourcePrimitiveType(new StringType()),
+            new ResourcePrimitiveType(new StringType())
         ];
 
         $this->mockMetadataProvider->shouldReceive('getTypes')->andReturn($fakeTypes);
@@ -517,7 +519,10 @@ class ProvidersWrapperTest extends TestCase
             $wrapper->getTypes();
             $this->fail('An expected ODataException for entity type name repetition has not been thrown');
         } catch (ODataException $exception) {
-            $this->assertEquals(Messages::providersWrapperEntityTypeNameShouldBeUnique('FakeType1'), $exception->getMessage());
+            $this->assertEquals(
+                Messages::providersWrapperEntityTypeNameShouldBeUnique('String'),
+                $exception->getMessage()
+            );
             $this->assertEquals(500, $exception->getStatusCode());
         }
     }

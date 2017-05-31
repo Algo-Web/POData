@@ -16,34 +16,28 @@ class ResourceSet
      *
      * @var string
      */
-    private $_name;
+    private $name;
 
     /**
      * The type hold by this container.
      *
-     * @var ResourceType
+     * @var ResourceEntityType
      */
-    private $_resourceType;
+    private $resourceType;
 
     /**
      * Creates new instance of ResourceSet.
      *
-     * @param string       $name         Name of the resource set (entity set)
-     * @param ResourceType $resourceType ResourceType describing the resource
-     *                                   this entity set holds
+     * @param string             $name          Name of the resource set (entity set)
+     * @param ResourceEntityType $resourceType  Type ResourceType describing the resource
+     *                                          this entity set holds
      *
      * @throws \InvalidArgumentException
      */
-    public function __construct($name, ResourceType $resourceType)
+    public function __construct($name, ResourceEntityType $resourceType)
     {
-        if ($resourceType->getResourceTypeKind() != ResourceTypeKind::ENTITY) {
-            throw new \InvalidArgumentException(
-                Messages::resourceSetContainerMustBeAssociatedWithEntityType()
-            );
-        }
-
-        $this->_name = $name;
-        $this->_resourceType = $resourceType;
+        $this->name = $name;
+        $this->resourceType = $resourceType;
     }
 
     /**
@@ -53,16 +47,16 @@ class ResourceSet
      */
     public function getName()
     {
-        return $this->_name;
+        return $this->name;
     }
 
     /**
      * Get the type hold by this container.
      *
-     * @return ResourceType
+     * @return ResourceEntityType
      */
     public function getResourceType()
     {
-        return $this->_resourceType;
+        return $this->resourceType;
     }
 }

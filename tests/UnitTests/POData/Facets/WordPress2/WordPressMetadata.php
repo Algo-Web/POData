@@ -181,7 +181,9 @@ class WordPressMetadata
         $metadata = new SimpleMetadataProvider('WordPressEntities', 'WordPress');
 
         //Register the entity (resource) type 'Post'
-        $postsEntityType = $metadata->addEntityType(new \ReflectionClass('UnitTests\POData\Facets\WordPress2\Post'), 'Post', 'WordPress');
+        $postsEntityType = $metadata->addEntityType(
+            new \ReflectionClass('UnitTests\POData\Facets\WordPress2\Post'), 'Post'
+        );
         $metadata->addKeyProperty($postsEntityType, 'PostID', EdmPrimitiveType::INT32);
         $metadata->addPrimitiveProperty($postsEntityType, 'Author', EdmPrimitiveType::INT32);
         $metadata->addPrimitiveProperty($postsEntityType, 'Date', EdmPrimitiveType::DATETIME);
@@ -207,21 +209,27 @@ class WordPressMetadata
         $metadata->addPrimitiveProperty($postsEntityType, 'CommentCount', EdmPrimitiveType::INT32);
 
         //Register the entity (resource) type 'Tag'
-        $tagsEntityType = $metadata->addEntityType(new \ReflectionClass('UnitTests\POData\Facets\WordPress2\Tag'), 'Tag', 'WordPress');
+        $tagsEntityType = $metadata->addEntityType(
+            new \ReflectionClass('UnitTests\POData\Facets\WordPress2\Tag'), 'Tag'
+        );
         $metadata->addKeyProperty($tagsEntityType, 'TagID', EdmPrimitiveType::INT32);
         $metadata->addPrimitiveProperty($tagsEntityType, 'Name', EdmPrimitiveType::STRING);
         $metadata->addPrimitiveProperty($tagsEntityType, 'Slug', EdmPrimitiveType::STRING);
         $metadata->addPrimitiveProperty($tagsEntityType, 'Description', EdmPrimitiveType::STRING);
 
         //Register the entity (resource) type 'Category'
-        $catsEntityType = $metadata->addEntityType(new \ReflectionClass('UnitTests\POData\Facets\WordPress2\Category'), 'Category', 'WordPress');
+        $catsEntityType = $metadata->addEntityType(
+            new \ReflectionClass('UnitTests\POData\Facets\WordPress2\Category'), 'Category'
+        );
         $metadata->addKeyProperty($catsEntityType, 'CategoryID', EdmPrimitiveType::INT32);
         $metadata->addPrimitiveProperty($catsEntityType, 'Name', EdmPrimitiveType::STRING);
         $metadata->addPrimitiveProperty($catsEntityType, 'Slug', EdmPrimitiveType::STRING);
         $metadata->addPrimitiveProperty($catsEntityType, 'Description', EdmPrimitiveType::STRING);
 
         //Register the entity (resource) type 'Comment'
-        $commentsEntityType = $metadata->addEntityType(new \ReflectionClass('UnitTests\POData\Facets\WordPress2\Comment'), 'Comment', 'WordPress');
+        $commentsEntityType = $metadata->addEntityType(
+            new \ReflectionClass('UnitTests\POData\Facets\WordPress2\Comment'), 'Comment'
+        );
         $metadata->addKeyProperty($commentsEntityType, 'CommentID', EdmPrimitiveType::INT32);
         $metadata->addPrimitiveProperty($commentsEntityType, 'PostID', EdmPrimitiveType::INT32);
         $metadata->addPrimitiveProperty($commentsEntityType, 'Author', EdmPrimitiveType::STRING);
@@ -239,7 +247,9 @@ class WordPressMetadata
         $metadata->addPrimitiveProperty($commentsEntityType, 'UserID', EdmPrimitiveType::INT32);
 
         //Register the entity (resource) type 'User'
-        $usersEntityType = $metadata->addEntityType(new \ReflectionClass('UnitTests\POData\Facets\WordPress2\User'), 'User', 'WordPress');
+        $usersEntityType = $metadata->addEntityType(
+            new \ReflectionClass('UnitTests\POData\Facets\WordPress2\User'), 'User'
+        );
         $metadata->addKeyProperty($usersEntityType, 'UserID', EdmPrimitiveType::INT32);
         $metadata->addPrimitiveProperty($usersEntityType, 'Login', EdmPrimitiveType::STRING);
         $metadata->addPrimitiveProperty($usersEntityType, 'Nicename', EdmPrimitiveType::STRING);

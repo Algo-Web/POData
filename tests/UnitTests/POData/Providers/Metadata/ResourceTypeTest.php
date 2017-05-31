@@ -2,8 +2,11 @@
 
 namespace UnitTests\POData\Providers\Metadata;
 
+use AlgoWeb\ODataMetadata\MetadataV3\edm\TComplexTypeType;
 use Mockery as m;
 use POData\Common\InvalidOperationException;
+use POData\Providers\Metadata\ResourceComplexType;
+use POData\Providers\Metadata\ResourcePrimitiveType;
 use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\Providers\Metadata\ResourceStreamInfo;
 use POData\Providers\Metadata\ResourceType;
@@ -98,8 +101,9 @@ class ResourceTypeTest extends TestCase
     public function testSleepWakeupRealObjectITypeRoundTrip()
     {
         $instanceType = m::mock(IType::class);
+        $instanceType->shouldReceive('getName')->andReturn('name');
         $resourceTypeKind = ResourceTypeKind::PRIMITIVE;
-        $foo = new ResourceType($instanceType, $resourceTypeKind, 'name');
+        $foo = new ResourcePrimitiveType($instanceType);
 
         $result = $foo->__sleep();
 
@@ -117,9 +121,11 @@ class ResourceTypeTest extends TestCase
 
     public function testSleepWakeupRealObjectReflectableRoundTrip()
     {
+        $complex = m::mock(TComplexTypeType::class);
+        $complex->shouldReceive('getName')->andReturn('name');
         $instanceType = new reusableEntityClass2('foo', 'bar');
         $resourceTypeKind = ResourceTypeKind::COMPLEX;
-        $foo = new ResourceType(new ReflectionClass($instanceType), $resourceTypeKind, 'name');
+        $foo = new ResourceComplexType(new ReflectionClass($instanceType), $complex);
 
         $result = $foo->__sleep();
 
@@ -133,5 +139,34 @@ class ResourceTypeTest extends TestCase
         }
 
         $foo->__wakeup();
+    }
+
+    public function testGetBaseTypeOnResourcePrimitiveType()
+    {
+        $foo = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::BINARY);
+        $this->assertFalse($foo->hasBaseType());
+        $this->assertNull($foo->getBaseType());
+        $this->assertFalse($foo->isAbstract());
+    }
+
+    public function testPrimitiveTypeAssignableFromOtherPrimitiveType()
+    {
+        $foo = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::BINARY);
+        $bar = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::STRING);
+        $this->assertFalse($foo->isAssignableFrom($bar));
+    }
+
+    public function testGetNamedStreamsOnPrimitiveType()
+    {
+        $foo = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::BINARY);
+        $result = $foo->getNamedStreamsDeclaredOnThisType();
+        $this->assertTrue(is_array($result));
+        $this->assertEquals(0, count($result));
+    }
+
+    public function testResolvePropertyOnPrimitiveType()
+    {
+        $foo = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::BINARY);
+        $this->assertNull($foo->resolvePropertyDeclaredOnThisType(null));
     }
 }

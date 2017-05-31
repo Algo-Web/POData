@@ -108,11 +108,15 @@ class NorthWindMetadata
         $metadata = new SimpleMetadataProvider('NorthWindEntities', 'NorthWind');
 
         //Register the complex type 'Address2'
-        $address2ComplexType = $metadata->addComplexType(new \ReflectionClass('UnitTests\POData\Facets\NorthWind1\Address2'), 'Address2');
+        $address2ComplexType = $metadata->addComplexType(
+            new \ReflectionClass('UnitTests\POData\Facets\NorthWind1\Address2'), 'Address2'
+        );
         $metadata->addPrimitiveProperty($address2ComplexType, 'IsPrimary', EdmPrimitiveType::BOOLEAN);
 
         //Register the complex type 'Address' with 'Address2' as base class
-        $addressComplexType = $metadata->addComplexType(new \ReflectionClass('UnitTests\POData\Facets\NorthWind1\Address4'), 'Address');
+        $addressComplexType = $metadata->addComplexType(
+            new \ReflectionClass('UnitTests\POData\Facets\NorthWind1\Address4'), 'Address'
+        );
         $metadata->addPrimitiveProperty($addressComplexType, 'HouseNumber', EdmPrimitiveType::STRING);
         $metadata->addPrimitiveProperty($addressComplexType, 'LineNumber', EdmPrimitiveType::INT32);
         $metadata->addPrimitiveProperty($addressComplexType, 'LineNumber2', EdmPrimitiveType::INT32);
@@ -121,7 +125,9 @@ class NorthWindMetadata
         $metadata->addComplexProperty($addressComplexType, 'Address2', $address2ComplexType);
 
         //Register the entity (resource) type 'Customer'
-        $customersEntityType = $metadata->addEntityType(new \ReflectionClass('UnitTests\POData\Facets\NorthWind1\Customer2'), 'Customer');
+        $customersEntityType = $metadata->addEntityType(
+            new \ReflectionClass('UnitTests\POData\Facets\NorthWind1\Customer2'), 'Customer'
+        );
         $metadata->addKeyProperty($customersEntityType, 'CustomerID', EdmPrimitiveType::STRING);
         $metadata->addKeyProperty($customersEntityType, 'CustomerGuid', EdmPrimitiveType::GUID);
         $metadata->addPrimitiveProperty($customersEntityType, 'CustomerName', EdmPrimitiveType::STRING);
@@ -131,7 +137,9 @@ class NorthWindMetadata
         $metadata->addComplexProperty($customersEntityType, 'Address', $addressComplexType);
 
         //Register the entity (resource) type 'Order'
-        $orderEntityType = $metadata->addEntityType(new \ReflectionClass('UnitTests\POData\Facets\NorthWind1\Order2'), 'Order');
+        $orderEntityType = $metadata->addEntityType(
+            new \ReflectionClass('UnitTests\POData\Facets\NorthWind1\Order2'), 'Order'
+        );
         $metadata->addKeyProperty($orderEntityType, 'OrderID', EdmPrimitiveType::INT32);
         $metadata->addPrimitiveProperty($orderEntityType, 'OrderDate', EdmPrimitiveType::DATETIME);
         $metadata->addPrimitiveProperty($orderEntityType, 'DeliveryDate', EdmPrimitiveType::DATETIME);
@@ -141,12 +149,16 @@ class NorthWindMetadata
         $metadata->addPrimitiveProperty($orderEntityType, 'Price', EdmPrimitiveType::DOUBLE);
 
         //Register the entity (resource) type 'Product2'
-        $productEntityType = $metadata->addEntityType(new \ReflectionClass('UnitTests\POData\Facets\NorthWind1\Product2'), 'Product');
+        $productEntityType = $metadata->addEntityType(
+            new \ReflectionClass('UnitTests\POData\Facets\NorthWind1\Product2'), 'Product'
+        );
         $metadata->addKeyProperty($productEntityType, 'ProductID', EdmPrimitiveType::INT32);
         $metadata->addPrimitiveProperty($productEntityType, 'ProductName', EdmPrimitiveType::STRING);
 
         //Register the entity (resource) type 'Order_Details'
-        $orderDetailsEntityType = $metadata->addEntityType(new \ReflectionClass('UnitTests\POData\Facets\NorthWind1\Order_Details2'), 'Order_Details');
+        $orderDetailsEntityType = $metadata->addEntityType(
+            new \ReflectionClass('UnitTests\POData\Facets\NorthWind1\Order_Details2'), 'Order_Details'
+        );
         $metadata->addKeyProperty($orderDetailsEntityType, 'ProductID', EdmPrimitiveType::INT32);
         $metadata->addKeyProperty($orderDetailsEntityType, 'OrderID', EdmPrimitiveType::INT32);
         $metadata->addPrimitiveProperty($orderDetailsEntityType, 'UnitPrice', EdmPrimitiveType::DECIMAL);
@@ -154,7 +166,9 @@ class NorthWindMetadata
         $metadata->addPrimitiveProperty($orderDetailsEntityType, 'Discount', EdmPrimitiveType::SINGLE);
 
         //Register the entity (resource) type 'Employee'
-        $employeeEntityType = $metadata->addEntityType(new \ReflectionClass('UnitTests\POData\Facets\NorthWind1\Employee2'), 'Employee');
+        $employeeEntityType = $metadata->addEntityType(
+            new \ReflectionClass('UnitTests\POData\Facets\NorthWind1\Employee2'), 'Employee'
+        );
         $metadata->addKeyProperty($employeeEntityType, 'EmployeeID', EdmPrimitiveType::STRING);
         $metadata->addPrimitiveProperty($employeeEntityType, 'FirstName', EdmPrimitiveType::STRING);
         $metadata->addPrimitiveProperty($employeeEntityType, 'LastName', EdmPrimitiveType::STRING);

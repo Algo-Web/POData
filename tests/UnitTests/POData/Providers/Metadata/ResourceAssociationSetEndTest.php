@@ -4,6 +4,7 @@ namespace UnitTests\POData\Providers\Metadata;
 
 use Mockery as m;
 use POData\Providers\Metadata\ResourceAssociationSetEnd;
+use POData\Providers\Metadata\ResourceEntityType;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\ResourceType;
@@ -13,11 +14,11 @@ class ResourceAssociationSetEndTest extends TestCase
 {
     public function testConstructorNullResourcePropertyTypeNotAssignableToSetThrowException()
     {
-        $middleType = m::mock(ResourceType::class);
+        $middleType = m::mock(ResourceEntityType::class);
 
         $set = m::mock(ResourceSet::class);
         $set->shouldReceive('getName')->andReturn('fakeSet');
-        $type = m::mock(ResourceType::class);
+        $type = m::mock(ResourceEntityType::class);
         $type->shouldReceive('isAssignableFrom')->andReturn(false)->once();
         $type->shouldReceive('getFullName')->andReturn('fakeType');
         $set->shouldReceive('getResourceType')->andReturn($middleType);
@@ -38,7 +39,7 @@ class ResourceAssociationSetEndTest extends TestCase
     public function testConstructorWithBadResourceProperty()
     {
         $set = m::mock(ResourceSet::class);
-        $type = m::mock(ResourceType::class);
+        $type = m::mock(ResourceEntityType::class);
 
         $property = new \StdClass();
 

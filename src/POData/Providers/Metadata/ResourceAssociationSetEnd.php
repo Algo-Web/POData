@@ -14,21 +14,21 @@ class ResourceAssociationSetEnd
      *
      * @var ResourceSet
      */
-    private $_resourceSet;
+    private $resourceSet;
 
     /**
      * Resource type for the association end.
      *
-     * @var ResourceType
+     * @var ResourceEntityType
      */
-    private $_resourceType;
+    private $resourceType;
 
     /**
      * Resource property for the association end.
      *
      * @var ResourceProperty
      */
-    private $_resourceProperty;
+    private $resourceProperty;
 
     /**
      * Construct new instance of ResourceAssociationSetEnd
@@ -37,15 +37,15 @@ class ResourceAssociationSetEnd
      * base resource of this entity, on which the navigation property
      * represented by $resourceProperty is defined.
      *
-     * @param ResourceSet      $resourceSet      Resource set for the association end
-     * @param ResourceType     $resourceType     Resource type for the association end
-     * @param ResourceProperty $resourceProperty Resource property for the association end
+     * @param ResourceSet               $resourceSet      Resource set for the association end
+     * @param ResourceEntityType        $resourceType     Resource type for the association end
+     * @param ResourceProperty          $resourceProperty Resource property for the association end
      *
      * @throws \InvalidArgumentException
      */
     public function __construct(
         ResourceSet $resourceSet,
-        ResourceType $resourceType,
+        ResourceEntityType $resourceType,
         ResourceProperty $resourceProperty = null
     ) {
         if (!is_null($resourceProperty)
@@ -72,9 +72,9 @@ class ResourceAssociationSetEnd
             );
         }
 
-        $this->_resourceSet = $resourceSet;
-        $this->_resourceType = $resourceType;
-        $this->_resourceProperty = $resourceProperty;
+        $this->resourceSet = $resourceSet;
+        $this->resourceType = $resourceType;
+        $this->resourceProperty = $resourceProperty;
     }
 
     /**
@@ -95,10 +95,11 @@ class ResourceAssociationSetEnd
         ResourceType $resourceType,
         ResourceProperty $resourceProperty
     ) {
-        return strcmp($resourceSet->getName(), $this->_resourceSet->getName()) == 0
-            && $this->_resourceType->isAssignableFrom($resourceType)
-            && ((is_null($resourceProperty) && is_null($this->_resourceProperty)) ||
-                  (!is_null($resourceProperty) && !is_null($this->_resourceProperty) && (strcmp($resourceProperty->getName(), $this->_resourceProperty->getName()) == 0)));
+        return strcmp($resourceSet->getName(), $this->resourceSet->getName()) == 0
+            && $this->resourceType->isAssignableFrom($resourceType)
+            && ((is_null($resourceProperty) && is_null($this->resourceProperty))
+                || (!is_null($resourceProperty) && !is_null($this->resourceProperty)
+                    && (strcmp($resourceProperty->getName(), $this->resourceProperty->getName()) == 0)));
     }
 
     /**
@@ -108,17 +109,17 @@ class ResourceAssociationSetEnd
      */
     public function getResourceSet()
     {
-        return $this->_resourceSet;
+        return $this->resourceSet;
     }
 
     /**
      * Gets reference to resource type.
      *
-     * @return ResourceType
+     * @return ResourceEntityType
      */
     public function getResourceType()
     {
-        return $this->_resourceType;
+        return $this->resourceType;
     }
 
     /**
@@ -128,6 +129,6 @@ class ResourceAssociationSetEnd
      */
     public function getResourceProperty()
     {
-        return $this->_resourceProperty;
+        return $this->resourceProperty;
     }
 }
