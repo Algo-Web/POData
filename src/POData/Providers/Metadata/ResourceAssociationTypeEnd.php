@@ -20,21 +20,21 @@ class ResourceAssociationTypeEnd
      *
      * @var string
      */
-    private $_name;
+    private $name;
 
     /**
      * Type of the entity in the relationship end.
      *
-     * @var ResourceType
+     * @var ResourceEntityType
      */
-    private $_resourceType;
+    private $resourceType;
 
     /**
      * Entity property involved in the relationship end.
      *
      * @var ResourceProperty
      */
-    private $_resourceProperty;
+    private $resourceProperty;
 
     /**
      * Property of the entity involved in the relationship end points to this end.
@@ -42,13 +42,13 @@ class ResourceAssociationTypeEnd
      *
      * @var ResourceProperty
      */
-    private $_fromProperty;
+    private $fromProperty;
 
     /**
      * Construct new instance of ResourceAssociationTypeEnd.
      *
      * @param string                $name             name of the end
-     * @param ResourceType          $resourceType     resource type that the end
+     * @param ResourceEntityType    $resourceType     resource type that the end
      *                                                refers to
      * @param ResourceProperty|null $resourceProperty property of the end, can be
      *                                                NULL if relationship is
@@ -60,7 +60,7 @@ class ResourceAssociationTypeEnd
      */
     public function __construct(
         $name,
-        ResourceType $resourceType,
+        ResourceEntityType $resourceType,
         $resourceProperty,
         $fromProperty
     ) {
@@ -90,35 +90,35 @@ class ResourceAssociationTypeEnd
             );
         }
 
-        $this->_name = $name;
-        $this->_resourceType = $resourceType;
-        $this->_resourceProperty = $resourceProperty;
-        $this->_fromProperty = $fromProperty;
+        $this->name = $name;
+        $this->resourceType = $resourceType;
+        $this->resourceProperty = $resourceProperty;
+        $this->fromProperty = $fromProperty;
     }
 
     /**
      * To check this relationship belongs to a specfic entity property.
      *
-     * @param ResourceType          $resourceType     The type of the entity
+     * @param ResourceEntityType    $resourceType     The type of the entity
      * @param ResourceProperty|null $resourceProperty The property in the entity
      *
      * @return bool
      */
-    public function isBelongsTo(ResourceType $resourceType, $resourceProperty)
+    public function isBelongsTo(ResourceEntityType $resourceType, $resourceProperty)
     {
         $flag1 = is_null($resourceProperty);
-        $flag2 = is_null($this->_resourceProperty);
+        $flag2 = is_null($this->resourceProperty);
         if ($flag1 != $flag2) {
             return false;
         }
 
-        $typeNameMatch = 0 == strcmp($resourceType->getFullName(), $this->_resourceType->getFullName());
+        $typeNameMatch = 0 == strcmp($resourceType->getFullName(), $this->resourceType->getFullName());
 
         if (true === $flag1) {
             return $typeNameMatch;
         }
         assert(isset($resourceProperty));
-        $propertyNameMatch = 0 == strcmp($resourceProperty->getName(), $this->_resourceProperty->getName());
+        $propertyNameMatch = 0 == strcmp($resourceProperty->getName(), $this->resourceProperty->getName());
 
         return $typeNameMatch && $propertyNameMatch;
     }
@@ -130,17 +130,17 @@ class ResourceAssociationTypeEnd
      */
     public function getName()
     {
-        return $this->_name;
+        return $this->name;
     }
 
     /**
      * Get the resource type that the end refers to.
      *
-     * @return ResourceType
+     * @return ResourceEntityType
      */
     public function getResourceType()
     {
-        return $this->_resourceType;
+        return $this->resourceType;
     }
 
     /**
@@ -150,7 +150,7 @@ class ResourceAssociationTypeEnd
      */
     public function getResourceProperty()
     {
-        return $this->_resourceProperty;
+        return $this->resourceProperty;
     }
 
     /**
@@ -160,8 +160,8 @@ class ResourceAssociationTypeEnd
      */
     public function getMultiplicity()
     {
-        if (!is_null($this->_fromProperty)
-            && $this->_fromProperty->getKind() == ResourcePropertyKind::RESOURCE_REFERENCE
+        if (!is_null($this->fromProperty)
+            && $this->fromProperty->getKind() == ResourcePropertyKind::RESOURCE_REFERENCE
         ) {
             return ODataConstants::ZERO_OR_ONE;
         }

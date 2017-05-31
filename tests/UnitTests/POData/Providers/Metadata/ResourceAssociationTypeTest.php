@@ -5,6 +5,7 @@ namespace UnitTests\POData\Providers\Metadata;
 use Mockery as m;
 use POData\Providers\Metadata\ResourceAssociationType;
 use POData\Providers\Metadata\ResourceAssociationTypeEnd;
+use POData\Providers\Metadata\ResourceEntityType;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceType;
 use UnitTests\POData\TestCase;
@@ -13,7 +14,7 @@ class ResourceAssociationTypeTest extends TestCase
 {
     public function testGetResourceAssociationTypeEndFirst()
     {
-        $type = m::mock(ResourceType::class);
+        $type = m::mock(ResourceEntityType::class);
         $property = m::mock(ResourceProperty::class);
 
         $end1 = m::mock(ResourceAssociationTypeEnd::class);
@@ -31,7 +32,7 @@ class ResourceAssociationTypeTest extends TestCase
 
     public function testGetResourceAssociationTypeEndSecond()
     {
-        $type = m::mock(ResourceType::class);
+        $type = m::mock(ResourceEntityType::class);
         $property = m::mock(ResourceProperty::class);
 
         $end1 = m::mock(ResourceAssociationTypeEnd::class);
@@ -49,7 +50,7 @@ class ResourceAssociationTypeTest extends TestCase
 
     public function testGetResourceAssociationTypeEndNeither()
     {
-        $type = m::mock(ResourceType::class);
+        $type = m::mock(ResourceEntityType::class);
         $property = m::mock(ResourceProperty::class);
 
         $end1 = m::mock(ResourceAssociationTypeEnd::class);
@@ -66,7 +67,7 @@ class ResourceAssociationTypeTest extends TestCase
 
     public function testGetRelatedResourceAssociationSetEndFirst()
     {
-        $type = m::mock(ResourceType::class);
+        $type = m::mock(ResourceEntityType::class);
         $property = m::mock(ResourceProperty::class);
 
         $end1 = m::mock(ResourceAssociationTypeEnd::class);
@@ -84,7 +85,7 @@ class ResourceAssociationTypeTest extends TestCase
 
     public function testGetRelatedResourceAssociationSetEndSecond()
     {
-        $type = m::mock(ResourceType::class);
+        $type = m::mock(ResourceEntityType::class);
         $property = m::mock(ResourceProperty::class);
 
         $end1 = m::mock(ResourceAssociationTypeEnd::class);
@@ -102,7 +103,7 @@ class ResourceAssociationTypeTest extends TestCase
 
     public function testGetRelatedResourceAssociationSetEndNeither()
     {
-        $type = m::mock(ResourceType::class);
+        $type = m::mock(ResourceEntityType::class);
         $property = m::mock(ResourceProperty::class);
 
         $end1 = m::mock(ResourceAssociationTypeEnd::class);

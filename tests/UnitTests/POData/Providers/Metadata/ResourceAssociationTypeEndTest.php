@@ -4,6 +4,7 @@ namespace UnitTests\POData\Providers\Metadata;
 
 use Mockery as m;
 use POData\Providers\Metadata\ResourceAssociationTypeEnd;
+use POData\Providers\Metadata\ResourceEntityType;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceType;
 use UnitTests\POData\TestCase;
@@ -12,7 +13,7 @@ class ResourceAssociationTypeEndTest extends TestCase
 {
     public function testConstructorWithBothPropertiesNullThrowException()
     {
-        $type = m::mock(ResourceType::class);
+        $type = m::mock(ResourceEntityType::class);
 
         $expected = 'Both to and from property argument to ResourceAssociationTypeEnd constructor cannot be null.';
         $actual = null;
@@ -27,7 +28,7 @@ class ResourceAssociationTypeEndTest extends TestCase
 
     public function testConstructorFromPropertyBadTypeThrowException()
     {
-        $type = m::mock(ResourceType::class);
+        $type = m::mock(ResourceEntityType::class);
 
         $expected = 'The argument \'$resourceProperty\' must be either null or instance of \'ResourceProperty\'.';
         $actual = null;
@@ -42,7 +43,7 @@ class ResourceAssociationTypeEndTest extends TestCase
 
     public function testConstructorToPropertyBadTypeThrowException()
     {
-        $type = m::mock(ResourceType::class);
+        $type = m::mock(ResourceEntityType::class);
 
         $expected = 'The argument \'$fromProperty\' must be either null or instance of \'ResourceProperty\'.';
         $actual = null;
@@ -57,7 +58,7 @@ class ResourceAssociationTypeEndTest extends TestCase
 
     public function testIsBelongsToWithNullResourceType()
     {
-        $type = m::mock(ResourceType::class);
+        $type = m::mock(ResourceEntityType::class);
         $type->shouldReceive('getFullName')->andReturn('Northwind.Customer', 'Northwind.Order');
         $from = m::mock(ResourceProperty::class);
 
@@ -69,7 +70,7 @@ class ResourceAssociationTypeEndTest extends TestCase
 
     public function testIsBelongsToWithNullMismatchOnResourceTypes()
     {
-        $type = m::mock(ResourceType::class);
+        $type = m::mock(ResourceEntityType::class);
         $type->shouldReceive('getFullName')->andReturn('Northwind.Customer', 'Northwind.Order');
         $from = m::mock(ResourceProperty::class);
 

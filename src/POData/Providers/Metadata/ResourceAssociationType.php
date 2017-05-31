@@ -12,28 +12,28 @@ class ResourceAssociationType
      *
      * @var string
      */
-    private $_fullName;
+    private $fullName;
 
     /**
      * Name of the association.
      *
      * @var string
      */
-    private $_name;
+    private $name;
 
     /**
      * end1 for this association.
      *
      * @var ResourceAssociationTypeEnd
      */
-    private $_end1;
+    private $end1;
 
     /**
      * end2 for this association.
      *
      * @var ResourceAssociationTypeEnd
      */
-    private $_end2;
+    private $end2;
 
     /**
      * Construct new instance of ResourceAssociationType.
@@ -50,13 +50,12 @@ class ResourceAssociationType
         ResourceAssociationTypeEnd $end1,
         ResourceAssociationTypeEnd $end2
     ) {
-        $this->_name = $name;
-        $this->_fullName = !is_null($namespaceName)
-                          ? $namespaceName . '.' . $name : $name;
-        $this->_end1 = $end1;
-        $this->_end2 = $end2;
+        $this->name = $name;
+        $this->fullName = !is_null($namespaceName) ? $namespaceName . '.' . $name : $name;
+        $this->end1 = $end1;
+        $this->end2 = $end2;
     }
-
+    
     /**
      * Gets name of the association.
      *
@@ -64,7 +63,7 @@ class ResourceAssociationType
      */
     public function getName()
     {
-        return $this->_name;
+        return $this->name;
     }
 
     /**
@@ -74,7 +73,7 @@ class ResourceAssociationType
      */
     public function getFullName()
     {
-        return $this->_fullName;
+        return $this->fullName;
     }
 
     /**
@@ -84,7 +83,7 @@ class ResourceAssociationType
      */
     public function getEnd1()
     {
-        return $this->_end1;
+        return $this->end1;
     }
 
     /**
@@ -94,14 +93,14 @@ class ResourceAssociationType
      */
     public function getEnd2()
     {
-        return $this->_end2;
+        return $this->end2;
     }
 
     /**
      * Retrieve the end for the given resource type and property.
      *
-     * @param ResourceType     $resourceType     Resource type for the source end
-     * @param ResourceProperty $resourceProperty Resource property for the source end
+     * @param ResourceEntityType    $resourceType     Resource type for the source end
+     * @param ResourceProperty      $resourceProperty Resource property for the source end
      *
      * @return ResourceAssociationTypeEnd Association type end for the
      *                                    given parameters
@@ -110,34 +109,34 @@ class ResourceAssociationType
         ResourceType $resourceType,
         $resourceProperty
     ) {
-        if ($this->_end1->isBelongsTo($resourceType, $resourceProperty)) {
-            return $this->_end1;
+        if ($this->end1->isBelongsTo($resourceType, $resourceProperty)) {
+            return $this->end1;
         }
 
-        if ($this->_end2->isBelongsTo($resourceType, $resourceProperty)) {
-            return $this->_end2;
+        if ($this->end2->isBelongsTo($resourceType, $resourceProperty)) {
+            return $this->end2;
         }
     }
 
     /**
      * Retrieve the related end for the given resource set, type and property.
      *
-     * @param ResourceType     $resourceType     Resource type for the source end
-     * @param ResourceProperty $resourceProperty Resource property for the source end
+     * @param ResourceEntityType    $resourceType     Resource type for the source end
+     * @param ResourceProperty      $resourceProperty Resource property for the source end
      *
      * @return ResourceAssociationTypeEndRelated Association type end for the
      *                                           given parameters
      */
     public function getRelatedResourceAssociationSetEnd(
-        ResourceType $resourceType,
+        ResourceEntityType $resourceType,
         $resourceProperty
     ) {
-        if ($this->_end1->isBelongsTo($resourceType, $resourceProperty)) {
-            return $this->_end2;
+        if ($this->end1->isBelongsTo($resourceType, $resourceProperty)) {
+            return $this->end2;
         }
 
-        if ($this->_end2->isBelongsTo($resourceType, $resourceProperty)) {
-            return $this->_end1;
+        if ($this->end2->isBelongsTo($resourceType, $resourceProperty)) {
+            return $this->end1;
         }
     }
 }
