@@ -7,6 +7,7 @@ use Mockery as m;
 use POData\Common\InvalidOperationException;
 use POData\Providers\Metadata\ResourceAssociationSet;
 use POData\Providers\Metadata\ResourceComplexType;
+use POData\Providers\Metadata\ResourceEntityType;
 use POData\Providers\Metadata\ResourcePrimitiveType;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceSet;
@@ -33,7 +34,7 @@ class SimpleMetadataProviderTest extends TestCase
     {
         $foo = new SimpleMetadataProvider('string', 'String');
         $name = 'Hammer';
-        $type = m::mock(ResourceType::class);
+        $type = m::mock(ResourceEntityType::class);
         $type->shouldReceive('setCustomState')->andReturnNull()->once();
         $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY);
 
@@ -70,7 +71,7 @@ class SimpleMetadataProviderTest extends TestCase
     {
         $foo = new SimpleMetadataProvider('string', 'String');
         $name = 'Hammer';
-        $type = m::mock(ResourceType::class);
+        $type = m::mock(ResourceEntityType::class);
         $type->shouldReceive('setCustomState')->andReturnNull()->once();
         $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY);
 

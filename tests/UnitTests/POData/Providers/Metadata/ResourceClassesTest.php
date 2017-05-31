@@ -348,20 +348,6 @@ class ResourceClassesTest extends TestCase
      */
     public function testResourceSet()
     {
-        $int64 = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::INT64);
-
-        try {
-            $customerResourceSet = new ResourceSet('Customers', $int64);
-            $this->fail(
-                'An expected InvalidArgumentException for \'non-entity type resource type\' has not been raised'
-            );
-        } catch (\InvalidArgumentException $exception) {
-            $this->assertStringStartsWith(
-                'The ResourceTypeKind property of a ResourceType instance associated with a ResourceSet',
-                $exception->getMessage()
-            );
-        }
-
         $customerResType = $this->_getCustomerResourceType();
         $customerResourceSet = new ResourceSet('Customers', $customerResType);
         $this->assertEquals($customerResourceSet->getName(), 'Customers');
