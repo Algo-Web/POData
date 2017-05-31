@@ -281,7 +281,7 @@ class SimpleMetadataProviderTest extends TestCase
         $foo = new SimpleMetadataProvider('string', 'String');
 
         $keyName = 'id';
-        $complex = $foo->addEntityType(new \ReflectionClass(get_class($orig)), 'table', 'data');
+        $complex = $foo->addEntityType(new \ReflectionClass(get_class($orig)), 'table');
 
         $expected = 'The argument \'$typeCode\' to getPrimitiveResourceType is not'.
                     ' a valid EdmPrimitiveType Enum value.';
@@ -303,7 +303,7 @@ class SimpleMetadataProviderTest extends TestCase
         $foo = new SimpleMetadataProvider('string', 'String');
 
         $keyName = 'id';
-        $complex = $foo->addEntityType(new \ReflectionClass(get_class($orig)), 'table', 'data');
+        $complex = $foo->addEntityType(new \ReflectionClass(get_class($orig)), 'table');
 
         $expected = 'Can\'t add a property which does not exist on the instance type.';
         $actual = null;
@@ -399,8 +399,8 @@ class SimpleMetadataProviderTest extends TestCase
 
         $foo = new SimpleMetadataProvider('string', 'String');
 
-        $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore', 'Data');
-        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft', 'Data');
+        $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore');
+        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
         $this->assertTrue($fore instanceof ResourceType);
         $this->assertTrue($aft instanceof ResourceType);
 
@@ -433,8 +433,8 @@ class SimpleMetadataProviderTest extends TestCase
 
         $foo = new SimpleMetadataProvider('string', 'String');
 
-        $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore', 'Data');
-        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft', 'Data');
+        $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore');
+        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
         $this->assertTrue($fore instanceof ResourceType);
         $this->assertTrue($aft instanceof ResourceType);
 
@@ -456,8 +456,8 @@ class SimpleMetadataProviderTest extends TestCase
 
         $foo = new SimpleMetadataProvider('string', 'String');
 
-        $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore', 'Data');
-        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft', 'Data');
+        $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore');
+        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
         $this->assertTrue($fore instanceof ResourceType);
         $this->assertTrue($aft instanceof ResourceType);
 
@@ -479,8 +479,8 @@ class SimpleMetadataProviderTest extends TestCase
 
         $foo = new SimpleMetadataProvider('string', 'String');
 
-        $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore', 'Data');
-        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft', 'Data');
+        $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore');
+        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
         $this->assertTrue($fore instanceof ResourceType);
         $this->assertTrue($aft instanceof ResourceType);
 
@@ -502,8 +502,8 @@ class SimpleMetadataProviderTest extends TestCase
 
         $foo = new SimpleMetadataProvider('string', 'String');
 
-        $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore', 'Data');
-        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft', 'Data');
+        $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore');
+        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
         $this->assertTrue($fore instanceof ResourceType);
         $this->assertTrue($aft instanceof ResourceType);
 
@@ -525,8 +525,8 @@ class SimpleMetadataProviderTest extends TestCase
 
         $foo = new SimpleMetadataProvider('string', 'String');
 
-        $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore', 'Data');
-        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft', 'Data');
+        $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore');
+        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
         $this->assertTrue($fore instanceof ResourceType);
         $this->assertTrue($aft instanceof ResourceType);
 
@@ -548,8 +548,8 @@ class SimpleMetadataProviderTest extends TestCase
 
         $foo = new SimpleMetadataProvider('string', 'String');
 
-        $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore', 'Data');
-        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft', 'Data');
+        $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore');
+        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
         $this->assertTrue($fore instanceof ResourceType);
         $this->assertTrue($aft instanceof ResourceType);
 
@@ -573,8 +573,8 @@ class SimpleMetadataProviderTest extends TestCase
 
         $foo = new SimpleMetadataProvider('string', 'String');
 
-        $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore', 'Data');
-        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft', 'Data');
+        $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore');
+        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
         $this->assertTrue($fore instanceof ResourceType);
         $this->assertTrue($aft instanceof ResourceType);
         $fore->setCustomState($forwardSet);
@@ -597,8 +597,8 @@ class SimpleMetadataProviderTest extends TestCase
 
         $foo = new SimpleMetadataProvider('string', 'String');
 
-        $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore', 'Data');
-        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft', 'Data');
+        $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore');
+        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
         $this->assertTrue($fore instanceof ResourceType);
         $this->assertTrue($aft instanceof ResourceType);
 
@@ -630,8 +630,8 @@ class SimpleMetadataProviderTest extends TestCase
 
         $foo = new SimpleMetadataProvider('string', 'String');
 
-        $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore', 'Data');
-        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft', 'Data');
+        $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore');
+        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
         $this->assertTrue($fore instanceof ResourceType);
         $this->assertTrue($aft instanceof ResourceType);
 
@@ -663,8 +663,8 @@ class SimpleMetadataProviderTest extends TestCase
 
         $foo = new SimpleMetadataProvider('string', 'String');
 
-        $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore', 'Data');
-        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft', 'Data');
+        $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore');
+        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
         $this->assertTrue($fore instanceof ResourceType);
         $this->assertTrue($aft instanceof ResourceType);
 
@@ -696,8 +696,8 @@ class SimpleMetadataProviderTest extends TestCase
 
         $foo = new SimpleMetadataProvider('string', 'String');
 
-        $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore', 'Data');
-        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft', 'Data');
+        $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore');
+        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
         $this->assertTrue($fore instanceof ResourceType);
         $this->assertTrue($aft instanceof ResourceType);
 

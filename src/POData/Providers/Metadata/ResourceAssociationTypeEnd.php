@@ -117,8 +117,9 @@ class ResourceAssociationTypeEnd
         if (true === $flag1) {
             return $typeNameMatch;
         }
-
+        assert(isset($resourceProperty));
         $propertyNameMatch = 0 == strcmp($resourceProperty->getName(), $this->_resourceProperty->getName());
+
         return $typeNameMatch && $propertyNameMatch;
     }
 

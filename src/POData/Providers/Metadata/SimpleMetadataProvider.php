@@ -241,15 +241,15 @@ class SimpleMetadataProvider implements IMetadataProvider
     /**
      * Add an entity type.
      *
-     * @param \ReflectionClass $refClass  reflection class of the entity
-     * @param string           $name      name of the entity
-     * @param string           $namespace namespace of the data source
+     * @param \ReflectionClass $refClass reflection class of the entity
+     * @param string $name name of the entity
+     * @return ResourceType when the name is already in use
      *
      * @throws InvalidOperationException when the name is already in use
+     * @internal param string $namespace namespace of the data source
      *
-     * @return ResourceType
      */
-    public function addEntityType(\ReflectionClass $refClass, $name, $namespace = null)
+    public function addEntityType(\ReflectionClass $refClass, $name)
     {
         return $this->createResourceType($refClass, $name, ResourceTypeKind::ENTITY);
     }
@@ -295,16 +295,16 @@ class SimpleMetadataProvider implements IMetadataProvider
     /**
      * Add a complex type.
      *
-     * @param \ReflectionClass $refClass         reflection class of the complex entity type
-     * @param string           $name             name of the entity
-     * @param string           $namespace        namespace of the data source
-     * @param ResourceType     $baseResourceType base resource type
+     * @param \ReflectionClass $refClass reflection class of the complex entity type
+     * @param string $name name of the entity
+     * @return ResourceType when the name is already in use
      *
      * @throws InvalidOperationException when the name is already in use
+     * @internal param string $namespace namespace of the data source
+     * @internal param ResourceType $baseResourceType base resource type
      *
-     * @return ResourceType
      */
-    public function addComplexType(\ReflectionClass $refClass, $name, $namespace = null, $baseResourceType = null)
+    public function addComplexType(\ReflectionClass $refClass, $name)
     {
         return $this->createResourceType($refClass, $name, ResourceTypeKind::COMPLEX);
     }

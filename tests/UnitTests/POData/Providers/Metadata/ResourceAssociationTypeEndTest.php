@@ -4,6 +4,7 @@ namespace UnitTests\POData\Providers\Metadata;
 
 use Mockery as m;
 use POData\Providers\Metadata\ResourceAssociationTypeEnd;
+use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceType;
 use UnitTests\POData\TestCase;
 
@@ -52,5 +53,28 @@ class ResourceAssociationTypeEndTest extends TestCase
             $actual = $e->getMessage();
         }
         $this->assertEquals($expected, $actual);
+    }
+
+    public function testIsBelongsToWithNullResourceType()
+    {
+        $type = m::mock(ResourceType::class);
+        $type->shouldReceive('getFullName')->andReturn('Northwind.Customer', 'Northwind.Order');
+        $from = m::mock(ResourceProperty::class);
+
+        $foo = new ResourceAssociationTypeEnd('name', $type, null, $from);
+
+        $result = $foo->isBelongsTo($type, null);
+        $this->assertFalse($result);
+    }
+
+    public function testIsBelongsToWithNullMismatchOnResourceTypes()
+    {
+        $type = m::mock(ResourceType::class);
+        $type->shouldReceive('getFullName')->andReturn('Northwind.Customer', 'Northwind.Order');
+        $from = m::mock(ResourceProperty::class);
+
+        $foo = new ResourceAssociationTypeEnd('name', $type, null, $from);
+        $result = $foo->isBelongsTo($type, $from);
+        $this->assertFalse($result);
     }
 }
