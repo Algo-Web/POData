@@ -101,7 +101,7 @@ class ResourceTypeTest extends TestCase
     public function testSleepWakeupRealObjectITypeRoundTrip()
     {
         $instanceType = m::mock(IType::class);
-        $instanceType->shouldReceive('getName')->andReturn('name');
+        $instanceType->shouldReceive('getName')->andReturn('label');
         $resourceTypeKind = ResourceTypeKind::PRIMITIVE;
         $foo = new ResourcePrimitiveType($instanceType);
 
@@ -122,7 +122,7 @@ class ResourceTypeTest extends TestCase
     public function testSleepWakeupRealObjectReflectableRoundTrip()
     {
         $complex = m::mock(TComplexTypeType::class);
-        $complex->shouldReceive('getName')->andReturn('name');
+        $complex->shouldReceive('getName')->andReturn('label');
         $instanceType = new reusableEntityClass2('foo', 'bar');
         $resourceTypeKind = ResourceTypeKind::COMPLEX;
         $foo = new ResourceComplexType(new ReflectionClass($instanceType), $complex);

@@ -33,7 +33,7 @@ abstract class ResourceType
      *
      * @var string
      */
-    private $name;
+    protected $name;
 
     /**
      * Namespace name in which resource described by this class instance
@@ -41,14 +41,14 @@ abstract class ResourceType
      *
      * @var string
      */
-    private $namespaceName;
+    protected $namespaceName;
 
     /**
      * The fully qualified name of the resource described by this class instance.
      *
      * @var string
      */
-    private $fullName;
+    protected $fullName;
 
     /**
      * The type the resource described by this class instance.
@@ -61,14 +61,14 @@ abstract class ResourceType
     /**
      * @var bool
      */
-    private $abstractType;
+    protected $abstractType;
 
     /**
      * Refrence to ResourceType instance for base type, if any.
      *
      * @var ResourceType
      */
-    private $baseType;
+    protected $baseType;
 
     /**
      * Collection of ResourceProperty for all properties declared on the
@@ -77,7 +77,7 @@ abstract class ResourceType
      *
      * @var ResourceProperty[] indexed by name
      */
-    private $propertiesDeclaredOnThisType = [];
+    protected $propertiesDeclaredOnThisType = [];
 
     /**
      * Collection of ResourceStreamInfo for all named streams declared on
@@ -86,7 +86,7 @@ abstract class ResourceType
      *
      * @var ResourceStreamInfo[] indexed by name
      */
-    private $namedStreamsDeclaredOnThisType = [];
+    protected $namedStreamsDeclaredOnThisType = [];
 
     /**
      * Collection of ResourceProperty for all properties declared on this type.
@@ -94,7 +94,7 @@ abstract class ResourceType
      *
      * @var ResourceProperty[] indexed by name
      */
-    private $allProperties = [];
+    protected $allProperties = [];
 
     /**
      * Collection of ResourceStreamInfo for all named streams declared on this type.
@@ -102,28 +102,28 @@ abstract class ResourceType
      *
      * @var ResourceStreamInfo[]
      */
-    private $allNamedStreams = [];
+    protected $allNamedStreams = [];
 
     /**
      * Collection of properties which has etag defined subset of $_allProperties.
      *
      * @var ResourceProperty[]
      */
-    private $eTagProperties = [];
+    protected $eTagProperties = [];
 
     /**
      * Collection of key properties subset of $_allProperties.
      *
      * @var ResourceProperty[]
      */
-    private $keyProperties = [];
+    protected $keyProperties = [];
 
     /**
      * Whether the resource type described by this class instance is a MLE or not.
      *
      * @var bool
      */
-    private $isMediaLinkEntry = false;
+    protected $isMediaLinkEntry = false;
 
     /**
      * Whether the resource type described by this class instance has bag properties
@@ -132,7 +132,7 @@ abstract class ResourceType
      *
      * @var bool
      */
-    private $hasBagProperty = null;
+    protected $hasBagProperty = null;
 
     /**
      * Whether the resource type described by this class instance has named streams
@@ -141,7 +141,7 @@ abstract class ResourceType
      *
      * @var bool
      */
-    private $hasNamedStreams = null;
+    protected $hasNamedStreams = null;
 
     /**
      * ReflectionClass (for complex/Entity) or IType (for Primitive) instance for
@@ -149,21 +149,21 @@ abstract class ResourceType
      *
      * @var \ReflectionClass|IType|string
      */
-    private $type;
+    protected $type;
 
     /**
      * To store any custom information related to this class instance.
      *
      * @var object
      */
-    private $customState;
+    protected $customState;
 
     /**
      * Array to detect looping in bag's complex type.
      *
      * @var array
      */
-    private $arrayToDetectLoopInComplexBag;
+    protected $arrayToDetectLoopInComplexBag;
 
     /**
      * Create new instance of ResourceType.
