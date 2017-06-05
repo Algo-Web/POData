@@ -275,7 +275,7 @@ class SimpleMetadataProvider implements IMetadataProvider
 
         $type = null;
         if ($typeKind == ResourceTypeKind::ENTITY) {
-            $oet = $this->metadataManager->addEntityType($name);
+            list($oet, $entitySet) = $this->metadataManager->addEntityType($name);
             assert($oet instanceof TEntityTypeType, "Entity type ".$name. " not successfully added");
             $type = new ResourceEntityType($refClass, $oet, $this);
             $this->OdataEntityMap[$type->getFullName()] = $oet;
