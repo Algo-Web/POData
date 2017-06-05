@@ -281,6 +281,8 @@ class SimpleMetadataProvider implements IMetadataProvider
             $type = new ResourceEntityType($refClass, $oet, $this);
             $typeName = $type->getFullName();
             $this->OdataEntityMap[$typeName] = $oet;
+            $this->typeSetMapping[$name] = $entitySet;
+            $this->typeSetMapping[$typeName] = $entitySet;
         } elseif ($typeKind == ResourceTypeKind::COMPLEX) {
             $complex = new TComplexTypeType();
             $complex->setName($name);
@@ -325,7 +327,7 @@ class SimpleMetadataProvider implements IMetadataProvider
             throw new InvalidOperationException('Resource Set already added');
         }
 
-        $this->resourceSets[$name] = new ResourceSet($name, $resourceType);
+        $this->resourceSets[$name] = new ResourceSet($resourceType->getFullName(), $resourceType);
         //No support for multiple ResourceSet with same EntityType
         //So keeping reference to the 'ResourceSet' with the entity type
         $resourceType->setCustomState($this->resourceSets[$name]);

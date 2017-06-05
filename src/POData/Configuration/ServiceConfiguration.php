@@ -288,6 +288,7 @@ class ServiceConfiguration implements IServiceConfiguration
             $pageSize,
             'setEntitySetPageSize'
         );
+
         if ($this->_maxResultsPerCollection != PHP_INT_MAX) {
             throw new InvalidOperationException(
                 Messages::configurationMaxResultAndPageSizeMutuallyExclusive()
@@ -306,7 +307,6 @@ class ServiceConfiguration implements IServiceConfiguration
                     Messages::configurationResourceSetNameNotFound($name)
                 );
             }
-
             $this->_pageSizes[$name] = $pageSize;
         }
     }

@@ -126,7 +126,8 @@ class NorthWindMetadata
 
         //Register the entity (resource) type 'Customer'
         $customersEntityType = $metadata->addEntityType(
-            new \ReflectionClass('UnitTests\POData\Facets\NorthWind1\Customer2'), 'Customer'
+            new \ReflectionClass('UnitTests\POData\Facets\NorthWind1\Customer2'),
+            'Customer'
         );
         $metadata->addKeyProperty($customersEntityType, 'CustomerID', EdmPrimitiveType::STRING);
         $metadata->addKeyProperty($customersEntityType, 'CustomerGuid', EdmPrimitiveType::GUID);

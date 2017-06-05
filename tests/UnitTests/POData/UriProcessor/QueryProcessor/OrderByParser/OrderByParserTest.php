@@ -401,6 +401,7 @@ class OrderByParserTest extends TestCase
         );
 
         $resourceSetWrapper = $providersWrapper->resolveResourceSet('Orders');
+        assert(null != $resourceSetWrapper);
         $resourceType = $resourceSetWrapper->getResourceType();
         $orderBy = 'Customer/CustomerID';
 

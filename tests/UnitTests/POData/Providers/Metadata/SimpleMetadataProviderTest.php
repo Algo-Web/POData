@@ -35,6 +35,7 @@ class SimpleMetadataProviderTest extends TestCase
         $foo = new SimpleMetadataProvider('string', 'String');
         $name = 'Hammer';
         $type = m::mock(ResourceEntityType::class);
+        $type->shouldReceive('getFullName')->andReturn('Customer')->once();
         $type->shouldReceive('setCustomState')->andReturnNull()->once();
         $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY);
 
@@ -72,6 +73,7 @@ class SimpleMetadataProviderTest extends TestCase
         $foo = new SimpleMetadataProvider('string', 'String');
         $name = 'Hammer';
         $type = m::mock(ResourceEntityType::class);
+        $type->shouldReceive('getFullName')->andReturn('Customer')->once();
         $type->shouldReceive('setCustomState')->andReturnNull()->once();
         $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY);
 
