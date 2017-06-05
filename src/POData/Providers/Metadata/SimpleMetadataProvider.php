@@ -22,6 +22,7 @@ class SimpleMetadataProvider implements IMetadataProvider
     protected $containerName;
     protected $namespaceName;
     private $metadataManager;
+    private $typeSetMapping = [];
 
     /**
      * @param string $containerName container name for the datasource
@@ -278,7 +279,8 @@ class SimpleMetadataProvider implements IMetadataProvider
             list($oet, $entitySet) = $this->metadataManager->addEntityType($name);
             assert($oet instanceof TEntityTypeType, "Entity type ".$name. " not successfully added");
             $type = new ResourceEntityType($refClass, $oet, $this);
-            $this->OdataEntityMap[$type->getFullName()] = $oet;
+            $typeName = $type->getFullName();
+            $this->OdataEntityMap[$typeName] = $oet;
         } elseif ($typeKind == ResourceTypeKind::COMPLEX) {
             $complex = new TComplexTypeType();
             $complex->setName($name);
