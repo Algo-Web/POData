@@ -556,7 +556,10 @@ class SelectTest extends TestCase
             );
             $this->fail('An expected ODataException usage of bag type as navigation property has not been thrown');
         } catch (ODataException $odataException) {
-            $this->assertStringStartsWith('The selection from property \'Emails\' on type \'Employee\' is not valid. The select query option does not support selection items from a bag property', $odataException->getMessage());
+            $this->assertStringStartsWith(
+                'The selection from property \'Emails\' on type \'Employee\' is not valid. The select query option does not support selection items from a bag property',
+                $odataException->getMessage()
+            );
         }
     }
 

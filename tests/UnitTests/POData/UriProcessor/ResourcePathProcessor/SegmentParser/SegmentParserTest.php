@@ -612,7 +612,10 @@ class SegmentParserTest extends TestCase
             SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
             $this->fail('An expected ODataException for using bag property as non-leaf segment has not been thrown');
         } catch (ODataException $exception) {
-            $this->assertStringStartsWith('The request URI is not valid. The segment \'Emails\' must be the last segment in the URI', $exception->getMessage());
+            $this->assertStringStartsWith(
+                'The request URI is not valid. The segment \'Emails\' must be the last segment in the URI',
+                $exception->getMessage()
+            );
         }
     }
 

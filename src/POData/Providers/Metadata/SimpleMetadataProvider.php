@@ -455,7 +455,16 @@ class SimpleMetadataProvider implements IMetadataProvider
         $defaultValue = null,
         $nullable = false
     ) {
-        $this->_addPrimitivePropertyInternal($resourceType, $name, $typeCode, false, $isBag, $defaultValue, $nullable);
+        $this->_addPrimitivePropertyInternal(
+            $resourceType,
+            $name,
+            $typeCode,
+            false,
+            $isBag,
+            false,
+            $defaultValue,
+            $nullable
+        );
     }
 
     /**
