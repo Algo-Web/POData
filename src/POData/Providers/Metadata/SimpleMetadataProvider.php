@@ -5,6 +5,7 @@ namespace POData\Providers\Metadata;
 use AlgoWeb\ODataMetadata\MetadataManager;
 use AlgoWeb\ODataMetadata\MetadataV3\edm\TComplexTypeType;
 use AlgoWeb\ODataMetadata\MetadataV3\edm\TEntityTypeType;
+use Illuminate\Support\Str;
 use POData\Common\InvalidOperationException;
 use POData\Common\NotImplementedException;
 use POData\Providers\Metadata\Type\IType;
@@ -280,9 +281,11 @@ class SimpleMetadataProvider implements IMetadataProvider
             assert($oet instanceof TEntityTypeType, "Entity type ".$name. " not successfully added");
             $type = new ResourceEntityType($refClass, $oet, $this);
             $typeName = $type->getFullName();
+            $returnName = Str::plural($typeName);
             $this->OdataEntityMap[$typeName] = $oet;
             $this->typeSetMapping[$name] = $entitySet;
             $this->typeSetMapping[$typeName] = $entitySet;
+            $this->typeSetMapping[$returnName] = $entitySet;
         } elseif ($typeKind == ResourceTypeKind::COMPLEX) {
             $complex = new TComplexTypeType();
             $complex->setName($name);
@@ -314,7 +317,7 @@ class SimpleMetadataProvider implements IMetadataProvider
     }
 
     /**
-     * @param string                $name           name of the resource set
+     * @param string                $name           name of the resource set (now taken from resource type)
      * @param ResourceEntityType    $resourceType   resource type
      *
      * @throws InvalidOperationException
@@ -323,17 +326,19 @@ class SimpleMetadataProvider implements IMetadataProvider
      */
     public function addResourceSet($name, ResourceEntityType $resourceType)
     {
-        if (array_key_exists($name, $this->resourceSets)) {
+        $returnName = Str::plural($resourceType->getFullName());
+        if (array_key_exists($returnName, $this->resourceSets)) {
             throw new InvalidOperationException('Resource Set already added');
         }
 
-        $this->resourceSets[$name] = new ResourceSet($resourceType->getFullName(), $resourceType);
+        $this->resourceSets[$returnName] = new ResourceSet($returnName, $resourceType);
+
         //No support for multiple ResourceSet with same EntityType
         //So keeping reference to the 'ResourceSet' with the entity type
-        $resourceType->setCustomState($this->resourceSets[$name]);
+        $resourceType->setCustomState($this->resourceSets[$returnName]);
         ksort($this->resourceSets);
 
-        return $this->resourceSets[$name];
+        return $this->resourceSets[$returnName];
     }
 
     /**
