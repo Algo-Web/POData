@@ -370,7 +370,9 @@ class SimpleMetadataProvider implements IMetadataProvider
         $typeCode,
         $isKey = false,
         $isBag = false,
-        $isETagProperty = false
+        $isETagProperty = false,
+        $defaultValue = null,
+        $nullable = false
     ) {
         $this->checkInstanceProperty($name, $resourceType);
 
@@ -405,8 +407,8 @@ class SimpleMetadataProvider implements IMetadataProvider
                 $this->OdataEntityMap[$resourceType->getFullName()],
                 $name,
                 $primitiveResourceType->getFullName(),
-                null,
-                false,
+                $defaultValue,
+                $nullable,
                 $isKey
             );
         }
@@ -445,9 +447,15 @@ class SimpleMetadataProvider implements IMetadataProvider
      * @param TypeCode $typeCode type of the key property
      * @param bool $isBag property is bag or not
      */
-    public function addPrimitiveProperty($resourceType, $name, $typeCode, $isBag = false)
-    {
-        $this->_addPrimitivePropertyInternal($resourceType, $name, $typeCode, false, $isBag);
+    public function addPrimitiveProperty(
+        $resourceType,
+        $name,
+        $typeCode,
+        $isBag = false,
+        $defaultValue = null,
+        $nullable = false
+    ) {
+        $this->_addPrimitivePropertyInternal($resourceType, $name, $typeCode, false, $isBag, $defaultValue, $nullable);
     }
 
     /**
@@ -458,9 +466,18 @@ class SimpleMetadataProvider implements IMetadataProvider
      * @param string $name name of the property
      * @param TypeCode $typeCode type of the etag property
      */
-    public function addETagProperty($resourceType, $name, $typeCode)
+    public function addETagProperty($resourceType, $name, $typeCode, $defaultValue = null, $nullable = false)
     {
-        $this->_addPrimitivePropertyInternal($resourceType, $name, $typeCode, false, false, true);
+        $this->_addPrimitivePropertyInternal(
+            $resourceType,
+            $name,
+            $typeCode,
+            false,
+            false,
+            true,
+            $defaultValue,
+            $nullable
+        );
     }
 
     /**
