@@ -515,6 +515,7 @@ class ExpandTest extends TestCase
         );
 
         $customersResourceSetWrapper = $providersWrapper->resolveResourceSet('Customers');
+        assert(null != $customersResourceSetWrapper);
         $customerResourceType = $customersResourceSetWrapper->getResourceType();
 
         $exceptionThrown = false;

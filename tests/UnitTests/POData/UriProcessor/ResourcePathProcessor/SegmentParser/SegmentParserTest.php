@@ -32,7 +32,12 @@ class SegmentParserTest extends TestCase
 
         $this->mockQueryProvider = m::mock('POData\Providers\Query\IQueryProvider');
 
-        $this->providersWrapper = new ProvidersWrapper($this->_metadataProvider, $this->mockQueryProvider, $this->_serviceConfiguration, false);
+        $this->providersWrapper = new ProvidersWrapper(
+            $this->_metadataProvider,
+            $this->mockQueryProvider,
+            $this->_serviceConfiguration,
+            false
+        );
     }
 
     public function testEmptySegments()
@@ -92,7 +97,10 @@ class SegmentParserTest extends TestCase
             SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
             $this->fail('An expected ODataException query syntax error for \'$links\'');
         } catch (ODataException $exception) {
-            $this->assertStringStartsWith('The request URI is not valid, the segment \'$links\' cannot be applied', $exception->getMessage());
+            $this->assertStringStartsWith(
+                'The request URI is not valid, the segment \'$links\' cannot be applied',
+                $exception->getMessage()
+            );
         }
 
         //Test for $count option
@@ -101,7 +109,10 @@ class SegmentParserTest extends TestCase
             SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
             $this->fail('An expected ODataException query syntax error for \'$count\'');
         } catch (ODataException $exception) {
-            $this->assertStringStartsWith('The request URI is not valid, the segment \'$count\' cannot be applied', $exception->getMessage());
+            $this->assertStringStartsWith(
+                'The request URI is not valid, the segment \'$count\' cannot be applied',
+                $exception->getMessage()
+            );
         }
 
         //Test for unknown entity set
@@ -134,7 +145,10 @@ class SegmentParserTest extends TestCase
             SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
             $this->fail('An expected ODataException for multiple positional values has not been thrown');
         } catch (ODataException $exception) {
-            $this->assertStringStartsWith('Segments with multiple key values must specify them in \'name=value\' form', $exception->getMessage());
+            $this->assertStringStartsWith(
+                'Segments with multiple key values must specify them in \'name=value\' form',
+                $exception->getMessage()
+            );
         }
 
         //test with multiple named values
@@ -143,9 +157,9 @@ class SegmentParserTest extends TestCase
         $this->assertEquals(count($segmentDescriptors), 1);
         $resourceSetWrapper = $segmentDescriptors[0]->getTargetResourceSetWrapper();
         $this->assertNotNull($resourceSetWrapper);
-        $this->assertEquals($resourceSetWrapper->getName(), 'Customers');
+        $this->assertEquals('Customers', $resourceSetWrapper->getName());
         $this->assertTrue($segmentDescriptors[0]->isSingleResult());
-        $this->assertEquals($segmentDescriptors[0]->getIdentifier(), 'Customers');
+        $this->assertEquals('Customers', $segmentDescriptors[0]->getIdentifier());
         $keyDescriptor = $segmentDescriptors[0]->getKeyDescriptor();
         $namedKeys = $keyDescriptor->getValidatedNamedValues();
         $this->assertEquals(count($namedKeys), 2);
@@ -668,7 +682,12 @@ class SegmentParserTest extends TestCase
         $serviceConfiguration = new ServiceConfiguration($this->_metadataProvider);
         $serviceConfiguration->setEntitySetAccessRule('Customers', EntitySetRights::READ_ALL);
         $serviceConfiguration->setEntitySetAccessRule('Orders', EntitySetRights::NONE);
-        $providersWrapper = new ProvidersWrapper($metadataProvider, $this->mockQueryProvider, $serviceConfiguration, false);
+        $providersWrapper = new ProvidersWrapper(
+            $metadataProvider,
+            $this->mockQueryProvider,
+            $serviceConfiguration,
+            false
+        );
 
         $segments = ["Customers(CustomerID='ALFKI', CustomerGuid=guid'15b242e7-52eb-46bd-8f0e-6568b72cd9a6')",
                           'Orders(789)',

@@ -33,8 +33,9 @@ class SimpleMetadataProviderTest extends TestCase
     public function testAddResourceSetThenGoAroundAgainAndThrowException()
     {
         $foo = new SimpleMetadataProvider('string', 'String');
-        $name = 'Hammer';
+        $name = 'Customers';
         $type = m::mock(ResourceEntityType::class);
+        $type->shouldReceive('getFullName')->andReturn('Customer')->twice();
         $type->shouldReceive('setCustomState')->andReturnNull()->once();
         $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY);
 
@@ -70,14 +71,15 @@ class SimpleMetadataProviderTest extends TestCase
     public function testGetResourceSetsOnlyOneExists()
     {
         $foo = new SimpleMetadataProvider('string', 'String');
-        $name = 'Hammer';
+        $name = 'Customers';
         $type = m::mock(ResourceEntityType::class);
+        $type->shouldReceive('getFullName')->andReturn('Customer')->once();
         $type->shouldReceive('setCustomState')->andReturnNull()->once();
         $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY);
 
         $foo->addResourceSet($name, $type);
 
-        $parms = ['Hammer', 'Time'];
+        $parms = ['Hammer', 'Time', 'Customers'];
         $result = $foo->getResourceSets($parms);
         $this->assertTrue(is_array($result));
         $this->assertEquals(1, count($result));
