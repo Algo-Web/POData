@@ -529,8 +529,8 @@ class SimpleMetadataProvider implements IMetadataProvider
             $targetResourceType,
             $sourceProperty,
             $targetProperty,
-            ResourcePropertyKind::RESOURCE_REFERENCE,
-            ResourcePropertyKind::RESOURCESET_REFERENCE
+            '*',
+            '1'
         );
     }
 
@@ -613,19 +613,23 @@ class SimpleMetadataProvider implements IMetadataProvider
      *                                                   property to add to source type
      * @param string               $targetProperty       The name of the
      *                                                   property to add to target type
-     * @param ResourcePropertyKind $sourcePropertyKind   The property kind on the source type
-     * @param ResourcePropertyKind $targetPropertyKind   The property kind on the target type
+     * @param string               $sourceMultiplicity   The multiplicity at the source end of relation
+     * @param string               $targetMultiplicity   The multiplicity at the target end of relation
      */
     private function _addReferencePropertyInternalBidirectional(
         ResourceEntityType $sourceResourceType,
         ResourceEntityType $targetResourceType,
         $sourceProperty,
         $targetProperty,
-        $sourcePropertyKind,
-        $targetPropertyKind
+        $sourceMultiplicity,
+        $targetMultiplicity
     ) {
         if (!is_string($sourceProperty) || !is_string($targetProperty)) {
             throw new InvalidOperationException("Source and target properties must both be strings");
+        }
+
+        if (!is_string($sourceMultiplicity) || !is_string($targetMultiplicity)) {
+            throw new InvalidOperationException("Source and target multiplicities must both be strings");
         }
 
         $this->checkInstanceProperty($sourceProperty, $sourceResourceType);
@@ -665,10 +669,16 @@ class SimpleMetadataProvider implements IMetadataProvider
         if (isset($this->associationSets[$fwdSetKey]) && $this->associationSets[$revSetKey]) {
             return;
         }
+        $sourceKind = ('*' == $sourceMultiplicity)
+            ? ResourcePropertyKind::RESOURCESET_REFERENCE
+            : ResourcePropertyKind::RESOURCE_REFERENCE;
+        $targetKind = ('*' == $targetMultiplicity)
+            ? ResourcePropertyKind::RESOURCESET_REFERENCE
+            : ResourcePropertyKind::RESOURCE_REFERENCE;
 
-        $sourceResourceProperty = new ResourceProperty($sourceProperty, null, $sourcePropertyKind, $targetResourceType);
+        $sourceResourceProperty = new ResourceProperty($sourceProperty, null, $sourceKind, $targetResourceType);
         $sourceResourceType->addProperty($sourceResourceProperty, false);
-        $targetResourceProperty = new ResourceProperty($targetProperty, null, $targetPropertyKind, $sourceResourceType);
+        $targetResourceProperty = new ResourceProperty($targetProperty, null, $targetKind, $sourceResourceType);
         $targetResourceType->addProperty($targetResourceProperty, false);
 
 
@@ -684,14 +694,12 @@ class SimpleMetadataProvider implements IMetadataProvider
         );
         $sourceName = $sourceResourceType->getFullName();
         $targetName = $targetResourceType->getFullName();
-        $sourceMult = $sourcePropertyKind == ResourcePropertyKind::RESOURCESET_REFERENCE ? '*' : '0..1';
-        $targetMult = $targetPropertyKind == ResourcePropertyKind::RESOURCESET_REFERENCE ? '*' : '0..1';
         $this->metadataManager->addNavigationPropertyToEntityType(
             $this->OdataEntityMap[$sourceName],
-            $sourceMult,
+            $sourceMultiplicity,
             $sourceProperty,
             $this->OdataEntityMap[$targetName],
-            $targetMult,
+            $targetMultiplicity,
             $targetProperty
         );
         $this->associationSets[$fwdSetKey] = $fwdSet;
@@ -738,8 +746,8 @@ class SimpleMetadataProvider implements IMetadataProvider
             $targetResourceType,
             $sourceProperty,
             $targetProperty,
-            ResourcePropertyKind::RESOURCESET_REFERENCE,
-            ResourcePropertyKind::RESOURCESET_REFERENCE
+            '*',
+            '*'
         );
     }
 
@@ -764,8 +772,8 @@ class SimpleMetadataProvider implements IMetadataProvider
             $targetResourceType,
             $sourceProperty,
             $targetProperty,
-            ResourcePropertyKind::RESOURCE_REFERENCE,
-            ResourcePropertyKind::RESOURCE_REFERENCE
+            '0..1',
+            '1'
         );
     }
 
