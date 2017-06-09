@@ -10,6 +10,7 @@ use POData\Providers\Metadata\ResourceComplexType;
 use POData\Providers\Metadata\ResourceEntityType;
 use POData\Providers\Metadata\ResourcePrimitiveType;
 use POData\Providers\Metadata\ResourceProperty;
+use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\ResourceTypeKind;
@@ -624,6 +625,15 @@ class SimpleMetadataProviderTest extends TestCase
         $this->assertNotNull($result, "Second association set is null");
         $this->assertTrue($result instanceof ResourceAssociationSet, get_class($result));
         $this->assertEquals($secondExpectedKey, $result->getName());
+
+        // now dig out ends and check resource property types
+        $result = $foo->resolveAssociationSet($firstExpectedKey);
+        $end1 = $result->getEnd1();
+        $property = $end1->getResourceProperty()->getKind();
+        $this->assertEquals(ResourcePropertyKind::RESOURCESET_REFERENCE, $property);
+        $end2 = $result->getEnd2();
+        $property = $end2->getResourceProperty()->getKind();
+        $this->assertEquals(ResourcePropertyKind::RESOURCE_REFERENCE, $property);
     }
 
     public function testAddResourceSetReferenceBidirectionalCheckSane()
@@ -657,6 +667,15 @@ class SimpleMetadataProviderTest extends TestCase
         $this->assertNotNull($result, "Second association set is null");
         $this->assertTrue($result instanceof ResourceAssociationSet, get_class($result));
         $this->assertEquals($secondExpectedKey, $result->getName());
+
+        // now dig out ends and check resource property types
+        $result = $foo->resolveAssociationSet($firstExpectedKey);
+        $end1 = $result->getEnd1();
+        $property = $end1->getResourceProperty()->getKind();
+        $this->assertEquals(ResourcePropertyKind::RESOURCESET_REFERENCE, $property);
+        $end2 = $result->getEnd2();
+        $property = $end2->getResourceProperty()->getKind();
+        $this->assertEquals(ResourcePropertyKind::RESOURCESET_REFERENCE, $property);
     }
 
     public function testAddResourceReferenceSingleBidirectionalCheckSane()
@@ -690,6 +709,15 @@ class SimpleMetadataProviderTest extends TestCase
         $this->assertNotNull($result, "Second association set is null");
         $this->assertTrue($result instanceof ResourceAssociationSet, get_class($result));
         $this->assertEquals($secondExpectedKey, $result->getName());
+
+        // now dig out ends and check resource property types
+        $result = $foo->resolveAssociationSet($firstExpectedKey);
+        $end1 = $result->getEnd1();
+        $property = $end1->getResourceProperty()->getKind();
+        $this->assertEquals(ResourcePropertyKind::RESOURCE_REFERENCE, $property);
+        $end2 = $result->getEnd2();
+        $property = $end2->getResourceProperty()->getKind();
+        $this->assertEquals(ResourcePropertyKind::RESOURCE_REFERENCE, $property);
     }
 
     public function testAddResourceReferenceSingleBidirectionalForwardAndReverse()
