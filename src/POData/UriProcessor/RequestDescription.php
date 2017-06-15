@@ -294,7 +294,7 @@ class RequestDescription
     private function _readData($dataType)
     {
         $string = $this->_data;
-        $__data = [];
+        $dataArray = [];
         if ($dataType === MimeTypes::MIME_APPLICATION_ATOM) {
             if (is_array($string) && 1 == count($string)) {
                 $string = $string[0];
@@ -305,14 +305,14 @@ class RequestDescription
                 if (is_array($clearData)) {
                     foreach ($clearData as $key => $value) {
                         if (is_array($value)) {
-                            $__data[substr($key, 2)] = $value['@value'];
+                            $dataArray[substr($key, 2)] = $value['@value'];
                         } else {
-                            $__data[substr($key, 2)] = $value;
+                            $dataArray[substr($key, 2)] = $value;
                         }
                     }
                 }
             }
-            $this->_data = $__data;
+            $this->_data = $dataArray;
         } elseif ($dataType === MimeTypes::MIME_APPLICATION_JSON) {
             $data = !is_array($string) ? json_decode($string, true) : $string;
             $this->_data = $data;
