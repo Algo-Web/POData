@@ -134,6 +134,7 @@ class IncomingIlluminateRequest implements IHTTPRequest
      */
     public function getAllInput()
     {
-        return $this->request->all();
+        $content = $this->request->all();
+        return !empty($content) ? $content : $this->request->getContent();
     }
 }
