@@ -304,15 +304,15 @@ class RequestDescription
                 $clearData = $data['entry']['content']['m:properties'];
                 if (is_array($clearData)) {
                     foreach ($clearData as $key => $value) {
-                        if(is_array($value)){
+                        if (is_array($value)) {
                             $__data[substr($key, 2)] = $value['@value'];
-                        } else{
+                        } else {
                             $__data[substr($key, 2)] = $value;
                         }
                     }
                 }
             }
-        $this->_data = $__data;
+            $this->_data = $__data;
         } elseif ($dataType === MimeTypes::MIME_APPLICATION_JSON) {
             $data = !is_array($string) ? json_decode($string, true) : $string;
             $this->_data = $data;
