@@ -630,10 +630,10 @@ class SimpleMetadataProviderTest extends TestCase
         $result = $foo->resolveAssociationSet($firstExpectedKey);
         $end1 = $result->getEnd1();
         $property = $end1->getResourceProperty()->getKind();
-        $this->assertEquals(ResourcePropertyKind::RESOURCESET_REFERENCE, $property);
+        $this->assertEquals(ResourcePropertyKind::RESOURCE_REFERENCE, $property);
         $end2 = $result->getEnd2();
         $property = $end2->getResourceProperty()->getKind();
-        $this->assertEquals(ResourcePropertyKind::RESOURCE_REFERENCE, $property);
+        $this->assertEquals(ResourcePropertyKind::RESOURCESET_REFERENCE, $property);
     }
 
     public function testAddResourceSetReferenceBidirectionalCheckSane()

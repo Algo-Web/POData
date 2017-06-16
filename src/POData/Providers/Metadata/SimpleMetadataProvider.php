@@ -531,8 +531,8 @@ class SimpleMetadataProvider implements IMetadataProvider
             $targetResourceType,
             $sourceProperty,
             $targetProperty,
-            '*',
-            '1'
+            '1',
+            '*'
         );
     }
 
@@ -782,8 +782,8 @@ class SimpleMetadataProvider implements IMetadataProvider
             $targetResourceType,
             $sourceProperty,
             $targetProperty,
-            '0..1',
-            '1'
+            '1',
+            '0..1'
         );
     }
 
