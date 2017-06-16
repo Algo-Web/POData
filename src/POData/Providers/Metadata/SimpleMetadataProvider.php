@@ -829,14 +829,20 @@ class SimpleMetadataProvider implements IMetadataProvider
         return $resourceProperty;
     }
 
-    public function createSingleton($name, IsOK $returnType, $functionName)
+    public function createSingleton($name, ResourceType $returnType, $functionName)
     {
         $msg = null;
         if (array_key_exists($name, $this->singletons)) {
             $msg = "Singleton name already exists";
             throw new \InvalidArgumentException($msg);
         }
-        $singleton = $this->metadataManager->createSingleton($name, $returnType);
+        $typeName = $returnType->getName();
+        if (!array_key_exists($typeName, $this->OdataEntityMap)) {
+            $msg = "Mapping not defined for ".$typeName;
+            throw new \InvalidArgumentException($msg);
+        }
+        $metaReturn = $this->OdataEntityMap[$typeName];
+        $singleton = $this->metadataManager->createSingleton($name, $metaReturn);
         assert($singleton->isOK($msg), $msg);
         $type = new ResourceFunctionType($functionName, $singleton);
         // Since singletons should take no args, enforce it here

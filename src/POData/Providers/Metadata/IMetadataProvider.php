@@ -99,12 +99,12 @@ interface IMetadataProvider
      * Generate singleton wrapper
      *
      * @param string                $name               Name of singleton
-     * @param IsOK                  $returnType         Return type wrapper
+     * @param ResourceType          $returnType         Return type wrapper
      * @param string|array          $functionName       Function call to be wrapped
      *
      * @return mixed
      */
-    public function createSingleton($name, IsOK $returnType, $functionName);
+    public function createSingleton($name, ResourceType $returnType, $functionName);
 
     /**
      * Get all singletons defined on this object
