@@ -240,7 +240,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $actual = $writer->getOutput();
 
         $expected = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<feed xml:base="http://localhost/NorthWind.svc" xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns="http://www.w3.org/2005/Atom">
+<feed xml:base="http://localhost/NorthWind.svc/" xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns="http://www.w3.org/2005/Atom">
  <title type="text">Feed Title</title>
  <id>Feed Id</id>
  <updated>2013-09-17T19:22:33-06:00</updated>
@@ -821,7 +821,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 
         $actual = $writer->getOutput();
         $expected = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<entry xml:base="http://localhost/NorthWind.svc" xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns="http://www.w3.org/2005/Atom" m:etag="Entry ETag">
+<entry xml:base="http://localhost/NorthWind.svc/" xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns="http://www.w3.org/2005/Atom" m:etag="Entry ETag">
  <id>Expand Entry</id>
  <title type="text">Entry Title</title>
  <updated>2013-09-17T19:49:59-06:00</updated>
@@ -1053,7 +1053,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $actual = $writer->getOutput();
 
         $expected = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<entry xml:base="http://localhost/NorthWind.svc" xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns="http://www.w3.org/2005/Atom" m:etag="">
+<entry xml:base="http://localhost/NorthWind.svc/" xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns="http://www.w3.org/2005/Atom" m:etag="">
  <id>http://host/service.svc/Customers(1)</id>
  <title type="text">title of entry 2</title>
  <updated>2011-05-24T15:01:23+05:30</updated>
