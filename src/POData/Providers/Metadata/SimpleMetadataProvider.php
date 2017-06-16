@@ -2,6 +2,7 @@
 
 namespace POData\Providers\Metadata;
 
+use AlgoWeb\ODataMetadata\IsOK;
 use AlgoWeb\ODataMetadata\MetadataManager;
 use AlgoWeb\ODataMetadata\MetadataV3\edm\TComplexTypeType;
 use AlgoWeb\ODataMetadata\MetadataV3\edm\TEntityTypeType;
@@ -24,6 +25,7 @@ class SimpleMetadataProvider implements IMetadataProvider
     protected $namespaceName;
     private $metadataManager;
     private $typeSetMapping = [];
+    protected $singletons = [];
 
     /**
      * @param string $containerName container name for the datasource
@@ -825,5 +827,34 @@ class SimpleMetadataProvider implements IMetadataProvider
         $targetResourceType->addProperty($resourceProperty);
 
         return $resourceProperty;
+    }
+
+    public function createSingleton($name, IsOK $returnType, $functionName)
+    {
+        if (array_key_exists($name, $this->singletons)) {
+            $msg = "Singleton name already exists";
+            throw new \InvalidArgumentException($msg);
+        }
+        $singleton = $this->metadataManager->createSingleton($name, $returnType);
+        assert($singleton->isOK($msg), $msg);
+        $type = new ResourceFunctionType($functionName, $singleton);
+        // Since singletons should take no args, enforce it here
+        assert(0 == count($type->getParms()));
+        $this->singletons[$name] = $type;
+    }
+
+    public function getSingletons()
+    {
+        return $this->singletons;
+    }
+
+    public function callSingleton($name)
+    {
+        if (!array_key_exists($name, $this->singletons)) {
+            $msg = "Requested singleton does not exist";
+            throw new \InvalidArgumentException($msg);
+        }
+
+        return $this->singletons[$name]->get();
     }
 }
