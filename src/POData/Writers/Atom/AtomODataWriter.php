@@ -44,6 +44,10 @@ class AtomODataWriter implements IODataWriter
      */
     public function __construct($absoluteServiceUri)
     {
+        $final = substr($absoluteServiceUri, -1);
+        if ('/' != $final) {
+            $absoluteServiceUri .= '/';
+        }
         $this->baseUri = $absoluteServiceUri;
 
         $this->xmlWriter = new \XMLWriter();
@@ -789,7 +793,7 @@ class AtomODataWriter implements IODataWriter
     {
         $writer = $this->xmlWriter;
         $writer->startElementNs(null, ODataConstants::ATOM_PUBLISHING_SERVICE_ELEMENT_NAME, ODataConstants::APP_NAMESPACE);
-        $writer->writeAttributeNs(ODataConstants::XML_NAMESPACE_PREFIX, ODataConstants::XML_BASE_ATTRIBUTE_NAME, null, $this->baseUri. '/');
+        $writer->writeAttributeNs(ODataConstants::XML_NAMESPACE_PREFIX, ODataConstants::XML_BASE_ATTRIBUTE_NAME, null, $this->baseUri);
         $writer->writeAttributeNs(ODataConstants::XMLNS_NAMESPACE_PREFIX, self::ATOM_NAMESPACE_PREFIX, null, ODataConstants::ATOM_NAMESPACE);
         //$writer->writeAttributeNs(ODataConstants::XMLNS_NAMESPACE_PREFIX, self::APP_NAMESPACE_PREFIX, null, ODataConstants::APP_NAMESPACE);
 
