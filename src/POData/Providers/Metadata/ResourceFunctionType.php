@@ -66,10 +66,7 @@ class ResourceFunctionType
                     $msg = "First element of FunctionName must not be empty";
                     throw new \InvalidArgumentException($msg);
                 }
-                if (in_array($func, $this->blacklist) || in_array(strtolower($func), $this->blacklist)) {
-                    $msg = "First element of FunctionName blacklisted";
-                    throw new \InvalidArgumentException($msg);
-                }
+                $this->checkBlacklist($func, true);
             }
         } else {
             if (!is_string($functionName) || empty(trim($functionName))) {
@@ -78,10 +75,7 @@ class ResourceFunctionType
             }
             $functionName = trim($functionName);
 
-            if (in_array($functionName, $this->blacklist) || in_array(strtolower($functionName), $this->blacklist)) {
-                $msg = "FunctionName blacklisted";
-                throw new \InvalidArgumentException($msg);
-            }
+            $this->checkBlacklist($functionName, false);
         }
 
         if (!$type->isOK($msg)) {
@@ -135,5 +129,16 @@ class ResourceFunctionType
 
         // commence primary ignition
         return call_user_func_array($this->functionName, $parms);
+    }
+
+    /**
+     * @param $func
+     */
+    private function checkBlacklist($func, $fromArray = false)
+    {
+        if (in_array($func, $this->blacklist) || in_array(strtolower($func), $this->blacklist)) {
+            $msg = (true === $fromArray ? "First element of " : "")."FunctionName blacklisted";
+            throw new \InvalidArgumentException($msg);
+        }
     }
 }

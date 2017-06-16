@@ -831,6 +831,7 @@ class SimpleMetadataProvider implements IMetadataProvider
 
     public function createSingleton($name, IsOK $returnType, $functionName)
     {
+        $msg = null;
         if (array_key_exists($name, $this->singletons)) {
             $msg = "Singleton name already exists";
             throw new \InvalidArgumentException($msg);
