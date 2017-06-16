@@ -2,6 +2,8 @@
 
 namespace POData\Providers\Metadata;
 
+use AlgoWeb\ODataMetadata\IsOK;
+
 /**
  * Class IMetadataProvider.
  *
@@ -92,4 +94,31 @@ interface IMetadataProvider
         ResourceEntityType $resourceType,
         ResourceProperty $resourceProperty
     );
+
+    /**
+     * Generate singleton wrapper
+     *
+     * @param string                $name               Name of singleton
+     * @param ResourceType          $returnType         Return type wrapper
+     * @param string|array          $functionName       Function call to be wrapped
+     *
+     * @return mixed
+     */
+    public function createSingleton($name, ResourceType $returnType, $functionName);
+
+    /**
+     * Get all singletons defined on this object
+     *
+     * @return array
+     */
+    public function getSingletons();
+
+    /**
+     * Call $name singleton and return result
+     *
+     * @param string                $name               Singleton to call
+     *
+     * @return mixed
+     */
+    public function callSingleton($name);
 }
