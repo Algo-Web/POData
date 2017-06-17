@@ -94,4 +94,9 @@ class TargetKind extends Enum
      * e.g. http://localhost/myservice.svc/Customers('ALFKI')/EMails.
      */
     const BAG = 12;
+
+    /**
+     * A singleton (parameterless function wrapper)
+     */
+    const SINGLETON = 13;
 }
