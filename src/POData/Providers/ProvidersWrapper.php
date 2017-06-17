@@ -306,10 +306,20 @@ class ProvidersWrapper
     {
         $resourceType = $this->metaProvider->resolveResourceType($name);
         if (is_null($resourceType)) {
-            return;
+            return null;
         }
 
         return $this->validateResourceType($resourceType);
+    }
+
+
+    public function resolveSingleton($name)
+    {
+        $singletons = $this->metaProvider->getSingletons();
+        if (array_key_exists($name, $singletons)) {
+            return $singletons[$name];
+        }
+        return null;
     }
 
     /**

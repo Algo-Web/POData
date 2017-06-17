@@ -134,6 +134,7 @@ class UriProcessorTest extends TestCase
         $this->mockCollectionResourceSetWrapper->shouldReceive('hasNamedStreams')->andReturn(false);
         $this->mockCollectionResourceSetWrapper->shouldReceive('hasBagProperty')->andReturn(false);
         $this->mockProvidersWrapper->shouldReceive('handlesOrderedPaging')->andReturn(false);
+        $this->mockProvidersWrapper->shouldReceive('resolveSingleton')->andReturn(null);
 
         $uriProcessor = UriProcessor::process($this->mockService);
 
@@ -168,6 +169,7 @@ class UriProcessorTest extends TestCase
         $this->mockServiceHost->shouldReceive('getRequestVersion')->andReturn('1.0');
         $this->mockServiceHost->shouldReceive('getRequestMaxVersion')->andReturn('1.0');
         $this->mockCollectionResourceSetWrapper->shouldReceive('checkResourceSetRightsForRead')->andReturnNull();
+        $this->mockProvidersWrapper->shouldReceive('resolveSingleton')->andReturn(null);
 
         $this->fakeServiceConfig->setAcceptCountRequests(true);
         $this->fakeServiceConfig->setMaxDataServiceVersion(ProtocolVersion::V1()); //because this is V1 and $count requires V2, this will fail
@@ -190,6 +192,7 @@ class UriProcessorTest extends TestCase
         $this->mockServiceHost->shouldReceive('getRequestVersion')->andReturn('2.0');
         $this->mockServiceHost->shouldReceive('getRequestMaxVersion')->andReturn('2.0');
         $this->mockCollectionResourceSetWrapper->shouldReceive('checkResourceSetRightsForRead')->andReturnNull();
+        $this->mockProvidersWrapper->shouldReceive('resolveSingleton')->andReturn(null);
 
         $this->fakeServiceConfig->setAcceptCountRequests(false);
 
@@ -215,6 +218,7 @@ class UriProcessorTest extends TestCase
         $this->mockCollectionResourceSetWrapper->shouldReceive('checkResourceSetRightsForRead')->andReturnNull();
         $this->mockCollectionResourceSetWrapper->shouldReceive('getName')->andReturn('STOP!');
         $this->mockServiceHost->shouldReceive('getQueryStringItem')->andReturn(null);
+        $this->mockProvidersWrapper->shouldReceive('resolveSingleton')->andReturn(null);
 
         $uriProcessor = UriProcessor::process($this->mockService);
 
@@ -254,6 +258,7 @@ class UriProcessorTest extends TestCase
         $this->mockServiceHost->shouldReceive('getRequestMaxVersion')->andReturn('2.0');
         $this->mockCollectionResourceSetWrapper->shouldReceive('checkResourceSetRightsForRead')->andReturnNull();
         $this->mockServiceHost->shouldReceive('getQueryStringItem')->andReturn(null);
+        $this->mockProvidersWrapper->shouldReceive('resolveSingleton')->andReturn(null);
 
         $this->fakeServiceConfig->setAcceptCountRequests(true);
         $this->fakeServiceConfig->setMaxDataServiceVersion(ProtocolVersion::V2());
@@ -297,6 +302,7 @@ class UriProcessorTest extends TestCase
         $this->mockCollectionResourceSetWrapper->shouldReceive('checkResourceSetRightsForRead')->andReturnNull();
         $this->mockCollectionResourceSetWrapper->shouldReceive('hasNamedStreams')->andReturn(false);
         $this->mockCollectionResourceSetWrapper->shouldReceive('hasBagProperty')->andReturn(false);
+        $this->mockProvidersWrapper->shouldReceive('resolveSingleton')->andReturn(null);
 
         //mock inline count as all pages
         $this->mockServiceHost->shouldReceive('getQueryStringItem')
@@ -329,6 +335,7 @@ class UriProcessorTest extends TestCase
         $this->mockCollectionResourceSetWrapper->shouldReceive('checkResourceSetRightsForRead')->andReturnNull();
         $this->mockCollectionResourceSetWrapper->shouldReceive('hasNamedStreams')->andReturn(true);
         $this->mockCollectionResourceSetWrapper->shouldReceive('hasBagProperty')->andReturn(true);
+        $this->mockProvidersWrapper->shouldReceive('resolveSingleton')->andReturn(null);
 
         //mock inline count as all pages
         $this->mockServiceHost->shouldReceive('getQueryStringItem')
@@ -365,6 +372,7 @@ class UriProcessorTest extends TestCase
         $this->mockCollectionResourceSetWrapper->shouldReceive('hasNamedStreams')->andReturn(false);
         $this->mockCollectionResourceSetWrapper->shouldReceive('hasBagProperty')->andReturn(false);
         $this->mockCollectionResourceSetWrapper->shouldReceive('getName')->andReturn('HAMMER TIME!');
+        $this->mockProvidersWrapper->shouldReceive('resolveSingleton')->andReturn(null);
 
         //mock inline count as all pages
         $this->mockServiceHost->shouldReceive('getQueryStringItem')
@@ -418,6 +426,7 @@ class UriProcessorTest extends TestCase
         $this->mockCollectionResourceSetWrapper->shouldReceive('hasNamedStreams')->andReturn(false);
         $this->mockCollectionResourceSetWrapper->shouldReceive('hasBagProperty')->andReturn(false);
         $this->mockCollectionResourceSetWrapper->shouldReceive('getName')->andReturn('HAMMER TIME!');
+        $this->mockProvidersWrapper->shouldReceive('resolveSingleton')->andReturn(null);
 
         //mock inline count as all pages
         $this->mockServiceHost->shouldReceive('getQueryStringItem')
@@ -470,6 +479,7 @@ class UriProcessorTest extends TestCase
         $this->mockCollectionResourceSetWrapper->shouldReceive('checkResourceSetRightsForRead')->andReturnNull();
         $this->mockCollectionResourceSetWrapper->shouldReceive('hasNamedStreams')->andReturn(true);
         $this->mockCollectionResourceSetWrapper->shouldReceive('hasBagProperty')->andReturn(true);
+        $this->mockProvidersWrapper->shouldReceive('resolveSingleton')->andReturn(null);
 
         //mock inline count as all pages
         $this->mockServiceHost->shouldReceive('getQueryStringItem')
