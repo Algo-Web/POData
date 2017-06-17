@@ -10,13 +10,16 @@ use POData\ObjectModel\IObjectSerialiser;
 use POData\OperationContext\ServiceHost;
 use POData\Providers\Metadata\ResourceComplexType;
 use POData\Providers\Metadata\ResourceEntityType;
+use POData\Providers\Metadata\ResourceFunctionType;
+use POData\Providers\Metadata\ResourceSet;
+use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\SimpleMetadataProvider;
 use POData\Providers\Stream\StreamProviderWrapper;
 use UnitTests\POData\BaseServiceDummy;
 use UnitTests\POData\TestCase;
 use Mockery as m;
 
-class SimpleMetadataProviderSingletonTest extends TestCase
+class SimpleMetadataProviderSingletonTest extends SimpleMetadataProviderTest
 {
     public function testCreateSingleton()
     {
@@ -28,11 +31,13 @@ class SimpleMetadataProviderSingletonTest extends TestCase
         $return->shouldReceive('getName')->andReturn('name');
 
         $foo = new SimpleMetadataProvider('string', 'number');
+        $this->assertNull($foo->resolveSingleton($name));
         $foo->addEntityType($refDummy, 'name');
         $foo->createSingleton($name, $return, $functionName);
         $result = $foo->getSingletons();
         $this->assertTrue(is_array($result));
         $this->assertEquals(1, count($result));
+        $this->assertTrue($foo->resolveSingleton($name) instanceof ResourceFunctionType);
     }
 
     public function testCreateSingletonWithDuplicateName()
@@ -95,6 +100,42 @@ class SimpleMetadataProviderSingletonTest extends TestCase
         $result = $foo->callSingleton('example');
         $this->assertTrue(is_array($result));
         $this->assertEquals(0, count($result));
+    }
+
+    public function testCreateSingletonNameCollideWithExistingEntitySet()
+    {
+        $expected = "Resource set with same name, fores, exists";
+        $actual = null;
+
+        $refDummy = $this->createDummyEntityType();
+        $functionName = [get_class($this), 'exampleSingleton'];
+
+        $complex = m::mock(TComplexTypeType::class)->makePartial();
+        $complex->shouldReceive('getName')->andReturn('example');
+        $return = new ResourceComplexType($refDummy, $complex);
+
+        $forward = new reusableEntityClass4('foo', 'bar');
+        $back = new reusableEntityClass5('foo', 'bar');
+
+        $foo = new SimpleMetadataProvider('string', 'number');
+
+        $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore');
+        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
+        $this->assertTrue($fore instanceof ResourceType);
+        $this->assertTrue($aft instanceof ResourceType);
+
+        $foreSet = $foo->addResourceSet('foreSet', $fore);
+        $aftSet = $foo->addResourceSet('aftSet', $aft);
+        $this->assertTrue($foreSet instanceof ResourceSet);
+        $this->assertTrue($aftSet instanceof ResourceSet);
+        $name = $foreSet->getName();
+
+        try {
+            $foo->createSingleton($name, $return, $functionName);
+        } catch (\InvalidArgumentException $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
     }
 
     public function testCallNonExistentSingleton()
