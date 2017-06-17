@@ -1142,6 +1142,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
     public function testGetOutputNoResourceSets()
     {
         $this->mockProvider->shouldReceive('getResourceSets')->andReturn([]);
+        $this->mockProvider->shouldReceive('getSingletons')->andReturn([]);
 
         $fakeBaseURL = 'http://some/place/some/where/'.uniqid();
 
@@ -1168,6 +1169,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         ];
 
         $this->mockProvider->shouldReceive('getResourceSets')->andReturn($fakeResourceSets);
+        $this->mockProvider->shouldReceive('getSingletons')->andReturn([]);
 
         $fakeBaseURL = 'http://some/place/some/where/'.uniqid();
 

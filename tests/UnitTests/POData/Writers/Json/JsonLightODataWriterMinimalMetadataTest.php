@@ -1272,6 +1272,7 @@ class JsonLightODataWriterMinimalMetadataTest extends TestCase
     public function testGetOutputNoResourceSets()
     {
         $this->mockProvider->shouldReceive('getResourceSets')->andReturn([]);
+        $this->mockProvider->shouldReceive('getSingletons')->andReturn([]);
 
         $writer = new JsonLightODataWriter(JsonLightMetadataLevel::MINIMAL(), $this->serviceBase);
         $actual = $writer->writeServiceDocument($this->mockProvider)->getOutput();
@@ -1296,6 +1297,7 @@ class JsonLightODataWriterMinimalMetadataTest extends TestCase
         ];
 
         $this->mockProvider->shouldReceive('getResourceSets')->andReturn($fakeResourceSets);
+        $this->mockProvider->shouldReceive('getSingletons')->andReturn([]);
 
         $writer = new JsonLightODataWriter(JsonLightMetadataLevel::MINIMAL(), $this->serviceBase);
         $actual = $writer->writeServiceDocument($this->mockProvider)->getOutput();
