@@ -813,6 +813,18 @@ class AtomODataWriter implements IODataWriter
             //end collection node
             $writer->endElement();
         }
+        foreach ($providers->getSingletons() as $single) {
+            //start collection node
+            $writer->startElement(ODataConstants::ATOM_PUBLISHING_COLLECTION_ELEMENT_NAME);
+            $writer->writeAttribute(ODataConstants::ATOM_HREF_ATTRIBUTE_NAME, $single->getName());
+            //start title node
+            $writer->startElementNs(self::ATOM_NAMESPACE_PREFIX, ODataConstants::ATOM_TITLE_ELELMET_NAME, null);
+            $writer->text($single->getName());
+            //end title node
+            $writer->endElement();
+            //end collection node
+            $writer->endElement();
+        }
 
         //End workspace and service nodes
         $writer->endElement();

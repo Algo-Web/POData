@@ -14,6 +14,8 @@ use POData\ObjectModel\ODataProperty;
 use POData\ObjectModel\ODataPropertyContent;
 use POData\ObjectModel\ODataURL;
 use POData\ObjectModel\ODataURLCollection;
+use POData\Providers\Metadata\ResourceFunctionType;
+use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\ProvidersWrapper;
 use POData\Writers\Json\JsonODataV1Writer;
 use UnitTests\POData\TestCase;
@@ -1272,6 +1274,33 @@ class JsonODataV1WriterTest extends TestCase
 
         $expected = "{\n    \"d\":{\n        \"EntitySet\":[\n            \"Name 1\",\"XML escaped stuff \\\" ' <> & ?\"\n        ]\n    }\n}";
 
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testAddSingletonsToServiceDocument()
+    {
+        $expected = '{
+    "d":{
+        "EntitySet":[
+            "Sets","single"
+        ]
+    }
+}';
+
+        $set = m::mock(ResourceSetWrapper::class);
+        $set->shouldReceive('getName')->andReturn('Sets');
+
+        $single = m::mock(ResourceFunctionType::class);
+        $single->shouldReceive('getName')->andReturn('single');
+
+        $wrapper = m::mock(ProvidersWrapper::class);
+        $wrapper->shouldReceive('getResourceSets')->andReturn([$set]);
+        $wrapper->shouldReceive('getSingletons')->andReturn([$single]);
+
+        $foo = new JsonODataV1Writer('http://localhost/odata.svc');
+        $foo->writeServiceDocument($wrapper);
+
+        $actual = $foo->getOutput();
         $this->assertEquals($expected, $actual);
     }
 

@@ -456,17 +456,20 @@ class JsonODataV1Writer implements IODataWriter
             ->startObjectScope() // {
             ->writeName(ODataConstants::ENTITY_SET) // "EntitySets"
             ->startArrayScope() // [
-;
+        ;
 
         foreach ($providers->getResourceSets() as $resourceSetWrapper) {
             $writer->writeValue($resourceSetWrapper->getName());
+        }
+        foreach ($providers->getSingletons() as $singleton) {
+            $writer->writeValue($singleton->getName());
         }
 
         $writer
             ->endScope() // ]
             ->endScope() // }
             ->endScope() // }
-;
+        ;
 
         return $this;
     }
