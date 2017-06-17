@@ -121,7 +121,6 @@ class ResourceFunctionType
     }
 
     /**
-     * @param array $parms
      * @return ResourceType
      */
     public function getResourceType()

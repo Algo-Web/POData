@@ -175,7 +175,6 @@ class SegmentParser
             throw ODataException::createSyntaxError("Singleton must be first element");
         }
 
-        $current = null;
         if ($previousKind == TargetKind::PRIMITIVE()) {
             if ($identifier !== ODataConstants::URI_VALUE_SEGMENT) {
                 throw ODataException::resourceNotFoundError(
