@@ -80,10 +80,9 @@ class ResponseWriter
                 $responseBody = $writer->write($entityModel)->getOutput();
             }
         }
-
         $service->getHost()->setResponseStatusCode(HttpStatus::CODE_OK);
         $service->getHost()->setResponseContentType($responseContentType);
-// Hack: this needs to be sorted out in the future as we hookup other versions.
+        // Hack: this needs to be sorted out in the future as we hookup other versions.
         $service->getHost()->setResponseVersion('3.0;');
         $service->getHost()->setResponseCacheControl(ODataConstants::HTTPRESPONSE_HEADER_CACHECONTROL_NOCACHE);
         $service->getHost()->getOperationContext()->outgoingResponse()->setStream($responseBody);

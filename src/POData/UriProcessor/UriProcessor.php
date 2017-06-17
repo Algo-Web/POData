@@ -282,7 +282,10 @@ class UriProcessor
         foreach ($segments as $segment) {
             $requestTargetKind = $segment->getTargetKind();
 
-            if ($segment->getTargetSource() == TargetSource::ENTITY_SET) {
+            if (TargetKind::SINGLETON() == $requestTargetKind) {
+                $singleton = $this->getService()->getProvidersWrapper()->resolveSingleton($segment->getIdentifier());
+                $segment->setResult($singleton->get());
+            } elseif ($segment->getTargetSource() == TargetSource::ENTITY_SET) {
                 $this->handleSegmentTargetsToResourceSet($segment);
             } elseif ($requestTargetKind == TargetKind::RESOURCE()) {
                 if (is_null($segment->getPrevious()->getResult())) {

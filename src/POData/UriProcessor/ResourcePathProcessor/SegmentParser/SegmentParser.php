@@ -394,6 +394,8 @@ class SegmentParser
             $this->_assertion(is_null($keyPredicate));
             $descriptor->setTargetKind(TargetKind::SINGLETON());
             $descriptor->setTargetSource(TargetSource::ENTITY_SET);
+            $descriptor->setTargetResourceType($singleton->getResourceType());
+            $descriptor->setSingleResult(true);
 
             return $descriptor;
         }

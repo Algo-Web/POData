@@ -68,6 +68,7 @@ class SegmentParserMockeryTest extends TestCase
         $this->assertNull($keyDesc);
         $this->assertEquals(TargetKind::SINGLETON(), $result->getTargetKind());
         $this->assertEquals(TargetSource::ENTITY_SET, $result->getTargetSource());
+        $this->assertTrue($result->isSingleResult());
     }
 
     public function testSingletonAsLaterSegment()
