@@ -266,6 +266,12 @@ class ProvidersWrapper
         return $resourceTypes;
     }
 
+    public function getSingletons()
+    {
+        $singletons = $this->metaProvider->getSingletons();
+        return (null == $singletons) ? [] : $singletons;
+    }
+
     /**
      * To get a resource set based on the specified resource set name which is
      * visible,
