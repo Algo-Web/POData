@@ -139,6 +139,21 @@ class SimpleMetadataProvider implements IMetadataProvider
     }
 
     /**
+     * get a singelton based on the specified singleton name.
+     *
+     * @param string $name Name of the resource set
+     *
+     * @return ResourceFunctionType|null    singleton with the given name if found else NULL
+     */
+    public function resolveSingleton($name)
+    {
+        if (array_key_exists($name, $this->singletons)) {
+            return $this->singletons[$name];
+        }
+        return null;
+    }
+
+    /**
      * get a resource set based on the specified resource association set name.
      *
      * @param string $name Name of the resource assocation set
@@ -834,6 +849,10 @@ class SimpleMetadataProvider implements IMetadataProvider
         $msg = null;
         if (array_key_exists($name, $this->singletons)) {
             $msg = "Singleton name already exists";
+            throw new \InvalidArgumentException($msg);
+        }
+        if (array_key_exists($name, $this->resourceSets)) {
+            $msg = "Resource set with same name, ". $name. ", exists";
             throw new \InvalidArgumentException($msg);
         }
         $typeName = $returnType->getName();
