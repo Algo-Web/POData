@@ -838,7 +838,10 @@ abstract class ResourceType
         if (null == $this->type || $this->type instanceof \POData\Providers\Metadata\Type\IType) {
             return array_keys(get_object_vars($this));
         }
-        $this->type = $this->type->name;
+        if (is_object($this->type)) {
+            $this->type = $this->type->name;
+        }
+        assert(is_string($this->type), "Type name should be a string at end of serialisation");
         $result = array_keys(get_object_vars($this));
 
         return $result;
