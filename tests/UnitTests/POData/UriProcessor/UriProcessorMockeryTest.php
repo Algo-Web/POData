@@ -5,11 +5,18 @@ namespace UnitTests\POData\UriProcessor;
 use POData\Common\ODataException;
 use POData\Common\Url;
 use POData\Common\Version;
+use POData\ObjectModel\IObjectSerialiser;
+use POData\ObjectModel\ObjectModelSerializer;
+use POData\ObjectModel\ODataURL;
 use POData\OperationContext\HTTPRequestMethod;
 use POData\OperationContext\IOperationContext;
+use POData\Providers\Metadata\ResourceFunctionType;
 use POData\Providers\Metadata\Type\DateTime;
 use POData\Providers\Metadata\Type\Int32;
+use POData\Providers\ProvidersWrapper;
+use POData\Providers\Query\IQueryProvider;
 use POData\Providers\Query\QueryType;
+use POData\SimpleDataService;
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandedProjectionNode;
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ProjectionNode;
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\RootProjectionNode;
@@ -19,14 +26,21 @@ use POData\UriProcessor\QueryProcessor\OrderByParser\OrderByPathSegment;
 use POData\UriProcessor\QueryProcessor\OrderByParser\OrderBySubPathSegment;
 use POData\UriProcessor\QueryProcessor\SkipTokenParser\InternalSkipTokenInfo;
 use POData\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenInfo;
+use POData\UriProcessor\RequestDescription;
+use POData\UriProcessor\RequestExpander;
+use POData\UriProcessor\ResourcePathProcessor\SegmentParser\SegmentDescriptor;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetSource;
 use UnitTests\POData\Facets\NorthWind1\Customer2;
+use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 use UnitTests\POData\Facets\NorthWind1\NorthWindService2;
 use UnitTests\POData\Facets\NorthWind1\NorthWindServiceV1;
 use UnitTests\POData\Facets\NorthWind1\NorthWindServiceV3;
+use UnitTests\POData\Facets\NorthWind4\NorthWindService;
 use UnitTests\POData\Facets\ServiceHostTestFake;
+use UnitTests\POData\Providers\Metadata\reusableEntityClass4;
 use UnitTests\POData\TestCase;
+use Mockery as m;
 
 class UriProcessorMockeryTest extends TestCase
 {
@@ -2230,5 +2244,91 @@ class UriProcessorMockeryTest extends TestCase
 
         $topCount = $requestDescription->getTopCount();
         $this->assertNotNull($topCount);
+    }
+
+    public function testExecuteBaseWithJustASingleton()
+    {
+        $resourceFunc = m::mock(ResourceFunctionType::class);
+        $resourceFunc->shouldReceive('get')->andReturnSelf();
+        $resourceFunc->shouldReceive('getName')->andReturn('Hammer, M.C.');
+
+        $providers = m::mock(ProvidersWrapper::class);
+        $providers->shouldReceive('resolveSingleton')->withArgs(['whereami'])->andReturn($resourceFunc)->once();
+
+        $service = \Mockery::mock(\POData\IService::class);
+        $service->shouldReceive('getOperationContext')->andReturnNull();
+        $service->shouldReceive('getProvidersWrapper')->andReturn($providers)->once();
+
+        $descript = new SegmentDescriptor();
+        $descript->setIdentifier('whereami');
+        $descript->setTargetKind(TargetKind::SINGLETON());
+        $descript->setTargetSource(TargetSource::ENTITY_SET);
+
+        $request = m::mock(RequestDescription::class);
+        $request->shouldReceive('getSegments')->andReturn([$descript]);
+
+        $expander = m::mock(RequestExpander::class);
+        $expander->shouldReceive('handleExpansion')->andReturnNull()->once();
+
+        $foo = \Mockery::mock(\POData\UriProcessor\UriProcessor::class)
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+        $foo->shouldReceive('getService')->andReturn($service)->times(2);
+        $foo->shouldReceive('executeBase')->passthru()->once();
+        $foo->shouldReceive('executeGet')->andReturnNull()->never();
+        $foo->shouldReceive('executePost')->andReturnNull()->never();
+        $foo->shouldReceive('executePut')->andReturnNull()->never();
+        $foo->shouldReceive('executePatch')->andReturnNull()->never();
+        $foo->shouldReceive('executeDelete')->andReturnNull()->never();
+        $foo->shouldReceive('execute')->passthru();
+        $foo->shouldReceive('getRequest')->andReturn($request)->once();
+        $foo->shouldReceive('getExpander')->andReturn($expander)->once();
+
+        $foo->execute();
+
+        $rebar = $descript->getResult();
+        $this->assertTrue($rebar instanceof ResourceFunctionType);
+        $this->assertEquals('Hammer, M.C.', $rebar->getName());
+    }
+
+    public function testIntegrationWithJustASingleton()
+    {
+        $hostInfo = [
+            'AbsoluteRequestUri'    => new Url('http://localhost:8083/NorthWindDataService.svc/Foobar'),
+            'AbsoluteServiceUri'    => new Url('http://localhost:8083/NorthWindDataService.svc'),
+            'QueryString'           => null,
+            'DataServiceVersion'    => new Version(1, 0),
+            'MaxDataServiceVersion' => new Version(3, 0),
+        ];
+
+        $cereal = m::mock(ObjectModelSerializer::class)->makePartial();
+        $cereal->shouldReceive('writeTopLevelElement')->andReturn('fnord');
+        $cereal->shouldReceive('setRequest')->andReturnNull()->once();
+        $host = new ServiceHostTestFake($hostInfo);
+        $db = m::mock(IQueryProvider::class);
+
+        $functionName = [get_class($this), 'exampleSingleton'];
+        $forward = new reusableEntityClass4('foo', 'bar');
+
+        $meta = NorthWindMetadata::Create();
+        $fore = $meta->addEntityType(new \ReflectionClass($forward), 'fore');
+
+        $name = "Foobar";
+
+        $meta->createSingleton($name, $fore, $functionName);
+
+        $foo = new SimpleDataService($db, $meta, $host, $cereal);
+        $this->assertEquals(null, $foo->getHost()->getResponseContentType());
+        $foo->handleRequest();
+
+        $this->assertEquals("application/atom+xml", $foo->getHost()->getResponseContentType());
+        $stream = $foo->getHost()->getOperationContext()->outgoingResponse()->getStream();
+        $this->assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>".PHP_EOL, $stream);
+    }
+
+
+    public static function exampleSingleton()
+    {
+        return [];
     }
 }

@@ -2,6 +2,7 @@
 
 namespace UnitTests\POData\Providers\Metadata;
 
+use POData\Providers\Metadata\ResourceType;
 use UnitTests\POData\BaseServiceDummy;
 use UnitTests\POData\TestCase;
 use POData\Providers\Metadata\ResourceFunctionType;
@@ -12,6 +13,7 @@ class ResourceFunctionTypeTest extends TestCase
 {
     public function testCreateNullName()
     {
+        $resource = m::mock(ResourceType::class);
         $type = m::mock(FunctionImportAnonymousType::class)->makePartial();
         $name = null;
 
@@ -19,7 +21,7 @@ class ResourceFunctionTypeTest extends TestCase
         $actual = null;
 
         try {
-            $foo = new ResourceFunctionType($name, $type);
+            $foo = new ResourceFunctionType($name, $type, $resource);
         } catch (\InvalidArgumentException $e) {
             $actual = $e->getMessage();
         }
@@ -28,6 +30,7 @@ class ResourceFunctionTypeTest extends TestCase
 
     public function testCreateEmptyArrayName()
     {
+        $resource = m::mock(ResourceType::class);
         $type = m::mock(FunctionImportAnonymousType::class)->makePartial();
         $name = [];
 
@@ -35,7 +38,7 @@ class ResourceFunctionTypeTest extends TestCase
         $actual = null;
 
         try {
-            $foo = new ResourceFunctionType($name, $type);
+            $foo = new ResourceFunctionType($name, $type, $resource);
         } catch (\InvalidArgumentException $e) {
             $actual = $e->getMessage();
         }
@@ -44,6 +47,7 @@ class ResourceFunctionTypeTest extends TestCase
 
     public function testCreateOverflowingArrayName()
     {
+        $resource = m::mock(ResourceType::class);
         $type = m::mock(FunctionImportAnonymousType::class)->makePartial();
         $name = ['stop!', 'hammer', 'time!'];
 
@@ -51,7 +55,7 @@ class ResourceFunctionTypeTest extends TestCase
         $actual = null;
 
         try {
-            $foo = new ResourceFunctionType($name, $type);
+            $foo = new ResourceFunctionType($name, $type, $resource);
         } catch (\InvalidArgumentException $e) {
             $actual = $e->getMessage();
         }
@@ -60,6 +64,7 @@ class ResourceFunctionTypeTest extends TestCase
 
     public function testCreateArrayWithBadContentsFirstElementName()
     {
+        $resource = m::mock(ResourceType::class);
         $type = m::mock(FunctionImportAnonymousType::class)->makePartial();
         $name = [['stop!'], 'hammer'];
 
@@ -67,7 +72,7 @@ class ResourceFunctionTypeTest extends TestCase
         $actual = null;
 
         try {
-            $foo = new ResourceFunctionType($name, $type);
+            $foo = new ResourceFunctionType($name, $type, $resource);
         } catch (\InvalidArgumentException $e) {
             $actual = $e->getMessage();
         }
@@ -76,6 +81,7 @@ class ResourceFunctionTypeTest extends TestCase
 
     public function testCreateArrayWithBadContentsSecondElementName()
     {
+        $resource = m::mock(ResourceType::class);
         $type = m::mock(FunctionImportAnonymousType::class)->makePartial();
         $name = ['hammer', ['stop!']];
 
@@ -83,7 +89,7 @@ class ResourceFunctionTypeTest extends TestCase
         $actual = null;
 
         try {
-            $foo = new ResourceFunctionType($name, $type);
+            $foo = new ResourceFunctionType($name, $type, $resource);
         } catch (\InvalidArgumentException $e) {
             $actual = $e->getMessage();
         }
@@ -92,6 +98,7 @@ class ResourceFunctionTypeTest extends TestCase
 
     public function testCreateArrayWithEncapsulatedBadContentsFirstElementName()
     {
+        $resource = m::mock(ResourceType::class);
         $type = m::mock(FunctionImportAnonymousType::class)->makePartial();
         $name = ['eval', 'hammer'];
 
@@ -99,7 +106,7 @@ class ResourceFunctionTypeTest extends TestCase
         $actual = null;
 
         try {
-            $foo = new ResourceFunctionType($name, $type);
+            $foo = new ResourceFunctionType($name, $type, $resource);
         } catch (\InvalidArgumentException $e) {
             $actual = $e->getMessage();
         }
@@ -108,6 +115,7 @@ class ResourceFunctionTypeTest extends TestCase
 
     public function testCreateArrayWithEncapsulatedMixedCaseBadContentsFirstElementName()
     {
+        $resource = m::mock(ResourceType::class);
         $type = m::mock(FunctionImportAnonymousType::class)->makePartial();
         $name = ['SYSTEM', 'hammer'];
 
@@ -115,7 +123,7 @@ class ResourceFunctionTypeTest extends TestCase
         $actual = null;
 
         try {
-            $foo = new ResourceFunctionType($name, $type);
+            $foo = new ResourceFunctionType($name, $type, $resource);
         } catch (\InvalidArgumentException $e) {
             $actual = $e->getMessage();
         }
@@ -124,6 +132,7 @@ class ResourceFunctionTypeTest extends TestCase
 
     public function testCreateArrayWithEmptyFirstElementName()
     {
+        $resource = m::mock(ResourceType::class);
         $type = m::mock(FunctionImportAnonymousType::class)->makePartial();
         $name = ['', 'hammer'];
 
@@ -131,7 +140,7 @@ class ResourceFunctionTypeTest extends TestCase
         $actual = null;
 
         try {
-            $foo = new ResourceFunctionType($name, $type);
+            $foo = new ResourceFunctionType($name, $type, $resource);
         } catch (\InvalidArgumentException $e) {
             $actual = $e->getMessage();
         }
@@ -140,6 +149,7 @@ class ResourceFunctionTypeTest extends TestCase
 
     public function testCreateArrayWithTwoNullElementName()
     {
+        $resource = m::mock(ResourceType::class);
         $type = m::mock(FunctionImportAnonymousType::class)->makePartial();
         $name = [null, null];
 
@@ -147,7 +157,7 @@ class ResourceFunctionTypeTest extends TestCase
         $actual = null;
 
         try {
-            $foo = new ResourceFunctionType($name, $type);
+            $foo = new ResourceFunctionType($name, $type, $resource);
         } catch (\InvalidArgumentException $e) {
             $actual = $e->getMessage();
         }
@@ -156,6 +166,7 @@ class ResourceFunctionTypeTest extends TestCase
 
     public function testCreateObjectName()
     {
+        $resource = m::mock(ResourceType::class);
         $type = m::mock(FunctionImportAnonymousType::class)->makePartial();
         $name = new \DateTime();
 
@@ -163,7 +174,7 @@ class ResourceFunctionTypeTest extends TestCase
         $actual = null;
 
         try {
-            $foo = new ResourceFunctionType($name, $type);
+            $foo = new ResourceFunctionType($name, $type, $resource);
         } catch (\InvalidArgumentException $e) {
             $actual = $e->getMessage();
         }
@@ -172,6 +183,7 @@ class ResourceFunctionTypeTest extends TestCase
 
     public function testCreateEmptyName()
     {
+        $resource = m::mock(ResourceType::class);
         $type = m::mock(FunctionImportAnonymousType::class)->makePartial();
         $name = ' ';
 
@@ -179,7 +191,7 @@ class ResourceFunctionTypeTest extends TestCase
         $actual = null;
 
         try {
-            $foo = new ResourceFunctionType($name, $type);
+            $foo = new ResourceFunctionType($name, $type, $resource);
         } catch (\InvalidArgumentException $e) {
             $actual = $e->getMessage();
         }
@@ -188,6 +200,7 @@ class ResourceFunctionTypeTest extends TestCase
 
     public function testCreateBlacklistedName()
     {
+        $resource = m::mock(ResourceType::class);
         $type = m::mock(FunctionImportAnonymousType::class)->makePartial();
         $name = 'exec';
 
@@ -195,7 +208,7 @@ class ResourceFunctionTypeTest extends TestCase
         $actual = null;
 
         try {
-            $foo = new ResourceFunctionType($name, $type);
+            $foo = new ResourceFunctionType($name, $type, $resource);
         } catch (\InvalidArgumentException $e) {
             $actual = $e->getMessage();
         }
@@ -204,6 +217,7 @@ class ResourceFunctionTypeTest extends TestCase
 
     public function testCreateEncapsulatedAndBlacklistedName()
     {
+        $resource = m::mock(ResourceType::class);
         $type = m::mock(FunctionImportAnonymousType::class)->makePartial();
         $name = 'exec';
 
@@ -211,7 +225,7 @@ class ResourceFunctionTypeTest extends TestCase
         $actual = null;
 
         try {
-            $foo = new ResourceFunctionType([$name], $type);
+            $foo = new ResourceFunctionType([$name], $type, $resource);
         } catch (\InvalidArgumentException $e) {
             $actual = $e->getMessage();
         }
@@ -220,6 +234,7 @@ class ResourceFunctionTypeTest extends TestCase
 
     public function testCreateBlacklistedNameMixedCase()
     {
+        $resource = m::mock(ResourceType::class);
         $type = m::mock(FunctionImportAnonymousType::class)->makePartial();
         $name = 'SyStEm';
 
@@ -227,7 +242,7 @@ class ResourceFunctionTypeTest extends TestCase
         $actual = null;
 
         try {
-            $foo = new ResourceFunctionType($name, $type);
+            $foo = new ResourceFunctionType($name, $type, $resource);
         } catch (\InvalidArgumentException $e) {
             $actual = $e->getMessage();
         }
@@ -236,6 +251,7 @@ class ResourceFunctionTypeTest extends TestCase
 
     public function testCreateBadType()
     {
+        $resource = m::mock(ResourceType::class);
         $type = m::mock(FunctionImportAnonymousType::class)->makePartial();
         $type->shouldReceive('isOK')->andReturn(false)->once();
 
@@ -245,7 +261,7 @@ class ResourceFunctionTypeTest extends TestCase
         $actual = null;
 
         try {
-            $foo = new ResourceFunctionType($name, $type);
+            $foo = new ResourceFunctionType($name, $type, $resource);
         } catch (\InvalidArgumentException $e) {
             $actual = $e->getMessage();
         }
@@ -255,6 +271,8 @@ class ResourceFunctionTypeTest extends TestCase
 
     public function testGetters()
     {
+        $resource = m::mock(ResourceType::class);
+        $resource->shouldReceive('getName')->andReturn('foo');
         $type = m::mock(FunctionImportAnonymousType::class)->makePartial();
         $type->shouldReceive('isOK')->andReturn(true)->once();
         $type->shouldReceive('getName')->andReturn('type')->once();
@@ -262,22 +280,26 @@ class ResourceFunctionTypeTest extends TestCase
 
         $name = "func";
 
-        $foo = new ResourceFunctionType($name, $type);
+        $foo = new ResourceFunctionType($name, $type, $resource);
         $parms = $foo->getParms();
         $this->assertEquals("func", $foo->getFunctionName());
         $this->assertEquals("type", $foo->getName());
         $this->assertTrue(is_array($parms));
         $this->assertEquals(0, count($parms));
+        $res = $foo->getResourceType();
+        $this->assertTrue($res instanceof ResourceType);
+        $this->assertEquals('foo', $res->getName());
     }
 
     public function testGetTooManyParms()
     {
+        $resource = m::mock(ResourceType::class);
         $type = m::mock(FunctionImportAnonymousType::class)->makePartial();
         $type->shouldReceive('isOK')->andReturn(true)->once();
         $type->shouldReceive('getParameter')->andReturn([])->once();
 
         $name = "func";
-        $foo = new ResourceFunctionType($name, $type);
+        $foo = new ResourceFunctionType($name, $type, $resource);
 
         $expected = "Was expecting 0 arguments, received 1 instead";
         $actual = null;
@@ -292,12 +314,13 @@ class ResourceFunctionTypeTest extends TestCase
 
     public function testGetTooFewParms()
     {
+        $resource = m::mock(ResourceType::class);
         $type = m::mock(FunctionImportAnonymousType::class)->makePartial();
         $type->shouldReceive('isOK')->andReturn(true)->once();
         $type->shouldReceive('getParameter')->andReturn(['a'])->once();
 
         $name = "func";
-        $foo = new ResourceFunctionType($name, $type);
+        $foo = new ResourceFunctionType($name, $type, $resource);
 
         $expected = "Was expecting 1 arguments, received 0 instead";
         $actual = null;
@@ -312,12 +335,13 @@ class ResourceFunctionTypeTest extends TestCase
 
     public function testGetWithBuiltinFunctionOneParms()
     {
+        $resource = m::mock(ResourceType::class);
         $type = m::mock(FunctionImportAnonymousType::class)->makePartial();
         $type->shouldReceive('isOK')->andReturn(true)->once();
         $type->shouldReceive('getParameter')->andReturn(['a'])->once();
 
         $name = "date";
-        $foo = new ResourceFunctionType($name, $type);
+        $foo = new ResourceFunctionType($name, $type, $resource);
 
         $parms = 'Y-m-d';
 
@@ -327,6 +351,7 @@ class ResourceFunctionTypeTest extends TestCase
 
     public function testWithObjectAndMethodCallNoParms()
     {
+        $resource = m::mock(ResourceType::class);
         $type = m::mock(FunctionImportAnonymousType::class)->makePartial();
         $type->shouldReceive('isOK')->andReturn(true)->once();
         $type->shouldReceive('getParameter')->andReturn([])->once();
@@ -337,7 +362,7 @@ class ResourceFunctionTypeTest extends TestCase
 
         $name = [$obj, $method];
 
-        $foo = new ResourceFunctionType($name, $type);
+        $foo = new ResourceFunctionType($name, $type, $resource);
 
         $result = $foo->get();
         $this->assertNull($result);
@@ -345,13 +370,14 @@ class ResourceFunctionTypeTest extends TestCase
 
     public function testWithStaticMethodCallBifurcatedAndParms()
     {
+        $resource = m::mock(ResourceType::class);
         $type = m::mock(FunctionImportAnonymousType::class)->makePartial();
         $type->shouldReceive('isOK')->andReturn(true)->once();
         $type->shouldReceive('getParameter')->andReturn(['a', 'b'])->once();
 
         $name = [get_class($this), 'addTwoNumbers'];
 
-        $foo = new ResourceFunctionType($name, $type);
+        $foo = new ResourceFunctionType($name, $type, $resource);
 
         $result = $foo->get([1, 2]);
         $this->assertEquals(3, $result);
@@ -359,13 +385,14 @@ class ResourceFunctionTypeTest extends TestCase
 
     public function testWithStaticMethodCallUnbifurcatedAndParms()
     {
+        $resource = m::mock(ResourceType::class);
         $type = m::mock(FunctionImportAnonymousType::class)->makePartial();
         $type->shouldReceive('isOK')->andReturn(true)->once();
         $type->shouldReceive('getParameter')->andReturn(['a', 'b'])->once();
 
         $name = [get_class($this) . '::addTwoNumbers'];
 
-        $foo = new ResourceFunctionType($name, $type);
+        $foo = new ResourceFunctionType($name, $type, $resource);
 
         $result = $foo->get([1, 2]);
         $this->assertEquals(3, $result);

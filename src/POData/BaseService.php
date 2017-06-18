@@ -355,6 +355,7 @@ abstract class BaseService implements IRequestHandler, IService
     protected function serializeResult(RequestDescription $request, UriProcessor $uriProcessor)
     {
         $isETagHeaderAllowed = $request->isETagHeaderAllowed();
+
         if ($this->getConfiguration()->getValidateETagHeader() && !$isETagHeaderAllowed) {
             if (!is_null($this->getHost()->getRequestIfMatch())
                 || !is_null($this->getHost()->getRequestIfNoneMatch())
@@ -414,7 +415,7 @@ abstract class BaseService implements IRequestHandler, IService
                     assert($odataModelInstance instanceof ODataFeed, '!$odataModelInstance instanceof ODataFeed');
                 }
             } else {
-                // Code path for entry, complex, bag, resource reference link,
+                // Code path for entity, complex, bag, resource reference link,
                 // primitive type or primitive value
                 $result = $request->getTargetResult();
                 $requestTargetKind = $request->getTargetKind();
@@ -427,7 +428,8 @@ abstract class BaseService implements IRequestHandler, IService
                     }
 
                     $odataModelInstance = $objectModelSerializer->writeUrlElement($result);
-                } elseif (TargetKind::RESOURCE() == $requestTargetKind) {
+                } elseif (TargetKind::RESOURCE() == $requestTargetKind
+                          || TargetKind::SINGLETON() == $requestTargetKind) {
                     if (!is_null($this->getHost()->getRequestIfMatch())
                         && !is_null($this->getHost()->getRequestIfNoneMatch())
                     ) {
@@ -438,6 +440,7 @@ abstract class BaseService implements IRequestHandler, IService
                     // handle entry resource
                     $needToSerializeResponse = true;
                     $eTag = $this->compareETag($result, $targetResourceType, $needToSerializeResponse);
+
 
                     if ($needToSerializeResponse) {
                         if (is_null($result)) {
@@ -603,6 +606,7 @@ abstract class BaseService implements IRequestHandler, IService
                     )
                 );
 
+            case TargetKind::SINGLETON():
             case TargetKind::RESOURCE():
                 return HttpProcessUtility::selectMimeType(
                     $requestAcceptText,

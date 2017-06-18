@@ -863,7 +863,7 @@ class SimpleMetadataProvider implements IMetadataProvider
         $metaReturn = $this->OdataEntityMap[$typeName];
         $singleton = $this->metadataManager->createSingleton($name, $metaReturn);
         assert($singleton->isOK($msg), $msg);
-        $type = new ResourceFunctionType($functionName, $singleton);
+        $type = new ResourceFunctionType($functionName, $singleton, $returnType);
         // Since singletons should take no args, enforce it here
         assert(0 == count($type->getParms()));
         $this->singletons[$name] = $type;

@@ -16,6 +16,8 @@ use POData\ObjectModel\ODataProperty;
 use POData\ObjectModel\ODataPropertyContent;
 use POData\ObjectModel\ODataURL;
 use POData\ObjectModel\ODataURLCollection;
+use POData\Providers\Metadata\ResourceFunctionType;
+use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\ProvidersWrapper;
 use POData\Writers\Atom\AtomODataWriter;
 use UnitTests\POData\TestCase;
@@ -1140,6 +1142,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
     public function testGetOutputNoResourceSets()
     {
         $this->mockProvider->shouldReceive('getResourceSets')->andReturn([]);
+        $this->mockProvider->shouldReceive('getSingletons')->andReturn([]);
 
         $fakeBaseURL = 'http://some/place/some/where/'.uniqid();
 
@@ -1166,6 +1169,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         ];
 
         $this->mockProvider->shouldReceive('getResourceSets')->andReturn($fakeResourceSets);
+        $this->mockProvider->shouldReceive('getSingletons')->andReturn([]);
 
         $fakeBaseURL = 'http://some/place/some/where/'.uniqid();
 
@@ -1218,6 +1222,39 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 </error>
 ';
         $actual = AtomODataWriter::serializeException($foo, true);
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testAddSingletonsToServiceDocument()
+    {
+        $expected = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<service xml:base="http://localhost/odata.svc/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns="http://www.w3.org/2007/app">
+ <workspace>
+  <atom:title>Default</atom:title>
+  <collection href="Sets">
+   <atom:title>Sets</atom:title>
+  </collection>
+  <collection href="single">
+   <atom:title>single</atom:title>
+  </collection>
+ </workspace>
+</service>
+';
+
+        $set = m::mock(ResourceSetWrapper::class);
+        $set->shouldReceive('getName')->andReturn('Sets');
+
+        $single = m::mock(ResourceFunctionType::class);
+        $single->shouldReceive('getName')->andReturn('single');
+
+        $wrapper = m::mock(ProvidersWrapper::class);
+        $wrapper->shouldReceive('getResourceSets')->andReturn([$set]);
+        $wrapper->shouldReceive('getSingletons')->andReturn([$single]);
+
+        $foo = new AtomODataWriter('http://localhost/odata.svc');
+        $foo->writeServiceDocument($wrapper);
+
+        $actual = $foo->xmlWriter->outputMemory(true);
         $this->assertEquals($expected, $actual);
     }
 }

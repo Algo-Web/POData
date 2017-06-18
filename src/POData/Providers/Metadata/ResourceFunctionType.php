@@ -18,12 +18,15 @@ class ResourceFunctionType
      */
     private $baseType = null;
 
+    private $resourceType = null;
+
     /**
      * ResourceFunctionType constructor.
      * @param string|array $functionName
      * @param FunctionImportAnonymousType $type
+     * @param ResourceType $resource
      */
-    public function __construct($functionName, FunctionImportAnonymousType $type)
+    public function __construct($functionName, FunctionImportAnonymousType $type, ResourceType $resource)
     {
         if (null === $functionName) {
             $msg = "FunctionName must not be null";
@@ -84,6 +87,7 @@ class ResourceFunctionType
 
         $this->functionName = $functionName;
         $this->baseType = $type;
+        $this->resourceType = $resource;
     }
 
     /**
@@ -114,6 +118,14 @@ class ResourceFunctionType
     public function getParms()
     {
         return $this->baseType->getParameter();
+    }
+
+    /**
+     * @return ResourceType
+     */
+    public function getResourceType()
+    {
+        return $this->resourceType;
     }
 
     public function get(array $parms = [])

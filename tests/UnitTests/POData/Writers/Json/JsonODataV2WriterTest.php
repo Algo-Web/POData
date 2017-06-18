@@ -1398,6 +1398,7 @@ class JsonODataV2WriterTest extends TestCase
     public function testGetOutputNoResourceSets()
     {
         $this->mockProvider->shouldReceive('getResourceSets')->andReturn([]);
+        $this->mockProvider->shouldReceive('getSingletons')->andReturn([]);
 
         $writer = new JsonODataV2Writer();
         $actual = $writer->writeServiceDocument($this->mockProvider)->getOutput();
@@ -1422,6 +1423,7 @@ class JsonODataV2WriterTest extends TestCase
         ];
 
         $this->mockProvider->shouldReceive('getResourceSets')->andReturn($fakeResourceSets);
+        $this->mockProvider->shouldReceive('getSingletons')->andReturn([]);
 
         $writer = new JsonODataV2Writer();
         $actual = $writer->writeServiceDocument($this->mockProvider)->getOutput();

@@ -266,6 +266,12 @@ class ProvidersWrapper
         return $resourceTypes;
     }
 
+    public function getSingletons()
+    {
+        $singletons = $this->metaProvider->getSingletons();
+        return (null == $singletons) ? [] : $singletons;
+    }
+
     /**
      * To get a resource set based on the specified resource set name which is
      * visible,
@@ -306,10 +312,20 @@ class ProvidersWrapper
     {
         $resourceType = $this->metaProvider->resolveResourceType($name);
         if (is_null($resourceType)) {
-            return;
+            return null;
         }
 
         return $this->validateResourceType($resourceType);
+    }
+
+
+    public function resolveSingleton($name)
+    {
+        $singletons = $this->metaProvider->getSingletons();
+        if (array_key_exists($name, $singletons)) {
+            return $singletons[$name];
+        }
+        return null;
     }
 
     /**

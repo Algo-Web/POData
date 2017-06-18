@@ -802,16 +802,13 @@ class AtomODataWriter implements IODataWriter
         $writer->text(ODataConstants::ATOM_PUBLISHING_WORKSPACE_DEFAULT_VALUE);
         $writer->endElement();
         foreach ($providers->getResourceSets() as $resourceSetWrapper) {
+            $name = $resourceSetWrapper->getName();
+            $this->writeServiceDocumentNode($writer, $name);
+        }
+        foreach ($providers->getSingletons() as $single) {
+            $name = $single->getName();
             //start collection node
-            $writer->startElement(ODataConstants::ATOM_PUBLISHING_COLLECTION_ELEMENT_NAME);
-            $writer->writeAttribute(ODataConstants::ATOM_HREF_ATTRIBUTE_NAME, $resourceSetWrapper->getName());
-            //start title node
-            $writer->startElementNs(self::ATOM_NAMESPACE_PREFIX, ODataConstants::ATOM_TITLE_ELELMET_NAME, null);
-            $writer->text($resourceSetWrapper->getName());
-            //end title node
-            $writer->endElement();
-            //end collection node
-            $writer->endElement();
+            $this->writeServiceDocumentNode($writer, $name);
         }
 
         //End workspace and service nodes
@@ -819,5 +816,23 @@ class AtomODataWriter implements IODataWriter
         $writer->endElement();
 
         return $this;
+    }
+
+    /**
+     * @param $writer
+     * @param $name
+     */
+    private function writeServiceDocumentNode(&$writer, $name)
+    {
+        //start collection node
+        $writer->startElement(ODataConstants::ATOM_PUBLISHING_COLLECTION_ELEMENT_NAME);
+        $writer->writeAttribute(ODataConstants::ATOM_HREF_ATTRIBUTE_NAME, $name);
+        //start title node
+        $writer->startElementNs(self::ATOM_NAMESPACE_PREFIX, ODataConstants::ATOM_TITLE_ELELMET_NAME, null);
+        $writer->text($name);
+        //end title node
+        $writer->endElement();
+        //end collection node
+        $writer->endElement();
     }
 }

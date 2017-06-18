@@ -2,10 +2,15 @@
 
 namespace UnitTests\POData\Providers\Metadata;
 
+use POData\Configuration\IServiceConfiguration;
+use POData\Providers\Metadata\ResourceFunctionType;
 use POData\Providers\Metadata\SimpleMetadataProvider;
+use POData\Providers\ProvidersWrapper;
+use POData\Providers\Query\IQueryProvider;
 use UnitTests\POData\TestCase;
+use Mockery as m;
 
-class ProvidersWrapperTestMockery extends TestCase
+class ProvidersWrapperMockeryTest extends TestCase
 {
     public function testGetResourceSetsByMatchingName()
     {
@@ -100,6 +105,72 @@ class ProvidersWrapperTestMockery extends TestCase
         }
 
         $this->assertTrue($exceptionThrown, 'Object input should have thrown error exception');
+    }
+
+    public function testResolveNullSingleton()
+    {
+        $meta = m::mock(SimpleMetadataProvider::class)->makePartial();
+        $query = m::mock(IQueryProvider::class);
+        $service = m::mock(IServiceConfiguration::class);
+
+        $foo = new ProvidersWrapper($meta, $query, $service);
+        $this->assertNull($foo->resolveSingleton('singleton'));
+    }
+
+    public function testGetNullSingletons()
+    {
+        $meta = m::mock(SimpleMetadataProvider::class)->makePartial();
+        $query = m::mock(IQueryProvider::class);
+        $service = m::mock(IServiceConfiguration::class);
+
+        $foo = new ProvidersWrapper($meta, $query, $service);
+        $result = $foo->getSingletons();
+        $this->assertTrue(is_array($result));
+        $this->assertEquals(0, count($result));
+    }
+
+    public function testResolveNonNullSingleton()
+    {
+        $func = m::mock(ResourceFunctionType::class);
+        $func->shouldReceive('getName')->andReturn('hammerTime')->once();
+
+        $meta = m::mock(SimpleMetadataProvider::class)->makePartial();
+        $meta->shouldReceive('getSingletons')->andReturn(['singleton' => $func]);
+        $query = m::mock(IQueryProvider::class);
+        $service = m::mock(IServiceConfiguration::class);
+
+        $foo = new ProvidersWrapper($meta, $query, $service);
+        $result = $foo->resolveSingleton('singleton');
+        $this->assertTrue($result instanceof ResourceFunctionType);
+        $this->assertEquals('hammerTime', $func->getName());
+    }
+
+    public function testGetNonNullSingletons()
+    {
+        $func = m::mock(ResourceFunctionType::class);
+
+        $meta = m::mock(SimpleMetadataProvider::class)->makePartial();
+        $meta->shouldReceive('getSingletons')->andReturn(['singleton' => $func]);
+        $query = m::mock(IQueryProvider::class);
+        $service = m::mock(IServiceConfiguration::class);
+
+        $foo = new ProvidersWrapper($meta, $query, $service);
+        $result = $foo->getSingletons();
+        $this->assertTrue(is_array($result));
+        $this->assertEquals(1, count($result));
+    }
+
+    public function testGetEmptySingletons()
+    {
+        $meta = m::mock(SimpleMetadataProvider::class)->makePartial();
+        $meta->shouldReceive('getSingletons')->andReturn([]);
+        $query = m::mock(IQueryProvider::class);
+        $service = m::mock(IServiceConfiguration::class);
+
+        $foo = new ProvidersWrapper($meta, $query, $service);
+        $result = $foo->getSingletons();
+        $this->assertTrue(is_array($result));
+        $this->assertEquals(0, count($result));
     }
 
     public static function mockProperty($object, $propertyName, $value)

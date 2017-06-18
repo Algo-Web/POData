@@ -169,7 +169,12 @@ class SegmentParser
         $identifier = $keyPredicate = null;
         $this->extractSegmentIdentifierAndKeyPredicate($segment, $identifier, $keyPredicate);
         $hasPredicate = !is_null($keyPredicate);
-        $current = null;
+
+        $singleton = $this->providerWrapper->resolveSingleton($identifier);
+        if (null !== $singleton) {
+            throw ODataException::createSyntaxError("Singleton must be first element");
+        }
+
         if ($previousKind == TargetKind::PRIMITIVE()) {
             if ($identifier !== ODataConstants::URI_VALUE_SEGMENT) {
                 throw ODataException::resourceNotFoundError(
@@ -383,8 +388,19 @@ class SegmentParser
             );
         }
 
+        $singleton = $this->providerWrapper->resolveSingleton($segmentIdentifier);
+        if (null !== $singleton) {
+            $this->_assertion(is_null($keyPredicate));
+            $descriptor->setTargetKind(TargetKind::SINGLETON());
+            $descriptor->setTargetSource(TargetSource::ENTITY_SET);
+            $descriptor->setTargetResourceType($singleton->getResourceType());
+            $descriptor->setSingleResult(true);
+
+            return $descriptor;
+        }
+
         $resourceSetWrapper = $this->providerWrapper->resolveResourceSet($segmentIdentifier);
-        if ($resourceSetWrapper === null) {
+        if (null === $resourceSetWrapper) {
             throw ODataException::createResourceNotFoundError($segmentIdentifier);
         }
 
@@ -392,7 +408,7 @@ class SegmentParser
         $descriptor->setTargetResourceType($resourceSetWrapper->getResourceType());
         $descriptor->setTargetSource(TargetSource::ENTITY_SET);
         $descriptor->setTargetKind(TargetKind::RESOURCE());
-        if ($keyPredicate !== null) {
+        if (null !== $keyPredicate) {
             $keyDescriptor = $this->_createKeyDescriptor(
                 $segmentIdentifier . '(' . $keyPredicate . ')',
                 $resourceSetWrapper->getResourceType(),
@@ -449,7 +465,6 @@ class SegmentParser
                 Messages::segmentParserKeysMustBeNamed($segment)
             );
         }
-
         $keyDescriptor->validate($segment, $resourceType);
 
         return $keyDescriptor;
