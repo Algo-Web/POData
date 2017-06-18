@@ -6,6 +6,7 @@ use POData\Common\ODataException;
 use POData\Configuration\EntitySetRights;
 use POData\Configuration\ServiceConfiguration;
 use POData\Providers\Metadata\IMetadataProvider;
+use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Metadata\SimpleMetadataProvider;
 use POData\Providers\ProvidersWrapper;
 use POData\Providers\Query\IQueryProvider;
@@ -69,6 +70,9 @@ class SegmentParserMockeryTest extends TestCase
         $this->assertEquals(TargetKind::SINGLETON(), $result->getTargetKind());
         $this->assertEquals(TargetSource::ENTITY_SET, $result->getTargetSource());
         $this->assertTrue($result->isSingleResult());
+        $wrapper = $result->getTargetResourceSetWrapper();
+        $this->assertNotNull($wrapper);
+        $this->assertTrue($wrapper instanceof ResourceSetWrapper);
     }
 
     public function testSingletonAsLaterSegment()

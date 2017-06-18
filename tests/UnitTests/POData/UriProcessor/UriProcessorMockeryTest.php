@@ -2312,6 +2312,7 @@ class UriProcessorMockeryTest extends TestCase
 
         $meta = NorthWindMetadata::Create();
         $fore = $meta->addEntityType(new \ReflectionClass($forward), 'fore');
+        $meta->addResourceSet('foreSet', $fore);
 
         $name = "Foobar";
 

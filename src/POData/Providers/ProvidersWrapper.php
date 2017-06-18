@@ -291,7 +291,7 @@ class ProvidersWrapper
 
         $resourceSet = $this->metaProvider->resolveResourceSet($name);
         if (is_null($resourceSet)) {
-            return;
+            return null;
         }
 
         return $this->_validateResourceSetAndGetWrapper($resourceSet);

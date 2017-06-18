@@ -2,10 +2,12 @@
 
 namespace POData\UriProcessor\ResourcePathProcessor\SegmentParser;
 
+use Illuminate\Support\Str;
 use POData\Common\Messages;
 use POData\Common\ODataConstants;
 use POData\Common\ODataException;
 use POData\Providers\Metadata\ResourcePropertyKind;
+use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\ResourceTypeKind;
 use POData\Providers\ProvidersWrapper;
@@ -391,9 +393,14 @@ class SegmentParser
         $singleton = $this->providerWrapper->resolveSingleton($segmentIdentifier);
         if (null !== $singleton) {
             $this->_assertion(is_null($keyPredicate));
+            $resourceType = $singleton->getResourceType();
+            $typeName = Str::plural($resourceType->getName());
+            $resourceSet = $this->providerWrapper->resolveResourceSet($typeName);
+            assert($resourceSet instanceof ResourceSetWrapper);
             $descriptor->setTargetKind(TargetKind::SINGLETON());
             $descriptor->setTargetSource(TargetSource::ENTITY_SET);
-            $descriptor->setTargetResourceType($singleton->getResourceType());
+            $descriptor->setTargetResourceType($resourceType);
+            $descriptor->setTargetResourceSetWrapper($resourceSet);
             $descriptor->setSingleResult(true);
 
             return $descriptor;
