@@ -829,6 +829,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
             $resourceProperties = $resourceType->getAllProperties();
         }
 
+        $nonPrimitiveProperties = [];
         //First write out primitive types
         foreach ($resourceProperties as $name => $resourceProperty) {
             $resourceKind = $resourceProperty->getKind();
@@ -837,12 +838,14 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
                 $primitiveValue = $this->getPropertyValue($customObject, $resourceType, $resourceProperty);
                 $this->writePrimitiveValue($primitiveValue, $odataProperty, $resourceProperty);
                 $odataPropertyContent->properties[] = $odataProperty;
+            } else {
+                $nonPrimitiveProperties[] = $resourceProperty;
             }
         }
 
         //Write out bag and complex type
         $i = 0;
-        foreach ($resourceProperties as $resourceProperty) {
+        foreach ($nonPrimitiveProperties as $resourceProperty) {
             if ($resourceProperty->isKindOf(ResourcePropertyKind::BAG)) {
                 //Handle Bag Property (Bag of Primitive or complex)
                 $propertyValue = $this->getPropertyValue($customObject, $resourceType, $resourceProperty);

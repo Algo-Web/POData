@@ -538,11 +538,11 @@ class ObjectModelSerializerTest extends TestCase
         $propType->shouldReceive('getInstanceType')->andReturn(new \POData\Providers\Metadata\Type\EdmString());
 
         $property = m::mock(ResourceProperty::class);
-        $property->shouldReceive('getKind')->andReturn(ResourcePropertyKind::PRIMITIVE)->times(4);
+        $property->shouldReceive('getKind')->andReturn(ResourcePropertyKind::PRIMITIVE)->times(2);
         $property->shouldReceive('getInstanceType->getFullTypeName')->andReturn('fullTypeName')->twice();
         $property->shouldReceive('getName')->andReturn('propertyName');
         $property->shouldReceive('getResourceType')->andReturn($propType)->twice();
-        $property->shouldReceive('isKindOf')->andReturn(false)->twice();
+        $property->shouldReceive('isKindOf')->andReturn(false)->never();
 
         $type = m::mock(ResourceType::class);
         $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::COMPLEX)->times(3);
