@@ -423,7 +423,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
                 $navigationProperties
             );
         } else { //This is the code path to handle projected properties of Entry
-            list($navigationProperties, $odataPropertyContent) = $this->writeObjectPropertiesExpanded(
+            list($odataPropertyContent, $navigationProperties) = $this->writeObjectPropertiesExpanded(
                 $customObject,
                 $resourceType,
                 $relativeUri,
@@ -869,8 +869,6 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
                         $relativeUri . '/' . $resourceProperty->getName(),
                         $odataPropertyContent
                     );
-                } elseif (ObjectModelSerializer::isMatchPrimitive($resourceKind)) {
-                    continue;
                 } else {
                     assert(
                         (ResourcePropertyKind::RESOURCE_REFERENCE == $resourceKind)
@@ -997,6 +995,6 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
             }
         }
 
-        return [$navigationProperties, $odataPropertyContent];
+        return [$odataPropertyContent, $navigationProperties];
     }
 }
