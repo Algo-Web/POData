@@ -171,6 +171,56 @@ class ObjectModelSerializerTest extends TestCase
         $this->assertTrue($ret->entries[1]->propertyContent instanceof \POData\ObjectModel\ODataPropertyContent);
     }
 
+    public function testwriteTopLevelElementsViaProperty()
+    {
+        $foo = $this->Construct();
+        $entity = new reusableEntityClass4();
+        $entity->name = 'bilbo';
+        $entity->type = 2;
+        $entity1 = new reusableEntityClass4();
+        $entity1->name = 'riptide';
+        $entity1->type = 3;
+        $e = [$entity, $entity1];
+
+        $property = m::mock(ResourceProperty::class);
+        $property->shouldReceive('getKind')->andReturn(ResourcePropertyKind::RESOURCESET_REFERENCE);
+        $property->shouldReceive('getName')->andReturn('name');
+
+        $itype = new StringType();
+        $rProp = m::mock(ResourceProperty::class);
+        $rProp->shouldReceive('getName')->andReturn('name');
+        $rProp->shouldReceive('getInstanceType')->andReturn($itype);
+
+        $resourceSet = m::mock(ResourceSetWrapper::class);
+        $resourceSet->shouldReceive('getName')->andReturn('names');
+        $resourceSet->shouldReceive('getResourceSetPageSize')->andReturn(50);
+
+        $resourceType = m::mock(ResourceType::class);
+        $resourceType->shouldReceive('getKeyProperties')->andReturn(['name' => $rProp]);
+        $resourceType->shouldReceive('getName')->andReturn('name');
+        $resourceType->shouldReceive('getFullName')->andReturn('Data.name');
+        $resourceType->shouldReceive('isMediaLinkEntry')->andReturn(false);
+        $resourceType->shouldReceive('hasNamedStream')->andReturn(false);
+        $resourceType->shouldReceive('getETagProperties')->andReturn([]);
+        $resourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY);
+
+        $requestURL = new \POData\Common\Url('http://192.168.2.1/abm-master/public/odata.svc/Entity(1)');
+        $this->mockRequest->shouldReceive('getTargetSource')
+            ->andReturn(TargetSource::PROPERTY);
+        $this->mockRequest->shouldReceive('getProjectedProperty')
+            ->andReturn($property);
+        $this->mockRequest->shouldReceive('getIdentifier')->andReturn('name');
+        $this->mockRequest->shouldReceive('getTargetResourceSetWrapper')->andReturn($resourceSet);
+        $this->mockRequest->shouldReceive('getContainerName')->andReturn('Data');
+        $this->mockRequest->shouldReceive('getTargetResourceType')->andReturn($resourceType);
+        $this->mockRequest->shouldReceive('getRequestUrl')->andReturn($requestURL);
+
+        $ret = $foo->writeTopLevelElements($e);
+        $this->assertTrue($ret instanceof \POData\ObjectModel\ODataFeed);
+        $this->assertTrue($ret->selfLink instanceof \POData\ObjectModel\ODataLink);
+        $this->assertEquals("http://192.168.2.1/abm-master/public/odata.svc/Entity(1)", $ret->id);
+    }
+
     public function testWriteNullPrimitive()
     {
         $foo = $this->Construct();
