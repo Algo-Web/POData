@@ -132,15 +132,15 @@ class SegmentParserMockeryTest extends TestCase
         $expectedTargetSources = [TargetSource::ENTITY_SET, TargetSource::PROPERTY];
         $actualTargetSources = [$result[0]->getTargetSource(), $result[1]->getTargetSource()];
         $this->assertEquals($expectedTargetSources, $actualTargetSources);
+        $this->assertNull($result[0]->getProjectedProperty());
+        $projected = $result[1]->getProjectedProperty();
+        $this->assertNotNull($projected);
+        $this->assertEquals(ResourcePropertyKind::RESOURCESET_REFERENCE, $projected->getKind());
         // As we're expanding the many side of a one-to-many relation, first segment should be a singleton,
         // second segment should not
         $expectedSingles = [true, false];
         $actualSingles = [$result[0]->isSingleResult(), $result[1]->isSingleResult()];
         $this->assertEquals($expectedSingles, $actualSingles);
-        $this->assertNull($result[0]->getProjectedProperty());
-        $projected = $result[1]->getProjectedProperty();
-        $this->assertNotNull($projected);
-        $this->assertEquals(ResourcePropertyKind::RESOURCESET_REFERENCE, $projected->getTypeKind());
     }
 
     public static function exampleSingleton()

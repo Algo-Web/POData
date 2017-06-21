@@ -549,6 +549,17 @@ class SimpleMetadataProvider implements IMetadataProvider
             '1',
             '*'
         );
+        // verify resource property types are what we expect them to be
+        $sourceResourceKind = $sourceResourceType->resolveProperty($sourceProperty)->getKind();
+        assert(
+            ResourcePropertyKind::RESOURCE_REFERENCE == $sourceResourceKind,
+            "1 side of relationship not mapped to resource reference"
+        );
+        $targetResourceKind = $targetResourceType->resolveProperty($targetProperty)->getKind();
+        assert(
+            ResourcePropertyKind::RESOURCESET_REFERENCE == $targetResourceKind,
+            "Many side of relationship not mapped to resource set reference"
+        );
     }
 
     /**
@@ -706,7 +717,6 @@ class SimpleMetadataProvider implements IMetadataProvider
         $targetResourceProperty = new ResourceProperty($targetProperty, null, $targetKind, $sourceResourceType);
         $targetResourceType->addProperty($targetResourceProperty, false);
 
-
         $fwdSet = new ResourceAssociationSet(
             $fwdSetKey,
             new ResourceAssociationSetEnd($sourceResourceSet, $sourceResourceType, $sourceResourceProperty),
@@ -774,6 +784,17 @@ class SimpleMetadataProvider implements IMetadataProvider
             '*',
             '*'
         );
+        // verify resource property types are what we expect them to be
+        $sourceResourceKind = $sourceResourceType->resolveProperty($sourceProperty)->getKind();
+        assert(
+            ResourcePropertyKind::RESOURCESET_REFERENCE == $sourceResourceKind,
+            "Many side of relationship not mapped to resource set reference"
+        );
+        $targetResourceKind = $targetResourceType->resolveProperty($targetProperty)->getKind();
+        assert(
+            ResourcePropertyKind::RESOURCESET_REFERENCE == $targetResourceKind,
+            "Many side of relationship not mapped to resource set reference"
+        );
     }
 
     /**
@@ -799,6 +820,17 @@ class SimpleMetadataProvider implements IMetadataProvider
             $targetProperty,
             '1',
             '0..1'
+        );
+        // verify resource property types are what we expect them to be
+        $sourceResourceKind = $sourceResourceType->resolveProperty($sourceProperty)->getKind();
+        assert(
+            ResourcePropertyKind::RESOURCE_REFERENCE == $sourceResourceKind,
+            "1 side of relationship not mapped to resource reference"
+        );
+        $targetResourceKind = $targetResourceType->resolveProperty($targetProperty)->getKind();
+        assert(
+            ResourcePropertyKind::RESOURCE_REFERENCE == $targetResourceKind,
+            "1 side of relationship not mapped to resource reference"
         );
     }
 
