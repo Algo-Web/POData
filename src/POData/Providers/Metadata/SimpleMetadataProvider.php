@@ -536,8 +536,8 @@ class SimpleMetadataProvider implements IMetadataProvider
      * @param string $targetProperty            The name of the property to add, on target type
      */
     public function addResourceReferencePropertyBidirectional(
-        ResourceType $sourceResourceType,
-        ResourceType $targetResourceType,
+        ResourceEntityType $sourceResourceType,
+        ResourceEntityType $targetResourceType,
         $sourceProperty,
         $targetProperty
     ) {
@@ -546,8 +546,19 @@ class SimpleMetadataProvider implements IMetadataProvider
             $targetResourceType,
             $sourceProperty,
             $targetProperty,
-            '1',
-            '*'
+            '*',
+            '1'
+        );
+        // verify resource property types are what we expect them to be
+        $sourceResourceKind = $sourceResourceType->resolveProperty($sourceProperty)->getKind();
+        assert(
+            ResourcePropertyKind::RESOURCESET_REFERENCE == $sourceResourceKind,
+            "1 side of 1:N relationship not pointing to resource set reference"
+        );
+        $targetResourceKind = $targetResourceType->resolveProperty($targetProperty)->getKind();
+        assert(
+            ResourcePropertyKind::RESOURCE_REFERENCE == $targetResourceKind,
+            "N side of 1:N relationship not pointing to resource reference"
         );
     }
 
@@ -702,11 +713,19 @@ class SimpleMetadataProvider implements IMetadataProvider
             : ResourcePropertyKind::RESOURCE_REFERENCE;
 
         $sourceResourceProperty = new ResourceProperty($sourceProperty, null, $sourceKind, $targetResourceType);
+        assert(
+            $sourceKind == $sourceResourceProperty->getKind(),
+            'Resource property kind mismatch between $sourceKind and $sourceResourceProperty'
+        );
         $sourceResourceType->addProperty($sourceResourceProperty, false);
         $targetResourceProperty = new ResourceProperty($targetProperty, null, $targetKind, $sourceResourceType);
+        assert(
+            $targetKind == $targetResourceProperty->getKind(),
+            'Resource property kind mismatch between $targetKind and $targetResourceProperty'
+        );
         $targetResourceType->addProperty($targetResourceProperty, false);
 
-
+        //TODO: Audit this, figure out how it makes metadata go sproing
         $fwdSet = new ResourceAssociationSet(
             $fwdSetKey,
             new ResourceAssociationSetEnd($sourceResourceSet, $sourceResourceType, $sourceResourceProperty),
@@ -774,6 +793,17 @@ class SimpleMetadataProvider implements IMetadataProvider
             '*',
             '*'
         );
+        // verify resource property types are what we expect them to be
+        $sourceResourceKind = $sourceResourceType->resolveProperty($sourceProperty)->getKind();
+        assert(
+            ResourcePropertyKind::RESOURCESET_REFERENCE == $sourceResourceKind,
+            "M side of M:N relationship not pointing to resource set reference"
+        );
+        $targetResourceKind = $targetResourceType->resolveProperty($targetProperty)->getKind();
+        assert(
+            ResourcePropertyKind::RESOURCESET_REFERENCE == $targetResourceKind,
+            "N side of M:N relationship not pointing to resource set reference"
+        );
     }
 
     /**
@@ -799,6 +829,17 @@ class SimpleMetadataProvider implements IMetadataProvider
             $targetProperty,
             '1',
             '0..1'
+        );
+        // verify resource property types are what we expect them to be
+        $sourceResourceKind = $sourceResourceType->resolveProperty($sourceProperty)->getKind();
+        assert(
+            ResourcePropertyKind::RESOURCE_REFERENCE == $sourceResourceKind,
+            "0..1 side of 1:1 relationship not pointing to resource reference"
+        );
+        $targetResourceKind = $targetResourceType->resolveProperty($targetProperty)->getKind();
+        assert(
+            ResourcePropertyKind::RESOURCE_REFERENCE == $targetResourceKind,
+            "1 side of 1:1 relationship not pointing to resource reference"
         );
     }
 

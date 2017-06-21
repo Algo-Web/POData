@@ -105,6 +105,95 @@ class NorthWindMetadata
      */
     public static function Create()
     {
+        list($metadata,
+            $customersEntityType,
+            $orderEntityType,
+            $productEntityType,
+            $orderDetailsEntityType,
+            $employeeEntityType,
+            $customersResourceSet,
+            $ordersResourceSet,
+            $productResourceSet,
+            $orderDetailsEntitySet,
+            $employeeSet) = self::createMetadataCore();
+
+        //Register the associations (navigations)
+        //Customers (1) <==> Orders (0-*)
+        $metadata->addResourceSetReferenceProperty($customersEntityType, 'Orders', $ordersResourceSet);
+        $metadata->addResourceReferenceProperty($orderEntityType, 'Customer', $customersResourceSet);
+        //Orders (1) <==> Order_Details (0-*)
+        //Products (1) <==> Order_Details (0-*)
+        $metadata->addResourceReferenceProperty($orderDetailsEntityType, 'Order', $ordersResourceSet);
+        $metadata->addResourceReferenceProperty($orderDetailsEntityType, 'Product', $productResourceSet);
+        $metadata->addResourceSetReferenceProperty($productEntityType, 'Order_Details', $orderDetailsEntitySet);
+        $metadata->addResourceSetReferenceProperty($orderEntityType, 'Order_Details', $orderDetailsEntitySet);
+        //Employees (1) <==> Employees (1) 'Manager
+        //Employees (1) <==> Employees (*) 'Subordinates
+        $metadata->addResourceReferenceProperty($employeeEntityType, 'Manager', $employeeSet);
+        $metadata->addResourceSetReferenceProperty($employeeEntityType, 'Subordinates', $employeeSet);
+
+        return $metadata;
+    }
+
+    /**
+     * @throws InvalidOperationException
+     *
+     * @return IMetadataProvider
+     */
+    public static function CreateBidirectional()
+    {
+        list($metadata,
+            $customersEntityType,
+            $orderEntityType,
+            $productEntityType,
+            $orderDetailsEntityType,
+            $employeeEntityType,
+            $customersResourceSet,
+            $ordersResourceSet,
+            $productResourceSet,
+            $orderDetailsEntitySet,
+            $employeeSet) = self::createMetadataCore();
+
+        //Register the associations (navigations)
+        //Customers (1) <==> Orders (0-*)
+        $metadata->addResourceReferencePropertyBidirectional(
+            $customersEntityType,
+            $orderEntityType,
+            "Orders",
+            'Customer'
+        );
+        //Orders (1) <==> Order_Details (0-*)
+        //Products (1) <==> Order_Details (0-*)
+        $metadata->addResourceReferencePropertyBidirectional(
+            $productEntityType,
+            $orderDetailsEntityType,
+            'Order_Details',
+            'Product'
+        );
+        $metadata->addResourceReferencePropertyBidirectional(
+            $orderEntityType,
+            $orderDetailsEntityType,
+            'Order_Details',
+            'Order'
+        );
+        //Employees (1) <==> Employees (1) 'Manager
+        //Employees (1) <==> Employees (*) 'Subordinates
+        $metadata->addResourceReferencePropertyBidirectional(
+            $employeeEntityType,
+            $employeeEntityType,
+            'Subordinates',
+            'Manager'
+        );
+
+        return $metadata;
+    }
+
+    /**
+     * @return array
+     * @throws InvalidOperationException
+     */
+    private static function createMetadataCore()
+    {
         $metadata = new SimpleMetadataProvider('NorthWindEntities', 'NorthWind');
 
         //Register the complex type 'Address2'
@@ -194,22 +283,18 @@ class NorthWindMetadata
         $productResourceSet = $metadata->addResourceSet('Products', $productEntityType);
         $orderDetailsEntitySet = $metadata->addResourceSet('Order_Details', $orderDetailsEntityType);
         $employeeSet = $metadata->addResourceSet('Employees', $employeeEntityType);
-
-        //Register the assoications (navigations)
-        //Customers (1) <==> Orders (0-*)
-        $metadata->addResourceSetReferenceProperty($customersEntityType, 'Orders', $ordersResourceSet);
-        $metadata->addResourceReferenceProperty($orderEntityType, 'Customer', $customersResourceSet);
-        //Orders (1) <==> Order_Details (0-*)
-        //Products (1) <==> Order_Details (0-*)
-        $metadata->addResourceReferenceProperty($orderDetailsEntityType, 'Order', $ordersResourceSet);
-        $metadata->addResourceReferenceProperty($orderDetailsEntityType, 'Product', $productResourceSet);
-        $metadata->addResourceSetReferenceProperty($productEntityType, 'Order_Details', $orderDetailsEntitySet);
-        $metadata->addResourceSetReferenceProperty($orderEntityType, 'Order_Details', $orderDetailsEntitySet);
-        //Employees (1) <==> Employees (1) 'Manager
-        //Employees (1) <==> Employees (*) 'Subordinates
-        $metadata->addResourceReferenceProperty($employeeEntityType, 'Manager', $employeeSet);
-        $metadata->addResourceSetReferenceProperty($employeeEntityType, 'Subordinates', $employeeSet);
-
-        return $metadata;
+        return array(
+            $metadata,
+            $customersEntityType,
+            $orderEntityType,
+            $productEntityType,
+            $orderDetailsEntityType,
+            $employeeEntityType,
+            $customersResourceSet,
+            $ordersResourceSet,
+            $productResourceSet,
+            $orderDetailsEntitySet,
+            $employeeSet
+        );
     }
 }
