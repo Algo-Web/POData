@@ -198,6 +198,7 @@ class SimpleMetadataProviderSingletonTest extends SimpleMetadataProviderTest
     private function createDummyEntityType()
     {
         $cereal = m::mock(IObjectSerialiser::class);
+        $cereal->shouldReceive('setService')->withAnyArgs()->andReturnNull();
         $host = m::mock(ServiceHost::class);
         $host->shouldReceive('getAbsoluteServiceUri')->andReturn('http://localhost/odata.svc');
         $wrapper = m::mock(StreamProviderWrapper::class);

@@ -40,7 +40,7 @@ class BaseServiceNewTest extends TestCase
     {
         $db = m::mock(IQueryProvider::class);
         $host = m::mock(ServiceHost::class)->makePartial();
-        $cereal = m::mock(IObjectSerialiser::class);
+        $cereal = $this->spinUpMockSerialiser();
         $wrap = m::mock(StreamProviderWrapper::class)->makePartial();
 
         $foo = new BaseServiceDummy($db, $host, $cereal, $wrap, null);
@@ -62,7 +62,7 @@ class BaseServiceNewTest extends TestCase
     {
         $db = m::mock(IQueryProvider::class);
         $host = m::mock(ServiceHost::class)->makePartial();
-        $cereal = m::mock(IObjectSerialiser::class);
+        $cereal = $this->spinUpMockSerialiser();
         $wrap = m::mock(StreamProviderWrapper::class)->makePartial();
 
         $foo = new BaseServiceDummy($db, $host, $cereal, $wrap, null);
@@ -99,7 +99,7 @@ class BaseServiceNewTest extends TestCase
     {
         $db = null;
         $host = m::mock(ServiceHost::class)->makePartial();
-        $cereal = m::mock(IObjectSerialiser::class);
+        $cereal = $this->spinUpMockSerialiser();
         $wrap = m::mock(StreamProviderWrapper::class)->makePartial();
         $meta = m::mock(IMetadataProvider::class);
 
@@ -387,7 +387,7 @@ class BaseServiceNewTest extends TestCase
     public function testGetEtagForEntryNoProperties()
     {
         $host = m::mock(ServiceHost::class);
-        $cereal = m::mock(IObjectSerialiser::class);
+        $cereal = $this->spinUpMockSerialiser();
 
         $stream = m::mock(StreamProviderWrapper::class);
         $stream->shouldReceive('setService')->andReturnNull()->once();
@@ -408,7 +408,7 @@ class BaseServiceNewTest extends TestCase
         $property->shouldReceive('getInstanceType')->andReturnNull()->once();
 
         $host = m::mock(ServiceHost::class);
-        $cereal = m::mock(IObjectSerialiser::class);
+        $cereal = $this->spinUpMockSerialiser();
 
         $stream = m::mock(StreamProviderWrapper::class);
         $stream->shouldReceive('setService')->andReturnNull()->once();
@@ -439,7 +439,7 @@ class BaseServiceNewTest extends TestCase
         $property->shouldReceive('getName')->andReturn('name');
 
         $host = m::mock(ServiceHost::class);
-        $cereal = m::mock(IObjectSerialiser::class);
+        $cereal = $this->spinUpMockSerialiser();
 
         $stream = m::mock(StreamProviderWrapper::class);
         $stream->shouldReceive('setService')->andReturnNull()->once();
@@ -471,7 +471,7 @@ class BaseServiceNewTest extends TestCase
         $property->shouldReceive('getName')->andReturn('name', 'type');
 
         $host = m::mock(ServiceHost::class);
-        $cereal = m::mock(IObjectSerialiser::class);
+        $cereal = $this->spinUpMockSerialiser();
 
         $stream = m::mock(StreamProviderWrapper::class);
         $stream->shouldReceive('setService')->andReturnNull()->once();
@@ -495,7 +495,7 @@ class BaseServiceNewTest extends TestCase
         $property->shouldReceive('getName')->andReturn('name', 'type');
 
         $host = m::mock(ServiceHost::class);
-        $cereal = m::mock(IObjectSerialiser::class);
+        $cereal = $this->spinUpMockSerialiser();
 
         $stream = m::mock(StreamProviderWrapper::class);
         $stream->shouldReceive('setService')->andReturnNull()->once();
@@ -517,7 +517,7 @@ class BaseServiceNewTest extends TestCase
         $host = m::mock(ServiceHost::class);
         $host->shouldReceive('getRequestIfMatch')->andReturn('a');
         $host->shouldReceive('getRequestIfNoneMatch')->andReturn('b');
-        $cereal = m::mock(IObjectSerialiser::class);
+        $cereal = $this->spinUpMockSerialiser();
 
         $stream = m::mock(StreamProviderWrapper::class);
         $stream->shouldReceive('setService')->andReturnNull()->once();
@@ -546,7 +546,7 @@ class BaseServiceNewTest extends TestCase
         $host = m::mock(ServiceHost::class);
         $host->shouldReceive('getRequestIfMatch')->andReturn(null);
         $host->shouldReceive('getRequestIfNoneMatch')->andReturn(null);
-        $cereal = m::mock(IObjectSerialiser::class);
+        $cereal = $this->spinUpMockSerialiser();
 
         $stream = m::mock(StreamProviderWrapper::class);
         $stream->shouldReceive('setService')->andReturnNull()->once();
@@ -572,7 +572,7 @@ class BaseServiceNewTest extends TestCase
         $host = m::mock(ServiceHost::class);
         $host->shouldReceive('getRequestIfMatch')->andReturn('a');
         $host->shouldReceive('getRequestIfNoneMatch')->andReturn('b');
-        $cereal = m::mock(IObjectSerialiser::class);
+        $cereal = $this->spinUpMockSerialiser();
 
         $stream = m::mock(StreamProviderWrapper::class);
         $stream->shouldReceive('setService')->andReturnNull()->once();
@@ -604,7 +604,7 @@ class BaseServiceNewTest extends TestCase
         $host = m::mock(ServiceHost::class);
         $host->shouldReceive('getRequestIfMatch')->andReturn(null);
         $host->shouldReceive('getRequestIfNoneMatch')->andReturn(null);
-        $cereal = m::mock(IObjectSerialiser::class);
+        $cereal = $this->spinUpMockSerialiser();
 
         $stream = m::mock(StreamProviderWrapper::class);
         $stream->shouldReceive('setService')->andReturnNull()->once();
@@ -630,7 +630,7 @@ class BaseServiceNewTest extends TestCase
         $host = m::mock(ServiceHost::class);
         $host->shouldReceive('getRequestIfMatch')->andReturn(null);
         $host->shouldReceive('getRequestIfNoneMatch')->andReturn(null);
-        $cereal = m::mock(IObjectSerialiser::class);
+        $cereal = $this->spinUpMockSerialiser();
 
         $stream = m::mock(StreamProviderWrapper::class);
         $stream->shouldReceive('setService')->andReturnNull()->once();
@@ -662,7 +662,7 @@ class BaseServiceNewTest extends TestCase
         $host = m::mock(ServiceHost::class);
         $host->shouldReceive('getRequestIfMatch')->andReturn(null);
         $host->shouldReceive('getRequestIfNoneMatch')->andReturn(null);
-        $cereal = m::mock(IObjectSerialiser::class);
+        $cereal = $this->spinUpMockSerialiser();
 
         $stream = m::mock(StreamProviderWrapper::class);
         $stream->shouldReceive('setService')->andReturnNull()->once();
@@ -696,7 +696,7 @@ class BaseServiceNewTest extends TestCase
         $host = m::mock(ServiceHost::class);
         $host->shouldReceive('getRequestIfMatch')->andReturn(null);
         $host->shouldReceive('getRequestIfNoneMatch')->andReturn('*');
-        $cereal = m::mock(IObjectSerialiser::class);
+        $cereal = $this->spinUpMockSerialiser();
 
         $stream = m::mock(StreamProviderWrapper::class);
         $stream->shouldReceive('setService')->andReturnNull()->once();
@@ -730,7 +730,7 @@ class BaseServiceNewTest extends TestCase
         $host = m::mock(ServiceHost::class);
         $host->shouldReceive('getRequestIfMatch')->andReturn(null);
         $host->shouldReceive('getRequestIfNoneMatch')->andReturn('abc');
-        $cereal = m::mock(IObjectSerialiser::class);
+        $cereal = $this->spinUpMockSerialiser();
 
         $stream = m::mock(StreamProviderWrapper::class);
         $stream->shouldReceive('setService')->andReturnNull()->once();
@@ -764,7 +764,7 @@ class BaseServiceNewTest extends TestCase
         $host = m::mock(ServiceHost::class);
         $host->shouldReceive('getRequestIfMatch')->andReturn(null);
         $host->shouldReceive('getRequestIfNoneMatch')->andReturn('W/"\'bar\'"');
-        $cereal = m::mock(IObjectSerialiser::class);
+        $cereal = $this->spinUpMockSerialiser();
 
         $stream = m::mock(StreamProviderWrapper::class);
         $stream->shouldReceive('setService')->andReturnNull()->once();
@@ -798,7 +798,7 @@ class BaseServiceNewTest extends TestCase
         $host = m::mock(ServiceHost::class);
         $host->shouldReceive('getRequestIfMatch')->andReturn('abc');
         $host->shouldReceive('getRequestIfNoneMatch')->andReturn('W/"\'bar\'"');
-        $cereal = m::mock(IObjectSerialiser::class);
+        $cereal = $this->spinUpMockSerialiser();
 
         $stream = m::mock(StreamProviderWrapper::class);
         $stream->shouldReceive('setService')->andReturnNull()->once();
@@ -843,7 +843,7 @@ class BaseServiceNewTest extends TestCase
         $host->shouldReceive('getRequestIfNoneMatch')->andReturn('b');
         $host->shouldReceive('getAbsoluteRequestUri')->andReturn($url);
 
-        $cereal = m::mock(IObjectSerialiser::class);
+        $cereal = $this->spinUpMockSerialiser();
 
         $stream = m::mock(StreamProviderWrapper::class);
         $stream->shouldReceive('setService')->andReturnNull()->once();
@@ -880,7 +880,7 @@ class BaseServiceNewTest extends TestCase
         $host->shouldReceive('getRequestIfNoneMatch')->andReturn('b');
         $host->shouldReceive('getAbsoluteRequestUri')->andReturn($url);
 
-        $cereal = m::mock(IObjectSerialiser::class);
+        $cereal = $this->spinUpMockSerialiser();
 
         $stream = m::mock(StreamProviderWrapper::class);
         $stream->shouldReceive('setService')->andReturnNull()->once();
@@ -931,7 +931,7 @@ class BaseServiceNewTest extends TestCase
         $host->shouldReceive('getOperationContext->outgoingResponse->setStream')
             ->withArgs(['ScatmanJohn'])->andReturnNull()->once();
 
-        $cereal = m::mock(IObjectSerialiser::class);
+        $cereal = $this->spinUpMockSerialiser();
 
         $stream = m::mock(StreamProviderWrapper::class);
         $stream->shouldReceive('setService')->andReturnNull()->once();
@@ -979,7 +979,7 @@ class BaseServiceNewTest extends TestCase
         $host->shouldReceive('setResponseCacheControl')->withAnyArgs()->andReturnNull()->never();
         $host->shouldReceive('getOperationContext')->andReturn($context);
 
-        $cereal = m::mock(IObjectSerialiser::class);
+        $cereal = $this->spinUpMockSerialiser();
 
         $stream = m::mock(StreamProviderWrapper::class);
         $stream->shouldReceive('setService')->andReturnNull()->once();
@@ -1028,7 +1028,7 @@ class BaseServiceNewTest extends TestCase
         $host->shouldReceive('setResponseCacheControl')->withAnyArgs()->andReturnNull()->never();
         $host->shouldReceive('getOperationContext')->andReturn($context);
 
-        $cereal = m::mock(IObjectSerialiser::class);
+        $cereal = $this->spinUpMockSerialiser();
         $cereal->shouldReceive('setRequest')->andReturnNull()->once();
 
         $stream = m::mock(StreamProviderWrapper::class);
@@ -1087,7 +1087,7 @@ class BaseServiceNewTest extends TestCase
         $host->shouldReceive('setResponseCacheControl')->withAnyArgs()->andReturnNull()->never();
         $host->shouldReceive('getOperationContext')->andReturn($context);
 
-        $cereal = m::mock(IObjectSerialiser::class);
+        $cereal = $this->spinUpMockSerialiser();
         $cereal->shouldReceive('setRequest')->andReturnNull()->once();
 
         $stream = m::mock(StreamProviderWrapper::class);
@@ -1147,7 +1147,7 @@ class BaseServiceNewTest extends TestCase
         $host->shouldReceive('setResponseCacheControl')->withAnyArgs()->andReturnNull()->never();
         $host->shouldReceive('getOperationContext')->andReturn($context);
 
-        $cereal = m::mock(IObjectSerialiser::class);
+        $cereal = $this->spinUpMockSerialiser();
         $cereal->shouldReceive('setRequest')->andReturnNull()->once();
         $cereal->shouldReceive('writeUrlElements')->andReturnNull()->once();
 
@@ -1208,7 +1208,7 @@ class BaseServiceNewTest extends TestCase
         $host->shouldReceive('setResponseCacheControl')->withAnyArgs()->andReturnNull()->never();
         $host->shouldReceive('getOperationContext')->andReturn($context);
 
-        $cereal = m::mock(IObjectSerialiser::class);
+        $cereal = $this->spinUpMockSerialiser();
         $cereal->shouldReceive('setRequest')->andReturnNull()->once();
         $cereal->shouldReceive('writeTopLevelElements')->andReturnNull()->once();
 
@@ -1269,7 +1269,7 @@ class BaseServiceNewTest extends TestCase
         $host->shouldReceive('setResponseCacheControl')->withAnyArgs()->andReturnNull()->never();
         $host->shouldReceive('getOperationContext')->andReturn($context);
 
-        $cereal = m::mock(IObjectSerialiser::class);
+        $cereal = $this->spinUpMockSerialiser();
         $cereal->shouldReceive('setRequest')->andReturnNull()->once();
 
         $stream = m::mock(StreamProviderWrapper::class);
@@ -1333,7 +1333,7 @@ class BaseServiceNewTest extends TestCase
         $host->shouldReceive('setResponseCacheControl')->withAnyArgs()->andReturnNull()->never();
         $host->shouldReceive('getOperationContext')->andReturn($context);
 
-        $cereal = m::mock(IObjectSerialiser::class);
+        $cereal = $this->spinUpMockSerialiser();
         $cereal->shouldReceive('setRequest')->andReturnNull()->once();
         $cereal->shouldReceive('writeUrlElement')->andReturnNull()->once();
 
@@ -1401,7 +1401,7 @@ class BaseServiceNewTest extends TestCase
         $host->shouldReceive('setResponseCacheControl')->withAnyArgs()->andReturnNull()->never();
         $host->shouldReceive('getOperationContext')->andReturn($context);
 
-        $cereal = m::mock(IObjectSerialiser::class);
+        $cereal = $this->spinUpMockSerialiser();
         $cereal->shouldReceive('setRequest')->andReturnNull()->once();
 
         $stream = m::mock(StreamProviderWrapper::class);
@@ -1468,7 +1468,7 @@ class BaseServiceNewTest extends TestCase
         $host->shouldReceive('setResponseCacheControl')->withAnyArgs()->andReturnNull()->never();
         $host->shouldReceive('getOperationContext')->andReturn($context);
 
-        $cereal = m::mock(IObjectSerialiser::class);
+        $cereal = $this->spinUpMockSerialiser();
         $cereal->shouldReceive('setRequest')->andReturnNull()->once();
         $cereal->shouldReceive('writeTopLevelComplexObject')->andReturnNull()->never();
         $cereal->shouldReceive('writeTopLevelPrimitive')->andReturnNull()->once();
@@ -1535,7 +1535,7 @@ class BaseServiceNewTest extends TestCase
         $host->shouldReceive('setResponseCacheControl')->withAnyArgs()->andReturnNull()->never();
         $host->shouldReceive('getOperationContext')->andReturn($context);
 
-        $cereal = m::mock(IObjectSerialiser::class);
+        $cereal = $this->spinUpMockSerialiser();
         $cereal->shouldReceive('setRequest')->andReturnNull()->once();
         $cereal->shouldReceive('writeTopLevelComplexObject')->andReturnNull()->never();
         $cereal->shouldReceive('writeTopLevelPrimitive')->andReturnNull()->never();
@@ -1604,7 +1604,7 @@ class BaseServiceNewTest extends TestCase
         $host->shouldReceive('setResponseCacheControl')->withAnyArgs()->andReturnNull()->never();
         $host->shouldReceive('getOperationContext')->andReturn($context);
 
-        $cereal = m::mock(IObjectSerialiser::class);
+        $cereal = $this->spinUpMockSerialiser();
         $cereal->shouldReceive('setRequest')->andReturnNull()->once();
         $cereal->shouldReceive('writeTopLevelComplexObject')->andReturnNull()->once();
 
@@ -1670,7 +1670,7 @@ class BaseServiceNewTest extends TestCase
         $host->shouldReceive('setResponseCacheControl')->withAnyArgs()->andReturnNull()->never();
         $host->shouldReceive('getOperationContext')->andReturn($context);
 
-        $cereal = m::mock(IObjectSerialiser::class);
+        $cereal = $this->spinUpMockSerialiser();
         $cereal->shouldReceive('setRequest')->andReturnNull()->once();
         $cereal->shouldReceive('writeTopLevelBagObject')->andReturnNull()->once();
 
@@ -1738,7 +1738,7 @@ class BaseServiceNewTest extends TestCase
         $host->shouldReceive('setResponseCacheControl')->withAnyArgs()->andReturnNull()->never();
         $host->shouldReceive('getOperationContext')->andReturn($context);
 
-        $cereal = m::mock(IObjectSerialiser::class);
+        $cereal = $this->spinUpMockSerialiser();
         $cereal->shouldReceive('setRequest')->andReturnNull()->once();
         $cereal->shouldReceive('writeTopLevelPrimitive')->andReturnNull()->once();
 
@@ -1806,7 +1806,7 @@ class BaseServiceNewTest extends TestCase
         $host->shouldReceive('setResponseCacheControl')->withAnyArgs()->andReturnNull()->never();
         $host->shouldReceive('getOperationContext')->andReturn($context);
 
-        $cereal = m::mock(IObjectSerialiser::class);
+        $cereal = $this->spinUpMockSerialiser();
         $cereal->shouldReceive('setRequest')->andReturnNull()->once();
         $cereal->shouldReceive('writeTopLevelElement')->andReturnNull()->never();
 
@@ -1851,7 +1851,7 @@ class BaseServiceNewTest extends TestCase
         $host = m::mock(ServiceHost::class)->makePartial();
         $host->shouldReceive('getRequestAccept')->andReturn('application/xml, application/atomsvc+xml');
         $host->shouldReceive('getQueryStringItem')->andReturn(null)->once();
-        $cereal = m::mock(IObjectSerialiser::class);
+        $cereal = $this->spinUpMockSerialiser();
         $wrap = m::mock(StreamProviderWrapper::class)->makePartial();
 
         $foo = new BaseServiceDummy($db, $host, $cereal, $wrap, null);
@@ -1873,7 +1873,7 @@ class BaseServiceNewTest extends TestCase
         $host = m::mock(ServiceHost::class)->makePartial();
         $host->shouldReceive('getRequestAccept')->andReturn('application/xml, application/atomsvc+xml');
         $host->shouldReceive('getQueryStringItem')->andReturn(null)->once();
-        $cereal = m::mock(IObjectSerialiser::class);
+        $cereal = $this->spinUpMockSerialiser();
         $wrap = m::mock(StreamProviderWrapper::class)->makePartial();
 
         $foo = new BaseServiceDummy($db, $host, $cereal, $wrap, null);
@@ -1887,5 +1887,15 @@ class BaseServiceNewTest extends TestCase
         $expected = 'application/atomsvc+xml';
         $actual = $foo->getResponseContentType($request, $uriProc);
         $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * @return m\MockInterface
+     */
+    private function spinUpMockSerialiser()
+    {
+        $cereal = m::mock(IObjectSerialiser::class);
+        $cereal->shouldReceive('setService')->withAnyArgs()->andReturnNull();
+        return $cereal;
     }
 }

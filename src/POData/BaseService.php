@@ -107,7 +107,12 @@ abstract class BaseService implements IRequestHandler, IService
 
     protected function __construct(IObjectSerialiser $serialiser = null)
     {
-        $this->objectSerialiser = (null == $serialiser) ? new ObjectModelSerializer($this, null) : $serialiser;
+        if (null != $serialiser) {
+            $serialiser->setService($this);
+        } else {
+            $serialiser = new ObjectModelSerializer($this, null);
+        }
+        $this->objectSerialiser = $serialiser;
     }
 
     /**
