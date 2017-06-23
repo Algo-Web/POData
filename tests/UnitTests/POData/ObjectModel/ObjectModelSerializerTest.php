@@ -964,6 +964,25 @@ class ObjectModelSerializerTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
+    public function testSetService()
+    {
+        $oldUrl = 'http://localhost/odata.svc';
+        $newUrl = 'http://localhost/megamix.svc';
+        $oldService = m::mock(IService::class);
+        $oldService->shouldReceive('getHost->getAbsoluteServiceUri->getUrlAsString')
+            ->andReturn($oldUrl);
+        $newService = m::mock(IService::class);
+        $newService->shouldReceive('getHost->getAbsoluteServiceUri->getUrlAsString')
+            ->andReturn($newUrl);
+        $request = null;
+
+        $foo = new ObjectModelSerializer($oldService, $request);
+        $this->assertEquals($oldUrl, $foo->getService()->getHost()->getAbsoluteServiceUri()->getUrlAsString());
+
+        $foo->setService($newService);
+        $this->assertEquals($newUrl, $foo->getService()->getHost()->getAbsoluteServiceUri()->getUrlAsString());
+    }
+
     /**
      * @dataProvider matchPrimitiveProvider
      */
