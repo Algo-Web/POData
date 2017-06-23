@@ -114,6 +114,13 @@ interface IObjectSerialiser
     public function getService();
 
     /**
+     * Sets the data service instance.
+     *
+     * @return IService
+     */
+    public function setService(IService $service);
+
+    /**
      * Gets the segment stack instance.
      *
      * @return SegmentStack
