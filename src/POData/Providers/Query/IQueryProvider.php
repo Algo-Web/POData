@@ -38,7 +38,8 @@ interface IQueryProvider
      * @param ResourceSet                                                                $resourceSet The entity set containing the entities to fetch
      * @param FilterInfo                                                                 $filterInfo  represents the $filter parameter of the OData query.  NULL if no $filter specified
      * @param null|\POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo $orderBy     sorted order if we want to get the data in some specific order
-     * @param int                                                                        $top         number of records which  need to be skip
+     * @param int                                                                        $top         number of records which need to be retrieved
+     * @param int                                                                        $skip        number of records which need to be skipped
      * @param string                                                                     $skipToken   value indicating what records to skip
      *
      * @return QueryResult
@@ -49,6 +50,7 @@ interface IQueryProvider
         $filterInfo = null,
         $orderBy = null,
         $top = null,
+        $skip = null,
         $skipToken = null
     );
 

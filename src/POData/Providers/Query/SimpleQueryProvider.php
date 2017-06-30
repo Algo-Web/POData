@@ -162,7 +162,8 @@ abstract class SimpleQueryProvider implements IQueryProvider
         $filterInfo = null,
         $orderBy = null,
         $top = null,
-        $skip = null
+        $skip = null,
+        $skipToken = null
     ) {
         $result = new QueryResult();
         $entityClassName = $resourceSet->getResourceType()->getInstanceType()->name;
@@ -237,7 +238,7 @@ abstract class SimpleQueryProvider implements IQueryProvider
         $filterExpAsDataSourceExp .= $filterFieldName . ' = ' . $sourceEntityInstance->id;
         $completeFilterInfo = new FilterInfo($navigationPropertiesUsedInTheFilterClause, $filterExpAsDataSourceExp);
 
-        return $this->getResourceSet($queryType, $targetResourceSet, $completeFilterInfo, $orderBy, $top, $skip);
+        return $this->getResourceSet($queryType, $targetResourceSet, $completeFilterInfo, $orderBy, $top, $skip, null);
     }
 
     /**
