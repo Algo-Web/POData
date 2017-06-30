@@ -41,7 +41,8 @@ class NorthWindQueryProvider implements IQueryProvider
      * @param ResourceSet $resourceSet The entity set containing the entities to fetch
      * @param string      $filter      filter condition if any need to be apply in the query
      * @param mixed       $orderBy     sorted order if we want to get the data in some specific order
-     * @param int         $top         number of records which  need to be skip
+     * @param int         $top         number of records which need to be retrieved
+     * @param int         $skip        number of records which need to be skipped
      * @param string      $skipToken   value indicating what records to skip
      * @param QueryType   $queryType   indicates if this is a query for a count, entities, or entities with a count
      *
@@ -53,6 +54,7 @@ class NorthWindQueryProvider implements IQueryProvider
         $filter = null,
         $orderBy = null,
         $top = null,
+        $skip = null,
         $skipToken = null
     ) {
         // TODO: Implement getResourceSet() method.
