@@ -268,12 +268,14 @@ class ServiceHost
     }
 
     /**
-     * This method verfies the client provided url query parameters and check whether
-     * any of the odata query option specified more than once or check any of the
-     * non-odata query parameter start will $ symbol or check any of the odata query
-     * option specified with out value. If any of the above check fails throws
-     * ODataException, else set _queryOptions member variable.
+     * This method verifies the client provided url query parameters.
      *
+     * A query parameter is valid if and only if all the following conditions hold:
+     * 1. It does not duplicate another parameter
+     * 2. It has a supplied value.
+     * 3. If a non-OData query parameter, its name does not start with $.
+     * A valid parameter is then stored in _queryOptions, while an invalid parameter
+     * trips an ODataException
      *
      * @throws ODataException
      */
@@ -288,45 +290,35 @@ class ServiceHost
             $optionValue = current($queryOption);
             if (empty($optionName)) {
                 if (!empty($optionValue)) {
-                    if ($optionValue[0] == '$') {
+                    if ('$' == $optionValue[0]) {
                         if ($this->_isODataQueryOption($optionValue)) {
                             throw ODataException::createBadRequestError(
-                                Messages::hostODataQueryOptionFoundWithoutValue(
-                                    $optionValue
-                                )
+                                Messages::hostODataQueryOptionFoundWithoutValue($optionValue)
                             );
                         } else {
                             throw ODataException::createBadRequestError(
-                                Messages::hostNonODataOptionBeginsWithSystemCharacter(
-                                    $optionValue
-                                )
+                                Messages::hostNonODataOptionBeginsWithSystemCharacter($optionValue)
                             );
                         }
                     }
                 }
             } else {
-                if ($optionName[0] == '$') {
+                if ('$' == $optionName[0]) {
                     if (!$this->_isODataQueryOption($optionName)) {
                         throw ODataException::createBadRequestError(
-                            Messages::hostNonODataOptionBeginsWithSystemCharacter(
-                                $optionName
-                            )
+                            Messages::hostNonODataOptionBeginsWithSystemCharacter($optionName)
                         );
                     }
 
-                    if (array_search($optionName, $namesFound) !== false) {
+                    if (false !== array_search($optionName, $namesFound)) {
                         throw ODataException::createBadRequestError(
-                            Messages::hostODataQueryOptionCannotBeSpecifiedMoreThanOnce(
-                                $optionName
-                            )
+                            Messages::hostODataQueryOptionCannotBeSpecifiedMoreThanOnce($optionName)
                         );
                     }
 
-                    if (empty($optionValue) && $optionValue !== '0') {
+                    if (empty($optionValue) && '0' !== $optionValue) {
                         throw ODataException::createBadRequestError(
-                            Messages::hostODataQueryOptionFoundWithoutValue(
-                                $optionName
-                            )
+                            Messages::hostODataQueryOptionFoundWithoutValue($optionName)
                         );
                     }
 
