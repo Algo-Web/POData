@@ -36,6 +36,11 @@ class ProvidersQueryWrapper
         $this->queryProvider = $query;
     }
 
+    public function getQueryProvider()
+    {
+        return $this->queryProvider;
+    }
+
     /**
      * Get related resource set for a resource.
      *
@@ -68,7 +73,7 @@ class ProvidersQueryWrapper
         $skip,
         $skipToken = null
     ) {
-        $queryResult = $this->queryProvider->getRelatedResourceSet(
+        $queryResult = $this->getQueryProvider()->getRelatedResourceSet(
             $queryType,
             $sourceResourceSet,
             $sourceEntity,
@@ -110,7 +115,7 @@ class ProvidersQueryWrapper
         $skip = null,
         SkipTokenInfo $skipToken = null
     ) {
-        $queryResult = $this->queryProvider->getResourceSet(
+        $queryResult = $this->getQueryProvider()->getResourceSet(
             $queryType,
             $resourceSet,
             $filterInfo,
@@ -139,7 +144,7 @@ class ProvidersQueryWrapper
         KeyDescriptor $keyDescriptor,
         $data
     ) {
-        $queryResult = $this->queryProvider->putResource(
+        $queryResult = $this->getQueryProvider()->putResource(
             $resourceSet,
             $keyDescriptor,
             $data
@@ -157,7 +162,7 @@ class ProvidersQueryWrapper
      */
     public function handlesOrderedPaging()
     {
-        return $this->queryProvider->handlesOrderedPaging();
+        return $this->getQueryProvider()->handlesOrderedPaging();
     }
 
     /**
@@ -170,7 +175,7 @@ class ProvidersQueryWrapper
      */
     public function getExpressionProvider()
     {
-        $expressionProvider = $this->queryProvider->getExpressionProvider();
+        $expressionProvider = $this->getQueryProvider()->getExpressionProvider();
         if (is_null($expressionProvider)) {
             throw ODataException::createInternalServerError(
                 Messages::providersWrapperExpressionProviderMustNotBeNullOrEmpty()
@@ -198,7 +203,7 @@ class ProvidersQueryWrapper
         $sourceEntityInstance,
         $data
     ) {
-        return $this->queryProvider->createResourceforResourceSet(
+        return $this->getQueryProvider()->createResourceforResourceSet(
             $resourceSet,
             $sourceEntityInstance,
             $data
@@ -217,7 +222,7 @@ class ProvidersQueryWrapper
         ResourceSet $sourceResourceSet,
         $sourceEntityInstance
     ) {
-        return $this->queryProvider->deleteResource(
+        return $this->getQueryProvider()->deleteResource(
             $sourceResourceSet,
             $sourceEntityInstance
         );
@@ -241,7 +246,7 @@ class ProvidersQueryWrapper
         $data,
         $shouldUpdate = false
     ) {
-        return $this->queryProvider->updateResource(
+        return $this->getQueryProvider()->updateResource(
             $sourceResourceSet,
             $sourceEntityInstance,
             $keyDescriptor,
@@ -270,7 +275,7 @@ class ProvidersQueryWrapper
         ResourceSet $targetResourceSet,
         ResourceProperty $targetProperty
     ) {
-        $entityInstance = $this->queryProvider->getRelatedResourceReference(
+        $entityInstance = $this->getQueryProvider()->getRelatedResourceReference(
             $sourceResourceSet,
             $sourceEntity,
             $targetResourceSet,
@@ -323,7 +328,7 @@ class ProvidersQueryWrapper
         ResourceProperty $targetProperty,
         KeyDescriptor $keyDescriptor
     ) {
-        $entityInstance = $this->queryProvider->getResourceFromRelatedResourceSet(
+        $entityInstance = $this->getQueryProvider()->getResourceFromRelatedResourceSet(
             $sourceResourceSet,
             $sourceEntity,
             $targetResourceSet,
@@ -351,7 +356,7 @@ class ProvidersQueryWrapper
      */
     public function getResourceFromResourceSet(ResourceSet $resourceSet, KeyDescriptor $keyDescriptor)
     {
-        $entityInstance = $this->queryProvider->getResourceFromResourceSet($resourceSet, $keyDescriptor);
+        $entityInstance = $this->getQueryProvider()->getResourceFromResourceSet($resourceSet, $keyDescriptor);
         $this->validateEntityInstance(
             $entityInstance,
             $resourceSet,
