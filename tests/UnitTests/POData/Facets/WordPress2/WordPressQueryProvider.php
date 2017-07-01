@@ -14,6 +14,7 @@ use POData\Providers\Query\IQueryProvider;
 use POData\Providers\Query\QueryResult;
 use POData\Providers\Query\QueryType;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
+use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
 use POData\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenInfo;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 
@@ -76,13 +77,13 @@ class WordPressQueryProvider implements IQueryProvider
      * IE: http://host/EntitySet
      *  http://host/EntitySet?$skip=10&$top=5&filter=Prop gt Value.
      *
-     * @param ResourceSet $resourceSet The entity set containing the entities to fetch
-     * @param string      $filter      filter condition if any need to be apply in the query
-     * @param mixed       $orderBy     sorted order if we want to get the data in some specific order
-     * @param int         $top         number of records which need to be retrieved
-     * @param int         $skip        number of records which need to be skipped
-     * @param string      $skipToken   value indicating what records to skip
-     * @param QueryType   $queryType   indicates if this is a query for a count, entities, or entities with a count
+     * @param QueryType                 $queryType   indicates if this is a query for a count, entities, or entities with a count
+     * @param ResourceSet               $resourceSet The entity set containing the entities to fetch
+     * @param FilterInfo                $filterInfo  represents the $filter parameter of the OData query.  NULL if no $filter specified
+     * @param null|InternalOrderByInfo  $orderBy     sorted order if we want to get the data in some specific order
+     * @param int                       $top         number of records which need to be retrieved
+     * @param int                       $skip        number of records which need to be skipped
+     * @param SkipTokenInfo|null        $skipToken   value indicating what records to skip
      *
      * @return QueryResult
      */
