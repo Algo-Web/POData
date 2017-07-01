@@ -2,10 +2,15 @@
 
 namespace UnitTests\POData\OperationContext\Web;
 
+use Illuminate\Http\Request;
 use POData\Common\ODataConstants;
+use POData\Common\ODataException;
 use POData\Common\Version;
 use POData\OperationContext\ServiceHost;
+use POData\OperationContext\Web\Illuminate\IlluminateOperationContext;
+use POData\OperationContext\Web\Illuminate\IncomingIlluminateRequest;
 use UnitTests\POData\TestCase;
+use Mockery as m;
 
 class ServiceHostTest extends TestCase
 {
@@ -128,6 +133,51 @@ class ServiceHostTest extends TestCase
 
         $expected = "$format;q=1.0";
 
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testValidateQueryParametersStartWithDollarButNotOData()
+    {
+        $expected = 'The query parameter \'$impostorKey\' begins with a system-reserved'
+                    .' \'$\' character but is not recognized.';
+        $actual = null;
+
+        $request = m::mock(Request::class);
+        $request->shouldReceive('getMethod')->andReturn('GET');
+        $request->shouldReceive('all')->andReturn(['$impostorKey' => 'value']);
+        $request->shouldReceive('fullUrl')->andReturn('http://localhost/odata.svc');
+
+        $context = new IlluminateOperationContext($request);
+
+        $host = new ServiceHost($context, $request);
+
+        try {
+            $host->validateQueryParameters();
+        } catch (ODataException $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testValidateQueryParametersEmptyODataValue()
+    {
+        $expected = 'Query parameter \'$skip\' is specified, but it should be specified with value.';
+        $actual = null;
+
+        $request = m::mock(Request::class);
+        $request->shouldReceive('getMethod')->andReturn('GET');
+        $request->shouldReceive('all')->andReturn(['$top' => 'value', '$skip' => '']);
+        $request->shouldReceive('fullUrl')->andReturn('http://localhost/odata.svc');
+
+        $context = new IlluminateOperationContext($request);
+
+        $host = new ServiceHost($context, $request);
+
+        try {
+            $host->validateQueryParameters();
+        } catch (ODataException $e) {
+            $actual = $e->getMessage();
+        }
         $this->assertEquals($expected, $actual);
     }
 }

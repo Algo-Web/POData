@@ -110,12 +110,13 @@ class IncomingIlluminateRequest implements IHTTPRequest
         $this->queryOptionsCount = [];
 
         foreach ($this->request->all() as $key => $value) {
-            $this->queryOptions[] = [$key => $value];
+            $keyBitz = explode(';', $key);
+            $newKey = $keyBitz[count($keyBitz) - 1];
+            $this->queryOptions[] = [$newKey => $value];
             if (!array_key_exists($key, $this->queryOptionsCount)) {
-                $this->queryOptionsCount[$key] = 1;
-            } else {
-                $this->queryOptionsCount[$key]++;
+                $this->queryOptionsCount[$newKey] = 0;
             }
+            $this->queryOptionsCount[$newKey]++;
         }
 
         return $this->queryOptions;
