@@ -373,6 +373,8 @@ class UriProcessor
         } else {
             $skip = (null == $this->getRequest()) ? 0 : $this->getRequest()->getSkipCount();
             $skip = (null == $skip) ? 0 : $skip;
+            $skipToken = $this->getRequest()->getInternalSkipTokenInfo();
+            $skipToken = (null != $skipToken) ? $skipToken->getSkipTokenInfo() : null;
             $queryResult = $this->getProviders()->getResourceSet(
                 $this->getRequest()->queryType,
                 $segment->getTargetResourceSetWrapper(),
@@ -380,7 +382,7 @@ class UriProcessor
                 $this->getRequest()->getInternalOrderByInfo(),
                 $this->getRequest()->getTopCount(),
                 $skip,
-                null
+                $skipToken
             );
             $segment->setResult($queryResult);
         }
@@ -410,6 +412,8 @@ class UriProcessor
 
                 $segment->setResult($entityInstance);
             } else {
+                $skipToken = $this->getRequest()->getInternalSkipTokenInfo();
+                $skipToken = (null != $skipToken) ? $skipToken->getSkipTokenInfo() : null;
                 $queryResult = $this->getProviders()->getRelatedResourceSet(
                     $this->getRequest()->queryType,
                     $segment->getPrevious()->getTargetResourceSetWrapper(),
@@ -420,7 +424,8 @@ class UriProcessor
                     //TODO: why are these null?  see #98
                     null, // $orderby
                     null, // $top
-                    null  // $skip
+                    null,  // $skip
+                    $skipToken
                 );
 
                 $segment->setResult($queryResult);

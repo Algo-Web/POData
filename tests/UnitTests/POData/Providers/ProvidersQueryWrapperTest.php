@@ -55,6 +55,7 @@ class ProvidersQueryWrapperTest extends TestCase
                 $this->filterInfo,
                 null,
                 null,
+                null,
                 null
             );
         } catch (ODataException $e) {
@@ -87,6 +88,7 @@ class ProvidersQueryWrapperTest extends TestCase
                 $this->targResourceSet,
                 $this->targProperty,
                 $this->filterInfo,
+                null,
                 null,
                 null,
                 null
@@ -123,6 +125,7 @@ class ProvidersQueryWrapperTest extends TestCase
                 $this->filterInfo,
                 null,
                 null,
+                null,
                 null
             );
         } catch (ODataException $e) {
@@ -157,6 +160,7 @@ class ProvidersQueryWrapperTest extends TestCase
                 $this->filterInfo,
                 null,
                 null,
+                null,
                 null
             );
         } catch (ODataException $e) {
@@ -184,6 +188,7 @@ class ProvidersQueryWrapperTest extends TestCase
             $this->targResourceSet,
             $this->targProperty,
             $this->filterInfo,
+            null,
             null,
             null,
             null
@@ -507,6 +512,30 @@ class ProvidersQueryWrapperTest extends TestCase
         } catch (ODataException $e) {
             $actual = $e->getMessage();
         }
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testGetNullResourceFromResourceSet()
+    {
+        $expected = "Resource not found for the segment 'resourceSet'.";
+        $actual = null;
+
+        $query = m::mock(IQueryProvider::class);
+        $query->shouldReceive('getResourceFromResourceSet')->andReturn(null)->once();
+        $query->shouldReceive('handlesOrderedPaging')->andReturn(true);
+
+        $key = m::mock(KeyDescriptor::class);
+
+        $this->sourceResourceSet->shouldReceive('getName')->andReturn('resourceSet');
+
+        $foo = new ProvidersQueryWrapper($query);
+
+        try {
+            $foo->getResourceFromResourceSet($this->sourceResourceSet, $key);
+        } catch (ODataException $e) {
+            $actual = $e->getMessage();
+        }
+
         $this->assertEquals($expected, $actual);
     }
 }

@@ -14,6 +14,7 @@ use POData\Providers\Query\QueryType;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
 use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
 use POData\UriProcessor\QueryProcessor\SkipTokenParser\InternalSkipTokenInfo;
+use POData\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenInfo;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 
 class ProvidersQueryWrapper
@@ -35,20 +36,26 @@ class ProvidersQueryWrapper
         $this->queryProvider = $query;
     }
 
+    public function getQueryProvider()
+    {
+        return $this->queryProvider;
+    }
+
     /**
      * Get related resource set for a resource.
      *
-     * @param QueryType        $queryType         Indicates if this is a query for a count, entities, or entities
-     *                                            with a count
-     * @param ResourceSet      $sourceResourceSet The entity set containing the source entity
-     * @param object           $sourceEntity      The source entity instance
-     * @param ResourceSet      $targetResourceSet The resource set of containing the target of the navigation property
-     * @param ResourceProperty $targetProperty    The navigation property to retrieve
-     * @param FilterInfo       $filterInfo        Represents the $filter parameter of the OData query.
-     *                                            NULL if no $filter specified
-     * @param mixed            $orderBy           sorted order if we want to get the data in some specific order
-     * @param int              $top               number of records which  need to be skip
-     * @param string           $skip              value indicating what records to skip
+     * @param QueryType             $queryType         Indicates if this is a query for a count, entities, or entities
+     *                                                  with a count
+     * @param ResourceSet           $sourceResourceSet The entity set containing the source entity
+     * @param object                $sourceEntity      The source entity instance
+     * @param ResourceSet           $targetResourceSet The resource set containing the target of the navigation property
+     * @param ResourceProperty      $targetProperty    The navigation property to retrieve
+     * @param FilterInfo            $filterInfo        Represents the $filter parameter of the OData query.
+     *                                                 NULL if no $filter specified
+     * @param mixed                 $orderBy           sorted order if we want to get the data in some specific order
+     * @param int                   $top               The top count
+     * @param int                   $skip              The skip count
+     * @param SkipTokenInfo|null    $skipToken         The skip token
      *
      * @throws ODataException
      *
@@ -63,9 +70,10 @@ class ProvidersQueryWrapper
         $filterInfo,
         $orderBy,
         $top,
-        $skip
+        $skip,
+        $skipToken = null
     ) {
-        $queryResult = $this->queryProvider->getRelatedResourceSet(
+        $queryResult = $this->getQueryProvider()->getRelatedResourceSet(
             $queryType,
             $sourceResourceSet,
             $sourceEntity,
@@ -74,7 +82,8 @@ class ProvidersQueryWrapper
             $filterInfo,
             $orderBy,
             $top,
-            $skip
+            $skip,
+            $skipToken
         );
 
         $this->validateQueryResult($queryResult, $queryType, 'IQueryProvider::getRelatedResourceSet');
@@ -93,7 +102,7 @@ class ProvidersQueryWrapper
      * @param InternalOrderByInfo   $orderBy     The orderBy information
      * @param int                   $top         The top count
      * @param int                   $skip        The skip count
-     * @param InternalSkipTokenInfo $skipToken   The skip token
+     * @param SkipTokenInfo|null    $skipToken   The skip token
      *
      * @return QueryResult
      */
@@ -104,9 +113,9 @@ class ProvidersQueryWrapper
         InternalOrderByInfo $orderBy = null,
         $top = null,
         $skip = null,
-        InternalSkipTokenInfo $skipToken = null
+        SkipTokenInfo $skipToken = null
     ) {
-        $queryResult = $this->queryProvider->getResourceSet(
+        $queryResult = $this->getQueryProvider()->getResourceSet(
             $queryType,
             $resourceSet,
             $filterInfo,
@@ -135,7 +144,7 @@ class ProvidersQueryWrapper
         KeyDescriptor $keyDescriptor,
         $data
     ) {
-        $queryResult = $this->queryProvider->putResource(
+        $queryResult = $this->getQueryProvider()->putResource(
             $resourceSet,
             $keyDescriptor,
             $data
@@ -153,7 +162,7 @@ class ProvidersQueryWrapper
      */
     public function handlesOrderedPaging()
     {
-        return $this->queryProvider->handlesOrderedPaging();
+        return $this->getQueryProvider()->handlesOrderedPaging();
     }
 
     /**
@@ -166,7 +175,7 @@ class ProvidersQueryWrapper
      */
     public function getExpressionProvider()
     {
-        $expressionProvider = $this->queryProvider->getExpressionProvider();
+        $expressionProvider = $this->getQueryProvider()->getExpressionProvider();
         if (is_null($expressionProvider)) {
             throw ODataException::createInternalServerError(
                 Messages::providersWrapperExpressionProviderMustNotBeNullOrEmpty()
@@ -194,7 +203,7 @@ class ProvidersQueryWrapper
         $sourceEntityInstance,
         $data
     ) {
-        return $this->queryProvider->createResourceforResourceSet(
+        return $this->getQueryProvider()->createResourceforResourceSet(
             $resourceSet,
             $sourceEntityInstance,
             $data
@@ -213,7 +222,7 @@ class ProvidersQueryWrapper
         ResourceSet $sourceResourceSet,
         $sourceEntityInstance
     ) {
-        return $this->queryProvider->deleteResource(
+        return $this->getQueryProvider()->deleteResource(
             $sourceResourceSet,
             $sourceEntityInstance
         );
@@ -237,7 +246,7 @@ class ProvidersQueryWrapper
         $data,
         $shouldUpdate = false
     ) {
-        return $this->queryProvider->updateResource(
+        return $this->getQueryProvider()->updateResource(
             $sourceResourceSet,
             $sourceEntityInstance,
             $keyDescriptor,
@@ -266,7 +275,7 @@ class ProvidersQueryWrapper
         ResourceSet $targetResourceSet,
         ResourceProperty $targetProperty
     ) {
-        $entityInstance = $this->queryProvider->getRelatedResourceReference(
+        $entityInstance = $this->getQueryProvider()->getRelatedResourceReference(
             $sourceResourceSet,
             $sourceEntity,
             $targetResourceSet,
@@ -319,7 +328,7 @@ class ProvidersQueryWrapper
         ResourceProperty $targetProperty,
         KeyDescriptor $keyDescriptor
     ) {
-        $entityInstance = $this->queryProvider->getResourceFromRelatedResourceSet(
+        $entityInstance = $this->getQueryProvider()->getResourceFromRelatedResourceSet(
             $sourceResourceSet,
             $sourceEntity,
             $targetResourceSet,
@@ -347,7 +356,7 @@ class ProvidersQueryWrapper
      */
     public function getResourceFromResourceSet(ResourceSet $resourceSet, KeyDescriptor $keyDescriptor)
     {
-        $entityInstance = $this->queryProvider->getResourceFromResourceSet($resourceSet, $keyDescriptor);
+        $entityInstance = $this->getQueryProvider()->getResourceFromResourceSet($resourceSet, $keyDescriptor);
         $this->validateEntityInstance(
             $entityInstance,
             $resourceSet,
