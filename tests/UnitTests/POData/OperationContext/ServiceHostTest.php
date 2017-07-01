@@ -138,7 +138,7 @@ class ServiceHostTest extends TestCase
 
     public function testValidateQueryParametersStartWithDollarButNotOData()
     {
-        $expected = 'The query parameter \'$impostorKey\' begins with a system-reserved'
+        $expected = 'The query parameter \'$impostorkey\' begins with a system-reserved'
                     .' \'$\' character but is not recognized.';
         $actual = null;
 

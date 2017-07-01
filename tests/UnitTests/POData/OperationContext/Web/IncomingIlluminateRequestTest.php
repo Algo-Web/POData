@@ -19,9 +19,32 @@ class IncomingIlluminateRequestTest extends TestCase
         ];
 
         $expectedParm = [
-            [ '$orderBy' => 'CustomerTitle desc,id desc'],
+            [ '$orderby' => 'CustomerTitle desc,id desc'],
             [ '$top' => '1'],
-            [ '$skipToken' => "'University+of+Loamshire', 1, 1"]
+            [ '$skiptoken' => "'University+of+Loamshire', 1, 1"]
+        ];
+
+        $request = new Request($rawParm, $rawParm);
+        $request->setMethod('GET');
+
+        $foo = new IncomingIlluminateRequest($request);
+
+        $actualParm = $foo->getQueryParameters();
+        $this->assertEquals($expectedParm, $actualParm);
+    }
+
+    public function testHandlingHtmlExpansionCapitalsInParmNames()
+    {
+        $rawParm = [
+            '$orderBy' => 'CustomerTitle desc,id desc',
+            '$Top' => '1',
+            '$skipToken' => "'University+of+Loamshire', 1, 1"
+        ];
+
+        $expectedParm = [
+            [ '$orderby' => 'CustomerTitle desc,id desc'],
+            [ '$top' => '1'],
+            [ '$skiptoken' => "'University+of+Loamshire', 1, 1"]
         ];
 
         $request = new Request($rawParm, $rawParm);

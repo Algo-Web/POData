@@ -111,7 +111,7 @@ class IncomingIlluminateRequest implements IHTTPRequest
 
         foreach ($this->request->all() as $key => $value) {
             $keyBitz = explode(';', $key);
-            $newKey = $keyBitz[count($keyBitz) - 1];
+            $newKey = strtolower($keyBitz[count($keyBitz) - 1]);
             $this->queryOptions[] = [$newKey => $value];
             if (!array_key_exists($key, $this->queryOptionsCount)) {
                 $this->queryOptionsCount[$newKey] = 0;
