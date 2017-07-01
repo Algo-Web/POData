@@ -223,7 +223,8 @@ abstract class SimpleQueryProvider implements IQueryProvider
         $filterInfo = null,
         $orderBy = null,
         $top = null,
-        $skip = null
+        $skip = null,
+        $skipToken = null
     ) {
         // Correct filter
         $srcClass = get_class($sourceEntityInstance);
