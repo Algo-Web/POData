@@ -22,6 +22,7 @@ use POData\Providers\Query\QueryType;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
 use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
 use POData\UriProcessor\QueryProcessor\SkipTokenParser\InternalSkipTokenInfo;
+use POData\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenInfo;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 
 /**
@@ -633,7 +634,7 @@ class ProvidersWrapper
         InternalOrderByInfo $orderBy = null,
         $top = null,
         $skip = null,
-        InternalSkipTokenInfo $skipToken = null
+        SkipTokenInfo $skipToken = null
     ) {
         return $this->providerWrapper->getResourceSet(
             $queryType,
@@ -682,17 +683,18 @@ class ProvidersWrapper
     /**
      * Get related resource set for a resource.
      *
-     * @param QueryType        $queryType         Indicates if this is a query for a count, entities, or entities
-     *                                            with a count
-     * @param ResourceSet      $sourceResourceSet The entity set containing the source entity
-     * @param object           $sourceEntity      The source entity instance
-     * @param ResourceSet      $targetResourceSet The resource set of containing the target of the navigation property
-     * @param ResourceProperty $targetProperty    The navigation property to retrieve
-     * @param FilterInfo|null  $filterInfo        Represents the $filter parameter of the OData query.
-     *                                            NULL if no $filter specified
-     * @param mixed            $orderBy           sorted order if we want to get the data in some specific order
-     * @param int              $top               number of records which  need to be skip
-     * @param string           $skip              value indicating what records to skip
+     * @param QueryType             $queryType         Indicates if this is a query for a count, entities, or entities
+     *                                                 with a count
+     * @param ResourceSet           $sourceResourceSet The entity set containing the source entity
+     * @param object                $sourceEntity      The source entity instance
+     * @param ResourceSet           $targetResourceSet The resource set containing the target of the navigation property
+     * @param ResourceProperty      $targetProperty    The navigation property to retrieve
+     * @param FilterInfo|null       $filterInfo        Represents the $filter parameter of the OData query.
+     *                                                 NULL if no $filter specified
+     * @param mixed                 $orderBy           sorted order if we want to get the data in some specific order
+     * @param int                   $top                  number of records which need to be retrieved
+     * @param int                   $skip                 number of records which need to be skipped
+     * @param SkipTokenInfo|null    $skipToken            value indicating what records to skip
      *
      * @throws ODataException
      *
@@ -707,7 +709,8 @@ class ProvidersWrapper
         $filterInfo,
         $orderBy,
         $top,
-        $skip
+        $skip,
+        SkipTokenInfo $skipToken = null
     ) {
         return $this->providerWrapper->getRelatedResourceSet(
             $queryType,
@@ -718,7 +721,8 @@ class ProvidersWrapper
             $filterInfo,
             $orderBy,
             $top,
-            $skip
+            $skip,
+            $skipToken
         );
     }
 

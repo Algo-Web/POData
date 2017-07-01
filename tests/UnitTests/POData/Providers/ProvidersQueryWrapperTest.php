@@ -55,6 +55,7 @@ class ProvidersQueryWrapperTest extends TestCase
                 $this->filterInfo,
                 null,
                 null,
+                null,
                 null
             );
         } catch (ODataException $e) {
@@ -87,6 +88,7 @@ class ProvidersQueryWrapperTest extends TestCase
                 $this->targResourceSet,
                 $this->targProperty,
                 $this->filterInfo,
+                null,
                 null,
                 null,
                 null
@@ -123,6 +125,7 @@ class ProvidersQueryWrapperTest extends TestCase
                 $this->filterInfo,
                 null,
                 null,
+                null,
                 null
             );
         } catch (ODataException $e) {
@@ -157,6 +160,7 @@ class ProvidersQueryWrapperTest extends TestCase
                 $this->filterInfo,
                 null,
                 null,
+                null,
                 null
             );
         } catch (ODataException $e) {
@@ -184,6 +188,7 @@ class ProvidersQueryWrapperTest extends TestCase
             $this->targResourceSet,
             $this->targProperty,
             $this->filterInfo,
+            null,
             null,
             null,
             null
