@@ -433,6 +433,7 @@ class ObjectModelSerializerBase
         $currentExpandedProjectionNode = $this->getCurrentExpandedProjectionNode();
         $internalOrderByInfo = $currentExpandedProjectionNode->getInternalOrderByInfo();
         $skipToken = $internalOrderByInfo->buildSkipTokenValue($lastObject);
+        $numSegments = count($internalOrderByInfo->getOrderByPathSegments());
         assert(!is_null($skipToken), '!is_null($skipToken)');
         $queryParameterString = null;
         if ($this->isRootResourceSet()) {
@@ -441,7 +442,8 @@ class ObjectModelSerializerBase
             $queryParameterString = $this->getNextPageLinkQueryParametersForExpandedResourceSet();
         }
 
-        $queryParameterString .= '$skip=' . $skipToken;
+        $token = (1 < $numSegments) ? '$skiptoken=' : '$skip=';
+        $queryParameterString .= $token . $skipToken;
         $odataLink = new ODataLink();
         $odataLink->name = ODataConstants::ATOM_LINK_NEXT_ATTRIBUTE_STRING;
         $odataLink->url = rtrim($absoluteUri, '/') . '?' . $queryParameterString;
