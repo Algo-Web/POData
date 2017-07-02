@@ -405,6 +405,7 @@ class ObjectModelSerializerBaseTest extends TestCase
     {
         $orderInfo = m::mock(InternalOrderByInfo::class);
         $orderInfo->shouldReceive('buildSkipTokenValue')->andReturnNull()->once();
+        $orderInfo->shouldReceive('getOrderByPathSegments')->andReturn(['a'])->once();
 
         $node = m::mock(ExpandedProjectionNode::class);
         $node->shouldReceive('getInternalOrderByInfo')->andReturn($orderInfo);
@@ -431,6 +432,7 @@ class ObjectModelSerializerBaseTest extends TestCase
 
         $orderInfo = m::mock(InternalOrderByInfo::class);
         $orderInfo->shouldReceive('buildSkipTokenValue')->andReturn('skippage')->once();
+        $orderInfo->shouldReceive('getOrderByPathSegments')->andReturn(['a'])->once();
 
         $node = m::mock(ExpandedProjectionNode::class);
         $node->shouldReceive('getInternalOrderByInfo')->andReturn($orderInfo)->once();
@@ -458,6 +460,7 @@ class ObjectModelSerializerBaseTest extends TestCase
 
         $orderInfo = m::mock(InternalOrderByInfo::class);
         $orderInfo->shouldReceive('buildSkipTokenValue')->andReturn('skippage')->once();
+        $orderInfo->shouldReceive('getOrderByPathSegments')->andReturn(['a'])->once();
 
         $node = m::mock(ExpandedProjectionNode::class);
         $node->shouldReceive('getInternalOrderByInfo')->andReturn($orderInfo)->once();
@@ -493,6 +496,48 @@ class ObjectModelSerializerBaseTest extends TestCase
         $foo->setStack($stack);
 
         $this->assertFalse($foo->needNextPageLink(42));
+    }
+
+    public function testGenerateNextLinkUrlNeedsPlainSkippage()
+    {
+        $object = new \stdClass();
+
+        $internalInfo = m::mock(InternalOrderByInfo::class)->makePartial();
+        $internalInfo->shouldReceive('buildSkipTokenValue')->andReturn('200');
+        $internalInfo->shouldReceive('getOrderByPathSegments')->andReturn(['a'])->once();
+
+        $node = m::mock(ExpandedProjectionNode::class)->makePartial();
+        $node->shouldReceive('getInternalOrderByInfo')->andReturn($internalInfo)->once();
+
+        $foo = m::mock(ObjectModelSerializerDummy::class)->shouldAllowMockingProtectedMethods()->makePartial();
+        $foo->shouldReceive('getCurrentExpandedProjectionNode')->andReturn($node)->once();
+        $foo->shouldReceive('getNextPageLinkQueryParametersForExpandedResourceSet')->andReturn('Customers(42)/Orders');
+        $foo->shouldReceive('isRootResourceSet')->andReturn(false);
+
+        $expected = 'http://localhost/odata.svc?Customers(42)/Orders$skip=200';
+        $actual = $foo->getNextLinkUri($object, 'http://localhost/odata.svc/');
+        $this->assertEquals($expected, $actual->url);
+    }
+
+    public function testGenerateNextLinkUrlNeedsSkipToken()
+    {
+        $object = new \stdClass();
+
+        $internalInfo = m::mock(InternalOrderByInfo::class)->makePartial();
+        $internalInfo->shouldReceive('buildSkipTokenValue')->andReturn('\'University+of+Loamshire\'');
+        $internalInfo->shouldReceive('getOrderByPathSegments')->andReturn(['a', 'b'])->once();
+
+        $node = m::mock(ExpandedProjectionNode::class)->makePartial();
+        $node->shouldReceive('getInternalOrderByInfo')->andReturn($internalInfo)->once();
+
+        $foo = m::mock(ObjectModelSerializerDummy::class)->shouldAllowMockingProtectedMethods()->makePartial();
+        $foo->shouldReceive('getCurrentExpandedProjectionNode')->andReturn($node)->once();
+        $foo->shouldReceive('getNextPageLinkQueryParametersForExpandedResourceSet')->andReturn('Customers(42)/Orders');
+        $foo->shouldReceive('isRootResourceSet')->andReturn(false);
+
+        $expected = 'http://localhost/odata.svc?Customers(42)/Orders$skiptoken=\'University+of+Loamshire\'';
+        $actual = $foo->getNextLinkUri($object, 'http://localhost/odata.svc/');
+        $this->assertEquals($expected, $actual->url);
     }
 }
 
