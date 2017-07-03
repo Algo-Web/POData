@@ -112,6 +112,86 @@ class ObjectModelSerializerTest extends TestCase
         $this->assertEquals('Entity', $ret->resourceSetName);
     }
 
+    public function testwriteTopLevelElementsWithoutHasMore()
+    {
+        $foo = $this->Construct();
+        $entity = new reusableEntityClass4();
+        $entity->name = 'bilbo';
+        $entity->type = 2;
+        $entity1 = new reusableEntityClass4();
+        $entity1->name = 'dildo';
+        $entity1->type = 3;
+
+        $mockResourceType = m::mock(\POData\Providers\Metadata\ResourceType::class)->makePartial();
+        $mockResourceSetWrapper = m::mock(\POData\Providers\Metadata\ResourceSetWrapper::class)->makePartial();
+
+        $requestURL = new \POData\Common\Url('http://192.168.2.1/abm-master/public/odata.svc/Entity(1)');
+
+        $this->serviceHost->shouldReceive('getQueryStringItem')->andReturn(null);
+
+        $orderInfo = m::mock(InternalOrderByInfo::class)->makePartial();
+        $orderInfo->shouldReceive('getOrderByPathSegments')->andReturn([])->never();
+
+        $rootNode = m::mock(RootProjectionNode::class);
+        $rootNode->shouldReceive('isExpansionSpecified')->andReturn(false)->once();
+        $rootNode->shouldReceive('canSelectAllProperties')->andReturn(true)->twice();
+        $rootNode->shouldReceive('getInternalOrderByInfo')->andReturn($orderInfo)->never();
+
+        $this->mockRequest->shouldReceive('getTargetSource')->andReturn(2);
+        $this->mockRequest->shouldReceive('getContainerName')->andReturn('data');
+        $this->mockRequest->shouldReceive('getTargetResourceType')->andReturn($mockResourceType);
+        $this->mockRequest->shouldReceive('getTargetResourceSetWrapper')->andReturn($mockResourceSetWrapper);
+        $this->mockRequest->shouldReceive('getRequestUrl')->andReturn($requestURL);
+        $this->mockRequest->shouldReceive('getIdentifier')->andReturn('Entity');
+        $this->mockRequest->shouldReceive('getRootProjectionNode')->andReturn($rootNode);
+
+        $resourceProperty = m::mock(\POData\Providers\Metadata\ResourceProperty::class)->makePartial();
+        $resourceProperty->shouldReceive('getName')->andReturn('name');
+        $resourceProperty->shouldReceive('getInstanceType')->andReturn(new \POData\Providers\Metadata\Type\EdmString());
+
+        $resourceProperty2 = m::mock(\POData\Providers\Metadata\ResourceProperty::class)->makePartial();
+        $resourceProperty2->shouldReceive('getName')->andReturn('type');
+        $resourceProperty2->shouldReceive('getInstanceType')->andReturn(new \POData\Providers\Metadata\Type\Int32());
+
+        $keysProperty = ['name' => $resourceProperty, 'type'=>$resourceProperty2];
+        $mockResourceType->shouldReceive('getKeyProperties')->andReturn($keysProperty);
+
+        $mockResourceType->shouldReceive('getResourceTypeKind')->andReturn(2);
+        $mockResourceSetWrapper->shouldReceive('getName')->andReturn('Entity');
+
+        $e = [$entity, $entity1];
+        $queryResult = new QueryResult();
+        $queryResult->results = $e;
+        $queryResult->hasMore = false;
+
+        $ret = $foo->writeTopLevelElements($queryResult);
+        $this->assertTrue($ret instanceof \POData\ObjectModel\ODataFeed);
+        $this->assertTrue($ret->selfLink instanceof \POData\ObjectModel\ODataLink);
+
+        $this->assertTrue(is_array($ret->entries));
+
+        $this->assertEquals('http://192.168.2.1/abm-master/public/odata.svc/Entity(1)', $ret->id);
+        $this->assertEquals('data', $ret->title);
+
+        $this->assertEquals('self', $ret->selfLink->name);
+        $this->assertEquals('data', $ret->selfLink->title);
+        $this->assertEquals('Entity', $ret->selfLink->url);
+
+        $this->assertEquals(2, count($ret->entries));
+
+        $this->assertTrue($ret->entries[0] instanceof \POData\ObjectModel\ODataEntry);
+        $this->assertTrue($ret->entries[1] instanceof \POData\ObjectModel\ODataEntry);
+
+        $this->assertEquals("http://192.168.2.1/abm-master/public/odata.svc/Entity(name='bilbo',type=2)", $ret->entries[0]->id);
+        $this->assertEquals("http://192.168.2.1/abm-master/public/odata.svc/Entity(name='dildo',type=3)", $ret->entries[1]->id);
+
+        $this->assertEquals("Entity(name='bilbo',type=2)", $ret->entries[0]->editLink);
+        $this->assertEquals("Entity(name='dildo',type=3)", $ret->entries[1]->editLink);
+
+        $this->assertTrue($ret->entries[0]->propertyContent instanceof \POData\ObjectModel\ODataPropertyContent);
+        $this->assertTrue($ret->entries[1]->propertyContent instanceof \POData\ObjectModel\ODataPropertyContent);
+    }
+
     public function testwriteTopLevelElements()
     {
         $foo = $this->Construct();
