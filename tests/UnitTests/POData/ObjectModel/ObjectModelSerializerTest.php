@@ -28,6 +28,8 @@ use POData\Providers\Query\QueryResult;
 use POData\Providers\Query\QueryType;
 use POData\Providers\Stream\StreamProviderWrapper;
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandedProjectionNode;
+use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\RootProjectionNode;
+use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
 use POData\UriProcessor\RequestDescription;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetSource;
 use POData\UriProcessor\SegmentStack;
@@ -125,12 +127,23 @@ class ObjectModelSerializerTest extends TestCase
 
         $requestURL = new \POData\Common\Url('http://192.168.2.1/abm-master/public/odata.svc/Entity(1)');
 
+        $this->serviceHost->shouldReceive('getQueryStringItem')->andReturn(null);
+
+        $orderInfo = m::mock(InternalOrderByInfo::class)->makePartial();
+        $orderInfo->shouldReceive('getOrderByPathSegments')->andReturn([])->twice();
+
+        $rootNode = m::mock(RootProjectionNode::class);
+        $rootNode->shouldReceive('isExpansionSpecified')->andReturn(false)->once();
+        $rootNode->shouldReceive('canSelectAllProperties')->andReturn(true)->twice();
+        $rootNode->shouldReceive('getInternalOrderByInfo')->andReturn($orderInfo)->once();
+
         $this->mockRequest->shouldReceive('getTargetSource')->andReturn(2);
         $this->mockRequest->shouldReceive('getContainerName')->andReturn('data');
         $this->mockRequest->shouldReceive('getTargetResourceType')->andReturn($mockResourceType);
         $this->mockRequest->shouldReceive('getTargetResourceSetWrapper')->andReturn($mockResourceSetWrapper);
         $this->mockRequest->shouldReceive('getRequestUrl')->andReturn($requestURL);
         $this->mockRequest->shouldReceive('getIdentifier')->andReturn('Entity');
+        $this->mockRequest->shouldReceive('getRootProjectionNode')->andReturn($rootNode);
 
         $resourceProperty = m::mock(\POData\Providers\Metadata\ResourceProperty::class)->makePartial();
         $resourceProperty->shouldReceive('getName')->andReturn('name');
@@ -149,6 +162,7 @@ class ObjectModelSerializerTest extends TestCase
         $e = [$entity, $entity1];
         $queryResult = new QueryResult();
         $queryResult->results = $e;
+        $queryResult->hasMore = true;
 
         $ret = $foo->writeTopLevelElements($queryResult);
         $this->assertTrue($ret instanceof \POData\ObjectModel\ODataFeed);
@@ -437,13 +451,14 @@ class ObjectModelSerializerTest extends TestCase
 
         $queryResult = new QueryResult();
         $queryResult->results = [$supplier, $customer];
+        $queryResult->hasMore = true;
 
         $foo = m::mock(ObjectModelSerializer::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $foo->shouldReceive('writeUrlElement')->withArgs([$supplier])->andReturn('/supplier')->once();
         $foo->shouldReceive('writeUrlElement')->withArgs([$customer])->andReturn('/customer')->once();
         $foo->shouldReceive('getStack->getSegmentWrappers')->andReturn([]);
         $foo->shouldReceive('getRequest')->andReturn($this->mockRequest);
-        $foo->shouldReceive('needNextPageLink')->andReturn(true)->once();
+        $foo->shouldReceive('needNextPageLink')->andReturn(true)->never();
         $foo->shouldReceive('getNextLinkUri')->andReturn($odataLink)->once();
 
         $result = $foo->writeUrlElements($queryResult);

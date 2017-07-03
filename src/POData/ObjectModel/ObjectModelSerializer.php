@@ -107,7 +107,8 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
             $title,
             $this->getRequest()->getRequestUrl()->getUrlAsString(),
             $relativeUri,
-            $feed
+            $feed,
+            $entryObjects->hasMore
         );
         $this->popSegment($needPop);
 
@@ -157,7 +158,8 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
                 ++$i;
             }
 
-            if ($i > 0 && $this->needNextPageLink(count($results))) {
+            //if ($i > 0 && $this->needNextPageLink(count($results))) {
+            if ($i > 0 && true === $entryObjects->hasMore) {
                 $urls->nextPageLink = $this->getNextLinkUri(
                     $results[$i - 1],
                     $this->getRequest()->getRequestUrl()->getUrlAsString()
@@ -313,8 +315,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
      * Writes the feed elements.
      *
      * @param array        &$entryObjects Array of entries in the feed element
-     * @param ResourceType &$resourceType The resource type of the f the elements
-     *                                    in the collection
+     * @param ResourceType &$resourceType The resource type of the elements in the collection
      * @param string       $title         Title of the feed element
      * @param string       $absoluteUri   Absolute uri representing the feed element
      * @param string       $relativeUri   Relative uri representing the feed element
@@ -326,7 +327,8 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
         $title,
         $absoluteUri,
         $relativeUri,
-        ODataFeed &$feed
+        ODataFeed &$feed,
+        $needLink = false
     ) {
         assert(is_array($entryObjects), '!_writeFeedElements::is_array($entryObjects)');
         $feed->id = $absoluteUri;
@@ -344,7 +346,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
                 $feed->entries[] = $this->writeEntryElement($entryObject, $resourceType, null, null);
             }
 
-            if ($this->needNextPageLink(count($entryObjects))) {
+            if (true === $needLink || $this->needNextPageLink(count($entryObjects))) {
                 $lastObject = end($entryObjects);
                 $feed->nextPageLink = $this->getNextLinkUri($lastObject, $absoluteUri);
             }
@@ -457,13 +459,15 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
                             $inlineFeed = new ODataFeed();
                             $link->isCollection = true;
 
+                            //TODO: Robustise need-next-link determination
                             $this->writeFeedElements(
                                 $navigationPropertyInfo->value,
                                 $currentResourceType,
                                 $propertyName,
                                 $propertyAbsoluteUri,
                                 $propertyRelativeUri,
-                                $inlineFeed
+                                $inlineFeed,
+                                false
                             );
                             $link->expandedResult = $inlineFeed;
                         } else {

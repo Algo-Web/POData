@@ -463,11 +463,13 @@ class ObjectModelSerializerBase
     protected function getNextPageLinkQueryParametersForRootResourceSet()
     {
         $queryParameterString = null;
-        foreach ([ODataConstants::HTTPQUERY_STRING_FILTER,
-            ODataConstants::HTTPQUERY_STRING_EXPAND,
-            ODataConstants::HTTPQUERY_STRING_ORDERBY,
-            ODataConstants::HTTPQUERY_STRING_INLINECOUNT,
-            ODataConstants::HTTPQUERY_STRING_SELECT, ] as $queryOption) {
+        foreach ([
+                    ODataConstants::HTTPQUERY_STRING_FILTER,
+                    ODataConstants::HTTPQUERY_STRING_EXPAND,
+                    ODataConstants::HTTPQUERY_STRING_ORDERBY,
+                    ODataConstants::HTTPQUERY_STRING_INLINECOUNT,
+                    ODataConstants::HTTPQUERY_STRING_SELECT
+                 ] as $queryOption) {
             $value = $this->getService()->getHost()->getQueryStringItem($queryOption);
             if (!is_null($value)) {
                 if (!is_null($queryParameterString)) {
