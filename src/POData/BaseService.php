@@ -26,6 +26,7 @@ use POData\Providers\Metadata\Type\Binary;
 use POData\Providers\Metadata\Type\IType;
 use POData\Providers\ProvidersWrapper;
 use POData\Providers\Query\IQueryProvider;
+use POData\Providers\Query\QueryResult;
 use POData\Providers\Stream\StreamProviderWrapper;
 use POData\UriProcessor\RequestDescription;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
@@ -406,7 +407,8 @@ abstract class BaseService implements IRequestHandler, IService
             if (!$request->isSingleResult() && $method) {
                 // Code path for collection (feed or links)
                 $entryObjects = $request->getTargetResult();
-                assert(is_array($entryObjects), '!is_array($entryObjects)');
+                assert($entryObjects instanceof QueryResult, '!$entryObjects instanceof QueryResult');
+                assert(is_array($entryObjects->results), '!is_array($entryObjects->results)');
                 // If related resource set is empty for an entry then we should
                 // not throw error instead response must be empty feed or empty links
                 if ($request->isLinkUri()) {

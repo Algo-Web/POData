@@ -24,6 +24,7 @@ use POData\Providers\Metadata\Type\Binary;
 use POData\Providers\Metadata\Type\IType;
 use POData\Providers\Metadata\Type\StringType;
 use POData\Providers\Query\IQueryProvider;
+use POData\Providers\Query\QueryResult;
 use POData\Providers\Stream\IStreamProvider2;
 use POData\Providers\Stream\StreamProviderWrapper;
 use POData\SimpleDataService;
@@ -1095,20 +1096,23 @@ class BaseServiceNewTest extends TestCase
 
         $foo = new BaseServiceDummy(null, $host, $cereal, $stream, null, $config);
 
+        $queryResult = new QueryResult();
+        $queryResult->results = 'ScatmanJohn';
+
         $request = m::mock(RequestDescription::class);
         $request->shouldReceive('isETagHeaderAllowed')->andReturn(true);
         $request->shouldReceive('getTargetKind')->andReturn(TargetKind::METADATA(), TargetKind::PRIMITIVE_VALUE());
         $request->shouldReceive('needExecution')->andReturn(true)->once();
         $request->shouldReceive('getResponseVersion')->andReturn(Version::v3());
         $request->shouldReceive('isLinkUri')->andReturn(false);
-        $request->shouldReceive('getTargetResult')->andReturn('ScatmanJohn');
+        $request->shouldReceive('getTargetResult')->andReturn($queryResult);
         $request->shouldReceive('getTargetResourceType')->andReturn($type)->once();
         $request->shouldReceive('isSingleResult')->andReturn(false)->once();
 
         $uriProc = m::mock(UriProcessor::class);
         $uriProc->shouldReceive('execute')->andReturnNull()->once();
 
-        $expected = 'assert(): !is_array($entryObjects) failed';
+        $expected = 'assert(): !is_array($entryObjects->results) failed';
         $actual = null;
 
         try {
@@ -1156,13 +1160,16 @@ class BaseServiceNewTest extends TestCase
 
         $foo = new BaseServiceDummy(null, $host, $cereal, $stream, null, $config);
 
+        $queryResult = new QueryResult();
+        $queryResult->results = ['ScatmanJohn'];
+
         $request = m::mock(RequestDescription::class);
         $request->shouldReceive('isETagHeaderAllowed')->andReturn(true);
         $request->shouldReceive('getTargetKind')->andReturn(TargetKind::METADATA(), TargetKind::PRIMITIVE_VALUE());
         $request->shouldReceive('needExecution')->andReturn(true)->once();
         $request->shouldReceive('getResponseVersion')->andReturn(Version::v3());
         $request->shouldReceive('isLinkUri')->andReturn(true);
-        $request->shouldReceive('getTargetResult')->andReturn(['ScatmanJohn']);
+        $request->shouldReceive('getTargetResult')->andReturn($queryResult);
         $request->shouldReceive('getTargetResourceType')->andReturn($type)->once();
         $request->shouldReceive('isSingleResult')->andReturn(false)->once();
 
@@ -1217,13 +1224,16 @@ class BaseServiceNewTest extends TestCase
 
         $foo = new BaseServiceDummy(null, $host, $cereal, $stream, null, $config);
 
+        $queryResult = new QueryResult();
+        $queryResult->results = ['ScatmanJohn'];
+
         $request = m::mock(RequestDescription::class);
         $request->shouldReceive('isETagHeaderAllowed')->andReturn(true);
         $request->shouldReceive('getTargetKind')->andReturn(TargetKind::METADATA(), TargetKind::PRIMITIVE_VALUE());
         $request->shouldReceive('needExecution')->andReturn(true)->once();
         $request->shouldReceive('getResponseVersion')->andReturn(Version::v3());
         $request->shouldReceive('isLinkUri')->andReturn(false);
-        $request->shouldReceive('getTargetResult')->andReturn(['ScatmanJohn']);
+        $request->shouldReceive('getTargetResult')->andReturn($queryResult);
         $request->shouldReceive('getTargetResourceType')->andReturn($type)->once();
         $request->shouldReceive('isSingleResult')->andReturn(false)->once();
 
