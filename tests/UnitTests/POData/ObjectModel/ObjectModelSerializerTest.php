@@ -24,6 +24,7 @@ use POData\Providers\Metadata\Type\Boolean;
 use POData\Providers\Metadata\Type\DateTime;
 use POData\Providers\Metadata\Type\StringType;
 use POData\Providers\ProvidersWrapper;
+use POData\Providers\Query\QueryResult;
 use POData\Providers\Query\QueryType;
 use POData\Providers\Stream\StreamProviderWrapper;
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandedProjectionNode;
@@ -100,7 +101,10 @@ class ObjectModelSerializerTest extends TestCase
         $mockResourceType->shouldReceive('getResourceTypeKind')->andReturn(2);
         $mockResourceSetWrapper->shouldReceive('getName')->andReturn('Entity');
 
-        $ret = $foo->writeTopLevelElement($entity);
+        $queryResult = new QueryResult();
+        $queryResult->results = $entity;
+
+        $ret = $foo->writeTopLevelElement($queryResult);
         $this->assertEquals("http://192.168.2.1/abm-master/public/odata.svc/Entity(name='bilbo',type=2)", $ret->id);
         $this->assertEquals("Entity(name='bilbo',type=2)", $ret->editLink);
         $this->assertEquals('Entity', $ret->resourceSetName);
@@ -143,7 +147,10 @@ class ObjectModelSerializerTest extends TestCase
         $mockResourceSetWrapper->shouldReceive('getName')->andReturn('Entity');
 
         $e = [$entity, $entity1];
-        $ret = $foo->writeTopLevelElements($e);
+        $queryResult = new QueryResult();
+        $queryResult->results = $e;
+
+        $ret = $foo->writeTopLevelElements($queryResult);
         $this->assertTrue($ret instanceof \POData\ObjectModel\ODataFeed);
         $this->assertTrue($ret->selfLink instanceof \POData\ObjectModel\ODataLink);
 
@@ -215,7 +222,10 @@ class ObjectModelSerializerTest extends TestCase
         $this->mockRequest->shouldReceive('getTargetResourceType')->andReturn($resourceType);
         $this->mockRequest->shouldReceive('getRequestUrl')->andReturn($requestURL);
 
-        $ret = $foo->writeTopLevelElements($e);
+        $queryResult = new QueryResult();
+        $queryResult->results = $e;
+
+        $ret = $foo->writeTopLevelElements($queryResult);
         $this->assertTrue($ret instanceof \POData\ObjectModel\ODataFeed);
         $this->assertTrue($ret->selfLink instanceof \POData\ObjectModel\ODataLink);
         $this->assertEquals("http://192.168.2.1/abm-master/public/odata.svc/Entity(1)", $ret->id);
@@ -230,7 +240,10 @@ class ObjectModelSerializerTest extends TestCase
         $property->shouldReceive('getName')->andReturn('name');
         $property->shouldReceive('getInstanceType->getFullTypeName')->andReturn('typeName');
 
-        $result = $foo->writeTopLevelPrimitive($primVal, $property);
+        $queryResult = new QueryResult();
+        $queryResult->results = $primVal;
+
+        $result = $foo->writeTopLevelPrimitive($queryResult, $property);
         $this->assertTrue($result instanceof ODataPropertyContent, get_class($result));
         $this->assertEquals('name', $result->properties[0]->name);
         $this->assertEquals('typeName', $result->properties[0]->typeName);
@@ -250,7 +263,10 @@ class ObjectModelSerializerTest extends TestCase
         $property->shouldReceive('getInstanceType->getFullTypeName')->andReturn('typeName');
         $property->shouldReceive('getResourceType')->andReturn($type);
 
-        $result = $foo->writeTopLevelPrimitive($primVal, $property);
+        $queryResult = new QueryResult();
+        $queryResult->results = $primVal;
+
+        $result = $foo->writeTopLevelPrimitive($queryResult, $property);
         $this->assertTrue($result instanceof ODataPropertyContent, get_class($result));
         $this->assertEquals('name', $result->properties[0]->name);
         $this->assertEquals('typeName', $result->properties[0]->typeName);
@@ -270,7 +286,10 @@ class ObjectModelSerializerTest extends TestCase
         $property->shouldReceive('getInstanceType->getFullTypeName')->andReturn('typeName');
         $property->shouldReceive('getResourceType')->andReturn($type);
 
-        $result = $foo->writeTopLevelPrimitive($primVal, $property);
+        $queryResult = new QueryResult();
+        $queryResult->results = $primVal;
+
+        $result = $foo->writeTopLevelPrimitive($queryResult, $property);
         $this->assertTrue($result instanceof ODataPropertyContent, get_class($result));
         $this->assertEquals('name', $result->properties[0]->name);
         $this->assertEquals('typeName', $result->properties[0]->typeName);
@@ -290,7 +309,10 @@ class ObjectModelSerializerTest extends TestCase
         $property->shouldReceive('getInstanceType->getFullTypeName')->andReturn('typeName');
         $property->shouldReceive('getResourceType')->andReturn($type);
 
-        $result = $foo->writeTopLevelPrimitive($primVal, $property);
+        $queryResult = new QueryResult();
+        $queryResult->results = $primVal;
+
+        $result = $foo->writeTopLevelPrimitive($queryResult, $property);
         $this->assertTrue($result instanceof ODataPropertyContent, get_class($result));
         $this->assertEquals('name', $result->properties[0]->name);
         $this->assertEquals('typeName', $result->properties[0]->typeName);
@@ -310,7 +332,10 @@ class ObjectModelSerializerTest extends TestCase
         $property->shouldReceive('getInstanceType->getFullTypeName')->andReturn('typeName');
         $property->shouldReceive('getResourceType')->andReturn($type);
 
-        $result = $foo->writeTopLevelPrimitive($primVal, $property);
+        $queryResult = new QueryResult();
+        $queryResult->results = $primVal;
+
+        $result = $foo->writeTopLevelPrimitive($queryResult, $property);
         $this->assertTrue($result instanceof ODataPropertyContent, get_class($result));
         $this->assertEquals('name', $result->properties[0]->name);
         $this->assertEquals('typeName', $result->properties[0]->typeName);
@@ -330,7 +355,10 @@ class ObjectModelSerializerTest extends TestCase
         $property->shouldReceive('getInstanceType->getFullTypeName')->andReturn('typeName');
         $property->shouldReceive('getResourceType')->andReturn($type);
 
-        $result = $foo->writeTopLevelPrimitive($primVal, $property);
+        $queryResult = new QueryResult();
+        $queryResult->results = $primVal;
+
+        $result = $foo->writeTopLevelPrimitive($queryResult, $property);
         $this->assertTrue($result instanceof ODataPropertyContent, get_class($result));
         $this->assertEquals('name', $result->properties[0]->name);
         $this->assertEquals('typeName', $result->properties[0]->typeName);
@@ -341,7 +369,10 @@ class ObjectModelSerializerTest extends TestCase
     {
         $foo = $this->Construct();
 
-        $result = $foo->writeUrlElement(null);
+        $queryResult = new QueryResult();
+        $queryResult->results = null;
+
+        $result = $foo->writeUrlElement($queryResult);
         $this->assertEquals(null, $result->url);
     }
 
@@ -357,7 +388,10 @@ class ObjectModelSerializerTest extends TestCase
         $foo->shouldReceive('getCurrentResourceSetWrapper')->andReturn($wrap);
         $foo->shouldReceive('getEntryInstanceKey')->andReturn('customer')->once();
 
-        $result = $foo->writeUrlElement('bar');
+        $queryResult = new QueryResult();
+        $queryResult->results = 'bar';
+
+        $result = $foo->writeUrlElement($queryResult);
         $this->assertEquals('/customer', $result->url);
     }
 
@@ -366,7 +400,11 @@ class ObjectModelSerializerTest extends TestCase
         $foo = $this->Construct();
         $this->mockRequest->queryType = QueryType::ENTITIES_WITH_COUNT();
         $this->mockRequest->shouldReceive('getCountValue')->andReturn(1);
-        $result = $foo->writeUrlElements(null);
+
+        $queryResult = new QueryResult();
+        $queryResult->results = null;
+
+        $result = $foo->writeUrlElements($queryResult);
         $this->assertEquals(0, count($result->urls));
         $this->assertNull($result->nextPageLink);
         $this->assertEquals(1, $result->count);
@@ -391,15 +429,24 @@ class ObjectModelSerializerTest extends TestCase
 
         $objects = ['customer', 'supplier'];
 
+        $supplier = new QueryResult();
+        $supplier->results = 'supplier';
+
+        $customer = new QueryResult();
+        $customer->results = 'customer';
+
+        $queryResult = new QueryResult();
+        $queryResult->results = [$supplier, $customer];
+
         $foo = m::mock(ObjectModelSerializer::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $foo->shouldReceive('writeUrlElement')->withArgs(['supplier'])->andReturn('/supplier')->once();
-        $foo->shouldReceive('writeUrlElement')->withArgs(['customer'])->andReturn('/customer')->once();
+        $foo->shouldReceive('writeUrlElement')->withArgs([$supplier])->andReturn('/supplier')->once();
+        $foo->shouldReceive('writeUrlElement')->withArgs([$customer])->andReturn('/customer')->once();
         $foo->shouldReceive('getStack->getSegmentWrappers')->andReturn([]);
         $foo->shouldReceive('getRequest')->andReturn($this->mockRequest);
         $foo->shouldReceive('needNextPageLink')->andReturn(true)->once();
         $foo->shouldReceive('getNextLinkUri')->andReturn($odataLink)->once();
 
-        $result = $foo->writeUrlElements($objects);
+        $result = $foo->writeUrlElements($queryResult);
         $expectedUrl = $odataLink->url;
         $this->assertEquals($expectedUrl, $result->nextPageLink->url);
         $this->assertEquals(2, $result->count);
@@ -412,8 +459,11 @@ class ObjectModelSerializerTest extends TestCase
         $type = m::mock(ResourceType::class);
         $type->shouldReceive('getFullName')->andReturn('typeName')->once();
 
+        $queryResult = new QueryResult();
+        $queryResult->results = $complexValue;
+
         $foo = $this->Construct();
-        $result = $foo->writeTopLevelComplexObject($complexValue, $propertyName, $type);
+        $result = $foo->writeTopLevelComplexObject($queryResult, $propertyName, $type);
         $this->assertTrue($result instanceof ODataPropertyContent);
         $this->assertTrue($result->properties[0] instanceof ODataProperty);
         $this->assertNull($result->properties[0]->value);
@@ -443,8 +493,11 @@ class ObjectModelSerializerTest extends TestCase
         $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::COMPLEX)->once();
         $type->shouldReceive('getAllProperties')->andReturn([$resProperty]);
 
+        $queryResult = new QueryResult();
+        $queryResult->results = $complexValue;
+
         $foo = $this->Construct();
-        $result = $foo->writeTopLevelComplexObject($complexValue, $propertyName, $type);
+        $result = $foo->writeTopLevelComplexObject($queryResult, $propertyName, $type);
         $this->assertTrue($result instanceof ODataPropertyContent);
         $this->assertTrue($result->properties[0] instanceof ODataProperty);
         $this->assertNull($result->properties[0]->attributeExtensions);
@@ -462,6 +515,9 @@ class ObjectModelSerializerTest extends TestCase
 
         $bag = null;
 
+        $queryResult = new QueryResult();
+        $queryResult->results = $bag;
+
         $foo = $this->Construct();
 
         $expected = 'assert(): $bagItemResourceTypeKind != ResourceTypeKind::PRIMITIVE &&'
@@ -469,7 +525,7 @@ class ObjectModelSerializerTest extends TestCase
         $actual = null;
 
         try {
-            $foo->writeTopLevelBagObject($bag, 'property', $type);
+            $foo->writeTopLevelBagObject($queryResult, 'property', $type);
         } catch (\PHPUnit_Framework_Error_Warning $e) {
             $actual = $e->getMessage();
         }
@@ -485,9 +541,12 @@ class ObjectModelSerializerTest extends TestCase
 
         $bag = null;
 
+        $queryResult = new QueryResult();
+        $queryResult->results = $bag;
+
         $foo = $this->Construct();
 
-        $result = $foo->writeTopLevelBagObject($bag, 'property', $type);
+        $result = $foo->writeTopLevelBagObject($queryResult, 'property', $type);
         $this->assertTrue($result instanceof ODataPropertyContent);
         $this->assertTrue($result->properties[0] instanceof ODataProperty);
         $this->assertNull($result->properties[0]->attributeExtensions);
@@ -504,9 +563,12 @@ class ObjectModelSerializerTest extends TestCase
 
         $bag = [];
 
+        $queryResult = new QueryResult();
+        $queryResult->results = $bag;
+
         $foo = $this->Construct();
 
-        $result = $foo->writeTopLevelBagObject($bag, 'property', $type);
+        $result = $foo->writeTopLevelBagObject($queryResult, 'property', $type);
         $this->assertTrue($result instanceof ODataPropertyContent);
         $this->assertTrue($result->properties[0] instanceof ODataProperty);
         $this->assertNull($result->properties[0]->attributeExtensions);
@@ -523,9 +585,12 @@ class ObjectModelSerializerTest extends TestCase
 
         $bag = [null, null];
 
+        $queryResult = new QueryResult();
+        $queryResult->results = $bag;
+
         $foo = $this->Construct();
 
-        $result = $foo->writeTopLevelBagObject($bag, 'property', $type);
+        $result = $foo->writeTopLevelBagObject($queryResult, 'property', $type);
         $this->assertTrue($result instanceof ODataPropertyContent);
         $this->assertTrue($result->properties[0] instanceof ODataProperty);
         $this->assertNull($result->properties[0]->attributeExtensions);
@@ -544,13 +609,16 @@ class ObjectModelSerializerTest extends TestCase
 
         $bag = new \DateTime();
 
+        $queryResult = new QueryResult();
+        $queryResult->results = $bag;
+
         $foo = $this->Construct();
 
         $expected = 'assert(): Bag parameter must be null or array failed';
         $actual = null;
 
         try {
-            $foo->writeTopLevelBagObject($bag, 'property', $type);
+            $foo->writeTopLevelBagObject($queryResult, 'property', $type);
         } catch (\PHPUnit_Framework_Error_Warning $e) {
             $actual = $e->getMessage();
         }
@@ -570,7 +638,10 @@ class ObjectModelSerializerTest extends TestCase
 
         $foo = $this->Construct();
 
-        $result = $foo->writeTopLevelBagObject($bag, 'property', $type);
+        $queryResult = new QueryResult();
+        $queryResult->results = $bag;
+
+        $result = $foo->writeTopLevelBagObject($queryResult, 'property', $type);
         $this->assertTrue($result instanceof ODataPropertyContent);
         $this->assertTrue($result->properties[0] instanceof ODataProperty);
         $this->assertNull($result->properties[0]->attributeExtensions);
@@ -603,10 +674,13 @@ class ObjectModelSerializerTest extends TestCase
         $bag = ['foo', 123];
         $expected = ['foo', '123'];
 
+        $queryResult = new QueryResult();
+        $queryResult->results = $bag;
+
         $foo = m::mock(ObjectModelSerializer::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $foo->shouldReceive('getPropertyValue')->andReturn('foo', 123);
 
-        $result = $foo->writeTopLevelBagObject($bag, 'property', $type);
+        $result = $foo->writeTopLevelBagObject($queryResult, 'property', $type);
         $this->assertTrue($result instanceof ODataPropertyContent);
         $this->assertTrue($result->properties[0] instanceof ODataProperty);
         $this->assertNull($result->properties[0]->attributeExtensions);
@@ -711,8 +785,11 @@ class ObjectModelSerializerTest extends TestCase
         $expected = 'Internal Server Error. The type \'name\' has inconsistent metadata and runtime type info.';
         $actual = null;
 
+        $queryResult = new QueryResult();
+        $queryResult->results = $complexValue;
+
         try {
-            $foo->writeTopLevelComplexObject($complexValue, 'property', $type);
+            $foo->writeTopLevelComplexObject($queryResult, 'property', $type);
         } catch (ODataException $e) {
             $actual = $e->getMessage();
         }
@@ -786,7 +863,10 @@ class ObjectModelSerializerTest extends TestCase
         $foo->shouldReceive('shouldExpandSegment')->andReturn(true);
         $foo->shouldReceive('getPropertyValue')->andReturn('propertyValue');
 
-        $result = $foo->writeTopLevelElement($entity);
+        $queryResult = new QueryResult();
+        $queryResult->results = $entity;
+
+        $result = $foo->writeTopLevelElement($queryResult);
         $this->assertTrue($result instanceof ODataEntry);
         $this->assertEquals('/customer', $result->id);
         $this->assertEquals('customers', $result->title);
@@ -871,8 +951,11 @@ class ObjectModelSerializerTest extends TestCase
         $expected = 'assert(): $propertyTypeKind != Primitive or Bag or ComplexType failed';
         $actual = null;
 
+        $queryResult = new QueryResult();
+        $queryResult->results = $entity;
+
         try {
-            $result = $foo->writeTopLevelElement($entity);
+            $result = $foo->writeTopLevelElement($queryResult);
         } catch (\PHPUnit_Framework_Error_Warning $e) {
             $actual = $e->getMessage();
         }
@@ -956,8 +1039,11 @@ class ObjectModelSerializerTest extends TestCase
         $expected = 'Internal Server Error. The type \'\' has inconsistent metadata and runtime type info.';
         $actual = null;
 
+        $queryResult = new QueryResult();
+        $queryResult->results = $entity;
+
         try {
-            $result = $foo->writeTopLevelElement($entity);
+            $result = $foo->writeTopLevelElement($queryResult);
         } catch (ODataException $e) {
             $actual = $e->getMessage();
         }

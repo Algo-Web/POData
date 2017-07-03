@@ -1289,13 +1289,16 @@ class BaseServiceNewTest extends TestCase
 
         $property = m::mock(ResourceProperty::class);
 
+        $queryResult = new QueryResult();
+        $queryResult->results = null;
+
         $request = m::mock(RequestDescription::class);
         $request->shouldReceive('isETagHeaderAllowed')->andReturn(true);
         $request->shouldReceive('getTargetKind')->andReturn(null);
         $request->shouldReceive('needExecution')->andReturn(true)->once();
         $request->shouldReceive('getResponseVersion')->andReturn(Version::v3());
         $request->shouldReceive('isLinkUri')->andReturn(true);
-        $request->shouldReceive('getTargetResult')->andReturn(null);
+        $request->shouldReceive('getTargetResult')->andReturn($queryResult);
         $request->shouldReceive('getTargetResourceType')->andReturn($type)->once();
         $request->shouldReceive('isSingleResult')->andReturn(true)->once();
         $request->shouldReceive('getIdentifier')->andReturn('FNORD')->once();
@@ -1358,13 +1361,16 @@ class BaseServiceNewTest extends TestCase
 
         $property = m::mock(ResourceProperty::class);
 
+        $queryResult = new QueryResult();
+        $queryResult->results = 'ad astra per fnordua';
+
         $request = m::mock(RequestDescription::class);
         $request->shouldReceive('isETagHeaderAllowed')->andReturn(true);
         $request->shouldReceive('getTargetKind')->andReturn(null);
         $request->shouldReceive('needExecution')->andReturn(true)->once();
         $request->shouldReceive('getResponseVersion')->andReturn(Version::v3());
         $request->shouldReceive('isLinkUri')->andReturn(true);
-        $request->shouldReceive('getTargetResult')->andReturn('ad astra per fnordua');
+        $request->shouldReceive('getTargetResult')->andReturn($queryResult);
         $request->shouldReceive('getTargetResourceType')->andReturn($type)->once();
         $request->shouldReceive('isSingleResult')->andReturn(true)->once();
         $request->shouldReceive('getProjectedProperty')->andReturn($property)->once();
@@ -1424,13 +1430,16 @@ class BaseServiceNewTest extends TestCase
 
         $property = m::mock(ResourceProperty::class);
 
+        $queryResult = new QueryResult();
+        $queryResult->results = 'ad astra per fnordua';
+
         $request = m::mock(RequestDescription::class);
         $request->shouldReceive('isETagHeaderAllowed')->andReturn(true);
         $request->shouldReceive('getTargetKind')->andReturn(TargetKind::METADATA(), null);
         $request->shouldReceive('needExecution')->andReturn(true)->once();
         $request->shouldReceive('getResponseVersion')->andReturn(Version::v3());
         $request->shouldReceive('isLinkUri')->andReturn(false);
-        $request->shouldReceive('getTargetResult')->andReturn('ad astra per fnordua');
+        $request->shouldReceive('getTargetResult')->andReturn($queryResult);
         $request->shouldReceive('getTargetResourceType')->andReturn($type)->once();
         $request->shouldReceive('isSingleResult')->andReturn(true)->once();
         $request->shouldReceive('setExecuted')->andReturnNull()->never();
@@ -1492,13 +1501,16 @@ class BaseServiceNewTest extends TestCase
         $foo = new BaseServiceDummy(null, $host, $cereal, $stream, null, $config);
         $foo->setODataWriterRegistry($rego);
 
+        $queryResult = new QueryResult();
+        $queryResult->results = 'ad astra per fnordua';
+
         $request = m::mock(RequestDescription::class);
         $request->shouldReceive('isETagHeaderAllowed')->andReturn(true);
         $request->shouldReceive('getTargetKind')->andReturn(TargetKind::PRIMITIVE());
         $request->shouldReceive('needExecution')->andReturn(true)->once();
         $request->shouldReceive('getResponseVersion')->andReturn(Version::v3());
         $request->shouldReceive('isLinkUri')->andReturn(false);
-        $request->shouldReceive('getTargetResult')->andReturn('ad astra per fnordua');
+        $request->shouldReceive('getTargetResult')->andReturn($queryResult);
         $request->shouldReceive('getTargetResourceType')->andReturn($type)->once();
         $request->shouldReceive('isSingleResult')->andReturn(true)->once();
         $request->shouldReceive('getProjectedProperty')->andReturn(null)->once();
@@ -1560,13 +1572,16 @@ class BaseServiceNewTest extends TestCase
         $foo = new BaseServiceDummy(null, $host, $cereal, $stream, null, $config);
         $foo->setODataWriterRegistry($rego);
 
+        $queryResult = new QueryResult();
+        $queryResult->results = 'ad astra per fnordua';
+
         $request = m::mock(RequestDescription::class);
         $request->shouldReceive('isETagHeaderAllowed')->andReturn(true);
         $request->shouldReceive('getTargetKind')->andReturn(TargetKind::BAG());
         $request->shouldReceive('needExecution')->andReturn(true)->once();
         $request->shouldReceive('getResponseVersion')->andReturn(Version::v3());
         $request->shouldReceive('isLinkUri')->andReturn(false);
-        $request->shouldReceive('getTargetResult')->andReturn('ad astra per fnordua');
+        $request->shouldReceive('getTargetResult')->andReturn($queryResult);
         $request->shouldReceive('getTargetResourceType')->andReturn($type)->once();
         $request->shouldReceive('isSingleResult')->andReturn(true)->once();
         $request->shouldReceive('getProjectedProperty')->andReturn(null)->once();
@@ -1627,13 +1642,16 @@ class BaseServiceNewTest extends TestCase
         $foo = new BaseServiceDummy(null, $host, $cereal, $stream, null, $config);
         $foo->setODataWriterRegistry($rego);
 
+        $queryResult = new QueryResult();
+        $queryResult->results = 'ad astra per fnordua';
+
         $request = m::mock(RequestDescription::class);
         $request->shouldReceive('isETagHeaderAllowed')->andReturn(true);
         $request->shouldReceive('getTargetKind')->andReturn(TargetKind::COMPLEX_OBJECT());
         $request->shouldReceive('needExecution')->andReturn(true)->once();
         $request->shouldReceive('getResponseVersion')->andReturn(Version::v3());
         $request->shouldReceive('isLinkUri')->andReturn(false);
-        $request->shouldReceive('getTargetResult')->andReturn('ad astra per fnordua');
+        $request->shouldReceive('getTargetResult')->andReturn($queryResult);
         $request->shouldReceive('getTargetResourceType')->andReturn($type)->once();
         $request->shouldReceive('isSingleResult')->andReturn(true)->once();
         $request->shouldReceive('getProjectedProperty->getName')->andReturn('name')->once();
@@ -1693,13 +1711,16 @@ class BaseServiceNewTest extends TestCase
         $foo = new BaseServiceDummy(null, $host, $cereal, $stream, null, $config);
         $foo->setODataWriterRegistry($rego);
 
+        $queryResult = new QueryResult();
+        $queryResult->results = 'ad astra per fnordua';
+
         $request = m::mock(RequestDescription::class);
         $request->shouldReceive('isETagHeaderAllowed')->andReturn(true);
         $request->shouldReceive('getTargetKind')->andReturn(TargetKind::BAG());
         $request->shouldReceive('needExecution')->andReturn(true)->once();
         $request->shouldReceive('getResponseVersion')->andReturn(Version::v3());
         $request->shouldReceive('isLinkUri')->andReturn(false);
-        $request->shouldReceive('getTargetResult')->andReturn('ad astra per fnordua');
+        $request->shouldReceive('getTargetResult')->andReturn($queryResult);
         $request->shouldReceive('getTargetResourceType')->andReturn($type)->once();
         $request->shouldReceive('isSingleResult')->andReturn(true)->once();
         $request->shouldReceive('getProjectedProperty->getName')->andReturn('name')->once();
@@ -1761,13 +1782,16 @@ class BaseServiceNewTest extends TestCase
         $foo = new BaseServiceDummy(null, $host, $cereal, $stream, null, $config);
         $foo->setODataWriterRegistry($rego);
 
+        $queryResult = new QueryResult();
+        $queryResult->results = 'ad astra per fnordua';
+
         $request = m::mock(RequestDescription::class);
         $request->shouldReceive('isETagHeaderAllowed')->andReturn(true);
         $request->shouldReceive('getTargetKind')->andReturn(TargetKind::PRIMITIVE());
         $request->shouldReceive('needExecution')->andReturn(true)->once();
         $request->shouldReceive('getResponseVersion')->andReturn(Version::v3());
         $request->shouldReceive('isLinkUri')->andReturn(false);
-        $request->shouldReceive('getTargetResult')->andReturn('ad astra per fnordua');
+        $request->shouldReceive('getTargetResult')->andReturn($queryResult);
         $request->shouldReceive('getTargetResourceType')->andReturn($type)->once();
         $request->shouldReceive('isSingleResult')->andReturn(true)->once();
         $request->shouldReceive('getProjectedProperty')->andReturn($prop)->once();
@@ -1829,13 +1853,16 @@ class BaseServiceNewTest extends TestCase
         $foo = new BaseServiceDummy(null, $host, $cereal, $stream, null, $config);
         $foo->setODataWriterRegistry($rego);
 
+        $queryResult = new QueryResult();
+        $queryResult->results = 'ad astra per fnordua';
+
         $request = m::mock(RequestDescription::class);
         $request->shouldReceive('isETagHeaderAllowed')->andReturn(true);
         $request->shouldReceive('getTargetKind')->andReturn(TargetKind::RESOURCE());
         $request->shouldReceive('needExecution')->andReturn(true)->once();
         $request->shouldReceive('getResponseVersion')->andReturn(Version::v3());
         $request->shouldReceive('isLinkUri')->andReturn(false);
-        $request->shouldReceive('getTargetResult')->andReturn('ad astra per fnordua');
+        $request->shouldReceive('getTargetResult')->andReturn($queryResult);
         $request->shouldReceive('getTargetResourceType')->andReturn($type)->once();
         $request->shouldReceive('isSingleResult')->andReturn(true)->once();
         $request->shouldReceive('getProjectedProperty')->andReturn($prop)->once();

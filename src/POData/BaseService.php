@@ -425,15 +425,18 @@ abstract class BaseService implements IRequestHandler, IService
                 // Code path for entity, complex, bag, resource reference link,
                 // primitive type or primitive value
                 $result = $request->getTargetResult();
+                if (!$result instanceof QueryResult) {
+                    $result = new QueryResult();
+                    $result->results = $request->getTargetResult();
+                }
                 $requestTargetKind = $request->getTargetKind();
                 $requestProperty = $request->getProjectedProperty();
                 if ($request->isLinkUri()) {
                     // In the query 'Orders(1245)/$links/Customer', the targeted
                     // Customer might be null
-                    if (is_null($result)) {
+                    if (is_null($result->results)) {
                         throw ODataException::createResourceNotFoundError($request->getIdentifier());
                     }
-
                     $odataModelInstance = $objectModelSerializer->writeUrlElement($result);
                 } elseif (TargetKind::RESOURCE() == $requestTargetKind
                           || TargetKind::SINGLETON() == $requestTargetKind) {
@@ -447,7 +450,6 @@ abstract class BaseService implements IRequestHandler, IService
                     // handle entry resource
                     $needToSerializeResponse = true;
                     $eTag = $this->compareETag($result, $targetResourceType, $needToSerializeResponse);
-
 
                     if ($needToSerializeResponse) {
                         if (is_null($result)) {

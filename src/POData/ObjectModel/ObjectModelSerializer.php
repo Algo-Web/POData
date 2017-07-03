@@ -16,6 +16,7 @@ use POData\Providers\Metadata\Type\Binary;
 use POData\Providers\Metadata\Type\Boolean;
 use POData\Providers\Metadata\Type\DateTime;
 use POData\Providers\Metadata\Type\StringType;
+use POData\Providers\Query\QueryResult;
 use POData\Providers\Query\QueryType;
 use POData\UriProcessor\RequestDescription;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetSource;
@@ -39,11 +40,11 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
     /**
      * Write a top level entry resource.
      *
-     * @param mixed $entryObject Reference to the entry object to be written
+     * @param QueryResult $entryObject      Results property contains reference to the entry object to be written
      *
      * @return ODataEntry
      */
-    public function writeTopLevelElement($entryObject)
+    public function writeTopLevelElement(QueryResult $entryObject)
     {
         $requestTargetSource = $this->getRequest()->getTargetSource();
 
@@ -57,7 +58,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
 
         $needPop = $this->pushSegmentForRoot();
         $entry = $this->writeEntryElement(
-            $entryObject,
+            $entryObject->results,
             $resourceType,
             $this->getRequest()->getRequestUrl()->getUrlAsString(),
             $this->getRequest()->getContainerName()
@@ -70,13 +71,13 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
     /**
      * Write top level feed element.
      *
-     * @param array &$entryObjects Array of entry resources to be written
+     * @param QueryResult &$entryObjects    Results property contains array of entry resources to be written
      *
      * @return ODataFeed
      */
-    public function writeTopLevelElements(&$entryObjects)
+    public function writeTopLevelElements(QueryResult &$entryObjects)
     {
-        assert(is_array($entryObjects), '!is_array($entryObjects)');
+        assert(is_array($entryObjects->results), '!is_array($entryObjects->results)');
         $requestTargetSource = $this->getRequest()->getTargetSource();
         if (TargetSource::ENTITY_SET == $requestTargetSource) {
             $title = $this->getRequest()->getContainerName();
@@ -101,7 +102,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
         $targetResourceType = $this->getRequest()->getTargetResourceType();
         assert(null != $targetResourceType, 'Target resource type must not be null');
         $this->writeFeedElements(
-            $entryObjects,
+            $entryObjects->results,
             $targetResourceType,
             $title,
             $this->getRequest()->getRequestUrl()->getUrlAsString(),
@@ -116,17 +117,17 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
     /**
      * Write top level url element.
      *
-     * @param mixed $entryObject The entry resource whose url to be written
+     * @param QueryResult $entryObject      Results property contains the entry resource whose url to be written
      *
      * @return ODataURL
      */
-    public function writeUrlElement($entryObject)
+    public function writeUrlElement(QueryResult $entryObject)
     {
         $url = new ODataURL();
-        if (!is_null($entryObject)) {
+        if (!is_null($entryObject->results)) {
             $currentResourceType = $this->getCurrentResourceSetWrapper()->getResourceType();
             $relativeUri = $this->getEntryInstanceKey(
-                $entryObject,
+                $entryObject->results,
                 $currentResourceType,
                 $this->getCurrentResourceSetWrapper()->getName()
             );
@@ -140,24 +141,25 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
     /**
      * Write top level url collection.
      *
-     * @param array $entryObjects Array of entry resources
-     *                            whose url to be written
+     * @param QueryResult $entryObjects     Results property contains the array of entry resources whose urls are
+     *                                      to be written
      *
      * @return ODataURLCollection
      */
-    public function writeUrlElements($entryObjects)
+    public function writeUrlElements(QueryResult $entryObjects)
     {
         $urls = new ODataURLCollection();
-        if (!empty($entryObjects)) {
+        $results = $entryObjects->results;
+        if (!empty($results)) {
             $i = 0;
-            foreach ($entryObjects as $entryObject) {
+            foreach ($results as $entryObject) {
                 $urls->urls[$i] = $this->writeUrlElement($entryObject);
                 ++$i;
             }
 
-            if ($i > 0 && $this->needNextPageLink(count($entryObjects))) {
+            if ($i > 0 && $this->needNextPageLink(count($results))) {
                 $urls->nextPageLink = $this->getNextLinkUri(
-                    $entryObjects[$i - 1],
+                    $results[$i - 1],
                     $this->getRequest()->getRequestUrl()->getUrlAsString()
                 );
             }
@@ -173,23 +175,20 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
     /**
      * Write top level complex resource.
      *
-     * @param mixed        &$complexValue The complex object to be
-     *                                    written
-     * @param string       $propertyName  The name of the
-     *                                    complex property
-     * @param ResourceType &$resourceType Describes the type of
-     *                                    complex object
+     * @param QueryResult  &$complexValue Results property contains the complex object to be written
+     * @param string       $propertyName  The name of the complex property
+     * @param ResourceType &$resourceType Describes the type of complex object
      *
      * @return ODataPropertyContent
      */
     public function writeTopLevelComplexObject(
-        &$complexValue,
+        QueryResult &$complexValue,
         $propertyName,
         ResourceType & $resourceType
     ) {
         $propertyContent = new ODataPropertyContent();
         $this->writeComplexValue(
-            $complexValue,
+            $complexValue->results,
             $propertyName,
             $resourceType,
             null,
@@ -202,23 +201,20 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
     /**
      * Write top level bag resource.
      *
-     * @param mixed        &$BagValue     The bag object to be
-     *                                    written
-     * @param string       $propertyName  The name of the
-     *                                    bag property
-     * @param ResourceType &$resourceType Describes the type of
-     *                                    bag object
+     * @param QueryResult  &$BagValue     Results property contains the bag object to be written
+     * @param string       $propertyName  The name of the bag property
+     * @param ResourceType &$resourceType Describes the type of bag object
      *
      * @return ODataPropertyContent
      */
     public function writeTopLevelBagObject(
-        &$BagValue,
+        QueryResult &$BagValue,
         $propertyName,
         ResourceType &$resourceType
     ) {
         $propertyContent = new ODataPropertyContent();
         $this->writeBagValue(
-            $BagValue,
+            $BagValue->results,
             $propertyName,
             $resourceType,
             null,
@@ -231,24 +227,20 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
     /**
      * Write top level primitive value.
      *
-     * @param mixed            &$primitiveValue   The primitve value to be
-     *                                            written
-     * @param ResourceProperty &$resourceProperty Resource property
-     *                                            describing the
-     *                                            primitive property
-     *                                            to be written
+     * @param QueryResult      &$primitiveValue   Results property contains the primitive value to be written
+     * @param ResourceProperty &$resourceProperty Resource property describing the primitive property to be written
      *
      * @return ODataPropertyContent
      */
     public function writeTopLevelPrimitive(
-        &$primitiveValue,
+        QueryResult &$primitiveValue,
         ResourceProperty &$resourceProperty = null
     ) {
         assert(null != $resourceProperty, "Resource property must not be null");
         $propertyContent = new ODataPropertyContent();
         $propertyContent->properties[] = new ODataProperty();
         $this->writePrimitiveValue(
-            $primitiveValue,
+            $primitiveValue->results,
             $propertyContent->properties[0],
             $resourceProperty
         );
