@@ -320,6 +320,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
      * @param string       $absoluteUri   Absolute uri representing the feed element
      * @param string       $relativeUri   Relative uri representing the feed element
      * @param ODataFeed    &$feed         Feed to write to
+     * @param bool|null    $needLink      Has query provider already determined next-page link is needed?
      */
     private function writeFeedElements(
         &$entryObjects,

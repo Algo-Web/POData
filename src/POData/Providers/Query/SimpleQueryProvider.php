@@ -200,11 +200,11 @@ abstract class SimpleQueryProvider implements IQueryProvider
             $top = null !== $top ? intval($top) : $top;
             $skip = null !== $skip ? intval($skip) : $skip;
             $rawCount = $this->queryScalar($sqlCount);
-            $result->count = QueryResult::adjustCountForPaging(
+            $result->count = intval(QueryResult::adjustCountForPaging(
                 $rawCount,
                 $top,
                 $skip
-            );
+            ));
             $result->hasMore = $rawCount > $result->count;
         }
 
