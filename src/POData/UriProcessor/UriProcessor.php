@@ -494,7 +494,7 @@ class UriProcessor
             }
         }
 
-        $segment->setResult($result->results);
+        $segment->setResult($result);
     }
 
     /**

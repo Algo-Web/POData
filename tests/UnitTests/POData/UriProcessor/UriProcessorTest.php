@@ -157,8 +157,9 @@ class UriProcessorTest extends TestCase
         $request = $uriProcessor->getRequest();
 
         $actual = $request->getTargetResult();
+        $this->assertTrue($actual instanceof QueryResult);
 
-        $this->assertEquals([1, 2, 3], $actual);
+        $this->assertEquals([1, 2, 3], $actual->results);
     }
 
     public function testProcessRequestForCollectionCountThrowsWhenServiceVersionIs10()
@@ -410,9 +411,13 @@ class UriProcessorTest extends TestCase
         $request = $uriProcessor->getRequest();
 
         $actual = $request->getTargetResult();
+        $this->assertTrue($actual instanceof QueryResult);
 
-        $this->assertEquals([1, 2, 3], $actual);
-        $this->assertNull($request->getCountValue(), 'Since $inlinecount is specified as none, there should be no count set');
+        $this->assertEquals([1, 2, 3], $actual->results);
+        $this->assertNull(
+            $request->getCountValue(),
+            'Since $inlinecount is specified as none, there should be no count set'
+        );
     }
 
     public function testProcessRequestForCollectionWithInlineCountProviderDoesNotHandlePaging()
@@ -464,8 +469,9 @@ class UriProcessorTest extends TestCase
         $request = $uriProcessor->getRequest();
 
         $actual = $request->getTargetResult();
+        $this->assertTrue($actual instanceof QueryResult);
 
-        $this->assertEquals([1, 2, 3], $actual);
+        $this->assertEquals([1, 2, 3], $actual->results);
         $this->assertEquals(3, $request->getCountValue());
     }
 
@@ -517,8 +523,9 @@ class UriProcessorTest extends TestCase
         $request = $uriProcessor->getRequest();
 
         $actual = $request->getTargetResult();
+        $this->assertTrue($actual instanceof QueryResult);
 
-        $this->assertEquals([1, 2, 3], $actual);
+        $this->assertEquals([1, 2, 3], $actual->results);
         $this->assertEquals(10, $request->getCountValue());
     }
 
