@@ -5,6 +5,7 @@ namespace POData\UriProcessor\QueryProcessor\OrderByParser;
 use POData\Common\Messages;
 use POData\Common\ODataException;
 use POData\Providers\Metadata\ResourceType;
+use POData\Providers\Query\QueryResult;
 
 /**
  * Class InternalOrderByInfo.
@@ -153,6 +154,9 @@ class InternalOrderByInfo
             foreach ($subPathSegments as &$subPathSegment) {
                 $isLastSegment = ($index == $subPathCount - 1);
                 try {
+                    if ($currentObject instanceof QueryResult) {
+                        $currentObject = $currentObject->results;
+                    }
                     $currentObject = $this->_resourceType->getPropertyValue($currentObject, $subPathSegment->getName());
                     if (is_null($currentObject)) {
                         $nextPageLink .= 'null, ';
