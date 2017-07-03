@@ -344,10 +344,16 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
             //then the feed should have at least one Author tag
         } else {
             foreach ($entryObjects as $entryObject) {
+                if ($entryObject instanceof QueryResult) {
+                    $entryObject = $entryObject->results;
+                }
                 $feed->entries[] = $this->writeEntryElement($entryObject, $resourceType, null, null);
             }
 
-            if (true === $needLink || $this->needNextPageLink(count($entryObjects))) {
+            if (true === $needLink) {
+                if ($entryObjects instanceof QueryResult) {
+                    $entryObjects = $entryObjects->results;
+                }
                 $lastObject = end($entryObjects);
                 $feed->nextPageLink = $this->getNextLinkUri($lastObject, $absoluteUri);
             }
