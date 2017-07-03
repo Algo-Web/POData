@@ -182,20 +182,30 @@ abstract class SimpleQueryProvider implements IQueryProvider
                     .($top ? ' LIMIT ' . $top : '') . ($skip ? ' OFFSET ' . $skip : '');
             $data = $this->queryAll($sql);
 
+            $rawCount = $this->queryScalar($sqlCount);
+            $adjCount = QueryResult::adjustCountForPaging(
+                $rawCount,
+                $top,
+                $skip
+            );
+
             if ($queryType == QueryType::ENTITIES_WITH_COUNT()) {
                 //get those found rows
                 //$result->count = $this->queryScalar('SELECT FOUND_ROWS()');
                 $result->count = $this->queryScalar($sqlCount);
             }
             $result->results = array_map($entityClassName . '::fromRecord', $data);
+            $result->hasMore = $rawCount > $adjCount;
         } elseif ($queryType == QueryType::COUNT()) {
             $top = null !== $top ? intval($top) : $top;
             $skip = null !== $skip ? intval($skip) : $skip;
-            $result->count = QueryResult::adjustCountForPaging(
-                $this->queryScalar($sqlCount),
+            $rawCount = $this->queryScalar($sqlCount);
+            $result->count = intval(QueryResult::adjustCountForPaging(
+                $rawCount,
                 $top,
                 $skip
-            );
+            ));
+            $result->hasMore = $rawCount > $result->count;
         }
 
         return $result;

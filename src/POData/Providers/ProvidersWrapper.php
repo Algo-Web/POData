@@ -103,6 +103,12 @@ class ProvidersWrapper
         $this->propertyCache = [];
     }
 
+    public function getProviderWrapper()
+    {
+        assert(null != $this->providerWrapper, "Provider wrapper must be set");
+        return $this->providerWrapper;
+    }
+
     //Wrappers for IMetadataProvider methods
 
     /**
@@ -597,7 +603,7 @@ class ProvidersWrapper
      */
     public function getExpressionProvider()
     {
-        return $this->providerWrapper->getExpressionProvider();
+        return $this->getProviderWrapper()->getExpressionProvider();
     }
 
     /**
@@ -609,7 +615,7 @@ class ProvidersWrapper
      */
     public function handlesOrderedPaging()
     {
-        return $this->providerWrapper->handlesOrderedPaging();
+        return $this->getProviderWrapper()->handlesOrderedPaging();
     }
 
     /**
@@ -636,7 +642,7 @@ class ProvidersWrapper
         $skip = null,
         SkipTokenInfo $skipToken = null
     ) {
-        return $this->providerWrapper->getResourceSet(
+        return $this->getProviderWrapper()->getResourceSet(
             $queryType,
             $resourceSet,
             $filterInfo,
@@ -657,7 +663,7 @@ class ProvidersWrapper
      */
     public function getResourceFromResourceSet(ResourceSet $resourceSet, KeyDescriptor $keyDescriptor)
     {
-        return $this->providerWrapper->getResourceFromResourceSet($resourceSet, $keyDescriptor);
+        return $this->getProviderWrapper()->getResourceFromResourceSet($resourceSet, $keyDescriptor);
     }
 
     /**
@@ -673,7 +679,7 @@ class ProvidersWrapper
         KeyDescriptor $keyDescriptor,
         $data
     ) {
-        return $this->providerWrapper->putResource(
+        return $this->getProviderWrapper()->putResource(
             $resourceSet,
             $keyDescriptor,
             $data
@@ -712,7 +718,7 @@ class ProvidersWrapper
         $skip,
         SkipTokenInfo $skipToken = null
     ) {
-        return $this->providerWrapper->getRelatedResourceSet(
+        return $this->getProviderWrapper()->getRelatedResourceSet(
             $queryType,
             $sourceResourceSet,
             $sourceEntity,
@@ -744,7 +750,7 @@ class ProvidersWrapper
         ResourceProperty $targetProperty,
         KeyDescriptor $keyDescriptor
     ) {
-        return $this->providerWrapper->getResourceFromRelatedResourceSet(
+        return $this->getProviderWrapper()->getResourceFromRelatedResourceSet(
             $sourceResourceSet,
             $sourceEntity,
             $targetResourceSet,
@@ -771,7 +777,7 @@ class ProvidersWrapper
         ResourceSet $targetResourceSet,
         ResourceProperty $targetProperty
     ) {
-        return $this->providerWrapper->getRelatedResourceReference(
+        return $this->getProviderWrapper()->getRelatedResourceReference(
             $sourceResourceSet,
             $sourceEntity,
             $targetResourceSet,
@@ -797,7 +803,7 @@ class ProvidersWrapper
         $data,
         $shouldUpdate = false
     ) {
-        return $this->providerWrapper->updateResource(
+        return $this->getProviderWrapper()->updateResource(
             $sourceResourceSet,
             $sourceEntityInstance,
             $keyDescriptor,
@@ -818,7 +824,7 @@ class ProvidersWrapper
         ResourceSet $sourceResourceSet,
         $sourceEntityInstance
     ) {
-        return $this->providerWrapper->deleteResource(
+        return $this->getProviderWrapper()->deleteResource(
             $sourceResourceSet,
             $sourceEntityInstance
         );
@@ -836,7 +842,7 @@ class ProvidersWrapper
         $sourceEntityInstance,
         $data
     ) {
-        return $this->providerWrapper->createResourceforResourceSet(
+        return $this->getProviderWrapper()->createResourceforResourceSet(
             $resourceSet,
             $sourceEntityInstance,
             $data

@@ -15,6 +15,7 @@ use POData\Providers\Metadata\Type\DateTime;
 use POData\Providers\Metadata\Type\Int32;
 use POData\Providers\ProvidersWrapper;
 use POData\Providers\Query\IQueryProvider;
+use POData\Providers\Query\QueryResult;
 use POData\Providers\Query\QueryType;
 use POData\SimpleDataService;
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandedProjectionNode;
@@ -2300,6 +2301,9 @@ class UriProcessorMockeryTest extends TestCase
             'DataServiceVersion'    => new Version(1, 0),
             'MaxDataServiceVersion' => new Version(3, 0),
         ];
+
+        $queryResult = new QueryResult();
+        $queryResult->results = 'fnord';
 
         $cereal = m::mock(ObjectModelSerializer::class)->makePartial();
         $cereal->shouldReceive('writeTopLevelElement')->andReturn('fnord');

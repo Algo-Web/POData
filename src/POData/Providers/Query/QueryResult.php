@@ -14,6 +14,11 @@ class QueryResult
      */
     public $count;
 
+    /***
+     * @var bool|null
+     */
+    public $hasMore;
+
     /**
      * @param $count
      * @param int|null $top
