@@ -546,19 +546,19 @@ class SimpleMetadataProvider implements IMetadataProvider
             $targetResourceType,
             $sourceProperty,
             $targetProperty,
-            '*',
-            '1'
+            '1',
+            '*'
         );
         // verify resource property types are what we expect them to be
         $sourceResourceKind = $sourceResourceType->resolveProperty($sourceProperty)->getKind();
         assert(
-            ResourcePropertyKind::RESOURCESET_REFERENCE == $sourceResourceKind,
-            "1 side of 1:N relationship not pointing to resource set reference"
+            ResourcePropertyKind::RESOURCE_REFERENCE == $sourceResourceKind,
+            "1 side of 1:N relationship not pointing to resource reference"
         );
         $targetResourceKind = $targetResourceType->resolveProperty($targetProperty)->getKind();
         assert(
-            ResourcePropertyKind::RESOURCE_REFERENCE == $targetResourceKind,
-            "N side of 1:N relationship not pointing to resource reference"
+            ResourcePropertyKind::RESOURCESET_REFERENCE == $targetResourceKind,
+            "N side of 1:N relationship not pointing to resource set reference"
         );
     }
 
@@ -662,10 +662,6 @@ class SimpleMetadataProvider implements IMetadataProvider
     ) {
         if (!is_string($sourceProperty) || !is_string($targetProperty)) {
             throw new InvalidOperationException("Source and target properties must both be strings");
-        }
-
-        if (!is_string($sourceMultiplicity) || !is_string($targetMultiplicity)) {
-            throw new InvalidOperationException("Source and target multiplicities must both be strings");
         }
 
         $this->checkInstanceProperty($sourceProperty, $sourceResourceType);
@@ -834,12 +830,12 @@ class SimpleMetadataProvider implements IMetadataProvider
         $sourceResourceKind = $sourceResourceType->resolveProperty($sourceProperty)->getKind();
         assert(
             ResourcePropertyKind::RESOURCE_REFERENCE == $sourceResourceKind,
-            "0..1 side of 1:1 relationship not pointing to resource reference"
+            "1 side of 1:1 relationship not pointing to resource reference"
         );
         $targetResourceKind = $targetResourceType->resolveProperty($targetProperty)->getKind();
         assert(
             ResourcePropertyKind::RESOURCE_REFERENCE == $targetResourceKind,
-            "1 side of 1:1 relationship not pointing to resource reference"
+            "0..1 side of 1:1 relationship not pointing to resource reference"
         );
     }
 
