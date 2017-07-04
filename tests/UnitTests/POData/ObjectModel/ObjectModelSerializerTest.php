@@ -16,6 +16,7 @@ use POData\ObjectModel\ODataPropertyContent;
 use POData\OperationContext\IOperationContext;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourcePropertyKind;
+use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\ResourceTypeKind;
@@ -128,6 +129,7 @@ class ObjectModelSerializerTest extends TestCase
         $requestURL = new \POData\Common\Url('http://192.168.2.1/abm-master/public/odata.svc/Entity(1)');
 
         $this->serviceHost->shouldReceive('getQueryStringItem')->andReturn(null);
+        $this->mockService->shouldReceive('getConfiguration->getEntitySetPageSize')->andReturn(200);
 
         $orderInfo = m::mock(InternalOrderByInfo::class)->makePartial();
         $orderInfo->shouldReceive('getOrderByPathSegments')->andReturn([])->never();
@@ -192,7 +194,7 @@ class ObjectModelSerializerTest extends TestCase
         $this->assertTrue($ret->entries[1]->propertyContent instanceof \POData\ObjectModel\ODataPropertyContent);
     }
 
-    public function testwriteTopLevelElements()
+    public function testwriteTopLevelElementsOnly()
     {
         $foo = $this->Construct();
         $entity = new reusableEntityClass4();
@@ -208,6 +210,7 @@ class ObjectModelSerializerTest extends TestCase
         $requestURL = new \POData\Common\Url('http://192.168.2.1/abm-master/public/odata.svc/Entity(1)');
 
         $this->serviceHost->shouldReceive('getQueryStringItem')->andReturn(null);
+        $this->mockService->shouldReceive('getConfiguration->getEntitySetPageSize')->andReturn(200);
 
         $orderInfo = m::mock(InternalOrderByInfo::class)->makePartial();
         $orderInfo->shouldReceive('getOrderByPathSegments')->andReturn([])->twice();
@@ -224,6 +227,7 @@ class ObjectModelSerializerTest extends TestCase
         $this->mockRequest->shouldReceive('getRequestUrl')->andReturn($requestURL);
         $this->mockRequest->shouldReceive('getIdentifier')->andReturn('Entity');
         $this->mockRequest->shouldReceive('getRootProjectionNode')->andReturn($rootNode);
+        $this->mockRequest->shouldReceive('getTopOptionCount')->andReturn(300);
 
         $resourceProperty = m::mock(\POData\Providers\Metadata\ResourceProperty::class)->makePartial();
         $resourceProperty->shouldReceive('getName')->andReturn('name');
@@ -283,6 +287,8 @@ class ObjectModelSerializerTest extends TestCase
         $entity1->type = 3;
         $e = [$entity, $entity1];
 
+        $this->mockService->shouldReceive('getConfiguration->getEntitySetPageSize')->andReturn(200);
+
         $property = m::mock(ResourceProperty::class);
         $property->shouldReceive('getKind')->andReturn(ResourcePropertyKind::RESOURCESET_REFERENCE);
         $property->shouldReceive('getName')->andReturn('name');
@@ -292,9 +298,12 @@ class ObjectModelSerializerTest extends TestCase
         $rProp->shouldReceive('getName')->andReturn('name');
         $rProp->shouldReceive('getInstanceType')->andReturn($itype);
 
+        $rSet = m::mock(ResourceSet::class);
+
         $resourceSet = m::mock(ResourceSetWrapper::class);
         $resourceSet->shouldReceive('getName')->andReturn('names');
         $resourceSet->shouldReceive('getResourceSetPageSize')->andReturn(50);
+        $resourceSet->shouldReceive('getResourceSet')->andReturn($rSet);
 
         $resourceType = m::mock(ResourceType::class);
         $resourceType->shouldReceive('getKeyProperties')->andReturn(['name' => $rProp]);

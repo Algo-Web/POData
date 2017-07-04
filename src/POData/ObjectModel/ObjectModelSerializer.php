@@ -101,6 +101,12 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
         $needPop = $this->pushSegmentForRoot();
         $targetResourceType = $this->getRequest()->getTargetResourceType();
         assert(null != $targetResourceType, 'Target resource type must not be null');
+
+        $resourceSet = $this->getRequest()->getTargetResourceSetWrapper()->getResourceSet();
+        $requestTop = $this->getRequest()->getTopOptionCount();
+        $pageSize = $this->getService()->getConfiguration()->getEntitySetPageSize($resourceSet);
+        $needLink = $entryObjects->hasMore && ($requestTop > $pageSize);
+
         $this->writeFeedElements(
             $entryObjects->results,
             $targetResourceType,
@@ -108,7 +114,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
             $this->getRequest()->getRequestUrl()->getUrlAsString(),
             $relativeUri,
             $feed,
-            $entryObjects->hasMore
+            $needLink
         );
         $this->popSegment($needPop);
 
