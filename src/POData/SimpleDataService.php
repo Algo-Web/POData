@@ -31,7 +31,7 @@ class SimpleDataService extends BaseService implements IService
      * @var IStreamProvider2;
      */
     protected $streamProvider;
-    public $maxPageSize = 200;
+    public $maxPageSize = 400;
 
     public function __construct(
         $db,
