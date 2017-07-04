@@ -728,10 +728,11 @@ class AtomODataWriter implements IODataWriter
                 $link->title
             );
         }
-        $this->xmlWriter->writeAttribute(
-            ODataConstants::ATOM_HREF_ATTRIBUTE_NAME,
-            $link->url
-        );
+
+        $this->xmlWriter->startAttribute(ODataConstants::ATOM_HREF_ATTRIBUTE_NAME);
+        $this->xmlWriter->writeRaw($link->url);
+        $this->xmlWriter->endAttribute();
+
         if (!$isExpanded) {
             $this->xmlWriter->endElement();
         }
