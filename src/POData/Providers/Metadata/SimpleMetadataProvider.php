@@ -546,8 +546,8 @@ class SimpleMetadataProvider implements IMetadataProvider
             $targetResourceType,
             $sourceProperty,
             $targetProperty,
-            '1',
-            '*'
+            '*',
+            '1'
         );
         // verify resource property types are what we expect them to be
         $sourceResourceKind = $sourceResourceType->resolveProperty($sourceProperty)->getKind();
@@ -708,16 +708,16 @@ class SimpleMetadataProvider implements IMetadataProvider
             ? ResourcePropertyKind::RESOURCESET_REFERENCE
             : ResourcePropertyKind::RESOURCE_REFERENCE;
 
-        $sourceResourceProperty = new ResourceProperty($sourceProperty, null, $sourceKind, $targetResourceType);
+        $sourceResourceProperty = new ResourceProperty($sourceProperty, null, $targetKind, $targetResourceType);
         assert(
-            $sourceKind == $sourceResourceProperty->getKind(),
-            'Resource property kind mismatch between $sourceKind and $sourceResourceProperty'
+            $targetKind == $sourceResourceProperty->getKind(),
+            'Resource property kind mismatch between $targetKind and $sourceResourceProperty'
         );
         $sourceResourceType->addProperty($sourceResourceProperty, false);
-        $targetResourceProperty = new ResourceProperty($targetProperty, null, $targetKind, $sourceResourceType);
+        $targetResourceProperty = new ResourceProperty($targetProperty, null, $sourceKind, $sourceResourceType);
         assert(
-            $targetKind == $targetResourceProperty->getKind(),
-            'Resource property kind mismatch between $targetKind and $targetResourceProperty'
+            $sourceKind == $targetResourceProperty->getKind(),
+            'Resource property kind mismatch between $sourceKind and $targetResourceProperty'
         );
         $targetResourceType->addProperty($targetResourceProperty, false);
 
