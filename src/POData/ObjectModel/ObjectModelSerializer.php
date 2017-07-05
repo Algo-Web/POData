@@ -105,6 +105,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
         $resourceSet = $this->getRequest()->getTargetResourceSetWrapper()->getResourceSet();
         $requestTop = $this->getRequest()->getTopOptionCount();
         $pageSize = $this->getService()->getConfiguration()->getEntitySetPageSize($resourceSet);
+        $requestTop = (null == $requestTop) ? $pageSize + 1 : $requestTop;
         $needLink = $entryObjects->hasMore && ($requestTop > $pageSize);
 
         $this->writeFeedElements(
