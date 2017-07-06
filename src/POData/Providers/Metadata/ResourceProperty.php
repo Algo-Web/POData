@@ -153,7 +153,9 @@ class ResourceProperty
      */
     public function getInstanceType()
     {
-        return $this->propertyResourceType->getInstanceType();
+        $type = $this->propertyResourceType->getInstanceType();
+        assert($type instanceof IType == static::sIsKindOf($this->getKind(), ResourcePropertyKind::PRIMITIVE));
+        return $type;
     }
 
     /**
