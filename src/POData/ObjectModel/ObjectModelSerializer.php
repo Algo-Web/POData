@@ -616,22 +616,23 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
             $odataProperty->value = null;
         } else {
             $odataBagContent = new ODataBagContent();
-            // strip out null elements
-            $BagValue = array_diff($BagValue, [null]);
             foreach ($BagValue as $itemValue) {
-                if (ResourceTypeKind::PRIMITIVE == $bagItemResourceTypeKind) {
-                    $odataBagContent->propertyContents[] = $this->primitiveToString($resourceType, $itemValue);
-                } elseif (ResourceTypeKind::COMPLEX == $bagItemResourceTypeKind) {
-                    $complexContent = new ODataPropertyContent();
-                    $this->complexObjectToContent(
-                        $itemValue,
-                        $propertyName,
-                        $resourceType,
-                        $relativeUri,
-                        $complexContent
-                    );
-                    //TODO add type in case of base type
-                    $odataBagContent->propertyContents[] = $complexContent;
+                // strip out null elements
+                if (isset($itemValue)) {
+                    if (ResourceTypeKind::PRIMITIVE == $bagItemResourceTypeKind) {
+                        $odataBagContent->propertyContents[] = $this->primitiveToString($resourceType, $itemValue);
+                    } elseif (ResourceTypeKind::COMPLEX == $bagItemResourceTypeKind) {
+                        $complexContent = new ODataPropertyContent();
+                        $this->complexObjectToContent(
+                            $itemValue,
+                            $propertyName,
+                            $resourceType,
+                            $relativeUri,
+                            $complexContent
+                        );
+                        //TODO add type in case of base type
+                        $odataBagContent->propertyContents[] = $complexContent;
+                    }
                 }
             }
 
