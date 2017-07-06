@@ -802,7 +802,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
     }
 
     /**
-     * @param $customObject
+     * @param object $customObject
      * @param ResourceType $resourceType
      * @param string $relativeUri
      * @param ODataPropertyContent $odataPropertyContent
@@ -821,6 +821,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
         $resourceTypeKind,
         $navigationProperties
     ) {
+        assert(is_object($customObject), 'Supplied $customObject must be an object');
         //This is the code path to handle properties of Complex type
         //or Entry without projection (i.e. no expansion or selection)
         if (ResourceTypeKind::ENTITY == $resourceTypeKind) {
@@ -921,7 +922,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
 
 
     /**
-     * @param $customObject
+     * @param object $customObject
      * @param ResourceType $resourceType
      * @param string $relativeUri
      * @param ODataPropertyContent $odataPropertyContent
@@ -940,6 +941,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
         $projectionNodes,
         $navigationProperties
     ) {
+        assert(is_object($customObject), 'Supplied $customObject must be an object');
         $i = 0;
         foreach ($projectionNodes as $projectionNode) {
             $propertyName = $projectionNode->getPropertyName();

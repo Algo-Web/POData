@@ -757,54 +757,6 @@ class ObjectModelSerializerTest extends TestCase
         $this->assertEquals('Collection(fullName)', $result->properties[0]->typeName);
     }
 
-    public function testWriteTopLevelBagObjectArrayOfComplexObjects()
-    {
-        $propType = m::mock(ResourceType::class);
-        $propType->shouldReceive('getInstanceType')->andReturn(new \POData\Providers\Metadata\Type\EdmString());
-
-        $property = m::mock(ResourceProperty::class);
-        $property->shouldReceive('getKind')->andReturn(ResourcePropertyKind::PRIMITIVE)->times(2);
-        $property->shouldReceive('getInstanceType->getFullTypeName')->andReturn('fullTypeName')->twice();
-        $property->shouldReceive('getName')->andReturn('propertyName');
-        $property->shouldReceive('getResourceType')->andReturn($propType)->twice();
-        $property->shouldReceive('isKindOf')->andReturn(false)->never();
-
-        $type = m::mock(ResourceType::class);
-        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::COMPLEX)->times(3);
-        $type->shouldReceive('getFullName')->andReturn('fullName');
-        $type->shouldReceive('getInstanceType')->andReturn(new \POData\Providers\Metadata\Type\EdmString());
-        $type->shouldReceive('getAllProperties')->andReturn([$property]);
-
-        $bag = ['foo', 123];
-        $expected = ['foo', '123'];
-
-        $queryResult = new QueryResult();
-        $queryResult->results = $bag;
-
-        $foo = m::mock(ObjectModelSerializer::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $foo->shouldReceive('getPropertyValue')->andReturn('foo', 123);
-
-        $result = $foo->writeTopLevelBagObject($queryResult, 'property', $type);
-        $this->assertTrue($result instanceof ODataPropertyContent);
-        $this->assertTrue($result->properties[0] instanceof ODataProperty);
-        $this->assertNull($result->properties[0]->attributeExtensions);
-        $this->assertTrue($result->properties[0]->value instanceof ODataBagContent);
-        $this->assertNull($result->properties[0]->value->type);
-        $this->assertTrue(is_array($result->properties[0]->value->propertyContents));
-        $firstProp = $result->properties[0]->value->propertyContents[0];
-        $secondProp = $result->properties[0]->value->propertyContents[1];
-        $this->assertEquals('propertyName', $firstProp->properties[0]->name);
-        $this->assertEquals('fullTypeName', $firstProp->properties[0]->typeName);
-        $this->assertEquals(null, $firstProp->properties[0]->attributeExtensions);
-        $this->assertEquals('foo', $firstProp->properties[0]->value);
-        $this->assertEquals('propertyName', $secondProp->properties[0]->name);
-        $this->assertEquals('fullTypeName', $secondProp->properties[0]->typeName);
-        $this->assertEquals(null, $secondProp->properties[0]->attributeExtensions);
-        $this->assertEquals('123', $secondProp->properties[0]->value);
-        $this->assertEquals('property', $result->properties[0]->name);
-        $this->assertEquals('Collection(fullName)', $result->properties[0]->typeName);
-    }
-
     public function testWriteTopLevelComplexObjectWithExpandedPropertiesTripsComplexObjectLoopException()
     {
         $complexValue = new reusableEntityClass2('2016-12-25', null);
@@ -1068,7 +1020,7 @@ class ObjectModelSerializerTest extends TestCase
 
     public function testWriteTopLevelElementBagWithExpandedProjectionAndNavigationNodesInconsistentMetadata()
     {
-        $entity = ['foo', 'bar'];
+        $entity = new reusableEntityClass2('foo', 'bar');
 
         $url = new Url('https://www.example.org/odata.svc');
 
