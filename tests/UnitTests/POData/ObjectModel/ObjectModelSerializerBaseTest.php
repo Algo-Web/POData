@@ -12,6 +12,8 @@ use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\ResourceTypeKind;
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandedProjectionNode;
+use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ProjectionNode;
+use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\RootProjectionNode;
 use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
 use POData\UriProcessor\RequestDescription;
 use POData\UriProcessor\SegmentStack;
@@ -539,6 +541,60 @@ class ObjectModelSerializerBaseTest extends TestCase
         $actual = $foo->getNextLinkUri($object, 'http://localhost/odata.svc/');
         $this->assertEquals($expected, $actual->url);
     }
+
+    public function testGetNextPageLinkQueryParametersForExpandedResourceSetNothingToExpand()
+    {
+        $foo = m::mock(ObjectModelSerializerDummy::class)->shouldAllowMockingProtectedMethods()->makePartial();
+        $foo->shouldReceive('getCurrentExpandedProjectionNode')->andReturn(null)->once();
+
+        $this->assertNull($foo->getNextPageLinkQueryParametersForExpandedResourceSet());
+    }
+
+    public function testGetNextPageLinkQueryParametersForExpandedResourceSetCurrentNodeHasNoChildren()
+    {
+        $node = m::mock(ExpandedProjectionNode::class)->makePartial();
+        $node->shouldReceive('getChildNodes')->andReturn([])->once();
+
+        $foo = m::mock(ObjectModelSerializerDummy::class)->shouldAllowMockingProtectedMethods()->makePartial();
+        $foo->shouldReceive('getCurrentExpandedProjectionNode')->andReturn($node)->once();
+
+        $expected = null;
+        $actual = $foo->getNextPageLinkQueryParametersForExpandedResourceSet();
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testGetNextPageLinkQueryParametersForExpandedResourceSetCurrentNodeHasOneNonExpansionChild()
+    {
+        $rootNode = m::mock(ProjectionNode::class)->makePartial();
+        $rootNode->shouldReceive('getPropertyName')->andReturn('fooBar');
+
+        $node = m::mock(ExpandedProjectionNode::class)->makePartial();
+        $node->shouldReceive('getChildNodes')->andReturn([$rootNode])->once();
+
+        $foo = m::mock(ObjectModelSerializerDummy::class)->shouldAllowMockingProtectedMethods()->makePartial();
+        $foo->shouldReceive('getCurrentExpandedProjectionNode')->andReturn($node)->once();
+
+        $expected = '$expand=fooBar&';
+        $actual = $foo->getNextPageLinkQueryParametersForExpandedResourceSet();
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testGetNextPageLinkQueryParametersForExpandedResourceSetCurrentNodeHasOneRootExpansionChild()
+    {
+        $rootNode = m::mock(RootProjectionNode::class)->makePartial();
+        $rootNode->shouldReceive('getPropertyName')->andReturn('fooBar');
+        $rootNode->shouldReceive('canSelectAllProperties')->andReturn(true);
+
+        $node = m::mock(ExpandedProjectionNode::class)->makePartial();
+        $node->shouldReceive('getChildNodes')->andReturn([$rootNode])->once();
+
+        $foo = m::mock(ObjectModelSerializerDummy::class)->shouldAllowMockingProtectedMethods()->makePartial();
+        $foo->shouldReceive('getCurrentExpandedProjectionNode')->andReturn($node)->once();
+
+        $expected = '$expand=fooBar&';
+        $actual = $foo->getNextPageLinkQueryParametersForExpandedResourceSet();
+        $this->assertEquals($expected, $actual);
+    }
 }
 
 class reusableEntityClass1
@@ -637,6 +693,11 @@ class ObjectModelSerializerDummy extends ObjectModelSerializerBase
     public function getNextPageLinkQueryParametersForRootResourceSet()
     {
         return parent::getNextPageLinkQueryParametersForRootResourceSet();
+    }
+
+    public function getNextPageLinkQueryParametersForExpandedResourceSet()
+    {
+        return parent::getNextPageLinkQueryParametersForExpandedResourceSet();
     }
 
     public function getNextLinkUri(&$lastObject, $absoluteUri)
