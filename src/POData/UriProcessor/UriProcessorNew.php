@@ -29,6 +29,51 @@ use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetSource;
  */
 class UriProcessorNew implements IUriProcessor
 {
+    /**
+     * Description of the OData request that a client has submitted.
+     *
+     * @var RequestDescription
+     */
+    private $request;
+
+    /**
+     * Holds reference to the data service instance.
+     *
+     * @var IService
+     */
+    private $service;
+
+    /**
+     * Holds reference to the wrapper over IDSMP and IDSQP implementation.
+     *
+     * @var ProvidersWrapper
+     */
+    private $providers;
+
+    /**
+     * Holds reference to request expander.
+     *
+     * @var RequestExpander
+     */
+    private $expander;
+
+    /**
+     * Constructs a new instance of UriProcessor.
+     *
+     * @param IService $service Reference to the data service instance
+     */
+    private function __construct(IService $service)
+    {
+        $this->service = $service;
+        $this->providers = $service->getProvidersWrapper();
+        $this->request = ResourcePathProcessor::process($service);
+        $this->expander = new RequestExpander(
+            $this->getRequest(),
+            $this->getService(),
+            $this->getProviders()
+        );
+        $this->getRequest()->setUriProcessor($this);
+    }
 
     /**
      * Process the resource path and query options of client's request uri.
@@ -41,7 +86,21 @@ class UriProcessorNew implements IUriProcessor
      */
     public static function process(IService $service)
     {
-        // TODO: Implement process() method.
+        $absRequestUri = $service->getHost()->getAbsoluteRequestUri();
+        $absServiceUri = $service->getHost()->getAbsoluteServiceUri();
+
+        if (!$absServiceUri->isBaseOf($absRequestUri)) {
+            throw ODataException::createInternalServerError(
+                Messages::uriProcessorRequestUriDoesNotHaveTheRightBaseUri(
+                    $absRequestUri->getUrlAsString(),
+                    $absServiceUri->getUrlAsString()
+                )
+            );
+        }
+
+        $processor = new self($service);
+
+        return $processor;
     }
 
     /**
@@ -51,7 +110,7 @@ class UriProcessorNew implements IUriProcessor
      */
     public function getRequest()
     {
-        // TODO: Implement getRequest() method.
+        return $this->request;
     }
 
     /**
@@ -61,7 +120,7 @@ class UriProcessorNew implements IUriProcessor
      */
     public function getProviders()
     {
-        // TODO: Implement getProviders() method.
+        return $this->providers;
     }
 
     /**
@@ -71,7 +130,7 @@ class UriProcessorNew implements IUriProcessor
      */
     public function getService()
     {
-        // TODO: Implement getService() method.
+        return $this->service;
     }
 
     /**
@@ -81,7 +140,7 @@ class UriProcessorNew implements IUriProcessor
      */
     public function getExpander()
     {
-        // TODO: Implement getExpander() method.
+        return $this->expander;
     }
 
     /**
@@ -89,6 +148,36 @@ class UriProcessorNew implements IUriProcessor
      */
     public function execute()
     {
-        // TODO: Implement execute() method.
+        $service = $this->getService();
+        $context = $service->getOperationContext();
+        $method = $context->incomingRequest()->getMethod();
+
+        switch ($method) {
+            case HTTPRequestMethod::GET():
+                $this->executeGet();
+                break;
+            default:
+                throw ODataException::createNotImplementedError(Messages::onlyReadSupport($method));
+        }
+    }
+
+    /**
+     * Execute the client submitted request against the data source (GET).
+     */
+    protected function executeGet()
+    {
+        $segments = $this->getRequest()->getSegments();
+
+        foreach ($segments as $segment) {
+            $requestTargetKind = $segment->getTargetKind();
+
+            switch ($requestTargetKind) {
+                case TargetKind::SINGLETON():
+                    $segmentId = $segment->getIdentifier();
+                    $singleton = $this->getService()->getProvidersWrapper()->resolveSingleton($segmentId);
+                    $segment->setResult($singleton->get());
+                    break;
+            }
+        }
     }
 }

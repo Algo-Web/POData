@@ -17,6 +17,7 @@ use MyCLabs\Enum\Enum;
  * @method static \POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind LINK()
  * @method static \POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind MEDIA_RESOURCE()
  * @method static \POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind BAG()
+ * @method static \POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind SINGLETON()
  */
 class TargetKind extends Enum
 {

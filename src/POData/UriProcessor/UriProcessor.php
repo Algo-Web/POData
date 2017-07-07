@@ -90,6 +90,9 @@ class UriProcessor implements IUriProcessor
         return $uriProcessor;
     }
 
+    /**
+     * @return RequestDescription
+     */
     public function getRequest()
     {
         return $this->request;
