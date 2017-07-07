@@ -11,22 +11,14 @@ use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\Providers\ProvidersWrapper;
 use POData\Providers\Query\QueryResult;
 use POData\Providers\Query\QueryType;
+use POData\UriProcessor\Interfaces\IUriProcessor;
 use POData\UriProcessor\QueryProcessor\QueryProcessor;
 use POData\UriProcessor\ResourcePathProcessor\ResourcePathProcessor;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\SegmentDescriptor;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetSource;
 
-/**
- * Class UriProcessor.
- *
- * A type to process client's requets URI
- * The syntax of request URI is:
- *  Scheme Host Port ServiceRoot ResourcePath ? QueryOption
- * For more details refer:
- * http://www.odata.org/developers/protocols/uri-conventions#UriComponents
- */
-class UriProcessor
+class UriProcessor implements IUriProcessor
 {
     /**
      * Description of the OData request that a client has submitted.
@@ -67,15 +59,6 @@ class UriProcessor
         $this->providers = $service->getProvidersWrapper();
     }
 
-    /**
-     * Process the resource path and query options of client's request uri.
-     *
-     * @param IService $service Reference to the data service instance
-     *
-     * @throws ODataException
-     *
-     * @return URIProcessor
-     */
     public static function process(IService $service)
     {
         $absoluteRequestUri = $service->getHost()->getAbsoluteRequestUri();
@@ -107,49 +90,26 @@ class UriProcessor
         return $uriProcessor;
     }
 
-    /**
-     * Gets reference to the request submitted by client.
-     *
-     * @return RequestDescription
-     */
     public function getRequest()
     {
         return $this->request;
     }
 
-    /**
-     * Gets reference to the request submitted by client.
-     *
-     * @return ProvidersWrapper
-     */
     public function getProviders()
     {
         return $this->providers;
     }
 
-    /**
-     * Gets the data service instance.
-     *
-     * @return IService
-     */
     public function getService()
     {
         return $this->service;
     }
 
-    /**
-     * Gets the request expander instance.
-     *
-     * @return RequestExpander
-     */
     public function getExpander()
     {
         return $this->expander;
     }
 
-    /**
-     * Execute the client submitted request against the data source.
-     */
     public function execute()
     {
         $service = $this->getService();
