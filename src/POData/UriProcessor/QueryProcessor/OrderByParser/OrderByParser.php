@@ -89,9 +89,8 @@ class OrderByParser
     /**
      * This function perform the following tasks with the help of internal helper
      * functions
-     * (1) Read the orderby clause and perform basic syntax errors
-     * (2) Build 'Order By Tree', creates anonymous sorter function for each leaf
-     *     node and check for error
+     * (1) Read the orderby clause and perform basic syntax checks
+     * (2) Build 'Order By Tree', creates anonymous sorter function for each leaf node and check for error
      * (3) Build 'OrderInfo' structure, holds information about the navigation
      *     properties used in the orderby clause (if any) and orderby path if
      *     IDSQP implementor want to perform sorting
@@ -116,6 +115,8 @@ class OrderByParser
         ProvidersWrapper $providerWrapper
     ) {
         assert(is_string($orderBy), "OrderBy clause must be a string");
+        $orderBy = trim($orderBy);
+        assert(0 < strlen($orderBy), "OrderBy clause must not be trimmable to an empty string");
         $orderByParser = new self($providerWrapper);
         try {
             $orderByParser->dummyObject = $resourceType->getInstanceType()->newInstance();
