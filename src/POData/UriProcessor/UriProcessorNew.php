@@ -177,6 +177,22 @@ class UriProcessorNew implements IUriProcessor
                     $singleton = $this->getService()->getProvidersWrapper()->resolveSingleton($segmentId);
                     $segment->setResult($singleton->get());
                     break;
+                case TargetKind::RESOURCE():
+                    $skip = $this->getRequest()->getSkipCount();
+                    $skip = (null == $skip) ? 0 : $skip;
+                    $skipToken = $this->getRequest()->getInternalSkipTokenInfo();
+                    $skipToken = (null != $skipToken) ? $skipToken->getSkipTokenInfo() : null;
+                    $queryResult = $this->getProviders()->getResourceSet(
+                        $this->getRequest()->queryType,
+                        $segment->getTargetResourceSetWrapper(),
+                        $this->getRequest()->getFilterInfo(),
+                        $this->getRequest()->getInternalOrderByInfo(),
+                        $this->getRequest()->getTopCount(),
+                        $skip,
+                        $skipToken
+                    );
+                    $segment->setResult($queryResult);
+                    break;
             }
         }
     }
