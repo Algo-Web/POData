@@ -178,19 +178,26 @@ class UriProcessorNew implements IUriProcessor
                     $segment->setResult($singleton->get());
                     break;
                 case TargetKind::RESOURCE():
-                    $skip = $this->getRequest()->getSkipCount();
-                    $skip = (null == $skip) ? 0 : $skip;
-                    $skipToken = $this->getRequest()->getInternalSkipTokenInfo();
-                    $skipToken = (null != $skipToken) ? $skipToken->getSkipTokenInfo() : null;
-                    $queryResult = $this->getProviders()->getResourceSet(
-                        $this->getRequest()->queryType,
-                        $segment->getTargetResourceSetWrapper(),
-                        $this->getRequest()->getFilterInfo(),
-                        $this->getRequest()->getInternalOrderByInfo(),
-                        $this->getRequest()->getTopCount(),
-                        $skip,
-                        $skipToken
-                    );
+                    if ($segment->isSingleResult()) {
+                        $queryResult = $this->getProviders()->getResourceFromResourceSet(
+                            $segment->getTargetResourceSetWrapper(),
+                            $segment->getKeyDescriptor()
+                        );
+                    } else {
+                        $skip = $this->getRequest()->getSkipCount();
+                        $skip = (null == $skip) ? 0 : $skip;
+                        $skipToken = $this->getRequest()->getInternalSkipTokenInfo();
+                        $skipToken = (null != $skipToken) ? $skipToken->getSkipTokenInfo() : null;
+                        $queryResult = $this->getProviders()->getResourceSet(
+                            $this->getRequest()->queryType,
+                            $segment->getTargetResourceSetWrapper(),
+                            $this->getRequest()->getFilterInfo(),
+                            $this->getRequest()->getInternalOrderByInfo(),
+                            $this->getRequest()->getTopCount(),
+                            $skip,
+                            $skipToken
+                        );
+                    }
                     $segment->setResult($queryResult);
                     break;
             }
