@@ -523,14 +523,15 @@ class QueryProcessor
 
         $allNull = true;
         foreach ($items as $queryItem) {
-            $currentNull = null == $serviceHost->getQueryStringItem($queryItem);
-            $allNull &= $currentNull;
-            if (false == $allNull) {
+            $item = $serviceHost->getQueryStringItem($queryItem);
+            $currentNull = null === $item;
+            $allNull = ($currentNull && $allNull);
+            if (false === $allNull) {
                 break;
             }
         }
 
-        if (false == $allNull) {
+        if (false === $allNull) {
             throw ODataException::createBadRequestError(
                 Messages::queryProcessorNoQueryOptionsApplicable()
             );
