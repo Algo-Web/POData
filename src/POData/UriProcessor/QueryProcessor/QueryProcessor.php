@@ -222,7 +222,7 @@ class QueryProcessor
             $orderBy = rtrim($orderBy, ', ');
         }
 
-        if (!is_null($orderBy)) {
+        if (!is_null($orderBy) && '' != trim($orderBy)) {
             $setWrapper = $this->request->getTargetResourceSetWrapper();
             assert(null != $setWrapper, "Target resource set wrapper must not be null");
             $internalOrderByInfo = OrderByParser::parseOrderByClause(
@@ -510,15 +510,27 @@ class QueryProcessor
     private function checkForEmptyQueryArguments()
     {
         $serviceHost = $this->service->getHost();
-        if (!is_null($serviceHost->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_FILTER))
-            || !is_null($serviceHost->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_EXPAND))
-            || !is_null($serviceHost->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_INLINECOUNT))
-            || !is_null($serviceHost->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_ORDERBY))
-            || !is_null($serviceHost->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_SELECT))
-            || !is_null($serviceHost->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_SKIP))
-            || !is_null($serviceHost->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_SKIPTOKEN))
-            || !is_null($serviceHost->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_TOP))
-        ) {
+        $items = [
+            ODataConstants::HTTPQUERY_STRING_FILTER,
+            ODataConstants::HTTPQUERY_STRING_EXPAND,
+            ODataConstants::HTTPQUERY_STRING_INLINECOUNT,
+            ODataConstants::HTTPQUERY_STRING_ORDERBY,
+            ODataConstants::HTTPQUERY_STRING_SELECT,
+            ODataConstants::HTTPQUERY_STRING_SKIP,
+            ODataConstants::HTTPQUERY_STRING_SKIPTOKEN,
+            ODataConstants::HTTPQUERY_STRING_TOP
+        ];
+
+        $allNull = true;
+        foreach ($items as $queryItem) {
+            $currentNull = null == $serviceHost->getQueryStringItem($queryItem);
+            $allNull &= $currentNull;
+            if (false == $allNull) {
+                break;
+            }
+        }
+
+        if (false == $allNull) {
             throw ODataException::createBadRequestError(
                 Messages::queryProcessorNoQueryOptionsApplicable()
             );
