@@ -7,6 +7,8 @@ use POData\Common\ODataException;
 use POData\Configuration\EntitySetRights;
 use POData\Configuration\ServiceConfiguration;
 use POData\Providers\Metadata\ResourceProperty;
+use POData\Providers\Metadata\ResourceSetWrapper;
+use POData\Providers\Metadata\ResourceType;
 use POData\Providers\ProvidersWrapper;
 use POData\Providers\Query\IQueryProvider;
 use POData\UriProcessor\QueryProcessor\OrderByParser\OrderByParser;
@@ -647,6 +649,25 @@ class OrderByParserTest extends TestCase
         $this->assertEquals($naviUsed[1][0]->getName(), 'Product');
         $orderByPathSegments = $orderByInfo->getOrderByPathSegments();
         $this->assertEquals(count($orderByPathSegments), 2);
+    }
+
+    public function testParseOrderByClauseWithBlankString()
+    {
+        $wrapper = m::mock(ResourceSetWrapper::class);
+        $type = m::mock(ResourceType::class);
+        $type->shouldReceive('getInstanceType->newInstance')->andReturn(new \stdClass());
+        $orderBy = " ";
+        $provider = m::mock(ProvidersWrapper::class);
+
+        $expected = "assert(): OrderBy clause must not be trimmable to an empty string failed";
+        $actual = null;
+
+        try {
+            OrderByParser::parseOrderByClause($wrapper, $type, $orderBy, $provider);
+        } catch (\PHPUnit_Framework_Error_Warning $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
     }
 
     public function tearDown()
