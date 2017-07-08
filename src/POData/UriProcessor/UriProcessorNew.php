@@ -200,7 +200,18 @@ class UriProcessorNew implements IUriProcessor
                     }
                     $segment->setResult($queryResult);
                     break;
+                case TargetKind::MEDIA_RESOURCE():
+                    $segment->setResult($segment->getPrevious()->getResult());
+                    // a media resource means we're done - bail out of segment processing
+                    break 2;
+                default:
+                    assert(false, "Not implemented yet");
             }
         }
+
+        // Apply $select and $expand options to result set, this function will be always applied
+        // irrespective of return value of IDSQP2::canApplyQueryOptions which means library will
+        // not delegate $expand/$select operation to IDSQP2 implementation
+        $this->getExpander()->handleExpansion();
     }
 }
