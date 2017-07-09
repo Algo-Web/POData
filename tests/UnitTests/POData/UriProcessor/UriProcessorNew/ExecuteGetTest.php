@@ -32,6 +32,57 @@ use Mockery as m;
 
 class ExecuteGetTest extends TestCase
 {
+    public function testExecuteBadMethod()
+    {
+        $baseUrl = new Url('http://localhost/odata.svc');
+        $reqUrl = new Url('http://localhost/odata.svc');
+
+        $host = m::mock(ServiceHost::class);
+        $host->shouldReceive('getAbsoluteRequestUri')->andReturn($reqUrl);
+        $host->shouldReceive('getAbsoluteServiceUri')->andReturn($baseUrl);
+        $host->shouldReceive('getRequestVersion')->andReturn('1.0');
+        $host->shouldReceive('getRequestMaxVersion')->andReturn('3.0');
+        $host->shouldReceive('getQueryStringItem')->andReturn(null);
+
+        $request = m::mock(IHTTPRequest::class);
+        $request->shouldReceive('getMethod')->andReturn(null);
+        $request->shouldReceive('getAllInput')->andReturn(null);
+
+        $context = m::mock(IOperationContext::class);
+        $context->shouldReceive('incomingRequest')->andReturn($request);
+
+        $wrapper = m::mock(ProvidersWrapper::class);
+
+        $config = m::mock(IServiceConfiguration::class);
+        $config->shouldReceive('getMaxDataServiceVersion')->andReturn(new Version(3, 0));
+
+        $service = m::mock(IService::class);
+        $service->shouldReceive('getHost')->andReturn($host);
+        $service->shouldReceive('getProvidersWrapper')->andReturn($wrapper);
+        $service->shouldReceive('getOperationContext')->andReturn($context);
+        $service->shouldReceive('getConfiguration')->andReturn($config);
+
+        $expected = null;
+        $expectedClass = null;
+        $actual = null;
+        $actualClass = null;
+
+        try {
+            UriProcessor::process($service);
+        } catch (\Exception $e) {
+            $expectedClass = get_class($e);
+            $expected = $e->getMessage();
+        }
+        try {
+            UriProcessorNew::process($service);
+        } catch (\Exception $e) {
+            $actualClass = get_class($e);
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expectedClass, $actualClass);
+        $this->assertEquals($expected, $actual);
+    }
+
     public function testExecuteGetOnSingleton()
     {
         $baseUrl = new Url('http://localhost/odata.svc');
