@@ -210,6 +210,11 @@ class UriProcessorNew implements IUriProcessor
                     break;
                 case TargetKind::BAG():
                     break;
+                case TargetKind::LINK():
+                    $previous = $segment->getPrevious();
+                    assert(isset($previous));
+                    $segment->setResult($previous->getResult());
+                    break;
                 default:
                     assert(false, "Not implemented yet");
             }
