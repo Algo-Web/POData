@@ -28,6 +28,7 @@ use POData\Providers\ProvidersWrapper;
 use POData\Providers\Query\IQueryProvider;
 use POData\Providers\Query\QueryResult;
 use POData\Providers\Stream\StreamProviderWrapper;
+use POData\UriProcessor\Interfaces\IUriProcessor;
 use POData\UriProcessor\RequestDescription;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
 use POData\UriProcessor\UriProcessor;
@@ -356,9 +357,9 @@ abstract class BaseService implements IRequestHandler, IService
      * Serialize the requested resource.
      *
      * @param RequestDescription $request      The description of the request  submitted by the client
-     * @param UriProcessor       $uriProcessor Reference to the uri processor
+     * @param IUriProcessor      $uriProcessor Reference to the uri processor
      */
-    protected function serializeResult(RequestDescription $request, UriProcessor $uriProcessor)
+    protected function serializeResult(RequestDescription $request, IUriProcessor $uriProcessor)
     {
         $isETagHeaderAllowed = $request->isETagHeaderAllowed();
 
@@ -527,7 +528,7 @@ abstract class BaseService implements IRequestHandler, IService
      * Gets the response format for the requested resource.
      *
      * @param RequestDescription $request      The request submitted by client and it's execution result
-     * @param UriProcessor       $uriProcessor The reference to the UriProcessor
+     * @param IUriProcessor      $uriProcessor The reference to the IUriProcessor
      *
      * @throws ODataException, HttpHeaderFailure
      *
@@ -536,7 +537,7 @@ abstract class BaseService implements IRequestHandler, IService
      */
     public function getResponseContentType(
         RequestDescription $request,
-        UriProcessor $uriProcessor
+        IUriProcessor $uriProcessor
     ) {
         $baseMimeTypes = [
             MimeTypes::MIME_APPLICATION_JSON,

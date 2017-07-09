@@ -185,7 +185,7 @@ class UriProcessorNew implements IUriProcessor
                         );
                     } else {
                         $skip = $this->getRequest()->getSkipCount();
-                        $skip = (null == $skip) ? 0 : $skip;
+                        $skip = (null === $skip) ? 0 : $skip;
                         $skipToken = $this->getRequest()->getInternalSkipTokenInfo();
                         $skipToken = (null != $skipToken) ? $skipToken->getSkipTokenInfo() : null;
                         $queryResult = $this->getProviders()->getResourceSet(

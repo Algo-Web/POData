@@ -9,6 +9,7 @@ use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Query\IQueryProvider;
 use POData\Providers\Stream\StreamProviderWrapper;
+use POData\UriProcessor\Interfaces\IUriProcessor;
 use POData\UriProcessor\RequestDescription;
 use POData\UriProcessor\UriProcessor;
 use POData\Writers\ODataWriterRegistry;
@@ -100,7 +101,7 @@ class BaseServiceDummy extends BaseServiceTestWrapper
         return parent::getETagForEntry($entryObject, $resourceType);
     }
 
-    public function serializeResult(RequestDescription $request, UriProcessor $uriProcessor)
+    public function serializeResult(RequestDescription $request, IUriProcessor $uriProcessor)
     {
         return parent::serializeResult($request, $uriProcessor);
     }

@@ -210,7 +210,7 @@ class RequestDescription
     /**
      * Reference to Uri processor.
      *
-     * @var UriProcessor
+     * @var IUriProcessor
      */
     private $_uriProcessor;
 
@@ -1019,7 +1019,7 @@ class RequestDescription
     }
 
     /**
-     * Gets reference to the UriProcessor instance.
+     * Gets reference to the IUriProcessor instance.
      *
      * @return IUriProcessor
      */
@@ -1029,7 +1029,7 @@ class RequestDescription
     }
 
     /**
-     * Set reference to UriProcessor instance.
+     * Set reference to IUriProcessor instance.
      *
      * @param IUriProcessor $uriProcessor Reference to the UriProcessor
      */
