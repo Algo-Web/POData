@@ -659,7 +659,7 @@ class ProvidersWrapper
      * @param ResourceSet   $resourceSet   The entity set containing the entity to fetch
      * @param KeyDescriptor $keyDescriptor The key identifying the entity to fetch
      *
-     * @return object|null Returns entity instance if found else null
+     * @return object|null Returns entity instance if found, else null
      */
     public function getResourceFromResourceSet(ResourceSet $resourceSet, KeyDescriptor $keyDescriptor)
     {
@@ -672,7 +672,7 @@ class ProvidersWrapper
      * @param ResourceSet   $resourceSet   The entity set containing the entity to update
      * @param KeyDescriptor $keyDescriptor The key identifying the entity to update
      *
-     * @return bool|null Returns result of executiong query
+     * @return bool|null Returns result of executing query
      */
     public function putResource(
         ResourceSet $resourceSet,
@@ -741,7 +741,7 @@ class ProvidersWrapper
      * @param ResourceProperty $targetProperty    The metadata of the target property
      * @param KeyDescriptor    $keyDescriptor     The key to identify the entity to be fetched
      *
-     * @return object|null Returns entity instance if found else null
+     * @return object|null Returns entity instance if found, else null
      */
     public function getResourceFromRelatedResourceSet(
         ResourceSet $sourceResourceSet,
@@ -769,7 +769,7 @@ class ProvidersWrapper
      * @param ResourceProperty $targetProperty    The navigation property to be
      *                                            retrieved
      *
-     * @return object|null The related resource if exists else null
+     * @return object|null The related resource if exists, else null
      */
     public function getRelatedResourceReference(
         ResourceSet $sourceResourceSet,
@@ -794,7 +794,7 @@ class ProvidersWrapper
      * @param object        $data                 The New data for the entity instance.
      * @param bool          $shouldUpdate         Should undefined values be updated or reset to default
      *
-     * @return object|null The new resource value if it is assignable or throw exception for null.
+     * @return object|null The new resource value if it is assignable, or throw exception for null.
      */
     public function updateResource(
         ResourceSet $sourceResourceSet,
@@ -818,7 +818,7 @@ class ProvidersWrapper
      * @param ResourceSet $sourceResourceSet
      * @param object      $sourceEntityInstance
      *
-     * return bool true if resources sucessfully deteled, otherwise false.
+     * return bool true if resources successfully deleted, otherwise false.
      */
     public function deleteResource(
         ResourceSet $sourceResourceSet,
@@ -835,7 +835,7 @@ class ProvidersWrapper
      * @param object      $sourceEntityInstance The source entity instance
      * @param object      $data                 The New data for the entity instance.
      *
-     * returns object|null returns the newly created model if sucessful or null if model creation failed.
+     * returns object|null returns the newly created model if successful, or null if model creation failed.
      */
     public function createResourceforResourceSet(
         ResourceSet $resourceSet,
