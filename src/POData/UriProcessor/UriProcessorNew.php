@@ -206,6 +206,10 @@ class UriProcessorNew implements IUriProcessor
                     break 2;
                 case TargetKind::PRIMITIVE_VALUE():
                     break;
+                case TargetKind::COMPLEX_OBJECT():
+                    break;
+                case TargetKind::BAG():
+                    break;
                 default:
                     assert(false, "Not implemented yet");
             }
