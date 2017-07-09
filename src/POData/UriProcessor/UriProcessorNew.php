@@ -204,6 +204,8 @@ class UriProcessorNew implements IUriProcessor
                     $segment->setResult($segment->getPrevious()->getResult());
                     // a media resource means we're done - bail out of segment processing
                     break 2;
+                case TargetKind::PRIMITIVE():
+                    break;
                 case TargetKind::PRIMITIVE_VALUE():
                     break;
                 case TargetKind::COMPLEX_OBJECT():
