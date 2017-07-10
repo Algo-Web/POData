@@ -164,6 +164,9 @@ class UriProcessorNew implements IUriProcessor
                 $this->executeGet();
                 $this->executePut();
                 break;
+            case HTTPRequestMethod::POST():
+                $this->executePost();
+                break;
             default:
                 throw ODataException::createNotImplementedError(Messages::onlyReadSupport($method));
         }
@@ -275,6 +278,30 @@ class UriProcessorNew implements IUriProcessor
             false
         );
         $segment->setResult($queryResult);
+    }
+
+    /**
+     * Execute the client submitted request against the data source (POST).
+     */
+    protected function executePost()
+    {
+        $segments = $this->getRequest()->getSegments();
+        $requestMethod = $this->getService()->getOperationContext()->incomingRequest()->getMethod();
+
+        foreach ($segments as $segment) {
+            $requestTargetKind = $segment->getTargetKind();
+            if ($requestTargetKind == TargetKind::RESOURCE()) {
+                $resourceSet = $segment->getTargetResourceSetWrapper();
+                $keyDescriptor = $segment->getKeyDescriptor();
+
+                $data = $this->getRequest()->getData();
+                if (empty($data)) {
+                    throw ODataException::createBadRequestError(Messages::noDataForThisVerb($requestMethod));
+                }
+                $queryResult = $this->getProviders()->createResourceforResourceSet($resourceSet, $keyDescriptor, $data);
+                $segment->setResult($queryResult);
+            }
+        }
     }
 
     /**
