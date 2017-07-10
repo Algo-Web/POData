@@ -190,10 +190,7 @@ class UriProcessor implements IUriProcessor
             $resourceSet = $segment->getTargetResourceSetWrapper();
             $keyDescriptor = $segment->getKeyDescriptor();
 
-            if (!$resourceSet || !$keyDescriptor) {
-                $url = $uriProcessor->getService()->getHost()->getAbsoluteRequestUri()->getUrlAsString();
-                throw ODataException::createBadRequestError(Messages::badRequestInvalidUriForThisVerb($url, $requestMethod));
-            }
+            $uriProcessor->checkUriValidForSuppliedVerb($uriProcessor, $resourceSet, $keyDescriptor, $requestMethod);
 
             $data = $uriProcessor->getRequest()->getData();
             if (!$data) {
@@ -222,12 +219,7 @@ class UriProcessor implements IUriProcessor
             $requestMethod = $uriProcessor->getService()->getOperationContext()->incomingRequest()->getMethod();
             $resourceSet = $segment->getTargetResourceSetWrapper();
             $keyDescriptor = $segment->getKeyDescriptor();
-            if (!$resourceSet || !$keyDescriptor) {
-                $url = $uriProcessor->getService()->getHost()->getAbsoluteRequestUri()->getUrlAsString();
-                throw ODataException::createBadRequestError(
-                    Messages::badRequestInvalidUriForThisVerb($url, $requestMethod)
-                );
-            }
+            $uriProcessor->checkUriValidForSuppliedVerb($uriProcessor, $resourceSet, $keyDescriptor, $requestMethod);
 
             return $uriProcessor->getProviders()->deleteResource($resourceSet, $segment->getResult());
         });
@@ -503,5 +495,22 @@ class UriProcessor implements IUriProcessor
     private function handleExpansion()
     {
         $this->getExpander()->handleExpansion();
+    }
+
+    /**
+     * @param $uriProcessor
+     * @param $resourceSet
+     * @param $keyDescriptor
+     * @param $requestMethod
+     * @throws ODataException
+     */
+    public function checkUriValidForSuppliedVerb($uriProcessor, $resourceSet, $keyDescriptor, $requestMethod)
+    {
+        if (!$resourceSet || !$keyDescriptor) {
+            $url = $uriProcessor->getService()->getHost()->getAbsoluteRequestUri()->getUrlAsString();
+            throw ODataException::createBadRequestError(
+                Messages::badRequestInvalidUriForThisVerb($url, $requestMethod)
+            );
+        }
     }
 }
