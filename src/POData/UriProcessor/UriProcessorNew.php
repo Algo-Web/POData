@@ -160,6 +160,10 @@ class UriProcessorNew implements IUriProcessor
                 $this->executeGet();
                 $this->executeDelete();
                 break;
+            case HTTPRequestMethod::PUT():
+                $this->executeGet();
+                $this->executePut();
+                break;
             default:
                 throw ODataException::createNotImplementedError(Messages::onlyReadSupport($method));
         }
@@ -241,13 +245,36 @@ class UriProcessorNew implements IUriProcessor
         $requestMethod = $this->getService()->getOperationContext()->incomingRequest()->getMethod();
         $resourceSet = $segment->getTargetResourceSetWrapper();
         $keyDescriptor = $segment->getKeyDescriptor();
-        if (!$resourceSet || !$keyDescriptor) {
-            $url = $this->getService()->getHost()->getAbsoluteRequestUri()->getUrlAsString();
-            throw ODataException::createBadRequestError(
-                Messages::badRequestInvalidUriForThisVerb($url, $requestMethod)
-            );
-        }
+
+        $this->checkUriValidForSuppliedVerb($resourceSet, $keyDescriptor, $requestMethod);
         $this->getProviders()->deleteResource($resourceSet, $segment->getResult());
+    }
+
+    /**
+     * Execute the client submitted request against the data source (PUT).
+     */
+    protected function executePut()
+    {
+        $segment = $this->getFinalEffectiveSegment();
+        $requestMethod = $this->getService()->getOperationContext()->incomingRequest()->getMethod();
+        $resourceSet = $segment->getTargetResourceSetWrapper();
+        $keyDescriptor = $segment->getKeyDescriptor();
+
+        $this->checkUriValidForSuppliedVerb($resourceSet, $keyDescriptor, $requestMethod);
+
+        $data = $this->getRequest()->getData();
+        if (!$data) {
+            throw ODataException::createBadRequestError(Messages::noDataForThisVerb($requestMethod));
+        }
+
+        $queryResult = $this->getProviders()->updateResource(
+            $resourceSet,
+            $segment->getResult(),
+            $keyDescriptor,
+            $data,
+            false
+        );
+        $segment->setResult($queryResult);
     }
 
     /**
@@ -262,5 +289,21 @@ class UriProcessorNew implements IUriProcessor
             return $segment;
         }
         return $segment;
+    }
+
+    /**
+     * @param $resourceSet
+     * @param $keyDescriptor
+     * @param $requestMethod
+     * @throws ODataException
+     */
+    protected function checkUriValidForSuppliedVerb($resourceSet, $keyDescriptor, $requestMethod)
+    {
+        if (!$resourceSet || !$keyDescriptor) {
+            $url = $this->getService()->getHost()->getAbsoluteRequestUri()->getUrlAsString();
+            throw ODataException::createBadRequestError(
+                Messages::badRequestInvalidUriForThisVerb($url, $requestMethod)
+            );
+        }
     }
 }
