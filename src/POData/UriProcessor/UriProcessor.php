@@ -147,7 +147,7 @@ class UriProcessor implements IUriProcessor
      */
     protected function executeGet()
     {
-        return $this->executeBase();
+        $this->executeBase();
     }
 
     /**
@@ -185,7 +185,7 @@ class UriProcessor implements IUriProcessor
      */
     protected function executePut()
     {
-        return $this->executeBase(function ($uriProcessor, $segment) {
+        $this->executeBase(function ($uriProcessor, $segment) {
             $requestMethod = $uriProcessor->getService()->getOperationContext()->incomingRequest()->getMethod();
             $resourceSet = $segment->getTargetResourceSetWrapper();
             $keyDescriptor = $segment->getKeyDescriptor();
@@ -218,7 +218,7 @@ class UriProcessor implements IUriProcessor
      */
     protected function executeDelete()
     {
-        return $this->executeBase(function ($uriProcessor, $segment) {
+        $this->executeBase(function ($uriProcessor, $segment) {
             $requestMethod = $uriProcessor->getService()->getOperationContext()->incomingRequest()->getMethod();
             $resourceSet = $segment->getTargetResourceSetWrapper();
             $keyDescriptor = $segment->getKeyDescriptor();
