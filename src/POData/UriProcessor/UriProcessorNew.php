@@ -156,6 +156,10 @@ class UriProcessorNew implements IUriProcessor
             case HTTPRequestMethod::GET():
                 $this->executeGet();
                 break;
+            case HTTPRequestMethod::DELETE():
+                $this->executeGet();
+                $this->executeDelete();
+                break;
             default:
                 throw ODataException::createNotImplementedError(Messages::onlyReadSupport($method));
         }
@@ -226,5 +230,37 @@ class UriProcessorNew implements IUriProcessor
                     assert(false, "Not implemented yet");
             }
         }
+    }
+
+    /**
+     * Execute the client submitted request against the data source (DELETE).
+     */
+    protected function executeDelete()
+    {
+        $segment = $this->getFinalEffectiveSegment();
+        $requestMethod = $this->getService()->getOperationContext()->incomingRequest()->getMethod();
+        $resourceSet = $segment->getTargetResourceSetWrapper();
+        $keyDescriptor = $segment->getKeyDescriptor();
+        if (!$resourceSet || !$keyDescriptor) {
+            $url = $this->getService()->getHost()->getAbsoluteRequestUri()->getUrlAsString();
+            throw ODataException::createBadRequestError(
+                Messages::badRequestInvalidUriForThisVerb($url, $requestMethod)
+            );
+        }
+        $this->getProviders()->deleteResource($resourceSet, $segment->getResult());
+    }
+
+    /**
+     * @return null|SegmentDescriptor
+     */
+    protected function getFinalEffectiveSegment()
+    {
+        $segment = $this->getRequest()->getLastSegment();
+        // if last segment is $count, back up one
+        if (ODataConstants::URI_COUNT_SEGMENT == $segment->getIdentifier()) {
+            $segment = $segment->getPrevious();
+            return $segment;
+        }
+        return $segment;
     }
 }
