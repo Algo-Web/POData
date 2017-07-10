@@ -565,7 +565,7 @@ class ExecuteGetTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function testExecuteGetOnLinkAfterSingleResource()
+    public function testExecuteGetOnCountAfterSingleResource()
     {
         $baseUrl = new Url('http://localhost/odata.svc');
         $reqUrl = new Url('http://localhost/odata.svc/customers(id=1)/'.ODataConstants::URI_COUNT_SEGMENT);
@@ -637,7 +637,7 @@ class ExecuteGetTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function testExecuteGetOnLinkAfterResourceSet()
+    public function testExecuteGetOnCountAfterResourceSet()
     {
         $baseUrl = new Url('http://localhost/odata.svc');
         $reqUrl = new Url('http://localhost/odata.svc/customers/'.ODataConstants::URI_COUNT_SEGMENT);
@@ -708,6 +708,82 @@ class ExecuteGetTest extends TestCase
             $this->assertEquals($origSegments[$i]->getNext(), $remixSegments[$i]->getNext());
             $this->assertEquals($origSegments[$i]->getPrevious(), $remixSegments[$i]->getPrevious());
         }
+    }
+
+    public function testExecuteGetOnNonterminalCountAfterResourceSet()
+    {
+        $baseUrl = new Url('http://localhost/odata.svc');
+        $reqUrl = new Url('http://localhost/odata.svc/customers/'.ODataConstants::URI_COUNT_SEGMENT.'/orders');
+
+        $host = m::mock(ServiceHost::class);
+        $host->shouldReceive('getAbsoluteRequestUri')->andReturn($reqUrl);
+        $host->shouldReceive('getAbsoluteServiceUri')->andReturn($baseUrl);
+        $host->shouldReceive('getRequestVersion')->andReturn('2.0');
+        $host->shouldReceive('getRequestMaxVersion')->andReturn('3.0');
+        $host->shouldReceive('getQueryStringItem')->andReturn(null);
+
+        $request = m::mock(IHTTPRequest::class);
+        $request->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::GET());
+        $request->shouldReceive('getAllInput')->andReturn(null);
+
+        $context = m::mock(IOperationContext::class);
+        $context->shouldReceive('incomingRequest')->andReturn($request);
+
+        $config = m::mock(IServiceConfiguration::class);
+        $config->shouldReceive('getMaxDataServiceVersion')->andReturn(new Version(3, 0));
+        $config->shouldReceive('getAcceptCountRequests')->andReturn(true)->atLeast(2);
+
+        $iType = m::mock(IType::class);
+        $iType->shouldReceive('isCompatibleWith')->andReturn(true)->atLeast(2);
+
+        $keyProp = m::mock(ResourceProperty::class);
+        $keyProp->shouldReceive('getInstanceType')->andReturn($iType);
+
+        $resourceType = m::mock(ResourceType::class);
+        $resourceType->shouldReceive('getName')->andReturn('Customer');
+        $resourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY);
+        $resourceType->shouldReceive('getKeyProperties')->andReturn(['id' => $keyProp])->atLeast(2);
+        $resourceType->shouldReceive('getInstanceType->newInstance')->andReturn(new \stdClass())->atLeast(2);
+        $resourceType->shouldReceive('resolveProperty')->andReturn(null)->atLeast(2);
+
+        $resourceSet = m::mock(ResourceSetWrapper::class);
+        $resourceSet->shouldReceive('getName')->andReturn('Customers');
+        $resourceSet->shouldReceive('getResourceType')->andReturn($resourceType);
+        $resourceSet->shouldReceive('checkResourceSetRightsForRead')->andReturnNull()->atLeast(2);
+        $resourceSet->shouldReceive('hasNamedStreams')->andReturn(false);
+
+        $result = ['eins', 'zwei', 'polizei'];
+
+        $wrapper = m::mock(ProvidersWrapper::class);
+        $wrapper->shouldReceive('resolveSingleton')->andReturn(null);
+        $wrapper->shouldReceive('resolveResourceSet')->andReturn($resourceSet);
+        $wrapper->shouldReceive('getResourceSet')->andReturn($result)->atLeast(2);
+
+        $service = m::mock(IService::class);
+        $service->shouldReceive('getHost')->andReturn($host);
+        $service->shouldReceive('getProvidersWrapper')->andReturn($wrapper);
+        $service->shouldReceive('getOperationContext')->andReturn($context);
+        $service->shouldReceive('getConfiguration')->andReturn($config);
+
+        $expected = null;
+        $expectedClass = null;
+        $actual = null;
+        $actualClass = null;
+
+        try {
+            UriProcessor::process($service);
+        } catch (\Exception $e) {
+            $expectedClass = get_class($e);
+            $expected = $e->getMessage();
+        }
+        try {
+            UriProcessorNew::process($service);
+        } catch (\Exception $e) {
+            $actualClass = get_class($e);
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expectedClass, $actualClass);
+        $this->assertEquals($expected, $actual);
     }
 
     public function testExecuteGetOnComplexType()
