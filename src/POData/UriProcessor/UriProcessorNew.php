@@ -159,6 +159,11 @@ class UriProcessorNew implements IUriProcessor
             default:
                 throw ODataException::createNotImplementedError(Messages::onlyReadSupport($method));
         }
+
+        // Apply $select and $expand options to result set, this function will be always applied
+        // irrespective of return value of IDSQP2::canApplyQueryOptions which means library will
+        // not delegate $expand/$select operation to IDSQP2 implementation
+        $this->getExpander()->handleExpansion();
     }
 
     /**
@@ -221,10 +226,5 @@ class UriProcessorNew implements IUriProcessor
                     assert(false, "Not implemented yet");
             }
         }
-
-        // Apply $select and $expand options to result set, this function will be always applied
-        // irrespective of return value of IDSQP2::canApplyQueryOptions which means library will
-        // not delegate $expand/$select operation to IDSQP2 implementation
-        $this->getExpander()->handleExpansion();
     }
 }
