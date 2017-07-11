@@ -2,6 +2,7 @@
 
 namespace UnitTests\POData\UriProcessor\UriProcessorNew;
 
+use POData\Common\ODataException;
 use POData\Common\Url;
 use POData\Common\Version;
 use POData\Configuration\IServiceConfiguration;
@@ -14,6 +15,7 @@ use POData\Providers\ProvidersWrapper;
 use POData\UriProcessor\RequestDescription;
 use POData\UriProcessor\UriProcessor;
 use POData\UriProcessor\UriProcessorNew;
+use TypeError;
 use UnitTests\POData\TestCase;
 use Mockery as m;
 
@@ -102,5 +104,27 @@ class ProcessTest extends TestCase
         $this->assertEquals($remix->getRequest(), $remix->getExpander()->getRequest());
         $this->assertEquals($original->getRequest(), $original->getExpander()->getStack()->getRequest());
         $this->assertEquals($remix->getRequest(), $remix->getExpander()->getStack()->getRequest());
+    }
+
+    public function testBadHttpVerbOnExecute()
+    {
+        $context = m::mock(IOperationContext::class);
+        $context->shouldReceive('incomingRequest->getMethod')->andReturn(HTTPRequestMethod::NONE());
+
+        $service = m::mock(IService::class);
+        $service->shouldReceive('getOperationContext')->andReturn($context);
+
+        $remix = m::mock(UriProcessorNew::class)->makePartial();
+        $remix->shouldReceive('getService')->andReturn($service);
+
+        $expected = 'This release of library supports only GET (read) request, received a request with method NONE';
+        $actual = null;
+
+        try {
+            $remix->execute();
+        } catch (ODataException $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
     }
 }

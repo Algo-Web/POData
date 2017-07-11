@@ -13,6 +13,7 @@ use MyCLabs\Enum\Enum;
  * @method static \POData\OperationContext\HTTPRequestMethod DELETE()
  * @method static \POData\OperationContext\HTTPRequestMethod PATCH()
  * @method static \POData\OperationContext\HTTPRequestMethod MERGE()
+ * @method static \POData\OperationContext\HTTPRequestMethod NONE()
  */
 class HTTPRequestMethod extends Enum
 {
@@ -22,4 +23,5 @@ class HTTPRequestMethod extends Enum
     const DELETE = 'DELETE';
     const PATCH = 'PATCH';
     const MERGE = 'MERGE';
+    const NONE = 'NONE';
 }
