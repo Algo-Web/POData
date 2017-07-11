@@ -106,6 +106,81 @@ class ExecuteDeleteTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
+    public function testExecuteDeleteOnResourceSetWithCount()
+    {
+        $baseUrl = new Url('http://localhost/odata.svc');
+        $reqUrl = new Url('http://localhost/odata.svc/customers/$count');
+
+        $host = m::mock(ServiceHost::class);
+        $host->shouldReceive('getAbsoluteRequestUri')->andReturn($reqUrl);
+        $host->shouldReceive('getAbsoluteServiceUri')->andReturn($baseUrl);
+        $host->shouldReceive('getRequestVersion')->andReturn('2.0');
+        $host->shouldReceive('getRequestMaxVersion')->andReturn('3.0');
+        $host->shouldReceive('getQueryStringItem')->andReturn(null);
+        $host->shouldReceive('getRequestContentType')->andReturn(ODataConstants::FORMAT_ATOM)->atLeast(2);
+
+        $request = m::mock(IHTTPRequest::class);
+        $request->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::DELETE());
+        $request->shouldReceive('getAllInput')->andReturn(null);
+
+        $context = m::mock(IOperationContext::class);
+        $context->shouldReceive('incomingRequest')->andReturn($request);
+
+        $resourceType = m::mock(ResourceType::class);
+        $resourceType->shouldReceive('getName')->andReturn('Customer');
+        $resourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY);
+        $resourceType->shouldReceive('getKeyProperties')->andReturn([])->atLeast(2);
+        $resourceType->shouldReceive('getInstanceType->newInstance')->andReturn(new \stdClass())->atLeast(2);
+        $resourceType->shouldReceive('resolveProperty')->andReturnNull();
+
+        $result = ['eins', 'zwei', 'polizei'];
+
+        $resourceSet = m::mock(ResourceSetWrapper::class);
+        $resourceSet->shouldReceive('getResourceType')->andReturn($resourceType);
+        $resourceSet->shouldReceive('checkResourceSetRightsForRead')->andReturnNull()->atLeast(2);
+        $resourceSet->shouldReceive('hasNamedStreams')->andReturn(false);
+        $resourceSet->shouldReceive('hasBagProperty')->andReturn(false);
+        $resourceSet->shouldReceive('getResourceSetPageSize')->andReturn(200);
+
+        $wrapper = m::mock(ProvidersWrapper::class);
+        $wrapper->shouldReceive('resolveSingleton')->andReturn(null);
+        $wrapper->shouldReceive('resolveResourceSet')->andReturn($resourceSet);
+        $wrapper->shouldReceive('getResourceSet')->andReturn($result);
+
+        $config = m::mock(IServiceConfiguration::class);
+        $config->shouldReceive('getMaxDataServiceVersion')->andReturn(new Version(3, 0));
+        $config->shouldReceive('getAcceptCountRequests')->andReturn(true)->atLeast(2);
+
+        $service = m::mock(IService::class);
+        $service->shouldReceive('getHost')->andReturn($host);
+        $service->shouldReceive('getProvidersWrapper')->andReturn($wrapper);
+        $service->shouldReceive('getOperationContext')->andReturn($context);
+        $service->shouldReceive('getConfiguration')->andReturn($config);
+
+        $original = UriProcessor::process($service);
+        $remix = UriProcessorNew::process($service);
+
+        $expected = null;
+        $expectedClass = null;
+        $actual = null;
+        $actualClass = null;
+
+        try {
+            $original->execute();
+        } catch (\Exception $e) {
+            $expectedClass = get_class($e);
+            $expected = $e->getMessage();
+        }
+        try {
+            $remix->execute();
+        } catch (\Exception $e) {
+            $actualClass = get_class($e);
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expectedClass, $actualClass);
+        $this->assertEquals($expected, $actual);
+    }
+
     public function testExecuteDeleteOnResourceSingle()
     {
         $baseUrl = new Url('http://localhost/odata.svc');
