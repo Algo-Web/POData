@@ -564,4 +564,20 @@ class HttpProcessUtilityTest extends TestCase
 
         HttpProcessUtility::readMediaTypeParameter($text, $textIndex, $parms);
     }
+
+    public function testIsHttpElementSeparator()
+    {
+        $this->assertTrue(HttpProcessUtility::isHttpElementSeparator(','));
+        $this->assertTrue(HttpProcessUtility::isHttpElementSeparator(' '));
+        $this->assertTrue(HttpProcessUtility::isHttpElementSeparator('\t'));
+        $this->assertFalse(HttpProcessUtility::isHttpElementSeparator('n'));
+    }
+
+    public function testNonHttpHeaderName()
+    {
+        $input = 'name';
+        $expected = 'NAME';
+        $actual = HttpProcessUtility::headerToServerKey($input);
+        $this->assertEquals($expected, $actual);
+    }
 }
