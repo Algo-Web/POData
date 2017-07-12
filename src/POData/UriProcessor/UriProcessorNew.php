@@ -189,32 +189,10 @@ class UriProcessorNew implements IUriProcessor
 
             switch ($requestTargetKind) {
                 case TargetKind::SINGLETON():
-                    $segmentId = $segment->getIdentifier();
-                    $singleton = $this->getService()->getProvidersWrapper()->resolveSingleton($segmentId);
-                    $segment->setResult($singleton->get());
+                    $this->executeGetSingleton($segment);
                     break;
                 case TargetKind::RESOURCE():
-                    if ($segment->isSingleResult()) {
-                        $queryResult = $this->getProviders()->getResourceFromResourceSet(
-                            $segment->getTargetResourceSetWrapper(),
-                            $segment->getKeyDescriptor()
-                        );
-                    } else {
-                        $skip = $this->getRequest()->getSkipCount();
-                        $skip = (null === $skip) ? 0 : $skip;
-                        $skipToken = $this->getRequest()->getInternalSkipTokenInfo();
-                        $skipToken = (null != $skipToken) ? $skipToken->getSkipTokenInfo() : null;
-                        $queryResult = $this->getProviders()->getResourceSet(
-                            $this->getRequest()->queryType,
-                            $segment->getTargetResourceSetWrapper(),
-                            $this->getRequest()->getFilterInfo(),
-                            $this->getRequest()->getInternalOrderByInfo(),
-                            $this->getRequest()->getTopCount(),
-                            $skip,
-                            $skipToken
-                        );
-                    }
-                    $segment->setResult($queryResult);
+                    $this->executeGetResource($segment);
                     break;
                 case TargetKind::MEDIA_RESOURCE():
                     $segment->setResult($segment->getPrevious()->getResult());
@@ -229,9 +207,7 @@ class UriProcessorNew implements IUriProcessor
                 case TargetKind::BAG():
                     break;
                 case TargetKind::LINK():
-                    $previous = $segment->getPrevious();
-                    assert(isset($previous));
-                    $segment->setResult($previous->getResult());
+                    $this->executeGetLink($segment);
                     break;
                 default:
                     assert(false, "Not implemented yet");
@@ -332,5 +308,53 @@ class UriProcessorNew implements IUriProcessor
                 Messages::badRequestInvalidUriForThisVerb($url, $requestMethod)
             );
         }
+    }
+
+    /**
+     * @param $segment
+     */
+    private function executeGetSingleton($segment)
+    {
+        $segmentId = $segment->getIdentifier();
+        $singleton = $this->getService()->getProvidersWrapper()->resolveSingleton($segmentId);
+        $segment->setResult($singleton->get());
+    }
+
+    /**
+     * @param $segment
+     */
+    private function executeGetResource($segment)
+    {
+        if ($segment->isSingleResult()) {
+            $queryResult = $this->getProviders()->getResourceFromResourceSet(
+                $segment->getTargetResourceSetWrapper(),
+                $segment->getKeyDescriptor()
+            );
+        } else {
+            $skip = $this->getRequest()->getSkipCount();
+            $skip = (null === $skip) ? 0 : $skip;
+            $skipToken = $this->getRequest()->getInternalSkipTokenInfo();
+            $skipToken = (null != $skipToken) ? $skipToken->getSkipTokenInfo() : null;
+            $queryResult = $this->getProviders()->getResourceSet(
+                $this->getRequest()->queryType,
+                $segment->getTargetResourceSetWrapper(),
+                $this->getRequest()->getFilterInfo(),
+                $this->getRequest()->getInternalOrderByInfo(),
+                $this->getRequest()->getTopCount(),
+                $skip,
+                $skipToken
+            );
+        }
+        $segment->setResult($queryResult);
+    }
+
+    /**
+     * @param $segment
+     */
+    private function executeGetLink($segment)
+    {
+        $previous = $segment->getPrevious();
+        assert(isset($previous));
+        $segment->setResult($previous->getResult());
     }
 }
