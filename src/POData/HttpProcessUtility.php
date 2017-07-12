@@ -118,7 +118,7 @@ class HttpProcessUtility
                 for ($i = 0; $i < $numAvailable; ++$i) {
                     $availableType = $availableTypes[$i];
                     $matchRating   = $acceptType->getMatchingRating($availableType);
-                    if ($matchRating < 0) {
+                    if (0 > $matchRating) {
                         continue;
                     }
 
@@ -128,7 +128,7 @@ class HttpProcessUtility
                         $selectedMatchingParts   = $matchRating;
                         $selectedQualityValue    = $acceptType->getQualityValue();
                         $selectedPreferenceIndex = $i;
-                        $acceptable              = $selectedQualityValue != 0;
+                        $acceptable              = 0 != $selectedQualityValue;
                     } elseif ($matchRating == $selectedMatchingParts) {
                         // A type with a higher q-value wins.
                         $candidateQualityValue = $acceptType->getQualityValue();
@@ -136,7 +136,7 @@ class HttpProcessUtility
                             $selectedContentType     = $availableType;
                             $selectedQualityValue    = $candidateQualityValue;
                             $selectedPreferenceIndex = $i;
-                            $acceptable              = $selectedQualityValue != 0;
+                            $acceptable              = 0 != $selectedQualityValue;
                         } elseif ($candidateQualityValue == $selectedQualityValue) {
                             // A type that is earlier in the availableTypes array wins.
                             if ($i < $selectedPreferenceIndex) {
@@ -177,13 +177,13 @@ class HttpProcessUtility
             self::readMediaTypeAndSubtype($text, $textIndex, $type, $subType);
 
             $parameters = [];
-            while (!self::skipWhiteSpace($text, $textIndex)) {
-                if ($text[$textIndex] == ',') {
+            while (!self::skipWhitespace($text, $textIndex)) {
+                if (',' == $text[$textIndex]) {
                     ++$textIndex;
                     break;
                 }
 
-                if ($text[$textIndex] != ';') {
+                if (';' != $text[$textIndex]) {
                     throw new HttpHeaderFailure(
                         Messages::httpProcessUtilityMediaTypeRequiresSemicolonBeforeParameter(),
                         400
@@ -247,7 +247,7 @@ class HttpProcessUtility
             );
         }
 
-        if ($text[$textIndex] != '/') {
+        if ('/' != $text[$textIndex]) {
             throw new HttpHeaderFailure(
                 Messages::httpProcessUtilityMediaTypeRequiresSlash(),
                 400
@@ -298,8 +298,7 @@ class HttpProcessUtility
      */
     public static function isHttpTokenChar($char)
     {
-        return ord($char) < 126 && ord($char) > 31
-            && !self::isHttpSeparator($char);
+        return 126 > ord($char) && 31 < ord($char) && !self::isHttpSeparator($char);
     }
 
     /**
@@ -340,7 +339,7 @@ class HttpProcessUtility
         }
 
         $parameterName = substr($text, $textStart, $textIndex - $textStart);
-        if ($text[$textIndex] != '=') {
+        if ('=' != $text[$textIndex]) {
             throw new HttpHeaderFailure(
                 Messages::httpProcessUtilityMediaTypeMissingValue(),
                 400
@@ -374,7 +373,7 @@ class HttpProcessUtility
         $textLen        = strlen($text);
         $valueIsQuoted  = false;
         if ($textIndex < $textLen) {
-            if ($text[$textIndex] == '"') {
+            if ('"' == $text[$textIndex]) {
                 ++$textIndex;
                 $valueIsQuoted = true;
             }
@@ -383,7 +382,7 @@ class HttpProcessUtility
         while ($textIndex < $textLen) {
             $currentChar = $text[$textIndex];
 
-            if ($currentChar == '\\' || $currentChar == '"') {
+            if ('\\' == $currentChar || '"' == $currentChar) {
                 if (!$valueIsQuoted) {
                     throw new HttpHeaderFailure(
                         Messages::httpProcessUtilityEscapeCharWithoutQuotes(
@@ -396,7 +395,7 @@ class HttpProcessUtility
                 ++$textIndex;
 
                 // End of quoted parameter value.
-                if ($currentChar == '"') {
+                if ('"' == $currentChar) {
                     $valueIsQuoted = false;
                     break;
                 }
@@ -442,9 +441,9 @@ class HttpProcessUtility
     public static function readQualityValue($text, &$textIndex, &$qualityValue)
     {
         $digit = $text[$textIndex++];
-        if ($digit == '0') {
+        if ('0' == $digit) {
             $qualityValue = 0;
-        } elseif ($digit == '1') {
+        } elseif ('1' == $digit) {
             $qualityValue = 1;
         } else {
             throw new HttpHeaderFailure(
@@ -454,14 +453,14 @@ class HttpProcessUtility
         }
 
         $textLen = strlen($text);
-        if ($textIndex < $textLen && $text[$textIndex] == '.') {
+        if ($textIndex < $textLen && '.' == $text[$textIndex]) {
             ++$textIndex;
 
             $adjustFactor = 1000;
-            while ($adjustFactor > 1 && $textIndex < $textLen) {
+            while (1 < $adjustFactor && $textIndex < $textLen) {
                 $c         = $text[$textIndex];
                 $charValue = self::digitToInt32($c);
-                if ($charValue >= 0) {
+                if (0 <= $charValue) {
                     ++$textIndex;
                     $adjustFactor /= 10;
                     $qualityValue *= 10;
@@ -495,7 +494,7 @@ class HttpProcessUtility
      */
     public static function digitToInt32($c)
     {
-        if ($c >= '0' && $c <= '9') {
+        if ('0' <= $c && '9' >= $c) {
             return intval($c);
         } else {
             if (self::isHttpElementSeparator($c)) {
@@ -520,7 +519,7 @@ class HttpProcessUtility
      */
     public static function isHttpElementSeparator($c)
     {
-        return $c == ',' || $c == ' ' || $c == '\t';
+        return ',' == $c || ' ' == $c || '\t' == $c;
     }
 
     /**
