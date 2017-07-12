@@ -98,21 +98,39 @@ class UriProcessor implements IUriProcessor
         return $this->request;
     }
 
+    /**
+     * Gets reference to the request submitted by client.
+     *
+     * @return ProvidersWrapper
+     */
     public function getProviders()
     {
         return $this->providers;
     }
 
+    /**
+     * Gets the data service instance.
+     *
+     * @return IService
+     */
     public function getService()
     {
         return $this->service;
     }
 
+    /**
+     * Gets the request expander instance.
+     *
+     * @return RequestExpander
+     */
     public function getExpander()
     {
         return $this->expander;
     }
 
+    /**
+     * Execute the client submitted request against the data source.
+     */
     public function execute()
     {
         $service = $this->getService();
