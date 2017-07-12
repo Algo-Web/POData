@@ -432,7 +432,6 @@ class SegmentParser
                 $descriptor->isSingleResult()
             );
         }
-
         return $descriptor;
     }
 

@@ -325,7 +325,7 @@ class UriProcessorNewTest extends TestCase
         $processor = m::mock(UriProcessor::class)->shouldAllowMockingProtectedMethods()->makePartial();
         $processor->shouldReceive('getService')->andReturn($service);
 
-        $expected = 'This release of library support only GET (read) request, received a request with method MERGE';
+        $expected = 'This release of library supports only GET (read) request, received a request with method MERGE';
         $actual = null;
 
         try {

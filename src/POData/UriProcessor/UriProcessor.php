@@ -11,22 +11,14 @@ use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\Providers\ProvidersWrapper;
 use POData\Providers\Query\QueryResult;
 use POData\Providers\Query\QueryType;
+use POData\UriProcessor\Interfaces\IUriProcessor;
 use POData\UriProcessor\QueryProcessor\QueryProcessor;
 use POData\UriProcessor\ResourcePathProcessor\ResourcePathProcessor;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\SegmentDescriptor;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetSource;
 
-/**
- * Class UriProcessor.
- *
- * A type to process client's requets URI
- * The syntax of request URI is:
- *  Scheme Host Port ServiceRoot ResourcePath ? QueryOption
- * For more details refer:
- * http://www.odata.org/developers/protocols/uri-conventions#UriComponents
- */
-class UriProcessor
+class UriProcessor implements IUriProcessor
 {
     /**
      * Description of the OData request that a client has submitted.
@@ -67,15 +59,6 @@ class UriProcessor
         $this->providers = $service->getProvidersWrapper();
     }
 
-    /**
-     * Process the resource path and query options of client's request uri.
-     *
-     * @param IService $service Reference to the data service instance
-     *
-     * @throws ODataException
-     *
-     * @return URIProcessor
-     */
     public static function process(IService $service)
     {
         $absoluteRequestUri = $service->getHost()->getAbsoluteRequestUri();
@@ -108,8 +91,6 @@ class UriProcessor
     }
 
     /**
-     * Gets reference to the request submitted by client.
-     *
      * @return RequestDescription
      */
     public function getRequest()
@@ -184,7 +165,7 @@ class UriProcessor
      */
     protected function executeGet()
     {
-        return $this->executeBase();
+        $this->executeBase();
     }
 
     /**
@@ -222,15 +203,12 @@ class UriProcessor
      */
     protected function executePut()
     {
-        return $this->executeBase(function ($uriProcessor, $segment) {
+        $this->executeBase(function ($uriProcessor, $segment) {
             $requestMethod = $uriProcessor->getService()->getOperationContext()->incomingRequest()->getMethod();
             $resourceSet = $segment->getTargetResourceSetWrapper();
             $keyDescriptor = $segment->getKeyDescriptor();
 
-            if (!$resourceSet || !$keyDescriptor) {
-                $url = $uriProcessor->getService()->getHost()->getAbsoluteRequestUri()->getUrlAsString();
-                throw ODataException::createBadRequestError(Messages::badRequestInvalidUriForThisVerb($url, $requestMethod));
-            }
+            $uriProcessor->checkUriValidForSuppliedVerb($uriProcessor, $resourceSet, $keyDescriptor, $requestMethod);
 
             $data = $uriProcessor->getRequest()->getData();
             if (!$data) {
@@ -255,16 +233,11 @@ class UriProcessor
      */
     protected function executeDelete()
     {
-        return $this->executeBase(function ($uriProcessor, $segment) {
+        $this->executeBase(function ($uriProcessor, $segment) {
             $requestMethod = $uriProcessor->getService()->getOperationContext()->incomingRequest()->getMethod();
             $resourceSet = $segment->getTargetResourceSetWrapper();
             $keyDescriptor = $segment->getKeyDescriptor();
-            if (!$resourceSet || !$keyDescriptor) {
-                $url = $uriProcessor->getService()->getHost()->getAbsoluteRequestUri()->getUrlAsString();
-                throw ODataException::createBadRequestError(
-                    Messages::badRequestInvalidUriForThisVerb($url, $requestMethod)
-                );
-            }
+            $uriProcessor->checkUriValidForSuppliedVerb($uriProcessor, $resourceSet, $keyDescriptor, $requestMethod);
 
             return $uriProcessor->getProviders()->deleteResource($resourceSet, $segment->getResult());
         });
@@ -540,5 +513,22 @@ class UriProcessor
     private function handleExpansion()
     {
         $this->getExpander()->handleExpansion();
+    }
+
+    /**
+     * @param $uriProcessor
+     * @param $resourceSet
+     * @param $keyDescriptor
+     * @param $requestMethod
+     * @throws ODataException
+     */
+    public function checkUriValidForSuppliedVerb($uriProcessor, $resourceSet, $keyDescriptor, $requestMethod)
+    {
+        if (!$resourceSet || !$keyDescriptor) {
+            $url = $uriProcessor->getService()->getHost()->getAbsoluteRequestUri()->getUrlAsString();
+            throw ODataException::createBadRequestError(
+                Messages::badRequestInvalidUriForThisVerb($url, $requestMethod)
+            );
+        }
     }
 }

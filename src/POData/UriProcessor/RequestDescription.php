@@ -14,6 +14,7 @@ use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Metadata\ResourceStreamInfo;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Query\QueryType;
+use POData\UriProcessor\Interfaces\IUriProcessor;
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\RootProjectionNode;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
 use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
@@ -209,7 +210,7 @@ class RequestDescription
     /**
      * Reference to Uri processor.
      *
-     * @var UriProcessor
+     * @var IUriProcessor
      */
     private $_uriProcessor;
 
@@ -1018,9 +1019,9 @@ class RequestDescription
     }
 
     /**
-     * Gets reference to the UriProcessor instance.
+     * Gets reference to the IUriProcessor instance.
      *
-     * @return UriProcessor
+     * @return IUriProcessor
      */
     public function getUriProcessor()
     {
@@ -1028,11 +1029,11 @@ class RequestDescription
     }
 
     /**
-     * Set reference to UriProcessor instance.
+     * Set reference to IUriProcessor instance.
      *
-     * @param UriProcessor $uriProcessor Reference to the UriProcessor
+     * @param IUriProcessor $uriProcessor Reference to the UriProcessor
      */
-    public function setUriProcessor(UriProcessor $uriProcessor)
+    public function setUriProcessor(IUriProcessor $uriProcessor)
     {
         $this->_uriProcessor = $uriProcessor;
     }
