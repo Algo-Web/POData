@@ -32,6 +32,7 @@ use POData\UriProcessor\Interfaces\IUriProcessor;
 use POData\UriProcessor\RequestDescription;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
 use POData\UriProcessor\UriProcessor;
+use POData\UriProcessor\UriProcessorNew;
 use POData\Writers\Atom\AtomODataWriter;
 use POData\Writers\Json\JsonLightMetadataLevel;
 use POData\Writers\Json\JsonLightODataWriter;
