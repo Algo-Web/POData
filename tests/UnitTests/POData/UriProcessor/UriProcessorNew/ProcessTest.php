@@ -11,8 +11,12 @@ use POData\OperationContext\HTTPRequestMethod;
 use POData\OperationContext\IHTTPRequest;
 use POData\OperationContext\IOperationContext;
 use POData\OperationContext\ServiceHost;
+use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\ProvidersWrapper;
 use POData\UriProcessor\RequestDescription;
+use POData\UriProcessor\ResourcePathProcessor\SegmentParser\SegmentDescriptor;
+use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
+use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetSource;
 use POData\UriProcessor\UriProcessor;
 use POData\UriProcessor\UriProcessorNew;
 use TypeError;
@@ -123,6 +127,38 @@ class ProcessTest extends TestCase
         try {
             $remix->execute();
         } catch (ODataException $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testBadResourcePropertyKindOnRelatedResourceGet()
+    {
+        $property = m::mock(ResourceProperty::class);
+        $property->shouldReceive('getKind')->andReturnNull();
+
+        $segment = m::mock(SegmentDescriptor::class);
+        $segment->shouldReceive('getTargetKind')->andReturn(TargetKind::RESOURCE());
+        $segment->shouldReceive('getTargetSource')->andReturn(TargetSource::PROPERTY);
+        $segment->shouldReceive('getProjectedProperty')->andReturn($property);
+        $segment->shouldReceive('isSingleResult')->andReturn(true);
+
+        $context = m::mock(IOperationContext::class);
+        $context->shouldReceive('incomingRequest->getMethod')->andReturn(HTTPRequestMethod::GET());
+
+        $service = m::mock(IService::class);
+        $service->shouldReceive('getOperationContext')->andReturn($context);
+
+        $remix = m::mock(UriProcessorNew::class)->makePartial();
+        $remix->shouldReceive('getService')->andReturn($service);
+        $remix->shouldReceive('getRequest->getSegments')->andReturn([$segment]);
+
+        $expected = "assert(): Invalid property kind type for resource retrieval failed";
+        $actual = null;
+
+        try {
+            $remix->execute();
+        } catch (\Exception $e) {
             $actual = $e->getMessage();
         }
         $this->assertEquals($expected, $actual);
