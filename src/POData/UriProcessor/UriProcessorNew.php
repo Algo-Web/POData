@@ -354,7 +354,7 @@ class UriProcessorNew implements IUriProcessor
                         $segment->getPrevious()->getTargetResourceSetWrapper(),
                         $segment->getPrevious()->getResult(),
                         $segment->getTargetResourceSetWrapper(),
-                        $segment->getProjectedProperty()
+                        $projectedProperty
                     );
                     break;
                 case ResourcePropertyKind::RESOURCESET_REFERENCE:
@@ -374,7 +374,7 @@ class UriProcessorNew implements IUriProcessor
                             $segment->getPrevious()->getTargetResourceSetWrapper(),
                             $segment->getPrevious()->getResult(),
                             $segment->getTargetResourceSetWrapper(),
-                            $segment->getProjectedProperty(),
+                            $projectedProperty,
                             $this->getRequest()->getFilterInfo(),
                             null, // $orderby
                             null, // $top
