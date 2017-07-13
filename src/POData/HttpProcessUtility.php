@@ -51,8 +51,7 @@ class HttpProcessUtility
                     break;
                 }
 
-                $matchingParts
-                    = $acceptType->getMatchingRating($inexactContentType);
+                $matchingParts = $acceptType->getMatchingRating($inexactContentType);
                 if ($matchingParts < 0) {
                     continue;
                 }
@@ -433,8 +432,8 @@ class HttpProcessUtility
      * @param int    &$qualityValue After the method executes, the normalized qvalue
      * @param int    $textIndex
      *
-     * @throws HttpHeaderFailure If any error occured while reading and processing
-     *                           the quality factor
+     * @throws HttpHeaderFailure    If any error occurred while reading and processing
+     *                              the quality factor
      */
     public static function readQualityValue($text, &$textIndex, &$qualityValue)
     {
