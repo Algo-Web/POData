@@ -358,21 +358,30 @@ class UriProcessorNew implements IUriProcessor
                     );
                     break;
                 case ResourcePropertyKind::RESOURCESET_REFERENCE:
-                    $skipToken = $this->getRequest()->getInternalSkipTokenInfo();
-                    $skipToken = (null !== $skipToken) ? $skipToken->getSkipTokenInfo() : null;
-                    $queryResult = $this->getProviders()->getRelatedResourceSet(
-                        $this->getRequest()->queryType,
-                        $segment->getPrevious()->getTargetResourceSetWrapper(),
-                        $segment->getPrevious()->getResult(),
-                        $segment->getTargetResourceSetWrapper(),
-                        $segment->getProjectedProperty(),
-                        $this->getRequest()->getFilterInfo(),
-                        //TODO: why are these null?  see #98
-                        null, // $orderby
-                        null, // $top
-                        null,  // $skip
-                        $skipToken
-                    );
+                    if ($segment->isSingleResult()) {
+                        $queryResult = $this->getProviders()->getResourceFromRelatedResourceSet(
+                            $segment->getPrevious()->getTargetResourceSetWrapper(),
+                            $segment->getPrevious()->getResult(),
+                            $segment->getTargetResourceSetWrapper(),
+                            $projectedProperty,
+                            $segment->getKeyDescriptor()
+                        );
+                    } else {
+                        $skipToken = $this->getRequest()->getInternalSkipTokenInfo();
+                        $skipToken = (null !== $skipToken) ? $skipToken->getSkipTokenInfo() : null;
+                        $queryResult = $this->getProviders()->getRelatedResourceSet(
+                            $this->getRequest()->queryType,
+                            $segment->getPrevious()->getTargetResourceSetWrapper(),
+                            $segment->getPrevious()->getResult(),
+                            $segment->getTargetResourceSetWrapper(),
+                            $segment->getProjectedProperty(),
+                            $this->getRequest()->getFilterInfo(),
+                            null, // $orderby
+                            null, // $top
+                            null,  // $skip
+                            $skipToken
+                        );
+                    }
                     break;
                 default:
                     assert(false, "Invalid property kind type for resource retrieval");
