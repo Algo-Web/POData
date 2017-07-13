@@ -38,12 +38,7 @@ class ExecuteGetTest extends TestCase
         $baseUrl = new Url('http://localhost/odata.svc');
         $reqUrl = new Url('http://localhost/odata.svc');
 
-        $host = m::mock(ServiceHost::class);
-        $host->shouldReceive('getAbsoluteRequestUri')->andReturn($reqUrl);
-        $host->shouldReceive('getAbsoluteServiceUri')->andReturn($baseUrl);
-        $host->shouldReceive('getRequestVersion')->andReturn('1.0');
-        $host->shouldReceive('getRequestMaxVersion')->andReturn('3.0');
-        $host->shouldReceive('getQueryStringItem')->andReturn(null);
+        $host = $this->setUpMockHost($reqUrl, $baseUrl);
 
         $request = m::mock(IHTTPRequest::class);
         $request->shouldReceive('getMethod')->andReturn(null);
@@ -57,11 +52,7 @@ class ExecuteGetTest extends TestCase
         $config = m::mock(IServiceConfiguration::class);
         $config->shouldReceive('getMaxDataServiceVersion')->andReturn(new Version(3, 0));
 
-        $service = m::mock(IService::class);
-        $service->shouldReceive('getHost')->andReturn($host);
-        $service->shouldReceive('getProvidersWrapper')->andReturn($wrapper);
-        $service->shouldReceive('getOperationContext')->andReturn($context);
-        $service->shouldReceive('getConfiguration')->andReturn($config);
+        $service = $this->setUpMockService($host, $wrapper, $context, $config);
 
         $expected = null;
         $expectedClass = null;
@@ -89,16 +80,9 @@ class ExecuteGetTest extends TestCase
         $baseUrl = new Url('http://localhost/odata.svc');
         $reqUrl = new Url('http://localhost/odata.svc/whoami');
 
-        $host = m::mock(ServiceHost::class);
-        $host->shouldReceive('getAbsoluteRequestUri')->andReturn($reqUrl);
-        $host->shouldReceive('getAbsoluteServiceUri')->andReturn($baseUrl);
-        $host->shouldReceive('getRequestVersion')->andReturn('1.0');
-        $host->shouldReceive('getRequestMaxVersion')->andReturn('3.0');
-        $host->shouldReceive('getQueryStringItem')->andReturn(null);
+        $host = $this->setUpMockHost($reqUrl, $baseUrl);
 
-        $request = m::mock(IHTTPRequest::class);
-        $request->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::GET());
-        $request->shouldReceive('getAllInput')->andReturn(null);
+        $request = $this->setUpMockRequest();
 
         $context = m::mock(IOperationContext::class);
         $context->shouldReceive('incomingRequest')->andReturn($request);
@@ -121,11 +105,7 @@ class ExecuteGetTest extends TestCase
         $config = m::mock(IServiceConfiguration::class);
         $config->shouldReceive('getMaxDataServiceVersion')->andReturn(new Version(3, 0));
 
-        $service = m::mock(IService::class);
-        $service->shouldReceive('getHost')->andReturn($host);
-        $service->shouldReceive('getProvidersWrapper')->andReturn($wrapper);
-        $service->shouldReceive('getOperationContext')->andReturn($context);
-        $service->shouldReceive('getConfiguration')->andReturn($config);
+        $service = $this->setUpMockService($host, $wrapper, $context, $config);
 
         $original = UriProcessor::process($service);
         $remix = UriProcessorNew::process($service);
@@ -134,8 +114,10 @@ class ExecuteGetTest extends TestCase
         $origSegments = $original->getRequest()->getSegments();
         $remix->execute();
         $remixSegments = $remix->getRequest()->getSegments();
-        $this->assertEquals(1, count($origSegments));
-        $this->assertEquals(1, count($remixSegments));
+
+        $segCount = 1;
+        $this->assertEquals($segCount, count($origSegments));
+        $this->assertEquals($segCount, count($remixSegments));
         $this->assertEquals($singleResult, $origSegments[0]->getResult());
         $this->assertEquals($singleResult, $remixSegments[0]->getResult());
     }
@@ -145,16 +127,9 @@ class ExecuteGetTest extends TestCase
         $baseUrl = new Url('http://localhost/odata.svc');
         $reqUrl = new Url('http://localhost/odata.svc/customers');
 
-        $host = m::mock(ServiceHost::class);
-        $host->shouldReceive('getAbsoluteRequestUri')->andReturn($reqUrl);
-        $host->shouldReceive('getAbsoluteServiceUri')->andReturn($baseUrl);
-        $host->shouldReceive('getRequestVersion')->andReturn('1.0');
-        $host->shouldReceive('getRequestMaxVersion')->andReturn('3.0');
-        $host->shouldReceive('getQueryStringItem')->andReturn(null);
+        $host = $this->setUpMockHost($reqUrl, $baseUrl);
 
-        $request = m::mock(IHTTPRequest::class);
-        $request->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::GET());
-        $request->shouldReceive('getAllInput')->andReturn(null);
+        $request = $this->setUpMockRequest();
 
         $context = m::mock(IOperationContext::class);
         $context->shouldReceive('incomingRequest')->andReturn($request);
@@ -182,11 +157,7 @@ class ExecuteGetTest extends TestCase
         $config = m::mock(IServiceConfiguration::class);
         $config->shouldReceive('getMaxDataServiceVersion')->andReturn(new Version(3, 0));
 
-        $service = m::mock(IService::class);
-        $service->shouldReceive('getHost')->andReturn($host);
-        $service->shouldReceive('getProvidersWrapper')->andReturn($wrapper);
-        $service->shouldReceive('getOperationContext')->andReturn($context);
-        $service->shouldReceive('getConfiguration')->andReturn($config);
+        $service = $this->setUpMockService($host, $wrapper, $context, $config);
 
         $original = UriProcessor::process($service);
         $remix = UriProcessorNew::process($service);
@@ -195,9 +166,9 @@ class ExecuteGetTest extends TestCase
         $origSegments = $original->getRequest()->getSegments();
         $remix->execute();
         $remixSegments = $remix->getRequest()->getSegments();
-        $this->assertEquals(1, count($origSegments));
-        $this->assertEquals(1, count($remixSegments));
-        $this->assertEquals($origSegments[0]->getResult(), $remixSegments[0]->getResult());
+        $segCount = 1;
+
+        $this->checkSegmentEquality($segCount, $origSegments, $remixSegments);
     }
 
     public function testExecuteGetOnResourceSingle()
@@ -205,16 +176,9 @@ class ExecuteGetTest extends TestCase
         $baseUrl = new Url('http://localhost/odata.svc');
         $reqUrl = new Url('http://localhost/odata.svc/customers(id=1)');
 
-        $host = m::mock(ServiceHost::class);
-        $host->shouldReceive('getAbsoluteRequestUri')->andReturn($reqUrl);
-        $host->shouldReceive('getAbsoluteServiceUri')->andReturn($baseUrl);
-        $host->shouldReceive('getRequestVersion')->andReturn('1.0');
-        $host->shouldReceive('getRequestMaxVersion')->andReturn('3.0');
-        $host->shouldReceive('getQueryStringItem')->andReturn(null);
+        $host = $this->setUpMockHost($reqUrl, $baseUrl);
 
-        $request = m::mock(IHTTPRequest::class);
-        $request->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::GET());
-        $request->shouldReceive('getAllInput')->andReturn(null);
+        $request = $this->setUpMockRequest();
 
         $context = m::mock(IOperationContext::class);
         $context->shouldReceive('incomingRequest')->andReturn($request);
@@ -248,11 +212,7 @@ class ExecuteGetTest extends TestCase
         $config = m::mock(IServiceConfiguration::class);
         $config->shouldReceive('getMaxDataServiceVersion')->andReturn(new Version(3, 0));
 
-        $service = m::mock(IService::class);
-        $service->shouldReceive('getHost')->andReturn($host);
-        $service->shouldReceive('getProvidersWrapper')->andReturn($wrapper);
-        $service->shouldReceive('getOperationContext')->andReturn($context);
-        $service->shouldReceive('getConfiguration')->andReturn($config);
+        $service = $this->setUpMockService($host, $wrapper, $context, $config);
 
         $original = UriProcessor::process($service);
         $remix = UriProcessorNew::process($service);
@@ -261,9 +221,9 @@ class ExecuteGetTest extends TestCase
         $origSegments = $original->getRequest()->getSegments();
         $remix->execute();
         $remixSegments = $remix->getRequest()->getSegments();
-        $this->assertEquals(1, count($origSegments));
-        $this->assertEquals(1, count($remixSegments));
-        $this->assertEquals($origSegments[0]->getResult(), $remixSegments[0]->getResult());
+        $segCount = 1;
+
+        $this->checkSegmentEquality($segCount, $origSegments, $remixSegments);
     }
 
     public function testGetOnResourceSingleWithExpansion()
@@ -271,16 +231,9 @@ class ExecuteGetTest extends TestCase
         $baseUrl = new Url('http://localhost/odata.svc');
         $reqUrl = new Url('http://localhost/odata.svc/customers(id=1)?expand=orders');
 
-        $host = m::mock(ServiceHost::class);
-        $host->shouldReceive('getAbsoluteRequestUri')->andReturn($reqUrl);
-        $host->shouldReceive('getAbsoluteServiceUri')->andReturn($baseUrl);
-        $host->shouldReceive('getRequestVersion')->andReturn('1.0');
-        $host->shouldReceive('getRequestMaxVersion')->andReturn('3.0');
-        $host->shouldReceive('getQueryStringItem')->andReturn(null);
+        $host = $this->setUpMockHost($reqUrl, $baseUrl);
 
-        $request = m::mock(IHTTPRequest::class);
-        $request->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::GET());
-        $request->shouldReceive('getAllInput')->andReturn(null);
+        $request = $this->setUpMockRequest();
 
         $context = m::mock(IOperationContext::class);
         $context->shouldReceive('incomingRequest')->andReturn($request);
@@ -323,11 +276,7 @@ class ExecuteGetTest extends TestCase
         $config = m::mock(IServiceConfiguration::class);
         $config->shouldReceive('getMaxDataServiceVersion')->andReturn(new Version(3, 0));
 
-        $service = m::mock(IService::class);
-        $service->shouldReceive('getHost')->andReturn($host);
-        $service->shouldReceive('getProvidersWrapper')->andReturn($wrapper);
-        $service->shouldReceive('getOperationContext')->andReturn($context);
-        $service->shouldReceive('getConfiguration')->andReturn($config);
+        $service = $this->setUpMockService($host, $wrapper, $context, $config);
 
         $original = UriProcessor::process($service);
         $remix = UriProcessorNew::process($service);
@@ -336,13 +285,9 @@ class ExecuteGetTest extends TestCase
         $origSegments = $original->getRequest()->getSegments();
         $remix->execute();
         $remixSegments = $remix->getRequest()->getSegments();
+        $segCount = 1;
 
-        $this->assertEquals(1, count($origSegments));
-        $this->assertEquals(1, count($remixSegments));
-        $this->assertEquals($origSegments[0]->getResult(), $remixSegments[0]->getResult());
-        $this->assertEquals($origSegments[0]->isSingleResult(), $remixSegments[0]->isSingleResult());
-        $this->assertEquals($origSegments[0]->getNext(), $remixSegments[0]->getNext());
-        $this->assertEquals($origSegments[0]->getPrevious(), $remixSegments[0]->getPrevious());
+        $this->checkSegmentEquality($segCount, $origSegments, $remixSegments);
     }
 
     public function testExecuteGetOnMediaResourceBadRequestVersion()
@@ -350,16 +295,9 @@ class ExecuteGetTest extends TestCase
         $baseUrl = new Url('http://localhost/odata.svc');
         $reqUrl = new Url('http://localhost/odata.svc/customers(id=1)/photo');
 
-        $host = m::mock(ServiceHost::class);
-        $host->shouldReceive('getAbsoluteRequestUri')->andReturn($reqUrl);
-        $host->shouldReceive('getAbsoluteServiceUri')->andReturn($baseUrl);
-        $host->shouldReceive('getRequestVersion')->andReturn('1.0');
-        $host->shouldReceive('getRequestMaxVersion')->andReturn('3.0');
-        $host->shouldReceive('getQueryStringItem')->andReturn(null);
+        $host = $this->setUpMockHost($reqUrl, $baseUrl);
 
-        $request = m::mock(IHTTPRequest::class);
-        $request->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::GET());
-        $request->shouldReceive('getAllInput')->andReturn(null);
+        $request = $this->setUpMockRequest();
 
         $context = m::mock(IOperationContext::class);
         $context->shouldReceive('incomingRequest')->andReturn($request);
@@ -404,11 +342,7 @@ class ExecuteGetTest extends TestCase
         $config = m::mock(IServiceConfiguration::class);
         $config->shouldReceive('getMaxDataServiceVersion')->andReturn(new Version(3, 0));
 
-        $service = m::mock(IService::class);
-        $service->shouldReceive('getHost')->andReturn($host);
-        $service->shouldReceive('getProvidersWrapper')->andReturn($wrapper);
-        $service->shouldReceive('getOperationContext')->andReturn($context);
-        $service->shouldReceive('getConfiguration')->andReturn($config);
+        $service = $this->setUpMockService($host, $wrapper, $context, $config);
 
         $expected = null;
         $expectedClass = null;
@@ -443,9 +377,7 @@ class ExecuteGetTest extends TestCase
         $host->shouldReceive('getRequestMaxVersion')->andReturn('3.0');
         $host->shouldReceive('getQueryStringItem')->andReturn(null);
 
-        $request = m::mock(IHTTPRequest::class);
-        $request->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::GET());
-        $request->shouldReceive('getAllInput')->andReturn(null);
+        $request = $this->setUpMockRequest();
 
         $context = m::mock(IOperationContext::class);
         $context->shouldReceive('incomingRequest')->andReturn($request);
@@ -490,11 +422,7 @@ class ExecuteGetTest extends TestCase
         $config = m::mock(IServiceConfiguration::class);
         $config->shouldReceive('getMaxDataServiceVersion')->andReturn(new Version(3, 0));
 
-        $service = m::mock(IService::class);
-        $service->shouldReceive('getHost')->andReturn($host);
-        $service->shouldReceive('getProvidersWrapper')->andReturn($wrapper);
-        $service->shouldReceive('getOperationContext')->andReturn($context);
-        $service->shouldReceive('getConfiguration')->andReturn($config);
+        $service = $this->setUpMockService($host, $wrapper, $context, $config);
 
         $original = UriProcessor::process($service);
         $remix = UriProcessorNew::process($service);
@@ -503,15 +431,9 @@ class ExecuteGetTest extends TestCase
         $origSegments = $original->getRequest()->getSegments();
         $remix->execute();
         $remixSegments = $remix->getRequest()->getSegments();
+        $segCount = 2;
 
-        $this->assertEquals(2, count($origSegments));
-        $this->assertEquals(2, count($remixSegments));
-        for ($i = 0; $i < 2; $i++) {
-            $this->assertEquals($origSegments[$i]->getResult(), $remixSegments[$i]->getResult());
-            $this->assertEquals($origSegments[$i]->isSingleResult(), $remixSegments[$i]->isSingleResult());
-            $this->assertEquals($origSegments[$i]->getNext(), $remixSegments[$i]->getNext());
-            $this->assertEquals($origSegments[$i]->getPrevious(), $remixSegments[$i]->getPrevious());
-        }
+        $this->checkSegmentEquality($segCount, $origSegments, $remixSegments);
     }
 
     public function testExecuteGetOnFirstSegmentLink()
@@ -519,16 +441,9 @@ class ExecuteGetTest extends TestCase
         $baseUrl = new Url('http://localhost/odata.svc');
         $reqUrl = new Url('http://localhost/odata.svc/'.ODataConstants::URI_COUNT_SEGMENT);
 
-        $host = m::mock(ServiceHost::class);
-        $host->shouldReceive('getAbsoluteRequestUri')->andReturn($reqUrl);
-        $host->shouldReceive('getAbsoluteServiceUri')->andReturn($baseUrl);
-        $host->shouldReceive('getRequestVersion')->andReturn('1.0');
-        $host->shouldReceive('getRequestMaxVersion')->andReturn('3.0');
-        $host->shouldReceive('getQueryStringItem')->andReturn(null);
+        $host = $this->setUpMockHost($reqUrl, $baseUrl);
 
-        $request = m::mock(IHTTPRequest::class);
-        $request->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::GET());
-        $request->shouldReceive('getAllInput')->andReturn(null);
+        $request = $this->setUpMockRequest();
 
         $context = m::mock(IOperationContext::class);
         $context->shouldReceive('incomingRequest')->andReturn($request);
@@ -538,11 +453,7 @@ class ExecuteGetTest extends TestCase
 
         $wrapper = m::mock(ProvidersWrapper::class);
 
-        $service = m::mock(IService::class);
-        $service->shouldReceive('getHost')->andReturn($host);
-        $service->shouldReceive('getProvidersWrapper')->andReturn($wrapper);
-        $service->shouldReceive('getOperationContext')->andReturn($context);
-        $service->shouldReceive('getConfiguration')->andReturn($config);
+        $service = $this->setUpMockService($host, $wrapper, $context, $config);
 
         $expected = null;
         $expectedClass = null;
@@ -570,16 +481,9 @@ class ExecuteGetTest extends TestCase
         $baseUrl = new Url('http://localhost/odata.svc');
         $reqUrl = new Url('http://localhost/odata.svc/customers(id=1)/'.ODataConstants::URI_COUNT_SEGMENT);
 
-        $host = m::mock(ServiceHost::class);
-        $host->shouldReceive('getAbsoluteRequestUri')->andReturn($reqUrl);
-        $host->shouldReceive('getAbsoluteServiceUri')->andReturn($baseUrl);
-        $host->shouldReceive('getRequestVersion')->andReturn('1.0');
-        $host->shouldReceive('getRequestMaxVersion')->andReturn('3.0');
-        $host->shouldReceive('getQueryStringItem')->andReturn(null);
+        $host = $this->setUpMockHost($reqUrl, $baseUrl);
 
-        $request = m::mock(IHTTPRequest::class);
-        $request->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::GET());
-        $request->shouldReceive('getAllInput')->andReturn(null);
+        $request = $this->setUpMockRequest();
 
         $context = m::mock(IOperationContext::class);
         $context->shouldReceive('incomingRequest')->andReturn($request);
@@ -610,11 +514,7 @@ class ExecuteGetTest extends TestCase
         $wrapper->shouldReceive('resolveSingleton')->andReturn(null);
         $wrapper->shouldReceive('resolveResourceSet')->andReturn($resourceSet);
 
-        $service = m::mock(IService::class);
-        $service->shouldReceive('getHost')->andReturn($host);
-        $service->shouldReceive('getProvidersWrapper')->andReturn($wrapper);
-        $service->shouldReceive('getOperationContext')->andReturn($context);
-        $service->shouldReceive('getConfiguration')->andReturn($config);
+        $service = $this->setUpMockService($host, $wrapper, $context, $config);
 
         $expected = null;
         $expectedClass = null;
@@ -642,16 +542,9 @@ class ExecuteGetTest extends TestCase
         $baseUrl = new Url('http://localhost/odata.svc');
         $reqUrl = new Url('http://localhost/odata.svc/customers/'.ODataConstants::URI_COUNT_SEGMENT);
 
-        $host = m::mock(ServiceHost::class);
-        $host->shouldReceive('getAbsoluteRequestUri')->andReturn($reqUrl);
-        $host->shouldReceive('getAbsoluteServiceUri')->andReturn($baseUrl);
-        $host->shouldReceive('getRequestVersion')->andReturn('2.0');
-        $host->shouldReceive('getRequestMaxVersion')->andReturn('3.0');
-        $host->shouldReceive('getQueryStringItem')->andReturn(null);
+        $host = $this->setUpMockHost($reqUrl, $baseUrl, '2.0', '3.0');
 
-        $request = m::mock(IHTTPRequest::class);
-        $request->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::GET());
-        $request->shouldReceive('getAllInput')->andReturn(null);
+        $request = $this->setUpMockRequest();
 
         $context = m::mock(IOperationContext::class);
         $context->shouldReceive('incomingRequest')->andReturn($request);
@@ -686,11 +579,7 @@ class ExecuteGetTest extends TestCase
         $wrapper->shouldReceive('resolveResourceSet')->andReturn($resourceSet);
         $wrapper->shouldReceive('getResourceSet')->andReturn($result)->atLeast(2);
 
-        $service = m::mock(IService::class);
-        $service->shouldReceive('getHost')->andReturn($host);
-        $service->shouldReceive('getProvidersWrapper')->andReturn($wrapper);
-        $service->shouldReceive('getOperationContext')->andReturn($context);
-        $service->shouldReceive('getConfiguration')->andReturn($config);
+        $service = $this->setUpMockService($host, $wrapper, $context, $config);
 
         $original = UriProcessor::process($service);
         $remix = UriProcessorNew::process($service);
@@ -699,15 +588,9 @@ class ExecuteGetTest extends TestCase
         $origSegments = $original->getRequest()->getSegments();
         $remix->execute();
         $remixSegments = $remix->getRequest()->getSegments();
+        $segCount = 2;
 
-        $this->assertEquals(2, count($origSegments));
-        $this->assertEquals(2, count($remixSegments));
-        for ($i = 0; $i < 2; $i++) {
-            $this->assertEquals($origSegments[$i]->getResult(), $remixSegments[$i]->getResult());
-            $this->assertEquals($origSegments[$i]->isSingleResult(), $remixSegments[$i]->isSingleResult());
-            $this->assertEquals($origSegments[$i]->getNext(), $remixSegments[$i]->getNext());
-            $this->assertEquals($origSegments[$i]->getPrevious(), $remixSegments[$i]->getPrevious());
-        }
+        $this->checkSegmentEquality($segCount, $origSegments, $remixSegments);
     }
 
     public function testExecuteGetOnNonterminalCountAfterResourceSet()
@@ -715,16 +598,9 @@ class ExecuteGetTest extends TestCase
         $baseUrl = new Url('http://localhost/odata.svc');
         $reqUrl = new Url('http://localhost/odata.svc/customers/'.ODataConstants::URI_COUNT_SEGMENT.'/orders');
 
-        $host = m::mock(ServiceHost::class);
-        $host->shouldReceive('getAbsoluteRequestUri')->andReturn($reqUrl);
-        $host->shouldReceive('getAbsoluteServiceUri')->andReturn($baseUrl);
-        $host->shouldReceive('getRequestVersion')->andReturn('2.0');
-        $host->shouldReceive('getRequestMaxVersion')->andReturn('3.0');
-        $host->shouldReceive('getQueryStringItem')->andReturn(null);
+        $host = $this->setUpMockHost($reqUrl, $baseUrl, '2.0', '3.0');
 
-        $request = m::mock(IHTTPRequest::class);
-        $request->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::GET());
-        $request->shouldReceive('getAllInput')->andReturn(null);
+        $request = $this->setUpMockRequest();
 
         $context = m::mock(IOperationContext::class);
         $context->shouldReceive('incomingRequest')->andReturn($request);
@@ -759,11 +635,7 @@ class ExecuteGetTest extends TestCase
         $wrapper->shouldReceive('resolveResourceSet')->andReturn($resourceSet);
         $wrapper->shouldReceive('getResourceSet')->andReturn($result)->atLeast(2);
 
-        $service = m::mock(IService::class);
-        $service->shouldReceive('getHost')->andReturn($host);
-        $service->shouldReceive('getProvidersWrapper')->andReturn($wrapper);
-        $service->shouldReceive('getOperationContext')->andReturn($context);
-        $service->shouldReceive('getConfiguration')->andReturn($config);
+        $service = $this->setUpMockService($host, $wrapper, $context, $config);
 
         $expected = null;
         $expectedClass = null;
@@ -791,16 +663,9 @@ class ExecuteGetTest extends TestCase
         $baseUrl = new Url('http://localhost/odata.svc');
         $reqUrl = new Url('http://localhost/odata.svc/customers(id=1)/address');
 
-        $host = m::mock(ServiceHost::class);
-        $host->shouldReceive('getAbsoluteRequestUri')->andReturn($reqUrl);
-        $host->shouldReceive('getAbsoluteServiceUri')->andReturn($baseUrl);
-        $host->shouldReceive('getRequestVersion')->andReturn('1.0');
-        $host->shouldReceive('getRequestMaxVersion')->andReturn('3.0');
-        $host->shouldReceive('getQueryStringItem')->andReturn(null);
+        $host = $this->setUpMockHost($reqUrl, $baseUrl);
 
-        $request = m::mock(IHTTPRequest::class);
-        $request->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::GET());
-        $request->shouldReceive('getAllInput')->andReturn(null);
+        $request = $this->setUpMockRequest();
 
         $context = m::mock(IOperationContext::class);
         $context->shouldReceive('incomingRequest')->andReturn($request);
@@ -841,11 +706,7 @@ class ExecuteGetTest extends TestCase
         $config = m::mock(IServiceConfiguration::class);
         $config->shouldReceive('getMaxDataServiceVersion')->andReturn(new Version(3, 0));
 
-        $service = m::mock(IService::class);
-        $service->shouldReceive('getHost')->andReturn($host);
-        $service->shouldReceive('getProvidersWrapper')->andReturn($wrapper);
-        $service->shouldReceive('getOperationContext')->andReturn($context);
-        $service->shouldReceive('getConfiguration')->andReturn($config);
+        $service = $this->setUpMockService($host, $wrapper, $context, $config);
 
         $original = UriProcessor::process($service);
         $remix = UriProcessorNew::process($service);
@@ -854,14 +715,9 @@ class ExecuteGetTest extends TestCase
         $origSegments = $original->getRequest()->getSegments();
         $remix->execute();
         $remixSegments = $remix->getRequest()->getSegments();
-        $this->assertEquals(2, count($origSegments));
-        $this->assertEquals(2, count($remixSegments));
-        for ($i = 0; $i < 2; $i++) {
-            $this->assertEquals($origSegments[$i]->getResult(), $remixSegments[$i]->getResult());
-            $this->assertEquals($origSegments[$i]->isSingleResult(), $remixSegments[$i]->isSingleResult());
-            $this->assertEquals($origSegments[$i]->getNext(), $remixSegments[$i]->getNext());
-            $this->assertEquals($origSegments[$i]->getPrevious(), $remixSegments[$i]->getPrevious());
-        }
+        $segCount = 2;
+
+        $this->checkSegmentEquality($segCount, $origSegments, $remixSegments);
     }
 
     public function testExecuteGetOnBagOfPrimitivesType()
@@ -869,16 +725,9 @@ class ExecuteGetTest extends TestCase
         $baseUrl = new Url('http://localhost/odata.svc');
         $reqUrl = new Url('http://localhost/odata.svc/customers(id=1)/addresses');
 
-        $host = m::mock(ServiceHost::class);
-        $host->shouldReceive('getAbsoluteRequestUri')->andReturn($reqUrl);
-        $host->shouldReceive('getAbsoluteServiceUri')->andReturn($baseUrl);
-        $host->shouldReceive('getRequestVersion')->andReturn('1.0');
-        $host->shouldReceive('getRequestMaxVersion')->andReturn('3.0');
-        $host->shouldReceive('getQueryStringItem')->andReturn(null);
+        $host = $this->setUpMockHost($reqUrl, $baseUrl);
 
-        $request = m::mock(IHTTPRequest::class);
-        $request->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::GET());
-        $request->shouldReceive('getAllInput')->andReturn(null);
+        $request = $this->setUpMockRequest();
 
         $context = m::mock(IOperationContext::class);
         $context->shouldReceive('incomingRequest')->andReturn($request);
@@ -920,11 +769,7 @@ class ExecuteGetTest extends TestCase
         $config = m::mock(IServiceConfiguration::class);
         $config->shouldReceive('getMaxDataServiceVersion')->andReturn(new Version(3, 0));
 
-        $service = m::mock(IService::class);
-        $service->shouldReceive('getHost')->andReturn($host);
-        $service->shouldReceive('getProvidersWrapper')->andReturn($wrapper);
-        $service->shouldReceive('getOperationContext')->andReturn($context);
-        $service->shouldReceive('getConfiguration')->andReturn($config);
+        $service = $this->setUpMockService($host, $wrapper, $context, $config);
 
         $original = UriProcessor::process($service);
         $remix = UriProcessorNew::process($service);
@@ -933,14 +778,9 @@ class ExecuteGetTest extends TestCase
         $origSegments = $original->getRequest()->getSegments();
         $remix->execute();
         $remixSegments = $remix->getRequest()->getSegments();
-        $this->assertEquals(2, count($origSegments));
-        $this->assertEquals(2, count($remixSegments));
-        for ($i = 0; $i < 2; $i++) {
-            $this->assertEquals($origSegments[$i]->getResult(), $remixSegments[$i]->getResult());
-            $this->assertEquals($origSegments[$i]->isSingleResult(), $remixSegments[$i]->isSingleResult());
-            $this->assertEquals($origSegments[$i]->getNext(), $remixSegments[$i]->getNext());
-            $this->assertEquals($origSegments[$i]->getPrevious(), $remixSegments[$i]->getPrevious());
-        }
+        $segCount = 2;
+
+        $this->checkSegmentEquality($segCount, $origSegments, $remixSegments);
     }
 
     public function testExecuteGetOnBagOfComplexType()
@@ -948,16 +788,9 @@ class ExecuteGetTest extends TestCase
         $baseUrl = new Url('http://localhost/odata.svc');
         $reqUrl = new Url('http://localhost/odata.svc/customers(id=1)/addresses');
 
-        $host = m::mock(ServiceHost::class);
-        $host->shouldReceive('getAbsoluteRequestUri')->andReturn($reqUrl);
-        $host->shouldReceive('getAbsoluteServiceUri')->andReturn($baseUrl);
-        $host->shouldReceive('getRequestVersion')->andReturn('1.0');
-        $host->shouldReceive('getRequestMaxVersion')->andReturn('3.0');
-        $host->shouldReceive('getQueryStringItem')->andReturn(null);
+        $host = $this->setUpMockHost($reqUrl, $baseUrl);
 
-        $request = m::mock(IHTTPRequest::class);
-        $request->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::GET());
-        $request->shouldReceive('getAllInput')->andReturn(null);
+        $request = $this->setUpMockRequest();
 
         $context = m::mock(IOperationContext::class);
         $context->shouldReceive('incomingRequest')->andReturn($request);
@@ -999,11 +832,7 @@ class ExecuteGetTest extends TestCase
         $config = m::mock(IServiceConfiguration::class);
         $config->shouldReceive('getMaxDataServiceVersion')->andReturn(new Version(3, 0));
 
-        $service = m::mock(IService::class);
-        $service->shouldReceive('getHost')->andReturn($host);
-        $service->shouldReceive('getProvidersWrapper')->andReturn($wrapper);
-        $service->shouldReceive('getOperationContext')->andReturn($context);
-        $service->shouldReceive('getConfiguration')->andReturn($config);
+        $service = $this->setUpMockService($host, $wrapper, $context, $config);
 
         $original = UriProcessor::process($service);
         $remix = UriProcessorNew::process($service);
@@ -1012,14 +841,9 @@ class ExecuteGetTest extends TestCase
         $origSegments = $original->getRequest()->getSegments();
         $remix->execute();
         $remixSegments = $remix->getRequest()->getSegments();
-        $this->assertEquals(2, count($origSegments));
-        $this->assertEquals(2, count($remixSegments));
-        for ($i = 0; $i < 2; $i++) {
-            $this->assertEquals($origSegments[$i]->getResult(), $remixSegments[$i]->getResult());
-            $this->assertEquals($origSegments[$i]->isSingleResult(), $remixSegments[$i]->isSingleResult());
-            $this->assertEquals($origSegments[$i]->getNext(), $remixSegments[$i]->getNext());
-            $this->assertEquals($origSegments[$i]->getPrevious(), $remixSegments[$i]->getPrevious());
-        }
+        $segCount = 2;
+
+        $this->checkSegmentEquality($segCount, $origSegments, $remixSegments);
     }
 
     public function testExecuteGetOnBatchFirstSegment()
@@ -1027,16 +851,9 @@ class ExecuteGetTest extends TestCase
         $baseUrl = new Url('http://localhost/odata.svc');
         $reqUrl = new Url('http://localhost/odata.svc/'.ODataConstants::URI_BATCH_SEGMENT);
 
-        $host = m::mock(ServiceHost::class);
-        $host->shouldReceive('getAbsoluteRequestUri')->andReturn($reqUrl);
-        $host->shouldReceive('getAbsoluteServiceUri')->andReturn($baseUrl);
-        $host->shouldReceive('getRequestVersion')->andReturn('1.0');
-        $host->shouldReceive('getRequestMaxVersion')->andReturn('3.0');
-        $host->shouldReceive('getQueryStringItem')->andReturn(null);
+        $host = $this->setUpMockHost($reqUrl, $baseUrl);
 
-        $request = m::mock(IHTTPRequest::class);
-        $request->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::GET());
-        $request->shouldReceive('getAllInput')->andReturn(null);
+        $request = $this->setUpMockRequest();
 
         $context = m::mock(IOperationContext::class);
         $context->shouldReceive('incomingRequest')->andReturn($request);
@@ -1047,11 +864,7 @@ class ExecuteGetTest extends TestCase
         $config = m::mock(IServiceConfiguration::class);
         $config->shouldReceive('getMaxDataServiceVersion')->andReturn(new Version(3, 0));
 
-        $service = m::mock(IService::class);
-        $service->shouldReceive('getHost')->andReturn($host);
-        $service->shouldReceive('getProvidersWrapper')->andReturn($wrapper);
-        $service->shouldReceive('getOperationContext')->andReturn($context);
-        $service->shouldReceive('getConfiguration')->andReturn($config);
+        $service = $this->setUpMockService($host, $wrapper, $context, $config);
 
         $expected = null;
         $expectedClass = null;
@@ -1079,16 +892,9 @@ class ExecuteGetTest extends TestCase
         $baseUrl = new Url('http://localhost/odata.svc');
         $reqUrl = new Url('http://localhost/odata.svc/'.ODataConstants::URI_LINK_SEGMENT);
 
-        $host = m::mock(ServiceHost::class);
-        $host->shouldReceive('getAbsoluteRequestUri')->andReturn($reqUrl);
-        $host->shouldReceive('getAbsoluteServiceUri')->andReturn($baseUrl);
-        $host->shouldReceive('getRequestVersion')->andReturn('1.0');
-        $host->shouldReceive('getRequestMaxVersion')->andReturn('3.0');
-        $host->shouldReceive('getQueryStringItem')->andReturn(null);
+        $host = $this->setUpMockHost($reqUrl, $baseUrl);
 
-        $request = m::mock(IHTTPRequest::class);
-        $request->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::GET());
-        $request->shouldReceive('getAllInput')->andReturn(null);
+        $request = $this->setUpMockRequest();
 
         $context = m::mock(IOperationContext::class);
         $context->shouldReceive('incomingRequest')->andReturn($request);
@@ -1099,11 +905,7 @@ class ExecuteGetTest extends TestCase
         $config = m::mock(IServiceConfiguration::class);
         $config->shouldReceive('getMaxDataServiceVersion')->andReturn(new Version(3, 0));
 
-        $service = m::mock(IService::class);
-        $service->shouldReceive('getHost')->andReturn($host);
-        $service->shouldReceive('getProvidersWrapper')->andReturn($wrapper);
-        $service->shouldReceive('getOperationContext')->andReturn($context);
-        $service->shouldReceive('getConfiguration')->andReturn($config);
+        $service = $this->setUpMockService($host, $wrapper, $context, $config);
 
         $expected = null;
         $expectedClass = null;
@@ -1131,16 +933,9 @@ class ExecuteGetTest extends TestCase
         $baseUrl = new Url('http://localhost/odata.svc');
         $reqUrl = new Url('http://localhost/odata.svc/customers(id=1)/'.ODataConstants::URI_LINK_SEGMENT);
 
-        $host = m::mock(ServiceHost::class);
-        $host->shouldReceive('getAbsoluteRequestUri')->andReturn($reqUrl);
-        $host->shouldReceive('getAbsoluteServiceUri')->andReturn($baseUrl);
-        $host->shouldReceive('getRequestVersion')->andReturn('1.0');
-        $host->shouldReceive('getRequestMaxVersion')->andReturn('3.0');
-        $host->shouldReceive('getQueryStringItem')->andReturn(null);
+        $host = $this->setUpMockHost($reqUrl, $baseUrl);
 
-        $request = m::mock(IHTTPRequest::class);
-        $request->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::GET());
-        $request->shouldReceive('getAllInput')->andReturn(null);
+        $request = $this->setUpMockRequest();
 
         $context = m::mock(IOperationContext::class);
         $context->shouldReceive('incomingRequest')->andReturn($request);
@@ -1173,11 +968,7 @@ class ExecuteGetTest extends TestCase
         $config = m::mock(IServiceConfiguration::class);
         $config->shouldReceive('getMaxDataServiceVersion')->andReturn(new Version(3, 0));
 
-        $service = m::mock(IService::class);
-        $service->shouldReceive('getHost')->andReturn($host);
-        $service->shouldReceive('getProvidersWrapper')->andReturn($wrapper);
-        $service->shouldReceive('getOperationContext')->andReturn($context);
-        $service->shouldReceive('getConfiguration')->andReturn($config);
+        $service = $this->setUpMockService($host, $wrapper, $context, $config);
 
         $expected = null;
         $expectedClass = null;
@@ -1205,16 +996,9 @@ class ExecuteGetTest extends TestCase
         $baseUrl = new Url('http://localhost/odata.svc');
         $reqUrl = new Url('http://localhost/odata.svc/customers(id=1)/'.ODataConstants::URI_LINK_SEGMENT.'/orders');
 
-        $host = m::mock(ServiceHost::class);
-        $host->shouldReceive('getAbsoluteRequestUri')->andReturn($reqUrl);
-        $host->shouldReceive('getAbsoluteServiceUri')->andReturn($baseUrl);
-        $host->shouldReceive('getRequestVersion')->andReturn('1.0');
-        $host->shouldReceive('getRequestMaxVersion')->andReturn('3.0');
-        $host->shouldReceive('getQueryStringItem')->andReturn(null);
+        $host = $this->setUpMockHost($reqUrl, $baseUrl);
 
-        $request = m::mock(IHTTPRequest::class);
-        $request->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::GET());
-        $request->shouldReceive('getAllInput')->andReturn(null);
+        $request = $this->setUpMockRequest();
 
         $context = m::mock(IOperationContext::class);
         $context->shouldReceive('incomingRequest')->andReturn($request);
@@ -1280,11 +1064,7 @@ class ExecuteGetTest extends TestCase
         $wrapper->shouldReceive('getRelatedResourceReference')->andReturn('mosh around the world')->atLeast(2);
         $wrapper->shouldReceive('getRelatedResourceSet')->andReturn('foobar')->atLeast(2);
 
-        $service = m::mock(IService::class);
-        $service->shouldReceive('getHost')->andReturn($host);
-        $service->shouldReceive('getProvidersWrapper')->andReturn($wrapper);
-        $service->shouldReceive('getOperationContext')->andReturn($context);
-        $service->shouldReceive('getConfiguration')->andReturn($config);
+        $service = $this->setUpMockService($host, $wrapper, $context, $config);
 
         $original = UriProcessor::process($service);
         $remix = UriProcessorNew::process($service);
@@ -1293,14 +1073,9 @@ class ExecuteGetTest extends TestCase
         $origSegments = $original->getRequest()->getSegments();
         $remix->execute();
         $remixSegments = $remix->getRequest()->getSegments();
-        $this->assertEquals(3, count($origSegments));
-        $this->assertEquals(3, count($remixSegments));
-        for ($i = 0; $i < 3; $i++) {
-            $this->assertEquals($origSegments[$i]->getResult(), $remixSegments[$i]->getResult(), $i);
-            $this->assertEquals($origSegments[$i]->isSingleResult(), $remixSegments[$i]->isSingleResult(), $i);
-            $this->assertEquals($origSegments[$i]->getNext(), $remixSegments[$i]->getNext(), $i);
-            $this->assertEquals($origSegments[$i]->getPrevious(), $remixSegments[$i]->getPrevious(), $i);
-        }
+        $segCount = 3;
+
+        $this->checkSegmentEquality($segCount, $origSegments, $remixSegments);
     }
 
     public function testExecuteGetOnPrimitiveValueOfEntity()
@@ -1308,16 +1083,9 @@ class ExecuteGetTest extends TestCase
         $baseUrl = new Url('http://localhost/odata.svc');
         $reqUrl = new Url('http://localhost/odata.svc/customers(id=1)/id/$value');
 
-        $host = m::mock(ServiceHost::class);
-        $host->shouldReceive('getAbsoluteRequestUri')->andReturn($reqUrl);
-        $host->shouldReceive('getAbsoluteServiceUri')->andReturn($baseUrl);
-        $host->shouldReceive('getRequestVersion')->andReturn('1.0');
-        $host->shouldReceive('getRequestMaxVersion')->andReturn('3.0');
-        $host->shouldReceive('getQueryStringItem')->andReturn(null);
+        $host = $this->setUpMockHost($reqUrl, $baseUrl);
 
-        $request = m::mock(IHTTPRequest::class);
-        $request->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::GET());
-        $request->shouldReceive('getAllInput')->andReturn(null);
+        $request = $this->setUpMockRequest();
 
         $context = m::mock(IOperationContext::class);
         $context->shouldReceive('incomingRequest')->andReturn($request);
@@ -1358,11 +1126,7 @@ class ExecuteGetTest extends TestCase
         $wrapper->shouldReceive('resolveResourceSet')->andReturn($resourceSet)->atLeast(2);
         $wrapper->shouldReceive('getResourceFromResourceSet')->andReturn($result)->atLeast(2);
 
-        $service = m::mock(IService::class);
-        $service->shouldReceive('getHost')->andReturn($host);
-        $service->shouldReceive('getProvidersWrapper')->andReturn($wrapper);
-        $service->shouldReceive('getOperationContext')->andReturn($context);
-        $service->shouldReceive('getConfiguration')->andReturn($config);
+        $service = $this->setUpMockService($host, $wrapper, $context, $config);
 
         $original = UriProcessor::process($service);
         $remix = UriProcessorNew::process($service);
@@ -1371,15 +1135,9 @@ class ExecuteGetTest extends TestCase
         $origSegments = $original->getRequest()->getSegments();
         $remix->execute();
         $remixSegments = $remix->getRequest()->getSegments();
-        $this->assertEquals(3, count($origSegments));
-        $this->assertEquals(3, count($remixSegments));
-        for ($i = 0; $i < 3; $i++) {
-            $this->assertEquals($origSegments[$i]->getTargetKind(), $remixSegments[$i]->getTargetKind(), $i);
-            $this->assertEquals($origSegments[$i]->getResult(), $remixSegments[$i]->getResult(), $i);
-            $this->assertEquals($origSegments[$i]->isSingleResult(), $remixSegments[$i]->isSingleResult(), $i);
-            $this->assertEquals($origSegments[$i]->getNext(), $remixSegments[$i]->getNext(), $i);
-            $this->assertEquals($origSegments[$i]->getPrevious(), $remixSegments[$i]->getPrevious(), $i);
-        }
+        $segCount = 3;
+
+        $this->checkSegmentEquality($segCount, $origSegments, $remixSegments);
     }
 
     public function testExecuteGetWhenHeadingUpToSingleResult()
@@ -1387,16 +1145,9 @@ class ExecuteGetTest extends TestCase
         $baseUrl = new Url('http://localhost/odata.svc');
         $reqUrl = new Url('http://localhost/odata.svc/orders(id=1)/customer');
 
-        $host = m::mock(ServiceHost::class);
-        $host->shouldReceive('getAbsoluteRequestUri')->andReturn($reqUrl);
-        $host->shouldReceive('getAbsoluteServiceUri')->andReturn($baseUrl);
-        $host->shouldReceive('getRequestVersion')->andReturn('1.0');
-        $host->shouldReceive('getRequestMaxVersion')->andReturn('3.0');
-        $host->shouldReceive('getQueryStringItem')->andReturn(null);
+        $host = $this->setUpMockHost($reqUrl, $baseUrl);
 
-        $request = m::mock(IHTTPRequest::class);
-        $request->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::GET());
-        $request->shouldReceive('getAllInput')->andReturn(null);
+        $request = $this->setUpMockRequest();
 
         $context = m::mock(IOperationContext::class);
         $context->shouldReceive('incomingRequest')->andReturn($request);
@@ -1454,11 +1205,7 @@ class ExecuteGetTest extends TestCase
         $wrapper->shouldReceive('getResourceFromResourceSet')->andReturn($result)->atLeast(2);
         $wrapper->shouldReceive('getRelatedResourceReference')->andReturn($relatedResult)->atLeast(2);
 
-        $service = m::mock(IService::class);
-        $service->shouldReceive('getHost')->andReturn($host);
-        $service->shouldReceive('getProvidersWrapper')->andReturn($wrapper);
-        $service->shouldReceive('getOperationContext')->andReturn($context);
-        $service->shouldReceive('getConfiguration')->andReturn($config);
+        $service = $this->setUpMockService($host, $wrapper, $context, $config);
 
         $original = UriProcessor::process($service);
         $remix = UriProcessorNew::process($service);
@@ -1467,16 +1214,9 @@ class ExecuteGetTest extends TestCase
         $origSegments = $original->getRequest()->getSegments();
         $remix->execute();
         $remixSegments = $remix->getRequest()->getSegments();
+        $segCount = 2;
 
-        $this->assertEquals(2, count($origSegments));
-        $this->assertEquals(2, count($remixSegments));
-        for ($i = 0; $i < 2; $i++) {
-            $this->assertEquals($origSegments[$i]->getTargetKind(), $remixSegments[$i]->getTargetKind(), $i);
-            $this->assertEquals($origSegments[$i]->getResult(), $remixSegments[$i]->getResult(), $i);
-            $this->assertEquals($origSegments[$i]->isSingleResult(), $remixSegments[$i]->isSingleResult(), $i);
-            $this->assertEquals($origSegments[$i]->getNext(), $remixSegments[$i]->getNext(), $i);
-            $this->assertEquals($origSegments[$i]->getPrevious(), $remixSegments[$i]->getPrevious(), $i);
-        }
+        $this->checkSegmentEquality($segCount, $origSegments, $remixSegments);
     }
 
     public function testExecuteGetOnResourceFromRelatedResourceSet()
@@ -1484,16 +1224,9 @@ class ExecuteGetTest extends TestCase
         $baseUrl = new Url('http://localhost/odata.svc');
         $reqUrl = new Url('http://localhost/odata.svc/orders(id=1)/customer(id=1)');
 
-        $host = m::mock(ServiceHost::class);
-        $host->shouldReceive('getAbsoluteRequestUri')->andReturn($reqUrl);
-        $host->shouldReceive('getAbsoluteServiceUri')->andReturn($baseUrl);
-        $host->shouldReceive('getRequestVersion')->andReturn('1.0');
-        $host->shouldReceive('getRequestMaxVersion')->andReturn('3.0');
-        $host->shouldReceive('getQueryStringItem')->andReturn(null);
+        $host = $this->setUpMockHost($reqUrl, $baseUrl);
 
-        $request = m::mock(IHTTPRequest::class);
-        $request->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::GET());
-        $request->shouldReceive('getAllInput')->andReturn(null);
+        $request = $this->setUpMockRequest();
 
         $context = m::mock(IOperationContext::class);
         $context->shouldReceive('incomingRequest')->andReturn($request);
@@ -1552,11 +1285,7 @@ class ExecuteGetTest extends TestCase
         $wrapper->shouldReceive('getResourceFromResourceSet')->andReturn($result)->atLeast(2);
         $wrapper->shouldReceive('getResourceFromRelatedResourceSet')->andReturn($relatedResult)->atLeast(2);
 
-        $service = m::mock(IService::class);
-        $service->shouldReceive('getHost')->andReturn($host);
-        $service->shouldReceive('getProvidersWrapper')->andReturn($wrapper);
-        $service->shouldReceive('getOperationContext')->andReturn($context);
-        $service->shouldReceive('getConfiguration')->andReturn($config);
+        $service = $this->setUpMockService($host, $wrapper, $context, $config);
 
         $original = UriProcessor::process($service);
         $remix = UriProcessorNew::process($service);
@@ -1565,10 +1294,66 @@ class ExecuteGetTest extends TestCase
         $origSegments = $original->getRequest()->getSegments();
         $remix->execute();
         $remixSegments = $remix->getRequest()->getSegments();
+        $segCount = 2;
 
-        $this->assertEquals(2, count($origSegments));
-        $this->assertEquals(2, count($remixSegments));
-        for ($i = 0; $i < 2; $i++) {
+        $this->checkSegmentEquality($segCount, $origSegments, $remixSegments);
+    }
+
+    /**
+     * @param $host
+     * @param $wrapper
+     * @param $context
+     * @param $config
+     * @return m\MockInterface
+     */
+    private function setUpMockService($host, $wrapper, $context, $config)
+    {
+        $service = m::mock(IService::class);
+        $service->shouldReceive('getHost')->andReturn($host);
+        $service->shouldReceive('getProvidersWrapper')->andReturn($wrapper);
+        $service->shouldReceive('getOperationContext')->andReturn($context);
+        $service->shouldReceive('getConfiguration')->andReturn($config);
+        return $service;
+    }
+
+    /**
+     * @param $reqUrl
+     * @param $baseUrl
+     * @return m\MockInterface
+     */
+    private function setUpMockHost($reqUrl, $baseUrl, $requestVer = '1.0', $maxVer = '3.0')
+    {
+        $host = m::mock(ServiceHost::class);
+        $host->shouldReceive('getAbsoluteRequestUri')->andReturn($reqUrl);
+        $host->shouldReceive('getAbsoluteServiceUri')->andReturn($baseUrl);
+        $host->shouldReceive('getRequestVersion')->andReturn($requestVer);
+        $host->shouldReceive('getRequestMaxVersion')->andReturn($maxVer);
+        $host->shouldReceive('getQueryStringItem')->andReturn(null);
+        return $host;
+    }
+
+    /**
+     * @return m\MockInterface
+     */
+    private function setUpMockRequest()
+    {
+        $request = m::mock(IHTTPRequest::class);
+        $request->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::GET());
+        $request->shouldReceive('getAllInput')->andReturn(null);
+        return $request;
+    }
+
+    /**
+     * @param $segCount
+     * @param $origSegments
+     * @param $remixSegments
+     */
+    private function checkSegmentEquality($segCount, $origSegments, $remixSegments)
+    {
+        $this->assertEquals($segCount, count($origSegments));
+        $this->assertEquals($segCount, count($remixSegments));
+
+        for ($i = 0; $i < $segCount; $i++) {
             $this->assertEquals($origSegments[$i]->getTargetKind(), $remixSegments[$i]->getTargetKind(), $i);
             $this->assertEquals($origSegments[$i]->getResult(), $remixSegments[$i]->getResult(), $i);
             $this->assertEquals($origSegments[$i]->isSingleResult(), $remixSegments[$i]->isSingleResult(), $i);
