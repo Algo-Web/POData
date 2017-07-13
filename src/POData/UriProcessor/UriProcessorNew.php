@@ -322,25 +322,61 @@ class UriProcessorNew implements IUriProcessor
      */
     private function executeGetResource($segment)
     {
-        if ($segment->isSingleResult()) {
-            $queryResult = $this->getProviders()->getResourceFromResourceSet(
-                $segment->getTargetResourceSetWrapper(),
-                $segment->getKeyDescriptor()
-            );
+        $isRelated = $segment->getTargetSource() != TargetSource::ENTITY_SET;
+        $queryResult = null;
+        if (!$isRelated) {
+            if ($segment->isSingleResult()) {
+                $queryResult = $this->getProviders()->getResourceFromResourceSet(
+                    $segment->getTargetResourceSetWrapper(),
+                    $segment->getKeyDescriptor()
+                );
+            } else {
+                $skip = $this->getRequest()->getSkipCount();
+                $skip = (null === $skip) ? 0 : $skip;
+                $skipToken = $this->getRequest()->getInternalSkipTokenInfo();
+                $skipToken = (null != $skipToken) ? $skipToken->getSkipTokenInfo() : null;
+                $queryResult = $this->getProviders()->getResourceSet(
+                    $this->getRequest()->queryType,
+                    $segment->getTargetResourceSetWrapper(),
+                    $this->getRequest()->getFilterInfo(),
+                    $this->getRequest()->getInternalOrderByInfo(),
+                    $this->getRequest()->getTopCount(),
+                    $skip,
+                    $skipToken
+                );
+            }
         } else {
-            $skip = $this->getRequest()->getSkipCount();
-            $skip = (null === $skip) ? 0 : $skip;
-            $skipToken = $this->getRequest()->getInternalSkipTokenInfo();
-            $skipToken = (null != $skipToken) ? $skipToken->getSkipTokenInfo() : null;
-            $queryResult = $this->getProviders()->getResourceSet(
-                $this->getRequest()->queryType,
-                $segment->getTargetResourceSetWrapper(),
-                $this->getRequest()->getFilterInfo(),
-                $this->getRequest()->getInternalOrderByInfo(),
-                $this->getRequest()->getTopCount(),
-                $skip,
-                $skipToken
-            );
+            $projectedProperty = $segment->getProjectedProperty();
+            $projectedPropertyKind = $projectedProperty->getKind();
+            switch ($projectedPropertyKind) {
+                case ResourcePropertyKind::RESOURCE_REFERENCE:
+                    $queryResult = $this->getProviders()->getRelatedResourceReference(
+                        $segment->getPrevious()->getTargetResourceSetWrapper(),
+                        $segment->getPrevious()->getResult(),
+                        $segment->getTargetResourceSetWrapper(),
+                        $segment->getProjectedProperty()
+                    );
+                    break;
+                case ResourcePropertyKind::RESOURCESET_REFERENCE:
+                    $skipToken = $this->getRequest()->getInternalSkipTokenInfo();
+                    $skipToken = (null !== $skipToken) ? $skipToken->getSkipTokenInfo() : null;
+                    $queryResult = $this->getProviders()->getRelatedResourceSet(
+                        $this->getRequest()->queryType,
+                        $segment->getPrevious()->getTargetResourceSetWrapper(),
+                        $segment->getPrevious()->getResult(),
+                        $segment->getTargetResourceSetWrapper(),
+                        $segment->getProjectedProperty(),
+                        $this->getRequest()->getFilterInfo(),
+                        //TODO: why are these null?  see #98
+                        null, // $orderby
+                        null, // $top
+                        null,  // $skip
+                        $skipToken
+                    );
+                    break;
+                default:
+                    assert(false, "Invalid property kind type for resource retrieval");
+            }
         }
         $segment->setResult($queryResult);
     }

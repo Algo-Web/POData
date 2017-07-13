@@ -1381,4 +1381,101 @@ class ExecuteGetTest extends TestCase
             $this->assertEquals($origSegments[$i]->getPrevious(), $remixSegments[$i]->getPrevious(), $i);
         }
     }
+
+    public function testExecuteGetWhenHeadingUpToSingleResult()
+    {
+        $baseUrl = new Url('http://localhost/odata.svc');
+        $reqUrl = new Url('http://localhost/odata.svc/orders(id=1)/customer');
+
+        $host = m::mock(ServiceHost::class);
+        $host->shouldReceive('getAbsoluteRequestUri')->andReturn($reqUrl);
+        $host->shouldReceive('getAbsoluteServiceUri')->andReturn($baseUrl);
+        $host->shouldReceive('getRequestVersion')->andReturn('1.0');
+        $host->shouldReceive('getRequestMaxVersion')->andReturn('3.0');
+        $host->shouldReceive('getQueryStringItem')->andReturn(null);
+
+        $request = m::mock(IHTTPRequest::class);
+        $request->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::GET());
+        $request->shouldReceive('getAllInput')->andReturn(null);
+
+        $context = m::mock(IOperationContext::class);
+        $context->shouldReceive('incomingRequest')->andReturn($request);
+
+        $config = m::mock(IServiceConfiguration::class);
+        $config->shouldReceive('getMaxDataServiceVersion')->andReturn(new Version(3, 0));
+
+        $custType = m::mock(ResourceEntityType::class);
+        $custType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY);
+
+        $custSet = m::mock(ResourceSetWrapper::class);
+        $custSet->shouldReceive('checkResourceSetRightsForRead')->andReturnNull()->atLeast(2);
+        $custSet->shouldReceive('hasNamedStreams')->andReturn(false);
+        $custSet->shouldReceive('hasBagProperty')->andReturn(true);
+
+        $primType = m::mock(ResourcePrimitiveType::class);
+
+        $custProp = m::mock(ResourceProperty::class);
+        $custProp->shouldReceive('getResourceType')->andReturn($custType);
+        $custProp->shouldReceive('getKind')->andReturn(ResourcePropertyKind::RESOURCE_REFERENCE);
+
+        $iType = m::mock(IType::class);
+        $iType->shouldReceive('isCompatibleWith')->andReturn(true)->atLeast(2);
+
+        $keyProp = m::mock(ResourceProperty::class);
+        $keyProp->shouldReceive('isKindOf')->withArgs([ResourcePropertyKind::PRIMITIVE])->andReturn(true)->atLeast(2);
+        $keyProp->shouldReceive('getInstanceType')->andReturn($iType);
+        $keyProp->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::PRIMITIVE);
+        $keyProp->shouldReceive('getResourceType')->andReturn($primType);
+        $keyProp->shouldReceive('getKind')->andReturn(ResourcePropertyKind::PRIMITIVE);
+
+        $resourceType = m::mock(ResourceEntityType::class);
+        $resourceType->shouldReceive('getName')->andReturn('Order');
+        $resourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY);
+        $resourceType->shouldReceive('getKeyProperties')->andReturn(['id' => $keyProp])->atLeast(2);
+        $resourceType->shouldReceive('getInstanceType->newInstance')->andReturn(new \stdClass())->atLeast(2);
+        $resourceType->shouldReceive('resolveProperty')->withArgs(['id'])->andReturn($keyProp)->atLeast(2);
+        $resourceType->shouldReceive('resolveProperty')->withArgs(['customer'])->andReturn($custProp)->atLeast(2);
+
+        $resourceSet = m::mock(ResourceSetWrapper::class);
+        $resourceSet->shouldReceive('getResourceType')->andReturn($resourceType);
+        $resourceSet->shouldReceive('checkResourceSetRightsForRead')->andReturnNull()->atLeast(2);
+        $resourceSet->shouldReceive('hasNamedStreams')->andReturn(false);
+        $resourceSet->shouldReceive('hasBagProperty')->andReturn(true);
+        $resourceSet->shouldReceive('getResourceSetPageSize')->andReturn(200);
+
+        $result = 'eins';
+
+        $relatedResult = 'zwei';
+
+        $wrapper = m::mock(ProvidersWrapper::class);
+        $wrapper->shouldReceive('resolveSingleton')->andReturn(null);
+        $wrapper->shouldReceive('resolveResourceSet')->andReturn($resourceSet)->atLeast(2);
+        $wrapper->shouldReceive('getResourceSetWrapperForNavigationProperty')->andReturn($custSet)->atLeast(2);
+        $wrapper->shouldReceive('getResourceFromResourceSet')->andReturn($result)->atLeast(2);
+        $wrapper->shouldReceive('getRelatedResourceReference')->andReturn($relatedResult)->atLeast(2);
+
+        $service = m::mock(IService::class);
+        $service->shouldReceive('getHost')->andReturn($host);
+        $service->shouldReceive('getProvidersWrapper')->andReturn($wrapper);
+        $service->shouldReceive('getOperationContext')->andReturn($context);
+        $service->shouldReceive('getConfiguration')->andReturn($config);
+
+        $original = UriProcessor::process($service);
+        $remix = UriProcessorNew::process($service);
+
+        $original->execute();
+        $origSegments = $original->getRequest()->getSegments();
+        $remix->execute();
+        $remixSegments = $remix->getRequest()->getSegments();
+
+        $this->assertEquals(2, count($origSegments));
+        $this->assertEquals(2, count($remixSegments));
+        for ($i = 0; $i < 2; $i++) {
+            $this->assertEquals($origSegments[$i]->getTargetKind(), $remixSegments[$i]->getTargetKind(), $i);
+            $this->assertEquals($origSegments[$i]->getResult(), $remixSegments[$i]->getResult(), $i);
+            $this->assertEquals($origSegments[$i]->isSingleResult(), $remixSegments[$i]->isSingleResult(), $i);
+            $this->assertEquals($origSegments[$i]->getNext(), $remixSegments[$i]->getNext(), $i);
+            $this->assertEquals($origSegments[$i]->getPrevious(), $remixSegments[$i]->getPrevious(), $i);
+        }
+    }
 }
