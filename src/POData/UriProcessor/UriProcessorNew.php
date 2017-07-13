@@ -100,6 +100,9 @@ class UriProcessorNew implements IUriProcessor
 
         $processor = new self($service);
 
+        //Parse the query string options of the request Uri.
+        QueryProcessor::process($processor->request, $service);
+
         return $processor;
     }
 
