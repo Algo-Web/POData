@@ -326,7 +326,6 @@ class UriProcessorNew implements IUriProcessor
     private function executeGetResource($segment)
     {
         $isRelated = $segment->getTargetSource() != TargetSource::ENTITY_SET;
-        $queryResult = null;
         if (!$isRelated) {
             $queryResult = $this->executeGetResourceDirect($segment);
         } else {
@@ -351,7 +350,6 @@ class UriProcessorNew implements IUriProcessor
      */
     private function executeGetResourceDirect($segment)
     {
-        $queryResult = null;
         if ($segment->isSingleResult()) {
             $queryResult = $this->getProviders()->getResourceFromResourceSet(
                 $segment->getTargetResourceSetWrapper(),
