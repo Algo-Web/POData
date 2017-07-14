@@ -38,7 +38,7 @@ abstract class BinaryExpression extends AbstractExpression
      */
     public function getLeft()
     {
-        return $this->left;
+        return isset($this->left) ? $this->left: null;
     }
 
     /**
@@ -48,7 +48,7 @@ abstract class BinaryExpression extends AbstractExpression
      */
     public function getRight()
     {
-        return $this->right;
+        return isset($this->right) ? $this->right : null;
     }
 
     /**

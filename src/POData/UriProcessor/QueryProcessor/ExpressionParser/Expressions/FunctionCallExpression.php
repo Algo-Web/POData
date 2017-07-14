@@ -60,9 +60,10 @@ class FunctionCallExpression extends AbstractExpression
      */
     public function free()
     {
-        foreach ($this->paramExpressions as $paramExpression) {
-            $paramExpression->free();
-            unset($paramExpression);
+        $numExpr = count($this->paramExpressions);
+        for ($i = $numExpr - 1; $i >= 0; $i--) {
+            $this->paramExpressions[$i]->free();
+            unset($this->paramExpressions[$i]);
         }
     }
 }
