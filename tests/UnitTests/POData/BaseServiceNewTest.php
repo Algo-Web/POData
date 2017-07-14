@@ -37,28 +37,6 @@ use UnitTests\POData\ObjectModel\reusableEntityClass3;
 
 class BaseServiceNewTest extends TestCase
 {
-    public function testRattleStubMethods()
-    {
-        $db = m::mock(IQueryProvider::class);
-        $host = m::mock(ServiceHost::class)->makePartial();
-        $cereal = $this->spinUpMockSerialiser();
-        $wrap = m::mock(StreamProviderWrapper::class)->makePartial();
-
-        $foo = new BaseServiceDummy($db, $host, $cereal, $wrap, null);
-
-        $foo->handleRequest2();
-        $foo->delegateRequestProcessing();
-        $foo->serializeResultForResponseBody();
-        $foo->handlePOSTOperation();
-        $foo->handlePUTOperation();
-        $foo->handleDELETEOperation();
-
-        $cereal = $foo->getObjectSerialiser();
-        $this->assertTrue($cereal instanceof IObjectSerialiser);
-        $rebar = $foo->getStreamProviderWrapper();
-        $this->assertTrue($rebar instanceof StreamProviderWrapper);
-    }
-
     public function testGetResultWithNullMetadataProviderThrowException()
     {
         $db = m::mock(IQueryProvider::class);
