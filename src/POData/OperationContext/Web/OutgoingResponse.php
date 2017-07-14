@@ -12,7 +12,7 @@ class OutgoingResponse
     /**
      * Gets the headers from the outgoing Web response.
      *
-     * @var WebHeaderCollection
+     * @var []
      */
     private $_headers;
 
@@ -119,7 +119,7 @@ class OutgoingResponse
     /**
      * Gets the value of the ETag header of the response.
      *
-     * @return reference of _headers[HttpResponseHeaderStrETag]
+     * @return string reference of _headers[HttpResponseHeaderStrETag]
      */
     public function getETag()
     {

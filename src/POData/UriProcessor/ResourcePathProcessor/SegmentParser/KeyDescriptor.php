@@ -63,7 +63,7 @@ class KeyDescriptor
      *
      * @var array
      */
-    private $_namedValues;
+    private $_namedValues = [];
 
     /**
      * Holds collection of positional key values
@@ -77,7 +77,7 @@ class KeyDescriptor
      *
      * @var array
      */
-    private $_positionalValues;
+    private $_positionalValues = [];
 
     /**
      * Holds collection of positional or named values as named values. The validate
