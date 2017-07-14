@@ -109,7 +109,7 @@ class Char implements IType
     /**
      * Checks a character is whilespace.
      *
-     * @param char $char character to check
+     * @param char|string $char character to check
      *
      * @return bool
      */
@@ -126,7 +126,7 @@ class Char implements IType
     /**
      * Checks a character is letter.
      *
-     * @param char $char character to check
+     * @param char|string $char character to check
      *
      * @return bool
      */
@@ -141,7 +141,7 @@ class Char implements IType
     /**
      * Checks a character is digit.
      *
-     * @param char $char character to check
+     * @param char|string $char character to check
      *
      * @return bool
      */
@@ -155,7 +155,7 @@ class Char implements IType
     /**
      * Checks a character is letter or digit.
      *
-     * @param char $char character to check
+     * @param char|string $char character to check
      *
      * @return bool
      */
