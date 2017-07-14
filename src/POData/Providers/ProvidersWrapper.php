@@ -59,7 +59,7 @@ class ProvidersWrapper
      * resource set. An entry (ResourceProperty collection) in this cache
      * contains only the visible properties of ResourceType.
      *
-     * @var array(string, array(string, ResourceProperty))
+     * @var array<array>
      */
     private $propertyCache;
 

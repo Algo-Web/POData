@@ -63,7 +63,7 @@ class ServiceHost
     /**
      * array of query-string parameters.
      *
-     * @var array(string, string)
+     * @var array<string>
      */
     private $_queryOptions;
 

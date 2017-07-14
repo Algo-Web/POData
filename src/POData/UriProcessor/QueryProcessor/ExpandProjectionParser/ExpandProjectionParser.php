@@ -169,9 +169,9 @@ class ExpandProjectionParser
     /**
      * Build 'Projection Tree' from the given expand path segments.
      *
-     * @param array(array(string)) $expandPathSegments Collection of expand paths
+     * @param array<array>      $expandPathSegments Collection of expand paths
      *
-     * @throws ODataException If any error occurs while processing the expand path segments
+     * @throws ODataException                       If any error occurs while processing the expand path segments
      */
     private function _buildProjectionTree($expandPathSegments)
     {
@@ -373,8 +373,7 @@ class ExpandProjectionParser
      * @param bool   $isSelect true means $value is value of select clause
      *                         else value of expand clause
      *
-     * @return array(array) An array of 'PathSegment's, each of which is array
-     *                      of 'SubPathSegment's
+     * @return array<array>     An array of 'PathSegment's, each of which is array of 'SubPathSegment's
      */
     private function _readExpandOrSelect($value, $isSelect)
     {

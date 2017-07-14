@@ -106,7 +106,7 @@ class KeyDescriptor
     /**
      * Gets collection of named key values.
      *
-     * @return array(string, array(string, IType))
+     * @return array[]
      */
     public function getNamedValues()
     {
@@ -116,7 +116,7 @@ class KeyDescriptor
     /**
      * Gets collection of positional key values.
      *
-     * @return array(int, array(string, IType))
+     * @return array[]
      */
     public function getPositionalValues()
     {
@@ -126,7 +126,7 @@ class KeyDescriptor
     /**
      * Gets collection of positional key values by reference.
      *
-     * @return array(int, array(string, IType))
+     * @return array[]
      */
     public function &getPositionalValuesByRef()
     {
@@ -137,9 +137,9 @@ class KeyDescriptor
      * Gets validated named key values, this array will be populated
      * in validate function.
      *
-     * @throws InvalidOperationException If this function invoked before invoking validate function
+     * @throws InvalidOperationException    If this function invoked before invoking validate function
      *
-     * @return array(string, array(string, IType))
+     * @return array[]
      */
     public function getValidatedNamedValues()
     {
@@ -199,8 +199,7 @@ class KeyDescriptor
      * @param KeyDescriptor KeyDescriptor On return, Description of key after
      *                                      parsing
      *
-     * @return bool True if the given values were parsed; false if there was
-     *              a syntactic error
+     * @return bool True if the given values were parsed; false if there was a syntax error
      */
     public static function tryParseKeysFromKeyPredicate(
         $keyPredicate,
@@ -222,8 +221,7 @@ class KeyDescriptor
      * @param KeyDescriptor &$keyDescriptor On return, Description of values
      *                                      after parsing
      *
-     * @return bool True if the given values were parsed; false if there was
-     *              a syntactic error
+     * @return bool True if the given values were parsed; false if there was a syntax error
      */
     public static function tryParseValuesFromSkipToken($skipToken, &$keyDescriptor)
     {
@@ -240,10 +238,10 @@ class KeyDescriptor
      * _validatedNamedValues array with key as keyName and value as an array of
      * key value and key type.
      *
-     * @param string       $segmentAsString The segment in the form identifer
+     * @param string       $segmentAsString The segment in the form identifier
      *                                      (keyPredicate) which this descriptor
      *                                      represents
-     * @param ResourceType $resourceType    The type of the idenfier in the segment
+     * @param ResourceType $resourceType    The type of the identifier in the segment
      *
      * @throws ODataException If validation fails
      */
@@ -337,11 +335,10 @@ class KeyDescriptor
     /**
      * Attempts to parse value(s) of resource key(s) from the key predicate and
      * creates instance of KeyDescription representing the same, Once parsing is
-     * done one should call validate function to validate the created
-     * KeyDescription.
+     * done, one should call validate function to validate the created KeyDescription.
      *
      * @param string        $keyPredicate     The key predicate to parse
-     * @param bool          $allowNamedValues Set to true if paser should accept
+     * @param bool          $allowNamedValues Set to true if parser should accept
      *                                        named values(Property = KeyValue),
      *                                        if false then parser will fail on
      *                                        such constructs
@@ -352,8 +349,7 @@ class KeyDescriptor
      * @param KeyDescriptor &$keyDescriptor   On return, Description of key after
      *                                        parsing
      *
-     * @return bool True if the given values were parsed; false if there was a
-     *              syntactic error
+     * @return bool True if the given values were parsed; false if there was a syntax error
      */
     private static function _tryParseKeysFromKeyPredicate(
         $keyPredicate,
@@ -469,7 +465,7 @@ class KeyDescriptor
      * @param IType|null        &$outType  After the invocation, this parameter holds the type of $value, if $value is
      *                                     not a valid key value type then this parameter will be null
      *
-     * @return bool True if $value is a valid type else false
+     * @return bool True if $value is a valid type, else false
      */
     private static function _getTypeAndValidateKeyValue($value, $tokenId, &$outValue, &$outType)
     {
