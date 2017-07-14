@@ -163,7 +163,7 @@ class SegmentDescriptor
      *
      * @param KeyDescriptor $keyDescriptor The descriptor for the key associated with this segment
      */
-    public function setKeyDescriptor($keyDescriptor)
+    public function setKeyDescriptor(KeyDescriptor $keyDescriptor = null)
     {
         $this->_keyDescriptor = $keyDescriptor;
     }
@@ -183,7 +183,7 @@ class SegmentDescriptor
      *
      * @param ResourceProperty $projectedProperty The property projected in this segment
      */
-    public function setProjectedProperty($projectedProperty)
+    public function setProjectedProperty(ResourceProperty $projectedProperty = null)
     {
         $this->_projectedProperty = $projectedProperty;
     }

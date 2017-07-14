@@ -203,7 +203,7 @@ class KeyDescriptor
      */
     public static function tryParseKeysFromKeyPredicate(
         $keyPredicate,
-        &$keyDescriptor
+        KeyDescriptor &$keyDescriptor = null
     ) {
         return self::_tryParseKeysFromKeyPredicate(
             $keyPredicate,
