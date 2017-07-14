@@ -2,6 +2,7 @@
 
 namespace POData\UriProcessor\QueryProcessor\OrderByParser;
 
+use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceSetWrapper;
 
 /**
@@ -23,31 +24,22 @@ class OrderByNode extends OrderByBaseNode
     /**
      * list of child nodes.
      *
-     * @var array(OrderByNode/OrderByLeafNode)
+     * @var OrderByBaseNode[]
      */
     private $_childNodes = [];
 
     /**
      * Construct a new instance of OrderByNode.
      *
-     * @param string             $propertyName       Name of the property corrosponds
-     *                                               to the sub path
-     *                                               segment represented by
-     *                                               this node, this parameter
-     *                                               will be null if this
-     *                                               node is root
-     * @param ResourceProperty   $resourceProperty   Resource property corrosponds
-     *                                               to the sub path
-     *                                               segment represented by this
-     *                                               node, this parameter
-     *                                               will be null if
-     *                                               this node is root
-     * @param ResourceSetWrapper $resourceSetWrapper The resource set wrapper
-     *                                               associated with the sub path
-     *                                               segment represented by this
-     *                                               node, this will be null
-     *                                               if this node represents a
-     *                                               complex sub path segment
+     * @param string|null               $propertyName       Name of the property corresponds to the sub path
+     *                                                      segment represented by this node, this parameter
+     *                                                      will be null if this node is root
+     * @param ResourceProperty|null     $resourceProperty   Resource property corresponds to the sub path
+     *                                                      segment represented by this node, this parameter
+     *                                                      will be null if  this node is root
+     * @param ResourceSetWrapper|null   $resourceSetWrapper The resource set wrapper associated with the sub path
+     *                                                      segment represented by this node, this will be null
+     *                                                      if this node represents a complex sub path segment
      */
     public function __construct($propertyName, $resourceProperty, $resourceSetWrapper)
     {

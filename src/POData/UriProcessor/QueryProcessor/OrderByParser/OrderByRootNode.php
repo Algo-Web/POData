@@ -28,8 +28,7 @@ class OrderByRootNode extends OrderByNode
      * @param ResourceSetWrapper $resourceSetWrapper The resource set pointed by
      *                                               the request resource path uri
      * @param ResourceType       $baseResourceType   The resource type resource set
-     *                                               pointed by the request resource
-     *                                               path uri
+     *                                               pointed to by the request resource path uri
      */
     public function __construct(
         ResourceSetWrapper $resourceSetWrapper,

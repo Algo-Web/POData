@@ -30,10 +30,10 @@ class OrderByLeafNode extends OrderByBaseNode
      * Constructs new instance of OrderByLeafNode.
      *
      * @param string           $propertyName     Name of the property
-     *                                           corrosponds to the
+     *                                           corresponds to the
      *                                           sub path segment represented
      *                                           by this node
-     * @param ResourceProperty $resourceProperty Resource property corrosponds
+     * @param ResourceProperty $resourceProperty Resource property corresponds
      *                                           to the sub path
      *                                           segment represented by this node
      * @param bool             $isAscending      The order of sorting to be

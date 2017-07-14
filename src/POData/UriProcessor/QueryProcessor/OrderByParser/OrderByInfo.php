@@ -7,9 +7,8 @@ use POData\Common\Messages;
 /**
  * Class OrderByInfo.
  *
- * Type to hold information about the navigation properties used
- * in the orderby clause (if any) and orderby path if IDSQP implementor
- * want to perform sorting.
+ * Type to hold information about the navigation properties used in the orderby clause (if any) and orderby
+ * path if IDSQP implementor wants to perform sorting.
  */
 class OrderByInfo
 {
@@ -29,16 +28,15 @@ class OrderByInfo
     private $_isSorted;
 
     /**
-     * Collection of navigation properties specified in the orderby
-     * clause, if no navigation (resource reference) property used
-     * in the clause then this property will be null.
+     * Collection of navigation properties specified in the orderby clause, if no navigation (resource reference)
+     * property used in the clause, then this property will be null.
      *
      * e.g. $orderby=NaviProp1/NaviProp2/PrimitiveProp,
      *      NaviPropA/NaviPropB/PrimitiveProp
      * In this case array will be as follows:
      * array(array(NaviProp1, NaviProp2), array(NaviPropA, NaviPropB))
      *
-     * @var array(array(ResourceProperty))/NULL
+     * @var array(array(ResourceProperty))|null
      */
     private $_navigationPropertiesUsedInTheOrderByClause;
 
@@ -96,10 +94,9 @@ class OrderByInfo
      * Gets collection of navigation properties specified in the orderby clause
      * if no navigation (resource reference) properties are used in the clause then
      * this function returns null, IQueryProvider must check this
-     * function and include these resource reference type navigation properties
-     * in the result.
+     * function and include these resource reference type navigation properties in the result.
      *
-     * @return array(array(ResourceProperty))/NULL
+     * @return array(array(ResourceProperty))|null
      */
     public function getNavigationPropertiesUsed()
     {
@@ -107,9 +104,8 @@ class OrderByInfo
     }
 
     /**
-     * IQueryProvider implementation should use this function to let the
-     * library know that whether implementation will be performing the sorting
-     * or not, if not library will perform the sorting.
+     * IQueryProvider implementation should use this function to let the library know that whether implementation
+     * will be performing the sorting or will library perform the sorting.
      *
      * @param bool $isSorted Set the flag so indicate that the result has been sorted
      */
@@ -120,7 +116,7 @@ class OrderByInfo
 
     /**
      * Whether library should do the sorting or not, if the IQueryProvider implementation already sorted the
-     * entities then library will not perform the sorting.
+     * entities, then library will not perform the sorting.
      *
      * @return bool
      */

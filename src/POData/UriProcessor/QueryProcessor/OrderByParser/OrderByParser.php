@@ -28,16 +28,14 @@ use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionTokenId;
 class OrderByParser
 {
     /**
-     * Collection of anonymous sorter function corresponding to
-     * each orderby path segment.
+     * Collection of anonymous sorter function corresponding to each orderby path segment.
      *
      * @var callable[]
      */
     private $comparisonFunctions = [];
 
     /**
-     * The top level sorter function generated from orderby path
-     * segments.
+     * The top level sorter function generated from orderby path segments.
      *
      * @var callable
      */
@@ -45,7 +43,7 @@ class OrderByParser
 
     /**
      * The structure holds information about the navigation properties
-     * used in the orderby clause (if any) and orderby path if IDSQP
+     * used in the orderby clause (if any), and orderby path if IDSQP
      * implementor want to perform sorting.
      *
      * @var OrderByInfo
@@ -60,8 +58,7 @@ class OrderByParser
     private $providerWrapper;
 
     /**
-     * This object will be of type of the resource set identified by the
-     * request uri.
+     * This object will be of type of the resource set identified by the request uri.
      *
      * @var mixed
      */
@@ -159,8 +156,7 @@ class OrderByParser
      *                                           2. remove duplicate orderby path
      *                                           segment
      *
-     * @throws ODataException If any error occurs while processing the orderby path
-     *                        segments
+     * @throws ODataException                    If any error occurs while processing the orderby path segments
      */
     private function buildOrderByTree(&$orderByPathSegments)
     {
@@ -358,10 +354,9 @@ class OrderByParser
     /**
      * Traverse 'Order By Tree' and create 'OrderInfo' structure.
      *
-     * @param array(array) $orderByPaths The orderby paths
+     * @param array(array)  $orderByPaths   The orderby paths
      *
-     * @throws ODataException In case parser found any tree inconsisitent
-     *                        state, throws unexpected state error
+     * @throws ODataException               If parser finds an inconsistent-tree state, throws unexpected state error
      *
      * @return OrderByInfo
      */
@@ -477,8 +472,7 @@ class OrderByParser
     }
 
     /**
-     * Assert that the given condition is true, if false throw
-     * ODataException for unexpected state.
+     * Assert that the given condition is true, if false throw ODataException for unexpected state.
      *
      * @param bool $condition The condition to assert
      *
