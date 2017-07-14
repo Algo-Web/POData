@@ -467,8 +467,8 @@ class ExpressionParser2 extends ExpressionParser
     }
 
     /**
-     * @param $leftNullableExpTree
-     * @param $rightNullableExpTree
+     * @param AbstractExpression|null $leftNullableExpTree
+     * @param AbstractExpression|null $rightNullableExpTree
      * @return null|AbstractExpression
      */
     private function calculateResultExpression($leftNullableExpTree, $rightNullableExpTree)
