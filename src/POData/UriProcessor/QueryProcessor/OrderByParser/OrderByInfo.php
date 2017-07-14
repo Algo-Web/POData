@@ -36,7 +36,7 @@ class OrderByInfo
      * In this case array will be as follows:
      * array(array(NaviProp1, NaviProp2), array(NaviPropA, NaviPropB))
      *
-     * @var array(array(ResourceProperty))|null
+     * @var array<array<ResourceProperty>>|null
      */
     private $_navigationPropertiesUsedInTheOrderByClause;
 
@@ -44,7 +44,7 @@ class OrderByInfo
      * Constructs new instance of OrderByInfo.
      *
      * @param OrderByPathSegment[]                $orderByPathSegments                        Order by path segments
-     * @param array(array(ResourceProperty))|null $navigationPropertiesUsedInTheOrderByClause navigation properties used in the order by clause
+     * @param array<array<ResourceProperty>>|null $navigationPropertiesUsedInTheOrderByClause navigation properties used in the order by clause
      *
      * @throws \InvalidArgumentException
      */
@@ -96,7 +96,7 @@ class OrderByInfo
      * this function returns null, IQueryProvider must check this
      * function and include these resource reference type navigation properties in the result.
      *
-     * @return array(array(ResourceProperty))|null
+     * @return array<array<ResourceProperty>>|null
      */
     public function getNavigationPropertiesUsed()
     {

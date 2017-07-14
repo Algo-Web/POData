@@ -2,6 +2,7 @@
 
 namespace POData\UriProcessor\QueryProcessor\SkipTokenParser;
 
+use InvalidArgumentException;
 use POData\Common\Messages;
 use POData\Common\ODataException;
 use POData\Providers\Metadata\ResourceType;
@@ -29,7 +30,7 @@ class InternalSkipTokenInfo
      * Holds collection of values in the skiptoken corresponds to the orderby
      * path segments.
      *
-     * @var array(int (array(string, IType))
+     * @var array<array<IType>>
      */
     private $_orderByValuesInSkipToken;
 
@@ -103,7 +104,7 @@ class InternalSkipTokenInfo
      * skip token key values and returns index of first entry in the next
      * page.
      *
-     * @param array(mixed) &$searchArray The sorted array to search
+     * @param array &$searchArray The sorted array to search
      *
      * @throws InvalidArgumentException
      *
@@ -129,13 +130,11 @@ class InternalSkipTokenInfo
             return -1;
         }
 
-        $comparer
-            = $this->_internalOrderByInfo->getSorterFunction();
+        $comparer = $this->_internalOrderByInfo->getSorterFunction();
         //Gets the key object initialized from skiptoken
         $keyObject = $this->getKeyObject();
         $low = 0;
         $searcArraySize = count($searchArray) - 1;
-        $mid = 0;
         $high = $searcArraySize;
         do {
             $matchLevel = 0;
@@ -146,11 +145,9 @@ class InternalSkipTokenInfo
             } elseif ($result < 0) {
                 $high = $mid - 1;
             } else {
-                //Now we found record the matches with skiptoken value,
-                //so first record of next page will at $mid + 1
+                //Now we found record the matches with skiptoken value, so first record of next page will at $mid + 1
                 if ($mid == $searcArraySize) {
-                    //Check skiptoken points to last record, in this
-                    //case no more records available for next page
+                    //Check skiptoken points to last record, in this case no more records available for next page
                     return -1;
                 }
 
@@ -159,12 +156,10 @@ class InternalSkipTokenInfo
         } while ($low <= $high);
 
         if ($mid >= $searcArraySize) {
-            //If key object does not match with last object, then
-            //no more page
+            //If key object does not match with last object, then no more page
             return -1;
         } elseif ($mid <= 0) {
-            //If key object is less than first object, then paged
-            //result start from 0
+            //If key object is less than first object, then paged result start from 0
             return 0;
         }
 
@@ -176,8 +171,7 @@ class InternalSkipTokenInfo
      * Gets the key object for searching, if the object is not initialized,
      * then do it from skiptoken positional values.
      *
-     * @throws ODataException If reflection exception occurs while accessing
-     *                        or setting property
+     * @throws ODataException If reflection exception occurs while accessing or setting property
      *
      * @return mixed
      */
@@ -186,8 +180,7 @@ class InternalSkipTokenInfo
         if (is_null($this->_keyObject)) {
             $this->_keyObject = $this->_internalOrderByInfo->getDummyObject();
             $i = 0;
-            foreach ($this->_internalOrderByInfo->getOrderByPathSegments()
-    as $orderByPathSegment) {
+            foreach ($this->_internalOrderByInfo->getOrderByPathSegments() as $orderByPathSegment) {
                 $index = 0;
                 $currentObject = $this->_keyObject;
                 $subPathSegments = $orderByPathSegment->getSubPathSegments();
@@ -249,8 +242,7 @@ class InternalSkipTokenInfo
     public function buildNextPageLink($lastObject)
     {
         $nextPageLink = null;
-        foreach ($this->_internalOrderByInfo->getOrderByPathSegments()
-    as $orderByPathSegment) {
+        foreach ($this->_internalOrderByInfo->getOrderByPathSegments() as $orderByPathSegment) {
             $index = 0;
             $currentObject = $lastObject;
             $subPathSegments = $orderByPathSegment->getSubPathSegments();
