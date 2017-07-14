@@ -28,6 +28,5 @@ class ArithmeticExpressionTest extends TestCase
         $foo->free();
         $this->assertNull($foo->getLeft());
         $this->assertNull($foo->getRight());
-
     }
 }

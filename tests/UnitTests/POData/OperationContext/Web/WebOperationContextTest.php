@@ -11,6 +11,9 @@ class WebOperationContextTest extends TestCase
 {
     public function testWebOperationContextCtor()
     {
+        // set up required superglobal
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+
         $foo = new WebOperationContext();
         $this->assertTrue($foo->incomingRequest() instanceof IHTTPRequest);
         $this->assertTrue($foo->outgoingResponse() instanceof OutgoingResponse);

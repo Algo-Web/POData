@@ -38,6 +38,5 @@ class PropertyAccessExpressionTest extends TestCase
         $foo->free();
         $this->assertNull($foo->getParent());
         $this->assertNull($foo->getChild());
-
     }
 }
