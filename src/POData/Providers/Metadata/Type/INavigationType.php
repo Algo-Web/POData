@@ -2,6 +2,8 @@
 
 namespace POData\Providers\Metadata\Type;
 
+use POData\Providers\Metadata\ResourceType;
+
 /**
  * Class INavigationType.
  *
