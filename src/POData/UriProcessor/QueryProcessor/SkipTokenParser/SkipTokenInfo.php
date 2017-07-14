@@ -21,7 +21,7 @@ class SkipTokenInfo
     private $_orderByInfo;
 
     /**
-     * Holds collection of values in the skiptoken corrosponds to the orderby
+     * Holds collection of values in the skiptoken corresponds to the orderby
      * path segments.
      *
      * @var array(int (array(string, IType)
@@ -33,7 +33,7 @@ class SkipTokenInfo
      *
      * @param OrderByInfo                      &$orderByInfo             Type holding information about the navigation properties
      *                                                                   used in the orderby clause (if any) and orderby path
-     * @param array(int,(array(string,IType))) $orderByValuesInSkipToken Collection of values in the skiptoken corrosponds
+     * @param array(int,(array(string,IType))) $orderByValuesInSkipToken Collection of values in the skiptoken corresponds
      *                                                                   to the orderby path segments
      */
     public function __construct(OrderByInfo & $orderByInfo, $orderByValuesInSkipToken)
@@ -44,7 +44,7 @@ class SkipTokenInfo
 
     /**
      * Get reference to the OrderByInfo instance holdint information about the
-     * navigation properties used in the rderby clause (if any) and orderby path.
+     * navigation properties used in the orderby clause (if any) and orderby path.
      *
      * @return OrderByInfo
      */
@@ -54,7 +54,7 @@ class SkipTokenInfo
     }
 
     /**
-     * Gets collection of values in the skiptoken corrosponds to the orderby
+     * Gets collection of values in the skiptoken corresponds to the orderby
      * path segments.
      *
      * @return array(int,(array(string,IType)))
