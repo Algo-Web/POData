@@ -29,7 +29,7 @@ class MediaType
     /**
      * The parameters associated with the media type.
      *
-     * @var array(array(string, string))
+     * @var array[]
      */
     private $_parameters;
 
@@ -60,7 +60,7 @@ class MediaType
     /**
      * Gets the parameters associated with the media types.
      *
-     * @return array(array(string, string))
+     * @return array[]
      */
     public function getParameters()
     {
