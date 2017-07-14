@@ -65,7 +65,7 @@ class ExpressionLexer
     /**
      * Character being processed.
      *
-     * @var char
+     * @var string
      */
     private $_ch;
 
@@ -295,6 +295,7 @@ class ExpressionLexer
     public function peekNextToken()
     {
         $savedTextPos = $this->_textPos;
+        assert(2 >= strlen($this->_ch));
         $savedChar = $this->_ch;
         $savedToken = clone $this->_token;
         $this->nextToken();
@@ -475,7 +476,6 @@ class ExpressionLexer
      */
     private function _parseFromDigit()
     {
-        $result = null;
         $startChar = $this->_ch;
         $this->_nextChar();
         if ($startChar == '0' && $this->_ch == 'x' || $this->_ch == 'X') {
@@ -549,7 +549,9 @@ class ExpressionLexer
             ++$this->_textPos;
         }
 
-        $this->_ch = $this->_textPos < $this->_textLen ? $this->_text[$this->_textPos] : '\0';
+        $nextChar = $this->_textPos < $this->_textLen ? $this->_text[$this->_textPos] : '\0';
+        assert(2 >= strlen($nextChar));
+        $this->_ch = $nextChar;
     }
 
     /**
@@ -560,7 +562,9 @@ class ExpressionLexer
     private function _setTextPos($pos)
     {
         $this->_textPos = $pos;
-        $this->_ch = $this->_textPos < $this->_textLen ? $this->_text[$this->_textPos] : '\0';
+        $nextChar = $this->_textPos < $this->_textLen ? $this->_text[$this->_textPos] : '\0';
+        assert(2 >= strlen($nextChar));
+        $this->_ch = $nextChar;
     }
 
     /**
