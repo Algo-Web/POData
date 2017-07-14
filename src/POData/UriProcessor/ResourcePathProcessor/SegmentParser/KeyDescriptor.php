@@ -13,6 +13,7 @@ use POData\Providers\Metadata\Type\Double;
 use POData\Providers\Metadata\Type\Guid;
 use POData\Providers\Metadata\Type\Int32;
 use POData\Providers\Metadata\Type\Int64;
+use POData\Providers\Metadata\Type\IType;
 use POData\Providers\Metadata\Type\Null1;
 use POData\Providers\Metadata\Type\Single;
 use POData\Providers\Metadata\Type\StringType;
@@ -85,7 +86,7 @@ class KeyDescriptor
      *
      * @var array
      */
-    private $_validatedNamedValues;
+    private $_validatedNamedValues = [];
 
     /**
      * Creates new instance of KeyDescriptor
@@ -95,11 +96,11 @@ class KeyDescriptor
      * @param array $namedValues      Collection of named key values
      * @param array $positionalValues Collection of positional key values
      */
-    private function __construct($namedValues, $positionalValues)
+    private function __construct(array $namedValues, array $positionalValues)
     {
         $this->_namedValues = $namedValues;
         $this->_positionalValues = $positionalValues;
-        $this->_validatedNamedValues = null;
+        $this->_validatedNamedValues = [];
     }
 
     /**
@@ -136,15 +137,13 @@ class KeyDescriptor
      * Gets validated named key values, this array will be populated
      * in validate function.
      *
-     * @throws InvalidOperationException if this function invoked
-     *                                   before invoking validate
-     *                                   function
+     * @throws InvalidOperationException If this function invoked before invoking validate function
      *
      * @return array(string, array(string, IType))
      */
     public function getValidatedNamedValues()
     {
-        if ($this->_validatedNamedValues === null) {
+        if (empty($this->_validatedNamedValues)) {
             throw new InvalidOperationException(
                 Messages::keyDescriptorValidateNotCalled()
             );
@@ -460,20 +459,15 @@ class KeyDescriptor
     }
 
     /**
-     * Get the type of an Astoria URI key value, validate the value aganist
-     * the type if valid this function provide the PHP value equivalent to
-     * the astoira URI key value.
+     * Get the type of an Astoria URI key value, validate the value against the type. If valid, this function
+     * provides the PHP value equivalent to the Astoria URI key value.
      *
      * @param string            $value     The Astoria URI key value
      * @param ExpressionTokenId $tokenId   The tokenId for $value literal
-     * @param unknown           &$outValue After the invocation, this parameter
-     *                                     holds the PHP value equivalent to $value,
-     *                                     if $value is not valid then this
-     *                                     parameter will be null
-     * @param IType             &$outType  After the invocation, this parameter
-     *                                     holds the type of $value, if $value is
-     *                                     not a valid key value type then this
-     *                                     parameter will be null
+     * @param mixed|null        &$outValue After the invocation, this parameter holds the PHP equivalent to $value,
+     *                                     if $value is not valid then this parameter will be null
+     * @param IType|null        &$outType  After the invocation, this parameter holds the type of $value, if $value is
+     *                                     not a valid key value type then this parameter will be null
      *
      * @return bool True if $value is a valid type else false
      */
