@@ -170,7 +170,7 @@ interface IQueryProvider
      * @return bool|null Returns result of executing query
      */
     public function putResource(
-        ResourceSet $resourceSet,
+        ResourceSet $sourceresourceSet,
         KeyDescriptor $keyDescriptor,
         $data
     );
@@ -195,7 +195,7 @@ interface IQueryProvider
      * returns object|null returns the newly created model if successful, or null if model creation failed.
      */
     public function createResourceforResourceSet(
-        ResourceSet $resourceSet,
+        ResourceSet $sourceresourceSet,
         $keyDescriptor,
         $data
     );
