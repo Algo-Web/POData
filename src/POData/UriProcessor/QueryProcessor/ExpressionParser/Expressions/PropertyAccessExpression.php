@@ -76,7 +76,7 @@ class PropertyAccessExpression extends AbstractExpression
      */
     public function getParent()
     {
-        return $this->parent;
+        return isset($this->parent) ? $this->parent : null;
     }
 
     /**
@@ -86,7 +86,7 @@ class PropertyAccessExpression extends AbstractExpression
      */
     public function getChild()
     {
-        return $this->child;
+        return isset($this->child) ? $this->child : null;
     }
 
     /**

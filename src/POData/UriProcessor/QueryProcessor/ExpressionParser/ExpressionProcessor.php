@@ -50,9 +50,9 @@ class ExpressionProcessor
      *
      * @param AbstractExpression $expression Current node to process
      *
-     * @return string The language specific expression
+     * @return string|null The language specific expression
      */
-    private function _processExpressionNode(AbstractExpression $expression)
+    private function _processExpressionNode(AbstractExpression $expression = null)
     {
         if ($expression instanceof ArithmeticExpression) {
             $left = $this->_processExpressionNode($expression->getLeft());
@@ -120,5 +120,7 @@ class ExpressionProcessor
                 $child
             );
         }
+
+        return null;
     }
 }

@@ -35,7 +35,7 @@ class UnaryExpression extends AbstractExpression
      */
     public function getChild()
     {
-        return $this->child;
+        return isset($this->child) ? $this->child : null;
     }
 
     /**

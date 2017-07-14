@@ -34,7 +34,7 @@ class ConstantExpression extends AbstractExpression
      */
     public function getValue()
     {
-        return $this->value;
+        return isset($this->value) ? $this->value : null;
     }
 
     /**
