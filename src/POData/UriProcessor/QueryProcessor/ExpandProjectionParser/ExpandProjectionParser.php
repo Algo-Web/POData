@@ -268,7 +268,7 @@ class ExpandProjectionParser
     /**
      * Modify the 'Projection Tree' to include selection details.
      *
-     * @param array(array(string)) $selectPathSegments Collection of select
+     * @param array<array<string>> $selectPathSegments Collection of select
      *                                                 paths
      *
      * @throws ODataException If any error occurs while processing select

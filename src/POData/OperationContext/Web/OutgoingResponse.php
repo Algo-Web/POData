@@ -69,7 +69,7 @@ class OutgoingResponse
      *
      * It may contain service based customized headers also like dataServiceVersion
      *
-     * @return array<string, string>
+     * @return array<string,string>
      */
     public function &getHeaders()
     {

@@ -354,7 +354,7 @@ class OrderByParser
     /**
      * Traverse 'Order By Tree' and create 'OrderInfo' structure.
      *
-     * @param array(array)  $orderByPaths   The orderby paths
+     * @param array<array>  $orderByPaths   The orderby paths
      *
      * @throws ODataException               If parser finds an inconsistent-tree state, throws unexpected state error
      *
@@ -425,7 +425,7 @@ class OrderByParser
      *
      * @throws ODataException If any syntax error found while reading the clause
      *
-     * @return array(array) An array of 'OrderByPathSegment's, each of which
+     * @return array<array> An array of 'OrderByPathSegment's, each of which
      *                      is array of 'OrderBySubPathSegment's
      */
     private function readOrderBy($value)

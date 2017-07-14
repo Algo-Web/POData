@@ -63,7 +63,7 @@ class InternalSkipTokenInfo
      *
      * @param InternalOrderByInfo           &$internalOrderByInfo     Reference to an instance of InternalOrderByInfo which holds
      *                                                                sorter function(s) generated from orderby clause
-     * @param array(int(array(string,IType) $orderByValuesInSkipToken Collection of values in the skiptoken corresponds to the
+     * @param array<array<IType>>           $orderByValuesInSkipToken Collection of values in the skiptoken corresponds to the
      *                                                                orderby path segments
      * @param ResourceType                  &$resourceType            Reference to the type of the resource pointed by the request uri
      */

@@ -2,6 +2,7 @@
 
 namespace POData\UriProcessor\QueryProcessor\OrderByParser;
 
+use InvalidArgumentException;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceSetWrapper;
 
@@ -108,12 +109,13 @@ class OrderByNode extends OrderByBaseNode
         if (array_key_exists($propertyName, $this->_childNodes)) {
             return $this->_childNodes[$propertyName];
         }
+        return null;
     }
 
     /**
      * To add a child node to the list of child nodes.
      *
-     * @param OrderByNode/OrderByLeafNode $node The child node
+     * @param OrderByNode|OrderByLeafNode $node The child node
      *
      * @throws InvalidArgumentException
      */
