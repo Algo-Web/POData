@@ -5,6 +5,7 @@ namespace POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceTypeKind;
 use POData\Providers\Metadata\Type\Boolean;
+use POData\Providers\Metadata\Type\IType;
 use POData\Providers\Metadata\Type\Navigation;
 use POData\UriProcessor\QueryProcessor\FunctionDescription;
 
@@ -46,7 +47,9 @@ class PropertyAccessExpression extends AbstractExpression
         //If the property is primitive type, then _type will be primitve types
         //implementing IType
         if ($resourceProperty->getResourceType()->getResourceTypeKind() == ResourceTypeKind::PRIMITIVE) {
-            $this->type = $resourceProperty->getResourceType()->getInstanceType();
+            $rawType = $resourceProperty->getResourceType()->getInstanceType();
+            assert($rawType instanceof IType, "Primitive type instance type not an IType");
+            $this->type = $rawType;
         } else {
             //This is a navigation i.e. Complex, ResourceReference or Collection
             $this->type = new Navigation($resourceProperty->getResourceType());
@@ -126,11 +129,9 @@ class PropertyAccessExpression extends AbstractExpression
 
         $navigationPropertiesInThePath = [];
         while ($basePropertyExpression) {
-            $resourceTypeKind
-                = $basePropertyExpression->getResourceType()->getResourceTypeKind();
+            $resourceTypeKind = $basePropertyExpression->getResourceType()->getResourceTypeKind();
             if ($resourceTypeKind == ResourceTypeKind::ENTITY) {
-                $navigationPropertiesInThePath[]
-                    = $basePropertyExpression->resourceProperty;
+                $navigationPropertiesInThePath[] = $basePropertyExpression->resourceProperty;
             } else {
                 break;
             }
@@ -145,11 +146,9 @@ class PropertyAccessExpression extends AbstractExpression
      * Function to create a nullable expression subtree for checking the
      * nullablilty of parent (and current poperty optionally) properties.
      *
-     * @param bool $includeMe Boolean flag indicating whether to include null
-     *                        check for this property along with parents
+     * @param bool $includeMe Boolean flag indicating whether to include null check for this property along with parents
      *
-     * @return AbstractExpression Instance of UnaryExpression, LogicalExpression
-     *                            or Null
+     * @return AbstractExpression|null Instance of UnaryExpression, LogicalExpression or Null
      */
     public function createNullableExpressionTree($includeMe)
     {
@@ -160,8 +159,7 @@ class PropertyAccessExpression extends AbstractExpression
             $basePropertyExpression = $basePropertyExpression->parent;
         }
 
-        //This property is direct child of ResourceSet, no need to check
-        //nullability for direct ResourceSet properties
+        //This property is direct child of ResourceSet, no need to check nullability for direct ResourceSet properties
         // ($c->CustomerID, $c->Order, $c->Address) unless $includeMe is true
         if ($basePropertyExpression == $this) {
             if ($includeMe) {
@@ -177,19 +175,16 @@ class PropertyAccessExpression extends AbstractExpression
                 );
             }
 
-            return;
+            return null;
         }
 
-        //This property is a property of a complex type or resource reference
+        //This property is a property of a complex type or resource reference, whether directly or otherwise
         //$c->Order->OrderID, $c->Address->LineNumber,
-        // $c->complex1->complex2->primitveVar
-        //($c->Order != null),($c->Address != null),
-        // (($c->complex1 != null) && ($c->complex1->complex2 != null))
+        // $c->complex1->complex2->primitiveVar
+        // Intermediate values must of course be non-null - otherwise PHP gets rather shirty
         $expression = new UnaryExpression(
             new FunctionCallExpression(
-                FunctionDescription::isNullCheckFunction(
-                    $basePropertyExpression->getType()
-                ),
+                FunctionDescription::isNullCheckFunction($basePropertyExpression->getType()),
                 [$basePropertyExpression]
             ),
             ExpressionType::NOT_LOGICAL,
@@ -200,9 +195,7 @@ class PropertyAccessExpression extends AbstractExpression
             $basePropertyExpression = $basePropertyExpression->getChild();
             $expression2 = new UnaryExpression(
                 new FunctionCallExpression(
-                    FunctionDescription::isNullCheckFunction(
-                        $basePropertyExpression->getType()
-                    ),
+                    FunctionDescription::isNullCheckFunction($basePropertyExpression->getType()),
                     [$basePropertyExpression]
                 ),
                 ExpressionType::NOT_LOGICAL,
@@ -219,9 +212,7 @@ class PropertyAccessExpression extends AbstractExpression
             $basePropertyExpression = $basePropertyExpression->getChild();
             $expression2 = new UnaryExpression(
                 new FunctionCallExpression(
-                    FunctionDescription::isNullCheckFunction(
-                        $basePropertyExpression->getType()
-                    ),
+                    FunctionDescription::isNullCheckFunction($basePropertyExpression->getType()),
                     [$basePropertyExpression]
                 ),
                 ExpressionType::NOT_LOGICAL,
