@@ -54,33 +54,20 @@ class ExpressionProcessor
      */
     private function _processExpressionNode(AbstractExpression $expression = null)
     {
+        $funcName = null;
         if ($expression instanceof ArithmeticExpression) {
-            $left = $this->_processExpressionNode($expression->getLeft());
-            $right = $this->_processExpressionNode($expression->getRight());
-
-            return $this->_expressionProvider->onArithmeticExpression(
-                $expression->getNodeType(),
-                $left,
-                $right
-            );
+            $funcName = 'onArithmeticExpression';
+        } elseif ($expression instanceof LogicalExpression) {
+            $funcName = 'onLogicalExpression';
+        } elseif ($expression instanceof RelationalExpression) {
+            $funcName = 'onRelationalExpression';
         }
 
-        if ($expression instanceof LogicalExpression) {
+        if (null !== $funcName) {
             $left = $this->_processExpressionNode($expression->getLeft());
             $right = $this->_processExpressionNode($expression->getRight());
 
-            return $this->_expressionProvider->onLogicalExpression(
-                $expression->getNodeType(),
-                $left,
-                $right
-            );
-        }
-
-        if ($expression instanceof RelationalExpression) {
-            $left = $this->_processExpressionNode($expression->getLeft());
-            $right = $this->_processExpressionNode($expression->getRight());
-
-            return $this->_expressionProvider->onRelationalExpression(
+            return $this->_expressionProvider->$funcName(
                 $expression->getNodeType(),
                 $left,
                 $right

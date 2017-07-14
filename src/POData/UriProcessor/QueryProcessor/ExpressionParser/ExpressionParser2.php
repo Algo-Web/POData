@@ -35,7 +35,7 @@ class ExpressionParser2 extends ExpressionParser
     /**
      * Collection of navigation properties used in the expression.
      *
-     * @var array(array(ResourceProperty))
+     * @var array<array>
      */
     private $navigationPropertiesUsedInTheExpression;
 

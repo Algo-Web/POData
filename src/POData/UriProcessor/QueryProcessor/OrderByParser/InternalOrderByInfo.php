@@ -14,8 +14,7 @@ class InternalOrderByInfo
 {
     /**
      * The structure holds information about the navigation properties used in the
-     * orderby clause (if any) and orderby path if IDSQP implementor want to perform
-     * sorting.
+     * orderby clause (if any), and orderby path if IDSQP implementor want to perform sorting.
      *
      * @var OrderByInfo
      */
@@ -52,20 +51,16 @@ class InternalOrderByInfo
     /**
      * Creates new instance of InternalOrderByInfo.
      *
-     * @param OrderByInfo  $orderByInfo        The structure holds
-     *                                         information about the
-     *                                         navigation properties
-     *                                         used in the orderby clause
-     *                                         (if any) and orderby path
-     *                                         if IDSQP implementation wants to perform sorting
-     * @param callable[]   $subSorterFunctions Collection of sub sorter functions corresponding to each orderby path segment
+     * @param OrderByInfo  $orderByInfo        The structure holds information about the
+     *                                         navigation properties used in the orderby clause
+     *                                         (if any) and orderby path if IDSQP implementation wants to perform
+     *                                         sorting
+     * @param callable[]   $subSorterFunctions Collection of sub sorter functions corresponding to each orderby path
+     *                                         segment
      * @param callable     $sorterFunction     The top level anonymous sorter function
-     * @param mixed        $dummyObject        A dummy object of type
-     *                                         of the resource set
-     *                                         identified by the
-     *                                         request uri
-     * @param ResourceType $resourceType       The ResourceType for the resource
-     *                                         targeted by resource path
+     * @param mixed        $dummyObject        A dummy object of type of the resource set
+     *                                         identified by the request uri
+     * @param ResourceType $resourceType       The ResourceType for the resource targeted by resource path
      */
     public function __construct(
         OrderByInfo $orderByInfo,
@@ -82,7 +77,7 @@ class InternalOrderByInfo
     }
 
     /**
-     * Get reference to order information to pe passed to IDSQP implementation calls.
+     * Get reference to order information to be passed to IDSQP implementation calls.
      *
      * @return OrderByInfo
      */
@@ -135,11 +130,9 @@ class InternalOrderByInfo
      * Build value of $skiptoken from the given object which will be the
      * last object in the page.
      *
-     * @param mixed $lastObject entity instance from which skiptoken needs
-     *                          to be built
+     * @param mixed             $lastObject entity instance from which skiptoken needs to be built
      *
-     * @throws ODataException If reflection exception occurs while accessing
-     *                        property
+     * @throws ODataException   If reflection exception occurs while accessing property
      *
      * @return string
      */

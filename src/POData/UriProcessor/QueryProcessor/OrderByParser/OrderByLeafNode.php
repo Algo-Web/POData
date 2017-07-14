@@ -30,10 +30,10 @@ class OrderByLeafNode extends OrderByBaseNode
      * Constructs new instance of OrderByLeafNode.
      *
      * @param string           $propertyName     Name of the property
-     *                                           corrosponds to the
+     *                                           corresponds to the
      *                                           sub path segment represented
      *                                           by this node
-     * @param ResourceProperty $resourceProperty Resource property corrosponds
+     * @param ResourceProperty $resourceProperty Resource property corresponds
      *                                           to the sub path
      *                                           segment represented by this node
      * @param bool             $isAscending      The order of sorting to be
@@ -88,7 +88,7 @@ class OrderByLeafNode extends OrderByBaseNode
     /**
      * Build comparison function for this leaf node.
      *
-     * @param string[] $ancestors Array of parent properties e.g. array('Orders', 'Customer', 'Customer_Demographics')
+     * @param string[] $ancestors Array of parent properties e.g. ['Orders', 'Customer', 'Customer_Demographics']
      *
      * @return \Closure
      */

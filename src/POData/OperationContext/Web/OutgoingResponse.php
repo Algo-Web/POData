@@ -12,7 +12,7 @@ class OutgoingResponse
     /**
      * Gets the headers from the outgoing Web response.
      *
-     * @var WebHeaderCollection
+     * @var []
      */
     private $_headers;
 
@@ -69,7 +69,7 @@ class OutgoingResponse
      *
      * It may contain service based customized headers also like dataServiceVersion
      *
-     * @return array<string, string>
+     * @return array<string,string>
      */
     public function &getHeaders()
     {
@@ -119,7 +119,7 @@ class OutgoingResponse
     /**
      * Gets the value of the ETag header of the response.
      *
-     * @return reference of _headers[HttpResponseHeaderStrETag]
+     * @return string reference of _headers[HttpResponseHeaderStrETag]
      */
     public function getETag()
     {

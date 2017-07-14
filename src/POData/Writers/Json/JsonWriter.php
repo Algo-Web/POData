@@ -46,9 +46,7 @@ class JsonWriter
      */
     public function endScope()
     {
-        $this->_writer
-            ->writeLine()
-            ->decreaseIndent();
+        $this->_writer->writeLine()->decreaseIndent();
 
         if (array_pop($this->_scopes)->type == $this->_scopeType['Array']) {
             $this->_writer->writeValue(']');
@@ -199,7 +197,7 @@ class JsonWriter
         $search = ['\\', "\n", "\t", "\r", "\b", "\f", '"'];
         $replace = ['\\\\', '\\n', '\\t', '\\r', '\\b', '\\f', '\"'];
         $processedString = str_replace($search, $replace, $string);
-        // Escape some ASCII characters(0x08, 0x0c)
+        // Escape some ASCII characters - namely, 0x08 and 0x0c
         $processedString = str_replace([chr(0x08), chr(0x0C)], ['\b', '\f'], $processedString);
 
         return $processedString;
@@ -209,14 +207,14 @@ class JsonWriter
      * Write the string value with/without quotes.
      *
      * @param string $text   value to be written
-     * @param string $quotes put quotes around the value if this value is true
+     * @param bool $quotes put quotes around the value if this value is true
      */
     private function _writeCore($text, $quotes)
     {
-        if (count($this->_scopes) != 0) {
+        if (0 != count($this->_scopes)) {
             $currentScope = end($this->_scopes);
             if ($currentScope->type == $this->_scopeType['Array']) {
-                if ($currentScope->objectCount != 0) {
+                if (0 != $currentScope->objectCount) {
                     $this->_writer->writeTrimmed(', ');
                 }
 
@@ -224,12 +222,12 @@ class JsonWriter
             }
         }
 
-        if ($quotes && $text !== 'null') {
+        if ($quotes && 'null' !== $text) {
             $this->_writer->writeValue('"');
         }
 
         $this->_writer->writeValue($text);
-        if ($quotes && $text !== 'null') {
+        if ($quotes && 'null' !== $text) {
             $this->_writer->writeValue('"');
         }
     }
@@ -241,11 +239,9 @@ class JsonWriter
      */
     private function _startScope($type)
     {
-        if (count($this->_scopes) != 0) {
+        if (0 != count($this->_scopes)) {
             $currentScope = end($this->_scopes);
-            if (($currentScope->type == $this->_scopeType['Array'])
-                && ($currentScope->objectCount != 0)
-            ) {
+            if (($currentScope->type == $this->_scopeType['Array']) && (0 != $currentScope->objectCount)) {
                 $this->_writer->writeTrimmed(', ');
             }
 
@@ -261,9 +257,7 @@ class JsonWriter
             $this->_writer->writeValue('{');
         }
 
-        $this->_writer
-            ->increaseIndent()
-            ->writeLine();
+        $this->_writer->increaseIndent()->writeLine();
     }
 
     /**
@@ -274,32 +268,5 @@ class JsonWriter
     public function getJsonOutput()
     {
         return $this->_writer->getResult();
-    }
-}
-
-/**
- * class representing scope information.
- */
-class Scope
-{
-    /**
-     * keeps the count of the nested scopes.
-     */
-    public $objectCount;
-
-    /**
-     *  keeps the type of the scope.
-     */
-    public $type;
-
-    /**
-     * Creates a new instance of scope type.
-     *
-     * @param int $type type of the scope
-     */
-    public function __construct($type)
-    {
-        $this->type = $type;
-        $this->objectCount = 0;
     }
 }

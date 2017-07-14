@@ -163,21 +163,21 @@ interface IQueryProvider
     /**
      * Puts an entity instance to entity set identified by a key.
      *
-     * @param ResourceSet   $resourceSet   The entity set containing the entity to update
-     * @param KeyDescriptor $keyDescriptor The key identifying the entity to update
+     * @param ResourceSet   $sourceResourceSet  The entity set containing the entity to update
+     * @param KeyDescriptor $keyDescriptor      The key identifying the entity to update
      * @param $data
      *
      * @return bool|null Returns result of executing query
      */
     public function putResource(
-        ResourceSet $resourceSet,
+        ResourceSet $sourceresourceSet,
         KeyDescriptor $keyDescriptor,
         $data
     );
 
     /*
      * Delete resource from a resource set.
-     * @param ResourceSet|null $resourceSet
+     * @param ResourceSet|null $sourceResourceSet
      * @param object           $sourceEntityInstance
      *
      * return bool true if resources successfully deleted, otherwise false.
@@ -195,7 +195,7 @@ interface IQueryProvider
      * returns object|null returns the newly created model if successful, or null if model creation failed.
      */
     public function createResourceforResourceSet(
-        ResourceSet $resourceSet,
+        ResourceSet $sourceresourceSet,
         $keyDescriptor,
         $data
     );

@@ -17,7 +17,7 @@ class FilterInfo
      * In this case array will be as follows:
      * array(array(NaviProp1, NaviProp2), array(NaviPropA, NaviPropB))
      *
-     * @var array(array(ResourceProperty))/NULL
+     * @var array<array>|null
      */
     private $navigationPropertiesUsedInTheFilterClause;
 

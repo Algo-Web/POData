@@ -6,6 +6,7 @@ use Illuminate\Support\Str;
 use POData\Common\Messages;
 use POData\Common\ODataConstants;
 use POData\Common\ODataException;
+use POData\Providers\Metadata\ResourceEntityType;
 use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Metadata\ResourceType;
@@ -295,9 +296,11 @@ class SegmentParser
                     case ResourcePropertyKind::RESOURCE_REFERENCE:
                     case ResourcePropertyKind::RESOURCESET_REFERENCE:
                         $current->setTargetKind(TargetKind::RESOURCE());
+                        $prevResource = $previous->getTargetResourceType();
+                        assert($prevResource instanceof ResourceEntityType);
                         $resourceSetWrapper = $this->providerWrapper->getResourceSetWrapperForNavigationProperty(
                             $previous->getTargetResourceSetWrapper(),
-                            $previous->getTargetResourceType(),
+                            $prevResource,
                             $projectedProperty
                         );
                         if (is_null($resourceSetWrapper)) {
@@ -309,9 +312,7 @@ class SegmentParser
                     default:
                         if (!$projectedProperty->isKindOf(ResourcePropertyKind::PRIMITIVE)) {
                             throw ODataException::createInternalServerError(
-                                Messages::segmentParserUnExpectedPropertyKind(
-                                    'Primitive'
-                                )
+                                Messages::segmentParserUnExpectedPropertyKind('Primitive')
                             );
                         }
 

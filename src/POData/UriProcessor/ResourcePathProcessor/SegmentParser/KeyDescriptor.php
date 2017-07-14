@@ -13,6 +13,7 @@ use POData\Providers\Metadata\Type\Double;
 use POData\Providers\Metadata\Type\Guid;
 use POData\Providers\Metadata\Type\Int32;
 use POData\Providers\Metadata\Type\Int64;
+use POData\Providers\Metadata\Type\IType;
 use POData\Providers\Metadata\Type\Null1;
 use POData\Providers\Metadata\Type\Single;
 use POData\Providers\Metadata\Type\StringType;
@@ -63,7 +64,7 @@ class KeyDescriptor
      *
      * @var array
      */
-    private $_namedValues;
+    private $_namedValues = [];
 
     /**
      * Holds collection of positional key values
@@ -77,7 +78,7 @@ class KeyDescriptor
      *
      * @var array
      */
-    private $_positionalValues;
+    private $_positionalValues = [];
 
     /**
      * Holds collection of positional or named values as named values. The validate
@@ -85,7 +86,7 @@ class KeyDescriptor
      *
      * @var array
      */
-    private $_validatedNamedValues;
+    private $_validatedNamedValues = [];
 
     /**
      * Creates new instance of KeyDescriptor
@@ -95,17 +96,17 @@ class KeyDescriptor
      * @param array $namedValues      Collection of named key values
      * @param array $positionalValues Collection of positional key values
      */
-    private function __construct($namedValues, $positionalValues)
+    private function __construct(array $namedValues, array $positionalValues)
     {
         $this->_namedValues = $namedValues;
         $this->_positionalValues = $positionalValues;
-        $this->_validatedNamedValues = null;
+        $this->_validatedNamedValues = [];
     }
 
     /**
      * Gets collection of named key values.
      *
-     * @return array(string, array(string, IType))
+     * @return array[]
      */
     public function getNamedValues()
     {
@@ -115,7 +116,7 @@ class KeyDescriptor
     /**
      * Gets collection of positional key values.
      *
-     * @return array(int, array(string, IType))
+     * @return array[]
      */
     public function getPositionalValues()
     {
@@ -125,7 +126,7 @@ class KeyDescriptor
     /**
      * Gets collection of positional key values by reference.
      *
-     * @return array(int, array(string, IType))
+     * @return array[]
      */
     public function &getPositionalValuesByRef()
     {
@@ -136,15 +137,13 @@ class KeyDescriptor
      * Gets validated named key values, this array will be populated
      * in validate function.
      *
-     * @throws InvalidOperationException if this function invoked
-     *                                   before invoking validate
-     *                                   function
+     * @throws InvalidOperationException    If this function invoked before invoking validate function
      *
-     * @return array(string, array(string, IType))
+     * @return array[]
      */
     public function getValidatedNamedValues()
     {
-        if ($this->_validatedNamedValues === null) {
+        if (empty($this->_validatedNamedValues)) {
             throw new InvalidOperationException(
                 Messages::keyDescriptorValidateNotCalled()
             );
@@ -200,12 +199,11 @@ class KeyDescriptor
      * @param KeyDescriptor KeyDescriptor On return, Description of key after
      *                                      parsing
      *
-     * @return bool True if the given values were parsed; false if there was
-     *              a syntactic error
+     * @return bool True if the given values were parsed; false if there was a syntax error
      */
     public static function tryParseKeysFromKeyPredicate(
         $keyPredicate,
-        &$keyDescriptor
+        KeyDescriptor &$keyDescriptor = null
     ) {
         return self::_tryParseKeysFromKeyPredicate(
             $keyPredicate,
@@ -223,8 +221,7 @@ class KeyDescriptor
      * @param KeyDescriptor &$keyDescriptor On return, Description of values
      *                                      after parsing
      *
-     * @return bool True if the given values were parsed; false if there was
-     *              a syntactic error
+     * @return bool True if the given values were parsed; false if there was a syntax error
      */
     public static function tryParseValuesFromSkipToken($skipToken, &$keyDescriptor)
     {
@@ -241,10 +238,10 @@ class KeyDescriptor
      * _validatedNamedValues array with key as keyName and value as an array of
      * key value and key type.
      *
-     * @param string       $segmentAsString The segment in the form identifer
+     * @param string       $segmentAsString The segment in the form identifier
      *                                      (keyPredicate) which this descriptor
      *                                      represents
-     * @param ResourceType $resourceType    The type of the idenfier in the segment
+     * @param ResourceType $resourceType    The type of the identifier in the segment
      *
      * @throws ODataException If validation fails
      */
@@ -338,11 +335,10 @@ class KeyDescriptor
     /**
      * Attempts to parse value(s) of resource key(s) from the key predicate and
      * creates instance of KeyDescription representing the same, Once parsing is
-     * done one should call validate function to validate the created
-     * KeyDescription.
+     * done, one should call validate function to validate the created KeyDescription.
      *
      * @param string        $keyPredicate     The key predicate to parse
-     * @param bool          $allowNamedValues Set to true if paser should accept
+     * @param bool          $allowNamedValues Set to true if parser should accept
      *                                        named values(Property = KeyValue),
      *                                        if false then parser will fail on
      *                                        such constructs
@@ -353,8 +349,7 @@ class KeyDescriptor
      * @param KeyDescriptor &$keyDescriptor   On return, Description of key after
      *                                        parsing
      *
-     * @return bool True if the given values were parsed; false if there was a
-     *              syntactic error
+     * @return bool True if the given values were parsed; false if there was a syntax error
      */
     private static function _tryParseKeysFromKeyPredicate(
         $keyPredicate,
@@ -460,22 +455,17 @@ class KeyDescriptor
     }
 
     /**
-     * Get the type of an Astoria URI key value, validate the value aganist
-     * the type if valid this function provide the PHP value equivalent to
-     * the astoira URI key value.
+     * Get the type of an Astoria URI key value, validate the value against the type. If valid, this function
+     * provides the PHP value equivalent to the Astoria URI key value.
      *
      * @param string            $value     The Astoria URI key value
      * @param ExpressionTokenId $tokenId   The tokenId for $value literal
-     * @param unknown           &$outValue After the invocation, this parameter
-     *                                     holds the PHP value equivalent to $value,
-     *                                     if $value is not valid then this
-     *                                     parameter will be null
-     * @param IType             &$outType  After the invocation, this parameter
-     *                                     holds the type of $value, if $value is
-     *                                     not a valid key value type then this
-     *                                     parameter will be null
+     * @param mixed|null        &$outValue After the invocation, this parameter holds the PHP equivalent to $value,
+     *                                     if $value is not valid then this parameter will be null
+     * @param IType|null        &$outType  After the invocation, this parameter holds the type of $value, if $value is
+     *                                     not a valid key value type then this parameter will be null
      *
-     * @return bool True if $value is a valid type else false
+     * @return bool True if $value is a valid type, else false
      */
     private static function _getTypeAndValidateKeyValue($value, $tokenId, &$outValue, &$outType)
     {

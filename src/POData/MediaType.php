@@ -29,7 +29,7 @@ class MediaType
     /**
      * The parameters associated with the media type.
      *
-     * @var array(array(string, string))
+     * @var array[]
      */
     private $_parameters;
 
@@ -40,7 +40,7 @@ class MediaType
      * @param string $subType    The sub type of media type
      * @param array  $parameters The parameters associated with media type
      */
-    public function __construct($type, $subType, $parameters)
+    public function __construct($type, $subType, array $parameters)
     {
         $this->_type = $type;
         $this->_subType = $subType;
@@ -60,7 +60,7 @@ class MediaType
     /**
      * Gets the parameters associated with the media types.
      *
-     * @return array(array(string, string))
+     * @return array[]
      */
     public function getParameters()
     {

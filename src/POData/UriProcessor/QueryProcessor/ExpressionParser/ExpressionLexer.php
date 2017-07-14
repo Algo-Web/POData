@@ -44,7 +44,7 @@ class ExpressionLexer
     /**
      * Text being parsed.
      *
-     * @var char[]
+     * @var string
      */
     private $_text;
 
@@ -65,7 +65,7 @@ class ExpressionLexer
     /**
      * Character being processed.
      *
-     * @var char
+     * @var string
      */
     private $_ch;
 
@@ -105,7 +105,7 @@ class ExpressionLexer
      *
      * @param ExpressionToken $token The expression token to set as current
      */
-    public function setCurrentToken($token)
+    public function setCurrentToken(ExpressionToken $token)
     {
         $this->_token = $token;
     }
@@ -113,7 +113,7 @@ class ExpressionLexer
     /**
      * To get the text being parsed.
      *
-     * @return char[]
+     * @return string
      */
     public function getExpressionText()
     {
@@ -179,8 +179,6 @@ class ExpressionLexer
                     if (self::isNumeric($t)) {
                         break;
                     }
-
-                    $this->_setTextPos($tokenPos);
                 } elseif ($hasNext && $this->_text[$tokenPos + 1] == 'I') {
                     $this->_nextChar();
                     $this->_parseIdentifier();
@@ -194,11 +192,9 @@ class ExpressionLexer
                         break;
                     }
 
-                    // If it looked like '-INF' but wasn't we'll rewind and fall
-                    // through to a simple '-' token.
-                    $this->_setTextPos($tokenPos);
+                    // If it looked like '-INF' but wasn't we'll rewind and fall through to a simple '-' token.
                 }
-
+                $this->_setTextPos($tokenPos);
                 $this->_nextChar();
                 $t = ExpressionTokenId::MINUS;
                 break;
@@ -299,6 +295,7 @@ class ExpressionLexer
     public function peekNextToken()
     {
         $savedTextPos = $this->_textPos;
+        assert(2 >= strlen($this->_ch));
         $savedChar = $this->_ch;
         $savedToken = clone $this->_token;
         $this->nextToken();
@@ -323,11 +320,7 @@ class ExpressionLexer
     public function validateToken($tokenId)
     {
         if ($this->_token->Id != $tokenId) {
-            $this->_parseError(
-                Messages::expressionLexerSyntaxError(
-                    $this->_textPos
-                )
-            );
+            $this->_parseError(Messages::expressionLexerSyntaxError($this->_textPos));
         }
     }
 
@@ -483,7 +476,6 @@ class ExpressionLexer
      */
     private function _parseFromDigit()
     {
-        $result = null;
         $startChar = $this->_ch;
         $this->_nextChar();
         if ($startChar == '0' && $this->_ch == 'x' || $this->_ch == 'X') {
@@ -557,9 +549,9 @@ class ExpressionLexer
             ++$this->_textPos;
         }
 
-        $this->_ch
-            = $this->_textPos < $this->_textLen
-             ? $this->_text[$this->_textPos] : '\0';
+        $nextChar = $this->_textPos < $this->_textLen ? $this->_text[$this->_textPos] : '\0';
+        assert(2 >= strlen($nextChar));
+        $this->_ch = $nextChar;
     }
 
     /**
@@ -570,9 +562,9 @@ class ExpressionLexer
     private function _setTextPos($pos)
     {
         $this->_textPos = $pos;
-        $this->_ch
-            = $this->_textPos < $this->_textLen
-             ? $this->_text[$this->_textPos] : '\0';
+        $nextChar = $this->_textPos < $this->_textLen ? $this->_text[$this->_textPos] : '\0';
+        assert(2 >= strlen($nextChar));
+        $this->_ch = $nextChar;
     }
 
     /**
@@ -581,11 +573,7 @@ class ExpressionLexer
     private function _validateDigit()
     {
         if (!Char::isDigit($this->_ch)) {
-            $this->_parseError(
-                Messages::expressionLexerDigitExpected(
-                    $this->_textPos
-                )
-            );
+            $this->_parseError(Messages::expressionLexerDigitExpected($this->_textPos));
         }
     }
 

@@ -4,8 +4,10 @@ namespace UnitTests\POData\UriProcessor\QueryProcessor\ExpressionParser;
 
 use POData\Common\ODataException;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionLexer;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionToken;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionTokenId;
 use UnitTests\POData\TestCase;
+use Mockery as m;
 
 class ExpressionLexerTest extends TestCase
 {
@@ -767,6 +769,27 @@ class ExpressionLexerTest extends TestCase
         $token = $lexer->getCurrentToken();
         $this->AssertEquals($token->Id, ExpressionTokenId::END);
         $this->AssertEquals($token->Position, 37);
+    }
+
+    public function testGetSetTokenRoundTrip()
+    {
+        $id = ExpressionTokenId::END;
+        $token = m::mock(ExpressionToken::class)->makePartial();
+        $token->Id = $id;
+
+        $expression = '     IntIdentifier     eq     123    ';
+        $foo = new ExpressionLexer($expression);
+        $foo->setCurrentToken($token);
+        $actual = $foo->getCurrentToken();
+        $this->assertEquals($id, $actual->Id);
+    }
+
+    public function testGetExpressionRoundTrip()
+    {
+        $expression = '     IntIdentifier     eq     123    ';
+        $foo = new ExpressionLexer($expression);
+        $actual = $foo->getExpressionText();
+        $this->assertEquals($expression, $actual);
     }
 
     public function tearDown()

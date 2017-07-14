@@ -452,7 +452,7 @@ class ExpressionParser
      *
      * @return PropertyAccessExpression
      */
-    private function _parsePropertyAccess($parentExpression)
+    private function _parsePropertyAccess(PropertyAccessExpression $parentExpression = null)
     {
         $identifier = $this->_getCurrentToken()->getIdentifier();
         if (is_null($parentExpression)) {

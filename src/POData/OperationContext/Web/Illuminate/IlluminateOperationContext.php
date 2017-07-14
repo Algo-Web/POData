@@ -11,7 +11,7 @@ class IlluminateOperationContext implements IOperationContext
     /**
      * Object of IncomingRequest which is needed to get all the HTTP headers info.
      *
-     * @var IncomingRequest
+     * @var IncomingIlluminateRequest
      */
     private $_incomingRequest;
 
@@ -49,7 +49,7 @@ class IlluminateOperationContext implements IOperationContext
     /**
      * Gets the Web request context for the request being received.
      *
-     * @return IHTTPRequest
+     * @return IncomingIlluminateRequest
      */
     public function incomingRequest()
     {
