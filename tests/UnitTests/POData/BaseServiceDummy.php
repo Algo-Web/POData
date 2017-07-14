@@ -2,6 +2,7 @@
 
 namespace UnitTests\POData;
 
+use POData\Configuration\EntitySetRights;
 use POData\Configuration\IServiceConfiguration;
 use POData\ObjectModel\IObjectSerialiser;
 use POData\OperationContext\ServiceHost;
@@ -103,37 +104,7 @@ class BaseServiceDummy extends BaseServiceTestWrapper
 
     public function serializeResult(RequestDescription $request, IUriProcessor $uriProcessor)
     {
-        return parent::serializeResult($request, $uriProcessor);
-    }
-
-    public function handleRequest2()
-    {
-        parent::handleRequest2();
-    }
-
-    public function delegateRequestProcessing()
-    {
-        parent::delegateRequestProcessing();
-    }
-
-    public function serializeResultForResponseBody()
-    {
-        parent::serializeResultForResponseBody();
-    }
-
-    public function handlePOSTOperation()
-    {
-        parent::handlePOSTOperation();
-    }
-
-    public function handlePUTOperation()
-    {
-        parent::handlePUTOperation();
-    }
-
-    public function handleDELETEOperation()
-    {
-        parent::handleDELETEOperation();
+        parent::serializeResult($request, $uriProcessor);
     }
 
     public function setODataWriterRegistry(ODataWriterRegistry $registry)
