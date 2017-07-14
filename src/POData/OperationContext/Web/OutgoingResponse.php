@@ -93,8 +93,7 @@ class OutgoingResponse
      */
     public function setContentType($value)
     {
-        $this->_headers[ODataConstants::HTTPRESPONSE_HEADER_CONTENTTYPE]
-            = $value;
+        $this->_headers[ODataConstants::HTTPRESPONSE_HEADER_CONTENTTYPE] = $value;
     }
 
     /**
@@ -104,8 +103,7 @@ class OutgoingResponse
      */
     public function setContentLength($value)
     {
-        $this->_headers[ODataConstants::HTTPRESPONSE_HEADER_CONTENTLENGTH]
-            = $value;
+        $this->_headers[ODataConstants::HTTPRESPONSE_HEADER_CONTENTLENGTH] = $value;
     }
 
     /**
@@ -115,8 +113,7 @@ class OutgoingResponse
      */
     public function setCacheControl($value)
     {
-        $this->_headers[ODataConstants::HTTPRESPONSE_HEADER_CACHECONTROL]
-            = $value;
+        $this->_headers[ODataConstants::HTTPRESPONSE_HEADER_CACHECONTROL] = $value;
     }
 
     /**
@@ -136,8 +133,7 @@ class OutgoingResponse
      */
     public function setETag($value)
     {
-        $this->_headers[ODataConstants::HTTPRESPONSE_HEADER_ETAG]
-            = $value;
+        $this->_headers[ODataConstants::HTTPRESPONSE_HEADER_ETAG] = $value;
     }
 
     /**
@@ -147,8 +143,7 @@ class OutgoingResponse
      */
     public function setLastModified($value)
     {
-        $this->_headers[ODataConstants::HTTPRESPONSE_HEADER_LASTMODIFIED]
-            = $value;
+        $this->_headers[ODataConstants::HTTPRESPONSE_HEADER_LASTMODIFIED] = $value;
     }
 
     /**
@@ -158,8 +153,7 @@ class OutgoingResponse
      */
     public function setLocation($value)
     {
-        $this->_headers[ODataConstants::HTTPRESPONSE_HEADER_LOCATION]
-            = $value;
+        $this->_headers[ODataConstants::HTTPRESPONSE_HEADER_LOCATION] = $value;
     }
 
     /**
@@ -170,8 +164,7 @@ class OutgoingResponse
      */
     public function setStatusCode($value)
     {
-        $this->_headers[ODataConstants::HTTPRESPONSE_HEADER_STATUS]
-            = $value;
+        $this->_headers[ODataConstants::HTTPRESPONSE_HEADER_STATUS] = $value;
     }
 
     /**
@@ -181,8 +174,7 @@ class OutgoingResponse
      */
     public function setStatusDescription($value)
     {
-        $this->_headers[ODataConstants::HTTPRESPONSE_HEADER_STATUS_DESC]
-            = $value;
+        $this->_headers[ODataConstants::HTTPRESPONSE_HEADER_STATUS_DESC] = $value;
     }
 
     /**
@@ -212,8 +204,7 @@ class OutgoingResponse
      */
     public function setServiceVersion($value)
     {
-        $this->_headers[ODataConstants::ODATAVERSIONHEADER]
-            = $value;
+        $this->_headers[ODataConstants::ODATAVERSIONHEADER] = $value;
     }
 
     /**

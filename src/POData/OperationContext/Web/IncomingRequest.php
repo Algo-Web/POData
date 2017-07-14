@@ -43,8 +43,7 @@ class IncomingRequest implements IHTTPRequest
     private $queryOptions;
 
     /**
-     * A collection that represents mapping between query
-     * option and its count.
+     * A collection that represents mapping between query option and its count.
      *
      * @var array(string, int)
      */
@@ -193,11 +192,9 @@ class IncomingRequest implements IHTTPRequest
                     $isNamedOptions = 2 == count($result);
                     $rawUrl = rawurldecode($result[0]);
                     if ($isNamedOptions) {
-                        $this->queryOptions[]
-                            = [$rawUrl => trim(rawurldecode($result[1]))];
+                        $this->queryOptions[] = [$rawUrl => trim(rawurldecode($result[1]))];
                     } else {
-                        $this->queryOptions[]
-                            = [null => trim($rawUrl)];
+                        $this->queryOptions[] = [null => trim($rawUrl)];
                     }
                 }
             }
