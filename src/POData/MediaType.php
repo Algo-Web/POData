@@ -40,7 +40,7 @@ class MediaType
      * @param string $subType    The sub type of media type
      * @param array  $parameters The parameters associated with media type
      */
-    public function __construct($type, $subType, $parameters)
+    public function __construct($type, $subType, array $parameters)
     {
         $this->_type = $type;
         $this->_subType = $subType;
