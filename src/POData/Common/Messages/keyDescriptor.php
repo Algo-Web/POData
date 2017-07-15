@@ -16,8 +16,8 @@ trait keyDescriptor
      */
     public static function keyDescriptorKeyCountNotMatching($segment, $expectedCount, $actualCount)
     {
-        return 'The predicate in the segment \'' . $segment . '\' expect ' . $expectedCount . ' keys but ' . $actualCount
-                .' provided';
+        return 'The predicate in the segment \'' . $segment . '\' expect ' . $expectedCount . 
+               ' keys but ' . $actualCount . ' provided';
     }
 
     /**
@@ -31,8 +31,8 @@ trait keyDescriptor
      */
     public static function keyDescriptorMissingKeys($segment, $expectedKeys)
     {
-        return 'Missing keys in key predicate for the segment \'' . $segment . '\'. The key predicate expects the keys \''
-                .$expectedKeys . '\'';
+        return 'Missing keys in key predicate for the segment \'' . $segment . '\'. The key predicate ' .
+               'expects the keys \'' . $expectedKeys . '\'';
     }
 
     /**

@@ -45,7 +45,8 @@ trait common
      */
     public static function commonNotValidPrimitiveEDMType($argumentName, $functionName)
     {
-        return 'The argument \'' . $argumentName . '\' to ' . $functionName . ' is not a valid EdmPrimitiveType Enum value.';
+        return 'The argument \'' . $argumentName . '\' to ' . $functionName . ' is not a valid ' .
+               'EdmPrimitiveType Enum value.';
     }
 
     /**
@@ -70,7 +71,8 @@ trait common
      */
     public static function failedToAccessProperty($propertyName, $parentObjectName)
     {
-        return 'Data Service failed to access or initialize the property ' . $propertyName . ' of ' . $parentObjectName . '.';
+        return 'Data Service failed to access or initialize the property ' . $propertyName .
+               ' of ' . $parentObjectName . '.';
     }
 
     /**

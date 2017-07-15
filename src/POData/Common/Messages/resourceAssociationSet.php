@@ -28,7 +28,8 @@ trait resourceAssociationSet
      */
     public static function resourceAssociationSetEndPropertyMustBeNavigationProperty($propertyName, $resourceTypeName)
     {
-        return 'The property ' . $propertyName . ' must be a navigation property of the resource type ' . $resourceTypeName;
+        return 'The property ' . $propertyName . ' must be a navigation property of the resource type ' .
+                $resourceTypeName;
     }
 
     /**
@@ -42,7 +43,8 @@ trait resourceAssociationSet
      */
     public static function resourceAssociationSetEndResourceTypeMustBeAssignableToResourceSet($resourceTypeName, $resourceSetName)
     {
-        return 'The resource type ' . $resourceTypeName . ' must be assignable to the resource set ' . $resourceSetName . '.';
+        return 'The resource type ' . $resourceTypeName . ' must be assignable to the resource set ' . 
+                $resourceSetName . '.';
     }
 
     /**

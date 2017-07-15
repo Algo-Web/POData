@@ -92,8 +92,8 @@ trait httpProcessUtility
      */
     public static function httpProcessUtilityClosingQuoteNotFound($parameterName)
     {
-        return 'Value for MIME type parameter \'' . $parameterName . '\' is incorrect because the closing quote character'
-                .' could not be found while the parameter value started with a quote character.';
+        return 'Value for MIME type parameter \'' . $parameterName . '\' is incorrect because the closing quote '.
+               ' character could not be found while the parameter value started with a quote character.';
     }
 
     /**

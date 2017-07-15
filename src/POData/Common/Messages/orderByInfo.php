@@ -177,6 +177,7 @@ trait orderByInfo
      */
     public static function orderByParserFailedToAccessOrInitializeProperty($propertyName, $parentObjectName)
     {
-        return 'OrderBy parser failed to access or initialize the property ' . $propertyName . ' of ' . $parentObjectName;
+        return 'OrderBy parser failed to access or initialize the property ' . $propertyName .
+               ' of ' . $parentObjectName;
     }
 }

@@ -32,8 +32,8 @@ trait expandProjectionParser
     {
         $clause = $isSelect ? 'select' : 'expand';
 
-        return 'Error in the ' . $clause . ' clause. Type \'' . $resourceTypeName . '\' does not have a property named \''
-                .$propertyName . '\'.';
+        return 'Error in the ' . $clause . ' clause. Type \'' . $resourceTypeName . '\' does not have ' .
+               'a property named \'' . $propertyName . '\'.';
     }
 
     /**
