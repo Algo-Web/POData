@@ -108,9 +108,10 @@ class HttpProcessUtility
         $acceptTypesEmpty = true;
         if (!is_null($acceptTypesText)) {
             $acceptTypes = self::mimeTypesFromAcceptHeaders($acceptTypesText);
+            $numAvailable = count($availableTypes);
             foreach ($acceptTypes as $acceptType) {
                 $acceptTypesEmpty = false;
-                for ($i = 0; $i < count($availableTypes); ++$i) {
+                for ($i = 0; $i < $numAvailable; ++$i) {
                     $availableType = $availableTypes[$i];
                     $matchRating = $acceptType->getMatchingRating($availableType);
                     if ($matchRating < 0) {
