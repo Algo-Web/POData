@@ -284,7 +284,9 @@ class PHPExpressionProvider implements IExpressionProvider
 
             case ODataConstants::STRFUN_SUBSTRING:
                 return count($params) == 3 ?
-                    'substr(' . $params[0] . ', ' . $params[1] . ', ' . $params[2] . ')' : 'substr(' . $params[0] . ', ' . $params[1] . ')';
+                    'substr(' . $params[0] . ', ' . $params[1] .
+                    ', ' . $params[2] . ')' : 'substr(' . $params[0] .
+                    ', ' . $params[1] . ')';
 
             case ODataConstants::STRFUN_SUBSTRINGOF:
                 return '(strpos(' . $params[1] . ', ' . $params[0] . ') !== false)';

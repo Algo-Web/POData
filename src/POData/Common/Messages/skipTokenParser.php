@@ -40,8 +40,8 @@ trait skipTokenParser
      */
     public static function skipTokenParserSkipTokenNotMatchingOrdering($skipTokenValuesCount, $skipToken, $expectedCount)
     {
-        return 'The number of keys \'' . $skipTokenValuesCount . '\' in skip token with value \'' . $skipToken
-                .'\' did not match the number of ordering constraints \'' . $expectedCount . '\' for the resource type.';
+        return 'The number of keys \'' . $skipTokenValuesCount . '\' in skip token with value \'' . $skipToken .
+               '\' did not match the number of ordering constraints \'' . $expectedCount . '\' for the resource type.';
     }
 
     /**
