@@ -13,7 +13,7 @@ trait uriProcessor
      */
     public static function uriProcessorResourceNotFound($segment)
     {
-        return 'Resource not found for the segment \''.$segment.'\'.';
+        return 'Resource not found for the segment \'' . $segment . '\'.';
     }
 
     /**
@@ -38,6 +38,6 @@ trait uriProcessor
      */
     public static function uriProcessorRequestUriDoesNotHaveTheRightBaseUri($requestUri, $serviceUri)
     {
-        return 'The URI \''.$requestUri.'\' is not valid since it is not based on \''.$serviceUri.'\'';
+        return 'The URI \'' . $requestUri . '\' is not valid since it is not based on \'' . $serviceUri . '\'';
     }
 }

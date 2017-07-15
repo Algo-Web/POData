@@ -193,7 +193,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
     public function writeTopLevelComplexObject(
         QueryResult &$complexValue,
         $propertyName,
-        ResourceType & $resourceType
+        ResourceType &$resourceType
     ) {
         $propertyContent = new ODataPropertyContent();
         $this->writeComplexValue(
@@ -429,7 +429,8 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
                 $resourceTypeKind,
                 $navigationProperties
             );
-        } else { //This is the code path to handle projected properties of Entry
+        } else {
+            //This is the code path to handle projected properties of Entry
             list($odataPropertyContent, $navigationProperties) = $this->writeObjectPropertiesExpanded(
                 $customObject,
                 $resourceType,
@@ -918,7 +919,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
         if (28 < $resourceKind) {
             return false;
         }
-        return 0 == ($resourceKind % 4);
+        return 0 == ($resourceKind%4);
     }
 
 

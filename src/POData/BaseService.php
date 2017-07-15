@@ -682,7 +682,7 @@ abstract class BaseService implements IRequestHandler, IService
      */
     protected function compareETag(
         &$entryObject,
-        ResourceType & $resourceType,
+        ResourceType &$resourceType,
         &$needToSerializeResponse
     ) {
         $needToSerializeResponse = true;
@@ -775,7 +775,7 @@ abstract class BaseService implements IRequestHandler, IService
      *                     for use in a URI) there are etag properties, NULL if
      *                     there is no etag property
      */
-    protected function getETagForEntry(&$entryObject, ResourceType & $resourceType)
+    protected function getETagForEntry(&$entryObject, ResourceType &$resourceType)
     {
         $eTag = null;
         $comma = null;

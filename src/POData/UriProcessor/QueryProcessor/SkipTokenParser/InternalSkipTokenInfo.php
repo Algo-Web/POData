@@ -68,9 +68,9 @@ class InternalSkipTokenInfo
      * @param ResourceType        &$resourceType            Reference to the type of the resource pointed by the request uri
      */
     public function __construct(
-        InternalOrderByInfo & $internalOrderByInfo,
+        InternalOrderByInfo &$internalOrderByInfo,
         $orderByValuesInSkipToken,
-        ResourceType & $resourceType
+        ResourceType &$resourceType
     ) {
         $this->internalOrderByInfo = $internalOrderByInfo;
         $this->orderByValuesInSkipToken = $orderByValuesInSkipToken;

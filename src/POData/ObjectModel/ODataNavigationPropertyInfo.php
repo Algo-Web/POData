@@ -21,7 +21,7 @@ class ODataNavigationPropertyInfo
      * @param bool             $expanded          Whether the navigation is expanded
      *                                            or not
      */
-    public function __construct(ResourceProperty & $resourceProperty, $expanded)
+    public function __construct(ResourceProperty &$resourceProperty, $expanded)
     {
         $this->resourceProperty = $resourceProperty;
         $this->expanded = $expanded;

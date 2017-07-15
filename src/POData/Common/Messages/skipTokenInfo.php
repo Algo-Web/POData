@@ -18,8 +18,8 @@ trait skipTokenInfo
      */
     public static function skipTokenInfoBothOrderByPathAndOrderByValuesShouldBeSetOrNotSet($orderByPathsVarName, $orderByValuesVarName)
     {
-        return 'Either both the arguments '.$orderByPathsVarName.' and '.$orderByValuesVarName.' should be'
-               .' null or not-null';
+        return 'Either both the arguments ' . $orderByPathsVarName . ' and ' . $orderByValuesVarName . ' should be'
+                .' null or not-null';
     }
 
     /**
@@ -32,7 +32,7 @@ trait skipTokenInfo
      */
     public static function internalSkipTokenInfoFailedToAccessOrInitializeProperty($propertyName)
     {
-        return 'internalSkipTokenInfo failed to access or initialize the property '.$propertyName;
+        return 'internalSkipTokenInfo failed to access or initialize the property ' . $propertyName;
     }
 
     /**
@@ -45,6 +45,6 @@ trait skipTokenInfo
      */
     public static function internalSkipTokenInfoBinarySearchRequireArray($argumentName)
     {
-        return 'The argument \''.$argumentName.'\' should be an array to perfrom binary search';
+        return 'The argument \'' . $argumentName . '\' should be an array to perfrom binary search';
     }
 }

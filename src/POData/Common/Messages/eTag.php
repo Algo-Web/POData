@@ -13,7 +13,7 @@ trait eTag
     public static function eTagNotAllowedForNonExistingResource()
     {
         return 'The resource targeted by the request does not exists, eTag header is not allowed for'
-               .' non-existing resource.';
+                .' non-existing resource.';
     }
 
     /**
@@ -25,7 +25,7 @@ trait eTag
     public static function noETagPropertiesForType()
     {
         return 'If-Match or If-None-Match headers cannot be specified if the target type does not have'
-               .' etag properties defined.';
+                .' etag properties defined.';
     }
 
     /**
@@ -49,8 +49,8 @@ trait eTag
      */
     public static function eTagCannotBeSpecified($uri)
     {
-        return 'If-Match or If-None-Match HTTP headers cannot be specified since the URI \''.$uri.'\' refers to a'
-               .' collection of resources or has a $count or $link segment or has an $expand as one of the query'
-               .' parameters.';
+        return 'If-Match or If-None-Match HTTP headers cannot be specified since the URI \'' . $uri . '\' refers to a'
+                .' collection of resources or has a $count or $link segment or has an $expand as one of the query'
+                .' parameters.';
     }
 }

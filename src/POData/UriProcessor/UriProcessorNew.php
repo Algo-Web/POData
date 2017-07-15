@@ -412,7 +412,7 @@ class UriProcessorNew implements IUriProcessor
                         $this->getRequest()->getFilterInfo(),
                         null, // $orderby
                         null, // $top
-                        null,  // $skip
+                        null, // $skip
                         $skipToken
                     );
                 }
