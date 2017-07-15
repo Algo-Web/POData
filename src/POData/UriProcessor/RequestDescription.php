@@ -283,7 +283,7 @@ class RequestDescription
 
         // Define data from request body
         if ($dataType) {
-            $this->_readData($dataType);
+            $this->readData($dataType);
         }
     }
 
@@ -292,7 +292,7 @@ class RequestDescription
      *
      * @param string $dataType
      */
-    private function _readData($dataType)
+    private function readData($dataType)
     {
         $string = $this->data;
         $dataArray = [];

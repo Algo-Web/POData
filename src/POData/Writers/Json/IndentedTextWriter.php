@@ -56,7 +56,7 @@ class IndentedTextWriter
     public function writeValue($value)
     {
         $this->outputTabs();
-        $this->_write($value);
+        $this->write($value);
 
         return $this;
     }
@@ -68,7 +68,7 @@ class IndentedTextWriter
      */
     public function writeLine()
     {
-        $this->_write("\n");
+        $this->write("\n");
         $this->tabsPending = true;
 
         return $this;
@@ -83,7 +83,7 @@ class IndentedTextWriter
      */
     public function writeTrimmed($value)
     {
-        $this->_write(trim($value));
+        $this->write(trim($value));
 
         return $this;
     }
@@ -128,7 +128,7 @@ class IndentedTextWriter
     private function outputTabs()
     {
         if ($this->tabsPending) {
-            $this->_write(str_repeat($this->tabString, $this->indentLevel));
+            $this->write(str_repeat($this->tabString, $this->indentLevel));
             $this->tabsPending = false;
         }
     }
@@ -138,7 +138,7 @@ class IndentedTextWriter
      *
      * @param string $value value to be written
      */
-    private function _write($value)
+    private function write($value)
     {
         $this->result .= $value;
     }

@@ -126,7 +126,7 @@ class SegmentParser
         $segmentCount = count($segments);
         $identifier = $keyPredicate = null;
         $this->extractSegmentIdentifierAndKeyPredicate($segments[0], $identifier, $keyPredicate);
-        $previous = $this->_createFirstSegmentDescriptor(
+        $previous = $this->createFirstSegmentDescriptor(
             $identifier,
             $keyPredicate,
             $checkRights
@@ -188,7 +188,7 @@ class SegmentParser
                 );
             }
 
-            $this->_assertion(!$hasPredicate);
+            $this->assertion(!$hasPredicate);
             $current = SegmentDescriptor::createFrom($previous);
             $current->setIdentifier(ODataConstants::URI_VALUE_SEGMENT);
             $current->setTargetKind(TargetKind::PRIMITIVE_VALUE());
@@ -203,7 +203,7 @@ class SegmentParser
             && $previous->isSingleResult()
             && $identifier === ODataConstants::URI_LINK_SEGMENT
         ) {
-            $this->_assertion(!$hasPredicate);
+            $this->assertion(!$hasPredicate);
             $current = SegmentDescriptor::createFrom($previous);
             $current->setIdentifier(ODataConstants::URI_LINK_SEGMENT);
             $current->setTargetKind(TargetKind::LINK());
@@ -321,8 +321,8 @@ class SegmentParser
                 }
 
                 if ($hasPredicate) {
-                    $this->_assertion(!$current->isSingleResult());
-                    $keyDescriptor = $this->_createKeyDescriptor(
+                    $this->assertion(!$current->isSingleResult());
+                    $keyDescriptor = $this->createKeyDescriptor(
                         $identifier . '(' . $keyPredicate . ')',
                         $projectedProperty->getResourceType(),
                         $keyPredicate
@@ -356,20 +356,20 @@ class SegmentParser
      *
      * @return SegmentDescriptor Descriptor for the first segment
      */
-    private function _createFirstSegmentDescriptor($segmentIdentifier, $keyPredicate, $checkRights)
+    private function createFirstSegmentDescriptor($segmentIdentifier, $keyPredicate, $checkRights)
     {
         $descriptor = new SegmentDescriptor();
         $descriptor->setIdentifier($segmentIdentifier);
 
         if ($segmentIdentifier === ODataConstants::URI_METADATA_SEGMENT) {
-            $this->_assertion(is_null($keyPredicate));
+            $this->assertion(is_null($keyPredicate));
             $descriptor->setTargetKind(TargetKind::METADATA());
 
             return $descriptor;
         }
 
         if ($segmentIdentifier === ODataConstants::URI_BATCH_SEGMENT) {
-            $this->_assertion(is_null($keyPredicate));
+            $this->assertion(is_null($keyPredicate));
             $descriptor->setTargetKind(TargetKind::BATCH());
 
             return $descriptor;
@@ -393,7 +393,7 @@ class SegmentParser
 
         $singleton = $this->providerWrapper->resolveSingleton($segmentIdentifier);
         if (null !== $singleton) {
-            $this->_assertion(is_null($keyPredicate));
+            $this->assertion(is_null($keyPredicate));
             $resourceType = $singleton->getResourceType();
             $typeName = Str::plural($resourceType->getName());
             $resourceSet = $this->providerWrapper->resolveResourceSet($typeName);
@@ -417,7 +417,7 @@ class SegmentParser
         $descriptor->setTargetSource(TargetSource::ENTITY_SET);
         $descriptor->setTargetKind(TargetKind::RESOURCE());
         if (null !== $keyPredicate) {
-            $keyDescriptor = $this->_createKeyDescriptor(
+            $keyDescriptor = $this->createKeyDescriptor(
                 $segmentIdentifier . '(' . $keyPredicate . ')',
                 $resourceSetWrapper->getResourceType(),
                 $keyPredicate
@@ -452,7 +452,7 @@ class SegmentParser
      *
      * @return KeyDescriptor Describes the key values in the $keyPredicate
      */
-    private function _createKeyDescriptor($segment, ResourceType $resourceType, $keyPredicate)
+    private function createKeyDescriptor($segment, ResourceType $resourceType, $keyPredicate)
     {
         /**
          * @var KeyDescriptor
@@ -485,7 +485,7 @@ class SegmentParser
      *
      * @throws ODataException
      */
-    private function _assertion($condition)
+    private function assertion($condition)
     {
         if (!$condition) {
             throw ODataException::createSyntaxError(Messages::syntaxError());

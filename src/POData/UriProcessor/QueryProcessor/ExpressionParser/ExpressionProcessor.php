@@ -42,7 +42,7 @@ class ExpressionProcessor
      */
     public function processExpression(AbstractExpression $rootExpression)
     {
-        return $this->_processExpressionNode($rootExpression);
+        return $this->processExpressionNode($rootExpression);
     }
 
     /**
@@ -52,7 +52,7 @@ class ExpressionProcessor
      *
      * @return string|null The language specific expression
      */
-    private function _processExpressionNode(AbstractExpression $expression = null)
+    private function processExpressionNode(AbstractExpression $expression = null)
     {
         $funcName = null;
         if ($expression instanceof ArithmeticExpression) {
@@ -64,8 +64,8 @@ class ExpressionProcessor
         }
 
         if (null !== $funcName) {
-            $left = $this->_processExpressionNode($expression->getLeft());
-            $right = $this->_processExpressionNode($expression->getRight());
+            $left = $this->processExpressionNode($expression->getLeft());
+            $right = $this->processExpressionNode($expression->getRight());
 
             return $this->expressionProvider->$funcName(
                 $expression->getNodeType(),
@@ -90,7 +90,7 @@ class ExpressionProcessor
         if ($expression instanceof FunctionCallExpression) {
             $params = [];
             foreach ($expression->getParamExpressions() as $paramExpression) {
-                $params[] = $this->_processExpressionNode($paramExpression);
+                $params[] = $this->processExpressionNode($paramExpression);
             }
 
             return $this->expressionProvider->onFunctionCallExpression(
@@ -100,7 +100,7 @@ class ExpressionProcessor
         }
 
         if ($expression instanceof UnaryExpression) {
-            $child = $this->_processExpressionNode($expression->getChild());
+            $child = $this->processExpressionNode($expression->getChild());
 
             return $this->expressionProvider->onUnaryExpression(
                 $expression->getNodeType(),

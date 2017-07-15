@@ -74,13 +74,13 @@ class StreamProviderWrapper
     {
         $requestETag = null;
         $checkETagForEquality = null;
-        $this->_getETagFromHeaders($requestETag, $checkETagForEquality);
+        $this->getETagFromHeaders($requestETag, $checkETagForEquality);
         $stream = null;
         try {
-            $this->_saveContentTypeAndETag();
+            $this->saveContentTypeAndETag();
             $opContext = $this->service->getOperationContext();
             if (is_null($resourceStreamInfo)) {
-                $this->_loadAndValidateStreamProvider();
+                $this->loadAndValidateStreamProvider();
                 $stream = $this->streamProvider->getReadStream2(
                     $entity,
                     null,
@@ -89,7 +89,7 @@ class StreamProviderWrapper
                     $opContext
                 );
             } else {
-                $this->_loadAndValidateStreamProvider2();
+                $this->loadAndValidateStreamProvider2();
                 $stream = $this->streamProvider->getReadStream2(
                     $entity,
                     $resourceStreamInfo,
@@ -99,7 +99,7 @@ class StreamProviderWrapper
                 );
             }
 
-            $this->_verifyContentTypeOrETagModified('IDSSP::getReadStream');
+            $this->verifyContentTypeOrETagModified('IDSSP::getReadStream');
         } catch (ODataException $ex) {
             //Check for status code 304 (stream Not Modified)
             if (304 == $ex->getStatusCode()) {
@@ -149,10 +149,10 @@ class StreamProviderWrapper
      */
     public function getStreamContentType($entity, ResourceStreamInfo $resourceStreamInfo = null)
     {
-        $this->_saveContentTypeAndETag();
+        $this->saveContentTypeAndETag();
         $opContext = $this->service->getOperationContext();
         if (is_null($resourceStreamInfo)) {
-            $this->_loadAndValidateStreamProvider();
+            $this->loadAndValidateStreamProvider();
             $contentType = $this->streamProvider->getStreamContentType2($entity, null, $opContext);
             if (is_null($contentType)) {
                 throw new InvalidOperationException(
@@ -160,12 +160,12 @@ class StreamProviderWrapper
                 );
             }
         } else {
-            $this->_loadAndValidateStreamProvider2();
+            $this->loadAndValidateStreamProvider2();
             assert($this->streamProvider instanceof IStreamProvider2);
             $contentType = $this->streamProvider->getStreamContentType2($entity, $resourceStreamInfo, $opContext);
         }
 
-        $this->_verifyContentTypeOrETagModified('IDSSP::getStreamContentType');
+        $this->verifyContentTypeOrETagModified('IDSSP::getStreamContentType');
 
         return $contentType;
     }
@@ -191,18 +191,18 @@ class StreamProviderWrapper
      */
     public function getStreamETag($entity, ResourceStreamInfo $resourceStreamInfo = null)
     {
-        $this->_saveContentTypeAndETag();
+        $this->saveContentTypeAndETag();
         $opContext = $this->service->getOperationContext();
         if (is_null($resourceStreamInfo)) {
-            $this->_loadAndValidateStreamProvider();
+            $this->loadAndValidateStreamProvider();
             $eTag = $this->streamProvider->getStreamETag2($entity, null, $opContext);
         } else {
-            $this->_loadAndValidateStreamProvider2();
+            $this->loadAndValidateStreamProvider2();
             assert($this->streamProvider instanceof IStreamProvider2);
             $eTag = $this->streamProvider->getStreamETag2($entity, $resourceStreamInfo, $opContext);
         }
 
-        $this->_verifyContentTypeOrETagModified('IDSSP::getStreamETag');
+        $this->verifyContentTypeOrETagModified('IDSSP::getStreamETag');
         if (!self::isETagValueValid($eTag, true)) {
             throw new InvalidOperationException(
                 Messages::streamProviderWrapperGetStreamETagReturnedInvalidETagFormat()
@@ -240,18 +240,18 @@ class StreamProviderWrapper
         ResourceStreamInfo $resourceStreamInfo = null,
         $mediaLinkEntryUri
     ) {
-        $this->_saveContentTypeAndETag();
+        $this->saveContentTypeAndETag();
         $opContext = $this->service->getOperationContext();
         if (is_null($resourceStreamInfo)) {
-            $this->_loadAndValidateStreamProvider();
+            $this->loadAndValidateStreamProvider();
             $readStreamUri = $this->streamProvider->getReadStreamUri2($entity, null, $opContext);
         } else {
-            $this->_loadAndValidateStreamProvider2();
+            $this->loadAndValidateStreamProvider2();
             assert($this->streamProvider instanceof IStreamProvider2);
             $readStreamUri = $this->streamProvider->getReadStreamUri2($entity, $resourceStreamInfo, $opContext);
         }
 
-        $this->_verifyContentTypeOrETagModified('IDSSP::getReadStreamUri');
+        $this->verifyContentTypeOrETagModified('IDSSP::getReadStreamUri');
         if (!is_null($readStreamUri)) {
             try {
                 new \POData\Common\Url($readStreamUri);
@@ -329,7 +329,7 @@ class StreamProviderWrapper
      *                                     IfNoneMatch header is present, null
      *                                     otherwise
      */
-    private function _getETagFromHeaders(&$eTag, &$checkETagForEquality)
+    private function getETagFromHeaders(&$eTag, &$checkETagForEquality)
     {
         $dataServiceHost = $this->service->getHost();
         //TODO Do check for mutual exclusion of RequestIfMatch and
@@ -358,10 +358,10 @@ class StreamProviderWrapper
      *
      * @throws ODataException
      */
-    private function _loadAndValidateStreamProvider()
+    private function loadAndValidateStreamProvider()
     {
         if (is_null($this->streamProvider)) {
-            $this->_loadStreamProvider();
+            $this->loadStreamProvider();
             if (is_null($this->streamProvider)) {
                 throw ODataException::createInternalServerError(
                     Messages::streamProviderWrapperMustImplementIStreamProviderToSupportStreaming()
@@ -377,7 +377,7 @@ class StreamProviderWrapper
      *
      * @throws ODataException
      */
-    private function _loadAndValidateStreamProvider2()
+    private function loadAndValidateStreamProvider2()
     {
         $maxServiceVersion = $this->service->getConfiguration()->getMaxDataServiceVersion();
         if ($maxServiceVersion->compare(new Version(3, 0)) < 0) {
@@ -387,7 +387,7 @@ class StreamProviderWrapper
         }
 
         if (is_null($this->streamProvider)) {
-            $this->_loadStreamProvider();
+            $this->loadStreamProvider();
             if (is_null($this->streamProvider)) {
                 throw ODataException::createInternalServerError(
                     Messages::streamProviderWrapperMustImplementStreamProvider2ToSupportNamedStreams()
@@ -406,7 +406,7 @@ class StreamProviderWrapper
      *
      * @throws ODataException
      */
-    private function _loadStreamProvider()
+    private function loadStreamProvider()
     {
         if (is_null($this->streamProvider)) {
             $this->streamProvider = $this->service->getStreamProviderX();
@@ -440,7 +440,7 @@ class StreamProviderWrapper
      * Save value of content type and etag headers before invoking implementor
      * methods.
      */
-    private function _saveContentTypeAndETag()
+    private function saveContentTypeAndETag()
     {
         $this->responseContentType = $this->service->getHost()->getResponseContentType();
         $this->responseETag = $this->service->getHost()->getResponseETag();
@@ -454,7 +454,7 @@ class StreamProviderWrapper
      *
      * @throws InvalidOperationException
      */
-    private function _verifyContentTypeOrETagModified($methodName)
+    private function verifyContentTypeOrETagModified($methodName)
     {
         if ($this->responseContentType !== $this->service->getHost()->getResponseContentType()
             || $this->responseETag !== $this->service->getHost()->getResponseETag()

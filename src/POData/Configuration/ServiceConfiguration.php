@@ -130,7 +130,7 @@ class ServiceConfiguration implements IServiceConfiguration
      */
     public function setMaxExpandCount($maxExpandCount)
     {
-        $this->maxExpandCount = $this->_checkIntegerNonNegativeParameter(
+        $this->maxExpandCount = $this->checkIntegerNonNegativeParameter(
             $maxExpandCount,
             'setMaxExpandCount'
         );
@@ -153,7 +153,7 @@ class ServiceConfiguration implements IServiceConfiguration
      */
     public function setMaxExpandDepth($maxExpandDepth)
     {
-        $this->maxExpandDepth = $this->_checkIntegerNonNegativeParameter(
+        $this->maxExpandDepth = $this->checkIntegerNonNegativeParameter(
             $maxExpandDepth,
             'setMaxExpandDepth'
         );
@@ -179,13 +179,13 @@ class ServiceConfiguration implements IServiceConfiguration
      */
     public function setMaxResultsPerCollection($maxResultPerCollection)
     {
-        if ($this->_isPageSizeDefined()) {
+        if ($this->isPageSizeDefined()) {
             throw new InvalidOperationException(
                 Messages::configurationMaxResultAndPageSizeMutuallyExclusive()
             );
         }
 
-        $this->maxResultsPerCollection = $this->_checkIntegerNonNegativeParameter(
+        $this->maxResultsPerCollection = $this->checkIntegerNonNegativeParameter(
             $maxResultPerCollection,
             'setMaxResultsPerCollection'
         );
@@ -284,7 +284,7 @@ class ServiceConfiguration implements IServiceConfiguration
      */
     public function setEntitySetPageSize($name, $pageSize)
     {
-        $pageSize = $this->_checkIntegerNonNegativeParameter(
+        $pageSize = $this->checkIntegerNonNegativeParameter(
             $pageSize,
             'setEntitySetPageSize'
         );
@@ -419,7 +419,7 @@ class ServiceConfiguration implements IServiceConfiguration
      *
      * @return int
      */
-    private function _checkIntegerNonNegativeParameter($value, $functionName)
+    private function checkIntegerNonNegativeParameter($value, $functionName)
     {
         if (!is_int($value)) {
             throw new \InvalidArgumentException(
@@ -441,7 +441,7 @@ class ServiceConfiguration implements IServiceConfiguration
      *
      * @return bool
      */
-    private function _isPageSizeDefined()
+    private function isPageSizeDefined()
     {
         return count($this->pageSizes) > 0 || $this->defaultPageSize > 0;
     }

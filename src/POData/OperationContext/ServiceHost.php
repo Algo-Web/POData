@@ -104,7 +104,7 @@ class ServiceHost
         //Dev Note: Andrew Clinton 5/19/16
         //absoluteServiceUri is never being set from what I can tell
         //so for now we'll set it as such
-        $this->setServiceUri($this->_getServiceUri());
+        $this->setServiceUri($this->getServiceUri());
     }
 
     /**
@@ -291,7 +291,7 @@ class ServiceHost
             if (empty($optionName)) {
                 if (!empty($optionValue)) {
                     if ('$' == $optionValue[0]) {
-                        if ($this->_isODataQueryOption($optionValue)) {
+                        if ($this->isODataQueryOption($optionValue)) {
                             throw ODataException::createBadRequestError(
                                 Messages::hostODataQueryOptionFoundWithoutValue($optionValue)
                             );
@@ -304,7 +304,7 @@ class ServiceHost
                 }
             } else {
                 if ('$' == $optionName[0]) {
-                    if (!$this->_isODataQueryOption($optionName)) {
+                    if (!$this->isODataQueryOption($optionName)) {
                         throw ODataException::createBadRequestError(
                             Messages::hostNonODataOptionBeginsWithSystemCharacter($optionName)
                         );
@@ -341,7 +341,7 @@ class ServiceHost
      *
      * return void
      */
-    private function _getServiceUri()
+    private function getServiceUri()
     {
         if (($pos = strpos($this->absoluteRequestUriAsString, '.svc')) !== false) {
             $serviceUri = substr($this->absoluteRequestUriAsString, 0, $pos + strlen('.svc'));
@@ -359,7 +359,7 @@ class ServiceHost
      *
      * @return bool True if the given option is a valid odata option False otherwise
      */
-    private function _isODataQueryOption($optionName)
+    private function isODataQueryOption($optionName)
     {
         return $optionName === ODataConstants::HTTPQUERY_STRING_FILTER ||
                 $optionName === ODataConstants::HTTPQUERY_STRING_EXPAND ||
