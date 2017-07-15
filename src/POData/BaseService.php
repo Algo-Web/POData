@@ -682,7 +682,7 @@ abstract class BaseService implements IRequestHandler, IService
      */
     protected function compareETag(
         &$entryObject,
-        ResourceType & $resourceType,
+        ResourceType &$resourceType,
         &$needToSerializeResponse
     ) {
         $needToSerializeResponse = true;

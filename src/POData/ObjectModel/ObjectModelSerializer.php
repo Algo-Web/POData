@@ -75,7 +75,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
      *
      * @return ODataFeed
      */
-    public function writeTopLevelElements(QueryResult & $entryObjects)
+    public function writeTopLevelElements(QueryResult &$entryObjects)
     {
         assert(is_array($entryObjects->results), '!is_array($entryObjects->results)');
         $requestTargetSource = $this->getRequest()->getTargetSource();
@@ -191,9 +191,9 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
      * @return ODataPropertyContent
      */
     public function writeTopLevelComplexObject(
-        QueryResult & $complexValue,
+        QueryResult &$complexValue,
         $propertyName,
-        ResourceType & $resourceType
+        ResourceType &$resourceType
     ) {
         $propertyContent = new ODataPropertyContent();
         $this->writeComplexValue(
@@ -216,9 +216,9 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
      * @return ODataPropertyContent
      */
     public function writeTopLevelBagObject(
-        QueryResult & $bagValue,
+        QueryResult &$bagValue,
         $propertyName,
-        ResourceType & $resourceType
+        ResourceType &$resourceType
     ) {
         $propertyContent = new ODataPropertyContent();
         $this->writeBagValue(
@@ -241,8 +241,8 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
      * @return ODataPropertyContent
      */
     public function writeTopLevelPrimitive(
-        QueryResult & $primitiveValue,
-        ResourceProperty & $resourceProperty = null
+        QueryResult &$primitiveValue,
+        ResourceProperty &$resourceProperty = null
     ) {
         assert(null != $resourceProperty, 'Resource property must not be null');
         $propertyContent = new ODataPropertyContent();
@@ -330,11 +330,11 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
      */
     private function writeFeedElements(
         &$entryObjects,
-        ResourceType & $resourceType,
+        ResourceType &$resourceType,
         $title,
         $absoluteUri,
         $relativeUri,
-        ODataFeed & $feed,
+        ODataFeed &$feed,
         $needLink = false
     ) {
         assert(is_array($entryObjects), '!_writeFeedElements::is_array($entryObjects)');
@@ -391,11 +391,11 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
      */
     private function writeObjectProperties(
         $customObject,
-        ResourceType & $resourceType,
+        ResourceType &$resourceType,
         $absoluteUri,
         $relativeUri,
         &$odataEntry,
-        ODataPropertyContent & $odataPropertyContent
+        ODataPropertyContent &$odataPropertyContent
     ) {
         $resourceTypeKind = $resourceType->getResourceTypeKind();
         if ((null === $absoluteUri) == (ResourceTypeKind::ENTITY == $resourceTypeKind)
@@ -519,8 +519,8 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
      */
     private function writePrimitiveValue(
         &$primitiveValue,
-        ODataProperty & $odataProperty,
-        ResourceProperty & $resourceProperty
+        ODataProperty &$odataProperty,
+        ResourceProperty &$resourceProperty
     ) {
         if (is_object($primitiveValue)) {
             //TODO ERROR: The property 'PropertyName'
@@ -554,9 +554,9 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
     private function writeComplexValue(
         &$complexValue,
         $propertyName,
-        ResourceType & $resourceType,
+        ResourceType &$resourceType,
         $relativeUri,
-        ODataPropertyContent & $odataPropertyContent
+        ODataPropertyContent &$odataPropertyContent
     ) {
         $odataProperty = new ODataProperty();
         $odataProperty->name = $propertyName;
@@ -597,9 +597,9 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
     private function writeBagValue(
         &$bagValue,
         $propertyName,
-        ResourceType & $resourceType,
+        ResourceType &$resourceType,
         $relativeUri,
-        ODataPropertyContent & $odataPropertyContent
+        ODataPropertyContent &$odataPropertyContent
     ) {
         assert(null == $bagValue || is_array($bagValue), 'Bag parameter must be null or array');
         $bagItemResourceTypeKind = $resourceType->getResourceTypeKind();
@@ -657,10 +657,10 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
      */
     private function writeMediaResourceMetadata(
         $entryObject,
-        ResourceType & $resourceType,
+        ResourceType &$resourceType,
         $title,
         $relativeUri,
-        ODataEntry & $odataEntry
+        ODataEntry &$odataEntry
     ) {
         $streamProviderWrapper = $this->getService()->getStreamProviderWrapper();
         assert(null != $streamProviderWrapper, 'Retrieved stream provider must not be null');
@@ -733,7 +733,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
      * @return string
      */
     private function primitiveToString(
-        ResourceType & $primitiveResourceType,
+        ResourceType &$primitiveResourceType,
         $primitiveValue
     ) {
         $type = $primitiveResourceType->getInstanceType();
@@ -772,9 +772,9 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
     private function complexObjectToContent(
         &$complexValue,
         $propertyName,
-        ResourceType & $resourceType,
+        ResourceType &$resourceType,
         $relativeUri,
-        ODataPropertyContent & $odataPropertyContent
+        ODataPropertyContent &$odataPropertyContent
     ) {
         $count = count($this->complexTypeInstanceCollection);
         for ($i = 0; $i < $count; ++$i) {
@@ -817,9 +817,9 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
      */
     private function writeObjectPropertiesUnexpanded(
         $customObject,
-        ResourceType & $resourceType,
+        ResourceType &$resourceType,
         $relativeUri,
-        ODataPropertyContent & $odataPropertyContent,
+        ODataPropertyContent &$odataPropertyContent,
         $resourceTypeKind,
         $navigationProperties
     ) {
@@ -937,9 +937,9 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
      */
     private function writeObjectPropertiesExpanded(
         $customObject,
-        ResourceType & $resourceType,
+        ResourceType &$resourceType,
         $relativeUri,
-        ODataPropertyContent & $odataPropertyContent,
+        ODataPropertyContent &$odataPropertyContent,
         $projectionNodes,
         $navigationProperties
     ) {

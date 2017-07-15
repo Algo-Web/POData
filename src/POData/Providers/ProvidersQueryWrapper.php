@@ -421,8 +421,8 @@ class ProvidersQueryWrapper
      */
     private function validateEntityInstance(
         $entityInstance,
-        ResourceSet & $resourceSet,
-        KeyDescriptor & $keyDescriptor,
+        ResourceSet &$resourceSet,
+        KeyDescriptor &$keyDescriptor,
         $methodName
     ) {
         if (null === $entityInstance) {

@@ -294,7 +294,7 @@ class ObjectModelSerializerBase
      *
      * @return bool true if a segment was pushed, false otherwise
      */
-    protected function pushSegmentForNavigationProperty(ResourceProperty & $resourceProperty)
+    protected function pushSegmentForNavigationProperty(ResourceProperty &$resourceProperty)
     {
         if (ResourceTypeKind::ENTITY == $resourceProperty->getTypeKind()) {
             assert(!empty($this->getStack()->getSegmentNames()), 'Segment names should not be empty');
@@ -405,7 +405,7 @@ class ObjectModelSerializerBase
      *
      * @return bool true if the segment was push, false otherwise
      */
-    private function pushSegment($segmentName, ResourceSetWrapper & $resourceSetWrapper)
+    private function pushSegment($segmentName, ResourceSetWrapper &$resourceSetWrapper)
     {
         // Even though there is no expand in the request URI, still we need to push
         // the segment information if we need to count
@@ -640,7 +640,7 @@ class ObjectModelSerializerBase
         &$parentPathSegments,
         &$selectionPaths,
         &$expansionPaths,
-        ExpandedProjectionNode & $expandedProjectionNode,
+        ExpandedProjectionNode &$expandedProjectionNode,
         &$foundSelections,
         &$foundExpansions
     ) {
