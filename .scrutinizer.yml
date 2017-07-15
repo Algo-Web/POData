@@ -164,7 +164,7 @@ coding_style:
 tools:
   php_cs_fixer:
     config:
-      level: all
+      level: psr2
   php_code_sniffer:
     config:
       standard: PSR2
