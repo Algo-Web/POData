@@ -430,7 +430,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
                 $navigationProperties
             );
         } else {
-//This is the code path to handle projected properties of Entry
+            //This is the code path to handle projected properties of Entry
             list($odataPropertyContent, $navigationProperties) = $this->writeObjectPropertiesExpanded(
                 $customObject,
                 $resourceType,

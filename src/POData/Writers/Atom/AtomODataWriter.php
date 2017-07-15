@@ -571,7 +571,7 @@ class AtomODataWriter implements IODataWriter
                 $this->writeProperties($content);
                 $this->xmlWriter->endElement();
             } else {
-//probably just a primitive string
+                //probably just a primitive string
                     $this->xmlWriter->startElementNs(
                         ODataConstants::ODATA_NAMESPACE_PREFIX,
                         ODataConstants::COLLECTION_ELEMENT_NAME,
