@@ -26,28 +26,28 @@ class SegmentDescriptor
      *
      * @var string
      */
-    private $_identifier;
+    private $identifier;
 
     /**
      * Describes the key for this segment.
      *
      * @var KeyDescriptor
      */
-    private $_keyDescriptor;
+    private $keyDescriptor;
 
     /**
      * Whether the segment targets a single result or not.
      *
      * @var bool
      */
-    private $_singleResult;
+    private $singleResult;
 
     /**
      * Resource set wrapper if applicable.
      *
      * @var ResourceSetWrapper
      */
-    private $_targetResourceSetWrapper;
+    private $targetResourceSetWrapper;
 
     /**
      * Reference to an instance of ResourceType describes type of resource
@@ -55,55 +55,55 @@ class SegmentDescriptor
      *
      * @var ResourceType
      */
-    private $_targetResourceType;
+    private $targetResourceType;
 
     /**
      * The kind of resource targeted by this segment.
      *
      * @var TargetKind
      */
-    private $_targetKind;
+    private $targetKind;
 
     /**
      * The kind of 'source of data' for this segment.
      *
      * @var TargetSource
      */
-    private $_targetSource;
+    private $targetSource;
 
     /**
      * The property that is being projected in this segment, if there's any.
      *
      * @var ResourceProperty
      */
-    private $_projectedProperty;
+    private $projectedProperty;
 
     /**
      * The data for this segment.
      *
      * @var mixed
      */
-    private $_result;
+    private $result;
 
     /**
      * Reference to next descriptor.
      *
      * @var SegmentDescriptor
      */
-    private $_next;
+    private $next;
 
     /**
      * Reference to previous descriptor.
      *
      * @var SegmentDescriptor
      */
-    private $_previous;
+    private $previous;
 
     public function __construct()
     {
-        $this->_singleResult = false;
-        $this->_targetKind = TargetKind::NOTHING();
-        $this->_targetSource = TargetSource::NONE;
+        $this->singleResult = false;
+        $this->targetKind = TargetKind::NOTHING();
+        $this->targetSource = TargetSource::NONE;
     }
 
     /**
@@ -116,14 +116,14 @@ class SegmentDescriptor
     public static function createFrom(SegmentDescriptor $anotherDescriptor)
     {
         $descriptor = new self();
-        $descriptor->_identifier = $anotherDescriptor->_identifier;
-        $descriptor->_keyDescriptor = $anotherDescriptor->_keyDescriptor;
-        $descriptor->_projectedProperty = $anotherDescriptor->_projectedProperty;
-        $descriptor->_singleResult = $anotherDescriptor->_singleResult;
-        $descriptor->_targetKind = $anotherDescriptor->_targetKind;
-        $descriptor->_targetResourceSetWrapper = $anotherDescriptor->_targetResourceSetWrapper;
-        $descriptor->_targetResourceType = $anotherDescriptor->_targetResourceType;
-        $descriptor->_targetSource = $anotherDescriptor->_targetSource;
+        $descriptor->identifier = $anotherDescriptor->identifier;
+        $descriptor->keyDescriptor = $anotherDescriptor->keyDescriptor;
+        $descriptor->projectedProperty = $anotherDescriptor->projectedProperty;
+        $descriptor->singleResult = $anotherDescriptor->singleResult;
+        $descriptor->targetKind = $anotherDescriptor->targetKind;
+        $descriptor->targetResourceSetWrapper = $anotherDescriptor->targetResourceSetWrapper;
+        $descriptor->targetResourceType = $anotherDescriptor->targetResourceType;
+        $descriptor->targetSource = $anotherDescriptor->targetSource;
 
         return $descriptor;
     }
@@ -135,7 +135,7 @@ class SegmentDescriptor
      */
     public function getIdentifier()
     {
-        return $this->_identifier;
+        return $this->identifier;
     }
 
     /**
@@ -145,7 +145,7 @@ class SegmentDescriptor
      */
     public function setIdentifier($identifier)
     {
-        $this->_identifier = $identifier;
+        $this->identifier = $identifier;
     }
 
     /**
@@ -155,7 +155,7 @@ class SegmentDescriptor
      */
     public function getKeyDescriptor()
     {
-        return $this->_keyDescriptor;
+        return $this->keyDescriptor;
     }
 
     /**
@@ -165,7 +165,7 @@ class SegmentDescriptor
      */
     public function setKeyDescriptor(KeyDescriptor $keyDescriptor = null)
     {
-        $this->_keyDescriptor = $keyDescriptor;
+        $this->keyDescriptor = $keyDescriptor;
     }
 
     /**
@@ -175,7 +175,7 @@ class SegmentDescriptor
      */
     public function getProjectedProperty()
     {
-        return $this->_projectedProperty;
+        return $this->projectedProperty;
     }
 
     /**
@@ -185,7 +185,7 @@ class SegmentDescriptor
      */
     public function setProjectedProperty(ResourceProperty $projectedProperty = null)
     {
-        $this->_projectedProperty = $projectedProperty;
+        $this->projectedProperty = $projectedProperty;
     }
 
     /**
@@ -195,7 +195,7 @@ class SegmentDescriptor
      */
     public function isSingleResult()
     {
-        return $this->_singleResult;
+        return $this->singleResult;
     }
 
     /**
@@ -205,7 +205,7 @@ class SegmentDescriptor
      */
     public function setSingleResult($isSingleResult)
     {
-        $this->_singleResult = $isSingleResult;
+        $this->singleResult = $isSingleResult;
     }
 
     /**
@@ -215,7 +215,7 @@ class SegmentDescriptor
      */
     public function getTargetKind()
     {
-        return $this->_targetKind;
+        return $this->targetKind;
     }
 
     /**
@@ -225,7 +225,7 @@ class SegmentDescriptor
      */
     public function setTargetKind(TargetKind $targetKind)
     {
-        $this->_targetKind = $targetKind;
+        $this->targetKind = $targetKind;
     }
 
     /**
@@ -235,7 +235,7 @@ class SegmentDescriptor
      */
     public function getTargetResourceSetWrapper()
     {
-        return $this->_targetResourceSetWrapper;
+        return $this->targetResourceSetWrapper;
     }
 
     /**
@@ -246,7 +246,7 @@ class SegmentDescriptor
      */
     public function setTargetResourceSetWrapper($resourceSetWrapper)
     {
-        $this->_targetResourceSetWrapper = $resourceSetWrapper;
+        $this->targetResourceSetWrapper = $resourceSetWrapper;
     }
 
     /**
@@ -257,7 +257,7 @@ class SegmentDescriptor
      */
     public function getTargetResourceType()
     {
-        return $this->_targetResourceType;
+        return $this->targetResourceType;
     }
 
     /**
@@ -268,7 +268,7 @@ class SegmentDescriptor
      */
     public function setTargetResourceType($resourceType)
     {
-        $this->_targetResourceType = $resourceType;
+        $this->targetResourceType = $resourceType;
     }
 
     /**
@@ -278,7 +278,7 @@ class SegmentDescriptor
      */
     public function getTargetSource()
     {
-        return $this->_targetSource;
+        return $this->targetSource;
     }
 
     /**
@@ -288,7 +288,7 @@ class SegmentDescriptor
      */
     public function setTargetSource($targetSource)
     {
-        $this->_targetSource = $targetSource;
+        $this->targetSource = $targetSource;
     }
 
     /**
@@ -298,7 +298,7 @@ class SegmentDescriptor
      */
     public function getResult()
     {
-        return $this->_result;
+        return $this->result;
     }
 
     /**
@@ -308,7 +308,7 @@ class SegmentDescriptor
      */
     public function setResult($result)
     {
-        $this->_result = $result;
+        $this->result = $result;
     }
 
     /**
@@ -318,7 +318,7 @@ class SegmentDescriptor
      */
     public function getNext()
     {
-        return $this->_next;
+        return $this->next;
     }
 
     /**
@@ -328,7 +328,7 @@ class SegmentDescriptor
      */
     public function setNext(SegmentDescriptor $next)
     {
-        $this->_next = $next;
+        $this->next = $next;
     }
 
     /**
@@ -336,7 +336,7 @@ class SegmentDescriptor
      */
     public function getPrevious()
     {
-        return $this->_previous;
+        return $this->previous;
     }
 
     /**
@@ -346,7 +346,7 @@ class SegmentDescriptor
      */
     public function setPrevious(SegmentDescriptor $previous)
     {
-        $this->_previous = $previous;
+        $this->previous = $previous;
     }
 
     /**
@@ -354,6 +354,6 @@ class SegmentDescriptor
      */
     public function hasKeyValues()
     {
-        return !is_null($this->_keyDescriptor);
+        return !is_null($this->keyDescriptor);
     }
 }

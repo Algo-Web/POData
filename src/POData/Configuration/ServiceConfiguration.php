@@ -13,68 +13,68 @@ class ServiceConfiguration implements IServiceConfiguration
     /**
      * Maximum number of segments to be expanded allowed in a request.
      */
-    private $_maxExpandCount;
+    private $maxExpandCount;
 
     /**
      * Maximum number of segments in a single $expand path.
      */
-    private $_maxExpandDepth;
+    private $maxExpandDepth;
 
     /**
      * Maximum number of elements in each returned collection (top-level or expanded).
      */
-    private $_maxResultsPerCollection;
+    private $maxResultsPerCollection;
 
     /**
      * The provider for the web service.
      *
      * @var IMetadataProvider
      */
-    private $_provider;
+    private $provider;
 
     /**
      * Rights used for unspecified resource sets.
      *
      * @var EntitySetRights
      */
-    private $_defaultResourceSetRight;
+    private $defaultResourceSetRight;
 
     /**
      * Page size for unspecified resource sets.
      */
-    private $_defaultPageSize;
+    private $defaultPageSize;
 
     /**
      * A mapping from entity set name to its right.
      *
      * @var EntitySetRights[]
      */
-    private $_resourceRights;
+    private $resourceRights;
 
     /**
      * A mapping from entity sets to their page sizes.
      *
      * @var int[]
      */
-    private $_pageSizes = [];
+    private $pageSizes = [];
 
     /**
      * Whether verbose errors should be returned by default.
      *
      * @var bool
      */
-    private $_useVerboseErrors;
+    private $useVerboseErrors;
 
     /**
      * Whether requests with the $count path segment or the $inlinecount
      * query options are accepted.
      */
-    private $_acceptCountRequest;
+    private $acceptCountRequest;
 
     /**
      * Whether projection requests ($select) should be accepted.
      */
-    private $_acceptProjectionRequest;
+    private $acceptProjectionRequest;
 
     /**
      * Maximum version of the response sent by server.
@@ -86,7 +86,7 @@ class ServiceConfiguration implements IServiceConfiguration
     /**
      * Boolean value indicating whether to validate ETag header or not.
      */
-    private $_validateETagHeader;
+    private $validateETagHeader;
 
     /**
      * Construct a new instance of ServiceConfiguration.
@@ -96,21 +96,21 @@ class ServiceConfiguration implements IServiceConfiguration
      */
     public function __construct(IMetadataProvider $metadataProvider)
     {
-        $this->_maxExpandCount = PHP_INT_MAX;
-        $this->_maxExpandDepth = PHP_INT_MAX;
-        $this->_maxResultsPerCollection = PHP_INT_MAX;
-        $this->_provider = $metadataProvider;
-        $this->_defaultResourceSetRight = EntitySetRights::NONE;
-        $this->_defaultPageSize = 0;
-        $this->_resourceRights = [];
-        $this->_pageSizes = [];
-        $this->_useVerboseErrors = false;
-        $this->_acceptCountRequest = false;
-        $this->_acceptProjectionRequest = false;
+        $this->maxExpandCount = PHP_INT_MAX;
+        $this->maxExpandDepth = PHP_INT_MAX;
+        $this->maxResultsPerCollection = PHP_INT_MAX;
+        $this->provider = $metadataProvider;
+        $this->defaultResourceSetRight = EntitySetRights::NONE;
+        $this->defaultPageSize = 0;
+        $this->resourceRights = [];
+        $this->pageSizes = [];
+        $this->useVerboseErrors = false;
+        $this->acceptCountRequest = false;
+        $this->acceptProjectionRequest = false;
 
         $this->maxVersion = ProtocolVersion::V3(); //We default to the highest version
 
-        $this->_validateETagHeader = true;
+        $this->validateETagHeader = true;
     }
 
     /**
@@ -120,7 +120,7 @@ class ServiceConfiguration implements IServiceConfiguration
      */
     public function getMaxExpandCount()
     {
-        return $this->_maxExpandCount;
+        return $this->maxExpandCount;
     }
 
     /**
@@ -130,7 +130,7 @@ class ServiceConfiguration implements IServiceConfiguration
      */
     public function setMaxExpandCount($maxExpandCount)
     {
-        $this->_maxExpandCount = $this->_checkIntegerNonNegativeParameter(
+        $this->maxExpandCount = $this->_checkIntegerNonNegativeParameter(
             $maxExpandCount,
             'setMaxExpandCount'
         );
@@ -143,7 +143,7 @@ class ServiceConfiguration implements IServiceConfiguration
      */
     public function getMaxExpandDepth()
     {
-        return $this->_maxExpandDepth;
+        return $this->maxExpandDepth;
     }
 
     /**
@@ -153,7 +153,7 @@ class ServiceConfiguration implements IServiceConfiguration
      */
     public function setMaxExpandDepth($maxExpandDepth)
     {
-        $this->_maxExpandDepth = $this->_checkIntegerNonNegativeParameter(
+        $this->maxExpandDepth = $this->_checkIntegerNonNegativeParameter(
             $maxExpandDepth,
             'setMaxExpandDepth'
         );
@@ -167,7 +167,7 @@ class ServiceConfiguration implements IServiceConfiguration
      */
     public function getMaxResultsPerCollection()
     {
-        return $this->_maxResultsPerCollection;
+        return $this->maxResultsPerCollection;
     }
 
     /**
@@ -185,7 +185,7 @@ class ServiceConfiguration implements IServiceConfiguration
             );
         }
 
-        $this->_maxResultsPerCollection = $this->_checkIntegerNonNegativeParameter(
+        $this->maxResultsPerCollection = $this->_checkIntegerNonNegativeParameter(
             $maxResultPerCollection,
             'setMaxResultsPerCollection'
         );
@@ -198,7 +198,7 @@ class ServiceConfiguration implements IServiceConfiguration
      */
     public function getUseVerboseErrors()
     {
-        return $this->_useVerboseErrors;
+        return $this->useVerboseErrors;
     }
 
     /**
@@ -208,7 +208,7 @@ class ServiceConfiguration implements IServiceConfiguration
      */
     public function setUseVerboseErrors($useVerboseError)
     {
-        $this->_useVerboseErrors = $useVerboseError;
+        $this->useVerboseErrors = $useVerboseError;
     }
 
     /**
@@ -221,11 +221,11 @@ class ServiceConfiguration implements IServiceConfiguration
      */
     public function getEntitySetAccessRule(ResourceSet $resourceSet)
     {
-        if (!array_key_exists($resourceSet->getName(), $this->_resourceRights)) {
-            return $this->_defaultResourceSetRight;
+        if (!array_key_exists($resourceSet->getName(), $this->resourceRights)) {
+            return $this->defaultResourceSetRight;
         }
 
-        return $this->_resourceRights[$resourceSet->getName()];
+        return $this->resourceRights[$resourceSet->getName()];
     }
 
     /**
@@ -243,15 +243,15 @@ class ServiceConfiguration implements IServiceConfiguration
         }
 
         if (strcmp($name, '*') === 0) {
-            $this->_defaultResourceSetRight = $rights;
+            $this->defaultResourceSetRight = $rights;
         } else {
-            if (!$this->_provider->resolveResourceSet($name)) {
+            if (!$this->provider->resolveResourceSet($name)) {
                 throw new \InvalidArgumentException(
                     Messages::configurationResourceSetNameNotFound($name)
                 );
             }
 
-            $this->_resourceRights[$name] = $rights;
+            $this->resourceRights[$name] = $rights;
         }
     }
 
@@ -264,11 +264,11 @@ class ServiceConfiguration implements IServiceConfiguration
      */
     public function getEntitySetPageSize(ResourceSet $resourceSet)
     {
-        if (!array_key_exists($resourceSet->getName(), $this->_pageSizes)) {
-            return $this->_defaultPageSize;
+        if (!array_key_exists($resourceSet->getName(), $this->pageSizes)) {
+            return $this->defaultPageSize;
         }
 
-        return $this->_pageSizes[$resourceSet->getName()];
+        return $this->pageSizes[$resourceSet->getName()];
     }
 
     /**
@@ -289,7 +289,7 @@ class ServiceConfiguration implements IServiceConfiguration
             'setEntitySetPageSize'
         );
 
-        if ($this->_maxResultsPerCollection != PHP_INT_MAX) {
+        if ($this->maxResultsPerCollection != PHP_INT_MAX) {
             throw new InvalidOperationException(
                 Messages::configurationMaxResultAndPageSizeMutuallyExclusive()
             );
@@ -300,14 +300,14 @@ class ServiceConfiguration implements IServiceConfiguration
         }
 
         if (strcmp($name, '*') === 0) {
-            $this->_defaultPageSize = $pageSize;
+            $this->defaultPageSize = $pageSize;
         } else {
-            if (!$this->_provider->resolveResourceSet($name)) {
+            if (!$this->provider->resolveResourceSet($name)) {
                 throw new \InvalidArgumentException(
                     Messages::configurationResourceSetNameNotFound($name)
                 );
             }
-            $this->_pageSizes[$name] = $pageSize;
+            $this->pageSizes[$name] = $pageSize;
         }
     }
 
@@ -319,7 +319,7 @@ class ServiceConfiguration implements IServiceConfiguration
      */
     public function getAcceptCountRequests()
     {
-        return $this->_acceptCountRequest;
+        return $this->acceptCountRequest;
     }
 
     /**
@@ -331,7 +331,7 @@ class ServiceConfiguration implements IServiceConfiguration
      */
     public function setAcceptCountRequests($acceptCountRequest)
     {
-        $this->_acceptCountRequest = $acceptCountRequest;
+        $this->acceptCountRequest = $acceptCountRequest;
     }
 
     /**
@@ -341,7 +341,7 @@ class ServiceConfiguration implements IServiceConfiguration
      */
     public function getAcceptProjectionRequests()
     {
-        return $this->_acceptProjectionRequest;
+        return $this->acceptProjectionRequest;
     }
 
     /**
@@ -352,7 +352,7 @@ class ServiceConfiguration implements IServiceConfiguration
      */
     public function setAcceptProjectionRequests($acceptProjectionRequest)
     {
-        $this->_acceptProjectionRequest = $acceptProjectionRequest;
+        $this->acceptProjectionRequest = $acceptProjectionRequest;
     }
 
     /**
@@ -392,7 +392,7 @@ class ServiceConfiguration implements IServiceConfiguration
      */
     public function setValidateETagHeader($validate)
     {
-        $this->_validateETagHeader = $validate;
+        $this->validateETagHeader = $validate;
     }
 
     /**
@@ -406,7 +406,7 @@ class ServiceConfiguration implements IServiceConfiguration
      */
     public function getValidateETagHeader()
     {
-        return $this->_validateETagHeader;
+        return $this->validateETagHeader;
     }
 
     /**
@@ -443,6 +443,6 @@ class ServiceConfiguration implements IServiceConfiguration
      */
     private function _isPageSizeDefined()
     {
-        return count($this->_pageSizes) > 0 || $this->_defaultPageSize > 0;
+        return count($this->pageSizes) > 0 || $this->defaultPageSize > 0;
     }
 }
