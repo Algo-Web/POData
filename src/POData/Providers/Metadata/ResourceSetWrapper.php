@@ -21,7 +21,7 @@ class ResourceSetWrapper extends ResourceSet
      *
      * @var ResourceSet
      */
-    private $_resourceSet;
+    private $resourceSet;
 
     /**
      * Reference to the EntitySetRights describing configured access to
@@ -29,14 +29,14 @@ class ResourceSetWrapper extends ResourceSet
      *
      * @var EntitySetRights
      */
-    private $_resourceSetRights;
+    private $resourceSetRights;
 
     /**
      * The configured page size of this resource set.
      *
      * @var int
      */
-    private $_resourceSetPageSize;
+    private $resourceSetPageSize;
 
     /**
      * Constructs a new instance of ResourceSetWrapper.
@@ -46,9 +46,9 @@ class ResourceSetWrapper extends ResourceSet
      */
     public function __construct(ResourceSet $resourceSet, IServiceConfiguration $configuration)
     {
-        $this->_resourceSet = $resourceSet;
-        $this->_resourceSetRights = $configuration->getEntitySetAccessRule($resourceSet);
-        $this->_resourceSetPageSize = $configuration->getEntitySetPageSize($resourceSet);
+        $this->resourceSet = $resourceSet;
+        $this->resourceSetRights = $configuration->getEntitySetAccessRule($resourceSet);
+        $this->resourceSetPageSize = $configuration->getEntitySetPageSize($resourceSet);
     }
 
     /**
@@ -58,7 +58,7 @@ class ResourceSetWrapper extends ResourceSet
      */
     public function getName()
     {
-        return $this->_resourceSet->getName();
+        return $this->resourceSet->getName();
     }
 
     /**
@@ -68,7 +68,7 @@ class ResourceSetWrapper extends ResourceSet
      */
     public function getResourceType()
     {
-        return $this->_resourceSet->getResourceType();
+        return $this->resourceSet->getResourceType();
     }
 
     /**
@@ -78,7 +78,7 @@ class ResourceSetWrapper extends ResourceSet
      */
     public function getResourceSet()
     {
-        return $this->_resourceSet;
+        return $this->resourceSet;
     }
 
     /**
@@ -88,7 +88,7 @@ class ResourceSetWrapper extends ResourceSet
      */
     public function getResourceSetRights()
     {
-        return $this->_resourceSetRights;
+        return $this->resourceSetRights;
     }
 
     /**
@@ -98,7 +98,7 @@ class ResourceSetWrapper extends ResourceSet
      */
     public function getResourceSetPageSize()
     {
-        return $this->_resourceSetPageSize;
+        return $this->resourceSetPageSize;
     }
 
     /**
@@ -108,7 +108,7 @@ class ResourceSetWrapper extends ResourceSet
      */
     public function isVisible()
     {
-        return $this->_resourceSetRights != EntitySetRights::NONE;
+        return $this->resourceSetRights != EntitySetRights::NONE;
     }
 
     /**
@@ -121,12 +121,12 @@ class ResourceSetWrapper extends ResourceSet
      */
     public function hasNamedStreams(ProvidersWrapper $provider)
     {
-        $hasNamedStream = $this->_resourceSet->getResourceType()->hasNamedStream();
+        $hasNamedStream = $this->resourceSet->getResourceType()->hasNamedStream();
         // This will check only the resource type associated with
         // the resource set, we need to check presence of named streams
         // in resource type(s) which is derived form this resource type also.
         if (!$hasNamedStream) {
-            $derivedTypes = $provider->getDerivedTypes($this->_resourceSet->getResourceType());
+            $derivedTypes = $provider->getDerivedTypes($this->resourceSet->getResourceType());
             foreach ($derivedTypes as $derivedType) {
                 if ($derivedType->hasNamedStream()) {
                     return true;
@@ -148,13 +148,13 @@ class ResourceSetWrapper extends ResourceSet
     public function hasBagProperty(ProvidersWrapper $provider)
     {
         $arrayToDetectLoop = [];
-        $hasBagProperty = $this->_resourceSet->getResourceType()->hasBagProperty($arrayToDetectLoop);
+        $hasBagProperty = $this->resourceSet->getResourceType()->hasBagProperty($arrayToDetectLoop);
         unset($arrayToDetectLoop);
         // This will check only the resource type associated with
         // the resource set, we need to check presence of bag property
         // in resource type which is derived form this resource type also.
         if (!$hasBagProperty) {
-            $derivedTypes = $provider->getDerivedTypes($this->_resourceSet->getResourceType());
+            $derivedTypes = $provider->getDerivedTypes($this->resourceSet->getResourceType());
             foreach ($derivedTypes as $derivedType) {
                 $arrayToDetectLoop = [];
                 if ($derivedType->hasBagProperty($arrayToDetectLoop)) {
@@ -175,7 +175,7 @@ class ResourceSetWrapper extends ResourceSet
      */
     public function checkResourceSetRights($requiredRights)
     {
-        if (($this->_resourceSetRights & $requiredRights) == 0) {
+        if (($this->resourceSetRights & $requiredRights) == 0) {
             throw ODataException::createForbiddenError();
         }
     }

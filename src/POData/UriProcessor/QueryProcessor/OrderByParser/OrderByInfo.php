@@ -38,7 +38,7 @@ class OrderByInfo
      *
      * @var array<array<ResourceProperty>>|null
      */
-    private $_navigationPropertiesUsedInTheOrderByClause;
+    private $navigationPropertiesUsedInTheOrderByClause;
 
     /**
      * Constructs new instance of OrderByInfo.

@@ -15,7 +15,7 @@ class WebOperationContextTest extends TestCase
         $_SERVER['REQUEST_METHOD'] = 'GET';
 
         $foo = new WebOperationContext();
-        $this->assertTrue($foo->incomingRequest() instanceof IHTTPRequest);
-        $this->assertTrue($foo->outgoingResponse() instanceof OutgoingResponse);
+        $this->assertTrue($foo->incomingRequest() instanceof IHTTPRequest, get_class($foo->incomingRequest()));
+        $this->assertTrue($foo->outgoingResponse() instanceof OutgoingResponse, get_class($foo->outgoingResponse()));
     }
 }

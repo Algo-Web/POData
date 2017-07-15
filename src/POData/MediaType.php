@@ -17,21 +17,21 @@ class MediaType
      *
      * @var string
      */
-    private $_type;
+    private $type;
 
     /**
      * The sub-type part of media type.
      *
      * @var string
      */
-    private $_subType;
+    private $subType;
 
     /**
      * The parameters associated with the media type.
      *
      * @var array[]
      */
-    private $_parameters;
+    private $parameters;
 
     /**
      * Constructs a new instance of Media Type.
@@ -42,9 +42,9 @@ class MediaType
      */
     public function __construct($type, $subType, array $parameters)
     {
-        $this->_type = $type;
-        $this->_subType = $subType;
-        $this->_parameters = $parameters;
+        $this->type = $type;
+        $this->subType = $subType;
+        $this->parameters = $parameters;
     }
 
     /**
@@ -54,7 +54,7 @@ class MediaType
      */
     public function getMimeType()
     {
-        return $this->_type . '/' . $this->_subType;
+        return $this->type . '/' . $this->subType;
     }
 
     /**
@@ -64,7 +64,7 @@ class MediaType
      */
     public function getParameters()
     {
-        return $this->_parameters;
+        return $this->parameters;
     }
 
     /**
@@ -102,21 +102,21 @@ class MediaType
                 return -1;
             }
 
-            if ($this->_type == '*') {
+            if ($this->type == '*') {
                 $result = 0;
             } else {
                 $separatorIdx = strpos($candidate, '/');
                 if ($separatorIdx !== false) {
                     //if there's a subtype..look further
                     $candidateType = substr($candidate, 0, $separatorIdx);
-                    if (strcasecmp($this->_type, $candidateType) == 0) {
+                    if (strcasecmp($this->type, $candidateType) == 0) {
                         //If main type matches
-                        if ($this->_subType == '*') {
+                        if ($this->subType == '*') {
                             //and sub type matches with wildcard
                             $result = 1;
                         } else {
                             $candidateSubType = substr($candidate, strlen($candidateType) + 1);
-                            if (strcasecmp($this->_subType, $candidateSubType) == 0) {
+                            if (strcasecmp($this->subType, $candidateSubType) == 0) {
                                 //if sub type matches
                                 $result = 2;
                             }
@@ -131,7 +131,7 @@ class MediaType
 
     public function getODataValue()
     {
-        foreach ($this->_parameters as $parameter) {
+        foreach ($this->parameters as $parameter) {
             foreach ($parameter as $key => $value) {
                 if (strcasecmp($key, 'odata') === 0) {
                     return $value;
@@ -149,7 +149,7 @@ class MediaType
      */
     public function getQualityValue()
     {
-        foreach ($this->_parameters as $parameter) {
+        foreach ($this->parameters as $parameter) {
             foreach ($parameter as $key => $value) {
                 if (strcasecmp($key, 'q') === 0) {
                     $textIndex = 0;

@@ -23,7 +23,7 @@ class OrderBySubPathSegment
      *
      * @var ResourceProperty
      */
-    private $_resourceProperty;
+    private $resourceProperty;
 
     /**
      * Constructs a new instance of OrderBySubPathSegment.
@@ -33,7 +33,7 @@ class OrderBySubPathSegment
      */
     public function __construct(ResourceProperty $resourceProperty)
     {
-        $this->_resourceProperty = $resourceProperty;
+        $this->resourceProperty = $resourceProperty;
     }
 
     /**
@@ -43,7 +43,7 @@ class OrderBySubPathSegment
      */
     public function getName()
     {
-        return $this->_resourceProperty->getName();
+        return $this->resourceProperty->getName();
     }
 
     /**
@@ -53,7 +53,7 @@ class OrderBySubPathSegment
      */
     public function getResourceProperty()
     {
-        return $this->_resourceProperty;
+        return $this->resourceProperty;
     }
 
     /**
@@ -65,6 +65,6 @@ class OrderBySubPathSegment
      */
     public function getInstanceType()
     {
-        return $this->_resourceProperty->getInstanceType();
+        return $this->resourceProperty->getInstanceType();
     }
 }

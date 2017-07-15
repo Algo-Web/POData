@@ -10,12 +10,12 @@ class ResourceStreamInfo
     /**
      * Name of the stream.
      */
-    private $_name;
+    private $name;
 
     /**
      * Custom state object associated with named stream.
      */
-    private $_customState;
+    private $customState;
 
     /**
      * Constructs a new instance of ResourceStreamInfo.
@@ -24,7 +24,7 @@ class ResourceStreamInfo
      */
     public function __construct($name)
     {
-        $this->_name = $name;
+        $this->name = $name;
     }
 
     /**
@@ -34,7 +34,7 @@ class ResourceStreamInfo
      */
     public function getName()
     {
-        return $this->_name;
+        return $this->name;
     }
 
     /**
@@ -44,7 +44,7 @@ class ResourceStreamInfo
      */
     public function getCustomState()
     {
-        return $this->_customState;
+        return $this->customState;
     }
 
     /**
@@ -54,6 +54,6 @@ class ResourceStreamInfo
      */
     public function setCustomState($stateObject)
     {
-        $this->_customState = $stateObject;
+        $this->customState = $stateObject;
     }
 }
