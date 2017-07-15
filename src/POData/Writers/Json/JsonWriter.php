@@ -12,22 +12,22 @@ class JsonWriter
     /**
      * Json datetime format.
      */
-    private $_jsonDateTimeFormat = "\/Date(%s)\/";
+    private $jsonDateTimeFormat = "\/Date(%s)\/";
 
     /**
      * Writer to write text into.
      */
-    private $_writer;
+    private $writer;
 
     /**
      * scope of the json text - object, array, etc.
      */
-    private $_scopes = [];
+    private $scopes = [];
 
     /**
      * Various scope types for Json writer.
      */
-    private $_scopeType = ['Array' => 0, 'Object' => 1];
+    private $scopeType = ['Array' => 0, 'Object' => 1];
 
     /**
      * Creates a new instance of Json writer.
@@ -36,7 +36,7 @@ class JsonWriter
      */
     public function __construct($writer)
     {
-        $this->_writer = new IndentedTextWriter($writer);
+        $this->writer = new IndentedTextWriter($writer);
     }
 
     /**
@@ -46,12 +46,12 @@ class JsonWriter
      */
     public function endScope()
     {
-        $this->_writer->writeLine()->decreaseIndent();
+        $this->writer->writeLine()->decreaseIndent();
 
-        if (array_pop($this->_scopes)->type == $this->_scopeType['Array']) {
-            $this->_writer->writeValue(']');
+        if (array_pop($this->scopes)->type == $this->scopeType['Array']) {
+            $this->writer->writeValue(']');
         } else {
-            $this->_writer->writeValue('}');
+            $this->writer->writeValue('}');
         }
 
         return $this;
@@ -64,7 +64,7 @@ class JsonWriter
      */
     public function startArrayScope()
     {
-        $this->_startScope($this->_scopeType['Array']);
+        $this->_startScope($this->scopeType['Array']);
 
         return $this;
     }
@@ -88,7 +88,7 @@ class JsonWriter
      */
     public function startObjectScope()
     {
-        $this->_startScope($this->_scopeType['Object']);
+        $this->_startScope($this->scopeType['Object']);
 
         return $this;
     }
@@ -102,17 +102,17 @@ class JsonWriter
      */
     public function writeName($name)
     {
-        $currentScope = end($this->_scopes);
-        if ($currentScope && $currentScope->type == $this->_scopeType['Object']) {
+        $currentScope = end($this->scopes);
+        if ($currentScope && $currentScope->type == $this->scopeType['Object']) {
             if ($currentScope->objectCount != 0) {
-                $this->_writer->writeTrimmed(', ');
+                $this->writer->writeTrimmed(', ');
             }
 
             ++$currentScope->objectCount;
         }
 
         $this->_writeCore($name, true /*quotes*/);
-        $this->_writer->writeTrimmed(': ');
+        $this->writer->writeTrimmed(': ');
 
         return $this;
     }
@@ -211,11 +211,11 @@ class JsonWriter
      */
     private function _writeCore($text, $quotes)
     {
-        if (0 != count($this->_scopes)) {
-            $currentScope = end($this->_scopes);
-            if ($currentScope->type == $this->_scopeType['Array']) {
+        if (0 != count($this->scopes)) {
+            $currentScope = end($this->scopes);
+            if ($currentScope->type == $this->scopeType['Array']) {
                 if (0 != $currentScope->objectCount) {
-                    $this->_writer->writeTrimmed(', ');
+                    $this->writer->writeTrimmed(', ');
                 }
 
                 ++$currentScope->objectCount;
@@ -223,12 +223,12 @@ class JsonWriter
         }
 
         if ($quotes && 'null' !== $text) {
-            $this->_writer->writeValue('"');
+            $this->writer->writeValue('"');
         }
 
-        $this->_writer->writeValue($text);
+        $this->writer->writeValue($text);
         if ($quotes && 'null' !== $text) {
-            $this->_writer->writeValue('"');
+            $this->writer->writeValue('"');
         }
     }
 
@@ -239,25 +239,25 @@ class JsonWriter
      */
     private function _startScope($type)
     {
-        if (0 != count($this->_scopes)) {
-            $currentScope = end($this->_scopes);
-            if (($currentScope->type == $this->_scopeType['Array']) && (0 != $currentScope->objectCount)) {
-                $this->_writer->writeTrimmed(', ');
+        if (0 != count($this->scopes)) {
+            $currentScope = end($this->scopes);
+            if (($currentScope->type == $this->scopeType['Array']) && (0 != $currentScope->objectCount)) {
+                $this->writer->writeTrimmed(', ');
             }
 
             ++$currentScope->objectCount;
         }
 
         $scope = new Scope($type);
-        array_push($this->_scopes, $scope);
+        array_push($this->scopes, $scope);
 
-        if ($type == $this->_scopeType['Array']) {
-            $this->_writer->writeValue('[');
+        if ($type == $this->scopeType['Array']) {
+            $this->writer->writeValue('[');
         } else {
-            $this->_writer->writeValue('{');
+            $this->writer->writeValue('{');
         }
 
-        $this->_writer->increaseIndent()->writeLine();
+        $this->writer->increaseIndent()->writeLine();
     }
 
     /**
@@ -267,6 +267,6 @@ class JsonWriter
      */
     public function getJsonOutput()
     {
-        return $this->_writer->getResult();
+        return $this->writer->getResult();
     }
 }

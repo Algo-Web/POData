@@ -13,14 +13,14 @@ class IlluminateOperationContext implements IOperationContext
      *
      * @var IncomingIlluminateRequest
      */
-    private $_incomingRequest;
+    private $incomingRequest;
 
     /**
      * Object of OutgoingResponse which is needed to get all the HTTP headers info.
      *
      * @var OutgoingResponse
      */
-    private $_outgoingResponse;
+    private $outgoingResponse;
 
     /**
      * Initializes a new instance of the IlluminateOperationContext class.
@@ -32,8 +32,8 @@ class IlluminateOperationContext implements IOperationContext
      */
     public function __construct(Request $request)
     {
-        $this->_incomingRequest = new IncomingIlluminateRequest($request);
-        $this->_outgoingResponse = new OutgoingResponse();
+        $this->incomingRequest = new IncomingIlluminateRequest($request);
+        $this->outgoingResponse = new OutgoingResponse();
     }
 
     /**
@@ -43,7 +43,7 @@ class IlluminateOperationContext implements IOperationContext
      */
     public function outgoingResponse()
     {
-        return $this->_outgoingResponse;
+        return $this->outgoingResponse;
     }
 
     /**
@@ -53,6 +53,6 @@ class IlluminateOperationContext implements IOperationContext
      */
     public function incomingRequest()
     {
-        return $this->_incomingRequest;
+        return $this->incomingRequest;
     }
 }

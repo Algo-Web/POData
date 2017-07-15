@@ -24,7 +24,7 @@ class InternalSkipTokenInfo
      *
      * @var InternalOrderByInfo
      */
-    private $_internalOrderByInfo;
+    private $internalOrderByInfo;
 
     /**
      * Holds collection of values in the skiptoken corresponds to the orderby
@@ -32,14 +32,14 @@ class InternalSkipTokenInfo
      *
      * @var array<array<IType>>
      */
-    private $_orderByValuesInSkipToken;
+    private $orderByValuesInSkipToken;
 
     /**
      * Holds reference to the type of the resource pointed by the request uri.
      *
      * @var ResourceType
      */
-    private $_resourceType;
+    private $resourceType;
 
     /**
      * Reference to the object holding parsed skiptoken value, this information
@@ -47,7 +47,7 @@ class InternalSkipTokenInfo
      *
      * @var SkipTokenInfo
      */
-    private $_skipTokenInfo;
+    private $skipTokenInfo;
 
     /**
      * Object which is used as a key for searching the sorted result, this object
@@ -56,7 +56,7 @@ class InternalSkipTokenInfo
      *
      * @var mixed
      */
-    private $_keyObject;
+    private $keyObject;
 
     /**
      * Creates a new instance of InternalSkipTokenInfo.
@@ -72,11 +72,11 @@ class InternalSkipTokenInfo
         $orderByValuesInSkipToken,
         ResourceType & $resourceType
     ) {
-        $this->_internalOrderByInfo = $internalOrderByInfo;
-        $this->_orderByValuesInSkipToken = $orderByValuesInSkipToken;
-        $this->_resourceType = $resourceType;
-        $this->_skipTokenInfo = null;
-        $this->_keyObject = null;
+        $this->internalOrderByInfo = $internalOrderByInfo;
+        $this->orderByValuesInSkipToken = $orderByValuesInSkipToken;
+        $this->resourceType = $resourceType;
+        $this->skipTokenInfo = null;
+        $this->keyObject = null;
     }
 
     /**
@@ -88,15 +88,15 @@ class InternalSkipTokenInfo
      */
     public function getSkipTokenInfo()
     {
-        if (is_null($this->_skipTokenInfo)) {
-            $orderbyInfo = $this->_internalOrderByInfo->getOrderByInfo();
-            $this->_skipTokenInfo = new SkipTokenInfo(
+        if (is_null($this->skipTokenInfo)) {
+            $orderbyInfo = $this->internalOrderByInfo->getOrderByInfo();
+            $this->skipTokenInfo = new SkipTokenInfo(
                 $orderbyInfo,
-                $this->_orderByValuesInSkipToken
+                $this->orderByValuesInSkipToken
             );
         }
 
-        return $this->_skipTokenInfo;
+        return $this->skipTokenInfo;
     }
 
     /**
@@ -130,7 +130,7 @@ class InternalSkipTokenInfo
             return -1;
         }
 
-        $comparer = $this->_internalOrderByInfo->getSorterFunction();
+        $comparer = $this->internalOrderByInfo->getSorterFunction();
         //Gets the key object initialized from skiptoken
         $keyObject = $this->getKeyObject();
         $low = 0;
@@ -177,12 +177,12 @@ class InternalSkipTokenInfo
      */
     public function getKeyObject()
     {
-        if (is_null($this->_keyObject)) {
-            $this->_keyObject = $this->_internalOrderByInfo->getDummyObject();
+        if (is_null($this->keyObject)) {
+            $this->keyObject = $this->internalOrderByInfo->getDummyObject();
             $i = 0;
-            foreach ($this->_internalOrderByInfo->getOrderByPathSegments() as $orderByPathSegment) {
+            foreach ($this->internalOrderByInfo->getOrderByPathSegments() as $orderByPathSegment) {
                 $index = 0;
-                $currentObject = $this->_keyObject;
+                $currentObject = $this->keyObject;
                 $subPathSegments = $orderByPathSegment->getSubPathSegments();
                 $subPathCount = count($subPathSegments);
                 foreach ($subPathSegments as &$subPathSegment) {
@@ -195,19 +195,19 @@ class InternalSkipTokenInfo
                         // the property is not set in the dummy object by OrderByParser,
                         // an unexpected state.
                         if (!$isLastSegment) {
-                            $currentObject = $this->_resourceType->getPropertyValue($currentObject, $subPathSegment->getName());
+                            $currentObject = $this->resourceType->getPropertyValue($currentObject, $subPathSegment->getName());
                         } else {
-                            if ($this->_orderByValuesInSkipToken[$i][1] instanceof Null1) {
-                                $this->_resourceType->setPropertyValue($currentObject, $subPathSegment->getName(), null);
+                            if ($this->orderByValuesInSkipToken[$i][1] instanceof Null1) {
+                                $this->resourceType->setPropertyValue($currentObject, $subPathSegment->getName(), null);
                             } else {
                                 // The Lexer's Token::Text value will be always
                                 // string, convert the string to
                                 // required type i.e. int, float, double etc..
                                 $value
-                                    = $this->_orderByValuesInSkipToken[$i][1]->convert(
-                                        $this->_orderByValuesInSkipToken[$i][0]
+                                    = $this->orderByValuesInSkipToken[$i][1]->convert(
+                                        $this->orderByValuesInSkipToken[$i][0]
                                     );
-                                $this->_resourceType->setPropertyValue($currentObject, $subPathSegment->getName(), $value);
+                                $this->resourceType->setPropertyValue($currentObject, $subPathSegment->getName(), $value);
                             }
                         }
                     } catch (\ReflectionException $reflectionException) {
@@ -225,7 +225,7 @@ class InternalSkipTokenInfo
             }
         }
 
-        return $this->_keyObject;
+        return $this->keyObject;
     }
 
     /**
@@ -242,7 +242,7 @@ class InternalSkipTokenInfo
     public function buildNextPageLink($lastObject)
     {
         $nextPageLink = null;
-        foreach ($this->_internalOrderByInfo->getOrderByPathSegments() as $orderByPathSegment) {
+        foreach ($this->internalOrderByInfo->getOrderByPathSegments() as $orderByPathSegment) {
             $index = 0;
             $currentObject = $lastObject;
             $subPathSegments = $orderByPathSegment->getSubPathSegments();
@@ -250,7 +250,7 @@ class InternalSkipTokenInfo
             foreach ($subPathSegments as &$subPathSegment) {
                 $isLastSegment = ($index == $subPathCount - 1);
                 try {
-                    $currentObject = $this->_resourceType->getPropertyValue($currentObject, $subPathSegment->getName());
+                    $currentObject = $this->resourceType->getPropertyValue($currentObject, $subPathSegment->getName());
                     if (is_null($currentObject)) {
                         $nextPageLink .= 'null, ';
                         break;

@@ -39,14 +39,14 @@ class ExpandProjectionParser
      *
      * @var ProvidersWrapper
      */
-    private $_providerWrapper;
+    private $providerWrapper;
 
     /**
      * Holds reference to the root of 'Projection Tree'.
      *
      * @var RootProjectionNode
      */
-    private $_rootProjectionNode;
+    private $rootProjectionNode;
 
     /**
      * Creates new instance of ExpandProjectionParser.
@@ -55,7 +55,7 @@ class ExpandProjectionParser
      */
     private function __construct(ProvidersWrapper $providerWrapper)
     {
-        $this->_providerWrapper = $providerWrapper;
+        $this->providerWrapper = $providerWrapper;
     }
 
     /**
@@ -106,7 +106,7 @@ class ExpandProjectionParser
         ProvidersWrapper $providerWrapper
     ) {
         $parser = new self($providerWrapper);
-        $parser->_rootProjectionNode = new RootProjectionNode(
+        $parser->rootProjectionNode = new RootProjectionNode(
             $resourceSetWrapper,
             $internalOrderInfo,
             $skipCount,
@@ -117,7 +117,7 @@ class ExpandProjectionParser
         $parser->_parseExpand($expand);
         $parser->_parseSelect($select);
 
-        return $parser->_rootProjectionNode;
+        return $parser->rootProjectionNode;
     }
 
     /**
@@ -134,7 +134,7 @@ class ExpandProjectionParser
         if (!is_null($expand)) {
             $pathSegments = $this->_readExpandOrSelect($expand, false);
             $this->_buildProjectionTree($pathSegments);
-            $this->_rootProjectionNode->setExpansionSpecified();
+            $this->rootProjectionNode->setExpansionSpecified();
         }
     }
 
@@ -154,15 +154,15 @@ class ExpandProjectionParser
     private function _parseSelect($select)
     {
         if (is_null($select)) {
-            $this->_rootProjectionNode->markSubtreeAsSelected();
+            $this->rootProjectionNode->markSubtreeAsSelected();
         } else {
             $pathSegments = $this->_readExpandOrSelect($select, true);
             $this->_applySelectionToProjectionTree($pathSegments);
-            $this->_rootProjectionNode->setSelectionSpecified();
-            $this->_rootProjectionNode->removeNonSelectedNodes();
-            $this->_rootProjectionNode->removeNodesAlreadyIncludedImplicitly();
+            $this->rootProjectionNode->setSelectionSpecified();
+            $this->rootProjectionNode->removeNonSelectedNodes();
+            $this->rootProjectionNode->removeNodesAlreadyIncludedImplicitly();
             //TODO: Move sort to parseExpandAndSelectClause function
-            $this->_rootProjectionNode->sortNodes();
+            $this->rootProjectionNode->sortNodes();
         }
     }
 
@@ -176,7 +176,7 @@ class ExpandProjectionParser
     private function _buildProjectionTree($expandPathSegments)
     {
         foreach ($expandPathSegments as $expandSubPathSegments) {
-            $currentNode = $this->_rootProjectionNode;
+            $currentNode = $this->rootProjectionNode;
             foreach ($expandSubPathSegments as $expandSubPathSegment) {
                 $resourceSetWrapper = $currentNode->getResourceSetWrapper();
                 $resourceType = $currentNode->getResourceType();
@@ -201,7 +201,7 @@ class ExpandProjectionParser
                     );
                 }
 
-                $resourceSetWrapper = $this->_providerWrapper
+                $resourceSetWrapper = $this->providerWrapper
                     ->getResourceSetWrapperForNavigationProperty(
                         $resourceSetWrapper,
                         $resourceType,
@@ -225,7 +225,7 @@ class ExpandProjectionParser
                 $pageSize = $resourceSetWrapper->getResourceSetPageSize();
                 $internalOrderByInfo = null;
                 if ($pageSize != 0 && !$singleResult) {
-                    $this->_rootProjectionNode->setPagedExpandedResult(true);
+                    $this->rootProjectionNode->setPagedExpandedResult(true);
                     $rt = $resourceSetWrapper->getResourceType();
                     //assert($rt != null)
                     $keys = array_keys($rt->getKeyProperties());
@@ -240,13 +240,13 @@ class ExpandProjectionParser
                         $resourceSetWrapper,
                         $rt,
                         $orderBy,
-                        $this->_providerWrapper
+                        $this->providerWrapper
                     );
                 }
 
                 $node = $currentNode->findNode($expandSubPathSegment);
                 if (is_null($node)) {
-                    $maxResultCount = $this->_providerWrapper
+                    $maxResultCount = $this->providerWrapper
                         ->getConfiguration()->getMaxResultsPerCollection();
                     $node = new ExpandedProjectionNode(
                         $expandSubPathSegment,
@@ -277,7 +277,7 @@ class ExpandProjectionParser
     private function _applySelectionToProjectionTree($selectPathSegments)
     {
         foreach ($selectPathSegments as $selectSubPathSegments) {
-            $currentNode = $this->_rootProjectionNode;
+            $currentNode = $this->rootProjectionNode;
             $subPathCount = count($selectSubPathSegments);
             foreach ($selectSubPathSegments as $index => $selectSubPathSegment) {
                 if (!($currentNode instanceof RootProjectionNode)

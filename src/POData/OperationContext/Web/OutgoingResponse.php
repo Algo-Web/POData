@@ -14,14 +14,14 @@ class OutgoingResponse
      *
      * @var []
      */
-    private $_headers;
+    private $headers;
 
     /**
      * The stream associated with the outgoing response.
      *
      * @var string
      */
-    private $_stream;
+    private $stream;
 
     /**
      * Gets and sets the DataServiceVersion of the outgoing Web response
@@ -30,14 +30,14 @@ class OutgoingResponse
      *
      * @var string
      */
-    private $_dataServiceVersion;
+    private $dataServiceVersion;
 
     /**
      * Initialize a new instance of OutgoingWebResponseContext.
      */
     public function __construct()
     {
-        $this->_headers = [];
+        $this->headers = [];
         $this->_initializeResponseHeaders();
     }
 
@@ -46,16 +46,16 @@ class OutgoingResponse
      */
     private function _initializeResponseHeaders()
     {
-        $this->_headers[ODataConstants::HTTPRESPONSE_HEADER_CONTENTTYPE] = null;
-        $this->_headers[ODataConstants::HTTPRESPONSE_HEADER_CONTENTLENGTH] = null;
-        $this->_headers[ODataConstants::HTTPRESPONSE_HEADER_ETAG] = null;
-        $this->_headers[ODataConstants::HTTPRESPONSE_HEADER_CACHECONTROL] = null;
-        $this->_headers[ODataConstants::HTTPRESPONSE_HEADER_LASTMODIFIED] = null;
-        $this->_headers[ODataConstants::HTTPRESPONSE_HEADER_LOCATION] = null;
-        $this->_headers[ODataConstants::HTTPRESPONSE_HEADER_STATUS] = null;
-        $this->_headers[ODataConstants::HTTPRESPONSE_HEADER_STATUS_CODE] = null;
-        $this->_headers[ODataConstants::HTTPRESPONSE_HEADER_STATUS_DESC] = null;
-        $this->_dataServiceVersion = null;
+        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_CONTENTTYPE] = null;
+        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_CONTENTLENGTH] = null;
+        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_ETAG] = null;
+        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_CACHECONTROL] = null;
+        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_LASTMODIFIED] = null;
+        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_LOCATION] = null;
+        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_STATUS] = null;
+        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_STATUS_CODE] = null;
+        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_STATUS_DESC] = null;
+        $this->dataServiceVersion = null;
     }
 
     /**
@@ -73,7 +73,7 @@ class OutgoingResponse
      */
     public function &getHeaders()
     {
-        return $this->_headers;
+        return $this->headers;
     }
 
     /**
@@ -83,7 +83,7 @@ class OutgoingResponse
      */
     public function getContentType()
     {
-        return $this->_headers[ODataConstants::HTTPRESPONSE_HEADER_CONTENTTYPE];
+        return $this->headers[ODataConstants::HTTPRESPONSE_HEADER_CONTENTTYPE];
     }
 
     /**
@@ -93,7 +93,7 @@ class OutgoingResponse
      */
     public function setContentType($value)
     {
-        $this->_headers[ODataConstants::HTTPRESPONSE_HEADER_CONTENTTYPE] = $value;
+        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_CONTENTTYPE] = $value;
     }
 
     /**
@@ -103,7 +103,7 @@ class OutgoingResponse
      */
     public function setContentLength($value)
     {
-        $this->_headers[ODataConstants::HTTPRESPONSE_HEADER_CONTENTLENGTH] = $value;
+        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_CONTENTLENGTH] = $value;
     }
 
     /**
@@ -113,7 +113,7 @@ class OutgoingResponse
      */
     public function setCacheControl($value)
     {
-        $this->_headers[ODataConstants::HTTPRESPONSE_HEADER_CACHECONTROL] = $value;
+        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_CACHECONTROL] = $value;
     }
 
     /**
@@ -123,7 +123,7 @@ class OutgoingResponse
      */
     public function getETag()
     {
-        return $this->_headers[ODataConstants::HTTPRESPONSE_HEADER_ETAG];
+        return $this->headers[ODataConstants::HTTPRESPONSE_HEADER_ETAG];
     }
 
     /**
@@ -133,7 +133,7 @@ class OutgoingResponse
      */
     public function setETag($value)
     {
-        $this->_headers[ODataConstants::HTTPRESPONSE_HEADER_ETAG] = $value;
+        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_ETAG] = $value;
     }
 
     /**
@@ -143,7 +143,7 @@ class OutgoingResponse
      */
     public function setLastModified($value)
     {
-        $this->_headers[ODataConstants::HTTPRESPONSE_HEADER_LASTMODIFIED] = $value;
+        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_LASTMODIFIED] = $value;
     }
 
     /**
@@ -153,7 +153,7 @@ class OutgoingResponse
      */
     public function setLocation($value)
     {
-        $this->_headers[ODataConstants::HTTPRESPONSE_HEADER_LOCATION] = $value;
+        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_LOCATION] = $value;
     }
 
     /**
@@ -164,7 +164,7 @@ class OutgoingResponse
      */
     public function setStatusCode($value)
     {
-        $this->_headers[ODataConstants::HTTPRESPONSE_HEADER_STATUS] = $value;
+        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_STATUS] = $value;
     }
 
     /**
@@ -174,7 +174,7 @@ class OutgoingResponse
      */
     public function setStatusDescription($value)
     {
-        $this->_headers[ODataConstants::HTTPRESPONSE_HEADER_STATUS_DESC] = $value;
+        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_STATUS_DESC] = $value;
     }
 
     /**
@@ -184,7 +184,7 @@ class OutgoingResponse
      */
     public function &getStream()
     {
-        return $this->_stream;
+        return $this->stream;
     }
 
     /**
@@ -194,7 +194,7 @@ class OutgoingResponse
      */
     public function setStream(&$value)
     {
-        $this->_stream = $value;
+        $this->stream = $value;
     }
 
     /**
@@ -204,7 +204,7 @@ class OutgoingResponse
      */
     public function setServiceVersion($value)
     {
-        $this->_headers[ODataConstants::ODATAVERSIONHEADER] = $value;
+        $this->headers[ODataConstants::ODATAVERSIONHEADER] = $value;
     }
 
     /**
@@ -215,6 +215,6 @@ class OutgoingResponse
      */
     public function addHeader($name, $value)
     {
-        $this->_headers[$name] = $value;
+        $this->headers[$name] = $value;
     }
 }

@@ -21,14 +21,14 @@ class WebOperationContext implements IOperationContext
      *
      * @var IncomingRequest
      */
-    private $_incomingRequest;
+    private $incomingRequest;
 
     /**
      * Object of OutgoingResponse which is needed to get all the HTTP headers info.
      *
      * @var OutgoingResponse
      */
-    private $_outgoingResponse;
+    private $outgoingResponse;
 
     /**
      * Initializes a new instance of the WebOperationContext class.
@@ -38,8 +38,8 @@ class WebOperationContext implements IOperationContext
      */
     public function __construct()
     {
-        $this->_incomingRequest = new IncomingRequest();
-        $this->_outgoingResponse = new OutgoingResponse();
+        $this->incomingRequest = new IncomingRequest();
+        $this->outgoingResponse = new OutgoingResponse();
     }
 
     /**
@@ -49,7 +49,7 @@ class WebOperationContext implements IOperationContext
      */
     public function outgoingResponse()
     {
-        return $this->_outgoingResponse;
+        return $this->outgoingResponse;
     }
 
     /**
@@ -59,6 +59,6 @@ class WebOperationContext implements IOperationContext
      */
     public function incomingRequest()
     {
-        return $this->_incomingRequest;
+        return $this->incomingRequest;
     }
 }

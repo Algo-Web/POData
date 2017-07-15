@@ -7,9 +7,9 @@ namespace POData\Common;
  */
 class Url
 {
-    private $_urlAsString = null;
-    private $_parts = [];
-    private $_segments = [];
+    private $urlAsString = null;
+    private $parts = [];
+    private $segments = [];
     const ABS_URL_REGEXP = '/^(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/';
     const REL_URL_REGEXP = '/^(\/|\/([\w#!:.?+=&%@!\-\/]))?/';
 
@@ -37,11 +37,11 @@ class Url
         if ($p === false) {
             throw new UrlFormatException(Messages::urlMalformedUrl($url));
         }
-        $this->_parts = $p;
+        $this->parts = $p;
         $path = $this->getPath();
         if ($path != null) {
-            $this->_segments = explode('/', trim($path, '/'));
-            foreach ($this->_segments as $segment) {
+            $this->segments = explode('/', trim($path, '/'));
+            foreach ($this->segments as $segment) {
                 $segment = trim($segment);
                 if (empty($segment)) {
                     throw new UrlFormatException(Messages::urlMalformedUrl($url));
@@ -49,7 +49,7 @@ class Url
             }
         }
 
-        $this->_urlAsString = $url;
+        $this->urlAsString = $url;
     }
 
     /**
@@ -59,7 +59,7 @@ class Url
      */
     public function getUrlAsString()
     {
-        return $this->_urlAsString;
+        return $this->urlAsString;
     }
 
     /**
@@ -70,7 +70,7 @@ class Url
      */
     public function getScheme()
     {
-        return isset($this->_parts['scheme']) ? $this->_parts['scheme'] : null;
+        return isset($this->parts['scheme']) ? $this->parts['scheme'] : null;
     }
 
     /**
@@ -81,7 +81,7 @@ class Url
      */
     public function getHost()
     {
-        return isset($this->_parts['host']) ? $this->_parts['host'] : null;
+        return isset($this->parts['host']) ? $this->parts['host'] : null;
     }
 
     /**
@@ -91,7 +91,7 @@ class Url
      */
     public function getPort()
     {
-        $port = isset($this->_parts['port']) ? $this->_parts['port'] : null;
+        $port = isset($this->parts['port']) ? $this->parts['port'] : null;
         if ($port != null) {
             return $port;
         }
@@ -114,7 +114,7 @@ class Url
      */
     public function getPath()
     {
-        return isset($this->_parts['path']) ? $this->_parts['path'] : null;
+        return isset($this->parts['path']) ? $this->parts['path'] : null;
     }
 
     /**
@@ -125,7 +125,7 @@ class Url
      */
     public function getQuery()
     {
-        return isset($this->_parts['query']) ? $this->_parts['query'] : null;
+        return isset($this->parts['query']) ? $this->parts['query'] : null;
     }
 
     /**
@@ -136,7 +136,7 @@ class Url
      */
     public function getFragment()
     {
-        return isset($this->_parts['fragment']) ? $this->_parts['fragment'] : null;
+        return isset($this->parts['fragment']) ? $this->parts['fragment'] : null;
     }
 
     /**
@@ -147,7 +147,7 @@ class Url
      */
     public function getSegments()
     {
-        return $this->_segments;
+        return $this->segments;
     }
 
     /**
@@ -157,7 +157,7 @@ class Url
      */
     public function getSegmentCount()
     {
-        return count($this->_segments);
+        return count($this->segments);
     }
 
     /**
@@ -167,7 +167,7 @@ class Url
      */
     public function isAbsolute()
     {
-        return isset($this->_parts['scheme']);
+        return isset($this->parts['scheme']);
     }
 
     /**
@@ -189,14 +189,14 @@ class Url
      */
     public function isBaseOf(Url $targetUri)
     {
-        if ($this->_parts['scheme'] !== $targetUri->getScheme()
-            || $this->_parts['host'] !== $targetUri->getHost()
+        if ($this->parts['scheme'] !== $targetUri->getScheme()
+            || $this->parts['host'] !== $targetUri->getHost()
             || $this->getPort() !== $targetUri->getPort()
         ) {
             return false;
         }
 
-        $srcSegmentCount = count($this->_segments);
+        $srcSegmentCount = count($this->segments);
         $targetSegments = $targetUri->getSegments();
         $targetSegmentCount = count($targetSegments);
         if ($srcSegmentCount > $targetSegmentCount) {
@@ -204,7 +204,7 @@ class Url
         }
 
         for ($i = 0; $i < $srcSegmentCount; ++$i) {
-            if ($this->_segments[$i] !== $targetSegments[$i]) {
+            if ($this->segments[$i] !== $targetSegments[$i]) {
                 return false;
             }
         }

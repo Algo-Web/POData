@@ -17,7 +17,7 @@ class Navigation implements INavigationType
      *
      * @var ResourceType
      */
-    private $_resourceType;
+    private $resourceType;
 
     /**
      * Creates new instance of Navigation.
@@ -34,7 +34,7 @@ class Navigation implements INavigationType
             throw new \InvalidArgumentException(Messages::navigationInvalidResourceType());
         }
 
-        $this->_resourceType = $resourceType;
+        $this->resourceType = $resourceType;
     }
 
     //Begin implementation of IType interface
@@ -64,7 +64,7 @@ class Navigation implements INavigationType
             return false;
         }
 
-        return 0 == strcmp($type->_resourceType->getFullName(), $this->_resourceType->getFullName());
+        return 0 == strcmp($type->resourceType->getFullName(), $this->resourceType->getFullName());
     }
 
     /**
@@ -96,7 +96,7 @@ class Navigation implements INavigationType
      */
     public function getFullTypeName()
     {
-        return $this->_resourceType->getFullName();
+        return $this->resourceType->getFullName();
     }
 
     /**
@@ -145,7 +145,7 @@ class Navigation implements INavigationType
      */
     public function getResourceType()
     {
-        return $this->_resourceType;
+        return $this->resourceType;
     }
 
     //End implementation of INavigationType interface

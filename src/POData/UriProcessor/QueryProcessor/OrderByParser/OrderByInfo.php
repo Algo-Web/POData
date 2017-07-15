@@ -17,7 +17,7 @@ class OrderByInfo
      *
      * @var OrderByPathSegment[]
      */
-    private $_orderByPathSegments;
+    private $orderByPathSegments;
 
     /**
      * The IQueryProvider implementation sets this to true using 'setSorted' function if it is going to perform
@@ -25,7 +25,7 @@ class OrderByInfo
      *
      * @var bool
      */
-    private $_isSorted;
+    private $isSorted;
 
     /**
      * Collection of navigation properties specified in the orderby clause, if no navigation (resource reference)
@@ -38,7 +38,7 @@ class OrderByInfo
      *
      * @var array<array<ResourceProperty>>|null
      */
-    private $_navigationPropertiesUsedInTheOrderByClause;
+    private $navigationPropertiesUsedInTheOrderByClause;
 
     /**
      * Constructs new instance of OrderByInfo.
@@ -76,8 +76,8 @@ class OrderByInfo
             }
         }
 
-        $this->_orderByPathSegments = $orderByPathSegments;
-        $this->_navigationPropertiesUsedInTheOrderByClause = $navigationPropertiesUsedInTheOrderByClause;
+        $this->orderByPathSegments = $orderByPathSegments;
+        $this->navigationPropertiesUsedInTheOrderByClause = $navigationPropertiesUsedInTheOrderByClause;
     }
 
     /**
@@ -87,7 +87,7 @@ class OrderByInfo
      */
     public function getOrderByPathSegments()
     {
-        return $this->_orderByPathSegments;
+        return $this->orderByPathSegments;
     }
 
     /**
@@ -100,7 +100,7 @@ class OrderByInfo
      */
     public function getNavigationPropertiesUsed()
     {
-        return $this->_navigationPropertiesUsedInTheOrderByClause;
+        return $this->navigationPropertiesUsedInTheOrderByClause;
     }
 
     /**
@@ -111,7 +111,7 @@ class OrderByInfo
      */
     public function setSorted($isSorted = true)
     {
-        $this->_isSorted = $isSorted;
+        $this->isSorted = $isSorted;
     }
 
     /**
@@ -122,6 +122,6 @@ class OrderByInfo
      */
     public function requireInternalSorting()
     {
-        return !$this->_isSorted;
+        return !$this->isSorted;
     }
 }

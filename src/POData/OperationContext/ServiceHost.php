@@ -26,7 +26,7 @@ class ServiceHost
      *
      * @var IOperationContext
      */
-    private $_operationContext;
+    private $operationContext;
 
     /**
      * The absolute request Uri as Url instance.
@@ -34,7 +34,7 @@ class ServiceHost
      *
      * @var Url
      */
-    private $_absoluteRequestUri;
+    private $absoluteRequestUri;
 
     /**
      * The absolute request Uri as string
@@ -42,7 +42,7 @@ class ServiceHost
      *
      * @var string
      */
-    private $_absoluteRequestUriAsString = null;
+    private $absoluteRequestUriAsString = null;
 
     /**
      * The absolute service uri as Url instance.
@@ -50,7 +50,7 @@ class ServiceHost
      *
      * @var Url
      */
-    private $_absoluteServiceUri;
+    private $absoluteServiceUri;
 
     /**
      * The absolute service uri string.
@@ -58,14 +58,14 @@ class ServiceHost
      *
      * @var string
      */
-    private $_absoluteServiceUriAsString = null;
+    private $absoluteServiceUriAsString = null;
 
     /**
      * array of query-string parameters.
      *
      * @var array<string>
      */
-    private $_queryOptions;
+    private $queryOptions;
 
     /**
      * Gets reference to the operation context.
@@ -74,7 +74,7 @@ class ServiceHost
      */
     public function getOperationContext()
     {
-        return $this->_operationContext;
+        return $this->operationContext;
     }
 
     /**
@@ -91,18 +91,18 @@ class ServiceHost
     public function __construct(IOperationContext $context = null, Request $incomingRequest)
     {
         if (is_null($context)) {
-            $this->_operationContext = new IlluminateOperationContext($incomingRequest);
+            $this->operationContext = new IlluminateOperationContext($incomingRequest);
         } else {
-            $this->_operationContext = $context;
+            $this->operationContext = $context;
         }
 
         // getAbsoluteRequestUri can throw UrlFormatException
         // let Dispatcher handle it
-        $this->_absoluteRequestUri = $this->getAbsoluteRequestUri();
-        $this->_absoluteServiceUri = null;
+        $this->absoluteRequestUri = $this->getAbsoluteRequestUri();
+        $this->absoluteServiceUri = null;
 
         //Dev Note: Andrew Clinton 5/19/16
-        //_absoluteServiceUri is never being set from what I can tell
+        //absoluteServiceUri is never being set from what I can tell
         //so for now we'll set it as such
         $this->setServiceUri($this->_getServiceUri());
     }
@@ -117,19 +117,19 @@ class ServiceHost
      */
     public function getAbsoluteRequestUri()
     {
-        if (is_null($this->_absoluteRequestUri)) {
-            $this->_absoluteRequestUriAsString = $this->getOperationContext()->incomingRequest()->getRawUrl();
+        if (is_null($this->absoluteRequestUri)) {
+            $this->absoluteRequestUriAsString = $this->getOperationContext()->incomingRequest()->getRawUrl();
             // Validate the uri first
             try {
-                new Url($this->_absoluteRequestUriAsString);
+                new Url($this->absoluteRequestUriAsString);
             } catch (UrlFormatException $exception) {
                 throw ODataException::createBadRequestError($exception->getMessage());
             }
 
-            $queryStartIndex = strpos($this->_absoluteRequestUriAsString, '?');
+            $queryStartIndex = strpos($this->absoluteRequestUriAsString, '?');
             if ($queryStartIndex !== false) {
-                $this->_absoluteRequestUriAsString = substr(
-                    $this->_absoluteRequestUriAsString,
+                $this->absoluteRequestUriAsString = substr(
+                    $this->absoluteRequestUriAsString,
                     0,
                     $queryStartIndex
                 );
@@ -137,11 +137,11 @@ class ServiceHost
 
             // We need the absolute uri only not associated components
             // (query, fragments etc..)
-            $this->_absoluteRequestUri = new Url($this->_absoluteRequestUriAsString);
-            $this->_absoluteRequestUriAsString = rtrim($this->_absoluteRequestUriAsString, '/');
+            $this->absoluteRequestUri = new Url($this->absoluteRequestUriAsString);
+            $this->absoluteRequestUriAsString = rtrim($this->absoluteRequestUriAsString, '/');
         }
 
-        return $this->_absoluteRequestUri;
+        return $this->absoluteRequestUri;
     }
 
     /**
@@ -152,7 +152,7 @@ class ServiceHost
      */
     public function getAbsoluteRequestUriAsString()
     {
-        return $this->_absoluteRequestUriAsString;
+        return $this->absoluteRequestUriAsString;
     }
 
     /**
@@ -164,30 +164,30 @@ class ServiceHost
      */
     public function setServiceUri($serviceUri)
     {
-        if (is_null($this->_absoluteServiceUri)) {
+        if (is_null($this->absoluteServiceUri)) {
             $isAbsoluteServiceUri = (strpos($serviceUri, 'http://') === 0)
                 || (strpos($serviceUri, 'https://') === 0);
             try {
-                $this->_absoluteServiceUri = new Url($serviceUri, $isAbsoluteServiceUri);
+                $this->absoluteServiceUri = new Url($serviceUri, $isAbsoluteServiceUri);
             } catch (UrlFormatException $exception) {
                 throw ODataException::createInternalServerError(Messages::hostMalFormedBaseUriInConfig());
             }
 
-            $segments = $this->_absoluteServiceUri->getSegments();
+            $segments = $this->absoluteServiceUri->getSegments();
             $lastSegment = $segments[count($segments) - 1];
             $endsWithSvc
                 = (substr_compare($lastSegment, '.svc', -strlen('.svc'), strlen('.svc')) === 0);
             if (!$endsWithSvc
-                || !is_null($this->_absoluteServiceUri->getQuery())
-                || !is_null($this->_absoluteServiceUri->getFragment())
+                || !is_null($this->absoluteServiceUri->getQuery())
+                || !is_null($this->absoluteServiceUri->getFragment())
             ) {
                 throw ODataException::createInternalServerError(Messages::hostMalFormedBaseUriInConfig(true));
             }
 
             if (!$isAbsoluteServiceUri) {
-                $requestUriSegments = $this->_absoluteRequestUri->getSegments();
-                $requestUriScheme = $this->_absoluteRequestUri->getScheme();
-                $requestUriPort = $this->_absoluteRequestUri->getPort();
+                $requestUriSegments = $this->absoluteRequestUri->getSegments();
+                $requestUriScheme = $this->absoluteRequestUri->getScheme();
+                $requestUriPort = $this->absoluteRequestUri->getPort();
                 $i = count($requestUriSegments) - 1;
                 // Find index of segment in the request uri that end with .svc
                 // There will be always a .svc segment in the request uri otherwise
@@ -204,7 +204,7 @@ class ServiceHost
                 if ($j > $i) {
                     throw ODataException::createBadRequestError(
                         Messages::hostRequestUriIsNotBasedOnRelativeUriInConfig(
-                            $this->_absoluteRequestUriAsString,
+                            $this->absoluteRequestUriAsString,
                             $serviceUri
                         )
                     );
@@ -218,7 +218,7 @@ class ServiceHost
                 if ($j != -1) {
                     throw ODataException::createBadRequestError(
                         Messages::hostRequestUriIsNotBasedOnRelativeUriInConfig(
-                            $this->_absoluteRequestUriAsString,
+                            $this->absoluteRequestUriAsString,
                             $serviceUri
                         )
                     );
@@ -226,7 +226,7 @@ class ServiceHost
 
                 $serviceUri = $requestUriScheme
                     .'://'
-                    .$this->_absoluteRequestUri->getHost();
+                    .$this->absoluteRequestUri->getHost();
 
                 if (($requestUriScheme == 'http' && $requestUriPort != '80') ||
                     ($requestUriScheme == 'https' && $requestUriPort != '443')
@@ -238,10 +238,10 @@ class ServiceHost
                     $serviceUri .= '/' . $requestUriSegments[$l];
                 }
 
-                $this->_absoluteServiceUri = new Url($serviceUri);
+                $this->absoluteServiceUri = new Url($serviceUri);
             }
 
-            $this->_absoluteServiceUriAsString = $serviceUri;
+            $this->absoluteServiceUriAsString = $serviceUri;
         }
     }
 
@@ -253,7 +253,7 @@ class ServiceHost
      */
     public function getAbsoluteServiceUri()
     {
-        return $this->_absoluteServiceUri;
+        return $this->absoluteServiceUri;
     }
 
     /**
@@ -264,7 +264,7 @@ class ServiceHost
      */
     public function getAbsoluteServiceUriAsString()
     {
-        return $this->_absoluteServiceUriAsString;
+        return $this->absoluteServiceUriAsString;
     }
 
     /**
@@ -329,7 +329,7 @@ class ServiceHost
             next($queryOptions);
         }
 
-        $this->_queryOptions = $queryOptions;
+        $this->queryOptions = $queryOptions;
     }
 
     /**
@@ -343,13 +343,13 @@ class ServiceHost
      */
     private function _getServiceUri()
     {
-        if (($pos = strpos($this->_absoluteRequestUriAsString, '.svc')) !== false) {
-            $serviceUri = substr($this->_absoluteRequestUriAsString, 0, $pos + strlen('.svc'));
+        if (($pos = strpos($this->absoluteRequestUriAsString, '.svc')) !== false) {
+            $serviceUri = substr($this->absoluteRequestUriAsString, 0, $pos + strlen('.svc'));
 
             return $serviceUri;
         }
 
-        return $this->_absoluteRequestUriAsString;
+        return $this->absoluteRequestUriAsString;
     }
 
     /**
@@ -384,7 +384,7 @@ class ServiceHost
      */
     public function getQueryStringItem($item)
     {
-        foreach ($this->_queryOptions as $queryOption) {
+        foreach ($this->queryOptions as $queryOption) {
             if (array_key_exists($item, $queryOption)) {
                 return $queryOption[$item];
             }
@@ -398,7 +398,7 @@ class ServiceHost
      */
     public function getRequestVersion()
     {
-        return $this->_operationContext
+        return $this->operationContext
             ->incomingRequest()
             ->getRequestHeader(ODataConstants::HTTPREQUEST_HEADER_DATA_SERVICE_VERSION);
     }
@@ -410,7 +410,7 @@ class ServiceHost
      */
     public function getRequestMaxVersion()
     {
-        return $this->_operationContext
+        return $this->operationContext
             ->incomingRequest()
             ->getRequestHeader(ODataConstants::HTTPREQUEST_HEADER_MAX_DATA_SERVICE_VERSION);
     }
@@ -422,7 +422,7 @@ class ServiceHost
      */
     public function getRequestAccept()
     {
-        return $this->_operationContext
+        return $this->operationContext
             ->incomingRequest()
             ->getRequestHeader(ODataConstants::HTTPREQUEST_HEADER_ACCEPT);
     }
@@ -434,7 +434,7 @@ class ServiceHost
      */
     public function getRequestAcceptCharSet()
     {
-        return $this->_operationContext
+        return $this->operationContext
             ->incomingRequest()
             ->getRequestHeader(ODataConstants::HTTPREQUEST_HEADER_ACCEPT_CHARSET);
     }
@@ -446,7 +446,7 @@ class ServiceHost
      */
     public function getRequestIfMatch()
     {
-        return $this->_operationContext
+        return $this->operationContext
             ->incomingRequest()
             ->getRequestHeader(ODataConstants::HTTPREQUEST_HEADER_IF_MATCH);
     }
@@ -458,7 +458,7 @@ class ServiceHost
      */
     public function getRequestIfNoneMatch()
     {
-        return $this->_operationContext
+        return $this->operationContext
             ->incomingRequest()
             ->getRequestHeader(ODataConstants::HTTPREQUEST_HEADER_IF_NONE);
     }
@@ -470,7 +470,7 @@ class ServiceHost
      */
     public function getRequestContentType()
     {
-        return $this->_operationContext
+        return $this->operationContext
             ->incomingRequest()
             ->getRequestHeader(ODataConstants::HTTP_CONTENTTYPE);
     }
@@ -583,7 +583,7 @@ class ServiceHost
      */
     public function setResponseStatusDescription($value)
     {
-        $this->_operationContext
+        $this->operationContext
             ->outgoingResponse()->setStatusDescription($value);
     }
 

@@ -64,7 +64,7 @@ class KeyDescriptor
      *
      * @var array
      */
-    private $_namedValues = [];
+    private $namedValues = [];
 
     /**
      * Holds collection of positional key values
@@ -78,7 +78,7 @@ class KeyDescriptor
      *
      * @var array
      */
-    private $_positionalValues = [];
+    private $positionalValues = [];
 
     /**
      * Holds collection of positional or named values as named values. The validate
@@ -86,7 +86,7 @@ class KeyDescriptor
      *
      * @var array
      */
-    private $_validatedNamedValues = [];
+    private $validatedNamedValues = [];
 
     /**
      * Creates new instance of KeyDescriptor
@@ -98,9 +98,9 @@ class KeyDescriptor
      */
     private function __construct(array $namedValues, array $positionalValues)
     {
-        $this->_namedValues = $namedValues;
-        $this->_positionalValues = $positionalValues;
-        $this->_validatedNamedValues = [];
+        $this->namedValues = $namedValues;
+        $this->positionalValues = $positionalValues;
+        $this->validatedNamedValues = [];
     }
 
     /**
@@ -110,7 +110,7 @@ class KeyDescriptor
      */
     public function getNamedValues()
     {
-        return $this->_namedValues;
+        return $this->namedValues;
     }
 
     /**
@@ -120,7 +120,7 @@ class KeyDescriptor
      */
     public function getPositionalValues()
     {
-        return $this->_positionalValues;
+        return $this->positionalValues;
     }
 
     /**
@@ -130,7 +130,7 @@ class KeyDescriptor
      */
     public function &getPositionalValuesByRef()
     {
-        return $this->_positionalValues;
+        return $this->positionalValues;
     }
 
     /**
@@ -143,13 +143,13 @@ class KeyDescriptor
      */
     public function getValidatedNamedValues()
     {
-        if (empty($this->_validatedNamedValues)) {
+        if (empty($this->validatedNamedValues)) {
             throw new InvalidOperationException(
                 Messages::keyDescriptorValidateNotCalled()
             );
         }
 
-        return $this->_validatedNamedValues;
+        return $this->validatedNamedValues;
     }
 
     /**
@@ -159,7 +159,7 @@ class KeyDescriptor
      */
     public function areNamedValues()
     {
-        return !empty($this->_namedValues);
+        return !empty($this->namedValues);
     }
 
     /**
@@ -169,8 +169,8 @@ class KeyDescriptor
      */
     public function isEmpty()
     {
-        return empty($this->_namedValues)
-             && empty($this->_positionalValues);
+        return empty($this->namedValues)
+             && empty($this->positionalValues);
     }
 
     /**
@@ -182,11 +182,11 @@ class KeyDescriptor
     {
         if ($this->isEmpty()) {
             return 0;
-        } elseif (!empty($this->_namedValues)) {
-            return count($this->_namedValues);
+        } elseif (!empty($this->namedValues)) {
+            return count($this->namedValues);
         }
 
-        return count($this->_positionalValues);
+        return count($this->positionalValues);
     }
 
     /**
@@ -248,26 +248,26 @@ class KeyDescriptor
     public function validate($segmentAsString, ResourceType $resourceType)
     {
         if ($this->isEmpty()) {
-            $this->_validatedNamedValues = [];
+            $this->validatedNamedValues = [];
 
             return;
         }
 
         $keyProperties = $resourceType->getKeyProperties();
         $keyPropertiesCount = count($keyProperties);
-        if (!empty($this->_namedValues)) {
-            if (count($this->_namedValues) != $keyPropertiesCount) {
+        if (!empty($this->namedValues)) {
+            if (count($this->namedValues) != $keyPropertiesCount) {
                 throw ODataException::createSyntaxError(
                     Messages::keyDescriptorKeyCountNotMatching(
                         $segmentAsString,
                         $keyPropertiesCount,
-                        count($this->_namedValues)
+                        count($this->namedValues)
                     )
                 );
             }
 
             foreach ($keyProperties as $keyName => $keyResourceProperty) {
-                if (!array_key_exists($keyName, $this->_namedValues)) {
+                if (!array_key_exists($keyName, $this->namedValues)) {
                     $keysAsString = null;
                     foreach (array_keys($keyProperties) as $key) {
                         $keysAsString .= $key . ', ';
@@ -282,7 +282,7 @@ class KeyDescriptor
                     );
                 }
 
-                $typeProvided = $this->_namedValues[$keyName][1];
+                $typeProvided = $this->namedValues[$keyName][1];
                 $expectedType = $keyResourceProperty->getInstanceType();
                 if (!$expectedType->isCompatibleWith($typeProvided)) {
                     throw ODataException::createSyntaxError(
@@ -295,22 +295,22 @@ class KeyDescriptor
                     );
                 }
 
-                $this->_validatedNamedValues[$keyName] = $this->_namedValues[$keyName];
+                $this->validatedNamedValues[$keyName] = $this->namedValues[$keyName];
             }
         } else {
-            if (count($this->_positionalValues) != $keyPropertiesCount) {
+            if (count($this->positionalValues) != $keyPropertiesCount) {
                 throw ODataException::createSyntaxError(
                     Messages::keyDescriptorKeyCountNotMatching(
                         $segmentAsString,
                         $keyPropertiesCount,
-                        count($this->_positionalValues)
+                        count($this->positionalValues)
                     )
                 );
             }
 
             $i = 0;
             foreach ($keyProperties as $keyName => $keyResourceProperty) {
-                $typeProvided = $this->_positionalValues[$i][1];
+                $typeProvided = $this->positionalValues[$i][1];
                 $expectedType = $keyResourceProperty->getInstanceType();
 
                 if (!$expectedType->isCompatibleWith($typeProvided)) {
@@ -325,8 +325,8 @@ class KeyDescriptor
                     );
                 }
 
-                $this->_validatedNamedValues[$keyName]
-                    = $this->_positionalValues[$i];
+                $this->validatedNamedValues[$keyName]
+                    = $this->positionalValues[$i];
                 ++$i;
             }
         }

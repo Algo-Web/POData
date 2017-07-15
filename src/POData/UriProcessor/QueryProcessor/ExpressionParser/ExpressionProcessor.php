@@ -20,7 +20,7 @@ use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\UnaryExpress
  */
 class ExpressionProcessor
 {
-    private $_expressionProvider;
+    private $expressionProvider;
 
     /**
      * Construct new instance of ExpressionProcessor.
@@ -29,7 +29,7 @@ class ExpressionProcessor
      */
     public function __construct(IExpressionProvider $expressionProvider)
     {
-        $this->_expressionProvider = $expressionProvider;
+        $this->expressionProvider = $expressionProvider;
     }
 
     /**
@@ -67,7 +67,7 @@ class ExpressionProcessor
             $left = $this->_processExpressionNode($expression->getLeft());
             $right = $this->_processExpressionNode($expression->getRight());
 
-            return $this->_expressionProvider->$funcName(
+            return $this->expressionProvider->$funcName(
                 $expression->getNodeType(),
                 $left,
                 $right
@@ -75,14 +75,14 @@ class ExpressionProcessor
         }
 
         if ($expression instanceof ConstantExpression) {
-            return $this->_expressionProvider->onConstantExpression(
+            return $this->expressionProvider->onConstantExpression(
                 $expression->getType(),
                 $expression->getValue()
             );
         }
 
         if ($expression instanceof PropertyAccessExpression) {
-            return $this->_expressionProvider->onPropertyAccessExpression(
+            return $this->expressionProvider->onPropertyAccessExpression(
                 $expression
             );
         }
@@ -93,7 +93,7 @@ class ExpressionProcessor
                 $params[] = $this->_processExpressionNode($paramExpression);
             }
 
-            return $this->_expressionProvider->onFunctionCallExpression(
+            return $this->expressionProvider->onFunctionCallExpression(
                 $expression->getFunctionDescription(),
                 $params
             );
@@ -102,7 +102,7 @@ class ExpressionProcessor
         if ($expression instanceof UnaryExpression) {
             $child = $this->_processExpressionNode($expression->getChild());
 
-            return $this->_expressionProvider->onUnaryExpression(
+            return $this->expressionProvider->onUnaryExpression(
                 $expression->getNodeType(),
                 $child
             );

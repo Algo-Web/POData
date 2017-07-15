@@ -19,7 +19,7 @@ class OrderByRootNode extends OrderByNode
      *
      * @var ResourceType
      */
-    private $_baseResourceType;
+    private $baseResourceType;
 
     /**
      * Constructs a new instance of 'OrderByRootNode' representing
@@ -35,7 +35,7 @@ class OrderByRootNode extends OrderByNode
         ResourceType $baseResourceType
     ) {
         parent::__construct(null, null, $resourceSetWrapper);
-        $this->_baseResourceType = $baseResourceType;
+        $this->baseResourceType = $baseResourceType;
     }
 
     /**
@@ -47,6 +47,6 @@ class OrderByRootNode extends OrderByNode
      */
     public function getResourceType()
     {
-        return $this->_baseResourceType;
+        return $this->baseResourceType;
     }
 }
