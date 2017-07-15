@@ -13,7 +13,7 @@ trait expandProjectionParser
     public static function expandedProjectionNodeArgumentTypeShouldBeProjection()
     {
         return 'The argument to ExpandedProjectionNode::addNode should be either ProjectionNode or'
-               .' ExpandedProjectionNode';
+                .' ExpandedProjectionNode';
     }
 
     /**
@@ -33,7 +33,7 @@ trait expandProjectionParser
         $clause = $isSelect ? 'select' : 'expand';
 
         return 'Error in the '.$clause.' clause. Type \''.$resourceTypeName.'\' does not have a property named \''
-               .$propertyName.'\'.';
+                .$propertyName.'\'.';
     }
 
     /**
@@ -48,7 +48,7 @@ trait expandProjectionParser
     public static function expandProjectionParserExpandCanOnlyAppliedToEntity($resourceTypeName, $propertyName)
     {
         return 'Error in the expand clause. Expand path can contain only navigation property, the property '.
-               '\''.$propertyName.'\' defined in \''.$resourceTypeName.'\' is not a navigation property';
+                '\''.$propertyName.'\' defined in \''.$resourceTypeName.'\' is not a navigation property';
     }
 
     /**
@@ -65,7 +65,7 @@ trait expandProjectionParser
     public static function expandProjectionParserPrimitivePropertyUsedAsNavigationProperty($resourceTypeName, $primitvePropertyName)
     {
         return 'Property \''.$primitvePropertyName.'\' on type \''.$resourceTypeName
-               .'\' is of primitive type and cannot be used as a navigation property.';
+                .'\' is of primitive type and cannot be used as a navigation property.';
     }
 
     /**
@@ -81,7 +81,7 @@ trait expandProjectionParser
     public static function expandProjectionParserComplexPropertyAsInnerSelectSegment($resourceTypeName, $complextTypeName)
     {
         return 'select doesn\'t support selection of properties of complex type. The property \''.$complextTypeName
-               .'\' on type \''.$resourceTypeName.'\' is a complex type.';
+                .'\' on type \''.$resourceTypeName.'\' is a complex type.';
     }
 
     /**
@@ -97,7 +97,7 @@ trait expandProjectionParser
     public static function expandProjectionParserBagPropertyAsInnerSelectSegment($resourceTypeName, $bagPropertyName)
     {
         return 'The selection from property \''.$bagPropertyName.'\' on type \''.$resourceTypeName
-               .'\' is not valid. The select query option does not support selection items from a bag property.';
+                .'\' is not valid. The select query option does not support selection items from a bag property.';
     }
 
     /**
@@ -123,6 +123,6 @@ trait expandProjectionParser
     public static function expandProjectionParserPropertyWithoutMatchingExpand($propertyName)
     {
         return 'Only navigation properties specified in expand option can be traversed in select option.  In order to'
-               .' traverse the navigation property \'' . $propertyName . '\', it should be first expanded';
+                .' traverse the navigation property \'' . $propertyName . '\', it should be first expanded';
     }
 }

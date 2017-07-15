@@ -15,7 +15,7 @@ trait expressionParser
      */
     public static function expressionParserInCompatibleTypes($operator, $str, $pos)
     {
-        return 'Operator \''.$operator.'\' incompatible with operand types '.$str.' at position '.$pos;
+        return 'Operator \'' . $operator . '\' incompatible with operand types ' . $str . ' at position ' . $pos;
     }
 
     /**
@@ -29,7 +29,7 @@ trait expressionParser
     public static function expressionParserOperatorNotSupportNull($operator, $pos)
     {
         return 'The operator \''.$operator.'\' at position '.$pos.' is not supported for the \'null\''
-               .' literal; only equality checks are supported';
+                .' literal; only equality checks are supported';
     }
 
     /**
@@ -43,7 +43,7 @@ trait expressionParser
     public static function expressionParserOperatorNotSupportGuid($operator, $pos)
     {
         return 'The operator \''.$operator.'\' at position '.$pos.' is not supported for the Edm.Guid;'
-               .' only equality checks are supported';
+                .' only equality checks are supported';
     }
 
     /**
@@ -57,7 +57,7 @@ trait expressionParser
     public static function expressionParserOperatorNotSupportBinary($operator, $pos)
     {
         return 'The operator \''.$operator.'\' at position '.$pos.' is not supported for the Edm.Binary;'
-               .' only equality checks are supported';
+                .' only equality checks are supported';
     }
 
     /**
@@ -71,7 +71,7 @@ trait expressionParser
      */
     public static function expressionParserUnrecognizedLiteral($type, $literal, $pos)
     {
-        return 'Unrecognized \''.$type.'\' literal \''.$literal.'\' in position \''.$pos.'\'.';
+        return 'Unrecognized \'' . $type . '\' literal \'' . $literal . '\' in position \'' . $pos . '\'.';
     }
 
     /**
@@ -84,7 +84,7 @@ trait expressionParser
      */
     public static function expressionParserUnknownFunction($str, $pos)
     {
-        return 'Unknown function \''.$str.'\' at position '.$pos;
+        return 'Unknown function \'' . $str . '\' at position ' . $pos;
     }
 
     /**
@@ -106,7 +106,7 @@ trait expressionParser
      */
     public static function expressionParser2UnexpectedExpression($expressionClassName)
     {
-        return 'Unexpected expression of type \''.$expressionClassName.'\' found';
+        return 'Unexpected expression of type \'' . $expressionClassName . '\' found';
     }
 
     /**
@@ -132,6 +132,6 @@ trait expressionParser
     public static function expressionParserEntityCollectionNotAllowedInFilter($property, $parentProperty, $pos)
     {
         return 'The \''.$property.'\' is an entity collection property of \''.$parentProperty.'\' (position: '.$pos
-               .'), which cannot be used in $filter query option';
+                .'), which cannot be used in $filter query option';
     }
 }

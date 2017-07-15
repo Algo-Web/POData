@@ -249,48 +249,48 @@ class MySQLExpressionProvider implements IExpressionProvider
     {
         switch ($functionDescription->name) {
             case ODataConstants::STRFUN_COMPARE:
-                return 'STRCMP('.$params[0].', '.$params[1].')';
+                return 'STRCMP(' . $params[0] . ', ' . $params[1] . ')';
 
             case ODataConstants::STRFUN_ENDSWITH:
-                return '(STRCMP('.$params[1].',RIGHT('.$params[0].',LENGTH('.$params[1].'))) = 0)';
+                return '(STRCMP(' . $params[1] . ',RIGHT(' . $params[0] . ',LENGTH(' . $params[1] . '))) = 0)';
 
             case ODataConstants::STRFUN_INDEXOF:
-                return 'INSTR('.$params[0].', '.$params[1].') - 1';
+                return 'INSTR(' . $params[0] . ', ' . $params[1] . ') - 1';
 
             case ODataConstants::STRFUN_REPLACE:
-                return 'REPLACE('.$params[0].','.$params[1].','.$params[2].')';
+                return 'REPLACE(' . $params[0] . ',' . $params[1] . ',' . $params[2] . ')';
 
             case ODataConstants::STRFUN_STARTSWITH:
-                return '(STRCMP('.$params[1].',LEFT('.$params[0].',LENGTH('.$params[1].'))) = 0)';
+                return '(STRCMP(' . $params[1] . ',LEFT(' . $params[0] . ',LENGTH(' . $params[1] . '))) = 0)';
 
             case ODataConstants::STRFUN_TOLOWER:
-                return 'LOWER('.$params[0].')';
+                return 'LOWER(' . $params[0] . ')';
 
             case ODataConstants::STRFUN_TOUPPER:
-                return 'UPPER('.$params[0].')';
+                return 'UPPER(' . $params[0] . ')';
 
             case ODataConstants::STRFUN_TRIM:
-                return 'TRIM('.$params[0].')';
+                return 'TRIM(' . $params[0] . ')';
 
             case ODataConstants::STRFUN_SUBSTRING:
                 return count($params) == 3 ?
-                    'SUBSTRING('.$params[0].', '.$params[1].' + 1, '.$params[2].')'
-                    : 'SUBSTRING('.$params[0].', '.$params[1].' + 1)';
+                    'SUBSTRING(' . $params[0] . ', ' . $params[1] . ' + 1, ' . $params[2] . ')'
+                    : 'SUBSTRING(' . $params[0] . ', ' . $params[1] . ' + 1)';
 
             case ODataConstants::STRFUN_SUBSTRINGOF:
-                return '(LOCATE('.$params[0].', '.$params[1].') > 0)';
+                return '(LOCATE(' . $params[0] . ', ' . $params[1] . ') > 0)';
 
             case ODataConstants::STRFUN_CONCAT:
-                return 'CONCAT('.$params[0].','.$params[1].')';
+                return 'CONCAT(' . $params[0] . ',' . $params[1] . ')';
 
             case ODataConstants::STRFUN_LENGTH:
-                return 'LENGTH('.$params[0].')';
+                return 'LENGTH(' . $params[0] . ')';
 
             case ODataConstants::GUIDFUN_EQUAL:
-                return 'STRCMP('.$params[0].', '.$params[1].')';
+                return 'STRCMP(' . $params[0] . ', ' . $params[1] . ')';
 
             case ODataConstants::DATETIME_COMPARE:
-                return 'DATETIMECMP('.$params[0].'; '.$params[1].')';
+                return 'DATETIMECMP(' . $params[0] . '; ' . $params[1] . ')';
 
             case ODataConstants::DATETIME_YEAR:
                 return 'EXTRACT(YEAR from ' . $params[0] . ')';
@@ -311,19 +311,19 @@ class MySQLExpressionProvider implements IExpressionProvider
                 return 'EXTRACT(SECOND from ' . $params[0] . ')';
 
             case ODataConstants::MATHFUN_ROUND:
-                return 'ROUND('.$params[0].')';
+                return 'ROUND(' . $params[0] . ')';
 
             case ODataConstants::MATHFUN_CEILING:
-                return 'CEIL('.$params[0].')';
+                return 'CEIL(' . $params[0] . ')';
 
             case ODataConstants::MATHFUN_FLOOR:
-                return 'FLOOR('.$params[0].')';
+                return 'FLOOR(' . $params[0] . ')';
 
             case ODataConstants::BINFUL_EQUAL:
-                return '('.$params[0].' = '.$params[1].')';
+                return '(' . $params[0] . ' = ' . $params[1] . ')';
 
             case 'is_null':
-                return 'is_null('.$params[0].')';
+                return 'is_null(' . $params[0] . ')';
 
             default:
                 throw new \InvalidArgumentException('onFunctionCallExpression');

@@ -262,7 +262,7 @@ class PHPExpressionProvider implements IExpressionProvider
 
             case ODataConstants::STRFUN_ENDSWITH:
                 return '(strcmp(substr('.$params[0].', strlen('.$params[0].') - strlen('.$params[1].')), '
-                       .$params[1].') === 0)';
+                        .$params[1].') === 0)';
 
             case ODataConstants::STRFUN_INDEXOF:
                 return 'strpos('.$params[0].', '.$params[1].')';

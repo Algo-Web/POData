@@ -28,7 +28,8 @@ class Url
                 throw new UrlFormatException(Messages::urlMalformedUrl($url));
             }
         } else {
-            if (!preg_match(self::REL_URL_REGEXP, $url)) { //TODO: this matches EVERYTHING!!! what's the intent here? see #77
+            if (!preg_match(self::REL_URL_REGEXP, $url)) {
+//TODO: this matches EVERYTHING!!! what's the intent here? see #77
                 throw new UrlFormatException(Messages::urlMalformedUrl($url));
             }
         }

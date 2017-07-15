@@ -135,7 +135,7 @@ class ResourceFunctionType
         $expectedParms = count($baseParms);
         $actualParms = count($parms);
         if ($expectedParms != $actualParms) {
-            $msg = 'Was expecting '. $expectedParms. ' arguments, received '.$actualParms.' instead';
+            $msg = 'Was expecting ' . $expectedParms . ' arguments, received ' . $actualParms . ' instead';
             throw new \InvalidArgumentException($msg);
         }
 
@@ -150,7 +150,7 @@ class ResourceFunctionType
     private function checkBlacklist($func, $fromArray = false)
     {
         if (in_array($func, $this->blacklist) || in_array(strtolower($func), $this->blacklist)) {
-            $msg = (true === $fromArray ? 'First element of ' : '').'FunctionName blacklisted';
+            $msg = (true === $fromArray ? 'First element of ' : '') . 'FunctionName blacklisted';
             throw new \InvalidArgumentException($msg);
         }
     }

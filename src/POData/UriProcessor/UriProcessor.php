@@ -397,7 +397,7 @@ class UriProcessor implements IUriProcessor
                     //TODO: why are these null?  see #98
                     null, // $orderby
                     null, // $top
-                    null,  // $skip
+                    null, // $skip
                     $skipToken
                 );
 

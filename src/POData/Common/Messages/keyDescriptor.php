@@ -17,7 +17,7 @@ trait keyDescriptor
     public static function keyDescriptorKeyCountNotMatching($segment, $expectedCount, $actualCount)
     {
         return 'The predicate in the segment \''.$segment.'\' expect '.$expectedCount.' keys but '.$actualCount
-               .' provided';
+                .' provided';
     }
 
     /**
@@ -32,7 +32,7 @@ trait keyDescriptor
     public static function keyDescriptorMissingKeys($segment, $expectedKeys)
     {
         return 'Missing keys in key predicate for the segment \''.$segment.'\'. The key predicate expects the keys \''
-               .$expectedKeys.'\'';
+                .$expectedKeys.'\'';
     }
 
     /**
@@ -49,7 +49,7 @@ trait keyDescriptor
     public static function keyDescriptorInCompatibleKeyType($segment, $keyProperty, $expectedType, $actualType)
     {
         return 'Syntax error in the segment \''.$segment.'\'. The value of key property \''.$keyProperty
-               .'\' should be of type ' . $expectedType . ', given ' . $actualType;
+                .'\' should be of type ' . $expectedType . ', given ' . $actualType;
     }
 
     /**
@@ -67,7 +67,7 @@ trait keyDescriptor
     public static function keyDescriptorInCompatibleKeyTypeAtPosition($segment, $keyProperty, $position, $expectedType, $actualType)
     {
         return 'Syntax error in the segment \''.$segment.'\'. The value of key property \''.$keyProperty
-               .'\' at position '.$position.' should be of type ' . $expectedType . ', given ' . $actualType;
+                .'\' at position '.$position.' should be of type ' . $expectedType . ', given ' . $actualType;
     }
 
     /**

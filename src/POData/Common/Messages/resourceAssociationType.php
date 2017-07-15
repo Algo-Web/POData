@@ -14,7 +14,7 @@ trait resourceAssociationType
      */
     public static function resourceAssociationTypeEndPropertyMustBeNullOrInstanceofResourceProperty($argumentName)
     {
-        return 'The argument \''.$argumentName.'\' must be either null or instance of \'ResourceProperty\'.';
+        return 'The argument \'' . $argumentName . '\' must be either null or instance of \'ResourceProperty\'.';
     }
 
     /**

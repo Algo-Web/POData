@@ -294,7 +294,7 @@ class SimpleMetadataProvider implements IMetadataProvider
         $type = null;
         if ($typeKind == ResourceTypeKind::ENTITY) {
             list($oet, $entitySet) = $this->metadataManager->addEntityType($name);
-            assert($oet instanceof TEntityTypeType, 'Entity type '.$name. ' not successfully added');
+            assert($oet instanceof TEntityTypeType, 'Entity type ' . $name . ' not successfully added');
             $type = new ResourceEntityType($refClass, $oet, $this);
             $typeName = $type->getFullName();
             $returnName = Str::plural($typeName);
@@ -599,7 +599,7 @@ class SimpleMetadataProvider implements IMetadataProvider
             );
         }
         if (!in_array($resourceMult, $allowedMult)) {
-            throw new InvalidOperationException('Supplied multiplicity '.$resourceMult.' not valid');
+            throw new InvalidOperationException('Supplied multiplicity ' . $resourceMult . ' not valid');
         }
 
         $resourcePropertyKind = ('*' == $resourceMult)
@@ -893,12 +893,12 @@ class SimpleMetadataProvider implements IMetadataProvider
             throw new \InvalidArgumentException($msg);
         }
         if (array_key_exists($name, $this->resourceSets)) {
-            $msg = 'Resource set with same name, '. $name. ', exists';
+            $msg = 'Resource set with same name, ' . $name . ', exists';
             throw new \InvalidArgumentException($msg);
         }
         $typeName = $returnType->getName();
         if (!array_key_exists($typeName, $this->OdataEntityMap)) {
-            $msg = 'Mapping not defined for '.$typeName;
+            $msg = 'Mapping not defined for ' . $typeName;
             throw new \InvalidArgumentException($msg);
         }
         $metaReturn = $this->OdataEntityMap[$typeName];

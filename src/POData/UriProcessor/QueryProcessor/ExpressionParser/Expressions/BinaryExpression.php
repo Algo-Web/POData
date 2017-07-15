@@ -38,7 +38,7 @@ abstract class BinaryExpression extends AbstractExpression
      */
     public function getLeft()
     {
-        return isset($this->left) ? $this->left: null;
+        return isset($this->left) ? $this->left : null;
     }
 
     /**

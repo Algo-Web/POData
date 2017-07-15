@@ -469,7 +469,7 @@ class ObjectModelSerializerBase
                     ODataConstants::HTTPQUERY_STRING_ORDERBY,
                     ODataConstants::HTTPQUERY_STRING_INLINECOUNT,
                     ODataConstants::HTTPQUERY_STRING_SELECT
-                 ] as $queryOption) {
+                    ] as $queryOption) {
             $value = $this->getService()->getHost()->getQueryStringItem($queryOption);
             if (null !== $value) {
                 if (null !== $queryParameterString) {

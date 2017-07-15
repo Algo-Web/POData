@@ -51,7 +51,7 @@ trait expressionLexer
      */
     public static function expressionLexerInvalidCharacter($ch, $pos)
     {
-        return 'Invalid character \''.$ch.'\' at position '.$pos;
+        return 'Invalid character \'' . $ch . '\' at position ' . $pos;
     }
 
     /**
@@ -69,7 +69,7 @@ trait expressionLexer
         $position
     ) {
         return 'No applicable function found for \''.$functionName.'\' at position '.$position.' with the specified'
-               .' arguments. The functions considered are: '.$protoTypes;
+                .' arguments. The functions considered are: '.$protoTypes;
     }
 
     /**
@@ -83,6 +83,6 @@ trait expressionLexer
      */
     public static function expressionLexerNoPropertyInType($property, $type, $position)
     {
-        return 'No property \''.$property.'\' exists in type \''.$type.'\' at position '.$position;
+        return 'No property \'' . $property . '\' exists in type \'' . $type . '\' at position ' . $position;
     }
 }
