@@ -15,7 +15,8 @@ trait common
      */
     public static function commonArgumentShouldBeInteger($argument, $functionName)
     {
-        return "The argument to the function '$functionName' should be integer, non-integer value '$argument' passed";
+        return 'The argument to the function '.$functionName.' should be integer, non-integer value \''
+               .$argument.'\' passed';
     }
 
     /**
@@ -29,7 +30,8 @@ trait common
      */
     public static function commonArgumentShouldBeNonNegative($argument, $functionName)
     {
-        return "The argument to the function '$functionName' should be non-negative, negative value '$argument' passed";
+        return 'The argument to the function '.$functionName.' should be non-negative, negative value \''
+               .$argument.'\' passed';
     }
 
     /**
@@ -43,7 +45,7 @@ trait common
      */
     public static function commonNotValidPrimitiveEDMType($argumentName, $functionName)
     {
-        return "The argument '$argumentName' to $functionName is not a valid EdmPrimitiveType Enum value.";
+        return 'The argument \''.$argumentName.'\' to '.$functionName.' is not a valid EdmPrimitiveType Enum value.';
     }
 
     /**
@@ -68,7 +70,7 @@ trait common
      */
     public static function failedToAccessProperty($propertyName, $parentObjectName)
     {
-        return "Data Service failed to access or initialize the property $propertyName of $parentObjectName.";
+        return 'Data Service failed to access or initialize the property '.$propertyName.' of '.$parentObjectName.'.';
     }
 
     /**
@@ -78,7 +80,7 @@ trait common
      */
     public static function orderByLeafNodeArgumentShouldBeNonEmptyArray()
     {
-        return 'There should be atleast one anscestor for building the sort function';
+        return 'There should be at least one ancestor for building the sort function';
     }
 
     /**
@@ -91,7 +93,9 @@ trait common
      */
     public static function badRequestInvalidPropertyNameSpecified($resourceTypeName, $propertyName)
     {
-        return "Error processing request stream. The property name '$propertyName' specified for type '$resourceTypeName' is not valid. (Check the resource set of the navigation property '$propertyName' is visible)";
+        return 'Error processing request stream. The property name '.$propertyName.' specified for type '
+               .$resourceTypeName.' is not valid. (Check the resource set of the navigation property \''
+               .$propertyName.'\' is visible)';
     }
 
     /**
@@ -102,6 +106,6 @@ trait common
      */
     public static function anonymousFunctionParameterShouldStartWithDollarSymbol()
     {
-        return 'The parameter names in parameter array should start with dollar symbol';
+        return 'The parameter names in parameter array should start with a dollar symbol';
     }
 }

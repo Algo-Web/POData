@@ -130,8 +130,8 @@ class SelectTest extends TestCase
         //We applied '*' on root, so flag for selection of all immediate properties must me true
         $this->assertTrue($projectionTreeRoot->canSelectAllImmediateProperties());
         $this->assertTrue($projectionTreeRoot->canSelectAllProperties());
-        //Even though we explicity selected 'CustomerID', 'CustomerName' and link to 'Orders'
-        //these children will be removed since '*' implcilty select all properties
+        //Even though we explicitly selected 'CustomerID', 'CustomerName' and link to 'Orders'
+        //these children will be removed since '*' implicitly select all properties
         $this->assertEquals(count($projectionTreeRoot->getChildNodes()), 0);
     }
 
@@ -163,19 +163,23 @@ class SelectTest extends TestCase
 
         try {
             //Try to traverse 'Orders' on select without expanding
-                $projectionTreeRoot = ExpandProjectionParser::parseExpandAndSelectClause(
-                    $customersResourceSetWrapper,
-                    $customerResourceType,
-                    null,
-                    null,
-                    null,
-                    null, // $expand
-                    'Orders/OrderID', //$select
-                    $providersWrapper
-                );
+            $projectionTreeRoot = ExpandProjectionParser::parseExpandAndSelectClause(
+                $customersResourceSetWrapper,
+                $customerResourceType,
+                null,
+                null,
+                null,
+                null, // $expand
+                'Orders/OrderID', //$select
+                $providersWrapper
+            );
             $this->fail('An expected ODataException for traversal on select without expansion has not been thrown');
         } catch (ODataException $odataException) {
-            $this->assertStringStartsWith('Only navigation properties specified in expand option can be travered in select option,In order to treaverse', $odataException->getMessage());
+            $this->assertStringStartsWith(
+                'Only navigation properties specified in expand option can be traversed in select option.  '
+                .'In order to traverse',
+                $odataException->getMessage()
+            );
         }
     }
 

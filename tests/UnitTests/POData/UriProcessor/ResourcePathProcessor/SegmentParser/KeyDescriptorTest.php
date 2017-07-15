@@ -194,7 +194,7 @@ class KeyDescriptorTest extends TestCase
             $keyDescriptor->validate('Order_Details(ProductID=11, OrderID1=2546)', $orderDetailsResourceType);
             $this->fail('An expected ODataException for missing of keys in the predicate has not been thrown');
         } catch (ODataException $exception) {
-            $this->assertStringEndsWith('The key predicate expect the keys \'ProductID, OrderID\'', $exception->getMessage());
+            $this->assertStringEndsWith('The key predicate expects the keys \'ProductID, OrderID\'', $exception->getMessage());
         }
 
         //test for key type

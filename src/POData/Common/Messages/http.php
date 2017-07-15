@@ -16,7 +16,8 @@ trait http
     public static function hostMalFormedBaseUriInConfig($notEndWithSvcOrHasQuery = false)
     {
         if ($notEndWithSvcOrHasQuery) {
-            return 'Malformed base service uri in the configuration file (should end with .svc, there should not be query or fragment in the base service uri)';
+            return 'Malformed base service uri in the configuration file (should end with .svc, there should not'.
+                   ' be query or fragment in the base service uri)';
         }
 
         return 'Malformed base service uri in the configuration file';
@@ -33,7 +34,8 @@ trait http
      */
     public static function hostRequestUriIsNotBasedOnRelativeUriInConfig($requestUri, $relativeUri)
     {
-        return 'The request uri ' . $requestUri . ' is not valid as it is not based on the configured relative uri ' . $relativeUri;
+        return 'The request uri ' . $requestUri . ' is not valid as it is not based on the configured relative uri '
+               . $relativeUri;
     }
 
     /**
@@ -46,7 +48,7 @@ trait http
     public static function onlyReadSupport(HTTPRequestMethod $method)
     {
         // TODO: Update to reflect expanded library capabilities?
-        return "This release of library supports only GET (read) request, received a request with method $method";
+        return 'This release of library supports only GET (read) request, received a request with method '. $method;
     }
 
     /**
@@ -59,7 +61,7 @@ trait http
      */
     public static function badRequestInvalidUriForThisVerb($uri, $verb)
     {
-        return "The URI '$uri' is not valid for $verb method.";
+        return 'The URI \''.$uri.'\' is not valid for '.$verb.' method.';
     }
 
     /**
@@ -71,7 +73,7 @@ trait http
      */
     public static function noDataForThisVerb($verb)
     {
-        return "Method $verb expecting some data, but received empty data.";
+        return 'Method '.$verb.' expecting some data, but received empty data.';
     }
 
     /**
@@ -84,7 +86,8 @@ trait http
      */
     public static function badRequestInvalidUriForMediaResource($uri)
     {
-        return "The URI '$uri' is not valid. The segment before '\$value' must be a Media Link Entry or a primitive property.";
+        return 'The URI \''.$uri.'\' is not valid. The segment before \'$value\' must be a Media Link Entry or'
+               .' a primitive property.';
     }
 
     /**
@@ -97,7 +100,8 @@ trait http
      */
     public static function hostNonODataOptionBeginsWithSystemCharacter($optionName)
     {
-        return "The query parameter '$optionName' begins with a system-reserved '$' character but is not recognized.";
+        return 'The query parameter \''.$optionName.'\' begins with a system-reserved \'$\' character but'
+               .' is not recognized.';
     }
 
     /**
@@ -110,7 +114,7 @@ trait http
      */
     public static function hostODataQueryOptionFoundWithoutValue($optionName)
     {
-        return "Query parameter '$optionName' is specified, but it should be specified with value.";
+        return 'Query parameter \''.$optionName.'\' is specified, but it should be specified with value.';
     }
 
     /**
@@ -123,7 +127,7 @@ trait http
      */
     public static function hostODataQueryOptionCannotBeSpecifiedMoreThanOnce($optionName)
     {
-        return "Query parameter '$optionName' is specified, but it should be specified exactly once.";
+        return 'Query parameter \''.$optionName.'\' is specified, but it should be specified exactly once.';
     }
 
     /**
@@ -134,6 +138,7 @@ trait http
      */
     public static function bothIfMatchAndIfNoneMatchHeaderSpecified()
     {
-        return 'Both If-Match and If-None-Match HTTP headers cannot be specified at the same time. Please specify either one of the headers or none of them.';
+        return 'Both If-Match and If-None-Match HTTP headers cannot be specified at the same time. Please specify'
+               .' either one of the headers or none of them.';
     }
 }

@@ -11,7 +11,7 @@ trait httpProcessUtility
      */
     public static function httpProcessUtilityMediaTypeRequiresSemicolonBeforeParameter()
     {
-        return "Media type requires a ';' character before a parameter definition.";
+        return 'Media type requires a \';\' character before a parameter definition.';
     }
 
     /**
@@ -31,7 +31,7 @@ trait httpProcessUtility
      */
     public static function httpProcessUtilityMediaTypeRequiresSlash()
     {
-        return "Media type requires a '/' character.";
+        return 'Media type requires a \'/\' character.';
     }
 
     /**
@@ -64,7 +64,8 @@ trait httpProcessUtility
      */
     public static function httpProcessUtilityEscapeCharWithoutQuotes($parameterName)
     {
-        return "Value for MIME type parameter '$parameterName' is incorrect because it contained escape characters even though it was not quoted.";
+        return 'Value for MIME type parameter \''.$parameterName.'\' is incorrect because it contained escape'.
+               ' characters even though it was not quoted.';
     }
 
     /**
@@ -77,7 +78,8 @@ trait httpProcessUtility
      */
     public static function httpProcessUtilityEscapeCharAtEnd($parameterName)
     {
-        return "Value for MIME type parameter '$parameterName' is incorrect because it terminated with escape character. Escape characters must always be followed by a character in a parameter value.";
+        return 'Value for MIME type parameter \''.$parameterName.'\' is incorrect because it terminated with escape'
+               .' character. Escape characters must always be followed by a character in a parameter value.';
     }
 
     /**
@@ -90,7 +92,8 @@ trait httpProcessUtility
      */
     public static function httpProcessUtilityClosingQuoteNotFound($parameterName)
     {
-        return "Value for MIME type parameter '$parameterName' is incorrect because the closing quote character could not be found while the parameter value started with a quote character.";
+        return 'Value for MIME type parameter \''.$parameterName.'\' is incorrect because the closing quote character'
+               .' could not be found while the parameter value started with a quote character.';
     }
 
     /**

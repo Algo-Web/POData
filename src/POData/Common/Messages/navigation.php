@@ -33,6 +33,6 @@ trait navigation
      */
     public static function urlMalformedUrl($url)
     {
-        return "Bad Request - The url '$url' is malformed.";
+        return 'Bad Request - The url \''.$url.'\' is malformed.';
     }
 }

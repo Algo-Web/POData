@@ -51,7 +51,8 @@ trait streamProviderWrapper
      */
     public static function streamProviderWrapperMustImplementIStreamProviderToSupportStreaming()
     {
-        return 'To support streaming, the data service must implement IService::getStreamProviderX() to return an implementation of IStreamProvider or IStreamProvider2';
+        return 'To support streaming, the data service must implement IService::getStreamProviderX() to return'
+               .' an implementation of IStreamProvider or IStreamProvider2';
     }
 
     /**
@@ -61,17 +62,20 @@ trait streamProviderWrapper
      */
     public static function streamProviderWrapperMaxProtocolVersionMustBeV3OrAboveToSupportNamedStreams()
     {
-        return 'To support named streams, the MaxProtocolVersion of the data service must be set to ProtocolVersion.V3 or above.';
+        return 'To support named streams, the MaxProtocolVersion of the data service must be set to'
+               .' ProtocolVersion.V3 or above.';
     }
 
     /**
-     * Message to show error when data service does not provide implementation of IDDSP2 for which named stream is defined.
+     * Message to show error when data service does not provide implementation of IDDSP2 for which named stream is
+     * defined.
      *
      * @return string The message
      */
     public static function streamProviderWrapperMustImplementStreamProvider2ToSupportNamedStreams()
     {
-        return 'To support named streams, the data service must implement IServiceProvider.GetService() to return an implementation of IStreamProvider2 or the data source must implement IStreamProvider2.';
+        return 'To support named streams, the data service must implement IServiceProvider.GetService() to'
+               .' return an implementation of IStreamProvider2 or the data source must implement IStreamProvider2.';
     }
 
     /**
@@ -83,7 +87,7 @@ trait streamProviderWrapper
      */
     public static function streamProviderWrapperMustNotSetContentTypeAndEtag($methodName)
     {
-        return "The method $methodName must not set the HTTP response headers 'Content-Type' and 'ETag'";
+        return 'The method '.$methodName.' must not set the HTTP response headers \'Content-Type\' and \'ETag\'';
     }
 
     /**
