@@ -114,8 +114,8 @@ class ExpandProjectionParser
             null,
             $resourceType
         );
-        $parser->_parseExpand($expand);
-        $parser->_parseSelect($select);
+        $parser->parseExpand($expand);
+        $parser->parseSelect($select);
 
         return $parser->rootProjectionNode;
     }
@@ -129,11 +129,11 @@ class ExpandProjectionParser
      * @throws ODataException If any error occurs while reading expand clause
      *                        or building the projection tree
      */
-    private function _parseExpand($expand)
+    private function parseExpand($expand)
     {
         if (!is_null($expand)) {
-            $pathSegments = $this->_readExpandOrSelect($expand, false);
-            $this->_buildProjectionTree($pathSegments);
+            $pathSegments = $this->readExpandOrSelect($expand, false);
+            $this->buildProjectionTree($pathSegments);
             $this->rootProjectionNode->setExpansionSpecified();
         }
     }
@@ -151,13 +151,13 @@ class ExpandProjectionParser
      * @throws ODataException If any error occurs while reading expand clause
      *                        or applying selection to projection tree
      */
-    private function _parseSelect($select)
+    private function parseSelect($select)
     {
         if (is_null($select)) {
             $this->rootProjectionNode->markSubtreeAsSelected();
         } else {
-            $pathSegments = $this->_readExpandOrSelect($select, true);
-            $this->_applySelectionToProjectionTree($pathSegments);
+            $pathSegments = $this->readExpandOrSelect($select, true);
+            $this->applySelectionToProjectionTree($pathSegments);
             $this->rootProjectionNode->setSelectionSpecified();
             $this->rootProjectionNode->removeNonSelectedNodes();
             $this->rootProjectionNode->removeNodesAlreadyIncludedImplicitly();
@@ -173,7 +173,7 @@ class ExpandProjectionParser
      *
      * @throws ODataException                       If any error occurs while processing the expand path segments
      */
-    private function _buildProjectionTree($expandPathSegments)
+    private function buildProjectionTree($expandPathSegments)
     {
         foreach ($expandPathSegments as $expandSubPathSegments) {
             $currentNode = $this->rootProjectionNode;
@@ -274,7 +274,7 @@ class ExpandProjectionParser
      * @throws ODataException If any error occurs while processing select
      *                        path segments
      */
-    private function _applySelectionToProjectionTree($selectPathSegments)
+    private function applySelectionToProjectionTree($selectPathSegments)
     {
         foreach ($selectPathSegments as $selectSubPathSegments) {
             $currentNode = $this->rootProjectionNode;
@@ -375,7 +375,7 @@ class ExpandProjectionParser
      *
      * @return array<array>     An array of 'PathSegment's, each of which is array of 'SubPathSegment's
      */
-    private function _readExpandOrSelect($value, $isSelect)
+    private function readExpandOrSelect($value, $isSelect)
     {
         $pathSegments = [];
         $lexer = new ExpressionLexer($value);

@@ -86,7 +86,7 @@ class ExpressionLexer
         $this->text = $expression;
         $this->textLen = strlen($this->text);
         $this->token = new ExpressionToken();
-        $this->_setTextPos(0);
+        $this->setTextPos(0);
         $this->nextToken();
     }
 
@@ -153,35 +153,35 @@ class ExpressionLexer
     public function nextToken()
     {
         while (Char::isWhiteSpace($this->ch)) {
-            $this->_nextChar();
+            $this->nextChar();
         }
 
         $t = null;
         $tokenPos = $this->textPos;
         switch ($this->ch) {
             case '(':
-                $this->_nextChar();
+                $this->nextChar();
                 $t = ExpressionTokenId::OPENPARAM;
                 break;
             case ')':
-                $this->_nextChar();
+                $this->nextChar();
                 $t = ExpressionTokenId::CLOSEPARAM;
                 break;
             case ',':
-                $this->_nextChar();
+                $this->nextChar();
                 $t = ExpressionTokenId::COMMA;
                 break;
             case '-':
                 $hasNext = $this->textPos + 1 < $this->textLen;
                 if ($hasNext && Char::isDigit($this->text[$this->textPos + 1])) {
-                    $this->_nextChar();
-                    $t = $this->_parseFromDigit();
+                    $this->nextChar();
+                    $t = $this->parseFromDigit();
                     if (self::isNumeric($t)) {
                         break;
                     }
                 } elseif ($hasNext && $this->text[$tokenPos + 1] == 'I') {
-                    $this->_nextChar();
-                    $this->_parseIdentifier();
+                    $this->nextChar();
+                    $this->parseIdentifier();
                     $currentIdentifier = substr($this->text, $tokenPos + 1, $this->textPos - $tokenPos - 1);
 
                     if (self::_isInfinityLiteralDouble($currentIdentifier)) {
@@ -194,36 +194,36 @@ class ExpressionLexer
 
                     // If it looked like '-INF' but wasn't we'll rewind and fall through to a simple '-' token.
                 }
-                $this->_setTextPos($tokenPos);
-                $this->_nextChar();
+                $this->setTextPos($tokenPos);
+                $this->nextChar();
                 $t = ExpressionTokenId::MINUS;
                 break;
             case '=':
-                $this->_nextChar();
+                $this->nextChar();
                 $t = ExpressionTokenId::EQUAL;
                 break;
             case '/':
-                $this->_nextChar();
+                $this->nextChar();
                 $t = ExpressionTokenId::SLASH;
                 break;
             case '?':
-                $this->_nextChar();
+                $this->nextChar();
                 $t = ExpressionTokenId::QUESTION;
                 break;
             case '.':
-                $this->_nextChar();
+                $this->nextChar();
                 $t = ExpressionTokenId::DOT;
                 break;
             case '\'':
                 $quote = $this->ch;
                 do {
-                    $this->_nextChar();
+                    $this->nextChar();
                     while ($this->textPos < $this->textLen && $this->ch != $quote) {
-                        $this->_nextChar();
+                        $this->nextChar();
                     }
 
                     if ($this->textPos == $this->textLen) {
-                        $this->_parseError(
+                        $this->parseError(
                             Messages::expressionLexerUnterminatedStringLiteral(
                                 $this->textPos,
                                 $this->text
@@ -231,23 +231,23 @@ class ExpressionLexer
                         );
                     }
 
-                    $this->_nextChar();
+                    $this->nextChar();
                 } while ($this->ch == $quote);
                 $t = ExpressionTokenId::STRING_LITERAL;
                 break;
             case '*':
-                $this->_nextChar();
+                $this->nextChar();
                 $t = ExpressionTokenId::STAR;
                 break;
             default:
                 if (Char::isLetter($this->ch) || $this->ch == '_') {
-                    $this->_parseIdentifier();
+                    $this->parseIdentifier();
                     $t = ExpressionTokenId::IDENTIFIER;
                     break;
                 }
 
                 if (Char::isDigit($this->ch)) {
-                    $t = $this->_parseFromDigit();
+                    $t = $this->parseFromDigit();
                     break;
                 }
 
@@ -256,7 +256,7 @@ class ExpressionLexer
                     break;
                 }
 
-                $this->_parseError(
+                $this->parseError(
                     Messages::expressionLexerInvalidCharacter(
                         $this->ch,
                         $this->textPos
@@ -269,7 +269,7 @@ class ExpressionLexer
         $this->token->Position = $tokenPos;
 
         // Handle type-prefixed literals such as binary, datetime or guid.
-        $this->_handleTypePrefixedLiterals();
+        $this->handleTypePrefixedLiterals();
 
         // Handle keywords.
         if ($this->token->Id == ExpressionTokenId::IDENTIFIER) {
@@ -320,7 +320,7 @@ class ExpressionLexer
     public function validateToken($tokenId)
     {
         if ($this->token->Id != $tokenId) {
-            $this->_parseError(Messages::expressionLexerSyntaxError($this->textPos));
+            $this->parseError(Messages::expressionLexerSyntaxError($this->textPos));
         }
     }
 
@@ -422,7 +422,7 @@ class ExpressionLexer
      *
      * @throws ODataException
      */
-    private function _handleTypePrefixedLiterals()
+    private function handleTypePrefixedLiterals()
     {
         $id = $this->token->Id;
         if ($id != ExpressionTokenId::IDENTIFIER) {
@@ -451,11 +451,11 @@ class ExpressionLexer
 
         $tokenPos = $this->token->Position;
         do {
-            $this->_nextChar();
+            $this->nextChar();
         } while ($this->ch != '\0' && $this->ch != '\'');
 
         if ($this->ch == '\0') {
-            $this->_parseError(
+            $this->parseError(
                 Messages::expressionLexerUnterminatedStringLiteral(
                     $this->textPos,
                     $this->text
@@ -463,7 +463,7 @@ class ExpressionLexer
             );
         }
 
-        $this->_nextChar();
+        $this->nextChar();
         $this->token->Id = $id;
         $this->token->Text
             = substr($this->text, $tokenPos, $this->textPos - $tokenPos);
@@ -474,56 +474,56 @@ class ExpressionLexer
      *
      * @return ExpressionTokenId The kind of token recognized
      */
-    private function _parseFromDigit()
+    private function parseFromDigit()
     {
         $startChar = $this->ch;
-        $this->_nextChar();
+        $this->nextChar();
         if ($startChar == '0' && $this->ch == 'x' || $this->ch == 'X') {
             $result = ExpressionTokenId::BINARY_LITERAL;
             do {
-                $this->_nextChar();
+                $this->nextChar();
             } while (ctype_xdigit($this->ch));
         } else {
             $result = ExpressionTokenId::INTEGER_LITERAL;
             while (Char::isDigit($this->ch)) {
-                $this->_nextChar();
+                $this->nextChar();
             }
 
             if ($this->ch == '.') {
                 $result = ExpressionTokenId::DOUBLE_LITERAL;
-                $this->_nextChar();
-                $this->_validateDigit();
+                $this->nextChar();
+                $this->validateDigit();
 
                 do {
-                    $this->_nextChar();
+                    $this->nextChar();
                 } while (Char::isDigit($this->ch));
             }
 
             if ($this->ch == 'E' || $this->ch == 'e') {
                 $result = ExpressionTokenId::DOUBLE_LITERAL;
-                $this->_nextChar();
+                $this->nextChar();
                 if ($this->ch == '+' || $this->ch == '-') {
-                    $this->_nextChar();
+                    $this->nextChar();
                 }
 
-                $this->_validateDigit();
+                $this->validateDigit();
                 do {
-                    $this->_nextChar();
+                    $this->nextChar();
                 } while (Char::isDigit($this->ch));
             }
 
             if ($this->ch == 'M' || $this->ch == 'm') {
                 $result = ExpressionTokenId::DECIMAL_LITERAL;
-                $this->_nextChar();
+                $this->nextChar();
             } elseif ($this->ch == 'd' || $this->ch == 'D') {
                 $result = ExpressionTokenId::DOUBLE_LITERAL;
-                $this->_nextChar();
+                $this->nextChar();
             } elseif ($this->ch == 'L' || $this->ch == 'l') {
                 $result = ExpressionTokenId::INT64_LITERAL;
-                $this->_nextChar();
+                $this->nextChar();
             } elseif ($this->ch == 'f' || $this->ch == 'F') {
                 $result = ExpressionTokenId::SINGLE_LITERAL;
-                $this->_nextChar();
+                $this->nextChar();
             }
         }
 
@@ -533,17 +533,17 @@ class ExpressionLexer
     /**
      * Parses an identifier by advancing the current character.
      */
-    private function _parseIdentifier()
+    private function parseIdentifier()
     {
         do {
-            $this->_nextChar();
+            $this->nextChar();
         } while (Char::isLetterOrDigit($this->ch) || $this->ch == '_');
     }
 
     /**
      * Advance to next character.
      */
-    private function _nextChar()
+    private function nextChar()
     {
         if ($this->textPos < $this->textLen) {
             ++$this->textPos;
@@ -559,7 +559,7 @@ class ExpressionLexer
      *
      * @param int $pos Value to position
      */
-    private function _setTextPos($pos)
+    private function setTextPos($pos)
     {
         $this->textPos = $pos;
         $nextChar = $this->textPos < $this->textLen ? $this->text[$this->textPos] : '\0';
@@ -570,10 +570,10 @@ class ExpressionLexer
     /**
      * Validate current character is a digit.
      */
-    private function _validateDigit()
+    private function validateDigit()
     {
         if (!Char::isDigit($this->ch)) {
-            $this->_parseError(Messages::expressionLexerDigitExpected($this->textPos));
+            $this->parseError(Messages::expressionLexerDigitExpected($this->textPos));
         }
     }
 
@@ -584,7 +584,7 @@ class ExpressionLexer
      *
      * @throws ODataException
      */
-    private function _parseError($message)
+    private function parseError($message)
     {
         throw ODataException::createSyntaxError($message);
     }

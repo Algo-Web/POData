@@ -106,7 +106,7 @@ class ExpressionParser
      *
      * @return ExpressionToken
      */
-    private function _getCurrentToken()
+    private function getCurrentToken()
     {
         return $this->lexer->getCurrentToken();
     }
@@ -116,7 +116,7 @@ class ExpressionParser
      *
      * @param ExpressionToken $token The token to set as current token
      */
-    private function _setCurrentToken($token)
+    private function setCurrentToken($token)
     {
         $this->lexer->setCurrentToken($token);
     }
@@ -139,7 +139,7 @@ class ExpressionParser
      */
     public function parseFilter()
     {
-        return $this->_parseExpression();
+        return $this->parseExpression();
     }
 
     /**
@@ -147,11 +147,11 @@ class ExpressionParser
      *
      * @return AbstractExpression
      */
-    private function _parseExpression()
+    private function parseExpression()
     {
-        $this->_recurseEnter();
-        $expr = $this->_parseLogicalOr();
-        $this->_recurseLeave();
+        $this->recurseEnter();
+        $expr = $this->parseLogicalOr();
+        $this->recurseLeave();
 
         return $expr;
     }
@@ -161,14 +161,14 @@ class ExpressionParser
      *
      * @return AbstractExpression
      */
-    private function _parseLogicalOr()
+    private function parseLogicalOr()
     {
-        $this->_recurseEnter();
-        $left = $this->_parseLogicalAnd();
-        while ($this->_tokenIdentifierIs(ODataConstants::KEYWORD_OR)) {
-            $logicalOpToken = clone $this->_getCurrentToken();
+        $this->recurseEnter();
+        $left = $this->parseLogicalAnd();
+        while ($this->tokenIdentifierIs(ODataConstants::KEYWORD_OR)) {
+            $logicalOpToken = clone $this->getCurrentToken();
             $this->lexer->nextToken();
-            $right = $this->_parseLogicalAnd();
+            $right = $this->parseLogicalAnd();
             FunctionDescription::verifyLogicalOpArguments($logicalOpToken, $left, $right);
             $left = new LogicalExpression(
                 $left,
@@ -177,7 +177,7 @@ class ExpressionParser
             );
         }
 
-        $this->_recurseLeave();
+        $this->recurseLeave();
 
         return $left;
     }
@@ -187,19 +187,19 @@ class ExpressionParser
      *
      * @return AbstractExpression
      */
-    private function _parseLogicalAnd()
+    private function parseLogicalAnd()
     {
-        $this->_recurseEnter();
-        $left = $this->_parseComparison();
-        while ($this->_tokenIdentifierIs(ODataConstants::KEYWORD_AND)) {
-            $logicalOpToken = clone $this->_getCurrentToken();
+        $this->recurseEnter();
+        $left = $this->parseComparison();
+        while ($this->tokenIdentifierIs(ODataConstants::KEYWORD_AND)) {
+            $logicalOpToken = clone $this->getCurrentToken();
             $this->lexer->nextToken();
-            $right = $this->_parseComparison();
+            $right = $this->parseComparison();
             FunctionDescription::verifyLogicalOpArguments($logicalOpToken, $left, $right);
             $left = new LogicalExpression($left, $right, ExpressionType::AND_LOGICAL);
         }
 
-        $this->_recurseLeave();
+        $this->recurseLeave();
 
         return $left;
     }
@@ -209,15 +209,15 @@ class ExpressionParser
      *
      * @return AbstractExpression
      */
-    private function _parseComparison()
+    private function parseComparison()
     {
-        $this->_recurseEnter();
-        $left = $this->_parseAdditive();
-        while ($this->_getCurrentToken()->isComparisonOperator()) {
-            $comparisonToken = clone $this->_getCurrentToken();
+        $this->recurseEnter();
+        $left = $this->parseAdditive();
+        while ($this->getCurrentToken()->isComparisonOperator()) {
+            $comparisonToken = clone $this->getCurrentToken();
             $this->lexer->nextToken();
-            $right = $this->_parseAdditive();
-            $left = self::_generateComparisonExpression(
+            $right = $this->parseAdditive();
+            $left = self::generateComparisonExpression(
                 $left,
                 $right,
                 $comparisonToken,
@@ -225,7 +225,7 @@ class ExpressionParser
             );
         }
 
-        $this->_recurseLeave();
+        $this->recurseLeave();
 
         return $left;
     }
@@ -235,15 +235,15 @@ class ExpressionParser
      *
      * @return AbstractExpression
      */
-    private function _parseAdditive()
+    private function parseAdditive()
     {
-        $this->_recurseEnter();
-        $left = $this->_parseMultiplicative();
-        while ($this->_getCurrentToken()->identifierIs(ODataConstants::KEYWORD_ADD)
-            || $this->_getCurrentToken()->identifierIs(ODataConstants::KEYWORD_SUB)) {
-            $additiveToken = clone $this->_getCurrentToken();
+        $this->recurseEnter();
+        $left = $this->parseMultiplicative();
+        while ($this->getCurrentToken()->identifierIs(ODataConstants::KEYWORD_ADD)
+            || $this->getCurrentToken()->identifierIs(ODataConstants::KEYWORD_SUB)) {
+            $additiveToken = clone $this->getCurrentToken();
             $this->lexer->nextToken();
-            $right = $this->_parseMultiplicative();
+            $right = $this->parseMultiplicative();
             $opReturnType = FunctionDescription::verifyAndPromoteArithmeticOpArguments($additiveToken, $left, $right);
             if ($additiveToken->identifierIs(ODataConstants::KEYWORD_ADD)) {
                 $left = new ArithmeticExpression($left, $right, ExpressionType::ADD, $opReturnType);
@@ -252,7 +252,7 @@ class ExpressionParser
             }
         }
 
-        $this->_recurseLeave();
+        $this->recurseLeave();
 
         return $left;
     }
@@ -262,17 +262,17 @@ class ExpressionParser
      *
      * @return AbstractExpression
      */
-    private function _parseMultiplicative()
+    private function parseMultiplicative()
     {
-        $this->_recurseEnter();
-        $left = $this->_parseUnary();
-        while ($this->_getCurrentToken()->identifierIs(ODataConstants::KEYWORD_MULTIPLY)
-            || $this->_getCurrentToken()->identifierIs(ODataConstants::KEYWORD_DIVIDE)
-            || $this->_getCurrentToken()->identifierIs(ODataConstants::KEYWORD_MODULO)
+        $this->recurseEnter();
+        $left = $this->parseUnary();
+        while ($this->getCurrentToken()->identifierIs(ODataConstants::KEYWORD_MULTIPLY)
+            || $this->getCurrentToken()->identifierIs(ODataConstants::KEYWORD_DIVIDE)
+            || $this->getCurrentToken()->identifierIs(ODataConstants::KEYWORD_MODULO)
         ) {
-            $multiplicativeToken = clone $this->_getCurrentToken();
+            $multiplicativeToken = clone $this->getCurrentToken();
             $this->lexer->nextToken();
-            $right = $this->_parseUnary();
+            $right = $this->parseUnary();
             $opReturnType = FunctionDescription::verifyAndPromoteArithmeticOpArguments(
                 $multiplicativeToken,
                 $left,
@@ -287,7 +287,7 @@ class ExpressionParser
             }
         }
 
-        $this->_recurseLeave();
+        $this->recurseLeave();
 
         return $left;
     }
@@ -297,29 +297,29 @@ class ExpressionParser
      *
      * @return AbstractExpression
      */
-    private function _parseUnary()
+    private function parseUnary()
     {
-        $this->_recurseEnter();
+        $this->recurseEnter();
 
-        if ($this->_getCurrentToken()->Id == ExpressionTokenId::MINUS
-            || $this->_getCurrentToken()->identifierIs(ODataConstants::KEYWORD_NOT)
+        if ($this->getCurrentToken()->Id == ExpressionTokenId::MINUS
+            || $this->getCurrentToken()->identifierIs(ODataConstants::KEYWORD_NOT)
         ) {
-            $op = clone $this->_getCurrentToken();
+            $op = clone $this->getCurrentToken();
             $this->lexer->nextToken();
             if ($op->Id == ExpressionTokenId::MINUS
-                && (ExpressionLexer::isNumeric($this->_getCurrentToken()->Id))
+                && (ExpressionLexer::isNumeric($this->getCurrentToken()->Id))
             ) {
-                $numberLiteral = $this->_getCurrentToken();
+                $numberLiteral = $this->getCurrentToken();
                 $numberLiteral->Text = '-' . $numberLiteral->Text;
                 $numberLiteral->Position = $op->Position;
-                $v = $this->_getCurrentToken();
-                $this->_setCurrentToken($numberLiteral);
-                $this->_recurseLeave();
+                $v = $this->getCurrentToken();
+                $this->setCurrentToken($numberLiteral);
+                $this->recurseLeave();
 
-                return $this->_parsePrimary();
+                return $this->parsePrimary();
             }
 
-            $expr = $this->_parsePrimary();
+            $expr = $this->parsePrimary();
             FunctionDescription::validateUnaryOpArguments($op, $expr);
             if ($op->Id == ExpressionTokenId::MINUS) {
                 $expr = new UnaryExpression($expr, ExpressionType::NEGATE, $expr->getType());
@@ -327,14 +327,14 @@ class ExpressionParser
                 $expr = new UnaryExpression($expr, ExpressionType::NOT_LOGICAL, new Boolean());
             }
 
-            $this->_recurseLeave();
+            $this->recurseLeave();
 
             return $expr;
         }
 
-        $this->_recurseLeave();
+        $this->recurseLeave();
 
-        return $this->_parsePrimary();
+        return $this->parsePrimary();
     }
 
     /**
@@ -342,20 +342,20 @@ class ExpressionParser
      *
      * @return AbstractExpression
      */
-    private function _parsePrimary()
+    private function parsePrimary()
     {
-        $this->_recurseEnter();
-        $expr = $this->_parsePrimaryStart();
+        $this->recurseEnter();
+        $expr = $this->parsePrimaryStart();
         while (true) {
-            if ($this->_getCurrentToken()->Id == ExpressionTokenId::SLASH) {
+            if ($this->getCurrentToken()->Id == ExpressionTokenId::SLASH) {
                 $this->lexer->nextToken();
-                $expr = $this->_parsePropertyAccess($expr);
+                $expr = $this->parsePropertyAccess($expr);
             } else {
                 break;
             }
         }
 
-        $this->_recurseLeave();
+        $this->recurseLeave();
 
         return $expr;
     }
@@ -366,38 +366,38 @@ class ExpressionParser
      *
      * @return AbstractExpression
      */
-    private function _parsePrimaryStart()
+    private function parsePrimaryStart()
     {
         switch ($this->lexer->getCurrentToken()->Id) {
             case ExpressionTokenId::BOOLEAN_LITERAL:
-                return $this->_parseTypedLiteral(new Boolean());
+                return $this->parseTypedLiteral(new Boolean());
             case ExpressionTokenId::DATETIME_LITERAL:
-                return $this->_parseTypedLiteral(new DateTime());
+                return $this->parseTypedLiteral(new DateTime());
             case ExpressionTokenId::DECIMAL_LITERAL:
-                return $this->_parseTypedLiteral(new Decimal());
+                return $this->parseTypedLiteral(new Decimal());
             case ExpressionTokenId::NULL_LITERAL:
-                return $this->_parseNullLiteral();
+                return $this->parseNullLiteral();
             case ExpressionTokenId::IDENTIFIER:
-                return $this->_parseIdentifier();
+                return $this->parseIdentifier();
             case ExpressionTokenId::STRING_LITERAL:
-                return $this->_parseTypedLiteral(new StringType());
+                return $this->parseTypedLiteral(new StringType());
             case ExpressionTokenId::INT64_LITERAL:
-                return $this->_parseTypedLiteral(new Int64());
+                return $this->parseTypedLiteral(new Int64());
             case ExpressionTokenId::INTEGER_LITERAL:
-                return $this->_parseTypedLiteral(new Int32());
+                return $this->parseTypedLiteral(new Int32());
             case ExpressionTokenId::DOUBLE_LITERAL:
-                return $this->_parseTypedLiteral(new Double());
+                return $this->parseTypedLiteral(new Double());
             case ExpressionTokenId::SINGLE_LITERAL:
-                return $this->_parseTypedLiteral(new Single());
+                return $this->parseTypedLiteral(new Single());
             case ExpressionTokenId::GUID_LITERAL:
-                return $this->_parseTypedLiteral(new Guid());
+                return $this->parseTypedLiteral(new Guid());
             case ExpressionTokenId::BINARY_LITERAL:
                 throw new NotImplementedException(
                     'Support for binary is not implemented'
                 );
-                //return $this->_parseTypedLiteral(new Binary());
+                //return $this->parseTypedLiteral(new Binary());
             case ExpressionTokenId::OPENPARAM:
-                return $this->_parseParenExpression();
+                return $this->parseParenExpression();
             default:
                 throw ODataException::createSyntaxError('Expression expected.');
         }
@@ -408,15 +408,15 @@ class ExpressionParser
      *
      * @return AbstractExpression
      */
-    private function _parseParenExpression()
+    private function parseParenExpression()
     {
-        if ($this->_getCurrentToken()->Id != ExpressionTokenId::OPENPARAM) {
+        if ($this->getCurrentToken()->Id != ExpressionTokenId::OPENPARAM) {
             throw ODataException::createSyntaxError('Open parenthesis expected.');
         }
 
         $this->lexer->nextToken();
-        $expr = $this->_parseExpression();
-        if ($this->_getCurrentToken()->Id != ExpressionTokenId::CLOSEPARAM) {
+        $expr = $this->parseExpression();
+        if ($this->getCurrentToken()->Id != ExpressionTokenId::CLOSEPARAM) {
             throw ODataException::createSyntaxError('Close parenthesis expected.');
         }
 
@@ -430,16 +430,16 @@ class ExpressionParser
      *
      * @return AbstractExpression
      */
-    private function _parseIdentifier()
+    private function parseIdentifier()
     {
-        $this->_validateToken(ExpressionTokenId::IDENTIFIER);
+        $this->validateToken(ExpressionTokenId::IDENTIFIER);
 
         // An open paren here would indicate calling a method
         $identifierIsFunction = $this->lexer->peekNextToken()->Id == ExpressionTokenId::OPENPARAM;
         if ($identifierIsFunction) {
-            return $this->_parseIdentifierAsFunction();
+            return $this->parseIdentifierAsFunction();
         } else {
-            return $this->_parsePropertyAccess(null);
+            return $this->parsePropertyAccess(null);
         }
     }
 
@@ -452,9 +452,9 @@ class ExpressionParser
      *
      * @return PropertyAccessExpression
      */
-    private function _parsePropertyAccess(PropertyAccessExpression $parentExpression = null)
+    private function parsePropertyAccess(PropertyAccessExpression $parentExpression = null)
     {
-        $identifier = $this->_getCurrentToken()->getIdentifier();
+        $identifier = $this->getCurrentToken()->getIdentifier();
         if (is_null($parentExpression)) {
             $parentResourceType = $this->resourceType;
         } else {
@@ -468,7 +468,7 @@ class ExpressionParser
                 Messages::expressionLexerNoPropertyInType(
                     $identifier,
                     $parentResourceType->getFullName(),
-                    $this->_getCurrentToken()->Position
+                    $this->getCurrentToken()->Position
                 )
             );
         }
@@ -478,7 +478,7 @@ class ExpressionParser
                 Messages::expressionParserEntityCollectionNotAllowedInFilter(
                     $resourceProperty->getName(),
                     $parentResourceType->getFullName(),
-                    $this->_getCurrentToken()->Position
+                    $this->getCurrentToken()->Position
                 )
             );
         }
@@ -497,12 +497,12 @@ class ExpressionParser
      *
      * @return AbstractExpression
      */
-    private function _parseIdentifierAsFunction()
+    private function parseIdentifierAsFunction()
     {
-        $functionToken = clone $this->_getCurrentToken();
+        $functionToken = clone $this->getCurrentToken();
         $functions = FunctionDescription::verifyFunctionExists($functionToken);
         $this->lexer->nextToken();
-        $paramExpressions = $this->_parseArgumentList();
+        $paramExpressions = $this->parseArgumentList();
         $function = FunctionDescription::verifyFunctionCallOpArguments(
             $functions,
             $paramExpressions,
@@ -517,17 +517,16 @@ class ExpressionParser
      *
      * @return array<AbstractExpression>
      */
-    private function _parseArgumentList()
+    private function parseArgumentList()
     {
-        if ($this->_getCurrentToken()->Id != ExpressionTokenId::OPENPARAM) {
+        if ($this->getCurrentToken()->Id != ExpressionTokenId::OPENPARAM) {
             throw ODataException::createSyntaxError('Open parenthesis expected.');
         }
 
         $this->lexer->nextToken();
-        $args
-            = $this->_getCurrentToken()->Id != ExpressionTokenId::CLOSEPARAM
-             ? $this->_parseArguments() : [];
-        if ($this->_getCurrentToken()->Id != ExpressionTokenId::CLOSEPARAM) {
+        $args = $this->getCurrentToken()->Id != ExpressionTokenId::CLOSEPARAM
+             ? $this->parseArguments() : [];
+        if ($this->getCurrentToken()->Id != ExpressionTokenId::CLOSEPARAM) {
             throw ODataException::createSyntaxError('Close parenthesis expected.');
         }
 
@@ -541,12 +540,12 @@ class ExpressionParser
      *
      * @return array<AbstractExpression>
      */
-    private function _parseArguments()
+    private function parseArguments()
     {
         $argList = [];
         while (true) {
-            $argList[] = $this->_parseExpression();
-            if ($this->_getCurrentToken()->Id != ExpressionTokenId::COMMA) {
+            $argList[] = $this->parseExpression();
+            if ($this->getCurrentToken()->Id != ExpressionTokenId::COMMA) {
                 break;
             }
 
@@ -565,7 +564,7 @@ class ExpressionParser
      *
      * @return AbstractExpression
      */
-    private function _parseTypedLiteral(IType $targetType)
+    private function parseTypedLiteral(IType $targetType)
     {
         $literal = $this->lexer->getCurrentToken()->Text;
         $outVal = null;
@@ -590,7 +589,7 @@ class ExpressionParser
      *
      * @return ConstantExpression
      */
-    private function _parseNullLiteral()
+    private function parseNullLiteral()
     {
         $this->lexer->nextToken();
 
@@ -605,9 +604,9 @@ class ExpressionParser
      *
      * @return bool
      */
-    private function _tokenIdentifierIs($expressionTokenId)
+    private function tokenIdentifierIs($expressionTokenId)
     {
-        return $this->_getCurrentToken()->identifierIs($expressionTokenId);
+        return $this->getCurrentToken()->identifierIs($expressionTokenId);
     }
 
     /**
@@ -618,9 +617,9 @@ class ExpressionParser
      *
      * @throws ODataException
      */
-    private function _validateToken($expressionTokenId)
+    private function validateToken($expressionTokenId)
     {
-        if ($this->_getCurrentToken()->Id != $expressionTokenId) {
+        if ($this->getCurrentToken()->Id != $expressionTokenId) {
             throw ODataException::createSyntaxError('Syntax error.');
         }
     }
@@ -631,7 +630,7 @@ class ExpressionParser
      *
      * @throws ODataException If max recursion limit hits
      */
-    private function _recurseEnter()
+    private function recurseEnter()
     {
         ++$this->recursionDepth;
         if ($this->recursionDepth == self::RECURSION_LIMIT) {
@@ -642,7 +641,7 @@ class ExpressionParser
     /**
      * Decrement recursion count.
      */
-    private function _recurseLeave()
+    private function recurseLeave()
     {
         --$this->recursionDepth;
     }
@@ -657,7 +656,7 @@ class ExpressionParser
      *
      * @return AbstractExpression
      */
-    private static function _generateComparisonExpression($left, $right, $expressionToken, $isPHPExpressionProvider)
+    private static function generateComparisonExpression($left, $right, $expressionToken, $isPHPExpressionProvider)
     {
         FunctionDescription::verifyRelationalOpArguments($expressionToken, $left, $right);
 
