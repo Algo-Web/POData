@@ -32,7 +32,7 @@ class ExpandedProjectionNode extends ProjectionNode
      *
      * @var ResourceSetWrapper
      */
-    private $_resourceSetWrapper;
+    private $resourceSetWrapper;
 
     /**
      * The sort information associated with the expanded navigation property or
@@ -46,7 +46,7 @@ class ExpandedProjectionNode extends ProjectionNode
      *
      * @var InternalOrderByInfo
      */
-    private $_internalOrderByInfo;
+    private $internalOrderByInfo;
 
     /**
      * Number of results to be skipped for this node, the value of this field
@@ -59,7 +59,7 @@ class ExpandedProjectionNode extends ProjectionNode
      *
      * @var int
      */
-    private $_skipCount;
+    private $skipCount;
 
     /**
      * Maximum number of results to be returned for this node, the value of
@@ -75,7 +75,7 @@ class ExpandedProjectionNode extends ProjectionNode
      *
      * @var int
      */
-    private $_takeCount;
+    private $takeCount;
 
     /**
      * The maximum number of results allowed for this node, taken from
@@ -84,7 +84,7 @@ class ExpandedProjectionNode extends ProjectionNode
      *
      * @var int
      */
-    private $_maxResultCount;
+    private $maxResultCount;
 
     /**
      * List of child nodes, array of ExpandedProjectionNode and/or
@@ -92,7 +92,7 @@ class ExpandedProjectionNode extends ProjectionNode
      *
      * @var ProjectionNode[]
      */
-    private $_childNodes = [];
+    private $childNodes = [];
 
     /**
      * When we have seen a $select path including this expanded property then
@@ -107,7 +107,7 @@ class ExpandedProjectionNode extends ProjectionNode
      *
      * @var bool
      */
-    private $_selectionFound = false;
+    private $selectionFound = false;
 
     /**
      * This field set to true when we have seen the special token '*', means
@@ -126,7 +126,7 @@ class ExpandedProjectionNode extends ProjectionNode
      *
      * @var bool
      */
-    private $_selectAllImmediateProperties = false;
+    private $selectAllImmediateProperties = false;
 
     /**
      * Flag which indicate whether the entire expanded subtree of this node
@@ -140,7 +140,7 @@ class ExpandedProjectionNode extends ProjectionNode
      *
      * @var bool
      */
-    private $_selectSubtree = false;
+    private $selectSubtree = false;
 
     /**
      * Constructs a new instance of node representing expanded navigation property.
@@ -194,10 +194,10 @@ class ExpandedProjectionNode extends ProjectionNode
         $takeCount,
         $maxResultCount
     ) {
-        $this->_resourceSetWrapper = $resourceSetWrapper;
-        $this->_internalOrderByInfo = $internalOrderByInfo;
-        $this->_skipCount = $skipCount;
-        $this->_takeCount = $takeCount;
+        $this->resourceSetWrapper = $resourceSetWrapper;
+        $this->internalOrderByInfo = $internalOrderByInfo;
+        $this->skipCount = $skipCount;
+        $this->takeCount = $takeCount;
         parent::__construct($propertyName, $resourceProperty);
     }
 
@@ -214,7 +214,7 @@ class ExpandedProjectionNode extends ProjectionNode
      */
     public function getResourceSetWrapper()
     {
-        return $this->_resourceSetWrapper;
+        return $this->resourceSetWrapper;
     }
 
     /**
@@ -239,7 +239,7 @@ class ExpandedProjectionNode extends ProjectionNode
      */
     public function getChildNodes()
     {
-        return $this->_childNodes;
+        return $this->childNodes;
     }
 
     /**
@@ -252,7 +252,7 @@ class ExpandedProjectionNode extends ProjectionNode
      */
     public function getSkipCount()
     {
-        return $this->_skipCount;
+        return $this->skipCount;
     }
 
     /**
@@ -268,7 +268,7 @@ class ExpandedProjectionNode extends ProjectionNode
      */
     public function getTakeCount()
     {
-        return $this->_takeCount;
+        return $this->takeCount;
     }
 
     /**
@@ -278,7 +278,7 @@ class ExpandedProjectionNode extends ProjectionNode
      */
     public function getMaxResultCount()
     {
-        return $this->_maxResultCount;
+        return $this->maxResultCount;
     }
 
     /**
@@ -289,7 +289,7 @@ class ExpandedProjectionNode extends ProjectionNode
      */
     public function getInternalOrderByInfo()
     {
-        return $this->_internalOrderByInfo;
+        return $this->internalOrderByInfo;
     }
 
     /**
@@ -302,7 +302,7 @@ class ExpandedProjectionNode extends ProjectionNode
      */
     public function setSelectionFound($isSelectionFound = true)
     {
-        $this->_selectionFound = $isSelectionFound;
+        $this->selectionFound = $isSelectionFound;
     }
 
     /**
@@ -312,7 +312,7 @@ class ExpandedProjectionNode extends ProjectionNode
      */
     public function isSelectionFound()
     {
-        return $this->_selectionFound;
+        return $this->selectionFound;
     }
 
     /**
@@ -328,7 +328,7 @@ class ExpandedProjectionNode extends ProjectionNode
     public function setSelectAllImmediateProperties(
         $selectAllImmediateProperties = true
     ) {
-        $this->_selectAllImmediateProperties = $selectAllImmediateProperties;
+        $this->selectAllImmediateProperties = $selectAllImmediateProperties;
     }
 
     /**
@@ -339,7 +339,7 @@ class ExpandedProjectionNode extends ProjectionNode
      */
     public function canSelectAllImmediateProperties()
     {
-        return $this->_selectAllImmediateProperties;
+        return $this->selectAllImmediateProperties;
     }
 
     /**
@@ -356,7 +356,7 @@ class ExpandedProjectionNode extends ProjectionNode
      */
     public function canSelectAllProperties()
     {
-        return $this->_selectSubtree || $this->_selectAllImmediateProperties;
+        return $this->selectSubtree || $this->selectAllImmediateProperties;
     }
 
     /**
@@ -370,8 +370,8 @@ class ExpandedProjectionNode extends ProjectionNode
      */
     public function findNode($propertyName)
     {
-        if (array_key_exists($propertyName, $this->_childNodes)) {
-            return $this->_childNodes[$propertyName];
+        if (array_key_exists($propertyName, $this->childNodes)) {
+            return $this->childNodes[$propertyName];
         }
     }
 
@@ -392,7 +392,7 @@ class ExpandedProjectionNode extends ProjectionNode
             );
         }
 
-        $this->_childNodes[$node->getPropertyName()] = $node;
+        $this->childNodes[$node->getPropertyName()] = $node;
     }
 
     /**
@@ -403,9 +403,9 @@ class ExpandedProjectionNode extends ProjectionNode
      */
     public function markSubtreeAsSelected()
     {
-        $this->_selectSubtree = true;
-        $this->_selectAllImmediateProperties = false;
-        foreach ($this->_childNodes as $node) {
+        $this->selectSubtree = true;
+        $this->selectAllImmediateProperties = false;
+        foreach ($this->childNodes as $node) {
             if ($node instanceof self) {
                 $node->markSubtreeAsSelected();
             }
@@ -427,10 +427,10 @@ class ExpandedProjectionNode extends ProjectionNode
         // | F  | T   |  For $select=A/B, this is status of C and D
         // | F  | F   |  For $select=A/B, this is status of X and Y
 
-        foreach ($this->_childNodes as $propertyName => $node) {
+        foreach ($this->childNodes as $propertyName => $node) {
             if ($node instanceof self) {
-                if (!$this->_selectSubtree && !$node->_selectionFound) {
-                    unset($this->_childNodes[$propertyName]);
+                if (!$this->selectSubtree && !$node->selectionFound) {
+                    unset($this->childNodes[$propertyName]);
                 } else {
                     $node->removeNonSelectedNodes();
                 }
@@ -451,17 +451,17 @@ class ExpandedProjectionNode extends ProjectionNode
         //$select=A/B, A/B/guid, A/B/Name
         //Here A/B cause to implcilty include all immeiate properties of B
         //so remove explicitly included 'ProjectionNode' for guid and Name
-        if ($this->_selectSubtree) {
-            foreach ($this->_childNodes as $propertyName => $node) {
+        if ($this->selectSubtree) {
+            foreach ($this->childNodes as $propertyName => $node) {
                 if ($node instanceof self) {
-                    $node->_selectSubtree = true;
+                    $node->selectSubtree = true;
                     $node->removeNodesAlreadyIncludedImplicitly();
                 } else {
-                    unset($this->_childNodes[$propertyName]);
+                    unset($this->childNodes[$propertyName]);
                 }
             }
 
-            $this->_selectAllImmediateProperties = false;
+            $this->selectAllImmediateProperties = false;
 
             return;
         }
@@ -469,11 +469,11 @@ class ExpandedProjectionNode extends ProjectionNode
         //$select=A/B/*, A/B/guid, A/B/Name
         //Here A/B/* cause to implcitly include all immediate properties of B
         //so remove explicitly included 'ProjectionNode' for guid and Name
-        foreach ($this->_childNodes as $propertyName => $node) {
+        foreach ($this->childNodes as $propertyName => $node) {
             if ($node instanceof self) {
                 $node->removeNodesAlreadyIncludedImplicitly();
-            } elseif ($this->_selectAllImmediateProperties) {
-                unset($this->_childNodes[$propertyName]);
+            } elseif ($this->selectAllImmediateProperties) {
+                unset($this->childNodes[$propertyName]);
             }
         }
     }
@@ -484,8 +484,8 @@ class ExpandedProjectionNode extends ProjectionNode
      */
     public function sortNodes()
     {
-        if (count($this->_childNodes) > 0) {
-            foreach ($this->_childNodes as $childNode) {
+        if (count($this->childNodes) > 0) {
+            foreach ($this->childNodes as $childNode) {
                 if ($childNode instanceof self) {
                     $childNode->sortNodes();
                 }
@@ -493,13 +493,13 @@ class ExpandedProjectionNode extends ProjectionNode
 
             //We are applying sorting in bottom-up fashion, do it only we have
             // more than 1 child
-            if (count($this->_childNodes) > 1) {
-                $existingNodes = $this->_childNodes;
-                $this->_childNodes = [];
+            if (count($this->childNodes) > 1) {
+                $existingNodes = $this->childNodes;
+                $this->childNodes = [];
                 foreach ($this->getResourceType()->getAllProperties() as $resourceProperty) {
                     $propertyName = $resourceProperty->getName();
                     if (array_key_exists($propertyName, $existingNodes)) {
-                        $this->_childNodes[$propertyName]
+                        $this->childNodes[$propertyName]
                             = $existingNodes[$propertyName];
                     }
                 }
