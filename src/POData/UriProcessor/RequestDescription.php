@@ -666,7 +666,7 @@ class RequestDescription
      *
      * @param InternalOrderByInfo &$internalOrderByInfo The sorting information
      */
-    public function setInternalOrderByInfo(InternalOrderByInfo & $internalOrderByInfo)
+    public function setInternalOrderByInfo(InternalOrderByInfo &$internalOrderByInfo)
     {
         $this->internalOrderByInfo = $internalOrderByInfo;
     }
@@ -687,7 +687,7 @@ class RequestDescription
      * @param InternalSkipTokenInfo &$internalSkipTokenInfo The paging information
      */
     public function setInternalSkipTokenInfo(
-        InternalSkipTokenInfo & $internalSkipTokenInfo
+        InternalSkipTokenInfo &$internalSkipTokenInfo
     ) {
         $this->internalSkipTokenInfo = $internalSkipTokenInfo;
     }
@@ -713,7 +713,7 @@ class RequestDescription
      *
      * @param RootProjectionNode &$rootProjectionNode Root of the projection tree
      */
-    public function setRootProjectionNode(RootProjectionNode & $rootProjectionNode)
+    public function setRootProjectionNode(RootProjectionNode &$rootProjectionNode)
     {
         $this->rootProjectionNode = $rootProjectionNode;
     }
