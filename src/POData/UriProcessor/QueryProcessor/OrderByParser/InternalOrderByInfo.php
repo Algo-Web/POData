@@ -130,9 +130,9 @@ class InternalOrderByInfo
      * Build value of $skiptoken from the given object which will be the
      * last object in the page.
      *
-     * @param mixed             $lastObject entity instance from which skiptoken needs to be built
+     * @param mixed $lastObject entity instance from which skiptoken needs to be built
      *
-     * @throws ODataException   If reflection exception occurs while accessing property
+     * @throws ODataException If reflection exception occurs while accessing property
      *
      * @return string
      */
@@ -151,7 +151,7 @@ class InternalOrderByInfo
                         $currentObject = $currentObject->results;
                     }
                     $currentObject = $this->resourceType->getPropertyValue($currentObject, $subPathSegment->getName());
-                    if (is_null($currentObject)) {
+                    if (null === $currentObject) {
                         $nextPageLink .= 'null, ';
                         break;
                     } elseif ($isLastSegment) {

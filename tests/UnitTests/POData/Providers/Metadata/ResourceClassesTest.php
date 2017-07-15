@@ -4,6 +4,7 @@ namespace UnitTests\POData\Providers\Metadata;
 
 use AlgoWeb\ODataMetadata\MetadataV3\edm\TComplexTypeType;
 use AlgoWeb\ODataMetadata\MetadataV3\edm\TEntityTypeType;
+use Mockery as m;
 use POData\Common\InvalidOperationException;
 use POData\Common\ODataConstants;
 use POData\Providers\Metadata\IMetadataProvider;
@@ -26,7 +27,6 @@ use POData\Providers\Metadata\Type\Int32;
 use POData\Providers\Metadata\Type\TypeCode;
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 use UnitTests\POData\TestCase;
-use Mockery as m;
 
 class ResourceClassesTest extends TestCase
 {

@@ -55,8 +55,8 @@ class ResourceAssociationSet
         ResourceAssociationSetEnd $end1,
         ResourceAssociationSetEnd $end2
     ) {
-        if (is_null($end1->getResourceProperty())
-            && is_null($end2->getResourceProperty())
+        if (null === $end1->getResourceProperty()
+            && null === $end2->getResourceProperty()
         ) {
             throw new \InvalidArgumentException(
                 Messages::resourceAssociationSetResourcePropertyCannotBeBothNull()
@@ -79,12 +79,12 @@ class ResourceAssociationSet
     /**
      * Retrieve the end for the given resource set, type and property.
      *
-     * @param ResourceSet           $resourceSet      Resource set for the end
-     * @param ResourceEntityType    $resourceType     Resource type for the end
-     * @param ResourceProperty      $resourceProperty Resource property for the end
+     * @param ResourceSet        $resourceSet      Resource set for the end
+     * @param ResourceEntityType $resourceType     Resource type for the end
+     * @param ResourceProperty   $resourceProperty Resource property for the end
      *
      * @return ResourceAssociationSetEnd|null Resource association set end for the
-     *                                   given parameters
+     *                                        given parameters
      */
     public function getResourceAssociationSetEnd(
         ResourceSet $resourceSet,
@@ -104,12 +104,12 @@ class ResourceAssociationSet
     /**
      * Retrieve the related end for the given resource set, type and property.
      *
-     * @param ResourceSet           $resourceSet      Resource set for the end
-     * @param ResourceEntityType    $resourceType     Resource type for the end
-     * @param ResourceProperty      $resourceProperty Resource property for the end
+     * @param ResourceSet        $resourceSet      Resource set for the end
+     * @param ResourceEntityType $resourceType     Resource type for the end
+     * @param ResourceProperty   $resourceProperty Resource property for the end
      *
      * @return ResourceAssociationSetEnd|null Related resource association set end
-     *                                   for the given parameters
+     *                                        for the given parameters
      */
     public function getRelatedResourceAssociationSetEnd(
         ResourceSet $resourceSet,
@@ -164,8 +164,8 @@ class ResourceAssociationSet
      */
     public function isBidirectional()
     {
-        return !is_null($this->end1->getResourceProperty())
-            && !is_null($this->end2->getResourceProperty());
+        return null !== $this->end1->getResourceProperty()
+            && null !== $this->end2->getResourceProperty();
     }
 
 

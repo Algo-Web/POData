@@ -2,6 +2,7 @@
 
 namespace POData;
 
+use \POData\Providers\Stream\IStreamProvider2;
 use POData\Common\ODataException;
 use POData\Configuration\EntitySetRights;
 use POData\Configuration\IServiceConfiguration;
@@ -11,7 +12,6 @@ use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\Metadata\SimpleMetadataProvider;
 use POData\Providers\Query\IQueryProvider;
 use POData\Providers\Query\SimpleQueryProvider;
-use \POData\Providers\Stream\IStreamProvider2;
 
 /**
  * DataService that implements IServiceProvider.

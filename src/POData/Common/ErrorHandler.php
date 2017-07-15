@@ -39,7 +39,7 @@ class ErrorHandler
             // Never come here
         }
 
-        if (is_null($responseContentType)) {
+        if (null === $responseContentType) {
             $responseContentType = MimeTypes::MIME_APPLICATION_XML;
         }
 

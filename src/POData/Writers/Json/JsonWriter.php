@@ -207,7 +207,7 @@ class JsonWriter
      * Write the string value with/without quotes.
      *
      * @param string $text   value to be written
-     * @param bool $quotes put quotes around the value if this value is true
+     * @param bool   $quotes put quotes around the value if this value is true
      */
     private function writeCore($text, $quotes)
     {

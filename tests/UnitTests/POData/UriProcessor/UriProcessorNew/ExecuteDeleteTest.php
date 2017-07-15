@@ -2,6 +2,7 @@
 
 namespace UnitTests\POData\UriProcessor\UriProcessorNew;
 
+use Mockery as m;
 use POData\Common\ODataConstants;
 use POData\Common\Url;
 use POData\Common\Version;
@@ -29,7 +30,6 @@ use POData\UriProcessor\RequestDescription;
 use POData\UriProcessor\UriProcessor;
 use POData\UriProcessor\UriProcessorNew;
 use UnitTests\POData\TestCase;
-use Mockery as m;
 
 class ExecuteDeleteTest extends TestCase
 {

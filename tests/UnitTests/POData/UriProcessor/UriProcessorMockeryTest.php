@@ -2,6 +2,7 @@
 
 namespace UnitTests\POData\UriProcessor;
 
+use Mockery as m;
 use POData\Common\ODataException;
 use POData\Common\Url;
 use POData\Common\Version;
@@ -41,7 +42,6 @@ use UnitTests\POData\Facets\NorthWind4\NorthWindService;
 use UnitTests\POData\Facets\ServiceHostTestFake;
 use UnitTests\POData\Providers\Metadata\reusableEntityClass4;
 use UnitTests\POData\TestCase;
-use Mockery as m;
 
 class UriProcessorMockeryTest extends TestCase
 {
@@ -2318,7 +2318,7 @@ class UriProcessorMockeryTest extends TestCase
         $fore = $meta->addEntityType(new \ReflectionClass($forward), 'fore');
         $meta->addResourceSet('foreSet', $fore);
 
-        $name = "Foobar";
+        $name = 'Foobar';
 
         $meta->createSingleton($name, $fore, $functionName);
 
@@ -2326,9 +2326,9 @@ class UriProcessorMockeryTest extends TestCase
         $this->assertEquals(null, $foo->getHost()->getResponseContentType());
         $foo->handleRequest();
 
-        $this->assertEquals("application/atom+xml", $foo->getHost()->getResponseContentType());
+        $this->assertEquals('application/atom+xml', $foo->getHost()->getResponseContentType());
         $stream = $foo->getHost()->getOperationContext()->outgoingResponse()->getStream();
-        $this->assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>".PHP_EOL, $stream);
+        $this->assertEquals('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'.PHP_EOL, $stream);
     }
 
 

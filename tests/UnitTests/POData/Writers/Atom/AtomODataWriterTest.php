@@ -33,7 +33,8 @@ class AtomODataWriterTest extends TestCase
      * Removes the updated tag from an XML string
      * IE <updated>2013-09-17T19:22:33-06:00</updated>.
      *
-     * @param string $xml
+     * @param string     $xml
+     * @param null|mixed $new
      *
      * @return string
      */
@@ -1183,6 +1184,10 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 
     /**
      * @dataProvider canHandleProvider
+     * @param mixed $id
+     * @param mixed $version
+     * @param mixed $contentType
+     * @param mixed $expected
      */
     public function testCanHandle($id, $version, $contentType, $expected)
     {

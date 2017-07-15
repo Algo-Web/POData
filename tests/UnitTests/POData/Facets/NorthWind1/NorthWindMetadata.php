@@ -159,7 +159,7 @@ class NorthWindMetadata
         $metadata->addResourceReferencePropertyBidirectional(
             $customersEntityType,
             $orderEntityType,
-            "Orders",
+            'Orders',
             'Customer'
         );
         //Orders (1) <==> Order_Details (0-*)
@@ -189,8 +189,8 @@ class NorthWindMetadata
     }
 
     /**
-     * @return array
      * @throws InvalidOperationException
+     * @return array
      */
     private static function createMetadataCore()
     {

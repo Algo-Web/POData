@@ -2,9 +2,9 @@
 
 namespace UnitTests\POData;
 
+use Mockery as m;
 use POData\MediaType;
 use UnitTests\POData\TestCase;
-use Mockery as m;
 
 class MediaTypeTest extends TestCase
 {

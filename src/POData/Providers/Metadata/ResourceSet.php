@@ -28,9 +28,9 @@ class ResourceSet
     /**
      * Creates new instance of ResourceSet.
      *
-     * @param string             $name          Name of the resource set (entity set)
-     * @param ResourceEntityType $resourceType  Type ResourceType describing the resource
-     *                                          this entity set holds
+     * @param string             $name         Name of the resource set (entity set)
+     * @param ResourceEntityType $resourceType Type ResourceType describing the resource
+     *                                         this entity set holds
      *
      * @throws \InvalidArgumentException
      */

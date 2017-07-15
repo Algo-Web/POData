@@ -8,7 +8,7 @@ class ResourcePrimitiveType extends ResourceType
 {
     /**
      * Create new instance of ResourcePrimitiveType.
-     * @param IType                 $primitive      Instance type for the primitive type
+     * @param IType $primitive Instance type for the primitive type
      *
      * @throws \InvalidArgumentException
      */

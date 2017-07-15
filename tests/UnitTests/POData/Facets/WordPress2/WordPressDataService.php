@@ -44,7 +44,7 @@ class WordPressDataService extends BaseService
      */
     public function getMetadataProvider()
     {
-        if (is_null($this->_wordPressMetadata)) {
+        if (null === $this->_wordPressMetadata) {
             $this->_wordPressMetadata = WordPressMetadata::create();
             // $this->_wordPressMetadata->mappedDetails = CreateWordPressMetadata::mappingInitialize();
         }
@@ -57,7 +57,7 @@ class WordPressDataService extends BaseService
      */
     public function getQueryProvider()
     {
-        if (is_null($this->_wordPressQueryProvider)) {
+        if (null === $this->_wordPressQueryProvider) {
             $this->_wordPressQueryProvider = new WordPressQueryProvider();
         }
 

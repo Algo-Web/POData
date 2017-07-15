@@ -33,7 +33,7 @@ class SimpleStreamProviderTest extends TestCase
 
         $foo = new SimpleStreamProvider();
 
-        $expected = "stream for DateTime";
+        $expected = 'stream for DateTime';
         $actual = $foo->getReadStream2($entity, $resourceStreamInfo, $eTag, $checkETag, $context);
         $this->assertEquals($expected, $actual);
     }
@@ -41,7 +41,7 @@ class SimpleStreamProviderTest extends TestCase
     public function testGetReadStreamWithNonNullResourceInfo()
     {
         $entity = new \stdClass();
-        $entity->TheStreamWithNoName = "ELEVATION!";
+        $entity->TheStreamWithNoName = 'ELEVATION!';
         $resourceStreamInfo = m::mock(ResourceStreamInfo::class);
         $resourceStreamInfo->shouldReceive('getName')->andReturn('TheStreamWithNoName');
         $checkETag = true;
@@ -50,7 +50,7 @@ class SimpleStreamProviderTest extends TestCase
 
         $foo = new SimpleStreamProvider();
 
-        $expected = "ELEVATION!";
+        $expected = 'ELEVATION!';
         $actual = $foo->getReadStream2($entity, $resourceStreamInfo, $eTag, $checkETag, $context);
         $this->assertEquals($expected, $actual);
     }
@@ -81,7 +81,7 @@ class SimpleStreamProviderTest extends TestCase
 
         $foo = new SimpleStreamProvider();
 
-        $expected = "all/your/base/TheStreamWithNoName";
+        $expected = 'all/your/base/TheStreamWithNoName';
         $actual = $foo->getDefaultStreamEditMediaUri($entity, $rType, $resourceStreamInfo, $context, $relativeUri);
         $this->assertEquals($expected, $actual);
     }
@@ -116,7 +116,7 @@ class SimpleStreamProviderTest extends TestCase
     public function testGetStreamETag2WithNullResourceInfo()
     {
         $entity = new \stdClass();
-        $entity->TheStreamWithNoName = "HorseWithNoName";
+        $entity->TheStreamWithNoName = 'HorseWithNoName';
         $resourceStreamInfo = null;
         $context = m::mock(IOperationContext::class)->makePartial();
 
@@ -130,7 +130,7 @@ class SimpleStreamProviderTest extends TestCase
     public function testGetStreamETag2WithNonNullResourceInfo()
     {
         $entity = new \stdClass();
-        $entity->TheStreamWithNoName = "HorseWithNoName";
+        $entity->TheStreamWithNoName = 'HorseWithNoName';
         $resourceStreamInfo = m::mock(ResourceStreamInfo::class);
         $resourceStreamInfo->shouldReceive('getName')->andReturn('TheStreamWithNoName');
         $context = m::mock(IOperationContext::class)->makePartial();
@@ -145,7 +145,7 @@ class SimpleStreamProviderTest extends TestCase
     public function testGetReadStreamUri2WithNullResourceInfo()
     {
         $entity = new \stdClass();
-        $entity->TheStreamWithNoName = "HorseWithNoName";
+        $entity->TheStreamWithNoName = 'HorseWithNoName';
         $resourceStreamInfo = null;
         $context = m::mock(IOperationContext::class)->makePartial();
         $relativeUri = 'all/your/base';
@@ -160,7 +160,7 @@ class SimpleStreamProviderTest extends TestCase
     public function testGetReadStreamUri2WithNonNullResourceInfo()
     {
         $entity = new \stdClass();
-        $entity->TheStreamWithNoName = "HorseWithNoName";
+        $entity->TheStreamWithNoName = 'HorseWithNoName';
         $resourceStreamInfo = m::mock(ResourceStreamInfo::class);
         $resourceStreamInfo->shouldReceive('getName')->andReturn('TheStreamWithNoName');
         $context = m::mock(IOperationContext::class)->makePartial();

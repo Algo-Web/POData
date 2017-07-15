@@ -205,7 +205,7 @@ class WordPressDSExpressionProvider implements IExpressionProvider
     {
         if (is_bool($value)) {
             return var_export($value, true);
-        } elseif (is_null($value)) {
+        } elseif (null === $value) {
             return var_export(null, true);
         }
 

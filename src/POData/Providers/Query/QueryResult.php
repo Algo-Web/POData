@@ -35,7 +35,7 @@ class QueryResult
         }
 
         //treat nulls like 0
-        if (is_null($skip)) {
+        if (null === $skip) {
             $skip = 0;
         }
 
@@ -44,7 +44,7 @@ class QueryResult
             return 0;
         } //if there aren't enough to skip, the count is 0
 
-        if (is_null($top)) {
+        if (null === $top) {
             return $count;
         } //if there's no top, then it's the count as is
 

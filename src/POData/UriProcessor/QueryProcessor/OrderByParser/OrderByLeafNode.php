@@ -105,28 +105,28 @@ class OrderByLeafNode extends OrderByBaseNode
         $retVal = function ($object1, $object2) use ($ancestors, $a) {
             $accessor1 = $object1;
             $accessor2 = $object2;
-            $flag1 = is_null($accessor1);
-            $flag2 = is_null($accessor2);
+            $flag1 = null === $accessor1;
+            $flag2 = null === $accessor2;
             foreach ($ancestors as $i => $ancestor) {
                 if ($i == 0) {
                     continue;
                 }
                 $accessor1 = $accessor1->$ancestor;
                 $accessor2 = $accessor2->$ancestor;
-                $flag1 |= is_null($accessor1);
-                $flag2 |= is_null($accessor2);
+                $flag1 |= null === $accessor1;
+                $flag2 |= null === $accessor2;
             }
             $propertyName = $this->propertyName;
             $getter = 'get' . ucfirst($propertyName);
-            if (!is_null($accessor1)) {
+            if (null !== $accessor1) {
                 $accessor1 = method_exists($accessor1, $getter) ? $accessor1->$getter() : $accessor1->$propertyName;
             }
-            if (!is_null($accessor2)) {
+            if (null !== $accessor2) {
                 $accessor2 = method_exists($accessor2, $getter) ? $accessor2->$getter() : $accessor2->$propertyName;
             }
 
-            $flag1 |= is_null($accessor1);
-            $flag2 |= is_null($accessor2);
+            $flag1 |= null === $accessor1;
+            $flag2 |= null === $accessor2;
 
             if ($flag1 && $flag2) {
                 return 0;

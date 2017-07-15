@@ -2,6 +2,7 @@
 
 namespace UnitTests\POData\UriProcessor\QueryProcessor;
 
+use Mockery as m;
 use POData\Common\ODataConstants;
 use POData\Common\ODataException;
 use POData\IService;
@@ -15,7 +16,6 @@ use POData\UriProcessor\RequestDescription;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetSource;
 use UnitTests\POData\TestCase;
-use Mockery as m;
 
 class QueryProcessorTest extends TestCase
 {

@@ -346,7 +346,7 @@ class OrderByParserTest extends TestCase
         //There are navigation (resource reference) properties in the orderby path so getNavigationPropertiesUsed should
         //not be null
         $naviUsed = $orderByInfo->getNavigationPropertiesUsed();
-        $this->assertFalse(is_null($naviUsed));
+        $this->assertFalse(null === $naviUsed);
         //Only one main segment so one element in main collection
         $this->assertEquals(count($naviUsed), 1);
         $this->assertTrue(is_array($naviUsed[0]));
@@ -363,7 +363,7 @@ class OrderByParserTest extends TestCase
         $this->assertTrue($orderByPathSegments[0]->isAscending());
         //there are two sub path 'Order', 'Customer' and 'Rating'
         $subPathSegments = $orderByPathSegments[0]->getSubPathSegments();
-        $this->assertTrue(!is_null($subPathSegments));
+        $this->assertTrue(null !== $subPathSegments);
         $this->assertEquals(count($subPathSegments), 3);
         $this->assertEquals($subPathSegments[0]->getName(), 'Order');
         $this->assertEquals($subPathSegments[1]->getName(), 'Customer');
@@ -373,7 +373,7 @@ class OrderByParserTest extends TestCase
         $this->assertTrue($subPathSegments[2]->getResourceProperty() instanceof ResourceProperty);
         //There is only one sub sorter function
         $subSorters = $internalOrderInfo->getSubSorterFunctions();
-        $this->assertTrue(!is_null($subSorters));
+        $this->assertTrue(null !== $subSorters);
         $this->assertEquals(count($subSorters), 1);
         //Parmater to this sub sort must be Order_DetailsA, Order_DetailsB
 //        $this->assertEquals($subSorters[0]->getParametersAsString(), '$Order_DetailsA, $Order_DetailsB');
@@ -381,7 +381,7 @@ class OrderByParserTest extends TestCase
         //asset this by comapring the anonymous function names
         $subSorterName = $subSorters[0];
         $sorter = $internalOrderInfo->getSorterFunction();
-        $this->assertTrue(!is_null($sorter));
+        $this->assertTrue(null !== $sorter);
         $mainSorterName = $sorter;
         $this->assertEquals($subSorterName, $mainSorterName);
     }
@@ -448,7 +448,7 @@ class OrderByParserTest extends TestCase
         //There are navigation (resource reference) properties in the orderby path so getNavigationPropertiesUsed should
         //not be null
         $naviUsed = $orderByInfo->getNavigationPropertiesUsed();
-        $this->assertFalse(is_null($naviUsed));
+        $this->assertFalse(null === $naviUsed);
         //two path segment so two element in main collection
         $this->assertEquals(count($naviUsed), 2);
         $this->assertTrue(is_array($naviUsed[0]));
@@ -470,14 +470,14 @@ class OrderByParserTest extends TestCase
         $this->assertTrue($orderByPathSegments[1]->isAscending());
         //there are two sub path 'Address' and 'HouseNumber'
         $subPathSegments = $orderByPathSegments[0]->getSubPathSegments();
-        $this->assertTrue(!is_null($subPathSegments));
+        $this->assertTrue(null !== $subPathSegments);
         $this->assertEquals(count($subPathSegments), 2);
         $this->assertEquals($subPathSegments[0]->getName(), 'Order');
         $this->assertEquals($subPathSegments[1]->getName(), 'Price');
         $this->assertTrue($subPathSegments[0]->getResourceProperty() instanceof ResourceProperty);
         $this->assertTrue($subPathSegments[1]->getResourceProperty() instanceof ResourceProperty);
         $subPathSegments = $orderByPathSegments[1]->getSubPathSegments();
-        $this->assertTrue(!is_null($subPathSegments));
+        $this->assertTrue(null !== $subPathSegments);
         $this->assertEquals(count($subPathSegments), 2);
         $this->assertEquals($subPathSegments[0]->getName(), 'Product');
         $this->assertEquals($subPathSegments[1]->getName(), 'ProductName');
@@ -485,7 +485,7 @@ class OrderByParserTest extends TestCase
         $this->assertTrue($subPathSegments[1]->getResourceProperty() instanceof ResourceProperty);
         //There is two one sub sorter function
         $subSorters = $internalOrderInfo->getSubSorterFunctions();
-        $this->assertTrue(!is_null($subSorters));
+        $this->assertTrue(null !== $subSorters);
         $this->assertEquals(count($subSorters), 2);
         //Parmater to first sub sort must be $Order_DetailsA, $Order_DetailsB
 //        $this->assertEquals($subSorters[0]->getParametersAsString(), '$Order_DetailsA, $Order_DetailsB');
@@ -495,7 +495,7 @@ class OrderByParserTest extends TestCase
         $subSorterName2 = $subSorters[1];
 //        $this->assertNotEquals($subSorterName1, $subSorterName2);
         $sorter = $internalOrderInfo->getSorterFunction();
-        $this->assertTrue(!is_null($sorter));
+        $this->assertTrue(null !== $sorter);
         $mainSorterName = $sorter;
         //Test the function generated for 'Order/Price desc' path
         /*
@@ -636,7 +636,7 @@ class OrderByParserTest extends TestCase
         //There are navigation (resource reference) properties in the orderby path so getNavigationPropertiesUsed should
         //not be null
         $naviUsed = $orderByInfo->getNavigationPropertiesUsed();
-        $this->assertFalse(is_null($naviUsed));
+        $this->assertFalse(null === $naviUsed);
         //3 path segment are there, but last one is duplicate of first one, so parser removes last one
         $this->assertEquals(count($naviUsed), 2);
         $this->assertTrue(is_array($naviUsed[0]));
@@ -656,10 +656,10 @@ class OrderByParserTest extends TestCase
         $wrapper = m::mock(ResourceSetWrapper::class);
         $type = m::mock(ResourceType::class);
         $type->shouldReceive('getInstanceType->newInstance')->andReturn(new \stdClass());
-        $orderBy = " ";
+        $orderBy = ' ';
         $provider = m::mock(ProvidersWrapper::class);
 
-        $expected = "assert(): OrderBy clause must not be trimmable to an empty string failed";
+        $expected = 'assert(): OrderBy clause must not be trimmable to an empty string failed';
         $actual = null;
 
         try {

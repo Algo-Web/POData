@@ -156,7 +156,7 @@ class OrderByParser
      *                                           2. remove duplicate orderby path
      *                                           segment
      *
-     * @throws ODataException                    If any error occurs while processing the orderby path segments
+     * @throws ODataException If any error occurs while processing the orderby path segments
      */
     private function buildOrderByTree(&$orderByPathSegments)
     {
@@ -184,7 +184,7 @@ class OrderByParser
                 $resourceSetWrapper = null;
                 $resourceType = $currentNode->getResourceType();
                 $resourceProperty = $resourceType->resolveProperty($orderBySubPathSegment);
-                if (is_null($resourceProperty)) {
+                if (null === $resourceProperty) {
                     throw ODataException::createSyntaxError(
                         Messages::orderByParserPropertyNotFound(
                             $resourceType->getFullName(),
@@ -219,14 +219,14 @@ class OrderByParser
                 ) {
                     $this->assertion($currentNode instanceof OrderByRootNode || $currentNode instanceof OrderByNode);
                     $resourceSetWrapper = $currentNode->getResourceSetWrapper();
-                    $this->assertion(!is_null($resourceSetWrapper));
+                    $this->assertion(null !== $resourceSetWrapper);
                     $resourceSetWrapper
                         = $this->providerWrapper->getResourceSetWrapperForNavigationProperty(
                             $resourceSetWrapper,
                             $resourceType,
                             $resourceProperty
                         );
-                    if (is_null($resourceSetWrapper)) {
+                    if (null === $resourceSetWrapper) {
                         throw ODataException::createBadRequestError(
                             Messages::badRequestInvalidPropertyNameSpecified(
                                 $resourceType->getFullName(),
@@ -271,7 +271,7 @@ class OrderByParser
                 }
 
                 $node = $currentNode->findNode($orderBySubPathSegment);
-                if (is_null($node)) {
+                if (null === $node) {
                     if ($resourceProperty->isKindOf(ResourcePropertyKind::PRIMITIVE)) {
                         $node = new OrderByLeafNode(
                             $orderBySubPathSegment,
@@ -354,9 +354,9 @@ class OrderByParser
     /**
      * Traverse 'Order By Tree' and create 'OrderInfo' structure.
      *
-     * @param array<array>  $orderByPaths   The orderby paths
+     * @param array<array> $orderByPaths The orderby paths
      *
-     * @throws ODataException               If parser finds an inconsistent-tree state, throws unexpected state error
+     * @throws ODataException If parser finds an inconsistent-tree state, throws unexpected state error
      *
      * @return OrderByInfo
      */
@@ -369,9 +369,9 @@ class OrderByParser
             $orderBySubPathSegments = [];
             foreach ($orderBySubPaths as $orderBySubPath) {
                 $node = $currentNode->findNode($orderBySubPath);
-                $this->assertion(!is_null($node));
+                $this->assertion(null !== $node);
                 $resourceProperty = $node->getResourceProperty();
-                if ($node instanceof OrderByNode && !is_null($node->getResourceSetWrapper())) {
+                if ($node instanceof OrderByNode && null !== $node->getResourceSetWrapper()) {
                     if (!array_key_exists($index, $navigationPropertiesInThePath)) {
                         $navigationPropertiesInThePath[$index] = [];
                     }

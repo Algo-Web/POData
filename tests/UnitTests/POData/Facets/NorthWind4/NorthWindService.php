@@ -51,7 +51,7 @@ class NorthWindService extends BaseService
      */
     public function getQueryProvider()
     {
-        if (is_null($this->_northWindQueryProvider)) {
+        if (null === $this->_northWindQueryProvider) {
             $this->_northWindQueryProvider = new NorthWindQueryProvider4();
         }
 

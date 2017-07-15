@@ -68,6 +68,7 @@ class SimpleMetadataProvider implements IMetadataProvider
     /**
      * get all entity set information.
      *
+     * @param  null|mixed    $params
      * @return ResourceSet[]
      */
     public function getResourceSets($params = null)
@@ -143,7 +144,7 @@ class SimpleMetadataProvider implements IMetadataProvider
      *
      * @param string $name Name of the resource set
      *
-     * @return ResourceFunctionType|null    singleton with the given name if found else NULL
+     * @return ResourceFunctionType|null singleton with the given name if found else NULL
      */
     public function resolveSingleton($name)
     {
@@ -236,7 +237,7 @@ class SimpleMetadataProvider implements IMetadataProvider
         //             );
 
         $targetResourceSet = $targetResourceProperty->getResourceType()->getCustomState();
-        if (is_null($targetResourceSet)) {
+        if (null === $targetResourceSet) {
             throw new InvalidOperationException(
                 'Failed to retrieve the custom state from ' . $targetResourceProperty->getResourceType()->getName()
             );
@@ -260,13 +261,12 @@ class SimpleMetadataProvider implements IMetadataProvider
     /**
      * Add an entity type.
      *
-     * @param \ReflectionClass $refClass reflection class of the entity
-     * @param string $name name of the entity
-     * @return ResourceType when the name is already in use
-     *
+     * @param  \ReflectionClass          $refClass reflection class of the entity
+     * @param  string                    $name     name of the entity
      * @throws InvalidOperationException when the name is already in use
-     * @internal param string $namespace namespace of the data source
+     * @return ResourceType              when the name is already in use
      *
+     * @internal param string $namespace namespace of the data source
      */
     public function addEntityType(\ReflectionClass $refClass, $name)
     {
@@ -275,13 +275,12 @@ class SimpleMetadataProvider implements IMetadataProvider
 
     /**
      * @param \ReflectionClass $refClass
-     * @param string $name
+     * @param string           $name
      * @param $typeKind
-     * @return ResourceType
      * @throws InvalidOperationException
+     * @return ResourceType
      * @internal param null|string $namespace
      * @internal param null|ResourceType $baseResourceType
-     *
      */
     private function createResourceType(
         \ReflectionClass $refClass,
@@ -319,14 +318,13 @@ class SimpleMetadataProvider implements IMetadataProvider
     /**
      * Add a complex type.
      *
-     * @param \ReflectionClass $refClass reflection class of the complex entity type
-     * @param string $name name of the entity
-     * @return ResourceType when the name is already in use
-     *
+     * @param  \ReflectionClass          $refClass reflection class of the complex entity type
+     * @param  string                    $name     name of the entity
      * @throws InvalidOperationException when the name is already in use
+     * @return ResourceType              when the name is already in use
+     *
      * @internal param string $namespace namespace of the data source
      * @internal param ResourceType $baseResourceType base resource type
-     *
      */
     public function addComplexType(\ReflectionClass $refClass, $name)
     {
@@ -334,8 +332,8 @@ class SimpleMetadataProvider implements IMetadataProvider
     }
 
     /**
-     * @param string                $name           name of the resource set (now taken from resource type)
-     * @param ResourceEntityType    $resourceType   resource type
+     * @param string             $name         name of the resource set (now taken from resource type)
+     * @param ResourceEntityType $resourceType resource type
      *
      * @throws InvalidOperationException
      *
@@ -380,6 +378,8 @@ class SimpleMetadataProvider implements IMetadataProvider
      * @param bool         $isKey          property is key or not
      * @param bool         $isBag          property is bag or not
      * @param bool         $isETagProperty property is etag or not
+     * @param null|mixed   $defaultValue
+     * @param mixed        $nullable
      */
     private function addPrimitivePropertyInternal(
         $resourceType,
@@ -432,7 +432,7 @@ class SimpleMetadataProvider implements IMetadataProvider
     }
 
     /**
-     * @param string $name
+     * @param string       $name
      * @param ResourceType $resourceType
      *
      * @throws InvalidOperationException
@@ -460,9 +460,11 @@ class SimpleMetadataProvider implements IMetadataProvider
      *
      * @param ResourceType $resourceType resource type to which key property
      *                                   is to be added
-     * @param string $name name of the key property
-     * @param TypeCode $typeCode type of the key property
-     * @param bool $isBag property is bag or not
+     * @param string       $name         name of the key property
+     * @param TypeCode     $typeCode     type of the key property
+     * @param bool         $isBag        property is bag or not
+     * @param null|mixed   $defaultValue
+     * @param mixed        $nullable
      */
     public function addPrimitiveProperty(
         $resourceType,
@@ -489,8 +491,10 @@ class SimpleMetadataProvider implements IMetadataProvider
      *
      * @param ResourceType $resourceType resource type to which key property
      *                                   is to be added
-     * @param string $name name of the property
-     * @param TypeCode $typeCode type of the etag property
+     * @param string       $name         name of the property
+     * @param TypeCode     $typeCode     type of the etag property
+     * @param null|mixed   $defaultValue
+     * @param mixed        $nullable
      */
     public function addETagProperty($resourceType, $name, $typeCode, $defaultValue = null, $nullable = false)
     {
@@ -509,11 +513,11 @@ class SimpleMetadataProvider implements IMetadataProvider
     /**
      * To add a resource reference property.
      *
-     * @param ResourceEntityType    $resourceType   The resource type to add the resource
+     * @param ResourceEntityType $resourceType      The resource type to add the resource
      *                                              reference property to
-     * @param string                $name           The name of the property to add
-     * @param ResourceSet           $targetResourceSet The resource set the resource reference
-     *                                               property points to
+     * @param string             $name              The name of the property to add
+     * @param ResourceSet        $targetResourceSet The resource set the resource reference
+     *                                              property points to
      */
     public function addResourceReferenceProperty($resourceType, $name, $targetResourceSet)
     {
@@ -528,12 +532,12 @@ class SimpleMetadataProvider implements IMetadataProvider
     /**
      * To add a 1:N resource reference property.
      *
-     * @param ResourceType $sourceResourceType  The resource type to add the resource
-     *                                          reference property from
-     * @param ResourceType $targetResourceType  The resource type to add the resource
-     *                                          reference property to
-     * @param string $sourceProperty            The name of the property to add, on source type
-     * @param string $targetProperty            The name of the property to add, on target type
+     * @param ResourceType $sourceResourceType The resource type to add the resource
+     *                                         reference property from
+     * @param ResourceType $targetResourceType The resource type to add the resource
+     *                                         reference property to
+     * @param string       $sourceProperty     The name of the property to add, on source type
+     * @param string       $targetProperty     The name of the property to add, on target type
      */
     public function addResourceReferencePropertyBidirectional(
         ResourceEntityType $sourceResourceType,
@@ -566,18 +570,18 @@ class SimpleMetadataProvider implements IMetadataProvider
      * To add a navigation property (resource set or resource reference)
      * to a resource type.
      *
-     * @param ResourceEntityType   $sourceResourceType   The resource type to add
-     *                                                   the resource reference
-     *                                                   or resource
-     *                                                   reference set property to
-     * @param string               $name                 The name of the
-     *                                                   property to add
-     * @param ResourceSet          $targetResourceSet    The resource set the
-     *                                                   resource reference
-     *                                                   or reference
-     *                                                   set property
-     *                                                   points to
-     * @param string               $resourceMult         The multiplicity of relation being added
+     * @param ResourceEntityType $sourceResourceType The resource type to add
+     *                                               the resource reference
+     *                                               or resource
+     *                                               reference set property to
+     * @param string             $name               The name of the
+     *                                               property to add
+     * @param ResourceSet        $targetResourceSet  The resource set the
+     *                                               resource reference
+     *                                               or reference
+     *                                               set property
+     *                                               points to
+     * @param string             $resourceMult       The multiplicity of relation being added
      */
     private function addReferencePropertyInternal(
         ResourceEntityType $sourceResourceType,
@@ -639,18 +643,18 @@ class SimpleMetadataProvider implements IMetadataProvider
      * To add a navigation property (resource set or resource reference)
      * to a resource type.
      *
-     * @param ResourceEntityType   $sourceResourceType   The source resource type to add
-     *                                                   the resource reference
-     *                                                   or resource reference set property to
-     * @param ResourceEntityType   $targetResourceType   The target resource type to add
-     *                                                   the resource reference
-     *                                                   or resource reference set property to
-     * @param string               $sourceProperty       The name of the
-     *                                                   property to add to source type
-     * @param string               $targetProperty       The name of the
-     *                                                   property to add to target type
-     * @param string               $sourceMultiplicity   The multiplicity at the source end of relation
-     * @param string               $targetMultiplicity   The multiplicity at the target end of relation
+     * @param ResourceEntityType $sourceResourceType The source resource type to add
+     *                                               the resource reference
+     *                                               or resource reference set property to
+     * @param ResourceEntityType $targetResourceType The target resource type to add
+     *                                               the resource reference
+     *                                               or resource reference set property to
+     * @param string             $sourceProperty     The name of the
+     *                                               property to add to source type
+     * @param string             $targetProperty     The name of the
+     *                                               property to add to target type
+     * @param string             $sourceMultiplicity The multiplicity at the source end of relation
+     * @param string             $targetMultiplicity The multiplicity at the target end of relation
      */
     private function addReferencePropertyInternalBidirectional(
         ResourceEntityType $sourceResourceType,
@@ -749,10 +753,10 @@ class SimpleMetadataProvider implements IMetadataProvider
     /**
      * To add a resource set reference property.
      *
-     * @param ResourceEntityType    $resourceType   The resource type to add the
+     * @param ResourceEntityType $resourceType      The resource type to add the
      *                                              resource reference set property to
-     * @param string                $name           The name of the property to add
-     * @param ResourceSet           $targetResourceSet The resource set the resource
+     * @param string             $name              The name of the property to add
+     * @param ResourceSet        $targetResourceSet The resource set the resource
      *                                              reference set property points to
      */
     public function addResourceSetReferenceProperty(ResourceEntityType $resourceType, $name, $targetResourceSet)
@@ -768,12 +772,12 @@ class SimpleMetadataProvider implements IMetadataProvider
     /**
      * To add a M:N resource reference property.
      *
-     * @param ResourceEntityType    $sourceResourceType     The resource type to add the resource
-     *                                                      reference property from
-     * @param ResourceEntityType    $targetResourceType     The resource type to add the resource
-     *                                                      reference property to
-     * @param string                $sourceProperty         The name of the property to add, on source type
-     * @param string                $targetProperty         The name of the property to add, on target type
+     * @param ResourceEntityType $sourceResourceType The resource type to add the resource
+     *                                               reference property from
+     * @param ResourceEntityType $targetResourceType The resource type to add the resource
+     *                                               reference property to
+     * @param string             $sourceProperty     The name of the property to add, on source type
+     * @param string             $targetProperty     The name of the property to add, on target type
      */
     public function addResourceSetReferencePropertyBidirectional(
         ResourceEntityType $sourceResourceType,
@@ -805,12 +809,12 @@ class SimpleMetadataProvider implements IMetadataProvider
     /**
      * To add a 1-1 resource reference.
      *
-     * @param ResourceEntityType    $sourceResourceType     The resource type to add the resource
-     *                                                      reference property from
-     * @param ResourceEntityType    $targetResourceType     The resource type to add the resource
-     *                                                      reference property to
-     * @param string                $sourceProperty         The name of the property to add, on source type
-     * @param string                $targetProperty         The name of the property to add, on target type
+     * @param ResourceEntityType $sourceResourceType The resource type to add the resource
+     *                                               reference property from
+     * @param ResourceEntityType $targetResourceType The resource type to add the resource
+     *                                               reference property to
+     * @param string             $sourceProperty     The name of the property to add, on source type
+     * @param string             $targetProperty     The name of the property to add, on target type
      */
     public function addResourceReferenceSinglePropertyBidirectional(
         ResourceEntityType $sourceResourceType,
@@ -842,10 +846,10 @@ class SimpleMetadataProvider implements IMetadataProvider
     /**
      * To add a complex property to entity or complex type.
      *
-     * @param ResourceType          $targetResourceType     The resource type to which the complex property needs to add
-     * @param string                $name                   name of the complex property
-     * @param ResourceComplexType   $complexResourceType    complex resource type
-     * @param bool                  $isBag                  complex type is bag or not
+     * @param ResourceType        $targetResourceType  The resource type to which the complex property needs to add
+     * @param string              $name                name of the complex property
+     * @param ResourceComplexType $complexResourceType complex resource type
+     * @param bool                $isBag               complex type is bag or not
      *
      * @return ResourceProperty
      */

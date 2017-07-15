@@ -247,18 +247,18 @@ class RequestDescription
 
         //see http://www.odata.org/documentation/odata-v2-documentation/overview/#ProtocolVersioning
         //if requestVersion isn't there, use Service Max Version
-        $this->requestVersion = is_null($requestVersion)
+        $this->requestVersion = null === $requestVersion
             ? $serviceMaxVersion
             : self::parseVersionHeader($requestVersion, ODataConstants::ODATAVERSIONHEADER);
 
         //if max version isn't there, use the request version
-        $this->requestMaxVersion = is_null($maxRequestVersion)
+        $this->requestMaxVersion = null === $maxRequestVersion
             ? $this->requestVersion
             : self::parseVersionHeader($maxRequestVersion, ODataConstants::ODATAMAXVERSIONHEADER);
 
         //if it's OData v3..things change a bit
         if ($this->maxServiceVersion == Version::v3()) {
-            if (is_null($maxRequestVersion)) {
+            if (null === $maxRequestVersion) {
                 //if max request version isn't specified we use the service max version instead of the request version
                 //thus we favour newer versions
                 $this->requestMaxVersion = $this->maxServiceVersion;
@@ -850,7 +850,7 @@ class RequestDescription
         return $this->lastSegment->isSingleResult()
             && ($this->queryType != QueryType::COUNT())
             && !$this->isLinkUri()
-            && (is_null($this->rootProjectionNode)
+            && (null === $this->rootProjectionNode
                 || !($this->rootProjectionNode->isExpansionSpecified())
                 );
     }
@@ -862,7 +862,7 @@ class RequestDescription
      */
     public static function getKnownDataServiceVersions()
     {
-        if (is_null(self::$knownDataServiceVersions)) {
+        if (null === self::$knownDataServiceVersions) {
             self::$knownDataServiceVersions = [
                 new Version(1, 0),
                 new Version(2, 0),

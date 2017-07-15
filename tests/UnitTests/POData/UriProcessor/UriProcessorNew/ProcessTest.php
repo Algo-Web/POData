@@ -2,6 +2,7 @@
 
 namespace UnitTests\POData\UriProcessor\UriProcessorNew;
 
+use Mockery as m;
 use POData\Common\ODataException;
 use POData\Common\Url;
 use POData\Common\Version;
@@ -21,7 +22,6 @@ use POData\UriProcessor\UriProcessor;
 use POData\UriProcessor\UriProcessorNew;
 use TypeError;
 use UnitTests\POData\TestCase;
-use Mockery as m;
 
 class ProcessTest extends TestCase
 {
@@ -153,7 +153,7 @@ class ProcessTest extends TestCase
         $remix->shouldReceive('getService')->andReturn($service);
         $remix->shouldReceive('getRequest->getSegments')->andReturn([$segment]);
 
-        $expected = "assert(): Invalid property kind type for resource retrieval failed";
+        $expected = 'assert(): Invalid property kind type for resource retrieval failed';
         $actual = null;
 
         try {

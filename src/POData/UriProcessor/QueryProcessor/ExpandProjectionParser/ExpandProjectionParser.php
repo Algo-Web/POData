@@ -131,7 +131,7 @@ class ExpandProjectionParser
      */
     private function parseExpand($expand)
     {
-        if (!is_null($expand)) {
+        if (null !== $expand) {
             $pathSegments = $this->readExpandOrSelect($expand, false);
             $this->buildProjectionTree($pathSegments);
             $this->rootProjectionNode->setExpansionSpecified();
@@ -153,7 +153,7 @@ class ExpandProjectionParser
      */
     private function parseSelect($select)
     {
-        if (is_null($select)) {
+        if (null === $select) {
             $this->rootProjectionNode->markSubtreeAsSelected();
         } else {
             $pathSegments = $this->readExpandOrSelect($select, true);
@@ -169,9 +169,9 @@ class ExpandProjectionParser
     /**
      * Build 'Projection Tree' from the given expand path segments.
      *
-     * @param array<array>      $expandPathSegments Collection of expand paths
+     * @param array<array> $expandPathSegments Collection of expand paths
      *
-     * @throws ODataException                       If any error occurs while processing the expand path segments
+     * @throws ODataException If any error occurs while processing the expand path segments
      */
     private function buildProjectionTree($expandPathSegments)
     {
@@ -184,7 +184,7 @@ class ExpandProjectionParser
                     = $resourceType->resolveProperty(
                         $expandSubPathSegment
                     );
-                if (is_null($resourceProperty)) {
+                if (null === $resourceProperty) {
                     throw ODataException::createSyntaxError(
                         Messages::expandProjectionParserPropertyNotFound(
                             $resourceType->getFullName(),
@@ -208,7 +208,7 @@ class ExpandProjectionParser
                         $resourceProperty
                     );
 
-                if (is_null($resourceSetWrapper)) {
+                if (null === $resourceSetWrapper) {
                     throw ODataException::createBadRequestError(
                         Messages::badRequestInvalidPropertyNameSpecified(
                             $resourceType->getFullName(),
@@ -245,7 +245,7 @@ class ExpandProjectionParser
                 }
 
                 $node = $currentNode->findNode($expandSubPathSegment);
-                if (is_null($node)) {
+                if (null === $node) {
                     $maxResultCount = $this->providerWrapper
                         ->getConfiguration()->getMaxResultsPerCollection();
                     $node = new ExpandedProjectionNode(
@@ -302,7 +302,7 @@ class ExpandProjectionParser
                     = $currentResourceType->resolveProperty(
                         $selectSubPathSegment
                     );
-                if (is_null($resourceProperty)) {
+                if (null === $resourceProperty) {
                     throw ODataException::createSyntaxError(
                         Messages::expandProjectionParserPropertyNotFound(
                             $currentResourceType->getFullName(),
@@ -342,7 +342,7 @@ class ExpandProjectionParser
                 }
 
                 $node = $currentNode->findNode($selectSubPathSegment);
-                if (is_null($node)) {
+                if (null === $node) {
                     if (!$isLastSegment) {
                         throw ODataException::createBadRequestError(
                             Messages::expandProjectionParserPropertyWithoutMatchingExpand(
@@ -373,7 +373,7 @@ class ExpandProjectionParser
      * @param bool   $isSelect true means $value is value of select clause
      *                         else value of expand clause
      *
-     * @return array<array>     An array of 'PathSegment's, each of which is array of 'SubPathSegment's
+     * @return array<array> An array of 'PathSegment's, each of which is array of 'SubPathSegment's
      */
     private function readExpandOrSelect($value, $isSelect)
     {

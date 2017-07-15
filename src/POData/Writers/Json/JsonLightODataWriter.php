@@ -154,7 +154,7 @@ class JsonLightODataWriter extends JsonODataV2Writer
             return $this;
         }
 
-        if (is_null($property->value)) {
+        if (null === $property->value) {
             //it appears full metadata doesn't output types for nulls...
             return $this;
         }
@@ -215,7 +215,7 @@ class JsonLightODataWriter extends JsonODataV2Writer
         if ($link->isExpanded) {
             $this->_writer->writeName($link->title);
 
-            if (is_null($link->expandedResult)) {
+            if (null === $link->expandedResult) {
                 $this->_writer->writeValue('null');
             } else {
                 $this->writeExpandedLink($link);

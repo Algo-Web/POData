@@ -86,8 +86,8 @@ class ResourcePropertyTest extends TestCase
 
     public function testGetMimeType()
     {
-        $name = "name";
-        $mimeName = "foo";
+        $name = 'name';
+        $mimeName = 'foo';
         $kind = ResourcePropertyKind::RESOURCE_REFERENCE;
         $entKind = ResourceTypeKind::ENTITY;
         $type = m::mock(ResourceType::class);
@@ -99,8 +99,8 @@ class ResourcePropertyTest extends TestCase
 
     public function testResourceTypePropertyMismatchOnPrimitive()
     {
-        $name = "name";
-        $mimeName = "foo";
+        $name = 'name';
+        $mimeName = 'foo';
         $kind = ResourcePropertyKind::PRIMITIVE;
         $entKind = ResourceTypeKind::ENTITY;
         $type = m::mock(ResourceType::class);
@@ -119,8 +119,8 @@ class ResourcePropertyTest extends TestCase
 
     public function testResourceTypePropertyMismatchOnResource()
     {
-        $name = "name";
-        $mimeName = "foo";
+        $name = 'name';
+        $mimeName = 'foo';
         $kind = ResourcePropertyKind::RESOURCE_REFERENCE;
         $entKind = ResourceTypeKind::PRIMITIVE;
         $type = m::mock(ResourceType::class);

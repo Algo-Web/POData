@@ -261,7 +261,7 @@ class UriProcessor implements IUriProcessor
             } elseif ($segment->getTargetSource() == TargetSource::ENTITY_SET) {
                 $this->handleSegmentTargetsToResourceSet($segment);
             } elseif ($requestTargetKind == TargetKind::RESOURCE()) {
-                if (is_null($segment->getPrevious()->getResult())) {
+                if (null === $segment->getPrevious()->getResult()) {
                     throw ODataException::createResourceNotFoundError(
                         $segment->getPrevious()->getIdentifier()
                     );
@@ -276,7 +276,7 @@ class UriProcessor implements IUriProcessor
                 break;
             } else {
                 if ($requestTargetKind == TargetKind::MEDIA_RESOURCE()) {
-                    if (is_null($segment->getPrevious()->getResult())) {
+                    if (null === $segment->getPrevious()->getResult()) {
                         throw ODataException::createResourceNotFoundError(
                             $segment->getPrevious()->getIdentifier()
                         );
@@ -291,9 +291,9 @@ class UriProcessor implements IUriProcessor
                 }
 
                 $value = $segment->getPrevious()->getResult();
-                while (!is_null($segment)) {
+                while (null !== $segment) {
                     //TODO: what exactly is this doing here?  Once a null's found it seems everything will be null
-                    if (!is_null($value)) {
+                    if (null !== $value) {
                         $value = null;
                     } else {
                         // This is theoretically impossible to reach, but should that be changed, this will need to call
@@ -307,7 +307,7 @@ class UriProcessor implements IUriProcessor
 
                     $segment->setResult($value);
                     $segment = $segment->getNext();
-                    if (!is_null($segment) && ODataConstants::URI_VALUE_SEGMENT == $segment->getIdentifier()) {
+                    if (null !== $segment && ODataConstants::URI_VALUE_SEGMENT == $segment->getIdentifier()) {
                         $segment->setResult($value);
                         $segment = $segment->getNext();
                     }
@@ -316,7 +316,7 @@ class UriProcessor implements IUriProcessor
                 break;
             }
 
-            if (is_null($segment->getNext())
+            if (null === $segment->getNext()
                 || ODataConstants::URI_COUNT_SEGMENT == $segment->getNext()->getIdentifier()
             ) {
                 $this->applyQueryOptions($segment, $callback);
@@ -481,14 +481,14 @@ class UriProcessor implements IUriProcessor
     {
         //Apply (implicit and explicit) $orderby option
         $internalOrderByInfo = $this->getRequest()->getInternalOrderByInfo();
-        if (!is_null($internalOrderByInfo)) {
+        if (null !== $internalOrderByInfo) {
             $orderByFunction = $internalOrderByInfo->getSorterFunction();
             usort($result, $orderByFunction);
         }
 
         //Apply $skiptoken option
         $internalSkipTokenInfo = $this->getRequest()->getInternalSkipTokenInfo();
-        if (!is_null($internalSkipTokenInfo)) {
+        if (null !== $internalSkipTokenInfo) {
             $matchingIndex = $internalSkipTokenInfo->getIndexOfFirstEntryInTheNextPage($result);
             $result = array_slice($result, $matchingIndex);
         }
@@ -497,7 +497,7 @@ class UriProcessor implements IUriProcessor
         if (!empty($result)) {
             $top = $this->getRequest()->getTopCount();
             $skip = $this->getRequest()->getSkipCount();
-            if (is_null($skip)) {
+            if (null === $skip) {
                 $skip = 0;
             }
 

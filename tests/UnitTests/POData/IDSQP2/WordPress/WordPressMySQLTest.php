@@ -640,15 +640,15 @@ class WordPressMySQLTest extends TestCase
         $dataService = new WordPressDataService($host);
 
         $uriProcessor = $dataService->handleRequest();
-        $check = !is_null($uriProcessor);
+        $check = null !== $uriProcessor;
         $this->assertTrue($check);
 
         $requestDescription = $uriProcessor->getRequest();
-        $check = !is_null($requestDescription);
+        $check = null !== $requestDescription;
         $this->assertTrue($check);
 
         $filterInfo = $requestDescription->getFilterInfo();
-        $check = !is_null($filterInfo);
+        $check = null !== $filterInfo;
         $this->assertTrue($check);
 
         $mysqlexpression = $filterInfo->getExpressionAsString();

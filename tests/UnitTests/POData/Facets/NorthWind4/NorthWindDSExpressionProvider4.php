@@ -195,7 +195,7 @@ class NorthWindDSExpressionProvider4 implements IExpressionProvider
     {
         if (is_bool($value)) {
             return var_export($value, true);
-        } elseif (is_null($value)) {
+        } elseif (null === $value) {
             return var_export(null, true);
         }
 
@@ -213,7 +213,7 @@ class NorthWindDSExpressionProvider4 implements IExpressionProvider
     {
         $parent = $expression;
         $variable = null;
-        $isFirstLevelPrimitive = is_null($parent->getParent());
+        $isFirstLevelPrimitive = null === $parent->getParent();
         if (!$isFirstLevelPrimitive) {
             // This propery access sub-expression in the $filter need access
             // to level 2 or greater property of a complex or resource reference

@@ -43,7 +43,7 @@ class OrderByInfo
     /**
      * Constructs new instance of OrderByInfo.
      *
-     * @param OrderByPathSegment[] $orderByPathSegments Order by path segments
+     * @param OrderByPathSegment[]                 $orderByPathSegments  Order by path segments
      * @param array <array<ResourceProperty>>|null $navigationProperties navigation properties used in the order by clause
      */
     public function __construct($orderByPathSegments, $navigationProperties)
@@ -60,7 +60,7 @@ class OrderByInfo
             );
         }
 
-        if (!is_null($navigationProperties)) {
+        if (null !== $navigationProperties) {
             if (!is_array($navigationProperties)) {
                 throw new \InvalidArgumentException(
                     Messages::orderByInfoNaviUsedArgumentShouldBeNullOrNonEmptyArray()

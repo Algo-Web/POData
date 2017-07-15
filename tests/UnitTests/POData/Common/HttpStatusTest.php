@@ -58,6 +58,8 @@ class HttpStatusTest extends TestCase
 
     /**
      * @dataProvider codeDataProvider
+     * @param mixed $code
+     * @param mixed $expected
      */
     public function testCode($code, $expected)
     {

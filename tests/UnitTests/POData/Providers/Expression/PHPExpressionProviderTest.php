@@ -31,6 +31,10 @@ class PHPExpressionProviderTest extends TestCase
 
     /**
      * @dataProvider onLogicalExpressionProvider
+     * @param mixed $type
+     * @param mixed $left
+     * @param mixed $right
+     * @param mixed $expected
      */
     public function testonLogicalExpression($type, $left, $right, $expected)
     {
@@ -66,6 +70,10 @@ class PHPExpressionProviderTest extends TestCase
 
     /**
      * @dataProvider onArithmeticExpressionProvider
+     * @param mixed $type
+     * @param mixed $left
+     * @param mixed $right
+     * @param mixed $expected
      */
     public function testonArithmeticExpression($type, $left, $right, $expected)
     {
@@ -102,6 +110,10 @@ class PHPExpressionProviderTest extends TestCase
 
     /**
      * @dataProvider onRelationalExpressionProvider
+     * @param mixed $type
+     * @param mixed $left
+     * @param mixed $right
+     * @param mixed $expected
      */
     public function testonRelationalExpression($type, $left, $right, $expected)
     {
@@ -134,6 +146,9 @@ class PHPExpressionProviderTest extends TestCase
 
     /**
      * @dataProvider onUnaryExpressionProvider
+     * @param mixed $type
+     * @param mixed $arg
+     * @param mixed $expected
      */
     public function testonUnaryExpression($type, $arg, $expected)
     {
@@ -200,6 +215,9 @@ class PHPExpressionProviderTest extends TestCase
 
     /**
      * @dataProvider onFunctionCallExpressionProvider
+     * @param mixed $type
+     * @param mixed $params
+     * @param mixed $expected
      */
     public function testonFunctionCallExpression($type, $params, $expected)
     {

@@ -6,6 +6,7 @@ use AlgoWeb\ODataMetadata\IsOK;
 use AlgoWeb\ODataMetadata\MetadataV3\edm\EntityContainer\FunctionImportAnonymousType;
 use AlgoWeb\ODataMetadata\MetadataV3\edm\TComplexTypeType;
 use AlgoWeb\ODataMetadata\MetadataV3\edm\TEntityTypeType;
+use Mockery as m;
 use POData\ObjectModel\IObjectSerialiser;
 use POData\OperationContext\ServiceHost;
 use POData\Providers\Metadata\ResourceComplexType;
@@ -17,7 +18,6 @@ use POData\Providers\Metadata\SimpleMetadataProvider;
 use POData\Providers\Stream\StreamProviderWrapper;
 use UnitTests\POData\BaseServiceDummy;
 use UnitTests\POData\TestCase;
-use Mockery as m;
 
 class SimpleMetadataProviderSingletonTest extends SimpleMetadataProviderTest
 {
@@ -26,7 +26,7 @@ class SimpleMetadataProviderSingletonTest extends SimpleMetadataProviderTest
         $refDummy = $this->createDummyEntityType();
 
         $functionName = [get_class($this), 'exampleSingleton'];
-        $name = "name";
+        $name = 'name';
         $return = m::mock(ResourceEntityType::class);
         $return->shouldReceive('getName')->andReturn('name');
 
@@ -45,10 +45,10 @@ class SimpleMetadataProviderSingletonTest extends SimpleMetadataProviderTest
         $refDummy = $this->createDummyEntityType();
 
         $functionName = [get_class($this), 'exampleSingleton'];
-        $expected = "Singleton name already exists";
+        $expected = 'Singleton name already exists';
         $actual = null;
 
-        $name = "name";
+        $name = 'name';
         $return = m::mock(ResourceEntityType::class);
         $return->shouldReceive('getName')->andReturn('name');
 
@@ -67,10 +67,10 @@ class SimpleMetadataProviderSingletonTest extends SimpleMetadataProviderTest
     public function testCreateSingletonWithNoMapping()
     {
         $functionName = [get_class($this), 'exampleSingleton'];
-        $expected = "Mapping not defined for name";
+        $expected = 'Mapping not defined for name';
         $actual = null;
 
-        $name = "name";
+        $name = 'name';
         $return = m::mock(ResourceEntityType::class);
         $return->shouldReceive('getName')->andReturn('name');
 
@@ -104,7 +104,7 @@ class SimpleMetadataProviderSingletonTest extends SimpleMetadataProviderTest
 
     public function testCreateSingletonNameCollideWithExistingEntitySet()
     {
-        $expected = "Resource set with same name, fores, exists";
+        $expected = 'Resource set with same name, fores, exists';
         $actual = null;
 
         $refDummy = $this->createDummyEntityType();
@@ -140,7 +140,7 @@ class SimpleMetadataProviderSingletonTest extends SimpleMetadataProviderTest
 
     public function testCallNonExistentSingleton()
     {
-        $expected = "Requested singleton does not exist";
+        $expected = 'Requested singleton does not exist';
         $actual = null;
 
         $foo = new SimpleMetadataProvider('string', 'number');
@@ -156,7 +156,7 @@ class SimpleMetadataProviderSingletonTest extends SimpleMetadataProviderTest
 
     public function testCallNonExistentSingletonWithArrayName()
     {
-        $expected = "array_key_exists(): The first argument should be either a string or an integer";
+        $expected = 'array_key_exists(): The first argument should be either a string or an integer';
         $actual = null;
 
         $foo = new SimpleMetadataProvider('string', 'number');
@@ -172,7 +172,7 @@ class SimpleMetadataProviderSingletonTest extends SimpleMetadataProviderTest
 
     public function testCallNonExistentSingletonWithObjectName()
     {
-        $expected = "array_key_exists(): The first argument should be either a string or an integer";
+        $expected = 'array_key_exists(): The first argument should be either a string or an integer';
         $actual = null;
 
         $foo = new SimpleMetadataProvider('string', 'number');

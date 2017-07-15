@@ -22,6 +22,7 @@ class NavigationTest extends TestCase
     }
 
     /**
+     * @param  mixed $kind
      * @return IType
      */
     public function getAsIType($kind = ResourceTypeKind::COMPLEX)

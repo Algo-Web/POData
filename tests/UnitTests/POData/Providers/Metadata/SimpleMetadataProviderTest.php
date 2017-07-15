@@ -421,11 +421,11 @@ class SimpleMetadataProviderTest extends TestCase
         $secondExpectedKey = 'aft_backRelation_fore';
 
         $result = $foo->resolveAssociationSet($firstExpectedKey);
-        $this->assertNotNull($result, "First association set is null");
+        $this->assertNotNull($result, 'First association set is null');
         $this->assertTrue($result instanceof ResourceAssociationSet, get_class($result));
         $this->assertEquals($firstExpectedKey, $result->getName());
         $result = $foo->resolveAssociationSet($secondExpectedKey);
-        $this->assertNotNull($result, "Second association set is null");
+        $this->assertNotNull($result, 'Second association set is null');
         $this->assertTrue($result instanceof ResourceAssociationSet, get_class($result));
         $this->assertEquals($secondExpectedKey, $result->getName());
     }
@@ -442,7 +442,7 @@ class SimpleMetadataProviderTest extends TestCase
         $this->assertTrue($fore instanceof ResourceType);
         $this->assertTrue($aft instanceof ResourceType);
 
-        $expected = "Source and target properties must both be strings";
+        $expected = 'Source and target properties must both be strings';
         $actual = null;
 
         try {
@@ -465,7 +465,7 @@ class SimpleMetadataProviderTest extends TestCase
         $this->assertTrue($fore instanceof ResourceType);
         $this->assertTrue($aft instanceof ResourceType);
 
-        $expected = "Source and target properties must both be strings";
+        $expected = 'Source and target properties must both be strings';
         $actual = null;
 
         try {
@@ -488,7 +488,7 @@ class SimpleMetadataProviderTest extends TestCase
         $this->assertTrue($fore instanceof ResourceType);
         $this->assertTrue($aft instanceof ResourceType);
 
-        $expected = "Source and target properties must both be strings";
+        $expected = 'Source and target properties must both be strings';
         $actual = null;
 
         try {
@@ -511,7 +511,7 @@ class SimpleMetadataProviderTest extends TestCase
         $this->assertTrue($fore instanceof ResourceType);
         $this->assertTrue($aft instanceof ResourceType);
 
-        $expected = "Source property name must be different from source resource name.";
+        $expected = 'Source property name must be different from source resource name.';
         $actual = null;
 
         try {
@@ -534,7 +534,7 @@ class SimpleMetadataProviderTest extends TestCase
         $this->assertTrue($fore instanceof ResourceType);
         $this->assertTrue($aft instanceof ResourceType);
 
-        $expected = "Target property name must be different from target resource name.";
+        $expected = 'Target property name must be different from target resource name.';
         $actual = null;
 
         try {
@@ -557,7 +557,7 @@ class SimpleMetadataProviderTest extends TestCase
         $this->assertTrue($fore instanceof ResourceType);
         $this->assertTrue($aft instanceof ResourceType);
 
-        $expected = "Failed to retrieve the custom state from fore";
+        $expected = 'Failed to retrieve the custom state from fore';
         $actual = null;
 
         try {
@@ -583,7 +583,7 @@ class SimpleMetadataProviderTest extends TestCase
         $this->assertTrue($aft instanceof ResourceType);
         $fore->setCustomState($forwardSet);
 
-        $expected = "Failed to retrieve the custom state from aft";
+        $expected = 'Failed to retrieve the custom state from aft';
         $actual = null;
 
         try {
@@ -618,11 +618,11 @@ class SimpleMetadataProviderTest extends TestCase
         $secondExpectedKey = 'aft_backRelation_fore';
 
         $result = $foo->resolveAssociationSet($firstExpectedKey);
-        $this->assertNotNull($result, "First association set is null");
+        $this->assertNotNull($result, 'First association set is null');
         $this->assertTrue($result instanceof ResourceAssociationSet, get_class($result));
         $this->assertEquals($firstExpectedKey, $result->getName());
         $result = $foo->resolveAssociationSet($secondExpectedKey);
-        $this->assertNotNull($result, "Second association set is null");
+        $this->assertNotNull($result, 'Second association set is null');
         $this->assertTrue($result instanceof ResourceAssociationSet, get_class($result));
         $this->assertEquals($secondExpectedKey, $result->getName());
 
@@ -660,11 +660,11 @@ class SimpleMetadataProviderTest extends TestCase
         $secondExpectedKey = 'aft_backRelation_fore';
 
         $result = $foo->resolveAssociationSet($firstExpectedKey);
-        $this->assertNotNull($result, "First association set is null");
+        $this->assertNotNull($result, 'First association set is null');
         $this->assertTrue($result instanceof ResourceAssociationSet, get_class($result));
         $this->assertEquals($firstExpectedKey, $result->getName());
         $result = $foo->resolveAssociationSet($secondExpectedKey);
-        $this->assertNotNull($result, "Second association set is null");
+        $this->assertNotNull($result, 'Second association set is null');
         $this->assertTrue($result instanceof ResourceAssociationSet, get_class($result));
         $this->assertEquals($secondExpectedKey, $result->getName());
 
@@ -702,11 +702,11 @@ class SimpleMetadataProviderTest extends TestCase
         $secondExpectedKey = 'aft_backRelation_fore';
 
         $result = $foo->resolveAssociationSet($firstExpectedKey);
-        $this->assertNotNull($result, "First association set is null");
+        $this->assertNotNull($result, 'First association set is null');
         $this->assertTrue($result instanceof ResourceAssociationSet, get_class($result));
         $this->assertEquals($firstExpectedKey, $result->getName());
         $result = $foo->resolveAssociationSet($secondExpectedKey);
-        $this->assertNotNull($result, "Second association set is null");
+        $this->assertNotNull($result, 'Second association set is null');
         $this->assertTrue($result instanceof ResourceAssociationSet, get_class($result));
         $this->assertEquals($secondExpectedKey, $result->getName());
 

@@ -192,10 +192,10 @@ interface IStreamProvider2
 
     /**
      * @param $entity
-     * @param ResourceType $resourceType
-     * @param ResourceStreamInfo|null $resourceStreamInfo
-     * @param IOperationContext $operationContext
-     * @param null $relativeUri
+     * @param  ResourceType            $resourceType
+     * @param  ResourceStreamInfo|null $resourceStreamInfo
+     * @param  IOperationContext       $operationContext
+     * @param  null                    $relativeUri
      * @return mixed
      */
     public function getDefaultStreamEditMediaUri(

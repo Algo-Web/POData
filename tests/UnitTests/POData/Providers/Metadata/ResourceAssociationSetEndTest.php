@@ -44,11 +44,11 @@ class ResourceAssociationSetEndTest extends TestCase
         $property = new \StdClass();
 
         // Type-hint mismatch error message is slightly different in PHP 7.1
-        $expected = "Argument 3 passed to POData\\Providers\\Metadata\\ResourceAssociationSetEnd::__construct() must be"
-                    ." an instance of POData\\Providers\\Metadata\\ResourceProperty, instance of stdClass given,";
-        $expected71 = "Argument 3 passed to POData\\Providers\\Metadata\\ResourceAssociationSetEnd::__construct() must"
-                      ." be an instance of POData\\Providers\\Metadata\\ResourceProperty or null, instance of stdClass"
-                      ." given,";
+        $expected = 'Argument 3 passed to POData\\Providers\\Metadata\\ResourceAssociationSetEnd::__construct() must be'
+                    .' an instance of POData\\Providers\\Metadata\\ResourceProperty, instance of stdClass given,';
+        $expected71 = 'Argument 3 passed to POData\\Providers\\Metadata\\ResourceAssociationSetEnd::__construct() must'
+                      .' be an instance of POData\\Providers\\Metadata\\ResourceProperty or null, instance of stdClass'
+                      .' given,';
         $actual = null;
 
         try {
@@ -62,7 +62,7 @@ class ResourceAssociationSetEndTest extends TestCase
         }
 
         // If we're running under PHP 7.1 or later, use "or null" expectation
-        $targ = version_compare(phpversion(), "7.1", ">=") ? $expected71 : $expected;
+        $targ = version_compare(phpversion(), '7.1', '>=') ? $expected71 : $expected;
 
         $this->assertStringStartsWith($targ, $actual);
     }

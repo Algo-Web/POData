@@ -63,14 +63,14 @@ interface IMetadataProvider
      * $resourceType The collection returned should NOT include the type
      * passed in as a parameter.
      *
-     * @param ResourceEntityType    $resourceType   Resource to get derived resource types from
+     * @param ResourceEntityType $resourceType Resource to get derived resource types from
      *
      * @return ResourceType[]
      */
     public function getDerivedTypes(ResourceEntityType $resourceType);
 
     /**
-     * @param ResourceEntityType    $resourceType   Resource to check for derived resource types
+     * @param ResourceEntityType $resourceType Resource to check for derived resource types
      *
      * @return bool true if $resourceType represents an Entity Type which has derived Entity Types, else false
      */
@@ -80,12 +80,12 @@ interface IMetadataProvider
      * Gets the ResourceAssociationSet instance for the given source
      * association end.
      *
-     * @param ResourceSet           $resourceSet        Resource set of the source
-     *                                                  association end
-     * @param ResourceEntityType    $resourceType       Resource type of the source
-     *                                                  association end
-     * @param ResourceProperty      $resourceProperty   Resource property of the source
-     *                                                  association end
+     * @param ResourceSet        $resourceSet      Resource set of the source
+     *                                             association end
+     * @param ResourceEntityType $resourceType     Resource type of the source
+     *                                             association end
+     * @param ResourceProperty   $resourceProperty Resource property of the source
+     *                                             association end
      *
      * @return ResourceAssociationSet
      */
@@ -96,27 +96,27 @@ interface IMetadataProvider
     );
 
     /**
-     * Generate singleton wrapper
+     * Generate singleton wrapper.
      *
-     * @param string                $name               Name of singleton
-     * @param ResourceType          $returnType         Return type wrapper
-     * @param string|array          $functionName       Function call to be wrapped
+     * @param string       $name         Name of singleton
+     * @param ResourceType $returnType   Return type wrapper
+     * @param string|array $functionName Function call to be wrapped
      *
      * @return mixed
      */
     public function createSingleton($name, ResourceType $returnType, $functionName);
 
     /**
-     * Get all singletons defined on this object
+     * Get all singletons defined on this object.
      *
      * @return array
      */
     public function getSingletons();
 
     /**
-     * Call $name singleton and return result
+     * Call $name singleton and return result.
      *
-     * @param string                $name               Singleton to call
+     * @param string $name Singleton to call
      *
      * @return mixed
      */

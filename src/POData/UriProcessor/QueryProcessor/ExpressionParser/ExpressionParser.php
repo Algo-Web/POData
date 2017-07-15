@@ -455,7 +455,7 @@ class ExpressionParser
     private function parsePropertyAccess(PropertyAccessExpression $parentExpression = null)
     {
         $identifier = $this->getCurrentToken()->getIdentifier();
-        if (is_null($parentExpression)) {
+        if (null === $parentExpression) {
             $parentResourceType = $this->resourceType;
         } else {
             $parentResourceType = $parentExpression->getResourceType();
@@ -463,7 +463,7 @@ class ExpressionParser
         }
 
         $resourceProperty = $parentResourceType->resolveProperty($identifier);
-        if (is_null($resourceProperty)) {
+        if (null === $resourceProperty) {
             throw ODataException::createSyntaxError(
                 Messages::expressionLexerNoPropertyInType(
                     $identifier,

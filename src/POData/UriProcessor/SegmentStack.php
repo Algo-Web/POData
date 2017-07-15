@@ -55,7 +55,7 @@ class SegmentStack
             throw new InvalidOperationException('segmentName must be a string');
         }
         $rootProjectionNode = $this->getRequest()->getRootProjectionNode();
-        if (!is_null($rootProjectionNode) && $rootProjectionNode->isExpansionSpecified()) {
+        if (null !== $rootProjectionNode && $rootProjectionNode->isExpansionSpecified()) {
             array_push($this->segmentNames, $segmentName);
             array_push($this->segmentResourceSetWrappers, $resourceSetWrapper);
             assert(count($this->segmentNames) == count($this->segmentResourceSetWrappers), $this->mismatch);

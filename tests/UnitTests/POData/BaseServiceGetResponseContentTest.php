@@ -43,6 +43,10 @@ class BaseServiceGetResponseContentTest extends TestCase
 
     /**
      * @dataProvider provider
+     * @param mixed $id
+     * @param mixed $acceptsHeader
+     * @param mixed $format
+     * @param mixed $expectedValue
      */
     public function testGetResponseContentType(
         $id,

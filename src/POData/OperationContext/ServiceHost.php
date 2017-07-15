@@ -90,7 +90,7 @@ class ServiceHost
      */
     public function __construct(IOperationContext $context = null, Request $incomingRequest)
     {
-        if (is_null($context)) {
+        if (null === $context) {
             $this->operationContext = new IlluminateOperationContext($incomingRequest);
         } else {
             $this->operationContext = $context;
@@ -117,7 +117,7 @@ class ServiceHost
      */
     public function getAbsoluteRequestUri()
     {
-        if (is_null($this->absoluteRequestUri)) {
+        if (null === $this->absoluteRequestUri) {
             $this->absoluteRequestUriAsString = $this->getOperationContext()->incomingRequest()->getRawUrl();
             // Validate the uri first
             try {
@@ -164,7 +164,7 @@ class ServiceHost
      */
     public function setServiceUri($serviceUri)
     {
-        if (is_null($this->absoluteServiceUri)) {
+        if (null === $this->absoluteServiceUri) {
             $isAbsoluteServiceUri = (strpos($serviceUri, 'http://') === 0)
                 || (strpos($serviceUri, 'https://') === 0);
             try {
@@ -178,8 +178,8 @@ class ServiceHost
             $endsWithSvc
                 = (substr_compare($lastSegment, '.svc', -strlen('.svc'), strlen('.svc')) === 0);
             if (!$endsWithSvc
-                || !is_null($this->absoluteServiceUri->getQuery())
-                || !is_null($this->absoluteServiceUri->getFragment())
+                || null !== $this->absoluteServiceUri->getQuery()
+                || null !== $this->absoluteServiceUri->getFragment()
             ) {
                 throw ODataException::createInternalServerError(Messages::hostMalFormedBaseUriInConfig(true));
             }
@@ -564,7 +564,7 @@ class ServiceHost
         $floor = floor($value/100);
         if ($floor >= 1 && $floor <= 5) {
             $statusDescription = HttpStatus::getStatusDescription($value);
-            if (!is_null($statusDescription)) {
+            if (null !== $statusDescription) {
                 $statusDescription = ' ' . $statusDescription;
             }
 

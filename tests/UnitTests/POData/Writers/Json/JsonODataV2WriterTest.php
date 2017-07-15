@@ -1435,6 +1435,10 @@ class JsonODataV2WriterTest extends TestCase
 
     /**
      * @dataProvider canHandleProvider
+     * @param mixed $id
+     * @param mixed $version
+     * @param mixed $contentType
+     * @param mixed $expected
      */
     public function testCanHandle($id, $version, $contentType, $expected)
     {

@@ -33,7 +33,7 @@ class HttpProcessUtility
         $acceptTypesEmpty = true;
         $foundExactMatch = false;
 
-        if (!is_null($acceptTypesText)) {
+        if (null !== $acceptTypesText) {
             $acceptTypes = self::mimeTypesFromAcceptHeaders($acceptTypesText);
             foreach ($acceptTypes as $acceptType) {
                 $acceptTypesEmpty = false;
@@ -106,7 +106,7 @@ class HttpProcessUtility
         $selectedPreferenceIndex = PHP_INT_MAX;
         $acceptable = false;
         $acceptTypesEmpty = true;
-        if (!is_null($acceptTypesText)) {
+        if (null !== $acceptTypesText) {
             $acceptTypes = self::mimeTypesFromAcceptHeaders($acceptTypesText);
             $numAvailable = count($availableTypes);
             foreach ($acceptTypes as $acceptType) {
@@ -433,8 +433,8 @@ class HttpProcessUtility
      * @param int    &$qualityValue After the method executes, the normalized qvalue
      * @param int    $textIndex
      *
-     * @throws HttpHeaderFailure    If any error occurred while reading and processing
-     *                              the quality factor
+     * @throws HttpHeaderFailure If any error occurred while reading and processing
+     *                           the quality factor
      */
     public static function readQualityValue($text, &$textIndex, &$qualityValue)
     {

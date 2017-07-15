@@ -251,7 +251,7 @@ class AtomODataWriter implements IODataWriter
             $this->writeBaseUriAndDefaultNamespaces();
         }
 
-        if (!is_null($entry->eTag)) {
+        if (null !== $entry->eTag) {
             $this->xmlWriter->startAttributeNs(
                 ODataConstants::ODATA_METADATA_NAMESPACE_PREFIX,
                 ODataConstants::ATOM_ETAG_ATTRIBUTE_NAME,
@@ -378,7 +378,7 @@ class AtomODataWriter implements IODataWriter
                 null
             );
 
-            if (!is_null($link->expandedResult)) {
+            if (null !== $link->expandedResult) {
                 if ($link->isCollection) {
                     $this->writeFeed($link->expandedResult);
                 } else {

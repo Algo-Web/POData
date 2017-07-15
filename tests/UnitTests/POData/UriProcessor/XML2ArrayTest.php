@@ -67,6 +67,7 @@ class XML2ArrayTest extends TestCase
 
     /**
      * @param mixed $invalidType
+     * @param mixed $emptyType
      *
      * @dataProvider provideEmptyTypes
      */

@@ -8,8 +8,8 @@ class ResourceComplexType extends ResourceType
 {
     /**
      * Create new instance of ResourceComplexType.
-     * @param \ReflectionClass      $instanceType   Instance type for the complex type
-     * @param TComplexTypeType      $complex        Object containing complex type metadata
+     * @param \ReflectionClass $instanceType Instance type for the complex type
+     * @param TComplexTypeType $complex      Object containing complex type metadata
      *
      * @throws \InvalidArgumentException
      */
