@@ -648,7 +648,7 @@ class ObjectModelSerializerBase
         $foundExpansions = false;
         $foundSelectionOnChild = false;
         $foundExpansionOnChild = false;
-        $expandedChildrenNeededToBeSelected = [];
+        $expandedChildrenToBeSelected = [];
         foreach ($expandedProjectionNode->getChildNodes() as $childNode) {
             if (!($childNode instanceof ExpandedProjectionNode)) {
                 $foundSelections = true;
@@ -677,7 +677,7 @@ class ObjectModelSerializerBase
                             $childNode->getPropertyName() . '/*'
                         );
                     } else {
-                        $expandedChildrenNeededToBeSelected[] = $childNode;
+                        $expandedChildrenToBeSelected[] = $childNode;
                     }
                 }
             }
@@ -693,7 +693,7 @@ class ObjectModelSerializerBase
         }
 
         if (!$expandedProjectionNode->canSelectAllProperties() || $foundSelections) {
-            foreach ($expandedChildrenNeededToBeSelected as $childToProject) {
+            foreach ($expandedChildrenToBeSelected as $childToProject) {
                 $this->appendSelectionOrExpandPath(
                     $selectionPaths,
                     $parentPathSegments,

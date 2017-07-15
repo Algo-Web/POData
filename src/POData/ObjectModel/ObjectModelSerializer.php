@@ -210,20 +210,19 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
     /**
      * Write top level bag resource.
      *
-     * @param QueryResult  &$BagValue     Results property contains the bag object to be written
-     * @param string       $propertyName  The name of the bag property
+     * @param QueryResult &$bagValue Results property contains the bag object to be written
+     * @param string $propertyName The name of the bag property
      * @param ResourceType &$resourceType Describes the type of bag object
-     *
      * @return ODataPropertyContent
      */
     public function writeTopLevelBagObject(
-        QueryResult &$BagValue,
+        QueryResult &$bagValue,
         $propertyName,
         ResourceType &$resourceType
     ) {
         $propertyContent = new ODataPropertyContent();
         $this->writeBagValue(
-            $BagValue->results,
+            $bagValue->results,
             $propertyName,
             $resourceType,
             null,
@@ -583,23 +582,25 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
     /**
      * Write value of a bag instance.
      *
-     * @param array/NULL           &$BagValue             Bag value to write
-     * @param string               $propertyName          Property name of the bag
-     * @param ResourceType         &$resourceType         Type describing the
+     * @param $bagValue
+     * @param string $propertyName Property name of the bag
+     * @param ResourceType &$resourceType Type describing the
      *                                                    bag value
-     * @param string               $relativeUri           Relative Url to the bag
+     * @param string $relativeUri Relative Url to the bag
      * @param ODataPropertyContent &$odataPropertyContent On return, this object
      *                                                    will hold bag value which
      *                                                    can be used by writers
+     * @throws InvalidOperationException
+     * @internal param $array /NULL           &$BagValue             Bag value to write
      */
     private function writeBagValue(
-        &$BagValue,
+        &$bagValue,
         $propertyName,
         ResourceType &$resourceType,
         $relativeUri,
         ODataPropertyContent &$odataPropertyContent
     ) {
-        assert(null == $BagValue || is_array($BagValue), 'Bag parameter must be null or array');
+        assert(null == $bagValue || is_array($bagValue), 'Bag parameter must be null or array');
         $bagItemResourceTypeKind = $resourceType->getResourceTypeKind();
         assert(
             ResourceTypeKind::PRIMITIVE == $bagItemResourceTypeKind
@@ -612,11 +613,11 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
         $odataProperty->name = $propertyName;
         $odataProperty->typeName = 'Collection(' . $resourceType->getFullName() . ')';
 
-        if (is_null($BagValue) || (is_array($BagValue) && empty($BagValue))) {
+        if (is_null($bagValue) || (is_array($bagValue) && empty($bagValue))) {
             $odataProperty->value = null;
         } else {
             $odataBagContent = new ODataBagContent();
-            foreach ($BagValue as $itemValue) {
+            foreach ($bagValue as $itemValue) {
                 // strip out null elements
                 if (isset($itemValue)) {
                     if (ResourceTypeKind::PRIMITIVE == $bagItemResourceTypeKind) {

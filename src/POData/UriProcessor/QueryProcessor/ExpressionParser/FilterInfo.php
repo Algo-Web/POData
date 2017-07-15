@@ -34,16 +34,16 @@ class FilterInfo
     private $filterExpressionAsDataSourceExpression;
 
     /**
-     * @param array  $navigationPropertiesUsedInTheFilterClause navigation properties in the $filter clause
-     * @param string $filterExpAsDataSourceExp                  The $filter expression, specific to data source
+     * @param array $navigationProperties navigation properties in the $filter clause
+     * @param string $filterExpAsDataSourceExp The $filter expression, specific to data source
      */
-    public function __construct(array $navigationPropertiesUsedInTheFilterClause, $filterExpAsDataSourceExp)
+    public function __construct(array $navigationProperties, $filterExpAsDataSourceExp)
     {
         assert(
             is_string($filterExpAsDataSourceExp),
             'Filter expression must be a string'
         );
-        $this->navigationPropertiesUsedInTheFilterClause = $navigationPropertiesUsedInTheFilterClause;
+        $this->navigationPropertiesUsedInTheFilterClause = $navigationProperties;
         $this->filterExpressionAsDataSourceExpression = $filterExpAsDataSourceExp;
     }
 
