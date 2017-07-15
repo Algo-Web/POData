@@ -43,7 +43,7 @@ trait resourceAssociationSet
      */
     public static function resourceAssociationSetEndResourceTypeMustBeAssignableToResourceSet($resourceTypeName, $resourceSetName)
     {
-        return 'The resource type ' . $resourceTypeName . ' must be assignable to the resource set ' . 
+        return 'The resource type ' . $resourceTypeName . ' must be assignable to the resource set ' .
                 $resourceSetName . '.';
     }
 

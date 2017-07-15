@@ -16,7 +16,7 @@ trait keyDescriptor
      */
     public static function keyDescriptorKeyCountNotMatching($segment, $expectedCount, $actualCount)
     {
-        return 'The predicate in the segment \'' . $segment . '\' expect ' . $expectedCount . 
+        return 'The predicate in the segment \'' . $segment . '\' expect ' . $expectedCount .
                ' keys but ' . $actualCount . ' provided';
     }
 
