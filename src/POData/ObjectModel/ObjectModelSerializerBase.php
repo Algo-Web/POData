@@ -277,7 +277,7 @@ class ObjectModelSerializerBase
         $segmentResourceSetWrapper = $this->getRequest()->getTargetResourceSetWrapper();
         assert(null != $segmentResourceSetWrapper, 'Segment resource set wrapper must not be null');
 
-        return $this->_pushSegment($segmentName, $segmentResourceSetWrapper);
+        return $this->pushSegment($segmentName, $segmentResourceSetWrapper);
     }
 
     /**
@@ -310,7 +310,7 @@ class ObjectModelSerializerBase
 
             assert(!is_null($currentResourceSetWrapper), 'is_null($currentResourceSetWrapper)');
 
-            return $this->_pushSegment($resourceProperty->getName(), $currentResourceSetWrapper);
+            return $this->pushSegment($resourceProperty->getName(), $currentResourceSetWrapper);
         }
         throw new InvalidOperationException('pushSegmentForNavigationProperty should not be called with non-entity type');
     }
@@ -405,7 +405,7 @@ class ObjectModelSerializerBase
      *
      * @return bool true if the segment was push, false otherwise
      */
-    private function _pushSegment($segmentName, ResourceSetWrapper & $resourceSetWrapper)
+    private function pushSegment($segmentName, ResourceSetWrapper & $resourceSetWrapper)
     {
         // Even though there is no expand in the request URI, still we need to push
         // the segment information if we need to count
@@ -516,7 +516,7 @@ class ObjectModelSerializerBase
             $expansionPaths = null;
             $foundSelections = false;
             $foundExpansions = false;
-            $this->_buildSelectionAndExpansionPathsForNode(
+            $this->buildSelectionAndExpansionPathsForNode(
                 $pathSegments,
                 $selectionPaths,
                 $expansionPaths,
@@ -526,7 +526,7 @@ class ObjectModelSerializerBase
             );
 
             if ($foundSelections && $expandedProjectionNode->canSelectAllProperties()) {
-                $this->_appendSelectionOrExpandPath($selectionPaths, $pathSegments, '*');
+                $this->appendSelectionOrExpandPath($selectionPaths, $pathSegments, '*');
             }
 
             if (!is_null($selectionPaths)) {
@@ -636,7 +636,7 @@ class ObjectModelSerializerBase
      * @param bool                   $foundSelections
      * @param bool                   $foundExpansions
      */
-    private function _buildSelectionAndExpansionPathsForNode(
+    private function buildSelectionAndExpansionPathsForNode(
         &$parentPathSegments,
         &$selectionPaths,
         &$expansionPaths,
@@ -652,7 +652,7 @@ class ObjectModelSerializerBase
         foreach ($expandedProjectionNode->getChildNodes() as $childNode) {
             if (!($childNode instanceof ExpandedProjectionNode)) {
                 $foundSelections = true;
-                $this->_appendSelectionOrExpandPath(
+                $this->appendSelectionOrExpandPath(
                     $selectionPaths,
                     $parentPathSegments,
                     $childNode->getPropertyName()
@@ -660,7 +660,7 @@ class ObjectModelSerializerBase
             } else {
                 $foundExpansions = true;
                 array_push($parentPathSegments, $childNode->getPropertyName());
-                $this->_buildSelectionAndExpansionPathsForNode(
+                $this->buildSelectionAndExpansionPathsForNode(
                     $parentPathSegments,
                     $selectionPaths,
                     $expansionPaths,
@@ -671,7 +671,7 @@ class ObjectModelSerializerBase
                 array_pop($parentPathSegments);
                 if ($childNode->canSelectAllProperties()) {
                     if ($foundSelectionOnChild) {
-                        $this->_appendSelectionOrExpandPath(
+                        $this->appendSelectionOrExpandPath(
                             $selectionPaths,
                             $parentPathSegments,
                             $childNode->getPropertyName() . '/*'
@@ -684,7 +684,7 @@ class ObjectModelSerializerBase
 
             $foundSelections |= $foundSelectionOnChild;
             if (!$foundExpansionOnChild) {
-                $this->_appendSelectionOrExpandPath(
+                $this->appendSelectionOrExpandPath(
                     $expansionPaths,
                     $parentPathSegments,
                     $childNode->getPropertyName()
@@ -694,7 +694,7 @@ class ObjectModelSerializerBase
 
         if (!$expandedProjectionNode->canSelectAllProperties() || $foundSelections) {
             foreach ($expandedChildrenNeededToBeSelected as $childToProject) {
-                $this->_appendSelectionOrExpandPath(
+                $this->appendSelectionOrExpandPath(
                     $selectionPaths,
                     $parentPathSegments,
                     $childNode->getPropertyName()
@@ -711,7 +711,7 @@ class ObjectModelSerializerBase
      * @param string[] &$parentPathSegments The list of path up to the $segmentToAppend
      * @param string   $segmentToAppend     The last segment of the path
      */
-    private function _appendSelectionOrExpandPath(&$path, &$parentPathSegments, $segmentToAppend)
+    private function appendSelectionOrExpandPath(&$path, &$parentPathSegments, $segmentToAppend)
     {
         if (!is_null($path)) {
             $path .= ', ';

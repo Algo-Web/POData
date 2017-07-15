@@ -368,7 +368,7 @@ class SimpleMetadataProvider implements IMetadataProvider
      */
     public function addKeyProperty($resourceType, $name, $typeCode)
     {
-        $this->_addPrimitivePropertyInternal($resourceType, $name, $typeCode, true);
+        $this->addPrimitivePropertyInternal($resourceType, $name, $typeCode, true);
     }
 
     /**
@@ -381,7 +381,7 @@ class SimpleMetadataProvider implements IMetadataProvider
      * @param bool         $isBag          property is bag or not
      * @param bool         $isETagProperty property is etag or not
      */
-    private function _addPrimitivePropertyInternal(
+    private function addPrimitivePropertyInternal(
         $resourceType,
         $name,
         $typeCode,
@@ -472,7 +472,7 @@ class SimpleMetadataProvider implements IMetadataProvider
         $defaultValue = null,
         $nullable = false
     ) {
-        $this->_addPrimitivePropertyInternal(
+        $this->addPrimitivePropertyInternal(
             $resourceType,
             $name,
             $typeCode,
@@ -494,7 +494,7 @@ class SimpleMetadataProvider implements IMetadataProvider
      */
     public function addETagProperty($resourceType, $name, $typeCode, $defaultValue = null, $nullable = false)
     {
-        $this->_addPrimitivePropertyInternal(
+        $this->addPrimitivePropertyInternal(
             $resourceType,
             $name,
             $typeCode,
@@ -517,7 +517,7 @@ class SimpleMetadataProvider implements IMetadataProvider
      */
     public function addResourceReferenceProperty($resourceType, $name, $targetResourceSet)
     {
-        $this->_addReferencePropertyInternal(
+        $this->addReferencePropertyInternal(
             $resourceType,
             $name,
             $targetResourceSet,
@@ -541,7 +541,7 @@ class SimpleMetadataProvider implements IMetadataProvider
         $sourceProperty,
         $targetProperty
     ) {
-        $this->_addReferencePropertyInternalBidirectional(
+        $this->addReferencePropertyInternalBidirectional(
             $sourceResourceType,
             $targetResourceType,
             $sourceProperty,
@@ -579,7 +579,7 @@ class SimpleMetadataProvider implements IMetadataProvider
      *                                                   points to
      * @param string               $resourceMult         The multiplicity of relation being added
      */
-    private function _addReferencePropertyInternal(
+    private function addReferencePropertyInternal(
         ResourceEntityType $sourceResourceType,
         $name,
         ResourceSet $targetResourceSet,
@@ -652,7 +652,7 @@ class SimpleMetadataProvider implements IMetadataProvider
      * @param string               $sourceMultiplicity   The multiplicity at the source end of relation
      * @param string               $targetMultiplicity   The multiplicity at the target end of relation
      */
-    private function _addReferencePropertyInternalBidirectional(
+    private function addReferencePropertyInternalBidirectional(
         ResourceEntityType $sourceResourceType,
         ResourceEntityType $targetResourceType,
         $sourceProperty,
@@ -757,7 +757,7 @@ class SimpleMetadataProvider implements IMetadataProvider
      */
     public function addResourceSetReferenceProperty(ResourceEntityType $resourceType, $name, $targetResourceSet)
     {
-        $this->_addReferencePropertyInternal(
+        $this->addReferencePropertyInternal(
             $resourceType,
             $name,
             $targetResourceSet,
@@ -781,7 +781,7 @@ class SimpleMetadataProvider implements IMetadataProvider
         $sourceProperty,
         $targetProperty
     ) {
-        $this->_addReferencePropertyInternalBidirectional(
+        $this->addReferencePropertyInternalBidirectional(
             $sourceResourceType,
             $targetResourceType,
             $sourceProperty,
@@ -818,7 +818,7 @@ class SimpleMetadataProvider implements IMetadataProvider
         $sourceProperty,
         $targetProperty
     ) {
-        $this->_addReferencePropertyInternalBidirectional(
+        $this->addReferencePropertyInternalBidirectional(
             $sourceResourceType,
             $targetResourceType,
             $sourceProperty,

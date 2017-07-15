@@ -64,7 +64,7 @@ class JsonWriter
      */
     public function startArrayScope()
     {
-        $this->_startScope($this->scopeType['Array']);
+        $this->startScope($this->scopeType['Array']);
 
         return $this;
     }
@@ -88,7 +88,7 @@ class JsonWriter
      */
     public function startObjectScope()
     {
-        $this->_startScope($this->scopeType['Object']);
+        $this->startScope($this->scopeType['Object']);
 
         return $this;
     }
@@ -111,7 +111,7 @@ class JsonWriter
             ++$currentScope->objectCount;
         }
 
-        $this->_writeCore($name, true /*quotes*/);
+        $this->writeCore($name, true /*quotes*/);
         $this->writer->writeTrimmed(': ');
 
         return $this;
@@ -133,22 +133,22 @@ class JsonWriter
             case 'Edm.Int32':
             case 'Edm.Byte':
             case 'Edm.SByte':
-                $this->_writeCore($value, /* quotes */ false);
+                $this->writeCore($value, /* quotes */ false);
                 break;
 
             case 'Edm.Int64':
             case 'Edm.Guid':
             case 'Edm.Decimal':
             case 'Edm.Binary':
-                $this->_writeCore($value, /* quotes */ true);
+                $this->writeCore($value, /* quotes */ true);
                 break;
 
             case 'Edm.Single':
             case 'Edm.Double':
                 if (is_infinite($value) || is_nan($value)) {
-                    $this->_writeCore('null', /* quotes */ true);
+                    $this->writeCore('null', /* quotes */ true);
                 } else {
-                    $this->_writeCore($value, /* quotes */ false);
+                    $this->writeCore($value, /* quotes */ false);
                 }
 
                 break;
@@ -156,12 +156,12 @@ class JsonWriter
             case 'Edm.DateTime':
                 $dateTime = new Carbon($value, new \DateTimeZone('UTC'));
                 $formattedDateTime = $dateTime->format('U') * 1000;
-                $this->_writeCore('/Date('.$formattedDateTime.')/', /* quotes */ true);
+                $this->writeCore('/Date('.$formattedDateTime.')/', /* quotes */ true);
                 break;
 
             case 'Edm.String':
                 if ($value == null) {
-                    $this->_writeCore('null', /* quotes */ false);
+                    $this->writeCore('null', /* quotes */ false);
                 } else {
                     $jsonEncoded = json_encode($value);
                     //json_encode always escapes a solidus (forward slash, %x2F),
@@ -171,12 +171,12 @@ class JsonWriter
                     $jsonEncoded = str_replace('\\/', '/', $jsonEncoded);
                     //since json_encode is already appending chords
                     //there is no need to set it again
-                    $this->_writeCore($jsonEncoded, /* quotes */ false);
+                    $this->writeCore($jsonEncoded, /* quotes */ false);
                 }
                 break;
 
             default:
-                $this->_writeCore($this->_quoteJScriptString($value), /* quotes */ true);
+                $this->writeCore($this->quoteJScriptString($value), /* quotes */ true);
         }
 
         return $this;
@@ -191,7 +191,7 @@ class JsonWriter
      *
      * @return string
      */
-    private function _quoteJScriptString($string)
+    private function quoteJScriptString($string)
     {
         // Escape ( " \ / \n \r \t \b \f) characters with a backslash.
         $search = ['\\', "\n", "\t", "\r", "\b", "\f", '"'];
@@ -209,7 +209,7 @@ class JsonWriter
      * @param string $text   value to be written
      * @param bool $quotes put quotes around the value if this value is true
      */
-    private function _writeCore($text, $quotes)
+    private function writeCore($text, $quotes)
     {
         if (0 != count($this->scopes)) {
             $currentScope = end($this->scopes);
@@ -237,7 +237,7 @@ class JsonWriter
      *
      * @param int $type scope type
      */
-    private function _startScope($type)
+    private function startScope($type)
     {
         if (0 != count($this->scopes)) {
             $currentScope = end($this->scopes);
