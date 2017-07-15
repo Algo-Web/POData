@@ -61,7 +61,7 @@ trait resourceType
      */
     public static function resourceTypeMissingKeyPropertiesForEntity($entityName)
     {
-        return 'The entity type \''.$entityName.'\' does not have any key properties. Please make sure the key'
+        return 'The entity type \'' . $entityName . '\' does not have any key properties. Please make sure the key'
                 .' properties are defined for this entity type';
     }
 
@@ -111,7 +111,7 @@ trait resourceType
      */
     public static function resourceTypePropertyWithSameNameAlreadyExists($propertyName, $resourceTypeName)
     {
-        return 'Property with same name \''.$propertyName.'\' already exists in type \''.$resourceTypeName
+        return 'Property with same name \'' . $propertyName . '\' already exists in type \'' . $resourceTypeName
                 .'\'. Please make sure that there is no property with the same name defined in one of the'
                 .' ancestor types';
     }
@@ -157,7 +157,7 @@ trait resourceType
      */
     public static function resourceTypeNamedStreamWithSameNameAlreadyExists($namedStreamName, $resourceTypeName)
     {
-        return 'Named stream with the name \''.$namedStreamName.'\' already exists in type \''.$resourceTypeName
+        return 'Named stream with the name \'' . $namedStreamName . '\' already exists in type \'' . $resourceTypeName
                 .'\'. Please make sure that there is no named stream with the same name defined in one of the'
                 .' ancestor types';
     }

@@ -15,9 +15,9 @@ trait metadataResourceType
      */
     public static function metadataResourceTypeSetNamedStreamsOnDerivedEntityTypesNotSupported($entitySetName, $derivedTypeName)
     {
-        return 'Named streams are not supported on derived entity types. Entity Set \''.$entitySetName
-                .'\' has an instance of type \''.$derivedTypeName.'\', which is a derived entity type and has'
-                .' named streams. Please remove all named streams from type \''.$derivedTypeName.'\'.';
+        return 'Named streams are not supported on derived entity types. Entity Set \'' . $entitySetName
+                .'\' has an instance of type \'' . $derivedTypeName . '\', which is a derived entity type and has'
+                .' named streams. Please remove all named streams from type \'' . $derivedTypeName . '\'.';
     }
 
     /**
@@ -31,7 +31,7 @@ trait metadataResourceType
      */
     public static function metadataResourceTypeSetBagOfComplexTypeWithDerivedTypes($complexTypeName)
     {
-        return 'Complex type \''.$complexTypeName.'\' has derived types and is used as the item type in a bag.'
+        return 'Complex type \'' . $complexTypeName . '\' has derived types and is used as the item type in a bag.'
                 .' Only bags containing complex types without derived types are supported.';
     }
 }

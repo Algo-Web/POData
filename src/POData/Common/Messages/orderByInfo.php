@@ -62,7 +62,7 @@ trait orderByInfo
      */
     public static function orderByParserBagPropertyNotAllowed($bagPropertyName)
     {
-        return 'orderby clause does not support Bag property in the path, the property \''.$bagPropertyName
+        return 'orderby clause does not support Bag property in the path, the property \'' . $bagPropertyName
                 .'\' is a bag property';
     }
 
@@ -76,7 +76,7 @@ trait orderByInfo
      */
     public static function orderByParserPrimitiveAsIntermediateSegment($propertyName)
     {
-        return 'The primitive property \''.$propertyName.'\' cannnot be used as intermediate segment, it should'
+        return 'The primitive property \'' . $propertyName . '\' cannnot be used as intermediate segment, it should'
                 .' be last segment';
     }
 
@@ -104,7 +104,7 @@ trait orderByInfo
     public static function orderByParserResourceSetReferenceNotAllowed($propertyName, $definedType)
     {
         return 'Navigation property points to a collection cannot be used in orderby clause, The property \''
-                .$propertyName.'\' defined on type \''.$definedType.'\' is such a property';
+                .$propertyName . '\' defined on type \'' . $definedType . '\' is such a property';
     }
 
     /**
@@ -130,7 +130,7 @@ trait orderByInfo
      */
     public static function orderByParserSortByComplexPropertyIsNotAllowed($complexPropertyName)
     {
-        return 'Complex property cannot be used as sort key, the property \''.$complexPropertyName
+        return 'Complex property cannot be used as sort key, the property \'' . $complexPropertyName
                 .'\' is a complex property';
     }
 

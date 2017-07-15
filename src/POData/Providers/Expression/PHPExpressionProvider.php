@@ -258,81 +258,81 @@ class PHPExpressionProvider implements IExpressionProvider
     {
         switch ($functionDescription->name) {
             case ODataConstants::STRFUN_COMPARE:
-                return 'strcmp('.$params[0].', '.$params[1].')';
+                return 'strcmp(' . $params[0] . ', ' . $params[1] . ')';
 
             case ODataConstants::STRFUN_ENDSWITH:
-                return '(strcmp(substr('.$params[0].', strlen('.$params[0].') - strlen('.$params[1].')), '
-                        .$params[1].') === 0)';
+                return '(strcmp(substr(' . $params[0] . ', strlen(' . $params[0] . ') - strlen(' . $params[1] . ')), '
+                        .$params[1] . ') === 0)';
 
             case ODataConstants::STRFUN_INDEXOF:
-                return 'strpos('.$params[0].', '.$params[1].')';
+                return 'strpos(' . $params[0] . ', ' . $params[1] . ')';
 
             case ODataConstants::STRFUN_REPLACE:
-                return 'str_replace('.$params[1].', '.$params[2].', '.$params[0].')';
+                return 'str_replace(' . $params[1] . ', ' . $params[2] . ', ' . $params[0] . ')';
 
             case ODataConstants::STRFUN_STARTSWITH:
-                return '(strpos('.$params[0].', '.$params[1].') === 0)';
+                return '(strpos(' . $params[0] . ', ' . $params[1] . ') === 0)';
 
             case ODataConstants::STRFUN_TOLOWER:
-                return 'strtolower('.$params[0].')';
+                return 'strtolower(' . $params[0] . ')';
 
             case ODataConstants::STRFUN_TOUPPER:
-                return 'strtoupper('.$params[0].')';
+                return 'strtoupper(' . $params[0] . ')';
 
             case ODataConstants::STRFUN_TRIM:
-                return 'trim('.$params[0].')';
+                return 'trim(' . $params[0] . ')';
 
             case ODataConstants::STRFUN_SUBSTRING:
                 return count($params) == 3 ?
-                    'substr('.$params[0].', '.$params[1].', '.$params[2].')' : 'substr('.$params[0].', '.$params[1].')';
+                    'substr(' . $params[0] . ', ' . $params[1] . ', ' . $params[2] . ')' : 'substr(' . $params[0] . ', ' . $params[1] . ')';
 
             case ODataConstants::STRFUN_SUBSTRINGOF:
-                return '(strpos('.$params[1].', '.$params[0].') !== false)';
+                return '(strpos(' . $params[1] . ', ' . $params[0] . ') !== false)';
 
             case ODataConstants::STRFUN_CONCAT:
                 return $params[0] . ' . ' . $params[1];
 
             case ODataConstants::STRFUN_LENGTH:
-                return 'strlen('.$params[0].')';
+                return 'strlen(' . $params[0] . ')';
 
             case ODataConstants::GUIDFUN_EQUAL:
-                return self::TYPE_NAMESPACE . 'Guid::guidEqual('.$params[0].', '.$params[1].')';
+                return self::TYPE_NAMESPACE . 'Guid::guidEqual(' . $params[0] . ', ' . $params[1] . ')';
 
             case ODataConstants::DATETIME_COMPARE:
-                return self::TYPE_NAMESPACE . 'DateTime::dateTimeCmp('.$params[0].', '.$params[1].')';
+                return self::TYPE_NAMESPACE . 'DateTime::dateTimeCmp(' . $params[0] . ', ' . $params[1] . ')';
 
             case ODataConstants::DATETIME_YEAR:
-                return self::TYPE_NAMESPACE . 'DateTime::year('.$params[0].')';
+                return self::TYPE_NAMESPACE . 'DateTime::year(' . $params[0] . ')';
 
             case ODataConstants::DATETIME_MONTH:
-                return self::TYPE_NAMESPACE . 'DateTime::month('.$params[0].')';
+                return self::TYPE_NAMESPACE . 'DateTime::month(' . $params[0] . ')';
 
             case ODataConstants::DATETIME_DAY:
-                return self::TYPE_NAMESPACE . 'DateTime::day('.$params[0].')';
+                return self::TYPE_NAMESPACE . 'DateTime::day(' . $params[0] . ')';
 
             case ODataConstants::DATETIME_HOUR:
-                return self::TYPE_NAMESPACE . 'DateTime::hour('.$params[0].')';
+                return self::TYPE_NAMESPACE . 'DateTime::hour(' . $params[0] . ')';
 
             case ODataConstants::DATETIME_MINUTE:
-                return self::TYPE_NAMESPACE . 'DateTime::minute('.$params[0].')';
+                return self::TYPE_NAMESPACE . 'DateTime::minute(' . $params[0] . ')';
 
             case ODataConstants::DATETIME_SECOND:
-                return self::TYPE_NAMESPACE . 'DateTime::second('.$params[0].')';
+                return self::TYPE_NAMESPACE . 'DateTime::second(' . $params[0] . ')';
 
             case ODataConstants::MATHFUN_ROUND:
-                return 'round('.$params[0].')';
+                return 'round(' . $params[0] . ')';
 
             case ODataConstants::MATHFUN_CEILING:
-                return 'ceil('.$params[0].')';
+                return 'ceil(' . $params[0] . ')';
 
             case ODataConstants::MATHFUN_FLOOR:
-                return 'floor('.$params[0].')';
+                return 'floor(' . $params[0] . ')';
 
             case ODataConstants::BINFUL_EQUAL:
-                return self::TYPE_NAMESPACE . 'Binary::binaryEqual('.$params[0].', '.$params[1].')';
+                return self::TYPE_NAMESPACE . 'Binary::binaryEqual(' . $params[0] . ', ' . $params[1] . ')';
 
             case 'is_null':
-                return 'is_null('.$params[0].')';
+                return 'is_null(' . $params[0] . ')';
 
             default:
                 throw new \InvalidArgumentException('onFunctionCallExpression');

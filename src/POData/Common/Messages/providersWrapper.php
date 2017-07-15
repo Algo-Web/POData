@@ -71,7 +71,7 @@ trait providersWrapper
      */
     public static function providersWrapperEntitySetNameShouldBeUnique($entitySetName)
     {
-        return 'More than one entity set with the name \''.$entitySetName
+        return 'More than one entity set with the name \'' . $entitySetName
                 .'\' was found. Entity set names must be unique';
     }
 
@@ -85,7 +85,7 @@ trait providersWrapper
      */
     public static function providersWrapperEntityTypeNameShouldBeUnique($entityTypeName)
     {
-        return 'More than one entity type with the name \''.$entityTypeName
+        return 'More than one entity type with the name \'' . $entityTypeName
                 .'\' was found. Entity type names must be unique';
     }
 
@@ -101,9 +101,9 @@ trait providersWrapper
      */
     public static function providersWrapperIDSMPGetResourceSetReturnsInvalidResourceSet($resourceSetName, $resourceTypeName, $resourcePropertyName)
     {
-        return 'IDSMP::GetResourceSet retruns invalid instance of ResourceSet when invoked with params'.
-                ' {ResourceSet with name '.$resourceSetName.', ResourceType with name '.$resourceTypeName
-                .', ResourceProperty with name '.$resourcePropertyName.'}.';
+        return 'IDSMP::GetResourceSet retruns invalid instance of ResourceSet when invoked with params' .
+                ' {ResourceSet with name ' . $resourceSetName . ', ResourceType with name ' . $resourceTypeName
+                .', ResourceProperty with name ' . $resourcePropertyName . '}.';
     }
 
     /**

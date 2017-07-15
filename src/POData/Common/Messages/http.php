@@ -16,7 +16,7 @@ trait http
     public static function hostMalFormedBaseUriInConfig($notEndWithSvcOrHasQuery = false)
     {
         if ($notEndWithSvcOrHasQuery) {
-            return 'Malformed base service uri in the configuration file (should end with .svc, there should not'.
+            return 'Malformed base service uri in the configuration file (should end with .svc, there should not' .
                     ' be query or fragment in the base service uri)';
         }
 
@@ -86,7 +86,7 @@ trait http
      */
     public static function badRequestInvalidUriForMediaResource($uri)
     {
-        return 'The URI \''.$uri.'\' is not valid. The segment before \'$value\' must be a Media Link Entry or'
+        return 'The URI \'' . $uri . '\' is not valid. The segment before \'$value\' must be a Media Link Entry or'
                 .' a primitive property.';
     }
 
@@ -100,7 +100,7 @@ trait http
      */
     public static function hostNonODataOptionBeginsWithSystemCharacter($optionName)
     {
-        return 'The query parameter \''.$optionName.'\' begins with a system-reserved \'$\' character but'
+        return 'The query parameter \'' . $optionName . '\' begins with a system-reserved \'$\' character but'
                 .' is not recognized.';
     }
 

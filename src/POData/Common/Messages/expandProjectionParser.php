@@ -32,8 +32,8 @@ trait expandProjectionParser
     {
         $clause = $isSelect ? 'select' : 'expand';
 
-        return 'Error in the '.$clause.' clause. Type \''.$resourceTypeName.'\' does not have a property named \''
-                .$propertyName.'\'.';
+        return 'Error in the ' . $clause . ' clause. Type \'' . $resourceTypeName . '\' does not have a property named \''
+                .$propertyName . '\'.';
     }
 
     /**
@@ -47,8 +47,8 @@ trait expandProjectionParser
      */
     public static function expandProjectionParserExpandCanOnlyAppliedToEntity($resourceTypeName, $propertyName)
     {
-        return 'Error in the expand clause. Expand path can contain only navigation property, the property '.
-                '\''.$propertyName.'\' defined in \''.$resourceTypeName.'\' is not a navigation property';
+        return 'Error in the expand clause. Expand path can contain only navigation property, the property ' .
+                '\'' . $propertyName . '\' defined in \'' . $resourceTypeName . '\' is not a navigation property';
     }
 
     /**
@@ -64,7 +64,7 @@ trait expandProjectionParser
      */
     public static function expandProjectionParserPrimitivePropertyUsedAsNavigationProperty($resourceTypeName, $primitvePropertyName)
     {
-        return 'Property \''.$primitvePropertyName.'\' on type \''.$resourceTypeName
+        return 'Property \'' . $primitvePropertyName . '\' on type \'' . $resourceTypeName
                 .'\' is of primitive type and cannot be used as a navigation property.';
     }
 
@@ -80,8 +80,8 @@ trait expandProjectionParser
      */
     public static function expandProjectionParserComplexPropertyAsInnerSelectSegment($resourceTypeName, $complextTypeName)
     {
-        return 'select doesn\'t support selection of properties of complex type. The property \''.$complextTypeName
-                .'\' on type \''.$resourceTypeName.'\' is a complex type.';
+        return 'select doesn\'t support selection of properties of complex type. The property \'' . $complextTypeName
+                .'\' on type \'' . $resourceTypeName . '\' is a complex type.';
     }
 
     /**
@@ -96,7 +96,7 @@ trait expandProjectionParser
      */
     public static function expandProjectionParserBagPropertyAsInnerSelectSegment($resourceTypeName, $bagPropertyName)
     {
-        return 'The selection from property \''.$bagPropertyName.'\' on type \''.$resourceTypeName
+        return 'The selection from property \'' . $bagPropertyName . '\' on type \'' . $resourceTypeName
                 .'\' is not valid. The select query option does not support selection items from a bag property.';
     }
 

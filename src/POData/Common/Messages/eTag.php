@@ -49,7 +49,7 @@ trait eTag
      */
     public static function eTagCannotBeSpecified($uri)
     {
-        return 'If-Match or If-None-Match HTTP headers cannot be specified since the URI \''.$uri.'\' refers to a'
+        return 'If-Match or If-None-Match HTTP headers cannot be specified since the URI \'' . $uri . '\' refers to a'
                 .' collection of resources or has a $count or $link segment or has an $expand as one of the query'
                 .' parameters.';
     }

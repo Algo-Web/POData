@@ -18,7 +18,7 @@ trait skipTokenInfo
      */
     public static function skipTokenInfoBothOrderByPathAndOrderByValuesShouldBeSetOrNotSet($orderByPathsVarName, $orderByValuesVarName)
     {
-        return 'Either both the arguments '.$orderByPathsVarName.' and '.$orderByValuesVarName.' should be'
+        return 'Either both the arguments ' . $orderByPathsVarName . ' and ' . $orderByValuesVarName . ' should be'
                 .' null or not-null';
     }
 
