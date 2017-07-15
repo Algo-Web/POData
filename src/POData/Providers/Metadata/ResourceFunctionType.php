@@ -29,12 +29,12 @@ class ResourceFunctionType
     public function __construct($functionName, FunctionImportAnonymousType $type, ResourceType $resource)
     {
         if (null === $functionName) {
-            $msg = "FunctionName must not be null";
+            $msg = 'FunctionName must not be null';
             throw new \InvalidArgumentException($msg);
         }
 
         if (!is_string($functionName) && !is_array($functionName)) {
-            $msg = "Function name must be string or array";
+            $msg = 'Function name must be string or array';
             throw new \InvalidArgumentException($msg);
         }
 
@@ -46,34 +46,34 @@ class ResourceFunctionType
 
         if ($isArray) {
             if (2 < count($functionName)) {
-                $msg = "FunctionName must have no more than 2 elements";
+                $msg = 'FunctionName must have no more than 2 elements';
                 throw new \InvalidArgumentException($msg);
             }
             if (0 == count($functionName)) {
-                $msg = "FunctionName must have 1 or 2 elements";
+                $msg = 'FunctionName must have 1 or 2 elements';
                 throw new \InvalidArgumentException($msg);
             }
 
             if (!is_object($functionName[0]) && !is_string($functionName[0])) {
-                $msg = "First element of FunctionName must be either object or string";
+                $msg = 'First element of FunctionName must be either object or string';
                 throw new \InvalidArgumentException($msg);
             }
             if (!is_string($functionName[1])) {
-                $msg = "Second element of FunctionName must be string";
+                $msg = 'Second element of FunctionName must be string';
                 throw new \InvalidArgumentException($msg);
             }
             if (is_string($functionName[0])) {
                 $functionName[0] = trim($functionName[0]);
                 $func = $functionName[0];
                 if ('' == $func) {
-                    $msg = "First element of FunctionName must not be empty";
+                    $msg = 'First element of FunctionName must not be empty';
                     throw new \InvalidArgumentException($msg);
                 }
                 $this->checkBlacklist($func, true);
             }
         } else {
             if (!is_string($functionName) || empty(trim($functionName))) {
-                $msg = "FunctionName must be a non-empty string";
+                $msg = 'FunctionName must be a non-empty string';
                 throw new \InvalidArgumentException($msg);
             }
             $functionName = trim($functionName);
@@ -135,7 +135,7 @@ class ResourceFunctionType
         $expectedParms = count($baseParms);
         $actualParms = count($parms);
         if ($expectedParms != $actualParms) {
-            $msg = "Was expecting ". $expectedParms. " arguments, received ".$actualParms." instead";
+            $msg = 'Was expecting '. $expectedParms. ' arguments, received '.$actualParms.' instead';
             throw new \InvalidArgumentException($msg);
         }
 
@@ -149,7 +149,7 @@ class ResourceFunctionType
     private function checkBlacklist($func, $fromArray = false)
     {
         if (in_array($func, $this->blacklist) || in_array(strtolower($func), $this->blacklist)) {
-            $msg = (true === $fromArray ? "First element of " : "")."FunctionName blacklisted";
+            $msg = (true === $fromArray ? 'First element of ' : '').'FunctionName blacklisted';
             throw new \InvalidArgumentException($msg);
         }
     }

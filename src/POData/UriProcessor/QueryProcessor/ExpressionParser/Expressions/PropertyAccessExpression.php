@@ -48,7 +48,7 @@ class PropertyAccessExpression extends AbstractExpression
         //implementing IType
         if ($resourceProperty->getResourceType()->getResourceTypeKind() == ResourceTypeKind::PRIMITIVE) {
             $rawType = $resourceProperty->getResourceType()->getInstanceType();
-            assert($rawType instanceof IType, "Primitive type instance type not an IType");
+            assert($rawType instanceof IType, 'Primitive type instance type not an IType');
             $this->type = $rawType;
         } else {
             //This is a navigation i.e. Complex, ResourceReference or Collection

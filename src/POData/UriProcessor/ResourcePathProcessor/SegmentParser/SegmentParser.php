@@ -175,7 +175,7 @@ class SegmentParser
 
         $singleton = $this->providerWrapper->resolveSingleton($identifier);
         if (null !== $singleton) {
-            throw ODataException::createSyntaxError("Singleton must be first element");
+            throw ODataException::createSyntaxError('Singleton must be first element');
         }
 
         if ($previousKind == TargetKind::PRIMITIVE()) {

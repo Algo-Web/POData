@@ -210,7 +210,7 @@ class UriProcessorNew implements IUriProcessor
                 case TargetKind::BAG():
                     break;
                 default:
-                    assert(false, "Not implemented yet");
+                    assert(false, 'Not implemented yet');
             }
         }
     }
@@ -418,7 +418,7 @@ class UriProcessorNew implements IUriProcessor
                 }
                 break;
             default:
-                assert(false, "Invalid property kind type for resource retrieval");
+                assert(false, 'Invalid property kind type for resource retrieval');
         }
         return $queryResult;
     }

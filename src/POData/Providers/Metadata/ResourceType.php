@@ -841,7 +841,7 @@ abstract class ResourceType
         if (is_object($this->type)) {
             $this->type = $this->type->name;
         }
-        assert(is_string($this->type), "Type name should be a string at end of serialisation");
+        assert(is_string($this->type), 'Type name should be a string at end of serialisation');
         $result = array_keys(get_object_vars($this));
 
         return $result;

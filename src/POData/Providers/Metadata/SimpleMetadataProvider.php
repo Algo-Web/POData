@@ -252,7 +252,7 @@ class SimpleMetadataProvider implements IMetadataProvider
         $associationSet = array_key_exists($key, $this->associationSets) ? $this->associationSets[$key] : null;
         assert(
             null == $associationSet || $associationSet instanceof ResourceAssociationSet,
-            "Retrieved resource assocation must be either null or an instance of ResourceAssociationSet"
+            'Retrieved resource assocation must be either null or an instance of ResourceAssociationSet'
         );
         return $associationSet;
     }
@@ -295,7 +295,7 @@ class SimpleMetadataProvider implements IMetadataProvider
         $type = null;
         if ($typeKind == ResourceTypeKind::ENTITY) {
             list($oet, $entitySet) = $this->metadataManager->addEntityType($name);
-            assert($oet instanceof TEntityTypeType, "Entity type ".$name. " not successfully added");
+            assert($oet instanceof TEntityTypeType, 'Entity type '.$name. ' not successfully added');
             $type = new ResourceEntityType($refClass, $oet, $this);
             $typeName = $type->getFullName();
             $returnName = Str::plural($typeName);
@@ -308,7 +308,7 @@ class SimpleMetadataProvider implements IMetadataProvider
             $complex->setName($name);
             $type = new ResourceComplexType($refClass, $complex);
         }
-        assert(null != $type, "Type variable must not be null");
+        assert(null != $type, 'Type variable must not be null');
 
         $this->resourceTypes[$name] = $type;
         ksort($this->resourceTypes);
@@ -404,7 +404,7 @@ class SimpleMetadataProvider implements IMetadataProvider
 
         if ($isETagProperty && $isBag) {
             throw new InvalidOperationException(
-                'Only primitve property can be etag property, bag property cannot be etag property.'
+                'Only primitive property can be etag property, bag property cannot be etag property.'
             );
         }
 
@@ -553,12 +553,12 @@ class SimpleMetadataProvider implements IMetadataProvider
         $sourceResourceKind = $sourceResourceType->resolveProperty($sourceProperty)->getKind();
         assert(
             ResourcePropertyKind::RESOURCE_REFERENCE == $sourceResourceKind,
-            "1 side of 1:N relationship not pointing to resource reference"
+            '1 side of 1:N relationship not pointing to resource reference'
         );
         $targetResourceKind = $targetResourceType->resolveProperty($targetProperty)->getKind();
         assert(
             ResourcePropertyKind::RESOURCESET_REFERENCE == $targetResourceKind,
-            "N side of 1:N relationship not pointing to resource set reference"
+            'N side of 1:N relationship not pointing to resource set reference'
         );
     }
 
@@ -595,7 +595,7 @@ class SimpleMetadataProvider implements IMetadataProvider
             );
         }
         if (!in_array($resourceMult, $allowedMult)) {
-            throw new InvalidOperationException("Supplied multiplicity ".$resourceMult." not valid");
+            throw new InvalidOperationException('Supplied multiplicity '.$resourceMult.' not valid');
         }
 
         $resourcePropertyKind = ('*' == $resourceMult)
@@ -661,7 +661,7 @@ class SimpleMetadataProvider implements IMetadataProvider
         $targetMultiplicity
     ) {
         if (!is_string($sourceProperty) || !is_string($targetProperty)) {
-            throw new InvalidOperationException("Source and target properties must both be strings");
+            throw new InvalidOperationException('Source and target properties must both be strings');
         }
 
         $this->checkInstanceProperty($sourceProperty, $sourceResourceType);
@@ -793,12 +793,12 @@ class SimpleMetadataProvider implements IMetadataProvider
         $sourceResourceKind = $sourceResourceType->resolveProperty($sourceProperty)->getKind();
         assert(
             ResourcePropertyKind::RESOURCESET_REFERENCE == $sourceResourceKind,
-            "M side of M:N relationship not pointing to resource set reference"
+            'M side of M:N relationship not pointing to resource set reference'
         );
         $targetResourceKind = $targetResourceType->resolveProperty($targetProperty)->getKind();
         assert(
             ResourcePropertyKind::RESOURCESET_REFERENCE == $targetResourceKind,
-            "N side of M:N relationship not pointing to resource set reference"
+            'N side of M:N relationship not pointing to resource set reference'
         );
     }
 
@@ -830,12 +830,12 @@ class SimpleMetadataProvider implements IMetadataProvider
         $sourceResourceKind = $sourceResourceType->resolveProperty($sourceProperty)->getKind();
         assert(
             ResourcePropertyKind::RESOURCE_REFERENCE == $sourceResourceKind,
-            "1 side of 1:1 relationship not pointing to resource reference"
+            '1 side of 1:1 relationship not pointing to resource reference'
         );
         $targetResourceKind = $targetResourceType->resolveProperty($targetProperty)->getKind();
         assert(
             ResourcePropertyKind::RESOURCE_REFERENCE == $targetResourceKind,
-            "0..1 side of 1:1 relationship not pointing to resource reference"
+            '0..1 side of 1:1 relationship not pointing to resource reference'
         );
     }
 
@@ -885,16 +885,16 @@ class SimpleMetadataProvider implements IMetadataProvider
     {
         $msg = null;
         if (array_key_exists($name, $this->singletons)) {
-            $msg = "Singleton name already exists";
+            $msg = 'Singleton name already exists';
             throw new \InvalidArgumentException($msg);
         }
         if (array_key_exists($name, $this->resourceSets)) {
-            $msg = "Resource set with same name, ". $name. ", exists";
+            $msg = 'Resource set with same name, '. $name. ', exists';
             throw new \InvalidArgumentException($msg);
         }
         $typeName = $returnType->getName();
         if (!array_key_exists($typeName, $this->OdataEntityMap)) {
-            $msg = "Mapping not defined for ".$typeName;
+            $msg = 'Mapping not defined for '.$typeName;
             throw new \InvalidArgumentException($msg);
         }
         $metaReturn = $this->OdataEntityMap[$typeName];
@@ -914,7 +914,7 @@ class SimpleMetadataProvider implements IMetadataProvider
     public function callSingleton($name)
     {
         if (!array_key_exists($name, $this->singletons)) {
-            $msg = "Requested singleton does not exist";
+            $msg = 'Requested singleton does not exist';
             throw new \InvalidArgumentException($msg);
         }
 
