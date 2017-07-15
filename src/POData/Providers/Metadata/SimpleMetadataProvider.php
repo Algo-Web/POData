@@ -261,10 +261,10 @@ class SimpleMetadataProvider implements IMetadataProvider
     /**
      * Add an entity type.
      *
-     * @param  \ReflectionClass          $refClass reflection class of the entity
-     * @param  string                    $name     name of the entity
-     * @throws InvalidOperationException when the name is already in use
-     * @return ResourceType              when the name is already in use
+     * @param  \ReflectionClass          $refClass    reflection class of the entity
+     * @param  string                    $name        name of the entity
+     * @throws InvalidOperationException              when the name is already in use
+     * @return ResourceComplexType|ResourceEntityType
      *
      * @internal param string $namespace namespace of the data source
      */
