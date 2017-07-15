@@ -61,7 +61,7 @@ checks:
     no_property_on_interface: true
     no_non_implemented_abstract_methods: true
     no_long_variable_names:
-      maximum: '20'
+      maximum: '30'
     no_goto: true
     no_global_keyword: true
     no_exit: true

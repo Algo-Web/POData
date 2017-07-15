@@ -239,15 +239,15 @@ abstract class SimpleQueryProvider implements IQueryProvider
         // Correct filter
         $srcClass = get_class($sourceEntityInstance);
         $filterFieldName = $this->getTableName($this->getEntityName($srcClass)) . '_id';
-        $navigationPropertiesUsedInTheFilterClause = null;
+        $navigationPropertiesUsed = null;
         $filterExpAsDataSourceExp = '';
         if ($filterInfo) {
-            $navigationPropertiesUsedInTheFilterClause = $filterInfo->getNavigationPropertiesUsed();
+            $navigationPropertiesUsed = $filterInfo->getNavigationPropertiesUsed();
             $filterExpAsDataSourceExp = $filterInfo->getExpressionAsString();
         }
         $filterExpAsDataSourceExp .= $filterExpAsDataSourceExp ? ' AND ' : '';
         $filterExpAsDataSourceExp .= $filterFieldName . ' = ' . $sourceEntityInstance->id;
-        $completeFilterInfo = new FilterInfo($navigationPropertiesUsedInTheFilterClause, $filterExpAsDataSourceExp);
+        $completeFilterInfo = new FilterInfo($navigationPropertiesUsed, $filterExpAsDataSourceExp);
 
         return $this->getResourceSet($queryType, $targetResourceSet, $completeFilterInfo, $orderBy, $top, $skip, null);
     }

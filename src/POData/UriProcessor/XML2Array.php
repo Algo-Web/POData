@@ -16,32 +16,30 @@ class XML2Array
     /**
      * Convert an XML to Array.
      *
-     * @param string $input_xml
-     *
-     * @throws \Exception
-     *
+     * @param string $inputXml
      * @return array
+     * @throws \Exception
      */
-    public static function createArray($input_xml)
+    public static function createArray($inputXml)
     {
-        if (empty($input_xml)) {
+        if (empty($inputXml)) {
             return [];
         }
         $xml = self::getXMLRoot();
-        if (is_string($input_xml)) {
+        if (is_string($inputXml)) {
             try {
-                $xml->loadXML($input_xml);
+                $xml->loadXML($inputXml);
                 if (!is_object($xml) || empty($xml->documentElement)) {
                     throw new \Exception();
                 }
             } catch (\Exception $ex) {
                 throw new \Exception('[XML2Array] Error parsing the XML string.' . PHP_EOL . $ex->getMessage());
             }
-        } elseif (is_object($input_xml)) {
-            if (get_class($input_xml) != 'DOMDocument') {
+        } elseif (is_object($inputXml)) {
+            if (get_class($inputXml) != 'DOMDocument') {
                 throw new \Exception('[XML2Array] The input XML object should be of type: DOMDocument.');
             }
-            $xml = self::$xml = $input_xml;
+            $xml = self::$xml = $inputXml;
         } else {
             throw new \Exception('[XML2Array] Invalid input');
         }
@@ -55,14 +53,14 @@ class XML2Array
      *
      * @param string $version
      * @param string $encoding
-     * @param bool   $standalone
-     * @param bool   $format_output
+     * @param bool $standalone
+     * @param bool $formatOutput
      */
-    public static function init($version = '1.0', $encoding = 'utf-8', $standalone = false, $format_output = true)
+    public static function init($version = '1.0', $encoding = 'utf-8', $standalone = false, $formatOutput = true)
     {
         self::$xml = new \DomDocument($version, $encoding);
         self::$xml->xmlStandalone = $standalone;
-        self::$xml->formatOutput = $format_output;
+        self::$xml->formatOutput = $formatOutput;
         self::$encoding = $encoding;
     }
 

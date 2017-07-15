@@ -43,12 +43,10 @@ class OrderByInfo
     /**
      * Constructs new instance of OrderByInfo.
      *
-     * @param OrderByPathSegment[]                $orderByPathSegments                        Order by path segments
-     * @param array<array<ResourceProperty>>|null $navigationPropertiesUsedInTheOrderByClause navigation properties used in the order by clause
-     *
-     * @throws \InvalidArgumentException
+     * @param OrderByPathSegment[] $orderByPathSegments Order by path segments
+     * @param array <array<ResourceProperty>>|null $navigationProperties navigation properties used in the order by clause
      */
-    public function __construct($orderByPathSegments, $navigationPropertiesUsedInTheOrderByClause)
+    public function __construct($orderByPathSegments, $navigationProperties)
     {
         if (!is_array($orderByPathSegments)) {
             throw new \InvalidArgumentException(
@@ -62,14 +60,14 @@ class OrderByInfo
             );
         }
 
-        if (!is_null($navigationPropertiesUsedInTheOrderByClause)) {
-            if (!is_array($navigationPropertiesUsedInTheOrderByClause)) {
+        if (!is_null($navigationProperties)) {
+            if (!is_array($navigationProperties)) {
                 throw new \InvalidArgumentException(
                     Messages::orderByInfoNaviUsedArgumentShouldBeNullOrNonEmptyArray()
                 );
             }
 
-            if (empty($navigationPropertiesUsedInTheOrderByClause)) {
+            if (empty($navigationProperties)) {
                 throw new \InvalidArgumentException(
                     Messages::orderByInfoNaviUsedArgumentShouldBeNullOrNonEmptyArray()
                 );
@@ -77,7 +75,7 @@ class OrderByInfo
         }
 
         $this->orderByPathSegments = $orderByPathSegments;
-        $this->navigationPropertiesUsedInTheOrderByClause = $navigationPropertiesUsedInTheOrderByClause;
+        $this->navigationPropertiesUsedInTheOrderByClause = $navigationProperties;
     }
 
     /**

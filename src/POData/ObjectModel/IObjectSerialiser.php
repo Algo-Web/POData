@@ -65,13 +65,13 @@ interface IObjectSerialiser
     /**
      * Write top level bag resource.
      *
-     * @param QueryResult  &$BagValue     Results property contains the bag object to be written
-     * @param string       $propertyName  The name of the bag property
+     * @param QueryResult $bagValue
+     * @param string $propertyName The name of the bag property
      * @param ResourceType &$resourceType Describes the type of bag object
-     *
      * @return ODataPropertyContent
+     * @internal param QueryResult $BagValue Results property contains the bag object to be written
      */
-    public function writeTopLevelBagObject(QueryResult &$BagValue, $propertyName, ResourceType &$resourceType);
+    public function writeTopLevelBagObject(QueryResult &$bagValue, $propertyName, ResourceType &$resourceType);
 
     /**
      * Write top level primitive value.
