@@ -12,7 +12,8 @@ trait configuration
      */
     public static function configurationMaxResultAndPageSizeMutuallyExclusive()
     {
-        return 'Specification of \'entity set page size\' is mutually exclusive with the specification of \'maximum result per collection\' in configuration';
+        return 'Specification of \'entity set page size\' is mutually exclusive with the specification '
+               .'of \'maximum result per collection\' in configuration';
     }
 
     /**
@@ -25,7 +26,7 @@ trait configuration
      */
     public static function configurationResourceSetNameNotFound($name)
     {
-        return "The given name '$name' was not found in the entity sets";
+        return 'The given name \''.$name.'\' was not found in the entity sets';
     }
 
     /**
@@ -39,7 +40,7 @@ trait configuration
      */
     public static function configurationRightsAreNotInRange($argument, $functionName)
     {
-        return "The argument '$argument' of '$functionName' should be EntitySetRights enum value";
+        return 'The argument \''.$argument.'\' of \''.$functionName.'\' should be EntitySetRights enum value';
     }
 
     /**
@@ -50,7 +51,8 @@ trait configuration
      */
     public static function configurationCountNotAccepted()
     {
-        return 'The ability of the data service to return row count information is disabled. To enable this functionality, set the ServiceConfiguration.AcceptCountRequests property to true.';
+        return 'The ability of the data service to return row count information is disabled. To enable'
+               .' this functionality, set the ServiceConfiguration.AcceptCountRequests property to true.';
     }
 
     /**
@@ -61,6 +63,8 @@ trait configuration
      */
     public static function configurationProjectionsNotAccepted()
     {
-        return 'The ability to use the $select query option to define a projection in a data service query is disabled. To enable this functionality, call ServiceConfiguration::setAcceptProjectionRequests method with argument as true.';
+        return 'The ability to use the $select query option to define a projection in a data service query is'
+               .' disabled. To enable this functionality, call ServiceConfiguration::setAcceptProjectionRequests'
+               .' method with argument as true.';
     }
 }

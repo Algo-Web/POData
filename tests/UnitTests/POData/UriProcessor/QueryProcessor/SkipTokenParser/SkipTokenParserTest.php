@@ -196,7 +196,7 @@ class SkipTokenParserTest extends TestCase
             $internalSkipTokenInfo = SkipTokenParser::parseSkipTokenClause($resourceType, $internalOrderByInfo, $skipToken);
             $this->fail('An expected ODataException for type mismatch (datetime and string) ');
         } catch (ODataException $odataException) {
-            $this->assertStringStartsWith('The skiptoken value \'datetime\'1996-07-12T03:58:58\', 22.00, 1234\' contain a value of type \'Edm.DateTime\' at position 0 which is not compatible with the type \'Edm.String\' of corresponding orderby constraint', $odataException->getMessage());
+            $this->assertStringStartsWith('The skiptoken value \'datetime\'1996-07-12T03:58:58\', 22.00, 1234\' contains a value of type \'Edm.DateTime\' at position 0 which is not compatible with the type \'Edm.String\' of corresponding orderby constraint', $odataException->getMessage());
         }
 
         //Price is Double, but in skiptoken uses true
@@ -207,7 +207,7 @@ class SkipTokenParserTest extends TestCase
             $internalSkipTokenInfo = SkipTokenParser::parseSkipTokenClause($resourceType, $internalOrderByInfo, $skipToken);
             $this->fail('An expected ODataException for type mismatch (boolean and double) ');
         } catch (ODataException $odataException) {
-            $this->assertStringStartsWith('The skiptoken value \'\'ANS\', true, 1234\' contain a value of type \'Edm.Boolean\' at position 1 which is not compatible with the type \'Edm.Double\' of corresponding orderby constraint', $odataException->getMessage());
+            $this->assertStringStartsWith('The skiptoken value \'\'ANS\', true, 1234\' contains a value of type \'Edm.Boolean\' at position 1 which is not compatible with the type \'Edm.Double\' of corresponding orderby constraint', $odataException->getMessage());
         }
 
         //null is allowed in skiptoken and compactable with all types

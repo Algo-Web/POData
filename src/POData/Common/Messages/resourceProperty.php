@@ -13,7 +13,8 @@ trait resourceProperty
      */
     public static function resourcePropertyInvalidKindParameter($argumentName)
     {
-        return "The argument '$argumentName' is not a valid ResourcePropertyKind enum value or valid combination of ResourcePropertyKind enum values";
+        return 'The argument \''.$argumentName.'\' is not a valid ResourcePropertyKind enum value or'
+               .' valid combination of ResourcePropertyKind enum values';
     }
 
     /**
@@ -26,6 +27,7 @@ trait resourceProperty
      */
     public static function resourcePropertyPropertyKindAndResourceTypeKindMismatch($resourcePropertyKindArgName, $resourceTypeArgName)
     {
-        return "The '$resourcePropertyKindArgName' parameter does not match with the type of the resource type in parameter '$resourceTypeArgName'";
+        return 'The \''.$resourcePropertyKindArgName.'\' parameter does not match with the type of the resource'
+               .' type in parameter \''.$resourceTypeArgName.'\'';
     }
 }

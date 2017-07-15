@@ -836,7 +836,7 @@ class BaseServiceNewTest extends TestCase
 
         $expected = 'If-Match or If-None-Match HTTP headers cannot be specified since the'
                     .' URI \'https://www.example.org/odata.svc\' refers to a collection of resources or has'
-                    .' a $count or $link segment or has a $expand as one of the query parameters.';
+                    .' a $count or $link segment or has an $expand as one of the query parameters.';
         $actual = null;
 
         try {

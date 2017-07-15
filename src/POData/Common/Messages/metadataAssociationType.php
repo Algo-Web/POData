@@ -14,7 +14,8 @@ trait metadataAssociationType
      */
     public static function metadataAssociationTypeSetBidirectionalAssociationMustReturnSameResourceAssociationSetFromBothEnd()
     {
-        return 'When the ResourceAssociationSet is bidirectional, IMetadataProvider::getResourceAssociationSet() must return the same ResourceAssociationSet when call from both ends.';
+        return 'When the ResourceAssociationSet is bidirectional, IMetadataProvider::getResourceAssociationSet() must'.
+               ' return the same ResourceAssociationSet when call from both ends.';
     }
 
     /**
@@ -30,7 +31,11 @@ trait metadataAssociationType
      */
     public static function metadataAssociationTypeSetMultipleAssociationSetsForTheSameAssociationTypeMustNotReferToSameEndSets($resourceSet1Name, $resourceSet2Name, $entitySetName)
     {
-        return "ResourceAssociationSets '$resourceSet1Name' and '$resourceSet2Name' have a ResourceAssociationSetEnd referring to the same EntitySet '$entitySetName' through the same AssociationType. Make sure that if two or more AssociationSets refer to the same AssociationType, the ends must not refer to the same EntitySet. (this could happen if multiple entity sets have entity types that have a common ancestor and the ancestor has a property of derived entity types)";
+        return 'ResourceAssociationSets \''.$resourceSet1Name.'\' and \''.$resourceSet2Name.'\' have a'
+               .' ResourceAssociationSetEnd referring to the same EntitySet \''.$entitySetName.'\' through the same'
+               .' AssociationType. Make sure that if two or more AssociationSets refer to the same AssociationType,'
+               .' the ends must not refer to the same EntitySet. (this could happen if multiple entity sets have'
+               .' entity types that have a common ancestor and the ancestor has a property of derived entity types)';
     }
 
     /**
@@ -43,6 +48,7 @@ trait metadataAssociationType
      */
     public static function metadataAssociationTypeSetInvalidGetDerivedTypesReturnType($resourceTypeName)
     {
-        return "Return type of IDSMP::getDerivedTypes should be either null or array of 'ResourceType', check implementation of IDSMP::getDerivedTypes for the resource type '$resourceTypeName'.";
+        return 'Return type of IDSMP::getDerivedTypes should be either null or array of \'ResourceType\', check'
+               .' implementation of IDSMP::getDerivedTypes for the resource type \''.$resourceTypeName.'\'.';
     }
 }

@@ -12,6 +12,7 @@ trait resourceSet
      */
     public static function resourceSetContainerMustBeAssociatedWithEntityType()
     {
-        return 'The ResourceTypeKind property of a ResourceType instance associated with a ResourceSet must be equal to \'EntityType\'';
+        return 'The ResourceTypeKind property of a ResourceType instance associated with a ResourceSet'
+               .' must be equal to \'EntityType\'';
     }
 }

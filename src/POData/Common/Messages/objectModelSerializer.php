@@ -15,7 +15,7 @@ trait objectModelSerializer
      */
     public static function badProviderInconsistentEntityOrComplexTypeUsage($typeName)
     {
-        return "Internal Server Error. The type '$typeName' has inconsistent metadata and runtime type info.";
+        return 'Internal Server Error. The type \''.$typeName.'\' has inconsistent metadata and runtime type info.';
     }
 
     /**
@@ -30,7 +30,8 @@ trait objectModelSerializer
      */
     public static function badQueryNullKeysAreNotSupported($resourceTypeName, $keyName)
     {
-        return "The serialized resource of type $resourceTypeName has a null value in key member '$keyName'. Null values are not supported in key members.";
+        return 'The serialized resource of type '.$resourceTypeName.' has a null value in key member \''.$keyName
+               .'\'. Null values are not supported in key members.';
     }
 
     /**
@@ -44,7 +45,8 @@ trait objectModelSerializer
      */
     public static function objectModelSerializerFailedToAccessProperty($propertyName, $parentObjectName)
     {
-        return "objectModelSerializer failed to access or initialize the property $propertyName of $parentObjectName, Please contact provider.";
+        return 'objectModelSerializer failed to access or initialize the property '.$propertyName.' of '
+               .$parentObjectName.', Please contact provider.';
     }
 
     /**
@@ -57,6 +59,7 @@ trait objectModelSerializer
      */
     public static function objectModelSerializerLoopsNotAllowedInComplexTypes($complexPropertyName)
     {
-        return 'A circular loop was detected while serializing the property \'' . $complexPropertyName . '\'. You must make sure that loops are not present in properties that return a bag or complex type.';
+        return 'A circular loop was detected while serializing the property \'' . $complexPropertyName
+               . '\'. You must make sure that loops are not present in properties that return a bag or complex type.';
     }
 }

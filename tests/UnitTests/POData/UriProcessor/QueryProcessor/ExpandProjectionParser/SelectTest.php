@@ -173,9 +173,13 @@ class SelectTest extends TestCase
                     'Orders/OrderID', //$select
                     $providersWrapper
                 );
-            $this->fail('An expected ODataException for traversal on select without expansion has not been thrown');
+                $this->fail('An expected ODataException for traversal on select without expansion has not been thrown');
         } catch (ODataException $odataException) {
-            $this->assertStringStartsWith('Only navigation properties specified in expand option can be travered in select option,In order to treaverse', $odataException->getMessage());
+                $this->assertStringStartsWith(
+                    'Only navigation properties specified in expand option can be traversed in select option.  '
+                    .'In order to traverse',
+                    $odataException->getMessage()
+                );
         }
     }
 
