@@ -331,7 +331,7 @@ class ObjectModelSerializerTest extends TestCase
         $ret = $foo->writeTopLevelElements($queryResult);
         $this->assertTrue($ret instanceof \POData\ObjectModel\ODataFeed);
         $this->assertTrue($ret->selfLink instanceof \POData\ObjectModel\ODataLink);
-        $this->assertEquals("http://192.168.2.1/abm-master/public/odata.svc/Entity(1)", $ret->id);
+        $this->assertEquals('http://192.168.2.1/abm-master/public/odata.svc/Entity(1)', $ret->id);
     }
 
     public function testWriteNullPrimitive()
@@ -1127,6 +1127,8 @@ class ObjectModelSerializerTest extends TestCase
 
     /**
      * @dataProvider matchPrimitiveProvider
+     * @param mixed $input
+     * @param mixed $expected
      */
     public function testResourceKindMatchesPrimitive($input, $expected)
     {

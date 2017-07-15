@@ -61,11 +61,11 @@ class InternalSkipTokenInfo
     /**
      * Creates a new instance of InternalSkipTokenInfo.
      *
-     * @param InternalOrderByInfo           &$internalOrderByInfo     Reference to an instance of InternalOrderByInfo which holds
-     *                                                                sorter function(s) generated from orderby clause
-     * @param array<array<IType>>           $orderByValuesInSkipToken Collection of values in the skiptoken corresponds to the
-     *                                                                orderby path segments
-     * @param ResourceType                  &$resourceType            Reference to the type of the resource pointed by the request uri
+     * @param InternalOrderByInfo &$internalOrderByInfo     Reference to an instance of InternalOrderByInfo which holds
+     *                                                      sorter function(s) generated from orderby clause
+     * @param array<array<IType>> $orderByValuesInSkipToken Collection of values in the skiptoken corresponds to the
+     *                                                      orderby path segments
+     * @param ResourceType        &$resourceType            Reference to the type of the resource pointed by the request uri
      */
     public function __construct(
         InternalOrderByInfo & $internalOrderByInfo,
@@ -88,7 +88,7 @@ class InternalSkipTokenInfo
      */
     public function getSkipTokenInfo()
     {
-        if (is_null($this->skipTokenInfo)) {
+        if (null === $this->skipTokenInfo) {
             $orderbyInfo = $this->internalOrderByInfo->getOrderByInfo();
             $this->skipTokenInfo = new SkipTokenInfo(
                 $orderbyInfo,
@@ -177,7 +177,7 @@ class InternalSkipTokenInfo
      */
     public function getKeyObject()
     {
-        if (is_null($this->keyObject)) {
+        if (null === $this->keyObject) {
             $this->keyObject = $this->internalOrderByInfo->getDummyObject();
             $i = 0;
             foreach ($this->internalOrderByInfo->getOrderByPathSegments() as $orderByPathSegment) {
@@ -251,7 +251,7 @@ class InternalSkipTokenInfo
                 $isLastSegment = ($index == $subPathCount - 1);
                 try {
                     $currentObject = $this->resourceType->getPropertyValue($currentObject, $subPathSegment->getName());
-                    if (is_null($currentObject)) {
+                    if (null === $currentObject) {
                         $nextPageLink .= 'null, ';
                         break;
                     } elseif ($isLastSegment) {

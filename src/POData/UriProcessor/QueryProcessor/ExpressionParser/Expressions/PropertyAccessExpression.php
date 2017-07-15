@@ -55,7 +55,7 @@ class PropertyAccessExpression extends AbstractExpression
             $this->type = new Navigation($resourceProperty->getResourceType());
         }
 
-        if (!is_null($parent)) {
+        if (null !== $parent) {
             $parent->setChild($this);
         }
     }
@@ -235,12 +235,12 @@ class PropertyAccessExpression extends AbstractExpression
      */
     public function free()
     {
-        if (!is_null($this->parent)) {
+        if (null !== $this->parent) {
             $this->parent->free();
             unset($this->parent);
         }
 
-        if (!is_null($this->child)) {
+        if (null !== $this->child) {
             $this->child->free();
             unset($this->child);
         }

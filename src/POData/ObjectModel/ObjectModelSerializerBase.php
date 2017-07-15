@@ -158,7 +158,7 @@ class ObjectModelSerializerBase
             $keyType = $resourceProperty->getInstanceType();
             assert($keyType instanceof IType, '$keyType not instanceof IType');
             $keyValue = $this->getPropertyValue($entityInstance, $resourceType, $resourceProperty);
-            if (is_null($keyValue)) {
+            if (null === $keyValue) {
                 throw ODataException::createInternalServerError(
                     Messages::badQueryNullKeysAreNotSupported($resourceType->getName(), $keyName)
                 );
@@ -242,9 +242,9 @@ class ObjectModelSerializerBase
         $comma = null;
         foreach ($resourceType->getETagProperties() as $eTagProperty) {
             $type = $eTagProperty->getInstanceType();
-            assert(!is_null($type) && $type instanceof IType, 'is_null($type) || $type not instanceof IType');
+            assert(null !== $type && $type instanceof IType, 'is_null($type) || $type not instanceof IType');
             $value = $this->getPropertyValue($entryObject, $resourceType, $eTagProperty);
-            if (is_null($value)) {
+            if (null === $value) {
                 $eTag = $eTag . $comma . 'null';
             } else {
                 $eTag = $eTag . $comma . $type->convertToOData($value);
@@ -253,7 +253,7 @@ class ObjectModelSerializerBase
             $comma = ',';
         }
 
-        if (!is_null($eTag)) {
+        if (null !== $eTag) {
             // If eTag is made up of datetime or string properties then the above
             // IType::converToOData will perform utf8 and url encode. But we don't
             // want this for eTag value.
@@ -308,7 +308,7 @@ class ObjectModelSerializerBase
                     $resourceProperty
                 );
 
-            assert(!is_null($currentResourceSetWrapper), 'is_null($currentResourceSetWrapper)');
+            assert(null !== $currentResourceSetWrapper, 'is_null($currentResourceSetWrapper)');
 
             return $this->pushSegment($resourceProperty->getName(), $currentResourceSetWrapper);
         }
@@ -328,7 +328,7 @@ class ObjectModelSerializerBase
     protected function getProjectionNodes()
     {
         $expandedProjectionNode = $this->getCurrentExpandedProjectionNode();
-        if (is_null($expandedProjectionNode) || $expandedProjectionNode->canSelectAllProperties()) {
+        if (null === $expandedProjectionNode || $expandedProjectionNode->canSelectAllProperties()) {
             return;
         }
 
@@ -344,7 +344,7 @@ class ObjectModelSerializerBase
     protected function getCurrentExpandedProjectionNode()
     {
         $expandedProjectionNode = $this->getRequest()->getRootProjectionNode();
-        if (is_null($expandedProjectionNode)) {
+        if (null === $expandedProjectionNode) {
             return;
         } else {
             $segmentNames = $this->getStack()->getSegmentNames();
@@ -359,7 +359,7 @@ class ObjectModelSerializerBase
                 for ($i = 1; $i < $depth; ++$i) {
                     $expandedProjectionNode
                         = $expandedProjectionNode->findNode($segmentNames[$i]);
-                    assert(!is_null($expandedProjectionNode), 'is_null($expandedProjectionNode)');
+                    assert(null !== $expandedProjectionNode, 'is_null($expandedProjectionNode)');
                     assert(
                         $expandedProjectionNode instanceof ExpandedProjectionNode,
                         '$expandedProjectionNode not instanceof ExpandedProjectionNode'
@@ -382,7 +382,7 @@ class ObjectModelSerializerBase
     protected function shouldExpandSegment($navigationPropertyName)
     {
         $expandedProjectionNode = $this->getCurrentExpandedProjectionNode();
-        if (is_null($expandedProjectionNode)) {
+        if (null === $expandedProjectionNode) {
             return false;
         }
 
@@ -434,7 +434,7 @@ class ObjectModelSerializerBase
         $internalOrderByInfo = $currentExpandedProjectionNode->getInternalOrderByInfo();
         $skipToken = $internalOrderByInfo->buildSkipTokenValue($lastObject);
         $numSegments = count($internalOrderByInfo->getOrderByPathSegments());
-        assert(!is_null($skipToken), '!is_null($skipToken)');
+        assert(null !== $skipToken, '!is_null($skipToken)');
         $queryParameterString = null;
         if ($this->isRootResourceSet()) {
             $queryParameterString = $this->getNextPageLinkQueryParametersForRootResourceSet();
@@ -471,8 +471,8 @@ class ObjectModelSerializerBase
                     ODataConstants::HTTPQUERY_STRING_SELECT
                  ] as $queryOption) {
             $value = $this->getService()->getHost()->getQueryStringItem($queryOption);
-            if (!is_null($value)) {
-                if (!is_null($queryParameterString)) {
+            if (null !== $value) {
+                if (null !== $queryParameterString) {
                     $queryParameterString = $queryParameterString . '&';
                 }
 
@@ -481,16 +481,16 @@ class ObjectModelSerializerBase
         }
 
         $topCountValue = $this->getRequest()->getTopOptionCount();
-        if (!is_null($topCountValue)) {
+        if (null !== $topCountValue) {
             $remainingCount = $topCountValue - $this->getRequest()->getTopCount();
-            if (!is_null($queryParameterString)) {
+            if (null !== $queryParameterString) {
                 $queryParameterString .= '&';
             }
 
             $queryParameterString .= ODataConstants::HTTPQUERY_STRING_TOP . '=' . $remainingCount;
         }
 
-        if (!is_null($queryParameterString)) {
+        if (null !== $queryParameterString) {
             $queryParameterString .= '&';
         }
 
@@ -510,7 +510,7 @@ class ObjectModelSerializerBase
     {
         $queryParameterString = null;
         $expandedProjectionNode = $this->getCurrentExpandedProjectionNode();
-        if (!is_null($expandedProjectionNode)) {
+        if (null !== $expandedProjectionNode) {
             $pathSegments = [];
             $selectionPaths = null;
             $expansionPaths = null;
@@ -529,19 +529,19 @@ class ObjectModelSerializerBase
                 $this->appendSelectionOrExpandPath($selectionPaths, $pathSegments, '*');
             }
 
-            if (!is_null($selectionPaths)) {
+            if (null !== $selectionPaths) {
                 $queryParameterString = '$select=' . $selectionPaths;
             }
 
-            if (!is_null($expansionPaths)) {
-                if (!is_null($queryParameterString)) {
+            if (null !== $expansionPaths) {
+                if (null !== $queryParameterString) {
                     $queryParameterString .= '&';
                 }
 
                 $queryParameterString = '$expand=' . $expansionPaths;
             }
 
-            if (!is_null($queryParameterString)) {
+            if (null !== $queryParameterString) {
                 $queryParameterString .= '&';
             }
         }
@@ -568,7 +568,7 @@ class ObjectModelSerializerBase
         if ($recursionLevel == 1) {
             //presence of $top option affect next link for root container
             $topValueCount = $this->getRequest()->getTopOptionCount();
-            if (!is_null($topValueCount) && ($topValueCount <= $pageSize)) {
+            if (null !== $topValueCount && ($topValueCount <= $pageSize)) {
                 return false;
             }
         }
@@ -713,7 +713,7 @@ class ObjectModelSerializerBase
      */
     private function appendSelectionOrExpandPath(&$path, &$parentPathSegments, $segmentToAppend)
     {
-        if (!is_null($path)) {
+        if (null !== $path) {
             $path .= ', ';
         }
 

@@ -3,6 +3,7 @@
 namespace UnitTests\POData\OperationContext\Web;
 
 use Illuminate\Http\Request;
+use Mockery as m;
 use POData\Common\ODataConstants;
 use POData\Common\ODataException;
 use POData\Common\Version;
@@ -10,7 +11,6 @@ use POData\OperationContext\ServiceHost;
 use POData\OperationContext\Web\Illuminate\IlluminateOperationContext;
 use POData\OperationContext\Web\Illuminate\IncomingIlluminateRequest;
 use UnitTests\POData\TestCase;
-use Mockery as m;
 
 class ServiceHostTest extends TestCase
 {

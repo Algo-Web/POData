@@ -22,9 +22,9 @@ class ResourceFunctionType
 
     /**
      * ResourceFunctionType constructor.
-     * @param string|array $functionName
+     * @param string|array                $functionName
      * @param FunctionImportAnonymousType $type
-     * @param ResourceType $resource
+     * @param ResourceType                $resource
      */
     public function __construct($functionName, FunctionImportAnonymousType $type, ResourceType $resource)
     {
@@ -91,7 +91,7 @@ class ResourceFunctionType
     }
 
     /**
-     * Get endpoint name
+     * Get endpoint name.
      *
      * @return string
      */
@@ -101,7 +101,7 @@ class ResourceFunctionType
     }
 
     /**
-     * Get underlying function name
+     * Get underlying function name.
      *
      * @return string
      */
@@ -111,7 +111,7 @@ class ResourceFunctionType
     }
 
     /**
-     * Required parameter list
+     * Required parameter list.
      *
      * @return array
      */
@@ -145,6 +145,7 @@ class ResourceFunctionType
 
     /**
      * @param $func
+     * @param mixed $fromArray
      */
     private function checkBlacklist($func, $fromArray = false)
     {

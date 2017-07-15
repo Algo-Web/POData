@@ -32,15 +32,15 @@ class OrderByNode extends OrderByBaseNode
     /**
      * Construct a new instance of OrderByNode.
      *
-     * @param string|null               $propertyName       Name of the property corresponds to the sub path
-     *                                                      segment represented by this node, this parameter
-     *                                                      will be null if this node is root
-     * @param ResourceProperty|null     $resourceProperty   Resource property corresponds to the sub path
-     *                                                      segment represented by this node, this parameter
-     *                                                      will be null if  this node is root
-     * @param ResourceSetWrapper|null   $resourceSetWrapper The resource set wrapper associated with the sub path
-     *                                                      segment represented by this node, this will be null
-     *                                                      if this node represents a complex sub path segment
+     * @param string|null             $propertyName       Name of the property corresponds to the sub path
+     *                                                    segment represented by this node, this parameter
+     *                                                    will be null if this node is root
+     * @param ResourceProperty|null   $resourceProperty   Resource property corresponds to the sub path
+     *                                                    segment represented by this node, this parameter
+     *                                                    will be null if  this node is root
+     * @param ResourceSetWrapper|null $resourceSetWrapper The resource set wrapper associated with the sub path
+     *                                                    segment represented by this node, this will be null
+     *                                                    if this node represents a complex sub path segment
      */
     public function __construct($propertyName, $resourceProperty, $resourceSetWrapper)
     {

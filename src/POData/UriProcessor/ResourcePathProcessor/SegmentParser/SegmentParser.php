@@ -171,7 +171,7 @@ class SegmentParser
 
         $identifier = $keyPredicate = null;
         $this->extractSegmentIdentifierAndKeyPredicate($segment, $identifier, $keyPredicate);
-        $hasPredicate = !is_null($keyPredicate);
+        $hasPredicate = null !== $keyPredicate;
 
         $singleton = $this->providerWrapper->resolveSingleton($identifier);
         if (null !== $singleton) {
@@ -193,7 +193,7 @@ class SegmentParser
             $current->setIdentifier(ODataConstants::URI_VALUE_SEGMENT);
             $current->setTargetKind(TargetKind::PRIMITIVE_VALUE());
             $current->setSingleResult(true);
-        } elseif (!is_null($previous->getPrevious())
+        } elseif (null !== $previous->getPrevious()
                   && $previous->getPrevious()->getIdentifier() === ODataConstants::URI_LINK_SEGMENT
                   && $identifier !== ODataConstants::URI_COUNT_SEGMENT) {
             throw ODataException::createBadRequestError(
@@ -260,9 +260,9 @@ class SegmentParser
                     $previous->getTargetResourceType()
                 );
                 $current->setTargetKind(TargetKind::MEDIA_RESOURCE());
-            } elseif (is_null($projectedProperty)) {
-                if (!is_null($previous->getTargetResourceType())
-                    && !is_null($previous->getTargetResourceType()->tryResolveNamedStreamByName($identifier))
+            } elseif (null === $projectedProperty) {
+                if (null !== $previous->getTargetResourceType()
+                    && null !== $previous->getTargetResourceType()->tryResolveNamedStreamByName($identifier)
                 ) {
                     $current->setTargetKind(TargetKind::MEDIA_RESOURCE());
                     $current->setSingleResult(true);
@@ -303,7 +303,7 @@ class SegmentParser
                             $prevResource,
                             $projectedProperty
                         );
-                        if (is_null($resourceSetWrapper)) {
+                        if (null === $resourceSetWrapper) {
                             throw ODataException::createResourceNotFoundError($projectedProperty->getName());
                         }
 
@@ -333,7 +333,7 @@ class SegmentParser
                     }
                 }
 
-                if ($checkRights && !is_null($current->getTargetResourceSetWrapper())) {
+                if ($checkRights && null !== $current->getTargetResourceSetWrapper()) {
                     $current->getTargetResourceSetWrapper()
                         ->checkResourceSetRightsForRead(
                             $current->isSingleResult()
@@ -362,14 +362,14 @@ class SegmentParser
         $descriptor->setIdentifier($segmentIdentifier);
 
         if ($segmentIdentifier === ODataConstants::URI_METADATA_SEGMENT) {
-            $this->assertion(is_null($keyPredicate));
+            $this->assertion(null === $keyPredicate);
             $descriptor->setTargetKind(TargetKind::METADATA());
 
             return $descriptor;
         }
 
         if ($segmentIdentifier === ODataConstants::URI_BATCH_SEGMENT) {
-            $this->assertion(is_null($keyPredicate));
+            $this->assertion(null === $keyPredicate);
             $descriptor->setTargetKind(TargetKind::BATCH());
 
             return $descriptor;
@@ -393,7 +393,7 @@ class SegmentParser
 
         $singleton = $this->providerWrapper->resolveSingleton($segmentIdentifier);
         if (null !== $singleton) {
-            $this->assertion(is_null($keyPredicate));
+            $this->assertion(null === $keyPredicate);
             $resourceType = $singleton->getResourceType();
             $typeName = Str::plural($resourceType->getName());
             $resourceSet = $this->providerWrapper->resolveResourceSet($typeName);

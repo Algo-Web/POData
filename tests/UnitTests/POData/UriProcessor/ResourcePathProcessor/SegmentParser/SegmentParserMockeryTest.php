@@ -2,6 +2,7 @@
 
 namespace UnitTests\POData\UriProcessor\ResourcePathProcessor\SegmentParser;
 
+use Mockery as m;
 use POData\Common\ODataException;
 use POData\Configuration\EntitySetRights;
 use POData\Configuration\ServiceConfiguration;
@@ -19,7 +20,6 @@ use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 use UnitTests\POData\Providers\Metadata\reusableEntityClass4;
 use UnitTests\POData\Providers\Metadata\reusableEntityClass5;
 use UnitTests\POData\TestCase;
-use Mockery as m;
 
 class SegmentParserMockeryTest extends TestCase
 {
@@ -56,7 +56,7 @@ class SegmentParserMockeryTest extends TestCase
         $fore = $foo->addEntityType(new \ReflectionClass($refForward), 'fore');
         $foo->addResourceSet('foreSet', $fore);
 
-        $name = "Foobar";
+        $name = 'Foobar';
 
         $foo->createSingleton($name, $fore, $functionName);
 
@@ -79,7 +79,7 @@ class SegmentParserMockeryTest extends TestCase
 
     public function testSingletonAsLaterSegment()
     {
-        $expected = "Singleton must be first element";
+        $expected = 'Singleton must be first element';
         $actual = null;
 
         $functionName = [get_class($this), 'exampleSingleton'];
@@ -94,7 +94,7 @@ class SegmentParserMockeryTest extends TestCase
         $foo->addResourceSet('foreSet', $fore);
         $foo->addResourceSet('backSet', $aft);
 
-        $name = "Foobar";
+        $name = 'Foobar';
 
         $foo->createSingleton($name, $fore, $functionName);
 

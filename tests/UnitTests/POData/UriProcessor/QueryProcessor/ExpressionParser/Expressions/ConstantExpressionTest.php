@@ -2,15 +2,15 @@
 
 namespace UnitTests\POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions;
 
+use Mockery as m;
 use POData\Common\ODataException;
 use POData\Providers\Metadata\Type\IType;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\AbstractExpression;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ArithmeticExpression;
-use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ExpressionType;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ConstantExpression;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ExpressionType;
 use POData\UriProcessor\QueryProcessor\FunctionDescription;
 use UnitTests\POData\TestCase;
-use Mockery as m;
 
 class ConstantExpressionTest extends TestCase
 {

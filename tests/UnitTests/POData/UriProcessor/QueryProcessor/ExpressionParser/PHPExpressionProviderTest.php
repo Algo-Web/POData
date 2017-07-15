@@ -689,7 +689,7 @@ class PHPExpressionProviderTest extends TestCase
 
     private function setCustomerOrder($customer, $order)
     {
-        if (is_null($customer->Orders)) {
+        if (null === $customer->Orders) {
             $customer->Orders = [];
         }
 

@@ -8,9 +8,9 @@ class ResourceEntityType extends ResourceType
 {
     /**
      * Create new instance of ResourceEntityType.
-     * @param \ReflectionClass              $instanceType   Instance type for the entity type
-     * @param TEntityTypeType               $entity         Object containing complex type metadata
-     * @param IMetadataProvider             $meta           Application's metadata provider
+     * @param \ReflectionClass  $instanceType Instance type for the entity type
+     * @param TEntityTypeType   $entity       Object containing complex type metadata
+     * @param IMetadataProvider $meta         Application's metadata provider
      *
      * @throws \InvalidArgumentException
      */

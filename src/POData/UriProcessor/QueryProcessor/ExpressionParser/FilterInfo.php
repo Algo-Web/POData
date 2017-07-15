@@ -34,7 +34,7 @@ class FilterInfo
     private $filterExpressionAsDataSourceExpression;
 
     /**
-     * @param array $navigationProperties navigation properties in the $filter clause
+     * @param array  $navigationProperties     navigation properties in the $filter clause
      * @param string $filterExpAsDataSourceExp The $filter expression, specific to data source
      */
     public function __construct(array $navigationProperties, $filterExpAsDataSourceExp)

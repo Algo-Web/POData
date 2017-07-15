@@ -187,7 +187,7 @@ class ProvidersWrapper
 
             $resourceSetNames[] = $name;
             $resourceSetWrapper = $this->validateResourceSetAndGetWrapper($resourceSet);
-            if (!is_null($resourceSetWrapper)) {
+            if (null !== $resourceSetWrapper) {
                 $resourceSetWrappers[] = $resourceSetWrapper;
             }
         }
@@ -297,7 +297,7 @@ class ProvidersWrapper
         }
 
         $resourceSet = $this->metaProvider->resolveResourceSet($name);
-        if (is_null($resourceSet)) {
+        if (null === $resourceSet) {
             return null;
         }
 
@@ -318,7 +318,7 @@ class ProvidersWrapper
     public function resolveResourceType($name)
     {
         $resourceType = $this->metaProvider->resolveResourceType($name);
-        if (is_null($resourceType)) {
+        if (null === $resourceType) {
             return null;
         }
 
@@ -387,8 +387,8 @@ class ProvidersWrapper
     /**
      * Gets the visible resource properties for the given resource type from the given resource set wrapper.
      *
-     * @param ResourceSetWrapper $setWrapper Resource set wrapper in question
-     * @param ResourceType $resourceType Resource type in question
+     * @param ResourceSetWrapper $setWrapper   Resource set wrapper in question
+     * @param ResourceType       $resourceType Resource type in question
      *
      * @return ResourceProperty[] Collection of visible resource properties from the given resource set wrapper
      *                            and resource type
@@ -408,11 +408,11 @@ class ProvidersWrapper
                 //Check whether this is a visible navigation property
                 //TODO: is this broken?? see #87
                 if ($resourceProperty->getTypeKind() == ResourceTypeKind::ENTITY
-                    && !is_null($this->getResourceSetWrapperForNavigationProperty(
+                    && null !== $this->getResourceSetWrapperForNavigationProperty(
                         $setWrapper,
                         $resourceType,
                         $resourceProperty
-                    ))
+                    )
                 ) {
                     $this->propertyCache[$cacheKey][$resourceProperty->getName()] = $resourceProperty;
                 } else {
@@ -429,8 +429,8 @@ class ProvidersWrapper
      * Gets the target resource set wrapper for the given navigation property,
      * source resource set wrapper and the source resource type.
      *
-     * @param ResourceSetWrapper $resourceSetWrapper Source resource set
-     * @param ResourceEntityType $resourceType Source resource type
+     * @param ResourceSetWrapper $resourceSetWrapper         Source resource set
+     * @param ResourceEntityType $resourceType               Source resource type
      * @param ResourceProperty   $navigationResourceProperty Navigation property
      *
      * @return ResourceSetWrapper|null Returns instance of ResourceSetWrapper
@@ -450,7 +450,7 @@ class ProvidersWrapper
             $navigationResourceProperty
         );
 
-        if (!is_null($associationSet)) {
+        if (null !== $associationSet) {
             $relatedAssociationSetEnd = $associationSet->getRelatedResourceAssociationSetEnd(
                 $resourceSetWrapper->getResourceSet(),
                 $resourceType,
@@ -469,9 +469,9 @@ class ProvidersWrapper
      * Note: Wrapper for IMetadataProvider::getResourceAssociationSet
      * method implementation.
      *
-     * @param ResourceSet           $set      Resource set of the source association end
-     * @param ResourceEntityType    $type     Resource type of the source association end
-     * @param ResourceProperty      $property Resource property of the source association end
+     * @param ResourceSet        $set      Resource set of the source association end
+     * @param ResourceEntityType $type     Resource type of the source association end
+     * @param ResourceProperty   $property Resource property of the source association end
      *
      * @return ResourceAssociationSet|null Returns ResourceAssociationSet for the source
      *                                     association end, NULL if no such
@@ -497,7 +497,7 @@ class ProvidersWrapper
             'Retrieved resource assocation must be either null or an instance of ResourceAssociationSet'
         );
 
-        if (!is_null($associationSet)) {
+        if (null !== $associationSet) {
             $thisAssociationSetEnd = $associationSet->getResourceAssociationSetEnd(
                 $set,
                 $type,
@@ -516,7 +516,7 @@ class ProvidersWrapper
             //Return null, if either AssociationSet's End1 or End2's resourceset name
             //doesn't match the name of resource set wrapper (param1) and resource type is not assignable
             //from given resource type (param2)
-            if (is_null($thisAssociationSetEnd) || is_null($relatedAssociationSetEnd)) {
+            if (null === $thisAssociationSetEnd || null === $relatedAssociationSetEnd) {
                 throw new ODataException(
                     Messages::providersWrapperIDSMPGetResourceSetReturnsInvalidResourceSet(
                         $set->getName(),
@@ -671,6 +671,7 @@ class ProvidersWrapper
      *
      * @param ResourceSet   $resourceSet   The entity set containing the entity to update
      * @param KeyDescriptor $keyDescriptor The key identifying the entity to update
+     * @param mixed         $data
      *
      * @return bool|null Returns result of executing query
      */
@@ -689,18 +690,18 @@ class ProvidersWrapper
     /**
      * Get related resource set for a resource.
      *
-     * @param QueryType             $queryType         Indicates if this is a query for a count, entities, or entities
-     *                                                 with a count
-     * @param ResourceSet           $sourceResourceSet The entity set containing the source entity
-     * @param object                $sourceEntity      The source entity instance
-     * @param ResourceSet           $targetResourceSet The resource set containing the target of the navigation property
-     * @param ResourceProperty      $targetProperty    The navigation property to retrieve
-     * @param FilterInfo|null       $filterInfo        Represents the $filter parameter of the OData query.
-     *                                                 NULL if no $filter specified
-     * @param mixed                 $orderBy           sorted order if we want to get the data in some specific order
-     * @param int                   $top                  number of records which need to be retrieved
-     * @param int                   $skip                 number of records which need to be skipped
-     * @param SkipTokenInfo|null    $skipToken            value indicating what records to skip
+     * @param QueryType          $queryType         Indicates if this is a query for a count, entities, or entities
+     *                                              with a count
+     * @param ResourceSet        $sourceResourceSet The entity set containing the source entity
+     * @param object             $sourceEntity      The source entity instance
+     * @param ResourceSet        $targetResourceSet The resource set containing the target of the navigation property
+     * @param ResourceProperty   $targetProperty    The navigation property to retrieve
+     * @param FilterInfo|null    $filterInfo        Represents the $filter parameter of the OData query.
+     *                                              NULL if no $filter specified
+     * @param mixed              $orderBy           sorted order if we want to get the data in some specific order
+     * @param int                $top               number of records which need to be retrieved
+     * @param int                $skip              number of records which need to be skipped
+     * @param SkipTokenInfo|null $skipToken         value indicating what records to skip
      *
      * @throws ODataException
      *
@@ -791,10 +792,10 @@ class ProvidersWrapper
      * @param ResourceSet   $sourceResourceSet    The entity set containing the source entity
      * @param object        $sourceEntityInstance The source entity instance
      * @param KeyDescriptor $keyDescriptor        The key identifying the entity to fetch
-     * @param object        $data                 The New data for the entity instance.
+     * @param object        $data                 the New data for the entity instance
      * @param bool          $shouldUpdate         Should undefined values be updated or reset to default
      *
-     * @return object|null The new resource value if it is assignable, or throw exception for null.
+     * @return object|null the new resource value if it is assignable, or throw exception for null
      */
     public function updateResource(
         ResourceSet $sourceResourceSet,
@@ -818,7 +819,7 @@ class ProvidersWrapper
      * @param ResourceSet $sourceResourceSet
      * @param object      $sourceEntityInstance
      *
-     * return bool true if resources successfully deleted, otherwise false.
+     * return bool true if resources successfully deleted, otherwise false
      */
     public function deleteResource(
         ResourceSet $sourceResourceSet,

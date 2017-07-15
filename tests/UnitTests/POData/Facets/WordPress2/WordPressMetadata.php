@@ -285,7 +285,7 @@ class WordPressMetadata
 
     public static function getEntityMapping()
     {
-        if (!is_null(self::$_entityMapping)) {
+        if (null !== self::$_entityMapping) {
             self::$_entityMapping = [
             'Post' => [
                 '$MappedTable$'   => 'wp_posts',

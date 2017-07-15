@@ -16,9 +16,9 @@ class XML2Array
     /**
      * Convert an XML to Array.
      *
-     * @param string $inputXml
-     * @return array
+     * @param  string     $inputXml
      * @throws \Exception
+     * @return array
      */
     public static function createArray($inputXml)
     {
@@ -53,8 +53,8 @@ class XML2Array
      *
      * @param string $version
      * @param string $encoding
-     * @param bool $standalone
-     * @param bool $formatOutput
+     * @param bool   $standalone
+     * @param bool   $formatOutput
      */
     public static function init($version = '1.0', $encoding = 'utf-8', $standalone = false, $formatOutput = true)
     {

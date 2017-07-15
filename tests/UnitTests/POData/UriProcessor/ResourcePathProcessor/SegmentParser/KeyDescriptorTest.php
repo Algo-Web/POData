@@ -20,7 +20,7 @@ class KeyDescriptorTest extends TestCase
         $keyPredicate = '  ';
         $validPredicateSyntax = KeyDescriptor::tryParseKeysFromKeyPredicate($keyPredicate, $keyDescriptor);
         $this->assertTrue($validPredicateSyntax);
-        $this->assertFalse(is_null($keyDescriptor));
+        $this->assertFalse(null === $keyDescriptor);
         $this->assertTrue($keyDescriptor->isEmpty());
         $this->assertEquals($keyDescriptor->valueCount(), 0);
 
@@ -28,7 +28,7 @@ class KeyDescriptorTest extends TestCase
         $keyPredicate = 'ProductID=11, OrderID=2546';
         $validPredicateSyntax = KeyDescriptor::tryParseKeysFromKeyPredicate($keyPredicate, $keyDescriptor);
         $this->assertTrue($validPredicateSyntax);
-        $this->assertFalse(is_null($keyDescriptor));
+        $this->assertFalse(null === $keyDescriptor);
         $this->assertFalse($keyDescriptor->isEmpty());
         $this->assertTrue($keyDescriptor->areNamedValues());
         $this->assertEquals($keyDescriptor->valueCount(), 2);
@@ -52,7 +52,7 @@ class KeyDescriptorTest extends TestCase
         $keyPredicate = '11, 2546';
         $validPredicateSyntax = KeyDescriptor::tryParseKeysFromKeyPredicate($keyPredicate, $keyDescriptor);
         $this->assertTrue($validPredicateSyntax);
-        $this->assertFalse(is_null($keyDescriptor));
+        $this->assertFalse(null === $keyDescriptor);
         $this->assertFalse($keyDescriptor->isEmpty());
         $this->assertFalse($keyDescriptor->areNamedValues());
         $this->assertEquals($keyDescriptor->valueCount(), 2);
@@ -140,14 +140,14 @@ class KeyDescriptorTest extends TestCase
     {
         $northWindMetadata = NorthWindMetadata::Create();
         $orderDetailsResourceType = $northWindMetadata->resolveResourceType('Order_Details');
-        $this->assertFalse(is_null($orderDetailsResourceType));
+        $this->assertFalse(null === $orderDetailsResourceType);
 
         $keyDescriptor = null;
         //Test with a valid named value key predicate
         $keyPredicate = 'ProductID=11, OrderID=2546';
         $validPredicateSyntax = KeyDescriptor::tryParseKeysFromKeyPredicate($keyPredicate, $keyDescriptor);
         $this->assertTrue($validPredicateSyntax);
-        $this->assertFalse(is_null($keyDescriptor));
+        $this->assertFalse(null === $keyDescriptor);
         $keyDescriptor->validate('Order_Details(ProductID=11, OrderID=2546)', $orderDetailsResourceType);
         $validatedNamedValues = $keyDescriptor->getValidatedNamedValues();
         $this->assertTrue(array_key_exists('ProductID', $validatedNamedValues));
@@ -162,7 +162,7 @@ class KeyDescriptorTest extends TestCase
         $keyPredicate = '11, 2546';
         $validPredicateSyntax = KeyDescriptor::tryParseKeysFromKeyPredicate($keyPredicate, $keyDescriptor);
         $this->assertTrue($validPredicateSyntax);
-        $this->assertFalse(is_null($keyDescriptor));
+        $this->assertFalse(null === $keyDescriptor);
         $keyDescriptor->validate('Order_Details(11, 2546)', $orderDetailsResourceType);
         $validatedNamedValues = $keyDescriptor->getValidatedNamedValues();
         $this->assertEquals(count($validatedNamedValues), 2);

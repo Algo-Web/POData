@@ -516,7 +516,7 @@ class SegmentParserTest extends TestCase
         $this->assertEquals($segmentDescriptors[1]->getTargetKind(), TargetKind::COMPLEX_OBJECT());
         $this->assertEquals($segmentDescriptors[1]->getTargetSource(), TargetSource::PROPERTY);
         $projectedProperty = $segmentDescriptors[1]->getProjectedProperty();
-        $this->assertFalse(is_null($projectedProperty));
+        $this->assertFalse(null === $projectedProperty);
         $this->assertEquals($projectedProperty->getName(), 'Address');
         $this->assertTrue($segmentDescriptors[1]->isSingleResult());
         $this->assertNull($segmentDescriptors[1]->getTargetResourceSetWrapper());
@@ -538,7 +538,7 @@ class SegmentParserTest extends TestCase
         $this->assertEquals($segmentDescriptors[1]->getTargetKind(), TargetKind::COMPLEX_OBJECT());
         $this->assertEquals($segmentDescriptors[1]->getTargetSource(), TargetSource::PROPERTY);
         $projectedProperty = $segmentDescriptors[1]->getProjectedProperty();
-        $this->assertFalse(is_null($projectedProperty));
+        $this->assertFalse(null === $projectedProperty);
         $this->assertEquals($projectedProperty->getName(), 'Address');
         $this->assertTrue($segmentDescriptors[1]->isSingleResult());
         $this->assertNull($segmentDescriptors[1]->getTargetResourceSetWrapper());
@@ -547,10 +547,10 @@ class SegmentParserTest extends TestCase
         $this->assertEquals($segmentDescriptors[2]->getTargetKind(), TargetKind::PRIMITIVE());
         $this->assertEquals($segmentDescriptors[2]->getTargetSource(), TargetSource::PROPERTY);
         $projectedProperty = $segmentDescriptors[2]->getProjectedProperty();
-        $this->assertFalse(is_null($projectedProperty));
+        $this->assertFalse(null === $projectedProperty);
         $this->assertEquals($projectedProperty->getName(), 'StreetName');
         $resourceType = $projectedProperty->getResourceType();
-        $this->assertFalse(is_null($resourceType));
+        $this->assertFalse(null === $resourceType);
         $this->assertEquals($resourceType->getName(), 'String');
         $this->assertTrue($segmentDescriptors[2]->isSingleResult());
         $this->assertNull($segmentDescriptors[2]->getTargetResourceSetWrapper());
@@ -597,7 +597,7 @@ class SegmentParserTest extends TestCase
         $this->assertEquals($segmentDescriptors[1]->getTargetKind(), TargetKind::BAG());
         $this->assertEquals($segmentDescriptors[1]->getTargetSource(), TargetSource::PROPERTY);
         $projectedProperty = $segmentDescriptors[1]->getProjectedProperty();
-        $this->assertFalse(is_null($projectedProperty));
+        $this->assertFalse(null === $projectedProperty);
         $this->assertEquals($projectedProperty->getName(), 'Emails');
         $resourceType = $projectedProperty->getResourceType();
         $this->assertEquals($resourceType->getName(), 'String');
@@ -634,13 +634,13 @@ class SegmentParserTest extends TestCase
         $this->assertEquals($segmentDescriptors[3]->getIdentifier(), 'CustomerName');
 
         $keyDescriptor = $segmentDescriptors[0]->getKeyDescriptor();
-        $this->assertFalse(is_null($keyDescriptor));
+        $this->assertFalse(null === $keyDescriptor);
         $keyDescriptor = $segmentDescriptors[1]->getKeyDescriptor();
-        $this->assertFalse(is_null($keyDescriptor));
+        $this->assertFalse(null === $keyDescriptor);
         $keyDescriptor = $segmentDescriptors[2]->getKeyDescriptor();
-        $this->assertTrue(is_null($keyDescriptor));
+        $this->assertTrue(null === $keyDescriptor);
         $keyDescriptor = $segmentDescriptors[3]->getKeyDescriptor();
-        $this->assertTrue(is_null($keyDescriptor));
+        $this->assertTrue(null === $keyDescriptor);
 
         $keyDescriptor = $segmentDescriptors[0]->getKeyDescriptor();
         $this->assertEquals($keyDescriptor->valueCount(), 2);
@@ -666,13 +666,13 @@ class SegmentParserTest extends TestCase
         $this->assertEquals($segmentDescriptors[3]->getTargetSource(), TargetSource::PROPERTY);
 
         $resourceSetWrapper = $segmentDescriptors[0]->getTargetResourcesetWrapper();
-        $this->assertFalse(is_null($resourceSetWrapper));
+        $this->assertFalse(null === $resourceSetWrapper);
         $resourceSetWrapper = $segmentDescriptors[1]->getTargetResourcesetWrapper();
-        $this->assertFalse(is_null($resourceSetWrapper));
+        $this->assertFalse(null === $resourceSetWrapper);
         $resourceSetWrapper = $segmentDescriptors[2]->getTargetResourcesetWrapper();
-        $this->assertFalse(is_null($resourceSetWrapper));
+        $this->assertFalse(null === $resourceSetWrapper);
         $resourceSetWrapper = $segmentDescriptors[3]->getTargetResourcesetWrapper();
-        $this->assertTrue(is_null($resourceSetWrapper));
+        $this->assertTrue(null === $resourceSetWrapper);
 
         $this->assertTrue($segmentDescriptors[0]->isSingleResult());
         $this->assertTrue($segmentDescriptors[0]->isSingleResult());
@@ -717,14 +717,14 @@ class SegmentParserTest extends TestCase
         $this->assertEquals($segmentDescriptors[1]->getTargetKind(), TargetKind::MEDIA_RESOURCE());
 
         $resourceType = $segmentDescriptors[0]->getTargetResourceType();
-        $this->assertFalse(is_null($resourceType));
+        $this->assertFalse(null === $resourceType);
         $resourceType = $segmentDescriptors[1]->getTargetResourceType();
-        $this->assertFalse(is_null($resourceType));
+        $this->assertFalse(null === $resourceType);
 
         $resourceSetWrapper = $segmentDescriptors[0]->getTargetResourceSetWrapper();
-        $this->assertFalse(is_null($resourceSetWrapper));
+        $this->assertFalse(null === $resourceSetWrapper);
         $resourceSetWrapper = $segmentDescriptors[1]->getTargetResourceSetWrapper();
-        $this->assertTrue(is_null($resourceSetWrapper));
+        $this->assertTrue(null === $resourceSetWrapper);
 
         $this->assertEquals($segmentDescriptors[0]->isSingleResult(), true);
         $this->assertEquals($segmentDescriptors[1]->isSingleResult(), true);
@@ -743,18 +743,18 @@ class SegmentParserTest extends TestCase
         $this->assertEquals($segmentDescriptors[2]->getTargetKind(), TargetKind::MEDIA_RESOURCE());
 
         $resourceType = $segmentDescriptors[0]->getTargetResourceType();
-        $this->assertFalse(is_null($resourceType));
+        $this->assertFalse(null === $resourceType);
         $resourceType = $segmentDescriptors[1]->getTargetResourceType();
-        $this->assertFalse(is_null($resourceType));
+        $this->assertFalse(null === $resourceType);
         $resourceType = $segmentDescriptors[2]->getTargetResourceType();
-        $this->assertFalse(is_null($resourceType));
+        $this->assertFalse(null === $resourceType);
 
         $resourceSetWrapper = $segmentDescriptors[0]->getTargetResourceSetWrapper();
-        $this->assertFalse(is_null($resourceSetWrapper));
+        $this->assertFalse(null === $resourceSetWrapper);
         $resourceSetWrapper = $segmentDescriptors[1]->getTargetResourceSetWrapper();
-        $this->assertFalse(is_null($resourceSetWrapper));
+        $this->assertFalse(null === $resourceSetWrapper);
         $resourceSetWrapper = $segmentDescriptors[2]->getTargetResourceSetWrapper();
-        $this->assertTrue(is_null($resourceSetWrapper));
+        $this->assertTrue(null === $resourceSetWrapper);
 
         //Test Named Stream
         $segments = ["Employees('JKT')",
@@ -769,14 +769,14 @@ class SegmentParserTest extends TestCase
         $this->assertEquals($segmentDescriptors[1]->getTargetKind(), TargetKind::MEDIA_RESOURCE());
 
         $resourceType = $segmentDescriptors[0]->getTargetResourceType();
-        $this->assertFalse(is_null($resourceType));
+        $this->assertFalse(null === $resourceType);
         $resourceType = $segmentDescriptors[1]->getTargetResourceType();
-        $this->assertFalse(is_null($resourceType));
+        $this->assertFalse(null === $resourceType);
 
         $resourceSetWrapper = $segmentDescriptors[0]->getTargetResourceSetWrapper();
-        $this->assertFalse(is_null($resourceSetWrapper));
+        $this->assertFalse(null === $resourceSetWrapper);
         $resourceSetWrapper = $segmentDescriptors[1]->getTargetResourceSetWrapper();
-        $this->assertTrue(is_null($resourceSetWrapper));
+        $this->assertTrue(null === $resourceSetWrapper);
 
         //No more segments after namedstream or MLE
         $segments = ["Employees('JKT')",

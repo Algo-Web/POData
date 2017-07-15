@@ -9,6 +9,11 @@ class QueryResultTest extends TestCase
 {
     /**
      * @dataProvider provider
+     * @param mixed $id
+     * @param mixed $count
+     * @param mixed $top
+     * @param mixed $skip
+     * @param mixed $expected
      */
     public function testAdjustCountForPaging($id, $count, $top, $skip, $expected)
     {

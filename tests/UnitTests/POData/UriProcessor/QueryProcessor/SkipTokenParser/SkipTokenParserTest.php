@@ -243,10 +243,10 @@ class SkipTokenParserTest extends TestCase
         $dummyObject = $internalOrderByInfo->getDummyObject();
         //we will remove Customer object created by orderby parser, so that getKeyObject function will
         //fail to access the property 'Rating', since parent ($dummyObject->Order->Customer) is null
-        $this->assertTrue(!is_null($dummyObject));
-        $this->assertTrue(!is_null($dummyObject->Order));
-        $this->assertTrue(!is_null($dummyObject->Order->Customer));
-        $this->assertTrue(is_null($dummyObject->Order->Customer->Rating));
+        $this->assertTrue(null !== $dummyObject);
+        $this->assertTrue(null !== $dummyObject->Order);
+        $this->assertTrue(null !== $dummyObject->Order->Customer);
+        $this->assertTrue(null === $dummyObject->Order->Customer->Rating);
         $dummyObject->Order->Customer = null;
         $internalSkipTokenInfo = SkipTokenParser::parseSkipTokenClause($resourceType, $internalOrderByInfo, $skipToken);
 
@@ -288,14 +288,14 @@ class SkipTokenParserTest extends TestCase
         $internalSkipTokenInfo = SkipTokenParser::parseSkipTokenClause($resourceType, $internalOrderByInfo, $skipToken);
         //The getKeyObject should do utf8 encoding on Antonio Moreno Taquería
         $keyObject = $internalSkipTokenInfo->getKeyObject();
-        $this->assertTrue(!is_null($keyObject->ShipName));
+        $this->assertTrue(null !== $keyObject->ShipName);
         $shipName = (urldecode('Antonio%20Moreno%20Taquer%C3%ADa'));
         $this->assertEquals($shipName, $keyObject->ShipName);
 
-        $this->assertTrue(!is_null($keyObject->Price));
+        $this->assertTrue(null !== $keyObject->Price);
         $this->assertTrue(is_float($keyObject->Price));
 
-        $this->assertTrue(!is_null($keyObject->OrderID));
+        $this->assertTrue(null !== $keyObject->OrderID);
         $this->assertTrue(is_int($keyObject->OrderID));
     }
 
@@ -327,9 +327,9 @@ class SkipTokenParserTest extends TestCase
         $dummyObject = $internalOrderByInfo->getDummyObject();
         $internalSkipTokenInfo = SkipTokenParser::parseSkipTokenClause($resourceType, $internalOrderByInfo, $skipToken);
         $keyObject = $internalSkipTokenInfo->getKeyObject();
-        $this->assertTrue(!is_null($keyObject));
-        $this->assertTrue(!is_null($keyObject->Address));
-        $this->assertTrue(!is_null($keyObject->Address->IsValid));
+        $this->assertTrue(null !== $keyObject);
+        $this->assertTrue(null !== $keyObject->Address);
+        $this->assertTrue(null !== $keyObject->Address->IsValid);
         $this->assertTrue($keyObject->Address->IsValid);
 
         //test with other values, double, guid, int, datetime
@@ -367,7 +367,7 @@ class SkipTokenParserTest extends TestCase
         $lastObject->Address = new Address4();
         $lastObject->Address->Address2 = null;
         $nextLink = $internalSkipTokenInfo->buildNextPageLink($lastObject);
-        $this->assertTrue(!is_null($nextLink));
+        $this->assertTrue(null !== $nextLink);
         $this->assertEquals($nextLink, "null, 'ALFKI'");
 
         $lastObject = null;
@@ -410,7 +410,7 @@ class SkipTokenParserTest extends TestCase
         $lastObject->Price = 23.56;
         $lastObject->OrderID = 3456;
         $nextLink = $internalSkipTokenInfo->buildNextPageLink($lastObject);
-        $this->assertTrue(!is_null($nextLink));
+        $this->assertTrue(null !== $nextLink);
         $thrownException = false;
         $nextLink = $internalSkipTokenInfo->buildNextPageLink($lastObject);
         $this->assertEquals($nextLink, "'Antonio+Moreno+Taquer%C3%ADa', 23.56D, 3456");
@@ -444,7 +444,7 @@ class SkipTokenParserTest extends TestCase
         $lastObject->OrderDate = '1996-07-12T00:00:00';
         $lastObject->OrderID = 3456;
         $nextLink = $internalSkipTokenInfo->buildNextPageLink($lastObject);
-        $this->assertTrue(!is_null($nextLink));
+        $this->assertTrue(null !== $nextLink);
         $nextLink = $internalSkipTokenInfo->buildNextPageLink($lastObject);
         $this->assertEquals($nextLink, "datetime'1996-07-12T00%3A00%3A00', 3456");
     }

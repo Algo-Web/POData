@@ -196,7 +196,7 @@ abstract class BaseService implements IRequestHandler, IService
      */
     public function getStreamProvider()
     {
-        if (is_null($this->streamProvider)) {
+        if (null === $this->streamProvider) {
             $this->streamProvider = new StreamProviderWrapper();
             $this->streamProvider->setService($this);
         }
@@ -300,7 +300,7 @@ abstract class BaseService implements IRequestHandler, IService
     protected function createProviders()
     {
         $metadataProvider = $this->getMetadataProvider();
-        if (is_null($metadataProvider)) {
+        if (null === $metadataProvider) {
             throw ODataException::createInternalServerError(Messages::providersWrapperNull());
         }
 
@@ -310,7 +310,7 @@ abstract class BaseService implements IRequestHandler, IService
 
         $queryProvider = $this->getQueryProvider();
 
-        if (is_null($queryProvider)) {
+        if (null === $queryProvider) {
             throw ODataException::createInternalServerError(Messages::providersWrapperNull());
         }
 
@@ -365,8 +365,8 @@ abstract class BaseService implements IRequestHandler, IService
         $isETagHeaderAllowed = $request->isETagHeaderAllowed();
 
         if ($this->getConfiguration()->getValidateETagHeader() && !$isETagHeaderAllowed) {
-            if (!is_null($this->getHost()->getRequestIfMatch())
-                || !is_null($this->getHost()->getRequestIfNoneMatch())
+            if (null !== $this->getHost()->getRequestIfMatch()
+                || null !== $this->getHost()->getRequestIfNoneMatch()
             ) {
                 throw ODataException::createBadRequestError(
                     Messages::eTagCannotBeSpecified($this->getHost()->getAbsoluteRequestUri()->getUrlAsString())
@@ -376,7 +376,7 @@ abstract class BaseService implements IRequestHandler, IService
 
         $responseContentType = $this->getResponseContentType($request, $uriProcessor);
 
-        if (is_null($responseContentType) && $request->getTargetKind() != TargetKind::MEDIA_RESOURCE()) {
+        if (null === $responseContentType && $request->getTargetKind() != TargetKind::MEDIA_RESOURCE()) {
             //the responseContentType can ONLY be null if it's a stream (media resource) and
             // that stream is storing null as the content type
             throw new ODataException(Messages::unsupportedMediaType(), 415);
@@ -436,14 +436,14 @@ abstract class BaseService implements IRequestHandler, IService
                 if ($request->isLinkUri()) {
                     // In the query 'Orders(1245)/$links/Customer', the targeted
                     // Customer might be null
-                    if (is_null($result->results)) {
+                    if (null === $result->results) {
                         throw ODataException::createResourceNotFoundError($request->getIdentifier());
                     }
                     $odataModelInstance = $objectModelSerializer->writeUrlElement($result);
                 } elseif (TargetKind::RESOURCE() == $requestTargetKind
                           || TargetKind::SINGLETON() == $requestTargetKind) {
-                    if (!is_null($this->getHost()->getRequestIfMatch())
-                        && !is_null($this->getHost()->getRequestIfNoneMatch())
+                    if (null !== $this->getHost()->getRequestIfMatch()
+                        && null !== $this->getHost()->getRequestIfNoneMatch()
                     ) {
                         throw ODataException::createBadRequestError(
                             Messages::bothIfMatchAndIfNoneMatchHeaderSpecified()
@@ -454,7 +454,7 @@ abstract class BaseService implements IRequestHandler, IService
                     $eTag = $this->compareETag($result, $targetResourceType, $needToSerializeResponse);
 
                     if ($needToSerializeResponse) {
-                        if (is_null($result)) {
+                        if (null === $result) {
                             // In the query 'Orders(1245)/Customer', the targeted
                             // Customer might be null
                             // set status code to 204 => 'No Content'
@@ -471,7 +471,7 @@ abstract class BaseService implements IRequestHandler, IService
                     }
 
                     // if resource has eTagProperty then eTag header needs to written
-                    if (!is_null($eTag)) {
+                    if (null !== $eTag) {
                         $this->getHost()->setResponseETag($eTag);
                     }
                 } elseif (TargetKind::COMPLEX_OBJECT() == $requestTargetKind) {
@@ -508,7 +508,7 @@ abstract class BaseService implements IRequestHandler, IService
         }
 
         //Note: Response content type can be null for named stream
-        if ($hasResponseBody && !is_null($responseContentType)) {
+        if ($hasResponseBody && null !== $responseContentType) {
             if (TargetKind::MEDIA_RESOURCE() != $request->getTargetKind()
                 && MimeTypes::MIME_APPLICATION_OCTETSTREAM != $responseContentType) {
                 //append charset for everything except:
@@ -555,7 +555,7 @@ abstract class BaseService implements IRequestHandler, IService
 
         //if the $format header is present it overrides the accepts header
         $format = $host->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_FORMAT);
-        if (!is_null($format)) {
+        if (null !== $format) {
             //There's a strange edge case..if application/json is supplied and it's V3
             if (MimeTypes::MIME_APPLICATION_JSON == $format && Version::v3() == $requestVersion) {
                 //then it's actual minimalmetadata
@@ -591,7 +591,7 @@ abstract class BaseService implements IRequestHandler, IService
 
                 if ('$count' != $request->getIdentifier()) {
                     $projectedProperty = $request->getProjectedProperty();
-                    assert(!is_null($projectedProperty), 'is_null($projectedProperty)');
+                    assert(null !== $projectedProperty, 'is_null($projectedProperty)');
                     $type = $projectedProperty->getInstanceType();
                     assert($type instanceof IType, '!$type instanceof IType');
                     if ($type instanceof Binary) {
@@ -650,7 +650,7 @@ abstract class BaseService implements IRequestHandler, IService
                 // Note StreamWrapper::getStreamContentType can return NULL if the requested named stream has not
                 // yet been uploaded. But for an MLE if IDSSP::getStreamContentType returns NULL
                 // then StreamWrapper will throw error
-                if (!is_null($responseContentType)) {
+                if (null !== $responseContentType) {
                     $responseContentType = HttpProcessUtility::selectMimeType(
                         $requestAcceptText,
                         [$responseContentType]
@@ -689,8 +689,8 @@ abstract class BaseService implements IRequestHandler, IService
         $eTag = null;
         $ifMatch = $this->getHost()->getRequestIfMatch();
         $ifNoneMatch = $this->getHost()->getRequestIfNoneMatch();
-        if (is_null($entryObject)) {
-            if (!is_null($ifMatch)) {
+        if (null === $entryObject) {
+            if (null !== $ifMatch) {
                 throw ODataException::createPreConditionFailedError(
                     Messages::eTagNotAllowedForNonExistingResource()
                 );
@@ -700,7 +700,7 @@ abstract class BaseService implements IRequestHandler, IService
         }
 
         if ($this->getConfiguration()->getValidateETagHeader() && !$resourceType->hasETagProperties()) {
-            if (!is_null($ifMatch) || !is_null($ifNoneMatch)) {
+            if (null !== $ifMatch || null !== $ifNoneMatch) {
                 // No eTag properties but request has eTag headers, bad request
                 throw ODataException::createBadRequestError(
                     Messages::noETagPropertiesForType()
@@ -717,7 +717,7 @@ abstract class BaseService implements IRequestHandler, IService
             return;
         }
 
-        if (is_null($ifMatch) && is_null($ifNoneMatch)) {
+        if (null === $ifMatch && null === $ifNoneMatch) {
             // No request eTag header, we need to write the response
             // and eTag header
         } elseif (0 === strcmp($ifMatch, '*')) {
@@ -734,7 +734,7 @@ abstract class BaseService implements IRequestHandler, IService
             // firefix browser is unable to parse the ETag in this case.
             // Need to follow up PHP core devs for this.
             $eTag = ODataConstants::HTTP_WEAK_ETAG_PREFIX . $eTag . '"';
-            if (!is_null($ifMatch)) {
+            if (null !== $ifMatch) {
                 if (0 != strcmp($eTag, $ifMatch)) {
                     // Requested If-Match value does not match with current
                     // eTag Value then pre-condition error
@@ -749,7 +749,7 @@ abstract class BaseService implements IRequestHandler, IService
             }
         }
 
-        if (is_null($eTag)) {
+        if (null === $eTag) {
             $eTag = $this->getETagForEntry($entryObject, $resourceType);
             // Note: The following code for attaching the prefix W\"
             // and the suffix " can be done in getETagForEntry function
@@ -800,7 +800,7 @@ abstract class BaseService implements IRequestHandler, IService
             $comma = ',';
         }
 
-        if (!is_null($eTag)) {
+        if (null !== $eTag) {
             // If eTag is made up of datetime or string properties then the above
             // IType::convertToOData will perform utf8 and url encode. But we don't
             // want this for eTag value.

@@ -354,6 +354,6 @@ class SegmentDescriptor
      */
     public function hasKeyValues()
     {
-        return !is_null($this->keyDescriptor);
+        return null !== $this->keyDescriptor;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace UnitTests\POData\Providers\Metadata;
 
+use Mockery as m;
 use POData\Configuration\IServiceConfiguration;
 use POData\Providers\Metadata\ResourceFunctionType;
 use POData\Providers\Metadata\ResourceProperty;
@@ -13,7 +14,6 @@ use POData\Providers\Query\IQueryProvider;
 use POData\Providers\Query\QueryType;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 use UnitTests\POData\TestCase;
-use Mockery as m;
 
 class ProvidersWrapperMockeryTest extends TestCase
 {

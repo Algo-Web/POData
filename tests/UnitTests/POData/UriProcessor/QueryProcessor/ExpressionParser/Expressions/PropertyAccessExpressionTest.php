@@ -2,6 +2,7 @@
 
 namespace UnitTests\POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions;
 
+use Mockery as m;
 use POData\Common\ODataException;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceType;
@@ -11,7 +12,6 @@ use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\AbstractExpr
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\PropertyAccessExpression;
 use POData\UriProcessor\QueryProcessor\FunctionDescription;
 use UnitTests\POData\TestCase;
-use Mockery as m;
 
 class PropertyAccessExpressionTest extends TestCase
 {

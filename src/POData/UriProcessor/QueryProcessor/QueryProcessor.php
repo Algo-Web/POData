@@ -88,8 +88,8 @@ class QueryProcessor
         $targetResourceType = $this->request->getTargetResourceType();
         $targetResourceSetWrapper = $this->request->getTargetResourceSetWrapper();
 
-        $this->expandSelectApplicable = !is_null($targetResourceType)
-            && !is_null($targetResourceSetWrapper)
+        $this->expandSelectApplicable = null !== $targetResourceType
+            && null !== $targetResourceSetWrapper
             && $targetResourceType->getResourceTypeKind() == ResourceTypeKind::ENTITY
             && !$this->request->isLinkUri();
     }
@@ -171,8 +171,8 @@ class QueryProcessor
             $this->request->setTopCount($pageSize);
         }
 
-        if (!is_null($this->request->getSkipCount())
-            || !is_null($this->request->getTopCount())
+        if (null !== $this->request->getSkipCount()
+            || null !== $this->request->getTopCount()
         ) {
             $this->checkSetQueryApplicable();
         }
@@ -192,7 +192,7 @@ class QueryProcessor
     {
         $orderBy = $this->service->getHost()->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_ORDERBY);
 
-        if (!is_null($orderBy)) {
+        if (null !== $orderBy) {
             $this->checkSetQueryApplicable();
         }
 
@@ -211,8 +211,8 @@ class QueryProcessor
          *     RequestDescription::getTopCount will give non-null value.
          *
          */
-        if (!is_null($this->request->getSkipCount()) || !is_null($this->request->getTopCount())) {
-            $orderBy = !is_null($orderBy) ? $orderBy . ', ' : null;
+        if (null !== $this->request->getSkipCount() || null !== $this->request->getTopCount()) {
+            $orderBy = null !== $orderBy ? $orderBy . ', ' : null;
             $keys = array_keys($targetResourceType->getKeyProperties());
             //assert(!empty($keys))
             foreach ($keys as $key) {
@@ -222,7 +222,7 @@ class QueryProcessor
             $orderBy = rtrim($orderBy, ', ');
         }
 
-        if (!is_null($orderBy) && '' != trim($orderBy)) {
+        if (null !== $orderBy && '' != trim($orderBy)) {
             $setWrapper = $this->request->getTargetResourceSetWrapper();
             assert(null != $setWrapper, 'Target resource set wrapper must not be null');
             $internalOrderByInfo = OrderByParser::parseOrderByClause(
@@ -254,7 +254,7 @@ class QueryProcessor
     private function processFilter()
     {
         $filter = $this->service->getHost()->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_FILTER);
-        if (is_null($filter)) {
+        if (null === $filter) {
             return;
         }
 
@@ -288,7 +288,7 @@ class QueryProcessor
         $inlineCount = $this->service->getHost()->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_INLINECOUNT);
 
         //If it's not specified, we're done
-        if (is_null($inlineCount)) {
+        if (null === $inlineCount) {
             return;
         }
 
@@ -345,7 +345,7 @@ class QueryProcessor
     private function processSkipToken()
     {
         $skipToken = $this->service->getHost()->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_SKIPTOKEN);
-        if (is_null($skipToken)) {
+        if (null === $skipToken) {
             return;
         }
 
@@ -392,13 +392,13 @@ class QueryProcessor
     {
         $expand = $this->service->getHost()->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_EXPAND);
 
-        if (!is_null($expand)) {
+        if (null !== $expand) {
             $this->checkExpandOrSelectApplicable(ODataConstants::HTTPQUERY_STRING_EXPAND);
         }
 
         $select = $this->service->getHost()->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_SELECT);
 
-        if (!is_null($select)) {
+        if (null !== $select) {
             if (!$this->service->getConfiguration()->getAcceptProjectionRequests()) {
                 throw ODataException::createBadRequestError(Messages::configurationProjectionsNotAccepted());
             }
@@ -471,7 +471,7 @@ class QueryProcessor
     private function readSkipOrTopOption($queryItem, &$value)
     {
         $value = $this->service->getHost()->getQueryStringItem($queryItem);
-        if (!is_null($value)) {
+        if (null !== $value) {
             $int = new Int32();
             if (!$int->validate($value, $outValue)) {
                 throw ODataException::createSyntaxError(
@@ -544,7 +544,7 @@ class QueryProcessor
      *
      *
      * @throws ODataException Throws bad request error if any of the query options $orderby, $inlinecount,
-     * $skip or $top cannot be applied to the requested resource
+     *                        $skip or $top cannot be applied to the requested resource
      */
     private function checkSetQueryApplicable()
     {

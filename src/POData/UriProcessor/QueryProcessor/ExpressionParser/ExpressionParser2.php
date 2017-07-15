@@ -71,7 +71,7 @@ class ExpressionParser2 extends ExpressionParser
      * @param IExpressionProvider $expressionProvider Implementation of IExpressionProvider
      *
      * @throws ODataException If any error occurs while parsing the odata expression or
-     * building the php/custom expression
+     *                        building the php/custom expression
      *
      * @return FilterInfo
      */
@@ -127,11 +127,11 @@ class ExpressionParser2 extends ExpressionParser
     /**
      * Process the expression node for nullability.
      *
-     * @param AbstractExpression        $parentExpression       The parent expression of expression node to process
-     * @param AbstractExpression|null   $expression             The expression node to process
-     * @param bool                      $checkNullForMostChild  Whether to include null check for current property
-     * @return AbstractExpression
+     * @param  AbstractExpression      $parentExpression      The parent expression of expression node to process
+     * @param  AbstractExpression|null $expression            The expression node to process
+     * @param  bool                    $checkNullForMostChild Whether to include null check for current property
      * @throws ODataException
+     * @return AbstractExpression|null
      */
     private function processNodeForNullability(
         $parentExpression,
@@ -467,8 +467,8 @@ class ExpressionParser2 extends ExpressionParser
     }
 
     /**
-     * @param AbstractExpression|null $leftNullableExpTree
-     * @param AbstractExpression|null $rightNullableExpTree
+     * @param  AbstractExpression|null $leftNullableExpTree
+     * @param  AbstractExpression|null $rightNullableExpTree
      * @return null|AbstractExpression
      */
     private function calculateResultExpression($leftNullableExpTree, $rightNullableExpTree)

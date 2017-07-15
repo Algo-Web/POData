@@ -2,12 +2,12 @@
 
 namespace UnitTests\POData\Providers\Metadata;
 
+use AlgoWeb\ODataMetadata\MetadataV3\edm\EntityContainer\FunctionImportAnonymousType;
+use Mockery as m;
+use POData\Providers\Metadata\ResourceFunctionType;
 use POData\Providers\Metadata\ResourceType;
 use UnitTests\POData\BaseServiceDummy;
 use UnitTests\POData\TestCase;
-use POData\Providers\Metadata\ResourceFunctionType;
-use AlgoWeb\ODataMetadata\MetadataV3\edm\EntityContainer\FunctionImportAnonymousType;
-use Mockery as m;
 
 class ResourceFunctionTypeTest extends TestCase
 {
@@ -17,7 +17,7 @@ class ResourceFunctionTypeTest extends TestCase
         $type = m::mock(FunctionImportAnonymousType::class)->makePartial();
         $name = null;
 
-        $expected = "FunctionName must not be null";
+        $expected = 'FunctionName must not be null';
         $actual = null;
 
         try {
@@ -34,7 +34,7 @@ class ResourceFunctionTypeTest extends TestCase
         $type = m::mock(FunctionImportAnonymousType::class)->makePartial();
         $name = [];
 
-        $expected = "FunctionName must have 1 or 2 elements";
+        $expected = 'FunctionName must have 1 or 2 elements';
         $actual = null;
 
         try {
@@ -51,7 +51,7 @@ class ResourceFunctionTypeTest extends TestCase
         $type = m::mock(FunctionImportAnonymousType::class)->makePartial();
         $name = ['stop!', 'hammer', 'time!'];
 
-        $expected = "FunctionName must have no more than 2 elements";
+        $expected = 'FunctionName must have no more than 2 elements';
         $actual = null;
 
         try {
@@ -68,7 +68,7 @@ class ResourceFunctionTypeTest extends TestCase
         $type = m::mock(FunctionImportAnonymousType::class)->makePartial();
         $name = [['stop!'], 'hammer'];
 
-        $expected = "First element of FunctionName must be either object or string";
+        $expected = 'First element of FunctionName must be either object or string';
         $actual = null;
 
         try {
@@ -85,7 +85,7 @@ class ResourceFunctionTypeTest extends TestCase
         $type = m::mock(FunctionImportAnonymousType::class)->makePartial();
         $name = ['hammer', ['stop!']];
 
-        $expected = "Second element of FunctionName must be string";
+        $expected = 'Second element of FunctionName must be string';
         $actual = null;
 
         try {
@@ -102,7 +102,7 @@ class ResourceFunctionTypeTest extends TestCase
         $type = m::mock(FunctionImportAnonymousType::class)->makePartial();
         $name = ['eval', 'hammer'];
 
-        $expected = "First element of FunctionName blacklisted";
+        $expected = 'First element of FunctionName blacklisted';
         $actual = null;
 
         try {
@@ -119,7 +119,7 @@ class ResourceFunctionTypeTest extends TestCase
         $type = m::mock(FunctionImportAnonymousType::class)->makePartial();
         $name = ['SYSTEM', 'hammer'];
 
-        $expected = "First element of FunctionName blacklisted";
+        $expected = 'First element of FunctionName blacklisted';
         $actual = null;
 
         try {
@@ -136,7 +136,7 @@ class ResourceFunctionTypeTest extends TestCase
         $type = m::mock(FunctionImportAnonymousType::class)->makePartial();
         $name = ['', 'hammer'];
 
-        $expected = "First element of FunctionName must not be empty";
+        $expected = 'First element of FunctionName must not be empty';
         $actual = null;
 
         try {
@@ -153,7 +153,7 @@ class ResourceFunctionTypeTest extends TestCase
         $type = m::mock(FunctionImportAnonymousType::class)->makePartial();
         $name = [null, null];
 
-        $expected = "First element of FunctionName must be either object or string";
+        $expected = 'First element of FunctionName must be either object or string';
         $actual = null;
 
         try {
@@ -170,7 +170,7 @@ class ResourceFunctionTypeTest extends TestCase
         $type = m::mock(FunctionImportAnonymousType::class)->makePartial();
         $name = new \DateTime();
 
-        $expected = "Function name must be string or array";
+        $expected = 'Function name must be string or array';
         $actual = null;
 
         try {
@@ -187,7 +187,7 @@ class ResourceFunctionTypeTest extends TestCase
         $type = m::mock(FunctionImportAnonymousType::class)->makePartial();
         $name = ' ';
 
-        $expected = "FunctionName must be a non-empty string";
+        $expected = 'FunctionName must be a non-empty string';
         $actual = null;
 
         try {
@@ -204,7 +204,7 @@ class ResourceFunctionTypeTest extends TestCase
         $type = m::mock(FunctionImportAnonymousType::class)->makePartial();
         $name = 'exec';
 
-        $expected = "FunctionName blacklisted";
+        $expected = 'FunctionName blacklisted';
         $actual = null;
 
         try {
@@ -221,7 +221,7 @@ class ResourceFunctionTypeTest extends TestCase
         $type = m::mock(FunctionImportAnonymousType::class)->makePartial();
         $name = 'exec';
 
-        $expected = "FunctionName blacklisted";
+        $expected = 'FunctionName blacklisted';
         $actual = null;
 
         try {
@@ -238,7 +238,7 @@ class ResourceFunctionTypeTest extends TestCase
         $type = m::mock(FunctionImportAnonymousType::class)->makePartial();
         $name = 'SyStEm';
 
-        $expected = "FunctionName blacklisted";
+        $expected = 'FunctionName blacklisted';
         $actual = null;
 
         try {
@@ -255,9 +255,9 @@ class ResourceFunctionTypeTest extends TestCase
         $type = m::mock(FunctionImportAnonymousType::class)->makePartial();
         $type->shouldReceive('isOK')->andReturn(false)->once();
 
-        $name = "func";
+        $name = 'func';
 
-        $expected = "";
+        $expected = '';
         $actual = null;
 
         try {
@@ -278,12 +278,12 @@ class ResourceFunctionTypeTest extends TestCase
         $type->shouldReceive('getName')->andReturn('type')->once();
         $type->shouldReceive('getParameter')->andReturn([])->once();
 
-        $name = "func";
+        $name = 'func';
 
         $foo = new ResourceFunctionType($name, $type, $resource);
         $parms = $foo->getParms();
-        $this->assertEquals("func", $foo->getFunctionName());
-        $this->assertEquals("type", $foo->getName());
+        $this->assertEquals('func', $foo->getFunctionName());
+        $this->assertEquals('type', $foo->getName());
         $this->assertTrue(is_array($parms));
         $this->assertEquals(0, count($parms));
         $res = $foo->getResourceType();
@@ -298,10 +298,10 @@ class ResourceFunctionTypeTest extends TestCase
         $type->shouldReceive('isOK')->andReturn(true)->once();
         $type->shouldReceive('getParameter')->andReturn([])->once();
 
-        $name = "func";
+        $name = 'func';
         $foo = new ResourceFunctionType($name, $type, $resource);
 
-        $expected = "Was expecting 0 arguments, received 1 instead";
+        $expected = 'Was expecting 0 arguments, received 1 instead';
         $actual = null;
 
         try {
@@ -319,10 +319,10 @@ class ResourceFunctionTypeTest extends TestCase
         $type->shouldReceive('isOK')->andReturn(true)->once();
         $type->shouldReceive('getParameter')->andReturn(['a'])->once();
 
-        $name = "func";
+        $name = 'func';
         $foo = new ResourceFunctionType($name, $type, $resource);
 
-        $expected = "Was expecting 1 arguments, received 0 instead";
+        $expected = 'Was expecting 1 arguments, received 0 instead';
         $actual = null;
 
         try {
@@ -340,7 +340,7 @@ class ResourceFunctionTypeTest extends TestCase
         $type->shouldReceive('isOK')->andReturn(true)->once();
         $type->shouldReceive('getParameter')->andReturn(['a'])->once();
 
-        $name = "date";
+        $name = 'date';
         $foo = new ResourceFunctionType($name, $type, $resource);
 
         $parms = 'Y-m-d';

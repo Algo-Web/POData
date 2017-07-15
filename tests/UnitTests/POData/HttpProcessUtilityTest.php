@@ -231,7 +231,7 @@ class HttpProcessUtilityTest extends TestCase
         $actual = null;
         $actualCode = null;
 
-        $qualText = "2.000";
+        $qualText = '2.000';
         $qualDex = 0;
         $qualValue = 0;
 
@@ -252,7 +252,7 @@ class HttpProcessUtilityTest extends TestCase
         $actual = null;
         $actualCode = null;
 
-        $qualText = "1.9 ";
+        $qualText = '1.9 ';
         $qualDex = 0;
         $qualValue = 0;
 
@@ -268,7 +268,7 @@ class HttpProcessUtilityTest extends TestCase
 
     public function testGoodQualityValueOneDigit()
     {
-        $qualText = "0.9 ";
+        $qualText = '0.9 ';
         $qualDex = 0;
         $qualValue = 0;
         HttpProcessUtility::readQualityValue($qualText, $qualDex, $qualValue);
@@ -278,7 +278,7 @@ class HttpProcessUtilityTest extends TestCase
 
     public function testGoodQualityValueTwoDigit()
     {
-        $qualText = "0.81 ";
+        $qualText = '0.81 ';
         $qualDex = 0;
         $qualValue = 0;
         HttpProcessUtility::readQualityValue($qualText, $qualDex, $qualValue);
@@ -298,7 +298,7 @@ class HttpProcessUtilityTest extends TestCase
 
     public function testGoodQualityValueFourDigit()
     {
-        $qualText = "0.6561";
+        $qualText = '0.6561';
         $qualDex = 0;
         $qualValue = 0;
         HttpProcessUtility::readQualityValue($qualText, $qualDex, $qualValue);

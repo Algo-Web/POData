@@ -137,7 +137,7 @@ class KeyDescriptor
      * Gets validated named key values, this array will be populated
      * in validate function.
      *
-     * @throws InvalidOperationException    If this function invoked before invoking validate function
+     * @throws InvalidOperationException If this function invoked before invoking validate function
      *
      * @return array[]
      */

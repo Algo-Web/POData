@@ -195,7 +195,7 @@ abstract class ResourceType
         $this->name = $name;
         $this->baseType = $baseType;
         $this->namespaceName = $namespaceName;
-        $this->fullName = is_null($namespaceName) ? $name : $namespaceName . '.' . $name;
+        $this->fullName = null === $namespaceName ? $name : $namespaceName . '.' . $name;
         $this->abstractType = $isAbstract;
         $this->isMediaLinkEntry = false;
         $this->customState = null;
@@ -220,7 +220,7 @@ abstract class ResourceType
      */
     public function hasBaseType()
     {
-        return !is_null($this->baseType);
+        return null !== $this->baseType;
     }
 
     /**
@@ -638,7 +638,7 @@ abstract class ResourceType
         // from null depending on the current state of _allNamedStreams
         // array, so method should be called only after adding all
         // named streams
-        if (is_null($this->hasNamedStreams)) {
+        if (null === $this->hasNamedStreams) {
             $this->getAllNamedStreams();
             $this->hasNamedStreams = !empty($this->allNamedStreams);
         }
@@ -661,7 +661,7 @@ abstract class ResourceType
         // from null depending on the current state of
         // _propertiesDeclaredOnThisType array, so method
         // should be called only after adding all properties
-        if (!is_null($this->hasBagProperty)) {
+        if (null !== $this->hasBagProperty) {
             return $this->hasBagProperty;
         }
 
@@ -820,6 +820,8 @@ abstract class ResourceType
 
     /**
      * @param string $property
+     * @param mixed  $entity
+     * @param mixed  $value
      */
     public function setPropertyValue($entity, $property, $value)
     {

@@ -51,7 +51,7 @@ class ResourceAssociationType
         ResourceAssociationTypeEnd $end2
     ) {
         $this->name = $name;
-        $this->fullName = !is_null($namespaceName) ? $namespaceName . '.' . $name : $name;
+        $this->fullName = null !== $namespaceName ? $namespaceName . '.' . $name : $name;
         $this->end1 = $end1;
         $this->end2 = $end2;
     }
@@ -99,8 +99,8 @@ class ResourceAssociationType
     /**
      * Retrieve the end for the given resource type and property.
      *
-     * @param ResourceEntityType    $resourceType     Resource type for the source end
-     * @param ResourceProperty      $resourceProperty Resource property for the source end
+     * @param ResourceEntityType $resourceType     Resource type for the source end
+     * @param ResourceProperty   $resourceProperty Resource property for the source end
      *
      * @return ResourceAssociationTypeEnd Association type end for the
      *                                    given parameters
@@ -121,8 +121,8 @@ class ResourceAssociationType
     /**
      * Retrieve the related end for the given resource set, type and property.
      *
-     * @param ResourceEntityType    $resourceType     Resource type for the source end
-     * @param ResourceProperty      $resourceProperty Resource property for the source end
+     * @param ResourceEntityType $resourceType     Resource type for the source end
+     * @param ResourceProperty   $resourceProperty Resource property for the source end
      *
      * @return ResourceAssociationTypeEndRelated Association type end for the
      *                                           given parameters

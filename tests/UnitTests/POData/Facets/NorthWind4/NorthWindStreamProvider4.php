@@ -333,10 +333,10 @@ class NorthWindStreamProvider4 implements IStreamProvider2
     //End IStreamProvider2 methods implementation
     /**
      * @param $entity
-     * @param ResourceType $resourceType
-     * @param ResourceStreamInfo|null $resourceStreamInfo
-     * @param IOperationContext $operationContext
-     * @param null $relativeUri
+     * @param  ResourceType            $resourceType
+     * @param  ResourceStreamInfo|null $resourceStreamInfo
+     * @param  IOperationContext       $operationContext
+     * @param  null                    $relativeUri
      * @return mixed
      */
     public function getDefaultStreamEditMediaUri(

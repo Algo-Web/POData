@@ -155,7 +155,7 @@ class Binary implements IType
     public static function binaryEqual($binary1, $binary2)
     {
         //str cmp will return true if they are both null, so check short circuit that..
-        if (is_null($binary1) || is_null($binary2)) {
+        if (null === $binary1 || null === $binary2) {
             return false;
         }
 

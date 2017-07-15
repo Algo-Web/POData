@@ -3,10 +3,10 @@
 namespace UnitTests\POData\OperationContext\Web;
 
 use Illuminate\Http\Request;
+use Mockery as m;
 use POData\OperationContext\Web\Illuminate\IncomingIlluminateRequest;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use UnitTests\POData\TestCase;
-use Mockery as m;
 
 class IncomingIlluminateRequestTest extends TestCase
 {
@@ -69,7 +69,7 @@ class IncomingIlluminateRequestTest extends TestCase
     public function testEmptyRequestHeaderReturnsNull()
     {
         $request = m::mock(Request::class);
-        $request->shouldReceive('header')->withAnyArgs()->andReturn("");
+        $request->shouldReceive('header')->withAnyArgs()->andReturn('');
         $request->shouldReceive('getMethod')->andReturn('GET');
 
         $foo = new IncomingIlluminateRequest($request);

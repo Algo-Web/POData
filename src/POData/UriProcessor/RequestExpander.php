@@ -96,9 +96,9 @@ class RequestExpander
     public function handleExpansion()
     {
         $node = $this->getRequest()->getRootProjectionNode();
-        if (!is_null($node) && $node->isExpansionSpecified()) {
+        if (null !== $node && $node->isExpansionSpecified()) {
             $result = $this->getRequest()->getTargetResult();
-            if (!is_null($result) && (!is_array($result) || !empty($result))) {
+            if (null !== $result && (!is_array($result) || !empty($result))) {
                 $needPop = $this->pushSegmentForRoot();
                 $this->executeExpansion($result);
                 $this->popSegment(true === $needPop);
@@ -208,7 +208,7 @@ class RequestExpander
                     $resourceProperty
                 );
 
-            assert(!is_null($currentResourceSetWrapper), '!null($currentResourceSetWrapper)');
+            assert(null !== $currentResourceSetWrapper, '!null($currentResourceSetWrapper)');
 
             return $this->pushSegment(
                 $resourceProperty->getName(),
@@ -230,7 +230,7 @@ class RequestExpander
     {
         $expandedProjectionNode = $this->getCurrentExpandedProjectionNode();
         $expandedProjectionNodes = [];
-        if (!is_null($expandedProjectionNode)) {
+        if (null !== $expandedProjectionNode) {
             foreach ($expandedProjectionNode->getChildNodes() as $node) {
                 if ($node instanceof ExpandedProjectionNode) {
                     $expandedProjectionNodes[] = $node;
@@ -250,13 +250,13 @@ class RequestExpander
     private function getCurrentExpandedProjectionNode()
     {
         $expandedProjectionNode = $this->getRequest()->getRootProjectionNode();
-        if (!is_null($expandedProjectionNode)) {
+        if (null !== $expandedProjectionNode) {
             $names = $this->getStack()->getSegmentNames();
             $depth = count($names);
             if (0 != $depth) {
                 for ($i = 1; $i < $depth; ++$i) {
                     $expandedProjectionNode = $expandedProjectionNode->findNode($names[$i]);
-                    assert(!is_null($expandedProjectionNode), '!is_null($expandedProjectionNode)');
+                    assert(null !== $expandedProjectionNode, '!is_null($expandedProjectionNode)');
                     assert(
                         $expandedProjectionNode instanceof ExpandedProjectionNode,
                         '$expandedProjectionNode instanceof ExpandedProjectionNode'
@@ -332,7 +332,7 @@ class RequestExpander
      * @param ExpandedProjectionNode $expandedProjectionNode
      * @param $entry
      * @param \POData\Providers\Metadata\ResourceType $resourceType
-     * @param string $expandedPropertyName
+     * @param string                                  $expandedPropertyName
      *
      * @throws InvalidOperationException
      * @throws \POData\Common\ODataException
@@ -355,7 +355,7 @@ class RequestExpander
             $projectedProperty
         );
         $resourceType->setPropertyValue($entry, $expandedPropertyName, $result);
-        if (!is_null($result)) {
+        if (null !== $result) {
             $this->pushPropertyToNavigation($result, $expandedProjectionNode);
         }
     }
@@ -363,9 +363,9 @@ class RequestExpander
     /**
      * @param $entry
      * @param $result
-     * @param ExpandedProjectionNode $expandedProjectionNode
+     * @param ExpandedProjectionNode                  $expandedProjectionNode
      * @param \POData\Providers\Metadata\ResourceType $resourceType
-     * @param string $expandedPropertyName
+     * @param string                                  $expandedPropertyName
      *
      * @throws InvalidOperationException
      */
@@ -377,12 +377,12 @@ class RequestExpander
         $expandedPropertyName
     ) {
         $internalOrderByInfo = $expandedProjectionNode->getInternalOrderByInfo();
-        if (!is_null($internalOrderByInfo)) {
+        if (null !== $internalOrderByInfo) {
             $orderByFunction = $internalOrderByInfo->getSorterFunction();
             usort($result, $orderByFunction);
             unset($internalOrderByInfo);
             $takeCount = $expandedProjectionNode->getTakeCount();
-            if (!is_null($takeCount)) {
+            if (null !== $takeCount) {
                 $result = array_slice($result, 0, $takeCount);
             }
         }

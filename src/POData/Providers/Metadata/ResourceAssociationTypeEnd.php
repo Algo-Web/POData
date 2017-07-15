@@ -64,13 +64,13 @@ class ResourceAssociationTypeEnd
         $resourceProperty,
         $fromProperty
     ) {
-        if (is_null($resourceProperty) && is_null($fromProperty)) {
+        if (null === $resourceProperty && null === $fromProperty) {
             throw new \InvalidArgumentException(
                 Messages::resourceAssociationTypeEndBothPropertyCannotBeNull()
             );
         }
 
-        if (!is_null($fromProperty)
+        if (null !== $fromProperty
             && !($fromProperty instanceof ResourceProperty)
         ) {
             throw new \InvalidArgumentException(
@@ -80,7 +80,7 @@ class ResourceAssociationTypeEnd
             );
         }
 
-        if (!is_null($resourceProperty)
+        if (null !== $resourceProperty
             && !($resourceProperty instanceof ResourceProperty)
         ) {
             throw new \InvalidArgumentException(
@@ -106,8 +106,8 @@ class ResourceAssociationTypeEnd
      */
     public function isBelongsTo(ResourceEntityType $resourceType, $resourceProperty)
     {
-        $flag1 = is_null($resourceProperty);
-        $flag2 = is_null($this->resourceProperty);
+        $flag1 = null === $resourceProperty;
+        $flag2 = null === $this->resourceProperty;
         if ($flag1 != $flag2) {
             return false;
         }
@@ -160,7 +160,7 @@ class ResourceAssociationTypeEnd
      */
     public function getMultiplicity()
     {
-        if (!is_null($this->fromProperty)
+        if (null !== $this->fromProperty
             && $this->fromProperty->getKind() == ResourcePropertyKind::RESOURCE_REFERENCE
         ) {
             return ODataConstants::ZERO_OR_ONE;
