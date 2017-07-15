@@ -41,7 +41,7 @@ class FilterInfo
     {
         assert(
             is_string($filterExpAsDataSourceExp),
-            "Filter expression must be a string"
+            'Filter expression must be a string'
         );
         $this->navigationPropertiesUsedInTheFilterClause = $navigationPropertiesUsedInTheFilterClause;
         $this->filterExpressionAsDataSourceExpression = $filterExpAsDataSourceExp;
