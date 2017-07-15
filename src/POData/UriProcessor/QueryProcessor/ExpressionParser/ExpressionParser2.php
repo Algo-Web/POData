@@ -131,7 +131,7 @@ class ExpressionParser2 extends ExpressionParser
      * @param  AbstractExpression|null $expression            The expression node to process
      * @param  bool                    $checkNullForMostChild Whether to include null check for current property
      * @throws ODataException
-     * @return AbstractExpression
+     * @return AbstractExpression|null
      */
     private function processNodeForNullability(
         $parentExpression,
