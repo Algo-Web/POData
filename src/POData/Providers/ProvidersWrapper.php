@@ -105,7 +105,7 @@ class ProvidersWrapper
 
     public function getProviderWrapper()
     {
-        assert(null != $this->providerWrapper, "Provider wrapper must be set");
+        assert(null != $this->providerWrapper, 'Provider wrapper must be set');
         return $this->providerWrapper;
     }
 
@@ -494,7 +494,7 @@ class ProvidersWrapper
         );
         assert(
             null == $associationSet || $associationSet instanceof ResourceAssociationSet,
-            "Retrieved resource assocation must be either null or an instance of ResourceAssociationSet"
+            'Retrieved resource assocation must be either null or an instance of ResourceAssociationSet'
         );
 
         if (!is_null($associationSet)) {
@@ -539,7 +539,7 @@ class ProvidersWrapper
         }
         assert(
             null == $associationSet || $associationSet instanceof ResourceAssociationSet,
-            "Retrieved resource assocation must be either null or an instance of ResourceAssociationSet"
+            'Retrieved resource assocation must be either null or an instance of ResourceAssociationSet'
         );
 
         return $associationSet;

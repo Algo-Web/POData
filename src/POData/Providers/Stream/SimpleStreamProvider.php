@@ -24,7 +24,7 @@ class SimpleStreamProvider implements IStreamProvider2
         IOperationContext $operationContext
     ) {
         if (null == $resourceStreamInfo) {
-            return "stream for " . get_class($entity);
+            return 'stream for ' . get_class($entity);
         }
         $name = $resourceStreamInfo->getName();
         return $entity->$name;
@@ -63,7 +63,7 @@ class SimpleStreamProvider implements IStreamProvider2
         IOperationContext $operationContext
     ) {
         if (null == $resourceStreamInfo) {
-            return "*/*";
+            return '*/*';
         }
         return 'application/octet-stream';
     }

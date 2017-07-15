@@ -245,7 +245,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
         QueryResult &$primitiveValue,
         ResourceProperty &$resourceProperty = null
     ) {
-        assert(null != $resourceProperty, "Resource property must not be null");
+        assert(null != $resourceProperty, 'Resource property must not be null');
         $propertyContent = new ODataPropertyContent();
         $propertyContent->properties[] = new ODataProperty();
         $this->writePrimitiveValue(
@@ -661,7 +661,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
         ODataEntry &$odataEntry
     ) {
         $streamProviderWrapper = $this->getService()->getStreamProviderWrapper();
-        assert(null != $streamProviderWrapper, "Retrieved stream provider must not be null");
+        assert(null != $streamProviderWrapper, 'Retrieved stream provider must not be null');
         $context = $this->getService()->getOperationContext();
         if ($resourceType->isMediaLinkEntry()) {
             $odataEntry->isMediaLinkEntry = true;

@@ -197,7 +197,7 @@ class QueryProcessor
         }
 
         $targetResourceType = $this->request->getTargetResourceType();
-        assert($targetResourceType != null, "Request target resource type must not be null");
+        assert($targetResourceType != null, 'Request target resource type must not be null');
         /*
          * We need to do sorting in the folowing cases, irrespective of
          * $orderby clause is present or not.
@@ -224,7 +224,7 @@ class QueryProcessor
 
         if (!is_null($orderBy) && '' != trim($orderBy)) {
             $setWrapper = $this->request->getTargetResourceSetWrapper();
-            assert(null != $setWrapper, "Target resource set wrapper must not be null");
+            assert(null != $setWrapper, 'Target resource set wrapper must not be null');
             $internalOrderByInfo = OrderByParser::parseOrderByClause(
                 $setWrapper,
                 $targetResourceType,
@@ -364,9 +364,9 @@ class QueryProcessor
         }
 
         $internalOrderByInfo = $this->request->getInternalOrderByInfo();
-        assert($internalOrderByInfo != null, "Internal order info must not be null");
+        assert($internalOrderByInfo != null, 'Internal order info must not be null');
         $targetResourceType = $this->request->getTargetResourceType();
-        assert($targetResourceType != null, "Request target resource type must not be null");
+        assert($targetResourceType != null, 'Request target resource type must not be null');
 
         $internalSkipTokenInfo = SkipTokenParser::parseSkipTokenClause(
             $targetResourceType,
