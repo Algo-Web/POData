@@ -205,7 +205,7 @@ class KeyDescriptor
         $keyPredicate,
         KeyDescriptor &$keyDescriptor = null
     ) {
-        return self::_tryParseKeysFromKeyPredicate(
+        return self::tryParseKeysFromRawKeyPredicate(
             $keyPredicate,
             true,
             false,
@@ -225,7 +225,7 @@ class KeyDescriptor
      */
     public static function tryParseValuesFromSkipToken($skipToken, &$keyDescriptor)
     {
-        return self::_tryParseKeysFromKeyPredicate(
+        return self::tryParseKeysFromRawKeyPredicate(
             $skipToken,
             false,
             true,
@@ -351,7 +351,7 @@ class KeyDescriptor
      *
      * @return bool True if the given values were parsed; false if there was a syntax error
      */
-    private static function _tryParseKeysFromKeyPredicate(
+    private static function tryParseKeysFromRawKeyPredicate(
         $keyPredicate,
         $allowNamedValues,
         $allowNull,
@@ -401,7 +401,7 @@ class KeyDescriptor
 
                 //Get type of keyValue and validate keyValue
                 $ouValue = $outType = null;
-                if (!self::_getTypeAndValidateKeyValue(
+                if (!self::getTypeAndValidateKeyValue(
                     $currentToken->Text,
                     $currentToken->Id,
                     $outValue,
@@ -422,7 +422,7 @@ class KeyDescriptor
 
                 //Get type of keyValue and validate keyValue
                 $ouValue = $outType = null;
-                if (!self::_getTypeAndValidateKeyValue(
+                if (!self::getTypeAndValidateKeyValue(
                     $currentToken->Text,
                     $currentToken->Id,
                     $outValue,
@@ -467,7 +467,7 @@ class KeyDescriptor
      *
      * @return bool True if $value is a valid type, else false
      */
-    private static function _getTypeAndValidateKeyValue($value, $tokenId, &$outValue, &$outType)
+    private static function getTypeAndValidateKeyValue($value, $tokenId, &$outValue, &$outType)
     {
         switch ($tokenId) {
             case ExpressionTokenId::BOOLEAN_LITERAL:

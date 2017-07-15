@@ -184,10 +184,10 @@ class ExpressionLexer
                     $this->parseIdentifier();
                     $currentIdentifier = substr($this->text, $tokenPos + 1, $this->textPos - $tokenPos - 1);
 
-                    if (self::_isInfinityLiteralDouble($currentIdentifier)) {
+                    if (self::isInfinityLiteralDouble($currentIdentifier)) {
                         $t = ExpressionTokenId::DOUBLE_LITERAL;
                         break;
-                    } elseif (self::_isInfinityLiteralSingle($currentIdentifier)) {
+                    } elseif (self::isInfinityLiteralSingle($currentIdentifier)) {
                         $t = ExpressionTokenId::SINGLE_LITERAL;
                         break;
                     }
@@ -273,9 +273,9 @@ class ExpressionLexer
 
         // Handle keywords.
         if ($this->token->Id == ExpressionTokenId::IDENTIFIER) {
-            if (self::_isInfinityOrNaNDouble($this->token->Text)) {
+            if (self::isInfinityOrNaNDouble($this->token->Text)) {
                 $this->token->Id = ExpressionTokenId::DOUBLE_LITERAL;
-            } elseif (self::_isInfinityOrNanSingle($this->token->Text)) {
+            } elseif (self::isInfinityOrNanSingle($this->token->Text)) {
                 $this->token->Id = ExpressionTokenId::SINGLE_LITERAL;
             } elseif ($this->token->Text == ODataConstants::KEYWORD_TRUE
                 || $this->token->Text == ODataConstants::KEYWORD_FALSE
@@ -352,11 +352,11 @@ class ExpressionLexer
      *
      * @return bool true if match found, false otherwise
      */
-    private static function _isInfinityOrNaNDouble($tokenText)
+    private static function isInfinityOrNaNDouble($tokenText)
     {
         if (strlen($tokenText) == 3) {
             if ($tokenText[0] == 'I') {
-                return self::_isInfinityLiteralDouble($tokenText);
+                return self::isInfinityLiteralDouble($tokenText);
             } elseif ($tokenText[0] == 'N') {
                 return strncmp($tokenText, ODataConstants::XML_NAN_LITERAL, 3) == 0;
             }
@@ -372,7 +372,7 @@ class ExpressionLexer
      *
      * @return bool true if match found, false otherwise
      */
-    private static function _isInfinityLiteralDouble($text)
+    private static function isInfinityLiteralDouble($text)
     {
         return strcmp($text, ODataConstants::XML_INFINITY_LITERAL) == 0;
     }
@@ -384,11 +384,11 @@ class ExpressionLexer
      *
      * @return bool true if match found, false otherwise
      */
-    private static function _isInfinityOrNanSingle($tokenText)
+    private static function isInfinityOrNanSingle($tokenText)
     {
         if (strlen($tokenText) == 4) {
             if ($tokenText[0] == 'I') {
-                return self::_isInfinityLiteralSingle($tokenText);
+                return self::isInfinityLiteralSingle($tokenText);
             } elseif ($tokenText[0] == 'N') {
                 return ($tokenText[3] == self::SINGLE_SUFFIX_LOWER
                     || $tokenText[3] == self::SINGLE_SUFFIX_UPPER)
@@ -407,7 +407,7 @@ class ExpressionLexer
      * @return bool true if the substring is equal using an ordinal comparison;
      *              false otherwise
      */
-    private static function _isInfinityLiteralSingle($text)
+    private static function isInfinityLiteralSingle($text)
     {
         return strlen($text) == 4
             && ($text[3] == self::SINGLE_SUFFIX_LOWER
