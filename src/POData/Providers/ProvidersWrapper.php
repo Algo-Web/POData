@@ -186,7 +186,7 @@ class ProvidersWrapper
             }
 
             $resourceSetNames[] = $name;
-            $resourceSetWrapper = $this->_validateResourceSetAndGetWrapper($resourceSet);
+            $resourceSetWrapper = $this->validateResourceSetAndGetWrapper($resourceSet);
             if (!is_null($resourceSetWrapper)) {
                 $resourceSetWrappers[] = $resourceSetWrapper;
             }
@@ -211,7 +211,7 @@ class ProvidersWrapper
      *
      * @return ResourceSetWrapper|null Returns an instance if a resource set with the given name is visible
      */
-    private function _validateResourceSetAndGetWrapper(ResourceSet $resourceSet)
+    private function validateResourceSetAndWrapper(ResourceSet $resourceSet)
     {
         $cacheKey = $resourceSet->getName();
         if (array_key_exists($cacheKey, $this->setWrapperCache)) {
@@ -301,7 +301,7 @@ class ProvidersWrapper
             return null;
         }
 
-        return $this->_validateResourceSetAndGetWrapper($resourceSet);
+        return $this->validateResourceSetAndWrapper($resourceSet);
     }
 
     /**
@@ -457,7 +457,7 @@ class ProvidersWrapper
                 $navigationResourceProperty
             );
 
-            return $this->_validateResourceSetAndGetWrapper(
+            return $this->validateResourceSetAndWrapper(
                 $relatedAssociationSetEnd->getResourceSet()
             );
         }
@@ -527,7 +527,7 @@ class ProvidersWrapper
                 );
             }
 
-            $relatedResourceSetWrapper = $this->_validateResourceSetAndGetWrapper(
+            $relatedResourceSetWrapper = $this->validateResourceSetAndWrapper(
                 $relatedAssociationSetEnd->getResourceSet()
             );
             if ($relatedResourceSetWrapper === null) {
@@ -581,7 +581,7 @@ class ProvidersWrapper
      */
     public function validateResourceSetAndGetWrapper(ResourceSet $resourceSet)
     {
-        return $this->_validateResourceSetAndGetWrapper($resourceSet);
+        return $this->validateResourceSetAndWrapper($resourceSet);
     }
 
     /**

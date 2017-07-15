@@ -38,13 +38,13 @@ class OutgoingResponse
     public function __construct()
     {
         $this->headers = [];
-        $this->_initializeResponseHeaders();
+        $this->initializeResponseHeaders();
     }
 
     /**
      * Sets the initial value of the default response headers.
      */
-    private function _initializeResponseHeaders()
+    private function initializeResponseHeaders()
     {
         $this->headers[ODataConstants::HTTPRESPONSE_HEADER_CONTENTTYPE] = null;
         $this->headers[ODataConstants::HTTPRESPONSE_HEADER_CONTENTLENGTH] = null;
