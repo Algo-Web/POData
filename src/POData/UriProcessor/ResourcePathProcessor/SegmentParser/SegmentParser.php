@@ -43,7 +43,7 @@ class SegmentParser
      *
      * @var SegmentDescriptor[]
      */
-    private $_segmentDescriptors = [];
+    private $segmentDescriptors = [];
 
     /**
      * Constructs a new instance of SegmentParser.
@@ -71,7 +71,7 @@ class SegmentParser
         $segmentParser = new self($providerWrapper);
         $segmentParser->createSegmentDescriptors($segments, $checkForRights);
 
-        return $segmentParser->_segmentDescriptors;
+        return $segmentParser->segmentDescriptors;
     }
 
     /**
@@ -118,7 +118,7 @@ class SegmentParser
             //If there's no segments, then it's the service root
             $descriptor = new SegmentDescriptor();
             $descriptor->setTargetKind(TargetKind::SERVICE_DIRECTORY());
-            $this->_segmentDescriptors[] = $descriptor;
+            $this->segmentDescriptors[] = $descriptor;
 
             return;
         }
@@ -132,7 +132,7 @@ class SegmentParser
             $checkRights
         );
         assert($previous instanceof SegmentDescriptor, get_class($previous));
-        $this->_segmentDescriptors[0] = $previous;
+        $this->segmentDescriptors[0] = $previous;
 
         for ($i = 1; $i < $segmentCount; ++$i) {
             $thisSegment = $segments[$i];
@@ -140,7 +140,7 @@ class SegmentParser
 
             $current->setPrevious($previous);
             $previous->setNext($current);
-            $this->_segmentDescriptors[] = $current;
+            $this->segmentDescriptors[] = $current;
             $previous = $current;
         }
 
