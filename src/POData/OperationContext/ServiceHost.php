@@ -519,7 +519,7 @@ class ServiceHost
             $this->getOperationContext()->outgoingResponse()->setContentLength($value);
         } else {
             throw ODataException::notAcceptableError(
-                "ContentLength:$value is invalid"
+                'ContentLength:'.$value.' is invalid'
             );
         }
     }
@@ -610,7 +610,7 @@ class ServiceHost
     /**
      * Get the response headers.
      *
-     * @return Array
+     * @return array
      */
     public function &getResponseHeaders()
     {
