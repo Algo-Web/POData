@@ -21,6 +21,19 @@ class UrlTest extends TestCase
         $this->assertFalse($url->isRelative());
     }
 
+    public function testRelativeUrl()
+    {
+        $urlStr = "/NorthwindService.svc/Customers('ALFKI')/Orders?\$filter=OrderID eq 123";
+        $url = new Url($urlStr, false);
+        $this->assertEquals(null, $url->getScheme());
+        $this->assertEquals(null, $url->getPort());
+        $this->assertEquals(null, $url->getHost());
+        $this->assertEquals("/NorthwindService.svc/Customers('ALFKI')/Orders", $url->getPath());
+        $this->assertEquals('$filter=OrderID eq 123', $url->getQuery());
+        $this->assertFalse($url->isAbsolute());
+        $this->assertTrue($url->isRelative());
+    }
+
     public function testGetSegmentsAbsoluteUrlWithRedundantSlashing()
     {
         //This is valid
@@ -63,6 +76,17 @@ class UrlTest extends TestCase
         $urlStr = "http://localhost/NorthwindService.svc//Customers('ALFKI')/Orders?\$filter=OrderID eq 123";
         try {
             new Url($urlStr);
+            $this->fail('An expected UrlFormatException has not been raised');
+        } catch (UrlFormatException $exception) {
+            $this->assertEquals("Bad Request - The url '$urlStr' is malformed.", $exception->getMessage());
+        }
+    }
+
+    public function testRelativeURLWithDoubleSlashesAfterService()
+    {
+        $urlStr = "/NorthwindService.svc//Customers('ALFKI')/Orders?\$filter=OrderID eq 123";
+        try {
+            new Url($urlStr, false);
             $this->fail('An expected UrlFormatException has not been raised');
         } catch (UrlFormatException $exception) {
             $this->assertEquals("Bad Request - The url '$urlStr' is malformed.", $exception->getMessage());
