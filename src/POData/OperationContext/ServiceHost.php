@@ -555,6 +555,10 @@ class ServiceHost
      */
     public function setResponseStatusCode($value)
     {
+        if (!is_numeric($value)) {
+            $msg = 'Invalid, non-numeric, status code: '.$value;
+            throw ODataException::createInternalServerError($msg);
+        }
         $floor = floor($value/100);
         if ($floor >= 1 && $floor <= 5) {
             $statusDescription = HttpStatus::getStatusDescription($value);
@@ -564,9 +568,8 @@ class ServiceHost
 
             $this->getOperationContext()->outgoingResponse()->setStatusCode($value . $statusDescription);
         } else {
-            throw ODataException::createInternalServerError(
-                'Invalid Status Code: ' . $value
-            );
+            $msg = 'Invalid status code: ' . $value;
+            throw ODataException::createInternalServerError($msg);
         }
     }
 

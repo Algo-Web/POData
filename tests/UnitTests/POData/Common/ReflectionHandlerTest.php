@@ -24,8 +24,5 @@ class reflectionTest1
 
     public function __construct($name)
     {
-
     }
-
 }
-

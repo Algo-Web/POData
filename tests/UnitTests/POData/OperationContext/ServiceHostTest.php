@@ -199,7 +199,7 @@ class ServiceHostTest extends TestCase
 
     public function testSetBadResponseCodeNonNumeric()
     {
-        $expected = 'Invalid Status Code: abc';
+        $expected = 'Invalid, non-numeric, status code: abc';
         $actual = null;
 
         $request = m::mock(Request::class);
@@ -221,7 +221,7 @@ class ServiceHostTest extends TestCase
 
     public function testSetBadResponseCodeTooBig()
     {
-        $expected = 'Invalid Status Code: 600';
+        $expected = 'Invalid status code: 600';
         $actual = null;
 
         $request = m::mock(Request::class);
@@ -243,7 +243,7 @@ class ServiceHostTest extends TestCase
 
     public function testSetBadResponseCodeTooSmall()
     {
-        $expected = 'Invalid Status Code: 99';
+        $expected = 'Invalid status code: 99';
         $actual = null;
 
         $request = m::mock(Request::class);
