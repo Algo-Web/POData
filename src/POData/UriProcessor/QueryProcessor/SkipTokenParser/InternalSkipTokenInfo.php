@@ -65,7 +65,7 @@ class InternalSkipTokenInfo
      *                                                      sorter function(s) generated from orderby clause
      * @param array<array<IType>> $orderByValuesInSkipToken Collection of values in the skiptoken corresponds to the
      *                                                      orderby path segments
-     * @param ResourceType        &$resourceType            Reference to the type of the resource pointed by the request uri
+     * @param ResourceType        &$resourceType            Reference to the resource type pointed to by the request uri
      */
     public function __construct(
         InternalOrderByInfo &$internalOrderByInfo,
@@ -89,7 +89,7 @@ class InternalSkipTokenInfo
     public function getSkipTokenInfo()
     {
         if (null === $this->skipTokenInfo) {
-            $orderbyInfo = $this->internalOrderByInfo->getOrderByInfo();
+            $orderbyInfo = $this->getInternalOrderByInfo()->getOrderByInfo();
             $this->skipTokenInfo = new SkipTokenInfo(
                 $orderbyInfo,
                 $this->orderByValuesInSkipToken
@@ -100,9 +100,18 @@ class InternalSkipTokenInfo
     }
 
     /**
+     * Get reference to the InternalOrderByInfo object holding orderBy details
+     *
+     * @return InternalOrderByInfo
+     */
+    public function getInternalOrderByInfo()
+    {
+        return $this->internalOrderByInfo;
+    }
+
+    /**
      * Search the sorted array of result set for key object created from the
-     * skip token key values and returns index of first entry in the next
-     * page.
+     * skip token key values and returns index of first entry in the next page.
      *
      * @param array &$searchArray The sorted array to search
      *
@@ -113,31 +122,26 @@ class InternalSkipTokenInfo
      *             in the next page,
      *             (3) If partial matching found (means found matching for first
      *             m keys where m < n, where n is total number of positional
-     *             keys, then return the index of the object which has most
-     *             matching
+     *             keys, then return the index of the object which has most matching
      */
     public function getIndexOfFirstEntryInTheNextPage(&$searchArray)
     {
         if (!is_array($searchArray)) {
-            throw new \InvalidArgumentException(
-                Messages::internalSkipTokenInfoBinarySearchRequireArray(
-                    'searchArray'
-                )
-            );
+            $msg = Messages::internalSkipTokenInfoBinarySearchRequireArray('searchArray');
+            throw new \InvalidArgumentException($msg);
         }
 
         if (empty($searchArray)) {
             return -1;
         }
 
-        $comparer = $this->internalOrderByInfo->getSorterFunction();
+        $comparer = $this->getInternalOrderByInfo()->getSorterFunction();
         //Gets the key object initialized from skiptoken
         $keyObject = $this->getKeyObject();
         $low = 0;
-        $searcArraySize = count($searchArray) - 1;
-        $high = $searcArraySize;
+        $searchArraySize = count($searchArray) - 1;
+        $high = $searchArraySize;
         do {
-            $matchLevel = 0;
             $mid = $low + round(($high - $low)/2);
             $result = $comparer($keyObject, $searchArray[$mid]);
             if ($result > 0) {
@@ -146,7 +150,7 @@ class InternalSkipTokenInfo
                 $high = $mid - 1;
             } else {
                 //Now we found record the matches with skiptoken value, so first record of next page will at $mid + 1
-                if ($mid == $searcArraySize) {
+                if ($mid == $searchArraySize) {
                     //Check skiptoken points to last record, in this case no more records available for next page
                     return -1;
                 }
@@ -155,7 +159,7 @@ class InternalSkipTokenInfo
             }
         } while ($low <= $high);
 
-        if ($mid >= $searcArraySize) {
+        if ($mid >= $searchArraySize) {
             //If key object does not match with last object, then no more page
             return -1;
         } elseif ($mid <= 0) {
@@ -178,9 +182,9 @@ class InternalSkipTokenInfo
     public function getKeyObject()
     {
         if (null === $this->keyObject) {
-            $this->keyObject = $this->internalOrderByInfo->getDummyObject();
+            $this->keyObject = $this->getInternalOrderByInfo()->getDummyObject();
             $i = 0;
-            foreach ($this->internalOrderByInfo->getOrderByPathSegments() as $orderByPathSegment) {
+            foreach ($this->getInternalOrderByInfo()->getOrderByPathSegments() as $orderByPathSegment) {
                 $index = 0;
                 $currentObject = $this->keyObject;
                 $subPathSegments = $orderByPathSegment->getSubPathSegments();
@@ -194,8 +198,9 @@ class InternalSkipTokenInfo
                         // represents a complex/navigation, but its null, which means
                         // the property is not set in the dummy object by OrderByParser,
                         // an unexpected state.
+                        $subSegName = $subPathSegment->getName();
                         if (!$isLastSegment) {
-                            $currentObject = $this->resourceType->getPropertyValue($currentObject, $subPathSegment->getName());
+                            $currentObject = $this->resourceType->getPropertyValue($currentObject, $subSegName);
                         } else {
                             if ($this->orderByValuesInSkipToken[$i][1] instanceof Null1) {
                                 $this->resourceType->setPropertyValue($currentObject, $subPathSegment->getName(), null);
@@ -207,7 +212,7 @@ class InternalSkipTokenInfo
                                     = $this->orderByValuesInSkipToken[$i][1]->convert(
                                         $this->orderByValuesInSkipToken[$i][0]
                                     );
-                                $this->resourceType->setPropertyValue($currentObject, $subPathSegment->getName(), $value);
+                                $this->resourceType->setPropertyValue($currentObject, $subSegName, $value);
                             }
                         }
                     } catch (\ReflectionException $reflectionException) {
@@ -242,7 +247,7 @@ class InternalSkipTokenInfo
     public function buildNextPageLink($lastObject)
     {
         $nextPageLink = null;
-        foreach ($this->internalOrderByInfo->getOrderByPathSegments() as $orderByPathSegment) {
+        foreach ($this->getInternalOrderByInfo()->getOrderByPathSegments() as $orderByPathSegment) {
             $index = 0;
             $currentObject = $lastObject;
             $subPathSegments = $orderByPathSegment->getSubPathSegments();
