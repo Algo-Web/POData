@@ -116,5 +116,7 @@ class ResourceAssociationTypeTest extends TestCase
         $foo = new ResourceAssociationType('name', 'space', $end1, $end2);
         $result = $foo->getRelatedResourceAssociationSetEnd($type, $property);
         $this->assertNull($result);
+        $this->assertEquals('foo', $foo->getEnd1()->getName());
+        $this->assertEquals('bar', $foo->getEnd2()->getName());
     }
 }
