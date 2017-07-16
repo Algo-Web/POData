@@ -1437,4 +1437,68 @@ class JsonLightODataWriterFullMetadataTest extends TestCase
             [602, Version::v3(), MimeTypes::MIME_APPLICATION_JSON_VERBOSE, false],
         ];
     }
+
+    public function testConstructorWithBadServiceUri()
+    {
+        $level = JsonLightMetadataLevel::FULL();
+        $serviceUri = '';
+
+        $expected = 'absoluteServiceUri must not be empty or null';
+        $actual = null;
+
+        try {
+            new JsonLightODataWriter($level, $serviceUri);
+        } catch (\Exception $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testWritePropertyContentWithFirstPropertyHavingNullValue()
+    {
+        $level = JsonLightMetadataLevel::FULL();
+        $serviceUri = 'http://localhost/odata.svc';
+
+        $foo = new JsonLightODataWriter($level, $serviceUri);
+
+        $property = new ODataProperty();
+        $property->value = null;
+        $property->typeName = 'Edm.String';
+
+        $model = new ODataPropertyContent();
+        $model->properties[] = $property;
+
+        $expected = '{'.PHP_EOL;
+        $expected .= '    "odata.metadata":"http://localhost/odata.svc/$metadata#Edm.String","value":null'.PHP_EOL;
+        $expected .= '}';
+        $foo->write($model);
+        $actual = $foo->getOutput();
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testWritePropertyContentWithFirstPropertyHavingBagValue()
+    {
+        $level = JsonLightMetadataLevel::FULL();
+        $serviceUri = 'http://localhost/odata.svc';
+
+        $foo = new JsonLightODataWriter($level, $serviceUri);
+
+        $bag = new ODataBagContent();
+        $bag->propertyContents = [];
+
+        $property = new ODataProperty();
+        $property->value = $bag;
+        $property->typeName = 'Edm.String';
+
+        $model = new ODataPropertyContent();
+        $model->properties[] = $property;
+
+        $expected = '{'.PHP_EOL;
+        $expected .= '    "odata.metadata":"http://localhost/odata.svc/$metadata#Edm.String","value":['.PHP_EOL;
+        $expected .= PHP_EOL.'    ]'.PHP_EOL;
+        $expected .= '}';
+        $foo->write($model);
+        $actual = $foo->getOutput();
+        $this->assertEquals($expected, $actual);
+    }
 }

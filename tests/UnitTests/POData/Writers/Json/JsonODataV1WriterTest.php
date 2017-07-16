@@ -4,6 +4,7 @@ namespace UnitTests\POData\Writers\Json;
 
 use Mockery as m;
 use POData\Common\MimeTypes;
+use POData\Common\ODataException;
 use POData\Common\Version;
 use POData\ObjectModel\ODataBagContent;
 use POData\ObjectModel\ODataEntry;
@@ -1351,5 +1352,72 @@ class JsonODataV1WriterTest extends TestCase
             [601, Version::v2(), MimeTypes::MIME_APPLICATION_JSON_VERBOSE, false],
             [602, Version::v3(), MimeTypes::MIME_APPLICATION_JSON_VERBOSE, false],
         ];
+    }
+
+    public function testSerialiseExceptionWithErrorCode()
+    {
+        $exception = new ODataException('BORK BORK BORK!', 500);
+
+        $expected = '{'.PHP_EOL.'    "error":{'.PHP_EOL.'        "code":"0","message":{'.PHP_EOL;
+        $expected .= '            "lang":"en-US","value":"BORK BORK BORK!"'.PHP_EOL;
+        $expected .= '        }'.PHP_EOL.'    }'.PHP_EOL.'}';
+        $actual = JsonODataV1Writer::serializeException($exception, false);
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testWriteMediaLinkEntryWithTypeSet()
+    {
+        $media = new ODataMediaLink('name', 'edit', 'src', 'application/json', 'etag');
+
+        $prop = new ODataPropertyContent();
+
+        $entry = new ODataEntry();
+        $entry->links = [];
+        $entry->propertyContent = $prop;
+        $entry->isMediaLinkEntry = true;
+        $entry->mediaLink = $media;
+        $entry->mediaLinks = [$media];
+        $entry->type = 'Entry';
+
+        $foo = new JsonODataV1Writer();
+
+        $foo->write($entry);
+
+        $expected = '{'.PHP_EOL.'    "d":{'.PHP_EOL.'        "__metadata":{'.PHP_EOL;
+        $expected .= '            "type":"Entry","edit_media":"edit","media_src":"src","content_type":'
+                     .'"application/json","media_etag":"etag"'.PHP_EOL;
+        $expected .= '        },"name":{'.PHP_EOL;
+        $expected .= '            "media_src":"src","content_type":"application/json","media_etag":"etag"'.PHP_EOL;
+        $expected .= '        }'.PHP_EOL.'    }'.PHP_EOL.'}';
+        $actual = $foo->getOutput();
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testWriteMediaLinkEntryWithNoTypeSet()
+    {
+        $media = new ODataMediaLink('name', 'edit', 'src', 'application/json', 'etag');
+
+        $prop = new ODataPropertyContent();
+
+        $entry = new ODataEntry();
+        $entry->links = [];
+        $entry->propertyContent = $prop;
+        $entry->isMediaLinkEntry = true;
+        $entry->mediaLink = $media;
+        $entry->mediaLinks = [$media];
+        $entry->type = null;
+
+        $foo = new JsonODataV1Writer();
+
+        $foo->write($entry);
+
+        $expected = '{'.PHP_EOL.'    "d":{'.PHP_EOL.'        "__metadata":{'.PHP_EOL;
+        $expected .= '            "edit_media":"edit","media_src":"src","content_type":'
+                     .'"application/json","media_etag":"etag"'.PHP_EOL;
+        $expected .= '        },"name":{'.PHP_EOL;
+        $expected .= '            "media_src":"src","content_type":"application/json","media_etag":"etag"'.PHP_EOL;
+        $expected .= '        }'.PHP_EOL.'    }'.PHP_EOL.'}';
+        $actual = $foo->getOutput();
+        $this->assertEquals($expected, $actual);
     }
 }
