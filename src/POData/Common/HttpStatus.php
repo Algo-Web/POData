@@ -149,14 +149,14 @@ class HttpStatus
         // if int, look up corresponding constant value - if not exists, bail out
         if (is_int($statusCode)) {
             if (!array_key_exists($statusCode, self::$reverse)) {
-                return;
+                return null;
             }
             $statusCode = self::$reverse[$statusCode];
         }
 
         // here mainly to catch non-integral inputs that can't be mapped to a defined class constant
         if (!array_key_exists($statusCode, self::$mapping)) {
-            return;
+            return null;
         }
 
         return self::$mapping[$statusCode];
