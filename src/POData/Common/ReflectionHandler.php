@@ -33,8 +33,6 @@ class ReflectionHandler
         // If magic method exists, try that first, else try property directly
         if (method_exists($entity, '__set')) {
             $entity->$property = $value;
-        } elseif (is_object($entity) && property_exists($entity, $property)) {
-            $entity->$property = $value;
         } else {
             $reflect = new \ReflectionProperty($entity, $property);
             $oldAccess = $reflect->isPublic();

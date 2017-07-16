@@ -7,17 +7,17 @@ use POData\OperationContext\Web\OutgoingResponse;
 class SimpleOperativeContext implements IOperationContext
 {
     /**
-     * @var RequestAdapter;
+     * @var SimpleRequestAdapter;
      */
     protected $request;
     protected $response;
 
     /**
-     * @param yii\base\Request $request
+     * @param SimpleRequestAdapter $request
      */
     public function __construct($request)
     {
-        $this->request = new RequestAdapter($request);
+        $this->request = new SimpleRequestAdapter($request);
         $this->response = new OutgoingResponse();
     }
 

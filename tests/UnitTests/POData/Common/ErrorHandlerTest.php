@@ -76,7 +76,7 @@ class ErrorHandlerTest extends TestCase
 
         $expected = '{
     "error":{
-        "message":{
+        "code":"0","message":{
             "lang":"en-US","value":"FAIL"
         }
     }

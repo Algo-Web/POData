@@ -138,7 +138,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $feed->nextPageLink = $nextPageLink;
         $feed->title = 'Feed Title';
 
-         // Entry 1
+        // Entry 1
 
         $entry1 = new ODataEntry();
         $entry1->id = 'Entry 1';
@@ -378,13 +378,13 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
             'Media Content Type',
             'Media ETag'
         ),
-                                            new ODataMediaLink(
-                                                'Media Link Name2',
-                                                'Edit Media link2',
-                                                'Src Media Link2',
-                                                'Media Content Type2',
-                                                'Media ETag2'
-                                            ), ];
+            new ODataMediaLink(
+                'Media Link Name2',
+                'Edit Media link2',
+                'Src Media Link2',
+                'Media Content Type2',
+                'Media ETag2'
+            ), ];
 
         $link = new ODataLink();
         $link->name = 'Link Name';
@@ -987,8 +987,8 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $bagEntryProp3 = new ODataBagContent();
 
         $bagEntryProp3->propertyContents = [
-                                      'mike@foo.com',
-                                      'mike2@foo.com', ];
+            'mike@foo.com',
+            'mike2@foo.com', ];
 
         $entryProp3 = new ODataProperty();
         $entryProp3->name = 'EmailAddresses';
@@ -1013,7 +1013,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $bagEntryProp4ContentProp1ContentProp2->value = '508';
 
         $bagEntryProp4ContentProp1Content->properties = [$bagEntryProp4ContentProp1ContentProp1,
-                                                                 $bagEntryProp4ContentProp1ContentProp2, ];
+            $bagEntryProp4ContentProp1ContentProp2, ];
 
         //end property content for bagEntryProp4ContentProp1
 
@@ -1031,13 +1031,13 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $bagEntryProp4ContentProp1Content2Prop2->value = '102';
 
         $bagEntryProp4ContentProp1Content2->properties = [$bagEntryProp4ContentProp1Content2Prop1,
-                                                                 $bagEntryProp4ContentProp1Content2Prop2, ];
+            $bagEntryProp4ContentProp1Content2Prop2, ];
 
         //end property content for bagEntryProp4ContentProp1
 
         $bagEntryProp4->propertyContents = [$bagEntryProp4ContentProp1Content,
-                                                 $bagEntryProp4ContentProp1Content2,
-                                                ];
+            $bagEntryProp4ContentProp1Content2,
+        ];
 
         $entryProp4 = new ODataProperty();
         $entryProp4->name = 'Addresses';
@@ -1108,10 +1108,10 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $odataProperty->value = $odataBag;
 
         $odataBag->propertyContents = [
-                                      'yash_kothari@persistent.co.in',
-                                      'v-yashk@microsoft.com',
-                                      'yash2712@gmail.com',
-                                      'y2k2712@yahoo.com', ];
+            'yash_kothari@persistent.co.in',
+            'v-yashk@microsoft.com',
+            'yash2712@gmail.com',
+            'y2k2712@yahoo.com', ];
 
         $propCont = new ODataPropertyContent();
         $propCont->properties = [$odataProperty];
@@ -1260,6 +1260,97 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $foo->writeServiceDocument($wrapper);
 
         $actual = $foo->xmlWriter->outputMemory(true);
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testBeforeWriteDateTimeValue()
+    {
+        $type = 'Edm.DateTime';
+        $value = '2000-01-01 00:00:00';
+
+        $foo = new AtomODataWriterDummy('http://localhost/odata.svc');
+        $expected = '2000-01-01T00:00:00';
+        $actual = $foo->beforeWriteValue($value, $type);
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testWriteNullValue()
+    {
+        $property = m::mock(ODataProperty::class)->makePartial();
+
+        $foo = new AtomODataWriterDummy('http://localhost/odata.svc');
+        $foo->writeNullValue($property);
+
+        $expected = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'.PHP_EOL;
+        $actual = $foo->getOutput();
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testPreWritePropertiesWithMediaLinkEntry()
+    {
+        $media = new ODataMediaLink('name', 'edit', 'src', 'application/xml', 'etag');
+
+        $entry = new ODataEntry();
+        $entry->isMediaLinkEntry = true;
+        $entry->mediaLink = $media;
+
+        $foo = new AtomODataWriterDummy('http://localhost/odata.svc');
+        $foo->preWriteProperties($entry);
+
+        $expected = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'.PHP_EOL;
+        $expected .= '<category term="" scheme="http://schemas.microsoft.com/ado/2007/08/dataservices/scheme"/>'
+                     .PHP_EOL;
+        $expected .= '<content type="application/xml" src="src"/>'.PHP_EOL;
+        $expected .= '<m:properties/>'.PHP_EOL;
+        $actual = $foo->getOutput();
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testWriteBeginEntryWithMediaLinks()
+    {
+        $media = new ODataMediaLink('name', 'edit', 'src', 'application/xml', 'etag');
+
+        $entry = new ODataEntry();
+        $entry->isMediaLinkEntry = true;
+        $entry->mediaLink = $media;
+        $entry->mediaLinks[] = $media;
+        $entry->editLink = 'edit';
+
+        $foo = new AtomODataWriterDummy('http://localhost/odata.svc');
+        $foo->writeBeginEntry($entry, false);
+
+        $expectedStart = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'.PHP_EOL;
+        $expectedStart .= '<entry>'.PHP_EOL;
+        $expectedStart .= ' <id></id>'.PHP_EOL;
+        $expectedStart .= ' <title type="text"></title>'.PHP_EOL;
+
+        $expectedEnd = ' <author>'.PHP_EOL;
+        $expectedEnd .= '  <name/>'.PHP_EOL;
+        $expectedEnd .= ' </author>'.PHP_EOL;
+        $expectedEnd .= ' <link rel="edit" title="" href="edit"/>'.PHP_EOL;
+        $expectedEnd .= ' <link m:etag="etag" rel="edit-media" type="application/xml" title="name" href="edit"/>'
+                        .PHP_EOL;
+        $expectedEnd .= ' <link m:etag="etag" rel="http://schemas.microsoft.com/ado/2007/08/dataservices/'
+                        .'mediaresource/name" type="application/xml" title="name" href="edit"/>'.PHP_EOL;
+        $expectedEnd .= '</entry>'.PHP_EOL;
+
+        $actual = $foo->getOutput();
+        $this->assertStringStartsWith($expectedStart, $actual);
+        $this->assertStringEndsWith($expectedEnd, $actual);
+    }
+
+    public function testWriteUnexpandedLinkNode()
+    {
+        $link = new ODataLink();
+        $link->type = 'linkType';
+        $link->title = 'Title';
+
+        $foo = new AtomODataWriterDummy('http://localhost/odata.svc');
+        $foo->writeLinkNode($link, false);
+
+        $expected = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'.PHP_EOL;
+        $expected .= '<link rel="" type="linkType" title="Title" href=""/>'.PHP_EOL;
+        $actual = $foo->getOutput();
         $this->assertEquals($expected, $actual);
     }
 }
