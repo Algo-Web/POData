@@ -241,9 +241,9 @@ class JsonLightODataWriter extends JsonODataV2Writer
     /**
      * Writes the next page link.
      *
-     * @param ODataLink $nextPageLinkUri Uri for next page link
+     * @param ODataLink|null                $nextPageLinkUri Uri for next page link
      *
-     * @return JsonLightODataWriter
+     * @return JsonLightODataWriter|null
      */
     protected function writeNextPageLink(ODataLink $nextPageLinkUri = null)
     {

@@ -99,11 +99,10 @@ class ResourceAssociationType
     /**
      * Retrieve the end for the given resource type and property.
      *
-     * @param ResourceEntityType $resourceType     Resource type for the source end
+     * @param ResourceType       $resourceType     Resource type for the source end
      * @param ResourceProperty   $resourceProperty Resource property for the source end
      *
-     * @return ResourceAssociationTypeEnd Association type end for the
-     *                                    given parameters
+     * @return ResourceAssociationTypeEnd|null      Association type end for the given parameters
      */
     public function getResourceAssociationTypeEnd(
         ResourceType $resourceType,
@@ -116,6 +115,7 @@ class ResourceAssociationType
         if ($this->end2->isBelongsTo($resourceType, $resourceProperty)) {
             return $this->end2;
         }
+        return null;
     }
 
     /**
@@ -124,8 +124,7 @@ class ResourceAssociationType
      * @param ResourceEntityType $resourceType     Resource type for the source end
      * @param ResourceProperty   $resourceProperty Resource property for the source end
      *
-     * @return ResourceAssociationTypeEndRelated Association type end for the
-     *                                           given parameters
+     * @return ResourceAssociationTypeEnd|null Association type end for the given parameters
      */
     public function getRelatedResourceAssociationSetEnd(
         ResourceEntityType $resourceType,
@@ -138,5 +137,6 @@ class ResourceAssociationType
         if ($this->end2->isBelongsTo($resourceType, $resourceProperty)) {
             return $this->end1;
         }
+        return null;
     }
 }

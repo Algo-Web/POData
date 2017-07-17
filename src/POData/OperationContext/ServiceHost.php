@@ -78,12 +78,11 @@ class ServiceHost
     }
 
     /**
-     * @param IOperationContext $context the OperationContext implementation to use.
-     *                                   If null the IlluminateOperationContext will be used.  Defaults to null.
+     * @param IOperationContext|null    $context    the OperationContext implementation to use.
+     *                                              If null the IlluminateOperationContext will be used.  Default null.
      *
      * Currently we are forcing the input request to be of type
-     * \Illuminate\Http\Request but in the future we could make this more flexible
-     * if needed
+     * \Illuminate\Http\Request but in the future we could make this more flexible if needed
      * @param Request $incomingRequest
      *
      * @throws ODataException
@@ -418,7 +417,7 @@ class ServiceHost
     /**
      * Get comma separated list of client-supported MIME Accept types.
      *
-     * @return string
+     * @return string|null
      */
     public function getRequestAccept()
     {
@@ -429,7 +428,7 @@ class ServiceHost
     /**
      * Get the character set encoding that the client requested.
      *
-     * @return string
+     * @return string|null
      */
     public function getRequestAcceptCharSet()
     {
@@ -440,7 +439,7 @@ class ServiceHost
     /**
      * Get the value of If-Match header of the request.
      *
-     * @return string
+     * @return string|null
      */
     public function getRequestIfMatch()
     {
@@ -451,7 +450,7 @@ class ServiceHost
     /**
      * Gets the value of If-None-Match header of the request.
      *
-     * @return string
+     * @return string|null
      */
     public function getRequestIfNoneMatch()
     {
@@ -462,7 +461,7 @@ class ServiceHost
     /**
      * Gets the value of Content-Type header of the request.
      *
-     * @return string
+     * @return string|null
      */
     public function getRequestContentType()
     {
@@ -606,7 +605,7 @@ class ServiceHost
     /**
      * Get the response headers.
      *
-     * @return array
+     * @return array<string,string>
      */
     public function &getResponseHeaders()
     {

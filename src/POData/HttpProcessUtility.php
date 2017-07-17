@@ -19,7 +19,7 @@ class HttpProcessUtility
      * @param string[] $exactContentTypes  Preferred content type to match if an exact media type is given - this is in descending order of preference
      * @param string   $inexactContentType Preferred fallback content type for inexact matches
      *
-     * @return string One of exactContentType or inexactContentType
+     * @return string|null  One of exactContentType or inexactContentType
      */
     public static function selectRequiredMimeType(
         $acceptTypesText,
@@ -96,7 +96,7 @@ class HttpProcessUtility
      *
      * @throws HttpHeaderFailure
      *
-     * @return string The best MIME type for the client
+     * @return string|null The best MIME type for the client
      */
     public static function selectMimeType($acceptTypesText, array $availableTypes)
     {

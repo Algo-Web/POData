@@ -23,6 +23,7 @@ use POData\Providers\Metadata\ResourceTypeKind;
 use POData\Providers\Metadata\Type\Binary;
 use POData\Providers\Metadata\Type\Boolean;
 use POData\Providers\Metadata\Type\DateTime;
+use POData\Providers\Metadata\Type\IType;
 use POData\Providers\Metadata\Type\StringType;
 use POData\Providers\ProvidersWrapper;
 use POData\Providers\Query\QueryResult;
@@ -861,7 +862,10 @@ class ObjectModelSerializerTest extends TestCase
         $projNode1 = m::mock(ExpandedProjectionNode::class)->makePartial();
         $projNode2 = m::mock(ExpandedProjectionNode::class)->makePartial();
 
+        $iType = m::mock(IType::class);
+
         $navType = m::mock(ResourceType::class)->makePartial();
+        $navType->shouldReceive('getInstanceType')->andReturn($iType);
 
         $resolv = m::mock(ResourceProperty::class)->makePartial();
         $resolv->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::ENTITY)->twice();
