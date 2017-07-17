@@ -59,7 +59,7 @@ class JsonODataV2Writer extends JsonODataV1Writer
      *
      * @param ODataURL|ODataURLCollection|ODataPropertyContent|ODataFeed|ODataEntry $model Object of requested content
      *
-     * @return JsonODataV1Writer
+     * @return JsonODataV2Writer
      */
     public function write($model)
     {

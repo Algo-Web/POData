@@ -356,11 +356,10 @@ class QueryProcessor
         }
 
         if (!$this->isSSPagingRequired()) {
-            throw ODataException::createBadRequestError(
-                Messages::queryProcessorSkipTokenCannotBeAppliedForNonPagedResourceSet(
-                    $this->request->getTargetResourceSetWrapper()
-                )
-            );
+            $set = $this->request->getTargetResourceSetWrapper();
+            $setName = (null != $set) ? $set->getName() : 'null';
+            $msg = Messages::queryProcessorSkipTokenCannotBeAppliedForNonPagedResourceSet($setName);
+            throw ODataException::createBadRequestError($msg);
         }
 
         $internalOrderByInfo = $this->request->getInternalOrderByInfo();

@@ -286,7 +286,7 @@ class ExpressionParser2 extends ExpressionParser
      * @param bool                     $checkNullForMostChild Wheter to check null for
      *                                                        most child node or not
      *
-     * @return LogicalExpression|RelationalExpression|null
+     * @return LogicalExpression|UnaryExpression|null
      */
     private function processPropertyAccessNode(
         PropertyAccessExpression $expression,
@@ -391,7 +391,7 @@ class ExpressionParser2 extends ExpressionParser
      * @param AbstractExpression $nullCheckExpTree1 First expression
      * @param AbstractExpression $nullCheckExpTree2 Second expression
      *
-     * @return AbstractExpression
+     * @return LogicalExpression|UnaryExpression|null
      */
     private function mergeNullableExpressionTrees(
         $nullCheckExpTree1,

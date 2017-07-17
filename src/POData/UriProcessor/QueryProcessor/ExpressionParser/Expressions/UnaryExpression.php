@@ -31,7 +31,7 @@ class UnaryExpression extends AbstractExpression
     /**
      * To get the child.
      *
-     * @return AbstractExpression
+     * @return AbstractExpression|null
      */
     public function getChild()
     {

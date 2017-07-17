@@ -15,6 +15,7 @@ interface IService
      * This method is called only once to initialize service-wide policies.
      *
      * @param IServiceConfiguration $config data service configuration
+     * @return void
      */
     public function initialize(IServiceConfiguration $config);
 
@@ -50,6 +51,7 @@ interface IService
      * To set reference to the ServiceHost instance created by the dispatcher.
      *
      * @param ServiceHost $serviceHost data service host
+     * @return void
      */
     public function setHost(ServiceHost $serviceHost);
 

@@ -428,7 +428,7 @@ class ExpressionParser
     /**
      * Parse an identifier.
      *
-     * @return AbstractExpression
+     * @return FunctionCallExpression|PropertyAccessExpression
      */
     private function parseIdentifier()
     {
@@ -446,7 +446,7 @@ class ExpressionParser
     /**
      * Parse a property access.
      *
-     * @param PropertyAccessExpression $parentExpression Parent expression
+     * @param PropertyAccessExpression|null     $parentExpression Parent expression
      *
      * @throws ODataException
      *
@@ -490,12 +490,11 @@ class ExpressionParser
     }
 
     /**
-     * Try to parse an identifier which is followed by an opern bracket as
-     * astoria URI function call.
+     * Try to parse an identifier which is followed by an open bracket as an astoria URI function call.
      *
      * @throws ODataException
      *
-     * @return AbstractExpression
+     * @return FunctionCallExpression
      */
     private function parseIdentifierAsFunction()
     {
@@ -536,7 +535,7 @@ class ExpressionParser
     }
 
     /**
-     * Parse arguments of  a function-call.
+     * Parse arguments of a function-call.
      *
      * @return array<AbstractExpression>
      */
@@ -562,7 +561,7 @@ class ExpressionParser
      *
      * @throws ODataException
      *
-     * @return AbstractExpression
+     * @return ConstantExpression
      */
     private function parseTypedLiteral(IType $targetType)
     {
@@ -654,7 +653,7 @@ class ExpressionParser
      * @param ExpressionToken    $expressionToken         The comparison expression token
      * @param bool               $isPHPExpressionProvider
      *
-     * @return AbstractExpression
+     * @return FunctionCallExpression|UnaryExpression|RelationalExpression
      */
     private static function generateComparisonExpression($left, $right, $expressionToken, $isPHPExpressionProvider)
     {

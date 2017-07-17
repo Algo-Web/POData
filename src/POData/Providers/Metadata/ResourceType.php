@@ -176,8 +176,8 @@ abstract class ResourceType
      *                                                 will be IType
      * @param ResourceTypeKind       $resourceTypeKind Kind of resource (Entity, Complex or Primitive)
      * @param string                 $name             Name of the resource
-     * @param string                 $namespaceName    Namespace of the resource
-     * @param ResourceType           $baseType         Base type of the resource, if exists
+     * @param string|null            $namespaceName    Namespace of the resource
+     * @param ResourceType|null      $baseType         Base type of the resource, if exists
      * @param bool                   $isAbstract       Whether resource is abstract
      *
      * @throws \InvalidArgumentException
@@ -255,6 +255,7 @@ abstract class ResourceType
         if (is_string($this->type)) {
             $this->__wakeup();
         }
+        assert($this->type instanceof \ReflectionClass || $this->type instanceof IType);
 
         return $this->type;
     }
@@ -777,7 +778,7 @@ abstract class ResourceType
      *
      * @throws InvalidArgumentException
      *
-     * @return ResourceType
+     * @return ResourcePrimitiveType
      */
     public static function getPrimitiveResourceType($typeCode)
     {

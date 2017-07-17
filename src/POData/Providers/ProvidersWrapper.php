@@ -325,7 +325,12 @@ class ProvidersWrapper
         return $this->validateResourceType($resourceType);
     }
 
-
+    /**
+     * Try to resolve named singleton
+     *
+     * @param string $name
+     * @return mixed|null
+     */
     public function resolveSingleton($name)
     {
         $singletons = $this->metaProvider->getSingletons();
@@ -621,15 +626,15 @@ class ProvidersWrapper
     /**
      * Gets collection of entities belongs to an entity set.
      *
-     * @param QueryType             $queryType   Indicates if this is a query for a count, entities, or entities with a
-     *                                           count
-     * @param ResourceSet           $resourceSet The entity set containing the entities that need to be fetched
-     * @param FilterInfo            $filterInfo  Represents the $filter parameter of the OData query.
-     *                                           NULL if no $filter specified
-     * @param InternalOrderByInfo   $orderBy     The orderBy information
-     * @param int                   $top         The top count
-     * @param int                   $skip        The skip count
-     * @param InternalSkipTokenInfo $skipToken   The skip token
+     * @param QueryType                 $queryType   Indicates if this is a query for a count, entities, or entities
+     *                                               with a count
+     * @param ResourceSet               $resourceSet The entity set containing the entities that need to be fetched
+     * @param FilterInfo|null           $filterInfo  Represents the $filter parameter of the OData query.
+     *                                               NULL if no $filter specified
+     * @param InternalOrderByInfo|null  $orderBy     The orderBy information
+     * @param integer|null              $top         The top count
+     * @param integer|null              $skip        The skip count
+     * @param SkipTokenInfo|null        $skipToken   The skip token
      *
      * @return QueryResult
      */
@@ -819,7 +824,7 @@ class ProvidersWrapper
      * @param ResourceSet $sourceResourceSet
      * @param object      $sourceEntityInstance
      *
-     * return bool true if resources successfully deleted, otherwise false
+     * @return bool true if resources successfully deleted, otherwise false
      */
     public function deleteResource(
         ResourceSet $sourceResourceSet,
@@ -836,7 +841,7 @@ class ProvidersWrapper
      * @param object      $sourceEntityInstance The source entity instance
      * @param object      $data                 The New data for the entity instance.
      *
-     * returns object|null returns the newly created model if successful, or null if model creation failed.
+     * @return object|null returns the newly created model if successful, or null if model creation failed.
      */
     public function createResourceforResourceSet(
         ResourceSet $resourceSet,

@@ -38,7 +38,7 @@ class ExpressionProcessor
      *
      * @param AbstractExpression $rootExpression The root of the expression tree
      *
-     * @return string
+     * @return string|null
      */
     public function processExpression(AbstractExpression $rootExpression)
     {
@@ -48,9 +48,9 @@ class ExpressionProcessor
     /**
      * Recursive function to process each node of the expression.
      *
-     * @param AbstractExpression $expression Current node to process
+     * @param AbstractExpression|null   $expression Current node to process
      *
-     * @return string|null The language specific expression
+     * @return string|null              The language specific expression
      */
     private function processExpressionNode(AbstractExpression $expression = null)
     {

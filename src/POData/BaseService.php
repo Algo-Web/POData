@@ -533,8 +533,8 @@ abstract class BaseService implements IRequestHandler, IService
      *
      * @throws ODataException, HttpHeaderFailure
      *
-     * @return string the response content-type, a null value means the requested resource
-     *                is named stream and IDSSP2::getStreamContentType returned null
+     * @return string|null      the response content-type, a null value means the requested resource
+     *                          is named stream and IDSSP2::getStreamContentType returned null
      */
     public function getResponseContentType(
         RequestDescription $request,

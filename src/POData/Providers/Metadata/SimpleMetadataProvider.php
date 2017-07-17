@@ -40,6 +40,9 @@ class SimpleMetadataProvider implements IMetadataProvider
 
     //Begin Implementation of IMetadataProvider
 
+    /**
+     * @return mixed
+     */
     public function getXML()
     {
         return $this->metadataManager->getEdmxXML();
@@ -264,13 +267,15 @@ class SimpleMetadataProvider implements IMetadataProvider
      * @param  \ReflectionClass          $refClass    reflection class of the entity
      * @param  string                    $name        name of the entity
      * @throws InvalidOperationException              when the name is already in use
-     * @return ResourceComplexType|ResourceEntityType
+     * @return ResourceEntityType
      *
      * @internal param string $namespace namespace of the data source
      */
     public function addEntityType(\ReflectionClass $refClass, $name)
     {
-        return $this->createResourceType($refClass, $name, ResourceTypeKind::ENTITY);
+        $result = $this->createResourceType($refClass, $name, ResourceTypeKind::ENTITY);
+        assert($result instanceof ResourceEntityType);
+        return $result;
     }
 
     /**
@@ -278,7 +283,7 @@ class SimpleMetadataProvider implements IMetadataProvider
      * @param string           $name
      * @param $typeKind
      * @throws InvalidOperationException
-     * @return ResourceType
+     * @return ResourceEntityType|ResourceComplexType
      * @internal param null|string $namespace
      * @internal param null|ResourceType $baseResourceType
      */
@@ -321,14 +326,16 @@ class SimpleMetadataProvider implements IMetadataProvider
      * @param  \ReflectionClass          $refClass reflection class of the complex entity type
      * @param  string                    $name     name of the entity
      * @throws InvalidOperationException when the name is already in use
-     * @return ResourceType              when the name is already in use
+     * @return ResourceComplexType
      *
      * @internal param string $namespace namespace of the data source
      * @internal param ResourceType $baseResourceType base resource type
      */
     public function addComplexType(\ReflectionClass $refClass, $name)
     {
-        return $this->createResourceType($refClass, $name, ResourceTypeKind::COMPLEX);
+        $result = $this->createResourceType($refClass, $name, ResourceTypeKind::COMPLEX);
+        assert($result instanceof ResourceComplexType);
+        return $result;
     }
 
     /**

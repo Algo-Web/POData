@@ -15,7 +15,7 @@ class FunctionCallExpression extends AbstractExpression
     protected $functionDescription;
 
     /**
-     * @var array<AbstractExpression>
+     * @var AbstractExpression[]
      */
     protected $paramExpressions;
 

@@ -47,6 +47,8 @@ abstract class AbstractExpression
      * Set the expression type.
      *
      * @param IType $type The type to set as expression type
+     *
+     * @return void
      */
     public function setType($type)
     {
@@ -67,6 +69,8 @@ abstract class AbstractExpression
 
     /**
      * Frees the resources hold by this expression.
+     *
+     * @return void
      */
     abstract public function free();
 }

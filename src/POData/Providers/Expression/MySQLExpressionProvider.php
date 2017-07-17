@@ -51,7 +51,7 @@ class MySQLExpressionProvider implements IExpressionProvider
     /**
      * Get the name of the iterator.
      *
-     * @return string
+     * @return string|null
      */
     public function getIteratorName()
     {
@@ -185,7 +185,7 @@ class MySQLExpressionProvider implements IExpressionProvider
      * @param IType $type  The type of constant
      * @param mixed $value The value of the constant
      *
-     * @return string
+     * @return string|object|integer|double|array<String>
      */
     public function onConstantExpression(IType $type, $value)
     {

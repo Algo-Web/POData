@@ -120,8 +120,8 @@ class JsonWriter
     /**
      * JSON write a basic data type (string, number, boolean, null).
      *
-     * @param mixed  $value value to be written
-     * @param string $type  data type of the value
+     * @param mixed         $value value to be written
+     * @param string|null   $type  data type of the value
      *
      * @return JsonWriter
      */

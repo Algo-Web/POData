@@ -75,7 +75,7 @@ class PropertyAccessExpression extends AbstractExpression
      * then return null, If this property is property of complex type
      * then return PropertyAccessExpression for the parent complex type.
      *
-     * @return PropertyAccessExpression
+     * @return PropertyAccessExpression|null
      */
     public function getParent()
     {
@@ -85,7 +85,7 @@ class PropertyAccessExpression extends AbstractExpression
     /**
      * To get the child. Returns null if no child property.
      *
-     * @return PropertyAccessExpression
+     * @return PropertyAccessExpression|null
      */
     public function getChild()
     {
@@ -148,7 +148,7 @@ class PropertyAccessExpression extends AbstractExpression
      *
      * @param bool $includeMe Boolean flag indicating whether to include null check for this property along with parents
      *
-     * @return AbstractExpression|null Instance of UnaryExpression, LogicalExpression or Null
+     * @return UnaryExpression|LogicalExpression|null Instance of UnaryExpression, LogicalExpression or Null
      */
     public function createNullableExpressionTree($includeMe)
     {

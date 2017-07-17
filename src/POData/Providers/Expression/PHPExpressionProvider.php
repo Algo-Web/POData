@@ -69,8 +69,9 @@ class PHPExpressionProvider implements IExpressionProvider
     /**
      * call-back for setting the resource type.
      *
-     * @param ResourceType $resourceType The resource type on which the filter
-     *                                   is going to be applied
+     * @param ResourceType $resourceType The resource type on which the filter is going to be applied
+     *
+     * @return void
      */
     public function setResourceType(ResourceType $resourceType)
     {
@@ -195,7 +196,7 @@ class PHPExpressionProvider implements IExpressionProvider
      * @param IType $type  The type of constant
      * @param mixed $value The value of the constant
      *
-     * @return string
+     * @return string|object|integer|double|array<String>
      */
     public function onConstantExpression(IType $type, $value)
     {

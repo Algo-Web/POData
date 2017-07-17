@@ -13,6 +13,7 @@ use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\ResourceTypeKind;
 use POData\Providers\Metadata\Type\IType;
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandedProjectionNode;
+use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ProjectionNode;
 use POData\UriProcessor\RequestDescription;
 use POData\UriProcessor\SegmentStack;
 
@@ -65,8 +66,8 @@ class ObjectModelSerializerBase
     protected $stack;
 
     /**
-     * @param IService           $service Reference to the data service instance
-     * @param RequestDescription $request Type instance describing the client submitted request
+     * @param IService                  $service Reference to the data service instance
+     * @param RequestDescription|null   $request Type instance describing the client submitted request
      */
     protected function __construct(IService $service, RequestDescription $request = null)
     {
@@ -104,7 +105,7 @@ class ObjectModelSerializerBase
     /**
      * Gets the data service instance.
      *
-     * @return IService
+     * @return IService|null
      */
     public function getService()
     {
