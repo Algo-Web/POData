@@ -273,7 +273,9 @@ class SimpleMetadataProvider implements IMetadataProvider
      */
     public function addEntityType(\ReflectionClass $refClass, $name)
     {
-        return $this->createResourceType($refClass, $name, ResourceTypeKind::ENTITY);
+        $result = $this->createResourceType($refClass, $name, ResourceTypeKind::ENTITY);
+        assert($result instanceof ResourceEntityType);
+        return $result;
     }
 
     /**
@@ -331,7 +333,9 @@ class SimpleMetadataProvider implements IMetadataProvider
      */
     public function addComplexType(\ReflectionClass $refClass, $name)
     {
-        return $this->createResourceType($refClass, $name, ResourceTypeKind::COMPLEX);
+        $result = $this->createResourceType($refClass, $name, ResourceTypeKind::COMPLEX);
+        assert($result instanceof ResourceComplexType);
+        return $result;
     }
 
     /**
