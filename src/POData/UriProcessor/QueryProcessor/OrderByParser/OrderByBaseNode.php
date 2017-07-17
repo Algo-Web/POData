@@ -52,6 +52,8 @@ abstract class OrderByBaseNode
 
     /**
      * Free resource used by this node.
+     *
+     * @return void
      */
     abstract public function free();
 

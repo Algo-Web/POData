@@ -30,7 +30,7 @@ class ConstantExpression extends AbstractExpression
     /**
      * Get the value associated with the expression.
      *
-     * @return string
+     * @return string|null
      */
     public function getValue()
     {
@@ -41,6 +41,7 @@ class ConstantExpression extends AbstractExpression
      * (non-PHPdoc).
      *
      * @see library/POData/QueryProcessor/ExpressionParser/Expressions.AbstractExpression::free()
+     * @return void
      */
     public function free()
     {
