@@ -196,7 +196,7 @@ class PHPExpressionProvider implements IExpressionProvider
      * @param IType $type  The type of constant
      * @param mixed $value The value of the constant
      *
-     * @return string
+     * @return string|object|integer|double|array<String>
      */
     public function onConstantExpression(IType $type, $value)
     {

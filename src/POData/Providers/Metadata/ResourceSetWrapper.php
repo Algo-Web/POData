@@ -64,7 +64,7 @@ class ResourceSetWrapper extends ResourceSet
     /**
      * Gets reference to the resource type of wrapped resource set.
      *
-     * @return ResourceType
+     * @return ResourceEntityType
      */
     public function getResourceType()
     {

@@ -161,7 +161,7 @@ class SegmentDescriptor
     /**
      * Sets the description of the key, if any, associated with this segment.
      *
-     * @param KeyDescriptor $keyDescriptor The descriptor for the key associated with this segment
+     * @param KeyDescriptor|null    $keyDescriptor  The descriptor for the key associated with this segment
      */
     public function setKeyDescriptor(KeyDescriptor $keyDescriptor = null)
     {
@@ -181,7 +181,7 @@ class SegmentDescriptor
     /**
      * Sets the property that is being projected in this segment, if there's any.
      *
-     * @param ResourceProperty $projectedProperty The property projected in this segment
+     * @param ResourceProperty|null $projectedProperty  The property projected in this segment
      */
     public function setProjectedProperty(ResourceProperty $projectedProperty = null)
     {

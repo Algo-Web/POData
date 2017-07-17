@@ -78,7 +78,7 @@ class FunctionDescription
      *
      * TODO: FIGURE OUT WHAT THE HECK THIS IS RETURNING!?!?
      *
-     * @return array indexed by function name
+     * @return array<string,FunctionDescription[]> indexed by function name
      */
     public static function filterFunctionDescriptions()
     {
