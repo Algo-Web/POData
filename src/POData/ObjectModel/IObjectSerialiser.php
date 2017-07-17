@@ -94,6 +94,7 @@ interface IObjectSerialiser
      * Sets reference to the request submitted by client.
      *
      * @param RequestDescription $request
+     * @return void
      */
     public function setRequest(RequestDescription $request);
 

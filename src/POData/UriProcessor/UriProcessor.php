@@ -246,7 +246,8 @@ class UriProcessor implements IUriProcessor
     /**
      * Execute the client submitted request against the data source.
      *
-     * @param callable $callback Function, what must be called
+     * @param callable|null     $callback Function, what must be called
+     * @return void
      */
     protected function executeBase($callback = null)
     {
@@ -421,7 +422,7 @@ class UriProcessor implements IUriProcessor
      * Applies the query options to the resource(s) retrieved from the data source.
      *
      * @param SegmentDescriptor $segment  The descriptor which holds resource(s) on which query options to be applied
-     * @param callable          $callback Function, what must be called
+     * @param callable|null     $callback Function, what must be called
      */
     private function applyQueryOptions(SegmentDescriptor $segment, $callback = null)
     {

@@ -129,6 +129,11 @@ class MediaType
         return $result;
     }
 
+    /**
+     * Retrieve OData parameter value
+     *
+     * @return mixed|null
+     */
     public function getODataValue()
     {
         foreach ($this->parameters as $parameter) {
