@@ -26,6 +26,8 @@ class Null1 implements IType
      *
      * @param IType $type Type to check compatibility
      *
+     * @throws NotImplementedException
+     *
      * @return bool
      */
     public function isCompatibleWith(IType $type)
@@ -70,12 +72,12 @@ class Null1 implements IType
      *
      * @param string $stringValue value to convert
      *
-     * @return string
+     * @return string|null
      */
     public function convert($stringValue)
     {
         if (0 == strcmp($stringValue, 'null')) {
-            return;
+            return null;
         }
 
         return $stringValue;

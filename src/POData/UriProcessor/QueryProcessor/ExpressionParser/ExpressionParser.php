@@ -490,12 +490,11 @@ class ExpressionParser
     }
 
     /**
-     * Try to parse an identifier which is followed by an opern bracket as
-     * astoria URI function call.
+     * Try to parse an identifier which is followed by an open bracket as an astoria URI function call.
      *
      * @throws ODataException
      *
-     * @return AbstractExpression
+     * @return FunctionCallExpression
      */
     private function parseIdentifierAsFunction()
     {
@@ -536,7 +535,7 @@ class ExpressionParser
     }
 
     /**
-     * Parse arguments of  a function-call.
+     * Parse arguments of a function-call.
      *
      * @return array<AbstractExpression>
      */

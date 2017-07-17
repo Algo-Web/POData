@@ -69,8 +69,9 @@ class PHPExpressionProvider implements IExpressionProvider
     /**
      * call-back for setting the resource type.
      *
-     * @param ResourceType $resourceType The resource type on which the filter
-     *                                   is going to be applied
+     * @param ResourceType $resourceType The resource type on which the filter is going to be applied
+     *
+     * @return void
      */
     public function setResourceType(ResourceType $resourceType)
     {

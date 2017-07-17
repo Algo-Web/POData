@@ -34,7 +34,7 @@ abstract class BinaryExpression extends AbstractExpression
     /**
      * Get left operand (expression) of binary expression.
      *
-     * @return AbstractExpression
+     * @return AbstractExpression|null
      */
     public function getLeft()
     {
@@ -44,7 +44,7 @@ abstract class BinaryExpression extends AbstractExpression
     /**
      * Get right operand (expression) of binary expression.
      *
-     * @return AbstractExpression
+     * @return AbstractExpression|null
      */
     public function getRight()
     {
