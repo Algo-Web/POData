@@ -757,7 +757,7 @@ class FunctionDescription
         }
 
         if (empty($applicableFunctions)) {
-            return;
+            return null;
         }
 
         //Check for exact match
@@ -802,5 +802,6 @@ class FunctionDescription
                 return $function;
             }
         }
+        return null;
     }
 }

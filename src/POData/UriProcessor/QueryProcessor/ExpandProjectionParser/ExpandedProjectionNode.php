@@ -2,6 +2,7 @@
 
 namespace POData\UriProcessor\QueryProcessor\ExpandProjectionParser;
 
+use InvalidArgumentException;
 use POData\Common\Messages;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceSetWrapper;
@@ -373,6 +374,7 @@ class ExpandedProjectionNode extends ProjectionNode
         if (array_key_exists($propertyName, $this->childNodes)) {
             return $this->childNodes[$propertyName];
         }
+        return null;
     }
 
     /**

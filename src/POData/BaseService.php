@@ -691,7 +691,7 @@ abstract class BaseService implements IRequestHandler, IService
                 );
             }
 
-            return;
+            return null;
         }
 
         if ($this->getConfiguration()->getValidateETagHeader() && !$resourceType->hasETagProperties()) {
@@ -703,13 +703,13 @@ abstract class BaseService implements IRequestHandler, IService
             }
 
             // We need write the response but no eTag header
-            return;
+            return null;
         }
 
         if (!$this->getConfiguration()->getValidateETagHeader()) {
             // Configuration says do not validate ETag, so we will not write ETag header in the
             // response even though the requested resource support it
-            return;
+            return null;
         }
 
         if (null === $ifMatch && null === $ifNoneMatch) {

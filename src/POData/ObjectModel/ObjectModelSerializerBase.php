@@ -263,6 +263,7 @@ class ObjectModelSerializerBase
 
             return ODataConstants::HTTP_WEAK_ETAG_PREFIX . rtrim($eTag, ',') . '"';
         }
+        return null;
     }
 
     /**
@@ -349,7 +350,7 @@ class ObjectModelSerializerBase
     {
         $expandedProjectionNode = $this->getRequest()->getRootProjectionNode();
         if (null === $expandedProjectionNode) {
-            return;
+            return null;
         } else {
             $segmentNames = $this->getStack()->getSegmentNames();
             $depth = count($segmentNames);

@@ -817,6 +817,7 @@ class RequestDescription
                     $this->lastSegment->getIdentifier()
                 );
         }
+        return null;
     }
 
     /**
