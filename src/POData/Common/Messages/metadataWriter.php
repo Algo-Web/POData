@@ -25,8 +25,10 @@ trait metadataWriter
      *
      * @return string The formatted message
      */
-    public static function metadataWriterNoResourceAssociationSetForNavigationProperty($navigationPropertyName, $resourceTypeName)
-    {
+    public static function metadataWriterNoResourceAssociationSetForNavigationProperty(
+        $navigationPropertyName,
+        $resourceTypeName
+    ) {
         return 'No visible ResourceAssociationSet found for navigation property \'' . $navigationPropertyName .
                 '\' on type \'' . $resourceTypeName . '\'. There must be at least one ResourceAssociationSet for' .
                 ' each navigation property.';

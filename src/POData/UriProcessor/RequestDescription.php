@@ -778,7 +778,8 @@ class RequestDescription
      */
     public function isLinkUri()
     {
-        return ($this->segmentCount > 2) && ($this->segments[$this->segmentCount - 2]->getTargetKind() == TargetKind::LINK());
+        return ($this->segmentCount > 2)
+               && ($this->segments[$this->segmentCount - 2]->getTargetKind() == TargetKind::LINK());
     }
 
     /**
@@ -914,7 +915,8 @@ class RequestDescription
             );
         }
 
-        //If the max version supported by the service is below the version required to fulfill the response..throw an exception
+        //If the max version supported by the service is below the version required to fulfill the response..
+        //throw an exception
         if ($this->maxServiceVersion->compare($this->requiredMinResponseVersion) < 0) {
             throw ODataException::createBadRequestError(
                 Messages::requestVersionIsBiggerThanProtocolVersion(

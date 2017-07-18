@@ -57,8 +57,10 @@ trait segmentParser
      *
      * @return string The formatted message
      */
-    public static function segmentParserOnlyValueSegmentAllowedAfterPrimitivePropertySegment($segment, $primitivePropertySegment)
-    {
+    public static function segmentParserOnlyValueSegmentAllowedAfterPrimitivePropertySegment(
+        $segment,
+        $primitivePropertySegment
+    ) {
         return 'The segment \'' . $segment . '\' in the request URI is not valid. Since the segment \''
                 .$primitivePropertySegment . '\' refers to a primitive type property, the only supported value from'
                 .' the next segment is \'$value\'.';

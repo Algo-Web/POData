@@ -180,7 +180,8 @@ class ObjectModelSerializerBase
      *
      * @param mixed            $entity           Instance of a type which contains this property
      * @param ResourceType     $resourceType     Resource type instance containing metadata about the instance
-     * @param ResourceProperty $resourceProperty Resource property instance containing metadata about the property whose value to be retrieved
+     * @param ResourceProperty $resourceProperty Resource property instance containing metadata about the property
+     *                                           whose value is to be retrieved
      *
      * @throws ODataException If reflection exception occurred while trying to access the property
      *
@@ -313,24 +314,26 @@ class ObjectModelSerializerBase
 
             return $this->pushSegment($resourceProperty->getName(), $currentResourceSetWrapper);
         }
-        throw new InvalidOperationException('pushSegmentForNavigationProperty should not be called with non-entity type');
+        throw new InvalidOperationException(
+            'pushSegmentForNavigationProperty should not be called with non-entity type'
+        );
     }
 
     /**
      * Gets collection of projection nodes under the current node.
      *
-     * @return ProjectionNode[]|ExpandedProjectionNode[]|null List of nodes
-     *                                                        describing projections for the current segment, If this method returns
-     *                                                        null it means no projections are to be applied and the entire resource
-     *                                                        for the current segment should be serialized, If it returns non-null
-     *                                                        only the properties described by the returned projection segments should
-     *                                                        be serialized
+     * @return ProjectionNode[]|ExpandedProjectionNode[]|null List of nodes describing projections for the current
+     *                                                        segment, If this method returns null it means no
+     *                                                        projections are to be applied and the entire resource for
+     *                                                        the current segment should be serialized, If it returns
+     *                                                        non-null, only the properties described by the returned
+     *                                                        projection segments should be serialized
      */
     protected function getProjectionNodes()
     {
         $expandedProjectionNode = $this->getCurrentExpandedProjectionNode();
         if (null === $expandedProjectionNode || $expandedProjectionNode->canSelectAllProperties()) {
-            return;
+            return null;
         }
 
         return $expandedProjectionNode->getChildNodes();

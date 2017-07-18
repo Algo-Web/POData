@@ -55,16 +55,16 @@ trait expandProjectionParser
      * Format a message to show error when a primitive property is used as
      * navigation property in select clause.
      *
-     * @param string $resourceTypeName     The resource type on which the
-     *                                     primitive property defined
-     * @param string $primitvePropertyName The primitive property used as
-     *                                     navigation property
+     * @param string $resourceTypeName      The resource type on which the primitive property defined
+     * @param string $primitivePropertyName The primitive property used as navigation property
      *
      * @return string The formatted message
      */
-    public static function expandProjectionParserPrimitivePropertyUsedAsNavigationProperty($resourceTypeName, $primitvePropertyName)
-    {
-        return 'Property \'' . $primitvePropertyName . '\' on type \'' . $resourceTypeName
+    public static function expandProjectionParserPrimitivePropertyUsedAsNavigationProperty(
+        $resourceTypeName,
+        $primitivePropertyName
+    ) {
+        return 'Property \'' . $primitivePropertyName . '\' on type \'' . $resourceTypeName
                 .'\' is of primitive type and cannot be used as a navigation property.';
     }
 
@@ -74,13 +74,15 @@ trait expandProjectionParser
      *
      * @param string $resourceTypeName The name of the resource type on which
      *                                 complex property is defined
-     * @param string $complextTypeName The name of complex type
+     * @param string $complexTypeName  The name of complex type
      *
      * @return string The formatted message
      */
-    public static function expandProjectionParserComplexPropertyAsInnerSelectSegment($resourceTypeName, $complextTypeName)
-    {
-        return 'select doesn\'t support selection of properties of complex type. The property \'' . $complextTypeName
+    public static function expandProjectionParserComplexPropertyAsInnerSelectSegment(
+        $resourceTypeName,
+        $complexTypeName
+    ) {
+        return 'select doesn\'t support selection of properties of complex type. The property \'' . $complexTypeName
                 .'\' on type \'' . $resourceTypeName . '\' is a complex type.';
     }
 

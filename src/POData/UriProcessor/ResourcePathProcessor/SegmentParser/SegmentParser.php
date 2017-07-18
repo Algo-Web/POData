@@ -21,7 +21,8 @@ use POData\Providers\ProvidersWrapper;
  * e.g. Customers('ALFKI')/Orders(2134)/Order_Details/Product
  *
  * Syntax of an OData segment is:
- * Segment       : identifier[(keyPredicate)]?            : e.g. Customers, Customers('ALFKI'), Order_Details(OrderID=123, ProductID=11)
+ * Segment       : identifier[(keyPredicate)]?            : e.g. Customers, Customers('ALFKI'),
+ *                                                          Order_Details(OrderID=123, ProductID=11)
  * keyPredicate  : keyValue | NamedKeyValue
  * NamedKeyValue : keyName=keyValue [, keyName=keyValue]* : e.g. OrderID=123, ProductID=11
  * keyValue      : quotedValue | unquotedValue            : e.g. 'ALFKI'

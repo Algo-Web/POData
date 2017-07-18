@@ -49,7 +49,8 @@ trait orderByInfo
      */
     public static function orderByParserPropertyNotFound($resourceTypeName, $propertyName)
     {
-        return 'Error in the \'orderby\' clause. Type ' . $resourceTypeName . ' does not have a property named \'' . $propertyName . '\'.';
+        return 'Error in the \'orderby\' clause. Type ' . $resourceTypeName
+               . ' does not have a property named \'' . $propertyName . '\'.';
     }
 
     /**

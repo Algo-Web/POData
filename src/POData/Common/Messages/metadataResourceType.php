@@ -13,8 +13,10 @@ trait metadataResourceType
      *
      * @return string The formatted message
      */
-    public static function metadataResourceTypeSetNamedStreamsOnDerivedEntityTypesNotSupported($entitySetName, $derivedTypeName)
-    {
+    public static function metadataResourceTypeSetNamedStreamsOnDerivedEntityTypesNotSupported(
+        $entitySetName,
+        $derivedTypeName
+    ) {
         return 'Named streams are not supported on derived entity types. Entity Set \'' . $entitySetName
                 .'\' has an instance of type \'' . $derivedTypeName . '\', which is a derived entity type and has'
                 .' named streams. Please remove all named streams from type \'' . $derivedTypeName . '\'.';

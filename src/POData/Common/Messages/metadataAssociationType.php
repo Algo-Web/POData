@@ -29,8 +29,11 @@ trait metadataAssociationType
      *
      * @return string The formatted message
      */
-    public static function metadataAssociationTypeSetMultipleAssociationSetsForTheSameAssociationTypeMustNotReferToSameEndSets($resourceSet1Name, $resourceSet2Name, $entitySetName)
-    {
+    public static function metadataAssociationTypeSetMultipleAssociationSetsForTheSameAssociationTypeMustNotReferToSameEndSets(
+        $resourceSet1Name,
+        $resourceSet2Name,
+        $entitySetName
+    ) {
         return 'ResourceAssociationSets \'' . $resourceSet1Name . '\' and \'' . $resourceSet2Name . '\' have a'
                 .' ResourceAssociationSetEnd referring to the EntitySet \'' . $entitySetName . '\' through the same'
                 .' AssociationType. Make sure that if two or more AssociationSets refer to the same AssociationType,'

@@ -16,7 +16,8 @@ class HttpProcessUtility
      *
      * @param string   $acceptTypesText    Text as it appears in an HTTP
      *                                     Accepts header
-     * @param string[] $exactContentTypes  Preferred content type to match if an exact media type is given - this is in descending order of preference
+     * @param string[] $exactContentTypes  Preferred content type to match if an exact media type is given - this is in
+     *                                     descending order of preference
      * @param string   $inexactContentType Preferred fallback content type for inexact matches
      *
      * @return string|null  One of exactContentType or inexactContentType

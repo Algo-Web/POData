@@ -146,7 +146,8 @@ interface IStreamProvider2
      *
      * @return string ETag of the named stream associated with the entity specified
      */
-    public function getStreamETag2($entity,
+    public function getStreamETag2(
+        $entity,
         ResourceStreamInfo $resourceStreamInfo = null,
         IOperationContext $operationContext
     );

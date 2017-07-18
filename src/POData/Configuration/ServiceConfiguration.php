@@ -239,7 +239,8 @@ class ServiceConfiguration implements IServiceConfiguration
     public function setEntitySetAccessRule($name, $rights)
     {
         if ($rights < EntitySetRights::NONE || $rights > EntitySetRights::ALL) {
-            throw new \InvalidArgumentException(Messages::configurationRightsAreNotInRange('$rights', 'setEntitySetAccessRule'));
+            $msg = Messages::configurationRightsAreNotInRange('$rights', 'setEntitySetAccessRule');
+            throw new \InvalidArgumentException($msg);
         }
 
         if (strcmp($name, '*') === 0) {

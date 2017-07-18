@@ -99,8 +99,11 @@ trait providersWrapper
      *
      * @return string The formatted message
      */
-    public static function providersWrapperIDSMPGetResourceSetReturnsInvalidResourceSet($resourceSetName, $resourceTypeName, $resourcePropertyName)
-    {
+    public static function providersWrapperIDSMPGetResourceSetReturnsInvalidResourceSet(
+        $resourceSetName,
+        $resourceTypeName,
+        $resourcePropertyName
+    ) {
         return 'IDSMP::GetResourceSet retruns invalid instance of ResourceSet when invoked with params' .
                 ' {ResourceSet with name ' . $resourceSetName . ', ResourceType with name ' . $resourceTypeName
                 .', ResourceProperty with name ' . $resourcePropertyName . '}.';

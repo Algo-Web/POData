@@ -41,8 +41,10 @@ trait resourceAssociationSet
      *
      * @return string The formatted message
      */
-    public static function resourceAssociationSetEndResourceTypeMustBeAssignableToResourceSet($resourceTypeName, $resourceSetName)
-    {
+    public static function resourceAssociationSetEndResourceTypeMustBeAssignableToResourceSet(
+        $resourceTypeName,
+        $resourceSetName
+    ) {
         return 'The resource type ' . $resourceTypeName . ' must be assignable to the resource set ' .
                 $resourceSetName . '.';
     }

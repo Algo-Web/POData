@@ -445,8 +445,8 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
             //Write out navigation properties (deferred or inline)
             foreach ($navigationProperties as $navigationPropertyInfo) {
                 $propertyName = $navigationPropertyInfo->resourceProperty->getName();
-                $type = ResourcePropertyKind::RESOURCE_REFERENCE == $navigationPropertyInfo->resourceProperty->getKind() ?
-                    'application/atom+xml;type=entry' : 'application/atom+xml;type=feed';
+                $type = ResourcePropertyKind::RESOURCE_REFERENCE == $navigationPropertyInfo->resourceProperty->getKind()
+                    ? 'application/atom+xml;type=entry' : 'application/atom+xml;type=feed';
                 $link = new ODataLink();
                 $link->name = ODataConstants::ODATA_RELATED_NAMESPACE . $propertyName;
                 $link->title = $propertyName;

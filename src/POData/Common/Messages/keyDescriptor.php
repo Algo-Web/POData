@@ -64,8 +64,13 @@ trait keyDescriptor
      *
      * @return string The formatted message
      */
-    public static function keyDescriptorInCompatibleKeyTypeAtPosition($segment, $keyProperty, $position, $expectedType, $actualType)
-    {
+    public static function keyDescriptorInCompatibleKeyTypeAtPosition(
+        $segment,
+        $keyProperty,
+        $position,
+        $expectedType,
+        $actualType
+    ) {
         return 'Syntax error in the segment \'' . $segment . '\'. The value of key property \'' . $keyProperty
                 .'\' at position ' . $position . ' should be of type ' . $expectedType . ', given ' . $actualType;
     }

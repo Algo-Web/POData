@@ -429,7 +429,8 @@ abstract class ResourceType
             }
 
             $this->allProperties = array_merge(
-                $this->allProperties, $this->propertiesDeclaredOnThisType
+                $this->allProperties,
+                $this->propertiesDeclaredOnThisType
             );
         }
 

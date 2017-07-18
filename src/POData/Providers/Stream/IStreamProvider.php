@@ -98,7 +98,8 @@ interface IStreamProvider
      *
      * @throws ODataException if a valid stream cannot be returned. Null should never be returned from this method
      *
-     * @return mixed A valid  default stream which is associated with the entity,Null should never be returned from this method
+     * @return mixed A valid default stream which is associated with the entity,  Null should never be returned
+     * from this method
      */
     public function getReadStream($entity, $eTag, $checkETagForEquality, IOperationContext $operationContext);
 

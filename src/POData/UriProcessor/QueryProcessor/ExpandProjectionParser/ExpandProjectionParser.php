@@ -64,12 +64,10 @@ class ExpandProjectionParser
      *
      * @param ResourceSetWrapper  $resourceSetWrapper The resource set identified by the resource path uri
      * @param ResourceType        $resourceType       The resource type of entities identified by the resource path uri
-     * @param InternalOrderByInfo $internalOrderInfo  The top level sort information, this will be set if the $skip, $top is
-     *                                                specified in the
-     *                                                request uri or Server
-     *                                                side paging is
-     *                                                enabled for top level
-     *                                                resource
+     * @param InternalOrderByInfo $internalOrderInfo  The top level sort information, this will be set if the $skip,
+     *                                                $top is specified in the
+     *                                                request uri or Server side paging is
+     *                                                enabled for top level resource
      * @param int                 $skipCount          The value of $skip option applied to the top level resource
      *                                                set identified by the
      *                                                resource path uri
@@ -334,7 +332,8 @@ class ExpandProjectionParser
                                 $selectSubPathSegment
                             )
                         );
-                    } elseif ($resourceProperty->getKind() != ResourcePropertyKind::RESOURCE_REFERENCE && $resourceProperty->getKind() != ResourcePropertyKind::RESOURCESET_REFERENCE) {
+                    } elseif ($resourceProperty->getKind() != ResourcePropertyKind::RESOURCE_REFERENCE
+                              && $resourceProperty->getKind() != ResourcePropertyKind::RESOURCESET_REFERENCE) {
                         throw ODataException::createInternalServerError(
                             Messages::expandProjectionParserUnexpectedPropertyType()
                         );
