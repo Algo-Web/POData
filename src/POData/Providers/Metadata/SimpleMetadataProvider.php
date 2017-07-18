@@ -243,6 +243,7 @@ class SimpleMetadataProvider implements IMetadataProvider
                 'Failed to retrieve the custom state from ' . $targetResourceProperty->getResourceType()->getName()
             );
         }
+        assert($targetResourceSet instanceof ResourceSet);
 
         //Customer_Orders_Orders, Order_Customer_Customers
         $key = ResourceAssociationSet::keyName(

@@ -348,13 +348,13 @@ class ProvidersWrapper
      * Note: Wrapper for IMetadataProvider::getDerivedTypes
      * method implementation.
      *
-     * @param ResourceType $resourceType Resource to get derived resource types from
+     * @param ResourceEntityType $resourceType Resource to get derived resource types from
      *
      * @throws InvalidOperationException when the meat provider doesn't return an array
      *
      * @return ResourceType[]
      */
-    public function getDerivedTypes(ResourceType $resourceType)
+    public function getDerivedTypes(ResourceEntityType $resourceType)
     {
         $derivedTypes = $this->metaProvider->getDerivedTypes($resourceType);
         if (!is_array($derivedTypes)) {
@@ -373,17 +373,15 @@ class ProvidersWrapper
     /**
      * Returns true if $resourceType represents an Entity Type which has derived
      * Entity Types, else false.
-     * Note: Wrapper for IMetadataProvider::hasDerivedTypes method
-     * implementation.
+     * Note: Wrapper for IMetadataProvider::hasDerivedTypes method implementation.
      *
-     * @param ResourceType $resourceType Resource to check for derived resource
-     *                                   types
+     * @param ResourceEntityType    $resourceType   Resource to check for derived resource types
      *
      * @throws ODataException If the ResourceType is invalid
      *
      * @return bool
      */
-    public function hasDerivedTypes(ResourceType $resourceType)
+    public function hasDerivedTypes(ResourceEntityType $resourceType)
     {
         $this->validateResourceType($resourceType);
 

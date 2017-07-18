@@ -4,6 +4,7 @@ namespace POData\UriProcessor\QueryProcessor\ExpandProjectionParser;
 
 use POData\Common\Messages;
 use POData\Common\ODataException;
+use POData\Providers\Metadata\ResourceEntityType;
 use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\ResourceSetWrapper;
@@ -178,10 +179,7 @@ class ExpandProjectionParser
             foreach ($expandSubPathSegments as $expandSubPathSegment) {
                 $resourceSetWrapper = $currentNode->getResourceSetWrapper();
                 $resourceType = $currentNode->getResourceType();
-                $resourceProperty
-                    = $resourceType->resolveProperty(
-                        $expandSubPathSegment
-                    );
+                $resourceProperty = $resourceType->resolveProperty($expandSubPathSegment);
                 if (null === $resourceProperty) {
                     throw ODataException::createSyntaxError(
                         Messages::expandProjectionParserPropertyNotFound(
@@ -198,6 +196,7 @@ class ExpandProjectionParser
                         )
                     );
                 }
+                assert($resourceType instanceof ResourceEntityType);
 
                 $resourceSetWrapper = $this->providerWrapper
                     ->getResourceSetWrapperForNavigationProperty(
