@@ -141,12 +141,13 @@ class ObjectModelSerializerBase
      * required escaping of characters, for example:
      * Ships(ShipName='Antonio%20Moreno%20Taquer%C3%ADa',ShipID=123),
      * Note to method caller: Don't do urlencoding on
-     * return value of this method as it already encoded.
+     * return value of this method as it's already encoded.
      *
      * @param mixed        $entityInstance Entity instance for which key value needs to be prepared
      * @param ResourceType $resourceType   Resource type instance containing metadata about the instance
      * @param string       $containerName  Name of the entity set that the entity instance belongs to
      *
+     * @throws ODataException
      * @return string Key for the given resource, with values encoded for use in a URI
      */
     protected function getEntryInstanceKey($entityInstance, ResourceType $resourceType, $containerName)

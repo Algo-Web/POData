@@ -252,6 +252,7 @@ class ProvidersWrapper
      * To get all resource types in the data source,
      * Note: Wrapper for IMetadataProvider::getTypes method implementation.
      *
+     * @throws ODataException
      * @return ResourceType[]
      */
     public function getTypes()
@@ -478,6 +479,7 @@ class ProvidersWrapper
      * @param ResourceEntityType $type     Resource type of the source association end
      * @param ResourceProperty   $property Resource property of the source association end
      *
+     * @throws ODataException
      * @return ResourceAssociationSet|null Returns ResourceAssociationSet for the source
      *                                     association end, NULL if no such
      *                                     association end or resource set in the

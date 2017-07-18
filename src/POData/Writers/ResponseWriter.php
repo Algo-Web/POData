@@ -21,6 +21,8 @@ class ResponseWriter
      * @param RequestDescription $request             the OData request
      * @param mixed              $entityModel         OData model instance
      * @param string             $responseContentType Content type of the response
+     *
+     * @throws \Exception
      */
     public static function write(
         IService $service,

@@ -160,6 +160,8 @@ abstract class SimpleQueryProvider implements IQueryProvider
      * @param null|mixed $top
      * @param null|mixed $skip
      * @param null|mixed $skipToken
+     *
+     * @return mixed
      */
     public function getResourceSet(
         QueryType $queryType,
@@ -234,6 +236,8 @@ abstract class SimpleQueryProvider implements IQueryProvider
      * @param null|mixed $top
      * @param null|mixed $skip
      * @param null|mixed $skipToken
+     *
+     * @return mixed
      */
     public function getRelatedResourceSet(
         QueryType $queryType,
@@ -266,6 +270,7 @@ abstract class SimpleQueryProvider implements IQueryProvider
     /**
      * For queries like http://localhost/NorthWind.svc/Customers(‘ALFKI’)/Orders(10643).
      * @param mixed $sourceEntityInstance
+     * @return mixed
      */
     public function getResourceFromRelatedResourceSet(
         ResourceSet $sourceResourceSet,
@@ -286,6 +291,7 @@ abstract class SimpleQueryProvider implements IQueryProvider
     /**
      * For queries like http://localhost/NorthWind.svc/Orders(10643)/Customer.
      * @param mixed $sourceEntityInstance
+     * @return mixed
      */
     public function getRelatedResourceReference(
         ResourceSet $sourceResourceSet,

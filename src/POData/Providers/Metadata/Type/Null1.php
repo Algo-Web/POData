@@ -89,6 +89,7 @@ class Null1 implements IType
      * @param mixed $value value to convert
      *
      * @throws NotImplementedException
+     * @return void
      */
     public function convertToOData($value)
     {

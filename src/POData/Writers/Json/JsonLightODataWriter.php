@@ -33,6 +33,8 @@ class JsonLightODataWriter extends JsonODataV2Writer
 
     /**
      * @param string $absoluteServiceUri
+     *
+     * @throws \Exception
      */
     public function __construct(JsonLightMetadataLevel $metadataLevel, $absoluteServiceUri)
     {

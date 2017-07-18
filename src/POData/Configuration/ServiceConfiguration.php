@@ -176,6 +176,8 @@ class ServiceConfiguration implements IServiceConfiguration
      *
      * @param int $maxResultPerCollection Maximum number of elements
      *                                    in returned collection
+     *
+     * @throws InvalidOperationException
      */
     public function setMaxResultsPerCollection($maxResultPerCollection)
     {

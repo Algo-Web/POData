@@ -563,6 +563,8 @@ class FunctionDescription
      * @param ExpressionToken    $expressionToken The expression token
      * @param AbstractExpression $leftArgument    The left argument expression
      * @param AbstractExpression $rightArgument   The right argument expression
+     *
+     * @throws ODataException
      */
     public static function verifyRelationalOpArguments(
         $expressionToken,

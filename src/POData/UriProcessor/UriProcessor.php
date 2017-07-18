@@ -247,6 +247,8 @@ class UriProcessor implements IUriProcessor
      * Execute the client submitted request against the data source.
      *
      * @param callable|null     $callback Function, what must be called
+     *
+     * @throws ODataException
      * @return void
      */
     protected function executeBase($callback = null)

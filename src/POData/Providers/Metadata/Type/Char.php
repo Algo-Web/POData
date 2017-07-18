@@ -2,6 +2,7 @@
 
 namespace POData\Providers\Metadata\Type;
 
+use Mockery\Matcher\Not;
 use POData\Common\NotImplementedException;
 
 /**
@@ -60,6 +61,7 @@ class Char implements IType
      * @param string &$outValue The stripped form of $value that can
      *                          be used in PHP expressions
      *
+     * @throws NotImplementedException
      * @return bool
      */
     public function validate($value, &$outValue)

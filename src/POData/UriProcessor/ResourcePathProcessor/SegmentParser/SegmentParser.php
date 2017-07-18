@@ -112,6 +112,7 @@ class SegmentParser
      * @param bool     $checkRights Whether to check for rights or not
      *
      * @throws ODataException Exception in case of any error found while precessing segments
+     * @return mixed
      */
     private function createSegmentDescriptors($segments, $checkRights)
     {
@@ -154,6 +155,9 @@ class SegmentParser
     /**
      * @param string $segment
      * @param bool   $checkRights
+     *
+     * @throws ODataException
+     * @return SegmentDescriptor
      */
     private function createNextSegment(SegmentDescriptor $previous, $segment, $checkRights)
     {

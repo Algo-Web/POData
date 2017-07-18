@@ -99,7 +99,7 @@ abstract class BaseService implements IRequestHandler, IService
      * Get reference to object serialiser - bit wot turns PHP objects
      * into message traffic on wire.
      *
-     * @var IObjectSerialiser
+     * @return IObjectSerialiser
      */
     public function getObjectSerialiser()
     {
@@ -354,6 +354,8 @@ abstract class BaseService implements IRequestHandler, IService
      *
      * @param RequestDescription $request      The description of the request  submitted by the client
      * @param IUriProcessor      $uriProcessor Reference to the uri processor
+     *
+     * @throws ODataException
      */
     protected function serializeResult(RequestDescription $request, IUriProcessor $uriProcessor)
     {
@@ -672,6 +674,7 @@ abstract class BaseService implements IRequestHandler, IService
      *                                               serialized, False otherwise
      * @param bool         $needToSerializeResponse
      *
+     * @throws ODataException
      * @return string|null The ETag for the entry object if it has eTag properties
      *                     NULL otherwise
      */
@@ -766,6 +769,7 @@ abstract class BaseService implements IRequestHandler, IService
      *                                    be returned
      * @param ResourceType &$resourceType Resource type of the $entryObject
      *
+     * @throws ODataException
      * @return string|null ETag value for the given resource (with values encoded
      *                     for use in a URI) there are etag properties, NULL if
      *                     there is no etag property

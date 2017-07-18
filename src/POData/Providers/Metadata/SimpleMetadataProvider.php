@@ -72,6 +72,8 @@ class SimpleMetadataProvider implements IMetadataProvider
      * get all entity set information.
      *
      * @param  null|mixed    $params
+     *
+     * @throws \ErrorException
      * @return ResourceSet[]
      */
     public function getResourceSets($params = null)
@@ -214,6 +216,7 @@ class SimpleMetadataProvider implements IMetadataProvider
      * @param ResourceEntityType    $sourceResourceType     Resource type of the source association end
      * @param ResourceProperty      $targetResourceProperty Resource property of the target association end
      *
+     * @throws InvalidOperationException
      * @return ResourceAssociationSet|null
      */
     public function getResourceAssociationSet(
@@ -382,6 +385,8 @@ class SimpleMetadataProvider implements IMetadataProvider
      * @param bool         $isETagProperty property is etag or not
      * @param null|mixed   $defaultValue
      * @param mixed        $nullable
+     *
+     * @throws InvalidOperationException
      */
     private function addPrimitivePropertyInternal(
         $resourceType,
@@ -579,6 +584,8 @@ class SimpleMetadataProvider implements IMetadataProvider
      *                                               resource reference or reference
      *                                               set property points to
      * @param string             $resourceMult       The multiplicity of relation being added
+     *
+     * @throws InvalidOperationException
      */
     private function addReferencePropertyInternal(
         ResourceEntityType $sourceResourceType,
@@ -652,6 +659,8 @@ class SimpleMetadataProvider implements IMetadataProvider
      *                                               property to add to target type
      * @param string             $sourceMultiplicity The multiplicity at the source end of relation
      * @param string             $targetMultiplicity The multiplicity at the target end of relation
+     *
+     * @throws InvalidOperationException
      */
     private function addReferencePropertyInternalBidirectional(
         ResourceEntityType $sourceResourceType,
@@ -848,6 +857,7 @@ class SimpleMetadataProvider implements IMetadataProvider
      * @param ResourceComplexType $complexResourceType complex resource type
      * @param bool                $isBag               complex type is bag or not
      *
+     * @throws InvalidOperationException
      * @return ResourceProperty
      */
     public function addComplexProperty(

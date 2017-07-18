@@ -353,6 +353,7 @@ class ExpressionParser2 extends ExpressionParser
      * @param AbstractExpression $parentExpression The parent expression of
      *                                             expression node to process
      *
+     * @throws ODataException
      * @return AbstractExpression|null
      */
     private function processUnaryNode(

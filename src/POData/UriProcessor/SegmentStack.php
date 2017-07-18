@@ -47,6 +47,7 @@ class SegmentStack
      * @param ResourceSetWrapper &$resourceSetWrapper The resource set wrapper
      *                                                to push
      *
+     * @throws InvalidOperationException
      * @return bool true if the segment was push, false otherwise
      */
     public function pushSegment($segmentName, ResourceSetWrapper &$resourceSetWrapper)

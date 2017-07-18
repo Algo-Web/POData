@@ -388,6 +388,8 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
      * @param ODataPropertyContent &$odataPropertyContent ODataPropertyContent
      *                                                    instance in which
      *                                                    to place the values
+     *
+     * @throws ODataException
      */
     private function writeObjectProperties(
         $customObject,
@@ -767,6 +769,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
      *                                                    complex type element
      * @param ODataPropertyContent &$odataPropertyContent Content to write to
      *
+     * @throws InvalidOperationException
      * @return ResourceType The actual type of the complex object
      */
     private function complexObjectToContent(

@@ -20,6 +20,7 @@ class HttpProcessUtility
      *                                     descending order of preference
      * @param string   $inexactContentType Preferred fallback content type for inexact matches
      *
+     * @throws HttpHeaderFailure
      * @return string|null  One of exactContentType or inexactContentType
      */
     public static function selectRequiredMimeType(
@@ -526,6 +527,7 @@ class HttpProcessUtility
      * Get server key by header.
      *
      * @param string $headerName Name of header
+     * @return string
      */
     public static function headerToServerKey($headerName)
     {

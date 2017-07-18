@@ -326,6 +326,8 @@ abstract class ResourceType
      * Set the resource type as MLE or non-MLE.
      *
      * @param bool $isMLE True to set as MLE, false for non-MLE
+     *
+     * @throws InvalidOperationException
      */
     public function setMediaLinkEntry($isMLE)
     {
@@ -824,6 +826,8 @@ abstract class ResourceType
      * @param string $property
      * @param mixed  $entity
      * @param mixed  $value
+     *
+     * @return ResourceType
      */
     public function setPropertyValue($entity, $property, $value)
     {

@@ -503,8 +503,7 @@ class ServiceHost
      *
      * @param string $value The content length
      *
-     *
-     * @throw Exception if $value is not numeric throws notAcceptableError
+     * @throws ODataException
      */
     public function setResponseContentLength($value)
     {
@@ -551,6 +550,8 @@ class ServiceHost
      * Sets the value status code header on the response.
      *
      * @param string $value The status code
+     *
+     * @throws ODataException
      */
     public function setResponseStatusCode($value)
     {
