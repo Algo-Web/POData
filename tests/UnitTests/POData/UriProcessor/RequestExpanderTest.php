@@ -192,7 +192,7 @@ class RequestExpanderTest extends TestCase
 
         $resProperty = m::mock(ResourceProperty::class);
         $resProperty->shouldReceive('getKind')->andReturn(ResourcePropertyKind::RESOURCESET_REFERENCE);
-        $resProperty->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::ENTITY);
+        $resProperty->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::ENTITY());
         $resProperty->shouldReceive('getName')->andReturn('resourceProperty');
 
         $nuNode = m::mock(RootProjectionNode::class);
@@ -229,7 +229,7 @@ class RequestExpanderTest extends TestCase
 
         $resProperty = m::mock(ResourceProperty::class);
         $resProperty->shouldReceive('getKind')->andReturn(ResourcePropertyKind::RESOURCESET_REFERENCE);
-        $resProperty->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::ENTITY);
+        $resProperty->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::ENTITY());
         $resProperty->shouldReceive('getName')->andReturn('resourceProperty');
 
         $type = m::mock(ResourceType::class);
@@ -280,7 +280,7 @@ class RequestExpanderTest extends TestCase
 
         $resProperty = m::mock(ResourceProperty::class);
         $resProperty->shouldReceive('getKind')->andReturn(ResourcePropertyKind::RESOURCESET_REFERENCE);
-        $resProperty->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::ENTITY);
+        $resProperty->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::ENTITY());
         $resProperty->shouldReceive('getName')->andReturn('resourceProperty');
 
         $type = m::mock(ResourceEntityType::class);
@@ -351,7 +351,7 @@ class RequestExpanderTest extends TestCase
 
         $resProperty = m::mock(ResourceProperty::class);
         $resProperty->shouldReceive('getKind')->andReturn(ResourcePropertyKind::RESOURCESET_REFERENCE);
-        $resProperty->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::COMPLEX);
+        $resProperty->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::COMPLEX());
         $resProperty->shouldReceive('getName')->andReturn('resourceProperty');
 
         $wrap = m::mock(ResourceSetWrapper::class);

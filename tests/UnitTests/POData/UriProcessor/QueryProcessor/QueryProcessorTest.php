@@ -25,7 +25,7 @@ class QueryProcessorTest extends TestCase
 
         $rSet = m::mock(ResourceSetWrapper::class)->makePartial();
         $rType = m::mock(ResourceType::class)->makePartial();
-        $rType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY);
+        $rType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
 
         $host = m::mock(ServiceHost::class)->makePartial();
         $host->shouldReceive('getQueryStringItem')->withArgs([ODataConstants::HTTPQUERY_STRING_ORDERBY])->andReturn('');

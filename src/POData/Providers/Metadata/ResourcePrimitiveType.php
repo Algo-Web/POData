@@ -14,7 +14,7 @@ class ResourcePrimitiveType extends ResourceType
      */
     public function __construct(IType $primitive)
     {
-        $resourceTypeKind = ResourceTypeKind::PRIMITIVE;
+        $resourceTypeKind = ResourceTypeKind::PRIMITIVE();
         $bitz = explode('.', $primitive->getName());
         $name = array_pop($bitz);
         $namespaceName = null;

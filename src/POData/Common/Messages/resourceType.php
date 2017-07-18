@@ -101,11 +101,10 @@ trait resourceType
     }
 
     /**
-     * Format a message to show error for
-     * duplication of resource property on resource type.
+     * Format a message to show error for duplication of resource property on resource type.
      *
      * @param string $propertyName     The property name
-     * @param string $resourceTypeName The rtesource type name
+     * @param string $resourceTypeName The resource type name
      *
      * @return string The formatted message
      */

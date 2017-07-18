@@ -256,7 +256,7 @@ class ObjectModelSerializerBaseTest extends TestCase
     public function testPushSegmentForNavigationWrongTypeThrowsException()
     {
         $prop2 = m::mock(ResourceProperty::class);
-        $prop2->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::COMPLEX);
+        $prop2->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::COMPLEX());
 
         $foo = $this->Construct();
         $expected = 'pushSegmentForNavigationProperty should not be called with non-entity type';
@@ -273,7 +273,7 @@ class ObjectModelSerializerBaseTest extends TestCase
     public function testPushSegmentForNavigationEmptySegments()
     {
         $prop2 = m::mock(ResourceProperty::class);
-        $prop2->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::ENTITY);
+        $prop2->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::ENTITY());
 
         $stack = m::mock(SegmentStack::class);
         $stack->shouldReceive('getSegmentNames')->andReturn([]);
@@ -296,7 +296,7 @@ class ObjectModelSerializerBaseTest extends TestCase
         $resourceType = m::mock(ResourceType::class)->makePartial();
 
         $prop2 = m::mock(ResourceProperty::class);
-        $prop2->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::ENTITY);
+        $prop2->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::ENTITY());
         $prop2->shouldReceive('getName')->andReturn('hammer');
 
         $resourceWrap = m::mock(ResourceSetWrapper::class);

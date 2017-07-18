@@ -41,6 +41,7 @@ class VoidType implements IType
      * @param string &$outValue The stripped form of $value that can
      *                          be used in PHP expressions
      *
+     * @throws NotImplementedException
      * @return bool
      */
     public function validate($value, &$outValue)
@@ -66,6 +67,7 @@ class VoidType implements IType
      * @param string $stringValue value to convert
      *
      * @throws NotImplementedException
+     * @return void
      */
     public function convert($stringValue)
     {
@@ -78,6 +80,7 @@ class VoidType implements IType
      * @param string $value value to convert to OData
      *
      * @throws NotImplementedException
+     * @return void
      */
     public function convertToOData($value)
     {

@@ -71,7 +71,7 @@ class ResourceClassesTest extends TestCase
         $this->AssertEquals($customerResType->getFullName(), 'Northwind.Customer');
         $this->assertTrue($customerResType->getInstanceType() instanceof \ReflectionClass);
         $this->AssertEquals($customerResType->getNamespace(), 'Northwind');
-        $this->AssertEquals($customerResType->getResourceTypeKind(), ResourceTypeKind::ENTITY);
+        $this->AssertEquals($customerResType->getResourceTypeKind(), ResourceTypeKind::ENTITY());
         $this->AssertEquals($customerResType->isMediaLinkEntry(), false);
 
         try {
@@ -339,7 +339,7 @@ class ResourceClassesTest extends TestCase
         $this->assertEquals($customerReferenceSetProperty->getKind(), ResourcePropertyKind::RESOURCESET_REFERENCE);
         $this->assertEquals($customerReferenceSetProperty->getInstanceType() instanceof \ReflectionClass, true);
         $this->assertEquals($customerReferenceSetProperty->getResourceType()->getName(), 'Customer');
-        $this->assertEquals($customerReferenceSetProperty->getTypeKind(), ResourceTypeKind::ENTITY);
+        $this->assertEquals($customerReferenceSetProperty->getTypeKind(), ResourceTypeKind::ENTITY());
         $this->assertFalse($customerReferenceSetProperty->isKindOf(ResourcePropertyKind::RESOURCE_REFERENCE));
     }
 

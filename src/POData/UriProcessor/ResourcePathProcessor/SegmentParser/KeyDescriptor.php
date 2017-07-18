@@ -58,7 +58,7 @@ class KeyDescriptor
      * Array([OrderID] => Array( [0] => 10248 [1] => Object(Int32)),
      *       [ProductID] => Array( [0] => 11 [1] => Object(Int32)))
      * Note: This is mutually exclusive with $_positionalValues. These values
-     * are not validated aganist entity's ResourceType, validation will happen
+     * are not validated against entity's ResourceType, validation will happen
      * once validate function is called, $_validatedNamedValues will hold
      * validated values.
      *
@@ -73,7 +73,7 @@ class KeyDescriptor
      * Array([0] => Array( [0] => 10248 [1] => Object(Int32)),
      *       [1] => Array( [0] => 11 [1] => Object(Int32)))
      * Note: This is mutually exclusive with $_namedValues. These values are not
-     * validated aganist entity's ResourceType, validation will happen once validate
+     * validated against entity's ResourceType, validation will happen once validate
      * function is called, $_validatedNamedValues will hold validated values.
      *
      * @var array
@@ -214,7 +214,7 @@ class KeyDescriptor
     }
 
     /**
-     * Attempt to parse comma seperated values representing a skiptoken and creates
+     * Attempt to parse comma separated values representing a skiptoken and creates
      * instance of KeyDescriptor representing the same.
      *
      * @param string        $skipToken      The skiptoken value to parse

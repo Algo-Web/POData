@@ -163,6 +163,7 @@ class ServiceHost
      */
     public function setServiceUri($serviceUri)
     {
+        $builtServiceUri = null;
         if (null === $this->absoluteServiceUri) {
             $isAbsoluteServiceUri = (0 === strpos($serviceUri, 'http://')) || (0 === strpos($serviceUri, 'https://'));
             try {
@@ -222,22 +223,22 @@ class ServiceHost
                     );
                 }
 
-                $serviceUri = $requestUriScheme .'://' . $this->getAbsoluteRequestUri()->getHost();
+                $builtServiceUri = $requestUriScheme .'://' . $this->getAbsoluteRequestUri()->getHost();
 
                 if (($requestUriScheme == 'http' && $requestUriPort != '80') ||
                     ($requestUriScheme == 'https' && $requestUriPort != '443')
                 ) {
-                    $serviceUri .= ':' . $requestUriPort;
+                    $builtServiceUri .= ':' . $requestUriPort;
                 }
 
                 for ($l = 0; $l <= $k; ++$l) {
-                    $serviceUri .= '/' . $requestUriSegments[$l];
+                    $builtServiceUri .= '/' . $requestUriSegments[$l];
                 }
 
-                $this->absoluteServiceUri = new Url($serviceUri);
+                $this->absoluteServiceUri = new Url($builtServiceUri);
             }
 
-            $this->absoluteServiceUriAsString = $serviceUri;
+            $this->absoluteServiceUriAsString = $isAbsoluteServiceUri ? $serviceUri : $builtServiceUri;
         }
     }
 
@@ -503,8 +504,7 @@ class ServiceHost
      *
      * @param string $value The content length
      *
-     *
-     * @throw Exception if $value is not numeric throws notAcceptableError
+     * @throws ODataException
      */
     public function setResponseContentLength($value)
     {
@@ -551,6 +551,8 @@ class ServiceHost
      * Sets the value status code header on the response.
      *
      * @param string $value The status code
+     *
+     * @throws ODataException
      */
     public function setResponseStatusCode($value)
     {

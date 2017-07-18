@@ -76,7 +76,7 @@ trait common
     }
 
     /**
-     * Message to show error when found empty anscestor list.
+     * Message to show error when found empty ancestor list.
      *
      * @return string The message
      */

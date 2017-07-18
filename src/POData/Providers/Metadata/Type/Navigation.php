@@ -28,8 +28,8 @@ class Navigation implements INavigationType
      */
     public function __construct($resourceType)
     {
-        if (ResourceTypeKind::COMPLEX != $resourceType->getResourceTypeKind()
-            && ResourceTypeKind::ENTITY != $resourceType->getResourceTypeKind()
+        if (ResourceTypeKind::COMPLEX() != $resourceType->getResourceTypeKind()
+            && ResourceTypeKind::ENTITY() != $resourceType->getResourceTypeKind()
         ) {
             throw new \InvalidArgumentException(Messages::navigationInvalidResourceType());
         }
@@ -105,6 +105,7 @@ class Navigation implements INavigationType
      * @param string $stringValue value to convert
      *
      * @throws NotImplementedException
+     * @return void
      */
     public function convert($stringValue)
     {
@@ -117,6 +118,7 @@ class Navigation implements INavigationType
      * @param mixed $value value to convert
      *
      * @throws NotImplementedException
+     * @return void
      */
     public function convertToOData($value)
     {

@@ -115,7 +115,8 @@ class ObjectModelSerializerBase
     /**
      * Gets the data service instance.
      *
-     * @return IService
+     * @param IService $service
+     * @return void
      */
     public function setService(IService $service)
     {
@@ -141,12 +142,13 @@ class ObjectModelSerializerBase
      * required escaping of characters, for example:
      * Ships(ShipName='Antonio%20Moreno%20Taquer%C3%ADa',ShipID=123),
      * Note to method caller: Don't do urlencoding on
-     * return value of this method as it already encoded.
+     * return value of this method as it's already encoded.
      *
      * @param mixed        $entityInstance Entity instance for which key value needs to be prepared
      * @param ResourceType $resourceType   Resource type instance containing metadata about the instance
      * @param string       $containerName  Name of the entity set that the entity instance belongs to
      *
+     * @throws ODataException
      * @return string Key for the given resource, with values encoded for use in a URI
      */
     protected function getEntryInstanceKey($entityInstance, ResourceType $resourceType, $containerName)
@@ -180,7 +182,8 @@ class ObjectModelSerializerBase
      *
      * @param mixed            $entity           Instance of a type which contains this property
      * @param ResourceType     $resourceType     Resource type instance containing metadata about the instance
-     * @param ResourceProperty $resourceProperty Resource property instance containing metadata about the property whose value to be retrieved
+     * @param ResourceProperty $resourceProperty Resource property instance containing metadata about the property
+     *                                           whose value is to be retrieved
      *
      * @throws ODataException If reflection exception occurred while trying to access the property
      *
@@ -262,6 +265,7 @@ class ObjectModelSerializerBase
 
             return ODataConstants::HTTP_WEAK_ETAG_PREFIX . rtrim($eTag, ',') . '"';
         }
+        return null;
     }
 
     /**
@@ -297,7 +301,7 @@ class ObjectModelSerializerBase
      */
     protected function pushSegmentForNavigationProperty(ResourceProperty &$resourceProperty)
     {
-        if (ResourceTypeKind::ENTITY == $resourceProperty->getTypeKind()) {
+        if (ResourceTypeKind::ENTITY() == $resourceProperty->getTypeKind()) {
             assert(!empty($this->getStack()->getSegmentNames()), 'Segment names should not be empty');
             $currentResourceSetWrapper = $this->getCurrentResourceSetWrapper();
             $currentResourceType = $currentResourceSetWrapper->getResourceType();
@@ -313,24 +317,26 @@ class ObjectModelSerializerBase
 
             return $this->pushSegment($resourceProperty->getName(), $currentResourceSetWrapper);
         }
-        throw new InvalidOperationException('pushSegmentForNavigationProperty should not be called with non-entity type');
+        throw new InvalidOperationException(
+            'pushSegmentForNavigationProperty should not be called with non-entity type'
+        );
     }
 
     /**
      * Gets collection of projection nodes under the current node.
      *
-     * @return ProjectionNode[]|ExpandedProjectionNode[]|null List of nodes
-     *                                                        describing projections for the current segment, If this method returns
-     *                                                        null it means no projections are to be applied and the entire resource
-     *                                                        for the current segment should be serialized, If it returns non-null
-     *                                                        only the properties described by the returned projection segments should
-     *                                                        be serialized
+     * @return ProjectionNode[]|ExpandedProjectionNode[]|null List of nodes describing projections for the current
+     *                                                        segment, If this method returns null it means no
+     *                                                        projections are to be applied and the entire resource for
+     *                                                        the current segment should be serialized, If it returns
+     *                                                        non-null, only the properties described by the returned
+     *                                                        projection segments should be serialized
      */
     protected function getProjectionNodes()
     {
         $expandedProjectionNode = $this->getCurrentExpandedProjectionNode();
         if (null === $expandedProjectionNode || $expandedProjectionNode->canSelectAllProperties()) {
-            return;
+            return null;
         }
 
         return $expandedProjectionNode->getChildNodes();
@@ -346,7 +352,7 @@ class ObjectModelSerializerBase
     {
         $expandedProjectionNode = $this->getRequest()->getRootProjectionNode();
         if (null === $expandedProjectionNode) {
-            return;
+            return null;
         } else {
             $segmentNames = $this->getStack()->getSegmentNames();
             $depth = count($segmentNames);
@@ -375,7 +381,7 @@ class ObjectModelSerializerBase
     /**
      * Check whether to expand a navigation property or not.
      *
-     * @param string $navigationPropertyName Name of naviagtion property in question
+     * @param string $navigationPropertyName Name of navigation property in question
      *
      * @return bool True if the given navigation should be
      *              explanded otherwise false
@@ -551,11 +557,10 @@ class ObjectModelSerializerBase
     }
 
     /**
-     * Wheter next link is needed for the current resource set (feed)
+     * Whether next link is needed for the current resource set (feed)
      * being serialized.
      *
-     * @param int $resultSetCount Number of entries in the current
-     *                            resource set
+     * @param int $resultSetCount Number of entries in the current resource set
      *
      * @return bool true if the feed must have a next page link
      */
@@ -597,42 +602,25 @@ class ObjectModelSerializerBase
     /**
      * Recursive metod to build $expand and $select paths for a specified node.
      *
-     * @param string[]               &$parentPathSegments     Array of path
-     *                                                        segments which leads
-     *                                                        up to (including)
-     *                                                        the segment
-     *                                                        represented by
-     *                                                        $expandedProjectionNode
-     * @param string[]               &$selectionPaths         The string which
-     *                                                        holds projection
-     *                                                        path segment
-     *                                                        seperated by comma,
-     *                                                        On return this argument
-     *                                                        will be updated with
-     *                                                        the selection path
-     *                                                        segments under
+     * @param string[]               &$parentPathSegments     Array of path segments which leads
+     *                                                        up to (including) the segment
+     *                                                        represented by $expandedProjectionNode
+     * @param string[]               &$selectionPaths         The string which holds projection
+     *                                                        path segment separated by comma,
+     *                                                        On return this argument will be updated with
+     *                                                        the selection path segments under
      *                                                        this node
-     * @param string[]               &$expansionPaths         The string which holds
-     *                                                        expansion path segment
-     *                                                        seperated by comma.
-     *                                                        On return this argument
-     *                                                        will be updated with
-     *                                                        the expand path
-     *                                                        segments under
-     *                                                        this node
-     * @param ExpandedProjectionNode &$expandedProjectionNode The expanded node for
-     *                                                        which expansion
-     *                                                        and selection path
-     *                                                        to be build
-     * @param bool                   &$foundSelections        On return, this
-     *                                                        argument will hold
-     *                                                        true if any selection
-     *                                                        defined under this node
+     * @param string[]               &$expansionPaths         The string which holds expansion path segment
+     *                                                        separated by comma. On return this argument
+     *                                                        will be updated with the expand path
+     *                                                        segments under this node
+     * @param ExpandedProjectionNode &$expandedProjectionNode The expanded node for which expansion
+     *                                                        and selection path to be build
+     * @param bool                   &$foundSelections        On return, this argument will hold
+     *                                                        true if any selection defined under this node
      *                                                        false otherwise
-     * @param bool                   &$foundExpansions        On return, this
-     *                                                        argument will hold
-     *                                                        true if any expansion
-     *                                                        defined under this node
+     * @param bool                   &$foundExpansions        On return, this argument will hold
+     *                                                        true if any expansion defined under this node
      *                                                        false otherwise
      * @param bool                   $foundSelections
      * @param bool                   $foundExpansions

@@ -21,7 +21,8 @@ use POData\Providers\ProvidersWrapper;
  * e.g. Customers('ALFKI')/Orders(2134)/Order_Details/Product
  *
  * Syntax of an OData segment is:
- * Segment       : identifier[(keyPredicate)]?            : e.g. Customers, Customers('ALFKI'), Order_Details(OrderID=123, ProductID=11)
+ * Segment       : identifier[(keyPredicate)]?            : e.g. Customers, Customers('ALFKI'),
+ *                                                          Order_Details(OrderID=123, ProductID=11)
  * keyPredicate  : keyValue | NamedKeyValue
  * NamedKeyValue : keyName=keyValue [, keyName=keyValue]* : e.g. OrderID=123, ProductID=11
  * keyValue      : quotedValue | unquotedValue            : e.g. 'ALFKI'
@@ -111,6 +112,7 @@ class SegmentParser
      * @param bool     $checkRights Whether to check for rights or not
      *
      * @throws ODataException Exception in case of any error found while precessing segments
+     * @return mixed
      */
     private function createSegmentDescriptors($segments, $checkRights)
     {
@@ -151,8 +153,12 @@ class SegmentParser
     }
 
     /**
+     * @param SegmentDescriptor $previous
      * @param string $segment
-     * @param bool   $checkRights
+     * @param bool $checkRights
+     *
+     * @throws ODataException
+     * @return SegmentDescriptor
      */
     private function createNextSegment(SegmentDescriptor $previous, $segment, $checkRights)
     {
@@ -276,7 +282,7 @@ class SegmentParser
                 $current->setTargetResourceType($projectedProperty->getResourceType());
                 $current->setSingleResult($projectedProperty->getKind() != ResourcePropertyKind::RESOURCESET_REFERENCE);
                 if ($previousKind == TargetKind::LINK()
-                    && $projectedProperty->getTypeKind() != ResourceTypeKind::ENTITY
+                    && $projectedProperty->getTypeKind() != ResourceTypeKind::ENTITY()
                 ) {
                     throw ODataException::createBadRequestError(
                         Messages::segmentParserLinkSegmentMustBeFollowedByEntitySegment(

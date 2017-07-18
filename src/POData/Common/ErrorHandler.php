@@ -18,7 +18,7 @@ class ErrorHandler
      * @param \Exception $exception exception
      * @param IService   $service   service
      */
-    public static function handleException($exception, IService $service)
+    public static function handleException(\Exception $exception, IService $service)
     {
         $acceptTypesText = $service->getHost()->getRequestAccept();
         $responseContentType = null;
@@ -30,10 +30,10 @@ class ErrorHandler
                     MimeTypes::MIME_APPLICATION_JSON,
                 ]
             );
-        } catch (HttpHeaderFailure $exception) {
+        } catch (HttpHeaderFailure $headerException) {
             $exception = new ODataException(
-                $exception->getMessage(),
-                $exception->getStatusCode()
+                $headerException->getMessage(),
+                $headerException->getStatusCode()
             );
         } catch (\Exception $exception) {
             // Never come here

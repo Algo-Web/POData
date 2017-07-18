@@ -252,6 +252,7 @@ class ProvidersWrapper
      * To get all resource types in the data source,
      * Note: Wrapper for IMetadataProvider::getTypes method implementation.
      *
+     * @throws ODataException
      * @return ResourceType[]
      */
     public function getTypes()
@@ -347,13 +348,13 @@ class ProvidersWrapper
      * Note: Wrapper for IMetadataProvider::getDerivedTypes
      * method implementation.
      *
-     * @param ResourceType $resourceType Resource to get derived resource types from
+     * @param ResourceEntityType $resourceType Resource to get derived resource types from
      *
      * @throws InvalidOperationException when the meat provider doesn't return an array
      *
      * @return ResourceType[]
      */
-    public function getDerivedTypes(ResourceType $resourceType)
+    public function getDerivedTypes(ResourceEntityType $resourceType)
     {
         $derivedTypes = $this->metaProvider->getDerivedTypes($resourceType);
         if (!is_array($derivedTypes)) {
@@ -372,17 +373,15 @@ class ProvidersWrapper
     /**
      * Returns true if $resourceType represents an Entity Type which has derived
      * Entity Types, else false.
-     * Note: Wrapper for IMetadataProvider::hasDerivedTypes method
-     * implementation.
+     * Note: Wrapper for IMetadataProvider::hasDerivedTypes method implementation.
      *
-     * @param ResourceType $resourceType Resource to check for derived resource
-     *                                   types
+     * @param ResourceEntityType    $resourceType   Resource to check for derived resource types
      *
      * @throws ODataException If the ResourceType is invalid
      *
      * @return bool
      */
-    public function hasDerivedTypes(ResourceType $resourceType)
+    public function hasDerivedTypes(ResourceEntityType $resourceType)
     {
         $this->validateResourceType($resourceType);
 
@@ -400,7 +399,7 @@ class ProvidersWrapper
      */
     public function getResourceProperties(ResourceSetWrapper $setWrapper, ResourceType $resourceType)
     {
-        if ($resourceType->getResourceTypeKind() != ResourceTypeKind::ENTITY) {
+        if ($resourceType->getResourceTypeKind() != ResourceTypeKind::ENTITY()) {
             //Complex resource type
             return $resourceType->getAllProperties();
         }
@@ -412,7 +411,8 @@ class ProvidersWrapper
             foreach ($resourceType->getAllProperties() as $resourceProperty) {
                 //Check whether this is a visible navigation property
                 //TODO: is this broken?? see #87
-                if ($resourceProperty->getTypeKind() == ResourceTypeKind::ENTITY
+                if ($resourceProperty->getTypeKind() == ResourceTypeKind::ENTITY()
+                    && $resourceType instanceof ResourceEntityType
                     && null !== $this->getResourceSetWrapperForNavigationProperty(
                         $setWrapper,
                         $resourceType,
@@ -478,6 +478,7 @@ class ProvidersWrapper
      * @param ResourceEntityType $type     Resource type of the source association end
      * @param ResourceProperty   $property Resource property of the source association end
      *
+     * @throws ODataException
      * @return ResourceAssociationSet|null Returns ResourceAssociationSet for the source
      *                                     association end, NULL if no such
      *                                     association end or resource set in the
@@ -491,6 +492,7 @@ class ProvidersWrapper
         $type = $this->getResourceTypeWherePropertyIsDeclared($type, $property);
         // usage below requires $type to not be null - so kaboom as early as possible
         assert(null != $type, 'Resource type obtained from property must not be null.');
+        assert($type instanceof ResourceEntityType);
 
         $associationSet = $this->metaProvider->getResourceAssociationSet(
             $set,
@@ -499,7 +501,7 @@ class ProvidersWrapper
         );
         assert(
             null == $associationSet || $associationSet instanceof ResourceAssociationSet,
-            'Retrieved resource assocation must be either null or an instance of ResourceAssociationSet'
+            'Retrieved resource association must be either null or an instance of ResourceAssociationSet'
         );
 
         if (null !== $associationSet) {

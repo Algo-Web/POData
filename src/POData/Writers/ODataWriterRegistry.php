@@ -35,5 +35,6 @@ class ODataWriterRegistry
                 return $writer;
             }
         }
+        return null;
     }
 }

@@ -15,7 +15,7 @@ class ConstantExpression extends AbstractExpression
     protected $value;
 
     /**
-     * Create new inatnce of ConstantExpression.
+     * Create new instance of ConstantExpression.
      *
      * @param string                                $value The constant value
      * @param \POData\Providers\Metadata\Type\IType $type  The expression node type

@@ -146,7 +146,7 @@ class ResourceProperty
     /**
      * Get the instance type. If the property is of kind 'Complex',
      * 'ResourceReference' or 'ResourceSetReference' then this function returns
-     * refernece to ReflectionClass instance for the type. If the property of
+     * reference to ReflectionClass instance for the type. If the property of
      * kind 'Primitive' then this function returns ITYpe instance for the type.
      *
      * @return \ReflectionClass|IType
@@ -219,23 +219,23 @@ class ResourceProperty
      * @return bool True if resource type kind and property kind matches
      *              otherwise false
      */
-    private function isResourceKindValidForPropertyKind($pKind, $rKind)
+    private function isResourceKindValidForPropertyKind($pKind, ResourceTypeKind $rKind)
     {
         if (self::sIsKindOf($pKind, ResourcePropertyKind::PRIMITIVE)
-            && $rKind != ResourceTypeKind::PRIMITIVE
+            && $rKind != ResourceTypeKind::PRIMITIVE()
         ) {
             return false;
         }
 
         if (self::sIsKindOf($pKind, ResourcePropertyKind::COMPLEX_TYPE)
-            && $rKind != ResourceTypeKind::COMPLEX
+            && $rKind != ResourceTypeKind::COMPLEX()
         ) {
             return false;
         }
 
         if ((self::sIsKindOf($pKind, ResourcePropertyKind::RESOURCE_REFERENCE)
             || self::sIsKindOf($pKind, ResourcePropertyKind::RESOURCESET_REFERENCE))
-            && $rKind != ResourceTypeKind::ENTITY
+            && $rKind != ResourceTypeKind::ENTITY()
         ) {
             return false;
         }

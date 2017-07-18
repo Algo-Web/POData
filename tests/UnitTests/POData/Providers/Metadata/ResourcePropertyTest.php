@@ -89,7 +89,7 @@ class ResourcePropertyTest extends TestCase
         $name = 'name';
         $mimeName = 'foo';
         $kind = ResourcePropertyKind::RESOURCE_REFERENCE;
-        $entKind = ResourceTypeKind::ENTITY;
+        $entKind = ResourceTypeKind::ENTITY();
         $type = m::mock(ResourceType::class);
         $type->shouldReceive('getResourceTypeKind')->andReturn($entKind);
 
@@ -102,7 +102,7 @@ class ResourcePropertyTest extends TestCase
         $name = 'name';
         $mimeName = 'foo';
         $kind = ResourcePropertyKind::PRIMITIVE;
-        $entKind = ResourceTypeKind::ENTITY;
+        $entKind = ResourceTypeKind::ENTITY();
         $type = m::mock(ResourceType::class);
         $type->shouldReceive('getResourceTypeKind')->andReturn($entKind);
 
@@ -122,7 +122,7 @@ class ResourcePropertyTest extends TestCase
         $name = 'name';
         $mimeName = 'foo';
         $kind = ResourcePropertyKind::RESOURCE_REFERENCE;
-        $entKind = ResourceTypeKind::PRIMITIVE;
+        $entKind = ResourceTypeKind::PRIMITIVE();
         $type = m::mock(ResourceType::class);
         $type->shouldReceive('getResourceTypeKind')->andReturn($entKind);
 

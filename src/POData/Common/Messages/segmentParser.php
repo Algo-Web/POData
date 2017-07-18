@@ -19,7 +19,7 @@ trait segmentParser
     }
 
     /**
-     * Format a message to show error when a leaft segment
+     * Format a message to show error when a leaf segment
      * ($batch, $value, $metadata, $count, a bag property,
      * a named media resource or void service operation) is followed by a segment.
      *
@@ -57,8 +57,10 @@ trait segmentParser
      *
      * @return string The formatted message
      */
-    public static function segmentParserOnlyValueSegmentAllowedAfterPrimitivePropertySegment($segment, $primitivePropertySegment)
-    {
+    public static function segmentParserOnlyValueSegmentAllowedAfterPrimitivePropertySegment(
+        $segment,
+        $primitivePropertySegment
+    ) {
         return 'The segment \'' . $segment . '\' in the request URI is not valid. Since the segment \''
                 .$primitivePropertySegment . '\' refers to a primitive type property, the only supported value from'
                 .' the next segment is \'$value\'.';
@@ -144,7 +146,7 @@ trait segmentParser
      * Format a message to show error when expecting a
      * property kind not found while paring segments.
      *
-     * @param string $expectedKind The exptected property kind as string
+     * @param string $expectedKind The expected property kind as string
      *
      * @return string
      */

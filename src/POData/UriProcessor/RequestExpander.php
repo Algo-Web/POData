@@ -196,7 +196,7 @@ class RequestExpander
      */
     private function pushSegmentForNavigationProperty(ResourceProperty &$resourceProperty)
     {
-        if ($resourceProperty->getTypeKind() == ResourceTypeKind::ENTITY) {
+        if ($resourceProperty->getTypeKind() == ResourceTypeKind::ENTITY()) {
             assert(!empty($this->getStack()->getSegmentNames()), '!is_empty($this->getStack()->getSegmentNames())');
             $currentResourceSetWrapper = $this->getCurrentResourceSetWrapper();
             $currentResourceType = $currentResourceSetWrapper->getResourceType();

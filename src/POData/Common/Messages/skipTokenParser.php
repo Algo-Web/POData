@@ -38,8 +38,11 @@ trait skipTokenParser
      *
      * @return string The formatted message
      */
-    public static function skipTokenParserSkipTokenNotMatchingOrdering($skipTokenValuesCount, $skipToken, $expectedCount)
-    {
+    public static function skipTokenParserSkipTokenNotMatchingOrdering(
+        $skipTokenValuesCount,
+        $skipToken,
+        $expectedCount
+    ) {
         return 'The number of keys \'' . $skipTokenValuesCount . '\' in skip token with value \'' . $skipToken .
                '\' did not match the number of ordering constraints \'' . $expectedCount . '\' for the resource type.';
     }
@@ -70,8 +73,12 @@ trait skipTokenParser
      *
      * @return string The formatted message
      */
-    public static function skipTokenParserInCompatibleTypeAtPosition($skipToken, $expectedTypeName, $position, $typeProvidedInSkipTokenName)
-    {
+    public static function skipTokenParserInCompatibleTypeAtPosition(
+        $skipToken,
+        $expectedTypeName,
+        $position,
+        $typeProvidedInSkipTokenName
+    ) {
         return 'The skiptoken value \'' . $skipToken . '\' contains a value of type \'' . $typeProvidedInSkipTokenName
                 .'\' at position ' . $position . ' which is not compatible with the type \'' . $expectedTypeName
                 .'\' of corresponding orderby constraint.';

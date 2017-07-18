@@ -99,7 +99,7 @@ abstract class BaseService implements IRequestHandler, IService
      * Get reference to object serialiser - bit wot turns PHP objects
      * into message traffic on wire.
      *
-     * @var IObjectSerialiser
+     * @return IObjectSerialiser
      */
     public function getObjectSerialiser()
     {
@@ -245,11 +245,6 @@ abstract class BaseService implements IRequestHandler, IService
         try {
             $this->createProviders();
             $this->getHost()->validateQueryParameters();
-            //$requestMethod = $this->getOperationContext()->incomingRequest()->getMethod();
-            //if ($requestMethod != HTTPRequestMethod::GET()) {
-            // Now supporting GET and trying to support PUT
-            //throw ODataException::createNotImplementedError(Messages::onlyReadSupport($requestMethod));
-            //}
 
             $uriProcessor = UriProcessorNew::process($this);
             $request = $uriProcessor->getRequest();
@@ -359,6 +354,8 @@ abstract class BaseService implements IRequestHandler, IService
      *
      * @param RequestDescription $request      The description of the request  submitted by the client
      * @param IUriProcessor      $uriProcessor Reference to the uri processor
+     *
+     * @throws ODataException
      */
     protected function serializeResult(RequestDescription $request, IUriProcessor $uriProcessor)
     {
@@ -496,7 +493,7 @@ abstract class BaseService implements IRequestHandler, IService
                         $odataModelInstance
                     );
                 } elseif (TargetKind::PRIMITIVE_VALUE() == $requestTargetKind) {
-                    // Code path for primitive value (Since its primitve no need for
+                    // Code path for primitive value (Since its primitive no need for
                     // object model serialization)
                     // Customers('ANU')/CompanyName/$value => string
                     // Employees(1)/Photo/$value => binary stream
@@ -677,6 +674,7 @@ abstract class BaseService implements IRequestHandler, IService
      *                                               serialized, False otherwise
      * @param bool         $needToSerializeResponse
      *
+     * @throws ODataException
      * @return string|null The ETag for the entry object if it has eTag properties
      *                     NULL otherwise
      */
@@ -696,7 +694,7 @@ abstract class BaseService implements IRequestHandler, IService
                 );
             }
 
-            return;
+            return null;
         }
 
         if ($this->getConfiguration()->getValidateETagHeader() && !$resourceType->hasETagProperties()) {
@@ -708,13 +706,13 @@ abstract class BaseService implements IRequestHandler, IService
             }
 
             // We need write the response but no eTag header
-            return;
+            return null;
         }
 
         if (!$this->getConfiguration()->getValidateETagHeader()) {
             // Configuration says do not validate ETag, so we will not write ETag header in the
             // response even though the requested resource support it
-            return;
+            return null;
         }
 
         if (null === $ifMatch && null === $ifNoneMatch) {
@@ -731,7 +729,7 @@ abstract class BaseService implements IRequestHandler, IService
             // Note: The following code for attaching the prefix W\"
             // and the suffix " can be done in getETagForEntry function
             // but that is causing an issue in Linux env where the
-            // firefix browser is unable to parse the ETag in this case.
+            // firefox browser is unable to parse the ETag in this case.
             // Need to follow up PHP core devs for this.
             $eTag = ODataConstants::HTTP_WEAK_ETAG_PREFIX . $eTag . '"';
             if (null !== $ifMatch) {
@@ -754,7 +752,7 @@ abstract class BaseService implements IRequestHandler, IService
             // Note: The following code for attaching the prefix W\"
             // and the suffix " can be done in getETagForEntry function
             // but that is causing an issue in Linux env where the
-            // firefix browser is unable to parse the ETag in this case.
+            // firefox browser is unable to parse the ETag in this case.
             // Need to follow up PHP core devs for this.
             $eTag = ODataConstants::HTTP_WEAK_ETAG_PREFIX . $eTag . '"';
         }
@@ -764,13 +762,14 @@ abstract class BaseService implements IRequestHandler, IService
 
     /**
      * Returns the etag for the given resource.
-     * Note: This function will not add W\" prefix and " suffix, its callers
-     * repsonsibility.
+     * Note: This function will not add W\" prefix and " suffix, that is caller's
+     * responsibility.
      *
      * @param mixed        &$entryObject  Resource for which etag value needs to
      *                                    be returned
      * @param ResourceType &$resourceType Resource type of the $entryObject
      *
+     * @throws ODataException
      * @return string|null ETag value for the given resource (with values encoded
      *                     for use in a URI) there are etag properties, NULL if
      *                     there is no etag property

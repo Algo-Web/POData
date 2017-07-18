@@ -44,7 +44,7 @@ class OrderByNode extends OrderByBaseNode
      */
     public function __construct($propertyName, $resourceProperty, $resourceSetWrapper)
     {
-        // This must be the parameter state at this point, we won't chek
+        // This must be the parameter state at this point, we won't check
         // these as this is an internal class
         //if ($resourceProperty != NULL)
         //{

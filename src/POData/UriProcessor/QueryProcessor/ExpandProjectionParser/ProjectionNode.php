@@ -8,9 +8,9 @@ use POData\Providers\Metadata\ResourceProperty;
  * Class ProjectionNode.
  *
  * ExpandProjectionParser will create a 'Projection Tree' from the $expand
- * and/or $select query options, Each path segement in the $expand/$select
- * will be represented by a node in the proejction tree, A path segment in
- * $expand option (which is not appear in expand option) will be represented
+ * and/or $select query options, Each path segment in the $expand/$select
+ * will be represented by a node in the projection tree, A path segment in
+ * $expand option (which does not appear in expand option) will be represented
  * using a type derived from this type 'ExpandedProjectionNode' and a path
  * segment in $select option will be represented using 'ProjectionNode'.
  * The root of the projection tree will be represented using the type

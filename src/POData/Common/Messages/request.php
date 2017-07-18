@@ -59,8 +59,11 @@ trait request
      *
      * @return string The formatted message
      */
-    public static function requestDescriptionUnSupportedVersion($requestHeaderName, $requestedVersion, $availableVersions)
-    {
+    public static function requestDescriptionUnSupportedVersion(
+        $requestHeaderName,
+        $requestedVersion,
+        $availableVersions
+    ) {
         return 'The version value '.$requestedVersion.' in the header '.$requestHeaderName.' is not'
                .' supported, available versions are '.$availableVersions;
     }

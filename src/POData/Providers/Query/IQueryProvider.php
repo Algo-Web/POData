@@ -163,7 +163,7 @@ interface IQueryProvider
     /**
      * Puts an entity instance to entity set identified by a key.
      *
-     * @param ResourceSet   $sourceResourceSet The entity set containing the entity to update
+     * @param ResourceSet   $sourceresourceSet The entity set containing the entity to update
      * @param KeyDescriptor $keyDescriptor     The key identifying the entity to update
      * @param $data
      *
@@ -177,8 +177,8 @@ interface IQueryProvider
 
     /**
      * Delete resource from a resource set.
-     * @param ResourceSet|null $sourceResourceSet
-     * @param object           $sourceEntityInstance
+     * @param ResourceSet       $sourceResourceSet
+     * @param object            $sourceEntityInstance
      *
      * @return bool true if resources successfully deleted, otherwise false.
      */
@@ -189,7 +189,7 @@ interface IQueryProvider
 
     /**
      * Create a new resource in a resource set
-     * @param ResourceSet      $sourceResourceSet    The entity set containing the entity to fetch
+     * @param ResourceSet      $sourceresourceSet    The entity set containing the entity to fetch
      * @param object           $keyDescriptor
      * @param object           $data                 The New data for the entity instance.
      *

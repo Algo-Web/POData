@@ -157,6 +157,7 @@ class OrderByParser
      *                                           segment
      *
      * @throws ODataException If any error occurs while processing the orderby path segments
+     * @return mixed
      */
     private function buildOrderByTree(&$orderByPathSegments)
     {

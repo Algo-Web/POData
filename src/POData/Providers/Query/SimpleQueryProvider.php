@@ -41,7 +41,7 @@ abstract class SimpleQueryProvider implements IQueryProvider
      */
     abstract protected function queryScalar($sql, $parameters = null);
 
-    /* Stubbed Implementaiton Here */
+    /* Stubbed Implementation Here */
     public function getQueryProvider()
     {
         return new QueryProvider();
@@ -116,7 +116,12 @@ abstract class SimpleQueryProvider implements IQueryProvider
     /**
      * Common method for getResourceFromRelatedResourceSet() and getResourceFromResourceSet().
      *
+     * @param ResourceSet $resourceSet
      * @param KeyDescriptor|null $keyDescriptor
+     * @param array $whereCondition
+     *
+     * @throws \POData\Common\InvalidOperationException
+     * @return
      */
     protected function getResource(
         ResourceSet $resourceSet,
@@ -155,11 +160,15 @@ abstract class SimpleQueryProvider implements IQueryProvider
 
     /**
      * For queries like http://localhost/NorthWind.svc/Customers.
+     * @param QueryType $queryType
+     * @param ResourceSet $resourceSet
      * @param null|mixed $filterInfo
      * @param null|mixed $orderBy
      * @param null|mixed $top
      * @param null|mixed $skip
      * @param null|mixed $skipToken
+     *
+     * @return QueryResult
      */
     public function getResourceSet(
         QueryType $queryType,
@@ -218,6 +227,10 @@ abstract class SimpleQueryProvider implements IQueryProvider
 
     /**
      * For queries like http://localhost/NorthWind.svc/Customers(‘ALFKI’).
+     * @param ResourceSet $resourceSet
+     * @param KeyDescriptor $keyDescriptor
+     *
+     * @return null|object
      */
     public function getResourceFromResourceSet(
         ResourceSet $resourceSet,
@@ -228,12 +241,17 @@ abstract class SimpleQueryProvider implements IQueryProvider
 
     /**
      * For queries like http://localhost/NorthWind.svc/Customers(‘ALFKI’)/Orders.
-     * @param mixed      $sourceEntityInstance
-     * @param null|mixed $filterInfo
-     * @param null|mixed $orderBy
-     * @param null|mixed $top
-     * @param null|mixed $skip
-     * @param null|mixed $skipToken
+     * @param QueryType         $queryType
+     * @param ResourceSet       $sourceResourceSet
+     * @param mixed             $sourceEntityInstance
+     * @param ResourceSet       $targetResourceSet
+     * @param ResourceProperty  $targetProperty
+     * @param null|mixed        $filterInfo
+     * @param null|mixed        $orderBy
+     * @param null|mixed        $top
+     * @param null|mixed        $skip
+     * @param null|mixed        $skipToken
+     * @return QueryResult
      */
     public function getRelatedResourceSet(
         QueryType $queryType,
@@ -265,7 +283,12 @@ abstract class SimpleQueryProvider implements IQueryProvider
 
     /**
      * For queries like http://localhost/NorthWind.svc/Customers(‘ALFKI’)/Orders(10643).
-     * @param mixed $sourceEntityInstance
+     * @param ResourceSet       $sourceResourceSet
+     * @param mixed             $sourceEntityInstance
+     * @param ResourceSet       $targetResourceSet
+     * @param ResourceProperty  $targetProperty
+     * @param KeyDescriptor     $keyDescriptor
+     * @return mixed
      */
     public function getResourceFromRelatedResourceSet(
         ResourceSet $sourceResourceSet,
@@ -285,7 +308,11 @@ abstract class SimpleQueryProvider implements IQueryProvider
 
     /**
      * For queries like http://localhost/NorthWind.svc/Orders(10643)/Customer.
-     * @param mixed $sourceEntityInstance
+     * @param ResourceSet       $sourceResourceSet
+     * @param mixed             $sourceEntityInstance
+     * @param ResourceSet       $targetResourceSet
+     * @param ResourceProperty  $targetProperty
+     * @return mixed
      */
     public function getRelatedResourceReference(
         ResourceSet $sourceResourceSet,

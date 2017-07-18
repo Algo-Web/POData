@@ -25,8 +25,10 @@ trait resourceProperty
      *
      * @return string The formatted message
      */
-    public static function resourcePropertyPropertyKindAndResourceTypeKindMismatch($resourcePropertyKindArgName, $resourceTypeArgName)
-    {
+    public static function resourcePropertyPropertyKindAndResourceTypeKindMismatch(
+        $resourcePropertyKindArgName,
+        $resourceTypeArgName
+    ) {
         return 'The \''.$resourcePropertyKindArgName.'\' parameter does not match with the type of the resource'
                .' type in parameter \''.$resourceTypeArgName.'\'';
     }

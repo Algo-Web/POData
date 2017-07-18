@@ -20,7 +20,7 @@ abstract class BinaryExpression extends AbstractExpression
     protected $right;
 
     /**
-     * Create new inatnce of BinaryExpression.
+     * Create new instance of BinaryExpression.
      *
      * @param AbstractExpression $left  The left expression
      * @param AbstractExpression $right The right expression

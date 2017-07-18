@@ -2,6 +2,7 @@
 
 namespace POData\UriProcessor\QueryProcessor\ExpandProjectionParser;
 
+use InvalidArgumentException;
 use POData\Common\Messages;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceSetWrapper;
@@ -80,7 +81,7 @@ class ExpandedProjectionNode extends ProjectionNode
     /**
      * The maximum number of results allowed for this node, taken from
      * ServiceConfiguration::_maxResultsPerCollection null means no limit
-     * will be applied and thus all results availabe should be returned.
+     * will be applied and thus all results available should be returned.
      *
      * @var int
      */
@@ -373,6 +374,7 @@ class ExpandedProjectionNode extends ProjectionNode
         if (array_key_exists($propertyName, $this->childNodes)) {
             return $this->childNodes[$propertyName];
         }
+        return null;
     }
 
     /**
@@ -398,7 +400,7 @@ class ExpandedProjectionNode extends ProjectionNode
     /**
      * Mark the entire subtree as selected, for example
      * $expand=A/B/C/D/E & $select = A/B Here we need to select the entire
-     * subtree of B i.e result should include all immedate properties of B
+     * subtree of B i.e result should include all immediate properties of B
      * and associated C's, D's associated with each C and E's associated each D.
      */
     public function markSubtreeAsSelected()
@@ -419,7 +421,7 @@ class ExpandedProjectionNode extends ProjectionNode
      */
     public function removeNonSelectedNodes()
     {
-        //Possilbe Node status flags are:
+        //Possible Node status flags are:
         //for $expand=A/B/C/D, X/Y
         // | SF | SST |
         // | T  | F   |  For $select=A/B, this is status of A
@@ -439,17 +441,17 @@ class ExpandedProjectionNode extends ProjectionNode
     }
 
     /**
-     * Remove explicity included nodes which already included implicitly, For
+     * Remove explicitly included nodes which already included implicitly, For
      * an expand navigation property, all immediate properties will be
      * implicitly selected if that navigation property is the last segment of
-     * expand path or if there is a '*' token present after the naivgation
-     * property, this function remove all explicity included 'ProjectionNode's
+     * expand path or if there is a '*' token present after the navigation
+     * property, this function remove all explicitly included 'ProjectionNode's
      * which already included implicitly.
      */
     public function removeNodesAlreadyIncludedImplicitly()
     {
         //$select=A/B, A/B/guid, A/B/Name
-        //Here A/B cause to implcilty include all immeiate properties of B
+        //Here A/B cause to implicitly include all immediate properties of B
         //so remove explicitly included 'ProjectionNode' for guid and Name
         if ($this->selectSubtree) {
             foreach ($this->childNodes as $propertyName => $node) {
@@ -467,7 +469,7 @@ class ExpandedProjectionNode extends ProjectionNode
         }
 
         //$select=A/B/*, A/B/guid, A/B/Name
-        //Here A/B/* cause to implcitly include all immediate properties of B
+        //Here A/B/* cause to implicitly include all immediate properties of B
         //so remove explicitly included 'ProjectionNode' for guid and Name
         foreach ($this->childNodes as $propertyName => $node) {
             if ($node instanceof self) {

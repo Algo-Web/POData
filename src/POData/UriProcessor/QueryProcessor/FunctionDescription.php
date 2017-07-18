@@ -135,7 +135,6 @@ class FunctionDescription
                 ],
             'substring' => [
                     new self(
-
                         'substring',
                         new StringType(),
                         [new StringType(), new Int32()]
@@ -564,6 +563,8 @@ class FunctionDescription
      * @param ExpressionToken    $expressionToken The expression token
      * @param AbstractExpression $leftArgument    The left argument expression
      * @param AbstractExpression $rightArgument   The right argument expression
+     *
+     * @throws ODataException
      */
     public static function verifyRelationalOpArguments(
         $expressionToken,
@@ -738,12 +739,11 @@ class FunctionDescription
      * Finds a function from the list of functions whose argument types matches
      * with types of expressions.
      *
-     * @param \POData\UriProcessor\QueryProcessor\FunctionDescription[] $functionDescriptions List of functions
-     * @param AbstractExpression[]                                      $argExpressions       Function argument expressions
-     * @param bool                                                      $promoteArguments     Function argument
+     * @param FunctionDescription[]     $functionDescriptions   List of functions
+     * @param AbstractExpression[]      $argExpressions         Function argument expressions
+     * @param bool                      $promoteArguments       Function argument
      *
-     * @return \POData\UriProcessor\QueryProcessor\FunctionDescription|null Reference to the matching function if
-     *                                                                      found else NULL
+     * @return FunctionDescription|null Reference to the matching function if found else NULL
      */
     public static function findFunctionWithPromotion(
         $functionDescriptions,
@@ -759,7 +759,7 @@ class FunctionDescription
         }
 
         if (empty($applicableFunctions)) {
-            return;
+            return null;
         }
 
         //Check for exact match
@@ -804,5 +804,6 @@ class FunctionDescription
                 return $function;
             }
         }
+        return null;
     }
 }

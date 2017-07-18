@@ -64,7 +64,7 @@ abstract class ResourceType
     protected $abstractType;
 
     /**
-     * Refrence to ResourceType instance for base type, if any.
+     * Reference to ResourceType instance for base type, if any.
      *
      * @var ResourceType
      */
@@ -136,7 +136,7 @@ abstract class ResourceType
 
     /**
      * Whether the resource type described by this class instance has named streams
-     * Note: This has been intitialized with null, later in hasNamedStreams method,
+     * Note: This has been intialised with null, later in hasNamedStreams method,
      * this flag will be set to boolean value.
      *
      * @var bool
@@ -184,7 +184,7 @@ abstract class ResourceType
      */
     protected function __construct(
         $instanceType,
-        $resourceTypeKind,
+        ResourceTypeKind $resourceTypeKind,
         $name,
         $namespaceName = null,
         ResourceType $baseType = null,
@@ -326,10 +326,12 @@ abstract class ResourceType
      * Set the resource type as MLE or non-MLE.
      *
      * @param bool $isMLE True to set as MLE, false for non-MLE
+     *
+     * @throws InvalidOperationException
      */
     public function setMediaLinkEntry($isMLE)
     {
-        if (ResourceTypeKind::ENTITY != $this->resourceTypeKind) {
+        if (ResourceTypeKind::ENTITY() != $this->resourceTypeKind) {
             throw new InvalidOperationException(
                 Messages::resourceTypeHasStreamAttributeOnlyAppliesToEntityType()
             );
@@ -348,7 +350,7 @@ abstract class ResourceType
      */
     public function addProperty(ResourceProperty $property, $throw = true)
     {
-        if (ResourceTypeKind::PRIMITIVE == $this->resourceTypeKind) {
+        if (ResourceTypeKind::PRIMITIVE() == $this->resourceTypeKind) {
             throw new InvalidOperationException(
                 Messages::resourceTypeNoAddPropertyForPrimitive()
             );
@@ -370,7 +372,7 @@ abstract class ResourceType
         }
 
         if ($property->isKindOf(ResourcePropertyKind::KEY)) {
-            if (ResourceTypeKind::ENTITY != $this->resourceTypeKind) {
+            if (ResourceTypeKind::ENTITY() != $this->resourceTypeKind) {
                 throw new InvalidOperationException(
                     Messages::resourceTypeKeyPropertiesOnlyOnEntityTypes()
                 );
@@ -384,7 +386,7 @@ abstract class ResourceType
         }
 
         if ($property->isKindOf(ResourcePropertyKind::ETAG)
-            && (ResourceTypeKind::ENTITY != $this->resourceTypeKind)
+            && (ResourceTypeKind::ENTITY() != $this->resourceTypeKind)
         ) {
             throw new InvalidOperationException(
                 Messages::resourceTypeETagPropertiesOnlyOnEntityTypes()
@@ -394,7 +396,7 @@ abstract class ResourceType
         //Check for Base class properties
         $this->propertiesDeclaredOnThisType[$name] = $property;
         // Set $this->allProperties to null, this is very important because the
-        // first call to getAllProperties will initilaize $this->allProperties,
+        // first call to getAllProperties will initialise $this->allProperties,
         // further call to getAllProperties will not reinitialize _allProperties
         // so if addProperty is called after calling getAllProperties then the
         // property just added will not be reflected in $this->allProperties
@@ -429,7 +431,8 @@ abstract class ResourceType
             }
 
             $this->allProperties = array_merge(
-                $this->allProperties, $this->propertiesDeclaredOnThisType
+                $this->allProperties,
+                $this->propertiesDeclaredOnThisType
             );
         }
 
@@ -532,7 +535,7 @@ abstract class ResourceType
      */
     public function addNamedStream(ResourceStreamInfo $namedStream)
     {
-        if ($this->resourceTypeKind != ResourceTypeKind::ENTITY) {
+        if ($this->resourceTypeKind != ResourceTypeKind::ENTITY()) {
             throw new InvalidOperationException(
                 Messages::resourceTypeNamedStreamsOnlyApplyToEntityType()
             );
@@ -672,7 +675,7 @@ abstract class ResourceType
             foreach ($this->propertiesDeclaredOnThisType as $resourceProperty) {
                 $hasBagInComplex = false;
                 if ($resourceProperty->isKindOf(ResourcePropertyKind::COMPLEX_TYPE)) {
-                    //We can say current ResouceType ("this")
+                    //We can say current ResourceType ("this")
                     //is contains a bag property if:
                     //1. It contain a property of kind bag.
                     //2. It contains a normal complex property
@@ -739,7 +742,7 @@ abstract class ResourceType
     public function validateType()
     {
         $keyProperties = $this->getKeyProperties();
-        if (($this->resourceTypeKind == ResourceTypeKind::ENTITY) && empty($keyProperties)) {
+        if (($this->resourceTypeKind == ResourceTypeKind::ENTITY()) && empty($keyProperties)) {
             throw new InvalidOperationException(
                 Messages::resourceTypeMissingKeyPropertiesForEntity(
                     $this->getFullName()
@@ -823,6 +826,8 @@ abstract class ResourceType
      * @param string $property
      * @param mixed  $entity
      * @param mixed  $value
+     *
+     * @return ResourceType
      */
     public function setPropertyValue($entity, $property, $value)
     {

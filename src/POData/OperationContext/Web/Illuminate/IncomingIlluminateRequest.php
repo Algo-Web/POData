@@ -101,10 +101,9 @@ class IncomingIlluminateRequest implements IHTTPRequest
     {
         //TODO: the contract is more specific than this, it requires the name and values to be decoded
         //not sure how to test that...
-        //TODO: another issue.  This may not be the right thing to return...since POData only really understands GET requests today
         //Have to convert to the stranger format known to POData that deals with multiple query strings.
-        //this makes this request a bit non compliant as it doesn't expose duplicate keys, something POData will check for
-        //instead whatever parameter was last in the query string is set.  IE
+        //this makes this request a bit non compliant as it doesn't expose duplicate keys, something POData will
+        //check for instead whatever parameter was last in the query string is set.  IE
         //odata.svc/?$format=xml&$format=json the format will be json
         $this->queryOptions = [];
         $this->queryOptionsCount = [];

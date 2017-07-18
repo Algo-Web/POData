@@ -77,6 +77,7 @@ class ExpressionToken
     /**
      * Gets the current identifier text.
      *
+     * @throws ODataException
      * @return string
      */
     public function getIdentifier()

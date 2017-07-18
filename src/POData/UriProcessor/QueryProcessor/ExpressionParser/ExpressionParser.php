@@ -258,7 +258,7 @@ class ExpressionParser
     }
 
     /**
-     * Parse multipicative operators (mul, div, mod).
+     * Parse multiplicative operators (mul, div, mod).
      *
      * @return AbstractExpression
      */
@@ -363,7 +363,8 @@ class ExpressionParser
     /**
      * Parse primary tokens [literals, identifiers (e.g. function call), open param for sub expressions].
      *
-     *
+     * @throws ODataException
+     * @throws NotImplementedException
      * @return AbstractExpression
      */
     private function parsePrimaryStart()
@@ -406,6 +407,7 @@ class ExpressionParser
     /**
      * Parse Sub expression.
      *
+     * @throws ODataException
      * @return AbstractExpression
      */
     private function parseParenExpression()
@@ -514,6 +516,7 @@ class ExpressionParser
     /**
      * Start parsing argument list of a function-call.
      *
+     * @throws ODataException
      * @return array<AbstractExpression>
      */
     private function parseArgumentList()

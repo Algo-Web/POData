@@ -6,6 +6,7 @@ use Mockery as m;
 use POData\Common\ODataException;
 use POData\Configuration\EntitySetRights;
 use POData\Configuration\ServiceConfiguration;
+use POData\Providers\Metadata\ResourceEntityType;
 use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Metadata\ResourceType;
@@ -16,7 +17,7 @@ class ResourceSetWrapperTest extends TestCase
 {
     public function testHasNamedStreamsYes()
     {
-        $type = m::mock(ResourceType::class);
+        $type = m::mock(ResourceEntityType::class);
         $type->shouldReceive('hasNamedStream')->andReturnNull()->once();
 
         $set = m::mock(ResourceSet::class);
@@ -48,7 +49,7 @@ class ResourceSetWrapperTest extends TestCase
 
     public function testHasBagPropertyYes()
     {
-        $type = m::mock(ResourceType::class);
+        $type = m::mock(ResourceEntityType::class);
         $type->shouldReceive('hasBagProperty')->andReturnNull()->once();
 
         $set = m::mock(ResourceSet::class);

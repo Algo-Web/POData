@@ -221,6 +221,7 @@ class RequestDescription
      * @param string|null         $requestVersion
      * @param string|null         $maxRequestVersion
      * @param string              $dataType
+     * @param IHTTPRequest|null   $payload
      */
     public function __construct(
         $segmentDescriptors,
@@ -282,7 +283,7 @@ class RequestDescription
         $this->data = isset($payload) ? $payload->getAllInput() : null;
 
         // Define data from request body
-        if ($dataType) {
+        if (null !== $dataType) {
             $this->readData($dataType);
         }
     }
@@ -430,7 +431,7 @@ class RequestDescription
      *      (e) MLE
      *          http://server/NW.svc/Employees(123)/$value
      *      (f) Named Stream
-     *          http://server/NW.svc/Employees(123)/Thumnail48_48
+     *          http://server/NW.svc/Employees(123)/Thumbnail48_48
      *      (g) metadata
      *          http://server/NW.svc/$metadata
      *      (h) service directory
@@ -472,7 +473,7 @@ class RequestDescription
      *      (h) MLE
      *          http://server/NW.svc/Employees(123)/$value
      *      (i) Named Stream
-     *          http://server/NW.svc/Employees(123)/Thumnail48_48
+     *          http://server/NW.svc/Employees(123)/Thumbnail48_48
      * ResourceType will be absent (NULL) in the following cases:
      * if the last segment descriptor describes
      *      (a) metadata
@@ -521,7 +522,7 @@ class RequestDescription
      *          http://server/NW.svc/Customers
      *          http://server/NW.svc/Customers('ALFKI')
      *      (b) Named Stream
-     *          http://server/NW.svc/Employees(123)/Thumnail48_48
+     *          http://server/NW.svc/Employees(123)/Thumbnail48_48
      *      (c) metadata
      *          http://server/NW.svc/$metadata
      *      (d) service directory
@@ -778,11 +779,12 @@ class RequestDescription
      */
     public function isLinkUri()
     {
-        return ($this->segmentCount > 2) && ($this->segments[$this->segmentCount - 2]->getTargetKind() == TargetKind::LINK());
+        return ($this->segmentCount > 2)
+               && ($this->segments[$this->segmentCount - 2]->getTargetKind() == TargetKind::LINK());
     }
 
     /**
-     * To check if the resource path is a request for meida resource.
+     * To check if the resource path is a request for media resource.
      *
      * @return bool True if request is for media resource else false
      */
@@ -816,6 +818,7 @@ class RequestDescription
                     $this->lastSegment->getIdentifier()
                 );
         }
+        return null;
     }
 
     /**
@@ -914,7 +917,8 @@ class RequestDescription
             );
         }
 
-        //If the max version supported by the service is below the version required to fulfill the response..throw an exception
+        //If the max version supported by the service is below the version required to fulfill the response..
+        //throw an exception
         if ($this->maxServiceVersion->compare($this->requiredMinResponseVersion) < 0) {
             throw ODataException::createBadRequestError(
                 Messages::requestVersionIsBiggerThanProtocolVersion(

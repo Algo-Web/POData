@@ -7,6 +7,7 @@ use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\Type\IType;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ExpressionType;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\PropertyAccessExpression;
+use POData\UriProcessor\QueryProcessor\FunctionDescription;
 
 /**
  * Class PHPExpressionProvider.
@@ -250,8 +251,8 @@ class PHPExpressionProvider implements IExpressionProvider
     /**
      * Call-back for function call expression.
      *
-     * @param \POData\UriProcessor\QueryProcessor\FunctionDescription $functionDescription Description of the function
-     * @param array<string>                                           $params              Paameters to the function
+     * @param FunctionDescription   $functionDescription Description of the function
+     * @param array<string>         $params              Parameters to the function
      *
      * @return string
      */

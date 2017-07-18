@@ -102,7 +102,7 @@ class ObjectModelSerializerTest extends TestCase
         $keysProperty = ['name' => $resourceProperty, 'type'=>$resourceProperty2];
         $mockResourceType->shouldReceive('getKeyProperties')->andReturn($keysProperty);
 
-        $mockResourceType->shouldReceive('getResourceTypeKind')->andReturn(2);
+        $mockResourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
         $mockResourceSetWrapper->shouldReceive('getName')->andReturn('Entity');
 
         $queryResult = new QueryResult();
@@ -159,7 +159,7 @@ class ObjectModelSerializerTest extends TestCase
         $keysProperty = ['name' => $resourceProperty, 'type'=>$resourceProperty2];
         $mockResourceType->shouldReceive('getKeyProperties')->andReturn($keysProperty);
 
-        $mockResourceType->shouldReceive('getResourceTypeKind')->andReturn(2);
+        $mockResourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
         $mockResourceSetWrapper->shouldReceive('getName')->andReturn('Entity');
 
         $e = [$entity, $entity1];
@@ -241,7 +241,7 @@ class ObjectModelSerializerTest extends TestCase
         $keysProperty = ['name' => $resourceProperty, 'type'=>$resourceProperty2];
         $mockResourceType->shouldReceive('getKeyProperties')->andReturn($keysProperty);
 
-        $mockResourceType->shouldReceive('getResourceTypeKind')->andReturn(2);
+        $mockResourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
         $mockResourceSetWrapper->shouldReceive('getName')->andReturn('Entity');
 
         $e = [$entity, $entity1];
@@ -313,7 +313,7 @@ class ObjectModelSerializerTest extends TestCase
         $resourceType->shouldReceive('isMediaLinkEntry')->andReturn(false);
         $resourceType->shouldReceive('hasNamedStream')->andReturn(false);
         $resourceType->shouldReceive('getETagProperties')->andReturn([]);
-        $resourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY);
+        $resourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
 
         $requestURL = new \POData\Common\Url('http://192.168.2.1/abm-master/public/odata.svc/Entity(1)');
         $this->mockRequest->shouldReceive('getTargetSource')
@@ -595,7 +595,7 @@ class ObjectModelSerializerTest extends TestCase
         $type = m::mock(ResourceType::class);
         $type->shouldReceive('getFullName')->andReturn('typeName')->once();
         $type->shouldReceive('getName')->andReturn('typeName')->never();
-        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::COMPLEX)->once();
+        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::COMPLEX())->once();
         $type->shouldReceive('getAllProperties')->andReturn([$resProperty]);
 
         $queryResult = new QueryResult();
@@ -616,7 +616,7 @@ class ObjectModelSerializerTest extends TestCase
     public function testWriteTopLevelBagObjectTripAssertion()
     {
         $type = m::mock(ResourceType::class);
-        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY)->once();
+        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY())->once();
 
         $bag = null;
 
@@ -641,7 +641,7 @@ class ObjectModelSerializerTest extends TestCase
     public function testWriteTopLevelBagObjectNull()
     {
         $type = m::mock(ResourceType::class);
-        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::PRIMITIVE)->once();
+        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::PRIMITIVE())->once();
         $type->shouldReceive('getFullName')->andReturn('fullName');
 
         $bag = null;
@@ -663,7 +663,7 @@ class ObjectModelSerializerTest extends TestCase
     public function testWriteTopLevelBagObjectEmptyArray()
     {
         $type = m::mock(ResourceType::class);
-        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::PRIMITIVE)->once();
+        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::PRIMITIVE())->once();
         $type->shouldReceive('getFullName')->andReturn('fullName');
 
         $bag = [];
@@ -685,7 +685,7 @@ class ObjectModelSerializerTest extends TestCase
     public function testWriteTopLevelBagObjectArrayOfNulls()
     {
         $type = m::mock(ResourceType::class);
-        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::PRIMITIVE)->once();
+        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::PRIMITIVE())->once();
         $type->shouldReceive('getFullName')->andReturn('fullName');
 
         $bag = [null, null];
@@ -709,7 +709,7 @@ class ObjectModelSerializerTest extends TestCase
     public function testWriteTopLevelBagObjectActualObject()
     {
         $type = m::mock(ResourceType::class);
-        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::PRIMITIVE)->never();
+        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::PRIMITIVE())->never();
         $type->shouldReceive('getFullName')->andReturn('fullName');
 
         $bag = new \DateTime();
@@ -734,7 +734,7 @@ class ObjectModelSerializerTest extends TestCase
     public function testWriteTopLevelBagObjectArrayOfPrimitiveObjects()
     {
         $type = m::mock(ResourceType::class);
-        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::PRIMITIVE)->once();
+        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::PRIMITIVE())->once();
         $type->shouldReceive('getFullName')->andReturn('fullName');
         $type->shouldReceive('getInstanceType')->andReturn(new \POData\Providers\Metadata\Type\EdmString());
 
@@ -765,50 +765,50 @@ class ObjectModelSerializerTest extends TestCase
         $kidNode1 = m::mock(ExpandedProjectionNode::class);
         $kidNode1->shouldReceive('getPropertyName')->andReturn('wun');
         $kidNode1->shouldReceive('getName')->andReturn('wunName');
-        $kidNode1->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::ENTITY);
+        $kidNode1->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::ENTITY());
         $kidNode2 = m::mock(ExpandedProjectionNode::class);
         $kidNode2->shouldReceive('getPropertyName')->andReturn('too');
         $kidNode2->shouldReceive('getName')->andReturn('tooName');
-        $kidNode1->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::COMPLEX);
+        $kidNode1->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::COMPLEX());
 
         $propType = m::mock(ResourceType::class);
         $propType->shouldReceive('getFullName')->andReturn('fullName');
         $propType->shouldReceive('getName')->andReturn('name');
         $propType->shouldReceive('isMediaLinkEntry')->andReturn(false);
         $propType->shouldReceive('hasNamedStream')->andReturn(false);
-        $propType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY);
+        $propType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
         $propType->shouldReceive('resolveProperty')->withArgs(['wun'])->andReturn($kidNode1);
         $propType->shouldReceive('resolveProperty')->withArgs(['too'])->andReturn($kidNode2);
 
         $nuType = m::mock(ResourceType::class);
-        $nuType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::COMPLEX);
+        $nuType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::COMPLEX());
 
         $prop1 = m::mock(ResourceProperty::class);
         $prop1->shouldReceive('getKind')->andReturn(ResourcePropertyKind::COMPLEX_TYPE)->twice();
         $prop1->shouldReceive('isKindOf')->andReturn(false);
         $prop1->shouldReceive('getName')->andReturn('type');
         $prop1->shouldReceive('getResourceType')->andReturn($propType);
-        $prop1->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::ENTITY);
+        $prop1->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::ENTITY());
         $prop2 = m::mock(ResourceProperty::class);
         $prop2->shouldReceive('getKind')->andReturn(ResourcePropertyKind::RESOURCE_REFERENCE)->once();
         $prop2->shouldReceive('isKindOf')->andReturn(false);
         $prop2->shouldReceive('getName')->andReturn('name');
-        $prop2->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::ENTITY);
+        $prop2->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::ENTITY());
 
         $prop3 = m::mock(ResourceProperty::class);
         $prop3->shouldReceive('getKind')->andReturn(ResourcePropertyKind::COMPLEX_TYPE)->never();
         $prop3->shouldReceive('isKindOf')->andReturn(false);
         $prop3->shouldReceive('getResourceType')->andReturn($nuType);
         $prop3->shouldReceive('getName')->andReturn('type');
-        $prop3->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::COMPLEX);
+        $prop3->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::COMPLEX());
         $prop4 = m::mock(ResourceProperty::class);
         $prop4->shouldReceive('getKind')->andReturn(ResourcePropertyKind::RESOURCE_REFERENCE)->never();
         $prop4->shouldReceive('isKindOf')->andReturn(false);
         $prop4->shouldReceive('getName')->andReturn('name');
-        $prop4->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::ENTITY);
+        $prop4->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::ENTITY());
 
         $type = m::mock(ResourceType::class);
-        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::COMPLEX)->once();
+        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::COMPLEX())->once();
         $type->shouldReceive('getName')->andReturn('nuName');
         $type->shouldReceive('getAllProperties')->andReturn([$prop1, $prop2]);
         $propType->shouldReceive('getAllProperties')->andReturn([$prop3, $prop4]);
@@ -868,7 +868,7 @@ class ObjectModelSerializerTest extends TestCase
         $navType->shouldReceive('getInstanceType')->andReturn($iType);
 
         $resolv = m::mock(ResourceProperty::class)->makePartial();
-        $resolv->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::ENTITY)->twice();
+        $resolv->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::ENTITY())->twice();
         $resolv->shouldReceive('getResourceType')->andReturn($navType);
         $resolv->shouldReceive('isKindOf')->withArgs([ResourcePropertyKind::PRIMITIVE])->andReturn(true);
         $resolv->shouldReceive('isKindOf')->andReturn(false);
@@ -879,7 +879,7 @@ class ObjectModelSerializerTest extends TestCase
         $type->shouldReceive('getFullName')->andReturn('customers');
         $type->shouldReceive('isMediaLinkEntry')->andReturn(false)->once();
         $type->shouldReceive('hasNamedStream')->andReturn(false)->once();
-        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY)->once();
+        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY())->once();
         $type->shouldReceive('resolveProperty')->andReturn($resolv);
 
         $prop = m::mock(ResourceProperty::class)->makePartial();
@@ -964,7 +964,7 @@ class ObjectModelSerializerTest extends TestCase
         $type->shouldReceive('getFullName')->andReturn('customers');
         $type->shouldReceive('isMediaLinkEntry')->andReturn(false)->once();
         $type->shouldReceive('hasNamedStream')->andReturn(false)->once();
-        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY)->once();
+        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY())->once();
         $type->shouldReceive('resolveProperty')->andReturn($resolv);
 
         $prop = m::mock(ResourceProperty::class)->makePartial();
@@ -1035,7 +1035,7 @@ class ObjectModelSerializerTest extends TestCase
         $navType->shouldReceive('getResourcePropertyKind')->andReturn(ResourcePropertyKind::RESOURCE_REFERENCE)->never();
 
         $resolv = m::mock(ResourceProperty::class)->makePartial();
-        $resolv->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::ENTITY)->twice();
+        $resolv->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::ENTITY())->twice();
         $resolv->shouldReceive('getResourceType')->andReturn($navType);
         $resolv->shouldReceive('isKindOf')->withArgs([ResourcePropertyKind::BAG])->andReturn(true);
         $resolv->shouldReceive('isKindOf')->andReturn(false);
@@ -1048,7 +1048,7 @@ class ObjectModelSerializerTest extends TestCase
         $type->shouldReceive('getFullName')->andReturn('customers');
         $type->shouldReceive('isMediaLinkEntry')->andReturn(false)->once();
         $type->shouldReceive('hasNamedStream')->andReturn(false)->once();
-        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY)->once();
+        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY())->once();
         $type->shouldReceive('resolveProperty')->andReturn($resolv);
 
         $prop = m::mock(ResourceProperty::class)->makePartial();

@@ -15,7 +15,7 @@ class ResourceComplexType extends ResourceType
      */
     public function __construct(\ReflectionClass $instanceType, TComplexTypeType $complex)
     {
-        $resourceTypeKind = ResourceTypeKind::COMPLEX;
+        $resourceTypeKind = ResourceTypeKind::COMPLEX();
         $bitz = explode('.', $complex->getName());
         $name = array_pop($bitz);
         $namespaceName = null;

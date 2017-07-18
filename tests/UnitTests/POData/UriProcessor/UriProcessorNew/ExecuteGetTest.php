@@ -91,7 +91,7 @@ class ExecuteGetTest extends TestCase
 
         $singleType = m::mock(ResourceType::class);
         $singleType->shouldReceive('getName')->andReturn('Object');
-        $singleType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY);
+        $singleType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
 
         $singleResult = new \DateTime();
         $singleton = m::mock(ResourceFunctionType::class);
@@ -136,7 +136,7 @@ class ExecuteGetTest extends TestCase
 
         $resourceType = m::mock(ResourceType::class);
         $resourceType->shouldReceive('getName')->andReturn('Customer');
-        $resourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY);
+        $resourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
         $resourceType->shouldReceive('getKeyProperties')->andReturn([])->atLeast(2);
         $resourceType->shouldReceive('getInstanceType->newInstance')->andReturn(new \stdClass())->atLeast(2);
 
@@ -191,7 +191,7 @@ class ExecuteGetTest extends TestCase
 
         $resourceType = m::mock(ResourceType::class);
         $resourceType->shouldReceive('getName')->andReturn('Customer');
-        $resourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY);
+        $resourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
         $resourceType->shouldReceive('getKeyProperties')->andReturn(['id' => $keyProp])->atLeast(2);
         $resourceType->shouldReceive('getInstanceType->newInstance')->andReturn(new \stdClass())->atLeast(2);
 
@@ -253,7 +253,7 @@ class ExecuteGetTest extends TestCase
 
         $resourceType = m::mock(ResourceType::class);
         $resourceType->shouldReceive('getName')->andReturn('Customer');
-        $resourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY);
+        $resourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
         $resourceType->shouldReceive('getKeyProperties')->andReturn(['id' => $keyProp])->atLeast(2);
         $resourceType->shouldReceive('getInstanceType->newInstance')->andReturn(new \stdClass())->atLeast(2);
         $resourceType->shouldReceive('resolveProperty')->withArgs(['id'])->andReturn($rProp)->atLeast(2);
@@ -319,7 +319,7 @@ class ExecuteGetTest extends TestCase
 
         $resourceType = m::mock(ResourceType::class);
         $resourceType->shouldReceive('getName')->andReturn('Customer');
-        $resourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY);
+        $resourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
         $resourceType->shouldReceive('getKeyProperties')->andReturn(['id' => $keyProp])->atLeast(2);
         $resourceType->shouldReceive('getInstanceType->newInstance')->andReturn(new \stdClass())->atLeast(2);
         $resourceType->shouldReceive('resolveProperty')->withArgs(['id'])->andReturn($rProp)->atLeast(2);
@@ -399,7 +399,7 @@ class ExecuteGetTest extends TestCase
 
         $resourceType = m::mock(ResourceType::class);
         $resourceType->shouldReceive('getName')->andReturn('Customer');
-        $resourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY);
+        $resourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
         $resourceType->shouldReceive('getKeyProperties')->andReturn(['id' => $keyProp])->atLeast(2);
         $resourceType->shouldReceive('getInstanceType->newInstance')->andReturn(new \stdClass())->atLeast(2);
         $resourceType->shouldReceive('resolveProperty')->withArgs(['id'])->andReturn($rProp)->atLeast(2);
@@ -499,7 +499,7 @@ class ExecuteGetTest extends TestCase
 
         $resourceType = m::mock(ResourceType::class);
         $resourceType->shouldReceive('getName')->andReturn('Customer');
-        $resourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY);
+        $resourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
         $resourceType->shouldReceive('getKeyProperties')->andReturn(['id' => $keyProp])->atLeast(2);
         $resourceType->shouldReceive('getInstanceType->newInstance')->andReturn(new \stdClass())->atLeast(2);
         $resourceType->shouldReceive('resolveProperty')->andReturn(null)->atLeast(2);
@@ -561,7 +561,7 @@ class ExecuteGetTest extends TestCase
 
         $resourceType = m::mock(ResourceType::class);
         $resourceType->shouldReceive('getName')->andReturn('Customer');
-        $resourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY);
+        $resourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
         $resourceType->shouldReceive('getKeyProperties')->andReturn(['id' => $keyProp])->atLeast(2);
         $resourceType->shouldReceive('getInstanceType->newInstance')->andReturn(new \stdClass())->atLeast(2);
         $resourceType->shouldReceive('resolveProperty')->andReturn(null)->atLeast(2);
@@ -617,7 +617,7 @@ class ExecuteGetTest extends TestCase
 
         $resourceType = m::mock(ResourceType::class);
         $resourceType->shouldReceive('getName')->andReturn('Customer');
-        $resourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY);
+        $resourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
         $resourceType->shouldReceive('getKeyProperties')->andReturn(['id' => $keyProp])->atLeast(2);
         $resourceType->shouldReceive('getInstanceType->newInstance')->andReturn(new \stdClass())->atLeast(2);
         $resourceType->shouldReceive('resolveProperty')->andReturn(null)->atLeast(2);
@@ -684,7 +684,7 @@ class ExecuteGetTest extends TestCase
 
         $resourceType = m::mock(ResourceEntityType::class);
         $resourceType->shouldReceive('getName')->andReturn('Customer');
-        $resourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY);
+        $resourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
         $resourceType->shouldReceive('getKeyProperties')->andReturn(['id' => $keyProp])->atLeast(2);
         $resourceType->shouldReceive('getInstanceType->newInstance')->andReturn(new \stdClass())->atLeast(2);
         $resourceType->shouldReceive('resolveProperty')->withArgs(['address'])->andReturn($complexProp)->atLeast(2);
@@ -747,7 +747,7 @@ class ExecuteGetTest extends TestCase
 
         $resourceType = m::mock(ResourceEntityType::class);
         $resourceType->shouldReceive('getName')->andReturn('Customer');
-        $resourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY);
+        $resourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
         $resourceType->shouldReceive('getKeyProperties')->andReturn(['id' => $keyProp])->atLeast(2);
         $resourceType->shouldReceive('getInstanceType->newInstance')->andReturn(new \stdClass())->atLeast(2);
         $resourceType->shouldReceive('resolveProperty')->withArgs(['addresses'])->andReturn($bagProp)->atLeast(2);
@@ -810,7 +810,7 @@ class ExecuteGetTest extends TestCase
 
         $resourceType = m::mock(ResourceEntityType::class);
         $resourceType->shouldReceive('getName')->andReturn('Customer');
-        $resourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY);
+        $resourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
         $resourceType->shouldReceive('getKeyProperties')->andReturn(['id' => $keyProp])->atLeast(2);
         $resourceType->shouldReceive('getInstanceType->newInstance')->andReturn(new \stdClass())->atLeast(2);
         $resourceType->shouldReceive('resolveProperty')->withArgs(['addresses'])->andReturn($bagProp)->atLeast(2);
@@ -948,7 +948,7 @@ class ExecuteGetTest extends TestCase
 
         $resourceType = m::mock(ResourceEntityType::class);
         $resourceType->shouldReceive('getName')->andReturn('Customer');
-        $resourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY);
+        $resourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
         $resourceType->shouldReceive('getKeyProperties')->andReturn(['id' => $keyProp])->atLeast(2);
         $resourceType->shouldReceive('getInstanceType->newInstance')->andReturn(new \stdClass())->atLeast(2);
 
@@ -1009,7 +1009,7 @@ class ExecuteGetTest extends TestCase
         $keyProp = m::mock(ResourceProperty::class);
         $keyProp->shouldReceive('isKindOf')->passthru();
         $keyProp->shouldReceive('getInstanceType')->andReturn($iType);
-        $keyProp->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::PRIMITIVE);
+        $keyProp->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::PRIMITIVE());
 
         $ordersProp = m::mock(ResourceProperty::class);
         $ordersProp->shouldReceive('isKindOf')->withArgs([ResourcePropertyKind::PRIMITIVE])->andReturn(true);
@@ -1025,7 +1025,7 @@ class ExecuteGetTest extends TestCase
         $ordersType = m::mock(ResourceEntityType::class);
         $ordersType->shouldReceive('getName')->andReturn('Order');
         $ordersType->shouldReceive('getFullName')->andReturn('Data.Order');
-        $ordersType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY);
+        $ordersType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
         $ordersType->shouldReceive('getKeyProperties')->andReturn(['id' => $keyProp])->atLeast(2);
         $ordersType->shouldReceive('getInstanceType->newInstance')->andReturn(new \stdClass())->atLeast(2);
         $ordersType->shouldReceive('resolveProperty')->withArgs(['id'])->andReturn($ordersProp)->atLeast(2);
@@ -1033,12 +1033,12 @@ class ExecuteGetTest extends TestCase
 
         $bagProp = m::mock(ResourceProperty::class);
         $bagProp->shouldReceive('getResourceType')->andReturn($ordersType);
-        $bagProp->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::ENTITY);
+        $bagProp->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::ENTITY());
         $bagProp->shouldReceive('getKind')->andReturn(ResourcePropertyKind::RESOURCESET_REFERENCE);
 
         $resourceType = m::mock(ResourceEntityType::class);
         $resourceType->shouldReceive('getName')->andReturn('Customer');
-        $resourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY);
+        $resourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
         $resourceType->shouldReceive('getKeyProperties')->andReturn(['id' => $keyProp])->atLeast(2);
         $resourceType->shouldReceive('getInstanceType->newInstance')->andReturn(new \stdClass())->atLeast(2);
         $resourceType->shouldReceive('resolveProperty')->withArgs(['orders'])->andReturn($bagProp)->atLeast(2);
@@ -1101,13 +1101,13 @@ class ExecuteGetTest extends TestCase
         $keyProp = m::mock(ResourceProperty::class);
         $keyProp->shouldReceive('isKindOf')->withArgs([ResourcePropertyKind::PRIMITIVE])->andReturn(true)->atLeast(2);
         $keyProp->shouldReceive('getInstanceType')->andReturn($iType);
-        $keyProp->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::PRIMITIVE);
+        $keyProp->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::PRIMITIVE());
         $keyProp->shouldReceive('getResourceType')->andReturn($primType);
         $keyProp->shouldReceive('getKind')->andReturn(ResourcePropertyKind::PRIMITIVE);
 
         $resourceType = m::mock(ResourceEntityType::class);
         $resourceType->shouldReceive('getName')->andReturn('Customer');
-        $resourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY);
+        $resourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
         $resourceType->shouldReceive('getKeyProperties')->andReturn(['id' => $keyProp])->atLeast(2);
         $resourceType->shouldReceive('getInstanceType->newInstance')->andReturn(new \stdClass())->atLeast(2);
         $resourceType->shouldReceive('resolveProperty')->withArgs(['id'])->andReturn($keyProp)->atLeast(2);
@@ -1156,7 +1156,7 @@ class ExecuteGetTest extends TestCase
         $config->shouldReceive('getMaxDataServiceVersion')->andReturn(new Version(3, 0));
 
         $custType = m::mock(ResourceEntityType::class);
-        $custType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY);
+        $custType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
 
         $custSet = m::mock(ResourceSetWrapper::class);
         $custSet->shouldReceive('checkResourceSetRightsForRead')->andReturnNull()->atLeast(2);
@@ -1175,13 +1175,13 @@ class ExecuteGetTest extends TestCase
         $keyProp = m::mock(ResourceProperty::class);
         $keyProp->shouldReceive('isKindOf')->withArgs([ResourcePropertyKind::PRIMITIVE])->andReturn(true)->atLeast(2);
         $keyProp->shouldReceive('getInstanceType')->andReturn($iType);
-        $keyProp->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::PRIMITIVE);
+        $keyProp->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::PRIMITIVE());
         $keyProp->shouldReceive('getResourceType')->andReturn($primType);
         $keyProp->shouldReceive('getKind')->andReturn(ResourcePropertyKind::PRIMITIVE);
 
         $resourceType = m::mock(ResourceEntityType::class);
         $resourceType->shouldReceive('getName')->andReturn('Order');
-        $resourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY);
+        $resourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
         $resourceType->shouldReceive('getKeyProperties')->andReturn(['id' => $keyProp])->atLeast(2);
         $resourceType->shouldReceive('getInstanceType->newInstance')->andReturn(new \stdClass())->atLeast(2);
         $resourceType->shouldReceive('resolveProperty')->withArgs(['id'])->andReturn($keyProp)->atLeast(2);
@@ -1242,12 +1242,12 @@ class ExecuteGetTest extends TestCase
         $keyProp = m::mock(ResourceProperty::class);
         $keyProp->shouldReceive('isKindOf')->withArgs([ResourcePropertyKind::PRIMITIVE])->andReturn(true)->atLeast(2);
         $keyProp->shouldReceive('getInstanceType')->andReturn($iType);
-        $keyProp->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::PRIMITIVE);
+        $keyProp->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::PRIMITIVE());
         $keyProp->shouldReceive('getResourceType')->andReturn($primType);
         $keyProp->shouldReceive('getKind')->andReturn(ResourcePropertyKind::PRIMITIVE);
 
         $custType = m::mock(ResourceEntityType::class);
-        $custType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY);
+        $custType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
         $custType->shouldReceive('getKeyProperties')->andReturn(['id' => $keyProp])->atLeast(2);
 
         $custSet = m::mock(ResourceSetWrapper::class);
@@ -1261,7 +1261,7 @@ class ExecuteGetTest extends TestCase
 
         $resourceType = m::mock(ResourceEntityType::class);
         $resourceType->shouldReceive('getName')->andReturn('Order');
-        $resourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY);
+        $resourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
         $resourceType->shouldReceive('getKeyProperties')->andReturn(['id' => $keyProp])->atLeast(2);
         $resourceType->shouldReceive('getInstanceType->newInstance')->andReturn(new \stdClass())->atLeast(2);
         $resourceType->shouldReceive('resolveProperty')->withArgs(['id'])->andReturn($keyProp)->atLeast(2);
