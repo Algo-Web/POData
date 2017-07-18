@@ -258,7 +258,7 @@ class ExpressionParser
     }
 
     /**
-     * Parse multipicative operators (mul, div, mod).
+     * Parse multiplicative operators (mul, div, mod).
      *
      * @return AbstractExpression
      */

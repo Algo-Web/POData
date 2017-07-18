@@ -64,7 +64,7 @@ abstract class ResourceType
     protected $abstractType;
 
     /**
-     * Refrence to ResourceType instance for base type, if any.
+     * Reference to ResourceType instance for base type, if any.
      *
      * @var ResourceType
      */
@@ -136,7 +136,7 @@ abstract class ResourceType
 
     /**
      * Whether the resource type described by this class instance has named streams
-     * Note: This has been intitialized with null, later in hasNamedStreams method,
+     * Note: This has been intialised with null, later in hasNamedStreams method,
      * this flag will be set to boolean value.
      *
      * @var bool
@@ -396,7 +396,7 @@ abstract class ResourceType
         //Check for Base class properties
         $this->propertiesDeclaredOnThisType[$name] = $property;
         // Set $this->allProperties to null, this is very important because the
-        // first call to getAllProperties will initilaize $this->allProperties,
+        // first call to getAllProperties will initialise $this->allProperties,
         // further call to getAllProperties will not reinitialize _allProperties
         // so if addProperty is called after calling getAllProperties then the
         // property just added will not be reflected in $this->allProperties
@@ -675,7 +675,7 @@ abstract class ResourceType
             foreach ($this->propertiesDeclaredOnThisType as $resourceProperty) {
                 $hasBagInComplex = false;
                 if ($resourceProperty->isKindOf(ResourcePropertyKind::COMPLEX_TYPE)) {
-                    //We can say current ResouceType ("this")
+                    //We can say current ResourceType ("this")
                     //is contains a bag property if:
                     //1. It contain a property of kind bag.
                     //2. It contains a normal complex property

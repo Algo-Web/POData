@@ -119,7 +119,7 @@ class QueryProcessor
      * Processes the odata query options in the request uri and update the request description
      * instance with processed details.
      *
-     * @throws ODataException If any error occured while processing the query options
+     * @throws ODataException If any error occurred while processing the query options
      */
     private function processQuery()
     {
@@ -239,16 +239,16 @@ class QueryProcessor
     }
 
     /**
-     * Process the $filter option in the request and update request decription.
+     * Process the $filter option in the request and update request description.
      *
      *
      * @throws ODataException Throws error in the following cases:
      *                        (1) If $filter cannot be applied to the
      *                        resource targeted by the request uri
-     *                        (2) If any error occured while parsing and
+     *                        (2) If any error occurred while parsing and
      *                        translating the odata $filter expression
      *                        to expression tree
-     *                        (3) If any error occured while generating
+     *                        (3) If any error occurred while generating
      *                        php expression from expression tree
      */
     private function processFilter()

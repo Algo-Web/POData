@@ -44,8 +44,7 @@ class PropertyAccessExpression extends AbstractExpression
         $this->child = null;
         $this->nodeType = ExpressionType::PROPERTYACCESS;
         $this->resourceProperty = $resourceProperty;
-        //If the property is primitive type, then _type will be primitve types
-        //implementing IType
+        //If the property is primitive type, then _type will be primitive types implementing IType
         if ($resourceProperty->getResourceType()->getResourceTypeKind() == ResourceTypeKind::PRIMITIVE) {
             $rawType = $resourceProperty->getResourceType()->getInstanceType();
             assert($rawType instanceof IType, 'Primitive type instance type not an IType');

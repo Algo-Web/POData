@@ -113,8 +113,7 @@ trait queryProcessor
 
     /**
      * Format a message to show error when query processor found $skiptoken
-     * in the request uri targetting to a resource for which paging is not
-     * enabled.
+     * in the request uri targeting to a resource for which paging is not enabled.
      *
      * @param string $resourceSetName The name of the resource set
      *
@@ -128,8 +127,7 @@ trait queryProcessor
 
     /**
      * Format a message to show error when query processor found $select
-     * or $expand which cannot be applied to resource targeted by the
-     * request uri.
+     * or $expand which cannot be applied to resource targeted by the request uri.
      *
      * @param string $queryItem Query item
      *

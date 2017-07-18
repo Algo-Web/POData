@@ -41,7 +41,7 @@ trait expandProjectionParser
      * contain non-navigation property.
      *
      * @param string $resourceTypeName The resource type name
-     * @param string $propertyName     The proeprty name
+     * @param string $propertyName     The property name
      *
      * @return string The formatted message
      */

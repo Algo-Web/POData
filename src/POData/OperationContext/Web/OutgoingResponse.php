@@ -109,7 +109,7 @@ class OutgoingResponse
     /**
      * Set the Cache-Control header for the response.
      *
-     * @param string $value the cache-contro; value
+     * @param string $value the cache-control value
      */
     public function setCacheControl($value)
     {
@@ -119,7 +119,7 @@ class OutgoingResponse
     /**
      * Gets the value of the ETag header of the response.
      *
-     * @return string reference of _headers[HttpResponseHeaderStrETag]
+     * @return string reference of headers[HttpResponseHeaderStrETag]
      */
     public function getETag()
     {

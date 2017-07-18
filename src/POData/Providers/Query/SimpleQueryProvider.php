@@ -41,7 +41,7 @@ abstract class SimpleQueryProvider implements IQueryProvider
      */
     abstract protected function queryScalar($sql, $parameters = null);
 
-    /* Stubbed Implementaiton Here */
+    /* Stubbed Implementation Here */
     public function getQueryProvider()
     {
         return new QueryProvider();

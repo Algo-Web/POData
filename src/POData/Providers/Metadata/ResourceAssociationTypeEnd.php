@@ -97,7 +97,7 @@ class ResourceAssociationTypeEnd
     }
 
     /**
-     * To check this relationship belongs to a specfic entity property.
+     * To check this relationship belongs to a specific entity property.
      *
      * @param ResourceEntityType    $resourceType     The type of the entity
      * @param ResourceProperty|null $resourceProperty The property in the entity

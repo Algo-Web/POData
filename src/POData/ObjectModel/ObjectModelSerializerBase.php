@@ -381,7 +381,7 @@ class ObjectModelSerializerBase
     /**
      * Check whether to expand a navigation property or not.
      *
-     * @param string $navigationPropertyName Name of naviagtion property in question
+     * @param string $navigationPropertyName Name of navigation property in question
      *
      * @return bool True if the given navigation should be
      *              explanded otherwise false
@@ -557,11 +557,10 @@ class ObjectModelSerializerBase
     }
 
     /**
-     * Wheter next link is needed for the current resource set (feed)
+     * Whether next link is needed for the current resource set (feed)
      * being serialized.
      *
-     * @param int $resultSetCount Number of entries in the current
-     *                            resource set
+     * @param int $resultSetCount Number of entries in the current resource set
      *
      * @return bool true if the feed must have a next page link
      */
@@ -603,42 +602,25 @@ class ObjectModelSerializerBase
     /**
      * Recursive metod to build $expand and $select paths for a specified node.
      *
-     * @param string[]               &$parentPathSegments     Array of path
-     *                                                        segments which leads
-     *                                                        up to (including)
-     *                                                        the segment
-     *                                                        represented by
-     *                                                        $expandedProjectionNode
-     * @param string[]               &$selectionPaths         The string which
-     *                                                        holds projection
-     *                                                        path segment
-     *                                                        seperated by comma,
-     *                                                        On return this argument
-     *                                                        will be updated with
-     *                                                        the selection path
-     *                                                        segments under
+     * @param string[]               &$parentPathSegments     Array of path segments which leads
+     *                                                        up to (including) the segment
+     *                                                        represented by $expandedProjectionNode
+     * @param string[]               &$selectionPaths         The string which holds projection
+     *                                                        path segment separated by comma,
+     *                                                        On return this argument will be updated with
+     *                                                        the selection path segments under
      *                                                        this node
-     * @param string[]               &$expansionPaths         The string which holds
-     *                                                        expansion path segment
-     *                                                        seperated by comma.
-     *                                                        On return this argument
-     *                                                        will be updated with
-     *                                                        the expand path
-     *                                                        segments under
-     *                                                        this node
-     * @param ExpandedProjectionNode &$expandedProjectionNode The expanded node for
-     *                                                        which expansion
-     *                                                        and selection path
-     *                                                        to be build
-     * @param bool                   &$foundSelections        On return, this
-     *                                                        argument will hold
-     *                                                        true if any selection
-     *                                                        defined under this node
+     * @param string[]               &$expansionPaths         The string which holds expansion path segment
+     *                                                        separated by comma. On return this argument
+     *                                                        will be updated with the expand path
+     *                                                        segments under this node
+     * @param ExpandedProjectionNode &$expandedProjectionNode The expanded node for which expansion
+     *                                                        and selection path to be build
+     * @param bool                   &$foundSelections        On return, this argument will hold
+     *                                                        true if any selection defined under this node
      *                                                        false otherwise
-     * @param bool                   &$foundExpansions        On return, this
-     *                                                        argument will hold
-     *                                                        true if any expansion
-     *                                                        defined under this node
+     * @param bool                   &$foundExpansions        On return, this argument will hold
+     *                                                        true if any expansion defined under this node
      *                                                        false otherwise
      * @param bool                   $foundSelections
      * @param bool                   $foundExpansions

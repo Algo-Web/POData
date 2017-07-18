@@ -21,7 +21,7 @@ class ExpressionType
     const AND_LOGICAL = 2;
 
     /**
-     * Funcation call expression
+     * Function call expression
      * e.g. substringof('Alfreds', CompanyName).
      */
     const CALL = 3;
@@ -29,7 +29,7 @@ class ExpressionType
     /**
      * Constant expression. e.g. In the expression
      * OrderID ne null and OrderID add 2 gt 5432
-     * 2, null, 5432 are candicate for constant expression.
+     * 2, null, 5432 are candidate for constant expression.
      */
     const CONSTANT = 4;
 
@@ -96,12 +96,12 @@ class ExpressionType
     /**
      * Property expression. e.g. In the expression
      * OrderID add 2 gt 5432
-     * OrderID is candicate for PropertyAccessExpression.
+     * OrderID is candidate for PropertyAccessExpression.
      */
     const PROPERTYACCESS = 17;
 
     /**
-     * Same as property expression but for nullabilty check.
+     * Same as property expression but for nullability check.
      */
     const PROPERTY_NULLABILITY_CHECK = 18;
 

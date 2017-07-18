@@ -12,7 +12,7 @@ use POData\UriProcessor\UriProcessor;
 /**
  * Class UriProcessor.
  *
- * A type to process client's requets URI
+ * A type to process client's request URI
  * The syntax of request URI is:
  *  Scheme Host Port ServiceRoot ResourcePath ? QueryOption
  * For more details refer:

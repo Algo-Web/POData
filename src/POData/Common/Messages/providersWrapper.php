@@ -104,14 +104,14 @@ trait providersWrapper
         $resourceTypeName,
         $resourcePropertyName
     ) {
-        return 'IDSMP::GetResourceSet retruns invalid instance of ResourceSet when invoked with params' .
+        return 'IDSMP::GetResourceSet returns invalid instance of ResourceSet when invoked with params' .
                 ' {ResourceSet with name ' . $resourceSetName . ', ResourceType with name ' . $resourceTypeName
                 .', ResourceProperty with name ' . $resourcePropertyName . '}.';
     }
 
     /**
      * Format a message to show error when IDSMP::getResourceFromResourceSet
-     * returns an instnce which is not an instance of expected entity instance.
+     * returns an instance which is not an instance of expected entity instance.
      *
      * @param string $entityTypeName The name of expected entity type
      * @param string $methodName     Method name

@@ -431,7 +431,7 @@ class RequestDescription
      *      (e) MLE
      *          http://server/NW.svc/Employees(123)/$value
      *      (f) Named Stream
-     *          http://server/NW.svc/Employees(123)/Thumnail48_48
+     *          http://server/NW.svc/Employees(123)/Thumbnail48_48
      *      (g) metadata
      *          http://server/NW.svc/$metadata
      *      (h) service directory
@@ -473,7 +473,7 @@ class RequestDescription
      *      (h) MLE
      *          http://server/NW.svc/Employees(123)/$value
      *      (i) Named Stream
-     *          http://server/NW.svc/Employees(123)/Thumnail48_48
+     *          http://server/NW.svc/Employees(123)/Thumbnail48_48
      * ResourceType will be absent (NULL) in the following cases:
      * if the last segment descriptor describes
      *      (a) metadata
@@ -522,7 +522,7 @@ class RequestDescription
      *          http://server/NW.svc/Customers
      *          http://server/NW.svc/Customers('ALFKI')
      *      (b) Named Stream
-     *          http://server/NW.svc/Employees(123)/Thumnail48_48
+     *          http://server/NW.svc/Employees(123)/Thumbnail48_48
      *      (c) metadata
      *          http://server/NW.svc/$metadata
      *      (d) service directory
@@ -784,7 +784,7 @@ class RequestDescription
     }
 
     /**
-     * To check if the resource path is a request for meida resource.
+     * To check if the resource path is a request for media resource.
      *
      * @return bool True if request is for media resource else false
      */

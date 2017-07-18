@@ -301,11 +301,11 @@ class HttpProcessUtility
     }
 
     /**
-     * To check whether the given character is a HTTP seperator character.
+     * To check whether the given character is a HTTP separator character.
      *
      * @param string $char The character to inspect
      *
-     * @return bool True if the given character is a valid HTTP seperator
+     * @return bool True if the given character is a valid HTTP separator
      *              character, False otherwise
      */
     public static function isHttpSeparator($char)
@@ -488,8 +488,7 @@ class HttpProcessUtility
      *
      * @param string $c Character to convert
      *
-     * @throws HttpHeaderFailure If $c is not ASCII value for digit or element
-     *                           seperator
+     * @throws HttpHeaderFailure If $c is not ASCII value for digit or element separator
      *
      * @return int The Int32 value for $c, or -1 if it is an element separator
      */

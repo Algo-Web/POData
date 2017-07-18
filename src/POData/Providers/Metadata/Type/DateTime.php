@@ -45,8 +45,7 @@ class DateTime implements IType
      */
     public function validate($value, &$outValue)
     {
-        //1. The datetime value present in the $filter option should have
-        //   'datetime' prefix.
+        //1. The datetime value present in the $filter option should have 'datetime' prefix.
         //2. Month and day should be two digit
         if (!preg_match(
             "/^datetime\'(\d{4})-(\d{2})-(\d{2})((\s|T)([0-1][0-9]|2[0-4]):([0-5][0-9])(:([0-5][0-9])([Z])?)?)?\'$/",
@@ -56,7 +55,7 @@ class DateTime implements IType
             return false;
         }
 
-        //stripoff prefix, and quotes from both ends
+        //strip off prefix, and quotes from both ends
         $value = trim($value, 'datetime\'');
 
         //Validate the date using PHP Carbon class

@@ -146,7 +146,7 @@ class ResourceProperty
     /**
      * Get the instance type. If the property is of kind 'Complex',
      * 'ResourceReference' or 'ResourceSetReference' then this function returns
-     * refernece to ReflectionClass instance for the type. If the property of
+     * reference to ReflectionClass instance for the type. If the property of
      * kind 'Primitive' then this function returns ITYpe instance for the type.
      *
      * @return \ReflectionClass|IType

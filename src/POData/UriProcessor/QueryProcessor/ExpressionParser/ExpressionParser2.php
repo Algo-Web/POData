@@ -283,7 +283,7 @@ class ExpressionParser2 extends ExpressionParser
      *                                                        expression node to process
      * @param AbstractExpression       $parentExpression      The parent expression of
      *                                                        expression node to process
-     * @param bool                     $checkNullForMostChild Wheter to check null for
+     * @param bool                     $checkNullForMostChild Whether to check null for
      *                                                        most child node or not
      *
      * @return LogicalExpression|UnaryExpression|null
@@ -312,7 +312,7 @@ class ExpressionParser2 extends ExpressionParser
     }
 
     /**
-     * Process a releational expression node for nullability.
+     * Process a relational expression node for nullability.
      *
      * @param RelationalExpression $expression       The relational expression node
      *                                               to process
@@ -437,7 +437,7 @@ class ExpressionParser2 extends ExpressionParser
     /**
      *  Populate map table.
      *
-     * @param AbstractExpression $nullCheckExpTree The expression to verfiy
+     * @param AbstractExpression $nullCheckExpTree The expression to verify
      *
      * @throws ODataException
      */

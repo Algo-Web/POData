@@ -68,7 +68,7 @@ trait orderByInfo
     }
 
     /**
-     * Format a message to show error when found a primitve property used as
+     * Format a message to show error when found a primitive property used as
      * intermediate segment in orderby clause.
      *
      * @param string $propertyName The name of primitive property
@@ -77,7 +77,7 @@ trait orderByInfo
      */
     public static function orderByParserPrimitiveAsIntermediateSegment($propertyName)
     {
-        return 'The primitive property \'' . $propertyName . '\' cannnot be used as intermediate segment, it should'
+        return 'The primitive property \'' . $propertyName . '\' cannot be used as intermediate segment, it should'
                 .' be last segment';
     }
 

@@ -159,7 +159,7 @@ class InternalOrderByInfo
                         // assert($type implements IType)
                         // If this is a string then do utf8_encode to convert
                         // utf8 decoded characters to
-                        // corrospoding utf8 char (e.g. � to í), then do a
+                        // corresponding utf8 char (e.g. � to í), then do a
                         // urlencode to convert í to %C3%AD
                         // urlencode is needed for datetime and guid too
                         // if ($type instanceof String || $type instanceof DateTime
@@ -171,12 +171,10 @@ class InternalOrderByInfo
                         //    $currentObject = urlencode($currentObject);
                         //}
 
-                        // call IType::convertToOData to attach reuqired suffix
-                        // and prepfix.
+                        // call IType::convertToOData to attach required suffix and prefix.
                         // e.g. $valueM, $valueF, datetime'$value', guid'$value',
                         // '$value' etc..
-                        // Also we can think about moving above urlencode to this
-                        // function
+                        // Also we can think about moving above urlencode to this function
                         $value = $type->convertToOData($currentObject);
                         $nextPageLink .= $value . ', ';
                     }

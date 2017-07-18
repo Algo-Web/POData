@@ -228,7 +228,7 @@ class SimpleMetadataProvider implements IMetadataProvider
         //ResourceSet => Representing 'Customers' entity set
         //ResourceType => Representing'Customer' entity type
         //ResourceProperty => Representing 'Orders' property
-        //We have created ResourceAssoicationSet while adding
+        //We have created ResourceAssociationSet while adding
         //ResourceSetReference or ResourceReference
         //and kept in $this->associationSets
         //$metadata->addResourceSetReferenceProperty(
@@ -254,7 +254,7 @@ class SimpleMetadataProvider implements IMetadataProvider
         $associationSet = array_key_exists($key, $this->associationSets) ? $this->associationSets[$key] : null;
         assert(
             null == $associationSet || $associationSet instanceof ResourceAssociationSet,
-            'Retrieved resource assocation must be either null or an instance of ResourceAssociationSet'
+            'Retrieved resource association must be either null or an instance of ResourceAssociationSet'
         );
         return $associationSet;
     }

@@ -501,7 +501,7 @@ class ProvidersWrapper
         );
         assert(
             null == $associationSet || $associationSet instanceof ResourceAssociationSet,
-            'Retrieved resource assocation must be either null or an instance of ResourceAssociationSet'
+            'Retrieved resource association must be either null or an instance of ResourceAssociationSet'
         );
 
         if (null !== $associationSet) {

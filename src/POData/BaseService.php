@@ -493,7 +493,7 @@ abstract class BaseService implements IRequestHandler, IService
                         $odataModelInstance
                     );
                 } elseif (TargetKind::PRIMITIVE_VALUE() == $requestTargetKind) {
-                    // Code path for primitive value (Since its primitve no need for
+                    // Code path for primitive value (Since its primitive no need for
                     // object model serialization)
                     // Customers('ANU')/CompanyName/$value => string
                     // Employees(1)/Photo/$value => binary stream
@@ -729,7 +729,7 @@ abstract class BaseService implements IRequestHandler, IService
             // Note: The following code for attaching the prefix W\"
             // and the suffix " can be done in getETagForEntry function
             // but that is causing an issue in Linux env where the
-            // firefix browser is unable to parse the ETag in this case.
+            // firefox browser is unable to parse the ETag in this case.
             // Need to follow up PHP core devs for this.
             $eTag = ODataConstants::HTTP_WEAK_ETAG_PREFIX . $eTag . '"';
             if (null !== $ifMatch) {
@@ -752,7 +752,7 @@ abstract class BaseService implements IRequestHandler, IService
             // Note: The following code for attaching the prefix W\"
             // and the suffix " can be done in getETagForEntry function
             // but that is causing an issue in Linux env where the
-            // firefix browser is unable to parse the ETag in this case.
+            // firefox browser is unable to parse the ETag in this case.
             // Need to follow up PHP core devs for this.
             $eTag = ODataConstants::HTTP_WEAK_ETAG_PREFIX . $eTag . '"';
         }
@@ -762,8 +762,8 @@ abstract class BaseService implements IRequestHandler, IService
 
     /**
      * Returns the etag for the given resource.
-     * Note: This function will not add W\" prefix and " suffix, its callers
-     * repsonsibility.
+     * Note: This function will not add W\" prefix and " suffix, that is caller's
+     * responsibility.
      *
      * @param mixed        &$entryObject  Resource for which etag value needs to
      *                                    be returned

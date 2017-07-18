@@ -9,7 +9,7 @@ class TargetSource
 {
     /**
      * The source of data has not been determined yet or
-     * The source of data is intrinsic to the sytem i.e Service Document,
+     * The source of data is intrinsic to the system i.e Service Document,
      * Metadata or batch requests.
      * The associated TargetKind enum values are:
      *  TargetKind::METADATA
