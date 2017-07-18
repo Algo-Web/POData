@@ -369,8 +369,9 @@ class ProvidersQueryWrapper
     }
 
     /**
-     * @param QueryResult $queryResult
-     * @param string      $methodName
+     * @param QueryResult   $queryResult
+     * @param QueryType     $queryType
+     * @param string        $methodName
      *
      * @throws ODataException
      */

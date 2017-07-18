@@ -115,6 +115,7 @@ class ObjectModelSerializerBase
     /**
      * Gets the data service instance.
      *
+     * @param IService $service
      * @return IService
      */
     public function setService(IService $service)

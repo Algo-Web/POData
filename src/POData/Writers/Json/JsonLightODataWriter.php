@@ -32,6 +32,7 @@ class JsonLightODataWriter extends JsonODataV2Writer
     protected $baseUri;
 
     /**
+     * @param JsonLightMetadataLevel $metadataLevel
      * @param string $absoluteServiceUri
      *
      * @throws \Exception

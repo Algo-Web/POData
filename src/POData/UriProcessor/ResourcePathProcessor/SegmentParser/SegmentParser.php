@@ -153,8 +153,9 @@ class SegmentParser
     }
 
     /**
+     * @param SegmentDescriptor $previous
      * @param string $segment
-     * @param bool   $checkRights
+     * @param bool $checkRights
      *
      * @throws ODataException
      * @return SegmentDescriptor

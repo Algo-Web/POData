@@ -25,8 +25,9 @@ class ReflectionHandler
     }
 
     /**
+     * @param object $entity
      * @param string $property
-     * @param mixed  $value
+     * @param mixed $value
      */
     public static function setProperty(&$entity, $property, $value)
     {

@@ -221,6 +221,7 @@ class RequestDescription
      * @param string|null         $requestVersion
      * @param string|null         $maxRequestVersion
      * @param string              $dataType
+     * @param IHTTPRequest|null   $payload
      */
     public function __construct(
         $segmentDescriptors,
