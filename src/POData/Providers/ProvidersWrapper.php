@@ -412,6 +412,7 @@ class ProvidersWrapper
                 //Check whether this is a visible navigation property
                 //TODO: is this broken?? see #87
                 if ($resourceProperty->getTypeKind() == ResourceTypeKind::ENTITY()
+                    && $resourceType instanceof ResourceEntityType
                     && null !== $this->getResourceSetWrapperForNavigationProperty(
                         $setWrapper,
                         $resourceType,
@@ -491,6 +492,7 @@ class ProvidersWrapper
         $type = $this->getResourceTypeWherePropertyIsDeclared($type, $property);
         // usage below requires $type to not be null - so kaboom as early as possible
         assert(null != $type, 'Resource type obtained from property must not be null.');
+        assert($type instanceof ResourceEntityType);
 
         $associationSet = $this->metaProvider->getResourceAssociationSet(
             $set,
