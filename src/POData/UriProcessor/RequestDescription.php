@@ -282,7 +282,7 @@ class RequestDescription
         $this->data = isset($payload) ? $payload->getAllInput() : null;
 
         // Define data from request body
-        if ($dataType) {
+        if (null !== $dataType) {
             $this->readData($dataType);
         }
     }

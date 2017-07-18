@@ -245,11 +245,6 @@ abstract class BaseService implements IRequestHandler, IService
         try {
             $this->createProviders();
             $this->getHost()->validateQueryParameters();
-            //$requestMethod = $this->getOperationContext()->incomingRequest()->getMethod();
-            //if ($requestMethod != HTTPRequestMethod::GET()) {
-            // Now supporting GET and trying to support PUT
-            //throw ODataException::createNotImplementedError(Messages::onlyReadSupport($requestMethod));
-            //}
 
             $uriProcessor = UriProcessorNew::process($this);
             $request = $uriProcessor->getRequest();
