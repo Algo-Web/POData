@@ -161,7 +161,7 @@ abstract class SimpleQueryProvider implements IQueryProvider
      * @param null|mixed $skip
      * @param null|mixed $skipToken
      *
-     * @return mixed
+     * @return QueryResult
      */
     public function getResourceSet(
         QueryType $queryType,
@@ -237,7 +237,7 @@ abstract class SimpleQueryProvider implements IQueryProvider
      * @param null|mixed $skip
      * @param null|mixed $skipToken
      *
-     * @return mixed
+     * @return QueryResult
      */
     public function getRelatedResourceSet(
         QueryType $queryType,
