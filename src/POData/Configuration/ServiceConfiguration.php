@@ -277,17 +277,15 @@ class ServiceConfiguration implements IServiceConfiguration
     /**
      * Sets the maximum page size for an entity set resource.
      *
-     * @param string $name     Name of entity set resource for which to set
-     *                         the page size
-     * @param int    $pageSize Page size for the entity set resource that is
-     *                         specified in name
+     * @param string $name     Name of entity set resource for which to set the page size
+     * @param int    $pageSize Page size for the entity set resource specified in name
      *
      * @throws InvalidOperationException
      * @throws \InvalidArgumentException
      */
     public function setEntitySetPageSize($name, $pageSize)
     {
-        $pageSize = $this->checkIntegerNonNegativeParameter(
+        $checkPageSize = $this->checkIntegerNonNegativeParameter(
             $pageSize,
             'setEntitySetPageSize'
         );
@@ -298,19 +296,19 @@ class ServiceConfiguration implements IServiceConfiguration
             );
         }
 
-        if ($pageSize == PHP_INT_MAX) {
-            $pageSize = 0;
+        if ($checkPageSize == PHP_INT_MAX) {
+            $checkPageSize = 0;
         }
 
         if (strcmp($name, '*') === 0) {
-            $this->defaultPageSize = $pageSize;
+            $this->defaultPageSize = $checkPageSize;
         } else {
             if (!$this->provider->resolveResourceSet($name)) {
                 throw new \InvalidArgumentException(
                     Messages::configurationResourceSetNameNotFound($name)
                 );
             }
-            $this->pageSizes[$name] = $pageSize;
+            $this->pageSizes[$name] = $checkPageSize;
         }
     }
 

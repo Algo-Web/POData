@@ -146,19 +146,21 @@ class HttpStatus
      */
     public static function getStatusDescription($statusCode)
     {
-        // if int, look up corresponding constant value - if not exists, bail out
+        // if int, look up corresponding constant value - if it doesn't exist, bail out
         if (is_int($statusCode)) {
             if (!array_key_exists($statusCode, self::$reverse)) {
                 return null;
             }
-            $statusCode = self::$reverse[$statusCode];
+            $mapStatus = self::$reverse[$statusCode];
+        } else {
+            $mapStatus = $statusCode;
         }
 
         // here mainly to catch non-integral inputs that can't be mapped to a defined class constant
-        if (!array_key_exists($statusCode, self::$mapping)) {
+        if (!array_key_exists($mapStatus, self::$mapping)) {
             return null;
         }
 
-        return self::$mapping[$statusCode];
+        return self::$mapping[$mapStatus];
     }
 }

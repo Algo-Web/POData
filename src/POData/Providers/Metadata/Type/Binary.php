@@ -44,24 +44,25 @@ class Binary implements IType
     public function validate($value, &$outValue)
     {
         $length = strlen($value);
-        if ((0 === strpos($value, 'binary\'')) && (7 < $length)) {
-            $value = substr($value, 7, $length - 7);
+        $trimVal = $value;
+        if ((0 === strpos($trimVal, 'binary\'')) && (7 < $length)) {
+            $trimVal = substr($trimVal, 7, $length - 7);
             $length -= 7;
-        } elseif ((0 === strpos($value, 'X\'') || 0 === strpos($value, 'x\'')) && (2 < $length)
+        } elseif ((0 === strpos($trimVal, 'X\'') || 0 === strpos($trimVal, 'x\'')) && (2 < $length)
         ) {
-            $value = substr($value, 2, $length - 2);
+            $trimVal = substr($trimVal, 2, $length - 2);
             $length -= 2;
         } else {
             return false;
         }
 
-        if ('\'' != $value[$length - 1]) {
+        if ('\'' != $trimVal[$length - 1]) {
             return false;
         }
 
-        $value = rtrim($value, "'");
+        $trimVal = rtrim($trimVal, "'");
 
-        if (!self::validateWithoutPrefix($value, $outValue)) {
+        if (!self::validateWithoutPrefix($trimVal, $outValue)) {
             $outValue = null;
 
             return false;

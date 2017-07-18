@@ -40,31 +40,33 @@ class ResourceFunctionType
 
         $isArray = is_array($functionName);
         if ($isArray && 1 == count($functionName)) {
-            $functionName = $functionName[0];
+            $builtFunctionName = $functionName[0];
             $isArray = false;
+        } else {
+            $builtFunctionName = $functionName;
         }
 
         if ($isArray) {
-            if (2 < count($functionName)) {
+            if (2 < count($builtFunctionName)) {
                 $msg = 'FunctionName must have no more than 2 elements';
                 throw new \InvalidArgumentException($msg);
             }
-            if (0 == count($functionName)) {
+            if (0 == count($builtFunctionName)) {
                 $msg = 'FunctionName must have 1 or 2 elements';
                 throw new \InvalidArgumentException($msg);
             }
 
-            if (!is_object($functionName[0]) && !is_string($functionName[0])) {
+            if (!is_object($builtFunctionName[0]) && !is_string($builtFunctionName[0])) {
                 $msg = 'First element of FunctionName must be either object or string';
                 throw new \InvalidArgumentException($msg);
             }
-            if (!is_string($functionName[1])) {
+            if (!is_string($builtFunctionName[1])) {
                 $msg = 'Second element of FunctionName must be string';
                 throw new \InvalidArgumentException($msg);
             }
-            if (is_string($functionName[0])) {
-                $functionName[0] = trim($functionName[0]);
-                $func = $functionName[0];
+            if (is_string($builtFunctionName[0])) {
+                $builtFunctionName[0] = trim($builtFunctionName[0]);
+                $func = $builtFunctionName[0];
                 if ('' == $func) {
                     $msg = 'First element of FunctionName must not be empty';
                     throw new \InvalidArgumentException($msg);
@@ -72,20 +74,20 @@ class ResourceFunctionType
                 $this->checkBlacklist($func, true);
             }
         } else {
-            if (!is_string($functionName) || empty(trim($functionName))) {
+            if (!is_string($builtFunctionName) || empty(trim($builtFunctionName))) {
                 $msg = 'FunctionName must be a non-empty string';
                 throw new \InvalidArgumentException($msg);
             }
-            $functionName = trim($functionName);
+            $builtFunctionName = trim($builtFunctionName);
 
-            $this->checkBlacklist($functionName, false);
+            $this->checkBlacklist($builtFunctionName, false);
         }
 
         if (!$type->isOK($msg)) {
             throw new \InvalidArgumentException($msg);
         }
 
-        $this->functionName = $functionName;
+        $this->functionName = $builtFunctionName;
         $this->baseType = $type;
         $this->resourceType = $resource;
     }

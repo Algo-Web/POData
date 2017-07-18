@@ -57,12 +57,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
         }
 
         $needPop = $this->pushSegmentForRoot();
-        $entry = $this->writeEntryElement(
-            $entryObject->results,
-            $resourceType,
-            $this->getRequest()->getRequestUrl()->getUrlAsString(),
-            $this->getRequest()->getContainerName()
-        );
+        $entry = $this->writeEntryElement($entryObject->results, $resourceType);
         $this->popSegment($needPop);
 
         return $entry;
@@ -259,18 +254,15 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
     /**
      * Write an entry element.
      *
-     * @param mixed        $entryObject  Object representing entry element
+     * @param mixed $entryObject Object representing entry element
      * @param ResourceType $resourceType Expected type of the entry object
-     * @param string       $absoluteUri  Absolute uri of the entry element
-     * @param string       $relativeUri  Relative uri of the entry element
      *
+     * @throws ODataException
      * @return ODataEntry
      */
     private function writeEntryElement(
         $entryObject,
-        ResourceType $resourceType,
-        $absoluteUri,
-        $relativeUri
+        ResourceType $resourceType
     ) {
         $entry = new ODataEntry();
         $entry->resourceSetName = $this->getCurrentResourceSetWrapper()->getName();
@@ -353,7 +345,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
                 if ($entryObject instanceof QueryResult) {
                     $entryObject = $entryObject->results;
                 }
-                $feed->entries[] = $this->writeEntryElement($entryObject, $resourceType, null, null);
+                $feed->entries[] = $this->writeEntryElement($entryObject, $resourceType);
             }
 
             if (true === $needLink) {
@@ -490,9 +482,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
                             $link->isCollection = false;
                             $link->expandedResult = $this->writeEntryElement(
                                 $navigationPropertyInfo->value,
-                                $currentResourceType,
-                                $propertyAbsoluteUri,
-                                $propertyRelativeUri
+                                $currentResourceType
                             );
                         }
                     } else {
@@ -850,7 +840,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
         //First write out primitive types
         foreach ($resourceProperties as $name => $resourceProperty) {
             $resourceKind = $resourceProperty->getKind();
-            if (ObjectModelSerializer::isMatchPrimitive($resourceKind)) {
+            if (self::isMatchPrimitive($resourceKind)) {
                 $odataProperty = new ODataProperty();
                 $primitiveValue = $this->getPropertyValue($customObject, $resourceType, $resourceProperty);
                 $this->writePrimitiveValue($primitiveValue, $odataProperty, $resourceProperty);

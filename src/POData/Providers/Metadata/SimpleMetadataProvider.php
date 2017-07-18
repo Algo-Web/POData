@@ -17,7 +17,7 @@ use POData\Providers\Metadata\Type\TypeCode;
  */
 class SimpleMetadataProvider implements IMetadataProvider
 {
-    public $OdataEntityMap = [];
+    public $oDataEntityMap = [];
     protected $resourceSets = [];
     protected $resourceTypes = [];
     protected $associationSets = [];
@@ -302,7 +302,7 @@ class SimpleMetadataProvider implements IMetadataProvider
             $type = new ResourceEntityType($refClass, $oet, $this);
             $typeName = $type->getFullName();
             $returnName = Str::plural($typeName);
-            $this->OdataEntityMap[$typeName] = $oet;
+            $this->oDataEntityMap[$typeName] = $oet;
             $this->typeSetMapping[$name] = $entitySet;
             $this->typeSetMapping[$typeName] = $entitySet;
             $this->typeSetMapping[$returnName] = $entitySet;
@@ -427,9 +427,9 @@ class SimpleMetadataProvider implements IMetadataProvider
 
         $resourceProperty = new ResourceProperty($name, null, $kind, $primitiveResourceType);
         $resourceType->addProperty($resourceProperty);
-        if (array_key_exists($resourceType->getFullName(), $this->OdataEntityMap)) {
+        if (array_key_exists($resourceType->getFullName(), $this->oDataEntityMap)) {
             $this->metadataManager->addPropertyToEntityType(
-                $this->OdataEntityMap[$resourceType->getFullName()],
+                $this->oDataEntityMap[$resourceType->getFullName()],
                 $name,
                 $primitiveResourceType->getFullName(),
                 $defaultValue,
@@ -635,10 +635,10 @@ class SimpleMetadataProvider implements IMetadataProvider
         $mult = $resourceMult;
         $backMult = '*' == $resourceMult ? '*' : '1';
         $this->metadataManager->addNavigationPropertyToEntityType(
-            $this->OdataEntityMap[$sourceResourceType->getFullName()],
+            $this->oDataEntityMap[$sourceResourceType->getFullName()],
             $mult,
             $name,
-            $this->OdataEntityMap[$targetResourceType->getFullName()],
+            $this->oDataEntityMap[$targetResourceType->getFullName()],
             $backMult
         );
         $this->associationSets[$setKey] = $set;
@@ -746,10 +746,10 @@ class SimpleMetadataProvider implements IMetadataProvider
         $sourceName = $sourceResourceType->getFullName();
         $targetName = $targetResourceType->getFullName();
         $this->metadataManager->addNavigationPropertyToEntityType(
-            $this->OdataEntityMap[$sourceName],
+            $this->oDataEntityMap[$sourceName],
             $sourceMultiplicity,
             $sourceProperty,
-            $this->OdataEntityMap[$targetName],
+            $this->oDataEntityMap[$targetName],
             $targetMultiplicity,
             $targetProperty
         );
@@ -905,11 +905,11 @@ class SimpleMetadataProvider implements IMetadataProvider
             throw new \InvalidArgumentException($msg);
         }
         $typeName = $returnType->getName();
-        if (!array_key_exists($typeName, $this->OdataEntityMap)) {
+        if (!array_key_exists($typeName, $this->oDataEntityMap)) {
             $msg = 'Mapping not defined for ' . $typeName;
             throw new \InvalidArgumentException($msg);
         }
-        $metaReturn = $this->OdataEntityMap[$typeName];
+        $metaReturn = $this->oDataEntityMap[$typeName];
         $singleton = $this->metadataManager->createSingleton($name, $metaReturn);
         assert($singleton->isOK($msg), $msg);
         $type = new ResourceFunctionType($functionName, $singleton, $returnType);
