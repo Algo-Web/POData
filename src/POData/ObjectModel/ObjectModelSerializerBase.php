@@ -301,7 +301,7 @@ class ObjectModelSerializerBase
      */
     protected function pushSegmentForNavigationProperty(ResourceProperty &$resourceProperty)
     {
-        if (ResourceTypeKind::ENTITY == $resourceProperty->getTypeKind()) {
+        if (ResourceTypeKind::ENTITY() == $resourceProperty->getTypeKind()) {
             assert(!empty($this->getStack()->getSegmentNames()), 'Segment names should not be empty');
             $currentResourceSetWrapper = $this->getCurrentResourceSetWrapper();
             $currentResourceType = $currentResourceSetWrapper->getResourceType();

@@ -219,23 +219,23 @@ class ResourceProperty
      * @return bool True if resource type kind and property kind matches
      *              otherwise false
      */
-    private function isResourceKindValidForPropertyKind($pKind, $rKind)
+    private function isResourceKindValidForPropertyKind($pKind, ResourceTypeKind $rKind)
     {
         if (self::sIsKindOf($pKind, ResourcePropertyKind::PRIMITIVE)
-            && $rKind != ResourceTypeKind::PRIMITIVE
+            && $rKind != ResourceTypeKind::PRIMITIVE()
         ) {
             return false;
         }
 
         if (self::sIsKindOf($pKind, ResourcePropertyKind::COMPLEX_TYPE)
-            && $rKind != ResourceTypeKind::COMPLEX
+            && $rKind != ResourceTypeKind::COMPLEX()
         ) {
             return false;
         }
 
         if ((self::sIsKindOf($pKind, ResourcePropertyKind::RESOURCE_REFERENCE)
             || self::sIsKindOf($pKind, ResourcePropertyKind::RESOURCESET_REFERENCE))
-            && $rKind != ResourceTypeKind::ENTITY
+            && $rKind != ResourceTypeKind::ENTITY()
         ) {
             return false;
         }

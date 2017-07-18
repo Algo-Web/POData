@@ -2,7 +2,14 @@
 
 namespace POData\Providers\Metadata;
 
-class ResourceTypeKind
+use MyCLabs\Enum\Enum;
+
+/**
+ * @method static ResourceTypeKind COMPLEX()
+ * @method static ResourceTypeKind ENTITY()
+ * @method static ResourceTypeKind PRIMITIVE()
+ */
+class ResourceTypeKind extends Enum
 {
     /**
      * A complex type resource.

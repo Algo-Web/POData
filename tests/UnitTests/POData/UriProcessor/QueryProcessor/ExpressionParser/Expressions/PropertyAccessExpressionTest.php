@@ -25,7 +25,7 @@ class PropertyAccessExpressionTest extends TestCase
 
         $iType = m::mock(IType::class);
         $rType = m::mock(ResourceType::class);
-        $rType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::PRIMITIVE);
+        $rType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::PRIMITIVE());
         $rType->shouldReceive('getInstanceType')->andReturn($iType);
 
         $prop = m::mock(ResourceProperty::class);

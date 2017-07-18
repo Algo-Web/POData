@@ -16,7 +16,7 @@ class ResourceEntityType extends ResourceType
      */
     public function __construct(\ReflectionClass $instanceType, TEntityTypeType $entity, IMetadataProvider $meta)
     {
-        $resourceTypeKind = ResourceTypeKind::ENTITY;
+        $resourceTypeKind = ResourceTypeKind::ENTITY();
         $bitz = explode('.', $entity->getName());
         $name = array_pop($bitz);
         $namespaceName = null;

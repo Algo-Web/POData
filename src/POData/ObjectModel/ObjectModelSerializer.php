@@ -400,7 +400,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
         ODataPropertyContent &$odataPropertyContent
     ) {
         $resourceTypeKind = $resourceType->getResourceTypeKind();
-        if ((null === $absoluteUri) == (ResourceTypeKind::ENTITY == $resourceTypeKind)
+        if ((null === $absoluteUri) == (ResourceTypeKind::ENTITY() == $resourceTypeKind)
         ) {
             throw ODataException::createInternalServerError(
                 Messages::badProviderInconsistentEntityOrComplexTypeUsage(
@@ -410,14 +410,14 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
         }
 
         assert(
-            ((ResourceTypeKind::ENTITY == $resourceTypeKind) && ($odataEntry instanceof ODataEntry))
-            || ((ResourceTypeKind::COMPLEX == $resourceTypeKind) && null === $odataEntry),
+            ((ResourceTypeKind::ENTITY() == $resourceTypeKind) && ($odataEntry instanceof ODataEntry))
+            || ((ResourceTypeKind::COMPLEX() == $resourceTypeKind) && null === $odataEntry),
             '!(($resourceTypeKind == ResourceTypeKind::ENTITY) && ($odataEntry instanceof ODataEntry))'
             .' && !(($resourceTypeKind == ResourceTypeKind::COMPLEX) && is_null($odataEntry))'
         );
         $projectionNodes = null;
         $navigationProperties = null;
-        if (ResourceTypeKind::ENTITY == $resourceTypeKind) {
+        if (ResourceTypeKind::ENTITY() == $resourceTypeKind) {
             $projectionNodes = $this->getProjectionNodes();
             $navigationProperties = [];
         }
@@ -606,8 +606,8 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
         assert(null == $bagValue || is_array($bagValue), 'Bag parameter must be null or array');
         $bagItemResourceTypeKind = $resourceType->getResourceTypeKind();
         assert(
-            ResourceTypeKind::PRIMITIVE == $bagItemResourceTypeKind
-            || ResourceTypeKind::COMPLEX == $bagItemResourceTypeKind,
+            ResourceTypeKind::PRIMITIVE() == $bagItemResourceTypeKind
+            || ResourceTypeKind::COMPLEX() == $bagItemResourceTypeKind,
             '$bagItemResourceTypeKind != ResourceTypeKind::PRIMITIVE'
             .' && $bagItemResourceTypeKind != ResourceTypeKind::COMPLEX'
         );
@@ -623,9 +623,9 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
             foreach ($bagValue as $itemValue) {
                 // strip out null elements
                 if (isset($itemValue)) {
-                    if (ResourceTypeKind::PRIMITIVE == $bagItemResourceTypeKind) {
+                    if (ResourceTypeKind::PRIMITIVE() == $bagItemResourceTypeKind) {
                         $odataBagContent->propertyContents[] = $this->primitiveToString($resourceType, $itemValue);
-                    } elseif (ResourceTypeKind::COMPLEX == $bagItemResourceTypeKind) {
+                    } elseif (ResourceTypeKind::COMPLEX() == $bagItemResourceTypeKind) {
                         $complexContent = new ODataPropertyContent();
                         $this->complexObjectToContent(
                             $itemValue,
@@ -823,13 +823,13 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
         ResourceType &$resourceType,
         $relativeUri,
         ODataPropertyContent &$odataPropertyContent,
-        $resourceTypeKind,
+        ResourceTypeKind $resourceTypeKind,
         $navigationProperties
     ) {
         assert(is_object($customObject), 'Supplied $customObject must be an object');
         //This is the code path to handle properties of Complex type
         //or Entry without projection (i.e. no expansion or selection)
-        if (ResourceTypeKind::ENTITY == $resourceTypeKind) {
+        if (ResourceTypeKind::ENTITY() == $resourceTypeKind) {
             // If custom object is an entry then it can contain navigation
             // properties which are invisible (because the corresponding
             // resource set is invisible).
@@ -953,7 +953,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
             $resourceProperty = $resourceType->resolveProperty($propertyName);
             assert(null !== $resourceProperty, 'is_null($resourceProperty)');
 
-            if (ResourceTypeKind::ENTITY == $resourceProperty->getTypeKind()) {
+            if (ResourceTypeKind::ENTITY() == $resourceProperty->getTypeKind()) {
                 $currentResourceSetWrapper2 = $this->getCurrentResourceSetWrapper();
                 $resourceProperties = $this->getService()
                     ->getProvidersWrapper()

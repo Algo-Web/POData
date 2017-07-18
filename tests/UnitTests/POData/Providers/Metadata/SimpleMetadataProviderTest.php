@@ -38,7 +38,7 @@ class SimpleMetadataProviderTest extends TestCase
         $type = m::mock(ResourceEntityType::class);
         $type->shouldReceive('getFullName')->andReturn('Customer')->twice();
         $type->shouldReceive('setCustomState')->andReturnNull()->once();
-        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY);
+        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
 
         $result = $foo->addResourceSet($name, $type);
         $this->assertEquals($name, $result->getName());
@@ -76,7 +76,7 @@ class SimpleMetadataProviderTest extends TestCase
         $type = m::mock(ResourceEntityType::class);
         $type->shouldReceive('getFullName')->andReturn('Customer')->once();
         $type->shouldReceive('setCustomState')->andReturnNull()->once();
-        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY);
+        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
 
         $foo->addResourceSet($name, $type);
 
@@ -212,7 +212,7 @@ class SimpleMetadataProviderTest extends TestCase
     public function testAddComplexPropertyBadEntityTypeThrowException()
     {
         $type = m::mock(ResourceType::class);
-        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::PRIMITIVE);
+        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::PRIMITIVE());
         $complexType = m::mock(ResourceComplexType::class);
         $foo = new SimpleMetadataProvider('string', 'String');
 
@@ -234,7 +234,7 @@ class SimpleMetadataProviderTest extends TestCase
         $deflect->shouldReceive('hasMethod')->withArgs(['__get'])->andReturn(false)->once();
 
         $type = m::mock(ResourceType::class);
-        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY);
+        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
         $type->shouldReceive('getInstanceType')->andReturn($deflect);
         $type->shouldReceive('getName')->andReturn('outaTime');
 
@@ -259,7 +259,7 @@ class SimpleMetadataProviderTest extends TestCase
         $deflect->shouldReceive('hasMethod')->withArgs(['__get'])->andReturn(true)->never();
 
         $type = m::mock(ResourceType::class);
-        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY);
+        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
         $type->shouldReceive('getInstanceType')->andReturn($deflect);
         $type->shouldReceive('getName')->andReturn('time');
 
@@ -326,7 +326,7 @@ class SimpleMetadataProviderTest extends TestCase
         $deflect->shouldReceive('hasMethod')->withArgs(['__get'])->andReturn(true)->once();
 
         $type = m::mock(ResourceType::class);
-        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY);
+        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
         $type->shouldReceive('getInstanceType')->andReturn($deflect);
         $type->shouldReceive('getName')->andReturn('time');
 
@@ -349,7 +349,7 @@ class SimpleMetadataProviderTest extends TestCase
         $deflect->shouldReceive('hasMethod')->withArgs(['__get'])->andReturn(true)->once();
 
         $type = m::mock(ResourceEntityType::class);
-        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY);
+        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
         $type->shouldReceive('getInstanceType')->andReturn($deflect);
         $type->shouldReceive('getName')->andReturn('time');
 
@@ -374,7 +374,7 @@ class SimpleMetadataProviderTest extends TestCase
         $deflect->shouldReceive('hasMethod')->withArgs(['__get'])->andReturn(true)->once();
 
         $type = m::mock(ResourceEntityType::class);
-        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY);
+        $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
         $type->shouldReceive('getInstanceType')->andReturn($deflect);
         $type->shouldReceive('getName')->andReturn('time');
         $type->shouldReceive('addProperty')->andReturn(null)->once();

@@ -90,7 +90,7 @@ class QueryProcessor
 
         $this->expandSelectApplicable = null !== $targetResourceType
             && null !== $targetResourceSetWrapper
-            && $targetResourceType->getResourceTypeKind() == ResourceTypeKind::ENTITY
+            && $targetResourceType->getResourceTypeKind() == ResourceTypeKind::ENTITY()
             && !$this->request->isLinkUri();
     }
 

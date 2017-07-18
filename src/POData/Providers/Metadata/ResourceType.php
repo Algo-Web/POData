@@ -184,7 +184,7 @@ abstract class ResourceType
      */
     protected function __construct(
         $instanceType,
-        $resourceTypeKind,
+        ResourceTypeKind $resourceTypeKind,
         $name,
         $namespaceName = null,
         ResourceType $baseType = null,
@@ -331,7 +331,7 @@ abstract class ResourceType
      */
     public function setMediaLinkEntry($isMLE)
     {
-        if (ResourceTypeKind::ENTITY != $this->resourceTypeKind) {
+        if (ResourceTypeKind::ENTITY() != $this->resourceTypeKind) {
             throw new InvalidOperationException(
                 Messages::resourceTypeHasStreamAttributeOnlyAppliesToEntityType()
             );
@@ -350,7 +350,7 @@ abstract class ResourceType
      */
     public function addProperty(ResourceProperty $property, $throw = true)
     {
-        if (ResourceTypeKind::PRIMITIVE == $this->resourceTypeKind) {
+        if (ResourceTypeKind::PRIMITIVE() == $this->resourceTypeKind) {
             throw new InvalidOperationException(
                 Messages::resourceTypeNoAddPropertyForPrimitive()
             );
@@ -372,7 +372,7 @@ abstract class ResourceType
         }
 
         if ($property->isKindOf(ResourcePropertyKind::KEY)) {
-            if (ResourceTypeKind::ENTITY != $this->resourceTypeKind) {
+            if (ResourceTypeKind::ENTITY() != $this->resourceTypeKind) {
                 throw new InvalidOperationException(
                     Messages::resourceTypeKeyPropertiesOnlyOnEntityTypes()
                 );
@@ -386,7 +386,7 @@ abstract class ResourceType
         }
 
         if ($property->isKindOf(ResourcePropertyKind::ETAG)
-            && (ResourceTypeKind::ENTITY != $this->resourceTypeKind)
+            && (ResourceTypeKind::ENTITY() != $this->resourceTypeKind)
         ) {
             throw new InvalidOperationException(
                 Messages::resourceTypeETagPropertiesOnlyOnEntityTypes()
@@ -535,7 +535,7 @@ abstract class ResourceType
      */
     public function addNamedStream(ResourceStreamInfo $namedStream)
     {
-        if ($this->resourceTypeKind != ResourceTypeKind::ENTITY) {
+        if ($this->resourceTypeKind != ResourceTypeKind::ENTITY()) {
             throw new InvalidOperationException(
                 Messages::resourceTypeNamedStreamsOnlyApplyToEntityType()
             );
@@ -742,7 +742,7 @@ abstract class ResourceType
     public function validateType()
     {
         $keyProperties = $this->getKeyProperties();
-        if (($this->resourceTypeKind == ResourceTypeKind::ENTITY) && empty($keyProperties)) {
+        if (($this->resourceTypeKind == ResourceTypeKind::ENTITY()) && empty($keyProperties)) {
             throw new InvalidOperationException(
                 Messages::resourceTypeMissingKeyPropertiesForEntity(
                     $this->getFullName()

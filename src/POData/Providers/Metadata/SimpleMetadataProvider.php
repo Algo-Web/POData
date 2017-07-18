@@ -272,7 +272,7 @@ class SimpleMetadataProvider implements IMetadataProvider
      */
     public function addEntityType(\ReflectionClass $refClass, $name)
     {
-        $result = $this->createResourceType($refClass, $name, ResourceTypeKind::ENTITY);
+        $result = $this->createResourceType($refClass, $name, ResourceTypeKind::ENTITY());
         assert($result instanceof ResourceEntityType);
         return $result;
     }
@@ -296,7 +296,7 @@ class SimpleMetadataProvider implements IMetadataProvider
         }
 
         $type = null;
-        if ($typeKind == ResourceTypeKind::ENTITY) {
+        if ($typeKind == ResourceTypeKind::ENTITY()) {
             list($oet, $entitySet) = $this->metadataManager->addEntityType($name);
             assert($oet instanceof TEntityTypeType, 'Entity type ' . $name . ' not successfully added');
             $type = new ResourceEntityType($refClass, $oet, $this);
@@ -306,7 +306,7 @@ class SimpleMetadataProvider implements IMetadataProvider
             $this->typeSetMapping[$name] = $entitySet;
             $this->typeSetMapping[$typeName] = $entitySet;
             $this->typeSetMapping[$returnName] = $entitySet;
-        } elseif ($typeKind == ResourceTypeKind::COMPLEX) {
+        } elseif ($typeKind == ResourceTypeKind::COMPLEX()) {
             $complex = new TComplexTypeType();
             $complex->setName($name);
             $type = new ResourceComplexType($refClass, $complex);
@@ -332,7 +332,7 @@ class SimpleMetadataProvider implements IMetadataProvider
      */
     public function addComplexType(\ReflectionClass $refClass, $name)
     {
-        $result = $this->createResourceType($refClass, $name, ResourceTypeKind::COMPLEX);
+        $result = $this->createResourceType($refClass, $name, ResourceTypeKind::COMPLEX());
         assert($result instanceof ResourceComplexType);
         return $result;
     }
@@ -867,8 +867,8 @@ class SimpleMetadataProvider implements IMetadataProvider
         ResourceComplexType $complexResourceType,
         $isBag = false
     ) {
-        if ($targetResourceType->getResourceTypeKind() != ResourceTypeKind::ENTITY
-            && $targetResourceType->getResourceTypeKind() != ResourceTypeKind::COMPLEX
+        if ($targetResourceType->getResourceTypeKind() != ResourceTypeKind::ENTITY()
+            && $targetResourceType->getResourceTypeKind() != ResourceTypeKind::COMPLEX()
         ) {
             throw new InvalidOperationException('Complex property can be added to an entity or another complex type');
         }

@@ -282,7 +282,7 @@ class SegmentParser
                 $current->setTargetResourceType($projectedProperty->getResourceType());
                 $current->setSingleResult($projectedProperty->getKind() != ResourcePropertyKind::RESOURCESET_REFERENCE);
                 if ($previousKind == TargetKind::LINK()
-                    && $projectedProperty->getTypeKind() != ResourceTypeKind::ENTITY
+                    && $projectedProperty->getTypeKind() != ResourceTypeKind::ENTITY()
                 ) {
                     throw ODataException::createBadRequestError(
                         Messages::segmentParserLinkSegmentMustBeFollowedByEntitySegment(

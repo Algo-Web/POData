@@ -22,11 +22,14 @@ class NavigationTest extends TestCase
     }
 
     /**
-     * @param  mixed $kind
+     * @param  ResourceTypeKind|null $kind
      * @return IType
      */
-    public function getAsIType($kind = ResourceTypeKind::COMPLEX)
+    public function getAsIType(ResourceTypeKind $kind = null)
     {
+        if (null == $kind) {
+            $kind = ResourceTypeKind::COMPLEX();
+        }
         $this->resource->shouldReceive('getResourceTypeKind')->andReturn($kind);
 
         return new Navigation($this->resource);
@@ -34,7 +37,7 @@ class NavigationTest extends TestCase
 
     public function testConstructWithBadResourceTypeThrowException()
     {
-        $this->resource->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::PRIMITIVE);
+        $this->resource->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::PRIMITIVE());
 
         $expected = 'Only possible Navigation types are Complex and Entity.';
         $actual = null;
@@ -56,7 +59,7 @@ class NavigationTest extends TestCase
 
     public function testIncompatibleWithOtherIType()
     {
-        $foo = $this->getAsIType(ResourceTypeKind::COMPLEX);
+        $foo = $this->getAsIType(ResourceTypeKind::COMPLEX());
 
         $bar = new StringType();
         $this->assertFalse($foo->isCompatibleWith($bar));
@@ -65,7 +68,7 @@ class NavigationTest extends TestCase
     public function testCompatibleWithOwnType()
     {
         $foo = $this->getAsIType();
-        $bar = $this->getAsIType(ResourceTypeKind::ENTITY);
+        $bar = $this->getAsIType(ResourceTypeKind::ENTITY());
 
         $this->assertTrue($foo->isCompatibleWith($bar));
         $this->assertTrue($bar->isCompatibleWith($foo));
@@ -74,7 +77,7 @@ class NavigationTest extends TestCase
     public function testInCompatibleWithOwnTypeDifferentNames()
     {
         $foo = $this->getAsIType();
-        $bar = $this->getAsIType(ResourceTypeKind::ENTITY);
+        $bar = $this->getAsIType(ResourceTypeKind::ENTITY());
 
         $this->resource->shouldReceive('getFullName')->andReturn('foo', 'bar', 'bar', 'foo');
 
@@ -84,7 +87,7 @@ class NavigationTest extends TestCase
 
     public function testValidateDifferentIType()
     {
-        $foo = $this->getAsIType(ResourceTypeKind::COMPLEX);
+        $foo = $this->getAsIType(ResourceTypeKind::COMPLEX());
 
         $bar = new StringType();
         $out = '';
@@ -93,7 +96,7 @@ class NavigationTest extends TestCase
 
     public function testValidateSameIType()
     {
-        $foo = $this->getAsIType(ResourceTypeKind::COMPLEX);
+        $foo = $this->getAsIType(ResourceTypeKind::COMPLEX());
 
         $bar = $this->getAsIType();
         $out = '';
@@ -142,6 +145,6 @@ class NavigationTest extends TestCase
     {
         $foo = $this->getAsIType();
         $result = $foo->getResourceType();
-        $this->assertEquals(ResourceTypeKind::COMPLEX, $result->getResourceTypeKind());
+        $this->assertEquals(ResourceTypeKind::COMPLEX(), $result->getResourceTypeKind());
     }
 }

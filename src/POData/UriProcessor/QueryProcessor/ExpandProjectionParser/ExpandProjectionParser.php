@@ -188,7 +188,7 @@ class ExpandProjectionParser
                             false
                         )
                     );
-                } elseif ($resourceProperty->getTypeKind() != ResourceTypeKind::ENTITY) {
+                } elseif ($resourceProperty->getTypeKind() != ResourceTypeKind::ENTITY()) {
                     throw ODataException::createBadRequestError(
                         Messages::expandProjectionParserExpandCanOnlyAppliedToEntity(
                             $resourceType->getFullName(),

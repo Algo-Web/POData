@@ -399,7 +399,7 @@ class ProvidersWrapper
      */
     public function getResourceProperties(ResourceSetWrapper $setWrapper, ResourceType $resourceType)
     {
-        if ($resourceType->getResourceTypeKind() != ResourceTypeKind::ENTITY) {
+        if ($resourceType->getResourceTypeKind() != ResourceTypeKind::ENTITY()) {
             //Complex resource type
             return $resourceType->getAllProperties();
         }
@@ -411,7 +411,7 @@ class ProvidersWrapper
             foreach ($resourceType->getAllProperties() as $resourceProperty) {
                 //Check whether this is a visible navigation property
                 //TODO: is this broken?? see #87
-                if ($resourceProperty->getTypeKind() == ResourceTypeKind::ENTITY
+                if ($resourceProperty->getTypeKind() == ResourceTypeKind::ENTITY()
                     && null !== $this->getResourceSetWrapperForNavigationProperty(
                         $setWrapper,
                         $resourceType,

@@ -124,7 +124,7 @@ class ResourceTypeTest extends TestCase
         $complex = m::mock(TComplexTypeType::class);
         $complex->shouldReceive('getName')->andReturn('label');
         $instanceType = new reusableEntityClass2('foo', 'bar');
-        $resourceTypeKind = ResourceTypeKind::COMPLEX;
+        $resourceTypeKind = ResourceTypeKind::COMPLEX();
         $foo = new ResourceComplexType(new ReflectionClass($instanceType), $complex);
 
         $result = $foo->__sleep();

@@ -28,8 +28,8 @@ class Navigation implements INavigationType
      */
     public function __construct($resourceType)
     {
-        if (ResourceTypeKind::COMPLEX != $resourceType->getResourceTypeKind()
-            && ResourceTypeKind::ENTITY != $resourceType->getResourceTypeKind()
+        if (ResourceTypeKind::COMPLEX() != $resourceType->getResourceTypeKind()
+            && ResourceTypeKind::ENTITY() != $resourceType->getResourceTypeKind()
         ) {
             throw new \InvalidArgumentException(Messages::navigationInvalidResourceType());
         }
