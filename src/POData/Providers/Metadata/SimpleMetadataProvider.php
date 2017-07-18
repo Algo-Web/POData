@@ -195,7 +195,7 @@ class SimpleMetadataProvider implements IMetadataProvider
     }
 
     /**
-     * @param ResourceType $resourceType Resource to check for derived resource types
+     * @param ResourceEntityType    $resourceType           Resource to check for derived resource types
      *
      * @return bool true if $resourceType represents an Entity Type which has derived Entity Types, else false
      */
@@ -210,14 +210,9 @@ class SimpleMetadataProvider implements IMetadataProvider
      * Gets the ResourceAssociationSet instance for the given source
      * association end.
      *
-     * @param ResourceSet      $sourceResourceSet      Resource set
-     *                                                 of the source
-     *                                                 association end
-     * @param ResourceType     $sourceResourceType     Resource type of the source
-     *                                                 association end
-     * @param ResourceProperty $targetResourceProperty Resource property of
-     *                                                 the source
-     *                                                 association end
+     * @param ResourceSet           $sourceResourceSet      Resource set of the source association end
+     * @param ResourceEntityType    $sourceResourceType     Resource type of the source association end
+     * @param ResourceProperty      $targetResourceProperty Resource property of the target association end
      *
      * @return ResourceAssociationSet|null
      */
@@ -526,7 +521,7 @@ class SimpleMetadataProvider implements IMetadataProvider
      * @param ResourceSet        $targetResourceSet The resource set the resource reference
      *                                              property points to
      */
-    public function addResourceReferenceProperty($resourceType, $name, $targetResourceSet)
+    public function addResourceReferenceProperty(ResourceEntityType $resourceType, $name, $targetResourceSet)
     {
         $this->addReferencePropertyInternal(
             $resourceType,
@@ -539,12 +534,12 @@ class SimpleMetadataProvider implements IMetadataProvider
     /**
      * To add a 1:N resource reference property.
      *
-     * @param ResourceType $sourceResourceType The resource type to add the resource
-     *                                         reference property from
-     * @param ResourceType $targetResourceType The resource type to add the resource
-     *                                         reference property to
-     * @param string       $sourceProperty     The name of the property to add, on source type
-     * @param string       $targetProperty     The name of the property to add, on target type
+     * @param ResourceEntityType    $sourceResourceType The resource type to add the resource
+     *                                                  reference property from
+     * @param ResourceEntityType    $targetResourceType The resource type to add the resource
+     *                                                  reference property to
+     * @param string                $sourceProperty     The name of the property to add, on source type
+     * @param string                $targetProperty     The name of the property to add, on target type
      */
     public function addResourceReferencePropertyBidirectional(
         ResourceEntityType $sourceResourceType,
@@ -577,17 +572,12 @@ class SimpleMetadataProvider implements IMetadataProvider
      * To add a navigation property (resource set or resource reference)
      * to a resource type.
      *
-     * @param ResourceEntityType $sourceResourceType The resource type to add
-     *                                               the resource reference
-     *                                               or resource
-     *                                               reference set property to
-     * @param string             $name               The name of the
-     *                                               property to add
+     * @param ResourceEntityType $sourceResourceType The resource type to add the resource reference
+     *                                               or resource reference set property to
+     * @param string             $name               The name of the property to add
      * @param ResourceSet        $targetResourceSet  The resource set the
-     *                                               resource reference
-     *                                               or reference
-     *                                               set property
-     *                                               points to
+     *                                               resource reference or reference
+     *                                               set property points to
      * @param string             $resourceMult       The multiplicity of relation being added
      */
     private function addReferencePropertyInternal(

@@ -177,8 +177,8 @@ interface IQueryProvider
 
     /**
      * Delete resource from a resource set.
-     * @param ResourceSet|null $sourceResourceSet
-     * @param object           $sourceEntityInstance
+     * @param ResourceSet       $sourceResourceSet
+     * @param object            $sourceEntityInstance
      *
      * @return bool true if resources successfully deleted, otherwise false.
      */
