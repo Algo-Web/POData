@@ -191,7 +191,6 @@ class InternalSkipTokenInfo
                 $subPathCount = count($subPathSegments);
                 foreach ($subPathSegments as &$subPathSegment) {
                     $isLastSegment = ($index == $subPathCount - 1);
-                    $dummyProperty = null;
                     try {
                         // if currentObject = null means, previous iteration did a
                         // ReflectionProperty::getValue where ReflectionProperty

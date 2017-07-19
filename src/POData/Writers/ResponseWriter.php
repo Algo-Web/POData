@@ -30,8 +30,6 @@ class ResponseWriter
         $entityModel,
         $responseContentType
     ) {
-        $responseBody = null;
-        $dataServiceVersion = $request->getResponseVersion();
         $targetKind = $request->getTargetKind();
 
         if (TargetKind::METADATA() == $targetKind) {

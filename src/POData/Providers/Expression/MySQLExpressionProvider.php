@@ -223,7 +223,6 @@ class MySQLExpressionProvider implements IExpressionProvider
             throw new \InvalidArgumentException('onPropertyAccessExpression - expression has no resource property');
         }
         $parent = $expression;
-        $variable = null;
         $entityTypeName = $this->resourceType->getName();
         $propertyName = $parent->getResourceProperty()->getName();
         if (is_array($this->entityMapping)) {

@@ -56,7 +56,6 @@ class SkipTokenParser
             );
         }
 
-        $orderByPathSegments = null;
         //$positionalValues are of type array(int, array(string, IType))
         $positionalValues = &$tokenValueDescriptor->getPositionalValuesByRef();
         $count = count($positionalValues);
@@ -94,7 +93,7 @@ class SkipTokenParser
             ++$i;
         }
 
-        return  new InternalSkipTokenInfo(
+        return new InternalSkipTokenInfo(
             $internalOrderByInfo,
             $positionalValues,
             $resourceType
