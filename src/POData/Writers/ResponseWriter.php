@@ -36,7 +36,16 @@ class ResponseWriter
 
         if (TargetKind::METADATA() == $targetKind) {
             // /$metadata
-            $responseBody = $service->getProvidersWrapper()->GetMetadataXML();
+            $responseBody = $service->getProvidersWrapper()->getMetadataXML();
+        } elseif (TargetKind::SERVICE_DIRECTORY() == $targetKind) {
+            $writer = $service->getODataWriterRegistry()->getWriter(
+                $request->getResponseVersion(),
+                $responseContentType
+            );
+            if (null === $writer) {
+                throw new \Exception('No writer can handle the request.');
+            }
+            $responseBody = $writer->writeServiceDocument($service->getProvidersWrapper())->getOutput();
         } elseif (TargetKind::PRIMITIVE_VALUE() == $targetKind
                   && $responseContentType != MimeTypes::MIME_APPLICATION_OCTETSTREAM) {
             //This second part is to exclude binary properties
@@ -69,18 +78,13 @@ class ResponseWriter
                 $request->getResponseVersion(),
                 $responseContentType
             );
-            //TODO: move ot Messages
+            //TODO: move to Messages
             if (null === $writer) {
                 throw new \Exception('No writer can handle the request.');
             }
+            assert(null !== $entityModel);
 
-            //TODO: this seems like a weird way to know that the request is for a service document..
-            //i'd think we know this some other way
-            if (null === $entityModel) {
-                $responseBody = $writer->writeServiceDocument($service->getProvidersWrapper())->getOutput();
-            } else {
-                $responseBody = $writer->write($entityModel)->getOutput();
-            }
+            $responseBody = $writer->write($entityModel)->getOutput();
         }
         $service->getHost()->setResponseStatusCode(HttpStatus::CODE_OK);
         $service->getHost()->setResponseContentType($responseContentType);
