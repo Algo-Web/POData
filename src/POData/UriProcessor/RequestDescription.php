@@ -941,12 +941,9 @@ class RequestDescription
      */
     private static function parseVersionHeader($versionHeader, $headerName)
     {
-        $libName = null;
         $versionHeader = trim($versionHeader);
         $libNameIndex = strpos($versionHeader, ';');
-        if ($libNameIndex !== false) {
-            $libName = substr($versionHeader, $libNameIndex);
-        } else {
+        if (false === $libNameIndex) {
             $libNameIndex = strlen($versionHeader);
         }
 
