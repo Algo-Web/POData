@@ -42,7 +42,7 @@ class VoidType implements IType
      *                          be used in PHP expressions
      *
      * @throws NotImplementedException
-     * @return bool
+     * @return NoType
      */
     public function validate($value, &$outValue)
     {
@@ -67,7 +67,7 @@ class VoidType implements IType
      * @param string $stringValue value to convert
      *
      * @throws NotImplementedException
-     * @return void
+     * @return NoType
      */
     public function convert($stringValue)
     {
@@ -80,7 +80,7 @@ class VoidType implements IType
      * @param string $value value to convert to OData
      *
      * @throws NotImplementedException
-     * @return void
+     * @return NoType
      */
     public function convertToOData($value)
     {

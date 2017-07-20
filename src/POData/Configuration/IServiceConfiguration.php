@@ -19,6 +19,7 @@ interface IServiceConfiguration
      * Sets maximum number of segments to be expanded allowed in a request.
      *
      * @param int $maxExpandCount Maximum number of segments to be expanded
+     * @return void
      */
     public function setMaxExpandCount($maxExpandCount);
 

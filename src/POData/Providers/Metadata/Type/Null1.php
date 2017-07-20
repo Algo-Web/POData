@@ -28,7 +28,7 @@ class Null1 implements IType
      *
      * @throws NotImplementedException
      *
-     * @return bool
+     * @return NoType
      */
     public function isCompatibleWith(IType $type)
     {
@@ -89,7 +89,7 @@ class Null1 implements IType
      * @param mixed $value value to convert
      *
      * @throws NotImplementedException
-     * @return void
+     * @return NoType
      */
     public function convertToOData($value)
     {
