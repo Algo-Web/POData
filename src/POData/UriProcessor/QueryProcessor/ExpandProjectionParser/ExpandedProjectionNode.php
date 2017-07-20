@@ -146,54 +146,54 @@ class ExpandedProjectionNode extends ProjectionNode
     /**
      * Constructs a new instance of node representing expanded navigation property.
      *
-     * @param string              $propertyName        The name of the property
-     *                                                 to expand If this node
-     *                                                 represents an expanded
-     *                                                 navigation property then
-     *                                                 this is the name of the
-     *                                                 navigation property. if this
-     *                                                 node represents root of the
-     *                                                 projection tree then this
-     *                                                 will be null
-     * @param ResourceProperty    $resourceProperty    The resource property for
-     *                                                 the property to expand.
-     *                                                 If this node represents an
-     *                                                 expanded navigation property
-     *                                                 then this is the resource
-     *                                                 property of navigation
-     *                                                 property, if this node
-     *                                                 represents root of the
-     *                                                 projection tree then
-     *                                                 this will be null
-     * @param ResourceSetWrapper  $resourceSetWrapper  The resource set to which
-     *                                                 the expansion leads, see the
-     *                                                 comment of _resourceSetWrapper
-     *                                                 field
-     * @param InternalOrderByInfo $internalOrderByInfo The sort information
-     *                                                 associated with this node,
-     *                                                 see the comments of
-     *                                                 $_internalOrderByInfo field
-     * @param int                 $skipCount           The number of results to
-     *                                                 skip, null means no
-     *                                                 result to skip, see the
-     *                                                 comments of _skipCount
-     *                                                 field
-     * @param int                 $takeCount           The maximum number of results
-     *                                                 to return, null means return
-     *                                                 all available result, see the
-     *                                                 comments of _takeCount field
-     * @param int                 $maxResultCount      The maximum number of
-     *                                                 expected result,see comment
-     *                                                 of _maxResultCount field
+     * @param string|null           $propertyName           The name of the property
+     *                                                      to expand. If this node
+     *                                                      represents an expanded
+     *                                                      navigation property then
+     *                                                      this is the name of the
+     *                                                      navigation property. If this
+     *                                                      node represents root of the
+     *                                                      projection tree then this
+     *                                                      will be null
+     * @param ResourceSetWrapper    $resourceSetWrapper     The resource set to which
+     *                                                      the expansion leads, see the
+     *                                                      comment of _resourceSetWrapper
+     *                                                      field
+     * @param InternalOrderByInfo   $internalOrderByInfo    The sort information
+     *                                                      associated with this node,
+     *                                                      see the comments of
+     *                                                      $_internalOrderByInfo field
+     * @param int|null              $skipCount              The number of results to
+     *                                                      skip, null means no
+     *                                                      result to skip, see the
+     *                                                      comments of _skipCount
+     *                                                      field
+     * @param int                   $takeCount              The maximum number of results
+     *                                                      to return, null means return
+     *                                                      all available result, see the
+     *                                                      comments of _takeCount field
+     * @param int                   $maxResultCount         The maximum number of
+     *                                                      expected results,see comment
+     *                                                      of _maxResultCount field
+     * @param ResourceProperty|null $resourceProperty       The resource property for
+     *                                                      the property to expand.
+     *                                                      If this node represents an
+     *                                                      expanded navigation property
+     *                                                      then this is the resource
+     *                                                      property of navigation
+     *                                                      property, if this node
+     *                                                      represents root of the
+     *                                                      projection tree then
+     *                                                      this will be null
      */
     public function __construct(
         $propertyName,
-        $resourceProperty,
         ResourceSetWrapper $resourceSetWrapper,
         $internalOrderByInfo,
         $skipCount,
         $takeCount,
-        $maxResultCount
+        $maxResultCount,
+        ResourceProperty $resourceProperty = null
     ) {
         $this->resourceSetWrapper = $resourceSetWrapper;
         $this->internalOrderByInfo = $internalOrderByInfo;
