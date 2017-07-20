@@ -857,6 +857,9 @@ class ProvidersWrapper
         );
     }
 
+    /**
+     * @return mixed
+     */
     public function getMetadataXML()
     {
         return $this->metaProvider->getXML();

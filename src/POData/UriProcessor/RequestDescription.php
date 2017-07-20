@@ -220,7 +220,7 @@ class RequestDescription
      * @param Version             $serviceMaxVersion
      * @param string|null         $requestVersion
      * @param string|null         $maxRequestVersion
-     * @param string              $dataType
+     * @param string|null         $dataType
      * @param IHTTPRequest|null   $payload
      */
     public function __construct(

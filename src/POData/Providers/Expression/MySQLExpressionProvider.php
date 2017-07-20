@@ -185,7 +185,7 @@ class MySQLExpressionProvider implements IExpressionProvider
      * @param IType $type   The type of constant
      * @param mixed $value  The value of the constant
      *
-     * @return string|object|integer|double|string[]
+     * @return string|object|integer|double|String[]
      */
     public function onConstantExpression(IType $type, $value)
     {

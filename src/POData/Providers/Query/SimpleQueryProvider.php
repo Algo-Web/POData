@@ -121,7 +121,7 @@ abstract class SimpleQueryProvider implements IQueryProvider
      * @param array $whereCondition
      *
      * @throws \POData\Common\InvalidOperationException
-     * @return
+     * @return object
      */
     protected function getResource(
         ResourceSet $resourceSet,

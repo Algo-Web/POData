@@ -62,7 +62,7 @@ class Char implements IType
      *                          be used in PHP expressions
      *
      * @throws NotImplementedException
-     * @return bool
+     * @return NoType
      */
     public function validate($value, &$outValue)
     {
