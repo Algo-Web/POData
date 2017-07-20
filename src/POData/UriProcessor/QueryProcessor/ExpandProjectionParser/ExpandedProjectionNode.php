@@ -199,6 +199,7 @@ class ExpandedProjectionNode extends ProjectionNode
         $this->internalOrderByInfo = $internalOrderByInfo;
         $this->skipCount = $skipCount;
         $this->takeCount = $takeCount;
+        $this->maxResultCount = $maxResultCount;
         parent::__construct($propertyName, $resourceProperty);
     }
 
@@ -300,6 +301,7 @@ class ExpandedProjectionNode extends ProjectionNode
      *
      * @param bool $isSelectionFound True if selection found in this node
      *                               False otherwise
+     * @return void
      */
     public function setSelectionFound($isSelectionFound = true)
     {
@@ -325,6 +327,7 @@ class ExpandedProjectionNode extends ProjectionNode
      * @param bool $selectAllImmediateProperties True if all immediate
      *                                           properties to be included
      *                                           False otherwise
+     * @return void
      */
     public function setSelectAllImmediateProperties(
         $selectAllImmediateProperties = true
@@ -383,6 +386,7 @@ class ExpandedProjectionNode extends ProjectionNode
      * @param ProjectionNode $node Node to add
      *
      * @throws InvalidArgumentException
+     * @return void
      */
     public function addNode($node)
     {
@@ -402,6 +406,8 @@ class ExpandedProjectionNode extends ProjectionNode
      * $expand=A/B/C/D/E & $select = A/B Here we need to select the entire
      * subtree of B i.e result should include all immediate properties of B
      * and associated C's, D's associated with each C and E's associated each D.
+     *
+     * @return void
      */
     public function markSubtreeAsSelected()
     {
@@ -418,6 +424,8 @@ class ExpandedProjectionNode extends ProjectionNode
      * Remove all child 'ExpandedProjectionNode's of this node which are
      * not selected, Recursively invoke the same function for selected
      * node, so that all unnecessary nodes will be removed from the subtree.
+     *
+     * @return void
      */
     public function removeNonSelectedNodes()
     {
@@ -447,6 +455,8 @@ class ExpandedProjectionNode extends ProjectionNode
      * expand path or if there is a '*' token present after the navigation
      * property, this function remove all explicitly included 'ProjectionNode's
      * which already included implicitly.
+     *
+     * @return void
      */
     public function removeNodesAlreadyIncludedImplicitly()
     {
@@ -483,6 +493,8 @@ class ExpandedProjectionNode extends ProjectionNode
     /**
      * Sort the selected nodes such that order is same as the order in which
      * the properties are appear in the owning type.
+     *
+     * @return void
      */
     public function sortNodes()
     {
@@ -501,8 +513,7 @@ class ExpandedProjectionNode extends ProjectionNode
                 foreach ($this->getResourceType()->getAllProperties() as $resourceProperty) {
                     $propertyName = $resourceProperty->getName();
                     if (array_key_exists($propertyName, $existingNodes)) {
-                        $this->childNodes[$propertyName]
-                            = $existingNodes[$propertyName];
+                        $this->childNodes[$propertyName] = $existingNodes[$propertyName];
                     }
                 }
             }

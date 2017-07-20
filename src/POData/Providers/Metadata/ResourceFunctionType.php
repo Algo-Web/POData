@@ -3,6 +3,7 @@
 namespace POData\Providers\Metadata;
 
 use AlgoWeb\ODataMetadata\MetadataV3\edm\EntityContainer\FunctionImportAnonymousType;
+use AlgoWeb\ODataMetadata\MetadataV3\edm\TFunctionImportParameterType;
 
 class ResourceFunctionType
 {
@@ -115,7 +116,7 @@ class ResourceFunctionType
     /**
      * Required parameter list.
      *
-     * @return array
+     * @return TFunctionImportParameterType[]
      */
     public function getParms()
     {

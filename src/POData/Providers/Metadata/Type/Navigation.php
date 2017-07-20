@@ -105,7 +105,7 @@ class Navigation implements INavigationType
      * @param string $stringValue value to convert
      *
      * @throws NotImplementedException
-     * @return void
+     * @return NoType
      */
     public function convert($stringValue)
     {
@@ -118,7 +118,7 @@ class Navigation implements INavigationType
      * @param mixed $value value to convert
      *
      * @throws NotImplementedException
-     * @return void
+     * @return NoType
      */
     public function convertToOData($value)
     {

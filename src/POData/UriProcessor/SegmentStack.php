@@ -97,7 +97,7 @@ class SegmentStack
     /**
      * Retrieve stored segment names.
      *
-     * @return \string[]
+     * @return string[]
      */
     public function getSegmentNames()
     {

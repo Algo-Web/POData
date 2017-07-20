@@ -130,7 +130,7 @@ class IncomingIlluminateRequest implements IHTTPRequest
     }
 
     /**
-     * @return array|mixed
+     * @return resource|string|array
      */
     public function getAllInput()
     {

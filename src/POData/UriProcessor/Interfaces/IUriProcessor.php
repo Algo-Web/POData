@@ -61,6 +61,8 @@ interface IUriProcessor
 
     /**
      * Execute the client submitted request against the data source.
+     *
+     * @return void
      */
     public function execute();
 }

@@ -92,6 +92,8 @@ class RequestExpander
 
     /**
      * Perform expansion.
+     *
+     * @return void
      */
     public function handleExpansion()
     {
@@ -304,7 +306,7 @@ class RequestExpander
      * @param ExpandedProjectionNode $expandedProjectionNode
      * @param $entry
      *
-     * @return null|\object[]
+     * @return object[]|null
      */
     private function executeCollectionExpansionGetRelated($expandedProjectionNode, $entry)
     {

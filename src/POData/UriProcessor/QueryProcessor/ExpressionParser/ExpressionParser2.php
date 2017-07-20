@@ -135,7 +135,7 @@ class ExpressionParser2 extends ExpressionParser
      */
     private function processNodeForNullability(
         $parentExpression,
-        $expression = null,
+        AbstractExpression $expression = null,
         $checkNullForMostChild = true
     ) {
         if ($expression instanceof ArithmeticExpression) {

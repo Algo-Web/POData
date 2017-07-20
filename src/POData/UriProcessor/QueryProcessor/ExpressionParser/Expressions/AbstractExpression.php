@@ -50,7 +50,7 @@ abstract class AbstractExpression
      *
      * @return void
      */
-    public function setType($type)
+    public function setType(IType $type)
     {
         $this->type = $type;
     }

@@ -456,7 +456,7 @@ class SegmentParser
      * @throws ODataException Exception if any error occurs while parsing and
      *                        validating the key predicate
      *
-     * @return KeyDescriptor Describes the key values in the $keyPredicate
+     * @return KeyDescriptor|null       Describes the key values in the $keyPredicate
      */
     private function createKeyDescriptor($segment, ResourceType $resourceType, $keyPredicate)
     {
