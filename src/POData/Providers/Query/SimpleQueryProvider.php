@@ -288,7 +288,7 @@ abstract class SimpleQueryProvider implements IQueryProvider
      * @param ResourceSet       $targetResourceSet
      * @param ResourceProperty  $targetProperty
      * @param KeyDescriptor     $keyDescriptor
-     * @return mixed
+     * @return object
      */
     public function getResourceFromRelatedResourceSet(
         ResourceSet $sourceResourceSet,
@@ -312,7 +312,7 @@ abstract class SimpleQueryProvider implements IQueryProvider
      * @param mixed             $sourceEntityInstance
      * @param ResourceSet       $targetResourceSet
      * @param ResourceProperty  $targetProperty
-     * @return mixed
+     * @return object
      */
     public function getRelatedResourceReference(
         ResourceSet $sourceResourceSet,

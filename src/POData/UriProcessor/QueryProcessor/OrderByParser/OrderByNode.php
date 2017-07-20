@@ -115,17 +115,14 @@ class OrderByNode extends OrderByBaseNode
     /**
      * To add a child node to the list of child nodes.
      *
-     * @param OrderByNode|OrderByLeafNode   $node   The child node
+     * @param OrderByBaseNode   $node   The child node
      *
      * @throws InvalidArgumentException
+     * @return void
      */
     public function addNode(OrderByBaseNode $node)
     {
-        // if (!($node instanceof OrderByNode)
-        //     && !($node instanceof OrderByLeafNode)
-        // ) {
-            //Error
-        // }
+        assert($node instanceof OrderByNode || $node instanceof OrderByLeafNode);
 
         $this->childNodes[$node->getPropertyName()] = $node;
     }
