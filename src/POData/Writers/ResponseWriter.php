@@ -3,6 +3,7 @@
 namespace POData\Writers;
 
 use POData\Common\HttpStatus;
+use POData\Common\Messages;
 use POData\Common\MimeTypes;
 use POData\Common\ODataConstants;
 use POData\IService;
@@ -41,7 +42,7 @@ class ResponseWriter
                 $responseContentType
             );
             if (null === $writer) {
-                throw new \Exception('No writer can handle the request.');
+                throw new \Exception(Messages::noWriterToHandleRequest());
             }
             $responseBody = $writer->writeServiceDocument($service->getProvidersWrapper())->getOutput();
         } elseif (TargetKind::PRIMITIVE_VALUE() == $targetKind
@@ -76,9 +77,8 @@ class ResponseWriter
                 $request->getResponseVersion(),
                 $responseContentType
             );
-            //TODO: move to Messages
             if (null === $writer) {
-                throw new \Exception('No writer can handle the request.');
+                throw new \Exception(Messages::noWriterToHandleRequest());
             }
             assert(null !== $entityModel);
 
