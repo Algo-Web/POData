@@ -2,6 +2,8 @@
 
 namespace UnitTests\POData\OperationContext\Web;
 
+use POData\Common\ODataConstants;
+use POData\HttpProcessUtility;
 use POData\OperationContext\Web\IncomingRequest;
 use UnitTests\POData\TestCase;
 
@@ -47,5 +49,52 @@ class IncomingRequestTest extends TestCase
         ];
 
         $this->assertEquals($expectedParameters, $incoming->getQueryParameters());
+        $this->assertEquals('GET', $incoming->getMethod());
+    }
+
+    public function testIncomingRequestGetHttpsRawUrl()
+    {
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL] = 'HTTPS';
+        $_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)] = 'localhost/';
+        $_SERVER[ODataConstants::HTTPREQUEST_URI] = 'odata.svc';
+
+        $expected = 'https://localhost/odata.svc';
+        $actual = null;
+
+        $incoming = new IncomingRequest();
+        $actual = $incoming->getRawUrl();
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testIncomingRequestGetHttpRawUrl()
+    {
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL] = 'HTTP';
+        $_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)] = 'localhost/';
+        $_SERVER[ODataConstants::HTTPREQUEST_URI] = 'odata.svc';
+
+        $expected = 'http://localhost/odata.svc';
+        $actual = null;
+
+        $incoming = new IncomingRequest();
+        $actual = $incoming->getRawUrl();
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testGetRequestMethodHeader()
+    {
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL] = 'HTTPS';
+        $_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)] = 'localhost/';
+        $_SERVER[ODataConstants::HTTPREQUEST_URI] = 'odata.svc';
+
+        $expected = 'GET';
+        $actual = null;
+
+        $incoming = new IncomingRequest();
+        $actual = $incoming->getRequestHeader('REQUEST_METHOD');
+        $this->assertEquals($expected, $actual);
+        $this->assertNull($incoming->getRequestHeader('REQUEST_TYPE'));
     }
 }
