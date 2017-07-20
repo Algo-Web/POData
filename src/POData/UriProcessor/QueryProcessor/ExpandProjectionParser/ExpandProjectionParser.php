@@ -247,12 +247,12 @@ class ExpandProjectionParser
                         ->getConfiguration()->getMaxResultsPerCollection();
                     $node = new ExpandedProjectionNode(
                         $expandSubPathSegment,
-                        $resourceProperty,
                         $resourceSetWrapper,
                         $internalOrderByInfo,
                         null,
                         $pageSize == 0 ? null : $pageSize,
-                        $maxResultCount == PHP_INT_MAX ? null : $maxResultCount
+                        $maxResultCount == PHP_INT_MAX ? null : $maxResultCount,
+                        $resourceProperty
                     );
                     $currentNode->addNode($node);
                 }

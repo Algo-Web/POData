@@ -566,6 +566,7 @@ abstract class BaseService implements IRequestHandler, IService
         //The response format can be dictated by the target resource kind. IE a $value will be different then expected
         //getTargetKind doesn't deal with link resources directly and this can change things
         $targetKind = $request->isLinkUri() ? TargetKind::LINK() : $request->getTargetKind();
+        assert(is_string($requestAcceptText) || !isset($requestAcceptText));
 
         switch ($targetKind) {
             case TargetKind::METADATA():

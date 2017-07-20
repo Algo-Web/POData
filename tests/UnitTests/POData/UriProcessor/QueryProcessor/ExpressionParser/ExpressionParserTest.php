@@ -122,7 +122,10 @@ class ExpressionParserTest extends TestCase
             $expr = $parser->parseFilter();
             $this->fail('An expected ODataException for \'dateime\' validation has not been raised');
         } catch (ODataException $ex) {
-            $this->assertEquals('Unrecognized \'Edm.DateTime\' literal \'datetime\'11990-12-23\'\' in position \'0\'.', $ex->getMessage());
+            $this->assertEquals(
+                'Unrecognized \'Edm.DateTime\' literal \'datetime\'11990-12-23\'\' in position \'0\'.',
+                $ex->getMessage()
+            );
         }
 
         //$expression = 'binary\'ABCD\'';
@@ -182,7 +185,10 @@ class ExpressionParserTest extends TestCase
             $expr = $parser->parseFilter();
             $this->fail('An expected ODataException for \'No property exists\' has not been thrown');
         } catch (ODataException $exception) {
-            $this->assertEquals('No property \'CustomerID1\' exists in type \'Customer\' at position 0', $exception->getMessage());
+            $this->assertEquals(
+                'No property \'CustomerID1\' exists in type \'Customer\' at position 0',
+                $exception->getMessage()
+            );
         }
 
         $expression = 'Address/InvalidLineNumber';
@@ -191,7 +197,10 @@ class ExpressionParserTest extends TestCase
             $expr = $parser->parseFilter();
             $this->fail('An expected ODataException for \'No property exists\' has not been thrown');
         } catch (ODataException $exception) {
-            $this->assertEquals('No property \'InvalidLineNumber\' exists in type \'Address\' at position 8', $exception->getMessage());
+            $this->assertEquals(
+                'No property \'InvalidLineNumber\' exists in type \'Address\' at position 8',
+                $exception->getMessage()
+            );
         }
 
         $expression = 'Orders/OrderID';
@@ -200,7 +209,10 @@ class ExpressionParserTest extends TestCase
             $expr = $parser->parseFilter();
             $this->fail('An expected ODataException for collection property navigation was not thrown');
         } catch (ODataException $exception) {
-            $this->assertStringStartsWith('The \'Orders\' is an entity collection property of \'Customer\'', $exception->getMessage());
+            $this->assertStringStartsWith(
+                'The \'Orders\' is an entity collection property of \'Customer\'',
+                $exception->getMessage()
+            );
         }
 
         $expression = 'Customer/CustomerID';
@@ -220,7 +232,10 @@ class ExpressionParserTest extends TestCase
             $expr = $parser->parseFilter();
             $this->fail('An expected ODataException for collection property navigation was not thrown');
         } catch (ODataException $exception) {
-            $this->assertStringStartsWith('The \'Orders\' is an entity collection property of \'Customer\'', $exception->getMessage());
+            $this->assertStringStartsWith(
+                'The \'Orders\' is an entity collection property of \'Customer\'',
+                $exception->getMessage()
+            );
         }
     }
 
@@ -328,7 +343,10 @@ class ExpressionParserTest extends TestCase
             $expr = $parser->parseFilter();
             $this->fail('An expected ODataException for incompatible between Double and Boolean was not thrown');
         } catch (ODataException $exception) {
-            $this->assertStringStartsWith('Operator \'mul\' incompatible with operand types Edm.Double and Edm.Boolean', $exception->getMessage());
+            $this->assertStringStartsWith(
+                'Operator \'mul\' incompatible with operand types Edm.Double and Edm.Boolean',
+                $exception->getMessage()
+            );
         }
 
         $expression = '1F add 2M';
@@ -337,7 +355,10 @@ class ExpressionParserTest extends TestCase
             $expr = $parser->parseFilter();
             $this->fail('An expected ODataException for incompatible between Single and Decimal was not thrown');
         } catch (ODataException $exception) {
-            $this->assertStringStartsWith('Operator \'add\' incompatible with operand types Edm.Single and Edm.Decimal', $exception->getMessage());
+            $this->assertStringStartsWith(
+                'Operator \'add\' incompatible with operand types Edm.Single and Edm.Decimal',
+                $exception->getMessage()
+            );
         }
 
         $expression = "1 add 'MyString'";
@@ -346,7 +367,10 @@ class ExpressionParserTest extends TestCase
             $expr = $parser->parseFilter();
             $this->fail('An expected ODataException for incompatible between Int32 and EdmString was not thrown');
         } catch (ODataException $exception) {
-            $this->assertStringStartsWith('Operator \'add\' incompatible with operand types Edm.Int32 and Edm.String', $exception->getMessage());
+            $this->assertStringStartsWith(
+                'Operator \'add\' incompatible with operand types Edm.Int32 and Edm.String',
+                $exception->getMessage()
+            );
         }
 
         $expression = '1F add 2M';
@@ -355,7 +379,10 @@ class ExpressionParserTest extends TestCase
             $expr = $parser->parseFilter();
             $this->fail('An expected ODataException for incompatible between Single and Decimal was not thrown');
         } catch (ODataException $exception) {
-            $this->assertStringStartsWith('Operator \'add\' incompatible with operand types Edm.Single and Edm.Decimal', $exception->getMessage());
+            $this->assertStringStartsWith(
+                'Operator \'add\' incompatible with operand types Edm.Single and Edm.Decimal',
+                $exception->getMessage()
+            );
         }
 
         $expression = "datetime'1990-12-12' add datetime'1991-11-11'";
@@ -364,7 +391,10 @@ class ExpressionParserTest extends TestCase
             $expr = $parser->parseFilter();
             $this->fail('An expected ODataException for incompatible between DateTime types was not thrown');
         } catch (ODataException $exception) {
-            $this->assertStringStartsWith('Operator \'add\' incompatible with operand types Edm.DateTime and Edm.DateTime', $exception->getMessage());
+            $this->assertStringStartsWith(
+                'Operator \'add\' incompatible with operand types Edm.DateTime and Edm.DateTime',
+                $exception->getMessage()
+            );
         }
     }
 
@@ -416,7 +446,10 @@ class ExpressionParserTest extends TestCase
             $expr = $parser->parseFilter();
             $this->fail('An expected ODataException for gt operator\'s incompatible between Edm.Single and Edm.Decimal was not thrown');
         } catch (ODataException $exception) {
-            $this->assertStringStartsWith('Operator \'gt\' incompatible with operand types Edm.Single and Edm.Decimal', $exception->getMessage());
+            $this->assertStringStartsWith(
+                'Operator \'gt\' incompatible with operand types Edm.Single and Edm.Decimal',
+                $exception->getMessage()
+            );
         }
 
         $expression = 'Rating lt null';
@@ -425,7 +458,10 @@ class ExpressionParserTest extends TestCase
             $expr = $parser->parseFilter();
             $this->fail('An expected ODataException for lt operator\'s incompatible for null was not thrown');
         } catch (ODataException $exception) {
-            $this->assertStringStartsWith('The operator \'lt\' at position 7 is not supported for the \'null\' literal; only equality checks', $exception->getMessage());
+            $this->assertStringStartsWith(
+                'The operator \'lt\' at position 7 is not supported for the \'null\' literal; only equality checks',
+                $exception->getMessage()
+            );
         }
     }
 
@@ -455,7 +491,10 @@ class ExpressionParserTest extends TestCase
             $expr = $parser->parseFilter();
             $this->fail('An expected ODataException for add operator\'s incompatible between Edm.Int32 and Edm.Boolean was not thrown');
         } catch (ODataException $exception) {
-            $this->assertStringStartsWith('Operator \'add\' incompatible with operand types Edm.Int32 and Edm.Boolean', $exception->getMessage());
+            $this->assertStringStartsWith(
+                'Operator \'add\' incompatible with operand types Edm.Int32 and Edm.Boolean',
+                $exception->getMessage()
+            );
         }
 
         $expression = '12 or 34.5';
@@ -464,7 +503,10 @@ class ExpressionParserTest extends TestCase
             $expr = $parser->parseFilter();
             $this->fail('An expected ODataException for or operator\'s incompatible between Edm.Int32 and Edm.Double was not thrown');
         } catch (ODataException $exception) {
-            $this->assertStringStartsWith('Operator \'or\' incompatible with operand types Edm.Int32 and Edm.Double', $exception->getMessage());
+            $this->assertStringStartsWith(
+                'Operator \'or\' incompatible with operand types Edm.Int32 and Edm.Double',
+                $exception->getMessage()
+            );
         }
 
         $expression = '12.6F and true';
@@ -473,7 +515,10 @@ class ExpressionParserTest extends TestCase
             $expr = $parser->parseFilter();
             $this->fail('An expected ODataException for and operator\'s incompatible between Edm.Single and Edm.Boolean was not thrown');
         } catch (ODataException $exception) {
-            $this->assertStringStartsWith('Operator \'and\' incompatible with operand types Edm.Single and Edm.Boolean', $exception->getMessage());
+            $this->assertStringStartsWith(
+                'Operator \'and\' incompatible with operand types Edm.Single and Edm.Boolean',
+                $exception->getMessage()
+            );
         }
 
         $expression = '\'string1\' and \'string2\'';
@@ -482,7 +527,10 @@ class ExpressionParserTest extends TestCase
             $expr = $parser->parseFilter();
             $this->fail('An expected ODataException for and operator\'s incompatible between Edm.String and Edm.String was not thrown');
         } catch (ODataException $exception) {
-            $this->assertStringStartsWith('Operator \'and\' incompatible with operand types Edm.String and Edm.String', $exception->getMessage());
+            $this->assertStringStartsWith(
+                'Operator \'and\' incompatible with operand types Edm.String and Edm.String',
+                $exception->getMessage()
+            );
         }
     }
 
@@ -509,7 +557,10 @@ class ExpressionParserTest extends TestCase
             $expr = $parser->parseFilter();
             $this->fail('An expected ODataException for negate operator\'s incompatible with Edm.String was not thrown');
         } catch (ODataException $exception) {
-            $this->assertStringStartsWith('Operator \'-\' incompatible with operand types Edm.String at position 0', $exception->getMessage());
+            $this->assertStringStartsWith(
+                'Operator \'-\' incompatible with operand types Edm.String at position 0',
+                $exception->getMessage()
+            );
         }
 
         $expression = 'not(1 mul 3)';
@@ -518,7 +569,10 @@ class ExpressionParserTest extends TestCase
             $expr = $parser->parseFilter();
             $this->fail('An expected ODataException for not operator\'s incompatible with Edm.Int32 was not thrown');
         } catch (ODataException $exception) {
-            $this->assertStringStartsWith('Operator \'not\' incompatible with operand types Edm.Int32 at position 0', $exception->getMessage());
+            $this->assertStringStartsWith(
+                'Operator \'not\' incompatible with operand types Edm.Int32 at position 0',
+                $exception->getMessage()
+            );
         }
     }
 
@@ -571,7 +625,10 @@ class ExpressionParserTest extends TestCase
             $expr = $parser->parseFilter();
             $this->fail('An expected ODataException for \'No applicable function found\' was not thrown for trim');
         } catch (ODataException $exception) {
-            $this->assertStringStartsWith('No applicable function found for \'trim\' at position 0 with the specified arguments. The functions considered are: Edm.String trim(Edm.String)', $exception->getMessage());
+            $this->assertStringStartsWith(
+                'No applicable function found for \'trim\' at position 0 with the specified arguments. The functions considered are: Edm.String trim(Edm.String)',
+                $exception->getMessage()
+            );
         }
 
         $expression = 'month(123.4)';
@@ -580,7 +637,10 @@ class ExpressionParserTest extends TestCase
             $expr = $parser->parseFilter();
             $this->fail('An expected ODataException for \'No applicable function found\' was not thrown for month');
         } catch (ODataException $exception) {
-            $this->assertStringStartsWith('No applicable function found for \'month\' at position', $exception->getMessage());
+            $this->assertStringStartsWith(
+                'No applicable function found for \'month\' at position',
+                $exception->getMessage()
+            );
         }
     }
 }

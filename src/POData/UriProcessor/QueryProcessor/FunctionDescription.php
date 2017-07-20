@@ -779,7 +779,6 @@ class FunctionDescription
         }
 
         //Check match with promotion
-        $promotedTypes = [];
         foreach ($applicableFunctions as $function) {
             $i = 0;
             $promotedTypes = [];

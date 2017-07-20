@@ -124,7 +124,7 @@ class IncomingRequest implements IHTTPRequest
     public function getRawUrl()
     {
         if (null === $this->rawUrl) {
-            if (!preg_match('/^HTTTPS/', $_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL])) {
+            if (false === stripos($_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL], 'HTTPS')) {
                 $this->rawUrl = ODataConstants::HTTPREQUEST_PROTOCOL_HTTP;
             } else {
                 $this->rawUrl = ODataConstants::HTTPREQUEST_PROTOCOL_HTTPS;

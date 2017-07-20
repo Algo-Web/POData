@@ -27,6 +27,7 @@ use POData\Common\Messages\resourceAssociationType;
 use POData\Common\Messages\resourceProperty;
 use POData\Common\Messages\resourceSet;
 use POData\Common\Messages\resourceType;
+use POData\Common\Messages\responseWriter;
 use POData\Common\Messages\segmentParser;
 use POData\Common\Messages\skipTokenInfo;
 use POData\Common\Messages\skipTokenParser;
@@ -66,6 +67,7 @@ class Messages
         keyDescriptor,
         objectModelSerializer,
         request,
+        responseWriter,
         resourceType,
         uriProcessor;
 }

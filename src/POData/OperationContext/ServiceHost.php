@@ -400,8 +400,8 @@ class ServiceHost
      */
     public function getRequestVersion()
     {
-        return $this->getOperationContext()->incomingRequest()
-            ->getRequestHeader(ODataConstants::HTTPREQUEST_HEADER_DATA_SERVICE_VERSION);
+        $headerType = ODataConstants::HTTPREQUEST_HEADER_DATA_SERVICE_VERSION;
+        return $this->getRequestHeader($headerType);
     }
 
     /**
@@ -411,8 +411,8 @@ class ServiceHost
      */
     public function getRequestMaxVersion()
     {
-        return $this->getOperationContext()->incomingRequest()
-            ->getRequestHeader(ODataConstants::HTTPREQUEST_HEADER_MAX_DATA_SERVICE_VERSION);
+        $headerType = ODataConstants::HTTPREQUEST_HEADER_MAX_DATA_SERVICE_VERSION;
+        return $this->getRequestHeader($headerType);
     }
 
     /**
@@ -422,8 +422,8 @@ class ServiceHost
      */
     public function getRequestAccept()
     {
-        return $this->getOperationContext()->incomingRequest()
-            ->getRequestHeader(ODataConstants::HTTPREQUEST_HEADER_ACCEPT);
+        $headerType = ODataConstants::HTTPREQUEST_HEADER_ACCEPT;
+        return $this->getRequestHeader($headerType);
     }
 
     /**
@@ -433,8 +433,8 @@ class ServiceHost
      */
     public function getRequestAcceptCharSet()
     {
-        return $this->getOperationContext()->incomingRequest()
-            ->getRequestHeader(ODataConstants::HTTPREQUEST_HEADER_ACCEPT_CHARSET);
+        $headerType = ODataConstants::HTTPREQUEST_HEADER_ACCEPT_CHARSET;
+        return $this->getRequestHeader($headerType);
     }
 
     /**
@@ -444,8 +444,8 @@ class ServiceHost
      */
     public function getRequestIfMatch()
     {
-        return $this->getOperationContext()->incomingRequest()
-            ->getRequestHeader(ODataConstants::HTTPREQUEST_HEADER_IF_MATCH);
+        $headerType = ODataConstants::HTTPREQUEST_HEADER_IF_MATCH;
+        return $this->getRequestHeader($headerType);
     }
 
     /**
@@ -455,8 +455,8 @@ class ServiceHost
      */
     public function getRequestIfNoneMatch()
     {
-        return $this->getOperationContext()->incomingRequest()
-            ->getRequestHeader(ODataConstants::HTTPREQUEST_HEADER_IF_NONE);
+        $headerType = ODataConstants::HTTPREQUEST_HEADER_IF_NONE;
+        return $this->getRequestHeader($headerType);
     }
 
     /**
@@ -466,7 +466,8 @@ class ServiceHost
      */
     public function getRequestContentType()
     {
-        return $this->getOperationContext()->incomingRequest()->getRequestHeader(ODataConstants::HTTP_CONTENTTYPE);
+        $headerType = ODataConstants::HTTP_CONTENTTYPE;
+        return $this->getRequestHeader($headerType);
     }
 
     /**
@@ -493,6 +494,7 @@ class ServiceHost
      * Sets the HTTP MIME type of the output stream.
      *
      * @param string $value The HTTP MIME type
+     * @return void
      */
     public function setResponseContentType($value)
     {
@@ -505,6 +507,7 @@ class ServiceHost
      * @param string $value The content length
      *
      * @throws ODataException
+     * @return void
      */
     public function setResponseContentLength($value)
     {
@@ -663,5 +666,16 @@ class ServiceHost
         }
 
         return $format . ';q=1.0';
+    }
+
+    /**
+     * @param $headerType
+     * @return null|string
+     */
+    private function getRequestHeader($headerType)
+    {
+        $result = $this->getOperationContext()->incomingRequest()->getRequestHeader($headerType);
+        assert(null === $result || is_string($result));
+        return $result;
     }
 }

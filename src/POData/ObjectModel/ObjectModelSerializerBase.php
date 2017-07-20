@@ -442,7 +442,6 @@ class ObjectModelSerializerBase
         $skipToken = $internalOrderByInfo->buildSkipTokenValue($lastObject);
         $numSegments = count($internalOrderByInfo->getOrderByPathSegments());
         assert(null !== $skipToken, '!is_null($skipToken)');
-        $queryParameterString = null;
         if ($this->isRootResourceSet()) {
             $queryParameterString = $this->getNextPageLinkQueryParametersForRootResourceSet();
         } else {

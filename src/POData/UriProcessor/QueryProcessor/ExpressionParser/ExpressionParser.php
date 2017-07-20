@@ -312,7 +312,6 @@ class ExpressionParser
                 $numberLiteral = $this->getCurrentToken();
                 $numberLiteral->Text = '-' . $numberLiteral->Text;
                 $numberLiteral->Position = $op->Position;
-                $v = $this->getCurrentToken();
                 $this->setCurrentToken($numberLiteral);
                 $this->recurseLeave();
 

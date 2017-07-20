@@ -195,9 +195,8 @@ class KeyDescriptor
      *  is done one should call validate function to validate the created
      *  KeyDescription.
      *
-     * @param string $keyPredicate The predicate to parse
-     * @param KeyDescriptor KeyDescriptor On return, Description of key after
-     *                                      parsing
+     * @param string                $keyPredicate   The predicate to parse
+     * @param KeyDescriptor|null    $keyDescriptor  On return, Description of key after parsing
      *
      * @return bool True if the given values were parsed; false if there was a syntax error
      */
@@ -389,7 +388,6 @@ class KeyDescriptor
 
                 $expressionLexer->nextToken();
                 $currentToken = $expressionLexer->getCurrentToken();
-                $value = null;
                 if (!$currentToken->isKeyValueToken()) {
                     return false;
                 }
@@ -400,7 +398,7 @@ class KeyDescriptor
                 }
 
                 //Get type of keyValue and validate keyValue
-                $ouValue = $outType = null;
+                $outValue = $outType = null;
                 if (!self::getTypeAndValidateKeyValue(
                     $currentToken->Text,
                     $currentToken->Id,
@@ -421,7 +419,7 @@ class KeyDescriptor
                 }
 
                 //Get type of keyValue and validate keyValue
-                $ouValue = $outType = null;
+                $outValue = $outType = null;
                 if (!self::getTypeAndValidateKeyValue(
                     $currentToken->Text,
                     $currentToken->Id,

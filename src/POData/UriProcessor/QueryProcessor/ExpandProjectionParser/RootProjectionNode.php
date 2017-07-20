@@ -86,12 +86,12 @@ class RootProjectionNode extends ExpandedProjectionNode
         $this->baseResourceType = $baseResourceType;
         parent::__construct(
             null,
-            null,
             $resourceSetWrapper,
             $internalOrderByInfo,
             $skipCount,
             $takeCount,
-            $maxResultCount
+            $maxResultCount,
+            null
         );
     }
 

@@ -127,6 +127,16 @@ class InternalOrderByInfo
     }
 
     /**
+     * Get resource type this InternalOrderByInfo object points to
+     *
+     * @return ResourceType
+     */
+    public function getResourceType()
+    {
+        return $this->resourceType;
+    }
+
+    /**
      * Build value of $skiptoken from the given object which will be the
      * last object in the page.
      *
@@ -146,11 +156,12 @@ class InternalOrderByInfo
             $subPathCount = count($subPathSegments);
             foreach ($subPathSegments as &$subPathSegment) {
                 $isLastSegment = ($index == $subPathCount - 1);
+                $segName = $subPathSegment->getName();
                 try {
                     if ($currentObject instanceof QueryResult) {
                         $currentObject = $currentObject->results;
                     }
-                    $currentObject = $this->resourceType->getPropertyValue($currentObject, $subPathSegment->getName());
+                    $currentObject = $this->getResourceType()->getPropertyValue($currentObject, $segName);
                     if (null === $currentObject) {
                         $nextPageLink .= 'null, ';
                         break;
@@ -179,11 +190,8 @@ class InternalOrderByInfo
                         $nextPageLink .= $value . ', ';
                     }
                 } catch (\ReflectionException $reflectionException) {
-                    throw ODataException::createInternalServerError(
-                        Messages::internalSkipTokenInfoFailedToAccessOrInitializeProperty(
-                            $subPathSegment->getName()
-                        )
-                    );
+                    $msg = Messages::internalSkipTokenInfoFailedToAccessOrInitializeProperty($segName);
+                    throw ODataException::createInternalServerError($msg);
                 }
 
                 ++$index;

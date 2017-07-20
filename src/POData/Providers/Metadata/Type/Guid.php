@@ -120,7 +120,6 @@ class Guid implements IType
      */
     public static function validateWithoutPrefix($guid, $withQuotes = false)
     {
-        $patterns = null;
         if ($withQuotes) {
             $patt = ['/^(\'[0-9a-fA-F]{32}\')?$/',
                 '/^(\'[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\')?$/',

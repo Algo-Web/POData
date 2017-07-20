@@ -56,7 +56,6 @@ class ErrorHandler
         } else {
             $service->getHost()->setResponseStatusCode($exception->getStatusCode());
             $service->getHost()->setResponseContentType($responseContentType);
-            $responseBody = null;
             if (strcasecmp($responseContentType, MimeTypes::MIME_APPLICATION_XML) == 0) {
                 $responseBody = AtomODataWriter::serializeException($exception, true);
             } else {

@@ -94,15 +94,14 @@ class OrderByLeafNode extends OrderByBaseNode
      */
     public function buildComparisonFunction($ancestors)
     {
-        if (count($ancestors) == 0) {
-            throw new \InvalidArgumentException(
-                Messages::orderByLeafNodeArgumentShouldBeNonEmptyArray()
-            );
+        if (0 == count($ancestors)) {
+            $msg = Messages::orderByLeafNodeArgumentShouldBeNonEmptyArray();
+            throw new \InvalidArgumentException($msg);
         }
 
-        $a = $this->isAscending ? 1 : -1;
+        $ascend = $this->isAscending ? 1 : -1;
 
-        $retVal = function ($object1, $object2) use ($ancestors, $a) {
+        $retVal = function ($object1, $object2) use ($ancestors, $ascend) {
             $accessor1 = $object1;
             $accessor2 = $object2;
             $flag1 = null === $accessor1;
@@ -131,9 +130,9 @@ class OrderByLeafNode extends OrderByBaseNode
             if ($flag1 && $flag2) {
                 return 0;
             } elseif ($flag1) {
-                return $a*-1;
+                return $ascend*-1;
             } elseif ($flag2) {
-                return $a*1;
+                return $ascend*1;
             }
             $type = $this->resourceProperty->getInstanceType();
             if ($type instanceof DateTime) {
@@ -147,7 +146,7 @@ class OrderByLeafNode extends OrderByBaseNode
                 $result = (0 == $delta) ? 0 : $delta/abs($delta);
             }
 
-            return $a*$result;
+            return $ascend*$result;
         };
 
         return $retVal;

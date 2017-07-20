@@ -402,7 +402,6 @@ class ExpressionParser2 extends ExpressionParser
         $this->map($nullCheckExpTree1);
         $this->map($nullCheckExpTree2);
         $expression = null;
-        $isNullFunctionDescription = null;
         foreach ($this->mapTable as $node) {
             if (null == $expression) {
                 $expression = new UnaryExpression(

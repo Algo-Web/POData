@@ -35,6 +35,7 @@ class ExpressionToken
     {
         return
             $this->Id == ExpressionTokenId::IDENTIFIER &&
+            is_string($this->Text) &&
             (strcmp($this->Text, ODataConstants::KEYWORD_EQUAL) == 0 ||
                 strcmp($this->Text, ODataConstants::KEYWORD_NOT_EQUAL) == 0 ||
                 strcmp($this->Text, ODataConstants::KEYWORD_LESSTHAN) == 0 ||
@@ -53,8 +54,9 @@ class ExpressionToken
     {
         return
             $this->Id == ExpressionTokenId::IDENTIFIER &&
-                (strcmp($this->Text, ODataConstants::KEYWORD_EQUAL) == 0 ||
-                    strcmp($this->Text, ODataConstants::KEYWORD_NOT_EQUAL) == 0);
+                is_string($this->Text) &&
+                    (strcmp($this->Text, ODataConstants::KEYWORD_EQUAL) === 0 ||
+                        strcmp($this->Text, ODataConstants::KEYWORD_NOT_EQUAL) === 0);
     }
 
     /**
