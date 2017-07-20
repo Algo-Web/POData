@@ -140,14 +140,14 @@ class JsonODataV2Writer extends JsonODataV1Writer
     /**
      * Writes the next page link.
      *
-     * @param ODataLink $nextPageLinkUri Uri for next page link
+     * @param ODataLink|null    $nextPageLinkUri    Uri for next page link
      *
      * @return JsonODataV2Writer
      */
     protected function writeNextPageLink(ODataLink $nextPageLinkUri = null)
     {
         // "__next" : uri
-        if ($nextPageLinkUri != null) {
+        if (null !== $nextPageLinkUri) {
             $this->writer
                 ->writeName($this->nextLinkName)
                 ->writeValue($nextPageLinkUri->url);

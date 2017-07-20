@@ -20,9 +20,9 @@ class QueryResult
     public $hasMore;
 
     /**
-     * @param $count
-     * @param int|null $top
-     * @param int|null $skip
+     * @param int       $count
+     * @param int|null  $top
+     * @param int|null  $skip
      *
      * @throws \InvalidArgumentException if $count is not numeric
      *
@@ -48,6 +48,6 @@ class QueryResult
             return $count;
         } //if there's no top, then it's the count as is
 
-        return min($count, $top); //count is top, unless there aren't enough records
+        return intval(min($count, $top)); //count is top, unless there aren't enough records
     }
 }

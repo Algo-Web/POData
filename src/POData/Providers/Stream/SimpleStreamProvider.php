@@ -72,7 +72,7 @@ class SimpleStreamProvider implements IStreamProvider2
      * @param  object                  $entity
      * @param  ResourceStreamInfo|null $resourceStreamInfo
      * @param  IOperationContext       $operationContext
-     * @return mixed
+     * @return string
      */
     public function getStreamETag2(
         $entity,

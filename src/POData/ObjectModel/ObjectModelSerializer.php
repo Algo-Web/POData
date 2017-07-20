@@ -29,8 +29,8 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
     /**
      * Creates new instance of ObjectModelSerializer.
      *
-     * @param IService           $service
-     * @param RequestDescription $request the  request submitted by the client
+     * @param IService                  $service
+     * @param RequestDescription|null   $request    the request submitted by the client
      */
     public function __construct(IService $service, RequestDescription $request = null)
     {
