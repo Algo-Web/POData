@@ -4,6 +4,7 @@ namespace POData\UriProcessor\QueryProcessor\OrderByParser;
 
 use POData\Common\Messages;
 use POData\Common\ODataException;
+use POData\Common\ReflectionHandler;
 use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Metadata\ResourceType;
@@ -321,16 +322,7 @@ class OrderByParser
                     $currentNode->addNode($node);
                 } else {
                     try {
-                        // If a magic method for properties exists (eg Eloquent), dive into it directly and return value
-                        if (method_exists($currentObject, '__get')) {
-                            $targProperty = $resourceProperty->getName();
-
-                            return $currentObject->$targProperty;
-                        }
-                        $reflectionClass = new \ReflectionClass(get_class($currentObject));
-                        $reflectionProperty = $reflectionClass->getProperty($resourceProperty->getName());
-                        $reflectionProperty->setAccessible(true);
-                        $currentObject = $reflectionProperty->getValue($currentObject);
+                        $currentObject = ReflectionHandler::getProperty($currentObject, $resourceProperty->getName());
                     } catch (\ReflectionException $reflectionException) {
                         throw ODataException::createInternalServerError(
                             Messages::orderByParserFailedToAccessOrInitializeProperty(

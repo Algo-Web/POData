@@ -94,10 +94,9 @@ class OrderByLeafNode extends OrderByBaseNode
      */
     public function buildComparisonFunction($ancestors)
     {
-        if (count($ancestors) == 0) {
-            throw new \InvalidArgumentException(
-                Messages::orderByLeafNodeArgumentShouldBeNonEmptyArray()
-            );
+        if (0 == count($ancestors)) {
+            $msg = Messages::orderByLeafNodeArgumentShouldBeNonEmptyArray();
+            throw new \InvalidArgumentException($msg);
         }
 
         $a = $this->isAscending ? 1 : -1;

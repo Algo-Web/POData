@@ -68,7 +68,10 @@ class OrderByParserTest extends TestCase
             OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
             $this->fail('An expected ODataException for bag property in the path');
         } catch (ODataException $odataException) {
-            $this->assertStringStartsWith('orderby clause does not support Bag property in the path, the property', $odataException->getMessage());
+            $this->assertStringStartsWith(
+                'orderby clause does not support Bag property in the path, the property',
+                $odataException->getMessage()
+            );
         }
     }
 
@@ -95,7 +98,10 @@ class OrderByParserTest extends TestCase
             OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
             $this->fail('An expected ODataException for using complex property as sort key has not been thrown');
         } catch (ODataException $odataException) {
-            $this->assertStringStartsWith('Complex property cannot be used as sort key,', $odataException->getMessage());
+            $this->assertStringStartsWith(
+                'Complex property cannot be used as sort key,',
+                $odataException->getMessage()
+            );
         }
 
         $resourceSetWrapper = $providersWrapper->resolveResourceSet('Customers');
@@ -106,7 +112,10 @@ class OrderByParserTest extends TestCase
             OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
             $this->fail('An expected ODataException for using complex property as sort key has not been thrown');
         } catch (ODataException $odataException) {
-            $this->assertStringStartsWith('Complex property cannot be used as sort key,', $odataException->getMessage());
+            $this->assertStringStartsWith(
+                'Complex property cannot be used as sort key,',
+                $odataException->getMessage()
+            );
         }
     }
 
@@ -133,7 +142,10 @@ class OrderByParserTest extends TestCase
             OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
             $this->fail('An expected ODataException for usage of resource reference set has not been thrown');
         } catch (ODataException $odataException) {
-            $this->assertStringStartsWith('Navigation property points to a collection cannot be used in orderby clause', $odataException->getMessage());
+            $this->assertStringStartsWith(
+                'Navigation property points to a collection cannot be used in orderby clause',
+                $odataException->getMessage()
+            );
         }
     }
 
@@ -160,7 +172,10 @@ class OrderByParserTest extends TestCase
             OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
             $this->fail('An expected ODataException for usage of resource reference as sort key has not been thrown');
         } catch (ODataException $odataException) {
-            $this->assertStringStartsWith('Navigation property cannot be used as sort key,', $odataException->getMessage());
+            $this->assertStringStartsWith(
+                'Navigation property cannot be used as sort key,',
+                $odataException->getMessage()
+            );
         }
 
         $resourceSetWrapper = $providersWrapper->resolveResourceSet('Order_Details');
@@ -171,7 +186,10 @@ class OrderByParserTest extends TestCase
             OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
             $this->fail('An expected ODataException for usage of resource reference as sort key has not been thrown');
         } catch (ODataException $odataException) {
-            $this->assertStringStartsWith('Navigation property cannot be used as sort key,', $odataException->getMessage());
+            $this->assertStringStartsWith(
+                'Navigation property cannot be used as sort key,',
+                $odataException->getMessage()
+            );
         }
     }
 
@@ -411,7 +429,10 @@ class OrderByParserTest extends TestCase
             OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
             $this->fail('An expected ODataException for navigation to invisible resource set has not been thrown');
         } catch (ODataException $odataException) {
-            $this->assertStringEndsWith("(Check the resource set of the navigation property 'Customer' is visible)", $odataException->getMessage());
+            $this->assertStringEndsWith(
+                "(Check the resource set of the navigation property 'Customer' is visible)",
+                $odataException->getMessage()
+            );
         }
     }
 
@@ -638,17 +659,17 @@ class OrderByParserTest extends TestCase
         $naviUsed = $orderByInfo->getNavigationPropertiesUsed();
         $this->assertFalse(null === $naviUsed);
         //3 path segment are there, but last one is duplicate of first one, so parser removes last one
-        $this->assertEquals(count($naviUsed), 2);
+        $this->assertEquals(2, count($naviUsed));
         $this->assertTrue(is_array($naviUsed[0]));
         $this->assertTrue(is_array($naviUsed[1]));
         //one navgations used in first orderby 'Order'
-        $this->assertEquals(count($naviUsed[0]), 1);
-        //one navgations used in second orderby 'Prodcut'
-        $this->assertEquals(count($naviUsed[1]), 1);
-        $this->assertEquals($naviUsed[0][0]->getName(), 'Order');
-        $this->assertEquals($naviUsed[1][0]->getName(), 'Product');
+        $this->assertEquals(1, count($naviUsed[0]));
+        //one navgations used in second orderby 'Product'
+        $this->assertEquals(1, count($naviUsed[1]));
+        $this->assertEquals('Order', $naviUsed[0][0]->getName());
+        $this->assertEquals('Product', $naviUsed[1][0]->getName());
         $orderByPathSegments = $orderByInfo->getOrderByPathSegments();
-        $this->assertEquals(count($orderByPathSegments), 2);
+        $this->assertEquals(2, count($orderByPathSegments));
     }
 
     public function testParseOrderByClauseWithBlankString()
@@ -665,6 +686,25 @@ class OrderByParserTest extends TestCase
         try {
             OrderByParser::parseOrderByClause($wrapper, $type, $orderBy, $provider);
         } catch (\PHPUnit_Framework_Error_Warning $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testParseOrderByClauseCannotCreateDummyObject()
+    {
+        $wrapper = m::mock(ResourceSetWrapper::class);
+        $type = m::mock(ResourceType::class);
+        $type->shouldReceive('getInstanceType->newInstance')->andThrow(new \ReflectionException());
+        $orderBy = 'Price desc ';
+        $provider = m::mock(ProvidersWrapper::class);
+
+        $expected = 'OrderBy Parser failed to create dummy object from request uri resource type';
+        $actual = null;
+
+        try {
+            OrderByParser::parseOrderByClause($wrapper, $type, $orderBy, $provider);
+        } catch (ODataException $e) {
             $actual = $e->getMessage();
         }
         $this->assertEquals($expected, $actual);
