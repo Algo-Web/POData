@@ -18,7 +18,7 @@ interface IHTTPRequest
      *
      * @param string $key The header name
      *
-     * @return string|null value of the header, NULL if header is absent
+     * @return array|string|null value of the header, NULL if header is absent
      */
     public function getRequestHeader($key);
 
