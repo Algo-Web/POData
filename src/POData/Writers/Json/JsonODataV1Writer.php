@@ -72,10 +72,10 @@ class JsonODataV1Writer implements IODataWriter
 
         if ($model instanceof ODataURL) {
             $this->writer->startObjectScope();
-            $this->writeURL($model);
+            $this->writeUrl($model);
         } elseif ($model instanceof ODataURLCollection) {
             $this->writer->startArrayScope();
-            $this->writeURLCollection($model);
+            $this->writeUrlCollection($model);
         } elseif ($model instanceof ODataPropertyContent) {
             $this->writer->startObjectScope();
             $this->writeProperties($model);

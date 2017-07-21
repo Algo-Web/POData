@@ -7,9 +7,9 @@ use MyCLabs\Enum\Enum;
 /**
  * Class JsonLightMetadataLevel.
  *
- * @method static \POData\Writers\Json\JsonLightMetadataLevel NONE()
- * @method static \POData\Writers\Json\JsonLightMetadataLevel MINIMAL()
- * @method static \POData\Writers\Json\JsonLightMetadataLevel FULL()
+ * @method static JsonLightMetadataLevel NONE()
+ * @method static JsonLightMetadataLevel MINIMAL()
+ * @method static JsonLightMetadataLevel FULL()
  */
 class JsonLightMetadataLevel extends Enum
 {

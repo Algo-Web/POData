@@ -7,13 +7,13 @@ use MyCLabs\Enum\Enum;
 /**
  * Class HTTPRequestMethod.
  *
- * @method static \POData\OperationContext\HTTPRequestMethod GET()
- * @method static \POData\OperationContext\HTTPRequestMethod POST()
- * @method static \POData\OperationContext\HTTPRequestMethod PUT()
- * @method static \POData\OperationContext\HTTPRequestMethod DELETE()
- * @method static \POData\OperationContext\HTTPRequestMethod PATCH()
- * @method static \POData\OperationContext\HTTPRequestMethod MERGE()
- * @method static \POData\OperationContext\HTTPRequestMethod NONE()
+ * @method static HTTPRequestMethod GET()
+ * @method static HTTPRequestMethod POST()
+ * @method static HTTPRequestMethod PUT()
+ * @method static HTTPRequestMethod DELETE()
+ * @method static HTTPRequestMethod PATCH()
+ * @method static HTTPRequestMethod MERGE()
+ * @method static HTTPRequestMethod NONE()
  */
 class HTTPRequestMethod extends Enum
 {

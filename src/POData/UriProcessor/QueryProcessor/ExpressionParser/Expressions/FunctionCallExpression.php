@@ -29,7 +29,7 @@ class FunctionCallExpression extends AbstractExpression
     {
         $this->functionDescription = $functionDescription;
         $this->paramExpressions = $paramExpressions;
-        $this->nodeType = ExpressionType::CALL;
+        $this->nodeType = ExpressionType::CALL();
         $this->type = $functionDescription->returnType;
     }
 

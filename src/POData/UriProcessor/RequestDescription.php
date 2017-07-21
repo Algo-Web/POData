@@ -224,7 +224,7 @@ class RequestDescription
      * @param IHTTPRequest|null   $payload
      */
     public function __construct(
-        $segmentDescriptors,
+        array $segmentDescriptors,
         Url $requestUri,
         Version $serviceMaxVersion,
         $requestVersion,
@@ -948,26 +948,20 @@ class RequestDescription
         }
 
         $dotIndex = -1;
+        $badVersionMsg = Messages::requestDescriptionInvalidVersionHeader(
+            $versionHeader,
+            $headerName
+        );
         for ($i = 0; $i < $libNameIndex; ++$i) {
             if ($versionHeader[$i] == '.') {
                 //Throw an exception if we find more than 1 dot
                 if ($dotIndex != -1) {
-                    throw ODataException::createBadRequestError(
-                        Messages::requestDescriptionInvalidVersionHeader(
-                            $versionHeader,
-                            $headerName
-                        )
-                    );
+                    throw ODataException::createBadRequestError($badVersionMsg);
                 }
 
                 $dotIndex = $i;
             } elseif ($versionHeader[$i] < '0' || $versionHeader[$i] > '9') {
-                throw ODataException::createBadRequestError(
-                    Messages::requestDescriptionInvalidVersionHeader(
-                        $versionHeader,
-                        $headerName
-                    )
-                );
+                throw ODataException::createBadRequestError($badVersionMsg);
             }
         }
 
@@ -978,12 +972,7 @@ class RequestDescription
         if ($dotIndex != -1) {
             if ($dotIndex == 0) {
                 //If it starts with a ., throw an exception
-                throw ODataException::createBadRequestError(
-                    Messages::requestDescriptionInvalidVersionHeader(
-                        $versionHeader,
-                        $headerName
-                    )
-                );
+                throw ODataException::createBadRequestError($badVersionMsg);
             }
             $minor = intval(substr($versionHeader, $dotIndex + 1, $libNameIndex));
         }

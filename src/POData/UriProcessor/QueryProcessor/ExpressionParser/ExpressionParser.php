@@ -173,7 +173,7 @@ class ExpressionParser
             $left = new LogicalExpression(
                 $left,
                 $right,
-                ExpressionType::OR_LOGICAL
+                ExpressionType::OR_LOGICAL()
             );
         }
 
@@ -196,7 +196,7 @@ class ExpressionParser
             $this->lexer->nextToken();
             $right = $this->parseComparison();
             FunctionDescription::verifyLogicalOpArguments($logicalOpToken, $left, $right);
-            $left = new LogicalExpression($left, $right, ExpressionType::AND_LOGICAL);
+            $left = new LogicalExpression($left, $right, ExpressionType::AND_LOGICAL());
         }
 
         $this->recurseLeave();
@@ -246,9 +246,9 @@ class ExpressionParser
             $right = $this->parseMultiplicative();
             $opReturnType = FunctionDescription::verifyAndPromoteArithmeticOpArguments($additiveToken, $left, $right);
             if ($additiveToken->identifierIs(ODataConstants::KEYWORD_ADD)) {
-                $left = new ArithmeticExpression($left, $right, ExpressionType::ADD, $opReturnType);
+                $left = new ArithmeticExpression($left, $right, ExpressionType::ADD(), $opReturnType);
             } else {
-                $left = new ArithmeticExpression($left, $right, ExpressionType::SUBTRACT, $opReturnType);
+                $left = new ArithmeticExpression($left, $right, ExpressionType::SUBTRACT(), $opReturnType);
             }
         }
 
@@ -279,11 +279,11 @@ class ExpressionParser
                 $right
             );
             if ($multiplicativeToken->identifierIs(ODataConstants::KEYWORD_MULTIPLY)) {
-                $left = new ArithmeticExpression($left, $right, ExpressionType::MULTIPLY, $opReturnType);
+                $left = new ArithmeticExpression($left, $right, ExpressionType::MULTIPLY(), $opReturnType);
             } elseif ($multiplicativeToken->identifierIs(ODataConstants::KEYWORD_DIVIDE)) {
-                $left = new ArithmeticExpression($left, $right, ExpressionType::DIVIDE, $opReturnType);
+                $left = new ArithmeticExpression($left, $right, ExpressionType::DIVIDE(), $opReturnType);
             } else {
-                $left = new ArithmeticExpression($left, $right, ExpressionType::MODULO, $opReturnType);
+                $left = new ArithmeticExpression($left, $right, ExpressionType::MODULO(), $opReturnType);
             }
         }
 
@@ -321,9 +321,9 @@ class ExpressionParser
             $expr = $this->parsePrimary();
             FunctionDescription::validateUnaryOpArguments($op, $expr);
             if ($op->Id == ExpressionTokenId::MINUS) {
-                $expr = new UnaryExpression($expr, ExpressionType::NEGATE, $expr->getType());
+                $expr = new UnaryExpression($expr, ExpressionType::NEGATE(), $expr->getType());
             } else {
-                $expr = new UnaryExpression($expr, ExpressionType::NOT_LOGICAL, new Boolean());
+                $expr = new UnaryExpression($expr, ExpressionType::NOT_LOGICAL(), new Boolean());
             }
 
             $this->recurseLeave();
@@ -740,7 +740,7 @@ class ExpressionParser
                     case ODataConstants::KEYWORD_NOT_EQUAL:
                         return new UnaryExpression(
                             new FunctionCallExpression($isNullFunctionDescription, [$arg]),
-                            ExpressionType::NOT_LOGICAL,
+                            ExpressionType::NOT_LOGICAL(),
                             new Boolean()
                         );
                         break;
@@ -753,37 +753,37 @@ class ExpressionParser
                 return new RelationalExpression(
                     $left,
                     $right,
-                    ExpressionType::EQUAL
+                    ExpressionType::EQUAL()
                 );
             case ODataConstants::KEYWORD_NOT_EQUAL:
                 return new RelationalExpression(
                     $left,
                     $right,
-                    ExpressionType::NOTEQUAL
+                    ExpressionType::NOTEQUAL()
                 );
             case ODataConstants::KEYWORD_GREATERTHAN:
                 return new RelationalExpression(
                     $left,
                     $right,
-                    ExpressionType::GREATERTHAN
+                    ExpressionType::GREATERTHAN()
                 );
             case ODataConstants::KEYWORD_GREATERTHAN_OR_EQUAL:
                 return new RelationalExpression(
                     $left,
                     $right,
-                    ExpressionType::GREATERTHAN_OR_EQUAL
+                    ExpressionType::GREATERTHAN_OR_EQUAL()
                 );
             case ODataConstants::KEYWORD_LESSTHAN:
                 return new RelationalExpression(
                     $left,
                     $right,
-                    ExpressionType::LESSTHAN
+                    ExpressionType::LESSTHAN()
                 );
             default:
                 return new RelationalExpression(
                     $left,
                     $right,
-                    ExpressionType::LESSTHAN_OR_EQUAL
+                    ExpressionType::LESSTHAN_OR_EQUAL()
                 );
         }
     }

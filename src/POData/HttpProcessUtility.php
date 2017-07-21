@@ -169,13 +169,13 @@ class HttpProcessUtility
     {
         $mediaTypes = [];
         $textIndex = 0;
-        while (!self::skipWhitespace($text, $textIndex)) {
+        while (!self::skipWhiteSpace($text, $textIndex)) {
             $type = null;
             $subType = null;
             self::readMediaTypeAndSubtype($text, $textIndex, $type, $subType);
 
             $parameters = [];
-            while (!self::skipWhitespace($text, $textIndex)) {
+            while (!self::skipWhiteSpace($text, $textIndex)) {
                 if ($text[$textIndex] == ',') {
                     ++$textIndex;
                     break;
@@ -189,7 +189,7 @@ class HttpProcessUtility
                 }
 
                 ++$textIndex;
-                if (self::skipWhitespace($text, $textIndex)) {
+                if (self::skipWhiteSpace($text, $textIndex)) {
                     break;
                 }
 

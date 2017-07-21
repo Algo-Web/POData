@@ -61,7 +61,7 @@ class ProvidersWrapper
      *
      * @var array<array>
      */
-    private $propertyCache;
+    private $propertyCache = [];
 
     /**
      * Cache for ResourceSetWrappers. If ResourceSet is invisible value will
@@ -69,14 +69,14 @@ class ProvidersWrapper
      *
      * @var ResourceSetWrapper[] indexed by resource set name
      */
-    private $setWrapperCache;
+    private $setWrapperCache = [];
 
     /**
      * Cache for ResourceTypes.
      *
      * @var ResourceType[] indexed by resource type name
      */
-    private $typeCache;
+    private $typeCache = [];
 
     /**
      * Cache for ResourceAssociationSet. If ResourceAssociationSet is invisible
@@ -84,7 +84,7 @@ class ProvidersWrapper
      *
      * @var ResourceAssociationSet[] indexed by name
      */
-    private $associationSetCache;
+    private $associationSetCache = [];
 
     /**
      * Creates a new instance of ProvidersWrapper.
@@ -98,15 +98,24 @@ class ProvidersWrapper
         $this->metaProvider = $meta;
         $this->config = $config;
         $this->providerWrapper = new ProvidersQueryWrapper($query);
-        $this->setWrapperCache = [];
-        $this->typeCache = [];
-        $this->propertyCache = [];
     }
 
+    /**
+     * @return ProvidersQueryWrapper
+     */
     public function getProviderWrapper()
     {
         assert(null != $this->providerWrapper, 'Provider wrapper must be set');
         return $this->providerWrapper;
+    }
+
+    /**
+     * @return IMetadataProvider
+     */
+    public function getMetaProvider()
+    {
+        assert(null != $this->metaProvider, 'Metadata provider must be set');
+        return $this->metaProvider;
     }
 
     //Wrappers for IMetadataProvider methods
@@ -122,7 +131,7 @@ class ProvidersWrapper
      */
     public function getContainerName()
     {
-        $containerName = $this->metaProvider->getContainerName();
+        $containerName = $this->getMetaProvider()->getContainerName();
         if (empty($containerName)) {
             throw new ODataException(
                 Messages::providersWrapperContainerNameMustNotBeNullOrEmpty(),
@@ -143,7 +152,7 @@ class ProvidersWrapper
      */
     public function getContainerNamespace()
     {
-        $containerNamespace = $this->metaProvider->getContainerNamespace();
+        $containerNamespace = $this->getMetaProvider()->getContainerNamespace();
         if (empty($containerNamespace)) {
             throw new ODataException(
                 Messages::providersWrapperContainerNamespaceMustNotBeNullOrEmpty(),
@@ -176,7 +185,7 @@ class ProvidersWrapper
      */
     public function getResourceSets()
     {
-        $resourceSets = $this->metaProvider->getResourceSets();
+        $resourceSets = $this->getMetaProvider()->getResourceSets();
         $resourceSetWrappers = [];
         $resourceSetNames = [];
         foreach ($resourceSets as $resourceSet) {
@@ -257,7 +266,7 @@ class ProvidersWrapper
      */
     public function getTypes()
     {
-        $resourceTypes = $this->metaProvider->getTypes();
+        $resourceTypes = $this->getMetaProvider()->getTypes();
         $resourceTypeNames = [];
         foreach ($resourceTypes as $resourceType) {
             if (in_array($resourceType->getName(), $resourceTypeNames)) {
@@ -276,7 +285,7 @@ class ProvidersWrapper
 
     public function getSingletons()
     {
-        $singletons = $this->metaProvider->getSingletons();
+        $singletons = $this->getMetaProvider()->getSingletons();
         return (null == $singletons) ? [] : $singletons;
     }
 
@@ -297,7 +306,7 @@ class ProvidersWrapper
             return $this->setWrapperCache[$name];
         }
 
-        $resourceSet = $this->metaProvider->resolveResourceSet($name);
+        $resourceSet = $this->getMetaProvider()->resolveResourceSet($name);
         if (null === $resourceSet) {
             return null;
         }
@@ -318,7 +327,7 @@ class ProvidersWrapper
      */
     public function resolveResourceType($name)
     {
-        $resourceType = $this->metaProvider->resolveResourceType($name);
+        $resourceType = $this->getMetaProvider()->resolveResourceType($name);
         if (null === $resourceType) {
             return null;
         }
@@ -334,7 +343,7 @@ class ProvidersWrapper
      */
     public function resolveSingleton($name)
     {
-        $singletons = $this->metaProvider->getSingletons();
+        $singletons = $this->getMetaProvider()->getSingletons();
         if (array_key_exists($name, $singletons)) {
             return $singletons[$name];
         }
@@ -356,7 +365,7 @@ class ProvidersWrapper
      */
     public function getDerivedTypes(ResourceEntityType $resourceType)
     {
-        $derivedTypes = $this->metaProvider->getDerivedTypes($resourceType);
+        $derivedTypes = $this->getMetaProvider()->getDerivedTypes($resourceType);
         if (!is_array($derivedTypes)) {
             throw new InvalidOperationException(
                 Messages::metadataAssociationTypeSetInvalidGetDerivedTypesReturnType($resourceType->getName())
@@ -385,7 +394,7 @@ class ProvidersWrapper
     {
         $this->validateResourceType($resourceType);
 
-        return $this->metaProvider->hasDerivedTypes($resourceType);
+        return $this->getMetaProvider()->hasDerivedTypes($resourceType);
     }
 
     /**
@@ -399,7 +408,7 @@ class ProvidersWrapper
      */
     public function getResourceProperties(ResourceSetWrapper $setWrapper, ResourceType $resourceType)
     {
-        if ($resourceType->getResourceTypeKind() != ResourceTypeKind::ENTITY()) {
+        if (!$resourceType instanceof ResourceEntityType) {
             //Complex resource type
             return $resourceType->getAllProperties();
         }
@@ -409,21 +418,7 @@ class ProvidersWrapper
             //Fill the cache
             $this->propertyCache[$cacheKey] = [];
             foreach ($resourceType->getAllProperties() as $resourceProperty) {
-                //Check whether this is a visible navigation property
-                //TODO: is this broken?? see #87
-                if ($resourceProperty->getTypeKind() == ResourceTypeKind::ENTITY()
-                    && $resourceType instanceof ResourceEntityType
-                    && null !== $this->getResourceSetWrapperForNavigationProperty(
-                        $setWrapper,
-                        $resourceType,
-                        $resourceProperty
-                    )
-                ) {
-                    $this->propertyCache[$cacheKey][$resourceProperty->getName()] = $resourceProperty;
-                } else {
-                    //primitive, bag or complex property
-                    $this->propertyCache[$cacheKey][$resourceProperty->getName()] = $resourceProperty;
-                }
+                $this->propertyCache[$cacheKey][$resourceProperty->getName()] = $resourceProperty;
             }
         }
 
@@ -494,7 +489,7 @@ class ProvidersWrapper
         assert(null != $type, 'Resource type obtained from property must not be null.');
         assert($type instanceof ResourceEntityType);
 
-        $associationSet = $this->metaProvider->getResourceAssociationSet(
+        $associationSet = $this->getMetaProvider()->getResourceAssociationSet(
             $set,
             $type,
             $property
@@ -862,6 +857,6 @@ class ProvidersWrapper
      */
     public function getMetadataXML()
     {
-        return $this->metaProvider->getXML();
+        return $this->getMetaProvider()->getXML();
     }
 }

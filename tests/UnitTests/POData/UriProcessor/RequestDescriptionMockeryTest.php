@@ -4,11 +4,15 @@ namespace UnitTests\POData\UriProcessor;
 
 use Mockery as m;
 use POData\Common\MimeTypes;
+use POData\Common\ODataException;
 use POData\Common\Url;
 use POData\Common\Version;
 use POData\OperationContext\Web\Illuminate\IncomingIlluminateRequest;
+use POData\Providers\Metadata\ResourceEntityType;
+use POData\Providers\Metadata\ResourceStreamInfo;
 use POData\UriProcessor\RequestDescription;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\SegmentDescriptor;
+use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
 use UnitTests\POData\TestCase;
 
 class RequestDescriptionMockeryTest extends TestCase
@@ -96,5 +100,200 @@ class RequestDescriptionMockeryTest extends TestCase
         $data = $desc->getData();
         unset($data['value']);
         $this->assertEquals($expectedArray, $data);
+    }
+
+    public function testGetResourceStreamInfo()
+    {
+        $rStream = new ResourceStreamInfo('Delta');
+
+        $rType = m::mock(ResourceEntityType::class);
+        $rType->shouldReceive('tryResolveNamedStreamByName')->withArgs(['identifier'])->andReturn($rStream);
+
+        $segment = m::mock(SegmentDescriptor::class);
+        $segment->shouldReceive('getTargetResourceType')->andReturn($rType);
+        $segment->shouldReceive('getIdentifier')->andReturn('identifier');
+        $segment->shouldReceive('getTargetKind')->andReturn(TargetKind::MEDIA_RESOURCE());
+        $segArray = [$segment];
+
+        $url = m::mock(Url::class);
+        $version = Version::v3();
+
+        $type = MimeTypes::MIME_APPLICATION_ATOM;
+
+        $request = m::mock(IncomingIlluminateRequest::class)->makePartial();
+        $request->shouldReceive('getAllInput')->andReturn(null)->atLeast(1);
+
+        $desc = new RequestDescription($segArray, $url, $version, null, null, $type, $request);
+
+        $expected = 'Delta';
+        $info = $desc->getResourceStreamInfo();
+        $this->assertTrue(isset($info));
+        $actual = $info->getName();
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testSetExecutionAttribute()
+    {
+        $rStream = new ResourceStreamInfo('Delta');
+
+        $rType = m::mock(ResourceEntityType::class);
+        $rType->shouldReceive('tryResolveNamedStreamByName')->withArgs(['identifier'])->andReturn($rStream);
+
+        $segment = m::mock(SegmentDescriptor::class);
+        $segment->shouldReceive('getTargetResourceType')->andReturn($rType);
+        $segment->shouldReceive('getIdentifier')->andReturn('identifier');
+        $segment->shouldReceive('getTargetKind')->andReturn(TargetKind::MEDIA_RESOURCE());
+        $segArray = [$segment];
+
+        $url = m::mock(Url::class);
+        $version = Version::v3();
+
+        $type = MimeTypes::MIME_APPLICATION_ATOM;
+
+        $request = m::mock(IncomingIlluminateRequest::class)->makePartial();
+        $request->shouldReceive('getAllInput')->andReturn(null)->atLeast(1);
+
+        $desc = new RequestDescription($segArray, $url, $version, null, null, $type, $request);
+
+        $this->assertTrue($desc->needExecution());
+        $desc->setExecuted();
+        $this->assertFalse($desc->needExecution());
+    }
+
+    public function testRequestVersionWithTwoDots()
+    {
+        $expected = 'The header DataServiceVersion has malformed version value 0.1.1';
+        $actual = null;
+
+        $rStream = new ResourceStreamInfo('Delta');
+
+        $rType = m::mock(ResourceEntityType::class);
+        $rType->shouldReceive('tryResolveNamedStreamByName')->withArgs(['identifier'])->andReturn($rStream);
+
+        $segment = m::mock(SegmentDescriptor::class);
+        $segment->shouldReceive('getTargetResourceType')->andReturn($rType);
+        $segment->shouldReceive('getIdentifier')->andReturn('identifier');
+        $segment->shouldReceive('getTargetKind')->andReturn(TargetKind::MEDIA_RESOURCE());
+        $segArray = [$segment];
+
+        $url = m::mock(Url::class);
+        $version = Version::v3();
+
+        $type = MimeTypes::MIME_APPLICATION_ATOM;
+
+        $request = m::mock(IncomingIlluminateRequest::class)->makePartial();
+        $request->shouldReceive('getAllInput')->andReturn(null)->atLeast(1);
+
+        $requestVersion = '0.1.1';
+
+        try {
+            $desc = new RequestDescription($segArray, $url, $version, $requestVersion, null, $type, $request);
+        } catch (ODataException $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testRequestVersionNonNumeric()
+    {
+        $expected = 'The header DataServiceVersion has malformed version value slash.dot';
+        $actual = null;
+
+        $rStream = new ResourceStreamInfo('Delta');
+
+        $rType = m::mock(ResourceEntityType::class);
+        $rType->shouldReceive('tryResolveNamedStreamByName')->withArgs(['identifier'])->andReturn($rStream);
+
+        $segment = m::mock(SegmentDescriptor::class);
+        $segment->shouldReceive('getTargetResourceType')->andReturn($rType);
+        $segment->shouldReceive('getIdentifier')->andReturn('identifier');
+        $segment->shouldReceive('getTargetKind')->andReturn(TargetKind::MEDIA_RESOURCE());
+        $segArray = [$segment];
+
+        $url = m::mock(Url::class);
+        $version = Version::v3();
+
+        $type = MimeTypes::MIME_APPLICATION_ATOM;
+
+        $request = m::mock(IncomingIlluminateRequest::class)->makePartial();
+        $request->shouldReceive('getAllInput')->andReturn(null)->atLeast(1);
+
+        $requestVersion = 'slash.dot';
+
+        try {
+            $desc = new RequestDescription($segArray, $url, $version, $requestVersion, null, $type, $request);
+        } catch (ODataException $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testRequestVersionStartsWithDot()
+    {
+        $expected = 'The header DataServiceVersion has malformed version value .1';
+        $actual = null;
+
+        $rStream = new ResourceStreamInfo('Delta');
+
+        $rType = m::mock(ResourceEntityType::class);
+        $rType->shouldReceive('tryResolveNamedStreamByName')->withArgs(['identifier'])->andReturn($rStream);
+
+        $segment = m::mock(SegmentDescriptor::class);
+        $segment->shouldReceive('getTargetResourceType')->andReturn($rType);
+        $segment->shouldReceive('getIdentifier')->andReturn('identifier');
+        $segment->shouldReceive('getTargetKind')->andReturn(TargetKind::MEDIA_RESOURCE());
+        $segArray = [$segment];
+
+        $url = m::mock(Url::class);
+        $version = Version::v3();
+
+        $type = MimeTypes::MIME_APPLICATION_ATOM;
+
+        $request = m::mock(IncomingIlluminateRequest::class)->makePartial();
+        $request->shouldReceive('getAllInput')->andReturn(null)->atLeast(1);
+
+        $requestVersion = '.1';
+
+        try {
+            $desc = new RequestDescription($segArray, $url, $version, $requestVersion, null, $type, $request);
+        } catch (ODataException $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testRequestVersionNumericButUnsupported()
+    {
+        $expected = 'The version value 0.1 in the header DataServiceVersion is not supported, available'
+                    .' versions are 1.0, 2.0, 3.0';
+        $actual = null;
+
+        $rStream = new ResourceStreamInfo('Delta');
+
+        $rType = m::mock(ResourceEntityType::class);
+        $rType->shouldReceive('tryResolveNamedStreamByName')->withArgs(['identifier'])->andReturn($rStream);
+
+        $segment = m::mock(SegmentDescriptor::class);
+        $segment->shouldReceive('getTargetResourceType')->andReturn($rType);
+        $segment->shouldReceive('getIdentifier')->andReturn('identifier');
+        $segment->shouldReceive('getTargetKind')->andReturn(TargetKind::MEDIA_RESOURCE());
+        $segArray = [$segment];
+
+        $url = m::mock(Url::class);
+        $version = Version::v3();
+
+        $type = MimeTypes::MIME_APPLICATION_ATOM;
+
+        $request = m::mock(IncomingIlluminateRequest::class)->makePartial();
+        $request->shouldReceive('getAllInput')->andReturn(null)->atLeast(1);
+
+        $requestVersion = '0.1';
+
+        try {
+            $desc = new RequestDescription($segArray, $url, $version, $requestVersion, null, $type, $request);
+        } catch (ODataException $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
     }
 }

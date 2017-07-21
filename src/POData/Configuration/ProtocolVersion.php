@@ -5,9 +5,9 @@ namespace POData\Configuration;
 use MyCLabs\Enum\Enum;
 
 /**
- * @method static \POData\Configuration\ProtocolVersion V1()
- * @method static \POData\Configuration\ProtocolVersion V2()
- * @method static \POData\Configuration\ProtocolVersion V3()
+ * @method static ProtocolVersion V1()
+ * @method static ProtocolVersion V2()
+ * @method static ProtocolVersion V3()
  */
 class ProtocolVersion extends Enum
 {
