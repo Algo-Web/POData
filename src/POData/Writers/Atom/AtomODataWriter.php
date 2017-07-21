@@ -86,11 +86,11 @@ class AtomODataWriter implements IODataWriter
     public function write($model)
     {
         if ($model instanceof ODataURL) {
-            return $this->writeURL($model);
+            return $this->writeUrl($model);
         }
 
         if ($model instanceof ODataURLCollection) {
-            return $this->writeURLCollection($model);
+            return $this->writeUrlCollection($model);
         }
 
         if ($model instanceof ODataPropertyContent) {
@@ -113,7 +113,7 @@ class AtomODataWriter implements IODataWriter
      *
      * @return AtomODataWriter
      */
-    protected function writeURL(ODataURL $url)
+    protected function writeUrl(ODataURL $url)
     {
         $this->xmlWriter->startElement(ODataConstants::ATOM_URI_ELEMENT_NAME);
         $this->xmlWriter->writeAttribute(ODataConstants::XMLNS_NAMESPACE_PREFIX, ODataConstants::ODATA_NAMESPACE);
@@ -375,7 +375,7 @@ class AtomODataWriter implements IODataWriter
         $this->writeLinkNode($link, $link->isExpanded);
 
         if ($link->isExpanded) {
-            $this->xmlWriter->startElementNS(
+            $this->xmlWriter->startElementNs(
                 ODataConstants::ODATA_METADATA_NAMESPACE_PREFIX,
                 ODataConstants::ATOM_INLINE_ELEMENT_NAME,
                 null
@@ -480,7 +480,7 @@ class AtomODataWriter implements IODataWriter
                 $entry->mediaLink->srcLink
             );
             $this->xmlWriter->endElement();
-            $this->xmlWriter->startElementNS(
+            $this->xmlWriter->startElementNs(
                 ODataConstants::ODATA_METADATA_NAMESPACE_PREFIX,
                 ODataConstants::ATOM_PROPERTIES_ELEMENT_NAME,
                 null
@@ -490,7 +490,7 @@ class AtomODataWriter implements IODataWriter
                 ODataConstants::ATOM_TYPE_ATTRIBUTE_NAME,
                 MimeTypes::MIME_APPLICATION_XML
             );
-            $this->xmlWriter->startElementNS(
+            $this->xmlWriter->startElementNs(
                 ODataConstants::ODATA_METADATA_NAMESPACE_PREFIX,
                 ODataConstants::ATOM_PROPERTIES_ELEMENT_NAME,
                 null
@@ -510,7 +510,7 @@ class AtomODataWriter implements IODataWriter
      */
     protected function beginWriteProperty(ODataProperty $property, $isTopLevel)
     {
-        $this->xmlWriter->startElementNS(
+        $this->xmlWriter->startElementNs(
             ODataConstants::ODATA_NAMESPACE_PREFIX,
             $property->name,
             null

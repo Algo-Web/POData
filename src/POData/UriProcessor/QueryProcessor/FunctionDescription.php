@@ -325,18 +325,18 @@ class FunctionDescription
         return [
             new self(
                 'F',
-                new int16(),
-                [new int16(), new int16()]
+                new Int16(),
+                [new Int16(), new Int16()]
             ),
             new self(
                 'F',
-                new int32(),
-                [new int32(), new int32()]
+                new Int32(),
+                [new Int32(), new Int32()]
             ),
             new self(
                 'F',
-                new int64(),
-                [new int64(), new int64()]
+                new Int64(),
+                [new Int64(), new Int64()]
             ),
             new self(
                 'F',

@@ -70,9 +70,9 @@ class JsonODataV2Writer extends JsonODataV1Writer
             ->startObjectScope();
 
         if ($model instanceof ODataURL) {
-            $this->writeURL($model);
+            $this->writeUrl($model);
         } elseif ($model instanceof ODataURLCollection) {
-            $this->writeURLCollection($model);
+            $this->writeUrlCollection($model);
         } elseif ($model instanceof ODataPropertyContent) {
             $this->writeProperties($model);
         } elseif ($model instanceof ODataFeed) {
