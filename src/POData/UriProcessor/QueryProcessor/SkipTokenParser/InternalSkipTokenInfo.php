@@ -6,6 +6,7 @@ use InvalidArgumentException;
 use POData\Common\Messages;
 use POData\Common\ODataException;
 use POData\Providers\Metadata\ResourceType;
+use POData\Providers\Metadata\Type\IType;
 use POData\Providers\Metadata\Type\Null1;
 use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
 
@@ -260,6 +261,7 @@ class InternalSkipTokenInfo
                         break;
                     } elseif ($isLastSegment) {
                         $type = $subPathSegment->getInstanceType();
+                        assert($type instanceof IType, get_class($type));
                         $value = $type->convertToOData($currentObject);
                         $nextPageLink .= $value . ', ';
                     }
