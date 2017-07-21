@@ -80,15 +80,16 @@ class SimpleDataService extends BaseService implements IService
         return $this->metaProvider;
     }
 
-    public function setStreamProvider($streamProvider)
+    /**
+     * @param IStreamProvider2|null     $streamProvider
+     * @return void
+     */
+    public function setStreamProvider(IStreamProvider2 $streamProvider = null)
     {
-        if (null == $streamProvider) {
-            $streamProvider = new SimpleStreamProvider();
-        }
-        $this->streamProvider = $streamProvider;
+        $this->streamProvider = (null == $streamProvider) ? new SimpleStreamProvider() : $streamProvider;
     }
     /**
-     * @return \POData\Providers\Stream\IStreamProvider2
+     * @return IStreamProvider2
      */
     public function getStreamProviderX()
     {
