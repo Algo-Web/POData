@@ -5,19 +5,19 @@ namespace POData\UriProcessor\ResourcePathProcessor\SegmentParser;
 use MyCLabs\Enum\Enum;
 
 /**
- * @method static \POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind NOTHING()
- * @method static \POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind SERVICE_DIRECTORY()
- * @method static \POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind RESOURCE()
- * @method static \POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind COMPLEX_OBJECT()
- * @method static \POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind PRIMITIVE()
- * @method static \POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind PRIMITIVE_VALUE()
- * @method static \POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind METADATA()
- * @method static \POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind VOID_SERVICE_OPERATION()
- * @method static \POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind BATCH()
- * @method static \POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind LINK()
- * @method static \POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind MEDIA_RESOURCE()
- * @method static \POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind BAG()
- * @method static \POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind SINGLETON()
+ * @method static TargetKind NOTHING()
+ * @method static TargetKind SERVICE_DIRECTORY()
+ * @method static TargetKind RESOURCE()
+ * @method static TargetKind COMPLEX_OBJECT()
+ * @method static TargetKind PRIMITIVE()
+ * @method static TargetKind PRIMITIVE_VALUE()
+ * @method static TargetKind METADATA()
+ * @method static TargetKind VOID_SERVICE_OPERATION()
+ * @method static TargetKind BATCH()
+ * @method static TargetKind LINK()
+ * @method static TargetKind MEDIA_RESOURCE()
+ * @method static TargetKind BAG()
+ * @method static TargetKind SINGLETON()
  */
 class TargetKind extends Enum
 {

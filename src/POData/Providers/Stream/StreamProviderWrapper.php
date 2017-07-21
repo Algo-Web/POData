@@ -6,6 +6,8 @@ use POData\Common\InvalidOperationException;
 use POData\Common\Messages;
 use POData\Common\ODataConstants;
 use POData\Common\ODataException;
+use POData\Common\Url;
+use POData\Common\UrlFormatException;
 use POData\Common\Version;
 use POData\IService;
 use POData\OperationContext\ServiceHost;
@@ -257,8 +259,8 @@ class StreamProviderWrapper
         $this->verifyContentTypeOrETagModified('IDSSP::getReadStreamUri');
         if (null !== $readStreamUri) {
             try {
-                new \POData\Common\Url($readStreamUri);
-            } catch (\POData\Common\UrlFormatException $ex) {
+                new Url($readStreamUri);
+            } catch (UrlFormatException $ex) {
                 throw new InvalidOperationException(
                     Messages::streamProviderWrapperGetReadStreamUriMustReturnAbsoluteUriOrNull()
                 );

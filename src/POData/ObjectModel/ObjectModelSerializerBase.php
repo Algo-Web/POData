@@ -6,6 +6,7 @@ use POData\Common\InvalidOperationException;
 use POData\Common\Messages;
 use POData\Common\ODataConstants;
 use POData\Common\ODataException;
+use POData\Common\ReflectionHandler;
 use POData\IService;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceSetWrapper;
@@ -192,7 +193,7 @@ class ObjectModelSerializerBase
     protected function getPropertyValue($entity, ResourceType $resourceType, ResourceProperty $resourceProperty)
     {
         try {
-            return \POData\Common\ReflectionHandler::getProperty($entity, $resourceProperty->getName());
+            return ReflectionHandler::getProperty($entity, $resourceProperty->getName());
         } catch (\ReflectionException $reflectionException) {
             throw ODataException::createInternalServerError(
                 Messages::objectModelSerializerFailedToAccessProperty(

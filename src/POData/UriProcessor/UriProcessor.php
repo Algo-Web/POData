@@ -5,6 +5,7 @@ namespace POData\UriProcessor;
 use POData\Common\Messages;
 use POData\Common\ODataConstants;
 use POData\Common\ODataException;
+use POData\Common\ReflectionHandler;
 use POData\IService;
 use POData\OperationContext\HTTPRequestMethod;
 use POData\Providers\Metadata\ResourcePropertyKind;
@@ -303,7 +304,7 @@ class UriProcessor implements IUriProcessor
                         // ResourceType::getPropertyValue... somehow
                         try {
                             //see #88
-                            $value = \POData\Common\ReflectionHandler::getProperty($value, $segment->getIdentifier());
+                            $value = ReflectionHandler::getProperty($value, $segment->getIdentifier());
                         } catch (\ReflectionException $reflectionException) {
                         }
                     }

@@ -12,6 +12,7 @@ use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\Metadata\SimpleMetadataProvider;
 use POData\Providers\Query\IQueryProvider;
 use POData\Providers\Query\SimpleQueryProvider;
+use POData\Providers\Stream\SimpleStreamProvider;
 
 /**
  * DataService that implements IServiceProvider.
@@ -82,7 +83,7 @@ class SimpleDataService extends BaseService implements IService
     public function setStreamProvider($streamProvider)
     {
         if (null == $streamProvider) {
-            $streamProvider = new \POData\Providers\Stream\SimpleStreamProvider();
+            $streamProvider = new SimpleStreamProvider();
         }
         $this->streamProvider = $streamProvider;
     }

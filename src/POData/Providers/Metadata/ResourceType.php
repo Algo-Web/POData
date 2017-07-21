@@ -5,6 +5,7 @@ namespace POData\Providers\Metadata;
 use InvalidArgumentException;
 use POData\Common\InvalidOperationException;
 use POData\Common\Messages;
+use POData\Common\ReflectionHandler;
 use POData\Providers\Metadata\Type\Binary;
 use POData\Providers\Metadata\Type\Boolean;
 use POData\Providers\Metadata\Type\Byte;
@@ -831,19 +832,19 @@ abstract class ResourceType
      */
     public function setPropertyValue($entity, $property, $value)
     {
-        \POData\Common\ReflectionHandler::setProperty($entity, $property, $value);
+        ReflectionHandler::setProperty($entity, $property, $value);
 
         return $this;
     }
 
     public function getPropertyValue($entity, $property)
     {
-        return \POData\Common\ReflectionHandler::getProperty($entity, $property);
+        return ReflectionHandler::getProperty($entity, $property);
     }
 
     public function __sleep()
     {
-        if (null == $this->type || $this->type instanceof \POData\Providers\Metadata\Type\IType) {
+        if (null == $this->type || $this->type instanceof IType) {
             return array_keys(get_object_vars($this));
         }
         if (is_object($this->type)) {
