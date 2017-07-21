@@ -153,7 +153,7 @@ class ResourceSetWrapper extends ResourceSet
         // This will check only the resource type associated with
         // the resource set, we need to check presence of bag property
         // in resource type which is derived form this resource type also.
-        if (!$hasBagProperty) {
+        if (true !== $hasBagProperty) {
             $derivedTypes = $provider->getDerivedTypes($this->resourceSet->getResourceType());
             foreach ($derivedTypes as $derivedType) {
                 $arrayToDetectLoop = [];
