@@ -477,6 +477,17 @@ class ProvidersWrapperMockeryTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
+    public function testGetMetadataXML()
+    {
+        $expected = 'xml';
+        $meta = m::mock(IMetadataProvider::class);
+        $meta->shouldReceive('getXML')->andReturn($expected)->once();
+        $foo = m::mock(ProvidersWrapper::class)->makePartial();
+        $foo->shouldReceive('getMetaProvider')->andReturn($meta);
+        $actual = $foo->getMetadataXML();
+        $this->assertEquals($expected, $actual);
+    }
+
     public static function mockProperty($object, $propertyName, $value)
     {
         $bar = new \ReflectionClass($object);
