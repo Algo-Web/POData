@@ -715,7 +715,7 @@ class ProvidersWrapper
         $sourceEntity,
         ResourceSet $targetResourceSet,
         ResourceProperty $targetProperty,
-        $filterInfo,
+        FilterInfo $filterInfo = null,
         $orderBy,
         $top,
         $skip,

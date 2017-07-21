@@ -95,7 +95,7 @@ interface IQueryProvider
         $sourceEntityInstance,
         ResourceSet $targetResourceSet,
         ResourceProperty $targetProperty,
-        $filter = null,
+        FilterInfo $filter = null,
         $orderBy = null,
         $top = null,
         $skip = null,

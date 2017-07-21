@@ -246,7 +246,7 @@ abstract class SimpleQueryProvider implements IQueryProvider
      * @param mixed             $sourceEntityInstance
      * @param ResourceSet       $targetResourceSet
      * @param ResourceProperty  $targetProperty
-     * @param null|mixed        $filterInfo
+     * @param null|FilterInfo   $filterInfo
      * @param null|mixed        $orderBy
      * @param null|mixed        $top
      * @param null|mixed        $skip
@@ -259,7 +259,7 @@ abstract class SimpleQueryProvider implements IQueryProvider
         $sourceEntityInstance,
         ResourceSet $targetResourceSet,
         ResourceProperty $targetProperty,
-        $filterInfo = null,
+        FilterInfo $filterInfo = null,
         $orderBy = null,
         $top = null,
         $skip = null,

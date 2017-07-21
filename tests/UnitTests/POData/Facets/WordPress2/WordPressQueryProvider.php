@@ -127,7 +127,7 @@ class WordPressQueryProvider implements IQueryProvider
      * @param object             $sourceEntityInstance The source entity instance
      * @param ResourceSet        $targetResourceSet    The resource set of containing the target of the navigation property
      * @param ResourceProperty   $targetProperty       The navigation property to retrieve
-     * @param FilterInfo         $filter               represents the $filter parameter of the OData query.  NULL if no $filter specified
+     * @param FilterInfo|null    $filter               represents the $filter parameter of the OData query.  NULL if no $filter specified
      * @param mixed              $orderBy              sorted order if we want to get the data in some specific order
      * @param int                $top                  number of records which need to be retrieved
      * @param int                $skip                 number of records which need to be skipped
@@ -141,7 +141,7 @@ class WordPressQueryProvider implements IQueryProvider
         $sourceEntityInstance,
         ResourceSet $targetResourceSet,
         ResourceProperty $targetProperty,
-        $filter = null,
+        FilterInfo $filter = null,
         $orderBy = null,
         $top = null,
         $skip = null,
