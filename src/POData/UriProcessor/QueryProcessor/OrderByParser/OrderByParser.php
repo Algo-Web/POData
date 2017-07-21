@@ -12,6 +12,7 @@ use POData\Providers\Metadata\Type\Binary;
 use POData\Providers\ProvidersWrapper;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionLexer;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionTokenId;
+use ReflectionClass;
 
 /**
  * Class OrderByParser.
@@ -117,7 +118,9 @@ class OrderByParser
         assert(0 < strlen($orderBy), 'OrderBy clause must not be trimmable to an empty string');
         $orderByParser = new self($providerWrapper);
         try {
-            $orderByParser->dummyObject = $resourceType->getInstanceType()->newInstance();
+            $instance = $resourceType->getInstanceType();
+            assert($instance instanceof ReflectionClass, get_class($instance));
+            $orderByParser->dummyObject = $instance->newInstanceArgs([]);
         } catch (\ReflectionException $reflectionException) {
             throw ODataException::createInternalServerError(Messages::orderByParserFailedToCreateDummyObject());
         }
@@ -290,7 +293,9 @@ class OrderByParser
                         // Initialize this member variable (identified by
                         // $resourceProperty) of parent object.
                         try {
-                            $object = $resourceProperty->getInstanceType()->newInstance();
+                            $instance = $resourceProperty->getInstanceType();
+                            assert($instance instanceof ReflectionClass, get_class($instance));
+                            $object = $instance->newInstanceArgs();
                             $resourceType->setPropertyValue($currentObject, $resourceProperty->getName(), $object);
                             $currentObject = $object;
                         } catch (\ReflectionException $reflectionException) {
@@ -306,7 +311,9 @@ class OrderByParser
                         // Initialize this member variable
                         // (identified by $resourceProperty)of parent object.
                         try {
-                            $object = $resourceProperty->getInstanceType()->newInstance();
+                            $instance = $resourceProperty->getInstanceType();
+                            assert($instance instanceof ReflectionClass, get_class($instance));
+                            $object = $instance->newInstanceArgs();
                             $resourceType->setPropertyValue($currentObject, $resourceProperty->getName(), $object);
                             $currentObject = $object;
                         } catch (\ReflectionException $reflectionException) {

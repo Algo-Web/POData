@@ -10,6 +10,7 @@ use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\ProvidersWrapper;
 use POData\UriProcessor\QueryProcessor\OrderByParser\OrderByParser;
+use ReflectionClass;
 use UnitTests\POData\TestCase;
 
 class OrderByParserMockeryTest extends TestCase
@@ -22,10 +23,13 @@ class OrderByParserMockeryTest extends TestCase
         $wrapper = m::mock(ResourceSetWrapper::class);
         $wrapper->shouldReceive('getName')->andReturn('resourceSet');
 
+        $rClass = m::mock(ReflectionClass::class);
+        $rClass->shouldReceive('newInstanceArgs')->andReturn(new \stdClass());
+
         $type = m::mock(ResourceType::class);
         $type->shouldReceive('resolveProperty')->andReturn(null)->once();
         $type->shouldReceive('getFullName')->andReturn('Edm.None')->once();
-        $type->shouldReceive('getInstanceType->newInstance')->andReturn(new \stdClass());
+        $type->shouldReceive('getInstanceType')->andReturn($rClass);
         $provider = m::mock(ProvidersWrapper::class);
         $orderBy = 'Customers asc';
 
@@ -46,16 +50,19 @@ class OrderByParserMockeryTest extends TestCase
         $wrapper = m::mock(ResourceSetWrapper::class);
         $wrapper->shouldReceive('getName')->andReturn('resourceSet');
 
+        $rClass = m::mock(ReflectionClass::class);
+        $rClass->shouldReceive('newInstanceArgs')->andReturn(new \stdClass());
+
         $rProp = m::mock(ResourceProperty::class);
         $rProp->shouldReceive('isKindOf')->withArgs([ResourcePropertyKind::PRIMITIVE])->andReturn(true);
         $rProp->shouldReceive('isKindOf')->withArgs([ResourcePropertyKind::BAG])->andReturn(false);
         $rProp->shouldReceive('isKindOf')->withAnyArgs()->andReturn(false);
-        $rProp->shouldReceive('getInstanceType->newInstance')->andReturn(new \stdClass());
+        $rProp->shouldReceive('getInstanceType')->andReturn($rClass);
         $rProp->shouldReceive('getName')->andReturn('rProp');
 
         $type = m::mock(ResourceType::class);
         $type->shouldReceive('resolveProperty')->andReturn($rProp)->once();
-        $type->shouldReceive('getInstanceType->newInstance')->andReturn(new \stdClass());
+        $type->shouldReceive('getInstanceType')->andReturn($rClass);
         $provider = m::mock(ProvidersWrapper::class);
         $orderBy = 'Customers/Id asc, Orders desc, Id asc';
 
@@ -75,15 +82,18 @@ class OrderByParserMockeryTest extends TestCase
         $wrapper = m::mock(ResourceSetWrapper::class);
         $wrapper->shouldReceive('getName')->andReturn('resourceSet');
 
+        $rClass = m::mock(ReflectionClass::class);
+        $rClass->shouldReceive('newInstanceArgs')->andReturn(new \stdClass());
+
         $rProp = m::mock(ResourceProperty::class);
         $rProp->shouldReceive('isKindOf')->withAnyArgs()->andReturn(false);
-        $rProp->shouldReceive('getInstanceType->newInstance')->andReturn(new \stdClass());
+        $rProp->shouldReceive('getInstanceType')->andReturn($rClass);
         $rProp->shouldReceive('getName')->andReturn('rProp');
         $rProp->shouldReceive('getKind')->andReturn(null);
 
         $type = m::mock(ResourceType::class);
         $type->shouldReceive('resolveProperty')->andReturn($rProp)->once();
-        $type->shouldReceive('getInstanceType->newInstance')->andReturn(new \stdClass());
+        $type->shouldReceive('getInstanceType')->andReturn($rClass);
         $provider = m::mock(ProvidersWrapper::class);
         $orderBy = 'Customers/Id asc, Orders desc, Id asc';
 
@@ -103,16 +113,19 @@ class OrderByParserMockeryTest extends TestCase
         $wrapper = m::mock(ResourceSetWrapper::class);
         $wrapper->shouldReceive('getName')->andReturn('resourceSet');
 
+        $rClass = m::mock(ReflectionClass::class);
+        $rClass->shouldReceive('newInstanceArgs')->andReturn(new \stdClass());
+
         $rProp = m::mock(ResourceProperty::class);
         $rProp->shouldReceive('isKindOf')->withArgs([ResourcePropertyKind::PRIMITIVE])->andReturn(true, false);
         $rProp->shouldReceive('isKindOf')->withAnyArgs()->andReturn(false);
-        $rProp->shouldReceive('getInstanceType->newInstance')->andReturn(new \stdClass());
+        $rProp->shouldReceive('getInstanceType')->andReturn($rClass);
         $rProp->shouldReceive('getName')->andReturn('rProp');
         $rProp->shouldReceive('getKind')->andReturn(ResourcePropertyKind::RESOURCE_REFERENCE);
 
         $type = m::mock(ResourceType::class);
         $type->shouldReceive('resolveProperty')->andReturn($rProp)->once();
-        $type->shouldReceive('getInstanceType->newInstance')->andReturn(new \stdClass());
+        $type->shouldReceive('getInstanceType')->andReturn($rClass);
         $type->shouldReceive('setPropertyValue')->andThrow(new \ReflectionException());
         $type->shouldReceive('getName')->andReturn('type');
         $provider = m::mock(ProvidersWrapper::class);
@@ -134,16 +147,19 @@ class OrderByParserMockeryTest extends TestCase
         $wrapper = m::mock(ResourceSetWrapper::class);
         $wrapper->shouldReceive('getName')->andReturn('resourceSet');
 
+        $rClass = m::mock(ReflectionClass::class);
+        $rClass->shouldReceive('newInstanceArgs')->andReturn(new \stdClass());
+
         $rProp = m::mock(ResourceProperty::class);
         $rProp->shouldReceive('isKindOf')->withArgs([ResourcePropertyKind::PRIMITIVE])->andReturn(true, false);
         $rProp->shouldReceive('isKindOf')->withAnyArgs()->andReturn(false);
-        $rProp->shouldReceive('getInstanceType->newInstance')->andReturn(new \stdClass());
+        $rProp->shouldReceive('getInstanceType')->andReturn($rClass);
         $rProp->shouldReceive('getName')->andReturn('prop');
         $rProp->shouldReceive('getKind')->andReturn(ResourcePropertyKind::COMPLEX_TYPE);
 
         $type = m::mock(ResourceType::class);
         $type->shouldReceive('resolveProperty')->andReturn($rProp)->once();
-        $type->shouldReceive('getInstanceType->newInstance')->andReturn(new \stdClass());
+        $type->shouldReceive('getInstanceType')->andReturn($rClass);
         $type->shouldReceive('setPropertyValue')->andThrow(new \ReflectionException());
         $type->shouldReceive('getName')->andReturn('rType');
         $provider = m::mock(ProvidersWrapper::class);
