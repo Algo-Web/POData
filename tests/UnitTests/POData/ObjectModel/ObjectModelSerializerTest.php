@@ -339,10 +339,13 @@ class ObjectModelSerializerTest extends TestCase
     {
         $foo = $this->Construct();
 
+        $iType = m::mock(IType::class);
+        $iType->shouldReceive('getFullTypeName')->andReturn('typeName');
+
         $primVal = null;
         $property = m::mock(ResourceProperty::class);
         $property->shouldReceive('getName')->andReturn('name');
-        $property->shouldReceive('getInstanceType->getFullTypeName')->andReturn('typeName');
+        $property->shouldReceive('getInstanceType')->andReturn($iType);
 
         $queryResult = new QueryResult();
         $queryResult->results = $primVal;
@@ -358,13 +361,16 @@ class ObjectModelSerializerTest extends TestCase
     {
         $foo = $this->Construct();
 
+        $iType = m::mock(IType::class);
+        $iType->shouldReceive('getFullTypeName')->andReturn('typeName');
+
         $type = m::mock(ResourceType::class);
         $type->shouldReceive('getInstanceType')->andReturn(new Boolean());
 
         $primVal = true;
         $property = m::mock(ResourceProperty::class);
         $property->shouldReceive('getName')->andReturn('name');
-        $property->shouldReceive('getInstanceType->getFullTypeName')->andReturn('typeName');
+        $property->shouldReceive('getInstanceType')->andReturn($iType);
         $property->shouldReceive('getResourceType')->andReturn($type);
 
         $queryResult = new QueryResult();
@@ -381,13 +387,16 @@ class ObjectModelSerializerTest extends TestCase
     {
         $foo = $this->Construct();
 
+        $iType = m::mock(IType::class);
+        $iType->shouldReceive('getFullTypeName')->andReturn('typeName');
+
         $type = m::mock(ResourceType::class);
         $type->shouldReceive('getInstanceType')->andReturn(new Binary());
 
         $primVal = 'aybabtu';
         $property = m::mock(ResourceProperty::class);
         $property->shouldReceive('getName')->andReturn('name');
-        $property->shouldReceive('getInstanceType->getFullTypeName')->andReturn('typeName');
+        $property->shouldReceive('getInstanceType')->andReturn($iType);
         $property->shouldReceive('getResourceType')->andReturn($type);
 
         $queryResult = new QueryResult();
@@ -404,13 +413,16 @@ class ObjectModelSerializerTest extends TestCase
     {
         $foo = $this->Construct();
 
+        $iType = m::mock(IType::class);
+        $iType->shouldReceive('getFullTypeName')->andReturn('typeName');
+
         $type = m::mock(ResourceType::class);
         $type->shouldReceive('getInstanceType')->andReturn(new DateTime());
 
         $primVal = new \DateTime('2016-01-01');
         $property = m::mock(ResourceProperty::class);
         $property->shouldReceive('getName')->andReturn('name');
-        $property->shouldReceive('getInstanceType->getFullTypeName')->andReturn('typeName');
+        $property->shouldReceive('getInstanceType')->andReturn($iType);
         $property->shouldReceive('getResourceType')->andReturn($type);
 
         $queryResult = new QueryResult();
@@ -427,13 +439,16 @@ class ObjectModelSerializerTest extends TestCase
     {
         $foo = $this->Construct();
 
+        $iType = m::mock(IType::class);
+        $iType->shouldReceive('getFullTypeName')->andReturn('typeName');
+
         $type = m::mock(ResourceType::class);
         $type->shouldReceive('getInstanceType')->andReturn(new StringType());
 
         $primVal = 'Börk, börk, börk!';
         $property = m::mock(ResourceProperty::class);
         $property->shouldReceive('getName')->andReturn('name');
-        $property->shouldReceive('getInstanceType->getFullTypeName')->andReturn('typeName');
+        $property->shouldReceive('getInstanceType')->andReturn($iType);
         $property->shouldReceive('getResourceType')->andReturn($type);
 
         $queryResult = new QueryResult();
@@ -450,13 +465,16 @@ class ObjectModelSerializerTest extends TestCase
     {
         $foo = $this->Construct();
 
+        $iType = m::mock(IType::class);
+        $iType->shouldReceive('getFullTypeName')->andReturn('typeName');
+
         $type = m::mock(ResourceType::class);
         $type->shouldReceive('getInstanceType')->andReturn(null);
 
         $primVal = 'Börk, börk, börk!';
         $property = m::mock(ResourceProperty::class);
         $property->shouldReceive('getName')->andReturn('name');
-        $property->shouldReceive('getInstanceType->getFullTypeName')->andReturn('typeName');
+        $property->shouldReceive('getInstanceType')->andReturn($iType);
         $property->shouldReceive('getResourceType')->andReturn($type);
 
         $queryResult = new QueryResult();
@@ -579,14 +597,16 @@ class ObjectModelSerializerTest extends TestCase
 
     public function testWriteNonNullComplexValue()
     {
+        $iType = m::mock(IType::class);
+        $iType->shouldReceive('getFullTypeName')->andReturn('fullName');
+
         $propType = m::mock(ResourceType::class);
-        $propType->shouldReceive('getFullTypeName')->andReturn('fullName');
         $propType->shouldReceive('getInstanceType')->andReturn($propType);
 
         $resProperty = m::mock(ResourceProperty::class);
         $resProperty->shouldReceive('getKind')->andReturn(24);
         $resProperty->shouldReceive('getName')->andReturn('name');
-        $resProperty->shouldReceive('getInstanceType')->andReturn($propType);
+        $resProperty->shouldReceive('getInstanceType')->andReturn($iType);
         $resProperty->shouldReceive('getResourceType')->andReturn($propType);
         $resProperty->shouldReceive('isKindOf')->passthru();
 
@@ -863,6 +883,7 @@ class ObjectModelSerializerTest extends TestCase
         $projNode2 = m::mock(ExpandedProjectionNode::class)->makePartial();
 
         $iType = m::mock(IType::class);
+        $iType->shouldReceive('getFullTypeName')->andReturn('fullTypeName');
 
         $navType = m::mock(ResourceType::class)->makePartial();
         $navType->shouldReceive('getInstanceType')->andReturn($iType);
@@ -872,7 +893,7 @@ class ObjectModelSerializerTest extends TestCase
         $resolv->shouldReceive('getResourceType')->andReturn($navType);
         $resolv->shouldReceive('isKindOf')->withArgs([ResourcePropertyKind::PRIMITIVE])->andReturn(true);
         $resolv->shouldReceive('isKindOf')->andReturn(false);
-        $resolv->shouldReceive('getInstanceType->getFullTypeName')->andReturn('fullTypeName');
+        $resolv->shouldReceive('getInstanceType')->andReturn($iType);
 
         $type = m::mock(ResourceType::class);
         $type->shouldReceive('getName')->andReturn('customers');
@@ -953,11 +974,14 @@ class ObjectModelSerializerTest extends TestCase
 
         $navType = m::mock(ResourceType::class)->makePartial();
 
+        $iType = m::mock(IType::class);
+        $iType->shouldReceive('getFullTypeName')->andReturn('fullTypeName');
+
         $resolv = m::mock(ResourceProperty::class)->makePartial();
         $resolv->shouldReceive('getTypeKind')->andReturn(null)->once();
         $resolv->shouldReceive('getResourceType')->andReturn($navType);
         $resolv->shouldReceive('isKindOf')->andReturn(false);
-        $resolv->shouldReceive('getInstanceType->getFullTypeName')->andReturn('fullTypeName');
+        $resolv->shouldReceive('getInstanceType')->andReturn($iType);
 
         $type = m::mock(ResourceType::class);
         $type->shouldReceive('getName')->andReturn('customers');

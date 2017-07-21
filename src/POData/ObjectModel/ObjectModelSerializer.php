@@ -15,6 +15,7 @@ use POData\Providers\Metadata\ResourceTypeKind;
 use POData\Providers\Metadata\Type\Binary;
 use POData\Providers\Metadata\Type\Boolean;
 use POData\Providers\Metadata\Type\DateTime;
+use POData\Providers\Metadata\Type\IType;
 use POData\Providers\Metadata\Type\StringType;
 use POData\Providers\Query\QueryResult;
 use POData\Providers\Query\QueryType;
@@ -100,7 +101,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
         $resourceSet = $this->getRequest()->getTargetResourceSetWrapper()->getResourceSet();
         $requestTop = $this->getRequest()->getTopOptionCount();
         $pageSize = $this->getService()->getConfiguration()->getEntitySetPageSize($resourceSet);
-        $requestTop = (null == $requestTop) ? $pageSize + 1 : $requestTop;
+        $requestTop = (null === $requestTop) ? $pageSize + 1 : $requestTop;
         $needLink = $entryObjects->hasMore && ($requestTop > $pageSize);
 
         $this->writeFeedElements(
@@ -520,7 +521,9 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
         }
 
         $odataProperty->name = $resourceProperty->getName();
-        $odataProperty->typeName = $resourceProperty->getInstanceType()->getFullTypeName();
+        $instance = $resourceProperty->getInstanceType();
+        assert($instance instanceof IType, get_class($instance));
+        $odataProperty->typeName = $instance->getFullTypeName();
         if (null === $primitiveValue) {
             $odataProperty->value = null;
         } else {
