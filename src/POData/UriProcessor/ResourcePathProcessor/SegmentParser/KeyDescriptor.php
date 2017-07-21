@@ -283,6 +283,7 @@ class KeyDescriptor
 
                 $typeProvided = $this->namedValues[$keyName][1];
                 $expectedType = $keyResourceProperty->getInstanceType();
+                assert($expectedType instanceof IType, get_class($expectedType));
                 if (!$expectedType->isCompatibleWith($typeProvided)) {
                     throw ODataException::createSyntaxError(
                         Messages::keyDescriptorInCompatibleKeyType(
