@@ -70,18 +70,6 @@ class JsonWriter
     }
 
     /**
-     * Write the "results" header for the data array.
-     *
-     * @return JsonWriter
-     */
-    public function writeDataArrayName()
-    {
-        $this->writeName($this->dataArrayName);
-
-        return $this;
-    }
-
-    /**
      * Start the object scope.
      *
      * @return JsonWriter

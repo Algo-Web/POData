@@ -484,7 +484,7 @@ class ExpressionParser
             );
         }
 
-        $exp = new PropertyAccessExpression($parentExpression, $resourceProperty);
+        $exp = new PropertyAccessExpression($resourceProperty, $parentExpression);
         $this->lexer->nextToken();
 
         return $exp;

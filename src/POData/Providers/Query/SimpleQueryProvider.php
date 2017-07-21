@@ -246,7 +246,7 @@ abstract class SimpleQueryProvider implements IQueryProvider
      * @param mixed             $sourceEntityInstance
      * @param ResourceSet       $targetResourceSet
      * @param ResourceProperty  $targetProperty
-     * @param null|mixed        $filterInfo
+     * @param null|FilterInfo   $filterInfo
      * @param null|mixed        $orderBy
      * @param null|mixed        $top
      * @param null|mixed        $skip
@@ -259,7 +259,7 @@ abstract class SimpleQueryProvider implements IQueryProvider
         $sourceEntityInstance,
         ResourceSet $targetResourceSet,
         ResourceProperty $targetProperty,
-        $filterInfo = null,
+        FilterInfo $filterInfo = null,
         $orderBy = null,
         $top = null,
         $skip = null,
@@ -270,12 +270,15 @@ abstract class SimpleQueryProvider implements IQueryProvider
         $filterFieldName = $this->getTableName($this->getEntityName($srcClass)) . '_id';
         $navigationPropertiesUsed = null;
         $filterExpAsDataSourceExp = '';
-        if ($filterInfo) {
+        if (null !== $filterInfo) {
             $navigationPropertiesUsed = $filterInfo->getNavigationPropertiesUsed();
             $filterExpAsDataSourceExp = $filterInfo->getExpressionAsString();
         }
         $filterExpAsDataSourceExp .= $filterExpAsDataSourceExp ? ' AND ' : '';
         $filterExpAsDataSourceExp .= $filterFieldName . ' = ' . $sourceEntityInstance->id;
+        if (null === $navigationPropertiesUsed) {
+            $navigationPropertiesUsed = [];
+        }
         $completeFilterInfo = new FilterInfo($navigationPropertiesUsed, $filterExpAsDataSourceExp);
 
         return $this->getResourceSet($queryType, $targetResourceSet, $completeFilterInfo, $orderBy, $top, $skip, null);

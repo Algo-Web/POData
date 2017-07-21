@@ -29,6 +29,7 @@ use POData\Providers\ProvidersWrapper;
 use POData\UriProcessor\RequestDescription;
 use POData\UriProcessor\UriProcessor;
 use POData\UriProcessor\UriProcessorNew;
+use ReflectionClass;
 use UnitTests\POData\TestCase;
 
 class ExecuteGetTest extends TestCase
@@ -1022,12 +1023,15 @@ class ExecuteGetTest extends TestCase
         $ordersSet->shouldReceive('getResourceSetPageSize')->andReturn(200);
         $ordersSet->shouldReceive('getName')->andReturn('Orders');
 
+        $rClass = m::mock(ReflectionClass::class);
+        $rClass->shouldReceive('newInstanceArgs')->andReturn(new \stdClass())->atLeast(4);
+
         $ordersType = m::mock(ResourceEntityType::class);
         $ordersType->shouldReceive('getName')->andReturn('Order');
         $ordersType->shouldReceive('getFullName')->andReturn('Data.Order');
         $ordersType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
         $ordersType->shouldReceive('getKeyProperties')->andReturn(['id' => $keyProp])->atLeast(2);
-        $ordersType->shouldReceive('getInstanceType->newInstance')->andReturn(new \stdClass())->atLeast(2);
+        $ordersType->shouldReceive('getInstanceType')->andReturn($rClass)->atLeast(2);
         $ordersType->shouldReceive('resolveProperty')->withArgs(['id'])->andReturn($ordersProp)->atLeast(2);
         $ordersType->shouldReceive('resolveProperty')->withAnyArgs()->andReturn(null)->atLeast(2);
 
@@ -1040,7 +1044,7 @@ class ExecuteGetTest extends TestCase
         $resourceType->shouldReceive('getName')->andReturn('Customer');
         $resourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
         $resourceType->shouldReceive('getKeyProperties')->andReturn(['id' => $keyProp])->atLeast(2);
-        $resourceType->shouldReceive('getInstanceType->newInstance')->andReturn(new \stdClass())->atLeast(2);
+        $resourceType->shouldReceive('getInstanceType')->andReturn($rClass)->atLeast(2);
         $resourceType->shouldReceive('resolveProperty')->withArgs(['orders'])->andReturn($bagProp)->atLeast(2);
 
         $config = m::mock(IServiceConfiguration::class);

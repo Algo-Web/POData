@@ -54,6 +54,9 @@ class ExpressionProcessor
      */
     private function processExpressionNode(AbstractExpression $expression = null)
     {
+        if (null === $expression) {
+            return null;
+        }
         $funcName = null;
         if ($expression instanceof ArithmeticExpression) {
             $funcName = 'onArithmeticExpression';

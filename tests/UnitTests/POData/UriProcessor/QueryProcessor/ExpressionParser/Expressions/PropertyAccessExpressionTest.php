@@ -31,7 +31,7 @@ class PropertyAccessExpressionTest extends TestCase
         $prop = m::mock(ResourceProperty::class);
         $prop->shouldReceive('getResourceType')->andReturn($rType);
 
-        $foo = new PropertyAccessExpression($parent, $prop);
+        $foo = new PropertyAccessExpression($prop, $parent);
         $foo->setChild($child);
         $this->assertNotNull($foo->getParent());
         $this->assertNotNull($foo->getChild());

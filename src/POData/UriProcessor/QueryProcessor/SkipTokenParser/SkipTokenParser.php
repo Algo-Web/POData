@@ -5,6 +5,7 @@ namespace POData\UriProcessor\QueryProcessor\SkipTokenParser;
 use POData\Common\Messages;
 use POData\Common\ODataException;
 use POData\Providers\Metadata\ResourceType;
+use POData\Providers\Metadata\Type\IType;
 use POData\Providers\Metadata\Type\Null1;
 use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
@@ -78,6 +79,7 @@ class SkipTokenParser
                 $orderBySubPathSegments = $orderByPathSegment->getSubPathSegments();
                 $j = count($orderBySubPathSegments) - 1;
                 $expectedType = $orderBySubPathSegments[$j]->getInstanceType();
+                assert($expectedType instanceof IType, get_class($expectedType));
                 if (!$expectedType->isCompatibleWith($typeProvidedInSkipToken)) {
                     throw ODataException::createSyntaxError(
                         Messages::skipTokenParserInCompatibleTypeAtPosition(

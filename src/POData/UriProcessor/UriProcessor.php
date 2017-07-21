@@ -349,7 +349,7 @@ class UriProcessor implements IUriProcessor
             $segment->setResult($entityInstance);
         } else {
             $skip = (null == $this->getRequest()) ? 0 : $this->getRequest()->getSkipCount();
-            $skip = (null == $skip) ? 0 : $skip;
+            $skip = (null === $skip) ? 0 : $skip;
             $skipToken = $this->getRequest()->getInternalSkipTokenInfo();
             $skipToken = (null != $skipToken) ? $skipToken->getSkipTokenInfo() : null;
             $queryResult = $this->getProviders()->getResourceSet(

@@ -14,6 +14,7 @@ use POData\Providers\Query\IQueryProvider;
 use POData\UriProcessor\QueryProcessor\OrderByParser\OrderByParser;
 //These are in the file loaded by above use statement
 //TODO: move to own class files
+use ReflectionClass;
 use UnitTests\POData\Facets\NorthWind1\Address2;
 use UnitTests\POData\Facets\NorthWind1\Address4;
 use UnitTests\POData\Facets\NorthWind1\Customer2;
@@ -694,8 +695,11 @@ class OrderByParserTest extends TestCase
     public function testParseOrderByClauseCannotCreateDummyObject()
     {
         $wrapper = m::mock(ResourceSetWrapper::class);
+        $rClass = m::mock(ReflectionClass::class);
+        $rClass->shouldReceive('newInstanceArgs')->withAnyArgs()->andThrow(new \ReflectionException())->once();
+
         $type = m::mock(ResourceType::class);
-        $type->shouldReceive('getInstanceType->newInstance')->andThrow(new \ReflectionException());
+        $type->shouldReceive('getInstanceType')->andReturn($rClass);
         $orderBy = 'Price desc ';
         $provider = m::mock(ProvidersWrapper::class);
 
