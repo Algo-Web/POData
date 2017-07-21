@@ -700,9 +700,9 @@ class ProvidersWrapper
      * @param ResourceProperty   $targetProperty    The navigation property to retrieve
      * @param FilterInfo|null    $filterInfo        Represents the $filter parameter of the OData query.
      *                                              NULL if no $filter specified
-     * @param mixed              $orderBy           sorted order if we want to get the data in some specific order
-     * @param int                $top               number of records which need to be retrieved
-     * @param int                $skip              number of records which need to be skipped
+     * @param mixed|null         $orderBy           sorted order if we want to get the data in some specific order
+     * @param int|null           $top               number of records which need to be retrieved
+     * @param int|null           $skip              number of records which need to be skipped
      * @param SkipTokenInfo|null $skipToken         value indicating what records to skip
      *
      * @throws ODataException
@@ -716,9 +716,9 @@ class ProvidersWrapper
         ResourceSet $targetResourceSet,
         ResourceProperty $targetProperty,
         FilterInfo $filterInfo = null,
-        $orderBy,
-        $top,
-        $skip,
+        $orderBy = null,
+        $top = null,
+        $skip = null,
         SkipTokenInfo $skipToken = null
     ) {
         return $this->getProviderWrapper()->getRelatedResourceSet(

@@ -82,7 +82,7 @@ interface IQueryProvider
      * @param ResourceSet        $targetResourceSet    The resource set pointed to by the navigation property
      * @param ResourceProperty   $targetProperty       The navigation property to retrieve
      * @param FilterInfo|null    $filter               The $filter parameter of the OData query.  NULL if none specified
-     * @param mixed              $orderBy              sorted order if we want to get the data in some specific order
+     * @param mixed|null         $orderBy              sorted order if we want to get the data in some specific order
      * @param integer|null       $top                  number of records which need to be retrieved
      * @param integer|null       $skip                 number of records which need to be skipped
      * @param SkipTokenInfo|null $skipToken            value indicating what records to skip
