@@ -47,6 +47,9 @@ class FilterInfo
         $this->filterExpressionAsDataSourceExpression = $filterExpAsDataSourceExp;
     }
 
+    /**
+     * @return array
+     */
     public function getNavigationPropertiesUsed()
     {
         return $this->navigationPropertiesUsedInTheFilterClause;
