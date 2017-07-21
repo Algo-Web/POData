@@ -686,7 +686,7 @@ class ObjectModelSerializerBase
                 $this->appendSelectionOrExpandPath(
                     $selectionPaths,
                     $parentPathSegments,
-                    $childNode->getPropertyName()
+                    $childToProject->getPropertyName()
                 );
                 $foundSelections = true;
             }
