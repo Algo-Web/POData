@@ -23,7 +23,7 @@ class ConstantExpression extends AbstractExpression
     public function __construct($value, $type)
     {
         $this->value = $value;
-        $this->nodeType = ExpressionType::CONSTANT;
+        $this->nodeType = ExpressionType::CONSTANT();
         $this->type = $type;
     }
 

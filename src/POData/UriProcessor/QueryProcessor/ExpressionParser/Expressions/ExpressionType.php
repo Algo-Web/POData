@@ -2,13 +2,35 @@
 
 namespace POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions;
 
+use MyCLabs\Enum\Enum;
+
 /**
  * Class ExpressionType.
  *
  * Enumeration for expression language operators, function call and literal
  * used in $filter option
+ *
+ * @method ExpressionType ADD()
+ * @method ExpressionType AND_LOGICAL()
+ * @method ExpressionType CALL()
+ * @method ExpressionType CONSTANT()
+ * @method ExpressionType DIVIDE()
+ * @method ExpressionType EQUAL()
+ * @method ExpressionType GREATERTHAN()
+ * @method ExpressionType GREATERTHAN_OR_EQUAL()
+ * @method ExpressionType LESSTHAN()
+ * @method ExpressionType LESSTHAN_OR_EQUAL()
+ * @method ExpressionType MODULO()
+ * @method ExpressionType MULTIPLY()
+ * @method ExpressionType NEGATE()
+ * @method ExpressionType NOT_LOGICAL()
+ * @method ExpressionType NOTEQUAL()
+ * @method ExpressionType OR_LOGICAL()
+ * @method ExpressionType PROPERTYACCESS()
+ * @method ExpressionType PROPERTY_NULLABILITY_CHECK()
+ * @method ExpressionType SUBTRACT()
  */
-class ExpressionType
+class ExpressionType extends Enum
 {
     /**
      * Arithmetic expression with 'add' operator.

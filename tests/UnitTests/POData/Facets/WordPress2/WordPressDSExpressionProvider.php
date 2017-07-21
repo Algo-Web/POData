@@ -12,6 +12,7 @@ use POData\Providers\Expression\IExpressionProvider;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\Type\IType;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ExpressionType;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\PropertyAccessExpression;
 use POData\UriProcessor\QueryProcessor\FunctionDescription;
 
 class WordPressDSExpressionProvider implements IExpressionProvider
@@ -85,10 +86,10 @@ class WordPressDSExpressionProvider implements IExpressionProvider
     public function onLogicalExpression($expressionType, $left, $right)
     {
         switch ($expressionType) {
-            case ExpressionType::AND_LOGICAL:
+            case ExpressionType::AND_LOGICAL():
                 return $this->_prepareBinaryExpression(self::LOGICAL_AND, $left, $right);
             break;
-            case ExpressionType::OR_LOGICAL:
+            case ExpressionType::OR_LOGICAL():
                 return $this->_prepareBinaryExpression(self::LOGICAL_OR, $left, $right);
             break;
             default:
@@ -108,19 +109,19 @@ class WordPressDSExpressionProvider implements IExpressionProvider
     public function onArithmeticExpression($expressionType, $left, $right)
     {
         switch ($expressionType) {
-            case ExpressionType::MULTIPLY:
+            case ExpressionType::MULTIPLY():
                 return $this->_prepareBinaryExpression(self::MULTIPLY, $left, $right);
             break;
-            case ExpressionType::DIVIDE:
+            case ExpressionType::DIVIDE():
                 return $this->_prepareBinaryExpression(self::DIVIDE, $left, $right);
             break;
-            case ExpressionType::MODULO:
+            case ExpressionType::MODULO():
                 return $this->_prepareBinaryExpression(self::MODULO, $left, $right);
             break;
-            case ExpressionType::ADD:
+            case ExpressionType::ADD():
                 return $this->_prepareBinaryExpression(self::ADD, $left, $right);
             break;
-            case ExpressionType::SUBTRACT:
+            case ExpressionType::SUBTRACT():
                 return $this->_prepareBinaryExpression(self::SUBTRACT, $left, $right);
             break;
             default:
@@ -139,31 +140,32 @@ class WordPressDSExpressionProvider implements IExpressionProvider
      */
     public function onRelationalExpression($expressionType, $left, $right)
     {
+        assert($expressionType instanceof ExpressionType, get_class($expressionType));
         switch ($expressionType) {
-            case ExpressionType::GREATERTHAN:
+            case ExpressionType::GREATERTHAN():
                 return $this->_prepareBinaryExpression(self::GREATERTHAN, $left, $right);
             break;
-            case ExpressionType::GREATERTHAN_OR_EQUAL:
+            case ExpressionType::GREATERTHAN_OR_EQUAL():
                 return $this->_prepareBinaryExpression(
                     self::GREATERTHAN_OR_EQUAL,
                     $left,
                     $right
                 );
             break;
-            case ExpressionType::LESSTHAN:
+            case ExpressionType::LESSTHAN():
                 return $this->_prepareBinaryExpression(self::LESSTHAN, $left, $right);
             break;
-            case ExpressionType::LESSTHAN_OR_EQUAL:
+            case ExpressionType::LESSTHAN_OR_EQUAL():
                 return $this->_prepareBinaryExpression(
                     self::LESSTHAN_OR_EQUAL,
                     $left,
                     $right
                 );
             break;
-            case ExpressionType::EQUAL:
+            case ExpressionType::EQUAL():
                 return $this->_prepareBinaryExpression(self::EQUAL, $left, $right);
             break;
-            case ExpressionType::NOTEQUAL:
+            case ExpressionType::NOTEQUAL():
                 return $this->_prepareBinaryExpression(self::NOTEQUAL, $left, $right);
             break;
             default:
@@ -182,10 +184,10 @@ class WordPressDSExpressionProvider implements IExpressionProvider
     public function onUnaryExpression($expressionType, $child)
     {
         switch ($expressionType) {
-            case ExpressionType::NEGATE:
+            case ExpressionType::NEGATE():
                 return $this->_prepareUnaryExpression(self::NEGATE, $child);
             break;
-            case ExpressionType::NOT_LOGICAL:
+            case ExpressionType::NOT_LOGICAL():
                 return $this->_prepareUnaryExpression(self::LOGICAL_NOT, $child);
             break;
             default:
@@ -197,7 +199,7 @@ class WordPressDSExpressionProvider implements IExpressionProvider
      * Call-back for constant expression.
      *
      * @param IType  $type  The type of constant
-     * @param objetc $value The value of the constant
+     * @param object $value The value of the constant
      *
      * @return string
      */

@@ -214,7 +214,7 @@ class ExpressionParser2 extends ExpressionParser
             return new LogicalExpression(
                 $resultExpression,
                 $expression,
-                ExpressionType::AND_LOGICAL
+                ExpressionType::AND_LOGICAL()
             );
         }
 
@@ -237,12 +237,12 @@ class ExpressionParser2 extends ExpressionParser
     ) {
         $leftNullableExpTree = $this->processNodeForNullability($expression, $expression->getLeft());
         $rightNullableExpTree = $this->processNodeForNullability($expression, $expression->getRight());
-        if ($expression->getNodeType() == ExpressionType::OR_LOGICAL) {
+        if ($expression->getNodeType() == ExpressionType::OR_LOGICAL()) {
             if (null !== $leftNullableExpTree) {
                 $resultExpression = new LogicalExpression(
                     $leftNullableExpTree,
                     $expression->getLeft(),
-                    ExpressionType::AND_LOGICAL
+                    ExpressionType::AND_LOGICAL()
                 );
                 $expression->setLeft($resultExpression);
             }
@@ -251,7 +251,7 @@ class ExpressionParser2 extends ExpressionParser
                 $resultExpression = new LogicalExpression(
                     $rightNullableExpTree,
                     $expression->getRight(),
-                    ExpressionType::AND_LOGICAL
+                    ExpressionType::AND_LOGICAL()
                 );
                 $expression->setRight($resultExpression);
             }
@@ -269,7 +269,7 @@ class ExpressionParser2 extends ExpressionParser
             return new LogicalExpression(
                 $resultExpression,
                 $expression,
-                ExpressionType::AND_LOGICAL
+                ExpressionType::AND_LOGICAL()
             );
         }
 
@@ -304,7 +304,7 @@ class ExpressionParser2 extends ExpressionParser
             return new LogicalExpression(
                 $nullableExpTree,
                 $expression,
-                ExpressionType::AND_LOGICAL
+                ExpressionType::AND_LOGICAL()
             );
         }
 
@@ -338,7 +338,7 @@ class ExpressionParser2 extends ExpressionParser
             return new LogicalExpression(
                 $resultExpression,
                 $expression,
-                ExpressionType::AND_LOGICAL
+                ExpressionType::AND_LOGICAL()
             );
         }
 
@@ -360,11 +360,11 @@ class ExpressionParser2 extends ExpressionParser
         UnaryExpression $expression,
         $parentExpression
     ) {
-        if (ExpressionType::NEGATE == $expression->getNodeType()) {
+        if (ExpressionType::NEGATE() == $expression->getNodeType()) {
             return $this->processNodeForNullability($expression, $expression->getChild());
         }
 
-        if (ExpressionType::NOT_LOGICAL == $expression->getNodeType()) {
+        if (ExpressionType::NOT_LOGICAL() == $expression->getNodeType()) {
             $resultExpression = $this->processNodeForNullability($expression, $expression->getChild());
             if (null == $resultExpression) {
                 return null;
@@ -374,7 +374,7 @@ class ExpressionParser2 extends ExpressionParser
                 return new LogicalExpression(
                     $resultExpression,
                     $expression,
-                    ExpressionType::AND_LOGICAL
+                    ExpressionType::AND_LOGICAL()
                 );
             }
 
@@ -409,7 +409,7 @@ class ExpressionParser2 extends ExpressionParser
                         FunctionDescription::isNullCheckFunction($node->getType()),
                         [$node]
                     ),
-                    ExpressionType::NOT_LOGICAL,
+                    ExpressionType::NOT_LOGICAL(),
                     new Boolean()
                 );
             } else {
@@ -422,10 +422,10 @@ class ExpressionParser2 extends ExpressionParser
                             ),
                             [$node]
                         ),
-                        ExpressionType::NOT_LOGICAL,
+                        ExpressionType::NOT_LOGICAL(),
                         new Boolean()
                     ),
-                    ExpressionType::AND_LOGICAL
+                    ExpressionType::AND_LOGICAL()
                 );
             }
         }

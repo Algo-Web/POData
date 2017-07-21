@@ -42,7 +42,7 @@ class PropertyAccessExpression extends AbstractExpression
     {
         $this->parent = $parent;
         $this->child = null;
-        $this->nodeType = ExpressionType::PROPERTYACCESS;
+        $this->nodeType = ExpressionType::PROPERTYACCESS();
         $this->resourceProperty = $resourceProperty;
         //If the property is primitive type, then _type will be primitive types implementing IType
         if ($resourceProperty->getResourceType()->getResourceTypeKind() == ResourceTypeKind::PRIMITIVE()) {
@@ -169,7 +169,7 @@ class PropertyAccessExpression extends AbstractExpression
                         ),
                         [$basePropertyExpression]
                     ),
-                    ExpressionType::NOT_LOGICAL,
+                    ExpressionType::NOT_LOGICAL(),
                     new Boolean()
                 );
             }
@@ -186,7 +186,7 @@ class PropertyAccessExpression extends AbstractExpression
                 FunctionDescription::isNullCheckFunction($basePropertyExpression->getType()),
                 [$basePropertyExpression]
             ),
-            ExpressionType::NOT_LOGICAL,
+            ExpressionType::NOT_LOGICAL(),
             new Boolean()
         );
         while (($basePropertyExpression->getChild() != null)
@@ -197,13 +197,13 @@ class PropertyAccessExpression extends AbstractExpression
                     FunctionDescription::isNullCheckFunction($basePropertyExpression->getType()),
                     [$basePropertyExpression]
                 ),
-                ExpressionType::NOT_LOGICAL,
+                ExpressionType::NOT_LOGICAL(),
                 new Boolean()
             );
             $expression = new LogicalExpression(
                 $expression,
                 $expression2,
-                ExpressionType::AND_LOGICAL
+                ExpressionType::AND_LOGICAL()
             );
         }
 
@@ -214,13 +214,13 @@ class PropertyAccessExpression extends AbstractExpression
                     FunctionDescription::isNullCheckFunction($basePropertyExpression->getType()),
                     [$basePropertyExpression]
                 ),
-                ExpressionType::NOT_LOGICAL,
+                ExpressionType::NOT_LOGICAL(),
                 new Boolean()
             );
             $expression = new LogicalExpression(
                 $expression,
                 $expression2,
-                ExpressionType::AND_LOGICAL
+                ExpressionType::AND_LOGICAL()
             );
         }
 

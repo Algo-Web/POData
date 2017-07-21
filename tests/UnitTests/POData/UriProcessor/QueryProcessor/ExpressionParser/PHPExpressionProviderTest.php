@@ -4,6 +4,7 @@ namespace UnitTests\POData\UriProcessor\QueryProcessor\ExpressionParser;
 
 use Mockery as m;
 use POData\Providers\Metadata\IMetadataProvider;
+use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\Type\DateTime;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionParser2;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionProcessor;
@@ -546,7 +547,7 @@ class PHPExpressionProviderTest extends TestCase
 
         $expressionTree = $parser->parseFilter();
         //emit the PHP expression corresponds to Astoria filter query
-        $res = m::mock(\POData\Providers\Metadata\ResourceType::class)->makePartial();
+        $res = m::mock(ResourceType::class)->makePartial();
         $res->shouldReceive('getName')->andReturn('OH NOES!');
         $phpProvider = new \POData\Providers\Expression\PHPExpressionProvider('$lt');
         $phpProvider->setResourceType($res);

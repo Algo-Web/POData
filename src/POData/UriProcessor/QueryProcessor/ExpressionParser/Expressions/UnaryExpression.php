@@ -19,7 +19,7 @@ class UnaryExpression extends AbstractExpression
      * @param ExpressionType                        $nodeType Expression node type
      * @param \POData\Providers\Metadata\Type\IType $type     Expression type
      */
-    public function __construct($child, $nodeType, $type)
+    public function __construct($child, ExpressionType $nodeType, $type)
     {
         $this->child = $child;
         //allowed unary operator are 'not' (ExpressionType::NOT_LOGICAL)

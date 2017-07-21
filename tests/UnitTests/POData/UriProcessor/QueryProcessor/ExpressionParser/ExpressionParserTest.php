@@ -283,11 +283,11 @@ class ExpressionParserTest extends TestCase
         $expression = '1 add 2 sub 4';
         $parser->resetParser($expression);
         $expr = $parser->parseFilter();
-        $this->assertEquals(ExpressionType::SUBTRACT, $expr->getNodeType());
+        $this->assertEquals(ExpressionType::SUBTRACT(), $expr->getNodeType());
         $this->assertTrue($expr->getLeft() instanceof ArithmeticExpression);
         $this->assertTrue($expr->getRight() instanceof ConstantExpression);
-        $this->assertEquals(ExpressionType::ADD, $expr->getLeft()->getNodeType());
-        $this->assertEquals(ExpressionType::CONSTANT, $expr->getRight()->getNodeType());
+        $this->assertEquals(ExpressionType::ADD(), $expr->getLeft()->getNodeType());
+        $this->assertEquals(ExpressionType::CONSTANT(), $expr->getRight()->getNodeType());
         $this->assertTrue($expr->getLeft()->getLeft() instanceof ConstantExpression);
         $this->assertTrue($expr->getLeft()->getRight() instanceof ConstantExpression);
         $this->assertEquals(1, $expr->getLeft()->getLeft()->getValue());
@@ -295,11 +295,11 @@ class ExpressionParserTest extends TestCase
         $expression = '1 add (2 sub 4)';
         $parser->resetParser($expression);
         $expr = $parser->parseFilter();
-        $this->assertEquals(ExpressionType::ADD, $expr->getNodeType());
+        $this->assertEquals(ExpressionType::ADD(), $expr->getNodeType());
         $this->assertTrue($expr->getLeft() instanceof ConstantExpression);
         $this->assertTrue($expr->getRight() instanceof ArithmeticExpression);
-        $this->assertEquals(ExpressionType::SUBTRACT, $expr->getRight()->getNodeType());
-        $this->assertEquals(ExpressionType::CONSTANT, $expr->getLeft()->getNodeType());
+        $this->assertEquals(ExpressionType::SUBTRACT(), $expr->getRight()->getNodeType());
+        $this->assertEquals(ExpressionType::CONSTANT(), $expr->getLeft()->getNodeType());
         $this->assertTrue($expr->getRight()->getLeft() instanceof ConstantExpression);
         $this->assertTrue($expr->getRight()->getRight() instanceof ConstantExpression);
         $this->assertEquals(2, $expr->getRight()->getLeft()->getValue());
@@ -307,11 +307,11 @@ class ExpressionParserTest extends TestCase
         $expression = '1 add (2 sub 4)';
         $parser->resetParser($expression);
         $expr = $parser->parseFilter();
-        $this->assertEquals(ExpressionType::ADD, $expr->getNodeType());
+        $this->assertEquals(ExpressionType::ADD(), $expr->getNodeType());
         $this->assertTrue($expr->getLeft() instanceof ConstantExpression);
         $this->assertTrue($expr->getRight() instanceof ArithmeticExpression);
-        $this->assertEquals(ExpressionType::SUBTRACT, $expr->getRight()->getNodeType());
-        $this->assertEquals(ExpressionType::CONSTANT, $expr->getLeft()->getNodeType());
+        $this->assertEquals(ExpressionType::SUBTRACT(), $expr->getRight()->getNodeType());
+        $this->assertEquals(ExpressionType::CONSTANT(), $expr->getLeft()->getNodeType());
         $this->assertTrue($expr->getRight()->getLeft() instanceof ConstantExpression);
         $this->assertTrue($expr->getRight()->getRight() instanceof ConstantExpression);
         $this->assertEquals(2, $expr->getRight()->getLeft()->getValue());
@@ -319,11 +319,11 @@ class ExpressionParserTest extends TestCase
         $expression = '1 add 2 mul 4';
         $parser->resetParser($expression);
         $expr = $parser->parseFilter();
-        $this->assertEquals(ExpressionType::ADD, $expr->getNodeType());
+        $this->assertEquals(ExpressionType::ADD(), $expr->getNodeType());
         $this->assertTrue($expr->getLeft() instanceof ConstantExpression);
         $this->assertTrue($expr->getRight() instanceof ArithmeticExpression);
-        $this->assertEquals(ExpressionType::MULTIPLY, $expr->getRight()->getNodeType());
-        $this->assertEquals(ExpressionType::CONSTANT, $expr->getLeft()->getNodeType());
+        $this->assertEquals(ExpressionType::MULTIPLY(), $expr->getRight()->getNodeType());
+        $this->assertEquals(ExpressionType::CONSTANT(), $expr->getLeft()->getNodeType());
         $this->assertTrue($expr->getRight()->getLeft() instanceof ConstantExpression);
         $this->assertTrue($expr->getRight()->getRight() instanceof ConstantExpression);
         $this->assertEquals(4, $expr->getRight()->getRight()->getValue());
@@ -333,7 +333,7 @@ class ExpressionParserTest extends TestCase
         $expr = $parser->parseFilter();
         $this->assertTrue($expr instanceof ArithmeticExpression);
         $this->assertTrue($expr->getType() instanceof Double);
-        $this->assertEquals(ExpressionType::ADD, $expr->getNodeType());
+        $this->assertEquals(ExpressionType::ADD(), $expr->getNodeType());
         $this->assertTrue($expr->getLeft() instanceof PropertyAccessExpression);
         $this->assertTrue($expr->getLeft()->getType() instanceof Double);
 
@@ -429,7 +429,7 @@ class ExpressionParserTest extends TestCase
         $parser->resetParser($expression);
         $expr = $parser->parseFilter();
         $this->assertTrue($expr instanceof RelationalExpression);
-        $this->assertEquals($expr->getNodeType(), ExpressionType::GREATERTHAN_OR_EQUAL);
+        $this->assertEquals(ExpressionType::GREATERTHAN_OR_EQUAL(), $expr->getNodeType());
         $this->assertTrue($expr->getLeft() instanceof FunctionCallExpression);
         $this->assertEquals('strcmp', $expr->getLeft()->getFunctionDescription()->name);
         $paramExpression = $expr->getLeft()->getParamExpressions();
@@ -477,11 +477,11 @@ class ExpressionParserTest extends TestCase
         $parser->resetParser($expression);
         $expr = $parser->parseFilter();
         $this->assertTrue($expr instanceof LogicalExpression);
-        $this->assertEquals(ExpressionType::AND_LOGICAL, $expr->getNodeType());
+        $this->assertEquals(ExpressionType::AND_LOGICAL(), $expr->getNodeType());
         $this->assertTrue($expr->getLeft() instanceof RelationalExpression);
         $this->assertTrue($expr->getRight() instanceof RelationalExpression);
-        $this->assertEquals(ExpressionType::GREATERTHAN, $expr->getLeft()->getNodeType());
-        $this->assertEquals(ExpressionType::LESSTHAN_OR_EQUAL, $expr->getRight()->getNodeType());
+        $this->assertEquals(ExpressionType::GREATERTHAN(), $expr->getLeft()->getNodeType());
+        $this->assertEquals(ExpressionType::LESSTHAN_OR_EQUAL(), $expr->getRight()->getNodeType());
         $this->assertTrue($expr->getLeft()->getLeft() instanceof ArithmeticExpression);
         $this->assertTrue($expr->getLeft()->getRight() instanceof ConstantExpression);
 
@@ -540,14 +540,14 @@ class ExpressionParserTest extends TestCase
         $parser = new ExpressionParser($expression, $this->customersResourceType, false);
         $expr = $parser->parseFilter();
         $this->assertTrue($expr instanceof UnaryExpression);
-        $this->assertEquals(ExpressionType::NEGATE, $expr->getNodeType());
+        $this->assertEquals(ExpressionType::NEGATE(), $expr->getNodeType());
         $this->assertTrue($expr->getChild() instanceof PropertyAccessExpression);
 
         $expression = 'not(1 gt 4)';
         $parser->resetParser($expression);
         $expr = $parser->parseFilter();
         $this->assertTrue($expr instanceof UnaryExpression);
-        $this->assertEquals(ExpressionType::NOT_LOGICAL, $expr->getNodeType());
+        $this->assertEquals(ExpressionType::NOT_LOGICAL(), $expr->getNodeType());
         $this->assertTrue($expr->getType() instanceof Boolean);
         $this->assertTrue($expr->getChild() instanceof RelationalExpression);
 

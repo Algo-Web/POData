@@ -15,7 +15,7 @@ class ArithmeticExpression extends BinaryExpression
      * @param ExpressionType                        $nodeType Expression node type
      * @param \POData\Providers\Metadata\Type\IType $type     Expression type
      */
-    public function __construct($left, $right, $nodeType, $type)
+    public function __construct($left, $right, ExpressionType $nodeType, $type)
     {
         $this->nodeType = $nodeType;
         $this->type = $type;
