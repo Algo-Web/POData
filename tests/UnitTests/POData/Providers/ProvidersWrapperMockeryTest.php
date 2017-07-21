@@ -3,10 +3,17 @@
 namespace UnitTests\POData\Providers\Metadata;
 
 use Mockery as m;
+use POData\Common\ODataException;
 use POData\Configuration\IServiceConfiguration;
+use POData\Providers\Metadata\EdmSchemaVersion;
+use POData\Providers\Metadata\IMetadataProvider;
+use POData\Providers\Metadata\ResourceAssociationSet;
+use POData\Providers\Metadata\ResourceComplexType;
+use POData\Providers\Metadata\ResourceEntityType;
 use POData\Providers\Metadata\ResourceFunctionType;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceSet;
+use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Metadata\SimpleMetadataProvider;
 use POData\Providers\ProvidersQueryWrapper;
 use POData\Providers\ProvidersWrapper;
@@ -321,6 +328,153 @@ class ProvidersWrapperMockeryTest extends TestCase
         $this->assertTrue(
             $foo->handlesOrderedPaging()
         );
+    }
+
+    public function testGetResourcePropertiesOnNonEntityType()
+    {
+        $expected = ['eins', 'zwei', 'polizei'];
+        $wrap = m::mock(ResourceSetWrapper::class);
+        $type = m::mock(ResourceComplexType::class);
+        $type->shouldReceive('getAllProperties')->andReturn($expected);
+
+        $foo = m::mock(ProvidersWrapper::class)->makePartial();
+        $actual = $foo->getResourceProperties($wrap, $type);
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testGetResourcePropertiesOnEntityType()
+    {
+        $rProp1 = m::mock(ResourceProperty::class)->makePartial();
+        $rProp1->shouldReceive('getName')->andReturn('first')->atLeast(1);
+        $rProp2 = m::mock(ResourceProperty::class)->makePartial();
+        $rProp2->shouldReceive('getName')->andReturn('second')->atLeast(1);
+
+        $wrap = m::mock(ResourceSetWrapper::class);
+        $wrap->shouldReceive('getName')->andReturn('STOP!');
+        $type = m::mock(ResourceEntityType::class);
+        $type->shouldReceive('getFullName')->andReturn('HammerTime!');
+        $type->shouldReceive('getAllProperties')->andReturn([$rProp1, $rProp2]);
+
+        $foo = m::mock(ProvidersWrapper::class)->makePartial();
+        $actual = $foo->getResourceProperties($wrap, $type);
+        $this->assertEquals(2, count($actual));
+        $this->assertTrue(isset($actual['first']));
+        $this->assertEquals('first', $actual['first']->getName());
+        $this->assertTrue(isset($actual['second']));
+        $this->assertEquals('second', $actual['second']->getName());
+    }
+
+    public function testGetResourceAssociationSetWhereAssociationSetHasTwoNullEnds()
+    {
+        $expected = 'IDSMP::GetResourceSet returns invalid instance of ResourceSet when invoked with params'
+                    .' {ResourceSet with name rSet, ResourceType with name rTypeDelta, ResourceProperty with'
+                    .' name rProp}.';
+        $actual = null;
+
+        $set = m::mock(ResourceSet::class);
+        $set->shouldReceive('getName')->andReturn('rSet');
+        $type = m::mock(ResourceEntityType::class);
+        $type->shouldReceive('resolvePropertyDeclaredOnThisType')->andReturn('foo')->once();
+        $type->shouldReceive('getFullName')->andReturn('rTypeDelta');
+
+        $prop = m::mock(ResourceProperty::class);
+        $prop->shouldReceive('getName')->andReturn('rProp');
+
+        $associationSet = m::mock(ResourceAssociationSet::class);
+        $associationSet->shouldReceive('getResourceAssociationSetEnd')->andReturn(null)->once();
+        $associationSet->shouldReceive('getRelatedResourceAssociationSetEnd')->andReturn(null)->once();
+
+        $meta = m::mock(IMetadataProvider::class);
+        $meta->shouldReceive('getResourceAssociationSet')->andReturn($associationSet);
+
+        $foo = m::mock(ProvidersWrapper::class)->makePartial();
+        $foo->shouldReceive('getMetaProvider')->andReturn($meta);
+
+        try {
+            $foo->getResourceAssociationSet($set, $type, $prop);
+        } catch (ODataException $e) {
+            $actual = $e->getMessage();
+            $this->assertEquals(500, $e->getStatusCode());
+        }
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testGetResourceAssociationSetWhereAssociationSetHasThisEndNull()
+    {
+        $expected = 'IDSMP::GetResourceSet returns invalid instance of ResourceSet when invoked with params'
+                    .' {ResourceSet with name rSet, ResourceType with name rTypeDelta, ResourceProperty with'
+                    .' name rProp}.';
+        $actual = null;
+
+        $set = m::mock(ResourceSet::class);
+        $set->shouldReceive('getName')->andReturn('rSet');
+        $type = m::mock(ResourceEntityType::class);
+        $type->shouldReceive('resolvePropertyDeclaredOnThisType')->andReturn('foo')->once();
+        $type->shouldReceive('getFullName')->andReturn('rTypeDelta');
+
+        $prop = m::mock(ResourceProperty::class);
+        $prop->shouldReceive('getName')->andReturn('rProp');
+
+        $associationSet = m::mock(ResourceAssociationSet::class);
+        $associationSet->shouldReceive('getResourceAssociationSetEnd')->andReturn(null)->once();
+        $associationSet->shouldReceive('getRelatedResourceAssociationSetEnd')->andReturn('foo')->once();
+
+        $meta = m::mock(IMetadataProvider::class);
+        $meta->shouldReceive('getResourceAssociationSet')->andReturn($associationSet);
+
+        $foo = m::mock(ProvidersWrapper::class)->makePartial();
+        $foo->shouldReceive('getMetaProvider')->andReturn($meta);
+
+        try {
+            $foo->getResourceAssociationSet($set, $type, $prop);
+        } catch (ODataException $e) {
+            $actual = $e->getMessage();
+            $this->assertEquals(500, $e->getStatusCode());
+        }
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testGetResourceAssociationSetWhereAssociationSetHasRelatedEndNull()
+    {
+        $expected = 'IDSMP::GetResourceSet returns invalid instance of ResourceSet when invoked with params'
+                    .' {ResourceSet with name rSet, ResourceType with name rTypeDelta, ResourceProperty with'
+                    .' name rProp}.';
+        $actual = null;
+
+        $set = m::mock(ResourceSet::class);
+        $set->shouldReceive('getName')->andReturn('rSet');
+        $type = m::mock(ResourceEntityType::class);
+        $type->shouldReceive('resolvePropertyDeclaredOnThisType')->andReturn('foo')->once();
+        $type->shouldReceive('getFullName')->andReturn('rTypeDelta');
+
+        $prop = m::mock(ResourceProperty::class);
+        $prop->shouldReceive('getName')->andReturn('rProp');
+
+        $associationSet = m::mock(ResourceAssociationSet::class);
+        $associationSet->shouldReceive('getResourceAssociationSetEnd')->andReturn('foo')->once();
+        $associationSet->shouldReceive('getRelatedResourceAssociationSetEnd')->andReturn(null)->once();
+
+        $meta = m::mock(IMetadataProvider::class);
+        $meta->shouldReceive('getResourceAssociationSet')->andReturn($associationSet);
+
+        $foo = m::mock(ProvidersWrapper::class)->makePartial();
+        $foo->shouldReceive('getMetaProvider')->andReturn($meta);
+
+        try {
+            $foo->getResourceAssociationSet($set, $type, $prop);
+        } catch (ODataException $e) {
+            $actual = $e->getMessage();
+            $this->assertEquals(500, $e->getStatusCode());
+        }
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testGetSchemaVersion()
+    {
+        $expected = EdmSchemaVersion::VERSION_1_DOT_1;
+        $foo = m::mock(ProvidersWrapper::class)->makePartial();
+        $actual = $foo->getEdmSchemaVersion();
+        $this->assertEquals($expected, $actual);
     }
 
     public static function mockProperty($object, $propertyName, $value)
