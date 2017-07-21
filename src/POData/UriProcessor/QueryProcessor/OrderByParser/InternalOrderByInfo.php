@@ -5,6 +5,7 @@ namespace POData\UriProcessor\QueryProcessor\OrderByParser;
 use POData\Common\Messages;
 use POData\Common\ODataException;
 use POData\Providers\Metadata\ResourceType;
+use POData\Providers\Metadata\Type\IType;
 use POData\Providers\Query\QueryResult;
 
 /**
@@ -167,7 +168,7 @@ class InternalOrderByInfo
                         break;
                     } elseif ($isLastSegment) {
                         $type = $subPathSegment->getInstanceType();
-                        // assert($type implements IType)
+                        assert($type instanceof IType);
                         // If this is a string then do utf8_encode to convert
                         // utf8 decoded characters to
                         // corresponding utf8 char (e.g. � to í), then do a
