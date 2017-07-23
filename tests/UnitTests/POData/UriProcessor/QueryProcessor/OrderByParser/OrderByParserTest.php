@@ -21,6 +21,7 @@ use UnitTests\POData\Facets\NorthWind1\Customer2;
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 use UnitTests\POData\Facets\NorthWind1\Order2;
 use UnitTests\POData\Facets\NorthWind1\Order_Details2;
+use UnitTests\POData\Facets\NorthWind1\OrderDetails2;
 use UnitTests\POData\Facets\NorthWind1\Product2;
 use UnitTests\POData\TestCase;
 
@@ -354,7 +355,7 @@ class OrderByParserTest extends TestCase
         //Check the dummy object is initialized properly
         $dummyObject = $internalOrderInfo->getDummyObject();
         $this->assertTrue(is_object($dummyObject));
-        $this->assertTrue($dummyObject instanceof Order_Details2);
+        $this->assertTrue($dummyObject instanceof OrderDetails2);
         $this->assertTrue(isset($dummyObject->Order));
         $this->assertTrue(is_object($dummyObject->Order));
         $this->assertTrue($dummyObject->Order instanceof Order2);
@@ -459,7 +460,7 @@ class OrderByParserTest extends TestCase
         //Check the dummy object is initialized properly
         $dummyObject = $internalOrderInfo->getDummyObject();
         $this->assertTrue(is_object($dummyObject));
-        $this->assertTrue($dummyObject instanceof Order_Details2);
+        $this->assertTrue($dummyObject instanceof OrderDetails2);
         $this->assertTrue(isset($dummyObject->Order));
         $this->assertTrue(is_object($dummyObject->Order));
         $this->assertTrue($dummyObject->Order instanceof Order2);
@@ -536,8 +537,8 @@ class OrderByParserTest extends TestCase
          $result = $Order_DetailsA->Order->Price > $Order_DetailsB->Order->Price;
          return -1*$result;
          */
-        $OrderDetails1 = new Order_Details2();
-        $OrderDetails2 = new Order_Details2();
+        $OrderDetails1 = new OrderDetails2();
+        $OrderDetails2 = new OrderDetails2();
         //When any properties in the orderby path become null for both parameters then they are equal
         $OrderDetails1->Order = new Order2();
         $OrderDetails1->Order->Price = null;
