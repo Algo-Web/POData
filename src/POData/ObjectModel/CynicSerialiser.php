@@ -58,6 +58,13 @@ class CynicSerialiser implements IObjectSerialiser
     protected $absoluteServiceUri;
 
     /**
+     * Absolute service Uri with slash.
+     *
+     * @var string
+     */
+    protected $absoluteServiceUriWithSlash;
+
+    /**
      * Holds reference to segment stack being processed.
      *
      * @var SegmentStack
@@ -147,7 +154,7 @@ class CynicSerialiser implements IObjectSerialiser
             if ($i > 0 && true === $entryObjects->hasMore) {
                 $stackSegment = $this->getRequest()->getTargetResourceSetWrapper()->getName();
                 $lastObject = end($entryObjects->results);
-                $segment = $this->getNextLinkUri($lastObject, $this->getRequest()->getRequestUrl()->getUrlAsString());
+                $segment = $this->getNextLinkUri($lastObject);
                 $nextLink = new ODataLink();
                 $nextLink->name = ODataConstants::ATOM_LINK_NEXT_ATTRIBUTE_STRING;
                 $nextLink->url = rtrim($this->absoluteServiceUri, '/') . '/' . $stackSegment . $segment;
@@ -173,7 +180,20 @@ class CynicSerialiser implements IObjectSerialiser
      */
     public function writeTopLevelComplexObject(QueryResult &$complexValue, $propertyName, ResourceType &$resourceType)
     {
-        // TODO: Implement writeTopLevelComplexObject() method.
+        $result = $complexValue->results;
+
+        $propertyContent = new ODataPropertyContent();
+        $odataProperty = new ODataProperty();
+        $odataProperty->name = $propertyName;
+        $odataProperty->typeName = $resourceType->getFullName();
+        if (null !== $result) {
+            $internalContent = $this->writeComplexValue($resourceType, $result);
+            $odataProperty->value = $internalContent;
+        }
+
+        $propertyContent->properties[] = $odataProperty;
+
+        return $propertyContent;
     }
 
     /**
@@ -411,11 +431,10 @@ class CynicSerialiser implements IObjectSerialiser
      *
      * @param mixed  &$lastObject Last object serialized to be
      *                            used for generating $skiptoken
-     * @param string $absoluteUri Absolute response URI
      *
      * @return string for the link for next page
      */
-    protected function getNextLinkUri(&$lastObject, $absoluteUri)
+    protected function getNextLinkUri(&$lastObject)
     {
         $currentExpandedProjectionNode = $this->getCurrentExpandedProjectionNode();
         $internalOrderByInfo = $currentExpandedProjectionNode->getInternalOrderByInfo();
