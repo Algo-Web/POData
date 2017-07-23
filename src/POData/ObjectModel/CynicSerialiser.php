@@ -2,13 +2,16 @@
 
 namespace POData\ObjectModel;
 
+use POData\Common\InvalidOperationException;
 use POData\Common\Messages;
 use POData\Common\ODataConstants;
 use POData\Common\ODataException;
 use POData\IService;
 use POData\Providers\Metadata\ResourceProperty;
+use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Metadata\ResourceType;
+use POData\Providers\Metadata\ResourceTypeKind;
 use POData\Providers\Metadata\Type\Binary;
 use POData\Providers\Metadata\Type\Boolean;
 use POData\Providers\Metadata\Type\DateTime;
@@ -39,6 +42,13 @@ class CynicSerialiser implements IObjectSerialiser
      * @var RequestDescription
      */
     protected $request;
+
+    /**
+     * Collection of complex type instances used for cycle detection.
+     *
+     * @var array
+     */
+    protected $complexTypeInstanceCollection;
 
     /**
      * Absolute service Uri.
@@ -172,12 +182,21 @@ class CynicSerialiser implements IObjectSerialiser
      * @param  QueryResult $bagValue
      * @param  string $propertyName The name of the bag property
      * @param  ResourceType &$resourceType Describes the type of bag object
+     *
      * @return ODataPropertyContent
-     * @internal param QueryResult $BagValue Results property contains the bag object to be written
      */
     public function writeTopLevelBagObject(QueryResult &$bagValue, $propertyName, ResourceType &$resourceType)
     {
-        // TODO: Implement writeTopLevelBagObject() method.
+        $result = $bagValue->results;
+
+        $propertyContent = new ODataPropertyContent();
+        $odataProperty = new ODataProperty();
+        $odataProperty->name = $propertyName;
+        $odataProperty->typeName = 'Collection('.$resourceType->getFullName().')';
+        $odataProperty->value = $this->writeBagValue($resourceType, $result);
+
+        $propertyContent->properties[] = $odataProperty;
+        return $propertyContent;
     }
 
     /**
@@ -261,6 +280,90 @@ class CynicSerialiser implements IObjectSerialiser
     public function getStack()
     {
         return $this->stack;
+    }
+
+    /**
+     * @param ResourceType $resourceType
+     * @param $result
+     * @return ODataBagContent|null
+     */
+    protected function writeBagValue(ResourceType &$resourceType, $result)
+    {
+        assert(null == $result || is_array($result), 'Bag parameter must be null or array');
+        $typeKind = $resourceType->getResourceTypeKind();
+        assert(
+            ResourceTypeKind::PRIMITIVE() == $typeKind || ResourceTypeKind::COMPLEX() == $typeKind,
+            '$bagItemResourceTypeKind != ResourceTypeKind::PRIMITIVE'
+            .' && $bagItemResourceTypeKind != ResourceTypeKind::COMPLEX'
+        );
+        if (null == $result) {
+            return null;
+        }
+        $bag = new ODataBagContent();
+        foreach ($result as $value) {
+            if (isset($value)) {
+                if (ResourceTypeKind::PRIMITIVE() == $typeKind) {
+                    $instance = $resourceType->getInstanceType();
+                    assert($instance instanceof IType, get_class($instance));
+                    $bag->propertyContents[] = $this->primitiveToString($instance, $value);
+                } elseif (ResourceTypeKind::COMPLEX() == $typeKind) {
+                    $bag->propertyContents[] = $this->writeComplexValue($resourceType, $value);
+                }
+            }
+        }
+        return $bag;
+    }
+
+    /**
+     * @param ResourceType  $resourceType
+     * @param object        $result
+     * @param string|null   $propertyName
+     * @return ODataPropertyContent
+     */
+    protected function writeComplexValue(ResourceType &$resourceType, &$result, $propertyName = null)
+    {
+        assert(is_object($result), 'Supplied $customObject must be an object');
+
+        $count = count($this->complexTypeInstanceCollection);
+        for ($i = 0; $i < $count; ++$i) {
+            if ($this->complexTypeInstanceCollection[$i] === $result) {
+                throw new InvalidOperationException(
+                    Messages::objectModelSerializerLoopsNotAllowedInComplexTypes($propertyName)
+                );
+            }
+        }
+
+        $this->complexTypeInstanceCollection[$count] = &$result;
+
+        $internalContent = new ODataPropertyContent();
+        $resourceProperties = $resourceType->getAllProperties();
+        // first up, handle primitive properties
+        foreach ($resourceProperties as $prop) {
+            $resourceKind = $prop->getKind();
+            $propName = $prop->getName();
+            $internalProperty = new ODataProperty();
+            $internalProperty->name = $propName;
+            if (static::isMatchPrimitive($resourceKind)) {
+                $iType = $prop->getInstanceType();
+                assert($iType instanceof IType, get_class($iType));
+                $internalProperty->typeName = $iType->getFullTypeName();
+
+                $rType = $prop->getResourceType()->getInstanceType();
+                assert($rType instanceof IType, get_class($rType));
+                $internalProperty->value = $this->primitiveToString($rType, $result->$propName);
+
+                $internalContent->properties[] = $internalProperty;
+            } elseif (ResourcePropertyKind::COMPLEX_TYPE == $resourceKind) {
+                $rType = $prop->getResourceType();
+                $internalProperty->typeName = $rType->getFullName();
+                $internalProperty->value = $this->writeComplexValue($rType, $result->$propName, $propName);
+
+                $internalContent->properties[] = $internalProperty;
+            }
+        }
+
+        unset($this->complexTypeInstanceCollection[$count]);
+        return $internalContent;
     }
 
     protected function getEntryInstanceKey($entityInstance, ResourceType $resourceType, $containerName)
@@ -456,5 +559,16 @@ class CynicSerialiser implements IObjectSerialiser
         }
 
         return $stringValue;
+    }
+
+    public static function isMatchPrimitive($resourceKind)
+    {
+        if (16 > $resourceKind) {
+            return false;
+        }
+        if (28 < $resourceKind) {
+            return false;
+        }
+        return 0 == ($resourceKind % 4);
     }
 }
