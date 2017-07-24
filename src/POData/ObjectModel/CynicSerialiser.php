@@ -286,7 +286,7 @@ class CynicSerialiser implements IObjectSerialiser
      * Sets the data service instance.
      *
      * @param IService $service
-     * @return IService
+     * @return void
      */
     public function setService(IService $service)
     {
