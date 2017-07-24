@@ -290,7 +290,9 @@ class CynicSerialiser implements IObjectSerialiser
      */
     public function setService(IService $service)
     {
-        // TODO: Implement setService() method.
+        $this->service = $service;
+        $this->absoluteServiceUri = $service->getHost()->getAbsoluteServiceUri()->getUrlAsString();
+        $this->absoluteServiceUriWithSlash = rtrim($this->absoluteServiceUri, '/') . '/';
     }
 
     /**
@@ -310,7 +312,7 @@ class CynicSerialiser implements IObjectSerialiser
      */
     protected function writeBagValue(ResourceType &$resourceType, $result)
     {
-        assert(null == $result || is_array($result), 'Bag parameter must be null or array');
+        assert(null === $result || is_array($result), 'Bag parameter must be null or array');
         $typeKind = $resourceType->getResourceTypeKind();
         assert(
             ResourceTypeKind::PRIMITIVE() == $typeKind || ResourceTypeKind::COMPLEX() == $typeKind,
@@ -436,7 +438,7 @@ class CynicSerialiser implements IObjectSerialiser
     {
         $currentExpandedProjectionNode = $this->getCurrentExpandedProjectionNode();
         $internalOrderByInfo = $currentExpandedProjectionNode->getInternalOrderByInfo();
-        assert(null != $internalOrderByInfo);
+        assert(null !== $internalOrderByInfo);
         assert(is_object($internalOrderByInfo));
         assert($internalOrderByInfo instanceof InternalOrderByInfo, get_class($internalOrderByInfo));
         $numSegments = count($internalOrderByInfo->getOrderByPathSegments());
@@ -523,8 +525,8 @@ class CynicSerialiser implements IObjectSerialiser
                      ODataConstants::HTTPQUERY_STRING_INLINECOUNT,
                      ODataConstants::HTTPQUERY_STRING_SELECT, ] as $queryOption) {
             $value = $this->getService()->getHost()->getQueryStringItem($queryOption);
-            if (!is_null($value)) {
-                if (!is_null($queryParameterString)) {
+            if (null !== $value) {
+                if (null !== $queryParameterString) {
                     $queryParameterString = $queryParameterString . '&';
                 }
 
@@ -536,7 +538,7 @@ class CynicSerialiser implements IObjectSerialiser
         if (!is_null($topCountValue)) {
             $remainingCount = $topCountValue - $this->getRequest()->getTopCount();
             if (0 < $remainingCount) {
-                if (!is_null($queryParameterString)) {
+                if (null !== $queryParameterString) {
                     $queryParameterString .= '&';
                 }
 
@@ -544,7 +546,7 @@ class CynicSerialiser implements IObjectSerialiser
             }
         }
 
-        if (!is_null($queryParameterString)) {
+        if (null !== $queryParameterString) {
             $queryParameterString .= '&';
         }
 
