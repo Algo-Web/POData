@@ -187,6 +187,7 @@ class CynicSerialiser implements IObjectSerialiser
         $odataProperty->name = $propertyName;
         $odataProperty->typeName = $resourceType->getFullName();
         if (null !== $result) {
+            assert(is_object($result), 'Supplied $customObject must be an object');
             $internalContent = $this->writeComplexValue($resourceType, $result);
             $odataProperty->value = $internalContent;
         }
@@ -371,15 +372,12 @@ class CynicSerialiser implements IObjectSerialiser
                 $rType = $prop->getResourceType()->getInstanceType();
                 assert($rType instanceof IType, get_class($rType));
                 $internalProperty->value = $this->primitiveToString($rType, $result->$propName);
-
-                $internalContent->properties[] = $internalProperty;
             } elseif (ResourcePropertyKind::COMPLEX_TYPE == $resourceKind) {
                 $rType = $prop->getResourceType();
                 $internalProperty->typeName = $rType->getFullName();
                 $internalProperty->value = $this->writeComplexValue($rType, $result->$propName, $propName);
-
-                $internalContent->properties[] = $internalProperty;
             }
+            $internalContent->properties[] = $internalProperty;
         }
 
         unset($this->complexTypeInstanceCollection[$count]);
