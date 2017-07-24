@@ -386,6 +386,26 @@ class CynicSerialiser implements IObjectSerialiser
         return $internalContent;
     }
 
+    /**
+     * Check whether to expand a navigation property or not.
+     *
+     * @param string $navigationPropertyName Name of naviagtion property in question
+     *
+     * @return bool True if the given navigation should be expanded, otherwise false
+     */
+    protected function shouldExpandSegment($navigationPropertyName)
+    {
+        $expandedProjectionNode = $this->getCurrentExpandedProjectionNode();
+        if (is_null($expandedProjectionNode)) {
+            return false;
+        }
+
+        $expandedProjectionNode = $expandedProjectionNode->findNode($navigationPropertyName);
+
+        // null is a valid input to an instanceof call as of PHP 5.6 - will always return false
+        return $expandedProjectionNode instanceof ExpandedProjectionNode;
+    }
+
     protected function getEntryInstanceKey($entityInstance, ResourceType $resourceType, $containerName)
     {
         $typeName = $resourceType->getName();
@@ -424,6 +444,31 @@ class CynicSerialiser implements IObjectSerialiser
         $count = count($segmentWrappers);
 
         return 0 == $count ? $this->getRequest()->getTargetResourceSetWrapper() : $segmentWrappers[$count - 1];
+    }
+
+    /**
+     * Wheter next link is needed for the current resource set (feed)
+     * being serialized.
+     *
+     * @param int $resultSetCount Number of entries in the current
+     *                            resource set
+     *
+     * @return bool true if the feed must have a next page link
+     */
+    protected function needNextPageLink($resultSetCount)
+    {
+        $currentResourceSet = $this->getCurrentResourceSetWrapper();
+        $recursionLevel = count($this->getStack()->getSegmentNames());
+        $pageSize = $currentResourceSet->getResourceSetPageSize();
+
+        if (1 == $recursionLevel) {
+            //presence of $top option affect next link for root container
+            $topValueCount = $this->getRequest()->getTopOptionCount();
+            if (!is_null($topValueCount) && ($topValueCount <= $pageSize)) {
+                return false;
+            }
+        }
+        return $resultSetCount == $pageSize;
     }
 
     /**
