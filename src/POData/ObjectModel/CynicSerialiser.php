@@ -7,8 +7,12 @@ use POData\Common\Messages;
 use POData\Common\ODataConstants;
 use POData\Common\ODataException;
 use POData\IService;
+use POData\Providers\Metadata\ResourceComplexType;
+use POData\Providers\Metadata\ResourceEntityType;
+use POData\Providers\Metadata\ResourcePrimitiveType;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourcePropertyKind;
+use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\ResourceTypeKind;
@@ -72,6 +76,11 @@ class CynicSerialiser implements IObjectSerialiser
     protected $stack;
 
     /**
+     * Lightweight stack tracking for recursive descent fill
+     */
+    private $lightStack = [];
+
+    /**
      * @param IService                  $service    Reference to the data service instance
      * @param RequestDescription|null   $request    Type instance describing the client submitted request
      */
@@ -94,7 +103,94 @@ class CynicSerialiser implements IObjectSerialiser
      */
     public function writeTopLevelElement(QueryResult $entryObject)
     {
-        // TODO: Implement writeTopLevelElement() method.
+        if (!isset($entryObject->results)) {
+            array_pop($this->lightStack);
+            return null;
+        }
+
+        $this->loadStackIfEmpty();
+
+        $stackCount = count($this->lightStack);
+        $topOfStack = $this->lightStack[$stackCount-1];
+        $resourceType = $this->getService()->getProvidersWrapper()->resolveResourceType($topOfStack[0]);
+        $rawProp = $resourceType->getAllProperties();
+        $relProp = [];
+        $nonRelProp = [];
+        foreach ($rawProp as $prop) {
+            if ($prop->getResourceType() instanceof ResourceEntityType) {
+                $relProp[] = $prop;
+            } else {
+                $nonRelProp[$prop->getName()] = $prop;
+            }
+        }
+
+        $resourceSet = $resourceType->getCustomState();
+        assert($resourceSet instanceof ResourceSet);
+        $title = $resourceType->getName();
+        $type = $resourceType->getFullName();
+
+        $relativeUri = $this->getEntryInstanceKey(
+            $entryObject->results,
+            $resourceType,
+            $resourceSet->getName()
+        );
+        $absoluteUri = rtrim($this->absoluteServiceUri, '/') . '/' . $relativeUri;
+
+        list($mediaLink, $mediaLinks) = $this->writeMediaData(
+            $entryObject->results,
+            $type,
+            $relativeUri,
+            $resourceType
+        );
+
+        $propertyContent = $this->writeProperties($entryObject->results, $nonRelProp);
+
+        $links = [];
+        foreach ($relProp as $prop) {
+            $nuLink = new ODataLink();
+            $propKind = $prop->getKind();
+
+            assert(
+                ResourcePropertyKind::RESOURCESET_REFERENCE == $propKind
+                || ResourcePropertyKind::RESOURCE_REFERENCE == $propKind,
+                '$propKind != ResourcePropertyKind::RESOURCESET_REFERENCE &&'
+                .' $propKind != ResourcePropertyKind::RESOURCE_REFERENCE'
+            );
+            $propTail = ResourcePropertyKind::RESOURCE_REFERENCE == $propKind ? 'entry' : 'feed';
+            $propType = 'application/atom+xml;type='.$propTail;
+            $propName = $prop->getName();
+            $nuLink->title = $propName;
+            $nuLink->name = ODataConstants::ODATA_RELATED_NAMESPACE . $propName;
+            $nuLink->url = $relativeUri . '/' . $propName;
+            $nuLink->type = $propType;
+
+            $navProp = new ODataNavigationPropertyInfo($prop, $this->shouldExpandSegment($propName));
+            if ($navProp->expanded) {
+                $this->expandNavigationProperty($entryObject, $prop, $nuLink, $propKind, $propName);
+            }
+
+            $links[] = $nuLink;
+        }
+
+        $odata = new ODataEntry();
+        $odata->resourceSetName = $resourceSet->getName();
+        $odata->id = $absoluteUri;
+        $odata->title = $title;
+        $odata->type = $type;
+        $odata->propertyContent = $propertyContent;
+        $odata->isMediaLinkEntry = $resourceType->isMediaLinkEntry();
+        $odata->editLink = $relativeUri;
+        $odata->mediaLink = $mediaLink;
+        $odata->mediaLinks = $mediaLinks;
+        $odata->links = $links;
+
+        $newCount = count($this->lightStack);
+        assert(
+            $newCount == $stackCount,
+            'Should have ' . $stackCount . 'elements in stack, have ' . $newCount . 'elements'
+        );
+        array_pop($this->lightStack);
+        return $odata;
     }
 
     /**
@@ -498,6 +594,52 @@ class CynicSerialiser implements IObjectSerialiser
     }
 
     /**
+     * @param $entryObject
+     * @param $type
+     * @param $relativeUri
+     * @param $resourceType
+     * @return array<ODataMediaLink|null|array>
+     */
+    protected function writeMediaData($entryObject, $type, $relativeUri, ResourceType $resourceType)
+    {
+        $context = $this->getService()->getOperationContext();
+        $streamProviderWrapper = $this->getService()->getStreamProviderWrapper();
+        assert(null != $streamProviderWrapper, 'Retrieved stream provider must not be null');
+
+        $mediaLink = null;
+        if ($resourceType->isMediaLinkEntry()) {
+            $eTag = $streamProviderWrapper->getStreamETag2($entryObject, null, $context);
+            $mediaLink = new ODataMediaLink($type, '/$value', $relativeUri . '/$value', '*/*', $eTag);
+        }
+        $mediaLinks = [];
+        if ($resourceType->hasNamedStream()) {
+            $namedStreams = $resourceType->getAllNamedStreams();
+            foreach ($namedStreams as $streamTitle => $resourceStreamInfo) {
+                $readUri = $streamProviderWrapper->getReadStreamUri2(
+                    $entryObject,
+                    $resourceStreamInfo,
+                    $context,
+                    $relativeUri
+                );
+                $mediaContentType = $streamProviderWrapper->getStreamContentType2(
+                    $entryObject,
+                    $resourceStreamInfo,
+                    $context
+                );
+                $eTag = $streamProviderWrapper->getStreamETag2(
+                    $entryObject,
+                    $resourceStreamInfo,
+                    $context
+                );
+
+                $nuLink = new ODataMediaLink($streamTitle, $readUri, $readUri, $mediaContentType, $eTag);
+                $mediaLinks[] = $nuLink;
+            }
+        }
+        return [$mediaLink, $mediaLinks];
+    }
+
+    /**
      * Gets collection of projection nodes under the current node.
      *
      * @return ProjectionNode[]|ExpandedProjectionNode[]|null List of nodes describing projections for the current
@@ -596,6 +738,46 @@ class CynicSerialiser implements IObjectSerialiser
         }
 
         return $queryParameterString;
+    }
+
+    /**
+     * @param $entryObject
+     * @param $nonRelProp
+     * @return ODataPropertyContent
+     */
+    private function writeProperties($entryObject, $nonRelProp)
+    {
+        $propertyContent = new ODataPropertyContent();
+        foreach ($nonRelProp as $corn => $flake) {
+            $resource = $nonRelProp[$corn]->getResourceType();
+            if ($resource instanceof ResourceEntityType) {
+                continue;
+            }
+            $result = $entryObject->$corn;
+            $nonNull = null !== $result;
+            $subProp = new ODataProperty();
+            $subProp->name = $corn;
+            $subProp->typeName = $resource->getFullName();
+            if ($resource instanceof ResourcePrimitiveType && $nonNull) {
+                $rType = $resource->getInstanceType();
+                $subProp->value = $this->primitiveToString($rType, $result);
+            } elseif ($resource instanceof ResourceComplexType && $nonNull) {
+                $subProp->value = $this->writeComplexValue($resource, $result, $flake->getName());
+            }
+            $propertyContent->properties[] = $subProp;
+        }
+        return $propertyContent;
+    }
+
+    /**
+     * @return void
+     */
+    private function loadStackIfEmpty()
+    {
+        if (0 == count($this->lightStack)) {
+            $typeName = $this->getRequest()->getTargetResourceType()->getName();
+            array_push($this->lightStack, [$typeName, $typeName]);
+        }
     }
 
     /**
