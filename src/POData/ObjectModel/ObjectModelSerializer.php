@@ -489,6 +489,9 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
                     } else {
                         $link->expandedResult = null;
                     }
+                    if (null === $link->expandedResult) {
+                        $link->isExpanded = null;
+                    }
 
                     $this->popSegment($needPop);
                 }
