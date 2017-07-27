@@ -20,8 +20,11 @@ use POData\Providers\Query\IQueryProvider;
 use POData\Providers\Query\QueryResult;
 use POData\Providers\Query\QueryType;
 use POData\ObjectModel\CynicSerialiser as IronicSerialiser;
+use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandedProjectionNode;
+use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\RootProjectionNode;
 use UnitTests\POData\Facets\NorthWind1\Customer2;
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
+use UnitTests\POData\Facets\NorthWind1\Order2;
 use UnitTests\POData\ObjectModel\reusableEntityClass1;
 
 class SerialiserWriteElementTest extends SerialiserTestBase
@@ -64,6 +67,49 @@ class SerialiserWriteElementTest extends SerialiserTestBase
                 'Values for '. $propName .'not identical'
             );
         }
+    }
+
+    public function testExpandOrderAttachedCustomer()
+    {
+        $request = $this->setUpRequest();
+        $request->shouldReceive('prepareRequestUri')->andReturn('/odata.svc/Orders(OrderID=1)?$expand=Customer');
+        $request->shouldReceive('fullUrl')->andReturn('http://localhost/odata.svc/Orders(OrderID=1)?$expand=Customer');
+
+        list($host, $meta, $query) = $this->setUpDataServiceDeps($request);
+
+        // default data service
+        list($object, $ironic) = $this->setUpSerialisers($query, $meta, $host);
+
+        $expandNode = m::mock(ExpandedProjectionNode::class);
+        $expandNode->shouldReceive('canSelectAllProperties')->andReturn(true);
+        $expandNode->shouldReceive('isExpansionSpecified')->andReturn(false);
+        $expandNode->shouldReceive('findNode')->andReturn(null);
+
+        $node = m::mock(RootProjectionNode::class);
+        $node->shouldReceive('getPropertyName')->andReturn('Customer');
+        $node->shouldReceive('isExpansionSpecified')->andReturn(true);
+        $node->shouldReceive('canSelectAllProperties')->andReturn(true);
+        $node->shouldReceive('findNode')->andReturn($expandNode);
+
+        $object->getRequest()->setRootProjectionNode($node);
+        $ironic->getRequest()->setRootProjectionNode($node);
+
+        $cust = new Customer2();
+        $cust->CustomerID = 1;
+        $cust->CustomerGuid = '123e4567-e89b-12d3-a456-426655440000';
+
+        $order = new Order2();
+        $order->OrderID = 1;
+        $order->Customer = $cust;
+
+        $result = new QueryResult();
+        $result->results = $order;
+
+        $objectResult = $object->writeTopLevelElement($result);
+        $ironicResult = $ironic->writeTopLevelElement($result);
+
+        $this->assertEquals(get_class($objectResult), get_class($ironicResult));
+        $this->assertEquals($objectResult, $ironicResult);
     }
 
     /**

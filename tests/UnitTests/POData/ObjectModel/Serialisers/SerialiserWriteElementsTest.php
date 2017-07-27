@@ -157,7 +157,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $expandNode->shouldReceive('findNode')->andReturn(null);
 
         $node = m::mock(RootProjectionNode::class);
-        $node->shouldReceive('getPropertyName')->andReturn('oneSource');
+        $node->shouldReceive('getPropertyName')->andReturn('Orders');
         $node->shouldReceive('isExpansionSpecified')->andReturn(true, true, true, false);
         $node->shouldReceive('canSelectAllProperties')->andReturn(true);
         $node->shouldReceive('findNode')->andReturn($expandNode);

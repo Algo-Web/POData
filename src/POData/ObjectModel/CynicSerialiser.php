@@ -178,7 +178,7 @@ class CynicSerialiser implements IObjectSerialiser
         $odata->title = $title;
         $odata->type = $type;
         $odata->propertyContent = $propertyContent;
-        $odata->isMediaLinkEntry = $resourceType->isMediaLinkEntry();
+        $odata->isMediaLinkEntry = true == $resourceType->isMediaLinkEntry() ? true : null;
         $odata->editLink = $relativeUri;
         $odata->mediaLink = $mediaLink;
         $odata->mediaLinks = $mediaLinks;
