@@ -202,7 +202,54 @@ class CynicSerialiser implements IObjectSerialiser
      */
     public function writeTopLevelElements(QueryResult &$entryObjects)
     {
-        // TODO: Implement writeTopLevelElements() method.
+        assert(is_array($entryObjects->results), '!is_array($entryObjects->results)');
+
+        $this->loadStackIfEmpty();
+        $setName = $this->getRequest()->getTargetResourceSetWrapper()->getName();
+
+        $title = $this->getRequest()->getContainerName();
+        $relativeUri = $this->getRequest()->getIdentifier();
+        $absoluteUri = $this->getRequest()->getRequestUrl()->getUrlAsString();
+
+        $selfLink = new ODataLink();
+        $selfLink->name = 'self';
+        $selfLink->title = $relativeUri;
+        $selfLink->url = $relativeUri;
+
+        $odata = new ODataFeed();
+        $odata->title = $title;
+        $odata->id = $absoluteUri;
+        $odata->selfLink = $selfLink;
+
+        if ($this->getRequest()->queryType == QueryType::ENTITIES_WITH_COUNT()) {
+            $odata->rowCount = $this->getRequest()->getCountValue();
+        }
+        foreach ($entryObjects->results as $entry) {
+            if (!$entry instanceof QueryResult) {
+                $query = new QueryResult();
+                $query->results = $entry;
+            } else {
+                $query = $entry;
+            }
+            $odata->entries[] = $this->writeTopLevelElement($query);
+        }
+
+        $resourceSet = $this->getRequest()->getTargetResourceSetWrapper()->getResourceSet();
+        $requestTop = $this->getRequest()->getTopOptionCount();
+        $pageSize = $this->getService()->getConfiguration()->getEntitySetPageSize($resourceSet);
+        $requestTop = (null == $requestTop) ? $pageSize + 1 : $requestTop;
+
+        if (true === $entryObjects->hasMore && $requestTop > $pageSize) {
+            $stackSegment = $setName;
+            $lastObject = end($entryObjects->results);
+            $segment = $this->getNextLinkUri($lastObject);
+            $nextLink = new ODataLink();
+            $nextLink->name = ODataConstants::ATOM_LINK_NEXT_ATTRIBUTE_STRING;
+            $nextLink->url = rtrim($this->absoluteServiceUri, '/') . '/' . $stackSegment . $segment;
+            $odata->nextPageLink = $nextLink;
+        }
+
+        return $odata;
     }
 
     /**
@@ -640,6 +687,47 @@ class CynicSerialiser implements IObjectSerialiser
     }
 
     /**
+     * @param $entryObject
+     * @param $prop
+     * @param $nuLink
+     * @param $propKind
+     * @param $propName
+     */
+    private function expandNavigationProperty(QueryResult $entryObject, $prop, $nuLink, $propKind, $propName)
+    {
+        $nextName = $prop->getResourceType()->getName();
+        $nuLink->isExpanded = true;
+        $isCollection = ResourcePropertyKind::RESOURCESET_REFERENCE == $propKind;
+        $nuLink->isCollection = $isCollection;
+        $value = $entryObject->results->$propName;
+        $nullResult = null === $value;
+        $result = new QueryResult();
+        $result->results = $value;
+        if (!$nullResult) {
+            array_push($this->lightStack, [$nextName, $propName]);
+            if (isset($value)) {
+                if (!$isCollection) {
+                    $expandedResult = $this->writeTopLevelElement($result);
+                } else {
+                    $expandedResult = $this->writeTopLevelElements($result);
+                }
+                $nuLink->expandedResult = $expandedResult;
+            }
+        }
+        if (!isset($nuLink->expandedResult)) {
+            $nuLink->isCollection = null;
+            $nuLink->isExpanded = null;
+        } else {
+            if (isset($nuLink->expandedResult->selfLink)) {
+                $nuLink->expandedResult->selfLink->title = $propName;
+                $nuLink->expandedResult->selfLink->url = $nuLink->url;
+                $nuLink->expandedResult->title = $propName;
+                $nuLink->expandedResult->id = rtrim($this->absoluteServiceUri, '/') . '/' . $nuLink->url;
+            }
+        }
+    }
+
+    /**
      * Gets collection of projection nodes under the current node.
      *
      * @return ProjectionNode[]|ExpandedProjectionNode[]|null List of nodes describing projections for the current
@@ -754,10 +842,15 @@ class CynicSerialiser implements IObjectSerialiser
                 continue;
             }
             $result = $entryObject->$corn;
+            $isBag = $flake->isKindOf(ResourcePropertyKind::BAG);
+            $typePrepend = $isBag ? 'Collection(' : '';
+            $typeAppend = $isBag ? ')' : '';
             $nonNull = null !== $result;
             $subProp = new ODataProperty();
             $subProp->name = $corn;
             $subProp->typeName = $resource->getFullName();
+            $subProp->typeName = $typePrepend . $subProp->typeName . $typeAppend;
+
             if ($resource instanceof ResourcePrimitiveType && $nonNull) {
                 $rType = $resource->getInstanceType();
                 $subProp->value = $this->primitiveToString($rType, $result);
