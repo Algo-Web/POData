@@ -258,10 +258,11 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
      * @param $host
      * @return array
      */
-    private function setUpSerialisers($query, $meta, $host)
+    private function setUpSerialisers($query, $meta, $host, $pageSize = 200)
     {
         // default data service
         $service = new TestDataService($query, $meta, $host);
+        $service->maxPageSize = $pageSize;
         $processor = $service->handleRequest();
         $processor->getRequest()->queryType = QueryType::ENTITIES();
         $processor->getRequest()->setCountValue(1);
