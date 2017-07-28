@@ -116,12 +116,26 @@ class CynicSerialiser implements IObjectSerialiser
         $rawProp = $resourceType->getAllProperties();
         $relProp = [];
         $nonRelProp = [];
+        $last = end($this->lightStack);
+        $projNodes = ($last[0] == $last[1]) ? $this->getProjectionNodes() : null;
+
         foreach ($rawProp as $prop) {
             if ($prop->getResourceType() instanceof ResourceEntityType) {
-                $relProp[] = $prop;
+                $relProp[$prop->getName()] = $prop;
             } else {
                 $nonRelProp[$prop->getName()] = $prop;
             }
+        }
+
+        // now mask off against projNodes
+        if (null !== $projNodes) {
+            $keys = [];
+            foreach ($projNodes as $node) {
+                $keys[$node->getPropertyName()] = '';
+            }
+
+            $relProp = array_intersect_key($relProp, $keys);
+            $nonRelProp = array_intersect_key($nonRelProp, $keys);
         }
 
         $resourceSet = $resourceType->getCustomState();
@@ -509,6 +523,7 @@ class CynicSerialiser implements IObjectSerialiser
             $propName = $prop->getName();
             $internalProperty = new ODataProperty();
             $internalProperty->name = $propName;
+            $raw = $result->$propName;
             if (static::isMatchPrimitive($resourceKind)) {
                 $iType = $prop->getInstanceType();
                 assert($iType instanceof IType, get_class($iType));
@@ -516,11 +531,15 @@ class CynicSerialiser implements IObjectSerialiser
 
                 $rType = $prop->getResourceType()->getInstanceType();
                 assert($rType instanceof IType, get_class($rType));
-                $internalProperty->value = $this->primitiveToString($rType, $result->$propName);
+                if (null !== $raw) {
+                    $internalProperty->value = $this->primitiveToString($rType, $raw);
+                }
             } elseif (ResourcePropertyKind::COMPLEX_TYPE == $resourceKind) {
                 $rType = $prop->getResourceType();
                 $internalProperty->typeName = $rType->getFullName();
-                $internalProperty->value = $this->writeComplexValue($rType, $result->$propName, $propName);
+                if (null !== $raw) {
+                    $internalProperty->value = $this->writeComplexValue($rType, $raw, $propName);
+                }
             }
             $internalContent->properties[] = $internalProperty;
         }
@@ -848,10 +867,11 @@ class CynicSerialiser implements IObjectSerialiser
             $nonNull = null !== $result;
             $subProp = new ODataProperty();
             $subProp->name = $corn;
-            $subProp->typeName = $resource->getFullName();
-            $subProp->typeName = $typePrepend . $subProp->typeName . $typeAppend;
+            $subProp->typeName = $typePrepend . $resource->getFullName() . $typeAppend;
 
-            if ($resource instanceof ResourcePrimitiveType && $nonNull) {
+            if ($nonNull && is_array($result)) {
+                $subProp->value = $this->writeBagValue($resource, $result);
+            } elseif ($resource instanceof ResourcePrimitiveType && $nonNull) {
                 $rType = $resource->getInstanceType();
                 $subProp->value = $this->primitiveToString($rType, $result);
             } elseif ($resource instanceof ResourceComplexType && $nonNull) {

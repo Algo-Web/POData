@@ -393,8 +393,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase implements IObject
         ODataPropertyContent &$odataPropertyContent
     ) {
         $resourceTypeKind = $resourceType->getResourceTypeKind();
-        if ((null === $absoluteUri) == (ResourceTypeKind::ENTITY() == $resourceTypeKind)
-        ) {
+        if ((null === $absoluteUri) == (ResourceTypeKind::ENTITY() == $resourceTypeKind)) {
             throw ODataException::createInternalServerError(
                 Messages::badProviderInconsistentEntityOrComplexTypeUsage(
                     $resourceType->getName()
