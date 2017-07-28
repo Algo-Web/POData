@@ -99,7 +99,7 @@ class CynicSerialiser implements IObjectSerialiser
      *
      * @param QueryResult $entryObject Results property contains reference to the entry object to be written
      *
-     * @return ODataEntry
+     * @return ODataEntry|null
      */
     public function writeTopLevelElement(QueryResult $entryObject)
     {
@@ -113,6 +113,7 @@ class CynicSerialiser implements IObjectSerialiser
         $stackCount = count($this->lightStack);
         $topOfStack = $this->lightStack[$stackCount-1];
         $resourceType = $this->getService()->getProvidersWrapper()->resolveResourceType($topOfStack[0]);
+        assert($resourceType instanceof ResourceType, get_class($resourceType));
         $rawProp = $resourceType->getAllProperties();
         $relProp = [];
         $nonRelProp = [];
@@ -192,7 +193,7 @@ class CynicSerialiser implements IObjectSerialiser
         $odata->title = $title;
         $odata->type = $type;
         $odata->propertyContent = $propertyContent;
-        $odata->isMediaLinkEntry = true == $resourceType->isMediaLinkEntry() ? true : null;
+        $odata->isMediaLinkEntry = true === $resourceType->isMediaLinkEntry() ? true : null;
         $odata->editLink = $relativeUri;
         $odata->mediaLink = $mediaLink;
         $odata->mediaLinks = $mediaLinks;
@@ -866,13 +867,14 @@ class CynicSerialiser implements IObjectSerialiser
             $typeAppend = $isBag ? ')' : '';
             $nonNull = null !== $result;
             $subProp = new ODataProperty();
-            $subProp->name = $corn;
+            $subProp->name = strval($corn);
             $subProp->typeName = $typePrepend . $resource->getFullName() . $typeAppend;
 
             if ($nonNull && is_array($result)) {
                 $subProp->value = $this->writeBagValue($resource, $result);
             } elseif ($resource instanceof ResourcePrimitiveType && $nonNull) {
                 $rType = $resource->getInstanceType();
+                assert($rType instanceof IType, get_class($rType));
                 $subProp->value = $this->primitiveToString($rType, $result);
             } elseif ($resource instanceof ResourceComplexType && $nonNull) {
                 $subProp->value = $this->writeComplexValue($resource, $result, $flake->getName());

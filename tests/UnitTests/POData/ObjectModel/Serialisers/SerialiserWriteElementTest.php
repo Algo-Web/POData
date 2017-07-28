@@ -150,7 +150,6 @@ class SerialiserWriteElementTest extends SerialiserTestBase
 
         $this->assertEquals(get_class($objectResult), get_class($ironicResult));
         $this->assertEquals($objectResult, $ironicResult);
-
     }
 
     public function testExpandEmployeeAttachedManagerWithAllProperties()
