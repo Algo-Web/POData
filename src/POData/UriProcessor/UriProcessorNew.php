@@ -152,6 +152,7 @@ class UriProcessorNew implements IUriProcessor
     public function execute()
     {
         $service = $this->getService();
+        assert($service instanceof IService);
         $context = $service->getOperationContext();
         $method = $context->incomingRequest()->getMethod();
 

@@ -12,6 +12,9 @@ use POData\Configuration\IServiceConfiguration;
 use POData\Configuration\ProtocolVersion;
 use POData\Configuration\ServiceConfiguration;
 use POData\IService;
+use POData\OperationContext\HTTPRequestMethod;
+use POData\OperationContext\IHTTPRequest;
+use POData\OperationContext\IOperationContext;
 use POData\OperationContext\ServiceHost;
 use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\Metadata\ResourceProperty;
@@ -21,6 +24,7 @@ use POData\Providers\Metadata\Type\Int32;
 use POData\Providers\ProvidersWrapper;
 use POData\Providers\Query\QueryResult;
 use POData\Providers\Query\QueryType;
+use POData\UriProcessor\RequestDescription;
 use POData\UriProcessor\UriProcessor;
 use UnitTests\POData\TestCase;
 
@@ -124,8 +128,15 @@ class UriProcessorTest extends TestCase
     {
         $this->fakeServiceConfig->setMaxDataServiceVersion(ProtocolVersion::V2());
 
+        $request = m::mock(IHTTPRequest::class);
+        $request->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::GET());
+        $request->shouldReceive('getAllInput')->andReturnNull();
+
+        $opCon = m::mock(IOperationContext::class);
+        $opCon->shouldReceive('incomingRequest')->andReturn($request);
+
         $requestURI = new Url('http://host.com/data.svc/Collection');
-        $this->mockService->shouldReceive('getOperationContext')->andReturnNull();
+        $this->mockService->shouldReceive('getOperationContext')->andReturn($opCon);
         $this->mockServiceHost->shouldReceive('getAbsoluteRequestUri')->andReturn($requestURI);
         $this->mockServiceHost->shouldReceive('getRequestVersion')->andReturn('2.0');
         $this->mockServiceHost->shouldReceive('getRequestMaxVersion')->andReturn('2.0');
@@ -173,7 +184,8 @@ class UriProcessorTest extends TestCase
         $this->mockProvidersWrapper->shouldReceive('resolveSingleton')->andReturn(null);
 
         $this->fakeServiceConfig->setAcceptCountRequests(true);
-        $this->fakeServiceConfig->setMaxDataServiceVersion(ProtocolVersion::V1()); //because this is V1 and $count requires V2, this will fail
+        $this->fakeServiceConfig->setMaxDataServiceVersion(ProtocolVersion::V1());
+        //because this is V1 and $count requires V2, this will fail
 
         try {
             UriProcessor::process($this->mockService);
@@ -208,8 +220,15 @@ class UriProcessorTest extends TestCase
 
     public function testProcessRequestForCollectionCountProviderDoesNotHandlePaging()
     {
+        $request = m::mock(IHTTPRequest::class);
+        $request->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::GET());
+        $request->shouldReceive('getAllInput')->andReturnNull();
+
+        $opCon = m::mock(IOperationContext::class);
+        $opCon->shouldReceive('incomingRequest')->andReturn($request);
+        
         $requestURI = new Url('http://host.com/data.svc/Collection/$count');
-        $this->mockService->shouldReceive('getOperationContext')->andReturnNull();
+        $this->mockService->shouldReceive('getOperationContext')->andReturn($opCon);
         $this->mockServiceHost->shouldReceive('getAbsoluteRequestUri')->andReturn($requestURI);
         $this->mockServiceHost->shouldReceive('getRequestVersion')->andReturn('2.0');
         $this->mockServiceHost->shouldReceive('getRequestMaxVersion')->andReturn('2.0');
@@ -251,9 +270,16 @@ class UriProcessorTest extends TestCase
 
     public function testProcessRequestForCollectionCountProviderHandlesPaging()
     {
+        $request = m::mock(IHTTPRequest::class);
+        $request->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::GET());
+        $request->shouldReceive('getAllInput')->andReturnNull();
+
+        $opCon = m::mock(IOperationContext::class);
+        $opCon->shouldReceive('incomingRequest')->andReturn($request);
+
         $requestURI = new Url('http://host.com/data.svc/Collection/$count');
 
-        $this->mockService->shouldReceive('getOperationContext')->andReturnNull();
+        $this->mockService->shouldReceive('getOperationContext')->andReturn($opCon);
         $this->mockServiceHost->shouldReceive('getAbsoluteRequestUri')->andReturn($requestURI);
         $this->mockServiceHost->shouldReceive('getRequestVersion')->andReturn('2.0');
         $this->mockServiceHost->shouldReceive('getRequestMaxVersion')->andReturn('2.0');
@@ -363,8 +389,15 @@ class UriProcessorTest extends TestCase
         //I'm not so sure about this test...basically $inlinecount is ignored if it's none, but maybe we should
         //be throwing an exception?
 
+        $request = m::mock(IHTTPRequest::class);
+        $request->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::GET());
+        $request->shouldReceive('getAllInput')->andReturnNull();
+
+        $opCon = m::mock(IOperationContext::class);
+        $opCon->shouldReceive('incomingRequest')->andReturn($request);
+
         $requestURI = new Url('http://host.com/data.svc/Collection/?$inlinecount=none');
-        $this->mockService->shouldReceive('getOperationContext')->andReturnNull();
+        $this->mockService->shouldReceive('getOperationContext')->andReturn($opCon);
         $this->mockServiceHost->shouldReceive('getAbsoluteRequestUri')->andReturn($requestURI);
         $this->mockServiceHost->shouldReceive('getRequestVersion')->andReturn('1.0');
         $this->mockServiceHost->shouldReceive('getRequestMaxVersion')->andReturn('1.0');
@@ -422,8 +455,15 @@ class UriProcessorTest extends TestCase
 
     public function testProcessRequestForCollectionWithInlineCountProviderDoesNotHandlePaging()
     {
+        $request = m::mock(IHTTPRequest::class);
+        $request->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::GET());
+        $request->shouldReceive('getAllInput')->andReturnNull();
+
+        $opCon = m::mock(IOperationContext::class);
+        $opCon->shouldReceive('incomingRequest')->andReturn($request);
+
         $requestURI = new Url('http://host.com/data.svc/Collection/?$inlinecount=allpages');
-        $this->mockService->shouldReceive('getOperationContext')->andReturnNull();
+        $this->mockService->shouldReceive('getOperationContext')->andReturn($opCon);
         $this->mockServiceHost->shouldReceive('getAbsoluteRequestUri')->andReturn($requestURI);
         $this->mockServiceHost->shouldReceive('getRequestVersion')->andReturn('2.0');
         $this->mockServiceHost->shouldReceive('getRequestMaxVersion')->andReturn('2.0');
@@ -477,9 +517,16 @@ class UriProcessorTest extends TestCase
 
     public function testProcessRequestForCollectionWithInlineCountProviderHandlesPaging()
     {
+        $request = m::mock(IHTTPRequest::class);
+        $request->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::GET());
+        $request->shouldReceive('getAllInput')->andReturnNull();
+
+        $opCon = m::mock(IOperationContext::class);
+        $opCon->shouldReceive('incomingRequest')->andReturn($request);
+
         $requestURI = new Url('http://host.com/data.svc/Collection/?$inlinecount=allpages');
         $this->mockServiceHost->shouldReceive('getAbsoluteRequestUri')->andReturn($requestURI);
-        $this->mockService->shouldReceive('getOperationContext')->andReturnNull();
+        $this->mockService->shouldReceive('getOperationContext')->andReturn($opCon);
         $this->mockServiceHost->shouldReceive('getRequestVersion')->andReturn('3.0');
         $this->mockServiceHost->shouldReceive('getRequestMaxVersion')->andReturn('3.0');
         $this->mockCollectionResourceSetWrapper->shouldReceive('checkResourceSetRightsForRead')->andReturnNull();

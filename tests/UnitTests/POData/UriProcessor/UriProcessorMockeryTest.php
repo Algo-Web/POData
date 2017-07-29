@@ -53,7 +53,6 @@ class UriProcessorMockeryTest extends TestCase
         $foo = \Mockery::mock(\POData\UriProcessor\UriProcessor::class)
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
-        $foo->shouldReceive('executeBase')->andReturnNull()->once();
         $foo->shouldReceive('executeGet')->andReturnNull()->never();
         $foo->shouldReceive('executePost')->andReturnNull()->never();
         $foo->shouldReceive('executePut')->andReturnNull()->never();
@@ -61,11 +60,22 @@ class UriProcessorMockeryTest extends TestCase
         $foo->shouldReceive('executeDelete')->andReturnNull()->never();
         $foo->shouldReceive('execute')->passthru();
 
-        $foo->execute();
+        $expected = 'assert(): assert($service instanceof IService) failed';
+        $actual = null;
+
+        try {
+            $foo->execute();
+        } catch (\Exception $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
     }
 
     public function testUriProcessorWithSuppliedHttpGetOperationContext()
     {
+        $expander = m::mock(RequestExpander::class);
+        $expander->shouldReceive('handleExpansion')->andReturnNull()->once();
+
         $opcon = \Mockery::mock(IOperationContext::class);
         $opcon->shouldReceive('incomingRequest->getMethod')->andReturn(HTTPRequestMethod::GET());
 
@@ -76,19 +86,22 @@ class UriProcessorMockeryTest extends TestCase
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
         $foo->shouldReceive('getService')->andReturn($service);
-        $foo->shouldReceive('executeBase')->andReturnNull()->never();
         $foo->shouldReceive('executeGet')->andReturnNull()->once();
         $foo->shouldReceive('executePost')->andReturnNull()->never();
         $foo->shouldReceive('executePut')->andReturnNull()->never();
         $foo->shouldReceive('executePatch')->andReturnNull()->never();
         $foo->shouldReceive('executeDelete')->andReturnNull()->never();
         $foo->shouldReceive('execute')->passthru();
+        $foo->shouldReceive('getExpander')->andReturn($expander);
 
         $foo->execute();
     }
 
     public function testUriProcessorWithSuppliedHttpPutOperationContext()
     {
+        $expander = m::mock(RequestExpander::class);
+        $expander->shouldReceive('handleExpansion')->andReturnNull()->once();
+
         $opcon = \Mockery::mock(IOperationContext::class);
         $opcon->shouldReceive('incomingRequest->getMethod')->andReturn(HTTPRequestMethod::PUT());
 
@@ -99,13 +112,13 @@ class UriProcessorMockeryTest extends TestCase
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
         $foo->shouldReceive('getService')->andReturn($service);
-        $foo->shouldReceive('executeBase')->andReturnNull()->never();
-        $foo->shouldReceive('executeGet')->andReturnNull()->never();
+        $foo->shouldReceive('executeGet')->andReturnNull()->once();
         $foo->shouldReceive('executePost')->andReturnNull()->never();
         $foo->shouldReceive('executePut')->andReturnNull()->once();
         $foo->shouldReceive('executePatch')->andReturnNull()->never();
         $foo->shouldReceive('executeDelete')->andReturnNull()->never();
         $foo->shouldReceive('execute')->passthru();
+        $foo->shouldReceive('getExpander')->andReturn($expander);
 
         $foo->execute();
     }
@@ -2256,8 +2269,10 @@ class UriProcessorMockeryTest extends TestCase
         $providers = m::mock(ProvidersWrapper::class);
         $providers->shouldReceive('resolveSingleton')->withArgs(['whereami'])->andReturn($resourceFunc)->once();
 
+        $opCon = m::mock(IOperationContext::class);
+
         $service = \Mockery::mock(\POData\IService::class);
-        $service->shouldReceive('getOperationContext')->andReturnNull();
+        $service->shouldReceive('getOperationContext')->andReturn($opCon);
         $service->shouldReceive('getProvidersWrapper')->andReturn($providers)->once();
 
         $descript = new SegmentDescriptor();
@@ -2267,6 +2282,8 @@ class UriProcessorMockeryTest extends TestCase
 
         $request = m::mock(RequestDescription::class);
         $request->shouldReceive('getSegments')->andReturn([$descript]);
+        $request->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::GET());
+        $opCon->shouldReceive('incomingRequest')->andReturn($request);
 
         $expander = m::mock(RequestExpander::class);
         $expander->shouldReceive('handleExpansion')->andReturnNull()->once();
@@ -2275,8 +2292,7 @@ class UriProcessorMockeryTest extends TestCase
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
         $foo->shouldReceive('getService')->andReturn($service)->times(2);
-        $foo->shouldReceive('executeBase')->passthru()->once();
-        $foo->shouldReceive('executeGet')->andReturnNull()->never();
+        $foo->shouldReceive('executeGet')->passthru()->once();
         $foo->shouldReceive('executePost')->andReturnNull()->never();
         $foo->shouldReceive('executePut')->andReturnNull()->never();
         $foo->shouldReceive('executePatch')->andReturnNull()->never();
