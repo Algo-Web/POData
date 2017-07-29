@@ -21,5 +21,4 @@ use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetSource;
 
 class UriProcessor extends UriProcessorNew
 {
-    
 }

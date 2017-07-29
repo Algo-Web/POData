@@ -60,7 +60,7 @@ class UriProcessorMockeryTest extends TestCase
         $foo->shouldReceive('executeDelete')->andReturnNull()->never();
         $foo->shouldReceive('execute')->passthru();
 
-        $expected = 'assert(): assert($service instanceof IService) failed';
+        $expected = 'assert(): !($service instanceof IService) failed';
         $actual = null;
 
         try {

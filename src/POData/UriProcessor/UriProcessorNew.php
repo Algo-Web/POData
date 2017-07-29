@@ -8,12 +8,15 @@ use POData\Common\ODataException;
 use POData\IService;
 use POData\OperationContext\HTTPRequestMethod;
 use POData\Providers\Metadata\ResourcePropertyKind;
+use POData\Providers\Metadata\ResourceSet;
+use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\ProvidersWrapper;
 use POData\Providers\Query\QueryResult;
 use POData\Providers\Query\QueryType;
 use POData\UriProcessor\Interfaces\IUriProcessor;
 use POData\UriProcessor\QueryProcessor\QueryProcessor;
 use POData\UriProcessor\ResourcePathProcessor\ResourcePathProcessor;
+use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\SegmentDescriptor;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetSource;
@@ -152,7 +155,7 @@ class UriProcessorNew implements IUriProcessor
     public function execute()
     {
         $service = $this->getService();
-        assert($service instanceof IService);
+        assert($service instanceof IService, '!($service instanceof IService)');
         $context = $service->getOperationContext();
         $method = $context->incomingRequest()->getMethod();
 
@@ -211,7 +214,7 @@ class UriProcessorNew implements IUriProcessor
                     if (null !== $previous && TargetKind::RESOURCE() == $previous->getTargetKind()) {
                         $result = $previous->getResult();
                         if ($result instanceof QueryResult) {
-                            $raw = null != $result->count ? $result->count : count($result->results);
+                            $raw = null !== $result->count ? $result->count : count($result->results);
                             $segment->setResult($raw);
                         }
                     }
@@ -243,6 +246,7 @@ class UriProcessorNew implements IUriProcessor
         $keyDescriptor = $segment->getKeyDescriptor();
 
         $this->checkUriValidForSuppliedVerb($resourceSet, $keyDescriptor, $requestMethod);
+        assert($resourceSet instanceof ResourceSet);
         $this->getProviders()->deleteResource($resourceSet, $segment->getResult());
     }
 
@@ -257,6 +261,8 @@ class UriProcessorNew implements IUriProcessor
         $keyDescriptor = null !== $segment ? $segment->getKeyDescriptor() : null;
 
         $this->checkUriValidForSuppliedVerb($resourceSet, $keyDescriptor, $requestMethod);
+        assert($resourceSet instanceof ResourceSet);
+        assert($keyDescriptor instanceof KeyDescriptor);
 
         $data = $this->getRequest()->getData();
         if (!$data) {
