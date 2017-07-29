@@ -206,13 +206,28 @@ class UriProcessorNew implements IUriProcessor
                 case TargetKind::LINK():
                     $this->executeGetLink($segment);
                     break;
-                case TargetKind::PRIMITIVE():
                 case TargetKind::PRIMITIVE_VALUE():
+                    $previous = $segment->getPrevious();
+                    if (null !== $previous && TargetKind::RESOURCE() == $previous->getTargetKind()) {
+                        $result = $previous->getResult();
+                        if ($result instanceof QueryResult) {
+                            $raw = null != $result->count ? $result->count : count($result->results);
+                            $segment->setResult($raw);
+                        }
+                    }
+                    break;
+                case TargetKind::PRIMITIVE():
                 case TargetKind::COMPLEX_OBJECT():
                 case TargetKind::BAG():
                     break;
                 default:
                     assert(false, 'Not implemented yet');
+            }
+
+            if (null === $segment->getNext()
+                || ODataConstants::URI_COUNT_SEGMENT == $segment->getNext()->getIdentifier()
+            ) {
+                $this->applyQueryOptions($segment);
             }
         }
     }
@@ -443,5 +458,75 @@ class UriProcessorNew implements IUriProcessor
                 $segment->getPrevious()->getIdentifier()
             );
         }
+    }
+
+    /**
+     * Applies the query options to the resource(s) retrieved from the data source.
+     *
+     * @param SegmentDescriptor $segment  The descriptor which holds resource(s) on which query options to be applied
+     */
+    private function applyQueryOptions(SegmentDescriptor $segment)
+    {
+        $result = $segment->getResult();
+        if (!$result instanceof QueryResult) {
+            //If the segment isn't a query result, then there's no paging or counting to be done
+            return;
+        }
+        // Note $inlinecount=allpages means include the total count regardless of paging..so we set the counts first
+        // regardless if POData does the paging or not.
+        if ($this->getRequest()->queryType == QueryType::ENTITIES_WITH_COUNT()) {
+            if ($this->getProviders()->handlesOrderedPaging()) {
+                $this->getRequest()->setCountValue($result->count);
+            } else {
+                $this->getRequest()->setCountValue(count($result->results));
+            }
+        }
+        //Have POData perform paging if necessary
+        if (!$this->getProviders()->handlesOrderedPaging() && !empty($result->results)) {
+            $result->results = $this->performPaging($result->results);
+        }
+        //a bit surprising, but $skip and $top affects $count so update it here, not above
+        //IE  data.svc/Collection/$count?$top=10 returns 10 even if Collection has 11+ entries
+        if ($this->getRequest()->queryType == QueryType::COUNT()) {
+            if ($this->getProviders()->handlesOrderedPaging()) {
+                $this->getRequest()->setCountValue($result->count);
+            } else {
+                $this->getRequest()->setCountValue(count($result->results));
+            }
+        }
+        $segment->setResult($result);
+    }
+
+    /**
+     * If the provider does not perform the paging (ordering, top, skip) then this method does it.
+     *
+     * @param array $result
+     *
+     * @return array
+     */
+    private function performPaging(array $result)
+    {
+        //Apply (implicit and explicit) $orderby option
+        $internalOrderByInfo = $this->getRequest()->getInternalOrderByInfo();
+        if (null !== $internalOrderByInfo) {
+            $orderByFunction = $internalOrderByInfo->getSorterFunction();
+            usort($result, $orderByFunction);
+        }
+        //Apply $skiptoken option
+        $internalSkipTokenInfo = $this->getRequest()->getInternalSkipTokenInfo();
+        if (null !== $internalSkipTokenInfo) {
+            $matchingIndex = $internalSkipTokenInfo->getIndexOfFirstEntryInTheNextPage($result);
+            $result = array_slice($result, $matchingIndex);
+        }
+        //Apply $top and $skip option
+        if (!empty($result)) {
+            $top = $this->getRequest()->getTopCount();
+            $skip = $this->getRequest()->getSkipCount();
+            if (null === $skip) {
+                $skip = 0;
+            }
+            $result = array_slice($result, $skip, $top);
+        }
+        return $result;
     }
 }
