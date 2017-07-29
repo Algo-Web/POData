@@ -41,7 +41,7 @@ trait http
     /**
      * Message to show error when data service found a request method other than GET.
      *
-     * @param HTTPRequestMethod $method Request method
+     * @param HTTPRequestMethod|null $method Request method
      *
      * @return string The formatted message
      */
