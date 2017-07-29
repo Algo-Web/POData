@@ -21,6 +21,7 @@ use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\SegmentDescriptor;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
 use POData\UriProcessor\UriProcessor;
+use POData\UriProcessor\UriProcessorNew;
 use UnitTests\POData\TestCase;
 
 class UriProcessorNewTest extends TestCase
@@ -45,7 +46,7 @@ class UriProcessorNewTest extends TestCase
         $actual = null;
 
         try {
-            $result = UriProcessor::process($service);
+            $result = UriProcessorNew::process($service);
         } catch (\POData\Common\ODataException $e) {
             $actual = $e->getMessage();
         }
@@ -75,7 +76,7 @@ class UriProcessorNewTest extends TestCase
         $service->shouldReceive('getProvidersWrapper')->andReturn($wrapper);
         $service->shouldReceive('getOperationContext')->andReturn($context);
 
-        $processor = m::mock(UriProcessor::class)->shouldAllowMockingProtectedMethods()->makePartial();
+        $processor = m::mock(UriProcessorNew::class)->shouldAllowMockingProtectedMethods()->makePartial();
         $processor->shouldReceive('executePost')->passthru()->once();
         $processor->shouldReceive('getService')->andReturn($service);
         $processor->shouldReceive('getRequest')->andReturn($request);
@@ -115,7 +116,7 @@ class UriProcessorNewTest extends TestCase
         $service->shouldReceive('getProvidersWrapper')->andReturn($wrapper);
         $service->shouldReceive('getOperationContext')->andReturn($context);
 
-        $processor = m::mock(UriProcessor::class)->shouldAllowMockingProtectedMethods()->makePartial();
+        $processor = m::mock(UriProcessorNew::class)->shouldAllowMockingProtectedMethods()->makePartial();
         $processor->shouldReceive('executePost')->passthru()->once();
         $processor->shouldReceive('getService')->andReturn($service);
         $processor->shouldReceive('getRequest')->andReturn($request);
@@ -134,6 +135,9 @@ class UriProcessorNewTest extends TestCase
     public function testExecutePostSuccessfully()
     {
         $resourceWrapper = m::mock(ResourceSetWrapper::class)->makePartial();
+
+        $expander = m::mock(RequestExpander::class)->makePartial();
+        $expander->shouldReceive('handleExpansion')->andReturnNull()->once();
 
         $seg1 = m::mock(SegmentDescriptor::class)->makePartial();
         $seg1->shouldReceive('getTargetKind')->andReturn(TargetKind::RESOURCE());
@@ -160,8 +164,9 @@ class UriProcessorNewTest extends TestCase
         $service->shouldReceive('getProvidersWrapper')->andReturn($wrapper);
         $service->shouldReceive('getOperationContext')->andReturn($context);
 
-        $processor = m::mock(UriProcessor::class)->shouldAllowMockingProtectedMethods()->makePartial();
+        $processor = m::mock(UriProcessorNew::class)->shouldAllowMockingProtectedMethods()->makePartial();
         $processor->shouldReceive('executePost')->passthru()->once();
+        $processor->shouldReceive('getExpander')->andReturn($expander);
         $processor->shouldReceive('getService')->andReturn($service);
         $processor->shouldReceive('getRequest')->andReturn($request);
         $processor->shouldReceive('getProviders')->andReturn($wrapper);
@@ -172,10 +177,13 @@ class UriProcessorNewTest extends TestCase
 
     public function testGetResourceNotFound()
     {
+        $prev = m::mock(SegmentDescriptor::class)->makePartial();
+        $prev->shouldReceive('getIdentifier')->andReturn('Identifier');
+        $prev->shouldReceive('getResult')->andReturn(null);
+
         $seg1 = m::mock(SegmentDescriptor::class)->makePartial();
         $seg1->shouldReceive('getTargetKind')->andReturn(TargetKind::RESOURCE());
-        $seg1->shouldReceive('getPrevious->getResult')->andReturnNull();
-        $seg1->shouldReceive('getPrevious->getIdentifier')->andReturn('Identifier');
+        $seg1->shouldReceive('getPrevious')->andReturn($prev);
 
         $url1 = m::mock(Url::class);
         $url1->shouldReceive('isBaseOf')->andReturn(true);
@@ -195,7 +203,7 @@ class UriProcessorNewTest extends TestCase
         $service->shouldReceive('getProvidersWrapper')->andReturn($wrapper);
         $service->shouldReceive('getOperationContext')->andReturn($context);
 
-        $processor = m::mock(UriProcessor::class)->shouldAllowMockingProtectedMethods()->makePartial();
+        $processor = m::mock(UriProcessorNew::class)->shouldAllowMockingProtectedMethods()->makePartial();
         $processor->shouldReceive('executeGet')->passthru()->once();
         $processor->shouldReceive('getService')->andReturn($service);
         $processor->shouldReceive('getRequest')->andReturn($request);
@@ -230,6 +238,9 @@ class UriProcessorNewTest extends TestCase
 
         $wrapper = m::mock(ProvidersWrapper::class)->makePartial();
 
+        $expander = m::mock(RequestExpander::class);
+        $expander->shouldReceive('handleExpansion')->andReturnNull()->never();
+
         $context = m::mock(IOperationContext::class)->makePartial();
         $context->shouldReceive('incomingRequest')->andReturn($request);
 
@@ -239,10 +250,11 @@ class UriProcessorNewTest extends TestCase
         $service->shouldReceive('getProvidersWrapper')->andReturn($wrapper);
         $service->shouldReceive('getOperationContext')->andReturn($context);
 
-        $processor = m::mock(UriProcessor::class)->shouldAllowMockingProtectedMethods()->makePartial();
+        $processor = m::mock(UriProcessorNew::class)->shouldAllowMockingProtectedMethods()->makePartial();
         $processor->shouldReceive('executeGet')->passthru()->once();
         $processor->shouldReceive('getService')->andReturn($service);
         $processor->shouldReceive('getRequest')->andReturn($request);
+        $processor->shouldReceive('getExpander')->andReturn($expander);
 
         $expected = 'Resource not found for the segment \'Identifier\'.';
         $actual = null;
@@ -304,7 +316,7 @@ class UriProcessorNewTest extends TestCase
         $expander = m::mock(RequestExpander::class);
         $expander->shouldReceive('handleExpansion')->andReturnNull()->once();
 
-        $processor = m::mock(UriProcessor::class)->shouldAllowMockingProtectedMethods()->makePartial();
+        $processor = m::mock(UriProcessorNew::class)->shouldAllowMockingProtectedMethods()->makePartial();
         $processor->shouldReceive('executeGet')->passthru()->once();
         $processor->shouldReceive('getService')->andReturn($service);
         $processor->shouldReceive('getRequest')->andReturn($request);
@@ -322,7 +334,7 @@ class UriProcessorNewTest extends TestCase
         $service = m::mock(IService::class);
         $service->shouldReceive('getOperationContext')->andReturn($context);
 
-        $processor = m::mock(UriProcessor::class)->shouldAllowMockingProtectedMethods()->makePartial();
+        $processor = m::mock(UriProcessorNew::class)->shouldAllowMockingProtectedMethods()->makePartial();
         $processor->shouldReceive('getService')->andReturn($service);
 
         $expected = 'This release of library supports only GET (read) request, received a request with method MERGE';
@@ -349,11 +361,13 @@ class UriProcessorNewTest extends TestCase
 
         $seg0 = m::mock(SegmentDescriptor::class)->makePartial();
         $seg0->shouldReceive('getResult')->andReturn('MC');
+        $seg0->shouldReceive('getIdentifier')->andReturn(null);
+        $seg0->shouldReceive('getTargetResourceSetWrapper')->andReturn(null);
 
         $seg1 = m::mock(SegmentDescriptor::class)->makePartial();
         $seg1->shouldReceive('getTargetKind')->andReturn(TargetKind::LINK());
         $seg1->shouldReceive('getPrevious')->andReturn($seg0);
-
+        $seg1->shouldReceive('getIdentifier')->andReturn('Entity');
         $seg1->shouldReceive('getProjectedProperty')->andReturn($property);
         $seg1->shouldReceive('setResult')->andReturnNull()->once();
         $seg1->shouldReceive('getTargetResourceSetWrapper')->andReturn($resourceSet);
@@ -377,7 +391,7 @@ class UriProcessorNewTest extends TestCase
 
         $wrapper = m::mock(ProvidersWrapper::class);
 
-        $processor = m::mock(UriProcessor::class)->shouldAllowMockingProtectedMethods()->makePartial();
+        $processor = m::mock(UriProcessorNew::class)->shouldAllowMockingProtectedMethods()->makePartial();
         $processor->shouldReceive('executePut')->passthru()->once();
         $processor->shouldReceive('getService')->andReturn($service);
         $processor->shouldReceive('getRequest')->andReturn($request);
@@ -439,12 +453,13 @@ class UriProcessorNewTest extends TestCase
 
         $wrapper = m::mock(ProvidersWrapper::class);
 
-        $processor = m::mock(UriProcessor::class)->shouldAllowMockingProtectedMethods()->makePartial();
+        $processor = m::mock(UriProcessorNew::class)->shouldAllowMockingProtectedMethods()->makePartial();
         $processor->shouldReceive('executePut')->passthru()->once();
         $processor->shouldReceive('getService')->andReturn($service);
         $processor->shouldReceive('getRequest')->andReturn($request);
         $processor->shouldReceive('getProviders')->andReturn($wrapper);
         $processor->shouldReceive('getExpander')->andReturn($expander);
+        $processor->shouldReceive('getFinalEffectiveSegment')->andReturn($seg1);
 
         $expected = 'Method PUT expecting some data, but received empty data.';
         $actual = null;
@@ -477,7 +492,6 @@ class UriProcessorNewTest extends TestCase
         $seg1->shouldReceive('getTargetKind')->andReturn(TargetKind::LINK());
         $seg1->shouldReceive('getPrevious')->andReturn($seg0);
         $seg1->shouldReceive('getKeyDescriptor')->andReturn($keyDescript);
-
         $seg1->shouldReceive('getProjectedProperty')->andReturn($property);
         $seg1->shouldReceive('setResult')->andReturnNull()->twice();
         $seg1->shouldReceive('getTargetResourceSetWrapper')->andReturn($resourceSet);
@@ -503,12 +517,13 @@ class UriProcessorNewTest extends TestCase
         $wrapper = m::mock(ProvidersWrapper::class);
         $wrapper->shouldReceive('updateResource')->andReturnNull()->once();
 
-        $processor = m::mock(UriProcessor::class)->shouldAllowMockingProtectedMethods()->makePartial();
+        $processor = m::mock(UriProcessorNew::class)->shouldAllowMockingProtectedMethods()->makePartial();
         $processor->shouldReceive('executePut')->passthru()->once();
         $processor->shouldReceive('getService')->andReturn($service);
         $processor->shouldReceive('getRequest')->andReturn($request);
         $processor->shouldReceive('getProviders')->andReturn($wrapper);
         $processor->shouldReceive('getExpander')->andReturn($expander);
+        $processor->shouldReceive('getFinalEffectiveSegment')->andReturn($seg1);
 
         $processor->execute();
     }

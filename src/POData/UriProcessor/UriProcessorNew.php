@@ -198,6 +198,7 @@ class UriProcessorNew implements IUriProcessor
                     $this->executeGetResource($segment);
                     break;
                 case TargetKind::MEDIA_RESOURCE():
+                    $this->checkResourceExistsByIdentifier($segment);
                     $segment->setResult($segment->getPrevious()->getResult());
                     // a media resource means we're done - bail out of segment processing
                     break 2;
@@ -236,8 +237,8 @@ class UriProcessorNew implements IUriProcessor
     {
         $segment = $this->getFinalEffectiveSegment();
         $requestMethod = $this->getService()->getOperationContext()->incomingRequest()->getMethod();
-        $resourceSet = $segment->getTargetResourceSetWrapper();
-        $keyDescriptor = $segment->getKeyDescriptor();
+        $resourceSet = null !== $segment ? $segment->getTargetResourceSetWrapper() : null;
+        $keyDescriptor = null !== $segment ? $segment->getKeyDescriptor() : null;
 
         $this->checkUriValidForSuppliedVerb($resourceSet, $keyDescriptor, $requestMethod);
 
@@ -268,6 +269,12 @@ class UriProcessorNew implements IUriProcessor
             $requestTargetKind = $segment->getTargetKind();
             if ($requestTargetKind == TargetKind::RESOURCE()) {
                 $resourceSet = $segment->getTargetResourceSetWrapper();
+                if (!$resourceSet) {
+                    $url = $this->getService()->getHost()->getAbsoluteRequestUri()->getUrlAsString();
+                    $msg = Messages::badRequestInvalidUriForThisVerb($url, $requestMethod);
+                    throw ODataException::createBadRequestError($msg);
+                }
+
                 $keyDescriptor = $segment->getKeyDescriptor();
 
                 $data = $this->getRequest()->getData();
@@ -287,7 +294,7 @@ class UriProcessorNew implements IUriProcessor
     {
         $segment = $this->getRequest()->getLastSegment();
         // if last segment is $count, back up one
-        if (ODataConstants::URI_COUNT_SEGMENT == $segment->getIdentifier()) {
+        if (null !== $segment && ODataConstants::URI_COUNT_SEGMENT == $segment->getIdentifier()) {
             $segment = $segment->getPrevious();
             return $segment;
         }
@@ -380,7 +387,7 @@ class UriProcessorNew implements IUriProcessor
     private function executeGetResourceRelated($segment)
     {
         $projectedProperty = $segment->getProjectedProperty();
-        $projectedPropertyKind = $projectedProperty->getKind();
+        $projectedPropertyKind = null !== $projectedProperty ? $projectedProperty->getKind() : 0;
         $queryResult = null;
         switch ($projectedPropertyKind) {
             case ResourcePropertyKind::RESOURCE_REFERENCE:
@@ -418,8 +425,22 @@ class UriProcessorNew implements IUriProcessor
                 }
                 break;
             default:
+                $this->checkResourceExistsByIdentifier($segment);
                 assert(false, 'Invalid property kind type for resource retrieval');
         }
         return $queryResult;
+    }
+
+    /**
+     * @param $segment
+     * @throws ODataException
+     */
+    private function checkResourceExistsByIdentifier($segment)
+    {
+        if (null === $segment->getPrevious()->getResult()) {
+            throw ODataException::createResourceNotFoundError(
+                $segment->getPrevious()->getIdentifier()
+            );
+        }
     }
 }
