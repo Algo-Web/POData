@@ -8,94 +8,6 @@ use POData\Providers\Metadata\ResourceStreamInfo;
 use POData\Providers\Metadata\SimpleMetadataProvider;
 use POData\Providers\Metadata\Type\EdmPrimitiveType;
 
-//Begin Resource Classes
-
-//Complex type base class for Address
-class Address2
-{
-    public $IsPrimary;
-}
-
-//Complex class for Address
-class Address4
-{
-    public $HouseNumber;
-    public $LineNumber;
-    public $LineNumber2;
-    public $StreetName;
-    public $IsValid;
-    public $Address2;
-}
-
-//Customer entity type
-class Customer2
-{
-    public $CustomerID;
-    public $CustomerGuid;
-    public $CustomerName;
-    public $Address;
-    public $Country;
-    public $Rating;
-    public $Photo;
-    //Navigation Property to associated Orders (ResourceSetReference)
-    public $Orders;
-}
-
-//Order entity type
-class Order2
-{
-    public $OrderID;
-    public $OrderDate;
-    public $DeliveryDate;
-    public $ShipName;
-    public $ItemCount;
-    public $QualityRate;
-    public $Price;
-    //Navigation Property to associated Customer (ResourceReference)
-    public $Customer;
-    //Navigation Property to associated Order_Details (ResourceSetReference)
-    public $Order_Details;
-}
-
-//Product Entity Type
-class Product2
-{
-    public $ProductID;
-    public $ProductName;
-    //Navigation Property to associated Order_Details (ResourceSetReference)
-    public $Order_Details;
-}
-
-//Order_Details entity type
-class Order_Details2
-{
-    public $OrderID;
-    public $ProductID;
-    public $UnitPrice;
-    public $Quantity;
-    public $Discount;
-    //Navigation Property to associated Order (ResourceReference)
-    public $Order;
-    //Navigation Property to associated Product (ResourceReference)
-    public $Product;
-}
-
-//Employee entity type, MLE and has named stream as Thumnails
-class Employee2
-{
-    public $EmployeeID;
-    public $FirstName;
-    public $LastName;
-     //Bag of strings
-    public $Emails;
-    public $ReportsTo;
-     //Navigation Property to associated instance of Employee instance represeting manager (ResourceReference)
-    public $Manager;
-     //Navigation Property to associated instance of Employee instances represeting subordinates (ResourceSetReference)
-    public $Subordinates;
-}
-//End Resource Classes
-
 class NorthWindMetadata
 {
     /**
@@ -251,7 +163,7 @@ class NorthWindMetadata
 
         //Register the entity (resource) type 'Order_Details'
         $orderDetailsEntityType = $metadata->addEntityType(
-            new \ReflectionClass('UnitTests\POData\Facets\NorthWind1\Order_Details2'),
+            new \ReflectionClass('UnitTests\POData\Facets\NorthWind1\OrderDetails2'),
             'Order_Details'
         );
         $metadata->addKeyProperty($orderDetailsEntityType, 'ProductID', EdmPrimitiveType::INT32);
