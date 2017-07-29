@@ -4,6 +4,7 @@ namespace UnitTests\POData\UriProcessor\UriProcessorNew;
 
 use Mockery as m;
 use POData\Common\ODataConstants;
+use POData\Common\ODataException;
 use POData\Common\Url;
 use POData\Common\Version;
 use POData\Configuration\IServiceConfiguration;
@@ -18,7 +19,6 @@ use POData\Providers\Metadata\ResourceFunctionType;
 use POData\Providers\Metadata\ResourcePrimitiveType;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourcePropertyKind;
-use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Metadata\ResourceStreamInfo;
 use POData\Providers\Metadata\ResourceType;
@@ -27,7 +27,10 @@ use POData\Providers\Metadata\Type\Int32;
 use POData\Providers\Metadata\Type\IType;
 use POData\Providers\ProvidersWrapper;
 use POData\UriProcessor\RequestDescription;
-use POData\UriProcessor\UriProcessor;
+use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
+use POData\UriProcessor\ResourcePathProcessor\SegmentParser\SegmentDescriptor;
+use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
+use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetSource;
 use POData\UriProcessor\UriProcessorNew;
 use ReflectionClass;
 use UnitTests\POData\TestCase;
@@ -40,6 +43,7 @@ class ExecuteGetTest extends TestCase
         $reqUrl = new Url('http://localhost/odata.svc');
 
         $host = $this->setUpMockHost($reqUrl, $baseUrl);
+        $host->shouldReceive('getRequestContentType')->andReturn(null);
 
         $request = m::mock(IHTTPRequest::class);
         $request->shouldReceive('getMethod')->andReturn(null);
@@ -55,19 +59,14 @@ class ExecuteGetTest extends TestCase
 
         $service = $this->setUpMockService($host, $wrapper, $context, $config);
 
-        $expected = null;
-        $expectedClass = null;
+        $expected = 'This release of library supports only GET (read) request, received a request with method ';
+        $expectedClass = ODataException::class;
         $actual = null;
         $actualClass = null;
 
         try {
-            UriProcessor::process($service);
-        } catch (\Exception $e) {
-            $expectedClass = get_class($e);
-            $expected = $e->getMessage();
-        }
-        try {
-            UriProcessorNew::process($service);
+            $remix = UriProcessorNew::process($service);
+            $remix->execute();
         } catch (\Exception $e) {
             $actualClass = get_class($e);
             $actual = $e->getMessage();
@@ -94,7 +93,7 @@ class ExecuteGetTest extends TestCase
         $singleType->shouldReceive('getName')->andReturn('Object');
         $singleType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
 
-        $singleResult = new \DateTime();
+        $singleResult = new \DateTime('2017-06-10');
         $singleton = m::mock(ResourceFunctionType::class);
         $singleton->shouldReceive('getResourceType')->andReturn($singleType);
         $singleton->shouldReceive('get')->andReturn($singleResult);
@@ -108,11 +107,11 @@ class ExecuteGetTest extends TestCase
 
         $service = $this->setUpMockService($host, $wrapper, $context, $config);
 
-        $original = UriProcessor::process($service);
         $remix = UriProcessorNew::process($service);
 
-        $original->execute();
-        $origSegments = $original->getRequest()->getSegments();
+        $origSegments = [ new SegmentDescriptor()];
+        $origSegments[0]->setResult(new \DateTime('2017-06-10'));
+
         $remix->execute();
         $remixSegments = $remix->getRequest()->getSegments();
 
@@ -138,14 +137,14 @@ class ExecuteGetTest extends TestCase
         $resourceType = m::mock(ResourceType::class);
         $resourceType->shouldReceive('getName')->andReturn('Customer');
         $resourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
-        $resourceType->shouldReceive('getKeyProperties')->andReturn([])->atLeast(2);
-        $resourceType->shouldReceive('getInstanceType->newInstance')->andReturn(new \stdClass())->atLeast(2);
+        $resourceType->shouldReceive('getKeyProperties')->andReturn([])->atLeast(1);
+        $resourceType->shouldReceive('getInstanceType->newInstance')->andReturn(new \stdClass())->atLeast(1);
 
         $result = ['eins', 'zwei', 'polizei'];
 
         $resourceSet = m::mock(ResourceSetWrapper::class);
         $resourceSet->shouldReceive('getResourceType')->andReturn($resourceType);
-        $resourceSet->shouldReceive('checkResourceSetRightsForRead')->andReturnNull()->atLeast(2);
+        $resourceSet->shouldReceive('checkResourceSetRightsForRead')->andReturnNull()->atLeast(1);
         $resourceSet->shouldReceive('hasNamedStreams')->andReturn(false);
         $resourceSet->shouldReceive('hasBagProperty')->andReturn(false);
         $resourceSet->shouldReceive('getResourceSetPageSize')->andReturn(200);
@@ -160,11 +159,12 @@ class ExecuteGetTest extends TestCase
 
         $service = $this->setUpMockService($host, $wrapper, $context, $config);
 
-        $original = UriProcessor::process($service);
         $remix = UriProcessorNew::process($service);
 
-        $original->execute();
-        $origSegments = $original->getRequest()->getSegments();
+        $origSegments = [ new SegmentDescriptor()];
+        $origSegments[0]->setTargetKind(TargetKind::RESOURCE());
+        $origSegments[0]->setResult($result);
+
         $remix->execute();
         $remixSegments = $remix->getRequest()->getSegments();
         $segCount = 1;
@@ -185,7 +185,7 @@ class ExecuteGetTest extends TestCase
         $context->shouldReceive('incomingRequest')->andReturn($request);
 
         $iType = m::mock(IType::class);
-        $iType->shouldReceive('isCompatibleWith')->andReturn(true)->atLeast(2);
+        $iType->shouldReceive('isCompatibleWith')->andReturn(true)->atLeast(1);
 
         $keyProp = m::mock(ResourceProperty::class);
         $keyProp->shouldReceive('getInstanceType')->andReturn($iType);
@@ -193,14 +193,14 @@ class ExecuteGetTest extends TestCase
         $resourceType = m::mock(ResourceType::class);
         $resourceType->shouldReceive('getName')->andReturn('Customer');
         $resourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
-        $resourceType->shouldReceive('getKeyProperties')->andReturn(['id' => $keyProp])->atLeast(2);
-        $resourceType->shouldReceive('getInstanceType->newInstance')->andReturn(new \stdClass())->atLeast(2);
+        $resourceType->shouldReceive('getKeyProperties')->andReturn(['id' => $keyProp])->atLeast(1);
+        $resourceType->shouldReceive('getInstanceType->newInstance')->andReturn(new \stdClass())->atLeast(1);
 
         $result = 'eins';
 
         $resourceSet = m::mock(ResourceSetWrapper::class);
         $resourceSet->shouldReceive('getResourceType')->andReturn($resourceType);
-        $resourceSet->shouldReceive('checkResourceSetRightsForRead')->andReturnNull()->atLeast(2);
+        $resourceSet->shouldReceive('checkResourceSetRightsForRead')->andReturnNull()->atLeast(1);
         $resourceSet->shouldReceive('hasNamedStreams')->andReturn(false);
         $resourceSet->shouldReceive('hasBagProperty')->andReturn(false);
         $resourceSet->shouldReceive('getResourceSetPageSize')->andReturn(200);
@@ -208,18 +208,19 @@ class ExecuteGetTest extends TestCase
         $wrapper = m::mock(ProvidersWrapper::class);
         $wrapper->shouldReceive('resolveSingleton')->andReturn(null);
         $wrapper->shouldReceive('resolveResourceSet')->andReturn($resourceSet);
-        $wrapper->shouldReceive('getResourceFromResourceSet')->andReturn($result)->twice();
+        $wrapper->shouldReceive('getResourceFromResourceSet')->andReturn($result)->once();
 
         $config = m::mock(IServiceConfiguration::class);
         $config->shouldReceive('getMaxDataServiceVersion')->andReturn(new Version(3, 0));
 
         $service = $this->setUpMockService($host, $wrapper, $context, $config);
 
-        $original = UriProcessor::process($service);
         $remix = UriProcessorNew::process($service);
 
-        $original->execute();
-        $origSegments = $original->getRequest()->getSegments();
+        $origSegments = [ new SegmentDescriptor()];
+        $origSegments[0]->setTargetKind(TargetKind::RESOURCE());
+        $origSegments[0]->setResult($result);
+        $origSegments[0]->setSingleResult(true);
         $remix->execute();
         $remixSegments = $remix->getRequest()->getSegments();
         $segCount = 1;
@@ -240,7 +241,7 @@ class ExecuteGetTest extends TestCase
         $context->shouldReceive('incomingRequest')->andReturn($request);
 
         $iType = m::mock(IType::class);
-        $iType->shouldReceive('isCompatibleWith')->andReturn(true)->atLeast(2);
+        $iType->shouldReceive('isCompatibleWith')->andReturn(true)->atLeast(1);
 
         $rPropType = new Int32();
 
@@ -255,14 +256,14 @@ class ExecuteGetTest extends TestCase
         $resourceType = m::mock(ResourceType::class);
         $resourceType->shouldReceive('getName')->andReturn('Customer');
         $resourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
-        $resourceType->shouldReceive('getKeyProperties')->andReturn(['id' => $keyProp])->atLeast(2);
-        $resourceType->shouldReceive('getInstanceType->newInstance')->andReturn(new \stdClass())->atLeast(2);
-        $resourceType->shouldReceive('resolveProperty')->withArgs(['id'])->andReturn($rProp)->atLeast(2);
+        $resourceType->shouldReceive('getKeyProperties')->andReturn(['id' => $keyProp])->atLeast(1);
+        $resourceType->shouldReceive('getInstanceType->newInstance')->andReturn(new \stdClass())->atLeast(1);
+        $resourceType->shouldReceive('resolveProperty')->withArgs(['id'])->andReturn($rProp)->atLeast(1);
 
         $resourceSet = m::mock(ResourceSetWrapper::class);
         $resourceSet->shouldReceive('getName')->andReturn('Customers');
         $resourceSet->shouldReceive('getResourceType')->andReturn($resourceType);
-        $resourceSet->shouldReceive('checkResourceSetRightsForRead')->andReturnNull()->atLeast(2);
+        $resourceSet->shouldReceive('checkResourceSetRightsForRead')->andReturnNull()->atLeast(1);
         $resourceSet->shouldReceive('hasNamedStreams')->andReturn(false);
         $resourceSet->shouldReceive('hasBagProperty')->andReturn(false);
         $resourceSet->shouldReceive('getResourceSetPageSize')->andReturn(200);
@@ -272,18 +273,19 @@ class ExecuteGetTest extends TestCase
         $wrapper = m::mock(ProvidersWrapper::class);
         $wrapper->shouldReceive('resolveSingleton')->andReturn(null);
         $wrapper->shouldReceive('resolveResourceSet')->withArgs(['customers'])->andReturn($resourceSet);
-        $wrapper->shouldReceive('getResourceFromResourceSet')->andReturn($result)->times(2);
+        $wrapper->shouldReceive('getResourceFromResourceSet')->andReturn($result)->times(1);
 
         $config = m::mock(IServiceConfiguration::class);
         $config->shouldReceive('getMaxDataServiceVersion')->andReturn(new Version(3, 0));
 
         $service = $this->setUpMockService($host, $wrapper, $context, $config);
 
-        $original = UriProcessor::process($service);
         $remix = UriProcessorNew::process($service);
 
-        $original->execute();
-        $origSegments = $original->getRequest()->getSegments();
+        $origSegments = [ new SegmentDescriptor()];
+        $origSegments[0]->setTargetKind(TargetKind::RESOURCE());
+        $origSegments[0]->setResult($result);
+        $origSegments[0]->setSingleResult(true);
         $remix->execute();
         $remixSegments = $remix->getRequest()->getSegments();
         $segCount = 1;
@@ -345,17 +347,12 @@ class ExecuteGetTest extends TestCase
 
         $service = $this->setUpMockService($host, $wrapper, $context, $config);
 
-        $expected = null;
-        $expectedClass = null;
+        $expected = 'Request version \'1.0\' is not supported for the request payload. The only supported'
+                    .' version is \'3.0\'.';
+        $expectedClass = ODataException::class;
         $actual = null;
         $actualClass = null;
 
-        try {
-            UriProcessor::process($service);
-        } catch (\Exception $e) {
-            $expectedClass = get_class($e);
-            $expected = $e->getMessage();
-        }
         try {
             UriProcessorNew::process($service);
         } catch (\Exception $e) {
@@ -384,7 +381,7 @@ class ExecuteGetTest extends TestCase
         $context->shouldReceive('incomingRequest')->andReturn($request);
 
         $iType = m::mock(IType::class);
-        $iType->shouldReceive('isCompatibleWith')->andReturn(true)->atLeast(2);
+        $iType->shouldReceive('isCompatibleWith')->andReturn(true)->atLeast(1);
 
         $rPropType = new Int32();
 
@@ -401,23 +398,23 @@ class ExecuteGetTest extends TestCase
         $resourceType = m::mock(ResourceType::class);
         $resourceType->shouldReceive('getName')->andReturn('Customer');
         $resourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
-        $resourceType->shouldReceive('getKeyProperties')->andReturn(['id' => $keyProp])->atLeast(2);
-        $resourceType->shouldReceive('getInstanceType->newInstance')->andReturn(new \stdClass())->atLeast(2);
-        $resourceType->shouldReceive('resolveProperty')->withArgs(['id'])->andReturn($rProp)->atLeast(2);
+        $resourceType->shouldReceive('getKeyProperties')->andReturn(['id' => $keyProp])->atLeast(1);
+        $resourceType->shouldReceive('getInstanceType->newInstance')->andReturn(new \stdClass())->atLeast(1);
+        $resourceType->shouldReceive('resolveProperty')->withArgs(['id'])->andReturn($rProp)->atLeast(1);
         $resourceType->shouldReceive('resolveProperty')->withArgs(['photo'])->andReturn(null);
         $resourceType->shouldReceive('tryResolveNamedStreamByName')->withArgs(['photo'])->andReturn($photoStream);
 
         $resourceSet = m::mock(ResourceSetWrapper::class);
         $resourceSet->shouldReceive('getName')->andReturn('Customers');
         $resourceSet->shouldReceive('getResourceType')->andReturn($resourceType);
-        $resourceSet->shouldReceive('checkResourceSetRightsForRead')->andReturnNull()->atLeast(2);
+        $resourceSet->shouldReceive('checkResourceSetRightsForRead')->andReturnNull()->atLeast(1);
         $resourceSet->shouldReceive('hasNamedStreams')->andReturn(true);
 
         $result = ['eins'];
 
         $wrapper = m::mock(ProvidersWrapper::class);
         $wrapper->shouldReceive('resolveSingleton')->andReturn(null);
-        $wrapper->shouldReceive('getResourceFromResourceSet')->andReturn($result)->times(2);
+        $wrapper->shouldReceive('getResourceFromResourceSet')->andReturn($result)->times(1);
         $wrapper->shouldReceive('resolveResourceSet')->andReturn($resourceSet);
 
         $config = m::mock(IServiceConfiguration::class);
@@ -425,11 +422,31 @@ class ExecuteGetTest extends TestCase
 
         $service = $this->setUpMockService($host, $wrapper, $context, $config);
 
-        $original = UriProcessor::process($service);
         $remix = UriProcessorNew::process($service);
 
-        $original->execute();
-        $origSegments = $original->getRequest()->getSegments();
+        $foo = null;
+        $key = KeyDescriptor::tryParseKeysFromKeyPredicate('id=1', $foo);
+        $foo->validate('customers(id=1)', $resourceType);
+
+        $origSegments = [ new SegmentDescriptor(), new SegmentDescriptor];
+        $origSegments[0]->setIdentifier('customers');
+        $origSegments[0]->setTargetKind(TargetKind::RESOURCE());
+        $origSegments[0]->setResult($result);
+        $origSegments[0]->setSingleResult(true);
+        $origSegments[0]->setNext($origSegments[1]);
+        $origSegments[0]->setTargetSource(TargetSource::ENTITY_SET);
+        $origSegments[0]->setResult($result);
+        $origSegments[0]->setTargetResourceSetWrapper($resourceSet);
+        $origSegments[0]->setKeyDescriptor($foo);
+        $origSegments[0]->setTargetResourceType($resourceType);
+        $origSegments[1]->setTargetResourceType($resourceType);
+        $origSegments[1]->setIdentifier('photo');
+        $origSegments[1]->setSingleResult(true);
+        $origSegments[1]->setTargetKind(TargetKind::MEDIA_RESOURCE());
+        $origSegments[1]->setTargetSource(TargetSource::PROPERTY);
+        $origSegments[1]->setResult($result);
+        $origSegments[1]->setPrevious($origSegments[0]);
+
         $remix->execute();
         $remixSegments = $remix->getRequest()->getSegments();
         $segCount = 2;
@@ -456,17 +473,11 @@ class ExecuteGetTest extends TestCase
 
         $service = $this->setUpMockService($host, $wrapper, $context, $config);
 
-        $expected = null;
-        $expectedClass = null;
+        $expected = 'The request URI is not valid, the segment \'$count\' cannot be applied to the root of the service';
+        $expectedClass = ODataException::class;
         $actual = null;
         $actualClass = null;
 
-        try {
-            UriProcessor::process($service);
-        } catch (\Exception $e) {
-            $expectedClass = get_class($e);
-            $expected = $e->getMessage();
-        }
         try {
             UriProcessorNew::process($service);
         } catch (\Exception $e) {
@@ -517,17 +528,12 @@ class ExecuteGetTest extends TestCase
 
         $service = $this->setUpMockService($host, $wrapper, $context, $config);
 
-        $expected = null;
-        $expectedClass = null;
+        $expected = 'The request URI is not valid, since the segment \'customers\' refers to a singleton,'
+                    .' and the segment \'$count\' can only follow a resource collection.';
+        $expectedClass = ODataException::class;
         $actual = null;
         $actualClass = null;
 
-        try {
-            UriProcessor::process($service);
-        } catch (\Exception $e) {
-            $expectedClass = get_class($e);
-            $expected = $e->getMessage();
-        }
         try {
             UriProcessorNew::process($service);
         } catch (\Exception $e) {
@@ -582,15 +588,33 @@ class ExecuteGetTest extends TestCase
 
         $service = $this->setUpMockService($host, $wrapper, $context, $config);
 
-        $original = UriProcessor::process($service);
         $remix = UriProcessorNew::process($service);
 
-        $original->execute();
-        $origSegments = $original->getRequest()->getSegments();
+        $bar = null;
+        $key = KeyDescriptor::tryParseKeysFromKeyPredicate('id=1', $bar);
+        $bar->validate('customers(id=1)', $resourceType);
+
+        $origSegments = [new SegmentDescriptor(), new SegmentDescriptor()];
+        $origSegments[0]->setTargetKind(TargetKind::RESOURCE());
+        $origSegments[0]->setResult($result);
+        $origSegments[0]->setSingleResult(false);
+        $origSegments[0]->setIdentifier('customers');
+        $origSegments[0]->setTargetSource(TargetSource::ENTITY_SET);
+        $origSegments[0]->setTargetResourceSetWrapper($resourceSet);
+        $origSegments[0]->setTargetResourceType($resourceType);
+        $origSegments[0]->setNext($origSegments[1]);
+        $origSegments[1]->setTargetKind(TargetKind::PRIMITIVE_VALUE());
+        $origSegments[1]->setIdentifier('$count');
+        $origSegments[1]->setSingleResult(true);
+        $origSegments[1]->setTargetSource(TargetSource::PROPERTY);
+        $origSegments[1]->setTargetResourceSetWrapper($resourceSet);
+        $origSegments[1]->setTargetResourceType($resourceType);
+        $origSegments[1]->setPrevious($origSegments[0]);
+
         $remix->execute();
         $remixSegments = $remix->getRequest()->getSegments();
         $segCount = 2;
-
+        $this->assertEquals($origSegments[0], $remixSegments[0]);
         $this->checkSegmentEquality($segCount, $origSegments, $remixSegments);
     }
 
@@ -638,17 +662,13 @@ class ExecuteGetTest extends TestCase
 
         $service = $this->setUpMockService($host, $wrapper, $context, $config);
 
-        $expected = null;
-        $expectedClass = null;
+        $expected = 'The request URI is not valid. The segment \'$count\' must be the last segment in the URI'
+                    .' because it is one of the following: $batch, $value, $metadata, $count, a bag property, a'
+                    .' named media resource, or a service operation that does not return a value.';
+        $expectedClass = ODataException::class;
         $actual = null;
         $actualClass = null;
 
-        try {
-            UriProcessor::process($service);
-        } catch (\Exception $e) {
-            $expectedClass = get_class($e);
-            $expected = $e->getMessage();
-        }
         try {
             UriProcessorNew::process($service);
         } catch (\Exception $e) {
@@ -674,11 +694,11 @@ class ExecuteGetTest extends TestCase
         $complexType = m::mock(ResourceComplexType::class);
 
         $complexProp = m::mock(ResourceProperty::class);
-        $complexProp->shouldReceive('getKind')->andReturn(ResourcePropertyKind::COMPLEX_TYPE)->atLeast(2);
+        $complexProp->shouldReceive('getKind')->andReturn(ResourcePropertyKind::COMPLEX_TYPE)->atLeast(1);
         $complexProp->shouldReceive('getResourceType')->andReturn($complexType);
 
         $iType = m::mock(IType::class);
-        $iType->shouldReceive('isCompatibleWith')->andReturn(true)->atLeast(2);
+        $iType->shouldReceive('isCompatibleWith')->andReturn(true)->atLeast(1);
 
         $keyProp = m::mock(ResourceProperty::class);
         $keyProp->shouldReceive('getInstanceType')->andReturn($iType);
@@ -686,15 +706,15 @@ class ExecuteGetTest extends TestCase
         $resourceType = m::mock(ResourceEntityType::class);
         $resourceType->shouldReceive('getName')->andReturn('Customer');
         $resourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
-        $resourceType->shouldReceive('getKeyProperties')->andReturn(['id' => $keyProp])->atLeast(2);
-        $resourceType->shouldReceive('getInstanceType->newInstance')->andReturn(new \stdClass())->atLeast(2);
-        $resourceType->shouldReceive('resolveProperty')->withArgs(['address'])->andReturn($complexProp)->atLeast(2);
+        $resourceType->shouldReceive('getKeyProperties')->andReturn(['id' => $keyProp])->atLeast(1);
+        $resourceType->shouldReceive('getInstanceType->newInstance')->andReturn(new \stdClass())->atLeast(1);
+        $resourceType->shouldReceive('resolveProperty')->withArgs(['address'])->andReturn($complexProp)->atLeast(1);
 
         $result = 'eins';
 
         $resourceSet = m::mock(ResourceSetWrapper::class);
         $resourceSet->shouldReceive('getResourceType')->andReturn($resourceType);
-        $resourceSet->shouldReceive('checkResourceSetRightsForRead')->andReturnNull()->atLeast(2);
+        $resourceSet->shouldReceive('checkResourceSetRightsForRead')->andReturnNull()->atLeast(1);
         $resourceSet->shouldReceive('hasNamedStreams')->andReturn(false);
         $resourceSet->shouldReceive('hasBagProperty')->andReturn(false);
         $resourceSet->shouldReceive('getResourceSetPageSize')->andReturn(200);
@@ -702,18 +722,37 @@ class ExecuteGetTest extends TestCase
         $wrapper = m::mock(ProvidersWrapper::class);
         $wrapper->shouldReceive('resolveSingleton')->andReturn(null);
         $wrapper->shouldReceive('resolveResourceSet')->andReturn($resourceSet);
-        $wrapper->shouldReceive('getResourceFromResourceSet')->andReturn($result)->twice();
+        $wrapper->shouldReceive('getResourceFromResourceSet')->andReturn($result)->once();
 
         $config = m::mock(IServiceConfiguration::class);
         $config->shouldReceive('getMaxDataServiceVersion')->andReturn(new Version(3, 0));
 
         $service = $this->setUpMockService($host, $wrapper, $context, $config);
 
-        $original = UriProcessor::process($service);
         $remix = UriProcessorNew::process($service);
 
-        $original->execute();
-        $origSegments = $original->getRequest()->getSegments();
+        $bar = null;
+        $key = KeyDescriptor::tryParseKeysFromKeyPredicate('id=1', $bar);
+        $bar->validate('customers(id=1)', $resourceType);
+
+        $origSegments = [new SegmentDescriptor(), new SegmentDescriptor()];
+        $origSegments[0]->setTargetKind(TargetKind::RESOURCE());
+        $origSegments[0]->setResult($result);
+        $origSegments[0]->setSingleResult(true);
+        $origSegments[0]->setIdentifier('customers');
+        $origSegments[0]->setTargetSource(TargetSource::ENTITY_SET);
+        $origSegments[0]->setTargetResourceSetWrapper($resourceSet);
+        $origSegments[0]->setTargetResourceType($resourceType);
+        $origSegments[0]->setKeyDescriptor($bar);
+        $origSegments[0]->setNext($origSegments[1]);
+        $origSegments[1]->setTargetKind(TargetKind::COMPLEX_OBJECT());
+        $origSegments[1]->setIdentifier('address');
+        $origSegments[1]->setSingleResult(true);
+        $origSegments[1]->setTargetSource(TargetSource::PROPERTY);
+        $origSegments[1]->setTargetResourceType($complexType);
+        $origSegments[1]->setProjectedProperty($complexProp);
+        $origSegments[1]->setPrevious($origSegments[0]);
+
         $remix->execute();
         $remixSegments = $remix->getRequest()->getSegments();
         $segCount = 2;
@@ -737,11 +776,11 @@ class ExecuteGetTest extends TestCase
 
         $bagProp = m::mock(ResourceProperty::class);
         $bagProp->shouldReceive('getKind')
-            ->andReturn(ResourcePropertyKind::BAG | ResourcePropertyKind::PRIMITIVE)->atLeast(2);
+            ->andReturn(ResourcePropertyKind::BAG | ResourcePropertyKind::PRIMITIVE)->atLeast(1);
         $bagProp->shouldReceive('getResourceType')->andReturn($bagType);
 
         $iType = m::mock(IType::class);
-        $iType->shouldReceive('isCompatibleWith')->andReturn(true)->atLeast(2);
+        $iType->shouldReceive('isCompatibleWith')->andReturn(true)->atLeast(1);
 
         $keyProp = m::mock(ResourceProperty::class);
         $keyProp->shouldReceive('getInstanceType')->andReturn($iType);
@@ -749,15 +788,15 @@ class ExecuteGetTest extends TestCase
         $resourceType = m::mock(ResourceEntityType::class);
         $resourceType->shouldReceive('getName')->andReturn('Customer');
         $resourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
-        $resourceType->shouldReceive('getKeyProperties')->andReturn(['id' => $keyProp])->atLeast(2);
-        $resourceType->shouldReceive('getInstanceType->newInstance')->andReturn(new \stdClass())->atLeast(2);
-        $resourceType->shouldReceive('resolveProperty')->withArgs(['addresses'])->andReturn($bagProp)->atLeast(2);
+        $resourceType->shouldReceive('getKeyProperties')->andReturn(['id' => $keyProp])->atLeast(1);
+        $resourceType->shouldReceive('getInstanceType->newInstance')->andReturn(new \stdClass())->atLeast(1);
+        $resourceType->shouldReceive('resolveProperty')->withArgs(['addresses'])->andReturn($bagProp)->atLeast(1);
 
         $result = 'eins';
 
         $resourceSet = m::mock(ResourceSetWrapper::class);
         $resourceSet->shouldReceive('getResourceType')->andReturn($resourceType);
-        $resourceSet->shouldReceive('checkResourceSetRightsForRead')->andReturnNull()->atLeast(2);
+        $resourceSet->shouldReceive('checkResourceSetRightsForRead')->andReturnNull()->atLeast(1);
         $resourceSet->shouldReceive('hasNamedStreams')->andReturn(false);
         $resourceSet->shouldReceive('hasBagProperty')->andReturn(true);
         $resourceSet->shouldReceive('getResourceSetPageSize')->andReturn(200);
@@ -765,18 +804,37 @@ class ExecuteGetTest extends TestCase
         $wrapper = m::mock(ProvidersWrapper::class);
         $wrapper->shouldReceive('resolveSingleton')->andReturn(null);
         $wrapper->shouldReceive('resolveResourceSet')->andReturn($resourceSet);
-        $wrapper->shouldReceive('getResourceFromResourceSet')->andReturn($result)->twice();
+        $wrapper->shouldReceive('getResourceFromResourceSet')->andReturn($result)->once();
 
         $config = m::mock(IServiceConfiguration::class);
         $config->shouldReceive('getMaxDataServiceVersion')->andReturn(new Version(3, 0));
 
         $service = $this->setUpMockService($host, $wrapper, $context, $config);
 
-        $original = UriProcessor::process($service);
         $remix = UriProcessorNew::process($service);
 
-        $original->execute();
-        $origSegments = $original->getRequest()->getSegments();
+        $bar = null;
+        $key = KeyDescriptor::tryParseKeysFromKeyPredicate('id=1', $bar);
+        $bar->validate('customers(id=1)', $resourceType);
+
+        $origSegments = [new SegmentDescriptor(), new SegmentDescriptor()];
+        $origSegments[0]->setTargetKind(TargetKind::RESOURCE());
+        $origSegments[0]->setResult($result);
+        $origSegments[0]->setSingleResult(true);
+        $origSegments[0]->setIdentifier('customers');
+        $origSegments[0]->setTargetSource(TargetSource::ENTITY_SET);
+        $origSegments[0]->setTargetResourceSetWrapper($resourceSet);
+        $origSegments[0]->setTargetResourceType($resourceType);
+        $origSegments[0]->setKeyDescriptor($bar);
+        $origSegments[0]->setNext($origSegments[1]);
+        $origSegments[1]->setTargetKind(TargetKind::BAG());
+        $origSegments[1]->setIdentifier('addresses');
+        $origSegments[1]->setSingleResult(true);
+        $origSegments[1]->setTargetSource(TargetSource::PROPERTY);
+        $origSegments[1]->setTargetResourceType($bagType);
+        $origSegments[1]->setProjectedProperty($bagProp);
+        $origSegments[1]->setPrevious($origSegments[0]);
+
         $remix->execute();
         $remixSegments = $remix->getRequest()->getSegments();
         $segCount = 2;
@@ -800,11 +858,11 @@ class ExecuteGetTest extends TestCase
 
         $bagProp = m::mock(ResourceProperty::class);
         $bagProp->shouldReceive('getKind')
-            ->andReturn(ResourcePropertyKind::BAG | ResourcePropertyKind::COMPLEX_TYPE)->atLeast(2);
+            ->andReturn(ResourcePropertyKind::BAG | ResourcePropertyKind::COMPLEX_TYPE)->atLeast(1);
         $bagProp->shouldReceive('getResourceType')->andReturn($bagType);
 
         $iType = m::mock(IType::class);
-        $iType->shouldReceive('isCompatibleWith')->andReturn(true)->atLeast(2);
+        $iType->shouldReceive('isCompatibleWith')->andReturn(true)->atLeast(1);
 
         $keyProp = m::mock(ResourceProperty::class);
         $keyProp->shouldReceive('getInstanceType')->andReturn($iType);
@@ -812,15 +870,15 @@ class ExecuteGetTest extends TestCase
         $resourceType = m::mock(ResourceEntityType::class);
         $resourceType->shouldReceive('getName')->andReturn('Customer');
         $resourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
-        $resourceType->shouldReceive('getKeyProperties')->andReturn(['id' => $keyProp])->atLeast(2);
-        $resourceType->shouldReceive('getInstanceType->newInstance')->andReturn(new \stdClass())->atLeast(2);
-        $resourceType->shouldReceive('resolveProperty')->withArgs(['addresses'])->andReturn($bagProp)->atLeast(2);
+        $resourceType->shouldReceive('getKeyProperties')->andReturn(['id' => $keyProp])->atLeast(1);
+        $resourceType->shouldReceive('getInstanceType->newInstance')->andReturn(new \stdClass())->atLeast(1);
+        $resourceType->shouldReceive('resolveProperty')->withArgs(['addresses'])->andReturn($bagProp)->atLeast(1);
 
         $result = 'eins';
 
         $resourceSet = m::mock(ResourceSetWrapper::class);
         $resourceSet->shouldReceive('getResourceType')->andReturn($resourceType);
-        $resourceSet->shouldReceive('checkResourceSetRightsForRead')->andReturnNull()->atLeast(2);
+        $resourceSet->shouldReceive('checkResourceSetRightsForRead')->andReturnNull()->atLeast(1);
         $resourceSet->shouldReceive('hasNamedStreams')->andReturn(false);
         $resourceSet->shouldReceive('hasBagProperty')->andReturn(true);
         $resourceSet->shouldReceive('getResourceSetPageSize')->andReturn(200);
@@ -828,18 +886,37 @@ class ExecuteGetTest extends TestCase
         $wrapper = m::mock(ProvidersWrapper::class);
         $wrapper->shouldReceive('resolveSingleton')->andReturn(null);
         $wrapper->shouldReceive('resolveResourceSet')->andReturn($resourceSet);
-        $wrapper->shouldReceive('getResourceFromResourceSet')->andReturn($result)->twice();
+        $wrapper->shouldReceive('getResourceFromResourceSet')->andReturn($result)->once();
 
         $config = m::mock(IServiceConfiguration::class);
         $config->shouldReceive('getMaxDataServiceVersion')->andReturn(new Version(3, 0));
 
         $service = $this->setUpMockService($host, $wrapper, $context, $config);
 
-        $original = UriProcessor::process($service);
         $remix = UriProcessorNew::process($service);
 
-        $original->execute();
-        $origSegments = $original->getRequest()->getSegments();
+        $bar = null;
+        $key = KeyDescriptor::tryParseKeysFromKeyPredicate('id=1', $bar);
+        $bar->validate('customers(id=1)', $resourceType);
+
+        $origSegments = [new SegmentDescriptor(), new SegmentDescriptor()];
+        $origSegments[0]->setTargetKind(TargetKind::RESOURCE());
+        $origSegments[0]->setResult($result);
+        $origSegments[0]->setSingleResult(true);
+        $origSegments[0]->setIdentifier('customers');
+        $origSegments[0]->setTargetSource(TargetSource::ENTITY_SET);
+        $origSegments[0]->setTargetResourceSetWrapper($resourceSet);
+        $origSegments[0]->setTargetResourceType($resourceType);
+        $origSegments[0]->setKeyDescriptor($bar);
+        $origSegments[0]->setNext($origSegments[1]);
+        $origSegments[1]->setTargetKind(TargetKind::BAG());
+        $origSegments[1]->setIdentifier('addresses');
+        $origSegments[1]->setSingleResult(true);
+        $origSegments[1]->setTargetSource(TargetSource::PROPERTY);
+        $origSegments[1]->setTargetResourceType($bagType);
+        $origSegments[1]->setProjectedProperty($bagProp);
+        $origSegments[1]->setPrevious($origSegments[0]);
+
         $remix->execute();
         $remixSegments = $remix->getRequest()->getSegments();
         $segCount = 2;
@@ -873,12 +950,6 @@ class ExecuteGetTest extends TestCase
         $actualClass = null;
 
         try {
-            UriProcessor::process($service);
-        } catch (\Exception $e) {
-            $expectedClass = get_class($e);
-            $expected = $e->getMessage();
-        }
-        try {
             UriProcessorNew::process($service);
         } catch (\Exception $e) {
             $actualClass = get_class($e);
@@ -908,17 +979,11 @@ class ExecuteGetTest extends TestCase
 
         $service = $this->setUpMockService($host, $wrapper, $context, $config);
 
-        $expected = null;
-        $expectedClass = null;
+        $expected = 'The request URI is not valid, the segment \'$links\' cannot be applied to the root of the service';
+        $expectedClass = ODataException::class;
         $actual = null;
         $actualClass = null;
 
-        try {
-            UriProcessor::process($service);
-        } catch (\Exception $e) {
-            $expectedClass = get_class($e);
-            $expected = $e->getMessage();
-        }
         try {
             UriProcessorNew::process($service);
         } catch (\Exception $e) {
@@ -971,17 +1036,12 @@ class ExecuteGetTest extends TestCase
 
         $service = $this->setUpMockService($host, $wrapper, $context, $config);
 
-        $expected = null;
-        $expectedClass = null;
+        $expected = 'The request URI is not valid. There must a segment specified after the \'$links\' segment'
+                    .' and the segment must refer to a entity resource.';
+        $expectedClass = ODataException::class;
         $actual = null;
         $actualClass = null;
 
-        try {
-            UriProcessor::process($service);
-        } catch (\Exception $e) {
-            $expectedClass = get_class($e);
-            $expected = $e->getMessage();
-        }
         try {
             UriProcessorNew::process($service);
         } catch (\Exception $e) {
@@ -1070,15 +1130,46 @@ class ExecuteGetTest extends TestCase
 
         $service = $this->setUpMockService($host, $wrapper, $context, $config);
 
-        $original = UriProcessor::process($service);
         $remix = UriProcessorNew::process($service);
 
-        $original->execute();
-        $origSegments = $original->getRequest()->getSegments();
+        $bar = null;
+        $key = KeyDescriptor::tryParseKeysFromKeyPredicate('id=1', $bar);
+        $bar->validate('customers(id=1)', $resourceType);
+
+        $origSegments = [new SegmentDescriptor(), new SegmentDescriptor(), new SegmentDescriptor()];
+        $origSegments[0]->setTargetKind(TargetKind::RESOURCE());
+        $origSegments[0]->setResult($result);
+        $origSegments[0]->setSingleResult(true);
+        $origSegments[0]->setIdentifier('customers');
+        $origSegments[0]->setTargetSource(TargetSource::ENTITY_SET);
+        $origSegments[0]->setTargetResourceSetWrapper($resourceSet);
+        $origSegments[0]->setTargetResourceType($resourceType);
+        $origSegments[0]->setKeyDescriptor($bar);
+        $origSegments[0]->setNext($origSegments[1]);
+        $origSegments[1]->setIdentifier('$links');
+        $origSegments[1]->setSingleResult(true);
+        $origSegments[1]->setTargetSource(TargetSource::ENTITY_SET);
+        $origSegments[1]->setTargetKind(TargetKind::LINK());
+        $origSegments[1]->setResult('eins');
+        $origSegments[1]->setTargetResourceSetWrapper($resourceSet);
+        $origSegments[1]->setTargetResourceType($resourceType);
+        $origSegments[1]->setKeyDescriptor($bar);
+        $origSegments[1]->setNext($origSegments[2]);
+        $origSegments[1]->setPrevious($origSegments[0]);
+        $origSegments[2]->setIdentifier('orders');
+        $origSegments[2]->setSingleResult(false);
+        $origSegments[2]->setTargetSource(TargetSource::PROPERTY);
+        $origSegments[2]->setTargetKind(TargetKind::RESOURCE());
+        $origSegments[2]->setTargetResourceSetWrapper($ordersSet);
+        $origSegments[2]->setTargetResourceType($ordersType);
+        $origSegments[2]->setProjectedProperty($bagProp);
+        $origSegments[2]->setResult('foobar');
+        $origSegments[2]->setPrevious($origSegments[1]);
+
         $remix->execute();
         $remixSegments = $remix->getRequest()->getSegments();
         $segCount = 3;
-
+        $this->assertEquals($origSegments[2], $remixSegments[2]);
         $this->checkSegmentEquality($segCount, $origSegments, $remixSegments);
     }
 
@@ -1132,11 +1223,38 @@ class ExecuteGetTest extends TestCase
 
         $service = $this->setUpMockService($host, $wrapper, $context, $config);
 
-        $original = UriProcessor::process($service);
         $remix = UriProcessorNew::process($service);
 
-        $original->execute();
-        $origSegments = $original->getRequest()->getSegments();
+        $bar = null;
+        $key = KeyDescriptor::tryParseKeysFromKeyPredicate('id=1', $bar);
+        $bar->validate('orders(id=1)', $resourceType);
+
+        $origSegments = [new SegmentDescriptor(), new SegmentDescriptor(), new SegmentDescriptor()];
+        $origSegments[0]->setTargetKind(TargetKind::RESOURCE());
+        $origSegments[0]->setResult($result);
+        $origSegments[0]->setSingleResult(true);
+        $origSegments[0]->setIdentifier('customers');
+        $origSegments[0]->setTargetSource(TargetSource::ENTITY_SET);
+        $origSegments[0]->setTargetResourceSetWrapper($resourceSet);
+        $origSegments[0]->setTargetResourceType($resourceType);
+        $origSegments[0]->setKeyDescriptor($bar);
+        $origSegments[0]->setNext($origSegments[1]);
+        $origSegments[1]->setIdentifier('id');
+        $origSegments[1]->setSingleResult(true);
+        $origSegments[1]->setTargetSource(TargetSource::PROPERTY);
+        $origSegments[1]->setTargetKind(TargetKind::PRIMITIVE());
+        $origSegments[1]->setProjectedProperty($keyProp);
+        $origSegments[1]->setTargetResourceType($primType);
+        $origSegments[1]->setNext($origSegments[2]);
+        $origSegments[1]->setPrevious($origSegments[0]);
+        $origSegments[2]->setIdentifier('$value');
+        $origSegments[2]->setTargetResourceType($primType);
+        $origSegments[2]->setSingleResult(true);
+        $origSegments[2]->setTargetSource(TargetSource::PROPERTY);
+        $origSegments[2]->setTargetKind(TargetKind::PRIMITIVE_VALUE());
+        $origSegments[2]->setProjectedProperty($keyProp);
+        $origSegments[2]->setPrevious($origSegments[1]);
+
         $remix->execute();
         $remixSegments = $remix->getRequest()->getSegments();
         $segCount = 3;
@@ -1211,11 +1329,32 @@ class ExecuteGetTest extends TestCase
 
         $service = $this->setUpMockService($host, $wrapper, $context, $config);
 
-        $original = UriProcessor::process($service);
         $remix = UriProcessorNew::process($service);
 
-        $original->execute();
-        $origSegments = $original->getRequest()->getSegments();
+        $bar = null;
+        $key = KeyDescriptor::tryParseKeysFromKeyPredicate('id=1', $bar);
+        $bar->validate('orders(id=1)', $resourceType);
+
+        $origSegments = [new SegmentDescriptor(), new SegmentDescriptor()];
+        $origSegments[0]->setTargetKind(TargetKind::RESOURCE());
+        $origSegments[0]->setResult($result);
+        $origSegments[0]->setSingleResult(true);
+        $origSegments[0]->setIdentifier('orders');
+        $origSegments[0]->setTargetSource(TargetSource::ENTITY_SET);
+        $origSegments[0]->setTargetResourceSetWrapper($resourceSet);
+        $origSegments[0]->setTargetResourceType($resourceType);
+        $origSegments[0]->setKeyDescriptor($bar);
+        $origSegments[0]->setNext($origSegments[1]);
+        $origSegments[1]->setIdentifier('customer');
+        $origSegments[1]->setResult($relatedResult);
+        $origSegments[1]->setTargetSource(TargetSource::PROPERTY);
+        $origSegments[1]->setSingleResult(true);
+        $origSegments[1]->setTargetKind(TargetKind::RESOURCE());
+        $origSegments[1]->setTargetResourceSetWrapper($custSet);
+        $origSegments[1]->setTargetResourceType($custType);
+        $origSegments[1]->setProjectedProperty($custProp);
+        $origSegments[1]->setPrevious($origSegments[0]);
+
         $remix->execute();
         $remixSegments = $remix->getRequest()->getSegments();
         $segCount = 2;
@@ -1291,11 +1430,36 @@ class ExecuteGetTest extends TestCase
 
         $service = $this->setUpMockService($host, $wrapper, $context, $config);
 
-        $original = UriProcessor::process($service);
         $remix = UriProcessorNew::process($service);
 
-        $original->execute();
-        $origSegments = $original->getRequest()->getSegments();
+        $bar = null;
+        $foo = null;
+        $key = KeyDescriptor::tryParseKeysFromKeyPredicate('id=1', $foo);
+        $foo->validate('customers(id=1)', $resourceType);
+        $key = KeyDescriptor::tryParseKeysFromKeyPredicate('id=1', $bar);
+        $bar->validate('orders(id=1)', $resourceType);
+
+        $origSegments = [new SegmentDescriptor(), new SegmentDescriptor()];
+        $origSegments[0]->setTargetKind(TargetKind::RESOURCE());
+        $origSegments[0]->setResult($result);
+        $origSegments[0]->setSingleResult(true);
+        $origSegments[0]->setIdentifier('orders');
+        $origSegments[0]->setTargetSource(TargetSource::ENTITY_SET);
+        $origSegments[0]->setTargetResourceSetWrapper($resourceSet);
+        $origSegments[0]->setTargetResourceType($resourceType);
+        $origSegments[0]->setKeyDescriptor($bar);
+        $origSegments[0]->setNext($origSegments[1]);
+        $origSegments[1]->setIdentifier('customer');
+        $origSegments[1]->setResult($relatedResult);
+        $origSegments[1]->setTargetSource(TargetSource::PROPERTY);
+        $origSegments[1]->setSingleResult(true);
+        $origSegments[1]->setTargetKind(TargetKind::RESOURCE());
+        $origSegments[1]->setTargetResourceSetWrapper($custSet);
+        $origSegments[1]->setTargetResourceType($custType);
+        $origSegments[1]->setKeyDescriptor($foo);
+        $origSegments[1]->setProjectedProperty($custProp);
+        $origSegments[1]->setPrevious($origSegments[0]);
+
         $remix->execute();
         $remixSegments = $remix->getRequest()->getSegments();
         $segCount = 2;

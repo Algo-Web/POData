@@ -45,7 +45,7 @@ trait http
      *
      * @return string The formatted message
      */
-    public static function onlyReadSupport(HTTPRequestMethod $method)
+    public static function onlyReadSupport(HTTPRequestMethod $method = null)
     {
         // TODO: Update to reflect expanded library capabilities?
         return 'This release of library supports only GET (read) request, received a request with method ' . $method;
