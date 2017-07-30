@@ -12,22 +12,10 @@ use POData\OperationContext\HTTPRequestMethod;
 use POData\OperationContext\IHTTPRequest;
 use POData\OperationContext\IOperationContext;
 use POData\OperationContext\ServiceHost;
-use POData\Providers\Metadata\ResourceComplexType;
-use POData\Providers\Metadata\ResourceEntityType;
-use POData\Providers\Metadata\ResourceFunctionType;
-use POData\Providers\Metadata\ResourcePrimitiveType;
-use POData\Providers\Metadata\ResourceProperty;
-use POData\Providers\Metadata\ResourcePropertyKind;
-use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\ResourceSetWrapper;
-use POData\Providers\Metadata\ResourceStreamInfo;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\ResourceTypeKind;
-use POData\Providers\Metadata\Type\Int32;
-use POData\Providers\Metadata\Type\IType;
 use POData\Providers\ProvidersWrapper;
-use POData\UriProcessor\RequestDescription;
-use POData\UriProcessor\UriProcessor;
 use POData\UriProcessor\UriProcessorNew;
 use UnitTests\POData\TestCase;
 
@@ -72,11 +60,10 @@ class ExecuteGetWithOptionsTest extends TestCase
 
         $service = $this->setUpMockService($host, $wrapper, $context, $config);
 
-        $original = UriProcessor::process($service);
         $remix = UriProcessorNew::process($service);
 
-        $this->assertEquals($original->getRequest()->getTopCount(), $remix->getRequest()->getTopCount());
-        $this->assertEquals($original->getRequest()->getTopOptionCount(), $remix->getRequest()->getTopOptionCount());
+        $this->assertEquals(200, $remix->getRequest()->getTopCount());
+        $this->assertEquals(null, $remix->getRequest()->getTopOptionCount());
     }
 
     public function testExecuteGetOnResourceSetWithSkipOptionSet()
@@ -118,10 +105,9 @@ class ExecuteGetWithOptionsTest extends TestCase
 
         $service = $this->setUpMockService($host, $wrapper, $context, $config);
 
-        $original = UriProcessor::process($service);
         $remix = UriProcessorNew::process($service);
 
-        $this->assertEquals($original->getRequest()->getSkipCount(), $remix->getRequest()->getSkipCount());
+        $this->assertEquals(null, $remix->getRequest()->getSkipCount());
     }
 
     /**

@@ -6,4 +6,8 @@ use POData\UriProcessor\UriProcessor;
 
 class UriProcessorDummy extends UriProcessor
 {
+    public function executeGet()
+    {
+        parent::executeGet();
+    }
 }

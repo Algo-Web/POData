@@ -8,12 +8,15 @@ use POData\Common\ODataException;
 use POData\IService;
 use POData\OperationContext\HTTPRequestMethod;
 use POData\Providers\Metadata\ResourcePropertyKind;
+use POData\Providers\Metadata\ResourceSet;
+use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\ProvidersWrapper;
 use POData\Providers\Query\QueryResult;
 use POData\Providers\Query\QueryType;
 use POData\UriProcessor\Interfaces\IUriProcessor;
 use POData\UriProcessor\QueryProcessor\QueryProcessor;
 use POData\UriProcessor\ResourcePathProcessor\ResourcePathProcessor;
+use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\SegmentDescriptor;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetSource;
@@ -152,6 +155,7 @@ class UriProcessorNew implements IUriProcessor
     public function execute()
     {
         $service = $this->getService();
+        assert($service instanceof IService, '!($service instanceof IService)');
         $context = $service->getOperationContext();
         $method = $context->incomingRequest()->getMethod();
 
@@ -198,19 +202,35 @@ class UriProcessorNew implements IUriProcessor
                     $this->executeGetResource($segment);
                     break;
                 case TargetKind::MEDIA_RESOURCE():
+                    $this->checkResourceExistsByIdentifier($segment);
                     $segment->setResult($segment->getPrevious()->getResult());
                     // a media resource means we're done - bail out of segment processing
                     break 2;
                 case TargetKind::LINK():
                     $this->executeGetLink($segment);
                     break;
-                case TargetKind::PRIMITIVE():
                 case TargetKind::PRIMITIVE_VALUE():
+                    $previous = $segment->getPrevious();
+                    if (null !== $previous && TargetKind::RESOURCE() == $previous->getTargetKind()) {
+                        $result = $previous->getResult();
+                        if ($result instanceof QueryResult) {
+                            $raw = null !== $result->count ? $result->count : count($result->results);
+                            $segment->setResult($raw);
+                        }
+                    }
+                    break;
+                case TargetKind::PRIMITIVE():
                 case TargetKind::COMPLEX_OBJECT():
                 case TargetKind::BAG():
                     break;
                 default:
                     assert(false, 'Not implemented yet');
+            }
+
+            if (null === $segment->getNext()
+                || ODataConstants::URI_COUNT_SEGMENT == $segment->getNext()->getIdentifier()
+            ) {
+                $this->applyQueryOptions($segment);
             }
         }
     }
@@ -226,6 +246,7 @@ class UriProcessorNew implements IUriProcessor
         $keyDescriptor = $segment->getKeyDescriptor();
 
         $this->checkUriValidForSuppliedVerb($resourceSet, $keyDescriptor, $requestMethod);
+        assert($resourceSet instanceof ResourceSet);
         $this->getProviders()->deleteResource($resourceSet, $segment->getResult());
     }
 
@@ -236,10 +257,12 @@ class UriProcessorNew implements IUriProcessor
     {
         $segment = $this->getFinalEffectiveSegment();
         $requestMethod = $this->getService()->getOperationContext()->incomingRequest()->getMethod();
-        $resourceSet = $segment->getTargetResourceSetWrapper();
-        $keyDescriptor = $segment->getKeyDescriptor();
+        $resourceSet = null !== $segment ? $segment->getTargetResourceSetWrapper() : null;
+        $keyDescriptor = null !== $segment ? $segment->getKeyDescriptor() : null;
 
         $this->checkUriValidForSuppliedVerb($resourceSet, $keyDescriptor, $requestMethod);
+        assert($resourceSet instanceof ResourceSet);
+        assert($keyDescriptor instanceof KeyDescriptor);
 
         $data = $this->getRequest()->getData();
         if (!$data) {
@@ -268,6 +291,12 @@ class UriProcessorNew implements IUriProcessor
             $requestTargetKind = $segment->getTargetKind();
             if ($requestTargetKind == TargetKind::RESOURCE()) {
                 $resourceSet = $segment->getTargetResourceSetWrapper();
+                if (!$resourceSet) {
+                    $url = $this->getService()->getHost()->getAbsoluteRequestUri()->getUrlAsString();
+                    $msg = Messages::badRequestInvalidUriForThisVerb($url, $requestMethod);
+                    throw ODataException::createBadRequestError($msg);
+                }
+
                 $keyDescriptor = $segment->getKeyDescriptor();
 
                 $data = $this->getRequest()->getData();
@@ -287,7 +316,7 @@ class UriProcessorNew implements IUriProcessor
     {
         $segment = $this->getRequest()->getLastSegment();
         // if last segment is $count, back up one
-        if (ODataConstants::URI_COUNT_SEGMENT == $segment->getIdentifier()) {
+        if (null !== $segment && ODataConstants::URI_COUNT_SEGMENT == $segment->getIdentifier()) {
             $segment = $segment->getPrevious();
             return $segment;
         }
@@ -380,7 +409,7 @@ class UriProcessorNew implements IUriProcessor
     private function executeGetResourceRelated($segment)
     {
         $projectedProperty = $segment->getProjectedProperty();
-        $projectedPropertyKind = $projectedProperty->getKind();
+        $projectedPropertyKind = null !== $projectedProperty ? $projectedProperty->getKind() : 0;
         $queryResult = null;
         switch ($projectedPropertyKind) {
             case ResourcePropertyKind::RESOURCE_REFERENCE:
@@ -418,8 +447,92 @@ class UriProcessorNew implements IUriProcessor
                 }
                 break;
             default:
+                $this->checkResourceExistsByIdentifier($segment);
                 assert(false, 'Invalid property kind type for resource retrieval');
         }
         return $queryResult;
+    }
+
+    /**
+     * @param $segment
+     * @throws ODataException
+     */
+    private function checkResourceExistsByIdentifier($segment)
+    {
+        if (null === $segment->getPrevious()->getResult()) {
+            throw ODataException::createResourceNotFoundError(
+                $segment->getPrevious()->getIdentifier()
+            );
+        }
+    }
+
+    /**
+     * Applies the query options to the resource(s) retrieved from the data source.
+     *
+     * @param SegmentDescriptor $segment  The descriptor which holds resource(s) on which query options to be applied
+     */
+    private function applyQueryOptions(SegmentDescriptor $segment)
+    {
+        $result = $segment->getResult();
+        if (!$result instanceof QueryResult) {
+            //If the segment isn't a query result, then there's no paging or counting to be done
+            return;
+        }
+        // Note $inlinecount=allpages means include the total count regardless of paging..so we set the counts first
+        // regardless if POData does the paging or not.
+        if ($this->getRequest()->queryType == QueryType::ENTITIES_WITH_COUNT()) {
+            if ($this->getProviders()->handlesOrderedPaging()) {
+                $this->getRequest()->setCountValue($result->count);
+            } else {
+                $this->getRequest()->setCountValue(count($result->results));
+            }
+        }
+        //Have POData perform paging if necessary
+        if (!$this->getProviders()->handlesOrderedPaging() && !empty($result->results)) {
+            $result->results = $this->performPaging($result->results);
+        }
+        //a bit surprising, but $skip and $top affects $count so update it here, not above
+        //IE  data.svc/Collection/$count?$top=10 returns 10 even if Collection has 11+ entries
+        if ($this->getRequest()->queryType == QueryType::COUNT()) {
+            if ($this->getProviders()->handlesOrderedPaging()) {
+                $this->getRequest()->setCountValue($result->count);
+            } else {
+                $this->getRequest()->setCountValue(count($result->results));
+            }
+        }
+        $segment->setResult($result);
+    }
+
+    /**
+     * If the provider does not perform the paging (ordering, top, skip) then this method does it.
+     *
+     * @param array $result
+     *
+     * @return array
+     */
+    private function performPaging(array $result)
+    {
+        //Apply (implicit and explicit) $orderby option
+        $internalOrderByInfo = $this->getRequest()->getInternalOrderByInfo();
+        if (null !== $internalOrderByInfo) {
+            $orderByFunction = $internalOrderByInfo->getSorterFunction();
+            usort($result, $orderByFunction);
+        }
+        //Apply $skiptoken option
+        $internalSkipTokenInfo = $this->getRequest()->getInternalSkipTokenInfo();
+        if (null !== $internalSkipTokenInfo) {
+            $matchingIndex = $internalSkipTokenInfo->getIndexOfFirstEntryInTheNextPage($result);
+            $result = array_slice($result, $matchingIndex);
+        }
+        //Apply $top and $skip option
+        if (!empty($result)) {
+            $top = $this->getRequest()->getTopCount();
+            $skip = $this->getRequest()->getSkipCount();
+            if (null === $skip) {
+                $skip = 0;
+            }
+            $result = array_slice($result, $skip, $top);
+        }
+        return $result;
     }
 }

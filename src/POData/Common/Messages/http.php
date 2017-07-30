@@ -41,11 +41,11 @@ trait http
     /**
      * Message to show error when data service found a request method other than GET.
      *
-     * @param HTTPRequestMethod $method Request method
+     * @param HTTPRequestMethod|null $method Request method
      *
      * @return string The formatted message
      */
-    public static function onlyReadSupport(HTTPRequestMethod $method)
+    public static function onlyReadSupport(HTTPRequestMethod $method = null)
     {
         // TODO: Update to reflect expanded library capabilities?
         return 'This release of library supports only GET (read) request, received a request with method ' . $method;

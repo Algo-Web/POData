@@ -4,6 +4,7 @@ namespace UnitTests\POData\UriProcessor\UriProcessorNew;
 
 use Mockery as m;
 use POData\Common\ODataConstants;
+use POData\Common\ODataException;
 use POData\Common\Url;
 use POData\Common\Version;
 use POData\Configuration\IServiceConfiguration;
@@ -27,6 +28,7 @@ use POData\Providers\Metadata\Type\Int32;
 use POData\Providers\Metadata\Type\IType;
 use POData\Providers\ProvidersWrapper;
 use POData\UriProcessor\RequestDescription;
+use POData\UriProcessor\ResourcePathProcessor\SegmentParser\SegmentDescriptor;
 use POData\UriProcessor\UriProcessor;
 use POData\UriProcessor\UriProcessorNew;
 use UnitTests\POData\TestCase;
@@ -82,20 +84,13 @@ class ExecuteDeleteTest extends TestCase
         $service->shouldReceive('getOperationContext')->andReturn($context);
         $service->shouldReceive('getConfiguration')->andReturn($config);
 
-        $original = UriProcessor::process($service);
         $remix = UriProcessorNew::process($service);
 
-        $expected = null;
-        $expectedClass = null;
+        $expected = 'The URI \'http://localhost/odata.svc/customers\' is not valid for DELETE method.';
+        $expectedClass = ODataException::class;
         $actual = null;
         $actualClass = null;
 
-        try {
-            $original->execute();
-        } catch (\Exception $e) {
-            $expectedClass = get_class($e);
-            $expected = $e->getMessage();
-        }
         try {
             $remix->execute();
         } catch (\Exception $e) {
@@ -157,20 +152,13 @@ class ExecuteDeleteTest extends TestCase
         $service->shouldReceive('getOperationContext')->andReturn($context);
         $service->shouldReceive('getConfiguration')->andReturn($config);
 
-        $original = UriProcessor::process($service);
         $remix = UriProcessorNew::process($service);
 
-        $expected = null;
-        $expectedClass = null;
+        $expected = 'The URI \'http://localhost/odata.svc/customers/$count\' is not valid for DELETE method.';
+        $expectedClass = ODataException::class;
         $actual = null;
         $actualClass = null;
 
-        try {
-            $original->execute();
-        } catch (\Exception $e) {
-            $expectedClass = get_class($e);
-            $expected = $e->getMessage();
-        }
         try {
             $remix->execute();
         } catch (\Exception $e) {
@@ -192,7 +180,7 @@ class ExecuteDeleteTest extends TestCase
         $host->shouldReceive('getRequestVersion')->andReturn('1.0');
         $host->shouldReceive('getRequestMaxVersion')->andReturn('3.0');
         $host->shouldReceive('getQueryStringItem')->andReturn(null);
-        $host->shouldReceive('getRequestContentType')->andReturn(ODataConstants::FORMAT_ATOM)->atLeast(2);
+        $host->shouldReceive('getRequestContentType')->andReturn(ODataConstants::FORMAT_ATOM)->atLeast(1);
 
         $request = m::mock(IHTTPRequest::class);
         $request->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::DELETE());
@@ -202,7 +190,7 @@ class ExecuteDeleteTest extends TestCase
         $context->shouldReceive('incomingRequest')->andReturn($request);
 
         $iType = m::mock(IType::class);
-        $iType->shouldReceive('isCompatibleWith')->andReturn(true)->atLeast(2);
+        $iType->shouldReceive('isCompatibleWith')->andReturn(true)->atLeast(1);
 
         $keyProp = m::mock(ResourceProperty::class);
         $keyProp->shouldReceive('getInstanceType')->andReturn($iType);
@@ -210,14 +198,14 @@ class ExecuteDeleteTest extends TestCase
         $resourceType = m::mock(ResourceType::class);
         $resourceType->shouldReceive('getName')->andReturn('Customer');
         $resourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
-        $resourceType->shouldReceive('getKeyProperties')->andReturn(['id' => $keyProp])->atLeast(2);
-        $resourceType->shouldReceive('getInstanceType->newInstance')->andReturn(new \stdClass())->atLeast(2);
+        $resourceType->shouldReceive('getKeyProperties')->andReturn(['id' => $keyProp])->atLeast(1);
+        $resourceType->shouldReceive('getInstanceType->newInstance')->andReturn(new \stdClass())->atLeast(1);
 
         $result = 'eins';
 
         $resourceSet = m::mock(ResourceSetWrapper::class);
         $resourceSet->shouldReceive('getResourceType')->andReturn($resourceType);
-        $resourceSet->shouldReceive('checkResourceSetRightsForRead')->andReturnNull()->atLeast(2);
+        $resourceSet->shouldReceive('checkResourceSetRightsForRead')->andReturnNull()->atLeast(1);
         $resourceSet->shouldReceive('hasNamedStreams')->andReturn(false);
         $resourceSet->shouldReceive('hasBagProperty')->andReturn(false);
         $resourceSet->shouldReceive('getResourceSetPageSize')->andReturn(200);
@@ -225,8 +213,8 @@ class ExecuteDeleteTest extends TestCase
         $wrapper = m::mock(ProvidersWrapper::class);
         $wrapper->shouldReceive('resolveSingleton')->andReturn(null);
         $wrapper->shouldReceive('resolveResourceSet')->andReturn($resourceSet);
-        $wrapper->shouldReceive('getResourceFromResourceSet')->andReturn($result)->twice();
-        $wrapper->shouldReceive('deleteResource')->with($resourceSet, m::any())->andReturnNull()->twice();
+        $wrapper->shouldReceive('getResourceFromResourceSet')->andReturn($result)->once();
+        $wrapper->shouldReceive('deleteResource')->with($resourceSet, m::any())->andReturnNull()->once();
 
         $config = m::mock(IServiceConfiguration::class);
         $config->shouldReceive('getMaxDataServiceVersion')->andReturn(new Version(3, 0));
@@ -237,11 +225,10 @@ class ExecuteDeleteTest extends TestCase
         $service->shouldReceive('getOperationContext')->andReturn($context);
         $service->shouldReceive('getConfiguration')->andReturn($config);
 
-        $original = UriProcessor::process($service);
         $remix = UriProcessorNew::process($service);
 
-        $original->execute();
-        $origSegments = $original->getRequest()->getSegments();
+        $origSegments = [new SegmentDescriptor()];
+        $origSegments[0]->setResult($result);
         $remix->execute();
         $remixSegments = $remix->getRequest()->getSegments();
         $this->assertEquals(1, count($origSegments));
