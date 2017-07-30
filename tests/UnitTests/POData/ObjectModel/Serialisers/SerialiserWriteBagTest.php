@@ -3,6 +3,9 @@
 namespace UnitTests\POData\ObjectModel\Serialisers;
 
 use POData\ObjectModel\ObjectModelSerializer;
+use POData\ObjectModel\ODataBagContent;
+use POData\ObjectModel\ODataProperty;
+use POData\ObjectModel\ODataPropertyContent;
 use POData\OperationContext\ServiceHost;
 use POData\OperationContext\Web\Illuminate\IlluminateOperationContext as OperationContextAdapter;
 use Mockery as m;
@@ -34,7 +37,7 @@ class SerialiserWriteBagTest extends SerialiserTestBase
         list($host, $meta, $query) = $this->setUpDataServiceDeps($request);
 
         // default data service
-        list($object, $ironic) = $this->setUpSerialisers($query, $meta, $host);
+        $ironic = $this->setUpSerialisers($query, $meta, $host);
 
         $propName = 'makeItPhunkee';
         $rType = m::mock(ResourceType::class);
@@ -45,7 +48,11 @@ class SerialiserWriteBagTest extends SerialiserTestBase
         $collection = new QueryResult();
         $collection->results = null;
 
-        $objectResult = $object->writeTopLevelBagObject($collection, $propName, $rType);
+        $objProp = new ODataProperty();
+        $objProp->name = 'makeItPhunkee';
+        $objProp->typeName = 'Collection(stopHammerTime)';
+        $objectResult = new ODataPropertyContent();
+        $objectResult->properties[] = $objProp;
         $ironicResult = $ironic->writeTopLevelBagObject($collection, $propName, $rType);
 
         $this->assertEquals(get_class($objectResult), get_class($ironicResult));
@@ -61,7 +68,7 @@ class SerialiserWriteBagTest extends SerialiserTestBase
         list($host, $meta, $query) = $this->setUpDataServiceDeps($request);
 
         // default data service
-        list($object, $ironic) = $this->setUpSerialisers($query, $meta, $host);
+        $ironic = $this->setUpSerialisers($query, $meta, $host);
 
         $propName = 'makeItPhunkee';
         $rType = m::mock(ResourceType::class);
@@ -97,7 +104,7 @@ class SerialiserWriteBagTest extends SerialiserTestBase
         list($host, $meta, $query) = $this->setUpDataServiceDeps($request);
 
         // default data service
-        list($object, $ironic) = $this->setUpSerialisers($query, $meta, $host);
+        $ironic = $this->setUpSerialisers($query, $meta, $host);
 
         $propName = 'makeItPhunkee';
         $rType = m::mock(ResourceType::class);
@@ -134,7 +141,7 @@ class SerialiserWriteBagTest extends SerialiserTestBase
         list($host, $meta, $query) = $this->setUpDataServiceDeps($request);
 
         // default data service
-        list($object, $ironic) = $this->setUpSerialisers($query, $meta, $host);
+        $ironic = $this->setUpSerialisers($query, $meta, $host);
 
         $propName = 'makeItPhunkee';
         $rType = m::mock(ResourceType::class);
@@ -145,7 +152,11 @@ class SerialiserWriteBagTest extends SerialiserTestBase
         $collection = new QueryResult();
         $collection->results = [];
 
-        $objectResult = $object->writeTopLevelBagObject($collection, $propName, $rType);
+        $objProp = new ODataProperty();
+        $objProp->name = 'makeItPhunkee';
+        $objProp->typeName = 'Collection(stopHammerTime)';
+        $objectResult = new ODataPropertyContent();
+        $objectResult->properties[] = $objProp;
         $ironicResult = $ironic->writeTopLevelBagObject($collection, $propName, $rType);
 
         $this->assertEquals(get_class($objectResult), get_class($ironicResult));
@@ -161,7 +172,7 @@ class SerialiserWriteBagTest extends SerialiserTestBase
         list($host, $meta, $query) = $this->setUpDataServiceDeps($request);
 
         // default data service
-        list($object, $ironic) = $this->setUpSerialisers($query, $meta, $host);
+        $ironic = $this->setUpSerialisers($query, $meta, $host);
 
         $iType = new StringType();
 
@@ -175,7 +186,14 @@ class SerialiserWriteBagTest extends SerialiserTestBase
         $collection = new QueryResult();
         $collection->results = ['eins', 'zwei', 'polizei'];
 
-        $objectResult = $object->writeTopLevelBagObject($collection, $propName, $rType);
+        $bag = new ODataBagContent();
+        $bag->propertyContents = ['eins', 'zwei', 'polizei'];
+        $objProp = new ODataProperty();
+        $objProp->name = 'makeItPhunkee';
+        $objProp->typeName = 'Collection(stopHammerTime)';
+        $objProp->value = $bag;
+        $objectResult = new ODataPropertyContent();
+        $objectResult->properties[] = $objProp;
         $ironicResult = $ironic->writeTopLevelBagObject($collection, $propName, $rType);
 
         $this->assertEquals(get_class($objectResult), get_class($ironicResult));
@@ -191,7 +209,7 @@ class SerialiserWriteBagTest extends SerialiserTestBase
         list($host, $meta, $query) = $this->setUpDataServiceDeps($request);
 
         // default data service
-        list($object, $ironic) = $this->setUpSerialisers($query, $meta, $host);
+        $ironic = $this->setUpSerialisers($query, $meta, $host);
 
         $iType = new StringType();
 
@@ -205,7 +223,14 @@ class SerialiserWriteBagTest extends SerialiserTestBase
         $collection = new QueryResult();
         $collection->results = ['eins', null, 'zwei', null, 'polizei'];
 
-        $objectResult = $object->writeTopLevelBagObject($collection, $propName, $rType);
+        $bag = new ODataBagContent();
+        $bag->propertyContents = ['eins', 'zwei', 'polizei'];
+        $objProp = new ODataProperty();
+        $objProp->name = 'makeItPhunkee';
+        $objProp->typeName = 'Collection(stopHammerTime)';
+        $objProp->value = $bag;
+        $objectResult = new ODataPropertyContent();
+        $objectResult->properties[] = $objProp;
         $ironicResult = $ironic->writeTopLevelBagObject($collection, $propName, $rType);
 
         $this->assertEquals(get_class($objectResult), get_class($ironicResult));
@@ -221,7 +246,7 @@ class SerialiserWriteBagTest extends SerialiserTestBase
         list($host, $meta, $query) = $this->setUpDataServiceDeps($request);
 
         // default data service
-        list($object, $ironic) = $this->setUpSerialisers($query, $meta, $host);
+        $ironic = $this->setUpSerialisers($query, $meta, $host);
 
         $iType = new StringType();
 
@@ -255,7 +280,26 @@ class SerialiserWriteBagTest extends SerialiserTestBase
         $collection = new QueryResult();
         $collection->results = [$model];
 
-        $objectResult = $object->writeTopLevelBagObject($collection, $propName, $rType);
+        $comp1 = new ODataProperty();
+        $comp1->name = 'name';
+        $comp1->typeName = 'Edm.String';
+        $comp1->value = 'name';
+        $comp2 = new ODataProperty();
+        $comp2->name = 'type';
+        $comp2->typeName = 'Edm.String';
+        $comp2->value = 'type';
+
+        $complex = new ODataPropertyContent();
+        $complex->properties = [$comp1, $comp2];
+
+        $bag = new ODataBagContent();
+        $bag->propertyContents = [$complex];
+        $objProp = new ODataProperty();
+        $objProp->name = 'makeItPhunkee';
+        $objProp->typeName = 'Collection(stopHammerTime)';
+        $objProp->value = $bag;
+        $objectResult = new ODataPropertyContent();
+        $objectResult->properties[] = $objProp;
         $ironicResult = $ironic->writeTopLevelBagObject($collection, $propName, $rType);
 
         $this->assertEquals(get_class($objectResult), get_class($ironicResult));
@@ -290,8 +334,7 @@ class SerialiserWriteBagTest extends SerialiserTestBase
         $processor = $service->handleRequest();
         $processor->getRequest()->queryType = QueryType::ENTITIES_WITH_COUNT();
         $processor->getRequest()->setCountValue(1);
-        $object = new ObjectModelSerializer($service, $processor->getRequest());
         $ironic = new IronicSerialiser($service, $processor->getRequest());
-        return [$object, $ironic];
+        return $ironic;
     }
 }
