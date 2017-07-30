@@ -43,17 +43,11 @@ class SerialiserWritePrimitiveTest extends SerialiserTestBase
 
         $resProp = null;
 
-        $expected = null;
-        $expectedExceptionClass = null;
+        $expected = 'assert(): Resource property must not be null failed';
+        $expectedExceptionClass = \PHPUnit_Framework_Error_Warning::class;
         $actual = null;
         $actualExceptionClass = null;
 
-        try {
-            $object->writeTopLevelPrimitive($collection, $resProp);
-        } catch (\Exception $e) {
-            $expectedExceptionClass = get_class($e);
-            $expected = $e->getMessage();
-        }
         try {
             $ironic->writeTopLevelPrimitive($collection, $resProp);
         } catch (\Exception $e) {

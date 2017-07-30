@@ -2,6 +2,7 @@
 
 namespace UnitTests\POData\ObjectModel\Serialisers;
 
+use POData\Common\ODataException;
 use POData\ObjectModel\ObjectModelSerializer;
 use POData\OperationContext\ServiceHost;
 use POData\OperationContext\Web\Illuminate\IlluminateOperationContext as OperationContextAdapter;
@@ -238,17 +239,12 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $result = new QueryResult();
         $result->results = $model;
 
-        $expected = null;
-        $expectedExceptionClass = null;
+        $expected = 'The serialized resource of type Customer has a null value in key member \'CustomerID\'. Null'
+                    .' values are not supported in key members.';
+        $expectedExceptionClass = ODataException::class;
         $actual = null;
         $actualExceptionClass = null;
 
-        try {
-            $object->writeTopLevelElement($result);
-        } catch (\Exception $e) {
-            $expectedExceptionClass = get_class($e);
-            $expected = $e->getMessage();
-        }
         try {
             $ironic->writeTopLevelElement($result);
         } catch (\Exception $e) {

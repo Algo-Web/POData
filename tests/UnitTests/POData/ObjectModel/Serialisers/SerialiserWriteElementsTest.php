@@ -187,17 +187,11 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $collection->results = null;
 
         $models = null;
-        $expected = null;
-        $expectedExceptionClass = null;
+        $expected = 'assert(): !is_array($entryObjects->results) failed';
+        $expectedExceptionClass = \PHPUnit_Framework_Error_Warning::class;
         $actual = null;
         $actualExceptionClass = null;
 
-        try {
-            $object->writeTopLevelElements($collection);
-        } catch (\Exception $e) {
-            $expectedExceptionClass = get_class($e);
-            $expected = $e->getMessage();
-        }
         try {
             $ironic->writeTopLevelElements($collection);
         } catch (\Exception $e) {

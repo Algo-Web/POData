@@ -2,6 +2,7 @@
 
 namespace UnitTests\POData\ObjectModel\Serialisers;
 
+use POData\Common\InvalidOperationException;
 use POData\ObjectModel\ObjectModelSerializer;
 use POData\OperationContext\ServiceHost;
 use POData\OperationContext\Web\Illuminate\IlluminateOperationContext as OperationContextAdapter;
@@ -71,17 +72,11 @@ class SerialiserWriteComplexTest extends SerialiserTestBase
         $collection = new QueryResult();
         $collection->results = [ 'foo' ];
 
-        $expected = null;
-        $expectedExceptionClass = null;
+        $expected = 'assert(): Supplied $customObject must be an object failed';
+        $expectedExceptionClass = \PHPUnit_Framework_Error_Warning::class;
         $actual = null;
         $actualExceptionClass = null;
 
-        try {
-            $object->writeTopLevelComplexObject($collection, $propName, $rType);
-        } catch (\Exception $e) {
-            $expectedExceptionClass = get_class($e);
-            $expected = $e->getMessage();
-        }
         try {
             $ironic->writeTopLevelComplexObject($collection, $propName, $rType);
         } catch (\Exception $e) {
@@ -134,17 +129,11 @@ class SerialiserWriteComplexTest extends SerialiserTestBase
         $collection = new QueryResult();
         $collection->results = [$model];
 
-        $expected = null;
-        $expectedExceptionClass = null;
+        $expected = 'assert(): Supplied $customObject must be an object failed';
+        $expectedExceptionClass = \PHPUnit_Framework_Error_Warning::class;
         $actual = null;
         $actualExceptionClass = null;
 
-        try {
-            $object->writeTopLevelComplexObject($collection, $propName, $rType);
-        } catch (\Exception $e) {
-            $expectedExceptionClass = get_class($e);
-            $expected = $e->getMessage();
-        }
         try {
             $ironic->writeTopLevelComplexObject($collection, $propName, $rType);
         } catch (\Exception $e) {
@@ -330,17 +319,12 @@ class SerialiserWriteComplexTest extends SerialiserTestBase
 
         $propName = 'makeItPhunkee';
 
-        $expected = null;
-        $expectedExceptionClass = null;
+        $expected = 'A circular loop was detected while serializing the property \'name\'. You must make sure'
+                    .' that loops are not present in properties that return a bag or complex type.';
+        $expectedExceptionClass = InvalidOperationException::class;
         $actual = null;
         $actualExceptionClass = null;
 
-        try {
-            $object->writeTopLevelComplexObject($collection, $propName, $rType);
-        } catch (\Exception $e) {
-            $expectedExceptionClass = get_class($e);
-            $expected = $e->getMessage();
-        }
         try {
             $ironic->writeTopLevelComplexObject($collection, $propName, $rType);
         } catch (\Exception $e) {

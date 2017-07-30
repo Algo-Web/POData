@@ -72,17 +72,11 @@ class SerialiserWriteBagTest extends SerialiserTestBase
         $collection = new QueryResult();
         $collection->results = 'NARF!';
 
-        $expected = null;
-        $expectedExceptionClass = null;
+        $expected = 'assert(): Bag parameter must be null or array failed';
+        $expectedExceptionClass = \PHPUnit_Framework_Error_Warning::class;
         $actual = null;
         $actualExceptionClass = null;
 
-        try {
-            $object->writeTopLevelBagObject($collection, $propName, $rType);
-        } catch (\Exception $e) {
-            $expectedExceptionClass = get_class($e);
-            $expected = $e->getMessage();
-        }
         try {
             $ironic->writeTopLevelBagObject($collection, $propName, $rType);
         } catch (\Exception $e) {
@@ -114,17 +108,12 @@ class SerialiserWriteBagTest extends SerialiserTestBase
         $collection = new QueryResult();
         $collection->results = null;
 
-        $expected = null;
-        $expectedExceptionClass = null;
+        $expected = 'assert(): $bagItemResourceTypeKind != ResourceTypeKind::PRIMITIVE &&'
+                    .' $bagItemResourceTypeKind != ResourceTypeKind::COMPLEX failed';
+        $expectedExceptionClass = \PHPUnit_Framework_Error_Warning::class;
         $actual = null;
         $actualExceptionClass = null;
 
-        try {
-            $object->writeTopLevelBagObject($collection, $propName, $rType);
-        } catch (\Exception $e) {
-            $expectedExceptionClass = get_class($e);
-            $expected = $e->getMessage();
-        }
         try {
             $ironic->writeTopLevelBagObject($collection, $propName, $rType);
         } catch (\Exception $e) {
