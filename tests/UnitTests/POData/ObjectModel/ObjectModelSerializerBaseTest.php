@@ -64,7 +64,7 @@ class ObjectModelSerializerBaseTest extends TestCase
         $resourceType->shouldReceive('getKeyProperties')->andReturn($keysProperty);
 
         $foo = $this->Construct();
-        $entity = new reUsableentityClass1();
+        $entity = new reusableEntityClass1();
         $entity->name = 'bilbo';
         $entity->type = 2;
         $ret = $foo->getEntryInstanceKey($entity, $resourceType, 'Data');
@@ -594,41 +594,6 @@ class ObjectModelSerializerBaseTest extends TestCase
         $expected = '$expand=fooBar&';
         $actual = $foo->getNextPageLinkQueryParametersForExpandedResourceSet();
         $this->assertEquals($expected, $actual);
-    }
-}
-
-class reusableEntityClass1
-{
-    public $name;
-    public $type;
-}
-
-class reusableEntityClass2
-{
-    private $name;
-    private $type;
-
-    public function __construct($n, $t)
-    {
-        $this->name = $n;
-        $this->type = $t;
-    }
-
-    public function __get($name)
-    {
-        return $this->$name;
-    }
-}
-
-class reusableEntityClass3
-{
-    private $name;
-    private $type;
-
-    public function __construct($n, $t)
-    {
-        $this->name = $n;
-        $this->type = $t;
     }
 }
 
