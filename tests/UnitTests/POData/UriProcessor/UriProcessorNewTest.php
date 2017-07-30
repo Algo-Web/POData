@@ -14,12 +14,17 @@ use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\ProvidersWrapper;
+use POData\Providers\Query\QueryResult;
+use POData\Providers\Query\QueryType;
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\RootProjectionNode;
+use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
+use POData\UriProcessor\QueryProcessor\SkipTokenParser\InternalSkipTokenInfo;
 use POData\UriProcessor\RequestDescription;
 use POData\UriProcessor\RequestExpander;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\SegmentDescriptor;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
+use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetSource;
 use POData\UriProcessor\UriProcessor;
 use POData\UriProcessor\UriProcessorNew;
 use UnitTests\POData\TestCase;
@@ -526,5 +531,101 @@ class UriProcessorNewTest extends TestCase
         $processor->shouldReceive('getFinalEffectiveSegment')->andReturn($seg1);
 
         $processor->execute();
+    }
+
+    public function testExecuteGetWithBadMethod()
+    {
+        $segment = m::mock(SegmentDescriptor::class);
+        $segment->shouldReceive('getTargetKind')->andReturnNull()->once();
+
+        $request = m::mock(RequestDescription::class);
+        $request->shouldReceive('getSegments')->andReturn([$segment]);
+
+        $processor = m::mock(UriProcessorDummy::class)->makePartial();
+        $processor->shouldReceive('getRequest')->andReturn($request);
+
+        $expected = 'assert(): Not implemented yet failed';
+        $actual = null;
+
+        try {
+            $processor->executeGet();
+        } catch (\PHPUnit_Framework_Error_Warning $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testExecuteGetPerformPagingWithSkipToken()
+    {
+        $result = new QueryResult();
+        $result->results = ['eins', 'zwei', 'polizei', 'drei', 'vier', 'grenadier'];
+
+        $setWrapper = m::mock(ResourceSetWrapper::class);
+
+        $skipToken = m::mock(InternalSkipTokenInfo::class);
+        $skipToken->shouldReceive('getIndexOfFirstEntryInTheNextPage')->andReturn(1)->once();
+        $skipToken->shouldReceive('getSkipTokenInfo')->andReturnNull()->once();
+
+        $segment = m::mock(SegmentDescriptor::class)->makePartial();
+        $segment->shouldReceive('getTargetKind')->andReturn(TargetKind::RESOURCE())->once();
+        $segment->shouldReceive('getTargetSource')->andReturn(TargetSource::ENTITY_SET)->once();
+        $segment->shouldReceive('getTargetResourceSetWrapper')->andReturn($setWrapper)->once();
+
+        $request = m::mock(RequestDescription::class)->makePartial();
+        $request->shouldReceive('getSegments')->andReturn([$segment]);
+        $request->shouldReceive('getInternalSkipTokenInfo')->andReturn($skipToken);
+        $request->queryType = QueryType::ENTITIES_WITH_COUNT();
+
+        $wrapper = m::mock(ProvidersWrapper::class);
+        $wrapper->shouldReceive('handlesOrderedPaging')->andReturn(false)->atLeast(1);
+        $wrapper->shouldReceive('getResourceSet')->withAnyArgs()->andReturn($result)->once();
+
+        $processor = m::mock(UriProcessorDummy::class)->makePartial();
+        $processor->shouldReceive('getRequest')->andReturn($request);
+        $processor->shouldReceive('getProviders')->andReturn($wrapper);
+
+        $processor->executeGet();
+
+        $this->assertEquals(5, count($result->results));
+    }
+
+    public function testExecuteGetPerformPagingWithInternalSortGubbins()
+    {
+        $expected = ['drei', 'eins', 'grenadier', 'polizei', 'vier', 'zwei'];
+
+        $result = new QueryResult();
+        $result->results = ['eins', 'zwei', 'polizei', 'drei', 'vier', 'grenadier'];
+
+        $setWrapper = m::mock(ResourceSetWrapper::class);
+
+        $sort = function ($a, $b) {
+            return strcmp($a, $b);
+        };
+
+        $order = m::mock(InternalOrderByInfo::class)->makePartial();
+        $order->shouldReceive('getSorterFunction')->andReturn($sort)->once();
+
+        $segment = m::mock(SegmentDescriptor::class)->makePartial();
+        $segment->shouldReceive('getTargetKind')->andReturn(TargetKind::RESOURCE())->once();
+        $segment->shouldReceive('getTargetSource')->andReturn(TargetSource::ENTITY_SET)->once();
+        $segment->shouldReceive('getTargetResourceSetWrapper')->andReturn($setWrapper)->once();
+
+        $request = m::mock(RequestDescription::class)->makePartial();
+        $request->shouldReceive('getSegments')->andReturn([$segment]);
+        $request->shouldReceive('getInternalOrderByInfo')->andReturn($order);
+        $request->queryType = QueryType::ENTITIES_WITH_COUNT();
+
+        $wrapper = m::mock(ProvidersWrapper::class);
+        $wrapper->shouldReceive('handlesOrderedPaging')->andReturn(false)->atLeast(1);
+        $wrapper->shouldReceive('getResourceSet')->withAnyArgs()->andReturn($result)->once();
+
+        $processor = m::mock(UriProcessorDummy::class)->makePartial();
+        $processor->shouldReceive('getRequest')->andReturn($request);
+        $processor->shouldReceive('getProviders')->andReturn($wrapper);
+
+        $processor->executeGet();
+
+        $this->assertEquals(6, count($result->results));
+        $this->assertEquals($expected, $result->results);
     }
 }
