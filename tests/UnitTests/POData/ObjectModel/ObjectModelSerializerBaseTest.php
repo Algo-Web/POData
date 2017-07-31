@@ -596,4 +596,3 @@ class ObjectModelSerializerBaseTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 }
-
