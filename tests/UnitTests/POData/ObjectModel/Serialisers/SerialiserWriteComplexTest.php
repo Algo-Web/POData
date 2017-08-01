@@ -2,7 +2,10 @@
 
 namespace UnitTests\POData\ObjectModel\Serialisers;
 
+use POData\Common\InvalidOperationException;
 use POData\ObjectModel\ObjectModelSerializer;
+use POData\ObjectModel\ODataProperty;
+use POData\ObjectModel\ODataPropertyContent;
 use POData\OperationContext\ServiceHost;
 use POData\OperationContext\Web\Illuminate\IlluminateOperationContext as OperationContextAdapter;
 use Mockery as m;
@@ -34,7 +37,7 @@ class SerialiserWriteComplexTest extends SerialiserTestBase
         list($host, $meta, $query) = $this->setUpDataServiceDeps($request);
 
         // default data service
-        list($object, $ironic) = $this->setUpSerialisers($query, $meta, $host);
+        $ironic = $this->setUpSerialisers($query, $meta, $host);
 
         $propName = 'makeItPhunkee';
         $rType = m::mock(ResourceType::class);
@@ -44,7 +47,11 @@ class SerialiserWriteComplexTest extends SerialiserTestBase
         $collection = new QueryResult();
         $collection->results = null;
 
-        $objectResult = $object->writeTopLevelComplexObject($collection, $propName, $rType);
+        $objProp = new ODataProperty();
+        $objProp->name = 'makeItPhunkee';
+        $objProp->typeName = 'stopHammerTime';
+        $objectResult = new ODataPropertyContent();
+        $objectResult->properties[] = $objProp;
         $ironicResult = $ironic->writeTopLevelComplexObject($collection, $propName, $rType);
 
         $this->assertEquals(get_class($objectResult), get_class($ironicResult));
@@ -60,7 +67,7 @@ class SerialiserWriteComplexTest extends SerialiserTestBase
         list($host, $meta, $query) = $this->setUpDataServiceDeps($request);
 
         // default data service
-        list($object, $ironic) = $this->setUpSerialisers($query, $meta, $host);
+        $ironic = $this->setUpSerialisers($query, $meta, $host);
 
         $propName = 'makeItPhunkee';
         $rType = m::mock(ResourceType::class);
@@ -71,17 +78,11 @@ class SerialiserWriteComplexTest extends SerialiserTestBase
         $collection = new QueryResult();
         $collection->results = [ 'foo' ];
 
-        $expected = null;
-        $expectedExceptionClass = null;
+        $expected = 'assert(): Supplied $customObject must be an object failed';
+        $expectedExceptionClass = \PHPUnit_Framework_Error_Warning::class;
         $actual = null;
         $actualExceptionClass = null;
 
-        try {
-            $object->writeTopLevelComplexObject($collection, $propName, $rType);
-        } catch (\Exception $e) {
-            $expectedExceptionClass = get_class($e);
-            $expected = $e->getMessage();
-        }
         try {
             $ironic->writeTopLevelComplexObject($collection, $propName, $rType);
         } catch (\Exception $e) {
@@ -102,7 +103,7 @@ class SerialiserWriteComplexTest extends SerialiserTestBase
         list($host, $meta, $query) = $this->setUpDataServiceDeps($request);
 
         // default data service
-        list($object, $ironic) = $this->setUpSerialisers($query, $meta, $host);
+        $ironic = $this->setUpSerialisers($query, $meta, $host);
 
         $subType1 = m::mock(ResourceType::class);
         $subType1->shouldReceive('getInstanceType')->andReturn(new Int32());
@@ -134,17 +135,11 @@ class SerialiserWriteComplexTest extends SerialiserTestBase
         $collection = new QueryResult();
         $collection->results = [$model];
 
-        $expected = null;
-        $expectedExceptionClass = null;
+        $expected = 'assert(): Supplied $customObject must be an object failed';
+        $expectedExceptionClass = \PHPUnit_Framework_Error_Warning::class;
         $actual = null;
         $actualExceptionClass = null;
 
-        try {
-            $object->writeTopLevelComplexObject($collection, $propName, $rType);
-        } catch (\Exception $e) {
-            $expectedExceptionClass = get_class($e);
-            $expected = $e->getMessage();
-        }
         try {
             $ironic->writeTopLevelComplexObject($collection, $propName, $rType);
         } catch (\Exception $e) {
@@ -165,7 +160,7 @@ class SerialiserWriteComplexTest extends SerialiserTestBase
         list($host, $meta, $query) = $this->setUpDataServiceDeps($request);
 
         // default data service
-        list($object, $ironic) = $this->setUpSerialisers($query, $meta, $host);
+        $ironic = $this->setUpSerialisers($query, $meta, $host);
 
         $subType1 = m::mock(ResourceType::class);
         $subType1->shouldReceive('getInstanceType')->andReturn(new Int32());
@@ -197,7 +192,24 @@ class SerialiserWriteComplexTest extends SerialiserTestBase
         $collection = new QueryResult();
         $collection->results = $model;
 
-        $objectResult = $object->writeTopLevelComplexObject($collection, $propName, $rType);
+        $comp1 = new ODataProperty();
+        $comp1->name = 'name';
+        $comp1->typeName = 'Edm.String';
+        $comp1->value = 'name';
+        $comp2 = new ODataProperty();
+        $comp2->name = 'type';
+        $comp2->typeName = 'Edm.String';
+        $comp2->value = 'type';
+
+        $complex = new ODataPropertyContent();
+        $complex->properties = [$comp1, $comp2];
+
+        $objProp = new ODataProperty();
+        $objProp->name = 'makeItPhunkee';
+        $objProp->typeName = 'stopHammerTime';
+        $objProp->value = $complex;
+        $objectResult = new ODataPropertyContent();
+        $objectResult->properties[] = $objProp;
         $ironicResult = $ironic->writeTopLevelComplexObject($collection, $propName, $rType);
 
         $this->assertEquals(get_class($objectResult), get_class($ironicResult));
@@ -213,7 +225,7 @@ class SerialiserWriteComplexTest extends SerialiserTestBase
         list($host, $meta, $query) = $this->setUpDataServiceDeps($request);
 
         // default data service
-        list($object, $ironic) = $this->setUpSerialisers($query, $meta, $host);
+        $ironic = $this->setUpSerialisers($query, $meta, $host);
 
         $rTypeBase = m::mock(ResourceType::class);
         $rTypeBase->shouldReceive('getInstanceType')->andReturn(new StringType());
@@ -269,7 +281,36 @@ class SerialiserWriteComplexTest extends SerialiserTestBase
         $collection = new QueryResult();
         $collection->results = $model;
 
-        $objectResult = $object->writeTopLevelComplexObject($collection, $propName, $rType);
+        $zoid1 = new ODataProperty();
+        $zoid1->name = 'name';
+        $zoid1->typeName = 'Edm.String';
+        $zoid1->value = 'name';
+        $zoid2 = new ODataProperty();
+        $zoid2->name = 'type';
+        $zoid2->typeName = 'Edm.String';
+        $zoid2->value = 'type';
+
+        $zoidContent = new ODataPropertyContent();
+        $zoidContent->properties = [$zoid1, $zoid2];
+
+        $comp1 = new ODataProperty();
+        $comp1->name = 'name';
+        $comp1->typeName = 'Edm.String';
+        $comp1->value = '11';
+        $comp2 = new ODataProperty();
+        $comp2->name = 'type';
+        $comp2->typeName = 'paintItBlack';
+        $comp2->value = $zoidContent;
+
+        $complex = new ODataPropertyContent();
+        $complex->properties = [$comp1, $comp2];
+
+        $objProp = new ODataProperty();
+        $objProp->name = 'makeItPhunkee';
+        $objProp->typeName = 'stopHammerTime';
+        $objProp->value = $complex;
+        $objectResult = new ODataPropertyContent();
+        $objectResult->properties[] = $objProp;
         $ironicResult = $ironic->writeTopLevelComplexObject($collection, $propName, $rType);
 
         $this->assertEquals(get_class($objectResult), get_class($ironicResult));
@@ -285,7 +326,7 @@ class SerialiserWriteComplexTest extends SerialiserTestBase
         list($host, $meta, $query) = $this->setUpDataServiceDeps($request);
 
         // default data service
-        list($object, $ironic) = $this->setUpSerialisers($query, $meta, $host);
+        $ironic = $this->setUpSerialisers($query, $meta, $host);
 
         $subType1 = m::mock(ResourceType::class);
         $subType1->shouldReceive('getInstanceType')->andReturn(new Int32());
@@ -330,17 +371,12 @@ class SerialiserWriteComplexTest extends SerialiserTestBase
 
         $propName = 'makeItPhunkee';
 
-        $expected = null;
-        $expectedExceptionClass = null;
+        $expected = 'A circular loop was detected while serializing the property \'name\'. You must make sure'
+                    .' that loops are not present in properties that return a bag or complex type.';
+        $expectedExceptionClass = InvalidOperationException::class;
         $actual = null;
         $actualExceptionClass = null;
 
-        try {
-            $object->writeTopLevelComplexObject($collection, $propName, $rType);
-        } catch (\Exception $e) {
-            $expectedExceptionClass = get_class($e);
-            $expected = $e->getMessage();
-        }
         try {
             $ironic->writeTopLevelComplexObject($collection, $propName, $rType);
         } catch (\Exception $e) {
@@ -386,8 +422,7 @@ class SerialiserWriteComplexTest extends SerialiserTestBase
         $processor = $service->handleRequest();
         $processor->getRequest()->queryType = QueryType::ENTITIES_WITH_COUNT();
         $processor->getRequest()->setCountValue(1);
-        $object = new ObjectModelSerializer($service, $processor->getRequest());
         $ironic = new IronicSerialiser($service, $processor->getRequest());
-        return [$object, $ironic];
+        return $ironic;
     }
 }

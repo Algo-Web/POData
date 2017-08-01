@@ -3,6 +3,8 @@
 namespace UnitTests\POData\ObjectModel\Serialisers;
 
 use POData\ObjectModel\ObjectModelSerializer;
+use POData\ObjectModel\ODataProperty;
+use POData\ObjectModel\ODataPropertyContent;
 use POData\OperationContext\ServiceHost;
 use POData\OperationContext\Web\Illuminate\IlluminateOperationContext as OperationContextAdapter;
 use Mockery as m;
@@ -43,17 +45,11 @@ class SerialiserWritePrimitiveTest extends SerialiserTestBase
 
         $resProp = null;
 
-        $expected = null;
-        $expectedExceptionClass = null;
+        $expected = 'assert(): Resource property must not be null failed';
+        $expectedExceptionClass = \PHPUnit_Framework_Error_Warning::class;
         $actual = null;
         $actualExceptionClass = null;
 
-        try {
-            $object->writeTopLevelPrimitive($collection, $resProp);
-        } catch (\Exception $e) {
-            $expectedExceptionClass = get_class($e);
-            $expected = $e->getMessage();
-        }
         try {
             $ironic->writeTopLevelPrimitive($collection, $resProp);
         } catch (\Exception $e) {
@@ -78,7 +74,6 @@ class SerialiserWritePrimitiveTest extends SerialiserTestBase
         $processor = $service->handleRequest();
         $processor->getRequest()->queryType = QueryType::ENTITIES_WITH_COUNT();
         $processor->getRequest()->setCountValue(1);
-        $object = new ObjectModelSerializer($service, $processor->getRequest());
         $ironic = new IronicSerialiser($service, $processor->getRequest());
 
         $collection = new QueryResult();
@@ -91,7 +86,11 @@ class SerialiserWritePrimitiveTest extends SerialiserTestBase
         $resProp->shouldReceive('getName')->andReturn('DesertWithNoName');
         $resProp->shouldReceive('getInstanceType')->andReturn($iType);
 
-        $objectResult = $object->writeTopLevelPrimitive($collection, $resProp);
+        $objProp = new ODataProperty();
+        $objProp->name = 'DesertWithNoName';
+        $objProp->typeName = 'String';
+        $objectResult = new ODataPropertyContent();
+        $objectResult->properties[] = $objProp;
         $ironicResult = $ironic->writeTopLevelPrimitive($collection, $resProp);
 
         $this->assertEquals(get_class($objectResult), get_class($ironicResult));
@@ -111,7 +110,6 @@ class SerialiserWritePrimitiveTest extends SerialiserTestBase
         $processor = $service->handleRequest();
         $processor->getRequest()->queryType = QueryType::ENTITIES_WITH_COUNT();
         $processor->getRequest()->setCountValue(1);
-        $object = new ObjectModelSerializer($service, $processor->getRequest());
         $ironic = new IronicSerialiser($service, $processor->getRequest());
 
         $collection = new QueryResult();
@@ -131,7 +129,12 @@ class SerialiserWritePrimitiveTest extends SerialiserTestBase
         $resProp->shouldReceive('getResourceType')->andReturn($rType);
         $resProp->shouldReceive('getInstanceType')->andReturn($iType);
 
-        $objectResult = $object->writeTopLevelPrimitive($collection, $resProp);
+        $objProp = new ODataProperty();
+        $objProp->name = 'DesertWithNoName';
+        $objProp->typeName = 'String';
+        $objProp->value = 'MakeItPhunkee';
+        $objectResult = new ODataPropertyContent();
+        $objectResult->properties[] = $objProp;
         $ironicResult = $ironic->writeTopLevelPrimitive($collection, $resProp);
 
         $this->assertEquals(get_class($objectResult), get_class($ironicResult));
@@ -151,11 +154,10 @@ class SerialiserWritePrimitiveTest extends SerialiserTestBase
         $processor = $service->handleRequest();
         $processor->getRequest()->queryType = QueryType::ENTITIES_WITH_COUNT();
         $processor->getRequest()->setCountValue(1);
-        $object = new ObjectModelSerializer($service, $processor->getRequest());
         $ironic = new IronicSerialiser($service, $processor->getRequest());
 
         $collection = new QueryResult();
-        $collection->results = new \DateTime();
+        $collection->results = new \DateTime('2017-07-02 11:10:09');
 
         $iType = new DateTime();
 
@@ -171,7 +173,12 @@ class SerialiserWritePrimitiveTest extends SerialiserTestBase
         $resProp->shouldReceive('getResourceType')->andReturn($rType);
         $resProp->shouldReceive('getInstanceType')->andReturn($iType);
 
-        $objectResult = $object->writeTopLevelPrimitive($collection, $resProp);
+        $objProp = new ODataProperty();
+        $objProp->name = 'DesertWithNoName';
+        $objProp->typeName = 'String';
+        $objProp->value = '2017-07-02T11:10:09-06:00';
+        $objectResult = new ODataPropertyContent();
+        $objectResult->properties[] = $objProp;
         $ironicResult = $ironic->writeTopLevelPrimitive($collection, $resProp);
 
         $this->assertEquals(get_class($objectResult), get_class($ironicResult));
@@ -191,7 +198,6 @@ class SerialiserWritePrimitiveTest extends SerialiserTestBase
         $processor = $service->handleRequest();
         $processor->getRequest()->queryType = QueryType::ENTITIES_WITH_COUNT();
         $processor->getRequest()->setCountValue(1);
-        $object = new ObjectModelSerializer($service, $processor->getRequest());
         $ironic = new IronicSerialiser($service, $processor->getRequest());
 
         $collection = new QueryResult();
@@ -211,7 +217,12 @@ class SerialiserWritePrimitiveTest extends SerialiserTestBase
         $resProp->shouldReceive('getResourceType')->andReturn($rType);
         $resProp->shouldReceive('getInstanceType')->andReturn($iType);
 
-        $objectResult = $object->writeTopLevelPrimitive($collection, $resProp);
+        $objProp = new ODataProperty();
+        $objProp->name = 'DesertWithNoName';
+        $objProp->typeName = 'String';
+        $objProp->value = 'U3RhcnRUaGVEYW5jZQ==';
+        $objectResult = new ODataPropertyContent();
+        $objectResult->properties[] = $objProp;
         $ironicResult = $ironic->writeTopLevelPrimitive($collection, $resProp);
 
         $this->assertEquals(get_class($objectResult), get_class($ironicResult));
@@ -231,7 +242,6 @@ class SerialiserWritePrimitiveTest extends SerialiserTestBase
         $processor = $service->handleRequest();
         $processor->getRequest()->queryType = QueryType::ENTITIES_WITH_COUNT();
         $processor->getRequest()->setCountValue(1);
-        $object = new ObjectModelSerializer($service, $processor->getRequest());
         $ironic = new IronicSerialiser($service, $processor->getRequest());
 
         $collection = new QueryResult();
@@ -251,7 +261,12 @@ class SerialiserWritePrimitiveTest extends SerialiserTestBase
         $resProp->shouldReceive('getResourceType')->andReturn($rType);
         $resProp->shouldReceive('getInstanceType')->andReturn($iType);
 
-        $objectResult = $object->writeTopLevelPrimitive($collection, $resProp);
+        $objProp = new ODataProperty();
+        $objProp->name = 'DesertWithNoName';
+        $objProp->typeName = 'String';
+        $objProp->value = '311';
+        $objectResult = new ODataPropertyContent();
+        $objectResult->properties[] = $objProp;
         $ironicResult = $ironic->writeTopLevelPrimitive($collection, $resProp);
 
         $this->assertEquals(get_class($objectResult), get_class($ironicResult));

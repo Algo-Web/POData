@@ -792,6 +792,14 @@ class ExpressionLexerTest extends TestCase
         $this->assertEquals($expression, $actual);
     }
 
+    public function testGetPosition()
+    {
+        $expression = '     IntIdentifier     eq     123    ';
+        $foo = new ExpressionLexer($expression);
+        $this->assertEquals(5, $foo->getPosition());
+    }
+
+
     public function tearDown()
     {
         parent::tearDown();
