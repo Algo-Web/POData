@@ -121,12 +121,21 @@ class CynicSerialiser implements IObjectSerialiser
         $projNodes = ($last[0] == $last[1]) ? $this->getProjectionNodes() : null;
 
         foreach ($rawProp as $prop) {
+            $propName = $prop->getName();
             if ($prop->getResourceType() instanceof ResourceEntityType) {
-                $relProp[$prop->getName()] = $prop;
+                $relProp[$propName] = $prop;
             } else {
-                $nonRelProp[$prop->getName()] = $prop;
+                $nonRelProp[$propName] = $prop;
             }
         }
+        $rawCount = count($rawProp);
+        $relCount = count($relProp);
+        $nonRelCount = count($nonRelProp);
+        assert(
+            $rawCount == $relCount + $nonRelCount,
+            'Raw property count '.$rawCount.', does not equal sum of relProp count, '.$relCount
+            .', and nonRelPropCount,'.$nonRelCount
+        );
 
         // now mask off against projNodes
         if (null !== $projNodes) {
@@ -228,7 +237,7 @@ class CynicSerialiser implements IObjectSerialiser
 
         $selfLink = new ODataLink();
         $selfLink->name = 'self';
-        $selfLink->title = $relativeUri;
+        $selfLink->title = $title;
         $selfLink->url = $relativeUri;
 
         $odata = new ODataFeed();
@@ -316,6 +325,7 @@ class CynicSerialiser implements IObjectSerialiser
                 $nextLink = new ODataLink();
                 $nextLink->name = ODataConstants::ATOM_LINK_NEXT_ATTRIBUTE_STRING;
                 $nextLink->url = rtrim($this->absoluteServiceUri, '/') . '/' . $stackSegment . $segment;
+                $nextLink->url = ltrim($nextLink->url, '/');
                 $urls->nextPageLink = $nextLink;
             }
         }
