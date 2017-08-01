@@ -948,6 +948,26 @@ class ObjectModelSerializerTest extends TestCase
         $this->assertEquals($newUrl, $foo->getService()->getHost()->getAbsoluteServiceUri()->getUrlAsString());
     }
 
+    public function testWriteElementWithNullResultReturnsNull()
+    {
+        $oldUrl = 'http://localhost/odata.svc';
+        $newUrl = 'http://localhost/megamix.svc';
+        $oldService = m::mock(IService::class);
+        $oldService->shouldReceive('getHost->getAbsoluteServiceUri->getUrlAsString')
+            ->andReturn($oldUrl);
+        $newService = m::mock(IService::class);
+        $newService->shouldReceive('getHost->getAbsoluteServiceUri->getUrlAsString')
+            ->andReturn($newUrl);
+        $request = null;
+
+        $foo = new ObjectModelSerializer($oldService, $request);
+
+        $result = new QueryResult();
+        $result->results = null;
+
+        $this->assertNull($foo->writeTopLevelElement($result));
+    }
+
     /**
      * @dataProvider matchPrimitiveProvider
      * @param mixed $input

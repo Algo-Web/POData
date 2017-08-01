@@ -643,4 +643,11 @@ class ExpressionParserTest extends TestCase
             );
         }
     }
+
+    public function testNewConstructionLacksLevel2Property()
+    {
+        $expression = 'year(datetime\'1988-11-11\')';
+        $parser = new ExpressionParser($expression, $this->customersResourceType, false);
+        $this->assertFalse($parser->hasLevel2Property());
+    }
 }

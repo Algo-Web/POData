@@ -305,7 +305,7 @@ class ExpandedProjectionNode extends ProjectionNode
      */
     public function setSelectionFound($isSelectionFound = true)
     {
-        $this->selectionFound = $isSelectionFound;
+        $this->selectionFound = boolval($isSelectionFound);
     }
 
     /**
@@ -385,19 +385,10 @@ class ExpandedProjectionNode extends ProjectionNode
      *
      * @param ProjectionNode $node Node to add
      *
-     * @throws InvalidArgumentException
      * @return void
      */
-    public function addNode($node)
+    public function addNode(ProjectionNode $node)
     {
-        if (!($node instanceof ProjectionNode)
-            && !($node instanceof self)
-        ) {
-            throw new \InvalidArgumentException(
-                Messages::expandedProjectionNodeArgumentTypeShouldBeProjection()
-            );
-        }
-
         $this->childNodes[$node->getPropertyName()] = $node;
     }
 

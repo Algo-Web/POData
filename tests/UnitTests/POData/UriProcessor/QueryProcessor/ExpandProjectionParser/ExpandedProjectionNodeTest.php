@@ -25,4 +25,18 @@ class ExpandedProjectionNodeTest extends TestCase
         $this->assertEquals($takeCount, $foo->getTakeCount());
         $this->assertEquals($maxResultCount, $foo->getMaxResultCount());
     }
+
+    public function testSelectionFoundRoundTripTrue()
+    {
+        $foo = m::mock(ExpandedProjectionNode::class)->makePartial();
+        $foo->setSelectionFound(true);
+        $this->assertTrue($foo->isSelectionFound());
+    }
+
+    public function testSelectionFoundRoundTripFalse()
+    {
+        $foo = m::mock(ExpandedProjectionNode::class)->makePartial();
+        $foo->setSelectionFound(false);
+        $this->assertFalse($foo->isSelectionFound());
+    }
 }
