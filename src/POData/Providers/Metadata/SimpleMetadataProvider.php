@@ -270,9 +270,9 @@ class SimpleMetadataProvider implements IMetadataProvider
      *
      * @internal param string $namespace namespace of the data source
      */
-    public function addEntityType(\ReflectionClass $refClass, $name)
+    public function addEntityType(\ReflectionClass $refClass, $name,$isAbstract = false, $baseType = null)
     {
-        $result = $this->createResourceType($refClass, $name, ResourceTypeKind::ENTITY());
+        $result = $this->createResourceType($refClass, $name, ResourceTypeKind::ENTITY(), $isAbstract, $baseType);
         assert($result instanceof ResourceEntityType);
         return $result;
     }
@@ -289,7 +289,9 @@ class SimpleMetadataProvider implements IMetadataProvider
     private function createResourceType(
         \ReflectionClass $refClass,
         $name,
-        $typeKind
+        $typeKind,
+        $isAbstract = false,
+        $baseType = null
     ) {
         if (array_key_exists($name, $this->resourceTypes)) {
             throw new InvalidOperationException('Type with same name already added');
@@ -297,7 +299,7 @@ class SimpleMetadataProvider implements IMetadataProvider
 
         $type = null;
         if ($typeKind == ResourceTypeKind::ENTITY()) {
-            list($oet, $entitySet) = $this->metadataManager->addEntityType($name);
+            list($oet, $entitySet) = $this->metadataManager->addEntityType($name,$baseType);
             assert($oet instanceof TEntityTypeType, 'Entity type ' . $name . ' not successfully added');
             $type = new ResourceEntityType($refClass, $oet, $this);
             $typeName = $type->getFullName();
