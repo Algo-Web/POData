@@ -195,8 +195,8 @@ class KeyDescriptor
      *  is done one should call validate function to validate the created
      *  KeyDescription.
      *
-     * @param string                $keyPredicate   The predicate to parse
-     * @param KeyDescriptor|null    $keyDescriptor  On return, Description of key after parsing
+     * @param string             $keyPredicate  The predicate to parse
+     * @param KeyDescriptor|null $keyDescriptor On return, Description of key after parsing
      *
      * @return bool True if the given values were parsed; false if there was a syntax error
      */

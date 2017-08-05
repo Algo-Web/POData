@@ -743,6 +743,21 @@ class SimpleMetadataProviderTest extends TestCase
         $foo->addResourceReferenceSinglePropertyBidirectional($aft, $fore, 'backRelation', 'relation');
         $this->assertEquals(2, $foo->getAssociationCount());
     }
+    public function testAddEntityTypeAbstractTest()
+    {
+        $forward = new reusableEntityClass4('foo', 'bar');
+        $back = new reusableEntityClass5('foo', 'bar');
+
+        $foo = new SimpleMetadataProvider('string', 'String');
+
+        $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore', true);
+        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft', false, $fore);
+        $this->assertTrue($fore->isAbstract());
+        $this->assertFalse($aft->isAbstract());
+        $this->assertEquals($fore, $aft->getBaseType());
+        $this->assertTrue($foo->hasDerivedTypes($fore));
+        $this->assertEquals([$aft], $foo->getDerivedTypes($fore));
+    }
 }
 
 class reusableEntityClass4

@@ -447,7 +447,7 @@ class ExpressionParser
     /**
      * Parse a property access.
      *
-     * @param PropertyAccessExpression|null     $parentExpression Parent expression
+     * @param PropertyAccessExpression|null $parentExpression Parent expression
      *
      * @throws ODataException
      *

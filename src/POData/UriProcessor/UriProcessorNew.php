@@ -469,7 +469,7 @@ class UriProcessorNew implements IUriProcessor
     /**
      * Applies the query options to the resource(s) retrieved from the data source.
      *
-     * @param SegmentDescriptor $segment  The descriptor which holds resource(s) on which query options to be applied
+     * @param SegmentDescriptor $segment The descriptor which holds resource(s) on which query options to be applied
      */
     private function applyQueryOptions(SegmentDescriptor $segment)
     {

@@ -115,7 +115,7 @@ class OrderByNode extends OrderByBaseNode
     /**
      * To add a child node to the list of child nodes.
      *
-     * @param OrderByBaseNode   $node   The child node
+     * @param OrderByBaseNode $node The child node
      *
      * @throws InvalidArgumentException
      * @return void

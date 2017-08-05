@@ -20,9 +20,9 @@ class QueryResult
     public $hasMore;
 
     /**
-     * @param int       $count
-     * @param int|null  $top
-     * @param int|null  $skip
+     * @param int      $count
+     * @param int|null $top
+     * @param int|null $skip
      *
      * @throws \InvalidArgumentException if $count is not numeric
      *

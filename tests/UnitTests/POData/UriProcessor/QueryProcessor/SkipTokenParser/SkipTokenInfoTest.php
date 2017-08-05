@@ -2,10 +2,10 @@
 
 namespace UnitTests\POData\UriProcessor\QueryProcessor\SkipTokenParser;
 
+use Mockery as m;
 use POData\UriProcessor\QueryProcessor\OrderByParser\OrderByInfo;
 use POData\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenInfo;
 use UnitTests\POData\TestCase;
-use Mockery as m;
 
 class SkipTokenInfoTest extends TestCase
 {

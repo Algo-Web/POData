@@ -2,13 +2,14 @@
 
 namespace UnitTests\POData\ObjectModel\Serialisers;
 
+use Mockery as m;
+use POData\ObjectModel\CynicSerialiser as IronicSerialiser;
 use POData\ObjectModel\ObjectModelSerializer;
 use POData\ObjectModel\ODataLink;
 use POData\ObjectModel\ODataURL;
 use POData\ObjectModel\ODataURLCollection;
 use POData\OperationContext\ServiceHost;
 use POData\OperationContext\Web\Illuminate\IlluminateOperationContext as OperationContextAdapter;
-use Mockery as m;
 use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceType;
@@ -20,7 +21,6 @@ use POData\Providers\Metadata\Type\StringType;
 use POData\Providers\Query\IQueryProvider;
 use POData\Providers\Query\QueryResult;
 use POData\Providers\Query\QueryType;
-use POData\ObjectModel\CynicSerialiser as IronicSerialiser;
 use UnitTests\POData\Facets\NorthWind1\Customer2;
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 

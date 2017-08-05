@@ -5,7 +5,7 @@ namespace POData\Common\Messages;
 trait responseWriter
 {
     /**
-     * Returned when there's no writer available matching supplied constraints
+     * Returned when there's no writer available matching supplied constraints.
      *
      * @return string
      */

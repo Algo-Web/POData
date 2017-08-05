@@ -2,6 +2,8 @@
 
 namespace UnitTests\POData\ObjectModel\Serialisers;
 
+use Mockery as m;
+use POData\ObjectModel\CynicSerialiser as IronicSerialiser;
 use POData\ObjectModel\ObjectModelSerializer;
 use POData\ObjectModel\ODataEntry;
 use POData\ObjectModel\ODataFeed;
@@ -11,7 +13,6 @@ use POData\ObjectModel\ODataProperty;
 use POData\ObjectModel\ODataPropertyContent;
 use POData\OperationContext\ServiceHost;
 use POData\OperationContext\Web\Illuminate\IlluminateOperationContext as OperationContextAdapter;
-use Mockery as m;
 use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourcePropertyKind;
@@ -25,7 +26,6 @@ use POData\Providers\Metadata\Type\StringType;
 use POData\Providers\Query\IQueryProvider;
 use POData\Providers\Query\QueryResult;
 use POData\Providers\Query\QueryType;
-use POData\ObjectModel\CynicSerialiser as IronicSerialiser;
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandedProjectionNode;
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\RootProjectionNode;
 use UnitTests\POData\Facets\NorthWind1\Customer2;
@@ -542,6 +542,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
      * @param $query
      * @param $meta
      * @param $host
+     * @param  mixed $pageSize
      * @return array
      */
     private function setUpSerialisers($query, $meta, $host, $pageSize = 200)

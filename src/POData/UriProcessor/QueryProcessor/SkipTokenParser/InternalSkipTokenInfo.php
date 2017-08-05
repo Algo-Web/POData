@@ -101,7 +101,7 @@ class InternalSkipTokenInfo
     }
 
     /**
-     * Get reference to the InternalOrderByInfo object holding orderBy details
+     * Get reference to the InternalOrderByInfo object holding orderBy details.
      *
      * @return InternalOrderByInfo
      */
@@ -118,12 +118,12 @@ class InternalSkipTokenInfo
      *
      * @throws InvalidArgumentException
      *
-     * @return int  (1) If the array is empty then return -1,
-     *              (2) If the key object found then return index of first record
-     *              in the next page,
-     *              (3) If partial matching found (means found matching for first
-     *              m keys where m < n, where n is total number of positional
-     *              keys, then return the index of the object which has most matching
+     * @return int (1) If the array is empty then return -1,
+     *             (2) If the key object found then return index of first record
+     *             in the next page,
+     *             (3) If partial matching found (means found matching for first
+     *             m keys where m < n, where n is total number of positional
+     *             keys, then return the index of the object which has most matching
      */
     public function getIndexOfFirstEntryInTheNextPage(&$searchArray)
     {

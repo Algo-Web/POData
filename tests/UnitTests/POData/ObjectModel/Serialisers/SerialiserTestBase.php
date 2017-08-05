@@ -3,9 +3,6 @@
 namespace UnitTests\POData\ObjectModel\Serialisers;
 
 use Illuminate\Http\Request;
-use ReflectionException;
-use Symfony\Component\HttpFoundation\HeaderBag;
-use UnitTests\POData\TestCase;
 use Mockery as m;
 use POData\Common\InvalidOperationException;
 use POData\Common\ODataException;
@@ -21,6 +18,9 @@ use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\RootProjectionNode
 use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
 use POData\UriProcessor\RequestDescription;
 use POData\UriProcessor\SegmentStack;
+use ReflectionException;
+use Symfony\Component\HttpFoundation\HeaderBag;
+use UnitTests\POData\TestCase;
 
 class SerialiserTestBase extends TestCase
 {

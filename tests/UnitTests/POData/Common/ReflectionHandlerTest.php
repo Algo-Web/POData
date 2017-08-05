@@ -2,9 +2,9 @@
 
 namespace UnitTests\POData\Common;
 
+use Mockery as m;
 use POData\Common\ReflectionHandler;
 use UnitTests\POData\TestCase;
-use Mockery as m;
 
 class ReflectionHandlerTest extends TestCase
 {

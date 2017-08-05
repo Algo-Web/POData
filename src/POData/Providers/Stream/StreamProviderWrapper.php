@@ -61,14 +61,14 @@ class StreamProviderWrapper
     /**
      * To get stream associated with the given media resource.
      *
-     * @param object                    $entity             The media resource
-     * @param ResourceStreamInfo|null   $resourceStreamInfo This will be null if media
-     *                                                      resource is MLE, if media
-     *                                                      resource is named
-     *                                                      stream then will be the
-     *                                                      ResourceStreamInfo instance
-     *                                                      holding the details of
-     *                                                      named stream
+     * @param object                  $entity             The media resource
+     * @param ResourceStreamInfo|null $resourceStreamInfo This will be null if media
+     *                                                    resource is MLE, if media
+     *                                                    resource is named
+     *                                                    stream then will be the
+     *                                                    ResourceStreamInfo instance
+     *                                                    holding the details of
+     *                                                    named stream
      *
      * @throws ODataException
      * @throws InvalidOperationException
@@ -137,17 +137,17 @@ class StreamProviderWrapper
      * Gets the IANA content type (aka media type) of the stream associated with
      * the specified media resource.
      *
-     * @param object                    $entity             The entity instance
-     *                                                      (media resource) associated with
-     *                                                      the stream for which the content
-     *                                                      type is to be obtained
-     * @param ResourceStreamInfo|null   $resourceStreamInfo This will be null if
-     *                                                      media resource is MLE,
-     *                                                      if media resource is named
-     *                                                      stream then will be the
-     *                                                      ResourceStreamInfo instance
-     *                                                      holding the details of
-     *                                                      named stream
+     * @param object                  $entity             The entity instance
+     *                                                    (media resource) associated with
+     *                                                    the stream for which the content
+     *                                                    type is to be obtained
+     * @param ResourceStreamInfo|null $resourceStreamInfo This will be null if
+     *                                                    media resource is MLE,
+     *                                                    if media resource is named
+     *                                                    stream then will be the
+     *                                                    ResourceStreamInfo instance
+     *                                                    holding the details of
+     *                                                    named stream
      *
      * @throws InvalidOperationException
      * @return string|null
@@ -178,17 +178,17 @@ class StreamProviderWrapper
     /**
      * Get the ETag of the stream associated with the entity specified.
      *
-     * @param object                    $entity             The entity instance
-     *                                                      (media resource) associated
-     *                                                      with the stream for which
-     *                                                      the etag is to be obtained
-     * @param ResourceStreamInfo|null   $resourceStreamInfo This will be null if
-     *                                                      media resource is MLE,
-     *                                                      if media resource is named
-     *                                                      stream then will be the
-     *                                                      ResourceStreamInfo
-     *                                                      instance holding the
-     *                                                      details of named stream
+     * @param object                  $entity             The entity instance
+     *                                                    (media resource) associated
+     *                                                    with the stream for which
+     *                                                    the etag is to be obtained
+     * @param ResourceStreamInfo|null $resourceStreamInfo This will be null if
+     *                                                    media resource is MLE,
+     *                                                    if media resource is named
+     *                                                    stream then will be the
+     *                                                    ResourceStreamInfo
+     *                                                    instance holding the
+     *                                                    details of named stream
      *
      * @throws InvalidOperationException
      *
@@ -221,20 +221,20 @@ class StreamProviderWrapper
      * Gets the URI clients should use when making retrieve (ie. GET) requests
      * to the stream.
      *
-     * @param object                    $entity             The entity instance
-     *                                                      associated with the
-     *                                                      stream for which a
-     *                                                      read stream URI is to
-     *                                                      be obtained
-     * @param ResourceStreamInfo|null   $resourceStreamInfo This will be null
-     *                                                      if media resource
-     *                                                      is MLE, if media
-     *                                                      resource is named
-     *                                                      stream then will be
-     *                                                      the ResourceStreamInfo
-     *                                                      instance holding the
-     *                                                      details of named stream
-     * @param string                    $mediaLinkEntryUri  MLE uri
+     * @param object                  $entity             The entity instance
+     *                                                    associated with the
+     *                                                    stream for which a
+     *                                                    read stream URI is to
+     *                                                    be obtained
+     * @param ResourceStreamInfo|null $resourceStreamInfo This will be null
+     *                                                    if media resource
+     *                                                    is MLE, if media
+     *                                                    resource is named
+     *                                                    stream then will be
+     *                                                    the ResourceStreamInfo
+     *                                                    instance holding the
+     *                                                    details of named stream
+     * @param string                  $mediaLinkEntryUri  MLE uri
      *
      * @throws InvalidOperationException
      *

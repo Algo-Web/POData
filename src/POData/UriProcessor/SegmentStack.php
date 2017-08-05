@@ -48,7 +48,7 @@ class SegmentStack
      *                                                to push
      *
      * @throws InvalidOperationException
-     * @return bool true if the segment was push, false otherwise
+     * @return bool                      true if the segment was push, false otherwise
      */
     public function pushSegment($segmentName, ResourceSetWrapper &$resourceSetWrapper)
     {

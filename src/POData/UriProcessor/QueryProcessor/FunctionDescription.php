@@ -739,9 +739,9 @@ class FunctionDescription
      * Finds a function from the list of functions whose argument types matches
      * with types of expressions.
      *
-     * @param FunctionDescription[]     $functionDescriptions   List of functions
-     * @param AbstractExpression[]      $argExpressions         Function argument expressions
-     * @param bool                      $promoteArguments       Function argument
+     * @param FunctionDescription[] $functionDescriptions List of functions
+     * @param AbstractExpression[]  $argExpressions       Function argument expressions
+     * @param bool                  $promoteArguments     Function argument
      *
      * @return FunctionDescription|null Reference to the matching function if found else NULL
      */

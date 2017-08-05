@@ -530,8 +530,8 @@ abstract class BaseService implements IRequestHandler, IService
      *
      * @throws ODataException, HttpHeaderFailure
      *
-     * @return string|null      the response content-type, a null value means the requested resource
-     *                          is named stream and IDSSP2::getStreamContentType returned null
+     * @return string|null the response content-type, a null value means the requested resource
+     *                     is named stream and IDSSP2::getStreamContentType returned null
      */
     public function getResponseContentType(
         RequestDescription $request,
@@ -676,8 +676,8 @@ abstract class BaseService implements IRequestHandler, IService
      * @param bool         $needToSerializeResponse
      *
      * @throws ODataException
-     * @return string|null The ETag for the entry object if it has eTag properties
-     *                     NULL otherwise
+     * @return string|null    The ETag for the entry object if it has eTag properties
+     *                        NULL otherwise
      */
     protected function compareETag(
         &$entryObject,
@@ -771,9 +771,9 @@ abstract class BaseService implements IRequestHandler, IService
      * @param ResourceType &$resourceType Resource type of the $entryObject
      *
      * @throws ODataException
-     * @return string|null ETag value for the given resource (with values encoded
-     *                     for use in a URI) there are etag properties, NULL if
-     *                     there is no etag property
+     * @return string|null    ETag value for the given resource (with values encoded
+     *                        for use in a URI) there are etag properties, NULL if
+     *                        there is no etag property
      */
     protected function getETagForEntry(&$entryObject, ResourceType &$resourceType)
     {

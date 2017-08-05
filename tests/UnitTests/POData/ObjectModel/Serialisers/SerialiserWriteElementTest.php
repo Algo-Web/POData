@@ -2,7 +2,9 @@
 
 namespace UnitTests\POData\ObjectModel\Serialisers;
 
+use Mockery as m;
 use POData\Common\ODataException;
+use POData\ObjectModel\CynicSerialiser as IronicSerialiser;
 use POData\ObjectModel\ODataBagContent;
 use POData\ObjectModel\ODataEntry;
 use POData\ObjectModel\ODataLink;
@@ -11,7 +13,6 @@ use POData\ObjectModel\ODataProperty;
 use POData\ObjectModel\ODataPropertyContent;
 use POData\OperationContext\ServiceHost;
 use POData\OperationContext\Web\Illuminate\IlluminateOperationContext as OperationContextAdapter;
-use Mockery as m;
 use POData\Providers\Metadata\ResourcePrimitiveType;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourcePropertyKind;
@@ -20,7 +21,6 @@ use POData\Providers\Metadata\Type\StringType;
 use POData\Providers\Query\IQueryProvider;
 use POData\Providers\Query\QueryResult;
 use POData\Providers\Query\QueryType;
-use POData\ObjectModel\CynicSerialiser as IronicSerialiser;
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandedProjectionNode;
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\RootProjectionNode;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -341,7 +341,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
             ->andReturn('/odata.svc/Employees(EmployeeID=\'Bruce\')?$expand=Manager');
         $request->shouldReceive('fullUrl')
             ->andReturn('http://localhost/odata.svc/Employees(EmployeeID=\'Bruce\')?$expand=Manager');
-        $request->request = new ParameterBag([ '$expand' => "Manager"]);
+        $request->request = new ParameterBag([ '$expand' => 'Manager']);
 
         list($host, $meta, $query) = $this->setUpDataServiceDeps($request);
 
