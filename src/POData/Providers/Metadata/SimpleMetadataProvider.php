@@ -307,10 +307,13 @@ class SimpleMetadataProvider implements IMetadataProvider
         if (array_key_exists($name, $this->resourceTypes)) {
             throw new InvalidOperationException('Type with same name already added');
         }
-        if(null !== $baseType){
+        if (null !== $baseType) {
             $baseTEntityType = $this->oDataEntityMap[$baseType->getFullName()];
             $this->baseTypes[] = $baseType;
+        }  else {
+            $baseTEntityType = null;
         }
+        
         $type = null;
         if ($typeKind == ResourceTypeKind::ENTITY()) {
             list($oet, $entitySet) = $this->metadataManager->addEntityType($name, $baseTEntityType, $isAbstract);
