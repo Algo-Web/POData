@@ -2,9 +2,9 @@
 
 namespace UnitTests\POData\UriProcessor\QueryProcessor\OrderByParser;
 
+use Mockery as m;
 use POData\UriProcessor\QueryProcessor\OrderByParser\OrderByPathSegment;
 use UnitTests\POData\TestCase;
-use Mockery as m;
 
 class OrderByPathSegmentTest extends TestCase
 {

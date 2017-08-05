@@ -430,8 +430,8 @@ class AtomODataWriter implements IODataWriter
     /**
      * XML write a basic data type (string, number, boolean, null).
      *
-     * @param string $value         value to be written
-     * @param string $type|null     data type of the value
+     * @param string $value     value to be written
+     * @param string $type|null data type of the value
      *
      * @return string
      */

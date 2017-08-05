@@ -18,7 +18,7 @@ interface IServiceConfiguration
     /**
      * Sets maximum number of segments to be expanded allowed in a request.
      *
-     * @param int $maxExpandCount Maximum number of segments to be expanded
+     * @param  int  $maxExpandCount Maximum number of segments to be expanded
      * @return void
      */
     public function setMaxExpandCount($maxExpandCount);
@@ -33,7 +33,7 @@ interface IServiceConfiguration
     /**
      * Sets the maximum number of segments in a single $expand path.
      *
-     * @param int $maxExpandDepth Maximum number of segments in a single $expand path
+     * @param  int  $maxExpandDepth Maximum number of segments in a single $expand path
      * @return void
      */
     public function setMaxExpandDepth($maxExpandDepth);
@@ -50,7 +50,7 @@ interface IServiceConfiguration
      * Sets maximum number of elements in each returned collection
      * (top-level or expanded).
      *
-     * @param int $maxResultPerCollection Maximum number of elements in returned collection
+     * @param  int  $maxResultPerCollection Maximum number of elements in returned collection
      * @return void
      */
     public function setMaxResultsPerCollection($maxResultPerCollection);
@@ -65,7 +65,7 @@ interface IServiceConfiguration
     /**
      * Sets whether verbose errors should be used by default.
      *
-     * @param bool $useVerboseError true to enable verbose error else false
+     * @param  bool $useVerboseError true to enable verbose error else false
      * @return void
      */
     public function setUseVerboseErrors($useVerboseError);
@@ -125,7 +125,7 @@ interface IServiceConfiguration
      * Sets whether requests with the $count path segment or the $inlinecount
      * query options are accepted.
      *
-     * @param bool $acceptCountRequest true to accept count request, false to not
+     * @param  bool $acceptCountRequest true to accept count request, false to not
      * @return void
      */
     public function setAcceptCountRequests($acceptCountRequest);
@@ -140,7 +140,7 @@ interface IServiceConfiguration
     /**
      * Sets whether projection requests ($select) should be accepted.
      *
-     * @param bool $acceptProjectionRequest true to accept projection request, false to not
+     * @param  bool $acceptProjectionRequest true to accept projection request, false to not
      * @return void
      */
     public function setAcceptProjectionRequests($acceptProjectionRequest);
@@ -155,7 +155,7 @@ interface IServiceConfiguration
     /**
      * Sets Maximum version of the response sent by server.
      *
-     * @param ProtocolVersion $version The version to set
+     * @param  ProtocolVersion $version The version to set
      * @return void
      */
     public function setMaxDataServiceVersion(ProtocolVersion $version);
@@ -163,7 +163,7 @@ interface IServiceConfiguration
     /**
      * Specify whether to validate the ETag or not.
      *
-     * @param bool $validate True if ETag needs to validated, false otherwise
+     * @param  bool $validate True if ETag needs to validated, false otherwise
      * @return void
      */
     public function setValidateETagHeader($validate);

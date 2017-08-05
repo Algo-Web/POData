@@ -78,8 +78,8 @@ class ServiceHost
     }
 
     /**
-     * @param IOperationContext|null    $context    the OperationContext implementation to use.
-     *                                              If null the IlluminateOperationContext will be used.  Default null.
+     * @param IOperationContext|null $context the OperationContext implementation to use.
+     *                                        If null the IlluminateOperationContext will be used.  Default null.
      *
      * Currently we are forcing the input request to be of type
      * \Illuminate\Http\Request but in the future we could make this more flexible if needed
@@ -493,7 +493,7 @@ class ServiceHost
     /**
      * Sets the HTTP MIME type of the output stream.
      *
-     * @param string $value The HTTP MIME type
+     * @param  string $value The HTTP MIME type
      * @return void
      */
     public function setResponseContentType($value)

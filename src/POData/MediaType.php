@@ -130,7 +130,7 @@ class MediaType
     }
 
     /**
-     * Retrieve OData parameter value
+     * Retrieve OData parameter value.
      *
      * @return mixed|null
      */

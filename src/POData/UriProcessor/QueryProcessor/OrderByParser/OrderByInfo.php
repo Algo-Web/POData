@@ -45,7 +45,7 @@ class OrderByInfo
      *
      * @param OrderByPathSegment[]                 $orderByPathSegments  Order by path segments
      * @param array <array<ResourceProperty>>|null $navigationProperties navigation properties used in the
-     *                                             order by clause
+     *                                                                   order by clause
      */
     public function __construct($orderByPathSegments, $navigationProperties)
     {

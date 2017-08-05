@@ -48,9 +48,9 @@ class ExpressionProcessor
     /**
      * Recursive function to process each node of the expression.
      *
-     * @param AbstractExpression|null   $expression Current node to process
+     * @param AbstractExpression|null $expression Current node to process
      *
-     * @return string|null              The language specific expression
+     * @return string|null The language specific expression
      */
     private function processExpressionNode(AbstractExpression $expression = null)
     {

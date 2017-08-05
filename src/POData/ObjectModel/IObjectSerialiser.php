@@ -93,7 +93,7 @@ interface IObjectSerialiser
     /**
      * Sets reference to the request submitted by client.
      *
-     * @param RequestDescription $request
+     * @param  RequestDescription $request
      * @return void
      */
     public function setRequest(RequestDescription $request);
@@ -108,7 +108,7 @@ interface IObjectSerialiser
     /**
      * Sets the data service instance.
      *
-     * @param IService $service
+     * @param  IService $service
      * @return void
      */
     public function setService(IService $service);

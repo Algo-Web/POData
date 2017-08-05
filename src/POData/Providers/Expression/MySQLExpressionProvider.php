@@ -182,8 +182,8 @@ class MySQLExpressionProvider implements IExpressionProvider
     /**
      * Call-back for constant expression.
      *
-     * @param IType $type   The type of constant
-     * @param mixed $value  The value of the constant
+     * @param IType $type  The type of constant
+     * @param mixed $value The value of the constant
      *
      * @return string
      */

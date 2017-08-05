@@ -336,9 +336,9 @@ class ProvidersWrapper
     }
 
     /**
-     * Try to resolve named singleton
+     * Try to resolve named singleton.
      *
-     * @param string $name
+     * @param  string     $name
      * @return mixed|null
      */
     public function resolveSingleton($name)
@@ -384,7 +384,7 @@ class ProvidersWrapper
      * Entity Types, else false.
      * Note: Wrapper for IMetadataProvider::hasDerivedTypes method implementation.
      *
-     * @param ResourceEntityType    $resourceType   Resource to check for derived resource types
+     * @param ResourceEntityType $resourceType Resource to check for derived resource types
      *
      * @throws ODataException If the ResourceType is invalid
      *
@@ -623,15 +623,15 @@ class ProvidersWrapper
     /**
      * Gets collection of entities belongs to an entity set.
      *
-     * @param QueryType                 $queryType   Indicates if this is a query for a count, entities, or entities
-     *                                               with a count
-     * @param ResourceSet               $resourceSet The entity set containing the entities that need to be fetched
-     * @param FilterInfo|null           $filterInfo  Represents the $filter parameter of the OData query.
-     *                                               NULL if no $filter specified
-     * @param InternalOrderByInfo|null  $orderBy     The orderBy information
-     * @param integer|null              $top         The top count
-     * @param integer|null              $skip        The skip count
-     * @param SkipTokenInfo|null        $skipToken   The skip token
+     * @param QueryType                $queryType   Indicates if this is a query for a count, entities, or entities
+     *                                              with a count
+     * @param ResourceSet              $resourceSet The entity set containing the entities that need to be fetched
+     * @param FilterInfo|null          $filterInfo  Represents the $filter parameter of the OData query.
+     *                                              NULL if no $filter specified
+     * @param InternalOrderByInfo|null $orderBy     The orderBy information
+     * @param int|null                 $top         The top count
+     * @param int|null                 $skip        The skip count
+     * @param SkipTokenInfo|null       $skipToken   The skip token
      *
      * @return QueryResult
      */
@@ -836,9 +836,9 @@ class ProvidersWrapper
     /**
      * @param ResourceSet $resourceSet          The entity set containing the entity to fetch
      * @param object      $sourceEntityInstance The source entity instance
-     * @param object      $data                 The New data for the entity instance.
+     * @param object      $data                 the New data for the entity instance
      *
-     * @return object|null returns the newly created model if successful, or null if model creation failed.
+     * @return object|null returns the newly created model if successful, or null if model creation failed
      */
     public function createResourceforResourceSet(
         ResourceSet $resourceSet,

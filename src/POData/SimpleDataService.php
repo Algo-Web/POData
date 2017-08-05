@@ -81,7 +81,7 @@ class SimpleDataService extends BaseService implements IService
     }
 
     /**
-     * @param IStreamProvider2|null     $streamProvider
+     * @param  IStreamProvider2|null $streamProvider
      * @return void
      */
     public function setStreamProvider(IStreamProvider2 $streamProvider = null)

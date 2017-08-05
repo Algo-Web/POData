@@ -252,8 +252,8 @@ class PHPExpressionProvider implements IExpressionProvider
     /**
      * Call-back for function call expression.
      *
-     * @param FunctionDescription   $functionDescription Description of the function
-     * @param array<string>         $params              Parameters to the function
+     * @param FunctionDescription $functionDescription Description of the function
+     * @param array<string>       $params              Parameters to the function
      *
      * @return string
      */

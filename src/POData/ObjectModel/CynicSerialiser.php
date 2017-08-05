@@ -76,13 +76,13 @@ class CynicSerialiser implements IObjectSerialiser
     protected $stack;
 
     /**
-     * Lightweight stack tracking for recursive descent fill
+     * Lightweight stack tracking for recursive descent fill.
      */
     private $lightStack = [];
 
     /**
-     * @param IService                  $service    Reference to the data service instance
-     * @param RequestDescription|null   $request    Type instance describing the client submitted request
+     * @param IService                $service Reference to the data service instance
+     * @param RequestDescription|null $request Type instance describing the client submitted request
      */
     public function __construct(IService $service, RequestDescription $request = null)
     {
@@ -286,7 +286,7 @@ class CynicSerialiser implements IObjectSerialiser
     public function writeUrlElement(QueryResult $entryObject)
     {
         $url = new ODataURL();
-        if (!is_null($entryObject->results)) {
+        if (null !== $entryObject->results) {
             $currentResourceType = $this->getCurrentResourceSetWrapper()->getResourceType();
             $relativeUri = $this->getEntryInstanceKey(
                 $entryObject->results,
@@ -340,8 +340,8 @@ class CynicSerialiser implements IObjectSerialiser
     /**
      * Write top level complex resource.
      *
-     * @param QueryResult &$complexValue Results property contains the complex object to be written
-     * @param string $propertyName The name of the complex property
+     * @param QueryResult  &$complexValue Results property contains the complex object to be written
+     * @param string       $propertyName  The name of the complex property
      * @param ResourceType &$resourceType Describes the type of complex object
      *
      * @return ODataPropertyContent
@@ -368,9 +368,9 @@ class CynicSerialiser implements IObjectSerialiser
     /**
      * Write top level bag resource.
      *
-     * @param  QueryResult $bagValue
-     * @param  string $propertyName The name of the bag property
-     * @param  ResourceType &$resourceType Describes the type of bag object
+     * @param QueryResult  $bagValue
+     * @param string       $propertyName  The name of the bag property
+     * @param ResourceType &$resourceType Describes the type of bag object
      *
      * @return ODataPropertyContent
      */
@@ -391,7 +391,7 @@ class CynicSerialiser implements IObjectSerialiser
     /**
      * Write top level primitive value.
      *
-     * @param QueryResult &$primitiveValue Results property contains the primitive value to be written
+     * @param QueryResult      &$primitiveValue   Results property contains the primitive value to be written
      * @param ResourceProperty &$resourceProperty Resource property describing the primitive property to be written
      *
      * @return ODataPropertyContent
@@ -431,7 +431,7 @@ class CynicSerialiser implements IObjectSerialiser
     /**
      * Sets reference to the request submitted by client.
      *
-     * @param RequestDescription $request
+     * @param  RequestDescription $request
      * @return void
      */
     public function setRequest(RequestDescription $request)
@@ -453,7 +453,7 @@ class CynicSerialiser implements IObjectSerialiser
     /**
      * Sets the data service instance.
      *
-     * @param IService $service
+     * @param  IService $service
      * @return void
      */
     public function setService(IService $service)
@@ -506,9 +506,9 @@ class CynicSerialiser implements IObjectSerialiser
     }
 
     /**
-     * @param ResourceType  $resourceType
-     * @param object        $result
-     * @param string|null   $propertyName
+     * @param  ResourceType         $resourceType
+     * @param  object               $result
+     * @param  string|null          $propertyName
      * @return ODataPropertyContent
      */
     protected function writeComplexValue(ResourceType &$resourceType, &$result, $propertyName = null)
@@ -569,7 +569,7 @@ class CynicSerialiser implements IObjectSerialiser
     protected function shouldExpandSegment($navigationPropertyName)
     {
         $expandedProjectionNode = $this->getCurrentExpandedProjectionNode();
-        if (is_null($expandedProjectionNode)) {
+        if (null === $expandedProjectionNode) {
             return false;
         }
 
@@ -637,7 +637,7 @@ class CynicSerialiser implements IObjectSerialiser
         if (1 == $recursionLevel) {
             //presence of $top option affect next link for root container
             $topValueCount = $this->getRequest()->getTopOptionCount();
-            if (!is_null($topValueCount) && ($topValueCount <= $pageSize)) {
+            if (null !== $topValueCount && ($topValueCount <= $pageSize)) {
                 return false;
             }
         }
@@ -647,8 +647,8 @@ class CynicSerialiser implements IObjectSerialiser
     /**
      * Get next page link from the given entity instance.
      *
-     * @param mixed  &$lastObject Last object serialized to be
-     *                            used for generating $skiptoken
+     * @param mixed &$lastObject Last object serialized to be
+     *                           used for generating $skiptoken
      *
      * @return string for the link for next page
      */
@@ -663,7 +663,7 @@ class CynicSerialiser implements IObjectSerialiser
         $queryParameterString = $this->getNextPageLinkQueryParametersForRootResourceSet();
 
         $skipToken = $internalOrderByInfo->buildSkipTokenValue($lastObject);
-        assert(!is_null($skipToken), '!is_null($skipToken)');
+        assert(null !== $skipToken, '!is_null($skipToken)');
         $token = (1 < $numSegments) ? '$skiptoken=' : '$skip=';
         $skipToken = '?'.$queryParameterString.$token.$skipToken;
 
@@ -770,7 +770,7 @@ class CynicSerialiser implements IObjectSerialiser
     protected function getProjectionNodes()
     {
         $expandedProjectionNode = $this->getCurrentExpandedProjectionNode();
-        if (is_null($expandedProjectionNode) || $expandedProjectionNode->canSelectAllProperties()) {
+        if (null === $expandedProjectionNode || $expandedProjectionNode->canSelectAllProperties()) {
             return null;
         }
 
@@ -786,7 +786,7 @@ class CynicSerialiser implements IObjectSerialiser
     protected function getCurrentExpandedProjectionNode()
     {
         $expandedProjectionNode = $this->getRequest()->getRootProjectionNode();
-        if (is_null($expandedProjectionNode)) {
+        if (null === $expandedProjectionNode) {
             return null;
         } else {
             $segmentNames = $this->getStack()->getSegmentNames();
@@ -800,7 +800,7 @@ class CynicSerialiser implements IObjectSerialiser
             if (0 != $depth) {
                 for ($i = 1; $i < $depth; ++$i) {
                     $expandedProjectionNode = $expandedProjectionNode->findNode($segmentNames[$i]);
-                    assert(!is_null($expandedProjectionNode), 'is_null($expandedProjectionNode)');
+                    assert(null !== $expandedProjectionNode, 'is_null($expandedProjectionNode)');
                     assert(
                         $expandedProjectionNode instanceof ExpandedProjectionNode,
                         '$expandedProjectionNode not instanceof ExpandedProjectionNode'
@@ -840,7 +840,7 @@ class CynicSerialiser implements IObjectSerialiser
         }
 
         $topCountValue = $this->getRequest()->getTopOptionCount();
-        if (!is_null($topCountValue)) {
+        if (null !== $topCountValue) {
             $remainingCount = $topCountValue - $this->getRequest()->getTopCount();
             if (0 < $remainingCount) {
                 if (null !== $queryParameterString) {
@@ -909,9 +909,9 @@ class CynicSerialiser implements IObjectSerialiser
      * Convert the given primitive value to string.
      * Note: This method will not handle null primitive value.
      *
-     * @param IType &$primitiveResourceType        Type of the primitive property
-     *                                             whose value need to be converted
-     * @param mixed        $primitiveValue         Primitive value to convert
+     * @param IType &$primitiveResourceType Type of the primitive property
+     *                                      whose value need to be converted
+     * @param mixed $primitiveValue         Primitive value to convert
      *
      * @return string
      */

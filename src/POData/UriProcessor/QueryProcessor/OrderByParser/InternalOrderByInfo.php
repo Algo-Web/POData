@@ -128,7 +128,7 @@ class InternalOrderByInfo
     }
 
     /**
-     * Get resource type this InternalOrderByInfo object points to
+     * Get resource type this InternalOrderByInfo object points to.
      *
      * @return ResourceType
      */

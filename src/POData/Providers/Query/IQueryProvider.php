@@ -40,8 +40,8 @@ interface IQueryProvider
      * @param ResourceSet              $resourceSet The entity set containing the entities to fetch
      * @param FilterInfo|null          $filterInfo  The $filter parameter of the OData query.  NULL if none specified
      * @param null|InternalOrderByInfo $orderBy     sorted order if we want to get the data in some specific order
-     * @param integer|null             $top         number of records which need to be retrieved
-     * @param integer|null             $skip        number of records which need to be skipped
+     * @param int|null                 $top         number of records which need to be retrieved
+     * @param int|null                 $skip        number of records which need to be skipped
      * @param SkipTokenInfo|null       $skipToken   value indicating what records to skip
      *
      * @return QueryResult
@@ -83,8 +83,8 @@ interface IQueryProvider
      * @param ResourceProperty   $targetProperty       The navigation property to retrieve
      * @param FilterInfo|null    $filter               The $filter parameter of the OData query.  NULL if none specified
      * @param mixed|null         $orderBy              sorted order if we want to get the data in some specific order
-     * @param integer|null       $top                  number of records which need to be retrieved
-     * @param integer|null       $skip                 number of records which need to be skipped
+     * @param int|null           $top                  number of records which need to be retrieved
+     * @param int|null           $skip                 number of records which need to be skipped
      * @param SkipTokenInfo|null $skipToken            value indicating what records to skip
      *
      * @return QueryResult
@@ -177,10 +177,10 @@ interface IQueryProvider
 
     /**
      * Delete resource from a resource set.
-     * @param ResourceSet       $sourceResourceSet
-     * @param object            $sourceEntityInstance
+     * @param ResourceSet $sourceResourceSet
+     * @param object      $sourceEntityInstance
      *
-     * @return bool true if resources successfully deleted, otherwise false.
+     * @return bool true if resources successfully deleted, otherwise false
      */
     public function deleteResource(
         ResourceSet $sourceResourceSet,
@@ -188,12 +188,12 @@ interface IQueryProvider
     );
 
     /**
-     * Create a new resource in a resource set
-     * @param ResourceSet      $sourceresourceSet    The entity set containing the entity to fetch
-     * @param object           $keyDescriptor
-     * @param object           $data                 The New data for the entity instance.
+     * Create a new resource in a resource set.
+     * @param ResourceSet $sourceresourceSet The entity set containing the entity to fetch
+     * @param object      $keyDescriptor
+     * @param object      $data              the New data for the entity instance
      *
-     * @return object|null returns the newly created model if successful, or null if model creation failed.
+     * @return object|null returns the newly created model if successful, or null if model creation failed
      */
     public function createResourceforResourceSet(
         ResourceSet $sourceresourceSet,

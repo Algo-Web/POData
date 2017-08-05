@@ -102,7 +102,7 @@ class ResourceAssociationType
      * @param ResourceEntityType $resourceType     Resource type for the source end
      * @param ResourceProperty   $resourceProperty Resource property for the source end
      *
-     * @return ResourceAssociationTypeEnd|null      Association type end for the given parameters
+     * @return ResourceAssociationTypeEnd|null Association type end for the given parameters
      */
     public function getResourceAssociationTypeEnd(
         ResourceEntityType $resourceType,

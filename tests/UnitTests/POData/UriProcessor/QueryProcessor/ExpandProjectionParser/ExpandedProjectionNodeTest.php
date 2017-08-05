@@ -2,12 +2,12 @@
 
 namespace UnitTests\POData\UriProcessor\QueryProcessor\ExpandProjectionParser;
 
+use Mockery as m;
 use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\ProvidersWrapper;
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandedProjectionNode;
 use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
 use UnitTests\POData\TestCase;
-use Mockery as m;
 
 class ExpandedProjectionNodeTest extends TestCase
 {

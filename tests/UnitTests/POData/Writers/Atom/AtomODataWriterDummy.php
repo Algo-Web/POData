@@ -33,7 +33,7 @@ class AtomODataWriterDummy extends AtomODataWriter
     }
 
     /**
-     * @param ODataLink $link       Link to write
+     * @param ODataLink $link Link to write
      *
      * @return AtomODataWriter
      */

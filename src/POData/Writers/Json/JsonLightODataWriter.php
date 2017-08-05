@@ -33,7 +33,7 @@ class JsonLightODataWriter extends JsonODataV2Writer
 
     /**
      * @param JsonLightMetadataLevel $metadataLevel
-     * @param string $absoluteServiceUri
+     * @param string                 $absoluteServiceUri
      *
      * @throws \Exception
      */
@@ -244,7 +244,7 @@ class JsonLightODataWriter extends JsonODataV2Writer
     /**
      * Writes the next page link.
      *
-     * @param ODataLink|null                $nextPageLinkUri Uri for next page link
+     * @param ODataLink|null $nextPageLinkUri Uri for next page link
      *
      * @return JsonLightODataWriter|null
      */

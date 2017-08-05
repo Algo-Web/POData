@@ -2,10 +2,10 @@
 
 namespace UnitTests\POData\OperationContext;
 
+use Mockery as m;
 use POData\OperationContext\HTTPRequestMethod;
 use POData\OperationContext\SimpleRequestAdapter;
 use UnitTests\POData\TestCase;
-use Mockery as m;
 
 class SimpleRequestAdapterTest extends TestCase
 {
