@@ -194,7 +194,14 @@ class SimpleMetadataProvider implements IMetadataProvider
      */
     public function getDerivedTypes(ResourceEntityType $resourceType)
     {
-        return [];
+        $ret = [];
+        foreach($this->resourceTypes as $rType){
+            $baseTEntityType = $this->oDataEntityMap[$resourceType->getFullName()];
+            if($rType->getBaseType() == $baseTEntityType->getName() ){
+                $ret[] = $rType
+            }
+        }
+        return $ret;
     }
 
     /**
