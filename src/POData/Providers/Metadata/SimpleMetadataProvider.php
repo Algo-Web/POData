@@ -205,7 +205,7 @@ class SimpleMetadataProvider implements IMetadataProvider
     public function hasDerivedTypes(ResourceEntityType $resourceType)
     {
         if(in_array($resourceType,$this->baseTypes)){
-            retuen true;
+            return true;
         }
         return false;
     }
