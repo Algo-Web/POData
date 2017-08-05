@@ -26,6 +26,7 @@ class SimpleMetadataProvider implements IMetadataProvider
     private $metadataManager;
     private $typeSetMapping = [];
     protected $singletons = [];
+    private $baseTypes = [];
 
     /**
      * @param string $containerName container name for the datasource
@@ -203,6 +204,9 @@ class SimpleMetadataProvider implements IMetadataProvider
      */
     public function hasDerivedTypes(ResourceEntityType $resourceType)
     {
+        if(in_array($resourceType,$this->baseTypes)){
+            retuen true;
+        }
         return false;
     }
 
@@ -297,11 +301,12 @@ class SimpleMetadataProvider implements IMetadataProvider
             throw new InvalidOperationException('Type with same name already added');
         }
         if(null !== $baseType){
-            $baseType = $this->oDataEntityMap[$baseType->getFullName()];
+            $baseTEntityType = $this->oDataEntityMap[$baseType->getFullName()];
+            $this->baseTypes[] = $baseType;
         }
         $type = null;
         if ($typeKind == ResourceTypeKind::ENTITY()) {
-            list($oet, $entitySet) = $this->metadataManager->addEntityType($name,$baseType,$isAbstract);
+            list($oet, $entitySet) = $this->metadataManager->addEntityType($name, $baseTEntityType, $isAbstract);
             assert($oet instanceof TEntityTypeType, 'Entity type ' . $name . ' not successfully added');
             $type = new ResourceEntityType($refClass, $oet, $this);
             $typeName = $type->getFullName();
