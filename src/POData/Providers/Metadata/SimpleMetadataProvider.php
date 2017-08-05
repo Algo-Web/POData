@@ -196,8 +196,7 @@ class SimpleMetadataProvider implements IMetadataProvider
     {
         $ret = [];
         foreach ($this->resourceTypes as $rType) {
-            $baseTEntityType = $this->oDataEntityMap[$resourceType->getFullName()];
-            if ($rType->getBaseType() == $baseTEntityType->getName()) {
+            if ($rType->getBaseType() == $resourceType) {
                 $ret[] = $rType;
             }
         }
