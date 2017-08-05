@@ -750,15 +750,14 @@ class SimpleMetadataProviderTest extends TestCase
 
         $foo = new SimpleMetadataProvider('string', 'String');
 
-        $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore',true);
-        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft',false,$fore);
+        $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore', true);
+        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft', false, $fore);
         $this->assertTrue($fore->isAbstract());
         $this->assertFalse($aft->isAbstract());
-        $this->assertEquals($fore,$aft->getBaseType());
+        $this->assertEquals($fore, $aft->getBaseType());
         $this->assertTrue($foo->hasDerivedTypes($fore));
-        $this->assertEquals([$aft],$foo->getDerivedTypes($fore));
+        $this->assertEquals([$aft], $foo->getDerivedTypes($fore));
     }
-
 }
 
 class reusableEntityClass4
