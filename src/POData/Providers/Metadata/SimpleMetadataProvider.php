@@ -471,6 +471,9 @@ class SimpleMetadataProvider implements IMetadataProvider
     {
         $instance = $resourceType->getInstanceType();
         $hasMagicGetter = $instance instanceof IType || $instance->hasMethod('__get');
+        if ($instance instanceof \ReflectionClass) {
+            $hasMagicGetter |= $instance->isInstance(new \stdClass);
+        }
 
         if (!$hasMagicGetter) {
             try {

@@ -230,6 +230,7 @@ class SimpleMetadataProviderTest extends TestCase
     public function testAddComplexPropertyWithMissingPropertyTypeThowException()
     {
         $deflect = m::mock(ReflectionClass::class);
+        $deflect->shouldReceive('isInstance')->andReturn(false);
         $deflect->shouldReceive('getProperty')->andThrow(new ReflectionException('OH NOES!'));
         $deflect->shouldReceive('hasMethod')->withArgs(['__get'])->andReturn(false)->once();
 
@@ -323,6 +324,7 @@ class SimpleMetadataProviderTest extends TestCase
     public function testAddPrimitivePropertyWithNameCollision()
     {
         $deflect = m::mock(ReflectionClass::class);
+        $deflect->shouldReceive('isInstance')->andReturn(false);
         $deflect->shouldReceive('hasMethod')->withArgs(['__get'])->andReturn(true)->once();
 
         $type = m::mock(ResourceType::class);
@@ -346,6 +348,7 @@ class SimpleMetadataProviderTest extends TestCase
     public function testAddResourceReferenceNameCollision()
     {
         $deflect = m::mock(ReflectionClass::class);
+        $deflect->shouldReceive('isInstance')->andReturn(false);
         $deflect->shouldReceive('hasMethod')->withArgs(['__get'])->andReturn(true)->once();
 
         $type = m::mock(ResourceEntityType::class);
@@ -371,6 +374,7 @@ class SimpleMetadataProviderTest extends TestCase
     public function testAddResourceReferenceBadCustomState()
     {
         $deflect = m::mock(ReflectionClass::class);
+        $deflect->shouldReceive('isInstance')->andReturn(false);
         $deflect->shouldReceive('hasMethod')->withArgs(['__get'])->andReturn(true)->once();
 
         $type = m::mock(ResourceEntityType::class);
