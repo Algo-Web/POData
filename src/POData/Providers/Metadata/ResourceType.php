@@ -379,7 +379,10 @@ abstract class ResourceType
                 );
             }
 
-            if (null != $this->baseType) {
+            $base = $this->baseType;
+            $derivedGood = null === $base || ($base instanceof ResourceEntityType && $base->isAbstract());
+
+            if (!$derivedGood) {
                 throw new InvalidOperationException(
                     Messages::resourceTypeNoKeysInDerivedTypes()
                 );
