@@ -3,10 +3,14 @@
 namespace UnitTests\POData\Providers\Metadata;
 
 use AlgoWeb\ODataMetadata\MetadataV3\edm\TComplexTypeType;
+use AlgoWeb\ODataMetadata\MetadataV3\edm\TEntityTypeType;
 use Mockery as m;
 use POData\Common\InvalidOperationException;
+use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\Metadata\ResourceComplexType;
+use POData\Providers\Metadata\ResourceEntityType;
 use POData\Providers\Metadata\ResourcePrimitiveType;
+use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\Providers\Metadata\ResourceStreamInfo;
 use POData\Providers\Metadata\ResourceType;
@@ -168,5 +172,63 @@ class ResourceTypeTest extends TestCase
     {
         $foo = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::BINARY);
         $this->assertNull($foo->resolvePropertyDeclaredOnThisType(null));
+    }
+
+    public function testAddKeyPropertyToEntityTypeWithAbstractBase()
+    {
+        $baseType = m::mock(ResourceEntityType::class);
+        $baseType->shouldReceive('isAbstract')->andReturn(true)->atLeast(1);
+
+        $meta = m::mock(IMetadataProvider::class);
+        $meta->shouldReceive('resolveResourceType')->andReturn($baseType)->atLeast(1);
+
+        $reflec = new \ReflectionClass(new \stdClass());
+        $entity = m::mock(TEntityTypeType::class);
+        $entity->shouldReceive('getName')->andReturn('foo');
+        $entity->shouldReceive('getBaseType')->andReturn('baseType');
+        $entity->shouldReceive('getAbstract')->andReturn(false)->once();
+
+        $foo = new ResourceEntityType($reflec, $entity, $meta);
+
+        $rProp = m::mock(ResourceProperty::class);
+        $rProp->shouldReceive('getName')->andReturn('RType');
+        $rProp->shouldReceive('isKindOf')->withArgs([ResourcePropertyKind::KEY])->andReturn(true);
+        $rProp->shouldReceive('isKindOf')->withAnyArgs()->andReturn(false);
+
+        $foo->addProperty($rProp);
+        $result = $foo->resolvePropertyDeclaredOnThisType('RType');
+        $this->assertTrue($result instanceof ResourceProperty);
+    }
+
+    public function testAddKeyPropertyToEntityTypeWithConcreteBase()
+    {
+        $baseType = m::mock(ResourceEntityType::class);
+        $baseType->shouldReceive('isAbstract')->andReturn(false)->atLeast(1);
+
+        $meta = m::mock(IMetadataProvider::class);
+        $meta->shouldReceive('resolveResourceType')->andReturn($baseType)->atLeast(1);
+
+        $reflec = new \ReflectionClass(new \stdClass());
+        $entity = m::mock(TEntityTypeType::class);
+        $entity->shouldReceive('getName')->andReturn('foo');
+        $entity->shouldReceive('getBaseType')->andReturn('baseType');
+        $entity->shouldReceive('getAbstract')->andReturn(false)->once();
+
+        $foo = new ResourceEntityType($reflec, $entity, $meta);
+
+        $rProp = m::mock(ResourceProperty::class);
+        $rProp->shouldReceive('getName')->andReturn('RType');
+        $rProp->shouldReceive('isKindOf')->withArgs([ResourcePropertyKind::KEY])->andReturn(true);
+        $rProp->shouldReceive('isKindOf')->withAnyArgs()->andReturn(false);
+
+        $expected = 'Key properties cannot be defined in derived types';
+        $actual = null;
+
+        try {
+            $foo->addProperty($rProp);
+        } catch (InvalidOperationException $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
     }
 }
