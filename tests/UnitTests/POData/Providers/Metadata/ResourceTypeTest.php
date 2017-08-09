@@ -181,6 +181,7 @@ class ResourceTypeTest extends TestCase
 
         $meta = m::mock(IMetadataProvider::class);
         $meta->shouldReceive('resolveResourceType')->andReturn($baseType)->atLeast(1);
+        $meta->shouldReceive('getContainerNamespace')->andReturn('Data');
 
         $reflec = new \ReflectionClass(new \stdClass());
         $entity = m::mock(TEntityTypeType::class);
@@ -207,6 +208,7 @@ class ResourceTypeTest extends TestCase
 
         $meta = m::mock(IMetadataProvider::class);
         $meta->shouldReceive('resolveResourceType')->andReturn($baseType)->atLeast(1);
+        $meta->shouldReceive('getContainerNamespace')->andReturn('Data');
 
         $reflec = new \ReflectionClass(new \stdClass());
         $entity = m::mock(TEntityTypeType::class);
