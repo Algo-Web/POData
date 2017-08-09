@@ -60,6 +60,7 @@ class ResourceClassesTest extends TestCase
         $entity->shouldReceive('getBaseType')->andReturn(null);
         $entity->shouldReceive('getAbstract')->andReturn(false);
         $meta = m::mock(IMetadataProvider::class);
+        $meta->shouldReceive('getContainerNamespace')->andReturn('Data');
 
         $customerResType = new ResourceEntityType(
             new \ReflectionClass('UnitTests\POData\Facets\NorthWind1\Customer2'),
@@ -200,6 +201,7 @@ class ResourceClassesTest extends TestCase
         $employeeEntity = m::mock(TEntityTypeType::class)->makePartial();
         $employeeEntity->shouldReceive('getName')->andReturn('Northwind.Employee');
         $employeeMeta = m::mock(IMetadataProvider::class);
+        $employeeMeta->shouldReceive('getContainerNamespace')->andReturn('Data');
         $employeeResType = new ResourceEntityType(
             new \ReflectionClass('UnitTests\POData\Facets\NorthWind1\Employee2'),
             $employeeEntity,
@@ -302,6 +304,7 @@ class ResourceClassesTest extends TestCase
         $entity = m::mock(TEntityTypeType::class)->makePartial();
         $entity->shouldReceive('getName')->andReturn('Northwind.Customer');
         $meta = m::mock(IMetadataProvider::class);
+        $meta->shouldReceive('getContainerNamespace')->andReturn('Northwind');
         $customerResType = new ResourceEntityType(
             new \ReflectionClass('UnitTests\POData\Facets\NorthWind1\Customer2'),
             $entity,
@@ -586,6 +589,7 @@ class ResourceClassesTest extends TestCase
         $entity = m::mock(TEntityTypeType::class)->makePartial();
         $entity->shouldReceive('getName')->andReturn('Northwind.Customer');
         $meta = m::mock(IMetadataProvider::class);
+        $meta->shouldReceive('getContainerNamespace')->andReturn('Northwind');
         $customerResType = new ResourceEntityType(
             new \ReflectionClass('UnitTests\POData\Facets\NorthWind1\Customer2'),
             $entity,
@@ -619,6 +623,7 @@ class ResourceClassesTest extends TestCase
         $entity = m::mock(TEntityTypeType::class)->makePartial();
         $entity->shouldReceive('getName')->andReturn('Northwind.Order');
         $meta = m::mock(IMetadataProvider::class);
+        $meta->shouldReceive('getContainerNamespace')->andReturn('Northwind');
         $orderResType = new ResourceEntityType(
             new \ReflectionClass('UnitTests\POData\Facets\NorthWind1\Order2'),
             $entity,

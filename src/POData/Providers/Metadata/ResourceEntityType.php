@@ -24,7 +24,12 @@ class ResourceEntityType extends ResourceType
             $namespaceName = implode('.', $bitz);
         }
         $rawType = $entity->getBaseType();
+        $metaNamespace = $meta->getContainerNamespace().'.';
+
+        $rawType = (null != $rawType) ? str_replace($metaNamespace, '', $rawType) : null;
         $baseType = null == $rawType ? null : $meta->resolveResourceType($rawType);
+        assert(isset($rawType) === isset($baseType), "Base and raw type nullity inconsistent");
+
         $isAbstract = $entity->getAbstract();
         parent::__construct($instanceType, $resourceTypeKind, $name, $namespaceName, $baseType, $isAbstract);
     }
