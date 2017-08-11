@@ -316,7 +316,7 @@ class SimpleMetadataProvider implements IMetadataProvider
         } else {
             $baseTEntityType = null;
         }
-        
+
         $type = null;
         if ($typeKind == ResourceTypeKind::ENTITY()) {
             list($oet, $entitySet) = $this->metadataManager->addEntityType($name, $baseTEntityType, $isAbstract);
@@ -555,14 +555,16 @@ class SimpleMetadataProvider implements IMetadataProvider
     public function addResourceReferenceProperty(
         ResourceEntityType $resourceType,
         $name,
-        $targetResourceSet,
-        $flip = false
+        ResourceSet $targetResourceSet,
+        $flip = false,
+        $many = false
     ) {
         $this->addReferencePropertyInternal(
             $resourceType,
             $name,
             $targetResourceSet,
-            $flip ? '0..1' : '1'
+            $flip ? '0..1' : '1',
+            $many
         );
     }
 
@@ -621,7 +623,8 @@ class SimpleMetadataProvider implements IMetadataProvider
         ResourceEntityType $sourceResourceType,
         $name,
         ResourceSet $targetResourceSet,
-        $resourceMult
+        $resourceMult,
+        $many = false
     ) {
         $allowedMult = ['*', '1', '0..1'];
         $backMultArray = [ '*' => '*', '1' => '0..1', '0..1' => '1'];
@@ -633,9 +636,7 @@ class SimpleMetadataProvider implements IMetadataProvider
                 'Property name must be different from resource name.'
             );
         }
-        if (!in_array($resourceMult, $allowedMult)) {
-            throw new InvalidOperationException('Supplied multiplicity ' . $resourceMult . ' not valid');
-        }
+        assert(in_array($resourceMult, $allowedMult), 'Supplied multiplicity ' . $resourceMult . ' not valid');
 
         $resourcePropertyKind = ('*' == $resourceMult)
             ? ResourcePropertyKind::RESOURCESET_REFERENCE
@@ -663,7 +664,7 @@ class SimpleMetadataProvider implements IMetadataProvider
             new ResourceAssociationSetEnd($targetResourceSet, $targetResourceType, null)
         );
         $mult = $resourceMult;
-        $backMult = $backMultArray[$resourceMult];
+        $backMult = $many ? '*' : $backMultArray[$resourceMult];
         $this->metadataManager->addNavigationPropertyToEntityType(
             $this->oDataEntityMap[$sourceResourceType->getFullName()],
             $mult,
