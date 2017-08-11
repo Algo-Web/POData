@@ -26,8 +26,8 @@ class ResourceEntityType extends ResourceType
         $rawType = $entity->getBaseType();
         $metaNamespace = $meta->getContainerNamespace().'.';
 
-        $rawType = (null != $rawType) ? str_replace($metaNamespace, '', $rawType) : null;
-        $baseType = null == $rawType ? null : $meta->resolveResourceType($rawType);
+        $rawType = (null !== $rawType) ? str_replace($metaNamespace, '', $rawType) : null;
+        $baseType = null === $rawType ? null : $meta->resolveResourceType($rawType);
         assert(isset($rawType) === isset($baseType), "Base and raw type nullity inconsistent");
 
         $isAbstract = $entity->getAbstract();
