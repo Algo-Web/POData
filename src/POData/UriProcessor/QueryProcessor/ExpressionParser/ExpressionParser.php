@@ -735,15 +735,12 @@ class ExpressionParser
                 switch ($expressionToken->Text) {
                     case ODataConstants::KEYWORD_EQUAL:
                         return new FunctionCallExpression($isNullFunctionDescription, [$arg]);
-                        break;
-
                     case ODataConstants::KEYWORD_NOT_EQUAL:
                         return new UnaryExpression(
                             new FunctionCallExpression($isNullFunctionDescription, [$arg]),
                             ExpressionType::NOT_LOGICAL(),
                             new Boolean()
                         );
-                        break;
                 }
             }
         }

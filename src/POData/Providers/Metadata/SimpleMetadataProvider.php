@@ -935,7 +935,8 @@ class SimpleMetadataProvider implements IMetadataProvider
             throw new \InvalidArgumentException($msg);
         }
         $metaReturn = $this->oDataEntityMap[$typeName];
-        $singleton = $this->metadataManager->createSingleton($name, $metaReturn);
+        $anonymousSet = $this->typeSetMapping[$typeName];
+        $singleton = $this->metadataManager->createSingleton($name, $metaReturn, $anonymousSet);
         assert($singleton->isOK($msg), $msg);
         $type = new ResourceFunctionType($functionName, $singleton, $returnType);
         // Since singletons should take no args, enforce it here
