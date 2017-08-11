@@ -552,13 +552,17 @@ class SimpleMetadataProvider implements IMetadataProvider
      * @param ResourceSet        $targetResourceSet The resource set the resource reference
      *                                              property points to
      */
-    public function addResourceReferenceProperty(ResourceEntityType $resourceType, $name, $targetResourceSet)
-    {
+    public function addResourceReferenceProperty(
+        ResourceEntityType $resourceType,
+        $name,
+        $targetResourceSet,
+        $flip = false
+    ) {
         $this->addReferencePropertyInternal(
             $resourceType,
             $name,
             $targetResourceSet,
-            '0..1'
+            $flip ? '0..1' : '1'
         );
     }
 
@@ -620,6 +624,7 @@ class SimpleMetadataProvider implements IMetadataProvider
         $resourceMult
     ) {
         $allowedMult = ['*', '1', '0..1'];
+        $backMultArray = [ '*' => '*', '1' => '0..1', '0..1' => '1'];
         $this->checkInstanceProperty($name, $sourceResourceType);
 
         // check that property and resource name don't up and collide - would violate OData spec
@@ -658,7 +663,7 @@ class SimpleMetadataProvider implements IMetadataProvider
             new ResourceAssociationSetEnd($targetResourceSet, $targetResourceType, null)
         );
         $mult = $resourceMult;
-        $backMult = '*' == $resourceMult ? '*' : '1';
+        $backMult = $backMultArray[$resourceMult];
         $this->metadataManager->addNavigationPropertyToEntityType(
             $this->oDataEntityMap[$sourceResourceType->getFullName()],
             $mult,
