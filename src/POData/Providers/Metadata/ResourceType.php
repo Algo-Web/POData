@@ -21,6 +21,7 @@ use POData\Providers\Metadata\Type\IType;
 use POData\Providers\Metadata\Type\SByte;
 use POData\Providers\Metadata\Type\Single;
 use POData\Providers\Metadata\Type\StringType;
+use POData\Providers\Query\QueryResult;
 
 /**
  * Class ResourceType.
@@ -835,14 +836,21 @@ abstract class ResourceType
      */
     public function setPropertyValue($entity, $property, $value)
     {
-        ReflectionHandler::setProperty($entity, $property, $value);
+        $targ = ($entity instanceof QueryResult) ? $entity->results[0] : $entity;
+        ReflectionHandler::setProperty($targ, $property, $value);
 
         return $this;
     }
 
+    /**
+     * @param $entity
+     * @param $property
+     * @return mixed
+     */
     public function getPropertyValue($entity, $property)
     {
-        return ReflectionHandler::getProperty($entity, $property);
+        $targ = ($entity instanceof QueryResult) ? $entity->results[0] : $entity;
+        return ReflectionHandler::getProperty($targ, $property);
     }
 
     public function __sleep()
