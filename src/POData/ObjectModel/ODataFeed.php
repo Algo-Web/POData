@@ -47,7 +47,7 @@ class ODataFeed
     /**
      * Last updated timestamp
      *
-     * @var \DateTime
+     * @var string
      */
     public $updated;
 }

@@ -486,7 +486,7 @@ class CynicSerialiser implements IObjectSerialiser
     /**
      * Get update timestamp
      *
-     * @return \DateTime
+     * @return Carbon
      */
     public function getUpdated()
     {
