@@ -538,4 +538,39 @@ class ProvidersQueryWrapperTest extends TestCase
 
         $this->assertEquals($expected, $actual);
     }
+
+    public function testGetSomeResourceFromRelatedResourceSet()
+    {
+        $query = m::mock(IQueryProvider::class);
+        $query->shouldReceive('getResourceFromRelatedResourceSet')->andReturn('result')->once();
+
+        $foo = m::mock(ProvidersQueryWrapper::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $foo->shouldReceive('getQueryProvider')->andReturn($query);
+        $foo->shouldReceive('validateEntityInstance')->andReturnNull()->once();
+
+        $result = $foo->getResourceFromRelatedResourceSet(
+            $this->sourceResourceSet,
+            new \stdClass(),
+            $this->targResourceSet,
+            $this->targProperty,
+            m::mock(KeyDescriptor::class)
+        );
+        $this->assertEquals('result', $result);
+    }
+
+    public function testGetSomeResourceFromResourceSet()
+    {
+        $query = m::mock(IQueryProvider::class);
+        $query->shouldReceive('getResourceFromResourceSet')->andReturn('result')->once();
+
+        $foo = m::mock(ProvidersQueryWrapper::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $foo->shouldReceive('getQueryProvider')->andReturn($query);
+        $foo->shouldReceive('validateEntityInstance')->andReturnNull()->once();
+
+        $result = $foo->getResourceFromResourceSet(
+            $this->sourceResourceSet,
+            m::mock(KeyDescriptor::class)
+        );
+        $this->assertEquals('result', $result);
+    }
 }

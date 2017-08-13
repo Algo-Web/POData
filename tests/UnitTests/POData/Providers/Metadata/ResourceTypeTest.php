@@ -233,4 +233,10 @@ class ResourceTypeTest extends TestCase
         }
         $this->assertEquals($expected, $actual);
     }
+
+    public function testGetInt64Type()
+    {
+        $foo = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::INT64);
+        $this->assertEquals('Int64', $foo->getName());
+    }
 }
