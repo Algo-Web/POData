@@ -22,7 +22,7 @@ class ODataEntry
     /**
      * Entry title.
      *
-     * @var string
+     * @var ODataTitle
      */
     public $title;
     /**
@@ -83,4 +83,11 @@ class ODataEntry
      * @var string
      */
     public $resourceSetName;
+
+    /**
+     * Last updated timestamp
+     *
+     * @var \DateTime
+     */
+    public $updated;
 }

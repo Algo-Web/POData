@@ -16,7 +16,7 @@ class ODataFeed
     /**
      * Feed title.
      *
-     * @var string
+     * @var ODataTitle
      */
     public $title;
     /**
@@ -43,4 +43,11 @@ class ODataFeed
      * @var ODataEntry[]
      */
     public $entries = [];
+
+    /**
+     * Last updated timestamp
+     *
+     * @var \DateTime
+     */
+    public $updated;
 }
