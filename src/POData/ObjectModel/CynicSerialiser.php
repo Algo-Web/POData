@@ -2,6 +2,7 @@
 
 namespace POData\ObjectModel;
 
+use Carbon\Carbon;
 use POData\Common\InvalidOperationException;
 use POData\Common\Messages;
 use POData\Common\ODataConstants;
@@ -80,6 +81,12 @@ class CynicSerialiser implements IObjectSerialiser
      */
     private $lightStack = [];
 
+    /*
+     * Update time to insert into ODataEntry/ODataFeed fields
+     * @var \DateTime;
+     */
+    private $updated;
+
     /**
      * @param IService                $service Reference to the data service instance
      * @param RequestDescription|null $request Type instance describing the client submitted request
@@ -92,6 +99,7 @@ class CynicSerialiser implements IObjectSerialiser
         $this->absoluteServiceUriWithSlash = rtrim($this->absoluteServiceUri, '/') . '/';
         $this->stack = new SegmentStack($request);
         $this->complexTypeInstanceCollection = [];
+        $this->updated = Carbon::now();
     }
 
     /**
@@ -199,7 +207,7 @@ class CynicSerialiser implements IObjectSerialiser
         $odata = new ODataEntry();
         $odata->resourceSetName = $resourceSet->getName();
         $odata->id = $absoluteUri;
-        $odata->title = $title;
+        $odata->title = new ODataTitle($title);
         $odata->type = $type;
         $odata->propertyContent = $propertyContent;
         $odata->isMediaLinkEntry = true === $resourceType->isMediaLinkEntry() ? true : null;
@@ -207,6 +215,7 @@ class CynicSerialiser implements IObjectSerialiser
         $odata->mediaLink = $mediaLink;
         $odata->mediaLinks = $mediaLinks;
         $odata->links = $links;
+        $odata->updated = $this->getUpdated()->format(DATE_ATOM);
 
         $newCount = count($this->lightStack);
         assert(
@@ -241,9 +250,10 @@ class CynicSerialiser implements IObjectSerialiser
         $selfLink->url = $relativeUri;
 
         $odata = new ODataFeed();
-        $odata->title = $title;
+        $odata->title = new ODataTitle($title);
         $odata->id = $absoluteUri;
         $odata->selfLink = $selfLink;
+        $odata->updated = $this->getUpdated()->format(DATE_ATOM);
 
         if ($this->getRequest()->queryType == QueryType::ENTITIES_WITH_COUNT()) {
             $odata->rowCount = $this->getRequest()->getCountValue();
@@ -471,6 +481,16 @@ class CynicSerialiser implements IObjectSerialiser
     public function getStack()
     {
         return $this->stack;
+    }
+
+    /**
+     * Get update timestamp
+     *
+     * @return \DateTime
+     */
+    public function getUpdated()
+    {
+        return $this->updated;
     }
 
     /**
@@ -751,7 +771,7 @@ class CynicSerialiser implements IObjectSerialiser
             if (isset($nuLink->expandedResult->selfLink)) {
                 $nuLink->expandedResult->selfLink->title = $propName;
                 $nuLink->expandedResult->selfLink->url = $nuLink->url;
-                $nuLink->expandedResult->title = $propName;
+                $nuLink->expandedResult->title = new ODataTitle($propName);
                 $nuLink->expandedResult->id = rtrim($this->absoluteServiceUri, '/') . '/' . $nuLink->url;
             }
         }

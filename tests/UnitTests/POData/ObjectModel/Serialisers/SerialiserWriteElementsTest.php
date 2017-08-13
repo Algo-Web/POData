@@ -2,6 +2,7 @@
 
 namespace UnitTests\POData\ObjectModel\Serialisers;
 
+use Carbon\Carbon;
 use Mockery as m;
 use POData\ObjectModel\CynicSerialiser as IronicSerialiser;
 use POData\ObjectModel\ObjectModelSerializer;
@@ -11,6 +12,7 @@ use POData\ObjectModel\ODataLink;
 use POData\ObjectModel\ODataMediaLink;
 use POData\ObjectModel\ODataProperty;
 use POData\ObjectModel\ODataPropertyContent;
+use POData\ObjectModel\ODataTitle;
 use POData\OperationContext\ServiceHost;
 use POData\OperationContext\Web\Illuminate\IlluminateOperationContext as OperationContextAdapter;
 use POData\Providers\Metadata\IMetadataProvider;
@@ -39,6 +41,9 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
 {
     public function testCompareWriteMultipleModelsNoPageOverrun()
     {
+        $known = Carbon::create(2017, 1, 1, 0, 0, 0, 'UTC');
+        Carbon::setTestNow($known);
+
         $request = $this->setUpRequest();
         $request->shouldReceive('prepareRequestUri')->andReturn('/odata.svc/Customers');
         $request->shouldReceive('fullUrl')->andReturn('http://localhost/odata.svc/Customers');
@@ -89,20 +94,22 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $entry = [new ODataEntry(), new ODataEntry()];
         $entry[0]->id = 'http://localhost/odata.svc/Customers(CustomerID=\'1\',CustomerGuid'
                         .'=guid\'123e4567-e89b-12d3-a456-426655440000\')';
-        $entry[0]->title = 'Customer';
+        $entry[0]->title = new ODataTitle('Customer');
         $entry[0]->type = 'Customer';
         $entry[0]->editLink = 'Customers(CustomerID=\'1\',CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')';
         $entry[0]->links[] = $links[0];
         $entry[0]->propertyContent = $linkContent[0];
         $entry[0]->resourceSetName = 'Customers';
+        $entry[0]->updated = '2017-01-01T00:00:00+00:00';
         $entry[1]->id = 'http://localhost/odata.svc/Customers(CustomerID=\'2\',CustomerGuid'
                         .'=guid\'223e4567-e89b-12d3-a456-426655440000\')';
-        $entry[1]->title = 'Customer';
+        $entry[1]->title = new ODataTitle('Customer');
         $entry[1]->type = 'Customer';
         $entry[1]->editLink = 'Customers(CustomerID=\'2\',CustomerGuid=guid\'223e4567-e89b-12d3-a456-426655440000\')';
         $entry[1]->links[] = $links[1];
         $entry[1]->propertyContent = $linkContent[1];
         $entry[1]->resourceSetName = 'Customers';
+        $entry[1]->updated = '2017-01-01T00:00:00+00:00';
 
         $selfLink = new ODataLink();
         $selfLink->name = 'self';
@@ -111,9 +118,10 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
 
         $objectResult = new ODataFeed();
         $objectResult->id = 'http://localhost/odata.svc/Customers';
-        $objectResult->title = 'Customers';
+        $objectResult->title = new ODataTitle('Customers');
         $objectResult->selfLink = $selfLink;
         $objectResult->entries = $entry;
+        $objectResult->updated = '2017-01-01T00:00:00+00:00';
 
         $ironicResult = $ironic->writeTopLevelElements($collection);
 
@@ -123,6 +131,9 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
 
     public function testCompareWriteMultipleModelsHasPageOverrun()
     {
+        $known = Carbon::create(2017, 1, 1, 0, 0, 0, 'UTC');
+        Carbon::setTestNow($known);
+
         $request = $this->setUpRequest();
         $request->shouldReceive('prepareRequestUri')->andReturn('/odata.svc/Customers');
         $request->shouldReceive('fullUrl')->andReturn('http://localhost/odata.svc/Customers');
@@ -157,13 +168,14 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
             $cand = new ODataEntry();
             $cand->id = 'http://localhost/odata.svc/'.$editStub;
             $cand->editLink = $editStub;
-            $cand->title = 'Customer';
+            $cand->title = new ODataTitle('Customer');
             $cand->type = 'Customer';
             $cand->propertyContent = $this->generateCustomerProperties();
             $cand->propertyContent->properties[0]->value = strval($i);
             $cand->propertyContent->properties[1]->value = '123e4567-e89b-12d3-a456-426655440000';
             $cand->links = [$link];
             $cand->resourceSetName = 'Customers';
+            $cand->updated = '2017-01-01T00:00:00+00:00';
 
             $entries[] = $cand;
         }
@@ -181,10 +193,11 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
 
         $objectResult = new ODataFeed();
         $objectResult->id = 'http://localhost/odata.svc/Customers';
-        $objectResult->title = 'Customers';
+        $objectResult->title = new ODataTitle('Customers');
         $objectResult->selfLink = $selfLink;
         $objectResult->nextPageLink = $nextLink;
         $objectResult->entries = $entries;
+        $objectResult->updated = '2017-01-01T00:00:00+00:00';
 
         $ironicResult = $ironic->writeTopLevelElements($results);
 
@@ -194,6 +207,9 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
 
     public function testCompareWriteModelsOnManyEndOfRelation()
     {
+        $known = Carbon::create(2017, 1, 1, 0, 0, 0, 'UTC');
+        Carbon::setTestNow($known);
+
         $request = $this->setUpRequest();
         $request->shouldReceive('prepareRequestUri')->andReturn('/odata.svc/Orders(OrderID=1)/Order_Details');
         $request->shouldReceive('fullUrl')->andReturn('http://localhost/odata.svc/Orders(OrderID=1)/Order_Details');
@@ -240,7 +256,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
 
         $entries = [new ODataEntry(), new ODataEntry()];
         $entries[0]->id = 'http://localhost/odata.svc/Order_Details(ProductID=1,OrderID=1)';
-        $entries[0]->title = 'Order_Details';
+        $entries[0]->title = new ODataTitle('Order_Details');
         $entries[0]->editLink = 'Order_Details(ProductID=1,OrderID=1)';
         $entries[0]->type = 'Order_Details';
         $entries[0]->propertyContent = $this->generateOrderDetailsProperties();
@@ -248,8 +264,9 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $entries[0]->propertyContent->properties[1]->value = '1';
         $entries[0]->links = $links[0];
         $entries[0]->resourceSetName = 'Order_Details';
+        $entries[0]->updated = '2017-01-01T00:00:00+00:00';
         $entries[1]->id = 'http://localhost/odata.svc/Order_Details(ProductID=2,OrderID=1)';
-        $entries[1]->title = 'Order_Details';
+        $entries[1]->title = new ODataTitle('Order_Details');
         $entries[1]->editLink = 'Order_Details(ProductID=2,OrderID=1)';
         $entries[1]->type = 'Order_Details';
         $entries[1]->propertyContent = $this->generateOrderDetailsProperties();
@@ -257,12 +274,14 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $entries[1]->propertyContent->properties[1]->value = '1';
         $entries[1]->links = $links[1];
         $entries[1]->resourceSetName = 'Order_Details';
+        $entries[1]->updated = '2017-01-01T00:00:00+00:00';
 
         $objectResult = new ODataFeed();
         $objectResult->id = 'http://localhost/odata.svc/Orders(OrderID=1)/Order_Details';
-        $objectResult->title = 'Order_Details';
+        $objectResult->title = new ODataTitle('Order_Details');
         $objectResult->selfLink = $selfLink;
         $objectResult->entries = $entries;
+        $objectResult->updated = '2017-01-01T00:00:00+00:00';
 
         $ironicResult = $ironic->writeTopLevelElements($collection);
 
@@ -272,6 +291,9 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
 
     public function testWriteTopLevelElementsAllExpanded()
     {
+        $known = Carbon::create(2017, 1, 1, 0, 0, 0, 'UTC');
+        Carbon::setTestNow($known);
+
         $request = $this->setUpRequest();
         $request->shouldReceive('prepareRequestUri')->andReturn('/odata.svc/Customers?$expand=Orders');
         $request->shouldReceive('fullUrl')->andReturn('http://localhost/odata.svc/Customers?$expand=Orders');
@@ -327,13 +349,14 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
 
         $subEntry = new ODataEntry();
         $subEntry->id = 'http://localhost/odata.svc/Orders(OrderID=1)';
-        $subEntry->title = 'Order';
+        $subEntry->title = new ODataTitle('Order');
         $subEntry->editLink = 'Orders(OrderID=1)';
         $subEntry->type = 'Order';
         $subEntry->resourceSetName = 'Orders';
         $subEntry->propertyContent = $this->generateOrderProperties();
         $subEntry->propertyContent->properties[0]->value = '1';
         $subEntry->links = $subLinks;
+        $subEntry->updated = '2017-01-01T00:00:00+00:00';
 
         $subSelf = new ODataLink();
         $subSelf->name = 'self';
@@ -343,9 +366,10 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $subFeed = new ODataFeed();
         $subFeed->id = 'http://localhost/odata.svc/Customers(CustomerID=\'1\',CustomerGuid'
                        .'=guid\'123e4567-e89b-12d3-a456-426655440000\')/Orders';
-        $subFeed->title = 'Orders';
+        $subFeed->title = new ODataTitle('Orders');
         $subFeed->selfLink = $subSelf;
         $subFeed->entries = [$subEntry];
+        $subFeed->updated = '2017-01-01T00:00:00+00:00';
 
         $link = new ODataLink();
         $link->name = 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Orders';
@@ -359,7 +383,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $entry = new ODataEntry();
         $entry->id = 'http://localhost/odata.svc/Customers(CustomerID=\'1\',CustomerGuid'
                      .'=guid\'123e4567-e89b-12d3-a456-426655440000\')';
-        $entry->title = 'Customer';
+        $entry->title = new ODataTitle('Customer');
         $entry->editLink = 'Customers(CustomerID=\'1\',CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')';
         $entry->type = 'Customer';
         $entry->resourceSetName = 'Customers';
@@ -367,12 +391,14 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $entry->propertyContent->properties[0]->value = '1';
         $entry->propertyContent->properties[1]->value = '123e4567-e89b-12d3-a456-426655440000';
         $entry->links = [$link];
+        $entry->updated = '2017-01-01T00:00:00+00:00';
 
         $objectResult = new ODataFeed();
         $objectResult->id = 'http://localhost/odata.svc/Customers';
-        $objectResult->title = 'Customers';
+        $objectResult->title = new ODataTitle('Customers');
         $objectResult->selfLink = $selfLink;
         $objectResult->entries = [$entry, $entry];
+        $objectResult->updated = '2017-01-01T00:00:00+00:00';
 
         $ironicResult = $ironic->writeTopLevelElements($collection);
 
@@ -413,6 +439,9 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
 
     public function testWriteElementsWithMediaLinks()
     {
+        $known = Carbon::create(2017, 1, 1, 0, 0, 0, 'UTC');
+        Carbon::setTestNow($known);
+
         $request = $this->setUpRequest();
         $request->shouldReceive('prepareRequestUri')->andReturn('/odata.svc/Employees');
         $request->shouldReceive('fullUrl')->andReturn('http://localhost/odata.svc/Employees');
@@ -480,8 +509,8 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
 
         $entries = [new ODataEntry(), new ODataEntry];
         $entries[0]->id = 'http://localhost/odata.svc/Employees(EmployeeID=\'1\')';
-        $entries[0]->title = 'Employee';
-        $entries[0]->editLink =  'Employees(EmployeeID=\'1\')';
+        $entries[0]->title = new ODataTitle('Employee');
+        $entries[0]->editLink = 'Employees(EmployeeID=\'1\')';
         $entries[0]->type = 'Employee';
         $entries[0]->isMediaLinkEntry = true;
         $entries[0]->mediaLink = $mediaLink[0];
@@ -489,8 +518,9 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $entries[0]->links = $links[0];
         $entries[0]->propertyContent = $prop1;
         $entries[0]->resourceSetName = 'Employees';
+        $entries[0]->updated = '2017-01-01T00:00:00+00:00';
         $entries[1]->id = 'http://localhost/odata.svc/Employees(EmployeeID=\'2\')';
-        $entries[1]->title = 'Employee';
+        $entries[1]->title = new ODataTitle('Employee');
         $entries[1]->editLink =  'Employees(EmployeeID=\'2\')';
         $entries[1]->type = 'Employee';
         $entries[1]->isMediaLinkEntry = true;
@@ -499,6 +529,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $entries[1]->links = $links[1];
         $entries[1]->propertyContent = $prop2;
         $entries[1]->resourceSetName = 'Employees';
+        $entries[1]->updated = '2017-01-01T00:00:00+00:00';
 
         $selfLink = new ODataLink();
         $selfLink->name = 'self';
@@ -507,9 +538,10 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
 
         $objectResult = new ODataFeed();
         $objectResult->id = 'http://localhost/odata.svc/Employees';
-        $objectResult->title = 'Employees';
+        $objectResult->title = new ODataTitle('Employees');
         $objectResult->selfLink = $selfLink;
         $objectResult->entries = $entries;
+        $objectResult->updated = '2017-01-01T00:00:00+00:00';
 
         $ironicResult = $ironic->writeTopLevelElements($collection);
 
