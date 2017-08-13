@@ -375,7 +375,7 @@ class ProvidersQueryWrapper
      *
      * @throws ODataException
      */
-    private function validateQueryResult($queryResult, QueryType $queryType, $methodName)
+    protected function validateQueryResult($queryResult, QueryType $queryType, $methodName)
     {
         if (!$queryResult instanceof QueryResult) {
             throw ODataException::createInternalServerError(
@@ -421,7 +421,7 @@ class ProvidersQueryWrapper
      *
      * @throws ODataException
      */
-    private function validateEntityInstance(
+    protected function validateEntityInstance(
         $entityInstance,
         ResourceSet &$resourceSet,
         KeyDescriptor &$keyDescriptor,

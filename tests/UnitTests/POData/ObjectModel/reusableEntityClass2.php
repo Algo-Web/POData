@@ -17,4 +17,9 @@ class reusableEntityClass2
     {
         return $this->$name;
     }
+
+    public function __set($name, $value)
+    {
+        $this->$name = $value;
+    }
 }

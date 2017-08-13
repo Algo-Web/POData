@@ -186,7 +186,7 @@ class AtomODataWriter implements IODataWriter
                 ODataConstants::ATOM_TITLE_ELELMET_NAME,
                 ODataConstants::ATOM_TYPE_ATTRIBUTE_NAME,
                 MimeTypes::MIME_TEXTTYPE,
-                $feed->title
+                $feed->title->title
             )
             ->writeNodeValue(ODataConstants::ATOM_ID_ELEMENT_NAME, $feed->id)
             ->writeNodeValue(ODataConstants::ATOM_UPDATED_ELEMENT_NAME, date(DATE_ATOM))
@@ -270,7 +270,7 @@ class AtomODataWriter implements IODataWriter
                 ODataConstants::ATOM_TITLE_ELELMET_NAME,
                 ODataConstants::ATOM_TYPE_ATTRIBUTE_NAME,
                 MimeTypes::MIME_TEXTTYPE,
-                $entry->title
+                $entry->title->title
             )
             ->writeNodeValue(ODataConstants::ATOM_UPDATED_ELEMENT_NAME, date(DATE_ATOM));
 
@@ -285,7 +285,7 @@ class AtomODataWriter implements IODataWriter
         $this->xmlWriter->text(ODataConstants::ATOM_EDIT_RELATION_ATTRIBUTE_VALUE);
         $this->xmlWriter->endAttribute();
         $this->xmlWriter->startAttribute(ODataConstants::ATOM_TITLE_ELELMET_NAME);
-        $this->xmlWriter->text($entry->title);
+        $this->xmlWriter->text($entry->title->title);
         $this->xmlWriter->endAttribute();
         $this->xmlWriter->startAttribute(ODataConstants::ATOM_HREF_ATTRIBUTE_NAME);
         if (is_string($entry->editLink)) {

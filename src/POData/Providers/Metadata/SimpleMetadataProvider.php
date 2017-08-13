@@ -46,7 +46,15 @@ class SimpleMetadataProvider implements IMetadataProvider
      */
     public function getXML()
     {
-        return $this->metadataManager->getEdmxXML();
+        return $this->getMetadataManager()->getEdmxXML();
+    }
+
+    /*
+     * @return MetadataManager
+     */
+    public function getMetadataManager()
+    {
+        return $this->metadataManager;
     }
 
     /**
@@ -319,7 +327,7 @@ class SimpleMetadataProvider implements IMetadataProvider
 
         $type = null;
         if ($typeKind == ResourceTypeKind::ENTITY()) {
-            list($oet, $entitySet) = $this->metadataManager->addEntityType($name, $baseTEntityType, $isAbstract);
+            list($oet, $entitySet) = $this->getMetadataManager()->addEntityType($name, $baseTEntityType, $isAbstract);
             assert($oet instanceof TEntityTypeType, 'Entity type ' . $name . ' not successfully added');
             $type = new ResourceEntityType($refClass, $oet, $this);
             $typeName = $type->getFullName();
@@ -665,7 +673,7 @@ class SimpleMetadataProvider implements IMetadataProvider
         );
         $mult = $resourceMult;
         $backMult = $many ? '*' : $backMultArray[$resourceMult];
-        $this->metadataManager->addNavigationPropertyToEntityType(
+        $this->getMetadataManager()->addNavigationPropertyToEntityType(
             $this->oDataEntityMap[$sourceResourceType->getFullName()],
             $mult,
             $name,
@@ -776,7 +784,7 @@ class SimpleMetadataProvider implements IMetadataProvider
         );
         $sourceName = $sourceResourceType->getFullName();
         $targetName = $targetResourceType->getFullName();
-        $this->metadataManager->addNavigationPropertyToEntityType(
+        $this->getMetadataManager()->addNavigationPropertyToEntityType(
             $this->oDataEntityMap[$sourceName],
             $sourceMultiplicity,
             $sourceProperty,
@@ -942,7 +950,7 @@ class SimpleMetadataProvider implements IMetadataProvider
         }
         $metaReturn = $this->oDataEntityMap[$typeName];
         $anonymousSet = $this->typeSetMapping[$typeName];
-        $singleton = $this->metadataManager->createSingleton($name, $metaReturn, $anonymousSet);
+        $singleton = $this->getMetadataManager()->createSingleton($name, $metaReturn, $anonymousSet);
         assert($singleton->isOK($msg), $msg);
         $type = new ResourceFunctionType($functionName, $singleton, $returnType);
         // Since singletons should take no args, enforce it here

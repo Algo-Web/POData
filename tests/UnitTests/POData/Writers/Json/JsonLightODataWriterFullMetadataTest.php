@@ -12,6 +12,7 @@ use POData\ObjectModel\ODataLink;
 use POData\ObjectModel\ODataMediaLink;
 use POData\ObjectModel\ODataProperty;
 use POData\ObjectModel\ODataPropertyContent;
+use POData\ObjectModel\ODataTitle;
 use POData\ObjectModel\ODataURL;
 use POData\ObjectModel\ODataURLCollection;
 use POData\Providers\ProvidersWrapper;
@@ -136,7 +137,7 @@ class JsonLightODataWriterFullMetadataTest extends TestCase
         $entry1 = new ODataEntry();
         $entry1->id = 'http://services.odata.org/OData/OData.svc/Products(0)';
         $entry1->selfLink = 'entry1 self link';
-        $entry1->title = 'title of entry 1';
+        $entry1->title = new ODataTitle('title of entry 1');
         $entry1->editLink = 'edit link of entry 1';
         $entry1->type = 'DataServiceProviderDemo.Product';
         $entry1->eTag = 'some eTag';
@@ -196,7 +197,7 @@ class JsonLightODataWriterFullMetadataTest extends TestCase
 
         $oDataFeed = new ODataFeed();
         $oDataFeed->id = 'FEED ID';
-        $oDataFeed->title = 'FEED TITLE';
+        $oDataFeed->title = new ODataTitle('FEED TITLE');
         //self link
         $selfLink = new ODataLink();
         $selfLink->name = 'Products';
@@ -293,7 +294,7 @@ class JsonLightODataWriterFullMetadataTest extends TestCase
         $entry1 = new ODataEntry();
         $entry1->id = 'http://services.odata.org/OData/OData.svc/Suppliers(0)';
         $entry1->selfLink = 'entry1 self link';
-        $entry1->title = 'title of entry 1';
+        $entry1->title = new ODataTitle('title of entry 1');
         $entry1->editLink = 'edit link of entry 1';
         $entry1->type = 'ODataDemo.Supplier';
         $entry1->eTag = 'W/"0"';
@@ -377,7 +378,7 @@ class JsonLightODataWriterFullMetadataTest extends TestCase
         $entry2 = new ODataEntry();
         $entry2->id = 'http://services.odata.org/OData/OData.svc/Suppliers(1)';
         $entry2->selfLink = 'entry2 self link';
-        $entry2->title = 'title of entry 2';
+        $entry2->title = new ODataTitle('title of entry 2');
         $entry2->editLink = 'edit link of entry 2';
         $entry2->type = 'ODataDemo.Supplier';
         $entry2->eTag = 'W/"0"';
@@ -459,7 +460,7 @@ class JsonLightODataWriterFullMetadataTest extends TestCase
 
         $oDataFeed = new ODataFeed();
         $oDataFeed->id = 'FEED ID';
-        $oDataFeed->title = 'FEED TITLE';
+        $oDataFeed->title = new ODataTitle('FEED TITLE');
         //self link
         $selfLink = new ODataLink();
         $selfLink->name = 'Products';
@@ -595,7 +596,7 @@ class JsonLightODataWriterFullMetadataTest extends TestCase
         $entry = new ODataEntry();
         $entry->id = 'http://services.odata.org/OData/OData.svc/Categories(0)';
         $entry->selfLink = 'entry2 self link';
-        $entry->title = 'title of entry 2';
+        $entry->title = new ODataTitle('title of entry 2');
         $entry->editLink = 'edit link of entry 2';
         $entry->type = 'ODataDemo.Category';
         $entry->eTag = '';
@@ -726,7 +727,7 @@ class JsonLightODataWriterFullMetadataTest extends TestCase
         $entry = new ODataEntry();
         $entry->id = 'http://host/service.svc/Customers(1)';
         $entry->selfLink = 'entry1 self link';
-        $entry->title = 'title of entry 1';
+        $entry->title = new ODataTitle('title of entry 1');
         $entry->editLink = 'edit link of entry 1';
         $entry->type = 'SampleModel.Customer';
         $entry->eTag = 'some eTag';
@@ -881,7 +882,7 @@ class JsonLightODataWriterFullMetadataTest extends TestCase
         //First build up the expanded entry
         $expandedEntry = new ODataEntry();
         $expandedEntry->id = 'Expanded Entry 1';
-        $expandedEntry->title = 'Expanded Entry Title';
+        $expandedEntry->title = new ODataTitle('Expanded Entry Title');
         $expandedEntry->type = 'Expanded.Type';
         $expandedEntry->editLink = 'Edit Link URL';
         $expandedEntry->selfLink = 'Self Link URL';
@@ -947,7 +948,7 @@ class JsonLightODataWriterFullMetadataTest extends TestCase
 
         $entry = new ODataEntry();
         $entry->id = 'Main Entry';
-        $entry->title = 'Entry Title';
+        $entry->title = new ODataTitle('Entry Title');
         $entry->type = 'Main.Type';
         $entry->editLink = 'Edit Link URL';
         $entry->selfLink = 'Self Link URL';
@@ -1036,7 +1037,7 @@ class JsonLightODataWriterFullMetadataTest extends TestCase
 
         $entry = new ODataEntry();
         $entry->id = 'Main Entry';
-        $entry->title = 'Entry Title';
+        $entry->title = new ODataTitle('Entry Title');
         $entry->type = 'Main.Type';
         $entry->editLink = 'Edit Link URL';
         $entry->selfLink = 'Self Link URL';
@@ -1111,7 +1112,7 @@ class JsonLightODataWriterFullMetadataTest extends TestCase
         //First build up the expanded entry 1
         $expandedEntry1 = new ODataEntry();
         $expandedEntry1->id = 'Expanded Entry 1';
-        $expandedEntry1->title = 'Expanded Entry 1 Title';
+        $expandedEntry1->title = new ODataTitle('Expanded Entry 1 Title');
         $expandedEntry1->type = 'Expanded.Type';
         $expandedEntry1->editLink = 'Edit Link URL';
         $expandedEntry1->selfLink = 'Self Link URL';
@@ -1174,7 +1175,7 @@ class JsonLightODataWriterFullMetadataTest extends TestCase
         //First build up the expanded entry 2
         $expandedEntry2 = new ODataEntry();
         $expandedEntry2->id = 'Expanded Entry 2';
-        $expandedEntry2->title = 'Expanded Entry 2 Title';
+        $expandedEntry2->title = new ODataTitle('Expanded Entry 2 Title');
         $expandedEntry2->type = 'Expanded.Type';
         $expandedEntry2->editLink = 'Edit Link URL';
         $expandedEntry2->selfLink = 'Self Link URL';
@@ -1238,7 +1239,7 @@ class JsonLightODataWriterFullMetadataTest extends TestCase
 
         $entry = new ODataEntry();
         $entry->id = 'Main Entry';
-        $entry->title = 'Entry Title';
+        $entry->title = new ODataTitle('Entry Title');
         $entry->type = 'Main.Type';
         $entry->editLink = 'Edit Link URL';
         $entry->selfLink = 'Self Link URL';
@@ -1279,7 +1280,7 @@ class JsonLightODataWriterFullMetadataTest extends TestCase
         //Create a the expanded feed
         $expandedFeed = new ODataFeed();
         $expandedFeed->id = 'expanded feed id';
-        $expandedFeed->title = 'SubCollection';
+        $expandedFeed->title = new ODataTitle('SubCollection');
         $expandedFeed->entries = [$expandedEntry1, $expandedEntry2];
 
         $expandedFeedSelfLink = new ODataLink();

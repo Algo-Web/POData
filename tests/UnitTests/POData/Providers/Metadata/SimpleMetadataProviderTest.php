@@ -2,7 +2,9 @@
 
 namespace UnitTests\POData\Providers\Metadata;
 
+use AlgoWeb\ODataMetadata\MetadataManager;
 use InvalidArgumentException;
+use JMS\Serializer\Serializer;
 use Mockery as m;
 use POData\Common\InvalidOperationException;
 use POData\Providers\Metadata\ResourceAssociationSet;
@@ -761,6 +763,18 @@ class SimpleMetadataProviderTest extends TestCase
         $this->assertEquals($fore, $aft->getBaseType());
         $this->assertTrue($foo->hasDerivedTypes($fore));
         $this->assertEquals([$aft], $foo->getDerivedTypes($fore));
+    }
+
+    public function testGetXML()
+    {
+        $cereal = m::mock(Serializer::class);
+        $meta = m::mock(MetadataManager::class)->makePartial();
+        $meta->shouldReceive('getEdmxXML')->andReturn($cereal);
+
+        $foo = m::mock(SimpleMetadataProvider::class)->makePartial();
+        $foo->shouldReceive('getMetadataManager')->andReturn($meta);
+        $result = $foo->getXML();
+        $this->assertTrue($result instanceof Serializer);
     }
 }
 

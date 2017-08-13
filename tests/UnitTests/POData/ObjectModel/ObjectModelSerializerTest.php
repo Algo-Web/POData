@@ -2,6 +2,7 @@
 
 namespace UnitTests\POData\ObjectModel;
 
+use Carbon\Carbon;
 use Mockery as m;
 use POData\Common\ODataConstants;
 use POData\Common\ODataException;
@@ -13,6 +14,7 @@ use POData\ObjectModel\ODataEntry;
 use POData\ObjectModel\ODataLink;
 use POData\ObjectModel\ODataProperty;
 use POData\ObjectModel\ODataPropertyContent;
+use POData\ObjectModel\ODataTitle;
 use POData\OperationContext\IOperationContext;
 use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\Metadata\ResourcePrimitiveType;
@@ -187,7 +189,7 @@ class ObjectModelSerializerTest extends TestCase
         $this->assertTrue(is_array($ret->entries));
 
         $this->assertEquals('http://192.168.2.1/abm-master/public/odata.svc/Entity(1)', $ret->id);
-        $this->assertEquals('data', $ret->title);
+        $this->assertEquals(new ODataTitle('data'), $ret->title);
 
         $this->assertEquals('self', $ret->selfLink->name);
         $this->assertEquals('data', $ret->selfLink->title);
@@ -273,7 +275,7 @@ class ObjectModelSerializerTest extends TestCase
         $this->assertTrue(is_array($ret->entries));
 
         $this->assertEquals('http://192.168.2.1/abm-master/public/odata.svc/Entity(1)', $ret->id);
-        $this->assertEquals('data', $ret->title);
+        $this->assertEquals(new ODataTitle('data'), $ret->title);
 
         $this->assertEquals('self', $ret->selfLink->name);
         $this->assertEquals('data', $ret->selfLink->title);
@@ -816,6 +818,9 @@ class ObjectModelSerializerTest extends TestCase
 
     public function testWriteTopLevelElementWithExpandedProjectionNodes()
     {
+        $known = Carbon::create(2017, 1, 1, 0, 0, 0, 'UTC');
+        Carbon::setTestNow($known);
+
         $entity = new reusableEntityClass2('2016-12-25', null);
 
         $url = new Url('https://www.example.org/odata.svc');
@@ -903,6 +908,7 @@ class ObjectModelSerializerTest extends TestCase
         $foo->shouldReceive('getProjectionNodes')->andReturn([$projNode1, $projNode2])->once();
         $foo->shouldReceive('shouldExpandSegment')->andReturn(true);
         $foo->shouldReceive('getPropertyValue')->andReturn('propertyValue');
+        $foo->shouldReceive('getUpdated')->andReturn($known);
 
         $queryResult = new QueryResult();
         $queryResult->results = $entity;
@@ -914,11 +920,10 @@ class ObjectModelSerializerTest extends TestCase
         $expectedProp->properties[1]->name = 'type';
         $expectedProp->properties[0]->typeName = '';
 
-
         $result = $foo->writeTopLevelElement($queryResult);
         $this->assertTrue($result instanceof ODataEntry);
         $this->assertEquals('/customer', $result->id);
-        $this->assertEquals('customers', $result->title);
+        $this->assertEquals(new ODataTitle('customers'), $result->title);
         $this->assertEquals('customer', $result->editLink);
         $this->assertEquals('customers', $result->type);
         $this->assertEquals('wrapper', $result->resourceSetName);
