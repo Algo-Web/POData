@@ -83,7 +83,7 @@ class CynicSerialiser implements IObjectSerialiser
 
     /*
      * Update time to insert into ODataEntry/ODataFeed fields
-     * @var \DateTime;
+     * @var Carbon;
      */
     private $updated;
 
