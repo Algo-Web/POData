@@ -37,6 +37,12 @@ class AtomODataWriter implements IODataWriter
      */
     protected $baseUri;
 
+    /*
+     * Update time to insert into ODataEntry/ODataFeed fields
+     * @var Carbon;
+     */
+    private $updated;
+
     /**
      * Construct a new instance of AtomODataWriter.
      *
@@ -49,6 +55,7 @@ class AtomODataWriter implements IODataWriter
             $absoluteServiceUri .= '/';
         }
         $this->baseUri = $absoluteServiceUri;
+        $this->updated = Carbon::now();
 
         $this->xmlWriter = new \XMLWriter();
         $this->xmlWriter->openMemory();
@@ -189,7 +196,7 @@ class AtomODataWriter implements IODataWriter
                 $feed->title->title
             )
             ->writeNodeValue(ODataConstants::ATOM_ID_ELEMENT_NAME, $feed->id)
-            ->writeNodeValue(ODataConstants::ATOM_UPDATED_ELEMENT_NAME, date(DATE_ATOM))
+            ->writeNodeValue(ODataConstants::ATOM_UPDATED_ELEMENT_NAME, $this->getUpdated()->format(DATE_ATOM))
             ->writeLinkNode($feed->selfLink, false);
 
         if ($feed->rowCount != null) {
@@ -272,7 +279,7 @@ class AtomODataWriter implements IODataWriter
                 MimeTypes::MIME_TEXTTYPE,
                 $entry->title->title
             )
-            ->writeNodeValue(ODataConstants::ATOM_UPDATED_ELEMENT_NAME, date(DATE_ATOM));
+            ->writeNodeValue(ODataConstants::ATOM_UPDATED_ELEMENT_NAME, $this->getUpdated()->format(DATE_ATOM));
 
         $this->xmlWriter->startElement(ODataConstants::ATOM_AUTHOR_ELEMENT_NAME);
         $this->xmlWriter->startElement(ODataConstants::ATOM_NAME_ELEMENT_NAME);
@@ -847,6 +854,16 @@ class AtomODataWriter implements IODataWriter
         $writer->endElement();
 
         return $this;
+    }
+
+    /**
+     * Get update timestamp
+     *
+     * @return Carbon
+     */
+    public function getUpdated()
+    {
+        return $this->updated;
     }
 
     /**
