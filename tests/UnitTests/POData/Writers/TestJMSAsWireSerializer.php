@@ -10,7 +10,7 @@ class TestJMSAsWireSerializer extends \PHPUnit_Framework_TestCase
 
     public function testWireSerializer(){
         $serialize = $this->initSerialiser();
-        //dd(ObjectModelsForTests::NorthWindCustomersExpandOrders());
+        //dd(ObjectModelsForTests::NorthWindCustomers());
         die($serialize->serialize(ObjectModelsForTests::NorthWindCustomers(), 'xml'));
 
     }

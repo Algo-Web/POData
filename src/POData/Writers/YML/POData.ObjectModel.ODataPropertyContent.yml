@@ -4,11 +4,9 @@ POData\ObjectModel\ODataPropertyContent:
     properties:
         properties:
             expose: true
-            inline: true
             serialized_name: properties
             xml_key_value_pairs: true
-            xml_map:
-                entry_name: object.name
+            xml_list:
                 namespace: http://schemas.microsoft.com/ado/2007/08/dataservices
             xml_element:
                 cdata: false

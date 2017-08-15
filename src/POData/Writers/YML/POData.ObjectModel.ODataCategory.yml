@@ -1,0 +1,15 @@
+POData\ObjectModel\ODataCategory:
+    exclusion_policy: ALL
+    xml_root_namespace: http://www.w3.org/2005/Atom
+    custom_accessor_order: [id, title, updated, links, mediaLink, mediaLinks, propertyContent]
+    properties:
+        term:
+            expose: true
+            xml_attribute: true
+            serialized_name: foo
+            type: string
+        scheme:
+            expose: true
+            xml_attribute: true
+            serialized_name: scheme
+            type: string
