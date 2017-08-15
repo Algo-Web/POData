@@ -8,6 +8,7 @@ use POData\Common\MimeTypes;
 use POData\Common\ODataException;
 use POData\Common\Version;
 use POData\ObjectModel\ODataBagContent;
+use POData\ObjectModel\ODataCategory;
 use POData\ObjectModel\ODataEntry;
 use POData\ObjectModel\ODataFeed;
 use POData\ObjectModel\ODataLink;
@@ -232,6 +233,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $propCont = new ODataPropertyContent();
         $propCont->properties = [$prop1];
         $entry1->propertyContent = $propCont;
+        $entry1->type = new ODataCategory('');
 
         $feed->entries = [
             $entry1,
@@ -334,6 +336,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $propCont = new ODataPropertyContent();
         $propCont->properties = [];
         $entry1->propertyContent = $propCont;
+        $entry1->type = new ODataCategory('');
 
         $writer = new AtomODataWriter('http://localhost/NorthWind.svc');
         $result = $writer->write($entry1);
@@ -619,6 +622,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
             $prop_address,
         ];
         $entry1->propertyContent = $propCont;
+        $entry1->type = new ODataCategory('');
 
         $writer = new AtomODataWriter('http://localhost/NorthWind.svc');
         $result = $writer->write($entry1);
@@ -640,6 +644,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $entry = new ODataEntry();
         $entry->id = 'Expand Entry';
         $entry->title = new ODataTitle('Entry Title');
+        $entry->type = new ODataCategory('');
 
         $editLink = new ODataLink();
         $editLink->name = 'edit';
@@ -757,6 +762,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
             $prop5,
         ];
         $odataExpandEntry->propertyContent = $propCon;
+        $odataExpandEntry->type = new ODataCategory('');
 
         $odataLink->expandedResult = $odataExpandEntry;
 
@@ -817,7 +823,9 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 
         $propCont = new ODataPropertyContent();
         $propCont->properties = [$prop1];
+
         $entry->propertyContent = $propCont;
+        $entry->type = new ODataCategory('');
 
         $writer = new AtomODataWriter('http://localhost/NorthWind.svc');
         $result = $writer->write($entry);
@@ -1048,6 +1056,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 
         $entryPropContent->properties = [$entryProp1, $entryProp2, $entryProp3, $entryProp4];
 
+        $entry->type = new ODataCategory('SampleModel.Customer');
         $entry->propertyContent = $entryPropContent;
 
         $writer = new AtomODataWriter('http://localhost/NorthWind.svc');
@@ -1291,9 +1300,12 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
     {
         $media = new ODataMediaLink('name', 'edit', 'src', 'application/xml', 'etag');
 
+        $type = new ODataCategory('');
+
         $entry = new ODataEntry();
         $entry->isMediaLinkEntry = true;
         $entry->mediaLink = $media;
+        $entry->type = $type;
 
         $foo = new AtomODataWriterDummy('http://localhost/odata.svc');
         $foo->preWriteProperties($entry);
