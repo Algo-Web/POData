@@ -28,7 +28,7 @@ class ODataEntry
     /**
      * Entry Edit Link.
      *
-     * @var string
+     * @var ODataLink
      */
     public $editLink;
     /**

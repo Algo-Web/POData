@@ -96,7 +96,11 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
                         .'=guid\'123e4567-e89b-12d3-a456-426655440000\')';
         $entry[0]->title = new ODataTitle('Customer');
         $entry[0]->type = 'Customer';
-        $entry[0]->editLink = 'Customers(CustomerID=\'1\',CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')';
+        $entry[0]->editLink = new ODataLink();
+        $entry[0]->editLink->url = 'Customers(CustomerID=\'1\','
+                                   .'CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')';
+        $entry[0]->editLink->name = 'edit';
+        $entry[0]->editLink->title = 'Customer';
         $entry[0]->links[] = $links[0];
         $entry[0]->propertyContent = $linkContent[0];
         $entry[0]->resourceSetName = 'Customers';
@@ -105,7 +109,11 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
                         .'=guid\'223e4567-e89b-12d3-a456-426655440000\')';
         $entry[1]->title = new ODataTitle('Customer');
         $entry[1]->type = 'Customer';
-        $entry[1]->editLink = 'Customers(CustomerID=\'2\',CustomerGuid=guid\'223e4567-e89b-12d3-a456-426655440000\')';
+        $entry[1]->editLink = new ODataLink();
+        $entry[1]->editLink->url = 'Customers(CustomerID=\'2\','
+                                   .'CustomerGuid=guid\'223e4567-e89b-12d3-a456-426655440000\')';
+        $entry[1]->editLink->name = 'edit';
+        $entry[1]->editLink->title = 'Customer';
         $entry[1]->links[] = $links[1];
         $entry[1]->propertyContent = $linkContent[1];
         $entry[1]->resourceSetName = 'Customers';
@@ -167,7 +175,10 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
 
             $cand = new ODataEntry();
             $cand->id = 'http://localhost/odata.svc/'.$editStub;
-            $cand->editLink = $editStub;
+            $cand->editLink = new ODataLink();
+            $cand->editLink->url = $editStub;
+            $cand->editLink->name = 'edit';
+            $cand->editLink->title = 'Customer';
             $cand->title = new ODataTitle('Customer');
             $cand->type = 'Customer';
             $cand->propertyContent = $this->generateCustomerProperties();
@@ -257,7 +268,10 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $entries = [new ODataEntry(), new ODataEntry()];
         $entries[0]->id = 'http://localhost/odata.svc/Order_Details(ProductID=1,OrderID=1)';
         $entries[0]->title = new ODataTitle('Order_Details');
-        $entries[0]->editLink = 'Order_Details(ProductID=1,OrderID=1)';
+        $entries[0]->editLink = new ODataLink();
+        $entries[0]->editLink->url = 'Order_Details(ProductID=1,OrderID=1)';
+        $entries[0]->editLink->title = 'Order_Details';
+        $entries[0]->editLink->name = 'edit';
         $entries[0]->type = 'Order_Details';
         $entries[0]->propertyContent = $this->generateOrderDetailsProperties();
         $entries[0]->propertyContent->properties[0]->value = '1';
@@ -267,7 +281,10 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $entries[0]->updated = '2017-01-01T00:00:00+00:00';
         $entries[1]->id = 'http://localhost/odata.svc/Order_Details(ProductID=2,OrderID=1)';
         $entries[1]->title = new ODataTitle('Order_Details');
-        $entries[1]->editLink = 'Order_Details(ProductID=2,OrderID=1)';
+        $entries[1]->editLink = new ODataLink();
+        $entries[1]->editLink->url = 'Order_Details(ProductID=2,OrderID=1)';
+        $entries[1]->editLink->title = 'Order_Details';
+        $entries[1]->editLink->name = 'edit';
         $entries[1]->type = 'Order_Details';
         $entries[1]->propertyContent = $this->generateOrderDetailsProperties();
         $entries[1]->propertyContent->properties[0]->value = '2';
@@ -350,7 +367,10 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $subEntry = new ODataEntry();
         $subEntry->id = 'http://localhost/odata.svc/Orders(OrderID=1)';
         $subEntry->title = new ODataTitle('Order');
-        $subEntry->editLink = 'Orders(OrderID=1)';
+        $subEntry->editLink = new ODataLink();
+        $subEntry->editLink->url = 'Orders(OrderID=1)';
+        $subEntry->editLink->name = 'edit';
+        $subEntry->editLink->title = 'Order';
         $subEntry->type = 'Order';
         $subEntry->resourceSetName = 'Orders';
         $subEntry->propertyContent = $this->generateOrderProperties();
@@ -384,7 +404,10 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $entry->id = 'http://localhost/odata.svc/Customers(CustomerID=\'1\',CustomerGuid'
                      .'=guid\'123e4567-e89b-12d3-a456-426655440000\')';
         $entry->title = new ODataTitle('Customer');
-        $entry->editLink = 'Customers(CustomerID=\'1\',CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')';
+        $entry->editLink = new ODataLink();
+        $entry->editLink->url = 'Customers(CustomerID=\'1\',CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')';
+        $entry->editLink->name = 'edit';
+        $entry->editLink->title = 'Customer';
         $entry->type = 'Customer';
         $entry->resourceSetName = 'Customers';
         $entry->propertyContent = $this->generateCustomerProperties();
@@ -510,7 +533,10 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $entries = [new ODataEntry(), new ODataEntry];
         $entries[0]->id = 'http://localhost/odata.svc/Employees(EmployeeID=\'1\')';
         $entries[0]->title = new ODataTitle('Employee');
-        $entries[0]->editLink = 'Employees(EmployeeID=\'1\')';
+        $entries[0]->editLink = new ODataLink();
+        $entries[0]->editLink->url = 'Employees(EmployeeID=\'1\')';
+        $entries[0]->editLink->name = 'edit';
+        $entries[0]->editLink->title = 'Employee';
         $entries[0]->type = 'Employee';
         $entries[0]->isMediaLinkEntry = true;
         $entries[0]->mediaLink = $mediaLink[0];
@@ -521,7 +547,10 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $entries[0]->updated = '2017-01-01T00:00:00+00:00';
         $entries[1]->id = 'http://localhost/odata.svc/Employees(EmployeeID=\'2\')';
         $entries[1]->title = new ODataTitle('Employee');
-        $entries[1]->editLink =  'Employees(EmployeeID=\'2\')';
+        $entries[1]->editLink = new ODataLink();
+        $entries[1]->editLink->url = 'Employees(EmployeeID=\'2\')';
+        $entries[1]->editLink->name = 'edit';
+        $entries[1]->editLink->title = 'Employee';
         $entries[1]->type = 'Employee';
         $entries[1]->isMediaLinkEntry = true;
         $entries[1]->mediaLink = $mediaLink[1];

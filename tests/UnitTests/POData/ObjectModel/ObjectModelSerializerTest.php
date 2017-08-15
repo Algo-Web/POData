@@ -119,9 +119,14 @@ class ObjectModelSerializerTest extends TestCase
         $queryResult = new QueryResult();
         $queryResult->results = $entity;
 
+        $editLink = new ODataLink();
+        $editLink->url = "Entity(name='bilbo',type=2)";
+        $editLink->name = 'edit';
+        $editLink->title = null;
+
         $ret = $foo->writeTopLevelElement($queryResult);
         $this->assertEquals("http://192.168.2.1/abm-master/public/odata.svc/Entity(name='bilbo',type=2)", $ret->id);
-        $this->assertEquals("Entity(name='bilbo',type=2)", $ret->editLink);
+        $this->assertEquals($editLink, $ret->editLink);
         $this->assertEquals('Entity', $ret->resourceSetName);
     }
 
@@ -200,11 +205,24 @@ class ObjectModelSerializerTest extends TestCase
         $this->assertTrue($ret->entries[0] instanceof \POData\ObjectModel\ODataEntry);
         $this->assertTrue($ret->entries[1] instanceof \POData\ObjectModel\ODataEntry);
 
-        $this->assertEquals("http://192.168.2.1/abm-master/public/odata.svc/Entity(name='bilbo',type=2)", $ret->entries[0]->id);
-        $this->assertEquals("http://192.168.2.1/abm-master/public/odata.svc/Entity(name='dildo',type=3)", $ret->entries[1]->id);
+        $this->assertEquals(
+            "http://192.168.2.1/abm-master/public/odata.svc/Entity(name='bilbo',type=2)",
+            $ret->entries[0]->id
+        );
+        $this->assertEquals(
+            "http://192.168.2.1/abm-master/public/odata.svc/Entity(name='dildo',type=3)",
+            $ret->entries[1]->id
+        );
 
-        $this->assertEquals("Entity(name='bilbo',type=2)", $ret->entries[0]->editLink);
-        $this->assertEquals("Entity(name='dildo',type=3)", $ret->entries[1]->editLink);
+        $editLink = new ODataLink();
+        $editLink->url = "Entity(name='bilbo',type=2)";
+        $editLink->name = 'edit';
+        $editLink->title = null;
+
+        $this->assertEquals($editLink, $ret->entries[0]->editLink);
+
+        $editLink->url = "Entity(name='dildo',type=3)";
+        $this->assertEquals($editLink, $ret->entries[1]->editLink);
 
         $this->assertTrue($ret->entries[0]->propertyContent instanceof \POData\ObjectModel\ODataPropertyContent);
         $this->assertTrue($ret->entries[1]->propertyContent instanceof \POData\ObjectModel\ODataPropertyContent);
@@ -286,11 +304,23 @@ class ObjectModelSerializerTest extends TestCase
         $this->assertTrue($ret->entries[0] instanceof \POData\ObjectModel\ODataEntry);
         $this->assertTrue($ret->entries[1] instanceof \POData\ObjectModel\ODataEntry);
 
-        $this->assertEquals("http://192.168.2.1/abm-master/public/odata.svc/Entity(name='bilbo',type=2)", $ret->entries[0]->id);
-        $this->assertEquals("http://192.168.2.1/abm-master/public/odata.svc/Entity(name='dildo',type=3)", $ret->entries[1]->id);
+        $this->assertEquals(
+            "http://192.168.2.1/abm-master/public/odata.svc/Entity(name='bilbo',type=2)",
+            $ret->entries[0]->id
+        );
+        $this->assertEquals(
+            "http://192.168.2.1/abm-master/public/odata.svc/Entity(name='dildo',type=3)",
+            $ret->entries[1]->id
+        );
 
-        $this->assertEquals("Entity(name='bilbo',type=2)", $ret->entries[0]->editLink);
-        $this->assertEquals("Entity(name='dildo',type=3)", $ret->entries[1]->editLink);
+        $editLink = new ODataLink();
+        $editLink->url = "Entity(name='bilbo',type=2)";
+        $editLink->name = 'edit';
+        $editLink->title = null;
+
+        $this->assertEquals($editLink, $ret->entries[0]->editLink);
+        $editLink->url = "Entity(name='dildo',type=3)";
+        $this->assertEquals($editLink, $ret->entries[1]->editLink);
 
         $this->assertTrue($ret->entries[0]->propertyContent instanceof \POData\ObjectModel\ODataPropertyContent);
         $this->assertTrue($ret->entries[1]->propertyContent instanceof \POData\ObjectModel\ODataPropertyContent);
@@ -920,11 +950,16 @@ class ObjectModelSerializerTest extends TestCase
         $expectedProp->properties[1]->name = 'type';
         $expectedProp->properties[0]->typeName = '';
 
+        $editLink = new ODataLink();
+        $editLink->url = 'customer';
+        $editLink->name = 'edit';
+        $editLink->title = 'customers';
+
         $result = $foo->writeTopLevelElement($queryResult);
         $this->assertTrue($result instanceof ODataEntry);
         $this->assertEquals('/customer', $result->id);
         $this->assertEquals(new ODataTitle('customers'), $result->title);
-        $this->assertEquals('customer', $result->editLink);
+        $this->assertEquals($editLink, $result->editLink);
         $this->assertEquals('customers', $result->type);
         $this->assertEquals('wrapper', $result->resourceSetName);
         $this->assertEquals(0, count($result->links));

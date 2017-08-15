@@ -86,8 +86,11 @@ class SerialiserWriteElementTest extends SerialiserTestBase
                             .'=guid\'123e4567-e89b-12d3-a456-426655440000\')';
         $objectResult->title = new ODataTitle('Customer');
         $objectResult->type = 'Customer';
-        $objectResult->editLink = 'Customers(CustomerID=\'1\',CustomerGuid'
-                                  .'=guid\'123e4567-e89b-12d3-a456-426655440000\')';
+        $objectResult->editLink = new ODataLink();
+        $objectResult->editLink->url = 'Customers(CustomerID=\'1\',CustomerGuid'
+                                       .'=guid\'123e4567-e89b-12d3-a456-426655440000\')';
+        $objectResult->editLink->name = 'edit';
+        $objectResult->editLink->title = 'Customer';
         $objectResult->propertyContent = $propContent;
         $objectResult->links[] = $link;
         $objectResult->resourceSetName = 'Customers';
@@ -219,7 +222,11 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $linkResult->id = 'http://localhost/odata.svc/Customers(CustomerID=\'1\',CustomerGuid'
                           .'=guid\'123e4567-e89b-12d3-a456-426655440000\')';
         $linkResult->title = new ODataTitle('Customer');
-        $linkResult->editLink = 'Customers(CustomerID=\'1\',CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')';
+        $linkResult->editLink = new ODataLink();
+        $linkResult->editLink->url = 'Customers(CustomerID=\'1\','
+                                     .'CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')';
+        $linkResult->editLink->name = 'edit';
+        $linkResult->editLink->title = 'Customer';
         $linkResult->type = 'Customer';
         $linkResult->links = [new ODataLink()];
         $linkResult->links[0]->name = 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Orders';
@@ -248,7 +255,10 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $objectResult->id = 'http://localhost/odata.svc/Orders(OrderID=1)';
         $objectResult->title = new ODataTitle('Order');
         $objectResult->type = 'Order';
-        $objectResult->editLink = 'Orders(OrderID=1)';
+        $objectResult->editLink = new ODataLink();
+        $objectResult->editLink->url = 'Orders(OrderID=1)';
+        $objectResult->editLink->name = 'edit';
+        $objectResult->editLink->title = 'Order';
         $objectResult->propertyContent = $propContent;
         $objectResult->links = $links;
         $objectResult->resourceSetName = 'Orders';
@@ -333,7 +343,10 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $objectResult->id = 'http://localhost/odata.svc/Employees(EmployeeID=\'Cave+Johnson\')';
         $objectResult->title = new ODataTitle('Employee');
         $objectResult->type = 'Employee';
-        $objectResult->editLink = 'Employees(EmployeeID=\'Cave+Johnson\')';
+        $objectResult->editLink = new ODataLink();
+        $objectResult->editLink->url = 'Employees(EmployeeID=\'Cave+Johnson\')';
+        $objectResult->editLink->name = 'edit';
+        $objectResult->editLink->title = 'Employee';
         $objectResult->isMediaLinkEntry = true;
         $objectResult->mediaLink = $mediaLink;
         $objectResult->mediaLinks[] = $mediaArray;
@@ -487,7 +500,10 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $manager = new ODataEntry();
         $manager->id = 'http://localhost/odata.svc/Employees(EmployeeID=\'Cave+Johnson\')';
         $manager->title = new ODataTitle('Employee');
-        $manager->editLink = 'Employees(EmployeeID=\'Cave+Johnson\')';
+        $manager->editLink = new ODataLink();
+        $manager->editLink->url = 'Employees(EmployeeID=\'Cave+Johnson\')';
+        $manager->editLink->name = 'edit';
+        $manager->editLink->title = 'Employee';
         $manager->mediaLink = $managerMedia1;
         $manager->mediaLinks = [$managerMedia2];
         $manager->propertyContent = $propContent;
@@ -516,7 +532,10 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $objectResult = new ODataEntry();
         $objectResult->id = 'http://localhost/odata.svc/Employees(EmployeeID=\'Bruce\')';
         $objectResult->title = new ODataTitle('Employee');
-        $objectResult->editLink = 'Employees(EmployeeID=\'Bruce\')';
+        $objectResult->editLink = new ODataLink();
+        $objectResult->editLink->url = 'Employees(EmployeeID=\'Bruce\')';
+        $objectResult->editLink->name = 'edit';
+        $objectResult->editLink->title = 'Employee';
         $objectResult->type = 'Employee';
         $objectResult->propertyContent = $objContent;
         $objectResult->isMediaLinkEntry = true;
