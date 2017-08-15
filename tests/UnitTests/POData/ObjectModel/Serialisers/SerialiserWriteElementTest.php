@@ -7,6 +7,7 @@ use Mockery as m;
 use POData\Common\ODataException;
 use POData\ObjectModel\CynicSerialiser as IronicSerialiser;
 use POData\ObjectModel\ODataBagContent;
+use POData\ObjectModel\ODataCategory;
 use POData\ObjectModel\ODataEntry;
 use POData\ObjectModel\ODataLink;
 use POData\ObjectModel\ODataMediaLink;
@@ -85,7 +86,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $objectResult->id = 'http://localhost/odata.svc/Customers(CustomerID=\'1\',CustomerGuid'
                             .'=guid\'123e4567-e89b-12d3-a456-426655440000\')';
         $objectResult->title = new ODataTitle('Customer');
-        $objectResult->type = 'Customer';
+        $objectResult->type = new ODataCategory('Customer');
         $objectResult->editLink = new ODataLink();
         $objectResult->editLink->url = 'Customers(CustomerID=\'1\',CustomerGuid'
                                        .'=guid\'123e4567-e89b-12d3-a456-426655440000\')';
@@ -227,7 +228,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
                                      .'CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')';
         $linkResult->editLink->name = 'edit';
         $linkResult->editLink->title = 'Customer';
-        $linkResult->type = 'Customer';
+        $linkResult->type = new ODataCategory('Customer');
         $linkResult->links = [new ODataLink()];
         $linkResult->links[0]->name = 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Orders';
         $linkResult->links[0]->title = 'Orders';
@@ -254,7 +255,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $objectResult = new ODataEntry();
         $objectResult->id = 'http://localhost/odata.svc/Orders(OrderID=1)';
         $objectResult->title = new ODataTitle('Order');
-        $objectResult->type = 'Order';
+        $objectResult->type = new ODataCategory('Order');
         $objectResult->editLink = new ODataLink();
         $objectResult->editLink->url = 'Orders(OrderID=1)';
         $objectResult->editLink->name = 'edit';
@@ -342,7 +343,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $objectResult = new ODataEntry();
         $objectResult->id = 'http://localhost/odata.svc/Employees(EmployeeID=\'Cave+Johnson\')';
         $objectResult->title = new ODataTitle('Employee');
-        $objectResult->type = 'Employee';
+        $objectResult->type = new ODataCategory('Employee');
         $objectResult->editLink = new ODataLink();
         $objectResult->editLink->url = 'Employees(EmployeeID=\'Cave+Johnson\')';
         $objectResult->editLink->name = 'edit';
@@ -507,7 +508,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $manager->mediaLink = $managerMedia1;
         $manager->mediaLinks = [$managerMedia2];
         $manager->propertyContent = $propContent;
-        $manager->type = 'Employee';
+        $manager->type = new ODataCategory('Employee');
         $manager->isMediaLinkEntry = true;
         $manager->links = [$managerLink1, $managerLink2];
         $manager->resourceSetName = 'Employees';
@@ -536,7 +537,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $objectResult->editLink->url = 'Employees(EmployeeID=\'Bruce\')';
         $objectResult->editLink->name = 'edit';
         $objectResult->editLink->title = 'Employee';
-        $objectResult->type = 'Employee';
+        $objectResult->type = new ODataCategory('Employee');
         $objectResult->propertyContent = $objContent;
         $objectResult->isMediaLinkEntry = true;
         $objectResult->mediaLink = $media1;

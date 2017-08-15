@@ -10,6 +10,7 @@ use POData\Common\Url;
 use POData\IService;
 use POData\ObjectModel\ObjectModelSerializer;
 use POData\ObjectModel\ODataBagContent;
+use POData\ObjectModel\ODataCategory;
 use POData\ObjectModel\ODataEntry;
 use POData\ObjectModel\ODataLink;
 use POData\ObjectModel\ODataProperty;
@@ -955,12 +956,14 @@ class ObjectModelSerializerTest extends TestCase
         $editLink->name = 'edit';
         $editLink->title = 'customers';
 
+        $type = new ODataCategory('customers');
+
         $result = $foo->writeTopLevelElement($queryResult);
         $this->assertTrue($result instanceof ODataEntry);
         $this->assertEquals('/customer', $result->id);
         $this->assertEquals(new ODataTitle('customers'), $result->title);
         $this->assertEquals($editLink, $result->editLink);
-        $this->assertEquals('customers', $result->type);
+        $this->assertEquals($type, $result->type);
         $this->assertEquals('wrapper', $result->resourceSetName);
         $this->assertEquals(0, count($result->links));
         $this->assertEquals(0, count($result->mediaLinks));

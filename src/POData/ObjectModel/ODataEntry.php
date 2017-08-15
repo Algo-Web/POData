@@ -34,7 +34,7 @@ class ODataEntry
     /**
      * Entry Type. This become the value of term attribute of Category element.
      *
-     * @var string
+     * @var ODataCategory
      */
     public $type;
     /**
