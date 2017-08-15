@@ -373,7 +373,7 @@ class CynicSerialiser implements IObjectSerialiser
             $odataProperty->value = $internalContent;
         }
 
-        $propertyContent->properties[] = $odataProperty;
+        $propertyContent->properties[$propertyName] = $odataProperty;
 
         return $propertyContent;
     }
@@ -397,7 +397,7 @@ class CynicSerialiser implements IObjectSerialiser
         $odataProperty->typeName = 'Collection('.$resourceType->getFullName().')';
         $odataProperty->value = $this->writeBagValue($resourceType, $result);
 
-        $propertyContent->properties[] = $odataProperty;
+        $propertyContent->properties[$propertyName] = $odataProperty;
         return $propertyContent;
     }
 
@@ -425,7 +425,7 @@ class CynicSerialiser implements IObjectSerialiser
             $property->value = $this->primitiveToString($rType, $primitiveValue->results);
         }
 
-        $result->properties[] = $property;
+        $result->properties[$property->name] = $property;
         return $result;
     }
 
@@ -575,7 +575,7 @@ class CynicSerialiser implements IObjectSerialiser
                     $internalProperty->value = $this->writeComplexValue($rType, $raw, $propName);
                 }
             }
-            $internalContent->properties[] = $internalProperty;
+            $internalContent->properties[$propName] = $internalProperty;
         }
 
         unset($this->complexTypeInstanceCollection[$count]);
@@ -912,7 +912,7 @@ class CynicSerialiser implements IObjectSerialiser
             } elseif ($resource instanceof ResourceComplexType && $nonNull) {
                 $subProp->value = $this->writeComplexValue($resource, $result, $flake->getName());
             }
-            $propertyContent->properties[] = $subProp;
+            $propertyContent->properties[$corn] = $subProp;
         }
         return $propertyContent;
     }

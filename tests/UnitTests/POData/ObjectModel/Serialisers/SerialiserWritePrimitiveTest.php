@@ -90,7 +90,7 @@ class SerialiserWritePrimitiveTest extends SerialiserTestBase
         $objProp->name = 'DesertWithNoName';
         $objProp->typeName = 'String';
         $objectResult = new ODataPropertyContent();
-        $objectResult->properties[] = $objProp;
+        $objectResult->properties['DesertWithNoName'] = $objProp;
         $ironicResult = $ironic->writeTopLevelPrimitive($collection, $resProp);
 
         $this->assertEquals(get_class($objectResult), get_class($ironicResult));
@@ -134,7 +134,7 @@ class SerialiserWritePrimitiveTest extends SerialiserTestBase
         $objProp->typeName = 'String';
         $objProp->value = 'MakeItPhunkee';
         $objectResult = new ODataPropertyContent();
-        $objectResult->properties[] = $objProp;
+        $objectResult->properties['DesertWithNoName'] = $objProp;
         $ironicResult = $ironic->writeTopLevelPrimitive($collection, $resProp);
 
         $this->assertEquals(get_class($objectResult), get_class($ironicResult));
@@ -178,7 +178,7 @@ class SerialiserWritePrimitiveTest extends SerialiserTestBase
         $objProp->typeName = 'String';
         $objProp->value = '2017-07-02T11:10:09-06:00';
         $objectResult = new ODataPropertyContent();
-        $objectResult->properties[] = $objProp;
+        $objectResult->properties['DesertWithNoName'] = $objProp;
         $ironicResult = $ironic->writeTopLevelPrimitive($collection, $resProp);
 
         $this->assertEquals(get_class($objectResult), get_class($ironicResult));
@@ -222,7 +222,7 @@ class SerialiserWritePrimitiveTest extends SerialiserTestBase
         $objProp->typeName = 'String';
         $objProp->value = 'U3RhcnRUaGVEYW5jZQ==';
         $objectResult = new ODataPropertyContent();
-        $objectResult->properties[] = $objProp;
+        $objectResult->properties['DesertWithNoName'] = $objProp;
         $ironicResult = $ironic->writeTopLevelPrimitive($collection, $resProp);
 
         $this->assertEquals(get_class($objectResult), get_class($ironicResult));
@@ -266,7 +266,7 @@ class SerialiserWritePrimitiveTest extends SerialiserTestBase
         $objProp->typeName = 'String';
         $objProp->value = '311';
         $objectResult = new ODataPropertyContent();
-        $objectResult->properties[] = $objProp;
+        $objectResult->properties['DesertWithNoName'] = $objProp;
         $ironicResult = $ironic->writeTopLevelPrimitive($collection, $resProp);
 
         $this->assertEquals(get_class($objectResult), get_class($ironicResult));

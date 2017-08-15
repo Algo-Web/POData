@@ -63,24 +63,25 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $link->url = 'Customers(CustomerID=\'1\',CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')/Orders';
 
         $propContent = new ODataPropertyContent();
-        $propContent->properties = [new ODataProperty(), new ODataProperty(), new ODataProperty(), new ODataProperty(),
-            new ODataProperty(), new ODataProperty(), new ODataProperty()];
-        $propContent->properties[0]->name = 'CustomerID';
-        $propContent->properties[0]->typeName = 'Edm.String';
-        $propContent->properties[0]->value = '1';
-        $propContent->properties[1]->name = 'CustomerGuid';
-        $propContent->properties[1]->typeName = 'Edm.Guid';
-        $propContent->properties[1]->value = '123e4567-e89b-12d3-a456-426655440000';
-        $propContent->properties[2]->name = 'CustomerName';
-        $propContent->properties[2]->typeName = 'Edm.String';
-        $propContent->properties[3]->name = 'Country';
-        $propContent->properties[3]->typeName = 'Edm.String';
-        $propContent->properties[4]->name = 'Rating';
-        $propContent->properties[4]->typeName = 'Edm.Int32';
-        $propContent->properties[5]->name = 'Photo';
-        $propContent->properties[5]->typeName = 'Edm.Binary';
-        $propContent->properties[6]->name = 'Address';
-        $propContent->properties[6]->typeName = 'Address';
+        $propContent->properties = ['CustomerID' => new ODataProperty(), 'CustomerGuid' => new ODataProperty(),
+            'CustomerName' => new ODataProperty(), 'Country' => new ODataProperty(), 'Rating' => new ODataProperty(),
+            'Photo' => new ODataProperty(), 'Address' => new ODataProperty()];
+        $propContent->properties['CustomerID']->name = 'CustomerID';
+        $propContent->properties['CustomerID']->typeName = 'Edm.String';
+        $propContent->properties['CustomerID']->value = '1';
+        $propContent->properties['CustomerGuid']->name = 'CustomerGuid';
+        $propContent->properties['CustomerGuid']->typeName = 'Edm.Guid';
+        $propContent->properties['CustomerGuid']->value = '123e4567-e89b-12d3-a456-426655440000';
+        $propContent->properties['CustomerName']->name = 'CustomerName';
+        $propContent->properties['CustomerName']->typeName = 'Edm.String';
+        $propContent->properties['Country']->name = 'Country';
+        $propContent->properties['Country']->typeName = 'Edm.String';
+        $propContent->properties['Rating']->name = 'Rating';
+        $propContent->properties['Rating']->typeName = 'Edm.Int32';
+        $propContent->properties['Photo']->name = 'Photo';
+        $propContent->properties['Photo']->typeName = 'Edm.Binary';
+        $propContent->properties['Address']->name = 'Address';
+        $propContent->properties['Address']->typeName = 'Address';
 
         $objectResult = new ODataEntry();
         $objectResult->id = 'http://localhost/odata.svc/Customers(CustomerID=\'1\',CustomerGuid'
@@ -101,10 +102,11 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $this->assertEquals(get_class($objectResult), get_class($ironicResult));
         $this->assertEquals($objectResult, $ironicResult);
         $numProperties = count($objectResult->propertyContent->properties);
+        $keys = array_keys($objectResult->propertyContent->properties);
         for ($i = 0; $i < $numProperties; $i++) {
-            $propName = $objectResult->propertyContent->properties[$i]->name;
-            $objectVal = $objectResult->propertyContent->properties[$i]->value;
-            $ironicVal = $ironicResult->propertyContent->properties[$i]->value;
+            $propName = $objectResult->propertyContent->properties[$keys[$i]]->name;
+            $objectVal = $objectResult->propertyContent->properties[$keys[$i]]->value;
+            $ironicVal = $ironicResult->propertyContent->properties[$keys[$i]]->value;
             $this->assertEquals(
                 isset($objectVal),
                 isset($ironicVal),
@@ -163,61 +165,64 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $result->results = $order;
 
         $propContent = new ODataPropertyContent();
-        $propContent->properties = [new ODataProperty(), new ODataProperty(), new ODataProperty(), new ODataProperty(),
-            new ODataProperty(), new ODataProperty(), new ODataProperty()];
-        $propContent->properties[0]->name = 'OrderID';
-        $propContent->properties[0]->typeName = 'Edm.Int32';
-        $propContent->properties[0]->value = '1';
-        $propContent->properties[1]->name = 'OrderDate';
-        $propContent->properties[1]->typeName = 'Edm.DateTime';
-        $propContent->properties[2]->name = 'DeliveryDate';
-        $propContent->properties[2]->typeName = 'Edm.DateTime';
-        $propContent->properties[3]->name = 'ShipName';
-        $propContent->properties[3]->typeName = 'Edm.String';
-        $propContent->properties[4]->name = 'ItemCount';
-        $propContent->properties[4]->typeName = 'Edm.Int32';
-        $propContent->properties[5]->name = 'QualityRate';
-        $propContent->properties[5]->typeName = 'Edm.Int32';
-        $propContent->properties[6]->name = 'Price';
-        $propContent->properties[6]->typeName = 'Edm.Double';
+        $propContent->properties = ['OrderID' => new ODataProperty(), 'OrderDate' => new ODataProperty(),
+            'DeliveryDate' => new ODataProperty(), 'ShipName' => new ODataProperty(),
+            'ItemCount' => new ODataProperty(), 'QualityRate' => new ODataProperty(), 'Price' => new ODataProperty()];
+        $propContent->properties['OrderID']->name = 'OrderID';
+        $propContent->properties['OrderID']->typeName = 'Edm.Int32';
+        $propContent->properties['OrderID']->value = '1';
+        $propContent->properties['OrderDate']->name = 'OrderDate';
+        $propContent->properties['OrderDate']->typeName = 'Edm.DateTime';
+        $propContent->properties['DeliveryDate']->name = 'DeliveryDate';
+        $propContent->properties['DeliveryDate']->typeName = 'Edm.DateTime';
+        $propContent->properties['ShipName']->name = 'ShipName';
+        $propContent->properties['ShipName']->typeName = 'Edm.String';
+        $propContent->properties['ItemCount']->name = 'ItemCount';
+        $propContent->properties['ItemCount']->typeName = 'Edm.Int32';
+        $propContent->properties['QualityRate']->name = 'QualityRate';
+        $propContent->properties['QualityRate']->typeName = 'Edm.Int32';
+        $propContent->properties['Price']->name = 'Price';
+        $propContent->properties['Price']->typeName = 'Edm.Double';
 
         $addressContent = new ODataPropertyContent();
-        $addressContent->properties = [new ODataProperty(), new ODataProperty(), new ODataProperty(),
-            new ODataProperty(), new ODataProperty(), new ODataProperty()];
-        $addressContent->properties[0]->name = 'HouseNumber';
-        $addressContent->properties[0]->typeName = 'Edm.String';
-        $addressContent->properties[0]->value = '1';
-        $addressContent->properties[1]->name = 'LineNumber';
-        $addressContent->properties[1]->typeName = 'Edm.Int32';
-        $addressContent->properties[2]->name = 'LineNumber2';
-        $addressContent->properties[2]->typeName = 'Edm.Int32';
-        $addressContent->properties[3]->name = 'StreetName';
-        $addressContent->properties[3]->typeName = 'Edm.String';
-        $addressContent->properties[4]->name = 'IsValid';
-        $addressContent->properties[4]->typeName = 'Edm.Boolean';
-        $addressContent->properties[5]->name = 'Address2';
-        $addressContent->properties[5]->typeName = 'Address2';
+        $addressContent->properties = ['HouseNumber' => new ODataProperty(), 'LineNumber' => new ODataProperty(),
+            'LineNumber2' => new ODataProperty(), 'StreetName' => new ODataProperty(), 'IsValid' => new ODataProperty(),
+            'Address2' => new ODataProperty()];
+        $addressContent->properties['HouseNumber']->name = 'HouseNumber';
+        $addressContent->properties['HouseNumber']->typeName = 'Edm.String';
+        $addressContent->properties['HouseNumber']->value = '1';
+        $addressContent->properties['LineNumber']->name = 'LineNumber';
+        $addressContent->properties['LineNumber']->typeName = 'Edm.Int32';
+        $addressContent->properties['LineNumber2']->name = 'LineNumber2';
+        $addressContent->properties['LineNumber2']->typeName = 'Edm.Int32';
+        $addressContent->properties['StreetName']->name = 'StreetName';
+        $addressContent->properties['StreetName']->typeName = 'Edm.String';
+        $addressContent->properties['IsValid']->name = 'IsValid';
+        $addressContent->properties['IsValid']->typeName = 'Edm.Boolean';
+        $addressContent->properties['Address2']->name = 'Address2';
+        $addressContent->properties['Address2']->typeName = 'Address2';
 
         $linkPropContent = new ODataPropertyContent();
-        $linkPropContent->properties = [new ODataProperty(), new ODataProperty(), new ODataProperty(),
-            new ODataProperty(), new ODataProperty(), new ODataProperty(), new ODataProperty()];
-        $linkPropContent->properties[0]->name = 'CustomerID';
-        $linkPropContent->properties[0]->typeName = 'Edm.String';
-        $linkPropContent->properties[0]->value = '1';
-        $linkPropContent->properties[1]->name = 'CustomerGuid';
-        $linkPropContent->properties[1]->typeName = 'Edm.Guid';
-        $linkPropContent->properties[1]->value = '123e4567-e89b-12d3-a456-426655440000';
-        $linkPropContent->properties[2]->name = 'CustomerName';
-        $linkPropContent->properties[2]->typeName = 'Edm.String';
-        $linkPropContent->properties[3]->name = 'Country';
-        $linkPropContent->properties[3]->typeName = 'Edm.String';
-        $linkPropContent->properties[4]->name = 'Rating';
-        $linkPropContent->properties[4]->typeName = 'Edm.Int32';
-        $linkPropContent->properties[5]->name = 'Photo';
-        $linkPropContent->properties[5]->typeName = 'Edm.Binary';
-        $linkPropContent->properties[6]->name = 'Address';
-        $linkPropContent->properties[6]->typeName = 'Address';
-        $linkPropContent->properties[6]->value = $addressContent;
+        $linkPropContent->properties = ['CustomerID' => new ODataProperty(), 'CustomerGuid' => new ODataProperty(),
+            'CustomerName' => new ODataProperty(), 'Country' => new ODataProperty(), 'Rating' => new ODataProperty(),
+            'Photo' => new ODataProperty(), 'Address' => new ODataProperty()];
+        $linkPropContent->properties['CustomerID']->name = 'CustomerID';
+        $linkPropContent->properties['CustomerID']->typeName = 'Edm.String';
+        $linkPropContent->properties['CustomerID']->value = '1';
+        $linkPropContent->properties['CustomerGuid']->name = 'CustomerGuid';
+        $linkPropContent->properties['CustomerGuid']->typeName = 'Edm.Guid';
+        $linkPropContent->properties['CustomerGuid']->value = '123e4567-e89b-12d3-a456-426655440000';
+        $linkPropContent->properties['CustomerName']->name = 'CustomerName';
+        $linkPropContent->properties['CustomerName']->typeName = 'Edm.String';
+        $linkPropContent->properties['Country']->name = 'Country';
+        $linkPropContent->properties['Country']->typeName = 'Edm.String';
+        $linkPropContent->properties['Rating']->name = 'Rating';
+        $linkPropContent->properties['Rating']->typeName = 'Edm.Int32';
+        $linkPropContent->properties['Photo']->name = 'Photo';
+        $linkPropContent->properties['Photo']->typeName = 'Edm.Binary';
+        $linkPropContent->properties['Address']->name = 'Address';
+        $linkPropContent->properties['Address']->typeName = 'Address';
+        $linkPropContent->properties['Address']->value = $addressContent;
 
         $linkResult = new ODataEntry();
         $linkResult->id = 'http://localhost/odata.svc/Customers(CustomerID=\'1\',CustomerGuid'
@@ -299,20 +304,20 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $emailBag->propertyContents = ['foo', 'bar'];
 
         $propContent = new ODataPropertyContent();
-        $propContent->properties = [new ODataProperty(), new ODataProperty(), new ODataProperty(),
-            new ODataProperty(), new ODataProperty()];
-        $propContent->properties[0]->name = 'EmployeeID';
-        $propContent->properties[0]->typeName = 'Edm.String';
-        $propContent->properties[0]->value = 'Cave Johnson';
-        $propContent->properties[1]->name = 'FirstName';
-        $propContent->properties[1]->typeName = 'Edm.String';
-        $propContent->properties[2]->name = 'LastName';
-        $propContent->properties[2]->typeName = 'Edm.String';
-        $propContent->properties[3]->name = 'ReportsTo';
-        $propContent->properties[3]->typeName = 'Edm.Int32';
-        $propContent->properties[4]->name = 'Emails';
-        $propContent->properties[4]->typeName = 'Collection(Edm.String)';
-        $propContent->properties[4]->value = $emailBag;
+        $propContent->properties = ['EmployeeID' => new ODataProperty(), 'FirstName' => new ODataProperty(),
+            'LastName' => new ODataProperty(), 'ReportsTo' => new ODataProperty(), 'Emails' => new ODataProperty()];
+        $propContent->properties['EmployeeID']->name = 'EmployeeID';
+        $propContent->properties['EmployeeID']->typeName = 'Edm.String';
+        $propContent->properties['EmployeeID']->value = 'Cave Johnson';
+        $propContent->properties['FirstName']->name = 'FirstName';
+        $propContent->properties['FirstName']->typeName = 'Edm.String';
+        $propContent->properties['LastName']->name = 'LastName';
+        $propContent->properties['LastName']->typeName = 'Edm.String';
+        $propContent->properties['ReportsTo']->name = 'ReportsTo';
+        $propContent->properties['ReportsTo']->typeName = 'Edm.Int32';
+        $propContent->properties['Emails']->name = 'Emails';
+        $propContent->properties['Emails']->typeName = 'Collection(Edm.String)';
+        $propContent->properties['Emails']->value = $emailBag;
 
         $mediaLink = new ODataMediaLink(
             'Employee',
@@ -468,11 +473,11 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $contentProp5->value->propertyContents = ['foo', 'bar'];
 
         $propContent = new ODataPropertyContent();
-        $propContent->properties[] = $contentProp1;
-        $propContent->properties[] = $contentProp2;
-        $propContent->properties[] = $contentProp3;
-        $propContent->properties[] = $contentProp4;
-        $propContent->properties[] = $contentProp5;
+        $propContent->properties['EmployeeID'] = $contentProp1;
+        $propContent->properties['FirstName'] = $contentProp2;
+        $propContent->properties['LastName'] = $contentProp3;
+        $propContent->properties['ReportsTo'] = $contentProp4;
+        $propContent->properties['Emails'] = $contentProp5;
 
         $managerMedia1 = new ODataMediaLink(
             'Employee',
@@ -531,7 +536,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $objContentProperty->typeName = 'Collection(Edm.String)';
 
         $objContent = new ODataPropertyContent();
-        $objContent->properties[] = $objContentProperty;
+        $objContent->properties['Emails'] = $objContentProperty;
 
         $objectResult = new ODataEntry();
         $objectResult->id = 'http://localhost/odata.svc/Employees(EmployeeID=\'Bruce\')';
