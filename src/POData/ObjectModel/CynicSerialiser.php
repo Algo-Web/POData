@@ -208,10 +208,13 @@ class CynicSerialiser implements IObjectSerialiser
         $odata->resourceSetName = $resourceSet->getName();
         $odata->id = $absoluteUri;
         $odata->title = new ODataTitle($title);
-        $odata->type = $type;
+        $odata->type = new ODataCategory($type);
         $odata->propertyContent = $propertyContent;
         $odata->isMediaLinkEntry = true === $resourceType->isMediaLinkEntry() ? true : null;
-        $odata->editLink = $relativeUri;
+        $odata->editLink = new ODataLink();
+        $odata->editLink->url = $relativeUri;
+        $odata->editLink->name = 'edit';
+        $odata->editLink->title = $title;
         $odata->mediaLink = $mediaLink;
         $odata->mediaLinks = $mediaLinks;
         $odata->links = $links;
@@ -370,7 +373,7 @@ class CynicSerialiser implements IObjectSerialiser
             $odataProperty->value = $internalContent;
         }
 
-        $propertyContent->properties[] = $odataProperty;
+        $propertyContent->properties[$propertyName] = $odataProperty;
 
         return $propertyContent;
     }
@@ -394,7 +397,7 @@ class CynicSerialiser implements IObjectSerialiser
         $odataProperty->typeName = 'Collection('.$resourceType->getFullName().')';
         $odataProperty->value = $this->writeBagValue($resourceType, $result);
 
-        $propertyContent->properties[] = $odataProperty;
+        $propertyContent->properties[$propertyName] = $odataProperty;
         return $propertyContent;
     }
 
@@ -422,7 +425,7 @@ class CynicSerialiser implements IObjectSerialiser
             $property->value = $this->primitiveToString($rType, $primitiveValue->results);
         }
 
-        $result->properties[] = $property;
+        $result->properties[$property->name] = $property;
         return $result;
     }
 
@@ -572,7 +575,7 @@ class CynicSerialiser implements IObjectSerialiser
                     $internalProperty->value = $this->writeComplexValue($rType, $raw, $propName);
                 }
             }
-            $internalContent->properties[] = $internalProperty;
+            $internalContent->properties[$propName] = $internalProperty;
         }
 
         unset($this->complexTypeInstanceCollection[$count]);
@@ -706,7 +709,7 @@ class CynicSerialiser implements IObjectSerialiser
         $mediaLink = null;
         if ($resourceType->isMediaLinkEntry()) {
             $eTag = $streamProviderWrapper->getStreamETag2($entryObject, null, $context);
-            $mediaLink = new ODataMediaLink($type, '/$value', $relativeUri . '/$value', '*/*', $eTag);
+            $mediaLink = new ODataMediaLink($type, '/$value', $relativeUri . '/$value', '*/*', $eTag, 'edit-media');
         }
         $mediaLinks = [];
         if ($resourceType->hasNamedStream()) {
@@ -909,7 +912,7 @@ class CynicSerialiser implements IObjectSerialiser
             } elseif ($resource instanceof ResourceComplexType && $nonNull) {
                 $subProp->value = $this->writeComplexValue($resource, $result, $flake->getName());
             }
-            $propertyContent->properties[] = $subProp;
+            $propertyContent->properties[$corn] = $subProp;
         }
         return $propertyContent;
     }

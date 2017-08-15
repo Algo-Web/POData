@@ -28,13 +28,13 @@ class ODataEntry
     /**
      * Entry Edit Link.
      *
-     * @var string
+     * @var ODataLink
      */
     public $editLink;
     /**
      * Entry Type. This become the value of term attribute of Category element.
      *
-     * @var string
+     * @var ODataCategory
      */
     public $type;
     /**

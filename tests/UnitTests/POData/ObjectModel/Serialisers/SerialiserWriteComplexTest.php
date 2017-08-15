@@ -51,7 +51,7 @@ class SerialiserWriteComplexTest extends SerialiserTestBase
         $objProp->name = 'makeItPhunkee';
         $objProp->typeName = 'stopHammerTime';
         $objectResult = new ODataPropertyContent();
-        $objectResult->properties[] = $objProp;
+        $objectResult->properties['makeItPhunkee'] = $objProp;
         $ironicResult = $ironic->writeTopLevelComplexObject($collection, $propName, $rType);
 
         $this->assertEquals(get_class($objectResult), get_class($ironicResult));
@@ -202,14 +202,14 @@ class SerialiserWriteComplexTest extends SerialiserTestBase
         $comp2->value = 'type';
 
         $complex = new ODataPropertyContent();
-        $complex->properties = [$comp1, $comp2];
+        $complex->properties = ['name' => $comp1, 'type' => $comp2];
 
         $objProp = new ODataProperty();
         $objProp->name = 'makeItPhunkee';
         $objProp->typeName = 'stopHammerTime';
         $objProp->value = $complex;
         $objectResult = new ODataPropertyContent();
-        $objectResult->properties[] = $objProp;
+        $objectResult->properties['makeItPhunkee'] = $objProp;
         $ironicResult = $ironic->writeTopLevelComplexObject($collection, $propName, $rType);
 
         $this->assertEquals(get_class($objectResult), get_class($ironicResult));
@@ -291,7 +291,7 @@ class SerialiserWriteComplexTest extends SerialiserTestBase
         $zoid2->value = 'type';
 
         $zoidContent = new ODataPropertyContent();
-        $zoidContent->properties = [$zoid1, $zoid2];
+        $zoidContent->properties = ['name' => $zoid1, 'type' => $zoid2];
 
         $comp1 = new ODataProperty();
         $comp1->name = 'name';
@@ -303,16 +303,16 @@ class SerialiserWriteComplexTest extends SerialiserTestBase
         $comp2->value = $zoidContent;
 
         $complex = new ODataPropertyContent();
-        $complex->properties = [$comp1, $comp2];
+        $complex->properties = ['name' => $comp1, 'type' => $comp2];
 
         $objProp = new ODataProperty();
         $objProp->name = 'makeItPhunkee';
         $objProp->typeName = 'stopHammerTime';
         $objProp->value = $complex;
         $objectResult = new ODataPropertyContent();
-        $objectResult->properties[] = $objProp;
+        $objectResult->properties['makeItPhunkee'] = $objProp;
         $ironicResult = $ironic->writeTopLevelComplexObject($collection, $propName, $rType);
-
+        
         $this->assertEquals(get_class($objectResult), get_class($ironicResult));
         $this->assertEquals($objectResult, $ironicResult);
     }
