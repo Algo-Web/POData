@@ -1,0 +1,55 @@
+POData\ObjectModel\ODataFeed:
+    xml_root_name: feed
+    exclusion_policy: ALL
+    xml_root_namespace: http://www.w3.org/2005/Atom
+    accessor_order: custom
+    custom_accessor_order: [title, id, updated, selfLink, rowCount, entries, nextPageLink]
+    xml_namespaces:
+        d: http://schemas.microsoft.com/ado/2007/08/dataservices
+        "": http://www.w3.org/2005/Atom
+        m: http://schemas.microsoft.com/ado/2007/08/dataservices/metadata
+    properties:
+        title:
+            expose: true
+            xml_element:
+                namespace: http://www.w3.org/2005/Atom
+                cdata: false
+            type: POData\ObjectModel\ODataTitle
+        id:
+            expose: true
+            xml_element:
+                namespace: http://www.w3.org/2005/Atom
+                cdata: false
+            type: string
+        updated:
+            exposed: true
+            xml_element:
+                namespace: http://www.w3.org/2005/Atom
+                cdata: false
+            type: string
+        selfLink:
+            expose: true
+            serialized_name: link
+            type: POData\ObjectModel\ODataLink
+        rowCount:
+            expose: true
+            skip_when_empty: true
+            serialized_name: count
+            xml_element:
+                namespace: http://schemas.microsoft.com/ado/2007/08/dataservices/metadata
+                cdata: false
+            type: integer
+        entries:
+            expose: true
+            xml_list:
+                inline: true
+                namespace: http://www.w3.org/2005/Atom
+            type: array<POData\ObjectModel\ODataEntry>
+        nextPageLink:
+            expose: true
+            skip_when_empty: true
+            serialized_name: link
+            xml_list:
+                inline: true
+                namespace: http://www.w3.org/2005/Atom
+            type: POData\ObjectModel\ODataLink

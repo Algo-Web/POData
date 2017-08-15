@@ -1,0 +1,28 @@
+POData\ObjectModel\ODataLink:
+    exclusion_policy: ALL
+    xml_root_namespace: http://www.w3.org/2005/Atom
+    properties:
+        name:
+            expose: true
+            xml_attribute: true
+            skip_when_empty: true
+            type: string
+            serialized_name: rel
+        title:
+            expose: true
+            xml_attribute: true
+            skip_when_empty: true
+            type: string
+            serialized_name: title
+        url:
+            expose: true
+            xml_attribute: true
+            skip_when_empty: true
+            type: string
+            serialized_name: href
+        type:
+            expose: true
+            xml_attribute: true
+            skip_when_empty: true
+            type: string
+            serialized_name: type

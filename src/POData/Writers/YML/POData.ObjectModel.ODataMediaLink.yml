@@ -1,0 +1,33 @@
+POData\ObjectModel\ODataMediaLink:
+    xml_root_name: link
+    exclusion_policy: ALL
+    custom_accessor_order: [eTag, contentType, name, links]
+    properties:
+        eTag:
+            expose: true
+            xml_attribute: true
+            xml_element:
+                namespace: http://schemas.microsoft.com/ado/2007/08/dataservices/metadata
+                cdata: false
+            type: string
+        contentType:
+            expose: true
+            xml_attribute: true
+            serialized_name: type
+            xml_element:
+                cdata: false
+            type: string
+        name:
+            expose: true
+            xml_attribute: true
+            serialized_name: title
+            xml_element:
+                cdata: false
+            type: string
+        srcLink:
+             expose: true
+             xml_attribute: true
+             serialized_name: href
+             xml_element:
+                 cdata: false
+             type: string

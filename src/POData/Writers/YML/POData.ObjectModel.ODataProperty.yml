@@ -1,0 +1,3 @@
+POData\ObjectModel\ODataProperty:
+    exclusion_policy: ALL
+    xml_root_namespace: http://www.w3.org/2005/Atom
