@@ -466,7 +466,7 @@ class AtomODataWriter implements IODataWriter
         $this->xmlWriter->startElement(ODataConstants::ATOM_CATEGORY_ELEMENT_NAME);
         $this->xmlWriter->writeAttribute(
             ODataConstants::ATOM_CATEGORY_TERM_ATTRIBUTE_NAME,
-            $entry->type
+            $entry->type->term
         );
         $this->xmlWriter->writeAttribute(
             ODataConstants::ATOM_CATEGORY_SCHEME_ATTRIBUTE_NAME,
