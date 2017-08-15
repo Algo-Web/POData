@@ -348,10 +348,7 @@ class AtomODataWriter implements IODataWriter
                     $this->xmlWriter->endAttribute();
                 }
                 $this->xmlWriter->startAttribute(ODataConstants::ATOM_LINK_RELATION_ATTRIBUTE_NAME);
-                $this->xmlWriter->text(
-                    'http://schemas.microsoft.com/ado/2007/08/dataservices/mediaresource/'
-                    .$mediaLink->name
-                );
+                $this->xmlWriter->text($mediaLink->rel);
                 $this->xmlWriter->endAttribute();
 
                 $this->xmlWriter->startAttribute(ODataConstants::ATOM_TYPE_ATTRIBUTE_NAME);

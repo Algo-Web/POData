@@ -709,7 +709,7 @@ class CynicSerialiser implements IObjectSerialiser
         $mediaLink = null;
         if ($resourceType->isMediaLinkEntry()) {
             $eTag = $streamProviderWrapper->getStreamETag2($entryObject, null, $context);
-            $mediaLink = new ODataMediaLink($type, '/$value', $relativeUri . '/$value', '*/*', $eTag);
+            $mediaLink = new ODataMediaLink($type, '/$value', $relativeUri . '/$value', '*/*', $eTag, 'edit-media');
         }
         $mediaLinks = [];
         if ($resourceType->hasNamedStream()) {

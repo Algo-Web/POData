@@ -485,8 +485,10 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $collection = new QueryResult();
         $collection->results = [$mod1, $mod2];
 
-        $mediaLink = [new ODataMediaLink('Employee', '/$value', 'Employees(EmployeeID=\'1\')/$value', '*/*', ''),
-            new ODataMediaLink('Employee', '/$value', 'Employees(EmployeeID=\'2\')/$value', '*/*', '')];
+        $mediaLink = [
+            new ODataMediaLink('Employee', '/$value', 'Employees(EmployeeID=\'1\')/$value', '*/*', '', 'edit-media'),
+            new ODataMediaLink('Employee', '/$value', 'Employees(EmployeeID=\'2\')/$value', '*/*', '', 'edit-media')
+        ];
 
         $mediaLinks = [
             new ODataMediaLink(

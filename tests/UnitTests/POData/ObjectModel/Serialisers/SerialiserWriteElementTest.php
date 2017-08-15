@@ -319,7 +319,8 @@ class SerialiserWriteElementTest extends SerialiserTestBase
             '/$value',
             'Employees(EmployeeID=\'Cave+Johnson\')/$value',
             '*/*',
-            ''
+            '',
+            'edit-media'
         );
 
         $mediaArray = new ODataMediaLink(
@@ -436,7 +437,8 @@ class SerialiserWriteElementTest extends SerialiserTestBase
             '/$value',
             'Employees(EmployeeID=\'Bruce\')/$value',
             '*/*',
-            ''
+            '',
+            'edit-media'
         );
         $media2 = new ODataMediaLink(
             'TumbNail_48X48',
@@ -477,7 +479,8 @@ class SerialiserWriteElementTest extends SerialiserTestBase
             '/$value',
             'Employees(EmployeeID=\'Cave+Johnson\')/$value',
             '*/*',
-            ''
+            '',
+            'edit-media'
         );
         $managerMedia2 = new ODataMediaLink(
             'TumbNail_48X48',
