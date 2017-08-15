@@ -37,4 +37,17 @@ class QueryResultTest extends TestCase
             [107,  10,     15,     7,      3],
         ];
     }
+
+    public function testAdjustCountForPagingWithNonNumericCount()
+    {
+        $expected = '$count';
+        $actual = null;
+
+        try {
+            QueryResult::adjustCountForPaging('a,b', 0, 0);
+        } catch (\InvalidArgumentException $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
+    }
 }
