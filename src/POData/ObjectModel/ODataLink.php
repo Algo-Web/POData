@@ -50,4 +50,14 @@ class ODataLink
      * @var bool
      */
     public $isExpanded;
+
+    public function expandResult(){
+        if(!$this->isExpanded){
+            return null;
+        }
+        if($this->isCollection){
+            return new ODataExpandedResult(null,$this->expandedResult);
+        }
+        return new ODataExpandedResult($this->expandedResult);
+    }
 }

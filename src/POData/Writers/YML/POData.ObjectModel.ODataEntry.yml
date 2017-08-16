@@ -1,7 +1,12 @@
 POData\ObjectModel\ODataEntry:
     exclusion_policy: ALL
     xml_root_namespace: http://www.w3.org/2005/Atom
-    custom_accessor_order: [id, title, updated, links, mediaLink, mediaLinks, type, propertyContent]
+    custom_accessor_order: [id, title, updated, atomAuthor, editLink, mediaLink, mediaLinks, links, type, atomContent, propertyContent]
+    virtual_properties:
+        atomContent:
+            serialized_name: content
+        atomAuthor:
+            serialized_name: author
     properties:
         id:
             expose: true
@@ -21,6 +26,12 @@ POData\ObjectModel\ODataEntry:
                 namespace: http://www.w3.org/2005/Atom
                 cdata: false
             type: string
+        editLink:
+            expose: true
+            serialized_name: link
+            xml_element:
+                namespace: http://www.w3.org/2005/Atom
+            type: POData\ObjectModel\ODataLink
         links:
             expose: true
             serialized_name: link

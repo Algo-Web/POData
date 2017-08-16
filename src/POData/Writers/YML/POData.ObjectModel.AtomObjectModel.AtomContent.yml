@@ -1,15 +1,15 @@
-POData\ObjectModel\ODataCategory:
+POData\ObjectModel\AtomObjectModel\AtomContent:
     exclusion_policy: ALL
     xml_root_namespace: http://www.w3.org/2005/Atom
     custom_accessor_order: [id, title, updated, links, mediaLink, mediaLinks, propertyContent]
     properties:
-        term:
+        type:
             expose: true
             xml_attribute: true
-            serialized_name: term
+            serialized_name: type
             type: string
-        scheme:
+        src:
             expose: true
             xml_attribute: true
-            serialized_name: scheme
+            serialized_name: src
             type: string

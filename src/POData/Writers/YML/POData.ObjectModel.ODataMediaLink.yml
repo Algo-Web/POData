@@ -6,6 +6,7 @@ POData\ObjectModel\ODataMediaLink:
         eTag:
             expose: true
             xml_attribute: true
+            serialized_name: etag
             xml_element:
                 namespace: http://schemas.microsoft.com/ado/2007/08/dataservices/metadata
                 cdata: false
@@ -24,10 +25,17 @@ POData\ObjectModel\ODataMediaLink:
             xml_element:
                 cdata: false
             type: string
-        srcLink:
+        editLink:
              expose: true
              xml_attribute: true
              serialized_name: href
+             xml_element:
+                 cdata: false
+             type: string
+        rel:
+             expose: true
+             xml_attribute: true
+             serialized_name: rel
              xml_element:
                  cdata: false
              type: string

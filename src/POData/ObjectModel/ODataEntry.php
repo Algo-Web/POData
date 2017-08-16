@@ -97,4 +97,15 @@ class ODataEntry
      * @var string
      */
     public $baseURI;
+
+	public function atomContent(){
+        if(!$this->isMediaLinkEntry){
+            return new \POData\ObjectModel\AtomObjectModel\AtomContent(\POData\Common\MimeTypes::MIME_APPLICATION_XML,null);
+        }
+        return new \POData\ObjectModel\AtomObjectModel\AtomContent($this->mediaLink->contentType,$this->mediaLink->srcLink);
+    }
+
+    public function atomAuthor(){
+        return new \POData\ObjectModel\AtomObjectModel\AtomAuthor();
+    }
 }

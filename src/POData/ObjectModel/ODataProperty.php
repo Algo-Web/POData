@@ -33,4 +33,8 @@ class ODataProperty
      * @var string|ODataPropertyContent|ODataBagContent
      */
     public $value;
+
+    public function isNull(){
+        return null === $this->value ? true:null;
+    }
 }

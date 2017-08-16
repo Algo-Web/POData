@@ -8,11 +8,18 @@ class TestJMSAsWireSerializer extends \PHPUnit_Framework_TestCase
 {
 
 
-    public function testWireSerializer(){
+    public function testWireSerializerExpanded(){
+        $serialize = $this->initSerialiser();
+        //dd(ObjectModelsForTests::NorthWindCustomersExpandOrders());
+        //die($serialize->serialize(ObjectModelsForTests::NorthWindCustomersExpandOrders(), 'xml'));
+        $this->assertXmlStringEqualsXmlString(ObjectModelsForTests::$NorthWindCustomersExpandOrdersXML,$serialize->serialize(ObjectModelsForTests::NorthWindCustomersExpandOrders(), 'xml'));
+    }
+
+    public function testWireSerializerNoneExpanded(){
         $serialize = $this->initSerialiser();
         //dd(ObjectModelsForTests::NorthWindCustomers());
-        die($serialize->serialize(ObjectModelsForTests::NorthWindCustomers(), 'xml'));
-
+        //die($serialize->serialize(ObjectModelsForTests::NorthWindCustomers(), 'xml'));
+        $this->assertXmlStringEqualsXmlString(ObjectModelsForTests::$NorthWindCustomersXML,$serialize->serialize(ObjectModelsForTests::NorthWindCustomers(), 'xml'));
     }
 
     private function initSerialiser()
