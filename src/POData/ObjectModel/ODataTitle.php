@@ -4,6 +4,7 @@ namespace POData\ObjectModel;
 
 /**
  * Class ODataTitle
+ *
  * @package POData\ObjectModel
  */
 class ODataTitle

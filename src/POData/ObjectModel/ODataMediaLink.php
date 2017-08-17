@@ -62,12 +62,12 @@ class ODataMediaLink
     /**
      * Constructor for initializing attributes.
      *
-     * @param string        $name        Name for media link
-     * @param string        $editLink    EditLink for media content
-     * @param string        $srcLink     source link for media content
-     * @param string        $contentType Mime type for Media content
-     * @param string        $eTag        eTag for media content
-     * @param string|null   $eTag        eTag for media content
+     * @param string      $name        Name for media link
+     * @param string      $editLink    EditLink for media content
+     * @param string      $srcLink     source link for media content
+     * @param string      $contentType Mime type for Media content
+     * @param string      $eTag        eTag for media content
+     * @param string|null $eTag        eTag for media content
      */
     public function __construct($name, $editLink, $srcLink, $contentType, $eTag, $rel = null)
     {

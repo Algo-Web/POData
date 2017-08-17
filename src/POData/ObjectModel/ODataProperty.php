@@ -37,7 +37,8 @@ class ODataProperty
     /**
      * @return bool|null
      */
-    public function isNull(){
+    public function isNull()
+    {
         return null === $this->value ? true:null;
     }
 }
