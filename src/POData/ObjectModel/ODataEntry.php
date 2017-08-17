@@ -109,8 +109,10 @@ class ODataEntry
     public function getAtomContent()
     {
         if (!$this->isMediaLinkEntry) {
-            return new AtomObjectModel\AtomContent(\POData\Common\MimeTypes::MIME_APPLICATION_XML,
-                null, $this->propertyContent);
+            return new AtomObjectModel\AtomContent(
+                \POData\Common\MimeTypes::MIME_APPLICATION_XML,
+                null, $this->propertyContent
+            );
         }
         return new AtomObjectModel\AtomContent($this->mediaLink->contentType, $this->mediaLink->srcLink);
     }
@@ -190,8 +192,8 @@ class ODataEntry
                 $this->resourceSetName = explode('(', $link->url)[0];
                 continue;
             }
-            if ('http://schemas.microsoft.com/ado/2007/08/dataservices/related' ==
-                substr($link->name, 0, 61)) {
+            if ('http://schemas.microsoft.com/ado/2007/08/dataservices/related' == substr($link->name, 0, 61)
+            ) {
                 $this->links[] = $link;
                 continue;
             }
@@ -219,7 +221,7 @@ class ODataEntry
                 $this->mediaLink = $mediaLink;
                 continue;
             }
-            if (ODataMediaLink::MEDIARESOURCE_BASE == substr($mediaLink->rel, 0, 67)) {
+            if (ODataMediaLink::MEDIARESOURCE_BASE == substr($mediaLink->rel, 0, 68)) {
                 $this->mediaLinks[] = $mediaLink;
             }
             if ('edit' == $mediaLink->rel) {

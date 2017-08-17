@@ -64,8 +64,10 @@ class ODataLink
             return null;
         }
         if ($this->isCollection) {
+            assert($this->expandedResult instanceof ODataFeed);
             return new ODataExpandedResult(null, $this->expandedResult);
         }
+        assert($this->expandedResult instanceof ODataEntry);
         return new ODataExpandedResult($this->expandedResult);
     }
 
