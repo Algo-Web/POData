@@ -91,7 +91,7 @@ POData\ObjectModel\ODataEntry:
         atomAuthor:
             serialized_name: author
             access_type: public_method
+            read_only: true
             accessor:
                 getter: getAtomAuthor
-                setter: setAtomAuthor
             type: POData\ObjectModel\AtomObjectModel\AtomAuthor

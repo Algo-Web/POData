@@ -139,13 +139,6 @@ class ODataEntry
     }
 
     /**
-     * @param \POData\ObjectModel\AtomObjectModel\AtomAuthor $atomAuthor
-     */
-    public function setAtomAuthor(AtomObjectModel\AtomAuthor $atomAuthor)
-    {
-    }
-
-    /**
      * @return null|\POData\ObjectModel\ODataPropertyContent
      */
     public function getPropertyContent()
