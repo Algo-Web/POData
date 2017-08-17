@@ -257,6 +257,50 @@ class ProvidersQueryWrapper
     }
 
     /**
+     * Create multiple new resources in a resource set.
+     * @param ResourceSet   $sourceResourceSet  The entity set containing the entity to fetch
+     * @param object[]      $data               The new data for the entity instance
+     *
+     * @return object[]|null returns the newly created model if successful, or null if model creation failed
+     */
+    public function createBulkResourceforResourceSet(
+        ResourceSet $sourceResourceSet,
+        array $data
+    ) {
+        return $this->getQueryProvider()->createBulkResourceforResourceSet(
+            $sourceResourceSet,
+            $data
+        );
+    }
+
+    /**
+     * Updates a group of resources in a resource set.
+     *
+     * @param ResourceSet       $sourceResourceSet    The entity set containing the source entity
+     * @param object            $sourceEntityInstance The source entity instance
+     * @param KeyDescriptor[]   $keyDescriptor        The key identifying the entity to fetch
+     * @param object[]          $data                 The new data for the entity instances
+     * @param bool              $shouldUpdate         Should undefined values be updated or reset to default
+     *
+     * @return object[]|null the new resource value if it is assignable, or throw exception for null
+     */
+    public function updateBulkResource(
+        ResourceSet $sourceResourceSet,
+        $sourceEntityInstance,
+        array $keyDescriptor,
+        array $data,
+        $shouldUpdate = false
+    ) {
+        return $this->getQueryProvider()->updateBulkResource(
+            $sourceResourceSet,
+            $sourceEntityInstance,
+            $keyDescriptor,
+            $data,
+            $shouldUpdate
+        );
+    }
+
+    /**
      * Get related resource for a resource.
      *
      * @param ResourceSet      $sourceResourceSet The source resource set

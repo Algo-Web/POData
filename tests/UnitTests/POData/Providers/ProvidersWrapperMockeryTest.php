@@ -20,6 +20,7 @@ use POData\Providers\ProvidersWrapper;
 use POData\Providers\Query\IQueryProvider;
 use POData\Providers\Query\QueryType;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
+use UnitTests\POData\Facets\NorthWind1\Customer2;
 use UnitTests\POData\TestCase;
 
 class ProvidersWrapperMockeryTest extends TestCase
@@ -485,6 +486,46 @@ class ProvidersWrapperMockeryTest extends TestCase
         $foo = m::mock(ProvidersWrapper::class)->makePartial();
         $foo->shouldReceive('getMetaProvider')->andReturn($meta);
         $actual = $foo->getMetadataXML();
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testCreateBulkResource()
+    {
+        $query = m::mock(IQueryProvider::class);
+        $query->shouldReceive('createBulkResourceforResourceSet')->andReturn('eins')->once();
+
+        $wrap = m::mock(ProvidersQueryWrapper::class)->makePartial();
+        $wrap->shouldReceive('getQueryProvider')->andReturn($query);
+
+        $foo = m::mock(ProvidersWrapper::class)->makePartial();
+        $foo->shouldReceive('getProviderWrapper')->andReturn($wrap);
+
+        $set = m::mock(ResourceSet::class);
+        $payload = [];
+
+        $expected = 'eins';
+        $actual = $foo->createBulkResourceForResourceSet($set, $payload);
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testUpdateBulkResource()
+    {
+        $query = m::mock(IQueryProvider::class);
+        $query->shouldReceive('updateBulkResource')->andReturn('eins')->once();
+
+        $wrap = m::mock(ProvidersQueryWrapper::class)->makePartial();
+        $wrap->shouldReceive('getQueryProvider')->andReturn($query);
+
+        $foo = m::mock(ProvidersWrapper::class)->makePartial();
+        $foo->shouldReceive('getProviderWrapper')->andReturn($wrap);
+
+        $set = m::mock(ResourceSet::class);
+        $payload = [];
+        $source = new Customer2();
+        $keys = [];
+
+        $expected = 'eins';
+        $actual = $foo->updateBulkResource($set, $source, $payload, $keys);
         $this->assertEquals($expected, $actual);
     }
 
