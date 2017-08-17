@@ -57,6 +57,7 @@ class ODataFeed
      * @var string
      */
     public $baseURI;
+	/**
      * @return \POData\ObjectModel\ODataLink
      */
     public function getNextPageLink()
