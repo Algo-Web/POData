@@ -131,6 +131,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $objectResult->selfLink = $selfLink;
         $objectResult->entries = $entry;
         $objectResult->updated = '2017-01-01T00:00:00+00:00';
+        $objectResult->baseURI = 'http://localhost/odata.svc/';
 
         $ironicResult = $ironic->writeTopLevelElements($collection);
 
@@ -210,6 +211,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $objectResult->nextPageLink = $nextLink;
         $objectResult->entries = $entries;
         $objectResult->updated = '2017-01-01T00:00:00+00:00';
+        $objectResult->baseURI = 'http://localhost/odata.svc/';
 
         $ironicResult = $ironic->writeTopLevelElements($results);
 
@@ -300,6 +302,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $objectResult->selfLink = $selfLink;
         $objectResult->entries = $entries;
         $objectResult->updated = '2017-01-01T00:00:00+00:00';
+        $objectResult->baseURI = 'http://localhost/odata.svc/';
 
         $ironicResult = $ironic->writeTopLevelElements($collection);
 
@@ -423,6 +426,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $objectResult->selfLink = $selfLink;
         $objectResult->entries = [$entry, $entry];
         $objectResult->updated = '2017-01-01T00:00:00+00:00';
+        $objectResult->baseURI = 'http://localhost/odata.svc/';
 
         $ironicResult = $ironic->writeTopLevelElements($collection);
 
@@ -574,6 +578,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $objectResult->selfLink = $selfLink;
         $objectResult->entries = $entries;
         $objectResult->updated = '2017-01-01T00:00:00+00:00';
+        $objectResult->baseURI = 'http://localhost/odata.svc/';
 
         $ironicResult = $ironic->writeTopLevelElements($collection);
 

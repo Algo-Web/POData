@@ -87,6 +87,12 @@ class CynicSerialiser implements IObjectSerialiser
      */
     private $updated;
 
+    /*
+     * Has base URI already been written out during serialisation?
+     * @var bool;
+     */
+    private $isBaseWritten = false;
+
     /**
      * @param IService                $service Reference to the data service instance
      * @param RequestDescription|null $request Type instance describing the client submitted request
@@ -117,6 +123,9 @@ class CynicSerialiser implements IObjectSerialiser
         }
 
         $this->loadStackIfEmpty();
+
+        $baseURI = $this->isBaseWritten ? null : $this->absoluteServiceUriWithSlash;
+        $this->isBaseWritten = true;
 
         $stackCount = count($this->lightStack);
         $topOfStack = $this->lightStack[$stackCount-1];
@@ -219,6 +228,7 @@ class CynicSerialiser implements IObjectSerialiser
         $odata->mediaLinks = $mediaLinks;
         $odata->links = $links;
         $odata->updated = $this->getUpdated()->format(DATE_ATOM);
+        $odata->baseURI = $baseURI;
 
         $newCount = count($this->lightStack);
         assert(
@@ -257,6 +267,8 @@ class CynicSerialiser implements IObjectSerialiser
         $odata->id = $absoluteUri;
         $odata->selfLink = $selfLink;
         $odata->updated = $this->getUpdated()->format(DATE_ATOM);
+        $odata->baseURI = $this->isBaseWritten ? null : $this->absoluteServiceUriWithSlash;
+        $this->isBaseWritten = true;
 
         if ($this->getRequest()->queryType == QueryType::ENTITIES_WITH_COUNT()) {
             $odata->rowCount = $this->getRequest()->getCountValue();
