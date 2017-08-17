@@ -90,4 +90,11 @@ class ODataEntry
      * @var string
      */
     public $updated;
+
+    /**
+     * Service Base URI
+     *
+     * @var string
+     */
+    public $baseURI;
 }

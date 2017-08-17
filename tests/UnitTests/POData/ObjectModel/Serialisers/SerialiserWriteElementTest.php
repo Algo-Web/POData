@@ -97,6 +97,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $objectResult->links[] = $link;
         $objectResult->resourceSetName = 'Customers';
         $objectResult->updated = '2017-01-01T00:00:00+00:00';
+        $objectResult->baseURI = 'http://localhost/odata.svc/';
 
         $ironicResult = $ironic->writeTopLevelElement($result);
         $this->assertEquals(get_class($objectResult), get_class($ironicResult));
@@ -269,6 +270,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $objectResult->links = $links;
         $objectResult->resourceSetName = 'Orders';
         $objectResult->updated = '2017-01-01T00:00:00+00:00';
+        $objectResult->baseURI = 'http://localhost/odata.svc/';
 
         $ironicResult = $ironic->writeTopLevelElement($result);
 
@@ -361,6 +363,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $objectResult->links = $links;
         $objectResult->resourceSetName = 'Employees';
         $objectResult->updated = '2017-01-01T00:00:00+00:00';
+        $objectResult->baseURI = 'http://localhost/odata.svc/';
 
         $ironicResult = $ironic->writeTopLevelElement($result);
 
@@ -553,6 +556,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $objectResult->links[] = $link;
         $objectResult->resourceSetName = 'Employees';
         $objectResult->updated = '2017-01-01T00:00:00+00:00';
+        $objectResult->baseURI = 'http://localhost/odata.svc/';
 
         $ironicResult = $ironic->writeTopLevelElement($result);
 
