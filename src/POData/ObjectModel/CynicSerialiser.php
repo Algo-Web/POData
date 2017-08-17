@@ -129,13 +129,13 @@ class CynicSerialiser implements IObjectSerialiser
 
         $stackCount = count($this->lightStack);
         $topOfStack = $this->lightStack[$stackCount-1];
-        $resourceType = $this->getService()->getProvidersWrapper()->resolveResourceType($topOfStack[0]);
+        $resourceType = $this->getService()->getProvidersWrapper()->resolveResourceType($topOfStack['type']);
         assert($resourceType instanceof ResourceType, get_class($resourceType));
         $rawProp = $resourceType->getAllProperties();
         $relProp = [];
         $nonRelProp = [];
         $last = end($this->lightStack);
-        $projNodes = ($last[0] == $last[1]) ? $this->getProjectionNodes() : null;
+        $projNodes = ($last['type'] == $last['property']) ? $this->getProjectionNodes() : null;
 
         foreach ($rawProp as $prop) {
             $propName = $prop->getName();
@@ -235,7 +235,10 @@ class CynicSerialiser implements IObjectSerialiser
             $newCount == $stackCount,
             'Should have ' . $stackCount . 'elements in stack, have ' . $newCount . 'elements'
         );
-        array_pop($this->lightStack);
+        $this->lightStack[$newCount-1]['count']--;
+        if (0 == $this->lightStack[$newCount-1]['count']) {
+            array_pop($this->lightStack);
+        }
         return $odata;
     }
 
@@ -766,17 +769,22 @@ class CynicSerialiser implements IObjectSerialiser
         $nuLink->isCollection = $isCollection;
         $value = $entryObject->results->$propName;
         $nullResult = null === $value;
-        $result = new QueryResult();
-        $result->results = $value;
-        if (!$nullResult) {
-            array_push($this->lightStack, [$nextName, $propName]);
-            if (isset($value)) {
-                if (!$isCollection) {
-                    $expandedResult = $this->writeTopLevelElement($result);
-                } else {
-                    $expandedResult = $this->writeTopLevelElements($result);
+        $resultCount = $nullResult ? 0 : count($value);
+
+        if (0 < $resultCount) {
+            $result = new QueryResult();
+            $result->results = $value;
+            if (!$nullResult) {
+                $newStackLine = ['type' => $nextName, 'property' => $propName, 'count' => $resultCount];
+                array_push($this->lightStack, $newStackLine);
+                if (isset($value)) {
+                    if (!$isCollection) {
+                        $expandedResult = $this->writeTopLevelElement($result);
+                    } else {
+                        $expandedResult = $this->writeTopLevelElements($result);
+                    }
+                    $nuLink->expandedResult = $expandedResult;
                 }
-                $nuLink->expandedResult = $expandedResult;
             }
         }
         if (!isset($nuLink->expandedResult)) {
@@ -936,7 +944,7 @@ class CynicSerialiser implements IObjectSerialiser
     {
         if (0 == count($this->lightStack)) {
             $typeName = $this->getRequest()->getTargetResourceType()->getName();
-            array_push($this->lightStack, [$typeName, $typeName]);
+            array_push($this->lightStack, ['type' => $typeName, 'property' => $typeName, 'count' => 1]);
         }
     }
 
