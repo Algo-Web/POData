@@ -22,6 +22,12 @@ class ODataTitle
      */
     public $type;
 
+    /**
+     * ODataTitle constructor.
+     *
+     * @param string $title
+     * @param string $type
+     */
     public function __construct($title, $type = 'text')
     {
         $this->title = $title;

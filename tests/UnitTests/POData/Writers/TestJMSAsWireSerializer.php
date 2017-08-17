@@ -12,7 +12,11 @@ class TestJMSAsWireSerializer extends \PHPUnit_Framework_TestCase
         $serialize = $this->initSerialiser();
         //dd(ObjectModelsForTests::NorthWindCustomersExpandOrders());
         //die($serialize->serialize(ObjectModelsForTests::NorthWindCustomersExpandOrders(), 'xml'));
-        $this->assertXmlStringEqualsXmlString(ObjectModelsForTests::$NorthWindCustomersExpandOrdersXML,$serialize->serialize(ObjectModelsForTests::NorthWindCustomersExpandOrders(), 'xml'));
+        $data = $serialize->serialize(ObjectModelsForTests::NorthWindCustomersExpandOrders(), 'xml');
+        $this->assertXmlStringEqualsXmlString(ObjectModelsForTests::$NorthWindCustomersExpandOrdersXML, $data);
+        $output = $serialize->deserialize($data, 'POData\ObjectModel\ODataFeed', 'xml');
+        $this->assertEquals(ObjectModelsForTests::NorthWindCustomersExpandOrders(), $output);
+
     }
 
     public function testWireSerializerNoneExpanded(){
@@ -20,7 +24,7 @@ class TestJMSAsWireSerializer extends \PHPUnit_Framework_TestCase
         //dd(ObjectModelsForTests::NorthWindCustomers());
         //die($serialize->serialize(ObjectModelsForTests::NorthWindCustomers(), 'xml'));
         $data = $serialize->serialize(ObjectModelsForTests::NorthWindCustomers(), 'xml');
-        //$this->assertXmlStringEqualsXmlString(ObjectModelsForTests::$NorthWindCustomersXML,$data);
+        $this->assertXmlStringEqualsXmlString(ObjectModelsForTests::$NorthWindCustomersXML, $data);
         $output = $serialize->deserialize($data, 'POData\ObjectModel\ODataFeed', 'xml');
         $this->assertEquals(ObjectModelsForTests::NorthWindCustomers(), $output);
     }

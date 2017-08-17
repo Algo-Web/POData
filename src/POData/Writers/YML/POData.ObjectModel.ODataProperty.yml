@@ -22,5 +22,6 @@ POData\ObjectModel\ODataProperty:
             xml_value: true
             xml_element:
                 cdata: false
+            type: string
 
 

@@ -25,6 +25,12 @@ class ODataExpandedResult
      */
     public $feed;
 
+    /**
+     * ODataExpandedResult constructor.
+     *
+     * @param \POData\ObjectModel\ODataEntry|null $Entry
+     * @param \POData\ObjectModel\ODataFeed|null  $Feed
+     */
     public function __construct(ODataEntry $Entry = null,ODataFeed $Feed = null)
     {
         $this->entry = $Entry;

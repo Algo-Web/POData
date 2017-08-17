@@ -24,9 +24,13 @@ POData\ObjectModel\ODataEntry:
         editLink:
             expose: true
             serialized_name: link
+            read_only: true
             xml_element:
                 namespace: http://www.w3.org/2005/Atom
             type: POData\ObjectModel\ODataLink
+            access_type: public_method
+            accessor:
+                getter: getEditLink
         links:
             expose: true
             serialized_name: link
@@ -35,6 +39,10 @@ POData\ObjectModel\ODataEntry:
                 inline: true
                 namespace: http://www.w3.org/2005/Atom
             type: array<POData\ObjectModel\ODataLink>
+            access_type: public_method
+            accessor:
+                getter: getLinks
+                setter: setLinks
         mediaLinks:
             expose: true
             serialized_name: link
@@ -43,13 +51,21 @@ POData\ObjectModel\ODataEntry:
                 inline: true
                 namespace: http://www.w3.org/2005/Atom
             type: array<POData\ObjectModel\ODataMediaLink>
+            access_type: public_method
+            accessor:
+                getter: getMediaLinks
+                setter: setMediaLinks
         mediaLink:
             expose: true
             serialized_name: link
+            read_only: true
             xml_element:
                 namespace: http://www.w3.org/2005/Atom
                 cdata: false
             type: POData\ObjectModel\ODataMediaLink
+            access_type: public_method
+            accessor:
+                getter: getMediaLink
         type:
             expose: true
             serialized_name: category
@@ -57,9 +73,6 @@ POData\ObjectModel\ODataEntry:
         propertyContent:
             expose: true
             serialized_name: properties
-            xml_key_value_pairs: true
-            xml_list:
-                namespace: http://schemas.microsoft.com/ado/2007/08/dataservices
             xml_element:
                 cdata: false
                 namespace: http://schemas.microsoft.com/ado/2007/08/dataservices/metadata
@@ -67,7 +80,7 @@ POData\ObjectModel\ODataEntry:
             accessor:
                 getter: getPropertyContent
                 setter: setPropertyContent
-            type: array<POData\ObjectModel\ODataProperty>
+            type: POData\ObjectModel\ODataPropertyContent
         atomContent:
             serialized_name: content
             access_type: public_method

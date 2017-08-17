@@ -91,7 +91,6 @@ class ODataEntry
      */
     public $updated;
 
-<<<<<<< HEAD
     /**
      * Service Base URI
      *
@@ -100,45 +99,155 @@ class ODataEntry
     public $baseURI;
 
 	public function atomContent(){
-=======
+
+    /**
+     * @var AtomObjectModel\AtomContent
+     */
     public $atomContent;
 
+    /**
+     * @return \POData\ObjectModel\AtomObjectModel\AtomContent
+     */
     public function getAtomContent()
     {
->>>>>>> Most recent attempt still debugging
         if(!$this->isMediaLinkEntry){
-            return new \POData\ObjectModel\AtomObjectModel\AtomContent(\POData\Common\MimeTypes::MIME_APPLICATION_XML, null, $this->propertyContent->properties);
+            return new AtomObjectModel\AtomContent(\POData\Common\MimeTypes::MIME_APPLICATION_XML, null, $this->propertyContent);
         }
-        return new \POData\ObjectModel\AtomObjectModel\AtomContent($this->mediaLink->contentType,$this->mediaLink->srcLink);
+        return new AtomObjectModel\AtomContent($this->mediaLink->contentType, $this->mediaLink->srcLink);
     }
 
-    public function setAtomContent($v)
+    /**
+     * @param \POData\ObjectModel\AtomObjectModel\AtomContent $atomContent
+     */
+    public function setAtomContent(AtomObjectModel\AtomContent $atomContent)
     {
+        $this->setPropertyContent($atomContent->properties);
     }
 
+    /**
+     * @var AtomObjectModel\AtomAuthor
+     */
     public $atomAuthor;
 
+    /**
+     * @return \POData\ObjectModel\AtomObjectModel\AtomAuthor
+     */
     public function getAtomAuthor()
     {
-        return new \POData\ObjectModel\AtomObjectModel\AtomAuthor();
+        return new AtomObjectModel\AtomAuthor();
     }
 
-    public function setAtomAuthor($v)
+    /**
+     * @param \POData\ObjectModel\AtomObjectModel\AtomAuthor $v
+     */
+    public function setAtomAuthor(AtomObjectModel\AtomAuthor $v)
     {
 
     }
 
+    /**
+     * @return null|\POData\ObjectModel\ODataPropertyContent
+     */
     public function getPropertyContent()
     {
 
         if (!$this->isMediaLinkEntry) {
             return null;
         }
-        return $this->propertyContent->properties;
+        return $this->propertyContent;
     }
 
-    public function setPropertyContent($v)
+    /**
+     * @param \POData\ObjectModel\ODataPropertyContent|null $v
+     */
+    public function setPropertyContent(ODataPropertyContent $v = null)
     {
-//        $e = new \Exception(); dd($e->getTraceAsString());
+        $this->propertyContent = $v;
     }
+
+    /**
+     * @return \POData\ObjectModel\ODataLink
+     */
+    public function getEditLink()
+    {
+        return $this->editLink;
+    }
+
+    /**
+     * @return \POData\ObjectModel\ODataLink[]
+     */
+    public function getLinks()
+    {
+        return $this->links;
+    }
+
+    /**
+     * @param $links \POData\ObjectModel\ODataLink[]
+     */
+    public function setLinks(array $links)
+    {
+        $this->links = [];
+        foreach ($links as $link) {
+            if ('edit' == $link->name) {
+                $this->editLink = $link;
+                $this->resourceSetName = explode('(', $link->url)[0];
+                continue;
+            }
+            if ('http://schemas.microsoft.com/ado/2007/08/dataservices/related' == substr($link->name, 0, 61)) {
+                $this->links[] = $link;
+                continue;
+            }
+        }
+
+    }
+
+    /**
+     * @return ODataMediaLink[]
+     */
+    public function getMediaLinks()
+    {
+        return $this->mediaLinks;
+    }
+
+    /**
+     * @param ODataMediaLink[] $mediaLinks
+     */
+    public function setMediaLinks(array $mediaLinks)
+    {
+        $this->mediaLinks = [];
+        $editLink = null;
+        foreach ($mediaLinks as $mediaLink) {
+            if ('edit-media' == $mediaLink->rel) {
+                $this->isMediaLinkEntry = true;
+                $this->mediaLink = $mediaLink;
+                continue;
+            }
+            if (ODataMediaLink::MEDIARESOURCE_BASE == substr($mediaLink->rel, 0, 67)) {
+                $this->mediaLinks[] = $mediaLink;
+            }
+            if ('edit' == $mediaLink->rel) {
+                $editLink = $mediaLink;
+
+            }
+        }
+        if (null !== $this->mediaLink && null != $editLink) {
+            $this->mediaLink->srcLink = $editLink->editLink . $this->mediaLink->editLink;
+            foreach ($this->mediaLinks as $mediaLink) {
+                $mediaLink->srcLink = $editLink->editLink . '/' . $mediaLink->name;
+            }
+        }
+        if (null === $this->mediaLink) {
+            $this->isMediaLinkEntry = false;
+        }
+
+    }
+
+    /**
+     * @return \POData\ObjectModel\ODataMediaLink
+     */
+    public function getMediaLink()
+    {
+        return $this->mediaLink;
+    }
+
 }

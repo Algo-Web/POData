@@ -16,10 +16,7 @@ POData\ObjectModel\AtomObjectModel\AtomContent:
         properties:
             expose: true
             serialized_name: properties
-            xml_key_value_pairs: true
-            xml_list:
-                namespace: http://schemas.microsoft.com/ado/2007/08/dataservices
             xml_element:
                 cdata: false
                 namespace: http://schemas.microsoft.com/ado/2007/08/dataservices/metadata
-            type: array<POData\ObjectModel\ODataProperty>
+            type: POData\ObjectModel\ODataPropertyContent

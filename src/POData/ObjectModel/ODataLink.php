@@ -50,14 +50,39 @@ class ODataLink
      * @var bool
      */
     public $isExpanded;
+    /**
+     * @var null
+     */
+    public $expandResult;
 
-    public function expandResult(){
-        if(!$this->isExpanded){
+    /**
+     * @return null|\POData\ObjectModel\ODataExpandedResult
+     */
+    public function getExpandResult()
+    {
+        if (!$this->isExpanded) {
             return null;
         }
-        if($this->isCollection){
-            return new ODataExpandedResult(null,$this->expandedResult);
+        if ($this->isCollection) {
+            return new ODataExpandedResult(null, $this->expandedResult);
         }
         return new ODataExpandedResult($this->expandedResult);
+    }
+
+    /**
+     * @param \POData\ObjectModel\ODataExpandedResult $eResult
+     */
+    public function setExpandResult(ODataExpandedResult $eResult)
+    {
+        if (null !== $eResult->feed) {
+            $this->isExpanded = true;
+            $this->isCollection = true;
+            $this->expandedResult = $eResult->feed;
+        }
+        if (null !== $eResult->entry) {
+            $this->isExpanded = true;
+            $this->isCollection = false;
+            $this->expandedResult = $eResult->entry;
+        }
     }
 }

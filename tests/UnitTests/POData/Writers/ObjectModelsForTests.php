@@ -971,7 +971,7 @@ class ObjectModelsForTests
 </feed>';
 
 public static $NorthWindCustomersExpandOrdersXML = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<feed xml:base="http://192.168.1.1/POData-Laravel-NorthWind/public/index.php/odata.svc/" xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns="http://www.w3.org/2005/Atom">
+<feed xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns="http://www.w3.org/2005/Atom">
  <title type="text">Customers</title>
  <id>http://192.168.1.1/POData-Laravel-NorthWind/public/index.php/odata.svc/Customers</id>
  <updated>2017-08-15T19:25:04+00:00</updated>

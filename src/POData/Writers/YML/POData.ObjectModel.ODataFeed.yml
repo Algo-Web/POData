@@ -45,6 +45,10 @@ POData\ObjectModel\ODataFeed:
                 inline: true
                 namespace: http://www.w3.org/2005/Atom
             type: array<POData\ObjectModel\ODataEntry>
+            access_type: public_method
+            accessor:
+                getter: getEntries
+                setter: setEntries
         nextPageLink:
             expose: true
             skip_when_empty: true
@@ -53,3 +57,7 @@ POData\ObjectModel\ODataFeed:
                 inline: true
                 namespace: http://www.w3.org/2005/Atom
             type: POData\ObjectModel\ODataLink
+            access_type: public_method
+            accessor:
+                getter: getNextPageLink
+                setter: setNextPageLink
