@@ -209,26 +209,42 @@ class ODataEntry
         $this->mediaLinks = [];
         $editLink = null;
         foreach ($mediaLinks as $mediaLink) {
-            if ('edit-media' == $mediaLink->rel) {
-                $this->isMediaLinkEntry = true;
-                $this->mediaLink = $mediaLink;
-                continue;
-            }
-            if (ODataMediaLink::MEDIARESOURCE_BASE == substr($mediaLink->rel, 0, 68)) {
-                $this->mediaLinks[] = $mediaLink;
-            }
-            if ('edit' == $mediaLink->rel) {
-                $editLink = $mediaLink;
-            }
+            $this->handleMediaLinkEntry($mediaLink, $editLink);
         }
-        if (null !== $this->mediaLink && null != $editLink) {
+        $this->correctMediaLinkSrc($editLink);
+        if (null === $this->mediaLink) {
+            $this->isMediaLinkEntry = false;
+        }
+    }
+
+    /**
+     * @param \POData\ObjectModel\ODataMediaLink      $mediaLink
+     * @param \POData\ObjectModel\ODataMediaLink|null $editLink
+     */
+    private function handleMediaLinkEntry(ODataMediaLink $mediaLink, ODataMediaLink &$editLink = null)
+    {
+        if ('edit-media' == $mediaLink->rel) {
+            $this->isMediaLinkEntry = true;
+            $this->mediaLink = $mediaLink;
+        }
+        if (ODataMediaLink::MEDIARESOURCE_BASE == substr($mediaLink->rel, 0, 68)) {
+            $this->mediaLinks[] = $mediaLink;
+        }
+        if ('edit' == $mediaLink->rel) {
+            $editLink = $mediaLink;
+        }
+    }
+
+    /**
+     * @param \POData\ObjectModel\ODataMediaLink|null $editLink
+     */
+    private function correctMediaLinkSrc(ODataMediaLink $editLink = null)
+    {
+        if (null !== $this->mediaLink && null !== $editLink) {
             $this->mediaLink->srcLink = $editLink->editLink . $this->mediaLink->editLink;
             foreach ($this->mediaLinks as $mediaLink) {
                 $mediaLink->srcLink = $editLink->editLink . '/' . $mediaLink->name;
             }
-        }
-        if (null === $this->mediaLink) {
-            $this->isMediaLinkEntry = false;
         }
     }
 
