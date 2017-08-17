@@ -52,13 +52,11 @@ class ODataFeed
     public $updated;
 
     /**
-<<<<<<< HEAD
      * Service Base URI
      *
      * @var string
      */
     public $baseURI;
-=======
      * @return \POData\ObjectModel\ODataLink
      */
     public function getNextPageLink()
@@ -94,5 +92,4 @@ class ODataFeed
     {
         $this->entries = $entries;
     }
->>>>>>> cleaned up doc comments, got tests passing, finalized yml.
 }

@@ -98,8 +98,6 @@ class ODataEntry
      */
     public $baseURI;
 
-	public function atomContent(){
-
     /**
      * @var AtomObjectModel\AtomContent
      */
