@@ -984,7 +984,7 @@ public static $NorthWindCustomersExpandOrdersXML = '<?xml version="1.0" encoding
    <name/>
   </author>
   <link rel="edit" title="Customer" href="Customers(id=1)"/>
-  <link m:etag="000000002d08935c00000000202e84b7" rel="edit-media" type="*/*" title="Customer" href="/$value"/>
+  <link m:etag="00000000323b8e3300000000642cbbb4" rel="edit-media" type="*/*" title="Customer" href="/$value"/>
   <link m:etag="da39a3ee5e6b4b0d3255bfef95601890afd80709" rel="http://schemas.microsoft.com/ado/2007/08/dataservices/mediaresource/attachments" type="application/octet-stream" title="attachments" href="Customers(id=1)/attachments"/>
   <link rel="http://schemas.microsoft.com/ado/2007/08/dataservices/related/orders" type="application/atom+xml;type=feed" title="orders" href="Customers(id=1)/orders">
    <m:inline>
@@ -1015,7 +1015,7 @@ public static $NorthWindCustomersExpandOrdersXML = '<?xml version="1.0" encoding
         <d:id m:type="Edm.Int32">44</d:id>
         <d:employee_id m:type="Edm.Int32">1</d:employee_id>
         <d:customer_id m:type="Edm.Int32">1</d:customer_id>
-        <d:order_date m:type="Edm.DateTime">2006-03-24T00:00:00</d:order_date>
+        <d:order_date m:type="Edm.DateTime">2006-03-24 00:00:00</d:order_date>
         <d:shipped_date m:type="Edm.DateTime" m:null="true"/>
         <d:shipper_id m:type="Edm.Int32" m:null="true"/>
         <d:ship_name m:type="Edm.String">Anna Bedecs</d:ship_name>
@@ -1057,7 +1057,7 @@ public static $NorthWindCustomersExpandOrdersXML = '<?xml version="1.0" encoding
         <d:id m:type="Edm.Int32">71</d:id>
         <d:employee_id m:type="Edm.Int32">1</d:employee_id>
         <d:customer_id m:type="Edm.Int32">1</d:customer_id>
-        <d:order_date m:type="Edm.DateTime">2006-05-24T00:00:00</d:order_date>
+        <d:order_date m:type="Edm.DateTime">2006-05-24 00:00:00</d:order_date>
         <d:shipped_date m:type="Edm.DateTime" m:null="true"/>
         <d:shipper_id m:type="Edm.Int32">3</d:shipper_id>
         <d:ship_name m:type="Edm.String">Anna Bedecs</d:ship_name>
@@ -1110,7 +1110,7 @@ public static $NorthWindCustomersExpandOrdersXML = '<?xml version="1.0" encoding
    <name/>
   </author>
   <link rel="edit" title="Customer" href="Customers(id=2)"/>
-  <link m:etag="000000002d08935d00000000202e84b7" rel="edit-media" type="*/*" title="Customer" href="/$value"/>
+  <link m:etag="00000000323b8e3200000000642cbbb4" rel="edit-media" type="*/*" title="Customer" href="/$value"/>
   <link m:etag="da39a3ee5e6b4b0d3255bfef95601890afd80709" rel="http://schemas.microsoft.com/ado/2007/08/dataservices/mediaresource/attachments" type="application/octet-stream" title="attachments" href="Customers(id=2)/attachments"/>
   <link rel="http://schemas.microsoft.com/ado/2007/08/dataservices/related/orders" type="application/atom+xml;type=feed" title="orders" href="Customers(id=2)/orders">
    <m:inline>

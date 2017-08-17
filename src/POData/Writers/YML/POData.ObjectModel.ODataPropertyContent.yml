@@ -11,3 +11,4 @@ POData\ObjectModel\ODataPropertyContent:
             xml_element:
                 cdata: false
                 namespace: http://schemas.microsoft.com/ado/2007/08/dataservices/metadata
+            type: array<POData\ObjectModel\ODataProperty>

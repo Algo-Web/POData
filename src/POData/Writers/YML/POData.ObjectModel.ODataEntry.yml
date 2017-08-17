@@ -2,11 +2,6 @@ POData\ObjectModel\ODataEntry:
     exclusion_policy: ALL
     xml_root_namespace: http://www.w3.org/2005/Atom
     custom_accessor_order: [id, title, updated, atomAuthor, editLink, mediaLink, mediaLinks, links, type, atomContent, propertyContent]
-    virtual_properties:
-        atomContent:
-            serialized_name: content
-        atomAuthor:
-            serialized_name: author
     properties:
         id:
             expose: true
@@ -61,10 +56,29 @@ POData\ObjectModel\ODataEntry:
             type: POData\ObjectModel\ODataCategory
         propertyContent:
             expose: true
-            inline: true
             serialized_name: properties
+            xml_key_value_pairs: true
+            xml_list:
+                namespace: http://schemas.microsoft.com/ado/2007/08/dataservices
             xml_element:
                 cdata: false
                 namespace: http://schemas.microsoft.com/ado/2007/08/dataservices/metadata
-            type: POData\ObjectModel\ODataPropertyContent
-
+            access_type: public_method
+            accessor:
+                getter: getPropertyContent
+                setter: setPropertyContent
+            type: array<POData\ObjectModel\ODataProperty>
+        atomContent:
+            serialized_name: content
+            access_type: public_method
+            accessor:
+                getter: getAtomContent
+                setter: setAtomContent
+            type: POData\ObjectModel\AtomObjectModel\AtomContent
+        atomAuthor:
+            serialized_name: author
+            access_type: public_method
+            accessor:
+                getter: getAtomAuthor
+                setter: setAtomAuthor
+            type: POData\ObjectModel\AtomObjectModel\AtomAuthor

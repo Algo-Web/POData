@@ -25,9 +25,12 @@ class AtomContent
      */
     public $src;
 
-    public function __construct($type, $src)
+    public $properties;
+
+    public function __construct($type, $src, $properties = null)
     {
         $this->src = $src;
         $this->type = $type;
+        $this->properties = $properties;
     }
 }

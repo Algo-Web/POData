@@ -91,6 +91,7 @@ class ODataEntry
      */
     public $updated;
 
+<<<<<<< HEAD
     /**
      * Service Base URI
      *
@@ -99,13 +100,45 @@ class ODataEntry
     public $baseURI;
 
 	public function atomContent(){
+=======
+    public $atomContent;
+
+    public function getAtomContent()
+    {
+>>>>>>> Most recent attempt still debugging
         if(!$this->isMediaLinkEntry){
-            return new \POData\ObjectModel\AtomObjectModel\AtomContent(\POData\Common\MimeTypes::MIME_APPLICATION_XML,null);
+            return new \POData\ObjectModel\AtomObjectModel\AtomContent(\POData\Common\MimeTypes::MIME_APPLICATION_XML, null, $this->propertyContent->properties);
         }
         return new \POData\ObjectModel\AtomObjectModel\AtomContent($this->mediaLink->contentType,$this->mediaLink->srcLink);
     }
 
-    public function atomAuthor(){
+    public function setAtomContent($v)
+    {
+    }
+
+    public $atomAuthor;
+
+    public function getAtomAuthor()
+    {
         return new \POData\ObjectModel\AtomObjectModel\AtomAuthor();
+    }
+
+    public function setAtomAuthor($v)
+    {
+
+    }
+
+    public function getPropertyContent()
+    {
+
+        if (!$this->isMediaLinkEntry) {
+            return null;
+        }
+        return $this->propertyContent->properties;
+    }
+
+    public function setPropertyContent($v)
+    {
+//        $e = new \Exception(); dd($e->getTraceAsString());
     }
 }
