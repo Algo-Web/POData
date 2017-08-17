@@ -45,19 +45,19 @@ class ODataFeed
     public $entries = [];
 
     /**
-     * Last updated timestamp
+     * Last updated timestamp.
      *
      * @var string
      */
     public $updated;
 
     /**
-     * Service Base URI
+     * Service Base URI.
      *
      * @var string
      */
     public $baseURI;
-	/**
+    /**
      * @return \POData\ObjectModel\ODataLink
      */
     public function getNextPageLink()
