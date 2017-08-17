@@ -26,12 +26,12 @@ class ODataExpandedResult
     /**
      * ODataExpandedResult constructor.
      *
-     * @param \POData\ObjectModel\ODataEntry|null $Entry
-     * @param \POData\ObjectModel\ODataFeed|null  $Feed
+     * @param \POData\ObjectModel\ODataEntry|null $entry
+     * @param \POData\ObjectModel\ODataFeed|null  $feed
      */
-    public function __construct(ODataEntry $Entry = null, ODataFeed $Feed = null)
+    public function __construct(ODataEntry $entry = null, ODataFeed $feed = null)
     {
-        $this->entry = $Entry;
-        $this->feed = $Feed;
+        $this->entry = $entry;
+        $this->feed = $feed;
     }
 }
