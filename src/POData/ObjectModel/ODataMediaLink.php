@@ -68,6 +68,7 @@ class ODataMediaLink
      * @param string      $contentType Mime type for Media content
      * @param string      $eTag        eTag for media content
      * @param string|null $eTag        eTag for media content
+     * @param null|mixed  $rel
      */
     public function __construct($name, $editLink, $srcLink, $contentType, $eTag, $rel = null)
     {

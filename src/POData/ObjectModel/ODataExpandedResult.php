@@ -3,11 +3,9 @@
  * Created by PhpStorm.
  * User: Barnso
  * Date: 16/08/2017
- * Time: 5:41 AM
+ * Time: 5:41 AM.
  */
-
 namespace POData\ObjectModel;
-
 
 class ODataExpandedResult
 {
@@ -19,7 +17,7 @@ class ODataExpandedResult
     public $entry;
 
     /**
-     * Scheme
+     * Scheme.
      *
      * @var ODataFeed
      */
@@ -31,7 +29,7 @@ class ODataExpandedResult
      * @param \POData\ObjectModel\ODataEntry|null $Entry
      * @param \POData\ObjectModel\ODataFeed|null  $Feed
      */
-    public function __construct(ODataEntry $Entry = null,ODataFeed $Feed = null)
+    public function __construct(ODataEntry $Entry = null, ODataFeed $Feed = null)
     {
         $this->entry = $Entry;
         $this->feed = $Feed;

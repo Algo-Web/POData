@@ -106,43 +106,43 @@ class Employee5
 {
     //Key Edm.Int32
     public $EmployeeID;
-     //Edm.String
+    //Edm.String
     public $FirstName;
-     //Edm.String
+    //Edm.String
     public $LastName;
-     //Edm.String
+    //Edm.String
     public $Title;
-     //Edm.String
+    //Edm.String
     public $TitleOfCourtesy;
-     //Edm.DateTime
+    //Edm.DateTime
     public $BirthDate;
-     //Edm.DateTime
+    //Edm.DateTime
     public $HireDate;
-     //Edm.String
+    //Edm.String
     public $Address;
-     //Edm.String
+    //Edm.String
     public $City;
-     //Edm.String
+    //Edm.String
     public $Region;
-     //Edm.String
+    //Edm.String
     public $PostalCode;
-     //Edm.String
+    //Edm.String
     public $Country;
-     //Edm.String
+    //Edm.String
     public $HomePhone;
-     //Edm.String
+    //Edm.String
     public $Extension;
-     //Edm.String
+    //Edm.String
     public $Notes;
-     //Bag of strings
+    //Bag of strings
     public $Emails;
-     //Edm.Int32
+    //Edm.Int32
     public $ReportsTo;
-     //Edm.Binary
+    //Edm.Binary
     public $Photo;
-     //Edm.String
+    //Edm.String
     public $PhotoPath;
-     //Navigation Property to associated instance of Employee instance
+    //Navigation Property to associated instance of Employee instance
      //representing manager (ResourceReference)
      //public $Manager;
      //Navigation Property to associated instance of Employee instances

@@ -559,6 +559,8 @@ class SimpleMetadataProvider implements IMetadataProvider
      * @param string             $name              The name of the property to add
      * @param ResourceSet        $targetResourceSet The resource set the resource reference
      *                                              property points to
+     * @param mixed              $flip
+     * @param mixed              $many
      */
     public function addResourceReferenceProperty(
         ResourceEntityType $resourceType,
@@ -624,6 +626,7 @@ class SimpleMetadataProvider implements IMetadataProvider
      *                                               resource reference or reference
      *                                               set property points to
      * @param string             $resourceMult       The multiplicity of relation being added
+     * @param mixed              $many
      *
      * @throws InvalidOperationException
      */

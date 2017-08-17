@@ -85,14 +85,14 @@ class ODataEntry
     public $resourceSetName;
 
     /**
-     * Last updated timestamp
+     * Last updated timestamp.
      *
      * @var string
      */
     public $updated;
 
     /**
-     * Service Base URI
+     * Service Base URI.
      *
      * @var string
      */
@@ -140,7 +140,6 @@ class ODataEntry
      */
     public function setAtomAuthor(AtomObjectModel\AtomAuthor $v)
     {
-
     }
 
     /**
@@ -148,7 +147,6 @@ class ODataEntry
      */
     public function getPropertyContent()
     {
-
         if (!$this->isMediaLinkEntry) {
             return null;
         }
@@ -196,7 +194,6 @@ class ODataEntry
                 continue;
             }
         }
-
     }
 
     /**
@@ -225,7 +222,6 @@ class ODataEntry
             }
             if ('edit' == $mediaLink->rel) {
                 $editLink = $mediaLink;
-
             }
         }
         if (null !== $this->mediaLink && null != $editLink) {
@@ -237,7 +233,6 @@ class ODataEntry
         if (null === $this->mediaLink) {
             $this->isMediaLinkEntry = false;
         }
-
     }
 
     /**
@@ -247,5 +242,4 @@ class ODataEntry
     {
         return $this->mediaLink;
     }
-
 }

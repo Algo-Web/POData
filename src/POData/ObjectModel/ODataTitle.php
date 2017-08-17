@@ -3,7 +3,7 @@
 namespace POData\ObjectModel;
 
 /**
- * Class ODataTitle
+ * Class ODataTitle.
  *
  * @package POData\ObjectModel
  */
@@ -17,7 +17,7 @@ class ODataTitle
     public $title;
 
     /**
-     * Type
+     * Type.
      *
      * @var string
      */

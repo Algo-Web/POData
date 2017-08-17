@@ -3,11 +3,9 @@
  * Created by PhpStorm.
  * User: Barnso
  * Date: 16/08/2017
- * Time: 4:25 AM
+ * Time: 4:25 AM.
  */
-
 namespace POData\ObjectModel\AtomObjectModel;
-
 
 class AtomContent
 {
@@ -19,7 +17,7 @@ class AtomContent
     public $type;
 
     /**
-     * Type
+     * Type.
      *
      * @var string
      */

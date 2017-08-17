@@ -901,7 +901,7 @@ class ProvidersWrapperTest extends TestCase
 
         $fakeSourceEntity = new \stdClass();
 
-         /* TODO: Audit this to see if it still works
+        /* TODO: Audit this to see if it still works
         $this->mockQueryProvider->shouldReceive('getRelatedResourceSet')->withArgs([
         QueryType::ENTITIES(),
         $this->mockResourceSet,

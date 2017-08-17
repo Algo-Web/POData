@@ -12,7 +12,7 @@ class ODataCategory
     public $term;
 
     /**
-     * Scheme
+     * Scheme.
      *
      * @var string
      */

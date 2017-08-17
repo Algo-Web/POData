@@ -236,7 +236,7 @@ class OrderByParserTest extends TestCase
         $this->assertNotNull($subSorters);
         $this->assertEquals(count($subSorters), 1);
         //Parmater to this sub sort must be CustomersA, CustomersB
-//        $this->assertEquals($subSorters[0]->getParametersAsString(), '$CustomersA, $CustomersB');
+        //        $this->assertEquals($subSorters[0]->getParametersAsString(), '$CustomersA, $CustomersB');
         //since there is only one sub sorter, that will be the main sorter
         //asset this by comapring the anonymous function names
         $subSorterName = $subSorters[0];
@@ -396,7 +396,7 @@ class OrderByParserTest extends TestCase
         $this->assertTrue(null !== $subSorters);
         $this->assertEquals(count($subSorters), 1);
         //Parmater to this sub sort must be Order_DetailsA, Order_DetailsB
-//        $this->assertEquals($subSorters[0]->getParametersAsString(), '$Order_DetailsA, $Order_DetailsB');
+        //        $this->assertEquals($subSorters[0]->getParametersAsString(), '$Order_DetailsA, $Order_DetailsB');
         //since there is only one sub sorter, that will be the main sorter
         //asset this by comapring the anonymous function names
         $subSorterName = $subSorters[0];
@@ -511,12 +511,12 @@ class OrderByParserTest extends TestCase
         $this->assertTrue(null !== $subSorters);
         $this->assertEquals(count($subSorters), 2);
         //Parmater to first sub sort must be $Order_DetailsA, $Order_DetailsB
-//        $this->assertEquals($subSorters[0]->getParametersAsString(), '$Order_DetailsA, $Order_DetailsB');
-//        $this->assertEquals($subSorters[1]->getParametersAsString(), '$Order_DetailsA, $Order_DetailsB');
+        //        $this->assertEquals($subSorters[0]->getParametersAsString(), '$Order_DetailsA, $Order_DetailsB');
+        //        $this->assertEquals($subSorters[1]->getParametersAsString(), '$Order_DetailsA, $Order_DetailsB');
         //generate sub sorter functions with different names
         $subSorterName1 = $subSorters[0];
         $subSorterName2 = $subSorters[1];
-//        $this->assertNotEquals($subSorterName1, $subSorterName2);
+        //        $this->assertNotEquals($subSorterName1, $subSorterName2);
         $sorter = $internalOrderInfo->getSorterFunction();
         $this->assertTrue(null !== $sorter);
         $mainSorterName = $sorter;
