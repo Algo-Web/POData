@@ -30,7 +30,7 @@ class JMSAsWireSerializerTest extends TestCase
 
     private function initSerialiser()
     {
-        $ymlDir = dirname(__DIR__, 4) . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR .'POData' .
+        $ymlDir = dirname(dirname(dirname(dirname(__DIR__)))) . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'POData' .
             DIRECTORY_SEPARATOR .'Writers' . DIRECTORY_SEPARATOR .'YML';
         return
             SerializerBuilder::create()

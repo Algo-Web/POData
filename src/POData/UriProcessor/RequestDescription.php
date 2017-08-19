@@ -305,7 +305,7 @@ class RequestDescription
             if (0 == strlen(trim($string))) {
                 return;
             }
-            $ymlDir = dirname(__DIR__, 3) . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'POData' .
+            $ymlDir = dirname(dirname(dirname(__DIR__))) . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'POData' .
                 DIRECTORY_SEPARATOR . 'Writers' . DIRECTORY_SEPARATOR . 'YML';
             $serialize =
                 SerializerBuilder::create()
