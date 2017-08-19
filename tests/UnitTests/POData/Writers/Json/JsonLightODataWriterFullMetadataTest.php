@@ -1474,6 +1474,8 @@ class JsonLightODataWriterFullMetadataTest extends TestCase
         $expected .= '}';
         $foo->write($model);
         $actual = $foo->getOutput();
+        $expected = preg_replace('~(*BSR_ANYCRLF)\R~', "\r\n", $expected);
+        $actual = preg_replace('~(*BSR_ANYCRLF)\R~', "\r\n", $actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -1500,6 +1502,8 @@ class JsonLightODataWriterFullMetadataTest extends TestCase
         $expected .= '}';
         $foo->write($model);
         $actual = $foo->getOutput();
+        $expected = preg_replace('~(*BSR_ANYCRLF)\R~', "\r\n", $expected);
+        $actual = preg_replace('~(*BSR_ANYCRLF)\R~', "\r\n", $actual);
         $this->assertEquals($expected, $actual);
     }
 }

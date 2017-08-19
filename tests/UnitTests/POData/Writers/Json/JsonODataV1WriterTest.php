@@ -1304,6 +1304,8 @@ class JsonODataV1WriterTest extends TestCase
         $foo->writeServiceDocument($wrapper);
 
         $actual = $foo->getOutput();
+        $expected = preg_replace('~(*BSR_ANYCRLF)\R~', "\r\n", $expected);
+        $actual = preg_replace('~(*BSR_ANYCRLF)\R~', "\r\n", $actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -1362,6 +1364,8 @@ class JsonODataV1WriterTest extends TestCase
         $expected .= '            "lang":"en-US","value":"BORK BORK BORK!"'.PHP_EOL;
         $expected .= '        }'.PHP_EOL.'    }'.PHP_EOL.'}';
         $actual = JsonODataV1Writer::serializeException($exception, false);
+        $expected = preg_replace('~(*BSR_ANYCRLF)\R~', "\r\n", $expected);
+        $actual = preg_replace('~(*BSR_ANYCRLF)\R~', "\r\n", $actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -1390,6 +1394,8 @@ class JsonODataV1WriterTest extends TestCase
         $expected .= '            "media_src":"src","content_type":"application/json","media_etag":"etag"'.PHP_EOL;
         $expected .= '        }'.PHP_EOL.'    }'.PHP_EOL.'}';
         $actual = $foo->getOutput();
+        $expected = preg_replace('~(*BSR_ANYCRLF)\R~', "\r\n", $expected);
+        $actual = preg_replace('~(*BSR_ANYCRLF)\R~', "\r\n", $actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -1418,6 +1424,8 @@ class JsonODataV1WriterTest extends TestCase
         $expected .= '            "media_src":"src","content_type":"application/json","media_etag":"etag"'.PHP_EOL;
         $expected .= '        }'.PHP_EOL.'    }'.PHP_EOL.'}';
         $actual = $foo->getOutput();
+        $expected = preg_replace('~(*BSR_ANYCRLF)\R~', "\r\n", $expected);
+        $actual = preg_replace('~(*BSR_ANYCRLF)\R~', "\r\n", $actual);
         $this->assertEquals($expected, $actual);
     }
 }
