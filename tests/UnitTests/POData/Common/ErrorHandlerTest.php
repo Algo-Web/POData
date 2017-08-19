@@ -47,7 +47,7 @@ class ErrorHandlerTest extends TestCase
 </error>
 ';
         $actual = $outgoing->getStream();
-        $this->assertEquals($expected, $actual);
+        $this->assertXmlStringEqualsXmlString($expected, $actual);
     }
 
     public function testHandleODataExceptionJson()
