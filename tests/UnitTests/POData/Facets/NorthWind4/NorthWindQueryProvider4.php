@@ -269,4 +269,48 @@ class NorthWindQueryProvider4 implements IQueryProvider
     ) {
         // TODO: Implement updateBulkResource() method.
     }
+
+    /**
+     * Attaches child model to parent model
+     *
+     * @param ResourceSet $sourceResourceSet
+     * @param object $sourceEntityInstance
+     * @param ResourceSet $targetResourceSet
+     * @param object $targetEntityInstance
+     * @param $navPropName
+     *
+     * @return bool
+     */
+    public function hookSingleModel(
+        ResourceSet $sourceResourceSet,
+        $sourceEntityInstance,
+        ResourceSet $targetResourceSet,
+        $targetEntityInstance,
+        $navPropName
+    )
+    {
+        // TODO: Implement hookSingleModel() method.
+    }
+
+    /**
+     * Removes child model from parent model
+     *
+     * @param ResourceSet $sourceResourceSet
+     * @param object $sourceEntityInstance
+     * @param ResourceSet $targetResourceSet
+     * @param object $targetEntityInstance
+     * @param $navPropName
+     *
+     * @return bool
+     */
+    public function unhookSingleModel(
+        ResourceSet $sourceResourceSet,
+        $sourceEntityInstance,
+        ResourceSet $targetResourceSet,
+        $targetEntityInstance,
+        $navPropName
+    )
+    {
+        // TODO: Implement unhookSingleModel() method.
+    }
 }
