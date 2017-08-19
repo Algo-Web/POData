@@ -6,9 +6,7 @@ use Mockery as m;
 use POData\Common\ODataException;
 use POData\Common\Url;
 use POData\Common\Version;
-use POData\ObjectModel\IObjectSerialiser;
 use POData\ObjectModel\ObjectModelSerializer;
-use POData\ObjectModel\ODataURL;
 use POData\OperationContext\HTTPRequestMethod;
 use POData\OperationContext\IOperationContext;
 use POData\Providers\Metadata\ResourceFunctionType;
@@ -38,7 +36,6 @@ use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 use UnitTests\POData\Facets\NorthWind1\NorthWindService2;
 use UnitTests\POData\Facets\NorthWind1\NorthWindServiceV1;
 use UnitTests\POData\Facets\NorthWind1\NorthWindServiceV3;
-use UnitTests\POData\Facets\NorthWind4\NorthWindService;
 use UnitTests\POData\Facets\ServiceHostTestFake;
 use UnitTests\POData\Providers\Metadata\reusableEntityClass4;
 use UnitTests\POData\TestCase;
@@ -2344,7 +2341,7 @@ class UriProcessorMockeryTest extends TestCase
 
         $this->assertEquals('application/atom+xml', $foo->getHost()->getResponseContentType());
         $stream = $foo->getHost()->getOperationContext()->outgoingResponse()->getStream();
-        $this->assertEquals('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'.PHP_EOL, $stream);
+        $this->assertEquals('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>', trim($stream));
     }
 
 

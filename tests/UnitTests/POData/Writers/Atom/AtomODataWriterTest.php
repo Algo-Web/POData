@@ -285,7 +285,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $new = '2013-09-17T19:22:33-06:00';
         $expected = $this->removeUpdatedTags($expected, $new);
         $actual = $this->removeUpdatedTags($actual, $new);
-        $this->assertEquals($expected, $actual);
+        $this->assertXmlStringEqualsXmlString($expected, $actual);
     }
 
     /**
@@ -888,7 +888,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $new = '2013-09-17T19:49:59-06:00';
         $expected = $this->removeUpdatedTags($expected, $new);
         $actual = $this->removeUpdatedTags($actual, $new);
-        $this->assertEquals($expected, $actual);
+        $this->assertXmlStringEqualsXmlString($expected, $actual);
     }
 
     /**
@@ -1101,7 +1101,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $new = '2011-05-24T15:01:23+05:30';
         $expected = $this->removeUpdatedTags($expected, $new);
         $actual = $this->removeUpdatedTags($actual, $new);
-        $this->assertEquals($expected, $actual);
+        $this->assertXmlStringEqualsXmlString($expected, $actual);
     }
 
     /**
@@ -1237,7 +1237,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 </error>
 ';
         $actual = AtomODataWriter::serializeException($foo, true);
-        $this->assertEquals($expected, $actual);
+        $this->assertXmlStringEqualsXmlString($expected, $actual);
     }
 
     public function testAddSingletonsToServiceDocument()
@@ -1270,7 +1270,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $foo->writeServiceDocument($wrapper);
 
         $actual = $foo->xmlWriter->outputMemory(true);
-        $this->assertEquals($expected, $actual);
+        $this->assertXmlStringEqualsXmlString($expected, $actual);
     }
 
     public function testBeforeWriteDateTimeValue()
@@ -1293,7 +1293,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 
         $expected = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'.PHP_EOL;
         $actual = $foo->getOutput();
-        $this->assertEquals($expected, $actual);
+        $this->assertEquals(trim($expected), trim($actual));
     }
 
     public function testPreWritePropertiesWithMediaLinkEntry()
@@ -1316,6 +1316,8 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $expected .= '<content type="application/xml" src="src"/>'.PHP_EOL;
         $expected .= '<m:properties/>'.PHP_EOL;
         $actual = $foo->getOutput();
+        $expected = preg_replace('~(*BSR_ANYCRLF)\R~', "\r\n", $expected);
+        $actual = preg_replace('~(*BSR_ANYCRLF)\R~', "\r\n", $actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -1349,6 +1351,9 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $expectedEnd .= '</entry>'.PHP_EOL;
 
         $actual = $foo->getOutput();
+        $expectedStart = preg_replace('~(*BSR_ANYCRLF)\R~', "\r\n", $expectedStart);
+        $actual = preg_replace('~(*BSR_ANYCRLF)\R~', "\r\n", $actual);
+        $expectedEnd = preg_replace('~(*BSR_ANYCRLF)\R~', "\r\n", $expectedEnd);
         $this->assertStringStartsWith($expectedStart, $actual);
         $this->assertStringEndsWith($expectedEnd, $actual);
     }
@@ -1365,6 +1370,6 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $expected = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'.PHP_EOL;
         $expected .= '<link rel="" type="linkType" title="Title" href=""/>'.PHP_EOL;
         $actual = $foo->getOutput();
-        $this->assertEquals($expected, $actual);
+        $this->assertXmlStringEqualsXmlString($expected, $actual);
     }
 }

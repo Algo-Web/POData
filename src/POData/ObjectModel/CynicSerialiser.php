@@ -504,7 +504,7 @@ class CynicSerialiser implements IObjectSerialiser
     }
 
     /**
-     * Get update timestamp
+     * Get update timestamp.
      *
      * @return Carbon
      */

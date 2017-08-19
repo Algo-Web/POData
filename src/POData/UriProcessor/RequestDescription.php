@@ -2,6 +2,7 @@
 
 namespace POData\UriProcessor;
 
+use JMS\Serializer\SerializerBuilder;
 use POData\Common\Messages;
 use POData\Common\MimeTypes;
 use POData\Common\ODataConstants;
@@ -301,20 +302,17 @@ class RequestDescription
             if (is_array($string) && 1 == count($string)) {
                 $string = $string[0];
             }
-            $data = XML2Array::createArray($string);
-            if (!empty($data['entry']['content']['m:properties'])) {
-                $clearData = $data['entry']['content']['m:properties'];
-                if (is_array($clearData)) {
-                    foreach ($clearData as $key => $value) {
-                        if (is_array($value)) {
-                            $dataArray[substr($key, 2)] = $value['@value'];
-                        } else {
-                            $dataArray[substr($key, 2)] = $value;
-                        }
-                    }
-                }
+            if (0 == strlen(trim($string))) {
+                return;
             }
-            $this->data = $dataArray;
+            $ymlDir = dirname(dirname(dirname(__DIR__))) . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR .
+                'POData' . DIRECTORY_SEPARATOR . 'Writers' . DIRECTORY_SEPARATOR . 'YML';
+            $serialize =
+                SerializerBuilder::create()
+                    ->addMetadataDir($ymlDir)
+                    ->build();
+            $this->data = $serialize->deserialize($string, 'POData\ObjectModel\ODataEntry', 'xml');
+            $dataArray;
         } elseif ($dataType === MimeTypes::MIME_APPLICATION_JSON) {
             $data = !is_array($string) ? json_decode($string, true) : $string;
             $this->data = $data;
@@ -780,7 +778,7 @@ class RequestDescription
     public function isLinkUri()
     {
         return ($this->segmentCount > 2)
-               && ($this->segments[$this->segmentCount - 2]->getTargetKind() == TargetKind::LINK());
+            && ($this->segments[$this->segmentCount - 2]->getTargetKind() == TargetKind::LINK());
     }
 
     /**
@@ -855,7 +853,7 @@ class RequestDescription
             && !$this->isLinkUri()
             && (null === $this->rootProjectionNode
                 || !($this->rootProjectionNode->isExpansionSpecified())
-                );
+            );
     }
 
     /**

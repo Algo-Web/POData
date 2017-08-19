@@ -1,0 +1,19 @@
+POData\ObjectModel\ODataPropertyContent:
+    exclusion_policy: ALL
+    xml_root_namespace: http://schemas.microsoft.com/ado/2007/08/dataservices/metadata
+    properties:
+        properties:
+            expose: true
+            serialized_name: properties
+            xml_key_value_pairs: true
+            inline: true
+            xml_list:
+                namespace: http://schemas.microsoft.com/ado/2007/08/dataservices
+            xml_element:
+                cdata: false
+                namespace: http://schemas.microsoft.com/ado/2007/08/dataservices/metadata
+            type: array<POData\ObjectModel\ODataProperty>
+            access_type: public_method
+            accessor:
+                getter: getPropertys
+                setter: setPropertys
