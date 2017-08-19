@@ -789,7 +789,6 @@ class SimpleMetadataProviderTest extends TestCase
         } catch (InvalidOperationException $e) {
             $this->assertEquals("Only primitive property can be etag property, bag property cannot be etag property.", $e->getMessage());
         }
-
     }
 }
 
