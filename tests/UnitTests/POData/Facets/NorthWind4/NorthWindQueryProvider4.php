@@ -287,8 +287,7 @@ class NorthWindQueryProvider4 implements IQueryProvider
         ResourceSet $targetResourceSet,
         $targetEntityInstance,
         $navPropName
-    )
-    {
+    ) {
         // TODO: Implement hookSingleModel() method.
     }
 
@@ -309,8 +308,7 @@ class NorthWindQueryProvider4 implements IQueryProvider
         ResourceSet $targetResourceSet,
         $targetEntityInstance,
         $navPropName
-    )
-    {
+    ) {
         // TODO: Implement unhookSingleModel() method.
     }
 }

@@ -111,7 +111,6 @@ class CynicDeserialiser
 
     protected function processFeedContent(ODataFeed &$content)
     {
-
     }
 
 

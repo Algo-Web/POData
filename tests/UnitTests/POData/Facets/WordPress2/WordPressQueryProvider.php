@@ -309,8 +309,7 @@ class WordPressQueryProvider implements IQueryProvider
         ResourceSet $targetResourceSet,
         $targetEntityInstance,
         $navPropName
-    )
-    {
+    ) {
         // TODO: Implement hookSingleModel() method.
     }
 
@@ -331,8 +330,7 @@ class WordPressQueryProvider implements IQueryProvider
         ResourceSet $targetResourceSet,
         $targetEntityInstance,
         $navPropName
-    )
-    {
+    ) {
         // TODO: Implement unhookSingleModel() method.
     }
 }
