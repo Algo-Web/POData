@@ -2,8 +2,9 @@
 namespace UnitTests\POData\Writers;
 
 use JMS\Serializer\SerializerBuilder;
+use UnitTests\POData\TestCase;
 
-class TestJMSAsWireSerializer extends \PHPUnit_Framework_TestCase
+class JMSAsWireSerializerTest extends TestCase
 {
     public function testWireSerializerExpanded()
     {
