@@ -4,6 +4,7 @@ namespace POData\ObjectModel;
 
 use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\Metadata\ResourceEntityType;
+use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\Type\IType;
 use POData\Providers\ProvidersWrapper;
 use POData\Providers\Query\IQueryProvider;
@@ -36,21 +37,27 @@ class CynicDeserialiser
     /**
      * @param ODataEntry|ODataFeed $payload
      */
-    public function processPayload(ODataEntry $payload)
+    public function processPayload(ODataEntry &$payload)
     {
         assert($this->checkEntryOK($payload));
-        $this->processEntryContent($payload);
+        list($sourceSet, $source) = $this->processEntryContent($payload);
+        $numLinks = count($payload->links);
+        for ($i = 0; $i < $numLinks; $i++) {
+            $this->processLink($payload->links[$i], $sourceSet, $source);
+        }
     }
 
     protected function checkEntryOK(ODataEntry $payload)
     {
         // check links
         foreach ($payload->links as $link) {
-            $hasUrl = isset($link->url);
+            $hasUrl = isset($link->id);
             $hasExpanded = isset($link->expandedResult);
-            if (!$hasUrl && !$hasExpanded) {
-                $msg = 'ODataEntry must have at least one of supplied url and/or expanded result';
-                throw new \InvalidArgumentException($msg);
+            if ($hasUrl) {
+                if (!is_string($link->id)) {
+                    $msg = 'ID must be either string or null';
+                    throw new \InvalidArgumentException($msg);
+                }
             }
             if ($hasExpanded) {
                 $isGood = $link->expandedResult instanceof ODataEntry || $link->expandedResult instanceof ODataFeed;
@@ -83,6 +90,7 @@ class CynicDeserialiser
     protected function processEntryContent(ODataEntry &$content)
     {
         assert(null === $content->id || is_string($content->id), 'Entry id must be null or string');
+
         $isCreate = null === $content->id;
         $set = $this->getMetaProvider()->resolveResourceSet($content->resourceSetName);
         $type = $set->getResourceType();
@@ -98,7 +106,7 @@ class CynicDeserialiser
         }
 
         $content->id = $key;
-        return;
+        return [$set, $result];
     }
 
     protected function processFeedContent(ODataFeed &$content)
@@ -149,5 +157,59 @@ class CynicDeserialiser
         // this is deliberate - ODataEntry/Feed has the structure we need for processing, and we're inserting
         // keyDescriptor objects in id fields to indicate the given record has been processed
         return $keyDesc;
+    }
+
+    protected function processLink(ODataLink &$link, ResourceSet $sourceSet, $source)
+    {
+        $hasUrl = isset($link->url);
+        $hasPayload = isset($link->expandedResult);
+
+        // if nothing to hook up, bail out now
+        if (!$hasUrl && !$hasPayload) {
+            return;
+        }
+
+        if ($hasUrl) {
+            $rawPredicate = explode('(', $link->url);
+            $setName = $rawPredicate[0];
+            $rawPredicate = trim($rawPredicate[count($rawPredicate) - 1], ')');
+            $targSet = $this->getMetaProvider()->resolveResourceSet($setName);
+            assert(null !== $targSet, get_class($targSet));
+            $type = $targSet->getResourceType();
+        } else {
+            $type = $this->getMetaProvider()->resolveResourceType($link->expandedResult->type->term);
+        }
+        $propName = $link->title;
+
+
+        if ($hasUrl) {
+            $keyDesc = null;
+            KeyDescriptor::tryParseKeysFromKeyPredicate($rawPredicate, $keyDesc);
+            $keyDesc->validate($rawPredicate, $type);
+            assert(null !== $keyDesc, 'Key description must not be null');
+        }
+
+        // hooking up to existing resource
+        if ($hasUrl && !$hasPayload) {
+            $target = $this->getWrapper()->getResourceFromResourceSet($targSet, $keyDesc);
+            $this->getWrapper()->hookSingleModel($sourceSet, $source, $targSet, $target, $propName);
+            $link->url = $keyDesc;
+            return;
+        }
+        // creating new resource
+        if (!$hasUrl && $hasPayload) {
+            list($targSet, $target) = $this->processEntryContent($link->expandedResult);
+            $key = $this->generateKeyDescriptor($type, $link->expandedResult->propertyContent);
+            $link->url = $key;
+            $link->expandedResult->id = $key;
+            $this->getWrapper()->hookSingleModel($sourceSet, $source, $targSet, $target, $propName);
+            return;
+        }
+        // updating existing resource and connecting to it
+        list($targSet, $target) = $this->processEntryContent($link->expandedResult);
+        $link->url = $keyDesc;
+        $link->expandedResult->id = $keyDesc;
+        $this->getWrapper()->hookSingleModel($sourceSet, $source, $targSet, $target, $propName);
+        return;
     }
 }
