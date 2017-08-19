@@ -32,13 +32,9 @@ class RequestDescriptionMockeryTest extends TestCase
     </content>
 </entry>';
 
-        $expectedArray = [
-            'Street' => '15 Woop Woop Drive',
-            'Suburb' => 'Downtown Woop Woop',
-            'State' => 'NSW',
-            'Postcode' => 2998,
-            'Country' => ''
-        ];
+        $expectedArray = unserialize('O:29:"POData\ObjectModel\ODataEntry":16:{s:2:"id";N;s:8:"selfLink";N;s:5:"title";N;s:8:"editLink";N;s:4:"type";N;s:15:"propertyContent";O:39:"POData\ObjectModel\ODataPropertyContent":1:{s:10:"properties";a:5:{s:6:"Street";O:32:"POData\ObjectModel\ODataProperty":4:{s:4:"name";s:6:"Street";s:8:"typeName";s:10:"Edm.String";s:19:"attributeExtensions";N;s:5:"value";s:20:" 15 Woop Woop Drive ";}s:6:"Suburb";O:32:"POData\ObjectModel\ODataProperty":4:{s:4:"name";s:6:"Suburb";s:8:"typeName";s:10:"Edm.String";s:19:"attributeExtensions";N;s:5:"value";s:20:" Downtown Woop Woop ";}s:5:"State";O:32:"POData\ObjectModel\ODataProperty":4:{s:4:"name";s:5:"State";s:8:"typeName";s:10:"Edm.String";s:19:"attributeExtensions";N;s:5:"value";s:3:"NSW";}s:8:"Postcode";O:32:"POData\ObjectModel\ODataProperty":4:{s:4:"name";s:8:"Postcode";s:8:"typeName";s:10:"Edm.String";s:19:"attributeExtensions";N;s:5:"value";s:4:"2998";}s:7:"Country";O:32:"POData\ObjectModel\ODataProperty":4:{s:4:"name";s:7:"Country";s:8:"typeName";s:10:"Edm.String";s:19:"attributeExtensions";N;s:5:"value";s:0:"";}}}s:10:"mediaLinks";a:0:{}s:9:"mediaLink";N;s:5:"links";a:0:{}s:4:"eTag";N;s:16:"isMediaLinkEntry";b:0;s:15:"resourceSetName";N;s:7:"updated";N;s:7:"baseURI";N;s:11:"atomContent";N;s:10:"atomAuthor";N;}');
+
+
 
         $url = m::mock(Url::class);
         $version = Version::v3();
@@ -76,13 +72,15 @@ class RequestDescriptionMockeryTest extends TestCase
 &lt;/Dashboard&gt;</d:value></m:properties></content></entry>
 ';
 
-        $expectedArray = [
-            'company_id' => '111111',
-            'configKey' => 'CompanyMainDashboard',
-            'created_at' => '0001-01-01T00:00:00',
-            'id' => '',
-            'updated_at' => '0001-01-01T00:00:00',
-        ];
+        $expectedArray = unserialize('O:29:"POData\ObjectModel\ODataEntry":16:{s:2:"id";s:0:"";s:8:"selfLink";N;s:5:"title";O:29:"POData\ObjectModel\ODataTitle":2:{s:5:"title";s:0:"";s:4:"type";N;}s:8:"editLink";N;s:4:"type";O:32:"POData\ObjectModel\ODataCategory":2:{s:4:"term";s:23:"Data.CompanyConfigModel";s:6:"scheme";s:60:"http://schemas.microsoft.com/ado/2007/08/dataservices/scheme";}s:15:"propertyContent";O:39:"POData\ObjectModel\ODataPropertyContent":1:{s:10:"properties";a:6:{s:10:"company_id";O:32:"POData\ObjectModel\ODataProperty":4:{s:4:"name";s:10:"company_id";s:8:"typeName";N;s:19:"attributeExtensions";N;s:5:"value";s:6:"111111";}s:9:"configKey";O:32:"POData\ObjectModel\ODataProperty":4:{s:4:"name";s:9:"configKey";s:8:"typeName";N;s:19:"attributeExtensions";N;s:5:"value";s:20:"CompanyMainDashboard";}s:10:"created_at";O:32:"POData\ObjectModel\ODataProperty":4:{s:4:"name";s:10:"created_at";s:8:"typeName";s:12:"Edm.DateTime";s:19:"attributeExtensions";N;s:5:"value";s:19:"0001-01-01T00:00:00";}s:2:"id";O:32:"POData\ObjectModel\ODataProperty":4:{s:4:"name";s:2:"id";s:8:"typeName";s:9:"Edm.Int32";s:19:"attributeExtensions";N;s:5:"value";s:1:"0";}s:10:"updated_at";O:32:"POData\ObjectModel\ODataProperty":4:{s:4:"name";s:10:"updated_at";s:8:"typeName";s:12:"Edm.DateTime";s:19:"attributeExtensions";N;s:5:"value";s:19:"0001-01-01T00:00:00";}s:5:"value";O:32:"POData\ObjectModel\ODataProperty":4:{s:4:"name";s:5:"value";s:8:"typeName";N;s:19:"attributeExtensions";N;s:5:"value";s:530:"<Dashboard CurrencyCulture="en-AU">
+  <Title Text="Dashboard" />
+  <DataSources>
+    <ObjectDataSource ComponentName="dashboardObjectDataSource1">
+      <Name>Foo Bar</Name>
+      <DataSource Type="System.Data.Services.Client.DataServiceQuery`1+DataServiceOrderedQuery[[FooBar.FooBarRemoteWCF.Address, FooBar, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], Microsoft.Data.Services.Client, Version=5.6.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    </ObjectDataSource>
+  </DataSources>
+</Dashboard>";}}}s:10:"mediaLinks";a:0:{}s:9:"mediaLink";N;s:5:"links";a:0:{}s:4:"eTag";N;s:16:"isMediaLinkEntry";b:0;s:15:"resourceSetName";N;s:7:"updated";s:20:"2017-06-15T04:44:40Z";s:7:"baseURI";N;s:11:"atomContent";N;s:10:"atomAuthor";N;}');
 
         $url = m::mock(Url::class);
         $version = Version::v3();
@@ -98,7 +96,6 @@ class RequestDescriptionMockeryTest extends TestCase
         $desc = new RequestDescription($segArray, $url, $version, null, null, $type, $request);
 
         $data = $desc->getData();
-        unset($data['value']);
         $this->assertEquals($expectedArray, $data);
     }
 
