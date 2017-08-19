@@ -32,13 +32,9 @@ class RequestDescriptionMockeryTest extends TestCase
     </content>
 </entry>';
 
-        $expectedArray = [
-            'Street' => '15 Woop Woop Drive',
-            'Suburb' => 'Downtown Woop Woop',
-            'State' => 'NSW',
-            'Postcode' => 2998,
-            'Country' => ''
-        ];
+        $expectedArray = unserialize(base64_decode('TzoyOToiUE9EYXRhXE9iamVjdE1vZGVsXE9EYXRhRW50cnkiOjE2OntzOjI6ImlkIjtOO3M6ODoic2VsZkxpbmsiO047czo1OiJ0aXRsZSI7TjtzOjg6ImVkaXRMaW5rIjtOO3M6NDoidHlwZSI7TjtzOjE1OiJwcm9wZXJ0eUNvbnRlbnQiO086Mzk6IlBPRGF0YVxPYmplY3RNb2RlbFxPRGF0YVByb3BlcnR5Q29udGVudCI6MTp7czoxMDoicHJvcGVydGllcyI7YTo1OntzOjY6IlN0cmVldCI7TzozMjoiUE9EYXRhXE9iamVjdE1vZGVsXE9EYXRhUHJvcGVydHkiOjQ6e3M6NDoibmFtZSI7czo2OiJTdHJlZXQiO3M6ODoidHlwZU5hbWUiO3M6MTA6IkVkbS5TdHJpbmciO3M6MTk6ImF0dHJpYnV0ZUV4dGVuc2lvbnMiO047czo1OiJ2YWx1ZSI7czoyMDoiIDE1IFdvb3AgV29vcCBEcml2ZSAiO31zOjY6IlN1YnVyYiI7TzozMjoiUE9EYXRhXE9iamVjdE1vZGVsXE9EYXRhUHJvcGVydHkiOjQ6e3M6NDoibmFtZSI7czo2OiJTdWJ1cmIiO3M6ODoidHlwZU5hbWUiO3M6MTA6IkVkbS5TdHJpbmciO3M6MTk6ImF0dHJpYnV0ZUV4dGVuc2lvbnMiO047czo1OiJ2YWx1ZSI7czoyMDoiIERvd250b3duIFdvb3AgV29vcCAiO31zOjU6IlN0YXRlIjtPOjMyOiJQT0RhdGFcT2JqZWN0TW9kZWxcT0RhdGFQcm9wZXJ0eSI6NDp7czo0OiJuYW1lIjtzOjU6IlN0YXRlIjtzOjg6InR5cGVOYW1lIjtzOjEwOiJFZG0uU3RyaW5nIjtzOjE5OiJhdHRyaWJ1dGVFeHRlbnNpb25zIjtOO3M6NToidmFsdWUiO3M6MzoiTlNXIjt9czo4OiJQb3N0Y29kZSI7TzozMjoiUE9EYXRhXE9iamVjdE1vZGVsXE9EYXRhUHJvcGVydHkiOjQ6e3M6NDoibmFtZSI7czo4OiJQb3N0Y29kZSI7czo4OiJ0eXBlTmFtZSI7czoxMDoiRWRtLlN0cmluZyI7czoxOToiYXR0cmlidXRlRXh0ZW5zaW9ucyI7TjtzOjU6InZhbHVlIjtzOjQ6IjI5OTgiO31zOjc6IkNvdW50cnkiO086MzI6IlBPRGF0YVxPYmplY3RNb2RlbFxPRGF0YVByb3BlcnR5Ijo0OntzOjQ6Im5hbWUiO3M6NzoiQ291bnRyeSI7czo4OiJ0eXBlTmFtZSI7czoxMDoiRWRtLlN0cmluZyI7czoxOToiYXR0cmlidXRlRXh0ZW5zaW9ucyI7TjtzOjU6InZhbHVlIjtzOjA6IiI7fX19czoxMDoibWVkaWFMaW5rcyI7YTowOnt9czo5OiJtZWRpYUxpbmsiO047czo1OiJsaW5rcyI7YTowOnt9czo0OiJlVGFnIjtOO3M6MTY6ImlzTWVkaWFMaW5rRW50cnkiO2I6MDtzOjE1OiJyZXNvdXJjZVNldE5hbWUiO047czo3OiJ1cGRhdGVkIjtOO3M6NzoiYmFzZVVSSSI7TjtzOjExOiJhdG9tQ29udGVudCI7TjtzOjEwOiJhdG9tQXV0aG9yIjtOO30'));
+
+
 
         $url = m::mock(Url::class);
         $version = Version::v3();
@@ -76,13 +72,7 @@ class RequestDescriptionMockeryTest extends TestCase
 &lt;/Dashboard&gt;</d:value></m:properties></content></entry>
 ';
 
-        $expectedArray = [
-            'company_id' => '111111',
-            'configKey' => 'CompanyMainDashboard',
-            'created_at' => '0001-01-01T00:00:00',
-            'id' => '',
-            'updated_at' => '0001-01-01T00:00:00',
-        ];
+        $expectedArray = unserialize(base64_decode('TzoyOToiUE9EYXRhXE9iamVjdE1vZGVsXE9EYXRhRW50cnkiOjE2OntzOjI6ImlkIjtzOjA6IiI7czo4OiJzZWxmTGluayI7TjtzOjU6InRpdGxlIjtPOjI5OiJQT0RhdGFcT2JqZWN0TW9kZWxcT0RhdGFUaXRsZSI6Mjp7czo1OiJ0aXRsZSI7czowOiIiO3M6NDoidHlwZSI7Tjt9czo4OiJlZGl0TGluayI7TjtzOjQ6InR5cGUiO086MzI6IlBPRGF0YVxPYmplY3RNb2RlbFxPRGF0YUNhdGVnb3J5IjoyOntzOjQ6InRlcm0iO3M6MjM6IkRhdGEuQ29tcGFueUNvbmZpZ01vZGVsIjtzOjY6InNjaGVtZSI7czo2MDoiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS9hZG8vMjAwNy8wOC9kYXRhc2VydmljZXMvc2NoZW1lIjt9czoxNToicHJvcGVydHlDb250ZW50IjtPOjM5OiJQT0RhdGFcT2JqZWN0TW9kZWxcT0RhdGFQcm9wZXJ0eUNvbnRlbnQiOjE6e3M6MTA6InByb3BlcnRpZXMiO2E6Njp7czoxMDoiY29tcGFueV9pZCI7TzozMjoiUE9EYXRhXE9iamVjdE1vZGVsXE9EYXRhUHJvcGVydHkiOjQ6e3M6NDoibmFtZSI7czoxMDoiY29tcGFueV9pZCI7czo4OiJ0eXBlTmFtZSI7TjtzOjE5OiJhdHRyaWJ1dGVFeHRlbnNpb25zIjtOO3M6NToidmFsdWUiO3M6NjoiMTExMTExIjt9czo5OiJjb25maWdLZXkiO086MzI6IlBPRGF0YVxPYmplY3RNb2RlbFxPRGF0YVByb3BlcnR5Ijo0OntzOjQ6Im5hbWUiO3M6OToiY29uZmlnS2V5IjtzOjg6InR5cGVOYW1lIjtOO3M6MTk6ImF0dHJpYnV0ZUV4dGVuc2lvbnMiO047czo1OiJ2YWx1ZSI7czoyMDoiQ29tcGFueU1haW5EYXNoYm9hcmQiO31zOjEwOiJjcmVhdGVkX2F0IjtPOjMyOiJQT0RhdGFcT2JqZWN0TW9kZWxcT0RhdGFQcm9wZXJ0eSI6NDp7czo0OiJuYW1lIjtzOjEwOiJjcmVhdGVkX2F0IjtzOjg6InR5cGVOYW1lIjtzOjEyOiJFZG0uRGF0ZVRpbWUiO3M6MTk6ImF0dHJpYnV0ZUV4dGVuc2lvbnMiO047czo1OiJ2YWx1ZSI7czoxOToiMDAwMS0wMS0wMVQwMDowMDowMCI7fXM6MjoiaWQiO086MzI6IlBPRGF0YVxPYmplY3RNb2RlbFxPRGF0YVByb3BlcnR5Ijo0OntzOjQ6Im5hbWUiO3M6MjoiaWQiO3M6ODoidHlwZU5hbWUiO3M6OToiRWRtLkludDMyIjtzOjE5OiJhdHRyaWJ1dGVFeHRlbnNpb25zIjtOO3M6NToidmFsdWUiO3M6MToiMCI7fXM6MTA6InVwZGF0ZWRfYXQiO086MzI6IlBPRGF0YVxPYmplY3RNb2RlbFxPRGF0YVByb3BlcnR5Ijo0OntzOjQ6Im5hbWUiO3M6MTA6InVwZGF0ZWRfYXQiO3M6ODoidHlwZU5hbWUiO3M6MTI6IkVkbS5EYXRlVGltZSI7czoxOToiYXR0cmlidXRlRXh0ZW5zaW9ucyI7TjtzOjU6InZhbHVlIjtzOjE5OiIwMDAxLTAxLTAxVDAwOjAwOjAwIjt9czo1OiJ2YWx1ZSI7TzozMjoiUE9EYXRhXE9iamVjdE1vZGVsXE9EYXRhUHJvcGVydHkiOjQ6e3M6NDoibmFtZSI7czo1OiJ2YWx1ZSI7czo4OiJ0eXBlTmFtZSI7TjtzOjE5OiJhdHRyaWJ1dGVFeHRlbnNpb25zIjtOO3M6NToidmFsdWUiO3M6NTMwOiI8RGFzaGJvYXJkIEN1cnJlbmN5Q3VsdHVyZT0iZW4tQVUiPg0KICA8VGl0bGUgVGV4dD0iRGFzaGJvYXJkIiAvPg0KICA8RGF0YVNvdXJjZXM+DQogICAgPE9iamVjdERhdGFTb3VyY2UgQ29tcG9uZW50TmFtZT0iZGFzaGJvYXJkT2JqZWN0RGF0YVNvdXJjZTEiPg0KICAgICAgPE5hbWU+Rm9vIEJhcjwvTmFtZT4NCiAgICAgIDxEYXRhU291cmNlIFR5cGU9IlN5c3RlbS5EYXRhLlNlcnZpY2VzLkNsaWVudC5EYXRhU2VydmljZVF1ZXJ5YDErRGF0YVNlcnZpY2VPcmRlcmVkUXVlcnlbW0Zvb0Jhci5Gb29CYXJSZW1vdGVXQ0YuQWRkcmVzcywgRm9vQmFyLCBWZXJzaW9uPTEuMC4wLjAsIEN1bHR1cmU9bmV1dHJhbCwgUHVibGljS2V5VG9rZW49bnVsbF1dLCBNaWNyb3NvZnQuRGF0YS5TZXJ2aWNlcy5DbGllbnQsIFZlcnNpb249NS42LjQuMCwgQ3VsdHVyZT1uZXV0cmFsLCBQdWJsaWNLZXlUb2tlbj0zMWJmMzg1NmFkMzY0ZTM1IiAvPg0KICAgIDwvT2JqZWN0RGF0YVNvdXJjZT4NCiAgPC9EYXRhU291cmNlcz4NCjwvRGFzaGJvYXJkPiI7fX19czoxMDoibWVkaWFMaW5rcyI7YTowOnt9czo5OiJtZWRpYUxpbmsiO047czo1OiJsaW5rcyI7YTowOnt9czo0OiJlVGFnIjtOO3M6MTY6ImlzTWVkaWFMaW5rRW50cnkiO2I6MDtzOjE1OiJyZXNvdXJjZVNldE5hbWUiO047czo3OiJ1cGRhdGVkIjtzOjIwOiIyMDE3LTA2LTE1VDA0OjQ0OjQwWiI7czo3OiJiYXNlVVJJIjtOO3M6MTE6ImF0b21Db250ZW50IjtOO3M6MTA6ImF0b21BdXRob3IiO047fQ=='));
 
         $url = m::mock(Url::class);
         $version = Version::v3();
@@ -98,7 +88,6 @@ class RequestDescriptionMockeryTest extends TestCase
         $desc = new RequestDescription($segArray, $url, $version, null, null, $type, $request);
 
         $data = $desc->getData();
-        unset($data['value']);
         $this->assertEquals($expectedArray, $data);
     }
 

@@ -47,7 +47,7 @@ class ErrorHandlerTest extends TestCase
 </error>
 ';
         $actual = $outgoing->getStream();
-        $this->assertEquals($expected, $actual);
+        $this->assertXmlStringEqualsXmlString($expected, $actual);
     }
 
     public function testHandleODataExceptionJson()
@@ -82,6 +82,8 @@ class ErrorHandlerTest extends TestCase
     }
 }';
         $actual = $outgoing->getStream();
+        $expected = preg_replace('~(*BSR_ANYCRLF)\R~', "\r\n", $expected);
+        $actual = preg_replace('~(*BSR_ANYCRLF)\R~', "\r\n", $actual);
         $this->assertEquals($expected, $actual);
     }
 

@@ -113,19 +113,19 @@ class Employee1
 {
     //Key Edm.Int32
     public $EmployeeID;
-     //Edm.String
+    //Edm.String
     public $FirstName;
-     //Edm.String
+    //Edm.String
     public $LastName;
-     //Bag of strings
+    //Bag of strings
     public $Emails;
-     //Edm.Binary
+    //Edm.Binary
     public $Photo;
-     //Edm.Int32
+    //Edm.Int32
     public $ReportsTo;
-     //Navigation Property to associated instance of Employee instance representing manager (ResourceReference)
+    //Navigation Property to associated instance of Employee instance representing manager (ResourceReference)
     public $Manager;
-     //Navigation Property to associated instance of Employee instances representing subordinates (ResourceSetReference)
+    //Navigation Property to associated instance of Employee instances representing subordinates (ResourceSetReference)
     public $Subordinates;
 }
 //End Resource Classes

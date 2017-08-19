@@ -1,0 +1,22 @@
+POData\ObjectModel\AtomObjectModel\AtomContent:
+    exclusion_policy: ALL
+    xml_root_namespace: http://www.w3.org/2005/Atom
+    custom_accessor_order: [id, title, updated, links, mediaLink, mediaLinks, propertyContent]
+    properties:
+        type:
+            expose: true
+            xml_attribute: true
+            serialized_name: type
+            type: string
+        src:
+            expose: true
+            xml_attribute: true
+            serialized_name: src
+            type: string
+        properties:
+            expose: true
+            serialized_name: properties
+            xml_element:
+                cdata: false
+                namespace: http://schemas.microsoft.com/ado/2007/08/dataservices/metadata
+            type: POData\ObjectModel\ODataPropertyContent

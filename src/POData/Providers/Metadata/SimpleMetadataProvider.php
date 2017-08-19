@@ -2,13 +2,11 @@
 
 namespace POData\Providers\Metadata;
 
-use AlgoWeb\ODataMetadata\IsOK;
 use AlgoWeb\ODataMetadata\MetadataManager;
 use AlgoWeb\ODataMetadata\MetadataV3\edm\TComplexTypeType;
 use AlgoWeb\ODataMetadata\MetadataV3\edm\TEntityTypeType;
 use Illuminate\Support\Str;
 use POData\Common\InvalidOperationException;
-use POData\Common\NotImplementedException;
 use POData\Providers\Metadata\Type\IType;
 use POData\Providers\Metadata\Type\TypeCode;
 
@@ -42,7 +40,7 @@ class SimpleMetadataProvider implements IMetadataProvider
     //Begin Implementation of IMetadataProvider
 
     /**
-     * @return mixed
+     * @return string|null
      */
     public function getXML()
     {
@@ -429,6 +427,12 @@ class SimpleMetadataProvider implements IMetadataProvider
         $defaultValue = null,
         $nullable = false
     ) {
+        if ($isETagProperty && $isBag) {
+            throw new InvalidOperationException(
+                'Only primitive property can be etag property, bag property cannot be etag property.'
+            );
+        }
+
         $this->checkInstanceProperty($name, $resourceType);
 
         // check that property and resource name don't up and collide - would violate OData spec
@@ -439,12 +443,6 @@ class SimpleMetadataProvider implements IMetadataProvider
         }
 
         $primitiveResourceType = ResourceType::getPrimitiveResourceType($typeCode);
-
-        if ($isETagProperty && $isBag) {
-            throw new InvalidOperationException(
-                'Only primitive property can be etag property, bag property cannot be etag property.'
-            );
-        }
 
         $kind = $isKey ? ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::KEY : ResourcePropertyKind::PRIMITIVE;
         if ($isBag) {
@@ -559,6 +557,8 @@ class SimpleMetadataProvider implements IMetadataProvider
      * @param string             $name              The name of the property to add
      * @param ResourceSet        $targetResourceSet The resource set the resource reference
      *                                              property points to
+     * @param mixed              $flip
+     * @param mixed              $many
      */
     public function addResourceReferenceProperty(
         ResourceEntityType $resourceType,
@@ -624,6 +624,7 @@ class SimpleMetadataProvider implements IMetadataProvider
      *                                               resource reference or reference
      *                                               set property points to
      * @param string             $resourceMult       The multiplicity of relation being added
+     * @param mixed              $many
      *
      * @throws InvalidOperationException
      */

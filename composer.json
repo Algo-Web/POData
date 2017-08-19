@@ -19,7 +19,7 @@
   "repositories": [
     {
       "type": "vcs",
-      "url": "https://github.com/CyberiaResurrection/phockito-unit.git"
+      "url": "https://github.com/Algo-Web/serializer.git"
     }
   ],
 

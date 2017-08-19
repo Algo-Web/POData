@@ -1,0 +1,13 @@
+POData\ObjectModel\ODataExpandedResult:
+    exclusion_policy: ALL
+    properties:
+        entry:
+            expose: true
+            serialized_name: entry
+            skip_when_empty: false
+            type: POData\ObjectModel\ODataEntry
+        feed:
+            expose: true
+            serialized_name: feed
+            skip_when_empty: false
+            type: POData\ObjectModel\ODataFeed

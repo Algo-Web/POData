@@ -3,7 +3,8 @@
 namespace POData\ObjectModel;
 
 /**
- * Class ODataTitle
+ * Class ODataTitle.
+ *
  * @package POData\ObjectModel
  */
 class ODataTitle
@@ -16,12 +17,18 @@ class ODataTitle
     public $title;
 
     /**
-     * Type
+     * Type.
      *
      * @var string
      */
     public $type;
 
+    /**
+     * ODataTitle constructor.
+     *
+     * @param string $title
+     * @param string $type
+     */
     public function __construct($title, $type = 'text')
     {
         $this->title = $title;

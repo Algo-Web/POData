@@ -1,0 +1,97 @@
+POData\ObjectModel\ODataEntry:
+    exclusion_policy: ALL
+    xml_root_namespace: http://www.w3.org/2005/Atom
+    custom_accessor_order: [id, title, updated, atomAuthor, editLink, mediaLink, mediaLinks, links, type, atomContent, propertyContent]
+    properties:
+        id:
+            expose: true
+            xml_element:
+                namespace: http://www.w3.org/2005/Atom
+                cdata: false
+            type: string
+        title:
+            expose: true
+            xml_element:
+                namespace: http://www.w3.org/2005/Atom
+                cdata: false
+            type: POData\ObjectModel\ODataTitle
+        updated:
+            expose: true
+            xml_element:
+                namespace: http://www.w3.org/2005/Atom
+                cdata: false
+            type: string
+        editLink:
+            expose: true
+            serialized_name: link
+            read_only: true
+            xml_element:
+                namespace: http://www.w3.org/2005/Atom
+            type: POData\ObjectModel\ODataLink
+            access_type: public_method
+            accessor:
+                getter: getEditLink
+        links:
+            expose: true
+            serialized_name: link
+            xml_list:
+                entry_name: link
+                inline: true
+                namespace: http://www.w3.org/2005/Atom
+            type: array<POData\ObjectModel\ODataLink>
+            access_type: public_method
+            accessor:
+                getter: getLinks
+                setter: setLinks
+        mediaLinks:
+            expose: true
+            serialized_name: link
+            xml_list:
+                entry_name: link
+                inline: true
+                namespace: http://www.w3.org/2005/Atom
+            type: array<POData\ObjectModel\ODataMediaLink>
+            access_type: public_method
+            accessor:
+                getter: getMediaLinks
+                setter: setMediaLinks
+        mediaLink:
+            expose: true
+            serialized_name: link
+            read_only: true
+            xml_element:
+                namespace: http://www.w3.org/2005/Atom
+                cdata: false
+            type: POData\ObjectModel\ODataMediaLink
+            access_type: public_method
+            accessor:
+                getter: getMediaLink
+        type:
+            expose: true
+            serialized_name: category
+            type: POData\ObjectModel\ODataCategory
+        propertyContent:
+            expose: true
+            serialized_name: properties
+            xml_element:
+                cdata: false
+                namespace: http://schemas.microsoft.com/ado/2007/08/dataservices/metadata
+            access_type: public_method
+            accessor:
+                getter: getPropertyContent
+                setter: setPropertyContent
+            type: POData\ObjectModel\ODataPropertyContent
+        atomContent:
+            serialized_name: content
+            access_type: public_method
+            accessor:
+                getter: getAtomContent
+                setter: setAtomContent
+            type: POData\ObjectModel\AtomObjectModel\AtomContent
+        atomAuthor:
+            serialized_name: author
+            access_type: public_method
+            read_only: true
+            accessor:
+                getter: getAtomAuthor
+            type: POData\ObjectModel\AtomObjectModel\AtomAuthor
