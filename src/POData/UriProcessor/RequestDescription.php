@@ -24,7 +24,6 @@ use POData\UriProcessor\ResourcePathProcessor\SegmentParser\SegmentDescriptor;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetSource;
 
-
 /**
  * Class RequestDescription.
  */
@@ -218,12 +217,12 @@ class RequestDescription
 
     /**
      * @param SegmentDescriptor[] $segmentDescriptors Description of segments in the resource path
-     * @param Url               $requestUri
-     * @param Version           $serviceMaxVersion
-     * @param string|null       $requestVersion
-     * @param string|null       $maxRequestVersion
-     * @param string|null       $dataType
-     * @param IHTTPRequest|null $payload
+     * @param Url                 $requestUri
+     * @param Version             $serviceMaxVersion
+     * @param string|null         $requestVersion
+     * @param string|null         $maxRequestVersion
+     * @param string|null         $dataType
+     * @param IHTTPRequest|null   $payload
      */
     public function __construct(
         array $segmentDescriptors,
