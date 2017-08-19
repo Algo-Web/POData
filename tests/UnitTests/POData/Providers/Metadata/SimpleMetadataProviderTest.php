@@ -10,7 +10,6 @@ use POData\Common\InvalidOperationException;
 use POData\Providers\Metadata\ResourceAssociationSet;
 use POData\Providers\Metadata\ResourceComplexType;
 use POData\Providers\Metadata\ResourceEntityType;
-use POData\Providers\Metadata\ResourcePrimitiveType;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\Providers\Metadata\ResourceSet;
@@ -290,8 +289,8 @@ class SimpleMetadataProviderTest extends TestCase
         $keyName = 'id';
         $complex = $foo->addEntityType(new \ReflectionClass(get_class($orig)), 'table');
 
-        $expected = 'The argument \'$typeCode\' to getPrimitiveResourceType is not'.
-                    ' a valid EdmPrimitiveType Enum value.';
+        $expected = 'The argument \'$typeCode\' to getPrimitiveResourceType is not' .
+            ' a valid EdmPrimitiveType Enum value.';
         $actual = null;
 
         try {
@@ -749,6 +748,7 @@ class SimpleMetadataProviderTest extends TestCase
         $foo->addResourceReferenceSinglePropertyBidirectional($aft, $fore, 'backRelation', 'relation');
         $this->assertEquals(2, $foo->getAssociationCount());
     }
+
     public function testAddEntityTypeAbstractTest()
     {
         $forward = new reusableEntityClass4('foo', 'bar');
@@ -776,7 +776,23 @@ class SimpleMetadataProviderTest extends TestCase
         $result = $foo->getXML();
         $this->assertTrue($result instanceof Serializer);
     }
+
+    public function testBagAndEtagException()
+    {
+        $foo = new SimpleMetadataProvider('string', 'String');
+        $reflector = new \ReflectionObject($foo);
+        $method = $reflector->getMethod('addPrimitivePropertyInternal');
+        $method->setAccessible(true);
+        try {
+            $method->invoke($foo, null, null, null, true, true, true);
+            $this->fail('expected exception not fired');
+        } catch (InvalidOperationException $e) {
+            $this->assertEquals("Only primitive property can be etag property, bag property cannot be etag property.", $e->getMessage());
+        }
+
+    }
 }
+
 
 class reusableEntityClass4
 {

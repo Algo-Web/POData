@@ -427,6 +427,12 @@ class SimpleMetadataProvider implements IMetadataProvider
         $defaultValue = null,
         $nullable = false
     ) {
+        if ($isETagProperty && $isBag) {
+            throw new InvalidOperationException(
+                'Only primitive property can be etag property, bag property cannot be etag property.'
+            );
+        }
+
         $this->checkInstanceProperty($name, $resourceType);
 
         // check that property and resource name don't up and collide - would violate OData spec
@@ -437,12 +443,6 @@ class SimpleMetadataProvider implements IMetadataProvider
         }
 
         $primitiveResourceType = ResourceType::getPrimitiveResourceType($typeCode);
-
-        if ($isETagProperty && $isBag) {
-            throw new InvalidOperationException(
-                'Only primitive property can be etag property, bag property cannot be etag property.'
-            );
-        }
 
         $kind = $isKey ? ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::KEY : ResourcePropertyKind::PRIMITIVE;
         if ($isBag) {
