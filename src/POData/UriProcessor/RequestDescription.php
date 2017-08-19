@@ -305,8 +305,8 @@ class RequestDescription
             if (0 == strlen(trim($string))) {
                 return;
             }
-            $ymlDir = dirname(dirname(dirname(__DIR__))) . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'POData' .
-                DIRECTORY_SEPARATOR . 'Writers' . DIRECTORY_SEPARATOR . 'YML';
+            $ymlDir = dirname(dirname(dirname(__DIR__))) . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR .
+                'POData' . DIRECTORY_SEPARATOR . 'Writers' . DIRECTORY_SEPARATOR . 'YML';
             $serialize =
                 SerializerBuilder::create()
                     ->addMetadataDir($ymlDir)

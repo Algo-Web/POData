@@ -2,13 +2,11 @@
 
 namespace POData\Providers\Metadata;
 
-use AlgoWeb\ODataMetadata\IsOK;
 use AlgoWeb\ODataMetadata\MetadataManager;
 use AlgoWeb\ODataMetadata\MetadataV3\edm\TComplexTypeType;
 use AlgoWeb\ODataMetadata\MetadataV3\edm\TEntityTypeType;
 use Illuminate\Support\Str;
 use POData\Common\InvalidOperationException;
-use POData\Common\NotImplementedException;
 use POData\Providers\Metadata\Type\IType;
 use POData\Providers\Metadata\Type\TypeCode;
 
@@ -42,7 +40,7 @@ class SimpleMetadataProvider implements IMetadataProvider
     //Begin Implementation of IMetadataProvider
 
     /**
-     * @return mixed
+     * @return string|null
      */
     public function getXML()
     {
