@@ -51,18 +51,18 @@ class CynicDeserialiser
     {
         // check links
         foreach ($payload->links as $link) {
-            $hasUrl = isset($link->id);
+            $hasUrl = isset($link->url);
             $hasExpanded = isset($link->expandedResult);
             if ($hasUrl) {
-                if (!is_string($link->id)) {
-                    $msg = 'ID must be either string or null';
+                if (!is_string($link->url)) {
+                    $msg = 'Url must be either string or null';
                     throw new \InvalidArgumentException($msg);
                 }
             }
             if ($hasExpanded) {
                 $isGood = $link->expandedResult instanceof ODataEntry || $link->expandedResult instanceof ODataFeed;
                 if (!$isGood) {
-                    $msg = 'Expanded result must be instance of ODataEntry or ODataFeed';
+                    $msg = 'Expanded result must null, or be instance of ODataEntry or ODataFeed';
                     throw new \InvalidArgumentException($msg);
                 }
             }
