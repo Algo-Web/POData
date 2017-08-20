@@ -35,12 +35,13 @@ class CynicDeserialiser
     }
 
     /**
-     * @param ODataEntry|ODataFeed $payload
+     * @param ODataEntry $payload
      */
     public function processPayload(ODataEntry &$payload)
     {
         assert($this->checkEntryOK($payload));
         list($sourceSet, $source) = $this->processEntryContent($payload);
+        assert($sourceSet instanceof ResourceSet);
         $numLinks = count($payload->links);
         for ($i = 0; $i < $numLinks; $i++) {
             $this->processLink($payload->links[$i], $sourceSet, $source);
@@ -93,15 +94,19 @@ class CynicDeserialiser
 
         $isCreate = null === $content->id;
         $set = $this->getMetaProvider()->resolveResourceSet($content->resourceSetName);
+        assert($set instanceof ResourceSet, get_class($set));
         $type = $set->getResourceType();
         $properties = $this->getDeserialiser()->bulkDeserialise($type, $content);
 
         if ($isCreate) {
             $result = $this->getWrapper()->createResourceforResourceSet($set, null, $properties);
+            assert(isset($result), get_class($result));
             $key = $this->generateKeyDescriptor($type, $result);
         } else {
             $key = $this->generateKeyDescriptor($type, $content->propertyContent);
+            assert($key instanceof KeyDescriptor, get_class($key));
             $source = $this->getWrapper()->getResourceFromResourceSet($set, $key);
+            assert(isset($source), get_class($source));
             $result = $this->getWrapper()->updateResource($set, $source, $key, $properties);
         }
 
@@ -132,7 +137,7 @@ class CynicDeserialiser
     /**
      * @param ResourceEntityType $type
      * @param ODataPropertyContent|object $result
-     * @return null
+     * @return null|KeyDescriptor
      */
     protected function generateKeyDescriptor(ResourceEntityType $type, $result)
     {
@@ -178,6 +183,7 @@ class CynicDeserialiser
         } else {
             $type = $this->getMetaProvider()->resolveResourceType($link->expandedResult->type->term);
         }
+        assert($type instanceof ResourceEntityType, get_class($type));
         $propName = $link->title;
 
 
