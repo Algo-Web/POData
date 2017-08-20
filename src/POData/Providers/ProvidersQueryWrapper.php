@@ -413,6 +413,61 @@ class ProvidersQueryWrapper
     }
 
     /**
+     * Attaches child model to parent model
+     *
+     * @param ResourceSet $sourceResourceSet
+     * @param object $sourceEntityInstance
+     * @param ResourceSet $targetResourceSet
+     * @param object $targetEntityInstance
+     * @param $navPropName
+     *
+     * @return bool
+     */
+    public function hookSingleModel(
+        ResourceSet $sourceResourceSet,
+        $sourceEntityInstance,
+        ResourceSet $targetResourceSet,
+        $targetEntityInstance,
+        $navPropName
+    ) {
+        return $this->getQueryProvider()->hookSingleModel(
+            $sourceResourceSet,
+            $sourceEntityInstance,
+            $targetResourceSet,
+            $targetEntityInstance,
+            $navPropName
+        );
+    }
+
+    /**
+     * Removes child model from parent model
+     *
+     * @param ResourceSet $sourceResourceSet
+     * @param object $sourceEntityInstance
+     * @param ResourceSet $targetResourceSet
+     * @param object $targetEntityInstance
+     * @param $navPropName
+     *
+     * @return bool
+     */
+    public function unhookSingleModel(
+        ResourceSet $sourceResourceSet,
+        $sourceEntityInstance,
+        ResourceSet $targetResourceSet,
+        $targetEntityInstance,
+        $navPropName
+    ) {
+        return $this->getQueryProvider()->unhookSingleModel(
+            $sourceResourceSet,
+            $sourceEntityInstance,
+            $targetResourceSet,
+            $targetEntityInstance,
+            $navPropName
+        );
+    }
+
+
+    /**
      * @param QueryResult $queryResult
      * @param QueryType   $queryType
      * @param string      $methodName

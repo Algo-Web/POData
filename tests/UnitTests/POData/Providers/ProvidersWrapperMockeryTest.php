@@ -20,6 +20,7 @@ use POData\Providers\ProvidersWrapper;
 use POData\Providers\Query\IQueryProvider;
 use POData\Providers\Query\QueryType;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
+use UnitTests\POData\Facets\NorthWind1\Address2;
 use UnitTests\POData\Facets\NorthWind1\Customer2;
 use UnitTests\POData\TestCase;
 
@@ -526,6 +527,48 @@ class ProvidersWrapperMockeryTest extends TestCase
 
         $expected = 'eins';
         $actual = $foo->updateBulkResource($set, $source, $payload, $keys);
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testHookSingleModel()
+    {
+        $query = m::mock(IQueryProvider::class);
+        $query->shouldReceive('hookSingleModel')->andReturn('eins')->once();
+
+        $wrap = m::mock(ProvidersQueryWrapper::class)->makePartial();
+        $wrap->shouldReceive('getQueryProvider')->andReturn($query);
+
+        $foo = m::mock(ProvidersWrapper::class)->makePartial();
+        $foo->shouldReceive('getProviderWrapper')->andReturn($wrap);
+
+        $set = m::mock(ResourceSet::class);
+        $source = new Customer2();
+        $target = new Address2();
+        $propName = 'property';
+
+        $expected = 'eins';
+        $actual = $foo->hookSingleModel($set, $source, $set, $target, $propName);
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testUnHookSingleModel()
+    {
+        $query = m::mock(IQueryProvider::class);
+        $query->shouldReceive('unhookSingleModel')->andReturn('eins')->once();
+
+        $wrap = m::mock(ProvidersQueryWrapper::class)->makePartial();
+        $wrap->shouldReceive('getQueryProvider')->andReturn($query);
+
+        $foo = m::mock(ProvidersWrapper::class)->makePartial();
+        $foo->shouldReceive('getProviderWrapper')->andReturn($wrap);
+
+        $set = m::mock(ResourceSet::class);
+        $source = new Customer2();
+        $target = new Address2();
+        $propName = 'property';
+
+        $expected = 'eins';
+        $actual = $foo->unhookSingleModel($set, $source, $set, $target, $propName);
         $this->assertEquals($expected, $actual);
     }
 
