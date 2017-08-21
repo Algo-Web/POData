@@ -114,11 +114,6 @@ class CynicDeserialiser
         return [$set, $result];
     }
 
-    protected function processFeedContent(ODataFeed &$content)
-    {
-    }
-
-
     protected function getMetaProvider()
     {
         return $this->metaProvider;
@@ -167,12 +162,36 @@ class CynicDeserialiser
     {
         $hasUrl = isset($link->url);
         $hasPayload = isset($link->expandedResult);
+        assert(
+            null == $link->expandedResult
+            || $link->expandedResult instanceof ODataEntry
+            || $link->expandedResult instanceof ODataFeed,
+            get_class($link->expandedResult)
+        );
+        $isFeed = $link->expandedResult instanceof ODataFeed;
 
         // if nothing to hook up, bail out now
         if (!$hasUrl && !$hasPayload) {
             return;
         }
 
+        if ($isFeed) {
+            $this->processLinkFeed($link, $sourceSet, $source, $hasUrl, $hasPayload);
+        } else {
+            $this->processLinkSingleton($link, $sourceSet, $source, $hasUrl, $hasPayload);
+        }
+        return;
+    }
+
+    /**
+     * @param ODataLink $link
+     * @param ResourceSet $sourceSet
+     * @param $source
+     * @param $hasUrl
+     * @param $hasPayload
+     */
+    protected function processLinkSingleton(ODataLink &$link, ResourceSet $sourceSet, $source, $hasUrl, $hasPayload)
+    {
         if ($hasUrl) {
             $rawPredicate = explode('(', $link->url);
             $setName = $rawPredicate[0];
@@ -185,7 +204,6 @@ class CynicDeserialiser
         }
         assert($type instanceof ResourceEntityType, get_class($type));
         $propName = $link->title;
-
 
         if ($hasUrl) {
             $keyDesc = null;
@@ -215,6 +233,78 @@ class CynicDeserialiser
         $link->url = $keyDesc;
         $link->expandedResult->id = $keyDesc;
         $this->getWrapper()->hookSingleModel($sourceSet, $source, $targSet, $target, $propName);
+        return;
+    }
+
+    protected function processLinkFeed(ODataLink &$link, ResourceSet $sourceSet, $source, $hasUrl, $hasPayload)
+    {
+        assert(
+            $link->expandedResult instanceof ODataFeed,
+            get_class($link->expandedResult)
+        );
+        $propName = $link->title;
+
+        // if entries is empty, bail out - nothing to do
+        $numEntries = count($link->expandedResult->entries);
+        if (0 === $numEntries) {
+            return;
+        }
+        // check that each entry is of consistent resource set
+        $first = $link->expandedResult->entries[0]->resourceSetName;
+        for ($i = 1; $i < $numEntries; $i++) {
+            if ($first !== $link->expandedResult->entries[$i]->resourceSetName) {
+                $msg = 'All entries in given feed must have same resource set';
+                throw new \InvalidArgumentException($msg);
+            }
+        }
+
+        $targSet = $this->getMetaProvider()->resolveResourceSet($first);
+        $targType = $targSet->getResourceType();
+        $targObj = $targType->getInstanceType()->newInstanceArgs();
+
+        // assemble payload
+        $data = [];
+        $keys = [];
+        for ($i = 0; $i < $numEntries; $i++) {
+            $data[] = $this->getDeserialiser()->bulkDeserialise(
+                $targType,
+                $link->expandedResult->entries[$i]
+            );
+            $keys[] = $this->generateKeyDescriptor(
+                $targType,
+                $link->expandedResult->entries[$i]->propertyContent
+            );
+        }
+
+        // creation
+        if (!$hasUrl && $hasPayload) {
+            $bulkResult = $this->getWrapper()->createBulkResourceforResourceSet($targSet, $data);
+            assert(is_array($bulkResult));
+            for ($i = 0; $i < $numEntries; $i++) {
+                $targEntityInstance = $bulkResult[$i];
+                $this->getWrapper()->hookSingleModel($sourceSet, $source, $targSet, $targEntityInstance, $propName);
+                $key = $this->generateKeyDescriptor($targType, $targEntityInstance);
+                $link->expandedResult->entries[$i]->id = $key;
+            }
+        }
+        // update
+        if ($hasUrl && $hasPayload) {
+            $bulkResult = $this->getWrapper()->updateBulkResource($targSet, $targObj, $keys, $data);
+            for ($i = 0; $i < $numEntries; $i++) {
+                $targEntityInstance = $bulkResult[$i];
+                $this->getWrapper()->hookSingleModel($sourceSet, $source, $targSet, $targEntityInstance, $propName);
+                $link->expandedResult->entries[$i]->id = $keys[$i];
+            }
+        }
+        assert(isset($bulkResult) && is_array($bulkResult));
+
+        for ($i = 0; $i < $numEntries; $i++) {
+            $numLinks = count($link->expandedResult->entries[$i]->links);
+            for ($j = 0; $j < $numLinks; $j++) {
+                $this->processLink($link->expandedResult->entries[$i]->links[$j], $targSet, $bulkResult[$i]);
+            }
+        }
+
         return;
     }
 }
