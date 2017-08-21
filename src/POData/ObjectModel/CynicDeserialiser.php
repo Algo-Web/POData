@@ -97,6 +97,7 @@ class CynicDeserialiser
         assert($set instanceof ResourceSet, get_class($set));
         $type = $set->getResourceType();
         $properties = $this->getDeserialiser()->bulkDeserialise($type, $content);
+        $properties = (object) $properties;
 
         if ($isCreate) {
             $result = $this->getWrapper()->createResourceforResourceSet($set, null, $properties);
