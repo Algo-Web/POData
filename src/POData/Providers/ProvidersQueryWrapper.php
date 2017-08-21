@@ -194,7 +194,7 @@ class ProvidersQueryWrapper
 
     /**
      * @param ResourceSet $resourceSet          The entity set containing the entity to fetch
-     * @param object      $sourceEntityInstance The source entity instance
+     * @param object|null $sourceEntityInstance The source entity instance
      * @param object      $data                 the New data for the entity instance
      *
      * @return object|null returns the newly created model if successful, or null if model creation failed

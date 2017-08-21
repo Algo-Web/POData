@@ -28,7 +28,7 @@ class ModelDeserialiser
     public function bulkDeserialise(ResourceEntityType $entityType, ODataEntry $payload)
     {
         if (!isset($payload->type)) {
-            $msg = "ODataEntry payload type not set";
+            $msg = 'ODataEntry payload type not set';
             throw new \InvalidArgumentException($msg);
         }
 

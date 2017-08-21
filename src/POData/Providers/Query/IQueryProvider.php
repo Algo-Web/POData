@@ -190,7 +190,7 @@ interface IQueryProvider
     /**
      * Create a new resource in a resource set.
      * @param ResourceSet $sourceresourceSet The entity set containing the entity to fetch
-     * @param object      $keyDescriptor
+     * @param object|null $keyDescriptor
      * @param object      $data              the New data for the entity instance
      *
      * @return object|null returns the newly created model if successful, or null if model creation failed

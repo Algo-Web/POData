@@ -39,7 +39,7 @@ class CynicDeserialiser
      */
     public function processPayload(ODataEntry &$payload)
     {
-        assert($this->checkEntryOK($payload));
+        assert($this->isEntryOK($payload));
         list($sourceSet, $source) = $this->processEntryContent($payload);
         assert($sourceSet instanceof ResourceSet);
         $numLinks = count($payload->links);
@@ -48,7 +48,7 @@ class CynicDeserialiser
         }
     }
 
-    protected function checkEntryOK(ODataEntry $payload)
+    protected function isEntryOK(ODataEntry $payload)
     {
         // check links
         foreach ($payload->links as $link) {
@@ -71,10 +71,10 @@ class CynicDeserialiser
 
             if ($hasExpanded) {
                 if ($isEntry) {
-                    $this->checkEntryOK($link->expandedResult);
+                    $this->isEntryOK($link->expandedResult);
                 } else {
                     foreach ($link->expandedResult->entries as $expanded) {
-                        $this->checkEntryOK($expanded);
+                        $this->isEntryOK($expanded);
                     }
                 }
             }
@@ -192,6 +192,10 @@ class CynicDeserialiser
      */
     protected function processLinkSingleton(ODataLink &$link, ResourceSet $sourceSet, $source, $hasUrl, $hasPayload)
     {
+        assert(
+            null === $link->expandedResult || $link->expandedResult instanceof ODataEntry,
+            get_class($link->expandedResult)
+        );
         if ($hasUrl) {
             $rawPredicate = explode('(', $link->url);
             $setName = $rawPredicate[0];
@@ -207,6 +211,7 @@ class CynicDeserialiser
 
         if ($hasUrl) {
             $keyDesc = null;
+            assert(isset($rawPredicate));
             KeyDescriptor::tryParseKeysFromKeyPredicate($rawPredicate, $keyDesc);
             $keyDesc->validate($rawPredicate, $type);
             assert(null !== $keyDesc, 'Key description must not be null');
@@ -214,7 +219,10 @@ class CynicDeserialiser
 
         // hooking up to existing resource
         if ($hasUrl && !$hasPayload) {
+            assert(isset($targSet));
+            assert(isset($keyDesc));
             $target = $this->getWrapper()->getResourceFromResourceSet($targSet, $keyDesc);
+            assert(isset($target));
             $this->getWrapper()->hookSingleModel($sourceSet, $source, $targSet, $target, $propName);
             $link->url = $keyDesc;
             return;
@@ -222,6 +230,7 @@ class CynicDeserialiser
         // creating new resource
         if (!$hasUrl && $hasPayload) {
             list($targSet, $target) = $this->processEntryContent($link->expandedResult);
+            assert(isset($target));
             $key = $this->generateKeyDescriptor($type, $link->expandedResult->propertyContent);
             $link->url = $key;
             $link->expandedResult->id = $key;
@@ -230,6 +239,7 @@ class CynicDeserialiser
         }
         // updating existing resource and connecting to it
         list($targSet, $target) = $this->processEntryContent($link->expandedResult);
+        assert(isset($target));
         $link->url = $keyDesc;
         $link->expandedResult->id = $keyDesc;
         $this->getWrapper()->hookSingleModel($sourceSet, $source, $targSet, $target, $propName);
@@ -259,8 +269,12 @@ class CynicDeserialiser
         }
 
         $targSet = $this->getMetaProvider()->resolveResourceSet($first);
+        assert($targSet instanceof ResourceSet);
         $targType = $targSet->getResourceType();
-        $targObj = $targType->getInstanceType()->newInstanceArgs();
+        assert($targType instanceof ResourceEntityType);
+        $instanceType = $targType->getInstanceType();
+        assert($instanceType instanceof \ReflectionClass);
+        $targObj = $instanceType->newInstanceArgs();
 
         // assemble payload
         $data = [];
