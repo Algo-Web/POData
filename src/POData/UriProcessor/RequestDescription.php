@@ -9,6 +9,7 @@ use POData\Common\ODataConstants;
 use POData\Common\ODataException;
 use POData\Common\Url;
 use POData\Common\Version;
+use POData\ObjectModel\ODataEntry;
 use POData\OperationContext\IHTTPRequest;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceSetWrapper;
@@ -297,7 +298,6 @@ class RequestDescription
     private function readData($dataType)
     {
         $string = $this->data;
-        $dataArray = [];
         if ($dataType === MimeTypes::MIME_APPLICATION_ATOM) {
             if (is_array($string) && 1 == count($string)) {
                 $string = $string[0];
@@ -312,7 +312,9 @@ class RequestDescription
                     ->addMetadataDir($ymlDir)
                     ->build();
             $this->data = $serialize->deserialize($string, 'POData\ObjectModel\ODataEntry', 'xml');
-            $dataArray;
+            assert($this->data instanceof ODataEntry);
+            $msg = null;
+            assert($this->data->isOk($msg), $msg);
         } elseif ($dataType === MimeTypes::MIME_APPLICATION_JSON) {
             $data = !is_array($string) ? json_decode($string, true) : $string;
             $this->data = $data;

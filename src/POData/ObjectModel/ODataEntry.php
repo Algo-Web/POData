@@ -255,4 +255,18 @@ class ODataEntry
     {
         return $this->mediaLink;
     }
+
+    public function isOk(&$msg = null)
+    {
+        if (!$this->propertyContent instanceof ODataPropertyContent) {
+            $msg = 'Property content must be instanceof ODataPropertyContent';
+            return false;
+        }
+        if (0 === count($this->propertyContent->properties)) {
+            $msg = 'Must have at least one property present';
+            return false;
+        }
+
+        return true;
+    }
 }
