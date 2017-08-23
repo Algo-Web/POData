@@ -50,7 +50,7 @@ class ModelDeserialiser
             foreach ($rawProp as $prop) {
                 $propName = $prop->getName();
                 if (!in_array($propName, $keyNames) && !($prop->getResourceType() instanceof ResourceEntityType)) {
-                    $nonRelProp[$propName] = $prop;
+                    $nonRelProp[] = $propName;
                 }
             }
             self::$nonKeyPropertiesCache[$actualType] = $nonRelProp;
@@ -61,7 +61,7 @@ class ModelDeserialiser
         // assemble data array
         $data = [];
         foreach ($payload->propertyContent->properties as $propName => $propSpec) {
-            if (array_key_exists($propName, $nonRelProp)) {
+            if (in_array($propName, $nonRelProp)) {
                 $rawVal = $propSpec->value;
                 $data[$propName] = trim($rawVal);
             }
