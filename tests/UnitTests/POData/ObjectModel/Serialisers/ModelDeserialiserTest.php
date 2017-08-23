@@ -85,10 +85,10 @@ class ModelDeserialiserTest extends SerialiserTestBase
         $propContent->properties['CustomerGuid']->value = '123e4567-e89b-12d3-a456-426655440000';
         $propContent->properties['CustomerName']->name = 'CustomerName';
         $propContent->properties['CustomerName']->typeName = 'Edm.String';
-        $propContent->properties['CustomerName']->value = 'MakeItPhunkee';
+        $propContent->properties['CustomerName']->value = ' MakeItPhunkee ';
         $propContent->properties['Country']->name = 'Country';
         $propContent->properties['Country']->typeName = 'Edm.String';
-        $propContent->properties['Country']->value = 'Oop North';
+        $propContent->properties['Country']->value = ' Oop North ';
         $propContent->properties['Rating']->name = 'Rating';
         $propContent->properties['Rating']->typeName = 'Edm.Int32';
         $propContent->properties['Photo']->name = 'Photo';

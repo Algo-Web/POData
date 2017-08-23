@@ -63,7 +63,7 @@ class ModelDeserialiser
         foreach ($payload->propertyContent->properties as $propName => $propSpec) {
             if (array_key_exists($propName, $nonRelProp)) {
                 $rawVal = $propSpec->value;
-                $data[$propName] = $rawVal;
+                $data[$propName] = trim($rawVal);
             }
         }
 
