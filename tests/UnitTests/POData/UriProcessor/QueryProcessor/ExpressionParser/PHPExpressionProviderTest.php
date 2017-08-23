@@ -169,7 +169,7 @@ class PHPExpressionProviderTest extends TestCase
         $expectedPHPExpression = '(((!(is_null($lt->Customer)) && !(is_null($lt->Customer->Address))) && !(is_null($lt->Customer->Address->LineNumber))) && !(((($lt->Customer->Address->LineNumber + 2) == 4) && true)))';
         $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
 
-       //Unary NOT with Logical OR expressons as child
+        //Unary NOT with Logical OR expressons as child
         $odataUriExpression = 'not(Customer/Address/LineNumber add 2 eq 4 or true)';
         $parser->resetParser($odataUriExpression);
         $actualPHPExpression = $expressionProcessor->processExpression($parser->parseFilter());

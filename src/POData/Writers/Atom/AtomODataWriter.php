@@ -854,7 +854,7 @@ class AtomODataWriter implements IODataWriter
     }
 
     /**
-     * Get update timestamp
+     * Get update timestamp.
      *
      * @return Carbon
      */

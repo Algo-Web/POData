@@ -45,16 +45,52 @@ class ODataFeed
     public $entries = [];
 
     /**
-     * Last updated timestamp
+     * Last updated timestamp.
      *
      * @var string
      */
     public $updated;
 
     /**
-     * Service Base URI
+     * Service Base URI.
      *
      * @var string
      */
     public $baseURI;
+    /**
+     * @return \POData\ObjectModel\ODataLink
+     */
+    public function getNextPageLink()
+    {
+        return $this->nextPageLink;
+    }
+
+    /**
+     * @param \POData\ObjectModel\ODataLink $nextPageLink
+     */
+    public function setNextPageLink(ODataLink $nextPageLink)
+    {
+        foreach (get_object_vars($nextPageLink) as $property) {
+            if (null !== $property) {
+                $this->nextPageLink = $nextPageLink;
+                return;
+            }
+        }
+    }
+
+    /**
+     * @return \POData\ObjectModel\ODataEntry[]
+     */
+    public function getEntries()
+    {
+        return $this->entries;
+    }
+
+    /**
+     * @param \POData\ObjectModel\ODataEntry[] $entries
+     */
+    public function setEntries(array $entries)
+    {
+        $this->entries = $entries;
+    }
 }

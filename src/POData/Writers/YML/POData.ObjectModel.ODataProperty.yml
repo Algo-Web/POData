@@ -1,0 +1,27 @@
+POData\ObjectModel\ODataProperty:
+    exclusion_policy: ALL
+    xml_root_namespace: http://www.w3.org/2005/Atom
+    custom_accessor_order: [typeName, isNull, value]
+    virtual_properties:
+        isNull:
+            serialized_name: m:null
+            xml_attribute: true
+            type: boolean
+            skip_when_empty: true
+    properties:
+        typeName:
+            expose: true
+            xml_attribute: true
+            serialized_name: type
+            xml_element:
+                namespace: http://schemas.microsoft.com/ado/2007/08/dataservices/metadata
+                cdata: false
+            type: string
+        value:
+            expose: true
+            xml_value: true
+            xml_element:
+                cdata: false
+            type: string
+
+

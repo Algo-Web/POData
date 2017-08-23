@@ -277,7 +277,7 @@ class SegmentParserTest extends TestCase
             $this->assertStringEndsWith('must a segment specified after the \'$links\' segment and the segment must refer to a entity resource.', $exception->getMessage());
         }
 
-         //test for post-post link
+        //test for post-post link
         $segments = ["Customers(CustomerID='ALFKI', CustomerGuid=guid'15b242e7-52eb-46bd-8f0e-6568b72cd9a6')",
             '$links',
             'Orders',
@@ -289,7 +289,7 @@ class SegmentParserTest extends TestCase
             $this->assertStringEndsWith('The segment \'OrderID\' is not valid. Since the uri contains the $links segment, there must be only one segment specified after that.', $exception->getMessage());
         }
 
-         //test for $links with predicate
+        //test for $links with predicate
         $segments = ["Customers(CustomerID='ALFKI', CustomerGuid=guid'15b242e7-52eb-46bd-8f0e-6568b72cd9a6')",
             '$links(123)',
             'Orders', ];

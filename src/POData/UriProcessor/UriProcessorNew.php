@@ -6,6 +6,8 @@ use POData\Common\Messages;
 use POData\Common\ODataConstants;
 use POData\Common\ODataException;
 use POData\IService;
+use POData\ObjectModel\ModelDeserialiser;
+use POData\ObjectModel\ODataEntry;
 use POData\OperationContext\HTTPRequestMethod;
 use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\Providers\Metadata\ResourceSet;
@@ -60,6 +62,8 @@ class UriProcessorNew implements IUriProcessor
      */
     private $expander;
 
+    private $cereal;
+
     /**
      * Constructs a new instance of UriProcessor.
      *
@@ -76,6 +80,7 @@ class UriProcessorNew implements IUriProcessor
             $this->getProviders()
         );
         $this->getRequest()->setUriProcessor($this);
+        $this->cereal = new ModelDeserialiser();
     }
 
     /**
@@ -265,6 +270,9 @@ class UriProcessorNew implements IUriProcessor
         assert($keyDescriptor instanceof KeyDescriptor);
 
         $data = $this->getRequest()->getData();
+        if ($data instanceof ODataEntry) {
+            $data = $this->cereal->bulkDeserialise($resourceSet->getResourceType(), $data);
+        }
         if (!$data) {
             throw ODataException::createBadRequestError(Messages::noDataForThisVerb($requestMethod));
         }
@@ -300,6 +308,10 @@ class UriProcessorNew implements IUriProcessor
                 $keyDescriptor = $segment->getKeyDescriptor();
 
                 $data = $this->getRequest()->getData();
+                if ($data instanceof ODataEntry) {
+                    $data = $this->cereal->bulkDeserialise($resourceSet->getResourceType(), $data);
+                }
+
                 if (empty($data)) {
                     throw ODataException::createBadRequestError(Messages::noDataForThisVerb($requestMethod));
                 }
