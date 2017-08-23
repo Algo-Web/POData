@@ -75,7 +75,7 @@ class ModelDeserialiserTest extends SerialiserTestBase
 
         $propContent = new ODataPropertyContent();
         $propContent->properties = ['CustomerID' => new ODataProperty(), 'CustomerGuid' => new ODataProperty(),
-            'CustomerName' => new ODataProperty(), 'Country' => new ODataProperty(), 'Rating' => new ODataProperty(),
+            'CustomerName' => new ODataProperty(), 'country' => new ODataProperty(), 'Rating' => new ODataProperty(),
             'Photo' => new ODataProperty(), 'Address' => new ODataProperty()];
         $propContent->properties['CustomerID']->name = 'CustomerID';
         $propContent->properties['CustomerID']->typeName = 'Edm.String';
@@ -85,10 +85,10 @@ class ModelDeserialiserTest extends SerialiserTestBase
         $propContent->properties['CustomerGuid']->value = '123e4567-e89b-12d3-a456-426655440000';
         $propContent->properties['CustomerName']->name = 'CustomerName';
         $propContent->properties['CustomerName']->typeName = 'Edm.String';
-        $propContent->properties['CustomerName']->value = 'MakeItPhunkee';
-        $propContent->properties['Country']->name = 'Country';
-        $propContent->properties['Country']->typeName = 'Edm.String';
-        $propContent->properties['Country']->value = 'Oop North';
+        $propContent->properties['CustomerName']->value = ' MakeItPhunkee ';
+        $propContent->properties['country']->name = 'country';
+        $propContent->properties['country']->typeName = 'Edm.String';
+        $propContent->properties['country']->value = ' Oop North ';
         $propContent->properties['Rating']->name = 'Rating';
         $propContent->properties['Rating']->typeName = 'Edm.Int32';
         $propContent->properties['Photo']->name = 'Photo';
@@ -115,7 +115,7 @@ class ModelDeserialiserTest extends SerialiserTestBase
         $cereal = new ModelDeserialiser();
         $cereal->reset();
 
-        $expected = ['CustomerName' => 'MakeItPhunkee', 'Country' => 'Oop North', 'Rating' => null, 'Photo' => null,
+        $expected = ['CustomerName' => 'MakeItPhunkee', 'country' => 'Oop North', 'Rating' => null, 'Photo' => null,
             'Address' => null];
 
         $actual = $cereal->bulkDeserialise($type, $objectResult);
