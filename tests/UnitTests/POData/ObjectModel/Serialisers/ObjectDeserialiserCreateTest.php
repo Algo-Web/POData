@@ -74,8 +74,10 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
 
         $cereal = new CynicDeserialiser($meta, $prov);
 
-        $cereal->processPayload($objectResult);
+        $result = $cereal->processPayload($objectResult);
         $this->assertTrue($objectResult->id instanceof KeyDescriptor);
+        $this->assertTrue($result instanceof Customer2);
+        $this->assertEquals(1, $result->CustomerID);
     }
 
     public function testUpdateSimpleCustomerModel()

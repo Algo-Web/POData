@@ -46,6 +46,7 @@ class CynicDeserialiser
         for ($i = 0; $i < $numLinks; $i++) {
             $this->processLink($payload->links[$i], $sourceSet, $source);
         }
+        return $source;
     }
 
     protected function isEntryOK(ODataEntry $payload)
