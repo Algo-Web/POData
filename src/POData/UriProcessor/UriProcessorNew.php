@@ -154,6 +154,11 @@ class UriProcessorNew implements IUriProcessor
         return $this->expander;
     }
 
+    public function getModelDeserialiser()
+    {
+        return $this->cereal;
+    }
+
     /**
      * Execute the client submitted request against the data source.
      */
@@ -270,9 +275,9 @@ class UriProcessorNew implements IUriProcessor
         assert($keyDescriptor instanceof KeyDescriptor);
 
         $data = $this->getRequest()->getData();
-        if ($data instanceof ODataEntry) {
-            $data = $this->cereal->bulkDeserialise($resourceSet->getResourceType(), $data);
-        }
+        assert($data instanceof ODataEntry, get_class($data));
+        $data = $this->getModelDeserialiser()->bulkDeserialise($resourceSet->getResourceType(), $data);
+
         if (!$data) {
             throw ODataException::createBadRequestError(Messages::noDataForThisVerb($requestMethod));
         }
@@ -308,9 +313,8 @@ class UriProcessorNew implements IUriProcessor
                 $keyDescriptor = $segment->getKeyDescriptor();
 
                 $data = $this->getRequest()->getData();
-                if ($data instanceof ODataEntry) {
-                    $data = $this->cereal->bulkDeserialise($resourceSet->getResourceType(), $data);
-                }
+                assert($data instanceof ODataEntry, get_class($data));
+                $data = $this->getModelDeserialiser()->bulkDeserialise($resourceSet->getResourceType(), $data);
 
                 if (empty($data)) {
                     throw ODataException::createBadRequestError(Messages::noDataForThisVerb($requestMethod));

@@ -6,9 +6,14 @@ use Mockery as m;
 use POData\Common\ODataException;
 use POData\Common\Url;
 use POData\IService;
+use POData\ObjectModel\ModelDeserialiser;
+use POData\ObjectModel\ODataCategory;
+use POData\ObjectModel\ODataEntry;
+use POData\ObjectModel\ODataPropertyContent;
 use POData\OperationContext\HTTPRequestMethod;
 use POData\OperationContext\IOperationContext;
 use POData\OperationContext\ServiceHost;
+use POData\Providers\Metadata\ResourceEntityType;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\Providers\Metadata\ResourceSet;
@@ -99,16 +104,30 @@ class UriProcessorNewTest extends TestCase
 
     public function testExecutePostAndTripNoDataException()
     {
+        $resourceType = m::mock(ResourceEntityType::class);
+
+        $resourceSet = m::mock(ResourceSetWrapper::class);
+        $resourceSet->shouldReceive('getResourceType')->andReturn($resourceType);
+
         $seg1 = m::mock(SegmentDescriptor::class)->makePartial();
         $seg1->shouldReceive('getTargetKind')->andReturn(TargetKind::RESOURCE());
-        $seg1->shouldReceive('getTargetResourceSetWrapper')->andReturn('resourceSet');
+        $seg1->shouldReceive('getTargetResourceSetWrapper')->andReturn($resourceSet);
 
         $url1 = m::mock(Url::class);
         $url1->shouldReceive('isBaseOf')->andReturn(true);
         $url1->shouldReceive('getUrlAsString')->andReturn('www.example.org');
+
+        $requestPayload = new ODataEntry();
+        $requestPayload->type = new ODataCategory('Customer');
+        $requestPayload->propertyContent = new ODataPropertyContent();
+
+        $cereal = m::mock(ModelDeserialiser::class);
+        $cereal->shouldReceive('bulkDeserialise')->andReturn(null)->once();
+
         $request = m::mock(RequestDescription::class)->makePartial();
         $request->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::POST());
         $request->shouldReceive('getSegments')->andReturn([$seg1]);
+        $request->shouldReceive('getData')->andReturn($requestPayload);
 
         $wrapper = m::mock(ProvidersWrapper::class)->makePartial();
 
@@ -125,6 +144,7 @@ class UriProcessorNewTest extends TestCase
         $processor->shouldReceive('executePost')->passthru()->once();
         $processor->shouldReceive('getService')->andReturn($service);
         $processor->shouldReceive('getRequest')->andReturn($request);
+        $processor->shouldReceive('getModelDeserialiser')->andReturn($cereal);
 
         $expected = 'Method POST expecting some data, but received empty data.';
         $actual = null;
@@ -139,7 +159,13 @@ class UriProcessorNewTest extends TestCase
 
     public function testExecutePostSuccessfully()
     {
+        $cereal = m::mock(ModelDeserialiser::class);
+        $cereal->shouldReceive('bulkDeserialise')->andReturn(['a']);
+
+        $resourceType = m::mock(ResourceEntityType::class);
+        $resourceType->shouldReceive('getName')->andReturn('Customer');
         $resourceWrapper = m::mock(ResourceSetWrapper::class)->makePartial();
+        $resourceWrapper->shouldReceive('getResourceType')->andReturn($resourceType);
 
         $expander = m::mock(RequestExpander::class)->makePartial();
         $expander->shouldReceive('handleExpansion')->andReturnNull()->once();
@@ -149,13 +175,17 @@ class UriProcessorNewTest extends TestCase
         $seg1->shouldReceive('getTargetResourceSetWrapper')->andReturn($resourceWrapper);
         $seg1->shouldReceive('setResult')->andReturnNull()->once();
 
+        $requestPayload = new ODataEntry();
+        $requestPayload->type = new ODataCategory('Customer');
+        $requestPayload->propertyContent = new ODataPropertyContent();
+
         $url1 = m::mock(Url::class);
         $url1->shouldReceive('isBaseOf')->andReturn(true);
         $url1->shouldReceive('getUrlAsString')->andReturn('www.example.org');
         $request = m::mock(RequestDescription::class)->makePartial();
         $request->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::POST());
         $request->shouldReceive('getSegments')->andReturn([$seg1]);
-        $request->shouldReceive('getData')->andReturn('data');
+        $request->shouldReceive('getData')->andReturn($requestPayload);
 
         $wrapper = m::mock(ProvidersWrapper::class)->makePartial();
         $wrapper->shouldReceive('createResourceforResourceSet')->withAnyArgs()->andReturnNull()->once();
@@ -175,6 +205,7 @@ class UriProcessorNewTest extends TestCase
         $processor->shouldReceive('getService')->andReturn($service);
         $processor->shouldReceive('getRequest')->andReturn($request);
         $processor->shouldReceive('getProviders')->andReturn($wrapper);
+        $processor->shouldReceive('getModelDeserialiser')->andReturn($cereal);
         //$processor->shouldReceive('getProviders->createResourceForResourceSet')->withAnyArgs()->andReturnNull()->once();
 
         $processor->execute();
@@ -418,9 +449,18 @@ class UriProcessorNewTest extends TestCase
     {
         $url1 = new \POData\Common\Url('http://192.168.2.1/abm-master/public/odata.svc/Entity(1)');
 
+        $requestPayload = new ODataEntry();
+        $requestPayload->type = new ODataCategory('Customer');
+        $requestPayload->propertyContent = new ODataPropertyContent();
+
+        $resourceType = m::mock(ResourceEntityType::class);
         $resourceSet = m::mock(ResourceSet::class);
+        $resourceSet->shouldReceive('getResourceType')->andReturn($resourceType);
         $resourceSetWrapper = m::mock(ResourceSetWrapper::class);
         $keyDescript = m::mock(KeyDescriptor::class);
+
+        $cereal = m::mock(ModelDeserialiser::class);
+        $cereal->shouldReceive('bulkDeserialise')->andReturn(null)->once();
 
         $propKind = ResourcePropertyKind::RESOURCE_REFERENCE;
 
@@ -445,6 +485,7 @@ class UriProcessorNewTest extends TestCase
         $request = m::mock(RequestDescription::class)->makePartial();
         $request->shouldReceive('getRequestUrl')->andReturn($url1);
         $request->shouldReceive('getSegments')->andReturn([$seg1]);
+        $request->shouldReceive('getData')->andReturn($requestPayload);
 
         $host = m::mock(ServiceHost::class);
         $host->shouldReceive('getAbsoluteRequestUri')->andReturn($url1);
@@ -465,6 +506,7 @@ class UriProcessorNewTest extends TestCase
         $processor->shouldReceive('getProviders')->andReturn($wrapper);
         $processor->shouldReceive('getExpander')->andReturn($expander);
         $processor->shouldReceive('getFinalEffectiveSegment')->andReturn($seg1);
+        $processor->shouldReceive('getModelDeserialiser')->andReturn($cereal);
 
         $expected = 'Method PUT expecting some data, but received empty data.';
         $actual = null;
@@ -481,7 +523,9 @@ class UriProcessorNewTest extends TestCase
     {
         $url1 = new \POData\Common\Url('http://192.168.2.1/abm-master/public/odata.svc/Entity(1)');
 
+        $resourceType = m::mock(ResourceEntityType::class);
         $resourceSet = m::mock(ResourceSet::class);
+        $resourceSet->shouldReceive('getResourceType')->andReturn($resourceType);
         $resourceSetWrapper = m::mock(ResourceSetWrapper::class);
         $keyDescript = m::mock(KeyDescriptor::class);
 
@@ -504,10 +548,17 @@ class UriProcessorNewTest extends TestCase
         $context = m::mock(IOperationContext::class)->makePartial();
         $context->shouldReceive('incomingRequest->getMethod')->andReturn(HTTPRequestMethod::PUT())->twice();
 
+        $requestPayload = new ODataEntry();
+        $requestPayload->type = new ODataCategory('Customer');
+        $requestPayload->propertyContent = new ODataPropertyContent();
+
         $request = m::mock(RequestDescription::class)->makePartial();
         $request->shouldReceive('getRequestUrl')->andReturn($url1);
         $request->shouldReceive('getSegments')->andReturn([$seg1]);
-        $request->shouldReceive('getData')->andReturn(['stop!', 'hammer', 'time!']);
+        $request->shouldReceive('getData')->andReturn($requestPayload);
+
+        $cereal = m::mock(ModelDeserialiser::class);
+        $cereal->shouldReceive('bulkDeserialise')->andReturn(['stop!', 'hammer', 'time!']);
 
         $host = m::mock(ServiceHost::class);
         $host->shouldReceive('getAbsoluteRequestUri')->andReturn($url1);
@@ -529,6 +580,7 @@ class UriProcessorNewTest extends TestCase
         $processor->shouldReceive('getProviders')->andReturn($wrapper);
         $processor->shouldReceive('getExpander')->andReturn($expander);
         $processor->shouldReceive('getFinalEffectiveSegment')->andReturn($seg1);
+        $processor->shouldReceive('getModelDeserialiser')->andReturn($cereal);
 
         $processor->execute();
     }

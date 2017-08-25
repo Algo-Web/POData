@@ -9,10 +9,17 @@ use POData\Common\Url;
 use POData\Common\Version;
 use POData\Configuration\IServiceConfiguration;
 use POData\IService;
+use POData\ObjectModel\ModelDeserialiser;
+use POData\ObjectModel\ODataCategory;
+use POData\ObjectModel\ODataEntry;
+use POData\ObjectModel\ODataProperty;
+use POData\ObjectModel\ODataPropertyContent;
 use POData\OperationContext\HTTPRequestMethod;
 use POData\OperationContext\IHTTPRequest;
 use POData\OperationContext\IOperationContext;
 use POData\OperationContext\ServiceHost;
+use POData\Providers\Metadata\ResourceEntityType;
+use POData\Providers\Metadata\ResourcePrimitiveType;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Metadata\ResourceType;
@@ -38,9 +45,13 @@ class ExecutePostTest extends TestCase
         $host->shouldReceive('getQueryStringItem')->andReturn(null);
         $host->shouldReceive('getRequestContentType')->andReturn(ODataConstants::FORMAT_ATOM)->atLeast(2);
 
+        $requestPayload = new ODataEntry();
+        $requestPayload->type = new ODataCategory('Customer');
+        $requestPayload->propertyContent = new ODataPropertyContent();
+
         $request = m::mock(IHTTPRequest::class);
         $request->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::POST());
-        $request->shouldReceive('getAllInput')->andReturn(null);
+        $request->shouldReceive('getAllInput')->andReturn($requestPayload);
 
         $context = m::mock(IOperationContext::class);
         $context->shouldReceive('incomingRequest')->andReturn($request);
@@ -51,7 +62,7 @@ class ExecutePostTest extends TestCase
         $keyProp = m::mock(ResourceProperty::class);
         $keyProp->shouldReceive('getInstanceType')->andReturn($iType);
 
-        $resourceType = m::mock(ResourceType::class);
+        $resourceType = m::mock(ResourceEntityType::class)->makePartial();
         $resourceType->shouldReceive('getName')->andReturn('Customer');
         $resourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
         $resourceType->shouldReceive('getKeyProperties')->andReturn(['id' => $keyProp])->atLeast(2);
@@ -111,9 +122,15 @@ class ExecutePostTest extends TestCase
         $host->shouldReceive('getQueryStringItem')->andReturn(null);
         $host->shouldReceive('getRequestContentType')->andReturn(ODataConstants::FORMAT_ATOM)->atLeast(1);
 
+        $requestPayload = new ODataEntry();
+        $requestPayload->type = new ODataCategory('Customer');
+        $requestPayload->propertyContent = new ODataPropertyContent();
+        $requestPayload->propertyContent->properties['otherNumber'] = new ODataProperty();
+        $requestPayload->propertyContent->properties['otherNumber']->value = 42;
+
         $request = m::mock(IHTTPRequest::class);
         $request->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::POST());
-        $request->shouldReceive('getAllInput')->andReturn(['a', 'b', 'c']);
+        $request->shouldReceive('getAllInput')->andReturn($requestPayload);
 
         $context = m::mock(IOperationContext::class);
         $context->shouldReceive('incomingRequest')->andReturn($request);
@@ -121,12 +138,22 @@ class ExecutePostTest extends TestCase
         $iType = m::mock(IType::class);
         $iType->shouldReceive('isCompatibleWith')->andReturn(true)->atLeast(1);
 
+        $primResource = m::mock(ResourcePrimitiveType::class);
+
+        $otherProp = m::mock(ResourceProperty::class);
+        $otherProp->shouldReceive('getInstanceType')->andReturn($iType);
+        $otherProp->shouldReceive('getResourceType')->andReturn($primResource);
+        $otherProp->shouldReceive('getName')->andReturn('otherNumber');
+
         $keyProp = m::mock(ResourceProperty::class);
         $keyProp->shouldReceive('getInstanceType')->andReturn($iType);
+        $keyProp->shouldReceive('getName')->andReturn('id');
 
-        $resourceType = m::mock(ResourceType::class);
+        $resourceType = m::mock(ResourceEntityType::class);
         $resourceType->shouldReceive('getName')->andReturn('Customer');
         $resourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
+        $resourceType->shouldReceive('getAllProperties')->andReturn(['id' => $keyProp, 'otherNumber' => $otherProp])
+            ->atLeast(1);
         $resourceType->shouldReceive('getKeyProperties')->andReturn(['id' => $keyProp])->atLeast(1);
         $resourceType->shouldReceive('getInstanceType->newInstance')->andReturn(new \stdClass())->atLeast(1);
 
@@ -143,7 +170,7 @@ class ExecutePostTest extends TestCase
         $wrapper->shouldReceive('resolveSingleton')->andReturn(null);
         $wrapper->shouldReceive('resolveResourceSet')->andReturn($resourceSet);
         $wrapper->shouldReceive('getResourceFromResourceSet')->andReturn($result)->never();
-        $wrapper->shouldReceive('createResourceforResourceSet')->with($resourceSet, m::any(), ['a', 'b', 'c'])
+        $wrapper->shouldReceive('createResourceforResourceSet')->with($resourceSet, m::any(), m::any())
             ->andReturn('polizei')->once();
 
         $config = m::mock(IServiceConfiguration::class);
