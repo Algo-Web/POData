@@ -70,6 +70,10 @@ POData\ObjectModel\ODataEntry:
             expose: true
             serialized_name: category
             type: POData\ObjectModel\ODataCategory
+            access_type: public_method
+            accessor:
+                getter: getType
+                setter: setType
         propertyContent:
             expose: true
             serialized_name: properties
