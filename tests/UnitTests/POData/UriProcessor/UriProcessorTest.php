@@ -122,6 +122,7 @@ class UriProcessorTest extends TestCase
 
         $this->fakeServiceConfig = new ServiceConfiguration($this->mockMetadataProvider);
         $this->mockService->shouldReceive('getConfiguration')->andReturn($this->fakeServiceConfig);
+        $this->mockService->shouldReceive('getMetadataProvider')->andReturn($this->mockMetadataProvider);
     }
 
     public function testProcessRequestForCollection()

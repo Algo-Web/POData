@@ -6,6 +6,7 @@ use POData\Common\Messages;
 use POData\Common\ODataConstants;
 use POData\Common\ODataException;
 use POData\IService;
+use POData\ObjectModel\CynicDeserialiser;
 use POData\ObjectModel\ModelDeserialiser;
 use POData\ObjectModel\ODataEntry;
 use POData\OperationContext\HTTPRequestMethod;
@@ -62,7 +63,15 @@ class UriProcessorNew implements IUriProcessor
      */
     private $expander;
 
+    /**
+     * @var ModelDeserialiser
+     */
     private $cereal;
+
+    /**
+     * @var CynicDeserialiser
+     */
+    private $cynicDeserialiser;
 
     /**
      * Constructs a new instance of UriProcessor.
@@ -81,6 +90,10 @@ class UriProcessorNew implements IUriProcessor
         );
         $this->getRequest()->setUriProcessor($this);
         $this->cereal = new ModelDeserialiser();
+        $this->cynicDeserialiser = new CynicDeserialiser(
+            $service->getMetadataProvider(),
+            $service->getProvidersWrapper()
+        );
     }
 
     /**
@@ -154,9 +167,17 @@ class UriProcessorNew implements IUriProcessor
         return $this->expander;
     }
 
+    /**
+     * @return ModelDeserialiser
+     */
     public function getModelDeserialiser()
     {
         return $this->cereal;
+    }
+
+    public function getCynicDeserialiser()
+    {
+        return $this->cynicDeserialiser;
     }
 
     /**

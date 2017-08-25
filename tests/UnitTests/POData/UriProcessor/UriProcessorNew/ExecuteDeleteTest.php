@@ -13,6 +13,7 @@ use POData\OperationContext\HTTPRequestMethod;
 use POData\OperationContext\IHTTPRequest;
 use POData\OperationContext\IOperationContext;
 use POData\OperationContext\ServiceHost;
+use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\Metadata\ResourceComplexType;
 use POData\Providers\Metadata\ResourceEntityType;
 use POData\Providers\Metadata\ResourceFunctionType;
@@ -75,6 +76,8 @@ class ExecuteDeleteTest extends TestCase
         $wrapper->shouldReceive('resolveResourceSet')->andReturn($resourceSet);
         $wrapper->shouldReceive('getResourceSet')->andReturn($result);
 
+        $metaProv = m::mock(IMetadataProvider::class);
+
         $config = m::mock(IServiceConfiguration::class);
         $config->shouldReceive('getMaxDataServiceVersion')->andReturn(new Version(3, 0));
 
@@ -83,6 +86,7 @@ class ExecuteDeleteTest extends TestCase
         $service->shouldReceive('getProvidersWrapper')->andReturn($wrapper);
         $service->shouldReceive('getOperationContext')->andReturn($context);
         $service->shouldReceive('getConfiguration')->andReturn($config);
+        $service->shouldReceive('getMetadataProvider')->andReturn($metaProv);
 
         $remix = UriProcessorNew::process($service);
 
@@ -146,11 +150,14 @@ class ExecuteDeleteTest extends TestCase
         $config->shouldReceive('getMaxDataServiceVersion')->andReturn(new Version(3, 0));
         $config->shouldReceive('getAcceptCountRequests')->andReturn(true)->atLeast(2);
 
+        $metaProv = m::mock(IMetadataProvider::class);
+
         $service = m::mock(IService::class);
         $service->shouldReceive('getHost')->andReturn($host);
         $service->shouldReceive('getProvidersWrapper')->andReturn($wrapper);
         $service->shouldReceive('getOperationContext')->andReturn($context);
         $service->shouldReceive('getConfiguration')->andReturn($config);
+        $service->shouldReceive('getMetadataProvider')->andReturn($metaProv);
 
         $remix = UriProcessorNew::process($service);
 
@@ -219,11 +226,14 @@ class ExecuteDeleteTest extends TestCase
         $config = m::mock(IServiceConfiguration::class);
         $config->shouldReceive('getMaxDataServiceVersion')->andReturn(new Version(3, 0));
 
+        $metaProv = m::mock(IMetadataProvider::class);
+
         $service = m::mock(IService::class);
         $service->shouldReceive('getHost')->andReturn($host);
         $service->shouldReceive('getProvidersWrapper')->andReturn($wrapper);
         $service->shouldReceive('getOperationContext')->andReturn($context);
         $service->shouldReceive('getConfiguration')->andReturn($config);
+        $service->shouldReceive('getMetadataProvider')->andReturn($metaProv);
 
         $remix = UriProcessorNew::process($service);
 
