@@ -15,8 +15,9 @@ use UnitTests\POData\TestCase;
 
 class SelectTest extends TestCase
 {
-    protected function setUp()
+    public function setUp()
     {
+        parent::setUp();
     }
 
     /**

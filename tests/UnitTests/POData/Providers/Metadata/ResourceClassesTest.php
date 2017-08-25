@@ -30,8 +30,9 @@ use UnitTests\POData\TestCase;
 
 class ResourceClassesTest extends TestCase
 {
-    protected function setUp()
+    public function setUp()
     {
+        parent::setUp();
         //TODO: move the entity types into their own files
         //unit then we need to ensure they are "in scope"
         $x = NorthWindMetadata::Create();

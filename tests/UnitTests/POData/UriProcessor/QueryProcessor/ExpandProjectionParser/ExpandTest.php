@@ -14,8 +14,9 @@ use UnitTests\POData\TestCase;
 
 class ExpandTest extends TestCase
 {
-    protected function setUp()
+    public function setUp()
     {
+        parent::setUp();
     }
 
     /**

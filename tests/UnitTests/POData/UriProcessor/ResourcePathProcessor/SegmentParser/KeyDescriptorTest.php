@@ -10,10 +10,6 @@ use UnitTests\POData\TestCase;
 
 class KeyDescriptorTest extends TestCase
 {
-    protected function setUp()
-    {
-    }
-
     public function testKeyPredicateParsing()
     {
         $keyDescriptor = null;

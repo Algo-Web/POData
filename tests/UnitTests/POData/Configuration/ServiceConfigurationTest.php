@@ -18,8 +18,9 @@ class ServiceConfigurationTest extends TestCase
     /** @var IServiceConfiguration */
     private $dataServiceConfiguration;
 
-    protected function setUp()
+    public function setUp()
     {
+        parent::setUp();
         $this->northWindMetadata = NorthWindMetadata::Create();
         $this->dataServiceConfiguration = new ServiceConfiguration($this->northWindMetadata);
     }

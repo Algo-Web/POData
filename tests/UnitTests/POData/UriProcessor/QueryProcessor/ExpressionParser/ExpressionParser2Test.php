@@ -16,8 +16,9 @@ class ExpressionParser2Test extends TestCase
      */
     private $_northWindMetadata;
 
-    protected function setUp()
+    public function setUp()
     {
+        parent::setUp();
         $this->_northWindMetadata = NorthWindMetadata::Create();
     }
 

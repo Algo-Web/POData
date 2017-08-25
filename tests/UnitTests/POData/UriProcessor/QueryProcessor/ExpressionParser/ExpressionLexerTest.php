@@ -11,9 +11,6 @@ use UnitTests\POData\TestCase;
 
 class ExpressionLexerTest extends TestCase
 {
-    protected function setUp()
-    {
-    }
 
     public function testStringLiteral()
     {
