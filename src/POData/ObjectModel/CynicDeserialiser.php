@@ -116,16 +116,25 @@ class CynicDeserialiser
         return [$set, $result];
     }
 
+    /**
+     * @return IMetadataProvider
+     */
     protected function getMetaProvider()
     {
         return $this->metaProvider;
     }
 
+    /**
+     * @return ProvidersWrapper
+     */
     protected function getWrapper()
     {
         return $this->wrapper;
     }
 
+    /**
+     * @return ModelDeserialiser
+     */
     protected function getDeserialiser()
     {
         return $this->cereal;

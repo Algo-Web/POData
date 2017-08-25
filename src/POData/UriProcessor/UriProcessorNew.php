@@ -274,9 +274,9 @@ class UriProcessorNew implements IUriProcessor
         assert($resourceSet instanceof ResourceSet);
         assert($keyDescriptor instanceof KeyDescriptor);
 
-        $data = $this->getRequest()->getData();
-        assert($data instanceof ODataEntry, get_class($data));
-        $data = $this->getModelDeserialiser()->bulkDeserialise($resourceSet->getResourceType(), $data);
+        $payload = $this->getRequest()->getData();
+        assert($payload instanceof ODataEntry, get_class($payload));
+        $data = $this->getModelDeserialiser()->bulkDeserialise($resourceSet->getResourceType(), $payload);
 
         if (empty($data)) {
             throw ODataException::createBadRequestError(Messages::noDataForThisVerb($requestMethod));
@@ -312,9 +312,9 @@ class UriProcessorNew implements IUriProcessor
 
                 $keyDescriptor = $segment->getKeyDescriptor();
 
-                $data = $this->getRequest()->getData();
-                assert($data instanceof ODataEntry, get_class($data));
-                $data = $this->getModelDeserialiser()->bulkDeserialise($resourceSet->getResourceType(), $data);
+                $payload = $this->getRequest()->getData();
+                assert($payload instanceof ODataEntry, get_class($payload));
+                $data = $this->getModelDeserialiser()->bulkDeserialise($resourceSet->getResourceType(), $payload);
 
                 if (empty($data)) {
                     throw ODataException::createBadRequestError(Messages::noDataForThisVerb($requestMethod));
