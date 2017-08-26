@@ -93,7 +93,7 @@ class CynicDeserialiser
     {
         assert(null === $content->id || is_string($content->id), 'Entry id must be null or string');
 
-        $isCreate = null === $content->id;
+        $isCreate = null === $content->id || empty($content->id);
         $set = $this->getMetaProvider()->resolveResourceSet($content->resourceSetName);
         assert($set instanceof ResourceSet, get_class($set));
         $type = $set->getResourceType();

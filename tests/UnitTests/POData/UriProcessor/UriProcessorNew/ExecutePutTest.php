@@ -112,6 +112,7 @@ class ExecutePutTest extends TestCase
         $host->shouldReceive('getRequestContentType')->andReturn(ODataConstants::FORMAT_ATOM)->atLeast(1);
 
         $requestPayload = new ODataEntry();
+        $requestPayload->id = 'http://localhost/odata.svc/customers(id=1)';
         $requestPayload->type = new ODataCategory('Customer');
         $requestPayload->propertyContent = new ODataPropertyContent();
 
@@ -176,7 +177,7 @@ class ExecutePutTest extends TestCase
     public function testExecutePutOnSingleWithData()
     {
         $baseUrl = new Url('http://localhost/odata.svc');
-        $reqUrl = new Url('http://localhost/odata.svc/customers(id=1)');
+        $reqUrl = new Url('http://localhost/odata.svc/customers(id=42)');
 
         $host = m::mock(ServiceHost::class);
         $host->shouldReceive('getAbsoluteRequestUri')->andReturn($reqUrl);
@@ -187,6 +188,7 @@ class ExecutePutTest extends TestCase
         $host->shouldReceive('getRequestContentType')->andReturn(ODataConstants::FORMAT_ATOM)->atLeast(2);
 
         $requestPayload = new ODataEntry();
+        $requestPayload->id = 'http://localhost/odata.svc/customers(id=42)';
         $requestPayload->type = new ODataCategory('Customer');
         $requestPayload->propertyContent = new ODataPropertyContent();
         $requestPayload->propertyContent->properties['otherNumber'] = new ODataProperty();

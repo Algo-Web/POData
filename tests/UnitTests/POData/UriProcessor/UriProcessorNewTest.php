@@ -450,6 +450,7 @@ class UriProcessorNewTest extends TestCase
         $url1 = new \POData\Common\Url('http://192.168.2.1/abm-master/public/odata.svc/Entity(1)');
 
         $requestPayload = new ODataEntry();
+        $requestPayload->id = 'http://192.168.2.1/abm-master/public/odata.svc/Entity(1)';
         $requestPayload->type = new ODataCategory('Customer');
         $requestPayload->propertyContent = new ODataPropertyContent();
 
@@ -549,6 +550,7 @@ class UriProcessorNewTest extends TestCase
         $context->shouldReceive('incomingRequest->getMethod')->andReturn(HTTPRequestMethod::PUT())->twice();
 
         $requestPayload = new ODataEntry();
+        $requestPayload->id = 'http://192.168.2.1/abm-master/public/odata.svc/Entity(1)';
         $requestPayload->type = new ODataCategory('Customer');
         $requestPayload->propertyContent = new ODataPropertyContent();
 

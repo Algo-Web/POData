@@ -297,6 +297,7 @@ class UriProcessorNew implements IUriProcessor
 
         $payload = $this->getRequest()->getData();
         assert($payload instanceof ODataEntry, get_class($payload));
+        assert(!empty($payload->id), 'Payload ID must not be empty for PUT request');
         $data = $this->getModelDeserialiser()->bulkDeserialise($resourceSet->getResourceType(), $payload);
 
         if (empty($data)) {
@@ -335,6 +336,7 @@ class UriProcessorNew implements IUriProcessor
 
                 $payload = $this->getRequest()->getData();
                 assert($payload instanceof ODataEntry, get_class($payload));
+                assert(empty($payload->id), 'Payload ID must be empty for POST request');
                 $data = $this->getModelDeserialiser()->bulkDeserialise($resourceSet->getResourceType(), $payload);
 
                 if (empty($data)) {
