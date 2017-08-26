@@ -29,6 +29,7 @@ use POData\Providers\Metadata\Type\IType;
 use POData\Providers\ProvidersWrapper;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\SegmentDescriptor;
 use POData\UriProcessor\UriProcessorNew;
+use UnitTests\POData\Facets\NorthWind1\Customer2;
 use UnitTests\POData\TestCase;
 
 class ExecutePostTest extends TestCase
@@ -109,7 +110,7 @@ class ExecutePostTest extends TestCase
     public function testExecutePostOnSingleWithSomeData()
     {
         $baseUrl = new Url('http://localhost/odata.svc');
-        $reqUrl = new Url('http://localhost/odata.svc/customers(id=1)');
+        $reqUrl = new Url('http://localhost/odata.svc/customers(CustomerID=1)');
 
         $host = m::mock(ServiceHost::class);
         $host->shouldReceive('getAbsoluteRequestUri')->andReturn($reqUrl);
@@ -134,6 +135,7 @@ class ExecutePostTest extends TestCase
 
         $iType = m::mock(IType::class);
         $iType->shouldReceive('isCompatibleWith')->andReturn(true)->atLeast(1);
+        $iType->shouldReceive('convertToOData')->andReturn('42')->once();
 
         $primResource = m::mock(ResourcePrimitiveType::class);
 
@@ -144,17 +146,18 @@ class ExecutePostTest extends TestCase
 
         $keyProp = m::mock(ResourceProperty::class);
         $keyProp->shouldReceive('getInstanceType')->andReturn($iType);
-        $keyProp->shouldReceive('getName')->andReturn('id');
+        $keyProp->shouldReceive('getName')->andReturn('CustomerID');
 
         $resourceType = m::mock(ResourceEntityType::class);
         $resourceType->shouldReceive('getName')->andReturn('Customer');
         $resourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
-        $resourceType->shouldReceive('getAllProperties')->andReturn(['id' => $keyProp, 'otherNumber' => $otherProp])
+        $resourceType->shouldReceive('getAllProperties')
+            ->andReturn(['CustomerID' => $keyProp, 'otherNumber' => $otherProp])
             ->atLeast(1);
-        $resourceType->shouldReceive('getKeyProperties')->andReturn(['id' => $keyProp])->atLeast(1);
+        $resourceType->shouldReceive('getKeyProperties')->andReturn(['CustomerID' => $keyProp])->atLeast(1);
         $resourceType->shouldReceive('getInstanceType->newInstance')->andReturn(new \stdClass())->atLeast(1);
 
-        $result = 'eins';
+        $result = new Customer2();
 
         $resourceSet = m::mock(ResourceSetWrapper::class);
         $resourceSet->shouldReceive('getResourceType')->andReturn($resourceType);
@@ -168,19 +171,20 @@ class ExecutePostTest extends TestCase
         $wrapper->shouldReceive('resolveResourceSet')->andReturn($resourceSet);
         $wrapper->shouldReceive('getResourceFromResourceSet')->andReturn($result)->never();
         $wrapper->shouldReceive('createResourceforResourceSet')->with($resourceSet, m::any(), m::any())
-            ->andReturn('polizei')->once();
+            ->andReturn($result)->once();
 
         $config = m::mock(IServiceConfiguration::class);
         $config->shouldReceive('getMaxDataServiceVersion')->andReturn(new Version(3, 0));
 
         $service = $this->setUpService($host, $wrapper, $context, $config);
+        $service->getMetadataProvider()->shouldReceive('resolveResourceSet')->andReturn($resourceSet);
 
         $remix = UriProcessorNew::process($service);
 
         $remix->execute();
 
         $origSegment = new SegmentDescriptor();
-        $origSegment->setResult('polizei');
+        $origSegment->setResult($result);
         $remixSegment = $remix->getRequest()->getLastSegment();
         $this->assertEquals($origSegment->getResult(), $remixSegment->getResult());
     }

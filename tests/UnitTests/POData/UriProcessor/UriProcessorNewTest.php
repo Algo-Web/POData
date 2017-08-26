@@ -6,6 +6,7 @@ use Mockery as m;
 use POData\Common\ODataException;
 use POData\Common\Url;
 use POData\IService;
+use POData\ObjectModel\CynicDeserialiser;
 use POData\ObjectModel\ModelDeserialiser;
 use POData\ObjectModel\ODataCategory;
 use POData\ObjectModel\ODataEntry;
@@ -13,6 +14,7 @@ use POData\ObjectModel\ODataPropertyContent;
 use POData\OperationContext\HTTPRequestMethod;
 use POData\OperationContext\IOperationContext;
 use POData\OperationContext\ServiceHost;
+use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\Metadata\ResourceEntityType;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourcePropertyKind;
@@ -32,6 +34,7 @@ use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetSource;
 use POData\UriProcessor\UriProcessor;
 use POData\UriProcessor\UriProcessorNew;
+use UnitTests\POData\Facets\NorthWind1\Customer2;
 use UnitTests\POData\TestCase;
 
 class UriProcessorNewTest extends TestCase
@@ -187,17 +190,31 @@ class UriProcessorNewTest extends TestCase
         $request->shouldReceive('getSegments')->andReturn([$seg1]);
         $request->shouldReceive('getData')->andReturn($requestPayload);
 
+        $model = new Customer2();
+
         $wrapper = m::mock(ProvidersWrapper::class)->makePartial();
-        $wrapper->shouldReceive('createResourceforResourceSet')->withAnyArgs()->andReturnNull()->once();
+        $wrapper->shouldReceive('createResourceforResourceSet')->withAnyArgs()->andReturn($model)->once();
 
         $context = m::mock(IOperationContext::class)->makePartial();
         $context->shouldReceive('incomingRequest')->andReturn($request);
+
+        $metaProv = m::mock(IMetadataProvider::class);
+        $metaProv->shouldReceive('resolveResourceSet')->andReturn($resourceWrapper);
 
         $service = m::mock(IService::class);
         $service->shouldReceive('getHost->getAbsoluteRequestUri')->andReturn($url1);
         $service->shouldReceive('getHost->getAbsoluteServiceUri')->andReturn($url1);
         $service->shouldReceive('getProvidersWrapper')->andReturn($wrapper);
         $service->shouldReceive('getOperationContext')->andReturn($context);
+        $service->shouldReceive('getMetadataProvider')->andReturn($metaProv);
+
+        $key = m::mock(KeyDescriptor::class);
+
+        $cynic = m::mock(CynicDeserialiser::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $cynic->shouldReceive('getDeserialiser')->andReturn($cereal);
+        $cynic->shouldReceive('getMetaProvider')->andReturn($metaProv);
+        $cynic->shouldReceive('getWrapper')->andReturn($wrapper);
+        $cynic->shouldReceive('generateKeyDescriptor')->andReturn($key)->once();
 
         $processor = m::mock(UriProcessorNew::class)->shouldAllowMockingProtectedMethods()->makePartial();
         $processor->shouldReceive('executePost')->passthru()->once();
@@ -206,6 +223,7 @@ class UriProcessorNewTest extends TestCase
         $processor->shouldReceive('getRequest')->andReturn($request);
         $processor->shouldReceive('getProviders')->andReturn($wrapper);
         $processor->shouldReceive('getModelDeserialiser')->andReturn($cereal);
+        $processor->shouldReceive('getCynicDeserialiser')->andReturn($cynic);
         //$processor->shouldReceive('getProviders->createResourceForResourceSet')->withAnyArgs()->andReturnNull()->once();
 
         $processor->execute();
@@ -554,6 +572,8 @@ class UriProcessorNewTest extends TestCase
         $requestPayload->type = new ODataCategory('Customer');
         $requestPayload->propertyContent = new ODataPropertyContent();
 
+        $model = new Customer2();
+
         $request = m::mock(RequestDescription::class)->makePartial();
         $request->shouldReceive('getRequestUrl')->andReturn($url1);
         $request->shouldReceive('getSegments')->andReturn([$seg1]);
@@ -574,6 +594,18 @@ class UriProcessorNewTest extends TestCase
 
         $wrapper = m::mock(ProvidersWrapper::class);
         $wrapper->shouldReceive('updateResource')->andReturnNull()->once();
+        $wrapper->shouldReceive('getResourceFromResourceSet')->andReturn($model)->once();
+
+        $metaProv = m::mock(IMetadataProvider::class);
+        $metaProv->shouldReceive('resolveResourceSet')->andReturn($resourceSet);
+
+        $key = m::mock(KeyDescriptor::class);
+
+        $cynic = m::mock(CynicDeserialiser::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $cynic->shouldReceive('getDeserialiser')->andReturn($cereal);
+        $cynic->shouldReceive('getMetaProvider')->andReturn($metaProv);
+        $cynic->shouldReceive('getWrapper')->andReturn($wrapper);
+        $cynic->shouldReceive('generateKeyDescriptor')->andReturn($key)->once();
 
         $processor = m::mock(UriProcessorNew::class)->shouldAllowMockingProtectedMethods()->makePartial();
         $processor->shouldReceive('executePut')->passthru()->once();
@@ -583,6 +615,7 @@ class UriProcessorNewTest extends TestCase
         $processor->shouldReceive('getExpander')->andReturn($expander);
         $processor->shouldReceive('getFinalEffectiveSegment')->andReturn($seg1);
         $processor->shouldReceive('getModelDeserialiser')->andReturn($cereal);
+        $processor->shouldReceive('getCynicDeserialiser')->andReturn($cynic);
 
         $processor->execute();
     }

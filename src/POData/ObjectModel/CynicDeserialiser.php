@@ -295,10 +295,10 @@ class CynicDeserialiser
                 $targType,
                 $link->expandedResult->entries[$i]
             );
-            $keys[] = $this->generateKeyDescriptor(
+            $keys[] = $hasUrl ? $this->generateKeyDescriptor(
                 $targType,
                 $link->expandedResult->entries[$i]->propertyContent
-            );
+            ) : null;
         }
 
         // creation

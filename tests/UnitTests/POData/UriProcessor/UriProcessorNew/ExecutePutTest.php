@@ -28,6 +28,7 @@ use POData\Providers\Metadata\Type\IType;
 use POData\Providers\ProvidersWrapper;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\SegmentDescriptor;
 use POData\UriProcessor\UriProcessorNew;
+use UnitTests\POData\Facets\NorthWind1\Customer2;
 use UnitTests\POData\TestCase;
 
 class ExecutePutTest extends TestCase
@@ -193,6 +194,8 @@ class ExecutePutTest extends TestCase
         $requestPayload->propertyContent = new ODataPropertyContent();
         $requestPayload->propertyContent->properties['otherNumber'] = new ODataProperty();
         $requestPayload->propertyContent->properties['otherNumber']->value = 42;
+        $requestPayload->propertyContent->properties['id'] = new ODataProperty();
+        $requestPayload->propertyContent->properties['id']->value = 42;
 
         $request = m::mock(IHTTPRequest::class);
         $request->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::PUT());
@@ -206,6 +209,7 @@ class ExecutePutTest extends TestCase
 
         $iType = m::mock(IType::class);
         $iType->shouldReceive('isCompatibleWith')->andReturn(true)->atLeast(2);
+        $iType->shouldReceive('convertToOData')->andReturn('42')->atLeast(2);
 
         $otherProp = m::mock(ResourceProperty::class);
         $otherProp->shouldReceive('getInstanceType')->andReturn($iType);
@@ -224,7 +228,7 @@ class ExecutePutTest extends TestCase
             ->atLeast(1);
         $resourceType->shouldReceive('getInstanceType->newInstance')->andReturn(new \stdClass())->atLeast(2);
 
-        $result = 'eins';
+        $result = new Customer2();
 
         $resourceSet = m::mock(ResourceSetWrapper::class);
         $resourceSet->shouldReceive('getResourceType')->andReturn($resourceType);
@@ -236,14 +240,15 @@ class ExecutePutTest extends TestCase
         $wrapper = m::mock(ProvidersWrapper::class);
         $wrapper->shouldReceive('resolveSingleton')->andReturn(null);
         $wrapper->shouldReceive('resolveResourceSet')->andReturn($resourceSet);
-        $wrapper->shouldReceive('getResourceFromResourceSet')->andReturn($result)->once();
-        $wrapper->shouldReceive('updateResource')->with($resourceSet, 'eins', m::any(), m::any(), false)
+        $wrapper->shouldReceive('getResourceFromResourceSet')->andReturn($result)->twice();
+        $wrapper->shouldReceive('updateResource')->with($resourceSet, m::any(), m::any(), m::any())
             ->andReturn('zwei')->once();
 
         $config = m::mock(IServiceConfiguration::class);
         $config->shouldReceive('getMaxDataServiceVersion')->andReturn(new Version(3, 0));
 
         $service = $this->setUpService($host, $wrapper, $context, $config);
+        $service->getMetadataProvider()->shouldReceive('resolveResourceSet')->andReturn($resourceSet);
 
         $remix = UriProcessorNew::process($service);
 

@@ -304,13 +304,7 @@ class UriProcessorNew implements IUriProcessor
             throw ODataException::createBadRequestError(Messages::noDataForThisVerb($requestMethod));
         }
 
-        $queryResult = $this->getProviders()->updateResource(
-            $resourceSet,
-            $segment->getResult(),
-            $keyDescriptor,
-            (object) $data,
-            false
-        );
+        $queryResult = $this->getCynicDeserialiser()->processPayload($payload);
         $segment->setResult($queryResult);
     }
 
@@ -342,11 +336,7 @@ class UriProcessorNew implements IUriProcessor
                 if (empty($data)) {
                     throw ODataException::createBadRequestError(Messages::noDataForThisVerb($requestMethod));
                 }
-                $queryResult = $this->getProviders()->createResourceforResourceSet(
-                    $resourceSet,
-                    $keyDescriptor,
-                    (object) $data
-                );
+                $queryResult = $this->getCynicDeserialiser()->processPayload($payload);
                 $segment->setResult($queryResult);
             }
         }
