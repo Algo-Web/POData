@@ -105,7 +105,7 @@ class CynicDeserialiser
             assert(isset($result), get_class($result));
             $key = $this->generateKeyDescriptor($type, $result);
         } else {
-            $key = $this->generateKeyDescriptor($type, $content->propertyContent);
+            $key = $this->generateKeyDescriptor($type, $content->propertyContent, $content->id);
             assert($key instanceof KeyDescriptor, get_class($key));
             $source = $this->getWrapper()->getResourceFromResourceSet($set, $key);
             assert(isset($source), get_class($source));
@@ -143,26 +143,35 @@ class CynicDeserialiser
     /**
      * @param ResourceEntityType $type
      * @param ODataPropertyContent|object $result
+     * @param string|null $id
      * @return null|KeyDescriptor
      */
-    protected function generateKeyDescriptor(ResourceEntityType $type, $result)
+    protected function generateKeyDescriptor(ResourceEntityType $type, $result, $id = null)
     {
         $isOData = $result instanceof ODataPropertyContent;
         $keyProp = $type->getKeyProperties();
-        $keyPredicate = '';
-        foreach ($keyProp as $prop) {
-            $iType = $prop->getInstanceType();
-            assert($iType instanceof IType, get_class($iType));
-            $keyName = $prop->getName();
-            $rawKey = $isOData ? $result->properties[$keyName]->value : $result->$keyName;
-            $keyVal = $iType->convertToOData($rawKey);
-            assert(isset($keyVal), 'Key property ' . $keyName . ' must not be null');
-            $keyPredicate .= $keyName . '=' . $keyVal . ', ';
+        if (null === $id) {
+            $keyPredicate = '';
+            foreach ($keyProp as $prop) {
+                $iType = $prop->getInstanceType();
+                assert($iType instanceof IType, get_class($iType));
+                $keyName = $prop->getName();
+                $rawKey = $isOData ? $result->properties[$keyName]->value : $result->$keyName;
+                $keyVal = $iType->convertToOData($rawKey);
+                assert(isset($keyVal), 'Key property ' . $keyName . ' must not be null');
+                $keyPredicate .= $keyName . '=' . $keyVal . ', ';
+            }
+            $keyPredicate[strlen($keyPredicate) - 2] = ' ';
+        } else {
+            $idBits = explode('/', $id);
+            $keyRaw = $idBits[count($idBits)-1];
+            $rawBits = explode('(', $keyRaw, 2);
+            $rawBits = explode(')', $rawBits[count($rawBits)-1]);
+            $keyPredicate = $rawBits[0];
         }
-        $keyPredicate[strlen($keyPredicate) - 2] = ' ';
         $keyPredicate = trim($keyPredicate);
         $keyDesc = null;
-        KeyDescriptor::tryParseKeysFromKeyPredicate($keyPredicate, $keyDesc);
+        assert(KeyDescriptor::tryParseKeysFromKeyPredicate($keyPredicate, $keyDesc));
         $keyDesc->validate($keyPredicate, $type);
         // this is deliberate - ODataEntry/Feed has the structure we need for processing, and we're inserting
         // keyDescriptor objects in id fields to indicate the given record has been processed

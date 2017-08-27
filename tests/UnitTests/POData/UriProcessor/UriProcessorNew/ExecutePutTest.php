@@ -178,7 +178,7 @@ class ExecutePutTest extends TestCase
     public function testExecutePutOnSingleWithData()
     {
         $baseUrl = new Url('http://localhost/odata.svc');
-        $reqUrl = new Url('http://localhost/odata.svc/customers(id=42)');
+        $reqUrl = new Url('http://localhost/odata.svc/customers(CustomerID=42)');
 
         $host = m::mock(ServiceHost::class);
         $host->shouldReceive('getAbsoluteRequestUri')->andReturn($reqUrl);
@@ -189,13 +189,13 @@ class ExecutePutTest extends TestCase
         $host->shouldReceive('getRequestContentType')->andReturn(ODataConstants::FORMAT_ATOM)->atLeast(2);
 
         $requestPayload = new ODataEntry();
-        $requestPayload->id = 'http://localhost/odata.svc/customers(id=42)';
+        $requestPayload->id = 'http://localhost/odata.svc/customers(CustomerID=42)';
         $requestPayload->type = new ODataCategory('Customer');
         $requestPayload->propertyContent = new ODataPropertyContent();
         $requestPayload->propertyContent->properties['otherNumber'] = new ODataProperty();
         $requestPayload->propertyContent->properties['otherNumber']->value = 42;
-        $requestPayload->propertyContent->properties['id'] = new ODataProperty();
-        $requestPayload->propertyContent->properties['id']->value = 42;
+        $requestPayload->propertyContent->properties['CustomerID'] = new ODataProperty();
+        $requestPayload->propertyContent->properties['CustomerID']->value = 42;
 
         $request = m::mock(IHTTPRequest::class);
         $request->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::PUT());
@@ -218,13 +218,14 @@ class ExecutePutTest extends TestCase
 
         $keyProp = m::mock(ResourceProperty::class);
         $keyProp->shouldReceive('getInstanceType')->andReturn($iType);
-        $keyProp->shouldReceive('getName')->andReturn('id');
+        $keyProp->shouldReceive('getName')->andReturn('CustomerID');
 
         $resourceType = m::mock(ResourceEntityType::class);
         $resourceType->shouldReceive('getName')->andReturn('Customer');
         $resourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
-        $resourceType->shouldReceive('getKeyProperties')->andReturn(['id' => $keyProp])->atLeast(2);
-        $resourceType->shouldReceive('getAllProperties')->andReturn(['id' => $keyProp, 'otherNumber' => $otherProp])
+        $resourceType->shouldReceive('getKeyProperties')->andReturn(['CustomerID' => $keyProp])->atLeast(2);
+        $resourceType->shouldReceive('getAllProperties')
+            ->andReturn(['CustomerID' => $keyProp, 'otherNumber' => $otherProp])
             ->atLeast(1);
         $resourceType->shouldReceive('getInstanceType->newInstance')->andReturn(new \stdClass())->atLeast(2);
 
