@@ -326,8 +326,6 @@ class UriProcessorNew implements IUriProcessor
                     throw ODataException::createBadRequestError($msg);
                 }
 
-                $keyDescriptor = $segment->getKeyDescriptor();
-
                 $payload = $this->getRequest()->getData();
                 assert($payload instanceof ODataEntry, get_class($payload));
                 assert(empty($payload->id), 'Payload ID must be empty for POST request');
