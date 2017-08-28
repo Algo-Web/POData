@@ -204,12 +204,15 @@ class KeyDescriptor
         $keyPredicate,
         KeyDescriptor &$keyDescriptor = null
     ) {
-        return self::tryParseKeysFromRawKeyPredicate(
+        $result = self::tryParseKeysFromRawKeyPredicate(
             $keyPredicate,
             true,
             false,
             $keyDescriptor
         );
+        assert(true === $result || false === $result, 'Result must be boolean');
+        assert($result === isset($keyDescriptor), 'Result must match existence of keyDescriptor');
+        return $result;
     }
 
     /**
@@ -224,12 +227,15 @@ class KeyDescriptor
      */
     public static function tryParseValuesFromSkipToken($skipToken, &$keyDescriptor)
     {
-        return self::tryParseKeysFromRawKeyPredicate(
+        $result = self::tryParseKeysFromRawKeyPredicate(
             $skipToken,
             false,
             true,
             $keyDescriptor
         );
+        assert(true === $result || false === $result, 'Result must be boolean');
+        assert($result === isset($keyDescriptor), 'Result must match existence of keyDescriptor');
+        return $result;
     }
 
     /**

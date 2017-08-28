@@ -171,7 +171,7 @@ class CynicDeserialiser
         }
         $keyPredicate = trim($keyPredicate);
         $keyDesc = null;
-        assert(KeyDescriptor::tryParseKeysFromKeyPredicate($keyPredicate, $keyDesc));
+        assert(true === KeyDescriptor::tryParseKeysFromKeyPredicate($keyPredicate, $keyDesc));
         $keyDesc->validate($keyPredicate, $type);
         // this is deliberate - ODataEntry/Feed has the structure we need for processing, and we're inserting
         // keyDescriptor objects in id fields to indicate the given record has been processed

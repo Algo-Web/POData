@@ -218,6 +218,24 @@ class KeyDescriptorTest extends TestCase
         }
     }
 
+    public function testSingleNamedValuePredicate()
+    {
+        $keyDescriptor = null;
+        $keyPredicate = 'GroupNo=11';
+        $validPredicateSyntax = KeyDescriptor::tryParseKeysFromKeyPredicate($keyPredicate, $keyDescriptor);
+        $this->assertTrue($validPredicateSyntax);
+        $this->assertFalse(null === $keyDescriptor);
+        $this->assertTrue($keyDescriptor instanceof KeyDescriptor, get_class($keyDescriptor));
+        $this->assertFalse($keyDescriptor->isEmpty());
+        $this->assertTrue($keyDescriptor->areNamedValues());
+        $this->assertEquals($keyDescriptor->valueCount(), 1);
+        $namedValues = $keyDescriptor->getNamedValues();
+        $this->assertFalse(empty($namedValues));
+        $this->assertTrue(array_key_exists('GroupNo', $namedValues));
+        $groupVal = $namedValues['GroupNo'];
+        $this->assertEquals($groupVal[0], 11);
+    }
+
     public function tearDown()
     {
         parent::tearDown();
