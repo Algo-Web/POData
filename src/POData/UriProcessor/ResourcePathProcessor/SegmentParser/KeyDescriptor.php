@@ -105,6 +105,25 @@ class KeyDescriptor
     }
 
     /**
+     * @param string $keyString
+     * @param bool $isKey
+     * @param KeyDescriptor|null $keyDescriptor
+     * @return bool
+     */
+    protected static function parseAndVerifyRawKeyPredicate($keyString, $isKey, KeyDescriptor &$keyDescriptor = null)
+    {
+        $result = self::tryParseKeysFromRawKeyPredicate(
+            $keyString,
+            $isKey,
+            !$isKey,
+            $keyDescriptor
+        );
+        assert(true === $result || false === $result, 'Result must be boolean');
+        assert($result === isset($keyDescriptor), 'Result must match existence of keyDescriptor');
+        return $result;
+    }
+
+    /**
      * Gets collection of named key values.
      *
      * @return array[]
@@ -205,15 +224,9 @@ class KeyDescriptor
         $keyPredicate,
         KeyDescriptor &$keyDescriptor = null
     ) {
-        $result = self::tryParseKeysFromRawKeyPredicate(
-            $keyPredicate,
-            true,
-            false,
-            $keyDescriptor
-        );
-        assert(true === $result || false === $result, 'Result must be boolean');
-        assert($result === isset($keyDescriptor), 'Result must match existence of keyDescriptor');
-        return $result;
+        $isKey = true;
+        $keyString = $keyPredicate;
+        return self::parseAndVerifyRawKeyPredicate($keyString, $isKey, $keyDescriptor);
     }
 
     /**
@@ -228,15 +241,9 @@ class KeyDescriptor
      */
     public static function tryParseValuesFromSkipToken($skipToken, &$keyDescriptor)
     {
-        $result = self::tryParseKeysFromRawKeyPredicate(
-            $skipToken,
-            false,
-            true,
-            $keyDescriptor
-        );
-        assert(true === $result || false === $result, 'Result must be boolean');
-        assert($result === isset($keyDescriptor), 'Result must match existence of keyDescriptor');
-        return $result;
+        $isKey = false;
+        $keyString = $skipToken;
+        return self::parseAndVerifyRawKeyPredicate($keyString, $isKey, $keyDescriptor);
     }
 
     /**
