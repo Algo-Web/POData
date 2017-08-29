@@ -391,7 +391,7 @@ abstract class BaseService implements IRequestHandler, IService
             $method = $this->getHost()->getOperationContext()->incomingRequest()->getMethod();
             $uriProcessor->execute();
             if (HTTPRequestMethod::DELETE() == $method) {
-                $this->getHost()->setResponseStatusCode(HttpStatus::CODE_OK);
+                $this->getHost()->setResponseStatusCode(HttpStatus::CODE_NOCONTENT);
 
                 return;
             }

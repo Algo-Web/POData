@@ -363,14 +363,14 @@ class ServiceHost
     private function isODataQueryOption($optionName)
     {
         return $optionName === ODataConstants::HTTPQUERY_STRING_FILTER ||
-                $optionName === ODataConstants::HTTPQUERY_STRING_EXPAND ||
-                $optionName === ODataConstants::HTTPQUERY_STRING_INLINECOUNT ||
-                $optionName === ODataConstants::HTTPQUERY_STRING_ORDERBY ||
-                $optionName === ODataConstants::HTTPQUERY_STRING_SELECT ||
-                $optionName === ODataConstants::HTTPQUERY_STRING_SKIP ||
-                $optionName === ODataConstants::HTTPQUERY_STRING_SKIPTOKEN ||
-                $optionName === ODataConstants::HTTPQUERY_STRING_TOP ||
-                $optionName === ODataConstants::HTTPQUERY_STRING_FORMAT;
+               $optionName === ODataConstants::HTTPQUERY_STRING_EXPAND ||
+               $optionName === ODataConstants::HTTPQUERY_STRING_INLINECOUNT ||
+               $optionName === ODataConstants::HTTPQUERY_STRING_ORDERBY ||
+               $optionName === ODataConstants::HTTPQUERY_STRING_SELECT ||
+               $optionName === ODataConstants::HTTPQUERY_STRING_SKIP ||
+               $optionName === ODataConstants::HTTPQUERY_STRING_SKIPTOKEN ||
+               $optionName === ODataConstants::HTTPQUERY_STRING_TOP ||
+               $optionName === ODataConstants::HTTPQUERY_STRING_FORMAT;
     }
 
     /**

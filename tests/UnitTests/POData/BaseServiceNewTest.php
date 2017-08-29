@@ -895,6 +895,8 @@ class BaseServiceNewTest extends TestCase
         $config = m::mock(IServiceConfiguration::class);
         $config->shouldReceive('getValidateETagHeader')->andReturn(true);
 
+        $hostHeaders = [ODataConstants::HTTPRESPONSE_HEADER_STATUS_CODE => 200];
+
         $host = m::mock(ServiceHost::class);
         $host->shouldReceive('getRequestIfMatch')->andReturn('a');
         $host->shouldReceive('getRequestIfNoneMatch')->andReturn('b');
@@ -909,6 +911,7 @@ class BaseServiceNewTest extends TestCase
             ->withArgs([ODataConstants::HTTPRESPONSE_HEADER_CACHECONTROL_NOCACHE])->andReturnNull()->once();
         $host->shouldReceive('getOperationContext->outgoingResponse->setStream')
             ->withArgs(['ScatmanJohn'])->andReturnNull()->once();
+        $host->shouldReceive('getResponseHeaders')->andReturn($hostHeaders);
 
         $cereal = $this->spinUpMockSerialiser();
 
@@ -952,7 +955,7 @@ class BaseServiceNewTest extends TestCase
         $host->shouldReceive('getAbsoluteRequestUri')->andReturn($url);
         $host->shouldReceive('getRequestAccept')->andReturn(null);
         $host->shouldReceive('getQueryStringItem')->andReturn(null);
-        $host->shouldReceive('setResponseStatusCode')->withArgs([HttpStatus::CODE_OK])->andReturnNull()->once();
+        $host->shouldReceive('setResponseStatusCode')->withArgs([HttpStatus::CODE_NOCONTENT])->andReturnNull()->once();
         $host->shouldReceive('setResponseContentType')->withAnyArgs()->andReturnNull()->never();
         $host->shouldReceive('setResponseVersion')->withAnyArgs()->andReturnNull()->never();
         $host->shouldReceive('setResponseCacheControl')->withAnyArgs()->andReturnNull()->never();
