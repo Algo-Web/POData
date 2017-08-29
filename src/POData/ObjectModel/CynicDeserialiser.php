@@ -218,7 +218,9 @@ class CynicDeserialiser
             get_class($link->expandedResult)
         );
         if ($hasUrl) {
-            $rawPredicate = explode('(', $link->url);
+            $urlBitz = explode('/', $link->url);
+            $rawPredicate = $urlBitz[count($urlBitz) - 1];
+            $rawPredicate = explode('(', $rawPredicate);
             $setName = $rawPredicate[0];
             $rawPredicate = trim($rawPredicate[count($rawPredicate) - 1], ')');
             $targSet = $this->getMetaProvider()->resolveResourceSet($setName);
