@@ -5,6 +5,7 @@ namespace POData\UriProcessor\ResourcePathProcessor\SegmentParser;
 use POData\Common\InvalidOperationException;
 use POData\Common\Messages;
 use POData\Common\ODataException;
+use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\Type\Boolean;
 use POData\Providers\Metadata\Type\DateTime;
@@ -519,5 +520,45 @@ class KeyDescriptor
         }
 
         return true;
+    }
+
+    /**
+     * Generate relative edit url for this key descriptor and supplied resource set
+     *
+     * @param ResourceSet $resourceSet
+     *
+     * @return string
+     * @throws \InvalidArgumentException
+     */
+    public function generateRelativeUri(ResourceSet $resourceSet)
+    {
+        $resourceType = $resourceSet->getResourceType();
+        $keys = $resourceType->getKeyProperties();
+
+        $namedKeys = $this->getNamedValues();
+        assert(0 !== count($keys), 'count($keys) == 0');
+        if (count($keys) !== count($namedKeys)) {
+            $msg = 'Mismatch between supplied key predicates and number of keys defined on resource set';
+            throw new \InvalidArgumentException($msg);
+        }
+        $editUrl = $resourceSet->getName() . '(';
+        $comma = null;
+        foreach ($keys as $keyName => $resourceProperty) {
+            if (!array_key_exists($keyName, $namedKeys)) {
+                $msg = 'Key predicate '.$keyName.' not present in named values';
+                throw new \InvalidArgumentException($msg);
+            }
+            $keyType = $resourceProperty->getInstanceType();
+            assert($keyType instanceof IType, '$keyType not instanceof IType');
+            $keyValue = $namedKeys[$keyName][0];
+            $keyValue = $keyType->convertToOData($keyValue);
+
+            $editUrl .= $comma . $keyName . '=' . $keyValue;
+            $comma = ',';
+        }
+
+        $editUrl .= ')';
+
+        return $editUrl;
     }
 }

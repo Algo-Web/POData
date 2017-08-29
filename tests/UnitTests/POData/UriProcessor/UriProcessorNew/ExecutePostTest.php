@@ -23,6 +23,7 @@ use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\Metadata\ResourceEntityType;
 use POData\Providers\Metadata\ResourcePrimitiveType;
 use POData\Providers\Metadata\ResourceProperty;
+use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\ResourceTypeKind;
@@ -111,7 +112,9 @@ class ExecutePostTest extends TestCase
     public function testExecutePostOnSingleWithSomeData()
     {
         $baseUrl = new Url('http://localhost/odata.svc');
-        $reqUrl = new Url('http://localhost/odata.svc/customers(CustomerID=1)');
+        $reqUrl = new Url('http://localhost/odata.svc/customers(CustomerID=42)');
+
+        $expectedServiceLocation = 'http://localhost/odata.svc/Orders(CustomerID=42)';
 
         $host = m::mock(ServiceHost::class);
         $host->shouldReceive('getAbsoluteRequestUri')->andReturn($reqUrl);
@@ -121,6 +124,7 @@ class ExecutePostTest extends TestCase
         $host->shouldReceive('getQueryStringItem')->andReturn(null);
         $host->shouldReceive('getRequestContentType')->andReturn(ODataConstants::FORMAT_ATOM)->atLeast(1);
         $host->shouldReceive('setResponseStatusCode')->withArgs([HttpStatus::CODE_CREATED])->once();
+        $host->shouldReceive('setResponseLocation')->withArgs([$expectedServiceLocation])->once();
 
         $requestPayload = new ODataEntry();
         $requestPayload->type = new ODataCategory('Customer');
@@ -137,7 +141,7 @@ class ExecutePostTest extends TestCase
 
         $iType = m::mock(IType::class);
         $iType->shouldReceive('isCompatibleWith')->andReturn(true)->atLeast(1);
-        $iType->shouldReceive('convertToOData')->andReturn('42')->once();
+        $iType->shouldReceive('convertToOData')->andReturn('42')->atLeast(1);
 
         $primResource = m::mock(ResourcePrimitiveType::class);
 
@@ -161,12 +165,17 @@ class ExecutePostTest extends TestCase
 
         $result = new Customer2();
 
+        $rawSet = m::mock(ResourceSet::class);
+        $rawSet->shouldReceive('getName')->andReturn('Orders');
+        $rawSet->shouldReceive('getResourceType')->andReturn($resourceType);
+
         $resourceSet = m::mock(ResourceSetWrapper::class);
         $resourceSet->shouldReceive('getResourceType')->andReturn($resourceType);
         $resourceSet->shouldReceive('checkResourceSetRightsForRead')->andReturnNull()->atLeast(1);
         $resourceSet->shouldReceive('hasNamedStreams')->andReturn(false);
         $resourceSet->shouldReceive('hasBagProperty')->andReturn(false);
         $resourceSet->shouldReceive('getResourceSetPageSize')->andReturn(200);
+        $resourceSet->shouldReceive('getResourceSet')->andReturn($rawSet);
 
         $wrapper = m::mock(ProvidersWrapper::class);
         $wrapper->shouldReceive('resolveSingleton')->andReturn(null);

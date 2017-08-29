@@ -338,6 +338,12 @@ class UriProcessorNew implements IUriProcessor
                 }
                 $this->getService()->getHost()->setResponseStatusCode(HttpStatus::CODE_CREATED);
                 $queryResult = $this->getCynicDeserialiser()->processPayload($payload);
+                $keyID = $payload->id;
+                assert($keyID instanceof KeyDescriptor, get_class($keyID));
+                $locationUrl = $keyID->generateRelativeUri($resourceSet->getResourceSet());
+                $absoluteServiceUri = $this->getService()->getHost()->getAbsoluteServiceUri()->getUrlAsString();
+                $location = rtrim($absoluteServiceUri, '/') . '/' . $locationUrl;
+                $this->getService()->getHost()->setResponseLocation($location);
                 $segment->setResult($queryResult);
             }
         }

@@ -7,6 +7,7 @@ use POData\Common\ODataException;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 use UnitTests\POData\TestCase;
+use Mockery as m;
 
 class KeyDescriptorTest extends TestCase
 {
@@ -234,6 +235,90 @@ class KeyDescriptorTest extends TestCase
         $this->assertTrue(array_key_exists('GroupNo', $namedValues));
         $groupVal = $namedValues['GroupNo'];
         $this->assertEquals($groupVal[0], 11);
+    }
+
+    public function testSingleValuePredicateRelativeUrlGeneration()
+    {
+        $northWindMetadata = NorthWindMetadata::Create();
+        $orderResourceType = $northWindMetadata->resolveResourceType('Order');
+        $this->assertFalse(null === $orderResourceType);
+        $orderResourceSet = $northWindMetadata->resolveResourceSet('Orders');
+        $this->assertFalse(null === $orderResourceSet);
+
+        $expected = 'Orders(OrderID=42)';
+
+        $keyDescriptor = null;
+        $keyPredicate = 'OrderID=42';
+        $validPredicateSyntax = KeyDescriptor::tryParseKeysFromKeyPredicate($keyPredicate, $keyDescriptor);
+        $this->assertTrue($validPredicateSyntax);
+        $keyDescriptor->validate($keyPredicate, $orderResourceType);
+
+        $actual = $keyDescriptor->generateRelativeUri($orderResourceSet);
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testMultipleValuePredicateRelativeUrlGeneration()
+    {
+        $northWindMetadata = NorthWindMetadata::Create();
+        $orderResourceType = $northWindMetadata->resolveResourceType('Order_Details');
+        $this->assertFalse(null === $orderResourceType);
+        $orderResourceSet = $northWindMetadata->resolveResourceSet('Order_Details');
+        $this->assertFalse(null === $orderResourceSet);
+
+        $expected = 'Order_Details(ProductID=11,OrderID=42)';
+
+        $keyDescriptor = null;
+        $keyPredicate = 'ProductID=11,OrderID=42';
+        $validPredicateSyntax = KeyDescriptor::tryParseKeysFromKeyPredicate($keyPredicate, $keyDescriptor);
+        $this->assertTrue($validPredicateSyntax);
+        $keyDescriptor->validate($keyPredicate, $orderResourceType);
+
+        $actual = $keyDescriptor->generateRelativeUri($orderResourceSet);
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testMismatchNumberOfKeyValues()
+    {
+        $northWindMetadata = NorthWindMetadata::Create();
+        $orderResourceType = $northWindMetadata->resolveResourceType('Order');
+        $this->assertFalse(null === $orderResourceType);
+        $orderResourceSet = $northWindMetadata->resolveResourceSet('Orders');
+        $this->assertFalse(null === $orderResourceSet);
+
+        $expected = 'Mismatch between supplied key predicates and number of keys defined on resource set';
+        $actual = null;
+
+        $keyDescriptor = m::mock(KeyDescriptor::class)->makePartial();
+        $keyDescriptor->shouldReceive('getNamedValues')->andReturn([]);
+
+        try {
+            $keyDescriptor->generateRelativeUri($orderResourceSet);
+        } catch (\InvalidArgumentException $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testMismatchMissingKeyPredicate()
+    {
+        $northWindMetadata = NorthWindMetadata::Create();
+        $orderResourceType = $northWindMetadata->resolveResourceType('Order');
+        $this->assertFalse(null === $orderResourceType);
+        $orderResourceSet = $northWindMetadata->resolveResourceSet('Orders');
+        $this->assertFalse(null === $orderResourceSet);
+
+        $expected = 'Key predicate OrderID not present in named values';
+        $actual = null;
+
+        $keyDescriptor = m::mock(KeyDescriptor::class)->makePartial();
+        $keyDescriptor->shouldReceive('getNamedValues')->andReturn(['foo' => 11]);
+
+        try {
+            $keyDescriptor->generateRelativeUri($orderResourceSet);
+        } catch (\InvalidArgumentException $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
     }
 
     public function tearDown()
