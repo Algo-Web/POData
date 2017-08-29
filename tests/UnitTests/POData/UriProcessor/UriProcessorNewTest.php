@@ -3,6 +3,7 @@
 namespace UnitTests\POData\UriProcessor;
 
 use Mockery as m;
+use POData\Common\HttpStatus;
 use POData\Common\ODataException;
 use POData\Common\Url;
 use POData\IService;
@@ -204,6 +205,7 @@ class UriProcessorNewTest extends TestCase
         $service = m::mock(IService::class);
         $service->shouldReceive('getHost->getAbsoluteRequestUri')->andReturn($url1);
         $service->shouldReceive('getHost->getAbsoluteServiceUri')->andReturn($url1);
+        $service->shouldReceive('getHost->setResponseStatusCode')->withArgs([HttpStatus::CODE_CREATED])->once();
         $service->shouldReceive('getProvidersWrapper')->andReturn($wrapper);
         $service->shouldReceive('getOperationContext')->andReturn($context);
         $service->shouldReceive('getMetadataProvider')->andReturn($metaProv);

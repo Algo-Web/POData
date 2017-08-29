@@ -2,6 +2,7 @@
 
 namespace POData\UriProcessor;
 
+use POData\Common\HttpStatus;
 use POData\Common\Messages;
 use POData\Common\ODataConstants;
 use POData\Common\ODataException;
@@ -279,6 +280,7 @@ class UriProcessorNew implements IUriProcessor
         $this->checkUriValidForSuppliedVerb($resourceSet, $keyDescriptor, $requestMethod);
         assert($resourceSet instanceof ResourceSet);
         $this->getProviders()->deleteResource($resourceSet, $segment->getResult());
+        $this->getService()->getHost()->setResponseStatusCode(HttpStatus::CODE_NOCONTENT);
     }
 
     /**
@@ -334,6 +336,7 @@ class UriProcessorNew implements IUriProcessor
                 if (empty($data)) {
                     throw ODataException::createBadRequestError(Messages::noDataForThisVerb($requestMethod));
                 }
+                $this->getService()->getHost()->setResponseStatusCode(HttpStatus::CODE_CREATED);
                 $queryResult = $this->getCynicDeserialiser()->processPayload($payload);
                 $segment->setResult($queryResult);
             }

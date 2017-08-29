@@ -3,6 +3,7 @@
 namespace UnitTests\POData\UriProcessor\UriProcessorNew;
 
 use Mockery as m;
+use POData\Common\HttpStatus;
 use POData\Common\ODataConstants;
 use POData\Common\ODataException;
 use POData\Common\Url;
@@ -188,6 +189,7 @@ class ExecuteDeleteTest extends TestCase
         $host->shouldReceive('getRequestMaxVersion')->andReturn('3.0');
         $host->shouldReceive('getQueryStringItem')->andReturn(null);
         $host->shouldReceive('getRequestContentType')->andReturn(ODataConstants::FORMAT_ATOM)->atLeast(1);
+        $host->shouldReceive('setResponseStatusCode')->withArgs([HttpStatus::CODE_NOCONTENT])->once();
 
         $request = m::mock(IHTTPRequest::class);
         $request->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::DELETE());
