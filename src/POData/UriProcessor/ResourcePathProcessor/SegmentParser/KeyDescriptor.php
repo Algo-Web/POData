@@ -99,6 +99,20 @@ class KeyDescriptor
      */
     private function __construct(array $namedValues, array $positionalValues)
     {
+        $namedCount = count($namedValues);
+        $posCount = count($positionalValues);
+        assert(0 == min($namedCount, $posCount), 'At least one of named and positional values arrays must be empty');
+        if (0 < $namedCount) {
+            $keys = array_keys($namedValues);
+            for ($i = 0; $i < $namedCount; $i++) {
+                $namedValues[$keys[$i]][0] = urldecode($namedValues[$keys[$i]][0]);
+            }
+        }
+        if (0 < $posCount) {
+            for ($i = 0; $i < $posCount; $i++) {
+                $positionalValues[$i][0] = urldecode($positionalValues[$i][0]);
+            }
+        }
         $this->namedValues = $namedValues;
         $this->positionalValues = $positionalValues;
         $this->validatedNamedValues = [];
