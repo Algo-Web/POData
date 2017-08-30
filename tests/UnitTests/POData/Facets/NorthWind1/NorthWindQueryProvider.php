@@ -296,4 +296,28 @@ class NorthWindQueryProvider implements IQueryProvider
     ) {
         // TODO: Implement unhookSingleModel() method.
     }
+
+    /**
+     * Start database transaction
+     */
+    public function startTransaction()
+    {
+        // TODO: Implement startTransaction() method.
+    }
+
+    /**
+     * Commit database transaction
+     */
+    public function commitTransaction()
+    {
+        // TODO: Implement commitTransaction() method.
+    }
+
+    /**
+     * Abort database transaction
+     */
+    public function rollBackTransaction()
+    {
+        // TODO: Implement rollBackTransaction() method.
+    }
 }

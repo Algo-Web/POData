@@ -164,7 +164,10 @@ class OutgoingResponse
      */
     public function setStatusCode($value)
     {
+        $rawCode = substr($value, 0, 3);
+        assert(is_numeric($rawCode), 'Raw HTTP status code is not numeric - is '.$rawCode);
         $this->headers[ODataConstants::HTTPRESPONSE_HEADER_STATUS] = $value;
+        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_STATUS_CODE] = intval($rawCode);
     }
 
     /**

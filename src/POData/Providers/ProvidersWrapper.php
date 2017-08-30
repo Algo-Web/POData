@@ -957,4 +957,34 @@ class ProvidersWrapper
     {
         return $this->getMetaProvider()->getXML();
     }
+
+    /**
+     * Start database transaction
+     *
+     * @return void
+     */
+    public function startTransaction()
+    {
+        $this->getProviderWrapper()->startTransaction();
+    }
+
+    /**
+     * Commit database transaction
+     *
+     * @return void
+     */
+    public function commitTransaction()
+    {
+        $this->getProviderWrapper()->commitTransaction();
+    }
+
+    /**
+     * Abort database transaction
+     *
+     * @return void
+     */
+    public function rollBackTransaction()
+    {
+        $this->getProviderWrapper()->rollBackTransaction();
+    }
 }

@@ -2,10 +2,12 @@
 
 namespace POData\UriProcessor;
 
+use POData\Common\HttpStatus;
 use POData\Common\Messages;
 use POData\Common\ODataConstants;
 use POData\Common\ODataException;
 use POData\IService;
+use POData\ObjectModel\CynicDeserialiser;
 use POData\ObjectModel\ModelDeserialiser;
 use POData\ObjectModel\ODataEntry;
 use POData\OperationContext\HTTPRequestMethod;
@@ -62,7 +64,15 @@ class UriProcessorNew implements IUriProcessor
      */
     private $expander;
 
+    /**
+     * @var ModelDeserialiser
+     */
     private $cereal;
+
+    /**
+     * @var CynicDeserialiser
+     */
+    private $cynicDeserialiser;
 
     /**
      * Constructs a new instance of UriProcessor.
@@ -81,6 +91,10 @@ class UriProcessorNew implements IUriProcessor
         );
         $this->getRequest()->setUriProcessor($this);
         $this->cereal = new ModelDeserialiser();
+        $this->cynicDeserialiser = new CynicDeserialiser(
+            $service->getMetadataProvider(),
+            $service->getProvidersWrapper()
+        );
     }
 
     /**
@@ -152,6 +166,19 @@ class UriProcessorNew implements IUriProcessor
     public function getExpander()
     {
         return $this->expander;
+    }
+
+    /**
+     * @return ModelDeserialiser
+     */
+    public function getModelDeserialiser()
+    {
+        return $this->cereal;
+    }
+
+    public function getCynicDeserialiser()
+    {
+        return $this->cynicDeserialiser;
     }
 
     /**
@@ -253,6 +280,7 @@ class UriProcessorNew implements IUriProcessor
         $this->checkUriValidForSuppliedVerb($resourceSet, $keyDescriptor, $requestMethod);
         assert($resourceSet instanceof ResourceSet);
         $this->getProviders()->deleteResource($resourceSet, $segment->getResult());
+        $this->getService()->getHost()->setResponseStatusCode(HttpStatus::CODE_NOCONTENT);
     }
 
     /**
@@ -269,21 +297,16 @@ class UriProcessorNew implements IUriProcessor
         assert($resourceSet instanceof ResourceSet);
         assert($keyDescriptor instanceof KeyDescriptor);
 
-        $data = $this->getRequest()->getData();
-        if ($data instanceof ODataEntry) {
-            $data = $this->cereal->bulkDeserialise($resourceSet->getResourceType(), $data);
-        }
-        if (!$data) {
+        $payload = $this->getRequest()->getData();
+        assert($payload instanceof ODataEntry, get_class($payload));
+        assert(!empty($payload->id), 'Payload ID must not be empty for PUT request');
+        $data = $this->getModelDeserialiser()->bulkDeserialise($resourceSet->getResourceType(), $payload);
+
+        if (empty($data)) {
             throw ODataException::createBadRequestError(Messages::noDataForThisVerb($requestMethod));
         }
 
-        $queryResult = $this->getProviders()->updateResource(
-            $resourceSet,
-            $segment->getResult(),
-            $keyDescriptor,
-            $data,
-            false
-        );
+        $queryResult = $this->getCynicDeserialiser()->processPayload($payload);
         $segment->setResult($queryResult);
     }
 
@@ -305,17 +328,22 @@ class UriProcessorNew implements IUriProcessor
                     throw ODataException::createBadRequestError($msg);
                 }
 
-                $keyDescriptor = $segment->getKeyDescriptor();
-
-                $data = $this->getRequest()->getData();
-                if ($data instanceof ODataEntry) {
-                    $data = $this->cereal->bulkDeserialise($resourceSet->getResourceType(), $data);
-                }
+                $payload = $this->getRequest()->getData();
+                assert($payload instanceof ODataEntry, get_class($payload));
+                assert(empty($payload->id), 'Payload ID must be empty for POST request');
+                $data = $this->getModelDeserialiser()->bulkDeserialise($resourceSet->getResourceType(), $payload);
 
                 if (empty($data)) {
                     throw ODataException::createBadRequestError(Messages::noDataForThisVerb($requestMethod));
                 }
-                $queryResult = $this->getProviders()->createResourceforResourceSet($resourceSet, $keyDescriptor, $data);
+                $this->getService()->getHost()->setResponseStatusCode(HttpStatus::CODE_CREATED);
+                $queryResult = $this->getCynicDeserialiser()->processPayload($payload);
+                $keyID = $payload->id;
+                assert($keyID instanceof KeyDescriptor, get_class($keyID));
+                $locationUrl = $keyID->generateRelativeUri($resourceSet->getResourceSet());
+                $absoluteServiceUri = $this->getService()->getHost()->getAbsoluteServiceUri()->getUrlAsString();
+                $location = rtrim($absoluteServiceUri, '/') . '/' . $locationUrl;
+                $this->getService()->getHost()->setResponseLocation($location);
                 $segment->setResult($queryResult);
             }
         }

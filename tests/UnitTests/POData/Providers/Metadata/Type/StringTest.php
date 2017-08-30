@@ -75,9 +75,9 @@ class StringTest extends TestCase
         $this->assertFalse($type->isCompatibleWith(new Decimal()));
         $this->assertFalse($type->isCompatibleWith(new Double()));
         $this->assertFalse($type->isCompatibleWith(new Guid()));
-        $this->assertFalse($type->isCompatibleWith(new Int16()));
-        $this->assertFalse($type->isCompatibleWith(new Int32()));
-        $this->assertFalse($type->isCompatibleWith(new Int64()));
+        $this->assertTrue($type->isCompatibleWith(new Int16()));
+        $this->assertTrue($type->isCompatibleWith(new Int32()));
+        $this->assertTrue($type->isCompatibleWith(new Int64()));
         $this->assertFalse($type->isCompatibleWith(new Null1()));
         $this->assertFalse($type->isCompatibleWith(new SByte()));
         $this->assertFalse($type->isCompatibleWith(new Single()));

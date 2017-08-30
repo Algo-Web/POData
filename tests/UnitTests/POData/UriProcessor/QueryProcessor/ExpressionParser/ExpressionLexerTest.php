@@ -11,28 +11,24 @@ use UnitTests\POData\TestCase;
 
 class ExpressionLexerTest extends TestCase
 {
-    protected function setUp()
-    {
-    }
-
     public function testStringLiteral()
     {
         $expression = "StringIdentifier eq 'mystring'";
         $lexer = new ExpressionLexer($expression);
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
-        $this->AssertEquals($token->Position, 0);
-        $this->AssertEquals($token->Text, 'StringIdentifier');
+        $this->assertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
+        $this->assertEquals($token->Position, 0);
+        $this->assertEquals($token->Text, 'StringIdentifier');
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
-        $this->AssertEquals($token->Position, 17);
-        $this->AssertEquals($token->Text, 'eq');
+        $this->assertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
+        $this->assertEquals($token->Position, 17);
+        $this->assertEquals($token->Text, 'eq');
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::STRING_LITERAL);
-        $this->AssertEquals($token->Position, 20);
-        $this->AssertEquals($token->Text, '\'mystring\'');
+        $this->assertEquals($token->Id, ExpressionTokenId::STRING_LITERAL);
+        $this->assertEquals($token->Position, 20);
+        $this->assertEquals($token->Text, '\'mystring\'');
 
         $expression = "StringIdentifier eq 'mystring";
         $lexer = new ExpressionLexer($expression);
@@ -52,138 +48,138 @@ class ExpressionLexerTest extends TestCase
         $lexer = new ExpressionLexer($expression);
 
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
-        $this->AssertEquals($token->Position, 0);
-        $this->AssertEquals($token->Text, 'BinaryIdentifier1');
+        $this->assertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
+        $this->assertEquals($token->Position, 0);
+        $this->assertEquals($token->Text, 'BinaryIdentifier1');
 
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
-        $this->AssertEquals($token->Position, 18);
-        $this->AssertEquals($token->Text, 'eq');
+        $this->assertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
+        $this->assertEquals($token->Position, 18);
+        $this->assertEquals($token->Text, 'eq');
 
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::BINARY_LITERAL);
-        $this->AssertEquals($token->Position, 21);
-        $this->AssertEquals($token->Text, 'X\'AF0\'');
+        $this->assertEquals($token->Id, ExpressionTokenId::BINARY_LITERAL);
+        $this->assertEquals($token->Position, 21);
+        $this->assertEquals($token->Text, 'X\'AF0\'');
 
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
-        $this->AssertEquals($token->Position, 28);
-        $this->AssertEquals($token->Text, 'and');
+        $this->assertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
+        $this->assertEquals($token->Position, 28);
+        $this->assertEquals($token->Text, 'and');
 
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
-        $this->AssertEquals($token->Position, 32);
-        $this->AssertEquals($token->Text, 'DateTimeIdentifier');
+        $this->assertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
+        $this->assertEquals($token->Position, 32);
+        $this->assertEquals($token->Text, 'DateTimeIdentifier');
 
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
-        $this->AssertEquals($token->Position, 51);
-        $this->AssertEquals($token->Text, 'gt');
+        $this->assertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
+        $this->assertEquals($token->Position, 51);
+        $this->assertEquals($token->Text, 'gt');
 
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::DATETIME_LITERAL);
-        $this->AssertEquals($token->Position, 54);
-        $this->AssertEquals($token->Text, 'datetime\'2010-02-12 T24:58:58Z\'');
+        $this->assertEquals($token->Id, ExpressionTokenId::DATETIME_LITERAL);
+        $this->assertEquals($token->Position, 54);
+        $this->assertEquals($token->Text, 'datetime\'2010-02-12 T24:58:58Z\'');
 
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
-        $this->AssertEquals($token->Position, 86);
-        $this->AssertEquals($token->Text, 'or');
+        $this->assertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
+        $this->assertEquals($token->Position, 86);
+        $this->assertEquals($token->Text, 'or');
 
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
-        $this->AssertEquals($token->Position, 89);
-        $this->AssertEquals($token->Text, 'BinaryIdentifier2');
+        $this->assertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
+        $this->assertEquals($token->Position, 89);
+        $this->assertEquals($token->Text, 'BinaryIdentifier2');
 
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
-        $this->AssertEquals($token->Position, 107);
-        $this->AssertEquals($token->Text, 'ne');
+        $this->assertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
+        $this->assertEquals($token->Position, 107);
+        $this->assertEquals($token->Text, 'ne');
 
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::BINARY_LITERAL);
-        $this->AssertEquals($token->Position, 110);
-        $this->AssertEquals($token->Text, 'x\'FF\'');
+        $this->assertEquals($token->Id, ExpressionTokenId::BINARY_LITERAL);
+        $this->assertEquals($token->Position, 110);
+        $this->assertEquals($token->Text, 'x\'FF\'');
 
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
-        $this->AssertEquals($token->Position, 116);
-        $this->AssertEquals($token->Text, 'and');
+        $this->assertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
+        $this->assertEquals($token->Position, 116);
+        $this->assertEquals($token->Text, 'and');
 
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
-        $this->AssertEquals($token->Position, 120);
-        $this->AssertEquals($token->Text, 'GuidIdentifier');
+        $this->assertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
+        $this->assertEquals($token->Position, 120);
+        $this->assertEquals($token->Text, 'GuidIdentifier');
 
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
-        $this->AssertEquals($token->Position, 135);
-        $this->AssertEquals($token->Text, 'eq');
+        $this->assertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
+        $this->assertEquals($token->Position, 135);
+        $this->assertEquals($token->Text, 'eq');
 
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::GUID_LITERAL);
-        $this->AssertEquals($token->Position, 138);
-        $this->AssertEquals($token->Text, 'guid\'\'');
+        $this->assertEquals($token->Id, ExpressionTokenId::GUID_LITERAL);
+        $this->assertEquals($token->Position, 138);
+        $this->assertEquals($token->Text, 'guid\'\'');
 
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
-        $this->AssertEquals($token->Position, 145);
-        $this->AssertEquals($token->Text, 'or');
+        $this->assertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
+        $this->assertEquals($token->Position, 145);
+        $this->assertEquals($token->Text, 'or');
 
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
-        $this->AssertEquals($token->Position, 148);
-        $this->AssertEquals($token->Text, 'BinaryIdentifier3');
+        $this->assertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
+        $this->assertEquals($token->Position, 148);
+        $this->assertEquals($token->Text, 'BinaryIdentifier3');
 
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
-        $this->AssertEquals($token->Position, 166);
-        $this->AssertEquals($token->Text, 'eq');
+        $this->assertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
+        $this->assertEquals($token->Position, 166);
+        $this->assertEquals($token->Text, 'eq');
 
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::BINARY_LITERAL);
-        $this->AssertEquals($token->Position, 169);
-        $this->AssertEquals($token->Text, 'binary\'0AFC\'');
+        $this->assertEquals($token->Id, ExpressionTokenId::BINARY_LITERAL);
+        $this->assertEquals($token->Position, 169);
+        $this->assertEquals($token->Text, 'binary\'0AFC\'');
 
         //-----------------------------------------------------------------
         $expression = 'NonBinaryIdentifier1 eq binaryABC';
         $lexer = new ExpressionLexer($expression);
 
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
-        $this->AssertEquals($token->Position, 0);
-        $this->AssertEquals($token->Text, 'NonBinaryIdentifier1');
+        $this->assertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
+        $this->assertEquals($token->Position, 0);
+        $this->assertEquals($token->Text, 'NonBinaryIdentifier1');
 
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
-        $this->AssertEquals($token->Position, 21);
-        $this->AssertEquals($token->Text, 'eq');
+        $this->assertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
+        $this->assertEquals($token->Position, 21);
+        $this->assertEquals($token->Text, 'eq');
 
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
-        $this->AssertEquals($token->Position, 24);
-        $this->AssertEquals($token->Text, 'binaryABC');
+        $this->assertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
+        $this->assertEquals($token->Position, 24);
+        $this->assertEquals($token->Text, 'binaryABC');
 
         //-----------------------------------------------------------------
         $expression = "DateTimeIdentifier eq datetime'";
@@ -225,187 +221,187 @@ class ExpressionLexerTest extends TestCase
 
         $lexer = new ExpressionLexer($expression);
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
-        $this->AssertEquals($token->Text, 'DoubleIdentifier1');
-        $this->AssertEquals($token->Position, 0);
+        $this->assertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
+        $this->assertEquals($token->Text, 'DoubleIdentifier1');
+        $this->assertEquals($token->Position, 0);
 
         $lexer->nextToken();
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::DOUBLE_LITERAL);
-        $this->AssertEquals($token->Text, '123.34');
-        $this->AssertEquals($token->Position, 23);
-
-        $lexer->nextToken();
-        $lexer->nextToken();
-        $lexer->nextToken();
-        $lexer->nextToken();
-        $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::DOUBLE_LITERAL);
-        $this->AssertEquals($token->Text, '124E3');
-        $this->AssertEquals($token->Position, 60);
+        $this->assertEquals($token->Id, ExpressionTokenId::DOUBLE_LITERAL);
+        $this->assertEquals($token->Text, '123.34');
+        $this->assertEquals($token->Position, 23);
 
         $lexer->nextToken();
         $lexer->nextToken();
         $lexer->nextToken();
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::DOUBLE_LITERAL);
-        $this->AssertEquals($token->Text, '125.6E3');
-        $this->AssertEquals($token->Position, 99);
+        $this->assertEquals($token->Id, ExpressionTokenId::DOUBLE_LITERAL);
+        $this->assertEquals($token->Text, '124E3');
+        $this->assertEquals($token->Position, 60);
 
         $lexer->nextToken();
         $lexer->nextToken();
         $lexer->nextToken();
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::DOUBLE_LITERAL);
-        $this->AssertEquals($token->Text, '125.6E+3');
-        $this->AssertEquals($token->Position, 138);
+        $this->assertEquals($token->Id, ExpressionTokenId::DOUBLE_LITERAL);
+        $this->assertEquals($token->Text, '125.6E3');
+        $this->assertEquals($token->Position, 99);
 
         $lexer->nextToken();
         $lexer->nextToken();
         $lexer->nextToken();
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::DOUBLE_LITERAL);
-        $this->AssertEquals($token->Text, '125.6E-3');
-        $this->AssertEquals($token->Position, 177);
+        $this->assertEquals($token->Id, ExpressionTokenId::DOUBLE_LITERAL);
+        $this->assertEquals($token->Text, '125.6E+3');
+        $this->assertEquals($token->Position, 138);
 
         $lexer->nextToken();
         $lexer->nextToken();
         $lexer->nextToken();
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::DOUBLE_LITERAL);
-        $this->AssertEquals($token->Text, '126D');
-        $this->AssertEquals($token->Position, 216);
+        $this->assertEquals($token->Id, ExpressionTokenId::DOUBLE_LITERAL);
+        $this->assertEquals($token->Text, '125.6E-3');
+        $this->assertEquals($token->Position, 177);
 
         $lexer->nextToken();
         $lexer->nextToken();
         $lexer->nextToken();
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::DOUBLE_LITERAL);
-        $this->AssertEquals($token->Text, '127d');
-        $this->AssertEquals($token->Position, 255);
+        $this->assertEquals($token->Id, ExpressionTokenId::DOUBLE_LITERAL);
+        $this->assertEquals($token->Text, '126D');
+        $this->assertEquals($token->Position, 216);
 
         $lexer->nextToken();
         $lexer->nextToken();
         $lexer->nextToken();
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::SINGLE_LITERAL);
-        $this->AssertEquals($token->Text, '154F');
-        $this->AssertEquals($token->Position, 294);
+        $this->assertEquals($token->Id, ExpressionTokenId::DOUBLE_LITERAL);
+        $this->assertEquals($token->Text, '127d');
+        $this->assertEquals($token->Position, 255);
 
         $lexer->nextToken();
         $lexer->nextToken();
         $lexer->nextToken();
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::SINGLE_LITERAL);
-        $this->AssertEquals($token->Text, '155f');
-        $this->AssertEquals($token->Position, 333);
+        $this->assertEquals($token->Id, ExpressionTokenId::SINGLE_LITERAL);
+        $this->assertEquals($token->Text, '154F');
+        $this->assertEquals($token->Position, 294);
 
         $lexer->nextToken();
         $lexer->nextToken();
         $lexer->nextToken();
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::SINGLE_LITERAL);
-        $this->AssertEquals($token->Text, '156.45F');
-        $this->AssertEquals($token->Position, 372);
+        $this->assertEquals($token->Id, ExpressionTokenId::SINGLE_LITERAL);
+        $this->assertEquals($token->Text, '155f');
+        $this->assertEquals($token->Position, 333);
 
         $lexer->nextToken();
         $lexer->nextToken();
         $lexer->nextToken();
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::SINGLE_LITERAL);
-        $this->AssertEquals($token->Text, '157.45f');
-        $this->AssertEquals($token->Position, 411);
+        $this->assertEquals($token->Id, ExpressionTokenId::SINGLE_LITERAL);
+        $this->assertEquals($token->Text, '156.45F');
+        $this->assertEquals($token->Position, 372);
 
         $lexer->nextToken();
         $lexer->nextToken();
         $lexer->nextToken();
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::SINGLE_LITERAL);
-        $this->AssertEquals($token->Text, '158E2F');
-        $this->AssertEquals($token->Position, 450);
+        $this->assertEquals($token->Id, ExpressionTokenId::SINGLE_LITERAL);
+        $this->assertEquals($token->Text, '157.45f');
+        $this->assertEquals($token->Position, 411);
 
         $lexer->nextToken();
         $lexer->nextToken();
         $lexer->nextToken();
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::SINGLE_LITERAL);
-        $this->AssertEquals($token->Text, '159E3f');
-        $this->AssertEquals($token->Position, 489);
+        $this->assertEquals($token->Id, ExpressionTokenId::SINGLE_LITERAL);
+        $this->assertEquals($token->Text, '158E2F');
+        $this->assertEquals($token->Position, 450);
 
         $lexer->nextToken();
         $lexer->nextToken();
         $lexer->nextToken();
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::SINGLE_LITERAL);
-        $this->AssertEquals($token->Text, '160E+2F');
-        $this->AssertEquals($token->Position, 528);
+        $this->assertEquals($token->Id, ExpressionTokenId::SINGLE_LITERAL);
+        $this->assertEquals($token->Text, '159E3f');
+        $this->assertEquals($token->Position, 489);
 
         $lexer->nextToken();
         $lexer->nextToken();
         $lexer->nextToken();
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::SINGLE_LITERAL);
-        $this->AssertEquals($token->Text, '161E-3f');
-        $this->AssertEquals($token->Position, 567);
+        $this->assertEquals($token->Id, ExpressionTokenId::SINGLE_LITERAL);
+        $this->assertEquals($token->Text, '160E+2F');
+        $this->assertEquals($token->Position, 528);
 
         $lexer->nextToken();
         $lexer->nextToken();
         $lexer->nextToken();
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::INTEGER_LITERAL);
-        $this->AssertEquals($token->Text, '170');
-        $this->AssertEquals($token->Position, 606);
+        $this->assertEquals($token->Id, ExpressionTokenId::SINGLE_LITERAL);
+        $this->assertEquals($token->Text, '161E-3f');
+        $this->assertEquals($token->Position, 567);
 
         $lexer->nextToken();
         $lexer->nextToken();
         $lexer->nextToken();
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::INT64_LITERAL);
-        $this->AssertEquals($token->Text, '171L');
-        $this->AssertEquals($token->Position, 644);
+        $this->assertEquals($token->Id, ExpressionTokenId::INTEGER_LITERAL);
+        $this->assertEquals($token->Text, '170');
+        $this->assertEquals($token->Position, 606);
 
         $lexer->nextToken();
         $lexer->nextToken();
         $lexer->nextToken();
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::DECIMAL_LITERAL);
-        $this->AssertEquals($token->Text, '180M');
-        $this->AssertEquals($token->Position, 683);
+        $this->assertEquals($token->Id, ExpressionTokenId::INT64_LITERAL);
+        $this->assertEquals($token->Text, '171L');
+        $this->assertEquals($token->Position, 644);
 
         $lexer->nextToken();
         $lexer->nextToken();
         $lexer->nextToken();
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::DECIMAL_LITERAL);
-        $this->AssertEquals($token->Text, '181.2m');
-        $this->AssertEquals($token->Position, 722);
+        $this->assertEquals($token->Id, ExpressionTokenId::DECIMAL_LITERAL);
+        $this->assertEquals($token->Text, '180M');
+        $this->assertEquals($token->Position, 683);
 
         $lexer->nextToken();
         $lexer->nextToken();
         $lexer->nextToken();
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::DECIMAL_LITERAL);
-        $this->AssertEquals($token->Text, '181.2E4m');
-        $this->AssertEquals($token->Position, 761);
+        $this->assertEquals($token->Id, ExpressionTokenId::DECIMAL_LITERAL);
+        $this->assertEquals($token->Text, '181.2m');
+        $this->assertEquals($token->Position, 722);
+
+        $lexer->nextToken();
+        $lexer->nextToken();
+        $lexer->nextToken();
+        $lexer->nextToken();
+        $token = $lexer->getCurrentToken();
+        $this->assertEquals($token->Id, ExpressionTokenId::DECIMAL_LITERAL);
+        $this->assertEquals($token->Text, '181.2E4m');
+        $this->assertEquals($token->Position, 761);
 
         $lexer->nextToken();
         $lexer->nextToken();
@@ -459,12 +455,12 @@ class ExpressionLexerTest extends TestCase
         $lexer->nextToken();
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::END);
+        $this->assertEquals($token->Id, ExpressionTokenId::END);
 
         //Test boundry
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::END);
+        $this->assertEquals($token->Id, ExpressionTokenId::END);
     }
 
     public function testReservedCharToken()
@@ -474,65 +470,65 @@ class ExpressionLexerTest extends TestCase
         $lexer = new ExpressionLexer($expression);
 
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
-        $this->AssertEquals($token->Position, 0);
-        $this->AssertEquals($token->Text, 'substring');
+        $this->assertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
+        $this->assertEquals($token->Position, 0);
+        $this->assertEquals($token->Text, 'substring');
 
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::OPENPARAM);
-        $this->AssertEquals($token->Position, 9);
-        $this->AssertEquals($token->Text, '(');
+        $this->assertEquals($token->Id, ExpressionTokenId::OPENPARAM);
+        $this->assertEquals($token->Position, 9);
+        $this->assertEquals($token->Text, '(');
 
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
-        $this->AssertEquals($token->Position, 10);
-        $this->AssertEquals($token->Text, 'CustomerName');
+        $this->assertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
+        $this->assertEquals($token->Position, 10);
+        $this->assertEquals($token->Text, 'CustomerName');
 
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::COMMA);
-        $this->AssertEquals($token->Position, 22);
-        $this->AssertEquals($token->Text, ',');
+        $this->assertEquals($token->Id, ExpressionTokenId::COMMA);
+        $this->assertEquals($token->Position, 22);
+        $this->assertEquals($token->Text, ',');
 
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::INTEGER_LITERAL);
-        $this->AssertEquals($token->Position, 24);
-        $this->AssertEquals($token->Text, '0');
+        $this->assertEquals($token->Id, ExpressionTokenId::INTEGER_LITERAL);
+        $this->assertEquals($token->Position, 24);
+        $this->assertEquals($token->Text, '0');
 
         $lexer->nextToken();
         $lexer->nextToken();
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::CLOSEPARAM);
-        $this->AssertEquals($token->Position, 28);
-        $this->AssertEquals($token->Text, ')');
-
-        $lexer->nextToken();
-        $lexer->nextToken();
-        $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::STRING_LITERAL);
-        $this->AssertEquals($token->Position, 33);
-        $this->AssertEquals($token->Text, '\'ABCDE\'');
+        $this->assertEquals($token->Id, ExpressionTokenId::CLOSEPARAM);
+        $this->assertEquals($token->Position, 28);
+        $this->assertEquals($token->Text, ')');
 
         $lexer->nextToken();
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
-        $this->AssertEquals($token->Position, 45);
-        $this->AssertEquals($token->Text, 'Address');
+        $this->assertEquals($token->Id, ExpressionTokenId::STRING_LITERAL);
+        $this->assertEquals($token->Position, 33);
+        $this->assertEquals($token->Text, '\'ABCDE\'');
 
         $lexer->nextToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::SLASH);
-        $this->AssertEquals($token->Position, 52);
-        $this->AssertEquals($token->Text, '/');
+        $lexer->nextToken();
+        $token = $lexer->getCurrentToken();
+        $this->assertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
+        $this->assertEquals($token->Position, 45);
+        $this->assertEquals($token->Text, 'Address');
 
         $lexer->nextToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
-        $this->AssertEquals($token->Position, 53);
-        $this->AssertEquals($token->Text, 'LineNumber');
+        $this->assertEquals($token->Id, ExpressionTokenId::SLASH);
+        $this->assertEquals($token->Position, 52);
+        $this->assertEquals($token->Text, '/');
+
+        $lexer->nextToken();
+        $this->assertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
+        $this->assertEquals($token->Position, 53);
+        $this->assertEquals($token->Text, 'LineNumber');
     }
 
     public function testInvalidCharacer()
@@ -540,9 +536,9 @@ class ExpressionLexerTest extends TestCase
         $expression = 'IntIdent@ifier eq 123';
         $lexer = new ExpressionLexer($expression);
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
-        $this->AssertEquals($token->Position, 0);
-        $this->AssertEquals($token->Text, 'IntIdent');
+        $this->assertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
+        $this->assertEquals($token->Position, 0);
+        $this->assertEquals($token->Text, 'IntIdent');
 
         try {
             $lexer->nextToken();
@@ -582,98 +578,98 @@ class ExpressionLexerTest extends TestCase
         $lexer = new ExpressionLexer($expression);
 
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
-        $this->AssertEquals($token->Position, 0);
-        $this->AssertEquals($token->Text, 'INFIdentifierDouble');
+        $this->assertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
+        $this->assertEquals($token->Position, 0);
+        $this->assertEquals($token->Text, 'INFIdentifierDouble');
 
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
-        $this->AssertEquals($token->Position, 20);
-        $this->AssertEquals($token->Text, 'eq');
+        $this->assertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
+        $this->assertEquals($token->Position, 20);
+        $this->assertEquals($token->Text, 'eq');
 
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::DOUBLE_LITERAL);
-        $this->AssertEquals($token->Position, 23);
-        $this->AssertEquals($token->Text, 'INF');
-
-        $lexer->nextToken();
-        $lexer->nextToken();
-        $lexer->nextToken();
-        $lexer->nextToken();
-        $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::DOUBLE_LITERAL);
-        $this->AssertEquals($token->Position, 53);
-        $this->AssertEquals($token->Text, 'NaN');
+        $this->assertEquals($token->Id, ExpressionTokenId::DOUBLE_LITERAL);
+        $this->assertEquals($token->Position, 23);
+        $this->assertEquals($token->Text, 'INF');
 
         $lexer->nextToken();
         $lexer->nextToken();
         $lexer->nextToken();
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
-        $this->AssertEquals($token->Position, 76);
-        $this->AssertEquals($token->Text, 'inf');
+        $this->assertEquals($token->Id, ExpressionTokenId::DOUBLE_LITERAL);
+        $this->assertEquals($token->Position, 53);
+        $this->assertEquals($token->Text, 'NaN');
 
         $lexer->nextToken();
         $lexer->nextToken();
         $lexer->nextToken();
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
-        $this->AssertEquals($token->Position, 98);
-        $this->AssertEquals($token->Text, 'nan');
+        $this->assertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
+        $this->assertEquals($token->Position, 76);
+        $this->assertEquals($token->Text, 'inf');
+
+        $lexer->nextToken();
+        $lexer->nextToken();
+        $lexer->nextToken();
+        $lexer->nextToken();
+        $token = $lexer->getCurrentToken();
+        $this->assertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
+        $this->assertEquals($token->Position, 98);
+        $this->assertEquals($token->Text, 'nan');
 
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::END);
+        $this->assertEquals($token->Id, ExpressionTokenId::END);
 
         $expression = 'INFIdentifierSingle1 eq INFF or INFIdentifierSingle2 eq INFf and NaNIdentifierSingle1 eq NaNF or NaNIdentifierSingle2 eq NaNf';
         $lexer = new ExpressionLexer($expression);
 
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
-        $this->AssertEquals($token->Position, 0);
-        $this->AssertEquals($token->Text, 'INFIdentifierSingle1');
+        $this->assertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
+        $this->assertEquals($token->Position, 0);
+        $this->assertEquals($token->Text, 'INFIdentifierSingle1');
 
         $lexer->nextToken();
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::SINGLE_LITERAL);
-        $this->AssertEquals($token->Position, 24);
-        $this->AssertEquals($token->Text, 'INFF');
+        $this->assertEquals($token->Id, ExpressionTokenId::SINGLE_LITERAL);
+        $this->assertEquals($token->Position, 24);
+        $this->assertEquals($token->Text, 'INFF');
 
         $lexer->nextToken();
         $lexer->nextToken();
         $lexer->nextToken();
         $lexer->nextToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::SINGLE_LITERAL);
-        $this->AssertEquals($token->Position, 56);
-        $this->AssertEquals($token->Text, 'INFf');
-
-        $lexer->nextToken();
-        $lexer->nextToken();
-        $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
-        $this->AssertEquals($token->Position, 65);
-        $this->AssertEquals($token->Text, 'NaNIdentifierSingle1');
+        $this->assertEquals($token->Id, ExpressionTokenId::SINGLE_LITERAL);
+        $this->assertEquals($token->Position, 56);
+        $this->assertEquals($token->Text, 'INFf');
 
         $lexer->nextToken();
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::SINGLE_LITERAL);
-        $this->AssertEquals($token->Position, 89);
-        $this->AssertEquals($token->Text, 'NaNF');
+        $this->assertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
+        $this->assertEquals($token->Position, 65);
+        $this->assertEquals($token->Text, 'NaNIdentifierSingle1');
+
+        $lexer->nextToken();
+        $lexer->nextToken();
+        $token = $lexer->getCurrentToken();
+        $this->assertEquals($token->Id, ExpressionTokenId::SINGLE_LITERAL);
+        $this->assertEquals($token->Position, 89);
+        $this->assertEquals($token->Text, 'NaNF');
 
         $lexer->nextToken();
         $lexer->nextToken();
         $lexer->nextToken();
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::SINGLE_LITERAL);
-        $this->AssertEquals($token->Position, 121);
-        $this->AssertEquals($token->Text, 'NaNf');
+        $this->assertEquals($token->Id, ExpressionTokenId::SINGLE_LITERAL);
+        $this->assertEquals($token->Position, 121);
+        $this->assertEquals($token->Text, 'NaNf');
     }
 
     public function testNegationLiteral()
@@ -685,17 +681,17 @@ class ExpressionLexerTest extends TestCase
         $lexer->nextToken();
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::INTEGER_LITERAL);
-        $this->AssertEquals($token->Position, 17);
-        $this->AssertEquals($token->Text, '-123');
+        $this->assertEquals($token->Id, ExpressionTokenId::INTEGER_LITERAL);
+        $this->assertEquals($token->Position, 17);
+        $this->assertEquals($token->Text, '-123');
 
         $lexer->nextToken();
         $lexer->nextToken();
         $lexer->nextToken();
         $lexer->nextToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::INT64_LITERAL);
-        $this->AssertEquals($token->Position, 45);
-        $this->AssertEquals($token->Text, '-124L');
+        $this->assertEquals($token->Id, ExpressionTokenId::INT64_LITERAL);
+        $this->assertEquals($token->Position, 45);
+        $this->assertEquals($token->Text, '-124L');
 
         $expression = 'INFIdentifier1 eq -INF and INFIdentifier2 eq -INFF';
         $lexer = new ExpressionLexer($expression);
@@ -703,32 +699,32 @@ class ExpressionLexerTest extends TestCase
         $lexer->nextToken();
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::DOUBLE_LITERAL);
-        $this->AssertEquals($token->Position, 18);
-        $this->AssertEquals($token->Text, '-INF');
+        $this->assertEquals($token->Id, ExpressionTokenId::DOUBLE_LITERAL);
+        $this->assertEquals($token->Position, 18);
+        $this->assertEquals($token->Text, '-INF');
 
         $lexer->nextToken();
         $lexer->nextToken();
         $lexer->nextToken();
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::SINGLE_LITERAL);
-        $this->AssertEquals($token->Position, 45);
-        $this->AssertEquals($token->Text, '-INFF');
+        $this->assertEquals($token->Id, ExpressionTokenId::SINGLE_LITERAL);
+        $this->assertEquals($token->Position, 45);
+        $this->assertEquals($token->Text, '-INFF');
 
         $expression = 'OrderRate1 eq -OrderRate2';
         $lexer = new ExpressionLexer($expression);
         $lexer->nextToken();
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::MINUS);
-        $this->AssertEquals($token->Position, 14);
-        $this->AssertEquals($token->Text, '-');
+        $this->assertEquals($token->Id, ExpressionTokenId::MINUS);
+        $this->assertEquals($token->Position, 14);
+        $this->assertEquals($token->Text, '-');
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
-        $this->AssertEquals($token->Position, 15);
-        $this->AssertEquals($token->Text, 'OrderRate2');
+        $this->assertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
+        $this->assertEquals($token->Position, 15);
+        $this->assertEquals($token->Text, 'OrderRate2');
     }
 
     public function testPeekNextToken()
@@ -739,9 +735,9 @@ class ExpressionLexerTest extends TestCase
         $token1 = $lexer->peekNextToken();
         $lexer->nextToken();
         $token2 = $lexer->getCurrentToken();
-        $this->AssertEquals($token1->Id, $token2->Id);
-        $this->AssertEquals($token1->Text, $token2->Text);
-        $this->AssertEquals($token1->Position, $token2->Position);
+        $this->assertEquals($token1->Id, $token2->Id);
+        $this->assertEquals($token1->Text, $token2->Text);
+        $this->assertEquals($token1->Position, $token2->Position);
     }
 
     public function testWhiteSpace()
@@ -749,26 +745,26 @@ class ExpressionLexerTest extends TestCase
         $expression = '     IntIdentifier     eq     123    ';
         $lexer = new ExpressionLexer($expression);
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
-        $this->AssertEquals($token->Text, 'IntIdentifier');
-        $this->AssertEquals($token->Position, 5);
+        $this->assertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
+        $this->assertEquals($token->Text, 'IntIdentifier');
+        $this->assertEquals($token->Position, 5);
 
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
-        $this->AssertEquals($token->Text, 'eq');
-        $this->AssertEquals($token->Position, 23);
+        $this->assertEquals($token->Id, ExpressionTokenId::IDENTIFIER);
+        $this->assertEquals($token->Text, 'eq');
+        $this->assertEquals($token->Position, 23);
 
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::INTEGER_LITERAL);
-        $this->AssertEquals($token->Text, '123');
-        $this->AssertEquals($token->Position, 30);
+        $this->assertEquals($token->Id, ExpressionTokenId::INTEGER_LITERAL);
+        $this->assertEquals($token->Text, '123');
+        $this->assertEquals($token->Position, 30);
 
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
-        $this->AssertEquals($token->Id, ExpressionTokenId::END);
-        $this->AssertEquals($token->Position, 37);
+        $this->assertEquals($token->Id, ExpressionTokenId::END);
+        $this->assertEquals($token->Position, 37);
     }
 
     public function testGetSetTokenRoundTrip()

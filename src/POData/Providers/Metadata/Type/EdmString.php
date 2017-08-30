@@ -28,7 +28,12 @@ class EdmString implements IType
      */
     public function isCompatibleWith(IType $type)
     {
-        return TypeCode::STRING == $type->getTypeCode();
+        $code = $type->getTypeCode();
+
+        return TypeCode::STRING == $code
+            || TypeCode::INT32 == $code
+            || TypeCode::INT64 == $code
+            || TypeCode::INT16 == $code;
     }
 
     /**

@@ -2,6 +2,8 @@
 
 namespace POData\ObjectModel;
 
+use Illuminate\Support\Str;
+
 /**
  * Class ODataEntry.
  */
@@ -163,6 +165,21 @@ class ODataEntry
     public function getEditLink()
     {
         return $this->editLink;
+    }
+
+    public function setType(ODataCategory $type = null)
+    {
+        $this->type = $type;
+        if (null !== $type) {
+            $rawTerm = $type->term;
+            $termArray = explode('.', $rawTerm);
+            $this->resourceSetName = Str::plural($termArray[count($termArray)-1]);
+        }
+    }
+
+    public function getType()
+    {
+        return $this->type;
     }
 
     /**

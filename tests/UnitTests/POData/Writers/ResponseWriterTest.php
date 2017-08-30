@@ -4,6 +4,7 @@ namespace UnitTests\POData\Writers;
 
 use Mockery as m;
 use POData\Common\MimeTypes;
+use POData\Common\ODataConstants;
 use POData\Common\Version;
 use POData\IService;
 use POData\OperationContext\ServiceHost;
@@ -104,6 +105,8 @@ class ResponseWriterTest extends TestCase
         $streamWrapper->shouldReceive('getStreamETag')->andReturn('eTag')->once();
         $streamWrapper->shouldReceive('getReadStream')->withArgs([null, null])->andReturn('MediaResource');
 
+        $hostHeaders = [ODataConstants::HTTPRESPONSE_HEADER_STATUS_CODE => 201];
+
         $wrapper = m::mock(ProvidersWrapper::class);
 
         $request = m::mock(RequestDescription::class);
@@ -117,6 +120,7 @@ class ResponseWriterTest extends TestCase
 
         $host = m::mock(ServiceHost::class)->makePartial();
         $host->shouldReceive('getOperationContext->outgoingResponse')->andReturn($response);
+        $host->shouldReceive('getResponseHeaders')->andReturn($hostHeaders);
 
         $service = m::mock(IService::class)->makePartial();
         $service->shouldReceive('getHost')->andReturn($host)->atLeast(1);

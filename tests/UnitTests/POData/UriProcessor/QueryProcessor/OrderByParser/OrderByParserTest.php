@@ -30,8 +30,9 @@ class OrderByParserTest extends TestCase
     /** @var IQueryProvider */
     protected $mockQueryProvider;
 
-    protected function setUp()
+    public function setUp()
     {
+        parent::setUp();
         $this->mockQueryProvider = m::mock('POData\Providers\Query\IQueryProvider');
     }
 

@@ -12,6 +12,7 @@ use POData\OperationContext\HTTPRequestMethod;
 use POData\OperationContext\IHTTPRequest;
 use POData\OperationContext\IOperationContext;
 use POData\OperationContext\ServiceHost;
+use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\ProvidersWrapper;
 use POData\UriProcessor\RequestDescription;
@@ -34,8 +35,11 @@ class ProcessTest extends TestCase
         $host->shouldReceive('getAbsoluteRequestUri')->andReturn($reqUrl);
         $host->shouldReceive('getAbsoluteServiceUri')->andReturn($baseUrl);
 
+        $metaProv = m::mock(IMetadataProvider::class);
+
         $service = m::mock(IService::class);
         $service->shouldReceive('getHost')->andReturn($host);
+        $service->shouldReceive('getMetadataProvider')->andReturn($metaProv);
 
         $expectedClass = null;
         $expected = null;
@@ -85,11 +89,7 @@ class ProcessTest extends TestCase
         $config = m::mock(IServiceConfiguration::class);
         $config->shouldReceive('getMaxDataServiceVersion')->andReturn(new Version(3, 0));
 
-        $service = m::mock(IService::class);
-        $service->shouldReceive('getHost')->andReturn($host);
-        $service->shouldReceive('getProvidersWrapper')->andReturn($wrapper);
-        $service->shouldReceive('getOperationContext')->andReturn($context);
-        $service->shouldReceive('getConfiguration')->andReturn($config);
+        $service = $this->setUpService($host, $wrapper, $context, $config);
 
         $original = UriProcessor::process($service);
         $remix = UriProcessorNew::process($service);
@@ -115,8 +115,11 @@ class ProcessTest extends TestCase
         $context = m::mock(IOperationContext::class);
         $context->shouldReceive('incomingRequest->getMethod')->andReturn(HTTPRequestMethod::NONE());
 
+        $metaProv = m::mock(IMetadataProvider::class);
+
         $service = m::mock(IService::class);
         $service->shouldReceive('getOperationContext')->andReturn($context);
+        $service->shouldReceive('getMetadataProvider')->andReturn($metaProv);
 
         $remix = m::mock(UriProcessorNew::class)->makePartial();
         $remix->shouldReceive('getService')->andReturn($service);
@@ -147,8 +150,11 @@ class ProcessTest extends TestCase
         $context = m::mock(IOperationContext::class);
         $context->shouldReceive('incomingRequest->getMethod')->andReturn(HTTPRequestMethod::GET());
 
+        $metaProv = m::mock(IMetadataProvider::class);
+
         $service = m::mock(IService::class);
         $service->shouldReceive('getOperationContext')->andReturn($context);
+        $service->shouldReceive('getMetadataProvider')->andReturn($metaProv);
 
         $remix = m::mock(UriProcessorNew::class)->makePartial();
         $remix->shouldReceive('getService')->andReturn($service);
@@ -163,5 +169,24 @@ class ProcessTest extends TestCase
             $actual = $e->getMessage();
         }
         $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * @param $host
+     * @param $wrapper
+     * @param $context
+     * @param $config
+     * @return m\MockInterface
+     */
+    protected function setUpService($host, $wrapper, $context, $config)
+    {
+        $metaProv = m::mock(IMetadataProvider::class);
+        $service = m::mock(IService::class);
+        $service->shouldReceive('getHost')->andReturn($host);
+        $service->shouldReceive('getProvidersWrapper')->andReturn($wrapper);
+        $service->shouldReceive('getOperationContext')->andReturn($context);
+        $service->shouldReceive('getConfiguration')->andReturn($config);
+        $service->shouldReceive('getMetadataProvider')->andReturn($metaProv);
+        return $service;
     }
 }

@@ -5,6 +5,7 @@ namespace POData;
 use POData\Configuration\IServiceConfiguration;
 use POData\OperationContext\IOperationContext;
 use POData\OperationContext\ServiceHost;
+use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\ProvidersWrapper;
 use POData\Providers\Stream\StreamProviderWrapper;
 use POData\Writers\ODataWriterRegistry;
@@ -79,4 +80,11 @@ interface IService
      * @return ODataWriterRegistry
      */
     public function getODataWriterRegistry();
+
+    /**
+     * Returns the service's metadata provider
+     *
+     * @return IMetadataProvider
+     */
+    public function getMetadataProvider();
 }

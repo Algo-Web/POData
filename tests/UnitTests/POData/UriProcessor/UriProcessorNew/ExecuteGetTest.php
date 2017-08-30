@@ -13,6 +13,7 @@ use POData\OperationContext\HTTPRequestMethod;
 use POData\OperationContext\IHTTPRequest;
 use POData\OperationContext\IOperationContext;
 use POData\OperationContext\ServiceHost;
+use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\Metadata\ResourceComplexType;
 use POData\Providers\Metadata\ResourceEntityType;
 use POData\Providers\Metadata\ResourceFunctionType;
@@ -1476,11 +1477,14 @@ class ExecuteGetTest extends TestCase
      */
     private function setUpMockService($host, $wrapper, $context, $config)
     {
+        $meta = m::mock(IMetadataProvider::class);
+
         $service = m::mock(IService::class);
         $service->shouldReceive('getHost')->andReturn($host);
         $service->shouldReceive('getProvidersWrapper')->andReturn($wrapper);
         $service->shouldReceive('getOperationContext')->andReturn($context);
         $service->shouldReceive('getConfiguration')->andReturn($config);
+        $service->shouldReceive('getMetadataProvider')->andReturn($meta);
         return $service;
     }
 
