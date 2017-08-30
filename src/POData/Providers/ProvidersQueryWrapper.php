@@ -577,4 +577,34 @@ class ProvidersQueryWrapper
 
         return $resourceType;
     }
+
+    /**
+     * Start database transaction
+     *
+     * @return void
+     */
+    public function startTransaction()
+    {
+        $this->getQueryProvider()->startTransaction();
+    }
+
+    /**
+     * Commit database transaction
+     *
+     * @return void
+     */
+    public function commitTransaction()
+    {
+        $this->getQueryProvider()->commitTransaction();
+    }
+
+    /**
+     * Abort database transaction
+     *
+     * @return void
+     */
+    public function rollBackTransaction()
+    {
+        $this->getQueryProvider()->rollBackTransaction();
+    }
 }

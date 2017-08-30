@@ -572,6 +572,48 @@ class ProvidersWrapperMockeryTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
+    public function testStartTransaction()
+    {
+        $query = m::mock(IQueryProvider::class);
+        $query->shouldReceive('startTransaction')->once();
+
+        $wrap = m::mock(ProvidersQueryWrapper::class)->makePartial();
+        $wrap->shouldReceive('getQueryProvider')->andReturn($query);
+
+        $foo = m::mock(ProvidersWrapper::class)->makePartial();
+        $foo->shouldReceive('getProviderWrapper')->andReturn($wrap);
+
+        $foo->startTransaction();
+    }
+
+    public function testCommitTransaction()
+    {
+        $query = m::mock(IQueryProvider::class);
+        $query->shouldReceive('commitTransaction')->once();
+
+        $wrap = m::mock(ProvidersQueryWrapper::class)->makePartial();
+        $wrap->shouldReceive('getQueryProvider')->andReturn($query);
+
+        $foo = m::mock(ProvidersWrapper::class)->makePartial();
+        $foo->shouldReceive('getProviderWrapper')->andReturn($wrap);
+
+        $foo->commitTransaction();
+    }
+
+    public function testRollBackTransaction()
+    {
+        $query = m::mock(IQueryProvider::class);
+        $query->shouldReceive('rollBackTransaction')->once();
+
+        $wrap = m::mock(ProvidersQueryWrapper::class)->makePartial();
+        $wrap->shouldReceive('getQueryProvider')->andReturn($query);
+
+        $foo = m::mock(ProvidersWrapper::class)->makePartial();
+        $foo->shouldReceive('getProviderWrapper')->andReturn($wrap);
+
+        $foo->rollBackTransaction();
+    }
+
     public static function mockProperty($object, $propertyName, $value)
     {
         $bar = new \ReflectionClass($object);

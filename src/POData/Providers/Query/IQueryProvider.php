@@ -269,4 +269,25 @@ interface IQueryProvider
         $targetEntityInstance,
         $navPropName
     );
+
+    /**
+     * Start database transaction
+     *
+     * @return void
+     */
+    public function startTransaction();
+
+    /**
+     * Commit database transaction
+     *
+     * @return void
+     */
+    public function commitTransaction();
+
+    /**
+     * Abort database transaction
+     *
+     * @return void
+     */
+    public function rollBackTransaction();
 }
