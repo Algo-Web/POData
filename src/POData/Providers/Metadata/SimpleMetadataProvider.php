@@ -749,7 +749,7 @@ class SimpleMetadataProvider implements IMetadataProvider
         //Customer_Orders_Orders, Order_Customer_Customers
         $fwdSetKey = ResourceAssociationSet::keyName($sourceResourceType, $sourceProperty, $targetResourceSet);
         $revSetKey = ResourceAssociationSet::keyName($targetResourceType, $targetProperty, $sourceResourceSet);
-        if (isset($this->associationSets[$fwdSetKey]) && $this->associationSets[$revSetKey]) {
+        if (isset($this->associationSets[$fwdSetKey]) && isset($this->associationSets[$revSetKey])) {
             return;
         }
         $sourceKind = ('*' == $sourceMultiplicity)
