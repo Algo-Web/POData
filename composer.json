@@ -29,7 +29,8 @@
         "php": ">=5.6.4",
         "illuminate/http": ">=5.1",
         "nesbot/carbon": "^1.21",
-        "algo-web/o-data-metadata": "dev-master"
+        "algo-web/o-data-metadata": "dev-master",
+        "jms/serializer": "dev-master#a175e4bd0459f8dcc8c735be94d447161598f068"
     },
     "require-dev": {
         "doctrine/annotations": "1.*",
