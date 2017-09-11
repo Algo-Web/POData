@@ -5,7 +5,7 @@ namespace POData\Providers\Query;
 class QueryResult
 {
     /**
-     * @var object[]|null
+     * @var object[]|object|null
      */
     public $results;
 

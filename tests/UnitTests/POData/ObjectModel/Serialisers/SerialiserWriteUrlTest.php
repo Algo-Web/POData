@@ -59,7 +59,7 @@ class SerialiserWriteUrlTest extends SerialiserTestBase
         list($host, $meta, $query) = $this->setUpDataServiceDeps($request);
 
         // default data service
-        $ironic = $this->setUpSerialisers($query, $meta, $host);
+        $ironic = $this->setUpSerialisers($query, $meta, $host, 2);
 
         $model = new Customer2();
         $model->CustomerID = 2;
@@ -69,7 +69,7 @@ class SerialiserWriteUrlTest extends SerialiserTestBase
         $result->results = $model;
 
         $collection = new QueryResult();
-        $collection->results = [$result];
+        $collection->results = [$result, $model];
 
         $url = new ODataURL();
         $url->url = 'http://localhost/odata.svc/Customers(CustomerID=\'2\',CustomerGuid'
@@ -77,7 +77,8 @@ class SerialiserWriteUrlTest extends SerialiserTestBase
 
         $objectResult = new ODataURLCollection();
         $objectResult->urls[] = $url;
-        $objectResult->count = 1;
+        $objectResult->urls[] = $url;
+        $objectResult->count = 2;
         $ironicResult = $ironic->writeUrlElements($collection);
         $this->assertEquals(get_class($objectResult), get_class($ironicResult));
         $this->assertEquals($objectResult, $ironicResult);
@@ -144,13 +145,13 @@ class SerialiserWriteUrlTest extends SerialiserTestBase
      * @param $host
      * @return array
      */
-    private function setUpSerialisers($query, $meta, $host)
+    private function setUpSerialisers($query, $meta, $host, $count = 1)
     {
         // default data service
         $service = new TestDataService($query, $meta, $host);
         $processor = $service->handleRequest();
         $processor->getRequest()->queryType = QueryType::ENTITIES_WITH_COUNT();
-        $processor->getRequest()->setCountValue(1);
+        $processor->getRequest()->setCountValue($count);
         $object = new ObjectModelSerializer($service, $processor->getRequest());
         $ironic = new IronicSerialiser($service, $processor->getRequest());
         return $ironic;
