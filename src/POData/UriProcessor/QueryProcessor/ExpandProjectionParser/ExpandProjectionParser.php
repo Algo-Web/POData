@@ -408,4 +408,12 @@ class ExpandProjectionParser
 
         return $pathSegments;
     }
+
+    /**
+     * @return ProvidersWrapper
+     */
+    public function getProviderWrapper()
+    {
+        return $this->providerWrapper;
+    }
 }
