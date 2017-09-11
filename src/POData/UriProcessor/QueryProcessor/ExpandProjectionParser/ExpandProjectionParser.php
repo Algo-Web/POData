@@ -4,6 +4,7 @@ namespace POData\UriProcessor\QueryProcessor\ExpandProjectionParser;
 
 use POData\Common\Messages;
 use POData\Common\ODataException;
+use POData\Providers\Metadata\ResourceAssociationSet;
 use POData\Providers\Metadata\ResourceEntityType;
 use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\Providers\Metadata\ResourceSet;
@@ -179,7 +180,11 @@ class ExpandProjectionParser
             foreach ($expandSubPathSegments as $expandSubPathSegment) {
                 $resourceSetWrapper = $currentNode->getResourceSetWrapper();
                 $resourceType = $currentNode->getResourceType();
+                assert($resourceType instanceof ResourceEntityType);
                 $resourceProperty = $resourceType->resolveProperty($expandSubPathSegment);
+                $keyType = ResourceAssociationSet::keyNameFromTypeAndProperty($resourceType, $resourceProperty);
+                $assoc = $this->getProviderWrapper()->getMetaProvider()->resolveAssociationSet($keyType);
+                $concreteType = isset($assoc) ? $assoc->getEnd2()->getConcreteType() : $resourceType;
                 if (null === $resourceProperty) {
                     throw ODataException::createSyntaxError(
                         Messages::expandProjectionParserPropertyNotFound(
@@ -224,6 +229,7 @@ class ExpandProjectionParser
                 if ($pageSize != 0 && !$singleResult) {
                     $this->rootProjectionNode->setPagedExpandedResult(true);
                     $rt = $resourceSetWrapper->getResourceType();
+                    $payloadType = $rt->isAbstract() ? $concreteType : $rt;
                     //assert($rt != null)
                     $keys = array_keys($rt->getKeyProperties());
                     //assert(!empty($keys))
@@ -235,7 +241,7 @@ class ExpandProjectionParser
                     $orderBy = rtrim($orderBy, ', ');
                     $internalOrderByInfo = OrderByParser::parseOrderByClause(
                         $resourceSetWrapper,
-                        $rt,
+                        $payloadType,
                         $orderBy,
                         $this->providerWrapper
                     );
