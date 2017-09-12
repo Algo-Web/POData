@@ -676,10 +676,9 @@ class SimpleMetadataProvider implements IMetadataProvider
             new ResourceAssociationSetEnd(
                 $sourceResourceSet,
                 $sourceResourceType,
-                $sourceResourceProperty,
-                $concreteType
+                $sourceResourceProperty
             ),
-            new ResourceAssociationSetEnd($targetResourceSet, $targetResourceType, null)
+            new ResourceAssociationSetEnd($targetResourceSet, $targetResourceType, null, $concreteType)
         );
         $mult = $resourceMult;
         $backMult = $many ? '*' : $backMultArray[$resourceMult];
@@ -827,6 +826,7 @@ class SimpleMetadataProvider implements IMetadataProvider
             $name,
             $targetResourceSet,
             '*',
+            null,
             $concreteType
         );
     }

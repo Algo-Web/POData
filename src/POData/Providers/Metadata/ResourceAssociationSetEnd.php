@@ -81,16 +81,8 @@ class ResourceAssociationSetEnd
             );
         }
         if (null !== $concreteType) {
-            if (!$resourceType->isAbstract()) {
-                $msg = 'Base type must be abstract if concrete type supplied';
-                throw new \InvalidArgumentException($msg);
-            }
             if ($concreteType->isAbstract()) {
                 $msg = 'Concrete type must not be abstract if explicitly supplied';
-                throw new \InvalidArgumentException($msg);
-            }
-            if ($concreteType->getBaseType() != $resourceType) {
-                $msg = 'Concrete type must be a derived type of supplied base type';
                 throw new \InvalidArgumentException($msg);
             }
         } else {

@@ -95,61 +95,6 @@ class ResourceAssociationSetEndTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function testResourceAssociationSetEndWithConcreteBaseTypeAndConcreteType()
-    {
-        $property = m::mock(ResourceProperty::class);
-        $property->shouldReceive('getName')->andReturn('property');
-        $property->shouldReceive('getKind')->andReturn(ResourcePropertyKind::RESOURCE_REFERENCE);
-
-        $base = m::mock(ResourceEntityType::class);
-        $base->shouldReceive('isAbstract')->andReturn(false);
-        $base->shouldReceive('resolveProperty')->andReturn($property);
-        $base->shouldReceive('isAssignableFrom')->andReturn(true);
-        $concrete = m::mock(ResourceEntityType::class);
-        $concrete->shouldReceive('isAbstract')->andReturn(false);
-
-        $set = m::mock(ResourceSet::class);
-        $set->shouldReceive('getResourceType')->andReturn($base);
-
-        $expected = 'Base type must be abstract if concrete type supplied';
-        $actual = null;
-
-        try {
-            $foo = new ResourceAssociationSetEnd($set, $base, $property, $concrete);
-        } catch (\Exception $e) {
-            $actual = $e->getMessage();
-        }
-        $this->assertEquals($expected, $actual);
-    }
-
-    public function testResourceAssociationSetEndWithConcreteTypeNotDerivedFromBase()
-    {
-        $property = m::mock(ResourceProperty::class);
-        $property->shouldReceive('getName')->andReturn('property');
-        $property->shouldReceive('getKind')->andReturn(ResourcePropertyKind::RESOURCE_REFERENCE);
-
-        $base = m::mock(ResourceEntityType::class);
-        $base->shouldReceive('isAbstract')->andReturn(true);
-        $base->shouldReceive('resolveProperty')->andReturn($property);
-        $base->shouldReceive('isAssignableFrom')->andReturn(true);
-        $concrete = m::mock(ResourceEntityType::class);
-        $concrete->shouldReceive('isAbstract')->andReturn(false);
-        $concrete->shouldReceive('getBaseType')->andReturn(null);
-
-        $set = m::mock(ResourceSet::class);
-        $set->shouldReceive('getResourceType')->andReturn($base);
-
-        $expected = 'Concrete type must be a derived type of supplied base type';
-        $actual = null;
-
-        try {
-            $foo = new ResourceAssociationSetEnd($set, $base, $property, $concrete);
-        } catch (\Exception $e) {
-            $actual = $e->getMessage();
-        }
-        $this->assertEquals($expected, $actual);
-    }
-
     public function testGetConcreteTypeWhenNotExplicitlySupplied()
     {
         $property = m::mock(ResourceProperty::class);
