@@ -6,6 +6,7 @@ use POData\Common\Messages;
 use POData\Common\ODataException;
 use POData\Providers\Metadata\ResourceAssociationSet;
 use POData\Providers\Metadata\ResourceEntityType;
+use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\ResourceSetWrapper;
@@ -182,6 +183,7 @@ class ExpandProjectionParser
                 $resourceType = $currentNode->getResourceType();
                 assert($resourceType instanceof ResourceEntityType);
                 $resourceProperty = $resourceType->resolveProperty($expandSubPathSegment);
+                assert($resourceProperty instanceof ResourceProperty);
                 $keyType = ResourceAssociationSet::keyNameFromTypeAndProperty($resourceType, $resourceProperty);
                 $assoc = $this->getProviderWrapper()->getMetaProvider()->resolveAssociationSet($keyType);
                 $concreteType = isset($assoc) ? $assoc->getEnd2()->getConcreteType() : $resourceType;
@@ -230,9 +232,8 @@ class ExpandProjectionParser
                     $this->rootProjectionNode->setPagedExpandedResult(true);
                     $rt = $resourceSetWrapper->getResourceType();
                     $payloadType = $rt->isAbstract() ? $concreteType : $rt;
-                    //assert($rt != null)
+
                     $keys = array_keys($rt->getKeyProperties());
-                    //assert(!empty($keys))
                     $orderBy = null;
                     foreach ($keys as $key) {
                         $orderBy = $orderBy . $key . ', ';

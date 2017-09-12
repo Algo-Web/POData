@@ -85,14 +85,15 @@ class ResourceAssociationSetEnd
                 $msg = 'Concrete type must not be abstract if explicitly supplied';
                 throw new \InvalidArgumentException($msg);
             }
+            $concType = $concreteType;
         } else {
-            $concreteType = $resourceType;
+            $concType = $resourceType;
         }
 
         $this->resourceSet = $resourceSet;
         $this->resourceType = $resourceType;
         $this->resourceProperty = $resourceProperty;
-        $this->concreteType = $concreteType;
+        $this->concreteType = $concType;
     }
 
     /**
