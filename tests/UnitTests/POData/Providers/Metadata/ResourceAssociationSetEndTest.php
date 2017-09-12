@@ -6,6 +6,7 @@ use Mockery as m;
 use POData\Providers\Metadata\ResourceAssociationSetEnd;
 use POData\Providers\Metadata\ResourceEntityType;
 use POData\Providers\Metadata\ResourceProperty;
+use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\ResourceType;
 use UnitTests\POData\TestCase;
@@ -41,7 +42,7 @@ class ResourceAssociationSetEndTest extends TestCase
         $set = m::mock(ResourceSet::class);
         $type = m::mock(ResourceEntityType::class);
 
-        $property = new \StdClass();
+        $property = new \stdClass();
 
         // Type-hint mismatch error message is slightly different in PHP 7.1
         $expected = 'Argument 3 passed to POData\\Providers\\Metadata\\ResourceAssociationSetEnd::__construct() must be'
@@ -65,5 +66,80 @@ class ResourceAssociationSetEndTest extends TestCase
         $targ = version_compare(phpversion(), '7.1', '>=') ? $expected71 : $expected;
 
         $this->assertStringStartsWith($targ, $actual);
+    }
+
+    public function testResourceAssociationSetEndWithAbstractConcreteType()
+    {
+        $property = m::mock(ResourceProperty::class);
+        $property->shouldReceive('getName')->andReturn('property');
+        $property->shouldReceive('getKind')->andReturn(ResourcePropertyKind::RESOURCE_REFERENCE);
+
+        $base = m::mock(ResourceEntityType::class);
+        $base->shouldReceive('isAbstract')->andReturn(true);
+        $base->shouldReceive('resolveProperty')->andReturn($property);
+        $base->shouldReceive('isAssignableFrom')->andReturn(true);
+        $concrete = m::mock(ResourceEntityType::class);
+        $concrete->shouldReceive('isAbstract')->andReturn(true);
+
+        $set = m::mock(ResourceSet::class);
+        $set->shouldReceive('getResourceType')->andReturn($base);
+
+        $expected = 'Concrete type must not be abstract if explicitly supplied';
+        $actual = null;
+
+        try {
+            $foo = new ResourceAssociationSetEnd($set, $base, $property, $concrete);
+        } catch (\Exception $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testGetConcreteTypeWhenNotExplicitlySupplied()
+    {
+        $property = m::mock(ResourceProperty::class);
+        $property->shouldReceive('getName')->andReturn('property');
+        $property->shouldReceive('getKind')->andReturn(ResourcePropertyKind::RESOURCE_REFERENCE);
+        $expected = 'TypeWithNoName';
+
+        $base = m::mock(ResourceEntityType::class);
+        $base->shouldReceive('isAbstract')->andReturn(false);
+        $base->shouldReceive('resolveProperty')->andReturn($property);
+        $base->shouldReceive('isAssignableFrom')->andReturn(true);
+        $base->shouldReceive('getName')->andReturn($expected);
+
+        $set = m::mock(ResourceSet::class);
+        $set->shouldReceive('getResourceType')->andReturn($base);
+
+        $foo = new ResourceAssociationSetEnd($set, $base, $property);
+        $result = $foo->getConcreteType();
+        $actual = $result->getName();
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testGetConcreteTypeWhenExplicitlySupplied()
+    {
+        $property = m::mock(ResourceProperty::class);
+        $property->shouldReceive('getName')->andReturn('property');
+        $property->shouldReceive('getKind')->andReturn(ResourcePropertyKind::RESOURCE_REFERENCE);
+        $expected = 'TypeWithNoName';
+
+        $concrete = m::mock(ResourceEntityType::class);
+        $concrete->shouldReceive('isAbstract')->andReturn(false);
+        $concrete->shouldReceive('getName')->andReturn($expected);
+
+        $base = m::mock(ResourceEntityType::class);
+        $base->shouldReceive('isAbstract')->andReturn(false);
+        $base->shouldReceive('resolveProperty')->andReturn($property);
+        $base->shouldReceive('isAssignableFrom')->andReturn(true);
+        $base->shouldReceive('getName')->andReturn('foo');
+
+        $set = m::mock(ResourceSet::class);
+        $set->shouldReceive('getResourceType')->andReturn($base);
+
+        $foo = new ResourceAssociationSetEnd($set, $base, $property, $concrete);
+        $result = $foo->getConcreteType();
+        $actual = $result->getName();
+        $this->assertEquals($expected, $actual);
     }
 }

@@ -24,6 +24,14 @@ class ResourceAssociationSetEnd
     private $resourceType;
 
     /**
+     * Concrete resource type for the association end.  Should only be set if $resourceType is abstract.
+     * Is assumed to be a derived type of $resourceType if set.
+     *
+     * @var ResourceEntityType
+     */
+    private $concreteType;
+
+    /**
      * Resource property for the association end.
      *
      * @var ResourceProperty
@@ -46,7 +54,8 @@ class ResourceAssociationSetEnd
     public function __construct(
         ResourceSet $resourceSet,
         ResourceEntityType $resourceType,
-        ResourceProperty $resourceProperty = null
+        ResourceProperty $resourceProperty = null,
+        ResourceEntityType $concreteType = null
     ) {
         if (null !== $resourceProperty
             && (null === $resourceType->resolveProperty($resourceProperty->getName())
@@ -71,10 +80,20 @@ class ResourceAssociationSetEnd
                 )
             );
         }
+        if (null !== $concreteType) {
+            if ($concreteType->isAbstract()) {
+                $msg = 'Concrete type must not be abstract if explicitly supplied';
+                throw new \InvalidArgumentException($msg);
+            }
+            $concType = $concreteType;
+        } else {
+            $concType = $resourceType;
+        }
 
         $this->resourceSet = $resourceSet;
         $this->resourceType = $resourceType;
         $this->resourceProperty = $resourceProperty;
+        $this->concreteType = $concType;
     }
 
     /**
@@ -120,6 +139,16 @@ class ResourceAssociationSetEnd
     public function getResourceType()
     {
         return $this->resourceType;
+    }
+
+    /**
+     * Gets reference to concrete type.
+     *
+     * @return ResourceEntityType
+     */
+    public function getConcreteType()
+    {
+        return $this->concreteType;
     }
 
     /**

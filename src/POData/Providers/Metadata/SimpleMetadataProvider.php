@@ -552,27 +552,30 @@ class SimpleMetadataProvider implements IMetadataProvider
     /**
      * To add a resource reference property.
      *
-     * @param ResourceEntityType $resourceType      The resource type to add the resource
-     *                                              reference property to
-     * @param string             $name              The name of the property to add
-     * @param ResourceSet        $targetResourceSet The resource set the resource reference
-     *                                              property points to
-     * @param mixed              $flip
-     * @param mixed              $many
+     * @param ResourceEntityType        $resourceType       The resource type to add the resource
+     *                                                      reference property to
+     * @param string                    $name               The name of the property to add
+     * @param ResourceSet               $targetResourceSet  The resource set the resource reference
+     *                                                      property points to
+     * @param mixed                     $flip
+     * @param mixed                     $many
+     * @param ResourceEntityType|null   $concreteType       Underlying concrete resource reference type, if set
      */
     public function addResourceReferenceProperty(
         ResourceEntityType $resourceType,
         $name,
         ResourceSet $targetResourceSet,
         $flip = false,
-        $many = false
+        $many = false,
+        ResourceEntityType $concreteType = null
     ) {
         $this->addReferencePropertyInternal(
             $resourceType,
             $name,
             $targetResourceSet,
             $flip ? '0..1' : '1',
-            $many
+            $many,
+            $concreteType
         );
     }
 
@@ -633,7 +636,8 @@ class SimpleMetadataProvider implements IMetadataProvider
         $name,
         ResourceSet $targetResourceSet,
         $resourceMult,
-        $many = false
+        $many = false,
+        ResourceEntityType $concreteType = null
     ) {
         $allowedMult = ['*', '1', '0..1'];
         $backMultArray = [ '*' => '*', '1' => '0..1', '0..1' => '1'];
@@ -669,8 +673,12 @@ class SimpleMetadataProvider implements IMetadataProvider
         //$setKey = $sourceResourceType->getName() . '_' . $name . '_' . $targetResourceType->getName();
         $set = new ResourceAssociationSet(
             $setKey,
-            new ResourceAssociationSetEnd($sourceResourceSet, $sourceResourceType, $sourceResourceProperty),
-            new ResourceAssociationSetEnd($targetResourceSet, $targetResourceType, null)
+            new ResourceAssociationSetEnd(
+                $sourceResourceSet,
+                $sourceResourceType,
+                $sourceResourceProperty
+            ),
+            new ResourceAssociationSetEnd($targetResourceSet, $targetResourceType, null, $concreteType)
         );
         $mult = $resourceMult;
         $backMult = $many ? '*' : $backMultArray[$resourceMult];
@@ -800,19 +808,26 @@ class SimpleMetadataProvider implements IMetadataProvider
     /**
      * To add a resource set reference property.
      *
-     * @param ResourceEntityType $resourceType      The resource type to add the
-     *                                              resource reference set property to
-     * @param string             $name              The name of the property to add
-     * @param ResourceSet        $targetResourceSet The resource set the resource
-     *                                              reference set property points to
+     * @param ResourceEntityType        $resourceType       The resource type to add the
+     *                                                      resource reference set property to
+     * @param string                    $name               The name of the property to add
+     * @param ResourceSet               $targetResourceSet  The resource set the resource
+     *                                                      reference set property points to
+     * @param ResourceEntityType|null   $concreteType       Underlying concrete resource type, if set
      */
-    public function addResourceSetReferenceProperty(ResourceEntityType $resourceType, $name, $targetResourceSet)
-    {
+    public function addResourceSetReferenceProperty(
+        ResourceEntityType $resourceType,
+        $name,
+        $targetResourceSet,
+        ResourceEntityType $concreteType = null
+    ) {
         $this->addReferencePropertyInternal(
             $resourceType,
             $name,
             $targetResourceSet,
-            '*'
+            '*',
+            null,
+            $concreteType
         );
     }
 

@@ -4,7 +4,9 @@ namespace POData\UriProcessor\QueryProcessor\ExpandProjectionParser;
 
 use POData\Common\Messages;
 use POData\Common\ODataException;
+use POData\Providers\Metadata\ResourceAssociationSet;
 use POData\Providers\Metadata\ResourceEntityType;
+use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\ResourceSetWrapper;
@@ -179,7 +181,12 @@ class ExpandProjectionParser
             foreach ($expandSubPathSegments as $expandSubPathSegment) {
                 $resourceSetWrapper = $currentNode->getResourceSetWrapper();
                 $resourceType = $currentNode->getResourceType();
+                assert($resourceType instanceof ResourceEntityType);
                 $resourceProperty = $resourceType->resolveProperty($expandSubPathSegment);
+                assert($resourceProperty instanceof ResourceProperty);
+                $keyType = ResourceAssociationSet::keyNameFromTypeAndProperty($resourceType, $resourceProperty);
+                $assoc = $this->getProviderWrapper()->getMetaProvider()->resolveAssociationSet($keyType);
+                $concreteType = isset($assoc) ? $assoc->getEnd2()->getConcreteType() : $resourceType;
                 if (null === $resourceProperty) {
                     throw ODataException::createSyntaxError(
                         Messages::expandProjectionParserPropertyNotFound(
@@ -224,9 +231,9 @@ class ExpandProjectionParser
                 if ($pageSize != 0 && !$singleResult) {
                     $this->rootProjectionNode->setPagedExpandedResult(true);
                     $rt = $resourceSetWrapper->getResourceType();
-                    //assert($rt != null)
+                    $payloadType = $rt->isAbstract() ? $concreteType : $rt;
+
                     $keys = array_keys($rt->getKeyProperties());
-                    //assert(!empty($keys))
                     $orderBy = null;
                     foreach ($keys as $key) {
                         $orderBy = $orderBy . $key . ', ';
@@ -235,7 +242,7 @@ class ExpandProjectionParser
                     $orderBy = rtrim($orderBy, ', ');
                     $internalOrderByInfo = OrderByParser::parseOrderByClause(
                         $resourceSetWrapper,
-                        $rt,
+                        $payloadType,
                         $orderBy,
                         $this->providerWrapper
                     );
@@ -407,5 +414,13 @@ class ExpandProjectionParser
         }
 
         return $pathSegments;
+    }
+
+    /**
+     * @return ProvidersWrapper
+     */
+    public function getProviderWrapper()
+    {
+        return $this->providerWrapper;
     }
 }

@@ -173,4 +173,9 @@ class ResourceAssociationSet
     {
         return $sourceType->getName() . '_' . $linkName . '_' . $targetResourceSet->getResourceType()->getName();
     }
+
+    public static function keyNameFromTypeAndProperty(ResourceEntityType $sourceType, ResourceProperty $property)
+    {
+        return $sourceType->getName() . '_' . $property->getName() . '_' . $property->getResourceType()->getName();
+    }
 }
