@@ -116,4 +116,30 @@ class ResourceAssociationSetEndTest extends TestCase
         $actual = $result->getName();
         $this->assertEquals($expected, $actual);
     }
+
+    public function testGetConcreteTypeWhenExplicitlySupplied()
+    {
+        $property = m::mock(ResourceProperty::class);
+        $property->shouldReceive('getName')->andReturn('property');
+        $property->shouldReceive('getKind')->andReturn(ResourcePropertyKind::RESOURCE_REFERENCE);
+        $expected = 'TypeWithNoName';
+
+        $concrete = m::mock(ResourceEntityType::class);
+        $concrete->shouldReceive('isAbstract')->andReturn(false);
+        $concrete->shouldReceive('getName')->andReturn($expected);
+
+        $base = m::mock(ResourceEntityType::class);
+        $base->shouldReceive('isAbstract')->andReturn(false);
+        $base->shouldReceive('resolveProperty')->andReturn($property);
+        $base->shouldReceive('isAssignableFrom')->andReturn(true);
+        $base->shouldReceive('getName')->andReturn('foo');
+
+        $set = m::mock(ResourceSet::class);
+        $set->shouldReceive('getResourceType')->andReturn($base);
+
+        $foo = new ResourceAssociationSetEnd($set, $base, $property, $concrete);
+        $result = $foo->getConcreteType();
+        $actual = $result->getName();
+        $this->assertEquals($expected, $actual);
+    }
 }

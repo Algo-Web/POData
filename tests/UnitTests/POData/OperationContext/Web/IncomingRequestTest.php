@@ -97,4 +97,13 @@ class IncomingRequestTest extends TestCase
         $this->assertEquals($expected, $actual);
         $this->assertNull($incoming->getRequestHeader('REQUEST_TYPE'));
     }
+
+    public function testGetEmptyQueryStringParameters()
+    {
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $incoming = new IncomingRequest();
+        $result = $incoming->getQueryParameters();
+        $this->assertTrue(is_array($result));
+        $this->assertEquals(1, count($result));
+    }
 }
