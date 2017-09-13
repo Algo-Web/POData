@@ -123,6 +123,7 @@ class CynicSerialiser implements IObjectSerialiser
             return null;
         }
 
+        assert(is_object($entryObject->results));
         $this->loadStackIfEmpty();
 
         $baseURI = $this->isBaseWritten ? null : $this->absoluteServiceUriWithSlash;
@@ -627,6 +628,7 @@ class CynicSerialiser implements IObjectSerialiser
 
     protected function getEntryInstanceKey($entityInstance, ResourceType $resourceType, $containerName)
     {
+        assert(is_object($entityInstance));
         $typeName = $resourceType->getName();
         $keyProperties = $resourceType->getKeyProperties();
         assert(0 != count($keyProperties), 'count($keyProperties) == 0');
@@ -773,9 +775,9 @@ class CynicSerialiser implements IObjectSerialiser
     {
         $nextName = $prop->getResourceType()->getName();
         $nuLink->isExpanded = true;
-        $isCollection = ResourcePropertyKind::RESOURCESET_REFERENCE == $propKind;
-        $nuLink->isCollection = $isCollection;
         $value = $entryObject->results->$propName;
+        $isCollection = ResourcePropertyKind::RESOURCESET_REFERENCE == $propKind || !is_object($value);
+        $nuLink->isCollection = $isCollection;
         $nullResult = null === $value;
         $resultCount = $nullResult ? 0 : count($value);
 
@@ -787,8 +789,10 @@ class CynicSerialiser implements IObjectSerialiser
                 array_push($this->lightStack, $newStackLine);
                 if (isset($value)) {
                     if (!$isCollection) {
+                        $nuLink->type = 'application/atom+xml;type=entry';
                         $expandedResult = $this->writeTopLevelElement($result);
                     } else {
+                        $nuLink->type = 'application/atom+xml;type=feed';
                         $expandedResult = $this->writeTopLevelElements($result);
                     }
                     $nuLink->expandedResult = $expandedResult;
