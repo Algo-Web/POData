@@ -682,6 +682,9 @@ class SimpleMetadataProvider implements IMetadataProvider
         );
         $mult = $resourceMult;
         $backMult = $many ? '*' : $backMultArray[$resourceMult];
+        if (false === $many && '*' == $backMult && '*' == $resourceMult) {
+            $backMult = '1';
+        }
         $this->getMetadataManager()->addNavigationPropertyToEntityType(
             $this->oDataEntityMap[$sourceResourceType->getFullName()],
             $mult,
@@ -818,15 +821,16 @@ class SimpleMetadataProvider implements IMetadataProvider
     public function addResourceSetReferenceProperty(
         ResourceEntityType $resourceType,
         $name,
-        $targetResourceSet,
-        ResourceEntityType $concreteType = null
+        ResourceSet $targetResourceSet,
+        ResourceEntityType $concreteType = null,
+        $single = false
     ) {
         $this->addReferencePropertyInternal(
             $resourceType,
             $name,
             $targetResourceSet,
             '*',
-            null,
+            (true === $single) ? false : null,
             $concreteType
         );
     }
