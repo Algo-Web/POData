@@ -765,6 +765,37 @@ class SimpleMetadataProviderTest extends TestCase
         $this->assertEquals([$aft], $foo->getDerivedTypes($fore));
     }
 
+    public function testAddResourceSetReferenceWithOtherEndSingle()
+    {
+        $forward = new reusableEntityClass4('foo', 'bar');
+        $back = new reusableEntityClass5('foo', 'bar');
+
+        $foo = new SimpleMetadataProvider('string', 'String');
+
+        $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore');
+        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
+        $this->assertTrue($fore instanceof ResourceType);
+        $this->assertTrue($aft instanceof ResourceType);
+
+        $foreSet = $foo->addResourceSet('foreSet', $fore);
+        $aftSet = $foo->addResourceSet('aftSet', $aft);
+        $this->assertTrue($foreSet instanceof ResourceSet);
+        $this->assertTrue($aftSet instanceof ResourceSet);
+
+        $foo->addResourceSetReferenceProperty($fore, 'fore_aft', $aftSet, null, true);
+        $xml = $foo->getXML();
+        $assocName = '<Association Name="fore_fore_aft_aft">';
+        $fwdEnd = '<End Type="String.fore" Role="fores_fore_aft" Multiplicity="*"/>';
+        $revEnd = '<End Type="String.aft" Role="afts" Multiplicity="1"/>';
+        $navProp = '<NavigationProperty Name="fore_aft" Relationship="String.fore_fore_aft_aft" ToRole="afts" '
+                   .'FromRole="fores_fore_aft" cg:GetterAccess="Public" cg:SetterAccess="Public"/>';
+
+        $this->assertTrue(false !== strpos($xml, $assocName));
+        $this->assertTrue(false !== strpos($xml, $fwdEnd));
+        $this->assertTrue(false !== strpos($xml, $revEnd));
+        $this->assertTrue(false !== strpos($xml, $navProp));
+    }
+
     public function testGetXML()
     {
         $cereal = m::mock(Serializer::class);
