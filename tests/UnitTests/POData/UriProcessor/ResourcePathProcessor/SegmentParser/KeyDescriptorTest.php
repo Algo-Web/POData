@@ -4,6 +4,8 @@ namespace UnitTests\POData\UriProcessor\ResourcePathProcessor\SegmentParser;
 
 use POData\Common\InvalidOperationException;
 use POData\Common\ODataException;
+use POData\ObjectModel\ODataProperty;
+use POData\Providers\Metadata\Type\Int32;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 use UnitTests\POData\TestCase;
@@ -319,6 +321,24 @@ class KeyDescriptorTest extends TestCase
             $actual = $e->getMessage();
         }
         $this->assertEquals($expected, $actual);
+    }
+
+    public function testGetPropertiesFromValidatedValues()
+    {
+        $validated = [ 'id' => [ '2', new Int32()]];
+
+        $payload = new ODataProperty();
+        $payload->name = 'id';
+        $payload->typeName = 'Edm.Int32';
+        $payload->value = 2;
+        $expected = ['id' => $payload];
+
+        $keyDescriptor = m::mock(KeyDescriptor::class)->makePartial();
+        $keyDescriptor->shouldReceive('getValidatedNamedValues')->andReturn($validated)->once();
+
+        $actual = $keyDescriptor->getODataProperties();
+        $this->assertEquals($expected, $actual);
+        $this->assertTrue(2 === $actual['id']->value);
     }
 
     public function tearDown()
