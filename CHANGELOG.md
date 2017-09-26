@@ -1,3 +1,6 @@
+Unreleased
+----------
+   * Extend KeyDescriptor to return key values as ODataProperty array
 
 0.2.0 (2017-03-02)
 ------------------
