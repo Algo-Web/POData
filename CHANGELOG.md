@@ -1,6 +1,6 @@
 Unreleased
 ----------
-   * Extend KeyDescriptor to return key values as ODataProperty array
+   * Extend KeyDescriptor to return key values as ODataProperty array.  (see [#165] (https://github.com/Algo-Web/POData/pull/165))
 
 0.2.0 (2017-03-02)
 ------------------

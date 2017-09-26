@@ -9,6 +9,15 @@ use UnitTests\POData\TestCase;
 
 class IncomingRequestTest extends TestCase
 {
+    public function tearDown()
+    {
+        unset($_SERVER['REQUEST_METHOD']);
+        unset($_SERVER['QUERY_STRING']);
+        unset($_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL]);
+        unset($_SERVER[ODataConstants::HTTPREQUEST_URI]);
+        unset($_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)]);
+    }
+
     public function testIncomingRequestDoesNotDecodeTooEarlyInParseProcess()
     {
         //The incoming request parses a PHP Super Globals so let's set those up
@@ -100,10 +109,14 @@ class IncomingRequestTest extends TestCase
 
     public function testGetEmptyQueryStringParameters()
     {
+        $expected = [ ['$filter' => '%20']];
+
         $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_SERVER['QUERY_STRING'] = '$filter='.rawurlencode('%20');
         $incoming = new IncomingRequest();
         $result = $incoming->getQueryParameters();
         $this->assertTrue(is_array($result));
         $this->assertEquals(1, count($result));
+        $this->assertEquals($expected, $result);
     }
 }

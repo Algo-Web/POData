@@ -598,7 +598,7 @@ class KeyDescriptor
             assert(2 == count($propDeets));
             assert($propDeets[1] instanceof IType);
             $property = new ODataProperty();
-            $property->name = $propName;
+            $property->name = strval($propName);
             $property->value = $propDeets[1]->convert($propDeets[0]);
             $property->typeName = $propDeets[1]->getFullTypeName();
             $result[$propName] = $property;
