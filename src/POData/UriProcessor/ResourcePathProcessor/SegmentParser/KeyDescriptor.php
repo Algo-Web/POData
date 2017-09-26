@@ -5,6 +5,7 @@ namespace POData\UriProcessor\ResourcePathProcessor\SegmentParser;
 use POData\Common\InvalidOperationException;
 use POData\Common\Messages;
 use POData\Common\ODataException;
+use POData\ObjectModel\ODataProperty;
 use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\Type\Boolean;
@@ -197,7 +198,7 @@ class KeyDescriptor
     }
 
     /**
-     * Check whether this KeyDesciption has any key values.
+     * Check whether this KeyDescription has any key values.
      *
      * @return bool
      */
@@ -581,5 +582,28 @@ class KeyDescriptor
         $editUrl .= ')';
 
         return $editUrl;
+    }
+
+    /**
+     * Convert validated named values into an array of ODataProperties
+     *
+     * return array[]
+     */
+    public function getODataProperties()
+    {
+        $values = $this->getValidatedNamedValues();
+        $result = [];
+
+        foreach ($values as $propName => $propDeets) {
+            assert(2 == count($propDeets));
+            assert($propDeets[1] instanceof IType);
+            $property = new ODataProperty();
+            $property->name = strval($propName);
+            $property->value = $propDeets[1]->convert($propDeets[0]);
+            $property->typeName = $propDeets[1]->getFullTypeName();
+            $result[$propName] = $property;
+        }
+
+        return $result;
     }
 }

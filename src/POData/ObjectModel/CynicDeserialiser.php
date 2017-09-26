@@ -104,6 +104,10 @@ class CynicDeserialiser
             $result = $this->getWrapper()->createResourceforResourceSet($set, null, $properties);
             assert(isset($result), get_class($result));
             $key = $this->generateKeyDescriptor($type, $result);
+            $keyProp = $key->getODataProperties();
+            foreach ($keyProp as $keyName => $payload) {
+                $content->propertyContent->properties[$keyName] = $payload;
+            }
         } else {
             $key = $this->generateKeyDescriptor($type, $content->propertyContent, $content->id);
             assert($key instanceof KeyDescriptor, get_class($key));
@@ -112,6 +116,7 @@ class CynicDeserialiser
             $result = $this->getWrapper()->updateResource($set, $source, $key, $properties);
         }
 
+        assert($key instanceof KeyDescriptor, get_class($key));
         $content->id = $key;
         return [$set, $result];
     }
