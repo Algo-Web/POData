@@ -89,6 +89,38 @@ class CynicDeserialiser
         return true;
     }
 
+    protected function isEntryProcessed(ODataEntry $payload, $depth = 0)
+    {
+        assert(is_int($depth) && 0 <= $depth && 100 >= $depth, 'Maximum recursion depth exceeded');
+        if (!$payload->id instanceof KeyDescriptor) {
+            return false;
+        }
+        foreach ($payload->links as $link) {
+            $expand = $link->expandedResult;
+            if (null === $expand) {
+                continue;
+            }
+            if ($expand instanceof ODataEntry) {
+                if (!$this->isEntryProcessed($expand, $depth + 1)) {
+                    return false;
+                } else {
+                    continue;
+                }
+            }
+            if ($expand instanceof ODataFeed) {
+                foreach ($expand->entries as $entry) {
+                    if (!$this->isEntryProcessed($entry, $depth + 1)) {
+                        return false;
+                    }
+                }
+                continue;
+            }
+            assert(false, 'Expanded result cannot be processed');
+        }
+
+        return true;
+    }
+
     protected function processEntryContent(ODataEntry &$content)
     {
         assert(null === $content->id || is_string($content->id), 'Entry id must be null or string');
