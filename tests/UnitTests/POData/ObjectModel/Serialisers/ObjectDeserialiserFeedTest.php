@@ -196,7 +196,7 @@ class ObjectDeserialiserFeedTest extends SerialiserTestBase
         $this->assertEquals($expected, $actual);
     }
 
-    public function testCreateAndCreateFeedAssociatedWithEmptyGrandchild()
+    public function testCreateAndCreateFeedAssociatedWithNonEmptyGrandchild()
     {
         $known = Carbon::create(2017, 1, 1, 0, 0, 0, 'UTC');
         Carbon::setTestNow($known);
@@ -207,6 +207,13 @@ class ObjectDeserialiserFeedTest extends SerialiserTestBase
         $request->shouldReceive('fullUrl')->andReturn('http://localhost/odata.svc/Customers');
 
         list($host, $meta, $prov) = $this->setUpDataServiceDeps($request);
+
+        $orderDeet = new OrderDetails2();
+        $orderDeet->Discount = 0;
+        $orderDeet->UnitPrice = 42;
+        $orderDeet->Quantity = 1;
+        $orderDeet->ProductID = 42;
+        $orderDeet->OrderID = 1;
 
         $orderModel = new Order2();
         $orderModel->OrderID = 1;
@@ -222,11 +229,36 @@ class ObjectDeserialiserFeedTest extends SerialiserTestBase
         $model->Rating = 11;
 
         $prov->shouldReceive('createResourceforResourceSet')->andReturn($model)->once();
-        $prov->shouldReceive('createBulkResourceforResourceSet')->andReturn([$orderModel])->once();
-        $prov->shouldReceive('hookSingleModel')->andReturn(null)->once();
+        $prov->shouldReceive('createBulkResourceforResourceSet')->andReturn([$orderModel], [$orderDeet])->twice();
+        $prov->shouldReceive('hookSingleModel')->andReturn(null)->twice();
+
+        $deetContent = new ODataPropertyContent();
+        $deetContent->properties = ['ProductID' => new ODataProperty(), 'OrderID' => new ODataProperty(),
+            'UnitPrice' => new ODataProperty(), 'Quantity' => new ODataProperty(), 'Discount' => new ODataProperty()];
+        $deetContent->properties['UnitPrice']->name = 'UnitPrice';
+        $deetContent->properties['UnitPrice']->typeName = 'Edm.Single';
+        $deetContent->properties['UnitPrice']->value = 42;
+        $deetContent->properties['Quantity']->name = 'UnitPrice';
+        $deetContent->properties['Quantity']->typeName = 'Edm.Int16';
+        $deetContent->properties['Quantity']->value = 1;
+        $deetContent->properties['Discount']->name = 'Discount';
+        $deetContent->properties['Discount']->typeName = 'Edm.Single';
+        $deetContent->properties['Discount']->value = 0;
+        $deetContent->properties['OrderID']->name = 'OrderID';
+        $deetContent->properties['OrderID']->typeName = 'Edm.Int32';
+        $deetContent->properties['OrderID']->value = 1;
+        $deetContent->properties['ProductID']->name = 'ProductID';
+        $deetContent->properties['ProductID']->typeName = 'Edm.Int32';
+        $deetContent->properties['ProductID']->value = 1;
+
+        $deet = new ODataEntry();
+        $deet->resourceSetName = 'Order_Details';
+        $deet->title = new ODataTitle('Order_Details');
+        $deet->type = new ODataCategory('Order_Details');
+        $deet->propertyContent = $deetContent;
 
         $orderFeed = new ODataFeed();
-        $orderFeed->entries = [];
+        $orderFeed->entries = [$deet];
 
         $orderLink = new ODataLink();
         $orderLink->name = 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Order';
