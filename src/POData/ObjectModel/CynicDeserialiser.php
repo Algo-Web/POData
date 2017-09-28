@@ -148,9 +148,14 @@ class CynicDeserialiser
             assert(isset($source), get_class($source));
             $result = $this->getWrapper()->updateResource($set, $source, $key, $properties);
         }
-
         assert($key instanceof KeyDescriptor, get_class($key));
         $content->id = $key;
+
+        $numLinks = count($content->links);
+        for ($i = 0; $i < $numLinks; $i++) {
+            $this->processLink($content->links[$i], $set, $result);
+        }
+
         return [$set, $result];
     }
 
@@ -228,6 +233,7 @@ class CynicDeserialiser
             get_class($link->expandedResult)
         );
         $isFeed = $link->expandedResult instanceof ODataFeed;
+        $isEntry = $link->expandedResult instanceof ODataEntry;
 
         // if nothing to hook up, bail out now
         if (!$hasUrl && !$hasPayload) {
@@ -255,6 +261,20 @@ class CynicDeserialiser
             null === $link->expandedResult || $link->expandedResult instanceof ODataEntry,
             get_class($link->expandedResult)
         );
+        // if link result has already been processed, bail out
+        if (null !== $link->expandedResult || null !== $link->url) {
+            $isUrlKey = $link->url instanceof KeyDescriptor;
+            $isIdKey = $link->expandedResult instanceof ODataEntry &&
+                       $link->expandedResult->id instanceof KeyDescriptor;
+            if ($isUrlKey || $isIdKey) {
+                if ($isIdKey) {
+                    $link->url = $link->expandedResult->id;
+                }
+                return;
+            }
+        }
+        assert(null === $link->expandedResult || !$link->expandedResult->id instanceof KeyDescriptor);
+        assert(null === $link->url || is_string($link->url));
         if ($hasUrl) {
             $urlBitz = explode('/', $link->url);
             $rawPredicate = $urlBitz[count($urlBitz) - 1];
@@ -320,8 +340,11 @@ class CynicDeserialiser
         if (0 === $numEntries) {
             return;
         }
-        // check that each entry is of consistent resource set
+        // check that each entry is of consistent resource set after checking it hasn't been processed
         $first = $link->expandedResult->entries[0]->resourceSetName;
+        if ($link->expandedResult->entries[0]->id instanceof KeyDescriptor) {
+            return;
+        }
         for ($i = 1; $i < $numEntries; $i++) {
             if ($first !== $link->expandedResult->entries[$i]->resourceSetName) {
                 $msg = 'All entries in given feed must have same resource set';
@@ -374,6 +397,7 @@ class CynicDeserialiser
         assert(isset($bulkResult) && is_array($bulkResult));
 
         for ($i = 0; $i < $numEntries; $i++) {
+            assert($link->expandedResult->entries[$i]->id instanceof KeyDescriptor);
             $numLinks = count($link->expandedResult->entries[$i]->links);
             for ($j = 0; $j < $numLinks; $j++) {
                 $this->processLink($link->expandedResult->entries[$i]->links[$j], $targSet, $bulkResult[$i]);
