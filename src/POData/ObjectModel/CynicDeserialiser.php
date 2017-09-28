@@ -233,7 +233,6 @@ class CynicDeserialiser
             get_class($link->expandedResult)
         );
         $isFeed = $link->expandedResult instanceof ODataFeed;
-        $isEntry = $link->expandedResult instanceof ODataEntry;
 
         // if nothing to hook up, bail out now
         if (!$hasUrl && !$hasPayload) {
