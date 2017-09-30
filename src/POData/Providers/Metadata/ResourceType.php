@@ -836,7 +836,7 @@ abstract class ResourceType
      */
     public function setPropertyValue($entity, $property, $value)
     {
-        $targ = ($entity instanceof QueryResult) ? $entity->results[0] : $entity;
+        $targ = $this->unpackEntityForPropertyGetSet($entity);
         ReflectionHandler::setProperty($targ, $property, $value);
 
         return $this;
@@ -849,7 +849,7 @@ abstract class ResourceType
      */
     public function getPropertyValue($entity, $property)
     {
-        $targ = ($entity instanceof QueryResult) ? $entity->results[0] : $entity;
+        $targ = $this->unpackEntityForPropertyGetSet($entity);
         return ReflectionHandler::getProperty($targ, $property);
     }
 
@@ -877,5 +877,17 @@ abstract class ResourceType
             $this->type instanceof \ReflectionClass || $this->type instanceof IType,
             '_type neither instance of reflection class nor IType'
         );
+    }
+
+    /**
+     * @param $entity
+     * @return mixed|null
+     */
+    private function unpackEntityForPropertyGetSet($entity)
+    {
+        $targ = ($entity instanceof QueryResult)
+            ? (is_array($entity->results) && 0 < count($entity->results)) ? $entity->results[0] : null
+            : $entity;
+        return $targ;
     }
 }

@@ -17,7 +17,9 @@ use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\ResourceTypeKind;
 use POData\Providers\Metadata\Type\EdmPrimitiveType;
 use POData\Providers\Metadata\Type\IType;
+use POData\Providers\Query\QueryResult;
 use ReflectionClass;
+use UnitTests\POData\Facets\NorthWind4\NorthWindMetadata;
 use UnitTests\POData\ObjectModel\reusableEntityClass2;
 use UnitTests\POData\TestCase;
 
@@ -238,5 +240,85 @@ class ResourceTypeTest extends TestCase
     {
         $foo = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::INT64);
         $this->assertEquals('Int64', $foo->getName());
+    }
+
+    public function testSetValueWithEmptyQueryResult()
+    {
+        $meta = NorthWindMetadata::create();
+        $type = $meta->resolveResourceType('Customer');
+
+        $entity = new QueryResult();
+        $entity->results = [];
+        $propName = 'CompanyName';
+        $value = 'Company';
+
+        $expected = 'The parameter class is expected to be either a string or an object';
+        $actual = null;
+
+        try {
+            $type->setPropertyValue($entity, $propName, $value);
+        } catch (\ReflectionException $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testSetValueWithNull()
+    {
+        $meta = NorthWindMetadata::create();
+        $type = $meta->resolveResourceType('Customer');
+
+        $entity = null;
+        $propName = 'CompanyName';
+        $value = 'Company';
+
+        $expected = 'The parameter class is expected to be either a string or an object';
+        $actual = null;
+
+        try {
+            $type->setPropertyValue($entity, $propName, $value);
+        } catch (\ReflectionException $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testGetValueWithEmptyQueryResult()
+    {
+        $meta = NorthWindMetadata::create();
+        $type = $meta->resolveResourceType('Customer');
+
+        $entity = new QueryResult();
+        $entity->results = [];
+        $propName = 'CompanyName';
+
+        $expected = 'Property POData\Common\ReflectionHandler::$CompanyName does not exist';
+        $actual = null;
+
+        try {
+            $type->getPropertyValue($entity, $propName);
+        } catch (\ReflectionException $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testGetValueWithNull()
+    {
+        $meta = NorthWindMetadata::create();
+        $type = $meta->resolveResourceType('Customer');
+
+        $entity = null;
+        $propName = 'CompanyName';
+
+        $expected = 'Property POData\Common\ReflectionHandler::$CompanyName does not exist';
+        $actual = null;
+
+        try {
+            $type->getPropertyValue($entity, $propName);
+        } catch (\ReflectionException $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
     }
 }
