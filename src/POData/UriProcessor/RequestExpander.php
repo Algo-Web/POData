@@ -9,6 +9,7 @@ use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Metadata\ResourceTypeKind;
 use POData\Providers\ProvidersWrapper;
+use POData\Providers\Query\QueryResult;
 use POData\Providers\Query\QueryType;
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandedProjectionNode;
 
@@ -129,6 +130,9 @@ class RequestExpander
 
             foreach ($result as $entry) {
                 // Check for null entry
+                if ($entry instanceof QueryResult && empty($entry->results)) {
+                    continue;
+                }
                 if ($isCollection) {
                     $result1 = $this->executeCollectionExpansionGetRelated($expandedProjectionNode, $entry);
                     if (!empty($result1)) {
