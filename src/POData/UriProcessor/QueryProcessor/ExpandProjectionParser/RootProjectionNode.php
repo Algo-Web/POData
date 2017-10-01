@@ -18,6 +18,8 @@ use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
  */
 class RootProjectionNode extends ExpandedProjectionNode
 {
+    const MAX_EXPAND_TREE_DEPTH = 20;
+
     /**
      * Flag indicates whether expansions were specified in the query or not.
      *
@@ -168,5 +170,81 @@ class RootProjectionNode extends ExpandedProjectionNode
     public function hasPagedExpandedResult()
     {
         return $this->hasPagedExpandedResult;
+    }
+
+    /**
+     * Get list of expanded properties to pass to specific query provider for eager loading
+     *
+     * @return string[]
+     */
+    public function getEagerLoadList()
+    {
+        if (!$this->isExpansionSpecified()) {
+            return [];
+        }
+        if (0 === count($this->getChildNodes())) {
+            return [];
+        }
+        // need to use a stack to track chain of parent nodes back to root
+        // each entry has three elements - zeroth being node itself, first being property name, second is
+        // index in parent's children - when that overruns parent's childNodes array, we can pop the parent
+        // node off the stack and move on to grandparent's next child.  When we're finished with a node, then and
+        // only then generate its relation chain and stash it.  When we're done (stack empty), dedupe the chain stash
+        // and return it.
+
+        // set up tracking stack and scratchpad
+        $trackStack = [];
+        $trackStack[] = ['node' => $this, 'name' => null, 'index' => 0];
+        $scratchpad = [];
+
+        // now start the dance
+        while (0 < count($trackStack)) {
+            $stackDex = count($trackStack) - 1;
+            assert(
+                self::MAX_EXPAND_TREE_DEPTH > $stackDex,
+                'Expansion stack too deep - should be less than '. self::MAX_EXPAND_TREE_DEPTH . 'elements'
+            );
+            $topNode = $trackStack[$stackDex];
+            $nodes = $topNode['node']->getChildNodes();
+            // have we finished processing current level?
+            // this treats a leaf node as simply another exhausted parent node with all of its zero children having
+            // been processed
+            $topDex = $topNode['index'];
+            if ($topDex >= count($nodes)) {
+                $eager = '';
+                foreach ($trackStack as $stack) {
+                    $eager .= $stack['name'] . '/';
+                }
+                $eager = trim($eager, '/');
+                if (1 < strlen($eager)) {
+                    $scratchpad[] = $eager;
+                }
+                array_pop($trackStack);
+                assert(
+                    count($trackStack) === $stackDex,
+                    'Exhausted node must shrink tracking stack by exactly one element'
+                );
+                continue;
+            }
+
+            // dig up key
+            $key = array_keys($nodes)[$topDex];
+            // prep payload for this child
+            $payload = ['node' => $nodes[$key], 'name' => $key, 'index' => 0];
+            array_push($trackStack, $payload);
+            // advance index pointer on parent
+            $trackStack[$stackDex]['index']++;
+            // $stackDex already decrements stack count by 1, so we have to bump it up by two to net out to a +1
+            assert(
+                count($trackStack) === $stackDex + 2,
+                'Non-exhausted node must expand tracking stack by exactly one element'
+            );
+        }
+
+        // dedupe scratchpad
+        $scratchpad = array_unique($scratchpad);
+        // deliberately shuffle scratchpad to falsify any ordering assumptions downstream
+        shuffle($scratchpad);
+        return $scratchpad;
     }
 }
