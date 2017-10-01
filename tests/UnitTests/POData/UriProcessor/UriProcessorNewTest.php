@@ -282,6 +282,7 @@ class UriProcessorNewTest extends TestCase
 
         $projNode = m::mock(RootProjectionNode::class);
         $projNode->shouldReceive('isExpansionSpecified')->andReturn(true);
+        $projNode->shouldReceive('getEagerLoadList')->andReturn([])->atLeast(1);
 
         $request = m::mock(RequestDescription::class)->makePartial();
         $request->shouldReceive('getRequestUrl')->andReturn($url1);
@@ -559,6 +560,7 @@ class UriProcessorNewTest extends TestCase
 
         $request = m::mock(RequestDescription::class);
         $request->shouldReceive('getSegments')->andReturn([$segment]);
+        $request->shouldReceive('getRootProjectionNode')->andReturn(null)->once();
 
         $processor = m::mock(UriProcessorDummy::class)->makePartial();
         $processor->shouldReceive('getRequest')->andReturn($request);

@@ -152,13 +152,17 @@ class ProcessTest extends TestCase
 
         $metaProv = m::mock(IMetadataProvider::class);
 
+        $request = m::mock(RequestDescription::class);
+        $request->shouldReceive('getSegments')->andReturn([$segment]);
+        $request->shouldReceive('getRootProjectionNode')->andReturn(null);
+
         $service = m::mock(IService::class);
         $service->shouldReceive('getOperationContext')->andReturn($context);
         $service->shouldReceive('getMetadataProvider')->andReturn($metaProv);
 
         $remix = m::mock(UriProcessorNew::class)->makePartial();
         $remix->shouldReceive('getService')->andReturn($service);
-        $remix->shouldReceive('getRequest->getSegments')->andReturn([$segment]);
+        $remix->shouldReceive('getRequest')->andReturn($request);
 
         $expected = 'assert(): Invalid property kind type for resource retrieval failed';
         $actual = null;
