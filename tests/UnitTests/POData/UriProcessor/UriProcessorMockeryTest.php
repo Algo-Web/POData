@@ -2280,6 +2280,7 @@ class UriProcessorMockeryTest extends TestCase
         $request = m::mock(RequestDescription::class);
         $request->shouldReceive('getSegments')->andReturn([$descript]);
         $request->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::GET());
+        $request->shouldReceive('getRootProjectionNode')->andReturn(null)->atLeast(1);
         $opCon->shouldReceive('incomingRequest')->andReturn($request);
 
         $expander = m::mock(RequestExpander::class);
@@ -2295,7 +2296,7 @@ class UriProcessorMockeryTest extends TestCase
         $foo->shouldReceive('executePatch')->andReturnNull()->never();
         $foo->shouldReceive('executeDelete')->andReturnNull()->never();
         $foo->shouldReceive('execute')->passthru();
-        $foo->shouldReceive('getRequest')->andReturn($request)->once();
+        $foo->shouldReceive('getRequest')->andReturn($request)->atLeast(1);
         $foo->shouldReceive('getExpander')->andReturn($expander)->once();
 
         $foo->execute();

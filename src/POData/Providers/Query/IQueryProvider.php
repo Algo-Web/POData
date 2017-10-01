@@ -65,7 +65,7 @@ interface IQueryProvider
      *
      * @param ResourceSet   $resourceSet   The entity set containing the entity to fetch
      * @param KeyDescriptor $keyDescriptor The key identifying the entity to fetch
-     * @param string[]|null $eagerLoad   array of relations to eager load
+     * @param string[]|null $eagerLoad     array of relations to eager load
      *
      * @return object|null Returns entity instance if found, else null
      */

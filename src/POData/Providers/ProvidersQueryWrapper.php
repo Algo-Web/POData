@@ -104,6 +104,7 @@ class ProvidersQueryWrapper
      * @param int|null                 $top         number of records which need to be retrieved
      * @param int|null                 $skip        number of records which need to be skipped
      * @param SkipTokenInfo|null       $skipToken   value indicating what records to skip
+     * @param string[]|null            $eagerLoad   array of relations to eager load
      *
      * @return QueryResult
      */
@@ -114,7 +115,8 @@ class ProvidersQueryWrapper
         InternalOrderByInfo $orderBy = null,
         $top = null,
         $skip = null,
-        SkipTokenInfo $skipToken = null
+        SkipTokenInfo $skipToken = null,
+        array $eagerLoad = null
     ) {
         $queryResult = $this->getQueryProvider()->getResourceSet(
             $queryType,
@@ -123,7 +125,8 @@ class ProvidersQueryWrapper
             $orderBy,
             $top,
             $skip,
-            $skipToken
+            $skipToken,
+            $eagerLoad
         );
 
         $this->validateQueryResult($queryResult, $queryType, 'IQueryProvider::getResourceSet');
@@ -396,12 +399,17 @@ class ProvidersQueryWrapper
      *
      * @param ResourceSet   $resourceSet   The entity set containing the entity to fetch
      * @param KeyDescriptor $keyDescriptor The key identifying the entity to fetch
+     * @param string[]|null $eagerLoad     array of relations to eager load
      *
      * @return object|null Returns entity instance if found, else null
      */
-    public function getResourceFromResourceSet(ResourceSet $resourceSet, KeyDescriptor $keyDescriptor)
-    {
-        $entityInstance = $this->getQueryProvider()->getResourceFromResourceSet($resourceSet, $keyDescriptor);
+    public function getResourceFromResourceSet(
+        ResourceSet $resourceSet,
+        KeyDescriptor $keyDescriptor,
+        array $eagerLoad = null
+    ) {
+        $entityInstance = $this->getQueryProvider()
+            ->getResourceFromResourceSet($resourceSet, $keyDescriptor, $eagerLoad);
         $this->validateEntityInstance(
             $entityInstance,
             $resourceSet,
