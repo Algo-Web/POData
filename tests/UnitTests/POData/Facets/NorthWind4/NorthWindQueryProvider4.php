@@ -55,14 +55,14 @@ class NorthWindQueryProvider4 implements IQueryProvider
      * IE: http://host/EntitySet
      *  http://host/EntitySet?$skip=10&$top=5&filter=Prop gt Value.
      *
-     * @param QueryType                $queryType   indicates if this is a query for a count, entities, or entities with a count
+     * @param QueryType                $queryType   Is this is a query for a count, entities, or entities-with-count
      * @param ResourceSet              $resourceSet The entity set containing the entities to fetch
-     * @param FilterInfo               $filterInfo  represents the $filter parameter of the OData query.  NULL if no $filter specified
+     * @param FilterInfo|null          $filterInfo  The $filter parameter of the OData query.  NULL if none specified
      * @param null|InternalOrderByInfo $orderBy     sorted order if we want to get the data in some specific order
-     * @param int                      $top         number of records which need to be retrieved
-     * @param int                      $skip        number of records which need to be skipped
+     * @param int|null                 $top         number of records which need to be retrieved
+     * @param int|null                 $skip        number of records which need to be skipped
      * @param SkipTokenInfo|null       $skipToken   value indicating what records to skip
-     * @param null|mixed               $filter
+     * @param string[]|null            $eagerLoad   array of relations to eager load
      *
      * @return QueryResult
      */
@@ -73,7 +73,8 @@ class NorthWindQueryProvider4 implements IQueryProvider
         $orderBy = null,
         $top = null,
         $skip = null,
-        $skipToken = null
+        $skipToken = null,
+        array $eagerLoad = null
     ) {
         // TODO: Implement getResourceSet() method.
     }
@@ -85,12 +86,14 @@ class NorthWindQueryProvider4 implements IQueryProvider
      *
      * @param ResourceSet   $resourceSet   The entity set containing the entity to fetch
      * @param KeyDescriptor $keyDescriptor The key identifying the entity to fetch
+     * @param string[]|null $eagerLoad     array of relations to eager load
      *
-     * @return object|null Returns entity instance if found else null
+     * @return object|null Returns entity instance if found, else null
      */
     public function getResourceFromResourceSet(
         ResourceSet $resourceSet,
-        KeyDescriptor $keyDescriptor
+        KeyDescriptor $keyDescriptor,
+        array $eagerLoad = null
     ) {
         // TODO: Implement getResourceFromResourceSet() method.
     }

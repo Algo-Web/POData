@@ -43,6 +43,7 @@ interface IQueryProvider
      * @param int|null                 $top         number of records which need to be retrieved
      * @param int|null                 $skip        number of records which need to be skipped
      * @param SkipTokenInfo|null       $skipToken   value indicating what records to skip
+     * @param string[]|null            $eagerLoad   array of relations to eager load
      *
      * @return QueryResult
      */
@@ -53,7 +54,8 @@ interface IQueryProvider
         $orderBy = null,
         $top = null,
         $skip = null,
-        $skipToken = null
+        $skipToken = null,
+        array $eagerLoad = null
     );
 
     /**
@@ -63,12 +65,14 @@ interface IQueryProvider
      *
      * @param ResourceSet   $resourceSet   The entity set containing the entity to fetch
      * @param KeyDescriptor $keyDescriptor The key identifying the entity to fetch
+     * @param string[]|null $eagerLoad   array of relations to eager load
      *
      * @return object|null Returns entity instance if found, else null
      */
     public function getResourceFromResourceSet(
         ResourceSet $resourceSet,
-        KeyDescriptor $keyDescriptor
+        KeyDescriptor $keyDescriptor,
+        array $eagerLoad = null
     );
 
     /**
