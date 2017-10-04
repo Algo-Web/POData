@@ -1,5 +1,6 @@
 Unreleased
 ----------
+   * Handle forward slashes in underlying data.  (see [#171] (https://github.com/Algo-Web/POData/pull/171))
    * Extend KeyDescriptor to return key values as ODataProperty array.  (see [#165] (https://github.com/Algo-Web/POData/pull/165))
 
 0.2.0 (2017-03-02)

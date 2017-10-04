@@ -77,7 +77,7 @@ class EdmString implements IType
      */
     public function convert($stringValue)
     {
-        $stringValue = str_replace('%C3%82%C2%BB', '/', $stringValue);
+        $value = str_replace('%C3%82%C2%BB', '/', $stringValue);
         //Consider the odata url option
         //$filter=ShipName eq 'Antonio%20Moreno%20Taquer%C3%ADa'
         //WebOperationContext will do urldecode, so the clause become
@@ -87,12 +87,12 @@ class EdmString implements IType
         //this function is used to remove the pre-post quotes from Token::Text
         //i.e. 'Antonio Moreno Taquería'
         //to Antonio Moreno Taquería
-        $len = strlen($stringValue);
+        $len = strlen($value);
         if (2 > $len) {
-            return $stringValue;
+            return $value;
         }
 
-        return substr($stringValue, 1, $len - 2);
+        return substr($value, 1, $len - 2);
     }
 
     /**
@@ -106,8 +106,8 @@ class EdmString implements IType
      */
     public function convertToOData($value)
     {
-        $value = str_replace('/', '»', $value);
-        return '\'' . str_replace('%27', "''", urlencode(utf8_encode($value))) . '\'';
+        $rawValue = str_replace('/', '»', $value);
+        return '\'' . str_replace('%27', "''", urlencode(utf8_encode($rawValue))) . '\'';
     }
 
     /**
