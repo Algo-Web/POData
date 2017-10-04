@@ -19,7 +19,8 @@
   "repositories": [
     {
       "type": "vcs",
-      "url": "https://github.com/Algo-Web/serializer.git"
+      "url": "https://github.com/Algo-Web/serializer.git",
+      "no-api": true
     }
   ],
 
