@@ -103,6 +103,7 @@ class SegmentParser
         $identifier = substr($segment, 0, $predicateStart);
         ++$predicateStart;
         $keyPredicate = substr($segment, $predicateStart, $segmentLength - $predicateStart - 1);
+        $keyPredicate = str_replace('%C3%82%C2%BB', '/', $keyPredicate);
     }
 
     /**

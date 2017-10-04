@@ -77,6 +77,7 @@ class EdmString implements IType
      */
     public function convert($stringValue)
     {
+        $stringValue = str_replace('%C3%82%C2%BB', '/', $stringValue);
         //Consider the odata url option
         //$filter=ShipName eq 'Antonio%20Moreno%20Taquer%C3%ADa'
         //WebOperationContext will do urldecode, so the clause become
@@ -105,6 +106,7 @@ class EdmString implements IType
      */
     public function convertToOData($value)
     {
+        $value = str_replace('/', '»', $value);
         return '\'' . str_replace('%27', "''", urlencode(utf8_encode($value))) . '\'';
     }
 
