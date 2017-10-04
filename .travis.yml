@@ -8,6 +8,7 @@ php:
 
 
 before_script:
+  - ssh-keygen -t rsa -b 4096 -C "travis@example.com" -f ~/.ssh/id_rsa -P ""
   - composer global require hirak/prestissimo
   - composer install
 #  - wget http://getcomposer.org/composer.phar
