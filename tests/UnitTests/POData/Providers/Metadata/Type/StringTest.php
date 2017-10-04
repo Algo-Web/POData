@@ -159,4 +159,15 @@ class StringTest extends TestCase
      *  Begin Type Specific Tests
      *
      */
+
+    public function testRoundTripWithSlashes()
+    {
+        $type = $this->getAsIType();
+        $value = 'OMG/LOL/WTF/BBQ';
+
+        $convert = $type->convertToOData($value);
+        $final = urldecode($type->convert($convert));
+        // assert conversion round-trips
+        $this->assertEquals($value, urldecode($final));
+    }
 }
