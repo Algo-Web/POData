@@ -8,9 +8,9 @@ php:
 
 
 before_script:
+  - composer config --global github-protocols https
   - composer global require hirak/prestissimo
   - composer install
-  - composer config --global github-protocols https
 #  - wget http://getcomposer.org/composer.phar
 #  - php composer.phar require satooshi/php-coveralls:dev-master --dev --no-progress --prefer-source
 
