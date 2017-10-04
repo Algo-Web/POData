@@ -8,7 +8,6 @@ php:
 
 
 before_script:
-  - composer config --global github-protocols https
   - composer global require hirak/prestissimo
   - composer install
 #  - wget http://getcomposer.org/composer.phar
