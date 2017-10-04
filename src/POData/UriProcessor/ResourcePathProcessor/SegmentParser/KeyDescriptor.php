@@ -120,9 +120,9 @@ class KeyDescriptor
     }
 
     /**
-     * @param string $keyString
-     * @param bool $isKey
-     * @param KeyDescriptor|null $keyDescriptor
+     * @param  string             $keyString
+     * @param  bool               $isKey
+     * @param  KeyDescriptor|null $keyDescriptor
      * @return bool
      */
     protected static function parseAndVerifyRawKeyPredicate($keyString, $isKey, KeyDescriptor &$keyDescriptor = null)
@@ -545,12 +545,12 @@ class KeyDescriptor
     }
 
     /**
-     * Generate relative edit url for this key descriptor and supplied resource set
+     * Generate relative edit url for this key descriptor and supplied resource set.
      *
      * @param ResourceSet $resourceSet
      *
-     * @return string
      * @throws \InvalidArgumentException
+     * @return string
      */
     public function generateRelativeUri(ResourceSet $resourceSet)
     {
@@ -585,7 +585,7 @@ class KeyDescriptor
     }
 
     /**
-     * Convert validated named values into an array of ODataProperties
+     * Convert validated named values into an array of ODataProperties.
      *
      * return array[]
      */
