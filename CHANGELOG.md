@@ -1,5 +1,8 @@
 Unreleased
 ----------
+
+0.3.0 (2017-11-09)
+------------------
    * Handle forward slashes in underlying data.  (see [#171] (https://github.com/Algo-Web/POData/pull/171))
    * Add capability to eager-load relations (see [#168] (https://github.com/Algo-Web/POData/pull/168))
    * Robustly handle null payloads (see [#167] (https://github.com/Algo-Web/POData/pull/167))
