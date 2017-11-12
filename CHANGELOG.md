@@ -1,6 +1,10 @@
 Unreleased
 ----------
 
+0.3.1 (2017-11-12)
+------------------
+   * Modify composer.json to render package installable as a dependency under minimum-stability of stable.  (see [#175] (https://github.com/Algo-Web/POData/pull/175))
+
 0.3.0 (2017-11-09)
 ------------------
    * Handle forward slashes in underlying data.  (see [#171] (https://github.com/Algo-Web/POData/pull/171))
