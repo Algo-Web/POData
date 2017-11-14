@@ -9,6 +9,9 @@ use Carbon\Carbon;
  */
 class DateTime implements IType
 {
+    protected static $comboRegex =
+        "/^datetime\'(\d{4})-(\d{2})-(\d{2})((\s|T)([0-1][0-9]|2[0-4]):([0-5][0-9])(:([0-5][0-9])([Z]|[\+|-]\d{2}:\d{2})?)?)?\'$/";
+
     /**
      * Gets the type code
      * Note: implementation of IType::getTypeCode.
@@ -48,7 +51,7 @@ class DateTime implements IType
         //1. The datetime value present in the $filter option should have 'datetime' prefix.
         //2. Month and day should be two digit
         if (!preg_match(
-            "/^datetime\'(\d{4})-(\d{2})-(\d{2})((\s|T)([0-1][0-9]|2[0-4]):([0-5][0-9])(:([0-5][0-9])([Z])?)?)?\'$/",
+            self::$comboRegex,
             strval($value),
             $matches
         )) {
@@ -57,6 +60,11 @@ class DateTime implements IType
 
         //strip off prefix, and quotes from both ends
         $value = trim($value, 'datetime\'');
+        $valLen = strlen($value) - 6;
+        $offsetChek = $value[$valLen];
+        if (18 < $valLen && ('-' == $offsetChek || '+' == $offsetChek)) {
+            $value = substr($value, 0, $valLen);
+        }
 
         //Validate the date using PHP Carbon class
         try {

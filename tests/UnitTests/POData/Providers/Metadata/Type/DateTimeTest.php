@@ -96,6 +96,28 @@ class DateTimeTest extends TestCase
         $this->assertEquals($expected, $out);
     }
 
+    public function testValidateSuccessWithPositiveOffset()
+    {
+        $date = 'datetime\'2017-10-22T00:00:00+10:00\'';
+        $type = $this->getAsIType();
+
+        $expected = '\'2017-10-22T00:00:00\'';
+        $out = '';
+        $this->assertTrue($type->validate($date, $out));
+        $this->assertEquals($expected, $out);
+    }
+
+    public function testValidateSuccessWithNegativeOffset()
+    {
+        $date = 'datetime\'2017-10-22T00:00:00-10:00\'';
+        $type = $this->getAsIType();
+
+        $expected = '\'2017-10-22T00:00:00\'';
+        $out = '';
+        $this->assertTrue($type->validate($date, $out));
+        $this->assertEquals($expected, $out);
+    }
+
     public function testConvert()
     {
         $type = $this->getAsIType();
