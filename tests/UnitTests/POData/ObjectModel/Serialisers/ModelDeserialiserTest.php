@@ -3,6 +3,7 @@
 namespace UnitTests\POData\ObjectModel\Serialisers;
 
 use Carbon\Carbon;
+use Mockery as m;
 use POData\ObjectModel\ModelDeserialiser;
 use POData\ObjectModel\ODataCategory;
 use POData\ObjectModel\ODataEntry;
@@ -11,9 +12,8 @@ use POData\ObjectModel\ODataProperty;
 use POData\ObjectModel\ODataPropertyContent;
 use POData\ObjectModel\ODataTitle;
 use POData\OperationContext\ServiceHost;
-use POData\Providers\Metadata\ResourceEntityType;
 use POData\OperationContext\Web\Illuminate\IlluminateOperationContext as OperationContextAdapter;
-use Mockery as m;
+use POData\Providers\Metadata\ResourceEntityType;
 use POData\Providers\Query\IQueryProvider;
 use UnitTests\POData\Facets\NorthWind1\Address4;
 use UnitTests\POData\Facets\NorthWind1\Customer2;

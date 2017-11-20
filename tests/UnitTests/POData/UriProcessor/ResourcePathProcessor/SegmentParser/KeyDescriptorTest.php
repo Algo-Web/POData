@@ -2,6 +2,7 @@
 
 namespace UnitTests\POData\UriProcessor\ResourcePathProcessor\SegmentParser;
 
+use Mockery as m;
 use POData\Common\InvalidOperationException;
 use POData\Common\ODataException;
 use POData\ObjectModel\ODataProperty;
@@ -9,7 +10,6 @@ use POData\Providers\Metadata\Type\Int32;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 use UnitTests\POData\TestCase;
-use Mockery as m;
 
 class KeyDescriptorTest extends TestCase
 {

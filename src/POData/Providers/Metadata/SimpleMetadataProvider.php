@@ -552,14 +552,14 @@ class SimpleMetadataProvider implements IMetadataProvider
     /**
      * To add a resource reference property.
      *
-     * @param ResourceEntityType        $resourceType       The resource type to add the resource
-     *                                                      reference property to
-     * @param string                    $name               The name of the property to add
-     * @param ResourceSet               $targetResourceSet  The resource set the resource reference
-     *                                                      property points to
-     * @param mixed                     $flip
-     * @param mixed                     $many
-     * @param ResourceEntityType|null   $concreteType       Underlying concrete resource reference type, if set
+     * @param ResourceEntityType      $resourceType      The resource type to add the resource
+     *                                                   reference property to
+     * @param string                  $name              The name of the property to add
+     * @param ResourceSet             $targetResourceSet The resource set the resource reference
+     *                                                   property points to
+     * @param mixed                   $flip
+     * @param mixed                   $many
+     * @param ResourceEntityType|null $concreteType      Underlying concrete resource reference type, if set
      */
     public function addResourceReferenceProperty(
         ResourceEntityType $resourceType,
@@ -811,12 +811,13 @@ class SimpleMetadataProvider implements IMetadataProvider
     /**
      * To add a resource set reference property.
      *
-     * @param ResourceEntityType        $resourceType       The resource type to add the
-     *                                                      resource reference set property to
-     * @param string                    $name               The name of the property to add
-     * @param ResourceSet               $targetResourceSet  The resource set the resource
-     *                                                      reference set property points to
-     * @param ResourceEntityType|null   $concreteType       Underlying concrete resource type, if set
+     * @param ResourceEntityType      $resourceType      The resource type to add the
+     *                                                   resource reference set property to
+     * @param string                  $name              The name of the property to add
+     * @param ResourceSet             $targetResourceSet The resource set the resource
+     *                                                   reference set property points to
+     * @param ResourceEntityType|null $concreteType      Underlying concrete resource type, if set
+     * @param mixed                   $single
      */
     public function addResourceSetReferenceProperty(
         ResourceEntityType $resourceType,

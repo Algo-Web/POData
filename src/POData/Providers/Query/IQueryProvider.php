@@ -207,8 +207,8 @@ interface IQueryProvider
 
     /**
      * Create multiple new resources in a resource set.
-     * @param ResourceSet   $sourceResourceSet  The entity set containing the entity to fetch
-     * @param object[]      $data               The new data for the entity instance
+     * @param ResourceSet $sourceResourceSet The entity set containing the entity to fetch
+     * @param object[]    $data              The new data for the entity instance
      *
      * @return object[]|null returns the newly created model if successful, or null if model creation failed
      */
@@ -220,11 +220,11 @@ interface IQueryProvider
     /**
      * Updates a group of resources in a resource set.
      *
-     * @param ResourceSet       $sourceResourceSet    The entity set containing the source entity
-     * @param object            $sourceEntityInstance The source entity instance
-     * @param KeyDescriptor[]   $keyDescriptor        The key identifying the entity to fetch
-     * @param object[]          $data                 The new data for the entity instances
-     * @param bool              $shouldUpdate         Should undefined values be updated or reset to default
+     * @param ResourceSet     $sourceResourceSet    The entity set containing the source entity
+     * @param object          $sourceEntityInstance The source entity instance
+     * @param KeyDescriptor[] $keyDescriptor        The key identifying the entity to fetch
+     * @param object[]        $data                 The new data for the entity instances
+     * @param bool            $shouldUpdate         Should undefined values be updated or reset to default
      *
      * @return object[]|null the new resource value if it is assignable, or throw exception for null
      */
@@ -237,12 +237,12 @@ interface IQueryProvider
     );
 
     /**
-     * Attaches child model to parent model
+     * Attaches child model to parent model.
      *
      * @param ResourceSet $sourceResourceSet
-     * @param object $sourceEntityInstance
+     * @param object      $sourceEntityInstance
      * @param ResourceSet $targetResourceSet
-     * @param object $targetEntityInstance
+     * @param object      $targetEntityInstance
      * @param $navPropName
      *
      * @return bool
@@ -256,12 +256,12 @@ interface IQueryProvider
     );
 
     /**
-     * Removes child model from parent model
+     * Removes child model from parent model.
      *
      * @param ResourceSet $sourceResourceSet
-     * @param object $sourceEntityInstance
+     * @param object      $sourceEntityInstance
      * @param ResourceSet $targetResourceSet
-     * @param object $targetEntityInstance
+     * @param object      $targetEntityInstance
      * @param $navPropName
      *
      * @return bool
@@ -275,21 +275,21 @@ interface IQueryProvider
     );
 
     /**
-     * Start database transaction
+     * Start database transaction.
      *
      * @return void
      */
     public function startTransaction();
 
     /**
-     * Commit database transaction
+     * Commit database transaction.
      *
      * @return void
      */
     public function commitTransaction();
 
     /**
-     * Abort database transaction
+     * Abort database transaction.
      *
      * @return void
      */

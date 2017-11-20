@@ -2,9 +2,6 @@
 
 namespace UnitTests\POData\ObjectModel\Serialisers;
 
-use POData\Providers\ProvidersWrapper;
-use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
-use UnitTests\POData\TestCase;
 use Carbon\Carbon;
 use Mockery as m;
 use POData\ObjectModel\CynicDeserialiser;
@@ -30,17 +27,20 @@ use POData\Providers\Metadata\Type\DateTime;
 use POData\Providers\Metadata\Type\Int32;
 use POData\Providers\Metadata\Type\IType;
 use POData\Providers\Metadata\Type\StringType;
+use POData\Providers\ProvidersWrapper;
 use POData\Providers\Query\IQueryProvider;
 use POData\Providers\Query\QueryResult;
 use POData\Providers\Query\QueryType;
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandedProjectionNode;
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\RootProjectionNode;
+use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 use UnitTests\POData\Facets\NorthWind1\Customer2;
 use UnitTests\POData\Facets\NorthWind1\Employee2;
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 use UnitTests\POData\Facets\NorthWind1\Order2;
 use UnitTests\POData\Facets\NorthWind1\OrderDetails2;
 use UnitTests\POData\ObjectModel\reusableEntityClass1;
+use UnitTests\POData\TestCase;
 
 class ObjectDeserialiserFeedTest extends SerialiserTestBase
 {

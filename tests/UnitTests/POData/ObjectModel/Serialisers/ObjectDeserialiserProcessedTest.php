@@ -2,6 +2,7 @@
 
 namespace UnitTests\POData\ObjectModel\Serialisers;
 
+use Mockery as m;
 use POData\ObjectModel\ODataEntry;
 use POData\ObjectModel\ODataFeed;
 use POData\ObjectModel\ODataLink;
@@ -9,7 +10,6 @@ use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\ProvidersWrapper;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 use UnitTests\POData\TestCase;
-use Mockery as m;
 
 class ObjectDeserialiserProcessedTest extends TestCase
 {
