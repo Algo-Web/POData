@@ -213,7 +213,28 @@ class DateTime implements IType
      */
     public static function dateTimeCmp($dateTime1, $dateTime2)
     {
-        return strtotime($dateTime1) - strtotime($dateTime2);
+        $firstStamp = null;
+        $secondStamp = null;
+        if (is_object($dateTime1) && $dateTime1 instanceof \DateTime) {
+            $firstStamp = $dateTime1->getTimestamp();
+        } elseif (is_string($dateTime1)) {
+            $firstStamp = strtotime($dateTime1);
+        } else {
+            throw new \Exception('Invalid input - datetime1 must be DateTime or string');
+        }
+
+        if (is_object($dateTime2) && $dateTime2 instanceof \DateTime) {
+            $secondStamp = $dateTime2->getTimestamp();
+        } elseif (is_string($dateTime2)) {
+            $secondStamp = strtotime($dateTime2);
+        } else {
+            throw new \Exception('Invalid input - datetime2 must be DateTime or string');
+        }
+
+        if ($firstStamp == $secondStamp) {
+            return 0;
+        }
+        return $firstStamp < $secondStamp ? -1 : 1;
     }
 
     /**

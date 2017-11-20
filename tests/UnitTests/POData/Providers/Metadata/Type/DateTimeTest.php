@@ -196,4 +196,66 @@ class DateTimeTest extends TestCase
         $result = DateTime::second($date);
         $this->assertEquals('51', $result);
     }
+
+    public function testCompareTwoDateTimeObjects()
+    {
+        $firstDate = new \DateTime();
+        $lastDate = $firstDate;
+
+        $expected = 0;
+        $actual = DateTime::dateTimeCmp($firstDate, $lastDate);
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testCompareDateTimeToString()
+    {
+        $firstDate = '2000-01-01 00:00:00';
+        $lastDate = new \DateTime();
+
+        $expected = -1;
+        $actual = DateTime::dateTimeCmp($firstDate, $lastDate);
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testCompareStringToDateTime()
+    {
+        $firstDate = new \DateTime();
+        $lastDate = '2000-01-01 00:00:00';
+
+        $expected = 1;
+        $actual = DateTime::dateTimeCmp($firstDate, $lastDate);
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testCompareStringToInvalidObject()
+    {
+        $firstDate = '2000-01-01 00:00:00';
+        $lastDate = null;
+
+        $expected = 'Invalid input - datetime2 must be DateTime or string';
+        $actual = null;
+
+        try {
+            DateTime::dateTimeCmp($firstDate, $lastDate);
+        } catch (\Exception $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testCompareInvalidObjectToString()
+    {
+        $firstDate = null;
+        $lastDate = '2000-01-01 00:00:00';
+
+        $expected = 'Invalid input - datetime1 must be DateTime or string';
+        $actual = null;
+
+        try {
+            DateTime::dateTimeCmp($firstDate, $lastDate);
+        } catch (\Exception $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
+    }
 }
