@@ -1,6 +1,11 @@
 Unreleased
 ----------
 
+0.3.2 (2017-11-21)
+------------------
+   * Fix goof that stopped empty result set serialisation in some cases.  (see [#178] (https://github.com/Algo-Web/POData/pull/178))
+   * Make DateTime validation insensitive to attached timezones.  (see [#176] (https://github.com/Algo-Web/POData/pull/176))
+
 0.3.1 (2017-11-12)
 ------------------
    * Modify composer.json to render package installable as a dependency under minimum-stability of stable.  (see [#175] (https://github.com/Algo-Web/POData/pull/175))
