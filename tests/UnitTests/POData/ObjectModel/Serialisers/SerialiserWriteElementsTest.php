@@ -434,6 +434,76 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $this->assertEquals($objectResult, $ironicResult);
     }
 
+    public function testWriteTopLevelElementsWithEmptyArrayPayloadAndHasMore()
+    {
+        $known = Carbon::create(2017, 1, 1, 0, 0, 0, 'UTC');
+        Carbon::setTestNow($known);
+
+        $request = $this->setUpRequest();
+        $request->shouldReceive('prepareRequestUri')->andReturn('/odata.svc/Customers');
+        $request->shouldReceive('fullUrl')->andReturn('http://localhost/odata.svc/Customers');
+
+        list($host, $meta, $query) = $this->setUpDataServiceDeps($request);
+
+        // default data service
+        list($object, $ironic) = $this->setUpSerialisers($query, $meta, $host, 10);
+
+        $collection = new QueryResult();
+        $collection->results = [];
+        $collection->hasMore = true;
+
+        $expandNode = m::mock(ExpandedProjectionNode::class);
+        $expandNode->shouldReceive('canSelectAllProperties')->andReturn(true);
+        $expandNode->shouldReceive('isExpansionSpecified')->andReturn(false);
+        $expandNode->shouldReceive('findNode')->andReturn(null);
+
+        $node = m::mock(RootProjectionNode::class);
+        $node->shouldReceive('getPropertyName')->andReturn('Orders');
+        $node->shouldReceive('isExpansionSpecified')->andReturn(true, true, true, false);
+        $node->shouldReceive('canSelectAllProperties')->andReturn(true);
+        $node->shouldReceive('findNode')->andReturn($expandNode);
+
+        $ironic->getRequest()->setRootProjectionNode($node);
+
+        $result = $ironic->writeTopLevelElements($collection);
+        $this->assertEquals(0, count($result->entries));
+    }
+
+    public function testWriteTopLevelElementsWithEmptyCollectionPayloadAndHasMore()
+    {
+        $known = Carbon::create(2017, 1, 1, 0, 0, 0, 'UTC');
+        Carbon::setTestNow($known);
+
+        $request = $this->setUpRequest();
+        $request->shouldReceive('prepareRequestUri')->andReturn('/odata.svc/Customers');
+        $request->shouldReceive('fullUrl')->andReturn('http://localhost/odata.svc/Customers');
+
+        list($host, $meta, $query) = $this->setUpDataServiceDeps($request);
+
+        // default data service
+        list($object, $ironic) = $this->setUpSerialisers($query, $meta, $host, 10);
+
+        $collection = new QueryResult();
+        $collection->results = collect([]);
+        $collection->hasMore = true;
+
+        $expandNode = m::mock(ExpandedProjectionNode::class);
+        $expandNode->shouldReceive('canSelectAllProperties')->andReturn(true);
+        $expandNode->shouldReceive('isExpansionSpecified')->andReturn(false);
+        $expandNode->shouldReceive('findNode')->andReturn(null);
+
+        $node = m::mock(RootProjectionNode::class);
+        $node->shouldReceive('getPropertyName')->andReturn('Orders');
+        $node->shouldReceive('isExpansionSpecified')->andReturn(true, true, true, false);
+        $node->shouldReceive('canSelectAllProperties')->andReturn(true);
+        $node->shouldReceive('findNode')->andReturn($expandNode);
+
+        $ironic->getRequest()->setRootProjectionNode($node);
+
+        $result = $ironic->writeTopLevelElements($collection);
+        $this->assertEquals(0, count($result->entries));
+    }
+
     public function testWriteNullTopLevelElements()
     {
         $request = $this->setUpRequest();
