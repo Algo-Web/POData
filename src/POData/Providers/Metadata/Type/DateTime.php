@@ -213,7 +213,13 @@ class DateTime implements IType
      */
     public static function dateTimeCmp($dateTime1, $dateTime2)
     {
-        return strtotime($dateTime1) - strtotime($dateTime2);
+        $firstStamp = self::dateTimeCmpCheckInput($dateTime1, 'Invalid input - datetime1 must be DateTime or string');
+        $secondStamp = self::dateTimeCmpCheckInput($dateTime2, 'Invalid input - datetime2 must be DateTime or string');
+
+        if ($firstStamp == $secondStamp) {
+            return 0;
+        }
+        return $firstStamp < $secondStamp ? -1 : 1;
     }
 
     /**
@@ -225,5 +231,18 @@ class DateTime implements IType
     public function getName()
     {
         return $this->getFullTypeName();
+    }
+
+    protected static function dateTimeCmpCheckInput($dateTime, $msg)
+    {
+        if (is_object($dateTime) && $dateTime instanceof \DateTime) {
+            $firstStamp = $dateTime->getTimestamp();
+            return $firstStamp;
+        }
+        if (is_string($dateTime)) {
+            $firstStamp = strtotime($dateTime);
+            return $firstStamp;
+        }
+        throw new \Exception($msg);
     }
 }
