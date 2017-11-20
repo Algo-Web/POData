@@ -213,23 +213,8 @@ class DateTime implements IType
      */
     public static function dateTimeCmp($dateTime1, $dateTime2)
     {
-        $firstStamp = null;
-        $secondStamp = null;
-        if (is_object($dateTime1) && $dateTime1 instanceof \DateTime) {
-            $firstStamp = $dateTime1->getTimestamp();
-        } elseif (is_string($dateTime1)) {
-            $firstStamp = strtotime($dateTime1);
-        } else {
-            throw new \Exception('Invalid input - datetime1 must be DateTime or string');
-        }
-
-        if (is_object($dateTime2) && $dateTime2 instanceof \DateTime) {
-            $secondStamp = $dateTime2->getTimestamp();
-        } elseif (is_string($dateTime2)) {
-            $secondStamp = strtotime($dateTime2);
-        } else {
-            throw new \Exception('Invalid input - datetime2 must be DateTime or string');
-        }
+        $firstStamp = self::dateTimeCmpCheckInput($dateTime1, 'Invalid input - datetime1 must be DateTime or string');
+        $secondStamp = self::dateTimeCmpCheckInput($dateTime2, 'Invalid input - datetime2 must be DateTime or string');
 
         if ($firstStamp == $secondStamp) {
             return 0;
@@ -246,5 +231,18 @@ class DateTime implements IType
     public function getName()
     {
         return $this->getFullTypeName();
+    }
+
+    protected static function dateTimeCmpCheckInput($dateTime, $msg)
+    {
+        if (is_object($dateTime) && $dateTime instanceof \DateTime) {
+            $firstStamp = $dateTime->getTimestamp();
+            return $firstStamp;
+        }
+        if (is_string($dateTime)) {
+            $firstStamp = strtotime($dateTime);
+            return $firstStamp;
+        }
+        throw new \Exception($msg);
     }
 }
