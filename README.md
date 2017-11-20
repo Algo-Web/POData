@@ -1,7 +1,12 @@
 
-Master Status: [![Build Status](https://travis-ci.org/Algo-Web/POData.svg?branch=master)](https://travis-ci.org/Algo-Web/POData)
-[![Coverage Status](https://coveralls.io/repos/github/Algo-Web/POData/badge.svg?branch=master)](https://coveralls.io/github/Algo-Web/POData?branch=master)
+[![Build Status](https://travis-ci.org/Algo-Web/POData.svg?branch=master)](https://travis-ci.org/Algo-Web/POData)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Algo-Web/POData/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Algo-Web/POData/?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/Algo-Web/POData/badge.svg?branch=master)](https://coveralls.io/github/Algo-Web/POData?branch=master)
+[![Latest Stable Version](https://poser.pugx.org/algo-web/podata/v/stable)](https://packagist.org/packages/algo-web/podata)
+[![Latest Unstable Version](https://poser.pugx.org/algo-web/podata/v/unstable)](https://packagist.org/packages/algo-web/podata)
+[![Total Downloads](https://poser.pugx.org/algo-web/podata/downloads)](https://packagist.org/packages/algo-web/podata)
+[![Monthly Downloads](https://poser.pugx.org/algo-web/podata/d/monthly)](https://packagist.org/packages/algo-web/podata)
+[![Daily Downloads](https://poser.pugx.org/algo-web/podata/d/daily)](https://packagist.org/packages/algo-web/podata)
 
 POData - OData for the Poor PHP Developer
 ============
