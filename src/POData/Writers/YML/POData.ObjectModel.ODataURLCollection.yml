@@ -1,0 +1,29 @@
+POData\ObjectModel\ODataURLCollection:
+    xml_root_name: feed
+    exclusion_policy: ALL
+    xml_root_namespace: http://schemas.microsoft.com/ado/2007/08/dataservices
+    accessor_order: custom
+    custom_accessor_order: [count , urls, nextPageLink]
+    properties:
+        count:
+            expose: true
+            skip_when_empty: true
+            serialized_name: count
+            xml_element:
+                namespace: http://schemas.microsoft.com/ado/2007/08/dataservices/metadata
+                cdata: false
+            type: integer
+        urls:
+            expose: true
+            xml_list:
+                inline: true
+                namespace: http://schemas.microsoft.com/ado/2007/08/dataservices
+            type: array<POData\ObjectModel\ODataURL>
+        nextPageLink:
+            expose: true
+            skip_when_empty: true
+            serialized_name: link
+            xml_list:
+                inline: true
+                namespace: http://www.w3.org/2005/Atom
+            type: POData\ObjectModel\ODataLink

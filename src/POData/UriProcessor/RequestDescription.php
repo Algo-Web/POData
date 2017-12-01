@@ -298,7 +298,7 @@ class RequestDescription
     private function readData($dataType)
     {
         $string = $this->data;
-        if ($dataType === MimeTypes::MIME_APPLICATION_ATOM) {
+        if (MimeTypes::MIME_APPLICATION_ATOM === $dataType || MimeTypes::MIME_APPLICATION_XML === $dataType) {
             if (is_array($string) && 1 == count($string)) {
                 $string = $string[0];
             }
@@ -311,9 +311,10 @@ class RequestDescription
                 SerializerBuilder::create()
                     ->addMetadataDir($ymlDir)
                     ->build();
-            $this->data = $serialize->deserialize($string, 'POData\ObjectModel\ODataEntry', 'xml');
-            assert($this->data instanceof ODataEntry);
+            $objectType = strpos($this->requestUrl->getUrlAsString(), '$links') !== false ? 'POData\ObjectModel\ODataURL' : 'POData\ObjectModel\ODataEntry';
+            $this->data = $serialize->deserialize($string, $objectType, 'xml');
             $msg = null;
+            assert($this->data instanceof $objectType);
             assert($this->data->isOk($msg), $msg);
         } elseif ($dataType === MimeTypes::MIME_APPLICATION_JSON) {
             $data = !is_array($string) ? json_decode($string, true) : $string;
