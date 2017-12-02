@@ -335,7 +335,7 @@ class UriProcessorNew implements IUriProcessor
                     //dd($this->getRequest()->getSegments()[1]);
                     $masterModel = $this->getRequest()->getSegments()[0]->getResult();
                     $masterResourceSet = $this->getRequest()->getSegments()[0]->getTargetResourceSetWrapper();
-                    $masterNavProperty = $this->getRequest()->getSegments()[0]->getIdentifier();
+                    $masterNavProperty = $this->getRequest()->getLastSegment()->getIdentifier();
                     $slaveModelUri = new \POData\Common\Url($payload->url);
                     $host = $this->service->getHost();
                     $absoluteServiceUri = $host->getAbsoluteServiceUri();
