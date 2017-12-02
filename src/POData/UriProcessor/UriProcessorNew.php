@@ -357,6 +357,7 @@ class UriProcessorNew implements IUriProcessor
                     }else{
                         throw ODataException::createInternalServerError("AdapterInidicatedLinkNotAttached");
                     }
+                    return;
                 }
                 assert($payload instanceof ODataEntry, get_class($payload));
                 assert(empty($payload->id), 'Payload ID must be empty for POST request');
