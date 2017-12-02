@@ -331,6 +331,7 @@ class UriProcessorNew implements IUriProcessor
 
                 $payload = $this->getRequest()->getData();
                 if($payload instanceof ODataURL){
+try{
                     $this->executeGet();
                     //dd($this->getRequest()->getSegments()[1]);
                     $masterModel = $this->getRequest()->getSegments()[0]->getResult();
@@ -357,6 +358,12 @@ class UriProcessorNew implements IUriProcessor
                     }else{
                         throw ODataException::createInternalServerError("AdapterInidicatedLinkNotAttached");
                     }
+}catch(\Exception $e){
+dd($e);
+}
+        foreach ($segments as $segment) {
+            $segment->setResult(null);
+        }
                     return;
                 }
                 assert($payload instanceof ODataEntry, get_class($payload));
