@@ -173,7 +173,7 @@ class RootProjectionNode extends ExpandedProjectionNode
     }
 
     /**
-     * Get list of expanded properties to pass to specific query provider for eager loading
+     * Get list of expanded properties to pass to specific query provider for eager loading.
      *
      * @return string[]
      */

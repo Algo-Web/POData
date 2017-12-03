@@ -184,9 +184,9 @@ class CynicDeserialiser
     }
 
     /**
-     * @param ResourceEntityType $type
-     * @param ODataPropertyContent|object $result
-     * @param string|null $id
+     * @param  ResourceEntityType          $type
+     * @param  ODataPropertyContent|object $result
+     * @param  string|null                 $id
      * @return null|KeyDescriptor
      */
     protected function generateKeyDescriptor(ResourceEntityType $type, $result, $id = null)
@@ -248,7 +248,7 @@ class CynicDeserialiser
     }
 
     /**
-     * @param ODataLink $link
+     * @param ODataLink   $link
      * @param ResourceSet $sourceSet
      * @param $source
      * @param $hasUrl

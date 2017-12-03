@@ -402,8 +402,9 @@ abstract class BaseService implements IRequestHandler, IService
             $targetResourceType = $request->getTargetResourceType();
             assert(null != $targetResourceType, 'Target resource type cannot be null');
 
-            $method = (HTTPRequestMethod::POST() != $method);
-            if (!$request->isSingleResult() && $method) {
+            $methodIsNotPost = (HTTPRequestMethod::POST() != $method);
+            $methodIsNotDelete = (HTTPRequestMethod::DELETE() != $method);
+            if (!$request->isSingleResult() && $methodIsNotPost) {
                 // Code path for collection (feed or links)
                 $entryObjects = $request->getTargetResult();
                 assert($entryObjects instanceof QueryResult, '!$entryObjects instanceof QueryResult');
@@ -433,10 +434,12 @@ abstract class BaseService implements IRequestHandler, IService
                 if ($request->isLinkUri()) {
                     // In the query 'Orders(1245)/$links/Customer', the targeted
                     // Customer might be null
-                    if (null === $result->results) {
+                    if (null === $result->results && $methodIsNotPost && $methodIsNotDelete) {
                         throw ODataException::createResourceNotFoundError($request->getIdentifier());
                     }
-                    $odataModelInstance = $objectModelSerializer->writeUrlElement($result);
+                    if ($methodIsNotPost && $methodIsNotDelete) {
+                        $odataModelInstance = $objectModelSerializer->writeUrlElement($result);
+                    }
                 } elseif (TargetKind::RESOURCE() == $requestTargetKind
                           || TargetKind::SINGLETON() == $requestTargetKind) {
                     if (null !== $this->getHost()->getRequestIfMatch()

@@ -2,6 +2,7 @@
 
 namespace UnitTests\POData\UriProcessor\QueryProcessor\ExpandProjectionParser;
 
+use Mockery as m;
 use POData\Configuration\EntitySetRights;
 use POData\Configuration\ServiceConfiguration;
 use POData\Providers\ProvidersWrapper;
@@ -10,7 +11,6 @@ use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\RootProjectionNode
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 use UnitTests\POData\Facets\NorthWind1\NorthWindQueryProvider;
 use UnitTests\POData\TestCase;
-use Mockery as m;
 
 class RootProjectionNodeTest extends TestCase
 {

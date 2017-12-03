@@ -10,6 +10,7 @@ use POData\IService;
 use POData\ObjectModel\CynicDeserialiser;
 use POData\ObjectModel\ModelDeserialiser;
 use POData\ObjectModel\ODataEntry;
+use POData\ObjectModel\ODataURL;
 use POData\OperationContext\HTTPRequestMethod;
 use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\Providers\Metadata\ResourceSet;
@@ -22,6 +23,7 @@ use POData\UriProcessor\QueryProcessor\QueryProcessor;
 use POData\UriProcessor\ResourcePathProcessor\ResourcePathProcessor;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\SegmentDescriptor;
+use POData\UriProcessor\ResourcePathProcessor\SegmentParser\SegmentParser;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetSource;
 
@@ -121,10 +123,8 @@ class UriProcessorNew implements IUriProcessor
         }
 
         $processor = new self($service);
-
         //Parse the query string options of the request Uri.
         QueryProcessor::process($processor->request, $service);
-
         return $processor;
     }
 
@@ -331,6 +331,44 @@ class UriProcessorNew implements IUriProcessor
                 }
 
                 $payload = $this->getRequest()->getData();
+                if ($payload instanceof ODataURL) {
+                    $this->executeGet();
+                    $masterModel = $this->getRequest()->getSegments()[0]->getResult();
+                    $masterResourceSet = $this->getRequest()->getSegments()[0]->getTargetResourceSetWrapper();
+                    $masterNavProperty = $this->getRequest()->getLastSegment()->getIdentifier();
+                    $slaveModelUri = new \POData\Common\Url($payload->url);
+                    $host = $this->service->getHost();
+                    $absoluteServiceUri = $host->getAbsoluteServiceUri();
+                    $requestUriSegments = array_slice(
+                        $slaveModelUri->getSegments(),
+                        $absoluteServiceUri->getSegmentCount()
+                    );
+                    $newSegments = SegmentParser::parseRequestUriSegments(
+                        $requestUriSegments,
+                        $this->service->getProvidersWrapper(),
+                        true
+                    );
+                    $this->executeGetResource($newSegments[0]);
+                    $slaveModel = $newSegments[0]->getResult();
+                    $slaveResourceSet = $newSegments[0]->getTargetResourceSetWrapper();
+                    $linkAdded = $this->getProviders()
+                        ->hookSingleModel(
+                            $masterResourceSet,
+                            $masterModel,
+                            $slaveResourceSet,
+                            $slaveModel,
+                            $masterNavProperty
+                        );
+                    if ($linkAdded) {
+                        $this->getService()->getHost()->setResponseStatusCode(HttpStatus::CODE_NOCONTENT);
+                    } else {
+                        throw ODataException::createInternalServerError('AdapterIndicatedLinkNotAttached');
+                    }
+                    foreach ($segments as $segment) {
+                        $segment->setResult(null);
+                    }
+                    return;
+                }
                 assert($payload instanceof ODataEntry, get_class($payload));
                 assert(empty($payload->id), 'Payload ID must be empty for POST request');
                 $data = $this->getModelDeserialiser()->bulkDeserialise($resourceSet->getResourceType(), $payload);
