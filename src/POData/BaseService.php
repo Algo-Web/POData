@@ -403,6 +403,7 @@ abstract class BaseService implements IRequestHandler, IService
             assert(null != $targetResourceType, 'Target resource type cannot be null');
 
             $methodIsNotPost = (HTTPRequestMethod::POST() != $method);
+            $methodIsNotDelete = (HTTPRequestMethod::DELETE() != $method);
             if (!$request->isSingleResult() && $methodIsNotPost) {
                 // Code path for collection (feed or links)
                 $entryObjects = $request->getTargetResult();
@@ -433,10 +434,10 @@ abstract class BaseService implements IRequestHandler, IService
                 if ($request->isLinkUri()) {
                     // In the query 'Orders(1245)/$links/Customer', the targeted
                     // Customer might be null
-                    if (null === $result->results && HTTPRequestMethod::POST() != $method && HTTPRequestMethod::DELETE() != $method) {
+                    if (null === $result->results && $methodIsNotPost && $methodIsNotDelete) {
                         throw ODataException::createResourceNotFoundError($request->getIdentifier());
                     }
-                    if (HTTPRequestMethod::POST() != $method && HTTPRequestMethod::DELETE() != $method) {
+                    if ($methodIsNotPost && $methodIsNotDelete) {
                         $odataModelInstance = $objectModelSerializer->writeUrlElement($result);
                     }
                 } elseif (TargetKind::RESOURCE() == $requestTargetKind
