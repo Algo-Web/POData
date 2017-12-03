@@ -23,6 +23,7 @@ use POData\UriProcessor\QueryProcessor\QueryProcessor;
 use POData\UriProcessor\ResourcePathProcessor\ResourcePathProcessor;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\SegmentDescriptor;
+use POData\UriProcessor\ResourcePathProcessor\SegmentParser\SegmentParser;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetSource;
 
@@ -331,35 +332,37 @@ class UriProcessorNew implements IUriProcessor
 
                 $payload = $this->getRequest()->getData();
                 if ($payload instanceof ODataURL) {
-                    try {
-                        $this->executeGet();
-                        //dd($this->getRequest()->getSegments()[1]);
-                        $masterModel = $this->getRequest()->getSegments()[0]->getResult();
-                        $masterResourceSet = $this->getRequest()->getSegments()[0]->getTargetResourceSetWrapper();
-                        $masterNavProperty = $this->getRequest()->getLastSegment()->getIdentifier();
-                        $slaveModelUri = new \POData\Common\Url($payload->url);
-                        $host = $this->service->getHost();
-                        $absoluteServiceUri = $host->getAbsoluteServiceUri();
-                        $requestUriSegments = array_slice(
+                    $this->executeGet();
+                    $masterModel = $this->getRequest()->getSegments()[0]->getResult();
+                    $masterResourceSet = $this->getRequest()->getSegments()[0]->getTargetResourceSetWrapper();
+                    $masterNavProperty = $this->getRequest()->getLastSegment()->getIdentifier();
+                    $slaveModelUri = new \POData\Common\Url($payload->url);
+                    $host = $this->service->getHost();
+                    $absoluteServiceUri = $host->getAbsoluteServiceUri();
+                    $requestUriSegments = array_slice(
                         $slaveModelUri->getSegments(),
                         $absoluteServiceUri->getSegmentCount()
                     );
-                        $newSegments = \POData\UriProcessor\ResourcePathProcessor\SegmentParser\SegmentParser::parseRequestUriSegments(
+                    $newSegments = SegmentParser::parseRequestUriSegments(
                         $requestUriSegments,
                         $this->service->getProvidersWrapper(),
                         true
                     );
-                        $this->executeGetResource($newSegments[0]);
-                        $slaveModel = $newSegments[0]->getResult();
-                        $slaveResourceSet = $newSegments[0]->getTargetResourceSetWrapper();
-                        $linkAdded = $this->getProviders()->hookSingleModel($masterResourceSet, $masterModel, $slaveResourceSet, $slaveModel, $masterNavProperty);
-                        if ($linkAdded) {
-                            $this->getService()->getHost()->setResponseStatusCode(HttpStatus::CODE_NOCONTENT);
-                        } else {
-                            throw ODataException::createInternalServerError('AdapterInidicatedLinkNotAttached');
-                        }
-                    } catch (\Exception $e) {
-                        dd($e);
+                    $this->executeGetResource($newSegments[0]);
+                    $slaveModel = $newSegments[0]->getResult();
+                    $slaveResourceSet = $newSegments[0]->getTargetResourceSetWrapper();
+                    $linkAdded = $this->getProviders()
+                        ->hookSingleModel(
+                            $masterResourceSet,
+                            $masterModel,
+                            $slaveResourceSet,
+                            $slaveModel,
+                            $masterNavProperty
+                        );
+                    if ($linkAdded) {
+                        $this->getService()->getHost()->setResponseStatusCode(HttpStatus::CODE_NOCONTENT);
+                    } else {
+                        throw ODataException::createInternalServerError('AdapterIndicatedLinkNotAttached');
                     }
                     foreach ($segments as $segment) {
                         $segment->setResult(null);

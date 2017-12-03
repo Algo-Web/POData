@@ -311,7 +311,8 @@ class RequestDescription
                 SerializerBuilder::create()
                     ->addMetadataDir($ymlDir)
                     ->build();
-            $objectType = strpos($this->requestUrl->getUrlAsString(), '$links') !== false ? 'POData\ObjectModel\ODataURL' : 'POData\ObjectModel\ODataEntry';
+            $objectType = strpos($this->requestUrl->getUrlAsString(), '$links') !== false
+                ? 'POData\ObjectModel\ODataURL' : 'POData\ObjectModel\ODataEntry';
             $this->data = $serialize->deserialize($string, $objectType, 'xml');
             $msg = null;
             assert($this->data instanceof $objectType);
