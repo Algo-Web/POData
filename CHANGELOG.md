@@ -1,6 +1,10 @@
 Unreleased
 ----------
 
+0.3.3 (2017-12-04)
+------------------
+   * Handle links hookup post-event.  (see [#182] (https://github.com/Algo-Web/POData/pull/182))
+
 0.3.2 (2017-11-21)
 ------------------
    * Fix goof that stopped empty result set serialisation in some cases.  (see [#178] (https://github.com/Algo-Web/POData/pull/178))
