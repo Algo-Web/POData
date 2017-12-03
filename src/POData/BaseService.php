@@ -436,7 +436,7 @@ abstract class BaseService implements IRequestHandler, IService
                     if (null === $result->results && HTTPRequestMethod::POST() != $method && HTTPRequestMethod::DELETE() != $method) {
                         throw ODataException::createResourceNotFoundError($request->getIdentifier());
                     }
-                    if(HTTPRequestMethod::POST() != $method && HTTPRequestMethod::DELETE() != $method){
+                    if (HTTPRequestMethod::POST() != $method && HTTPRequestMethod::DELETE() != $method) {
                         $odataModelInstance = $objectModelSerializer->writeUrlElement($result);
                     }
                 } elseif (TargetKind::RESOURCE() == $requestTargetKind

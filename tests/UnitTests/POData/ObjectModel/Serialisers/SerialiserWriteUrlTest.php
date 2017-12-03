@@ -143,6 +143,7 @@ class SerialiserWriteUrlTest extends SerialiserTestBase
      * @param $query
      * @param $meta
      * @param $host
+     * @param  mixed $count
      * @return array
      */
     private function setUpSerialisers($query, $meta, $host, $count = 1)

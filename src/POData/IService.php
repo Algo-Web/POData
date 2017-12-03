@@ -82,7 +82,7 @@ interface IService
     public function getODataWriterRegistry();
 
     /**
-     * Returns the service's metadata provider
+     * Returns the service's metadata provider.
      *
      * @return IMetadataProvider
      */

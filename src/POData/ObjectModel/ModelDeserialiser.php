@@ -17,13 +17,13 @@ class ModelDeserialiser
     }
 
     /**
-     * Filter supplied ODataEntry into $data array for use in resource create/update
+     * Filter supplied ODataEntry into $data array for use in resource create/update.
      *
-     * @param ResourceEntityType $entityType    Entity type to deserialise to
-     * @param ODataEntry $payload               Raw data to deserialise
+     * @param ResourceEntityType $entityType Entity type to deserialise to
+     * @param ODataEntry         $payload    Raw data to deserialise
      *
-     * @return mixed[]
      * @throws \InvalidArgumentException
+     * @return mixed[]
      */
     public function bulkDeserialise(ResourceEntityType $entityType, ODataEntry $payload)
     {

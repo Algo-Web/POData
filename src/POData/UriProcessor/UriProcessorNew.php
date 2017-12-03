@@ -123,7 +123,7 @@ class UriProcessorNew implements IUriProcessor
 
         $processor = new self($service);
         //Parse the query string options of the request Uri.
-        QueryProcessor::process($processor->request, $service); 
+        QueryProcessor::process($processor->request, $service);
         return $processor;
     }
 
@@ -330,40 +330,40 @@ class UriProcessorNew implements IUriProcessor
                 }
 
                 $payload = $this->getRequest()->getData();
-                if($payload instanceof ODataURL){
-try{
-                    $this->executeGet();
-                    //dd($this->getRequest()->getSegments()[1]);
-                    $masterModel = $this->getRequest()->getSegments()[0]->getResult();
-                    $masterResourceSet = $this->getRequest()->getSegments()[0]->getTargetResourceSetWrapper();
-                    $masterNavProperty = $this->getRequest()->getLastSegment()->getIdentifier();
-                    $slaveModelUri = new \POData\Common\Url($payload->url);
-                    $host = $this->service->getHost();
-                    $absoluteServiceUri = $host->getAbsoluteServiceUri();
-                    $requestUriSegments = array_slice(
+                if ($payload instanceof ODataURL) {
+                    try {
+                        $this->executeGet();
+                        //dd($this->getRequest()->getSegments()[1]);
+                        $masterModel = $this->getRequest()->getSegments()[0]->getResult();
+                        $masterResourceSet = $this->getRequest()->getSegments()[0]->getTargetResourceSetWrapper();
+                        $masterNavProperty = $this->getRequest()->getLastSegment()->getIdentifier();
+                        $slaveModelUri = new \POData\Common\Url($payload->url);
+                        $host = $this->service->getHost();
+                        $absoluteServiceUri = $host->getAbsoluteServiceUri();
+                        $requestUriSegments = array_slice(
                         $slaveModelUri->getSegments(),
                         $absoluteServiceUri->getSegmentCount()
                     );
-                    $newSegments = \POData\UriProcessor\ResourcePathProcessor\SegmentParser\SegmentParser::parseRequestUriSegments(
+                        $newSegments = \POData\UriProcessor\ResourcePathProcessor\SegmentParser\SegmentParser::parseRequestUriSegments(
                         $requestUriSegments,
                         $this->service->getProvidersWrapper(),
                         true
                     );
-                    $this->executeGetResource($newSegments[0]);
-                    $slaveModel = $newSegments[0]->getResult();
-                    $slaveResourceSet = $newSegments[0]->getTargetResourceSetWrapper();
-                    $linkAdded = $this->getProviders()->hookSingleModel($masterResourceSet, $masterModel, $slaveResourceSet, $slaveModel, $masterNavProperty);
-                    if($linkAdded){
-                        $this->getService()->getHost()->setResponseStatusCode(HttpStatus::CODE_NOCONTENT);
-                    }else{
-                        throw ODataException::createInternalServerError("AdapterInidicatedLinkNotAttached");
+                        $this->executeGetResource($newSegments[0]);
+                        $slaveModel = $newSegments[0]->getResult();
+                        $slaveResourceSet = $newSegments[0]->getTargetResourceSetWrapper();
+                        $linkAdded = $this->getProviders()->hookSingleModel($masterResourceSet, $masterModel, $slaveResourceSet, $slaveModel, $masterNavProperty);
+                        if ($linkAdded) {
+                            $this->getService()->getHost()->setResponseStatusCode(HttpStatus::CODE_NOCONTENT);
+                        } else {
+                            throw ODataException::createInternalServerError('AdapterInidicatedLinkNotAttached');
+                        }
+                    } catch (\Exception $e) {
+                        dd($e);
                     }
-}catch(\Exception $e){
-dd($e);
-}
-        foreach ($segments as $segment) {
-            $segment->setResult(null);
-        }
+                    foreach ($segments as $segment) {
+                        $segment->setResult(null);
+                    }
                     return;
                 }
                 assert($payload instanceof ODataEntry, get_class($payload));
