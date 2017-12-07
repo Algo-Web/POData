@@ -2,6 +2,7 @@
 
 namespace POData;
 
+use POData\BatchProcessor\BatchProcessor;
 use POData\Common\ErrorHandler;
 use POData\Common\HttpStatus;
 use POData\Common\Messages;
@@ -263,7 +264,7 @@ abstract class BaseService implements IRequestHandler, IService
     private function handleBatchRequest($request){
         try{
         $cloneThis = clone $this;
-        $batchProcesser = new BatchProvider($cloneThis, $request);
+        $batchProcesser = new BatchProcessor($cloneThis, $request);
         $batchProcesser->handleBatchRequest();
     }catch(\Exception $e){
     dd($e); 
