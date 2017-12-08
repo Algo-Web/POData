@@ -99,6 +99,9 @@ class ChangeSetParser implements IBatchParser{
     public function process(){
                 foreach($this->rawRequests as $contentID => $workibngObject){
                     foreach($this->ContentIDToLocationLookup as $contentID => $location){
+                       if(0 > $contentID){
+                           continue;
+                       }
                        $workibngObject->Content = str_replace('$' . $contentID, $location, $workibngObject->Content);
                     }
 
