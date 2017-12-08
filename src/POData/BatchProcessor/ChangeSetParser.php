@@ -22,6 +22,7 @@ class ChangeSetParser implements IBatchParser{
         $prefix = "HTTP_";
         $matches = explode('--'.$this->changeSetBoundtry,$this->_data);
         array_shift($matches);
+        $contentIDinit = -1;
         foreach($matches as $match){
             if("--" === trim($match)){
                 continue;
@@ -33,7 +34,7 @@ class ChangeSetParser implements IBatchParser{
 
             $RequestPathParts = [];
             $serverParts = [];
-            $contentID = -1;
+            $contentID = $contentIDinit;
             $content = "";
             foreach($lines as $line){
                 if("" == $line){
@@ -82,7 +83,9 @@ class ChangeSetParser implements IBatchParser{
                         dd("how did we end up with more then 3 stanges??");
                }
             }
-            //dd($RequestPathParts[0]);
+            if($contentIDinit == $contentID){
+                $contentIDinit--;
+            }
             $this->rawRequests[$contentID] = (object)["RequestVerb"  => $RequestPathParts[0],
                                                       "RequestURL"   => $RequestPathParts[1],
                                                       "ServerParams" => $serverParts,
