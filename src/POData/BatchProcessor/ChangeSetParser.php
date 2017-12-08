@@ -6,14 +6,14 @@ use Illuminate\Http\Request;
 use POData\OperationContext\Web\Illuminate\IlluminateOperationContext;
 use \POData\OperationContext\ServiceHost;
 
-class ChangeSetParser{
+class ChangeSetParser implements IBatchParser{
     protected $_data;
     protected $changeSetBoundtry;
     protected $rawRequests = [];
     protected $_service;
     protected $ContentIDToLocationLookup =[];
 
-    public function __construct($service, $body){
+    public function __construct(BaseService $service, $body){
         $this->_service = $service;
         $this->_data = trim($body);
         $firstLine = trim(strtok($this->_data,"\n"));
