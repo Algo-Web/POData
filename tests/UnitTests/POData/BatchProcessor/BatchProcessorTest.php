@@ -17,6 +17,7 @@ use POData\OperationContext\IOperationContext;
 use POData\OperationContext\ServiceHost;
 use POData\OperationContext\Web\OutgoingResponse;
 use POData\UriProcessor\RequestDescription;
+use UnitTests\POData\BatchProcessor\BatchProcessorDummy;
 use UnitTests\POData\TestCase;
 
 class BatchProcessorTest extends TestCase
@@ -74,10 +75,13 @@ Host: host
 
         $contentLine = 'multipart/mixed; boundary=batch_36522ad7-fc75-4b56-8c71-56071383e77b';
         $firstChangeset = m::mock(ChangeSetParser::class);
+        $firstChangeset->shouldReceive('handleData')->andReturnNull()->once();
         $firstChangeset->shouldReceive('process')->andReturnNull()->once();
         $firstQuery = m::mock(QueryParser::class);
+        $firstQuery->shouldReceive('handleData')->andReturnNull()->once();
         $firstQuery->shouldReceive('process')->andReturnNull()->once();
         $secondQuery = m::mock(QueryParser::class);
+        $secondQuery->shouldReceive('handleData')->andReturnNull()->once();
         $secondQuery->shouldReceive('process')->andReturnNull()->once();
 
         $host = m::mock(ServiceHost::class);
@@ -106,5 +110,27 @@ Host: host
 
         $this->assertTrue($foo->getService() instanceof BaseService);
         $this->assertTrue($foo->getRequest() instanceof RequestDescription);
+    }
+
+    public function testGetChangeSetParser()
+    {
+        $service = m::mock(BaseService::class);
+        $request = m::mock(RequestDescription::class);
+
+        $foo = new BatchProcessorDummy($service, $request);
+
+        $result = $foo->getParser($service, 'bork bork bork', true);
+        $this->assertTrue($result instanceof ChangeSetParser);
+    }
+
+    public function testGetQueryParser()
+    {
+        $service = m::mock(BaseService::class);
+        $request = m::mock(RequestDescription::class);
+
+        $foo = new BatchProcessorDummy($service, $request);
+
+        $result = $foo->getParser($service, 'bork bork bork', false);
+        $this->assertTrue($result instanceof QueryParser);
     }
 }

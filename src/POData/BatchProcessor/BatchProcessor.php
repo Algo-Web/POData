@@ -43,6 +43,7 @@ class BatchProcessor
         }
 
         foreach ($this->ChangeSetProcessors as $csp) {
+            $csp->handleData();
             $csp->process();
         }
     }

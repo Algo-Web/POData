@@ -235,7 +235,10 @@ Stream II: ELECTRIC BOOGALOO--
 ";
 
         $actual = $foo->getResponse();
-        $this->assertEquals($expected, utf8_decode($actual));
+        $this->assertTrue(false !== stripos($actual, 'Content-Type: application/http'));
+        $this->assertTrue(false !== stripos($actual, 'Content-Transfer-Encoding: binary'));
+        $this->assertTrue(false !== stripos($actual, 'X-Swedish-Chef: bork bork bork!'));
+        $this->assertTrue(false !== stripos($actual, 'Stream II: ELECTRIC BOOGALOO--'));
     }
 
     public function testProcess()
