@@ -20,6 +20,7 @@ class ErrorHandler
      */
     public static function handleException(\Exception $exception, IService $service)
     {
+dd($exception->getTraceAsString ());
         $acceptTypesText = $service->getHost()->getRequestAccept();
         $responseContentType = null;
         try {

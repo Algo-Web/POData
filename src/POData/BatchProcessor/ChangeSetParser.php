@@ -119,4 +119,25 @@ class ChangeSetParser implements IBatchParser
             }
         }
     }
+    public function getResponse(){
+        $response = "";
+        foreach ($this->rawRequests as $contentID => $workibngObject) {
+            $response .= $this->changeSetBoundtry === false ? "" : '--' . $this->changeSetBoundtry . "\r\n";
+            $response .= 'Content-Type: application/http' . "\r\n";
+            $response .= 'Content-Transfer-Encoding: binary' . "\r\n";
+            $response .= "\r\n";
+            $headers = $workibngObject->Response->getHeaders();
+            foreach ($headers as $headerName => $headerValue) {
+                if (null !== $headerValue) {
+                     $response .= $headerName . ':' . $headerValue . "\r\n";
+                }
+            }
+            $response .= "\r\n";
+            $response .= $workibngObject->Response->getStream();
+
+
+        }
+        $response .= $this->changeSetBoundtry === false ? "" : '--' . $this->changeSetBoundtry . '--' . "\r\n";
+        return $response;
+    }
 }
