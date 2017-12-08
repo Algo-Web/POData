@@ -8,21 +8,21 @@ use POData\OperationContext\Web\Illuminate\IlluminateOperationContext;
 
 class ChangeSetParser implements IBatchParser
 {
-    protected $_data;
+    protected $data;
     protected $changeSetBoundtry;
     protected $rawRequests = [];
-    protected $_service;
+    protected $service;
     protected $ContentIDToLocationLookup =[];
 
     public function __construct(BaseService $service, $body)
     {
-        $this->_service = $service;
-        $this->_data = trim($body);
-        $firstLine = trim(strtok($this->_data, "\n"));
+        $this->service = $service;
+        $this->data = trim($body);
+        $firstLine = trim(strtok($this->data, "\n"));
         $this->changeSetBoundtry = substr($firstLine, 40);
 
         $prefix = 'HTTP_';
-        $matches = explode('--'.$this->changeSetBoundtry, $this->_data);
+        $matches = explode('--'.$this->changeSetBoundtry, $this->data);
         array_shift($matches);
         $contentIDinit = -1;
         foreach ($matches as $match) {
@@ -45,10 +45,12 @@ class ChangeSetParser implements IBatchParser
                 }
                 switch ($stage) {
                     case 0:
-                        if (strtolower('Content-Type') == strtolower(substr($line, 0, 12)) && 'application/http' != strtolower(substr($line, -16))) {
-                            //TODO: thro an error about incorrect content type for changeSet
+                        if (strtolower('Content-Type') == strtolower(substr($line, 0, 12))
+                            && 'application/http' != strtolower(substr($line, -16))) {
+                            //TODO: throw an error about incorrect content type for changeSet
                         }
-                        if (strtolower('Content-Transfer-Encoding') == strtolower(substr($line, 0, 25)) && 'binary' != strtolower(substr($line, -6))) {
+                        if (strtolower('Content-Transfer-Encoding') == strtolower(substr($line, 0, 25))
+                            && 'binary' != strtolower(substr($line, -6))) {
                             //TODO: throw an error about unsupported encoding
                         }
                         break;
@@ -81,8 +83,8 @@ class ChangeSetParser implements IBatchParser
                         $content .= $line;
                         break;
                     default:
-                        dd('how did we end up with more then 3 stanges??');
-               }
+                        throw new \Exception('how did we end up with more then 3 stages??');
+                }
             }
             if ($contentIDinit == $contentID) {
                 $contentIDinit--;
@@ -99,23 +101,31 @@ class ChangeSetParser implements IBatchParser
 
     public function process()
     {
-        foreach ($this->rawRequests as $contentID => $workibngObject) {
-            foreach ($this->ContentIDToLocationLookup as $contentID => $location) {
+        foreach ($this->rawRequests as $contentID => $workingObject) {
+            foreach ($this->ContentIDToLocationLookup as $lookupID => $location) {
                 if (0 > $contentID) {
                     continue;
                 }
-                $workibngObject->Content = str_replace('$' . $contentID, $location, $workibngObject->Content);
+                $workingObject->Content = str_replace('$' . $lookupID, $location, $workingObject->Content);
             }
 
-            $workibngObject->Request = Request::create($workibngObject->RequestURL, $workibngObject->RequestVerb, [], [], [], $workibngObject->ServerParams, $workibngObject->Content);
-            $newContext = new IlluminateOperationContext($workibngObject->Request);
-            $newHost = new ServiceHost($newContext, $workibngObject->Request);
+            $workingObject->Request = Request::create(
+                $workingObject->RequestURL,
+                $workingObject->RequestVerb,
+                [],
+                [],
+                [],
+                $workingObject->ServerParams,
+                $workingObject->Content
+            );
+            $newContext = new IlluminateOperationContext($workingObject->Request);
+            $newHost = new ServiceHost($newContext, $workingObject->Request);
 
-            $this->_service->setHost($newHost);
-            $this->_service->handleRequest();
-            $workibngObject->Response = $newContext->outgoingResponse();
-            if ($workibngObject->RequestVerb != 'GET') {
-                $this->ContentIDToLocationLookup[$contentID] = $workibngObject->Response->getHeaders()['Location'];
+            $this->service->setHost($newHost);
+            $this->service->handleRequest();
+            $workingObject->Response = $newContext->outgoingResponse();
+            if ('GET' != $workingObject->RequestVerb) {
+                $this->ContentIDToLocationLookup[$lookupID] = $workingObject->Response->getHeaders()['Location'];
             }
         }
     }
