@@ -248,10 +248,10 @@ abstract class BaseService implements IRequestHandler, IService
             $this->getHost()->validateQueryParameters();
             $uriProcessor = UriProcessorNew::process($this);
             $request = $uriProcessor->getRequest();
-            if(TargetKind::BATCH() == $request->getTargetKind()){
+            if (TargetKind::BATCH() == $request->getTargetKind()) {
                 //dd($request);
                 $this->handleBatchRequest($request);
-            }else{
+            } else {
                 $this->serializeResult($request, $uriProcessor);
             }
         } catch (\Exception $exception) {
@@ -261,14 +261,15 @@ abstract class BaseService implements IRequestHandler, IService
         }
     }
 
-    private function handleBatchRequest($request){
-        try{
-        $cloneThis = clone $this;
-        $batchProcesser = new BatchProcessor($cloneThis, $request);
-        $batchProcesser->handleBatchRequest();
-    }catch(\Exception $e){
-    dd($e); 
-   }
+    private function handleBatchRequest($request)
+    {
+        try {
+            $cloneThis = clone $this;
+            $batchProcesser = new BatchProcessor($cloneThis, $request);
+            $batchProcesser->handleBatchRequest();
+        } catch (\Exception $e) {
+            dd($e);
+        }
     }
 
     /**

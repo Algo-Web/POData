@@ -3,9 +3,9 @@ namespace POData\BatchProcessor;
 
 use POData\BaseService;
 
-interface IBatchParser{
+interface IBatchParser
+{
     public function __construct(BaseService $host, $data);
 
     public function process();
 }
-

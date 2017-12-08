@@ -1,12 +1,11 @@
 <?php
 namespace POData\BatchProcessor;
 
-use POData\BaseService;
-use Illuminate\Http\Request;
-use POData\OperationContext\Web\Illuminate\IlluminateOperationContext;
 use \POData\OperationContext\ServiceHost;
+use Illuminate\Http\Request;
+use POData\BaseService;
+use POData\OperationContext\Web\Illuminate\IlluminateOperationContext;
 
-class QueryParser extends ChangeSetParser{
-
+class QueryParser extends ChangeSetParser
+{
 }
-
