@@ -43,10 +43,10 @@ class ChangeSetParser implements IBatchParser{
                 }
                 switch($stage){
                     case 0:
-                        if("Content-Type" == substr($line,0,12) && "application/http" != substr($line,-16)){
+                        if(strtolower("Content-Type") == strtolower(substr($line,0,12)) && "application/http" != strtolower(substr($line,-16))){
                             //TODO: thro an error about incorrect content type for changeSet
                         }
-                        if("Content-Transfer-Encoding" == substr($line,0,25) && "binary" != substr($line,-6)){
+                        if(strtolower("Content-Transfer-Encoding") == strtolower(substr($line,0,25)) && "binary" != strtolower(substr($line,-6))){
                             //TODO: throw an error about unsupported encoding
                         }
                         break;
@@ -62,7 +62,7 @@ class ChangeSetParser implements IBatchParser{
                             dd($line);
 
                         }
-                        if(trim($headerSides[0]) == "Content-ID"){
+                        if(strtolower(trim($headerSides[0])) == strtolower("Content-ID")){
                             $contentID = trim($headerSides[1]);
                             continue;
                         }
