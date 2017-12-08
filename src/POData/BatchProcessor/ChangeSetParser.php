@@ -22,9 +22,10 @@ class ChangeSetParser implements IBatchParser
 
     public function process()
     {
-        foreach ($this->rawRequests as $contentID => $workingObject) {
+        $raw = $this->getRawRequests();
+        foreach ($raw as $contentID => &$workingObject) {
             foreach ($this->ContentIDToLocationLookup as $lookupID => $location) {
-                if (0 > $contentID) {
+                if (0 > $lookupID) {
                     continue;
                 }
                 $workingObject->Content = str_replace('$' . $lookupID, $location, $workingObject->Content);
@@ -39,14 +40,9 @@ class ChangeSetParser implements IBatchParser
                 $workingObject->ServerParams,
                 $workingObject->Content
             );
-            $newContext = new IlluminateOperationContext($workingObject->Request);
-            $newHost = new ServiceHost($newContext, $workingObject->Request);
-
-            $this->service->setHost($newHost);
-            $this->service->handleRequest();
-            $workingObject->Response = $newContext->outgoingResponse();
+            $this->processSubRequest($workingObject);
             if ('GET' != $workingObject->RequestVerb) {
-                $this->ContentIDToLocationLookup[$lookupID] = $workingObject->Response->getHeaders()['Location'];
+                $this->ContentIDToLocationLookup[$contentID] = $workingObject->Response->getHeaders()['Location'];
             }
         }
     }
@@ -54,23 +50,23 @@ class ChangeSetParser implements IBatchParser
     public function getResponse()
     {
         $response = "";
-        foreach ($this->rawRequests as $contentID => $workingObject) {
-            $response .= false === $this->changeSetBoundary ? "" : '--' . $this->changeSetBoundary . "\r\n";
+        $splitter = false === $this->changeSetBoundary ? "" : '--' . $this->changeSetBoundary . "\r\n";
+        $raw = $this->getRawRequests();
+        foreach ($raw as $contentID => &$workingObject) {
+            $response .= $splitter;
             $response .= 'Content-Type: application/http' . "\r\n";
             $response .= 'Content-Transfer-Encoding: binary' . "\r\n";
             $response .= "\r\n";
             $headers = $workingObject->Response->getHeaders();
             foreach ($headers as $headerName => $headerValue) {
                 if (null !== $headerValue) {
-                     $response .= $headerName . ':' . $headerValue . "\r\n";
+                     $response .= $headerName . ': ' . $headerValue . "\r\n";
                 }
             }
             $response .= "\r\n";
             $response .= $workingObject->Response->getStream();
-
-
         }
-        $response .= false === $this->changeSetBoundary ? "" : '--' . $this->changeSetBoundary . '--' . "\r\n";
+        $response .= $splitter;
         return $response;
     }
 
@@ -87,6 +83,7 @@ class ChangeSetParser implements IBatchParser
             if ('--' === trim($match)) {
                 continue;
             }
+
             $stage = 0;
             $gotRequestPathParts = false;
             $match = trim($match);
@@ -96,6 +93,7 @@ class ChangeSetParser implements IBatchParser
             $serverParts = [];
             $contentID = $contentIDinit;
             $content = '';
+
             foreach ($lines as $line) {
                 if ('' == $line) {
                     $stage++;
@@ -122,8 +120,7 @@ class ChangeSetParser implements IBatchParser
                         }
                         $headerSides = explode(':', $line);
                         if (count($headerSides) != 2) {
-                            //TODO: we should throw an error here
-                            dd($line);
+                            throw new \Exception('Malformed header line: '.$line);
                         }
                         if (strtolower(trim($headerSides[0])) == strtolower('Content-ID')) {
                             $contentID = trim($headerSides[1]);
@@ -146,6 +143,7 @@ class ChangeSetParser implements IBatchParser
                         throw new \Exception('how did we end up with more than 3 stages??');
                 }
             }
+
             if ($contentIDinit == $contentID) {
                 $contentIDinit--;
             }
@@ -174,5 +172,20 @@ class ChangeSetParser implements IBatchParser
     public function getData()
     {
         return $this->data;
+    }
+
+    public function getRawRequests()
+    {
+        return $this->rawRequests;
+    }
+
+    protected function processSubRequest(&$workingObject)
+    {
+        $newContext = new IlluminateOperationContext($workingObject->Request);
+        $newHost = new ServiceHost($newContext, $workingObject->Request);
+
+        $this->getService()->setHost($newHost);
+        $this->getService()->handleRequest();
+        $workingObject->Response = $newContext->outgoingResponse();
     }
 }
