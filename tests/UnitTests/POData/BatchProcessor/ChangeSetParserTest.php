@@ -225,14 +225,14 @@ Content-Length: ###
         $foo = m::mock(ChangeSetParser::class)->makePartial();
         $foo->shouldReceive('getRawRequests')->andReturn([-1 => $second])->once();
 
-        $expected = "--
+        $expected = '--
 Content-Type: application/http
 Content-Transfer-Encoding: binary
 
 X-Swedish-Chef: bork bork bork!
 
 Stream II: ELECTRIC BOOGALOO--
-";
+';
 
         $actual = $foo->getResponse();
         $this->assertTrue(false !== stripos($actual, 'Content-Type: application/http'));
