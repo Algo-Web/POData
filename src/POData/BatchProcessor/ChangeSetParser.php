@@ -49,8 +49,8 @@ class ChangeSetParser implements IBatchParser
 
     public function getResponse()
     {
-        $response = "";
-        $splitter = false === $this->changeSetBoundary ? "" : '--' . $this->changeSetBoundary . "\r\n";
+        $response = '';
+        $splitter = false === $this->changeSetBoundary ? '' : '--' . $this->changeSetBoundary . "\r\n";
         $raw = $this->getRawRequests();
         foreach ($raw as $contentID => &$workingObject) {
             $response .= $splitter;
@@ -60,7 +60,7 @@ class ChangeSetParser implements IBatchParser
             $headers = $workingObject->Response->getHeaders();
             foreach ($headers as $headerName => $headerValue) {
                 if (null !== $headerValue) {
-                     $response .= $headerName . ': ' . $headerValue . "\r\n";
+                    $response .= $headerName . ': ' . $headerValue . "\r\n";
                 }
             }
             $response .= "\r\n";

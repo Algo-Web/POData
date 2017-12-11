@@ -13,7 +13,7 @@ class BatchProcessor
     protected $ChangeSetProcessors = [];
 
     /**
-     * @param BaseService $service
+     * @param BaseService        $service
      * @param RequestDescription $request
      */
     public function __construct(BaseService $service, RequestDescription $request)
