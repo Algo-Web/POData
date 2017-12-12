@@ -10,7 +10,7 @@ class BatchProcessor
     protected $data;
     protected $batchBoundary = '';
     protected $request;
-    protected $ChangeSetProcessors = [];
+    protected $changeSetProcessors = [];
 
     /**
      * @param BaseService        $service
@@ -44,10 +44,10 @@ class BatchProcessor
             }
             $header = explode("\n\n", $match)[0];
             $isChangeset = false === strpos($header, 'Content-Type: application/http');
-            $this->ChangeSetProcessors[] = $this->getParser($this->getService(), $match, $isChangeset);
+            $this->changeSetProcessors[] = $this->getParser($this->getService(), $match, $isChangeset);
         }
 
-        foreach ($this->ChangeSetProcessors as $csp) {
+        foreach ($this->changeSetProcessors as $csp) {
             $csp->handleData();
             $csp->process();
         }
@@ -57,7 +57,7 @@ class BatchProcessor
     {
         $response = '';
         $splitter =  '--' . $this->batchBoundary . "\r\n";
-        $raw = $this->ChangeSetProcessors;
+        $raw = $this->changeSetProcessors;
         foreach ($raw as $contentID => &$workingObject) {
             $response .= $splitter;
             $response .= $workingObject->getResponse() . "\r\n";
