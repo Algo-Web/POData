@@ -12,7 +12,7 @@ class ChangeSetParser implements IBatchParser
     protected $changeSetBoundary;
     protected $rawRequests = [];
     protected $service;
-    protected $ContentIDToLocationLookup =[];
+    protected $contentIDToLocationLookup =[];
 
     public function __construct(BaseService $service, $body)
     {
@@ -29,7 +29,7 @@ class ChangeSetParser implements IBatchParser
     {
         $raw = $this->getRawRequests();
         foreach ($raw as $contentID => &$workingObject) {
-            foreach ($this->ContentIDToLocationLookup as $lookupID => $location) {
+            foreach ($this->contentIDToLocationLookup as $lookupID => $location) {
                 if (0 > $lookupID) {
                     continue;
                 }
@@ -47,7 +47,7 @@ class ChangeSetParser implements IBatchParser
             );
             $this->processSubRequest($workingObject);
             if ('GET' != $workingObject->RequestVerb) {
-                $this->ContentIDToLocationLookup[$contentID] = $workingObject->Response->getHeaders()['Location'];
+                $this->contentIDToLocationLookup[$contentID] = $workingObject->Response->getHeaders()['Location'];
             }
         }
     }
