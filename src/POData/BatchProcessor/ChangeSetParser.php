@@ -75,7 +75,9 @@ class ChangeSetParser implements IBatchParser
         $response .= trim($splitter);
         $response .= false === $this->changeSetBoundary ? "\r\n" : "--\r\n";
         $response = 'Content-Length: ' . strlen($response) . "\r\n\r\n" . $response;
-        $response = false === $this->changeSetBoundary ? $response : 'Content-Type: multipart/mixed; boundary=' . $this->changeSetBoundary . "\r\n" . $response;
+        $response = false === $this->changeSetBoundary ? 
+            $response : 
+            'Content-Type: multipart/mixed; boundary=' . $this->changeSetBoundary . "\r\n" . $response;
         return $response;
     }
 
@@ -98,7 +100,7 @@ class ChangeSetParser implements IBatchParser
             $match = trim($match);
             $lines = explode("\n", $match);
 
-            $RequestPathParts = [];
+            $requestPathParts = [];
             $serverParts = [];
             $contentID = $contentIDinit;
             $content = '';
@@ -123,7 +125,7 @@ class ChangeSetParser implements IBatchParser
                         break;
                     case 1:
                         if (!$gotRequestPathParts) {
-                            $RequestPathParts = explode(' ', $line);
+                            $requestPathParts = explode(' ', $line);
                             $gotRequestPathParts = true;
                             continue;
                         }
@@ -157,8 +159,8 @@ class ChangeSetParser implements IBatchParser
                 $contentIDinit--;
             }
             $this->rawRequests[$contentID] = (object)[
-                'RequestVerb' => $RequestPathParts[0],
-                'RequestURL' => $RequestPathParts[1],
+                'RequestVerb' => $requestPathParts[0],
+                'RequestURL' => $requestPathParts[1],
                 'ServerParams' => $serverParts,
                 'Content' => $content,
                 'Request' => null,
