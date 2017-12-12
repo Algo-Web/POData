@@ -263,20 +263,16 @@ abstract class BaseService implements IRequestHandler, IService
 
     private function handleBatchRequest($request)
     {
-        try {
-            $cloneThis = clone $this;
-            $batchProcesser = new BatchProcessor($cloneThis, $request);
-            $batchProcesser->handleBatch();
-            $response = $batchProcesser->getResponse();
-            $this->getHost()->setResponseStatusCode(HttpStatus::CODE_ACCEPTED);
-            $this->getHost()->setResponseContentType('Content-Type: multipart/mixed; boundary=' . $batchProcesser->getBoundary());
-            // Hack: this needs to be sorted out in the future as we hookup other versions.
-            $this->getHost()->setResponseVersion('3.0;');
-            $this->getHost()->setResponseCacheControl(ODataConstants::HTTPRESPONSE_HEADER_CACHECONTROL_NOCACHE);
-            $this->getHost()->getOperationContext()->outgoingResponse()->setStream($response);
-        } catch (\Exception $e) {
-            dd($e);
-        }
+        $cloneThis = clone $this;
+        $batchProcesser = new BatchProcessor($cloneThis, $request);
+        $batchProcesser->handleBatch();
+        $response = $batchProcesser->getResponse();
+        $this->getHost()->setResponseStatusCode(HttpStatus::CODE_ACCEPTED);
+        $this->getHost()->setResponseContentType('Content-Type: multipart/mixed; boundary=' . $batchProcesser->getBoundary());
+        // Hack: this needs to be sorted out in the future as we hookup other versions.
+        $this->getHost()->setResponseVersion('3.0;');
+        $this->getHost()->setResponseCacheControl(ODataConstants::HTTPRESPONSE_HEADER_CACHECONTROL_NOCACHE);
+        $this->getHost()->getOperationContext()->outgoingResponse()->setStream($response);
     }
 
     /**
