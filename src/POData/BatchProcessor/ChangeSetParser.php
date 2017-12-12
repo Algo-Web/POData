@@ -20,7 +20,8 @@ class ChangeSetParser implements IBatchParser
         $this->data = trim($body);
     }
 
-    public function getBoundary(){
+    public function getBoundary()
+    {
         return $this->changeSetBoundary;
     }
 
