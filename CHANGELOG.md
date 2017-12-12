@@ -1,5 +1,6 @@
 Unreleased
 ----------
+   * Handle $batch Requests (see [#185] (https://github.com/Algo-Web/POData/pull/185))
 
 0.3.3 (2017-12-04)
 ------------------
