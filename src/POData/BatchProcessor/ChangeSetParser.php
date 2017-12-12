@@ -54,6 +54,7 @@ class ChangeSetParser implements IBatchParser
         $raw = $this->getRawRequests();
         foreach ($raw as $contentID => &$workingObject) {
             $response .= $splitter;
+ 
             $response .= 'Content-Type: application/http' . "\r\n";
             $response .= 'Content-Transfer-Encoding: binary' . "\r\n";
             $response .= "\r\n";
@@ -66,7 +67,8 @@ class ChangeSetParser implements IBatchParser
             $response .= "\r\n";
             $response .= $workingObject->Response->getStream();
         }
-        $response .= $splitter;
+        $response .= trim($splitter);
+        $response .= false === $this->changeSetBoundary ? "\r\n" : "--\r\n";
         return $response;
     }
 

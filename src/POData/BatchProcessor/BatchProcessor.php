@@ -48,6 +48,20 @@ class BatchProcessor
         }
     }
 
+    public function getResponse()
+    {
+        $response = '';
+        $splitter =  '--' . $this->batchBoundary . "\r\n";
+        $raw = $this->ChangeSetProcessors;
+        foreach ($raw as $contentID => &$workingObject) {
+            $response .= $splitter;
+            $response .= $workingObject->getResponse() . "\r\n";
+        }
+        $response .= trim($splitter) . "--\r\n";
+        return $response;
+    }
+
+
     protected function getParser(BaseService $service, $match, $isChangeset)
     {
         if ($isChangeset) {
