@@ -20,6 +20,10 @@ class ChangeSetParser implements IBatchParser
         $this->data = trim($body);
     }
 
+    public function getBoundary(){
+        return $this->changeSetBoundary;
+    }
+
     public function process()
     {
         $raw = $this->getRawRequests();
@@ -69,6 +73,8 @@ class ChangeSetParser implements IBatchParser
         }
         $response .= trim($splitter);
         $response .= false === $this->changeSetBoundary ? "\r\n" : "--\r\n";
+        $response = 'Content-Length: ' . strlen($response) . "\r\n\r\n" . $response;
+        $response = false === $this->changeSetBoundary ? $response : 'Content-Type: multipart/mixed; boundary=' . $this->changeSetBoundary . "\r\n" . $response;
         return $response;
     }
 

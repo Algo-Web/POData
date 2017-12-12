@@ -22,6 +22,10 @@ class BatchProcessor
         $this->request = $request;
     }
 
+    public function getBoundary(){
+        return $this->batchBoundary;
+    }
+
     public function handleBatch()
     {
         $host = $this->getService()->getHost();
@@ -50,6 +54,7 @@ class BatchProcessor
 
     public function getResponse()
     {
+
         $response = '';
         $splitter =  '--' . $this->batchBoundary . "\r\n";
         $raw = $this->ChangeSetProcessors;
