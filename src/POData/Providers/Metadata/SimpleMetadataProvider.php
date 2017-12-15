@@ -379,6 +379,7 @@ class SimpleMetadataProvider implements IMetadataProvider
         if (array_key_exists($returnName, $this->resourceSets)) {
             throw new InvalidOperationException('Resource Set already added');
         }
+        $resourceType->validateType();
 
         $this->resourceSets[$returnName] = new ResourceSet($returnName, $resourceType);
 

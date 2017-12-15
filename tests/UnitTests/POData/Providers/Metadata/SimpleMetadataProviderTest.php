@@ -40,6 +40,7 @@ class SimpleMetadataProviderTest extends TestCase
         $type->shouldReceive('getFullName')->andReturn('Customer')->twice();
         $type->shouldReceive('setCustomState')->andReturnNull()->once();
         $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
+        $type->shouldReceive('validateType')->andReturnNull()->once();
 
         $result = $foo->addResourceSet($name, $type);
         $this->assertEquals($name, $result->getName());
@@ -78,6 +79,7 @@ class SimpleMetadataProviderTest extends TestCase
         $type->shouldReceive('getFullName')->andReturn('Customer')->once();
         $type->shouldReceive('setCustomState')->andReturnNull()->once();
         $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
+        $type->shouldReceive('validateType')->andReturnNull()->once();
 
         $foo->addResourceSet($name, $type);
 
@@ -410,6 +412,8 @@ class SimpleMetadataProviderTest extends TestCase
 
         $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore');
         $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
+        $foo->addKeyProperty($fore, 'key', TypeCode::INT32);
+        $foo->addKeyProperty($aft, 'key', TypeCode::INT32);
         $this->assertTrue($fore instanceof ResourceType);
         $this->assertTrue($aft instanceof ResourceType);
 
@@ -608,6 +612,8 @@ class SimpleMetadataProviderTest extends TestCase
 
         $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore');
         $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
+        $foo->addKeyProperty($fore, 'key', TypeCode::INT32);
+        $foo->addKeyProperty($aft, 'key', TypeCode::INT32);
         $this->assertTrue($fore instanceof ResourceType);
         $this->assertTrue($aft instanceof ResourceType);
 
@@ -650,6 +656,8 @@ class SimpleMetadataProviderTest extends TestCase
 
         $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore');
         $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
+        $foo->addKeyProperty($fore, 'key', TypeCode::INT32);
+        $foo->addKeyProperty($aft, 'key', TypeCode::INT32);
         $this->assertTrue($fore instanceof ResourceType);
         $this->assertTrue($aft instanceof ResourceType);
 
@@ -692,6 +700,8 @@ class SimpleMetadataProviderTest extends TestCase
 
         $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore');
         $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
+        $foo->addKeyProperty($fore, 'key', TypeCode::INT32);
+        $foo->addKeyProperty($aft, 'key', TypeCode::INT32);
         $this->assertTrue($fore instanceof ResourceType);
         $this->assertTrue($aft instanceof ResourceType);
 
@@ -734,6 +744,8 @@ class SimpleMetadataProviderTest extends TestCase
 
         $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore');
         $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
+        $foo->addKeyProperty($fore, 'key', TypeCode::INT32);
+        $foo->addKeyProperty($aft, 'key', TypeCode::INT32);
         $this->assertTrue($fore instanceof ResourceType);
         $this->assertTrue($aft instanceof ResourceType);
 
@@ -774,6 +786,8 @@ class SimpleMetadataProviderTest extends TestCase
 
         $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore');
         $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
+        $foo->addKeyProperty($fore, 'key', TypeCode::INT32);
+        $foo->addKeyProperty($aft, 'key', TypeCode::INT32);
         $this->assertTrue($fore instanceof ResourceType);
         $this->assertTrue($aft instanceof ResourceType);
 
@@ -818,7 +832,10 @@ class SimpleMetadataProviderTest extends TestCase
             $method->invoke($foo, null, null, null, true, true, true);
             $this->fail('expected exception not fired');
         } catch (InvalidOperationException $e) {
-            $this->assertEquals('Only primitive property can be etag property, bag property cannot be etag property.', $e->getMessage());
+            $this->assertEquals(
+                'Only primitive property can be etag property, bag property cannot be etag property.',
+                $e->getMessage()
+            );
         }
     }
 }
