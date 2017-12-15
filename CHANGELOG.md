@@ -1,5 +1,6 @@
 Unreleased
 ----------
+   * Handle $batch Requests (see [#185] (https://github.com/Algo-Web/POData/pull/185))
    * Add resource type validity check when adding resource set.  (see [#186] (https://github.com/Algo-Web/POData/pull/186))
 
 0.3.3 (2017-12-04)

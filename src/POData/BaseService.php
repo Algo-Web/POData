@@ -2,6 +2,7 @@
 
 namespace POData;
 
+use POData\BatchProcessor\BatchProcessor;
 use POData\Common\ErrorHandler;
 use POData\Common\HttpStatus;
 use POData\Common\Messages;
@@ -245,15 +246,34 @@ abstract class BaseService implements IRequestHandler, IService
         try {
             $this->createProviders();
             $this->getHost()->validateQueryParameters();
-
             $uriProcessor = UriProcessorNew::process($this);
             $request = $uriProcessor->getRequest();
-            $this->serializeResult($request, $uriProcessor);
+            if (TargetKind::BATCH() == $request->getTargetKind()) {
+                //dd($request);
+                $this->handleBatchRequest($request);
+            } else {
+                $this->serializeResult($request, $uriProcessor);
+            }
         } catch (\Exception $exception) {
             ErrorHandler::handleException($exception, $this);
             // Return to dispatcher for writing serialized exception
             return;
         }
+    }
+
+    private function handleBatchRequest($request)
+    {
+        $cloneThis = clone $this;
+        $batchProcesser = new BatchProcessor($cloneThis, $request);
+        $batchProcesser->handleBatch();
+        $response = $batchProcesser->getResponse();
+        $this->getHost()->setResponseStatusCode(HttpStatus::CODE_ACCEPTED);
+        $this->getHost()->setResponseContentType('Content-Type: multipart/mixed; boundary=' .
+            $batchProcesser->getBoundary());
+        // Hack: this needs to be sorted out in the future as we hookup other versions.
+        $this->getHost()->setResponseVersion('3.0;');
+        $this->getHost()->setResponseCacheControl(ODataConstants::HTTPRESPONSE_HEADER_CACHECONTROL_NOCACHE);
+        $this->getHost()->getOperationContext()->outgoingResponse()->setStream($response);
     }
 
     /**
