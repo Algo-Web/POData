@@ -15,6 +15,7 @@ use POData\Providers\Metadata\ResourceFunctionType;
 use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\SimpleMetadataProvider;
+use POData\Providers\Metadata\Type\TypeCode;
 use POData\Providers\Stream\StreamProviderWrapper;
 use UnitTests\POData\BaseServiceDummy;
 use UnitTests\POData\TestCase;
@@ -121,6 +122,8 @@ class SimpleMetadataProviderSingletonTest extends SimpleMetadataProviderTest
 
         $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore');
         $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
+        $foo->addKeyProperty($fore, 'key', TypeCode::INT32);
+        $foo->addKeyProperty($aft, 'key', TypeCode::INT32);
         $this->assertTrue($fore instanceof ResourceType);
         $this->assertTrue($aft instanceof ResourceType);
 

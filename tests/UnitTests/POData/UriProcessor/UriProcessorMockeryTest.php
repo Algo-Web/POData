@@ -12,6 +12,7 @@ use POData\OperationContext\IOperationContext;
 use POData\Providers\Metadata\ResourceFunctionType;
 use POData\Providers\Metadata\Type\DateTime;
 use POData\Providers\Metadata\Type\Int32;
+use POData\Providers\Metadata\Type\TypeCode;
 use POData\Providers\ProvidersWrapper;
 use POData\Providers\Query\IQueryProvider;
 use POData\Providers\Query\QueryResult;
@@ -2330,6 +2331,7 @@ class UriProcessorMockeryTest extends TestCase
 
         $meta = NorthWindMetadata::Create();
         $fore = $meta->addEntityType(new \ReflectionClass($forward), 'fore');
+        $meta->addKeyProperty($fore, 'name', TypeCode::INT32);
         $meta->addResourceSet('foreSet', $fore);
 
         $name = 'Foobar';
