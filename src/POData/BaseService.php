@@ -255,7 +255,7 @@ abstract class BaseService implements IRequestHandler, IService
                     $this->handleBatchRequest($request);
                 }catch(\Exception $ex){
                     $this->getProvidersWrapper()->rollBackTransaction();
-                    throw $ex
+                    throw $ex;
                 }
                 $this->getProvidersWrapper()->commitTransaction();
             } else {
