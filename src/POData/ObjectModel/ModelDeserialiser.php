@@ -73,17 +73,25 @@ class ModelDeserialiser
                         break;
                     case 'Edm.DateTime':
                         $rawVal = trim($rawVal);
-                        $valLen = strlen($rawVal) - 6;
-                        $offsetChek = $rawVal[$valLen];
-                        $timezone = new \DateTimeZone('UTC');
-                        if (18 < $valLen && ('-' == $offsetChek || '+' == $offsetChek)) {
-                            $rawTz = substr($rawVal, $valLen);
-                            $rawVal = substr($rawVal, 0, $valLen);
-                            $rawBitz = explode('.', $rawVal);
-                            $rawVal = $rawBitz[0];
-                            $timezone = new \DateTimeZone($rawTz);
+                        if (1 < strlen($rawVal)) {
+                            $valLen = strlen($rawVal) - 6;
+                            $offsetChek = $rawVal[$valLen];
+                            $timezone = new \DateTimeZone('UTC');
+                            if (18 < $valLen && ('-' == $offsetChek || '+' == $offsetChek)) {
+                                $rawTz = substr($rawVal, $valLen);
+                                $rawVal = substr($rawVal, 0, $valLen);
+                                $rawBitz = explode('.', $rawVal);
+                                $rawVal = $rawBitz[0];
+                                $timezone = new \DateTimeZone($rawTz);
+                            }
+                            $newValue = new Carbon($rawVal, $timezone);
+                            // clamp assignable times to:
+                            // after 1752, since OData DateTime epoch is apparently midnight 1 Jan 1753
+                            // before 10000, since OData has a Y10K problem
+                            if (1752 < $newValue->year && 10000 > $newValue->year) {
+                                $value = $newValue;
+                            }
                         }
-                        $value = new Carbon($rawVal, $timezone);
                         break;
                     default:
                         $value = trim($rawVal);
