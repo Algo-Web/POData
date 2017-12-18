@@ -2,6 +2,7 @@
 
 namespace POData\ObjectModel;
 
+use Carbon\Carbon;
 use POData\ObjectModel\ODataEntry;
 use POData\Providers\Metadata\ResourceEntityType;
 
@@ -69,6 +70,20 @@ class ModelDeserialiser
                     case 'Edm.Boolean':
                         $rawVal = trim(strtolower($rawVal));
                         $value = 'true' == $rawVal;
+                        break;
+                    case 'Edm.DateTime':
+                        $rawVal = trim($rawVal);
+                        $valLen = strlen($rawVal) - 6;
+                        $offsetChek = $rawVal[$valLen];
+                        $timezone = new \DateTimeZone('UTC');
+                        if (18 < $valLen && ('-' == $offsetChek || '+' == $offsetChek)) {
+                            $rawTz = substr($rawVal, $valLen);
+                            $rawVal = substr($rawVal, 0, $valLen);
+                            $rawBitz = explode('.', $rawVal);
+                            $rawVal = $rawBitz[0];
+                            $timezone = new \DateTimeZone($rawTz);
+                        }
+                        $value = new Carbon($rawVal, $timezone);
                         break;
                     default:
                         $value = trim($rawVal);
