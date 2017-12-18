@@ -80,7 +80,15 @@ class ResponseWriter
             if (null === $writer) {
                 throw new \Exception(Messages::noWriterToHandleRequest());
             }
-            assert(null !== $entityModel);
+            $segments = $request->getSegments();
+            $numSeg = count($segments);
+            if (1 < $numSeg && '$links' == $segments[$numSeg-2]->getIdentifier()) {
+                if (null !== $entityModel) {
+                    throw new \Exception(Messages::modelPayloadOnLinkModification());
+                }
+            } else {
+                assert(null !== $entityModel, 'EntityModel must not be null when not manipulating links');
+            }
 
             $responseBody = $writer->write($entityModel)->getOutput();
         }
