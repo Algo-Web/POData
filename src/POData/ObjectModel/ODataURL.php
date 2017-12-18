@@ -17,7 +17,7 @@ class ODataURL
     public function isOk(&$msg = null)
     {
         if (null == $this->url || empty($this->url)) {
-            $msg = "Url value must be non-empty";
+            $msg = 'Url value must be non-empty';
             return false;
         }
         return true;

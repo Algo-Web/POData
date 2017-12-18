@@ -9,7 +9,7 @@ use POData\ObjectModel\ODataExpandedResult;
 use POData\ObjectModel\ODataLink;
 use UnitTests\POData\TestCase;
 
-class ODataURLTest extends TestCase
+class ODataUrlTest extends TestCase
 {
     public function testNotOkWhenNullUrl()
     {
