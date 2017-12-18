@@ -64,7 +64,17 @@ class ModelDeserialiser
         foreach ($payload->propertyContent->properties as $propName => $propSpec) {
             if (in_array($propName, $nonRelProp) || in_array(strtolower($propName), $nonRelProp)) {
                 $rawVal = $propSpec->value;
-                $data[$propName] = trim($rawVal);
+                $value = null;
+                switch ($propSpec->typeName) {
+                    case 'Edm.Boolean':
+                        $rawVal = trim(strtolower($rawVal));
+                        $value = 'true' == $rawVal;
+                        break;
+                    default:
+                        $value = trim($rawVal);
+                        break;
+                }
+                $data[$propName] = $value;
             }
         }
 
