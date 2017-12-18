@@ -2,6 +2,7 @@
 
 namespace POData\ObjectModel;
 
+use Carbon\Carbon;
 use POData\ObjectModel\ODataEntry;
 use POData\Providers\Metadata\ResourceEntityType;
 
@@ -64,7 +65,39 @@ class ModelDeserialiser
         foreach ($payload->propertyContent->properties as $propName => $propSpec) {
             if (in_array($propName, $nonRelProp) || in_array(strtolower($propName), $nonRelProp)) {
                 $rawVal = $propSpec->value;
-                $data[$propName] = trim($rawVal);
+                $value = null;
+                switch ($propSpec->typeName) {
+                    case 'Edm.Boolean':
+                        $rawVal = trim(strtolower(/** @scrutinizer ignore-type */$rawVal));
+                        $value = 'true' == $rawVal;
+                        break;
+                    case 'Edm.DateTime':
+                        $rawVal = trim(/** @scrutinizer ignore-type */$rawVal);
+                        if (1 < strlen($rawVal)) {
+                            $valLen = strlen($rawVal) - 6;
+                            $offsetChek = $rawVal[$valLen];
+                            $timezone = new \DateTimeZone('UTC');
+                            if (18 < $valLen && ('-' == $offsetChek || '+' == $offsetChek)) {
+                                $rawTz = substr($rawVal, $valLen);
+                                $rawVal = substr($rawVal, 0, $valLen);
+                                $rawBitz = explode('.', $rawVal);
+                                $rawVal = $rawBitz[0];
+                                $timezone = new \DateTimeZone($rawTz);
+                            }
+                            $newValue = new Carbon($rawVal, $timezone);
+                            // clamp assignable times to:
+                            // after 1752, since OData DateTime epoch is apparently midnight 1 Jan 1753
+                            // before 10000, since OData has a Y10K problem
+                            if (1752 < $newValue->year && 10000 > $newValue->year) {
+                                $value = $newValue;
+                            }
+                        }
+                        break;
+                    default:
+                        $value = trim($rawVal);
+                        break;
+                }
+                $data[$propName] = $value;
             }
         }
 

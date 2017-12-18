@@ -14,6 +14,10 @@ use POData\ObjectModel\ODataTitle;
 use POData\OperationContext\ServiceHost;
 use POData\OperationContext\Web\Illuminate\IlluminateOperationContext as OperationContextAdapter;
 use POData\Providers\Metadata\ResourceEntityType;
+use POData\Providers\Metadata\ResourcePrimitiveType;
+use POData\Providers\Metadata\ResourceProperty;
+use POData\Providers\Metadata\Type\Boolean;
+use POData\Providers\Metadata\Type\DateTime;
 use POData\Providers\Query\IQueryProvider;
 use UnitTests\POData\Facets\NorthWind1\Address4;
 use UnitTests\POData\Facets\NorthWind1\Customer2;
@@ -119,6 +123,80 @@ class ModelDeserialiserTest extends SerialiserTestBase
             'Address' => null];
 
         $actual = $cereal->bulkDeserialise($type, $objectResult);
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testDeserialiseBooleanType()
+    {
+        $known = Carbon::create(2017, 1, 1, 0, 0, 0, 'UTC');
+        Carbon::setTestNow($known);
+
+        $type = new ResourcePrimitiveType(new Boolean());
+
+        $prop = m::mock(ResourceProperty::class)->makePartial();
+        $prop->shouldReceive('getName')->andReturn('gotFnord');
+        $prop->shouldReceive('getResourceType')->andReturn($type);
+
+        $resource = m::mock(ResourceEntityType::class);
+        $resource->shouldReceive('getName')->andReturn('RockTheBlock');
+        $resource->shouldReceive('getKeyProperties')->andReturn([]);
+        $resource->shouldReceive('getAllProperties')->andReturn(['gotFnord' => $prop]);
+
+        $odataProp = new ODataProperty();
+        $odataProp->name = 'gotFnord';
+        $odataProp->typeName = 'Edm.Boolean';
+        $odataProp->value = 'true';
+
+        $content = new ODataPropertyContent();
+        $content->setPropertys(['gotFnord' => $odataProp]);
+
+        $entry = new ODataEntry();
+        $entry->type = new ODataCategory('RockTheBlock');
+        $entry->setPropertyContent($content);
+
+        $cereal = new ModelDeserialiser();
+
+        $expected = ['gotFnord' => true];
+
+        $actual = $cereal->bulkDeserialise($resource, $entry);
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testDeserialiseDateTimeTypeWithTimezoneAndPickles()
+    {
+        $known = Carbon::create(2017, 1, 1, 0, 0, 0, 'UTC');
+        Carbon::setTestNow($known);
+
+        $type = new ResourcePrimitiveType(new DateTime());
+
+        $prop = m::mock(ResourceProperty::class)->makePartial();
+        $prop->shouldReceive('getName')->andReturn('startFnord');
+        $prop->shouldReceive('getResourceType')->andReturn($type);
+
+        $resource = m::mock(ResourceEntityType::class);
+        $resource->shouldReceive('getName')->andReturn('RockTheBlock');
+        $resource->shouldReceive('getKeyProperties')->andReturn([]);
+        $resource->shouldReceive('getAllProperties')->andReturn(['startFnord' => $prop]);
+
+        $odataProp = new ODataProperty();
+        $odataProp->name = 'startFnord';
+        $odataProp->typeName = 'Edm.DateTime';
+        $odataProp->value = '2017-12-18T18:22:11.3779297-08:00';
+
+        $content = new ODataPropertyContent();
+        $content->setPropertys(['startFnord' => $odataProp]);
+
+        $entry = new ODataEntry();
+        $entry->type = new ODataCategory('RockTheBlock');
+        $entry->setPropertyContent($content);
+
+        $cereal = new ModelDeserialiser();
+
+        $date = Carbon::create(2017, 12, 18, 18, 22, 11, '-08:00');
+
+        $expected = ['startFnord' => $date];
+
+        $actual = $cereal->bulkDeserialise($resource, $entry);
         $this->assertEquals($expected, $actual);
     }
 
