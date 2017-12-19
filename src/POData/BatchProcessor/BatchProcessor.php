@@ -32,7 +32,12 @@ class BatchProcessor
         $host = $this->getService()->getHost();
         $contentType = $host->getRequestContentType();
         assert('multipart/mixed;' === substr($contentType, 0, 16));
-        $this->data = trim($this->getRequest()->getData());
+        $rawData = $this->getRequest()->getData();
+        if (is_array($rawData)) {
+            $rawData = $rawData[0];
+        }
+
+        $this->data = trim($rawData);
         $this->data = preg_replace('~\r\n?~', "\n", $this->data);
         $this->batchBoundary = substr($contentType, 26);
 
