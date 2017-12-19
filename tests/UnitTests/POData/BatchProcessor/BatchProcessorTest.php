@@ -26,7 +26,7 @@ class BatchProcessorTest extends TestCase
     {
         // take the sample batch request in paragraph 2.2 of the OData v3 batch processing docs, feed it into
         // batchProcessor and verify it chops it into the expected number of things
-        
+
         $rawData = '
 --batch_36522ad7-fc75-4b56-8c71-56071383e77b
 Content-Type: application/http 
@@ -110,6 +110,7 @@ Host: host
 
         $this->assertTrue($foo->getService() instanceof BaseService);
         $this->assertTrue($foo->getRequest() instanceof RequestDescription);
+        $this->assertEquals('', $foo->getBoundary());
     }
 
     public function testGetChangeSetParser()
@@ -132,5 +133,22 @@ Host: host
 
         $result = $foo->getParser($service, 'bork bork bork', false);
         $this->assertTrue($result instanceof QueryParser);
+    }
+
+    public function testGetResponse()
+    {
+        $resp = m::mock(ChangeSetParser::class)->makePartial();
+        $resp->shouldReceive('getResponse')->andReturn(PHP_EOL."response".PHP_EOL);
+
+        $service = m::mock(BaseService::class);
+        $request = m::mock(RequestDescription::class);
+
+        $foo = new BatchProcessorDummy($service, $request);
+        $foo->setChangeSetProcessors([$resp, $resp]);
+
+        $actual = $foo->getResponse();
+
+        $bitz = explode('response', $actual);
+        $this->assertEquals(3, count($bitz));
     }
 }

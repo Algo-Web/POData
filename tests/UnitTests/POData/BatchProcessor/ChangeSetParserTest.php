@@ -32,6 +32,7 @@ class ChangeSetParserTest extends TestCase
 
         $this->assertTrue($foo->getService() instanceof BaseService);
         $this->assertTrue(is_string($foo->getData()));
+        $this->assertEquals('', $foo->getBoundary());
     }
 
     public function testHandleData()
@@ -206,9 +207,10 @@ Content-Length: ###
 
     public function testGetResponse()
     {
+        $headers = ['X-Swedish-Chef' => 'bork bork bork!', 'Status' => '202 Updated'];
         $response = m::mock(OutgoingResponse::class);
         $response->shouldReceive('getStream')->andReturn('Stream II: ELECTRIC BOOGALOO');
-        $response->shouldReceive('getHeaders')->andReturn(['X-Swedish-Chef' => 'bork bork bork!']);
+        $response->shouldReceive('getHeaders')->andReturn($headers);
 
         $second = (object) [
             'RequestVerb' => 'PUT',
@@ -244,7 +246,7 @@ Stream II: ELECTRIC BOOGALOO--
     public function testProcess()
     {
         $response = m::mock(OutgoingResponse::class);
-        $response->shouldReceive('getHeaders')->andReturn(['Location' => 'Location Location'])->twice();
+        $response->shouldReceive('getHeaders')->andReturn(['Location' => 'Location Location'])->times(4);
 
         $second = (object) [
             'RequestVerb' => 'PUT',
@@ -275,6 +277,50 @@ Stream II: ELECTRIC BOOGALOO--
         $foo->shouldReceive('processSubRequest')->with($first)->andReturnNull()->once();
 
         $foo->process();
+    }
+
+    public function testProcessWithBadLocation()
+    {
+        $response = m::mock(OutgoingResponse::class);
+        $response->shouldReceive('getHeaders')->andReturn(['Location' => null])->times(1);
+
+        $second = (object) [
+            'RequestVerb' => 'PUT',
+            'RequestURL' => '/service/Customers(\'ALFKI\')',
+            'ServerParams' =>
+                ['HTTP_HOST' => 'host',
+                    'CONTENT_TYPE' => 'application/json',
+                    'HTTP_IF_MATCH' => 'xxxxx',
+                    'HTTP_CONTENT_LENGTH' => '###'],
+            'Content' => '<JSON representation of Customer ALFKI>',
+            'Request' => null,
+            'Response' => $response];
+
+        $first = (object) [
+            'RequestVerb' => 'POST',
+            'RequestURL' => '/service/Customers',
+            'ServerParams' =>
+                ['HTTP_HOST' => 'host',
+                    'CONTENT_TYPE' => 'application/atom+xml;type=entry',
+                    'HTTP_CONTENT_LENGTH' => '###'],
+            'Content' => '<AtomPub representation of a new Customer>',
+            'Request' => null,
+            'Response' => $response];
+
+        $foo = m::mock(ChangeSetParser::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $foo->shouldReceive('getRawRequests')->andReturn([-1 => $second, 1 => $first])->once();
+        $foo->shouldReceive('processSubRequest')->with($second)->andReturnNull()->once();
+        $foo->shouldReceive('processSubRequest')->with($first)->andReturnNull()->never();
+
+        $expected = 'Location header not set in subrequest response for PUT request url /service/Customers(\'ALFKI\')';
+        $actual = null;
+
+        try {
+            $foo->process();
+        } catch (\Exception $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
     }
 
     public function testProcessSubRequest()
