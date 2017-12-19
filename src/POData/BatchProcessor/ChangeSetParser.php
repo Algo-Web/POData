@@ -72,6 +72,7 @@ class ChangeSetParser implements IBatchParser
             $response .= 'Content-Transfer-Encoding: binary' . "\r\n";
             $response .= "\r\n";
             $response .= 'HTTP/1.1 '.$headers['Status']."\r\n";
+            $response .= 'Content-ID: '.$contentID . "\r\n";
 
             foreach ($headers as $headerName => $headerValue) {
                 if (null !== $headerValue) {
