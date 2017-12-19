@@ -1,6 +1,7 @@
 <?php
 namespace POData\BatchProcessor;
 
+use Illuminate\Support\Str;
 use \POData\OperationContext\ServiceHost;
 use Illuminate\Http\Request;
 use POData\BaseService;
@@ -47,7 +48,7 @@ class ChangeSetParser implements IBatchParser
                 $workingObject->Content
             );
             $this->processSubRequest($workingObject);
-            if ('GET' != $workingObject->RequestVerb) {
+            if ('GET' != $workingObject->RequestVerb && !Str::contains($workingObject->RequestURL, '/$links/')) {
                 if (null === $workingObject->Response->getHeaders()['Location']) {
                     $msg = 'Location header not set in subrequest response for '. $workingObject->RequestVerb
                            .' request url '.$workingObject->RequestURL;
@@ -64,12 +65,14 @@ class ChangeSetParser implements IBatchParser
         $splitter = false === $this->changeSetBoundary ? '' : '--' . $this->changeSetBoundary . "\r\n";
         $raw = $this->getRawRequests();
         foreach ($raw as $contentID => &$workingObject) {
+            $headers = $workingObject->Response->getHeaders();
             $response .= $splitter;
- 
+
             $response .= 'Content-Type: application/http' . "\r\n";
             $response .= 'Content-Transfer-Encoding: binary' . "\r\n";
             $response .= "\r\n";
-            $headers = $workingObject->Response->getHeaders();
+            $response .= 'HTTP/1.1 '.$headers['Status']."\r\n";
+
             foreach ($headers as $headerName => $headerValue) {
                 if (null !== $headerValue) {
                     $response .= $headerName . ': ' . $headerValue . "\r\n";
