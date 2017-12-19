@@ -34,6 +34,7 @@ class ChangeSetParser implements IBatchParser
                     continue;
                 }
                 $workingObject->Content = str_replace('$' . $lookupID, $location, $workingObject->Content);
+                $workingObject->RequestURL = str_replace('$' . $lookupID, $location, $workingObject->RequestURL);
             }
 
             $workingObject->Request = Request::create(
@@ -47,6 +48,11 @@ class ChangeSetParser implements IBatchParser
             );
             $this->processSubRequest($workingObject);
             if ('GET' != $workingObject->RequestVerb) {
+                if (null === $workingObject->Response->getHeaders()['Location']) {
+                    $msg = 'Location header not set in subrequest response for '. $workingObject->RequestVerb
+                           .' request url '.$workingObject->RequestURL;
+                    throw new \Exception($msg);
+                }
                 $this->contentIDToLocationLookup[$contentID] = $workingObject->Response->getHeaders()['Location'];
             }
         }
