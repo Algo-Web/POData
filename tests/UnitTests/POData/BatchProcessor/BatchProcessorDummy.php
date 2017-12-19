@@ -25,4 +25,9 @@ class BatchProcessorDummy extends BatchProcessor
     {
         return parent::getParser($service, $match, $isChangeSet);
     }
+
+    public function setChangeSetProcessors(array $processors)
+    {
+        $this->changeSetProcessors = $processors;
+    }
 }

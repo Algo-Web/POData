@@ -1,6 +1,7 @@
 <?php
 namespace POData\BatchProcessor;
 
+use Illuminate\Support\Str;
 use \POData\OperationContext\ServiceHost;
 use Illuminate\Http\Request;
 use POData\BaseService;
@@ -34,6 +35,7 @@ class ChangeSetParser implements IBatchParser
                     continue;
                 }
                 $workingObject->Content = str_replace('$' . $lookupID, $location, $workingObject->Content);
+                $workingObject->RequestURL = str_replace('$' . $lookupID, $location, $workingObject->RequestURL);
             }
 
             $workingObject->Request = Request::create(
@@ -46,7 +48,12 @@ class ChangeSetParser implements IBatchParser
                 $workingObject->Content
             );
             $this->processSubRequest($workingObject);
-            if ('GET' != $workingObject->RequestVerb) {
+            if ('GET' != $workingObject->RequestVerb && !Str::contains($workingObject->RequestURL, '/$links/')) {
+                if (null === $workingObject->Response->getHeaders()['Location']) {
+                    $msg = 'Location header not set in subrequest response for '. $workingObject->RequestVerb
+                           .' request url '.$workingObject->RequestURL;
+                    throw new \Exception($msg);
+                }
                 $this->contentIDToLocationLookup[$contentID] = $workingObject->Response->getHeaders()['Location'];
             }
         }
@@ -58,12 +65,15 @@ class ChangeSetParser implements IBatchParser
         $splitter = false === $this->changeSetBoundary ? '' : '--' . $this->changeSetBoundary . "\r\n";
         $raw = $this->getRawRequests();
         foreach ($raw as $contentID => &$workingObject) {
+            $headers = $workingObject->Response->getHeaders();
             $response .= $splitter;
- 
+
             $response .= 'Content-Type: application/http' . "\r\n";
             $response .= 'Content-Transfer-Encoding: binary' . "\r\n";
             $response .= "\r\n";
-            $headers = $workingObject->Response->getHeaders();
+            $response .= 'HTTP/1.1 '.$headers['Status']."\r\n";
+            $response .= 'Content-ID: '.$contentID . "\r\n";
+
             foreach ($headers as $headerName => $headerValue) {
                 if (null !== $headerValue) {
                     $response .= $headerName . ': ' . $headerValue . "\r\n";

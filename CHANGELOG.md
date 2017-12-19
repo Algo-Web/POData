@@ -1,5 +1,6 @@
 Unreleased
 ----------
+   * Untangle batch sub-request handling (see [#191] (https://github.com/Algo-Web/POData/pull/191))
    * Stop deserialising boolean and date values to strings (see [#188] (https://github.com/Algo-Web/POData/pull/188))
    * Handle $batch Requests (see [#185] (https://github.com/Algo-Web/POData/pull/185))
    * Add resource type validity check when adding resource set.  (see [#186] (https://github.com/Algo-Web/POData/pull/186))
