@@ -115,6 +115,7 @@ class RequestDescriptionMockeryTest extends TestCase
         $segArray = [$segment];
 
         $url = m::mock(Url::class);
+        $url->shouldReceive('getUrlAsString')->andReturn('');
         $version = Version::v3();
 
         $type = MimeTypes::MIME_APPLICATION_ATOM;
@@ -145,6 +146,7 @@ class RequestDescriptionMockeryTest extends TestCase
         $segArray = [$segment];
 
         $url = m::mock(Url::class);
+        $url->shouldReceive('getUrlAsString')->andReturn('');
         $version = Version::v3();
 
         $type = MimeTypes::MIME_APPLICATION_ATOM;

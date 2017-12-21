@@ -10,6 +10,7 @@ use POData\Common\ODataException;
 use POData\Common\Url;
 use POData\Common\Version;
 use POData\ObjectModel\ODataEntry;
+use POData\ObjectModel\ODataURL;
 use POData\OperationContext\IHTTPRequest;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceSetWrapper;
@@ -298,6 +299,8 @@ class RequestDescription
     private function readData($dataType)
     {
         $string = $this->data;
+        $objectType = strpos($this->requestUrl->getUrlAsString(), '$links') !== false
+            ? ODataURL::class : ODataEntry::class;
         if (MimeTypes::MIME_APPLICATION_ATOM === $dataType || MimeTypes::MIME_APPLICATION_XML === $dataType) {
             if (is_array($string) && 1 == count($string)) {
                 $string = $string[0];
@@ -311,8 +314,7 @@ class RequestDescription
                 SerializerBuilder::create()
                     ->addMetadataDir($ymlDir)
                     ->build();
-            $objectType = strpos($this->requestUrl->getUrlAsString(), '$links') !== false
-                ? 'POData\ObjectModel\ODataURL' : 'POData\ObjectModel\ODataEntry';
+
             $this->data = $serialize->deserialize($string, $objectType, 'xml');
             $msg = null;
             assert($this->data instanceof $objectType);
