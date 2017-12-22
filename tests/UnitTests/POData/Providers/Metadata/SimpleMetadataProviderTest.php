@@ -99,6 +99,32 @@ class SimpleMetadataProviderTest extends TestCase
         $this->assertEquals(0, count($result));
     }
 
+    public function testAddResourceSetWithoutExplicitName()
+    {
+        $type = m::mock(ResourceEntityType::class)->makePartial();
+        $type->shouldReceive('getFullName')->andReturn('Supplier');
+
+        $foo = new SimpleMetadataProvider('string', 'String');
+        $foo->addResourceSet(null, $type);
+
+        $result = $foo->resolveResourceSet('Suppliers');
+        $this->assertTrue($result instanceof ResourceSet);
+        $this->assertEquals('Supplier', $result->getResourceType()->getFullName());
+    }
+
+    public function testAddResourceSetContainingTypeName()
+    {
+        $type = m::mock(ResourceEntityType::class)->makePartial();
+        $type->shouldReceive('getFullName')->andReturn('Supplier');
+
+        $foo = new SimpleMetadataProvider('string', 'String');
+        $foo->addResourceSet('App\Models\Supplier', $type);
+
+        $result = $foo->resolveResourceSet('Suppliers');
+        $this->assertTrue($result instanceof ResourceSet);
+        $this->assertEquals('Supplier', $result->getResourceType()->getFullName());
+    }
+
     public function testGetTypesOnEmpty()
     {
         $foo = new SimpleMetadataProvider('string', 'String');
