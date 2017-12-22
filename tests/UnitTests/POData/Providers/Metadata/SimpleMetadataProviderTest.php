@@ -3,6 +3,7 @@
 namespace UnitTests\POData\Providers\Metadata;
 
 use AlgoWeb\ODataMetadata\MetadataManager;
+use Illuminate\Support\Str;
 use InvalidArgumentException;
 use JMS\Serializer\Serializer;
 use Mockery as m;
@@ -123,6 +124,20 @@ class SimpleMetadataProviderTest extends TestCase
         $result = $foo->resolveResourceSet('Suppliers');
         $this->assertTrue($result instanceof ResourceSet);
         $this->assertEquals('Supplier', $result->getResourceType()->getFullName());
+    }
+
+    public function testAddResourceSetWithCustomSetName()
+    {
+        // as in one six-sided die, two six-sided dice
+        $type = m::mock(ResourceEntityType::class)->makePartial();
+        $type->shouldReceive('getFullName')->andReturn('Die');
+
+        $foo = new SimpleMetadataProvider('string', 'String');
+        $foo->addResourceSet('Dice', $type);
+
+        $result = $foo->resolveResourceSet('Dice');
+        $this->assertTrue($result instanceof ResourceSet);
+        $this->assertEquals('Die', $result->getResourceType()->getFullName());
     }
 
     public function testGetTypesOnEmpty()

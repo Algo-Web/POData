@@ -20,6 +20,7 @@ use POData\Providers\Metadata\ResourceFunctionType;
 use POData\Providers\Metadata\ResourcePrimitiveType;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourcePropertyKind;
+use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Metadata\ResourceStreamInfo;
 use POData\Providers\Metadata\ResourceType;
@@ -90,9 +91,13 @@ class ExecuteGetTest extends TestCase
 
         $singleSet = m::mock(ResourceSetWrapper::class);
 
+        $resourceSet = m::mock(ResourceSet::class);
+        $resourceSet->shouldReceive('getName')->andReturn('Objects');
+
         $singleType = m::mock(ResourceType::class);
         $singleType->shouldReceive('getName')->andReturn('Object');
         $singleType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
+        $singleType->shouldReceive('getCustomState')->andReturn($resourceSet);
 
         $singleResult = new \DateTime('2017-06-10');
         $singleton = m::mock(ResourceFunctionType::class);

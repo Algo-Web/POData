@@ -375,7 +375,22 @@ class SimpleMetadataProvider implements IMetadataProvider
      */
     public function addResourceSet($name, ResourceEntityType $resourceType)
     {
-        $returnName = Str::plural($resourceType->getFullName());
+        $typeName = $resourceType->getFullName();
+        $pluralName = Str::plural($typeName);
+        if (null == $name) {
+            $returnName = $pluralName;
+        } else {
+            // handle case where $name is a fully-qualified PHP class name
+            $nameBits = explode('\\', $name);
+            $numBits = count($nameBits);
+
+            if ($typeName == $nameBits[$numBits - 1]) {
+                $returnName = $pluralName;
+            } else {
+                $returnName = $name;
+            }
+        }
+
         if (array_key_exists($returnName, $this->resourceSets)) {
             throw new InvalidOperationException('Resource Set already added');
         }
