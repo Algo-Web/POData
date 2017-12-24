@@ -6,6 +6,7 @@ use POData\Common\MimeTypes;
 use POData\Common\ODataConstants;
 use POData\Common\Version;
 use POData\ObjectModel\ODataBagContent;
+use POData\ObjectModel\ODataCategory;
 use POData\ObjectModel\ODataEntry;
 use POData\ObjectModel\ODataFeed;
 use POData\ObjectModel\ODataLink;
@@ -188,15 +189,18 @@ class JsonLightODataWriter extends JsonODataV2Writer
             return $this;
         }
 
+        $typeValue = $entry->type instanceof ODataCategory ? $entry->type->term : $entry->type;
+        $linkValue = $entry->editLink instanceof ODataLink ? $entry->editLink->url : $entry->editLink;
+
         $this->writer
             ->writeName(ODataConstants::JSON_LIGHT_METADATA_TYPE_STRING)
-            ->writeValue($entry->type)
+            ->writeValue($typeValue)
             ->writeName(ODataConstants::JSON_LIGHT_METADATA_ID_STRING)
             ->writeValue($entry->id)
             ->writeName(ODataConstants::JSON_LIGHT_METADATA_ETAG_STRING)
             ->writeValue($entry->eTag)
             ->writeName(ODataConstants::JSON_LIGHT_METADATA_EDIT_LINK_STRING)
-            ->writeValue($entry->editLink);
+            ->writeValue($linkValue);
 
         return $this;
     }
