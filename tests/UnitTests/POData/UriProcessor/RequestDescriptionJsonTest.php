@@ -137,9 +137,4 @@ class RequestDescriptionJsonTest extends TestCase
 
         return $objectResult;
     }
-
-    private function generateODataURL()
-    {
-
-    }
 }
