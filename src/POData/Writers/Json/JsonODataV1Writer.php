@@ -7,6 +7,7 @@ use POData\Common\ODataConstants;
 use POData\Common\ODataException;
 use POData\Common\Version;
 use POData\ObjectModel\ODataBagContent;
+use POData\ObjectModel\ODataCategory;
 use POData\ObjectModel\ODataEntry;
 use POData\ObjectModel\ODataFeed;
 use POData\ObjectModel\ODataLink;
@@ -191,9 +192,10 @@ class JsonODataV1Writer implements IODataWriter
 
             // Write the type property, if the entry has type properties.
             if ($entry->type != null) {
+                $value = $entry->type instanceof ODataCategory ? $entry->type->term : $entry->type;
                 $this->writer
                     ->writeName(ODataConstants::JSON_TYPE_STRING)
-                    ->writeValue($entry->type);
+                    ->writeValue($value);
             }
         }
 

@@ -1,5 +1,6 @@
 Unreleased
 ----------
+   * Fix ODataCategory and ODataLink writes via JSON - **cdcampos** rides again! (see [#197] (https://github.com/Algo-Web/POData/pull/197))
    * Untangle batch sub-request handling (see [#191] (https://github.com/Algo-Web/POData/pull/191))
    * Stop deserialising boolean and date values to strings (see [#188] (https://github.com/Algo-Web/POData/pull/188))
    * Handle $batch Requests (see [#185] (https://github.com/Algo-Web/POData/pull/185))
