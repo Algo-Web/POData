@@ -809,8 +809,8 @@ class SimpleMetadataProviderTest extends TestCase
 
         $foo = new SimpleMetadataProvider('string', 'String');
 
-        $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore', true);
-        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft', false, $fore);
+        $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore', null, true);
+        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft', null, false, $fore);
         $this->assertTrue($fore->isAbstract());
         $this->assertFalse($aft->isAbstract());
         $this->assertEquals($fore, $aft->getBaseType());
