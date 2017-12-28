@@ -968,11 +968,12 @@ class ProvidersWrapper
     /**
      * Start database transaction.
      *
+     * @param bool      $isBulk     Is this transaction inside a batch request?
      * @return void
      */
-    public function startTransaction()
+    public function startTransaction($isBulk = false)
     {
-        $this->getProviderWrapper()->startTransaction();
+        $this->getProviderWrapper()->startTransaction($isBulk);
     }
 
     /**

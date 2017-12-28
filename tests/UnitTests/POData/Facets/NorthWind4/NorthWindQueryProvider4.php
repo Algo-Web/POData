@@ -319,7 +319,7 @@ class NorthWindQueryProvider4 implements IQueryProvider
     /**
      * Start database transaction.
      */
-    public function startTransaction()
+    public function startTransaction($isBulk = false)
     {
         // TODO: Implement startTransaction() method.
     }

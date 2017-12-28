@@ -340,7 +340,7 @@ class WordPressQueryProvider implements IQueryProvider
     /**
      * Start database transaction.
      */
-    public function startTransaction()
+    public function startTransaction($isBulk = false)
     {
         // TODO: Implement startTransaction() method.
     }
