@@ -2,6 +2,7 @@
 namespace UnitTests\POData\Writers;
 
 use JMS\Serializer\SerializerBuilder;
+use UnitTests\POData\Facets\NorthWind2\NorthWindMetadata;
 use UnitTests\POData\TestCase;
 
 class JMSAsWireSerializerTest extends TestCase
@@ -30,6 +31,7 @@ class JMSAsWireSerializerTest extends TestCase
 
     private function initSerialiser()
     {
+        NorthWindMetadata::Create();
         $ymlDir = dirname(dirname(dirname(dirname(__DIR__)))) . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'POData' .
             DIRECTORY_SEPARATOR .'Writers' . DIRECTORY_SEPARATOR .'YML';
         return

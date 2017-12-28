@@ -10,6 +10,8 @@ use POData\Common\Version;
 use POData\OperationContext\Web\Illuminate\IncomingIlluminateRequest;
 use POData\Providers\Metadata\ResourceEntityType;
 use POData\Providers\Metadata\ResourceStreamInfo;
+use POData\Providers\Metadata\SimpleMetadataProvider;
+use POData\Providers\Metadata\Type\TypeCode;
 use POData\UriProcessor\RequestDescription;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\SegmentDescriptor;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
@@ -54,6 +56,13 @@ class RequestDescriptionMockeryTest extends TestCase
 
     public function testProcessDataFromClientEndpointRequest()
     {
+        $bar = new SimpleMetadataProvider('Data', 'Data');
+        $refClass = m::mock(\ReflectionClass::class);
+        $refClass->shouldReceive('hasMethod')->withArgs(['__get'])->andReturn(true);
+        $refClass->shouldReceive('isInstance')->andReturn(true);
+        $resourceType = $bar->addEntityType($refClass, 'CompanyConfigModel');
+        $bar->addKeyProperty($resourceType, 'id', TypeCode::INT32);
+
         $raw = '<?xml version="1.0" encoding="utf-8"?>
 <entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 <category term="Data.CompanyConfigModel" scheme="http://schemas.microsoft.com/ado/2007/08/dataservices/scheme" /><id /><title />

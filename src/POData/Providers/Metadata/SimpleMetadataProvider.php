@@ -279,18 +279,30 @@ class SimpleMetadataProvider implements IMetadataProvider
     /**
      * Add an entity type.
      *
-     * @param  \ReflectionClass          $refClass   reflection class of the entity
-     * @param  string                    $name       name of the entity
-     * @param  mixed                     $isAbstract
-     * @param  null|mixed                $baseType
+     * @param  \ReflectionClass                                         $refClass reflection class of the entity
+     * @param  string                                                   $name name of the entity
+     * @param  null|string                                              $pluralName  Optional custom resource set name
+     * @param  mixed                                                    $isAbstract
+     * @param  null|mixed                                               $baseType
+     * @return ResourceEntityType when the name is already in use
      * @throws InvalidOperationException when the name is already in use
-     * @return ResourceEntityType
-     *
      * @internal param string $namespace namespace of the data source
      */
-    public function addEntityType(\ReflectionClass $refClass, $name, $isAbstract = false, $baseType = null)
-    {
-        $result = $this->createResourceType($refClass, $name, ResourceTypeKind::ENTITY(), $isAbstract, $baseType);
+    public function addEntityType(
+        \ReflectionClass $refClass,
+        $name,
+        $pluralName = null,
+        $isAbstract = false,
+        $baseType = null
+    ) {
+        $result = $this->createResourceType(
+            $refClass,
+            $name,
+            ResourceTypeKind::ENTITY(),
+            $isAbstract,
+            $baseType,
+            $pluralName
+        );
         assert($result instanceof ResourceEntityType);
         return $result;
     }
@@ -301,6 +313,7 @@ class SimpleMetadataProvider implements IMetadataProvider
      * @param $typeKind
      * @param  mixed                                  $isAbstract
      * @param  null|mixed                             $baseType
+     * @param  null|mixed                             $pluralName
      * @throws InvalidOperationException
      * @return ResourceEntityType|ResourceComplexType
      * @internal param null|string $namespace
@@ -311,7 +324,8 @@ class SimpleMetadataProvider implements IMetadataProvider
         $name,
         $typeKind,
         $isAbstract = false,
-        $baseType = null
+        $baseType = null,
+        $pluralName = null
     ) {
         if (array_key_exists($name, $this->resourceTypes)) {
             throw new InvalidOperationException('Type with same name already added');
@@ -325,11 +339,12 @@ class SimpleMetadataProvider implements IMetadataProvider
 
         $type = null;
         if ($typeKind == ResourceTypeKind::ENTITY()) {
-            list($oet, $entitySet) = $this->getMetadataManager()->addEntityType($name, $baseTEntityType, $isAbstract);
+            list($oet, $entitySet) = $this->getMetadataManager()
+                ->addEntityType($name, $baseTEntityType, $isAbstract, 'Public', null, null, $pluralName);
             assert($oet instanceof TEntityTypeType, 'Entity type ' . $name . ' not successfully added');
             $type = new ResourceEntityType($refClass, $oet, $this);
             $typeName = $type->getFullName();
-            $returnName = Str::plural($typeName);
+            $returnName = MetadataManager::getResourceSetNameFromResourceType($typeName);
             $this->oDataEntityMap[$typeName] = $oet;
             $this->typeSetMapping[$name] = $entitySet;
             $this->typeSetMapping[$typeName] = $entitySet;
@@ -375,7 +390,22 @@ class SimpleMetadataProvider implements IMetadataProvider
      */
     public function addResourceSet($name, ResourceEntityType $resourceType)
     {
-        $returnName = Str::plural($resourceType->getFullName());
+        $typeName = $resourceType->getFullName();
+        $pluralName = Str::plural($typeName);
+        if (null == $name) {
+            $returnName = $pluralName;
+        } else {
+            // handle case where $name is a fully-qualified PHP class name
+            $nameBits = explode('\\', $name);
+            $numBits = count($nameBits);
+
+            if ($typeName == $nameBits[$numBits - 1]) {
+                $returnName = $pluralName;
+            } else {
+                $returnName = $name;
+            }
+        }
+
         if (array_key_exists($returnName, $this->resourceSets)) {
             throw new InvalidOperationException('Resource Set already added');
         }

@@ -3,6 +3,7 @@
 namespace UnitTests\POData\Providers\Metadata;
 
 use AlgoWeb\ODataMetadata\MetadataManager;
+use Illuminate\Support\Str;
 use InvalidArgumentException;
 use JMS\Serializer\Serializer;
 use Mockery as m;
@@ -97,6 +98,46 @@ class SimpleMetadataProviderTest extends TestCase
         $result = $foo->getResourceSets($parms);
         $this->assertTrue(is_array($result));
         $this->assertEquals(0, count($result));
+    }
+
+    public function testAddResourceSetWithoutExplicitName()
+    {
+        $type = m::mock(ResourceEntityType::class)->makePartial();
+        $type->shouldReceive('getFullName')->andReturn('Supplier');
+
+        $foo = new SimpleMetadataProvider('string', 'String');
+        $foo->addResourceSet(null, $type);
+
+        $result = $foo->resolveResourceSet('Suppliers');
+        $this->assertTrue($result instanceof ResourceSet);
+        $this->assertEquals('Supplier', $result->getResourceType()->getFullName());
+    }
+
+    public function testAddResourceSetContainingTypeName()
+    {
+        $type = m::mock(ResourceEntityType::class)->makePartial();
+        $type->shouldReceive('getFullName')->andReturn('Supplier');
+
+        $foo = new SimpleMetadataProvider('string', 'String');
+        $foo->addResourceSet('App\Models\Supplier', $type);
+
+        $result = $foo->resolveResourceSet('Suppliers');
+        $this->assertTrue($result instanceof ResourceSet);
+        $this->assertEquals('Supplier', $result->getResourceType()->getFullName());
+    }
+
+    public function testAddResourceSetWithCustomSetName()
+    {
+        // as in one six-sided die, two six-sided dice
+        $type = m::mock(ResourceEntityType::class)->makePartial();
+        $type->shouldReceive('getFullName')->andReturn('Die');
+
+        $foo = new SimpleMetadataProvider('string', 'String');
+        $foo->addResourceSet('Dice', $type);
+
+        $result = $foo->resolveResourceSet('Dice');
+        $this->assertTrue($result instanceof ResourceSet);
+        $this->assertEquals('Die', $result->getResourceType()->getFullName());
     }
 
     public function testGetTypesOnEmpty()
@@ -768,8 +809,8 @@ class SimpleMetadataProviderTest extends TestCase
 
         $foo = new SimpleMetadataProvider('string', 'String');
 
-        $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore', true);
-        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft', false, $fore);
+        $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore', null, true);
+        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft', null, false, $fore);
         $this->assertTrue($fore->isAbstract());
         $this->assertFalse($aft->isAbstract());
         $this->assertEquals($fore, $aft->getBaseType());

@@ -8,6 +8,7 @@ use POData\Common\ODataConstants;
 use POData\Common\ODataException;
 use POData\Providers\Metadata\ResourceEntityType;
 use POData\Providers\Metadata\ResourcePropertyKind;
+use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\ResourceTypeKind;
@@ -402,7 +403,9 @@ class SegmentParser
         if (null !== $singleton) {
             $this->assertion(null === $keyPredicate);
             $resourceType = $singleton->getResourceType();
-            $typeName = Str::plural($resourceType->getName());
+            $resourceSet = $resourceType->getCustomState();
+            assert($resourceSet instanceof ResourceSet, get_class($resourceSet));
+            $typeName = $resourceSet->getName();
             $resourceSet = $this->providerWrapper->resolveResourceSet($typeName);
             assert($resourceSet instanceof ResourceSetWrapper);
             $descriptor->setTargetKind(TargetKind::SINGLETON());

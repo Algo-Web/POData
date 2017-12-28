@@ -105,7 +105,7 @@ class SimpleMetadataProviderSingletonTest extends SimpleMetadataProviderTest
 
     public function testCreateSingletonNameCollideWithExistingEntitySet()
     {
-        $expected = 'Resource set with same name, fores, exists';
+        $expected = 'Resource set with same name, foreSet, exists';
         $actual = null;
 
         $refDummy = $this->createDummyEntityType();

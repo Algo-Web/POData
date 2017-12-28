@@ -2,6 +2,7 @@
 
 namespace POData\ObjectModel;
 
+use AlgoWeb\ODataMetadata\MetadataManager;
 use Illuminate\Support\Str;
 
 /**
@@ -173,7 +174,8 @@ class ODataEntry
         if (null !== $type) {
             $rawTerm = $type->term;
             $termArray = explode('.', $rawTerm);
-            $this->resourceSetName = Str::plural($termArray[count($termArray)-1]);
+            $final = $termArray[count($termArray)-1];
+            $this->resourceSetName = MetadataManager::getResourceSetNameFromResourceType($final);
         }
     }
 

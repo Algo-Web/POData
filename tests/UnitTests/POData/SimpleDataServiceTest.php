@@ -13,6 +13,7 @@ use POData\Providers\Metadata\SimpleMetadataProvider;
 use POData\Providers\Query\IQueryProvider;
 use POData\Providers\Stream\IStreamProvider2;
 use POData\SimpleDataService;
+use UnitTests\POData\Facets\NorthWind1\NorthWindQueryProvider;
 
 class SimpleDataServiceTest extends TestCase
 {
@@ -27,6 +28,20 @@ class SimpleDataServiceTest extends TestCase
 
         $foo = new SimpleDataService($db, $meta, $service, $cereal);
         $this->assertTrue($foo instanceof SimpleDataService);
+    }
+
+    public function testCreateWithImpliedSerialiser()
+    {
+        $cereal = m::mock(IObjectSerialiser::class);
+        $cereal->shouldReceive('setService')->withAnyArgs()->andReturnNull()->once();
+
+        $meta = m::mock(SimpleMetadataProvider::class);
+        $service = m::mock(ServiceHost::class);
+        $db = new \stdClass();
+        $db->queryProviderClassName = NorthWindQueryProvider::class;
+        $foo = new SimpleDataService($db, $meta, $service, $cereal);
+        $this->assertTrue($foo instanceof SimpleDataService);
+        $this->assertTrue($foo->getQueryProvider() instanceof NorthWindQueryProvider);
     }
 
     public function testCreateWithNullSerialiser()
