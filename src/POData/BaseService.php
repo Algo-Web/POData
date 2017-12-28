@@ -250,7 +250,7 @@ abstract class BaseService implements IRequestHandler, IService
             $request = $uriProcessor->getRequest();
             if (TargetKind::BATCH() == $request->getTargetKind()) {
                 //dd($request);
-                $this->getProvidersWrapper()->startTransaction();
+                $this->getProvidersWrapper()->startTransaction(true);
                 try {
                     $this->handleBatchRequest($request);
                 } catch (\Exception $ex) {
