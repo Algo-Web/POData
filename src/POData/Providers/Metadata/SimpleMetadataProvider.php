@@ -281,7 +281,7 @@ class SimpleMetadataProvider implements IMetadataProvider
      *
      * @param  \ReflectionClass                                         $refClass reflection class of the entity
      * @param  string                                                   $name name of the entity
-     * @param  null                                                     $pluralName  Optional custom resource set name
+     * @param  null|string                                              $pluralName  Optional custom resource set name
      * @param  mixed                                                    $isAbstract
      * @param  null|mixed                                               $baseType
      * @return ResourceEntityType when the name is already in use
