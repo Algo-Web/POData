@@ -116,23 +116,24 @@ class RequestExpander
      */
     private function executeExpansion($result)
     {
+        if ($result instanceof QueryResult) {
+            $result = $result->results;
+        }
+
+        $originalIsArray = is_array($result);
+
+        if (!$originalIsArray) {
+            $result = [$result];
+        }
+
         $expandedProjectionNodes = $this->getExpandedProjectionNodes();
         foreach ($expandedProjectionNodes as $expandedProjectionNode) {
             $resourceType = $expandedProjectionNode->getResourceType();
             $isCollection = ResourcePropertyKind::RESOURCESET_REFERENCE
                             == $expandedProjectionNode->getResourceProperty()->getKind();
             $expandedPropertyName = $expandedProjectionNode->getResourceProperty()->getName();
-            $originalIsArray = is_array($result);
-
-            if (!$originalIsArray) {
-                $result = [$result];
-            }
 
             foreach ($result as $entry) {
-                // Check for null entry
-                if ($entry instanceof QueryResult && empty($entry->results)) {
-                    continue;
-                }
                 if ($isCollection) {
                     $result1 = $this->executeCollectionExpansionGetRelated($expandedProjectionNode, $entry);
                     if (!empty($result1)) {
