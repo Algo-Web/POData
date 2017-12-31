@@ -585,7 +585,7 @@ class UriProcessorNewTest extends TestCase
 
         $skipToken = m::mock(InternalSkipTokenInfo::class);
         $skipToken->shouldReceive('getIndexOfFirstEntryInTheNextPage')->andReturn(1)->once();
-        $skipToken->shouldReceive('getSkipTokenInfo')->andReturnNull()->once();
+        $skipToken->shouldReceive('getSkipTokenInfo')->andReturnNull();
 
         $segment = m::mock(SegmentDescriptor::class)->makePartial();
         $segment->shouldReceive('getTargetKind')->andReturn(TargetKind::RESOURCE())->once();

@@ -233,7 +233,11 @@ class UriProcessorNew implements IUriProcessor
                     $this->executeGetSingleton($segment);
                     break;
                 case TargetKind::RESOURCE():
-                    $this->executeGetResource($segment, $eagerLoad);
+                    if ($segment->getTargetSource() == TargetSource::ENTITY_SET) {
+                        $this->handleSegmentTargetsToResourceSet($segment);
+                    } else {
+                        $this->executeGetResource($segment, $eagerLoad);
+                    }
                     break;
                 case TargetKind::MEDIA_RESOURCE():
                     $this->checkResourceExistsByIdentifier($segment);
@@ -536,6 +540,36 @@ class UriProcessorNew implements IUriProcessor
                 assert(false, 'Invalid property kind type for resource retrieval');
         }
         return $queryResult;
+    }
+
+    /**
+     * Query for a resource set pointed by the given segment descriptor and update the descriptor with the result.
+     *
+     * @param SegmentDescriptor $segment Describes the resource set to query
+     */
+    private function handleSegmentTargetsToResourceSet(SegmentDescriptor $segment)
+    {
+        if ($segment->isSingleResult()) {
+            $entityInstance = $this->getProviders()->getResourceFromResourceSet(
+                $segment->getTargetResourceSetWrapper(),
+                $segment->getKeyDescriptor()
+            );
+
+            $segment->setResult($entityInstance);
+        } else {
+            $skip = (null == $this->getRequest()) ? 0 : $this->getRequest()->getSkipCount();
+            $skip = (null === $skip) ? 0 : $skip;
+            $queryResult = $this->getProviders()->getResourceSet(
+                $this->getRequest()->queryType,
+                $segment->getTargetResourceSetWrapper(),
+                $this->getRequest()->getFilterInfo(),
+                $this->getRequest()->getInternalOrderByInfo(),
+                $this->getRequest()->getTopCount(),
+                $skip,
+                null
+            );
+            $segment->setResult($queryResult);
+        }
     }
 
     /**
