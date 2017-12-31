@@ -532,8 +532,8 @@ class UriProcessorNew implements IUriProcessor
                 $this->getRequest()->getInternalOrderByInfo(),
                 $this->getRequest()->getTopCount(),
                 $skip,
-                $skipToken
-                // Eager load list not being passed in here due to downstream breakages
+                $skipToken,
+                $eagerList
             );
             $segment->setResult($queryResult);
         }
