@@ -19,7 +19,7 @@ script:
   - php vendor/bin/phpunit-randomizer --coverage-clover build/logs/clover.xml --order rand
 
 after_script:
-  - php vendor/bin/coveralls --exclude-no-stmt
+  - php vendor/bin/php-coveralls --exclude-no-stmt
 
 after_success:
   - coveralls
