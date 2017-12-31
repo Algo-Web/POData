@@ -233,7 +233,7 @@ class UriProcessorNew implements IUriProcessor
                     $this->executeGetSingleton($segment);
                     break;
                 case TargetKind::RESOURCE():
-                    if ($segment->getTargetSource() == TargetSource::ENTITY_SET) {
+                    if (TargetSource::ENTITY_SET == $segment->getTargetSource()) {
                         $this->handleSegmentTargetsToResourceSet($segment);
                     } else {
                         $this->executeGetResource($segment, $eagerLoad);
