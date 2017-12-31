@@ -233,7 +233,11 @@ class UriProcessorNew implements IUriProcessor
                     $this->executeGetSingleton($segment);
                     break;
                 case TargetKind::RESOURCE():
-                    $this->executeGetResource($segment, $eagerLoad);
+                    if (TargetSource::ENTITY_SET == $segment->getTargetSource()) {
+                        $this->handleSegmentTargetsToResourceSet($segment, $eagerLoad);
+                    } else {
+                        $this->executeGetResource($segment, $eagerLoad);
+                    }
                     break;
                 case TargetKind::MEDIA_RESOURCE():
                     $this->checkResourceExistsByIdentifier($segment);
@@ -437,12 +441,7 @@ class UriProcessorNew implements IUriProcessor
         foreach ($eagerList as $eager) {
             assert(is_string($eager) && 0 < strlen($eager), 'Eager-load list elements must be non-empty strings');
         }
-        $isRelated = $segment->getTargetSource() != TargetSource::ENTITY_SET;
-        if (!$isRelated) {
-            $queryResult = $this->executeGetResourceDirect($segment, $eagerList);
-        } else {
-            $queryResult = $this->executeGetResourceRelated($segment);
-        }
+        $queryResult = $this->executeGetResourceRelated($segment);
         $segment->setResult($queryResult);
     }
 
@@ -454,37 +453,6 @@ class UriProcessorNew implements IUriProcessor
         $previous = $segment->getPrevious();
         assert(isset($previous));
         $segment->setResult($previous->getResult());
-    }
-
-    /**
-     * @param $segment
-     * @return null|object|QueryResult
-     */
-    private function executeGetResourceDirect($segment, array $eagerList)
-    {
-        if ($segment->isSingleResult()) {
-            $queryResult = $this->getProviders()->getResourceFromResourceSet(
-                $segment->getTargetResourceSetWrapper(),
-                $segment->getKeyDescriptor(),
-                $eagerList
-            );
-        } else {
-            $skip = $this->getRequest()->getSkipCount();
-            $skip = (null === $skip) ? 0 : $skip;
-            $skipToken = $this->getRequest()->getInternalSkipTokenInfo();
-            $skipToken = (null != $skipToken) ? $skipToken->getSkipTokenInfo() : null;
-            $queryResult = $this->getProviders()->getResourceSet(
-                $this->getRequest()->queryType,
-                $segment->getTargetResourceSetWrapper(),
-                $this->getRequest()->getFilterInfo(),
-                $this->getRequest()->getInternalOrderByInfo(),
-                $this->getRequest()->getTopCount(),
-                $skip,
-                $skipToken,
-                $eagerList
-            );
-        }
-        return $queryResult;
     }
 
     /**
@@ -536,6 +504,39 @@ class UriProcessorNew implements IUriProcessor
                 assert(false, 'Invalid property kind type for resource retrieval');
         }
         return $queryResult;
+    }
+
+    /**
+     * Query for a resource set pointed by the given segment descriptor and update the descriptor with the result.
+     *
+     * @param SegmentDescriptor $segment Describes the resource set to query
+     */
+    private function handleSegmentTargetsToResourceSet(SegmentDescriptor $segment, array $eagerList)
+    {
+        if ($segment->isSingleResult()) {
+            $entityInstance = $this->getProviders()->getResourceFromResourceSet(
+                $segment->getTargetResourceSetWrapper(),
+                $segment->getKeyDescriptor(),
+                $eagerList
+            );
+            $segment->setResult($entityInstance);
+        } else {
+            $skip = (null == $this->getRequest()) ? 0 : $this->getRequest()->getSkipCount();
+            $skip = (null === $skip) ? 0 : $skip;
+            $skipToken = $this->getRequest()->getInternalSkipTokenInfo();
+            $skipToken = (null != $skipToken) ? $skipToken->getSkipTokenInfo() : null;
+            $queryResult = $this->getProviders()->getResourceSet(
+                $this->getRequest()->queryType,
+                $segment->getTargetResourceSetWrapper(),
+                $this->getRequest()->getFilterInfo(),
+                $this->getRequest()->getInternalOrderByInfo(),
+                $this->getRequest()->getTopCount(),
+                $skip,
+                $skipToken,
+                $eagerList
+            );
+            $segment->setResult($queryResult);
+        }
     }
 
     /**
