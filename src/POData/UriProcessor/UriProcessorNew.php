@@ -234,7 +234,7 @@ class UriProcessorNew implements IUriProcessor
                     break;
                 case TargetKind::RESOURCE():
                     if (TargetSource::ENTITY_SET == $segment->getTargetSource()) {
-                        $this->handleSegmentTargetsToResourceSet($segment, $eagerLoad);
+                        $this->handleSegmentTargetsToResourceSet($segment);
                     } else {
                         $this->executeGetResource($segment, $eagerLoad);
                     }
@@ -441,7 +441,12 @@ class UriProcessorNew implements IUriProcessor
         foreach ($eagerList as $eager) {
             assert(is_string($eager) && 0 < strlen($eager), 'Eager-load list elements must be non-empty strings');
         }
-        $queryResult = $this->executeGetResourceRelated($segment);
+        $isRelated = TargetSource::ENTITY_SET == $segment->getTargetSource();
+        if ($isRelated) {
+            $queryResult = $this->executeGetResourceDirect($segment, $eagerList);
+        } else {
+            $queryResult = $this->executeGetResourceRelated($segment, $eagerList);
+        }
         $segment->setResult($queryResult);
     }
 
@@ -459,7 +464,38 @@ class UriProcessorNew implements IUriProcessor
      * @param $segment
      * @return null|object|QueryResult
      */
-    private function executeGetResourceRelated($segment)
+    private function executeGetResourceDirect($segment, array $eagerList)
+    {
+        if ($segment->isSingleResult()) {
+            $queryResult = $this->getProviders()->getResourceFromResourceSet(
+                $segment->getTargetResourceSetWrapper(),
+                $segment->getKeyDescriptor(),
+                $eagerList
+            );
+        } else {
+            $skip = $this->getRequest()->getSkipCount();
+            $skip = (null === $skip) ? 0 : $skip;
+            $skipToken = $this->getRequest()->getInternalSkipTokenInfo();
+            $skipToken = (null != $skipToken) ? $skipToken->getSkipTokenInfo() : null;
+            $queryResult = $this->getProviders()->getResourceSet(
+                $this->getRequest()->queryType,
+                $segment->getTargetResourceSetWrapper(),
+                $this->getRequest()->getFilterInfo(),
+                $this->getRequest()->getInternalOrderByInfo(),
+                $this->getRequest()->getTopCount(),
+                $skip,
+                $skipToken,
+                $eagerList
+            );
+        }
+        return $queryResult;
+    }
+
+    /**
+     * @param $segment
+     * @return null|object|QueryResult
+     */
+    private function executeGetResourceRelated($segment, $eagerList)
     {
         $projectedProperty = $segment->getProjectedProperty();
         $projectedPropertyKind = null !== $projectedProperty ? $projectedProperty->getKind() : 0;
@@ -511,14 +547,14 @@ class UriProcessorNew implements IUriProcessor
      *
      * @param SegmentDescriptor $segment Describes the resource set to query
      */
-    private function handleSegmentTargetsToResourceSet(SegmentDescriptor $segment, array $eagerList)
+    private function handleSegmentTargetsToResourceSet(SegmentDescriptor $segment)
     {
         if ($segment->isSingleResult()) {
             $entityInstance = $this->getProviders()->getResourceFromResourceSet(
                 $segment->getTargetResourceSetWrapper(),
-                $segment->getKeyDescriptor(),
-                $eagerList
+                $segment->getKeyDescriptor()
             );
+
             $segment->setResult($entityInstance);
         } else {
             $skip = (null == $this->getRequest()) ? 0 : $this->getRequest()->getSkipCount();
@@ -532,8 +568,7 @@ class UriProcessorNew implements IUriProcessor
                 $this->getRequest()->getInternalOrderByInfo(),
                 $this->getRequest()->getTopCount(),
                 $skip,
-                $skipToken,
-                $eagerList
+                $skipToken
             );
             $segment->setResult($queryResult);
         }
