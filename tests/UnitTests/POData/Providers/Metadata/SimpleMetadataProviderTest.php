@@ -655,8 +655,8 @@ class SimpleMetadataProviderTest extends TestCase
         $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
         $foo->addKeyProperty($fore, 'key', TypeCode::INT32);
         $foo->addKeyProperty($aft, 'key', TypeCode::INT32);
-        $this->assertTrue($fore instanceof ResourceType);
-        $this->assertTrue($aft instanceof ResourceType);
+        $this->assertTrue($fore instanceof ResourceEntityType);
+        $this->assertTrue($aft instanceof ResourceEntityType);
 
         $foreSet = $foo->addResourceSet('foreSet', $fore);
         $aftSet = $foo->addResourceSet('aftSet', $aft);
@@ -686,6 +686,44 @@ class SimpleMetadataProviderTest extends TestCase
         $end2 = $result->getEnd2();
         $property = $end2->getResourceProperty()->getKind();
         $this->assertEquals(ResourcePropertyKind::RESOURCESET_REFERENCE, $property);
+
+        // fianlly, to check multiplicities, dig out from metadata manager
+        $assoc = $foo->getMetadataManager()->getEdmx()->getDataServiceType()->getSchema()[0]->getAssociation();
+        $this->assertEquals(1, count($assoc));
+        $assoc = $assoc[0];
+        $ends = $assoc->getEnd();
+        $this->assertEquals('*', $ends[0]->getMultiplicity());
+        $this->assertEquals('1', $ends[1]->getMultiplicity());
+    }
+
+    public function testAddResourceReferenceBidirectionalCheckSaneWhenParentNullable()
+    {
+        $forward = new reusableEntityClass4('foo', 'bar');
+        $back = new reusableEntityClass5('foo', 'bar');
+
+        $foo = new SimpleMetadataProvider('string', 'String');
+
+        $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore');
+        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
+        $foo->addKeyProperty($fore, 'key', TypeCode::INT32);
+        $foo->addKeyProperty($aft, 'key', TypeCode::INT32);
+        $this->assertTrue($fore instanceof ResourceEntityType);
+        $this->assertTrue($aft instanceof ResourceEntityType);
+
+        $foreSet = $foo->addResourceSet('foreSet', $fore);
+        $aftSet = $foo->addResourceSet('aftSet', $aft);
+        $this->assertTrue($foreSet instanceof ResourceSet);
+        $this->assertTrue($aftSet instanceof ResourceSet);
+
+        $foo->addResourceReferencePropertyBidirectional($fore, $aft, 'relation', 'backRelation', true);
+
+        // check multiplicities - dig out from metadata manager
+        $assoc = $foo->getMetadataManager()->getEdmx()->getDataServiceType()->getSchema()[0]->getAssociation();
+        $this->assertEquals(1, count($assoc));
+        $assoc = $assoc[0];
+        $ends = $assoc->getEnd();
+        $this->assertEquals('*', $ends[0]->getMultiplicity());
+        $this->assertEquals('0..1', $ends[1]->getMultiplicity());
     }
 
     public function testAddResourceSetReferenceBidirectionalCheckSane()
