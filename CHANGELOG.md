@@ -1,5 +1,6 @@
 Unreleased
 ----------
+   * Return HTTP 204 when a singleton resource is null (see [#205] (https://github.com/Algo-Web/POData/pull/201))
    * Fix property expansion - **cdcampos** is on a roll! (see [#201] (https://github.com/Algo-Web/POData/pull/201))
    * Fix ODataCategory and ODataLink writes via JSON - **cdcampos** rides again! (see [#197] (https://github.com/Algo-Web/POData/pull/197))
    * Untangle batch sub-request handling (see [#191] (https://github.com/Algo-Web/POData/pull/191))
