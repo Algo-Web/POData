@@ -478,9 +478,8 @@ abstract class BaseService implements IRequestHandler, IService
                     // handle entry resource
                     $needToSerializeResponse = true;
                     $eTag = $this->compareETag($result, $targetResourceType, $needToSerializeResponse);
-
                     if ($needToSerializeResponse) {
-                        if (null === $result) {
+                        if (null === $result || null === $result->results) {
                             // In the query 'Orders(1245)/Customer', the targeted
                             // Customer might be null
                             // set status code to 204 => 'No Content'
