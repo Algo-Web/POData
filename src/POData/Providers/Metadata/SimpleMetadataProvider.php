@@ -619,12 +619,15 @@ class SimpleMetadataProvider implements IMetadataProvider
      *                                               reference property to
      * @param string             $sourceProperty     The name of the property to add, on source type
      * @param string             $targetProperty     The name of the property to add, on target type
+     * @param bool               $nullable           Is singleton side of relation nullable?
+     * @throws InvalidOperationException
      */
     public function addResourceReferencePropertyBidirectional(
         ResourceEntityType $sourceResourceType,
         ResourceEntityType $targetResourceType,
         $sourceProperty,
-        $targetProperty
+        $targetProperty,
+        $nullable = false
     ) {
         $this->addReferencePropertyInternalBidirectional(
             $sourceResourceType,
@@ -632,7 +635,7 @@ class SimpleMetadataProvider implements IMetadataProvider
             $sourceProperty,
             $targetProperty,
             '*',
-            '1'
+            true === $nullable ? '0..1' : '1'
         );
         // verify resource property types are what we expect them to be
         $sourceResourceKind = $sourceResourceType->resolveProperty($sourceProperty)->getKind();
