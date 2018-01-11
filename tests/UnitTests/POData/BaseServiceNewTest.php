@@ -933,6 +933,55 @@ class BaseServiceNewTest extends TestCase
         $foo->serializeResult($request, $uriProc);
     }
 
+    public function testSerializeNullResultReturnsNoContent()
+    {
+        $url = new Url('https://www.example.org/odata.svc');
+
+        $property = m::mock(ResourceProperty::class);
+
+        $type = m::mock(ResourceType::class);
+        $type->shouldReceive('hasETagProperties')->andReturn(false);
+
+        $req = m::mock(IHTTPRequest::class);
+        $req->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::GET())->once();
+
+        $host = m::mock(ServiceHost::class);
+        $host->shouldReceive('setResponseStatusCode')->withArgs([HttpStatus::CODE_NOCONTENT])->andReturnNull()->once();
+        $host->shouldReceive('getRequestAccept')->andReturn(null);
+        $host->shouldReceive('getQueryStringItem')->andReturn(null);
+        $host->shouldReceive('getOperationContext->incomingRequest')->andReturn($req);
+        $host->shouldReceive('getRequestIfMatch')->andReturn(null);
+        $host->shouldReceive('getRequestIfNoneMatch')->andReturn(null);
+
+        $request = m::mock(RequestDescription::class);
+        $request->shouldReceive('isETagHeaderAllowed')->andReturn(true);
+        $request->shouldReceive('needExecution')->andReturn(true)->once();
+        $request->shouldReceive('getResponseVersion')->andReturn(Version::v3());
+        $request->shouldReceive('isLinkUri')->andReturn(false);
+        $request->shouldReceive('getTargetResult')->andReturnNull()->atLeast(1);
+        $request->shouldReceive('getTargetKind')->andReturn(TargetKind::RESOURCE());
+        $request->shouldReceive('getTargetResourceType')->andReturn($type);
+        $request->shouldReceive('isSingleResult')->andReturn(true)->once();
+        $request->shouldReceive('getProjectedProperty')->andReturn($property)->once();
+
+        $uriProc = m::mock(UriProcessor::class);
+        $uriProc->shouldReceive('execute')->andReturnNull();
+
+        $cereal = $this->spinUpMockSerialiser();
+        $cereal->shouldReceive('setRequest')->andReturnNull()->once();
+        $cereal->shouldReceive('writeTopLevelElement')->andReturnNull()->never();
+
+        $stream = m::mock(StreamProviderWrapper::class);
+        $stream->shouldReceive('setService')->andReturnNull()->once();
+
+        $config = m::mock(IServiceConfiguration::class);
+        $config->shouldReceive('getValidateETagHeader')->andReturn(true);
+
+        $foo = new BaseServiceDummy(null, $host, $cereal, $stream, null, $config);
+
+        $foo->serializeResult($request, $uriProc);
+    }
+
     public function testSerializeResultWithDeleteRequestExecuted()
     {
         $url = new Url('https://www.example.org/odata.svc');
