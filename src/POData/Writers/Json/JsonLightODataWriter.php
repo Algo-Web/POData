@@ -12,6 +12,7 @@ use POData\ObjectModel\ODataFeed;
 use POData\ObjectModel\ODataLink;
 use POData\ObjectModel\ODataProperty;
 use POData\ObjectModel\ODataPropertyContent;
+use POData\ObjectModel\ODataTitle;
 use POData\ObjectModel\ODataURL;
 use POData\ObjectModel\ODataURLCollection;
 
@@ -93,7 +94,8 @@ class JsonLightODataWriter extends JsonODataV2Writer
             $this->writeTopLevelMeta($model->properties[0]->typeName);
             $this->writeTopLevelProperty($model->properties[0]);
         } elseif ($model instanceof ODataFeed) {
-            $this->writeTopLevelMeta($model->title->title);
+            $effectiveTitle = $model->title instanceof ODataTitle ? $model->title->title : $model->title;
+            $this->writeTopLevelMeta($effectiveTitle);
             $this->writeRowCount($model->rowCount);
             $this->writer
                 ->writeName($this->dataArrayName)
