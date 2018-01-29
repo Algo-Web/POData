@@ -4,6 +4,7 @@ namespace UnitTests\POData\Writers\Json;
 
 use Mockery as m;
 use POData\Common\MimeTypes;
+use POData\Common\ODataConstants;
 use POData\Common\ODataException;
 use POData\Common\Version;
 use POData\ObjectModel\ODataBagContent;
@@ -1427,5 +1428,33 @@ class JsonODataV1WriterTest extends TestCase
         $expected = preg_replace('~(*BSR_ANYCRLF)\R~', "\r\n", $expected);
         $actual = preg_replace('~(*BSR_ANYCRLF)\R~', "\r\n", $actual);
         $this->assertEquals($expected, $actual);
+    }
+
+    public function testWriteEmptyODataEntry()
+    {
+        $entry = new ODataEntry();
+        $entry->resourceSetName = 'Foobars';
+
+        $foo = new JsonODataV1Writer('http://localhost/odata.svc');
+
+        $actual = $foo->write($entry)->getOutput();
+        $expected = '"__metadata":{'.PHP_EOL.PHP_EOL.'        }';
+        $this->assertTrue(false !== strpos($actual, $expected));
+    }
+
+    public function testWriteEmptyODataFeed()
+    {
+        $feed = new ODataFeed();
+        $feed->id = 'http://localhost/odata.svc/feedID';
+        $feed->title = 'title';
+        $feed->selfLink = new ODataLink();
+        $feed->selfLink->name = ODataConstants::ATOM_SELF_RELATION_ATTRIBUTE_VALUE;
+        $feed->selfLink->title = 'Feed Title';
+        $feed->selfLink->url = 'feedID';
+
+        $foo = new JsonODataV1Writer('http://localhost/odata.svc');
+        $expected = '"d":['.PHP_EOL.PHP_EOL.'    ]';
+        $actual = $foo->write($feed)->getOutput();
+        $this->assertTrue(false !== strpos($actual, $expected));
     }
 }
