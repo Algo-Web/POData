@@ -1372,4 +1372,18 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $actual = $foo->getOutput();
         $this->assertXmlStringEqualsXmlString($expected, $actual);
     }
+
+    public function testWriteEmptyODataEntry()
+    {
+        $entry = new ODataEntry();
+        $entry->resourceSetName = 'Foobars';
+
+        $foo = new AtomODataWriterDummy('http://localhost/odata.svc');
+
+        $actual = $foo->write($entry)->getOutput();
+        $expected = '<link rel="edit" title="" href=""/>';
+        $this->assertTrue(false !== strpos($actual, $expected));
+        $expected = '<m:properties/>';
+        $this->assertTrue(false !== strpos($actual, $expected));
+    }
 }
