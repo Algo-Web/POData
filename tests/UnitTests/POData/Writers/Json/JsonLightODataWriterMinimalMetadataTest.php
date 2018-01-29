@@ -4,6 +4,7 @@ namespace UnitTests\POData\Writers\Json;
 
 use Mockery as m;
 use POData\Common\MimeTypes;
+use POData\Common\ODataConstants;
 use POData\Common\Version;
 use POData\ObjectModel\ODataBagContent;
 use POData\ObjectModel\ODataEntry;
@@ -1353,5 +1354,36 @@ class JsonLightODataWriterMinimalMetadataTest extends TestCase
             [601, Version::v2(), MimeTypes::MIME_APPLICATION_JSON_VERBOSE, false],
             [602, Version::v3(), MimeTypes::MIME_APPLICATION_JSON_VERBOSE, false],
         ];
+    }
+
+    public function testWriteEmptyODataEntry()
+    {
+        $entry = new ODataEntry();
+        $entry->resourceSetName = 'Foobars';
+
+        $foo = new JsonLightODataWriter(JsonLightMetadataLevel::MINIMAL(), 'http://localhost/odata.svc');
+
+        $actual = $foo->write($entry)->getOutput();
+        $expected = '{'.PHP_EOL.'    "odata.metadata":"http://localhost/odata.svc/$metadata#Foobars/@Element"'
+                    .PHP_EOL.'}';
+        $this->assertTrue(false !== strpos($actual, $expected));
+    }
+
+    public function testWriteEmptyODataFeed()
+    {
+        $feed = new ODataFeed();
+        $feed->id = 'http://localhost/odata.svc/feedID';
+        $feed->title = 'title';
+        $feed->selfLink = new ODataLink();
+        $feed->selfLink->name = ODataConstants::ATOM_SELF_RELATION_ATTRIBUTE_VALUE;
+        $feed->selfLink->title = 'Feed Title';
+        $feed->selfLink->url = 'feedID';
+
+        $foo = new JsonLightODataWriter(JsonLightMetadataLevel::MINIMAL(), 'http://localhost/odata.svc');
+        $expected = '{'.PHP_EOL
+                    .'    "odata.metadata":"http://localhost/odata.svc/$metadata#title","value":['
+                    .PHP_EOL.PHP_EOL.'    ]'.PHP_EOL.'}';
+        $actual = $foo->write($feed)->getOutput();
+        $this->assertTrue(false !== strpos($actual, $expected));
     }
 }
