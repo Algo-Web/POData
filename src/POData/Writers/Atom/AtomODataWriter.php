@@ -188,12 +188,13 @@ class AtomODataWriter implements IODataWriter
             $this->writeBaseUriAndDefaultNamespaces();
         }
 
+        $effectiveTitle = is_string($feed->title) ? $feed->title : $feed->title->title;
         $this
             ->writeNodeAttributeValue(
                 ODataConstants::ATOM_TITLE_ELELMET_NAME,
                 ODataConstants::ATOM_TYPE_ATTRIBUTE_NAME,
                 MimeTypes::MIME_TEXTTYPE,
-                $feed->title->title
+                $effectiveTitle
             )
             ->writeNodeValue(ODataConstants::ATOM_ID_ELEMENT_NAME, $feed->id)
             ->writeNodeValue(ODataConstants::ATOM_UPDATED_ELEMENT_NAME, $this->getUpdated()->format(DATE_ATOM))
