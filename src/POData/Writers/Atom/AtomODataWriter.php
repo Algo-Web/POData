@@ -8,11 +8,13 @@ use POData\Common\ODataConstants;
 use POData\Common\ODataException;
 use POData\Common\Version;
 use POData\ObjectModel\ODataBagContent;
+use POData\ObjectModel\ODataCategory;
 use POData\ObjectModel\ODataEntry;
 use POData\ObjectModel\ODataFeed;
 use POData\ObjectModel\ODataLink;
 use POData\ObjectModel\ODataProperty;
 use POData\ObjectModel\ODataPropertyContent;
+use POData\ObjectModel\ODataTitle;
 use POData\ObjectModel\ODataURL;
 use POData\ObjectModel\ODataURLCollection;
 use POData\Providers\ProvidersWrapper;
@@ -188,7 +190,7 @@ class AtomODataWriter implements IODataWriter
             $this->writeBaseUriAndDefaultNamespaces();
         }
 
-        $effectiveTitle = is_string($feed->title) ? $feed->title : $feed->title->title;
+        $effectiveTitle = $feed->title instanceof ODataTitle ? $feed->title->title : $feed->title;
         $this
             ->writeNodeAttributeValue(
                 ODataConstants::ATOM_TITLE_ELELMET_NAME,
@@ -272,7 +274,7 @@ class AtomODataWriter implements IODataWriter
             $this->xmlWriter->endAttribute();
         }
 
-        $effectiveTitle = (null === $entry->title) ? null : $entry->title->title;
+        $effectiveTitle = $entry->title instanceof ODataTitle ? $entry->title->title : $entry->title;
         $this
             ->writeNodeValue(ODataConstants::ATOM_ID_ELEMENT_NAME, $entry->id)
             ->writeNodeAttributeValue(
@@ -467,7 +469,7 @@ class AtomODataWriter implements IODataWriter
      */
     public function preWriteProperties(ODataEntry $entry)
     {
-        $effectiveType = (null === $entry->type) ? null : $entry->type->term;
+        $effectiveType = $entry->type instanceof ODataCategory ? $entry->type->term : $entry->type;
         $this->xmlWriter->startElement(ODataConstants::ATOM_CATEGORY_ELEMENT_NAME);
         $this->xmlWriter->writeAttribute(
             ODataConstants::ATOM_CATEGORY_TERM_ATTRIBUTE_NAME,
