@@ -782,7 +782,7 @@ class CynicSerialiser implements IObjectSerialiser
         $nextName = $prop->getResourceType()->getName();
         $nuLink->isExpanded = true;
         $value = $entryObject->results->$propName;
-        $isCollection = ResourcePropertyKind::RESOURCESET_REFERENCE == $propKind || !is_object($value);
+        $isCollection = ResourcePropertyKind::RESOURCESET_REFERENCE == $propKind;
         $nuLink->isCollection = $isCollection;
         $nullResult = null === $value;
         $resultCount = $nullResult ? 0 : count($value);
@@ -804,17 +804,24 @@ class CynicSerialiser implements IObjectSerialiser
                     $nuLink->expandedResult = $expandedResult;
                 }
             }
-        }
-        if (!isset($nuLink->expandedResult)) {
-            $nuLink->isCollection = null;
-            $nuLink->isExpanded = null;
         } else {
-            if (isset($nuLink->expandedResult->selfLink)) {
-                $nuLink->expandedResult->selfLink->title = $propName;
-                $nuLink->expandedResult->selfLink->url = $nuLink->url;
-                $nuLink->expandedResult->title = new ODataTitle($propName);
-                $nuLink->expandedResult->id = rtrim($this->absoluteServiceUri, '/') . '/' . $nuLink->url;
+            $type = $this->getService()->getProvidersWrapper()->resolveResourceType($nextName);
+            /*
+            if (!$isCollection) {
+                $result = new ODataEntry();
+                $result->resourceSetName = $type->getName();
+            } else {
+                $result = new ODataFeed();
+                $result->selfLink = new ODataLink();
+                $result->selfLink->name = ODataConstants::ATOM_SELF_RELATION_ATTRIBUTE_VALUE;
             }
+            $nuLink->expandedResult = $result;*/
+        }
+        if (isset($nuLink->expandedResult->selfLink)) {
+            $nuLink->expandedResult->selfLink->title = $propName;
+            $nuLink->expandedResult->selfLink->url = $nuLink->url;
+            $nuLink->expandedResult->title = new ODataTitle($propName);
+            $nuLink->expandedResult->id = rtrim($this->absoluteServiceUri, '/') . '/' . $nuLink->url;
         }
     }
 

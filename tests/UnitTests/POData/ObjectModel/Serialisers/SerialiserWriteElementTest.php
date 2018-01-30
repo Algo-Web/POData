@@ -241,6 +241,8 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $linkResult->links[0]->type = 'application/atom+xml;type=feed';
         $linkResult->links[0]->url = 'Customers(CustomerID=\'1\',CustomerGuid=guid\'123e4567'
                                      .'-e89b-12d3-a456-426655440000\')/Orders';
+        $linkResult->links[0]->isCollection = true;
+        $linkResult->links[0]->isExpanded = true;
         $linkResult->resourceSetName = 'Customers';
         $linkResult->propertyContent = $linkPropContent;
         $linkResult->updated = '2017-01-01T00:00:00+00:00';
@@ -257,6 +259,8 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $links[1]->title = 'Order_Details';
         $links[1]->type = 'application/atom+xml;type=feed';
         $links[1]->url = 'Orders(OrderID=1)/Order_Details';
+        $links[1]->isCollection = true;
+        $links[1]->isExpanded = true;
 
         $objectResult = new ODataEntry();
         $objectResult->id = 'http://localhost/odata.svc/Orders(OrderID=1)';
@@ -503,11 +507,16 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $managerLink1->title = 'Manager';
         $managerLink1->type = 'application/atom+xml;type=entry';
         $managerLink1->url = 'Employees(EmployeeID=\'Cave+Johnson\')/Manager';
+        $managerLink1->isCollection = false;
+        $managerLink1->isExpanded = true;
         $managerLink2 = new ODataLink();
         $managerLink2->name = 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Subordinates';
         $managerLink2->title = 'Subordinates';
         $managerLink2->type = 'application/atom+xml;type=feed';
         $managerLink2->url = 'Employees(EmployeeID=\'Cave+Johnson\')/Subordinates';
+        $managerLink2->isCollection = true;
+        $managerLink2->isExpanded = false;
+
 
         $manager = new ODataEntry();
         $manager->id = 'http://localhost/odata.svc/Employees(EmployeeID=\'Cave+Johnson\')';
