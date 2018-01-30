@@ -200,6 +200,7 @@ class CynicSerialiser implements IObjectSerialiser
                 .' $propKind != ResourcePropertyKind::RESOURCE_REFERENCE'
             );
             $propTail = ResourcePropertyKind::RESOURCE_REFERENCE == $propKind ? 'entry' : 'feed';
+            $nuLink->isCollection = 'feed' === $propTail;
             $propType = 'application/atom+xml;type='.$propTail;
             $propName = $prop->getName();
             $nuLink->title = $propName;
@@ -207,10 +208,14 @@ class CynicSerialiser implements IObjectSerialiser
             $nuLink->url = $relativeUri . '/' . $propName;
             $nuLink->type = $propType;
 
-            $navProp = new ODataNavigationPropertyInfo($prop, $this->shouldExpandSegment($propName));
+            $shouldExpand = $this->shouldExpandSegment($propName);
+
+            $navProp = new ODataNavigationPropertyInfo($prop, $shouldExpand);
             if ($navProp->expanded) {
                 $this->expandNavigationProperty($entryObject, $prop, $nuLink, $propKind, $propName);
             }
+            $nuLink->isExpanded = isset($nuLink->expandedResult);
+            assert(null !== $nuLink->isCollection);
 
             $links[] = $nuLink;
         }

@@ -61,6 +61,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $link->type = 'application/atom+xml;type=feed';
         $link->title = 'Orders';
         $link->url = 'Customers(CustomerID=\'1\',CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')/Orders';
+        $link->isCollection = true;
 
         $propContent = new ODataPropertyContent();
         $propContent->properties = ['CustomerID' => new ODataProperty(), 'CustomerGuid' => new ODataProperty(),
@@ -242,7 +243,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $linkResult->links[0]->url = 'Customers(CustomerID=\'1\',CustomerGuid=guid\'123e4567'
                                      .'-e89b-12d3-a456-426655440000\')/Orders';
         $linkResult->links[0]->isCollection = true;
-        $linkResult->links[0]->isExpanded = true;
+        $linkResult->links[0]->isExpanded = false;
         $linkResult->resourceSetName = 'Customers';
         $linkResult->propertyContent = $linkPropContent;
         $linkResult->updated = '2017-01-01T00:00:00+00:00';
@@ -260,7 +261,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $links[1]->type = 'application/atom+xml;type=feed';
         $links[1]->url = 'Orders(OrderID=1)/Order_Details';
         $links[1]->isCollection = true;
-        $links[1]->isExpanded = true;
+        $links[1]->isExpanded = false;
 
         $objectResult = new ODataEntry();
         $objectResult->id = 'http://localhost/odata.svc/Orders(OrderID=1)';
@@ -351,6 +352,8 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $links[1]->title = 'Subordinates';
         $links[1]->type = 'application/atom+xml;type=feed';
         $links[1]->url = 'Employees(EmployeeID=\'Cave+Johnson\')/Subordinates';
+        $links[1]->isCollection = true;
+        $links[1]->isExpanded = false;
 
         $objectResult = new ODataEntry();
         $objectResult->id = 'http://localhost/odata.svc/Employees(EmployeeID=\'Cave+Johnson\')';
@@ -418,15 +421,16 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $expandNode->shouldReceive('getResourceProperty')->andReturn($rProp);
         $expandNode->shouldReceive('getPropertyName')->andReturn('Manager');
         $expandNode->shouldReceive('canSelectAllProperties')->andReturn(true);
-        $expandNode->shouldReceive('isExpansionSpecified')->andReturn(true);
+        $expandNode->shouldReceive('isExpansionSpecified')->andReturn(false);
         $expandNode->shouldReceive('findNode')->andReturn(null);
 
         $node = m::mock(RootProjectionNode::class);
         $node->shouldReceive('getPropertyName')->andReturn('Customer');
-        $node->shouldReceive('isExpansionSpecified')->andReturn(true, true, true, true);
+        $node->shouldReceive('isExpansionSpecified')->withArgs(['Subordinates'])->andReturn(false)->times(0);
+        $node->shouldReceive('isExpansionSpecified')->withArgs(['Manager'])->andReturn(true)->times(0);
         $node->shouldReceive('canSelectAllProperties')->andReturn(false);
-        $node->shouldReceive('findNode')->andReturn($expandNode);
-        $node->shouldReceive('getChildNodes')->andReturn([$expandNode, $mailNode])->atLeast(1);
+        $node->shouldReceive('findNode')->andReturn($expandNode, $expandNode, null);
+        $node->shouldReceive('getChildNodes')->andReturn([$expandNode, $mailNode])->times(1);
 
         $ironic->getRequest()->setRootProjectionNode($node);
 
@@ -508,7 +512,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $managerLink1->type = 'application/atom+xml;type=entry';
         $managerLink1->url = 'Employees(EmployeeID=\'Cave+Johnson\')/Manager';
         $managerLink1->isCollection = false;
-        $managerLink1->isExpanded = true;
+        $managerLink1->isExpanded = false;
         $managerLink2 = new ODataLink();
         $managerLink2->name = 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Subordinates';
         $managerLink2->title = 'Subordinates';

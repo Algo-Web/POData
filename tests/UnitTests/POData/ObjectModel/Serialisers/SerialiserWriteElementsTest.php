@@ -87,10 +87,14 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $links[0]->title = 'Orders';
         $links[0]->type = 'application/atom+xml;type=feed';
         $links[0]->url = 'Customers(CustomerID=\'1\',CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')/Orders';
+        $links[0]->isCollection = true;
+        $links[0]->isExpanded = false;
         $links[1]->name = 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Orders';
         $links[1]->title = 'Orders';
         $links[1]->type = 'application/atom+xml;type=feed';
         $links[1]->url = 'Customers(CustomerID=\'2\',CustomerGuid=guid\'223e4567-e89b-12d3-a456-426655440000\')/Orders';
+        $links[1]->isCollection = true;
+        $links[1]->isExpanded = false;
 
         $entry = [new ODataEntry(), new ODataEntry()];
         $entry[0]->id = 'http://localhost/odata.svc/Customers(CustomerID=\'1\',CustomerGuid'
@@ -174,6 +178,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
             $link->title = 'Orders';
             $link->type = 'application/atom+xml;type=feed';
             $link->url = $editStub.'/Orders';
+            $link->isCollection = true;
 
             $cand = new ODataEntry();
             $cand->id = 'http://localhost/odata.svc/'.$editStub;
@@ -363,13 +368,13 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $subLinks[0]->title = 'Customer';
         $subLinks[0]->type = 'application/atom+xml;type=entry';
         $subLinks[0]->url = 'Orders(OrderID=1)/Customer';
-        $subLinks[0]->isExpanded = true;
+        $subLinks[0]->isExpanded = false;
         $subLinks[0]->isCollection = false;
         $subLinks[1]->name = 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Order_Details';
         $subLinks[1]->title = 'Order_Details';
         $subLinks[1]->type = 'application/atom+xml;type=feed';
         $subLinks[1]->url = 'Orders(OrderID=1)/Order_Details';
-        $subLinks[1]->isExpanded = true;
+        $subLinks[1]->isExpanded = false;
         $subLinks[1]->isCollection = true;
 
         $subEntry = new ODataEntry();
@@ -604,6 +609,14 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $links[0][1]->url = 'Employees(EmployeeID=\'1\')/Subordinates';
         $links[1][0]->url = 'Employees(EmployeeID=\'2\')/Manager';
         $links[1][1]->url = 'Employees(EmployeeID=\'2\')/Subordinates';
+        $links[0][0]->isCollection = false;
+        $links[0][1]->isCollection = true;
+        $links[0][0]->isCollection = false;
+        $links[1][1]->isCollection = true;
+        $links[0][0]->isExpanded = false;
+        $links[0][1]->isExpanded = false;
+        $links[0][0]->isExpanded = false;
+        $links[1][1]->isExpanded = false;
 
         $prop1 = $this->generateEmployeeProperties();
         $prop2 = $this->generateEmployeeProperties();
