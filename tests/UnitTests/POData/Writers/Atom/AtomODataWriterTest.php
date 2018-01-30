@@ -5,6 +5,7 @@ namespace UnitTests\POData\Writers\Atom;
 use Carbon\Carbon as Carbon;
 use Mockery as m;
 use POData\Common\MimeTypes;
+use POData\Common\ODataConstants;
 use POData\Common\ODataException;
 use POData\Common\Version;
 use POData\ObjectModel\ODataBagContent;
@@ -1371,5 +1372,37 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $expected .= '<link rel="" type="linkType" title="Title" href=""/>'.PHP_EOL;
         $actual = $foo->getOutput();
         $this->assertXmlStringEqualsXmlString($expected, $actual);
+    }
+
+    public function testWriteEmptyODataEntry()
+    {
+        $entry = new ODataEntry();
+        $entry->resourceSetName = 'Foobars';
+
+        $foo = new AtomODataWriterDummy('http://localhost/odata.svc');
+
+        $actual = $foo->write($entry)->getOutput();
+        $expected = '<link rel="edit" title="" href=""/>';
+        $this->assertTrue(false !== strpos($actual, $expected));
+        $expected = '<m:properties/>';
+        $this->assertTrue(false !== strpos($actual, $expected));
+    }
+
+    public function testWriteEmptyODataFeed()
+    {
+        $feed = new ODataFeed();
+        $feed->id = 'http://localhost/odata.svc/feedID';
+        $feed->title = 'title';
+        $feed->selfLink = new ODataLink();
+        $feed->selfLink->name = ODataConstants::ATOM_SELF_RELATION_ATTRIBUTE_VALUE;
+        $feed->selfLink->title = 'Feed Title';
+        $feed->selfLink->url = 'feedID';
+
+        $foo = new AtomODataWriterDummy('http://localhost/odata.svc');
+        $expected = '<link rel="self" title="Feed Title" href="feedID"/>';
+        $actual = $foo->write($feed)->getOutput();
+        $this->assertTrue(false !== strpos($actual, $expected));
+        $expected = '<m:properties/>';
+        $this->assertTrue(false === strpos($actual, $expected));
     }
 }

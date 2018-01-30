@@ -300,20 +300,22 @@ class JsonODataV1Writer implements IODataWriter
      *
      * @return JsonODataV1Writer
      */
-    protected function writeProperties(ODataPropertyContent $properties)
+    protected function writeProperties(ODataPropertyContent $properties = null)
     {
-        foreach ($properties->properties as $property) {
-            $this->writePropertyMeta($property);
-            $this->writer->writeName($property->name);
+        if (null !== $properties) {
+            foreach ($properties->properties as $property) {
+                $this->writePropertyMeta($property);
+                $this->writer->writeName($property->name);
 
-            if ($property->value == null) {
-                $this->writer->writeValue('null');
-            } elseif ($property->value instanceof ODataPropertyContent) {
-                $this->writeComplexProperty($property);
-            } elseif ($property->value instanceof ODataBagContent) {
-                $this->writeBagContent($property->value);
-            } else {
-                $this->writer->writeValue($property->value, $property->typeName);
+                if ($property->value == null) {
+                    $this->writer->writeValue('null');
+                } elseif ($property->value instanceof ODataPropertyContent) {
+                    $this->writeComplexProperty($property);
+                } elseif ($property->value instanceof ODataBagContent) {
+                    $this->writeBagContent($property->value);
+                } else {
+                    $this->writer->writeValue($property->value, $property->typeName);
+                }
             }
         }
 
