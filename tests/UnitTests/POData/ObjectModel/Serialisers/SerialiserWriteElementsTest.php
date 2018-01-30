@@ -363,19 +363,32 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $selfLink->title = 'Customers';
         $selfLink->url = 'Customers';
 
+        $detailsFeed = new ODataFeed();
+        $detailsFeed->id = 'http://localhost/odata.svc/Orders(OrderID=1)/Order_Details';
+        $detailsFeed->title = new ODataTitle('Order_Details');
+        $detailsFeed->selfLink = new ODataLink();
+        $detailsFeed->selfLink->url = 'Orders(OrderID=1)/Order_Details';
+        $detailsFeed->selfLink->name = 'self';
+        $detailsFeed->selfLink->title = 'Order_Details';
+
+        $customerEntry = new ODataEntry();
+        $customerEntry->resourceSetName = 'Customer';
+
         $subLinks = [new ODataLink(), new ODataLink()];
         $subLinks[0]->name = 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Customer';
         $subLinks[0]->title = 'Customer';
         $subLinks[0]->type = 'application/atom+xml;type=entry';
         $subLinks[0]->url = 'Orders(OrderID=1)/Customer';
-        $subLinks[0]->isExpanded = false;
+        $subLinks[0]->isExpanded = true;
         $subLinks[0]->isCollection = false;
+        $subLinks[0]->expandedResult = $customerEntry;
         $subLinks[1]->name = 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Order_Details';
         $subLinks[1]->title = 'Order_Details';
         $subLinks[1]->type = 'application/atom+xml;type=feed';
         $subLinks[1]->url = 'Orders(OrderID=1)/Order_Details';
-        $subLinks[1]->isExpanded = false;
+        $subLinks[1]->isExpanded = true;
         $subLinks[1]->isCollection = true;
+        $subLinks[1]->expandedResult = $detailsFeed;
 
         $subEntry = new ODataEntry();
         $subEntry->id = 'http://localhost/odata.svc/Orders(OrderID=1)';

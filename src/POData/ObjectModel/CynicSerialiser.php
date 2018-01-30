@@ -811,7 +811,6 @@ class CynicSerialiser implements IObjectSerialiser
             }
         } else {
             $type = $this->getService()->getProvidersWrapper()->resolveResourceType($nextName);
-            /*
             if (!$isCollection) {
                 $result = new ODataEntry();
                 $result->resourceSetName = $type->getName();
@@ -820,7 +819,7 @@ class CynicSerialiser implements IObjectSerialiser
                 $result->selfLink = new ODataLink();
                 $result->selfLink->name = ODataConstants::ATOM_SELF_RELATION_ATTRIBUTE_VALUE;
             }
-            $nuLink->expandedResult = $result;*/
+            $nuLink->expandedResult = $result;
         }
         if (isset($nuLink->expandedResult->selfLink)) {
             $nuLink->expandedResult->selfLink->title = $propName;

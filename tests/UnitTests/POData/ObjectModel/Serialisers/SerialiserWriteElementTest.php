@@ -9,6 +9,7 @@ use POData\ObjectModel\CynicSerialiser as IronicSerialiser;
 use POData\ObjectModel\ODataBagContent;
 use POData\ObjectModel\ODataCategory;
 use POData\ObjectModel\ODataEntry;
+use POData\ObjectModel\ODataFeed;
 use POData\ObjectModel\ODataLink;
 use POData\ObjectModel\ODataMediaLink;
 use POData\ObjectModel\ODataProperty;
@@ -226,6 +227,17 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $linkPropContent->properties['Address']->typeName = 'Address';
         $linkPropContent->properties['Address']->value = $addressContent;
 
+        $linkRawResult = new ODataFeed();
+        $linkRawResult->id = 'http://localhost/odata.svc/Customers(CustomerID=\'1\','
+                             .'CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')/Orders';
+        $linkRawResult->title = new ODataTitle('Orders');
+        $linkRawResult->selfLink = new ODataLink();
+        $linkRawResult->selfLink->name = 'self';
+        $linkRawResult->selfLink->title = 'Orders';
+        $linkRawResult->selfLink->url = 'Customers(CustomerID=\'1\','
+                                        .'CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')/Orders';
+
+
         $linkResult = new ODataEntry();
         $linkResult->id = 'http://localhost/odata.svc/Customers(CustomerID=\'1\',CustomerGuid'
                           .'=guid\'123e4567-e89b-12d3-a456-426655440000\')';
@@ -243,10 +255,19 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $linkResult->links[0]->url = 'Customers(CustomerID=\'1\',CustomerGuid=guid\'123e4567'
                                      .'-e89b-12d3-a456-426655440000\')/Orders';
         $linkResult->links[0]->isCollection = true;
-        $linkResult->links[0]->isExpanded = false;
+        $linkResult->links[0]->isExpanded = true;
+        $linkResult->links[0]->expandedResult = $linkRawResult;
         $linkResult->resourceSetName = 'Customers';
         $linkResult->propertyContent = $linkPropContent;
         $linkResult->updated = '2017-01-01T00:00:00+00:00';
+
+        $linkFeedResult = new ODataFeed();
+        $linkFeedResult->id = 'http://localhost/odata.svc/Orders(OrderID=1)/Order_Details';
+        $linkFeedResult->title = new ODataTitle('Order_Details');
+        $linkFeedResult->selfLink = new ODataLink();
+        $linkFeedResult->selfLink->name = 'self';
+        $linkFeedResult->selfLink->title = 'Order_Details';
+        $linkFeedResult->selfLink->url = 'Orders(OrderID=1)/Order_Details';
 
         $links = [new ODataLink(), new ODataLink()];
         $links[0]->name = 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Customer';
@@ -261,7 +282,8 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $links[1]->type = 'application/atom+xml;type=feed';
         $links[1]->url = 'Orders(OrderID=1)/Order_Details';
         $links[1]->isCollection = true;
-        $links[1]->isExpanded = false;
+        $links[1]->isExpanded = true;
+        $links[1]->expandedResult = $linkFeedResult;
 
         $objectResult = new ODataEntry();
         $objectResult->id = 'http://localhost/odata.svc/Orders(OrderID=1)';
@@ -506,13 +528,17 @@ class SerialiserWriteElementTest extends SerialiserTestBase
             ''
         );
 
+        $managerResult = new ODataEntry();
+        $managerResult->resourceSetName = 'Employee';
+
         $managerLink1 = new ODataLink();
         $managerLink1->name = 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Manager';
         $managerLink1->title = 'Manager';
         $managerLink1->type = 'application/atom+xml;type=entry';
         $managerLink1->url = 'Employees(EmployeeID=\'Cave+Johnson\')/Manager';
         $managerLink1->isCollection = false;
-        $managerLink1->isExpanded = false;
+        $managerLink1->isExpanded = true;
+        $managerLink1->expandedResult = $managerResult;
         $managerLink2 = new ODataLink();
         $managerLink2->name = 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Subordinates';
         $managerLink2->title = 'Subordinates';
