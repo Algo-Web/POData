@@ -11,7 +11,7 @@
 POData - OData for the Poor PHP Developer
 ============
 
-POData (pronounced like the [sandwich](http://en.wikipedia.org/wiki/Po'_boy)) a is an OData service framework for PHP Developers.  PHP Developers are dirt poor because they are not afforded a nice OData toolkit, but POData elimantes their poverty and brings the bountiful wealth of OData to the masses!.
+POData (pronounced like the [sandwich](http://en.wikipedia.org/wiki/Po'_boy)) a is an OData service framework for PHP Developers.  PHP Developers are dirt poor because they are not afforded a nice OData toolkit, but POData eliminates their poverty and brings the bountiful wealth of OData to the masses!.
 
 POData vs odataphpprod
 ===================
@@ -26,11 +26,12 @@ POData started as a fork of [The OData Producer Library for PHP](https://github.
 * Optimized $expand support
 * Support for an Annotation Based Provider Implementation
 * Create, Update, & Delete support
+* Transaction support
 
 Long term goals include:
 
 * OData v4 Support
-* Transaction support
+
 
 MVC Integrations
 =================
