@@ -1,5 +1,6 @@
 Unreleased
 ----------
+   * Return namespaces to full resourceType names - thanks to **cdcampos** for reporting this (see [#207] (https://github.com/Algo-Web/POData/pull/207))
    * Fix empty-object serialisation - thanks to **cdcampos** for reporting this (see [#206] (https://github.com/Algo-Web/POData/pull/206))
    * Return HTTP 204 when a singleton resource is null (see [#205] (https://github.com/Algo-Web/POData/pull/205))
    * Fix property expansion - **cdcampos** is on a roll! (see [#201] (https://github.com/Algo-Web/POData/pull/201))
