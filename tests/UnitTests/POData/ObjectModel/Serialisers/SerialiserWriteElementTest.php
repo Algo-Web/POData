@@ -89,7 +89,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $objectResult->id = 'http://localhost/odata.svc/Customers(CustomerID=\'1\',CustomerGuid'
                             .'=guid\'123e4567-e89b-12d3-a456-426655440000\')';
         $objectResult->title = new ODataTitle('Customer');
-        $objectResult->type = new ODataCategory('Customer');
+        $objectResult->type = new ODataCategory('NorthWind.Customer');
         $objectResult->editLink = new ODataLink();
         $objectResult->editLink->url = 'Customers(CustomerID=\'1\',CustomerGuid'
                                        .'=guid\'123e4567-e89b-12d3-a456-426655440000\')';
@@ -247,7 +247,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
                                      .'CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')';
         $linkResult->editLink->name = 'edit';
         $linkResult->editLink->title = 'Customer';
-        $linkResult->type = new ODataCategory('Customer');
+        $linkResult->type = new ODataCategory('NorthWind.Customer');
         $linkResult->links = [new ODataLink()];
         $linkResult->links[0]->name = 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Orders';
         $linkResult->links[0]->title = 'Orders';
@@ -288,7 +288,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $objectResult = new ODataEntry();
         $objectResult->id = 'http://localhost/odata.svc/Orders(OrderID=1)';
         $objectResult->title = new ODataTitle('Order');
-        $objectResult->type = new ODataCategory('Order');
+        $objectResult->type = new ODataCategory('NorthWind.Order');
         $objectResult->editLink = new ODataLink();
         $objectResult->editLink->url = 'Orders(OrderID=1)';
         $objectResult->editLink->name = 'edit';
@@ -349,7 +349,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $propContent->properties['Emails']->value = $emailBag;
 
         $mediaLink = new ODataMediaLink(
-            'Employee',
+            'NorthWind.Employee',
             '/$value',
             'Employees(EmployeeID=\'Cave+Johnson\')/$value',
             '*/*',
@@ -380,7 +380,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $objectResult = new ODataEntry();
         $objectResult->id = 'http://localhost/odata.svc/Employees(EmployeeID=\'Cave+Johnson\')';
         $objectResult->title = new ODataTitle('Employee');
-        $objectResult->type = new ODataCategory('Employee');
+        $objectResult->type = new ODataCategory('NorthWind.Employee');
         $objectResult->editLink = new ODataLink();
         $objectResult->editLink->url = 'Employees(EmployeeID=\'Cave+Johnson\')';
         $objectResult->editLink->name = 'edit';
@@ -471,7 +471,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $result->results = $emp;
 
         $media1 = new ODataMediaLink(
-            'Employee',
+            'NorthWind.Employee',
             '/$value',
             'Employees(EmployeeID=\'Bruce\')/$value',
             '*/*',
@@ -513,7 +513,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $propContent->properties['Emails'] = $contentProp5;
 
         $managerMedia1 = new ODataMediaLink(
-            'Employee',
+            'NorthWind.Employee',
             '/$value',
             'Employees(EmployeeID=\'Cave+Johnson\')/$value',
             '*/*',
@@ -558,7 +558,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $manager->mediaLink = $managerMedia1;
         $manager->mediaLinks = [$managerMedia2];
         $manager->propertyContent = $propContent;
-        $manager->type = new ODataCategory('Employee');
+        $manager->type = new ODataCategory('NorthWind.Employee');
         $manager->isMediaLinkEntry = true;
         $manager->links = [$managerLink1, $managerLink2];
         $manager->resourceSetName = 'Employees';
@@ -587,7 +587,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $objectResult->editLink->url = 'Employees(EmployeeID=\'Bruce\')';
         $objectResult->editLink->name = 'edit';
         $objectResult->editLink->title = 'Employee';
-        $objectResult->type = new ODataCategory('Employee');
+        $objectResult->type = new ODataCategory('NorthWind.Employee');
         $objectResult->propertyContent = $objContent;
         $objectResult->isMediaLinkEntry = true;
         $objectResult->mediaLink = $media1;

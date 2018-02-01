@@ -523,9 +523,15 @@ class SelectTest extends TestCase
                 'Orders/OrderID/*', //$select
                 $providersWrapper
             );
-            $this->fail('An expected ODataException usage of primitive type as navigation property has not been thrown');
+            $this->fail(
+                'An expected ODataException usage of primitive type as navigation property has not been thrown'
+            );
         } catch (ODataException $odataException) {
-            $this->assertStringStartsWith('Property \'OrderID\' on type \'Order\' is of primitive type and cannot be used as a navigation property.', $odataException->getMessage());
+            $this->assertStringStartsWith(
+                'Property \'OrderID\' on type \'NorthWind.Order\' is of primitive type and cannot'
+                .' be used as a navigation property.',
+                $odataException->getMessage()
+            );
         }
 
         //Test using complex type as navigation
@@ -542,7 +548,11 @@ class SelectTest extends TestCase
             );
             $this->fail('An expected ODataException usage of complex type as navigation property has not been thrown');
         } catch (ODataException $odataException) {
-            $this->assertStringStartsWith('select doesn\'t support selection of properties of complex type. The property \'Address\' on type \'Customer\' is a complex type', $odataException->getMessage());
+            $this->assertStringStartsWith(
+                'select doesn\'t support selection of properties of complex type. The property \'Address\' on'
+                .' type \'NorthWind.Customer\' is a complex type',
+                $odataException->getMessage()
+            );
         }
 
         $employeesResourceSetWrapper = $providersWrapper->resolveResourceSet('Employees');
@@ -562,7 +572,8 @@ class SelectTest extends TestCase
             $this->fail('An expected ODataException usage of bag type as navigation property has not been thrown');
         } catch (ODataException $odataException) {
             $this->assertStringStartsWith(
-                'The selection from property \'Emails\' on type \'Employee\' is not valid. The select query option does not support selection items from a bag property',
+                'The selection from property \'Emails\' on type \'NorthWind.Employee\' is not valid.'
+                .' The select query option does not support selection items from a bag property',
                 $odataException->getMessage()
             );
         }

@@ -291,7 +291,11 @@ class ExpandTest extends TestCase
             );
             $this->fail('An expected ODataException for non-navigation property in the path has not been thrown');
         } catch (ODataException $odataException) {
-            $this->assertStringStartsWith("Error in the expand clause. Expand path can contain only navigation property, the property 'CustomerName' defined in 'Customer' is not a navigation property", $odataException->getMessage());
+            $this->assertStringStartsWith(
+                "Error in the expand clause. Expand path can contain only navigation property, the property"
+                ." 'CustomerName' defined in 'NorthWind.Customer' is not a navigation property",
+                $odataException->getMessage()
+            );
         }
 
         try {
@@ -308,7 +312,10 @@ class ExpandTest extends TestCase
             );
             $this->fail('An expected ODataException for non-navigation property in the path has not been thrown');
         } catch (ODataException $odataException) {
-            $this->assertStringStartsWith('Error in the expand clause. Expand path can contain only navigation property', $odataException->getMessage());
+            $this->assertStringStartsWith(
+                'Error in the expand clause. Expand path can contain only navigation property',
+                $odataException->getMessage()
+            );
         }
     }
 

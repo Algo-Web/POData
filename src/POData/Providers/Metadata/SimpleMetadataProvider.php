@@ -998,7 +998,7 @@ class SimpleMetadataProvider implements IMetadataProvider
             $msg = 'Resource set with same name, ' . $name . ', exists';
             throw new \InvalidArgumentException($msg);
         }
-        $typeName = $returnType->getName();
+        $typeName = $returnType->getFullName();
         if (!array_key_exists($typeName, $this->oDataEntityMap)) {
             $msg = 'Mapping not defined for ' . $typeName;
             throw new \InvalidArgumentException($msg);

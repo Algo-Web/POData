@@ -321,4 +321,15 @@ class ResourceTypeTest extends TestCase
         }
         $this->assertEquals($expected, $actual);
     }
+
+    public function testGetFullNameIncludingNamespace()
+    {
+        $meta = NorthWindMetadata::create();
+        $this->assertEquals('NorthWind', $meta->getContainerNamespace());
+
+        $type = $meta->resolveResourceType('Customer');
+        $expectedFullName = 'NorthWind.Customer';
+        $actualFullName = $type->getFullName();
+        $this->assertEquals($expectedFullName, $actualFullName);
+    }
 }
