@@ -19,12 +19,12 @@ class ResourceEntityType extends ResourceType
         $resourceTypeKind = ResourceTypeKind::ENTITY();
         $bitz = explode('.', $entity->getName());
         $name = array_pop($bitz);
-        $namespaceName = null;
+        $namespaceName = $meta->getContainerNamespace();
         if (0 < count($bitz)) {
             $namespaceName = implode('.', $bitz);
         }
         $rawType = $entity->getBaseType();
-        $metaNamespace = $meta->getContainerNamespace().'.';
+        $metaNamespace = $namespaceName.'.';
 
         $rawType = (null !== $rawType) ? str_replace($metaNamespace, '', $rawType) : null;
         $baseType = null === $rawType ? null : $meta->resolveResourceType($rawType);

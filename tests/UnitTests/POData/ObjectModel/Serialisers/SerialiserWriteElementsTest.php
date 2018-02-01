@@ -100,7 +100,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $entry[0]->id = 'http://localhost/odata.svc/Customers(CustomerID=\'1\',CustomerGuid'
                         .'=guid\'123e4567-e89b-12d3-a456-426655440000\')';
         $entry[0]->title = new ODataTitle('Customer');
-        $entry[0]->type = new ODataCategory('Customer');
+        $entry[0]->type = new ODataCategory('NorthWind.Customer');
         $entry[0]->editLink = new ODataLink();
         $entry[0]->editLink->url = 'Customers(CustomerID=\'1\','
                                    .'CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')';
@@ -113,7 +113,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $entry[1]->id = 'http://localhost/odata.svc/Customers(CustomerID=\'2\',CustomerGuid'
                         .'=guid\'223e4567-e89b-12d3-a456-426655440000\')';
         $entry[1]->title = new ODataTitle('Customer');
-        $entry[1]->type = new ODataCategory('Customer');
+        $entry[1]->type = new ODataCategory('NorthWind.Customer');
         $entry[1]->editLink = new ODataLink();
         $entry[1]->editLink->url = 'Customers(CustomerID=\'2\','
                                    .'CustomerGuid=guid\'223e4567-e89b-12d3-a456-426655440000\')';
@@ -187,7 +187,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
             $cand->editLink->name = 'edit';
             $cand->editLink->title = 'Customer';
             $cand->title = new ODataTitle('Customer');
-            $cand->type = new ODataCategory('Customer');
+            $cand->type = new ODataCategory('NorthWind.Customer');
             $cand->propertyContent = $this->generateCustomerProperties();
             $cand->propertyContent->properties['CustomerID']->value = strval($i);
             $cand->propertyContent->properties['CustomerGuid']->value = '123e4567-e89b-12d3-a456-426655440000';
@@ -280,7 +280,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $entries[0]->editLink->url = 'Order_Details(ProductID=1,OrderID=1)';
         $entries[0]->editLink->title = 'Order_Details';
         $entries[0]->editLink->name = 'edit';
-        $entries[0]->type = new ODataCategory('Order_Details');
+        $entries[0]->type = new ODataCategory('NorthWind.Order_Details');
         $entries[0]->propertyContent = $this->generateOrderDetailsProperties();
         $entries[0]->propertyContent->properties['ProductID']->value = '1';
         $entries[0]->propertyContent->properties['OrderID']->value = '1';
@@ -293,7 +293,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $entries[1]->editLink->url = 'Order_Details(ProductID=2,OrderID=1)';
         $entries[1]->editLink->title = 'Order_Details';
         $entries[1]->editLink->name = 'edit';
-        $entries[1]->type = new ODataCategory('Order_Details');
+        $entries[1]->type = new ODataCategory('NorthWind.Order_Details');
         $entries[1]->propertyContent = $this->generateOrderDetailsProperties();
         $entries[1]->propertyContent->properties['ProductID']->value = '2';
         $entries[1]->propertyContent->properties['OrderID']->value = '1';
@@ -397,7 +397,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $subEntry->editLink->url = 'Orders(OrderID=1)';
         $subEntry->editLink->name = 'edit';
         $subEntry->editLink->title = 'Order';
-        $subEntry->type = new ODataCategory('Order');
+        $subEntry->type = new ODataCategory('NorthWind.Order');
         $subEntry->resourceSetName = 'Orders';
         $subEntry->propertyContent = $this->generateOrderProperties();
         $subEntry->propertyContent->properties['OrderID']->value = '1';
@@ -434,7 +434,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $entry->editLink->url = 'Customers(CustomerID=\'1\',CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')';
         $entry->editLink->name = 'edit';
         $entry->editLink->title = 'Customer';
-        $entry->type = new ODataCategory('Customer');
+        $entry->type = new ODataCategory('NorthWind.Customer');
         $entry->resourceSetName = 'Customers';
         $entry->propertyContent = $this->generateCustomerProperties();
         $entry->propertyContent->properties['CustomerID']->value = '1';
@@ -582,8 +582,22 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $collection->results = [$mod1, $mod2];
 
         $mediaLink = [
-            new ODataMediaLink('Employee', '/$value', 'Employees(EmployeeID=\'1\')/$value', '*/*', '', 'edit-media'),
-            new ODataMediaLink('Employee', '/$value', 'Employees(EmployeeID=\'2\')/$value', '*/*', '', 'edit-media')
+            new ODataMediaLink(
+                'NorthWind.Employee',
+                '/$value',
+                'Employees(EmployeeID=\'1\')/$value',
+                '*/*',
+                '',
+                'edit-media'
+            ),
+            new ODataMediaLink(
+                'NorthWind.Employee',
+                '/$value',
+                'Employees(EmployeeID=\'2\')/$value',
+                '*/*',
+                '',
+                'edit-media'
+            )
         ];
 
         $mediaLinks = [
@@ -644,7 +658,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $entries[0]->editLink->url = 'Employees(EmployeeID=\'1\')';
         $entries[0]->editLink->name = 'edit';
         $entries[0]->editLink->title = 'Employee';
-        $entries[0]->type = new ODataCategory('Employee');
+        $entries[0]->type = new ODataCategory('NorthWind.Employee');
         $entries[0]->isMediaLinkEntry = true;
         $entries[0]->mediaLink = $mediaLink[0];
         $entries[0]->mediaLinks[] = $mediaLinks[0];
@@ -658,7 +672,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $entries[1]->editLink->url = 'Employees(EmployeeID=\'2\')';
         $entries[1]->editLink->name = 'edit';
         $entries[1]->editLink->title = 'Employee';
-        $entries[1]->type = new ODataCategory('Employee');
+        $entries[1]->type = new ODataCategory('NorthWind.Employee');
         $entries[1]->isMediaLinkEntry = true;
         $entries[1]->mediaLink = $mediaLink[1];
         $entries[1]->mediaLinks[] = $mediaLinks[1];

@@ -121,7 +121,7 @@ class ExpressionParserTest extends TestCase
         $parser->resetParser($expression);
         try {
             $expr = $parser->parseFilter();
-            $this->fail('An expected ODataException for \'dateime\' validation has not been raised');
+            $this->fail('An expected ODataException for \'datetime\' validation has not been raised');
         } catch (ODataException $ex) {
             $this->assertEquals(
                 'Unrecognized \'Edm.DateTime\' literal \'datetime\'11990-12-23\'\' in position \'0\'.',
@@ -175,7 +175,7 @@ class ExpressionParserTest extends TestCase
         $parser->resetParser($expression);
         try {
             $expr = $parser->parseFilter();
-            $this->fail('An expected ODataException for \'invalid chatacter\' has not been thrown');
+            $this->fail('An expected ODataException for \'invalid character\' has not been thrown');
         } catch (ODataException $exception) {
             $this->assertEquals('Invalid character \'\\\' at position 7', $exception->getMessage());
         }
@@ -187,7 +187,7 @@ class ExpressionParserTest extends TestCase
             $this->fail('An expected ODataException for \'No property exists\' has not been thrown');
         } catch (ODataException $exception) {
             $this->assertEquals(
-                'No property \'CustomerID1\' exists in type \'Customer\' at position 0',
+                'No property \'CustomerID1\' exists in type \'NorthWind.Customer\' at position 0',
                 $exception->getMessage()
             );
         }
@@ -211,7 +211,7 @@ class ExpressionParserTest extends TestCase
             $this->fail('An expected ODataException for collection property navigation was not thrown');
         } catch (ODataException $exception) {
             $this->assertStringStartsWith(
-                'The \'Orders\' is an entity collection property of \'Customer\'',
+                'The \'Orders\' is an entity collection property of \'NorthWind.Customer\'',
                 $exception->getMessage()
             );
         }
@@ -234,7 +234,7 @@ class ExpressionParserTest extends TestCase
             $this->fail('An expected ODataException for collection property navigation was not thrown');
         } catch (ODataException $exception) {
             $this->assertStringStartsWith(
-                'The \'Orders\' is an entity collection property of \'Customer\'',
+                'The \'Orders\' is an entity collection property of \'NorthWind.Customer\'',
                 $exception->getMessage()
             );
         }

@@ -29,7 +29,7 @@ class SimpleMetadataProviderSingletonTest extends SimpleMetadataProviderTest
         $functionName = [get_class($this), 'exampleSingleton'];
         $name = 'name';
         $return = m::mock(ResourceEntityType::class);
-        $return->shouldReceive('getName')->andReturn('name');
+        $return->shouldReceive('getFullName')->andReturn('number.name');
 
         $foo = new SimpleMetadataProvider('string', 'number');
         $this->assertNull($foo->resolveSingleton($name));
@@ -51,7 +51,7 @@ class SimpleMetadataProviderSingletonTest extends SimpleMetadataProviderTest
 
         $name = 'name';
         $return = m::mock(ResourceEntityType::class);
-        $return->shouldReceive('getName')->andReturn('name');
+        $return->shouldReceive('getFullName')->andReturn('number.name');
 
         $foo = new SimpleMetadataProvider('string', 'number');
         $foo->addEntityType($refDummy, 'name');
@@ -68,12 +68,12 @@ class SimpleMetadataProviderSingletonTest extends SimpleMetadataProviderTest
     public function testCreateSingletonWithNoMapping()
     {
         $functionName = [get_class($this), 'exampleSingleton'];
-        $expected = 'Mapping not defined for name';
+        $expected = 'Mapping not defined for number.name';
         $actual = null;
 
         $name = 'name';
         $return = m::mock(ResourceEntityType::class);
-        $return->shouldReceive('getName')->andReturn('name');
+        $return->shouldReceive('getFullName')->andReturn('number.name');
 
         $foo = new SimpleMetadataProvider('string', 'number');
 
@@ -91,9 +91,12 @@ class SimpleMetadataProviderSingletonTest extends SimpleMetadataProviderTest
         $functionName = [get_class($this), 'exampleSingleton'];
         $name = 'example';
         $complex = m::mock(TComplexTypeType::class)->makePartial();
+        $complex->shouldReceive('getName')->andReturn('number.example');
         $complex->shouldReceive('getName')->andReturn('example');
         $return = new ResourceComplexType($refDummy, $complex);
-        //$return->setName('example');
+        $this->assertEquals('example', $return->getName());
+        $this->assertEquals('number.example', $return->getFullName());
+        //$return->setName('number.example');
 
         $foo = new SimpleMetadataProvider('string', 'number');
         $foo->addEntityType($refDummy, 'example');
