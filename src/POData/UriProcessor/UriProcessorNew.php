@@ -3,6 +3,7 @@
 namespace POData\UriProcessor;
 
 use POData\Common\HttpStatus;
+use POData\Common\InvalidOperationException;
 use POData\Common\Messages;
 use POData\Common\ODataConstants;
 use POData\Common\ODataException;
@@ -187,7 +188,9 @@ class UriProcessorNew implements IUriProcessor
     public function execute()
     {
         $service = $this->getService();
-        assert($service instanceof IService, '!($service instanceof IService)');
+        if (!$service instanceof IService) {
+            throw new InvalidOperationException('!($service instanceof IService)');
+        }
         $context = $service->getOperationContext();
         $method = $context->incomingRequest()->getMethod();
 
@@ -262,7 +265,7 @@ class UriProcessorNew implements IUriProcessor
                 case TargetKind::BAG():
                     break;
                 default:
-                    assert(false, 'Not implemented yet');
+                    throw new InvalidOperationException('Not implemented yet');
             }
 
             if (null === $segment->getNext()
@@ -304,8 +307,12 @@ class UriProcessorNew implements IUriProcessor
         assert($keyDescriptor instanceof KeyDescriptor);
 
         $payload = $this->getRequest()->getData();
-        assert($payload instanceof ODataEntry, get_class($payload));
-        assert(!empty($payload->id), 'Payload ID must not be empty for PUT request');
+        if (!$payload instanceof ODataEntry) {
+            throw new InvalidOperationException(get_class($payload));
+        }
+        if (empty($payload->id)) {
+            throw new InvalidOperationException('Payload ID must not be empty for PUT request');
+        }
         $data = $this->getModelDeserialiser()->bulkDeserialise($resourceSet->getResourceType(), $payload);
 
         if (empty($data)) {
@@ -373,8 +380,13 @@ class UriProcessorNew implements IUriProcessor
                     }
                     return;
                 }
-                assert($payload instanceof ODataEntry, get_class($payload));
-                assert(empty($payload->id), 'Payload ID must be empty for POST request');
+                if (!$payload instanceof ODataEntry) {
+                    throw new InvalidOperationException(get_class($payload));
+                }
+                if (!empty($payload->id)) {
+                    throw new InvalidOperationException('Payload ID must be empty for POST request');
+                }
+
                 $data = $this->getModelDeserialiser()->bulkDeserialise($resourceSet->getResourceType(), $payload);
 
                 if (empty($data)) {
@@ -383,7 +395,10 @@ class UriProcessorNew implements IUriProcessor
                 $this->getService()->getHost()->setResponseStatusCode(HttpStatus::CODE_CREATED);
                 $queryResult = $this->getCynicDeserialiser()->processPayload($payload);
                 $keyID = $payload->id;
-                assert($keyID instanceof KeyDescriptor, get_class($keyID));
+                if (!$keyID instanceof KeyDescriptor) {
+                    throw new InvalidOperationException(get_class($keyID));
+                }
+
                 $locationUrl = $keyID->generateRelativeUri($resourceSet->getResourceSet());
                 $absoluteServiceUri = $this->getService()->getHost()->getAbsoluteServiceUri()->getUrlAsString();
                 $location = rtrim($absoluteServiceUri, '/') . '/' . $locationUrl;
@@ -439,7 +454,10 @@ class UriProcessorNew implements IUriProcessor
     private function executeGetResource($segment, array $eagerList = [])
     {
         foreach ($eagerList as $eager) {
-            assert(is_string($eager) && 0 < strlen($eager), 'Eager-load list elements must be non-empty strings');
+            $nonEmpty = is_string($eager) && 0 < strlen($eager);
+            if (!$nonEmpty) {
+                throw new InvalidOperationException('Eager-load list elements must be non-empty strings');
+            }
         }
         $isRelated = TargetSource::ENTITY_SET == $segment->getTargetSource();
         if ($isRelated) {
@@ -537,7 +555,7 @@ class UriProcessorNew implements IUriProcessor
                 break;
             default:
                 $this->checkResourceExistsByIdentifier($segment);
-                assert(false, 'Invalid property kind type for resource retrieval');
+                throw new InvalidOperationException('Invalid property kind type for resource retrieval');
         }
         return $queryResult;
     }

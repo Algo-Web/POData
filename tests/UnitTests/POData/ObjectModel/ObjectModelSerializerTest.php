@@ -4,6 +4,7 @@ namespace UnitTests\POData\ObjectModel;
 
 use Carbon\Carbon;
 use Mockery as m;
+use POData\Common\InvalidOperationException;
 use POData\Common\ODataConstants;
 use POData\Common\ODataException;
 use POData\Common\Url;
@@ -714,13 +715,13 @@ class ObjectModelSerializerTest extends TestCase
 
         $foo = $this->Construct();
 
-        $expected = 'assert(): $bagItemResourceTypeKind != ResourceTypeKind::PRIMITIVE &&'
-                    .' $bagItemResourceTypeKind != ResourceTypeKind::COMPLEX failed';
+        $expected = '$bagItemResourceTypeKind != ResourceTypeKind::PRIMITIVE &&'
+                    .' $bagItemResourceTypeKind != ResourceTypeKind::COMPLEX';
         $actual = null;
 
         try {
             $foo->writeTopLevelBagObject($queryResult, 'property', $type);
-        } catch (\PHPUnit_Framework_Error_Warning $e) {
+        } catch (InvalidOperationException $e) {
             $actual = $e->getMessage();
         }
 
@@ -808,12 +809,12 @@ class ObjectModelSerializerTest extends TestCase
 
         $foo = $this->Construct();
 
-        $expected = 'assert(): Bag parameter must be null or array failed';
+        $expected = 'Bag parameter must be null or array';
         $actual = null;
 
         try {
             $foo->writeTopLevelBagObject($queryResult, 'property', $type);
-        } catch (\PHPUnit_Framework_Error_Warning $e) {
+        } catch (InvalidOperationException $e) {
             $actual = $e->getMessage();
         }
 

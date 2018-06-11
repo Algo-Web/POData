@@ -4,6 +4,7 @@ namespace UnitTests\POData\UriProcessor;
 
 use Mockery as m;
 use POData\Common\HttpStatus;
+use POData\Common\InvalidOperationException;
 use POData\Common\ODataException;
 use POData\Common\Url;
 use POData\IService;
@@ -565,12 +566,12 @@ class UriProcessorNewTest extends TestCase
         $processor = m::mock(UriProcessorDummy::class)->makePartial();
         $processor->shouldReceive('getRequest')->andReturn($request);
 
-        $expected = 'assert(): Not implemented yet failed';
+        $expected = 'Not implemented yet';
         $actual = null;
 
         try {
             $processor->executeGet();
-        } catch (\PHPUnit_Framework_Error_Warning $e) {
+        } catch (InvalidOperationException $e) {
             $actual = $e->getMessage();
         }
         $this->assertEquals($expected, $actual);

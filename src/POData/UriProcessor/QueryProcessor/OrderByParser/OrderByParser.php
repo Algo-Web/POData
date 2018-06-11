@@ -2,6 +2,7 @@
 
 namespace POData\UriProcessor\QueryProcessor\OrderByParser;
 
+use POData\Common\InvalidOperationException;
 use POData\Common\Messages;
 use POData\Common\ODataException;
 use POData\Common\ReflectionHandler;
@@ -115,7 +116,9 @@ class OrderByParser
     ) {
         assert(is_string($orderBy), 'OrderBy clause must be a string');
         $orderBy = trim($orderBy);
-        assert(0 < strlen($orderBy), 'OrderBy clause must not be trimmable to an empty string');
+        if (0 == strlen($orderBy)) {
+            throw new InvalidOperationException('OrderBy clause must not be trimmable to an empty string');
+        }
         $orderByParser = new self($providerWrapper);
         try {
             $instance = $resourceType->getInstanceType();

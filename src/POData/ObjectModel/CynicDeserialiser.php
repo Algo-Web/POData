@@ -2,6 +2,7 @@
 
 namespace POData\ObjectModel;
 
+use POData\Common\InvalidOperationException;
 use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\Metadata\ResourceEntityType;
 use POData\Providers\Metadata\ResourceSet;
@@ -39,7 +40,10 @@ class CynicDeserialiser
      */
     public function processPayload(ODataEntry &$payload)
     {
-        assert($this->isEntryOK($payload));
+        $entryOk = $this->isEntryOK($payload);
+        if (!$entryOk) {
+            throw new InvalidOperationException('Payload not OK');
+        }
         list($sourceSet, $source) = $this->processEntryContent($payload);
         assert($sourceSet instanceof ResourceSet);
         $numLinks = count($payload->links);

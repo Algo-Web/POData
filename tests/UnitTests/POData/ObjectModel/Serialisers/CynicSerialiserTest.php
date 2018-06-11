@@ -3,6 +3,7 @@
 namespace UnitTests\POData\ObjectModel\Serialisers;
 
 use Mockery as m;
+use POData\Common\InvalidOperationException;
 use POData\Common\ODataConstants;
 use POData\IService;
 use POData\ObjectModel\CynicSerialiser;
@@ -167,12 +168,12 @@ class CynicSerialiserTest extends SerialiserTestBase
         $foo->getStack()->pushSegment($segName, $segWrapper);
         $foo->getStack()->pushSegment($segName, $segWrapper);
 
-        $expected = 'assert(): is_null($expandedProjectionNode) failed';
+        $expected = 'is_null($expandedProjectionNode)';
         $actual = null;
 
         try {
             $foo->getCurrentExpandedProjectionNode();
-        } catch (\PHPUnit_Framework_Error_Warning $e) {
+        } catch (InvalidOperationException $e) {
             $actual = $e->getMessage();
         }
         $this->assertEquals($expected, $actual);
@@ -199,12 +200,12 @@ class CynicSerialiserTest extends SerialiserTestBase
         $foo->getStack()->pushSegment($segName, $segWrapper);
         $foo->getStack()->pushSegment($segName, $segWrapper);
 
-        $expected = 'assert(): $expandedProjectionNode not instanceof ExpandedProjectionNode failed';
+        $expected = '$expandedProjectionNode not instanceof ExpandedProjectionNode';
         $actual = null;
 
         try {
             $foo->getCurrentExpandedProjectionNode();
-        } catch (\PHPUnit_Framework_Error_Warning $e) {
+        } catch (InvalidOperationException $e) {
             $actual = $e->getMessage();
         }
         $this->assertEquals($expected, $actual);

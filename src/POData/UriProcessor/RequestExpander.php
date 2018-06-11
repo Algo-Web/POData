@@ -215,7 +215,9 @@ class RequestExpander
                     $resourceProperty
                 );
 
-            assert(null !== $currentResourceSetWrapper, '!null($currentResourceSetWrapper)');
+            if (null === $currentResourceSetWrapper) {
+                throw new InvalidOperationException('!null($currentResourceSetWrapper)');
+            }
 
             return $this->pushSegment(
                 $resourceProperty->getName(),
@@ -263,11 +265,10 @@ class RequestExpander
             if (0 != $depth) {
                 for ($i = 1; $i < $depth; ++$i) {
                     $expandedProjectionNode = $expandedProjectionNode->findNode($names[$i]);
-                    assert(null !== $expandedProjectionNode, '!is_null($expandedProjectionNode)');
-                    assert(
-                        $expandedProjectionNode instanceof ExpandedProjectionNode,
-                        '$expandedProjectionNode instanceof ExpandedProjectionNode'
-                    );
+                    if (!$expandedProjectionNode instanceof ExpandedProjectionNode) {
+                        $msg = '$expandedProjectionNode instanceof ExpandedProjectionNode';
+                        throw new InvalidOperationException($msg);
+                    }
                 }
             }
         }

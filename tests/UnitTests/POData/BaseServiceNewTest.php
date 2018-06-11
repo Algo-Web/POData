@@ -5,6 +5,7 @@ namespace UnitTests\POData;
 use Mockery as m;
 use phpDocumentor\Reflection\Types\Resource;
 use POData\Common\HttpStatus;
+use POData\Common\InvalidOperationException;
 use POData\Common\MimeTypes;
 use POData\Common\ODataConstants;
 use POData\Common\ODataException;
@@ -160,12 +161,12 @@ class BaseServiceNewTest extends TestCase
 
         $proc = m::mock(UriProcessor::class);
 
-        $expected = 'assert(): is_null($projectedProperty) failed';
+        $expected = 'is_null($projectedProperty)';
         $actual = null;
 
         try {
             $result = $service->getResponseContentType($request, $proc);
-        } catch (\PHPUnit_Framework_Error_Warning $e) {
+        } catch (InvalidOperationException $e) {
             $actual = $e->getMessage();
         }
         $this->assertEquals($expected, $actual);
@@ -192,12 +193,12 @@ class BaseServiceNewTest extends TestCase
 
         $proc = m::mock(UriProcessor::class);
 
-        $expected = 'assert(): !$type instanceof IType failed';
+        $expected = '!$type instanceof IType';
         $actual = null;
 
         try {
             $result = $service->getResponseContentType($request, $proc);
-        } catch (\PHPUnit_Framework_Error_Warning $e) {
+        } catch (InvalidOperationException $e) {
             $actual = $e->getMessage();
         }
         $this->assertEquals($expected, $actual);
@@ -398,12 +399,12 @@ class BaseServiceNewTest extends TestCase
 
         $foo = new BaseServiceDummy(null, $host, $cereal, $stream, null);
 
-        $expected = 'assert(): !$type instanceof IType failed';
+        $expected = '!$type instanceof IType';
         $actual = null;
 
         try {
             $foo->getETagForEntry($object, $type);
-        } catch (\PHPUnit_Framework_Error_Warning $e) {
+        } catch (InvalidOperationException $e) {
             $actual = $e->getMessage();
         }
         $this->assertEquals($expected, $actual);
@@ -1079,12 +1080,12 @@ class BaseServiceNewTest extends TestCase
         $uriProc = m::mock(UriProcessor::class);
         $uriProc->shouldReceive('execute')->andReturnNull()->once();
 
-        $expected = 'assert(): Target resource type cannot be null failed';
+        $expected = 'Target resource type cannot be null';
         $actual = null;
 
         try {
             $foo->serializeResult($request, $uriProc);
-        } catch (\PHPUnit_Framework_Error_Warning $e) {
+        } catch (InvalidOperationException $e) {
             $actual = $e->getMessage();
         }
         $this->assertEquals($expected, $actual);
@@ -1142,12 +1143,12 @@ class BaseServiceNewTest extends TestCase
         $uriProc = m::mock(UriProcessor::class);
         $uriProc->shouldReceive('execute')->andReturnNull()->once();
 
-        $expected = 'assert(): !is_array($entryObjects->results) failed';
+        $expected = '!is_array($entryObjects->results)';
         $actual = null;
 
         try {
             $foo->serializeResult($request, $uriProc);
-        } catch (\PHPUnit_Framework_Error_Warning $e) {
+        } catch (InvalidOperationException $e) {
             $actual = $e->getMessage();
         }
         $this->assertEquals($expected, $actual);
@@ -1206,12 +1207,12 @@ class BaseServiceNewTest extends TestCase
         $uriProc = m::mock(UriProcessor::class);
         $uriProc->shouldReceive('execute')->andReturnNull()->once();
 
-        $expected = 'assert(): !$odataModelInstance instanceof ODataURLCollection failed';
+        $expected = '!$odataModelInstance instanceof ODataURLCollection';
         $actual = null;
 
         try {
             $foo->serializeResult($request, $uriProc);
-        } catch (\PHPUnit_Framework_Error_Warning $e) {
+        } catch (InvalidOperationException $e) {
             $actual = $e->getMessage();
         }
         $this->assertEquals($expected, $actual);
@@ -1270,12 +1271,12 @@ class BaseServiceNewTest extends TestCase
         $uriProc = m::mock(UriProcessor::class);
         $uriProc->shouldReceive('execute')->andReturnNull()->once();
 
-        $expected = 'assert(): !$odataModelInstance instanceof ODataFeed failed';
+        $expected = '!$odataModelInstance instanceof ODataFeed';
         $actual = null;
 
         try {
             $foo->serializeResult($request, $uriProc);
-        } catch (\PHPUnit_Framework_Error_Warning $e) {
+        } catch (InvalidOperationException $e) {
             $actual = $e->getMessage();
         }
         $this->assertEquals($expected, $actual);
@@ -1478,12 +1479,12 @@ class BaseServiceNewTest extends TestCase
         $uriProc = m::mock(UriProcessor::class);
         $uriProc->shouldReceive('execute')->andReturnNull()->once();
 
-        $expected = 'assert(): Unexpected resource target kind failed';
+        $expected = 'Unexpected resource target kind';
         $actual = null;
 
         try {
             $foo->serializeResult($request, $uriProc);
-        } catch (\PHPUnit_Framework_Error_Warning $e) {
+        } catch (InvalidOperationException $e) {
             $actual = $e->getMessage();
         }
         $this->assertEquals($expected, $actual);
@@ -1619,12 +1620,12 @@ class BaseServiceNewTest extends TestCase
         $uriProc = m::mock(UriProcessor::class);
         $uriProc->shouldReceive('execute')->andReturnNull()->once();
 
-        $expected = 'assert(): Projected request property cannot be null failed';
+        $expected = 'Projected request property cannot be null';
         $actual = null;
 
         try {
             $foo->serializeResult($request, $uriProc);
-        } catch (\PHPUnit_Framework_Error_Warning $e) {
+        } catch (InvalidOperationException $e) {
             $actual = $e->getMessage();
         }
         $this->assertEquals($expected, $actual);

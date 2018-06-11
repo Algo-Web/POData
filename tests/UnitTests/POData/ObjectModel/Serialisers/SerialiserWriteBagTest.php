@@ -3,6 +3,7 @@
 namespace UnitTests\POData\ObjectModel\Serialisers;
 
 use Mockery as m;
+use POData\Common\InvalidOperationException;
 use POData\ObjectModel\CynicSerialiser as IronicSerialiser;
 use POData\ObjectModel\ObjectModelSerializer;
 use POData\ObjectModel\ODataBagContent;
@@ -79,8 +80,8 @@ class SerialiserWriteBagTest extends SerialiserTestBase
         $collection = new QueryResult();
         $collection->results = 'NARF!';
 
-        $expected = 'assert(): Bag parameter must be null or array failed';
-        $expectedExceptionClass = \PHPUnit_Framework_Error_Warning::class;
+        $expected = 'Bag parameter must be null or array';
+        $expectedExceptionClass = InvalidOperationException::class;
         $actual = null;
         $actualExceptionClass = null;
 
@@ -115,9 +116,9 @@ class SerialiserWriteBagTest extends SerialiserTestBase
         $collection = new QueryResult();
         $collection->results = null;
 
-        $expected = 'assert(): $bagItemResourceTypeKind != ResourceTypeKind::PRIMITIVE &&'
-                    .' $bagItemResourceTypeKind != ResourceTypeKind::COMPLEX failed';
-        $expectedExceptionClass = \PHPUnit_Framework_Error_Warning::class;
+        $expected = '$bagItemResourceTypeKind != ResourceTypeKind::PRIMITIVE &&'
+                    .' $bagItemResourceTypeKind != ResourceTypeKind::COMPLEX';
+        $expectedExceptionClass = InvalidOperationException::class;
         $actual = null;
         $actualExceptionClass = null;
 

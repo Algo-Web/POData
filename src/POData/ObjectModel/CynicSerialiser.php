@@ -259,7 +259,10 @@ class CynicSerialiser implements IObjectSerialiser
     public function writeTopLevelElements(QueryResult &$entryObjects)
     {
         $res = $entryObjects->results;
-        assert(is_array($res) || $res instanceof Collection, '!is_array($entryObjects->results)');
+        if (!(is_array($res) || $res instanceof Collection)) {
+            throw new InvalidOperationException('!is_array($entryObjects->results)');
+        }
+
         if (is_array($res) && 0 == count($entryObjects->results)) {
             $entryObjects->hasMore = false;
         }
@@ -403,7 +406,9 @@ class CynicSerialiser implements IObjectSerialiser
         $odataProperty->name = $propertyName;
         $odataProperty->typeName = $resourceType->getFullName();
         if (null !== $result) {
-            assert(is_object($result), 'Supplied $customObject must be an object');
+            if (!is_object($result)) {
+                throw new InvalidOperationException('Supplied $customObject must be an object');
+            }
             $internalContent = $this->writeComplexValue($resourceType, $result);
             $odataProperty->value = $internalContent;
         }
@@ -446,17 +451,23 @@ class CynicSerialiser implements IObjectSerialiser
      */
     public function writeTopLevelPrimitive(QueryResult &$primitiveValue, ResourceProperty &$resourceProperty = null)
     {
-        assert(null !== $resourceProperty, 'Resource property must not be null');
+        if (null === $resourceProperty) {
+            throw new InvalidOperationException('Resource property must not be null');
+        }
         $result = new ODataPropertyContent();
         $property = new ODataProperty();
         $property->name = $resourceProperty->getName();
 
         $iType = $resourceProperty->getInstanceType();
-        assert($iType instanceof IType, get_class($iType));
+        if (!$iType instanceof IType) {
+            throw new InvalidOperationException(get_class($iType));
+        }
         $property->typeName = $iType->getFullTypeName();
         if (null !== $primitiveValue->results) {
             $rType = $resourceProperty->getResourceType()->getInstanceType();
-            assert($rType instanceof IType, get_class($rType));
+            if (!$rType instanceof IType) {
+                throw new InvalidOperationException(get_class($rType));
+            }
             $property->value = $this->primitiveToString($rType, $primitiveValue->results);
         }
 
@@ -538,13 +549,17 @@ class CynicSerialiser implements IObjectSerialiser
      */
     protected function writeBagValue(ResourceType &$resourceType, $result)
     {
-        assert(null === $result || is_array($result), 'Bag parameter must be null or array');
+        $bagNullOrArray = null === $result || is_array($result);
+        if (!$bagNullOrArray) {
+            throw new InvalidOperationException('Bag parameter must be null or array');
+        }
         $typeKind = $resourceType->getResourceTypeKind();
-        assert(
-            ResourceTypeKind::PRIMITIVE() == $typeKind || ResourceTypeKind::COMPLEX() == $typeKind,
-            '$bagItemResourceTypeKind != ResourceTypeKind::PRIMITIVE'
-            .' && $bagItemResourceTypeKind != ResourceTypeKind::COMPLEX'
-        );
+        $typePrimitiveOrComplex = ResourceTypeKind::PRIMITIVE() == $typeKind
+                                  || ResourceTypeKind::COMPLEX() == $typeKind;
+        if (!$typePrimitiveOrComplex) {
+            throw new InvalidOperationException('$bagItemResourceTypeKind != ResourceTypeKind::PRIMITIVE'
+                                                .' && $bagItemResourceTypeKind != ResourceTypeKind::COMPLEX');
+        }
         if (null == $result) {
             return null;
         }
@@ -553,7 +568,9 @@ class CynicSerialiser implements IObjectSerialiser
             if (isset($value)) {
                 if (ResourceTypeKind::PRIMITIVE() == $typeKind) {
                     $instance = $resourceType->getInstanceType();
-                    assert($instance instanceof IType, get_class($instance));
+                    if (!$instance instanceof IType) {
+                        throw new InvalidOperationException(get_class($instance));
+                    }
                     $bag->propertyContents[] = $this->primitiveToString($instance, $value);
                 } elseif (ResourceTypeKind::COMPLEX() == $typeKind) {
                     $bag->propertyContents[] = $this->writeComplexValue($resourceType, $value);
@@ -595,11 +612,16 @@ class CynicSerialiser implements IObjectSerialiser
             $raw = $result->$propName;
             if (static::isMatchPrimitive($resourceKind)) {
                 $iType = $prop->getInstanceType();
-                assert($iType instanceof IType, get_class($iType));
+                if (!$iType instanceof IType) {
+                    throw new InvalidOperationException(get_class($iType));
+                }
+
                 $internalProperty->typeName = $iType->getFullTypeName();
 
                 $rType = $prop->getResourceType()->getInstanceType();
-                assert($rType instanceof IType, get_class($rType));
+                if (!$rType instanceof IType) {
+                    throw new InvalidOperationException(get_class($rType));
+                }
                 if (null !== $raw) {
                     $internalProperty->value = $this->primitiveToString($rType, $raw);
                 }
@@ -872,11 +894,13 @@ class CynicSerialiser implements IObjectSerialiser
             if (0 != $depth) {
                 for ($i = 1; $i < $depth; ++$i) {
                     $expandedProjectionNode = $expandedProjectionNode->findNode($segmentNames[$i]);
-                    assert(null !== $expandedProjectionNode, 'is_null($expandedProjectionNode)');
-                    assert(
-                        $expandedProjectionNode instanceof ExpandedProjectionNode,
-                        '$expandedProjectionNode not instanceof ExpandedProjectionNode'
-                    );
+                    if (null === $expandedProjectionNode) {
+                        throw new InvalidOperationException('is_null($expandedProjectionNode)');
+                    }
+                    if (!$expandedProjectionNode instanceof ExpandedProjectionNode) {
+                        $msg = '$expandedProjectionNode not instanceof ExpandedProjectionNode';
+                        throw new InvalidOperationException($msg);
+                    }
                 }
             }
         }
@@ -956,7 +980,9 @@ class CynicSerialiser implements IObjectSerialiser
                 $subProp->value = $this->writeBagValue($resource, $result);
             } elseif ($resource instanceof ResourcePrimitiveType && $nonNull) {
                 $rType = $resource->getInstanceType();
-                assert($rType instanceof IType, get_class($rType));
+                if (!$rType instanceof IType) {
+                    throw new InvalidOperationException(get_class($rType));
+                }
                 $subProp->value = $this->primitiveToString($rType, $result);
             } elseif ($resource instanceof ResourceComplexType && $nonNull) {
                 $subProp->value = $this->writeComplexValue($resource, $result, $flake->getName());

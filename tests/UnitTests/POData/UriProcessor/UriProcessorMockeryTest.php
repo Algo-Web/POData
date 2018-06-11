@@ -3,6 +3,7 @@
 namespace UnitTests\POData\UriProcessor;
 
 use Mockery as m;
+use POData\Common\InvalidOperationException;
 use POData\Common\ODataException;
 use POData\Common\Url;
 use POData\Common\Version;
@@ -58,12 +59,12 @@ class UriProcessorMockeryTest extends TestCase
         $foo->shouldReceive('executeDelete')->andReturnNull()->never();
         $foo->shouldReceive('execute')->passthru();
 
-        $expected = 'assert(): !($service instanceof IService) failed';
+        $expected = '!($service instanceof IService)';
         $actual = null;
 
         try {
             $foo->execute();
-        } catch (\Exception $e) {
+        } catch (InvalidOperationException $e) {
             $actual = $e->getMessage();
         }
         $this->assertEquals($expected, $actual);
