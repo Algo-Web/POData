@@ -42,6 +42,7 @@ class ModelDeserialiserTest extends SerialiserTestBase
         } catch (\InvalidArgumentException $e) {
             $actual = $e->getMessage();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -63,6 +64,7 @@ class ModelDeserialiserTest extends SerialiserTestBase
         } catch (\InvalidArgumentException $e) {
             $actual = $e->getMessage();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 

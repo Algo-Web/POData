@@ -156,6 +156,7 @@ class ServiceHostTest extends TestCase
         } catch (ODataException $e) {
             $actual = $e->getMessage();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -178,6 +179,7 @@ class ServiceHostTest extends TestCase
         } catch (ODataException $e) {
             $actual = $e->getMessage();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -216,6 +218,7 @@ class ServiceHostTest extends TestCase
         } catch (ODataException $e) {
             $actual = $e->getMessage();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -238,6 +241,7 @@ class ServiceHostTest extends TestCase
         } catch (ODataException $e) {
             $actual = $e->getMessage();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -260,6 +264,7 @@ class ServiceHostTest extends TestCase
         } catch (ODataException $e) {
             $actual = $e->getMessage();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -346,6 +351,7 @@ class ServiceHostTest extends TestCase
         } catch (\Exception $e) {
             $actual = $e->getMessage();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -368,6 +374,7 @@ class ServiceHostTest extends TestCase
         } catch (ODataException $e) {
             $actual = $e->getMessage();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -473,6 +480,7 @@ class ServiceHostTest extends TestCase
         } catch (\Exception $e) {
             $actual = $e->getMessage();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -496,6 +504,7 @@ class ServiceHostTest extends TestCase
         } catch (\Exception $e) {
             $actual = $e->getMessage();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -518,6 +527,7 @@ class ServiceHostTest extends TestCase
         } catch (\Exception $e) {
             $actual = $e->getMessage();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -541,6 +551,7 @@ class ServiceHostTest extends TestCase
         } catch (\Exception $e) {
             $actual = $e->getMessage();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -564,6 +575,7 @@ class ServiceHostTest extends TestCase
         } catch (\Exception $e) {
             $actual = $e->getMessage();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -588,6 +600,7 @@ class ServiceHostTest extends TestCase
         } catch (\Exception $e) {
             $actual = $e->getMessage();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -612,6 +625,7 @@ class ServiceHostTest extends TestCase
         } catch (\Exception $e) {
             $actual = $e->getMessage();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 

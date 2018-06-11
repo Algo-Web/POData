@@ -176,6 +176,7 @@ class CynicSerialiserTest extends SerialiserTestBase
         } catch (InvalidOperationException $e) {
             $actual = $e->getMessage();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -208,6 +209,7 @@ class CynicSerialiserTest extends SerialiserTestBase
         } catch (InvalidOperationException $e) {
             $actual = $e->getMessage();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 

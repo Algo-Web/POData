@@ -91,6 +91,7 @@ class SerialiserWriteComplexTest extends SerialiserTestBase
         }
 
         $this->assertEquals($expectedExceptionClass, $actualExceptionClass);
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -148,6 +149,7 @@ class SerialiserWriteComplexTest extends SerialiserTestBase
         }
 
         $this->assertEquals($expectedExceptionClass, $actualExceptionClass);
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -385,6 +387,7 @@ class SerialiserWriteComplexTest extends SerialiserTestBase
         }
 
         $this->assertEquals($expectedExceptionClass, $actualExceptionClass);
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
