@@ -307,7 +307,7 @@ class RequestExpanderTest extends TestCase
         $stack->shouldReceive('pushSegment')->andReturnNull()->once();
         $stack->shouldReceive('popSegment')->andReturnNull()->never();
         $stack->shouldReceive('getSegmentWrappers')->andReturn([])->twice();
-        $stack->shouldReceive('getSegmentNames')->andReturn(['hammer', 'time'])->once();
+        $stack->shouldReceive('getSegmentNames')->andReturn(['hammer', 'time'])->twice();
 
         $providers = m::mock(ProvidersWrapper::class);
         $providers->shouldReceive('getRelatedResourceSet')->andReturn($resource)->once();
