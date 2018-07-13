@@ -445,6 +445,23 @@ class ServiceHostTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
+    public function testGetAbsoluteRequestUriMalformed()
+    {
+        $malformedUrl = 'foobar';
+        $expected = 'Bad Request - The url \'foobar\' is malformed.';
+
+        $host = m::mock(ServiceHost::class)->makePartial();
+        $host->shouldReceive('getOperationContext->incomingRequest->getRawUrl')->andReturn($malformedUrl)->once();
+
+        try {
+            $host->getAbsoluteRequestUri();
+        } catch (ODataException $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertNotNull($actual);
+        $this->assertEquals($expected, $actual);
+    }
+
     public function testGetAbsoluteServiceUriAsString()
     {
         $expected = 'http://localhost/odata.svc';

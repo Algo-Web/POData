@@ -205,6 +205,23 @@ Content-Length: ###
         $this->assertEquals($expected, $actual);
     }
 
+    public function testHandleDataWithTooManySegments()
+    {
+        $bigPayload = '--.--'.PHP_EOL.PHP_EOL.PHP_EOL.PHP_EOL.'.--.--.--.';
+
+        $foo = m::mock(ChangeSetParser::class)->makePartial();
+        $foo->shouldReceive('getData')->andReturn('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.', $bigPayload);
+
+        $expected = 'how did we end up with more than 3 stages??';
+        $actual = null;
+        try {
+            $foo->handleData();
+        } catch (\Exception $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
+    }
+
     public function testGetResponse()
     {
         $headers = ['X-Swedish-Chef' => 'bork bork bork!', 'Status' => '202 Updated'];
