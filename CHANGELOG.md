@@ -1,5 +1,6 @@
-Unreleased
-----------
+0.3.4 (2018-07-13)
+------------------
+   * Clean up whole bunch of vacuous asserts (see [#208] (https://github.com/Algo-Web/POData/pull/208))
    * Return namespaces to full resourceType names - thanks to **cdcampos** for reporting this (see [#207] (https://github.com/Algo-Web/POData/pull/207))
    * Fix empty-object serialisation - thanks to **cdcampos** for reporting this (see [#206] (https://github.com/Algo-Web/POData/pull/206))
    * Return HTTP 204 when a singleton resource is null (see [#205] (https://github.com/Algo-Web/POData/pull/205))
