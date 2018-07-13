@@ -78,8 +78,8 @@ class SerialiserWriteComplexTest extends SerialiserTestBase
         $collection = new QueryResult();
         $collection->results = [ 'foo' ];
 
-        $expected = 'assert(): Supplied $customObject must be an object failed';
-        $expectedExceptionClass = \PHPUnit_Framework_Error_Warning::class;
+        $expected = 'Supplied $customObject must be an object';
+        $expectedExceptionClass = InvalidOperationException::class;
         $actual = null;
         $actualExceptionClass = null;
 
@@ -91,6 +91,7 @@ class SerialiserWriteComplexTest extends SerialiserTestBase
         }
 
         $this->assertEquals($expectedExceptionClass, $actualExceptionClass);
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -135,8 +136,8 @@ class SerialiserWriteComplexTest extends SerialiserTestBase
         $collection = new QueryResult();
         $collection->results = [$model];
 
-        $expected = 'assert(): Supplied $customObject must be an object failed';
-        $expectedExceptionClass = \PHPUnit_Framework_Error_Warning::class;
+        $expected = 'Supplied $customObject must be an object';
+        $expectedExceptionClass = InvalidOperationException::class;
         $actual = null;
         $actualExceptionClass = null;
 
@@ -148,6 +149,7 @@ class SerialiserWriteComplexTest extends SerialiserTestBase
         }
 
         $this->assertEquals($expectedExceptionClass, $actualExceptionClass);
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -385,6 +387,7 @@ class SerialiserWriteComplexTest extends SerialiserTestBase
         }
 
         $this->assertEquals($expectedExceptionClass, $actualExceptionClass);
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 

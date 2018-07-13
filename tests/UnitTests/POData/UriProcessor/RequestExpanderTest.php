@@ -184,7 +184,7 @@ class RequestExpanderTest extends TestCase
         $stack->shouldReceive('pushSegment')->andReturnNull()->times(2);
         $stack->shouldReceive('popSegment')->andReturnNull()->times(2);
         $stack->shouldReceive('getSegmentWrappers')->andReturn([])->times(2);
-        $stack->shouldReceive('getSegmentNames')->andReturn(['time'])->once();
+        $stack->shouldReceive('getSegmentNames')->andReturn(['time']);
 
         $node = m::mock(RootProjectionNode::class);
         $node->shouldReceive('isExpansionSpecified')->andReturn(true);
@@ -328,14 +328,15 @@ class RequestExpanderTest extends TestCase
         $foo->shouldReceive('getProviders')->andReturn($providers);
         $foo->shouldReceive('getService')->andReturn($service);
 
-        $expected = 'assert(): !null($currentResourceSetWrapper) failed';
+        $expected = '!null($currentResourceSetWrapper)';
         $actual = null;
 
         try {
             $foo->handleExpansion();
-        } catch (\PHPUnit_Framework_Error_Warning $e) {
+        } catch (InvalidOperationException $e) {
             $actual = $e->getMessage();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -394,6 +395,7 @@ class RequestExpanderTest extends TestCase
         } catch (InvalidOperationException $e) {
             $actual = $e->getMessage();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 }

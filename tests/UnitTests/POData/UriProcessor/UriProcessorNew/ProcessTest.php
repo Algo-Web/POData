@@ -3,6 +3,7 @@
 namespace UnitTests\POData\UriProcessor\UriProcessorNew;
 
 use Mockery as m;
+use POData\Common\InvalidOperationException;
 use POData\Common\ODataException;
 use POData\Common\Url;
 use POData\Common\Version;
@@ -62,6 +63,7 @@ class ProcessTest extends TestCase
         }
 
         $this->assertEquals($expectedClass, $actualClass);
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -132,6 +134,7 @@ class ProcessTest extends TestCase
         } catch (ODataException $e) {
             $actual = $e->getMessage();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -164,14 +167,15 @@ class ProcessTest extends TestCase
         $remix->shouldReceive('getService')->andReturn($service);
         $remix->shouldReceive('getRequest')->andReturn($request);
 
-        $expected = 'assert(): Invalid property kind type for resource retrieval failed';
+        $expected = 'Invalid property kind type for resource retrieval';
         $actual = null;
 
         try {
             $remix->execute();
-        } catch (\Exception $e) {
+        } catch (InvalidOperationException $e) {
             $actual = $e->getMessage();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 

@@ -45,6 +45,7 @@ class ObjectDeserialiserOKTest extends TestCase
         } catch (\Exception $e) {
             $actual = $e->getMessage();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -68,6 +69,7 @@ class ObjectDeserialiserOKTest extends TestCase
         } catch (\Exception $e) {
             $actual = $e->getMessage();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -93,6 +95,7 @@ class ObjectDeserialiserOKTest extends TestCase
         } catch (\Exception $e) {
             $actual = $e->getMessage();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 }

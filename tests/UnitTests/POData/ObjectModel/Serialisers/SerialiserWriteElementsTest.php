@@ -4,6 +4,7 @@ namespace UnitTests\POData\ObjectModel\Serialisers;
 
 use Carbon\Carbon;
 use Mockery as m;
+use POData\Common\InvalidOperationException;
 use POData\ObjectModel\CynicSerialiser as IronicSerialiser;
 use POData\ObjectModel\ObjectModelSerializer;
 use POData\ObjectModel\ODataCategory;
@@ -541,19 +542,20 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $collection->results = null;
 
         $models = null;
-        $expected = 'assert(): !is_array($entryObjects->results) failed';
-        $expectedExceptionClass = \PHPUnit_Framework_Error_Warning::class;
+        $expected = '!is_array($entryObjects->results)';
+        $expectedExceptionClass = InvalidOperationException::class;
         $actual = null;
         $actualExceptionClass = null;
 
         try {
             $ironic->writeTopLevelElements($collection);
-        } catch (\Exception $e) {
+        } catch (InvalidOperationException $e) {
             $actualExceptionClass = get_class($e);
             $actual = $e->getMessage();
         }
 
         $this->assertEquals($expectedExceptionClass, $actualExceptionClass);
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 

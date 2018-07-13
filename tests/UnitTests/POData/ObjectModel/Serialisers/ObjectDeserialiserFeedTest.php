@@ -193,6 +193,7 @@ class ObjectDeserialiserFeedTest extends SerialiserTestBase
         } catch (\InvalidArgumentException $e) {
             $actual = $e->getMessage();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 

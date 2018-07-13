@@ -2,6 +2,7 @@
 
 namespace POData\ObjectModel;
 
+use POData\Common\InvalidOperationException;
 use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\Metadata\ResourceEntityType;
 use POData\Providers\Metadata\ResourceSet;
@@ -39,14 +40,21 @@ class CynicDeserialiser
      */
     public function processPayload(ODataEntry &$payload)
     {
-        assert($this->isEntryOK($payload));
+        $entryOk = $this->isEntryOK($payload);
+        if (!$entryOk) {
+            throw new InvalidOperationException('Payload not OK');
+        }
         list($sourceSet, $source) = $this->processEntryContent($payload);
-        assert($sourceSet instanceof ResourceSet);
+        if (!$sourceSet instanceof ResourceSet) {
+            throw new InvalidOperationException('$sourceSet not instanceof ResourceSet');
+        }
         $numLinks = count($payload->links);
         for ($i = 0; $i < $numLinks; $i++) {
             $this->processLink($payload->links[$i], $sourceSet, $source);
         }
-        assert($this->isEntryProcessed($payload));
+        if (!$this->isEntryProcessed($payload)) {
+            throw new InvalidOperationException('Payload not processed');
+        }
         return $source;
     }
 
@@ -148,7 +156,9 @@ class CynicDeserialiser
             assert(isset($source), get_class($source));
             $result = $this->getWrapper()->updateResource($set, $source, $key, $properties);
         }
-        assert($key instanceof KeyDescriptor, get_class($key));
+        if (!$key instanceof KeyDescriptor) {
+            throw new InvalidOperationException(get_class($key));
+        }
         $content->id = $key;
 
         $numLinks = count($content->links);

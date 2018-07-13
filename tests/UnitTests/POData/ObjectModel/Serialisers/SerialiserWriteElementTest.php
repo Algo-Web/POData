@@ -639,6 +639,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         }
 
         $this->assertEquals($expectedExceptionClass, $actualExceptionClass);
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 

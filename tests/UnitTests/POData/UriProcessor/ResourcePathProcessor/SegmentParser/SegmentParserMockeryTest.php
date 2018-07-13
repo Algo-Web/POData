@@ -115,6 +115,7 @@ class SegmentParserMockeryTest extends TestCase
             //dd($e->getTraceAsString());
             $actual = $e->getMessage();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 

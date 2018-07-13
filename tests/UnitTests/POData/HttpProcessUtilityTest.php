@@ -220,6 +220,7 @@ class HttpProcessUtilityTest extends TestCase
             $actual = $e->getMessage();
             $actualCode = $e->getStatusCode();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
         $this->assertEquals($expectedCode, $actualCode);
     }
@@ -241,6 +242,7 @@ class HttpProcessUtilityTest extends TestCase
             $actual = $e->getMessage();
             $actualCode = $e->getStatusCode();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
         $this->assertEquals($expectedCode, $actualCode);
     }
@@ -262,6 +264,7 @@ class HttpProcessUtilityTest extends TestCase
             $actual = $e->getMessage();
             $actualCode = $e->getStatusCode();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
         $this->assertEquals($expectedCode, $actualCode);
     }
@@ -324,6 +327,7 @@ class HttpProcessUtilityTest extends TestCase
             $actual = $e->getMessage();
             $actualCode = $e->getStatusCode();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
         $this->assertEquals($expectedCode, $actualCode);
     }
@@ -346,6 +350,7 @@ class HttpProcessUtilityTest extends TestCase
             $actual = $e->getMessage();
             $actualCode = $e->getStatusCode();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
         $this->assertEquals($expectedCode, $actualCode);
     }
@@ -368,6 +373,7 @@ class HttpProcessUtilityTest extends TestCase
             $actual = $e->getMessage();
             $actualCode = $e->getStatusCode();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
         $this->assertEquals($expectedCode, $actualCode);
     }
@@ -382,6 +388,7 @@ class HttpProcessUtilityTest extends TestCase
         $textIndex = 0;
 
         $actual = HttpProcessUtility::readQuotedParameterValue($parameterName, $headerText, $textIndex);
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -403,6 +410,7 @@ class HttpProcessUtilityTest extends TestCase
             $actual = $e->getMessage();
             $actualCode = $e->getStatusCode();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
         $this->assertEquals($expectedCode, $actualCode);
     }
@@ -425,6 +433,7 @@ class HttpProcessUtilityTest extends TestCase
             $actual = $e->getMessage();
             $actualCode = $e->getStatusCode();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
         $this->assertEquals($expectedCode, $actualCode);
     }
@@ -447,6 +456,7 @@ class HttpProcessUtilityTest extends TestCase
             $actual = $e->getMessage();
             $actualCode = $e->getStatusCode();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
         $this->assertEquals($expectedCode, $actualCode);
     }
@@ -471,6 +481,7 @@ class HttpProcessUtilityTest extends TestCase
             $actual = $e->getMessage();
             $actualCode = $e->getStatusCode();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
         $this->assertEquals($expectedCode, $actualCode);
     }
@@ -487,6 +498,7 @@ class HttpProcessUtilityTest extends TestCase
         } catch (\Exception $e) {
             $actual = $e->getMessage();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -502,6 +514,7 @@ class HttpProcessUtilityTest extends TestCase
         } catch (\Exception $e) {
             $actual = $e->getMessage();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -529,6 +542,7 @@ class HttpProcessUtilityTest extends TestCase
         } catch (\Exception $e) {
             $actual = $e->getMessage();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 }

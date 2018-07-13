@@ -3,6 +3,7 @@
 namespace UnitTests\POData\ObjectModel\Serialisers;
 
 use Mockery as m;
+use POData\Common\InvalidOperationException;
 use POData\ObjectModel\CynicSerialiser as IronicSerialiser;
 use POData\ObjectModel\ObjectModelSerializer;
 use POData\ObjectModel\ODataProperty;
@@ -45,8 +46,8 @@ class SerialiserWritePrimitiveTest extends SerialiserTestBase
 
         $resProp = null;
 
-        $expected = 'assert(): Resource property must not be null failed';
-        $expectedExceptionClass = \PHPUnit_Framework_Error_Warning::class;
+        $expected = 'Resource property must not be null';
+        $expectedExceptionClass = InvalidOperationException::class;
         $actual = null;
         $actualExceptionClass = null;
 
@@ -58,6 +59,7 @@ class SerialiserWritePrimitiveTest extends SerialiserTestBase
         }
 
         $this->assertEquals($expectedExceptionClass, $actualExceptionClass);
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 

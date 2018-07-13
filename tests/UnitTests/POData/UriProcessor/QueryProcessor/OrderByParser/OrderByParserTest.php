@@ -3,6 +3,7 @@
 namespace UnitTests\POData\UriProcessor\QueryProcessor\OrderByParser;
 
 use Mockery as m;
+use POData\Common\InvalidOperationException;
 use POData\Common\ODataException;
 use POData\Configuration\EntitySetRights;
 use POData\Configuration\ServiceConfiguration;
@@ -683,14 +684,15 @@ class OrderByParserTest extends TestCase
         $orderBy = ' ';
         $provider = m::mock(ProvidersWrapper::class);
 
-        $expected = 'assert(): OrderBy clause must not be trimmable to an empty string failed';
+        $expected = 'OrderBy clause must not be trimmable to an empty string';
         $actual = null;
 
         try {
             OrderByParser::parseOrderByClause($wrapper, $type, $orderBy, $provider);
-        } catch (\PHPUnit_Framework_Error_Warning $e) {
+        } catch (InvalidOperationException $e) {
             $actual = $e->getMessage();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -713,6 +715,7 @@ class OrderByParserTest extends TestCase
         } catch (ODataException $e) {
             $actual = $e->getMessage();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 

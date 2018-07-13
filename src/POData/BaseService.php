@@ -5,6 +5,7 @@ namespace POData;
 use POData\BatchProcessor\BatchProcessor;
 use POData\Common\ErrorHandler;
 use POData\Common\HttpStatus;
+use POData\Common\InvalidOperationException;
 use POData\Common\Messages;
 use POData\Common\MimeTypes;
 use POData\Common\NotImplementedException;
@@ -426,26 +427,33 @@ abstract class BaseService implements IRequestHandler, IService
             $objectModelSerializer->setRequest($request);
 
             $targetResourceType = $request->getTargetResourceType();
-            assert(null != $targetResourceType, 'Target resource type cannot be null');
+            if (null === $targetResourceType) {
+                throw new InvalidOperationException('Target resource type cannot be null');
+            }
 
             $methodIsNotPost = (HTTPRequestMethod::POST() != $method);
             $methodIsNotDelete = (HTTPRequestMethod::DELETE() != $method);
             if (!$request->isSingleResult() && $methodIsNotPost) {
                 // Code path for collection (feed or links)
                 $entryObjects = $request->getTargetResult();
-                assert($entryObjects instanceof QueryResult, '!$entryObjects instanceof QueryResult');
-                assert(is_array($entryObjects->results), '!is_array($entryObjects->results)');
+                if (!$entryObjects instanceof QueryResult) {
+                    throw new InvalidOperationException('!$entryObjects instanceof QueryResult');
+                }
+                if (!is_array($entryObjects->results)) {
+                    throw new InvalidOperationException('!is_array($entryObjects->results)');
+                }
                 // If related resource set is empty for an entry then we should
                 // not throw error instead response must be empty feed or empty links
                 if ($request->isLinkUri()) {
                     $odataModelInstance = $objectModelSerializer->writeUrlElements($entryObjects);
-                    assert(
-                        $odataModelInstance instanceof ODataURLCollection,
-                        '!$odataModelInstance instanceof ODataURLCollection'
-                    );
+                    if (!$odataModelInstance instanceof ODataURLCollection) {
+                        throw new InvalidOperationException('!$odataModelInstance instanceof ODataURLCollection');
+                    }
                 } else {
                     $odataModelInstance = $objectModelSerializer->writeTopLevelElements($entryObjects);
-                    assert($odataModelInstance instanceof ODataFeed, '!$odataModelInstance instanceof ODataFeed');
+                    if (!$odataModelInstance instanceof ODataFeed) {
+                        throw new InvalidOperationException('!$odataModelInstance instanceof ODataFeed');
+                    }
                 }
             } else {
                 // Code path for entity, complex, bag, resource reference link,
@@ -500,14 +508,18 @@ abstract class BaseService implements IRequestHandler, IService
                         $this->getHost()->setResponseETag($eTag);
                     }
                 } elseif (TargetKind::COMPLEX_OBJECT() == $requestTargetKind) {
-                    assert(null != $requestProperty, 'Projected request property cannot be null');
+                    if (null === $requestProperty) {
+                        throw new InvalidOperationException('Projected request property cannot be null');
+                    }
                     $odataModelInstance = $objectModelSerializer->writeTopLevelComplexObject(
                         $result,
                         $requestProperty->getName(),
                         $targetResourceType
                     );
                 } elseif (TargetKind::BAG() == $requestTargetKind) {
-                    assert(null != $requestProperty, 'Projected request property cannot be null');
+                    if (null === $requestProperty) {
+                        throw new InvalidOperationException('Projected request property cannot be null');
+                    }
                     $odataModelInstance = $objectModelSerializer->writeTopLevelBagObject(
                         $result,
                         $requestProperty->getName(),
@@ -527,7 +539,7 @@ abstract class BaseService implements IRequestHandler, IService
                     // Employees(1)/Photo/$value => binary stream
                     // Customers/$count => string
                 } else {
-                    assert(false, 'Unexpected resource target kind');
+                    throw new InvalidOperationException('Unexpected resource target kind');
                 }
             }
         }
@@ -594,7 +606,10 @@ abstract class BaseService implements IRequestHandler, IService
         //The response format can be dictated by the target resource kind. IE a $value will be different then expected
         //getTargetKind doesn't deal with link resources directly and this can change things
         $targetKind = $request->isLinkUri() ? TargetKind::LINK() : $request->getTargetKind();
-        assert(is_string($requestAcceptText) || !isset($requestAcceptText));
+        $acceptStringOrNull = is_string($requestAcceptText) || !isset($requestAcceptText);
+        if (!$acceptStringOrNull) {
+            throw new InvalidOperationException('Request accept text not either string or null');
+        }
 
         switch ($targetKind) {
             case TargetKind::METADATA():
@@ -617,9 +632,13 @@ abstract class BaseService implements IRequestHandler, IService
 
                 if ('$count' != $request->getIdentifier()) {
                     $projectedProperty = $request->getProjectedProperty();
-                    assert(null !== $projectedProperty, 'is_null($projectedProperty)');
+                    if (null === $projectedProperty) {
+                        throw new InvalidOperationException('is_null($projectedProperty)');
+                    }
                     $type = $projectedProperty->getInstanceType();
-                    assert($type instanceof IType, '!$type instanceof IType');
+                    if (!$type instanceof IType) {
+                        throw new InvalidOperationException('!$type instanceof IType');
+                    }
                     if ($type instanceof Binary) {
                         $supportedResponseMimeTypes = [MimeTypes::MIME_APPLICATION_OCTETSTREAM];
                     }
@@ -809,7 +828,9 @@ abstract class BaseService implements IRequestHandler, IService
         $comma = null;
         foreach ($resourceType->getETagProperties() as $eTagProperty) {
             $type = $eTagProperty->getInstanceType();
-            assert($type instanceof IType, '!$type instanceof IType');
+            if (!$type instanceof IType) {
+                throw new InvalidOperationException('!$type instanceof IType');
+            }
 
             $value = null;
             $property = $eTagProperty->getName();
