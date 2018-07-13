@@ -27,6 +27,7 @@ class InternalOrderByInfoTest extends TestCase
         $foo->shouldReceive('getOrderByPathSegments')->andReturn([$segment]);
 
         $actual = $foo->buildSkipTokenValue(new \DateTime());
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -57,6 +58,7 @@ class InternalOrderByInfoTest extends TestCase
         $foo->shouldReceive('getResourceType')->andReturn($rType);
 
         $actual = $foo->buildSkipTokenValue($bar);
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -91,6 +93,7 @@ class InternalOrderByInfoTest extends TestCase
         } catch (ODataException $e) {
             $actual = $e->getMessage();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -125,6 +128,7 @@ class InternalOrderByInfoTest extends TestCase
         $foo->shouldReceive('getResourceType')->andReturn($rType);
 
         $actual = $foo->buildSkipTokenValue($lastObject);
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 }

@@ -63,6 +63,7 @@ class ProcessTest extends TestCase
         }
 
         $this->assertEquals($expectedClass, $actualClass);
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -133,6 +134,7 @@ class ProcessTest extends TestCase
         } catch (ODataException $e) {
             $actual = $e->getMessage();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -173,6 +175,7 @@ class ProcessTest extends TestCase
         } catch (InvalidOperationException $e) {
             $actual = $e->getMessage();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 

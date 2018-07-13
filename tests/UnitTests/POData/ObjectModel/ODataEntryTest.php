@@ -23,6 +23,7 @@ class ODataEntryTest extends TestCase
 
         $actual = null;
         $foo->isOK($actual);
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -34,6 +35,7 @@ class ODataEntryTest extends TestCase
 
         $actual = null;
         $foo->isOK($actual);
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 

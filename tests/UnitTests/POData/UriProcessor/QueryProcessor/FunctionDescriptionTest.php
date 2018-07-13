@@ -56,6 +56,7 @@ class FunctionDescriptionTest extends TestCase
         } catch (ODataException $e) {
             $actual = $e->getMessage();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -82,6 +83,7 @@ class FunctionDescriptionTest extends TestCase
         } catch (ODataException $e) {
             $actual = $e->getMessage();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 

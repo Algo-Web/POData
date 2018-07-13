@@ -65,6 +65,7 @@ class UriProcessorNewTest extends TestCase
         } catch (\POData\Common\ODataException $e) {
             $actual = $e->getMessage();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -104,6 +105,7 @@ class UriProcessorNewTest extends TestCase
         } catch (ODataException $e) {
             $actual = $e->getMessage();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -159,6 +161,7 @@ class UriProcessorNewTest extends TestCase
         } catch (ODataException $e) {
             $actual = $e->getMessage();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -203,6 +206,7 @@ class UriProcessorNewTest extends TestCase
         } catch (ODataException $e) {
             $actual = $e->getMessage();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -251,6 +255,7 @@ class UriProcessorNewTest extends TestCase
         } catch (ODataException $e) {
             $actual = $e->getMessage();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -333,6 +338,7 @@ class UriProcessorNewTest extends TestCase
         } catch (ODataException $e) {
             $actual = $e->getMessage();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -394,6 +400,7 @@ class UriProcessorNewTest extends TestCase
         } catch (ODataException $e) {
             $actual = $e->getMessage();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -469,6 +476,7 @@ class UriProcessorNewTest extends TestCase
         } catch (ODataException $e) {
             $actual = $e->getMessage();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -574,6 +582,7 @@ class UriProcessorNewTest extends TestCase
         } catch (InvalidOperationException $e) {
             $actual = $e->getMessage();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 

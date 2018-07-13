@@ -74,6 +74,7 @@ class ExecuteGetTest extends TestCase
             $actual = $e->getMessage();
         }
         $this->assertEquals($expectedClass, $actualClass);
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -366,6 +367,7 @@ class ExecuteGetTest extends TestCase
             $actual = $e->getMessage();
         }
         $this->assertEquals($expectedClass, $actualClass);
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -491,6 +493,7 @@ class ExecuteGetTest extends TestCase
             $actual = $e->getMessage();
         }
         $this->assertEquals($expectedClass, $actualClass);
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -547,6 +550,7 @@ class ExecuteGetTest extends TestCase
             $actual = $e->getMessage();
         }
         $this->assertEquals($expectedClass, $actualClass);
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -682,6 +686,7 @@ class ExecuteGetTest extends TestCase
             $actual = $e->getMessage();
         }
         $this->assertEquals($expectedClass, $actualClass);
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -997,6 +1002,7 @@ class ExecuteGetTest extends TestCase
             $actual = $e->getMessage();
         }
         $this->assertEquals($expectedClass, $actualClass);
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -1055,6 +1061,7 @@ class ExecuteGetTest extends TestCase
             $actual = $e->getMessage();
         }
         $this->assertEquals($expectedClass, $actualClass);
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 

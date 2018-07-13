@@ -725,6 +725,7 @@ class ObjectModelSerializerTest extends TestCase
             $actual = $e->getMessage();
         }
 
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -818,6 +819,7 @@ class ObjectModelSerializerTest extends TestCase
             $actual = $e->getMessage();
         }
 
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 

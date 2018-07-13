@@ -692,6 +692,7 @@ class OrderByParserTest extends TestCase
         } catch (InvalidOperationException $e) {
             $actual = $e->getMessage();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -714,6 +715,7 @@ class OrderByParserTest extends TestCase
         } catch (ODataException $e) {
             $actual = $e->getMessage();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 

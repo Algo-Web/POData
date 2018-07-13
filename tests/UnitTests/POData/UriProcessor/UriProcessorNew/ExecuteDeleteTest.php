@@ -103,6 +103,7 @@ class ExecuteDeleteTest extends TestCase
             $actual = $e->getMessage();
         }
         $this->assertEquals($expectedClass, $actualClass);
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -174,6 +175,7 @@ class ExecuteDeleteTest extends TestCase
             $actual = $e->getMessage();
         }
         $this->assertEquals($expectedClass, $actualClass);
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 

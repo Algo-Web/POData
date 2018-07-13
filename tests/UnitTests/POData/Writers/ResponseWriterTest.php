@@ -98,6 +98,7 @@ class ResponseWriterTest extends TestCase
         } catch (\Exception $e) {
             $actual = $e->getMessage();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -193,6 +194,7 @@ class ResponseWriterTest extends TestCase
         } catch (\Exception $e) {
             $actual = $e->getMessage();
         }
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 }

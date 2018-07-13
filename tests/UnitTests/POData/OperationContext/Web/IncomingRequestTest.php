@@ -73,6 +73,7 @@ class IncomingRequestTest extends TestCase
 
         $incoming = new IncomingRequest();
         $actual = $incoming->getRawUrl();
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -88,6 +89,7 @@ class IncomingRequestTest extends TestCase
 
         $incoming = new IncomingRequest();
         $actual = $incoming->getRawUrl();
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -103,6 +105,7 @@ class IncomingRequestTest extends TestCase
 
         $incoming = new IncomingRequest();
         $actual = $incoming->getRequestHeader('REQUEST_METHOD');
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
         $this->assertNull($incoming->getRequestHeader('REQUEST_TYPE'));
     }

@@ -18,6 +18,7 @@ class ODataUrlTest extends TestCase
         $actual = null;
 
         $this->assertFalse($foo->isOk($actual));
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -29,6 +30,7 @@ class ODataUrlTest extends TestCase
         $actual = null;
 
         $this->assertFalse($foo->isOk($actual));
+        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -40,6 +42,7 @@ class ODataUrlTest extends TestCase
         $actual = null;
 
         $this->assertTrue($foo->isOk($actual));
+        $this->assertNull($actual);
         $this->assertEquals($expected, $actual);
     }
 }
