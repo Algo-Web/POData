@@ -644,7 +644,7 @@ class ProvidersWrapper
         $top = null,
         $skip = null,
         SkipTokenInfo $skipToken = null,
-        array $eagerLoad = null
+        array $eagerLoad = []
     ) {
         return $this->getProviderWrapper()->getResourceSet(
             $queryType,

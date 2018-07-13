@@ -147,4 +147,9 @@ class Version
 
         return self::$fixedVersion[3];
     }
+
+    public static function reset()
+    {
+        self::$fixedVersion = null;
+    }
 }

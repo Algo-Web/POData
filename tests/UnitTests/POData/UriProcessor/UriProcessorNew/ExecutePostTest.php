@@ -4,6 +4,7 @@ namespace UnitTests\POData\UriProcessor\UriProcessorNew;
 
 use Mockery as m;
 use POData\Common\HttpStatus;
+use POData\Common\InvalidOperationException;
 use POData\Common\ODataConstants;
 use POData\Common\ODataException;
 use POData\Common\Url;
@@ -13,8 +14,10 @@ use POData\IService;
 use POData\ObjectModel\ModelDeserialiser;
 use POData\ObjectModel\ODataCategory;
 use POData\ObjectModel\ODataEntry;
+use POData\ObjectModel\ODataFeed;
 use POData\ObjectModel\ODataProperty;
 use POData\ObjectModel\ODataPropertyContent;
+use POData\ObjectModel\ODataURL;
 use POData\OperationContext\HTTPRequestMethod;
 use POData\OperationContext\IHTTPRequest;
 use POData\OperationContext\IOperationContext;
@@ -29,10 +32,14 @@ use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\ResourceTypeKind;
 use POData\Providers\Metadata\Type\IType;
 use POData\Providers\ProvidersWrapper;
+use POData\Providers\Query\QueryType;
+use POData\UriProcessor\RequestDescription;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\SegmentDescriptor;
+use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
 use POData\UriProcessor\UriProcessorNew;
 use UnitTests\POData\Facets\NorthWind1\Customer2;
 use UnitTests\POData\TestCase;
+use UnitTests\POData\UriProcessor\UriProcessorDummy;
 
 class ExecutePostTest extends TestCase
 {
@@ -199,6 +206,113 @@ class ExecutePostTest extends TestCase
         $origSegment->setResult($result);
         $remixSegment = $remix->getRequest()->getLastSegment();
         $this->assertEquals($origSegment->getResult(), $remixSegment->getResult());
+    }
+
+    public function testExecutePostWithBadPayload()
+    {
+        $resourceSet = m::mock(ResourceSetWrapper::class)->makePartial();
+
+        $segment = m::mock(SegmentDescriptor::class)->makePartial();
+        $segment->shouldReceive('getTargetKind')->andReturn(TargetKind::RESOURCE())->once();
+        $segment->shouldReceive('getTargetResourceSetWrapper')->andReturn($resourceSet)->once();
+
+        $payload = new ODataFeed();
+
+        $remix = m::mock(UriProcessorDummy::class)->makePartial();
+        $remix->shouldReceive('getRequest->getSegments')->andReturn([$segment]);
+        $remix->shouldReceive('getService->getOperationContext->incomingRequest->getMethod')
+            ->andReturn(HTTPRequestMethod::POST());
+        $remix->shouldReceive('getRequest->getData')->andReturn($payload)->once();
+
+        $expected = 'POData\\ObjectModel\\ODataFeed';
+        $actual = null;
+
+        try {
+            $result = $remix->executePost();
+        } catch (InvalidOperationException $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testExecutePostWithBadID()
+    {
+        $resourceSet = m::mock(ResourceSetWrapper::class)->makePartial();
+
+        $segment = m::mock(SegmentDescriptor::class)->makePartial();
+        $segment->shouldReceive('getTargetKind')->andReturn(TargetKind::RESOURCE())->once();
+        $segment->shouldReceive('getTargetResourceSetWrapper')->andReturn($resourceSet)->once();
+
+        $payload = new ODataEntry();
+        $payload->id = '1';
+
+        $remix = m::mock(UriProcessorDummy::class)->makePartial();
+        $remix->shouldReceive('getRequest->getSegments')->andReturn([$segment]);
+        $remix->shouldReceive('getService->getOperationContext->incomingRequest->getMethod')
+            ->andReturn(HTTPRequestMethod::POST());
+        $remix->shouldReceive('getRequest->getData')->andReturn($payload)->once();
+
+        $expected = 'Payload ID must be empty for POST request';
+        $actual = null;
+
+        try {
+            $result = $remix->executePost();
+        } catch (InvalidOperationException $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testExecutePostWithBadHookup()
+    {
+        $reqUrl = new Url('http://localhost/odata.svc/customers(CustomerID=42)');
+        $resourceSet = m::mock(ResourceSetWrapper::class)->makePartial();
+
+        $segment = m::mock(SegmentDescriptor::class)->makePartial();
+        $segment->shouldReceive('getTargetKind')->andReturn(TargetKind::RESOURCE())->once();
+        $segment->shouldReceive('getTargetResourceSetWrapper')->andReturn($resourceSet)->twice();
+
+        $payload = new ODataURL();
+        $payload->url = 'http://localhost/odata.svc/customers(CustomerID=42)/orders';
+
+        $host = m::mock(ServiceHost::class)->makePartial();
+        $host->shouldReceive('getAbsoluteServiceUri')->andReturn($reqUrl);
+
+        $set = m::mock(ResourceSetWrapper::class)->makePartial();
+        $set->shouldReceive('getResourceType')->andReturnNull()->once();
+        $set->shouldReceive('checkResourceSetRightsForRead')->andReturnNull()->once();
+
+        $wrapper = m::mock(ProvidersWrapper::class)->makePartial();
+        $wrapper->shouldReceive('resolveSingleton')->andReturnNull()->once();
+        $wrapper->shouldReceive('resolveResourceType')->andReturnNull()->never();
+        $wrapper->shouldReceive('resolveResourceSet')->andReturn($set)->once();
+        $wrapper->shouldReceive('getResourceSet')->andReturn($set)->once();
+        $wrapper->shouldReceive('hookSingleModel')->andReturn(false)->once();
+
+        $request = m::mock(RequestDescription::class)->makePartial();
+        $request->shouldReceive('getSegments')->andReturn([$segment]);
+        $request->shouldReceive('getData')->andReturn($payload)->once();
+        $request->shouldReceive('getLastSegment->getIdentifier')->andReturn('nav')->once();
+        $request->queryType = QueryType::ENTITIES();
+
+        $remix = m::mock(UriProcessorDummy::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $remix->shouldReceive('getRequest')->andReturn($request);
+        $remix->shouldReceive('getService->getOperationContext->incomingRequest->getMethod')
+            ->andReturn(HTTPRequestMethod::POST());
+        $remix->shouldReceive('executeGet')->andReturnNull()->once();
+        $remix->shouldReceive('getService->getHost')->andReturn($host)->once();
+        $remix->shouldReceive('getService->getProvidersWrapper')->andReturn($wrapper)->once();
+        $remix->shouldReceive('getProviders')->andReturn($wrapper)->twice();
+
+        $expected = 'AdapterIndicatedLinkNotAttached';
+        $actual = null;
+
+        try {
+            $remix->executePost();
+        } catch (ODataException $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
     }
 
     /**
