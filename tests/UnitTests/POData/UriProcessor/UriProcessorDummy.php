@@ -10,4 +10,9 @@ class UriProcessorDummy extends UriProcessor
     {
         parent::executeGet();
     }
+
+    public function executePost()
+    {
+        parent::executePost();
+    }
 }

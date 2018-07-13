@@ -7,6 +7,12 @@ use UnitTests\POData\TestCase;
 
 class VersionTest extends TestCase
 {
+    public function setUp()
+    {
+        parent::setUp();
+        Version::reset();
+    }
+
     public function testCompareSame()
     {
         $version1 = new Version(1, 0);
@@ -33,6 +39,7 @@ class VersionTest extends TestCase
         $version1 = new Version(1, 0);
         $version2 = new Version(2, 0);
         $this->assertEquals(-1, $version1->compare($version2));
+        $this->assertEquals(+1, $version2->compare($version1));
     }
 
     public function testCompareMajorMoreMinorLess()

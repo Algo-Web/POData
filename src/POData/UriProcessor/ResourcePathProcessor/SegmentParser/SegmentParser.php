@@ -76,6 +76,11 @@ class SegmentParser
         return $segmentParser->segmentDescriptors;
     }
 
+    public function getProviderWrapper()
+    {
+        return $this->providerWrapper;
+    }
+
     /**
      * Extract identifier and key predicate from a segment.
      *
@@ -399,7 +404,7 @@ class SegmentParser
             );
         }
 
-        $singleton = $this->providerWrapper->resolveSingleton($segmentIdentifier);
+        $singleton = $this->getProviderWrapper()->resolveSingleton($segmentIdentifier);
         if (null !== $singleton) {
             $this->assertion(null === $keyPredicate);
             $resourceType = $singleton->getResourceType();
@@ -417,7 +422,7 @@ class SegmentParser
             return $descriptor;
         }
 
-        $resourceSetWrapper = $this->providerWrapper->resolveResourceSet($segmentIdentifier);
+        $resourceSetWrapper = $this->getProviderWrapper()->resolveResourceSet($segmentIdentifier);
         if (null === $resourceSetWrapper) {
             throw ODataException::createResourceNotFoundError($segmentIdentifier);
         }

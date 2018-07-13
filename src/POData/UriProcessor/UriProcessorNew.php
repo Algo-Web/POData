@@ -348,7 +348,7 @@ class UriProcessorNew implements IUriProcessor
                     $masterResourceSet = $this->getRequest()->getSegments()[0]->getTargetResourceSetWrapper();
                     $masterNavProperty = $this->getRequest()->getLastSegment()->getIdentifier();
                     $slaveModelUri = new \POData\Common\Url($payload->url);
-                    $host = $this->service->getHost();
+                    $host = $this->getService()->getHost();
                     $absoluteServiceUri = $host->getAbsoluteServiceUri();
                     $requestUriSegments = array_slice(
                         $slaveModelUri->getSegments(),
@@ -356,7 +356,7 @@ class UriProcessorNew implements IUriProcessor
                     );
                     $newSegments = SegmentParser::parseRequestUriSegments(
                         $requestUriSegments,
-                        $this->service->getProvidersWrapper(),
+                        $this->getService()->getProvidersWrapper(),
                         true
                     );
                     $this->executeGetResource($newSegments[0]);
