@@ -45,12 +45,16 @@ class CynicDeserialiser
             throw new InvalidOperationException('Payload not OK');
         }
         list($sourceSet, $source) = $this->processEntryContent($payload);
-        assert($sourceSet instanceof ResourceSet);
+        if (!$sourceSet instanceof ResourceSet) {
+            throw new InvalidOperationException('$sourceSet not instanceof ResourceSet');
+        }
         $numLinks = count($payload->links);
         for ($i = 0; $i < $numLinks; $i++) {
             $this->processLink($payload->links[$i], $sourceSet, $source);
         }
-        assert($this->isEntryProcessed($payload));
+        if (!$this->isEntryProcessed($payload)) {
+            throw new InvalidOperationException('Payload not processed');
+        }
         return $source;
     }
 
@@ -152,7 +156,9 @@ class CynicDeserialiser
             assert(isset($source), get_class($source));
             $result = $this->getWrapper()->updateResource($set, $source, $key, $properties);
         }
-        assert($key instanceof KeyDescriptor, get_class($key));
+        if (!$key instanceof KeyDescriptor) {
+            throw new InvalidOperationException(get_class($key));
+        }
         $content->id = $key;
 
         $numLinks = count($content->links);
