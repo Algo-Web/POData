@@ -34,7 +34,7 @@
     },
     "require-dev": {
         "doctrine/annotations": "^v1.4.0",
-        "php-coveralls/php-coveralls": "v2.0.x-dev",
+        "php-coveralls/php-coveralls": ">=v2.1",
         "phpunit/phpunit": "^5.6",
         "mockery/mockery": "0.9.*",
         "fiunchinho/phpunit-randomizer": "2.0.*"
