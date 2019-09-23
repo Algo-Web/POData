@@ -93,7 +93,7 @@ class OutgoingResponse
      */
     public function setContentType($value)
     {
-        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_CONTENTTYPE] = $value;
+        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_CONTENTTYPE] = $value.'; charset: utf-8';
     }
 
     /**
