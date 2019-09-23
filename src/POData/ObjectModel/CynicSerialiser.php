@@ -103,7 +103,7 @@ class CynicSerialiser implements IObjectSerialiser
         $this->service = $service;
         $this->request = $request;
         $this->absoluteServiceUri = $service->getHost()->getAbsoluteServiceUri()->getUrlAsString();
-        $this->absoluteServiceUriWithSlash = rtrim($this->absoluteServiceUri, '/') . '/';
+        $this->absoluteServiceUriWithSlash = rtrim($this->absoluteServiceUri, '/').'/';
         $this->stack = new SegmentStack($request);
         $this->complexTypeInstanceCollection = [];
         $this->updated = Carbon::now();
@@ -120,6 +120,7 @@ class CynicSerialiser implements IObjectSerialiser
     {
         if (!isset($entryObject->results)) {
             array_pop($this->lightStack);
+
             return null;
         }
 
@@ -130,7 +131,7 @@ class CynicSerialiser implements IObjectSerialiser
         $this->isBaseWritten = true;
 
         $stackCount = count($this->lightStack);
-        $topOfStack = $this->lightStack[$stackCount-1];
+        $topOfStack = $this->lightStack[$stackCount - 1];
         $resourceType = $this->getService()->getProvidersWrapper()->resolveResourceType($topOfStack['type']);
         assert($resourceType instanceof ResourceType, get_class($resourceType));
         $rawProp = $resourceType->getAllProperties();
@@ -177,7 +178,7 @@ class CynicSerialiser implements IObjectSerialiser
             $resourceType,
             $resourceSet->getName()
         );
-        $absoluteUri = rtrim($this->absoluteServiceUri, '/') . '/' . $relativeUri;
+        $absoluteUri = rtrim($this->absoluteServiceUri, '/').'/'.$relativeUri;
 
         list($mediaLink, $mediaLinks) = $this->writeMediaData(
             $entryObject->results,
@@ -204,8 +205,8 @@ class CynicSerialiser implements IObjectSerialiser
             $propType = 'application/atom+xml;type='.$propTail;
             $propName = $prop->getName();
             $nuLink->title = $propName;
-            $nuLink->name = ODataConstants::ODATA_RELATED_NAMESPACE . $propName;
-            $nuLink->url = $relativeUri . '/' . $propName;
+            $nuLink->name = ODataConstants::ODATA_RELATED_NAMESPACE.$propName;
+            $nuLink->url = $relativeUri.'/'.$propName;
             $nuLink->type = $propType;
 
             $shouldExpand = $this->shouldExpandSegment($propName);
@@ -240,12 +241,13 @@ class CynicSerialiser implements IObjectSerialiser
         $newCount = count($this->lightStack);
         assert(
             $newCount == $stackCount,
-            'Should have ' . $stackCount . 'elements in stack, have ' . $newCount . 'elements'
+            'Should have '.$stackCount.'elements in stack, have '.$newCount.'elements'
         );
-        $this->lightStack[$newCount-1]['count']--;
-        if (0 == $this->lightStack[$newCount-1]['count']) {
+        --$this->lightStack[$newCount - 1]['count'];
+        if (0 == $this->lightStack[$newCount - 1]['count']) {
             array_pop($this->lightStack);
         }
+
         return $odata;
     }
 
@@ -314,7 +316,7 @@ class CynicSerialiser implements IObjectSerialiser
             $segment = $this->getNextLinkUri($lastObject);
             $nextLink = new ODataLink();
             $nextLink->name = ODataConstants::ATOM_LINK_NEXT_ATTRIBUTE_STRING;
-            $nextLink->url = rtrim($this->absoluteServiceUri, '/') . '/' . $stackSegment . $segment;
+            $nextLink->url = rtrim($this->absoluteServiceUri, '/').'/'.$stackSegment.$segment;
             $odata->nextPageLink = $nextLink;
         }
 
@@ -339,7 +341,7 @@ class CynicSerialiser implements IObjectSerialiser
                 $this->getCurrentResourceSetWrapper()->getName()
             );
 
-            $url->url = rtrim($this->absoluteServiceUri, '/') . '/' . $relativeUri;
+            $url->url = rtrim($this->absoluteServiceUri, '/').'/'.$relativeUri;
         }
 
         return $url;
@@ -375,7 +377,7 @@ class CynicSerialiser implements IObjectSerialiser
                 $segment = $this->getNextLinkUri($lastObject);
                 $nextLink = new ODataLink();
                 $nextLink->name = ODataConstants::ATOM_LINK_NEXT_ATTRIBUTE_STRING;
-                $nextLink->url = rtrim($this->absoluteServiceUri, '/') . '/' . $stackSegment . $segment;
+                $nextLink->url = rtrim($this->absoluteServiceUri, '/').'/'.$stackSegment.$segment;
                 $nextLink->url = ltrim($nextLink->url, '/');
                 $urls->nextPageLink = $nextLink;
             }
@@ -438,6 +440,7 @@ class CynicSerialiser implements IObjectSerialiser
         $odataProperty->value = $this->writeBagValue($resourceType, $result);
 
         $propertyContent->properties[$propertyName] = $odataProperty;
+
         return $propertyContent;
     }
 
@@ -472,6 +475,7 @@ class CynicSerialiser implements IObjectSerialiser
         }
 
         $result->properties[$property->name] = $property;
+
         return $result;
     }
 
@@ -490,8 +494,7 @@ class CynicSerialiser implements IObjectSerialiser
     /**
      * Sets reference to the request submitted by client.
      *
-     * @param  RequestDescription $request
-     * @return void
+     * @param RequestDescription $request
      */
     public function setRequest(RequestDescription $request)
     {
@@ -512,14 +515,13 @@ class CynicSerialiser implements IObjectSerialiser
     /**
      * Sets the data service instance.
      *
-     * @param  IService $service
-     * @return void
+     * @param IService $service
      */
     public function setService(IService $service)
     {
         $this->service = $service;
         $this->absoluteServiceUri = $service->getHost()->getAbsoluteServiceUri()->getUrlAsString();
-        $this->absoluteServiceUriWithSlash = rtrim($this->absoluteServiceUri, '/') . '/';
+        $this->absoluteServiceUriWithSlash = rtrim($this->absoluteServiceUri, '/').'/';
     }
 
     /**
@@ -545,6 +547,7 @@ class CynicSerialiser implements IObjectSerialiser
     /**
      * @param ResourceType $resourceType
      * @param $result
+     *
      * @return ODataBagContent|null
      */
     protected function writeBagValue(ResourceType &$resourceType, $result)
@@ -577,13 +580,15 @@ class CynicSerialiser implements IObjectSerialiser
                 }
             }
         }
+
         return $bag;
     }
 
     /**
-     * @param  ResourceType         $resourceType
-     * @param  object               $result
-     * @param  string|null          $propertyName
+     * @param ResourceType $resourceType
+     * @param object       $result
+     * @param string|null  $propertyName
+     *
      * @return ODataPropertyContent
      */
     protected function writeComplexValue(ResourceType &$resourceType, &$result, $propertyName = null)
@@ -636,6 +641,7 @@ class CynicSerialiser implements IObjectSerialiser
         }
 
         unset($this->complexTypeInstanceCollection[$count]);
+
         return $internalContent;
     }
 
@@ -665,7 +671,7 @@ class CynicSerialiser implements IObjectSerialiser
         $typeName = $resourceType->getName();
         $keyProperties = $resourceType->getKeyProperties();
         assert(0 != count($keyProperties), 'count($keyProperties) == 0');
-        $keyString = $containerName . '(';
+        $keyString = $containerName.'(';
         $comma = null;
         foreach ($keyProperties as $keyName => $resourceProperty) {
             $keyType = $resourceProperty->getInstanceType();
@@ -678,7 +684,7 @@ class CynicSerialiser implements IObjectSerialiser
             }
 
             $keyValue = $keyType->convertToOData($keyValue);
-            $keyString .= $comma . $keyName . '=' . $keyValue;
+            $keyString .= $comma.$keyName.'='.$keyValue;
             $comma = ',';
         }
 
@@ -722,6 +728,7 @@ class CynicSerialiser implements IObjectSerialiser
                 return false;
             }
         }
+
         return $resultSetCount == $pageSize;
     }
 
@@ -756,7 +763,8 @@ class CynicSerialiser implements IObjectSerialiser
      * @param $type
      * @param $relativeUri
      * @param $resourceType
-     * @return array<ODataMediaLink|null|array>
+     *
+     * @return array<ODataMediaLink|array|null>
      */
     protected function writeMediaData($entryObject, $type, $relativeUri, ResourceType $resourceType)
     {
@@ -767,7 +775,7 @@ class CynicSerialiser implements IObjectSerialiser
         $mediaLink = null;
         if ($resourceType->isMediaLinkEntry()) {
             $eTag = $streamProviderWrapper->getStreamETag2($entryObject, null, $context);
-            $mediaLink = new ODataMediaLink($type, '/$value', $relativeUri . '/$value', '*/*', $eTag, 'edit-media');
+            $mediaLink = new ODataMediaLink($type, '/$value', $relativeUri.'/$value', '*/*', $eTag, 'edit-media');
         }
         $mediaLinks = [];
         if ($resourceType->hasNamedStream()) {
@@ -794,6 +802,7 @@ class CynicSerialiser implements IObjectSerialiser
                 $mediaLinks[] = $nuLink;
             }
         }
+
         return [$mediaLink, $mediaLinks];
     }
 
@@ -847,7 +856,7 @@ class CynicSerialiser implements IObjectSerialiser
             $nuLink->expandedResult->selfLink->title = $propName;
             $nuLink->expandedResult->selfLink->url = $nuLink->url;
             $nuLink->expandedResult->title = new ODataTitle($propName);
-            $nuLink->expandedResult->id = rtrim($this->absoluteServiceUri, '/') . '/' . $nuLink->url;
+            $nuLink->expandedResult->id = rtrim($this->absoluteServiceUri, '/').'/'.$nuLink->url;
         }
     }
 
@@ -875,7 +884,7 @@ class CynicSerialiser implements IObjectSerialiser
      * Find a 'ExpandedProjectionNode' instance in the projection tree
      * which describes the current segment.
      *
-     * @return null|RootProjectionNode|ExpandedProjectionNode
+     * @return RootProjectionNode|ExpandedProjectionNode|null
      */
     protected function getCurrentExpandedProjectionNode()
     {
@@ -928,10 +937,10 @@ class CynicSerialiser implements IObjectSerialiser
             $value = $this->getService()->getHost()->getQueryStringItem($queryOption);
             if (null !== $value) {
                 if (null !== $queryParameterString) {
-                    $queryParameterString = $queryParameterString . '&';
+                    $queryParameterString = $queryParameterString.'&';
                 }
 
-                $queryParameterString .= $queryOption . '=' . $value;
+                $queryParameterString .= $queryOption.'='.$value;
             }
         }
 
@@ -943,7 +952,7 @@ class CynicSerialiser implements IObjectSerialiser
                     $queryParameterString .= '&';
                 }
 
-                $queryParameterString .= ODataConstants::HTTPQUERY_STRING_TOP . '=' . $remainingCount;
+                $queryParameterString .= ODataConstants::HTTPQUERY_STRING_TOP.'='.$remainingCount;
             }
         }
 
@@ -957,6 +966,7 @@ class CynicSerialiser implements IObjectSerialiser
     /**
      * @param $entryObject
      * @param $nonRelProp
+     *
      * @return ODataPropertyContent
      */
     private function writeProperties($entryObject, $nonRelProp)
@@ -974,7 +984,7 @@ class CynicSerialiser implements IObjectSerialiser
             $nonNull = null !== $result;
             $subProp = new ODataProperty();
             $subProp->name = strval($corn);
-            $subProp->typeName = $typePrepend . $resource->getFullName() . $typeAppend;
+            $subProp->typeName = $typePrepend.$resource->getFullName().$typeAppend;
 
             if ($nonNull && is_array($result)) {
                 $subProp->value = $this->writeBagValue($resource, $result);
@@ -989,12 +999,10 @@ class CynicSerialiser implements IObjectSerialiser
             }
             $propertyContent->properties[$corn] = $subProp;
         }
+
         return $propertyContent;
     }
 
-    /**
-     * @return void
-     */
     private function loadStackIfEmpty()
     {
         if (0 == count($this->lightStack)) {
@@ -1022,7 +1030,7 @@ class CynicSerialiser implements IObjectSerialiser
         } elseif ($type instanceof DateTime && $primitiveValue instanceof \DateTime) {
             $stringValue = $primitiveValue->format(\DateTime::ATOM);
         } elseif ($type instanceof StringType) {
-            $stringValue = utf8_encode($primitiveValue);
+            $stringValue = $primitiveValue;
         } else {
             $stringValue = strval($primitiveValue);
         }
@@ -1038,6 +1046,7 @@ class CynicSerialiser implements IObjectSerialiser
         if (28 < $resourceKind) {
             return false;
         }
+
         return 0 == ($resourceKind % 4);
     }
 }
