@@ -1,3 +1,7 @@
+0.3.6 (2019-09-19)
+------------------
+   * Loosen Carbon dependency to maintain support for older clients (see [#216] (https://github.com/Algo-Web/POData/pull/215))
+
 0.3.5 (2019-09-19)
 ------------------
    * Generalise string encoding - thanks to **Kirich11** (see [#215] (https://github.com/Algo-Web/POData/pull/215))
