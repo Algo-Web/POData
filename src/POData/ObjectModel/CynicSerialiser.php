@@ -665,6 +665,13 @@ class CynicSerialiser implements IObjectSerialiser
         return $expandedProjectionNode instanceof ExpandedProjectionNode;
     }
 
+    /**
+     * @param object $entityInstance
+     * @param ResourceType $resourceType
+     * @param string $containerName
+     * @return string
+     * @throws ODataException
+     */
     protected function getEntryInstanceKey($entityInstance, ResourceType $resourceType, $containerName)
     {
         assert(is_object($entityInstance));
@@ -1003,6 +1010,11 @@ class CynicSerialiser implements IObjectSerialiser
         return $propertyContent;
     }
 
+    /**
+     * Load processing stack if it's currently empty.
+     *
+     * @return void
+     */
     private function loadStackIfEmpty()
     {
         if (0 == count($this->lightStack)) {
@@ -1038,6 +1050,12 @@ class CynicSerialiser implements IObjectSerialiser
         return $stringValue;
     }
 
+    /**
+     * Is the supplied resourceKind representing a primitive value?
+     *
+     * @param int $resourceKind
+     * @return bool
+     */
     public static function isMatchPrimitive($resourceKind)
     {
         if (16 > $resourceKind) {
