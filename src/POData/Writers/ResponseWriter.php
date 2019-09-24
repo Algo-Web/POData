@@ -50,7 +50,7 @@ class ResponseWriter
             //This second part is to exclude binary properties
             // /Customer('ALFKI')/CompanyName/$value
             // /Customers/$count
-            $responseBody = utf8_encode($request->getTargetResult());
+            $responseBody = mb_convert_encoding($request->getTargetResult(), 'UTF-8');
         } elseif (MimeTypes::MIME_APPLICATION_OCTETSTREAM == $responseContentType
                   || TargetKind::MEDIA_RESOURCE() == $targetKind
         ) {
@@ -82,7 +82,7 @@ class ResponseWriter
             }
             $segments = $request->getSegments();
             $numSeg = count($segments);
-            if (1 < $numSeg && '$links' == $segments[$numSeg-2]->getIdentifier()) {
+            if (1 < $numSeg && '$links' == $segments[$numSeg - 2]->getIdentifier()) {
                 if (null !== $entityModel) {
                     throw new \Exception(Messages::modelPayloadOnLinkModification());
                 }
