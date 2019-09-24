@@ -81,6 +81,7 @@ class UriProcessorNew implements IUriProcessor
      * Constructs a new instance of UriProcessor.
      *
      * @param IService $service Reference to the data service instance
+     * @throws ODataException
      */
     private function __construct(IService $service)
     {
@@ -184,6 +185,10 @@ class UriProcessorNew implements IUriProcessor
 
     /**
      * Execute the client submitted request against the data source.
+     * @throws InvalidOperationException
+     * @throws ODataException
+     * @throws \POData\Common\UrlFormatException
+     * @throws \ReflectionException
      */
     public function execute()
     {
@@ -450,6 +455,9 @@ class UriProcessorNew implements IUriProcessor
 
     /**
      * @param $segment
+     * @param array $eagerList
+     * @throws InvalidOperationException
+     * @throws ODataException
      */
     private function executeGetResource($segment, array $eagerList = [])
     {
@@ -481,6 +489,7 @@ class UriProcessorNew implements IUriProcessor
     /**
      * @param $segment
      * @return null|object|QueryResult
+     * @throws ODataException
      */
     private function executeGetResourceDirect($segment, array $eagerList)
     {
@@ -511,7 +520,10 @@ class UriProcessorNew implements IUriProcessor
 
     /**
      * @param $segment
+     * @param $eagerList
      * @return null|object|QueryResult
+     * @throws InvalidOperationException
+     * @throws ODataException
      */
     private function executeGetResourceRelated($segment, $eagerList)
     {
@@ -564,6 +576,7 @@ class UriProcessorNew implements IUriProcessor
      * Query for a resource set pointed by the given segment descriptor and update the descriptor with the result.
      *
      * @param SegmentDescriptor $segment Describes the resource set to query
+     * @throws ODataException
      */
     private function handleSegmentTargetsToResourceSet(SegmentDescriptor $segment)
     {

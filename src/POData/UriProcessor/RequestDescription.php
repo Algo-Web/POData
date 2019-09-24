@@ -218,12 +218,14 @@ class RequestDescription
 
     /**
      * @param SegmentDescriptor[] $segmentDescriptors Description of segments in the resource path
-     * @param Url                 $requestUri
-     * @param Version             $serviceMaxVersion
-     * @param string|null         $requestVersion
-     * @param string|null         $maxRequestVersion
-     * @param string|null         $dataType
-     * @param IHTTPRequest|null   $payload
+     * @param Url $requestUri
+     * @param Version $serviceMaxVersion
+     * @param string|null $requestVersion
+     * @param string|null $maxRequestVersion
+     * @param string|null $dataType
+     * @param IHTTPRequest|null $payload
+     * @throws ODataException
+     * @throws \Doctrine\Common\Annotations\AnnotationException
      */
     public function __construct(
         array $segmentDescriptors,
@@ -294,6 +296,7 @@ class RequestDescription
      * Define request data from body.
      *
      * @param string $dataType
+     * @throws \Doctrine\Common\Annotations\AnnotationException
      */
     private function readData($dataType)
     {
