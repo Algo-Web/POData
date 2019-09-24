@@ -1,3 +1,7 @@
+0.3.5 (2019-09-19)
+------------------
+   * Generalise string encoding - thanks to **Kirich11** (see [#215] (https://github.com/Algo-Web/POData/pull/215))
+
 0.3.4 (2018-07-13)
 ------------------
    * Clean up whole bunch of vacuous asserts (see [#208] (https://github.com/Algo-Web/POData/pull/208))
