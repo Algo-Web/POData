@@ -58,6 +58,12 @@ class CynicDeserialiser
         return $source;
     }
 
+    /**
+     * Check if supplied ODataEntry is well-formed.
+     *
+     * @param ODataEntry $payload
+     * @return bool
+     */
     protected function isEntryOK(ODataEntry $payload)
     {
         // check links
@@ -98,6 +104,11 @@ class CynicDeserialiser
         return true;
     }
 
+    /**
+     * @param ODataEntry $payload
+     * @param int $depth
+     * @return bool
+     */
     protected function isEntryProcessed(ODataEntry $payload, $depth = 0)
     {
         assert(is_int($depth) && 0 <= $depth && 100 >= $depth, 'Maximum recursion depth exceeded');
@@ -130,6 +141,12 @@ class CynicDeserialiser
         return true;
     }
 
+    /**
+     * @param ODataEntry $content
+     * @return array
+     * @throws InvalidOperationException
+     * @throws \POData\Common\ODataException
+     */
     protected function processEntryContent(ODataEntry &$content)
     {
         assert(null === $content->id || is_string($content->id), 'Entry id must be null or string');
@@ -232,6 +249,14 @@ class CynicDeserialiser
         return $keyDesc;
     }
 
+    /**
+     * @param ODataLink $link
+     * @param ResourceSet $sourceSet
+     * @param $source
+     * @throws InvalidOperationException
+     * @throws \POData\Common\ODataException
+     * @throws \ReflectionException
+     */
     protected function processLink(ODataLink &$link, ResourceSet $sourceSet, $source)
     {
         $hasUrl = isset($link->url);
@@ -336,6 +361,16 @@ class CynicDeserialiser
         return;
     }
 
+    /**
+     * @param ODataLink $link
+     * @param ResourceSet $sourceSet
+     * @param $source
+     * @param bool $hasUrl
+     * @param bool $hasPayload
+     * @throws InvalidOperationException
+     * @throws \POData\Common\ODataException
+     * @throws \ReflectionException
+     */
     protected function processLinkFeed(ODataLink &$link, ResourceSet $sourceSet, $source, $hasUrl, $hasPayload)
     {
         assert(
