@@ -104,6 +104,11 @@ class ModelDeserialiser
         return $data;
     }
 
+    /**
+     * Reset properties cache.
+     *
+     * @return void
+     */
     public function reset()
     {
         self::$nonKeyPropertiesCache = [];

@@ -37,6 +37,10 @@ class CynicDeserialiser
 
     /**
      * @param ODataEntry $payload
+     * @return mixed
+     * @throws InvalidOperationException
+     * @throws \POData\Common\ODataException
+     * @throws \ReflectionException
      */
     public function processPayload(ODataEntry &$payload)
     {
@@ -146,6 +150,7 @@ class CynicDeserialiser
      * @return array
      * @throws InvalidOperationException
      * @throws \POData\Common\ODataException
+     * @throws \ReflectionException
      */
     protected function processEntryContent(ODataEntry &$content)
     {
@@ -283,11 +288,14 @@ class CynicDeserialiser
     }
 
     /**
-     * @param ODataLink   $link
+     * @param ODataLink $link
      * @param ResourceSet $sourceSet
      * @param $source
      * @param $hasUrl
      * @param $hasPayload
+     * @throws InvalidOperationException
+     * @throws \POData\Common\ODataException
+     * @throws \ReflectionException
      */
     protected function processLinkSingleton(ODataLink &$link, ResourceSet $sourceSet, $source, $hasUrl, $hasPayload)
     {

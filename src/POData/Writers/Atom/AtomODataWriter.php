@@ -91,6 +91,7 @@ class AtomODataWriter implements IODataWriter
      * @param ODataURL|ODataURLCollection|ODataPropertyContent|ODataFeed|ODataEntry $model Object of requested content
      *
      * @return AtomODataWriter
+     * @throws \Exception
      */
     public function write($model)
     {
@@ -178,10 +179,11 @@ class AtomODataWriter implements IODataWriter
     /**
      * Begin write OData Feed.
      *
-     * @param ODataFeed $feed       Object of OData feed to start writing feed
-     * @param bool      $isTopLevel indicates if this is the top level feed in the response
+     * @param ODataFeed $feed Object of OData feed to start writing feed
+     * @param bool $isTopLevel indicates if this is the top level feed in the response
      *
      * @return AtomODataWriter
+     * @throws \Exception
      */
     protected function writeFeed(ODataFeed $feed, $isTopLevel = false)
     {
@@ -227,10 +229,11 @@ class AtomODataWriter implements IODataWriter
     /**
      * Write top level entry.
      *
-     * @param ODataEntry $entry      Object of ODataEntry
-     * @param bool       $isTopLevel
+     * @param ODataEntry $entry Object of ODataEntry
+     * @param bool $isTopLevel
      *
      * @return AtomODataWriter
+     * @throws \Exception
      */
     protected function writeEntry(ODataEntry $entry, $isTopLevel = false)
     {
@@ -377,6 +380,7 @@ class AtomODataWriter implements IODataWriter
      * @param ODataLink $link Link to write
      *
      * @return AtomODataWriter
+     * @throws \Exception
      */
     protected function writeLink(ODataLink $link)
     {
@@ -409,9 +413,10 @@ class AtomODataWriter implements IODataWriter
      * (properties of an entity or complex type).
      *
      * @param ODataPropertyContent $properties Collection of properties
-     * @param bool                 $topLevel   is this property content is the top level response to be written?
+     * @param bool $topLevel is this property content is the top level response to be written?
      *
      * @return AtomODataWriter
+     * @throws \Exception
      */
     protected function writeProperties(ODataPropertyContent $properties = null, $topLevel = false)
     {
@@ -440,10 +445,11 @@ class AtomODataWriter implements IODataWriter
     /**
      * XML write a basic data type (string, number, boolean, null).
      *
-     * @param string $value     value to be written
-     * @param string $type|null data type of the value
+     * @param string $value value to be written
+     * @param string $type |null data type of the value
      *
      * @return string
+     * @throws \Exception
      */
     protected function beforeWriteValue($value, $type = null)
     {
@@ -580,6 +586,7 @@ class AtomODataWriter implements IODataWriter
      * @param ODataBagContent $bag Bag property object to begin write property
      *
      * @return AtomODataWriter
+     * @throws \Exception
      */
     protected function writeBagContent(ODataBagContent $bag)
     {
@@ -811,6 +818,7 @@ class AtomODataWriter implements IODataWriter
      * @param ProvidersWrapper $providers
      *
      * @return IODataWriter
+     * @throws ODataException
      */
     public function writeServiceDocument(ProvidersWrapper $providers)
     {

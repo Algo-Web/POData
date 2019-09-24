@@ -379,10 +379,12 @@ abstract class BaseService implements IRequestHandler, IService
     /**
      * Serialize the requested resource.
      *
-     * @param RequestDescription $request      The description of the request  submitted by the client
-     * @param IUriProcessor      $uriProcessor Reference to the uri processor
+     * @param RequestDescription $request The description of the request  submitted by the client
+     * @param IUriProcessor $uriProcessor Reference to the uri processor
      *
      * @throws ODataException
+     * @throws InvalidOperationException
+     * @throws Common\HttpHeaderFailure
      */
     protected function serializeResult(RequestDescription $request, IUriProcessor $uriProcessor)
     {
@@ -565,13 +567,14 @@ abstract class BaseService implements IRequestHandler, IService
     /**
      * Gets the response format for the requested resource.
      *
-     * @param RequestDescription $request      The request submitted by client and it's execution result
-     * @param IUriProcessor      $uriProcessor The reference to the IUriProcessor
-     *
-     * @throws ODataException, HttpHeaderFailure
+     * @param RequestDescription $request The request submitted by client and it's execution result
+     * @param IUriProcessor $uriProcessor The reference to the IUriProcessor
      *
      * @return string|null the response content-type, a null value means the requested resource
      *                     is named stream and IDSSP2::getStreamContentType returned null
+     * @throws Common\HttpHeaderFailure
+     * @throws InvalidOperationException
+     * @throws ODataException , HttpHeaderFailure
      */
     public function getResponseContentType(
         RequestDescription $request,
@@ -723,6 +726,7 @@ abstract class BaseService implements IRequestHandler, IService
      * @param bool         $needToSerializeResponse
      *
      * @throws ODataException
+     * @throws InvalidOperationException
      * @return string|null    The ETag for the entry object if it has eTag properties
      *                        NULL otherwise
      */
@@ -818,9 +822,11 @@ abstract class BaseService implements IRequestHandler, IService
      * @param ResourceType &$resourceType Resource type of the $entryObject
      *
      * @throws ODataException
+     * @throws InvalidOperationException
      * @return string|null    ETag value for the given resource (with values encoded
      *                        for use in a URI) there are etag properties, NULL if
      *                        there is no etag property
+     *
      */
     protected function getETagForEntry(&$entryObject, ResourceType &$resourceType)
     {
