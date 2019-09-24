@@ -77,11 +77,12 @@ class ExpressionParser
     /**
      * Construct a new instance of ExpressionParser.
      *
-     * @param string       $text                    The expression to parse
-     * @param ResourceType $resourceType            The resource type of the resource targeted by the resource path
-     * @param bool         $isPHPExpressionProvider
+     * @param string $text The expression to parse
+     * @param ResourceType $resourceType The resource type of the resource targeted by the resource path
+     * @param bool $isPHPExpressionProvider
      *
      * TODO Expression parser should not depend on the fact that end user is implementing IExpressionProvider or not
+     * @throws ODataException
      */
     public function __construct($text, ResourceType $resourceType, $isPHPExpressionProvider)
     {
@@ -125,6 +126,7 @@ class ExpressionParser
      * Resets parser with new expression string.
      *
      * @param string $text Reset the expression to parse
+     * @throws ODataException
      */
     public function resetParser($text)
     {
@@ -136,6 +138,8 @@ class ExpressionParser
      * Parse the expression in filter option.
      *
      * @return AbstractExpression
+     * @throws NotImplementedException
+     * @throws ODataException
      */
     public function parseFilter()
     {
@@ -146,6 +150,8 @@ class ExpressionParser
      * Start parsing the expression.
      *
      * @return AbstractExpression
+     * @throws NotImplementedException
+     * @throws ODataException
      */
     private function parseExpression()
     {
@@ -160,6 +166,8 @@ class ExpressionParser
      * Parse logical or (or).
      *
      * @return AbstractExpression
+     * @throws NotImplementedException
+     * @throws ODataException
      */
     private function parseLogicalOr()
     {
@@ -186,6 +194,8 @@ class ExpressionParser
      * Parse logical and (and).
      *
      * @return AbstractExpression
+     * @throws NotImplementedException
+     * @throws ODataException
      */
     private function parseLogicalAnd()
     {
@@ -208,6 +218,8 @@ class ExpressionParser
      * Parse comparison operation (eq, ne, gt, ge, lt, le).
      *
      * @return AbstractExpression
+     * @throws NotImplementedException
+     * @throws ODataException
      */
     private function parseComparison()
     {
@@ -234,6 +246,8 @@ class ExpressionParser
      * Parse additive operation (add, sub).
      *
      * @return AbstractExpression
+     * @throws NotImplementedException
+     * @throws ODataException
      */
     private function parseAdditive()
     {
@@ -261,6 +275,8 @@ class ExpressionParser
      * Parse multiplicative operators (mul, div, mod).
      *
      * @return AbstractExpression
+     * @throws NotImplementedException
+     * @throws ODataException
      */
     private function parseMultiplicative()
     {
@@ -296,6 +312,8 @@ class ExpressionParser
      * Parse unary operator (- ,not).
      *
      * @return AbstractExpression
+     * @throws ODataException
+     * @throws NotImplementedException
      */
     private function parseUnary()
     {
@@ -340,6 +358,8 @@ class ExpressionParser
      * Start parsing the primary.
      *
      * @return AbstractExpression
+     * @throws NotImplementedException
+     * @throws ODataException
      */
     private function parsePrimary()
     {
@@ -407,6 +427,7 @@ class ExpressionParser
      * Parse Sub expression.
      *
      * @throws ODataException
+     * @throws NotImplementedException
      * @return AbstractExpression
      */
     private function parseParenExpression()
@@ -430,6 +451,8 @@ class ExpressionParser
      * Parse an identifier.
      *
      * @return FunctionCallExpression|PropertyAccessExpression
+     * @throws ODataException
+     * @throws NotImplementedException
      */
     private function parseIdentifier()
     {
@@ -494,6 +517,7 @@ class ExpressionParser
      * Try to parse an identifier which is followed by an open bracket as an astoria URI function call.
      *
      * @throws ODataException
+     * @throws NotImplementedException
      *
      * @return FunctionCallExpression
      */
@@ -516,6 +540,7 @@ class ExpressionParser
      * Start parsing argument list of a function-call.
      *
      * @throws ODataException
+     * @throws NotImplementedException
      * @return array<AbstractExpression>
      */
     private function parseArgumentList()
@@ -540,6 +565,8 @@ class ExpressionParser
      * Parse arguments of a function-call.
      *
      * @return array<AbstractExpression>
+     * @throws ODataException
+     * @throws NotImplementedException
      */
     private function parseArguments()
     {
@@ -589,6 +616,7 @@ class ExpressionParser
      * Parse null literal.
      *
      * @return ConstantExpression
+     * @throws ODataException
      */
     private function parseNullLiteral()
     {
@@ -650,12 +678,13 @@ class ExpressionParser
     /**
      * Generates Comparison Expression.
      *
-     * @param AbstractExpression $left                    The LHS expression
-     * @param AbstractExpression $right                   The RHS expression
-     * @param ExpressionToken    $expressionToken         The comparison expression token
-     * @param bool               $isPHPExpressionProvider
+     * @param AbstractExpression $left The LHS expression
+     * @param AbstractExpression $right The RHS expression
+     * @param ExpressionToken $expressionToken The comparison expression token
+     * @param bool $isPHPExpressionProvider
      *
      * @return FunctionCallExpression|UnaryExpression|RelationalExpression
+     * @throws ODataException
      */
     private static function generateComparisonExpression($left, $right, $expressionToken, $isPHPExpressionProvider)
     {

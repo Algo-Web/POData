@@ -49,11 +49,12 @@ class ExpressionParser2 extends ExpressionParser
     /**
      * Create new instance of ExpressionParser2.
      *
-     * @param string       $text                    The text expression to parse
-     * @param ResourceType $resourceType            The resource type in which
+     * @param string $text The text expression to parse
+     * @param ResourceType $resourceType The resource type in which
      *                                              expression will be applied
-     * @param bool         $isPHPExpressionProvider True if IExpressionProvider provider is
+     * @param bool $isPHPExpressionProvider True if IExpressionProvider provider is
      *                                              implemented by user, False otherwise
+     * @throws ODataException
      */
     public function __construct($text, ResourceType $resourceType, $isPHPExpressionProvider)
     {
@@ -66,12 +67,14 @@ class ExpressionParser2 extends ExpressionParser
      * Parse and generate expression from the the given odata expression.
      *
      *
-     * @param string              $text               The text expression to parse
-     * @param ResourceType        $resourceType       The resource type in which
+     * @param string $text The text expression to parse
+     * @param ResourceType $resourceType The resource type in which
      * @param IExpressionProvider $expressionProvider Implementation of IExpressionProvider
      *
-     * @throws ODataException If any error occurs while parsing the odata expression or
-     *                        building the php/custom expression
+     * @throws ODataException If any error occurs while parsing the odata expression or building the
+     *          php/custom expression
+     * @throws \POData\Common\NotImplementedException
+     *
      *
      * @return FilterInfo
      */
@@ -103,6 +106,7 @@ class ExpressionParser2 extends ExpressionParser
      * @see library/POData/QueryProcessor/ExpressionParser::parseFilter()
      *
      * @throws ODataException
+     * @throws \POData\Common\NotImplementedException
      *
      * @return AbstractExpression
      */
@@ -170,6 +174,7 @@ class ExpressionParser2 extends ExpressionParser
      *                                         to process
      *
      * @return AbstractExpression|null
+     * @throws ODataException
      */
     private function processArithmeticNode(ArithmeticExpression $expression)
     {
@@ -183,12 +188,13 @@ class ExpressionParser2 extends ExpressionParser
     /**
      * Process an arithmetic expression node for nullability.
      *
-     * @param FunctionCallExpression $expression       The function call expression
+     * @param FunctionCallExpression $expression The function call expression
      *                                                 node to process
-     * @param AbstractExpression     $parentExpression The parent expression of
+     * @param AbstractExpression $parentExpression The parent expression of
      *                                                 expression node to process
      *
      * @return null|AbstractExpression
+     * @throws ODataException
      */
     private function processFunctionCallNode(
         FunctionCallExpression $expression,
@@ -224,12 +230,13 @@ class ExpressionParser2 extends ExpressionParser
     /**
      * Process an logical expression node for nullability.
      *
-     * @param LogicalExpression  $expression       The logical expression node
+     * @param LogicalExpression $expression The logical expression node
      *                                             to process
      * @param AbstractExpression $parentExpression The parent expression of
      *                                             expression node to process
      *
      * @return null|AbstractExpression
+     * @throws ODataException
      */
     private function processLogicalNode(
         LogicalExpression $expression,
@@ -314,12 +321,13 @@ class ExpressionParser2 extends ExpressionParser
     /**
      * Process a relational expression node for nullability.
      *
-     * @param RelationalExpression $expression       The relational expression node
+     * @param RelationalExpression $expression The relational expression node
      *                                               to process
-     * @param AbstractExpression   $parentExpression The parent expression of
+     * @param AbstractExpression $parentExpression The parent expression of
      *                                               expression node to process
      *
      * @return null|AbstractExpression
+     * @throws ODataException
      */
     private function processRelationalNode(
         RelationalExpression $expression,
@@ -393,6 +401,7 @@ class ExpressionParser2 extends ExpressionParser
      * @param AbstractExpression $nullCheckExpTree2 Second expression
      *
      * @return LogicalExpression|UnaryExpression|null
+     * @throws ODataException
      */
     private function mergeNullableExpressionTrees(
         $nullCheckExpTree1,
@@ -470,6 +479,7 @@ class ExpressionParser2 extends ExpressionParser
      * @param  AbstractExpression|null $leftNullableExpTree
      * @param  AbstractExpression|null $rightNullableExpTree
      * @return null|AbstractExpression
+     * @throws ODataException
      */
     private function calculateResultExpression($leftNullableExpTree, $rightNullableExpTree)
     {
