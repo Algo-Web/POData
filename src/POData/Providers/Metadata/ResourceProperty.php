@@ -6,6 +6,10 @@ use InvalidArgumentException;
 use POData\Common\Messages;
 use POData\Providers\Metadata\Type\IType;
 
+/**
+ * Class ResourceProperty
+ * @package POData\Providers\Metadata
+ */
 class ResourceProperty
 {
     /**

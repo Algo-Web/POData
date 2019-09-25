@@ -18,6 +18,10 @@ use POData\UriProcessor\QueryProcessor\SkipTokenParser\InternalSkipTokenInfo;
 use POData\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenInfo;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 
+/**
+ * Class ProvidersQueryWrapper
+ * @package POData\Providers
+ */
 class ProvidersQueryWrapper
 {
     /**
@@ -37,6 +41,9 @@ class ProvidersQueryWrapper
         $this->queryProvider = $query;
     }
 
+    /**
+     * @return IQueryProvider
+     */
     public function getQueryProvider()
     {
         return $this->queryProvider;

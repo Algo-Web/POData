@@ -6,6 +6,10 @@ use POData\OperationContext\IOperationContext;
 use POData\Providers\Metadata\ResourceStreamInfo;
 use POData\Providers\Metadata\ResourceType;
 
+/**
+ * Class SimpleStreamProvider
+ * @package POData\Providers\Stream
+ */
 class SimpleStreamProvider implements IStreamProvider2
 {
     /**

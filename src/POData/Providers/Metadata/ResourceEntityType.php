@@ -4,6 +4,10 @@ namespace POData\Providers\Metadata;
 
 use AlgoWeb\ODataMetadata\MetadataV3\edm\TEntityTypeType;
 
+/**
+ * Class ResourceEntityType
+ * @package POData\Providers\Metadata
+ */
 class ResourceEntityType extends ResourceType
 {
     /**

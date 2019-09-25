@@ -9,6 +9,10 @@ use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ExpressionTy
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\PropertyAccessExpression;
 use POData\UriProcessor\QueryProcessor\FunctionDescription;
 
+/**
+ * Class MySQLExpressionProvider
+ * @package POData\Providers\Expression
+ */
 class MySQLExpressionProvider implements IExpressionProvider
 {
     const ADD = '+';

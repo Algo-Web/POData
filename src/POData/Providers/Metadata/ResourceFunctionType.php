@@ -5,6 +5,10 @@ namespace POData\Providers\Metadata;
 use AlgoWeb\ODataMetadata\MetadataV3\edm\EntityContainer\FunctionImportAnonymousType;
 use AlgoWeb\ODataMetadata\MetadataV3\edm\TFunctionImportParameterType;
 
+/**
+ * Class ResourceFunctionType
+ * @package POData\Providers\Metadata
+ */
 class ResourceFunctionType
 {
     private $blacklist = ['exec', 'system', 'eval'];
@@ -131,6 +135,10 @@ class ResourceFunctionType
         return $this->resourceType;
     }
 
+    /**
+     * @param array $parms
+     * @return mixed
+     */
     public function get(array $parms = [])
     {
         // check inputs

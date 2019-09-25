@@ -182,8 +182,10 @@ class SimpleMetadataProvider implements IMetadataProvider
         return null;
     }
 
-    /*
+    /**
      * Get number of association sets hooked up
+     *
+     * @return int
      */
     public function getAssociationCount()
     {
@@ -1040,11 +1042,18 @@ class SimpleMetadataProvider implements IMetadataProvider
         $this->singletons[$name] = $type;
     }
 
+    /**
+     * @return array
+     */
     public function getSingletons()
     {
         return $this->singletons;
     }
 
+    /**
+     * @param string $name
+     * @return mixed
+     */
     public function callSingleton($name)
     {
         if (!array_key_exists($name, $this->singletons)) {

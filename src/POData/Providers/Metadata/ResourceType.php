@@ -856,6 +856,9 @@ abstract class ResourceType
         return ReflectionHandler::getProperty($targ, $property);
     }
 
+    /**
+     * @return array
+     */
     public function __sleep()
     {
         if (null == $this->type || $this->type instanceof IType) {
