@@ -60,6 +60,7 @@ class JsonODataV2Writer extends JsonODataV1Writer
      * @param ODataURL|ODataURLCollection|ODataPropertyContent|ODataFeed|ODataEntry $model Object of requested content
      *
      * @return JsonODataV2Writer
+     * @throws \Exception
      */
     public function write($model)
     {
@@ -101,6 +102,7 @@ class JsonODataV2Writer extends JsonODataV1Writer
      * @param ODataURLCollection $urls url collection to write
      *
      * @return JsonODataV2Writer
+     * @throws \Exception
      */
     public function writeUrlCollection(ODataURLCollection $urls)
     {
@@ -126,6 +128,7 @@ class JsonODataV2Writer extends JsonODataV1Writer
      * @param int $count Row count value
      *
      * @return JsonODataV2Writer
+     * @throws \Exception
      */
     protected function writeRowCount($count)
     {
@@ -143,6 +146,7 @@ class JsonODataV2Writer extends JsonODataV1Writer
      * @param ODataLink|null $nextPageLinkUri Uri for next page link
      *
      * @return JsonODataV2Writer
+     * @throws \Exception
      */
     protected function writeNextPageLink(ODataLink $nextPageLinkUri = null)
     {
@@ -156,6 +160,12 @@ class JsonODataV2Writer extends JsonODataV1Writer
         return $this;
     }
 
+    /**
+     * Writes the expanded link.
+     *
+     * @param ODataLink $link
+     * @throws \Exception
+     */
     protected function writeExpandedLink(ODataLink $link)
     {
         //Difference from v1 is that expanded collection have a result: wrapper to allow for metadata to exist
