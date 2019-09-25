@@ -2,6 +2,10 @@
 
 namespace POData\Common;
 
+/**
+ * Class ReflectionHandler
+ * @package POData\Common
+ */
 class ReflectionHandler
 {
     /**

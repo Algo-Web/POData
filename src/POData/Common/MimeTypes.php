@@ -2,6 +2,10 @@
 
 namespace POData\Common;
 
+/**
+ * Class MimeTypes
+ * @package POData\Common
+ */
 class MimeTypes
 {
     //MIME type for ATOM bodies

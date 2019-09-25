@@ -2,6 +2,10 @@
 
 namespace POData\Common\Messages;
 
+/**
+ * Trait orderByInfo
+ * @package POData\Common\Messages
+ */
 trait orderByInfo
 {
     /**

@@ -2,6 +2,10 @@
 
 namespace POData\Common\Messages;
 
+/**
+ * Trait metadataWriter
+ * @package POData\Common\Messages
+ */
 trait metadataWriter
 {
     /**

@@ -2,6 +2,10 @@
 
 namespace POData\Common\Messages;
 
+/**
+ * Trait providersWrapper
+ * @package POData\Common\Messages
+ */
 trait providersWrapper
 {
     /**

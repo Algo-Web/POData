@@ -2,6 +2,10 @@
 
 namespace POData\Common\Messages;
 
+/**
+ * Trait keyDescriptor
+ * @package POData\Common\Messages
+ */
 trait keyDescriptor
 {
     /**

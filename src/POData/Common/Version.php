@@ -127,6 +127,9 @@ class Version
         }
     }
 
+    /**
+     * @return Version
+     */
     public static function v1()
     {
         self::fillVersions();
@@ -134,6 +137,9 @@ class Version
         return self::$fixedVersion[1];
     }
 
+    /**
+     * @return Version
+     */
     public static function v2()
     {
         self::fillVersions();
@@ -141,6 +147,9 @@ class Version
         return self::$fixedVersion[2];
     }
 
+    /**
+     * @return Version
+     */
     public static function v3()
     {
         self::fillVersions();

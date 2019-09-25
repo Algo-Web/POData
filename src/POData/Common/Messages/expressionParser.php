@@ -2,6 +2,10 @@
 
 namespace POData\Common\Messages;
 
+/**
+ * Trait expressionParser
+ * @package POData\Common\Messages
+ */
 trait expressionParser
 {
     /**

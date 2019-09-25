@@ -2,6 +2,10 @@
 
 namespace POData\Common\Messages;
 
+/**
+ * Trait httpProcessUtility
+ * @package POData\Common\Messages
+ */
 trait httpProcessUtility
 {
     /**

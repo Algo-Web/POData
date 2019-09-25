@@ -2,6 +2,10 @@
 
 namespace POData\Common\Messages;
 
+/**
+ * Trait IService
+ * @package POData\Common\Messages
+ */
 trait IService
 {
     /**
