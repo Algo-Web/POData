@@ -31,13 +31,14 @@ class SkipTokenParser
      * Parse the given skiptoken, validate it using the given InternalOrderByInfo
      * and generates instance of InternalSkipTokenInfo.
      *
-     * @param ResourceType        &$resourceType        The resource type of the
+     * @param ResourceType        &$resourceType The resource type of the
      *                                                  resource targeted by the
      *                                                  resource path
      * @param InternalOrderByInfo &$internalOrderByInfo The $orderby details
-     * @param string              $skipToken            The $skiptoken value
+     * @param string $skipToken The $skiptoken value
      *
      * @throws ODataException
+     * @throws \ReflectionException
      *
      * @return InternalSkipTokenInfo
      */

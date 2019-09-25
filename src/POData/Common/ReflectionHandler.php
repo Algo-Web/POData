@@ -9,6 +9,7 @@ class ReflectionHandler
      * @param $property
      *
      * @return mixed
+     * @throws \ReflectionException
      */
     public static function getProperty(&$entryObject, $property)
     {
@@ -27,7 +28,8 @@ class ReflectionHandler
     /**
      * @param object $entity
      * @param string $property
-     * @param mixed  $value
+     * @param mixed $value
+     * @throws \ReflectionException
      */
     public static function setProperty(&$entity, $property, $value)
     {

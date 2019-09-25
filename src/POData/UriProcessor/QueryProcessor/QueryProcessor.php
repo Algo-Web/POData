@@ -344,6 +344,7 @@ class QueryProcessor
      *
      *
      * @throws ODataException Throws bad request error in the following cases
+     * @throws \ReflectionException
      *                        (1) If $skiptoken cannot be applied to the
      *                        resource targeted by the request uri
      *                        (2) If paging is not enabled for the resource

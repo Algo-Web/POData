@@ -269,12 +269,13 @@ class KeyDescriptor
      * _validatedNamedValues array with key as keyName and value as an array of
      * key value and key type.
      *
-     * @param string       $segmentAsString The segment in the form identifier
+     * @param string $segmentAsString The segment in the form identifier
      *                                      (keyPredicate) which this descriptor
      *                                      represents
-     * @param ResourceType $resourceType    The type of the identifier in the segment
+     * @param ResourceType $resourceType The type of the identifier in the segment
      *
      * @throws ODataException If validation fails
+     * @throws \ReflectionException
      */
     public function validate($segmentAsString, ResourceType $resourceType)
     {
@@ -554,6 +555,7 @@ class KeyDescriptor
      * @param ResourceSet $resourceSet
      *
      * @throws \InvalidArgumentException
+     * @throws \ReflectionException
      * @return string
      */
     public function generateRelativeUri(ResourceSet $resourceSet)

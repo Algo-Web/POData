@@ -62,6 +62,7 @@ class OrderBySubPathSegment
      * this function returns 'IType', otherwise 'ReflectionClass'.
      *
      * @return ReflectionClass|IType
+     * @throws \ReflectionException
      */
     public function getInstanceType()
     {

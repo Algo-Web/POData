@@ -336,6 +336,7 @@ class CynicSerialiser implements IObjectSerialiser
      *
      * @return ODataURL
      * @throws ODataException
+     * @throws \ReflectionException
      */
     public function writeUrlElement(QueryResult $entryObject)
     {
@@ -363,6 +364,7 @@ class CynicSerialiser implements IObjectSerialiser
      * @return ODataURLCollection
      * @throws InvalidOperationException
      * @throws ODataException
+     * @throws \ReflectionException
      */
     public function writeUrlElements(QueryResult $entryObjects)
     {
@@ -691,6 +693,7 @@ class CynicSerialiser implements IObjectSerialiser
      * @param string $containerName
      * @return string
      * @throws ODataException
+     * @throws \ReflectionException
      */
     protected function getEntryInstanceKey($entityInstance, ResourceType $resourceType, $containerName)
     {

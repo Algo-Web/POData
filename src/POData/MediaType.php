@@ -151,6 +151,7 @@ class MediaType
      *
      * @return int The value associated with 'q' parameter (0-1000),
      *             if absent return 1000
+     * @throws Common\HttpHeaderFailure
      */
     public function getQualityValue()
     {

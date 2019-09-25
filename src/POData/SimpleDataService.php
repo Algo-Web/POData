@@ -34,6 +34,15 @@ class SimpleDataService extends BaseService implements IService
     protected $streamProvider;
     public $maxPageSize = 400;
 
+    /**
+     * SimpleDataService constructor.
+     * @param $db
+     * @param SimpleMetadataProvider $metaProvider
+     * @param ServiceHost $host
+     * @param IObjectSerialiser|null $serialiser
+     * @param IStreamProvider2|null $streamProvider
+     * @throws ODataException
+     */
     public function __construct(
         $db,
         SimpleMetadataProvider $metaProvider,
@@ -56,6 +65,10 @@ class SimpleDataService extends BaseService implements IService
         parent::__construct($serialiser);
     }
 
+    /**
+     * @inheritdoc
+     * @throws Common\InvalidOperationException
+     */
     public function initialize(IServiceConfiguration $config)
     {
         $config->setEntitySetPageSize('*', $this->maxPageSize);

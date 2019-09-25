@@ -26,6 +26,11 @@ class ChangeSetParser implements IBatchParser
         return $this->changeSetBoundary;
     }
 
+    /**
+     * @throws \POData\Common\ODataException
+     * @throws \POData\Common\UrlFormatException
+     * @throws \Exception
+     */
     public function process()
     {
         $raw = $this->getRawRequests();
@@ -91,6 +96,9 @@ class ChangeSetParser implements IBatchParser
         return $response;
     }
 
+    /**
+     * @throws \Exception
+     */
     public function handleData()
     {
         $firstLine = trim(strtok($this->getData(), "\n"));
@@ -200,6 +208,11 @@ class ChangeSetParser implements IBatchParser
         return $this->rawRequests;
     }
 
+    /**
+     * @param $workingObject
+     * @throws \POData\Common\ODataException
+     * @throws \POData\Common\UrlFormatException
+     */
     protected function processSubRequest(&$workingObject)
     {
         $newContext = new IlluminateOperationContext($workingObject->Request);

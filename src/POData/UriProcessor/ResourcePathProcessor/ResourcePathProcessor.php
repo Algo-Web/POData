@@ -27,6 +27,7 @@ class ResourcePathProcessor
      * @throws \Doctrine\Common\Annotations\AnnotationException
      * @throws \POData\Common\InvalidOperationException
      *                        or in case of any version incompatibility
+     * @throws \POData\Common\UrlFormatException
      *
      * @return RequestDescription
      */

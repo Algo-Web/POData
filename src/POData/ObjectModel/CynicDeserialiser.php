@@ -151,6 +151,7 @@ class CynicDeserialiser
      * @throws InvalidOperationException
      * @throws \POData\Common\ODataException
      * @throws \ReflectionException
+     * @throws \Exception
      */
     protected function processEntryContent(ODataEntry &$content)
     {
@@ -216,10 +217,12 @@ class CynicDeserialiser
     }
 
     /**
-     * @param  ResourceEntityType          $type
+     * @param  ResourceEntityType $type
      * @param  ODataPropertyContent|object $result
-     * @param  string|null                 $id
+     * @param  string|null $id
      * @return null|KeyDescriptor
+     * @throws \POData\Common\ODataException
+     * @throws \ReflectionException
      */
     protected function generateKeyDescriptor(ResourceEntityType $type, $result, $id = null)
     {
@@ -378,6 +381,7 @@ class CynicDeserialiser
      * @throws InvalidOperationException
      * @throws \POData\Common\ODataException
      * @throws \ReflectionException
+     * @throws \Exception
      */
     protected function processLinkFeed(ODataLink &$link, ResourceSet $sourceSet, $source, $hasUrl, $hasPayload)
     {
