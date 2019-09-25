@@ -81,7 +81,9 @@ class UriProcessorNew implements IUriProcessor
      * Constructs a new instance of UriProcessor.
      *
      * @param IService $service Reference to the data service instance
+     * @throws InvalidOperationException
      * @throws ODataException
+     * @throws \Doctrine\Common\Annotations\AnnotationException
      */
     private function __construct(IService $service)
     {
@@ -106,9 +108,12 @@ class UriProcessorNew implements IUriProcessor
      *
      * @param IService $service Reference to the data service instance
      *
-     * @throws ODataException
-     *
      * @return IUriProcessor
+     * @throws InvalidOperationException
+     * @throws ODataException
+     * @throws \Doctrine\Common\Annotations\AnnotationException
+     * @throws \POData\Common\NotImplementedException
+     * @throws \ReflectionException
      */
     public static function process(IService $service)
     {
@@ -226,6 +231,8 @@ class UriProcessorNew implements IUriProcessor
 
     /**
      * Execute the client submitted request against the data source (GET).
+     * @throws ODataException
+     * @throws InvalidOperationException
      */
     protected function executeGet()
     {
@@ -283,6 +290,7 @@ class UriProcessorNew implements IUriProcessor
 
     /**
      * Execute the client submitted request against the data source (DELETE).
+     * @throws ODataException
      */
     protected function executeDelete()
     {
@@ -299,6 +307,9 @@ class UriProcessorNew implements IUriProcessor
 
     /**
      * Execute the client submitted request against the data source (PUT).
+     * @throws InvalidOperationException
+     * @throws ODataException
+     * @throws \ReflectionException
      */
     protected function executePut()
     {
@@ -330,6 +341,10 @@ class UriProcessorNew implements IUriProcessor
 
     /**
      * Execute the client submitted request against the data source (POST).
+     * @throws InvalidOperationException
+     * @throws ODataException
+     * @throws \POData\Common\UrlFormatException
+     * @throws \ReflectionException
      */
     protected function executePost()
     {
@@ -622,6 +637,7 @@ class UriProcessorNew implements IUriProcessor
      * Applies the query options to the resource(s) retrieved from the data source.
      *
      * @param SegmentDescriptor $segment The descriptor which holds resource(s) on which query options to be applied
+     * @throws ODataException
      */
     private function applyQueryOptions(SegmentDescriptor $segment)
     {
@@ -661,6 +677,7 @@ class UriProcessorNew implements IUriProcessor
      * @param array $result
      *
      * @return array
+     * @throws ODataException
      */
     private function performPaging(array $result)
     {

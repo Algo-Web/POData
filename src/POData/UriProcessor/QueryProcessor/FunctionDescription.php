@@ -504,11 +504,12 @@ class FunctionDescription
     /**
      * Validate operands of an arithmetic operation and promote if required.
      *
-     * @param ExpressionToken    $expressionToken The expression token
-     * @param AbstractExpression $leftArgument    The left expression
-     * @param AbstractExpression $rightArgument   The right expression
+     * @param ExpressionToken $expressionToken The expression token
+     * @param AbstractExpression $leftArgument The left expression
+     * @param AbstractExpression $rightArgument The right expression
      *
      * @return IType
+     * @throws ODataException
      */
     public static function verifyAndPromoteArithmeticOpArguments(
         $expressionToken,

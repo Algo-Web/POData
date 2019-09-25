@@ -140,6 +140,7 @@ class ExpressionParser
      * @return AbstractExpression
      * @throws NotImplementedException
      * @throws ODataException
+     * @throws \ReflectionException
      */
     public function parseFilter()
     {
@@ -152,6 +153,7 @@ class ExpressionParser
      * @return AbstractExpression
      * @throws NotImplementedException
      * @throws ODataException
+     * @throws \ReflectionException
      */
     private function parseExpression()
     {
@@ -168,6 +170,7 @@ class ExpressionParser
      * @return AbstractExpression
      * @throws NotImplementedException
      * @throws ODataException
+     * @throws \ReflectionException
      */
     private function parseLogicalOr()
     {
@@ -196,6 +199,7 @@ class ExpressionParser
      * @return AbstractExpression
      * @throws NotImplementedException
      * @throws ODataException
+     * @throws \ReflectionException
      */
     private function parseLogicalAnd()
     {
@@ -220,6 +224,7 @@ class ExpressionParser
      * @return AbstractExpression
      * @throws NotImplementedException
      * @throws ODataException
+     * @throws \ReflectionException
      */
     private function parseComparison()
     {
@@ -248,6 +253,7 @@ class ExpressionParser
      * @return AbstractExpression
      * @throws NotImplementedException
      * @throws ODataException
+     * @throws \ReflectionException
      */
     private function parseAdditive()
     {
@@ -277,6 +283,7 @@ class ExpressionParser
      * @return AbstractExpression
      * @throws NotImplementedException
      * @throws ODataException
+     * @throws \ReflectionException
      */
     private function parseMultiplicative()
     {
@@ -312,8 +319,9 @@ class ExpressionParser
      * Parse unary operator (- ,not).
      *
      * @return AbstractExpression
-     * @throws ODataException
      * @throws NotImplementedException
+     * @throws ODataException
+     * @throws \ReflectionException
      */
     private function parseUnary()
     {
@@ -360,6 +368,7 @@ class ExpressionParser
      * @return AbstractExpression
      * @throws NotImplementedException
      * @throws ODataException
+     * @throws \ReflectionException
      */
     private function parsePrimary()
     {
@@ -384,6 +393,7 @@ class ExpressionParser
      *
      * @throws ODataException
      * @throws NotImplementedException
+     * @throws \ReflectionException
      * @return AbstractExpression
      */
     private function parsePrimaryStart()
@@ -428,6 +438,7 @@ class ExpressionParser
      *
      * @throws ODataException
      * @throws NotImplementedException
+     * @throws \ReflectionException
      * @return AbstractExpression
      */
     private function parseParenExpression()
@@ -453,6 +464,7 @@ class ExpressionParser
      * @return FunctionCallExpression|PropertyAccessExpression
      * @throws ODataException
      * @throws NotImplementedException
+     * @throws \ReflectionException
      */
     private function parseIdentifier()
     {
@@ -473,6 +485,7 @@ class ExpressionParser
      * @param PropertyAccessExpression|null $parentExpression Parent expression
      *
      * @throws ODataException
+     * @throws \ReflectionException
      *
      * @return PropertyAccessExpression
      */
@@ -518,6 +531,7 @@ class ExpressionParser
      *
      * @throws ODataException
      * @throws NotImplementedException
+     * @throws \ReflectionException
      *
      * @return FunctionCallExpression
      */
@@ -541,6 +555,7 @@ class ExpressionParser
      *
      * @throws ODataException
      * @throws NotImplementedException
+     * @throws \ReflectionException
      * @return array<AbstractExpression>
      */
     private function parseArgumentList()
@@ -567,6 +582,7 @@ class ExpressionParser
      * @return array<AbstractExpression>
      * @throws ODataException
      * @throws NotImplementedException
+     * @throws \ReflectionException
      */
     private function parseArguments()
     {

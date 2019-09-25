@@ -100,11 +100,12 @@ class OrderByParser
      *     level sorter function.
      *
      * @param ResourceSetWrapper $resourceSetWrapper ResourceSetWrapper for the resource targeted by resource path
-     * @param ResourceType       $resourceType       ResourceType for the resource targeted by resource path
-     * @param string             $orderBy            The orderby clause
-     * @param ProvidersWrapper   $providerWrapper    Reference to the wrapper for IDSQP and IDSMP impl
+     * @param ResourceType $resourceType ResourceType for the resource targeted by resource path
+     * @param string $orderBy The orderby clause
+     * @param ProvidersWrapper $providerWrapper Reference to the wrapper for IDSQP and IDSMP impl
      *
      * @throws ODataException If any error occur while parsing orderby clause
+     * @throws InvalidOperationException
      *
      * @return InternalOrderByInfo
      */
@@ -399,6 +400,7 @@ class OrderByParser
 
     /**
      * Generates top level comparison function from sub comparison functions.
+     * @throws ODataException
      */
     private function generateTopLevelComparisonFunction()
     {

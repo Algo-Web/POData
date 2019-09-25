@@ -98,9 +98,12 @@ class QueryProcessor
      * Process the OData query options and update RequestDescription accordingly.
      *
      * @param RequestDescription $request Description of the request submitted by client
-     * @param IService           $service Reference to the data service
+     * @param IService $service Reference to the data service
      *
      * @throws ODataException
+     * @throws \POData\Common\NotImplementedException
+     * @throws \POData\Common\InvalidOperationException
+     * @throws \ReflectionException
      */
     public static function process(RequestDescription $request, IService $service)
     {
@@ -120,6 +123,9 @@ class QueryProcessor
      * instance with processed details.
      *
      * @throws ODataException If any error occurred while processing the query options
+     * @throws \POData\Common\NotImplementedException
+     * @throws \POData\Common\InvalidOperationException
+     * @throws \ReflectionException
      */
     private function processQuery()
     {
@@ -187,6 +193,7 @@ class QueryProcessor
      *
      *
      * @throws ODataException If any error occurs while parsing orderby option
+     * @throws \POData\Common\InvalidOperationException
      */
     private function processOrderBy()
     {
@@ -250,6 +257,8 @@ class QueryProcessor
      *                        to expression tree
      *                        (3) If any error occurred while generating
      *                        php expression from expression tree
+     * @throws \POData\Common\NotImplementedException
+     * @throws \ReflectionException
      */
     private function processFilter()
     {
@@ -382,6 +391,7 @@ class QueryProcessor
      *
      *
      * @throws ODataException Throws bad request error in the following cases
+     * @throws \POData\Common\InvalidOperationException
      *                        (1) If $expand or select cannot be applied to the
      *                        requested resource.
      *                        (2) If projection is disabled by the developer

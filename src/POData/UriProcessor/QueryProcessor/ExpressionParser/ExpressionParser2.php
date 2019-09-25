@@ -74,6 +74,7 @@ class ExpressionParser2 extends ExpressionParser
      * @throws ODataException If any error occurs while parsing the odata expression or building the
      *          php/custom expression
      * @throws \POData\Common\NotImplementedException
+     * @throws \ReflectionException
      *
      *
      * @return FilterInfo
@@ -107,6 +108,7 @@ class ExpressionParser2 extends ExpressionParser
      *
      * @throws ODataException
      * @throws \POData\Common\NotImplementedException
+     * @throws \ReflectionException
      *
      * @return AbstractExpression
      */

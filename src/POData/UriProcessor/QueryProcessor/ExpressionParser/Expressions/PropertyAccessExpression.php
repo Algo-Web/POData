@@ -35,8 +35,9 @@ class PropertyAccessExpression extends AbstractExpression
     /**
      * Creates new instance of PropertyAccessExpression.
      *
-     * @param ResourceProperty              $resourceProperty The ResourceProperty
-     * @param PropertyAccessExpression|null $parent           The parent expression
+     * @param ResourceProperty $resourceProperty The ResourceProperty
+     * @param PropertyAccessExpression|null $parent The parent expression
+     * @throws \ReflectionException
      */
     public function __construct($resourceProperty, PropertyAccessExpression $parent = null)
     {
