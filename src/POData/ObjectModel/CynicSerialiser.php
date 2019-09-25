@@ -345,10 +345,13 @@ class CynicSerialiser implements IObjectSerialiser
     public function writeUrlElement(QueryResult $entryObject)
     {
         $url = new ODataURL();
-        if (null !== $entryObject->results) {
+
+        /** @var object|null $results */
+        $results = $entryObject->results;
+        if (null !== $results) {
             $currentResourceType = $this->getCurrentResourceSetWrapper()->getResourceType();
             $relativeUri = $this->getEntryInstanceKey(
-                $entryObject->results,
+                $results,
                 $currentResourceType,
                 $this->getCurrentResourceSetWrapper()->getName()
             );
