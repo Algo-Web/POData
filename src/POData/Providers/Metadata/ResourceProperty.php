@@ -150,6 +150,7 @@ class ResourceProperty
      * kind 'Primitive' then this function returns ITYpe instance for the type.
      *
      * @return \ReflectionClass|IType
+     * @throws \ReflectionException
      */
     public function getInstanceType()
     {

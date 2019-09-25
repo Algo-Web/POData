@@ -118,6 +118,8 @@ class ResourceSetWrapper extends ResourceSet
      * @param ProvidersWrapper $provider
      *
      * @return bool
+     * @throws \POData\Common\InvalidOperationException
+     * @throws ODataException
      */
     public function hasNamedStreams(ProvidersWrapper $provider)
     {
@@ -144,6 +146,8 @@ class ResourceSetWrapper extends ResourceSet
      * @param ProvidersWrapper $provider Metadata query provider wrapper
      *
      * @return bool
+     * @throws \POData\Common\InvalidOperationException
+     * @throws ODataException
      */
     public function hasBagProperty(ProvidersWrapper $provider)
     {

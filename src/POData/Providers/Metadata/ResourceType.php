@@ -251,6 +251,7 @@ abstract class ResourceType
      * If resource type describes a primitive type, then this function returns ITYpe.
      *
      * @return \ReflectionClass|IType
+     * @throws \ReflectionException
      */
     public function getInstanceType()
     {
@@ -829,10 +830,11 @@ abstract class ResourceType
 
     /**
      * @param string $property
-     * @param mixed  $entity
-     * @param mixed  $value
+     * @param mixed $entity
+     * @param mixed $value
      *
      * @return ResourceType
+     * @throws \ReflectionException
      */
     public function setPropertyValue($entity, $property, $value)
     {
@@ -846,6 +848,7 @@ abstract class ResourceType
      * @param $entity
      * @param $property
      * @return mixed
+     * @throws \ReflectionException
      */
     public function getPropertyValue($entity, $property)
     {
@@ -867,6 +870,9 @@ abstract class ResourceType
         return $result;
     }
 
+    /**
+     * @throws \ReflectionException
+     */
     public function __wakeup()
     {
         if (is_string($this->type)) {
