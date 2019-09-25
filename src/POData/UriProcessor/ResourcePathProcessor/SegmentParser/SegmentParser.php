@@ -76,6 +76,9 @@ class SegmentParser
         return $segmentParser->segmentDescriptors;
     }
 
+    /**
+     * @return ProvidersWrapper
+     */
     public function getProviderWrapper()
     {
         return $this->providerWrapper;

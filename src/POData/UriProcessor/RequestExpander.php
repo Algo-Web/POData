@@ -13,6 +13,10 @@ use POData\Providers\Query\QueryResult;
 use POData\Providers\Query\QueryType;
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandedProjectionNode;
 
+/**
+ * Class RequestExpander
+ * @package POData\UriProcessor
+ */
 class RequestExpander
 {
     /**
@@ -43,6 +47,12 @@ class RequestExpander
      */
     private $stack;
 
+    /**
+     * RequestExpander constructor.
+     * @param RequestDescription $request
+     * @param IService $service
+     * @param ProvidersWrapper $wrapper
+     */
     public function __construct(RequestDescription $request, IService $service, ProvidersWrapper $wrapper)
     {
         $this->request = $request;

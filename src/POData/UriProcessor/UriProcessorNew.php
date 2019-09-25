@@ -185,6 +185,9 @@ class UriProcessorNew implements IUriProcessor
         return $this->cereal;
     }
 
+    /**
+     * @return CynicDeserialiser
+     */
     public function getCynicDeserialiser()
     {
         return $this->cynicDeserialiser;
