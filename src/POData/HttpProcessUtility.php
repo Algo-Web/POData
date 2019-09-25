@@ -433,7 +433,6 @@ class HttpProcessUtility
      * @param string $text          Text to read qvalue from
      * @param int    &$textIndex    Index into text where the qvalue starts
      * @param int    &$qualityValue After the method executes, the normalized qvalue
-     * @param int    $textIndex
      *
      * @throws HttpHeaderFailure If any error occurred while reading and processing
      *                           the quality factor

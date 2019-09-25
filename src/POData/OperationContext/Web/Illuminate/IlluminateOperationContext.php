@@ -6,6 +6,10 @@ use Illuminate\Http\Request;
 use POData\OperationContext\IOperationContext;
 use POData\OperationContext\Web\OutgoingResponse;
 
+/**
+ * Class IlluminateOperationContext
+ * @package POData\OperationContext\Web\Illuminate
+ */
 class IlluminateOperationContext implements IOperationContext
 {
     /**

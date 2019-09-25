@@ -4,6 +4,10 @@ namespace POData\OperationContext;
 
 use POData\Common\Url;
 
+/**
+ * Interface IHTTPRequest
+ * @package POData\OperationContext
+ */
 interface IHTTPRequest
 {
     /**

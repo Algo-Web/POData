@@ -334,6 +334,10 @@ class JsonODataV1Writer implements IODataWriter
         return $this;
     }
 
+    /**
+     * @param ODataProperty $property
+     * @return $this
+     */
     protected function writePropertyMeta(ODataProperty $property)
     {
         return $this; //does nothing in v1 or v2, json light outputs stuff

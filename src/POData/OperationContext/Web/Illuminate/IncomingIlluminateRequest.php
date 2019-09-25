@@ -6,6 +6,10 @@ use Illuminate\Http\Request;
 use POData\OperationContext\HTTPRequestMethod;
 use POData\OperationContext\IHTTPRequest;
 
+/**
+ * Class IncomingIlluminateRequest
+ * @package POData\OperationContext\Web\Illuminate
+ */
 class IncomingIlluminateRequest implements IHTTPRequest
 {
     /**

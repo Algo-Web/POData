@@ -27,8 +27,6 @@ class ODataException extends \Exception
      * @param string      $message    The error message
      * @param int         $statusCode The status code
      * @param string|null $errorCode  The error code
-     *
-     * @return ODataException
      */
     public function __construct($message, $statusCode, $errorCode = null)
     {

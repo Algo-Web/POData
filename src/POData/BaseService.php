@@ -110,6 +110,10 @@ abstract class BaseService implements IRequestHandler, IService
         return $this->objectSerialiser;
     }
 
+    /**
+     * BaseService constructor.
+     * @param IObjectSerialiser|null $serialiser
+     */
     protected function __construct(IObjectSerialiser $serialiser = null)
     {
         if (null != $serialiser) {
@@ -738,7 +742,6 @@ abstract class BaseService implements IRequestHandler, IService
      * @param bool         &$needToSerializeResponse On return, this will contain
      *                                               True if response needs to be
      *                                               serialized, False otherwise
-     * @param bool $needToSerializeResponse
      *
      * @throws ODataException
      * @throws InvalidOperationException

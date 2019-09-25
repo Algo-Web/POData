@@ -677,6 +677,7 @@ class SimpleMetadataProvider implements IMetadataProvider
      * @param string $resourceMult The multiplicity of relation being added
      * @param mixed $many
      *
+     * @param ResourceEntityType|null $concreteType
      * @throws InvalidOperationException
      * @throws \ReflectionException
      */

@@ -6,6 +6,10 @@ use POData\Common\InvalidOperationException;
 use POData\Common\Version;
 use POData\Providers\Metadata\ResourceSet;
 
+/**
+ * Interface IServiceConfiguration
+ * @package POData\Configuration
+ */
 interface IServiceConfiguration
 {
     /**

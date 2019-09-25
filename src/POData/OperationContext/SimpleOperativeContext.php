@@ -4,6 +4,10 @@ namespace POData\OperationContext;
 
 use POData\OperationContext\Web\OutgoingResponse;
 
+/**
+ * Class SimpleOperativeContext
+ * @package POData\OperationContext
+ */
 class SimpleOperativeContext implements IOperationContext
 {
     /**

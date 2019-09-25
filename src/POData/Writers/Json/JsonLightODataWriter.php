@@ -270,7 +270,7 @@ class JsonLightODataWriter extends JsonODataV2Writer
      */
     protected function writeNextPageLink(ODataLink $nextPageLinkUri = null)
     {
-        return;
+        return null;
     }
 
     /**

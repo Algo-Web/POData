@@ -10,6 +10,10 @@ use POData\Providers\ProvidersWrapper;
 use POData\Providers\Stream\StreamProviderWrapper;
 use POData\Writers\ODataWriterRegistry;
 
+/**
+ * Interface IService
+ * @package POData
+ */
 interface IService
 {
     /**

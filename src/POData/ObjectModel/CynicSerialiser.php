@@ -1063,7 +1063,7 @@ class CynicSerialiser implements IObjectSerialiser
      * Convert the given primitive value to string.
      * Note: This method will not handle null primitive value.
      *
-     * @param IType &$primitiveResourceType Type of the primitive property
+     * @param IType &$type                  Type of the primitive property
      *                                      whose value need to be converted
      * @param mixed $primitiveValue         Primitive value to convert
      *
