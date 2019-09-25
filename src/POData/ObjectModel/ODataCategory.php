@@ -2,6 +2,10 @@
 
 namespace POData\ObjectModel;
 
+/**
+ * Class ODataCategory
+ * @package POData\ObjectModel
+ */
 class ODataCategory
 {
     /**

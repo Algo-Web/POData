@@ -6,6 +6,10 @@ use Carbon\Carbon;
 use POData\ObjectModel\ODataEntry;
 use POData\Providers\Metadata\ResourceEntityType;
 
+/**
+ * Class ModelDeserialiser
+ * @package POData\ObjectModel
+ */
 class ModelDeserialiser
 {
     // take a supplied resourceEntityType and ODataEntry object, check that they match, and retrieve the

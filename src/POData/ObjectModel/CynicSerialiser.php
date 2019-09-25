@@ -32,6 +32,10 @@ use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
 use POData\UriProcessor\RequestDescription;
 use POData\UriProcessor\SegmentStack;
 
+/**
+ * Class CynicSerialiser
+ * @package POData\ObjectModel
+ */
 class CynicSerialiser implements IObjectSerialiser
 {
     /**

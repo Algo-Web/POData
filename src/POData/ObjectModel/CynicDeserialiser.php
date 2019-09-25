@@ -11,6 +11,10 @@ use POData\Providers\ProvidersWrapper;
 use POData\Providers\Query\IQueryProvider;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 
+/**
+ * Class CynicDeserialiser
+ * @package POData\ObjectModel
+ */
 class CynicDeserialiser
 {
     /**
@@ -28,6 +32,11 @@ class CynicDeserialiser
      */
     private $cereal;
 
+    /**
+     * CynicDeserialiser constructor.
+     * @param IMetadataProvider $meta
+     * @param ProvidersWrapper $wrapper
+     */
     public function __construct(IMetadataProvider $meta, ProvidersWrapper $wrapper)
     {
         $this->metaProvider = $meta;
