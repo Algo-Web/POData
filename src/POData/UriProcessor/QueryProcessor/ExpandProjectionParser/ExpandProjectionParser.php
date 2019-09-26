@@ -409,7 +409,7 @@ class ExpandProjectionParser
             $tokenId = $lexer->getCurrentToken()->Id;
             if ($tokenId != ExpressionTokenId::END) {
                 if ($lastSegment || $tokenId != ExpressionTokenId::SLASH) {
-                    $lexer->validateToken(ExpressionTokenId::COMMA);
+                    $lexer->validateToken(ExpressionTokenId::COMMA());
                     ++$i;
                 }
 

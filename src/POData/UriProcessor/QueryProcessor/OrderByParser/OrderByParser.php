@@ -449,19 +449,19 @@ class OrderByParser
             if ($tokenId != ExpressionTokenId::END) {
                 if ($tokenId != ExpressionTokenId::SLASH) {
                     if ($tokenId != ExpressionTokenId::COMMA) {
-                        $lexer->validateToken(ExpressionTokenId::IDENTIFIER);
+                        $lexer->validateToken(ExpressionTokenId::IDENTIFIER());
                         $identifier = $lexer->getCurrentToken()->Text;
                         if ($identifier !== 'asc' && $identifier !== 'desc') {
                             // force lexer to throw syntax error as we found
                             // unexpected identifier
-                            $lexer->validateToken(ExpressionTokenId::DOT);
+                            $lexer->validateToken(ExpressionTokenId::DOT());
                         }
 
                         $orderByPathSegments[$i][] = '*' . $identifier;
                         $lexer->nextToken();
                         $tokenId = $lexer->getCurrentToken()->Id;
                         if ($tokenId != ExpressionTokenId::END) {
-                            $lexer->validateToken(ExpressionTokenId::COMMA);
+                            $lexer->validateToken(ExpressionTokenId::COMMA());
                             ++$i;
                         }
                     } else {

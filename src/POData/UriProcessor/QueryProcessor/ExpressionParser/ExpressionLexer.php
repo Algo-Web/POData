@@ -320,9 +320,9 @@ class ExpressionLexer
      * @throws ODataException if current token is not of the
      *                        specified kind
      */
-    public function validateToken($tokenId)
+    public function validateToken(ExpressionTokenId $tokenId)
     {
-        if ($this->token->Id != $tokenId) {
+        if ($this->token->Id != $tokenId->getValue()) {
             $this->parseError(Messages::expressionLexerSyntaxError($this->textPos));
         }
     }
@@ -336,12 +336,12 @@ class ExpressionLexer
      */
     public function readDottedIdentifier()
     {
-        $this->validateToken(ExpressionTokenId::IDENTIFIER);
+        $this->validateToken(ExpressionTokenId::IDENTIFIER());
         $identifier = $this->token->Text;
         $this->nextToken();
         while ($this->token->Id == ExpressionTokenId::DOT) {
             $this->nextToken();
-            $this->validateToken(ExpressionTokenId::IDENTIFIER);
+            $this->validateToken(ExpressionTokenId::IDENTIFIER());
             $identifier = $identifier . '.' . $this->token->Text;
             $this->nextToken();
         }

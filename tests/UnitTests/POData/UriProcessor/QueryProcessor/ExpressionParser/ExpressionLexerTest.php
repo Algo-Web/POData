@@ -548,16 +548,19 @@ class ExpressionLexerTest extends TestCase
         }
     }
 
+    /**
+     * @throws ODataException
+     */
     public function testValidateToken()
     {
         $expression = 'IntIdentifier eq 123';
         $lexer = new ExpressionLexer($expression);
-        $lexer->validateToken(ExpressionTokenId::IDENTIFIER);
+        $lexer->validateToken(ExpressionTokenId::IDENTIFIER());
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
 
         try {
-            $lexer->validateToken(ExpressionTokenId::INTEGER_LITERAL);
+            $lexer->validateToken(ExpressionTokenId::INTEGER_LITERAL());
             $this->fail('An expected ODataException has not been raised');
         } catch (ODataException $ex) {
             $this->assertStringStartsWith('Syntax Error at position 16', $ex->getMessage());

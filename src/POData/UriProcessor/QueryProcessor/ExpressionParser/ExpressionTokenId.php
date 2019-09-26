@@ -2,10 +2,16 @@
 
 namespace POData\UriProcessor\QueryProcessor\ExpressionParser;
 
+use MyCLabs\Enum\Enum;
+
 /**
  * Class ExpressionTokenId.
+ * @method static IDENTIFIER()
+ * @method static COMMA()
+ * @method static DOT()
+ * @method static INTEGER_LITERAL()
  */
-class ExpressionTokenId
+class ExpressionTokenId extends Enum
 {
     //Unknown.
     const UNKNOWN = 1;
