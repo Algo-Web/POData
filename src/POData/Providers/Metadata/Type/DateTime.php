@@ -20,7 +20,7 @@ class DateTime implements IType
      */
     public function getTypeCode()
     {
-        return TypeCode::DATETIME;
+        return TypeCode::DATETIME();
     }
 
     /**
@@ -33,7 +33,7 @@ class DateTime implements IType
      */
     public function isCompatibleWith(IType $type)
     {
-        return TypeCode::DATETIME == $type->getTypeCode();
+        return TypeCode::DATETIME() == $type->getTypeCode();
     }
 
     /**

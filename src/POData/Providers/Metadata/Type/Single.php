@@ -15,7 +15,7 @@ class Single implements IType
      */
     public function getTypeCode()
     {
-        return TypeCode::SINGLE;
+        return TypeCode::SINGLE();
     }
 
     /**
@@ -28,7 +28,7 @@ class Single implements IType
      */
     public function isCompatibleWith(IType $type)
     {
-        switch ($type->getTypeCode()) {
+        switch ($type->getTypeCode()->getValue()) {
             case TypeCode::BYTE:
             case TypeCode::SBYTE:
             case TypeCode::INT16:

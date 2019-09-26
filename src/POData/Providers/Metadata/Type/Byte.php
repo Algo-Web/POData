@@ -15,7 +15,7 @@ class Byte implements IType
      */
     public function getTypeCode()
     {
-        return TypeCode::BYTE;
+        return TypeCode::BYTE();
     }
 
     /**
@@ -28,7 +28,7 @@ class Byte implements IType
      */
     public function isCompatibleWith(IType $type)
     {
-        return TypeCode::BYTE == $type->getTypeCode();
+        return TypeCode::BYTE() == $type->getTypeCode();
     }
 
     /**

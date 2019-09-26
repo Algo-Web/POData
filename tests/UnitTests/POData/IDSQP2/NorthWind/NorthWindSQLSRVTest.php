@@ -13,6 +13,8 @@ class NorthWindSQLSRVTest extends TestCase
 {
     /**
      * Test the generated string comparison expression in sql server.
+     * @throws \POData\Common\UrlFormatException
+     * @throws \POData\Common\ODataException
      */
     public function testStringCompareSQLServer()
     {
@@ -46,6 +48,8 @@ class NorthWindSQLSRVTest extends TestCase
 
     /**
      * Test the generated function-call expression in sql server.
+     * @throws \POData\Common\UrlFormatException
+     * @throws \POData\Common\ODataException
      */
     public function testFunctionCallSQLServer()
     {
@@ -239,6 +243,8 @@ class NorthWindSQLSRVTest extends TestCase
 
     /**
      * Test the generated expression for ceil and floor sql server.
+     * @throws \POData\Common\UrlFormatException
+     * @throws \POData\Common\ODataException
      */
     public function testCeilFloorFunctionCallSQLServer()
     {

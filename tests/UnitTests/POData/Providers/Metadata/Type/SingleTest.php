@@ -60,7 +60,7 @@ class SingleTest extends TestCase
 
         $actual = $type->getTypeCode();
 
-        $this->assertEquals(TypeCode::SINGLE, $actual);
+        $this->assertEquals(TypeCode::SINGLE(), $actual);
     }
 
     public function testCompatibleWith()

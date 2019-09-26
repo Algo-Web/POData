@@ -17,7 +17,7 @@ class Null1 implements IType
      */
     public function getTypeCode()
     {
-        return TypeCode::NULL1;
+        return TypeCode::NULL1();
     }
 
     /**

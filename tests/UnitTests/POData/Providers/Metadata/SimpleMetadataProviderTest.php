@@ -363,7 +363,7 @@ class SimpleMetadataProviderTest extends TestCase
         $actual = null;
 
         try {
-            $foo->addKeyProperty($complex, $keyName, TypeCode::OBJECT);
+            $foo->addKeyProperty($complex, $keyName, EdmPrimitiveType::OBJECT());
         } catch (InvalidOperationException $e) {
             $actual = $e->getMessage();
         }
@@ -387,7 +387,7 @@ class SimpleMetadataProviderTest extends TestCase
         $actual = null;
 
         try {
-            $foo->addPrimitiveProperty($type, 'time', TypeCode::OBJECT);
+            $foo->addPrimitiveProperty($type, 'time', EdmPrimitiveType::OBJECT());
         } catch (InvalidOperationException $e) {
             $actual = $e->getMessage();
         }

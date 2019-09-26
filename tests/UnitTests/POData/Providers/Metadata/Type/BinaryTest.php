@@ -60,7 +60,7 @@ class BinaryTest extends TestCase
 
         $actual = $type->getTypeCode();
 
-        $this->assertEquals(TypeCode::BINARY, $actual);
+        $this->assertEquals(TypeCode::BINARY(), $actual);
     }
 
     public function testCompatibleWith()

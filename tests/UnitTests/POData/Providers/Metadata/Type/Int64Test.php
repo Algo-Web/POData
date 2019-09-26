@@ -60,7 +60,7 @@ class Int64Test extends TestCase
 
         $actual = $type->getTypeCode();
 
-        $this->assertEquals(TypeCode::INT64, $actual);
+        $this->assertEquals(TypeCode::INT64(), $actual);
     }
 
     public function testCompatibleWith()

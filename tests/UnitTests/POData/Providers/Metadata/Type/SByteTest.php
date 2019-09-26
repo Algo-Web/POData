@@ -60,7 +60,7 @@ class SByteTest extends TestCase
 
         $actual = $type->getTypeCode();
 
-        $this->assertEquals(TypeCode::SBYTE, $actual);
+        $this->assertEquals(TypeCode::SBYTE(), $actual);
     }
 
     public function testCompatibleWith()

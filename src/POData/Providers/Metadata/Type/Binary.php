@@ -15,7 +15,7 @@ class Binary implements IType
      */
     public function getTypeCode()
     {
-        return TypeCode::BINARY;
+        return TypeCode::BINARY();
     }
 
     /**
@@ -28,7 +28,7 @@ class Binary implements IType
      */
     public function isCompatibleWith(IType $type)
     {
-        return $type->getTypeCode() == TypeCode::BINARY;
+        return TypeCode::BINARY() == $type->getTypeCode();
     }
 
     /**

@@ -61,7 +61,7 @@ class VoidTest extends TestCase
 
         $actual = $type->getTypeCode();
 
-        $this->assertEquals(TypeCode::VOID, $actual);
+        $this->assertEquals(TypeCode::VOID(), $actual);
     }
 
     public function testCompatibleWith()

@@ -17,7 +17,7 @@ class VoidType implements IType
      */
     public function getTypeCode()
     {
-        return TypeCode::VOID;
+        return TypeCode::VOID();
     }
 
     /**
@@ -30,7 +30,7 @@ class VoidType implements IType
      */
     public function isCompatibleWith(IType $type)
     {
-        return TypeCode::VOID == $type->getTypeCode();
+        return TypeCode::VOID() == $type->getTypeCode();
     }
 
     /**

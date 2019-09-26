@@ -15,7 +15,7 @@ class SByte implements IType
      */
     public function getTypeCode()
     {
-        return TypeCode::SBYTE;
+        return TypeCode::SBYTE();
     }
 
     /**
@@ -28,7 +28,7 @@ class SByte implements IType
      */
     public function isCompatibleWith(IType $type)
     {
-        return TypeCode::SBYTE == $type->getTypeCode();
+        return TypeCode::SBYTE() == $type->getTypeCode();
     }
 
     /**

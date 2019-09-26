@@ -15,7 +15,7 @@ class Boolean implements IType
      */
     public function getTypeCode()
     {
-        return TypeCode::BOOLEAN;
+        return TypeCode::BOOLEAN();
     }
 
     /**
@@ -28,7 +28,7 @@ class Boolean implements IType
      */
     public function isCompatibleWith(IType $type)
     {
-        return TypeCode::BOOLEAN == $type->getTypeCode();
+        return TypeCode::BOOLEAN() == $type->getTypeCode();
     }
 
     /**

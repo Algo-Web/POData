@@ -61,7 +61,7 @@ class CharTest extends TestCase
 
         $actual = $type->getTypeCode();
 
-        $this->assertEquals(TypeCode::CHAR, $actual);
+        $this->assertEquals(TypeCode::CHAR(), $actual);
     }
 
     public function testCompatibleWith()
