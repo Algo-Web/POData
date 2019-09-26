@@ -21,6 +21,10 @@ class ReflectionHandler
         if (method_exists($entryObject, '__get')) {
             $value = $entryObject->$property;
         } else {
+            if (null === $entryObject) {
+                $msg = "Property POData\\Common\\ReflectionHandler::$".$property." does not exist";
+                throw new \ReflectionException($msg);
+            }
             $reflectionProperty = new \ReflectionProperty(get_class($entryObject), $property);
             $reflectionProperty->setAccessible(true);
             $value = $reflectionProperty->getValue($entryObject);
