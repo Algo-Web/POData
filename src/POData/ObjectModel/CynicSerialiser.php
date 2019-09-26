@@ -847,23 +847,29 @@ class CynicSerialiser implements IObjectSerialiser
 
     /**
      * @param QueryResult $entryObject
-     * @param $prop
+     * @param ResourceProperty $prop
      * @param $nuLink
      * @param $propKind
-     * @param $propName
+     * @param string $propName
      * @throws InvalidOperationException
      * @throws ODataException
      * @throws \ReflectionException
      */
-    private function expandNavigationProperty(QueryResult $entryObject, $prop, $nuLink, $propKind, $propName)
-    {
+    private function expandNavigationProperty(
+        QueryResult $entryObject,
+        ResourceProperty $prop,
+        $nuLink,
+        $propKind,
+        $propName
+    ) {
         $nextName = $prop->getResourceType()->getName();
         $nuLink->isExpanded = true;
         $value = $entryObject->results->$propName;
         $isCollection = ResourcePropertyKind::RESOURCESET_REFERENCE == $propKind;
         $nuLink->isCollection = $isCollection;
         $nullResult = null === $value;
-        $resultCount = $nullResult ? 0 : count($value);
+        $object = (is_object($value));
+        $resultCount = ($nullResult) ? 0 : ($object ? 1 : count($value));
 
         if (0 < $resultCount) {
             $result = new QueryResult();
