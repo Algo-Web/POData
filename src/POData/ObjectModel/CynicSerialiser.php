@@ -1015,7 +1015,7 @@ class CynicSerialiser implements IObjectSerialiser
 
     /**
      * @param $entryObject
-     * @param $nonRelProp
+     * @param array<string, ResourceSet> $nonRelProp
      *
      * @return ODataPropertyContent
      * @throws InvalidOperationException
@@ -1025,6 +1025,7 @@ class CynicSerialiser implements IObjectSerialiser
     {
         $propertyContent = new ODataPropertyContent();
         foreach ($nonRelProp as $corn => $flake) {
+            /** @var ResourceType $resource */
             $resource = $nonRelProp[$corn]->getResourceType();
             if ($resource instanceof ResourceEntityType) {
                 continue;

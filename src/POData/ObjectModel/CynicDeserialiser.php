@@ -257,6 +257,7 @@ class CynicDeserialiser
             $keyPredicate = $rawBits[0];
         }
         $keyPredicate = trim($keyPredicate);
+        /** @var KeyDescriptor|null $keyDesc */
         $keyDesc = null;
         $isParsed = KeyDescriptor::tryParseKeysFromKeyPredicate($keyPredicate, $keyDesc);
         assert(true === $isParsed, 'Key descriptor not successfully parsed');
@@ -345,6 +346,7 @@ class CynicDeserialiser
         $propName = $link->title;
 
         if ($hasUrl) {
+            /** @var KeyDescriptor|null $keyDesc */
             $keyDesc = null;
             assert(isset($rawPredicate));
             KeyDescriptor::tryParseKeysFromKeyPredicate($rawPredicate, $keyDesc);
