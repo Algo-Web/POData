@@ -528,7 +528,7 @@ class ObjectModelSerializerTest extends TestCase
         $this->assertTrue($result instanceof ODataPropertyContent, get_class($result));
         $this->assertEquals('name', $result->properties['name']->name);
         $this->assertEquals('typeName', $result->properties['name']->typeName);
-        $this->assertEquals('BÃ¶rk, bÃ¶rk, bÃ¶rk!', $result->properties['name']->value);
+        $this->assertEquals('Börk, börk, börk!', $result->properties['name']->value);
     }
 
     public function testWriteNullTypePrimitive()

@@ -2346,7 +2346,7 @@ class UriProcessorMockeryTest extends TestCase
         $this->assertEquals(null, $foo->getHost()->getResponseContentType());
         $foo->handleRequest();
 
-        $this->assertEquals('application/atom+xml', $foo->getHost()->getResponseContentType());
+        $this->assertEquals('application/atom+xml;charset=UTF-8', $foo->getHost()->getResponseContentType());
         $stream = $foo->getHost()->getOperationContext()->outgoingResponse()->getStream();
         $this->assertEquals('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>', trim($stream));
     }
