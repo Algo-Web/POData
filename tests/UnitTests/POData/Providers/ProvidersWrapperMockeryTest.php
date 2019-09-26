@@ -473,7 +473,8 @@ class ProvidersWrapperMockeryTest extends TestCase
 
     public function testGetSchemaVersion()
     {
-        $expected = EdmSchemaVersion::VERSION_1_DOT_1;
+        $expected = EdmSchemaVersion::VERSION_1_DOT_1();
+        /** @var ProvidersWrapper $foo */
         $foo = m::mock(ProvidersWrapper::class)->makePartial();
         $actual = $foo->getEdmSchemaVersion();
         $this->assertEquals($expected, $actual);
