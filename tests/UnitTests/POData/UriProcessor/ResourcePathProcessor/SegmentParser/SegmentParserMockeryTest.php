@@ -73,7 +73,7 @@ class SegmentParserMockeryTest extends TestCase
         $this->assertEquals('Foobar', $result->getIdentifier());
         $this->assertNull($keyDesc);
         $this->assertEquals(TargetKind::SINGLETON(), $result->getTargetKind());
-        $this->assertEquals(TargetSource::ENTITY_SET, $result->getTargetSource());
+        $this->assertEquals(TargetSource::ENTITY_SET(), $result->getTargetSource());
         $this->assertTrue($result->isSingleResult());
         $wrapper = $result->getTargetResourceSetWrapper();
         $this->assertNotNull($wrapper);
@@ -135,7 +135,7 @@ class SegmentParserMockeryTest extends TestCase
         $expectedTargetKinds = [TargetKind::RESOURCE(), TargetKind::RESOURCE()];
         $actualTargetKinds = [$result[0]->getTargetKind(), $result[1]->getTargetKind()];
         $this->assertEquals($expectedTargetKinds, $actualTargetKinds);
-        $expectedTargetSources = [TargetSource::ENTITY_SET, TargetSource::PROPERTY];
+        $expectedTargetSources = [TargetSource::ENTITY_SET(), TargetSource::PROPERTY()];
         $actualTargetSources = [$result[0]->getTargetSource(), $result[1]->getTargetSource()];
         $this->assertEquals($expectedTargetSources, $actualTargetSources);
         $this->assertNull($result[0]->getProjectedProperty());

@@ -254,7 +254,7 @@ class UriProcessorNew implements IUriProcessor
                     $this->executeGetSingleton($segment);
                     break;
                 case TargetKind::RESOURCE():
-                    if (TargetSource::ENTITY_SET == $segment->getTargetSource()) {
+                    if (TargetSource::ENTITY_SET() == $segment->getTargetSource()) {
                         $this->handleSegmentTargetsToResourceSet($segment);
                     } else {
                         $this->executeGetResource($segment, $eagerLoad);
@@ -493,7 +493,7 @@ class UriProcessorNew implements IUriProcessor
                 throw new InvalidOperationException('Eager-load list elements must be non-empty strings');
             }
         }
-        $isRelated = TargetSource::ENTITY_SET == $segment->getTargetSource();
+        $isRelated = TargetSource::ENTITY_SET() == $segment->getTargetSource();
         if ($isRelated) {
             $queryResult = $this->executeGetResourceDirect($segment, $eagerList);
         } else {

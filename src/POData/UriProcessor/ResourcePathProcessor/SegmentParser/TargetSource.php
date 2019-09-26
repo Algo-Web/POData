@@ -2,10 +2,16 @@
 
 namespace POData\UriProcessor\ResourcePathProcessor\SegmentParser;
 
+use MyCLabs\Enum\Enum;
+
 /**
  * Class TargetSource.
+ * @method static PROPERTY()
+ * @method static ENTITY_SET()
+ * @method static SERVICE_OPERATION()
+ * @method static NONE()
  */
-class TargetSource
+class TargetSource extends Enum
 {
     /**
      * The source of data has not been determined yet or

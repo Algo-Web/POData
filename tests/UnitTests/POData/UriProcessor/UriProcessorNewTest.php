@@ -599,7 +599,7 @@ class UriProcessorNewTest extends TestCase
 
         $segment = m::mock(SegmentDescriptor::class)->makePartial();
         $segment->shouldReceive('getTargetKind')->andReturn(TargetKind::RESOURCE())->once();
-        $segment->shouldReceive('getTargetSource')->andReturn(TargetSource::ENTITY_SET)->once();
+        $segment->shouldReceive('getTargetSource')->andReturn(TargetSource::ENTITY_SET())->once();
         $segment->shouldReceive('getTargetResourceSetWrapper')->andReturn($setWrapper)->once();
 
         $request = m::mock(RequestDescription::class)->makePartial();
@@ -638,7 +638,7 @@ class UriProcessorNewTest extends TestCase
 
         $segment = m::mock(SegmentDescriptor::class)->makePartial();
         $segment->shouldReceive('getTargetKind')->andReturn(TargetKind::RESOURCE())->once();
-        $segment->shouldReceive('getTargetSource')->andReturn(TargetSource::ENTITY_SET)->once();
+        $segment->shouldReceive('getTargetSource')->andReturn(TargetSource::ENTITY_SET())->once();
         $segment->shouldReceive('getTargetResourceSetWrapper')->andReturn($setWrapper)->once();
 
         $request = m::mock(RequestDescription::class)->makePartial();

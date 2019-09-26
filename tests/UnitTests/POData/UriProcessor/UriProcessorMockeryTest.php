@@ -142,7 +142,7 @@ class UriProcessorMockeryTest extends TestCase
 
         $uriProcessor = $dataService->handleRequest();
         $requestDescription = $uriProcessor->getRequest();
-        $this->assertEquals($requestDescription->getTargetSource(), TargetSource::NONE);
+        $this->assertEquals($requestDescription->getTargetSource(), TargetSource::NONE());
         $this->assertEquals($requestDescription->getTargetKind(), TargetKind::SERVICE_DIRECTORY());
 
         //Request for metadata
@@ -157,7 +157,7 @@ class UriProcessorMockeryTest extends TestCase
 
         $uriProcessor = $dataService->handleRequest();
         $requestDescription = $uriProcessor->getRequest();
-        $this->assertEquals($requestDescription->getTargetSource(), TargetSource::NONE);
+        $this->assertEquals($requestDescription->getTargetSource(), TargetSource::NONE());
         $this->assertEquals($requestDescription->getTargetKind(), TargetKind::METADATA());
 
         //Request for batch
@@ -171,7 +171,7 @@ class UriProcessorMockeryTest extends TestCase
 
         $uriProcessor = $dataService->handleRequest();
         $requestDescription = $uriProcessor->getRequest();
-        $this->assertEquals($requestDescription->getTargetSource(), TargetSource::NONE);
+        $this->assertEquals($requestDescription->getTargetSource(), TargetSource::NONE());
         $this->assertEquals($requestDescription->getTargetKind(), TargetKind::BATCH());
     }
 
@@ -2279,7 +2279,7 @@ class UriProcessorMockeryTest extends TestCase
         $descript = new SegmentDescriptor();
         $descript->setIdentifier('whereami');
         $descript->setTargetKind(TargetKind::SINGLETON());
-        $descript->setTargetSource(TargetSource::ENTITY_SET);
+        $descript->setTargetSource(TargetSource::ENTITY_SET());
 
         $request = m::mock(RequestDescription::class);
         $request->shouldReceive('getSegments')->andReturn([$descript]);

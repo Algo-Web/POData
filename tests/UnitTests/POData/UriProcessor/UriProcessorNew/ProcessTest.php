@@ -145,7 +145,7 @@ class ProcessTest extends TestCase
 
         $segment = m::mock(SegmentDescriptor::class);
         $segment->shouldReceive('getTargetKind')->andReturn(TargetKind::RESOURCE());
-        $segment->shouldReceive('getTargetSource')->andReturn(TargetSource::PROPERTY);
+        $segment->shouldReceive('getTargetSource')->andReturn(TargetSource::PROPERTY());
         $segment->shouldReceive('getProjectedProperty')->andReturn($property);
         $segment->shouldReceive('isSingleResult')->andReturn(true);
         $segment->shouldReceive('getPrevious->getResult')->andReturn('abc');

@@ -34,7 +34,7 @@ class QueryProcessorTest extends TestCase
         $request = m::mock(RequestDescription::class)->makePartial();
         $request->shouldReceive('isSingleResult')->andReturn(false);
         $request->shouldReceive('isLinkUri')->andReturn(false);
-        $request->shouldReceive('getTargetSource')->andReturn(TargetSource::ENTITY_SET);
+        $request->shouldReceive('getTargetSource')->andReturn(TargetSource::ENTITY_SET());
         $request->shouldReceive('getTargetKind')->andReturn(TargetKind::RESOURCE());
         $request->shouldReceive('getTargetResourceType')->andReturn($rType);
         $request->shouldReceive('getTargetResourceSetWrapper')->andReturn($rSet);
@@ -58,7 +58,7 @@ class QueryProcessorTest extends TestCase
         $host->shouldReceive('getQueryStringItem')->withAnyArgs()->andReturn('not null');
 
         $request = m::mock(RequestDescription::class)->makePartial();
-        $request->shouldReceive('getTargetSource')->andReturn(TargetSource::NONE);
+        $request->shouldReceive('getTargetSource')->andReturn(TargetSource::NONE());
         $request->shouldReceive('isSingleResult')->andReturn(true);
         $request->shouldReceive('getTargetKind')->andReturn(TargetKind::NOTHING());
         $request->shouldReceive('getTargetResourceType')->andReturn(null);

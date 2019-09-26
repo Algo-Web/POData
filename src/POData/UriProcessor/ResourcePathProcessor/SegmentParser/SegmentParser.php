@@ -242,7 +242,7 @@ class SegmentParser
 
             $current = new SegmentDescriptor();
             $current->setIdentifier($identifier);
-            $current->setTargetSource(TargetSource::PROPERTY);
+            $current->setTargetSource(TargetSource::PROPERTY());
             $previousType = $previous->getTargetResourceType();
             $projectedProperty = $previousType->resolveProperty($identifier);
             $current->setProjectedProperty($projectedProperty);
@@ -417,7 +417,7 @@ class SegmentParser
             $resourceSet = $this->providerWrapper->resolveResourceSet($typeName);
             assert($resourceSet instanceof ResourceSetWrapper);
             $descriptor->setTargetKind(TargetKind::SINGLETON());
-            $descriptor->setTargetSource(TargetSource::ENTITY_SET);
+            $descriptor->setTargetSource(TargetSource::ENTITY_SET());
             $descriptor->setTargetResourceType($resourceType);
             $descriptor->setTargetResourceSetWrapper($resourceSet);
             $descriptor->setSingleResult(true);
@@ -432,7 +432,7 @@ class SegmentParser
 
         $descriptor->setTargetResourceSetWrapper($resourceSetWrapper);
         $descriptor->setTargetResourceType($resourceSetWrapper->getResourceType());
-        $descriptor->setTargetSource(TargetSource::ENTITY_SET);
+        $descriptor->setTargetSource(TargetSource::ENTITY_SET());
         $descriptor->setTargetKind(TargetKind::RESOURCE());
         if (null !== $keyPredicate) {
             $keyDescriptor = $this->createKeyDescriptor(

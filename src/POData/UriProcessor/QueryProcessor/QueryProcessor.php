@@ -108,7 +108,7 @@ class QueryProcessor
     public static function process(RequestDescription $request, IService $service)
     {
         $queryProcessor = new self($request, $service);
-        if ($request->getTargetSource() == TargetSource::NONE) {
+        if ($request->getTargetSource() == TargetSource::NONE()) {
             //A service directory, metadata or batch request
             $queryProcessor->checkForEmptyQueryArguments();
         } else {
