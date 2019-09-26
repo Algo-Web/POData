@@ -11,6 +11,7 @@ use POData\Providers\Metadata\EdmSchemaVersion;
 use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\Metadata\ResourceAssociationSet;
 use POData\Providers\Metadata\ResourceEntityType;
+use POData\Providers\Metadata\ResourceFunctionType;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\ResourceSetWrapper;
@@ -285,7 +286,7 @@ class ProvidersWrapper
     }
 
     /**
-     * @return array
+     * @return ResourceFunctionType[]
      */
     public function getSingletons()
     {

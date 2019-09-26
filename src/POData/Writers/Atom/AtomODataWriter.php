@@ -879,7 +879,7 @@ class AtomODataWriter implements IODataWriter
     }
 
     /**
-     * @param $writer
+     * @param \XMLWriter $writer
      * @param $name
      */
     private function writeServiceDocumentNode(&$writer, $name)
