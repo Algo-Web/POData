@@ -783,6 +783,7 @@ class FunctionDescription
         foreach ($applicableFunctions as $function) {
             $i = 0;
             $promotedTypes = [];
+            /** @var IType $argumentType */
             foreach ($function->argumentTypes as $argumentType) {
                 if (!$argumentType->isCompatibleWith($argExpressions[$i]->getType())) {
                     break;

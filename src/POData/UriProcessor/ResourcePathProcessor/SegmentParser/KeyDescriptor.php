@@ -314,6 +314,7 @@ class KeyDescriptor
                     );
                 }
 
+                /** @var IType $typeProvided */
                 $typeProvided = $this->namedValues[$keyName][1];
                 $expectedType = $keyResourceProperty->getInstanceType();
                 assert($expectedType instanceof IType, get_class($expectedType));
@@ -343,6 +344,7 @@ class KeyDescriptor
 
             $i = 0;
             foreach ($keyProperties as $keyName => $keyResourceProperty) {
+                /** @var IType $typeProvided */
                 $typeProvided = $this->positionalValues[$i][1];
                 $expectedType = $keyResourceProperty->getInstanceType();
                 assert($expectedType instanceof IType, get_class($expectedType));

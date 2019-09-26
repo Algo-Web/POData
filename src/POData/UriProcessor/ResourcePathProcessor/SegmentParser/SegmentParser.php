@@ -410,6 +410,7 @@ class SegmentParser
         $singleton = $this->getProviderWrapper()->resolveSingleton($segmentIdentifier);
         if (null !== $singleton) {
             $this->assertion(null === $keyPredicate);
+            /** @var ResourceType $resourceType */
             $resourceType = $singleton->getResourceType();
             $resourceSet = $resourceType->getCustomState();
             assert($resourceSet instanceof ResourceSet, get_class($resourceSet));
@@ -458,22 +459,23 @@ class SegmentParser
      * Creates an instance of KeyDescriptor by parsing a key predicate, also
      * validates the KeyDescriptor.
      *
-     * @param string       $segment      The uri segment in the form identifier
+     * @param string $segment The uri segment in the form identifier
      *                                   (keyPredicate)
      * @param ResourceType $resourceType The Resource type whose keys need to
      *                                   be parsed
-     * @param string       $keyPredicate The key predicate to parse and generate
+     * @param string $keyPredicate The key predicate to parse and generate
      *                                   KeyDescriptor for
      *
      * @throws ODataException Exception if any error occurs while parsing and
      *                        validating the key predicate
+     * @throws \ReflectionException
      *
      * @return KeyDescriptor|null Describes the key values in the $keyPredicate
      */
     private function createKeyDescriptor($segment, ResourceType $resourceType, $keyPredicate)
     {
         /**
-         * @var KeyDescriptor
+         * @var KeyDescriptor|null $keyDescriptor
          */
         $keyDescriptor = null;
         if (!KeyDescriptor::tryParseKeysFromKeyPredicate($keyPredicate, $keyDescriptor)) {
