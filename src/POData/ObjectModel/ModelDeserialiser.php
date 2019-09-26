@@ -69,6 +69,7 @@ class ModelDeserialiser
         $data = [];
         foreach ($payload->propertyContent->properties as $propName => $propSpec) {
             if (in_array($propName, $nonRelProp) || in_array(strtolower($propName), $nonRelProp)) {
+                /** @var string $rawVal */
                 $rawVal = $propSpec->value;
                 $value = null;
                 switch ($propSpec->typeName) {
