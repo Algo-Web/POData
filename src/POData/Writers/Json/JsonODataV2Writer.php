@@ -175,10 +175,10 @@ class JsonODataV2Writer extends JsonODataV1Writer
             $this->writer
                 ->writeName($this->dataArrayName)
                 ->startArrayScope();
-            $this->writeFeed($link->expandedResult);
+            $this->writeFeed(/** @scrutinizer ignore-type */$link->expandedResult);
             $this->writer->endScope();
         } else {
-            $this->writeEntry($link->expandedResult);
+            $this->writeEntry(/** @scrutinizer ignore-type */$link->expandedResult);
         }
 
         $this->writer->endScope();

@@ -252,10 +252,10 @@ class JsonLightODataWriter extends JsonODataV2Writer
     {
         if ($link->isCollection) {
             $this->writer->startArrayScope();
-            $this->writeFeed($link->expandedResult);
+            $this->writeFeed(/** @scrutinizer ignore-type */$link->expandedResult);
         } else {
             $this->writer->startObjectScope();
-            $this->writeEntry($link->expandedResult);
+            $this->writeEntry(/** @scrutinizer ignore-type */$link->expandedResult);
         }
 
         $this->writer->endScope();

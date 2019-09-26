@@ -395,9 +395,9 @@ class AtomODataWriter implements IODataWriter
 
             if (null !== $link->expandedResult) {
                 if ($link->isCollection) {
-                    $this->writeFeed($link->expandedResult);
+                    $this->writeFeed(/** @scrutinizer ignore-type */$link->expandedResult);
                 } else {
-                    $this->writeEntry($link->expandedResult);
+                    $this->writeEntry(/** @scrutinizer ignore-type */$link->expandedResult);
                 }
             }
 
