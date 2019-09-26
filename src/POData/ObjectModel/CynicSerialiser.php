@@ -1015,7 +1015,7 @@ class CynicSerialiser implements IObjectSerialiser
 
     /**
      * @param $entryObject
-     * @param array<string, ResourceSet> $nonRelProp
+     * @param array<string, ResourceProperty> $nonRelProp
      *
      * @return ODataPropertyContent
      * @throws InvalidOperationException
@@ -1031,7 +1031,7 @@ class CynicSerialiser implements IObjectSerialiser
                 continue;
             }
             $result = $entryObject->$corn;
-            $isBag = $flake->isKindOf(ResourcePropertyKind::BAG);
+            $isBag = $flake->isKindOf(/** @scrutinizer ignore-type */ResourcePropertyKind::BAG);
             $typePrepend = $isBag ? 'Collection(' : '';
             $typeAppend = $isBag ? ')' : '';
             $nonNull = null !== $result;

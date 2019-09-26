@@ -42,6 +42,10 @@ class OrderByParserMockeryTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
+    /**
+     * @throws \POData\Common\InvalidOperationException
+     * @throws \ReflectionException
+     */
     public function testBuildOrderByTreeWithPrimitiveAsIntermediateSegment()
     {
         $expected = 'The primitive property \'rProp\' cannot be used as intermediate segment, it should'
@@ -60,6 +64,7 @@ class OrderByParserMockeryTest extends TestCase
         $rProp->shouldReceive('isKindOf')->withAnyArgs()->andReturn(false);
         $rProp->shouldReceive('getInstanceType')->andReturn($rClass);
         $rProp->shouldReceive('getName')->andReturn('rProp');
+        $rProp->shouldReceive('getKind')->andReturnNull();
 
         $type = m::mock(ResourceType::class);
         $type->shouldReceive('resolveProperty')->andReturn($rProp)->once();

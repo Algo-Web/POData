@@ -6,6 +6,8 @@ use POData\Common\InvalidOperationException;
 use POData\Common\Messages;
 use POData\Common\ODataException;
 use POData\Common\ReflectionHandler;
+use POData\Providers\Metadata\ResourceEntityType;
+use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Metadata\ResourceType;
@@ -194,8 +196,9 @@ class OrderByParser
             foreach ($orderBySubPathSegments as $index2 => $orderBySubPathSegment) {
                 $isLastSegment = ($index2 == $subPathCount - 1);
                 $resourceSetWrapper = null;
-                /** @var ResourceType $resourceType */
+                /** @var ResourceEntityType $resourceType */
                 $resourceType = $currentNode->getResourceType();
+                /** @var ResourceProperty $resourceProperty */
                 $resourceProperty = $resourceType->resolveProperty($orderBySubPathSegment);
                 if (null === $resourceProperty) {
                     throw ODataException::createSyntaxError(
@@ -205,6 +208,8 @@ class OrderByParser
                         )
                     );
                 }
+                /** @var ResourcePropertyKind $rKind */
+                $rKind = $resourceProperty->getKind();
 
                 if ($resourceProperty->isKindOf(/** @scrutinizer ignore-type */ResourcePropertyKind::BAG)) {
                     throw ODataException::createBadRequestError(
@@ -227,8 +232,8 @@ class OrderByParser
                             Messages::orderByParserSortByBinaryPropertyNotAllowed($resourceProperty->getName())
                         );
                     }
-                } elseif ($resourceProperty->getKind() == ResourcePropertyKind::RESOURCESET_REFERENCE
-                    || $resourceProperty->getKind() == ResourcePropertyKind::RESOURCE_REFERENCE
+                } elseif ($rKind == ResourcePropertyKind::RESOURCESET_REFERENCE
+                    || $rKind == ResourcePropertyKind::RESOURCE_REFERENCE
                 ) {
                     $this->assertion($currentNode instanceof OrderByRootNode || $currentNode instanceof OrderByNode);
                     $resourceSetWrapper = $currentNode->getResourceSetWrapper();
@@ -248,7 +253,7 @@ class OrderByParser
                         );
                     }
 
-                    if ($resourceProperty->getKind() == ResourcePropertyKind::RESOURCESET_REFERENCE) {
+                    if ($rKind == ResourcePropertyKind::RESOURCESET_REFERENCE) {
                         throw ODataException::createBadRequestError(
                             Messages::orderByParserResourceSetReferenceNotAllowed(
                                 $resourceProperty->getName(),
