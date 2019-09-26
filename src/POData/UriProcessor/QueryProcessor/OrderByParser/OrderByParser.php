@@ -67,10 +67,10 @@ class OrderByParser
      */
     private $dummyObject;
 
-    /*
+    /**
      * Root node for tree ordering
      *
-     * @var mixed
+     * @var OrderByNode|null
      */
     private $rootOrderByNode;
 
@@ -191,6 +191,7 @@ class OrderByParser
             foreach ($orderBySubPathSegments as $index2 => $orderBySubPathSegment) {
                 $isLastSegment = ($index2 == $subPathCount - 1);
                 $resourceSetWrapper = null;
+                /** @var ResourceType $resourceType */
                 $resourceType = $currentNode->getResourceType();
                 $resourceProperty = $resourceType->resolveProperty($orderBySubPathSegment);
                 if (null === $resourceProperty) {
@@ -369,9 +370,11 @@ class OrderByParser
         $orderByPathSegments = [];
         $navigationPropertiesInThePath = [];
         foreach ($orderByPaths as $index => $orderBySubPaths) {
+            /** @var OrderByNode $currentNode */
             $currentNode = $this->rootOrderByNode;
             $orderBySubPathSegments = [];
             foreach ($orderBySubPaths as $orderBySubPath) {
+                /** @var OrderByNode $node */
                 $node = $currentNode->findNode($orderBySubPath);
                 $this->assertion(null !== $node);
                 $resourceProperty = $node->getResourceProperty();
@@ -384,6 +387,7 @@ class OrderByParser
                 }
 
                 $orderBySubPathSegments[] = new OrderBySubPathSegment($resourceProperty);
+                /** @var OrderByNode $currentNode */
                 $currentNode = $node;
             }
 
