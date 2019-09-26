@@ -326,7 +326,7 @@ class SegmentParser
                         $current->setTargetResourceSetWrapper($resourceSetWrapper);
                         break;
                     default:
-                        if (!$projectedProperty->isKindOf(ResourcePropertyKind::PRIMITIVE)) {
+                        if (!$projectedProperty->isKindOf(/** @scrutinizer ignore-type */ResourcePropertyKind::PRIMITIVE)) {
                             throw ODataException::createInternalServerError(
                                 Messages::segmentParserUnExpectedPropertyKind('Primitive')
                             );
