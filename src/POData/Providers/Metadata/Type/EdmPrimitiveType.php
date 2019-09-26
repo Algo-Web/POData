@@ -2,10 +2,27 @@
 
 namespace POData\Providers\Metadata\Type;
 
+use MyCLabs\Enum\Enum;
+
 /**
  * Class EdmPrimitiveType.
+ * @method static STRING()
+ * @method static INT32()
+ * @method static DATETIME()
+ * @method static DECIMAL()
+ * @method static INT16()
+ * @method static SINGLE()
+ * @method static BINARY()
+ * @method static BOOLEAN()
+ * @method static GUID()
+ * @method static OBJECT()
+ * @method static INT64()
+ * @method static BYTE()
+ * @method static SBYTE()
+ * @method static DOUBLE()
+ * @method static VOID()
  */
-class EdmPrimitiveType
+class EdmPrimitiveType extends Enum
 {
     const BINARY = TypeCode::BINARY;
     const BOOLEAN = TypeCode::BOOLEAN;
@@ -20,4 +37,6 @@ class EdmPrimitiveType
     const SBYTE = TypeCode::SBYTE;
     const SINGLE = TypeCode::SINGLE;
     const STRING = TypeCode::STRING;
+    const OBJECT = TypeCode::OBJECT;
+    const VOID = TypeCode::VOID;
 }

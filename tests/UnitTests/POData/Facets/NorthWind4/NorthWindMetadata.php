@@ -160,6 +160,7 @@ class NorthWindMetadata
      * create metadata.
      *
      * @throws InvalidOperationException
+     * @throws \ReflectionException
      *
      * @return IMetadataProvider
      */
@@ -171,11 +172,11 @@ class NorthWindMetadata
         $addressComplexType = $metadata->addComplexType(
             new \ReflectionClass('UnitTests\POData\Facets\NorthWind4\Address5'), 'Address'
         );
-        $metadata->addPrimitiveProperty($addressComplexType, 'StreetName', EdmPrimitiveType::STRING);
-        $metadata->addPrimitiveProperty($addressComplexType, 'City', EdmPrimitiveType::STRING);
-        $metadata->addPrimitiveProperty($addressComplexType, 'Region', EdmPrimitiveType::STRING);
-        $metadata->addPrimitiveProperty($addressComplexType, 'PostalCode', EdmPrimitiveType::STRING);
-        $metadata->addPrimitiveProperty($addressComplexType, 'Country', EdmPrimitiveType::STRING);
+        $metadata->addPrimitiveProperty($addressComplexType, 'StreetName', EdmPrimitiveType::STRING());
+        $metadata->addPrimitiveProperty($addressComplexType, 'City', EdmPrimitiveType::STRING());
+        $metadata->addPrimitiveProperty($addressComplexType, 'Region', EdmPrimitiveType::STRING());
+        $metadata->addPrimitiveProperty($addressComplexType, 'PostalCode', EdmPrimitiveType::STRING());
+        $metadata->addPrimitiveProperty($addressComplexType, 'Country', EdmPrimitiveType::STRING());
         //A complex sub property to hold alternate address
         $metadata->addComplexProperty($addressComplexType, 'AltAddress', $addressComplexType);
 
@@ -183,71 +184,71 @@ class NorthWindMetadata
         $customersEntityType = $metadata->addEntityType(
             new \ReflectionClass('UnitTests\POData\Facets\NorthWind4\Customer5'), 'Customer'
         );
-        $metadata->addKeyProperty($customersEntityType, 'CustomerID', EdmPrimitiveType::STRING);
-        $metadata->addPrimitiveProperty($customersEntityType, 'CompanyName', EdmPrimitiveType::STRING);
-        $metadata->addPrimitiveProperty($customersEntityType, 'ContactName', EdmPrimitiveType::STRING);
-        $metadata->addPrimitiveProperty($customersEntityType, 'ContactTitle', EdmPrimitiveType::STRING);
-        $metadata->addPrimitiveProperty($customersEntityType, 'Phone', EdmPrimitiveType::STRING);
-        $metadata->addPrimitiveProperty($customersEntityType, 'Fax', EdmPrimitiveType::STRING);
+        $metadata->addKeyProperty($customersEntityType, 'CustomerID', EdmPrimitiveType::STRING());
+        $metadata->addPrimitiveProperty($customersEntityType, 'CompanyName', EdmPrimitiveType::STRING());
+        $metadata->addPrimitiveProperty($customersEntityType, 'ContactName', EdmPrimitiveType::STRING());
+        $metadata->addPrimitiveProperty($customersEntityType, 'ContactTitle', EdmPrimitiveType::STRING());
+        $metadata->addPrimitiveProperty($customersEntityType, 'Phone', EdmPrimitiveType::STRING());
+        $metadata->addPrimitiveProperty($customersEntityType, 'Fax', EdmPrimitiveType::STRING());
         $metadata->addComplexProperty($customersEntityType, 'Address', $addressComplexType);
         //Add a bag property (bag of complex type) to hold array of other addresses
         $metadata->addComplexProperty($customersEntityType, 'OtherAddresses', $addressComplexType, true);
         //Add a bag property (bag of primitve type) to hold array of email addresses
-        $metadata->addPrimitiveProperty($customersEntityType, 'EmailAddresses', EdmPrimitiveType::STRING, true);
+        $metadata->addPrimitiveProperty($customersEntityType, 'EmailAddresses', EdmPrimitiveType::STRING(), true);
 
         //Register the entity (resource) type 'Order'
         $orderEntityType = $metadata->addEntityType(
             new \ReflectionClass('UnitTests\POData\Facets\NorthWind4\Order5'), 'Order'
         );
-        $metadata->addKeyProperty($orderEntityType, 'OrderID', EdmPrimitiveType::INT32);
-        $metadata->addPrimitiveProperty($orderEntityType, 'CustomerID', EdmPrimitiveType::STRING);
-        $metadata->addPrimitiveProperty($orderEntityType, 'EmployeeID', EdmPrimitiveType::INT32);
+        $metadata->addKeyProperty($orderEntityType, 'OrderID', EdmPrimitiveType::INT32());
+        $metadata->addPrimitiveProperty($orderEntityType, 'CustomerID', EdmPrimitiveType::STRING());
+        $metadata->addPrimitiveProperty($orderEntityType, 'EmployeeID', EdmPrimitiveType::INT32());
         //Adding an etag property
-        $metadata->addETagProperty($orderEntityType, 'OrderDate', EdmPrimitiveType::DATETIME);
-        $metadata->addPrimitiveProperty($orderEntityType, 'RequiredDate', EdmPrimitiveType::DATETIME);
-        $metadata->addPrimitiveProperty($orderEntityType, 'ShippedDate', EdmPrimitiveType::DATETIME);
-        $metadata->addPrimitiveProperty($orderEntityType, 'ShipVia', EdmPrimitiveType::INT32);
-        $metadata->addPrimitiveProperty($orderEntityType, 'Freight', EdmPrimitiveType::DECIMAL);
-        $metadata->addPrimitiveProperty($orderEntityType, 'ShipName', EdmPrimitiveType::STRING);
-        $metadata->addPrimitiveProperty($orderEntityType, 'ShipAddress', EdmPrimitiveType::STRING);
-        $metadata->addPrimitiveProperty($orderEntityType, 'ShipCity', EdmPrimitiveType::STRING);
-        $metadata->addPrimitiveProperty($orderEntityType, 'ShipRegion', EdmPrimitiveType::STRING);
-        $metadata->addPrimitiveProperty($orderEntityType, 'ShipPostalCode', EdmPrimitiveType::STRING);
-        $metadata->addPrimitiveProperty($orderEntityType, 'ShipCountry', EdmPrimitiveType::STRING);
+        $metadata->addETagProperty($orderEntityType, 'OrderDate', EdmPrimitiveType::DATETIME());
+        $metadata->addPrimitiveProperty($orderEntityType, 'RequiredDate', EdmPrimitiveType::DATETIME());
+        $metadata->addPrimitiveProperty($orderEntityType, 'ShippedDate', EdmPrimitiveType::DATETIME());
+        $metadata->addPrimitiveProperty($orderEntityType, 'ShipVia', EdmPrimitiveType::INT32());
+        $metadata->addPrimitiveProperty($orderEntityType, 'Freight', EdmPrimitiveType::DECIMAL());
+        $metadata->addPrimitiveProperty($orderEntityType, 'ShipName', EdmPrimitiveType::STRING());
+        $metadata->addPrimitiveProperty($orderEntityType, 'ShipAddress', EdmPrimitiveType::STRING());
+        $metadata->addPrimitiveProperty($orderEntityType, 'ShipCity', EdmPrimitiveType::STRING());
+        $metadata->addPrimitiveProperty($orderEntityType, 'ShipRegion', EdmPrimitiveType::STRING());
+        $metadata->addPrimitiveProperty($orderEntityType, 'ShipPostalCode', EdmPrimitiveType::STRING());
+        $metadata->addPrimitiveProperty($orderEntityType, 'ShipCountry', EdmPrimitiveType::STRING());
 
         //Register the entity (resource) type 'Order_Details'
         $orderDetailsEntityType = $metadata->addEntityType(
             new \ReflectionClass('UnitTests\POData\Facets\NorthWind4\Order_Details5'), 'Order_Details'
         );
-        $metadata->addKeyProperty($orderDetailsEntityType, 'ProductID', EdmPrimitiveType::INT32);
-        $metadata->addKeyProperty($orderDetailsEntityType, 'OrderID', EdmPrimitiveType::INT32);
-        $metadata->addPrimitiveProperty($orderDetailsEntityType, 'UnitPrice', EdmPrimitiveType::DECIMAL);
-        $metadata->addPrimitiveProperty($orderDetailsEntityType, 'Quantity', EdmPrimitiveType::INT16);
-        $metadata->addPrimitiveProperty($orderDetailsEntityType, 'Discount', EdmPrimitiveType::SINGLE);
+        $metadata->addKeyProperty($orderDetailsEntityType, 'ProductID', EdmPrimitiveType::INT32());
+        $metadata->addKeyProperty($orderDetailsEntityType, 'OrderID', EdmPrimitiveType::INT32());
+        $metadata->addPrimitiveProperty($orderDetailsEntityType, 'UnitPrice', EdmPrimitiveType::DECIMAL());
+        $metadata->addPrimitiveProperty($orderDetailsEntityType, 'Quantity', EdmPrimitiveType::INT16());
+        $metadata->addPrimitiveProperty($orderDetailsEntityType, 'Discount', EdmPrimitiveType::SINGLE());
 
         //Register the entity (resource) type 'Employee'
         $employeeEntityType = $metadata->addEntityType(
             new \ReflectionClass('UnitTests\POData\Facets\NorthWind4\Employee5'), 'Employee'
         );
-        $metadata->addKeyProperty($employeeEntityType, 'EmployeeID', EdmPrimitiveType::INT32);
-        $metadata->addPrimitiveProperty($employeeEntityType, 'FirstName', EdmPrimitiveType::STRING);
-        $metadata->addPrimitiveProperty($employeeEntityType, 'LastName', EdmPrimitiveType::STRING);
-        $metadata->addPrimitiveProperty($employeeEntityType, 'Title', EdmPrimitiveType::STRING);
-        $metadata->addPrimitiveProperty($employeeEntityType, 'TitleOfCourtesy', EdmPrimitiveType::STRING);
-        $metadata->addPrimitiveProperty($employeeEntityType, 'BirthDate', EdmPrimitiveType::DATETIME);
-        $metadata->addPrimitiveProperty($employeeEntityType, 'HireDate', EdmPrimitiveType::DATETIME);
-        $metadata->addPrimitiveProperty($employeeEntityType, 'Address', EdmPrimitiveType::STRING);
-        $metadata->addPrimitiveProperty($employeeEntityType, 'City', EdmPrimitiveType::STRING);
-        $metadata->addPrimitiveProperty($employeeEntityType, 'Region', EdmPrimitiveType::STRING);
-        $metadata->addPrimitiveProperty($employeeEntityType, 'PostalCode', EdmPrimitiveType::STRING);
-        $metadata->addPrimitiveProperty($employeeEntityType, 'Country', EdmPrimitiveType::STRING);
-        $metadata->addPrimitiveProperty($employeeEntityType, 'HomePhone', EdmPrimitiveType::STRING);
-        $metadata->addPrimitiveProperty($employeeEntityType, 'Extension', EdmPrimitiveType::STRING);
-        $metadata->addPrimitiveProperty($employeeEntityType, 'Notes', EdmPrimitiveType::STRING);
-        $metadata->addPrimitiveProperty($employeeEntityType, 'ReportsTo', EdmPrimitiveType::INT32);
+        $metadata->addKeyProperty($employeeEntityType, 'EmployeeID', EdmPrimitiveType::INT32());
+        $metadata->addPrimitiveProperty($employeeEntityType, 'FirstName', EdmPrimitiveType::STRING());
+        $metadata->addPrimitiveProperty($employeeEntityType, 'LastName', EdmPrimitiveType::STRING());
+        $metadata->addPrimitiveProperty($employeeEntityType, 'Title', EdmPrimitiveType::STRING());
+        $metadata->addPrimitiveProperty($employeeEntityType, 'TitleOfCourtesy', EdmPrimitiveType::STRING());
+        $metadata->addPrimitiveProperty($employeeEntityType, 'BirthDate', EdmPrimitiveType::DATETIME());
+        $metadata->addPrimitiveProperty($employeeEntityType, 'HireDate', EdmPrimitiveType::DATETIME());
+        $metadata->addPrimitiveProperty($employeeEntityType, 'Address', EdmPrimitiveType::STRING());
+        $metadata->addPrimitiveProperty($employeeEntityType, 'City', EdmPrimitiveType::STRING());
+        $metadata->addPrimitiveProperty($employeeEntityType, 'Region', EdmPrimitiveType::STRING());
+        $metadata->addPrimitiveProperty($employeeEntityType, 'PostalCode', EdmPrimitiveType::STRING());
+        $metadata->addPrimitiveProperty($employeeEntityType, 'Country', EdmPrimitiveType::STRING());
+        $metadata->addPrimitiveProperty($employeeEntityType, 'HomePhone', EdmPrimitiveType::STRING());
+        $metadata->addPrimitiveProperty($employeeEntityType, 'Extension', EdmPrimitiveType::STRING());
+        $metadata->addPrimitiveProperty($employeeEntityType, 'Notes', EdmPrimitiveType::STRING());
+        $metadata->addPrimitiveProperty($employeeEntityType, 'ReportsTo', EdmPrimitiveType::INT32());
         //$metadata->addPrimitiveProperty($employeeEntityType, 'Photo', EdmPrimitiveType::BINARY);
-        $metadata->addPrimitiveProperty($employeeEntityType, 'Emails', EdmPrimitiveType::STRING, true);
-        $metadata->addPrimitiveProperty($employeeEntityType, 'PhotoPath', EdmPrimitiveType::STRING);
+        $metadata->addPrimitiveProperty($employeeEntityType, 'Emails', EdmPrimitiveType::STRING(), true);
+        $metadata->addPrimitiveProperty($employeeEntityType, 'PhotoPath', EdmPrimitiveType::STRING());
         //Set Employee entity type as MLE thus the url http://host/NorthWind.svc/Employee(1875)/$value will give the stream associated with employee with id 1875
         $employeeEntityType->setMediaLinkEntry(true);
         //Add a named stream property to the employee entity type

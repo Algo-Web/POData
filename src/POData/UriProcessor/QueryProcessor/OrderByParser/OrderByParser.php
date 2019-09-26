@@ -438,30 +438,30 @@ class OrderByParser
         $orderByPathSegments = [];
         $lexer = new ExpressionLexer($value);
         $i = 0;
-        while ($lexer->getCurrentToken()->Id != ExpressionTokenId::END) {
+        while ($lexer->getCurrentToken()->getId() != ExpressionTokenId::END()) {
             $orderBySubPathSegment = $lexer->readDottedIdentifier();
             if (!array_key_exists($i, $orderByPathSegments)) {
                 $orderByPathSegments[$i] = [];
             }
 
             $orderByPathSegments[$i][] = $orderBySubPathSegment;
-            $tokenId = $lexer->getCurrentToken()->Id;
-            if ($tokenId != ExpressionTokenId::END) {
-                if ($tokenId != ExpressionTokenId::SLASH) {
-                    if ($tokenId != ExpressionTokenId::COMMA) {
-                        $lexer->validateToken(ExpressionTokenId::IDENTIFIER);
+            $tokenId = $lexer->getCurrentToken()->getId();
+            if ($tokenId != ExpressionTokenId::END()) {
+                if ($tokenId != ExpressionTokenId::SLASH()) {
+                    if ($tokenId != ExpressionTokenId::COMMA()) {
+                        $lexer->validateToken(ExpressionTokenId::IDENTIFIER());
                         $identifier = $lexer->getCurrentToken()->Text;
                         if ($identifier !== 'asc' && $identifier !== 'desc') {
                             // force lexer to throw syntax error as we found
                             // unexpected identifier
-                            $lexer->validateToken(ExpressionTokenId::DOT);
+                            $lexer->validateToken(ExpressionTokenId::DOT());
                         }
 
                         $orderByPathSegments[$i][] = '*' . $identifier;
                         $lexer->nextToken();
-                        $tokenId = $lexer->getCurrentToken()->Id;
-                        if ($tokenId != ExpressionTokenId::END) {
-                            $lexer->validateToken(ExpressionTokenId::COMMA);
+                        $tokenId = $lexer->getCurrentToken()->getId();
+                        if ($tokenId != ExpressionTokenId::END()) {
+                            $lexer->validateToken(ExpressionTokenId::COMMA());
                             ++$i;
                         }
                     } else {

@@ -60,7 +60,7 @@ class GuidTest extends TestCase
 
         $actual = $type->getTypeCode();
 
-        $this->assertEquals(TypeCode::GUID, $actual);
+        $this->assertEquals(TypeCode::GUID(), $actual);
     }
 
     public function testCompatibleWith()

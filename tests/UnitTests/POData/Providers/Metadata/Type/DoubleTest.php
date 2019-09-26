@@ -60,7 +60,7 @@ class DoubleTest extends TestCase
 
         $actual = $type->getTypeCode();
 
-        $this->assertEquals(TypeCode::DOUBLE, $actual);
+        $this->assertEquals(TypeCode::DOUBLE(), $actual);
     }
 
     public function testCompatibleWith()

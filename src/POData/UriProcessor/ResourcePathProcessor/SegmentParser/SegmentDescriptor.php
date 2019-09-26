@@ -103,7 +103,7 @@ class SegmentDescriptor
     {
         $this->singleResult = false;
         $this->targetKind = TargetKind::NOTHING();
-        $this->targetSource = TargetSource::NONE;
+        $this->targetSource = TargetSource::NONE();
     }
 
     /**
@@ -286,7 +286,7 @@ class SegmentDescriptor
      *
      * @param TargetSource $targetSource The kind of 'source of data'
      */
-    public function setTargetSource($targetSource)
+    public function setTargetSource(TargetSource $targetSource)
     {
         $this->targetSource = $targetSource;
     }

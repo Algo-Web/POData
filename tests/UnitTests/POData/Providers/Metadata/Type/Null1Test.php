@@ -61,7 +61,7 @@ class Null1Test extends TestCase
 
         $actual = $type->getTypeCode();
 
-        $this->assertEquals(TypeCode::NULL1, $actual);
+        $this->assertEquals(TypeCode::NULL1(), $actual);
     }
 
     public function testCompatibleWith()

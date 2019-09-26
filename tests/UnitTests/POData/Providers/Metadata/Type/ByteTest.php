@@ -60,7 +60,7 @@ class ByteTest extends TestCase
 
         $actual = $type->getTypeCode();
 
-        $this->assertEquals(TypeCode::BYTE, $actual);
+        $this->assertEquals(TypeCode::BYTE(), $actual);
     }
 
     public function testCompatibleWith()

@@ -29,6 +29,7 @@ class WordPressDataService extends BaseService
      * This method is called only once to initialize service-wide policies.
      *
      * @param IServiceConfiguration $config Data service configuration object
+     * @throws \POData\Common\InvalidOperationException
      */
     public function initialize(IServiceConfiguration $config)
     {
@@ -41,6 +42,7 @@ class WordPressDataService extends BaseService
 
     /**
      * @return \POData\Providers\Metadata\IMetadataProvider
+     * @throws \POData\Common\InvalidOperationException
      */
     public function getMetadataProvider()
     {

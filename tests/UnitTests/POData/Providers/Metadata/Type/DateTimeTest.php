@@ -60,7 +60,7 @@ class DateTimeTest extends TestCase
 
         $actual = $type->getTypeCode();
 
-        $this->assertEquals(TypeCode::DATETIME, $actual);
+        $this->assertEquals(TypeCode::DATETIME(), $actual);
     }
 
     public function testCompatibleWith()

@@ -7,6 +7,7 @@ use AlgoWeb\ODataMetadata\MetadataV3\edm\TComplexTypeType;
 use AlgoWeb\ODataMetadata\MetadataV3\edm\TEntityTypeType;
 use Illuminate\Support\Str;
 use POData\Common\InvalidOperationException;
+use POData\Providers\Metadata\Type\EdmPrimitiveType;
 use POData\Providers\Metadata\Type\IType;
 use POData\Providers\Metadata\Type\TypeCode;
 
@@ -430,11 +431,11 @@ class SimpleMetadataProvider implements IMetadataProvider
      * @param ResourceType $resourceType resource type to which key property
      *                                   is to be added
      * @param string $name name of the key property
-     * @param TypeCode $typeCode type of the key property
+     * @param EdmPrimitiveType $typeCode type of the key property
      * @throws InvalidOperationException
      * @throws \ReflectionException
      */
-    public function addKeyProperty($resourceType, $name, $typeCode)
+    public function addKeyProperty($resourceType, $name, EdmPrimitiveType $typeCode)
     {
         $this->addPrimitivePropertyInternal($resourceType, $name, $typeCode, true);
     }
@@ -444,7 +445,7 @@ class SimpleMetadataProvider implements IMetadataProvider
      *
      * @param ResourceType $resourceType Resource type
      * @param string $name name of the property
-     * @param TypeCode $typeCode type of property
+     * @param EdmPrimitiveType $typeCode type of property
      * @param bool $isKey property is key or not
      * @param bool $isBag property is bag or not
      * @param bool $isETagProperty property is etag or not
@@ -457,7 +458,7 @@ class SimpleMetadataProvider implements IMetadataProvider
     private function addPrimitivePropertyInternal(
         $resourceType,
         $name,
-        $typeCode,
+        EdmPrimitiveType $typeCode = null,
         $isKey = false,
         $isBag = false,
         $isETagProperty = false,
@@ -538,7 +539,7 @@ class SimpleMetadataProvider implements IMetadataProvider
      * @param ResourceType $resourceType resource type to which key property
      *                                   is to be added
      * @param string $name name of the key property
-     * @param TypeCode $typeCode type of the key property
+     * @param EdmPrimitiveType $typeCode type of the key property
      * @param bool $isBag property is bag or not
      * @param null|mixed $defaultValue
      * @param mixed $nullable
@@ -548,7 +549,7 @@ class SimpleMetadataProvider implements IMetadataProvider
     public function addPrimitiveProperty(
         $resourceType,
         $name,
-        $typeCode,
+        EdmPrimitiveType $typeCode,
         $isBag = false,
         $defaultValue = null,
         $nullable = false
@@ -571,13 +572,13 @@ class SimpleMetadataProvider implements IMetadataProvider
      * @param ResourceType $resourceType resource type to which key property
      *                                   is to be added
      * @param string $name name of the property
-     * @param TypeCode $typeCode type of the etag property
+     * @param EdmPrimitiveType $typeCode type of the etag property
      * @param null|mixed $defaultValue
      * @param mixed $nullable
      * @throws InvalidOperationException
      * @throws \ReflectionException
      */
-    public function addETagProperty($resourceType, $name, $typeCode, $defaultValue = null, $nullable = false)
+    public function addETagProperty($resourceType, $name, EdmPrimitiveType $typeCode, $defaultValue = null, $nullable = false)
     {
         $this->addPrimitivePropertyInternal(
             $resourceType,

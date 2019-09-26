@@ -2,10 +2,30 @@
 
 namespace POData\Providers\Metadata\Type;
 
+use MyCLabs\Enum\Enum;
+
 /**
  * Class TypeCode.
+ * @method static OBJECT()
+ * @method static VOID()
+ * @method static DECIMAL()
+ * @method static BINARY()
+ * @method static BOOLEAN()
+ * @method static BYTE()
+ * @method static CHAR()
+ * @method static DATETIME()
+ * @method static DOUBLE()
+ * @method static STRING()
+ * @method static GUID()
+ * @method static INT16()
+ * @method static INT32()
+ * @method static INT64()
+ * @method static NULL1()
+ * @method static SBYTE()
+ * @method static SINGLE()
+ * @method static NAVIGATION()
  */
-class TypeCode
+class TypeCode extends Enum
 {
     const BINARY = 1;
     const BOOLEAN = 2;

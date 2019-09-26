@@ -60,7 +60,7 @@ class DecimalTest extends TestCase
 
         $actual = $type->getTypeCode();
 
-        $this->assertEquals(TypeCode::DECIMAL, $actual);
+        $this->assertEquals(TypeCode::DECIMAL(), $actual);
     }
 
     public function testCompatibleWith()

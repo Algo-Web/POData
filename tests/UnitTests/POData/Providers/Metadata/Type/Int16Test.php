@@ -60,7 +60,7 @@ class Int16Test extends TestCase
 
         $actual = $type->getTypeCode();
 
-        $this->assertEquals(TypeCode::INT16, $actual);
+        $this->assertEquals(TypeCode::INT16(), $actual);
     }
 
     public function testCompatibleWith()

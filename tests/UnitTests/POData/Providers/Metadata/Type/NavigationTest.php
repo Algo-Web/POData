@@ -54,7 +54,7 @@ class NavigationTest extends TestCase
     {
         $foo = $this->getAsIType();
 
-        $this->assertEquals(TypeCode::NAVIGATION, $foo->getTypeCode());
+        $this->assertEquals(TypeCode::NAVIGATION(), $foo->getTypeCode());
     }
 
     public function testIncompatibleWithOtherIType()

@@ -15,7 +15,7 @@ class Guid implements IType
      */
     public function getTypeCode()
     {
-        return TypeCode::GUID;
+        return TypeCode::GUID();
     }
 
     /**
@@ -28,7 +28,7 @@ class Guid implements IType
      */
     public function isCompatibleWith(IType $type)
     {
-        return TypeCode::GUID == $type->getTypeCode();
+        return TypeCode::GUID() == $type->getTypeCode();
     }
 
     /**

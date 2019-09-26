@@ -13,6 +13,8 @@ class WordPressMySQLTest extends TestCase
 {
     /**
      * test the generated string comparison expression in mysql.
+     * @throws \POData\Common\UrlFormatException
+     * @throws \POData\Common\ODataException
      */
     public function testStringCompareMySQL()
     {

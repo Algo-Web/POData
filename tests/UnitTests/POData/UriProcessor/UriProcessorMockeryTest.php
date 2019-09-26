@@ -12,6 +12,7 @@ use POData\OperationContext\HTTPRequestMethod;
 use POData\OperationContext\IOperationContext;
 use POData\Providers\Metadata\ResourceFunctionType;
 use POData\Providers\Metadata\Type\DateTime;
+use POData\Providers\Metadata\Type\EdmPrimitiveType;
 use POData\Providers\Metadata\Type\Int32;
 use POData\Providers\Metadata\Type\TypeCode;
 use POData\Providers\ProvidersWrapper;
@@ -141,7 +142,7 @@ class UriProcessorMockeryTest extends TestCase
 
         $uriProcessor = $dataService->handleRequest();
         $requestDescription = $uriProcessor->getRequest();
-        $this->assertEquals($requestDescription->getTargetSource(), TargetSource::NONE);
+        $this->assertEquals($requestDescription->getTargetSource(), TargetSource::NONE());
         $this->assertEquals($requestDescription->getTargetKind(), TargetKind::SERVICE_DIRECTORY());
 
         //Request for metadata
@@ -156,7 +157,7 @@ class UriProcessorMockeryTest extends TestCase
 
         $uriProcessor = $dataService->handleRequest();
         $requestDescription = $uriProcessor->getRequest();
-        $this->assertEquals($requestDescription->getTargetSource(), TargetSource::NONE);
+        $this->assertEquals($requestDescription->getTargetSource(), TargetSource::NONE());
         $this->assertEquals($requestDescription->getTargetKind(), TargetKind::METADATA());
 
         //Request for batch
@@ -170,7 +171,7 @@ class UriProcessorMockeryTest extends TestCase
 
         $uriProcessor = $dataService->handleRequest();
         $requestDescription = $uriProcessor->getRequest();
-        $this->assertEquals($requestDescription->getTargetSource(), TargetSource::NONE);
+        $this->assertEquals($requestDescription->getTargetSource(), TargetSource::NONE());
         $this->assertEquals($requestDescription->getTargetKind(), TargetKind::BATCH());
     }
 
@@ -2278,7 +2279,7 @@ class UriProcessorMockeryTest extends TestCase
         $descript = new SegmentDescriptor();
         $descript->setIdentifier('whereami');
         $descript->setTargetKind(TargetKind::SINGLETON());
-        $descript->setTargetSource(TargetSource::ENTITY_SET);
+        $descript->setTargetSource(TargetSource::ENTITY_SET());
 
         $request = m::mock(RequestDescription::class);
         $request->shouldReceive('getSegments')->andReturn([$descript]);
@@ -2335,7 +2336,7 @@ class UriProcessorMockeryTest extends TestCase
         $fore = $meta->addEntityType(new \ReflectionClass($forward), 'fore');
         $this->assertEquals('NorthWind.fore', $fore->getFullName());
 
-        $meta->addKeyProperty($fore, 'name', TypeCode::INT32);
+        $meta->addKeyProperty($fore, 'name', EdmPrimitiveType::INT32());
         $meta->addResourceSet('foreSet', $fore);
 
         $name = 'Foobar';

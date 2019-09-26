@@ -60,7 +60,7 @@ class StringTest extends TestCase
 
         $actual = $type->getTypeCode();
 
-        $this->assertEquals(TypeCode::STRING, $actual);
+        $this->assertEquals(TypeCode::STRING(), $actual);
     }
 
     public function testCompatibleWith()

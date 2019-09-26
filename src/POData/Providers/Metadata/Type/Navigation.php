@@ -47,7 +47,7 @@ class Navigation implements INavigationType
      */
     public function getTypeCode()
     {
-        return TypeCode::NAVIGATION;
+        return TypeCode::NAVIGATION();
     }
 
     /**

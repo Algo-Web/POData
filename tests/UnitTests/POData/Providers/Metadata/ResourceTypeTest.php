@@ -27,7 +27,7 @@ class ResourceTypeTest extends TestCase
 {
     public function testGetPrimitiveResourceTypeByte()
     {
-        $type = EdmPrimitiveType::BYTE;
+        $type = EdmPrimitiveType::BYTE();
         $result = ResourceType::getPrimitiveResourceType($type);
         $this->assertTrue($result instanceof ResourceType);
         $this->assertEquals('Byte', $result->getName());
@@ -37,7 +37,7 @@ class ResourceTypeTest extends TestCase
 
     public function testGetPrimitiveResourceTypeSByte()
     {
-        $type = EdmPrimitiveType::SBYTE;
+        $type = EdmPrimitiveType::SBYTE();
         $result = ResourceType::getPrimitiveResourceType($type);
         $this->assertTrue($result instanceof ResourceType);
         $this->assertEquals('SByte', $result->getName());
@@ -149,7 +149,7 @@ class ResourceTypeTest extends TestCase
 
     public function testGetBaseTypeOnResourcePrimitiveType()
     {
-        $foo = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::BINARY);
+        $foo = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::BINARY());
         $this->assertFalse($foo->hasBaseType());
         $this->assertNull($foo->getBaseType());
         $this->assertFalse($foo->isAbstract());
@@ -157,14 +157,14 @@ class ResourceTypeTest extends TestCase
 
     public function testPrimitiveTypeAssignableFromOtherPrimitiveType()
     {
-        $foo = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::BINARY);
-        $bar = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::STRING);
+        $foo = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::BINARY());
+        $bar = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::STRING());
         $this->assertFalse($foo->isAssignableFrom($bar));
     }
 
     public function testGetNamedStreamsOnPrimitiveType()
     {
-        $foo = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::BINARY);
+        $foo = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::BINARY());
         $result = $foo->getNamedStreamsDeclaredOnThisType();
         $this->assertTrue(is_array($result));
         $this->assertEquals(0, count($result));
@@ -172,7 +172,7 @@ class ResourceTypeTest extends TestCase
 
     public function testResolvePropertyOnPrimitiveType()
     {
-        $foo = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::BINARY);
+        $foo = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::BINARY());
         $this->assertNull($foo->resolvePropertyDeclaredOnThisType(null));
     }
 
@@ -238,10 +238,14 @@ class ResourceTypeTest extends TestCase
 
     public function testGetInt64Type()
     {
-        $foo = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::INT64);
+        $foo = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::INT64());
         $this->assertEquals('Int64', $foo->getName());
     }
 
+    /**
+     * @throws InvalidOperationException
+     * @throws \ReflectionException
+     */
     public function testSetValueWithEmptyQueryResult()
     {
         $meta = NorthWindMetadata::create();
@@ -322,6 +326,9 @@ class ResourceTypeTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
+    /**
+     * @throws InvalidOperationException
+     */
     public function testGetFullNameIncludingNamespace()
     {
         $meta = NorthWindMetadata::create();

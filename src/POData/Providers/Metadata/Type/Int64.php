@@ -15,7 +15,7 @@ class Int64 implements IType
      */
     public function getTypeCode()
     {
-        return TypeCode::INT64;
+        return TypeCode::INT64();
     }
 
     /**
@@ -28,7 +28,7 @@ class Int64 implements IType
      */
     public function isCompatibleWith(IType $type)
     {
-        switch ($type->getTypeCode()) {
+        switch ($type->getTypeCode()->getValue()) {
             case TypeCode::BYTE:
             case TypeCode::SBYTE:
             case TypeCode::INT16:

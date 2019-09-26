@@ -32,6 +32,9 @@ use UnitTests\POData\TestCase;
 
 class ExpressionTokenTest extends TestCase
 {
+    /**
+     *
+     */
     public function testGetIdentifierOnNewCreationThrowsException()
     {
         $expected = 'Identifier expected at position ';
@@ -57,7 +60,7 @@ class ExpressionTokenTest extends TestCase
     public function testIsEqualityOperatorWithGoodIdentifierAndBadText()
     {
         $foo = new ExpressionToken();
-        $foo->Id = ExpressionTokenId::IDENTIFIER;
+        $foo->setId(ExpressionTokenId::IDENTIFIER());
         $foo->Text = [];
         $this->assertFalse($foo->isEqualityOperator());
     }
@@ -65,7 +68,7 @@ class ExpressionTokenTest extends TestCase
     public function testIsComparisonOperatorWithGoodIdentifierAndBadText()
     {
         $foo = new ExpressionToken();
-        $foo->Id = ExpressionTokenId::IDENTIFIER;
+        $foo->setId(ExpressionTokenId::IDENTIFIER());
         $foo->Text = [];
         $this->assertFalse($foo->isComparisonOperator());
     }
@@ -73,7 +76,7 @@ class ExpressionTokenTest extends TestCase
     public function testIsEqualityOperatorWithGoodIdentifierAndNullText()
     {
         $foo = new ExpressionToken();
-        $foo->Id = ExpressionTokenId::IDENTIFIER;
+        $foo->setId(ExpressionTokenId::IDENTIFIER());
         $foo->Text = null;
         $this->assertFalse($foo->isEqualityOperator());
     }
@@ -81,7 +84,7 @@ class ExpressionTokenTest extends TestCase
     public function testIsEqualityOperatorWithGoodIdentifierAndNotEqualText()
     {
         $foo = new ExpressionToken();
-        $foo->Id = ExpressionTokenId::IDENTIFIER;
+        $foo->setId(ExpressionTokenId::IDENTIFIER());
         $foo->Text = 'ne';
         $this->assertTrue($foo->isEqualityOperator());
     }
@@ -89,7 +92,7 @@ class ExpressionTokenTest extends TestCase
     public function testIsEqualityOperatorWithGoodIdentifierAndEqualText()
     {
         $foo = new ExpressionToken();
-        $foo->Id = ExpressionTokenId::IDENTIFIER;
+        $foo->setId(ExpressionTokenId::IDENTIFIER());
         $foo->Text = 'eq';
         $this->assertTrue($foo->isEqualityOperator());
     }

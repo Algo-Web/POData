@@ -396,7 +396,7 @@ class KeyDescriptor
         $currentToken = $expressionLexer->getCurrentToken();
 
         //Check for empty predicate e.g. Customers(  )
-        if ($currentToken->Id == ExpressionTokenId::END) {
+        if ($currentToken->getId() == ExpressionTokenId::END()) {
             $keyDescriptor = new self([], []);
 
             return true;
@@ -406,7 +406,7 @@ class KeyDescriptor
         $positionalValues = [];
 
         do {
-            if (($currentToken->Id == ExpressionTokenId::IDENTIFIER)
+            if (($currentToken->getId() == ExpressionTokenId::IDENTIFIER())
                 && $allowNamedValues
             ) {
                 //named and positional values are mutually exclusive
@@ -418,7 +418,7 @@ class KeyDescriptor
                 $identifier = $currentToken->getIdentifier();
                 $expressionLexer->nextToken();
                 $currentToken = $expressionLexer->getCurrentToken();
-                if ($currentToken->Id != ExpressionTokenId::EQUAL) {
+                if ($currentToken->getId() != ExpressionTokenId::EQUAL()) {
                     return false;
                 }
 
@@ -437,7 +437,7 @@ class KeyDescriptor
                 $outValue = $outType = null;
                 if (!self::getTypeAndValidateKeyValue(
                     $currentToken->Text,
-                    $currentToken->Id,
+                    $currentToken->getId(),
                     $outValue,
                     $outType
                 )
@@ -447,7 +447,7 @@ class KeyDescriptor
 
                 $namedValues[$identifier] = [$outValue, $outType];
             } elseif ($currentToken->isKeyValueToken()
-                || ($currentToken->Id == ExpressionTokenId::NULL_LITERAL && $allowNull)
+                || ($currentToken->getId() == ExpressionTokenId::NULL_LITERAL() && $allowNull)
             ) {
                 //named and positional values are mutually exclusive
                 if (!empty($namedValues)) {
@@ -458,7 +458,7 @@ class KeyDescriptor
                 $outValue = $outType = null;
                 if (!self::getTypeAndValidateKeyValue(
                     $currentToken->Text,
-                    $currentToken->Id,
+                    $currentToken->getId(),
                     $outValue,
                     $outType
                 )
@@ -473,15 +473,15 @@ class KeyDescriptor
 
             $expressionLexer->nextToken();
             $currentToken = $expressionLexer->getCurrentToken();
-            if ($currentToken->Id == ExpressionTokenId::COMMA) {
+            if ($currentToken->getId() == ExpressionTokenId::COMMA()) {
                 $expressionLexer->nextToken();
                 $currentToken = $expressionLexer->getCurrentToken();
                 //end of text and comma, Trailing comma not allowed
-                if ($currentToken->Id == ExpressionTokenId::END) {
+                if ($currentToken->getId() == ExpressionTokenId::END()) {
                     return false;
                 }
             }
-        } while ($currentToken->Id != ExpressionTokenId::END);
+        } while ($currentToken->getId() != ExpressionTokenId::END());
 
         $keyDescriptor = new self($namedValues, $positionalValues);
 
@@ -504,34 +504,34 @@ class KeyDescriptor
     private static function getTypeAndValidateKeyValue($value, $tokenId, &$outValue, &$outType)
     {
         switch ($tokenId) {
-            case ExpressionTokenId::BOOLEAN_LITERAL:
+            case ExpressionTokenId::BOOLEAN_LITERAL():
                 $outType = new Boolean();
                 break;
-            case ExpressionTokenId::DATETIME_LITERAL:
+            case ExpressionTokenId::DATETIME_LITERAL():
                 $outType = new DateTime();
                 break;
-            case ExpressionTokenId::GUID_LITERAL:
+            case ExpressionTokenId::GUID_LITERAL():
                 $outType = new Guid();
                 break;
-            case ExpressionTokenId::STRING_LITERAL:
+            case ExpressionTokenId::STRING_LITERAL():
                 $outType = new StringType();
                 break;
-            case ExpressionTokenId::INTEGER_LITERAL:
+            case ExpressionTokenId::INTEGER_LITERAL():
                 $outType = new Int32();
                 break;
-            case ExpressionTokenId::DECIMAL_LITERAL:
+            case ExpressionTokenId::DECIMAL_LITERAL():
                 $outType = new Decimal();
                 break;
-            case ExpressionTokenId::DOUBLE_LITERAL:
+            case ExpressionTokenId::DOUBLE_LITERAL():
                 $outType = new Double();
                 break;
-            case ExpressionTokenId::INT64_LITERAL:
+            case ExpressionTokenId::INT64_LITERAL():
                 $outType = new Int64();
                 break;
-            case ExpressionTokenId::SINGLE_LITERAL:
+            case ExpressionTokenId::SINGLE_LITERAL():
                 $outType = new Single();
                 break;
-            case ExpressionTokenId::NULL_LITERAL:
+            case ExpressionTokenId::NULL_LITERAL():
                 $outType = new Null1();
                 break;
             default:

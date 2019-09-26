@@ -11,6 +11,7 @@ use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Metadata\ResourceTypeKind;
 use POData\Providers\Metadata\SimpleMetadataProvider;
+use POData\Providers\Metadata\Type\EdmPrimitiveType;
 use POData\Providers\Metadata\Type\TypeCode;
 use POData\Providers\ProvidersWrapper;
 use POData\Providers\Query\IQueryProvider;
@@ -55,7 +56,7 @@ class SegmentParserMockeryTest extends TestCase
 
         $foo = new SimpleMetadataProvider('string', 'number');
         $fore = $foo->addEntityType(new \ReflectionClass($refForward), 'fore');
-        $foo->addKeyProperty($fore, 'name', TypeCode::INT32);
+        $foo->addKeyProperty($fore, 'name', EdmPrimitiveType::INT32());
         $foo->addResourceSet('foreSet', $fore);
 
         $name = 'Foobar';
@@ -72,7 +73,7 @@ class SegmentParserMockeryTest extends TestCase
         $this->assertEquals('Foobar', $result->getIdentifier());
         $this->assertNull($keyDesc);
         $this->assertEquals(TargetKind::SINGLETON(), $result->getTargetKind());
-        $this->assertEquals(TargetSource::ENTITY_SET, $result->getTargetSource());
+        $this->assertEquals(TargetSource::ENTITY_SET(), $result->getTargetSource());
         $this->assertTrue($result->isSingleResult());
         $wrapper = $result->getTargetResourceSetWrapper();
         $this->assertNotNull($wrapper);
@@ -93,8 +94,8 @@ class SegmentParserMockeryTest extends TestCase
         $foo = NorthWindMetadata::Create();
         $fore = $foo->addEntityType(new \ReflectionClass($refForward), 'fore');
         $aft = $foo->addEntityType(new \ReflectionClass($refBack), 'back');
-        $foo->addKeyProperty($fore, 'name', TypeCode::INT32);
-        $foo->addKeyProperty($aft, 'name', TypeCode::INT32);
+        $foo->addKeyProperty($fore, 'name', EdmPrimitiveType::INT32());
+        $foo->addKeyProperty($aft, 'name', EdmPrimitiveType::INT32());
         $foo->addResourceSet('foreSet', $fore);
         $foo->addResourceSet('backSet', $aft);
 
@@ -134,7 +135,7 @@ class SegmentParserMockeryTest extends TestCase
         $expectedTargetKinds = [TargetKind::RESOURCE(), TargetKind::RESOURCE()];
         $actualTargetKinds = [$result[0]->getTargetKind(), $result[1]->getTargetKind()];
         $this->assertEquals($expectedTargetKinds, $actualTargetKinds);
-        $expectedTargetSources = [TargetSource::ENTITY_SET, TargetSource::PROPERTY];
+        $expectedTargetSources = [TargetSource::ENTITY_SET(), TargetSource::PROPERTY()];
         $actualTargetSources = [$result[0]->getTargetSource(), $result[1]->getTargetSource()];
         $this->assertEquals($expectedTargetSources, $actualTargetSources);
         $this->assertNull($result[0]->getProjectedProperty());

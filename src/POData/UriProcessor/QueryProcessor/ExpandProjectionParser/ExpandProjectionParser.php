@@ -226,7 +226,7 @@ class ExpandProjectionParser
 
                 $singleResult
                     = $resourceProperty->isKindOf(
-                        ResourcePropertyKind::RESOURCE_REFERENCE
+                    /** @scrutinizer ignore-type */ResourcePropertyKind::RESOURCE_REFERENCE
                     );
                 $resourceSetWrapper->checkResourceSetRightsForRead($singleResult);
                 $pageSize = $resourceSetWrapper->getResourceSetPageSize();
@@ -320,21 +320,21 @@ class ExpandProjectionParser
                 }
 
                 if (!$isLastSegment) {
-                    if ($resourceProperty->isKindOf(ResourcePropertyKind::BAG)) {
+                    if ($resourceProperty->isKindOf(/** @scrutinizer ignore-type */ResourcePropertyKind::BAG)) {
                         throw ODataException::createBadRequestError(
                             Messages::expandProjectionParserBagPropertyAsInnerSelectSegment(
                                 $currentResourceType->getFullName(),
                                 $selectSubPathSegment
                             )
                         );
-                    } elseif ($resourceProperty->isKindOf(ResourcePropertyKind::PRIMITIVE)) {
+                    } elseif ($resourceProperty->isKindOf(/** @scrutinizer ignore-type */ResourcePropertyKind::PRIMITIVE)) {
                         throw ODataException::createBadRequestError(
                             Messages::expandProjectionParserPrimitivePropertyUsedAsNavigationProperty(
                                 $currentResourceType->getFullName(),
                                 $selectSubPathSegment
                             )
                         );
-                    } elseif ($resourceProperty->isKindOf(ResourcePropertyKind::COMPLEX_TYPE)) {
+                    } elseif ($resourceProperty->isKindOf(/** @scrutinizer ignore-type */ResourcePropertyKind::COMPLEX_TYPE)) {
                         throw ODataException::createBadRequestError(
                             Messages::expandProjectionParserComplexPropertyAsInnerSelectSegment(
                                 $currentResourceType->getFullName(),
@@ -389,10 +389,10 @@ class ExpandProjectionParser
         $pathSegments = [];
         $lexer = new ExpressionLexer($value);
         $i = 0;
-        while ($lexer->getCurrentToken()->Id != ExpressionTokenId::END) {
+        while ($lexer->getCurrentToken()->getId() != ExpressionTokenId::END()) {
             $lastSegment = false;
             if ($isSelect
-                && $lexer->getCurrentToken()->Id == ExpressionTokenId::STAR
+                && $lexer->getCurrentToken()->getId() == ExpressionTokenId::STAR()
             ) {
                 $lastSegment = true;
                 $subPathSegment = $lexer->getCurrentToken()->Text;
@@ -406,10 +406,10 @@ class ExpandProjectionParser
             }
 
             $pathSegments[$i][] = $subPathSegment;
-            $tokenId = $lexer->getCurrentToken()->Id;
-            if ($tokenId != ExpressionTokenId::END) {
-                if ($lastSegment || $tokenId != ExpressionTokenId::SLASH) {
-                    $lexer->validateToken(ExpressionTokenId::COMMA);
+            $tokenId = $lexer->getCurrentToken()->getId();
+            if ($tokenId != ExpressionTokenId::END()) {
+                if ($lastSegment || $tokenId != ExpressionTokenId::SLASH()) {
+                    $lexer->validateToken(ExpressionTokenId::COMMA());
                     ++$i;
                 }
 

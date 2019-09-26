@@ -2,10 +2,17 @@
 
 namespace POData\Providers\Metadata;
 
+use MyCLabs\Enum\Enum;
+
 /**
  * Class EdmSchemaVersion.
+ * @method static VERSION_1_DOT_0()
+ * @method static VERSION_1_DOT_1()
+ * @method static VERSION_1_DOT_2()
+ * @method static VERSION_2_DOT_0()
+ * @method static VERSION_2_DOT_2()
  */
-class EdmSchemaVersion
+class EdmSchemaVersion extends Enum
 {
     /**
      * Edm Schema v1.0.

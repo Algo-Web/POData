@@ -60,7 +60,7 @@ class Int32Test extends TestCase
 
         $actual = $type->getTypeCode();
 
-        $this->assertEquals(TypeCode::INT32, $actual);
+        $this->assertEquals(TypeCode::INT32(), $actual);
     }
 
     public function testCompatibleWith()

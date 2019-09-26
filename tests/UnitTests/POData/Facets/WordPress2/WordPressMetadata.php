@@ -173,6 +173,7 @@ class WordPressMetadata
      * create metadata.
      *
      * @throws InvalidOperationException
+     * @throws \ReflectionException
      *
      * @return IMetadataProvider
      */
@@ -184,80 +185,80 @@ class WordPressMetadata
         $postsEntityType = $metadata->addEntityType(
             new \ReflectionClass('UnitTests\POData\Facets\WordPress2\Post'), 'Post'
         );
-        $metadata->addKeyProperty($postsEntityType, 'PostID', EdmPrimitiveType::INT32);
-        $metadata->addPrimitiveProperty($postsEntityType, 'Author', EdmPrimitiveType::INT32);
-        $metadata->addPrimitiveProperty($postsEntityType, 'Date', EdmPrimitiveType::DATETIME);
-        $metadata->addPrimitiveProperty($postsEntityType, 'DateGmt', EdmPrimitiveType::DATETIME);
-        $metadata->addPrimitiveProperty($postsEntityType, 'Content', EdmPrimitiveType::STRING);
-        $metadata->addPrimitiveProperty($postsEntityType, 'Title', EdmPrimitiveType::STRING);
-        $metadata->addPrimitiveProperty($postsEntityType, 'Excerpt', EdmPrimitiveType::STRING);
-        $metadata->addPrimitiveProperty($postsEntityType, 'Status', EdmPrimitiveType::STRING);
-        $metadata->addPrimitiveProperty($postsEntityType, 'CommentStatus', EdmPrimitiveType::STRING);
-        $metadata->addPrimitiveProperty($postsEntityType, 'PingStatus', EdmPrimitiveType::STRING);
-        $metadata->addPrimitiveProperty($postsEntityType, 'Password', EdmPrimitiveType::STRING);
-        $metadata->addPrimitiveProperty($postsEntityType, 'Name', EdmPrimitiveType::STRING);
-        $metadata->addPrimitiveProperty($postsEntityType, 'ToPing', EdmPrimitiveType::STRING);
-        $metadata->addPrimitiveProperty($postsEntityType, 'Pinged', EdmPrimitiveType::STRING);
-        $metadata->addETagProperty($postsEntityType, 'Modified', EdmPrimitiveType::DATETIME);
-        $metadata->addPrimitiveProperty($postsEntityType, 'ModifiedGmt', EdmPrimitiveType::DATETIME);
-        $metadata->addPrimitiveProperty($postsEntityType, 'ContentFiltered', EdmPrimitiveType::STRING);
-        $metadata->addPrimitiveProperty($postsEntityType, 'ParentID', EdmPrimitiveType::INT32);
-        $metadata->addPrimitiveProperty($postsEntityType, 'Guid', EdmPrimitiveType::STRING);
-        $metadata->addPrimitiveProperty($postsEntityType, 'MenuOrder', EdmPrimitiveType::INT32);
-        $metadata->addPrimitiveProperty($postsEntityType, 'Type', EdmPrimitiveType::STRING);
-        $metadata->addPrimitiveProperty($postsEntityType, 'MimeType', EdmPrimitiveType::STRING);
-        $metadata->addPrimitiveProperty($postsEntityType, 'CommentCount', EdmPrimitiveType::INT32);
+        $metadata->addKeyProperty($postsEntityType, 'PostID', EdmPrimitiveType::INT32());
+        $metadata->addPrimitiveProperty($postsEntityType, 'Author', EdmPrimitiveType::INT32());
+        $metadata->addPrimitiveProperty($postsEntityType, 'Date', EdmPrimitiveType::DATETIME());
+        $metadata->addPrimitiveProperty($postsEntityType, 'DateGmt', EdmPrimitiveType::DATETIME());
+        $metadata->addPrimitiveProperty($postsEntityType, 'Content', EdmPrimitiveType::STRING());
+        $metadata->addPrimitiveProperty($postsEntityType, 'Title', EdmPrimitiveType::STRING());
+        $metadata->addPrimitiveProperty($postsEntityType, 'Excerpt', EdmPrimitiveType::STRING());
+        $metadata->addPrimitiveProperty($postsEntityType, 'Status', EdmPrimitiveType::STRING());
+        $metadata->addPrimitiveProperty($postsEntityType, 'CommentStatus', EdmPrimitiveType::STRING());
+        $metadata->addPrimitiveProperty($postsEntityType, 'PingStatus', EdmPrimitiveType::STRING());
+        $metadata->addPrimitiveProperty($postsEntityType, 'Password', EdmPrimitiveType::STRING());
+        $metadata->addPrimitiveProperty($postsEntityType, 'Name', EdmPrimitiveType::STRING());
+        $metadata->addPrimitiveProperty($postsEntityType, 'ToPing', EdmPrimitiveType::STRING());
+        $metadata->addPrimitiveProperty($postsEntityType, 'Pinged', EdmPrimitiveType::STRING());
+        $metadata->addETagProperty($postsEntityType, 'Modified', EdmPrimitiveType::DATETIME());
+        $metadata->addPrimitiveProperty($postsEntityType, 'ModifiedGmt', EdmPrimitiveType::DATETIME());
+        $metadata->addPrimitiveProperty($postsEntityType, 'ContentFiltered', EdmPrimitiveType::STRING());
+        $metadata->addPrimitiveProperty($postsEntityType, 'ParentID', EdmPrimitiveType::INT32());
+        $metadata->addPrimitiveProperty($postsEntityType, 'Guid', EdmPrimitiveType::STRING());
+        $metadata->addPrimitiveProperty($postsEntityType, 'MenuOrder', EdmPrimitiveType::INT32());
+        $metadata->addPrimitiveProperty($postsEntityType, 'Type', EdmPrimitiveType::STRING());
+        $metadata->addPrimitiveProperty($postsEntityType, 'MimeType', EdmPrimitiveType::STRING());
+        $metadata->addPrimitiveProperty($postsEntityType, 'CommentCount', EdmPrimitiveType::INT32());
 
         //Register the entity (resource) type 'Tag'
         $tagsEntityType = $metadata->addEntityType(
             new \ReflectionClass('UnitTests\POData\Facets\WordPress2\Tag'), 'Tag'
         );
-        $metadata->addKeyProperty($tagsEntityType, 'TagID', EdmPrimitiveType::INT32);
-        $metadata->addPrimitiveProperty($tagsEntityType, 'Name', EdmPrimitiveType::STRING);
-        $metadata->addPrimitiveProperty($tagsEntityType, 'Slug', EdmPrimitiveType::STRING);
-        $metadata->addPrimitiveProperty($tagsEntityType, 'Description', EdmPrimitiveType::STRING);
+        $metadata->addKeyProperty($tagsEntityType, 'TagID', EdmPrimitiveType::INT32());
+        $metadata->addPrimitiveProperty($tagsEntityType, 'Name', EdmPrimitiveType::STRING());
+        $metadata->addPrimitiveProperty($tagsEntityType, 'Slug', EdmPrimitiveType::STRING());
+        $metadata->addPrimitiveProperty($tagsEntityType, 'Description', EdmPrimitiveType::STRING());
 
         //Register the entity (resource) type 'Category'
         $catsEntityType = $metadata->addEntityType(
             new \ReflectionClass('UnitTests\POData\Facets\WordPress2\Category'), 'Category'
         );
-        $metadata->addKeyProperty($catsEntityType, 'CategoryID', EdmPrimitiveType::INT32);
-        $metadata->addPrimitiveProperty($catsEntityType, 'Name', EdmPrimitiveType::STRING);
-        $metadata->addPrimitiveProperty($catsEntityType, 'Slug', EdmPrimitiveType::STRING);
-        $metadata->addPrimitiveProperty($catsEntityType, 'Description', EdmPrimitiveType::STRING);
+        $metadata->addKeyProperty($catsEntityType, 'CategoryID', EdmPrimitiveType::INT32());
+        $metadata->addPrimitiveProperty($catsEntityType, 'Name', EdmPrimitiveType::STRING());
+        $metadata->addPrimitiveProperty($catsEntityType, 'Slug', EdmPrimitiveType::STRING());
+        $metadata->addPrimitiveProperty($catsEntityType, 'Description', EdmPrimitiveType::STRING());
 
         //Register the entity (resource) type 'Comment'
         $commentsEntityType = $metadata->addEntityType(
             new \ReflectionClass('UnitTests\POData\Facets\WordPress2\Comment'), 'Comment'
         );
-        $metadata->addKeyProperty($commentsEntityType, 'CommentID', EdmPrimitiveType::INT32);
-        $metadata->addPrimitiveProperty($commentsEntityType, 'PostID', EdmPrimitiveType::INT32);
-        $metadata->addPrimitiveProperty($commentsEntityType, 'Author', EdmPrimitiveType::STRING);
-        $metadata->addPrimitiveProperty($commentsEntityType, 'AuthorEmail', EdmPrimitiveType::STRING);
-        $metadata->addPrimitiveProperty($commentsEntityType, 'AuthorUrl', EdmPrimitiveType::STRING);
-        $metadata->addPrimitiveProperty($commentsEntityType, 'AuthorIp', EdmPrimitiveType::STRING);
-        $metadata->addETagProperty($commentsEntityType, 'Date', EdmPrimitiveType::DATETIME);
-        $metadata->addPrimitiveProperty($commentsEntityType, 'DateGmt', EdmPrimitiveType::DATETIME);
-        $metadata->addPrimitiveProperty($commentsEntityType, 'Content', EdmPrimitiveType::STRING);
-        $metadata->addPrimitiveProperty($commentsEntityType, 'Karma', EdmPrimitiveType::INT32);
-        $metadata->addPrimitiveProperty($commentsEntityType, 'Approved', EdmPrimitiveType::STRING);
-        $metadata->addPrimitiveProperty($commentsEntityType, 'Agent', EdmPrimitiveType::STRING);
-        $metadata->addPrimitiveProperty($commentsEntityType, 'Type', EdmPrimitiveType::STRING);
-        $metadata->addPrimitiveProperty($commentsEntityType, 'ParentID', EdmPrimitiveType::INT32);
-        $metadata->addPrimitiveProperty($commentsEntityType, 'UserID', EdmPrimitiveType::INT32);
+        $metadata->addKeyProperty($commentsEntityType, 'CommentID', EdmPrimitiveType::INT32());
+        $metadata->addPrimitiveProperty($commentsEntityType, 'PostID', EdmPrimitiveType::INT32());
+        $metadata->addPrimitiveProperty($commentsEntityType, 'Author', EdmPrimitiveType::STRING());
+        $metadata->addPrimitiveProperty($commentsEntityType, 'AuthorEmail', EdmPrimitiveType::STRING());
+        $metadata->addPrimitiveProperty($commentsEntityType, 'AuthorUrl', EdmPrimitiveType::STRING());
+        $metadata->addPrimitiveProperty($commentsEntityType, 'AuthorIp', EdmPrimitiveType::STRING());
+        $metadata->addETagProperty($commentsEntityType, 'Date', EdmPrimitiveType::DATETIME());
+        $metadata->addPrimitiveProperty($commentsEntityType, 'DateGmt', EdmPrimitiveType::DATETIME());
+        $metadata->addPrimitiveProperty($commentsEntityType, 'Content', EdmPrimitiveType::STRING());
+        $metadata->addPrimitiveProperty($commentsEntityType, 'Karma', EdmPrimitiveType::INT32());
+        $metadata->addPrimitiveProperty($commentsEntityType, 'Approved', EdmPrimitiveType::STRING());
+        $metadata->addPrimitiveProperty($commentsEntityType, 'Agent', EdmPrimitiveType::STRING());
+        $metadata->addPrimitiveProperty($commentsEntityType, 'Type', EdmPrimitiveType::STRING());
+        $metadata->addPrimitiveProperty($commentsEntityType, 'ParentID', EdmPrimitiveType::INT32());
+        $metadata->addPrimitiveProperty($commentsEntityType, 'UserID', EdmPrimitiveType::INT32());
 
         //Register the entity (resource) type 'User'
         $usersEntityType = $metadata->addEntityType(
             new \ReflectionClass('UnitTests\POData\Facets\WordPress2\User'), 'User'
         );
-        $metadata->addKeyProperty($usersEntityType, 'UserID', EdmPrimitiveType::INT32);
-        $metadata->addPrimitiveProperty($usersEntityType, 'Login', EdmPrimitiveType::STRING);
-        $metadata->addPrimitiveProperty($usersEntityType, 'Nicename', EdmPrimitiveType::STRING);
-        $metadata->addPrimitiveProperty($usersEntityType, 'Email', EdmPrimitiveType::STRING);
-        $metadata->addPrimitiveProperty($usersEntityType, 'Url', EdmPrimitiveType::STRING);
-        $metadata->addETagProperty($usersEntityType, 'Registered', EdmPrimitiveType::DATETIME);
-        $metadata->addPrimitiveProperty($usersEntityType, 'Status', EdmPrimitiveType::INT16);
-        $metadata->addPrimitiveProperty($usersEntityType, 'DisplayName', EdmPrimitiveType::STRING);
+        $metadata->addKeyProperty($usersEntityType, 'UserID', EdmPrimitiveType::INT32());
+        $metadata->addPrimitiveProperty($usersEntityType, 'Login', EdmPrimitiveType::STRING());
+        $metadata->addPrimitiveProperty($usersEntityType, 'Nicename', EdmPrimitiveType::STRING());
+        $metadata->addPrimitiveProperty($usersEntityType, 'Email', EdmPrimitiveType::STRING());
+        $metadata->addPrimitiveProperty($usersEntityType, 'Url', EdmPrimitiveType::STRING());
+        $metadata->addETagProperty($usersEntityType, 'Registered', EdmPrimitiveType::DATETIME());
+        $metadata->addPrimitiveProperty($usersEntityType, 'Status', EdmPrimitiveType::INT16());
+        $metadata->addPrimitiveProperty($usersEntityType, 'DisplayName', EdmPrimitiveType::STRING());
 
         $postsResourceSet = $metadata->addResourceSet('Posts', $postsEntityType);
         $tagsResourceSet = $metadata->addResourceSet('Tags', $tagsEntityType);

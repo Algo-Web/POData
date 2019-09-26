@@ -28,6 +28,7 @@ class NorthWindService extends BaseService
      * This method is called only once to initialize service-wide policies.
      *
      * @param IServiceConfiguration $config Data service configuration object
+     * @throws \POData\Common\InvalidOperationException
      */
     public function initialize(IServiceConfiguration $config)
     {
@@ -40,6 +41,8 @@ class NorthWindService extends BaseService
 
     /**
      * @return \POData\Providers\Metadata\IMetadataProvider
+     * @throws \POData\Common\InvalidOperationException
+     * @throws \ReflectionException
      */
     public function getMetadataProvider()
     {
@@ -69,6 +72,15 @@ class NorthWindService extends BaseService
     // For testing we overridden the BaseService::handleRequest method, one thing is the
     // private member variable BaseService::_dataServiceHost is not accessible in this class,
     // so we are using getHost() below.
+    /**
+     * @return \POData\UriProcessor\Interfaces\IUriProcessor|void
+     * @throws ODataException
+     * @throws \Doctrine\Common\Annotations\AnnotationException
+     * @throws \POData\Common\InvalidOperationException
+     * @throws \POData\Common\NotImplementedException
+     * @throws \POData\Common\UrlFormatException
+     * @throws \ReflectionException
+     */
     public function handleRequest()
     {
         $request = $this->getOperationContext()->incomingRequest();

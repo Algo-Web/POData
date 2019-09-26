@@ -602,7 +602,7 @@ class ProvidersWrapper
     public function getEdmSchemaVersion()
     {
         //The minimal schema version for custom provider is 1.1
-        return EdmSchemaVersion::VERSION_1_DOT_1;
+        return EdmSchemaVersion::VERSION_1_DOT_1();
     }
 
     /**

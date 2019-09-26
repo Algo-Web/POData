@@ -60,7 +60,7 @@ class BooleanTest extends TestCase
 
         $actual = $type->getTypeCode();
 
-        $this->assertEquals(TypeCode::BOOLEAN, $actual);
+        $this->assertEquals(TypeCode::BOOLEAN(), $actual);
     }
 
     public function testCompatibleWith()
