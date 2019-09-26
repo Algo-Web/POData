@@ -11,6 +11,10 @@ use POData\Providers\ProvidersWrapper;
 use POData\Providers\Query\IQueryProvider;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 
+/**
+ * Class CynicDeserialiser
+ * @package POData\ObjectModel
+ */
 class CynicDeserialiser
 {
     /**
@@ -28,6 +32,11 @@ class CynicDeserialiser
      */
     private $cereal;
 
+    /**
+     * CynicDeserialiser constructor.
+     * @param IMetadataProvider $meta
+     * @param ProvidersWrapper $wrapper
+     */
     public function __construct(IMetadataProvider $meta, ProvidersWrapper $wrapper)
     {
         $this->metaProvider = $meta;
@@ -37,6 +46,10 @@ class CynicDeserialiser
 
     /**
      * @param ODataEntry $payload
+     * @return mixed
+     * @throws InvalidOperationException
+     * @throws \POData\Common\ODataException
+     * @throws \ReflectionException
      */
     public function processPayload(ODataEntry &$payload)
     {
@@ -58,6 +71,12 @@ class CynicDeserialiser
         return $source;
     }
 
+    /**
+     * Check if supplied ODataEntry is well-formed.
+     *
+     * @param ODataEntry $payload
+     * @return bool
+     */
     protected function isEntryOK(ODataEntry $payload)
     {
         // check links
@@ -98,6 +117,11 @@ class CynicDeserialiser
         return true;
     }
 
+    /**
+     * @param ODataEntry $payload
+     * @param int $depth
+     * @return bool
+     */
     protected function isEntryProcessed(ODataEntry $payload, $depth = 0)
     {
         assert(is_int($depth) && 0 <= $depth && 100 >= $depth, 'Maximum recursion depth exceeded');
@@ -130,6 +154,14 @@ class CynicDeserialiser
         return true;
     }
 
+    /**
+     * @param ODataEntry $content
+     * @return array
+     * @throws InvalidOperationException
+     * @throws \POData\Common\ODataException
+     * @throws \ReflectionException
+     * @throws \Exception
+     */
     protected function processEntryContent(ODataEntry &$content)
     {
         assert(null === $content->id || is_string($content->id), 'Entry id must be null or string');
@@ -194,10 +226,12 @@ class CynicDeserialiser
     }
 
     /**
-     * @param  ResourceEntityType          $type
+     * @param  ResourceEntityType $type
      * @param  ODataPropertyContent|object $result
-     * @param  string|null                 $id
+     * @param  string|null $id
      * @return null|KeyDescriptor
+     * @throws \POData\Common\ODataException
+     * @throws \ReflectionException
      */
     protected function generateKeyDescriptor(ResourceEntityType $type, $result, $id = null)
     {
@@ -232,6 +266,14 @@ class CynicDeserialiser
         return $keyDesc;
     }
 
+    /**
+     * @param ODataLink $link
+     * @param ResourceSet $sourceSet
+     * @param $source
+     * @throws InvalidOperationException
+     * @throws \POData\Common\ODataException
+     * @throws \ReflectionException
+     */
     protected function processLink(ODataLink &$link, ResourceSet $sourceSet, $source)
     {
         $hasUrl = isset($link->url);
@@ -258,11 +300,14 @@ class CynicDeserialiser
     }
 
     /**
-     * @param ODataLink   $link
+     * @param ODataLink $link
      * @param ResourceSet $sourceSet
      * @param $source
      * @param $hasUrl
      * @param $hasPayload
+     * @throws InvalidOperationException
+     * @throws \POData\Common\ODataException
+     * @throws \ReflectionException
      */
     protected function processLinkSingleton(ODataLink &$link, ResourceSet $sourceSet, $source, $hasUrl, $hasPayload)
     {
@@ -336,6 +381,17 @@ class CynicDeserialiser
         return;
     }
 
+    /**
+     * @param ODataLink $link
+     * @param ResourceSet $sourceSet
+     * @param $source
+     * @param bool $hasUrl
+     * @param bool $hasPayload
+     * @throws InvalidOperationException
+     * @throws \POData\Common\ODataException
+     * @throws \ReflectionException
+     * @throws \Exception
+     */
     protected function processLinkFeed(ODataLink &$link, ResourceSet $sourceSet, $source, $hasUrl, $hasPayload)
     {
         assert(

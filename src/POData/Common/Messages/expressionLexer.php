@@ -2,6 +2,10 @@
 
 namespace POData\Common\Messages;
 
+/**
+ * Trait expressionLexer
+ * @package POData\Common\Messages
+ */
 trait expressionLexer
 {
     /**

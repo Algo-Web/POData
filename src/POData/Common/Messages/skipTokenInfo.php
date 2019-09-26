@@ -2,6 +2,10 @@
 
 namespace POData\Common\Messages;
 
+/**
+ * Trait skipTokenInfo
+ * @package POData\Common\Messages
+ */
 trait skipTokenInfo
 {
     /**

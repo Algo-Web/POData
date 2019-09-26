@@ -120,10 +120,11 @@ class KeyDescriptor
     }
 
     /**
-     * @param  string             $keyString
-     * @param  bool               $isKey
+     * @param  string $keyString
+     * @param  bool $isKey
      * @param  KeyDescriptor|null $keyDescriptor
      * @return bool
+     * @throws ODataException
      */
     protected static function parseAndVerifyRawKeyPredicate($keyString, $isKey, KeyDescriptor &$keyDescriptor = null)
     {
@@ -230,10 +231,11 @@ class KeyDescriptor
      *  is done one should call validate function to validate the created
      *  KeyDescription.
      *
-     * @param string             $keyPredicate  The predicate to parse
+     * @param string $keyPredicate The predicate to parse
      * @param KeyDescriptor|null $keyDescriptor On return, Description of key after parsing
      *
      * @return bool True if the given values were parsed; false if there was a syntax error
+     * @throws ODataException
      */
     public static function tryParseKeysFromKeyPredicate(
         $keyPredicate,
@@ -248,11 +250,12 @@ class KeyDescriptor
      * Attempt to parse comma separated values representing a skiptoken and creates
      * instance of KeyDescriptor representing the same.
      *
-     * @param string        $skipToken      The skiptoken value to parse
+     * @param string $skipToken The skiptoken value to parse
      * @param KeyDescriptor &$keyDescriptor On return, Description of values
      *                                      after parsing
      *
      * @return bool True if the given values were parsed; false if there was a syntax error
+     * @throws ODataException
      */
     public static function tryParseValuesFromSkipToken($skipToken, &$keyDescriptor)
     {
@@ -266,12 +269,13 @@ class KeyDescriptor
      * _validatedNamedValues array with key as keyName and value as an array of
      * key value and key type.
      *
-     * @param string       $segmentAsString The segment in the form identifier
+     * @param string $segmentAsString The segment in the form identifier
      *                                      (keyPredicate) which this descriptor
      *                                      represents
-     * @param ResourceType $resourceType    The type of the identifier in the segment
+     * @param ResourceType $resourceType The type of the identifier in the segment
      *
      * @throws ODataException If validation fails
+     * @throws \ReflectionException
      */
     public function validate($segmentAsString, ResourceType $resourceType)
     {
@@ -367,19 +371,20 @@ class KeyDescriptor
      * creates instance of KeyDescription representing the same, Once parsing is
      * done, one should call validate function to validate the created KeyDescription.
      *
-     * @param string        $keyPredicate     The key predicate to parse
-     * @param bool          $allowNamedValues Set to true if parser should accept
+     * @param string $keyPredicate The key predicate to parse
+     * @param bool $allowNamedValues Set to true if parser should accept
      *                                        named values(Property = KeyValue),
      *                                        if false then parser will fail on
      *                                        such constructs
-     * @param bool          $allowNull        Set to true if parser should accept
+     * @param bool $allowNull Set to true if parser should accept
      *                                        null values for positional key
      *                                        values, if false then parser will
      *                                        fail on seeing null values
-     * @param KeyDescriptor &$keyDescriptor   On return, Description of key after
+     * @param KeyDescriptor &$keyDescriptor On return, Description of key after
      *                                        parsing
      *
      * @return bool True if the given values were parsed; false if there was a syntax error
+     * @throws ODataException
      */
     private static function tryParseKeysFromRawKeyPredicate(
         $keyPredicate,
@@ -550,6 +555,7 @@ class KeyDescriptor
      * @param ResourceSet $resourceSet
      *
      * @throws \InvalidArgumentException
+     * @throws \ReflectionException
      * @return string
      */
     public function generateRelativeUri(ResourceSet $resourceSet)
@@ -588,6 +594,7 @@ class KeyDescriptor
      * Convert validated named values into an array of ODataProperties.
      *
      * return array[]
+     * @throws InvalidOperationException
      */
     public function getODataProperties()
     {

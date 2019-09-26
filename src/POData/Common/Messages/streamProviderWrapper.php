@@ -2,6 +2,10 @@
 
 namespace POData\Common\Messages;
 
+/**
+ * Trait streamProviderWrapper
+ * @package POData\Common\Messages
+ */
 trait streamProviderWrapper
 {
     /**

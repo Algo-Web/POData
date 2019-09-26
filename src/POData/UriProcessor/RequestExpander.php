@@ -13,6 +13,10 @@ use POData\Providers\Query\QueryResult;
 use POData\Providers\Query\QueryType;
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandedProjectionNode;
 
+/**
+ * Class RequestExpander
+ * @package POData\UriProcessor
+ */
 class RequestExpander
 {
     /**
@@ -43,6 +47,12 @@ class RequestExpander
      */
     private $stack;
 
+    /**
+     * RequestExpander constructor.
+     * @param RequestDescription $request
+     * @param IService $service
+     * @param ProvidersWrapper $wrapper
+     */
     public function __construct(RequestDescription $request, IService $service, ProvidersWrapper $wrapper)
     {
         $this->request = $request;
@@ -95,6 +105,9 @@ class RequestExpander
      * Perform expansion.
      *
      * @return void
+     * @throws InvalidOperationException
+     * @throws \POData\Common\ODataException
+     * @throws \ReflectionException
      */
     public function handleExpansion()
     {
@@ -113,6 +126,9 @@ class RequestExpander
      * Execute queries for expansion.
      *
      * @param array|mixed $result Resource(s) whose navigation properties needs to be expanded
+     * @throws InvalidOperationException
+     * @throws \POData\Common\ODataException
+     * @throws \ReflectionException
      */
     private function executeExpansion($result)
     {
@@ -178,6 +194,7 @@ class RequestExpander
      * Note: Calls to this method should be balanced with calls to popSegment.
      *
      * @return bool true if the segment was pushed, false otherwise
+     * @throws InvalidOperationException
      */
     private function pushSegmentForRoot()
     {
@@ -196,8 +213,8 @@ class RequestExpander
      * @param ResourceProperty &$resourceProperty Current navigation property
      *                                            being written out
      *
-     * @throws InvalidOperationException If this function invoked with non-navigation
-     *                                   property instance
+     * @throws InvalidOperationException If this function invoked with non-navigation property instance
+     * @throws \POData\Common\ODataException
      *
      * @return bool true if a segment was pushed, false otherwise
      */
@@ -236,6 +253,7 @@ class RequestExpander
      * Gets collection of expanded projection nodes under the current node.
      *
      * @return ExpandedProjectionNode[] List of nodes describing expansions for the current segment
+     * @throws InvalidOperationException
      */
     protected function getExpandedProjectionNodes()
     {
@@ -257,6 +275,7 @@ class RequestExpander
      * which describes the current segment.
      *
      * @return ExpandedProjectionNode|null
+     * @throws InvalidOperationException
      */
     private function getCurrentExpandedProjectionNode()
     {
@@ -283,11 +302,12 @@ class RequestExpander
      * retrieved from the IDSQP implementation
      * Note: Calls to this method should be balanced with calls to popSegment.
      *
-     * @param string             $segmentName         Name of segment to push
+     * @param string $segmentName Name of segment to push
      * @param ResourceSetWrapper &$resourceSetWrapper The resource set wrapper
      *                                                to push
      *
      * @return bool true if the segment was push, false otherwise
+     * @throws InvalidOperationException
      */
     private function pushSegment($segmentName, ResourceSetWrapper &$resourceSetWrapper)
     {
@@ -315,6 +335,7 @@ class RequestExpander
      * @param $entry
      *
      * @return object[]|null
+     * @throws \POData\Common\ODataException
      */
     private function executeCollectionExpansionGetRelated($expandedProjectionNode, $entry)
     {
@@ -342,10 +363,11 @@ class RequestExpander
      * @param ExpandedProjectionNode $expandedProjectionNode
      * @param $entry
      * @param \POData\Providers\Metadata\ResourceType $resourceType
-     * @param string                                  $expandedPropertyName
+     * @param string $expandedPropertyName
      *
      * @throws InvalidOperationException
      * @throws \POData\Common\ODataException
+     * @throws \ReflectionException
      */
     private function executeSingleExpansionGetRelated(
         $expandedProjectionNode,
@@ -373,11 +395,13 @@ class RequestExpander
     /**
      * @param $entry
      * @param $result
-     * @param ExpandedProjectionNode                  $expandedProjectionNode
+     * @param ExpandedProjectionNode $expandedProjectionNode
      * @param \POData\Providers\Metadata\ResourceType $resourceType
-     * @param string                                  $expandedPropertyName
+     * @param string $expandedPropertyName
      *
      * @throws InvalidOperationException
+     * @throws \ReflectionException
+     * @throws \POData\Common\ODataException
      */
     private function executeCollectionExpansionProcessExpansion(
         $entry,
@@ -406,6 +430,8 @@ class RequestExpander
      * @param ExpandedProjectionNode $expandedProjectionNode
      *
      * @throws InvalidOperationException
+     * @throws \POData\Common\ODataException
+     * @throws \ReflectionException
      */
     private function pushPropertyToNavigation($result, $expandedProjectionNode)
     {

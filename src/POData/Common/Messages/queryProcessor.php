@@ -2,6 +2,10 @@
 
 namespace POData\Common\Messages;
 
+/**
+ * Trait queryProcessor
+ * @package POData\Common\Messages
+ */
 trait queryProcessor
 {
     /**

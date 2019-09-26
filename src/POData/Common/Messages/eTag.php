@@ -2,6 +2,10 @@
 
 namespace POData\Common\Messages;
 
+/**
+ * Trait eTag
+ * @package POData\Common\Messages
+ */
 trait eTag
 {
     /**

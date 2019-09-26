@@ -137,7 +137,7 @@ class StreamProviderWrapper
      * Gets the IANA content type (aka media type) of the stream associated with
      * the specified media resource.
      *
-     * @param object                  $entity             The entity instance
+     * @param object $entity The entity instance
      *                                                    (media resource) associated with
      *                                                    the stream for which the content
      *                                                    type is to be obtained
@@ -150,6 +150,7 @@ class StreamProviderWrapper
      *                                                    named stream
      *
      * @throws InvalidOperationException
+     * @throws ODataException
      * @return string|null
      */
     public function getStreamContentType($entity, ResourceStreamInfo $resourceStreamInfo = null)
@@ -178,7 +179,7 @@ class StreamProviderWrapper
     /**
      * Get the ETag of the stream associated with the entity specified.
      *
-     * @param object                  $entity             The entity instance
+     * @param object $entity The entity instance
      *                                                    (media resource) associated
      *                                                    with the stream for which
      *                                                    the etag is to be obtained
@@ -191,6 +192,7 @@ class StreamProviderWrapper
      *                                                    details of named stream
      *
      * @throws InvalidOperationException
+     * @throws ODataException
      *
      * @return string Etag
      */
@@ -221,7 +223,7 @@ class StreamProviderWrapper
      * Gets the URI clients should use when making retrieve (ie. GET) requests
      * to the stream.
      *
-     * @param object                  $entity             The entity instance
+     * @param object $entity The entity instance
      *                                                    associated with the
      *                                                    stream for which a
      *                                                    read stream URI is to
@@ -234,9 +236,10 @@ class StreamProviderWrapper
      *                                                    the ResourceStreamInfo
      *                                                    instance holding the
      *                                                    details of named stream
-     * @param string                  $mediaLinkEntryUri  MLE uri
+     * @param string $mediaLinkEntryUri MLE uri
      *
      * @throws InvalidOperationException
+     * @throws ODataException
      *
      * @return string
      */

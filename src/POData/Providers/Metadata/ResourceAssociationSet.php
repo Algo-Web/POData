@@ -168,12 +168,22 @@ class ResourceAssociationSet
             && null !== $this->end2->getResourceProperty();
     }
 
-
+    /**
+     * @param ResourceEntityType $sourceType
+     * @param string $linkName
+     * @param ResourceSet $targetResourceSet
+     * @return string
+     */
     public static function keyName(ResourceEntityType $sourceType, $linkName, ResourceSet $targetResourceSet)
     {
         return $sourceType->getName() . '_' . $linkName . '_' . $targetResourceSet->getResourceType()->getName();
     }
 
+    /**
+     * @param ResourceEntityType $sourceType
+     * @param ResourceProperty $property
+     * @return string
+     */
     public static function keyNameFromTypeAndProperty(ResourceEntityType $sourceType, ResourceProperty $property)
     {
         return $sourceType->getName() . '_' . $property->getName() . '_' . $property->getResourceType()->getName();

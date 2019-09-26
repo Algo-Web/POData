@@ -2,6 +2,10 @@
 
 namespace POData\Common\Messages;
 
+/**
+ * Trait expandProjectionParser
+ * @package POData\Common\Messages
+ */
 trait expandProjectionParser
 {
     /**

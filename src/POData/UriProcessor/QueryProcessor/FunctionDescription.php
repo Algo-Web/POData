@@ -78,7 +78,7 @@ class FunctionDescription
      *
      * TODO: FIGURE OUT WHAT THE HECK THIS IS RETURNING!?!?
      *
-     * @return array<string,FunctionDescription[]> indexed by function name
+     * @return array indexed by function name
      */
     public static function filterFunctionDescriptions()
     {
@@ -504,11 +504,12 @@ class FunctionDescription
     /**
      * Validate operands of an arithmetic operation and promote if required.
      *
-     * @param ExpressionToken    $expressionToken The expression token
-     * @param AbstractExpression $leftArgument    The left expression
-     * @param AbstractExpression $rightArgument   The right expression
+     * @param ExpressionToken $expressionToken The expression token
+     * @param AbstractExpression $leftArgument The left expression
+     * @param AbstractExpression $rightArgument The right expression
      *
      * @return IType
+     * @throws ODataException
      */
     public static function verifyAndPromoteArithmeticOpArguments(
         $expressionToken,

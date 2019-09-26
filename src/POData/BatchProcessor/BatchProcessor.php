@@ -4,6 +4,10 @@ namespace POData\BatchProcessor;
 use POData\BaseService;
 use POData\UriProcessor\RequestDescription;
 
+/**
+ * Class BatchProcessor
+ * @package POData\BatchProcessor
+ */
 class BatchProcessor
 {
     protected $service;
@@ -22,6 +26,9 @@ class BatchProcessor
         $this->request = $request;
     }
 
+    /**
+     * @return string
+     */
     public function getBoundary()
     {
         return $this->batchBoundary;
@@ -58,6 +65,9 @@ class BatchProcessor
         }
     }
 
+    /**
+     * @return string
+     */
     public function getResponse()
     {
         $response = '';
@@ -71,7 +81,12 @@ class BatchProcessor
         return $response;
     }
 
-
+    /**
+     * @param BaseService $service
+     * @param $match
+     * @param bool $isChangeset
+     * @return ChangeSetParser|QueryParser
+     */
     protected function getParser(BaseService $service, $match, $isChangeset)
     {
         if ($isChangeset) {

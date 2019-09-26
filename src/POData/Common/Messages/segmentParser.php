@@ -2,6 +2,10 @@
 
 namespace POData\Common\Messages;
 
+/**
+ * Trait segmentParser
+ * @package POData\Common\Messages
+ */
 trait segmentParser
 {
     /**

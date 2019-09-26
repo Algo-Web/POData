@@ -79,6 +79,7 @@ class JsonLightODataWriter extends JsonODataV2Writer
      * @param ODataURL|ODataURLCollection|ODataPropertyContent|ODataFeed|ODataEntry $model Object of requested content
      *
      * @return JsonLightODataWriter
+     * @throws \Exception
      */
     public function write($model)
     {
@@ -116,6 +117,7 @@ class JsonLightODataWriter extends JsonODataV2Writer
      * @param ODataProperty $property
      *
      * @return JsonLightODataWriter
+     * @throws \Exception
      */
     protected function writeTopLevelProperty(ODataProperty $property)
     {
@@ -141,6 +143,7 @@ class JsonLightODataWriter extends JsonODataV2Writer
 
     /**
      * @param string $fragment
+     * @throws \Exception
      */
     protected function writeTopLevelMeta($fragment)
     {
@@ -153,6 +156,11 @@ class JsonLightODataWriter extends JsonODataV2Writer
             ->writeValue($this->baseUri . '/' . ODataConstants::URI_METADATA_SEGMENT . '#' . $fragment);
     }
 
+    /**
+     * @param ODataProperty $property
+     * @return $this|JsonODataV2Writer
+     * @throws \Exception
+     */
     protected function writePropertyMeta(ODataProperty $property)
     {
         if ($this->metadataLevel != JsonLightMetadataLevel::FULL()) {
@@ -183,6 +191,7 @@ class JsonLightODataWriter extends JsonODataV2Writer
      * @param ODataEntry $entry Entry to write metadata for
      *
      * @return JsonLightODataWriter
+     * @throws \Exception
      */
     protected function writeEntryMetadata(ODataEntry $entry)
     {
@@ -211,6 +220,7 @@ class JsonLightODataWriter extends JsonODataV2Writer
      * @param ODataLink $link Link to write
      *
      * @return JsonLightODataWriter
+     * @throws \Exception
      */
     protected function writeLink(ODataLink $link)
     {
@@ -234,6 +244,10 @@ class JsonLightODataWriter extends JsonODataV2Writer
         return $this;
     }
 
+    /**
+     * @param ODataLink $link
+     * @throws \Exception
+     */
     protected function writeExpandedLink(ODataLink $link)
     {
         if ($link->isCollection) {
@@ -256,7 +270,7 @@ class JsonLightODataWriter extends JsonODataV2Writer
      */
     protected function writeNextPageLink(ODataLink $nextPageLinkUri = null)
     {
-        return;
+        return null;
     }
 
     /**
@@ -265,6 +279,7 @@ class JsonLightODataWriter extends JsonODataV2Writer
      * @param ODataProperty $property property to write
      *
      * @return JsonLightODataWriter
+     * @throws \Exception
      */
     protected function writeComplexProperty(ODataProperty $property)
     {
@@ -278,6 +293,11 @@ class JsonLightODataWriter extends JsonODataV2Writer
         return $this;
     }
 
+    /**
+     * @param ODataProperty $property
+     * @return $this
+     * @throws \Exception
+     */
     protected function writeComplexPropertyMeta(ODataProperty $property)
     {
         if ($this->metadataLevel == JsonLightMetadataLevel::FULL()) {
@@ -289,6 +309,11 @@ class JsonLightODataWriter extends JsonODataV2Writer
         return $this;
     }
 
+    /**
+     * @param ODataBagContent $bag
+     * @return $this|JsonODataV1Writer
+     * @throws \Exception
+     */
     protected function writeBagContent(ODataBagContent $bag)
     {
         $this->writer->startArrayScope();

@@ -18,6 +18,10 @@ use POData\UriProcessor\QueryProcessor\SkipTokenParser\InternalSkipTokenInfo;
 use POData\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenInfo;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 
+/**
+ * Class ProvidersQueryWrapper
+ * @package POData\Providers
+ */
 class ProvidersQueryWrapper
 {
     /**
@@ -37,6 +41,9 @@ class ProvidersQueryWrapper
         $this->queryProvider = $query;
     }
 
+    /**
+     * @return IQueryProvider
+     */
     public function getQueryProvider()
     {
         return $this->queryProvider;
@@ -97,16 +104,17 @@ class ProvidersQueryWrapper
      * IE: http://host/EntitySet
      *  http://host/EntitySet?$skip=10&$top=5&filter=Prop gt Value.
      *
-     * @param QueryType                $queryType   Is this is a query for a count, entities, or entities-with-count
-     * @param ResourceSet              $resourceSet The entity set containing the entities to fetch
-     * @param FilterInfo|null          $filterInfo  The $filter parameter of the OData query.  NULL if none specified
-     * @param null|InternalOrderByInfo $orderBy     sorted order if we want to get the data in some specific order
-     * @param int|null                 $top         number of records which need to be retrieved
-     * @param int|null                 $skip        number of records which need to be skipped
-     * @param SkipTokenInfo|null       $skipToken   value indicating what records to skip
-     * @param string[]|null            $eagerLoad   array of relations to eager load
+     * @param QueryType $queryType Is this is a query for a count, entities, or entities-with-count
+     * @param ResourceSet $resourceSet The entity set containing the entities to fetch
+     * @param FilterInfo|null $filterInfo The $filter parameter of the OData query.  NULL if none specified
+     * @param null|InternalOrderByInfo $orderBy sorted order if we want to get the data in some specific order
+     * @param int|null $top number of records which need to be retrieved
+     * @param int|null $skip number of records which need to be skipped
+     * @param SkipTokenInfo|null $skipToken value indicating what records to skip
+     * @param string[]|null $eagerLoad array of relations to eager load
      *
      * @return QueryResult
+     * @throws ODataException
      */
     public function getResourceSet(
         QueryType $queryType,
@@ -314,6 +322,8 @@ class ProvidersQueryWrapper
      *                                            retrieved
      *
      * @throws ODataException
+     * @throws \POData\Common\InvalidOperationException
+     * @throws \ReflectionException
      *
      * @return object|null The related resource if exists, else null
      */
@@ -368,6 +378,9 @@ class ProvidersQueryWrapper
      * @param KeyDescriptor    $keyDescriptor     The key to identify the entity to be fetched
      *
      * @return object|null Returns entity instance if found, else null
+     * @throws ODataException
+     * @throws \POData\Common\InvalidOperationException
+     * @throws \ReflectionException
      */
     public function getResourceFromRelatedResourceSet(
         ResourceSet $sourceResourceSet,
@@ -402,6 +415,9 @@ class ProvidersQueryWrapper
      * @param string[]|null $eagerLoad     array of relations to eager load
      *
      * @return object|null Returns entity instance if found, else null
+     * @throws ODataException
+     * @throws \POData\Common\InvalidOperationException
+     * @throws \ReflectionException
      */
     public function getResourceFromResourceSet(
         ResourceSet $resourceSet,
@@ -519,14 +535,16 @@ class ProvidersQueryWrapper
     /**
      * Validate the given entity instance.
      *
-     * @param object|null   $entityInstance Entity instance to validate
-     * @param ResourceSet   &$resourceSet   Resource set to which the entity
+     * @param object|null $entityInstance Entity instance to validate
+     * @param ResourceSet   &$resourceSet Resource set to which the entity
      *                                      instance belongs to
      * @param KeyDescriptor &$keyDescriptor The key descriptor
-     * @param string        $methodName     Method from which this function
+     * @param string $methodName Method from which this function
      *                                      invoked
      *
      * @throws ODataException
+     * @throws \POData\Common\InvalidOperationException
+     * @throws \ReflectionException
      */
     protected function validateEntityInstance(
         $entityInstance,
@@ -567,6 +585,7 @@ class ProvidersQueryWrapper
      * @param ResourceSet $resourceSet
      *
      * @throws ODataException
+     * @throws \ReflectionException
      *
      * @return ResourceEntityType
      */

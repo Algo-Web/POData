@@ -219,6 +219,7 @@ class ProvidersWrapper
      *                                 wrapper for
      *
      * @return ResourceSetWrapper|null Returns an instance if a resource set with the given name is visible
+     * @throws ODataException
      */
     private function validateResourceSetAndWrapper(ResourceSet $resourceSet)
     {
@@ -283,6 +284,9 @@ class ProvidersWrapper
         return $resourceTypes;
     }
 
+    /**
+     * @return array
+     */
     public function getSingletons()
     {
         $singletons = $this->getMetaProvider()->getSingletons();
@@ -299,6 +303,7 @@ class ProvidersWrapper
      *
      * @return ResourceSetWrapper|null Returns resource set with the given name if found,
      *                                 NULL if resource set is set to invisible or not found
+     * @throws ODataException
      */
     public function resolveResourceSet($name)
     {
@@ -360,6 +365,7 @@ class ProvidersWrapper
      * @param ResourceEntityType $resourceType Resource to get derived resource types from
      *
      * @throws InvalidOperationException when the meat provider doesn't return an array
+     * @throws ODataException
      *
      * @return ResourceType[]
      */
@@ -429,15 +435,16 @@ class ProvidersWrapper
      * Gets the target resource set wrapper for the given navigation property,
      * source resource set wrapper and the source resource type.
      *
-     * @param ResourceSetWrapper $resourceSetWrapper         Source resource set
-     * @param ResourceEntityType $resourceType               Source resource type
-     * @param ResourceProperty   $navigationResourceProperty Navigation property
+     * @param ResourceSetWrapper $resourceSetWrapper Source resource set
+     * @param ResourceEntityType $resourceType Source resource type
+     * @param ResourceProperty $navigationResourceProperty Navigation property
      *
      * @return ResourceSetWrapper|null Returns instance of ResourceSetWrapper
      *                                 (describes the entity set and associated configuration) for the
      *                                 given navigation property. returns NULL if resourceset for the
      *                                 navigation property is invisible or if metadata provider returns
      *                                 null resource association set
+     * @throws ODataException
      */
     public function getResourceSetWrapperForNavigationProperty(
         ResourceSetWrapper $resourceSetWrapper,
@@ -580,6 +587,7 @@ class ProvidersWrapper
      * @param ResourceSet $resourceSet see the comments of _validateResourceSetAndGetWrapper
      *
      * @return ResourceSetWrapper|null see the comments of _validateResourceSetAndGetWrapper
+     * @throws ODataException
      */
     public function validateResourceSetAndGetWrapper(ResourceSet $resourceSet)
     {
@@ -602,6 +610,7 @@ class ProvidersWrapper
      * responsible for implementing IExpressionProvider if he choose for.
      *
      * @return IExpressionProvider Instance of IExpressionProvider implementation
+     * @throws ODataException
      */
     public function getExpressionProvider()
     {
@@ -625,16 +634,17 @@ class ProvidersWrapper
      * IE: http://host/EntitySet
      *  http://host/EntitySet?$skip=10&$top=5&filter=Prop gt Value.
      *
-     * @param QueryType                $queryType   Is this is a query for a count, entities, or entities-with-count
-     * @param ResourceSet              $resourceSet The entity set containing the entities to fetch
-     * @param FilterInfo|null          $filterInfo  The $filter parameter of the OData query.  NULL if none specified
-     * @param null|InternalOrderByInfo $orderBy     sorted order if we want to get the data in some specific order
-     * @param int|null                 $top         number of records which need to be retrieved
-     * @param int|null                 $skip        number of records which need to be skipped
-     * @param SkipTokenInfo|null       $skipToken   value indicating what records to skip
-     * @param string[]|null            $eagerLoad   array of relations to eager load
+     * @param QueryType $queryType Is this is a query for a count, entities, or entities-with-count
+     * @param ResourceSet $resourceSet The entity set containing the entities to fetch
+     * @param FilterInfo|null $filterInfo The $filter parameter of the OData query.  NULL if none specified
+     * @param null|InternalOrderByInfo $orderBy sorted order if we want to get the data in some specific order
+     * @param int|null $top number of records which need to be retrieved
+     * @param int|null $skip number of records which need to be skipped
+     * @param SkipTokenInfo|null $skipToken value indicating what records to skip
+     * @param string[]|null $eagerLoad array of relations to eager load
      *
      * @return QueryResult
+     * @throws ODataException
      */
     public function getResourceSet(
         QueryType $queryType,
@@ -661,11 +671,14 @@ class ProvidersWrapper
     /**
      * Gets an entity instance from an entity set identified by a key.
      *
-     * @param ResourceSet   $resourceSet   The entity set containing the entity to fetch
+     * @param ResourceSet $resourceSet The entity set containing the entity to fetch
      * @param KeyDescriptor $keyDescriptor The key identifying the entity to fetch
-     * @param string[]|null $eagerLoad     array of relations to eager load
+     * @param string[]|null $eagerLoad array of relations to eager load
      *
      * @return object|null Returns entity instance if found, else null
+     * @throws ODataException
+     * @throws \POData\Common\InvalidOperationException
+     * @throws \ReflectionException
      */
     public function getResourceFromResourceSet(
         ResourceSet $resourceSet,
@@ -745,13 +758,16 @@ class ProvidersWrapper
     /**
      * Gets a related entity instance from an entity set identified by a key.
      *
-     * @param ResourceSet      $sourceResourceSet The entity set related to the entity to be fetched
-     * @param object           $sourceEntity      The related entity instance
-     * @param ResourceSet      $targetResourceSet The entity set from which entity needs to be fetched
-     * @param ResourceProperty $targetProperty    The metadata of the target property
-     * @param KeyDescriptor    $keyDescriptor     The key to identify the entity to be fetched
+     * @param ResourceSet $sourceResourceSet The entity set related to the entity to be fetched
+     * @param object $sourceEntity The related entity instance
+     * @param ResourceSet $targetResourceSet The entity set from which entity needs to be fetched
+     * @param ResourceProperty $targetProperty The metadata of the target property
+     * @param KeyDescriptor $keyDescriptor The key to identify the entity to be fetched
      *
      * @return object|null Returns entity instance if found, else null
+     * @throws ODataException
+     * @throws \POData\Common\InvalidOperationException
+     * @throws \ReflectionException
      */
     public function getResourceFromRelatedResourceSet(
         ResourceSet $sourceResourceSet,
@@ -772,14 +788,17 @@ class ProvidersWrapper
     /**
      * Get related resource for a resource.
      *
-     * @param ResourceSet      $sourceResourceSet The source resource set
-     * @param object           $sourceEntity      The source resource
-     * @param ResourceSet      $targetResourceSet The resource set of the navigation
+     * @param ResourceSet $sourceResourceSet The source resource set
+     * @param object $sourceEntity The source resource
+     * @param ResourceSet $targetResourceSet The resource set of the navigation
      *                                            property
-     * @param ResourceProperty $targetProperty    The navigation property to be
+     * @param ResourceProperty $targetProperty The navigation property to be
      *                                            retrieved
      *
      * @return object|null The related resource if exists, else null
+     * @throws ODataException
+     * @throws \POData\Common\InvalidOperationException
+     * @throws \ReflectionException
      */
     public function getRelatedResourceReference(
         ResourceSet $sourceResourceSet,

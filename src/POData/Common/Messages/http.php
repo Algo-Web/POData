@@ -4,6 +4,10 @@ namespace POData\Common\Messages;
 
 use POData\OperationContext\HTTPRequestMethod;
 
+/**
+ * Trait http
+ * @package POData\Common\Messages
+ */
 trait http
 {
     /**

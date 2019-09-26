@@ -65,18 +65,18 @@ class ExpandProjectionParser
      * Parse the given expand and select clause, validate them
      * and build 'Projection Tree'.
      *
-     * @param ResourceSetWrapper  $resourceSetWrapper The resource set identified by the resource path uri
-     * @param ResourceType        $resourceType       The resource type of entities identified by the resource path uri
-     * @param InternalOrderByInfo $internalOrderInfo  The top level sort information, this will be set if the $skip,
+     * @param ResourceSetWrapper $resourceSetWrapper The resource set identified by the resource path uri
+     * @param ResourceType $resourceType The resource type of entities identified by the resource path uri
+     * @param InternalOrderByInfo $internalOrderInfo The top level sort information, this will be set if the $skip,
      *                                                $top is specified in the
      *                                                request uri or Server side paging is
      *                                                enabled for top level resource
-     * @param int                 $skipCount          The value of $skip option applied to the top level resource
+     * @param int $skipCount The value of $skip option applied to the top level resource
      *                                                set identified by the
      *                                                resource path uri
      *                                                null means $skip
      *                                                option is not present
-     * @param int                 $takeCount          The minimum among the value of $top option applied to and
+     * @param int $takeCount The minimum among the value of $top option applied to and
      *                                                page size configured
      *                                                for the top level
      *                                                resource
@@ -88,11 +88,12 @@ class ExpandProjectionParser
      *                                                page size is not
      *                                                configured for top
      *                                                level resource set
-     * @param string              $expand             The value of $expand clause
-     * @param string              $select             The value of $select clause
-     * @param ProvidersWrapper    $providerWrapper    Reference to metadata and query provider wrapper
+     * @param string $expand The value of $expand clause
+     * @param string $select The value of $select clause
+     * @param ProvidersWrapper $providerWrapper Reference to metadata and query provider wrapper
      *
      * @throws ODataException If any error occur while parsing expand and/or select clause
+     * @throws \POData\Common\InvalidOperationException
      *
      * @return RootProjectionNode Returns root of the 'Projection Tree'
      */
@@ -129,6 +130,7 @@ class ExpandProjectionParser
      *
      * @throws ODataException If any error occurs while reading expand clause
      *                        or building the projection tree
+     * @throws \POData\Common\InvalidOperationException
      */
     private function parseExpand($expand)
     {
@@ -173,6 +175,7 @@ class ExpandProjectionParser
      * @param array<array> $expandPathSegments Collection of expand paths
      *
      * @throws ODataException If any error occurs while processing the expand path segments
+     * @throws \POData\Common\InvalidOperationException
      */
     private function buildProjectionTree($expandPathSegments)
     {
@@ -374,11 +377,12 @@ class ExpandProjectionParser
     /**
      * Read expand or select clause.
      *
-     * @param string $value    expand or select clause to read
-     * @param bool   $isSelect true means $value is value of select clause
+     * @param string $value expand or select clause to read
+     * @param bool $isSelect true means $value is value of select clause
      *                         else value of expand clause
      *
      * @return array<array> An array of 'PathSegment's, each of which is array of 'SubPathSegment's
+     * @throws ODataException
      */
     private function readExpandOrSelect($value, $isSelect)
     {

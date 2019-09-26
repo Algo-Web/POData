@@ -4,6 +4,10 @@ namespace POData\Providers\Metadata;
 
 use AlgoWeb\ODataMetadata\MetadataV3\edm\TComplexTypeType;
 
+/**
+ * Class ResourceComplexType
+ * @package POData\Providers\Metadata
+ */
 class ResourceComplexType extends ResourceType
 {
     /**

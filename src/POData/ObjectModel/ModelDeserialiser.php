@@ -6,6 +6,10 @@ use Carbon\Carbon;
 use POData\ObjectModel\ODataEntry;
 use POData\Providers\Metadata\ResourceEntityType;
 
+/**
+ * Class ModelDeserialiser
+ * @package POData\ObjectModel
+ */
 class ModelDeserialiser
 {
     // take a supplied resourceEntityType and ODataEntry object, check that they match, and retrieve the
@@ -21,9 +25,10 @@ class ModelDeserialiser
      * Filter supplied ODataEntry into $data array for use in resource create/update.
      *
      * @param ResourceEntityType $entityType Entity type to deserialise to
-     * @param ODataEntry         $payload    Raw data to deserialise
+     * @param ODataEntry $payload Raw data to deserialise
      *
      * @throws \InvalidArgumentException
+     * @throws \Exception
      * @return mixed[]
      */
     public function bulkDeserialise(ResourceEntityType $entityType, ODataEntry $payload)
@@ -64,6 +69,7 @@ class ModelDeserialiser
         $data = [];
         foreach ($payload->propertyContent->properties as $propName => $propSpec) {
             if (in_array($propName, $nonRelProp) || in_array(strtolower($propName), $nonRelProp)) {
+                /** @var string $rawVal */
                 $rawVal = $propSpec->value;
                 $value = null;
                 switch ($propSpec->typeName) {
@@ -104,6 +110,11 @@ class ModelDeserialiser
         return $data;
     }
 
+    /**
+     * Reset properties cache.
+     *
+     * @return void
+     */
     public function reset()
     {
         self::$nonKeyPropertiesCache = [];

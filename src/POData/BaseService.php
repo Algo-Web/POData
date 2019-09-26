@@ -110,6 +110,10 @@ abstract class BaseService implements IRequestHandler, IService
         return $this->objectSerialiser;
     }
 
+    /**
+     * BaseService constructor.
+     * @param IObjectSerialiser|null $serialiser
+     */
     protected function __construct(IObjectSerialiser $serialiser = null)
     {
         if (null != $serialiser) {
@@ -241,6 +245,7 @@ abstract class BaseService implements IRequestHandler, IService
      *           related to request uri (e.g. type of resource, result
      *           etc...)
      * (3). Invoke handleRequest2 for further processing
+     * @throws ODataException
      */
     public function handleRequest()
     {
@@ -269,6 +274,10 @@ abstract class BaseService implements IRequestHandler, IService
         }
     }
 
+    /**
+     * @param $request
+     * @throws ODataException
+     */
     private function handleBatchRequest($request)
     {
         $cloneThis = clone $this;
@@ -318,6 +327,7 @@ abstract class BaseService implements IRequestHandler, IService
      * BaseService::Initialize to initialize service specific policies.
      *
      * @throws ODataException
+     * @throws \Exception
      */
     protected function createProviders()
     {
@@ -355,6 +365,10 @@ abstract class BaseService implements IRequestHandler, IService
     }
 
     //TODO: i don't want this to be public..but it's the only way to test it right now...
+
+    /**
+     * @throws \Exception
+     */
     public function registerWriters()
     {
         $registry = $this->getODataWriterRegistry();
@@ -379,10 +393,15 @@ abstract class BaseService implements IRequestHandler, IService
     /**
      * Serialize the requested resource.
      *
-     * @param RequestDescription $request      The description of the request  submitted by the client
-     * @param IUriProcessor      $uriProcessor Reference to the uri processor
+     * @param RequestDescription $request The description of the request  submitted by the client
+     * @param IUriProcessor $uriProcessor Reference to the uri processor
      *
+     * @throws Common\HttpHeaderFailure
+     * @throws Common\UrlFormatException
+     * @throws InvalidOperationException
      * @throws ODataException
+     * @throws \ReflectionException
+     * @throws \Exception
      */
     protected function serializeResult(RequestDescription $request, IUriProcessor $uriProcessor)
     {
@@ -565,13 +584,16 @@ abstract class BaseService implements IRequestHandler, IService
     /**
      * Gets the response format for the requested resource.
      *
-     * @param RequestDescription $request      The request submitted by client and it's execution result
-     * @param IUriProcessor      $uriProcessor The reference to the IUriProcessor
-     *
-     * @throws ODataException, HttpHeaderFailure
+     * @param RequestDescription $request The request submitted by client and it's execution result
+     * @param IUriProcessor $uriProcessor The reference to the IUriProcessor
      *
      * @return string|null the response content-type, a null value means the requested resource
      *                     is named stream and IDSSP2::getStreamContentType returned null
+     * @throws Common\HttpHeaderFailure
+     * @throws InvalidOperationException
+     * @throws ODataException , HttpHeaderFailure
+     * @throws \ReflectionException
+     * @throws Common\UrlFormatException
      */
     public function getResponseContentType(
         RequestDescription $request,
@@ -713,16 +735,17 @@ abstract class BaseService implements IRequestHandler, IService
      * For the given entry object compare its eTag (if it has eTag properties)
      * with current eTag request headers (if present).
      *
-     * @param mixed        &$entryObject             entity resource for which etag
+     * @param mixed        &$entryObject entity resource for which etag
      *                                               needs to be checked
-     * @param ResourceType &$resourceType            Resource type of the entry
+     * @param ResourceType &$resourceType Resource type of the entry
      *                                               object
      * @param bool         &$needToSerializeResponse On return, this will contain
      *                                               True if response needs to be
      *                                               serialized, False otherwise
-     * @param bool         $needToSerializeResponse
      *
      * @throws ODataException
+     * @throws InvalidOperationException
+     * @throws \ReflectionException
      * @return string|null    The ETag for the entry object if it has eTag properties
      *                        NULL otherwise
      */
@@ -818,9 +841,12 @@ abstract class BaseService implements IRequestHandler, IService
      * @param ResourceType &$resourceType Resource type of the $entryObject
      *
      * @throws ODataException
+     * @throws InvalidOperationException
+     * @throws \ReflectionException
      * @return string|null    ETag value for the given resource (with values encoded
      *                        for use in a URI) there are etag properties, NULL if
      *                        there is no etag property
+     *
      */
     protected function getETagForEntry(&$entryObject, ResourceType &$resourceType)
     {

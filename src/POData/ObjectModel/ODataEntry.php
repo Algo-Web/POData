@@ -168,6 +168,9 @@ class ODataEntry
         return $this->editLink;
     }
 
+    /**
+     * @param ODataCategory|null $type
+     */
     public function setType(ODataCategory $type = null)
     {
         $this->type = $type;
@@ -179,6 +182,9 @@ class ODataEntry
         }
     }
 
+    /**
+     * @return ODataCategory
+     */
     public function getType()
     {
         return $this->type;
@@ -275,6 +281,10 @@ class ODataEntry
         return $this->mediaLink;
     }
 
+    /**
+     * @param string|null $msg
+     * @return bool
+     */
     public function isOk(&$msg = null)
     {
         if (!$this->propertyContent instanceof ODataPropertyContent) {

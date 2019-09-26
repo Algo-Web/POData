@@ -214,6 +214,9 @@ class IncomingRequest implements IHTTPRequest
         return $this->method;
     }
 
+    /**
+     * @return false|mixed|string|null
+     */
     public function getAllInput()
     {
         return file_get_contents('php://input');

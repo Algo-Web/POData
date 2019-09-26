@@ -5,6 +5,10 @@ namespace POData\UriProcessor;
 use POData\Common\InvalidOperationException;
 use POData\Providers\Metadata\ResourceSetWrapper;
 
+/**
+ * Class SegmentStack
+ * @package POData\UriProcessor
+ */
 class SegmentStack
 {
     /**
@@ -30,6 +34,10 @@ class SegmentStack
 
     private $mismatch = 'Mismatch between size of names array and wrappers array';
 
+    /**
+     * SegmentStack constructor.
+     * @param RequestDescription|null $request
+     */
     public function __construct(RequestDescription $request = null)
     {
         $this->request = $request;

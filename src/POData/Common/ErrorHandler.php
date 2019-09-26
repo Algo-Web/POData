@@ -16,7 +16,9 @@ class ErrorHandler
      * Common function to handle exceptions in the data service.
      *
      * @param \Exception $exception exception
-     * @param IService   $service   service
+     * @param IService $service service
+     * @throws ODataException
+     * @throws \Exception
      */
     public static function handleException(\Exception $exception, IService $service)
     {

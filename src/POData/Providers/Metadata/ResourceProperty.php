@@ -6,6 +6,10 @@ use InvalidArgumentException;
 use POData\Common\Messages;
 use POData\Providers\Metadata\Type\IType;
 
+/**
+ * Class ResourceProperty
+ * @package POData\Providers\Metadata
+ */
 class ResourceProperty
 {
     /**
@@ -150,6 +154,7 @@ class ResourceProperty
      * kind 'Primitive' then this function returns ITYpe instance for the type.
      *
      * @return \ReflectionClass|IType
+     * @throws \ReflectionException
      */
     public function getInstanceType()
     {

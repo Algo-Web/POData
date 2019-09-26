@@ -66,7 +66,6 @@ class ODataMediaLink
      * @param string      $editLink    EditLink for media content
      * @param string      $srcLink     source link for media content
      * @param string      $contentType Mime type for Media content
-     * @param string      $eTag        eTag for media content
      * @param string|null $eTag        eTag for media content
      * @param null|mixed  $rel
      */

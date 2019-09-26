@@ -2,6 +2,10 @@
 
 namespace POData\Common\Messages;
 
+/**
+ * Trait uriProcessor
+ * @package POData\Common\Messages
+ */
 trait uriProcessor
 {
     /**

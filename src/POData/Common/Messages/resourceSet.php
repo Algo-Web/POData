@@ -2,6 +2,10 @@
 
 namespace POData\Common\Messages;
 
+/**
+ * Trait resourceSet
+ * @package POData\Common\Messages
+ */
 trait resourceSet
 {
     /**

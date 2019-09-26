@@ -45,11 +45,11 @@ class ResourceAssociationSetEnd
      * base resource of this entity, on which the navigation property
      * represented by $resourceProperty is defined.
      *
-     * @param ResourceSet           $resourceSet      Resource set for the association end
-     * @param ResourceEntityType    $resourceType     Resource type for the association end
+     * @param ResourceSet $resourceSet Resource set for the association end
+     * @param ResourceEntityType $resourceType Resource type for the association end
      * @param ResourceProperty|null $resourceProperty Resource property for the association end
      *
-     * @throws \InvalidArgumentException
+     * @param ResourceEntityType|null $concreteType
      */
     public function __construct(
         ResourceSet $resourceSet,

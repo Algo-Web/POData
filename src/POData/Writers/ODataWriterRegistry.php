@@ -12,6 +12,9 @@ class ODataWriterRegistry
     /** @var IODataWriter[] */
     private $writers = [];
 
+    /**
+     * @param IODataWriter $writer
+     */
     public function register(IODataWriter $writer)
     {
         $this->writers[] = $writer;

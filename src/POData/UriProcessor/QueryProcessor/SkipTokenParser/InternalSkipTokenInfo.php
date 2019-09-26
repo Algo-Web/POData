@@ -117,6 +117,7 @@ class InternalSkipTokenInfo
      * @param array &$searchArray The sorted array to search
      *
      * @throws InvalidArgumentException
+     * @throws ODataException
      *
      * @return int (1) If the array is empty then return -1,
      *             (2) If the key object found then return index of first record

@@ -7,6 +7,10 @@
  */
 namespace POData\ObjectModel\AtomObjectModel;
 
+/**
+ * Class AtomAuthor
+ * @package POData\ObjectModel\AtomObjectModel
+ */
 class AtomAuthor
 {
     /**
@@ -16,6 +20,10 @@ class AtomAuthor
      */
     public $name;
 
+    /**
+     * AtomAuthor constructor.
+     * @param string $name
+     */
     public function __construct($name = '')
     {
         $this->name = $name;

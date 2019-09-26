@@ -4,6 +4,10 @@ namespace POData\Providers\Metadata;
 
 use POData\Providers\Metadata\Type\IType;
 
+/**
+ * Class ResourcePrimitiveType
+ * @package POData\Providers\Metadata
+ */
 class ResourcePrimitiveType extends ResourceType
 {
     /**

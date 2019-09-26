@@ -80,6 +80,7 @@ class ExpressionLexer
      * Initialize a new instance of ExpressionLexer.
      *
      * @param string $expression Expression to parse
+     * @throws ODataException
      */
     public function __construct($expression)
     {
@@ -149,6 +150,7 @@ class ExpressionLexer
 
     /**
      * Reads the next token, skipping whitespace as necessary.
+     * @throws ODataException
      */
     public function nextToken()
     {
@@ -291,6 +293,7 @@ class ExpressionLexer
      * Returns the next token without advancing the lexer to next token.
      *
      * @return ExpressionToken
+     * @throws ODataException
      */
     public function peekNextToken()
     {
@@ -329,6 +332,7 @@ class ExpressionLexer
      * and returns the text for it.
      *
      * @return string The dotted identifier starting at the current identifier
+     * @throws ODataException
      */
     public function readDottedIdentifier()
     {
@@ -473,6 +477,7 @@ class ExpressionLexer
      * Parses a token that starts with a digit.
      *
      * @return ExpressionTokenId The kind of token recognized
+     * @throws ODataException
      */
     private function parseFromDigit()
     {
@@ -569,6 +574,7 @@ class ExpressionLexer
 
     /**
      * Validate current character is a digit.
+     * @throws ODataException
      */
     private function validateDigit()
     {

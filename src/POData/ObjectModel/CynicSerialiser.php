@@ -32,6 +32,10 @@ use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
 use POData\UriProcessor\RequestDescription;
 use POData\UriProcessor\SegmentStack;
 
+/**
+ * Class CynicSerialiser
+ * @package POData\ObjectModel
+ */
 class CynicSerialiser implements IObjectSerialiser
 {
     /**
@@ -115,6 +119,9 @@ class CynicSerialiser implements IObjectSerialiser
      * @param QueryResult $entryObject Results property contains reference to the entry object to be written
      *
      * @return ODataEntry|null
+     * @throws InvalidOperationException
+     * @throws ODataException
+     * @throws \ReflectionException
      */
     public function writeTopLevelElement(QueryResult $entryObject)
     {
@@ -257,6 +264,9 @@ class CynicSerialiser implements IObjectSerialiser
      * @param QueryResult &$entryObjects Results property contains array of entry resources to be written
      *
      * @return ODataFeed
+     * @throws InvalidOperationException
+     * @throws ODataException
+     * @throws \ReflectionException
      */
     public function writeTopLevelElements(QueryResult &$entryObjects)
     {
@@ -329,14 +339,19 @@ class CynicSerialiser implements IObjectSerialiser
      * @param QueryResult $entryObject Results property contains the entry resource whose url to be written
      *
      * @return ODataURL
+     * @throws ODataException
+     * @throws \ReflectionException
      */
     public function writeUrlElement(QueryResult $entryObject)
     {
         $url = new ODataURL();
-        if (null !== $entryObject->results) {
+
+        /** @var object|null $results */
+        $results = $entryObject->results;
+        if (null !== $results) {
             $currentResourceType = $this->getCurrentResourceSetWrapper()->getResourceType();
             $relativeUri = $this->getEntryInstanceKey(
-                $entryObject->results,
+                $results,
                 $currentResourceType,
                 $this->getCurrentResourceSetWrapper()->getName()
             );
@@ -354,6 +369,9 @@ class CynicSerialiser implements IObjectSerialiser
      *                                  to be written
      *
      * @return ODataURLCollection
+     * @throws InvalidOperationException
+     * @throws ODataException
+     * @throws \ReflectionException
      */
     public function writeUrlElements(QueryResult $entryObjects)
     {
@@ -394,10 +412,12 @@ class CynicSerialiser implements IObjectSerialiser
      * Write top level complex resource.
      *
      * @param QueryResult  &$complexValue Results property contains the complex object to be written
-     * @param string       $propertyName  The name of the complex property
+     * @param string $propertyName The name of the complex property
      * @param ResourceType &$resourceType Describes the type of complex object
      *
      * @return ODataPropertyContent
+     * @throws InvalidOperationException
+     * @throws \ReflectionException
      */
     public function writeTopLevelComplexObject(QueryResult &$complexValue, $propertyName, ResourceType &$resourceType)
     {
@@ -423,11 +443,13 @@ class CynicSerialiser implements IObjectSerialiser
     /**
      * Write top level bag resource.
      *
-     * @param QueryResult  $bagValue
-     * @param string       $propertyName  The name of the bag property
+     * @param QueryResult $bagValue
+     * @param string $propertyName The name of the bag property
      * @param ResourceType &$resourceType Describes the type of bag object
      *
      * @return ODataPropertyContent
+     * @throws InvalidOperationException
+     * @throws \ReflectionException
      */
     public function writeTopLevelBagObject(QueryResult &$bagValue, $propertyName, ResourceType &$resourceType)
     {
@@ -447,10 +469,12 @@ class CynicSerialiser implements IObjectSerialiser
     /**
      * Write top level primitive value.
      *
-     * @param QueryResult      &$primitiveValue   Results property contains the primitive value to be written
+     * @param QueryResult      &$primitiveValue Results property contains the primitive value to be written
      * @param ResourceProperty &$resourceProperty Resource property describing the primitive property to be written
      *
      * @return ODataPropertyContent
+     * @throws InvalidOperationException
+     * @throws \ReflectionException
      */
     public function writeTopLevelPrimitive(QueryResult &$primitiveValue, ResourceProperty &$resourceProperty = null)
     {
@@ -549,6 +573,8 @@ class CynicSerialiser implements IObjectSerialiser
      * @param $result
      *
      * @return ODataBagContent|null
+     * @throws InvalidOperationException
+     * @throws \ReflectionException
      */
     protected function writeBagValue(ResourceType &$resourceType, $result)
     {
@@ -586,10 +612,12 @@ class CynicSerialiser implements IObjectSerialiser
 
     /**
      * @param ResourceType $resourceType
-     * @param object       $result
-     * @param string|null  $propertyName
+     * @param object $result
+     * @param string|null $propertyName
      *
      * @return ODataPropertyContent
+     * @throws InvalidOperationException
+     * @throws \ReflectionException
      */
     protected function writeComplexValue(ResourceType &$resourceType, &$result, $propertyName = null)
     {
@@ -651,6 +679,7 @@ class CynicSerialiser implements IObjectSerialiser
      * @param string $navigationPropertyName Name of naviagtion property in question
      *
      * @return bool True if the given navigation should be expanded, otherwise false
+     * @throws InvalidOperationException
      */
     protected function shouldExpandSegment($navigationPropertyName)
     {
@@ -665,6 +694,14 @@ class CynicSerialiser implements IObjectSerialiser
         return $expandedProjectionNode instanceof ExpandedProjectionNode;
     }
 
+    /**
+     * @param object $entityInstance
+     * @param ResourceType $resourceType
+     * @param string $containerName
+     * @return string
+     * @throws ODataException
+     * @throws \ReflectionException
+     */
     protected function getEntryInstanceKey($entityInstance, ResourceType $resourceType, $containerName)
     {
         assert(is_object($entityInstance));
@@ -739,6 +776,8 @@ class CynicSerialiser implements IObjectSerialiser
      *                           used for generating $skiptoken
      *
      * @return string for the link for next page
+     * @throws InvalidOperationException
+     * @throws ODataException
      */
     protected function getNextLinkUri(&$lastObject)
     {
@@ -807,11 +846,14 @@ class CynicSerialiser implements IObjectSerialiser
     }
 
     /**
-     * @param $entryObject
+     * @param QueryResult $entryObject
      * @param $prop
      * @param $nuLink
      * @param $propKind
      * @param $propName
+     * @throws InvalidOperationException
+     * @throws ODataException
+     * @throws \ReflectionException
      */
     private function expandNavigationProperty(QueryResult $entryObject, $prop, $nuLink, $propKind, $propName)
     {
@@ -869,6 +911,7 @@ class CynicSerialiser implements IObjectSerialiser
      *                                                        the current segment should be serialized, If it returns
      *                                                        non-null only the properties described by the returned
      *                                                        projection segments should be serialized
+     * @throws InvalidOperationException
      */
     protected function getProjectionNodes()
     {
@@ -885,6 +928,7 @@ class CynicSerialiser implements IObjectSerialiser
      * which describes the current segment.
      *
      * @return RootProjectionNode|ExpandedProjectionNode|null
+     * @throws InvalidOperationException
      */
     protected function getCurrentExpandedProjectionNode()
     {
@@ -968,6 +1012,8 @@ class CynicSerialiser implements IObjectSerialiser
      * @param $nonRelProp
      *
      * @return ODataPropertyContent
+     * @throws InvalidOperationException
+     * @throws \ReflectionException
      */
     private function writeProperties($entryObject, $nonRelProp)
     {
@@ -1003,6 +1049,11 @@ class CynicSerialiser implements IObjectSerialiser
         return $propertyContent;
     }
 
+    /**
+     * Load processing stack if it's currently empty.
+     *
+     * @return void
+     */
     private function loadStackIfEmpty()
     {
         if (0 == count($this->lightStack)) {
@@ -1015,7 +1066,7 @@ class CynicSerialiser implements IObjectSerialiser
      * Convert the given primitive value to string.
      * Note: This method will not handle null primitive value.
      *
-     * @param IType &$primitiveResourceType Type of the primitive property
+     * @param IType &$type                  Type of the primitive property
      *                                      whose value need to be converted
      * @param mixed $primitiveValue         Primitive value to convert
      *
@@ -1038,6 +1089,12 @@ class CynicSerialiser implements IObjectSerialiser
         return $stringValue;
     }
 
+    /**
+     * Is the supplied resourceKind representing a primitive value?
+     *
+     * @param int $resourceKind
+     * @return bool
+     */
     public static function isMatchPrimitive($resourceKind)
     {
         if (16 > $resourceKind) {

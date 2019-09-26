@@ -86,6 +86,7 @@ class ServiceHost
      * @param Request $incomingRequest
      *
      * @throws ODataException
+     * @throws UrlFormatException
      */
     public function __construct(IOperationContext $context = null, Request $incomingRequest)
     {
@@ -111,6 +112,7 @@ class ServiceHost
      * Note: This method will be called first time from constructor.
      *
      * @throws ODataException if AbsoluteRequestUri is not a valid URI
+     * @throws UrlFormatException
      *
      * @return Url
      */
@@ -160,6 +162,7 @@ class ServiceHost
      * @param string $serviceUri The service url, absolute or relative
      *
      * @throws ODataException If the base uri in the configuration is malformed
+     * @throws UrlFormatException
      */
     public function setServiceUri($serviceUri)
     {

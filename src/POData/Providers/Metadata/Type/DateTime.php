@@ -122,6 +122,7 @@ class DateTime implements IType
      * @param string $dateTime datetime to get the year from
      *
      * @return string
+     * @throws \Exception
      */
     public static function year($dateTime)
     {
@@ -136,6 +137,7 @@ class DateTime implements IType
      * @param string $dateTime datetime to get the month from
      *
      * @return string
+     * @throws \Exception
      */
     public static function month($dateTime)
     {
@@ -150,6 +152,7 @@ class DateTime implements IType
      * @param string $dateTime datetime to get the day from
      *
      * @return string
+     * @throws \Exception
      */
     public static function day($dateTime)
     {
@@ -164,6 +167,7 @@ class DateTime implements IType
      * @param string $dateTime datetime to get the hour from
      *
      * @return string
+     * @throws \Exception
      */
     public static function hour($dateTime)
     {
@@ -178,6 +182,7 @@ class DateTime implements IType
      * @param string $dateTime datetime to get the minute from
      *
      * @return string
+     * @throws \Exception
      */
     public static function minute($dateTime)
     {
@@ -192,6 +197,7 @@ class DateTime implements IType
      * @param string $dateTime datetime to get the second from
      *
      * @return string
+     * @throws \Exception
      */
     public static function second($dateTime)
     {
@@ -210,6 +216,7 @@ class DateTime implements IType
      * @param string $dateTime2 Second date
      *
      * @return int
+     * @throws \Exception
      */
     public static function dateTimeCmp($dateTime1, $dateTime2)
     {
@@ -233,6 +240,12 @@ class DateTime implements IType
         return $this->getFullTypeName();
     }
 
+    /**
+     * @param $dateTime
+     * @param $msg
+     * @return false|int
+     * @throws \Exception
+     */
     protected static function dateTimeCmpCheckInput($dateTime, $msg)
     {
         if (is_object($dateTime) && $dateTime instanceof \DateTime) {

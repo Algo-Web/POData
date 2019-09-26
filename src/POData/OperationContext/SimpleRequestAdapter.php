@@ -4,10 +4,18 @@ namespace POData\OperationContext;
 
 use POData\OperationContext\Web\IncomingRequest;
 
+/**
+ * Class SimpleRequestAdapter
+ * @package POData\OperationContext
+ */
 class SimpleRequestAdapter extends IncomingRequest implements IHTTPRequest
 {
     protected $request;
 
+    /**
+     * SimpleRequestAdapter constructor.
+     * @param $request
+     */
     public function __construct($request)
     {
         $this->request = $request;

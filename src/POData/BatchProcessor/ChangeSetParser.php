@@ -7,6 +7,10 @@ use Illuminate\Http\Request;
 use POData\BaseService;
 use POData\OperationContext\Web\Illuminate\IlluminateOperationContext;
 
+/**
+ * Class ChangeSetParser
+ * @package POData\BatchProcessor
+ */
 class ChangeSetParser implements IBatchParser
 {
     protected $data;
@@ -15,17 +19,30 @@ class ChangeSetParser implements IBatchParser
     protected $service;
     protected $contentIDToLocationLookup =[];
 
+    /**
+     * ChangeSetParser constructor.
+     * @param BaseService $service
+     * @param $body
+     */
     public function __construct(BaseService $service, $body)
     {
         $this->service = $service;
         $this->data = trim($body);
     }
 
+    /**
+     * @return mixed
+     */
     public function getBoundary()
     {
         return $this->changeSetBoundary;
     }
 
+    /**
+     * @throws \POData\Common\ODataException
+     * @throws \POData\Common\UrlFormatException
+     * @throws \Exception
+     */
     public function process()
     {
         $raw = $this->getRawRequests();
@@ -59,6 +76,9 @@ class ChangeSetParser implements IBatchParser
         }
     }
 
+    /**
+     * @return string
+     */
     public function getResponse()
     {
         $response = '';
@@ -91,6 +111,9 @@ class ChangeSetParser implements IBatchParser
         return $response;
     }
 
+    /**
+     * @throws \Exception
+     */
     public function handleData()
     {
         $firstLine = trim(strtok($this->getData(), "\n"));
@@ -195,11 +218,19 @@ class ChangeSetParser implements IBatchParser
         return $this->data;
     }
 
+    /**
+     * @return array
+     */
     public function getRawRequests()
     {
         return $this->rawRequests;
     }
 
+    /**
+     * @param $workingObject
+     * @throws \POData\Common\ODataException
+     * @throws \POData\Common\UrlFormatException
+     */
     protected function processSubRequest(&$workingObject)
     {
         $newContext = new IlluminateOperationContext($workingObject->Request);

@@ -1,6 +1,10 @@
+Unreleased
+----------
+   * Fix most missed doc block annotations (see [#217] (https://github.com/Algo-Web/POData/pull/217))
+
 0.3.6 (2019-09-19)
 ------------------
-   * Loosen Carbon dependency to maintain support for older clients (see [#216] (https://github.com/Algo-Web/POData/pull/215))
+   * Loosen Carbon dependency to maintain support for older clients (see [#216] (https://github.com/Algo-Web/POData/pull/216))
 
 0.3.5 (2019-09-19)
 ------------------

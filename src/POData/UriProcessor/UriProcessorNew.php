@@ -81,6 +81,10 @@ class UriProcessorNew implements IUriProcessor
      * Constructs a new instance of UriProcessor.
      *
      * @param IService $service Reference to the data service instance
+     * @throws InvalidOperationException
+     * @throws ODataException
+     * @throws \Doctrine\Common\Annotations\AnnotationException
+     * @throws \POData\Common\UrlFormatException
      */
     private function __construct(IService $service)
     {
@@ -105,9 +109,13 @@ class UriProcessorNew implements IUriProcessor
      *
      * @param IService $service Reference to the data service instance
      *
-     * @throws ODataException
-     *
      * @return IUriProcessor
+     * @throws InvalidOperationException
+     * @throws ODataException
+     * @throws \Doctrine\Common\Annotations\AnnotationException
+     * @throws \POData\Common\NotImplementedException
+     * @throws \ReflectionException
+     * @throws \POData\Common\UrlFormatException
      */
     public static function process(IService $service)
     {
@@ -177,6 +185,9 @@ class UriProcessorNew implements IUriProcessor
         return $this->cereal;
     }
 
+    /**
+     * @return CynicDeserialiser
+     */
     public function getCynicDeserialiser()
     {
         return $this->cynicDeserialiser;
@@ -184,6 +195,10 @@ class UriProcessorNew implements IUriProcessor
 
     /**
      * Execute the client submitted request against the data source.
+     * @throws InvalidOperationException
+     * @throws ODataException
+     * @throws \POData\Common\UrlFormatException
+     * @throws \ReflectionException
      */
     public function execute()
     {
@@ -221,6 +236,9 @@ class UriProcessorNew implements IUriProcessor
 
     /**
      * Execute the client submitted request against the data source (GET).
+     * @throws ODataException
+     * @throws InvalidOperationException
+     * @throws \ReflectionException
      */
     protected function executeGet()
     {
@@ -278,6 +296,8 @@ class UriProcessorNew implements IUriProcessor
 
     /**
      * Execute the client submitted request against the data source (DELETE).
+     * @throws ODataException
+     * @throws \POData\Common\UrlFormatException
      */
     protected function executeDelete()
     {
@@ -294,6 +314,10 @@ class UriProcessorNew implements IUriProcessor
 
     /**
      * Execute the client submitted request against the data source (PUT).
+     * @throws InvalidOperationException
+     * @throws ODataException
+     * @throws \ReflectionException
+     * @throws \Exception
      */
     protected function executePut()
     {
@@ -325,6 +349,11 @@ class UriProcessorNew implements IUriProcessor
 
     /**
      * Execute the client submitted request against the data source (POST).
+     * @throws InvalidOperationException
+     * @throws ODataException
+     * @throws \POData\Common\UrlFormatException
+     * @throws \ReflectionException
+     * @throws \Exception
      */
     protected function executePost()
     {
@@ -427,6 +456,7 @@ class UriProcessorNew implements IUriProcessor
      * @param $keyDescriptor
      * @param $requestMethod
      * @throws ODataException
+     * @throws \POData\Common\UrlFormatException
      */
     protected function checkUriValidForSuppliedVerb($resourceSet, $keyDescriptor, $requestMethod)
     {
@@ -450,6 +480,10 @@ class UriProcessorNew implements IUriProcessor
 
     /**
      * @param $segment
+     * @param array $eagerList
+     * @throws InvalidOperationException
+     * @throws ODataException
+     * @throws \ReflectionException
      */
     private function executeGetResource($segment, array $eagerList = [])
     {
@@ -480,7 +514,11 @@ class UriProcessorNew implements IUriProcessor
 
     /**
      * @param $segment
+     * @param array $eagerList
      * @return null|object|QueryResult
+     * @throws InvalidOperationException
+     * @throws ODataException
+     * @throws \ReflectionException
      */
     private function executeGetResourceDirect($segment, array $eagerList)
     {
@@ -511,7 +549,11 @@ class UriProcessorNew implements IUriProcessor
 
     /**
      * @param $segment
+     * @param $eagerList
      * @return null|object|QueryResult
+     * @throws InvalidOperationException
+     * @throws ODataException
+     * @throws \ReflectionException
      */
     private function executeGetResourceRelated($segment, $eagerList)
     {
@@ -564,6 +606,9 @@ class UriProcessorNew implements IUriProcessor
      * Query for a resource set pointed by the given segment descriptor and update the descriptor with the result.
      *
      * @param SegmentDescriptor $segment Describes the resource set to query
+     * @throws InvalidOperationException
+     * @throws ODataException
+     * @throws \ReflectionException
      */
     private function handleSegmentTargetsToResourceSet(SegmentDescriptor $segment)
     {
@@ -609,6 +654,7 @@ class UriProcessorNew implements IUriProcessor
      * Applies the query options to the resource(s) retrieved from the data source.
      *
      * @param SegmentDescriptor $segment The descriptor which holds resource(s) on which query options to be applied
+     * @throws ODataException
      */
     private function applyQueryOptions(SegmentDescriptor $segment)
     {
@@ -648,6 +694,7 @@ class UriProcessorNew implements IUriProcessor
      * @param array $result
      *
      * @return array
+     * @throws ODataException
      */
     private function performPaging(array $result)
     {

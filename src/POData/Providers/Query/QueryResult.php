@@ -2,6 +2,10 @@
 
 namespace POData\Providers\Query;
 
+/**
+ * Class QueryResult
+ * @package POData\Providers\Query
+ */
 class QueryResult
 {
     /**

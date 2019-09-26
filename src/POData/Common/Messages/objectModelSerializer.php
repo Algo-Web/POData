@@ -2,6 +2,10 @@
 
 namespace POData\Common\Messages;
 
+/**
+ * Trait objectModelSerializer
+ * @package POData\Common\Messages
+ */
 trait objectModelSerializer
 {
     /**

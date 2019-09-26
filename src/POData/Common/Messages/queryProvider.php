@@ -4,6 +4,10 @@ namespace POData\Common\Messages;
 
 use POData\Providers\Query\QueryType;
 
+/**
+ * Trait queryProvider
+ * @package POData\Common\Messages
+ */
 trait queryProvider
 {
     /**

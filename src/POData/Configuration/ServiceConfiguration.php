@@ -8,6 +8,10 @@ use POData\Common\Version;
 use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\Metadata\ResourceSet;
 
+/**
+ * Class ServiceConfiguration
+ * @package POData\Configuration
+ */
 class ServiceConfiguration implements IServiceConfiguration
 {
     /**

@@ -19,6 +19,10 @@ use POData\UriProcessor\ResourcePathProcessor\SegmentParser\SegmentDescriptor;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetSource;
 
+/**
+ * Class UriProcessor
+ * @package POData\UriProcessor
+ */
 class UriProcessor extends UriProcessorNew
 {
 }
