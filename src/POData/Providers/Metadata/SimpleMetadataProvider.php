@@ -491,7 +491,7 @@ class SimpleMetadataProvider implements IMetadataProvider
             $kind = $kind | ResourcePropertyKind::ETAG;
         }
 
-        $resourceProperty = new ResourceProperty($name, null, $kind, $primitiveResourceType);
+        $resourceProperty = new ResourceProperty($name, null, /** @scrutinizer ignore-type */$kind, $primitiveResourceType);
         $resourceType->addProperty($resourceProperty);
         if (array_key_exists($resourceType->getFullName(), $this->oDataEntityMap)) {
             $this->metadataManager->addPropertyToEntityType(

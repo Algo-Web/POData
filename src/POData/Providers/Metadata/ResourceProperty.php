@@ -226,20 +226,20 @@ class ResourceProperty
      */
     private function isResourceKindValidForPropertyKind($pKind, ResourceTypeKind $rKind)
     {
-        if (self::sIsKindOf($pKind, ResourcePropertyKind::PRIMITIVE)
+        if (self::sIsKindOf($pKind, /** @scrutinizer ignore-type */ResourcePropertyKind::PRIMITIVE)
             && $rKind != ResourceTypeKind::PRIMITIVE()
         ) {
             return false;
         }
 
-        if (self::sIsKindOf($pKind, ResourcePropertyKind::COMPLEX_TYPE)
+        if (self::sIsKindOf($pKind, /** @scrutinizer ignore-type */ResourcePropertyKind::COMPLEX_TYPE)
             && $rKind != ResourceTypeKind::COMPLEX()
         ) {
             return false;
         }
 
-        if ((self::sIsKindOf($pKind, ResourcePropertyKind::RESOURCE_REFERENCE)
-            || self::sIsKindOf($pKind, ResourcePropertyKind::RESOURCESET_REFERENCE))
+        if ((self::sIsKindOf($pKind, /** @scrutinizer ignore-type */ResourcePropertyKind::RESOURCE_REFERENCE)
+            || self::sIsKindOf($pKind, /** @scrutinizer ignore-type */ResourcePropertyKind::RESOURCESET_REFERENCE))
             && $rKind != ResourceTypeKind::ENTITY()
         ) {
             return false;

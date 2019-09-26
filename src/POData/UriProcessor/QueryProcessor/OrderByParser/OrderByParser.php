@@ -203,13 +203,13 @@ class OrderByParser
                     );
                 }
 
-                if ($resourceProperty->isKindOf(ResourcePropertyKind::BAG)) {
+                if ($resourceProperty->isKindOf(/** @scrutinizer ignore-type */ResourcePropertyKind::BAG)) {
                     throw ODataException::createBadRequestError(
                         Messages::orderByParserBagPropertyNotAllowed(
                             $resourceProperty->getName()
                         )
                     );
-                } elseif ($resourceProperty->isKindOf(ResourcePropertyKind::PRIMITIVE)) {
+                } elseif ($resourceProperty->isKindOf(/** @scrutinizer ignore-type */ResourcePropertyKind::PRIMITIVE)) {
                     if (!$isLastSegment) {
                         throw ODataException::createBadRequestError(
                             Messages::orderByParserPrimitiveAsIntermediateSegment(
@@ -264,7 +264,7 @@ class OrderByParser
                     }
 
                     $ancestors[] = $orderBySubPathSegment;
-                } elseif ($resourceProperty->isKindOf(ResourcePropertyKind::COMPLEX_TYPE)) {
+                } elseif ($resourceProperty->isKindOf(/** @scrutinizer ignore-type */ResourcePropertyKind::COMPLEX_TYPE)) {
                     if ($isLastSegment) {
                         throw ODataException::createBadRequestError(
                             Messages::orderByParserSortByComplexPropertyIsNotAllowed(
@@ -282,7 +282,7 @@ class OrderByParser
 
                 $node = $currentNode->findNode($orderBySubPathSegment);
                 if (null === $node) {
-                    if ($resourceProperty->isKindOf(ResourcePropertyKind::PRIMITIVE)) {
+                    if ($resourceProperty->isKindOf(/** @scrutinizer ignore-type */ResourcePropertyKind::PRIMITIVE)) {
                         $node = new OrderByLeafNode(
                             $orderBySubPathSegment,
                             $resourceProperty,
