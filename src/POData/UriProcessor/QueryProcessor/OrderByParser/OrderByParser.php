@@ -70,7 +70,7 @@ class OrderByParser
     /**
      * Root node for tree ordering
      *
-     * @var OrderByNode|null
+     * @var OrderByNode
      */
     private $rootOrderByNode;
 
@@ -106,6 +106,7 @@ class OrderByParser
      *
      * @throws ODataException If any error occur while parsing orderby clause
      * @throws InvalidOperationException
+     * @throws \ReflectionException
      *
      * @return InternalOrderByInfo
      */
@@ -165,11 +166,13 @@ class OrderByParser
      *                                           segment
      *
      * @throws ODataException If any error occurs while processing the orderby path segments
+     * @throws \ReflectionException
      * @return mixed
      */
     private function buildOrderByTree(&$orderByPathSegments)
     {
         foreach ($orderByPathSegments as $index1 => &$orderBySubPathSegments) {
+            /** @var OrderByNode $currentNode */
             $currentNode = $this->rootOrderByNode;
             $currentObject = $this->dummyObject;
             $ascending = true;
