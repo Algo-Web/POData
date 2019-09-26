@@ -138,7 +138,7 @@ class ExpressionLexer
      *
      * @return bool true if it's a numeric literal; false otherwise
      */
-    public static function isNumeric($id)
+    public static function isNumeric(ExpressionTokenId $id)
     {
         return
             $id == ExpressionTokenId::INTEGER_LITERAL()
