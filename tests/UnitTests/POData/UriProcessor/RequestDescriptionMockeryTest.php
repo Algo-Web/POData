@@ -11,6 +11,7 @@ use POData\OperationContext\Web\Illuminate\IncomingIlluminateRequest;
 use POData\Providers\Metadata\ResourceEntityType;
 use POData\Providers\Metadata\ResourceStreamInfo;
 use POData\Providers\Metadata\SimpleMetadataProvider;
+use POData\Providers\Metadata\Type\EdmPrimitiveType;
 use POData\Providers\Metadata\Type\TypeCode;
 use POData\UriProcessor\RequestDescription;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\SegmentDescriptor;
@@ -19,6 +20,10 @@ use UnitTests\POData\TestCase;
 
 class RequestDescriptionMockeryTest extends TestCase
 {
+    /**
+     * @throws ODataException
+     * @throws \Doctrine\Common\Annotations\AnnotationException
+     */
     public function testProcessDataStandaloneRequest()
     {
         $raw = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -61,7 +66,7 @@ class RequestDescriptionMockeryTest extends TestCase
         $refClass->shouldReceive('hasMethod')->withArgs(['__get'])->andReturn(true);
         $refClass->shouldReceive('isInstance')->andReturn(true);
         $resourceType = $bar->addEntityType($refClass, 'CompanyConfigModel');
-        $bar->addKeyProperty($resourceType, 'id', TypeCode::INT32);
+        $bar->addKeyProperty($resourceType, 'id', EdmPrimitiveType::INT32());
 
         $raw = '<?xml version="1.0" encoding="utf-8"?>
 <entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">

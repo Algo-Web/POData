@@ -17,6 +17,7 @@ use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\ResourceTypeKind;
 use POData\Providers\Metadata\SimpleMetadataProvider;
+use POData\Providers\Metadata\Type\EdmPrimitiveType;
 use POData\Providers\Metadata\Type\TypeCode;
 use ReflectionClass;
 use ReflectionException;
@@ -322,6 +323,10 @@ class SimpleMetadataProviderTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
+    /**
+     * @throws InvalidOperationException
+     * @throws ReflectionException
+     */
     public function testAddKeyPropertyWithMagicGetterMissingPropertyThrowsInvalidArgException()
     {
         $orig = new reusableEntityClass2('foo', 'bar');
@@ -337,7 +342,7 @@ class SimpleMetadataProviderTest extends TestCase
         $actual = null;
 
         try {
-            $foo->addKeyProperty($complex, $keyName, TypeCode::OBJECT);
+            $foo->addKeyProperty($complex, $keyName, EdmPrimitiveType::OBJECT());
         } catch (InvalidArgumentException $e) {
             $actual = $e->getMessage();
         }
@@ -453,8 +458,8 @@ class SimpleMetadataProviderTest extends TestCase
 
         $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore');
         $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
-        $foo->addKeyProperty($fore, 'key', TypeCode::INT32);
-        $foo->addKeyProperty($aft, 'key', TypeCode::INT32);
+        $foo->addKeyProperty($fore, 'key', EdmPrimitiveType::INT32());
+        $foo->addKeyProperty($aft, 'key', EdmPrimitiveType::INT32());
         $this->assertTrue($fore instanceof ResourceType);
         $this->assertTrue($aft instanceof ResourceType);
 
@@ -653,8 +658,8 @@ class SimpleMetadataProviderTest extends TestCase
 
         $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore');
         $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
-        $foo->addKeyProperty($fore, 'key', TypeCode::INT32);
-        $foo->addKeyProperty($aft, 'key', TypeCode::INT32);
+        $foo->addKeyProperty($fore, 'key', EdmPrimitiveType::INT32());
+        $foo->addKeyProperty($aft, 'key', EdmPrimitiveType::INT32());
         $this->assertTrue($fore instanceof ResourceEntityType);
         $this->assertTrue($aft instanceof ResourceEntityType);
 
@@ -705,8 +710,8 @@ class SimpleMetadataProviderTest extends TestCase
 
         $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore');
         $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
-        $foo->addKeyProperty($fore, 'key', TypeCode::INT32);
-        $foo->addKeyProperty($aft, 'key', TypeCode::INT32);
+        $foo->addKeyProperty($fore, 'key', EdmPrimitiveType::INT32());
+        $foo->addKeyProperty($aft, 'key', EdmPrimitiveType::INT32());
         $this->assertTrue($fore instanceof ResourceEntityType);
         $this->assertTrue($aft instanceof ResourceEntityType);
 
@@ -735,8 +740,8 @@ class SimpleMetadataProviderTest extends TestCase
 
         $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore');
         $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
-        $foo->addKeyProperty($fore, 'key', TypeCode::INT32);
-        $foo->addKeyProperty($aft, 'key', TypeCode::INT32);
+        $foo->addKeyProperty($fore, 'key', EdmPrimitiveType::INT32());
+        $foo->addKeyProperty($aft, 'key', EdmPrimitiveType::INT32());
         $this->assertTrue($fore instanceof ResourceType);
         $this->assertTrue($aft instanceof ResourceType);
 
@@ -779,8 +784,8 @@ class SimpleMetadataProviderTest extends TestCase
 
         $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore');
         $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
-        $foo->addKeyProperty($fore, 'key', TypeCode::INT32);
-        $foo->addKeyProperty($aft, 'key', TypeCode::INT32);
+        $foo->addKeyProperty($fore, 'key', EdmPrimitiveType::INT32());
+        $foo->addKeyProperty($aft, 'key', EdmPrimitiveType::INT32());
         $this->assertTrue($fore instanceof ResourceType);
         $this->assertTrue($aft instanceof ResourceType);
 
@@ -823,8 +828,8 @@ class SimpleMetadataProviderTest extends TestCase
 
         $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore');
         $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
-        $foo->addKeyProperty($fore, 'key', TypeCode::INT32);
-        $foo->addKeyProperty($aft, 'key', TypeCode::INT32);
+        $foo->addKeyProperty($fore, 'key', EdmPrimitiveType::INT32());
+        $foo->addKeyProperty($aft, 'key', EdmPrimitiveType::INT32());
         $this->assertTrue($fore instanceof ResourceType);
         $this->assertTrue($aft instanceof ResourceType);
 
@@ -865,8 +870,8 @@ class SimpleMetadataProviderTest extends TestCase
 
         $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore');
         $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
-        $foo->addKeyProperty($fore, 'key', TypeCode::INT32);
-        $foo->addKeyProperty($aft, 'key', TypeCode::INT32);
+        $foo->addKeyProperty($fore, 'key', EdmPrimitiveType::INT32());
+        $foo->addKeyProperty($aft, 'key', EdmPrimitiveType::INT32());
         $this->assertTrue($fore instanceof ResourceType);
         $this->assertTrue($aft instanceof ResourceType);
 

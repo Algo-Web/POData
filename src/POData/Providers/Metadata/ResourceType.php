@@ -789,9 +789,9 @@ abstract class ResourceType
      *
      * @return ResourcePrimitiveType
      */
-    public static function getPrimitiveResourceType($typeCode)
+    public static function getPrimitiveResourceType(EdmPrimitiveType $typeCode)
     {
-        switch ($typeCode) {
+        switch ($typeCode->getValue()) {
             case EdmPrimitiveType::BINARY:
                 return new ResourcePrimitiveType(new Binary());
             case EdmPrimitiveType::BOOLEAN:

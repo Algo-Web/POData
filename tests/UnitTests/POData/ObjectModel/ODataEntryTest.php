@@ -9,6 +9,7 @@ use POData\ObjectModel\ODataPropertyContent;
 use POData\Providers\Metadata\ResourceEntityType;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\SimpleMetadataProvider;
+use POData\Providers\Metadata\Type\EdmPrimitiveType;
 use POData\Providers\Metadata\Type\TypeCode;
 use ReflectionClass;
 use UnitTests\POData\TestCase;
@@ -39,6 +40,10 @@ class ODataEntryTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
+    /**
+     * @throws \POData\Common\InvalidOperationException
+     * @throws \ReflectionException
+     */
     public function testAddODataCategoryWithCustomResourceSetName()
     {
         $typeClass = m::mock(ReflectionClass::class)->makePartial();
@@ -47,7 +52,7 @@ class ODataEntryTest extends TestCase
 
         $foo = new SimpleMetadataProvider('string', 'String');
         $type = $foo->addEntityType($typeClass, 'Die', 'Dice', false, null);
-        $foo->addKeyProperty($type, 'key', TypeCode::STRING);
+        $foo->addKeyProperty($type, 'key', EdmPrimitiveType::STRING());
         $set = $foo->addResourceSet('Dice', $type);
         $this->assertEquals('Dice', $set->getName());
 

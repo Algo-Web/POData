@@ -45,12 +45,14 @@ class ResourceClassesTest extends TestCase
 
     /**
      * test ResourceType class.
+     * @throws InvalidOperationException
+     * @throws \ReflectionException
      */
     public function testResourceType()
     {
         $exceptionThrown = false;
         try {
-            ResourceType::getPrimitiveResourceType(TypeCode::VOID);
+            ResourceType::getPrimitiveResourceType(EdmPrimitiveType::VOID());
             $this->fail('An expected InvalidArgumentException for \'EdmPrimitiveType\' has not been raised');
         } catch (\InvalidArgumentException $exception) {
             $this->assertStringEndsWith('is not a valid EdmPrimitiveType Enum value.', $exception->getMessage());
@@ -86,8 +88,8 @@ class ResourceClassesTest extends TestCase
             );
         }
 
-        $int32ResourceType = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::INT32);
-        $primitiveResourceType = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::STRING);
+        $int32ResourceType = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::INT32());
+        $primitiveResourceType = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::STRING());
         $testProperty = new ResourceProperty('test', null, ResourcePropertyKind::PRIMITIVE, $primitiveResourceType);
         try {
             $int32ResourceType->addProperty($testProperty);
@@ -99,7 +101,7 @@ class ResourceClassesTest extends TestCase
             );
         }
 
-        $stringResourceType = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::STRING);
+        $stringResourceType = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::STRING());
         $customerIDPrimProperty = new ResourceProperty(
             'CustomerID',
             null,
@@ -112,7 +114,7 @@ class ResourceClassesTest extends TestCase
             ResourcePropertyKind::PRIMITIVE,
             $stringResourceType
         );
-        $intResourceType = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::INT32);
+        $intResourceType = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::INT32());
         $ratingPrimProperty = new ResourceProperty('Rating', null, ResourcePropertyKind::PRIMITIVE, $intResourceType);
 
         $addressComplex = m::mock(TComplexTypeType::class);
@@ -121,7 +123,7 @@ class ResourceClassesTest extends TestCase
             new \ReflectionClass('UnitTests\POData\Facets\NorthWind1\Address2'),
             $addressComplex
         );
-        $booleanResourceType = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::BOOLEAN);
+        $booleanResourceType = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::BOOLEAN());
         $isPrimaryPrimProperty = new ResourceProperty(
             'IsPrimary',
             null,
@@ -138,7 +140,7 @@ class ResourceClassesTest extends TestCase
             );
         }
 
-        $booleanResourceType = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::BOOLEAN);
+        $booleanResourceType = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::BOOLEAN());
         $isPrimaryPrimProperty = new ResourceProperty(
             'IsPrimary',
             null,
@@ -208,7 +210,7 @@ class ResourceClassesTest extends TestCase
             $employeeEntity,
             $employeeMeta
         );
-        $stringResourceType = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::STRING);
+        $stringResourceType = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::STRING());
         $employeeResType->addProperty(
             new ResourceProperty(
                 'EmployeeID',
@@ -258,7 +260,7 @@ class ResourceClassesTest extends TestCase
             $complex
         );
 
-        $booleanResourcetype = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::BOOLEAN);
+        $booleanResourcetype = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::BOOLEAN());
         $isPrimaryPrimProperty = new ResourceProperty(
             'IsPrimary',
             null,
@@ -284,7 +286,7 @@ class ResourceClassesTest extends TestCase
             );
         }
 
-        $stringResourceType = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::STRING);
+        $stringResourceType = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::STRING());
         try {
             $addressComplexProperty = new ResourceProperty(
                 'Address',
@@ -312,7 +314,7 @@ class ResourceClassesTest extends TestCase
             $meta
         );
 
-        $stringResourceType = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::STRING);
+        $stringResourceType = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::STRING());
         $customerIDPrimProperty = new ResourceProperty(
             'CustomerID',
             null,
@@ -325,7 +327,7 @@ class ResourceClassesTest extends TestCase
             ResourcePropertyKind::PRIMITIVE,
             $stringResourceType
         );
-        $intResourceType = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::INT32);
+        $intResourceType = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::INT32());
         $ratingPrimProperty = new ResourceProperty('Rating', null, ResourcePropertyKind::PRIMITIVE, $intResourceType);
         $customerResType->addProperty($customerIDPrimProperty);
         $customerResType->addProperty($customerNamePrimProperty);
@@ -585,6 +587,11 @@ class ResourceClassesTest extends TestCase
         $this->assertSame($assoSetEnd2, $actual);
     }
 
+    /**
+     * @return ResourceEntityType
+     * @throws InvalidOperationException
+     * @throws \ReflectionException
+     */
     private function _getCustomerResourceType()
     {
         $entity = m::mock(TEntityTypeType::class)->makePartial();
@@ -597,8 +604,8 @@ class ResourceClassesTest extends TestCase
             $meta
         );
 
-        $stringResourceType = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::STRING);
-        $intResourceType = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::INT32);
+        $stringResourceType = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::STRING());
+        $intResourceType = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::INT32());
         $customerIDPrimProperty = new ResourceProperty(
             'CustomerID',
             null,
@@ -619,6 +626,11 @@ class ResourceClassesTest extends TestCase
         return $customerResType;
     }
 
+    /**
+     * @return ResourceEntityType
+     * @throws InvalidOperationException
+     * @throws \ReflectionException
+     */
     private function _getOrderResourceType()
     {
         $entity = m::mock(TEntityTypeType::class)->makePartial();
@@ -631,21 +643,21 @@ class ResourceClassesTest extends TestCase
             $meta
         );
 
-        $intResourceType = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::INT32);
+        $intResourceType = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::INT32());
         $orderIDPrimProperty = new ResourceProperty(
             'OrderID',
             null,
             ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::KEY,
             $intResourceType
         );
-        $dateTimeResourceType = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::DATETIME);
+        $dateTimeResourceType = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::DATETIME());
         $orderDatePrimProperty = new ResourceProperty(
             'OrderDate',
             null,
             ResourcePropertyKind::PRIMITIVE,
             $dateTimeResourceType
         );
-        $stringResourceType = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::STRING);
+        $stringResourceType = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::STRING());
         $orderShipNamePrimProperty = new ResourceProperty(
             'ShipName',
             null,

@@ -12,6 +12,7 @@ use POData\OperationContext\HTTPRequestMethod;
 use POData\OperationContext\IOperationContext;
 use POData\Providers\Metadata\ResourceFunctionType;
 use POData\Providers\Metadata\Type\DateTime;
+use POData\Providers\Metadata\Type\EdmPrimitiveType;
 use POData\Providers\Metadata\Type\Int32;
 use POData\Providers\Metadata\Type\TypeCode;
 use POData\Providers\ProvidersWrapper;
@@ -2335,7 +2336,7 @@ class UriProcessorMockeryTest extends TestCase
         $fore = $meta->addEntityType(new \ReflectionClass($forward), 'fore');
         $this->assertEquals('NorthWind.fore', $fore->getFullName());
 
-        $meta->addKeyProperty($fore, 'name', TypeCode::INT32);
+        $meta->addKeyProperty($fore, 'name', EdmPrimitiveType::INT32());
         $meta->addResourceSet('foreSet', $fore);
 
         $name = 'Foobar';

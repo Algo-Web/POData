@@ -2,10 +2,14 @@
 
 namespace POData\Providers\Metadata\Type;
 
+use MyCLabs\Enum\Enum;
+
 /**
  * Class TypeCode.
+ * @method static OBJECT()
+ * @method static VOID()
  */
-class TypeCode
+class TypeCode extends Enum
 {
     const BINARY = 1;
     const BOOLEAN = 2;
