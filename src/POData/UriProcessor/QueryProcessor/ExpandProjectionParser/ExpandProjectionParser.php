@@ -389,10 +389,10 @@ class ExpandProjectionParser
         $pathSegments = [];
         $lexer = new ExpressionLexer($value);
         $i = 0;
-        while ($lexer->getCurrentToken()->Id != ExpressionTokenId::END) {
+        while ($lexer->getCurrentToken()->getId() != ExpressionTokenId::END()) {
             $lastSegment = false;
             if ($isSelect
-                && $lexer->getCurrentToken()->Id == ExpressionTokenId::STAR
+                && $lexer->getCurrentToken()->getId() == ExpressionTokenId::STAR()
             ) {
                 $lastSegment = true;
                 $subPathSegment = $lexer->getCurrentToken()->Text;
@@ -406,9 +406,9 @@ class ExpandProjectionParser
             }
 
             $pathSegments[$i][] = $subPathSegment;
-            $tokenId = $lexer->getCurrentToken()->Id;
-            if ($tokenId != ExpressionTokenId::END) {
-                if ($lastSegment || $tokenId != ExpressionTokenId::SLASH) {
+            $tokenId = $lexer->getCurrentToken()->getId();
+            if ($tokenId != ExpressionTokenId::END()) {
+                if ($lastSegment || $tokenId != ExpressionTokenId::SLASH()) {
                     $lexer->validateToken(ExpressionTokenId::COMMA());
                     ++$i;
                 }

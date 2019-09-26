@@ -13,7 +13,7 @@ class ExpressionToken
     /**
      * @var ExpressionTokenId
      */
-    public $Id;
+    protected $Id;
 
     /**
      * @var string
@@ -34,7 +34,7 @@ class ExpressionToken
     public function isComparisonOperator()
     {
         return
-            $this->Id == ExpressionTokenId::IDENTIFIER &&
+            $this->Id == ExpressionTokenId::IDENTIFIER() &&
             is_string($this->Text) &&
             (strcmp($this->Text, ODataConstants::KEYWORD_EQUAL) == 0 ||
                 strcmp($this->Text, ODataConstants::KEYWORD_NOT_EQUAL) == 0 ||
@@ -53,7 +53,7 @@ class ExpressionToken
     public function isEqualityOperator()
     {
         return
-            $this->Id == ExpressionTokenId::IDENTIFIER &&
+            $this->Id == ExpressionTokenId::IDENTIFIER() &&
                 is_string($this->Text) &&
                     (strcmp($this->Text, ODataConstants::KEYWORD_EQUAL) === 0 ||
                         strcmp($this->Text, ODataConstants::KEYWORD_NOT_EQUAL) === 0);
@@ -68,11 +68,11 @@ class ExpressionToken
     public function isKeyValueToken()
     {
         return
-            $this->Id == ExpressionTokenId::BINARY_LITERAL ||
-            $this->Id == ExpressionTokenId::BOOLEAN_LITERAL ||
-            $this->Id == ExpressionTokenId::DATETIME_LITERAL ||
-            $this->Id == ExpressionTokenId::GUID_LITERAL ||
-            $this->Id == ExpressionTokenId::STRING_LITERAL ||
+            $this->Id == ExpressionTokenId::BINARY_LITERAL() ||
+            $this->Id == ExpressionTokenId::BOOLEAN_LITERAL() ||
+            $this->Id == ExpressionTokenId::DATETIME_LITERAL() ||
+            $this->Id == ExpressionTokenId::GUID_LITERAL() ||
+            $this->Id == ExpressionTokenId::STRING_LITERAL() ||
             ExpressionLexer::isNumeric($this->Id);
     }
 
@@ -84,7 +84,7 @@ class ExpressionToken
      */
     public function getIdentifier()
     {
-        if ($this->Id != ExpressionTokenId::IDENTIFIER) {
+        if ($this->Id != ExpressionTokenId::IDENTIFIER()) {
             throw ODataException::createSyntaxError(
                 'Identifier expected at position ' . $this->Position
             );
@@ -102,7 +102,23 @@ class ExpressionToken
      */
     public function identifierIs($id)
     {
-        return $this->Id == ExpressionTokenId::IDENTIFIER
+        return $this->Id == ExpressionTokenId::IDENTIFIER()
             && strcmp($this->Text, $id) == 0;
+    }
+
+    /**
+     * @return ExpressionTokenId
+     */
+    public function getId()
+    {
+        return $this->Id;
+    }
+
+    /**
+     * @param ExpressionTokenId $Id
+     */
+    public function setId(ExpressionTokenId $Id)
+    {
+        $this->Id = $Id;
     }
 }

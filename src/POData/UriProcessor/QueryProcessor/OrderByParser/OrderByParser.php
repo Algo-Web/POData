@@ -438,17 +438,17 @@ class OrderByParser
         $orderByPathSegments = [];
         $lexer = new ExpressionLexer($value);
         $i = 0;
-        while ($lexer->getCurrentToken()->Id != ExpressionTokenId::END) {
+        while ($lexer->getCurrentToken()->getId() != ExpressionTokenId::END()) {
             $orderBySubPathSegment = $lexer->readDottedIdentifier();
             if (!array_key_exists($i, $orderByPathSegments)) {
                 $orderByPathSegments[$i] = [];
             }
 
             $orderByPathSegments[$i][] = $orderBySubPathSegment;
-            $tokenId = $lexer->getCurrentToken()->Id;
-            if ($tokenId != ExpressionTokenId::END) {
-                if ($tokenId != ExpressionTokenId::SLASH) {
-                    if ($tokenId != ExpressionTokenId::COMMA) {
+            $tokenId = $lexer->getCurrentToken()->getId();
+            if ($tokenId != ExpressionTokenId::END()) {
+                if ($tokenId != ExpressionTokenId::SLASH()) {
+                    if ($tokenId != ExpressionTokenId::COMMA()) {
                         $lexer->validateToken(ExpressionTokenId::IDENTIFIER());
                         $identifier = $lexer->getCurrentToken()->Text;
                         if ($identifier !== 'asc' && $identifier !== 'desc') {
@@ -459,8 +459,8 @@ class OrderByParser
 
                         $orderByPathSegments[$i][] = '*' . $identifier;
                         $lexer->nextToken();
-                        $tokenId = $lexer->getCurrentToken()->Id;
-                        if ($tokenId != ExpressionTokenId::END) {
+                        $tokenId = $lexer->getCurrentToken()->getId();
+                        if ($tokenId != ExpressionTokenId::END()) {
                             $lexer->validateToken(ExpressionTokenId::COMMA());
                             ++$i;
                         }

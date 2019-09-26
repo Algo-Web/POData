@@ -327,13 +327,13 @@ class ExpressionParser
     {
         $this->recurseEnter();
 
-        if ($this->getCurrentToken()->Id == ExpressionTokenId::MINUS
+        if ($this->getCurrentToken()->getId() == ExpressionTokenId::MINUS()
             || $this->getCurrentToken()->identifierIs(ODataConstants::KEYWORD_NOT)
         ) {
             $op = clone $this->getCurrentToken();
             $this->lexer->nextToken();
-            if ($op->Id == ExpressionTokenId::MINUS
-                && (ExpressionLexer::isNumeric($this->getCurrentToken()->Id))
+            if ($op->getId() == ExpressionTokenId::MINUS()
+                && (ExpressionLexer::isNumeric($this->getCurrentToken()->getId()))
             ) {
                 $numberLiteral = $this->getCurrentToken();
                 $numberLiteral->Text = '-' . $numberLiteral->Text;
@@ -346,7 +346,7 @@ class ExpressionParser
 
             $expr = $this->parsePrimary();
             FunctionDescription::validateUnaryOpArguments($op, $expr);
-            if ($op->Id == ExpressionTokenId::MINUS) {
+            if ($op->getId() == ExpressionTokenId::MINUS()) {
                 $expr = new UnaryExpression($expr, ExpressionType::NEGATE(), $expr->getType());
             } else {
                 $expr = new UnaryExpression($expr, ExpressionType::NOT_LOGICAL(), new Boolean());
@@ -375,7 +375,7 @@ class ExpressionParser
         $this->recurseEnter();
         $expr = $this->parsePrimaryStart();
         while (true) {
-            if ($this->getCurrentToken()->Id == ExpressionTokenId::SLASH) {
+            if ($this->getCurrentToken()->getId() == ExpressionTokenId::SLASH()) {
                 $this->lexer->nextToken();
                 $expr = $this->parsePropertyAccess($expr);
             } else {
@@ -398,7 +398,7 @@ class ExpressionParser
      */
     private function parsePrimaryStart()
     {
-        switch ($this->lexer->getCurrentToken()->Id) {
+        switch ($this->lexer->getCurrentToken()->getId()->getValue()) {
             case ExpressionTokenId::BOOLEAN_LITERAL:
                 return $this->parseTypedLiteral(new Boolean());
             case ExpressionTokenId::DATETIME_LITERAL:
@@ -443,13 +443,13 @@ class ExpressionParser
      */
     private function parseParenExpression()
     {
-        if ($this->getCurrentToken()->Id != ExpressionTokenId::OPENPARAM) {
+        if ($this->getCurrentToken()->getId() != ExpressionTokenId::OPENPARAM()) {
             throw ODataException::createSyntaxError('Open parenthesis expected.');
         }
 
         $this->lexer->nextToken();
         $expr = $this->parseExpression();
-        if ($this->getCurrentToken()->Id != ExpressionTokenId::CLOSEPARAM) {
+        if ($this->getCurrentToken()->getId() != ExpressionTokenId::CLOSEPARAM()) {
             throw ODataException::createSyntaxError('Close parenthesis expected.');
         }
 
@@ -468,10 +468,10 @@ class ExpressionParser
      */
     private function parseIdentifier()
     {
-        $this->validateToken(ExpressionTokenId::IDENTIFIER);
+        $this->validateToken(ExpressionTokenId::IDENTIFIER());
 
         // An open paren here would indicate calling a method
-        $identifierIsFunction = $this->lexer->peekNextToken()->Id == ExpressionTokenId::OPENPARAM;
+        $identifierIsFunction = $this->lexer->peekNextToken()->getId() == ExpressionTokenId::OPENPARAM();
         if ($identifierIsFunction) {
             return $this->parseIdentifierAsFunction();
         } else {
@@ -560,14 +560,14 @@ class ExpressionParser
      */
     private function parseArgumentList()
     {
-        if ($this->getCurrentToken()->Id != ExpressionTokenId::OPENPARAM) {
+        if ($this->getCurrentToken()->getId() != ExpressionTokenId::OPENPARAM()) {
             throw ODataException::createSyntaxError('Open parenthesis expected.');
         }
 
         $this->lexer->nextToken();
-        $args = $this->getCurrentToken()->Id != ExpressionTokenId::CLOSEPARAM
+        $args = $this->getCurrentToken()->getId() != ExpressionTokenId::CLOSEPARAM()
              ? $this->parseArguments() : [];
-        if ($this->getCurrentToken()->Id != ExpressionTokenId::CLOSEPARAM) {
+        if ($this->getCurrentToken()->getId() != ExpressionTokenId::CLOSEPARAM()) {
             throw ODataException::createSyntaxError('Close parenthesis expected.');
         }
 
@@ -589,7 +589,7 @@ class ExpressionParser
         $argList = [];
         while (true) {
             $argList[] = $this->parseExpression();
-            if ($this->getCurrentToken()->Id != ExpressionTokenId::COMMA) {
+            if ($this->getCurrentToken()->getId() != ExpressionTokenId::COMMA()) {
                 break;
             }
 
@@ -662,9 +662,9 @@ class ExpressionParser
      *
      * @throws ODataException
      */
-    private function validateToken($expressionTokenId)
+    private function validateToken(ExpressionTokenId $expressionTokenId)
     {
-        if ($this->getCurrentToken()->Id != $expressionTokenId) {
+        if ($this->getCurrentToken()->getId() != $expressionTokenId) {
             throw ODataException::createSyntaxError('Syntax error.');
         }
     }
