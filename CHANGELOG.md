@@ -1,5 +1,6 @@
 Unreleased
 ----------
+   * Make library more polyglot across PHP versions while fixing tests (see [#218] (https://github.com/Algo-Web/POData/pull/218))
    * Fix most missed doc block annotations (see [#217] (https://github.com/Algo-Web/POData/pull/217))
 
 0.3.6 (2019-09-19)
