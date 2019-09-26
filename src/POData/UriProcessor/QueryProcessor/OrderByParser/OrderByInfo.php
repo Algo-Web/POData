@@ -3,6 +3,7 @@
 namespace POData\UriProcessor\QueryProcessor\OrderByParser;
 
 use POData\Common\Messages;
+use POData\Providers\Metadata\ResourceProperty;
 
 /**
  * Class OrderByInfo.

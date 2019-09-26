@@ -2,6 +2,7 @@
 
 namespace POData\UriProcessor\QueryProcessor\SkipTokenParser;
 
+use POData\Providers\Metadata\Type\IType;
 use POData\UriProcessor\QueryProcessor\OrderByParser\OrderByInfo;
 
 /**
