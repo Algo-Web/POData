@@ -28,6 +28,7 @@ class ResourcePathProcessor
      * @throws \POData\Common\InvalidOperationException
      *                        or in case of any version incompatibility
      * @throws \POData\Common\UrlFormatException
+     * @throws \ReflectionException
      *
      * @return RequestDescription
      */

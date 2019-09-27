@@ -257,6 +257,7 @@ class CynicDeserialiser
             $keyPredicate = $rawBits[0];
         }
         $keyPredicate = trim($keyPredicate);
+        /** @var KeyDescriptor|null $keyDesc */
         $keyDesc = null;
         $isParsed = KeyDescriptor::tryParseKeysFromKeyPredicate($keyPredicate, $keyDesc);
         assert(true === $isParsed, 'Key descriptor not successfully parsed');
@@ -344,8 +345,10 @@ class CynicDeserialiser
         assert($type instanceof ResourceEntityType, get_class($type));
         $propName = $link->title;
 
+        /** @var KeyDescriptor|null $keyDesc */
+        $keyDesc = null;
+
         if ($hasUrl) {
-            $keyDesc = null;
             assert(isset($rawPredicate));
             KeyDescriptor::tryParseKeysFromKeyPredicate($rawPredicate, $keyDesc);
             $keyDesc->validate($rawPredicate, $type);

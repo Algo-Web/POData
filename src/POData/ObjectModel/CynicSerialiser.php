@@ -643,7 +643,7 @@ class CynicSerialiser implements IObjectSerialiser
             $internalProperty = new ODataProperty();
             $internalProperty->name = $propName;
             $raw = $result->$propName;
-            if (static::isMatchPrimitive($resourceKind)) {
+            if (static::isMatchPrimitive(/** @scrutinizer ignore-type */$resourceKind)) {
                 $iType = $prop->getInstanceType();
                 if (!$iType instanceof IType) {
                     throw new InvalidOperationException(get_class($iType));
@@ -1015,7 +1015,7 @@ class CynicSerialiser implements IObjectSerialiser
 
     /**
      * @param $entryObject
-     * @param $nonRelProp
+     * @param array<string, ResourceProperty> $nonRelProp
      *
      * @return ODataPropertyContent
      * @throws InvalidOperationException
@@ -1025,12 +1025,13 @@ class CynicSerialiser implements IObjectSerialiser
     {
         $propertyContent = new ODataPropertyContent();
         foreach ($nonRelProp as $corn => $flake) {
+            /** @var ResourceType $resource */
             $resource = $nonRelProp[$corn]->getResourceType();
             if ($resource instanceof ResourceEntityType) {
                 continue;
             }
             $result = $entryObject->$corn;
-            $isBag = $flake->isKindOf(ResourcePropertyKind::BAG);
+            $isBag = $flake->isKindOf(/** @scrutinizer ignore-type */ResourcePropertyKind::BAG);
             $typePrepend = $isBag ? 'Collection(' : '';
             $typeAppend = $isBag ? ')' : '';
             $nonNull = null !== $result;

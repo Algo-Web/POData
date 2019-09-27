@@ -85,6 +85,7 @@ class UriProcessorNew implements IUriProcessor
      * @throws ODataException
      * @throws \Doctrine\Common\Annotations\AnnotationException
      * @throws \POData\Common\UrlFormatException
+     * @throws \ReflectionException
      */
     private function __construct(IService $service)
     {
@@ -469,9 +470,9 @@ class UriProcessorNew implements IUriProcessor
     }
 
     /**
-     * @param $segment
+     * @param SegmentDescriptor $segment
      */
-    private function executeGetSingleton($segment)
+    private function executeGetSingleton(SegmentDescriptor $segment)
     {
         $segmentId = $segment->getIdentifier();
         $singleton = $this->getService()->getProvidersWrapper()->resolveSingleton($segmentId);
@@ -479,13 +480,13 @@ class UriProcessorNew implements IUriProcessor
     }
 
     /**
-     * @param $segment
+     * @param SegmentDescriptor $segment
      * @param array $eagerList
      * @throws InvalidOperationException
      * @throws ODataException
      * @throws \ReflectionException
      */
-    private function executeGetResource($segment, array $eagerList = [])
+    private function executeGetResource(SegmentDescriptor $segment, array $eagerList = [])
     {
         foreach ($eagerList as $eager) {
             $nonEmpty = is_string($eager) && 0 < strlen($eager);
@@ -503,9 +504,9 @@ class UriProcessorNew implements IUriProcessor
     }
 
     /**
-     * @param $segment
+     * @param SegmentDescriptor $segment
      */
-    private function executeGetLink($segment)
+    private function executeGetLink(SegmentDescriptor $segment)
     {
         $previous = $segment->getPrevious();
         assert(isset($previous));
@@ -513,14 +514,14 @@ class UriProcessorNew implements IUriProcessor
     }
 
     /**
-     * @param $segment
+     * @param SegmentDescriptor $segment
      * @param array $eagerList
      * @return null|object|QueryResult
      * @throws InvalidOperationException
      * @throws ODataException
      * @throws \ReflectionException
      */
-    private function executeGetResourceDirect($segment, array $eagerList)
+    private function executeGetResourceDirect(SegmentDescriptor $segment, array $eagerList)
     {
         if ($segment->isSingleResult()) {
             $queryResult = $this->getProviders()->getResourceFromResourceSet(
@@ -548,14 +549,14 @@ class UriProcessorNew implements IUriProcessor
     }
 
     /**
-     * @param $segment
+     * @param SegmentDescriptor $segment
      * @param $eagerList
      * @return null|object|QueryResult
      * @throws InvalidOperationException
      * @throws ODataException
      * @throws \ReflectionException
      */
-    private function executeGetResourceRelated($segment, $eagerList)
+    private function executeGetResourceRelated(SegmentDescriptor $segment, $eagerList)
     {
         $projectedProperty = $segment->getProjectedProperty();
         $projectedPropertyKind = null !== $projectedProperty ? $projectedProperty->getKind() : 0;
@@ -638,10 +639,10 @@ class UriProcessorNew implements IUriProcessor
     }
 
     /**
-     * @param $segment
+     * @param SegmentDescriptor $segment
      * @throws ODataException
      */
-    private function checkResourceExistsByIdentifier($segment)
+    private function checkResourceExistsByIdentifier(SegmentDescriptor $segment)
     {
         if (null === $segment->getPrevious()->getResult()) {
             throw ODataException::createResourceNotFoundError(

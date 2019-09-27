@@ -176,7 +176,7 @@ class ExpressionParser
     {
         $this->recurseEnter();
         $left = $this->parseLogicalAnd();
-        while ($this->tokenIdentifierIs(ODataConstants::KEYWORD_OR)) {
+        while ($this->tokenIdentifierIs(/** @scrutinizer ignore-type */ODataConstants::KEYWORD_OR)) {
             $logicalOpToken = clone $this->getCurrentToken();
             $this->lexer->nextToken();
             $right = $this->parseLogicalAnd();
@@ -205,7 +205,7 @@ class ExpressionParser
     {
         $this->recurseEnter();
         $left = $this->parseComparison();
-        while ($this->tokenIdentifierIs(ODataConstants::KEYWORD_AND)) {
+        while ($this->tokenIdentifierIs(/** @scrutinizer ignore-type */ODataConstants::KEYWORD_AND)) {
             $logicalOpToken = clone $this->getCurrentToken();
             $this->lexer->nextToken();
             $right = $this->parseComparison();
@@ -259,13 +259,13 @@ class ExpressionParser
     {
         $this->recurseEnter();
         $left = $this->parseMultiplicative();
-        while ($this->getCurrentToken()->identifierIs(ODataConstants::KEYWORD_ADD)
-            || $this->getCurrentToken()->identifierIs(ODataConstants::KEYWORD_SUB)) {
+        while ($this->getCurrentToken()->identifierIs(/** @scrutinizer ignore-type */ODataConstants::KEYWORD_ADD)
+            || $this->getCurrentToken()->identifierIs(/** @scrutinizer ignore-type */ODataConstants::KEYWORD_SUB)) {
             $additiveToken = clone $this->getCurrentToken();
             $this->lexer->nextToken();
             $right = $this->parseMultiplicative();
             $opReturnType = FunctionDescription::verifyAndPromoteArithmeticOpArguments($additiveToken, $left, $right);
-            if ($additiveToken->identifierIs(ODataConstants::KEYWORD_ADD)) {
+            if ($additiveToken->identifierIs(/** @scrutinizer ignore-type */ODataConstants::KEYWORD_ADD)) {
                 $left = new ArithmeticExpression($left, $right, ExpressionType::ADD(), $opReturnType);
             } else {
                 $left = new ArithmeticExpression($left, $right, ExpressionType::SUBTRACT(), $opReturnType);
@@ -289,9 +289,9 @@ class ExpressionParser
     {
         $this->recurseEnter();
         $left = $this->parseUnary();
-        while ($this->getCurrentToken()->identifierIs(ODataConstants::KEYWORD_MULTIPLY)
-            || $this->getCurrentToken()->identifierIs(ODataConstants::KEYWORD_DIVIDE)
-            || $this->getCurrentToken()->identifierIs(ODataConstants::KEYWORD_MODULO)
+        while ($this->getCurrentToken()->identifierIs(/** @scrutinizer ignore-type */ODataConstants::KEYWORD_MULTIPLY)
+            || $this->getCurrentToken()->identifierIs(/** @scrutinizer ignore-type */ODataConstants::KEYWORD_DIVIDE)
+            || $this->getCurrentToken()->identifierIs(/** @scrutinizer ignore-type */ODataConstants::KEYWORD_MODULO)
         ) {
             $multiplicativeToken = clone $this->getCurrentToken();
             $this->lexer->nextToken();
@@ -301,9 +301,9 @@ class ExpressionParser
                 $left,
                 $right
             );
-            if ($multiplicativeToken->identifierIs(ODataConstants::KEYWORD_MULTIPLY)) {
+            if ($multiplicativeToken->identifierIs(/** @scrutinizer ignore-type */ODataConstants::KEYWORD_MULTIPLY)) {
                 $left = new ArithmeticExpression($left, $right, ExpressionType::MULTIPLY(), $opReturnType);
-            } elseif ($multiplicativeToken->identifierIs(ODataConstants::KEYWORD_DIVIDE)) {
+            } elseif ($multiplicativeToken->identifierIs(/** @scrutinizer ignore-type */ODataConstants::KEYWORD_DIVIDE)) {
                 $left = new ArithmeticExpression($left, $right, ExpressionType::DIVIDE(), $opReturnType);
             } else {
                 $left = new ArithmeticExpression($left, $right, ExpressionType::MODULO(), $opReturnType);
@@ -328,7 +328,7 @@ class ExpressionParser
         $this->recurseEnter();
 
         if ($this->getCurrentToken()->getId() == ExpressionTokenId::MINUS()
-            || $this->getCurrentToken()->identifierIs(ODataConstants::KEYWORD_NOT)
+            || $this->getCurrentToken()->identifierIs(/** @scrutinizer ignore-type */ODataConstants::KEYWORD_NOT)
         ) {
             $op = clone $this->getCurrentToken();
             $this->lexer->nextToken();

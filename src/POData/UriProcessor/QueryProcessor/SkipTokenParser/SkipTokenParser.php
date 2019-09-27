@@ -47,6 +47,7 @@ class SkipTokenParser
         InternalOrderByInfo &$internalOrderByInfo,
         $skipToken
     ) {
+        /** @var KeyDescriptor|null $tokenValueDescriptor */
         $tokenValueDescriptor = null;
         if (!KeyDescriptor::tryParseValuesFromSkipToken(
             $skipToken,
@@ -75,6 +76,7 @@ class SkipTokenParser
 
         $i = 0;
         foreach ($orderByPathSegments as $orderByPathSegment) {
+            /** @var IType $typeProvidedInSkipToken */
             $typeProvidedInSkipToken = $positionalValues[$i][1];
             if (!($typeProvidedInSkipToken instanceof Null1)) {
                 $orderBySubPathSegments = $orderByPathSegment->getSubPathSegments();

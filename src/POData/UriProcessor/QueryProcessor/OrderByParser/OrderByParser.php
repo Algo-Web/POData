@@ -6,6 +6,8 @@ use POData\Common\InvalidOperationException;
 use POData\Common\Messages;
 use POData\Common\ODataException;
 use POData\Common\ReflectionHandler;
+use POData\Providers\Metadata\ResourceEntityType;
+use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Metadata\ResourceType;
@@ -67,10 +69,10 @@ class OrderByParser
      */
     private $dummyObject;
 
-    /*
+    /**
      * Root node for tree ordering
      *
-     * @var mixed
+     * @var OrderByNode
      */
     private $rootOrderByNode;
 
@@ -106,6 +108,7 @@ class OrderByParser
      *
      * @throws ODataException If any error occur while parsing orderby clause
      * @throws InvalidOperationException
+     * @throws \ReflectionException
      *
      * @return InternalOrderByInfo
      */
@@ -165,11 +168,13 @@ class OrderByParser
      *                                           segment
      *
      * @throws ODataException If any error occurs while processing the orderby path segments
+     * @throws \ReflectionException
      * @return mixed
      */
     private function buildOrderByTree(&$orderByPathSegments)
     {
         foreach ($orderByPathSegments as $index1 => &$orderBySubPathSegments) {
+            /** @var OrderByNode $currentNode */
             $currentNode = $this->rootOrderByNode;
             $currentObject = $this->dummyObject;
             $ascending = true;
@@ -191,7 +196,9 @@ class OrderByParser
             foreach ($orderBySubPathSegments as $index2 => $orderBySubPathSegment) {
                 $isLastSegment = ($index2 == $subPathCount - 1);
                 $resourceSetWrapper = null;
+                /** @var ResourceEntityType $resourceType */
                 $resourceType = $currentNode->getResourceType();
+                /** @var ResourceProperty $resourceProperty */
                 $resourceProperty = $resourceType->resolveProperty($orderBySubPathSegment);
                 if (null === $resourceProperty) {
                     throw ODataException::createSyntaxError(
@@ -201,14 +208,16 @@ class OrderByParser
                         )
                     );
                 }
+                /** @var ResourcePropertyKind $rKind */
+                $rKind = $resourceProperty->getKind();
 
-                if ($resourceProperty->isKindOf(ResourcePropertyKind::BAG)) {
+                if ($resourceProperty->isKindOf(/** @scrutinizer ignore-type */ResourcePropertyKind::BAG)) {
                     throw ODataException::createBadRequestError(
                         Messages::orderByParserBagPropertyNotAllowed(
                             $resourceProperty->getName()
                         )
                     );
-                } elseif ($resourceProperty->isKindOf(ResourcePropertyKind::PRIMITIVE)) {
+                } elseif ($resourceProperty->isKindOf(/** @scrutinizer ignore-type */ResourcePropertyKind::PRIMITIVE)) {
                     if (!$isLastSegment) {
                         throw ODataException::createBadRequestError(
                             Messages::orderByParserPrimitiveAsIntermediateSegment(
@@ -223,8 +232,8 @@ class OrderByParser
                             Messages::orderByParserSortByBinaryPropertyNotAllowed($resourceProperty->getName())
                         );
                     }
-                } elseif ($resourceProperty->getKind() == ResourcePropertyKind::RESOURCESET_REFERENCE
-                    || $resourceProperty->getKind() == ResourcePropertyKind::RESOURCE_REFERENCE
+                } elseif ($rKind == ResourcePropertyKind::RESOURCESET_REFERENCE
+                    || $rKind == ResourcePropertyKind::RESOURCE_REFERENCE
                 ) {
                     $this->assertion($currentNode instanceof OrderByRootNode || $currentNode instanceof OrderByNode);
                     $resourceSetWrapper = $currentNode->getResourceSetWrapper();
@@ -244,7 +253,7 @@ class OrderByParser
                         );
                     }
 
-                    if ($resourceProperty->getKind() == ResourcePropertyKind::RESOURCESET_REFERENCE) {
+                    if ($rKind == ResourcePropertyKind::RESOURCESET_REFERENCE) {
                         throw ODataException::createBadRequestError(
                             Messages::orderByParserResourceSetReferenceNotAllowed(
                                 $resourceProperty->getName(),
@@ -263,7 +272,7 @@ class OrderByParser
                     }
 
                     $ancestors[] = $orderBySubPathSegment;
-                } elseif ($resourceProperty->isKindOf(ResourcePropertyKind::COMPLEX_TYPE)) {
+                } elseif ($resourceProperty->isKindOf(/** @scrutinizer ignore-type */ResourcePropertyKind::COMPLEX_TYPE)) {
                     if ($isLastSegment) {
                         throw ODataException::createBadRequestError(
                             Messages::orderByParserSortByComplexPropertyIsNotAllowed(
@@ -281,7 +290,7 @@ class OrderByParser
 
                 $node = $currentNode->findNode($orderBySubPathSegment);
                 if (null === $node) {
-                    if ($resourceProperty->isKindOf(ResourcePropertyKind::PRIMITIVE)) {
+                    if ($resourceProperty->isKindOf(/** @scrutinizer ignore-type */ResourcePropertyKind::PRIMITIVE)) {
                         $node = new OrderByLeafNode(
                             $orderBySubPathSegment,
                             $resourceProperty,
@@ -369,9 +378,11 @@ class OrderByParser
         $orderByPathSegments = [];
         $navigationPropertiesInThePath = [];
         foreach ($orderByPaths as $index => $orderBySubPaths) {
+            /** @var OrderByNode $currentNode */
             $currentNode = $this->rootOrderByNode;
             $orderBySubPathSegments = [];
             foreach ($orderBySubPaths as $orderBySubPath) {
+                /** @var OrderByNode $node */
                 $node = $currentNode->findNode($orderBySubPath);
                 $this->assertion(null !== $node);
                 $resourceProperty = $node->getResourceProperty();
@@ -384,6 +395,7 @@ class OrderByParser
                 }
 
                 $orderBySubPathSegments[] = new OrderBySubPathSegment($resourceProperty);
+                /** @var OrderByNode $currentNode */
                 $currentNode = $node;
             }
 

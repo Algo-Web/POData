@@ -205,7 +205,9 @@ class RootProjectionNode extends ExpandedProjectionNode
                 'Expansion stack too deep - should be less than '. self::MAX_EXPAND_TREE_DEPTH . 'elements'
             );
             $topNode = $trackStack[$stackDex];
-            $nodes = $topNode['node']->getChildNodes();
+            /** @var ExpandedProjectionNode $rawNode */
+            $rawNode = $topNode['node'];
+            $nodes = $rawNode->getChildNodes();
             // have we finished processing current level?
             // this treats a leaf node as simply another exhausted parent node with all of its zero children having
             // been processed
