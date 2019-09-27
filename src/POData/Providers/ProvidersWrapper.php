@@ -971,6 +971,7 @@ class ProvidersWrapper
 
     /**
      * @return mixed
+     * @throws \Exception
      */
     public function getMetadataXML()
     {

@@ -94,6 +94,7 @@ class ExpandProjectionParser
      *
      * @throws ODataException If any error occur while parsing expand and/or select clause
      * @throws \POData\Common\InvalidOperationException
+     * @throws \ReflectionException
      *
      * @return RootProjectionNode Returns root of the 'Projection Tree'
      */
@@ -131,6 +132,7 @@ class ExpandProjectionParser
      * @throws ODataException If any error occurs while reading expand clause
      *                        or building the projection tree
      * @throws \POData\Common\InvalidOperationException
+     * @throws \ReflectionException
      */
     private function parseExpand($expand)
     {
@@ -176,6 +178,7 @@ class ExpandProjectionParser
      *
      * @throws ODataException If any error occurs while processing the expand path segments
      * @throws \POData\Common\InvalidOperationException
+     * @throws \ReflectionException
      */
     private function buildProjectionTree($expandPathSegments)
     {

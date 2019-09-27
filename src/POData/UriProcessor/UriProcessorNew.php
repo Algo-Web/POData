@@ -85,6 +85,7 @@ class UriProcessorNew implements IUriProcessor
      * @throws ODataException
      * @throws \Doctrine\Common\Annotations\AnnotationException
      * @throws \POData\Common\UrlFormatException
+     * @throws \ReflectionException
      */
     private function __construct(IService $service)
     {

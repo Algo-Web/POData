@@ -194,6 +194,7 @@ class QueryProcessor
      *
      * @throws ODataException If any error occurs while parsing orderby option
      * @throws \POData\Common\InvalidOperationException
+     * @throws \ReflectionException
      */
     private function processOrderBy()
     {
@@ -393,6 +394,7 @@ class QueryProcessor
      *
      * @throws ODataException Throws bad request error in the following cases
      * @throws \POData\Common\InvalidOperationException
+     * @throws \ReflectionException
      *                        (1) If $expand or select cannot be applied to the
      *                        requested resource.
      *                        (2) If projection is disabled by the developer

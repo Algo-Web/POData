@@ -60,11 +60,12 @@ class SegmentParser
     /**
      * Parse the given Uri segments.
      *
-     * @param string[]         $segments        Array of segments in the request Uri
+     * @param string[] $segments Array of segments in the request Uri
      * @param ProvidersWrapper $providerWrapper Reference to metadata and query provider wrapper
-     * @param bool             $checkForRights  Whether to check for rights on the resource sets in the segments
+     * @param bool $checkForRights Whether to check for rights on the resource sets in the segments
      *
      * @throws ODataException If any error occurs while processing segment
+     * @throws \ReflectionException
      *
      * @return SegmentDescriptor[]
      */
@@ -118,10 +119,11 @@ class SegmentParser
     /**
      * Process a collection of OData URI segment strings and turn them into segment descriptors.
      *
-     * @param string[] $segments    array of segments strings to parse
-     * @param bool     $checkRights Whether to check for rights or not
+     * @param string[] $segments array of segments strings to parse
+     * @param bool $checkRights Whether to check for rights or not
      *
      * @throws ODataException Exception in case of any error found while precessing segments
+     * @throws \ReflectionException
      * @return mixed
      */
     private function createSegmentDescriptors($segments, $checkRights)
@@ -164,10 +166,11 @@ class SegmentParser
 
     /**
      * @param SegmentDescriptor $previous
-     * @param string            $segment
-     * @param bool              $checkRights
+     * @param string $segment
+     * @param bool $checkRights
      *
      * @throws ODataException
+     * @throws \ReflectionException
      * @return SegmentDescriptor
      */
     private function createNextSegment(SegmentDescriptor $previous, $segment, $checkRights)
@@ -365,10 +368,11 @@ class SegmentParser
      * Create SegmentDescriptor for the first segment.
      *
      * @param string $segmentIdentifier The identifier part of the first segment
-     * @param string $keyPredicate      The predicate part of the first segment if any else NULL
-     * @param bool   $checkRights       Whether to check the rights on this segment
+     * @param string $keyPredicate The predicate part of the first segment if any else NULL
+     * @param bool $checkRights Whether to check the rights on this segment
      *
      * @throws ODataException Exception if any validation fails
+     * @throws \ReflectionException
      *
      * @return SegmentDescriptor Descriptor for the first segment
      */
