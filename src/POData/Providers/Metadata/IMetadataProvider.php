@@ -121,4 +121,10 @@ interface IMetadataProvider
      * @return mixed
      */
     public function callSingleton($name);
+
+    /**
+     * @return string|null
+     * @throws \Exception
+     */
+    public function getXML();
 }
