@@ -174,7 +174,7 @@ class ChangeSetParser implements IBatchParser
                         $name = trim($headerSides[0]);
                         $name = strtr(strtoupper($name), '-', '_');
                         $value = trim($headerSides[1]);
-                        if (!starts_with($name, $prefix) && $name != 'CONTENT_TYPE') {
+                        if (!Str::startsWith($name, $prefix) && $name != 'CONTENT_TYPE') {
                             $name = $prefix . $name;
                         }
                         $serverParts[$name] = $value;
