@@ -48,7 +48,7 @@ class ProvidersWrapper
      */
     private $config;
 
-    /*
+    /**
      * Holds reference to ProvidersQueryWrapper implementation
      *
      * @var ProvidersQueryWrapper
@@ -78,14 +78,6 @@ class ProvidersWrapper
      * @var ResourceType[] indexed by resource type name
      */
     private $typeCache = [];
-
-    /**
-     * Cache for ResourceAssociationSet. If ResourceAssociationSet is invisible
-     * value will be null.
-     *
-     * @var ResourceAssociationSet[] indexed by name
-     */
-    private $associationSetCache = [];
 
     /**
      * Creates a new instance of ProvidersWrapper.
