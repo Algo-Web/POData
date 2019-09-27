@@ -643,7 +643,7 @@ class CynicSerialiser implements IObjectSerialiser
             $internalProperty = new ODataProperty();
             $internalProperty->name = $propName;
             $raw = $result->$propName;
-            if (static::isMatchPrimitive($resourceKind)) {
+            if (static::isMatchPrimitive(/** @scrutinizer ignore-type */$resourceKind)) {
                 $iType = $prop->getInstanceType();
                 if (!$iType instanceof IType) {
                     throw new InvalidOperationException(get_class($iType));

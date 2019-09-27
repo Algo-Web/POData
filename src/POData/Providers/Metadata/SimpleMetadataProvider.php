@@ -1006,7 +1006,12 @@ class SimpleMetadataProvider implements IMetadataProvider
             $kind = $kind | ResourcePropertyKind::BAG;
         }
 
-        $resourceProperty = new ResourceProperty($name, null, $kind, $complexResourceType);
+        $resourceProperty = new ResourceProperty(
+            $name,
+            null,
+            /** @scrutinizer ignore-type */$kind,
+            $complexResourceType
+        );
         $targetResourceType->addProperty($resourceProperty);
 
         return $resourceProperty;
