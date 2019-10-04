@@ -508,7 +508,7 @@ class ProvidersQueryWrapper
 
         $isResultArray = is_array($queryResult->results);
 
-        if (QueryType::COUNT() == $queryType || QueryType::ENTITIES_WITH_COUNT() == $queryType) {
+        if (QueryType::hasCount($queryType)) {
             //and the provider is supposed to handle the ordered paging they must return a count!
             if ($this->handlesOrderedPaging() && !is_numeric($queryResult->count)) {
                 throw ODataException::createInternalServerError(
@@ -524,8 +524,7 @@ class ProvidersQueryWrapper
             }
         }
 
-        if ((QueryType::ENTITIES() == $queryType || QueryType::ENTITIES_WITH_COUNT() == $queryType)
-            && !$isResultArray) {
+        if ((QueryType::hasEntities($queryType)) && !$isResultArray) {
             throw ODataException::createInternalServerError(
                 Messages::queryProviderResultsMissing($methodName, $queryType)
             );
