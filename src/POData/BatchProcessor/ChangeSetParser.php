@@ -160,7 +160,7 @@ class ChangeSetParser implements IBatchParser
                         if (!$gotRequestPathParts) {
                             $requestPathParts = explode(' ', $line);
                             $gotRequestPathParts = true;
-                            continue;
+                            continue 2;
                         }
                         $headerSides = explode(':', $line);
                         if (count($headerSides) != 2) {
@@ -168,7 +168,7 @@ class ChangeSetParser implements IBatchParser
                         }
                         if (strtolower(trim($headerSides[0])) == strtolower('Content-ID')) {
                             $contentID = trim($headerSides[1]);
-                            continue;
+                            continue 2;
                         }
 
                         $name = trim($headerSides[0]);

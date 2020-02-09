@@ -256,7 +256,7 @@ class UriProcessorNew implements IUriProcessor
                     break;
                 case TargetKind::RESOURCE():
                     if (TargetSource::ENTITY_SET() == $segment->getTargetSource()) {
-                        $this->handleSegmentTargetsToResourceSet($segment);
+                        $this->handleSegmentTargetsToResourceSet($segment, $eagerLoad);
                     } else {
                         $this->executeGetResource($segment, $eagerLoad);
                     }
@@ -607,11 +607,12 @@ class UriProcessorNew implements IUriProcessor
      * Query for a resource set pointed by the given segment descriptor and update the descriptor with the result.
      *
      * @param SegmentDescriptor $segment Describes the resource set to query
+     * @param array|null $eagerLoad
      * @throws InvalidOperationException
      * @throws ODataException
      * @throws \ReflectionException
      */
-    private function handleSegmentTargetsToResourceSet(SegmentDescriptor $segment)
+    private function handleSegmentTargetsToResourceSet(SegmentDescriptor $segment, $eagerLoad)
     {
         if ($segment->isSingleResult()) {
             $entityInstance = $this->getProviders()->getResourceFromResourceSet(
@@ -621,6 +622,7 @@ class UriProcessorNew implements IUriProcessor
 
             $segment->setResult($entityInstance);
         } else {
+            $eagerLoad = (null !== $eagerLoad) ? $eagerLoad : [];
             $skip = (null == $this->getRequest()) ? 0 : $this->getRequest()->getSkipCount();
             $skip = (null === $skip) ? 0 : $skip;
             $skipToken = $this->getRequest()->getInternalSkipTokenInfo();
@@ -632,7 +634,8 @@ class UriProcessorNew implements IUriProcessor
                 $this->getRequest()->getInternalOrderByInfo(),
                 $this->getRequest()->getTopCount(),
                 $skip,
-                $skipToken
+                $skipToken,
+                $eagerLoad
             );
             $segment->setResult($queryResult);
         }
