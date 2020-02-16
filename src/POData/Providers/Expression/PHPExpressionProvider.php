@@ -178,7 +178,7 @@ class PHPExpressionProvider implements IExpressionProvider
      *
      * @return string
      */
-    public function onUnaryExpression($expressionType, $child)
+    public function onUnaryExpression(ExpressionType $expressionType, $child)
     {
         switch ($expressionType) {
             case ExpressionType::NEGATE():

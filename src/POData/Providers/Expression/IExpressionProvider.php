@@ -71,7 +71,7 @@ interface IExpressionProvider
      *
      * @return string
      */
-    public function onUnaryExpression($expressionType, $child);
+    public function onUnaryExpression(ExpressionType $expressionType, $child);
 
     /**
      * Call-back for constant expression.
