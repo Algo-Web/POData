@@ -138,7 +138,7 @@ class WordPressDSExpressionProvider implements IExpressionProvider
      *
      * @return string
      */
-    public function onRelationalExpression($expressionType, $left, $right)
+    public function onRelationalExpression(ExpressionType $expressionType, $left, $right)
     {
         assert($expressionType instanceof ExpressionType, get_class($expressionType));
         switch ($expressionType) {

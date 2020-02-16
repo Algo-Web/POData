@@ -61,7 +61,7 @@ interface IExpressionProvider
      *
      * @return string
      */
-    public function onRelationalExpression($expressionType, $left, $right);
+    public function onRelationalExpression(ExpressionType $expressionType, $left, $right);
 
     /**
      * Call-back for unary expression.

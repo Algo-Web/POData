@@ -144,7 +144,7 @@ class PHPExpressionProvider implements IExpressionProvider
      *
      * @return string
      */
-    public function onRelationalExpression($expressionType, $left, $right)
+    public function onRelationalExpression(ExpressionType $expressionType, $left, $right)
     {
         switch ($expressionType) {
             case ExpressionType::GREATERTHAN():

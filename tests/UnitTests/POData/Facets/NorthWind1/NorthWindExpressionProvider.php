@@ -68,7 +68,7 @@ class NorthWindExpressionProvider implements IExpressionProvider
      *
      * @return string
      */
-    public function onRelationalExpression($expressionType, $left, $right)
+    public function onRelationalExpression(ExpressionType $expressionType, $left, $right)
     {
         // TODO: Implement onRelationalExpression() method.
     }
