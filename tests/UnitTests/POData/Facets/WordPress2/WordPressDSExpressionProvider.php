@@ -221,7 +221,7 @@ class WordPressDSExpressionProvider implements IExpressionProvider
      *
      * @return string
      */
-    public function onPropertyAccessExpression($expression)
+    public function onPropertyAccessExpression(PropertyAccessExpression $expression)
     {
         $parent = $expression;
         $variable = null;

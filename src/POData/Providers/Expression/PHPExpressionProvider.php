@@ -218,14 +218,8 @@ class PHPExpressionProvider implements IExpressionProvider
      *
      * @return string
      */
-    public function onPropertyAccessExpression($expression)
+    public function onPropertyAccessExpression(PropertyAccessExpression $expression)
     {
-        if (null == $expression) {
-            throw new \InvalidArgumentException('onPropertyAccessExpression - expression null');
-        }
-        if (!($expression instanceof PropertyAccessExpression)) {
-            throw new \InvalidArgumentException('onPropertyAccessExpression - expression is incorrect type');
-        }
         if (null == $this->resourceType) {
             throw new \InvalidArgumentException('onPropertyAccessExpression - resourceType null');
         }
