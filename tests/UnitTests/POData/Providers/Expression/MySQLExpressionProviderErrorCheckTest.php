@@ -8,38 +8,12 @@ use POData\Providers\Metadata\ResourceType;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\PropertyAccessExpression;
 use UnitTests\POData\TestCase;
 
+/**
+ * Class MySQLExpressionProviderErrorCheckTest
+ * @package UnitTests\POData\Providers\Expression
+ */
 class MySQLExpressionProviderErrorCheckTest extends TestCase
 {
-    public function testonPropertyAccessExpressionNullExpression()
-    {
-        $foo = new MySQLExpressionProvider();
-
-        $expected = 'onPropertyAccessExpression - expression null';
-        $actual = null;
-
-        try {
-            $result = $foo->onPropertyAccessExpression(null);
-        } catch (\InvalidArgumentException $e) {
-            $actual = $e->getMessage();
-        }
-        $this->assertEquals($expected, $actual);
-    }
-
-    public function testonPropertyAccessExpressionBadTypeExpression()
-    {
-        $foo = new MySQLExpressionProvider();
-
-        $expected = 'onPropertyAccessExpression - expression is incorrect type';
-        $actual = null;
-
-        try {
-            $result = $foo->onPropertyAccessExpression($foo);
-        } catch (\InvalidArgumentException $e) {
-            $actual = $e->getMessage();
-        }
-        $this->assertEquals($expected, $actual);
-    }
-
     public function testonPropertyAccessExpressionNullResource()
     {
         $property = m::mock(PropertyAccessExpression::class)->makePartial();

@@ -88,7 +88,7 @@ class PHPExpressionProvider implements IExpressionProvider
      *
      * @return string
      */
-    public function onLogicalExpression($expressionType, $left, $right)
+    public function onLogicalExpression(ExpressionType $expressionType, $left, $right)
     {
         assert($expressionType instanceof ExpressionType, get_class($expressionType));
         switch ($expressionType) {
@@ -112,7 +112,7 @@ class PHPExpressionProvider implements IExpressionProvider
      *
      * @return string
      */
-    public function onArithmeticExpression($expressionType, $left, $right)
+    public function onArithmeticExpression(ExpressionType $expressionType, $left, $right)
     {
         switch ($expressionType) {
             case ExpressionType::MULTIPLY():
@@ -144,7 +144,7 @@ class PHPExpressionProvider implements IExpressionProvider
      *
      * @return string
      */
-    public function onRelationalExpression($expressionType, $left, $right)
+    public function onRelationalExpression(ExpressionType $expressionType, $left, $right)
     {
         switch ($expressionType) {
             case ExpressionType::GREATERTHAN():
@@ -178,7 +178,7 @@ class PHPExpressionProvider implements IExpressionProvider
      *
      * @return string
      */
-    public function onUnaryExpression($expressionType, $child)
+    public function onUnaryExpression(ExpressionType $expressionType, $child)
     {
         switch ($expressionType) {
             case ExpressionType::NEGATE():
@@ -218,14 +218,8 @@ class PHPExpressionProvider implements IExpressionProvider
      *
      * @return string
      */
-    public function onPropertyAccessExpression($expression)
+    public function onPropertyAccessExpression(PropertyAccessExpression $expression)
     {
-        if (null == $expression) {
-            throw new \InvalidArgumentException('onPropertyAccessExpression - expression null');
-        }
-        if (!($expression instanceof PropertyAccessExpression)) {
-            throw new \InvalidArgumentException('onPropertyAccessExpression - expression is incorrect type');
-        }
         if (null == $this->resourceType) {
             throw new \InvalidArgumentException('onPropertyAccessExpression - resourceType null');
         }

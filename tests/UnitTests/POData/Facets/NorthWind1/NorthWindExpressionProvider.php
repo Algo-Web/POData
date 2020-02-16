@@ -40,7 +40,7 @@ class NorthWindExpressionProvider implements IExpressionProvider
      *
      * @return string
      */
-    public function onLogicalExpression($expressionType, $left, $right)
+    public function onLogicalExpression(ExpressionType $expressionType, $left, $right)
     {
         // TODO: Implement onLogicalExpression() method.
     }
@@ -54,7 +54,7 @@ class NorthWindExpressionProvider implements IExpressionProvider
      *
      * @return string
      */
-    public function onArithmeticExpression($expressionType, $left, $right)
+    public function onArithmeticExpression(ExpressionType $expressionType, $left, $right)
     {
         // TODO: Implement onArithmeticExpression() method.
     }
@@ -68,7 +68,7 @@ class NorthWindExpressionProvider implements IExpressionProvider
      *
      * @return string
      */
-    public function onRelationalExpression($expressionType, $left, $right)
+    public function onRelationalExpression(ExpressionType $expressionType, $left, $right)
     {
         // TODO: Implement onRelationalExpression() method.
     }
@@ -81,7 +81,7 @@ class NorthWindExpressionProvider implements IExpressionProvider
      *
      * @return string
      */
-    public function onUnaryExpression($expressionType, $child)
+    public function onUnaryExpression(ExpressionType $expressionType, $child)
     {
         // TODO: Implement onUnaryExpression() method.
     }
@@ -106,7 +106,7 @@ class NorthWindExpressionProvider implements IExpressionProvider
      *
      * @return string
      */
-    public function onPropertyAccessExpression($expression)
+    public function onPropertyAccessExpression(PropertyAccessExpression $expression)
     {
         // TODO: Implement onPropertyAccessExpression() method.
     }

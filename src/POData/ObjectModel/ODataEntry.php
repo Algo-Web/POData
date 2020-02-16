@@ -114,7 +114,8 @@ class ODataEntry
         if (!$this->isMediaLinkEntry) {
             return new AtomObjectModel\AtomContent(
                 \POData\Common\MimeTypes::MIME_APPLICATION_XML,
-                null, $this->propertyContent
+                null,
+                $this->propertyContent
             );
         }
         return new AtomObjectModel\AtomContent($this->mediaLink->contentType, $this->mediaLink->srcLink);

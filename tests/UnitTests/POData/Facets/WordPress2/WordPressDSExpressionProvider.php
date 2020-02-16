@@ -83,7 +83,7 @@ class WordPressDSExpressionProvider implements IExpressionProvider
      *
      * @return string
      */
-    public function onLogicalExpression($expressionType, $left, $right)
+    public function onLogicalExpression(ExpressionType $expressionType, $left, $right)
     {
         switch ($expressionType) {
             case ExpressionType::AND_LOGICAL():
@@ -106,7 +106,7 @@ class WordPressDSExpressionProvider implements IExpressionProvider
      *
      * @return string
      */
-    public function onArithmeticExpression($expressionType, $left, $right)
+    public function onArithmeticExpression(ExpressionType $expressionType, $left, $right)
     {
         switch ($expressionType) {
             case ExpressionType::MULTIPLY():
@@ -138,7 +138,7 @@ class WordPressDSExpressionProvider implements IExpressionProvider
      *
      * @return string
      */
-    public function onRelationalExpression($expressionType, $left, $right)
+    public function onRelationalExpression(ExpressionType $expressionType, $left, $right)
     {
         assert($expressionType instanceof ExpressionType, get_class($expressionType));
         switch ($expressionType) {
@@ -181,7 +181,7 @@ class WordPressDSExpressionProvider implements IExpressionProvider
      *
      * @return string
      */
-    public function onUnaryExpression($expressionType, $child)
+    public function onUnaryExpression(ExpressionType $expressionType, $child)
     {
         switch ($expressionType) {
             case ExpressionType::NEGATE():
@@ -221,7 +221,7 @@ class WordPressDSExpressionProvider implements IExpressionProvider
      *
      * @return string
      */
-    public function onPropertyAccessExpression($expression)
+    public function onPropertyAccessExpression(PropertyAccessExpression $expression)
     {
         $parent = $expression;
         $variable = null;
@@ -242,7 +242,7 @@ class WordPressDSExpressionProvider implements IExpressionProvider
      * Call-back for function call expression.
      *
      * @param FunctionDescription $functionDescription Description of the function
-     * @param array<string>       $params              Paameters to the function
+     * @param array<string>       $params              Parameters to the function
      *
      * @return string
      */
