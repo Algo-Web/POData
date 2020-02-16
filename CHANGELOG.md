@@ -1,28 +1,28 @@
 Unreleased
 ----------
-   * Make library more polyglot across PHP versions while fixing tests (see [#218] (https://github.com/Algo-Web/POData/pull/218))
-   * Fix most missed doc block annotations (see [#217] (https://github.com/Algo-Web/POData/pull/217))
-   * Type-hint IExpressionProvider (see [#221] (https://github.com/Algo-Web/POData/pull/221))
+   * Make library more polyglot across PHP versions while fixing tests. (see [#218] (https://github.com/Algo-Web/POData/pull/218))
+   * Fix most missed doc block annotations. (see [#217] (https://github.com/Algo-Web/POData/pull/217))
+   * Type-hint IExpressionProvider. (see [#221] (https://github.com/Algo-Web/POData/pull/221))
 
 0.3.6 (2019-09-19)
 ------------------
-   * Loosen Carbon dependency to maintain support for older clients (see [#216] (https://github.com/Algo-Web/POData/pull/216))
+   * Loosen Carbon dependency to maintain support for older clients. (see [#216] (https://github.com/Algo-Web/POData/pull/216))
 
 0.3.5 (2019-09-19)
 ------------------
-   * Generalise string encoding - thanks to **Kirich11** (see [#215] (https://github.com/Algo-Web/POData/pull/215))
+   * Generalise string encoding - thanks to **Kirich11**. (see [#215] (https://github.com/Algo-Web/POData/pull/215))
 
 0.3.4 (2018-07-13)
 ------------------
    * Clean up whole bunch of vacuous asserts (see [#208] (https://github.com/Algo-Web/POData/pull/208))
-   * Return namespaces to full resourceType names - thanks to **cdcampos** for reporting this (see [#207] (https://github.com/Algo-Web/POData/pull/207))
-   * Fix empty-object serialisation - thanks to **cdcampos** for reporting this (see [#206] (https://github.com/Algo-Web/POData/pull/206))
-   * Return HTTP 204 when a singleton resource is null (see [#205] (https://github.com/Algo-Web/POData/pull/205))
+   * Return namespaces to full resourceType names - thanks to **cdcampos** for reporting this. (see [#207] (https://github.com/Algo-Web/POData/pull/207))
+   * Fix empty-object serialisation - thanks to **cdcampos** for reporting this. (see [#206] (https://github.com/Algo-Web/POData/pull/206))
+   * Return HTTP 204 when a singleton resource is null. (see [#205] (https://github.com/Algo-Web/POData/pull/205))
    * Fix property expansion - **cdcampos** is on a roll! (see [#201] (https://github.com/Algo-Web/POData/pull/201))
-   * Fix ODataCategory and ODataLink writes via JSON - **cdcampos** rides again! (see [#197] (https://github.com/Algo-Web/POData/pull/197))
-   * Untangle batch sub-request handling (see [#191] (https://github.com/Algo-Web/POData/pull/191))
-   * Stop deserialising boolean and date values to strings (see [#188] (https://github.com/Algo-Web/POData/pull/188))
-   * Handle $batch Requests (see [#185] (https://github.com/Algo-Web/POData/pull/185))
+   * Fix ODataCategory and ODataLink writes via JSON. - **cdcampos** rides again! (see [#197] (https://github.com/Algo-Web/POData/pull/197))
+   * Untangle batch sub-request handling. (see [#191] (https://github.com/Algo-Web/POData/pull/191))
+   * Stop deserialising boolean and date values to strings. (see [#188] (https://github.com/Algo-Web/POData/pull/188))
+   * Handle $batch Requests. (see [#185] (https://github.com/Algo-Web/POData/pull/185))
    * Add resource type validity check when adding resource set.  (see [#186] (https://github.com/Algo-Web/POData/pull/186))
 
 0.3.3 (2017-12-04)
