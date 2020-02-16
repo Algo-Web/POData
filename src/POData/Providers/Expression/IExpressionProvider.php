@@ -50,7 +50,7 @@ interface IExpressionProvider
      *
      * @return string
      */
-    public function onArithmeticExpression($expressionType, $left, $right);
+    public function onArithmeticExpression(ExpressionType $expressionType, $left, $right);
 
     /**
      * Call-back for relational expression.

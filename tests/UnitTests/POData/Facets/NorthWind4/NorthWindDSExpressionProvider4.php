@@ -95,7 +95,7 @@ class NorthWindDSExpressionProvider4 implements IExpressionProvider
      *
      * @return string
      */
-    public function onArithmeticExpression($expressionType, $left, $right)
+    public function onArithmeticExpression(ExpressionType $expressionType, $left, $right)
     {
         switch ($expressionType) {
             case ExpressionType::MULTIPLY():
