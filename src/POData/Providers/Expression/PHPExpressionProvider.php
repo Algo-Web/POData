@@ -88,7 +88,7 @@ class PHPExpressionProvider implements IExpressionProvider
      *
      * @return string
      */
-    public function onLogicalExpression($expressionType, $left, $right)
+    public function onLogicalExpression(ExpressionType $expressionType, $left, $right)
     {
         assert($expressionType instanceof ExpressionType, get_class($expressionType));
         switch ($expressionType) {

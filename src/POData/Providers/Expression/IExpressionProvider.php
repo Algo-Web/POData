@@ -39,7 +39,7 @@ interface IExpressionProvider
      *
      * @return string
      */
-    public function onLogicalExpression($expressionType, $left, $right);
+    public function onLogicalExpression(ExpressionType $expressionType, $left, $right);
 
     /**
      * Call-back for arithmetic expression.

@@ -40,7 +40,7 @@ class NorthWindExpressionProvider implements IExpressionProvider
      *
      * @return string
      */
-    public function onLogicalExpression($expressionType, $left, $right)
+    public function onLogicalExpression(ExpressionType $expressionType, $left, $right)
     {
         // TODO: Implement onLogicalExpression() method.
     }

@@ -83,7 +83,7 @@ class WordPressDSExpressionProvider implements IExpressionProvider
      *
      * @return string
      */
-    public function onLogicalExpression($expressionType, $left, $right)
+    public function onLogicalExpression(ExpressionType $expressionType, $left, $right)
     {
         switch ($expressionType) {
             case ExpressionType::AND_LOGICAL():
