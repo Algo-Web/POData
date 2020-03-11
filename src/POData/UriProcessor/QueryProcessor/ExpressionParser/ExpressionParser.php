@@ -398,35 +398,35 @@ class ExpressionParser
      */
     private function parsePrimaryStart()
     {
-        switch ($this->lexer->getCurrentToken()->getId()->getValue()) {
-            case ExpressionTokenId::BOOLEAN_LITERAL:
+        switch ($this->lexer->getCurrentToken()->getId()) {
+            case ExpressionTokenId::BOOLEAN_LITERAL():
                 return $this->parseTypedLiteral(new Boolean());
-            case ExpressionTokenId::DATETIME_LITERAL:
+            case ExpressionTokenId::DATETIME_LITERAL():
                 return $this->parseTypedLiteral(new DateTime());
-            case ExpressionTokenId::DECIMAL_LITERAL:
+            case ExpressionTokenId::DECIMAL_LITERAL():
                 return $this->parseTypedLiteral(new Decimal());
-            case ExpressionTokenId::NULL_LITERAL:
+            case ExpressionTokenId::NULL_LITERAL():
                 return $this->parseNullLiteral();
-            case ExpressionTokenId::IDENTIFIER:
+            case ExpressionTokenId::IDENTIFIER():
                 return $this->parseIdentifier();
-            case ExpressionTokenId::STRING_LITERAL:
+            case ExpressionTokenId::STRING_LITERAL():
                 return $this->parseTypedLiteral(new StringType());
-            case ExpressionTokenId::INT64_LITERAL:
+            case ExpressionTokenId::INT64_LITERAL():
                 return $this->parseTypedLiteral(new Int64());
-            case ExpressionTokenId::INTEGER_LITERAL:
+            case ExpressionTokenId::INTEGER_LITERAL():
                 return $this->parseTypedLiteral(new Int32());
-            case ExpressionTokenId::DOUBLE_LITERAL:
+            case ExpressionTokenId::DOUBLE_LITERAL():
                 return $this->parseTypedLiteral(new Double());
-            case ExpressionTokenId::SINGLE_LITERAL:
+            case ExpressionTokenId::SINGLE_LITERAL():
                 return $this->parseTypedLiteral(new Single());
-            case ExpressionTokenId::GUID_LITERAL:
+            case ExpressionTokenId::GUID_LITERAL():
                 return $this->parseTypedLiteral(new Guid());
-            case ExpressionTokenId::BINARY_LITERAL:
+            case ExpressionTokenId::BINARY_LITERAL():
                 throw new NotImplementedException(
                     'Support for binary is not implemented'
                 );
                 //return $this->parseTypedLiteral(new Binary());
-            case ExpressionTokenId::OPENPARAM:
+            case ExpressionTokenId::OPENPARAM():
                 return $this->parseParenExpression();
             default:
                 throw ODataException::createSyntaxError('Expression expected.');
