@@ -44,9 +44,9 @@ class Char implements IType
      */
     public function isCompatibleWith(IType $type)
     {
-        switch ($type->getTypeCode()->getValue()) {
-            case TypeCode::BYTE:
-            case TypeCode::CHAR:
+        switch ($type->getTypeCode()) {
+            case TypeCode::BYTE():
+            case TypeCode::CHAR():
                 return true;
         }
 

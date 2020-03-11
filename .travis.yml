@@ -9,7 +9,7 @@ php:
 
 before_script:
   - composer global require hirak/prestissimo
-  - composer install
+  - COMPOSER_MEMORY_LIMIT=-1 composer install
 #  - wget http://getcomposer.org/composer.phar
 #  - php composer.phar require satooshi/php-coveralls:dev-master --dev --no-progress --prefer-source
 
