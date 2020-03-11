@@ -791,32 +791,32 @@ abstract class ResourceType
      */
     public static function getPrimitiveResourceType(EdmPrimitiveType $typeCode)
     {
-        switch ($typeCode->getValue()) {
-            case EdmPrimitiveType::BINARY:
+        switch ($typeCode) {
+            case EdmPrimitiveType::BINARY():
                 return new ResourcePrimitiveType(new Binary());
-            case EdmPrimitiveType::BOOLEAN:
+            case EdmPrimitiveType::BOOLEAN():
                 return new ResourcePrimitiveType(new Boolean());
-            case EdmPrimitiveType::BYTE:
+            case EdmPrimitiveType::BYTE():
                 return new ResourcePrimitiveType(new Byte());
-            case EdmPrimitiveType::DATETIME:
+            case EdmPrimitiveType::DATETIME():
                 return new ResourcePrimitiveType(new DateTime());
-            case EdmPrimitiveType::DECIMAL:
+            case EdmPrimitiveType::DECIMAL():
                 return new ResourcePrimitiveType(new Decimal());
-            case EdmPrimitiveType::DOUBLE:
+            case EdmPrimitiveType::DOUBLE():
                 return new ResourcePrimitiveType(new Double());
-            case EdmPrimitiveType::GUID:
+            case EdmPrimitiveType::GUID():
                 return new ResourcePrimitiveType(new Guid());
-            case EdmPrimitiveType::INT16:
+            case EdmPrimitiveType::INT16():
                 return new ResourcePrimitiveType(new Int16());
-            case EdmPrimitiveType::INT32:
+            case EdmPrimitiveType::INT32():
                 return new ResourcePrimitiveType(new Int32());
-            case EdmPrimitiveType::INT64:
+            case EdmPrimitiveType::INT64():
                 return new ResourcePrimitiveType(new Int64());
-            case EdmPrimitiveType::SBYTE:
+            case EdmPrimitiveType::SBYTE():
                 return new ResourcePrimitiveType(new SByte());
-            case EdmPrimitiveType::SINGLE:
+            case EdmPrimitiveType::SINGLE():
                 return new ResourcePrimitiveType(new Single());
-            case EdmPrimitiveType::STRING:
+            case EdmPrimitiveType::STRING():
                 return new ResourcePrimitiveType(new StringType());
             default:
                 throw new \InvalidArgumentException(
