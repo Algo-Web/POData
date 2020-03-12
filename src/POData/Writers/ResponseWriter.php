@@ -92,8 +92,10 @@ class ResponseWriter
 
             $responseBody = $writer->write($entityModel)->getOutput();
         }
-        $rawCode = $service->getHost()->getResponseHeaders()[ODataConstants::HTTPRESPONSE_HEADER_STATUS_CODE];
-        $rawCode = (null !== $rawCode) ? $rawCode : HttpStatus::CODE_OK;
+        /** @var array|null $headers */
+        $headers = $service->getHost()->getResponseHeaders();
+        $rawCode = (null !== $headers) && isset($headers[ODataConstants::HTTPRESPONSE_HEADER_STATUS_CODE]) ?
+            $headers[ODataConstants::HTTPRESPONSE_HEADER_STATUS_CODE] : HttpStatus::CODE_OK;
         $service->getHost()->setResponseStatusCode($rawCode);
         $service->getHost()->setResponseContentType($responseContentType);
         // Hack: this needs to be sorted out in the future as we hookup other versions.
