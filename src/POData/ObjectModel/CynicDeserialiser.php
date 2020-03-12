@@ -311,24 +311,25 @@ class CynicDeserialiser
      */
     protected function processLinkSingleton(ODataLink &$link, ResourceSet $sourceSet, $source, $hasUrl, $hasPayload)
     {
+        /** @var ODataEntry|null $result */
         $result = $link->expandedResult;
         assert(
             null === $result || $result instanceof ODataEntry,
             (null === $result ? 'null' : get_class($result))
         );
         // if link result has already been processed, bail out
-        if (null !== $link->expandedResult || null !== $link->url) {
+        if (null !== $result || null !== $link->url) {
             $isUrlKey = $link->url instanceof KeyDescriptor;
-            $isIdKey = $link->expandedResult instanceof ODataEntry &&
-                       $link->expandedResult->id instanceof KeyDescriptor;
+            $isIdKey = $result instanceof ODataEntry &&
+                       $result->id instanceof KeyDescriptor;
             if ($isUrlKey || $isIdKey) {
                 if ($isIdKey) {
-                    $link->url = $link->expandedResult->id;
+                    $link->url = $result->id;
                 }
                 return;
             }
         }
-        assert(null === $link->expandedResult || !$link->expandedResult->id instanceof KeyDescriptor);
+        assert(null === $result || !$result->id instanceof KeyDescriptor);
         assert(null === $link->url || is_string($link->url));
         if ($hasUrl) {
             $urlBitz = explode('/', $link->url);
@@ -340,7 +341,7 @@ class CynicDeserialiser
             assert(null !== $targSet, get_class($targSet));
             $type = $targSet->getResourceType();
         } else {
-            $type = $this->getMetaProvider()->resolveResourceType($link->expandedResult->type->term);
+            $type = $this->getMetaProvider()->resolveResourceType($result->type->term);
         }
         assert($type instanceof ResourceEntityType, get_class($type));
         $propName = $link->title;
@@ -367,19 +368,19 @@ class CynicDeserialiser
         }
         // creating new resource
         if (!$hasUrl && $hasPayload) {
-            list($targSet, $target) = $this->processEntryContent($link->expandedResult);
+            list($targSet, $target) = $this->processEntryContent($result);
             assert(isset($target));
-            $key = $this->generateKeyDescriptor($type, $link->expandedResult->propertyContent);
+            $key = $this->generateKeyDescriptor($type, $result->propertyContent);
             $link->url = $key;
-            $link->expandedResult->id = $key;
+            $result->id = $key;
             $this->getWrapper()->hookSingleModel($sourceSet, $source, $targSet, $target, $propName);
             return;
         }
         // updating existing resource and connecting to it
-        list($targSet, $target) = $this->processEntryContent($link->expandedResult);
+        list($targSet, $target) = $this->processEntryContent($result);
         assert(isset($target));
         $link->url = $keyDesc;
-        $link->expandedResult->id = $keyDesc;
+        $result->id = $keyDesc;
         $this->getWrapper()->hookSingleModel($sourceSet, $source, $targSet, $target, $propName);
         return;
     }
