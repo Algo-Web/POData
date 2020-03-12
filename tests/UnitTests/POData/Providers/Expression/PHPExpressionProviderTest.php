@@ -291,6 +291,24 @@ class PHPExpressionProviderTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
+    public function testonFunctionCallExpressionSubstringOfEmptyNeedle()
+    {
+        $desc = FunctionDescription::filterFunctionDescriptions()["substringof"][0];
+        $prov = new PHPExpressionProvider('foo');
+
+        $issue = $prov->onFunctionCallExpression($desc, ['\'\'', '\'Property\'']);
+
+        $expected = 'strpos(): Empty needle';
+        $actual = null;
+
+        try {
+            eval($issue . ';');
+        } catch (\Exception $e) {
+            $actual = $e->getMessage();
+        }
+        $this->assertEquals($expected, $actual);
+    }
+
     public function testonPropertyAccessExpression()
     {
         $property = m::mock(PropertyAccessExpression::class)->makePartial();
