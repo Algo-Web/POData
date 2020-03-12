@@ -7,6 +7,7 @@ use POData\Common\InvalidOperationException;
 use POData\Common\ODataException;
 use POData\ObjectModel\ODataProperty;
 use POData\Providers\Metadata\Type\Int32;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionTokenId;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 use UnitTests\POData\TestCase;
@@ -341,6 +342,63 @@ class KeyDescriptorTest extends TestCase
         $actual = $keyDescriptor->getODataProperties();
         $this->assertEquals($expected, $actual);
         $this->assertTrue(2 === $actual['id']->value);
+    }
+
+    /**
+     * @throws \ReflectionException
+     */
+    public function testGetTypeAndValidateKeyValueForDecimalLiteral()
+    {
+        $reflec = new \ReflectionClass(KeyDescriptor::class);
+
+        $method = $reflec->getMethod('getTypeAndValidateKeyValue');
+        $method->setAccessible(true);
+
+        $value = "1.0m";
+        $tokenId = ExpressionTokenId::DECIMAL_LITERAL();
+        $outVal = null;
+        $outType = null;
+
+        $result = $method->invokeArgs(null, [$value, $tokenId, &$outVal, &$outType]);
+        $this->assertTrue($result);
+    }
+
+    /**
+     * @throws \ReflectionException
+     */
+    public function testGetTypeAndValidateKeyValueForInt64Literal()
+    {
+        $reflec = new \ReflectionClass(KeyDescriptor::class);
+
+        $method = $reflec->getMethod('getTypeAndValidateKeyValue');
+        $method->setAccessible(true);
+
+        $value = "10L";
+        $tokenId = ExpressionTokenId::INT64_LITERAL();
+        $outVal = null;
+        $outType = null;
+
+        $result = $method->invokeArgs(null, [$value, $tokenId, &$outVal, &$outType]);
+        $this->assertTrue($result);
+    }
+
+    /**
+     * @throws \ReflectionException
+     */
+    public function testGetTypeAndValidateKeyValueForSingleLiteral()
+    {
+        $reflec = new \ReflectionClass(KeyDescriptor::class);
+
+        $method = $reflec->getMethod('getTypeAndValidateKeyValue');
+        $method->setAccessible(true);
+
+        $value = "1.0f";
+        $tokenId = ExpressionTokenId::SINGLE_LITERAL();
+        $outVal = null;
+        $outType = null;
+
+        $result = $method->invokeArgs(null, [$value, $tokenId, &$outVal, &$outType]);
+        $this->assertTrue($result);
     }
 
     public function tearDown()
