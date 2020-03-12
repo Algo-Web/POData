@@ -3,9 +3,16 @@
     "type": "library",
     "description": "OData for Poor PHP Developers",
     "keywords": [ "rest", "odata" ],
-    "license": "BSD-2-Clause",
+    "license": "MIT",
     "authors": [
-
+        {
+            "name": "c-harris",
+            "email": "c.harris@communicationinnovations.com.au"
+        },
+        {
+            "name": "Alex Goodwin",
+            "email": "cyberia.resurrection@gmail.com"
+        },
         {
             "name": "POData Project",
             "email": "podataproject@gmail.com"
