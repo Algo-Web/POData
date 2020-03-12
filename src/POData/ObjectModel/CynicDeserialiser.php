@@ -278,12 +278,11 @@ class CynicDeserialiser
     protected function processLink(ODataLink &$link, ResourceSet $sourceSet, $source)
     {
         $hasUrl = isset($link->url);
-        $hasPayload = isset($link->expandedResult);
+        $result = $link->expandedResult;
+        $hasPayload = isset($result);
         assert(
-            null == $link->expandedResult
-            || $link->expandedResult instanceof ODataEntry
-            || $link->expandedResult instanceof ODataFeed,
-            get_class($link->expandedResult)
+            null == $result || $result instanceof ODataEntry || $result instanceof ODataFeed,
+            (null === $result ? 'null' : get_class($result))
         );
         $isFeed = $link->expandedResult instanceof ODataFeed;
 
@@ -312,9 +311,10 @@ class CynicDeserialiser
      */
     protected function processLinkSingleton(ODataLink &$link, ResourceSet $sourceSet, $source, $hasUrl, $hasPayload)
     {
+        $result = $link->expandedResult;
         assert(
-            null === $link->expandedResult || $link->expandedResult instanceof ODataEntry,
-            get_class($link->expandedResult)
+            null === $result || $result instanceof ODataEntry,
+            (null === $result ? 'null' : get_class($result))
         );
         // if link result has already been processed, bail out
         if (null !== $link->expandedResult || null !== $link->url) {
