@@ -9,8 +9,11 @@ php:
 
 
 before_script:
+  - pecl install pcov
+  - phpenv config-rm xdebug.ini
   - composer global require hirak/prestissimo
   - COMPOSER_MEMORY_LIMIT=-1 composer install
+  - vendor/bin/pcov clobber
 #  - wget http://getcomposer.org/composer.phar
 #  - php composer.phar require satooshi/php-coveralls:dev-master --dev --no-progress --prefer-source
 
