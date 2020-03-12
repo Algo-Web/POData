@@ -42,7 +42,7 @@ class VoidType implements IType
      *                          be used in PHP expressions
      *
      * @throws NotImplementedException
-     * @return NoType
+     * @return bool
      */
     public function validate($value, &$outValue)
     {
