@@ -263,6 +263,16 @@ class PHPExpressionProviderTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
+    public function testonFunctionCallExpressionEndsWithEmptyNeedle()
+    {
+        $desc = FunctionDescription::filterFunctionDescriptions()["endswith"][0];
+        $prov = new PHPExpressionProvider('foo');
+
+        $issue = $prov->onFunctionCallExpression($desc, ['\'Property\'', '\'\'']);
+
+        eval($issue . ';');
+    }
+
     public function testonPropertyAccessExpression()
     {
         $property = m::mock(PropertyAccessExpression::class)->makePartial();
