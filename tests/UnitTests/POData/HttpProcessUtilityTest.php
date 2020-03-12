@@ -3,6 +3,7 @@
 namespace UnitTests\POData\Common;
 
 use POData\Common\HttpHeaderFailure;
+use POData\Common\Messages;
 use POData\Common\MimeTypes;
 use POData\HttpProcessUtility;
 use UnitTests\POData\TestCase;
@@ -544,5 +545,21 @@ class HttpProcessUtilityTest extends TestCase
         }
         $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * @throws HttpHeaderFailure
+     */
+    public function testReadMediaTypeParameterFromEmptyString()
+    {
+        $text = '';
+        $textIndex = 0;
+
+        $parms = [];
+
+        $this->expectException(HttpHeaderFailure::class);
+        $this->expectExceptionMessage(Messages::httpProcessUtilityMediaTypeMissingValue());
+
+        HttpProcessUtility::readMediaTypeParameter($text, $textIndex, $parms);
     }
 }
