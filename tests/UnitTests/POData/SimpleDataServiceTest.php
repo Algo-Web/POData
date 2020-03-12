@@ -19,7 +19,7 @@ class SimpleDataServiceTest extends TestCase
 {
     public function testCreateWithSuppliedSerialiser()
     {
-        $cereal = m::mock(IObjectSerialiser::class);
+        $cereal = m::mock(IObjectSerialiser::class)->makePartial();
         $cereal->shouldReceive('setService')->withAnyArgs()->andReturnNull()->once();
 
         $meta = m::mock(SimpleMetadataProvider::class);
