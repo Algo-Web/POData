@@ -3,9 +3,16 @@
     "type": "library",
     "description": "OData for Poor PHP Developers",
     "keywords": [ "rest", "odata" ],
-    "license": "BSD-2-Clause",
+    "license": "MIT",
     "authors": [
-
+        {
+            "name": "c-harris",
+            "email": "c.harris@communicationinnovations.com.au"
+        },
+        {
+            "name": "Alex Goodwin",
+            "email": "cyberia.resurrection@gmail.com"
+        },
         {
             "name": "POData Project",
             "email": "podataproject@gmail.com"
@@ -31,7 +38,7 @@
         "illuminate/http": ">=5.1|^6.0",
         "nesbot/carbon": "^1.0|^2.0",
         "algo-web/o-data-metadata": "0.1.*|dev-master",
-        "jms/serializer": "^3.0|^2.0|^1.7"
+        "jms/serializer": "^1.7"
     },
     "require-dev": {
         "doctrine/annotations": "^v1.4.0",
