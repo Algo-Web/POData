@@ -53,6 +53,6 @@ trait skipTokenInfo
      */
     public static function internalSkipTokenInfoBinarySearchRequireArray($argumentName)
     {
-        return 'The argument \'' . $argumentName . '\' should be an array to perfrom binary search';
+        return 'The argument \'' . $argumentName . '\' should be an array to perform binary search';
     }
 }

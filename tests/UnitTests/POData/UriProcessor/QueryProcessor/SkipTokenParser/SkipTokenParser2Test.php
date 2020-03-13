@@ -12,6 +12,7 @@ use POData\Providers\ProvidersWrapper;
 use POData\Providers\Query\IQueryProvider;
 use POData\UriProcessor\QueryProcessor\OrderByParser\OrderByParser;
 use POData\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenParser;
+use TypeError;
 use UnitTests\POData\Facets\NorthWind2\NorthWindMetadata;
 use UnitTests\POData\TestCase;
 
@@ -27,6 +28,7 @@ class SkipTokenParser2Test extends TestCase
 
     /**
      * Test will null as resultSet and empty array as resultSet.
+     * @throws ODataException
      */
     public function testGetIndexOfFirstEntryInNextPage1()
     {
@@ -51,15 +53,10 @@ class SkipTokenParser2Test extends TestCase
         $skipToken             = '10365';
         $internalSkipTokenInfo = SkipTokenParser::parseSkipTokenClause($resourceType, $internalOrderByInfo, $skipToken);
 
-        try {
-            $internalSkipTokenInfo->getIndexOfFirstEntryInTheNextPage($m);
-            $this->fail('An expected ODataException for non-array param type has not been thrown');
-        } catch (\InvalidArgumentException $exception) {
-            $this->assertStringStartsWith(
-                "The argument 'searchArray' should be an array to perfrom binary search",
-                $exception->getMessage()
-            );
-        }
+        $this->expectException(TypeError::class);
+        $this->expectExceptionMessage('must be of the type array, null given');
+
+        $internalSkipTokenInfo->getIndexOfFirstEntryInTheNextPage($m);
     }
 
     /**
