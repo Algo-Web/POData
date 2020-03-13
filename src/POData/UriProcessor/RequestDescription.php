@@ -307,6 +307,7 @@ class RequestDescription
             if (is_array($string) && 1 == count($string)) {
                 $string = $string[0];
             }
+            $string = strval($string);
             if (0 == strlen(trim($string))) {
                 return;
             }

@@ -102,7 +102,7 @@ class ModelDeserialiser
                         }
                         break;
                     default:
-                        $value = trim($rawVal);
+                        $value = trim(strval($rawVal));
                         break;
                 }
                 $data[$propName] = $value;

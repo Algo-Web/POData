@@ -229,7 +229,7 @@ class QueryProcessor
                 $orderBy = $orderBy . $key . ', ';
             }
 
-            $orderBy = rtrim($orderBy, ', ');
+            $orderBy = rtrim(strval($orderBy), ', ');
         }
 
         if (null !== $orderBy && '' != trim($orderBy)) {

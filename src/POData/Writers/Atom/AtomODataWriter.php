@@ -302,11 +302,11 @@ class AtomODataWriter implements IODataWriter
         $this->xmlWriter->text(ODataConstants::ATOM_EDIT_RELATION_ATTRIBUTE_VALUE);
         $this->xmlWriter->endAttribute();
         $this->xmlWriter->startAttribute(ODataConstants::ATOM_TITLE_ELELMET_NAME);
-        $this->xmlWriter->text($effectiveTitle);
+        $this->xmlWriter->text(strval($effectiveTitle));
         $this->xmlWriter->endAttribute();
         $this->xmlWriter->startAttribute(ODataConstants::ATOM_HREF_ATTRIBUTE_NAME);
         if (null === $entry->editLink || is_string($entry->editLink)) {
-            $this->xmlWriter->text($entry->editLink);
+            $this->xmlWriter->text(strval($entry->editLink));
         } else {
             $this->xmlWriter->text($entry->editLink->url);
         }
@@ -482,7 +482,7 @@ class AtomODataWriter implements IODataWriter
         $this->xmlWriter->startElement(ODataConstants::ATOM_CATEGORY_ELEMENT_NAME);
         $this->xmlWriter->writeAttribute(
             ODataConstants::ATOM_CATEGORY_TERM_ATTRIBUTE_NAME,
-            $effectiveType
+            strval($effectiveType)
         );
         $this->xmlWriter->writeAttribute(
             ODataConstants::ATOM_CATEGORY_SCHEME_ATTRIBUTE_NAME,
@@ -497,7 +497,7 @@ class AtomODataWriter implements IODataWriter
             );
             $this->xmlWriter->writeAttribute(
                 ODataConstants::ATOM_CONTENT_SRC_ATTRIBUTE_NAME,
-                $entry->mediaLink->srcLink
+                strval($entry->mediaLink->srcLink)
             );
             $this->xmlWriter->endElement();
             $this->xmlWriter->startElementNs(
@@ -665,7 +665,8 @@ class AtomODataWriter implements IODataWriter
         $xmlWriter = new \XMLWriter();
         $xmlWriter->openMemory();
         $xmlWriter->startDocument('1.0', 'UTF-8', 'yes');
-        $xmlWriter->setIndent(4);
+        $xmlWriter->setIndent(true);
+        $xmlWriter->setIndentString('    ');
 
         $xmlWriter->startElement(ODataConstants::XML_ERROR_ELEMENT_NAME);
         //$xmlWriter->writeAttributeNs(
@@ -681,7 +682,7 @@ class AtomODataWriter implements IODataWriter
         $xmlWriter->endAttribute();
         $xmlWriter->startElement(ODataConstants::XML_ERROR_CODE_ELEMENT_NAME);
         if (null != $exception->getStatusCode()) {
-            $xmlWriter->text($exception->getStatusCode());
+            $xmlWriter->text(strval($exception->getStatusCode()));
         }
         $xmlWriter->endElement();
         $xmlWriter->startElement(ODataConstants::XML_ERROR_MESSAGE_ELEMENT_NAME);
