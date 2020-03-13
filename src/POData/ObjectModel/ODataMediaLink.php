@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace POData\ObjectModel;
 
+use POData\Common\ODataConstants;
+
 /**
  * Class ODataMediaLink represents an OData Media link.
  */
 class ODataMediaLink
 {
-    const MEDIARESOURCE_BASE = 'http://schemas.microsoft.com/ado/2007/08/dataservices/mediaresource/';
-
     /**
      * Name for media link.
      *
@@ -78,6 +78,7 @@ class ODataMediaLink
         $this->eTag        = $eTag;
         $this->name        = $name;
         $this->srcLink     = $srcLink;
-        $this->rel         = (null !== $rel) ? $rel : self::MEDIARESOURCE_BASE . $name;
+        $this->rel         = (null !== $rel) ? $rel :
+            ODataConstants::ATOM_MEDIA_RESOURCE_RELATION_ATTRIBUTE_VALUE . $name;
     }
 }
