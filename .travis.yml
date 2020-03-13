@@ -1,8 +1,6 @@
 language: php
 
 php:
-  - 5.6
-  - 7.0
   - 7.1
   - 7.2
   - 7.3
@@ -11,15 +9,18 @@ php:
 
 
 before_script:
+  - pecl install pcov
+  - phpenv config-rm xdebug.ini
   - composer global require hirak/prestissimo
   - COMPOSER_MEMORY_LIMIT=-1 composer install
+  - vendor/bin/pcov clobber
 #  - wget http://getcomposer.org/composer.phar
 #  - php composer.phar require satooshi/php-coveralls:dev-master --dev --no-progress --prefer-source
 
 script:
   - mkdir -p build/logs
   # run tests in random order to expose hidden inter-test dependencies (by breakages)
-  - php vendor/bin/phpunit-randomizer --coverage-clover build/logs/clover.xml --order rand
+  - php vendor/bin/phpunit --coverage-clover build/logs/clover.xml
 
 after_script:
   - php vendor/bin/php-coveralls --exclude-no-stmt

@@ -7,6 +7,7 @@ use AlgoWeb\ODataMetadata\MetadataV3\edm\EntityContainer\FunctionImportAnonymous
 use AlgoWeb\ODataMetadata\MetadataV3\edm\TComplexTypeType;
 use AlgoWeb\ODataMetadata\MetadataV3\edm\TEntityTypeType;
 use Mockery as m;
+use PHPUnit\Framework\Error\Error;
 use POData\ObjectModel\IObjectSerialiser;
 use POData\OperationContext\ServiceHost;
 use POData\Providers\Metadata\ResourceComplexType;
@@ -175,7 +176,7 @@ class SimpleMetadataProviderSingletonTest extends SimpleMetadataProviderTest
 
         try {
             $foo->callSingleton($name);
-        } catch (\PHPUnit_Framework_Error_Warning $e) {
+        } catch (Error $e) {
             $actual = $e->getMessage();
         }
         $this->assertEquals($expected, $actual);
@@ -191,7 +192,7 @@ class SimpleMetadataProviderSingletonTest extends SimpleMetadataProviderTest
 
         try {
             $foo->callSingleton($name);
-        } catch (\PHPUnit_Framework_Error_Warning $e) {
+        } catch (Error $e) {
             $actual = $e->getMessage();
         }
         $this->assertEquals($expected, $actual);

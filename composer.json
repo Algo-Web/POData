@@ -34,18 +34,18 @@
     "minimum-stability": "dev",
     "require": {
         "myclabs/php-enum": "1.2.0",
-        "php": ">=5.6.4|^7.0",
+        "php": "^7.1",
         "illuminate/http": ">=5.1|^6.0",
         "nesbot/carbon": "^1.0|^2.0",
         "algo-web/o-data-metadata": "0.1.*|dev-master",
-        "jms/serializer": "^1.7"
+        "jms/serializer": "^1.7",
+        "pcov/clobber": "dev-master"
     },
     "require-dev": {
         "doctrine/annotations": "^v1.4.0",
         "php-coveralls/php-coveralls": ">=v2.1",
-        "phpunit/phpunit": "^5.6",
-        "mockery/mockery": "0.9.*|dev-master",
-        "fiunchinho/phpunit-randomizer": "2.0.*"
+        "phpunit/phpunit": "^7.0",
+        "mockery/mockery": "0.9.*|dev-master"
     },
     "autoload": {
         "psr-0": {
