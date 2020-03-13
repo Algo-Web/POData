@@ -20,7 +20,7 @@ before_script:
 script:
   - mkdir -p build/logs
   # run tests in random order to expose hidden inter-test dependencies (by breakages)
-  - php vendor/bin/phpunit-randomizer --coverage-clover build/logs/clover.xml --order rand
+  - php vendor/bin/phpunit --coverage-clover build/logs/clover.xml
 
 after_script:
   - php vendor/bin/php-coveralls --exclude-no-stmt
