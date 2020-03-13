@@ -78,7 +78,7 @@ class ErrorHandlerTest extends TestCase
 
         $expected = '{
     "error":{
-        "code":"0","message":{
+        "code":"500","message":{
             "lang":"en-US","value":"FAIL"
         }
     }
@@ -146,6 +146,6 @@ class ErrorHandlerTest extends TestCase
         $expected .= ' <message>Media type requires a \'/\' character.</message>' . PHP_EOL;
         $expected .= '</error>' . PHP_EOL;
         $actual = $service->getHost()->getOperationContext()->outgoingResponse()->getStream();
-        $this->assertEquals($expected, $actual);
+        $this->assertXmlStringEqualsXmlString($expected, $actual);
     }
 }
