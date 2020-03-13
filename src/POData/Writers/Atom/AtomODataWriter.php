@@ -64,7 +64,8 @@ class AtomODataWriter implements IODataWriter
         $this->xmlWriter = new \XMLWriter();
         $this->xmlWriter->openMemory();
         $this->xmlWriter->startDocument('1.0', 'UTF-8', 'yes');
-        $this->xmlWriter->setIndent(4);
+        $this->xmlWriter->setIndent(true);
+        $this->xmlWriter->setIndentString ('    ');
     }
 
     /**
