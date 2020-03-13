@@ -9,6 +9,8 @@ declare(strict_types=1);
  */
 namespace POData\ObjectModel\AtomObjectModel;
 
+use POData\ObjectModel\ODataProperty;
+
 /**
  * Class AtomContent.
  * @package POData\ObjectModel\AtomObjectModel
@@ -37,10 +39,26 @@ class AtomContent
      * @param string     $src
      * @param mixed|null $properties
      */
-    public function __construct($type, $src, $properties = null)
+    public function __construct(string $type, string $src = null, $properties = null)
     {
         $this->src        = $src;
         $this->type       = $type;
         $this->properties = $properties;
+    }
+
+    /**
+     * @param $properties
+     */
+    public function setProperties($properties): void
+    {
+        $this->properties = $properties;
+    }
+
+    /**
+     * @param ODataProperty $property
+     */
+    public function addProperty(ODataProperty $property): void
+    {
+        $this->properties[] = $property;
     }
 }
