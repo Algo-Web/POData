@@ -70,7 +70,7 @@ class ChangeSetParser implements IBatchParser
             if ('GET' != $workingObject->RequestVerb && !Str::contains($workingObject->RequestURL, '/$links/')) {
                 if (null === $workingObject->Response->getHeaders()['Location']) {
                     $msg = 'Location header not set in subrequest response for ' . $workingObject->RequestVerb
-                           . ' request url ' . $workingObject->RequestURL;
+                        . ' request url ' . $workingObject->RequestURL;
                     throw new \Exception($msg);
                 }
                 $this->contentIDToLocationLookup[$contentID] = $workingObject->Response->getHeaders()['Location'];
@@ -133,7 +133,7 @@ class ChangeSetParser implements IBatchParser
             $stage               = 0;
             $gotRequestPathParts = false;
             $match               = trim($match);
-            $lines               = explode("\n", $match);
+            $lines               = explode(PHP_EOL, $match);
 
             $requestPathParts = [];
             $serverParts      = [];
@@ -201,6 +201,7 @@ class ChangeSetParser implements IBatchParser
                 'Request' => null,
                 'Response' => null
             ];
+
         }
     }
 
