@@ -99,25 +99,6 @@ class BaseServiceNewTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function testGetResultWithBadQueryProviderTypeThrowException()
-    {
-        $meta = m::mock(IMetadataProvider::class);
-
-        $foo = m::mock(BaseServiceDummy::class)->makePartial();
-        $foo->shouldReceive('getMetadataProvider')->andReturn($meta);
-        $foo->shouldReceive('getQueryProvider')->andReturn('foobar');
-
-        $expected = 'IService.getQueryProvider returns invalid object.';
-        $actual   = null;
-
-        try {
-            $result = $foo->handleRequest();
-        } catch (ODataException $e) {
-            $actual = $e->getMessage();
-        }
-        $this->assertEquals($expected, $actual);
-    }
-
     public function testGetResponseContentTypeBadTypeThrowException()
     {
         $host = m::mock(ServiceHost::class);

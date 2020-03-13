@@ -8,6 +8,7 @@ use POData\Configuration\EntitySetRights;
 use POData\Configuration\IServiceConfiguration;
 use POData\Configuration\ProtocolVersion;
 use POData\OperationContext\ServiceHost;
+use POData\Providers\Query\IQueryProvider;
 use UnitTests\POData\Facets\BaseServiceTestWrapper;
 
 class NorthWindServiceV3 extends BaseServiceTestWrapper
@@ -44,7 +45,7 @@ class NorthWindServiceV3 extends BaseServiceTestWrapper
     /**
      * @return \POData\Providers\Query\IQueryProvider
      */
-    public function getQueryProvider()
+    public function getQueryProvider(): ?IQueryProvider
     {
         return new NorthWindQueryProvider();
     }

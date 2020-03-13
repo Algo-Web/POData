@@ -12,6 +12,7 @@ use POData\Configuration\IServiceConfiguration;
 use POData\Configuration\ProtocolVersion;
 use POData\OperationContext\HTTPRequestMethod;
 use POData\OperationContext\ServiceHost;
+use POData\Providers\Query\IQueryProvider;
 use POData\UriProcessor\UriProcessor;
 use Symfony\Component\Config\Definition\Exception\Exception;
 
@@ -59,7 +60,7 @@ class WordPressDataService extends BaseService
     /**
      * @return \POData\Providers\Query\IQueryProvider
      */
-    public function getQueryProvider()
+    public function getQueryProvider(): ?IQueryProvider
     {
         if (null === $this->_wordPressQueryProvider) {
             $this->_wordPressQueryProvider = new WordPressQueryProvider();

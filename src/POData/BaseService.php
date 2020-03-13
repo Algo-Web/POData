@@ -295,9 +295,9 @@ abstract class BaseService implements IRequestHandler, IService
     }
 
     /**
-     * @return IQueryProvider
+     * @return IQueryProvider|null
      */
-    abstract public function getQueryProvider();
+    abstract public function getQueryProvider(): ?IQueryProvider;
 
     /**
      * @return IMetadataProvider
@@ -346,10 +346,6 @@ abstract class BaseService implements IRequestHandler, IService
 
         if (null === $queryProvider) {
             throw ODataException::createInternalServerError(Messages::providersWrapperNull());
-        }
-
-        if (!$queryProvider instanceof IQueryProvider) {
-            throw ODataException::createInternalServerError(Messages::invalidQueryInstance());
         }
 
         $this->config           = new ServiceConfiguration($metadataProvider);

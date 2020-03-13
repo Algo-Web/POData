@@ -82,7 +82,7 @@ class SimpleDataService extends BaseService implements IService
     /**
      * @return IQueryProvider
      */
-    public function getQueryProvider()
+    public function getQueryProvider(): ?IQueryProvider
     {
         return $this->queryProvider;
     }
