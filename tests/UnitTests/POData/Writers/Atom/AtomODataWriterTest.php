@@ -1340,16 +1340,16 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 
         $expectedStart = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . PHP_EOL;
         $expectedStart .= '<entry>' . PHP_EOL;
-        $expectedStart .= ' <id></id>' . PHP_EOL;
-        $expectedStart .= ' <title type="text"></title>' . PHP_EOL;
+        $expectedStart .= '    <id></id>' . PHP_EOL;
+        $expectedStart .= '    <title type="text"></title>' . PHP_EOL;
 
-        $expectedEnd = ' <author>' . PHP_EOL;
-        $expectedEnd .= '  <name/>' . PHP_EOL;
-        $expectedEnd .= ' </author>' . PHP_EOL;
-        $expectedEnd .= ' <link rel="edit" title="" href="edit"/>' . PHP_EOL;
-        $expectedEnd .= ' <link m:etag="etag" rel="edit-media" type="application/xml" title="name" href="edit"/>'
+        $expectedEnd = '    <author>' . PHP_EOL;
+        $expectedEnd .= '        <name/>' . PHP_EOL;
+        $expectedEnd .= '    </author>' . PHP_EOL;
+        $expectedEnd .= '    <link rel="edit" title="" href="edit"/>' . PHP_EOL;
+        $expectedEnd .= '    <link m:etag="etag" rel="edit-media" type="application/xml" title="name" href="edit"/>'
                         . PHP_EOL;
-        $expectedEnd .= ' <link m:etag="etag" rel="http://schemas.microsoft.com/ado/2007/08/dataservices/'
+        $expectedEnd .= '    <link m:etag="etag" rel="http://schemas.microsoft.com/ado/2007/08/dataservices/'
                         . 'mediaresource/name" type="application/xml" title="name" href="edit"/>' . PHP_EOL;
         $expectedEnd .= '</entry>' . PHP_EOL;
 
