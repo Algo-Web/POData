@@ -119,7 +119,7 @@ class ExpressionParser
      *
      * @param ExpressionToken $token The token to set as current token
      */
-    private function setCurrentToken($token)
+    private function setCurrentToken(ExpressionToken $token)
     {
         $this->getLexer()->setCurrentToken($token);
     }
