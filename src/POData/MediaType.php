@@ -82,9 +82,10 @@ class MediaType
      *             sub-types is '*' (accept all sub-type), 2 if both
      *             type and sub-type matches
      */
-    public function getMatchingRating($candidate)
+    public function getMatchingRating(?string $candidate)
     {
         $result = -1;
+        $candidate = $candidate ?? '';
         if (strlen($candidate) > 0) {
             //get the odata parameter (if there is one)
             $candidateODataValue = null;

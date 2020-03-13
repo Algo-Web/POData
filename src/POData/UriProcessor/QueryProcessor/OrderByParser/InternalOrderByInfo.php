@@ -201,6 +201,6 @@ class InternalOrderByInfo
             }
         }
 
-        return rtrim($nextPageLink, ', ');
+        return rtrim(strval($nextPageLink), ', ');
     }
 }

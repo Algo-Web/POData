@@ -91,7 +91,7 @@ class ResourceFunctionType
         }
 
         if (!$type->isOK($msg)) {
-            throw new \InvalidArgumentException($msg);
+            throw new \InvalidArgumentException(strval($msg));
         }
 
         $this->functionName = $builtFunctionName;

@@ -187,7 +187,7 @@ class CynicSerialiser implements IObjectSerialiser
             $resourceType,
             $resourceSet->getName()
         );
-        $absoluteUri = rtrim($this->absoluteServiceUri, '/') . '/' . $relativeUri;
+        $absoluteUri = rtrim(strval($this->absoluteServiceUri), '/') . '/' . $relativeUri;
 
         list($mediaLink, $mediaLinks) = $this->writeMediaData(
             $entryObject->results,
@@ -358,7 +358,7 @@ class CynicSerialiser implements IObjectSerialiser
                 $this->getCurrentResourceSetWrapper()->getName()
             );
 
-            $url->url = rtrim($this->absoluteServiceUri, '/') . '/' . $relativeUri;
+            $url->url = rtrim(strval($this->absoluteServiceUri), '/') . '/' . $relativeUri;
         }
 
         return $url;
@@ -397,7 +397,7 @@ class CynicSerialiser implements IObjectSerialiser
                 $segment            = $this->getNextLinkUri($lastObject);
                 $nextLink           = new ODataLink();
                 $nextLink->name     = ODataConstants::ATOM_LINK_NEXT_ATTRIBUTE_STRING;
-                $nextLink->url      = rtrim($this->absoluteServiceUri, '/') . '/' . $stackSegment . $segment;
+                $nextLink->url      = rtrim(strval($this->absoluteServiceUri), '/') . '/' . $stackSegment . $segment;
                 $nextLink->url      = ltrim($nextLink->url, '/');
                 $urls->nextPageLink = $nextLink;
             }
