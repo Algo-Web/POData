@@ -76,11 +76,11 @@ class ModelDeserialiser
                 $value  = null;
                 switch ($propSpec->typeName) {
                     case 'Edm.Boolean':
-                        $rawVal = trim(strtolower(/* @scrutinizer ignore-type */$rawVal));
+                        $rawVal = trim(strtolower(strval($rawVal)));
                         $value  = 'true' == $rawVal;
                         break;
                     case 'Edm.DateTime':
-                        $rawVal = trim(/* @scrutinizer ignore-type */$rawVal);
+                        $rawVal = trim(strval($rawVal));
                         if (1 < strlen($rawVal)) {
                             $valLen     = strlen($rawVal) - 6;
                             $offsetChek = $rawVal[$valLen];
