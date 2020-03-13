@@ -32,6 +32,8 @@ use POData\Providers\ProvidersWrapper;
 use POData\Providers\Query\IQueryProvider;
 use POData\Providers\Query\QueryResult;
 use POData\Providers\Stream\StreamProviderWrapper;
+use POData\Readers\Atom\AtomODataReader;
+use POData\Readers\ODataReaderRegistry;
 use POData\UriProcessor\Interfaces\IUriProcessor;
 use POData\UriProcessor\RequestDescription;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
@@ -312,6 +314,9 @@ abstract class BaseService implements IRequestHandler, IService
     /** @var ODataWriterRegistry */
     protected $writerRegistry;
 
+    /** @var ODataReaderRegistry */
+    protected $readerRegistry;
+
     /**
      * Returns the ODataWriterRegistry to use when writing the response to a service document or resource request.
      *
@@ -324,6 +329,17 @@ abstract class BaseService implements IRequestHandler, IService
         return $this->writerRegistry;
     }
 
+    /**
+     * Returns the ODataWriterRegistry to use when writing the response to a service document or resource request.
+     *
+     * @return ODataReaderRegistry
+     */
+    public function getODataReaderRegistry()
+    {
+        assert(null != $this->writerRegistry);
+
+        return $this->readerRegistry;
+    }
     /**
      * This method will query and validates for IMetadataProvider and IQueryProvider implementations, invokes
      * BaseService::Initialize to initialize service specific policies.
@@ -359,7 +375,9 @@ abstract class BaseService implements IRequestHandler, IService
 
         //TODO: this seems like a bad spot to do this
         $this->writerRegistry = new ODataWriterRegistry();
+        $this->readerRegistry = new ODataReaderRegistry();
         $this->registerWriters();
+        $this->registerReaders();
     }
 
     //TODO: i don't want this to be public..but it's the only way to test it right now...
@@ -386,6 +404,12 @@ abstract class BaseService implements IRequestHandler, IService
             $registry->register(new JsonLightODataWriter(JsonLightMetadataLevel::MINIMAL(), $serviceURI));
             $registry->register(new JsonLightODataWriter(JsonLightMetadataLevel::FULL(), $serviceURI));
         }
+    }
+    public function registerReaders()
+    {
+        $registry = $this->getODataReaderRegistry();
+        //We always register the v1 stuff
+        $registry->register(new AtomODataReader());
     }
 
     /**
