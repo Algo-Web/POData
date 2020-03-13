@@ -3,15 +3,17 @@
 
 namespace POData\Readers\Atom;
 
+use POData\Common\MimeTypes;
 use POData\Common\ODataConstants;
 use POData\ObjectModel\ODataEntry;
 use POData\ObjectModel\ODataFeed;
 use POData\Readers\Atom\Processors\EntryProcessor;
 use POData\Readers\Atom\Processors\FeedProcessor;
 use POData\Readers\Atom\Processors\BaseNodeHandler;
+use POData\Readers\IODataReader;
 use SplStack;
 
-class AtomODataReader
+class AtomODataReader implements IODataReader
 {
     /**
      * XmlParser
@@ -95,5 +97,10 @@ class AtomODataReader
                 list($namespsace, $name) = explode('|', $tag);
                 $this->stack->top()->handleEndNode($namespsace, $name);
         }
+    }
+
+    public function canHandle(\POData\Common\Version $responseVersion, $contentType)
+    {
+         return MimeTypes::MIME_APPLICATION_ATOM == $contentType || MimeTypes::MIME_APPLICATION_XML === $contentType;
     }
 }

@@ -9,32 +9,32 @@ use POData\Writers\IODataWriter;
 class ODataReaderRegistry
 {
     /** @var IODataReader[] */
-    private $writers = [];
+    private $readers = [];
 
     /**
-     * @param IODataReader $writer
+     * @param IODataReader $reader
      */
-    public function register(IODataReader $writer)
+    public function register(IODataReader $reader)
     {
-        $this->writers[] = $writer;
+        $this->readers[] = $reader;
     }
 
     public function reset()
     {
-        $this->writers = [];
+        $this->readers  = [];
     }
 
     /**
      * @param Version $responseVersion
      * @param $contentType
      *
-     * @return IODataReader|null the writer that can handle the give criteria, or null
+     * @return IODataReader|null the writer that can handle the given criteria, or null
      */
     public function getReader(Version $responseVersion, $contentType)
     {
-        foreach ($this->writers as $writer) {
-            if ($writer->canHandle($responseVersion, $contentType)) {
-                return $writer;
+        foreach ($this->readers as $reader) {
+            if ($reader->canHandle($responseVersion, $contentType)) {
+                return $reader;
             }
         }
         return null;
