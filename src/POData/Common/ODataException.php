@@ -26,9 +26,9 @@ class ODataException extends \Exception
      *
      * @param string      $message    The error message
      * @param int         $statusCode The status code
-     * @param string|null $errorCode  The error code
+     * @param int $errorCode  The error code
      */
-    public function __construct($message, $statusCode, $errorCode = null)
+    public function __construct($message, $statusCode, int $errorCode = null)
     {
         assert(is_int($statusCode) && 0 < $statusCode, 'Status code must be integer and positive');
         assert(is_string($message), 'Message must be a string');
