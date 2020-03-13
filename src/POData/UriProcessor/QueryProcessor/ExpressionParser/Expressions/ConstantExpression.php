@@ -10,16 +10,16 @@ namespace POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions;
 class ConstantExpression extends AbstractExpression
 {
     /**
-     * The value hold by the expression.
+     * The value held by the expression.
      *
-     * @var string
+     * @var string|bool|null
      */
     protected $value;
 
     /**
      * Create new instance of ConstantExpression.
      *
-     * @param string                                $value The constant value
+     * @param string|bool                           $value The constant value
      * @param \POData\Providers\Metadata\Type\IType $type  The expression node type
      */
     public function __construct($value, $type)
@@ -32,7 +32,7 @@ class ConstantExpression extends AbstractExpression
     /**
      * Get the value associated with the expression.
      *
-     * @return string|null
+     * @return string|bool|null
      */
     public function getValue()
     {
