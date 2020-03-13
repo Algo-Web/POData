@@ -61,34 +61,14 @@ class ResourceAssociationTypeEnd
      *                                                uni-directional
      */
     public function __construct(
-        $name,
+        string $name,
         ResourceEntityType $resourceType,
-        $resourceProperty,
-        $fromProperty
+        ?ResourceProperty $resourceProperty,
+        ?ResourceProperty $fromProperty
     ) {
         if (null === $resourceProperty && null === $fromProperty) {
             throw new \InvalidArgumentException(
                 Messages::resourceAssociationTypeEndBothPropertyCannotBeNull()
-            );
-        }
-
-        if (null !== $fromProperty
-            && !($fromProperty instanceof ResourceProperty)
-        ) {
-            throw new \InvalidArgumentException(
-                Messages::resourceAssociationTypeEndPropertyMustBeNullOrInstanceofResourceProperty(
-                    '$fromProperty'
-                )
-            );
-        }
-
-        if (null !== $resourceProperty
-            && !($resourceProperty instanceof ResourceProperty)
-        ) {
-            throw new \InvalidArgumentException(
-                Messages::resourceAssociationTypeEndPropertyMustBeNullOrInstanceofResourceProperty(
-                    '$resourceProperty'
-                )
             );
         }
 
