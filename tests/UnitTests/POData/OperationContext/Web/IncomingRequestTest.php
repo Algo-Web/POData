@@ -122,4 +122,18 @@ class IncomingRequestTest extends TestCase
         $this->assertEquals(1, count($result));
         $this->assertEquals($expected, $result);
     }
+
+    public function testMissingQueryStringParameters()
+    {
+        $expected = [];
+
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        unset($_SERVER['QUERY_STRING']);
+
+        $incoming = new IncomingRequest();
+        $result = $incoming->getQueryParameters();
+        $this->assertTrue(is_array($result));
+        $this->assertEquals(0, count($result));
+        $this->assertEquals($expected, $result);
+    }
 }

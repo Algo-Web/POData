@@ -113,4 +113,37 @@ class ErrorHandlerTest extends TestCase
 
         ErrorHandler::handleException($exception, $service);
     }
+
+    public function testHandleExceptionBadMimeTypes()
+    {
+        $exception = new ODataException('FAIL', 500);
+
+        $outgoing = m::mock(OutgoingResponse::class);
+        $outgoing->shouldReceive('setServiceVersion')
+            ->withArgs([ODataConstants::DATASERVICEVERSION_1_DOT_0.';'])->andReturnNull()->once();
+        $outgoing->shouldReceive('setStatusCode')->withArgs(['400 Bad Request'])->andReturnNull()->once();
+        $outgoing->shouldReceive('setContentType')->withArgs(['application/xml'])->andReturnNull()->once();
+        $outgoing->shouldReceive('setStream')->passthru();
+        $outgoing->shouldReceive('getStream')->passthru();
+
+        $context = m::mock(IOperationContext::class);
+        $context->shouldReceive('outgoingResponse')->andReturn($outgoing);
+
+        $host = m::mock(ServiceHost::class)->makePartial();
+        $host->shouldReceive('getRequestAccept')->andReturn('completely mangled result');
+        $host->shouldReceive('getOperationContext')->andReturn($context);
+
+        $service = m::mock(IService::class);
+        $service->shouldReceive('getHost')->andReturn($host);
+
+        ErrorHandler::handleException($exception, $service);
+
+        $expected = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . PHP_EOL;
+        $expected .= '<error xmlns="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">' . PHP_EOL;
+        $expected .= ' <code>400</code>' . PHP_EOL;
+        $expected .= ' <message>Media type requires a \'/\' character.</message>' . PHP_EOL;
+        $expected .= '</error>' . PHP_EOL;
+        $actual = $service->getHost()->getOperationContext()->outgoingResponse()->getStream();
+        $this->assertEquals($expected, $actual);
+    }
 }

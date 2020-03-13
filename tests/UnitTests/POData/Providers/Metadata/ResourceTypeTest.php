@@ -236,6 +236,39 @@ class ResourceTypeTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
+    public function testAddPropertyTwiceWithKaboomSuppressed()
+    {
+        $rType = m::mock(ResourceEntityType::class)->makePartial();
+
+        $rProp = m::mock(ResourceProperty::class);
+        $rProp->shouldReceive('getName')->andReturn('number')->twice();
+        $rProp->shouldReceive('isKindOf')->withArgs([ResourcePropertyKind::PRIMITIVE])->andReturn(true);
+        $rProp->shouldReceive('isKindOf')->withArgs([ResourcePropertyKind::KEY])->andReturn(false);
+        $rProp->shouldReceive('isKindOf')->withArgs([ResourcePropertyKind::ETAG])->andReturn(false);
+
+        $this->assertEquals(0, count($rType->getAllProperties()));
+        $rType->addProperty($rProp, false);
+        $this->assertEquals(1, count($rType->getAllProperties()));
+        $rType->addProperty($rProp, false);
+        $this->assertEquals(1, count($rType->getAllProperties()));
+    }
+
+    public function testAddETagToNonResourceEntityProperty()
+    {
+        $rType = m::mock(ResourceEntityType::class)->makePartial();
+
+        $rProp = m::mock(ResourceProperty::class);
+        $rProp->shouldReceive('getName')->andReturn('number')->once();
+        $rProp->shouldReceive('isKindOf')->withArgs([ResourcePropertyKind::PRIMITIVE])->andReturn(false);
+        $rProp->shouldReceive('isKindOf')->withArgs([ResourcePropertyKind::KEY])->andReturn(false);
+        $rProp->shouldReceive('isKindOf')->withArgs([ResourcePropertyKind::ETAG])->andReturn(true);
+
+        $this->expectException(InvalidOperationException::class);
+        $this->expectExceptionMessage('ETag properties can only be added to ResourceType instances with a ResourceTypeKind equal to \'EntityType\'');
+
+        $rType->addProperty($rProp, false);
+    }
+
     public function testGetInt64Type()
     {
         $foo = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::INT64());

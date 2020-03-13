@@ -179,4 +179,16 @@ class GuidTest extends TestCase
         $value = '00000000000000000000000000000000';
         $this->assertTrue(Guid::validateWithoutPrefix($value));
     }
+
+    public function testGuidEqual()
+    {
+        $value = 'guid\'05b242e752eb46bd8f0e6568b72cd9a5\'';
+        $outval = null;
+
+        $guid = new Guid();
+
+        $this->assertTrue($guid->validate($value, $outval));
+
+        $this->assertTrue(Guid::guidEqual($outval, $outval));
+    }
 }

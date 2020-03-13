@@ -242,6 +242,7 @@ class ResourceClassesTest extends TestCase
         $this->AssertEquals($employeeResType->hasNamedStream(), true);
         $b = [];
         $this->AssertEquals($employeeResType->hasBagProperty($b), true);
+        $this->AssertEquals($employeeResType->hasBagProperty($b), true);
 
         $namedStreams = $employeeResType->getAllNamedStreams();
         $this->AssertEquals(count($namedStreams), 1);
