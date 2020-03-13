@@ -10,7 +10,7 @@ use POData\Common\Messages;
  * Class OrderByPathSegment.
  *
  * A type to represent path segment in an order by clause
- * Syntax of orderby clause is:
+ * Syntax of orderBy clause is:
  *
  * OrderByClause         : OrderByPathSegment [, OrderByPathSegment]*
  * OrderByPathSegment    : OrderBySubPathSegment [/OrderBySubPathSegment]*[asc|desc]?
@@ -35,12 +35,12 @@ class OrderByPathSegment
     /**
      * Constructs a new instance of OrderByPathSegment.
      *
-     * @param OrderBySubPathSegment[] $orderBySubPathSegments Collection of orderby sub path segments for this
+     * @param OrderBySubPathSegment[] $orderBySubPathSegments Collection of orderBy sub path segments for this
      *                                                        path segment
      * @param bool                    $isAscending            sort order,
      *                                                        True for ascending and false for descending
      */
-    public function __construct($orderBySubPathSegments, $isAscending = true)
+    public function __construct(array $orderBySubPathSegments, bool $isAscending = true)
     {
         if (!is_array($orderBySubPathSegments)) {
             throw new \InvalidArgumentException(
@@ -63,7 +63,7 @@ class OrderByPathSegment
      *
      * @return OrderBySubPathSegment[]
      */
-    public function getSubPathSegments()
+    public function getSubPathSegments(): array
     {
         return $this->orderBySubPathSegments;
     }
@@ -73,7 +73,7 @@ class OrderByPathSegment
      *
      * @return bool Return true for ascending sort order, else false
      */
-    public function isAscending()
+    public function isAscending(): bool
     {
         return $this->isAscending;
     }
