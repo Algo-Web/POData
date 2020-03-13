@@ -791,9 +791,9 @@ abstract class BaseService implements IRequestHandler, IService
         if (null === $ifMatch && null === $ifNoneMatch) {
             // No request eTag header, we need to write the response
             // and eTag header
-        } elseif (0 === strcmp($ifMatch, '*')) {
+        } elseif (0 === strcmp(strval($ifMatch), '*')) {
             // If-Match:* => we need to write the response and eTag header
-        } elseif (0 === strcmp($ifNoneMatch, '*')) {
+        } elseif (0 === strcmp(strval($ifNoneMatch), '*')) {
             // if-None-Match:* => Do not write the response (304 not modified),
             // but write eTag header
             $needToSerializeResponse = false;

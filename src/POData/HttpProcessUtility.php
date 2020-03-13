@@ -215,7 +215,7 @@ class HttpProcessUtility
      */
     public static function skipWhiteSpace($text, &$textIndex)
     {
-        $textLen = strlen($text);
+        $textLen = strlen(strval($text));
         while (($textIndex < $textLen) && Char::isWhiteSpace($text[$textIndex])) {
             ++$textIndex;
         }
