@@ -1090,7 +1090,7 @@ class CynicSerialiser implements IObjectSerialiser
         } elseif ($type instanceof DateTime && $primitiveValue instanceof \DateTime) {
             $stringValue = $primitiveValue->format(\DateTime::ATOM);
         } elseif ($type instanceof StringType) {
-            $stringValue = mb_convert_encoding($primitiveValue, 'UTF-8');
+            $stringValue = mb_convert_encoding(strval($primitiveValue), 'UTF-8');
         } else {
             $stringValue = strval($primitiveValue);
         }
