@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace POData\UriProcessor;
 
-use JMS\Serializer\SerializerBuilder;
 use POData\Common\Messages;
 use POData\Common\MimeTypes;
 use POData\Common\ODataConstants;
