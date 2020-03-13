@@ -164,7 +164,7 @@ class AtomODataWriter implements IODataWriter
                 ODataConstants::ROWCOUNT_ELEMENT,
                 null
             );
-            $this->xmlWriter->text($urls->count);
+            $this->xmlWriter->text(strval($urls->count));
             $this->xmlWriter->endElement();
         }
         foreach ($urls->urls as $url) {
@@ -323,7 +323,7 @@ class AtomODataWriter implements IODataWriter
                     ODataConstants::ATOM_ETAG_ATTRIBUTE_NAME,
                     null
                 );
-                $this->xmlWriter->text($entry->mediaLink->eTag);
+                $this->xmlWriter->text(strval($entry->mediaLink->eTag));
                 $this->xmlWriter->endAttribute();
             }
             $this->xmlWriter->startAttribute(
@@ -435,7 +435,7 @@ class AtomODataWriter implements IODataWriter
                     $this->writeBagContent($property->value);
                 } else {
                     $value = $this->beforeWriteValue($property->value, $property->typeName);
-                    $this->xmlWriter->text($value);
+                    $this->xmlWriter->text(strval($value));
                 }
 
                 $this->xmlWriter->endElement();
@@ -704,7 +704,7 @@ class AtomODataWriter implements IODataWriter
     public function writeNodeValue($node, $value)
     {
         $this->xmlWriter->startElement($node);
-        $this->xmlWriter->text($value);
+        $this->xmlWriter->text($value ?? '');
         $this->xmlWriter->endElement();
 
         return $this;
@@ -728,7 +728,7 @@ class AtomODataWriter implements IODataWriter
     ) {
         $this->xmlWriter->startElement($node);
         $this->xmlWriter->writeAttribute($attribute, $attributeValue);
-        $this->xmlWriter->text($nodeValue);
+        $this->xmlWriter->text($nodeValue ?? '');
         $this->xmlWriter->endElement();
 
         return $this;
@@ -747,23 +747,23 @@ class AtomODataWriter implements IODataWriter
         $this->xmlWriter->startElement(ODataConstants::ATOM_LINK_ELEMENT_NAME);
         $this->xmlWriter->writeAttribute(
             ODataConstants::ATOM_LINK_RELATION_ATTRIBUTE_NAME,
-            $link->name
+            $link->name ?? ''
         );
         if ($link->type != null) {
             $this->xmlWriter->writeAttribute(
                 ODataConstants::ATOM_TYPE_ATTRIBUTE_NAME,
-                $link->type
+                $link->type ?? ''
             );
         }
         if ($link->title != null) {
             $this->xmlWriter->writeAttribute(
                 ODataConstants::ATOM_TITLE_ELELMET_NAME,
-                $link->title
+                $link->title ?? ''
             );
         }
         $this->xmlWriter->writeAttribute(
             ODataConstants::ATOM_HREF_ATTRIBUTE_NAME,
-            $link->url
+            $link->url ?? ''
         );
         if (!$isExpanded) {
             $this->xmlWriter->endElement();
