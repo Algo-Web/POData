@@ -42,12 +42,6 @@ class OrderByPathSegment
      */
     public function __construct(array $orderBySubPathSegments, bool $isAscending = true)
     {
-        if (!is_array($orderBySubPathSegments)) {
-            throw new \InvalidArgumentException(
-                Messages::orderByPathSegmentOrderBySubPathSegmentArgumentShouldBeNonEmptyArray()
-            );
-        }
-
         if (empty($orderBySubPathSegments)) {
             throw new \InvalidArgumentException(
                 Messages::orderByPathSegmentOrderBySubPathSegmentArgumentShouldBeNonEmptyArray()
