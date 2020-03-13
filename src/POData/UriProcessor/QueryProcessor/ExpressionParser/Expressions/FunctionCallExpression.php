@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions;
 
 use POData\UriProcessor\QueryProcessor\FunctionDescription;
@@ -28,9 +30,9 @@ class FunctionCallExpression extends AbstractExpression
     public function __construct(FunctionDescription $functionDescription, $paramExpressions)
     {
         $this->functionDescription = $functionDescription;
-        $this->paramExpressions = $paramExpressions;
-        $this->nodeType = ExpressionType::CALL();
-        $this->type = $functionDescription->returnType;
+        $this->paramExpressions    = $paramExpressions;
+        $this->nodeType            = ExpressionType::CALL();
+        $this->type                = $functionDescription->returnType;
     }
 
     /**

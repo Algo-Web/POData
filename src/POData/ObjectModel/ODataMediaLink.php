@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\ObjectModel;
 
 /**
@@ -72,10 +74,10 @@ class ODataMediaLink
     public function __construct($name, $editLink, $srcLink, $contentType, $eTag, $rel = null)
     {
         $this->contentType = $contentType;
-        $this->editLink = $editLink;
-        $this->eTag = $eTag;
-        $this->name = $name;
-        $this->srcLink = $srcLink;
-        $this->rel = (null !== $rel) ? $rel : self::MEDIARESOURCE_BASE.$name;
+        $this->editLink    = $editLink;
+        $this->eTag        = $eTag;
+        $this->name        = $name;
+        $this->srcLink     = $srcLink;
+        $this->rel         = (null !== $rel) ? $rel : self::MEDIARESOURCE_BASE . $name;
     }
 }

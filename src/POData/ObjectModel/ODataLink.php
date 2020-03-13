@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\ObjectModel;
 
 /**
@@ -77,13 +79,13 @@ class ODataLink
     public function setExpandResult(ODataExpandedResult $eResult)
     {
         if (null !== $eResult->feed) {
-            $this->isExpanded = true;
-            $this->isCollection = true;
+            $this->isExpanded     = true;
+            $this->isCollection   = true;
             $this->expandedResult = $eResult->feed;
         }
         if (null !== $eResult->entry) {
-            $this->isExpanded = true;
-            $this->isCollection = false;
+            $this->isExpanded     = true;
+            $this->isCollection   = false;
             $this->expandedResult = $eResult->entry;
         }
     }

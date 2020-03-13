@@ -1,11 +1,13 @@
 <?php
+
+declare(strict_types=1);
 namespace POData\BatchProcessor;
 
 use POData\BaseService;
 use POData\UriProcessor\RequestDescription;
 
 /**
- * Class BatchProcessor
+ * Class BatchProcessor.
  * @package POData\BatchProcessor
  */
 class BatchProcessor
@@ -36,7 +38,7 @@ class BatchProcessor
 
     public function handleBatch()
     {
-        $host = $this->getService()->getHost();
+        $host        = $this->getService()->getHost();
         $contentType = $host->getRequestContentType();
         assert('multipart/mixed;' === substr($contentType, 0, 16));
         $rawData = $this->getRequest()->getData();
@@ -44,8 +46,8 @@ class BatchProcessor
             $rawData = $rawData[0];
         }
 
-        $this->data = trim($rawData);
-        $this->data = preg_replace('~\r\n?~', "\n", $this->data);
+        $this->data          = trim($rawData);
+        $this->data          = preg_replace('~\r\n?~', "\n", $this->data);
         $this->batchBoundary = substr($contentType, 26);
 
         $matches = explode('--' . $this->batchBoundary, $this->data);
@@ -54,8 +56,8 @@ class BatchProcessor
             if ('' === $match || '--' === $match) {
                 continue;
             }
-            $header = explode("\n\n", $match)[0];
-            $isChangeset = false === strpos($header, 'Content-Type: application/http');
+            $header                      = explode("\n\n", $match)[0];
+            $isChangeset                 = false === strpos($header, 'Content-Type: application/http');
             $this->changeSetProcessors[] = $this->getParser($this->getService(), $match, $isChangeset);
         }
 
@@ -72,7 +74,7 @@ class BatchProcessor
     {
         $response = '';
         $splitter =  '--' . $this->batchBoundary . "\r\n";
-        $raw = $this->changeSetProcessors;
+        $raw      = $this->changeSetProcessors;
         foreach ($raw as $contentID => &$workingObject) {
             $response .= $splitter;
             $response .= $workingObject->getResponse() . "\r\n";
@@ -84,7 +86,7 @@ class BatchProcessor
     /**
      * @param BaseService $service
      * @param $match
-     * @param bool $isChangeset
+     * @param  bool                        $isChangeset
      * @return ChangeSetParser|QueryParser
      */
     protected function getParser(BaseService $service, $match, $isChangeset)

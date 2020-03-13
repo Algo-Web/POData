@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\ObjectModel;
 
 use Carbon\Carbon;
@@ -13,7 +15,7 @@ class ODataLinkTest extends TestCase
 {
     public function testSetGetODataEntryAsExpandedResult()
     {
-        $entry = new ODataEntry();
+        $entry  = new ODataEntry();
         $expand = new ODataExpandedResult($entry);
 
         $foo = new ODataLink();

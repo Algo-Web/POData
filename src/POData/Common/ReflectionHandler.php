@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\Common;
 
 /**
- * Class ReflectionHandler
+ * Class ReflectionHandler.
  * @package POData\Common
  */
 class ReflectionHandler
@@ -12,17 +14,17 @@ class ReflectionHandler
      * @param $entryObject
      * @param $property
      *
-     * @return mixed
      * @throws \ReflectionException
+     * @return mixed
      */
     public static function getProperty(&$entryObject, $property)
     {
         // If magic method exists, try that first, else try property directly
         if (method_exists($entryObject, '__get')) {
-            $value = $entryObject->$property;
+            $value = $entryObject->{$property};
         } else {
             if (null === $entryObject) {
-                $msg = "Property POData\\Common\\ReflectionHandler::$".$property." does not exist";
+                $msg = 'Property POData\\Common\\ReflectionHandler::$' . $property . ' does not exist';
                 throw new \ReflectionException($msg);
             }
             $reflectionProperty = new \ReflectionProperty(get_class($entryObject), $property);
@@ -34,18 +36,18 @@ class ReflectionHandler
     }
 
     /**
-     * @param object $entity
-     * @param string $property
-     * @param mixed $value
+     * @param  object               $entity
+     * @param  string               $property
+     * @param  mixed                $value
      * @throws \ReflectionException
      */
     public static function setProperty(&$entity, $property, $value)
     {
         // If magic method exists, try that first, else try property directly
         if (method_exists($entity, '__set')) {
-            $entity->$property = $value;
+            $entity->{$property} = $value;
         } else {
-            $reflect = new \ReflectionProperty($entity, $property);
+            $reflect   = new \ReflectionProperty($entity, $property);
             $oldAccess = $reflect->isPublic();
             $reflect->setAccessible(true);
             $reflect->setValue($entity, $value);

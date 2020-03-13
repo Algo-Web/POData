@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\Providers\Query;
 
 use POData\Providers\Expression\IExpressionProvider;
@@ -277,7 +279,7 @@ interface IQueryProvider
     /**
      * Start database transaction.
      *
-     * @param bool      $isBulk     Is this transaction inside a batch request?
+     * @param  bool $isBulk Is this transaction inside a batch request?
      * @return void
      */
     public function startTransaction($isBulk = false);

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData;
 
 use POData\Configuration\IServiceConfiguration;
@@ -11,7 +13,7 @@ use POData\Providers\Stream\StreamProviderWrapper;
 use POData\Writers\ODataWriterRegistry;
 
 /**
- * Interface IService
+ * Interface IService.
  * @package POData
  */
 interface IService

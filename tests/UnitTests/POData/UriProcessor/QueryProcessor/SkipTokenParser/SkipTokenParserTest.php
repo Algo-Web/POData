@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\UriProcessor\QueryProcessor\SkipTokenParser;
 
 use Mockery as m;
@@ -40,7 +42,7 @@ class SkipTokenParserTest extends TestCase
     public function testNamedValuesInSkipToken()
     {
         $northWindMetadata = NorthWindMetadata::Create();
-        $configuration = new ServiceConfiguration($northWindMetadata);
+        $configuration     = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
@@ -50,13 +52,13 @@ class SkipTokenParserTest extends TestCase
         );
 
         $resourceSetWrapper = $providersWrapper->resolveResourceSet('Orders');
-        $resourceType = $resourceSetWrapper->getResourceType();
-        $orderBy = 'ShipName asc, Price';
+        $resourceType       = $resourceSetWrapper->getResourceType();
+        $orderBy            = 'ShipName asc, Price';
         //Note: library will add prim key as last sort key
         $orderBy .= ', OrderID';
         $internalOrderByInfo = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
-        $skipToken = "'Antonio%20Moreno%20Taquer%C3%ADa',Price=22.0000M,10365";
-        $skipToken = urldecode($skipToken);
+        $skipToken           = "'Antonio%20Moreno%20Taquer%C3%ADa',Price=22.0000M,10365";
+        $skipToken           = urldecode($skipToken);
 
         try {
             $internalSkipTokenInfo = SkipTokenParser::parseSkipTokenClause($resourceType, $internalOrderByInfo, $skipToken);
@@ -73,7 +75,7 @@ class SkipTokenParserTest extends TestCase
     public function testSkipTokenWithLeadingAndTrailingCommas()
     {
         $northWindMetadata = NorthWindMetadata::Create();
-        $configuration = new ServiceConfiguration($northWindMetadata);
+        $configuration     = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
@@ -83,8 +85,8 @@ class SkipTokenParserTest extends TestCase
         );
 
         $resourceSetWrapper = $providersWrapper->resolveResourceSet('Orders');
-        $resourceType = $resourceSetWrapper->getResourceType();
-        $orderBy = 'ShipName asc, Price';
+        $resourceType       = $resourceSetWrapper->getResourceType();
+        $orderBy            = 'ShipName asc, Price';
         //Note: library will add prim key as last sort key
         $orderBy .= ', OrderID';
         $internalOrderByInfo = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
@@ -129,7 +131,7 @@ class SkipTokenParserTest extends TestCase
     public function testSkipTokenHavingCountMismatchWithOrderBy()
     {
         $northWindMetadata = NorthWindMetadata::Create();
-        $configuration = new ServiceConfiguration($northWindMetadata);
+        $configuration     = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
@@ -139,13 +141,13 @@ class SkipTokenParserTest extends TestCase
         );
 
         $resourceSetWrapper = $providersWrapper->resolveResourceSet('Orders');
-        $resourceType = $resourceSetWrapper->getResourceType();
-        $orderBy = 'ShipName asc, Price';
+        $resourceType       = $resourceSetWrapper->getResourceType();
+        $orderBy            = 'ShipName asc, Price';
         //Note: library will add prim key as last sort key
         $orderBy .= ', OrderID';
         $internalOrderByInfo = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
         //zero skiptoken values
-        $skipToken = '';
+        $skipToken       = '';
         $thrownException = false;
         try {
             $internalSkipTokenInfo = SkipTokenParser::parseSkipTokenClause($resourceType, $internalOrderByInfo, $skipToken);
@@ -173,7 +175,7 @@ class SkipTokenParserTest extends TestCase
     public function testSkipTokenTypeInCompatibility()
     {
         $northWindMetadata = NorthWindMetadata::Create();
-        $configuration = new ServiceConfiguration($northWindMetadata);
+        $configuration     = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
@@ -183,8 +185,8 @@ class SkipTokenParserTest extends TestCase
         );
 
         $resourceSetWrapper = $providersWrapper->resolveResourceSet('Orders');
-        $resourceType = $resourceSetWrapper->getResourceType();
-        $orderBy = 'ShipName asc, Price';
+        $resourceType       = $resourceSetWrapper->getResourceType();
+        $orderBy            = 'ShipName asc, Price';
         //Note: library will add prim key as last sort key
         $orderBy .= ', OrderID';
         $internalOrderByInfo = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
@@ -212,7 +214,7 @@ class SkipTokenParserTest extends TestCase
         }
 
         //null is allowed in skiptoken and compactable with all types
-        $skipToken = 'null, null, null';
+        $skipToken             = 'null, null, null';
         $internalSkipTokenInfo = SkipTokenParser::parseSkipTokenClause($resourceType, $internalOrderByInfo, $skipToken);
     }
 
@@ -225,7 +227,7 @@ class SkipTokenParserTest extends TestCase
     public function testInitializationOfKeyObject1()
     {
         $northWindMetadata = NorthWindMetadata::Create();
-        $configuration = new ServiceConfiguration($northWindMetadata);
+        $configuration     = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
@@ -235,13 +237,13 @@ class SkipTokenParserTest extends TestCase
         );
 
         $resourceSetWrapper = $providersWrapper->resolveResourceSet('Order_Details');
-        $resourceType = $resourceSetWrapper->getResourceType();
-        $orderBy = 'Order/Customer/Rating';
+        $resourceType       = $resourceSetWrapper->getResourceType();
+        $orderBy            = 'Order/Customer/Rating';
         //Note: library will add primary key as last sort key
         $orderBy .= ', ProductID, OrderID';
         $internalOrderByInfo = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
-        $skipToken = '12, 1234, 4567';
-        $dummyObject = $internalOrderByInfo->getDummyObject();
+        $skipToken           = '12, 1234, 4567';
+        $dummyObject         = $internalOrderByInfo->getDummyObject();
         //we will remove Customer object created by orderby parser, so that getKeyObject function will
         //fail to access the property 'Rating', since parent ($dummyObject->Order->Customer) is null
         $this->assertTrue(null !== $dummyObject);
@@ -249,7 +251,7 @@ class SkipTokenParserTest extends TestCase
         $this->assertTrue(null !== $dummyObject->Order->Customer);
         $this->assertTrue(null === $dummyObject->Order->Customer->Rating);
         $dummyObject->Order->Customer = null;
-        $internalSkipTokenInfo = SkipTokenParser::parseSkipTokenClause($resourceType, $internalOrderByInfo, $skipToken);
+        $internalSkipTokenInfo        = SkipTokenParser::parseSkipTokenClause($resourceType, $internalOrderByInfo, $skipToken);
 
         try {
             $o = $internalSkipTokenInfo->getKeyObject();
@@ -268,7 +270,7 @@ class SkipTokenParserTest extends TestCase
     public function testInitializationOfKeyObject2()
     {
         $northWindMetadata = NorthWindMetadata::Create();
-        $configuration = new ServiceConfiguration($northWindMetadata);
+        $configuration     = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
@@ -278,14 +280,14 @@ class SkipTokenParserTest extends TestCase
         );
 
         $resourceSetWrapper = $providersWrapper->resolveResourceSet('Orders');
-        $resourceType = $resourceSetWrapper->getResourceType();
-        $orderBy = 'ShipName asc, Price';
+        $resourceType       = $resourceSetWrapper->getResourceType();
+        $orderBy            = 'ShipName asc, Price';
         //Note: library will add prim key as last sort key
         $orderBy .= ', OrderID';
         $internalOrderByInfo = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
-        $skipToken = "'Antonio%20Moreno%20Taquer%C3%ADa',22.001,10365";
+        $skipToken           = "'Antonio%20Moreno%20Taquer%C3%ADa',22.001,10365";
         //urldecode convert the skip token to - 'Antonio Moreno Taquería',22.000,10365
-        $skipToken = urldecode($skipToken);
+        $skipToken             = urldecode($skipToken);
         $internalSkipTokenInfo = SkipTokenParser::parseSkipTokenClause($resourceType, $internalOrderByInfo, $skipToken);
         //The getKeyObject should do utf8 encoding on Antonio Moreno Taquería
         $keyObject = $internalSkipTokenInfo->getKeyObject();
@@ -309,7 +311,7 @@ class SkipTokenParserTest extends TestCase
     public function testInitializationOfKeyObject3()
     {
         $northWindMetadata = NorthWindMetadata::Create();
-        $configuration = new ServiceConfiguration($northWindMetadata);
+        $configuration     = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
@@ -319,15 +321,15 @@ class SkipTokenParserTest extends TestCase
         );
 
         $resourceSetWrapper = $providersWrapper->resolveResourceSet('Customers');
-        $resourceType = $resourceSetWrapper->getResourceType();
-        $orderBy = 'Address/IsValid';
+        $resourceType       = $resourceSetWrapper->getResourceType();
+        $orderBy            = 'Address/IsValid';
         //Note: library will add primery key as last sort key
         $orderBy .= ',CustomerID';
-        $internalOrderByInfo = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
-        $skipToken = "true, 'ALFKI'";
-        $dummyObject = $internalOrderByInfo->getDummyObject();
+        $internalOrderByInfo   = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
+        $skipToken             = "true, 'ALFKI'";
+        $dummyObject           = $internalOrderByInfo->getDummyObject();
         $internalSkipTokenInfo = SkipTokenParser::parseSkipTokenClause($resourceType, $internalOrderByInfo, $skipToken);
-        $keyObject = $internalSkipTokenInfo->getKeyObject();
+        $keyObject             = $internalSkipTokenInfo->getKeyObject();
         $this->assertTrue(null !== $keyObject);
         $this->assertTrue(null !== $keyObject->Address);
         $this->assertTrue(null !== $keyObject->Address->IsValid);
@@ -344,7 +346,7 @@ class SkipTokenParserTest extends TestCase
     public function testCreationOfNextLink1()
     {
         $northWindMetadata = NorthWindMetadata::Create();
-        $configuration = new ServiceConfiguration($northWindMetadata);
+        $configuration     = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
@@ -354,20 +356,20 @@ class SkipTokenParserTest extends TestCase
         );
 
         $resourceSetWrapper = $providersWrapper->resolveResourceSet('Customers');
-        $resourceType = $resourceSetWrapper->getResourceType();
-        $orderBy = 'Address/Address2/IsPrimary';
+        $resourceType       = $resourceSetWrapper->getResourceType();
+        $orderBy            = 'Address/Address2/IsPrimary';
         //Note: library will add primery key as last sort key
         $orderBy .= ',CustomerID';
-        $internalOrderByInfo = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
-        $skipToken = "true, 'ALFKI'";
+        $internalOrderByInfo   = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
+        $skipToken             = "true, 'ALFKI'";
         $internalSkipTokenInfo = SkipTokenParser::parseSkipTokenClause($resourceType, $internalOrderByInfo, $skipToken);
         //Here the Address2 property is null, the sort key property IsPrimary is a property of Address2
         //so should emit null
-        $lastObject = new Customer2();
-        $lastObject->CustomerID = 'ALFKI';
-        $lastObject->Address = new Address4();
+        $lastObject                    = new Customer2();
+        $lastObject->CustomerID        = 'ALFKI';
+        $lastObject->Address           = new Address4();
         $lastObject->Address->Address2 = null;
-        $nextLink = $internalSkipTokenInfo->buildNextPageLink($lastObject);
+        $nextLink                      = $internalSkipTokenInfo->buildNextPageLink($lastObject);
         $this->assertTrue(null !== $nextLink);
         $this->assertEquals($nextLink, "null, 'ALFKI'");
 
@@ -387,7 +389,7 @@ class SkipTokenParserTest extends TestCase
     public function testCreationOfNextLink2()
     {
         $northWindMetadata = NorthWindMetadata::Create();
-        $configuration = new ServiceConfiguration($northWindMetadata);
+        $configuration     = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
@@ -397,23 +399,23 @@ class SkipTokenParserTest extends TestCase
         );
 
         $resourceSetWrapper = $providersWrapper->resolveResourceSet('Orders');
-        $resourceType = $resourceSetWrapper->getResourceType();
-        $orderBy = 'ShipName asc, Price';
+        $resourceType       = $resourceSetWrapper->getResourceType();
+        $orderBy            = 'ShipName asc, Price';
         //Note: library will add prim key as last sort key
         $orderBy .= ', OrderID';
-        $internalOrderByInfo = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
-        $skipToken = "'ABY',22.000,10365";
+        $internalOrderByInfo   = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
+        $skipToken             = "'ABY',22.000,10365";
         $internalSkipTokenInfo = SkipTokenParser::parseSkipTokenClause($resourceType, $internalOrderByInfo, $skipToken);
-        $lastObject = new Order2();
+        $lastObject            = new Order2();
         //The string that is fetched from DB can be in utf8 format, so we are building
         //such a string with utf8_decode
         $lastObject->ShipName = utf8_decode(urldecode('Antonio%20Moreno%20Taquer%C3%ADa'));
-        $lastObject->Price = 23.56;
-        $lastObject->OrderID = 3456;
-        $nextLink = $internalSkipTokenInfo->buildNextPageLink($lastObject);
+        $lastObject->Price    = 23.56;
+        $lastObject->OrderID  = 3456;
+        $nextLink             = $internalSkipTokenInfo->buildNextPageLink($lastObject);
         $this->assertTrue(null !== $nextLink);
         $thrownException = false;
-        $nextLink = $internalSkipTokenInfo->buildNextPageLink($lastObject);
+        $nextLink        = $internalSkipTokenInfo->buildNextPageLink($lastObject);
         $this->assertEquals($nextLink, "'Antonio+Moreno+Taquer%C3%ADa', 23.56D, 3456");
     }
 
@@ -424,7 +426,7 @@ class SkipTokenParserTest extends TestCase
     public function testCreationOfNextLink3()
     {
         $northWindMetadata = NorthWindMetadata::Create();
-        $configuration = new ServiceConfiguration($northWindMetadata);
+        $configuration     = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
@@ -434,17 +436,17 @@ class SkipTokenParserTest extends TestCase
         );
 
         $resourceSetWrapper = $providersWrapper->resolveResourceSet('Orders');
-        $resourceType = $resourceSetWrapper->getResourceType();
-        $orderBy = 'OrderDate';
+        $resourceType       = $resourceSetWrapper->getResourceType();
+        $orderBy            = 'OrderDate';
         //Note: library will add prim key as last sort key
         $orderBy .= ', OrderID';
-        $internalOrderByInfo = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
-        $skipToken = 'null,10365';
+        $internalOrderByInfo   = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
+        $skipToken             = 'null,10365';
         $internalSkipTokenInfo = SkipTokenParser::parseSkipTokenClause($resourceType, $internalOrderByInfo, $skipToken);
-        $lastObject = new Order2();
+        $lastObject            = new Order2();
         $lastObject->OrderDate = '1996-07-12T00:00:00';
-        $lastObject->OrderID = 3456;
-        $nextLink = $internalSkipTokenInfo->buildNextPageLink($lastObject);
+        $lastObject->OrderID   = 3456;
+        $nextLink              = $internalSkipTokenInfo->buildNextPageLink($lastObject);
         $this->assertTrue(null !== $nextLink);
         $nextLink = $internalSkipTokenInfo->buildNextPageLink($lastObject);
         $this->assertEquals($nextLink, "datetime'1996-07-12T00%3A00%3A00', 3456");
@@ -457,7 +459,7 @@ class SkipTokenParserTest extends TestCase
     public function testCreationOfNextLink4()
     {
         $northWindMetadata = NorthWindMetadata::Create();
-        $configuration = new ServiceConfiguration($northWindMetadata);
+        $configuration     = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
@@ -466,17 +468,17 @@ class SkipTokenParserTest extends TestCase
             false
         );
 
-        $resourceSetWrapper = $providersWrapper->resolveResourceSet('Customers');
-        $resourceType = $resourceSetWrapper->getResourceType();
-        $orderBy = 'CustomerID, CustomerGuid';
-        $internalOrderByInfo = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
-        $skipToken = "null, guid'05b242e752eb46bd8f0e6568b72cd9a5'";
-        $internalSkipTokenInfo = SkipTokenParser::parseSkipTokenClause($resourceType, $internalOrderByInfo, $skipToken);
-        $keyObject = $internalSkipTokenInfo->getKeyObject();
-        $lastObject = new Customer2();
-        $lastObject->CustomerID = 'ABC';
+        $resourceSetWrapper       = $providersWrapper->resolveResourceSet('Customers');
+        $resourceType             = $resourceSetWrapper->getResourceType();
+        $orderBy                  = 'CustomerID, CustomerGuid';
+        $internalOrderByInfo      = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
+        $skipToken                = "null, guid'05b242e752eb46bd8f0e6568b72cd9a5'";
+        $internalSkipTokenInfo    = SkipTokenParser::parseSkipTokenClause($resourceType, $internalOrderByInfo, $skipToken);
+        $keyObject                = $internalSkipTokenInfo->getKeyObject();
+        $lastObject               = new Customer2();
+        $lastObject->CustomerID   = 'ABC';
         $lastObject->CustomerGuid = '{05b242e7-52eb-46bd-8f0e-6568b72cd9a5}';
-        $nextLink = $internalSkipTokenInfo->buildNextPageLink($lastObject);
+        $nextLink                 = $internalSkipTokenInfo->buildNextPageLink($lastObject);
         $this->assertEquals($nextLink, "'ABC', guid'%7B05b242e7-52eb-46bd-8f0e-6568b72cd9a5%7D'");
     }
 }

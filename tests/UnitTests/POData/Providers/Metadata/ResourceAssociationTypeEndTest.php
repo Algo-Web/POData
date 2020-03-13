@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\Providers\Metadata;
 
 use Mockery as m;
@@ -16,7 +18,7 @@ class ResourceAssociationTypeEndTest extends TestCase
         $type = m::mock(ResourceEntityType::class);
 
         $expected = 'Both to and from property argument to ResourceAssociationTypeEnd constructor cannot be null.';
-        $actual = null;
+        $actual   = null;
 
         try {
             new ResourceAssociationTypeEnd('name', $type, null, null);
@@ -31,7 +33,7 @@ class ResourceAssociationTypeEndTest extends TestCase
         $type = m::mock(ResourceEntityType::class);
 
         $expected = 'The argument \'$resourceProperty\' must be either null or instance of \'ResourceProperty\'.';
-        $actual = null;
+        $actual   = null;
 
         try {
             new ResourceAssociationTypeEnd('name', $type, $type, null);
@@ -46,7 +48,7 @@ class ResourceAssociationTypeEndTest extends TestCase
         $type = m::mock(ResourceEntityType::class);
 
         $expected = 'The argument \'$fromProperty\' must be either null or instance of \'ResourceProperty\'.';
-        $actual = null;
+        $actual   = null;
 
         try {
             new ResourceAssociationTypeEnd('name', $type, null, $type);
@@ -74,7 +76,7 @@ class ResourceAssociationTypeEndTest extends TestCase
         $type->shouldReceive('getFullName')->andReturn('Northwind.Customer', 'Northwind.Order');
         $from = m::mock(ResourceProperty::class);
 
-        $foo = new ResourceAssociationTypeEnd('name', $type, null, $from);
+        $foo    = new ResourceAssociationTypeEnd('name', $type, null, $from);
         $result = $foo->isBelongsTo($type, $from);
         $this->assertFalse($result);
     }

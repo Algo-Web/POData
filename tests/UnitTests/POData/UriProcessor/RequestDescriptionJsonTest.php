@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\UriProcessor;
 
 use Mockery as m;
@@ -39,7 +41,7 @@ class RequestDescriptionJsonTest extends TestCase
         $payload = $this->generateODataEntry();
 
         $jsonWriter = new JsonODataV1Writer();
-        $actual = $jsonWriter->write($payload)->getOutput();
+        $actual     = $jsonWriter->write($payload)->getOutput();
         $this->assertEquals($expected, $actual);
     }
 
@@ -55,7 +57,7 @@ class RequestDescriptionJsonTest extends TestCase
         $payload = $this->generateODataEntry();
 
         $jsonWriter = new JsonODataV2Writer();
-        $actual = $jsonWriter->write($payload)->getOutput();
+        $actual     = $jsonWriter->write($payload)->getOutput();
         $this->assertEquals($expected, $actual);
     }
 
@@ -67,7 +69,7 @@ class RequestDescriptionJsonTest extends TestCase
         $payload = $this->generateODataEntry();
 
         $jsonWriter = new JsonLightODataWriter(JsonLightMetadataLevel::FULL(), 'http://localhost/odata.svc');
-        $actual = $jsonWriter->write($payload)->getOutput();
+        $actual     = $jsonWriter->write($payload)->getOutput();
         $this->assertEquals($expected, $actual);
     }
 
@@ -79,7 +81,7 @@ class RequestDescriptionJsonTest extends TestCase
         $payload = $this->generateODataEntry();
 
         $jsonWriter = new JsonLightODataWriter(JsonLightMetadataLevel::MINIMAL(), 'http://localhost/odata.svc');
-        $actual = $jsonWriter->write($payload)->getOutput();
+        $actual     = $jsonWriter->write($payload)->getOutput();
         $this->assertEquals($expected, $actual);
     }
 
@@ -91,48 +93,48 @@ class RequestDescriptionJsonTest extends TestCase
         $payload = $this->generateODataEntry();
 
         $jsonWriter = new JsonLightODataWriter(JsonLightMetadataLevel::NONE(), 'http://localhost/odata.svc');
-        $actual = $jsonWriter->write($payload)->getOutput();
+        $actual     = $jsonWriter->write($payload)->getOutput();
         $this->assertEquals($expected, $actual);
     }
 
     private function generateODataEntry()
     {
-        $propContent = new ODataPropertyContent();
+        $propContent             = new ODataPropertyContent();
         $propContent->properties = ['CustomerID' => new ODataProperty(), 'CustomerGuid' => new ODataProperty(),
             'CustomerName' => new ODataProperty(), 'country' => new ODataProperty(), 'Rating' => new ODataProperty(),
             'Photo' => new ODataProperty(), 'Address' => new ODataProperty()];
-        $propContent->properties['CustomerID']->name = 'CustomerID';
-        $propContent->properties['CustomerID']->typeName = 'Edm.String';
-        $propContent->properties['CustomerID']->value = '1';
-        $propContent->properties['CustomerGuid']->name = 'CustomerGuid';
+        $propContent->properties['CustomerID']->name       = 'CustomerID';
+        $propContent->properties['CustomerID']->typeName   = 'Edm.String';
+        $propContent->properties['CustomerID']->value      = '1';
+        $propContent->properties['CustomerGuid']->name     = 'CustomerGuid';
         $propContent->properties['CustomerGuid']->typeName = 'Edm.Guid';
-        $propContent->properties['CustomerGuid']->value = '123e4567-e89b-12d3-a456-426655440000';
-        $propContent->properties['CustomerName']->name = 'CustomerName';
+        $propContent->properties['CustomerGuid']->value    = '123e4567-e89b-12d3-a456-426655440000';
+        $propContent->properties['CustomerName']->name     = 'CustomerName';
         $propContent->properties['CustomerName']->typeName = 'Edm.String';
-        $propContent->properties['CustomerName']->value = ' MakeItPhunkee ';
-        $propContent->properties['country']->name = 'country';
-        $propContent->properties['country']->typeName = 'Edm.String';
-        $propContent->properties['country']->value = ' Oop North ';
-        $propContent->properties['Rating']->name = 'Rating';
-        $propContent->properties['Rating']->typeName = 'Edm.Int32';
-        $propContent->properties['Photo']->name = 'Photo';
-        $propContent->properties['Photo']->typeName = 'Edm.Binary';
-        $propContent->properties['Address']->name = 'Address';
-        $propContent->properties['Address']->typeName = 'Address';
+        $propContent->properties['CustomerName']->value    = ' MakeItPhunkee ';
+        $propContent->properties['country']->name          = 'country';
+        $propContent->properties['country']->typeName      = 'Edm.String';
+        $propContent->properties['country']->value         = ' Oop North ';
+        $propContent->properties['Rating']->name           = 'Rating';
+        $propContent->properties['Rating']->typeName       = 'Edm.Int32';
+        $propContent->properties['Photo']->name            = 'Photo';
+        $propContent->properties['Photo']->typeName        = 'Edm.Binary';
+        $propContent->properties['Address']->name          = 'Address';
+        $propContent->properties['Address']->typeName      = 'Address';
 
-        $objectResult = new ODataEntry();
+        $objectResult     = new ODataEntry();
         $objectResult->id = 'http://localhost/odata.svc/Customers(CustomerID=\'1\',CustomerGuid'
-                            .'=guid\'123e4567-e89b-12d3-a456-426655440000\')';
-        $objectResult->title = new ODataTitle('Customer');
-        $objectResult->type = new ODataCategory('Customer');
-        $objectResult->editLink = new ODataLink();
+                            . '=guid\'123e4567-e89b-12d3-a456-426655440000\')';
+        $objectResult->title         = new ODataTitle('Customer');
+        $objectResult->type          = new ODataCategory('Customer');
+        $objectResult->editLink      = new ODataLink();
         $objectResult->editLink->url = 'Customers(CustomerID=\'1\',CustomerGuid'
-                                       .'=guid\'123e4567-e89b-12d3-a456-426655440000\')';
-        $objectResult->editLink->name = 'edit';
-        $objectResult->editLink->title = 'Customer';
-        $objectResult->propertyContent = $propContent;
-        $objectResult->resourceSetName = 'Customers';
-        $objectResult->updated = '2017-01-01T00:00:00+00:00';
+                                       . '=guid\'123e4567-e89b-12d3-a456-426655440000\')';
+        $objectResult->editLink->name   = 'edit';
+        $objectResult->editLink->title  = 'Customer';
+        $objectResult->propertyContent  = $propContent;
+        $objectResult->resourceSetName  = 'Customers';
+        $objectResult->updated          = '2017-01-01T00:00:00+00:00';
         $objectResult->isMediaLinkEntry = false;
 
         return $objectResult;

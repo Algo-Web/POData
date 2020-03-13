@@ -1,14 +1,16 @@
 <?php
+
+declare(strict_types=1);
 namespace POData\BatchProcessor;
 
-use Illuminate\Support\Str;
-use \POData\OperationContext\ServiceHost;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use POData\BaseService;
+use POData\OperationContext\ServiceHost;
 use POData\OperationContext\Web\Illuminate\IlluminateOperationContext;
 
 /**
- * Class ChangeSetParser
+ * Class ChangeSetParser.
  * @package POData\BatchProcessor
  */
 class ChangeSetParser implements IBatchParser
@@ -27,7 +29,7 @@ class ChangeSetParser implements IBatchParser
     public function __construct(BaseService $service, $body)
     {
         $this->service = $service;
-        $this->data = trim($body);
+        $this->data    = trim($body);
     }
 
     /**
@@ -51,7 +53,7 @@ class ChangeSetParser implements IBatchParser
                 if (0 > $lookupID) {
                     continue;
                 }
-                $workingObject->Content = str_replace('$' . $lookupID, $location, $workingObject->Content);
+                $workingObject->Content    = str_replace('$' . $lookupID, $location, $workingObject->Content);
                 $workingObject->RequestURL = str_replace('$' . $lookupID, $location, $workingObject->RequestURL);
             }
 
@@ -67,8 +69,8 @@ class ChangeSetParser implements IBatchParser
             $this->processSubRequest($workingObject);
             if ('GET' != $workingObject->RequestVerb && !Str::contains($workingObject->RequestURL, '/$links/')) {
                 if (null === $workingObject->Response->getHeaders()['Location']) {
-                    $msg = 'Location header not set in subrequest response for '. $workingObject->RequestVerb
-                           .' request url '.$workingObject->RequestURL;
+                    $msg = 'Location header not set in subrequest response for ' . $workingObject->RequestVerb
+                           . ' request url ' . $workingObject->RequestURL;
                     throw new \Exception($msg);
                 }
                 $this->contentIDToLocationLookup[$contentID] = $workingObject->Response->getHeaders()['Location'];
@@ -83,7 +85,7 @@ class ChangeSetParser implements IBatchParser
     {
         $response = '';
         $splitter = false === $this->changeSetBoundary ? '' : '--' . $this->changeSetBoundary . "\r\n";
-        $raw = $this->getRawRequests();
+        $raw      = $this->getRawRequests();
         foreach ($raw as $contentID => &$workingObject) {
             $headers = $workingObject->Response->getHeaders();
             $response .= $splitter;
@@ -91,8 +93,8 @@ class ChangeSetParser implements IBatchParser
             $response .= 'Content-Type: application/http' . "\r\n";
             $response .= 'Content-Transfer-Encoding: binary' . "\r\n";
             $response .= "\r\n";
-            $response .= 'HTTP/1.1 '.$headers['Status']."\r\n";
-            $response .= 'Content-ID: '.$contentID . "\r\n";
+            $response .= 'HTTP/1.1 ' . $headers['Status'] . "\r\n";
+            $response .= 'Content-ID: ' . $contentID . "\r\n";
 
             foreach ($headers as $headerName => $headerValue) {
                 if (null !== $headerValue) {
@@ -116,10 +118,10 @@ class ChangeSetParser implements IBatchParser
      */
     public function handleData()
     {
-        $firstLine = trim(strtok($this->getData(), "\n"));
+        $firstLine               = trim(strtok($this->getData(), "\n"));
         $this->changeSetBoundary = substr($firstLine, 40);
 
-        $prefix = 'HTTP_';
+        $prefix  = 'HTTP_';
         $matches = explode('--' . $this->changeSetBoundary, $this->getData());
         array_shift($matches);
         $contentIDinit = -1;
@@ -128,15 +130,15 @@ class ChangeSetParser implements IBatchParser
                 continue;
             }
 
-            $stage = 0;
+            $stage               = 0;
             $gotRequestPathParts = false;
-            $match = trim($match);
-            $lines = explode("\n", $match);
+            $match               = trim($match);
+            $lines               = explode("\n", $match);
 
             $requestPathParts = [];
-            $serverParts = [];
-            $contentID = $contentIDinit;
-            $content = '';
+            $serverParts      = [];
+            $contentID        = $contentIDinit;
+            $content          = '';
 
             foreach ($lines as $line) {
                 if ('' == $line) {
@@ -158,21 +160,21 @@ class ChangeSetParser implements IBatchParser
                         break;
                     case 1:
                         if (!$gotRequestPathParts) {
-                            $requestPathParts = explode(' ', $line);
+                            $requestPathParts    = explode(' ', $line);
                             $gotRequestPathParts = true;
                             continue 2;
                         }
                         $headerSides = explode(':', $line);
                         if (count($headerSides) != 2) {
-                            throw new \Exception('Malformed header line: '.$line);
+                            throw new \Exception('Malformed header line: ' . $line);
                         }
                         if (strtolower(trim($headerSides[0])) == strtolower('Content-ID')) {
                             $contentID = trim($headerSides[1]);
                             continue 2;
                         }
 
-                        $name = trim($headerSides[0]);
-                        $name = strtr(strtoupper($name), '-', '_');
+                        $name  = trim($headerSides[0]);
+                        $name  = strtr(strtoupper($name), '-', '_');
                         $value = trim($headerSides[1]);
                         if (!Str::startsWith($name, $prefix) && $name != 'CONTENT_TYPE') {
                             $name = $prefix . $name;
@@ -234,7 +236,7 @@ class ChangeSetParser implements IBatchParser
     protected function processSubRequest(&$workingObject)
     {
         $newContext = new IlluminateOperationContext($workingObject->Request);
-        $newHost = new ServiceHost($newContext, $workingObject->Request);
+        $newHost    = new ServiceHost($newContext, $workingObject->Request);
 
         $this->getService()->setHost($newHost);
         $this->getService()->handleRequest();

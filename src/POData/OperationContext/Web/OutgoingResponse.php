@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\OperationContext\Web;
 
 use POData\Common\ODataConstants;
@@ -46,16 +48,16 @@ class OutgoingResponse
      */
     private function initializeResponseHeaders()
     {
-        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_CONTENTTYPE] = null;
+        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_CONTENTTYPE]   = null;
         $this->headers[ODataConstants::HTTPRESPONSE_HEADER_CONTENTLENGTH] = null;
-        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_ETAG] = null;
-        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_CACHECONTROL] = null;
-        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_LASTMODIFIED] = null;
-        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_LOCATION] = null;
-        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_STATUS] = null;
-        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_STATUS_CODE] = null;
-        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_STATUS_DESC] = null;
-        $this->dataServiceVersion = null;
+        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_ETAG]          = null;
+        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_CACHECONTROL]  = null;
+        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_LASTMODIFIED]  = null;
+        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_LOCATION]      = null;
+        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_STATUS]        = null;
+        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_STATUS_CODE]   = null;
+        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_STATUS_DESC]   = null;
+        $this->dataServiceVersion                                         = null;
     }
 
     /**
@@ -93,7 +95,7 @@ class OutgoingResponse
      */
     public function setContentType($value)
     {
-        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_CONTENTTYPE] = $value.';charset=UTF-8';
+        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_CONTENTTYPE] = $value . ';charset=UTF-8';
     }
 
     /**
@@ -165,8 +167,8 @@ class OutgoingResponse
     public function setStatusCode($value)
     {
         $rawCode = substr($value, 0, 3);
-        assert(is_numeric($rawCode), 'Raw HTTP status code is not numeric - is '.$rawCode);
-        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_STATUS] = $value;
+        assert(is_numeric($rawCode), 'Raw HTTP status code is not numeric - is ' . $rawCode);
+        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_STATUS]      = $value;
         $this->headers[ODataConstants::HTTPRESPONSE_HEADER_STATUS_CODE] = intval($rawCode);
     }
 

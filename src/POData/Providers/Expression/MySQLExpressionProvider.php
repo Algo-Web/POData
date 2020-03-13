@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\Providers\Expression;
 
 use POData\Common\ODataConstants;
@@ -10,30 +12,30 @@ use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\PropertyAcce
 use POData\UriProcessor\QueryProcessor\FunctionDescription;
 
 /**
- * Class MySQLExpressionProvider
+ * Class MySQLExpressionProvider.
  * @package POData\Providers\Expression
  */
 class MySQLExpressionProvider implements IExpressionProvider
 {
-    const ADD = '+';
-    const CLOSE_BRACKET = ')';
-    const COMMA = ',';
-    const DIVIDE = '/';
-    const SUBTRACT = '-';
-    const EQUAL = '=';
-    const GREATER_THAN = '>';
+    const ADD                   = '+';
+    const CLOSE_BRACKET         = ')';
+    const COMMA                 = ',';
+    const DIVIDE                = '/';
+    const SUBTRACT              = '-';
+    const EQUAL                 = '=';
+    const GREATER_THAN          = '>';
     const GREATER_THAN_OR_EQUAL = '>=';
-    const LESS_THAN = '<';
-    const LESS_THAN_OR_EQUAL = '<=';
-    const LOGICAL_AND = '&&';
-    const LOGICAL_NOT = '!';
-    const LOGICAL_OR = '||';
-    const MEMBER_ACCESS = '';
-    const MODULO = '%';
-    const MULTIPLY = '*';
-    const NEGATE = '-';
-    const NOT_EQUAL = '!=';
-    const OPEN_BRACKET = '(';
+    const LESS_THAN             = '<';
+    const LESS_THAN_OR_EQUAL    = '<=';
+    const LOGICAL_AND           = '&&';
+    const LOGICAL_NOT           = '!';
+    const LOGICAL_OR            = '||';
+    const MEMBER_ACCESS         = '';
+    const MODULO                = '%';
+    const MULTIPLY              = '*';
+    const NEGATE                = '-';
+    const NOT_EQUAL             = '!=';
+    const OPEN_BRACKET          = '(';
 
     /**
      * The type of the resource pointed by the resource path segment.
@@ -220,9 +222,9 @@ class MySQLExpressionProvider implements IExpressionProvider
         if (null == $expression->getResourceProperty()) {
             throw new \InvalidArgumentException('onPropertyAccessExpression - expression has no resource property');
         }
-        $parent = $expression;
+        $parent         = $expression;
         $entityTypeName = $this->resourceType->getName();
-        $propertyName = $parent->getResourceProperty()->getName();
+        $propertyName   = $parent->getResourceProperty()->getName();
         if (is_array($this->entityMapping)) {
             if (array_key_exists($entityTypeName, $this->entityMapping)) {
                 if (array_key_exists($propertyName, $this->entityMapping[$entityTypeName])) {
@@ -340,12 +342,12 @@ class MySQLExpressionProvider implements IExpressionProvider
     {
         //DATETIMECMP
         if (0 == substr_compare($left, 'DATETIMECMP', 0, 11)) {
-            $str = explode(';', $left, 2);
+            $str    = explode(';', $left, 2);
             $str[0] = str_replace('DATETIMECMP', '', $str[0]);
 
             return self::OPEN_BRACKET
-                .$str[0] . ' ' . $operator
-                .' ' . $str[1] . self::CLOSE_BRACKET;
+                . $str[0] . ' ' . $operator
+                . ' ' . $str[1] . self::CLOSE_BRACKET;
         }
 
         return self::OPEN_BRACKET . $left . ' ' . $operator . ' ' . $right . self::CLOSE_BRACKET;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\Providers\Metadata;
 
 use Mockery as m;
@@ -123,8 +125,8 @@ class ProvidersWrapperMockeryTest extends TestCase
 
     public function testResolveNullSingleton()
     {
-        $meta = m::mock(SimpleMetadataProvider::class)->makePartial();
-        $query = m::mock(IQueryProvider::class);
+        $meta    = m::mock(SimpleMetadataProvider::class)->makePartial();
+        $query   = m::mock(IQueryProvider::class);
         $service = m::mock(IServiceConfiguration::class);
 
         $foo = new ProvidersWrapper($meta, $query, $service);
@@ -133,11 +135,11 @@ class ProvidersWrapperMockeryTest extends TestCase
 
     public function testGetNullSingletons()
     {
-        $meta = m::mock(SimpleMetadataProvider::class)->makePartial();
-        $query = m::mock(IQueryProvider::class);
+        $meta    = m::mock(SimpleMetadataProvider::class)->makePartial();
+        $query   = m::mock(IQueryProvider::class);
         $service = m::mock(IServiceConfiguration::class);
 
-        $foo = new ProvidersWrapper($meta, $query, $service);
+        $foo    = new ProvidersWrapper($meta, $query, $service);
         $result = $foo->getSingletons();
         $this->assertTrue(is_array($result));
         $this->assertEquals(0, count($result));
@@ -150,10 +152,10 @@ class ProvidersWrapperMockeryTest extends TestCase
 
         $meta = m::mock(SimpleMetadataProvider::class)->makePartial();
         $meta->shouldReceive('getSingletons')->andReturn(['singleton' => $func]);
-        $query = m::mock(IQueryProvider::class);
+        $query   = m::mock(IQueryProvider::class);
         $service = m::mock(IServiceConfiguration::class);
 
-        $foo = new ProvidersWrapper($meta, $query, $service);
+        $foo    = new ProvidersWrapper($meta, $query, $service);
         $result = $foo->resolveSingleton('singleton');
         $this->assertTrue($result instanceof ResourceFunctionType);
         $this->assertEquals('hammerTime', $func->getName());
@@ -165,10 +167,10 @@ class ProvidersWrapperMockeryTest extends TestCase
 
         $meta = m::mock(SimpleMetadataProvider::class)->makePartial();
         $meta->shouldReceive('getSingletons')->andReturn(['singleton' => $func]);
-        $query = m::mock(IQueryProvider::class);
+        $query   = m::mock(IQueryProvider::class);
         $service = m::mock(IServiceConfiguration::class);
 
-        $foo = new ProvidersWrapper($meta, $query, $service);
+        $foo    = new ProvidersWrapper($meta, $query, $service);
         $result = $foo->getSingletons();
         $this->assertTrue(is_array($result));
         $this->assertEquals(1, count($result));
@@ -178,10 +180,10 @@ class ProvidersWrapperMockeryTest extends TestCase
     {
         $meta = m::mock(SimpleMetadataProvider::class)->makePartial();
         $meta->shouldReceive('getSingletons')->andReturn([]);
-        $query = m::mock(IQueryProvider::class);
+        $query   = m::mock(IQueryProvider::class);
         $service = m::mock(IServiceConfiguration::class);
 
-        $foo = new ProvidersWrapper($meta, $query, $service);
+        $foo    = new ProvidersWrapper($meta, $query, $service);
         $result = $foo->getSingletons();
         $this->assertTrue(is_array($result));
         $this->assertEquals(0, count($result));
@@ -206,8 +208,8 @@ class ProvidersWrapperMockeryTest extends TestCase
         $query = m::mock(ProvidersQueryWrapper::class);
         $query->shouldReceive('putResource')->andReturn(null)->once();
 
-        $set = m::mock(ResourceSet::class);
-        $key = m::mock(KeyDescriptor::class);
+        $set  = m::mock(ResourceSet::class);
+        $key  = m::mock(KeyDescriptor::class);
         $data = [];
 
         $foo = m::mock(ProvidersWrapper::class)->makePartial();
@@ -223,8 +225,8 @@ class ProvidersWrapperMockeryTest extends TestCase
 
         $type = QueryType::ENTITIES();
 
-        $set = m::mock(ResourceSet::class);
-        $key = m::mock(KeyDescriptor::class);
+        $set      = m::mock(ResourceSet::class);
+        $key      = m::mock(KeyDescriptor::class);
         $property = m::mock(ResourceProperty::class);
 
         $foo = m::mock(ProvidersWrapper::class)->makePartial();
@@ -240,8 +242,8 @@ class ProvidersWrapperMockeryTest extends TestCase
         $query = m::mock(ProvidersQueryWrapper::class);
         $query->shouldReceive('getResourceFromRelatedResourceSet')->andReturn(null)->once();
 
-        $set = m::mock(ResourceSet::class);
-        $key = m::mock(KeyDescriptor::class);
+        $set      = m::mock(ResourceSet::class);
+        $key      = m::mock(KeyDescriptor::class);
         $property = m::mock(ResourceProperty::class);
 
         $foo = m::mock(ProvidersWrapper::class)->makePartial();
@@ -257,7 +259,7 @@ class ProvidersWrapperMockeryTest extends TestCase
         $query = m::mock(ProvidersQueryWrapper::class);
         $query->shouldReceive('getRelatedResourceReference')->andReturn(null)->once();
 
-        $set = m::mock(ResourceSet::class);
+        $set      = m::mock(ResourceSet::class);
         $property = m::mock(ResourceProperty::class);
 
         $foo = m::mock(ProvidersWrapper::class)->makePartial();
@@ -273,8 +275,8 @@ class ProvidersWrapperMockeryTest extends TestCase
         $query = m::mock(ProvidersQueryWrapper::class);
         $query->shouldReceive('updateResource')->andReturn(null)->once();
 
-        $set = m::mock(ResourceSet::class);
-        $key = m::mock(KeyDescriptor::class);
+        $set      = m::mock(ResourceSet::class);
+        $key      = m::mock(KeyDescriptor::class);
         $property = m::mock(ResourceProperty::class);
 
         $foo = m::mock(ProvidersWrapper::class)->makePartial();
@@ -290,8 +292,8 @@ class ProvidersWrapperMockeryTest extends TestCase
         $query = m::mock(ProvidersQueryWrapper::class);
         $query->shouldReceive('deleteResource')->andReturn(null)->once();
 
-        $set = m::mock(ResourceSet::class);
-        $key = m::mock(KeyDescriptor::class);
+        $set      = m::mock(ResourceSet::class);
+        $key      = m::mock(KeyDescriptor::class);
         $property = m::mock(ResourceProperty::class);
 
         $foo = m::mock(ProvidersWrapper::class)->makePartial();
@@ -307,8 +309,8 @@ class ProvidersWrapperMockeryTest extends TestCase
         $query = m::mock(ProvidersQueryWrapper::class);
         $query->shouldReceive('createResourceforResourceSet')->andReturn(null)->once();
 
-        $set = m::mock(ResourceSet::class);
-        $key = m::mock(KeyDescriptor::class);
+        $set      = m::mock(ResourceSet::class);
+        $key      = m::mock(KeyDescriptor::class);
         $property = m::mock(ResourceProperty::class);
 
         $foo = m::mock(ProvidersWrapper::class)->makePartial();
@@ -335,11 +337,11 @@ class ProvidersWrapperMockeryTest extends TestCase
     public function testGetResourcePropertiesOnNonEntityType()
     {
         $expected = ['eins', 'zwei', 'polizei'];
-        $wrap = m::mock(ResourceSetWrapper::class);
-        $type = m::mock(ResourceComplexType::class);
+        $wrap     = m::mock(ResourceSetWrapper::class);
+        $type     = m::mock(ResourceComplexType::class);
         $type->shouldReceive('getAllProperties')->andReturn($expected);
 
-        $foo = m::mock(ProvidersWrapper::class)->makePartial();
+        $foo    = m::mock(ProvidersWrapper::class)->makePartial();
         $actual = $foo->getResourceProperties($wrap, $type);
         $this->assertEquals($expected, $actual);
     }
@@ -357,7 +359,7 @@ class ProvidersWrapperMockeryTest extends TestCase
         $type->shouldReceive('getFullName')->andReturn('HammerTime!');
         $type->shouldReceive('getAllProperties')->andReturn([$rProp1, $rProp2]);
 
-        $foo = m::mock(ProvidersWrapper::class)->makePartial();
+        $foo    = m::mock(ProvidersWrapper::class)->makePartial();
         $actual = $foo->getResourceProperties($wrap, $type);
         $this->assertEquals(2, count($actual));
         $this->assertTrue(isset($actual['first']));
@@ -369,8 +371,8 @@ class ProvidersWrapperMockeryTest extends TestCase
     public function testGetResourceAssociationSetWhereAssociationSetHasTwoNullEnds()
     {
         $expected = 'IDSMP::GetResourceSet returns invalid instance of ResourceSet when invoked with params'
-                    .' {ResourceSet with name rSet, ResourceType with name rTypeDelta, ResourceProperty with'
-                    .' name rProp}.';
+                    . ' {ResourceSet with name rSet, ResourceType with name rTypeDelta, ResourceProperty with'
+                    . ' name rProp}.';
         $actual = null;
 
         $set = m::mock(ResourceSet::class);
@@ -404,8 +406,8 @@ class ProvidersWrapperMockeryTest extends TestCase
     public function testGetResourceAssociationSetWhereAssociationSetHasThisEndNull()
     {
         $expected = 'IDSMP::GetResourceSet returns invalid instance of ResourceSet when invoked with params'
-                    .' {ResourceSet with name rSet, ResourceType with name rTypeDelta, ResourceProperty with'
-                    .' name rProp}.';
+                    . ' {ResourceSet with name rSet, ResourceType with name rTypeDelta, ResourceProperty with'
+                    . ' name rProp}.';
         $actual = null;
 
         $set = m::mock(ResourceSet::class);
@@ -439,8 +441,8 @@ class ProvidersWrapperMockeryTest extends TestCase
     public function testGetResourceAssociationSetWhereAssociationSetHasRelatedEndNull()
     {
         $expected = 'IDSMP::GetResourceSet returns invalid instance of ResourceSet when invoked with params'
-                    .' {ResourceSet with name rSet, ResourceType with name rTypeDelta, ResourceProperty with'
-                    .' name rProp}.';
+                    . ' {ResourceSet with name rSet, ResourceType with name rTypeDelta, ResourceProperty with'
+                    . ' name rProp}.';
         $actual = null;
 
         $set = m::mock(ResourceSet::class);
@@ -475,7 +477,7 @@ class ProvidersWrapperMockeryTest extends TestCase
     {
         $expected = EdmSchemaVersion::VERSION_1_DOT_1();
         /** @var ProvidersWrapper $foo */
-        $foo = m::mock(ProvidersWrapper::class)->makePartial();
+        $foo    = m::mock(ProvidersWrapper::class)->makePartial();
         $actual = $foo->getEdmSchemaVersion();
         $this->assertEquals($expected, $actual);
     }
@@ -483,7 +485,7 @@ class ProvidersWrapperMockeryTest extends TestCase
     public function testGetMetadataXML()
     {
         $expected = 'xml';
-        $meta = m::mock(IMetadataProvider::class);
+        $meta     = m::mock(IMetadataProvider::class);
         $meta->shouldReceive('getXML')->andReturn($expected)->once();
         $foo = m::mock(ProvidersWrapper::class)->makePartial();
         $foo->shouldReceive('getMetaProvider')->andReturn($meta);
@@ -502,11 +504,11 @@ class ProvidersWrapperMockeryTest extends TestCase
         $foo = m::mock(ProvidersWrapper::class)->makePartial();
         $foo->shouldReceive('getProviderWrapper')->andReturn($wrap);
 
-        $set = m::mock(ResourceSet::class);
+        $set     = m::mock(ResourceSet::class);
         $payload = [];
 
         $expected = 'eins';
-        $actual = $foo->createBulkResourceForResourceSet($set, $payload);
+        $actual   = $foo->createBulkResourceForResourceSet($set, $payload);
         $this->assertEquals($expected, $actual);
     }
 
@@ -521,13 +523,13 @@ class ProvidersWrapperMockeryTest extends TestCase
         $foo = m::mock(ProvidersWrapper::class)->makePartial();
         $foo->shouldReceive('getProviderWrapper')->andReturn($wrap);
 
-        $set = m::mock(ResourceSet::class);
+        $set     = m::mock(ResourceSet::class);
         $payload = [];
-        $source = new Customer2();
-        $keys = [];
+        $source  = new Customer2();
+        $keys    = [];
 
         $expected = 'eins';
-        $actual = $foo->updateBulkResource($set, $source, $payload, $keys);
+        $actual   = $foo->updateBulkResource($set, $source, $payload, $keys);
         $this->assertEquals($expected, $actual);
     }
 
@@ -542,13 +544,13 @@ class ProvidersWrapperMockeryTest extends TestCase
         $foo = m::mock(ProvidersWrapper::class)->makePartial();
         $foo->shouldReceive('getProviderWrapper')->andReturn($wrap);
 
-        $set = m::mock(ResourceSet::class);
-        $source = new Customer2();
-        $target = new Address2();
+        $set      = m::mock(ResourceSet::class);
+        $source   = new Customer2();
+        $target   = new Address2();
         $propName = 'property';
 
         $expected = 'eins';
-        $actual = $foo->hookSingleModel($set, $source, $set, $target, $propName);
+        $actual   = $foo->hookSingleModel($set, $source, $set, $target, $propName);
         $this->assertEquals($expected, $actual);
     }
 
@@ -563,13 +565,13 @@ class ProvidersWrapperMockeryTest extends TestCase
         $foo = m::mock(ProvidersWrapper::class)->makePartial();
         $foo->shouldReceive('getProviderWrapper')->andReturn($wrap);
 
-        $set = m::mock(ResourceSet::class);
-        $source = new Customer2();
-        $target = new Address2();
+        $set      = m::mock(ResourceSet::class);
+        $source   = new Customer2();
+        $target   = new Address2();
         $propName = 'property';
 
         $expected = 'eins';
-        $actual = $foo->unhookSingleModel($set, $source, $set, $target, $propName);
+        $actual   = $foo->unhookSingleModel($set, $source, $set, $target, $propName);
         $this->assertEquals($expected, $actual);
     }
 
@@ -617,9 +619,9 @@ class ProvidersWrapperMockeryTest extends TestCase
 
     public static function mockProperty($object, $propertyName, $value)
     {
-        $bar = new \ReflectionClass($object);
+        $bar      = new \ReflectionClass($object);
         $property = $bar->getProperty($propertyName);
-        $oldAcc = $property->isPublic() ? true : false;
+        $oldAcc   = $property->isPublic() ? true : false;
 
         $property->setAccessible(true);
         $property->setValue($object, $value);

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\Common;
 
 use Mockery as m;
@@ -73,7 +75,7 @@ Host: host
 
 --batch_36522ad7-fc75-4b56-8c71-56071383e77b--';
 
-        $contentLine = 'multipart/mixed; boundary=batch_36522ad7-fc75-4b56-8c71-56071383e77b';
+        $contentLine    = 'multipart/mixed; boundary=batch_36522ad7-fc75-4b56-8c71-56071383e77b';
         $firstChangeset = m::mock(ChangeSetParser::class);
         $firstChangeset->shouldReceive('handleData')->andReturnNull()->once();
         $firstChangeset->shouldReceive('process')->andReturnNull()->once();
@@ -152,7 +154,7 @@ Host: host
 
 --batch_36522ad7-fc75-4b56-8c71-56071383e77b--';
 
-        $contentLine = 'multipart/mixed; boundary=batch_36522ad7-fc75-4b56-8c71-56071383e77b';
+        $contentLine    = 'multipart/mixed; boundary=batch_36522ad7-fc75-4b56-8c71-56071383e77b';
         $firstChangeset = m::mock(ChangeSetParser::class);
         $firstChangeset->shouldReceive('handleData')->andReturnNull()->once();
         $firstChangeset->shouldReceive('process')->andReturnNull()->once();
@@ -217,7 +219,7 @@ Host: host
     public function testGetResponse()
     {
         $resp = m::mock(ChangeSetParser::class)->makePartial();
-        $resp->shouldReceive('getResponse')->andReturn(PHP_EOL."response".PHP_EOL);
+        $resp->shouldReceive('getResponse')->andReturn(PHP_EOL . 'response' . PHP_EOL);
 
         $service = m::mock(BaseService::class);
         $request = m::mock(RequestDescription::class);

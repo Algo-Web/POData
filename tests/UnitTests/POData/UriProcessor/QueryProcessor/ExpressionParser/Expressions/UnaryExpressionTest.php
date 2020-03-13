@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions;
 
 use Mockery as m;
@@ -19,7 +21,7 @@ class UnaryExpressionTest extends TestCase
         $expr1 = m::mock(AbstractExpression::class);
         $expr1->shouldReceive('free')->andReturnNull()->once();
         $expression = m::mock(ExpressionType::class);
-        $iType = m::mock(IType::class);
+        $iType      = m::mock(IType::class);
 
         $foo = new UnaryExpression($expr1, $expression, $iType);
         $this->assertNotNull($foo->getChild());

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\UriProcessor\UriProcessorNew;
 
 use Mockery as m;
@@ -25,7 +27,7 @@ class ExecuteGetWithOptionsTest extends TestCase
     public function testExecuteGetOnResourceSetWithTopOptionSet()
     {
         $baseUrl = new Url('http://localhost/odata.svc');
-        $reqUrl = new Url('http://localhost/odata.svc/customers$top=1');
+        $reqUrl  = new Url('http://localhost/odata.svc/customers$top=1');
 
         $host = $this->setUpMockHost($reqUrl, $baseUrl);
 
@@ -70,7 +72,7 @@ class ExecuteGetWithOptionsTest extends TestCase
     public function testExecuteGetOnResourceSetWithSkipOptionSet()
     {
         $baseUrl = new Url('http://localhost/odata.svc');
-        $reqUrl = new Url('http://localhost/odata.svc/customers$skip=41');
+        $reqUrl  = new Url('http://localhost/odata.svc/customers$skip=41');
 
         $host = $this->setUpMockHost($reqUrl, $baseUrl);
 
@@ -137,7 +139,7 @@ class ExecuteGetWithOptionsTest extends TestCase
     private function setUpMockService($host, $wrapper, $context, $config)
     {
         $metaProv = m::mock(IMetadataProvider::class);
-        $service = m::mock(IService::class);
+        $service  = m::mock(IService::class);
         $service->shouldReceive('getHost')->andReturn($host);
         $service->shouldReceive('getProvidersWrapper')->andReturn($wrapper);
         $service->shouldReceive('getOperationContext')->andReturn($context);

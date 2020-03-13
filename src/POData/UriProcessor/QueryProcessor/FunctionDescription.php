@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\UriProcessor\QueryProcessor;
 
 use POData\Common\Messages;
@@ -52,8 +54,8 @@ class FunctionDescription
      */
     public function __construct($name, $returnType, $argumentTypes)
     {
-        $this->name = $name;
-        $this->returnType = $returnType;
+        $this->name          = $name;
+        $this->returnType    = $returnType;
         $this->argumentTypes = $argumentTypes;
     }
 
@@ -85,168 +87,168 @@ class FunctionDescription
         $functions = [
             //EdmString Functions
             'endswith' => [
-                    new self(
-                        'endswith',
-                        new Boolean(),
-                        [new StringType(), new StringType()]
-                    ),
-                ],
+                new self(
+                    'endswith',
+                    new Boolean(),
+                    [new StringType(), new StringType()]
+                ),
+            ],
             'indexof' => [
-                    new self(
-                        'indexof',
-                        new Int32(),
-                        [new StringType(), new StringType()]
-                    ),
-                ],
+                new self(
+                    'indexof',
+                    new Int32(),
+                    [new StringType(), new StringType()]
+                ),
+            ],
             'replace' => [
-                    new self(
-                        'replace',
-                        new StringType(),
-                        [new StringType(), new StringType(), new StringType()]
-                    ),
-                ],
+                new self(
+                    'replace',
+                    new StringType(),
+                    [new StringType(), new StringType(), new StringType()]
+                ),
+            ],
             'startswith' => [
-                    new self(
-                        'startswith',
-                        new Boolean(),
-                        [new StringType(), new StringType()]
-                    ),
-                ],
+                new self(
+                    'startswith',
+                    new Boolean(),
+                    [new StringType(), new StringType()]
+                ),
+            ],
             'tolower' => [
-                    new self(
-                        'tolower',
-                        new StringType(),
-                        [new StringType()]
-                    ),
-                ],
+                new self(
+                    'tolower',
+                    new StringType(),
+                    [new StringType()]
+                ),
+            ],
             'toupper' => [
-                    new self(
-                        'toupper',
-                        new StringType(),
-                        [new StringType()]
-                    ),
-                ],
+                new self(
+                    'toupper',
+                    new StringType(),
+                    [new StringType()]
+                ),
+            ],
             'trim' => [
-                    new self(
-                        'trim',
-                        new StringType(),
-                        [new StringType()]
-                    ),
-                ],
+                new self(
+                    'trim',
+                    new StringType(),
+                    [new StringType()]
+                ),
+            ],
             'substring' => [
-                    new self(
-                        'substring',
-                        new StringType(),
-                        [new StringType(), new Int32()]
-                    ),
-                    new self(
-                        'substring',
-                        new StringType(),
-                        [new StringType(), new Int32(), new Int32()]
-                    ),
-                ],
+                new self(
+                    'substring',
+                    new StringType(),
+                    [new StringType(), new Int32()]
+                ),
+                new self(
+                    'substring',
+                    new StringType(),
+                    [new StringType(), new Int32(), new Int32()]
+                ),
+            ],
             'substringof' => [
-                    new self(
-                        'substringof',
-                        new Boolean(),
-                        [new StringType(), new StringType()]
-                    ),
-                ],
+                new self(
+                    'substringof',
+                    new Boolean(),
+                    [new StringType(), new StringType()]
+                ),
+            ],
             'concat' => [
-                    new self(
-                        'concat',
-                        new StringType(),
-                        [new StringType(), new StringType()]
-                    ),
-                ],
+                new self(
+                    'concat',
+                    new StringType(),
+                    [new StringType(), new StringType()]
+                ),
+            ],
             'length' => [
-                    new self(
-                        'length',
-                        new Int32(),
-                        [new StringType()]
-                    ),
-                ],
+                new self(
+                    'length',
+                    new Int32(),
+                    [new StringType()]
+                ),
+            ],
             //DateTime functions
             'year' => [
-                    new self(
-                        'year',
-                        new Int32(),
-                        [new DateTime()]
-                    ),
-                ],
+                new self(
+                    'year',
+                    new Int32(),
+                    [new DateTime()]
+                ),
+            ],
             'month' => [
-                    new self(
-                        'month',
-                        new Int32(),
-                        [new DateTime()]
-                    ),
-                ],
+                new self(
+                    'month',
+                    new Int32(),
+                    [new DateTime()]
+                ),
+            ],
             'day' => [
-                    new self(
-                        'day',
-                        new Int32(),
-                        [new DateTime()]
-                    ),
-                ],
+                new self(
+                    'day',
+                    new Int32(),
+                    [new DateTime()]
+                ),
+            ],
             'hour' => [
-                    new self(
-                        'hour',
-                        new Int32(),
-                        [new DateTime()]
-                    ),
-                ],
+                new self(
+                    'hour',
+                    new Int32(),
+                    [new DateTime()]
+                ),
+            ],
             'minute' => [
-                    new self(
-                        'minute',
-                        new Int32(),
-                        [new DateTime()]
-                    ),
-                ],
+                new self(
+                    'minute',
+                    new Int32(),
+                    [new DateTime()]
+                ),
+            ],
             'second' => [
-                    new self(
-                        'second',
-                        new Int32(),
-                        [new DateTime()]
-                    ),
-                ],
+                new self(
+                    'second',
+                    new Int32(),
+                    [new DateTime()]
+                ),
+            ],
             //Math Functions
             'round' => [
-                    new self(
-                        'round',
-                        new Decimal(),
-                        [new Decimal()]
-                    ),
-                    new self(
-                        'round',
-                        new Double(),
-                        [new Double()]
-                    ),
-                ],
+                new self(
+                    'round',
+                    new Decimal(),
+                    [new Decimal()]
+                ),
+                new self(
+                    'round',
+                    new Double(),
+                    [new Double()]
+                ),
+            ],
             'ceiling' => [
-                    new self(
-                        'ceiling',
-                        new Decimal(),
-                        [new Decimal()]
-                    ),
-                    new self(
-                        'ceiling',
-                        new Double(),
-                        [new Double()]
-                    ),
-                ],
+                new self(
+                    'ceiling',
+                    new Decimal(),
+                    [new Decimal()]
+                ),
+                new self(
+                    'ceiling',
+                    new Double(),
+                    [new Double()]
+                ),
+            ],
             'floor' => [
-                    new self(
-                        'floor',
-                        new Decimal(),
-                        [new Decimal()]
-                    ),
-                    new self(
-                        'floor',
-                        new Double(),
-                        [new Double()]
-                    ),
-                ],
-            ];
+                new self(
+                    'floor',
+                    new Decimal(),
+                    [new Decimal()]
+                ),
+                new self(
+                    'floor',
+                    new Double(),
+                    [new Double()]
+                ),
+            ],
+        ];
 
         return $functions;
     }
@@ -487,7 +489,7 @@ class FunctionDescription
         }
 
         $string = rtrim($string, ', ');
-        $pos = strrpos($string, ', ');
+        $pos    = strrpos($string, ', ');
         if ($pos !== false) {
             $string = substr_replace($string, ' and ', strrpos($string, ', '), 2);
         }
@@ -504,12 +506,12 @@ class FunctionDescription
     /**
      * Validate operands of an arithmetic operation and promote if required.
      *
-     * @param ExpressionToken $expressionToken The expression token
-     * @param AbstractExpression $leftArgument The left expression
-     * @param AbstractExpression $rightArgument The right expression
+     * @param ExpressionToken    $expressionToken The expression token
+     * @param AbstractExpression $leftArgument    The left expression
+     * @param AbstractExpression $rightArgument   The right expression
      *
-     * @return IType
      * @throws ODataException
+     * @return IType
      */
     public static function verifyAndPromoteArithmeticOpArguments(
         $expressionToken,
@@ -751,7 +753,7 @@ class FunctionDescription
         $argExpressions,
         $promoteArguments = true
     ) {
-        $argCount = count($argExpressions);
+        $argCount            = count($argExpressions);
         $applicableFunctions = [];
         foreach ($functionDescriptions as $functionDescription) {
             if (count($functionDescription->argumentTypes) == $argCount) {
@@ -781,7 +783,7 @@ class FunctionDescription
 
         //Check match with promotion
         foreach ($applicableFunctions as $function) {
-            $i = 0;
+            $i             = 0;
             $promotedTypes = [];
             /** @var IType $argumentType */
             foreach ($function->argumentTypes as $argumentType) {

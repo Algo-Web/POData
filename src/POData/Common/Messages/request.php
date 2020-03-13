@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\Common\Messages;
 
 /**
- * Trait request
+ * Trait request.
  * @package POData\Common\Messages
  */
 trait request
@@ -20,8 +22,8 @@ trait request
      */
     public static function requestVersionTooLow($requestedVersion, $requiredVersion)
     {
-        return 'Request version \''.$requestedVersion.'\' is not supported for the request payload. The only'
-               .' supported version is \''.$requiredVersion.'\'.';
+        return 'Request version \'' . $requestedVersion . '\' is not supported for the request payload. The only'
+               . ' supported version is \'' . $requiredVersion . '\'.';
     }
 
     /**
@@ -35,8 +37,8 @@ trait request
      */
     public static function requestVersionIsBiggerThanProtocolVersion($requiredVersion, $configuredVersion)
     {
-        return 'The response requires that version '.$requiredVersion.' of the protocol be used, but the'
-               .' MaxProtocolVersion of the data service is set to '.$configuredVersion.'.';
+        return 'The response requires that version ' . $requiredVersion . ' of the protocol be used, but the'
+               . ' MaxProtocolVersion of the data service is set to ' . $configuredVersion . '.';
     }
 
     /**
@@ -50,7 +52,7 @@ trait request
      */
     public static function requestDescriptionInvalidVersionHeader($versionAsString, $headerName)
     {
-        return 'The header '.$headerName.' has malformed version value '.$versionAsString;
+        return 'The header ' . $headerName . ' has malformed version value ' . $versionAsString;
     }
 
     /**
@@ -68,7 +70,7 @@ trait request
         $requestedVersion,
         $availableVersions
     ) {
-        return 'The version value '.$requestedVersion.' in the header '.$requestHeaderName.' is not'
-               .' supported, available versions are '.$availableVersions;
+        return 'The version value ' . $requestedVersion . ' in the header ' . $requestHeaderName . ' is not'
+               . ' supported, available versions are ' . $availableVersions;
     }
 }

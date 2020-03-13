@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\Providers\Metadata;
 
 use AlgoWeb\ODataMetadata\MetadataV3\edm\TComplexTypeType;
@@ -88,9 +90,9 @@ class ResourceClassesTest extends TestCase
             );
         }
 
-        $int32ResourceType = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::INT32());
+        $int32ResourceType     = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::INT32());
         $primitiveResourceType = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::STRING());
-        $testProperty = new ResourceProperty('test', null, ResourcePropertyKind::PRIMITIVE, $primitiveResourceType);
+        $testProperty          = new ResourceProperty('test', null, ResourcePropertyKind::PRIMITIVE, $primitiveResourceType);
         try {
             $int32ResourceType->addProperty($testProperty);
             $this->fail('An expected InvalidOperationException for \'property on primitive\' has not been raised');
@@ -101,7 +103,7 @@ class ResourceClassesTest extends TestCase
             );
         }
 
-        $stringResourceType = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::STRING());
+        $stringResourceType     = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::STRING());
         $customerIDPrimProperty = new ResourceProperty(
             'CustomerID',
             null,
@@ -114,7 +116,7 @@ class ResourceClassesTest extends TestCase
             ResourcePropertyKind::PRIMITIVE,
             $stringResourceType
         );
-        $intResourceType = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::INT32());
+        $intResourceType    = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::INT32());
         $ratingPrimProperty = new ResourceProperty('Rating', null, ResourcePropertyKind::PRIMITIVE, $intResourceType);
 
         $addressComplex = m::mock(TComplexTypeType::class);
@@ -123,7 +125,7 @@ class ResourceClassesTest extends TestCase
             new \ReflectionClass('UnitTests\POData\Facets\NorthWind1\Address2'),
             $addressComplex
         );
-        $booleanResourceType = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::BOOLEAN());
+        $booleanResourceType   = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::BOOLEAN());
         $isPrimaryPrimProperty = new ResourceProperty(
             'IsPrimary',
             null,
@@ -140,7 +142,7 @@ class ResourceClassesTest extends TestCase
             );
         }
 
-        $booleanResourceType = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::BOOLEAN());
+        $booleanResourceType   = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::BOOLEAN());
         $isPrimaryPrimProperty = new ResourceProperty(
             'IsPrimary',
             null,
@@ -183,14 +185,14 @@ class ResourceClassesTest extends TestCase
         $customerAllProperties = $customerResType->getAllProperties();
         $this->AssertEquals(count($customerProperties), count($customerAllProperties));
         $keys = ['CustomerID', 'CustomerName', 'Rating', 'Address'];
-        $i = 0;
+        $i    = 0;
         foreach ($customerAllProperties as $key => $customerProperty) {
             $this->AssertEquals($key, $keys[$i++]);
         }
 
-        $entityKeys = ['CustomerID'];
+        $entityKeys            = ['CustomerID'];
         $customerKeyProperties = $customerResType->getKeyProperties();
-        $i = 0;
+        $i                     = 0;
         foreach ($customerKeyProperties as $key => $customerKeyProperty) {
             $this->AssertEquals($key, $entityKeys[$i++]);
         }
@@ -261,7 +263,7 @@ class ResourceClassesTest extends TestCase
             $complex
         );
 
-        $booleanResourcetype = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::BOOLEAN());
+        $booleanResourcetype   = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::BOOLEAN());
         $isPrimaryPrimProperty = new ResourceProperty(
             'IsPrimary',
             null,
@@ -315,7 +317,7 @@ class ResourceClassesTest extends TestCase
             $meta
         );
 
-        $stringResourceType = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::STRING());
+        $stringResourceType     = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::STRING());
         $customerIDPrimProperty = new ResourceProperty(
             'CustomerID',
             null,
@@ -328,7 +330,7 @@ class ResourceClassesTest extends TestCase
             ResourcePropertyKind::PRIMITIVE,
             $stringResourceType
         );
-        $intResourceType = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::INT32());
+        $intResourceType    = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::INT32());
         $ratingPrimProperty = new ResourceProperty('Rating', null, ResourcePropertyKind::PRIMITIVE, $intResourceType);
         $customerResType->addProperty($customerIDPrimProperty);
         $customerResType->addProperty($customerNamePrimProperty);
@@ -355,7 +357,7 @@ class ResourceClassesTest extends TestCase
      */
     public function testResourceSet()
     {
-        $customerResType = $this->_getCustomerResourceType();
+        $customerResType     = $this->_getCustomerResourceType();
         $customerResourceSet = new ResourceSet('Customers', $customerResType);
         $this->assertEquals($customerResourceSet->getName(), 'Customers');
         $this->assertEquals($customerResourceSet->getResourceType()->getName(), 'Customer');
@@ -369,7 +371,7 @@ class ResourceClassesTest extends TestCase
     public function testResourceAssociationTypeEnd()
     {
         $customerResType = $this->_getCustomerResourceType();
-        $orderResType = $this->_getOrderResourceType();
+        $orderResType    = $this->_getOrderResourceType();
         //Creates a one-to-many relationship from Customer to  Order entity
         $customerReferenceProperty = new ResourceProperty(
             'Customer',
@@ -415,7 +417,7 @@ class ResourceClassesTest extends TestCase
     public function testResourceAssociationType()
     {
         $customerResType = $this->_getCustomerResourceType();
-        $orderResType = $this->_getOrderResourceType();
+        $orderResType    = $this->_getOrderResourceType();
         //Creates a one-to-many relationship from Customer to  Order entity
         $customerReferenceProperty = new ResourceProperty(
             'Customer',
@@ -473,8 +475,8 @@ class ResourceClassesTest extends TestCase
      */
     public function testResourceAssociationSetEnd()
     {
-        $customerResType = $this->_getCustomerResourceType();
-        $orderResType = $this->_getOrderResourceType();
+        $customerResType            = $this->_getCustomerResourceType();
+        $orderResType               = $this->_getOrderResourceType();
         $ordersReferenceSetProperty = new ResourceProperty(
             'Orders',
             null,
@@ -539,10 +541,10 @@ class ResourceClassesTest extends TestCase
      */
     public function testResourceAssociationSet()
     {
-        $customerResType = $this->_getCustomerResourceType();
+        $customerResType     = $this->_getCustomerResourceType();
         $customerResourceSet = new ResourceSet('Customers', $customerResType);
 
-        $orderResType = $this->_getOrderResourceType();
+        $orderResType     = $this->_getOrderResourceType();
         $orderResourceSet = new ResourceSet('Orders', $orderResType);
 
         $customerReferenceProperty = new ResourceProperty(
@@ -567,7 +569,7 @@ class ResourceClassesTest extends TestCase
             $ordersReferenceSetProperty
         );
         $assoSetEnd2 = new ResourceAssociationSetEnd($orderResourceSet, $orderResType, $customerReferenceProperty);
-        $assoSet = new ResourceAssociationSet('Orders_Customers', $assoSetEnd1, $assoSetEnd2);
+        $assoSet     = new ResourceAssociationSet('Orders_Customers', $assoSetEnd1, $assoSetEnd2);
 
         $this->assertEquals($assoSet->getName(), 'Orders_Customers');
         $this->assertSame($assoSet->getEnd1(), $assoSetEnd1);
@@ -589,9 +591,9 @@ class ResourceClassesTest extends TestCase
     }
 
     /**
-     * @return ResourceEntityType
      * @throws InvalidOperationException
      * @throws \ReflectionException
+     * @return ResourceEntityType
      */
     private function _getCustomerResourceType()
     {
@@ -605,8 +607,8 @@ class ResourceClassesTest extends TestCase
             $meta
         );
 
-        $stringResourceType = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::STRING());
-        $intResourceType = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::INT32());
+        $stringResourceType     = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::STRING());
+        $intResourceType        = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::INT32());
         $customerIDPrimProperty = new ResourceProperty(
             'CustomerID',
             null,
@@ -628,9 +630,9 @@ class ResourceClassesTest extends TestCase
     }
 
     /**
-     * @return ResourceEntityType
      * @throws InvalidOperationException
      * @throws \ReflectionException
+     * @return ResourceEntityType
      */
     private function _getOrderResourceType()
     {
@@ -644,21 +646,21 @@ class ResourceClassesTest extends TestCase
             $meta
         );
 
-        $intResourceType = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::INT32());
+        $intResourceType     = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::INT32());
         $orderIDPrimProperty = new ResourceProperty(
             'OrderID',
             null,
             ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::KEY,
             $intResourceType
         );
-        $dateTimeResourceType = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::DATETIME());
+        $dateTimeResourceType  = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::DATETIME());
         $orderDatePrimProperty = new ResourceProperty(
             'OrderDate',
             null,
             ResourcePropertyKind::PRIMITIVE,
             $dateTimeResourceType
         );
-        $stringResourceType = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::STRING());
+        $stringResourceType        = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::STRING());
         $orderShipNamePrimProperty = new ResourceProperty(
             'ShipName',
             null,

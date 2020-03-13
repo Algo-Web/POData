@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\Common;
 
 use POData\HttpProcessUtility;
@@ -15,14 +17,14 @@ class ErrorHandler
     /**
      * Common function to handle exceptions in the data service.
      *
-     * @param \Exception $exception exception
-     * @param IService $service service
+     * @param  \Exception     $exception exception
+     * @param  IService       $service   service
      * @throws ODataException
      * @throws \Exception
      */
     public static function handleException(\Exception $exception, IService $service)
     {
-        $acceptTypesText = $service->getHost()->getRequestAccept();
+        $acceptTypesText     = $service->getHost()->getRequestAccept();
         $responseContentType = null;
         try {
             $responseContentType = HttpProcessUtility::selectMimeType(

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\Configuration;
 
 use POData\Common\InvalidOperationException;
@@ -9,7 +11,7 @@ use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\Metadata\ResourceSet;
 
 /**
- * Class ServiceConfiguration
+ * Class ServiceConfiguration.
  * @package POData\Configuration
  */
 class ServiceConfiguration implements IServiceConfiguration
@@ -100,16 +102,16 @@ class ServiceConfiguration implements IServiceConfiguration
      */
     public function __construct(IMetadataProvider $metadataProvider)
     {
-        $this->maxExpandCount = PHP_INT_MAX;
-        $this->maxExpandDepth = PHP_INT_MAX;
+        $this->maxExpandCount          = PHP_INT_MAX;
+        $this->maxExpandDepth          = PHP_INT_MAX;
         $this->maxResultsPerCollection = PHP_INT_MAX;
-        $this->provider = $metadataProvider;
+        $this->provider                = $metadataProvider;
         $this->defaultResourceSetRight = EntitySetRights::NONE;
-        $this->defaultPageSize = 0;
-        $this->resourceRights = [];
-        $this->pageSizes = [];
-        $this->useVerboseErrors = false;
-        $this->acceptCountRequest = false;
+        $this->defaultPageSize         = 0;
+        $this->resourceRights          = [];
+        $this->pageSizes               = [];
+        $this->useVerboseErrors        = false;
+        $this->acceptCountRequest      = false;
         $this->acceptProjectionRequest = false;
 
         $this->maxVersion = ProtocolVersion::V3(); //We default to the highest version

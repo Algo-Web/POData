@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\Providers\Metadata\Type;
 
 use POData\Providers\Metadata\Type\Binary;
@@ -92,7 +94,7 @@ class VoidTest extends TestCase
 
         $type = $this->getAsIType();
 
-        $in = '';
+        $in  = '';
         $out = null;
         $this->assertTrue($type->validate($in, $out));
 
@@ -105,7 +107,7 @@ class VoidTest extends TestCase
 
         $type = $this->getAsIType();
 
-        $in = '';
+        $in  = '';
         $out = null;
         $this->assertFalse($type->validate($in, $out));
     }
@@ -116,7 +118,7 @@ class VoidTest extends TestCase
 
         $type = $this->getAsIType();
 
-        $value = 'afaefasevaswee';
+        $value  = 'afaefasevaswee';
         $actual = $type->convert($value);
 
         $expected = 'afaefasevaswee';
@@ -129,7 +131,7 @@ class VoidTest extends TestCase
 
         $type = $this->getAsIType();
 
-        $value = 'afaefasevaswee';
+        $value  = 'afaefasevaswee';
         $actual = $type->convertToOData($value);
 
         $expected = 'afaefasevaswee';

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\Facets\NorthWind4;
 
 use POData\Common\ODataException;
@@ -76,8 +78,8 @@ class NorthWindStreamProvider4 implements IStreamProvider2
         }
 
         $filePath = self::IMAGE_PATH_ROOT
-            .'Employee_'.$entity->EmployeeID
-            .'.jpg';
+            . 'Employee_' . $entity->EmployeeID
+            . '.jpg';
         if (file_exists($filePath)) {
             $handle = fopen($filePath, 'r');
             $stream = fread($handle, filesize($filePath));
@@ -153,7 +155,7 @@ class NorthWindStreamProvider4 implements IStreamProvider2
         }
 
         $lastModifiedTime = null;
-        $filePath = self::IMAGE_PATH_ROOT.'Employee_'.$entity->EmployeeID.'.jpg';
+        $filePath         = self::IMAGE_PATH_ROOT . 'Employee_' . $entity->EmployeeID . '.jpg';
         if (file_exists($filePath)) {
             $lastModifiedTime = date('"m-d-Y H:i:s"', filemtime($filePath));
         } else {
@@ -240,11 +242,11 @@ class NorthWindStreamProvider4 implements IStreamProvider2
             throw new ODataException('Internal Server Error.', 500);
         }
 
-        $filePath = self::IMAGE_PATH_ROOT.'Employee_'
-            .$entity->EmployeeID
-            .'_'
-            .$resourceStreamInfo->getName()
-            .'.png';
+        $filePath = self::IMAGE_PATH_ROOT . 'Employee_'
+            . $entity->EmployeeID
+            . '_'
+            . $resourceStreamInfo->getName()
+            . '.png';
         if (file_exists($filePath)) {
             $handle = fopen($filePath, 'r');
             $stream = fread($handle, filesize($filePath));

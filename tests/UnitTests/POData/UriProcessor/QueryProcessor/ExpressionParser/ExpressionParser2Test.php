@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\UriProcessor\QueryProcessor\ExpressionParser;
 
 use POData\Providers\Expression\PHPExpressionProvider;
@@ -27,8 +29,8 @@ class ExpressionParser2Test extends TestCase
         $expressionProvider = new PHPExpressionProvider('$lt');
 
         $filterExpression = 'UnitPrice ge 6';
-        $resourceType = $this->_northWindMetadata->resolveResourceSet('Order_Details')->getResourceType();
-        $filterInfo = ExpressionParser2::parseExpression2($filterExpression, $resourceType, $expressionProvider);
+        $resourceType     = $this->_northWindMetadata->resolveResourceSet('Order_Details')->getResourceType();
+        $filterInfo       = ExpressionParser2::parseExpression2($filterExpression, $resourceType, $expressionProvider);
         $this->assertTrue(null !== $filterInfo);
 
         //There are no navigation properties in the expression so should be empty.
@@ -36,7 +38,7 @@ class ExpressionParser2Test extends TestCase
         $this->assertEquals('(!(is_null($lt->UnitPrice)) && ($lt->UnitPrice >= 6))', $filterInfo->getExpressionAsString());
 
         $filterExpression = 'Order/Customer/CustomerID eq \'ANU\' or Product/ProductID gt 123 and UnitPrice ge 6';
-        $filterInfo = ExpressionParser2::parseExpression2($filterExpression, $resourceType, $expressionProvider);
+        $filterInfo       = ExpressionParser2::parseExpression2($filterExpression, $resourceType, $expressionProvider);
         $this->assertTrue(null !== $filterInfo);
 
         $navigationsUsed = $filterInfo->getNavigationPropertiesUsed();
@@ -66,8 +68,8 @@ class ExpressionParser2Test extends TestCase
         $this->assertEquals($navigationsUsed[1][0]->getName(), 'Product');
 
         $filterExpression = 'Customer/Address/LineNumber add 4 eq 8';
-        $resourceType = $this->_northWindMetadata->resolveResourceSet('Orders')->getResourceType();
-        $filterInfo = ExpressionParser2::parseExpression2($filterExpression, $resourceType, $expressionProvider);
+        $resourceType     = $this->_northWindMetadata->resolveResourceSet('Orders')->getResourceType();
+        $filterInfo       = ExpressionParser2::parseExpression2($filterExpression, $resourceType, $expressionProvider);
         $this->assertTrue(null !== $filterInfo);
 
         $navigationsUsed = $filterInfo->getNavigationPropertiesUsed();
@@ -84,7 +86,7 @@ class ExpressionParser2Test extends TestCase
 
         //Test with property acess expression in function call
         $filterExpression = 'replace(Customer/CustomerID, \'LFK\', \'RTT\') eq \'ARTTI\'';
-        $filterInfo = ExpressionParser2::parseExpression2($filterExpression, $resourceType, $expressionProvider);
+        $filterInfo       = ExpressionParser2::parseExpression2($filterExpression, $resourceType, $expressionProvider);
         $this->assertTrue(null !== $filterInfo);
 
         $navigationsUsed = $filterInfo->getNavigationPropertiesUsed();

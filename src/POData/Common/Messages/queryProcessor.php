@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\Common\Messages;
 
 /**
- * Trait queryProcessor
+ * Trait queryProcessor.
  * @package POData\Common\Messages
  */
 trait queryProcessor
@@ -28,7 +30,7 @@ trait queryProcessor
      */
     public static function queryProcessorNoQueryOptionsApplicable()
     {
-        return 'Query options $select, $expand, $filter, $orderby, $inlinecount, $skip, $skiptoken and $top are not'.
+        return 'Query options $select, $expand, $filter, $orderby, $inlinecount, $skip, $skiptoken and $top are not' .
                ' supported by this request method or cannot be applied to the requested resource.';
     }
 
@@ -112,7 +114,7 @@ trait queryProcessor
      */
     public static function queryProcessorIncorrectArgumentFormat($argName, $argValue)
     {
-        return 'Incorrect format for '.$argName.' argument \''.$argValue.'\'';
+        return 'Incorrect format for ' . $argName . ' argument \'' . $argValue . '\'';
     }
 
     /**
@@ -125,8 +127,8 @@ trait queryProcessor
      */
     public static function queryProcessorSkipTokenCannotBeAppliedForNonPagedResourceSet($resourceSetName)
     {
-        return '$skiptoken cannot be applied to the resource set \''.$resourceSetName
-               .'\', since paging is not enabled for this resource set';
+        return '$skiptoken cannot be applied to the resource set \'' . $resourceSetName
+               . '\', since paging is not enabled for this resource set';
     }
 
     /**
@@ -139,6 +141,6 @@ trait queryProcessor
      */
     public static function queryProcessorSelectOrExpandOptionNotApplicable($queryItem)
     {
-        return 'Query option '.$queryItem.' cannot be applied to the requested resource';
+        return 'Query option ' . $queryItem . ' cannot be applied to the requested resource';
     }
 }

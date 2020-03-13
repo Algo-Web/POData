@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\Providers\Stream;
 
 use Mockery as m;
@@ -22,30 +24,30 @@ class StreamProviderWrapperTest extends TestCase
 {
     public function testGetDefaultMediaStreamUriWithNullStreamInfo()
     {
-        $mediaUrl = 'https://www.example.org/media/';
-        $foo = new StreamProviderWrapper();
+        $mediaUrl   = 'https://www.example.org/media/';
+        $foo        = new StreamProviderWrapper();
         $streamInfo = null;
 
         $expected = 'https://www.example.org/media/$value';
-        $actual = $foo->getDefaultStreamEditMediaUri($mediaUrl, $streamInfo);
+        $actual   = $foo->getDefaultStreamEditMediaUri($mediaUrl, $streamInfo);
         $this->assertEquals($expected, $actual);
     }
 
     public function testGetDefaultMediaStreamUriWithNonNullStreamInfo()
     {
-        $mediaUrl = 'https://www.example.org/media/';
-        $foo = new StreamProviderWrapper();
+        $mediaUrl   = 'https://www.example.org/media/';
+        $foo        = new StreamProviderWrapper();
         $streamInfo = m::mock(ResourceStreamInfo::class);
         $streamInfo->shouldReceive('getName')->andReturn('$size');
 
         $expected = 'https://www.example.org/media/$size';
-        $actual = $foo->getDefaultStreamEditMediaUri($mediaUrl, $streamInfo);
+        $actual   = $foo->getDefaultStreamEditMediaUri($mediaUrl, $streamInfo);
         $this->assertEquals($expected, $actual);
     }
 
     public function testIsNullETagValid()
     {
-        $etag = null;
+        $etag   = null;
         $result = StreamProviderWrapper::isETagValueValid($etag, false);
         $this->assertTrue($result);
         $result = StreamProviderWrapper::isETagValueValid($etag, true);
@@ -54,7 +56,7 @@ class StreamProviderWrapperTest extends TestCase
 
     public function testIsStarETagValid()
     {
-        $etag = '*';
+        $etag   = '*';
         $result = StreamProviderWrapper::isETagValueValid($etag, false);
         $this->assertTrue($result);
         $result = StreamProviderWrapper::isETagValueValid($etag, true);
@@ -63,7 +65,7 @@ class StreamProviderWrapperTest extends TestCase
 
     public function testWeakETagValid()
     {
-        $etag = 'W/"Uplink"';
+        $etag   = 'W/"Uplink"';
         $result = StreamProviderWrapper::isETagValueValid($etag, false);
         $this->assertTrue($result);
         $result = StreamProviderWrapper::isETagValueValid($etag, true);
@@ -72,7 +74,7 @@ class StreamProviderWrapperTest extends TestCase
 
     public function testWeakETagWithoutLastDubQuoteInvalid()
     {
-        $etag = 'W/"Uplink';
+        $etag   = 'W/"Uplink';
         $result = StreamProviderWrapper::isETagValueValid($etag, false);
         $this->assertFalse($result);
         $result = StreamProviderWrapper::isETagValueValid($etag, true);
@@ -81,7 +83,7 @@ class StreamProviderWrapperTest extends TestCase
 
     public function testStrongETagValid()
     {
-        $etag = '"Uplink"';
+        $etag   = '"Uplink"';
         $result = StreamProviderWrapper::isETagValueValid($etag, false);
         $this->assertFalse($result);
         $result = StreamProviderWrapper::isETagValueValid($etag, true);
@@ -90,7 +92,7 @@ class StreamProviderWrapperTest extends TestCase
 
     public function testStrongETagWithInternalDubQuoteInvalid()
     {
-        $etag = '"Up"link"';
+        $etag   = '"Up"link"';
         $result = StreamProviderWrapper::isETagValueValid($etag, false);
         $this->assertFalse($result);
         $result = StreamProviderWrapper::isETagValueValid($etag, true);
@@ -113,12 +115,12 @@ class StreamProviderWrapperTest extends TestCase
         $service->shouldReceive('getStreamProviderX')->andReturn('electric-rave')->once();
         $service->shouldReceive('getOperationContext')->andReturn($opContext)->once();
 
-        $foo = new StreamProviderWrapper();
+        $foo        = new StreamProviderWrapper();
         $streamInfo = null;
         $foo->setService($service);
 
         $expected = 'return \'IServiceProvider.GetService\' for IStreamProvider2 returns invalid object.';
-        $actual = null;
+        $actual   = null;
 
         try {
             $result = $foo->getStreamContentType($data, $streamInfo);
@@ -144,12 +146,12 @@ class StreamProviderWrapperTest extends TestCase
         $service->shouldReceive('getStreamProviderX')->andReturn('electric-rave')->once();
         $service->shouldReceive('getOperationContext')->andReturn($opContext)->once();
 
-        $foo = new StreamProviderWrapper();
+        $foo        = new StreamProviderWrapper();
         $streamInfo = null;
         $foo->setService($service);
 
         $expected = 'return \'IServiceProvider.GetService\' for IStreamProvider2 returns invalid object.';
-        $actual = null;
+        $actual   = null;
 
         try {
             $result = $foo->getStreamContentType($data, $streamInfo);
@@ -178,12 +180,12 @@ class StreamProviderWrapperTest extends TestCase
         $service->shouldReceive('getStreamProviderX')->andReturn($streamProv)->once();
         $service->shouldReceive('getOperationContext')->andReturn($opContext)->once();
 
-        $foo = new StreamProviderWrapper();
+        $foo        = new StreamProviderWrapper();
         $streamInfo = null;
         $foo->setService($service);
 
         $expected = 'The method \'IStreamProvider.GetStreamContentType\' must not return a null or empty string.';
-        $actual = null;
+        $actual   = null;
 
         try {
             $result = $foo->getStreamContentType($data, $streamInfo);
@@ -212,7 +214,7 @@ class StreamProviderWrapperTest extends TestCase
         $service->shouldReceive('getStreamProviderX')->andReturn($streamProv)->once();
         $service->shouldReceive('getOperationContext')->andReturn($opContext)->once();
 
-        $foo = new StreamProviderWrapper();
+        $foo        = new StreamProviderWrapper();
         $streamInfo = m::mock(ResourceStreamInfo::class);
         $foo->setService($service);
 
@@ -236,12 +238,12 @@ class StreamProviderWrapperTest extends TestCase
         $service->shouldReceive('getStreamProviderX')->andReturn(null)->times(1);
         $service->shouldReceive('getOperationContext')->andReturn($opContext)->once();
 
-        $foo = new StreamProviderWrapper();
+        $foo        = new StreamProviderWrapper();
         $streamInfo = m::mock(ResourceStreamInfo::class);
         $foo->setService($service);
 
         $expected = 'To support named streams, the data service must implement IServiceProvider.GetService() to'
-                    .' return an implementation of IStreamProvider2 or the data source must implement IStreamProvider2.';
+                    . ' return an implementation of IStreamProvider2 or the data source must implement IStreamProvider2.';
         $actual = null;
 
         try {
@@ -274,11 +276,11 @@ class StreamProviderWrapperTest extends TestCase
         $service->shouldReceive('getStreamProviderX')->andReturn($streamProv)->never();
         $service->shouldReceive('getOperationContext')->andReturn($opContext)->once();
 
-        $foo = new StreamProviderWrapper();
+        $foo        = new StreamProviderWrapper();
         $streamInfo = m::mock(ResourceStreamInfo::class);
         $foo->setService($service);
 
-        $expected = 'To support named streams, the MaxProtocolVersion of the data service must be set '.
+        $expected = 'To support named streams, the MaxProtocolVersion of the data service must be set ' .
                     'to ProtocolVersion.V3 or above.';
         $actual = null;
 
@@ -309,7 +311,7 @@ class StreamProviderWrapperTest extends TestCase
         $service->shouldReceive('getStreamProviderX')->andReturn($streamProv)->once();
         $service->shouldReceive('getOperationContext')->andReturn($opContext)->once();
 
-        $foo = new StreamProviderWrapper();
+        $foo        = new StreamProviderWrapper();
         $streamInfo = m::mock(ResourceStreamInfo::class);
         $foo->setService($service);
 
@@ -319,7 +321,7 @@ class StreamProviderWrapperTest extends TestCase
 
     public function testGetReadStreamAndThrowODataExceptionCode304()
     {
-        $data = new reusableEntityClass2('hammer', 'time!');
+        $data      = new reusableEntityClass2('hammer', 'time!');
         $exception = new ODataException('Inner universe', 304);
 
         $host = m::mock(ServiceHost::class);
@@ -338,7 +340,7 @@ class StreamProviderWrapperTest extends TestCase
         $foo->setService($service);
 
         $expected = 'Inner universe';
-        $actual = null;
+        $actual   = null;
 
         try {
             $result = $foo->getReadStream($data, null);
@@ -377,7 +379,7 @@ class StreamProviderWrapperTest extends TestCase
         $foo->setService($service);
 
         $expected = 'IStreamProvider.GetReadStream() must return a valid readable stream.';
-        $actual = null;
+        $actual   = null;
 
         try {
             $result = $foo->getReadStream($data, null);
@@ -473,12 +475,12 @@ class StreamProviderWrapperTest extends TestCase
         $service->shouldReceive('getConfiguration->getMaxDataServiceVersion')->andReturn(new Version(3, 0));
         $service->shouldReceive('getStreamProviderX')->andReturn(null)->times(1);
 
-        $foo = m::mock(StreamProviderWrapper::class)->makePartial();
+        $foo        = m::mock(StreamProviderWrapper::class)->makePartial();
         $streamInfo = m::mock(ResourceStreamInfo::class);
         $foo->setService($service);
 
         $expected = Messages::streamProviderWrapperMustImplementIStreamProviderToSupportStreaming();
-        $actual = null;
+        $actual   = null;
 
         try {
             $result = $foo->getStreamETag($data, null);
@@ -512,12 +514,12 @@ class StreamProviderWrapperTest extends TestCase
         $service->shouldReceive('getConfiguration->getMaxDataServiceVersion')->andReturn(new Version(3, 0));
         $service->shouldReceive('getStreamProviderX')->andReturn($streamProv)->once();
 
-        $foo = m::mock(StreamProviderWrapper::class)->makePartial();
+        $foo        = m::mock(StreamProviderWrapper::class)->makePartial();
         $streamInfo = m::mock(ResourceStreamInfo::class);
         $foo->setService($service);
 
         $expected = Messages::streamProviderWrapperGetStreamETagReturnedInvalidETagFormat();
-        $actual = null;
+        $actual   = null;
 
         try {
             $result = $foo->getStreamETag($data, null);
@@ -551,7 +553,7 @@ class StreamProviderWrapperTest extends TestCase
         $service->shouldReceive('getConfiguration->getMaxDataServiceVersion')->andReturn(new Version(3, 0));
         $service->shouldReceive('getStreamProviderX')->andReturn($streamProv)->once();
 
-        $foo = m::mock(StreamProviderWrapper::class)->makePartial();
+        $foo        = m::mock(StreamProviderWrapper::class)->makePartial();
         $streamInfo = m::mock(ResourceStreamInfo::class);
         $foo->setService($service);
 
@@ -580,7 +582,7 @@ class StreamProviderWrapperTest extends TestCase
         $service->shouldReceive('getConfiguration->getMaxDataServiceVersion')->andReturn(new Version(3, 0));
         $service->shouldReceive('getStreamProviderX')->andReturn($streamProv)->once();
 
-        $foo = m::mock(StreamProviderWrapper::class)->makePartial();
+        $foo        = m::mock(StreamProviderWrapper::class)->makePartial();
         $streamInfo = m::mock(ResourceStreamInfo::class);
         $foo->setService($service);
 
@@ -609,12 +611,12 @@ class StreamProviderWrapperTest extends TestCase
         $service->shouldReceive('getConfiguration->getMaxDataServiceVersion')->andReturn(new Version(3, 0));
         $service->shouldReceive('getStreamProviderX')->andReturn($streamProv)->once();
 
-        $foo = m::mock(StreamProviderWrapper::class)->makePartial();
+        $foo        = m::mock(StreamProviderWrapper::class)->makePartial();
         $streamInfo = m::mock(ResourceStreamInfo::class);
         $foo->setService($service);
 
         $expected = Messages::streamProviderWrapperGetReadStreamUriMustReturnAbsoluteUriOrNull();
-        $actual = null;
+        $actual   = null;
 
         try {
             $result = $foo->getReadStreamUri($data, null, 'http://www.example.com');

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\Common;
 
 use Mockery as m;
@@ -35,9 +37,9 @@ class BaseServiceTest extends TestCase
 
     public function setUp()
     {
-        $this->mockHost = m::mock(ServiceHost::class)->makePartial();
+        $this->mockHost         = m::mock(ServiceHost::class)->makePartial();
         $this->mockMetaProvider = m::mock(IMetadataProvider::class)->makePartial();
-        $this->mockRegistry = m::mock(ODataWriterRegistry::class)->makePartial();
+        $this->mockRegistry     = m::mock(ODataWriterRegistry::class)->makePartial();
     }
 
     public function testRegisterWritersV1()

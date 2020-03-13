@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\Common\Messages;
 
 /**
- * Trait IService
+ * Trait IService.
  * @package POData\Common\Messages
  */
 trait IService

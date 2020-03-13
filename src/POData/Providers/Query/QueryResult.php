@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\Providers\Query;
 
 /**
- * Class QueryResult
+ * Class QueryResult.
  * @package POData\Providers\Query
  */
 class QueryResult

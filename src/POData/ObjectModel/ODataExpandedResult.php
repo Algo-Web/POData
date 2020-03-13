@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: Barnso
@@ -8,7 +10,7 @@
 namespace POData\ObjectModel;
 
 /**
- * Class ODataExpandedResult
+ * Class ODataExpandedResult.
  * @package POData\ObjectModel
  */
 class ODataExpandedResult
@@ -36,6 +38,6 @@ class ODataExpandedResult
     public function __construct(ODataEntry $entry = null, ODataFeed $feed = null)
     {
         $this->entry = $entry;
-        $this->feed = $feed;
+        $this->feed  = $feed;
     }
 }

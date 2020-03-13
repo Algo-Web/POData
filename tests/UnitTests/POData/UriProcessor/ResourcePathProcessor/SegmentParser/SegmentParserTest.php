@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\UriProcessor\ResourcePathProcessor\SegmentParser;
 
 use Mockery as m;
@@ -27,7 +29,7 @@ class SegmentParserTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->_metadataProvider = NorthWindMetadata::Create();
+        $this->_metadataProvider     = NorthWindMetadata::Create();
         $this->_serviceConfiguration = new ServiceConfiguration($this->_metadataProvider);
         $this->_serviceConfiguration->setEntitySetAccessRule('*', EntitySetRights::ALL);
 
@@ -43,7 +45,7 @@ class SegmentParserTest extends TestCase
 
     public function testEmptySegments()
     {
-        $segments = [];
+        $segments           = [];
         $segmentDescriptors = SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
         //No segment means request for service directory
         $this->assertTrue(!empty($segmentDescriptors));
@@ -67,7 +69,7 @@ class SegmentParserTest extends TestCase
     public function testCreateFirstSegment()
     {
         //Test for $metadata option
-        $segments = ['$metadata'];
+        $segments           = ['$metadata'];
         $segmentDescriptors = SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
         $this->assertEquals($segmentDescriptors[0]->getIdentifier(), '$metadata');
 
@@ -81,7 +83,7 @@ class SegmentParserTest extends TestCase
         }
 
         //Test for $batch option
-        $segments = ['$batch'];
+        $segments           = ['$batch'];
         $segmentDescriptors = SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
         $this->assertEquals($segmentDescriptors[0]->getIdentifier(), '$batch');
         $segments = ['$batch(\'XYZ\')'];
@@ -126,7 +128,7 @@ class SegmentParserTest extends TestCase
         }
 
         //test with single positional value
-        $segments = ["Employees('AF123')"];
+        $segments           = ["Employees('AF123')"];
         $segmentDescriptors = SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
         $this->assertEquals(count($segmentDescriptors), 1);
         $this->assertTrue($segmentDescriptors[0]->isSingleResult());
@@ -153,7 +155,7 @@ class SegmentParserTest extends TestCase
         }
 
         //test with multiple named values
-        $segments = ["Customers(CustomerID='ALFKI', CustomerGuid=guid'15b242e7-52eb-46bd-8f0e-6568b72cd9a6')"];
+        $segments           = ["Customers(CustomerID='ALFKI', CustomerGuid=guid'15b242e7-52eb-46bd-8f0e-6568b72cd9a6')"];
         $segmentDescriptors = SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
         $this->assertEquals(count($segmentDescriptors), 1);
         $resourceSetWrapper = $segmentDescriptors[0]->getTargetResourceSetWrapper();
@@ -162,27 +164,27 @@ class SegmentParserTest extends TestCase
         $this->assertTrue($segmentDescriptors[0]->isSingleResult());
         $this->assertEquals('Customers', $segmentDescriptors[0]->getIdentifier());
         $keyDescriptor = $segmentDescriptors[0]->getKeyDescriptor();
-        $namedKeys = $keyDescriptor->getValidatedNamedValues();
+        $namedKeys     = $keyDescriptor->getValidatedNamedValues();
         $this->assertEquals(count($namedKeys), 2);
         $this->assertTrue(array_key_exists('CustomerGuid', $namedKeys));
         $this->assertEquals($namedKeys['CustomerGuid'][0], '\'15b242e7-52eb-46bd-8f0e-6568b72cd9a6\'');
         //test for multiple results
-        $segments = ['Orders'];
+        $segments           = ['Orders'];
         $segmentDescriptors = SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
         $this->assertEquals(count($segmentDescriptors), 1);
         $this->assertFalse($segmentDescriptors[0]->isSingleResult());
         //test for multiple results, Orders(   ) is also valid segment for all Orders
-        $segments = ['Orders(   )'];
+        $segments           = ['Orders(   )'];
         $segmentDescriptors = SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
         $this->assertEquals(count($segmentDescriptors), 1);
         $this->assertFalse($segmentDescriptors[0]->isSingleResult());
         //test for FORBIDDEN
-        $metadataProvider = NorthWindMetadata::Create();
+        $metadataProvider     = NorthWindMetadata::Create();
         $serviceConfiguration = new ServiceConfiguration($metadataProvider);
         //HIDING ALL RESOURCE SET
         $serviceConfiguration->setEntitySetAccessRule('*', EntitySetRights::NONE);
         $providersWrapper = new ProvidersWrapper($metadataProvider, $this->mockQueryProvider, $serviceConfiguration, false);
-        $segments = ["Employees('AF123')"];
+        $segments         = ["Employees('AF123')"];
 
         try {
             SegmentParser::parseRequestUriSegments($segments, $providersWrapper);
@@ -238,8 +240,8 @@ class SegmentParserTest extends TestCase
 
         //Test with $value followed by primitive type
         $segments = ["Customers(CustomerID='ALFKI', CustomerGuid=guid'15b242e7-52eb-46bd-8f0e-6568b72cd9a6')",
-                          'CustomerName',
-                          '$value', ];
+            'CustomerName',
+            '$value', ];
         $segmentDescriptors = SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
         $this->assertEquals(count($segmentDescriptors), 3);
         /* check first segment */
@@ -325,8 +327,8 @@ class SegmentParserTest extends TestCase
 
         //test a valid links segment followed by multiple result
         $segments = ["Customers(CustomerID='ALFKI', CustomerGuid=guid'15b242e7-52eb-46bd-8f0e-6568b72cd9a6')",
-                              '$links',
-                              'Orders', ];
+            '$links',
+            'Orders', ];
         $segmentDescriptors = SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
         /* check first segment */
         $this->assertEquals($segmentDescriptors[0]->getIdentifier(), 'Customers');
@@ -352,8 +354,8 @@ class SegmentParserTest extends TestCase
 
         //test a valid links segment followed by single result
         $segments = ["Customers(CustomerID='ALFKI', CustomerGuid=guid'15b242e7-52eb-46bd-8f0e-6568b72cd9a6')",
-                              '$links',
-                              'Orders(123)', ];
+            '$links',
+            'Orders(123)', ];
         $segmentDescriptors = SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
         $this->assertEquals(count($segmentDescriptors), 3);
         /* check first segment */
@@ -379,15 +381,15 @@ class SegmentParserTest extends TestCase
         $this->assertNotNull($segmentDescriptors[2]->getTargetResourceSetWrapper());
         $this->assertNotNull($segmentDescriptors[2]->getKeyDescriptor());
         $ordersKeyDescriptor = $segmentDescriptors[2]->getKeyDescriptor();
-        $namedKeyValues = $ordersKeyDescriptor->getValidatedNamedValues();
+        $namedKeyValues      = $ordersKeyDescriptor->getValidatedNamedValues();
         $this->assertTrue(array_key_exists('OrderID', $namedKeyValues));
         $this->assertEquals($namedKeyValues['OrderID'][0], 123);
 
         //$count followed by post segment is valid
         $segments = ["Customers(CustomerID='ALFKI', CustomerGuid=guid'15b242e7-52eb-46bd-8f0e-6568b72cd9a6')",
-                              '$links',
-                              'Orders',
-                              '$count', ];
+            '$links',
+            'Orders',
+            '$count', ];
         $segmentDescriptors = SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
         $this->assertEquals(count($segmentDescriptors), 4);
         /* check first segment */
@@ -425,8 +427,8 @@ class SegmentParserTest extends TestCase
     public function testCreateSegments_CountSegment()
     {
         $segments = ["Customers(CustomerID='ALFKI', CustomerGuid=guid'15b242e7-52eb-46bd-8f0e-6568b72cd9a6')",
-                          'Orders',
-                          '$count', ];
+            'Orders',
+            '$count', ];
         $segmentDescriptors = SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
         $this->assertEquals(count($segmentDescriptors), 3);
         /* check first segment */
@@ -502,7 +504,7 @@ class SegmentParserTest extends TestCase
     {
         //Test complex segment
         $segments = ["Customers(CustomerID='ALFKI', CustomerGuid=guid'15b242e7-52eb-46bd-8f0e-6568b72cd9a6')",
-                          'Address', ];
+            'Address', ];
         $segmentDescriptors = SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
         $this->assertEquals(count($segmentDescriptors), 2);
         /* check first segment */
@@ -523,8 +525,8 @@ class SegmentParserTest extends TestCase
         $this->assertNull($segmentDescriptors[1]->getTargetResourceSetWrapper());
         //Test property of complex
         $segments = ["Customers(CustomerID='ALFKI', CustomerGuid=guid'15b242e7-52eb-46bd-8f0e-6568b72cd9a6')",
-                          'Address',
-                          'StreetName', ];
+            'Address',
+            'StreetName', ];
         $segmentDescriptors = SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
         $this->assertEquals(count($segmentDescriptors), 3);
         /* check first segment */
@@ -583,7 +585,7 @@ class SegmentParserTest extends TestCase
     {
         //Test bag segment
         $segments = ["Employees('ABC')",
-                          'Emails', ];
+            'Emails', ];
         $segmentDescriptors = SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
         $this->assertEquals(count($segmentDescriptors), 2);
         /* check first segment */
@@ -624,9 +626,9 @@ class SegmentParserTest extends TestCase
     {
         //Test navigation segment followed by primitve property
         $segments = ["Customers(CustomerID='ALFKI', CustomerGuid=guid'15b242e7-52eb-46bd-8f0e-6568b72cd9a6')",
-                          'Orders(789)',
-                          'Customer',
-                          'CustomerName', ];
+            'Orders(789)',
+            'Customer',
+            'CustomerName', ];
         $segmentDescriptors = SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
         $this->assertEquals(count($segmentDescriptors), 4);
         $this->assertEquals($segmentDescriptors[0]->getIdentifier(), 'Customers');
@@ -682,7 +684,7 @@ class SegmentParserTest extends TestCase
 
         //Test invisible navigation segment
         //Creates a provider wrapper for NorthWind service with 'Orders' entity set as invisible
-        $metadataProvider = NorthWindMetadata::Create();
+        $metadataProvider     = NorthWindMetadata::Create();
         $serviceConfiguration = new ServiceConfiguration($this->_metadataProvider);
         $serviceConfiguration->setEntitySetAccessRule('Customers', EntitySetRights::READ_ALL);
         $serviceConfiguration->setEntitySetAccessRule('Orders', EntitySetRights::NONE);
@@ -694,8 +696,8 @@ class SegmentParserTest extends TestCase
         );
 
         $segments = ["Customers(CustomerID='ALFKI', CustomerGuid=guid'15b242e7-52eb-46bd-8f0e-6568b72cd9a6')",
-                          'Orders(789)',
-                          'OrderID', ];
+            'Orders(789)',
+            'OrderID', ];
         try {
             SegmentParser::parseRequestUriSegments($segments, $providersWrapper);
             $this->fail('An expected ODataException for \'Orders\' resource not found error has not been thrown');
@@ -708,7 +710,7 @@ class SegmentParserTest extends TestCase
     {
         //Test MLE
         $segments = ["Employees('JKT')",
-                      '$value', ];
+            '$value', ];
         $segmentDescriptors = SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
         $this->assertEquals(count($segmentDescriptors), 2);
         $this->assertEquals($segmentDescriptors[0]->getIdentifier(), 'Employees');
@@ -731,8 +733,8 @@ class SegmentParserTest extends TestCase
         $this->assertEquals($segmentDescriptors[1]->isSingleResult(), true);
 
         $segments = ["Employees('JKT')",
-                      'Manager',
-                      '$value', ];
+            'Manager',
+            '$value', ];
         $segmentDescriptors = SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
         $this->assertEquals(count($segmentDescriptors), 3);
         $this->assertEquals($segmentDescriptors[0]->getIdentifier(), 'Employees');
@@ -759,7 +761,7 @@ class SegmentParserTest extends TestCase
 
         //Test Named Stream
         $segments = ["Employees('JKT')",
-                      'TumbNail_48X48', ];
+            'TumbNail_48X48', ];
         $segmentDescriptors = SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
         $this->assertEquals(count($segmentDescriptors), 2);
 
@@ -781,8 +783,8 @@ class SegmentParserTest extends TestCase
 
         //No more segments after namedstream or MLE
         $segments = ["Employees('JKT')",
-                      'TumbNail_48X48',
-                      'anything', ];
+            'TumbNail_48X48',
+            'anything', ];
         try {
             SegmentParser::parseRequestUriSegments($segments, $this->providersWrapper);
             $this->fail('An expected ODataException for segments specifed after named stream has not been thrown');

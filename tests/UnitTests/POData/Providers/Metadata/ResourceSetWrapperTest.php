@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\Providers\Metadata;
 
 use Mockery as m;
@@ -38,7 +40,7 @@ class ResourceSetWrapperTest extends TestCase
 
     public function testGetResourceSetRights()
     {
-        $set = m::mock(ResourceSet::class);
+        $set    = m::mock(ResourceSet::class);
         $config = m::mock(ServiceConfiguration::class);
         $config->shouldReceive('getEntitySetPageSize')->andReturn(200);
         $config->shouldReceive('getEntitySetAccessRule')->andReturnNull();
@@ -70,7 +72,7 @@ class ResourceSetWrapperTest extends TestCase
 
     public function testCheckResourceSetRightsAndThrowException()
     {
-        $set = m::mock(ResourceSet::class);
+        $set    = m::mock(ResourceSet::class);
         $config = m::mock(ServiceConfiguration::class);
         $config->shouldReceive('getEntitySetPageSize')->andReturn(200);
         $config->shouldReceive('getEntitySetAccessRule')->andReturn(EntitySetRights::NONE);
@@ -78,7 +80,7 @@ class ResourceSetWrapperTest extends TestCase
         $foo = new ResourceSetWrapper($set, $config);
 
         $expected = 'Forbidden.';
-        $actual = null;
+        $actual   = null;
 
         try {
             $foo->checkResourceSetRights(EntitySetRights::ALL);

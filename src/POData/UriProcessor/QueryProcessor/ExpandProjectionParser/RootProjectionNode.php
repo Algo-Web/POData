@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\UriProcessor\QueryProcessor\ExpandProjectionParser;
 
 use POData\Providers\Metadata\ResourceSetWrapper;
@@ -193,21 +195,21 @@ class RootProjectionNode extends ExpandedProjectionNode
         // and return it.
 
         // set up tracking stack and scratchpad
-        $trackStack = [];
+        $trackStack   = [];
         $trackStack[] = ['node' => $this, 'name' => null, 'index' => 0];
-        $scratchpad = [];
+        $scratchpad   = [];
 
         // now start the dance
         while (0 < count($trackStack)) {
             $stackDex = count($trackStack) - 1;
             assert(
                 self::MAX_EXPAND_TREE_DEPTH > $stackDex,
-                'Expansion stack too deep - should be less than '. self::MAX_EXPAND_TREE_DEPTH . 'elements'
+                'Expansion stack too deep - should be less than ' . self::MAX_EXPAND_TREE_DEPTH . 'elements'
             );
             $topNode = $trackStack[$stackDex];
             /** @var ExpandedProjectionNode $rawNode */
             $rawNode = $topNode['node'];
-            $nodes = $rawNode->getChildNodes();
+            $nodes   = $rawNode->getChildNodes();
             // have we finished processing current level?
             // this treats a leaf node as simply another exhausted parent node with all of its zero children having
             // been processed

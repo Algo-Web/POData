@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\Common;
 
 use Illuminate\Http\Request;
@@ -26,7 +28,7 @@ class ChangeSetParserTest extends TestCase
     public function testGetters()
     {
         $service = m::mock(BaseService::class);
-        $body = 'body';
+        $body    = 'body';
 
         $foo = new QueryParser($service, $body);
 
@@ -38,7 +40,7 @@ class ChangeSetParserTest extends TestCase
     public function testHandleData()
     {
         $service = m::mock(BaseService::class);
-        $body = ' 
+        $body    = ' 
 Content-Type: multipart/mixed; boundary=changeset_77162fcd-b8da-41ac-a9f8-9357efbbd621 
 Content-Length: ###       
 
@@ -105,7 +107,7 @@ Content-Length: ###
     public function testHandleDataWithContentID()
     {
         $service = m::mock(BaseService::class);
-        $body = ' 
+        $body    = ' 
 Content-Type: multipart/mixed; boundary=changeset_77162fcd-b8da-41ac-a9f8-9357efbbd621 
 Content-Length: ###       
 
@@ -174,7 +176,7 @@ Content-ID: 2
     public function testHandleDataWithMalformedHeaderLine()
     {
         $service = m::mock(BaseService::class);
-        $body = ' 
+        $body    = ' 
 Content-Type: multipart/mixed; boundary=changeset_77162fcd-b8da-41ac-a9f8-9357efbbd621 
 Content-Length: ###       
 
@@ -194,7 +196,7 @@ Content-Length: ###
 ';
 
         $expected = 'Malformed header line: Content-Type: application/atom+xml:type=entry ';
-        $actual = null;
+        $actual   = null;
 
         $foo = new ChangeSetParser($service, $body);
         try {
@@ -207,13 +209,13 @@ Content-Length: ###
 
     public function testHandleDataWithTooManySegments()
     {
-        $bigPayload = '--.--'.PHP_EOL.PHP_EOL.PHP_EOL.PHP_EOL.'.--.--.--.';
+        $bigPayload = '--.--' . PHP_EOL . PHP_EOL . PHP_EOL . PHP_EOL . '.--.--.--.';
 
         $foo = m::mock(ChangeSetParser::class)->makePartial();
         $foo->shouldReceive('getData')->andReturn('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.', $bigPayload);
 
         $expected = 'how did we end up with more than 3 stages??';
-        $actual = null;
+        $actual   = null;
         try {
             $foo->handleData();
         } catch (\Exception $e) {
@@ -224,7 +226,7 @@ Content-Length: ###
 
     public function testGetResponse()
     {
-        $headers = ['X-Swedish-Chef' => 'bork bork bork!', 'Status' => '202 Updated'];
+        $headers  = ['X-Swedish-Chef' => 'bork bork bork!', 'Status' => '202 Updated'];
         $response = m::mock(OutgoingResponse::class);
         $response->shouldReceive('getStream')->andReturn('Stream II: ELECTRIC BOOGALOO');
         $response->shouldReceive('getHeaders')->andReturn($headers);
@@ -330,7 +332,7 @@ Stream II: ELECTRIC BOOGALOO--
         $foo->shouldReceive('processSubRequest')->with($first)->andReturnNull()->never();
 
         $expected = 'Location header not set in subrequest response for PUT request url /service/Customers(\'ALFKI\')';
-        $actual = null;
+        $actual   = null;
 
         try {
             $foo->process();
@@ -345,7 +347,7 @@ Stream II: ELECTRIC BOOGALOO--
         $service = m::mock(BaseService::class);
         $service->shouldReceive('setHost')->andReturnNull()->atLeast(1);
         $service->shouldReceive('handleRequest')->andReturnNull()->atLeast(1);
-        $body = 'foo';
+        $body    = 'foo';
         $request = m::mock(Request::class);
         $request->shouldReceive('getMethod')->andReturn('POST');
         $request->shouldReceive('fullUrl')->andReturn('http://localhost/service.svc/Customers');

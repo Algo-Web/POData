@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\Providers\Metadata\Type;
 
 use POData\Providers\Metadata\Type\Binary;
@@ -91,7 +93,7 @@ class GuidTest extends TestCase
 
         $type = $this->getAsIType();
 
-        $in = '';
+        $in  = '';
         $out = null;
         $this->assertTrue($type->validate($in, $out));
 
@@ -102,7 +104,7 @@ class GuidTest extends TestCase
     {
         $type = $this->getAsIType();
 
-        $in = '';
+        $in  = '';
         $out = null;
         $this->assertFalse($type->validate($in, $out));
         $this->assertEquals(null, $out);
@@ -112,7 +114,7 @@ class GuidTest extends TestCase
     {
         $type = $this->getAsIType();
 
-        $in = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKL';
+        $in  = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKL';
         $out = null;
         $this->assertFalse($type->validate($in, $out));
         $this->assertEquals(null, $out);
@@ -122,7 +124,7 @@ class GuidTest extends TestCase
     {
         $type = $this->getAsIType();
 
-        $in = 'guid\'fghijklmnopqrstuvwxyzABCDEFGHIJKL';
+        $in  = 'guid\'fghijklmnopqrstuvwxyzABCDEFGHIJKL';
         $out = null;
         $this->assertFalse($type->validate($in, $out));
         $this->assertEquals(null, $out);
@@ -132,7 +134,7 @@ class GuidTest extends TestCase
     {
         $type = $this->getAsIType();
 
-        $in = 'guid\'fghijklmnopqrstuvwxyzABCDEFGHIJK\'';
+        $in  = 'guid\'fghijklmnopqrstuvwxyzABCDEFGHIJK\'';
         $out = null;
         $this->assertFalse($type->validate($in, $out));
         $this->assertEquals(null, $out);
@@ -143,8 +145,8 @@ class GuidTest extends TestCase
         $type = $this->getAsIType();
 
         $expected = 'a';
-        $data = 'a';
-        $result = $type->convert($data);
+        $data     = 'a';
+        $result   = $type->convert($data);
         $this->assertEquals($expected, $result);
     }
 
@@ -152,7 +154,7 @@ class GuidTest extends TestCase
     {
         $type = $this->getAsIType();
 
-        $value = '{34234234}-{2342423}';
+        $value  = '{34234234}-{2342423}';
         $actual = $type->convertToOData($value);
 
         $expected = "guid'%7B34234234%7D-%7B2342423%7D'";
@@ -182,7 +184,7 @@ class GuidTest extends TestCase
 
     public function testGuidEqual()
     {
-        $value = 'guid\'05b242e752eb46bd8f0e6568b72cd9a5\'';
+        $value  = 'guid\'05b242e752eb46bd8f0e6568b72cd9a5\'';
         $outval = null;
 
         $guid = new Guid();

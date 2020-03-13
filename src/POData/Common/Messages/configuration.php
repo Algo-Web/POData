@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\Common\Messages;
 
 /**
- * Trait configuration
+ * Trait configuration.
  * @package POData\Common\Messages
  */
 trait configuration
@@ -17,7 +19,7 @@ trait configuration
     public static function configurationMaxResultAndPageSizeMutuallyExclusive()
     {
         return 'Specification of \'entity set page size\' is mutually exclusive with the specification '
-                .'of \'maximum result per collection\' in configuration';
+                . 'of \'maximum result per collection\' in configuration';
     }
 
     /**
@@ -56,7 +58,7 @@ trait configuration
     public static function configurationCountNotAccepted()
     {
         return 'The ability of the data service to return row count information is disabled. To enable'
-                .' this functionality, set the ServiceConfiguration.AcceptCountRequests property to true.';
+                . ' this functionality, set the ServiceConfiguration.AcceptCountRequests property to true.';
     }
 
     /**
@@ -68,7 +70,7 @@ trait configuration
     public static function configurationProjectionsNotAccepted()
     {
         return 'The ability to use the $select query option to define a projection in a data service query is'
-                .' disabled. To enable this functionality, call ServiceConfiguration::setAcceptProjectionRequests'
-                .' method with argument as true.';
+                . ' disabled. To enable this functionality, call ServiceConfiguration::setAcceptProjectionRequests'
+                . ' method with argument as true.';
     }
 }

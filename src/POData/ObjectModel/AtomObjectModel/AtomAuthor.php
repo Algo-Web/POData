@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: Barnso
@@ -8,7 +10,7 @@
 namespace POData\ObjectModel\AtomObjectModel;
 
 /**
- * Class AtomAuthor
+ * Class AtomAuthor.
  * @package POData\ObjectModel\AtomObjectModel
  */
 class AtomAuthor

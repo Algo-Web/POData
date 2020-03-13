@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\Providers\Metadata\Type;
 
 use POData\Providers\Metadata\Type\Binary;
@@ -89,13 +91,13 @@ class BooleanTest extends TestCase
     {
         $type = $this->getAsIType();
 
-        $in = 'true';
+        $in  = 'true';
         $out = null;
         $this->assertTrue($type->validate($in, $out));
 
         $this->assertSame('true', $out);
 
-        $in = 'false';
+        $in  = 'false';
         $out = null;
         $this->assertTrue($type->validate($in, $out));
 
@@ -106,19 +108,19 @@ class BooleanTest extends TestCase
     {
         $type = $this->getAsIType();
 
-        $in = 'True';
+        $in  = 'True';
         $out = null;
         $this->assertFalse($type->validate($in, $out));
 
-        $in = 'falsE';
+        $in  = 'falsE';
         $out = null;
         $this->assertFalse($type->validate($in, $out));
 
-        $in = '';
+        $in  = '';
         $out = null;
         $this->assertFalse($type->validate($in, $out));
 
-        $in = 'afeaf';
+        $in  = 'afeaf';
         $out = null;
         $this->assertFalse($type->validate($in, $out));
     }
@@ -127,19 +129,19 @@ class BooleanTest extends TestCase
     {
         $type = $this->getAsIType();
 
-        $value = 'afaefasevaswee';
+        $value  = 'afaefasevaswee';
         $actual = $type->convert($value);
 
         $expected = false;
         $this->assertSame($expected, $actual);
 
-        $value = 'True';
+        $value  = 'True';
         $actual = $type->convert($value);
 
         $expected = false;
         $this->assertSame($expected, $actual);
 
-        $value = 'true';
+        $value  = 'true';
         $actual = $type->convert($value);
 
         $expected = true;
@@ -150,13 +152,13 @@ class BooleanTest extends TestCase
     {
         $type = $this->getAsIType();
 
-        $value = true;
+        $value  = true;
         $actual = $type->convertToOData($value);
 
         $expected = 'true';
         $this->assertSame($expected, $actual);
 
-        $value = false;
+        $value  = false;
         $actual = $type->convertToOData($value);
 
         $expected = 'false';

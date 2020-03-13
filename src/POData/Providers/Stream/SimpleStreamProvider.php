@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\Providers\Stream;
 
 use POData\OperationContext\IOperationContext;
@@ -7,7 +9,7 @@ use POData\Providers\Metadata\ResourceStreamInfo;
 use POData\Providers\Metadata\ResourceType;
 
 /**
- * Class SimpleStreamProvider
+ * Class SimpleStreamProvider.
  * @package POData\Providers\Stream
  */
 class SimpleStreamProvider implements IStreamProvider2
@@ -31,7 +33,7 @@ class SimpleStreamProvider implements IStreamProvider2
             return 'stream for ' . get_class($entity);
         }
         $name = $resourceStreamInfo->getName();
-        return $entity->$name;
+        return $entity->{$name};
     }
 
     /**
@@ -88,7 +90,7 @@ class SimpleStreamProvider implements IStreamProvider2
         }
         $name = $resourceStreamInfo->getName();
 
-        return sha1($entity->$name);
+        return sha1($entity->{$name});
     }
 
     /**

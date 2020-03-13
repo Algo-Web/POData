@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\Common;
 
 use POData\Common\Url;
@@ -11,7 +13,7 @@ class UrlTest extends TestCase
     public function testAbsoluteUrl()
     {
         $urlStr = "http://localhost/NorthwindService.svc/Customers('ALFKI')/Orders?\$filter=OrderID eq 123";
-        $url = new Url($urlStr);
+        $url    = new Url($urlStr);
         $this->assertEquals('http', $url->getScheme());
         $this->assertEquals(80, $url->getPort());
         $this->assertEquals('localhost', $url->getHost());
@@ -24,7 +26,7 @@ class UrlTest extends TestCase
     public function testRelativeUrl()
     {
         $urlStr = "/NorthwindService.svc/Customers('ALFKI')/Orders?\$filter=OrderID eq 123";
-        $url = new Url($urlStr, false);
+        $url    = new Url($urlStr, false);
         $this->assertEquals(null, $url->getScheme());
         $this->assertEquals(null, $url->getPort());
         $this->assertEquals(null, $url->getHost());
@@ -38,7 +40,7 @@ class UrlTest extends TestCase
     {
         //This is valid
         $urlStr = "http://localhost///NorthwindService.svc/Customers('ALFKI')/Orders//?\$filter=OrderID eq 123";
-        $url = new Url($urlStr);
+        $url    = new Url($urlStr);
 
         $actual = $url->getSegments();
 
@@ -57,7 +59,7 @@ class UrlTest extends TestCase
 
         //This is valid
         $urlStr = "http://localhost/NorthwindService.svc/@/./!/Customers('ALFKI')/Orders?\$filter=OrderID eq 123";
-        $url = new Url($urlStr);
+        $url    = new Url($urlStr);
         $actual = $url->getSegments();
 
         $expected = [
@@ -119,37 +121,37 @@ class UrlTest extends TestCase
     {
         $urlStr1 = 'http://localhost/NorthwindService.svc';
         $urlStr2 = "http://localhost/NorthwindService.svc/Customers('ALFKI')/Orders";
-        $url1 = new Url($urlStr1);
+        $url1    = new Url($urlStr1);
         $this->assertTrue($url1->isBaseOf(new Url($urlStr2)));
 
         $urlStr1 = "http://localhost/NorthwindService.svc/Customers('ALFKI')/Orders/Order_Details";
         $urlStr2 = "http://localhost/NorthwindService.svc/Customers('ALFKI')/Orders";
-        $url1 = new Url($urlStr1);
+        $url1    = new Url($urlStr1);
         $this->assertFalse($url1->isBaseOf(new Url($urlStr2)));
 
         $urlStr1 = 'http://localhost/NorthwindService';
         $urlStr2 = "http://localhost/NorthwindService.svc/Customers('ALFKI')/Orders";
-        $url1 = new Url($urlStr1);
+        $url1    = new Url($urlStr1);
         $this->assertFalse($url1->isBaseOf(new Url($urlStr2)));
 
         $urlStr1 = 'http://localhost/NorthwindService.svc';
         $urlStr2 = "https://localhost/NorthwindService.svc/Customers('ALFKI')/Orders";
-        $url1 = new Url($urlStr1);
+        $url1    = new Url($urlStr1);
         $this->assertFalse($url1->isBaseOf(new Url($urlStr2)));
 
         $urlStr1 = 'http://localhost:80/NorthwindService.svc';
         $urlStr2 = "http://localhost/NorthwindService.svc/Customers('ALFKI')/Orders";
-        $url1 = new Url($urlStr1);
+        $url1    = new Url($urlStr1);
         $this->assertTrue($url1->isBaseOf(new Url($urlStr2)));
 
         $urlStr1 = 'https://localhost:443/NorthwindService.svc';
         $urlStr2 = "https://localhost/NorthwindService.svc/Customers('ALFKI')/Orders";
-        $url1 = new Url($urlStr1);
+        $url1    = new Url($urlStr1);
         $this->assertTrue($url1->isBaseOf(new Url($urlStr2)));
 
         $urlStr1 = 'http://msn.com/NorthwindService.svc';
         $urlStr2 = "http://localhost/NorthwindService.svc/Customers('ALFKI')/Orders";
-        $url1 = new Url($urlStr1);
+        $url1    = new Url($urlStr1);
         $this->assertFalse($url1->isBaseOf(new Url($urlStr2)));
     }
 }

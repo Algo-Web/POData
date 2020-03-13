@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\UriProcessor\QueryProcessor\ExpandProjectionParser;
 
 use Mockery as m;
@@ -13,11 +15,11 @@ class ExpandedProjectionNodeTest extends TestCase
 {
     public function testScalarProperties()
     {
-        $propName = 'property';
-        $wrapper = m::mock(ResourceSetWrapper::class);
-        $order = m::mock(InternalOrderByInfo::class);
-        $skipCount = 1;
-        $takeCount = 2;
+        $propName       = 'property';
+        $wrapper        = m::mock(ResourceSetWrapper::class);
+        $order          = m::mock(InternalOrderByInfo::class);
+        $skipCount      = 1;
+        $takeCount      = 2;
         $maxResultCount = 10;
 
         $foo = new ExpandedProjectionNode($propName, $wrapper, $order, $skipCount, $takeCount, $maxResultCount);

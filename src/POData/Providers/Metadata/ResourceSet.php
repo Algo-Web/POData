@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\Providers\Metadata;
 
 use POData\Common\Messages;
@@ -36,7 +38,7 @@ class ResourceSet
      */
     public function __construct($name, ResourceEntityType $resourceType)
     {
-        $this->name = $name;
+        $this->name         = $name;
         $this->resourceType = $resourceType;
     }
 

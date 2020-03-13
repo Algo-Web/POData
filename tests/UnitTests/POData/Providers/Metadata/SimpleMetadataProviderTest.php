@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\Providers\Metadata;
 
 use AlgoWeb\ODataMetadata\MetadataManager;
@@ -36,7 +38,7 @@ class SimpleMetadataProviderTest extends TestCase
 
     public function testAddResourceSetThenGoAroundAgainAndThrowException()
     {
-        $foo = new SimpleMetadataProvider('string', 'String');
+        $foo  = new SimpleMetadataProvider('string', 'String');
         $name = 'Customers';
         $type = m::mock(ResourceEntityType::class);
         $type->shouldReceive('getFullName')->andReturn('Customer')->twice();
@@ -48,7 +50,7 @@ class SimpleMetadataProviderTest extends TestCase
         $this->assertEquals($name, $result->getName());
 
         $expected = 'Resource Set already added';
-        $actual = null;
+        $actual   = null;
 
         try {
             $foo->addResourceSet($name, $type);
@@ -63,7 +65,7 @@ class SimpleMetadataProviderTest extends TestCase
         $foo = new SimpleMetadataProvider('string', 'String');
 
         $expected = 'Input parameter must be absent, null, string or array';
-        $actual = null;
+        $actual   = null;
 
         try {
             $foo->getResourceSets(new \StdClass());
@@ -75,7 +77,7 @@ class SimpleMetadataProviderTest extends TestCase
 
     public function testGetResourceSetsOnlyOneExists()
     {
-        $foo = new SimpleMetadataProvider('string', 'String');
+        $foo  = new SimpleMetadataProvider('string', 'String');
         $name = 'Customers';
         $type = m::mock(ResourceEntityType::class);
         $type->shouldReceive('getFullName')->andReturn('Customer')->once();
@@ -85,7 +87,7 @@ class SimpleMetadataProviderTest extends TestCase
 
         $foo->addResourceSet($name, $type);
 
-        $parms = ['Hammer', 'Time', 'Customers'];
+        $parms  = ['Hammer', 'Time', 'Customers'];
         $result = $foo->getResourceSets($parms);
         $this->assertTrue(is_array($result));
         $this->assertEquals(1, count($result));
@@ -94,8 +96,8 @@ class SimpleMetadataProviderTest extends TestCase
 
     public function testGetResourceSetsByStringNoneExist()
     {
-        $foo = new SimpleMetadataProvider('string', 'String');
-        $parms = 'Hammer';
+        $foo    = new SimpleMetadataProvider('string', 'String');
+        $parms  = 'Hammer';
         $result = $foo->getResourceSets($parms);
         $this->assertTrue(is_array($result));
         $this->assertEquals(0, count($result));
@@ -187,8 +189,8 @@ class SimpleMetadataProviderTest extends TestCase
 
     public function testGetResourceAssociationSetCustomStateNullThrowException()
     {
-        $set = m::mock(ResourceSet::class);
-        $type = m::mock(ResourceEntityType::class);
+        $set      = m::mock(ResourceSet::class);
+        $type     = m::mock(ResourceEntityType::class);
         $targType = m::mock(ResourceEntityType::class);
         $targType->shouldReceive('getCustomState')->andReturnNull()->once();
         $targType->shouldReceive('getName')->andReturn('Hammer');
@@ -198,7 +200,7 @@ class SimpleMetadataProviderTest extends TestCase
         $foo = new SimpleMetadataProvider('string', 'String');
 
         $expected = 'Failed to retrieve the custom state from Hammer';
-        $actual = null;
+        $actual   = null;
 
         try {
             $foo->getResourceAssociationSet($set, $type, $property);
@@ -210,7 +212,7 @@ class SimpleMetadataProviderTest extends TestCase
 
     public function testGetResourceAssociationSetWhenEmpty()
     {
-        $set = m::mock(ResourceSet::class);
+        $set     = m::mock(ResourceSet::class);
         $targSet = m::mock(ResourceSet::class);
         $targSet->shouldReceive('getResourceType->getName')->andReturn('M.C.');
         $type = m::mock(ResourceEntityType::class);
@@ -230,11 +232,11 @@ class SimpleMetadataProviderTest extends TestCase
 
     public function testAddResourceTypeThenGoAroundAgainAndThrowException()
     {
-        $set = m::mock(ResourceSet::class);
-        $type = m::mock(ResourceType::class);
+        $set      = m::mock(ResourceSet::class);
+        $type     = m::mock(ResourceType::class);
         $property = m::mock(ResourceProperty::class);
 
-        $orig = new reusableEntityClass2('foo', 'bar');
+        $orig   = new reusableEntityClass2('foo', 'bar');
         $entity = new \ReflectionClass($orig);
 
         $foo = new SimpleMetadataProvider('string', 'String');
@@ -244,7 +246,7 @@ class SimpleMetadataProviderTest extends TestCase
         $this->assertEquals('Hammer', $result->getName());
 
         $expected = 'Type with same name already added';
-        $actual = null;
+        $actual   = null;
 
         try {
             $foo->addEntityType($entity, 'Hammer');
@@ -259,10 +261,10 @@ class SimpleMetadataProviderTest extends TestCase
         $type = m::mock(ResourceType::class);
         $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::PRIMITIVE());
         $complexType = m::mock(ResourceComplexType::class);
-        $foo = new SimpleMetadataProvider('string', 'String');
+        $foo         = new SimpleMetadataProvider('string', 'String');
 
         $expected = 'Complex property can be added to an entity or another complex type';
-        $actual = null;
+        $actual   = null;
 
         try {
             $foo->addComplexProperty($type, 'Time', $complexType);
@@ -285,10 +287,10 @@ class SimpleMetadataProviderTest extends TestCase
         $type->shouldReceive('getName')->andReturn('outaTime');
 
         $complexType = m::mock(ResourceComplexType::class);
-        $foo = new SimpleMetadataProvider('string', 'String');
+        $foo         = new SimpleMetadataProvider('string', 'String');
 
         $expected = 'Can\'t add a property which does not exist on the instance type.';
-        $actual = null;
+        $actual   = null;
 
         try {
             $foo->addComplexProperty($type, 'Time', $complexType);
@@ -310,10 +312,10 @@ class SimpleMetadataProviderTest extends TestCase
         $type->shouldReceive('getName')->andReturn('time');
 
         $complexType = m::mock(ResourceComplexType::class);
-        $foo = new SimpleMetadataProvider('string', 'String');
+        $foo         = new SimpleMetadataProvider('string', 'String');
 
         $expected = 'Property name must be different from resource name.';
-        $actual = null;
+        $actual   = null;
 
         try {
             $foo->addComplexProperty($type, 'time', $complexType);
@@ -329,7 +331,7 @@ class SimpleMetadataProviderTest extends TestCase
      */
     public function testAddKeyPropertyWithMagicGetterMissingPropertyThrowsInvalidArgException()
     {
-        $orig = new reusableEntityClass2('foo', 'bar');
+        $orig   = new reusableEntityClass2('foo', 'bar');
         $entity = new \ReflectionClass($orig);
 
         $foo = new SimpleMetadataProvider('string', 'String');
@@ -351,7 +353,7 @@ class SimpleMetadataProviderTest extends TestCase
 
     public function testAddKeyPropertyWithoutMagicGetterMissingPropertyThrowsInvalidOpException()
     {
-        $orig = new reusableEntityClass1('foo', 'bar');
+        $orig   = new reusableEntityClass1('foo', 'bar');
         $entity = new \ReflectionClass($orig);
 
         $foo = new SimpleMetadataProvider('string', 'String');
@@ -360,7 +362,7 @@ class SimpleMetadataProviderTest extends TestCase
         $complex = $foo->addEntityType(new \ReflectionClass(get_class($orig)), 'table');
 
         $expected = 'Can\'t add a property which does not exist on the instance type.';
-        $actual = null;
+        $actual   = null;
 
         try {
             $foo->addKeyProperty($complex, $keyName, EdmPrimitiveType::OBJECT());
@@ -384,7 +386,7 @@ class SimpleMetadataProviderTest extends TestCase
         $foo = new SimpleMetadataProvider('string', 'String');
 
         $expected = 'Property name must be different from resource name.';
-        $actual = null;
+        $actual   = null;
 
         try {
             $foo->addPrimitiveProperty($type, 'time', EdmPrimitiveType::OBJECT());
@@ -410,7 +412,7 @@ class SimpleMetadataProviderTest extends TestCase
         $foo = new SimpleMetadataProvider('string', 'String');
 
         $expected = 'Property name must be different from resource name.';
-        $actual = null;
+        $actual   = null;
 
         try {
             $foo->addResourceReferenceProperty($type, 'time', $resourceSet);
@@ -439,7 +441,7 @@ class SimpleMetadataProviderTest extends TestCase
         $foo = new SimpleMetadataProvider('string', 'String');
 
         $expected = 'Failed to retrieve the custom state from time';
-        $actual = null;
+        $actual   = null;
 
         try {
             $foo->addResourceReferenceProperty($type, 'date', $resourceSet);
@@ -452,19 +454,19 @@ class SimpleMetadataProviderTest extends TestCase
     public function testAddResourceReferenceCheckSane()
     {
         $forward = new reusableEntityClass4('foo', 'bar');
-        $back = new reusableEntityClass5('foo', 'bar');
+        $back    = new reusableEntityClass5('foo', 'bar');
 
         $foo = new SimpleMetadataProvider('string', 'String');
 
         $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore');
-        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
+        $aft  = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
         $foo->addKeyProperty($fore, 'key', EdmPrimitiveType::INT32());
         $foo->addKeyProperty($aft, 'key', EdmPrimitiveType::INT32());
         $this->assertTrue($fore instanceof ResourceType);
         $this->assertTrue($aft instanceof ResourceType);
 
         $foreSet = $foo->addResourceSet('foreSet', $fore);
-        $aftSet = $foo->addResourceSet('aftSet', $aft);
+        $aftSet  = $foo->addResourceSet('aftSet', $aft);
         $this->assertTrue($foreSet instanceof ResourceSet);
         $this->assertTrue($aftSet instanceof ResourceSet);
 
@@ -472,7 +474,7 @@ class SimpleMetadataProviderTest extends TestCase
         $foo->addResourceReferenceProperty($aft, 'backRelation', $foreSet);
 
         // now dig out expected results
-        $firstExpectedKey = 'fore_relation_aft';
+        $firstExpectedKey  = 'fore_relation_aft';
         $secondExpectedKey = 'aft_backRelation_fore';
 
         $result = $foo->resolveAssociationSet($firstExpectedKey);
@@ -488,17 +490,17 @@ class SimpleMetadataProviderTest extends TestCase
     public function testAddResourceReferenceBidirectionalBadPropertyNames()
     {
         $forward = new reusableEntityClass4('foo', 'bar');
-        $back = new reusableEntityClass5('foo', 'bar');
+        $back    = new reusableEntityClass5('foo', 'bar');
 
         $foo = new SimpleMetadataProvider('string', 'String');
 
         $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore');
-        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
+        $aft  = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
         $this->assertTrue($fore instanceof ResourceType);
         $this->assertTrue($aft instanceof ResourceType);
 
         $expected = 'Source and target properties must both be strings';
-        $actual = null;
+        $actual   = null;
 
         try {
             $foo->addResourceReferencePropertyBidirectional($fore, $aft, null, null);
@@ -511,17 +513,17 @@ class SimpleMetadataProviderTest extends TestCase
     public function testAddResourceSetReferenceBidirectionalFirstBadPropertyName()
     {
         $forward = new reusableEntityClass4('foo', 'bar');
-        $back = new reusableEntityClass5('foo', 'bar');
+        $back    = new reusableEntityClass5('foo', 'bar');
 
         $foo = new SimpleMetadataProvider('string', 'String');
 
         $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore');
-        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
+        $aft  = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
         $this->assertTrue($fore instanceof ResourceType);
         $this->assertTrue($aft instanceof ResourceType);
 
         $expected = 'Source and target properties must both be strings';
-        $actual = null;
+        $actual   = null;
 
         try {
             $foo->addResourceSetReferencePropertyBidirectional($fore, $aft, null, 'property');
@@ -534,17 +536,17 @@ class SimpleMetadataProviderTest extends TestCase
     public function testAddResourceReferenceSingleBidirectionalSecondBadPropertyName()
     {
         $forward = new reusableEntityClass4('foo', 'bar');
-        $back = new reusableEntityClass5('foo', 'bar');
+        $back    = new reusableEntityClass5('foo', 'bar');
 
         $foo = new SimpleMetadataProvider('string', 'String');
 
         $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore');
-        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
+        $aft  = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
         $this->assertTrue($fore instanceof ResourceType);
         $this->assertTrue($aft instanceof ResourceType);
 
         $expected = 'Source and target properties must both be strings';
-        $actual = null;
+        $actual   = null;
 
         try {
             $foo->addResourceReferenceSinglePropertyBidirectional($fore, $aft, 'property', null);
@@ -557,17 +559,17 @@ class SimpleMetadataProviderTest extends TestCase
     public function testAddResourceReferenceBidirectionalFirstPropertyNameCollision()
     {
         $forward = new reusableEntityClass4('foo', 'bar');
-        $back = new reusableEntityClass5('foo', 'bar');
+        $back    = new reusableEntityClass5('foo', 'bar');
 
         $foo = new SimpleMetadataProvider('string', 'String');
 
         $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore');
-        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
+        $aft  = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
         $this->assertTrue($fore instanceof ResourceType);
         $this->assertTrue($aft instanceof ResourceType);
 
         $expected = 'Source property name must be different from source resource name.';
-        $actual = null;
+        $actual   = null;
 
         try {
             $foo->addResourceReferencePropertyBidirectional($fore, $aft, $fore->getName(), 'property');
@@ -580,17 +582,17 @@ class SimpleMetadataProviderTest extends TestCase
     public function testAddResourceReferenceBidirectionalSecondPropertyNameCollision()
     {
         $forward = new reusableEntityClass4('foo', 'bar');
-        $back = new reusableEntityClass5('foo', 'bar');
+        $back    = new reusableEntityClass5('foo', 'bar');
 
         $foo = new SimpleMetadataProvider('string', 'String');
 
         $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore');
-        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
+        $aft  = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
         $this->assertTrue($fore instanceof ResourceType);
         $this->assertTrue($aft instanceof ResourceType);
 
         $expected = 'Target property name must be different from target resource name.';
-        $actual = null;
+        $actual   = null;
 
         try {
             $foo->addResourceReferencePropertyBidirectional($fore, $aft, 'property', $aft->getName());
@@ -603,17 +605,17 @@ class SimpleMetadataProviderTest extends TestCase
     public function testAddResourceSetReferenceBidirectionalFirstNoCustomStage()
     {
         $forward = new reusableEntityClass4('foo', 'bar');
-        $back = new reusableEntityClass5('foo', 'bar');
+        $back    = new reusableEntityClass5('foo', 'bar');
 
         $foo = new SimpleMetadataProvider('string', 'String');
 
         $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore');
-        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
+        $aft  = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
         $this->assertTrue($fore instanceof ResourceType);
         $this->assertTrue($aft instanceof ResourceType);
 
         $expected = 'Failed to retrieve the custom state from fore';
-        $actual = null;
+        $actual   = null;
 
         try {
             $foo->addResourceSetReferencePropertyBidirectional($fore, $aft, 'property', 'property');
@@ -628,18 +630,18 @@ class SimpleMetadataProviderTest extends TestCase
         $forwardSet = m::mock(ResourceSet::class);
 
         $forward = new reusableEntityClass4('foo', 'bar');
-        $back = new reusableEntityClass5('foo', 'bar');
+        $back    = new reusableEntityClass5('foo', 'bar');
 
         $foo = new SimpleMetadataProvider('string', 'String');
 
         $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore');
-        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
+        $aft  = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
         $this->assertTrue($fore instanceof ResourceType);
         $this->assertTrue($aft instanceof ResourceType);
         $fore->setCustomState($forwardSet);
 
         $expected = 'Failed to retrieve the custom state from aft';
-        $actual = null;
+        $actual   = null;
 
         try {
             $foo->addResourceSetReferencePropertyBidirectional($fore, $aft, 'property', 'property');
@@ -652,26 +654,26 @@ class SimpleMetadataProviderTest extends TestCase
     public function testAddResourceReferenceBidirectionalCheckSane()
     {
         $forward = new reusableEntityClass4('foo', 'bar');
-        $back = new reusableEntityClass5('foo', 'bar');
+        $back    = new reusableEntityClass5('foo', 'bar');
 
         $foo = new SimpleMetadataProvider('string', 'String');
 
         $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore');
-        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
+        $aft  = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
         $foo->addKeyProperty($fore, 'key', EdmPrimitiveType::INT32());
         $foo->addKeyProperty($aft, 'key', EdmPrimitiveType::INT32());
         $this->assertTrue($fore instanceof ResourceEntityType);
         $this->assertTrue($aft instanceof ResourceEntityType);
 
         $foreSet = $foo->addResourceSet('foreSet', $fore);
-        $aftSet = $foo->addResourceSet('aftSet', $aft);
+        $aftSet  = $foo->addResourceSet('aftSet', $aft);
         $this->assertTrue($foreSet instanceof ResourceSet);
         $this->assertTrue($aftSet instanceof ResourceSet);
 
         $foo->addResourceReferencePropertyBidirectional($fore, $aft, 'relation', 'backRelation');
 
         // now dig out expected results
-        $firstExpectedKey = 'fore_relation_aft';
+        $firstExpectedKey  = 'fore_relation_aft';
         $secondExpectedKey = 'aft_backRelation_fore';
 
         $result = $foo->resolveAssociationSet($firstExpectedKey);
@@ -684,11 +686,11 @@ class SimpleMetadataProviderTest extends TestCase
         $this->assertEquals($secondExpectedKey, $result->getName());
 
         // now dig out ends and check resource property types
-        $result = $foo->resolveAssociationSet($firstExpectedKey);
-        $end1 = $result->getEnd1();
+        $result   = $foo->resolveAssociationSet($firstExpectedKey);
+        $end1     = $result->getEnd1();
         $property = $end1->getResourceProperty()->getKind();
         $this->assertEquals(ResourcePropertyKind::RESOURCE_REFERENCE, $property);
-        $end2 = $result->getEnd2();
+        $end2     = $result->getEnd2();
         $property = $end2->getResourceProperty()->getKind();
         $this->assertEquals(ResourcePropertyKind::RESOURCESET_REFERENCE, $property);
 
@@ -696,7 +698,7 @@ class SimpleMetadataProviderTest extends TestCase
         $assoc = $foo->getMetadataManager()->getEdmx()->getDataServiceType()->getSchema()[0]->getAssociation();
         $this->assertEquals(1, count($assoc));
         $assoc = $assoc[0];
-        $ends = $assoc->getEnd();
+        $ends  = $assoc->getEnd();
         $this->assertEquals('*', $ends[0]->getMultiplicity());
         $this->assertEquals('1', $ends[1]->getMultiplicity());
     }
@@ -704,19 +706,19 @@ class SimpleMetadataProviderTest extends TestCase
     public function testAddResourceReferenceBidirectionalCheckSaneWhenParentNullable()
     {
         $forward = new reusableEntityClass4('foo', 'bar');
-        $back = new reusableEntityClass5('foo', 'bar');
+        $back    = new reusableEntityClass5('foo', 'bar');
 
         $foo = new SimpleMetadataProvider('string', 'String');
 
         $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore');
-        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
+        $aft  = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
         $foo->addKeyProperty($fore, 'key', EdmPrimitiveType::INT32());
         $foo->addKeyProperty($aft, 'key', EdmPrimitiveType::INT32());
         $this->assertTrue($fore instanceof ResourceEntityType);
         $this->assertTrue($aft instanceof ResourceEntityType);
 
         $foreSet = $foo->addResourceSet('foreSet', $fore);
-        $aftSet = $foo->addResourceSet('aftSet', $aft);
+        $aftSet  = $foo->addResourceSet('aftSet', $aft);
         $this->assertTrue($foreSet instanceof ResourceSet);
         $this->assertTrue($aftSet instanceof ResourceSet);
 
@@ -726,7 +728,7 @@ class SimpleMetadataProviderTest extends TestCase
         $assoc = $foo->getMetadataManager()->getEdmx()->getDataServiceType()->getSchema()[0]->getAssociation();
         $this->assertEquals(1, count($assoc));
         $assoc = $assoc[0];
-        $ends = $assoc->getEnd();
+        $ends  = $assoc->getEnd();
         $this->assertEquals('*', $ends[0]->getMultiplicity());
         $this->assertEquals('0..1', $ends[1]->getMultiplicity());
     }
@@ -734,26 +736,26 @@ class SimpleMetadataProviderTest extends TestCase
     public function testAddResourceSetReferenceBidirectionalCheckSane()
     {
         $forward = new reusableEntityClass4('foo', 'bar');
-        $back = new reusableEntityClass5('foo', 'bar');
+        $back    = new reusableEntityClass5('foo', 'bar');
 
         $foo = new SimpleMetadataProvider('string', 'String');
 
         $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore');
-        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
+        $aft  = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
         $foo->addKeyProperty($fore, 'key', EdmPrimitiveType::INT32());
         $foo->addKeyProperty($aft, 'key', EdmPrimitiveType::INT32());
         $this->assertTrue($fore instanceof ResourceType);
         $this->assertTrue($aft instanceof ResourceType);
 
         $foreSet = $foo->addResourceSet('foreSet', $fore);
-        $aftSet = $foo->addResourceSet('aftSet', $aft);
+        $aftSet  = $foo->addResourceSet('aftSet', $aft);
         $this->assertTrue($foreSet instanceof ResourceSet);
         $this->assertTrue($aftSet instanceof ResourceSet);
 
         $foo->addResourceSetReferencePropertyBidirectional($fore, $aft, 'relation', 'backRelation');
 
         // now dig out expected results
-        $firstExpectedKey = 'fore_relation_aft';
+        $firstExpectedKey  = 'fore_relation_aft';
         $secondExpectedKey = 'aft_backRelation_fore';
 
         $result = $foo->resolveAssociationSet($firstExpectedKey);
@@ -766,11 +768,11 @@ class SimpleMetadataProviderTest extends TestCase
         $this->assertEquals($secondExpectedKey, $result->getName());
 
         // now dig out ends and check resource property types
-        $result = $foo->resolveAssociationSet($firstExpectedKey);
-        $end1 = $result->getEnd1();
+        $result   = $foo->resolveAssociationSet($firstExpectedKey);
+        $end1     = $result->getEnd1();
         $property = $end1->getResourceProperty()->getKind();
         $this->assertEquals(ResourcePropertyKind::RESOURCESET_REFERENCE, $property);
-        $end2 = $result->getEnd2();
+        $end2     = $result->getEnd2();
         $property = $end2->getResourceProperty()->getKind();
         $this->assertEquals(ResourcePropertyKind::RESOURCESET_REFERENCE, $property);
     }
@@ -778,26 +780,26 @@ class SimpleMetadataProviderTest extends TestCase
     public function testAddResourceReferenceSingleBidirectionalCheckSane()
     {
         $forward = new reusableEntityClass4('foo', 'bar');
-        $back = new reusableEntityClass5('foo', 'bar');
+        $back    = new reusableEntityClass5('foo', 'bar');
 
         $foo = new SimpleMetadataProvider('string', 'String');
 
         $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore');
-        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
+        $aft  = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
         $foo->addKeyProperty($fore, 'key', EdmPrimitiveType::INT32());
         $foo->addKeyProperty($aft, 'key', EdmPrimitiveType::INT32());
         $this->assertTrue($fore instanceof ResourceType);
         $this->assertTrue($aft instanceof ResourceType);
 
         $foreSet = $foo->addResourceSet('foreSet', $fore);
-        $aftSet = $foo->addResourceSet('aftSet', $aft);
+        $aftSet  = $foo->addResourceSet('aftSet', $aft);
         $this->assertTrue($foreSet instanceof ResourceSet);
         $this->assertTrue($aftSet instanceof ResourceSet);
 
         $foo->addResourceReferenceSinglePropertyBidirectional($fore, $aft, 'relation', 'backRelation');
 
         // now dig out expected results
-        $firstExpectedKey = 'fore_relation_aft';
+        $firstExpectedKey  = 'fore_relation_aft';
         $secondExpectedKey = 'aft_backRelation_fore';
 
         $result = $foo->resolveAssociationSet($firstExpectedKey);
@@ -810,11 +812,11 @@ class SimpleMetadataProviderTest extends TestCase
         $this->assertEquals($secondExpectedKey, $result->getName());
 
         // now dig out ends and check resource property types
-        $result = $foo->resolveAssociationSet($firstExpectedKey);
-        $end1 = $result->getEnd1();
+        $result   = $foo->resolveAssociationSet($firstExpectedKey);
+        $end1     = $result->getEnd1();
         $property = $end1->getResourceProperty()->getKind();
         $this->assertEquals(ResourcePropertyKind::RESOURCE_REFERENCE, $property);
-        $end2 = $result->getEnd2();
+        $end2     = $result->getEnd2();
         $property = $end2->getResourceProperty()->getKind();
         $this->assertEquals(ResourcePropertyKind::RESOURCE_REFERENCE, $property);
     }
@@ -822,19 +824,19 @@ class SimpleMetadataProviderTest extends TestCase
     public function testAddResourceReferenceSingleBidirectionalForwardAndReverse()
     {
         $forward = new reusableEntityClass4('foo', 'bar');
-        $back = new reusableEntityClass5('foo', 'bar');
+        $back    = new reusableEntityClass5('foo', 'bar');
 
         $foo = new SimpleMetadataProvider('string', 'String');
 
         $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore');
-        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
+        $aft  = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
         $foo->addKeyProperty($fore, 'key', EdmPrimitiveType::INT32());
         $foo->addKeyProperty($aft, 'key', EdmPrimitiveType::INT32());
         $this->assertTrue($fore instanceof ResourceType);
         $this->assertTrue($aft instanceof ResourceType);
 
         $foreSet = $foo->addResourceSet('foreSet', $fore);
-        $aftSet = $foo->addResourceSet('aftSet', $aft);
+        $aftSet  = $foo->addResourceSet('aftSet', $aft);
         $this->assertTrue($foreSet instanceof ResourceSet);
         $this->assertTrue($aftSet instanceof ResourceSet);
 
@@ -848,12 +850,12 @@ class SimpleMetadataProviderTest extends TestCase
     public function testAddEntityTypeAbstractTest()
     {
         $forward = new reusableEntityClass4('foo', 'bar');
-        $back = new reusableEntityClass5('foo', 'bar');
+        $back    = new reusableEntityClass5('foo', 'bar');
 
         $foo = new SimpleMetadataProvider('string', 'String');
 
         $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore', null, true);
-        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft', null, false, $fore);
+        $aft  = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft', null, false, $fore);
         $this->assertTrue($fore->isAbstract());
         $this->assertFalse($aft->isAbstract());
         $this->assertEquals($fore, $aft->getBaseType());
@@ -864,29 +866,29 @@ class SimpleMetadataProviderTest extends TestCase
     public function testAddResourceSetReferenceWithOtherEndSingle()
     {
         $forward = new reusableEntityClass4('foo', 'bar');
-        $back = new reusableEntityClass5('foo', 'bar');
+        $back    = new reusableEntityClass5('foo', 'bar');
 
         $foo = new SimpleMetadataProvider('string', 'String');
 
         $fore = $foo->addEntityType(new \ReflectionClass(get_class($forward)), 'fore');
-        $aft = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
+        $aft  = $foo->addEntityType(new \ReflectionClass(get_class($back)), 'aft');
         $foo->addKeyProperty($fore, 'key', EdmPrimitiveType::INT32());
         $foo->addKeyProperty($aft, 'key', EdmPrimitiveType::INT32());
         $this->assertTrue($fore instanceof ResourceType);
         $this->assertTrue($aft instanceof ResourceType);
 
         $foreSet = $foo->addResourceSet('foreSet', $fore);
-        $aftSet = $foo->addResourceSet('aftSet', $aft);
+        $aftSet  = $foo->addResourceSet('aftSet', $aft);
         $this->assertTrue($foreSet instanceof ResourceSet);
         $this->assertTrue($aftSet instanceof ResourceSet);
 
         $foo->addResourceSetReferenceProperty($fore, 'fore_aft', $aftSet, null, true);
-        $xml = $foo->getXML();
+        $xml       = $foo->getXML();
         $assocName = '<Association Name="fore_fore_aft_aft">';
-        $fwdEnd = '<End Type="String.fore" Role="fores_fore_aft" Multiplicity="*"/>';
-        $revEnd = '<End Type="String.aft" Role="afts" Multiplicity="1"/>';
-        $navProp = '<NavigationProperty Name="fore_aft" Relationship="String.fore_fore_aft_aft" ToRole="afts" '
-                   .'FromRole="fores_fore_aft" cg:GetterAccess="Public" cg:SetterAccess="Public"/>';
+        $fwdEnd    = '<End Type="String.fore" Role="fores_fore_aft" Multiplicity="*"/>';
+        $revEnd    = '<End Type="String.aft" Role="afts" Multiplicity="1"/>';
+        $navProp   = '<NavigationProperty Name="fore_aft" Relationship="String.fore_fore_aft_aft" ToRole="afts" '
+                   . 'FromRole="fores_fore_aft" cg:GetterAccess="Public" cg:SetterAccess="Public"/>';
 
         $this->assertTrue(false !== strpos($xml, $assocName));
         $this->assertTrue(false !== strpos($xml, $fwdEnd));
@@ -897,7 +899,7 @@ class SimpleMetadataProviderTest extends TestCase
     public function testGetXML()
     {
         $cereal = m::mock(Serializer::class);
-        $meta = m::mock(MetadataManager::class)->makePartial();
+        $meta   = m::mock(MetadataManager::class)->makePartial();
         $meta->shouldReceive('getEdmxXML')->andReturn($cereal);
 
         $foo = m::mock(SimpleMetadataProvider::class)->makePartial();
@@ -908,9 +910,9 @@ class SimpleMetadataProviderTest extends TestCase
 
     public function testBagAndEtagException()
     {
-        $foo = new SimpleMetadataProvider('string', 'String');
+        $foo       = new SimpleMetadataProvider('string', 'String');
         $reflector = new \ReflectionObject($foo);
-        $method = $reflector->getMethod('addPrimitivePropertyInternal');
+        $method    = $reflector->getMethod('addPrimitivePropertyInternal');
         $method->setAccessible(true);
         try {
             $method->invoke($foo, null, null, null, true, true, true);
@@ -939,7 +941,7 @@ class reusableEntityClass4
 
     public function __get($name)
     {
-        return $this->$name;
+        return $this->{$name};
     }
 }
 
@@ -957,6 +959,6 @@ class reusableEntityClass5
 
     public function __get($name)
     {
-        return $this->$name;
+        return $this->{$name};
     }
 }

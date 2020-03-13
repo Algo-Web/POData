@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\Common;
 
 use Mockery as m;
@@ -22,7 +24,7 @@ class ErrorHandlerTest extends TestCase
 
         $outgoing = m::mock(OutgoingResponse::class);
         $outgoing->shouldReceive('setServiceVersion')
-            ->withArgs([ODataConstants::DATASERVICEVERSION_1_DOT_0.';'])->andReturnNull()->once();
+            ->withArgs([ODataConstants::DATASERVICEVERSION_1_DOT_0 . ';'])->andReturnNull()->once();
         $outgoing->shouldReceive('setStatusCode')->withArgs(['500 Internal Server Error'])->andReturnNull()->once();
         $outgoing->shouldReceive('setContentType')->withArgs(['application/xml'])->andReturnNull()->once();
         $outgoing->shouldReceive('setStream')->passthru();
@@ -56,7 +58,7 @@ class ErrorHandlerTest extends TestCase
 
         $outgoing = m::mock(OutgoingResponse::class);
         $outgoing->shouldReceive('setServiceVersion')
-            ->withArgs([ODataConstants::DATASERVICEVERSION_1_DOT_0.';'])->andReturnNull()->once();
+            ->withArgs([ODataConstants::DATASERVICEVERSION_1_DOT_0 . ';'])->andReturnNull()->once();
         $outgoing->shouldReceive('setStatusCode')->withArgs(['500 Internal Server Error'])->andReturnNull()->once();
         $outgoing->shouldReceive('setContentType')->withArgs(['application/json'])->andReturnNull()->once();
         $outgoing->shouldReceive('setStream')->passthru();
@@ -81,9 +83,9 @@ class ErrorHandlerTest extends TestCase
         }
     }
 }';
-        $actual = $outgoing->getStream();
+        $actual   = $outgoing->getStream();
         $expected = preg_replace('~(*BSR_ANYCRLF)\R~', "\r\n", $expected);
-        $actual = preg_replace('~(*BSR_ANYCRLF)\R~', "\r\n", $actual);
+        $actual   = preg_replace('~(*BSR_ANYCRLF)\R~', "\r\n", $actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -93,7 +95,7 @@ class ErrorHandlerTest extends TestCase
 
         $outgoing = m::mock(OutgoingResponse::class);
         $outgoing->shouldReceive('setServiceVersion')
-            ->withArgs([ODataConstants::DATASERVICEVERSION_1_DOT_0.';'])->andReturnNull()->once();
+            ->withArgs([ODataConstants::DATASERVICEVERSION_1_DOT_0 . ';'])->andReturnNull()->once();
         $outgoing->shouldReceive('setStatusCode')->withArgs(['304 Not Modified'])->andReturnNull()->never();
         $outgoing->shouldReceive('setContentType')->withArgs(['application/json'])->andReturnNull()->never();
         $outgoing->shouldReceive('setStream')->passthru();
@@ -120,7 +122,7 @@ class ErrorHandlerTest extends TestCase
 
         $outgoing = m::mock(OutgoingResponse::class);
         $outgoing->shouldReceive('setServiceVersion')
-            ->withArgs([ODataConstants::DATASERVICEVERSION_1_DOT_0.';'])->andReturnNull()->once();
+            ->withArgs([ODataConstants::DATASERVICEVERSION_1_DOT_0 . ';'])->andReturnNull()->once();
         $outgoing->shouldReceive('setStatusCode')->withArgs(['400 Bad Request'])->andReturnNull()->once();
         $outgoing->shouldReceive('setContentType')->withArgs(['application/xml'])->andReturnNull()->once();
         $outgoing->shouldReceive('setStream')->passthru();

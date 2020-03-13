@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\ObjectModel\Serialisers;
 
 use Carbon\Carbon;
@@ -34,11 +36,11 @@ class ObjectDeserialiserOKTest extends TestCase
 
         $foo = new CynicDeserialiser($meta, $wrapper);
 
-        $payload = new ODataEntry();
+        $payload                  = new ODataEntry();
         $payload->resourceSetName = 'resourceSet';
 
         $expected = 'Specified resource set could not be resolved';
-        $actual = null;
+        $actual   = null;
 
         try {
             $foo->processPayload($payload);
@@ -51,18 +53,18 @@ class ObjectDeserialiserOKTest extends TestCase
 
     public function testBadLinkUrl()
     {
-        $meta = m::mock(IMetadataProvider::class);
+        $meta    = m::mock(IMetadataProvider::class);
         $wrapper = m::mock(ProvidersWrapper::class);
 
         $foo = new CynicDeserialiser($meta, $wrapper);
 
-        $link = new ODataLink();
-        $link->url = new \DateTime();
-        $payload = new ODataEntry();
+        $link             = new ODataLink();
+        $link->url        = new \DateTime();
+        $payload          = new ODataEntry();
         $payload->links[] = $link;
 
         $expected = 'Url must be either string or null';
-        $actual = null;
+        $actual   = null;
 
         try {
             $foo->processPayload($payload);
@@ -77,18 +79,18 @@ class ObjectDeserialiserOKTest extends TestCase
     {
         $resource = m::mock(ResourceSet::class);
 
-        $meta = m::mock(IMetadataProvider::class);
+        $meta    = m::mock(IMetadataProvider::class);
         $wrapper = m::mock(ProvidersWrapper::class);
 
         $foo = new CynicDeserialiser($meta, $wrapper);
 
-        $link = new ODataLink();
+        $link                 = new ODataLink();
         $link->expandedResult = new \DateTime();
-        $payload = new ODataEntry();
-        $payload->links[] = $link;
+        $payload              = new ODataEntry();
+        $payload->links[]     = $link;
 
         $expected = 'Expanded result must null, or be instance of ODataEntry or ODataFeed';
-        $actual = null;
+        $actual   = null;
 
         try {
             $foo->processPayload($payload);

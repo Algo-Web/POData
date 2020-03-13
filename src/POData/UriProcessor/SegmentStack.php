@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\UriProcessor;
 
 use POData\Common\InvalidOperationException;
 use POData\Providers\Metadata\ResourceSetWrapper;
 
 /**
- * Class SegmentStack
+ * Class SegmentStack.
  * @package POData\UriProcessor
  */
 class SegmentStack
@@ -40,8 +42,8 @@ class SegmentStack
      */
     public function __construct(RequestDescription $request = null)
     {
-        $this->request = $request;
-        $this->segmentNames = [];
+        $this->request                    = $request;
+        $this->segmentNames               = [];
         $this->segmentResourceSetWrappers = [];
         assert(count($this->segmentNames) == count($this->segmentResourceSetWrappers), $this->mismatch);
     }

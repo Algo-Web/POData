@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\Providers\Expression;
 
 use Mockery as m;
@@ -38,7 +40,7 @@ class PHPExpressionProviderTest extends TestCase
      */
     public function testonLogicalExpression($type, $left, $right, $expected)
     {
-        $foo = new PHPExpressionProvider('abc');
+        $foo    = new PHPExpressionProvider('abc');
         $result = $foo->onLogicalExpression($type, $left, $right);
         $this->assertEquals($expected, $result);
     }
@@ -48,7 +50,7 @@ class PHPExpressionProviderTest extends TestCase
         $foo = new PHPExpressionProvider('abc');
 
         $expected = 'onLogicalExpression';
-        $actual = null;
+        $actual   = null;
         try {
             $foo->onLogicalExpression(ExpressionType::CONSTANT(), '', '');
         } catch (\InvalidArgumentException $e) {
@@ -77,7 +79,7 @@ class PHPExpressionProviderTest extends TestCase
      */
     public function testonArithmeticExpression($type, $left, $right, $expected)
     {
-        $foo = new PHPExpressionProvider('abc');
+        $foo    = new PHPExpressionProvider('abc');
         $result = $foo->onArithmeticExpression($type, $left, $right);
         $this->assertEquals($expected, $result);
     }
@@ -87,7 +89,7 @@ class PHPExpressionProviderTest extends TestCase
         $foo = new PHPExpressionProvider('abc');
 
         $expected = 'onArithmeticExpression';
-        $actual = null;
+        $actual   = null;
         try {
             $foo->onArithmeticExpression(ExpressionType::NOT_LOGICAL(), '', '');
         } catch (\InvalidArgumentException $e) {
@@ -117,7 +119,7 @@ class PHPExpressionProviderTest extends TestCase
      */
     public function testonRelationalExpression($type, $left, $right, $expected)
     {
-        $foo = new PHPExpressionProvider('abc');
+        $foo    = new PHPExpressionProvider('abc');
         $result = $foo->onRelationalExpression($type, $left, $right);
         $this->assertEquals($expected, $result);
     }
@@ -127,7 +129,7 @@ class PHPExpressionProviderTest extends TestCase
         $foo = new PHPExpressionProvider('abc');
 
         $expected = 'onRelationalExpression';
-        $actual = null;
+        $actual   = null;
         try {
             $foo->onRelationalExpression(ExpressionType::NOT_LOGICAL(), '', '');
         } catch (\InvalidArgumentException $e) {
@@ -152,7 +154,7 @@ class PHPExpressionProviderTest extends TestCase
      */
     public function testonUnaryExpression($type, $arg, $expected)
     {
-        $foo = new PHPExpressionProvider('abc');
+        $foo    = new PHPExpressionProvider('abc');
         $result = $foo->onUnaryExpression($type, $arg);
         $this->assertEquals($expected, $result);
     }
@@ -162,7 +164,7 @@ class PHPExpressionProviderTest extends TestCase
         $foo = new PHPExpressionProvider('abc');
 
         $expected = 'onUnaryExpression';
-        $actual = null;
+        $actual   = null;
         try {
             $foo->onUnaryExpression(ExpressionType::ADD(), '');
         } catch (\InvalidArgumentException $e) {
@@ -221,10 +223,10 @@ class PHPExpressionProviderTest extends TestCase
      */
     public function testonFunctionCallExpression($type, $params, $expected)
     {
-        $descript = m::mock(FunctionDescription::class)->makePartial();
+        $descript       = m::mock(FunctionDescription::class)->makePartial();
         $descript->name = $type;
 
-        $foo = new PHPExpressionProvider('abc');
+        $foo    = new PHPExpressionProvider('abc');
         $result = $foo->onFunctionCallExpression($descript, $params);
         $this->assertEquals($expected, $result);
     }
@@ -236,7 +238,7 @@ class PHPExpressionProviderTest extends TestCase
         $foo = new PHPExpressionProvider('abc');
 
         $expected = 'onFunctionCallExpression';
-        $actual = null;
+        $actual   = null;
         try {
             $foo->onFunctionCallExpression($descript, []);
         } catch (\InvalidArgumentException $e) {
@@ -247,13 +249,13 @@ class PHPExpressionProviderTest extends TestCase
 
     public function testonFunctionCallExpressionStartsWithEmptyNeedle()
     {
-        $desc = FunctionDescription::filterFunctionDescriptions()["startswith"][0];
+        $desc = FunctionDescription::filterFunctionDescriptions()['startswith'][0];
         $prov = new PHPExpressionProvider('foo');
 
         $issue = $prov->onFunctionCallExpression($desc, ['\'Property\'', '\'\'']);
 
         $expected = 'strpos(): Empty needle';
-        $actual = null;
+        $actual   = null;
 
         try {
             eval($issue . ';');
@@ -265,7 +267,7 @@ class PHPExpressionProviderTest extends TestCase
 
     public function testonFunctionCallExpressionEndsWithEmptyNeedle()
     {
-        $desc = FunctionDescription::filterFunctionDescriptions()["endswith"][0];
+        $desc = FunctionDescription::filterFunctionDescriptions()['endswith'][0];
         $prov = new PHPExpressionProvider('foo');
 
         $issue = $prov->onFunctionCallExpression($desc, ['\'Property\'', '\'\'']);
@@ -275,13 +277,13 @@ class PHPExpressionProviderTest extends TestCase
 
     public function testonFunctionCallExpressionIndexOfEmptyNeedle()
     {
-        $desc = FunctionDescription::filterFunctionDescriptions()["indexof"][0];
+        $desc = FunctionDescription::filterFunctionDescriptions()['indexof'][0];
         $prov = new PHPExpressionProvider('foo');
 
         $issue = $prov->onFunctionCallExpression($desc, ['\'Property\'', '\'\'']);
 
         $expected = 'strpos(): Empty needle';
-        $actual = null;
+        $actual   = null;
 
         try {
             eval($issue . ';');
@@ -293,13 +295,13 @@ class PHPExpressionProviderTest extends TestCase
 
     public function testonFunctionCallExpressionSubstringOfEmptyNeedle()
     {
-        $desc = FunctionDescription::filterFunctionDescriptions()["substringof"][0];
+        $desc = FunctionDescription::filterFunctionDescriptions()['substringof'][0];
         $prov = new PHPExpressionProvider('foo');
 
         $issue = $prov->onFunctionCallExpression($desc, ['\'\'', '\'Property\'']);
 
         $expected = 'strpos(): Empty needle';
-        $actual = null;
+        $actual   = null;
 
         try {
             eval($issue . ';');
@@ -319,14 +321,14 @@ class PHPExpressionProviderTest extends TestCase
         $foo->setResourceType($res);
 
         $expected = 'abc->HAMMER TIME!';
-        $result = $foo->onPropertyAccessExpression($property);
+        $result   = $foo->onPropertyAccessExpression($property);
         $this->assertEquals($expected, $result);
     }
 
     public function testonConstantExpressionNullValue()
     {
         $type = m::mock(IType::class);
-        $foo = new PHPExpressionProvider('abc');
+        $foo  = new PHPExpressionProvider('abc');
 
         $result = $foo->onConstantExpression($type, null);
         $this->assertEquals('NULL', $result);
@@ -335,7 +337,7 @@ class PHPExpressionProviderTest extends TestCase
     public function testonConstantExpressionBoolValue()
     {
         $type = m::mock(IType::class);
-        $foo = new PHPExpressionProvider('abc');
+        $foo  = new PHPExpressionProvider('abc');
 
         $result = $foo->onConstantExpression($type, false);
         $this->assertEquals('false', $result);
@@ -344,7 +346,7 @@ class PHPExpressionProviderTest extends TestCase
     public function testonConstantExpressionOtherValue()
     {
         $type = m::mock(IType::class);
-        $foo = new PHPExpressionProvider('abc');
+        $foo  = new PHPExpressionProvider('abc');
 
         $result = $foo->onConstantExpression($type, 'fnord');
         $this->assertEquals('fnord', $result);

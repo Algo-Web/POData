@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\Providers\Expression;
 
 use Mockery as m;
@@ -38,7 +40,7 @@ class MySQLExpressionProviderTest extends TestCase
      */
     public function testonLogicalExpression($type, $left, $right, $expected)
     {
-        $foo = new MySQLExpressionProvider();
+        $foo    = new MySQLExpressionProvider();
         $result = $foo->onLogicalExpression($type, $left, $right);
         $this->assertEquals($expected, $result);
     }
@@ -48,7 +50,7 @@ class MySQLExpressionProviderTest extends TestCase
         $foo = new MySQLExpressionProvider();
 
         $expected = 'onLogicalExpression';
-        $actual = null;
+        $actual   = null;
         try {
             $foo->onLogicalExpression(ExpressionType::CONSTANT(), '', '');
         } catch (\InvalidArgumentException $e) {
@@ -77,7 +79,7 @@ class MySQLExpressionProviderTest extends TestCase
      */
     public function testonArithmeticExpression($type, $left, $right, $expected)
     {
-        $foo = new MySQLExpressionProvider();
+        $foo    = new MySQLExpressionProvider();
         $result = $foo->onArithmeticExpression($type, $left, $right);
         $this->assertEquals($expected, $result);
     }
@@ -87,7 +89,7 @@ class MySQLExpressionProviderTest extends TestCase
         $foo = new MySQLExpressionProvider();
 
         $expected = 'onArithmeticExpression';
-        $actual = null;
+        $actual   = null;
         try {
             $foo->onArithmeticExpression(ExpressionType::NOT_LOGICAL(), '', '');
         } catch (\InvalidArgumentException $e) {
@@ -117,7 +119,7 @@ class MySQLExpressionProviderTest extends TestCase
      */
     public function testonRelationalExpression($type, $left, $right, $expected)
     {
-        $foo = new MySQLExpressionProvider();
+        $foo    = new MySQLExpressionProvider();
         $result = $foo->onRelationalExpression($type, $left, $right);
         $this->assertEquals($expected, $result);
     }
@@ -127,7 +129,7 @@ class MySQLExpressionProviderTest extends TestCase
         $foo = new MySQLExpressionProvider();
 
         $expected = 'onRelationalExpression';
-        $actual = null;
+        $actual   = null;
         try {
             $foo->onRelationalExpression(ExpressionType::NOT_LOGICAL(), '', '');
         } catch (\InvalidArgumentException $e) {
@@ -152,7 +154,7 @@ class MySQLExpressionProviderTest extends TestCase
      */
     public function testonUnaryExpression($type, $arg, $expected)
     {
-        $foo = new MySQLExpressionProvider();
+        $foo    = new MySQLExpressionProvider();
         $result = $foo->onUnaryExpression($type, $arg);
         $this->assertEquals($expected, $result);
     }
@@ -162,7 +164,7 @@ class MySQLExpressionProviderTest extends TestCase
         $foo = new MySQLExpressionProvider();
 
         $expected = 'onUnaryExpression';
-        $actual = null;
+        $actual   = null;
         try {
             $foo->onUnaryExpression(ExpressionType::ADD(), '');
         } catch (\InvalidArgumentException $e) {
@@ -212,10 +214,10 @@ class MySQLExpressionProviderTest extends TestCase
      */
     public function testonFunctionCallExpression($type, $params, $expected)
     {
-        $descript = m::mock(FunctionDescription::class)->makePartial();
+        $descript       = m::mock(FunctionDescription::class)->makePartial();
         $descript->name = $type;
 
-        $foo = new MySQLExpressionProvider();
+        $foo    = new MySQLExpressionProvider();
         $result = $foo->onFunctionCallExpression($descript, $params);
         $this->assertEquals($expected, $result);
     }
@@ -227,7 +229,7 @@ class MySQLExpressionProviderTest extends TestCase
         $foo = new MySQLExpressionProvider();
 
         $expected = 'onFunctionCallExpression';
-        $actual = null;
+        $actual   = null;
         try {
             $foo->onFunctionCallExpression($descript, []);
         } catch (\InvalidArgumentException $e) {
@@ -246,14 +248,14 @@ class MySQLExpressionProviderTest extends TestCase
         $foo->setResourceType($res);
 
         $expected = 'HAMMER TIME!';
-        $result = $foo->onPropertyAccessExpression($property);
+        $result   = $foo->onPropertyAccessExpression($property);
         $this->assertEquals($expected, $result);
     }
 
     public function testonConstantExpressionNullValue()
     {
         $type = m::mock(IType::class);
-        $foo = new MySQLExpressionProvider();
+        $foo  = new MySQLExpressionProvider();
 
         $result = $foo->onConstantExpression($type, null);
         $this->assertEquals('NULL', $result);
@@ -262,7 +264,7 @@ class MySQLExpressionProviderTest extends TestCase
     public function testonConstantExpressionBoolValue()
     {
         $type = m::mock(IType::class);
-        $foo = new MySQLExpressionProvider();
+        $foo  = new MySQLExpressionProvider();
 
         $result = $foo->onConstantExpression($type, false);
         $this->assertEquals('false', $result);
@@ -271,7 +273,7 @@ class MySQLExpressionProviderTest extends TestCase
     public function testonConstantExpressionOtherValue()
     {
         $type = m::mock(IType::class);
-        $foo = new MySQLExpressionProvider();
+        $foo  = new MySQLExpressionProvider();
 
         $result = $foo->onConstantExpression($type, 'fnord');
         $this->assertEquals('fnord', $result);

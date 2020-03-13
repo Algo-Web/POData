@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\UriProcessor\ResourcePathProcessor\SegmentParser;
 
 use Mockery as m;
@@ -16,16 +18,16 @@ class KeyDescriptorTest extends TestCase
 {
     public function testKeyPredicateParsing()
     {
-        $keyDescriptor = null;
-        $keyPredicate = '  ';
+        $keyDescriptor        = null;
+        $keyPredicate         = '  ';
         $validPredicateSyntax = KeyDescriptor::tryParseKeysFromKeyPredicate($keyPredicate, $keyDescriptor);
         $this->assertTrue($validPredicateSyntax);
         $this->assertFalse(null === $keyDescriptor);
         $this->assertTrue($keyDescriptor->isEmpty());
         $this->assertEquals($keyDescriptor->valueCount(), 0);
 
-        $keyDescriptor = null;
-        $keyPredicate = 'ProductID=11, OrderID=2546';
+        $keyDescriptor        = null;
+        $keyPredicate         = 'ProductID=11, OrderID=2546';
         $validPredicateSyntax = KeyDescriptor::tryParseKeysFromKeyPredicate($keyPredicate, $keyDescriptor);
         $this->assertTrue($validPredicateSyntax);
         $this->assertFalse(null === $keyDescriptor);
@@ -37,7 +39,7 @@ class KeyDescriptorTest extends TestCase
         $this->assertTrue(array_key_exists('ProductID', $namedValues));
         $this->assertTrue(array_key_exists('OrderID', $namedValues));
         $productVal = $namedValues['ProductID'];
-        $orderVal = $namedValues['OrderID'];
+        $orderVal   = $namedValues['OrderID'];
         $this->assertEquals($productVal[0], 11);
         $this->assertEquals($orderVal[0], 2546);
 
@@ -48,8 +50,8 @@ class KeyDescriptorTest extends TestCase
             $exceptionThrown = true;
         }
 
-        $keyDescriptor = null;
-        $keyPredicate = '11, 2546';
+        $keyDescriptor        = null;
+        $keyPredicate         = '11, 2546';
         $validPredicateSyntax = KeyDescriptor::tryParseKeysFromKeyPredicate($keyPredicate, $keyDescriptor);
         $this->assertTrue($validPredicateSyntax);
         $this->assertFalse(null === $keyDescriptor);
@@ -59,7 +61,7 @@ class KeyDescriptorTest extends TestCase
         $positionalValues = $keyDescriptor->getPositionalValues();
         $this->assertFalse(empty($positionalValues));
         $productVal = $positionalValues[0];
-        $orderVal = $positionalValues[1];
+        $orderVal   = $positionalValues[1];
         $this->assertEquals($productVal[0], 11);
         $this->assertEquals($orderVal[0], 2546);
 
@@ -71,56 +73,56 @@ class KeyDescriptorTest extends TestCase
         }
 
         //Test Mixing of Named and Positional values
-        $keyDescriptor = null;
-        $keyPredicate = '11, OrderID=2546';
+        $keyDescriptor        = null;
+        $keyPredicate         = '11, OrderID=2546';
         $validPredicateSyntax = KeyDescriptor::tryParseKeysFromKeyPredicate($keyPredicate, $keyDescriptor);
         $this->assertFalse($validPredicateSyntax);
 
         //Test Mixing of Named and Positional values
-        $keyDescriptor = null;
-        $keyPredicate = 'ProductID=11, 2546';
+        $keyDescriptor        = null;
+        $keyPredicate         = 'ProductID=11, 2546';
         $validPredicateSyntax = KeyDescriptor::tryParseKeysFromKeyPredicate($keyPredicate, $keyDescriptor);
         $this->assertFalse($validPredicateSyntax);
 
         //Syntax of single key should be keyName=keyValue
-        $keyDescriptor = null;
-        $keyPredicate = 'ProductID, OrderID=2546';
+        $keyDescriptor        = null;
+        $keyPredicate         = 'ProductID, OrderID=2546';
         $validPredicateSyntax = KeyDescriptor::tryParseKeysFromKeyPredicate($keyPredicate, $keyDescriptor);
         $this->assertFalse($validPredicateSyntax);
 
         //Syntax of single key should be keyName=keyValue
-        $keyDescriptor = null;
-        $keyPredicate = 'ProductID=, OrderID=2546';
+        $keyDescriptor        = null;
+        $keyPredicate         = 'ProductID=, OrderID=2546';
         $validPredicateSyntax = KeyDescriptor::tryParseKeysFromKeyPredicate($keyPredicate, $keyDescriptor);
         $this->assertFalse($validPredicateSyntax);
 
         //Null is not a valid key value
-        $keyDescriptor = null;
-        $keyPredicate = 'ProductID=null, OrderID=2546';
+        $keyDescriptor        = null;
+        $keyPredicate         = 'ProductID=null, OrderID=2546';
         $validPredicateSyntax = KeyDescriptor::tryParseKeysFromKeyPredicate($keyPredicate, $keyDescriptor);
         $this->assertFalse($validPredicateSyntax);
 
         //Identifer is not a valid key value
-        $keyDescriptor = null;
-        $keyPredicate = 'ProductID=OrderID';
+        $keyDescriptor        = null;
+        $keyPredicate         = 'ProductID=OrderID';
         $validPredicateSyntax = KeyDescriptor::tryParseKeysFromKeyPredicate($keyPredicate, $keyDescriptor);
         $this->assertFalse($validPredicateSyntax);
 
         //Key name duplication not allowed
-        $keyDescriptor = null;
-        $keyPredicate = 'ProductID=11, OrderID=2546, ProductID=11';
+        $keyDescriptor        = null;
+        $keyPredicate         = 'ProductID=11, OrderID=2546, ProductID=11';
         $validPredicateSyntax = KeyDescriptor::tryParseKeysFromKeyPredicate($keyPredicate, $keyDescriptor);
         $this->assertFalse($validPredicateSyntax);
 
         //comma cannot be terminating char
-        $keyDescriptor = null;
-        $keyPredicate = 'ProductID=11, OrderID=2546,';
+        $keyDescriptor        = null;
+        $keyPredicate         = 'ProductID=11, OrderID=2546,';
         $validPredicateSyntax = KeyDescriptor::tryParseKeysFromKeyPredicate($keyPredicate, $keyDescriptor);
         $this->assertFalse($validPredicateSyntax);
 
         //Guid is a valid key value
-        $keyDescriptor = null;
-        $keyPredicate = 'Id=guid\'05b242e7-52eb-46bd-8f0e-6568b72cd9a5\', PlaceName=\'Ktym\'';
+        $keyDescriptor        = null;
+        $keyPredicate         = 'Id=guid\'05b242e7-52eb-46bd-8f0e-6568b72cd9a5\', PlaceName=\'Ktym\'';
         $validPredicateSyntax = KeyDescriptor::tryParseKeysFromKeyPredicate($keyPredicate, $keyDescriptor);
         $this->assertTrue($validPredicateSyntax);
         $namedValues = $keyDescriptor->getNamedValues();
@@ -130,21 +132,21 @@ class KeyDescriptorTest extends TestCase
         $this->assertEquals($idVal[0], '\'05b242e7-52eb-46bd-8f0e-6568b72cd9a5\'');
 
         //Test invalid guid
-        $keyDescriptor = null;
-        $keyPredicate = 'Id=guid\'05b242e7---52eb-46bd-8f0e-6568b72cd9a5\', PlaceName=\'Ktym\'';
+        $keyDescriptor        = null;
+        $keyPredicate         = 'Id=guid\'05b242e7---52eb-46bd-8f0e-6568b72cd9a5\', PlaceName=\'Ktym\'';
         $validPredicateSyntax = KeyDescriptor::tryParseKeysFromKeyPredicate($keyPredicate, $keyDescriptor);
         $this->assertFalse($validPredicateSyntax);
     }
 
     public function testKeyDescriptorValidation()
     {
-        $northWindMetadata = NorthWindMetadata::Create();
+        $northWindMetadata        = NorthWindMetadata::Create();
         $orderDetailsResourceType = $northWindMetadata->resolveResourceType('Order_Details');
         $this->assertFalse(null === $orderDetailsResourceType);
 
         $keyDescriptor = null;
         //Test with a valid named value key predicate
-        $keyPredicate = 'ProductID=11, OrderID=2546';
+        $keyPredicate         = 'ProductID=11, OrderID=2546';
         $validPredicateSyntax = KeyDescriptor::tryParseKeysFromKeyPredicate($keyPredicate, $keyDescriptor);
         $this->assertTrue($validPredicateSyntax);
         $this->assertFalse(null === $keyDescriptor);
@@ -153,13 +155,13 @@ class KeyDescriptorTest extends TestCase
         $this->assertTrue(array_key_exists('ProductID', $validatedNamedValues));
         $this->assertTrue(array_key_exists('OrderID', $validatedNamedValues));
         $productVal = $validatedNamedValues['ProductID'];
-        $orderVal = $validatedNamedValues['OrderID'];
+        $orderVal   = $validatedNamedValues['OrderID'];
         $this->assertEquals($productVal[0], 11);
         $this->assertEquals($orderVal[0], 2546);
 
         $keyDescriptor = null;
         //Test with a valid positional value key predicate
-        $keyPredicate = '11, 2546';
+        $keyPredicate         = '11, 2546';
         $validPredicateSyntax = KeyDescriptor::tryParseKeysFromKeyPredicate($keyPredicate, $keyDescriptor);
         $this->assertTrue($validPredicateSyntax);
         $this->assertFalse(null === $keyDescriptor);
@@ -169,13 +171,13 @@ class KeyDescriptorTest extends TestCase
         $this->assertTrue(array_key_exists('ProductID', $validatedNamedValues));
         $this->assertTrue(array_key_exists('OrderID', $validatedNamedValues));
         $productVal = $validatedNamedValues['ProductID'];
-        $orderVal = $validatedNamedValues['OrderID'];
+        $orderVal   = $validatedNamedValues['OrderID'];
         $this->assertEquals($productVal[0], 11);
         $this->assertEquals($orderVal[0], 2546);
 
         //Test for key count
-        $keyDescriptor = null;
-        $keyPredicate = 'ProductID=11';
+        $keyDescriptor        = null;
+        $keyPredicate         = 'ProductID=11';
         $validPredicateSyntax = KeyDescriptor::tryParseKeysFromKeyPredicate($keyPredicate, $keyDescriptor);
 
         try {
@@ -186,8 +188,8 @@ class KeyDescriptorTest extends TestCase
         }
 
         //test for missing key
-        $keyDescriptor = null;
-        $keyPredicate = 'ProductID=11, OrderID1=2546';
+        $keyDescriptor        = null;
+        $keyPredicate         = 'ProductID=11, OrderID1=2546';
         $validPredicateSyntax = KeyDescriptor::tryParseKeysFromKeyPredicate($keyPredicate, $keyDescriptor);
 
         try {
@@ -198,8 +200,8 @@ class KeyDescriptorTest extends TestCase
         }
 
         //test for key type
-        $keyDescriptor = null;
-        $keyPredicate = 'ProductID=11.12, OrderID=2546';
+        $keyDescriptor        = null;
+        $keyPredicate         = 'ProductID=11.12, OrderID=2546';
         $validPredicateSyntax = KeyDescriptor::tryParseKeysFromKeyPredicate($keyPredicate, $keyDescriptor);
 
         try {
@@ -210,8 +212,8 @@ class KeyDescriptorTest extends TestCase
         }
 
         //test for key type
-        $keyDescriptor = null;
-        $keyPredicate = '11, \'ABCD\'';
+        $keyDescriptor        = null;
+        $keyPredicate         = '11, \'ABCD\'';
         $validPredicateSyntax = KeyDescriptor::tryParseKeysFromKeyPredicate($keyPredicate, $keyDescriptor);
 
         try {
@@ -224,8 +226,8 @@ class KeyDescriptorTest extends TestCase
 
     public function testSingleNamedValuePredicate()
     {
-        $keyDescriptor = null;
-        $keyPredicate = 'GroupNo=11';
+        $keyDescriptor        = null;
+        $keyPredicate         = 'GroupNo=11';
         $validPredicateSyntax = KeyDescriptor::tryParseKeysFromKeyPredicate($keyPredicate, $keyDescriptor);
         $this->assertTrue($validPredicateSyntax);
         $this->assertFalse(null === $keyDescriptor);
@@ -250,8 +252,8 @@ class KeyDescriptorTest extends TestCase
 
         $expected = 'Orders(OrderID=42)';
 
-        $keyDescriptor = null;
-        $keyPredicate = 'OrderID=42';
+        $keyDescriptor        = null;
+        $keyPredicate         = 'OrderID=42';
         $validPredicateSyntax = KeyDescriptor::tryParseKeysFromKeyPredicate($keyPredicate, $keyDescriptor);
         $this->assertTrue($validPredicateSyntax);
         $keyDescriptor->validate($keyPredicate, $orderResourceType);
@@ -270,8 +272,8 @@ class KeyDescriptorTest extends TestCase
 
         $expected = 'Order_Details(ProductID=11,OrderID=42)';
 
-        $keyDescriptor = null;
-        $keyPredicate = 'ProductID=11,OrderID=42';
+        $keyDescriptor        = null;
+        $keyPredicate         = 'ProductID=11,OrderID=42';
         $validPredicateSyntax = KeyDescriptor::tryParseKeysFromKeyPredicate($keyPredicate, $keyDescriptor);
         $this->assertTrue($validPredicateSyntax);
         $keyDescriptor->validate($keyPredicate, $orderResourceType);
@@ -289,7 +291,7 @@ class KeyDescriptorTest extends TestCase
         $this->assertFalse(null === $orderResourceSet);
 
         $expected = 'Mismatch between supplied key predicates and number of keys defined on resource set';
-        $actual = null;
+        $actual   = null;
 
         $keyDescriptor = m::mock(KeyDescriptor::class)->makePartial();
         $keyDescriptor->shouldReceive('getNamedValues')->andReturn([]);
@@ -312,7 +314,7 @@ class KeyDescriptorTest extends TestCase
         $this->assertFalse(null === $orderResourceSet);
 
         $expected = 'Key predicate OrderID not present in named values';
-        $actual = null;
+        $actual   = null;
 
         $keyDescriptor = m::mock(KeyDescriptor::class)->makePartial();
         $keyDescriptor->shouldReceive('getNamedValues')->andReturn(['foo' => 11]);
@@ -330,11 +332,11 @@ class KeyDescriptorTest extends TestCase
     {
         $validated = [ 'id' => [ '2', new Int32()]];
 
-        $payload = new ODataProperty();
-        $payload->name = 'id';
+        $payload           = new ODataProperty();
+        $payload->name     = 'id';
         $payload->typeName = 'Edm.Int32';
-        $payload->value = 2;
-        $expected = ['id' => $payload];
+        $payload->value    = 2;
+        $expected          = ['id' => $payload];
 
         $keyDescriptor = m::mock(KeyDescriptor::class)->makePartial();
         $keyDescriptor->shouldReceive('getValidatedNamedValues')->andReturn($validated)->once();
@@ -354,9 +356,9 @@ class KeyDescriptorTest extends TestCase
         $method = $reflec->getMethod('getTypeAndValidateKeyValue');
         $method->setAccessible(true);
 
-        $value = "1.0m";
+        $value   = '1.0m';
         $tokenId = ExpressionTokenId::DECIMAL_LITERAL();
-        $outVal = null;
+        $outVal  = null;
         $outType = null;
 
         $result = $method->invokeArgs(null, [$value, $tokenId, &$outVal, &$outType]);
@@ -373,9 +375,9 @@ class KeyDescriptorTest extends TestCase
         $method = $reflec->getMethod('getTypeAndValidateKeyValue');
         $method->setAccessible(true);
 
-        $value = "10L";
+        $value   = '10L';
         $tokenId = ExpressionTokenId::INT64_LITERAL();
-        $outVal = null;
+        $outVal  = null;
         $outType = null;
 
         $result = $method->invokeArgs(null, [$value, $tokenId, &$outVal, &$outType]);
@@ -392,9 +394,9 @@ class KeyDescriptorTest extends TestCase
         $method = $reflec->getMethod('getTypeAndValidateKeyValue');
         $method->setAccessible(true);
 
-        $value = "1.0f";
+        $value   = '1.0f';
         $tokenId = ExpressionTokenId::SINGLE_LITERAL();
-        $outVal = null;
+        $outVal  = null;
         $outType = null;
 
         $result = $method->invokeArgs(null, [$value, $tokenId, &$outVal, &$outType]);

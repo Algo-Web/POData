@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\OperationContext;
 
 use Mockery as m;
@@ -13,12 +15,12 @@ class SimpleRequestAdapterTest extends TestCase
     {
         // set up required superglobals
         $_SERVER['REQUEST_SCHEME'] = 'https';
-        $_SERVER['HTTP_HOST'] = 'localhost';
-        $_SERVER['REQUEST_URI'] = 'odata.svc';
+        $_SERVER['HTTP_HOST']      = 'localhost';
+        $_SERVER['REQUEST_URI']    = 'odata.svc';
 
-        $foo = new SimpleRequestAdapter([]);
+        $foo      = new SimpleRequestAdapter([]);
         $expected = 'https://localhost/odata.svc';
-        $actual = $foo->getRawUrl();
+        $actual   = $foo->getRawUrl();
         $this->assertEquals($expected, $actual);
     }
 
@@ -27,17 +29,17 @@ class SimpleRequestAdapterTest extends TestCase
         // set up required superglobals
         $_SERVER['REQUEST_METHOD'] = 'PUT';
 
-        $foo = new SimpleRequestAdapter([]);
+        $foo      = new SimpleRequestAdapter([]);
         $expected = HTTPRequestMethod::PUT();
-        $actual = $foo->getMethod();
+        $actual   = $foo->getMethod();
         $this->assertEquals($expected, $actual);
     }
 
     public function testGetQueryParms()
     {
         $expected = ['key' => 'secret'];
-        $foo = new SimpleRequestAdapter($expected);
-        $actual = $foo->getQueryParameters();
+        $foo      = new SimpleRequestAdapter($expected);
+        $actual   = $foo->getQueryParameters();
         $this->assertEquals([$expected], $actual);
     }
 }

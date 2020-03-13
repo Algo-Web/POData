@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\OperationContext;
 
 use Illuminate\Http\Request;
@@ -111,7 +113,7 @@ class ServiceHost
      * Gets the absolute request Uri as Url instance
      * Note: This method will be called first time from constructor.
      *
-     * @throws ODataException if AbsoluteRequestUri is not a valid URI
+     * @throws ODataException     if AbsoluteRequestUri is not a valid URI
      * @throws UrlFormatException
      *
      * @return Url
@@ -138,7 +140,7 @@ class ServiceHost
 
             // We need the absolute uri only not associated components
             // (query, fragments etc..)
-            $this->absoluteRequestUri = new Url($this->absoluteRequestUriAsString);
+            $this->absoluteRequestUri         = new Url($this->absoluteRequestUriAsString);
             $this->absoluteRequestUriAsString = rtrim($this->absoluteRequestUriAsString, '/');
         }
 
@@ -161,7 +163,7 @@ class ServiceHost
      *
      * @param string $serviceUri The service url, absolute or relative
      *
-     * @throws ODataException If the base uri in the configuration is malformed
+     * @throws ODataException     If the base uri in the configuration is malformed
      * @throws UrlFormatException
      */
     public function setServiceUri($serviceUri)
@@ -175,9 +177,9 @@ class ServiceHost
                 throw ODataException::createInternalServerError(Messages::hostMalFormedBaseUriInConfig(false));
             }
 
-            $segments = $this->absoluteServiceUri->getSegments();
+            $segments    = $this->absoluteServiceUri->getSegments();
             $lastSegment = $segments[count($segments) - 1];
-            $sLen = strlen('.svc');
+            $sLen        = strlen('.svc');
             $endsWithSvc = (0 === substr_compare($lastSegment, '.svc', -$sLen, $sLen));
             if (!$endsWithSvc
                 || null !== $this->absoluteServiceUri->getQuery()
@@ -188,9 +190,9 @@ class ServiceHost
 
             if (!$isAbsoluteServiceUri) {
                 $requestUriSegments = $this->getAbsoluteRequestUri()->getSegments();
-                $requestUriScheme = $this->getAbsoluteRequestUri()->getScheme();
-                $requestUriPort = $this->getAbsoluteRequestUri()->getPort();
-                $i = count($requestUriSegments) - 1;
+                $requestUriScheme   = $this->getAbsoluteRequestUri()->getScheme();
+                $requestUriPort     = $this->getAbsoluteRequestUri()->getPort();
+                $i                  = count($requestUriSegments) - 1;
                 // Find index of segment in the request uri that end with .svc
                 // There will be always a .svc segment in the request uri otherwise
                 // uri redirection will not happen.
@@ -226,7 +228,7 @@ class ServiceHost
                     );
                 }
 
-                $builtServiceUri = $requestUriScheme .'://' . $this->getAbsoluteRequestUri()->getHost();
+                $builtServiceUri = $requestUriScheme . '://' . $this->getAbsoluteRequestUri()->getHost();
 
                 if (($requestUriScheme == 'http' && $requestUriPort != '80') ||
                     ($requestUriScheme == 'https' && $requestUriPort != '443')
@@ -286,10 +288,10 @@ class ServiceHost
         reset($queryOptions);
         $namesFound = [];
         while ($queryOption = current($queryOptions)) {
-            $optionName = key($queryOption);
+            $optionName  = key($queryOption);
             $optionValue = current($queryOption);
             if (!is_string($optionValue)) {
-                $optionName = array_keys($optionValue)[0];
+                $optionName  = array_keys($optionValue)[0];
                 $optionValue = $optionValue[$optionName];
             }
             if (empty($optionName)) {
@@ -518,7 +520,7 @@ class ServiceHost
             $this->getOperationContext()->outgoingResponse()->setContentLength($value);
         } else {
             throw ODataException::notAcceptableError(
-                'ContentLength: '.$value.' is invalid'
+                'ContentLength: ' . $value . ' is invalid'
             );
         }
     }
@@ -563,7 +565,7 @@ class ServiceHost
     public function setResponseStatusCode($value)
     {
         if (!is_numeric($value)) {
-            $msg = 'Invalid, non-numeric, status code: '.$value;
+            $msg = 'Invalid, non-numeric, status code: ' . $value;
             throw ODataException::createInternalServerError($msg);
         }
         $floor = floor($value/100);

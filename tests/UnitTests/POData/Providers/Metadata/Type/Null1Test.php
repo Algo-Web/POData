@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\Providers\Metadata\Type;
 
 use POData\Providers\Metadata\Type\Binary;
@@ -92,7 +94,7 @@ class Null1Test extends TestCase
     {
         $type = $this->getAsIType();
 
-        $in = 'null';
+        $in  = 'null';
         $out = null;
         $this->assertTrue($type->validate($in, $out));
 
@@ -103,15 +105,15 @@ class Null1Test extends TestCase
     {
         $type = $this->getAsIType();
 
-        $in = 'NULL';
+        $in  = 'NULL';
         $out = null;
         $this->assertFalse($type->validate($in, $out));
 
-        $in = '';
+        $in  = '';
         $out = null;
         $this->assertFalse($type->validate($in, $out));
 
-        $in = 'aefasefsf';
+        $in  = 'aefasefsf';
         $out = null;
         $this->assertFalse($type->validate($in, $out));
     }
@@ -120,19 +122,19 @@ class Null1Test extends TestCase
     {
         $type = $this->getAsIType();
 
-        $value = 'afaefasevaswee';
+        $value  = 'afaefasevaswee';
         $actual = $type->convert($value);
 
         $expected = 'afaefasevaswee';
         $this->assertSame($expected, $actual);
 
-        $value = 'null';
+        $value  = 'null';
         $actual = $type->convert($value);
 
         $expected = null;
         $this->assertSame($expected, $actual);
 
-        $value = 'NULL';
+        $value  = 'NULL';
         $actual = $type->convert($value);
 
         $expected = 'NULL';
@@ -144,7 +146,7 @@ class Null1Test extends TestCase
         $this->expectException('POData\Common\NotImplementedException');
         $type = $this->getAsIType();
 
-        $value = 'afaefasevaswee';
+        $value  = 'afaefasevaswee';
         $actual = $type->convertToOData($value);
     }
 
