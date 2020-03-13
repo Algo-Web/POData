@@ -22,6 +22,9 @@ use UnitTests\POData\TestCase;
 
 class ResponseWriterTest extends TestCase
 {
+    /**
+     * @throws \Exception
+     */
     public function testWriteMetadata()
     {
         $wrapper = m::mock(ProvidersWrapper::class);
