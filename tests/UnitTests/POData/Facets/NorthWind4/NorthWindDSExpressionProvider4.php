@@ -212,7 +212,7 @@ class NorthWindDSExpressionProvider4 implements IExpressionProvider
      *
      * @return string
      */
-    public function onPropertyAccessExpression(PropertyAccessExpression $expression)
+    public function onPropertyAccessExpression(PropertyAccessExpression $expression): string
     {
         $parent                = $expression;
         $variable              = null;

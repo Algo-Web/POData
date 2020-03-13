@@ -92,7 +92,7 @@ interface IExpressionProvider
      *
      * @return string
      */
-    public function onPropertyAccessExpression(PropertyAccessExpression $expression);
+    public function onPropertyAccessExpression(PropertyAccessExpression $expression): string;
 
     /**
      * Call-back for function call expression.

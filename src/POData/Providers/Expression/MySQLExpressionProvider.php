@@ -44,7 +44,8 @@ class MySQLExpressionProvider implements IExpressionProvider
      */
     private $resourceType;
 
-    private $entityMapping;
+    /** @var array */
+    private $entityMapping = [];
 
     /**
      * Constructs new instance of MySQLExpressionProvider.
@@ -211,7 +212,7 @@ class MySQLExpressionProvider implements IExpressionProvider
      *
      * @return string
      */
-    public function onPropertyAccessExpression(PropertyAccessExpression $expression)
+    public function onPropertyAccessExpression(PropertyAccessExpression $expression): string
     {
         if (null == $this->resourceType) {
             throw new \InvalidArgumentException('onPropertyAccessExpression - resourceType null');
@@ -225,11 +226,9 @@ class MySQLExpressionProvider implements IExpressionProvider
         $parent         = $expression;
         $entityTypeName = $this->resourceType->getName();
         $propertyName   = $parent->getResourceProperty()->getName();
-        if (is_array($this->entityMapping)) {
-            if (array_key_exists($entityTypeName, $this->entityMapping)) {
-                if (array_key_exists($propertyName, $this->entityMapping[$entityTypeName])) {
-                    return $this->entityMapping[$entityTypeName][$propertyName];
-                }
+        if (array_key_exists($entityTypeName, $this->entityMapping)) {
+            if (array_key_exists($propertyName, $this->entityMapping[$entityTypeName])) {
+                return $this->entityMapping[$entityTypeName][$propertyName];
             }
         }
 

@@ -108,9 +108,10 @@ class NorthWindExpressionProvider implements IExpressionProvider
      *
      * @return string
      */
-    public function onPropertyAccessExpression(PropertyAccessExpression $expression)
+    public function onPropertyAccessExpression(PropertyAccessExpression $expression): string
     {
         // TODO: Implement onPropertyAccessExpression() method.
+        return '';
     }
 
     /**
