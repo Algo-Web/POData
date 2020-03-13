@@ -12,6 +12,7 @@ use POData\Common\Version;
 use POData\OperationContext\ServiceHost;
 use POData\OperationContext\Web\Illuminate\IlluminateOperationContext;
 use POData\OperationContext\Web\Illuminate\IncomingIlluminateRequest;
+use TypeError;
 use UnitTests\POData\TestCase;
 
 class ServiceHostTest extends TestCase
@@ -215,13 +216,10 @@ class ServiceHostTest extends TestCase
 
         $host = new ServiceHost($context, $request);
 
-        try {
-            $host->setResponseStatusCode('abc');
-        } catch (ODataException $e) {
-            $actual = $e->getMessage();
-        }
-        $this->assertNotNull($actual);
-        $this->assertEquals($expected, $actual);
+        $this->expectException(TypeError::class);
+        $this->expectExceptionMessage('must be of the type int, string given');
+
+        $host->setResponseStatusCode('abc');
     }
 
     public function testSetBadResponseCodeTooBig()

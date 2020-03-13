@@ -96,6 +96,7 @@ class ResponseWriter
         }
         /** @var array|null $headers */
         $headers = $service->getHost()->getResponseHeaders();
+        /** @var int $rawCode */
         $rawCode = (null !== $headers) && isset($headers[ODataConstants::HTTPRESPONSE_HEADER_STATUS_CODE]) ?
             $headers[ODataConstants::HTTPRESPONSE_HEADER_STATUS_CODE] : HttpStatus::CODE_OK;
         $service->getHost()->setResponseStatusCode($rawCode);

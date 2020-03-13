@@ -558,16 +558,12 @@ class ServiceHost
     /**
      * Sets the value status code header on the response.
      *
-     * @param string $value The status code
+     * @param int $value The status code
      *
      * @throws ODataException
      */
-    public function setResponseStatusCode($value)
+    public function setResponseStatusCode(int $value): void
     {
-        if (!is_numeric($value)) {
-            $msg = 'Invalid, non-numeric, status code: ' . $value;
-            throw ODataException::createInternalServerError($msg);
-        }
         $floor = floor($value/100);
         if ($floor >= 1 && $floor <= 5) {
             $statusDescription = HttpStatus::getStatusDescription($value);
