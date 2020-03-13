@@ -3,19 +3,42 @@
 
 namespace POData\Readers\Atom\Processors;
 
-
-interface INodeHandler
+abstract class BaseNodeHandler
 {
+    private $charData = '';
 
-    public function __construct($attributes);
+    abstract public function __construct($attributes);
 
-    public function handleStartNode($tagNamespace, $tagName, $attributes);
+    abstract public function handleStartNode($tagNamespace, $tagName, $attributes);
 
-    public function handleEndNode($tagNamespace, $tagName);
+    abstract public function handleEndNode($tagNamespace, $tagName);
 
-    public function handleCharacterData($characters);
+    public function handleCharacterData($characters)
+    {
+        $this->charData .= $characters;
+    }
 
-    public function handleChildComplete($objectModel);
+    final public function popCharData()
+    {
+        $data = $this->charData;
+        $this->charData = '';
+        return $data;
+    }
 
-    public function getObjetModelObject();
+    abstract public function handleChildComplete($objectModel);
+
+    abstract public function getObjetModelObject();
+
+    final protected function arrayKeyOrDefault($array, $key, $default)
+    {
+        if (array_key_exists($key, $array)) {
+            return $array[$key];
+        }
+        foreach ($array as $objKey => $value) {
+            if (strtolower($key) === strtolower($objKey)) {
+                return $value;
+            }
+        }
+        return $default;
+    }
 }

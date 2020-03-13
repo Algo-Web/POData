@@ -1,45 +1,59 @@
 <?php
 
 
-namespace POData\Readers\Atom\Processors;
+namespace POData\Readers\Atom\Processors\Entry;
 
 
+use POData\Common\ODataConstants;
 use POData\ObjectModel\AtomObjectModel\AtomContent;
+use POData\ObjectModel\ODataProperty;
+use POData\Readers\Atom\Processors\BaseNodeHandler;
 
-class PropertiyProcessor implements INodeHandler
+class PropertyProcessor extends BaseNodeHandler
 {
-    private $atomContent;
+    /**
+     * @var ODataProperty[]
+     */
+    private $properties = [];
+    /**
+     * @var ODataProperty
+     */
+    private $latestProperty;
 
     public function __construct($attributes)
     {
-        $this->atomContent = new AtomContent(
-            $attributes['type'],
-            $attributes['src']
-        );
+        $this->properties = [];
     }
 
     public function handleStartNode($tagNamespace, $tagName, $attributes)
     {
-        // TODO: Implement handleStartNode() method.
+        //TODO: this will need to be expanded with opengis namespaces as well when supported
+        assert($tagNamespace === ODataConstants::ODATA_NAMESPACE);
+        $this->latestProperty = new ODataProperty();
+        $this->latestProperty->name = $tagName;
+        $this->latestProperty->typeName = $this->arrayKeyOrDefault(
+            $attributes,
+            ODataConstants::ODATA_METADATA_NAMESPACE . '|' . ODataConstants::ATOM_TYPE_ATTRIBUTE_NAME,
+            null
+        );
+        $this->properties[$this->latestProperty->name] = $this->latestProperty;
     }
 
     public function handleEndNode($tagNamespace, $tagName)
     {
-        // TODO: Implement handleEndNode() method.
+        $this->latestProperty->value = $this->popCharData();
     }
 
     public function handleChildComplete($objectModel)
     {
-        // TODO: Implement handleChildComplete() method.
+        //should never be called
     }
 
-    public function handleCharacterData($characters)
-    {
-        // TODO: Implement handleCharacterData() method.
-    }
-
+    /**
+     * @return ODataProperty[]
+     */
     public function getObjetModelObject()
     {
-        // TODO: Implement getObjetModelObject() method.
+        return $this->properties;
     }
 }

@@ -3,7 +3,6 @@
 
 namespace POData\Readers;
 
-
 interface IODataReader
 {
 
