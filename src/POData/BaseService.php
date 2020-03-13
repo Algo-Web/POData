@@ -544,14 +544,12 @@ abstract class BaseService implements IRequestHandler, IService
                     $odataModelInstance = $objectModelSerializer->writeTopLevelBagObject(
                         $result,
                         $requestProperty->getName(),
-                        $targetResourceType,
-                        $odataModelInstance
+                        $targetResourceType
                     );
                 } elseif (TargetKind::PRIMITIVE() == $requestTargetKind) {
                     $odataModelInstance = $objectModelSerializer->writeTopLevelPrimitive(
                         $result,
-                        $requestProperty,
-                        $odataModelInstance
+                        $requestProperty
                     );
                 } elseif (TargetKind::PRIMITIVE_VALUE() == $requestTargetKind) {
                     // Code path for primitive value (Since its primitive no need for
