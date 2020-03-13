@@ -15,6 +15,8 @@ use POData\Providers\Metadata\ResourceStreamInfo;
 use POData\Providers\Metadata\SimpleMetadataProvider;
 use POData\Providers\Metadata\Type\EdmPrimitiveType;
 use POData\Providers\Metadata\Type\TypeCode;
+use POData\Readers\Atom\AtomODataReader;
+use POData\Readers\ODataReaderRegistry;
 use POData\UriProcessor\RequestDescription;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\SegmentDescriptor;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
@@ -54,8 +56,9 @@ class RequestDescriptionMockeryTest extends TestCase
         $request->shouldReceive('getAllInput')->andReturn([$raw])->atLeast(1);
 
         $type = MimeTypes::MIME_APPLICATION_ATOM;
-
-        $desc = new RequestDescription($segArray, $url, $version, null, null, $type, $request);
+        $readerRegistry = new ODataReaderRegistry();
+        $readerRegistry->register(new AtomODataReader());
+        $desc = new RequestDescription($segArray, $url, $version, null, null, $type, $request, $readerRegistry);
 
         $data = $desc->getData();
         $this->assertEquals($expectedArray, $data);
@@ -101,8 +104,9 @@ class RequestDescriptionMockeryTest extends TestCase
         $request->shouldReceive('getAllInput')->andReturn($raw)->atLeast(1);
 
         $type = MimeTypes::MIME_APPLICATION_ATOM;
-
-        $desc = new RequestDescription($segArray, $url, $version, null, null, $type, $request);
+        $readerRegistry = new ODataReaderRegistry();
+        $readerRegistry->register(new AtomODataReader());
+        $desc = new RequestDescription($segArray, $url, $version, null, null, $type, $request, $readerRegistry);
 
         $data = $desc->getData();
         $this->assertEquals($expectedArray, $data);
@@ -128,8 +132,9 @@ class RequestDescriptionMockeryTest extends TestCase
 
         $request = m::mock(IncomingIlluminateRequest::class)->makePartial();
         $request->shouldReceive('getAllInput')->andReturn(null)->atLeast(1);
-
-        $desc = new RequestDescription($segArray, $url, $version, null, null, $type, $request);
+        $readerRegistry = new ODataReaderRegistry();
+        $readerRegistry->register(new AtomODataReader());
+        $desc = new RequestDescription($segArray, $url, $version, null, null, $type, $request, $readerRegistry);
 
         $expected = 'Delta';
         $info     = $desc->getResourceStreamInfo();
@@ -158,8 +163,9 @@ class RequestDescriptionMockeryTest extends TestCase
 
         $request = m::mock(IncomingIlluminateRequest::class)->makePartial();
         $request->shouldReceive('getAllInput')->andReturn(null)->atLeast(1);
-
-        $desc = new RequestDescription($segArray, $url, $version, null, null, $type, $request);
+        $readerRegistry = new ODataReaderRegistry();
+        $readerRegistry->register(new AtomODataReader());
+        $desc = new RequestDescription($segArray, $url, $version, null, null, $type, $request, $readerRegistry);
 
         $this->assertTrue($desc->needExecution());
         $desc->setExecuted();

@@ -322,7 +322,7 @@ class RequestDescription
         if (0 == strlen(trim($string))) {
             return;
         }
-        $reader = $this->readerRegistry->getReader($dataType);
+        $reader = $this->readerRegistry->getReader($this->getResponseVersion(), $dataType);
         if ($reader !== null) {
             $this->data = $reader->read($string);
         }
