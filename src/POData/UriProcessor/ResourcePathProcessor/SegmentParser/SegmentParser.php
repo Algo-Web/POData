@@ -91,20 +91,21 @@ class SegmentParser
      * Extract identifier and key predicate from a segment.
      *
      * @param string $segment       The segment from which identifier and key
-     * @param string &$identifier   On return, this parameter will contain identifier part of the segment
-     * @param string &$keyPredicate On return, this parameter will contain key predicate part of the segment,
+     * @param string $keyPredicate  On return, this parameter will contain key predicate part of the segment,
      *                              null if predicate is absent
+     *
+     * @return string               The identifier part of the segment
      *
      * @throws ODataException If any error occurs while processing segment
      */
-    private function extractSegmentIdentifierAndKeyPredicate($segment, &$identifier, &$keyPredicate)
+    private function extractSegmentIdentifierAndKeyPredicate($segment, &$keyPredicate): string
     {
         $predicateStart = strpos($segment, '(');
         if ($predicateStart === false) {
             $identifier   = $segment;
             $keyPredicate = null;
 
-            return;
+            return $identifier;
         }
 
         $segmentLength = strlen($segment);
@@ -116,6 +117,8 @@ class SegmentParser
         ++$predicateStart;
         $keyPredicate = substr($segment, $predicateStart, $segmentLength - $predicateStart - 1);
         $keyPredicate = str_replace('%C3%82%C2%BB', '/', $keyPredicate);
+
+        return $identifier;
     }
 
     /**
@@ -140,8 +143,8 @@ class SegmentParser
         }
 
         $segmentCount = count($segments);
-        $identifier   = $keyPredicate   = null;
-        $this->extractSegmentIdentifierAndKeyPredicate($segments[0], $identifier, $keyPredicate);
+        $keyPredicate = null;
+        $identifier   = $this->extractSegmentIdentifierAndKeyPredicate($segments[0], $keyPredicate);
         $previous = $this->createFirstSegmentDescriptor(
             $identifier,
             $keyPredicate,
@@ -190,8 +193,8 @@ class SegmentParser
             );
         }
 
-        $identifier = $keyPredicate = null;
-        $this->extractSegmentIdentifierAndKeyPredicate($segment, $identifier, $keyPredicate);
+        $keyPredicate = null;
+        $identifier = $this->extractSegmentIdentifierAndKeyPredicate($segment, $keyPredicate);
         $hasPredicate = null !== $keyPredicate;
 
         $singleton = $this->providerWrapper->resolveSingleton($identifier);
