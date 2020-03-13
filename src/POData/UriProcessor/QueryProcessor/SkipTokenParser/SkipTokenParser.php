@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\UriProcessor\QueryProcessor\SkipTokenParser;
 
 use POData\Common\Messages;
@@ -31,11 +33,11 @@ class SkipTokenParser
      * Parse the given skiptoken, validate it using the given InternalOrderByInfo
      * and generates instance of InternalSkipTokenInfo.
      *
-     * @param ResourceType        &$resourceType The resource type of the
+     * @param ResourceType        &$resourceType        The resource type of the
      *                                                  resource targeted by the
      *                                                  resource path
      * @param InternalOrderByInfo &$internalOrderByInfo The $orderby details
-     * @param string $skipToken The $skiptoken value
+     * @param string              $skipToken            The $skiptoken value
      *
      * @throws ODataException
      * @throws \ReflectionException
@@ -60,10 +62,10 @@ class SkipTokenParser
         }
 
         //$positionalValues are of type array(int, array(string, IType))
-        $positionalValues = &$tokenValueDescriptor->getPositionalValuesByRef();
-        $count = count($positionalValues);
+        $positionalValues    = &$tokenValueDescriptor->getPositionalValuesByRef();
+        $count               = count($positionalValues);
         $orderByPathSegments = $internalOrderByInfo->getOrderByPathSegments();
-        $orderByPathCount = count($orderByPathSegments);
+        $orderByPathCount    = count($orderByPathSegments);
         if ($count != ($orderByPathCount)) {
             throw ODataException::createBadRequestError(
                 Messages::skipTokenParserSkipTokenNotMatchingOrdering(
@@ -80,8 +82,8 @@ class SkipTokenParser
             $typeProvidedInSkipToken = $positionalValues[$i][1];
             if (!($typeProvidedInSkipToken instanceof Null1)) {
                 $orderBySubPathSegments = $orderByPathSegment->getSubPathSegments();
-                $j = count($orderBySubPathSegments) - 1;
-                $expectedType = $orderBySubPathSegments[$j]->getInstanceType();
+                $j                      = count($orderBySubPathSegments) - 1;
+                $expectedType           = $orderBySubPathSegments[$j]->getInstanceType();
                 assert($expectedType instanceof IType, get_class($expectedType));
                 if (!$expectedType->isCompatibleWith($typeProvidedInSkipToken)) {
                     throw ODataException::createSyntaxError(

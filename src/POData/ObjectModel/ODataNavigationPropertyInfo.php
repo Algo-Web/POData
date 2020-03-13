@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\ObjectModel;
 
 use POData\Providers\Metadata\ResourceProperty;
@@ -24,7 +26,7 @@ class ODataNavigationPropertyInfo
     public function __construct(ResourceProperty &$resourceProperty, $expanded)
     {
         $this->resourceProperty = $resourceProperty;
-        $this->expanded = $expanded;
-        $this->value = null;
+        $this->expanded         = $expanded;
+        $this->value            = null;
     }
 }

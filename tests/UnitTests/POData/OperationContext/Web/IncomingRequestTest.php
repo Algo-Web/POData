@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\OperationContext\Web;
 
 use POData\Common\ODataConstants;
@@ -22,7 +24,7 @@ class IncomingRequestTest extends TestCase
     {
         //The incoming request parses a PHP Super Globals so let's set those up
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_SERVER['QUERY_STRING'] = '$format=json&$expand=PhysicalAddress&$filter=Active%20eq%20true%20and%20(Segments/any(s:%20s/Name%20eq%20\'Cedar%20Rapids-Waterloo-Iowa%20City%26Dubuque\'))';
+        $_SERVER['QUERY_STRING']   = '$format=json&$expand=PhysicalAddress&$filter=Active%20eq%20true%20and%20(Segments/any(s:%20s/Name%20eq%20\'Cedar%20Rapids-Waterloo-Iowa%20City%26Dubuque\'))';
 
         $incoming = new IncomingRequest();
 
@@ -46,7 +48,7 @@ class IncomingRequestTest extends TestCase
     {
         //The incoming request parses a PHP Super Globals so let's set those up
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_SERVER['QUERY_STRING'] = '$filter='.rawurlencode('%20');
+        $_SERVER['QUERY_STRING']   = '$filter=' . rawurlencode('%20');
 
         $incoming = new IncomingRequest();
 
@@ -63,48 +65,48 @@ class IncomingRequestTest extends TestCase
 
     public function testIncomingRequestGetHttpsRawUrl()
     {
-        $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL] = 'HTTPS';
+        $_SERVER['REQUEST_METHOD']                                                               = 'GET';
+        $_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL]                                           = 'HTTPS';
         $_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)] = 'localhost/';
-        $_SERVER[ODataConstants::HTTPREQUEST_URI] = 'odata.svc';
+        $_SERVER[ODataConstants::HTTPREQUEST_URI]                                                = 'odata.svc';
 
         $expected = 'https://localhost/odata.svc';
-        $actual = null;
+        $actual   = null;
 
         $incoming = new IncomingRequest();
-        $actual = $incoming->getRawUrl();
+        $actual   = $incoming->getRawUrl();
         $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
     public function testIncomingRequestGetHttpRawUrl()
     {
-        $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL] = 'HTTP';
+        $_SERVER['REQUEST_METHOD']                                                               = 'GET';
+        $_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL]                                           = 'HTTP';
         $_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)] = 'localhost/';
-        $_SERVER[ODataConstants::HTTPREQUEST_URI] = 'odata.svc';
+        $_SERVER[ODataConstants::HTTPREQUEST_URI]                                                = 'odata.svc';
 
         $expected = 'http://localhost/odata.svc';
-        $actual = null;
+        $actual   = null;
 
         $incoming = new IncomingRequest();
-        $actual = $incoming->getRawUrl();
+        $actual   = $incoming->getRawUrl();
         $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 
     public function testGetRequestMethodHeader()
     {
-        $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL] = 'HTTPS';
+        $_SERVER['REQUEST_METHOD']                                                               = 'GET';
+        $_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL]                                           = 'HTTPS';
         $_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)] = 'localhost/';
-        $_SERVER[ODataConstants::HTTPREQUEST_URI] = 'odata.svc';
+        $_SERVER[ODataConstants::HTTPREQUEST_URI]                                                = 'odata.svc';
 
         $expected = 'GET';
-        $actual = null;
+        $actual   = null;
 
         $incoming = new IncomingRequest();
-        $actual = $incoming->getRequestHeader('REQUEST_METHOD');
+        $actual   = $incoming->getRequestHeader('REQUEST_METHOD');
         $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
         $this->assertNull($incoming->getRequestHeader('REQUEST_TYPE'));
@@ -115,9 +117,9 @@ class IncomingRequestTest extends TestCase
         $expected = [ ['$filter' => '%20']];
 
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_SERVER['QUERY_STRING'] = '$filter='.rawurlencode('%20');
-        $incoming = new IncomingRequest();
-        $result = $incoming->getQueryParameters();
+        $_SERVER['QUERY_STRING']   = '$filter=' . rawurlencode('%20');
+        $incoming                  = new IncomingRequest();
+        $result                    = $incoming->getQueryParameters();
         $this->assertTrue(is_array($result));
         $this->assertEquals(1, count($result));
         $this->assertEquals($expected, $result);
@@ -131,7 +133,7 @@ class IncomingRequestTest extends TestCase
         unset($_SERVER['QUERY_STRING']);
 
         $incoming = new IncomingRequest();
-        $result = $incoming->getQueryParameters();
+        $result   = $incoming->getQueryParameters();
         $this->assertTrue(is_array($result));
         $this->assertEquals(0, count($result));
         $this->assertEquals($expected, $result);

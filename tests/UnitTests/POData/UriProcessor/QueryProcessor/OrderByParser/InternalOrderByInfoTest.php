@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\UriProcessor\QueryProcessor\OrderByParser;
 
 use Mockery as m;
@@ -18,7 +20,7 @@ class InternalOrderByInfoTest extends TestCase
     public function testBuildSkipTokenValueWithNoSubPathSegments()
     {
         $expected = '';
-        $actual = null;
+        $actual   = null;
 
         $segment = m::mock(OrderByPathSegment::class)->makePartial();
         $segment->shouldReceive('getSubPathSegments')->andReturn([]);
@@ -33,14 +35,14 @@ class InternalOrderByInfoTest extends TestCase
 
     public function testBuildSkipTokenValueFromQueryResultWithOneSubPathSegmentPointingToNull()
     {
-        $bar = new \stdClass;
-        $bar->bar = 'null';
-        $bar->type = 'R';
-        $lastObject = new QueryResult();
+        $bar                 = new \stdClass();
+        $bar->bar            = 'null';
+        $bar->type           = 'R';
+        $lastObject          = new QueryResult();
         $lastObject->results = $bar;
 
         $expected = 'null';
-        $actual = null;
+        $actual   = null;
 
         $rType = m::mock(ResourceEntityType::class)->makePartial();
         $rType->shouldReceive('getPropertyValue')->with(m::any(), 'bar')->andReturnNull();
@@ -64,14 +66,14 @@ class InternalOrderByInfoTest extends TestCase
 
     public function testBuildSkipTokenValueFromQueryResultWithOneSubPathSegmentThrowReflectionException()
     {
-        $bar = new \stdClass;
-        $bar->bar = 'null';
-        $bar->type = 'R';
-        $lastObject = new QueryResult();
+        $bar                 = new \stdClass();
+        $bar->bar            = 'null';
+        $bar->type           = 'R';
+        $lastObject          = new QueryResult();
         $lastObject->results = $bar;
 
         $expected = 'internalSkipTokenInfo failed to access or initialize the property bar';
-        $actual = null;
+        $actual   = null;
 
         $rType = m::mock(ResourceEntityType::class)->makePartial();
         $rType->shouldReceive('getPropertyValue')->withAnyArgs()->andThrow(new \ReflectionException());
@@ -99,16 +101,16 @@ class InternalOrderByInfoTest extends TestCase
 
     public function testBuildSkipTokenValueFromQueryResultWithTwoSubPathSegments()
     {
-        $bar = new \stdClass;
-        $bar->bar = 'rebar';
-        $bar->type = 'R';
-        $lastObject = new QueryResult();
+        $bar                 = new \stdClass();
+        $bar->bar            = 'rebar';
+        $bar->type           = 'R';
+        $lastObject          = new QueryResult();
         $lastObject->results = $bar;
 
         $iType = new StringType();
 
         $expected = '\'R\'';
-        $actual = null;
+        $actual   = null;
 
         $rType = m::mock(ResourceEntityType::class)->makePartial();
         $rType->shouldReceive('getPropertyValue')->with(m::any(), 'bar')->andReturn('rebar');

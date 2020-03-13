@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\ObjectModel\Serialisers;
 
 use Carbon\Carbon;
@@ -56,56 +58,56 @@ class ObjectDeserialiserFeedTest extends SerialiserTestBase
 
         list($host, $meta, $prov) = $this->setUpDataServiceDeps($request);
 
-        $model = new Customer2();
-        $model->CustomerID = 1;
+        $model               = new Customer2();
+        $model->CustomerID   = 1;
         $model->CustomerGuid = '123e4567-e89b-12d3-a456-426655440000';
         $model->CustomerName = 'CustomerName';
-        $model->Country = 'STRAYA';
-        $model->Rating = 11;
+        $model->Country      = 'STRAYA';
+        $model->Rating       = 11;
 
         $prov->shouldReceive('createResourceforResourceSet')->andReturn($model)->once();
         $prov->shouldReceive('createBulkResourceforResourceSet')->andReturn(null)->never();
 
         $feed = new ODataFeed();
 
-        $link = new ODataLink();
-        $link->name = 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Order';
-        $link->title = 'Order';
-        $link->type = 'application/atom+xml;type=feed';
-        $link->url = null;
-        $link->isCollection = false;
-        $link->isExpanded = true;
+        $link                 = new ODataLink();
+        $link->name           = 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Order';
+        $link->title          = 'Order';
+        $link->type           = 'application/atom+xml;type=feed';
+        $link->url            = null;
+        $link->isCollection   = false;
+        $link->isExpanded     = true;
         $link->expandedResult = $feed;
 
-        $propContent = new ODataPropertyContent();
+        $propContent             = new ODataPropertyContent();
         $propContent->properties = ['CustomerID' => new ODataProperty(), 'CustomerGuid' => new ODataProperty(),
             'CustomerName' => new ODataProperty(), 'Country' => new ODataProperty(), 'Rating' => new ODataProperty(),
             'Photo' => new ODataProperty(), 'Address' => new ODataProperty()];
-        $propContent->properties['CustomerID']->name = 'CustomerID';
-        $propContent->properties['CustomerID']->typeName = 'Edm.String';
-        $propContent->properties['CustomerID']->value = '1';
-        $propContent->properties['CustomerGuid']->name = 'CustomerGuid';
+        $propContent->properties['CustomerID']->name       = 'CustomerID';
+        $propContent->properties['CustomerID']->typeName   = 'Edm.String';
+        $propContent->properties['CustomerID']->value      = '1';
+        $propContent->properties['CustomerGuid']->name     = 'CustomerGuid';
         $propContent->properties['CustomerGuid']->typeName = 'Edm.Guid';
-        $propContent->properties['CustomerGuid']->value = '123e4567-e89b-12d3-a456-426655440000';
-        $propContent->properties['CustomerName']->name = 'CustomerName';
+        $propContent->properties['CustomerGuid']->value    = '123e4567-e89b-12d3-a456-426655440000';
+        $propContent->properties['CustomerName']->name     = 'CustomerName';
         $propContent->properties['CustomerName']->typeName = 'Edm.String';
-        $propContent->properties['CustomerName']->value = 'CustomerName';
-        $propContent->properties['Country']->name = 'Country';
-        $propContent->properties['Country']->typeName = 'Edm.String';
-        $propContent->properties['Country']->value = 'STRAYA';
-        $propContent->properties['Rating']->name = 'Rating';
-        $propContent->properties['Rating']->typeName = 'Edm.Int32';
-        $propContent->properties['Rating']->value = 11;
-        $propContent->properties['Photo']->name = 'Photo';
-        $propContent->properties['Photo']->typeName = 'Edm.Binary';
-        $propContent->properties['Address']->name = 'Address';
-        $propContent->properties['Address']->typeName = 'Address';
+        $propContent->properties['CustomerName']->value    = 'CustomerName';
+        $propContent->properties['Country']->name          = 'Country';
+        $propContent->properties['Country']->typeName      = 'Edm.String';
+        $propContent->properties['Country']->value         = 'STRAYA';
+        $propContent->properties['Rating']->name           = 'Rating';
+        $propContent->properties['Rating']->typeName       = 'Edm.Int32';
+        $propContent->properties['Rating']->value          = 11;
+        $propContent->properties['Photo']->name            = 'Photo';
+        $propContent->properties['Photo']->typeName        = 'Edm.Binary';
+        $propContent->properties['Address']->name          = 'Address';
+        $propContent->properties['Address']->typeName      = 'Address';
 
-        $objectResult = new ODataEntry();
+        $objectResult                  = new ODataEntry();
         $objectResult->propertyContent = $propContent;
         $objectResult->resourceSetName = 'Customers';
-        $objectResult->type = new ODataCategory('Customer');
-        $objectResult->links = [$link];
+        $objectResult->type            = new ODataCategory('Customer');
+        $objectResult->links           = [$link];
 
         $cereal = new CynicDeserialiser($meta, $prov);
 
@@ -126,67 +128,67 @@ class ObjectDeserialiserFeedTest extends SerialiserTestBase
 
         list($host, $meta, $prov) = $this->setUpDataServiceDeps($request);
 
-        $model = new Customer2();
-        $model->CustomerID = 1;
+        $model               = new Customer2();
+        $model->CustomerID   = 1;
         $model->CustomerGuid = '123e4567-e89b-12d3-a456-426655440000';
         $model->CustomerName = 'CustomerName';
-        $model->Country = 'STRAYA';
-        $model->Rating = 11;
+        $model->Country      = 'STRAYA';
+        $model->Rating       = 11;
 
         $prov->shouldReceive('createResourceforResourceSet')->andReturn($model)->once();
         $prov->shouldReceive('createBulkResourceforResourceSet')->andReturn(null)->never();
 
-        $feed1 = new ODataEntry();
+        $feed1                  = new ODataEntry();
         $feed1->resourceSetName = 'Orders';
-        $feed2 = new ODataEntry();
+        $feed2                  = new ODataEntry();
         $feed2->resourceSetName = 'Customers';
 
-        $feed = new ODataFeed();
+        $feed          = new ODataFeed();
         $feed->entries = [$feed1, $feed1, $feed2];
 
-        $link = new ODataLink();
-        $link->name = 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Order';
-        $link->title = 'Order';
-        $link->type = 'application/atom+xml;type=feed';
-        $link->url = null;
-        $link->isCollection = false;
-        $link->isExpanded = true;
+        $link                 = new ODataLink();
+        $link->name           = 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Order';
+        $link->title          = 'Order';
+        $link->type           = 'application/atom+xml;type=feed';
+        $link->url            = null;
+        $link->isCollection   = false;
+        $link->isExpanded     = true;
         $link->expandedResult = $feed;
 
-        $propContent = new ODataPropertyContent();
+        $propContent             = new ODataPropertyContent();
         $propContent->properties = ['CustomerID' => new ODataProperty(), 'CustomerGuid' => new ODataProperty(),
             'CustomerName' => new ODataProperty(), 'Country' => new ODataProperty(), 'Rating' => new ODataProperty(),
             'Photo' => new ODataProperty(), 'Address' => new ODataProperty()];
-        $propContent->properties['CustomerID']->name = 'CustomerID';
-        $propContent->properties['CustomerID']->typeName = 'Edm.String';
-        $propContent->properties['CustomerID']->value = '1';
-        $propContent->properties['CustomerGuid']->name = 'CustomerGuid';
+        $propContent->properties['CustomerID']->name       = 'CustomerID';
+        $propContent->properties['CustomerID']->typeName   = 'Edm.String';
+        $propContent->properties['CustomerID']->value      = '1';
+        $propContent->properties['CustomerGuid']->name     = 'CustomerGuid';
         $propContent->properties['CustomerGuid']->typeName = 'Edm.Guid';
-        $propContent->properties['CustomerGuid']->value = '123e4567-e89b-12d3-a456-426655440000';
-        $propContent->properties['CustomerName']->name = 'CustomerName';
+        $propContent->properties['CustomerGuid']->value    = '123e4567-e89b-12d3-a456-426655440000';
+        $propContent->properties['CustomerName']->name     = 'CustomerName';
         $propContent->properties['CustomerName']->typeName = 'Edm.String';
-        $propContent->properties['CustomerName']->value = 'CustomerName';
-        $propContent->properties['Country']->name = 'Country';
-        $propContent->properties['Country']->typeName = 'Edm.String';
-        $propContent->properties['Country']->value = 'STRAYA';
-        $propContent->properties['Rating']->name = 'Rating';
-        $propContent->properties['Rating']->typeName = 'Edm.Int32';
-        $propContent->properties['Rating']->value = 11;
-        $propContent->properties['Photo']->name = 'Photo';
-        $propContent->properties['Photo']->typeName = 'Edm.Binary';
-        $propContent->properties['Address']->name = 'Address';
-        $propContent->properties['Address']->typeName = 'Address';
+        $propContent->properties['CustomerName']->value    = 'CustomerName';
+        $propContent->properties['Country']->name          = 'Country';
+        $propContent->properties['Country']->typeName      = 'Edm.String';
+        $propContent->properties['Country']->value         = 'STRAYA';
+        $propContent->properties['Rating']->name           = 'Rating';
+        $propContent->properties['Rating']->typeName       = 'Edm.Int32';
+        $propContent->properties['Rating']->value          = 11;
+        $propContent->properties['Photo']->name            = 'Photo';
+        $propContent->properties['Photo']->typeName        = 'Edm.Binary';
+        $propContent->properties['Address']->name          = 'Address';
+        $propContent->properties['Address']->typeName      = 'Address';
 
-        $objectResult = new ODataEntry();
+        $objectResult                  = new ODataEntry();
         $objectResult->propertyContent = $propContent;
         $objectResult->resourceSetName = 'Customers';
-        $objectResult->type = new ODataCategory('Customer');
-        $objectResult->links = [$link];
+        $objectResult->type            = new ODataCategory('Customer');
+        $objectResult->links           = [$link];
 
         $cereal = new CynicDeserialiser($meta, $prov);
 
         $expected = 'All entries in given feed must have same resource set';
-        $actual = null;
+        $actual   = null;
 
         try {
             $cereal->processPayload($objectResult);
@@ -209,138 +211,138 @@ class ObjectDeserialiserFeedTest extends SerialiserTestBase
 
         list($host, $meta, $prov) = $this->setUpDataServiceDeps($request);
 
-        $orderDeet = new OrderDetails2();
-        $orderDeet->Discount = 0;
+        $orderDeet            = new OrderDetails2();
+        $orderDeet->Discount  = 0;
         $orderDeet->UnitPrice = 42;
-        $orderDeet->Quantity = 1;
+        $orderDeet->Quantity  = 1;
         $orderDeet->ProductID = 42;
-        $orderDeet->OrderID = 1;
+        $orderDeet->OrderID   = 1;
 
-        $orderModel = new Order2();
-        $orderModel->OrderID = 1;
-        $orderModel->ShipName = 'Ship';
+        $orderModel            = new Order2();
+        $orderModel->OrderID   = 1;
+        $orderModel->ShipName  = 'Ship';
         $orderModel->ItemCount = 11;
-        $orderModel->Price = 42;
+        $orderModel->Price     = 42;
 
-        $model = new Customer2();
-        $model->CustomerID = 1;
+        $model               = new Customer2();
+        $model->CustomerID   = 1;
         $model->CustomerGuid = '123e4567-e89b-12d3-a456-426655440000';
         $model->CustomerName = 'CustomerName';
-        $model->Country = 'STRAYA';
-        $model->Rating = 11;
+        $model->Country      = 'STRAYA';
+        $model->Rating       = 11;
 
         $prov->shouldReceive('createResourceforResourceSet')->andReturn($model)->once();
         $prov->shouldReceive('createBulkResourceforResourceSet')->andReturn([$orderModel], [$orderDeet])->twice();
         $prov->shouldReceive('hookSingleModel')->andReturn(null)->twice();
 
-        $deetContent = new ODataPropertyContent();
+        $deetContent             = new ODataPropertyContent();
         $deetContent->properties = ['ProductID' => new ODataProperty(), 'OrderID' => new ODataProperty(),
             'UnitPrice' => new ODataProperty(), 'Quantity' => new ODataProperty(), 'Discount' => new ODataProperty()];
-        $deetContent->properties['UnitPrice']->name = 'UnitPrice';
+        $deetContent->properties['UnitPrice']->name     = 'UnitPrice';
         $deetContent->properties['UnitPrice']->typeName = 'Edm.Single';
-        $deetContent->properties['UnitPrice']->value = 42;
-        $deetContent->properties['Quantity']->name = 'UnitPrice';
-        $deetContent->properties['Quantity']->typeName = 'Edm.Int16';
-        $deetContent->properties['Quantity']->value = 1;
-        $deetContent->properties['Discount']->name = 'Discount';
-        $deetContent->properties['Discount']->typeName = 'Edm.Single';
-        $deetContent->properties['Discount']->value = 0;
-        $deetContent->properties['OrderID']->name = 'OrderID';
-        $deetContent->properties['OrderID']->typeName = 'Edm.Int32';
-        $deetContent->properties['OrderID']->value = 1;
-        $deetContent->properties['ProductID']->name = 'ProductID';
+        $deetContent->properties['UnitPrice']->value    = 42;
+        $deetContent->properties['Quantity']->name      = 'UnitPrice';
+        $deetContent->properties['Quantity']->typeName  = 'Edm.Int16';
+        $deetContent->properties['Quantity']->value     = 1;
+        $deetContent->properties['Discount']->name      = 'Discount';
+        $deetContent->properties['Discount']->typeName  = 'Edm.Single';
+        $deetContent->properties['Discount']->value     = 0;
+        $deetContent->properties['OrderID']->name       = 'OrderID';
+        $deetContent->properties['OrderID']->typeName   = 'Edm.Int32';
+        $deetContent->properties['OrderID']->value      = 1;
+        $deetContent->properties['ProductID']->name     = 'ProductID';
         $deetContent->properties['ProductID']->typeName = 'Edm.Int32';
-        $deetContent->properties['ProductID']->value = 1;
+        $deetContent->properties['ProductID']->value    = 1;
 
-        $deet = new ODataEntry();
+        $deet                  = new ODataEntry();
         $deet->resourceSetName = 'Order_Details';
-        $deet->title = new ODataTitle('Order_Details');
-        $deet->type = new ODataCategory('Order_Details');
+        $deet->title           = new ODataTitle('Order_Details');
+        $deet->type            = new ODataCategory('Order_Details');
         $deet->propertyContent = $deetContent;
 
-        $orderFeed = new ODataFeed();
+        $orderFeed          = new ODataFeed();
         $orderFeed->entries = [$deet];
 
-        $orderLink = new ODataLink();
-        $orderLink->name = 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Order';
-        $orderLink->title = 'Order';
-        $orderLink->type = 'application/atom+xml;type=feed';
-        $orderLink->url = null;
-        $orderLink->isCollection = true;
-        $orderLink->isExpanded = true;
+        $orderLink                 = new ODataLink();
+        $orderLink->name           = 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Order';
+        $orderLink->title          = 'Order';
+        $orderLink->type           = 'application/atom+xml;type=feed';
+        $orderLink->url            = null;
+        $orderLink->isCollection   = true;
+        $orderLink->isExpanded     = true;
         $orderLink->expandedResult = $orderFeed;
 
-        $linkContent = new ODataPropertyContent();
+        $linkContent             = new ODataPropertyContent();
         $linkContent->properties = ['OrderID' => new ODataProperty(), 'OrderDate' => new ODataProperty(),
             'DeliveryDate' => new ODataProperty(), 'ShipName' => new ODataProperty(),
             'ItemCount' => new ODataProperty(), 'QualityRate' => new ODataProperty(), 'Price' => new ODataProperty()];
-        $linkContent->properties['OrderID']->name = 'OrderID';
-        $linkContent->properties['OrderID']->typeName = 'Edm.Int32';
-        $linkContent->properties['OrderID']->value = '1';
-        $linkContent->properties['OrderDate']->name = 'OrderDate';
-        $linkContent->properties['OrderDate']->typeName = 'Edm.DateTime';
-        $linkContent->properties['DeliveryDate']->name = 'DeliveryDate';
+        $linkContent->properties['OrderID']->name          = 'OrderID';
+        $linkContent->properties['OrderID']->typeName      = 'Edm.Int32';
+        $linkContent->properties['OrderID']->value         = '1';
+        $linkContent->properties['OrderDate']->name        = 'OrderDate';
+        $linkContent->properties['OrderDate']->typeName    = 'Edm.DateTime';
+        $linkContent->properties['DeliveryDate']->name     = 'DeliveryDate';
         $linkContent->properties['DeliveryDate']->typeName = 'Edm.DateTime';
-        $linkContent->properties['ShipName']->name = 'ShipName';
-        $linkContent->properties['ShipName']->typeName = 'Edm.String';
-        $linkContent->properties['ShipName']->value = 'Ship';
-        $linkContent->properties['ItemCount']->name = 'ItemCount';
-        $linkContent->properties['ItemCount']->typeName = 'Edm.Int32';
-        $linkContent->properties['ItemCount']->value = 11;
-        $linkContent->properties['QualityRate']->name = 'QualityRate';
-        $linkContent->properties['QualityRate']->typeName = 'Edm.Int32';
-        $linkContent->properties['Price']->name = 'Price';
-        $linkContent->properties['Price']->typeName = 'Edm.Double';
-        $linkContent->properties['Price']->value = 42;
+        $linkContent->properties['ShipName']->name         = 'ShipName';
+        $linkContent->properties['ShipName']->typeName     = 'Edm.String';
+        $linkContent->properties['ShipName']->value        = 'Ship';
+        $linkContent->properties['ItemCount']->name        = 'ItemCount';
+        $linkContent->properties['ItemCount']->typeName    = 'Edm.Int32';
+        $linkContent->properties['ItemCount']->value       = 11;
+        $linkContent->properties['QualityRate']->name      = 'QualityRate';
+        $linkContent->properties['QualityRate']->typeName  = 'Edm.Int32';
+        $linkContent->properties['Price']->name            = 'Price';
+        $linkContent->properties['Price']->typeName        = 'Edm.Double';
+        $linkContent->properties['Price']->value           = 42;
 
-        $order = new ODataEntry();
+        $order                  = new ODataEntry();
         $order->resourceSetName = 'Orders';
-        $order->title = new ODataTitle('Order');
-        $order->type = new ODataCategory('Order');
+        $order->title           = new ODataTitle('Order');
+        $order->type            = new ODataCategory('Order');
         $order->propertyContent = $linkContent;
-        $order->links = [$orderLink];
+        $order->links           = [$orderLink];
 
-        $feed = new ODataFeed();
+        $feed          = new ODataFeed();
         $feed->entries = [$order];
 
-        $link = new ODataLink();
-        $link->name = 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Order';
-        $link->title = 'Order';
-        $link->type = 'application/atom+xml;type=feed';
-        $link->url = null;
-        $link->isCollection = false;
-        $link->isExpanded = true;
+        $link                 = new ODataLink();
+        $link->name           = 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Order';
+        $link->title          = 'Order';
+        $link->type           = 'application/atom+xml;type=feed';
+        $link->url            = null;
+        $link->isCollection   = false;
+        $link->isExpanded     = true;
         $link->expandedResult = $feed;
 
-        $propContent = new ODataPropertyContent();
+        $propContent             = new ODataPropertyContent();
         $propContent->properties = ['CustomerID' => new ODataProperty(), 'CustomerGuid' => new ODataProperty(),
             'CustomerName' => new ODataProperty(), 'Country' => new ODataProperty(), 'Rating' => new ODataProperty(),
             'Photo' => new ODataProperty(), 'Address' => new ODataProperty()];
-        $propContent->properties['CustomerID']->name = 'CustomerID';
-        $propContent->properties['CustomerID']->typeName = 'Edm.String';
-        $propContent->properties['CustomerID']->value = '1';
-        $propContent->properties['CustomerGuid']->name = 'CustomerGuid';
+        $propContent->properties['CustomerID']->name       = 'CustomerID';
+        $propContent->properties['CustomerID']->typeName   = 'Edm.String';
+        $propContent->properties['CustomerID']->value      = '1';
+        $propContent->properties['CustomerGuid']->name     = 'CustomerGuid';
         $propContent->properties['CustomerGuid']->typeName = 'Edm.Guid';
-        $propContent->properties['CustomerGuid']->value = '123e4567-e89b-12d3-a456-426655440000';
-        $propContent->properties['CustomerName']->name = 'CustomerName';
+        $propContent->properties['CustomerGuid']->value    = '123e4567-e89b-12d3-a456-426655440000';
+        $propContent->properties['CustomerName']->name     = 'CustomerName';
         $propContent->properties['CustomerName']->typeName = 'Edm.String';
-        $propContent->properties['CustomerName']->value = 'CustomerName';
-        $propContent->properties['Country']->name = 'Country';
-        $propContent->properties['Country']->typeName = 'Edm.String';
-        $propContent->properties['Country']->value = 'STRAYA';
-        $propContent->properties['Rating']->name = 'Rating';
-        $propContent->properties['Rating']->typeName = 'Edm.Int32';
-        $propContent->properties['Rating']->value = 11;
-        $propContent->properties['Photo']->name = 'Photo';
-        $propContent->properties['Photo']->typeName = 'Edm.Binary';
-        $propContent->properties['Address']->name = 'Address';
-        $propContent->properties['Address']->typeName = 'Address';
+        $propContent->properties['CustomerName']->value    = 'CustomerName';
+        $propContent->properties['Country']->name          = 'Country';
+        $propContent->properties['Country']->typeName      = 'Edm.String';
+        $propContent->properties['Country']->value         = 'STRAYA';
+        $propContent->properties['Rating']->name           = 'Rating';
+        $propContent->properties['Rating']->typeName       = 'Edm.Int32';
+        $propContent->properties['Rating']->value          = 11;
+        $propContent->properties['Photo']->name            = 'Photo';
+        $propContent->properties['Photo']->typeName        = 'Edm.Binary';
+        $propContent->properties['Address']->name          = 'Address';
+        $propContent->properties['Address']->typeName      = 'Address';
 
-        $objectResult = new ODataEntry();
+        $objectResult                  = new ODataEntry();
         $objectResult->propertyContent = $propContent;
         $objectResult->resourceSetName = 'Customers';
-        $objectResult->type = new ODataCategory('Customer');
-        $objectResult->links = [$link];
+        $objectResult->type            = new ODataCategory('Customer');
+        $objectResult->links           = [$link];
 
         $cereal = new CynicDeserialiser($meta, $prov);
 
@@ -362,111 +364,111 @@ class ObjectDeserialiserFeedTest extends SerialiserTestBase
 
         list($host, $meta, $prov) = $this->setUpDataServiceDeps($request);
 
-        $orderModel = new Order2();
-        $orderModel->OrderID = 1;
-        $orderModel->ShipName = 'Ship';
+        $orderModel            = new Order2();
+        $orderModel->OrderID   = 1;
+        $orderModel->ShipName  = 'Ship';
         $orderModel->ItemCount = 11;
-        $orderModel->Price = 42;
+        $orderModel->Price     = 42;
 
-        $model = new Customer2();
-        $model->CustomerID = 1;
+        $model               = new Customer2();
+        $model->CustomerID   = 1;
         $model->CustomerGuid = '123e4567-e89b-12d3-a456-426655440000';
         $model->CustomerName = 'CustomerName';
-        $model->Country = 'STRAYA';
-        $model->Rating = 11;
+        $model->Country      = 'STRAYA';
+        $model->Rating       = 11;
 
         $prov->shouldReceive('getResourceFromResourceSet')->andReturn($model)->once();
         $prov->shouldReceive('updateResource')->andReturn($model)->once();
         $prov->shouldReceive('updateBulkResource')->andReturn([$orderModel])->once();
         $prov->shouldReceive('hookSingleModel')->andReturn(null)->once();
 
-        $orderFeed = new ODataFeed();
+        $orderFeed          = new ODataFeed();
         $orderFeed->entries = [];
 
-        $orderLink = new ODataLink();
-        $orderLink->name = 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Order';
-        $orderLink->title = 'Order';
-        $orderLink->type = 'application/atom+xml;type=feed';
-        $orderLink->url = null;
-        $orderLink->isCollection = true;
-        $orderLink->isExpanded = true;
+        $orderLink                 = new ODataLink();
+        $orderLink->name           = 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Order';
+        $orderLink->title          = 'Order';
+        $orderLink->type           = 'application/atom+xml;type=feed';
+        $orderLink->url            = null;
+        $orderLink->isCollection   = true;
+        $orderLink->isExpanded     = true;
         $orderLink->expandedResult = $orderFeed;
 
-        $linkContent = new ODataPropertyContent();
+        $linkContent             = new ODataPropertyContent();
         $linkContent->properties = ['OrderID' => new ODataProperty(), 'OrderDate' => new ODataProperty(),
             'DeliveryDate' => new ODataProperty(), 'ShipName' => new ODataProperty(),
             'ItemCount' => new ODataProperty(), 'QualityRate' => new ODataProperty(), 'Price' => new ODataProperty()];
-        $linkContent->properties['OrderID']->name = 'OrderID';
-        $linkContent->properties['OrderID']->typeName = 'Edm.Int32';
-        $linkContent->properties['OrderID']->value = '1';
-        $linkContent->properties['OrderDate']->name = 'OrderDate';
-        $linkContent->properties['OrderDate']->typeName = 'Edm.DateTime';
-        $linkContent->properties['DeliveryDate']->name = 'DeliveryDate';
+        $linkContent->properties['OrderID']->name          = 'OrderID';
+        $linkContent->properties['OrderID']->typeName      = 'Edm.Int32';
+        $linkContent->properties['OrderID']->value         = '1';
+        $linkContent->properties['OrderDate']->name        = 'OrderDate';
+        $linkContent->properties['OrderDate']->typeName    = 'Edm.DateTime';
+        $linkContent->properties['DeliveryDate']->name     = 'DeliveryDate';
         $linkContent->properties['DeliveryDate']->typeName = 'Edm.DateTime';
-        $linkContent->properties['ShipName']->name = 'ShipName';
-        $linkContent->properties['ShipName']->typeName = 'Edm.String';
-        $linkContent->properties['ShipName']->value = 'Ship';
-        $linkContent->properties['ItemCount']->name = 'ItemCount';
-        $linkContent->properties['ItemCount']->typeName = 'Edm.Int32';
-        $linkContent->properties['ItemCount']->value = 11;
-        $linkContent->properties['QualityRate']->name = 'QualityRate';
-        $linkContent->properties['QualityRate']->typeName = 'Edm.Int32';
-        $linkContent->properties['Price']->name = 'Price';
-        $linkContent->properties['Price']->typeName = 'Edm.Double';
-        $linkContent->properties['Price']->value = 42;
+        $linkContent->properties['ShipName']->name         = 'ShipName';
+        $linkContent->properties['ShipName']->typeName     = 'Edm.String';
+        $linkContent->properties['ShipName']->value        = 'Ship';
+        $linkContent->properties['ItemCount']->name        = 'ItemCount';
+        $linkContent->properties['ItemCount']->typeName    = 'Edm.Int32';
+        $linkContent->properties['ItemCount']->value       = 11;
+        $linkContent->properties['QualityRate']->name      = 'QualityRate';
+        $linkContent->properties['QualityRate']->typeName  = 'Edm.Int32';
+        $linkContent->properties['Price']->name            = 'Price';
+        $linkContent->properties['Price']->typeName        = 'Edm.Double';
+        $linkContent->properties['Price']->value           = 42;
 
-        $order = new ODataEntry();
+        $order                  = new ODataEntry();
         $order->resourceSetName = 'Orders';
-        $order->title = new ODataTitle('Order');
-        $order->type = new ODataCategory('Order');
+        $order->title           = new ODataTitle('Order');
+        $order->type            = new ODataCategory('Order');
         $order->propertyContent = $linkContent;
-        $order->links = [$orderLink];
-        $order->id = 'http://localhost/odata.svc/Orders(OrderID=1)';
+        $order->links           = [$orderLink];
+        $order->id              = 'http://localhost/odata.svc/Orders(OrderID=1)';
 
-        $feed = new ODataFeed();
+        $feed          = new ODataFeed();
         $feed->entries = [$order];
 
-        $link = new ODataLink();
-        $link->name = 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Order';
+        $link        = new ODataLink();
+        $link->name  = 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Order';
         $link->title = 'Order';
-        $link->type = 'application/atom+xml;type=feed';
-        $link->url = 'http://localhost/odata.svc/Customers(CustomerID=\'1\',CustomerGuid'
-                     .'=guid\'123e4567-e89b-12d3-a456-426655440000\')/Orders';
-        $link->isCollection = false;
-        $link->isExpanded = true;
+        $link->type  = 'application/atom+xml;type=feed';
+        $link->url   = 'http://localhost/odata.svc/Customers(CustomerID=\'1\',CustomerGuid'
+                     . '=guid\'123e4567-e89b-12d3-a456-426655440000\')/Orders';
+        $link->isCollection   = false;
+        $link->isExpanded     = true;
         $link->expandedResult = $feed;
 
-        $propContent = new ODataPropertyContent();
+        $propContent             = new ODataPropertyContent();
         $propContent->properties = ['CustomerID' => new ODataProperty(), 'CustomerGuid' => new ODataProperty(),
             'CustomerName' => new ODataProperty(), 'Country' => new ODataProperty(), 'Rating' => new ODataProperty(),
             'Photo' => new ODataProperty(), 'Address' => new ODataProperty()];
-        $propContent->properties['CustomerID']->name = 'CustomerID';
-        $propContent->properties['CustomerID']->typeName = 'Edm.String';
-        $propContent->properties['CustomerID']->value = '1';
-        $propContent->properties['CustomerGuid']->name = 'CustomerGuid';
+        $propContent->properties['CustomerID']->name       = 'CustomerID';
+        $propContent->properties['CustomerID']->typeName   = 'Edm.String';
+        $propContent->properties['CustomerID']->value      = '1';
+        $propContent->properties['CustomerGuid']->name     = 'CustomerGuid';
         $propContent->properties['CustomerGuid']->typeName = 'Edm.Guid';
-        $propContent->properties['CustomerGuid']->value = '123e4567-e89b-12d3-a456-426655440000';
-        $propContent->properties['CustomerName']->name = 'CustomerName';
+        $propContent->properties['CustomerGuid']->value    = '123e4567-e89b-12d3-a456-426655440000';
+        $propContent->properties['CustomerName']->name     = 'CustomerName';
         $propContent->properties['CustomerName']->typeName = 'Edm.String';
-        $propContent->properties['CustomerName']->value = 'CustomerName';
-        $propContent->properties['Country']->name = 'Country';
-        $propContent->properties['Country']->typeName = 'Edm.String';
-        $propContent->properties['Country']->value = 'STRAYA';
-        $propContent->properties['Rating']->name = 'Rating';
-        $propContent->properties['Rating']->typeName = 'Edm.Int32';
-        $propContent->properties['Rating']->value = 11;
-        $propContent->properties['Photo']->name = 'Photo';
-        $propContent->properties['Photo']->typeName = 'Edm.Binary';
-        $propContent->properties['Address']->name = 'Address';
-        $propContent->properties['Address']->typeName = 'Address';
+        $propContent->properties['CustomerName']->value    = 'CustomerName';
+        $propContent->properties['Country']->name          = 'Country';
+        $propContent->properties['Country']->typeName      = 'Edm.String';
+        $propContent->properties['Country']->value         = 'STRAYA';
+        $propContent->properties['Rating']->name           = 'Rating';
+        $propContent->properties['Rating']->typeName       = 'Edm.Int32';
+        $propContent->properties['Rating']->value          = 11;
+        $propContent->properties['Photo']->name            = 'Photo';
+        $propContent->properties['Photo']->typeName        = 'Edm.Binary';
+        $propContent->properties['Address']->name          = 'Address';
+        $propContent->properties['Address']->typeName      = 'Address';
 
-        $objectResult = new ODataEntry();
+        $objectResult                  = new ODataEntry();
         $objectResult->propertyContent = $propContent;
         $objectResult->resourceSetName = 'Customers';
-        $objectResult->type = new ODataCategory('Customer');
-        $objectResult->links = [$link];
-        $objectResult->id = 'http://localhost/odata.svc/Customers(CustomerID=\'1\',CustomerGuid'
-                            .'=guid\'123e4567-e89b-12d3-a456-426655440000\')';
+        $objectResult->type            = new ODataCategory('Customer');
+        $objectResult->links           = [$link];
+        $objectResult->id              = 'http://localhost/odata.svc/Customers(CustomerID=\'1\',CustomerGuid'
+                            . '=guid\'123e4567-e89b-12d3-a456-426655440000\')';
 
         $cereal = new CynicDeserialiser($meta, $prov);
 
@@ -482,10 +484,10 @@ class ObjectDeserialiserFeedTest extends SerialiserTestBase
      */
     private function setUpDataServiceDeps($request)
     {
-        $op = new OperationContextAdapter($request);
+        $op   = new OperationContextAdapter($request);
         $host = new ServiceHost($op, $request);
 
-        $meta = NorthWindMetadata::Create();
+        $meta  = NorthWindMetadata::Create();
         $query = m::mock(ProvidersWrapper::class);
 
         return [$host, $meta, $query];

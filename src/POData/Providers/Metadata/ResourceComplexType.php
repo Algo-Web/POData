@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\Providers\Metadata;
 
 use AlgoWeb\ODataMetadata\MetadataV3\edm\TComplexTypeType;
 
 /**
- * Class ResourceComplexType
+ * Class ResourceComplexType.
  * @package POData\Providers\Metadata
  */
 class ResourceComplexType extends ResourceType
@@ -20,13 +22,13 @@ class ResourceComplexType extends ResourceType
     public function __construct(\ReflectionClass $instanceType, TComplexTypeType $complex)
     {
         $resourceTypeKind = ResourceTypeKind::COMPLEX();
-        $bitz = explode('.', $complex->getName());
-        $name = array_pop($bitz);
-        $namespaceName = null;
+        $bitz             = explode('.', $complex->getName());
+        $name             = array_pop($bitz);
+        $namespaceName    = null;
         if (0 < count($bitz)) {
             $namespaceName = implode('.', $bitz);
         }
-        $baseType = null;
+        $baseType   = null;
         $isAbstract = false;
         parent::__construct($instanceType, $resourceTypeKind, $name, $namespaceName, $baseType, $isAbstract);
     }

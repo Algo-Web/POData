@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\Common;
 
 use POData\Common\Messages\common;
@@ -39,35 +41,35 @@ use POData\Common\Messages\uriProcessor;
  */
 class Messages
 {
-    use common,
-        expressionParser,
-        metadataAssociationType,
-        orderByInfo,
-        resourceAssociationSet,
-        segmentParser,
-        configuration,
-        http,
-        metadataResourceType,
-        providersWrapper,
-        resourceAssociationType,
-        skipTokenInfo,
-        eTag,
-        httpProcessUtility,
-        metadataWriter,
-        queryProcessor,
-        resourceProperty,
-        skipTokenParser,
-        expandProjectionParser,
-        IService,
-        navigation,
-        queryProvider,
-        resourceSet,
-        streamProviderWrapper,
-        expressionLexer,
-        keyDescriptor,
-        objectModelSerializer,
-        request,
-        responseWriter,
-        resourceType,
-        uriProcessor;
+    use common;
+    use expressionParser;
+    use metadataAssociationType;
+    use orderByInfo;
+    use resourceAssociationSet;
+    use segmentParser;
+    use configuration;
+    use http;
+    use metadataResourceType;
+    use providersWrapper;
+    use resourceAssociationType;
+    use skipTokenInfo;
+    use eTag;
+    use httpProcessUtility;
+    use metadataWriter;
+    use queryProcessor;
+    use resourceProperty;
+    use skipTokenParser;
+    use expandProjectionParser;
+    use IService;
+    use navigation;
+    use queryProvider;
+    use resourceSet;
+    use streamProviderWrapper;
+    use expressionLexer;
+    use keyDescriptor;
+    use objectModelSerializer;
+    use request;
+    use responseWriter;
+    use resourceType;
+    use uriProcessor;
 }

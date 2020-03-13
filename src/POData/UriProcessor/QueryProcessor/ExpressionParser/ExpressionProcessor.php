@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\UriProcessor\QueryProcessor\ExpressionParser;
 
 use POData\Providers\Expression\IExpressionProvider;
@@ -67,10 +69,10 @@ class ExpressionProcessor
         }
 
         if (null !== $funcName) {
-            $left = $this->processExpressionNode($expression->getLeft());
+            $left  = $this->processExpressionNode($expression->getLeft());
             $right = $this->processExpressionNode($expression->getRight());
 
-            return $this->expressionProvider->$funcName(
+            return $this->expressionProvider->{$funcName}(
                 $expression->getNodeType(),
                 $left,
                 $right

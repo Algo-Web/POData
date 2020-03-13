@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\Common\Messages;
 
 /**
- * Trait responseWriter
+ * Trait responseWriter.
  * @package POData\Common\Messages
  */
 trait responseWriter

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\Providers\Metadata\Type;
 
 use POData\Common\Messages;
@@ -64,7 +66,7 @@ class Navigation implements INavigationType
             return false;
         }
 
-        return 0 == strcmp($type->resourceType->getFullName(), $this->resourceType->getFullName());
+        return 0 == strcmp(strval($type->resourceType->getFullName()), strval($this->resourceType->getFullName()));
     }
 
     /**

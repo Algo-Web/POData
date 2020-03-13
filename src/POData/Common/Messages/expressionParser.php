@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\Common\Messages;
 
 /**
- * Trait expressionParser
+ * Trait expressionParser.
  * @package POData\Common\Messages
  */
 trait expressionParser
@@ -33,7 +35,7 @@ trait expressionParser
     public static function expressionParserOperatorNotSupportNull($operator, $pos)
     {
         return 'The operator \'' . $operator . '\' at position ' . $pos . ' is not supported for the \'null\''
-                .' literal; only equality checks are supported';
+                . ' literal; only equality checks are supported';
     }
 
     /**
@@ -47,7 +49,7 @@ trait expressionParser
     public static function expressionParserOperatorNotSupportGuid($operator, $pos)
     {
         return 'The operator \'' . $operator . '\' at position ' . $pos . ' is not supported for the Edm.Guid;'
-                .' only equality checks are supported';
+                . ' only equality checks are supported';
     }
 
     /**
@@ -61,7 +63,7 @@ trait expressionParser
     public static function expressionParserOperatorNotSupportBinary($operator, $pos)
     {
         return 'The operator \'' . $operator . '\' at position ' . $pos . ' is not supported for the Edm.Binary;'
-                .' only equality checks are supported';
+                . ' only equality checks are supported';
     }
 
     /**

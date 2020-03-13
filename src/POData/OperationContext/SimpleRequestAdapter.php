@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\OperationContext;
 
 use POData\OperationContext\Web\IncomingRequest;
 
 /**
- * Class SimpleRequestAdapter
+ * Class SimpleRequestAdapter.
  * @package POData\OperationContext
  */
 class SimpleRequestAdapter extends IncomingRequest implements IHTTPRequest

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions;
 
 use Mockery as m;
@@ -20,7 +22,7 @@ class ArithmeticExpressionTest extends TestCase
         $expr2 = m::mock(AbstractExpression::class);
         $expr2->shouldReceive('free')->andReturnNull()->once();
         $expression = m::mock(ExpressionType::class);
-        $iType = m::mock(IType::class);
+        $iType      = m::mock(IType::class);
 
         $foo = new ArithmeticExpression($expr1, $expr2, $expression, $iType);
         $this->assertNotNull($foo->getLeft());

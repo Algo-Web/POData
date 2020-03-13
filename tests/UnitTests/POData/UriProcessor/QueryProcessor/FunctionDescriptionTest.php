@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\UriProcessor\QueryProcessor;
 
 use Mockery as m;
@@ -37,10 +39,10 @@ class FunctionDescriptionTest extends TestCase
 
     public function testVerifyRelationalArgsWithGuidAndLesserThan()
     {
-        $token = new ExpressionToken();
-        $token->Text = ODataConstants::KEYWORD_LESSTHAN;
+        $token           = new ExpressionToken();
+        $token->Text     = ODataConstants::KEYWORD_LESSTHAN;
         $token->Position = 0;
-        $left = m::mock(AbstractExpression::class);
+        $left            = m::mock(AbstractExpression::class);
         $left->shouldReceive('typeIs')->with(m::type(Guid::class))->andReturn(true);
         $left->shouldReceive('typeIs')->with(m::type(Null1::class))->andReturn(false);
         $right = m::mock(AbstractExpression::class);
@@ -48,7 +50,7 @@ class FunctionDescriptionTest extends TestCase
         $right->shouldReceive('typeIs')->with(m::type(Null1::class))->andReturn(false);
 
         $expected = 'The operator \'lt\' at position 0 is not supported for the Edm.Guid; only'
-                    .' equality checks are supported';
+                    . ' equality checks are supported';
         $actual = null;
 
         try {
@@ -62,10 +64,10 @@ class FunctionDescriptionTest extends TestCase
 
     public function testVerifyRelationalArgsWithBinaryAndLesserThan()
     {
-        $token = new ExpressionToken();
-        $token->Text = ODataConstants::KEYWORD_LESSTHAN;
+        $token           = new ExpressionToken();
+        $token->Text     = ODataConstants::KEYWORD_LESSTHAN;
         $token->Position = 0;
-        $left = m::mock(AbstractExpression::class);
+        $left            = m::mock(AbstractExpression::class);
         $left->shouldReceive('typeIs')->with(m::type(Binary::class))->andReturn(true)->once();
         $left->shouldReceive('typeIs')->with(m::type(Guid::class))->andReturn(false);
         $left->shouldReceive('typeIs')->with(m::type(Null1::class))->andReturn(false);
@@ -75,7 +77,7 @@ class FunctionDescriptionTest extends TestCase
         $right->shouldReceive('typeIs')->with(m::type(Null1::class))->andReturn(false);
 
         $expected = 'The operator \'lt\' at position 0 is not supported for the Edm.Binary; only'
-                    .' equality checks are supported';
+                    . ' equality checks are supported';
         $actual = null;
 
         try {
@@ -89,10 +91,10 @@ class FunctionDescriptionTest extends TestCase
 
     public function testVerifyRelationalArgsWithBinaryAndEqualTo()
     {
-        $token = new ExpressionToken();
-        $token->Text = ODataConstants::KEYWORD_NOT_EQUAL;
+        $token           = new ExpressionToken();
+        $token->Text     = ODataConstants::KEYWORD_NOT_EQUAL;
         $token->Position = 0;
-        $left = m::mock(AbstractExpression::class);
+        $left            = m::mock(AbstractExpression::class);
         $left->shouldReceive('typeIs')->with(m::type(Binary::class))->andReturn(true)->once();
         $left->shouldReceive('typeIs')->with(m::type(Guid::class))->andReturn(false);
         $left->shouldReceive('typeIs')->with(m::type(Null1::class))->andReturn(false);

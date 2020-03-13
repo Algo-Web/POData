@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\UriProcessor\ResourcePathProcessor\SegmentParser;
 
 use MyCLabs\Enum\Enum;

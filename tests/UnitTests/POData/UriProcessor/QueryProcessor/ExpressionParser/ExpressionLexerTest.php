@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\UriProcessor\QueryProcessor\ExpressionParser;
 
 use Mockery as m;
@@ -17,8 +19,8 @@ class ExpressionLexerTest extends TestCase
     public function testStringLiteral()
     {
         $expression = "StringIdentifier eq 'mystring'";
-        $lexer = new ExpressionLexer($expression);
-        $token = $lexer->getCurrentToken();
+        $lexer      = new ExpressionLexer($expression);
+        $token      = $lexer->getCurrentToken();
         $this->assertEquals($token->getId(), ExpressionTokenId::IDENTIFIER());
         $this->assertEquals($token->Position, 0);
         $this->assertEquals($token->Text, 'StringIdentifier');
@@ -34,7 +36,7 @@ class ExpressionLexerTest extends TestCase
         $this->assertEquals($token->Text, '\'mystring\'');
 
         $expression = "StringIdentifier eq 'mystring";
-        $lexer = new ExpressionLexer($expression);
+        $lexer      = new ExpressionLexer($expression);
         $lexer->nextToken();
         try {
             $lexer->nextToken();
@@ -51,7 +53,7 @@ class ExpressionLexerTest extends TestCase
     {
         //datetime, binary, guid, X, x followed by open-close quotes, only with open quote
         $expression = "BinaryIdentifier1 eq X'AF0' and DateTimeIdentifier gt datetime'2010-02-12 T24:58:58Z' or BinaryIdentifier2 ne x'FF' and GuidIdentifier eq guid'' or BinaryIdentifier3 eq binary'0AFC'";
-        $lexer = new ExpressionLexer($expression);
+        $lexer      = new ExpressionLexer($expression);
 
         $token = $lexer->getCurrentToken();
         $this->assertEquals($token->getId(), ExpressionTokenId::IDENTIFIER());
@@ -168,7 +170,7 @@ class ExpressionLexerTest extends TestCase
 
         //-----------------------------------------------------------------
         $expression = 'NonBinaryIdentifier1 eq binaryABC';
-        $lexer = new ExpressionLexer($expression);
+        $lexer      = new ExpressionLexer($expression);
 
         $token = $lexer->getCurrentToken();
         $this->assertEquals($token->getId(), ExpressionTokenId::IDENTIFIER());
@@ -189,7 +191,7 @@ class ExpressionLexerTest extends TestCase
 
         //-----------------------------------------------------------------
         $expression = "DateTimeIdentifier eq datetime'";
-        $lexer = new ExpressionLexer($expression);
+        $lexer      = new ExpressionLexer($expression);
         $lexer->nextToken();
         try {
             $lexer->nextToken();
@@ -206,26 +208,26 @@ class ExpressionLexerTest extends TestCase
     {
         //Double, Single, Integer, Decimal, F, f, L, l, M, m, D, d, Ee (+/-)
         //0x, 0X, 0123
-        $expression = 'DoubleIdentifier1   ne 123.34  and '.
-                    'DoubleIdentifier2     eq 124E3     and '.
-                    'DoubleIdentifier3     eq 125.6E3   and '.
-                    'DoubleIdentifier4     eq 125.6E+3  and '.
-                    'DoubleIdentifier5     eq 125.6E-3  and '.
-                    'DoubleIdentifier6     ne 126D      or  '.
-                    'DoubleIdentifier7     ne 127d      and '.
-                    'SingleIdentifier1     eq 154F      and '.
-                    'SingleIdentifier2     eq 155f      and '.
-                    'SingleIdentifier3     eq 156.45F   and '.
-                    'SingleIdentifier4     eq 157.45f   and '.
-                    'SingleIdentifier5     eq 158E2F    and '.
-                    'SingleIdentifier6     eq 159E3f    and '.
-                    'SingleIdentifier7     eq 160E+2F   and '.
-                    'SingleIdentifier8     eq 161E-3f   and '.
-                    'IntegralIdentifier1   eq 170 	    and '.
-                    'Integral64Identifier1 eq 171L 	    and '.
-                    'DecimalIdentifier1    ne 180M      and '.
-                    'DecimalIdentifier2    eq 181.2m    and '.
-                    'DecimalIdentifier3    eq 181.2E4m  and '.
+        $expression = 'DoubleIdentifier1   ne 123.34  and ' .
+                    'DoubleIdentifier2     eq 124E3     and ' .
+                    'DoubleIdentifier3     eq 125.6E3   and ' .
+                    'DoubleIdentifier4     eq 125.6E+3  and ' .
+                    'DoubleIdentifier5     eq 125.6E-3  and ' .
+                    'DoubleIdentifier6     ne 126D      or  ' .
+                    'DoubleIdentifier7     ne 127d      and ' .
+                    'SingleIdentifier1     eq 154F      and ' .
+                    'SingleIdentifier2     eq 155f      and ' .
+                    'SingleIdentifier3     eq 156.45F   and ' .
+                    'SingleIdentifier4     eq 157.45f   and ' .
+                    'SingleIdentifier5     eq 158E2F    and ' .
+                    'SingleIdentifier6     eq 159E3f    and ' .
+                    'SingleIdentifier7     eq 160E+2F   and ' .
+                    'SingleIdentifier8     eq 161E-3f   and ' .
+                    'IntegralIdentifier1   eq 170 	    and ' .
+                    'Integral64Identifier1 eq 171L 	    and ' .
+                    'DecimalIdentifier1    ne 180M      and ' .
+                    'DecimalIdentifier2    eq 181.2m    and ' .
+                    'DecimalIdentifier3    eq 181.2E4m  and ' .
                     'ErrNumeric1		   ne 123.A2';
 
         $lexer = new ExpressionLexer($expression);
@@ -424,7 +426,7 @@ class ExpressionLexerTest extends TestCase
         }
 
         $expression = 'ErrNumeric2	 ne 124.3EA2';
-        $lexer = new ExpressionLexer($expression);
+        $lexer      = new ExpressionLexer($expression);
         $lexer->nextToken();
         try {
             $lexer->nextToken();
@@ -434,7 +436,7 @@ class ExpressionLexerTest extends TestCase
         }
 
         $expression = 'ErrNumeric3	ne 126.3e';
-        $lexer = new ExpressionLexer($expression);
+        $lexer      = new ExpressionLexer($expression);
         $lexer->nextToken();
 
         try {
@@ -445,7 +447,7 @@ class ExpressionLexerTest extends TestCase
         }
 
         $expression = 'ErrNumeric4	ne 127.3e++5';
-        $lexer = new ExpressionLexer($expression);
+        $lexer      = new ExpressionLexer($expression);
         $lexer->nextToken();
         try {
             $lexer->nextToken();
@@ -461,7 +463,7 @@ class ExpressionLexerTest extends TestCase
     public function testEndToken()
     {
         $expression = 'IntIdentifier eq 123';
-        $lexer = new ExpressionLexer($expression);
+        $lexer      = new ExpressionLexer($expression);
 
         $lexer->nextToken();
         $lexer->nextToken();
@@ -482,7 +484,7 @@ class ExpressionLexerTest extends TestCase
     {
         //(, ), /, ', *
         $expression = "substring(CustomerName, 0, 5) eq 'ABCDE' and Address/LineNumber eq 1";
-        $lexer = new ExpressionLexer($expression);
+        $lexer      = new ExpressionLexer($expression);
 
         $token = $lexer->getCurrentToken();
         $this->assertEquals($token->getId(), ExpressionTokenId::IDENTIFIER());
@@ -552,8 +554,8 @@ class ExpressionLexerTest extends TestCase
     public function testInvalidCharacer()
     {
         $expression = 'IntIdent@ifier eq 123';
-        $lexer = new ExpressionLexer($expression);
-        $token = $lexer->getCurrentToken();
+        $lexer      = new ExpressionLexer($expression);
+        $token      = $lexer->getCurrentToken();
         $this->assertEquals($token->getId(), ExpressionTokenId::IDENTIFIER());
         $this->assertEquals($token->Position, 0);
         $this->assertEquals($token->Text, 'IntIdent');
@@ -572,7 +574,7 @@ class ExpressionLexerTest extends TestCase
     public function testValidateToken()
     {
         $expression = 'IntIdentifier eq 123';
-        $lexer = new ExpressionLexer($expression);
+        $lexer      = new ExpressionLexer($expression);
         $lexer->validateToken(ExpressionTokenId::IDENTIFIER());
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
@@ -599,7 +601,7 @@ class ExpressionLexerTest extends TestCase
         //|NaNF/NaNf
 
         $expression = 'INFIdentifierDouble eq INF or NANIdentifierDouble eq NaN and Identifier1 eq inf or Identifier2 eq nan';
-        $lexer = new ExpressionLexer($expression);
+        $lexer      = new ExpressionLexer($expression);
 
         $token = $lexer->getCurrentToken();
         $this->assertEquals($token->getId(), ExpressionTokenId::IDENTIFIER());
@@ -650,7 +652,7 @@ class ExpressionLexerTest extends TestCase
         $this->assertEquals($token->getId(), ExpressionTokenId::END());
 
         $expression = 'INFIdentifierSingle1 eq INFF or INFIdentifierSingle2 eq INFf and NaNIdentifierSingle1 eq NaNF or NaNIdentifierSingle2 eq NaNf';
-        $lexer = new ExpressionLexer($expression);
+        $lexer      = new ExpressionLexer($expression);
 
         $token = $lexer->getCurrentToken();
         $this->assertEquals($token->getId(), ExpressionTokenId::IDENTIFIER());
@@ -703,7 +705,7 @@ class ExpressionLexerTest extends TestCase
     {
         //-123, 123.5, INFF and INFf (negation is not applicable for NaN)
         $expression = 'IntIdentifier eq -123 and Int64Identifier eq -124L';
-        $lexer = new ExpressionLexer($expression);
+        $lexer      = new ExpressionLexer($expression);
 
         $lexer->nextToken();
         $lexer->nextToken();
@@ -721,7 +723,7 @@ class ExpressionLexerTest extends TestCase
         $this->assertEquals($token->Text, '-124L');
 
         $expression = 'INFIdentifier1 eq -INF and INFIdentifier2 eq -INFF';
-        $lexer = new ExpressionLexer($expression);
+        $lexer      = new ExpressionLexer($expression);
 
         $lexer->nextToken();
         $lexer->nextToken();
@@ -740,7 +742,7 @@ class ExpressionLexerTest extends TestCase
         $this->assertEquals($token->Text, '-INFF');
 
         $expression = 'OrderRate1 eq -OrderRate2';
-        $lexer = new ExpressionLexer($expression);
+        $lexer      = new ExpressionLexer($expression);
         $lexer->nextToken();
         $lexer->nextToken();
         $token = $lexer->getCurrentToken();
@@ -761,8 +763,8 @@ class ExpressionLexerTest extends TestCase
     {
         //Peek for next token and then call nexttoken to see same token peeked is getting
         $expression = 'IntIdentifier eq 123';
-        $lexer = new ExpressionLexer($expression);
-        $token1 = $lexer->peekNextToken();
+        $lexer      = new ExpressionLexer($expression);
+        $token1     = $lexer->peekNextToken();
         $lexer->nextToken();
         $token2 = $lexer->getCurrentToken();
         $this->assertEquals($token1->getId(), $token2->getId());
@@ -776,8 +778,8 @@ class ExpressionLexerTest extends TestCase
     public function testWhiteSpace()
     {
         $expression = '     IntIdentifier     eq     123    ';
-        $lexer = new ExpressionLexer($expression);
-        $token = $lexer->getCurrentToken();
+        $lexer      = new ExpressionLexer($expression);
+        $token      = $lexer->getCurrentToken();
         $this->assertEquals($token->getId(), ExpressionTokenId::IDENTIFIER());
         $this->assertEquals($token->Text, 'IntIdentifier');
         $this->assertEquals($token->Position, 5);
@@ -805,12 +807,12 @@ class ExpressionLexerTest extends TestCase
      */
     public function testGetSetTokenRoundTrip()
     {
-        $id = ExpressionTokenId::END();
+        $id    = ExpressionTokenId::END();
         $token = m::mock(ExpressionToken::class)->makePartial();
         $token->setId($id);
 
         $expression = '     IntIdentifier     eq     123    ';
-        $foo = new ExpressionLexer($expression);
+        $foo        = new ExpressionLexer($expression);
         $foo->setCurrentToken($token);
         $actual = $foo->getCurrentToken();
         $this->assertEquals($id, $actual->getId());
@@ -822,8 +824,8 @@ class ExpressionLexerTest extends TestCase
     public function testGetExpressionRoundTrip()
     {
         $expression = '     IntIdentifier     eq     123    ';
-        $foo = new ExpressionLexer($expression);
-        $actual = $foo->getExpressionText();
+        $foo        = new ExpressionLexer($expression);
+        $actual     = $foo->getExpressionText();
         $this->assertEquals($expression, $actual);
     }
 
@@ -833,7 +835,7 @@ class ExpressionLexerTest extends TestCase
     public function testGetPosition()
     {
         $expression = '     IntIdentifier     eq     123    ';
-        $foo = new ExpressionLexer($expression);
+        $foo        = new ExpressionLexer($expression);
         $this->assertEquals(5, $foo->getPosition());
     }
 

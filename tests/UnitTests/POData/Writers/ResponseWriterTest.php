@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\Writers;
 
 use Mockery as m;
@@ -75,7 +77,7 @@ class ResponseWriterTest extends TestCase
     public function testWriteServiceDocumentNoWriter()
     {
         $expected = 'No writer can handle the request.';
-        $actual = null;
+        $actual   = null;
 
         $writer = null;
 
@@ -185,7 +187,7 @@ class ResponseWriterTest extends TestCase
         $host->shouldReceive('getOperationContext->outgoingResponse')->andReturn($response);
 
         $expected = Messages::modelPayloadOnLinkModification();
-        $actual = null;
+        $actual   = null;
 
         $service = m::mock(IService::class)->makePartial();
         $service->shouldReceive('getHost')->andReturn($host)->atLeast(1);

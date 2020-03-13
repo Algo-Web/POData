@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\UriProcessor\ResourcePathProcessor\SegmentParser;
 
 use Mockery as m;

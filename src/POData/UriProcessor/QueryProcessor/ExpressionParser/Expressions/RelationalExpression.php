@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions;
 
 use POData\Providers\Metadata\Type\Boolean;
@@ -19,7 +21,7 @@ class RelationalExpression extends BinaryExpression
     public function __construct($left, $right, ExpressionType $nodeType)
     {
         $this->nodeType = $nodeType;
-        $this->type = new Boolean();
+        $this->type     = new Boolean();
         parent::__construct($left, $right);
     }
 }

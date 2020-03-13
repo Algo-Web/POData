@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\Providers\Metadata\Type;
 
 use POData\Providers\Metadata\Type\Binary;
@@ -89,13 +91,13 @@ class StringTest extends TestCase
     {
         $type = $this->getAsIType();
 
-        $in = '';
+        $in  = '';
         $out = null;
         $this->assertTrue($type->validate($in, $out));
 
         $this->assertSame('', $out);
 
-        $in = 'asdfsa asd ase se';
+        $in  = 'asdfsa asd ase se';
         $out = null;
         $this->assertTrue($type->validate($in, $out));
 
@@ -106,7 +108,7 @@ class StringTest extends TestCase
     {
         $type = $this->getAsIType();
 
-        $in = 4543;
+        $in  = 4543;
         $out = null;
         $this->assertFalse($type->validate($in, $out));
     }
@@ -115,19 +117,19 @@ class StringTest extends TestCase
     {
         $type = $this->getAsIType();
 
-        $value = "'afaefasevaswee'";
+        $value  = "'afaefasevaswee'";
         $actual = $type->convert($value);
 
         $expected = 'afaefasevaswee';
         $this->assertEquals($expected, $actual);
 
-        $value = 'a';
+        $value  = 'a';
         $actual = $type->convert($value);
 
         $expected = 'a';
         $this->assertEquals($expected, $actual);
 
-        $value = '';
+        $value  = '';
         $actual = $type->convert($value);
 
         $expected = '';
@@ -138,7 +140,7 @@ class StringTest extends TestCase
     {
         $type = $this->getAsIType();
 
-        $value = 'afaefasevaswee';
+        $value  = 'afaefasevaswee';
         $actual = $type->convertToOData($value);
 
         $expected = "'afaefasevaswee'";
@@ -162,11 +164,11 @@ class StringTest extends TestCase
 
     public function testRoundTripWithSlashes()
     {
-        $type = $this->getAsIType();
+        $type  = $this->getAsIType();
         $value = 'OMG/LOL/WTF/BBQ';
 
         $convert = $type->convertToOData($value);
-        $final = urldecode($type->convert($convert));
+        $final   = urldecode($type->convert($convert));
         // assert conversion round-trips
         $this->assertEquals($value, urldecode($final));
     }

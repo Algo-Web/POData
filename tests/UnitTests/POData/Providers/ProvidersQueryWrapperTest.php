@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\Providers;
 
 use Mockery as m;
@@ -27,11 +29,11 @@ class ProvidersQueryWrapperTest extends TestCase
 
     public function setUp()
     {
-        $this->queryType = m::mock(QueryType::class)->makePartial();
+        $this->queryType         = m::mock(QueryType::class)->makePartial();
         $this->sourceResourceSet = m::mock(ResourceSet::class)->makePartial();
-        $this->targResourceSet = m::mock(ResourceSet::class)->makePartial();
-        $this->targProperty = m::mock(ResourceProperty::class)->makePartial();
-        $this->filterInfo = m::mock(FilterInfo::class)->makePartial();
+        $this->targResourceSet   = m::mock(ResourceSet::class)->makePartial();
+        $this->targProperty      = m::mock(ResourceProperty::class)->makePartial();
+        $this->filterInfo        = m::mock(FilterInfo::class)->makePartial();
     }
 
     public function testGetRelatedResourceSetNotInstanceOfQueryResult()
@@ -42,7 +44,7 @@ class ProvidersQueryWrapperTest extends TestCase
         $foo = new ProvidersQueryWrapper($query);
 
         $expected = 'The implementation of the method IQueryProvider::getRelatedResourceSet'
-                    .' must return a QueryResult instance.';
+                    . ' must return a QueryResult instance.';
         $actual = null;
 
         try {
@@ -67,8 +69,8 @@ class ProvidersQueryWrapperTest extends TestCase
     public function testGetRelatedResourceSetHandlesPagingYetNonNumericCount()
     {
         $this->queryType = QueryType::ENTITIES_WITH_COUNT();
-        $result = m::mock(QueryResult::class)->makePartial();
-        $result->count = 'BORK BORK BORK!';
+        $result          = m::mock(QueryResult::class)->makePartial();
+        $result->count   = 'BORK BORK BORK!';
 
         $query = m::mock(IQueryProvider::class);
         $query->shouldReceive('getRelatedResourceSet')->andReturn($result)->once();
@@ -77,7 +79,7 @@ class ProvidersQueryWrapperTest extends TestCase
         $foo = new ProvidersQueryWrapper($query);
 
         $expected = 'The implementation of the method IQueryProvider::getRelatedResourceSet must return'
-                    .' a QueryResult instance with a count for queries of type ENTITIES_WITH_COUNT.';
+                    . ' a QueryResult instance with a count for queries of type ENTITIES_WITH_COUNT.';
         $actual = null;
 
         try {
@@ -102,7 +104,7 @@ class ProvidersQueryWrapperTest extends TestCase
     public function testGetRelatedResourceSetDoesNotHandlePagingYetNonArrayResult()
     {
         $this->queryType = QueryType::ENTITIES_WITH_COUNT();
-        $result = m::mock(QueryResult::class)->makePartial();
+        $result          = m::mock(QueryResult::class)->makePartial();
         $result->results = 'BORK BORK BORK!';
 
         $query = m::mock(IQueryProvider::class);
@@ -112,7 +114,7 @@ class ProvidersQueryWrapperTest extends TestCase
         $foo = new ProvidersQueryWrapper($query);
 
         $expected = 'The implementation of the method IQueryProvider::getRelatedResourceSet must return'
-                    .' a QueryResult instance with an array of results for queries of type ENTITIES_WITH_COUNT.';
+                    . ' a QueryResult instance with an array of results for queries of type ENTITIES_WITH_COUNT.';
         $actual = null;
 
         try {
@@ -137,7 +139,7 @@ class ProvidersQueryWrapperTest extends TestCase
     public function testGetRelatedResourceSetHandlesPagingYetNonArrayResult()
     {
         $this->queryType = QueryType::ENTITIES();
-        $result = m::mock(QueryResult::class)->makePartial();
+        $result          = m::mock(QueryResult::class)->makePartial();
         $result->results = 'BORK BORK BORK!';
 
         $query = m::mock(IQueryProvider::class);
@@ -147,7 +149,7 @@ class ProvidersQueryWrapperTest extends TestCase
         $foo = new ProvidersQueryWrapper($query);
 
         $expected = 'The implementation of the method IQueryProvider::getRelatedResourceSet must return'
-                    .' a QueryResult instance with an array of results for queries of type ENTITIES.';
+                    . ' a QueryResult instance with an array of results for queries of type ENTITIES.';
         $actual = null;
 
         try {
@@ -172,7 +174,7 @@ class ProvidersQueryWrapperTest extends TestCase
     public function testGetRelatedResourceSetHandlesPagingAndArrayResult()
     {
         $this->queryType = QueryType::ENTITIES();
-        $result = m::mock(QueryResult::class)->makePartial();
+        $result          = m::mock(QueryResult::class)->makePartial();
         $result->results = ['BORK BORK BORK!'];
 
         $query = m::mock(IQueryProvider::class);
@@ -202,7 +204,7 @@ class ProvidersQueryWrapperTest extends TestCase
     public function testGetResourceSetHandlesPagingAndArrayResult()
     {
         $this->queryType = QueryType::ENTITIES();
-        $result = m::mock(QueryResult::class)->makePartial();
+        $result          = m::mock(QueryResult::class)->makePartial();
         $result->results = ['BORK BORK BORK!'];
 
         $query = m::mock(IQueryProvider::class);
@@ -222,14 +224,14 @@ class ProvidersQueryWrapperTest extends TestCase
     {
         $key = m::mock(KeyDescriptor::class);
 
-        $result = m::mock(QueryResult::class)->makePartial();
+        $result          = m::mock(QueryResult::class)->makePartial();
         $result->results = ['BORK BORK BORK!'];
 
         $query = m::mock(IQueryProvider::class);
         $query->shouldReceive('putResource')->andReturn($result)->once();
         $query->shouldReceive('handlesOrderedPaging')->andReturn(true);
 
-        $foo = new ProvidersQueryWrapper($query);
+        $foo    = new ProvidersQueryWrapper($query);
         $result = $foo->putResource($this->sourceResourceSet, $key, $result);
         $this->assertTrue($result instanceof QueryResult);
         $this->assertTrue(is_array($result->results));
@@ -245,7 +247,7 @@ class ProvidersQueryWrapperTest extends TestCase
         $foo = new ProvidersQueryWrapper($query);
 
         $expected = 'The value returned by IQueryProvider::getExpressionProvider method must not be null or empty';
-        $actual = null;
+        $actual   = null;
 
         try {
             $foo->getExpressionProvider();
@@ -263,7 +265,7 @@ class ProvidersQueryWrapperTest extends TestCase
         $foo = new ProvidersQueryWrapper($query);
 
         $expected = 'The value returned by IQueryProvider::getExpressionProvider method must be an'
-                    .' implementation of IExpressionProvider';
+                    . ' implementation of IExpressionProvider';
         $actual = null;
 
         try {
@@ -299,7 +301,7 @@ class ProvidersQueryWrapperTest extends TestCase
         $query->shouldReceive('createResourceforResourceSet')->andReturn($data)->once();
         $query->shouldReceive('handlesOrderedPaging')->andReturn(true);
 
-        $foo = new ProvidersQueryWrapper($query);
+        $foo    = new ProvidersQueryWrapper($query);
         $result = $foo->createResourceforResourceSet($this->sourceResourceSet, $data, $key);
         $this->assertTrue($result instanceof reusableEntityClass2);
         $this->assertEquals('hammer', $data->name);
@@ -314,7 +316,7 @@ class ProvidersQueryWrapperTest extends TestCase
         $query->shouldReceive('deleteResource')->andReturn(true)->once();
         $query->shouldReceive('handlesOrderedPaging')->andReturn(true);
 
-        $foo = new ProvidersQueryWrapper($query);
+        $foo    = new ProvidersQueryWrapper($query);
         $result = $foo->deleteResource($this->sourceResourceSet, $data);
         $this->assertTrue($result);
     }
@@ -329,7 +331,7 @@ class ProvidersQueryWrapperTest extends TestCase
         $query->shouldReceive('updateResource')->andReturn($data)->once();
         $query->shouldReceive('handlesOrderedPaging')->andReturn(true);
 
-        $foo = new ProvidersQueryWrapper($query);
+        $foo    = new ProvidersQueryWrapper($query);
         $result = $foo->updateResource($this->sourceResourceSet, $data, $key, $data, false);
         $this->assertTrue($result instanceof reusableEntityClass2);
         $this->assertEquals('hammer', $data->name);
@@ -354,8 +356,8 @@ class ProvidersQueryWrapperTest extends TestCase
         $foo = new ProvidersQueryWrapper($query);
 
         $expected = 'The implementation of the method IQueryProvider::getRelatedResourceReference must return an'
-                    .' instance of type described by resource set\'s type(ResourceSet) or null if resource does'
-                    .' not exist.';
+                    . ' instance of type described by resource set\'s type(ResourceSet) or null if resource does'
+                    . ' not exist.';
         $actual = null;
 
         try {
@@ -392,7 +394,7 @@ class ProvidersQueryWrapperTest extends TestCase
         $foo = new ProvidersQueryWrapper($query);
 
         $expected = 'The IDSQP::getRelatedResourceReference implementation returns an entity with'
-                    .' null key propert(y|ies).';
+                    . ' null key propert(y|ies).';
         $actual = null;
 
         try {
@@ -441,8 +443,8 @@ class ProvidersQueryWrapperTest extends TestCase
 
     public function testGetResourceFromRelatedResourceSetNullInstanceThrowException()
     {
-        $data = new reusableEntityClass2('hammer', 'time!');
-        $type = m::mock(ResourceType::class);
+        $data     = new reusableEntityClass2('hammer', 'time!');
+        $type     = m::mock(ResourceType::class);
         $property = m::mock(ResourceProperty::class);
 
         $key = m::mock(KeyDescriptor::class);
@@ -456,7 +458,7 @@ class ProvidersQueryWrapperTest extends TestCase
         $foo = new ProvidersQueryWrapper($query);
 
         $expected = 'Resource not found for the segment \'CynicProject\'.';
-        $actual = null;
+        $actual   = null;
 
         try {
             $foo->getResourceFromRelatedResourceSet(
@@ -498,7 +500,7 @@ class ProvidersQueryWrapperTest extends TestCase
         $foo = new ProvidersQueryWrapper($query);
 
         $expected = 'The IQueryProvider::getResourceFromRelatedResourceSet implementation returns an entity'
-                    .' with null key propert(y|ies).';
+                    . ' with null key propert(y|ies).';
         $actual = null;
 
         try {
@@ -518,7 +520,7 @@ class ProvidersQueryWrapperTest extends TestCase
     public function testGetNullResourceFromResourceSet()
     {
         $expected = "Resource not found for the segment 'resourceSet'.";
-        $actual = null;
+        $actual   = null;
 
         $query = m::mock(IQueryProvider::class);
         $query->shouldReceive('getResourceFromResourceSet')->andReturn(null)->once();

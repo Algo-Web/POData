@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\UriProcessor;
 
 use Mockery as m;
@@ -74,17 +76,17 @@ class UriProcessorTest extends TestCase
         parent::setUp();
 
         // set up mock objects for later use
-        $this->mockServiceHost = m::mock(ServiceHost::class)->makePartial();
-        $this->mockService = m::mock(IService::class)->makePartial();
-        $this->mockMetadataProvider = m::mock(IMetadataProvider::class)->makePartial();
-        $this->mockProvidersWrapper = m::mock(ProvidersWrapper::class)->makePartial();
-        $this->mockCollectionResourceSetWrapper = m::mock(ResourceSetWrapper::class)->makePartial();
-        $this->mockCollectionResourceType = m::mock(ResourceType::class)->makePartial();
-        $this->mockCollectionKeyProperty = m::mock(ResourceProperty::class)->makePartial();
+        $this->mockServiceHost                         = m::mock(ServiceHost::class)->makePartial();
+        $this->mockService                             = m::mock(IService::class)->makePartial();
+        $this->mockMetadataProvider                    = m::mock(IMetadataProvider::class)->makePartial();
+        $this->mockProvidersWrapper                    = m::mock(ProvidersWrapper::class)->makePartial();
+        $this->mockCollectionResourceSetWrapper        = m::mock(ResourceSetWrapper::class)->makePartial();
+        $this->mockCollectionResourceType              = m::mock(ResourceType::class)->makePartial();
+        $this->mockCollectionKeyProperty               = m::mock(ResourceProperty::class)->makePartial();
         $this->mockCollectionRelatedCollectionProperty = m::mock(ResourceProperty::class)->makePartial();
         $this->mockRelatedCollectionResourceSetWrapper = m::mock(ResourceSetWrapper::class)->makePartial();
-        $this->mockRelatedCollectionResourceType = m::mock(ResourceType::class)->makePartial();
-        $this->mockRelatedCollectionKeyProperty = m::mock(ResourceProperty::class)->makePartial();
+        $this->mockRelatedCollectionResourceType       = m::mock(ResourceType::class)->makePartial();
+        $this->mockRelatedCollectionKeyProperty        = m::mock(ResourceProperty::class)->makePartial();
 
         //setup some general navigation between POData types
 
@@ -150,7 +152,7 @@ class UriProcessorTest extends TestCase
 
         $uriProcessor = UriProcessor::process($this->mockService);
 
-        $fakeQueryResult = new QueryResult();
+        $fakeQueryResult          = new QueryResult();
         $fakeQueryResult->results = [1, 2, 3];
 
         /* TODO: Figure out why this doesn't work when it should
@@ -227,7 +229,7 @@ class UriProcessorTest extends TestCase
 
         $opCon = m::mock(IOperationContext::class);
         $opCon->shouldReceive('incomingRequest')->andReturn($request);
-        
+
         $requestURI = new Url('http://host.com/data.svc/Collection/$count');
         $this->mockService->shouldReceive('getOperationContext')->andReturn($opCon);
         $this->mockServiceHost->shouldReceive('getAbsoluteRequestUri')->andReturn($requestURI);
@@ -243,7 +245,7 @@ class UriProcessorTest extends TestCase
 
         $uriProcessor = UriProcessor::process($this->mockService);
 
-        $fakeQueryResult = new QueryResult();
+        $fakeQueryResult          = new QueryResult();
         $fakeQueryResult->results = [1, 2, 3];
 
         /* TODO: Figure out why commented version loses plot while anyArgs version passes - with same
@@ -293,9 +295,9 @@ class UriProcessorTest extends TestCase
 
         $uriProcessor = UriProcessor::process($this->mockService);
 
-        $fakeQueryResult = new QueryResult();
+        $fakeQueryResult          = new QueryResult();
         $fakeQueryResult->results = [1, 2, 3];
-        $fakeQueryResult->count = 10; //note this differs from the size of the results array
+        $fakeQueryResult->count   = 10; //note this differs from the size of the results array
 
         /* TODO: Figure out why commented version loses plot while anyArgs version passes
         $this->mockProvidersWrapper->shouldReceive('getResourceSet')->withArgs([
@@ -422,9 +424,9 @@ class UriProcessorTest extends TestCase
 
         $uriProcessor = UriProcessor::process($this->mockService);
 
-        $fakeQueryResult = new QueryResult();
+        $fakeQueryResult          = new QueryResult();
         $fakeQueryResult->results = [1, 2, 3];
-        $fakeQueryResult->count = 10; //note this is different than the size of the array
+        $fakeQueryResult->count   = 10; //note this is different than the size of the array
 
         /* TODO: Figure out why commented version loses plot while anyArgs version passes
         $this->mockProvidersWrapper->shouldReceive('getResourceSet')->withArgs([
@@ -487,9 +489,9 @@ class UriProcessorTest extends TestCase
 
         $uriProcessor = UriProcessor::process($this->mockService);
 
-        $fakeQueryResult = new QueryResult();
+        $fakeQueryResult          = new QueryResult();
         $fakeQueryResult->results = [1, 2, 3];
-        $fakeQueryResult->count = 10; //note this is different than the size of the array
+        $fakeQueryResult->count   = 10; //note this is different than the size of the array
 
         /* TODO: Figure out why commented version loses plot while anyArgs version passes
          *  $this->mockProvidersWrapper->shouldReceive('getResourceSet')->withArgs([
@@ -546,9 +548,9 @@ class UriProcessorTest extends TestCase
         $this->fakeServiceConfig->setAcceptCountRequests(true);
         $this->fakeServiceConfig->setMaxDataServiceVersion(ProtocolVersion::V3());
 
-        $fakeQueryResult = new QueryResult();
+        $fakeQueryResult          = new QueryResult();
         $fakeQueryResult->results = [1, 2, 3];
-        $fakeQueryResult->count = 10;
+        $fakeQueryResult->count   = 10;
 
         /* TODO: Figure out why commented version loses plot while anyArgs version passes
         $this->mockProvidersWrapper->shouldReceive('getResourceSet')->withArgs([

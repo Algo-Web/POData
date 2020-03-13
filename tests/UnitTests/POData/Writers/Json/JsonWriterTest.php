@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\Writers\Json;
 
 use POData\Providers\Metadata\Type\Guid;
@@ -206,10 +208,10 @@ class JsonWriterTest extends TestCase
     public function testWriteValueEdmGuid()
     {
         $writer = new JsonWriter('');
-        $g = uniqid();
+        $g      = uniqid();
         $result = $writer->writeValue($g, 'Edm.Guid');
         $this->assertSame($result, $writer);
-        $this->assertEquals('"'.$g.'"', $writer->getJsonOutput());
+        $this->assertEquals('"' . $g . '"', $writer->getJsonOutput());
     }
 
     public function testWriteValueEdmDecimal()
@@ -284,7 +286,7 @@ class JsonWriterTest extends TestCase
         $this->assertEquals('"null"', $writer->getJsonOutput());
 
         $writer = new JsonWriter('');
-        $val = 'http://yahoo.com/some/path';
+        $val    = 'http://yahoo.com/some/path';
         $result = $writer->writeValue($val, 'Edm.String');
         $this->assertSame($result, $writer);
         $this->assertEquals('"http://yahoo.com/some/path"', $writer->getJsonOutput());

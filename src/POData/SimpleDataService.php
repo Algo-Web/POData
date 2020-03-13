@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData;
 
-use \POData\Providers\Stream\IStreamProvider2;
 use POData\Common\ODataException;
 use POData\Configuration\EntitySetRights;
 use POData\Configuration\IServiceConfiguration;
@@ -12,6 +13,7 @@ use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\Metadata\SimpleMetadataProvider;
 use POData\Providers\Query\IQueryProvider;
 use POData\Providers\Query\SimpleQueryProvider;
+use POData\Providers\Stream\IStreamProvider2;
 use POData\Providers\Stream\SimpleStreamProvider;
 
 /**
@@ -27,7 +29,7 @@ class SimpleDataService extends BaseService implements IService
      * @var IQueryProvider
      */
     protected $queryProvider;
-    
+
     /**
      * @var IStreamProvider2;
      */
@@ -37,10 +39,10 @@ class SimpleDataService extends BaseService implements IService
     /**
      * SimpleDataService constructor.
      * @param $db
-     * @param SimpleMetadataProvider $metaProvider
-     * @param ServiceHost $host
-     * @param IObjectSerialiser|null $serialiser
-     * @param IStreamProvider2|null $streamProvider
+     * @param  SimpleMetadataProvider $metaProvider
+     * @param  ServiceHost            $host
+     * @param  IObjectSerialiser|null $serialiser
+     * @param  IStreamProvider2|null  $streamProvider
      * @throws ODataException
      */
     public function __construct(
@@ -55,7 +57,7 @@ class SimpleDataService extends BaseService implements IService
             $this->queryProvider = $db;
         } elseif (!empty($db->queryProviderClassName)) {
             $queryProviderClassName = $db->queryProviderClassName;
-            $this->queryProvider = new $queryProviderClassName($db);
+            $this->queryProvider    = new $queryProviderClassName($db);
         } else {
             throw new ODataException('Invalid query provider supplied', 500);
         }
@@ -66,17 +68,17 @@ class SimpleDataService extends BaseService implements IService
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      * @throws Common\InvalidOperationException
      */
     public function initialize(IServiceConfiguration $config)
     {
         $config->setEntitySetPageSize('*', $this->maxPageSize);
-        $config->setEntitySetAccessRule('*', /** @scrutinizer ignore-type */EntitySetRights::ALL);
+        $config->setEntitySetAccessRule('*', /* @scrutinizer ignore-type */EntitySetRights::ALL);
         $config->setAcceptCountRequests(true);
         $config->setAcceptProjectionRequests(true);
     }
-    
+
     /**
      * @return IQueryProvider
      */
@@ -116,6 +118,6 @@ class SimpleDataService extends BaseService implements IService
      */
     public function initializeService(IServiceConfiguration $config)
     {
-        $config->setEntitySetAccessRule('*', /** @scrutinizer ignore-type */EntitySetRights::ALL);
+        $config->setEntitySetAccessRule('*', /* @scrutinizer ignore-type */EntitySetRights::ALL);
     }
 }

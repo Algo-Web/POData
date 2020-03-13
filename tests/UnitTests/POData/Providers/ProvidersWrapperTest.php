@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\Providers\Metadata;
 
 use Mockery as m;
@@ -63,15 +65,15 @@ class ProvidersWrapperTest extends TestCase
 
     public function setUp()
     {
-        $this->mockMetadataProvider = m::mock(IMetadataProvider::class)->makePartial();
-        $this->mockResourceSet = m::mock(ResourceSet::class)->makePartial();
-        $this->mockResourceSet2 = m::mock(ResourceSet::class)->makePartial();
-        $this->mockResourceType = m::mock(ResourceEntityType::class)->makePartial();
-        $this->mockResourceType2 = m::mock(ResourceType::class)->makePartial();
-        $this->mockQueryProvider = m::mock(IQueryProvider::class)->makePartial();
-        $this->mockServiceConfig = m::mock(ServiceConfiguration::class)->makePartial();
-        $this->mockResourceProperty = m::mock(ResourceProperty::class)->makePartial();
-        $this->mockResourceAssociationSet = m::mock(ResourceAssociationSet::class)->makePartial();
+        $this->mockMetadataProvider          = m::mock(IMetadataProvider::class)->makePartial();
+        $this->mockResourceSet               = m::mock(ResourceSet::class)->makePartial();
+        $this->mockResourceSet2              = m::mock(ResourceSet::class)->makePartial();
+        $this->mockResourceType              = m::mock(ResourceEntityType::class)->makePartial();
+        $this->mockResourceType2             = m::mock(ResourceType::class)->makePartial();
+        $this->mockQueryProvider             = m::mock(IQueryProvider::class)->makePartial();
+        $this->mockServiceConfig             = m::mock(ServiceConfiguration::class)->makePartial();
+        $this->mockResourceProperty          = m::mock(ResourceProperty::class)->makePartial();
+        $this->mockResourceAssociationSet    = m::mock(ResourceAssociationSet::class)->makePartial();
         $this->mockResourceAssociationSetEnd = m::mock(ResourceAssociationSetEnd::class)->makePartial();
     }
 
@@ -90,7 +92,7 @@ class ProvidersWrapperTest extends TestCase
     public function testGetContainerName()
     {
         $fakeContainerName = 'BigBadContainer';
-        $mockMeta = m::mock(IMetadataProvider::class)->makePartial();
+        $mockMeta          = m::mock(IMetadataProvider::class)->makePartial();
         $mockMeta->shouldReceive('getContainerName')->andReturn($fakeContainerName);
         $this->mockMetadataProvider = $mockMeta;
 
@@ -533,10 +535,10 @@ class ProvidersWrapperTest extends TestCase
     public function testGetResourceSetJustEntities()
     {
         $orderBy = null;
-        $top = 10;
-        $skip = 10;
+        $top     = 10;
+        $skip    = 10;
 
-        $fakeQueryResult = new QueryResult();
+        $fakeQueryResult          = new QueryResult();
         $fakeQueryResult->results = [];
 
         /* TODO: Audit this and see if it still applies
@@ -568,8 +570,8 @@ class ProvidersWrapperTest extends TestCase
     public function testGetResourceSetReturnsNonQueryResult()
     {
         $orderBy = null;
-        $top = 10;
-        $skip = 10;
+        $top     = 10;
+        $skip    = 10;
 
         /* TODO: Audit this and see if it still applies
         * $this->mockQueryProvider->shouldReceive('getResourceSet')->withArgs([
@@ -604,12 +606,12 @@ class ProvidersWrapperTest extends TestCase
 
     public function testGetResourceSetReturnsCountWhenQueryTypeIsCountProviderDoesNotHandlePaging()
     {
-        $orderBy = null;
-        $top = 10;
-        $skip = 10;
-        $SkipToken = 0;
-        $fakeQueryResult = new QueryResult();
-        $fakeQueryResult->count = 123; //this is irrelevant
+        $orderBy                  = null;
+        $top                      = 10;
+        $skip                     = 10;
+        $SkipToken                = 0;
+        $fakeQueryResult          = new QueryResult();
+        $fakeQueryResult->count   = 123; //this is irrelevant
         $fakeQueryResult->results = null;
 
         //Because the provider doe NOT handle paging and this request needs a count, there must be results to calculate a count from
@@ -649,10 +651,10 @@ class ProvidersWrapperTest extends TestCase
     public function testGetResourceSetReturnsCountWhenQueryTypeIsCountProviderHandlesPaging()
     {
         $orderBy = null;
-        $top = 10;
-        $skip = 10;
+        $top     = 10;
+        $skip    = 10;
 
-        $fakeQueryResult = new QueryResult();
+        $fakeQueryResult        = new QueryResult();
         $fakeQueryResult->count = null; //null is not numeric
 
         //Because the provider handles paging and this request needs a count, the count must be numeric
@@ -690,10 +692,10 @@ class ProvidersWrapperTest extends TestCase
     public function testGetResourceSetReturnsCountWhenQueryTypeIsEntitiesWithCountProviderHandlesPaging()
     {
         $orderBy = null;
-        $top = 10;
-        $skip = 10;
+        $top     = 10;
+        $skip    = 10;
 
-        $fakeQueryResult = new QueryResult();
+        $fakeQueryResult        = new QueryResult();
         $fakeQueryResult->count = null; //null is not numeric
 
         //Because the provider handles paging and this request needs a count, the count must be numeric
@@ -731,11 +733,11 @@ class ProvidersWrapperTest extends TestCase
     public function testGetResourceSetReturnsCountWhenQueryTypeIsEntitiesWithCountProviderDoesNotHandlePaging()
     {
         $orderBy = null;
-        $top = 10;
-        $skip = 10;
+        $top     = 10;
+        $skip    = 10;
 
-        $fakeQueryResult = new QueryResult();
-        $fakeQueryResult->count = 444; //irrelevant
+        $fakeQueryResult          = new QueryResult();
+        $fakeQueryResult->count   = 444; //irrelevant
         $fakeQueryResult->results = null;
 
         //Because the provider does NOT handle paging and this request needs a count, the result must have results collection to calculate count from
@@ -773,11 +775,11 @@ class ProvidersWrapperTest extends TestCase
     public function testGetResourceSetReturnsArrayWhenQueryTypeIsEntities()
     {
         $orderBy = null;
-        $top = 10;
-        $skip = 10;
+        $top     = 10;
+        $skip    = 10;
 
-        $fakeQueryResult = new QueryResult();
-        $fakeQueryResult->count = 2;
+        $fakeQueryResult          = new QueryResult();
+        $fakeQueryResult->count   = 2;
         $fakeQueryResult->results = null; //null is not an array
 
         /* TODO: Audit this and see if it still applies
@@ -812,11 +814,11 @@ class ProvidersWrapperTest extends TestCase
     public function testGetResourceSetReturnsArrayWhenQueryTypeIsEntitiesWithCount()
     {
         $orderBy = null;
-        $top = 10;
-        $skip = 10;
+        $top     = 10;
+        $skip    = 10;
 
-        $fakeQueryResult = new QueryResult();
-        $fakeQueryResult->count = 4;
+        $fakeQueryResult          = new QueryResult();
+        $fakeQueryResult->count   = 4;
         $fakeQueryResult->results = null; //null is not an array
 
         $this->mockQueryProvider->shouldReceive('handlesOrderedPaging')->andReturn(false);
@@ -854,10 +856,10 @@ class ProvidersWrapperTest extends TestCase
     public function testGetRelatedResourceSetJustEntities()
     {
         $orderBy = null;
-        $top = 10;
-        $skip = 10;
+        $top     = 10;
+        $skip    = 10;
 
-        $fakeQueryResult = new QueryResult();
+        $fakeQueryResult          = new QueryResult();
         $fakeQueryResult->results = [];
 
         $fakeSourceEntity = new \stdClass();
@@ -896,8 +898,8 @@ class ProvidersWrapperTest extends TestCase
     public function testGetRelatedResourceSetReturnsNonQueryResult()
     {
         $orderBy = null;
-        $top = 10;
-        $skip = 10;
+        $top     = 10;
+        $skip    = 10;
 
         $fakeSourceEntity = new \stdClass();
 
@@ -940,11 +942,11 @@ class ProvidersWrapperTest extends TestCase
     public function testGetRelatedResourceSetReturnsCountWhenQueryTypeIsCountProviderDoesNotHandlePaging()
     {
         $orderBy = null;
-        $top = 10;
-        $skip = 10;
+        $top     = 10;
+        $skip    = 10;
 
-        $fakeQueryResult = new QueryResult();
-        $fakeQueryResult->count = 123; //this is irrelevant
+        $fakeQueryResult          = new QueryResult();
+        $fakeQueryResult->count   = 123; //this is irrelevant
         $fakeQueryResult->results = null;
 
         //Because the provider does NOT handle paging and this request needs a count,
@@ -992,10 +994,10 @@ class ProvidersWrapperTest extends TestCase
     public function testGetRelatedResourceSetReturnsCountWhenQueryTypeIsCountProviderHandlesPaging()
     {
         $orderBy = null;
-        $top = 10;
-        $skip = 10;
+        $top     = 10;
+        $skip    = 10;
 
-        $fakeQueryResult = new QueryResult();
+        $fakeQueryResult        = new QueryResult();
         $fakeQueryResult->count = null; //null is not numeric
 
         //Because the provider handles paging and this request needs a count, the count must be numeric
@@ -1042,10 +1044,10 @@ class ProvidersWrapperTest extends TestCase
     public function testGetRelatedResourceSetReturnsCountWhenQueryTypeIsEntitiesWithCountProviderHandlesPaging()
     {
         $orderBy = null;
-        $top = 10;
-        $skip = 10;
+        $top     = 10;
+        $skip    = 10;
 
-        $fakeQueryResult = new QueryResult();
+        $fakeQueryResult        = new QueryResult();
         $fakeQueryResult->count = null; //null is not numeric
 
         //Because the provider handles paging and this request needs a count, the count must be numeric
@@ -1092,11 +1094,11 @@ class ProvidersWrapperTest extends TestCase
     public function testGetRelatedResourceSetReturnsCountWhenQueryTypeIsEntitiesWithCountProviderDoesNotHandlePaging()
     {
         $orderBy = null;
-        $top = 10;
-        $skip = 10;
+        $top     = 10;
+        $skip    = 10;
 
-        $fakeQueryResult = new QueryResult();
-        $fakeQueryResult->count = 444; //irrelevant
+        $fakeQueryResult          = new QueryResult();
+        $fakeQueryResult->count   = 444; //irrelevant
         $fakeQueryResult->results = null;
 
         //Because the provider does NOT handle paging and this request needs a count, the result must have results collection to calculate count from
@@ -1143,11 +1145,11 @@ class ProvidersWrapperTest extends TestCase
     public function testGetRelatedResourceSetReturnsArrayWhenQueryTypeIsEntities()
     {
         $orderBy = null;
-        $top = 10;
-        $skip = 10;
+        $top     = 10;
+        $skip    = 10;
 
-        $fakeQueryResult = new QueryResult();
-        $fakeQueryResult->count = 2;
+        $fakeQueryResult          = new QueryResult();
+        $fakeQueryResult->count   = 2;
         $fakeQueryResult->results = null; //null is not an array
 
         $fakeSourceEntity = new \stdClass();
@@ -1191,11 +1193,11 @@ class ProvidersWrapperTest extends TestCase
     public function testGetRelatedResourceSetReturnsArrayWhenQueryTypeIsEntitiesWithCount()
     {
         $orderBy = null;
-        $top = 10;
-        $skip = 10;
+        $top     = 10;
+        $skip    = 10;
 
-        $fakeQueryResult = new QueryResult();
-        $fakeQueryResult->count = 4;
+        $fakeQueryResult          = new QueryResult();
+        $fakeQueryResult->count   = 4;
         $fakeQueryResult->results = null; //null is not an array
 
         $fakeSourceEntity = new \stdClass();

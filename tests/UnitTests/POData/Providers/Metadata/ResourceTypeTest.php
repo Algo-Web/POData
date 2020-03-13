@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\Providers\Metadata;
 
 use AlgoWeb\ODataMetadata\MetadataV3\edm\TComplexTypeType;
@@ -27,7 +29,7 @@ class ResourceTypeTest extends TestCase
 {
     public function testGetPrimitiveResourceTypeByte()
     {
-        $type = EdmPrimitiveType::BYTE();
+        $type   = EdmPrimitiveType::BYTE();
         $result = ResourceType::getPrimitiveResourceType($type);
         $this->assertTrue($result instanceof ResourceType);
         $this->assertEquals('Byte', $result->getName());
@@ -37,7 +39,7 @@ class ResourceTypeTest extends TestCase
 
     public function testGetPrimitiveResourceTypeSByte()
     {
-        $type = EdmPrimitiveType::SBYTE();
+        $type   = EdmPrimitiveType::SBYTE();
         $result = ResourceType::getPrimitiveResourceType($type);
         $this->assertTrue($result instanceof ResourceType);
         $this->assertEquals('SByte', $result->getName());
@@ -76,10 +78,10 @@ class ResourceTypeTest extends TestCase
     public function testAddNamedStreamWhenNotEntityThrowException()
     {
         $info = m::mock(ResourceStreamInfo::class);
-        $foo = m::mock(ResourceType::class)->makePartial();
+        $foo  = m::mock(ResourceType::class)->makePartial();
 
         $expected = 'Named streams can only be added to entity types.';
-        $actual = null;
+        $actual   = null;
 
         try {
             $foo->addNamedStream($info);
@@ -109,7 +111,7 @@ class ResourceTypeTest extends TestCase
         $instanceType = m::mock(IType::class);
         $instanceType->shouldReceive('getName')->andReturn('label');
         $resourceTypeKind = ResourceTypeKind::PRIMITIVE;
-        $foo = new ResourcePrimitiveType($instanceType);
+        $foo              = new ResourcePrimitiveType($instanceType);
 
         $result = $foo->__sleep();
 
@@ -129,9 +131,9 @@ class ResourceTypeTest extends TestCase
     {
         $complex = m::mock(TComplexTypeType::class);
         $complex->shouldReceive('getName')->andReturn('label');
-        $instanceType = new reusableEntityClass2('foo', 'bar');
+        $instanceType     = new reusableEntityClass2('foo', 'bar');
         $resourceTypeKind = ResourceTypeKind::COMPLEX();
-        $foo = new ResourceComplexType(new ReflectionClass($instanceType), $complex);
+        $foo              = new ResourceComplexType(new ReflectionClass($instanceType), $complex);
 
         $result = $foo->__sleep();
 
@@ -164,7 +166,7 @@ class ResourceTypeTest extends TestCase
 
     public function testGetNamedStreamsOnPrimitiveType()
     {
-        $foo = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::BINARY());
+        $foo    = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::BINARY());
         $result = $foo->getNamedStreamsDeclaredOnThisType();
         $this->assertTrue(is_array($result));
         $this->assertEquals(0, count($result));
@@ -226,7 +228,7 @@ class ResourceTypeTest extends TestCase
         $rProp->shouldReceive('isKindOf')->withAnyArgs()->andReturn(false);
 
         $expected = 'Key properties cannot be defined in derived types';
-        $actual = null;
+        $actual   = null;
 
         try {
             $foo->addProperty($rProp);
@@ -284,13 +286,13 @@ class ResourceTypeTest extends TestCase
         $meta = NorthWindMetadata::create();
         $type = $meta->resolveResourceType('Customer');
 
-        $entity = new QueryResult();
+        $entity          = new QueryResult();
         $entity->results = [];
-        $propName = 'CompanyName';
-        $value = 'Company';
+        $propName        = 'CompanyName';
+        $value           = 'Company';
 
         $expected = 'The parameter class is expected to be either a string or an object';
-        $actual = null;
+        $actual   = null;
 
         try {
             $type->setPropertyValue($entity, $propName, $value);
@@ -305,12 +307,12 @@ class ResourceTypeTest extends TestCase
         $meta = NorthWindMetadata::create();
         $type = $meta->resolveResourceType('Customer');
 
-        $entity = null;
+        $entity   = null;
         $propName = 'CompanyName';
-        $value = 'Company';
+        $value    = 'Company';
 
         $expected = 'The parameter class is expected to be either a string or an object';
-        $actual = null;
+        $actual   = null;
 
         try {
             $type->setPropertyValue($entity, $propName, $value);
@@ -325,12 +327,12 @@ class ResourceTypeTest extends TestCase
         $meta = NorthWindMetadata::create();
         $type = $meta->resolveResourceType('Customer');
 
-        $entity = new QueryResult();
+        $entity          = new QueryResult();
         $entity->results = [];
-        $propName = 'CompanyName';
+        $propName        = 'CompanyName';
 
         $expected = 'Property POData\Common\ReflectionHandler::$CompanyName does not exist';
-        $actual = null;
+        $actual   = null;
 
         try {
             $type->getPropertyValue($entity, $propName);
@@ -345,11 +347,11 @@ class ResourceTypeTest extends TestCase
         $meta = NorthWindMetadata::create();
         $type = $meta->resolveResourceType('Customer');
 
-        $entity = null;
+        $entity   = null;
         $propName = 'CompanyName';
 
         $expected = 'Property POData\Common\ReflectionHandler::$CompanyName does not exist';
-        $actual = null;
+        $actual   = null;
 
         try {
             $type->getPropertyValue($entity, $propName);
@@ -367,9 +369,9 @@ class ResourceTypeTest extends TestCase
         $meta = NorthWindMetadata::create();
         $this->assertEquals('NorthWind', $meta->getContainerNamespace());
 
-        $type = $meta->resolveResourceType('Customer');
+        $type             = $meta->resolveResourceType('Customer');
         $expectedFullName = 'NorthWind.Customer';
-        $actualFullName = $type->getFullName();
+        $actualFullName   = $type->getFullName();
         $this->assertEquals($expectedFullName, $actualFullName);
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\UriProcessor\QueryProcessor\ExpandProjectionParser;
 
 use POData\Providers\Metadata\ResourceProperty;
@@ -59,7 +61,7 @@ class ProjectionNode
      */
     public function __construct($propertyName, ResourceProperty $resourceProperty = null)
     {
-        $this->propertyName = $propertyName;
+        $this->propertyName     = $propertyName;
         $this->resourceProperty = $resourceProperty;
     }
 

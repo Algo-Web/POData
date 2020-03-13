@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\UriProcessor\QueryProcessor\SkipTokenParser;
 
 use POData\Providers\Metadata\Type\IType;
@@ -39,7 +41,7 @@ class SkipTokenInfo
      */
     public function __construct(OrderByInfo &$orderByInfo, $orderByValuesInSkipToken)
     {
-        $this->orderByInfo = $orderByInfo;
+        $this->orderByInfo              = $orderByInfo;
         $this->orderByValuesInSkipToken = $orderByValuesInSkipToken;
     }
 

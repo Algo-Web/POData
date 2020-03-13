@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\Writers\Json;
 
 /**
@@ -42,7 +44,7 @@ class IndentedTextWriter
      */
     public function __construct($writer)
     {
-        $this->result = $writer;
+        $this->result    = $writer;
         $this->tabString = '    ';
     }
 

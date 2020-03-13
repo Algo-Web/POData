@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\UriProcessor;
 
 use POData\Common\Messages;
@@ -20,7 +22,7 @@ use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetSource;
 
 /**
- * Class UriProcessor
+ * Class UriProcessor.
  * @package POData\UriProcessor
  */
 class UriProcessor extends UriProcessorNew

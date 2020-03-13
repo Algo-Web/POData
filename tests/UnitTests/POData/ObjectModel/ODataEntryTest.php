@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\ObjectModel;
 
 use AlgoWeb\ODataMetadata\MetadataManager;
+use Mockery as m;
 use POData\ObjectModel\ODataCategory;
 use POData\ObjectModel\ODataEntry;
 use POData\ObjectModel\ODataPropertyContent;
@@ -13,13 +16,12 @@ use POData\Providers\Metadata\Type\EdmPrimitiveType;
 use POData\Providers\Metadata\Type\TypeCode;
 use ReflectionClass;
 use UnitTests\POData\TestCase;
-use Mockery as m;
 
 class ODataEntryTest extends TestCase
 {
     public function testOkNoContent()
     {
-        $foo = new ODataEntry();
+        $foo      = new ODataEntry();
         $expected = 'Property content must be instanceof ODataPropertyContent.';
 
         $actual = null;
@@ -30,9 +32,9 @@ class ODataEntryTest extends TestCase
 
     public function testOkEmptyContent()
     {
-        $foo = new ODataEntry();
+        $foo                  = new ODataEntry();
         $foo->propertyContent = new ODataPropertyContent();
-        $expected = 'Must have at least one property present.';
+        $expected             = 'Must have at least one property present.';
 
         $actual = null;
         $foo->isOK($actual);
@@ -50,7 +52,7 @@ class ODataEntryTest extends TestCase
         $typeClass->shouldReceive('hasMethod')->withArgs(['__get'])->andReturn(true);
         $typeClass->shouldReceive('isInstance')->andReturn(true);
 
-        $foo = new SimpleMetadataProvider('string', 'String');
+        $foo  = new SimpleMetadataProvider('string', 'String');
         $type = $foo->addEntityType($typeClass, 'Die', 'Dice', false, null);
         $foo->addKeyProperty($type, 'key', EdmPrimitiveType::STRING());
         $set = $foo->addResourceSet('Dice', $type);

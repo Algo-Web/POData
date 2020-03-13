@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\Facets\WordPress2;
 
 /*
@@ -339,6 +341,7 @@ class WordPressQueryProvider implements IQueryProvider
 
     /**
      * Start database transaction.
+     * @param mixed $isBulk
      */
     public function startTransaction($isBulk = false)
     {

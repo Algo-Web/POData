@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\UriProcessor\QueryProcessor\ExpressionParser;
 
 use POData\Common\ODataException;
@@ -48,8 +50,8 @@ class ExpressionParserTest extends TestCase
     public function testConstantExpression()
     {
         $expression = '123';
-        $parser = new ExpressionParser($expression, $this->customersResourceType, false);
-        $expr = $parser->parseFilter();
+        $parser     = new ExpressionParser($expression, $this->customersResourceType, false);
+        $expr       = $parser->parseFilter();
         $this->assertTrue($expr instanceof ConstantExpression);
         $this->assertTrue($expr->getType() instanceof Int32);
         $this->assertEquals(123, $expr->getValue());
@@ -145,8 +147,8 @@ class ExpressionParserTest extends TestCase
     public function testPropertyAccessExpression()
     {
         $expression = 'CustomerID';
-        $parser = new ExpressionParser($expression, $this->customersResourceType, false);
-        $expr = $parser->parseFilter();
+        $parser     = new ExpressionParser($expression, $this->customersResourceType, false);
+        $expr       = $parser->parseFilter();
         $this->assertTrue($expr instanceof PropertyAccessExpression);
         $this->assertTrue($expr->getType() instanceof StringType);
 
@@ -217,7 +219,7 @@ class ExpressionParserTest extends TestCase
         }
 
         $expression = 'Customer/CustomerID';
-        $parser = new ExpressionParser(
+        $parser     = new ExpressionParser(
             $expression,
             $this->northWindMetadata->resolveResourceSet('Orders')->getResourceType(),
             false
@@ -243,8 +245,8 @@ class ExpressionParserTest extends TestCase
     public function testArithmeticExpressionAndOperandPromotion()
     {
         $expression = '1 add 2';
-        $parser = new ExpressionParser($expression, $this->customersResourceType, false);
-        $expr = $parser->parseFilter();
+        $parser     = new ExpressionParser($expression, $this->customersResourceType, false);
+        $expr       = $parser->parseFilter();
         $this->assertTrue($expr instanceof ArithmeticExpression);
         $this->assertTrue($expr->getType() instanceof Int32);
         $this->assertTrue($expr->getLeft() instanceof ConstantExpression);
@@ -402,8 +404,8 @@ class ExpressionParserTest extends TestCase
     public function testRelationalExpression()
     {
         $expression = '2.5 gt 2';
-        $parser = new ExpressionParser($expression, $this->customersResourceType, true);
-        $expr = $parser->parseFilter();
+        $parser     = new ExpressionParser($expression, $this->customersResourceType, true);
+        $expr       = $parser->parseFilter();
         $this->assertTrue($expr instanceof RelationalExpression);
         $this->assertTrue($expr->getType() instanceof Boolean);
 
@@ -469,8 +471,8 @@ class ExpressionParserTest extends TestCase
     public function testLogicalExpression()
     {
         $expression = 'true or false';
-        $parser = new ExpressionParser($expression, $this->customersResourceType, false);
-        $expr = $parser->parseFilter();
+        $parser     = new ExpressionParser($expression, $this->customersResourceType, false);
+        $expr       = $parser->parseFilter();
         $this->assertTrue($expr instanceof LogicalExpression);
         $this->assertTrue($expr->getType() instanceof Boolean);
 
@@ -538,8 +540,8 @@ class ExpressionParserTest extends TestCase
     public function testUnaryExpression()
     {
         $expression = '-Rating';
-        $parser = new ExpressionParser($expression, $this->customersResourceType, false);
-        $expr = $parser->parseFilter();
+        $parser     = new ExpressionParser($expression, $this->customersResourceType, false);
+        $expr       = $parser->parseFilter();
         $this->assertTrue($expr instanceof UnaryExpression);
         $this->assertEquals(ExpressionType::NEGATE(), $expr->getNodeType());
         $this->assertTrue($expr->getChild() instanceof PropertyAccessExpression);
@@ -580,8 +582,8 @@ class ExpressionParserTest extends TestCase
     public function testFunctionCallExpression()
     {
         $expression = 'year(datetime\'1988-11-11\')';
-        $parser = new ExpressionParser($expression, $this->customersResourceType, false);
-        $expr = $parser->parseFilter();
+        $parser     = new ExpressionParser($expression, $this->customersResourceType, false);
+        $expr       = $parser->parseFilter();
         $this->assertTrue($expr instanceof FunctionCallExpression);
         $this->assertTrue($expr->getType() instanceof Int32);
 
@@ -648,7 +650,7 @@ class ExpressionParserTest extends TestCase
     public function testNewConstructionLacksLevel2Property()
     {
         $expression = 'year(datetime\'1988-11-11\')';
-        $parser = new ExpressionParser($expression, $this->customersResourceType, false);
+        $parser     = new ExpressionParser($expression, $this->customersResourceType, false);
         $this->assertFalse($parser->hasLevel2Property());
     }
 }

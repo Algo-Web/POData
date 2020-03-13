@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: Barnso
@@ -8,7 +10,7 @@
 namespace POData\ObjectModel\AtomObjectModel;
 
 /**
- * Class AtomContent
+ * Class AtomContent.
  * @package POData\ObjectModel\AtomObjectModel
  */
 class AtomContent
@@ -31,14 +33,14 @@ class AtomContent
 
     /**
      * AtomContent constructor.
-     * @param string $type
-     * @param string $src
+     * @param string     $type
+     * @param string     $src
      * @param mixed|null $properties
      */
     public function __construct($type, $src, $properties = null)
     {
-        $this->src = $src;
-        $this->type = $type;
+        $this->src        = $src;
+        $this->type       = $type;
         $this->properties = $properties;
     }
 }

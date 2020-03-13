@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\UriProcessor\QueryProcessor\OrderByParser;
 
 use POData\Common\Messages;
@@ -66,15 +68,15 @@ class InternalOrderByInfo
     public function __construct(
         OrderByInfo $orderByInfo,
         $subSorterFunctions,
-        callable  $sorterFunction,
+        callable $sorterFunction,
         $dummyObject,
         ResourceType $resourceType
     ) {
-        $this->orderByInfo = $orderByInfo;
-        $this->sorterFunction = $sorterFunction;
+        $this->orderByInfo        = $orderByInfo;
+        $this->sorterFunction     = $sorterFunction;
         $this->subSorterFunctions = $subSorterFunctions;
-        $this->dummyObject = $dummyObject;
-        $this->resourceType = $resourceType;
+        $this->dummyObject        = $dummyObject;
+        $this->resourceType       = $resourceType;
     }
 
     /**
@@ -151,13 +153,13 @@ class InternalOrderByInfo
     {
         $nextPageLink = null;
         foreach ($this->getOrderByPathSegments() as $orderByPathSegment) {
-            $index = 0;
-            $currentObject = $lastObject;
+            $index           = 0;
+            $currentObject   = $lastObject;
             $subPathSegments = $orderByPathSegment->getSubPathSegments();
-            $subPathCount = count($subPathSegments);
+            $subPathCount    = count($subPathSegments);
             foreach ($subPathSegments as &$subPathSegment) {
                 $isLastSegment = ($index == $subPathCount - 1);
-                $segName = $subPathSegment->getName();
+                $segName       = $subPathSegment->getName();
                 try {
                     if ($currentObject instanceof QueryResult) {
                         $currentObject = $currentObject->results;
@@ -199,6 +201,6 @@ class InternalOrderByInfo
             }
         }
 
-        return rtrim($nextPageLink, ', ');
+        return rtrim(strval($nextPageLink), ', ');
     }
 }

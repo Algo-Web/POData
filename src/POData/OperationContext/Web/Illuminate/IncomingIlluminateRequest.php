@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\OperationContext\Web\Illuminate;
 
 use Illuminate\Http\Request;
@@ -7,7 +9,7 @@ use POData\OperationContext\HTTPRequestMethod;
 use POData\OperationContext\IHTTPRequest;
 
 /**
- * Class IncomingIlluminateRequest
+ * Class IncomingIlluminateRequest.
  * @package POData\OperationContext\Web\Illuminate
  */
 class IncomingIlluminateRequest implements IHTTPRequest
@@ -62,11 +64,11 @@ class IncomingIlluminateRequest implements IHTTPRequest
      */
     public function __construct(Request $request)
     {
-        $this->request = $request;
-        $this->headers = [];
-        $this->queryOptions = [];
+        $this->request           = $request;
+        $this->headers           = [];
+        $this->queryOptions      = [];
         $this->queryOptionsCount = [];
-        $this->method = new HTTPRequestMethod($this->request->getMethod());
+        $this->method            = new HTTPRequestMethod($this->request->getMethod());
     }
 
     /**
@@ -109,12 +111,12 @@ class IncomingIlluminateRequest implements IHTTPRequest
         //this makes this request a bit non compliant as it doesn't expose duplicate keys, something POData will
         //check for instead whatever parameter was last in the query string is set.  IE
         //odata.svc/?$format=xml&$format=json the format will be json
-        $this->queryOptions = [];
+        $this->queryOptions      = [];
         $this->queryOptionsCount = [];
 
         foreach ($this->request->all() as $key => $value) {
-            $keyBitz = explode(';', $key);
-            $newKey = strtolower($keyBitz[count($keyBitz) - 1]);
+            $keyBitz              = explode(';', strval($key));
+            $newKey               = strtolower($keyBitz[count($keyBitz) - 1]);
             $this->queryOptions[] = [$newKey => $value];
             if (!array_key_exists($key, $this->queryOptionsCount)) {
                 $this->queryOptionsCount[$newKey] = 0;

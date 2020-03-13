@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\Providers\Metadata\Type;
 
 use POData\Providers\Metadata\Type\Binary;
@@ -92,9 +94,9 @@ class DecimalTest extends TestCase
 
     public function testValidateFailure()
     {
-        $type = $this->getAsIType();
+        $type  = $this->getAsIType();
         $value = '-3434.0';
-        $out = '';
+        $out   = '';
 
         $expected = '';
         $this->assertFalse($type->validate($value, $out));
@@ -105,7 +107,7 @@ class DecimalTest extends TestCase
     {
         $type = $this->getAsIType();
 
-        $value = '-3434.4331M';
+        $value  = '-3434.4331M';
         $actual = $type->convert($value);
 
         $expected = -3434.4331;
@@ -116,7 +118,7 @@ class DecimalTest extends TestCase
     {
         $type = $this->getAsIType();
 
-        $value = -3434.4331;
+        $value  = -3434.4331;
         $actual = $type->convertToOData($value);
 
         $expected = '-3434.4331M';

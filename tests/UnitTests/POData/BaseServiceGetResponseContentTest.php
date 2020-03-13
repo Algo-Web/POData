@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\Common;
 
 use Doctrine\Common\Annotations\Annotation\Target;
@@ -34,8 +36,8 @@ class BaseServiceGetResponseContentTest extends TestCase
         parent::setUp();
 
         $this->mockUriProcessor = m::mock(UriProcessor::class)->makePartial();
-        $this->mockHost = m::mock(ServiceHost::class)->makePartial();
-        $this->mockService = m::mock(BaseServiceDummy::class)->makePartial();
+        $this->mockHost         = m::mock(ServiceHost::class)->makePartial();
+        $this->mockService      = m::mock(BaseServiceDummy::class)->makePartial();
         $this->mockService->shouldReceive('getHost')->andReturn($this->mockHost);
 
         $this->mockRequest = m::mock(RequestDescription::class)->makePartial();
@@ -70,7 +72,7 @@ class BaseServiceGetResponseContentTest extends TestCase
         );
 
         //accepts doesn't match any possibles actual for that format..so it should return null
-        $this->assertEquals($expectedValue, $actual, $id);
+        $this->assertEquals($expectedValue, $actual, strval($id));
     }
 
     public function provider()

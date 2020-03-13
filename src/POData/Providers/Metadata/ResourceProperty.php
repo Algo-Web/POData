@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\Providers\Metadata;
 
 use InvalidArgumentException;
@@ -7,7 +9,7 @@ use POData\Common\Messages;
 use POData\Providers\Metadata\Type\IType;
 
 /**
- * Class ResourceProperty
+ * Class ResourceProperty.
  * @package POData\Providers\Metadata
  */
 class ResourceProperty
@@ -79,9 +81,9 @@ class ResourceProperty
             );
         }
 
-        $this->name = $name;
-        $this->mimeType = $mimeType;
-        $this->kind = $kind;
+        $this->name                 = $name;
+        $this->mimeType             = $mimeType;
+        $this->kind                 = $kind;
         $this->propertyResourceType = $propertyResourceType;
     }
 
@@ -153,8 +155,8 @@ class ResourceProperty
      * reference to ReflectionClass instance for the type. If the property of
      * kind 'Primitive' then this function returns ITYpe instance for the type.
      *
-     * @return \ReflectionClass|IType
      * @throws \ReflectionException
+     * @return \ReflectionClass|IType
      */
     public function getInstanceType()
     {
@@ -226,20 +228,20 @@ class ResourceProperty
      */
     private function isResourceKindValidForPropertyKind($pKind, ResourceTypeKind $rKind)
     {
-        if (self::sIsKindOf($pKind, /** @scrutinizer ignore-type */ResourcePropertyKind::PRIMITIVE)
+        if (self::sIsKindOf($pKind, /* @scrutinizer ignore-type */ResourcePropertyKind::PRIMITIVE)
             && $rKind != ResourceTypeKind::PRIMITIVE()
         ) {
             return false;
         }
 
-        if (self::sIsKindOf($pKind, /** @scrutinizer ignore-type */ResourcePropertyKind::COMPLEX_TYPE)
+        if (self::sIsKindOf($pKind, /* @scrutinizer ignore-type */ResourcePropertyKind::COMPLEX_TYPE)
             && $rKind != ResourceTypeKind::COMPLEX()
         ) {
             return false;
         }
 
-        if ((self::sIsKindOf($pKind, /** @scrutinizer ignore-type */ResourcePropertyKind::RESOURCE_REFERENCE)
-            || self::sIsKindOf($pKind, /** @scrutinizer ignore-type */ResourcePropertyKind::RESOURCESET_REFERENCE))
+        if ((self::sIsKindOf($pKind, /* @scrutinizer ignore-type */ResourcePropertyKind::RESOURCE_REFERENCE)
+            || self::sIsKindOf($pKind, /* @scrutinizer ignore-type */ResourcePropertyKind::RESOURCESET_REFERENCE))
             && $rKind != ResourceTypeKind::ENTITY()
         ) {
             return false;

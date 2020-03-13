@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\Providers\Metadata\Type;
 
 use POData\Providers\Metadata\Type\Binary;
@@ -92,9 +94,9 @@ class SingleTest extends TestCase
 
     public function testValidateFailure()
     {
-        $type = $this->getAsIType();
+        $type  = $this->getAsIType();
         $value = '-3434.0';
-        $out = '';
+        $out   = '';
 
         $expected = '';
         $this->assertFalse($type->validate($value, $out));
@@ -105,7 +107,7 @@ class SingleTest extends TestCase
     {
         $type = $this->getAsIType();
 
-        $value = '-343.3533';
+        $value  = '-343.3533';
         $actual = $type->convert($value);
 
         $expected = -343.3533;
@@ -116,7 +118,7 @@ class SingleTest extends TestCase
     {
         $type = $this->getAsIType();
 
-        $value = '-343.3533';
+        $value  = '-343.3533';
         $actual = $type->convertToOData($value);
 
         $expected = '-343.3533F';

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\UriProcessor\QueryProcessor\OrderByParser;
 
 use Mockery as m;
@@ -19,8 +21,8 @@ class OrderByLeafNodeTest extends TestCase
     public function testGetResourceType()
     {
         $propName = 'property';
-        $rType = m::mock(ResourceEntityType::class);
-        $rProp = m::mock(ResourceProperty::class);
+        $rType    = m::mock(ResourceEntityType::class);
+        $rProp    = m::mock(ResourceProperty::class);
         $rProp->shouldReceive('getResourceType')->andReturn($rType);
         $isAscending = true;
 
@@ -33,11 +35,11 @@ class OrderByLeafNodeTest extends TestCase
     public function testBuildComparisonFunctionFromEmptyArray()
     {
         $expected = 'There should be at least one ancestor for building the sort function';
-        $actual = null;
+        $actual   = null;
 
         $propName = 'property';
-        $rType = m::mock(ResourceEntityType::class);
-        $rProp = m::mock(ResourceProperty::class);
+        $rType    = m::mock(ResourceEntityType::class);
+        $rProp    = m::mock(ResourceProperty::class);
         $rProp->shouldReceive('getResourceType')->andReturn($rType);
         $isAscending = true;
 

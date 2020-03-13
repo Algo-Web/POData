@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\ObjectModel\Serialisers;
 
 use Mockery as m;
@@ -77,13 +79,13 @@ class CynicSerialiserTest extends SerialiserTestBase
         $mockService->shouldReceive('getHost->getAbsoluteServiceUri->getUrlAsString')
             ->andReturn('http://localhost/odata.svc/Models');
         $kidNode = m::mock(ExpandedProjectionNode::class);
-        $node = m::mock(RootProjectionNode::class);
+        $node    = m::mock(RootProjectionNode::class);
         $node->shouldReceive('canSelectAllProperties')->withAnyArgs()->andReturn(false)->once();
         $node->shouldReceive('getChildNodes')->andReturn([$kidNode])->once();
         $request = m::mock(RequestDescription::class)->makePartial();
         $request->shouldReceive('getRootProjectionNode')->andReturn($node)->once();
 
-        $foo = new CynicSerialiserDummy($mockService, $request);
+        $foo    = new CynicSerialiserDummy($mockService, $request);
         $result = $foo->getProjectionNodes();
         $this->assertTrue(is_array($result));
         $this->assertEquals(1, count($result));
@@ -108,13 +110,13 @@ class CynicSerialiserTest extends SerialiserTestBase
         $mockService->shouldReceive('getHost->getAbsoluteServiceUri->getUrlAsString')
             ->andReturn('http://localhost/odata.svc/Models');
         $kidNode = m::mock(ExpandedProjectionNode::class);
-        $node = m::mock(RootProjectionNode::class);
+        $node    = m::mock(RootProjectionNode::class);
         $node->shouldReceive('findNode')->withArgs(['Models'])->andReturn($kidNode)->never();
         $node->shouldReceive('isExpansionSpecified')->andReturn(true)->once();
         $request = m::mock(RequestDescription::class)->makePartial();
         $request->shouldReceive('getRootProjectionNode')->andReturn($node)->times(2);
 
-        $segName = 'Models';
+        $segName    = 'Models';
         $segWrapper = m::mock(ResourceSetWrapper::class);
 
         $foo = new CynicSerialiserDummy($mockService, $request);
@@ -130,13 +132,13 @@ class CynicSerialiserTest extends SerialiserTestBase
         $mockService->shouldReceive('getHost->getAbsoluteServiceUri->getUrlAsString')
             ->andReturn('http://localhost/odata.svc/Models');
         $kidNode = m::mock(ExpandedProjectionNode::class);
-        $node = m::mock(RootProjectionNode::class);
+        $node    = m::mock(RootProjectionNode::class);
         $node->shouldReceive('findNode')->withArgs(['Models'])->andReturn($kidNode)->once();
         $node->shouldReceive('isExpansionSpecified')->andReturn(true)->times(2);
         $request = m::mock(RequestDescription::class)->makePartial();
         $request->shouldReceive('getRootProjectionNode')->andReturn($node)->times(3);
 
-        $segName = 'Models';
+        $segName    = 'Models';
         $segWrapper = m::mock(ResourceSetWrapper::class);
 
         $foo = new CynicSerialiserDummy($mockService, $request);
@@ -160,7 +162,7 @@ class CynicSerialiserTest extends SerialiserTestBase
         $request = m::mock(RequestDescription::class)->makePartial();
         $request->shouldReceive('getRootProjectionNode')->andReturn($node)->times(4);
 
-        $segName = 'Models';
+        $segName    = 'Models';
         $segWrapper = m::mock(ResourceSetWrapper::class);
 
         $foo = new CynicSerialiserDummy($mockService, $request);
@@ -169,7 +171,7 @@ class CynicSerialiserTest extends SerialiserTestBase
         $foo->getStack()->pushSegment($segName, $segWrapper);
 
         $expected = 'is_null($expandedProjectionNode)';
-        $actual = null;
+        $actual   = null;
 
         try {
             $foo->getCurrentExpandedProjectionNode();
@@ -193,7 +195,7 @@ class CynicSerialiserTest extends SerialiserTestBase
         $request = m::mock(RequestDescription::class)->makePartial();
         $request->shouldReceive('getRootProjectionNode')->andReturn($node)->times(4);
 
-        $segName = 'Models';
+        $segName    = 'Models';
         $segWrapper = m::mock(ResourceSetWrapper::class);
 
         $foo = new CynicSerialiserDummy($mockService, $request);
@@ -202,7 +204,7 @@ class CynicSerialiserTest extends SerialiserTestBase
         $foo->getStack()->pushSegment($segName, $segWrapper);
 
         $expected = '$expandedProjectionNode not instanceof ExpandedProjectionNode';
-        $actual = null;
+        $actual   = null;
 
         try {
             $foo->getCurrentExpandedProjectionNode();
@@ -235,7 +237,7 @@ class CynicSerialiserTest extends SerialiserTestBase
 
     public function testNeedNextPageLineOnRootHasTopCount()
     {
-        $segName = 'Models';
+        $segName    = 'Models';
         $segWrapper = m::mock(ResourceSetWrapper::class);
         $segWrapper->shouldReceive('getResourceSetPageSize')->andReturn(10);
         $node = m::mock(RootProjectionNode::class);
@@ -259,7 +261,7 @@ class CynicSerialiserTest extends SerialiserTestBase
 
     public function testNeedNextPageLineOnRootHasNullTopCount()
     {
-        $segName = 'Models';
+        $segName    = 'Models';
         $segWrapper = m::mock(ResourceSetWrapper::class);
         $segWrapper->shouldReceive('getResourceSetPageSize')->andReturn(10);
         $node = m::mock(RootProjectionNode::class);
@@ -336,7 +338,7 @@ class CynicSerialiserTest extends SerialiserTestBase
         $foo->shouldReceive('getRequest')->andReturn($request);
 
         $expected = '?$orderby=CustomerTitle&$inlinecount=all&$top=200&$skip=200';
-        $actual = $foo->getNextLinkUri($object);
+        $actual   = $foo->getNextLinkUri($object);
         $this->assertEquals($expected, $actual);
     }
 
@@ -375,7 +377,7 @@ class CynicSerialiserTest extends SerialiserTestBase
         $foo->shouldReceive('getRequest')->andReturn($request);
 
         $expected = '?$orderby=CustomerTitle&$inlinecount=all&$skiptoken=\'University+of+Loamshire\'';
-        $actual = $foo->getNextLinkUri($object);
+        $actual   = $foo->getNextLinkUri($object);
         $this->assertEquals($expected, $actual);
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\Providers\Expression;
 
 use Mockery as m;
@@ -9,7 +11,7 @@ use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\PropertyAcce
 use UnitTests\POData\TestCase;
 
 /**
- * Class MySQLExpressionProviderErrorCheckTest
+ * Class MySQLExpressionProviderErrorCheckTest.
  * @package UnitTests\POData\Providers\Expression
  */
 class MySQLExpressionProviderErrorCheckTest extends TestCase
@@ -17,10 +19,10 @@ class MySQLExpressionProviderErrorCheckTest extends TestCase
     public function testonPropertyAccessExpressionNullResource()
     {
         $property = m::mock(PropertyAccessExpression::class)->makePartial();
-        $foo = new MySQLExpressionProvider();
+        $foo      = new MySQLExpressionProvider();
 
         $expected = 'onPropertyAccessExpression - resourceType null';
-        $actual = null;
+        $actual   = null;
 
         try {
             $result = $foo->onPropertyAccessExpression($property);
@@ -36,11 +38,11 @@ class MySQLExpressionProviderErrorCheckTest extends TestCase
         $res->shouldReceive('getName')->andReturn(null);
 
         $property = m::mock(PropertyAccessExpression::class)->makePartial();
-        $foo = new MySQLExpressionProvider();
+        $foo      = new MySQLExpressionProvider();
         $foo->setResourceType($res);
 
         $expected = 'onPropertyAccessExpression - resourceType has no name';
-        $actual = null;
+        $actual   = null;
 
         try {
             $result = $foo->onPropertyAccessExpression($property);
@@ -62,7 +64,7 @@ class MySQLExpressionProviderErrorCheckTest extends TestCase
         $foo->setResourceType($res);
 
         $expected = 'onPropertyAccessExpression - expression has no resource property';
-        $actual = null;
+        $actual   = null;
 
         try {
             $result = $foo->onPropertyAccessExpression($property);

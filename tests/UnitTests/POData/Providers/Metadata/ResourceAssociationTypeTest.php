@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\Providers\Metadata;
 
 use Mockery as m;
@@ -14,7 +16,7 @@ class ResourceAssociationTypeTest extends TestCase
 {
     public function testGetResourceAssociationTypeEndFirst()
     {
-        $type = m::mock(ResourceEntityType::class);
+        $type     = m::mock(ResourceEntityType::class);
         $property = m::mock(ResourceProperty::class);
 
         $end1 = m::mock(ResourceAssociationTypeEnd::class);
@@ -24,7 +26,7 @@ class ResourceAssociationTypeTest extends TestCase
         $end2->shouldReceive('getName')->andReturn('bar');
         $end2->shouldReceive('isBelongsTo')->andReturn(false)->never();
 
-        $foo = new ResourceAssociationType('name', 'space', $end1, $end2);
+        $foo    = new ResourceAssociationType('name', 'space', $end1, $end2);
         $result = $foo->getResourceAssociationTypeEnd($type, $property);
         $this->assertTrue($result instanceof ResourceAssociationTypeEnd);
         $this->assertEquals('foo', $result->getName());
@@ -32,7 +34,7 @@ class ResourceAssociationTypeTest extends TestCase
 
     public function testGetResourceAssociationTypeEndSecond()
     {
-        $type = m::mock(ResourceEntityType::class);
+        $type     = m::mock(ResourceEntityType::class);
         $property = m::mock(ResourceProperty::class);
 
         $end1 = m::mock(ResourceAssociationTypeEnd::class);
@@ -42,7 +44,7 @@ class ResourceAssociationTypeTest extends TestCase
         $end2->shouldReceive('getName')->andReturn('bar');
         $end2->shouldReceive('isBelongsTo')->andReturn(true)->once();
 
-        $foo = new ResourceAssociationType('name', 'space', $end1, $end2);
+        $foo    = new ResourceAssociationType('name', 'space', $end1, $end2);
         $result = $foo->getResourceAssociationTypeEnd($type, $property);
         $this->assertTrue($result instanceof ResourceAssociationTypeEnd);
         $this->assertEquals('bar', $result->getName());
@@ -50,7 +52,7 @@ class ResourceAssociationTypeTest extends TestCase
 
     public function testGetResourceAssociationTypeEndNeither()
     {
-        $type = m::mock(ResourceEntityType::class);
+        $type     = m::mock(ResourceEntityType::class);
         $property = m::mock(ResourceProperty::class);
 
         $end1 = m::mock(ResourceAssociationTypeEnd::class);
@@ -60,14 +62,14 @@ class ResourceAssociationTypeTest extends TestCase
         $end2->shouldReceive('getName')->andReturn('bar');
         $end2->shouldReceive('isBelongsTo')->andReturn(false)->once();
 
-        $foo = new ResourceAssociationType('name', 'space', $end1, $end2);
+        $foo    = new ResourceAssociationType('name', 'space', $end1, $end2);
         $result = $foo->getResourceAssociationTypeEnd($type, $property);
         $this->assertNull($result);
     }
 
     public function testGetRelatedResourceAssociationSetEndFirst()
     {
-        $type = m::mock(ResourceEntityType::class);
+        $type     = m::mock(ResourceEntityType::class);
         $property = m::mock(ResourceProperty::class);
 
         $end1 = m::mock(ResourceAssociationTypeEnd::class);
@@ -77,7 +79,7 @@ class ResourceAssociationTypeTest extends TestCase
         $end2->shouldReceive('getName')->andReturn('bar');
         $end2->shouldReceive('isBelongsTo')->andReturn(false)->never();
 
-        $foo = new ResourceAssociationType('name', 'space', $end1, $end2);
+        $foo    = new ResourceAssociationType('name', 'space', $end1, $end2);
         $result = $foo->getRelatedResourceAssociationSetEnd($type, $property);
         $this->assertTrue($result instanceof ResourceAssociationTypeEnd);
         $this->assertEquals('bar', $result->getName());
@@ -85,7 +87,7 @@ class ResourceAssociationTypeTest extends TestCase
 
     public function testGetRelatedResourceAssociationSetEndSecond()
     {
-        $type = m::mock(ResourceEntityType::class);
+        $type     = m::mock(ResourceEntityType::class);
         $property = m::mock(ResourceProperty::class);
 
         $end1 = m::mock(ResourceAssociationTypeEnd::class);
@@ -95,7 +97,7 @@ class ResourceAssociationTypeTest extends TestCase
         $end2->shouldReceive('getName')->andReturn('bar');
         $end2->shouldReceive('isBelongsTo')->andReturn(true)->once();
 
-        $foo = new ResourceAssociationType('name', 'space', $end1, $end2);
+        $foo    = new ResourceAssociationType('name', 'space', $end1, $end2);
         $result = $foo->getRelatedResourceAssociationSetEnd($type, $property);
         $this->assertTrue($result instanceof ResourceAssociationTypeEnd);
         $this->assertEquals('foo', $result->getName());
@@ -103,7 +105,7 @@ class ResourceAssociationTypeTest extends TestCase
 
     public function testGetRelatedResourceAssociationSetEndNeither()
     {
-        $type = m::mock(ResourceEntityType::class);
+        $type     = m::mock(ResourceEntityType::class);
         $property = m::mock(ResourceProperty::class);
 
         $end1 = m::mock(ResourceAssociationTypeEnd::class);
@@ -113,7 +115,7 @@ class ResourceAssociationTypeTest extends TestCase
         $end2->shouldReceive('getName')->andReturn('bar');
         $end2->shouldReceive('isBelongsTo')->andReturn(false)->once();
 
-        $foo = new ResourceAssociationType('name', 'space', $end1, $end2);
+        $foo    = new ResourceAssociationType('name', 'space', $end1, $end2);
         $result = $foo->getRelatedResourceAssociationSetEnd($type, $property);
         $this->assertNull($result);
         $this->assertEquals('foo', $foo->getEnd1()->getName());

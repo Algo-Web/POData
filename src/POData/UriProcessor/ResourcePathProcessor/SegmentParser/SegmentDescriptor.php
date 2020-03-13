@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\UriProcessor\ResourcePathProcessor\SegmentParser;
 
 use POData\Providers\Metadata\ResourceProperty;
@@ -102,7 +104,7 @@ class SegmentDescriptor
     public function __construct()
     {
         $this->singleResult = false;
-        $this->targetKind = TargetKind::NOTHING();
+        $this->targetKind   = TargetKind::NOTHING();
         $this->targetSource = TargetSource::NONE();
     }
 
@@ -115,15 +117,15 @@ class SegmentDescriptor
      */
     public static function createFrom(SegmentDescriptor $anotherDescriptor)
     {
-        $descriptor = new self();
-        $descriptor->identifier = $anotherDescriptor->identifier;
-        $descriptor->keyDescriptor = $anotherDescriptor->keyDescriptor;
-        $descriptor->projectedProperty = $anotherDescriptor->projectedProperty;
-        $descriptor->singleResult = $anotherDescriptor->singleResult;
-        $descriptor->targetKind = $anotherDescriptor->targetKind;
+        $descriptor                           = new self();
+        $descriptor->identifier               = $anotherDescriptor->identifier;
+        $descriptor->keyDescriptor            = $anotherDescriptor->keyDescriptor;
+        $descriptor->projectedProperty        = $anotherDescriptor->projectedProperty;
+        $descriptor->singleResult             = $anotherDescriptor->singleResult;
+        $descriptor->targetKind               = $anotherDescriptor->targetKind;
         $descriptor->targetResourceSetWrapper = $anotherDescriptor->targetResourceSetWrapper;
-        $descriptor->targetResourceType = $anotherDescriptor->targetResourceType;
-        $descriptor->targetSource = $anotherDescriptor->targetSource;
+        $descriptor->targetResourceType       = $anotherDescriptor->targetResourceType;
+        $descriptor->targetSource             = $anotherDescriptor->targetSource;
 
         return $descriptor;
     }

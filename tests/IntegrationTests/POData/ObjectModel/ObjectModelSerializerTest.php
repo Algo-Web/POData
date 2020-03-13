@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 ob_start();
 /*
  * Note:
@@ -45,12 +47,12 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
         ob_end_clean();
 
         $this->assertStringStartsWith(
-            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'."\n".'<feed',
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" . '<feed',
             $my_str
         );
 
         $this->assertStringEndsWith(
-            '</feed>'."\n",
+            '</feed>' . "\n",
             $my_str
         );
     }
@@ -77,12 +79,12 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
         ob_end_clean();
 
         $this->assertStringStartsWith(
-            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'."\n".'<feed',
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" . '<feed',
             $my_str
         );
 
         $this->assertStringEndsWith(
-            '</feed>'."\n",
+            '</feed>' . "\n",
             $my_str
         );
     }
@@ -107,12 +109,12 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
         ob_end_clean();
 
         $this->assertStringStartsWith(
-            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'."\n".'<feed',
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" . '<feed',
             $my_str
         );
 
         $this->assertStringEndsWith(
-            '</feed>'."\n",
+            '</feed>' . "\n",
             $my_str
         );
     }
@@ -138,12 +140,12 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
         $my_str = ob_get_contents();
         ob_end_clean();
         $this->assertStringStartsWith(
-            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'."\n".'<entry',
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" . '<entry',
             $my_str
         );
 
         $this->assertStringEndsWith(
-            '</entry>'."\n",
+            '</entry>' . "\n",
             $my_str
         );
     }
@@ -170,12 +172,12 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
         ob_end_clean();
 
         $this->assertStringStartsWith(
-            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'."\n".'<entry',
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" . '<entry',
             $my_str
         );
 
         $this->assertStringEndsWith(
-            '</entry>'."\n",
+            '</entry>' . "\n",
             $my_str
         );
     }
@@ -202,12 +204,12 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
         ob_end_clean();
 
         $this->assertStringStartsWith(
-            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'."\n".'<links',
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" . '<links',
             $my_str
         );
 
         $this->assertStringEndsWith(
-            '</links>'."\n",
+            '</links>' . "\n",
             $my_str
         );
     }
@@ -234,12 +236,12 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
         ob_end_clean();
 
         $this->assertStringStartsWith(
-            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'."\n".'<uri',
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" . '<uri',
             $my_str
         );
 
         $this->assertStringEndsWith(
-            '</uri>'."\n",
+            '</uri>' . "\n",
             $my_str
         );
     }
@@ -266,12 +268,12 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
         ob_end_clean();
 
         $this->assertStringStartsWith(
-            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'."\n".'<d:Address m:type="NorthWind.Address"',
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" . '<d:Address m:type="NorthWind.Address"',
             $my_str
         );
 
         $this->assertStringEndsWith(
-            '</d:Address>'."\n",
+            '</d:Address>' . "\n",
             $my_str
         );
     }
@@ -298,12 +300,12 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
         ob_end_clean();
 
         $this->assertStringStartsWith(
-            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'."\n".'<d:Country m:type="Edm.String"',
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" . '<d:Country m:type="Edm.String"',
             $my_str
         );
 
         $this->assertStringEndsWith(
-            '</d:Country>'."\n",
+            '</d:Country>' . "\n",
             $my_str
         );
     }
@@ -330,12 +332,12 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
         ob_end_clean();
 
         $this->assertStringStartsWith(
-            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'."\n".'<d:OtherAddresses m:type="Collection(NorthWind.Address)"',
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" . '<d:OtherAddresses m:type="Collection(NorthWind.Address)"',
             $my_str
         );
 
         $this->assertStringEndsWith(
-            '</d:OtherAddresses>'."\n",
+            '</d:OtherAddresses>' . "\n",
             $my_str
         );
     }
@@ -362,12 +364,12 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
         ob_end_clean();
 
         $this->assertStringStartsWith(
-            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'."\n".'<entry',
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" . '<entry',
             $my_str
         );
 
         $this->assertStringEndsWith(
-            '</entry>'."\n",
+            '</entry>' . "\n",
             $my_str
         );
     }
@@ -394,12 +396,12 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
         ob_end_clean();
 
         $this->assertStringStartsWith(
-            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'."\n".'<feed',
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" . '<feed',
             $my_str
         );
 
         $this->assertStringEndsWith(
-            '</feed>'."\n",
+            '</feed>' . "\n",
             $my_str
         );
     }
@@ -412,9 +414,9 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
         $_SERVER[ODataConstants::HTTPREQUEST_METHOD]
             = ODataConstants::HTTP_METHOD_GET;
         $_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL]
-            = ODataConstants::HTTPREQUEST_PROTOCOL_HTTP;
+                                                                                                 = ODataConstants::HTTPREQUEST_PROTOCOL_HTTP;
         $_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)] = 'localhost:8086';
-        $_SERVER[ODataConstants::HTTPREQUEST_URI] = '/NorthWind.svc/Customers';
+        $_SERVER[ODataConstants::HTTPREQUEST_URI]                                                = '/NorthWind.svc/Customers';
         $_SERVER[ODataConstants::HTTPREQUEST_QUERY_STRING]
             = '$inlinecount=allpages';
 
@@ -424,12 +426,12 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
         ob_end_clean();
 
         $this->assertStringStartsWith(
-            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'."\n".'<feed',
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" . '<feed',
             $my_str
         );
 
         $this->assertStringEndsWith(
-            '</feed>'."\n",
+            '</feed>' . "\n",
             $my_str
         );
     }
@@ -442,10 +444,10 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
         $_SERVER[ODataConstants::HTTPREQUEST_METHOD]
             = ODataConstants::HTTP_METHOD_GET;
         $_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL]
-            = ODataConstants::HTTPREQUEST_PROTOCOL_HTTP;
+                                                                                                 = ODataConstants::HTTPREQUEST_PROTOCOL_HTTP;
         $_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)] = 'localhost:8086';
-        $_SERVER[ODataConstants::HTTPREQUEST_URI] = '/NorthWind.svc/Customers';
-        $_SERVER[ODataConstants::HTTPREQUEST_QUERY_STRING] = '$inlinecount=none';
+        $_SERVER[ODataConstants::HTTPREQUEST_URI]                                                = '/NorthWind.svc/Customers';
+        $_SERVER[ODataConstants::HTTPREQUEST_QUERY_STRING]                                       = '$inlinecount=none';
 
         $dispatcher = new Dispatcher();
         $dispatcher->dispatch();
@@ -453,12 +455,12 @@ class TestObjectModelSerializer extends PHPUnit_Framework_TestCase
         ob_end_clean();
 
         $this->assertStringStartsWith(
-            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'."\n".'<feed',
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" . '<feed',
             $my_str
         );
 
         $this->assertStringEndsWith(
-            '</feed>'."\n",
+            '</feed>' . "\n",
             $my_str
         );
     }

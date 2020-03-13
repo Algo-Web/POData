@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions;
 
 /**
@@ -22,9 +24,9 @@ class ConstantExpression extends AbstractExpression
      */
     public function __construct($value, $type)
     {
-        $this->value = $value;
+        $this->value    = $value;
         $this->nodeType = ExpressionType::CONSTANT();
-        $this->type = $type;
+        $this->type     = $type;
     }
 
     /**

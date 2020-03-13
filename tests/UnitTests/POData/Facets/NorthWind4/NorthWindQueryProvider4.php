@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\Facets\NorthWind4;
 
 use POData\Providers\Metadata\ResourceProperty;
@@ -318,6 +320,7 @@ class NorthWindQueryProvider4 implements IQueryProvider
 
     /**
      * Start database transaction.
+     * @param mixed $isBulk
      */
     public function startTransaction($isBulk = false)
     {

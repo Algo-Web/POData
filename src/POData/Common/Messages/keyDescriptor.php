@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\Common\Messages;
 
 /**
- * Trait keyDescriptor
+ * Trait keyDescriptor.
  * @package POData\Common\Messages
  */
 trait keyDescriptor
@@ -53,7 +55,7 @@ trait keyDescriptor
     public static function keyDescriptorInCompatibleKeyType($segment, $keyProperty, $expectedType, $actualType)
     {
         return 'Syntax error in the segment \'' . $segment . '\'. The value of key property \'' . $keyProperty
-                .'\' should be of type ' . $expectedType . ', given ' . $actualType;
+                . '\' should be of type ' . $expectedType . ', given ' . $actualType;
     }
 
     /**
@@ -76,7 +78,7 @@ trait keyDescriptor
         $actualType
     ) {
         return 'Syntax error in the segment \'' . $segment . '\'. The value of key property \'' . $keyProperty
-                .'\' at position ' . $position . ' should be of type ' . $expectedType . ', given ' . $actualType;
+                . '\' at position ' . $position . ' should be of type ' . $expectedType . ', given ' . $actualType;
     }
 
     /**

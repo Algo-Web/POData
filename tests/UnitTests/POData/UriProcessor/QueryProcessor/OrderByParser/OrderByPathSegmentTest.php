@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\UriProcessor\QueryProcessor\OrderByParser;
 
 use Mockery as m;
@@ -11,7 +13,7 @@ class OrderByPathSegmentTest extends TestCase
     public function testConstructWithSegmentsNotArray()
     {
         $expected = 'The argument orderBySubPathSegments should be a non-empty array';
-        $actual = null;
+        $actual   = null;
 
         try {
             new OrderByPathSegment(null);
@@ -25,7 +27,7 @@ class OrderByPathSegmentTest extends TestCase
     public function testConstructWithSegmentsEmptyArray()
     {
         $expected = 'The argument orderBySubPathSegments should be a non-empty array';
-        $actual = null;
+        $actual   = null;
 
         try {
             new OrderByPathSegment([]);

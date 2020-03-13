@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\Writers;
 
 use POData\Common\HttpStatus;
@@ -56,10 +58,10 @@ class ResponseWriter
         ) {
             // Binary property or media resource
             if (TargetKind::MEDIA_RESOURCE() == $request->getTargetKind()) {
-                $result = $request->getTargetResult();
+                $result     = $request->getTargetResult();
                 $streamInfo = $request->getResourceStreamInfo();
-                $provider = $service->getStreamProviderWrapper();
-                $eTag = $provider->getStreamETag($result, $streamInfo);
+                $provider   = $service->getStreamProviderWrapper();
+                $eTag       = $provider->getStreamETag($result, $streamInfo);
                 $service->getHost()->setResponseETag($eTag);
                 $responseBody = $provider->getReadStream($result, $streamInfo);
             } else {
@@ -70,7 +72,7 @@ class ResponseWriter
                 $responseContentType = MimeTypes::MIME_APPLICATION_OCTETSTREAM;
             }
         } else {
-            $responsePieces = explode(';', $responseContentType);
+            $responsePieces      = explode(';', $responseContentType);
             $responseContentType = $responsePieces[0];
 
             $writer = $service->getODataWriterRegistry()->getWriter(
@@ -81,7 +83,7 @@ class ResponseWriter
                 throw new \Exception(Messages::noWriterToHandleRequest());
             }
             $segments = $request->getSegments();
-            $numSeg = count($segments);
+            $numSeg   = count($segments);
             if (1 < $numSeg && '$links' == $segments[$numSeg - 2]->getIdentifier()) {
                 if (null !== $entityModel) {
                     throw new \Exception(Messages::modelPayloadOnLinkModification());

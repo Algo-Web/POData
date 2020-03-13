@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\Common;
 
 use Mockery as m;
@@ -12,7 +14,7 @@ class ReflectionHandlerTest extends TestCase
     public function testSetGetPrivateValue()
     {
         $expected = 'oldName';
-        $foo = new reflectionTest1('newName');
+        $foo      = new reflectionTest1('newName');
         ReflectionHandler::setProperty($foo, 'name', 'oldName');
         $actual = ReflectionHandler::getProperty($foo, 'name');
         $this->assertEquals($expected, $actual);
@@ -21,7 +23,7 @@ class ReflectionHandlerTest extends TestCase
     public function testSetGetMagicMethod()
     {
         $expected = 'oldName';
-        $foo = new reusableEntityClass2('name', 'type');
+        $foo      = new reusableEntityClass2('name', 'type');
         ReflectionHandler::setProperty($foo, 'name', 'oldName');
         $actual = ReflectionHandler::getProperty($foo, 'name');
         $this->assertEquals($expected, $actual);

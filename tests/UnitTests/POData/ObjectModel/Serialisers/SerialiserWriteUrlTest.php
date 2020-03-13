@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\ObjectModel\Serialisers;
 
 use Mockery as m;
@@ -33,18 +35,18 @@ class SerialiserWriteUrlTest extends SerialiserTestBase
         $request->shouldReceive('fullUrl')->andReturn('http://localhost/odata.svc/Customers');
 
         list($host, $meta, $query) = $this->setUpDataServiceDeps($request);
-        $ironic = $this->setUpSerialisers($query, $meta, $host);
+        $ironic                    = $this->setUpSerialisers($query, $meta, $host);
 
-        $model = new Customer2();
-        $model->CustomerID = 2;
+        $model               = new Customer2();
+        $model->CustomerID   = 2;
         $model->CustomerGuid = '123e4567-e89b-12d3-a456-426655440000';
 
-        $result = new QueryResult();
+        $result          = new QueryResult();
         $result->results = $model;
 
-        $objectResult = new ODataURL();
+        $objectResult      = new ODataURL();
         $objectResult->url = 'http://localhost/odata.svc/Customers(CustomerID=\'2\',CustomerGuid'
-                             .'=guid\'123e4567-e89b-12d3-a456-426655440000\')';
+                             . '=guid\'123e4567-e89b-12d3-a456-426655440000\')';
         $ironicResult = $ironic->writeUrlElement($result);
         $this->assertEquals(get_class($objectResult), get_class($ironicResult));
         $this->assertEquals($objectResult, $ironicResult);
@@ -61,25 +63,25 @@ class SerialiserWriteUrlTest extends SerialiserTestBase
         // default data service
         $ironic = $this->setUpSerialisers($query, $meta, $host, 2);
 
-        $model = new Customer2();
-        $model->CustomerID = 2;
+        $model               = new Customer2();
+        $model->CustomerID   = 2;
         $model->CustomerGuid = '123e4567-e89b-12d3-a456-426655440000';
 
-        $result = new QueryResult();
+        $result          = new QueryResult();
         $result->results = $model;
 
-        $collection = new QueryResult();
+        $collection          = new QueryResult();
         $collection->results = [$result, $model];
 
-        $url = new ODataURL();
+        $url      = new ODataURL();
         $url->url = 'http://localhost/odata.svc/Customers(CustomerID=\'2\',CustomerGuid'
-                    .'=guid\'123e4567-e89b-12d3-a456-426655440000\')';
+                    . '=guid\'123e4567-e89b-12d3-a456-426655440000\')';
 
-        $objectResult = new ODataURLCollection();
+        $objectResult         = new ODataURLCollection();
         $objectResult->urls[] = $url;
         $objectResult->urls[] = $url;
-        $objectResult->count = 2;
-        $ironicResult = $ironic->writeUrlElements($collection);
+        $objectResult->count  = 2;
+        $ironicResult         = $ironic->writeUrlElements($collection);
         $this->assertEquals(get_class($objectResult), get_class($ironicResult));
         $this->assertEquals($objectResult, $ironicResult);
     }
@@ -95,31 +97,31 @@ class SerialiserWriteUrlTest extends SerialiserTestBase
         // default data service
         $ironic = $this->setUpSerialisers($query, $meta, $host);
 
-        $model = new Customer2();
-        $model->CustomerID = 2;
+        $model               = new Customer2();
+        $model->CustomerID   = 2;
         $model->CustomerGuid = '123e4567-e89b-12d3-a456-426655440000';
 
-        $result = new QueryResult();
+        $result          = new QueryResult();
         $result->results = $model;
 
-        $collection = new QueryResult();
+        $collection          = new QueryResult();
         $collection->results = [$result];
         $collection->hasMore = true;
 
-        $url = new ODataURL();
+        $url      = new ODataURL();
         $url->url = 'http://localhost/odata.svc/Customers(CustomerID=\'2\',CustomerGuid'
-                    .'=guid\'123e4567-e89b-12d3-a456-426655440000\')';
+                    . '=guid\'123e4567-e89b-12d3-a456-426655440000\')';
 
-        $nextLink = new ODataLink();
+        $nextLink       = new ODataLink();
         $nextLink->name = 'next';
-        $nextLink->url = 'http://localhost/odata.svc/Customers?$skiptoken=\'2\', '
-                         .'guid\'123e4567-e89b-12d3-a456-426655440000\'';
+        $nextLink->url  = 'http://localhost/odata.svc/Customers?$skiptoken=\'2\', '
+                         . 'guid\'123e4567-e89b-12d3-a456-426655440000\'';
 
-        $objectResult = new ODataURLCollection();
-        $objectResult->urls[] = $url;
-        $objectResult->count = 1;
+        $objectResult               = new ODataURLCollection();
+        $objectResult->urls[]       = $url;
+        $objectResult->count        = 1;
         $objectResult->nextPageLink = $nextLink;
-        $ironicResult = $ironic->writeUrlElements($collection);
+        $ironicResult               = $ironic->writeUrlElements($collection);
         $this->assertEquals(get_class($objectResult), get_class($ironicResult));
         $this->assertEquals($objectResult, $ironicResult);
     }
@@ -130,10 +132,10 @@ class SerialiserWriteUrlTest extends SerialiserTestBase
      */
     private function setUpDataServiceDeps($request)
     {
-        $op = new OperationContextAdapter($request);
+        $op   = new OperationContextAdapter($request);
         $host = new ServiceHost($op, $request);
 
-        $meta = NorthWindMetadata::Create();
+        $meta  = NorthWindMetadata::Create();
         $query = m::mock(IQueryProvider::class);
 
         return [$host, $meta, $query];
@@ -149,8 +151,8 @@ class SerialiserWriteUrlTest extends SerialiserTestBase
     private function setUpSerialisers($query, $meta, $host, $count = 1)
     {
         // default data service
-        $service = new TestDataService($query, $meta, $host);
-        $processor = $service->handleRequest();
+        $service                            = new TestDataService($query, $meta, $host);
+        $processor                          = $service->handleRequest();
         $processor->getRequest()->queryType = QueryType::ENTITIES_WITH_COUNT();
         $processor->getRequest()->setCountValue($count);
         $object = new ObjectModelSerializer($service, $processor->getRequest());

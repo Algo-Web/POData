@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\OperationContext;
 
 use POData\OperationContext\Web\OutgoingResponse;
 
 /**
- * Class SimpleOperativeContext
+ * Class SimpleOperativeContext.
  * @package POData\OperationContext
  */
 class SimpleOperativeContext implements IOperationContext
@@ -21,7 +23,7 @@ class SimpleOperativeContext implements IOperationContext
      */
     public function __construct($request)
     {
-        $this->request = new SimpleRequestAdapter($request);
+        $this->request  = new SimpleRequestAdapter($request);
         $this->response = new OutgoingResponse();
     }
 

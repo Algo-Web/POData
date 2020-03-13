@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\UriProcessor\QueryProcessor\ExpressionParser;
 
 use POData\Common\ODataConstants;
@@ -32,13 +34,10 @@ use UnitTests\POData\TestCase;
 
 class ExpressionTokenTest extends TestCase
 {
-    /**
-     *
-     */
     public function testGetIdentifierOnNewCreationThrowsException()
     {
         $expected = 'Identifier expected at position ';
-        $actual = null;
+        $actual   = null;
 
         $foo = new ExpressionToken();
 

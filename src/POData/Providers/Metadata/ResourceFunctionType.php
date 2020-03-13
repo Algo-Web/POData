@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\Providers\Metadata;
 
 use AlgoWeb\ODataMetadata\MetadataV3\edm\EntityContainer\FunctionImportAnonymousType;
 use AlgoWeb\ODataMetadata\MetadataV3\edm\TFunctionImportParameterType;
 
 /**
- * Class ResourceFunctionType
+ * Class ResourceFunctionType.
  * @package POData\Providers\Metadata
  */
 class ResourceFunctionType
@@ -46,7 +48,7 @@ class ResourceFunctionType
         $isArray = is_array($functionName);
         if ($isArray && 1 == count($functionName)) {
             $builtFunctionName = $functionName[0];
-            $isArray = false;
+            $isArray           = false;
         } else {
             $builtFunctionName = $functionName;
         }
@@ -71,7 +73,7 @@ class ResourceFunctionType
             }
             if (is_string($builtFunctionName[0])) {
                 $builtFunctionName[0] = trim($builtFunctionName[0]);
-                $func = $builtFunctionName[0];
+                $func                 = $builtFunctionName[0];
                 if ('' == $func) {
                     $msg = 'First element of FunctionName must not be empty';
                     throw new \InvalidArgumentException($msg);
@@ -89,11 +91,11 @@ class ResourceFunctionType
         }
 
         if (!$type->isOK($msg)) {
-            throw new \InvalidArgumentException($msg);
+            throw new \InvalidArgumentException(strval($msg));
         }
 
         $this->functionName = $builtFunctionName;
-        $this->baseType = $type;
+        $this->baseType     = $type;
         $this->resourceType = $resource;
     }
 
@@ -136,15 +138,15 @@ class ResourceFunctionType
     }
 
     /**
-     * @param array $parms
+     * @param  array $parms
      * @return mixed
      */
     public function get(array $parms = [])
     {
         // check inputs
-        $baseParms = $this->getParms();
+        $baseParms     = $this->getParms();
         $expectedParms = count($baseParms);
-        $actualParms = count($parms);
+        $actualParms   = count($parms);
         if ($expectedParms != $actualParms) {
             $msg = 'Was expecting ' . $expectedParms . ' arguments, received ' . $actualParms . ' instead';
             throw new \InvalidArgumentException($msg);

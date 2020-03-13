@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\Writers\Json;
 
 use POData\Common\MimeTypes;
@@ -62,8 +64,8 @@ class JsonODataV1Writer implements IODataWriter
      *
      * @param ODataURL|ODataURLCollection|ODataPropertyContent|ODataFeed|ODataEntry $model Object of requested content
      *
-     * @return JsonODataV1Writer
      * @throws \Exception
+     * @return JsonODataV1Writer
      */
     public function write($model)
     {
@@ -98,8 +100,8 @@ class JsonODataV1Writer implements IODataWriter
     /**
      * @param ODataURL $url the url to write
      *
-     * @return JsonODataV1Writer
      * @throws \Exception
+     * @return JsonODataV1Writer
      */
     public function writeUrl(ODataURL $url)
     {
@@ -115,8 +117,8 @@ class JsonODataV1Writer implements IODataWriter
      *
      * @param ODataURLCollection $urls url collection to write
      *
-     * @return JsonODataV1Writer
      * @throws \Exception
+     * @return JsonODataV1Writer
      */
     public function writeUrlCollection(ODataURLCollection $urls)
     {
@@ -134,8 +136,8 @@ class JsonODataV1Writer implements IODataWriter
      *
      * @param ODataFeed $feed Feed to write
      *
-     * @return JsonODataV1Writer
      * @throws \Exception
+     * @return JsonODataV1Writer
      */
     protected function writeFeed(ODataFeed $feed)
     {
@@ -151,8 +153,8 @@ class JsonODataV1Writer implements IODataWriter
     /**
      * @param ODataEntry $entry Entry to write
      *
-     * @return JsonODataV1Writer
      * @throws \Exception
+     * @return JsonODataV1Writer
      */
     protected function writeEntry(ODataEntry $entry)
     {
@@ -171,8 +173,8 @@ class JsonODataV1Writer implements IODataWriter
      *
      * @param ODataEntry $entry Entry to write metadata for
      *
-     * @return JsonODataV1Writer
      * @throws \Exception
+     * @return JsonODataV1Writer
      */
     protected function writeEntryMetadata(ODataEntry $entry)
     {
@@ -257,8 +259,8 @@ class JsonODataV1Writer implements IODataWriter
     /**
      * @param ODataLink $link Link to write
      *
-     * @return JsonODataV1Writer
      * @throws \Exception
+     * @return JsonODataV1Writer
      */
     protected function writeLink(ODataLink $link)
     {
@@ -287,17 +289,17 @@ class JsonODataV1Writer implements IODataWriter
     }
 
     /**
-     * @param ODataLink $link
+     * @param  ODataLink  $link
      * @throws \Exception
      */
     protected function writeExpandedLink(ODataLink $link)
     {
         if ($link->isCollection) {
             $this->writer->startArrayScope();
-            $this->writeFeed(/** @scrutinizer ignore-type */$link->expandedResult);
+            $this->writeFeed(/* @scrutinizer ignore-type */$link->expandedResult);
         } else {
             $this->writer->startObjectScope();
-            $this->writeEntry(/** @scrutinizer ignore-type */$link->expandedResult);
+            $this->writeEntry(/* @scrutinizer ignore-type */$link->expandedResult);
         }
 
         $this->writer->endScope();
@@ -309,8 +311,8 @@ class JsonODataV1Writer implements IODataWriter
      *
      * @param ODataPropertyContent $properties Collection of properties
      *
-     * @return JsonODataV1Writer
      * @throws \Exception
+     * @return JsonODataV1Writer
      */
     protected function writeProperties(ODataPropertyContent $properties = null)
     {
@@ -335,7 +337,7 @@ class JsonODataV1Writer implements IODataWriter
     }
 
     /**
-     * @param ODataProperty $property
+     * @param  ODataProperty $property
      * @return $this
      */
     protected function writePropertyMeta(ODataProperty $property)
@@ -348,8 +350,8 @@ class JsonODataV1Writer implements IODataWriter
      *
      * @param ODataProperty $property property to write
      *
-     * @return JsonODataV1Writer
      * @throws \Exception
+     * @return JsonODataV1Writer
      */
     protected function writeComplexProperty(ODataProperty $property)
     {
@@ -376,8 +378,8 @@ class JsonODataV1Writer implements IODataWriter
      *
      * @param ODataBagContent $bag bag property to write
      *
-     * @return JsonODataV1Writer
      * @throws \Exception
+     * @return JsonODataV1Writer
      */
     protected function writeBagContent(ODataBagContent $bag)
     {
@@ -414,13 +416,13 @@ class JsonODataV1Writer implements IODataWriter
     /**
      * serialize exception.
      *
-     * @param ODataException $exception Exception to serialize
-     * @param bool $serializeInnerException if set to true
+     * @param ODataException $exception               Exception to serialize
+     * @param bool           $serializeInnerException if set to true
      *
      * serialize the inner exception if $exception is an ODataException
      *
-     * @return string
      * @throws \Exception
+     * @return string
      */
     public static function serializeException(ODataException $exception, $serializeInnerException)
     {
@@ -467,8 +469,8 @@ class JsonODataV1Writer implements IODataWriter
     /**
      * @param ProvidersWrapper $providers
      *
-     * @return IODataWriter
      * @throws \Exception
+     * @return IODataWriter
      */
     public function writeServiceDocument(ProvidersWrapper $providers)
     {

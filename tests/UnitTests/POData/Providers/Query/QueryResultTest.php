@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\Providers\Metadata;
 
 use POData\Providers\Query\QueryResult;
@@ -19,13 +21,13 @@ class QueryResultTest extends TestCase
     {
         $actual = QueryResult::adjustCountForPaging($count, $top, $skip);
 
-        $this->assertEquals($expected, $actual, $id);
+        $this->assertEquals($expected, $actual, strval($id));
     }
 
     public function provider()
     {
         return [
-                        //count //top   //skip  //expected
+            //count //top   //skip  //expected
             [101,  0,      null,   null,   0],
             [102,  1,      null,   null,   1],
             [103,  10,     1,      null,   1],
@@ -41,7 +43,7 @@ class QueryResultTest extends TestCase
     public function testAdjustCountForPagingWithNonNumericCount()
     {
         $expected = '$count';
-        $actual = null;
+        $actual   = null;
 
         try {
             QueryResult::adjustCountForPaging('a,b', 0, 0);

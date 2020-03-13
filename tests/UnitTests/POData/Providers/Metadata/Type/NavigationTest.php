@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\Providers\Metadata\Type;
 
 use Mockery as m;
@@ -40,7 +42,7 @@ class NavigationTest extends TestCase
         $this->resource->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::PRIMITIVE());
 
         $expected = 'Only possible Navigation types are Complex and Entity.';
-        $actual = null;
+        $actual   = null;
 
         try {
             $foo = new Navigation($this->resource);
@@ -116,7 +118,7 @@ class NavigationTest extends TestCase
         $foo = $this->getAsIType();
 
         $expected = '';
-        $actual = null;
+        $actual   = null;
 
         try {
             $foo->convert('foo');
@@ -132,7 +134,7 @@ class NavigationTest extends TestCase
         $foo = $this->getAsIType();
 
         $expected = '';
-        $actual = null;
+        $actual   = null;
 
         try {
             $foo->convertToOData('foo');
@@ -145,7 +147,7 @@ class NavigationTest extends TestCase
 
     public function testGetResourceType()
     {
-        $foo = $this->getAsIType();
+        $foo    = $this->getAsIType();
         $result = $foo->getResourceType();
         $this->assertEquals(ResourceTypeKind::COMPLEX(), $result->getResourceTypeKind());
     }

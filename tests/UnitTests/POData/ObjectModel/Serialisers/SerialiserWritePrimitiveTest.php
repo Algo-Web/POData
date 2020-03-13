@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\ObjectModel\Serialisers;
 
 use Mockery as m;
@@ -34,28 +36,28 @@ class SerialiserWritePrimitiveTest extends SerialiserTestBase
         list($host, $meta, $query) = $this->setUpDataServiceDeps($request);
 
         // default data service
-        $service = new TestDataService($query, $meta, $host);
-        $processor = $service->handleRequest();
+        $service                            = new TestDataService($query, $meta, $host);
+        $processor                          = $service->handleRequest();
         $processor->getRequest()->queryType = QueryType::ENTITIES_WITH_COUNT();
         $processor->getRequest()->setCountValue(1);
         $object = new ObjectModelSerializer($service, $processor->getRequest());
         $ironic = new IronicSerialiser($service, $processor->getRequest());
 
-        $collection = new QueryResult();
+        $collection          = new QueryResult();
         $collection->results = null;
 
         $resProp = null;
 
-        $expected = 'Resource property must not be null';
+        $expected               = 'Resource property must not be null';
         $expectedExceptionClass = InvalidOperationException::class;
-        $actual = null;
-        $actualExceptionClass = null;
+        $actual                 = null;
+        $actualExceptionClass   = null;
 
         try {
             $ironic->writeTopLevelPrimitive($collection, $resProp);
         } catch (\Exception $e) {
             $actualExceptionClass = get_class($e);
-            $actual = $e->getMessage();
+            $actual               = $e->getMessage();
         }
 
         $this->assertEquals($expectedExceptionClass, $actualExceptionClass);
@@ -72,13 +74,13 @@ class SerialiserWritePrimitiveTest extends SerialiserTestBase
         list($host, $meta, $query) = $this->setUpDataServiceDeps($request);
 
         // default data service
-        $service = new TestDataService($query, $meta, $host);
-        $processor = $service->handleRequest();
+        $service                            = new TestDataService($query, $meta, $host);
+        $processor                          = $service->handleRequest();
         $processor->getRequest()->queryType = QueryType::ENTITIES_WITH_COUNT();
         $processor->getRequest()->setCountValue(1);
         $ironic = new IronicSerialiser($service, $processor->getRequest());
 
-        $collection = new QueryResult();
+        $collection          = new QueryResult();
         $collection->results = null;
 
         $iType = m::mock(IType::class);
@@ -88,12 +90,12 @@ class SerialiserWritePrimitiveTest extends SerialiserTestBase
         $resProp->shouldReceive('getName')->andReturn('DesertWithNoName');
         $resProp->shouldReceive('getInstanceType')->andReturn($iType);
 
-        $objProp = new ODataProperty();
-        $objProp->name = 'DesertWithNoName';
-        $objProp->typeName = 'String';
-        $objectResult = new ODataPropertyContent();
+        $objProp                                      = new ODataProperty();
+        $objProp->name                                = 'DesertWithNoName';
+        $objProp->typeName                            = 'String';
+        $objectResult                                 = new ODataPropertyContent();
         $objectResult->properties['DesertWithNoName'] = $objProp;
-        $ironicResult = $ironic->writeTopLevelPrimitive($collection, $resProp);
+        $ironicResult                                 = $ironic->writeTopLevelPrimitive($collection, $resProp);
 
         $this->assertEquals(get_class($objectResult), get_class($ironicResult));
         $this->assertEquals($objectResult, $ironicResult);
@@ -108,13 +110,13 @@ class SerialiserWritePrimitiveTest extends SerialiserTestBase
         list($host, $meta, $query) = $this->setUpDataServiceDeps($request);
 
         // default data service
-        $service = new TestDataService($query, $meta, $host);
-        $processor = $service->handleRequest();
+        $service                            = new TestDataService($query, $meta, $host);
+        $processor                          = $service->handleRequest();
         $processor->getRequest()->queryType = QueryType::ENTITIES_WITH_COUNT();
         $processor->getRequest()->setCountValue(1);
         $ironic = new IronicSerialiser($service, $processor->getRequest());
 
-        $collection = new QueryResult();
+        $collection          = new QueryResult();
         $collection->results = 'MakeItPhunkee';
 
         $iType = new StringType();
@@ -131,13 +133,13 @@ class SerialiserWritePrimitiveTest extends SerialiserTestBase
         $resProp->shouldReceive('getResourceType')->andReturn($rType);
         $resProp->shouldReceive('getInstanceType')->andReturn($iType);
 
-        $objProp = new ODataProperty();
-        $objProp->name = 'DesertWithNoName';
-        $objProp->typeName = 'String';
-        $objProp->value = 'MakeItPhunkee';
-        $objectResult = new ODataPropertyContent();
+        $objProp                                      = new ODataProperty();
+        $objProp->name                                = 'DesertWithNoName';
+        $objProp->typeName                            = 'String';
+        $objProp->value                               = 'MakeItPhunkee';
+        $objectResult                                 = new ODataPropertyContent();
         $objectResult->properties['DesertWithNoName'] = $objProp;
-        $ironicResult = $ironic->writeTopLevelPrimitive($collection, $resProp);
+        $ironicResult                                 = $ironic->writeTopLevelPrimitive($collection, $resProp);
 
         $this->assertEquals(get_class($objectResult), get_class($ironicResult));
         $this->assertEquals($objectResult, $ironicResult);
@@ -152,13 +154,13 @@ class SerialiserWritePrimitiveTest extends SerialiserTestBase
         list($host, $meta, $query) = $this->setUpDataServiceDeps($request);
 
         // default data service
-        $service = new TestDataService($query, $meta, $host);
-        $processor = $service->handleRequest();
+        $service                            = new TestDataService($query, $meta, $host);
+        $processor                          = $service->handleRequest();
         $processor->getRequest()->queryType = QueryType::ENTITIES_WITH_COUNT();
         $processor->getRequest()->setCountValue(1);
         $ironic = new IronicSerialiser($service, $processor->getRequest());
 
-        $collection = new QueryResult();
+        $collection          = new QueryResult();
         $collection->results = new \DateTime('2017-07-02 11:10:09');
 
         $iType = new DateTime();
@@ -175,13 +177,13 @@ class SerialiserWritePrimitiveTest extends SerialiserTestBase
         $resProp->shouldReceive('getResourceType')->andReturn($rType);
         $resProp->shouldReceive('getInstanceType')->andReturn($iType);
 
-        $objProp = new ODataProperty();
-        $objProp->name = 'DesertWithNoName';
-        $objProp->typeName = 'String';
-        $objProp->value = '2017-07-02T11:10:09-06:00';
-        $objectResult = new ODataPropertyContent();
+        $objProp                                      = new ODataProperty();
+        $objProp->name                                = 'DesertWithNoName';
+        $objProp->typeName                            = 'String';
+        $objProp->value                               = '2017-07-02T11:10:09-06:00';
+        $objectResult                                 = new ODataPropertyContent();
         $objectResult->properties['DesertWithNoName'] = $objProp;
-        $ironicResult = $ironic->writeTopLevelPrimitive($collection, $resProp);
+        $ironicResult                                 = $ironic->writeTopLevelPrimitive($collection, $resProp);
 
         $this->assertEquals(get_class($objectResult), get_class($ironicResult));
         $this->assertEquals($objectResult, $ironicResult);
@@ -196,13 +198,13 @@ class SerialiserWritePrimitiveTest extends SerialiserTestBase
         list($host, $meta, $query) = $this->setUpDataServiceDeps($request);
 
         // default data service
-        $service = new TestDataService($query, $meta, $host);
-        $processor = $service->handleRequest();
+        $service                            = new TestDataService($query, $meta, $host);
+        $processor                          = $service->handleRequest();
         $processor->getRequest()->queryType = QueryType::ENTITIES_WITH_COUNT();
         $processor->getRequest()->setCountValue(1);
         $ironic = new IronicSerialiser($service, $processor->getRequest());
 
-        $collection = new QueryResult();
+        $collection          = new QueryResult();
         $collection->results = 'StartTheDance';
 
         $iType = new Binary();
@@ -219,13 +221,13 @@ class SerialiserWritePrimitiveTest extends SerialiserTestBase
         $resProp->shouldReceive('getResourceType')->andReturn($rType);
         $resProp->shouldReceive('getInstanceType')->andReturn($iType);
 
-        $objProp = new ODataProperty();
-        $objProp->name = 'DesertWithNoName';
-        $objProp->typeName = 'String';
-        $objProp->value = 'U3RhcnRUaGVEYW5jZQ==';
-        $objectResult = new ODataPropertyContent();
+        $objProp                                      = new ODataProperty();
+        $objProp->name                                = 'DesertWithNoName';
+        $objProp->typeName                            = 'String';
+        $objProp->value                               = 'U3RhcnRUaGVEYW5jZQ==';
+        $objectResult                                 = new ODataPropertyContent();
         $objectResult->properties['DesertWithNoName'] = $objProp;
-        $ironicResult = $ironic->writeTopLevelPrimitive($collection, $resProp);
+        $ironicResult                                 = $ironic->writeTopLevelPrimitive($collection, $resProp);
 
         $this->assertEquals(get_class($objectResult), get_class($ironicResult));
         $this->assertEquals($objectResult, $ironicResult);
@@ -240,13 +242,13 @@ class SerialiserWritePrimitiveTest extends SerialiserTestBase
         list($host, $meta, $query) = $this->setUpDataServiceDeps($request);
 
         // default data service
-        $service = new TestDataService($query, $meta, $host);
-        $processor = $service->handleRequest();
+        $service                            = new TestDataService($query, $meta, $host);
+        $processor                          = $service->handleRequest();
         $processor->getRequest()->queryType = QueryType::ENTITIES_WITH_COUNT();
         $processor->getRequest()->setCountValue(1);
         $ironic = new IronicSerialiser($service, $processor->getRequest());
 
-        $collection = new QueryResult();
+        $collection          = new QueryResult();
         $collection->results = 311;
 
         $iType = new Int32();
@@ -263,13 +265,13 @@ class SerialiserWritePrimitiveTest extends SerialiserTestBase
         $resProp->shouldReceive('getResourceType')->andReturn($rType);
         $resProp->shouldReceive('getInstanceType')->andReturn($iType);
 
-        $objProp = new ODataProperty();
-        $objProp->name = 'DesertWithNoName';
-        $objProp->typeName = 'String';
-        $objProp->value = '311';
-        $objectResult = new ODataPropertyContent();
+        $objProp                                      = new ODataProperty();
+        $objProp->name                                = 'DesertWithNoName';
+        $objProp->typeName                            = 'String';
+        $objProp->value                               = '311';
+        $objectResult                                 = new ODataPropertyContent();
         $objectResult->properties['DesertWithNoName'] = $objProp;
-        $ironicResult = $ironic->writeTopLevelPrimitive($collection, $resProp);
+        $ironicResult                                 = $ironic->writeTopLevelPrimitive($collection, $resProp);
 
         $this->assertEquals(get_class($objectResult), get_class($ironicResult));
         $this->assertEquals($objectResult, $ironicResult);
@@ -281,10 +283,10 @@ class SerialiserWritePrimitiveTest extends SerialiserTestBase
      */
     private function setUpDataServiceDeps($request)
     {
-        $op = new OperationContextAdapter($request);
+        $op   = new OperationContextAdapter($request);
         $host = new ServiceHost($op, $request);
 
-        $meta = NorthWindMetadata::Create();
+        $meta  = NorthWindMetadata::Create();
         $query = m::mock(IQueryProvider::class);
 
         return array($host, $meta, $query);

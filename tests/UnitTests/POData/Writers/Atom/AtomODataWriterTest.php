@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\Writers\Atom;
 
 use Carbon\Carbon as Carbon;
@@ -47,7 +49,7 @@ class AtomODataWriterTest extends TestCase
             $new = '';
         }
 
-        $xml = preg_replace('/<updated>.*?<\/updated>/i', '<updated>'.$new.'</updated>', $xml);
+        $xml = preg_replace('/<updated>.*?<\/updated>/i', '<updated>' . $new . '</updated>', $xml);
 
         return $xml;
     }
@@ -57,7 +59,7 @@ class AtomODataWriterTest extends TestCase
      */
     public function testODataURLItem()
     {
-        $url = new ODataURL();
+        $url      = new ODataURL();
         $url->url = 'http://www.odata.org/developers/protocols/atom-format';
 
         $writer = new AtomODataWriter('http://localhost/NorthWind.svc');
@@ -77,22 +79,22 @@ class AtomODataWriterTest extends TestCase
      */
     public function testODataURLCollectionItem()
     {
-        $url1 = new ODataURL();
+        $url1      = new ODataURL();
         $url1->url = 'http://www.odata.org/developers/protocols/atom-format';
-        $url2 = new ODataURL();
+        $url2      = new ODataURL();
         $url2->url = 'http://www.odata.org/developers/protocols/json-format';
 
-        $urls = new ODataURLCollection();
+        $urls       = new ODataURLCollection();
         $urls->urls = [$url1, $url2];
 
-        $nextPageLink = new ODataLink();
-        $nextPageLink->name = 'Next';
+        $nextPageLink        = new ODataLink();
+        $nextPageLink->name  = 'Next';
         $nextPageLink->title = '';
-        $nextPageLink->type = '';
-        $nextPageLink->url = 'Next Link Url';
+        $nextPageLink->type  = '';
+        $nextPageLink->url   = 'Next Link Url';
 
         $urls->nextPageLink = $nextPageLink;
-        $urls->count = 10;
+        $urls->count        = 10;
 
         $writer = new AtomODataWriter('http://localhost/NorthWind.svc');
         $result = $writer->write($urls);
@@ -120,46 +122,46 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $testNow = Carbon::create(2013, 9, 17, 19, 22, 33);
         Carbon::setTestNow($testNow);
 
-        $feed = new ODataFeed();
-        $feed->id = 'Feed Id';
+        $feed           = new ODataFeed();
+        $feed->id       = 'Feed Id';
         $feed->rowCount = 'Count';
 
-        $selfLink = new ODataLink();
-        $selfLink->name = 'Self Link Name';
+        $selfLink        = new ODataLink();
+        $selfLink->name  = 'Self Link Name';
         $selfLink->tytle = 'Self Link Title';
-        $selfLink->type = '';
-        $selfLink->url = 'Self Link Url';
+        $selfLink->type  = '';
+        $selfLink->url   = 'Self Link Url';
 
         $feed->selfLink = $selfLink;
 
-        $nextPageLink = new ODataLink();
-        $nextPageLink->name = 'Next';
+        $nextPageLink        = new ODataLink();
+        $nextPageLink->name  = 'Next';
         $nextPageLink->tytle = '';
-        $nextPageLink->type = '';
-        $nextPageLink->url = 'Next Link Url';
+        $nextPageLink->type  = '';
+        $nextPageLink->url   = 'Next Link Url';
 
         $feed->nextPageLink = $nextPageLink;
-        $feed->title = new ODataTitle('Feed Title');
+        $feed->title        = new ODataTitle('Feed Title');
 
         // Entry 1
 
-        $entry1 = new ODataEntry();
-        $entry1->id = 'Entry 1';
+        $entry1        = new ODataEntry();
+        $entry1->id    = 'Entry 1';
         $entry1->title = new ODataTitle('Entry Title');
 
-        $editLink = new ODataLink();
-        $editLink->name = 'edit';
+        $editLink        = new ODataLink();
+        $editLink->name  = 'edit';
         $editLink->tytle = 'Edit Link Title';
-        $editLink->type = 'Edit link type';
-        $editLink->url = 'Edit Link URL';
+        $editLink->type  = 'Edit link type';
+        $editLink->url   = 'Edit Link URL';
 
         $entry1->editLink = $editLink;
 
-        $selfLink = new ODataLink();
-        $selfLink->name = 'self';
+        $selfLink        = new ODataLink();
+        $selfLink->name  = 'self';
         $selfLink->tytle = 'self Link Title';
-        $selfLink->type = '';
-        $selfLink->url = 'Self Link URL';
+        $selfLink->type  = '';
+        $selfLink->url   = 'Self Link URL';
 
         $entry1->selfLink = $selfLink;
 
@@ -170,71 +172,71 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
             'Media Content Type',
             'Media ETag'
         )];
-        $link = new ODataLink();
-        $link->name = 'Link Name';
+        $link        = new ODataLink();
+        $link->name  = 'Link Name';
         $link->tytle = 'Link Title';
-        $link->type = 'Link Type';
-        $link->url = 'Link URL';
+        $link->type  = 'Link Type';
+        $link->url   = 'Link URL';
 
-        $entry1->links = [];
-        $entry1->eTag = 'Entry ETag';
-        $link->isExpanded = false;
+        $entry1->links            = [];
+        $entry1->eTag             = 'Entry ETag';
+        $link->isExpanded         = false;
         $entry1->isMediaLinkEntry = false;
 
         $bagProp1 = new ODataBagContent();
 
-        $propCont1 = new ODataPropertyContent();
+        $propCont1   = new ODataPropertyContent();
         $propCont1_1 = new ODataPropertyContent();
 
-        $pr1 = new ODataProperty();
-        $pr1->name = 'fname';
+        $pr1           = new ODataProperty();
+        $pr1->name     = 'fname';
         $pr1->typeName = 'string';
-        $pr1->value = 'Yash';
+        $pr1->value    = 'Yash';
 
-        $pr2 = new ODataProperty();
-        $pr2->name = 'lname';
+        $pr2           = new ODataProperty();
+        $pr2->name     = 'lname';
         $pr2->typeName = 'string';
-        $pr2->value = 'Kothari';
+        $pr2->value    = 'Kothari';
 
         $propCont1_1->properties = [$pr1, $pr2];
-        $propCont1_1_1 = new ODataPropertyContent();
+        $propCont1_1_1           = new ODataPropertyContent();
 
-        $pr3 = new ODataProperty();
-        $pr3->name = 'fname';
+        $pr3           = new ODataProperty();
+        $pr3->name     = 'fname';
         $pr3->typeName = 'string';
-        $pr3->value = 'Anu';
+        $pr3->value    = 'Anu';
 
-        $pr4 = new ODataProperty();
-        $pr4->name = 'lname';
+        $pr4           = new ODataProperty();
+        $pr4->name     = 'lname';
         $pr4->typeName = 'string';
-        $pr4->value = 'Chandy';
+        $pr4->value    = 'Chandy';
 
-        $pr5 = new ODataProperty();
-        $pr5->name = 'name';
+        $pr5           = new ODataProperty();
+        $pr5->name     = 'name';
         $pr5->typeName = null;
-        $pr5->value = $propCont1_1;
+        $pr5->value    = $propCont1_1;
 
-        $pr6 = new ODataProperty();
-        $pr6->name = 'name';
+        $pr6           = new ODataProperty();
+        $pr6->name     = 'name';
         $pr6->typeName = null;
-        $pr6->value = $propCont1_1;
+        $pr6->value    = $propCont1_1;
 
         $propCont1_1_1->properties = [$pr3, $pr4];
-        $propCont1->properties = [$pr5, $pr6];
+        $propCont1->properties     = [$pr5, $pr6];
 
         $bagProp1->propertyContents = [$propCont1];
 
-        $pr7 = new ODataProperty();
-        $pr7->name = 'name';
+        $pr7           = new ODataProperty();
+        $pr7->name     = 'name';
         $pr7->typeName = 'Bag(Name)';
-        $pr7->value = $bagProp1;
+        $pr7->value    = $bagProp1;
 
         $prop1 = $pr7;
 
-        $propCont = new ODataPropertyContent();
-        $propCont->properties = [$prop1];
+        $propCont                = new ODataPropertyContent();
+        $propCont->properties    = [$prop1];
         $entry1->propertyContent = $propCont;
-        $entry1->type = new ODataCategory('');
+        $entry1->type            = new ODataCategory('');
 
         $feed->entries = [
             $entry1,
@@ -283,9 +285,9 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 </feed>
 ';
 
-        $new = '2013-09-17T19:22:33-06:00';
+        $new      = '2013-09-17T19:22:33-06:00';
         $expected = $this->removeUpdatedTags($expected, $new);
-        $actual = $this->removeUpdatedTags($actual, $new);
+        $actual   = $this->removeUpdatedTags($actual, $new);
         $this->assertXmlStringEqualsXmlString($expected, $actual);
     }
 
@@ -294,26 +296,26 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
      */
     public function testWriteMediaEntry()
     {
-        $entry1 = new ODataEntry();
-        $entry1->id = 'Entry 1';
+        $entry1        = new ODataEntry();
+        $entry1->id    = 'Entry 1';
         $entry1->title = new ODataTitle('Entry Title');
 
-        $editLink = new ODataLink();
-        $editLink->name = 'edit';
+        $editLink        = new ODataLink();
+        $editLink->name  = 'edit';
         $editLink->tytle = 'Edit Link Title';
-        $editLink->type = 'Edit link type';
-        $editLink->url = 'Edit Link URL';
+        $editLink->type  = 'Edit link type';
+        $editLink->url   = 'Edit Link URL';
 
         $entry1->editLink = $editLink;
 
-        $selfLink = new ODataLink();
-        $selfLink->name = 'self';
+        $selfLink        = new ODataLink();
+        $selfLink->name  = 'self';
         $selfLink->tytle = 'self Link Title';
-        $selfLink->type = '';
-        $selfLink->url = 'Self Link URL';
+        $selfLink->type  = '';
+        $selfLink->url   = 'Self Link URL';
 
-        $entry1->selfLink = $selfLink;
-        $entry1->mediaLink = new ODataMediaLink('Thumbnail_600X450', 'http://storage.live.com/123/christmas-tree-with-presents.jpg', 'http://cdn-8.nflximg.com/US/boxshots/large/5632678.jpg', 'image/jpg', time());
+        $entry1->selfLink   = $selfLink;
+        $entry1->mediaLink  = new ODataMediaLink('Thumbnail_600X450', 'http://storage.live.com/123/christmas-tree-with-presents.jpg', 'http://cdn-8.nflximg.com/US/boxshots/large/5632678.jpg', 'image/jpg', time());
         $entry1->mediaLinks = [new ODataMediaLink(
             'Media Link Name',
             'Edit Media link',
@@ -331,19 +333,19 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 
         $entry1->links = [];
 
-        $entry1->eTag = 'Entry ETag';
+        $entry1->eTag             = 'Entry ETag';
         $entry1->isMediaLinkEntry = true;
 
-        $propCont = new ODataPropertyContent();
-        $propCont->properties = [];
+        $propCont                = new ODataPropertyContent();
+        $propCont->properties    = [];
         $entry1->propertyContent = $propCont;
-        $entry1->type = new ODataCategory('');
+        $entry1->type            = new ODataCategory('');
 
         $writer = new AtomODataWriter('http://localhost/NorthWind.svc');
         $result = $writer->write($entry1);
         $this->assertSame($writer, $result);
 
-        $actual = $writer->getOutput();
+        $actual   = $writer->getOutput();
         $expected = '<x/>';
 
         $this->markTestSkipped('see #75 DOMDocument::loadXML(): Namespace prefix m for etag on entry is not defined in Entity, line: 2');
@@ -356,26 +358,26 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
      */
     public function testWriteEntry()
     {
-        $entry1 = new ODataEntry();
-        $entry1->id = 'Entry 1';
+        $entry1        = new ODataEntry();
+        $entry1->id    = 'Entry 1';
         $entry1->title = new ODataTitle('Entry Title');
 
-        $editLink = new ODataLink();
-        $editLink->name = 'edit';
+        $editLink        = new ODataLink();
+        $editLink->name  = 'edit';
         $editLink->tytle = 'Edit Link Title';
-        $editLink->type = 'Edit link type';
-        $editLink->url = 'Edit Link URL';
+        $editLink->type  = 'Edit link type';
+        $editLink->url   = 'Edit Link URL';
 
         $entry1->editLink = $editLink;
 
-        $selfLink = new ODataLink();
-        $selfLink->name = 'self';
+        $selfLink        = new ODataLink();
+        $selfLink->name  = 'self';
         $selfLink->tytle = 'self Link Title';
-        $selfLink->type = '';
-        $selfLink->url = 'Self Link URL';
+        $selfLink->type  = '';
+        $selfLink->url   = 'Self Link URL';
 
-        $entry1->selfLink = $selfLink;
-        $entry1->mediaLink = new ODataMediaLink('Thumbnail_600X450', 'http://storage.live.com/123/christmas-tree-with-presents.jpg', null, 'image/jpg', time());
+        $entry1->selfLink   = $selfLink;
+        $entry1->mediaLink  = new ODataMediaLink('Thumbnail_600X450', 'http://storage.live.com/123/christmas-tree-with-presents.jpg', null, 'image/jpg', time());
         $entry1->mediaLinks = [new ODataMediaLink(
             'Media Link Name',
             'Edit Media link',
@@ -391,228 +393,228 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
                 'Media ETag2'
             ), ];
 
-        $link = new ODataLink();
-        $link->name = 'Link Name';
-        $link->tytle = 'Link Title';
-        $link->type = 'Link Type';
-        $link->url = 'Link URL';
+        $link             = new ODataLink();
+        $link->name       = 'Link Name';
+        $link->tytle      = 'Link Title';
+        $link->type       = 'Link Type';
+        $link->url        = 'Link URL';
         $link->isExpanded = false;
 
         $entry1->links = [$link];
 
-        $entry1->eTag = 'Entry ETag';
+        $entry1->eTag             = 'Entry ETag';
         $entry1->isMediaLinkEntry = true;
 
         $bagProp1 = new ODataBagContent();
 
-        $propCont3 = new ODataPropertyContent();
+        $propCont3   = new ODataPropertyContent();
         $propCont3_1 = new ODataPropertyContent();
 
-        $pr1 = new ODataProperty();
-        $pr1->name = 'fname';
+        $pr1           = new ODataProperty();
+        $pr1->name     = 'fname';
         $pr1->typeName = 'string';
-        $pr1->value = 'Yash';
+        $pr1->value    = 'Yash';
 
-        $pr2 = new ODataProperty();
-        $pr2->name = 'lname';
+        $pr2           = new ODataProperty();
+        $pr2->name     = 'lname';
         $pr2->typeName = 'string';
-        $pr2->value = 'Kothari';
+        $pr2->value    = 'Kothari';
 
         $propCont3_1->properties = [$pr1, $pr2];
-        $propCont3_2 = new ODataPropertyContent();
+        $propCont3_2             = new ODataPropertyContent();
 
-        $pr3 = new ODataProperty();
-        $pr3->name = 'fname';
+        $pr3           = new ODataProperty();
+        $pr3->name     = 'fname';
         $pr3->typeName = 'string';
-        $pr3->value = 'Anu';
+        $pr3->value    = 'Anu';
 
-        $pr4 = new ODataProperty();
-        $pr4->name = 'lname';
+        $pr4           = new ODataProperty();
+        $pr4->name     = 'lname';
         $pr4->typeName = 'string';
-        $pr4->value = 'Chandy';
+        $pr4->value    = 'Chandy';
 
         $propCont3_2->properties = [$pr3, $pr4];
 
-        $pr5 = new ODataProperty();
-        $pr5->name = 'name';
+        $pr5           = new ODataProperty();
+        $pr5->name     = 'name';
         $pr5->typeName = null;
-        $pr5->value = $propCont3_1;
+        $pr5->value    = $propCont3_1;
 
-        $pr6 = new ODataProperty();
-        $pr6->name = 'name';
+        $pr6           = new ODataProperty();
+        $pr6->name     = 'name';
         $pr6->typeName = null;
-        $pr6->value = $propCont3_2;
+        $pr6->value    = $propCont3_2;
 
-        $propCont3->properties = [$pr5, $pr6];
+        $propCont3->properties      = [$pr5, $pr6];
         $bagProp1->propertyContents = [$propCont3];
 
-        $pr7 = new ODataProperty();
-        $pr7->name = 'name';
+        $pr7           = new ODataProperty();
+        $pr7->name     = 'name';
         $pr7->typeName = 'Bag(Name)';
-        $pr7->value = $bagProp1;
+        $pr7->value    = $bagProp1;
 
         $prop1 = $pr7;
 
         $propCont4 = new ODataPropertyContent();
 
-        $pr8 = new ODataProperty();
-        $pr8->name = 'House_num';
+        $pr8           = new ODataProperty();
+        $pr8->name     = 'House_num';
         $pr8->typeName = 'Int';
-        $pr8->value = '31';
+        $pr8->value    = '31';
 
-        $pr9 = new ODataProperty();
-        $pr9->name = 'Street_name';
+        $pr9           = new ODataProperty();
+        $pr9->name     = 'Street_name';
         $pr9->typeName = 'String';
-        $pr9->value = 'Ankur Road';
+        $pr9->value    = 'Ankur Road';
 
         $propCont4->properties = [$pr8, $pr9];
 
-        $pr9 = new ODataProperty();
-        $pr9->name = 'Address';
+        $pr9           = new ODataProperty();
+        $pr9->name     = 'Address';
         $pr9->typeName = 'Address';
-        $pr9->value = $propCont4;
+        $pr9->value    = $propCont4;
 
         $prop3 = $pr9;
 
-        $pr10 = new ODataProperty();
-        $pr10->name = 'Pin_Num';
+        $pr10           = new ODataProperty();
+        $pr10->name     = 'Pin_Num';
         $pr10->typeName = 'Int';
-        $pr10->value = '380013';
+        $pr10->value    = '380013';
 
         $prop4 = $pr10;
 
-        $pr11 = new ODataProperty();
-        $pr11->name = 'Phon_num';
+        $pr11           = new ODataProperty();
+        $pr11->name     = 'Phon_num';
         $pr11->typeName = 'Int';
-        $pr11->value = '9665-043-347';
+        $pr11->value    = '9665-043-347';
 
         $prop5 = $pr11;
 
         $bagProp3 = new ODataBagContent();
 
-        $propCont5 = new ODataPropertyContent();
+        $propCont5   = new ODataPropertyContent();
         $propCont5_1 = new ODataPropertyContent();
 
-        $pr12 = new ODataProperty();
-        $pr12->name = 'Flat_no';
+        $pr12           = new ODataProperty();
+        $pr12->name     = 'Flat_no';
         $pr12->typeName = '';
-        $pr12->value = '31';
+        $pr12->value    = '31';
 
-        $pr13 = new ODataProperty();
-        $pr13->name = 'Street_name';
+        $pr13           = new ODataProperty();
+        $pr13->name     = 'Street_name';
         $pr13->typeName = '';
-        $pr13->value = 'Ankur';
+        $pr13->value    = 'Ankur';
 
-        $pr14 = new ODataProperty();
-        $pr14->name = 'City';
+        $pr14           = new ODataProperty();
+        $pr14->name     = 'City';
         $pr14->typeName = '';
-        $pr14->value = 'Ahmedabad';
+        $pr14->value    = 'Ahmedabad';
 
         $propCont5_1->properties = [$pr12, $pr13, $pr14];
 
         $propCont5_2 = new ODataPropertyContent();
 
-        $pr15 = new ODataProperty();
-        $pr15->name = 'Flat_no';
+        $pr15           = new ODataProperty();
+        $pr15->name     = 'Flat_no';
         $pr15->typeName = '';
-        $pr15->value = '101';
+        $pr15->value    = '101';
 
-        $pr16 = new ODataProperty();
-        $pr16->name = 'Street_name';
+        $pr16           = new ODataProperty();
+        $pr16->name     = 'Street_name';
         $pr16->typeName = '';
-        $pr16->value = 'Nal Stop';
+        $pr16->value    = 'Nal Stop';
 
-        $pr17 = new ODataProperty();
-        $pr17->name = 'City';
+        $pr17           = new ODataProperty();
+        $pr17->name     = 'City';
         $pr17->typeName = '';
-        $pr17->value = 'Pune';
+        $pr17->value    = 'Pune';
 
         $propCont5_2->properties = [$pr15, $pr16, $pr17];
 
-        $pr18 = new ODataProperty();
-        $pr18->name = 'Address';
+        $pr18           = new ODataProperty();
+        $pr18->name     = 'Address';
         $pr18->typeName = '';
-        $pr18->value = $propCont5_1;
+        $pr18->value    = $propCont5_1;
 
-        $pr19 = new ODataProperty();
-        $pr19->name = 'Address';
+        $pr19           = new ODataProperty();
+        $pr19->name     = 'Address';
         $pr19->typeName = '';
-        $pr19->value = $propCont5_2;
+        $pr19->value    = $propCont5_2;
 
-        $propCont5->properties = [$pr18, $pr19];
+        $propCont5->properties      = [$pr18, $pr19];
         $bagProp3->propertyContents = [$propCont5];
 
-        $pr20 = new ODataProperty();
-        $pr20->name = 'Addresses';
+        $pr20           = new ODataProperty();
+        $pr20->name     = 'Addresses';
         $pr20->typeName = 'Bag(Address)';
-        $pr20->value = $bagProp3;
+        $pr20->value    = $bagProp3;
 
         $prop6 = $pr20;
 
         $bagProp4 = new ODataBagContent();
 
-        $propCont6 = new ODataPropertyContent();
-        $propCont6_1 = new ODataPropertyContent();
+        $propCont6     = new ODataPropertyContent();
+        $propCont6_1   = new ODataPropertyContent();
         $propCont6_1_1 = new ODataPropertyContent();
 
-        $pr21 = new ODataProperty();
-        $pr21->name = 'apartment1';
+        $pr21           = new ODataProperty();
+        $pr21->name     = 'apartment1';
         $pr21->typeName = 'String';
-        $pr21->value = 'taj residency';
+        $pr21->value    = 'taj residency';
 
-        $pr22 = new ODataProperty();
-        $pr22->name = 'apartment2';
+        $pr22           = new ODataProperty();
+        $pr22->name     = 'apartment2';
         $pr22->typeName = 'String';
-        $pr22->value = 'le-merdian';
+        $pr22->value    = 'le-merdian';
 
         $propCont6_1_1->properties = [$pr21, $pr22];
 
-        $pr23 = new ODataProperty();
-        $pr23->name = 'Street';
+        $pr23           = new ODataProperty();
+        $pr23->name     = 'Street';
         $pr23->typeName = 'String';
-        $pr23->value = '123 contoso street';
+        $pr23->value    = '123 contoso street';
 
-        $pr24 = new ODataProperty();
-        $pr24->name = 'Appartments';
+        $pr24           = new ODataProperty();
+        $pr24->name     = 'Appartments';
         $pr24->typeName = '';
-        $pr24->value = $propCont6_1_1;
+        $pr24->value    = $propCont6_1_1;
 
         $propCont6_1->properties = [$pr23, $pr24];
-        $propCont6_2 = new ODataPropertyContent();
+        $propCont6_2             = new ODataPropertyContent();
 
-        $pr25 = new ODataProperty();
-        $pr25->name = 'Street';
+        $pr25           = new ODataProperty();
+        $pr25->name     = 'Street';
         $pr25->typeName = 'String';
-        $pr25->value = '834 foo street';
+        $pr25->value    = '834 foo street';
 
-        $pr26 = new ODataProperty();
-        $pr26->name = 'Appartment';
+        $pr26           = new ODataProperty();
+        $pr26->name     = 'Appartment';
         $pr26->typeName = '';
-        $pr26->value = '';
+        $pr26->value    = '';
 
         $propCont6_2->properties = [$pr25, $pr26];
 
-        $pr27 = new ODataProperty();
-        $pr27->name = 'Addresses';
+        $pr27           = new ODataProperty();
+        $pr27->name     = 'Addresses';
         $pr27->typeName = '';
-        $pr27->value = $propCont6_1;
+        $pr27->value    = $propCont6_1;
 
-        $pr28 = new ODataProperty();
-        $pr28->name = 'Address';
+        $pr28           = new ODataProperty();
+        $pr28->name     = 'Address';
         $pr28->typeName = '';
-        $pr28->value = $propCont6_2;
+        $pr28->value    = $propCont6_2;
 
-        $propCont6->properties = [$pr27, $pr28];
+        $propCont6->properties      = [$pr27, $pr28];
         $bagProp4->propertyContents = [$propCont6];
 
-        $pr29 = new ODataProperty();
-        $pr29->name = 'Addresses';
+        $pr29           = new ODataProperty();
+        $pr29->name     = 'Addresses';
         $pr29->typeName = 'Bag(SampleModel.Address)';
-        $pr29->value = $bagProp4;
+        $pr29->value    = $bagProp4;
 
         $prop_address = $pr29;
 
-        $propCont = new ODataPropertyContent();
+        $propCont             = new ODataPropertyContent();
         $propCont->properties = [
             $prop1,
             //$prop2,
@@ -623,13 +625,13 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
             $prop_address,
         ];
         $entry1->propertyContent = $propCont;
-        $entry1->type = new ODataCategory('');
+        $entry1->type            = new ODataCategory('');
 
         $writer = new AtomODataWriter('http://localhost/NorthWind.svc');
         $result = $writer->write($entry1);
         $this->assertSame($writer, $result);
 
-        $actual = $writer->getOutput();
+        $actual   = $writer->getOutput();
         $expected = '<x/>';
 
         $this->markTestSkipped('see #75 DOMDocument::loadXML(): Namespace prefix m for etag on entry is not defined in Entity, line: 2');
@@ -642,26 +644,26 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
      */
     public function testWriteExpandEntry()
     {
-        $entry = new ODataEntry();
-        $entry->id = 'Expand Entry';
+        $entry        = new ODataEntry();
+        $entry->id    = 'Expand Entry';
         $entry->title = new ODataTitle('Entry Title');
-        $entry->type = new ODataCategory('');
+        $entry->type  = new ODataCategory('');
 
-        $editLink = new ODataLink();
-        $editLink->name = 'edit';
+        $editLink        = new ODataLink();
+        $editLink->name  = 'edit';
         $editLink->tytle = 'Edit Link Title';
-        $editLink->type = 'Edit link type';
-        $editLink->url = 'Edit Link URL';
+        $editLink->type  = 'Edit link type';
+        $editLink->url   = 'Edit Link URL';
 
         $entry->editLink = $editLink;
 
-        $selfLink = new ODataLink();
-        $selfLink->name = 'self';
+        $selfLink        = new ODataLink();
+        $selfLink->name  = 'self';
         $selfLink->tytle = 'self Link Title';
-        $selfLink->type = '';
-        $selfLink->url = 'Self Link URL';
+        $selfLink->type  = '';
+        $selfLink->url   = 'Self Link URL';
 
-        $entry->selfLink = $selfLink;
+        $entry->selfLink   = $selfLink;
         $entry->mediaLinks = [new ODataMediaLink(
             'Media Link Name',
             'Edit Media link',
@@ -676,27 +678,27 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
             'Media ETag2'
         )];
 
-        $odataLink = new ODataLink();
+        $odataLink               = new ODataLink();
         $odataLink->isCollection = false;
-        $odataLink->isExpanded = true;
-        $odataExpandEntry = new ODataEntry();
+        $odataLink->isExpanded   = true;
+        $odataExpandEntry        = new ODataEntry();
 
-        $odataExpandEntry->id = 'Entry 1';
+        $odataExpandEntry->id    = 'Entry 1';
         $odataExpandEntry->title = new ODataTitle('Entry Title');
 
-        $editLink = new ODataLink();
-        $editLink->name = 'edit';
+        $editLink        = new ODataLink();
+        $editLink->name  = 'edit';
         $editLink->tytle = 'Edit Link Title';
-        $editLink->type = 'Edit link type';
-        $editLink->url = 'Edit Link URL';
+        $editLink->type  = 'Edit link type';
+        $editLink->url   = 'Edit Link URL';
 
         $odataExpandEntry->editLink = $editLink;
 
-        $selfLink = new ODataLink();
-        $selfLink->name = 'self';
+        $selfLink        = new ODataLink();
+        $selfLink->name  = 'self';
         $selfLink->tytle = 'self Link Title';
-        $selfLink->type = '';
-        $selfLink->url = 'Self Link URL';
+        $selfLink->type  = '';
+        $selfLink->url   = 'Self Link URL';
 
         $odataExpandEntry->selfLink = $selfLink;
 
@@ -714,125 +716,125 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
             'Media ETag2'
         )];
 
-        $link = new ODataLink();
-        $link->name = 'Link Name';
-        $link->tytle = 'Link Title';
-        $link->type = 'Link Type';
-        $link->url = 'Link URL';
+        $link             = new ODataLink();
+        $link->name       = 'Link Name';
+        $link->tytle      = 'Link Title';
+        $link->type       = 'Link Type';
+        $link->url        = 'Link URL';
         $link->isExpanded = false;
 
-        $odataExpandEntry->links = [];
-        $odataExpandEntry->eTag = 'Entry ETag';
+        $odataExpandEntry->links            = [];
+        $odataExpandEntry->eTag             = 'Entry ETag';
         $odataExpandEntry->isMediaLinkEntry = false;
 
         $propCon1 = new ODataPropertyContent();
 
-        $pr1 = new ODataProperty();
-        $pr1->name = 'fname';
+        $pr1           = new ODataProperty();
+        $pr1->name     = 'fname';
         $pr1->typeName = 'string';
-        $pr1->value = 'Yash';
+        $pr1->value    = 'Yash';
 
-        $pr2 = new ODataProperty();
-        $pr2->name = 'lname';
+        $pr2           = new ODataProperty();
+        $pr2->name     = 'lname';
         $pr2->typeName = 'string';
-        $pr2->value = 'Kothari';
+        $pr2->value    = 'Kothari';
 
         $propCon1->properties = [$pr1, $pr2];
 
-        $pr3 = new ODataProperty();
-        $pr3->name = 'name';
+        $pr3           = new ODataProperty();
+        $pr3->name     = 'name';
         $pr3->typeName = 'string';
-        $pr3->value = $propCon1;
+        $pr3->value    = $propCon1;
 
         $prop3 = $pr3;
 
-        $prop4 = new ODataProperty();
-        $prop4->name = 'city';
+        $prop4           = new ODataProperty();
+        $prop4->name     = 'city';
         $prop4->typeName = 'string';
-        $prop4->value = 'Ahmedabad';
+        $prop4->value    = 'Ahmedabad';
 
-        $prop5 = new ODataProperty();
-        $prop5->name = 'state';
+        $prop5           = new ODataProperty();
+        $prop5->name     = 'state';
         $prop5->typeName = 'string';
-        $prop5->value = 'Gujarat';
+        $prop5->value    = 'Gujarat';
 
-        $propCon = new ODataPropertyContent();
+        $propCon             = new ODataPropertyContent();
         $propCon->properties = [
             $prop3,
             $prop4,
             $prop5,
         ];
         $odataExpandEntry->propertyContent = $propCon;
-        $odataExpandEntry->type = new ODataCategory('');
+        $odataExpandEntry->type            = new ODataCategory('');
 
         $odataLink->expandedResult = $odataExpandEntry;
 
-        $entry->links = [$odataLink];
-        $entry->eTag = 'Entry ETag';
+        $entry->links            = [$odataLink];
+        $entry->eTag             = 'Entry ETag';
         $entry->isMediaLinkEntry = false;
 
         $bagProp1 = new ODataBagContent();
 
-        $propCont1 = new ODataPropertyContent();
+        $propCont1   = new ODataPropertyContent();
         $propCont1_1 = new ODataPropertyContent();
 
-        $pr6 = new ODataProperty();
-        $pr6->name = 'fname';
+        $pr6           = new ODataProperty();
+        $pr6->name     = 'fname';
         $pr6->typeName = 'string';
-        $pr6->value = 'Yash';
+        $pr6->value    = 'Yash';
 
-        $pr7 = new ODataProperty();
-        $pr7->name = 'lname';
+        $pr7           = new ODataProperty();
+        $pr7->name     = 'lname';
         $pr7->typeName = 'string';
-        $pr7->value = 'Kothari';
+        $pr7->value    = 'Kothari';
 
         $propCont1_1->properties = [$pr6, $pr7];
 
         $propCont1_2 = new ODataPropertyContent();
 
-        $pr8 = new ODataProperty();
-        $pr8->name = 'fname';
+        $pr8           = new ODataProperty();
+        $pr8->name     = 'fname';
         $pr8->typeName = 'string';
-        $pr8->value = 'Anu';
+        $pr8->value    = 'Anu';
 
-        $pr9 = new ODataProperty();
-        $pr9->name = 'lname';
+        $pr9           = new ODataProperty();
+        $pr9->name     = 'lname';
         $pr9->typeName = 'string';
-        $pr9->value = 'Chandy';
+        $pr9->value    = 'Chandy';
 
         $propCont1_2->properties = [$pr8, $pr9];
 
-        $pr10 = new ODataProperty();
-        $pr10->name = 'name';
+        $pr10           = new ODataProperty();
+        $pr10->name     = 'name';
         $pr10->typeName = null;
-        $pr10->value = $propCont1_1;
+        $pr10->value    = $propCont1_1;
 
-        $pr11 = new ODataProperty();
-        $pr11->name = 'name';
+        $pr11           = new ODataProperty();
+        $pr11->name     = 'name';
         $pr11->typeName = null;
-        $pr11->value = $propCont1_2;
+        $pr11->value    = $propCont1_2;
 
-        $propCont1->properties = [$pr10, $pr11];
+        $propCont1->properties      = [$pr10, $pr11];
         $bagProp1->propertyContents = [$propCont1];
 
-        $pr12 = new ODataProperty();
-        $pr12->name = 'name';
+        $pr12           = new ODataProperty();
+        $pr12->name     = 'name';
         $pr12->typeName = 'Bag(Name)';
-        $pr12->value = $bagProp1;
+        $pr12->value    = $bagProp1;
 
         $prop1 = $pr12;
 
-        $propCont = new ODataPropertyContent();
+        $propCont             = new ODataPropertyContent();
         $propCont->properties = [$prop1];
 
         $entry->propertyContent = $propCont;
-        $entry->type = new ODataCategory('');
+        $entry->type            = new ODataCategory('');
 
         $writer = new AtomODataWriter('http://localhost/NorthWind.svc');
         $result = $writer->write($entry);
         $this->assertSame($writer, $result);
 
-        $actual = $writer->getOutput();
+        $actual   = $writer->getOutput();
         $expected = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <entry xml:base="http://localhost/NorthWind.svc/" xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns="http://www.w3.org/2005/Atom" m:etag="Entry ETag">
  <id>Expand Entry</id>
@@ -886,9 +888,9 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 </entry>
 ';
 
-        $new = '2013-09-17T19:49:59-06:00';
+        $new      = '2013-09-17T19:49:59-06:00';
         $expected = $this->removeUpdatedTags($expected, $new);
-        $actual = $this->removeUpdatedTags($actual, $new);
+        $actual   = $this->removeUpdatedTags($actual, $new);
         $this->assertXmlStringEqualsXmlString($expected, $actual);
     }
 
@@ -897,19 +899,19 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
      */
     public function testPrimitiveProperty()
     {
-        $prop = new ODataProperty();
-        $prop->name = 'Count';
+        $prop           = new ODataProperty();
+        $prop->name     = 'Count';
         $prop->typeName = null;
-        $prop->value = '56';
+        $prop->value    = '56';
 
-        $propCont = new ODataPropertyContent();
+        $propCont             = new ODataPropertyContent();
         $propCont->properties = [$prop];
 
         $writer = new AtomODataWriter('http://localhost/NorthWind.svc');
         $result = $writer->write($propCont);
         $this->assertSame($writer, $result);
 
-        $actual = $writer->getOutput();
+        $actual   = $writer->getOutput();
         $expected = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <d:Count xmlns="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
 xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices"
@@ -923,30 +925,30 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">56</d:C
      */
     public function testComplexProperty()
     {
-        $pr1 = new ODataProperty();
-        $pr1->name = 'FlatNo.';
+        $pr1           = new ODataProperty();
+        $pr1->name     = 'FlatNo.';
         $pr1->typeName = null;
-        $pr1->value = '31';
+        $pr1->value    = '31';
 
-        $pr2 = new ODataProperty();
-        $pr2->name = 'StreetName';
+        $pr2           = new ODataProperty();
+        $pr2->name     = 'StreetName';
         $pr2->typeName = null;
-        $pr2->value = 'Ankur';
+        $pr2->value    = 'Ankur';
 
-        $pr3 = new ODataProperty();
-        $pr3->name = 'City';
+        $pr3           = new ODataProperty();
+        $pr3->name     = 'City';
         $pr3->typeName = null;
-        $pr3->value = 'Ahmedabad';
+        $pr3->value    = 'Ahmedabad';
 
-        $propCont1 = new ODataPropertyContent();
+        $propCont1             = new ODataPropertyContent();
         $propCont1->properties = [$pr1, $pr2, $pr3];
 
-        $prop = new ODataProperty();
-        $prop->name = 'Address';
+        $prop           = new ODataProperty();
+        $prop->name     = 'Address';
         $prop->typeName = 'Complex.Address';
-        $prop->value = $propCont1;
+        $prop->value    = $propCont1;
 
-        $propCont = new ODataPropertyContent();
+        $propCont             = new ODataPropertyContent();
         $propCont->properties = [$prop];
 
         $writer = new AtomODataWriter('http://localhost/NorthWind.svc');
@@ -972,25 +974,25 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
     public function testEntryWithBagProperty()
     {
         //entry
-        $entry = new ODataEntry();
-        $entry->id = 'http://host/service.svc/Customers(1)';
+        $entry           = new ODataEntry();
+        $entry->id       = 'http://host/service.svc/Customers(1)';
         $entry->selfLink = 'entry2 self link';
-        $entry->title = new ODataTitle('title of entry 2');
+        $entry->title    = new ODataTitle('title of entry 2');
         $entry->editLink = 'edit link of entry 2';
-        $entry->type = 'SampleModel.Customer';
-        $entry->eTag = '';
+        $entry->type     = 'SampleModel.Customer';
+        $entry->eTag     = '';
 
         $entryPropContent = new ODataPropertyContent();
         //entry property
-        $entryProp1 = new ODataProperty();
-        $entryProp1->name = 'ID';
+        $entryProp1           = new ODataProperty();
+        $entryProp1->name     = 'ID';
         $entryProp1->typeName = 'Edm.Int16';
-        $entryProp1->value = 1;
+        $entryProp1->value    = 1;
 
-        $entryProp2 = new ODataProperty();
-        $entryProp2->name = 'Name';
+        $entryProp2           = new ODataProperty();
+        $entryProp2->name     = 'Name';
         $entryProp2->typeName = 'Edm.String';
-        $entryProp2->value = 'mike';
+        $entryProp2->value    = 'mike';
 
         //property 3 starts
         //bag property for property 3
@@ -1000,10 +1002,10 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
             'mike@foo.com',
             'mike2@foo.com', ];
 
-        $entryProp3 = new ODataProperty();
-        $entryProp3->name = 'EmailAddresses';
+        $entryProp3           = new ODataProperty();
+        $entryProp3->name     = 'EmailAddresses';
         $entryProp3->typeName = 'Bag(Edm.String)';
-        $entryProp3->value = $bagEntryProp3;
+        $entryProp3->value    = $bagEntryProp3;
         //property 3 ends
 
         //property 4 starts
@@ -1012,15 +1014,15 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         //property content for bagEntryProp4ContentProp1
         $bagEntryProp4ContentProp1Content = new ODataPropertyContent();
 
-        $bagEntryProp4ContentProp1ContentProp1 = new ODataProperty();
-        $bagEntryProp4ContentProp1ContentProp1->name = 'Street';
+        $bagEntryProp4ContentProp1ContentProp1           = new ODataProperty();
+        $bagEntryProp4ContentProp1ContentProp1->name     = 'Street';
         $bagEntryProp4ContentProp1ContentProp1->typeName = 'Edm.String';
-        $bagEntryProp4ContentProp1ContentProp1->value = '123 contoso street';
+        $bagEntryProp4ContentProp1ContentProp1->value    = '123 contoso street';
 
-        $bagEntryProp4ContentProp1ContentProp2 = new ODataProperty();
-        $bagEntryProp4ContentProp1ContentProp2->name = 'Apartment';
+        $bagEntryProp4ContentProp1ContentProp2           = new ODataProperty();
+        $bagEntryProp4ContentProp1ContentProp2->name     = 'Apartment';
         $bagEntryProp4ContentProp1ContentProp2->typeName = 'Edm.String';
-        $bagEntryProp4ContentProp1ContentProp2->value = '508';
+        $bagEntryProp4ContentProp1ContentProp2->value    = '508';
 
         $bagEntryProp4ContentProp1Content->properties = [$bagEntryProp4ContentProp1ContentProp1,
             $bagEntryProp4ContentProp1ContentProp2, ];
@@ -1030,15 +1032,15 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         //property content2 for bagEntryProp4ContentProp1
         $bagEntryProp4ContentProp1Content2 = new ODataPropertyContent();
 
-        $bagEntryProp4ContentProp1Content2Prop1 = new ODataProperty();
-        $bagEntryProp4ContentProp1Content2Prop1->name = 'Street';
+        $bagEntryProp4ContentProp1Content2Prop1           = new ODataProperty();
+        $bagEntryProp4ContentProp1Content2Prop1->name     = 'Street';
         $bagEntryProp4ContentProp1Content2Prop1->typeName = 'Edm.String';
-        $bagEntryProp4ContentProp1Content2Prop1->value = '834 foo street';
+        $bagEntryProp4ContentProp1Content2Prop1->value    = '834 foo street';
 
-        $bagEntryProp4ContentProp1Content2Prop2 = new ODataProperty();
-        $bagEntryProp4ContentProp1Content2Prop2->name = 'Apartment';
+        $bagEntryProp4ContentProp1Content2Prop2           = new ODataProperty();
+        $bagEntryProp4ContentProp1Content2Prop2->name     = 'Apartment';
         $bagEntryProp4ContentProp1Content2Prop2->typeName = 'Edm.String';
-        $bagEntryProp4ContentProp1Content2Prop2->value = '102';
+        $bagEntryProp4ContentProp1Content2Prop2->value    = '102';
 
         $bagEntryProp4ContentProp1Content2->properties = [$bagEntryProp4ContentProp1Content2Prop1,
             $bagEntryProp4ContentProp1Content2Prop2, ];
@@ -1049,15 +1051,15 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
             $bagEntryProp4ContentProp1Content2,
         ];
 
-        $entryProp4 = new ODataProperty();
-        $entryProp4->name = 'Addresses';
+        $entryProp4           = new ODataProperty();
+        $entryProp4->name     = 'Addresses';
         $entryProp4->typeName = 'Bag(SampleModel.Address)';
-        $entryProp4->value = $bagEntryProp4;
+        $entryProp4->value    = $bagEntryProp4;
         //property 4 ends
 
         $entryPropContent->properties = [$entryProp1, $entryProp2, $entryProp3, $entryProp4];
 
-        $entry->type = new ODataCategory('SampleModel.Customer');
+        $entry->type            = new ODataCategory('SampleModel.Customer');
         $entry->propertyContent = $entryPropContent;
 
         $writer = new AtomODataWriter('http://localhost/NorthWind.svc');
@@ -1099,9 +1101,9 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 </entry>
 ';
 
-        $new = '2011-05-24T15:01:23+05:30';
+        $new      = '2011-05-24T15:01:23+05:30';
         $expected = $this->removeUpdatedTags($expected, $new);
-        $actual = $this->removeUpdatedTags($actual, $new);
+        $actual   = $this->removeUpdatedTags($actual, $new);
         $this->assertXmlStringEqualsXmlString($expected, $actual);
     }
 
@@ -1114,9 +1116,9 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 
         $odataBag = new ODataBagContent();
 
-        $odataProperty->name = 'Emails';
+        $odataProperty->name     = 'Emails';
         $odataProperty->typeName = 'Bag(edm.String)';
-        $odataProperty->value = $odataBag;
+        $odataProperty->value    = $odataBag;
 
         $odataBag->propertyContents = [
             'yash_kothari@persistent.co.in',
@@ -1124,7 +1126,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
             'yash2712@gmail.com',
             'y2k2712@yahoo.com', ];
 
-        $propCont = new ODataPropertyContent();
+        $propCont             = new ODataPropertyContent();
         $propCont->properties = [$odataProperty];
 
         $writer = new AtomODataWriter('http://localhost/NorthWind.svc');
@@ -1156,14 +1158,14 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $this->mockProvider->shouldReceive('getResourceSets')->andReturn([]);
         $this->mockProvider->shouldReceive('getSingletons')->andReturn([]);
 
-        $fakeBaseURL = 'http://some/place/some/where/'.uniqid();
+        $fakeBaseURL = 'http://some/place/some/where/' . uniqid();
 
         $writer = new AtomODataWriter($fakeBaseURL);
         $actual = $writer->writeServiceDocument($this->mockProvider)->getOutput();
 
         $expected = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<service xml:base=\"{$fakeBaseURL}/\" xmlns:atom=\"http://www.w3.org/2005/Atom\" xmlns=\"http://www.w3.org/2007/app\">\n <workspace>\n  <atom:title>Default</atom:title>\n </workspace>\n</service>\n";
 
-        $this->assertEquals($expected, $actual);
+        $this->assertXmlStringEqualsXmlString($expected, $actual);
     }
 
     public function testGetOutputTwoResourceSets()
@@ -1183,14 +1185,14 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $this->mockProvider->shouldReceive('getResourceSets')->andReturn($fakeResourceSets);
         $this->mockProvider->shouldReceive('getSingletons')->andReturn([]);
 
-        $fakeBaseURL = 'http://some/place/some/where/'.uniqid();
+        $fakeBaseURL = 'http://some/place/some/where/' . uniqid();
 
         $writer = new AtomODataWriter($fakeBaseURL);
         $actual = $writer->writeServiceDocument($this->mockProvider)->getOutput();
 
         $expected = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<service xml:base=\"{$fakeBaseURL}/\" xmlns:atom=\"http://www.w3.org/2005/Atom\" xmlns=\"http://www.w3.org/2007/app\">\n <workspace>\n  <atom:title>Default</atom:title>\n  <collection href=\"Name 1\">\n   <atom:title>Name 1</atom:title>\n  </collection>\n  <collection href=\"XML escaped stuff &quot; ' &lt;&gt; &amp; ?\">\n   <atom:title>XML escaped stuff &quot; ' &lt;&gt; &amp; ?</atom:title>\n  </collection>\n </workspace>\n</service>\n";
 
-        $this->assertEquals($expected, $actual);
+        $this->assertXmlStringEqualsXmlString($expected, $actual);
     }
 
     /**
@@ -1206,7 +1208,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 
         $actual = $writer->canHandle($version, $contentType);
 
-        $this->assertEquals($expected, $actual, $id);
+        $this->assertEquals($expected, $actual, strval($id));
     }
 
     public function canHandleProvider()
@@ -1276,12 +1278,12 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 
     public function testBeforeWriteDateTimeValue()
     {
-        $type = 'Edm.DateTime';
+        $type  = 'Edm.DateTime';
         $value = '2000-01-01 00:00:00';
 
-        $foo = new AtomODataWriterDummy('http://localhost/odata.svc');
+        $foo      = new AtomODataWriterDummy('http://localhost/odata.svc');
         $expected = '2000-01-01T00:00:00';
-        $actual = $foo->beforeWriteValue($value, $type);
+        $actual   = $foo->beforeWriteValue($value, $type);
         $this->assertEquals($expected, $actual);
     }
 
@@ -1292,8 +1294,8 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $foo = new AtomODataWriterDummy('http://localhost/odata.svc');
         $foo->writeNullValue($property);
 
-        $expected = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'.PHP_EOL;
-        $actual = $foo->getOutput();
+        $expected = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . PHP_EOL;
+        $actual   = $foo->getOutput();
         $this->assertEquals(trim($expected), trim($actual));
     }
 
@@ -1303,22 +1305,22 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 
         $type = new ODataCategory('');
 
-        $entry = new ODataEntry();
+        $entry                   = new ODataEntry();
         $entry->isMediaLinkEntry = true;
-        $entry->mediaLink = $media;
-        $entry->type = $type;
+        $entry->mediaLink        = $media;
+        $entry->type             = $type;
 
         $foo = new AtomODataWriterDummy('http://localhost/odata.svc');
         $foo->preWriteProperties($entry);
 
-        $expected = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'.PHP_EOL;
+        $expected = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . PHP_EOL;
         $expected .= '<category term="" scheme="http://schemas.microsoft.com/ado/2007/08/dataservices/scheme"/>'
-                     .PHP_EOL;
-        $expected .= '<content type="application/xml" src="src"/>'.PHP_EOL;
-        $expected .= '<m:properties/>'.PHP_EOL;
-        $actual = $foo->getOutput();
+                     . PHP_EOL;
+        $expected .= '<content type="application/xml" src="src"/>' . PHP_EOL;
+        $expected .= '<m:properties/>' . PHP_EOL;
+        $actual   = $foo->getOutput();
         $expected = preg_replace('~(*BSR_ANYCRLF)\R~', "\r\n", $expected);
-        $actual = preg_replace('~(*BSR_ANYCRLF)\R~', "\r\n", $actual);
+        $actual   = preg_replace('~(*BSR_ANYCRLF)\R~', "\r\n", $actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -1326,62 +1328,62 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
     {
         $media = new ODataMediaLink('name', 'edit', 'src', 'application/xml', 'etag');
 
-        $entry = new ODataEntry();
+        $entry                   = new ODataEntry();
         $entry->isMediaLinkEntry = true;
-        $entry->mediaLink = $media;
-        $entry->mediaLinks[] = $media;
-        $entry->editLink = 'edit';
-        $entry->title = new ODataTitle('');
+        $entry->mediaLink        = $media;
+        $entry->mediaLinks[]     = $media;
+        $entry->editLink         = 'edit';
+        $entry->title            = new ODataTitle('');
 
         $foo = new AtomODataWriterDummy('http://localhost/odata.svc');
         $foo->writeBeginEntry($entry, false);
 
-        $expectedStart = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'.PHP_EOL;
-        $expectedStart .= '<entry>'.PHP_EOL;
-        $expectedStart .= ' <id></id>'.PHP_EOL;
-        $expectedStart .= ' <title type="text"></title>'.PHP_EOL;
+        $expectedStart = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . PHP_EOL;
+        $expectedStart .= '<entry>' . PHP_EOL;
+        $expectedStart .= '    <id></id>' . PHP_EOL;
+        $expectedStart .= '    <title type="text"></title>' . PHP_EOL;
 
-        $expectedEnd = ' <author>'.PHP_EOL;
-        $expectedEnd .= '  <name/>'.PHP_EOL;
-        $expectedEnd .= ' </author>'.PHP_EOL;
-        $expectedEnd .= ' <link rel="edit" title="" href="edit"/>'.PHP_EOL;
-        $expectedEnd .= ' <link m:etag="etag" rel="edit-media" type="application/xml" title="name" href="edit"/>'
-                        .PHP_EOL;
-        $expectedEnd .= ' <link m:etag="etag" rel="http://schemas.microsoft.com/ado/2007/08/dataservices/'
-                        .'mediaresource/name" type="application/xml" title="name" href="edit"/>'.PHP_EOL;
-        $expectedEnd .= '</entry>'.PHP_EOL;
+        $expectedEnd = '    <author>' . PHP_EOL;
+        $expectedEnd .= '        <name/>' . PHP_EOL;
+        $expectedEnd .= '    </author>' . PHP_EOL;
+        $expectedEnd .= '    <link rel="edit" title="" href="edit"/>' . PHP_EOL;
+        $expectedEnd .= '    <link m:etag="etag" rel="edit-media" type="application/xml" title="name" href="edit"/>'
+                        . PHP_EOL;
+        $expectedEnd .= '    <link m:etag="etag" rel="http://schemas.microsoft.com/ado/2007/08/dataservices/'
+                        . 'mediaresource/name" type="application/xml" title="name" href="edit"/>' . PHP_EOL;
+        $expectedEnd .= '</entry>' . PHP_EOL;
 
-        $actual = $foo->getOutput();
+        $actual        = $foo->getOutput();
         $expectedStart = preg_replace('~(*BSR_ANYCRLF)\R~', "\r\n", $expectedStart);
-        $actual = preg_replace('~(*BSR_ANYCRLF)\R~', "\r\n", $actual);
-        $expectedEnd = preg_replace('~(*BSR_ANYCRLF)\R~', "\r\n", $expectedEnd);
+        $actual        = preg_replace('~(*BSR_ANYCRLF)\R~', "\r\n", $actual);
+        $expectedEnd   = preg_replace('~(*BSR_ANYCRLF)\R~', "\r\n", $expectedEnd);
         $this->assertStringStartsWith($expectedStart, $actual);
         $this->assertStringEndsWith($expectedEnd, $actual);
     }
 
     public function testWriteUnexpandedLinkNode()
     {
-        $link = new ODataLink();
-        $link->type = 'linkType';
+        $link        = new ODataLink();
+        $link->type  = 'linkType';
         $link->title = 'Title';
 
         $foo = new AtomODataWriterDummy('http://localhost/odata.svc');
         $foo->writeLinkNode($link, false);
 
-        $expected = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'.PHP_EOL;
-        $expected .= '<link rel="" type="linkType" title="Title" href=""/>'.PHP_EOL;
+        $expected = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . PHP_EOL;
+        $expected .= '<link rel="" type="linkType" title="Title" href=""/>' . PHP_EOL;
         $actual = $foo->getOutput();
         $this->assertXmlStringEqualsXmlString($expected, $actual);
     }
 
     public function testWriteEmptyODataEntry()
     {
-        $entry = new ODataEntry();
+        $entry                  = new ODataEntry();
         $entry->resourceSetName = 'Foobars';
 
         $foo = new AtomODataWriterDummy('http://localhost/odata.svc');
 
-        $actual = $foo->write($entry)->getOutput();
+        $actual   = $foo->write($entry)->getOutput();
         $expected = '<link rel="edit" title="" href=""/>';
         $this->assertTrue(false !== strpos($actual, $expected));
         $expected = '<m:properties/>';
@@ -1390,17 +1392,17 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 
     public function testWriteEmptyODataFeed()
     {
-        $feed = new ODataFeed();
-        $feed->id = 'http://localhost/odata.svc/feedID';
-        $feed->title = 'title';
-        $feed->selfLink = new ODataLink();
-        $feed->selfLink->name = ODataConstants::ATOM_SELF_RELATION_ATTRIBUTE_VALUE;
+        $feed                  = new ODataFeed();
+        $feed->id              = 'http://localhost/odata.svc/feedID';
+        $feed->title           = 'title';
+        $feed->selfLink        = new ODataLink();
+        $feed->selfLink->name  = ODataConstants::ATOM_SELF_RELATION_ATTRIBUTE_VALUE;
         $feed->selfLink->title = 'Feed Title';
-        $feed->selfLink->url = 'feedID';
+        $feed->selfLink->url   = 'feedID';
 
-        $foo = new AtomODataWriterDummy('http://localhost/odata.svc');
+        $foo      = new AtomODataWriterDummy('http://localhost/odata.svc');
         $expected = '<link rel="self" title="Feed Title" href="feedID"/>';
-        $actual = $foo->write($feed)->getOutput();
+        $actual   = $foo->write($feed)->getOutput();
         $this->assertTrue(false !== strpos($actual, $expected));
         $expected = '<m:properties/>';
         $this->assertTrue(false === strpos($actual, $expected));

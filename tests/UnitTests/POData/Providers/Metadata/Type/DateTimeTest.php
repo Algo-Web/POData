@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\Providers\Metadata\Type;
 
 use POData\Providers\Metadata\Type\Binary;
@@ -91,7 +93,7 @@ class DateTimeTest extends TestCase
         $type = $this->getAsIType();
 
         $expected = '\'2399-12-31T24:51:51\'';
-        $out = '';
+        $out      = '';
         $this->assertTrue($type->validate($date, $out));
         $this->assertEquals($expected, $out);
     }
@@ -102,7 +104,7 @@ class DateTimeTest extends TestCase
         $type = $this->getAsIType();
 
         $expected = '\'2017-10-22T00:00:00\'';
-        $out = '';
+        $out      = '';
         $this->assertTrue($type->validate($date, $out));
         $this->assertEquals($expected, $out);
     }
@@ -113,7 +115,7 @@ class DateTimeTest extends TestCase
         $type = $this->getAsIType();
 
         $expected = '\'2017-10-22T00:00:00\'';
-        $out = '';
+        $out      = '';
         $this->assertTrue($type->validate($date, $out));
         $this->assertEquals($expected, $out);
     }
@@ -122,7 +124,7 @@ class DateTimeTest extends TestCase
     {
         $type = $this->getAsIType();
 
-        $value = 'afaefasevaswee';
+        $value  = 'afaefasevaswee';
         $actual = $type->convert($value);
 
         $expected = 'afaefasevaswee';
@@ -133,7 +135,7 @@ class DateTimeTest extends TestCase
     {
         $type = $this->getAsIType();
 
-        $value = 'afaefasevaswee';
+        $value  = 'afaefasevaswee';
         $actual = $type->convertToOData($value);
 
         $expected = "datetime'afaefasevaswee'";
@@ -157,42 +159,42 @@ class DateTimeTest extends TestCase
 
     public function testYear()
     {
-        $date = '2399-12-31T24:51:51';
+        $date   = '2399-12-31T24:51:51';
         $result = DateTime::year($date);
         $this->assertEquals('2400', $result);
     }
 
     public function testMonth()
     {
-        $date = '2399-12-31T24:51:51';
+        $date   = '2399-12-31T24:51:51';
         $result = DateTime::month($date);
         $this->assertEquals('01', $result);
     }
 
     public function testDay()
     {
-        $date = '2399-12-31T24:51:51';
+        $date   = '2399-12-31T24:51:51';
         $result = DateTime::day($date);
         $this->assertEquals('01', $result);
     }
 
     public function testHour()
     {
-        $date = '2399-12-31T24:51:51';
+        $date   = '2399-12-31T24:51:51';
         $result = DateTime::hour($date);
         $this->assertEquals('00', $result);
     }
 
     public function testMinute()
     {
-        $date = '2399-12-31T24:51:51';
+        $date   = '2399-12-31T24:51:51';
         $result = DateTime::minute($date);
         $this->assertEquals('51', $result);
     }
 
     public function testSecond()
     {
-        $date = '2399-12-31T24:51:51';
+        $date   = '2399-12-31T24:51:51';
         $result = DateTime::second($date);
         $this->assertEquals('51', $result);
     }
@@ -200,40 +202,40 @@ class DateTimeTest extends TestCase
     public function testCompareTwoDateTimeObjects()
     {
         $firstDate = new \DateTime();
-        $lastDate = $firstDate;
+        $lastDate  = $firstDate;
 
         $expected = 0;
-        $actual = DateTime::dateTimeCmp($firstDate, $lastDate);
+        $actual   = DateTime::dateTimeCmp($firstDate, $lastDate);
         $this->assertEquals($expected, $actual);
     }
 
     public function testCompareDateTimeToString()
     {
         $firstDate = '2000-01-01 00:00:00';
-        $lastDate = new \DateTime();
+        $lastDate  = new \DateTime();
 
         $expected = -1;
-        $actual = DateTime::dateTimeCmp($firstDate, $lastDate);
+        $actual   = DateTime::dateTimeCmp($firstDate, $lastDate);
         $this->assertEquals($expected, $actual);
     }
 
     public function testCompareStringToDateTime()
     {
         $firstDate = new \DateTime();
-        $lastDate = '2000-01-01 00:00:00';
+        $lastDate  = '2000-01-01 00:00:00';
 
         $expected = 1;
-        $actual = DateTime::dateTimeCmp($firstDate, $lastDate);
+        $actual   = DateTime::dateTimeCmp($firstDate, $lastDate);
         $this->assertEquals($expected, $actual);
     }
 
     public function testCompareStringToInvalidObject()
     {
         $firstDate = '2000-01-01 00:00:00';
-        $lastDate = null;
+        $lastDate  = null;
 
         $expected = 'Invalid input - datetime2 must be DateTime or string';
-        $actual = null;
+        $actual   = null;
 
         try {
             DateTime::dateTimeCmp($firstDate, $lastDate);
@@ -246,10 +248,10 @@ class DateTimeTest extends TestCase
     public function testCompareInvalidObjectToString()
     {
         $firstDate = null;
-        $lastDate = '2000-01-01 00:00:00';
+        $lastDate  = '2000-01-01 00:00:00';
 
         $expected = 'Invalid input - datetime1 must be DateTime or string';
-        $actual = null;
+        $actual   = null;
 
         try {
             DateTime::dateTimeCmp($firstDate, $lastDate);

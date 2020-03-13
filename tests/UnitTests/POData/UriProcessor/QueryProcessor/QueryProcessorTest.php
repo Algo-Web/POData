@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\UriProcessor\QueryProcessor;
 
 use Mockery as m;
@@ -23,7 +25,7 @@ class QueryProcessorTest extends TestCase
     {
         $providers = m::mock(ProvidersWrapper::class)->makePartial();
 
-        $rSet = m::mock(ResourceSetWrapper::class)->makePartial();
+        $rSet  = m::mock(ResourceSetWrapper::class)->makePartial();
         $rType = m::mock(ResourceType::class)->makePartial();
         $rType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
 
@@ -68,7 +70,7 @@ class QueryProcessorTest extends TestCase
         $service->shouldReceive('getHost')->andReturn($host);
 
         $expected = 'Query options $select, $expand, $filter, $orderby, $inlinecount, $skip, $skiptoken and $top'
-                    .' are not supported by this request method or cannot be applied to the requested resource.';
+                    . ' are not supported by this request method or cannot be applied to the requested resource.';
         $actual = null;
 
         try {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\Common;
 
 use Mockery as m;
@@ -13,7 +15,7 @@ class ServiceConfigurationTest extends TestCase
     public function testUseVerboseErrorsRoundTrip()
     {
         $meta = m::mock(IMetadataProvider::class);
-        $foo = new ServiceConfiguration($meta);
+        $foo  = new ServiceConfiguration($meta);
         $foo->setUseVerboseErrors(true);
         $this->assertTrue($foo->getUseVerboseErrors());
     }

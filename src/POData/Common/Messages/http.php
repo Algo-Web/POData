@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\Common\Messages;
 
 use POData\OperationContext\HTTPRequestMethod;
 
 /**
- * Trait http
+ * Trait http.
  * @package POData\Common\Messages
  */
 trait http
@@ -91,7 +93,7 @@ trait http
     public static function badRequestInvalidUriForMediaResource($uri)
     {
         return 'The URI \'' . $uri . '\' is not valid. The segment before \'$value\' must be a Media Link Entry or'
-                .' a primitive property.';
+                . ' a primitive property.';
     }
 
     /**
@@ -105,7 +107,7 @@ trait http
     public static function hostNonODataOptionBeginsWithSystemCharacter($optionName)
     {
         return 'The query parameter \'' . $optionName . '\' begins with a system-reserved \'$\' character but'
-                .' is not recognized.';
+                . ' is not recognized.';
     }
 
     /**
@@ -143,6 +145,6 @@ trait http
     public static function bothIfMatchAndIfNoneMatchHeaderSpecified()
     {
         return 'Both If-Match and If-None-Match HTTP headers cannot be specified at the same time. Please specify'
-                .' either one of the headers or none of them.';
+                . ' either one of the headers or none of them.';
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\Configuration;
 
 use POData\Common\InvalidOperationException;
@@ -21,7 +23,7 @@ class ServiceConfigurationTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->northWindMetadata = NorthWindMetadata::Create();
+        $this->northWindMetadata        = NorthWindMetadata::Create();
         $this->dataServiceConfiguration = new ServiceConfiguration($this->northWindMetadata);
     }
 

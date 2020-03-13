@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\UriProcessor\QueryProcessor\OrderByParser;
 
 use Mockery as m;
@@ -12,7 +14,7 @@ class OrderByInfoTest extends TestCase
     public function testCreateWithNonArraySegments()
     {
         $expected = 'The argument orderByPathSegments should be a non-empty array';
-        $actual = null;
+        $actual   = null;
 
         try {
             new OrderByInfo(new \DateTime(), null);
@@ -26,7 +28,7 @@ class OrderByInfoTest extends TestCase
     public function testCreateWithEmptyArraySegments()
     {
         $expected = 'The argument orderByPathSegments should be a non-empty array';
-        $actual = null;
+        $actual   = null;
 
         try {
             new OrderByInfo([], null);
@@ -40,7 +42,7 @@ class OrderByInfoTest extends TestCase
     public function testCreateWithNonArrayNavProperties()
     {
         $expected = 'The argument navigationPropertiesUsedInTheOrderByClause should be'
-                    .' either null or a non-empty array';
+                    . ' either null or a non-empty array';
         $actual = null;
 
         try {
@@ -55,7 +57,7 @@ class OrderByInfoTest extends TestCase
     public function testCreateWithEmptyArrayNavProperties()
     {
         $expected = 'The argument navigationPropertiesUsedInTheOrderByClause should be'
-                    .' either null or a non-empty array';
+                    . ' either null or a non-empty array';
         $actual = null;
 
         try {

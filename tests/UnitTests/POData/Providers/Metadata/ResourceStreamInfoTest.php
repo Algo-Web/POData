@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\Providers\Metadata;
 
 use POData\Providers\Metadata\ResourceStreamInfo;
@@ -10,7 +12,7 @@ class ResourceStreamInfoTest extends TestCase
 {
     public function testGetSetCustomStateRoundTrip()
     {
-        $foo = new ResourceStreamInfo('name');
+        $foo    = new ResourceStreamInfo('name');
         $object = new reusableEntityClass2('foo', 'bar');
 
         $foo->setCustomState($object);

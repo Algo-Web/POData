@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\Providers\Metadata;
 
 use InvalidArgumentException;
@@ -192,15 +194,15 @@ abstract class ResourceType
         ResourceType $baseType = null,
         $isAbstract = false
     ) {
-        $this->type = $instanceType;
-        $this->resourceTypeKind = $resourceTypeKind;
-        $this->name = $name;
-        $this->baseType = $baseType;
-        $this->namespaceName = $namespaceName;
-        $this->fullName = null === $namespaceName ? $name : $namespaceName . '.' . $name;
-        $this->abstractType = $isAbstract;
-        $this->isMediaLinkEntry = false;
-        $this->customState = null;
+        $this->type                          = $instanceType;
+        $this->resourceTypeKind              = $resourceTypeKind;
+        $this->name                          = $name;
+        $this->baseType                      = $baseType;
+        $this->namespaceName                 = $namespaceName;
+        $this->fullName                      = null === $namespaceName ? $name : $namespaceName . '.' . $name;
+        $this->abstractType                  = $isAbstract;
+        $this->isMediaLinkEntry              = false;
+        $this->customState                   = null;
         $this->arrayToDetectLoopInComplexBag = [];
         //TODO: Set MLE if base type has MLE Set
     }
@@ -250,8 +252,8 @@ abstract class ResourceType
      * then this function returns reference to ReflectionClass instance for the type.
      * If resource type describes a primitive type, then this function returns ITYpe.
      *
-     * @return \ReflectionClass|IType
      * @throws \ReflectionException
+     * @return \ReflectionClass|IType
      */
     public function getInstanceType()
     {
@@ -374,14 +376,14 @@ abstract class ResourceType
             }
         }
 
-        if ($property->isKindOf(/** @scrutinizer ignore-type */ResourcePropertyKind::KEY)) {
+        if ($property->isKindOf(/* @scrutinizer ignore-type */ResourcePropertyKind::KEY)) {
             if (ResourceTypeKind::ENTITY() != $this->resourceTypeKind) {
                 throw new InvalidOperationException(
                     Messages::resourceTypeKeyPropertiesOnlyOnEntityTypes()
                 );
             }
 
-            $base = $this->baseType;
+            $base        = $this->baseType;
             $derivedGood = null === $base || ($base instanceof ResourceEntityType && $base->isAbstract());
 
             if (!$derivedGood) {
@@ -391,7 +393,7 @@ abstract class ResourceType
             }
         }
 
-        if ($property->isKindOf(/** @scrutinizer ignore-type */ResourcePropertyKind::ETAG)
+        if ($property->isKindOf(/* @scrutinizer ignore-type */ResourcePropertyKind::ETAG)
             && (ResourceTypeKind::ENTITY() != $this->resourceTypeKind)
         ) {
             throw new InvalidOperationException(
@@ -461,7 +463,7 @@ abstract class ResourceType
             }
 
             foreach ($baseType->propertiesDeclaredOnThisType as $propertyName => $resourceProperty) {
-                if ($resourceProperty->isKindOf(/** @scrutinizer ignore-type */ResourcePropertyKind::KEY)) {
+                if ($resourceProperty->isKindOf(/* @scrutinizer ignore-type */ResourcePropertyKind::KEY)) {
                     $this->keyProperties[$propertyName] = $resourceProperty;
                 }
             }
@@ -479,7 +481,7 @@ abstract class ResourceType
     {
         if (empty($this->eTagProperties)) {
             foreach ($this->getAllProperties() as $propertyName => $resourceProperty) {
-                if ($resourceProperty->isKindOf(/** @scrutinizer ignore-type */ResourcePropertyKind::ETAG)) {
+                if ($resourceProperty->isKindOf(/* @scrutinizer ignore-type */ResourcePropertyKind::ETAG)) {
                     $this->eTagProperties[$propertyName] = $resourceProperty;
                 }
             }
@@ -680,7 +682,7 @@ abstract class ResourceType
         } else {
             foreach ($this->propertiesDeclaredOnThisType as $resourceProperty) {
                 $hasBagInComplex = false;
-                if ($resourceProperty->isKindOf(/** @scrutinizer ignore-type */ResourcePropertyKind::COMPLEX_TYPE)) {
+                if ($resourceProperty->isKindOf(/* @scrutinizer ignore-type */ResourcePropertyKind::COMPLEX_TYPE)) {
                     //We can say current ResourceType ("this")
                     //is contains a bag property if:
                     //1. It contain a property of kind bag.
@@ -711,7 +713,7 @@ abstract class ResourceType
                     //are same, this is a loop, we need to detect
                     //this and avoid infinite recursive loop.
 
-                    $count = count($arrayToDetectLoopInComplexType);
+                    $count     = count($arrayToDetectLoopInComplexType);
                     $foundLoop = false;
                     for ($i = 0; $i < $count; ++$i) {
                         if ($arrayToDetectLoopInComplexType[$i] === $resourceProperty->getResourceType()) {
@@ -722,14 +724,14 @@ abstract class ResourceType
 
                     if (!$foundLoop) {
                         $arrayToDetectLoopInComplexType[$count] = $resourceProperty->getResourceType();
-                        $hasBagInComplex = $resourceProperty
+                        $hasBagInComplex                        = $resourceProperty
                             ->getResourceType()
                             ->hasBagProperty($arrayToDetectLoopInComplexType);
                         unset($arrayToDetectLoopInComplexType[$count]);
                     }
                 }
 
-                if ($resourceProperty->isKindOf(/** @scrutinizer ignore-type */ResourcePropertyKind::BAG) || $hasBagInComplex) {
+                if ($resourceProperty->isKindOf(/* @scrutinizer ignore-type */ResourcePropertyKind::BAG) || $hasBagInComplex) {
                     $this->hasBagProperty = true;
                     break;
                 }
@@ -830,11 +832,11 @@ abstract class ResourceType
 
     /**
      * @param string $property
-     * @param mixed $entity
-     * @param mixed $value
+     * @param mixed  $entity
+     * @param mixed  $value
      *
-     * @return ResourceType
      * @throws \ReflectionException
+     * @return ResourceType
      */
     public function setPropertyValue($entity, $property, $value)
     {
@@ -847,8 +849,8 @@ abstract class ResourceType
     /**
      * @param $entity
      * @param $property
-     * @return mixed
      * @throws \ReflectionException
+     * @return mixed
      */
     public function getPropertyValue($entity, $property)
     {

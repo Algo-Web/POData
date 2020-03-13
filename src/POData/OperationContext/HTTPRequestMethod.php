@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\OperationContext;
 
 use MyCLabs\Enum\Enum;
@@ -17,11 +19,11 @@ use MyCLabs\Enum\Enum;
  */
 class HTTPRequestMethod extends Enum
 {
-    const GET = 'GET';
-    const POST = 'POST';
-    const PUT = 'PUT';
+    const GET    = 'GET';
+    const POST   = 'POST';
+    const PUT    = 'PUT';
     const DELETE = 'DELETE';
-    const PATCH = 'PATCH';
-    const MERGE = 'MERGE';
-    const NONE = 'NONE';
+    const PATCH  = 'PATCH';
+    const MERGE  = 'MERGE';
+    const NONE   = 'NONE';
 }
