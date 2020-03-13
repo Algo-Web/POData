@@ -84,7 +84,7 @@ class MediaType
      */
     public function getMatchingRating(?string $candidate)
     {
-        $result = -1;
+        $result    = -1;
         $candidate = $candidate ?? '';
         if (strlen($candidate) > 0) {
             //get the odata parameter (if there is one)

@@ -201,7 +201,6 @@ class ChangeSetParser implements IBatchParser
                 'Request' => null,
                 'Response' => null
             ];
-
         }
     }
 
