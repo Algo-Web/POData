@@ -65,7 +65,7 @@ class ServiceHost
     /**
      * array of query-string parameters.
      *
-     * @var array<string>
+     * @var array<string|array>
      */
     private $queryOptions;
 
@@ -388,7 +388,7 @@ class ServiceHost
      * @return string|null The value for the specified item in the request
      *                     query string NULL if the query option is absent
      */
-    public function getQueryStringItem($item)
+    public function getQueryStringItem(string $item): ?string
     {
         foreach ($this->queryOptions as $queryOption) {
             if (array_key_exists($item, $queryOption)) {
