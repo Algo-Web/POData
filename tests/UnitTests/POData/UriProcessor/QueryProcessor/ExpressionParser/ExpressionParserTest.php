@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace UnitTests\POData\UriProcessor\QueryProcessor\ExpressionParser;
 
+use POData\Common\NotImplementedException;
 use POData\Common\ODataException;
 use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\Metadata\ResourceType;
@@ -26,8 +27,11 @@ use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\LogicalExpre
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\PropertyAccessExpression;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\RelationalExpression;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\UnaryExpression;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionToken;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionTokenId;
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 use UnitTests\POData\TestCase;
+use Mockery as m;
 
 class ExpressionParserTest extends TestCase
 {
@@ -652,5 +656,138 @@ class ExpressionParserTest extends TestCase
         $expression = 'year(datetime\'1988-11-11\')';
         $parser     = new ExpressionParser($expression, $this->customersResourceType, false);
         $this->assertFalse($parser->hasLevel2Property());
+    }
+
+    /**
+     * @throws ODataException
+     * @throws \ReflectionException
+     */
+    public function testSetCurrentToken()
+    {
+        $expression = 'year(datetime\'1988-11-11\')';
+        $parser     = new ExpressionParser($expression, $this->customersResourceType, false);
+
+        $newToken = m::mock(ExpressionToken::class)->makePartial();
+        $newToken->shouldReceive('getIdentifier')->andReturn('drop bear');
+
+        $reflec = new \ReflectionClass($parser);
+
+        $method = $reflec->getMethod('setCurrentToken');
+        $method->setAccessible(true);
+
+        $get = $reflec->getMethod('getCurrentToken');
+        $get->setAccessible(true);
+
+        $method->invokeArgs($parser, [$newToken]);
+        $result = $get->invokeArgs($parser, []);
+
+        $this->assertEquals('drop bear', $result->getIdentifier());
+    }
+
+    /**
+     * @return array
+     */
+    public function primaryStartKaboomProvider(): array
+    {
+        $result = [];
+        $result[] = [ExpressionTokenId::BINARY_LITERAL(), NotImplementedException::class, 'Support for binary is not implemented'];
+        $result[] = [null, ODataException::class, 'Expression expected'];
+
+        return $result;
+    }
+
+    /**
+     * @dataProvider primaryStartKaboomProvider
+     *
+     * @param $tokenId
+     * @param $exceptionType
+     * @param $exceptionMessage
+     * @throws ODataException
+     * @throws \ReflectionException
+     */
+    public function testParsePrimaryStartKaboom($tokenId, $exceptionType, $exceptionMessage)
+    {
+        $expression = 'year(datetime\'1988-11-11\')';
+        $parser     = new ExpressionParser($expression, $this->customersResourceType, false);
+
+        $newToken = m::mock(ExpressionToken::class)->makePartial();
+        $newToken->shouldReceive('getId')->andReturn($tokenId);
+
+        $reflec = new \ReflectionClass($parser);
+
+        $method = $reflec->getMethod('setCurrentToken');
+        $method->setAccessible(true);
+
+        $method->invokeArgs($parser, [$newToken]);
+
+        $this->expectException($exceptionType);
+        $this->expectExceptionMessage($exceptionMessage);
+
+        $parse = $reflec->getMethod('parsePrimaryStart');
+        $parse->setAccessible(true);
+
+        $parse->invokeArgs($parser, []);
+    }
+
+    /**
+     * @throws ODataException
+     * @throws \ReflectionException
+     */
+    public function testParseParenExpressionBadInitialToken()
+    {
+        $exceptionType = ODataException::class;
+        $exceptionMessage = 'Open parenthesis expected.';
+
+        $expression = 'year(datetime\'1988-11-11\')';
+        $parser     = new ExpressionParser($expression, $this->customersResourceType, false);
+
+        $newToken = m::mock(ExpressionToken::class)->makePartial();
+        $newToken->shouldReceive('getId')->andReturn(null)->once();
+
+        $reflec = new \ReflectionClass($parser);
+
+        $method = $reflec->getMethod('setCurrentToken');
+        $method->setAccessible(true);
+
+        $method->invokeArgs($parser, [$newToken]);
+
+        $this->expectException($exceptionType);
+        $this->expectExceptionMessage($exceptionMessage);
+
+        $parse = $reflec->getMethod('parseParenExpression');
+        $parse->setAccessible(true);
+
+        $parse->invokeArgs($parser, []);
+    }
+
+    /**
+     * @throws ODataException
+     * @throws \ReflectionException
+     */
+    public function testParseArgumentListBadInitialToken()
+    {
+        $exceptionType = ODataException::class;
+        $exceptionMessage = 'Open parenthesis expected.';
+
+        $expression = 'year(datetime\'1988-11-11\')';
+        $parser     = new ExpressionParser($expression, $this->customersResourceType, false);
+
+        $newToken = m::mock(ExpressionToken::class)->makePartial();
+        $newToken->shouldReceive('getId')->andReturn(null)->once();
+
+        $reflec = new \ReflectionClass($parser);
+
+        $method = $reflec->getMethod('setCurrentToken');
+        $method->setAccessible(true);
+
+        $method->invokeArgs($parser, [$newToken]);
+
+        $this->expectException($exceptionType);
+        $this->expectExceptionMessage($exceptionMessage);
+
+        $parse = $reflec->getMethod('parseArgumentList');
+        $parse->setAccessible(true);
+
+        $parse->invokeArgs($parser, []);
     }
 }
