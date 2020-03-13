@@ -1449,7 +1449,7 @@ class JsonODataV2WriterTest extends TestCase
 
         $actual = $writer->canHandle($version, $contentType);
 
-        $this->assertEquals($expected, $actual, $id);
+        $this->assertEquals($expected, $actual, strval($id));
     }
 
     public function canHandleProvider()

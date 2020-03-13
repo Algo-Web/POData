@@ -1208,7 +1208,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 
         $actual = $writer->canHandle($version, $contentType);
 
-        $this->assertEquals($expected, $actual, $id);
+        $this->assertEquals($expected, $actual, strval($id));
     }
 
     public function canHandleProvider()

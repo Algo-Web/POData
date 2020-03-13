@@ -72,7 +72,7 @@ class BaseServiceGetResponseContentTest extends TestCase
         );
 
         //accepts doesn't match any possibles actual for that format..so it should return null
-        $this->assertEquals($expectedValue, $actual, $id);
+        $this->assertEquals($expectedValue, $actual, strval($id));
     }
 
     public function provider()

@@ -1542,11 +1542,12 @@ class ExecuteGetTest extends TestCase
         $this->assertEquals($segCount, count($remixSegments));
 
         for ($i = 0; $i < $segCount; $i++) {
-            $this->assertEquals($origSegments[$i]->getTargetKind(), $remixSegments[$i]->getTargetKind(), $i);
-            $this->assertEquals($origSegments[$i]->getResult(), $remixSegments[$i]->getResult(), $i);
-            $this->assertEquals($origSegments[$i]->isSingleResult(), $remixSegments[$i]->isSingleResult(), $i);
-            $this->assertEquals($origSegments[$i]->getNext(), $remixSegments[$i]->getNext(), $i);
-            $this->assertEquals($origSegments[$i]->getPrevious(), $remixSegments[$i]->getPrevious(), $i);
+            $strI = strval($i);
+            $this->assertEquals($origSegments[$i]->getTargetKind(), $remixSegments[$i]->getTargetKind(), $strI);
+            $this->assertEquals($origSegments[$i]->getResult(), $remixSegments[$i]->getResult(), $strI);
+            $this->assertEquals($origSegments[$i]->isSingleResult(), $remixSegments[$i]->isSingleResult(), $strI);
+            $this->assertEquals($origSegments[$i]->getNext(), $remixSegments[$i]->getNext(), $strI);
+            $this->assertEquals($origSegments[$i]->getPrevious(), $remixSegments[$i]->getPrevious(), $strI);
         }
     }
 }

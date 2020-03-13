@@ -21,10 +21,10 @@ class HttpHeaderFailure extends \Exception
     public function __construct($message, $statusCode, $errorCode = null)
     {
         $this->statusCode = $statusCode;
-        if($errorCode !== null) {
+        if (null !== $errorCode) {
             parent::__construct($message, $errorCode);
         }
-        parent::__construct($message);
+        parent::__construct($message, $statusCode);
     }
 
     /**

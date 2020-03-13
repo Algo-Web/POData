@@ -21,7 +21,7 @@ class QueryResultTest extends TestCase
     {
         $actual = QueryResult::adjustCountForPaging($count, $top, $skip);
 
-        $this->assertEquals($expected, $actual, $id);
+        $this->assertEquals($expected, $actual, strval($id));
     }
 
     public function provider()
