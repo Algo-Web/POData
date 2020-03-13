@@ -44,7 +44,7 @@
     "require-dev": {
         "doctrine/annotations": "^v1.4.0",
         "php-coveralls/php-coveralls": ">=v2.1",
-        "phpunit/phpunit": "^6.0",
+        "phpunit/phpunit": "^7.0",
         "mockery/mockery": "0.9.*|dev-master",
         "fiunchinho/phpunit-randomizer": "2.0.*"
     },
