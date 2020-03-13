@@ -34,7 +34,7 @@ class ErrorHandlerTest extends TestCase
         $context->shouldReceive('outgoingResponse')->andReturn($outgoing);
 
         $host = m::mock(ServiceHost::class)->makePartial();
-        $host->shouldReceive('getRequestAccept')->andReturn([MimeTypes::MIME_APPLICATION_HTTP]);
+        $host->shouldReceive('getRequestAccept')->andReturn(MimeTypes::MIME_APPLICATION_HTTP);
         $host->shouldReceive('getOperationContext')->andReturn($context);
 
         $service = m::mock(IService::class);
@@ -45,7 +45,7 @@ class ErrorHandlerTest extends TestCase
         $expected = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <error xmlns="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
  <code>500</code>
- <message>strlen() expects parameter 1 to be string, array given</message>
+ <message>FAIL</message>
 </error>
 ';
         $actual = $outgoing->getStream();
