@@ -147,7 +147,7 @@ class ServiceConfiguration implements IServiceConfiguration
      *
      * @return int
      */
-    public function getMaxExpandDepth()
+    public function getMaxExpandDepth(): int
     {
         return $this->maxExpandDepth;
     }
@@ -157,7 +157,7 @@ class ServiceConfiguration implements IServiceConfiguration
      *
      * @param int $maxExpandDepth Maximum number of segments in a single $expand path
      */
-    public function setMaxExpandDepth($maxExpandDepth)
+    public function setMaxExpandDepth($maxExpandDepth): void
     {
         $this->maxExpandDepth = $this->checkIntegerNonNegativeParameter(
             $maxExpandDepth,
@@ -426,14 +426,8 @@ class ServiceConfiguration implements IServiceConfiguration
      *
      * @return int
      */
-    private function checkIntegerNonNegativeParameter($value, $functionName)
+    private function checkIntegerNonNegativeParameter(int $value, string $functionName): int
     {
-        if (!is_int($value)) {
-            throw new \InvalidArgumentException(
-                Messages::commonArgumentShouldBeInteger($value, $functionName)
-            );
-        }
-
         if ($value < 0) {
             throw new \InvalidArgumentException(
                 Messages::commonArgumentShouldBeNonNegative($value, $functionName)

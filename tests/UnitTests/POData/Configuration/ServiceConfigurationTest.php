@@ -12,6 +12,10 @@ use POData\Providers\Metadata\IMetadataProvider;
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 use UnitTests\POData\TestCase;
 
+/**
+ * Class ServiceConfigurationTest
+ * @package UnitTests\POData\Configuration
+ */
 class ServiceConfigurationTest extends TestCase
 {
     /** @var IMetadataProvider */
@@ -29,26 +33,6 @@ class ServiceConfigurationTest extends TestCase
 
     public function testConfiguration1()
     {
-        try {
-            $this->dataServiceConfiguration->setMaxExpandCount(-123);
-            $this->fail('An expected InvalidArgumentException for \'non-negative parameter\' was not thrown for month');
-        } catch (\InvalidArgumentException $exception) {
-            $this->assertStringEndsWith(
-                'should be non-negative, negative value \'-123\' passed',
-                $exception->getMessage()
-            );
-        }
-
-        try {
-            $this->dataServiceConfiguration->setMaxExpandDepth('ABCS');
-            $this->fail('An expected InvalidArgumentException for \'non-integer parameter\' was not thrown for month');
-        } catch (\InvalidArgumentException $exception) {
-            $this->assertStringEndsWith(
-                'should be integer, non-integer value \'ABCS\' passed',
-                $exception->getMessage()
-            );
-        }
-
         $this->assertEquals($this->dataServiceConfiguration->getMaxExpandCount(), PHP_INT_MAX);
         $this->assertEquals($this->dataServiceConfiguration->getMaxExpandDepth(), PHP_INT_MAX);
 
