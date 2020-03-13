@@ -373,9 +373,9 @@ class OrderByParser
      *
      * @throws ODataException If parser finds an inconsistent-tree state, throws unexpected state error
      *
-     * @return OrderByInfo|null
+     * @return void
      */
-    private function createOrderInfo($orderByPaths)
+    private function createOrderInfo(array $orderByPaths): void
     {
         $orderByPathSegments           = [];
         $navigationPropertiesInThePath = [];
@@ -397,7 +397,7 @@ class OrderByParser
                 }
 
                 $orderBySubPathSegments[] = new OrderBySubPathSegment($resourceProperty);
-                /** @var OrderByNode $currentNode */
+                /** @var OrderByLeafNode $currentNode */
                 $currentNode = $node;
             }
 
