@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\UriProcessor\ResourcePathProcessor;
 
 use POData\Common\Messages;
@@ -23,10 +25,10 @@ class ResourcePathProcessor
      *
      * @param IService $service Reference to the data service instance
      *
-     * @throws ODataException If any exception occurs while processing the segments
+     * @throws ODataException                                   If any exception occurs while processing the segments
      * @throws \Doctrine\Common\Annotations\AnnotationException
      * @throws \POData\Common\InvalidOperationException
-     *                        or in case of any version incompatibility
+     *                                                          or in case of any version incompatibility
      * @throws \POData\Common\UrlFormatException
      * @throws \ReflectionException
      *
@@ -34,7 +36,7 @@ class ResourcePathProcessor
      */
     public static function process(IService $service)
     {
-        $host = $service->getHost();
+        $host               = $service->getHost();
         $absoluteRequestUri = $host->getAbsoluteRequestUri();
         $absoluteServiceUri = $host->getAbsoluteServiceUri();
 
@@ -49,13 +51,13 @@ class ResourcePathProcessor
             true
         );
 
-        $dataType = null;
+        $dataType         = null;
         $operationContext = $service->getOperationContext();
         if ($operationContext && $operationContext->incomingRequest()->getMethod() != HTTPRequestMethod::GET()) {
             $dataType = $service->getHost()->getRequestContentType();
         }
         $incoming = isset($operationContext) ? $operationContext->incomingRequest() : null;
-        $request = new RequestDescription(
+        $request  = new RequestDescription(
             $segments,
             $absoluteRequestUri,
             $service->getConfiguration()->getMaxDataServiceVersion(),

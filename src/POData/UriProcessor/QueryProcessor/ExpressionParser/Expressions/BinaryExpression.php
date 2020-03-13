@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions;
 
 /**
@@ -27,7 +29,7 @@ abstract class BinaryExpression extends AbstractExpression
      */
     public function __construct($left, $right)
     {
-        $this->left = $left;
+        $this->left  = $left;
         $this->right = $right;
     }
 

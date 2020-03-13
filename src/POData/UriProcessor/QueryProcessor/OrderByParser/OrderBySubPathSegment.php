@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\UriProcessor\QueryProcessor\OrderByParser;
 
 use POData\Providers\Metadata\ResourceProperty;
@@ -61,8 +63,8 @@ class OrderBySubPathSegment
      * this sub path segment If this sub path segment is last segment then
      * this function returns 'IType', otherwise 'ReflectionClass'.
      *
-     * @return ReflectionClass|IType
      * @throws \ReflectionException
+     * @return ReflectionClass|IType
      */
     public function getInstanceType()
     {

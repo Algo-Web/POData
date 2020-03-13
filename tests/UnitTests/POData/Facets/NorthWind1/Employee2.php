@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\Facets\NorthWind1;
 
 //Employee entity type, MLE and has named stream as Thumnails

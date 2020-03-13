@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\ObjectModel;
 
 use Carbon\Carbon;
@@ -54,16 +56,16 @@ class ObjectModelSerializerTest extends TestCase
 
     public function Construct()
     {
-        $AbsoluteServiceURL = new \POData\Common\Url('http://192.168.2.1/abm-master/public/odata.svc');
-        $this->mockMeta = m::mock(IMetadataProvider::class);
-        $service = m::mock(IService::class);
-        $request = m::mock(RequestDescription::class)->makePartial();
-        $wrapper = m::mock(ProvidersWrapper::class)->makePartial();
-        $context = m::mock(IOperationContext::class)->makePartial();
+        $AbsoluteServiceURL      = new \POData\Common\Url('http://192.168.2.1/abm-master/public/odata.svc');
+        $this->mockMeta          = m::mock(IMetadataProvider::class);
+        $service                 = m::mock(IService::class);
+        $request                 = m::mock(RequestDescription::class)->makePartial();
+        $wrapper                 = m::mock(ProvidersWrapper::class)->makePartial();
+        $context                 = m::mock(IOperationContext::class)->makePartial();
         $this->mockStreamWrapper = m::mock(StreamProviderWrapper::class);
-        $this->mockService = $service;
-        $this->mockRequest = $request;
-        $this->mockWrapper = $wrapper;
+        $this->mockService       = $service;
+        $this->mockRequest       = $request;
+        $this->mockWrapper       = $wrapper;
         $this->mockWrapper->shouldReceive('getMetaProvider')->andReturn($this->mockMeta);
         $this->serviceHost = m::mock(\POData\OperationContext\ServiceHost::class)->makePartial();
         $this->serviceHost->shouldReceive('getAbsoluteServiceUri')->andReturn($AbsoluteServiceURL);
@@ -85,13 +87,13 @@ class ObjectModelSerializerTest extends TestCase
 
     public function testwriteTopLevelElement()
     {
-        $foo = $this->Construct();
-        $entity = new reusableEntityClass4();
-        $entity->name = 'bilbo';
-        $entity->type = 2;
-        $mockResourceType = m::mock(\POData\Providers\Metadata\ResourceType::class)->makePartial();
+        $foo                    = $this->Construct();
+        $entity                 = new reusableEntityClass4();
+        $entity->name           = 'bilbo';
+        $entity->type           = 2;
+        $mockResourceType       = m::mock(\POData\Providers\Metadata\ResourceType::class)->makePartial();
         $mockResourceSetWrapper = m::mock(\POData\Providers\Metadata\ResourceSetWrapper::class)->makePartial();
-        $mockResourceSet = m::mock(\POData\Providers\Metadata\ResourceSet::class)->makePartial();
+        $mockResourceSet        = m::mock(\POData\Providers\Metadata\ResourceSet::class)->makePartial();
         $mockResourceType->shouldReceive('getCustomState')->andReturn($mockResourceSet);
 
         $requestURL = new \POData\Common\Url('http://192.168.2.1/abm-master/public/odata.svc/Entity(1)');
@@ -118,12 +120,12 @@ class ObjectModelSerializerTest extends TestCase
         $mockResourceSetWrapper->shouldReceive('getName')->andReturn('Entity');
         $mockResourceSet->shouldReceive('getName')->andReturn('Entity');
 
-        $queryResult = new QueryResult();
+        $queryResult          = new QueryResult();
         $queryResult->results = $entity;
 
-        $editLink = new ODataLink();
-        $editLink->url = "Entity(name='bilbo',type=2)";
-        $editLink->name = 'edit';
+        $editLink        = new ODataLink();
+        $editLink->url   = "Entity(name='bilbo',type=2)";
+        $editLink->name  = 'edit';
         $editLink->title = null;
 
         $ret = $foo->writeTopLevelElement($queryResult);
@@ -134,17 +136,17 @@ class ObjectModelSerializerTest extends TestCase
 
     public function testwriteTopLevelElementsWithoutHasMore()
     {
-        $foo = $this->Construct();
-        $entity = new reusableEntityClass4();
-        $entity->name = 'bilbo';
-        $entity->type = 2;
-        $entity1 = new reusableEntityClass4();
+        $foo           = $this->Construct();
+        $entity        = new reusableEntityClass4();
+        $entity->name  = 'bilbo';
+        $entity->type  = 2;
+        $entity1       = new reusableEntityClass4();
         $entity1->name = 'dildo';
         $entity1->type = 3;
 
-        $mockResourceType = m::mock(\POData\Providers\Metadata\ResourceType::class)->makePartial();
+        $mockResourceType       = m::mock(\POData\Providers\Metadata\ResourceType::class)->makePartial();
         $mockResourceSetWrapper = m::mock(\POData\Providers\Metadata\ResourceSetWrapper::class)->makePartial();
-        $mockResourceSet = m::mock(\POData\Providers\Metadata\ResourceSet::class)->makePartial();
+        $mockResourceSet        = m::mock(\POData\Providers\Metadata\ResourceSet::class)->makePartial();
 
         $requestURL = new \POData\Common\Url('http://192.168.2.1/abm-master/public/odata.svc/Entity(1)');
 
@@ -184,8 +186,8 @@ class ObjectModelSerializerTest extends TestCase
         $mockResourceSetWrapper->shouldReceive('getName')->andReturn('Entity');
         $mockResourceType->shouldReceive('getCustomState')->andReturn($mockResourceSet);
 
-        $e = [$entity, $entity1];
-        $queryResult = new QueryResult();
+        $e                    = [$entity, $entity1];
+        $queryResult          = new QueryResult();
         $queryResult->results = $e;
         $queryResult->hasMore = false;
 
@@ -216,9 +218,9 @@ class ObjectModelSerializerTest extends TestCase
             $ret->entries[1]->id
         );
 
-        $editLink = new ODataLink();
-        $editLink->url = "Entity(name='bilbo',type=2)";
-        $editLink->name = 'edit';
+        $editLink        = new ODataLink();
+        $editLink->url   = "Entity(name='bilbo',type=2)";
+        $editLink->name  = 'edit';
         $editLink->title = null;
 
         $this->assertEquals($editLink, $ret->entries[0]->editLink);
@@ -232,17 +234,17 @@ class ObjectModelSerializerTest extends TestCase
 
     public function testwriteTopLevelElementsOnly()
     {
-        $foo = $this->Construct();
-        $entity = new reusableEntityClass4();
-        $entity->name = 'bilbo';
-        $entity->type = 2;
-        $entity1 = new reusableEntityClass4();
+        $foo           = $this->Construct();
+        $entity        = new reusableEntityClass4();
+        $entity->name  = 'bilbo';
+        $entity->type  = 2;
+        $entity1       = new reusableEntityClass4();
         $entity1->name = 'dildo';
         $entity1->type = 3;
 
-        $mockResourceType = m::mock(\POData\Providers\Metadata\ResourceType::class)->makePartial();
+        $mockResourceType       = m::mock(\POData\Providers\Metadata\ResourceType::class)->makePartial();
         $mockResourceSetWrapper = m::mock(\POData\Providers\Metadata\ResourceSetWrapper::class)->makePartial();
-        $mockResourceSet = m::mock(\POData\Providers\Metadata\ResourceSet::class)->makePartial();
+        $mockResourceSet        = m::mock(\POData\Providers\Metadata\ResourceSet::class)->makePartial();
         $mockResourceSet->shouldReceive('getName')->andReturn('Entity');
         $mockResourceType->shouldReceive('getCustomState')->andReturn($mockResourceSet);
 
@@ -283,8 +285,8 @@ class ObjectModelSerializerTest extends TestCase
         $mockResourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
         $mockResourceSetWrapper->shouldReceive('getName')->andReturn('Entity');
 
-        $e = [$entity, $entity1];
-        $queryResult = new QueryResult();
+        $e                    = [$entity, $entity1];
+        $queryResult          = new QueryResult();
         $queryResult->results = $e;
         $queryResult->hasMore = true;
 
@@ -315,9 +317,9 @@ class ObjectModelSerializerTest extends TestCase
             $ret->entries[1]->id
         );
 
-        $editLink = new ODataLink();
-        $editLink->url = "Entity(name='bilbo',type=2)";
-        $editLink->name = 'edit';
+        $editLink        = new ODataLink();
+        $editLink->url   = "Entity(name='bilbo',type=2)";
+        $editLink->name  = 'edit';
         $editLink->title = null;
 
         $this->assertEquals($editLink, $ret->entries[0]->editLink);
@@ -330,14 +332,14 @@ class ObjectModelSerializerTest extends TestCase
 
     public function testwriteTopLevelElementsViaProperty()
     {
-        $foo = $this->Construct();
-        $entity = new reusableEntityClass4();
-        $entity->name = 'bilbo';
-        $entity->type = 2;
-        $entity1 = new reusableEntityClass4();
+        $foo           = $this->Construct();
+        $entity        = new reusableEntityClass4();
+        $entity->name  = 'bilbo';
+        $entity->type  = 2;
+        $entity1       = new reusableEntityClass4();
         $entity1->name = 'riptide';
         $entity1->type = 3;
-        $e = [$entity, $entity1];
+        $e             = [$entity, $entity1];
 
         $this->mockService->shouldReceive('getConfiguration->getEntitySetPageSize')->andReturn(200);
 
@@ -396,7 +398,7 @@ class ObjectModelSerializerTest extends TestCase
         $this->mockRequest->shouldReceive('getRequestUrl')->andReturn($requestURL);
         $this->mockMeta->shouldReceive('resolveResourceType')->andReturn($resourceType);
 
-        $queryResult = new QueryResult();
+        $queryResult          = new QueryResult();
         $queryResult->results = $e;
 
         $ret = $foo->writeTopLevelElements($queryResult);
@@ -412,12 +414,12 @@ class ObjectModelSerializerTest extends TestCase
         $iType = m::mock(IType::class);
         $iType->shouldReceive('getFullTypeName')->andReturn('typeName');
 
-        $primVal = null;
+        $primVal  = null;
         $property = m::mock(ResourceProperty::class);
         $property->shouldReceive('getName')->andReturn('name');
         $property->shouldReceive('getInstanceType')->andReturn($iType);
 
-        $queryResult = new QueryResult();
+        $queryResult          = new QueryResult();
         $queryResult->results = $primVal;
 
         $result = $foo->writeTopLevelPrimitive($queryResult, $property);
@@ -437,13 +439,13 @@ class ObjectModelSerializerTest extends TestCase
         $type = m::mock(ResourceType::class);
         $type->shouldReceive('getInstanceType')->andReturn(new Boolean());
 
-        $primVal = true;
+        $primVal  = true;
         $property = m::mock(ResourceProperty::class);
         $property->shouldReceive('getName')->andReturn('name');
         $property->shouldReceive('getInstanceType')->andReturn($iType);
         $property->shouldReceive('getResourceType')->andReturn($type);
 
-        $queryResult = new QueryResult();
+        $queryResult          = new QueryResult();
         $queryResult->results = $primVal;
 
         $result = $foo->writeTopLevelPrimitive($queryResult, $property);
@@ -463,13 +465,13 @@ class ObjectModelSerializerTest extends TestCase
         $type = m::mock(ResourceType::class);
         $type->shouldReceive('getInstanceType')->andReturn(new Binary());
 
-        $primVal = 'aybabtu';
+        $primVal  = 'aybabtu';
         $property = m::mock(ResourceProperty::class);
         $property->shouldReceive('getName')->andReturn('name');
         $property->shouldReceive('getInstanceType')->andReturn($iType);
         $property->shouldReceive('getResourceType')->andReturn($type);
 
-        $queryResult = new QueryResult();
+        $queryResult          = new QueryResult();
         $queryResult->results = $primVal;
 
         $result = $foo->writeTopLevelPrimitive($queryResult, $property);
@@ -489,13 +491,13 @@ class ObjectModelSerializerTest extends TestCase
         $type = m::mock(ResourceType::class);
         $type->shouldReceive('getInstanceType')->andReturn(new DateTime());
 
-        $primVal = new \DateTime('2016-01-01');
+        $primVal  = new \DateTime('2016-01-01');
         $property = m::mock(ResourceProperty::class);
         $property->shouldReceive('getName')->andReturn('name');
         $property->shouldReceive('getInstanceType')->andReturn($iType);
         $property->shouldReceive('getResourceType')->andReturn($type);
 
-        $queryResult = new QueryResult();
+        $queryResult          = new QueryResult();
         $queryResult->results = $primVal;
 
         $result = $foo->writeTopLevelPrimitive($queryResult, $property);
@@ -515,13 +517,13 @@ class ObjectModelSerializerTest extends TestCase
         $type = m::mock(ResourceType::class);
         $type->shouldReceive('getInstanceType')->andReturn(new StringType());
 
-        $primVal = 'Börk, börk, börk!';
+        $primVal  = 'Börk, börk, börk!';
         $property = m::mock(ResourceProperty::class);
         $property->shouldReceive('getName')->andReturn('name');
         $property->shouldReceive('getInstanceType')->andReturn($iType);
         $property->shouldReceive('getResourceType')->andReturn($type);
 
-        $queryResult = new QueryResult();
+        $queryResult          = new QueryResult();
         $queryResult->results = $primVal;
 
         $result = $foo->writeTopLevelPrimitive($queryResult, $property);
@@ -541,13 +543,13 @@ class ObjectModelSerializerTest extends TestCase
         $type = m::mock(ResourceType::class);
         $type->shouldReceive('getInstanceType')->andReturn($iType);
 
-        $primVal = 'Börk, börk, börk!';
+        $primVal  = 'Börk, börk, börk!';
         $property = m::mock(ResourceProperty::class);
         $property->shouldReceive('getName')->andReturn('name');
         $property->shouldReceive('getInstanceType')->andReturn($iType);
         $property->shouldReceive('getResourceType')->andReturn($type);
 
-        $queryResult = new QueryResult();
+        $queryResult          = new QueryResult();
         $queryResult->results = $primVal;
 
         $result = $foo->writeTopLevelPrimitive($queryResult, $property);
@@ -561,7 +563,7 @@ class ObjectModelSerializerTest extends TestCase
     {
         $foo = $this->Construct();
 
-        $queryResult = new QueryResult();
+        $queryResult          = new QueryResult();
         $queryResult->results = null;
 
         $result = $foo->writeUrlElement($queryResult);
@@ -580,7 +582,7 @@ class ObjectModelSerializerTest extends TestCase
         $foo->shouldReceive('getCurrentResourceSetWrapper')->andReturn($wrap);
         $foo->shouldReceive('getEntryInstanceKey')->andReturn('customer')->once();
 
-        $queryResult = new QueryResult();
+        $queryResult          = new QueryResult();
         $queryResult->results = 'bar';
 
         $result = $foo->writeUrlElement($queryResult);
@@ -589,11 +591,11 @@ class ObjectModelSerializerTest extends TestCase
 
     public function testWriteNullUrlCollection()
     {
-        $foo = $this->Construct();
+        $foo                          = $this->Construct();
         $this->mockRequest->queryType = QueryType::ENTITIES_WITH_COUNT();
         $this->mockRequest->shouldReceive('getCountValue')->andReturn(1);
 
-        $queryResult = new QueryResult();
+        $queryResult          = new QueryResult();
         $queryResult->results = null;
 
         $result = $foo->writeUrlElements($queryResult);
@@ -606,9 +608,9 @@ class ObjectModelSerializerTest extends TestCase
     {
         $url = new Url('https://www.example.org/odata.svc');
 
-        $odataLink = new ODataLink();
+        $odataLink       = new ODataLink();
         $odataLink->name = ODataConstants::ATOM_LINK_NEXT_ATTRIBUTE_STRING;
-        $odataLink->url = 'https://www.example.org/odata.svc/customer?skipToken=200';
+        $odataLink->url  = 'https://www.example.org/odata.svc/customer?skipToken=200';
 
         $resourceWrap = m::mock(ResourceSetWrapper::class);
         $resourceWrap->shouldReceive('getName')->andReturn(null);
@@ -620,13 +622,13 @@ class ObjectModelSerializerTest extends TestCase
         $this->mockRequest->shouldReceive('getRequestUrl')->andReturn($url);
         $this->mockRequest->shouldReceive('getTargetResourceSetWrapper')->andReturn($resourceWrap);
 
-        $supplier = new QueryResult();
+        $supplier          = new QueryResult();
         $supplier->results = 'supplier';
 
-        $customer = new QueryResult();
+        $customer          = new QueryResult();
         $customer->results = 'customer';
 
-        $queryResult = new QueryResult();
+        $queryResult          = new QueryResult();
         $queryResult->results = [$supplier, $customer];
         $queryResult->hasMore = true;
 
@@ -638,7 +640,7 @@ class ObjectModelSerializerTest extends TestCase
         $foo->shouldReceive('needNextPageLink')->andReturn(true)->never();
         $foo->shouldReceive('getNextLinkUri')->andReturn($odataLink->url)->once();
 
-        $result = $foo->writeUrlElements($queryResult);
+        $result      = $foo->writeUrlElements($queryResult);
         $expectedUrl = $odataLink->url;
         $this->assertEquals($expectedUrl, $result->nextPageLink->url);
         $this->assertEquals(2, $result->count);
@@ -648,13 +650,13 @@ class ObjectModelSerializerTest extends TestCase
     {
         $complexValue = null;
         $propertyName = 'property';
-        $type = m::mock(ResourceType::class);
+        $type         = m::mock(ResourceType::class);
         $type->shouldReceive('getFullName')->andReturn('typeName')->once();
 
-        $queryResult = new QueryResult();
+        $queryResult          = new QueryResult();
         $queryResult->results = $complexValue;
 
-        $foo = $this->Construct();
+        $foo    = $this->Construct();
         $result = $foo->writeTopLevelComplexObject($queryResult, $propertyName, $type);
         $this->assertTrue($result instanceof ODataPropertyContent);
         $this->assertTrue($result->properties[$propertyName] instanceof ODataProperty);
@@ -681,16 +683,16 @@ class ObjectModelSerializerTest extends TestCase
 
         $complexValue = new reusableEntityClass2('2016-12-25', null);
         $propertyName = 'property';
-        $type = m::mock(ResourceType::class);
+        $type         = m::mock(ResourceType::class);
         $type->shouldReceive('getFullName')->andReturn('typeName')->once();
         $type->shouldReceive('getName')->andReturn('typeName')->never();
         $type->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::COMPLEX());
         $type->shouldReceive('getAllProperties')->andReturn([$resProperty]);
 
-        $queryResult = new QueryResult();
+        $queryResult          = new QueryResult();
         $queryResult->results = $complexValue;
 
-        $foo = $this->Construct();
+        $foo    = $this->Construct();
         $result = $foo->writeTopLevelComplexObject($queryResult, $propertyName, $type);
         $this->assertTrue($result instanceof ODataPropertyContent);
         $this->assertTrue($result->properties[$propertyName] instanceof ODataProperty);
@@ -710,13 +712,13 @@ class ObjectModelSerializerTest extends TestCase
 
         $bag = null;
 
-        $queryResult = new QueryResult();
+        $queryResult          = new QueryResult();
         $queryResult->results = $bag;
 
         $foo = $this->Construct();
 
         $expected = '$bagItemResourceTypeKind != ResourceTypeKind::PRIMITIVE &&'
-                    .' $bagItemResourceTypeKind != ResourceTypeKind::COMPLEX';
+                    . ' $bagItemResourceTypeKind != ResourceTypeKind::COMPLEX';
         $actual = null;
 
         try {
@@ -737,7 +739,7 @@ class ObjectModelSerializerTest extends TestCase
 
         $bag = null;
 
-        $queryResult = new QueryResult();
+        $queryResult          = new QueryResult();
         $queryResult->results = $bag;
 
         $foo = $this->Construct();
@@ -759,7 +761,7 @@ class ObjectModelSerializerTest extends TestCase
 
         $bag = [];
 
-        $queryResult = new QueryResult();
+        $queryResult          = new QueryResult();
         $queryResult->results = $bag;
 
         $foo = $this->Construct();
@@ -781,7 +783,7 @@ class ObjectModelSerializerTest extends TestCase
 
         $bag = [null, null];
 
-        $queryResult = new QueryResult();
+        $queryResult          = new QueryResult();
         $queryResult->results = $bag;
 
         $foo = $this->Construct();
@@ -805,13 +807,13 @@ class ObjectModelSerializerTest extends TestCase
 
         $bag = new \DateTime();
 
-        $queryResult = new QueryResult();
+        $queryResult          = new QueryResult();
         $queryResult->results = $bag;
 
         $foo = $this->Construct();
 
         $expected = 'Bag parameter must be null or array';
-        $actual = null;
+        $actual   = null;
 
         try {
             $foo->writeTopLevelBagObject($queryResult, 'property', $type);
@@ -830,12 +832,12 @@ class ObjectModelSerializerTest extends TestCase
         $type->shouldReceive('getFullName')->andReturn('fullName');
         $type->shouldReceive('getInstanceType')->andReturn(new \POData\Providers\Metadata\Type\EdmString());
 
-        $bag = ['foo', 123];
+        $bag      = ['foo', 123];
         $expected = ['foo', '123'];
 
         $foo = $this->Construct();
 
-        $queryResult = new QueryResult();
+        $queryResult          = new QueryResult();
         $queryResult->results = $bag;
 
         $result = $foo->writeTopLevelBagObject($queryResult, 'property', $type);
@@ -944,19 +946,19 @@ class ObjectModelSerializerTest extends TestCase
         $foo->shouldReceive('getPropertyValue')->andReturn('propertyValue');
         $foo->shouldReceive('getUpdated')->andReturn($known);
 
-        $queryResult = new QueryResult();
+        $queryResult          = new QueryResult();
         $queryResult->results = $entity;
 
-        $expectedProp = new ODataPropertyContent();
-        $expectedProp->properties = ['name' => new ODataProperty(), 'type' => new ODataProperty()];
-        $expectedProp->properties['name']->name = 'name';
+        $expectedProp                               = new ODataPropertyContent();
+        $expectedProp->properties                   = ['name' => new ODataProperty(), 'type' => new ODataProperty()];
+        $expectedProp->properties['name']->name     = 'name';
         $expectedProp->properties['name']->typeName = '';
-        $expectedProp->properties['type']->name = 'type';
+        $expectedProp->properties['type']->name     = 'type';
         $expectedProp->properties['type']->typeName = '';
 
-        $editLink = new ODataLink();
-        $editLink->url = 'customer';
-        $editLink->name = 'edit';
+        $editLink        = new ODataLink();
+        $editLink->url   = 'customer';
+        $editLink->name  = 'edit';
         $editLink->title = 'customers';
 
         $type = new ODataCategory('customers');
@@ -977,8 +979,8 @@ class ObjectModelSerializerTest extends TestCase
 
     public function testSetService()
     {
-        $oldUrl = 'http://localhost/odata.svc';
-        $newUrl = 'http://localhost/megamix.svc';
+        $oldUrl     = 'http://localhost/odata.svc';
+        $newUrl     = 'http://localhost/megamix.svc';
         $oldService = m::mock(IService::class);
         $oldService->shouldReceive('getHost->getAbsoluteServiceUri->getUrlAsString')
             ->andReturn($oldUrl);
@@ -996,8 +998,8 @@ class ObjectModelSerializerTest extends TestCase
 
     public function testWriteElementWithNullResultReturnsNull()
     {
-        $oldUrl = 'http://localhost/odata.svc';
-        $newUrl = 'http://localhost/megamix.svc';
+        $oldUrl     = 'http://localhost/odata.svc';
+        $newUrl     = 'http://localhost/megamix.svc';
         $oldService = m::mock(IService::class);
         $oldService->shouldReceive('getHost->getAbsoluteServiceUri->getUrlAsString')
             ->andReturn($oldUrl);
@@ -1008,7 +1010,7 @@ class ObjectModelSerializerTest extends TestCase
 
         $foo = new ObjectModelSerializer($oldService, $request);
 
-        $result = new QueryResult();
+        $result          = new QueryResult();
         $result->results = null;
 
         $this->assertNull($foo->writeTopLevelElement($result));
@@ -1067,7 +1069,7 @@ class reusableEntityClass5
 
     public function __get($name)
     {
-        return $this->$name;
+        return $this->{$name};
     }
 }
 

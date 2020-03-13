@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\UriProcessor\QueryProcessor\OrderByParser;
 
 use Mockery as m;
@@ -55,7 +57,7 @@ class OrderByParserTest extends TestCase
     public function testOrderByBag()
     {
         $northWindMetadata = NorthWindMetadata::Create();
-        $configuration = new ServiceConfiguration($northWindMetadata);
+        $configuration     = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
@@ -65,8 +67,8 @@ class OrderByParserTest extends TestCase
         );
 
         $resourceSetWrapper = $providersWrapper->resolveResourceSet('Employees');
-        $resourceType = $resourceSetWrapper->getResourceType();
-        $orderBy = 'Emails';
+        $resourceType       = $resourceSetWrapper->getResourceType();
+        $orderBy            = 'Emails';
 
         try {
             OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
@@ -85,7 +87,7 @@ class OrderByParserTest extends TestCase
     public function testOrderByComplex()
     {
         $northWindMetadata = NorthWindMetadata::Create();
-        $configuration = new ServiceConfiguration($northWindMetadata);
+        $configuration     = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
@@ -95,8 +97,8 @@ class OrderByParserTest extends TestCase
         );
 
         $resourceSetWrapper = $providersWrapper->resolveResourceSet('Customers');
-        $resourceType = $resourceSetWrapper->getResourceType();
-        $orderBy = 'Address';
+        $resourceType       = $resourceSetWrapper->getResourceType();
+        $orderBy            = 'Address';
 
         try {
             OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
@@ -109,8 +111,8 @@ class OrderByParserTest extends TestCase
         }
 
         $resourceSetWrapper = $providersWrapper->resolveResourceSet('Customers');
-        $resourceType = $resourceSetWrapper->getResourceType();
-        $orderBy = 'Address/Address2';
+        $resourceType       = $resourceSetWrapper->getResourceType();
+        $orderBy            = 'Address/Address2';
 
         try {
             OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
@@ -130,7 +132,7 @@ class OrderByParserTest extends TestCase
     public function testOrderByResourceSetReference()
     {
         $northWindMetadata = NorthWindMetadata::Create();
-        $configuration = new ServiceConfiguration($northWindMetadata);
+        $configuration     = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
@@ -140,8 +142,8 @@ class OrderByParserTest extends TestCase
         );
 
         $resourceSetWrapper = $providersWrapper->resolveResourceSet('Customers');
-        $resourceType = $resourceSetWrapper->getResourceType();
-        $orderBy = 'Orders/OrderID';
+        $resourceType       = $resourceSetWrapper->getResourceType();
+        $orderBy            = 'Orders/OrderID';
         try {
             OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
             $this->fail('An expected ODataException for usage of resource reference set has not been thrown');
@@ -159,7 +161,7 @@ class OrderByParserTest extends TestCase
     public function testOrderByResourceReference()
     {
         $northWindMetadata = NorthWindMetadata::Create();
-        $configuration = new ServiceConfiguration($northWindMetadata);
+        $configuration     = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
@@ -169,8 +171,8 @@ class OrderByParserTest extends TestCase
         );
 
         $resourceSetWrapper = $providersWrapper->resolveResourceSet('Orders');
-        $resourceType = $resourceSetWrapper->getResourceType();
-        $orderBy = 'Customer';
+        $resourceType       = $resourceSetWrapper->getResourceType();
+        $orderBy            = 'Customer';
 
         try {
             OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
@@ -183,8 +185,8 @@ class OrderByParserTest extends TestCase
         }
 
         $resourceSetWrapper = $providersWrapper->resolveResourceSet('Order_Details');
-        $resourceType = $resourceSetWrapper->getResourceType();
-        $orderBy = 'Order/Customer';
+        $resourceType       = $resourceSetWrapper->getResourceType();
+        $orderBy            = 'Order/Customer';
 
         try {
             OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
@@ -203,7 +205,7 @@ class OrderByParserTest extends TestCase
     public function testOrderByPrimitiveInAComplex()
     {
         $northWindMetadata = NorthWindMetadata::Create();
-        $configuration = new ServiceConfiguration($northWindMetadata);
+        $configuration     = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
@@ -213,10 +215,10 @@ class OrderByParserTest extends TestCase
         );
 
         $resourceSetWrapper = $providersWrapper->resolveResourceSet('Customers');
-        $resourceType = $resourceSetWrapper->getResourceType();
-        $orderBy = 'Address/HouseNumber';
-        $internalOrderInfo = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
-        $orderByInfo = $internalOrderInfo->getOrderByInfo();
+        $resourceType       = $resourceSetWrapper->getResourceType();
+        $orderBy            = 'Address/HouseNumber';
+        $internalOrderInfo  = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
+        $orderByInfo        = $internalOrderInfo->getOrderByInfo();
         //There is no navigation (resource reference) property in the orderby path so getNavigationPropertiesUsed should
         //return null (not empty array)
         $this->assertNull($orderByInfo->getNavigationPropertiesUsed());
@@ -242,7 +244,7 @@ class OrderByParserTest extends TestCase
         //since there is only one sub sorter, that will be the main sorter
         //asset this by comapring the anonymous function names
         $subSorterName = $subSorters[0];
-        $sorter = $internalOrderInfo->getSorterFunction();
+        $sorter        = $internalOrderInfo->getSorterFunction();
         $this->assertNotNull($sorter);
         $mainSorterName = $sorter;
         $this->assertEquals($subSorterName, $mainSorterName);
@@ -266,45 +268,45 @@ class OrderByParserTest extends TestCase
         //When any properties in the orderby path become null for both parameters then they are equal
         $customer1->Address = null;
         $customer2->Address = null;
-        $result = $mainSorterName($customer1, $customer2);
+        $result             = $mainSorterName($customer1, $customer2);
         $this->assertEquals($result, 0);
         //When any properties in the orderby path become null for one parameter
         //and if the sort key for second parametr is not null, then second is greater
-        $customer1->Address = new Address4();
+        $customer1->Address              = new Address4();
         $customer1->Address->HouseNumber = null;
-        $customer2->Address = new Address4();
+        $customer2->Address              = new Address4();
         $customer2->Address->HouseNumber = '123';
-        $result = $mainSorterName($customer1, $customer2);
+        $result                          = $mainSorterName($customer1, $customer2);
         $this->assertEquals($result, -1);
         //reverse, second is lesser
-        $customer1->Address = new Address4();
+        $customer1->Address              = new Address4();
         $customer1->Address->HouseNumber = '123';
-        $customer2->Address = new Address4();
+        $customer2->Address              = new Address4();
         $customer2->Address->HouseNumber = null;
-        $result = $mainSorterName($customer1, $customer2);
+        $result                          = $mainSorterName($customer1, $customer2);
         $this->assertEquals($result, 1);
         //Try with not-null value for both sort key
         //'ABC' < 'DEF'
-        $customer1->Address = new Address4();
+        $customer1->Address              = new Address4();
         $customer1->Address->HouseNumber = 'ABC';
-        $customer2->Address = new Address4();
+        $customer2->Address              = new Address4();
         $customer2->Address->HouseNumber = 'DEF';
-        $result = $mainSorterName($customer1, $customer2);
+        $result                          = $mainSorterName($customer1, $customer2);
         $this->assertLessThan(0, $result);
         //'XYZ' > 'PQR'
-        $customer1->Address = new Address4();
+        $customer1->Address              = new Address4();
         $customer1->Address->HouseNumber = 'XYZ';
-        $customer2->Address = new Address4();
+        $customer2->Address              = new Address4();
         $customer2->Address->HouseNumber = 'PQR';
-        $result = $mainSorterName($customer1, $customer2);
+        $result                          = $mainSorterName($customer1, $customer2);
         $this->assertGreaterThan(0, $result);
 
         //'MN' == ''MN'
-        $customer1->Address = new Address4();
+        $customer1->Address              = new Address4();
         $customer1->Address->HouseNumber = 'MN';
-        $customer2->Address = new Address4();
+        $customer2->Address              = new Address4();
         $customer2->Address->HouseNumber = 'MN';
-        $result = $mainSorterName($customer1, $customer2);
+        $result                          = $mainSorterName($customer1, $customer2);
         $this->assertEquals($result, 0);
     }
 
@@ -314,7 +316,7 @@ class OrderByParserTest extends TestCase
     public function testOrderByBinaryProperty()
     {
         $northWindMetadata = NorthWindMetadata::Create();
-        $configuration = new ServiceConfiguration($northWindMetadata);
+        $configuration     = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
@@ -324,8 +326,8 @@ class OrderByParserTest extends TestCase
         );
 
         $resourceSetWrapper = $providersWrapper->resolveResourceSet('Customers');
-        $resourceType = $resourceSetWrapper->getResourceType();
-        $orderBy = 'Photo';
+        $resourceType       = $resourceSetWrapper->getResourceType();
+        $orderBy            = 'Photo';
 
         try {
             OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
@@ -341,7 +343,7 @@ class OrderByParserTest extends TestCase
     public function testOrderByPrimitiveInAResourceReference()
     {
         $northWindMetadata = NorthWindMetadata::Create();
-        $configuration = new ServiceConfiguration($northWindMetadata);
+        $configuration     = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
@@ -351,9 +353,9 @@ class OrderByParserTest extends TestCase
         );
 
         $resourceSetWrapper = $providersWrapper->resolveResourceSet('Order_Details');
-        $resourceType = $resourceSetWrapper->getResourceType();
-        $orderBy = 'Order/Customer/Rating';
-        $internalOrderInfo = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
+        $resourceType       = $resourceSetWrapper->getResourceType();
+        $orderBy            = 'Order/Customer/Rating';
+        $internalOrderInfo  = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
         //Check the dummy object is initialized properly
         $dummyObject = $internalOrderInfo->getDummyObject();
         $this->assertTrue(is_object($dummyObject));
@@ -402,7 +404,7 @@ class OrderByParserTest extends TestCase
         //since there is only one sub sorter, that will be the main sorter
         //asset this by comapring the anonymous function names
         $subSorterName = $subSorters[0];
-        $sorter = $internalOrderInfo->getSorterFunction();
+        $sorter        = $internalOrderInfo->getSorterFunction();
         $this->assertTrue(null !== $sorter);
         $mainSorterName = $sorter;
         $this->assertEquals($subSorterName, $mainSorterName);
@@ -414,7 +416,7 @@ class OrderByParserTest extends TestCase
     public function testOrderByWithInvisibleResourceReferencePropertyInThePath()
     {
         $northWindMetadata = NorthWindMetadata::Create();
-        $configuration = new ServiceConfiguration($northWindMetadata);
+        $configuration     = new ServiceConfiguration($northWindMetadata);
         //Make 'Orders' visible, make 'Customers' invisible
         $configuration->setEntitySetAccessRule('Orders', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
@@ -427,7 +429,7 @@ class OrderByParserTest extends TestCase
         $resourceSetWrapper = $providersWrapper->resolveResourceSet('Orders');
         assert(null != $resourceSetWrapper);
         $resourceType = $resourceSetWrapper->getResourceType();
-        $orderBy = 'Customer/CustomerID';
+        $orderBy      = 'Customer/CustomerID';
 
         try {
             OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
@@ -446,7 +448,7 @@ class OrderByParserTest extends TestCase
     public function testOrderByWithMultiplePathSegment1()
     {
         $northWindMetadata = NorthWindMetadata::Create();
-        $configuration = new ServiceConfiguration($northWindMetadata);
+        $configuration     = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
@@ -456,9 +458,9 @@ class OrderByParserTest extends TestCase
         );
 
         $resourceSetWrapper = $providersWrapper->resolveResourceSet('Order_Details');
-        $resourceType = $resourceSetWrapper->getResourceType();
-        $orderBy = 'Order/Price desc, Product/ProductName asc';
-        $internalOrderInfo = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
+        $resourceType       = $resourceSetWrapper->getResourceType();
+        $orderBy            = 'Order/Price desc, Product/ProductName asc';
+        $internalOrderInfo  = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
         //Check the dummy object is initialized properly
         $dummyObject = $internalOrderInfo->getDummyObject();
         $this->assertTrue(is_object($dummyObject));
@@ -542,47 +544,47 @@ class OrderByParserTest extends TestCase
         $OrderDetails1 = new OrderDetails2();
         $OrderDetails2 = new OrderDetails2();
         //When any properties in the orderby path become null for both parameters then they are equal
-        $OrderDetails1->Order = new Order2();
+        $OrderDetails1->Order        = new Order2();
         $OrderDetails1->Order->Price = null;
-        $OrderDetails2->Order = null;
-        $result = $subSorterName1($OrderDetails1, $OrderDetails2);
+        $OrderDetails2->Order        = null;
+        $result                      = $subSorterName1($OrderDetails1, $OrderDetails2);
         $this->assertEquals($result, 0);
         //When any properties in the orderby path become null for one parameter
         //and if the sort key for second parametr is not null, then second is considered as lesser for desc
-        $OrderDetails1->Order = new Order2();
+        $OrderDetails1->Order        = new Order2();
         $OrderDetails1->Order->Price = null;
-        $OrderDetails2->Order = new Order2();
+        $OrderDetails2->Order        = new Order2();
         $OrderDetails2->Order->Price = 12;
-        $result = $subSorterName1($OrderDetails1, $OrderDetails2);
+        $result                      = $subSorterName1($OrderDetails1, $OrderDetails2);
         $this->assertEquals($result, 1);
         //reverse, second is greater
-        $OrderDetails1->Order = new Order2();
+        $OrderDetails1->Order        = new Order2();
         $OrderDetails1->Order->Price = 12;
-        $OrderDetails2->Order = new Order2();
+        $OrderDetails2->Order        = new Order2();
         $OrderDetails2->Order->Price = null;
-        $result = $subSorterName1($OrderDetails1, $OrderDetails2);
+        $result                      = $subSorterName1($OrderDetails1, $OrderDetails2);
         $this->assertEquals($result, -1);
         //Try with not-null value for both sort key
         //12 < 13
-        $OrderDetails1->Order = new Order2();
+        $OrderDetails1->Order        = new Order2();
         $OrderDetails1->Order->Price = 12;
-        $OrderDetails2->Order = new Order2();
+        $OrderDetails2->Order        = new Order2();
         $OrderDetails2->Order->Price = 13;
-        $result = $subSorterName1($OrderDetails1, $OrderDetails2);
+        $result                      = $subSorterName1($OrderDetails1, $OrderDetails2);
         $this->assertEquals($result, 1);
         //14 > 10
-        $OrderDetails1->Order = new Order2();
+        $OrderDetails1->Order        = new Order2();
         $OrderDetails1->Order->Price = 14;
-        $OrderDetails2->Order = new Order2();
+        $OrderDetails2->Order        = new Order2();
         $OrderDetails2->Order->Price = 10;
-        $result = $subSorterName1($OrderDetails1, $OrderDetails2);
+        $result                      = $subSorterName1($OrderDetails1, $OrderDetails2);
         $this->assertEquals($result, -1);
         //6 == 6
-        $OrderDetails1->Order = new Order2();
+        $OrderDetails1->Order        = new Order2();
         $OrderDetails1->Order->Price = 6;
-        $OrderDetails2->Order = new Order2();
+        $OrderDetails2->Order        = new Order2();
         $OrderDetails2->Order->Price = 6;
-        $result = $subSorterName1($OrderDetails1, $OrderDetails2);
+        $result                      = $subSorterName1($OrderDetails1, $OrderDetails2);
         $this->assertEquals($result, 0);
         //No test for function generated for 'Product/ProductName asc' path, already done in the testcase testOrderByPrimitiveInAComplex
         /*
@@ -618,15 +620,15 @@ class OrderByParserTest extends TestCase
 
             return $result;
          */
-        $OrderDetails1->Order = new Order2();
-        $OrderDetails1->Product = new Product2();
-        $OrderDetails1->Order->Price = 6;
+        $OrderDetails1->Order                = new Order2();
+        $OrderDetails1->Product              = new Product2();
+        $OrderDetails1->Order->Price         = 6;
         $OrderDetails1->Product->ProductName = 'AB';
-        $OrderDetails2->Order = new Order2();
-        $OrderDetails2->Product = new Product2();
-        $OrderDetails2->Order->Price = 6;
+        $OrderDetails2->Order                = new Order2();
+        $OrderDetails2->Product              = new Product2();
+        $OrderDetails2->Order->Price         = 6;
         $OrderDetails2->Product->ProductName = 'DE';
-        $result = $mainSorterName($OrderDetails1, $OrderDetails2);
+        $result                              = $mainSorterName($OrderDetails1, $OrderDetails2);
         $this->assertLessThan(0, $result);
     }
 
@@ -643,7 +645,7 @@ class OrderByParserTest extends TestCase
     public function testOrderByWithPathDuplication()
     {
         $northWindMetadata = NorthWindMetadata::Create();
-        $configuration = new ServiceConfiguration($northWindMetadata);
+        $configuration     = new ServiceConfiguration($northWindMetadata);
         $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
@@ -653,9 +655,9 @@ class OrderByParserTest extends TestCase
         );
 
         $resourceSetWrapper = $providersWrapper->resolveResourceSet('Order_Details');
-        $resourceType = $resourceSetWrapper->getResourceType();
-        $orderBy = 'Order/Price desc, Product/ProductName asc, Order/Price asc';
-        $internalOrderInfo = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
+        $resourceType       = $resourceSetWrapper->getResourceType();
+        $orderBy            = 'Order/Price desc, Product/ProductName asc, Order/Price asc';
+        $internalOrderInfo  = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
         //The orderby path Order/Price appears twice, but parser will consider only first path
         $orderByInfo = $internalOrderInfo->getOrderByInfo();
         //There are navigation (resource reference) properties in the orderby path so getNavigationPropertiesUsed should
@@ -679,13 +681,13 @@ class OrderByParserTest extends TestCase
     public function testParseOrderByClauseWithBlankString()
     {
         $wrapper = m::mock(ResourceSetWrapper::class);
-        $type = m::mock(ResourceType::class);
+        $type    = m::mock(ResourceType::class);
         $type->shouldReceive('getInstanceType->newInstance')->andReturn(new \stdClass());
-        $orderBy = ' ';
+        $orderBy  = ' ';
         $provider = m::mock(ProvidersWrapper::class);
 
         $expected = 'OrderBy clause must not be trimmable to an empty string';
-        $actual = null;
+        $actual   = null;
 
         try {
             OrderByParser::parseOrderByClause($wrapper, $type, $orderBy, $provider);
@@ -699,16 +701,16 @@ class OrderByParserTest extends TestCase
     public function testParseOrderByClauseCannotCreateDummyObject()
     {
         $wrapper = m::mock(ResourceSetWrapper::class);
-        $rClass = m::mock(ReflectionClass::class);
+        $rClass  = m::mock(ReflectionClass::class);
         $rClass->shouldReceive('newInstanceArgs')->withAnyArgs()->andThrow(new \ReflectionException())->once();
 
         $type = m::mock(ResourceType::class);
         $type->shouldReceive('getInstanceType')->andReturn($rClass);
-        $orderBy = 'Price desc ';
+        $orderBy  = 'Price desc ';
         $provider = m::mock(ProvidersWrapper::class);
 
         $expected = 'OrderBy Parser failed to create dummy object from request uri resource type';
-        $actual = null;
+        $actual   = null;
 
         try {
             OrderByParser::parseOrderByClause($wrapper, $type, $orderBy, $provider);

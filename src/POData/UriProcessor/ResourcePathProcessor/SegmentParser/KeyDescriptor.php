@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\UriProcessor\ResourcePathProcessor\SegmentParser;
 
 use POData\Common\InvalidOperationException;
@@ -101,7 +103,7 @@ class KeyDescriptor
     private function __construct(array $namedValues, array $positionalValues)
     {
         $namedCount = count($namedValues);
-        $posCount = count($positionalValues);
+        $posCount   = count($positionalValues);
         assert(0 == min($namedCount, $posCount), 'At least one of named and positional values arrays must be empty');
         if (0 < $namedCount) {
             $keys = array_keys($namedValues);
@@ -114,17 +116,17 @@ class KeyDescriptor
                 $positionalValues[$i][0] = urldecode($positionalValues[$i][0]);
             }
         }
-        $this->namedValues = $namedValues;
-        $this->positionalValues = $positionalValues;
+        $this->namedValues          = $namedValues;
+        $this->positionalValues     = $positionalValues;
         $this->validatedNamedValues = [];
     }
 
     /**
-     * @param  string $keyString
-     * @param  bool $isKey
+     * @param  string             $keyString
+     * @param  bool               $isKey
      * @param  KeyDescriptor|null $keyDescriptor
-     * @return bool
      * @throws ODataException
+     * @return bool
      */
     protected static function parseAndVerifyRawKeyPredicate($keyString, $isKey, KeyDescriptor &$keyDescriptor = null)
     {
@@ -231,17 +233,17 @@ class KeyDescriptor
      *  is done one should call validate function to validate the created
      *  KeyDescription.
      *
-     * @param string $keyPredicate The predicate to parse
+     * @param string             $keyPredicate  The predicate to parse
      * @param KeyDescriptor|null $keyDescriptor On return, Description of key after parsing
      *
-     * @return bool True if the given values were parsed; false if there was a syntax error
      * @throws ODataException
+     * @return bool           True if the given values were parsed; false if there was a syntax error
      */
     public static function tryParseKeysFromKeyPredicate(
         $keyPredicate,
         KeyDescriptor &$keyDescriptor = null
     ) {
-        $isKey = true;
+        $isKey     = true;
         $keyString = $keyPredicate;
         return self::parseAndVerifyRawKeyPredicate($keyString, $isKey, $keyDescriptor);
     }
@@ -250,16 +252,16 @@ class KeyDescriptor
      * Attempt to parse comma separated values representing a skiptoken and creates
      * instance of KeyDescriptor representing the same.
      *
-     * @param string $skipToken The skiptoken value to parse
+     * @param string        $skipToken      The skiptoken value to parse
      * @param KeyDescriptor &$keyDescriptor On return, Description of values
      *                                      after parsing
      *
-     * @return bool True if the given values were parsed; false if there was a syntax error
      * @throws ODataException
+     * @return bool           True if the given values were parsed; false if there was a syntax error
      */
     public static function tryParseValuesFromSkipToken($skipToken, &$keyDescriptor)
     {
-        $isKey = false;
+        $isKey     = false;
         $keyString = $skipToken;
         return self::parseAndVerifyRawKeyPredicate($keyString, $isKey, $keyDescriptor);
     }
@@ -269,12 +271,12 @@ class KeyDescriptor
      * _validatedNamedValues array with key as keyName and value as an array of
      * key value and key type.
      *
-     * @param string $segmentAsString The segment in the form identifier
+     * @param string       $segmentAsString The segment in the form identifier
      *                                      (keyPredicate) which this descriptor
      *                                      represents
-     * @param ResourceType $resourceType The type of the identifier in the segment
+     * @param ResourceType $resourceType    The type of the identifier in the segment
      *
-     * @throws ODataException If validation fails
+     * @throws ODataException       If validation fails
      * @throws \ReflectionException
      */
     public function validate($segmentAsString, ResourceType $resourceType)
@@ -285,7 +287,7 @@ class KeyDescriptor
             return;
         }
 
-        $keyProperties = $resourceType->getKeyProperties();
+        $keyProperties      = $resourceType->getKeyProperties();
         $keyPropertiesCount = count($keyProperties);
         if (!empty($this->namedValues)) {
             if (count($this->namedValues) != $keyPropertiesCount) {
@@ -373,20 +375,20 @@ class KeyDescriptor
      * creates instance of KeyDescription representing the same, Once parsing is
      * done, one should call validate function to validate the created KeyDescription.
      *
-     * @param string $keyPredicate The key predicate to parse
-     * @param bool $allowNamedValues Set to true if parser should accept
+     * @param string        $keyPredicate     The key predicate to parse
+     * @param bool          $allowNamedValues Set to true if parser should accept
      *                                        named values(Property = KeyValue),
      *                                        if false then parser will fail on
      *                                        such constructs
-     * @param bool $allowNull Set to true if parser should accept
+     * @param bool          $allowNull        Set to true if parser should accept
      *                                        null values for positional key
      *                                        values, if false then parser will
      *                                        fail on seeing null values
-     * @param KeyDescriptor &$keyDescriptor On return, Description of key after
+     * @param KeyDescriptor &$keyDescriptor   On return, Description of key after
      *                                        parsing
      *
-     * @return bool True if the given values were parsed; false if there was a syntax error
      * @throws ODataException
+     * @return bool           True if the given values were parsed; false if there was a syntax error
      */
     private static function tryParseKeysFromRawKeyPredicate(
         $keyPredicate,
@@ -395,7 +397,7 @@ class KeyDescriptor
         &$keyDescriptor
     ) {
         $expressionLexer = new ExpressionLexer($keyPredicate);
-        $currentToken = $expressionLexer->getCurrentToken();
+        $currentToken    = $expressionLexer->getCurrentToken();
 
         //Check for empty predicate e.g. Customers(  )
         if ($currentToken->getId() == ExpressionTokenId::END()) {
@@ -404,7 +406,7 @@ class KeyDescriptor
             return true;
         }
 
-        $namedValues = [];
+        $namedValues      = [];
         $positionalValues = [];
 
         do {
@@ -563,7 +565,7 @@ class KeyDescriptor
     public function generateRelativeUri(ResourceSet $resourceSet)
     {
         $resourceType = $resourceSet->getResourceType();
-        $keys = $resourceType->getKeyProperties();
+        $keys         = $resourceType->getKeyProperties();
 
         $namedKeys = $this->getNamedValues();
         assert(0 !== count($keys), 'count($keys) == 0');
@@ -572,10 +574,10 @@ class KeyDescriptor
             throw new \InvalidArgumentException($msg);
         }
         $editUrl = $resourceSet->getName() . '(';
-        $comma = null;
+        $comma   = null;
         foreach ($keys as $keyName => $resourceProperty) {
             if (!array_key_exists($keyName, $namedKeys)) {
-                $msg = 'Key predicate '.$keyName.' not present in named values';
+                $msg = 'Key predicate ' . $keyName . ' not present in named values';
                 throw new \InvalidArgumentException($msg);
             }
             $keyType = $resourceProperty->getInstanceType();
@@ -606,11 +608,11 @@ class KeyDescriptor
         foreach ($values as $propName => $propDeets) {
             assert(2 == count($propDeets));
             assert($propDeets[1] instanceof IType);
-            $property = new ODataProperty();
-            $property->name = strval($propName);
-            $property->value = $propDeets[1]->convert($propDeets[0]);
+            $property           = new ODataProperty();
+            $property->name     = strval($propName);
+            $property->value    = $propDeets[1]->convert($propDeets[0]);
             $property->typeName = $propDeets[1]->getFullTypeName();
-            $result[$propName] = $property;
+            $result[$propName]  = $property;
         }
 
         return $result;

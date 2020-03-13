@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\Providers\Query;
 
 use MyCLabs\Enum\Enum;
@@ -11,14 +13,14 @@ use MyCLabs\Enum\Enum;
  */
 class QueryType extends Enum
 {
-    const ENTITIES = 'ENTITIES';
-    const COUNT = 'COUNT';
+    const ENTITIES            = 'ENTITIES';
+    const COUNT               = 'COUNT';
     const ENTITIES_WITH_COUNT = 'ENTITIES_WITH_COUNT';
 
     /**
-     * Check if supplied query type covers entities
+     * Check if supplied query type covers entities.
      *
-     * @param QueryType $queryType
+     * @param  QueryType $queryType
      * @return bool
      */
     public static function hasEntities(QueryType $queryType)
@@ -27,9 +29,9 @@ class QueryType extends Enum
     }
 
     /**
-     * Check if supplied query type covers record counts
+     * Check if supplied query type covers record counts.
      *
-     * @param QueryType $queryType
+     * @param  QueryType $queryType
      * @return bool
      */
     public static function hasCount(QueryType $queryType)

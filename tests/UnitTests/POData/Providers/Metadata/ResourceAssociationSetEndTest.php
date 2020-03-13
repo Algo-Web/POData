@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\Providers\Metadata;
 
 use Mockery as m;
@@ -27,7 +29,7 @@ class ResourceAssociationSetEndTest extends TestCase
         $middleType->shouldReceive('isAssignableFrom')->andReturn(false)->once();
 
         $expected = 'The resource type fakeType must be assignable to the resource set fakeSet.';
-        $actual = null;
+        $actual   = null;
 
         try {
             $foo = new ResourceAssociationSetEnd($set, $type, null);
@@ -39,17 +41,17 @@ class ResourceAssociationSetEndTest extends TestCase
 
     public function testConstructorWithBadResourceProperty()
     {
-        $set = m::mock(ResourceSet::class);
+        $set  = m::mock(ResourceSet::class);
         $type = m::mock(ResourceEntityType::class);
 
         $property = new \stdClass();
 
         // Type-hint mismatch error message is slightly different in PHP 7.1
         $expected = 'Argument 3 passed to POData\\Providers\\Metadata\\ResourceAssociationSetEnd::__construct() must be'
-                    .' an instance of POData\\Providers\\Metadata\\ResourceProperty, instance of stdClass given,';
+                    . ' an instance of POData\\Providers\\Metadata\\ResourceProperty, instance of stdClass given,';
         $expected71 = 'Argument 3 passed to POData\\Providers\\Metadata\\ResourceAssociationSetEnd::__construct() must'
-                      .' be an instance of POData\\Providers\\Metadata\\ResourceProperty or null, instance of stdClass'
-                      .' given,';
+                      . ' be an instance of POData\\Providers\\Metadata\\ResourceProperty or null, instance of stdClass'
+                      . ' given,';
         $actual = null;
 
         try {
@@ -85,7 +87,7 @@ class ResourceAssociationSetEndTest extends TestCase
         $set->shouldReceive('getResourceType')->andReturn($base);
 
         $expected = 'Concrete type must not be abstract if explicitly supplied';
-        $actual = null;
+        $actual   = null;
 
         try {
             $foo = new ResourceAssociationSetEnd($set, $base, $property, $concrete);
@@ -111,7 +113,7 @@ class ResourceAssociationSetEndTest extends TestCase
         $set = m::mock(ResourceSet::class);
         $set->shouldReceive('getResourceType')->andReturn($base);
 
-        $foo = new ResourceAssociationSetEnd($set, $base, $property);
+        $foo    = new ResourceAssociationSetEnd($set, $base, $property);
         $result = $foo->getConcreteType();
         $actual = $result->getName();
         $this->assertEquals($expected, $actual);
@@ -137,7 +139,7 @@ class ResourceAssociationSetEndTest extends TestCase
         $set = m::mock(ResourceSet::class);
         $set->shouldReceive('getResourceType')->andReturn($base);
 
-        $foo = new ResourceAssociationSetEnd($set, $base, $property, $concrete);
+        $foo    = new ResourceAssociationSetEnd($set, $base, $property, $concrete);
         $result = $foo->getConcreteType();
         $actual = $result->getName();
         $this->assertEquals($expected, $actual);

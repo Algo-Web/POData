@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\ObjectModel;
 
 class reusableEntityClass2
@@ -15,11 +17,11 @@ class reusableEntityClass2
 
     public function __get($name)
     {
-        return $this->$name;
+        return $this->{$name};
     }
 
     public function __set($name, $value)
     {
-        $this->$name = $value;
+        $this->{$name} = $value;
     }
 }

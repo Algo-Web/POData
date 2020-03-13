@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\UriProcessor\QueryProcessor\OrderByParser;
 
 use POData\Providers\Metadata\ResourceProperty;
@@ -39,7 +41,7 @@ abstract class OrderByBaseNode
      */
     public function __construct($propertyName, $resourceProperty)
     {
-        $this->propertyName = $propertyName;
+        $this->propertyName     = $propertyName;
         $this->resourceProperty = $resourceProperty;
     }
 

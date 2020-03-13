@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData;
 
 use POData\Configuration\EntitySetRights;
@@ -38,7 +40,7 @@ class BaseServiceDummy extends BaseServiceTestWrapper
         IMetadataProvider $metaProvider = null,
         IServiceConfiguration $config = null
     ) {
-        $this->metaProvider = $metaProvider;
+        $this->metaProvider  = $metaProvider;
         $this->queryProvider = $db;
         $provider->setService($this);
         $this->streamProvider = $provider;

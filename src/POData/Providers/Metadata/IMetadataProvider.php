@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\Providers\Metadata;
 
 use AlgoWeb\ODataMetadata\IsOK;
@@ -123,8 +125,8 @@ interface IMetadataProvider
     public function callSingleton($name);
 
     /**
-     * @return string|null
      * @throws \Exception
+     * @return string|null
      */
     public function getXML();
 }

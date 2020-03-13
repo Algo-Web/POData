@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\UriProcessor;
 
 use POData\UriProcessor\UriProcessor;

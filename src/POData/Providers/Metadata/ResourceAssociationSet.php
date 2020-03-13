@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\Providers\Metadata;
 
 use POData\Common\Messages;
@@ -169,9 +171,9 @@ class ResourceAssociationSet
     }
 
     /**
-     * @param ResourceEntityType $sourceType
-     * @param string $linkName
-     * @param ResourceSet $targetResourceSet
+     * @param  ResourceEntityType $sourceType
+     * @param  string             $linkName
+     * @param  ResourceSet        $targetResourceSet
      * @return string
      */
     public static function keyName(ResourceEntityType $sourceType, $linkName, ResourceSet $targetResourceSet)
@@ -180,8 +182,8 @@ class ResourceAssociationSet
     }
 
     /**
-     * @param ResourceEntityType $sourceType
-     * @param ResourceProperty $property
+     * @param  ResourceEntityType $sourceType
+     * @param  ResourceProperty   $property
      * @return string
      */
     public static function keyNameFromTypeAndProperty(ResourceEntityType $sourceType, ResourceProperty $property)

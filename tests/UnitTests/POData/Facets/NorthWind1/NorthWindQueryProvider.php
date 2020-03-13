@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\Facets\NorthWind1;
 
 use POData\Common\ODataException;
@@ -302,6 +304,7 @@ class NorthWindQueryProvider implements IQueryProvider
 
     /**
      * Start database transaction.
+     * @param mixed $isBulk
      */
     public function startTransaction($isBulk = false)
     {

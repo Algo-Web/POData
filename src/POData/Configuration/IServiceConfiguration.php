@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\Configuration;
 
 use POData\Common\InvalidOperationException;
@@ -7,7 +9,7 @@ use POData\Common\Version;
 use POData\Providers\Metadata\ResourceSet;
 
 /**
- * Interface IServiceConfiguration
+ * Interface IServiceConfiguration.
  * @package POData\Configuration
  */
 interface IServiceConfiguration

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\Providers\Metadata;
 
 /**
@@ -50,12 +52,12 @@ class ResourceAssociationType
         ResourceAssociationTypeEnd $end1,
         ResourceAssociationTypeEnd $end2
     ) {
-        $this->name = $name;
+        $this->name     = $name;
         $this->fullName = null !== $namespaceName ? $namespaceName . '.' . $name : $name;
-        $this->end1 = $end1;
-        $this->end2 = $end2;
+        $this->end1     = $end1;
+        $this->end2     = $end2;
     }
-    
+
     /**
      * Gets name of the association.
      *

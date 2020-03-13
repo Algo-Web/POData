@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\Facets\WordPress2;
 
 /*
@@ -17,25 +19,25 @@ use POData\UriProcessor\QueryProcessor\FunctionDescription;
 
 class WordPressDSExpressionProvider implements IExpressionProvider
 {
-    const ADD = '+';
-    const CLOSE_BRACKET = ')';
-    const COMMA = ',';
-    const DIVIDE = '/';
-    const SUBTRACT = '-';
-    const EQUAL = '=';
-    const GREATERTHAN = '>';
+    const ADD                  = '+';
+    const CLOSE_BRACKET        = ')';
+    const COMMA                = ',';
+    const DIVIDE               = '/';
+    const SUBTRACT             = '-';
+    const EQUAL                = '=';
+    const GREATERTHAN          = '>';
     const GREATERTHAN_OR_EQUAL = '>=';
-    const LESSTHAN = '<';
-    const LESSTHAN_OR_EQUAL = '<=';
-    const LOGICAL_AND = '&&';
-    const LOGICAL_NOT = '!';
-    const LOGICAL_OR = '||';
-    const MEMBERACCESS = '';
-    const MODULO = '%';
-    const MULTIPLY = '*';
-    const NEGATE = '-';
-    const NOTEQUAL = '!=';
-    const OPEN_BRAKET = '(';
+    const LESSTHAN             = '<';
+    const LESSTHAN_OR_EQUAL    = '<=';
+    const LOGICAL_AND          = '&&';
+    const LOGICAL_NOT          = '!';
+    const LOGICAL_OR           = '||';
+    const MEMBERACCESS         = '';
+    const MODULO               = '%';
+    const MULTIPLY             = '*';
+    const NEGATE               = '-';
+    const NOTEQUAL             = '!=';
+    const OPEN_BRAKET          = '(';
 
     /**
      * The type of the resource pointed by the resource path segement.
@@ -223,10 +225,10 @@ class WordPressDSExpressionProvider implements IExpressionProvider
      */
     public function onPropertyAccessExpression(PropertyAccessExpression $expression)
     {
-        $parent = $expression;
-        $variable = null;
+        $parent         = $expression;
+        $variable       = null;
         $entityTypeName = $this->_resourceType->getName();
-        $propertyName = $parent->getResourceProperty()->getName();
+        $propertyName   = $parent->getResourceProperty()->getName();
         if (is_array($this->_entityMapping)) {
             if (array_key_exists($entityTypeName, $this->_entityMapping)) {
                 if (array_key_exists($propertyName, $this->_entityMapping[$entityTypeName])) {
@@ -288,28 +290,28 @@ class WordPressDSExpressionProvider implements IExpressionProvider
                 return "LENGTH($params[0])";
             break;
             case ODataConstants::GUIDFUN_EQUAL:
-                return self::TYPE_NAMESPACE."Guid::guidEqual($params[0], $params[1])";
+                return self::TYPE_NAMESPACE . "Guid::guidEqual($params[0], $params[1])";
             break;
             case ODataConstants::DATETIME_COMPARE:
                 return "DATETIMECMP($params[0]; $params[1])";
             break;
             case ODataConstants::DATETIME_YEAR:
-                return 'EXTRACT(YEAR from '.$params[0].')';
+                return 'EXTRACT(YEAR from ' . $params[0] . ')';
             break;
             case ODataConstants::DATETIME_MONTH:
-                return 'EXTRACT(MONTH from '.$params[0].')';
+                return 'EXTRACT(MONTH from ' . $params[0] . ')';
             break;
             case ODataConstants::DATETIME_DAY:
-                return 'EXTRACT(DAY from '.$params[0].')';
+                return 'EXTRACT(DAY from ' . $params[0] . ')';
             break;
             case ODataConstants::DATETIME_HOUR:
-                return 'EXTRACT(HOUR from '.$params[0].')';
+                return 'EXTRACT(HOUR from ' . $params[0] . ')';
             break;
             case ODataConstants::DATETIME_MINUTE:
-                return 'EXTRACT(MINUTE from '.$params[0].')';
+                return 'EXTRACT(MINUTE from ' . $params[0] . ')';
             break;
             case ODataConstants::DATETIME_SECOND:
-                return 'EXTRACT(SECOND from '.$params[0].')';
+                return 'EXTRACT(SECOND from ' . $params[0] . ')';
             break;
             case ODataConstants::MATHFUN_ROUND:
                 return "ROUND($params[0])";
@@ -323,7 +325,7 @@ class WordPressDSExpressionProvider implements IExpressionProvider
             case ODataConstants::BINFUL_EQUAL:
                 return
                 self::TYPE_NAMESPACE
-                    ."Binary::binaryEqual($params[0], $params[1])";
+                    . "Binary::binaryEqual($params[0], $params[1])";
             break;
             case 'is_null':
                 return "is_null($params[0])";
@@ -347,18 +349,18 @@ class WordPressDSExpressionProvider implements IExpressionProvider
     {
         //DATETIMECMP
         if (!substr_compare($left, 'DATETIMECMP', 0, 11)) {
-            $str = explode(';', $left, 2);
+            $str    = explode(';', $left, 2);
             $str[0] = str_replace('DATETIMECMP', '', $str[0]);
 
             return self::OPEN_BRAKET
-                .$str[0].' '.$operator
-                .' '.$str[1].self::CLOSE_BRACKET;
+                . $str[0] . ' ' . $operator
+                . ' ' . $str[1] . self::CLOSE_BRACKET;
         }
 
         return
             self::OPEN_BRAKET
-            .$left.' '.$operator
-            .' '.$right.self::CLOSE_BRACKET;
+            . $left . ' ' . $operator
+            . ' ' . $right . self::CLOSE_BRACKET;
     }
 
     /**
@@ -371,6 +373,6 @@ class WordPressDSExpressionProvider implements IExpressionProvider
      */
     private function _prepareUnaryExpression($operator, $child)
     {
-        return $operator.self::OPEN_BRAKET.$child.self::CLOSE_BRACKET;
+        return $operator . self::OPEN_BRAKET . $child . self::CLOSE_BRACKET;
     }
 }

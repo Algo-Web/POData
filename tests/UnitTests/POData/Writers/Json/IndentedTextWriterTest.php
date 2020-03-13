@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\Writers\Json;
 
 use POData\Writers\Json\IndentedTextWriter;

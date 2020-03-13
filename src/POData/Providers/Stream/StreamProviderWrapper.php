@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\Providers\Stream;
 
 use POData\Common\InvalidOperationException;
@@ -76,7 +78,7 @@ class StreamProviderWrapper
      */
     public function getReadStream($entity, ResourceStreamInfo $resourceStreamInfo = null)
     {
-        $requestETag = null;
+        $requestETag          = null;
         $checkETagForEquality = null;
         $this->getETagFromHeaders($requestETag, $checkETagForEquality);
         $stream = null;
@@ -137,7 +139,7 @@ class StreamProviderWrapper
      * Gets the IANA content type (aka media type) of the stream associated with
      * the specified media resource.
      *
-     * @param object $entity The entity instance
+     * @param object                  $entity             The entity instance
      *                                                    (media resource) associated with
      *                                                    the stream for which the content
      *                                                    type is to be obtained
@@ -179,7 +181,7 @@ class StreamProviderWrapper
     /**
      * Get the ETag of the stream associated with the entity specified.
      *
-     * @param object $entity The entity instance
+     * @param object                  $entity             The entity instance
      *                                                    (media resource) associated
      *                                                    with the stream for which
      *                                                    the etag is to be obtained
@@ -223,7 +225,7 @@ class StreamProviderWrapper
      * Gets the URI clients should use when making retrieve (ie. GET) requests
      * to the stream.
      *
-     * @param object $entity The entity instance
+     * @param object                  $entity             The entity instance
      *                                                    associated with the
      *                                                    stream for which a
      *                                                    read stream URI is to
@@ -236,7 +238,7 @@ class StreamProviderWrapper
      *                                                    the ResourceStreamInfo
      *                                                    instance holding the
      *                                                    details of named stream
-     * @param string $mediaLinkEntryUri MLE uri
+     * @param string                  $mediaLinkEntryUri  MLE uri
      *
      * @throws InvalidOperationException
      * @throws ODataException
@@ -301,7 +303,7 @@ class StreamProviderWrapper
         //   weak       = "W/"
         //   opaque-tag = quoted-string
         $etagValueStartIndex = 1;
-        $eTagLength = strlen($etag);
+        $eTagLength          = strlen($etag);
         $isLastCharDubQuotes = ('"' == $etag[$eTagLength - 1]);
 
         if (0 === strpos($etag, 'W/"') && $isLastCharDubQuotes) {
@@ -438,7 +440,7 @@ class StreamProviderWrapper
     public function getDefaultStreamEditMediaUri($mediaLinkEntryUri, ResourceStreamInfo $resourceStreamInfo = null)
     {
         $base = rtrim($mediaLinkEntryUri, '/') . '/';
-        $end = (null == $resourceStreamInfo) ? ODataConstants::URI_VALUE_SEGMENT
+        $end  = (null == $resourceStreamInfo) ? ODataConstants::URI_VALUE_SEGMENT
             : ltrim($resourceStreamInfo->getName(), '/');
 
         return $base . $end;
@@ -451,7 +453,7 @@ class StreamProviderWrapper
     private function saveContentTypeAndETag()
     {
         $this->responseContentType = $this->service->getHost()->getResponseContentType();
-        $this->responseETag = $this->service->getHost()->getResponseETag();
+        $this->responseETag        = $this->service->getHost()->getResponseETag();
     }
 
     /**

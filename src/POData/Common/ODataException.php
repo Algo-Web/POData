@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\Common;
 
 /**
@@ -33,7 +35,7 @@ class ODataException extends \Exception
         assert(is_int($statusCode) && 0 < $statusCode, 'Status code must be integer and positive');
         assert(is_string($message), 'Message must be a string');
         assert(null === $errorCode || is_string($errorCode), 'Error code must be null or a string');
-        $this->errorCode = $errorCode;
+        $this->errorCode  = $errorCode;
         $this->statusCode = $statusCode;
         parent::__construct($message, $errorCode);
     }

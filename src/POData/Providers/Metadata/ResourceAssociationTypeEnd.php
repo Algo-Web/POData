@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\Providers\Metadata;
 
 use POData\Common\Messages;
@@ -90,10 +92,10 @@ class ResourceAssociationTypeEnd
             );
         }
 
-        $this->name = $name;
-        $this->resourceType = $resourceType;
+        $this->name             = $name;
+        $this->resourceType     = $resourceType;
         $this->resourceProperty = $resourceProperty;
-        $this->fromProperty = $fromProperty;
+        $this->fromProperty     = $fromProperty;
     }
 
     /**

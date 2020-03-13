@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\Common;
 
 /**
@@ -8,8 +10,8 @@ namespace POData\Common;
 class Url
 {
     private $urlAsString = null;
-    private $parts = [];
-    private $segments = [];
+    private $parts       = [];
+    private $segments    = [];
     const ABS_URL_REGEXP = '/^(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/';
     const REL_URL_REGEXP = '/^(\/|\/([\w#!:.?+=&%@!\-\/]))?/';
 
@@ -39,7 +41,7 @@ class Url
             throw new UrlFormatException(Messages::urlMalformedUrl($url));
         }
         $this->parts = $p;
-        $path = $this->getPath();
+        $path        = $this->getPath();
         if ($path != null) {
             $this->segments = explode('/', trim($path, '/'));
             foreach ($this->segments as $segment) {
@@ -197,8 +199,8 @@ class Url
             return false;
         }
 
-        $srcSegmentCount = count($this->segments);
-        $targetSegments = $targetUri->getSegments();
+        $srcSegmentCount    = count($this->segments);
+        $targetSegments     = $targetUri->getSegments();
         $targetSegmentCount = count($targetSegments);
         if ($srcSegmentCount > $targetSegmentCount) {
             return false;

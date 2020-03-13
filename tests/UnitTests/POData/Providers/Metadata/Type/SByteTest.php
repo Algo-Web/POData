@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\Providers\Metadata\Type;
 
 use POData\Providers\Metadata\Type\Binary;
@@ -89,7 +91,7 @@ class SByteTest extends TestCase
     {
         $type = $this->getAsIType();
 
-        $in = 'A';
+        $in  = 'A';
         $out = null;
         $this->assertTrue($type->validate($in, $out));
 
@@ -100,11 +102,11 @@ class SByteTest extends TestCase
     {
         $type = $this->getAsIType();
 
-        $in = '';
+        $in  = '';
         $out = null;
         $this->assertFalse($type->validate($in, $out));
 
-        $in = 'AA';
+        $in  = 'AA';
         $out = null;
         $this->assertFalse($type->validate($in, $out));
     }
@@ -113,7 +115,7 @@ class SByteTest extends TestCase
     {
         $type = $this->getAsIType();
 
-        $value = 'afaefasevaswee';
+        $value  = 'afaefasevaswee';
         $actual = $type->convert($value);
 
         $expected = 'afaefasevaswee';
@@ -124,7 +126,7 @@ class SByteTest extends TestCase
     {
         $type = $this->getAsIType();
 
-        $value = 'afaefasevaswee';
+        $value  = 'afaefasevaswee';
         $actual = $type->convertToOData($value);
 
         $expected = 'afaefasevaswee';

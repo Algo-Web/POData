@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\Common;
 
 use UnitTests\POData\TestCase;
@@ -197,7 +199,7 @@ class MessagesTest extends TestCase
         $this->assertEquals(sort($expected), sort($actual), 'You probably added a message without a corresponding test!');
         foreach ($actual as $funcName) {
             $param = [];
-            $fct = new \ReflectionMethod('POData\Common\Messages', $funcName);
+            $fct   = new \ReflectionMethod('POData\Common\Messages', $funcName);
             if ($fct->getNumberOfRequiredParameters() == 0) {
                 $r = $fct->invokeArgs(null, $param);
                 $this->assertTrue(is_string($r));

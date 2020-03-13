@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData;
 
 /**
@@ -42,8 +44,8 @@ class MediaType
      */
     public function __construct($type, $subType, array $parameters)
     {
-        $this->type = $type;
-        $this->subType = $subType;
+        $this->type       = $type;
+        $this->subType    = $subType;
         $this->parameters = $parameters;
     }
 
@@ -86,7 +88,7 @@ class MediaType
         if (strlen($candidate) > 0) {
             //get the odata parameter (if there is one)
             $candidateODataValue = null;
-            $candidateParts = explode(';', $candidate);
+            $candidateParts      = explode(';', $candidate);
             if (count($candidateParts) > 1) {
                 //is it safe to assume the mime type is always the first part?
                 $candidate = array_shift($candidateParts); //move off the first type matcher
@@ -149,9 +151,9 @@ class MediaType
     /**
      * Gets the quality factor associated with this media type.
      *
-     * @return int The value associated with 'q' parameter (0-1000),
-     *             if absent return 1000
      * @throws Common\HttpHeaderFailure
+     * @return int                      The value associated with 'q' parameter (0-1000),
+     *                                  if absent return 1000
      */
     public function getQualityValue()
     {
@@ -159,7 +161,7 @@ class MediaType
             foreach ($parameter as $key => $value) {
                 if (strcasecmp($key, 'q') === 0) {
                     $textIndex = 0;
-                    $result = '';
+                    $result    = '';
                     HttpProcessUtility::readQualityValue(
                         $value,
                         $textIndex,

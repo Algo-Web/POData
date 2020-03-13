@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData;
 
 use Mockery as m;
@@ -22,8 +24,8 @@ class SimpleDataServiceTest extends TestCase
         $cereal = m::mock(IObjectSerialiser::class)->makePartial();
         $cereal->shouldReceive('setService')->withAnyArgs()->andReturnNull()->once();
 
-        $meta = m::mock(SimpleMetadataProvider::class);
-        $db = m::mock(IQueryProvider::class);
+        $meta    = m::mock(SimpleMetadataProvider::class);
+        $db      = m::mock(IQueryProvider::class);
         $service = m::mock(ServiceHost::class);
 
         $foo = new SimpleDataService($db, $meta, $service, $cereal);
@@ -35,32 +37,32 @@ class SimpleDataServiceTest extends TestCase
         $cereal = m::mock(IObjectSerialiser::class);
         $cereal->shouldReceive('setService')->withAnyArgs()->andReturnNull()->once();
 
-        $meta = m::mock(SimpleMetadataProvider::class);
-        $service = m::mock(ServiceHost::class);
-        $db = new \stdClass();
+        $meta                       = m::mock(SimpleMetadataProvider::class);
+        $service                    = m::mock(ServiceHost::class);
+        $db                         = new \stdClass();
         $db->queryProviderClassName = NorthWindQueryProvider::class;
-        $foo = new SimpleDataService($db, $meta, $service, $cereal);
+        $foo                        = new SimpleDataService($db, $meta, $service, $cereal);
         $this->assertTrue($foo instanceof SimpleDataService);
         $this->assertTrue($foo->getQueryProvider() instanceof NorthWindQueryProvider);
     }
 
     public function testCreateWithNullSerialiser()
     {
-        $expected = 'Invalid query provider supplied';
+        $expected     = 'Invalid query provider supplied';
         $expectedCode = 500;
-        $actual = null;
-        $actualCode = null;
+        $actual       = null;
+        $actualCode   = null;
 
         $cereal = m::mock(IObjectSerialiser::class);
 
-        $meta = m::mock(SimpleMetadataProvider::class);
-        $db = null;
+        $meta    = m::mock(SimpleMetadataProvider::class);
+        $db      = null;
         $service = m::mock(ServiceHost::class);
 
         try {
             new SimpleDataService($db, $meta, $service, $cereal);
         } catch (ODataException $e) {
-            $actual = $e->getMessage();
+            $actual     = $e->getMessage();
             $actualCode = $e->getStatusCode();
         }
         $this->assertEquals($expectedCode, $actualCode);
@@ -72,8 +74,8 @@ class SimpleDataServiceTest extends TestCase
         $cereal = m::mock(IObjectSerialiser::class);
         $cereal->shouldReceive('setService')->withAnyArgs()->andReturnNull()->once();
 
-        $meta = m::mock(SimpleMetadataProvider::class);
-        $db = m::mock(IQueryProvider::class);
+        $meta    = m::mock(SimpleMetadataProvider::class);
+        $db      = m::mock(IQueryProvider::class);
         $service = m::mock(ServiceHost::class);
 
         $config = m::mock(IServiceConfiguration::class);

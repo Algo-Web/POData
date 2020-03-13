@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\Common\Messages;
 
 /**
- * Trait metadataWriter
+ * Trait metadataWriter.
  * @package POData\Common\Messages
  */
 trait metadataWriter

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\UriProcessor\QueryProcessor\OrderByParser;
 
 use POData\Common\Messages;
@@ -104,24 +106,24 @@ class OrderByLeafNode extends OrderByBaseNode
         $retVal = function ($object1, $object2) use ($ancestors, $ascend) {
             $accessor1 = $object1;
             $accessor2 = $object2;
-            $flag1 = null === $accessor1;
-            $flag2 = null === $accessor2;
+            $flag1     = null === $accessor1;
+            $flag2     = null === $accessor2;
             foreach ($ancestors as $i => $ancestor) {
                 if ($i == 0) {
                     continue;
                 }
-                $accessor1 = $accessor1->$ancestor;
-                $accessor2 = $accessor2->$ancestor;
+                $accessor1 = $accessor1->{$ancestor};
+                $accessor2 = $accessor2->{$ancestor};
                 $flag1 |= null === $accessor1;
                 $flag2 |= null === $accessor2;
             }
             $propertyName = $this->propertyName;
-            $getter = 'get' . ucfirst($propertyName);
+            $getter       = 'get' . ucfirst($propertyName);
             if (null !== $accessor1) {
-                $accessor1 = method_exists($accessor1, $getter) ? $accessor1->$getter() : $accessor1->$propertyName;
+                $accessor1 = method_exists($accessor1, $getter) ? $accessor1->{$getter}() : $accessor1->{$propertyName};
             }
             if (null !== $accessor2) {
-                $accessor2 = method_exists($accessor2, $getter) ? $accessor2->$getter() : $accessor2->$propertyName;
+                $accessor2 = method_exists($accessor2, $getter) ? $accessor2->{$getter}() : $accessor2->{$propertyName};
             }
 
             $flag1 |= null === $accessor1;
@@ -142,7 +144,7 @@ class OrderByLeafNode extends OrderByBaseNode
             } elseif ($type instanceof Guid) {
                 $result = strcmp($accessor1, $accessor2);
             } else {
-                $delta = $accessor1 - $accessor2;
+                $delta  = $accessor1 - $accessor2;
                 $result = (0 == $delta) ? 0 : $delta/abs($delta);
             }
 

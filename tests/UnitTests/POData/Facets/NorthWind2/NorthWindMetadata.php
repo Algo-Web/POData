@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\Facets\NorthWind2;
 
 use POData\Common\InvalidOperationException;
@@ -144,13 +146,15 @@ class NorthWindMetadata
 
         //Register the complex type 'Address2'
         $address2ComplexType = $metadata->addComplexType(
-            new \ReflectionClass('UnitTests\POData\Facets\NorthWind2\Address3'), 'Address2'
+            new \ReflectionClass('UnitTests\POData\Facets\NorthWind2\Address3'),
+            'Address2'
         );
         $metadata->addPrimitiveProperty($address2ComplexType, 'LineNumber2', EdmPrimitiveType::STRING());
 
         //Register the complex type 'Address' with 'Address2' as memebr variable
         $addressComplexType = $metadata->addComplexType(
-            new \ReflectionClass('UnitTests\POData\Facets\NorthWind2\Address1'), 'Address'
+            new \ReflectionClass('UnitTests\POData\Facets\NorthWind2\Address1'),
+            'Address'
         );
 
         $metadata->addPrimitiveProperty($addressComplexType, 'LineNumber', EdmPrimitiveType::INT32());
@@ -162,7 +166,8 @@ class NorthWindMetadata
 
         //Register the entity (resource) type 'Customer'
         $customersEntityType = $metadata->addEntityType(
-            new \ReflectionClass('UnitTests\POData\Facets\NorthWind2\Customer1'), 'Customer'
+            new \ReflectionClass('UnitTests\POData\Facets\NorthWind2\Customer1'),
+            'Customer'
         );
         $metadata->addKeyProperty($customersEntityType, 'CustomerID', EdmPrimitiveType::STRING());
         $metadata->addKeyProperty($customersEntityType, 'CompanyName', EdmPrimitiveType::STRING());
@@ -172,7 +177,8 @@ class NorthWindMetadata
 
         //Register the entity (resource) type 'Order'
         $orderEntityType = $metadata->addEntityType(
-            new \ReflectionClass('UnitTests\POData\Facets\NorthWind2\Order1'), 'Order'
+            new \ReflectionClass('UnitTests\POData\Facets\NorthWind2\Order1'),
+            'Order'
         );
         $metadata->addKeyProperty($orderEntityType, 'OrderID', EdmPrimitiveType::INT32());
         $metadata->addPrimitiveProperty($orderEntityType, 'OrderDate', EdmPrimitiveType::DATETIME());
@@ -183,7 +189,8 @@ class NorthWindMetadata
 
         //Register the entity (resource) type 'Product'
         $productEntityType = $metadata->addEntityType(
-            new \ReflectionClass('UnitTests\POData\Facets\NorthWind2\Product1'), 'Product'
+            new \ReflectionClass('UnitTests\POData\Facets\NorthWind2\Product1'),
+            'Product'
         );
         $metadata->addKeyProperty($productEntityType, 'ProductID', EdmPrimitiveType::INT32());
         $metadata->addPrimitiveProperty($productEntityType, 'ProductName', EdmPrimitiveType::STRING());
@@ -193,7 +200,8 @@ class NorthWindMetadata
 
         //Register the entity (resource) type 'Order_Details'
         $orderDetailsEntityType = $metadata->addEntityType(
-            new \ReflectionClass('UnitTests\POData\Facets\NorthWind2\Order_Details1'), 'Order_Details'
+            new \ReflectionClass('UnitTests\POData\Facets\NorthWind2\Order_Details1'),
+            'Order_Details'
         );
         $metadata->addKeyProperty($orderDetailsEntityType, 'ProductID', EdmPrimitiveType::INT32());
         $metadata->addKeyProperty($orderDetailsEntityType, 'OrderID', EdmPrimitiveType::INT32());
@@ -203,7 +211,8 @@ class NorthWindMetadata
 
         //Register the entity (resource) type 'Employee'
         $employeeEntityType = $metadata->addEntityType(
-            new \ReflectionClass('UnitTests\POData\Facets\NorthWind2\Employee1'), 'Employee'
+            new \ReflectionClass('UnitTests\POData\Facets\NorthWind2\Employee1'),
+            'Employee'
         );
         $metadata->addKeyProperty($employeeEntityType, 'EmployeeID', EdmPrimitiveType::INT32());
         $metadata->addPrimitiveProperty($employeeEntityType, 'FirstName', EdmPrimitiveType::STRING());
@@ -219,11 +228,11 @@ class NorthWindMetadata
         $employeeEntityType->addNamedStream($streamInfo);
 
         //Register the entity (resource) sets
-        $customersResourceSet = $metadata->addResourceSet('Customers', $customersEntityType);
-        $ordersResourceSet = $metadata->addResourceSet('Orders', $orderEntityType);
-        $productResourceSet = $metadata->addResourceSet('Products', $productEntityType);
+        $customersResourceSet  = $metadata->addResourceSet('Customers', $customersEntityType);
+        $ordersResourceSet     = $metadata->addResourceSet('Orders', $orderEntityType);
+        $productResourceSet    = $metadata->addResourceSet('Products', $productEntityType);
         $orderDetailsEntitySet = $metadata->addResourceSet('Order_Details', $orderDetailsEntityType);
-        $employeeSet = $metadata->addResourceSet('Employees', $employeeEntityType);
+        $employeeSet           = $metadata->addResourceSet('Employees', $employeeEntityType);
 
         //Register the assoications (navigations)
         //Customers (1) <==> Orders (0-*)

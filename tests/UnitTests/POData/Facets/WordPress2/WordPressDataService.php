@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\Facets\WordPress2;
 
 use POData\BaseService;
@@ -15,8 +17,8 @@ use Symfony\Component\Config\Definition\Exception\Exception;
 
 class WordPressDataService extends BaseService
 {
-    private $_wordPressMetadata = null;
-    private $_wordPressQueryProvider = null;
+    private $_wordPressMetadata           = null;
+    private $_wordPressQueryProvider      = null;
     private $_wordPressExpressionProvider = null;
 
     public function __construct(ServiceHost $serviceHost)
@@ -28,7 +30,7 @@ class WordPressDataService extends BaseService
     /**
      * This method is called only once to initialize service-wide policies.
      *
-     * @param IServiceConfiguration $config Data service configuration object
+     * @param  IServiceConfiguration                    $config Data service configuration object
      * @throws \POData\Common\InvalidOperationException
      */
     public function initialize(IServiceConfiguration $config)
@@ -41,8 +43,8 @@ class WordPressDataService extends BaseService
     }
 
     /**
-     * @return \POData\Providers\Metadata\IMetadataProvider
      * @throws \POData\Common\InvalidOperationException
+     * @return \POData\Providers\Metadata\IMetadataProvider
      */
     public function getMetadataProvider()
     {

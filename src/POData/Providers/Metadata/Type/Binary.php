@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\Providers\Metadata\Type;
 
 /**
@@ -43,7 +45,7 @@ class Binary implements IType
      */
     public function validate($value, &$outValue)
     {
-        $length = strlen($value);
+        $length  = strlen($value);
         $trimVal = $value;
         if ((0 === strpos($trimVal, 'binary\'')) && (7 < $length)) {
             $trimVal = substr($trimVal, 7, $length - 7);
@@ -130,9 +132,9 @@ class Binary implements IType
             return false;
         }
 
-        $outValue = [];
+        $outValue    = [];
         $outValIndex = 0;
-        $valueIndex = 0;
+        $valueIndex  = 0;
         while ($valueIndex < $length) {
             $ch0 = $value[$valueIndex];
             $ch1 = $value[$valueIndex + 1];

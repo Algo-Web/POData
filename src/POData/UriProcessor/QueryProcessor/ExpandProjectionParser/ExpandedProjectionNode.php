@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\UriProcessor\QueryProcessor\ExpandProjectionParser;
 
 use InvalidArgumentException;
@@ -195,11 +197,11 @@ class ExpandedProjectionNode extends ProjectionNode
         $maxResultCount,
         ResourceProperty $resourceProperty = null
     ) {
-        $this->resourceSetWrapper = $resourceSetWrapper;
+        $this->resourceSetWrapper  = $resourceSetWrapper;
         $this->internalOrderByInfo = $internalOrderByInfo;
-        $this->skipCount = $skipCount;
-        $this->takeCount = $takeCount;
-        $this->maxResultCount = $maxResultCount;
+        $this->skipCount           = $skipCount;
+        $this->takeCount           = $takeCount;
+        $this->maxResultCount      = $maxResultCount;
         parent::__construct($propertyName, $resourceProperty);
     }
 
@@ -402,7 +404,7 @@ class ExpandedProjectionNode extends ProjectionNode
      */
     public function markSubtreeAsSelected()
     {
-        $this->selectSubtree = true;
+        $this->selectSubtree                = true;
         $this->selectAllImmediateProperties = false;
         foreach ($this->childNodes as $node) {
             if ($node instanceof self) {
@@ -499,7 +501,7 @@ class ExpandedProjectionNode extends ProjectionNode
             //We are applying sorting in bottom-up fashion, do it only we have
             // more than 1 child
             if (count($this->childNodes) > 1) {
-                $existingNodes = $this->childNodes;
+                $existingNodes    = $this->childNodes;
                 $this->childNodes = [];
                 foreach ($this->getResourceType()->getAllProperties() as $resourceProperty) {
                     $propertyName = $resourceProperty->getName();

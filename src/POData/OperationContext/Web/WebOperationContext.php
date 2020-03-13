@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\OperationContext\Web;
 
 use POData\OperationContext\IHTTPRequest;
@@ -38,7 +40,7 @@ class WebOperationContext implements IOperationContext
      */
     public function __construct()
     {
-        $this->incomingRequest = new IncomingRequest();
+        $this->incomingRequest  = new IncomingRequest();
         $this->outgoingResponse = new OutgoingResponse();
     }
 

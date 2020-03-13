@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions;
 
 /**
@@ -18,7 +20,7 @@ class ArithmeticExpression extends BinaryExpression
     public function __construct($left, $right, ExpressionType $nodeType, $type)
     {
         $this->nodeType = $nodeType;
-        $this->type = $type;
+        $this->type     = $type;
         parent::__construct($left, $right);
     }
 }

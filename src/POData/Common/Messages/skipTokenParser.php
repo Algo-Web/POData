@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\Common\Messages;
 
 /**
- * Trait skipTokenParser
+ * Trait skipTokenParser.
  * @package POData\Common\Messages
  */
 trait skipTokenParser
@@ -84,7 +86,7 @@ trait skipTokenParser
         $typeProvidedInSkipTokenName
     ) {
         return 'The skiptoken value \'' . $skipToken . '\' contains a value of type \'' . $typeProvidedInSkipTokenName
-                .'\' at position ' . $position . ' which is not compatible with the type \'' . $expectedTypeName
-                .'\' of corresponding orderby constraint.';
+                . '\' at position ' . $position . ' which is not compatible with the type \'' . $expectedTypeName
+                . '\' of corresponding orderby constraint.';
     }
 }

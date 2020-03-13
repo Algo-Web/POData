@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\UriProcessor;
 
 use Mockery as m;
@@ -45,7 +47,7 @@ class RequestDescriptionMockeryTest extends TestCase
         $url->shouldReceive('getUrlAsString')->andReturn('http://localhost/foobar/odata.svc/Addresses');
         $version = Version::v3();
 
-        $segment = m::mock(SegmentDescriptor::class);
+        $segment  = m::mock(SegmentDescriptor::class);
         $segArray = [$segment];
 
         $request = m::mock(IncomingIlluminateRequest::class)->makePartial();
@@ -61,7 +63,7 @@ class RequestDescriptionMockeryTest extends TestCase
 
     public function testProcessDataFromClientEndpointRequest()
     {
-        $bar = new SimpleMetadataProvider('Data', 'Data');
+        $bar      = new SimpleMetadataProvider('Data', 'Data');
         $refClass = m::mock(\ReflectionClass::class);
         $refClass->shouldReceive('hasMethod')->withArgs(['__get'])->andReturn(true);
         $refClass->shouldReceive('isInstance')->andReturn(true);
@@ -85,14 +87,14 @@ class RequestDescriptionMockeryTest extends TestCase
 &lt;/Dashboard&gt;</d:value></m:properties></content></entry>
 ';
 
-        $expectedArray = unserialize(base64_decode('TzoyOToiUE9EYXRhXE9iamVjdE1vZGVsXE9EYXRhRW50cnkiOjE2OntzOjI6ImlkIjtzOjA6IiI7czo4OiJzZWxmTGluayI7TjtzOjU6InRpdGxlIjtPOjI5OiJQT0RhdGFcT2JqZWN0TW9kZWxcT0RhdGFUaXRsZSI6Mjp7czo1OiJ0aXRsZSI7czowOiIiO3M6NDoidHlwZSI7Tjt9czo4OiJlZGl0TGluayI7TjtzOjQ6InR5cGUiO086MzI6IlBPRGF0YVxPYmplY3RNb2RlbFxPRGF0YUNhdGVnb3J5IjoyOntzOjQ6InRlcm0iO3M6MjM6IkRhdGEuQ29tcGFueUNvbmZpZ01vZGVsIjtzOjY6InNjaGVtZSI7czo2MDoiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS9hZG8vMjAwNy8wOC9kYXRhc2VydmljZXMvc2NoZW1lIjt9czoxNToicHJvcGVydHlDb250ZW50IjtPOjM5OiJQT0RhdGFcT2JqZWN0TW9kZWxcT0RhdGFQcm9wZXJ0eUNvbnRlbnQiOjE6e3M6MTA6InByb3BlcnRpZXMiO2E6Njp7czoxMDoiY29tcGFueV9pZCI7TzozMjoiUE9EYXRhXE9iamVjdE1vZGVsXE9EYXRhUHJvcGVydHkiOjQ6e3M6NDoibmFtZSI7czoxMDoiY29tcGFueV9pZCI7czo4OiJ0eXBlTmFtZSI7TjtzOjE5OiJhdHRyaWJ1dGVFeHRlbnNpb25zIjtOO3M6NToidmFsdWUiO3M6NjoiMTExMTExIjt9czo5OiJjb25maWdLZXkiO086MzI6IlBPRGF0YVxPYmplY3RNb2RlbFxPRGF0YVByb3BlcnR5Ijo0OntzOjQ6Im5hbWUiO3M6OToiY29uZmlnS2V5IjtzOjg6InR5cGVOYW1lIjtOO3M6MTk6ImF0dHJpYnV0ZUV4dGVuc2lvbnMiO047czo1OiJ2YWx1ZSI7czoyMDoiQ29tcGFueU1haW5EYXNoYm9hcmQiO31zOjEwOiJjcmVhdGVkX2F0IjtPOjMyOiJQT0RhdGFcT2JqZWN0TW9kZWxcT0RhdGFQcm9wZXJ0eSI6NDp7czo0OiJuYW1lIjtzOjEwOiJjcmVhdGVkX2F0IjtzOjg6InR5cGVOYW1lIjtzOjEyOiJFZG0uRGF0ZVRpbWUiO3M6MTk6ImF0dHJpYnV0ZUV4dGVuc2lvbnMiO047czo1OiJ2YWx1ZSI7czoxOToiMDAwMS0wMS0wMVQwMDowMDowMCI7fXM6MjoiaWQiO086MzI6IlBPRGF0YVxPYmplY3RNb2RlbFxPRGF0YVByb3BlcnR5Ijo0OntzOjQ6Im5hbWUiO3M6MjoiaWQiO3M6ODoidHlwZU5hbWUiO3M6OToiRWRtLkludDMyIjtzOjE5OiJhdHRyaWJ1dGVFeHRlbnNpb25zIjtOO3M6NToidmFsdWUiO3M6MToiMCI7fXM6MTA6InVwZGF0ZWRfYXQiO086MzI6IlBPRGF0YVxPYmplY3RNb2RlbFxPRGF0YVByb3BlcnR5Ijo0OntzOjQ6Im5hbWUiO3M6MTA6InVwZGF0ZWRfYXQiO3M6ODoidHlwZU5hbWUiO3M6MTI6IkVkbS5EYXRlVGltZSI7czoxOToiYXR0cmlidXRlRXh0ZW5zaW9ucyI7TjtzOjU6InZhbHVlIjtzOjE5OiIwMDAxLTAxLTAxVDAwOjAwOjAwIjt9czo1OiJ2YWx1ZSI7TzozMjoiUE9EYXRhXE9iamVjdE1vZGVsXE9EYXRhUHJvcGVydHkiOjQ6e3M6NDoibmFtZSI7czo1OiJ2YWx1ZSI7czo4OiJ0eXBlTmFtZSI7TjtzOjE5OiJhdHRyaWJ1dGVFeHRlbnNpb25zIjtOO3M6NToidmFsdWUiO3M6NTMwOiI8RGFzaGJvYXJkIEN1cnJlbmN5Q3VsdHVyZT0iZW4tQVUiPg0KICA8VGl0bGUgVGV4dD0iRGFzaGJvYXJkIiAvPg0KICA8RGF0YVNvdXJjZXM+DQogICAgPE9iamVjdERhdGFTb3VyY2UgQ29tcG9uZW50TmFtZT0iZGFzaGJvYXJkT2JqZWN0RGF0YVNvdXJjZTEiPg0KICAgICAgPE5hbWU+Rm9vIEJhcjwvTmFtZT4NCiAgICAgIDxEYXRhU291cmNlIFR5cGU9IlN5c3RlbS5EYXRhLlNlcnZpY2VzLkNsaWVudC5EYXRhU2VydmljZVF1ZXJ5YDErRGF0YVNlcnZpY2VPcmRlcmVkUXVlcnlbW0Zvb0Jhci5Gb29CYXJSZW1vdGVXQ0YuQWRkcmVzcywgRm9vQmFyLCBWZXJzaW9uPTEuMC4wLjAsIEN1bHR1cmU9bmV1dHJhbCwgUHVibGljS2V5VG9rZW49bnVsbF1dLCBNaWNyb3NvZnQuRGF0YS5TZXJ2aWNlcy5DbGllbnQsIFZlcnNpb249NS42LjQuMCwgQ3VsdHVyZT1uZXV0cmFsLCBQdWJsaWNLZXlUb2tlbj0zMWJmMzg1NmFkMzY0ZTM1IiAvPg0KICAgIDwvT2JqZWN0RGF0YVNvdXJjZT4NCiAgPC9EYXRhU291cmNlcz4NCjwvRGFzaGJvYXJkPiI7fX19czoxMDoibWVkaWFMaW5rcyI7YTowOnt9czo5OiJtZWRpYUxpbmsiO047czo1OiJsaW5rcyI7YTowOnt9czo0OiJlVGFnIjtOO3M6MTY6ImlzTWVkaWFMaW5rRW50cnkiO2I6MDtzOjE1OiJyZXNvdXJjZVNldE5hbWUiO047czo3OiJ1cGRhdGVkIjtzOjIwOiIyMDE3LTA2LTE1VDA0OjQ0OjQwWiI7czo3OiJiYXNlVVJJIjtOO3M6MTE6ImF0b21Db250ZW50IjtOO3M6MTA6ImF0b21BdXRob3IiO047fQ=='));
+        $expectedArray                  = unserialize(base64_decode('TzoyOToiUE9EYXRhXE9iamVjdE1vZGVsXE9EYXRhRW50cnkiOjE2OntzOjI6ImlkIjtzOjA6IiI7czo4OiJzZWxmTGluayI7TjtzOjU6InRpdGxlIjtPOjI5OiJQT0RhdGFcT2JqZWN0TW9kZWxcT0RhdGFUaXRsZSI6Mjp7czo1OiJ0aXRsZSI7czowOiIiO3M6NDoidHlwZSI7Tjt9czo4OiJlZGl0TGluayI7TjtzOjQ6InR5cGUiO086MzI6IlBPRGF0YVxPYmplY3RNb2RlbFxPRGF0YUNhdGVnb3J5IjoyOntzOjQ6InRlcm0iO3M6MjM6IkRhdGEuQ29tcGFueUNvbmZpZ01vZGVsIjtzOjY6InNjaGVtZSI7czo2MDoiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS9hZG8vMjAwNy8wOC9kYXRhc2VydmljZXMvc2NoZW1lIjt9czoxNToicHJvcGVydHlDb250ZW50IjtPOjM5OiJQT0RhdGFcT2JqZWN0TW9kZWxcT0RhdGFQcm9wZXJ0eUNvbnRlbnQiOjE6e3M6MTA6InByb3BlcnRpZXMiO2E6Njp7czoxMDoiY29tcGFueV9pZCI7TzozMjoiUE9EYXRhXE9iamVjdE1vZGVsXE9EYXRhUHJvcGVydHkiOjQ6e3M6NDoibmFtZSI7czoxMDoiY29tcGFueV9pZCI7czo4OiJ0eXBlTmFtZSI7TjtzOjE5OiJhdHRyaWJ1dGVFeHRlbnNpb25zIjtOO3M6NToidmFsdWUiO3M6NjoiMTExMTExIjt9czo5OiJjb25maWdLZXkiO086MzI6IlBPRGF0YVxPYmplY3RNb2RlbFxPRGF0YVByb3BlcnR5Ijo0OntzOjQ6Im5hbWUiO3M6OToiY29uZmlnS2V5IjtzOjg6InR5cGVOYW1lIjtOO3M6MTk6ImF0dHJpYnV0ZUV4dGVuc2lvbnMiO047czo1OiJ2YWx1ZSI7czoyMDoiQ29tcGFueU1haW5EYXNoYm9hcmQiO31zOjEwOiJjcmVhdGVkX2F0IjtPOjMyOiJQT0RhdGFcT2JqZWN0TW9kZWxcT0RhdGFQcm9wZXJ0eSI6NDp7czo0OiJuYW1lIjtzOjEwOiJjcmVhdGVkX2F0IjtzOjg6InR5cGVOYW1lIjtzOjEyOiJFZG0uRGF0ZVRpbWUiO3M6MTk6ImF0dHJpYnV0ZUV4dGVuc2lvbnMiO047czo1OiJ2YWx1ZSI7czoxOToiMDAwMS0wMS0wMVQwMDowMDowMCI7fXM6MjoiaWQiO086MzI6IlBPRGF0YVxPYmplY3RNb2RlbFxPRGF0YVByb3BlcnR5Ijo0OntzOjQ6Im5hbWUiO3M6MjoiaWQiO3M6ODoidHlwZU5hbWUiO3M6OToiRWRtLkludDMyIjtzOjE5OiJhdHRyaWJ1dGVFeHRlbnNpb25zIjtOO3M6NToidmFsdWUiO3M6MToiMCI7fXM6MTA6InVwZGF0ZWRfYXQiO086MzI6IlBPRGF0YVxPYmplY3RNb2RlbFxPRGF0YVByb3BlcnR5Ijo0OntzOjQ6Im5hbWUiO3M6MTA6InVwZGF0ZWRfYXQiO3M6ODoidHlwZU5hbWUiO3M6MTI6IkVkbS5EYXRlVGltZSI7czoxOToiYXR0cmlidXRlRXh0ZW5zaW9ucyI7TjtzOjU6InZhbHVlIjtzOjE5OiIwMDAxLTAxLTAxVDAwOjAwOjAwIjt9czo1OiJ2YWx1ZSI7TzozMjoiUE9EYXRhXE9iamVjdE1vZGVsXE9EYXRhUHJvcGVydHkiOjQ6e3M6NDoibmFtZSI7czo1OiJ2YWx1ZSI7czo4OiJ0eXBlTmFtZSI7TjtzOjE5OiJhdHRyaWJ1dGVFeHRlbnNpb25zIjtOO3M6NToidmFsdWUiO3M6NTMwOiI8RGFzaGJvYXJkIEN1cnJlbmN5Q3VsdHVyZT0iZW4tQVUiPg0KICA8VGl0bGUgVGV4dD0iRGFzaGJvYXJkIiAvPg0KICA8RGF0YVNvdXJjZXM+DQogICAgPE9iamVjdERhdGFTb3VyY2UgQ29tcG9uZW50TmFtZT0iZGFzaGJvYXJkT2JqZWN0RGF0YVNvdXJjZTEiPg0KICAgICAgPE5hbWU+Rm9vIEJhcjwvTmFtZT4NCiAgICAgIDxEYXRhU291cmNlIFR5cGU9IlN5c3RlbS5EYXRhLlNlcnZpY2VzLkNsaWVudC5EYXRhU2VydmljZVF1ZXJ5YDErRGF0YVNlcnZpY2VPcmRlcmVkUXVlcnlbW0Zvb0Jhci5Gb29CYXJSZW1vdGVXQ0YuQWRkcmVzcywgRm9vQmFyLCBWZXJzaW9uPTEuMC4wLjAsIEN1bHR1cmU9bmV1dHJhbCwgUHVibGljS2V5VG9rZW49bnVsbF1dLCBNaWNyb3NvZnQuRGF0YS5TZXJ2aWNlcy5DbGllbnQsIFZlcnNpb249NS42LjQuMCwgQ3VsdHVyZT1uZXV0cmFsLCBQdWJsaWNLZXlUb2tlbj0zMWJmMzg1NmFkMzY0ZTM1IiAvPg0KICAgIDwvT2JqZWN0RGF0YVNvdXJjZT4NCiAgPC9EYXRhU291cmNlcz4NCjwvRGFzaGJvYXJkPiI7fX19czoxMDoibWVkaWFMaW5rcyI7YTowOnt9czo5OiJtZWRpYUxpbmsiO047czo1OiJsaW5rcyI7YTowOnt9czo0OiJlVGFnIjtOO3M6MTY6ImlzTWVkaWFMaW5rRW50cnkiO2I6MDtzOjE1OiJyZXNvdXJjZVNldE5hbWUiO047czo3OiJ1cGRhdGVkIjtzOjIwOiIyMDE3LTA2LTE1VDA0OjQ0OjQwWiI7czo3OiJiYXNlVVJJIjtOO3M6MTE6ImF0b21Db250ZW50IjtOO3M6MTA6ImF0b21BdXRob3IiO047fQ=='));
         $expectedArray->resourceSetName = 'CompanyConfigModels';
 
         $url = m::mock(Url::class);
         $url->shouldReceive('getUrlAsString')->andReturn('http://localhost/foobar/odata.svc/CompanyConfigModels');
         $version = Version::v3();
 
-        $segment = m::mock(SegmentDescriptor::class);
+        $segment  = m::mock(SegmentDescriptor::class);
         $segArray = [$segment];
 
         $request = m::mock(IncomingIlluminateRequest::class)->makePartial();
@@ -119,7 +121,7 @@ class RequestDescriptionMockeryTest extends TestCase
         $segment->shouldReceive('getTargetKind')->andReturn(TargetKind::MEDIA_RESOURCE());
         $segArray = [$segment];
 
-        $url = m::mock(Url::class);
+        $url     = m::mock(Url::class);
         $version = Version::v3();
 
         $type = MimeTypes::MIME_APPLICATION_ATOM;
@@ -130,7 +132,7 @@ class RequestDescriptionMockeryTest extends TestCase
         $desc = new RequestDescription($segArray, $url, $version, null, null, $type, $request);
 
         $expected = 'Delta';
-        $info = $desc->getResourceStreamInfo();
+        $info     = $desc->getResourceStreamInfo();
         $this->assertTrue(isset($info));
         $actual = $info->getName();
         $this->assertEquals($expected, $actual);
@@ -149,7 +151,7 @@ class RequestDescriptionMockeryTest extends TestCase
         $segment->shouldReceive('getTargetKind')->andReturn(TargetKind::MEDIA_RESOURCE());
         $segArray = [$segment];
 
-        $url = m::mock(Url::class);
+        $url     = m::mock(Url::class);
         $version = Version::v3();
 
         $type = MimeTypes::MIME_APPLICATION_ATOM;
@@ -167,7 +169,7 @@ class RequestDescriptionMockeryTest extends TestCase
     public function testRequestVersionWithTwoDots()
     {
         $expected = 'The header DataServiceVersion has malformed version value 0.1.1';
-        $actual = null;
+        $actual   = null;
 
         $rStream = new ResourceStreamInfo('Delta');
 
@@ -180,7 +182,7 @@ class RequestDescriptionMockeryTest extends TestCase
         $segment->shouldReceive('getTargetKind')->andReturn(TargetKind::MEDIA_RESOURCE());
         $segArray = [$segment];
 
-        $url = m::mock(Url::class);
+        $url     = m::mock(Url::class);
         $version = Version::v3();
 
         $type = MimeTypes::MIME_APPLICATION_ATOM;
@@ -202,7 +204,7 @@ class RequestDescriptionMockeryTest extends TestCase
     public function testRequestVersionNonNumeric()
     {
         $expected = 'The header DataServiceVersion has malformed version value slash.dot';
-        $actual = null;
+        $actual   = null;
 
         $rStream = new ResourceStreamInfo('Delta');
 
@@ -215,7 +217,7 @@ class RequestDescriptionMockeryTest extends TestCase
         $segment->shouldReceive('getTargetKind')->andReturn(TargetKind::MEDIA_RESOURCE());
         $segArray = [$segment];
 
-        $url = m::mock(Url::class);
+        $url     = m::mock(Url::class);
         $version = Version::v3();
 
         $type = MimeTypes::MIME_APPLICATION_ATOM;
@@ -237,7 +239,7 @@ class RequestDescriptionMockeryTest extends TestCase
     public function testRequestVersionStartsWithDot()
     {
         $expected = 'The header DataServiceVersion has malformed version value .1';
-        $actual = null;
+        $actual   = null;
 
         $rStream = new ResourceStreamInfo('Delta');
 
@@ -250,7 +252,7 @@ class RequestDescriptionMockeryTest extends TestCase
         $segment->shouldReceive('getTargetKind')->andReturn(TargetKind::MEDIA_RESOURCE());
         $segArray = [$segment];
 
-        $url = m::mock(Url::class);
+        $url     = m::mock(Url::class);
         $version = Version::v3();
 
         $type = MimeTypes::MIME_APPLICATION_ATOM;
@@ -272,7 +274,7 @@ class RequestDescriptionMockeryTest extends TestCase
     public function testRequestVersionNumericButUnsupported()
     {
         $expected = 'The version value 0.1 in the header DataServiceVersion is not supported, available'
-                    .' versions are 1.0, 2.0, 3.0';
+                    . ' versions are 1.0, 2.0, 3.0';
         $actual = null;
 
         $rStream = new ResourceStreamInfo('Delta');
@@ -286,7 +288,7 @@ class RequestDescriptionMockeryTest extends TestCase
         $segment->shouldReceive('getTargetKind')->andReturn(TargetKind::MEDIA_RESOURCE());
         $segArray = [$segment];
 
-        $url = m::mock(Url::class);
+        $url     = m::mock(Url::class);
         $version = Version::v3();
 
         $type = MimeTypes::MIME_APPLICATION_ATOM;

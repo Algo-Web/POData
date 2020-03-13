@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\UriProcessor;
 
 use Mockery as m;
@@ -58,7 +60,7 @@ class UriProcessorNewTest extends TestCase
         $service->shouldReceive('getHost')->andReturn($host);
 
         $expected = 'The URI \'www.example.org\' is not valid since it is not based on \'www.example.net\'';
-        $actual = null;
+        $actual   = null;
 
         try {
             $result = UriProcessorNew::process($service);
@@ -98,7 +100,7 @@ class UriProcessorNewTest extends TestCase
         $processor->shouldReceive('getRequest')->andReturn($request);
 
         $expected = 'The URI \'www.example.org\' is not valid for POST method.';
-        $actual = null;
+        $actual   = null;
 
         try {
             $processor->execute();
@@ -124,8 +126,8 @@ class UriProcessorNewTest extends TestCase
         $url1->shouldReceive('isBaseOf')->andReturn(true);
         $url1->shouldReceive('getUrlAsString')->andReturn('www.example.org');
 
-        $requestPayload = new ODataEntry();
-        $requestPayload->type = new ODataCategory('Customer');
+        $requestPayload                  = new ODataEntry();
+        $requestPayload->type            = new ODataCategory('Customer');
         $requestPayload->propertyContent = new ODataPropertyContent();
 
         $cereal = m::mock(ModelDeserialiser::class);
@@ -154,7 +156,7 @@ class UriProcessorNewTest extends TestCase
         $processor->shouldReceive('getModelDeserialiser')->andReturn($cereal);
 
         $expected = 'Method POST expecting some data, but received empty data.';
-        $actual = null;
+        $actual   = null;
 
         try {
             $processor->execute();
@@ -199,7 +201,7 @@ class UriProcessorNewTest extends TestCase
         $processor->shouldReceive('getRequest')->andReturn($request);
 
         $expected = 'Resource not found for the segment \'Identifier\'.';
-        $actual = null;
+        $actual   = null;
 
         try {
             $processor->execute();
@@ -248,7 +250,7 @@ class UriProcessorNewTest extends TestCase
         $processor->shouldReceive('getExpander')->andReturn($expander);
 
         $expected = 'Resource not found for the segment \'Identifier\'.';
-        $actual = null;
+        $actual   = null;
 
         try {
             $processor->execute();
@@ -264,7 +266,7 @@ class UriProcessorNewTest extends TestCase
         $wrapper = m::mock(ProvidersWrapper::class)->makePartial();
         $wrapper->shouldReceive('getRelatedResourceReference')->andReturnNull()->once();
 
-        $resourceSet = m::mock(ResourceSet::class);
+        $resourceSet     = m::mock(ResourceSet::class);
         $resourceWrapper = m::mock(ResourceSetWrapper::class);
 
         $propKind = ResourcePropertyKind::RESOURCE_REFERENCE;
@@ -331,7 +333,7 @@ class UriProcessorNewTest extends TestCase
         $processor->shouldReceive('getService')->andReturn($service);
 
         $expected = 'This release of library supports only GET (read) request, received a request with method MERGE';
-        $actual = null;
+        $actual   = null;
 
         try {
             $processor->execute();
@@ -393,7 +395,7 @@ class UriProcessorNewTest extends TestCase
         $processor->shouldReceive('getExpander')->andReturn($expander);
 
         $expected = 'The URI \'http://192.168.2.1/abm-master/public/odata.svc/Entity(1)\' is not valid for PUT method.';
-        $actual = null;
+        $actual   = null;
 
         try {
             $processor->execute();
@@ -408,16 +410,16 @@ class UriProcessorNewTest extends TestCase
     {
         $url1 = new \POData\Common\Url('http://192.168.2.1/abm-master/public/odata.svc/Entity(1)');
 
-        $requestPayload = new ODataEntry();
-        $requestPayload->id = 'http://192.168.2.1/abm-master/public/odata.svc/Entity(1)';
-        $requestPayload->type = new ODataCategory('Customer');
+        $requestPayload                  = new ODataEntry();
+        $requestPayload->id              = 'http://192.168.2.1/abm-master/public/odata.svc/Entity(1)';
+        $requestPayload->type            = new ODataCategory('Customer');
         $requestPayload->propertyContent = new ODataPropertyContent();
 
         $resourceType = m::mock(ResourceEntityType::class);
-        $resourceSet = m::mock(ResourceSet::class);
+        $resourceSet  = m::mock(ResourceSet::class);
         $resourceSet->shouldReceive('getResourceType')->andReturn($resourceType);
         $resourceSetWrapper = m::mock(ResourceSetWrapper::class);
-        $keyDescript = m::mock(KeyDescriptor::class);
+        $keyDescript        = m::mock(KeyDescriptor::class);
 
         $cereal = m::mock(ModelDeserialiser::class);
         $cereal->shouldReceive('bulkDeserialise')->andReturn(null)->once();
@@ -469,7 +471,7 @@ class UriProcessorNewTest extends TestCase
         $processor->shouldReceive('getModelDeserialiser')->andReturn($cereal);
 
         $expected = 'Method PUT expecting some data, but received empty data.';
-        $actual = null;
+        $actual   = null;
 
         try {
             $processor->execute();
@@ -485,10 +487,10 @@ class UriProcessorNewTest extends TestCase
         $url1 = new \POData\Common\Url('http://192.168.2.1/abm-master/public/odata.svc/Entity(1)');
 
         $resourceType = m::mock(ResourceEntityType::class);
-        $resourceSet = m::mock(ResourceSet::class);
+        $resourceSet  = m::mock(ResourceSet::class);
         $resourceSet->shouldReceive('getResourceType')->andReturn($resourceType);
         $resourceSetWrapper = m::mock(ResourceSetWrapper::class);
-        $keyDescript = m::mock(KeyDescriptor::class);
+        $keyDescript        = m::mock(KeyDescriptor::class);
 
         $propKind = ResourcePropertyKind::RESOURCE_REFERENCE;
 
@@ -509,9 +511,9 @@ class UriProcessorNewTest extends TestCase
         $context = m::mock(IOperationContext::class)->makePartial();
         $context->shouldReceive('incomingRequest->getMethod')->andReturn(HTTPRequestMethod::PUT())->twice();
 
-        $requestPayload = new ODataEntry();
-        $requestPayload->id = 'http://192.168.2.1/abm-master/public/odata.svc/Entity(1)';
-        $requestPayload->type = new ODataCategory('Customer');
+        $requestPayload                  = new ODataEntry();
+        $requestPayload->id              = 'http://192.168.2.1/abm-master/public/odata.svc/Entity(1)';
+        $requestPayload->type            = new ODataCategory('Customer');
         $requestPayload->propertyContent = new ODataPropertyContent();
 
         $model = new Customer2();
@@ -575,7 +577,7 @@ class UriProcessorNewTest extends TestCase
         $processor->shouldReceive('getRequest')->andReturn($request);
 
         $expected = 'Not implemented yet';
-        $actual = null;
+        $actual   = null;
 
         try {
             $processor->executeGet();
@@ -588,7 +590,7 @@ class UriProcessorNewTest extends TestCase
 
     public function testExecuteGetPerformPagingWithSkipToken()
     {
-        $result = new QueryResult();
+        $result          = new QueryResult();
         $result->results = ['eins', 'zwei', 'polizei', 'drei', 'vier', 'grenadier'];
 
         $setWrapper = m::mock(ResourceSetWrapper::class);
@@ -624,7 +626,7 @@ class UriProcessorNewTest extends TestCase
     {
         $expected = ['drei', 'eins', 'grenadier', 'polizei', 'vier', 'zwei'];
 
-        $result = new QueryResult();
+        $result          = new QueryResult();
         $result->results = ['eins', 'zwei', 'polizei', 'drei', 'vier', 'grenadier'];
 
         $setWrapper = m::mock(ResourceSetWrapper::class);

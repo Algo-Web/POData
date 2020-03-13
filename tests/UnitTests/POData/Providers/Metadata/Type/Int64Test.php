@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\Providers\Metadata\Type;
 
 use POData\Providers\Metadata\Type\Binary;
@@ -90,13 +92,13 @@ class Int64Test extends TestCase
     {
         $type = $this->getAsIType();
 
-        $in = '-4563l';
+        $in  = '-4563l';
         $out = null;
         $this->assertTrue($type->validate($in, $out));
 
         $this->assertSame('-4563', $out);
 
-        $in = '-4563L';
+        $in  = '-4563L';
         $out = null;
         $this->assertTrue($type->validate($in, $out));
 
@@ -107,15 +109,15 @@ class Int64Test extends TestCase
     {
         $type = $this->getAsIType();
 
-        $in = '-4563';
+        $in  = '-4563';
         $out = null;
         $this->assertFalse($type->validate($in, $out));
 
-        $in = '454.34';
+        $in  = '454.34';
         $out = null;
         $this->assertFalse($type->validate($in, $out));
 
-        $in = 'nan';
+        $in  = 'nan';
         $out = null;
         $this->assertFalse($type->validate($in, $out));
     }
@@ -124,7 +126,7 @@ class Int64Test extends TestCase
     {
         $type = $this->getAsIType();
 
-        $value = '-34533';
+        $value  = '-34533';
         $actual = $type->convert($value);
 
         $expected = -34533;
@@ -135,7 +137,7 @@ class Int64Test extends TestCase
     {
         $type = $this->getAsIType();
 
-        $value = '34533';
+        $value  = '34533';
         $actual = $type->convertToOData($value);
 
         $expected = '34533L';

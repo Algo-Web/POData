@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\Providers\Metadata\Type;
 
 use POData\Providers\Metadata\Type\Binary;
@@ -90,7 +92,7 @@ class BinaryTest extends TestCase
         $type = $this->getAsIType();
 
         $expected = [327680];
-        $out = '';
+        $out      = '';
 
         $this->assertTrue($type->validate('x\'ab\'', $out));
         $this->assertEquals($expected, $out);
@@ -145,7 +147,7 @@ class BinaryTest extends TestCase
     {
         $type = $this->getAsIType();
 
-        $value = 'afaefasevaswee';
+        $value  = 'afaefasevaswee';
         $actual = $type->convert($value);
 
         $expected = 'afaefasevaswee';
@@ -156,7 +158,7 @@ class BinaryTest extends TestCase
     {
         $type = $this->getAsIType();
 
-        $value = 'afaefasevaswee';
+        $value  = 'afaefasevaswee';
         $actual = $type->convertToOData($value);
 
         $expected = "binary'6166616566617365766173776565'";

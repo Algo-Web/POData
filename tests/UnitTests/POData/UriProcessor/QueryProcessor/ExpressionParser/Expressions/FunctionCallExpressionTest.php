@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions;
 
 use Mockery as m;
@@ -14,7 +16,7 @@ class FunctionCallExpressionTest extends TestCase
     public function testFree()
     {
         $descript = m::mock(FunctionDescription::class);
-        $expr1 = m::mock(AbstractExpression::class);
+        $expr1    = m::mock(AbstractExpression::class);
         $expr1->shouldReceive('free')->andReturnNull()->once();
         $expr2 = m::mock(AbstractExpression::class);
         $expr2->shouldReceive('free')->andReturnNull()->once();

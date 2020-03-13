@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions;
 
 use POData\Providers\Metadata\ResourceProperty;
@@ -35,15 +37,15 @@ class PropertyAccessExpression extends AbstractExpression
     /**
      * Creates new instance of PropertyAccessExpression.
      *
-     * @param ResourceProperty $resourceProperty The ResourceProperty
-     * @param PropertyAccessExpression|null $parent The parent expression
+     * @param  ResourceProperty              $resourceProperty The ResourceProperty
+     * @param  PropertyAccessExpression|null $parent           The parent expression
      * @throws \ReflectionException
      */
     public function __construct($resourceProperty, PropertyAccessExpression $parent = null)
     {
-        $this->parent = $parent;
-        $this->child = null;
-        $this->nodeType = ExpressionType::PROPERTYACCESS();
+        $this->parent           = $parent;
+        $this->child            = null;
+        $this->nodeType         = ExpressionType::PROPERTYACCESS();
         $this->resourceProperty = $resourceProperty;
         //If the property is primitive type, then _type will be primitive types implementing IType
         if ($resourceProperty->getResourceType()->getResourceTypeKind() == ResourceTypeKind::PRIMITIVE()) {
@@ -193,7 +195,7 @@ class PropertyAccessExpression extends AbstractExpression
         while (($basePropertyExpression->getChild() != null)
                 && ($basePropertyExpression->getChild()->getChild() != null)) {
             $basePropertyExpression = $basePropertyExpression->getChild();
-            $expression2 = new UnaryExpression(
+            $expression2            = new UnaryExpression(
                 new FunctionCallExpression(
                     FunctionDescription::isNullCheckFunction($basePropertyExpression->getType()),
                     [$basePropertyExpression]
@@ -210,7 +212,7 @@ class PropertyAccessExpression extends AbstractExpression
 
         if ($includeMe) {
             $basePropertyExpression = $basePropertyExpression->getChild();
-            $expression2 = new UnaryExpression(
+            $expression2            = new UnaryExpression(
                 new FunctionCallExpression(
                     FunctionDescription::isNullCheckFunction($basePropertyExpression->getType()),
                     [$basePropertyExpression]

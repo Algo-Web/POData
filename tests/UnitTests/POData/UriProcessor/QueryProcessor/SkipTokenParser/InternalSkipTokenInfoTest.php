@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\UriProcessor\QueryProcessor\SkipTokenParser;
 
 use Mockery as m;
@@ -40,7 +42,7 @@ class InternalSkipTokenInfoTest extends TestCase
         $searchArray = [0, 1, 2, 3, 4, 5, 6, 7];
 
         $expected = 4;
-        $actual = $foo->getIndexOfFirstEntryInTheNextPage($searchArray);
+        $actual   = $foo->getIndexOfFirstEntryInTheNextPage($searchArray);
         $this->assertEquals($expected, $actual);
     }
 
@@ -60,7 +62,7 @@ class InternalSkipTokenInfoTest extends TestCase
         $searchArray = [0, 1, 2, 3, 4, 5, 6, 7];
 
         $expected = -1;
-        $actual = $foo->getIndexOfFirstEntryInTheNextPage($searchArray);
+        $actual   = $foo->getIndexOfFirstEntryInTheNextPage($searchArray);
         $this->assertEquals($expected, $actual);
     }
 
@@ -80,7 +82,7 @@ class InternalSkipTokenInfoTest extends TestCase
         $searchArray = [0, 1, 2, 3, 4, 5, 6, 7];
 
         $expected = -1;
-        $actual = $foo->getIndexOfFirstEntryInTheNextPage($searchArray);
+        $actual   = $foo->getIndexOfFirstEntryInTheNextPage($searchArray);
         $this->assertEquals($expected, $actual);
     }
 
@@ -100,7 +102,7 @@ class InternalSkipTokenInfoTest extends TestCase
         $searchArray = [0, 1, 2, 3, 4, 5, 6, 7];
 
         $expected = 0;
-        $actual = $foo->getIndexOfFirstEntryInTheNextPage($searchArray);
+        $actual   = $foo->getIndexOfFirstEntryInTheNextPage($searchArray);
         $this->assertEquals($expected, $actual);
     }
 
@@ -120,7 +122,7 @@ class InternalSkipTokenInfoTest extends TestCase
         $searchArray = [0, 1, 2, 3, 4, 5, 6, 7];
 
         $expected = 5;
-        $actual = $foo->getIndexOfFirstEntryInTheNextPage($searchArray);
+        $actual   = $foo->getIndexOfFirstEntryInTheNextPage($searchArray);
         $this->assertEquals($expected, $actual);
     }
 }

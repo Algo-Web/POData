@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\Common\Messages;
 
 /**
- * Trait expandProjectionParser
+ * Trait expandProjectionParser.
  * @package POData\Common\Messages
  */
 trait expandProjectionParser
@@ -17,7 +19,7 @@ trait expandProjectionParser
     public static function expandedProjectionNodeArgumentTypeShouldBeProjection()
     {
         return 'The argument to ExpandedProjectionNode::addNode should be either ProjectionNode or'
-                .' ExpandedProjectionNode';
+                . ' ExpandedProjectionNode';
     }
 
     /**
@@ -69,7 +71,7 @@ trait expandProjectionParser
         $primitivePropertyName
     ) {
         return 'Property \'' . $primitivePropertyName . '\' on type \'' . $resourceTypeName
-                .'\' is of primitive type and cannot be used as a navigation property.';
+                . '\' is of primitive type and cannot be used as a navigation property.';
     }
 
     /**
@@ -87,7 +89,7 @@ trait expandProjectionParser
         $complexTypeName
     ) {
         return 'select doesn\'t support selection of properties of complex type. The property \'' . $complexTypeName
-                .'\' on type \'' . $resourceTypeName . '\' is a complex type.';
+                . '\' on type \'' . $resourceTypeName . '\' is a complex type.';
     }
 
     /**
@@ -103,7 +105,7 @@ trait expandProjectionParser
     public static function expandProjectionParserBagPropertyAsInnerSelectSegment($resourceTypeName, $bagPropertyName)
     {
         return 'The selection from property \'' . $bagPropertyName . '\' on type \'' . $resourceTypeName
-                .'\' is not valid. The select query option does not support selection items from a bag property.';
+                . '\' is not valid. The select query option does not support selection items from a bag property.';
     }
 
     /**
@@ -129,6 +131,6 @@ trait expandProjectionParser
     public static function expandProjectionParserPropertyWithoutMatchingExpand($propertyName)
     {
         return 'Only navigation properties specified in expand option can be traversed in select option.  In order to'
-                .' traverse the navigation property \'' . $propertyName . '\', it should be first expanded';
+                . ' traverse the navigation property \'' . $propertyName . '\', it should be first expanded';
     }
 }

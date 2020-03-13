@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\UriProcessor\QueryProcessor\OrderByParser;
 
 use POData\Common\Messages;
@@ -53,7 +55,7 @@ class OrderByPathSegment
         }
 
         $this->orderBySubPathSegments = $orderBySubPathSegments;
-        $this->isAscending = $isAscending;
+        $this->isAscending            = $isAscending;
     }
 
     /**

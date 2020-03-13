@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\OperationContext\Web;
 
 use Illuminate\Http\Request;
@@ -139,7 +141,7 @@ class ServiceHostTest extends TestCase
     public function testValidateQueryParametersStartWithDollarButNotOData()
     {
         $expected = 'The query parameter \'$impostorkey\' begins with a system-reserved'
-                    .' \'$\' character but is not recognized.';
+                    . ' \'$\' character but is not recognized.';
         $actual = null;
 
         $request = m::mock(Request::class);
@@ -163,7 +165,7 @@ class ServiceHostTest extends TestCase
     public function testValidateQueryParametersEmptyODataValue()
     {
         $expected = 'Query parameter \'$skip\' is specified, but it should be specified with value.';
-        $actual = null;
+        $actual   = null;
 
         $request = m::mock(Request::class);
         $request->shouldReceive('getMethod')->andReturn('GET');
@@ -202,7 +204,7 @@ class ServiceHostTest extends TestCase
     public function testSetBadResponseCodeNonNumeric()
     {
         $expected = 'Invalid, non-numeric, status code: abc';
-        $actual = null;
+        $actual   = null;
 
         $request = m::mock(Request::class);
         $request->shouldReceive('getMethod')->andReturn('GET');
@@ -225,7 +227,7 @@ class ServiceHostTest extends TestCase
     public function testSetBadResponseCodeTooBig()
     {
         $expected = 'Invalid status code: 600';
-        $actual = null;
+        $actual   = null;
 
         $request = m::mock(Request::class);
         $request->shouldReceive('getMethod')->andReturn('GET');
@@ -248,7 +250,7 @@ class ServiceHostTest extends TestCase
     public function testSetBadResponseCodeTooSmall()
     {
         $expected = 'Invalid status code: 99';
-        $actual = null;
+        $actual   = null;
 
         $request = m::mock(Request::class);
         $request->shouldReceive('getMethod')->andReturn('GET');
@@ -309,7 +311,7 @@ class ServiceHostTest extends TestCase
         $request->shouldReceive('fullUrl')->andReturn('http://localhost/odata.svc');
 
         $context = new IlluminateOperationContext($request);
-        $stream = 'stream';
+        $stream  = 'stream';
 
         $host = new ServiceHost($context, $request);
         $host->setResponseStream($stream);
@@ -324,7 +326,7 @@ class ServiceHostTest extends TestCase
         $request->shouldReceive('all')->andReturn(['$top' => 'value', '$skip' => '']);
         $request->shouldReceive('fullUrl')->andReturn('http://localhost/odata.svc');
 
-        $context = new IlluminateOperationContext($request);
+        $context  = new IlluminateOperationContext($request);
         $location = 'location';
 
         $host = new ServiceHost($context, $request);
@@ -337,7 +339,7 @@ class ServiceHostTest extends TestCase
     public function testGetAbsoluteRequestUriWhenMalformed()
     {
         $expected = 'Bad Request - The url \'BORK BORK BORK!\' is malformed.';
-        $actual = null;
+        $actual   = null;
 
         $request = m::mock(Request::class);
         $request->shouldReceive('getMethod')->andReturn('GET');
@@ -358,7 +360,7 @@ class ServiceHostTest extends TestCase
     public function testSetBadResponseLength()
     {
         $expected = 'ContentLength: abc is invalid';
-        $actual = null;
+        $actual   = null;
 
         $request = m::mock(Request::class);
         $request->shouldReceive('getMethod')->andReturn('GET');
@@ -406,7 +408,7 @@ class ServiceHostTest extends TestCase
 
         $context = new IlluminateOperationContext($request);
 
-        $host = new ServiceHost($context, $request);
+        $host   = new ServiceHost($context, $request);
         $actual = $host->getRequestContentType();
         $this->assertEquals($expected, $actual);
     }
@@ -424,7 +426,7 @@ class ServiceHostTest extends TestCase
 
         $context = new IlluminateOperationContext($request);
 
-        $host = new ServiceHost($context, $request);
+        $host   = new ServiceHost($context, $request);
         $actual = $host->getRequestAcceptCharSet();
         $this->assertEquals($expected, $actual);
     }
@@ -440,7 +442,7 @@ class ServiceHostTest extends TestCase
 
         $context = new IlluminateOperationContext($request);
 
-        $host = new ServiceHost($context, $request);
+        $host   = new ServiceHost($context, $request);
         $actual = $host->getAbsoluteRequestUriAsString();
         $this->assertEquals($expected, $actual);
     }
@@ -448,7 +450,7 @@ class ServiceHostTest extends TestCase
     public function testGetAbsoluteRequestUriMalformed()
     {
         $malformedUrl = 'foobar';
-        $expected = 'Bad Request - The url \'foobar\' is malformed.';
+        $expected     = 'Bad Request - The url \'foobar\' is malformed.';
 
         $host = m::mock(ServiceHost::class)->makePartial();
         $host->shouldReceive('getOperationContext->incomingRequest->getRawUrl')->andReturn($malformedUrl)->once();
@@ -473,7 +475,7 @@ class ServiceHostTest extends TestCase
 
         $context = new IlluminateOperationContext($request);
 
-        $host = new ServiceHost($context, $request);
+        $host   = new ServiceHost($context, $request);
         $actual = $host->getAbsoluteServiceUriAsString();
         $this->assertEquals($expected, $actual);
     }
@@ -481,7 +483,7 @@ class ServiceHostTest extends TestCase
     public function testDoubledQueryParameters()
     {
         $expected = 'Query parameter \'$top\' is specified, but it should be specified exactly once.';
-        $actual = null;
+        $actual   = null;
 
         $request = m::mock(Request::class);
         $request->shouldReceive('getMethod')->andReturn('GET');
@@ -504,7 +506,7 @@ class ServiceHostTest extends TestCase
     public function testEmptyLabelWithSystemReservedValueQueryParameters()
     {
         $expected = 'The query parameter \'$value\' begins with a system-reserved \'$\' character'
-                    .' but is not recognized.';
+                    . ' but is not recognized.';
         $actual = null;
 
         $request = m::mock(Request::class);
@@ -528,7 +530,7 @@ class ServiceHostTest extends TestCase
     public function testEmptyLabelWithOdataValueQueryParameters()
     {
         $expected = 'Query parameter \'$orderby\' is specified, but it should be specified with value.';
-        $actual = null;
+        $actual   = null;
 
         $request = m::mock(Request::class);
         $request->shouldReceive('getMethod')->andReturn('GET');
@@ -551,7 +553,7 @@ class ServiceHostTest extends TestCase
     public function testSetServiceUriWithMalformedUri()
     {
         $expected = 'Malformed base service uri in the configuration file (should end with .svc, there should'
-                    .' not be query or fragment in the base service uri)';
+                    . ' not be query or fragment in the base service uri)';
         $actual = null;
 
         $request = m::mock(Request::class);
@@ -575,7 +577,7 @@ class ServiceHostTest extends TestCase
     public function testSetServiceUriWithMissingServiceLink()
     {
         $expected = 'Malformed base service uri in the configuration file (should end with .svc, there should'
-                    .' not be query or fragment in the base service uri)';
+                    . ' not be query or fragment in the base service uri)';
         $actual = null;
 
         $request = m::mock(Request::class);
@@ -599,7 +601,7 @@ class ServiceHostTest extends TestCase
     public function testSetServiceWithInvalidRelativeUrl()
     {
         $expected = 'The request uri http://localhost/odata.svc/$metadata is not valid as it is not based'
-                    .' on the configured relative uri /public/odata.svc';
+                    . ' on the configured relative uri /public/odata.svc';
         $actual = null;
 
         $request = m::mock(Request::class);
@@ -623,7 +625,7 @@ class ServiceHostTest extends TestCase
 
     public function testSetServiceWithMismatchedRelativeUrl()
     {
-        $expected = 'The request uri http://localhost/private/odata.svc is not valid as it is not based'.
+        $expected = 'The request uri http://localhost/private/odata.svc is not valid as it is not based' .
                     ' on the configured relative uri /public/odata.svc';
         $actual = null;
 
@@ -649,7 +651,7 @@ class ServiceHostTest extends TestCase
     public function testSetServiceWithMatchedRelativeUrlAndNonstandardHttpPort()
     {
         $expected = 'http://localhost:81/private/odata.svc';
-        $actual = null;
+        $actual   = null;
 
         $request = m::mock(Request::class);
         $request->shouldReceive('getMethod')->andReturn('GET');
@@ -670,7 +672,7 @@ class ServiceHostTest extends TestCase
     public function testSetServiceWithMatchedRelativeUrlAndNonstandardHttpsPort()
     {
         $expected = 'https://localhost:445/private/odata.svc';
-        $actual = null;
+        $actual   = null;
 
         $request = m::mock(Request::class);
         $request->shouldReceive('getMethod')->andReturn('GET');

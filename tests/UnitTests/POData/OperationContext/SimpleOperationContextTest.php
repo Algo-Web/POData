@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UnitTests\POData\OperationContext;
 
 use Mockery as m;
@@ -13,7 +15,7 @@ class SimpleOperationContextTest extends TestCase
     public function testCreateSimpleOperationContext()
     {
         $request = new SimpleRequestAdapter([]);
-        
+
         $foo = new SimpleOperativeContext($request);
         $this->assertTrue($foo->incomingRequest() instanceof SimpleRequestAdapter);
         $this->assertTrue($foo->outgoingResponse() instanceof OutgoingResponse);

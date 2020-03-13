@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use POData\Common\ODataException;
 use POData\Common\Url;
 use POData\Common\Version;
@@ -15,23 +17,23 @@ class UriProcessorExecutionTest extends PHPUnit_Framework_TestCase
      */
     public function testCombinationWithAllQueryStringOptions()
     {
-        $serviceUri = 'http://localhost:8083/NorthWindDataService.svc/';
+        $serviceUri   = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Customers(CustomerID=\'ALFKI\', CompanyName=\'Alfreds Futterkiste\')/Orders(10643)/Customer/Orders(10692)/Order_Details(OrderID=10692,ProductID=63)/Product/Order_Details(OrderID=10692,ProductID=63)/Order/Customer/Orders';
-        $requestUri = $serviceUri.$resourcePath;
+        $requestUri   = $serviceUri . $resourcePath;
 
         $hostInfo = ['AbsoluteServiceUri'         => new Url($serviceUri),
-                          'AbsoluteRequestUri'    => new Url($requestUri),
-                          'QueryString'           => '$filter=OrderID gt 10836 and OrderID le 20000&$orderby=CustomerID&$top=7&$skip=1&$inlinecount=allpages',
-                          'DataServiceVersion'    => new Version(2, 0),
-                          'MaxDataServiceVersion' => new Version(2, 0), ];
+            'AbsoluteRequestUri'    => new Url($requestUri),
+            'QueryString'           => '$filter=OrderID gt 10836 and OrderID le 20000&$orderby=CustomerID&$top=7&$skip=1&$inlinecount=allpages',
+            'DataServiceVersion'    => new Version(2, 0),
+            'MaxDataServiceVersion' => new Version(2, 0), ];
 
-        $host = new DataServiceHost1($hostInfo);
+        $host        = new DataServiceHost1($hostInfo);
         $dataService = new NorthWindDataService1();
         $dataService->setHost($host);
         $queryProcessor = $dataService->handleRequest();
         $queryProcessor->execute();
 
-        $result = $queryProcessor->getRequestDescription()->getLastSegmentDescriptor()->getResult();
+        $result  = $queryProcessor->getRequestDescription()->getLastSegmentDescriptor()->getResult();
         $isarray = is_array($result);
         $this->assertTrue($isarray);
     }
@@ -41,17 +43,17 @@ class UriProcessorExecutionTest extends PHPUnit_Framework_TestCase
      */
     public function testCombinationWithAllQueryStringOptionsWithoutSkip()
     {
-        $serviceUri = 'http://localhost:8083/NorthWindDataService.svc/';
+        $serviceUri   = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Customers(CustomerID=\'ALFKI\', CompanyName=\'Alfreds Futterkiste\')/Orders(10643)/Customer/Orders(10692)/Order_Details(OrderID=10692,ProductID=63)/Product/Order_Details(OrderID=10692,ProductID=63)/Order/Customer/Orders';
-        $requestUri = $serviceUri.$resourcePath;
+        $requestUri   = $serviceUri . $resourcePath;
 
         $hostInfo = ['AbsoluteServiceUri'         => new Url($serviceUri),
-                          'AbsoluteRequestUri'    => new Url($requestUri),
-                          'QueryString'           => '$filter=OrderID gt 10600 and OrderID le 20000&$orderby=CustomerID&$top=7&$inlinecount=allpages',
-                          'DataServiceVersion'    => new Version(2, 0),
-                          'MaxDataServiceVersion' => new Version(2, 0), ];
+            'AbsoluteRequestUri'    => new Url($requestUri),
+            'QueryString'           => '$filter=OrderID gt 10600 and OrderID le 20000&$orderby=CustomerID&$top=7&$inlinecount=allpages',
+            'DataServiceVersion'    => new Version(2, 0),
+            'MaxDataServiceVersion' => new Version(2, 0), ];
 
-        $host = new DataServiceHost1($hostInfo);
+        $host        = new DataServiceHost1($hostInfo);
         $dataService = new NorthWindDataService1();
         $dataService->setHost($host);
         $queryProcessor = $dataService->handleRequest();
@@ -65,17 +67,17 @@ class UriProcessorExecutionTest extends PHPUnit_Framework_TestCase
      */
     public function testCombinationWithAllQueryStringOptionsWithCount()
     {
-        $serviceUri = 'http://localhost:8083/NorthWindDataService.svc/';
+        $serviceUri   = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Customers(CustomerID=\'ALFKI\', CompanyName=\'Alfreds Futterkiste\')/Orders(10643)/Customer/Orders(10692)/Order_Details(OrderID=10692,ProductID=63)/Product/Order_Details(OrderID=10692,ProductID=63)/Order/Customer/Orders/$count';
-        $requestUri = $serviceUri.$resourcePath;
+        $requestUri   = $serviceUri . $resourcePath;
 
         $hostInfo = ['AbsoluteServiceUri'         => new Url($serviceUri),
-                          'AbsoluteRequestUri'    => new Url($requestUri),
-                          'QueryString'           => '$filter=OrderID gt 10600 and OrderID le 20000&$orderby=CustomerID&$top=7&$skip=1',
-                          'DataServiceVersion'    => new Version(2, 0),
-                          'MaxDataServiceVersion' => new Version(2, 0), ];
+            'AbsoluteRequestUri'    => new Url($requestUri),
+            'QueryString'           => '$filter=OrderID gt 10600 and OrderID le 20000&$orderby=CustomerID&$top=7&$skip=1',
+            'DataServiceVersion'    => new Version(2, 0),
+            'MaxDataServiceVersion' => new Version(2, 0), ];
 
-        $host = new DataServiceHost1($hostInfo);
+        $host        = new DataServiceHost1($hostInfo);
         $dataService = new NorthWindDataService1();
         $dataService->setHost($host);
         $queryProcessor = $dataService->handleRequest();
@@ -89,17 +91,17 @@ class UriProcessorExecutionTest extends PHPUnit_Framework_TestCase
      */
     public function testResourceNotFound()
     {
-        $serviceUri = 'http://localhost:8083/NorthWindDataService.svc/';
+        $serviceUri   = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Orders(10247)';
-        $requestUri = $serviceUri.$resourcePath;
+        $requestUri   = $serviceUri . $resourcePath;
 
         $hostInfo = ['AbsoluteServiceUri'         => new Url($serviceUri),
-                          'AbsoluteRequestUri'    => new Url($requestUri),
-                          'QueryString'           => null,
-                          'DataServiceVersion'    => new Version(2, 0),
-                          'MaxDataServiceVersion' => new Version(2, 0), ];
+            'AbsoluteRequestUri'    => new Url($requestUri),
+            'QueryString'           => null,
+            'DataServiceVersion'    => new Version(2, 0),
+            'MaxDataServiceVersion' => new Version(2, 0), ];
 
-        $host = new DataServiceHost1($hostInfo);
+        $host        = new DataServiceHost1($hostInfo);
         $dataService = new NorthWindDataService1();
         $dataService->setHost($host);
         $exceptionThrown = false;
@@ -118,17 +120,17 @@ class UriProcessorExecutionTest extends PHPUnit_Framework_TestCase
      */
     public function testCombinationWithAllQueryStringOptionsForEntity()
     {
-        $serviceUri = 'http://localhost:8083/NorthWindDataService.svc/';
+        $serviceUri   = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Customers(CustomerID=\'ALFKI\', CompanyName=\'Alfreds Futterkiste\')/Orders(10643)/Customer/Orders(10692)/Order_Details(OrderID=10692,ProductID=63)/Product/Order_Details(OrderID=10692,ProductID=63)/Order/Customer/Orders(10835)';
-        $requestUri = $serviceUri.$resourcePath;
+        $requestUri   = $serviceUri . $resourcePath;
 
         $hostInfo = ['AbsoluteServiceUri'         => new Url($serviceUri),
-                          'AbsoluteRequestUri'    => new Url($requestUri),
-                          'QueryString'           => '$filter=OrderID gt 10836 and OrderID le 20000',
-                          'DataServiceVersion'    => new Version(2, 0),
-                          'MaxDataServiceVersion' => new Version(2, 0), ];
+            'AbsoluteRequestUri'    => new Url($requestUri),
+            'QueryString'           => '$filter=OrderID gt 10836 and OrderID le 20000',
+            'DataServiceVersion'    => new Version(2, 0),
+            'MaxDataServiceVersion' => new Version(2, 0), ];
 
-        $host = new DataServiceHost1($hostInfo);
+        $host        = new DataServiceHost1($hostInfo);
         $dataService = new NorthWindDataService1();
         $dataService->setHost($host);
         $queryProcessor = $dataService->handleRequest();
@@ -142,17 +144,17 @@ class UriProcessorExecutionTest extends PHPUnit_Framework_TestCase
      */
     public function testGetComplexPropertyValue()
     {
-        $serviceUri = 'http://localhost:8083/NorthWindDataService.svc/';
+        $serviceUri   = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Customers(CustomerID=\'ALFKI\', CompanyName=\'Alfreds Futterkiste\')/Address/Address2/LineNumber2/$value';
-        $requestUri = $serviceUri.$resourcePath;
+        $requestUri   = $serviceUri . $resourcePath;
 
         $hostInfo = ['AbsoluteServiceUri'         => new Url($serviceUri),
-                          'AbsoluteRequestUri'    => new Url($requestUri),
-                          'QueryString'           => null,
-                          'DataServiceVersion'    => new Version(2, 0),
-                          'MaxDataServiceVersion' => new Version(2, 0), ];
+            'AbsoluteRequestUri'    => new Url($requestUri),
+            'QueryString'           => null,
+            'DataServiceVersion'    => new Version(2, 0),
+            'MaxDataServiceVersion' => new Version(2, 0), ];
 
-        $host = new DataServiceHost1($hostInfo);
+        $host        = new DataServiceHost1($hostInfo);
         $dataService = new NorthWindDataService1();
         $dataService->setHost($host);
         $queryProcessor = $dataService->handleRequest();
@@ -166,17 +168,17 @@ class UriProcessorExecutionTest extends PHPUnit_Framework_TestCase
      */
     public function testCombinationOfEntitySetWithSkipToken()
     {
-        $serviceUri = 'http://localhost:8083/NorthWindDataService.svc/';
+        $serviceUri   = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Customers(CustomerID=\'ALFKI\', CompanyName=\'Alfreds Futterkiste\')/Orders(10643)/Customer/Orders(10692)/Order_Details(OrderID=10692,ProductID=63)/Product/Order_Details(OrderID=10692,ProductID=63)/Order/Customer/Orders';
-        $requestUri = $serviceUri.$resourcePath;
+        $requestUri   = $serviceUri . $resourcePath;
 
         $hostInfo = ['AbsoluteServiceUri'         => new Url($serviceUri),
-                          'AbsoluteRequestUri'    => new Url($requestUri),
-                          'QueryString'           => '$skiptoken=10835',
-                          'DataServiceVersion'    => new Version(2, 0),
-                          'MaxDataServiceVersion' => new Version(2, 0), ];
+            'AbsoluteRequestUri'    => new Url($requestUri),
+            'QueryString'           => '$skiptoken=10835',
+            'DataServiceVersion'    => new Version(2, 0),
+            'MaxDataServiceVersion' => new Version(2, 0), ];
 
-        $host = new DataServiceHost1($hostInfo);
+        $host        = new DataServiceHost1($hostInfo);
         $dataService = new NorthWindDataService1();
         $dataService->setHost($host);
         $queryProcessor = $dataService->handleRequest();
@@ -191,12 +193,12 @@ class UriProcessorExecutionTest extends PHPUnit_Framework_TestCase
     public function testInvalidBaseUri()
     {
         $hostInfo = ['AbsoluteServiceUri'         => new Url('http://localhost:8083/NorthWindDataService.svc/'),
-                          'AbsoluteRequestUri'    => new Url('http://localhost:8085/NorthWindDataService.svc/'),
-                          'QueryString'           => null,
-                          'DataServiceVersion'    => new Version(2, 0),
-                          'MaxDataServiceVersion' => new Version(2, 0), ];
+            'AbsoluteRequestUri'    => new Url('http://localhost:8085/NorthWindDataService.svc/'),
+            'QueryString'           => null,
+            'DataServiceVersion'    => new Version(2, 0),
+            'MaxDataServiceVersion' => new Version(2, 0), ];
 
-        $host = new DataServiceHost1($hostInfo);
+        $host        = new DataServiceHost1($hostInfo);
         $dataService = new NorthWindDataService1();
         $dataService->setHost($host);
         $exceptionThrown = false;

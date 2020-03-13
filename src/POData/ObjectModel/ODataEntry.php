@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\ObjectModel;
 
 use AlgoWeb\ODataMetadata\MetadataManager;
@@ -176,9 +178,9 @@ class ODataEntry
     {
         $this->type = $type;
         if (null !== $type) {
-            $rawTerm = $type->term;
-            $termArray = explode('.', $rawTerm);
-            $final = $termArray[count($termArray)-1];
+            $rawTerm               = $type->term;
+            $termArray             = explode('.', $rawTerm);
+            $final                 = $termArray[count($termArray)-1];
             $this->resourceSetName = MetadataManager::getResourceSetNameFromResourceType($final);
         }
     }
@@ -207,7 +209,7 @@ class ODataEntry
         $this->links = [];
         foreach ($links as $link) {
             if ('edit' == $link->name) {
-                $this->editLink = $link;
+                $this->editLink        = $link;
                 $this->resourceSetName = explode('(', $link->url)[0];
                 continue;
             }
@@ -233,7 +235,7 @@ class ODataEntry
     public function setMediaLinks(array $mediaLinks)
     {
         $this->mediaLinks = [];
-        $editLink = null;
+        $editLink         = null;
         foreach ($mediaLinks as $mediaLink) {
             $this->handleMediaLinkEntry($mediaLink, $editLink);
         }
@@ -251,7 +253,7 @@ class ODataEntry
     {
         if ('edit-media' == $mediaLink->rel) {
             $this->isMediaLinkEntry = true;
-            $this->mediaLink = $mediaLink;
+            $this->mediaLink        = $mediaLink;
         }
         if (ODataMediaLink::MEDIARESOURCE_BASE == substr($mediaLink->rel, 0, 68)) {
             $this->mediaLinks[] = $mediaLink;
@@ -283,7 +285,7 @@ class ODataEntry
     }
 
     /**
-     * @param string|null $msg
+     * @param  string|null $msg
      * @return bool
      */
     public function isOk(&$msg = null)

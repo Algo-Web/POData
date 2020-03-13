@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace POData\Common\Messages;
 
 /**
- * Trait metadataAssociationType
+ * Trait metadataAssociationType.
  * @package POData\Common\Messages
  */
 trait metadataAssociationType
@@ -39,10 +41,10 @@ trait metadataAssociationType
         $entitySetName
     ) {
         return 'ResourceAssociationSets \'' . $resourceSet1Name . '\' and \'' . $resourceSet2Name . '\' have a'
-                .' ResourceAssociationSetEnd referring to the EntitySet \'' . $entitySetName . '\' through the same'
-                .' AssociationType. Make sure that if two or more AssociationSets refer to the same AssociationType,'
-                .' the ends must not refer to the same EntitySet. (this could happen if multiple entity sets have'
-                .' entity types that have a common ancestor and the ancestor has a property of derived entity types)';
+                . ' ResourceAssociationSetEnd referring to the EntitySet \'' . $entitySetName . '\' through the same'
+                . ' AssociationType. Make sure that if two or more AssociationSets refer to the same AssociationType,'
+                . ' the ends must not refer to the same EntitySet. (this could happen if multiple entity sets have'
+                . ' entity types that have a common ancestor and the ancestor has a property of derived entity types)';
     }
 
     /**
@@ -56,6 +58,6 @@ trait metadataAssociationType
     public static function metadataAssociationTypeSetInvalidGetDerivedTypesReturnType($resourceTypeName)
     {
         return 'Return type of IDSMP::getDerivedTypes should be either null or array of \'ResourceType\', check'
-                .' implementation of IDSMP::getDerivedTypes for the resource type \'' . $resourceTypeName . '\'.';
+                . ' implementation of IDSMP::getDerivedTypes for the resource type \'' . $resourceTypeName . '\'.';
     }
 }
