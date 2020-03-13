@@ -60,9 +60,9 @@ class ErrorHandler
             $service->getHost()->setResponseStatusCode($exception->getStatusCode());
             $service->getHost()->setResponseContentType($responseContentType);
             if (strcasecmp($responseContentType, MimeTypes::MIME_APPLICATION_XML) == 0) {
-                $responseBody = AtomODataWriter::serializeException($exception, true);
+                $responseBody = AtomODataWriter::serializeException($exception);
             } else {
-                $responseBody = JsonODataV2Writer::serializeException($exception, true);
+                $responseBody = JsonODataV2Writer::serializeException($exception);
             }
 
             $service->getHost()->getOperationContext()->outgoingResponse()->setStream($responseBody);

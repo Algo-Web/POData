@@ -1366,7 +1366,7 @@ class JsonODataV1WriterTest extends TestCase
         $expected = '{' . PHP_EOL . '    "error":{' . PHP_EOL . '        "code":"500","message":{' . PHP_EOL;
         $expected .= '            "lang":"en-US","value":"BORK BORK BORK!"' . PHP_EOL;
         $expected .= '        }' . PHP_EOL . '    }' . PHP_EOL . '}';
-        $actual   = JsonODataV1Writer::serializeException($exception, false);
+        $actual   = JsonODataV1Writer::serializeException($exception);
         $expected = preg_replace('~(*BSR_ANYCRLF)\R~', "\r\n", $expected);
         $actual   = preg_replace('~(*BSR_ANYCRLF)\R~', "\r\n", $actual);
         $this->assertEquals($expected, $actual);

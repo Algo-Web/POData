@@ -417,14 +417,13 @@ class JsonODataV1Writer implements IODataWriter
      * serialize exception.
      *
      * @param ODataException $exception               Exception to serialize
-     * @param bool           $serializeInnerException if set to true
      *
      * serialize the inner exception if $exception is an ODataException
      *
      * @throws \Exception
      * @return string
      */
-    public static function serializeException(ODataException $exception, $serializeInnerException)
+    public static function serializeException(ODataException $exception)
     {
         $writer = new JsonWriter('');
         // Wrapper for error.

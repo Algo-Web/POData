@@ -655,12 +655,10 @@ class AtomODataWriter implements IODataWriter
      * Serialize the exception.
      *
      * @param ODataException $exception               Exception to serialize
-     * @param bool           $serializeInnerException if set to true,
-     *                                                serialize the inner exception if $exception is an ODataException
      *
      * @return string
      */
-    public static function serializeException(ODataException $exception, $serializeInnerException)
+    public static function serializeException(ODataException $exception)
     {
         $xmlWriter = new \XMLWriter();
         $xmlWriter->openMemory();
