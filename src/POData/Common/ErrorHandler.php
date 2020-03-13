@@ -25,7 +25,6 @@ class ErrorHandler
     public static function handleException(\Exception $exception, IService $service)
     {
         $acceptTypesText     = $service->getHost()->getRequestAccept();
-        $responseContentType = null;
         try {
             $responseContentType = HttpProcessUtility::selectMimeType(
                 $acceptTypesText,
@@ -43,7 +42,7 @@ class ErrorHandler
             // Never come here
         }
 
-        if (null === $responseContentType) {
+        if (!isset($responseContentType)) {
             $responseContentType = MimeTypes::MIME_APPLICATION_XML;
         }
 

@@ -86,8 +86,6 @@ class ExpressionParser2 extends ExpressionParser
         $expressionParser2 = new self($text, $resourceType, $expressionProvider instanceof PHPExpressionProvider);
         $expressionTree    = $expressionParser2->parseFilter();
 
-        $expressionAsString = null;
-
         $expressionProvider->setResourceType($resourceType);
         $expressionProcessor = new ExpressionProcessor($expressionProvider);
 
@@ -96,7 +94,7 @@ class ExpressionParser2 extends ExpressionParser
         } catch (\InvalidArgumentException $invalidArgumentException) {
             throw ODataException::createInternalServerError($invalidArgumentException->getMessage());
         }
-        $expressionAsString = (null !== $expressionAsString) ? $expressionAsString : '';
+        $expressionAsString = (isset($expressionAsString)) ? $expressionAsString : '';
         return new FilterInfo(
             $expressionParser2->navigationPropertiesUsedInTheExpression,
             $expressionAsString
