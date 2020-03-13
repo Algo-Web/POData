@@ -12,12 +12,14 @@ use POData\Common\ODataException;
 use POData\Common\Url;
 use POData\Common\Version;
 use POData\ObjectModel\ODataEntry;
+use POData\ObjectModel\ODataFeed;
 use POData\OperationContext\IHTTPRequest;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Metadata\ResourceStreamInfo;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Query\QueryType;
+use POData\Readers\ODataReaderRegistry;
 use POData\UriProcessor\Interfaces\IUriProcessor;
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\RootProjectionNode;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
@@ -217,6 +219,10 @@ class RequestDescription
      * @var IUriProcessor
      */
     private $uriProcessor;
+    /**
+     * @var ODataReaderRegistry
+     */
+    private $readerRegistry;
 
     /**
      * @param  SegmentDescriptor[]                              $segmentDescriptors Description of segments in the resource path
@@ -226,6 +232,7 @@ class RequestDescription
      * @param  string|null                                      $maxRequestVersion
      * @param  string|null                                      $dataType
      * @param  IHTTPRequest|null                                $payload
+     * @param  ODataReaderRegistry                              $readerRegistry
      * @throws ODataException
      * @throws \Doctrine\Common\Annotations\AnnotationException
      */
@@ -236,8 +243,10 @@ class RequestDescription
         $requestVersion,
         $maxRequestVersion,
         $dataType = null,
-        IHTTPRequest $payload = null
+        IHTTPRequest $payload = null,
+        ODataReaderRegistry $readerRegistry = null
     ) {
+        $this->readerRegistry = $readerRegistry;
         $this->segments     = $segmentDescriptors;
         $this->segmentCount = count($this->segments);
         $this->requestUrl   = $requestUri;
@@ -298,34 +307,25 @@ class RequestDescription
      * Define request data from body.
      *
      * @param  string                                           $dataType
-     * @throws \Doctrine\Common\Annotations\AnnotationException
+     * @return void
      */
     private function readData($dataType)
     {
         $string = $this->data;
-        if (MimeTypes::MIME_APPLICATION_ATOM === $dataType || MimeTypes::MIME_APPLICATION_XML === $dataType) {
-            if (is_array($string) && 1 == count($string)) {
-                $string = $string[0];
-            }
-            $string = strval($string);
-            if (0 == strlen(trim($string))) {
-                return;
-            }
-            $ymlDir = dirname(dirname(dirname(__DIR__))) . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR .
-                'POData' . DIRECTORY_SEPARATOR . 'Writers' . DIRECTORY_SEPARATOR . 'YML';
-            $serialize =
-                SerializerBuilder::create()
-                    ->addMetadataDir($ymlDir)
-                    ->build();
-            $objectType = strpos($this->requestUrl->getUrlAsString(), '$links') !== false
-                ? 'POData\ObjectModel\ODataURL' : 'POData\ObjectModel\ODataEntry';
-            $this->data = $serialize->deserialize($string, $objectType, 'xml');
-            $msg        = null;
-            assert($this->data instanceof $objectType);
-            assert($this->data->isOk($msg), $msg);
-        } elseif ($dataType === MimeTypes::MIME_APPLICATION_JSON) {
-            $data       = !is_array($string) ? json_decode($string, true) : $string;
+        if ($dataType === MimeTypes::MIME_APPLICATION_JSON) {
+            $data = !is_array($string) ? json_decode($string, true) : $string;
             $this->data = $data;
+            return;
+        }
+        if (is_array($string) && 1 == count($string)) {
+            $string = $string[0];
+        }
+        if (0 == strlen(trim($string))) {
+            return;
+        }
+        $reader = $this->readerRegistry->getReader($dataType);
+        if ($reader !== null) {
+            $this->data = $reader->read($string);
         }
     }
 
