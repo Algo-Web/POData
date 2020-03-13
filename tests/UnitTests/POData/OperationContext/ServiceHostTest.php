@@ -202,26 +202,6 @@ class ServiceHostTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function testSetBadResponseCodeNonNumeric()
-    {
-        $expected = 'Invalid, non-numeric, status code: abc';
-        $actual   = null;
-
-        $request = m::mock(Request::class);
-        $request->shouldReceive('getMethod')->andReturn('GET');
-        $request->shouldReceive('all')->andReturn(['$top' => 'value', '$skip' => '']);
-        $request->shouldReceive('fullUrl')->andReturn('http://localhost/odata.svc');
-
-        $context = new IlluminateOperationContext($request);
-
-        $host = new ServiceHost($context, $request);
-
-        $this->expectException(TypeError::class);
-        $this->expectExceptionMessage('must be of the type int, string given');
-
-        $host->setResponseStatusCode('abc');
-    }
-
     public function testSetBadResponseCodeTooBig()
     {
         $expected = 'Invalid status code: 600';
