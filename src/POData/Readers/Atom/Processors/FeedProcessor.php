@@ -32,12 +32,7 @@ class FeedProcessor extends BaseNodeHandler
             strtolower(ODataConstants::ATOM_NAMESPACE) === strtolower($tagNamespace) ||
             strtolower(ODataConstants::ODATA_METADATA_NAMESPACE) === strtolower($tagNamespace)
         );
-        $AtomOrMetadata = strtolower(ODataConstants::ATOM_NAMESPACE) === strtolower($tagNamespace) ? 'Atom' : 'Metadata';
-        $method = 'handleStart' . $AtomOrMetadata . ucfirst(strtolower($tagName));
-        if (!method_exists($this, $method)) {
-            $this->onParseError('Atom', $AtomOrMetadata, $tagName);
-        }
-        $this->{$method}($attributes);
+        parent::handleStartNode($tagNamespace, $tagName, $attributes);
     }
     public function handleStartAtomId(){
         $this->enqueueEnd(function (){

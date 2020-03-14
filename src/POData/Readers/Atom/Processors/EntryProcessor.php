@@ -30,8 +30,6 @@ class EntryProcessor extends BaseNodeHandler
      */
     private $subProcessor;
 
-
-
     /** @noinspection PhpUnusedParameterInspection */
     public function __construct()
     {
@@ -45,11 +43,7 @@ class EntryProcessor extends BaseNodeHandler
             $this->subProcessor->handleStartNode($tagNamespace, $tagName, $attributes);
             return;
         }
-        $method = 'handleStartAtom' . ucfirst(strtolower($tagName));
-        if (!method_exists($this, $method)) {
-            $this->onParseError('Atom', 'start', $tagName);
-        }
-        $this->{$method}($attributes);
+        parent::handleStartNode($tagNamespace, $tagName, $attributes);
     }
 
     public function handleEndNode($tagNamespace, $tagName)
@@ -68,14 +62,13 @@ class EntryProcessor extends BaseNodeHandler
     }
     protected function handleStartAtomTitle($attributes)
     {
-        $this->titleType = $this->arrayKeyOrDefault(
+        $titleType = $this->arrayKeyOrDefault(
             $attributes,
             ODataConstants::ATOM_TYPE_ATTRIBUTE_NAME,
             ''
         );
-        $this->enqueueEnd(function () {
-            $this->oDataEntry->title = new ODataTitle($this->popCharData(), $this->titleType);
-            $this->titleType         = null;
+        $this->enqueueEnd(function () use ($titleType) {
+            $this->oDataEntry->title = new ODataTitle($this->popCharData(), $titleType);
         });
     }
     protected function handleStartAtomSummary()
@@ -134,9 +127,6 @@ class EntryProcessor extends BaseNodeHandler
     {
         $this->enqueueEnd($this->doNothing());
     }
-
-
-
 
     public function handleChildComplete($objectModel)
     {

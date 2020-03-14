@@ -22,7 +22,24 @@ abstract class BaseNodeHandler
      */
     private $tagEndQueue;
 
-    abstract public function handleStartNode($tagNamespace, $tagName, $attributes);
+    private function resolveNamespaceToMethodTag($tagNamespace){
+        $tags = [
+            strtolower(ODataConstants::ODATA_METADATA_NAMESPACE) => 'Metadata',
+            strtolower(ODataConstants::ATOM_NAMESPACE) => 'Atom',
+            strtoLower(ODataConstants::ODATA_NAMESPACE) => 'Dataservice'
+        ];
+        return $tags[strtolower($tagNamespace)];
+    }
+
+    public function handleStartNode($tagNamespace, $tagName, $attributes)
+    {
+        $methodType = $this->resolveNamespaceToMethodTag($tagNamespace);
+        $method = 'handleStart' . $methodType . ucfirst(strtolower($tagName));
+        if (!method_exists($this, $method)) {
+            $this->onParseError($methodType, 'Start', $tagName);
+        }
+        $this->{$method}($attributes);
+    }
 
     public function handleCharacterData($characters)
     {
