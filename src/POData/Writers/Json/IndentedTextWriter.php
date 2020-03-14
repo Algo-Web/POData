@@ -118,10 +118,11 @@ class IndentedTextWriter
 
     /**
      * @return string the current written text
+     *                strReplace as json_encode does not always respect PHP_EOL
      */
     public function getResult()
     {
-        return $this->result;
+        return str_replace("\n", PHP_EOL, $this->result);
     }
 
     /**

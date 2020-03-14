@@ -6,6 +6,7 @@ namespace POData\ObjectModel;
 
 use AlgoWeb\ODataMetadata\MetadataManager;
 use Illuminate\Support\Str;
+use POData\Common\ODataConstants;
 
 /**
  * Class ODataEntry.
@@ -129,6 +130,7 @@ class ODataEntry
     public function setAtomContent(AtomObjectModel\AtomContent $atomContent)
     {
         $this->setPropertyContent($atomContent->properties);
+        $this->atomContent = $atomContent;
     }
 
     /**
@@ -255,7 +257,7 @@ class ODataEntry
             $this->isMediaLinkEntry = true;
             $this->mediaLink        = $mediaLink;
         }
-        if (ODataMediaLink::MEDIARESOURCE_BASE == substr($mediaLink->rel, 0, 68)) {
+        if (ODataConstants::ATOM_MEDIA_RESOURCE_RELATION_ATTRIBUTE_VALUE == substr($mediaLink->rel, 0, 68)) {
             $this->mediaLinks[] = $mediaLink;
         }
         if ('edit' == $mediaLink->rel) {

@@ -1,9 +1,0 @@
-POData\ObjectModel\ODataURL:
-    exclusion_policy: ALL
-    xml_root_namespace: http://schemas.microsoft.com/ado/2007/08/dataservices/metadata
-    properties:
-        url:
-            expose: true
-            xml_attribute: false
-            type: string
-            xml_value: true

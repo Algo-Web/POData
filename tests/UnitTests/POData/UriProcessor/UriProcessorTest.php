@@ -26,6 +26,8 @@ use POData\Providers\Metadata\Type\Int32;
 use POData\Providers\ProvidersWrapper;
 use POData\Providers\Query\QueryResult;
 use POData\Providers\Query\QueryType;
+use POData\Readers\Atom\AtomODataReader;
+use POData\Readers\ODataReaderRegistry;
 use POData\UriProcessor\RequestDescription;
 use POData\UriProcessor\UriProcessor;
 use UnitTests\POData\TestCase;
@@ -78,6 +80,9 @@ class UriProcessorTest extends TestCase
         // set up mock objects for later use
         $this->mockServiceHost                         = m::mock(ServiceHost::class)->makePartial();
         $this->mockService                             = m::mock(IService::class)->makePartial();
+        $readerRegistry                                = new ODataReaderRegistry();
+        $readerRegistry->register(new AtomODataReader());
+        $this->mockService->shouldReceive('getODataReaderRegistry')->andReturn($readerRegistry);
         $this->mockMetadataProvider                    = m::mock(IMetadataProvider::class)->makePartial();
         $this->mockProvidersWrapper                    = m::mock(ProvidersWrapper::class)->makePartial();
         $this->mockCollectionResourceSetWrapper        = m::mock(ResourceSetWrapper::class)->makePartial();

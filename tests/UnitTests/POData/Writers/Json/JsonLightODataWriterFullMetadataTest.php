@@ -1367,7 +1367,7 @@ class JsonLightODataWriterFullMetadataTest extends TestCase
 
         $expected = "{\n    \"d\":{\n        \"EntitySet\":[\n\n        ]\n    }\n}";
 
-        $this->assertEquals($expected, $actual);
+        $this->assertJsonStringEqualsJsonString($expected, $actual);
     }
 
     public function testGetOutputTwoResourceSets()
@@ -1392,7 +1392,7 @@ class JsonLightODataWriterFullMetadataTest extends TestCase
 
         $expected = "{\n    \"d\":{\n        \"EntitySet\":[\n            \"Name 1\",\"XML escaped stuff \\\" ' <> & ?\"\n        ]\n    }\n}";
 
-        $this->assertEquals($expected, $actual);
+        $this->assertJsonStringEqualsJsonString($expected, $actual);
     }
 
     /**
@@ -1480,7 +1480,7 @@ class JsonLightODataWriterFullMetadataTest extends TestCase
         $actual   = $foo->getOutput();
         $expected = preg_replace('~(*BSR_ANYCRLF)\R~', "\r\n", $expected);
         $actual   = preg_replace('~(*BSR_ANYCRLF)\R~', "\r\n", $actual);
-        $this->assertEquals($expected, $actual);
+        $this->assertJsonStringEqualsJsonString($expected, $actual);
     }
 
     public function testWritePropertyContentWithFirstPropertyHavingBagValue()
@@ -1508,7 +1508,7 @@ class JsonLightODataWriterFullMetadataTest extends TestCase
         $actual   = $foo->getOutput();
         $expected = preg_replace('~(*BSR_ANYCRLF)\R~', "\r\n", $expected);
         $actual   = preg_replace('~(*BSR_ANYCRLF)\R~', "\r\n", $actual);
-        $this->assertEquals($expected, $actual);
+        $this->assertJsonStringEqualsJsonString($expected, $actual);
     }
 
     public function testWriteEmptyODataEntry()
@@ -1521,7 +1521,7 @@ class JsonLightODataWriterFullMetadataTest extends TestCase
         $actual   = $foo->write($entry)->getOutput();
         $expected = '{' . PHP_EOL . '    "odata.metadata":"http://localhost/odata.svc/$metadata#Foobars/@Element"'
                     . ',"odata.type":"","odata.id":"","odata.etag":"","odata.editLink":""' . PHP_EOL . '}';
-        $this->assertTrue(false !== strpos($actual, $expected));
+        $this->assertJsonStringEqualsJsonString($actual, $expected);
     }
 
     public function testWriteEmptyODataFeed()

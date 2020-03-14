@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace POData\UriProcessor;
 
-use JMS\Serializer\SerializerBuilder;
 use POData\Common\Messages;
 use POData\Common\MimeTypes;
 use POData\Common\ODataConstants;
@@ -12,12 +11,14 @@ use POData\Common\ODataException;
 use POData\Common\Url;
 use POData\Common\Version;
 use POData\ObjectModel\ODataEntry;
+use POData\ObjectModel\ODataFeed;
 use POData\OperationContext\IHTTPRequest;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Metadata\ResourceStreamInfo;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Query\QueryType;
+use POData\Readers\ODataReaderRegistry;
 use POData\UriProcessor\Interfaces\IUriProcessor;
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\RootProjectionNode;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
@@ -200,7 +201,7 @@ class RequestDescription
     /**
      * Data of request from request body.
      *
-     * @var array|null
+     * @var array|string|ODataFeed|ODataEntry|null
      */
     private $data;
 
@@ -217,6 +218,10 @@ class RequestDescription
      * @var IUriProcessor
      */
     private $uriProcessor;
+    /**
+     * @var ODataReaderRegistry
+     */
+    private $readerRegistry;
 
     /**
      * @param  SegmentDescriptor[]                              $segmentDescriptors Description of segments in the resource path
@@ -226,6 +231,7 @@ class RequestDescription
      * @param  string|null                                      $maxRequestVersion
      * @param  string|null                                      $dataType
      * @param  IHTTPRequest|null                                $payload
+     * @param  ODataReaderRegistry                              $readerRegistry
      * @throws ODataException
      * @throws \Doctrine\Common\Annotations\AnnotationException
      */
@@ -236,13 +242,15 @@ class RequestDescription
         $requestVersion,
         $maxRequestVersion,
         $dataType = null,
-        IHTTPRequest $payload = null
+        IHTTPRequest $payload = null,
+        ODataReaderRegistry $readerRegistry = null
     ) {
-        $this->segments     = $segmentDescriptors;
-        $this->segmentCount = count($this->segments);
-        $this->requestUrl   = $requestUri;
-        $this->lastSegment  = $segmentDescriptors[$this->segmentCount - 1];
-        $this->queryType    = QueryType::ENTITIES();
+        $this->readerRegistry = $readerRegistry;
+        $this->segments       = $segmentDescriptors;
+        $this->segmentCount   = count($this->segments);
+        $this->requestUrl     = $requestUri;
+        $this->lastSegment    = $segmentDescriptors[$this->segmentCount - 1];
+        $this->queryType      = QueryType::ENTITIES();
         //we use this for validation checks down in validateVersions...
         //but maybe we should check that outside of this object...
         $this->maxServiceVersion = $serviceMaxVersion;
@@ -297,35 +305,30 @@ class RequestDescription
     /**
      * Define request data from body.
      *
-     * @param  string                                           $dataType
-     * @throws \Doctrine\Common\Annotations\AnnotationException
+     * @param  string $dataType
+     * @return void
      */
     private function readData($dataType)
     {
+        if (null === $this->data) {
+            return;
+        }
         $string = $this->data;
-        if (MimeTypes::MIME_APPLICATION_ATOM === $dataType || MimeTypes::MIME_APPLICATION_XML === $dataType) {
+        if ($dataType === MimeTypes::MIME_APPLICATION_JSON) {
+            $data       = !is_array($string) ? json_decode($string, true) : $string;
+            $this->data = $data;
+            return;
+        }
+
+        $reader = $this->readerRegistry->getReader($this->getResponseVersion(), $dataType);
+        if ($reader !== null) {
             if (is_array($string) && 1 == count($string)) {
                 $string = $string[0];
             }
-            $string = strval($string);
             if (0 == strlen(trim($string))) {
                 return;
             }
-            $ymlDir = dirname(dirname(dirname(__DIR__))) . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR .
-                'POData' . DIRECTORY_SEPARATOR . 'Writers' . DIRECTORY_SEPARATOR . 'YML';
-            $serialize =
-                SerializerBuilder::create()
-                    ->addMetadataDir($ymlDir)
-                    ->build();
-            $objectType = strpos($this->requestUrl->getUrlAsString(), '$links') !== false
-                ? 'POData\ObjectModel\ODataURL' : 'POData\ObjectModel\ODataEntry';
-            $this->data = $serialize->deserialize($string, $objectType, 'xml');
-            $msg        = null;
-            assert($this->data instanceof $objectType);
-            assert($this->data->isOk($msg), $msg);
-        } elseif ($dataType === MimeTypes::MIME_APPLICATION_JSON) {
-            $data       = !is_array($string) ? json_decode($string, true) : $string;
-            $this->data = $data;
+            $this->data = $reader->read($string);
         }
     }
 

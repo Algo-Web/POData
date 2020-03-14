@@ -1,56 +1,50 @@
 {
-    "name": "algo-web/podata",
-    "type": "library",
-    "description": "OData for Poor PHP Developers",
-    "keywords": [ "rest", "odata" ],
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "c-harris",
-            "email": "c.harris@communicationinnovations.com.au"
-        },
-        {
-            "name": "Alex Goodwin",
-            "email": "cyberia.resurrection@gmail.com"
-        },
-        {
-            "name": "POData Project",
-            "email": "podataproject@gmail.com"
-        },
-        {
-            "name": "Microsoft Open Technologies, Inc.",
-            "email": "msopentech@microsoft.com"
-        }
-    ],
-
-  "repositories": [
+  "name": "algo-web/podata",
+  "type": "library",
+  "description": "OData for Poor PHP Developers",
+  "keywords": [ "rest", "odata" ],
+  "license": "MIT",
+  "authors": [
     {
-      "type": "vcs",
-      "url": "https://github.com/Algo-Web/serializer.git",
-      "no-api": true
+      "name": "c-harris",
+      "email": "c.harris@communicationinnovations.com.au"
+    },
+    {
+      "name": "Alex Goodwin",
+      "email": "cyberia.resurrection@gmail.com"
+    },
+    {
+      "name": "POData Project",
+      "email": "podataproject@gmail.com"
+    },
+    {
+      "name": "Microsoft Open Technologies, Inc.",
+      "email": "msopentech@microsoft.com"
     }
   ],
+  "minimum-stability": "dev",
+  "require": {
+    "myclabs/php-enum": "1.2.0",
+    "php": "^7.1",
+    "illuminate/http": ">=5.1|^6.0",
+    "nesbot/carbon": "^1.0|^2.0",
+    "algo-web/o-data-metadata": "0.1.*|dev-master",
+    "ext-xml": "*",
+    "ext-xmlwriter": "*"
+  },
+  "require-dev": {
+    "doctrine/annotations": "^v1.4.0",
+    "pcov/clobber": "dev-master",
+    "php-coveralls/php-coveralls": ">=v2.1",
+    "phpunit/phpunit": "^7.0",
+    "mockery/mockery": "0.9.*|dev-master",
+    "fiunchinho/phpunit-randomizer": "2.0.*"
+  },
 
-    "minimum-stability": "dev",
-    "require": {
-        "myclabs/php-enum": "1.2.0",
-        "php": "^7.1",
-        "illuminate/http": ">=5.1|^6.0",
-        "nesbot/carbon": "^1.0|^2.0",
-        "algo-web/o-data-metadata": "0.1.*|dev-master",
-        "jms/serializer": "^1.7",
-        "pcov/clobber": "dev-master"
-    },
-    "require-dev": {
-        "doctrine/annotations": "^v1.4.0",
-        "php-coveralls/php-coveralls": ">=v2.1",
-        "phpunit/phpunit": "^7.0",
-        "mockery/mockery": "0.9.*|dev-master"
-    },
-    "autoload": {
-        "psr-0": {
-            "POData": "src/",
-            "UnitTests" : "tests/"
-        }
+  "autoload": {
+    "psr-0": {
+      "POData": "src/",
+      "UnitTests" : "tests/"
     }
+  }
 }

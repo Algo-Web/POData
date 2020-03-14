@@ -42,7 +42,7 @@ class RequestDescriptionJsonTest extends TestCase
 
         $jsonWriter = new JsonODataV1Writer();
         $actual     = $jsonWriter->write($payload)->getOutput();
-        $this->assertEquals($expected, $actual);
+        $this->assertJsonStringEqualsJsonString($expected, $actual);
     }
 
     public function testWriteOdataEntryOverJsonV2()
@@ -58,7 +58,7 @@ class RequestDescriptionJsonTest extends TestCase
 
         $jsonWriter = new JsonODataV2Writer();
         $actual     = $jsonWriter->write($payload)->getOutput();
-        $this->assertEquals($expected, $actual);
+        $this->assertJsonStringEqualsJsonString($expected, $actual);
     }
 
     public function testWriteOdataEntryOverJsonLightWithFullMetadata()
@@ -70,7 +70,7 @@ class RequestDescriptionJsonTest extends TestCase
 
         $jsonWriter = new JsonLightODataWriter(JsonLightMetadataLevel::FULL(), 'http://localhost/odata.svc');
         $actual     = $jsonWriter->write($payload)->getOutput();
-        $this->assertEquals($expected, $actual);
+        $this->assertJsonStringEqualsJsonString($expected, $actual);
     }
 
     public function testWriteOdataEntryOverJsonLightWithMinimalMetadata()
@@ -82,7 +82,7 @@ class RequestDescriptionJsonTest extends TestCase
 
         $jsonWriter = new JsonLightODataWriter(JsonLightMetadataLevel::MINIMAL(), 'http://localhost/odata.svc');
         $actual     = $jsonWriter->write($payload)->getOutput();
-        $this->assertEquals($expected, $actual);
+        $this->assertJsonStringEqualsJsonString($expected, $actual);
     }
 
     public function testWriteOdataEntryOverJsonLightWithNoMetadata()
@@ -94,7 +94,7 @@ class RequestDescriptionJsonTest extends TestCase
 
         $jsonWriter = new JsonLightODataWriter(JsonLightMetadataLevel::NONE(), 'http://localhost/odata.svc');
         $actual     = $jsonWriter->write($payload)->getOutput();
-        $this->assertEquals($expected, $actual);
+        $this->assertJsonStringEqualsJsonString($expected, $actual);
     }
 
     private function generateODataEntry()

@@ -15,7 +15,7 @@ class IndentedTextWriterTest extends TestCase
 
         $result = $writer->writeLine();
         $this->assertSame($writer, $result);
-        $this->assertEquals("\n", $writer->getResult());
+        $this->assertEquals(PHP_EOL, $writer->getResult());
     }
 
     public function testWrite()
@@ -67,7 +67,7 @@ class IndentedTextWriterTest extends TestCase
         $writer->decreaseIndent();
 
         $writer->writeValue('indented0x');
-        $expected = "indented1x\n        indented2x\n    indented1xtrimmed\nindented0x";
+        $expected = 'indented1x' . PHP_EOL . '        indented2x' . PHP_EOL . '    indented1xtrimmed' . PHP_EOL . 'indented0x';
 
         $this->assertEquals($expected, $writer->getResult());
     }

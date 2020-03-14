@@ -300,14 +300,14 @@ class JsonWriterTest extends TestCase
         $writer->writeValue('1', 'Edm.String');
         $writer->writeValue(2, 'Edm.Int16');
 
-        $expected = "[\n    \"1\",2";
+        $expected = '[' . PHP_EOL . '    "1",2';
         $this->assertEquals($expected, $writer->getJsonOutput());
 
         $result = $writer->endScope();
         $this->assertSame($result, $writer);
 
-        $expected = "[\n    \"1\",2\n]";
-        $this->assertEquals($expected, $writer->getJsonOutput());
+        $expected = '[' . PHP_EOL . '    "1",2' . PHP_EOL . ']';
+        $this->assertJsonStringEqualsJsonString($expected, $writer->getJsonOutput());
     }
 
     public function testStartObjectScope()
@@ -318,14 +318,14 @@ class JsonWriterTest extends TestCase
         $writer->writeName('1');
         $writer->writeValue(2, 'Edm.Int16');
 
-        $expected = "{\n    \"1\":2";
+        $expected = '{' . PHP_EOL . '    "1":2';
         $this->assertEquals($expected, $writer->getJsonOutput());
 
         $result = $writer->endScope();
         $this->assertSame($result, $writer);
 
-        $expected = "{\n    \"1\":2\n}";
-        $this->assertEquals($expected, $writer->getJsonOutput());
+        $expected = '{' . PHP_EOL . '    "1":2' . PHP_EOL . '}';
+        $this->assertJsonStringEqualsJsonString($expected, $writer->getJsonOutput());
     }
 
     public function testComplexObject()
@@ -348,7 +348,7 @@ class JsonWriterTest extends TestCase
         $writer->endScope();
         $writer->endScope();
 
-        $expected = "{\n    \"1\":2,\"child\":{\n        \"array\":[\n            \"100.00155\",\"/Date(1330773272000)/\"\n        ]\n    }\n}";
-        $this->assertEquals($expected, $writer->getJsonOutput());
+        $expected = '{' . PHP_EOL . '    "1":2,"child":{' . PHP_EOL . '        "array":[' . PHP_EOL . '            "100.00155","/Date(1330773272000)/"' . PHP_EOL . '        ]' . PHP_EOL . '    }' . PHP_EOL . '}';
+        $this->assertJsonStringEqualsJsonString($expected, $writer->getJsonOutput());
     }
 }
