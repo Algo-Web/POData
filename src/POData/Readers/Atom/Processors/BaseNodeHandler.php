@@ -52,9 +52,8 @@ abstract class BaseNodeHandler
         return $default;
     }
 
-    protected final function onParseError($namespace, $startEnd, $tagName)
+    final protected function onParseError($namespace, $startEnd, $tagName)
     {
         throw new ParseError(sprintf(self::$processExceptionMessage, $namespace, $startEnd, $tagName));
-
     }
 }
