@@ -12,6 +12,7 @@ use POData\ObjectModel\ODataCategory;
 use POData\ObjectModel\ODataEntry;
 use POData\ObjectModel\ODataLink;
 use POData\ObjectModel\ODataMediaLink;
+use POData\ObjectModel\ODataProperty;
 use POData\ObjectModel\ODataPropertyContent;
 use POData\Providers\Metadata\ResourceEntityType;
 use POData\Providers\Metadata\ResourceProperty;
@@ -82,6 +83,18 @@ class ODataEntryTest extends TestCase
         $this->assertNull($res->properties);
     }
 
+    public function testGetAtomContentOfMediaLinkEntry()
+    {
+        $link1 = new ODataMediaLink('edit', null, null, 'Bitz', '', 'edit');
+
+        $foo = new ODataEntry();
+        $foo->isMediaLinkEntry = true;
+        $foo->mediaLink = $link1;
+
+        $res = $foo->getAtomContent();
+        $this->assertEquals('Bitz', $res->type);
+    }
+
     public function testGetMediaLink()
     {
         $link       = m::mock(ODataMediaLink::class)->makePartial();
@@ -119,6 +132,26 @@ class ODataEntryTest extends TestCase
         $editLink = $foo->getEditLink();
         $this->assertEquals('Piecez', $editLink->url);
         $this->assertEquals('Piecez', $foo->resourceSetName);
+    }
+
+    public function testSetMediaLinkArray()
+    {
+        $link1 = new ODataLink('http://schemas.microsoft.com/ado/2007/08/dataservices/related', null, null, 'Bitz');
+
+        $foo = new ODataEntry();
+
+        $foo->setLinks([$link1]);
+
+        $this->assertEquals(1, count($foo->getLinks()));
+    }
+
+    public function testSetEmptyMediaLinkArray()
+    {
+        $foo = new ODataEntry();
+
+        $foo->setMediaLinks([]);
+
+        $this->assertFalse($foo->isMediaLinkEntry);
     }
 
     public function testFeedInThreeMediaLinks()
@@ -161,6 +194,23 @@ class ODataEntryTest extends TestCase
         $result = $foo->getPropertyContent();
         $this->assertTrue($result instanceof ODataPropertyContent);
         $this->assertEquals(0, count($result->getPropertys()));
+    }
+
+    public function testIsOkWhenMPropertyContentNotEmpty()
+    {
+        $property = new ODataProperty();
+
+        $content = new ODataPropertyContent();
+        $content->properties[] = $property;
+
+        $foo = new ODataEntry();
+        $foo->setPropertyContent($content);
+        $foo->isMediaLinkEntry = true;
+
+        $result = $foo->getPropertyContent();
+        $this->assertTrue($result instanceof ODataPropertyContent);
+        $this->assertEquals(1, count($result->getPropertys()));
+        $this->assertTrue($foo->isOk());
     }
 
     public function testGetAtomAuthor()

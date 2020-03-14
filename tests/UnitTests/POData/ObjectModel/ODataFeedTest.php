@@ -29,4 +29,23 @@ class ODataFeedTest extends TestCase
         $foo->setNextPageLink($bar);
         $this->assertNotNull($foo->getNextPageLink());
     }
+
+    public function testSetNextPageLinkBlank()
+    {
+        $foo      = new ODataFeed();
+        $bar      = new ODataLink();
+
+        $foo->setNextPageLink($bar);
+        $this->assertNull($foo->getNextPageLink());
+    }
+
+    public function testSetGetEntriesRoundTrip()
+    {
+        $entry    = new ODataEntry();
+        $foo      = new ODataFeed();
+
+        $foo->setEntries([$entry]);
+
+        $this->assertEquals(1, count($foo->getEntries()));
+    }
 }
