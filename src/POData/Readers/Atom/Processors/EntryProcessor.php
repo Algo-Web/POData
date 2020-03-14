@@ -30,6 +30,7 @@ class EntryProcessor extends BaseNodeHandler
      */
     private $subProcessor;
 
+    /** @noinspection PhpUnusedParameterInspection */
     public function __construct($attributes)
     {
         $this->oDataEntry                   = new ODataEntry();
@@ -153,20 +154,29 @@ class EntryProcessor extends BaseNodeHandler
      */
     private function handleLink($link)
     {
-        switch ($link->name) {
-            case ODataConstants::ATOM_EDIT_RELATION_ATTRIBUTE_VALUE:
-                $this->oDataEntry->editLink = $link;
+        switch (true) {
+            case $link instanceof ODataMediaLink:
+                $this->handleODataMediaLink($link);
                 break;
-            case ODataConstants::ODATA_ASSOCIATION_NAMESPACE . $link->title:
-            case ODataConstants::ODATA_RELATED_NAMESPACE . $link->title:
-                $this->oDataEntry->links[] = $link;
+            case $link instanceof ODataLink:
+                $this->handleODataLink($link);
                 break;
-            case ODataConstants::ATOM_EDIT_MEDIA_RELATION_ATTRIBUTE_VALUE:
-                $this->oDataEntry->mediaLink = $link;
-                $this->oDataEntry            = true;
-                break;
-            default:
-                $this->oDataEntry->mediaLinks[] = $link;
+        }
+    }
+    private function handleODataLink(ODataLink $link ){
+        if($link->name === ODataConstants::ATOM_EDIT_RELATION_ATTRIBUTE_VALUE){
+            $this->oDataEntry->editLink = $link;
+        }else{
+            $this->oDataEntry->links[] = $link;
+        }
+    }
+    private function handleODataMediaLink(ODataMediaLink $link)
+    {
+        if($link->name === ODataConstants::ATOM_EDIT_MEDIA_RELATION_ATTRIBUTE_VALUE){
+            $this->oDataEntry->mediaLink        = $link;
+            $this->oDataEntry->isMediaLinkEntry = true;
+        }else{
+            $this->oDataEntry->mediaLinks[] = $link;
         }
     }
 }
