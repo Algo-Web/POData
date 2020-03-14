@@ -63,7 +63,7 @@ class EntryProcessor extends BaseNodeHandler
             $this->subProcessor->handleEndNode($tagNamespace, $tagName);
             return;
         }
-        assert(!$this->tagEndQueue->isEmpty(), 'every node that opens should register a end tag')''
+        assert(!$this->tagEndQueue->isEmpty(), 'every node that opens should register a end tag');
         $endMethod = $this->tagEndQueue->pop();
         $endMethod();
     }
