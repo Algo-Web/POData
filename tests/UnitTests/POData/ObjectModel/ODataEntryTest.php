@@ -84,10 +84,10 @@ class ODataEntryTest extends TestCase
 
     public function testGetMediaLink()
     {
-        $link = m::mock(ODataMediaLink::class)->makePartial();
+        $link       = m::mock(ODataMediaLink::class)->makePartial();
         $link->name = 'The Launch';
 
-        $foo = new ODataEntry();
+        $foo            = new ODataEntry();
         $foo->mediaLink = $link;
 
         $result = $foo->getMediaLink();
@@ -102,7 +102,7 @@ class ODataEntryTest extends TestCase
         $foo->setLinks([]);
 
         $expected = [];
-        $actual = $foo->getLinks();
+        $actual   = $foo->getLinks();
 
         $this->assertEquals($expected, $actual);
     }

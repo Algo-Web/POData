@@ -94,17 +94,17 @@ class EntryProcessor extends BaseNodeHandler
                 'http://schemas.microsoft.com/ado/2007/08/dataservices/scheme'
             )
         );
-        $this->enqueueEnd(function () use($odataCategory) {
+        $this->enqueueEnd(function () use ($odataCategory) {
             $this->oDataEntry->setType($odataCategory);
         });
     }
     protected function handleStartAtomContent($attributes)
     {
         $this->subProcessor       = new PropertyProcessor($attributes);
-        $atomContent = new AtomContent(
+        $atomContent              = new AtomContent(
             $this->arrayKeyOrDefault($attributes, ODataConstants::ATOM_TYPE_ATTRIBUTE_NAME, 'application/xml')
         );
-        $this->enqueueEnd(function () use($atomContent) {
+        $this->enqueueEnd(function () use ($atomContent) {
             $atomContent->properties = $this->subProcessor->getObjetModelObject();
             $this->oDataEntry->setAtomContent($atomContent);
             $this->subProcessor = null;

@@ -22,7 +22,8 @@ abstract class BaseNodeHandler
      */
     private $tagEndQueue;
 
-    private function resolveNamespaceToMethodTag($tagNamespace){
+    private function resolveNamespaceToMethodTag($tagNamespace)
+    {
         $tags = [
             strtolower(ODataConstants::ODATA_METADATA_NAMESPACE) => 'Metadata',
             strtolower(ODataConstants::ATOM_NAMESPACE) => 'Atom',
@@ -34,7 +35,7 @@ abstract class BaseNodeHandler
     public function handleStartNode($tagNamespace, $tagName, $attributes)
     {
         $methodType = $this->resolveNamespaceToMethodTag($tagNamespace);
-        $method = 'handleStart' . $methodType . ucfirst(strtolower($tagName));
+        $method     = 'handleStart' . $methodType . ucfirst(strtolower($tagName));
         if (!method_exists($this, $method)) {
             $this->onParseError($methodType, 'Start', $tagName);
         }
@@ -90,7 +91,7 @@ abstract class BaseNodeHandler
     }
     protected function enqueueEnd(Closure $closure)
     {
-        if(null === $this->tagEndQueue){
+        if (null === $this->tagEndQueue) {
             $this->tagEndQueue = new SplStack();
         }
         $this->tagEndQueue->push($this->bindHere($closure));

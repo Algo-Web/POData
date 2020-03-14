@@ -34,29 +34,33 @@ class FeedProcessor extends BaseNodeHandler
         );
         parent::handleStartNode($tagNamespace, $tagName, $attributes);
     }
-    public function handleStartAtomId(){
-        $this->enqueueEnd(function (){
+    public function handleStartAtomId()
+    {
+        $this->enqueueEnd(function () {
             $this->oDataFeed->id = $this->popCharData();
         });
     }
-    public function handleStartAtomTitle($attributes){
+    public function handleStartAtomTitle($attributes)
+    {
         $this->titleType = $this->arrayKeyOrDefault(
             $attributes,
             ODataConstants::ATOM_TYPE_ATTRIBUTE_NAME,
             ''
         );
-        $this->enqueueEnd(function (){
+        $this->enqueueEnd(function () {
             $this->oDataFeed->title = new ODataTitle($this->popCharData(), $this->titleType);
             $this->titleType        = null;
         });
     }
-    public function handleStartAtomUpdated(){
-        $this->enqueueEnd(function(){
+    public function handleStartAtomUpdated()
+    {
+        $this->enqueueEnd(function () {
             $this->oDataFeed->updated = $this->popCharData();
         });
     }
 
-    public function handleStartAtomLink($attributes){
+    public function handleStartAtomLink($attributes)
+    {
         $rel                      = $this->arrayKeyOrDefault($attributes, ODataConstants::ATOM_LINK_RELATION_ATTRIBUTE_NAME, '');
         $prop                     = $rel === ODataConstants::ATOM_SELF_RELATION_ATTRIBUTE_VALUE ? 'selfLink' : 'nextPageLink';
         $this->oDataFeed->{$prop} = new ODataLink(
@@ -68,8 +72,9 @@ class FeedProcessor extends BaseNodeHandler
         $this->enqueueEnd($this->doNothing());
     }
 
-    public function handleStartMetadataCount(){
-        $this->enqueueEnd(function(){
+    public function handleStartMetadataCount()
+    {
+        $this->enqueueEnd(function () {
             $this->oDataFeed->rowCount =  (int)$this->popCharData();
         });
     }
