@@ -10,6 +10,7 @@ use POData\ObjectModel\AtomObjectModel\AtomContent;
 use POData\ObjectModel\ODataCategory;
 use POData\ObjectModel\ODataEntry;
 use POData\ObjectModel\ODataLink;
+use POData\ObjectModel\ODataMediaLink;
 use POData\ObjectModel\ODataTitle;
 use POData\Readers\Atom\Processors\Entry\LinkProcessor;
 use POData\Readers\Atom\Processors\Entry\PropertyProcessor;
@@ -105,13 +106,16 @@ class EntryProcessor extends BaseNodeHandler
                 $this->oDataEntry->updated = $this->popCharData();
                 break;
             case strtolower(ODataConstants::ATOM_LINK_ELEMENT_NAME):
+                assert($this->subProcessor instanceof LinkProcessor);
                  $this->handleLink($this->subProcessor->getObjetModelObject());
                  $this->subProcessor = null;
                 break;
             case strtolower(ODataConstants::ATOM_CATEGORY_ELEMENT_NAME):
+                assert($this->objectModelSubNode instanceof ODataCategory);
                 $this->oDataEntry->setType($this->objectModelSubNode);
                 break;
             case strtolower(ODataConstants::ATOM_CONTENT_ELEMENT_NAME):
+                assert($this->objectModelSubNode instanceof ODataConstants);
                 $this->objectModelSubNode->properties = $this->subProcessor->getObjetModelObject();
                 $this->oDataEntry->setAtomContent($this->objectModelSubNode);
                 $this->subProcessor = null;
@@ -144,6 +148,9 @@ class EntryProcessor extends BaseNodeHandler
         }
     }
 
+    /**
+     * @param ODataLink|ODataMediaLink $link
+     */
     private function handleLink(ODataLink $link)
     {
         switch ($link->name) {

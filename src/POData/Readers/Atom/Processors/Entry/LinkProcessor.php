@@ -58,6 +58,7 @@ class LinkProcessor extends BaseNodeHandler
 
     public function handleChildComplete($objectModel)
     {
+        assert(!$this->link instanceof ODataMediaLink);
         if ($objectModel instanceof ODataFeed) {
             $expandResult = new ODataExpandedResult(null, $objectModel);
         } else {
@@ -68,7 +69,7 @@ class LinkProcessor extends BaseNodeHandler
     }
 
     /**
-     * @return ODataLink
+     * @return ODataLink|ODataMediaLink
      */
     public function getObjetModelObject()
     {

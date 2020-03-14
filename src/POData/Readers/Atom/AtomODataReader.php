@@ -24,7 +24,7 @@ class AtomODataReader implements IODataReader
      */
     private $parser;
     /**
-     * @var SplStack|BaseNodeHandler[[]
+     * @var SplStack|BaseNodeHandler[]
      */
     private $stack;
     /**

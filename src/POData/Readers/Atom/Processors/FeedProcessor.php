@@ -102,7 +102,7 @@ class FeedProcessor extends BaseNodeHandler
         }
     }
 
-    public function handleMetadataStart($tagName, $attributes)
+    public function handleMetadataStart($tagName, /** @scrutinizer ignore-unused */  $attributes)
     {
         switch (strtolower($tagName)) {
             case strtolower(ODataConstants::ROWCOUNT_ELEMENT):
@@ -116,8 +116,7 @@ class FeedProcessor extends BaseNodeHandler
     {
         switch (strtolower($tagName)) {
             case strtolower(ODataConstants::ROWCOUNT_ELEMENT):
-                $this->oDataFeed->rowCount = $this->charData;
-                $this->charData            = '';
+                $this->oDataFeed->rowCount =  (int)$this->popCharData();
                 break;
             default:
                 $this->onParseError('Metadata', 'End', $tagName);

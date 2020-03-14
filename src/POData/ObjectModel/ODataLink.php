@@ -64,9 +64,6 @@ class ODataLink
      * @param string               $type
      * @param string               $url
      * @param bool                 $isCollection
-     * @param ODataEntry|ODataFeed $expandedResult
-     * @param bool                 $isExpanded
-     * @param null                 $expandResult
      */
     public function __construct($name = null, $title = null, $type = null, $url = null, $isCollection = null)
     {
