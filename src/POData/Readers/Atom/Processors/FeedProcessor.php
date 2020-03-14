@@ -102,7 +102,7 @@ class FeedProcessor extends BaseNodeHandler
         }
     }
 
-    public function handleMetadataStart($tagName, /** @scrutinizer ignore-unused */  $attributes)
+    public function handleMetadataStart($tagName, /* @scrutinizer ignore-unused */  $attributes)
     {
         switch (strtolower($tagName)) {
             case strtolower(ODataConstants::ROWCOUNT_ELEMENT):

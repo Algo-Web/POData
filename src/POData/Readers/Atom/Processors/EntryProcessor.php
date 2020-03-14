@@ -42,7 +42,7 @@ class EntryProcessor extends BaseNodeHandler
     {
         $this->oDataEntry                   = new ODataEntry();
         $this->oDataEntry->isMediaLinkEntry = false;
-        $this->tagEndQueue = new SplStack();
+        $this->tagEndQueue                  = new SplStack();
     }
 
     public function handleStartNode($tagNamespace, $tagName, $attributes)
@@ -67,7 +67,7 @@ class EntryProcessor extends BaseNodeHandler
             return;
         }
         $method = 'handle' . $methodType . 'Atom' . ucfirst(strtolower($tagName));
-        if(!method_exists($this, $method)){
+        if (!method_exists($this, $method)) {
             $this->onParseError('Atom', $methodType, $tagName);
         }
         $this->{$method}($attributes);
@@ -76,19 +76,20 @@ class EntryProcessor extends BaseNodeHandler
 
     private function doNothing()
     {
-        return function(){};
+        return function () {};
     }
 
     private function bindHere(Closure $closure)
     {
         return $closure->bindTo($this, get_class($this));
     }
-    private function enqueueEnd(Closure $closure){
+    private function enqueueEnd(Closure $closure)
+    {
         $this->tagEndQueue->push($this->bindHere($closure));
     }
     protected function handleStartAtomId()
     {
-        $this->enqueueEnd(function(){
+        $this->enqueueEnd(function () {
             $this->oDataEntry->id = $this->popCharData();
         });
     }
@@ -99,7 +100,7 @@ class EntryProcessor extends BaseNodeHandler
             ODataConstants::ATOM_TYPE_ATTRIBUTE_NAME,
             ''
         );
-        $this->enqueueEnd(function(){
+        $this->enqueueEnd(function () {
             $this->oDataEntry->title = new ODataTitle($this->popCharData(), $this->titleType);
             $this->titleType         = null;
         });
@@ -111,14 +112,14 @@ class EntryProcessor extends BaseNodeHandler
     }
     protected function handleStartAtomUpdated()
     {
-        $this->enqueueEnd(function(){
+        $this->enqueueEnd(function () {
             $this->oDataEntry->updated = $this->popCharData();
         });
     }
     protected function handleStartAtomLink($attributes)
     {
         $this->subProcessor = new LinkProcessor($attributes);
-        $this->enqueueEnd(function(){
+        $this->enqueueEnd(function () {
             assert($this->subProcessor instanceof LinkProcessor);
             $this->handleLink($this->subProcessor->getObjetModelObject());
             $this->subProcessor = null;
@@ -134,7 +135,7 @@ class EntryProcessor extends BaseNodeHandler
                 'http://schemas.microsoft.com/ado/2007/08/dataservices/scheme'
             )
         );
-        $this->enqueueEnd(function(){
+        $this->enqueueEnd(function () {
             assert($this->objectModelSubNode instanceof ODataCategory);
             $this->oDataEntry->setType($this->objectModelSubNode);
         });
@@ -145,7 +146,7 @@ class EntryProcessor extends BaseNodeHandler
         $this->objectModelSubNode = new AtomContent(
             $this->arrayKeyOrDefault($attributes, ODataConstants::ATOM_TYPE_ATTRIBUTE_NAME, 'application/xml')
         );
-        $this->enqueueEnd(function(){
+        $this->enqueueEnd(function () {
             assert($this->objectModelSubNode instanceof AtomContent);
             $this->objectModelSubNode->properties = $this->subProcessor->getObjetModelObject();
             $this->oDataEntry->setAtomContent($this->objectModelSubNode);
@@ -197,19 +198,20 @@ class EntryProcessor extends BaseNodeHandler
                 break;
         }
     }
-    private function handleODataLink(ODataLink $link ){
-        if($link->name === ODataConstants::ATOM_EDIT_RELATION_ATTRIBUTE_VALUE){
+    private function handleODataLink(ODataLink $link)
+    {
+        if ($link->name === ODataConstants::ATOM_EDIT_RELATION_ATTRIBUTE_VALUE) {
             $this->oDataEntry->editLink = $link;
-        }else{
+        } else {
             $this->oDataEntry->links[] = $link;
         }
     }
     private function handleODataMediaLink(ODataMediaLink $link)
     {
-        if($link->name === ODataConstants::ATOM_EDIT_MEDIA_RELATION_ATTRIBUTE_VALUE){
+        if ($link->name === ODataConstants::ATOM_EDIT_MEDIA_RELATION_ATTRIBUTE_VALUE) {
             $this->oDataEntry->mediaLink        = $link;
             $this->oDataEntry->isMediaLinkEntry = true;
-        }else{
+        } else {
             $this->oDataEntry->mediaLinks[] = $link;
         }
     }

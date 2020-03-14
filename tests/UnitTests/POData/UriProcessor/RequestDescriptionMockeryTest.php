@@ -61,7 +61,7 @@ class RequestDescriptionMockeryTest extends TestCase
         $readerRegistry->register(new AtomODataReader());
         $desc = new RequestDescription($segArray, $url, $version, null, null, $type, $request, $readerRegistry);
 
-        $data = $desc->getData();
+        $data              = $desc->getData();
         $data->atomContent = null;
 
         $this->assertEquals($expectedArray, $data);
@@ -111,7 +111,7 @@ class RequestDescriptionMockeryTest extends TestCase
         $readerRegistry->register(new AtomODataReader());
         $desc = new RequestDescription($segArray, $url, $version, null, null, $type, $request, $readerRegistry);
 
-        $data = $desc->getData();
+        $data              = $desc->getData();
         $data->atomContent = null;
         $this->assertEquals($expectedArray, $data);
     }
