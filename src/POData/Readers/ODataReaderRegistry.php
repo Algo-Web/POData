@@ -21,11 +21,6 @@ class ODataReaderRegistry
         $this->readers[] = $reader;
     }
 
-    public function reset()
-    {
-        $this->readers  = [];
-    }
-
     /**
      * @param Version $responseVersion
      * @param $contentType

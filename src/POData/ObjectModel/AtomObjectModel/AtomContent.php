@@ -45,20 +45,4 @@ class AtomContent
         $this->type       = $type;
         $this->properties = $properties;
     }
-
-    /**
-     * @param $properties
-     */
-    public function setProperties($properties): void
-    {
-        $this->properties = $properties;
-    }
-
-    /**
-     * @param ODataProperty $property
-     */
-    public function addProperty(ODataProperty $property): void
-    {
-        $this->properties[] = $property;
-    }
 }
