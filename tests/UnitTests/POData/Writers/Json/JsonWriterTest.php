@@ -300,13 +300,13 @@ class JsonWriterTest extends TestCase
         $writer->writeValue('1', 'Edm.String');
         $writer->writeValue(2, 'Edm.Int16');
 
-        $expected = "[" . PHP_EOL . "    \"1\",2";
+        $expected = '[' . PHP_EOL . '    "1",2';
         $this->assertEquals($expected, $writer->getJsonOutput());
 
         $result = $writer->endScope();
         $this->assertSame($result, $writer);
 
-        $expected = "[" . PHP_EOL . "    \"1\",2" . PHP_EOL . "]";
+        $expected = '[' . PHP_EOL . '    "1",2' . PHP_EOL . ']';
         $this->assertJsonStringEqualsJsonString($expected, $writer->getJsonOutput());
     }
 
@@ -318,13 +318,13 @@ class JsonWriterTest extends TestCase
         $writer->writeName('1');
         $writer->writeValue(2, 'Edm.Int16');
 
-        $expected = "{" . PHP_EOL . "    \"1\":2";
+        $expected = '{' . PHP_EOL . '    "1":2';
         $this->assertEquals($expected, $writer->getJsonOutput());
 
         $result = $writer->endScope();
         $this->assertSame($result, $writer);
 
-        $expected = "{" . PHP_EOL . "    \"1\":2" . PHP_EOL . "}";
+        $expected = '{' . PHP_EOL . '    "1":2' . PHP_EOL . '}';
         $this->assertJsonStringEqualsJsonString($expected, $writer->getJsonOutput());
     }
 
@@ -348,7 +348,7 @@ class JsonWriterTest extends TestCase
         $writer->endScope();
         $writer->endScope();
 
-        $expected = "{" . PHP_EOL . "    \"1\":2,\"child\":{" . PHP_EOL . "        \"array\":[" . PHP_EOL . "            \"100.00155\",\"/Date(1330773272000)/\"" . PHP_EOL . "        ]" . PHP_EOL . "    }" . PHP_EOL . "}";
+        $expected = '{' . PHP_EOL . '    "1":2,"child":{' . PHP_EOL . '        "array":[' . PHP_EOL . '            "100.00155","/Date(1330773272000)/"' . PHP_EOL . '        ]' . PHP_EOL . '    }' . PHP_EOL . '}';
         $this->assertJsonStringEqualsJsonString($expected, $writer->getJsonOutput());
     }
 }

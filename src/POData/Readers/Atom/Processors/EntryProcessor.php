@@ -31,13 +31,13 @@ class EntryProcessor extends BaseNodeHandler
 
     public function __construct($attributes)
     {
-        $this->oDataEntry = new ODataEntry();
+        $this->oDataEntry                   = new ODataEntry();
         $this->oDataEntry->isMediaLinkEntry = false;
     }
 
     public function handleStartNode($tagNamespace, $tagName, $attributes)
     {
-        if(strtolower($tagNamespace) !== strtolower(ODataConstants::ATOM_NAMESPACE)){
+        if (strtolower($tagNamespace) !== strtolower(ODataConstants::ATOM_NAMESPACE)) {
             $this->subProcessor->handleStartNode($tagNamespace, $tagName, $attributes);
             return;
         }
@@ -71,7 +71,7 @@ class EntryProcessor extends BaseNodeHandler
                 );
                 break;
             case strtolower(ODataConstants::ATOM_CONTENT_ELEMENT_NAME):
-                $this->subProcessor = new PropertyProcessor($attributes);
+                $this->subProcessor       = new PropertyProcessor($attributes);
                 $this->objectModelSubNode = new AtomContent(
                     $this->arrayKeyOrDefault($attributes, ODataConstants::ATOM_TYPE_ATTRIBUTE_NAME, 'application/xml')
                 );
@@ -90,7 +90,7 @@ class EntryProcessor extends BaseNodeHandler
 
     public function handleEndNode($tagNamespace, $tagName)
     {
-        if(strtolower($tagNamespace) !== strtolower(ODataConstants::ATOM_NAMESPACE)){
+        if (strtolower($tagNamespace) !== strtolower(ODataConstants::ATOM_NAMESPACE)) {
             $this->subProcessor->handleEndNode($tagNamespace, $tagName);
             return;
         }
@@ -160,7 +160,7 @@ class EntryProcessor extends BaseNodeHandler
                 break;
             case ODataConstants::ATOM_EDIT_MEDIA_RELATION_ATTRIBUTE_VALUE:
                 $this->oDataEntry->mediaLink = $link;
-                $this->oDataEntry = true;
+                $this->oDataEntry            = true;
                 break;
             default:
                 $this->oDataEntry->mediaLinks[] = $link;

@@ -33,10 +33,10 @@ class PropertyProcessor extends BaseNodeHandler
 
     public function handleStartNode($tagNamespace, $tagName, $attributes)
     {
-        if(
+        if (
             strtolower($tagNamespace) === strtolower(ODataConstants::ODATA_METADATA_NAMESPACE) &&
             strtolower($tagName) === strtolower((ODataConstants::ATOM_PROPERTIES_ELEMENT_NAME))
-        ){
+        ) {
             return ;
         }
         //TODO: this will need to be expanded with opengis namespaces as well when supported
@@ -56,19 +56,19 @@ class PropertyProcessor extends BaseNodeHandler
 
     public function handleEndNode($tagNamespace, $tagName)
     {
-        if(
+        if (
             strtolower($tagNamespace) === strtolower(ODataConstants::ODATA_METADATA_NAMESPACE) &&
             strtolower($tagName) === strtolower((ODataConstants::ATOM_PROPERTIES_ELEMENT_NAME))
-        ){
+        ) {
             return ;
         }
-        $prop = $this->properties->pop();
-        $propContent = $this->propertyContent->pop();
+        $prop                                                  = $this->properties->pop();
+        $propContent                                           = $this->propertyContent->pop();
         $this->propertyContent->top()->properties[$prop->name] = $prop;
 
-        if(count($propContent->properties) == 0){
+        if (count($propContent->properties) == 0) {
             $prop->value = $this->popCharData();
-        }else{
+        } else {
             $prop->value = $propContent;
         }
     }
