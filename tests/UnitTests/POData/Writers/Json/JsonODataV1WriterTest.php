@@ -1255,7 +1255,7 @@ class JsonODataV1WriterTest extends TestCase
 
         $expected = "{\n    \"d\":{\n        \"EntitySet\":[\n\n        ]\n    }\n}";
 
-        $this->assertEquals($expected, $actual);
+        $this->assertJsonStringEqualsJsonString($expected, $actual);
     }
 
     public function testGetOutputTwoResourceSets()
@@ -1280,7 +1280,7 @@ class JsonODataV1WriterTest extends TestCase
 
         $expected = "{\n    \"d\":{\n        \"EntitySet\":[\n            \"Name 1\",\"XML escaped stuff \\\" ' <> & ?\"\n        ]\n    }\n}";
 
-        $this->assertEquals($expected, $actual);
+        $this->assertJsonStringEqualsJsonString($expected, $actual);
     }
 
     public function testAddSingletonsToServiceDocument()
