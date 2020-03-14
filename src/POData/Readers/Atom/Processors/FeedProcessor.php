@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 
 namespace POData\Readers\Atom\Processors;
 
@@ -67,8 +69,8 @@ class FeedProcessor extends BaseNodeHandler
             case strtolower(ODataConstants::ATOM_UPDATED_ELEMENT_NAME):
                 break;
             case strtolower(ODataConstants::ATOM_LINK_ELEMENT_NAME):
-                $rel = $this->arrayKeyOrDefault($attributes, ODataConstants::ATOM_LINK_RELATION_ATTRIBUTE_NAME, '');
-                $prop = $rel === ODataConstants::ATOM_SELF_RELATION_ATTRIBUTE_VALUE ? 'selfLink' : 'nextPageLink';
+                $rel                      = $this->arrayKeyOrDefault($attributes, ODataConstants::ATOM_LINK_RELATION_ATTRIBUTE_NAME, '');
+                $prop                     = $rel === ODataConstants::ATOM_SELF_RELATION_ATTRIBUTE_VALUE ? 'selfLink' : 'nextPageLink';
                 $this->oDataFeed->{$prop} = new ODataLink(
                     $this->arrayKeyOrDefault($attributes, ODataConstants::ATOM_LINK_RELATION_ATTRIBUTE_NAME, ''),
                     $this->arrayKeyOrDefault($attributes, ODataConstants::ATOM_TITLE_ELELMET_NAME, ''),
@@ -89,7 +91,7 @@ class FeedProcessor extends BaseNodeHandler
                 break;
             case strtolower(ODataConstants::ATOM_TITLE_ELELMET_NAME):
                 $this->oDataFeed->title = new ODataTitle($this->popCharData(), $this->titleType);
-                $this->titleType = null;
+                $this->titleType        = null;
                 break;
             case strtolower(ODataConstants::ATOM_UPDATED_ELEMENT_NAME):
                 $this->oDataFeed->updated = $this->popCharData();
@@ -116,7 +118,7 @@ class FeedProcessor extends BaseNodeHandler
         switch (strtolower($tagName)) {
             case strtolower(ODataConstants::ROWCOUNT_ELEMENT):
                 $this->oDataFeed->rowCount = $this->charData;
-                $this->charData = '';
+                $this->charData            = '';
                 break;
             default:
                 throw new ParseError(sprintf(self::$processExceptionMessage, 'Metadata', 'End', $tagName));

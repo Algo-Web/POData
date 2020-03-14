@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 
 namespace POData\Readers\Atom\Processors;
 
@@ -20,7 +22,7 @@ abstract class BaseNodeHandler
 
     final public function popCharData()
     {
-        $data = $this->charData;
+        $data           = $this->charData;
         $this->charData = '';
         return $data;
     }

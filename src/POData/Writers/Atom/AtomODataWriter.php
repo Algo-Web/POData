@@ -652,7 +652,7 @@ class AtomODataWriter implements IODataWriter
     /**
      * Serialize the exception.
      *
-     * @param ODataException $exception               Exception to serialize
+     * @param ODataException $exception Exception to serialize
      *
      * @return string
      */

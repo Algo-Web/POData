@@ -246,11 +246,11 @@ class RequestDescription
         ODataReaderRegistry $readerRegistry = null
     ) {
         $this->readerRegistry = $readerRegistry;
-        $this->segments     = $segmentDescriptors;
-        $this->segmentCount = count($this->segments);
-        $this->requestUrl   = $requestUri;
-        $this->lastSegment  = $segmentDescriptors[$this->segmentCount - 1];
-        $this->queryType    = QueryType::ENTITIES();
+        $this->segments       = $segmentDescriptors;
+        $this->segmentCount   = count($this->segments);
+        $this->requestUrl     = $requestUri;
+        $this->lastSegment    = $segmentDescriptors[$this->segmentCount - 1];
+        $this->queryType      = QueryType::ENTITIES();
         //we use this for validation checks down in validateVersions...
         //but maybe we should check that outside of this object...
         $this->maxServiceVersion = $serviceMaxVersion;
@@ -305,14 +305,14 @@ class RequestDescription
     /**
      * Define request data from body.
      *
-     * @param  string                                           $dataType
+     * @param  string $dataType
      * @return void
      */
     private function readData($dataType)
     {
         $string = $this->data;
         if ($dataType === MimeTypes::MIME_APPLICATION_JSON) {
-            $data = !is_array($string) ? json_decode($string, true) : $string;
+            $data       = !is_array($string) ? json_decode($string, true) : $string;
             $this->data = $data;
             return;
         }

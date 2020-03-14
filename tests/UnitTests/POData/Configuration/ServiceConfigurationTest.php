@@ -13,7 +13,7 @@ use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 use UnitTests\POData\TestCase;
 
 /**
- * Class ServiceConfigurationTest
+ * Class ServiceConfigurationTest.
  * @package UnitTests\POData\Configuration
  */
 class ServiceConfigurationTest extends TestCase
