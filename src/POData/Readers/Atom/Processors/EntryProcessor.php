@@ -151,7 +151,7 @@ class EntryProcessor extends BaseNodeHandler
     /**
      * @param ODataLink|ODataMediaLink $link
      */
-    private function handleLink(ODataLink $link)
+    private function handleLink($link)
     {
         switch ($link->name) {
             case ODataConstants::ATOM_EDIT_RELATION_ATTRIBUTE_VALUE:
