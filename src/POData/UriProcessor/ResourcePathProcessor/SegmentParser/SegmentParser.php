@@ -178,8 +178,11 @@ class SegmentParser
      * @throws \ReflectionException
      * @return SegmentDescriptor
      */
-    private function createNextSegment(SegmentDescriptor $previous, $segment, $checkRights)
-    {
+    private function createNextSegment(
+        SegmentDescriptor $previous,
+        string $segment,
+        bool $checkRights
+    ): SegmentDescriptor {
         $previousKind = $previous->getTargetKind();
         if ($previousKind == TargetKind::METADATA()
             || $previousKind == TargetKind::BATCH()
@@ -321,7 +324,7 @@ class SegmentParser
                     case ResourcePropertyKind::RESOURCESET_REFERENCE:
                         $current->setTargetKind(TargetKind::RESOURCE());
                         $prevResource = $previous->getTargetResourceType();
-                        assert($prevResource instanceof ResourceEntityType);
+                        $this->assertion($prevResource instanceof ResourceEntityType);
                         $resourceSetWrapper = $this->providerWrapper->getResourceSetWrapperForNavigationProperty(
                             $previous->getTargetResourceSetWrapper(),
                             $prevResource,
