@@ -66,10 +66,10 @@ class AtomODataReader implements IODataReader
     {
         switch (strtolower($tag)) {
             case strtolower(ODataConstants::ATOM_NAMESPACE . '|' . ODataConstants::ATOM_FEED_ELEMENT_NAME):
-                $this->stack->push(new FeedProcessor($attributes));
+                $this->stack->push(new FeedProcessor());
                 break;
             case strtolower(ODataConstants::ATOM_NAMESPACE . '|' . ODataConstants::ATOM_ENTRY_ELEMENT_NAME):
-                $this->stack->push(new EntryProcessor($attributes));
+                $this->stack->push(new EntryProcessor());
                 break;
             default:
                 if ($this->stack->isEmpty()) {

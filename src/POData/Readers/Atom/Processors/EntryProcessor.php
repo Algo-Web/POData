@@ -100,7 +100,7 @@ class EntryProcessor extends BaseNodeHandler
     }
     protected function handleStartAtomContent($attributes)
     {
-        $this->subProcessor       = new PropertyProcessor($attributes);
+        $this->subProcessor       = new PropertyProcessor();
         $atomContent              = new AtomContent(
             $this->arrayKeyOrDefault($attributes, ODataConstants::ATOM_TYPE_ATTRIBUTE_NAME, 'application/xml')
         );

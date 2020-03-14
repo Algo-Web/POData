@@ -24,7 +24,7 @@ class PropertyProcessor extends BaseNodeHandler
      */
     private $propertyContent;
 
-    public function __construct($attributes)
+    public function __construct()
     {
         $this->propertyContent = new SplStack();
         $this->propertyContent->push(new ODataPropertyContent());
