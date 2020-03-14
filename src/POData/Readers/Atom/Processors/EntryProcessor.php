@@ -5,6 +5,7 @@ declare(strict_types=1);
 
 namespace POData\Readers\Atom\Processors;
 
+use Closure;
 use POData\Common\ODataConstants;
 use POData\ObjectModel\AtomObjectModel\AtomContent;
 use POData\ObjectModel\ODataCategory;
@@ -14,6 +15,7 @@ use POData\ObjectModel\ODataMediaLink;
 use POData\ObjectModel\ODataTitle;
 use POData\Readers\Atom\Processors\Entry\LinkProcessor;
 use POData\Readers\Atom\Processors\Entry\PropertyProcessor;
+use SplStack;
 
 class EntryProcessor extends BaseNodeHandler
 {
@@ -30,11 +32,17 @@ class EntryProcessor extends BaseNodeHandler
      */
     private $subProcessor;
 
+    /**
+     * @var SplStack|callable
+     */
+    private $tagEndQueue;
+
     /** @noinspection PhpUnusedParameterInspection */
     public function __construct()
     {
         $this->oDataEntry                   = new ODataEntry();
         $this->oDataEntry->isMediaLinkEntry = false;
+        $this->tagEndQueue = new SplStack();
     }
 
     public function handleStartNode($tagNamespace, $tagName, $attributes)
@@ -43,7 +51,12 @@ class EntryProcessor extends BaseNodeHandler
     }
     public function handleEndNode($tagNamespace, $tagName)
     {
-        $this->handleNode(false, $tagNamespace, $tagName);
+        if (strtolower($tagNamespace) !== strtolower(ODataConstants::ATOM_NAMESPACE)) {
+            $this->subProcessor->{'handleEndNode'}($tagNamespace, $tagName);
+            return;
+        }
+        $endMethod = $this->tagEndQueue->pop();
+        $endMethod();
     }
 
     private function handleNode(bool $start, string $tagNamespace, string $tagName, array $attributes = [])
@@ -61,18 +74,23 @@ class EntryProcessor extends BaseNodeHandler
     }
 
 
-    private function doNothing($attributes = [])
+    private function doNothing()
     {
-        assert(is_array($attributes));
+        return function(){};
     }
 
-    protected function handleStartAtomId($attributes)
+    private function bindHere(Closure $closure)
     {
-        $this->doNothing($attributes);
+        return $closure->bindTo($this, get_class($this));
     }
-    protected function handleEndAtomId()
+    private function enqueueEnd(Closure $closure){
+        $this->tagEndQueue->push($this->bindHere($closure));
+    }
+    protected function handleStartAtomId()
     {
-        $this->oDataEntry->id = $this->popCharData();
+        $this->enqueueEnd(function(){
+            $this->oDataEntry->id = $this->popCharData();
+        });
     }
     protected function handleStartAtomTitle($attributes)
     {
@@ -81,44 +99,31 @@ class EntryProcessor extends BaseNodeHandler
             ODataConstants::ATOM_TYPE_ATTRIBUTE_NAME,
             ''
         );
-    }
-    protected function handleEndAtomTitle()
-    {
-        $this->oDataEntry->title = new ODataTitle($this->popCharData(), $this->titleType);
-        $this->titleType         = null;
+        $this->enqueueEnd(function(){
+            $this->oDataEntry->title = new ODataTitle($this->popCharData(), $this->titleType);
+            $this->titleType         = null;
+        });
     }
     protected function handleStartAtomSummary()
     {
         //TODO: for some reason we do not support this......
-        $this->doNothing();
-    }
-
-    protected function handleEndAtomSummary()
-    {
-        //TODO: for some reason we do not support this......
-        $this->doNothing();
+        $this->enqueueEnd($this->doNothing());
     }
     protected function handleStartAtomUpdated()
     {
-        $this->doNothing();
+        $this->enqueueEnd(function(){
+            $this->oDataEntry->updated = $this->popCharData();
+        });
     }
-    protected function handleEndAtomUpdated()
-    {
-        $this->oDataEntry->updated = $this->popCharData();
-    }
-
     protected function handleStartAtomLink($attributes)
     {
         $this->subProcessor = new LinkProcessor($attributes);
+        $this->enqueueEnd(function(){
+            assert($this->subProcessor instanceof LinkProcessor);
+            $this->handleLink($this->subProcessor->getObjetModelObject());
+            $this->subProcessor = null;
+        });
     }
-
-    protected function handleEndAtomLink()
-    {
-        assert($this->subProcessor instanceof LinkProcessor);
-        $this->handleLink($this->subProcessor->getObjetModelObject());
-        $this->subProcessor = null;
-    }
-
     protected function handleStartAtomCategory($attributes)
     {
         $this->objectModelSubNode = new ODataCategory(
@@ -129,11 +134,10 @@ class EntryProcessor extends BaseNodeHandler
                 'http://schemas.microsoft.com/ado/2007/08/dataservices/scheme'
             )
         );
-    }
-    protected function handleEndAtomCategory()
-    {
-        assert($this->objectModelSubNode instanceof ODataCategory);
-        $this->oDataEntry->setType($this->objectModelSubNode);
+        $this->enqueueEnd(function(){
+            assert($this->objectModelSubNode instanceof ODataCategory);
+            $this->oDataEntry->setType($this->objectModelSubNode);
+        });
     }
     protected function handleStartAtomContent($attributes)
     {
@@ -141,30 +145,22 @@ class EntryProcessor extends BaseNodeHandler
         $this->objectModelSubNode = new AtomContent(
             $this->arrayKeyOrDefault($attributes, ODataConstants::ATOM_TYPE_ATTRIBUTE_NAME, 'application/xml')
         );
+        $this->enqueueEnd(function(){
+            assert($this->objectModelSubNode instanceof AtomContent);
+            $this->objectModelSubNode->properties = $this->subProcessor->getObjetModelObject();
+            $this->oDataEntry->setAtomContent($this->objectModelSubNode);
+            $this->subProcessor = null;
+        });
     }
-    protected function handleEndAtomContent()
+    protected function handleStartAtomName()
     {
-        assert($this->objectModelSubNode instanceof AtomContent);
-        $this->objectModelSubNode->properties = $this->subProcessor->getObjetModelObject();
-        $this->oDataEntry->setAtomContent($this->objectModelSubNode);
-        $this->subProcessor = null;
+        $this->enqueueEnd($this->doNothing());
     }
-    protected function handleStartAtomName($attributes)
+    protected function handleStartAtomAuthor()
     {
-        $this->doNothing($attributes);
+        $this->enqueueEnd($this->doNothing());
     }
-    protected function handleEndAtomName()
-    {
-        $this->doNothing();
-    }
-    protected function handleStartAtomAuthor($attributes)
-    {
-        $this->doNothing($attributes);
-    }
-    protected function handleEndAtomAuthor()
-    {
-        $this->doNothing();
-    }
+
 
 
 
