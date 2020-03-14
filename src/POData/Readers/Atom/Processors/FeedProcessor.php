@@ -5,7 +5,6 @@ declare(strict_types=1);
 
 namespace POData\Readers\Atom\Processors;
 
-use ParseError;
 use POData\Common\ODataConstants;
 use POData\ObjectModel\ODataFeed;
 use POData\ObjectModel\ODataLink;
@@ -20,107 +19,64 @@ class FeedProcessor extends BaseNodeHandler
      */
     private $oDataFeed;
 
-    private $charData = '';
-
     private $titleType;
 
-    public function __construct($attributes)
+    public function __construct()
     {
         $this->oDataFeed = new ODataFeed();
     }
 
     public function handleStartNode($tagNamespace, $tagName, $attributes)
     {
-        switch (strtolower($tagNamespace)) {
-            case strtolower(ODataConstants::ATOM_NAMESPACE):
-                $this->handleAtomStart($tagName, $attributes);
-                break;
-            case strtolower(ODataConstants::ODATA_METADATA_NAMESPACE):
-                $this->handleMetadataStart($tagName, $attributes);
-                break;
+        assert(
+            strtolower(ODataConstants::ATOM_NAMESPACE) === strtolower($tagNamespace) ||
+            strtolower(ODataConstants::ODATA_METADATA_NAMESPACE) === strtolower($tagNamespace)
+        );
+        $AtomOrMetadata = strtolower(ODataConstants::ATOM_NAMESPACE) === strtolower($tagNamespace) ? 'Atom' : 'Metadata';
+        $method = 'handleStart' . $AtomOrMetadata . ucfirst(strtolower($tagName));
+        if (!method_exists($this, $method)) {
+            $this->onParseError('Atom', $AtomOrMetadata, $tagName);
         }
+        $this->{$method}($attributes);
+    }
+    public function handleStartAtomId(){
+        $this->enqueueEnd(function (){
+            $this->oDataFeed->id = $this->popCharData();
+        });
+    }
+    public function handleStartAtomTitle($attributes){
+        $this->titleType = $this->arrayKeyOrDefault(
+            $attributes,
+            ODataConstants::ATOM_TYPE_ATTRIBUTE_NAME,
+            ''
+        );
+        $this->enqueueEnd(function (){
+            $this->oDataFeed->title = new ODataTitle($this->popCharData(), $this->titleType);
+            $this->titleType        = null;
+        });
+    }
+    public function handleStartAtomUpdated(){
+        $this->enqueueEnd(function(){
+            $this->oDataFeed->updated = $this->popCharData();
+        });
     }
 
-    public function handleEndNode($tagNamespace, $tagName)
-    {
-        switch (strtolower($tagNamespace)) {
-            case strtolower(ODataConstants::ATOM_NAMESPACE):
-                $this->handleAtomEnd($tagName);
-                break;
-            case strtolower(ODataConstants::ODATA_METADATA_NAMESPACE):
-                $this->handleMetadataEnd($tagName);
-                break;
-        }
+    public function handleStartAtomLink($attributes){
+        $rel                      = $this->arrayKeyOrDefault($attributes, ODataConstants::ATOM_LINK_RELATION_ATTRIBUTE_NAME, '');
+        $prop                     = $rel === ODataConstants::ATOM_SELF_RELATION_ATTRIBUTE_VALUE ? 'selfLink' : 'nextPageLink';
+        $this->oDataFeed->{$prop} = new ODataLink(
+            $this->arrayKeyOrDefault($attributes, ODataConstants::ATOM_LINK_RELATION_ATTRIBUTE_NAME, ''),
+            $this->arrayKeyOrDefault($attributes, ODataConstants::ATOM_TITLE_ELELMET_NAME, ''),
+            $this->arrayKeyOrDefault($attributes, ODataConstants::ATOM_TYPE_ATTRIBUTE_NAME, ''),
+            $this->arrayKeyOrDefault($attributes, ODataConstants::ATOM_HREF_ATTRIBUTE_NAME, '')
+        );
+        $this->enqueueEnd($this->doNothing());
     }
 
-    public function handleAtomStart($tagName, $attributes)
-    {
-        switch (strtolower($tagName)) {
-            case strtolower(ODataConstants::ATOM_ID_ELEMENT_NAME):
-                break;
-            case strtolower(ODataConstants::ATOM_TITLE_ELELMET_NAME):
-                $this->titleType = $this->arrayKeyOrDefault(
-                    $attributes,
-                    ODataConstants::ATOM_TYPE_ATTRIBUTE_NAME,
-                    ''
-                );
-                break;
-            case strtolower(ODataConstants::ATOM_UPDATED_ELEMENT_NAME):
-                break;
-            case strtolower(ODataConstants::ATOM_LINK_ELEMENT_NAME):
-                $rel                      = $this->arrayKeyOrDefault($attributes, ODataConstants::ATOM_LINK_RELATION_ATTRIBUTE_NAME, '');
-                $prop                     = $rel === ODataConstants::ATOM_SELF_RELATION_ATTRIBUTE_VALUE ? 'selfLink' : 'nextPageLink';
-                $this->oDataFeed->{$prop} = new ODataLink(
-                    $this->arrayKeyOrDefault($attributes, ODataConstants::ATOM_LINK_RELATION_ATTRIBUTE_NAME, ''),
-                    $this->arrayKeyOrDefault($attributes, ODataConstants::ATOM_TITLE_ELELMET_NAME, ''),
-                    $this->arrayKeyOrDefault($attributes, ODataConstants::ATOM_TYPE_ATTRIBUTE_NAME, ''),
-                    $this->arrayKeyOrDefault($attributes, ODataConstants::ATOM_HREF_ATTRIBUTE_NAME, '')
-                );
-                break;
-            default:
-                $this->onParseError('Atom', 'Start', $tagName);
-        }
-    }
-
-    public function handleAtomEnd($tagName)
-    {
-        switch (strtolower($tagName)) {
-            case strtolower(ODataConstants::ATOM_ID_ELEMENT_NAME):
-                $this->oDataFeed->id = $this->popCharData();
-                break;
-            case strtolower(ODataConstants::ATOM_TITLE_ELELMET_NAME):
-                $this->oDataFeed->title = new ODataTitle($this->popCharData(), $this->titleType);
-                $this->titleType        = null;
-                break;
-            case strtolower(ODataConstants::ATOM_UPDATED_ELEMENT_NAME):
-                $this->oDataFeed->updated = $this->popCharData();
-                break;
-            case strtolower(ODataConstants::ATOM_LINK_ELEMENT_NAME):
-                break;
-            default:
-                $this->onParseError('Atom', 'End', $tagName);
-        }
-    }
-
-    public function handleMetadataStart($tagName, /* @scrutinizer ignore-unused */  $attributes)
-    {
-        switch (strtolower($tagName)) {
-            case strtolower(ODataConstants::ROWCOUNT_ELEMENT):
-                break;
-            default:
-                $this->onParseError('Metadata', 'Start', $tagName);
-        }
-    }
-
-    public function handleMetadataEnd($tagName)
-    {
-        switch (strtolower($tagName)) {
-            case strtolower(ODataConstants::ROWCOUNT_ELEMENT):
-                $this->oDataFeed->rowCount =  (int)$this->popCharData();
-                break;
-            default:
-                $this->onParseError('Metadata', 'End', $tagName);
-        }
+    public function handleStartMetadataCount(){
+        $this->enqueueEnd(function(){
+            $this->oDataFeed->rowCount =  (int)$this->popCharData();
+        });
     }
 
     public function handleChildComplete($objectModel)

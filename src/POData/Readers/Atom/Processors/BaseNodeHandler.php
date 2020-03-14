@@ -5,7 +5,10 @@ declare(strict_types=1);
 
 namespace POData\Readers\Atom\Processors;
 
+use Closure;
 use ParseError;
+use POData\Common\ODataConstants;
+use SplStack;
 
 abstract class BaseNodeHandler
 {
@@ -14,9 +17,12 @@ abstract class BaseNodeHandler
 
     private $charData = '';
 
-    abstract public function handleStartNode($tagNamespace, $tagName, $attributes);
+    /**
+     * @var SplStack|callable
+     */
+    private $tagEndQueue;
 
-    abstract public function handleEndNode($tagNamespace, $tagName);
+    abstract public function handleStartNode($tagNamespace, $tagName, $attributes);
 
     public function handleCharacterData($characters)
     {
@@ -53,5 +59,30 @@ abstract class BaseNodeHandler
     final protected function onParseError($namespace, $startEnd, $tagName)
     {
         throw new ParseError(sprintf(self::$processExceptionMessage, $namespace, $startEnd, $tagName));
+    }
+
+
+    protected function doNothing()
+    {
+        return function () {};
+    }
+
+    protected function bindHere(Closure $closure)
+    {
+        return $closure->bindTo($this, get_class($this));
+    }
+    protected function enqueueEnd(Closure $closure)
+    {
+        if(null === $this->tagEndQueue){
+            $this->tagEndQueue = new SplStack();
+        }
+        $this->tagEndQueue->push($this->bindHere($closure));
+    }
+
+    public function handleEndNode($tagNamespace, $tagName)
+    {
+        assert(!$this->tagEndQueue->isEmpty(), 'every node that opens should register a end tag');
+        $endMethod = $this->tagEndQueue->pop();
+        $endMethod();
     }
 }

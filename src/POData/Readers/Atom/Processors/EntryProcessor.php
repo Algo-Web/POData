@@ -5,7 +5,6 @@ declare(strict_types=1);
 
 namespace POData\Readers\Atom\Processors;
 
-use Closure;
 use POData\Common\ODataConstants;
 use POData\ObjectModel\AtomObjectModel\AtomContent;
 use POData\ObjectModel\ODataCategory;
@@ -15,7 +14,6 @@ use POData\ObjectModel\ODataMediaLink;
 use POData\ObjectModel\ODataTitle;
 use POData\Readers\Atom\Processors\Entry\LinkProcessor;
 use POData\Readers\Atom\Processors\Entry\PropertyProcessor;
-use SplStack;
 
 class EntryProcessor extends BaseNodeHandler
 {
@@ -32,17 +30,13 @@ class EntryProcessor extends BaseNodeHandler
      */
     private $subProcessor;
 
-    /**
-     * @var SplStack|callable
-     */
-    private $tagEndQueue;
+
 
     /** @noinspection PhpUnusedParameterInspection */
     public function __construct()
     {
         $this->oDataEntry                   = new ODataEntry();
         $this->oDataEntry->isMediaLinkEntry = false;
-        $this->tagEndQueue                  = new SplStack();
     }
 
     public function handleStartNode($tagNamespace, $tagName, $attributes)
@@ -57,29 +51,14 @@ class EntryProcessor extends BaseNodeHandler
         }
         $this->{$method}($attributes);
     }
+
     public function handleEndNode($tagNamespace, $tagName)
     {
         if (strtolower($tagNamespace) !== strtolower(ODataConstants::ATOM_NAMESPACE)) {
             $this->subProcessor->handleEndNode($tagNamespace, $tagName);
             return;
         }
-        assert(!$this->tagEndQueue->isEmpty(), 'every node that opens should register a end tag');
-        $endMethod = $this->tagEndQueue->pop();
-        $endMethod();
-    }
-
-    private function doNothing()
-    {
-        return function () {};
-    }
-
-    private function bindHere(Closure $closure)
-    {
-        return $closure->bindTo($this, get_class($this));
-    }
-    private function enqueueEnd(Closure $closure)
-    {
-        $this->tagEndQueue->push($this->bindHere($closure));
+        parent::handleEndNode($tagNamespace, $tagName);
     }
     protected function handleStartAtomId()
     {
