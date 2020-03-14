@@ -5,8 +5,13 @@ declare(strict_types=1);
 
 namespace POData\Readers\Atom\Processors;
 
+use ParseError;
+
 abstract class BaseNodeHandler
 {
+    private static $processExceptionMessage =
+        'FeedProcessor encountered %s %s Tag with name %s that we don\'t know how to process';
+
     private $charData = '';
 
     abstract public function __construct($attributes);
@@ -44,5 +49,10 @@ abstract class BaseNodeHandler
             }
         }
         return $default;
+    }
+
+    protected final function onParseError($namespace, $startEnd, $tagName){
+        throw new ParseError(sprintf(self::$processExceptionMessage, $namespace, $startEnd, $tagName));
+
     }
 }

@@ -13,8 +13,7 @@ use POData\ObjectModel\ODataTitle;
 
 class FeedProcessor extends BaseNodeHandler
 {
-    private static $processExceptionMessage =
-        'FeedProcessor encountered %s %s Tag with name %s that we don\'t know how to process';
+
 
     /**
      * @var ODataFeed
@@ -79,7 +78,7 @@ class FeedProcessor extends BaseNodeHandler
                 );
                 break;
             default:
-                throw new ParseError(sprintf(self::$processExceptionMessage, 'Atom', 'Start', $tagName));
+                $this->onParseError('Atom', 'Start', $tagName);
         }
     }
 
@@ -99,7 +98,7 @@ class FeedProcessor extends BaseNodeHandler
             case strtolower(ODataConstants::ATOM_LINK_ELEMENT_NAME):
                 break;
             default:
-                throw new ParseError(sprintf(self::$processExceptionMessage, 'Atom', 'End', $tagName));
+                $this->onParseError('Atom', 'End', $tagName);
         }
     }
 
@@ -109,7 +108,7 @@ class FeedProcessor extends BaseNodeHandler
             case strtolower(ODataConstants::ROWCOUNT_ELEMENT):
                 break;
             default:
-                throw new ParseError(sprintf(self::$processExceptionMessage, 'Metadata', 'Start', $tagName));
+                $this->onParseError('Metadata', 'Start', $tagName);
         }
     }
 
@@ -121,7 +120,7 @@ class FeedProcessor extends BaseNodeHandler
                 $this->charData            = '';
                 break;
             default:
-                throw new ParseError(sprintf(self::$processExceptionMessage, 'Metadata', 'End', $tagName));
+                $this->onParseError('Metadata', 'End', $tagName);
         }
     }
 

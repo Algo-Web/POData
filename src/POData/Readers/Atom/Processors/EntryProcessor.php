@@ -80,11 +80,7 @@ class EntryProcessor extends BaseNodeHandler
             case strtolower(ODataConstants::ATOM_AUTHOR_ELEMENT_NAME):
                 break;
             default:
-                if (null === $this->subProcessor) {
-                    dd($tagName);
-                }
-                $this->subProcessor->handleStartNode($tagNamespace, $tagName, $attributes);
-                break;
+                $this->onParseError('Atom', 'Start', $tagName);
         }
     }
 
@@ -124,8 +120,8 @@ class EntryProcessor extends BaseNodeHandler
             case strtolower(ODataConstants::ATOM_AUTHOR_ELEMENT_NAME):
                 break;
             default:
-                $this->subProcessor->handleEndNode($tagNamespace, $tagName);
-                break;
+                $this->onParseError('Atom', 'End', $tagName);
+
         }
     }
 
