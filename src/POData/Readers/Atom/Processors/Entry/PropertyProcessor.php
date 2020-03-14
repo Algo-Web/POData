@@ -62,6 +62,7 @@ class PropertyProcessor extends BaseNodeHandler
         ) {
             return ;
         }
+        // Pops a complex object off the stack
         $prop                                                  = $this->properties->pop();
         $propContent                                           = $this->propertyContent->pop();
         $this->propertyContent->top()->properties[$prop->name] = $prop;

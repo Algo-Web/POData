@@ -229,4 +229,41 @@ class AtomODataReaderTest extends TestCase
         $reader = new AtomODataReader();
         $data   = $reader->read($xml);
     }
+
+    public function testDestructNotBoom()
+    {
+        $reader = new AtomODataReader();
+        $reader->__destruct();
+        $this->assertTrue(true);
+    }
+
+    public function testCharWithoutTagGoBoom()
+    {
+        $reader = new AtomODataReader();
+
+        $this->expectException(\ParseError::class);
+        $this->expectExceptionMessage('encountered character data outside of xml tag');
+
+        $reader->characterData(null, 'anything');
+    }
+
+    public function testReadUnknownRootTagOpen()
+    {
+        $reader = new AtomODataReader();
+
+        $this->expectException(\ParseError::class);
+        $this->expectExceptionMessage('encountered node tag while not in a feed or a stack');
+
+        $reader->tagOpen('namespace', 'tag', []);
+    }
+
+    public function testReadUnknownRootTagClose()
+    {
+        $reader = new AtomODataReader();
+
+        $this->expectException(\ParseError::class);
+        $this->expectExceptionMessage('encountered node %s while not in a feed or a stack');
+
+        $reader->tagClose('namespace', 'tag');
+    }
 }

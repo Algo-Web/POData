@@ -45,7 +45,6 @@ class AtomODataReader implements IODataReader
     public function __destruct()
     {
         xml_parser_free($this->parser);
-        unset($this->parser);
     }
 
     public function read($data)
@@ -57,7 +56,7 @@ class AtomODataReader implements IODataReader
     public function characterData($parser, $data)
     {
         if ($this->stack->isEmpty()) {
-            throw new \ParseError('enchanted character data outside of xml tag');
+            throw new \ParseError('encountered character data outside of xml tag');
         }
         $this->stack->top()->handleCharacterData($data);
     }
