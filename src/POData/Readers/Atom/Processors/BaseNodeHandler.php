@@ -17,6 +17,8 @@ abstract class BaseNodeHandler
 
     public function handleCharacterData($characters)
     {
+        if (ord($characters) === 10 && empty($this->charData))
+            return; 
         $this->charData .= $characters;
     }
 
@@ -24,7 +26,7 @@ abstract class BaseNodeHandler
     {
         $data           = $this->charData;
         $this->charData = '';
-        return ltrim($data);
+        return $data;
     }
 
     abstract public function handleChildComplete($objectModel);
