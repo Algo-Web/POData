@@ -110,7 +110,7 @@ class EntryProcessor extends BaseNodeHandler
                  $this->subProcessor = null;
                 break;
             case strtolower(ODataConstants::ATOM_CATEGORY_ELEMENT_NAME):
-                $this->oDataEntry->type = $this->objectModelSubNode;
+                $this->oDataEntry->setAtomContent($this->objectModelSubNode);
                 break;
             case strtolower(ODataConstants::ATOM_PROPERTIES_ELEMENT_NAME):
                 $this->objectModelSubNode->setProperties($this->subProcessor->getObjetModelObject());
