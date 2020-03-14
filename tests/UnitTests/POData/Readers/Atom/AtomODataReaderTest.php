@@ -171,11 +171,11 @@ class AtomODataReaderTest extends TestCase
             'the type of the atom content failed to deserialise correctly'
         );
 
-        $this->assertEquals(2, count($content->properties), 'the entity deserialised the wrong number of properties');
+        $this->assertEquals(2, count($content->properties->properties), 'the entity deserialised the wrong number of properties');
         /**
          * @var ODataProperty[] $properties;
          */
-        $properties = $content->properties;
+        $properties = $content->properties->properties;
         $this->assertArrayHasKey('ProductID', $properties, 'The properties array failed to deserialise a correct key');
         $this->assertArrayHasKey('Details', $properties, 'The properties array failed to deserialise a correct key');
 
