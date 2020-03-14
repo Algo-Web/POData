@@ -627,14 +627,12 @@ class AtomODataWriter implements IODataWriter
      */
     protected function writeNullValue(ODataProperty $property)
     {
-        if (!(($property instanceof ODataBagContent) || ($property instanceof ODataPropertyContent))) {
-            $this->xmlWriter->writeAttributeNs(
-                ODataConstants::ODATA_METADATA_NAMESPACE_PREFIX,
-                ODataConstants::ATOM_NULL_ATTRIBUTE_NAME,
-                null,
-                ODataConstants::XML_TRUE_LITERAL
-            );
-        }
+        $this->xmlWriter->writeAttributeNs(
+            ODataConstants::ODATA_METADATA_NAMESPACE_PREFIX,
+            ODataConstants::ATOM_NULL_ATTRIBUTE_NAME,
+            null,
+            ODataConstants::XML_TRUE_LITERAL
+        );
 
         return $this;
     }
