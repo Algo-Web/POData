@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace UnitTests\POData\Readers\Atom;
 
+use AlgoWeb\ODataMetadata\MetadataManager;
 use PHPUnit\Framework\TestCase;
 use POData\ObjectModel\ODataEntry;
 use POData\ObjectModel\ODataFeed;
@@ -11,8 +12,19 @@ use POData\ObjectModel\ODataLink;
 use POData\ObjectModel\ODataProperty;
 use POData\Readers\Atom\AtomODataReader;
 
+/**
+ * Class AtomODataReaderTest
+ * @package UnitTests\POData\Readers\Atom
+ */
 class AtomODataReaderTest extends TestCase
 {
+    public function setUp()
+    {
+        parent::setUp();
+        // Seed MetadataManager mapping so to avoid blowups
+        $mng = new MetadataManager();
+    }
+
     public function testParse()
     {
         $xml    = '<?xml version="1.0" encoding="utf-8"?><feed xml:base="https://services.odata.org/V3/OData/OData.svc/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml"><id>https://services.odata.org/V3/OData/OData.svc/ProductDetails</id><title type="text">ProductDetails</title><updated>2020-03-12T16:26:25Z</updated><link rel="self" title="ProductDetails" href="ProductDetails" /><entry><id>https://services.odata.org/V3/OData/OData.svc/ProductDetails(1)</id><category term="ODataDemo.ProductDetail" scheme="http://schemas.microsoft.com/ado/2007/08/dataservices/scheme" /><link rel="edit" title="ProductDetail" href="ProductDetails(1)" /><link rel="http://schemas.microsoft.com/ado/2007/08/dataservices/related/Product" type="application/atom+xml;type=entry" title="Product" href="ProductDetails(1)/Product" /><title /><updated>2020-03-12T16:26:25Z</updated><author><name /></author><link rel="http://schemas.microsoft.com/ado/2007/08/dataservices/relatedlinks/Product" type="application/xml" title="Product" href="ProductDetails(1)/$links/Product" /><content type="application/xml"><m:properties><d:ProductID m:type="Edm.Int32">1</d:ProductID><d:Details>Details of product 1</d:Details></m:properties></content></entry><entry><id>https://services.odata.org/V3/OData/OData.svc/ProductDetails(3)</id><category term="ODataDemo.ProductDetail" scheme="http://schemas.microsoft.com/ado/2007/08/dataservices/scheme" /><link rel="edit" title="ProductDetail" href="ProductDetails(3)" /><link rel="http://schemas.microsoft.com/ado/2007/08/dataservices/related/Product" type="application/atom+xml;type=entry" title="Product" href="ProductDetails(3)/Product" /><title /><updated>2020-03-12T16:26:25Z</updated><author><name /></author><link rel="http://schemas.microsoft.com/ado/2007/08/dataservices/relatedlinks/Product" type="application/xml" title="Product" href="ProductDetails(3)/$links/Product" /><content type="application/xml"><m:properties><d:ProductID m:type="Edm.Int32">3</d:ProductID><d:Details>Details of product 3</d:Details></m:properties></content></entry><entry><id>https://services.odata.org/V3/OData/OData.svc/ProductDetails(4)</id><category term="ODataDemo.ProductDetail" scheme="http://schemas.microsoft.com/ado/2007/08/dataservices/scheme" /><link rel="edit" title="ProductDetail" href="ProductDetails(4)" /><link rel="http://schemas.microsoft.com/ado/2007/08/dataservices/related/Product" type="application/atom+xml;type=entry" title="Product" href="ProductDetails(4)/Product" /><title /><updated>2020-03-12T16:26:25Z</updated><author><name /></author><link rel="http://schemas.microsoft.com/ado/2007/08/dataservices/relatedlinks/Product" type="application/xml" title="Product" href="ProductDetails(4)/$links/Product" /><content type="application/xml"><m:properties><d:ProductID m:type="Edm.Int32">4</d:ProductID><d:Details>Details of product 4</d:Details></m:properties></content></entry><entry><id>https://services.odata.org/V3/OData/OData.svc/ProductDetails(8)</id><category term="ODataDemo.ProductDetail" scheme="http://schemas.microsoft.com/ado/2007/08/dataservices/scheme" /><link rel="edit" title="ProductDetail" href="ProductDetails(8)" /><link rel="http://schemas.microsoft.com/ado/2007/08/dataservices/related/Product" type="application/atom+xml;type=entry" title="Product" href="ProductDetails(8)/Product" /><title /><updated>2020-03-12T16:26:25Z</updated><author><name /></author><link rel="http://schemas.microsoft.com/ado/2007/08/dataservices/relatedlinks/Product" type="application/xml" title="Product" href="ProductDetails(8)/$links/Product" /><content type="application/xml"><m:properties><d:ProductID m:type="Edm.Int32">8</d:ProductID><d:Details>Details of product 8</d:Details></m:properties></content></entry></feed>';

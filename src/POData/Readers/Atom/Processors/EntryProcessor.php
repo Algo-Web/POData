@@ -100,9 +100,8 @@ class EntryProcessor extends BaseNodeHandler
                 'http://schemas.microsoft.com/ado/2007/08/dataservices/scheme'
             )
         );
-        $this->enqueueEnd(function () use ($odataCategory) {
-            $this->oDataEntry->setType($odataCategory);
-        });
+        $this->oDataEntry->setType($odataCategory);
+        $this->enqueueEnd($this->doNothing());
     }
 
     protected function handleStartAtomContent($attributes)
