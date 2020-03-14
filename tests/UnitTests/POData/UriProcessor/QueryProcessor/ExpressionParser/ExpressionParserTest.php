@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace UnitTests\POData\UriProcessor\QueryProcessor\ExpressionParser;
 
+use Mockery as m;
 use POData\Common\NotImplementedException;
 use POData\Common\ODataException;
 use POData\Providers\Metadata\IMetadataProvider;
@@ -31,7 +32,6 @@ use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionToken;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionTokenId;
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 use UnitTests\POData\TestCase;
-use Mockery as m;
 
 class ExpressionParserTest extends TestCase
 {
@@ -689,7 +689,7 @@ class ExpressionParserTest extends TestCase
      */
     public function primaryStartKaboomProvider(): array
     {
-        $result = [];
+        $result   = [];
         $result[] = [ExpressionTokenId::BINARY_LITERAL(), NotImplementedException::class, 'Support for binary is not implemented'];
         $result[] = [null, ODataException::class, 'Expression expected'];
 
@@ -735,7 +735,7 @@ class ExpressionParserTest extends TestCase
      */
     public function testParseParenExpressionBadInitialToken()
     {
-        $exceptionType = ODataException::class;
+        $exceptionType    = ODataException::class;
         $exceptionMessage = 'Open parenthesis expected.';
 
         $expression = 'year(datetime\'1988-11-11\')';
@@ -766,7 +766,7 @@ class ExpressionParserTest extends TestCase
      */
     public function testParseArgumentListBadInitialToken()
     {
-        $exceptionType = ODataException::class;
+        $exceptionType    = ODataException::class;
         $exceptionMessage = 'Open parenthesis expected.';
 
         $expression = 'year(datetime\'1988-11-11\')';

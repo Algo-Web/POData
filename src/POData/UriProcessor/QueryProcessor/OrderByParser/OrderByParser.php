@@ -403,7 +403,7 @@ class OrderByParser
 
             $this->assertion($currentNode instanceof OrderByLeafNode);
             /** @var OrderByLeafNode $newNode */
-            $newNode = $currentNode;
+            $newNode               = $currentNode;
             $orderByPathSegments[] = new OrderByPathSegment($orderBySubPathSegments, $newNode->isAscending());
             unset($orderBySubPathSegments);
         }
