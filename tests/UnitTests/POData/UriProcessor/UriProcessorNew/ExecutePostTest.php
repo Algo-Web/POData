@@ -41,6 +41,7 @@ use POData\UriProcessor\RequestDescription;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\SegmentDescriptor;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
 use POData\UriProcessor\UriProcessorNew;
+use POData\Writers\Atom\AtomODataWriter;
 use UnitTests\POData\Facets\NorthWind1\Customer2;
 use UnitTests\POData\TestCase;
 use UnitTests\POData\UriProcessor\UriProcessorDummy;
@@ -60,6 +61,7 @@ class ExecutePostTest extends TestCase
         $host->shouldReceive('getQueryStringItem')->andReturn(null);
         $host->shouldReceive('getRequestContentType')->andReturn(ODataConstants::FORMAT_ATOM)->atLeast(2);
 
+        $writer                          = new AtomODataWriter($baseUrl->getUrlAsString());
         $requestPayload                  = new ODataEntry();
         $requestPayload->type            = new ODataCategory('Customer');
         $requestPayload->propertyContent = new ODataPropertyContent();

@@ -310,20 +310,24 @@ class RequestDescription
      */
     private function readData($dataType)
     {
+        if (null === $this->data) {
+            return;
+        }
         $string = $this->data;
         if ($dataType === MimeTypes::MIME_APPLICATION_JSON) {
             $data       = !is_array($string) ? json_decode($string, true) : $string;
             $this->data = $data;
             return;
         }
-        if (is_array($string) && 1 == count($string)) {
-            $string = $string[0];
-        }
-        if (0 == strlen(trim($string))) {
-            return;
-        }
+
         $reader = $this->readerRegistry->getReader($this->getResponseVersion(), $dataType);
         if ($reader !== null) {
+            if (is_array($string) && 1 == count($string)) {
+                $string = $string[0];
+            }
+            if (0 == strlen(trim($string))) {
+                return;
+            }
             $this->data = $reader->read($string);
         }
     }
