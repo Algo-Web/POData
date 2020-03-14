@@ -18,12 +18,6 @@ use POData\Readers\Atom\Processors\Entry\PropertyProcessor;
 class EntryProcessor extends BaseNodeHandler
 {
     private $oDataEntry;
-    private $titleType;
-
-    /**
-     * @var AtomContent|ODataCategory
-     */
-    private $objectModelSubNode;
 
     /**
      * @var LinkProcessor|PropertyProcessor $subProcessor
@@ -84,16 +78,15 @@ class EntryProcessor extends BaseNodeHandler
     }
     protected function handleStartAtomLink($attributes)
     {
-        $this->subProcessor = new LinkProcessor($attributes);
-        $this->enqueueEnd(function () {
-            assert($this->subProcessor instanceof LinkProcessor);
-            $this->handleLink($this->subProcessor->getObjetModelObject());
+        $this->subProcessor = $linkProcessor = new LinkProcessor($attributes);
+        $this->enqueueEnd(function () use ($linkProcessor) {
+            $this->handleLink($linkProcessor->getObjetModelObject());
             $this->subProcessor = null;
         });
     }
     protected function handleStartAtomCategory($attributes)
     {
-        $this->objectModelSubNode = new ODataCategory(
+        $odataCategory = new ODataCategory(
             $this->arrayKeyOrDefault($attributes, ODataConstants::ATOM_CATEGORY_TERM_ATTRIBUTE_NAME, ''),
             $this->arrayKeyOrDefault(
                 $attributes,
@@ -101,21 +94,19 @@ class EntryProcessor extends BaseNodeHandler
                 'http://schemas.microsoft.com/ado/2007/08/dataservices/scheme'
             )
         );
-        $this->enqueueEnd(function () {
-            assert($this->objectModelSubNode instanceof ODataCategory);
-            $this->oDataEntry->setType($this->objectModelSubNode);
+        $this->enqueueEnd(function () use($odataCategory) {
+            $this->oDataEntry->setType($odataCategory);
         });
     }
     protected function handleStartAtomContent($attributes)
     {
         $this->subProcessor       = new PropertyProcessor($attributes);
-        $this->objectModelSubNode = new AtomContent(
+        $atomContent = new AtomContent(
             $this->arrayKeyOrDefault($attributes, ODataConstants::ATOM_TYPE_ATTRIBUTE_NAME, 'application/xml')
         );
-        $this->enqueueEnd(function () {
-            assert($this->objectModelSubNode instanceof AtomContent);
-            $this->objectModelSubNode->properties = $this->subProcessor->getObjetModelObject();
-            $this->oDataEntry->setAtomContent($this->objectModelSubNode);
+        $this->enqueueEnd(function () use($atomContent) {
+            $atomContent->properties = $this->subProcessor->getObjetModelObject();
+            $this->oDataEntry->setAtomContent($atomContent);
             $this->subProcessor = null;
         });
     }
