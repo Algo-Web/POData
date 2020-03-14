@@ -22,8 +22,9 @@ abstract class BaseNodeHandler
 
     public function handleCharacterData($characters)
     {
-        if (ord($characters) === 10 && empty($this->charData))
-            return; 
+        if (ord($characters) === 10 && empty($this->charData)) {
+            return;
+        }
         $this->charData .= $characters;
     }
 
@@ -51,7 +52,8 @@ abstract class BaseNodeHandler
         return $default;
     }
 
-    protected final function onParseError($namespace, $startEnd, $tagName){
+    protected final function onParseError($namespace, $startEnd, $tagName)
+    {
         throw new ParseError(sprintf(self::$processExceptionMessage, $namespace, $startEnd, $tagName));
 
     }
