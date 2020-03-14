@@ -47,32 +47,26 @@ class EntryProcessor extends BaseNodeHandler
 
     public function handleStartNode($tagNamespace, $tagName, $attributes)
     {
-        $this->handleNode(true, $tagNamespace, $tagName, $attributes);
+        if (strtolower($tagNamespace) !== strtolower(ODataConstants::ATOM_NAMESPACE)) {
+            $this->subProcessor->handleStartNode($tagNamespace, $tagName, $attributes);
+            return;
+        }
+        $method = 'handleStartAtom' . ucfirst(strtolower($tagName));
+        if (!method_exists($this, $method)) {
+            $this->onParseError('Atom', 'start', $tagName);
+        }
+        $this->{$method}($attributes);
     }
     public function handleEndNode($tagNamespace, $tagName)
     {
         if (strtolower($tagNamespace) !== strtolower(ODataConstants::ATOM_NAMESPACE)) {
-            $this->subProcessor->{'handleEndNode'}($tagNamespace, $tagName);
+            $this->subProcessor->handleEndNode($tagNamespace, $tagName);
             return;
         }
+        assert(!$this->tagEndQueue->isEmpty(), 'every node that opens should register a end tag')''
         $endMethod = $this->tagEndQueue->pop();
         $endMethod();
     }
-
-    private function handleNode(bool $start, string $tagNamespace, string $tagName, array $attributes = [])
-    {
-        $methodType = $start ? 'Start' : 'End';
-        if (strtolower($tagNamespace) !== strtolower(ODataConstants::ATOM_NAMESPACE)) {
-            $this->subProcessor->{'handle' . $methodType . 'Node'}($tagNamespace, $tagName, $attributes);
-            return;
-        }
-        $method = 'handle' . $methodType . 'Atom' . ucfirst(strtolower($tagName));
-        if (!method_exists($this, $method)) {
-            $this->onParseError('Atom', $methodType, $tagName);
-        }
-        $this->{$method}($attributes);
-    }
-
 
     private function doNothing()
     {
