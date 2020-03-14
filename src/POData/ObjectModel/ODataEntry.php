@@ -130,6 +130,7 @@ class ODataEntry
     public function setAtomContent(AtomObjectModel\AtomContent $atomContent)
     {
         $this->setPropertyContent($atomContent->properties);
+        $this->atomContent = $atomContent;
     }
 
     /**
