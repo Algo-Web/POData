@@ -295,9 +295,9 @@ abstract class BaseService implements IRequestHandler, IService
     }
 
     /**
-     * @return IQueryProvider
+     * @return IQueryProvider|null
      */
-    abstract public function getQueryProvider();
+    abstract public function getQueryProvider(): ?IQueryProvider;
 
     /**
      * @return IMetadataProvider
@@ -346,10 +346,6 @@ abstract class BaseService implements IRequestHandler, IService
 
         if (null === $queryProvider) {
             throw ODataException::createInternalServerError(Messages::providersWrapperNull());
-        }
-
-        if (!$queryProvider instanceof IQueryProvider) {
-            throw ODataException::createInternalServerError(Messages::invalidQueryInstance());
         }
 
         $this->config           = new ServiceConfiguration($metadataProvider);
@@ -544,14 +540,12 @@ abstract class BaseService implements IRequestHandler, IService
                     $odataModelInstance = $objectModelSerializer->writeTopLevelBagObject(
                         $result,
                         $requestProperty->getName(),
-                        $targetResourceType,
-                        $odataModelInstance
+                        $targetResourceType
                     );
                 } elseif (TargetKind::PRIMITIVE() == $requestTargetKind) {
                     $odataModelInstance = $objectModelSerializer->writeTopLevelPrimitive(
                         $result,
-                        $requestProperty,
-                        $odataModelInstance
+                        $requestProperty
                     );
                 } elseif (TargetKind::PRIMITIVE_VALUE() == $requestTargetKind) {
                     // Code path for primitive value (Since its primitive no need for

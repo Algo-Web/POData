@@ -65,7 +65,7 @@ class ServiceHost
     /**
      * array of query-string parameters.
      *
-     * @var array<string>
+     * @var array<string|array>
      */
     private $queryOptions;
 
@@ -388,7 +388,7 @@ class ServiceHost
      * @return string|null The value for the specified item in the request
      *                     query string NULL if the query option is absent
      */
-    public function getQueryStringItem($item)
+    public function getQueryStringItem(string $item): ?string
     {
         foreach ($this->queryOptions as $queryOption) {
             if (array_key_exists($item, $queryOption)) {
@@ -558,16 +558,12 @@ class ServiceHost
     /**
      * Sets the value status code header on the response.
      *
-     * @param string $value The status code
+     * @param int $value The status code
      *
      * @throws ODataException
      */
-    public function setResponseStatusCode($value)
+    public function setResponseStatusCode(int $value): void
     {
-        if (!is_numeric($value)) {
-            $msg = 'Invalid, non-numeric, status code: ' . $value;
-            throw ODataException::createInternalServerError($msg);
-        }
         $floor = floor($value/100);
         if ($floor >= 1 && $floor <= 5) {
             $statusDescription = HttpStatus::getStatusDescription($value);

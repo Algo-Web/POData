@@ -12,6 +12,7 @@ use POData\Common\Version;
 use POData\OperationContext\ServiceHost;
 use POData\OperationContext\Web\Illuminate\IlluminateOperationContext;
 use POData\OperationContext\Web\Illuminate\IncomingIlluminateRequest;
+use TypeError;
 use UnitTests\POData\TestCase;
 
 class ServiceHostTest extends TestCase
@@ -198,29 +199,6 @@ class ServiceHostTest extends TestCase
         $expected = 'etag';
         $host->setResponseETag('etag');
         $actual = $host->getResponseETag();
-        $this->assertEquals($expected, $actual);
-    }
-
-    public function testSetBadResponseCodeNonNumeric()
-    {
-        $expected = 'Invalid, non-numeric, status code: abc';
-        $actual   = null;
-
-        $request = m::mock(Request::class);
-        $request->shouldReceive('getMethod')->andReturn('GET');
-        $request->shouldReceive('all')->andReturn(['$top' => 'value', '$skip' => '']);
-        $request->shouldReceive('fullUrl')->andReturn('http://localhost/odata.svc');
-
-        $context = new IlluminateOperationContext($request);
-
-        $host = new ServiceHost($context, $request);
-
-        try {
-            $host->setResponseStatusCode('abc');
-        } catch (ODataException $e) {
-            $actual = $e->getMessage();
-        }
-        $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
 

@@ -128,13 +128,8 @@ class InternalSkipTokenInfo
      *             m keys where m < n, where n is total number of positional
      *             keys, then return the index of the object which has most matching
      */
-    public function getIndexOfFirstEntryInTheNextPage(&$searchArray)
+    public function getIndexOfFirstEntryInTheNextPage(array &$searchArray): int
     {
-        if (!is_array($searchArray)) {
-            $msg = Messages::internalSkipTokenInfoBinarySearchRequireArray('searchArray');
-            throw new \InvalidArgumentException($msg);
-        }
-
         if (empty($searchArray)) {
             return -1;
         }
@@ -146,7 +141,7 @@ class InternalSkipTokenInfo
         $searchArraySize = count($searchArray) - 1;
         $high            = $searchArraySize;
         do {
-            $mid    = $low + round(($high - $low)/2);
+            $mid    = intval($low + round(($high - $low)/2));
             $result = $comparer($keyObject, $searchArray[$mid]);
             if ($result > 0) {
                 $low = $mid + 1;

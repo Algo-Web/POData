@@ -1239,7 +1239,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
  <message>message</message>
 </error>
 ';
-        $actual = AtomODataWriter::serializeException($foo, true);
+        $actual = AtomODataWriter::serializeException($foo);
         $this->assertXmlStringEqualsXmlString($expected, $actual);
     }
 

@@ -79,7 +79,7 @@ interface IExpressionProvider
      * Call-back for constant expression.
      *
      * @param IType  $type  The type of constant
-     * @param object $value The value of the constant
+     * @param string $value The value of the constant
      *
      * @return string
      */
@@ -92,7 +92,7 @@ interface IExpressionProvider
      *
      * @return string
      */
-    public function onPropertyAccessExpression(PropertyAccessExpression $expression);
+    public function onPropertyAccessExpression(PropertyAccessExpression $expression): string;
 
     /**
      * Call-back for function call expression.

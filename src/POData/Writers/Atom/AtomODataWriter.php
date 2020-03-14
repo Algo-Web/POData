@@ -627,14 +627,12 @@ class AtomODataWriter implements IODataWriter
      */
     protected function writeNullValue(ODataProperty $property)
     {
-        if (!(($property instanceof ODataBagContent) || ($property instanceof ODataPropertyContent))) {
-            $this->xmlWriter->writeAttributeNs(
-                ODataConstants::ODATA_METADATA_NAMESPACE_PREFIX,
-                ODataConstants::ATOM_NULL_ATTRIBUTE_NAME,
-                null,
-                ODataConstants::XML_TRUE_LITERAL
-            );
-        }
+        $this->xmlWriter->writeAttributeNs(
+            ODataConstants::ODATA_METADATA_NAMESPACE_PREFIX,
+            ODataConstants::ATOM_NULL_ATTRIBUTE_NAME,
+            null,
+            ODataConstants::XML_TRUE_LITERAL
+        );
 
         return $this;
     }
@@ -655,12 +653,10 @@ class AtomODataWriter implements IODataWriter
      * Serialize the exception.
      *
      * @param ODataException $exception               Exception to serialize
-     * @param bool           $serializeInnerException if set to true,
-     *                                                serialize the inner exception if $exception is an ODataException
      *
      * @return string
      */
-    public static function serializeException(ODataException $exception, $serializeInnerException)
+    public static function serializeException(ODataException $exception)
     {
         $xmlWriter = new \XMLWriter();
         $xmlWriter->openMemory();
