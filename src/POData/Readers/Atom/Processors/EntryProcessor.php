@@ -17,7 +17,6 @@ use POData\Readers\Atom\Processors\Entry\PropertyProcessor;
 class EntryProcessor extends BaseNodeHandler
 {
     private $oDataEntry;
-    private $charData = '';
     private $titleType;
 
     /**
@@ -33,10 +32,15 @@ class EntryProcessor extends BaseNodeHandler
     public function __construct($attributes)
     {
         $this->oDataEntry = new ODataEntry();
+        $this->oDataEntry->isMediaLinkEntry = false;
     }
 
     public function handleStartNode($tagNamespace, $tagName, $attributes)
     {
+        if(strtolower($tagNamespace) !== strtolower(ODataConstants::ATOM_NAMESPACE)){
+            $this->subProcessor->handleStartNode($tagNamespace, $tagName, $attributes);
+            return;
+        }
         switch (strtolower($tagName)) {
             case strtolower(ODataConstants::ATOM_ID_ELEMENT_NAME):
                 break;
@@ -66,10 +70,8 @@ class EntryProcessor extends BaseNodeHandler
                     )
                 );
                 break;
-            case strtolower(ODataConstants::ATOM_PROPERTIES_ELEMENT_NAME):
-                $this->subProcessor = new PropertyProcessor($attributes);
-                break;
             case strtolower(ODataConstants::ATOM_CONTENT_ELEMENT_NAME):
+                $this->subProcessor = new PropertyProcessor($attributes);
                 $this->objectModelSubNode = new AtomContent(
                     $this->arrayKeyOrDefault($attributes, ODataConstants::ATOM_TYPE_ATTRIBUTE_NAME, 'application/xml')
                 );
@@ -88,36 +90,35 @@ class EntryProcessor extends BaseNodeHandler
 
     public function handleEndNode($tagNamespace, $tagName)
     {
+        if(strtolower($tagNamespace) !== strtolower(ODataConstants::ATOM_NAMESPACE)){
+            $this->subProcessor->handleEndNode($tagNamespace, $tagName);
+            return;
+        }
         switch (strtolower($tagName)) {
             case strtolower(ODataConstants::ATOM_ID_ELEMENT_NAME):
                 $this->oDataEntry->id = $this->popCharData();
-                $this->charData       = '';
                 break;
             case strtolower(ODataConstants::ATOM_TITLE_ELELMET_NAME):
-                $this->oDataEntry->title = new ODataTitle($this->charData, $this->titleType);
-                $this->charData          = '';
+                $this->oDataEntry->title = new ODataTitle($this->popCharData(), $this->titleType);
                 $this->titleType         = null;
                 break;
             case strtolower(ODataConstants::ATOM_SUMMARY_ELEMENT_NAME):
                 //TODO: for some reason we do not support this......
                 break;
             case strtolower(ODataConstants::ATOM_UPDATED_ELEMENT_NAME):
-                $this->oDataEntry->updated = $this->charData;
-                $this->charData            = '';
+                $this->oDataEntry->updated = $this->popCharData();
                 break;
             case strtolower(ODataConstants::ATOM_LINK_ELEMENT_NAME):
                  $this->handleLink($this->subProcessor->getObjetModelObject());
                  $this->subProcessor = null;
                 break;
             case strtolower(ODataConstants::ATOM_CATEGORY_ELEMENT_NAME):
-                $this->oDataEntry->setAtomContent($this->objectModelSubNode);
-                break;
-            case strtolower(ODataConstants::ATOM_PROPERTIES_ELEMENT_NAME):
-                $this->objectModelSubNode->setProperties($this->subProcessor->getObjetModelObject());
-                $this->subProcessor = null;
+                $this->oDataEntry->type  = $this->objectModelSubNode;
                 break;
             case strtolower(ODataConstants::ATOM_CONTENT_ELEMENT_NAME):
-                $this->oDataEntry->atomContent = $this->objectModelSubNode;
+                $this->objectModelSubNode->properties = $this->subProcessor->getObjetModelObject();
+                $this->oDataEntry->setAtomContent($this->objectModelSubNode);
+                $this->subProcessor = null;
                 break;
             case strtolower(ODataConstants::ATOM_NAME_ELEMENT_NAME):
             case strtolower(ODataConstants::ATOM_AUTHOR_ELEMENT_NAME):
@@ -159,6 +160,7 @@ class EntryProcessor extends BaseNodeHandler
                 break;
             case ODataConstants::ATOM_EDIT_MEDIA_RELATION_ATTRIBUTE_VALUE:
                 $this->oDataEntry->mediaLink = $link;
+                $this->oDataEntry = true;
                 break;
             default:
                 $this->oDataEntry->mediaLinks[] = $link;

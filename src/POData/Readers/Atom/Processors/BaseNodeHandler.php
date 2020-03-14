@@ -24,7 +24,7 @@ abstract class BaseNodeHandler
     {
         $data           = $this->charData;
         $this->charData = '';
-        return $data;
+        return ltrim($data);
     }
 
     abstract public function handleChildComplete($objectModel);
