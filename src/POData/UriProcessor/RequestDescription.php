@@ -201,7 +201,7 @@ class RequestDescription
     /**
      * Data of request from request body.
      *
-     * @var array|null
+     * @var array|string|ODataFeed|ODataEntry|null
      */
     private $data;
 
