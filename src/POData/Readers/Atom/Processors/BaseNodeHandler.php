@@ -14,8 +14,6 @@ abstract class BaseNodeHandler
 
     private $charData = '';
 
-    abstract public function __construct($attributes);
-
     abstract public function handleStartNode($tagNamespace, $tagName, $attributes);
 
     abstract public function handleEndNode($tagNamespace, $tagName);

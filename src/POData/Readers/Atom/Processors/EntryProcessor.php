@@ -31,7 +31,7 @@ class EntryProcessor extends BaseNodeHandler
     private $subProcessor;
 
     /** @noinspection PhpUnusedParameterInspection */
-    public function __construct($attributes)
+    public function __construct()
     {
         $this->oDataEntry                   = new ODataEntry();
         $this->oDataEntry->isMediaLinkEntry = false;
@@ -39,96 +39,134 @@ class EntryProcessor extends BaseNodeHandler
 
     public function handleStartNode($tagNamespace, $tagName, $attributes)
     {
-        if (strtolower($tagNamespace) !== strtolower(ODataConstants::ATOM_NAMESPACE)) {
-            $this->subProcessor->handleStartNode($tagNamespace, $tagName, $attributes);
-            return;
-        }
-        switch (strtolower($tagName)) {
-            case strtolower(ODataConstants::ATOM_ID_ELEMENT_NAME):
-                break;
-            case strtolower(ODataConstants::ATOM_TITLE_ELELMET_NAME):
-                $this->titleType = $this->arrayKeyOrDefault(
-                    $attributes,
-                    ODataConstants::ATOM_TYPE_ATTRIBUTE_NAME,
-                    ''
-                );
-                break;
-            case strtolower(ODataConstants::ATOM_SUMMARY_ELEMENT_NAME):
-                //TODO: for some reason we do not support this......
-                break;
-            case strtolower(ODataConstants::ATOM_UPDATED_ELEMENT_NAME):
-                break;
-
-            case strtolower(ODataConstants::ATOM_LINK_ELEMENT_NAME):
-                $this->subProcessor = new LinkProcessor($attributes);
-                break;
-            case strtolower(ODataConstants::ATOM_CATEGORY_ELEMENT_NAME):
-                $this->objectModelSubNode = new ODataCategory(
-                    $this->arrayKeyOrDefault($attributes, ODataConstants::ATOM_CATEGORY_TERM_ATTRIBUTE_NAME, ''),
-                    $this->arrayKeyOrDefault(
-                        $attributes,
-                        ODataConstants::ATOM_CATEGORY_SCHEME_ATTRIBUTE_NAME,
-                        'http://schemas.microsoft.com/ado/2007/08/dataservices/scheme'
-                    )
-                );
-                break;
-            case strtolower(ODataConstants::ATOM_CONTENT_ELEMENT_NAME):
-                $this->subProcessor       = new PropertyProcessor($attributes);
-                $this->objectModelSubNode = new AtomContent(
-                    $this->arrayKeyOrDefault($attributes, ODataConstants::ATOM_TYPE_ATTRIBUTE_NAME, 'application/xml')
-                );
-                break;
-            case strtolower(ODataConstants::ATOM_NAME_ELEMENT_NAME):
-            case strtolower(ODataConstants::ATOM_AUTHOR_ELEMENT_NAME):
-                break;
-            default:
-                $this->onParseError('Atom', 'Start', $tagName);
-        }
+        $this->handleNode(true, $tagNamespace, $tagName, $attributes);
     }
-
     public function handleEndNode($tagNamespace, $tagName)
     {
+        $this->handleNode(false, $tagNamespace, $tagName);
+    }
+
+    private function handleNode(bool $start, string $tagNamespace, string $tagName, array $attributes = [])
+    {
+        $methodType = $start ? 'Start' : 'End';
         if (strtolower($tagNamespace) !== strtolower(ODataConstants::ATOM_NAMESPACE)) {
-            $this->subProcessor->handleEndNode($tagNamespace, $tagName);
+            $this->subProcessor->{'handle' . $methodType . 'Node'}($tagNamespace, $tagName, $attributes);
             return;
         }
-        switch (strtolower($tagName)) {
-            case strtolower(ODataConstants::ATOM_ID_ELEMENT_NAME):
-                $this->oDataEntry->id = $this->popCharData();
-                break;
-            case strtolower(ODataConstants::ATOM_TITLE_ELELMET_NAME):
-                $this->oDataEntry->title = new ODataTitle($this->popCharData(), $this->titleType);
-                $this->titleType         = null;
-                break;
-            case strtolower(ODataConstants::ATOM_SUMMARY_ELEMENT_NAME):
-                //TODO: for some reason we do not support this......
-                break;
-            case strtolower(ODataConstants::ATOM_UPDATED_ELEMENT_NAME):
-                $this->oDataEntry->updated = $this->popCharData();
-                break;
-            case strtolower(ODataConstants::ATOM_LINK_ELEMENT_NAME):
-                assert($this->subProcessor instanceof LinkProcessor);
-                 $this->handleLink($this->subProcessor->getObjetModelObject());
-                 $this->subProcessor = null;
-                break;
-            case strtolower(ODataConstants::ATOM_CATEGORY_ELEMENT_NAME):
-                assert($this->objectModelSubNode instanceof ODataCategory);
-                $this->oDataEntry->setType($this->objectModelSubNode);
-                break;
-            case strtolower(ODataConstants::ATOM_CONTENT_ELEMENT_NAME):
-                assert($this->objectModelSubNode instanceof AtomContent);
-                $this->objectModelSubNode->properties = $this->subProcessor->getObjetModelObject();
-                $this->oDataEntry->setAtomContent($this->objectModelSubNode);
-                $this->subProcessor = null;
-                break;
-            case strtolower(ODataConstants::ATOM_NAME_ELEMENT_NAME):
-            case strtolower(ODataConstants::ATOM_AUTHOR_ELEMENT_NAME):
-                break;
-            default:
-                $this->onParseError('Atom', 'End', $tagName);
-
+        $method = 'handle' . $methodType . 'Atom' . ucfirst(strtolower($tagName));
+        if(!method_exists($this, $method)){
+            $this->onParseError('Atom', $methodType, $tagName);
         }
+        $this->{$method}($attributes);
     }
+
+
+    private function doNothing($attributes = [])
+    {
+        assert(is_array($attributes));
+    }
+
+    protected function handleStartAtomId($attributes)
+    {
+        $this->doNothing($attributes);
+    }
+    protected function handleEndAtomId()
+    {
+        $this->oDataEntry->id = $this->popCharData();
+    }
+    protected function handleStartAtomTitle($attributes)
+    {
+        $this->titleType = $this->arrayKeyOrDefault(
+            $attributes,
+            ODataConstants::ATOM_TYPE_ATTRIBUTE_NAME,
+            ''
+        );
+    }
+    protected function handleEndAtomTitle()
+    {
+        $this->oDataEntry->title = new ODataTitle($this->popCharData(), $this->titleType);
+        $this->titleType         = null;
+    }
+    protected function handleStartAtomSummary()
+    {
+        //TODO: for some reason we do not support this......
+        $this->doNothing();
+    }
+
+    protected function handleEndAtomSummary()
+    {
+        //TODO: for some reason we do not support this......
+        $this->doNothing();
+    }
+    protected function handleStartAtomUpdated()
+    {
+        $this->doNothing();
+    }
+    protected function handleEndAtomUpdated()
+    {
+        $this->oDataEntry->updated = $this->popCharData();
+    }
+
+    protected function handleStartAtomLink($attributes)
+    {
+        $this->subProcessor = new LinkProcessor($attributes);
+    }
+
+    protected function handleEndAtomLink()
+    {
+        assert($this->subProcessor instanceof LinkProcessor);
+        $this->handleLink($this->subProcessor->getObjetModelObject());
+        $this->subProcessor = null;
+    }
+
+    protected function handleStartAtomCategory($attributes)
+    {
+        $this->objectModelSubNode = new ODataCategory(
+            $this->arrayKeyOrDefault($attributes, ODataConstants::ATOM_CATEGORY_TERM_ATTRIBUTE_NAME, ''),
+            $this->arrayKeyOrDefault(
+                $attributes,
+                ODataConstants::ATOM_CATEGORY_SCHEME_ATTRIBUTE_NAME,
+                'http://schemas.microsoft.com/ado/2007/08/dataservices/scheme'
+            )
+        );
+    }
+    protected function handleEndAtomCategory()
+    {
+        assert($this->objectModelSubNode instanceof ODataCategory);
+        $this->oDataEntry->setType($this->objectModelSubNode);
+    }
+    protected function handleStartAtomContent($attributes)
+    {
+        $this->subProcessor       = new PropertyProcessor($attributes);
+        $this->objectModelSubNode = new AtomContent(
+            $this->arrayKeyOrDefault($attributes, ODataConstants::ATOM_TYPE_ATTRIBUTE_NAME, 'application/xml')
+        );
+    }
+    protected function handleEndAtomContent()
+    {
+        assert($this->objectModelSubNode instanceof AtomContent);
+        $this->objectModelSubNode->properties = $this->subProcessor->getObjetModelObject();
+        $this->oDataEntry->setAtomContent($this->objectModelSubNode);
+        $this->subProcessor = null;
+    }
+    protected function handleStartAtomName($attributes)
+    {
+        $this->doNothing($attributes);
+    }
+    protected function handleEndAtomName()
+    {
+        $this->doNothing();
+    }
+    protected function handleStartAtomAuthor($attributes)
+    {
+        $this->doNothing($attributes);
+    }
+    protected function handleEndAtomAuthor()
+    {
+        $this->doNothing();
+    }
+
+
 
     public function handleChildComplete($objectModel)
     {
