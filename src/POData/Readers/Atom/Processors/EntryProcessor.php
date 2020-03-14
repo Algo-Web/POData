@@ -48,12 +48,14 @@ class EntryProcessor extends BaseNodeHandler
         }
         parent::handleEndNode($tagNamespace, $tagName);
     }
+
     protected function handleStartAtomId()
     {
         $this->enqueueEnd(function () {
             $this->oDataEntry->id = $this->popCharData();
         });
     }
+
     protected function handleStartAtomTitle($attributes)
     {
         $titleType = $this->arrayKeyOrDefault(
@@ -65,17 +67,20 @@ class EntryProcessor extends BaseNodeHandler
             $this->oDataEntry->title = new ODataTitle($this->popCharData(), $titleType);
         });
     }
+
     protected function handleStartAtomSummary()
     {
         //TODO: for some reason we do not support this......
         $this->enqueueEnd($this->doNothing());
     }
+
     protected function handleStartAtomUpdated()
     {
         $this->enqueueEnd(function () {
             $this->oDataEntry->updated = $this->popCharData();
         });
     }
+
     protected function handleStartAtomLink($attributes)
     {
         $this->subProcessor = $linkProcessor = new LinkProcessor($attributes);
@@ -84,6 +89,7 @@ class EntryProcessor extends BaseNodeHandler
             $this->subProcessor = null;
         });
     }
+
     protected function handleStartAtomCategory($attributes)
     {
         $odataCategory = new ODataCategory(
@@ -98,6 +104,7 @@ class EntryProcessor extends BaseNodeHandler
             $this->oDataEntry->setType($odataCategory);
         });
     }
+
     protected function handleStartAtomContent($attributes)
     {
         $this->subProcessor       = new PropertyProcessor();
@@ -110,10 +117,12 @@ class EntryProcessor extends BaseNodeHandler
             $this->subProcessor = null;
         });
     }
+
     protected function handleStartAtomName()
     {
         $this->enqueueEnd($this->doNothing());
     }
+
     protected function handleStartAtomAuthor()
     {
         $this->enqueueEnd($this->doNothing());
@@ -152,6 +161,7 @@ class EntryProcessor extends BaseNodeHandler
                 break;
         }
     }
+
     private function handleODataLink(ODataLink $link)
     {
         if ($link->name === ODataConstants::ATOM_EDIT_RELATION_ATTRIBUTE_VALUE) {
@@ -160,6 +170,7 @@ class EntryProcessor extends BaseNodeHandler
             $this->oDataEntry->links[] = $link;
         }
     }
+
     private function handleODataMediaLink(ODataMediaLink $link)
     {
         if ($link->name === ODataConstants::ATOM_EDIT_MEDIA_RELATION_ATTRIBUTE_VALUE) {
