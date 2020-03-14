@@ -6,6 +6,7 @@ Unreleased
         - Long-b0rked OData-specific exception constructors,
         - EOL-handling mismatch between Linux and Windows,
         - ... interesting ... ways that XMLWriter was being used.
+   * Drop external dependency on JMS serialiser in favour of a more performant functional equivalent (see [#227] (https://github.com/Algo-Web/POData/pull/227))
 
 0.3.7 (2020-03-13)
 ------------------
