@@ -82,7 +82,8 @@ abstract class BaseNodeHandler
 
     protected function doNothing()
     {
-        return function () {};
+        return function () {
+        };
     }
 
     protected function bindHere(Closure $closure)
