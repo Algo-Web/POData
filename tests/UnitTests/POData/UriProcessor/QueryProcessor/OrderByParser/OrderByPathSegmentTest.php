@@ -9,7 +9,7 @@ use POData\UriProcessor\QueryProcessor\OrderByParser\OrderByPathSegment;
 use UnitTests\POData\TestCase;
 
 /**
- * Class OrderByPathSegmentTest
+ * Class OrderByPathSegmentTest.
  * @package UnitTests\POData\UriProcessor\QueryProcessor\OrderByParser
  */
 class OrderByPathSegmentTest extends TestCase

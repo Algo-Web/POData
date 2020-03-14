@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 
 namespace POData\Readers\Atom\Processors\Entry;
-
 
 use POData\Common\ODataConstants;
 use POData\ObjectModel\AtomObjectModel\AtomContent;
@@ -29,8 +30,8 @@ class PropertyProcessor extends BaseNodeHandler
     {
         //TODO: this will need to be expanded with opengis namespaces as well when supported
         assert($tagNamespace === ODataConstants::ODATA_NAMESPACE);
-        $this->latestProperty = new ODataProperty();
-        $this->latestProperty->name = $tagName;
+        $this->latestProperty           = new ODataProperty();
+        $this->latestProperty->name     = $tagName;
         $this->latestProperty->typeName = $this->arrayKeyOrDefault(
             $attributes,
             ODataConstants::ODATA_METADATA_NAMESPACE . '|' . ODataConstants::ATOM_TYPE_ATTRIBUTE_NAME,

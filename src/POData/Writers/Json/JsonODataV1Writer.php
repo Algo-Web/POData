@@ -416,7 +416,7 @@ class JsonODataV1Writer implements IODataWriter
     /**
      * serialize exception.
      *
-     * @param ODataException $exception               Exception to serialize
+     * @param ODataException $exception Exception to serialize
      *
      * serialize the inner exception if $exception is an ODataException
      *

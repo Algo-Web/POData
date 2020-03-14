@@ -59,21 +59,21 @@ class ODataLink
 
     /**
      * ODataLink constructor.
-     * @param string $name
-     * @param string $title
-     * @param string $type
-     * @param string $url
-     * @param bool $isCollection
+     * @param string               $name
+     * @param string               $title
+     * @param string               $type
+     * @param string               $url
+     * @param bool                 $isCollection
      * @param ODataEntry|ODataFeed $expandedResult
-     * @param bool $isExpanded
-     * @param null $expandResult
+     * @param bool                 $isExpanded
+     * @param null                 $expandResult
      */
     public function __construct($name = null, $title = null, $type = null, $url = null, $isCollection = null)
     {
-        $this->name = $name;
-        $this->title = $title;
-        $this->type = $type;
-        $this->url = $url;
+        $this->name         = $name;
+        $this->title        = $title;
+        $this->type         = $type;
+        $this->url          = $url;
         $this->isCollection = $isCollection;
     }
 

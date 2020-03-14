@@ -90,13 +90,12 @@ class SegmentParser
     /**
      * Extract identifier and key predicate from a segment.
      *
-     * @param string $segment       The segment from which identifier and key
-     * @param string $keyPredicate  On return, this parameter will contain key predicate part of the segment,
-     *                              null if predicate is absent
-     *
-     * @return string               The identifier part of the segment
+     * @param string $segment      The segment from which identifier and key
+     * @param string $keyPredicate On return, this parameter will contain key predicate part of the segment,
+     *                             null if predicate is absent
      *
      * @throws ODataException If any error occurs while processing segment
+     * @return string         The identifier part of the segment
      */
     private function extractSegmentIdentifierAndKeyPredicate($segment, &$keyPredicate): string
     {
@@ -145,7 +144,7 @@ class SegmentParser
         $segmentCount = count($segments);
         $keyPredicate = null;
         $identifier   = $this->extractSegmentIdentifierAndKeyPredicate($segments[0], $keyPredicate);
-        $previous = $this->createFirstSegmentDescriptor(
+        $previous     = $this->createFirstSegmentDescriptor(
             $identifier,
             $keyPredicate,
             $checkRights
@@ -197,7 +196,7 @@ class SegmentParser
         }
 
         $keyPredicate = null;
-        $identifier = $this->extractSegmentIdentifierAndKeyPredicate($segment, $keyPredicate);
+        $identifier   = $this->extractSegmentIdentifierAndKeyPredicate($segment, $keyPredicate);
         $hasPredicate = null !== $keyPredicate;
 
         $singleton = $this->providerWrapper->resolveSingleton($identifier);

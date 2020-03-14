@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 
 namespace POData\Readers\Atom\Processors;
-
 
 use POData\Common\ODataConstants;
 use POData\ObjectModel\AtomObjectModel\AtomContent;
@@ -90,19 +91,19 @@ class EntryProcessor extends BaseNodeHandler
         switch (strtolower($tagName)) {
             case strtolower(ODataConstants::ATOM_ID_ELEMENT_NAME):
                 $this->oDataEntry->id = $this->popCharData();
-                $this->charData = '';
+                $this->charData       = '';
                 break;
             case strtolower(ODataConstants::ATOM_TITLE_ELELMET_NAME):
                 $this->oDataEntry->title = new ODataTitle($this->charData, $this->titleType);
-                $this->charData = '';
-                $this->titleType = null;
+                $this->charData          = '';
+                $this->titleType         = null;
                 break;
             case strtolower(ODataConstants::ATOM_SUMMARY_ELEMENT_NAME):
                 //TODO: for some reason we do not support this......
                 break;
             case strtolower(ODataConstants::ATOM_UPDATED_ELEMENT_NAME):
                 $this->oDataEntry->updated = $this->charData;
-                $this->charData = '';
+                $this->charData            = '';
                 break;
             case strtolower(ODataConstants::ATOM_LINK_ELEMENT_NAME):
                  $this->handleLink($this->subProcessor->getObjetModelObject());

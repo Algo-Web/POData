@@ -18,7 +18,7 @@ use POData\OperationContext\Web\OutgoingResponse;
 use UnitTests\POData\TestCase;
 
 /**
- * Class ErrorHandlerTest
+ * Class ErrorHandlerTest.
  * @package UnitTests\POData\Common
  */
 class ErrorHandlerTest extends TestCase

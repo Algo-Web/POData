@@ -55,7 +55,7 @@ class RequestDescriptionMockeryTest extends TestCase
         $request = m::mock(IncomingIlluminateRequest::class)->makePartial();
         $request->shouldReceive('getAllInput')->andReturn([$raw])->atLeast(1);
 
-        $type = MimeTypes::MIME_APPLICATION_ATOM;
+        $type           = MimeTypes::MIME_APPLICATION_ATOM;
         $readerRegistry = new ODataReaderRegistry();
         $readerRegistry->register(new AtomODataReader());
         $desc = new RequestDescription($segArray, $url, $version, null, null, $type, $request, $readerRegistry);
@@ -103,7 +103,7 @@ class RequestDescriptionMockeryTest extends TestCase
         $request = m::mock(IncomingIlluminateRequest::class)->makePartial();
         $request->shouldReceive('getAllInput')->andReturn($raw)->atLeast(1);
 
-        $type = MimeTypes::MIME_APPLICATION_ATOM;
+        $type           = MimeTypes::MIME_APPLICATION_ATOM;
         $readerRegistry = new ODataReaderRegistry();
         $readerRegistry->register(new AtomODataReader());
         $desc = new RequestDescription($segArray, $url, $version, null, null, $type, $request, $readerRegistry);
