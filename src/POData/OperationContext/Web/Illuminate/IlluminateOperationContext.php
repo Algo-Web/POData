@@ -47,7 +47,7 @@ class IlluminateOperationContext implements IOperationContext
      *
      * @return OutgoingResponse
      */
-    public function outgoingResponse()
+    public function outgoingResponse(): OutgoingResponse
     {
         return $this->outgoingResponse;
     }
@@ -57,7 +57,7 @@ class IlluminateOperationContext implements IOperationContext
      *
      * @return IncomingIlluminateRequest
      */
-    public function incomingRequest()
+    public function incomingRequest(): IncomingIlluminateRequest
     {
         return $this->incomingRequest;
     }

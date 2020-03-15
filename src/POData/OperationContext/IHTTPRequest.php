@@ -26,7 +26,7 @@ interface IHTTPRequest
      *
      * @return array|string|null value of the header, NULL if header is absent
      */
-    public function getRequestHeader($key);
+    public function getRequestHeader(string $key);
 
     /**
      * Returns the Query String Parameters (QSPs) as an array of KEY-VALUE pairs.  If a QSP appears twice

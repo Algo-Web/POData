@@ -74,7 +74,7 @@ class IncomingIlluminateRequest implements IHTTPRequest
     /**
      * @return string RequestURI called by User with the value of QueryString
      */
-    public function getRawUrl()
+    public function getRawUrl(): string
     {
         $this->rawUrl = $this->request->fullUrl();
 
@@ -86,7 +86,7 @@ class IncomingIlluminateRequest implements IHTTPRequest
      *
      * @return array|null|string
      */
-    public function getRequestHeader($key)
+    public function getRequestHeader(string $key)
     {
         $result = $this->request->header($key);
         //Zend returns false for a missing header...POData needs a null
@@ -103,7 +103,7 @@ class IncomingIlluminateRequest implements IHTTPRequest
      *
      * @return array
      */
-    public function getQueryParameters()
+    public function getQueryParameters(): array
     {
         //TODO: the contract is more specific than this, it requires the name and values to be decoded
         //not sure how to test that...
@@ -130,7 +130,7 @@ class IncomingIlluminateRequest implements IHTTPRequest
     /**
      * @return HTTPRequestMethod
      */
-    public function getMethod()
+    public function getMethod(): HTTPRequestMethod
     {
         return $this->method;
     }

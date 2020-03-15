@@ -146,7 +146,7 @@ class IncomingRequest implements IHTTPRequest
      *
      * @return string|null value of the header, NULL if header is absent
      */
-    public function getRequestHeader($key)
+    public function getRequestHeader(string $key)
     {
         if (0 == count($this->headers)) {
             $this->getHeaders();
