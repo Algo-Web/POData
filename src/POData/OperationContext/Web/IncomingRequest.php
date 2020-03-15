@@ -178,7 +178,7 @@ class IncomingRequest implements IHTTPRequest
     /**
      * Split the QueryString and assigns them as array element in KEY=VALUE.
      *
-     * @return string[]
+     * @return string[]|array[]
      */
     public function getQueryParameters(): array
     {
