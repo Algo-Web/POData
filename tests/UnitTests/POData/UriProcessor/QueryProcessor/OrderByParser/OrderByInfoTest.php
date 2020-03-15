@@ -11,20 +11,6 @@ use UnitTests\POData\TestCase;
 
 class OrderByInfoTest extends TestCase
 {
-    public function testCreateWithNonArraySegments()
-    {
-        $expected = 'The argument orderByPathSegments should be a non-empty array';
-        $actual   = null;
-
-        try {
-            new OrderByInfo(new \DateTime(), null);
-        } catch (\InvalidArgumentException $e) {
-            $actual = $e->getMessage();
-        }
-        $this->assertNotNull($actual);
-        $this->assertEquals($expected, $actual);
-    }
-
     public function testCreateWithEmptyArraySegments()
     {
         $expected = 'The argument orderByPathSegments should be a non-empty array';
