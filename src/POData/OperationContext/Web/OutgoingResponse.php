@@ -14,7 +14,7 @@ class OutgoingResponse
     /**
      * Gets the headers from the outgoing Web response.
      *
-     * @var []
+     * @var array
      */
     private $headers;
 
