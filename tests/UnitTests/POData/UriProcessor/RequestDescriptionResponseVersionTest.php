@@ -5,14 +5,19 @@ declare(strict_types=1);
 namespace UnitTests\POData\UriProcessor;
 
 use Mockery as m;
+use POData\Common\InvalidOperationException;
 use POData\Common\Messages;
+use POData\Common\MimeTypes;
 use POData\Common\ODataException;
 use POData\Common\Url;
 use POData\Common\Version;
 use POData\Configuration\IServiceConfiguration;
 use POData\Configuration\ServiceConfiguration;
 use POData\IService;
+use POData\OperationContext\IHTTPRequest;
 use POData\OperationContext\ServiceHost;
+use POData\Readers\Atom\AtomODataReader;
+use POData\Readers\ODataReaderRegistry;
 use POData\UriProcessor\RequestDescription;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\SegmentDescriptor;
 use Symfony\Component\EventDispatcher\Tests\Service;
@@ -1435,5 +1440,58 @@ class RequestDescriptionResponseVersionTest extends TestCase
 
         $request->raiseResponseVersion(3, 0); //max is already 3 ditto
         $this->assertEquals(Version::v3(), $request->getResponseVersion());
+    }
+
+    /**
+     * @throws ODataException
+     * @throws \Doctrine\Common\Annotations\AnnotationException
+     * @throws \POData\Common\UrlFormatException
+     * @throws \ReflectionException
+     */
+    public function testRequestedVersionGetsReturned()
+    {
+        $requestVersion       = '2.0';
+        $requestMaxVersion    = '3.0';
+        $fakeConfigMaxVersion = Version::v3();
+
+        $this->mockServiceConfiguration->shouldReceive('getMaxDataServiceVersion')->andReturn($fakeConfigMaxVersion);
+
+        $fakeURL      = new Url('http://host/service.svc/Collection');
+        $fakeSegments = [
+            new SegmentDescriptor(),
+        ];
+
+        $reader       = m::mock(AtomODataReader::class);
+        $reader->shouldReceive('read')->withAnyArgs()->andReturnNull()->once();
+
+        $rego         = m::mock(ODataReaderRegistry::class);
+        $rego->shouldReceive('getReader')
+            ->with(m::on(function (Version $version) {
+                if (2 == $version->getMajor() && 0 == $version->getMinor()) {
+                    return true;
+                }
+                return false;
+            }), m::any())
+            ->andReturn($reader)->once();
+
+        $payload      = m::mock(IHTTPRequest::class);
+        $payload->shouldReceive('getAllInput')->andReturn('AYBABTU')->once();
+
+        $request = new RequestDescription(
+            $fakeSegments,
+            $fakeURL,
+            $fakeConfigMaxVersion,
+            $requestVersion,
+            $requestMaxVersion,
+            MimeTypes::MIME_APPLICATION_ATOM,
+            $payload,
+            $rego
+        );
+
+        $reflec = new \ReflectionClass($request);
+        $method = $reflec->getMethod('readData');
+        $method->setAccessible(true);
+
+        $method->invokeArgs($request, [MimeTypes::MIME_APPLICATION_ATOM]);
     }
 }

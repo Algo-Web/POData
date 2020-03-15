@@ -320,7 +320,7 @@ class RequestDescription
             return;
         }
 
-        $reader = $this->readerRegistry->getReader($this->getResponseVersion(), $dataType);
+        $reader = $this->readerRegistry->getReader($this->requestVersion, $dataType);
         if ($reader !== null) {
             if (is_array($string) && 1 == count($string)) {
                 $string = $string[0];
