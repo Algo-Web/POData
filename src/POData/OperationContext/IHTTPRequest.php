@@ -17,7 +17,7 @@ interface IHTTPRequest
      *
      * @return string RequestURI called by User with the value of QueryString
      */
-    public function getRawUrl();
+    public function getRawUrl(): string;
 
     /**
      * get the specific request headers.
@@ -26,7 +26,7 @@ interface IHTTPRequest
      *
      * @return array|string|null value of the header, NULL if header is absent
      */
-    public function getRequestHeader($key);
+    public function getRequestHeader(string $key);
 
     /**
      * Returns the Query String Parameters (QSPs) as an array of KEY-VALUE pairs.  If a QSP appears twice
@@ -34,14 +34,14 @@ interface IHTTPRequest
      *
      * @return array[]
      */
-    public function getQueryParameters();
+    public function getQueryParameters(): array;
 
     /**
      * Get the HTTP method/verb of the HTTP Request.
      *
      * @return HTTPRequestMethod
      */
-    public function getMethod();
+    public function getMethod(): HTTPRequestMethod;
 
     /**
      * Get the input data of the HTTP Request.

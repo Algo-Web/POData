@@ -14,9 +14,9 @@ class OutgoingResponse
     /**
      * Gets the headers from the outgoing Web response.
      *
-     * @var []
+     * @var array
      */
-    private $headers;
+    private $headers = [];
 
     /**
      * The stream associated with the outgoing response.
@@ -73,7 +73,7 @@ class OutgoingResponse
      *
      * @return array<string,string>
      */
-    public function &getHeaders()
+    public function &getHeaders(): array
     {
         return $this->headers;
     }
@@ -83,9 +83,10 @@ class OutgoingResponse
      *
      * @return string _headers[HttpResponseHeaderStrContentType]
      */
-    public function getContentType()
+    public function getContentType(): string
     {
-        return $this->headers[ODataConstants::HTTPRESPONSE_HEADER_CONTENTTYPE];
+        $key = ODataConstants::HTTPRESPONSE_HEADER_CONTENTTYPE;
+        return $this->headers[$key] ?? '';
     }
 
     /**
@@ -93,7 +94,7 @@ class OutgoingResponse
      *
      * @param string $value The content type value
      */
-    public function setContentType($value)
+    public function setContentType(string $value): void
     {
         $this->headers[ODataConstants::HTTPRESPONSE_HEADER_CONTENTTYPE] = $value . ';charset=UTF-8';
     }
@@ -103,7 +104,7 @@ class OutgoingResponse
      *
      * @param string $value The content length header
      */
-    public function setContentLength($value)
+    public function setContentLength(string $value): void
     {
         $this->headers[ODataConstants::HTTPRESPONSE_HEADER_CONTENTLENGTH] = $value;
     }
@@ -113,7 +114,7 @@ class OutgoingResponse
      *
      * @param string $value the cache-control value
      */
-    public function setCacheControl($value)
+    public function setCacheControl(string $value): void
     {
         $this->headers[ODataConstants::HTTPRESPONSE_HEADER_CACHECONTROL] = $value;
     }
@@ -123,7 +124,7 @@ class OutgoingResponse
      *
      * @return string reference of headers[HttpResponseHeaderStrETag]
      */
-    public function getETag()
+    public function getETag(): string
     {
         return $this->headers[ODataConstants::HTTPRESPONSE_HEADER_ETAG];
     }
@@ -133,7 +134,7 @@ class OutgoingResponse
      *
      * @param string $value the etag value
      */
-    public function setETag($value)
+    public function setETag(string $value): void
     {
         $this->headers[ODataConstants::HTTPRESPONSE_HEADER_ETAG] = $value;
     }
@@ -143,7 +144,7 @@ class OutgoingResponse
      *
      * @param string $value The last-modified value
      */
-    public function setLastModified($value)
+    public function setLastModified(string $value): void
     {
         $this->headers[ODataConstants::HTTPRESPONSE_HEADER_LASTMODIFIED] = $value;
     }
@@ -153,7 +154,7 @@ class OutgoingResponse
      *
      * @param string $value The value of location
      */
-    public function setLocation($value)
+    public function setLocation(string $value): void
     {
         $this->headers[ODataConstants::HTTPRESPONSE_HEADER_LOCATION] = $value;
     }
@@ -164,7 +165,7 @@ class OutgoingResponse
      *
      * @param string $value The value of status header
      */
-    public function setStatusCode($value)
+    public function setStatusCode(string $value): void
     {
         $rawCode = substr($value, 0, 3);
         assert(is_numeric($rawCode), 'Raw HTTP status code is not numeric - is ' . $rawCode);
@@ -177,7 +178,7 @@ class OutgoingResponse
      *
      * @param string $value The value of status description
      */
-    public function setStatusDescription($value)
+    public function setStatusDescription(string $value): void
     {
         $this->headers[ODataConstants::HTTPRESPONSE_HEADER_STATUS_DESC] = $value;
     }
@@ -187,7 +188,7 @@ class OutgoingResponse
      *
      * @return string
      */
-    public function &getStream()
+    public function &getStream(): string
     {
         return $this->stream;
     }
@@ -197,7 +198,7 @@ class OutgoingResponse
      *
      * @param string &$value The value of stream
      */
-    public function setStream(&$value)
+    public function setStream(string &$value): void
     {
         $this->stream = $value;
     }
@@ -207,7 +208,7 @@ class OutgoingResponse
      *
      * @param string $value The value of data service version header
      */
-    public function setServiceVersion($value)
+    public function setServiceVersion(string $value): void
     {
         $this->headers[ODataConstants::ODATAVERSIONHEADER] = $value;
     }
@@ -218,7 +219,7 @@ class OutgoingResponse
      * @param string $name  The header name
      * @param string $value The header value
      */
-    public function addHeader($name, $value)
+    public function addHeader(string $name, string $value): void
     {
         $this->headers[$name] = $value;
     }

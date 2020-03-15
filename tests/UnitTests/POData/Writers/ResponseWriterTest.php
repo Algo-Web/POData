@@ -46,7 +46,7 @@ class ResponseWriterTest extends TestCase
         $service->shouldReceive('getHost')->andReturn($host)->atLeast(1);
         $service->shouldReceive('getProvidersWrapper')->andReturn($wrapper);
 
-        ResponseWriter::write($service, $request, null, null);
+        ResponseWriter::write($service, $request, null, 'application/atom+xml');
     }
 
     public function testWriteServiceDocument()
@@ -71,7 +71,7 @@ class ResponseWriterTest extends TestCase
         $service->shouldReceive('getProvidersWrapper')->andReturn($wrapper);
         $service->shouldReceive('getODataWriterRegistry->getWriter')->andReturn($writer);
 
-        ResponseWriter::write($service, $request, null, null);
+        ResponseWriter::write($service, $request, null, 'application/atom+xml');
     }
 
     public function testWriteServiceDocumentNoWriter()

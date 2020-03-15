@@ -49,7 +49,7 @@ class WebOperationContext implements IOperationContext
      *
      * @return OutgoingResponse
      */
-    public function outgoingResponse()
+    public function outgoingResponse(): OutgoingResponse
     {
         return $this->outgoingResponse;
     }
@@ -59,7 +59,7 @@ class WebOperationContext implements IOperationContext
      *
      * @return IHTTPRequest
      */
-    public function incomingRequest()
+    public function incomingRequest(): IHTTPRequest
     {
         return $this->incomingRequest;
     }

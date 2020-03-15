@@ -28,7 +28,7 @@ class SimpleRequestAdapter extends IncomingRequest implements IHTTPRequest
      *
      * @return string RequestURI called by User with the value of QueryString
      */
-    public function getRawUrl()
+    public function getRawUrl(): string
     {
         return $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/' . $_SERVER['REQUEST_URI'];
     }
@@ -39,7 +39,7 @@ class SimpleRequestAdapter extends IncomingRequest implements IHTTPRequest
      *
      * @return array[]
      */
-    public function getQueryParameters()
+    public function getQueryParameters(): array
     {
         $data = [];
         if (is_array($this->request)) {
@@ -56,7 +56,7 @@ class SimpleRequestAdapter extends IncomingRequest implements IHTTPRequest
      *
      * @return HTTPRequestMethod
      */
-    public function getMethod()
+    public function getMethod(): HTTPRequestMethod
     {
         return new HTTPRequestMethod($_SERVER['REQUEST_METHOD']);
     }
