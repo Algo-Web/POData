@@ -86,23 +86,4 @@ class SegmentStackTest extends TestCase
         $this->assertEquals(0, count($foo->getSegmentNames()));
         $this->assertEquals(0, count($foo->getSegmentWrappers()));
     }
-
-    public function testPushNonStringSegmentNameAndThrowException()
-    {
-        $wrap = m::mock(RequestDescription::class)->makePartial();
-        $foo  = new SegmentStack($wrap);
-
-        $segName = new \StdClass();
-        $setWrap = m::mock(ResourceSetWrapper::class);
-
-        $expected = 'segmentName must be a string';
-        $actual   = null;
-        try {
-            $foo->pushSegment($segName, $setWrap);
-        } catch (InvalidOperationException $e) {
-            $actual = $e->getMessage();
-        }
-        $this->assertNotNull($actual);
-        $this->assertEquals($expected, $actual);
-    }
 }
