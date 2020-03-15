@@ -32,7 +32,7 @@ class SimpleOperativeContext implements IOperationContext
      *
      * @return OutgoingResponse reference of OutgoingResponse object
      */
-    public function outgoingResponse()
+    public function outgoingResponse(): OutgoingResponse
     {
         return $this->response;
     }
@@ -42,7 +42,7 @@ class SimpleOperativeContext implements IOperationContext
      *
      * @return IHTTPRequest reference of IncomingRequest object
      */
-    public function incomingRequest()
+    public function incomingRequest(): IHTTPRequest
     {
         return $this->request;
     }

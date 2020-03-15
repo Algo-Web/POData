@@ -43,45 +43,6 @@ use UnitTests\POData\TestCase;
 
 class ExecuteGetTest extends TestCase
 {
-    public function testExecuteBadMethod()
-    {
-        $baseUrl = new Url('http://localhost/odata.svc');
-        $reqUrl  = new Url('http://localhost/odata.svc');
-
-        $host = $this->setUpMockHost($reqUrl, $baseUrl);
-        $host->shouldReceive('getRequestContentType')->andReturn(null);
-
-        $request = m::mock(IHTTPRequest::class);
-        $request->shouldReceive('getMethod')->andReturn(null);
-        $request->shouldReceive('getAllInput')->andReturn(null);
-
-        $context = m::mock(IOperationContext::class);
-        $context->shouldReceive('incomingRequest')->andReturn($request);
-
-        $wrapper = m::mock(ProvidersWrapper::class);
-
-        $config = m::mock(IServiceConfiguration::class);
-        $config->shouldReceive('getMaxDataServiceVersion')->andReturn(new Version(3, 0));
-
-        $service = $this->setUpMockService($host, $wrapper, $context, $config);
-
-        $expected      = 'This release of library supports only GET (read) request, received a request with method ';
-        $expectedClass = ODataException::class;
-        $actual        = null;
-        $actualClass   = null;
-
-        try {
-            $remix = UriProcessorNew::process($service);
-            $remix->execute();
-        } catch (\Exception $e) {
-            $actualClass = get_class($e);
-            $actual      = $e->getMessage();
-        }
-        $this->assertEquals($expectedClass, $actualClass);
-        $this->assertNotNull($actual);
-        $this->assertEquals($expected, $actual);
-    }
-
     public function testExecuteGetOnSingleton()
     {
         $baseUrl = new Url('http://localhost/odata.svc');
