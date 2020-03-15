@@ -50,7 +50,7 @@ class OrderByInfo
      * @param array <array<ResourceProperty>>|null $navigationProperties navigation properties used in the
      *                                                                   order by clause
      */
-    public function __construct(array $orderByPathSegments, $navigationProperties)
+    public function __construct(array $orderByPathSegments, array $navigationProperties = null)
     {
         if (empty($orderByPathSegments)) {
             throw new \InvalidArgumentException(
@@ -59,12 +59,6 @@ class OrderByInfo
         }
 
         if (null !== $navigationProperties) {
-            if (!is_array($navigationProperties)) {
-                throw new \InvalidArgumentException(
-                    Messages::orderByInfoNaviUsedArgumentShouldBeNullOrNonEmptyArray()
-                );
-            }
-
             if (empty($navigationProperties)) {
                 throw new \InvalidArgumentException(
                     Messages::orderByInfoNaviUsedArgumentShouldBeNullOrNonEmptyArray()
