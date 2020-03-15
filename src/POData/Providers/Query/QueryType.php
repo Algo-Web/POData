@@ -13,9 +13,9 @@ use MyCLabs\Enum\Enum;
  */
 class QueryType extends Enum
 {
-    const ENTITIES            = 'ENTITIES';
-    const COUNT               = 'COUNT';
-    const ENTITIES_WITH_COUNT = 'ENTITIES_WITH_COUNT';
+    protected const ENTITIES            = 'ENTITIES';
+    protected const COUNT               = 'COUNT';
+    protected const ENTITIES_WITH_COUNT = 'ENTITIES_WITH_COUNT';
 
     /**
      * Check if supplied query type covers entities.

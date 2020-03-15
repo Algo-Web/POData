@@ -388,7 +388,7 @@ class ObjectModelSerializerTest extends TestCase
 
         $requestURL = new \POData\Common\Url('http://192.168.2.1/abm-master/public/odata.svc/Entity(1)');
         $this->mockRequest->shouldReceive('getTargetSource')
-            ->andReturn(TargetSource::PROPERTY);
+            ->andReturn(TargetSource::PROPERTY());
         $this->mockRequest->shouldReceive('getProjectedProperty')
             ->andReturn($property);
         $this->mockRequest->shouldReceive('getIdentifier')->andReturn('name');
@@ -917,7 +917,7 @@ class ObjectModelSerializerTest extends TestCase
         $provWrap->shouldReceive('getMetaProvider')->andReturn($mockMeta);
 
         $request = m::mock(RequestDescription::class)->makePartial();
-        $request->shouldReceive('getTargetSource')->andReturn(TargetSource::PROPERTY);
+        $request->shouldReceive('getTargetSource')->andReturn(TargetSource::PROPERTY());
         $request->shouldReceive('getProjectedProperty')->andReturn($prop);
         $request->shouldReceive('getTargetResourceSetWrapper')->andReturn($wrap);
         $request->shouldReceive('getRequestUrl')->andReturn($url);

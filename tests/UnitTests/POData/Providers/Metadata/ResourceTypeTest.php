@@ -110,7 +110,7 @@ class ResourceTypeTest extends TestCase
     {
         $instanceType = m::mock(IType::class);
         $instanceType->shouldReceive('getName')->andReturn('label');
-        $resourceTypeKind = ResourceTypeKind::PRIMITIVE;
+        $resourceTypeKind = ResourceTypeKind::PRIMITIVE();
         $foo              = new ResourcePrimitiveType($instanceType);
 
         $result = $foo->__sleep();
