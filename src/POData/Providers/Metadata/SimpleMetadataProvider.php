@@ -686,9 +686,9 @@ class SimpleMetadataProvider implements IMetadataProvider
      */
     private function addReferencePropertyInternal(
         ResourceEntityType $sourceResourceType,
-        $name,
+        string $name,
         ResourceSet $targetResourceSet,
-        $resourceMult,
+        string $resourceMult,
         $many = false,
         ResourceEntityType $concreteType = null
     ) {
