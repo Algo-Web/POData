@@ -12,9 +12,10 @@ before_script:
   - pecl install pcov
   - phpenv config-rm xdebug.ini
   - composer global require hirak/prestissimo
+  - composer config minimum-stability ${STABILITY}
   - COMPOSER_MEMORY_LIMIT=-1 composer install
   - vendor/bin/pcov clobber
-#  - wget http://getcomposer.org/composer.phar
+# - wget http://getcomposer.org/composer.phar
 #  - php composer.phar require satooshi/php-coveralls:dev-master --dev --no-progress --prefer-source
 
 script:
@@ -28,6 +29,8 @@ after_script:
 after_success:
   - coveralls
 env: # important!
+  - STABILITY=stable
+  - STABILITY=dev
 matrix:
   allow_failures:
   - php: nightly
