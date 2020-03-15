@@ -773,8 +773,8 @@ class SimpleMetadataProvider implements IMetadataProvider
         ResourceEntityType $targetResourceType,
         string $sourceProperty,
         string $targetProperty,
-        $sourceMultiplicity,
-        $targetMultiplicity
+        string $sourceMultiplicity,
+        string $targetMultiplicity
     ) {
         $this->checkInstanceProperty($sourceProperty, $sourceResourceType);
         $this->checkInstanceProperty($targetProperty, $targetResourceType);
