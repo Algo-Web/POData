@@ -16,7 +16,7 @@ class OutgoingResponse
      *
      * @var array
      */
-    private $headers;
+    private $headers = [];
 
     /**
      * The stream associated with the outgoing response.
@@ -83,9 +83,10 @@ class OutgoingResponse
      *
      * @return string _headers[HttpResponseHeaderStrContentType]
      */
-    public function getContentType()
+    public function getContentType(): string
     {
-        return $this->headers[ODataConstants::HTTPRESPONSE_HEADER_CONTENTTYPE];
+        $key = ODataConstants::HTTPRESPONSE_HEADER_CONTENTTYPE;
+        return $this->headers[$key] ?? '';
     }
 
     /**
