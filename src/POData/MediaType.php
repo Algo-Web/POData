@@ -82,7 +82,7 @@ class MediaType
      *             sub-types is '*' (accept all sub-type), 2 if both
      *             type and sub-type matches
      */
-    public function getMatchingRating(?string $candidate)
+    public function getMatchingRating(?string $candidate): int
     {
         $result    = -1;
         $candidate = $candidate ?? '';

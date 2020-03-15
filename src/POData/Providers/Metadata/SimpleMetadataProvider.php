@@ -686,9 +686,9 @@ class SimpleMetadataProvider implements IMetadataProvider
      */
     private function addReferencePropertyInternal(
         ResourceEntityType $sourceResourceType,
-        $name,
+        string $name,
         ResourceSet $targetResourceSet,
-        $resourceMult,
+        string $resourceMult,
         $many = false,
         ResourceEntityType $concreteType = null
     ) {
@@ -771,15 +771,11 @@ class SimpleMetadataProvider implements IMetadataProvider
     private function addReferencePropertyInternalBidirectional(
         ResourceEntityType $sourceResourceType,
         ResourceEntityType $targetResourceType,
-        $sourceProperty,
-        $targetProperty,
-        $sourceMultiplicity,
-        $targetMultiplicity
+        string $sourceProperty,
+        string $targetProperty,
+        string $sourceMultiplicity,
+        string $targetMultiplicity
     ) {
-        if (!is_string($sourceProperty) || !is_string($targetProperty)) {
-            throw new InvalidOperationException('Source and target properties must both be strings');
-        }
-
         $this->checkInstanceProperty($sourceProperty, $sourceResourceType);
         $this->checkInstanceProperty($targetProperty, $targetResourceType);
 

@@ -60,11 +60,8 @@ class SegmentStack
      * @throws InvalidOperationException
      * @return bool                      true if the segment was push, false otherwise
      */
-    public function pushSegment($segmentName, ResourceSetWrapper &$resourceSetWrapper)
+    public function pushSegment(string $segmentName, ResourceSetWrapper &$resourceSetWrapper)
     {
-        if (!is_string($segmentName)) {
-            throw new InvalidOperationException('segmentName must be a string');
-        }
         $rootProjectionNode = $this->getRequest()->getRootProjectionNode();
         if (null !== $rootProjectionNode && $rootProjectionNode->isExpansionSpecified()) {
             array_push($this->segmentNames, $segmentName);
