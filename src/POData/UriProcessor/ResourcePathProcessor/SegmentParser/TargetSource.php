@@ -24,7 +24,7 @@ class TargetSource extends Enum
      *  TargetKind::SERVICE_DOCUMENT
      *  TargetKind::BATCH.
      */
-    const NONE = 1;
+    protected const NONE = 1;
 
     /**
      * An entity set provides the data.
@@ -32,14 +32,14 @@ class TargetSource extends Enum
      *  TargetKind::RESOURCE
      *  TargetKind::LINK.
      */
-    const ENTITY_SET = 2;
+    protected const ENTITY_SET = 2;
 
     /**
      * A service operation provides the data.
      * The associated TargetKind enum values are:
      *  TargetKind::VOID_SERVICE_OPERATION.
      */
-    const SERVICE_OPERATION = 3;
+    protected const SERVICE_OPERATION = 3;
 
     /**
      * A property of an entity or a complex object provides the data.
@@ -50,5 +50,5 @@ class TargetSource extends Enum
      *  TargetKind::MEDIA_RESOURCE
      *  TargetKind::BAG.
      */
-    const PROPERTY = 4;
+    protected const PROPERTY = 4;
 }
