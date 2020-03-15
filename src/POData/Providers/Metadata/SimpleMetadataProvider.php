@@ -771,15 +771,11 @@ class SimpleMetadataProvider implements IMetadataProvider
     private function addReferencePropertyInternalBidirectional(
         ResourceEntityType $sourceResourceType,
         ResourceEntityType $targetResourceType,
-        $sourceProperty,
-        $targetProperty,
+        string $sourceProperty,
+        string $targetProperty,
         $sourceMultiplicity,
         $targetMultiplicity
     ) {
-        if (!is_string($sourceProperty) || !is_string($targetProperty)) {
-            throw new InvalidOperationException('Source and target properties must both be strings');
-        }
-
         $this->checkInstanceProperty($sourceProperty, $sourceResourceType);
         $this->checkInstanceProperty($targetProperty, $targetResourceType);
 
