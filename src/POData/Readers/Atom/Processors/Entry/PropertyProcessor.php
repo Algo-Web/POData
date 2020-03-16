@@ -12,6 +12,10 @@ use POData\ObjectModel\ODataPropertyContent;
 use POData\Readers\Atom\Processors\BaseNodeHandler;
 use SplStack;
 
+/**
+ * Class PropertyProcessor
+ * @package POData\Readers\Atom\Processors\Entry
+ */
 class PropertyProcessor extends BaseNodeHandler
 {
     /**
@@ -31,6 +35,11 @@ class PropertyProcessor extends BaseNodeHandler
         $this->properties = new SplStack();
     }
 
+    /**
+     * @param $tagNamespace
+     * @param $tagName
+     * @param $attributes
+     */
     public function handleStartNode($tagNamespace, $tagName, $attributes)
     {
         if (strtolower($tagNamespace) === strtolower(ODataConstants::ODATA_METADATA_NAMESPACE) &&
@@ -53,6 +62,10 @@ class PropertyProcessor extends BaseNodeHandler
         $this->propertyContent->push(new ODataPropertyContent());
     }
 
+    /**
+     * @param $tagNamespace
+     * @param $tagName
+     */
     public function handleEndNode($tagNamespace, $tagName)
     {
         if (strtolower($tagNamespace) === strtolower(ODataConstants::ODATA_METADATA_NAMESPACE) &&
@@ -72,6 +85,10 @@ class PropertyProcessor extends BaseNodeHandler
         }
     }
 
+    /**
+     * @param $objectModel
+     * @return mixed
+     */
     public function handleChildComplete($objectModel)
     {
         //should never be called

@@ -10,6 +10,10 @@ use ParseError;
 use POData\Common\ODataConstants;
 use SplStack;
 
+/**
+ * Class BaseNodeHandler
+ * @package POData\Readers\Atom\Processors
+ */
 abstract class BaseNodeHandler
 {
     private static $processExceptionMessage =
@@ -22,6 +26,10 @@ abstract class BaseNodeHandler
      */
     private $tagEndQueue;
 
+    /**
+     * @param $tagNamespace
+     * @return mixed
+     */
     private function resolveNamespaceToMethodTag($tagNamespace)
     {
         $tags = [
@@ -32,6 +40,11 @@ abstract class BaseNodeHandler
         return $tags[strtolower($tagNamespace)];
     }
 
+    /**
+     * @param $tagNamespace
+     * @param $tagName
+     * @param $attributes
+     */
     public function handleStartNode($tagNamespace, $tagName, $attributes)
     {
         $methodType = $this->resolveNamespaceToMethodTag($tagNamespace);
@@ -42,6 +55,9 @@ abstract class BaseNodeHandler
         $this->{$method}($attributes);
     }
 
+    /**
+     * @param $characters
+     */
     public function handleCharacterData($characters)
     {
         if (ord($characters) === 10 && empty($this->charData)) {
@@ -50,6 +66,9 @@ abstract class BaseNodeHandler
         $this->charData .= $characters;
     }
 
+    /**
+     * @return string
+     */
     final public function popCharData()
     {
         $data           = $this->charData;
@@ -57,10 +76,20 @@ abstract class BaseNodeHandler
         return $data;
     }
 
+    /**
+     * @param $objectModel
+     * @return mixed
+     */
     abstract public function handleChildComplete($objectModel);
 
     abstract public function getObjetModelObject();
 
+    /**
+     * @param $array
+     * @param $key
+     * @param $default
+     * @return mixed
+     */
     final protected function arrayKeyOrDefault($array, $key, $default)
     {
         if (array_key_exists($key, $array)) {
@@ -74,22 +103,37 @@ abstract class BaseNodeHandler
         return $default;
     }
 
+    /**
+     * @param $namespace
+     * @param $startEnd
+     * @param $tagName
+     */
     final protected function onParseError($namespace, $startEnd, $tagName)
     {
         throw new ParseError(sprintf(self::$processExceptionMessage, $namespace, $startEnd, $tagName));
     }
 
-
+    /**
+     * @return Closure
+     */
     protected function doNothing()
     {
         return function () {
         };
     }
 
+    /**
+     * @param Closure $closure
+     * @return Closure
+     */
     protected function bindHere(Closure $closure)
     {
         return $closure->bindTo($this, get_class($this));
     }
+
+    /**
+     * @param Closure $closure
+     */
     protected function enqueueEnd(Closure $closure)
     {
         if (null === $this->tagEndQueue) {
@@ -98,6 +142,10 @@ abstract class BaseNodeHandler
         $this->tagEndQueue->push($this->bindHere($closure));
     }
 
+    /**
+     * @param $tagNamespace
+     * @param $tagName
+     */
     public function handleEndNode($tagNamespace, $tagName)
     {
         assert(!$this->tagEndQueue->isEmpty(), 'every node that opens should register a end tag');
