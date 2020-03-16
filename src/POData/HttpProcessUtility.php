@@ -102,7 +102,7 @@ class HttpProcessUtility
      *
      * @return string|null The best MIME type for the client
      */
-    public static function selectMimeType($acceptTypesText, array $availableTypes)
+    public static function selectMimeType(string $acceptTypesText, array $availableTypes): ?string
     {
         $selectedContentType     = null;
         $selectedMatchingParts   = -1;

@@ -130,7 +130,7 @@ class BaseServiceNewTest extends TestCase
     {
         $host = m::mock(ServiceHost::class);
         $host->shouldReceive('getQueryStringItem')->andReturn(null);
-        $host->shouldReceive('getRequestAccept')->andReturn(null);
+        $host->shouldReceive('getRequestAccept')->andReturn('*/*');
 
         $request = m::mock(RequestDescription::class);
         $request->shouldReceive('getResponseVersion')->andReturn(Version::v3());
@@ -162,7 +162,7 @@ class BaseServiceNewTest extends TestCase
 
         $host = m::mock(ServiceHost::class);
         $host->shouldReceive('getQueryStringItem')->andReturn(null);
-        $host->shouldReceive('getRequestAccept')->andReturn(null);
+        $host->shouldReceive('getRequestAccept')->andReturn('*/*');
 
         $request = m::mock(RequestDescription::class);
         $request->shouldReceive('getResponseVersion')->andReturn(Version::v3());
@@ -196,7 +196,7 @@ class BaseServiceNewTest extends TestCase
 
         $host = m::mock(ServiceHost::class);
         $host->shouldReceive('getQueryStringItem')->andReturn(null);
-        $host->shouldReceive('getRequestAccept')->andReturn(null);
+        $host->shouldReceive('getRequestAccept')->andReturn('*/*');
 
         $request = m::mock(RequestDescription::class);
         $request->shouldReceive('getResponseVersion')->andReturn(Version::v3());
@@ -227,7 +227,7 @@ class BaseServiceNewTest extends TestCase
 
         $host = m::mock(ServiceHost::class);
         $host->shouldReceive('getQueryStringItem')->andReturn(null);
-        $host->shouldReceive('getRequestAccept')->andReturn(null);
+        $host->shouldReceive('getRequestAccept')->andReturn('*/*');
         $host->shouldReceive('getAbsoluteRequestUri')->andReturn($url);
 
         $request = m::mock(RequestDescription::class);
@@ -267,7 +267,7 @@ class BaseServiceNewTest extends TestCase
 
         $host = m::mock(ServiceHost::class);
         $host->shouldReceive('getQueryStringItem')->andReturn(null);
-        $host->shouldReceive('getRequestAccept')->andReturn(null);
+        $host->shouldReceive('getRequestAccept')->andReturn('*/*');
         $host->shouldReceive('getAbsoluteRequestUri')->andReturn($url);
         $host->shouldReceive('getResponseContentType')->andReturn('application/xml')->times(2);
         $host->shouldReceive('getResponseETag')->andReturn('electric-rave')->times(2);
@@ -317,7 +317,7 @@ class BaseServiceNewTest extends TestCase
 
         $host = m::mock(ServiceHost::class);
         $host->shouldReceive('getQueryStringItem')->andReturn(null);
-        $host->shouldReceive('getRequestAccept')->andReturn(null);
+        $host->shouldReceive('getRequestAccept')->andReturn('text/xml');
         $host->shouldReceive('getAbsoluteRequestUri')->andReturn($url);
 
         $request = m::mock(RequestDescription::class);
@@ -885,7 +885,7 @@ class BaseServiceNewTest extends TestCase
         $host->shouldReceive('getRequestIfMatch')->andReturn('a');
         $host->shouldReceive('getRequestIfNoneMatch')->andReturn('b');
         $host->shouldReceive('getAbsoluteRequestUri')->andReturn($url);
-        $host->shouldReceive('getRequestAccept')->andReturn(null);
+        $host->shouldReceive('getRequestAccept')->andReturn('application/xml');
         $host->shouldReceive('getQueryStringItem')->andReturn(null);
         $host->shouldReceive('setResponseStatusCode')->withArgs([HttpStatus::CODE_OK])->andReturnNull()->once();
         $host->shouldReceive('setResponseContentType')->withArgs(['application/xml;charset=utf-8'])
@@ -931,7 +931,7 @@ class BaseServiceNewTest extends TestCase
 
         $host = m::mock(ServiceHost::class);
         $host->shouldReceive('setResponseStatusCode')->withArgs([HttpStatus::CODE_NOCONTENT])->andReturnNull()->once();
-        $host->shouldReceive('getRequestAccept')->andReturn(null);
+        $host->shouldReceive('getRequestAccept')->andReturn('*/*');
         $host->shouldReceive('getQueryStringItem')->andReturn(null);
         $host->shouldReceive('getOperationContext->incomingRequest')->andReturn($req);
         $host->shouldReceive('getRequestIfMatch')->andReturn(null);
@@ -986,7 +986,7 @@ class BaseServiceNewTest extends TestCase
         $host->shouldReceive('getRequestIfMatch')->andReturn('a');
         $host->shouldReceive('getRequestIfNoneMatch')->andReturn('b');
         $host->shouldReceive('getAbsoluteRequestUri')->andReturn($url);
-        $host->shouldReceive('getRequestAccept')->andReturn(null);
+        $host->shouldReceive('getRequestAccept')->andReturn('*/*');
         $host->shouldReceive('getQueryStringItem')->andReturn(null);
         $host->shouldReceive('setResponseStatusCode')->withArgs([HttpStatus::CODE_NOCONTENT])->andReturnNull()->once();
         $host->shouldReceive('setResponseContentType')->withAnyArgs()->andReturnNull()->never();
@@ -1035,7 +1035,7 @@ class BaseServiceNewTest extends TestCase
         $host->shouldReceive('getRequestIfMatch')->andReturn('a');
         $host->shouldReceive('getRequestIfNoneMatch')->andReturn('b');
         $host->shouldReceive('getAbsoluteRequestUri')->andReturn($url);
-        $host->shouldReceive('getRequestAccept')->andReturn(null);
+        $host->shouldReceive('getRequestAccept')->andReturn('*/*');
         $host->shouldReceive('getQueryStringItem')->andReturn(null);
         $host->shouldReceive('setResponseStatusCode')->withAnyArgs()->andReturnNull()->never();
         $host->shouldReceive('setResponseContentType')->withAnyArgs()->andReturnNull()->never();
@@ -1094,7 +1094,7 @@ class BaseServiceNewTest extends TestCase
         $host->shouldReceive('getRequestIfMatch')->andReturn('a');
         $host->shouldReceive('getRequestIfNoneMatch')->andReturn('b');
         $host->shouldReceive('getAbsoluteRequestUri')->andReturn($url);
-        $host->shouldReceive('getRequestAccept')->andReturn(null);
+        $host->shouldReceive('getRequestAccept')->andReturn('*/*');
         $host->shouldReceive('getQueryStringItem')->andReturn(null);
         $host->shouldReceive('setResponseStatusCode')->withAnyArgs()->andReturnNull()->never();
         $host->shouldReceive('setResponseContentType')->withAnyArgs()->andReturnNull()->never();
@@ -1157,7 +1157,7 @@ class BaseServiceNewTest extends TestCase
         $host->shouldReceive('getRequestIfMatch')->andReturn('a');
         $host->shouldReceive('getRequestIfNoneMatch')->andReturn('b');
         $host->shouldReceive('getAbsoluteRequestUri')->andReturn($url);
-        $host->shouldReceive('getRequestAccept')->andReturn(null);
+        $host->shouldReceive('getRequestAccept')->andReturn('*/*');
         $host->shouldReceive('getQueryStringItem')->andReturn(null);
         $host->shouldReceive('setResponseStatusCode')->withAnyArgs()->andReturnNull()->never();
         $host->shouldReceive('setResponseContentType')->withAnyArgs()->andReturnNull()->never();
@@ -1221,7 +1221,7 @@ class BaseServiceNewTest extends TestCase
         $host->shouldReceive('getRequestIfMatch')->andReturn('a');
         $host->shouldReceive('getRequestIfNoneMatch')->andReturn('b');
         $host->shouldReceive('getAbsoluteRequestUri')->andReturn($url);
-        $host->shouldReceive('getRequestAccept')->andReturn(null);
+        $host->shouldReceive('getRequestAccept')->andReturn('*/*');
         $host->shouldReceive('getQueryStringItem')->andReturn(null);
         $host->shouldReceive('setResponseStatusCode')->withAnyArgs()->andReturnNull()->never();
         $host->shouldReceive('setResponseContentType')->withAnyArgs()->andReturnNull()->never();
@@ -1285,7 +1285,7 @@ class BaseServiceNewTest extends TestCase
         $host->shouldReceive('getRequestIfMatch')->andReturn('a');
         $host->shouldReceive('getRequestIfNoneMatch')->andReturn('b');
         $host->shouldReceive('getAbsoluteRequestUri')->andReturn($url);
-        $host->shouldReceive('getRequestAccept')->andReturn(null);
+        $host->shouldReceive('getRequestAccept')->andReturn('*/*');
         $host->shouldReceive('getQueryStringItem')->andReturn(null);
         $host->shouldReceive('setResponseStatusCode')->withAnyArgs()->andReturnNull()->never();
         $host->shouldReceive('setResponseContentType')->withAnyArgs()->andReturnNull()->never();
@@ -1352,7 +1352,7 @@ class BaseServiceNewTest extends TestCase
         $host->shouldReceive('getRequestIfMatch')->andReturn('a');
         $host->shouldReceive('getRequestIfNoneMatch')->andReturn('b');
         $host->shouldReceive('getAbsoluteRequestUri')->andReturn($url);
-        $host->shouldReceive('getRequestAccept')->andReturn(null);
+        $host->shouldReceive('getRequestAccept')->andReturn('*/*');
         $host->shouldReceive('getQueryStringItem')->andReturn(null);
         $host->shouldReceive('setResponseStatusCode')->withAnyArgs()->andReturnNull()->never();
         $host->shouldReceive('setResponseContentType')->withAnyArgs()->andReturnNull()->never();
@@ -1423,7 +1423,7 @@ class BaseServiceNewTest extends TestCase
         $host->shouldReceive('getRequestIfMatch')->andReturn('a');
         $host->shouldReceive('getRequestIfNoneMatch')->andReturn('b');
         $host->shouldReceive('getAbsoluteRequestUri')->andReturn($url);
-        $host->shouldReceive('getRequestAccept')->andReturn(null);
+        $host->shouldReceive('getRequestAccept')->andReturn('*/*');
         $host->shouldReceive('getQueryStringItem')->andReturn(null);
         $host->shouldReceive('setResponseStatusCode')->withAnyArgs()->andReturnNull()->never();
         $host->shouldReceive('setResponseContentType')->withAnyArgs()->andReturnNull()->never();
@@ -1493,7 +1493,7 @@ class BaseServiceNewTest extends TestCase
         $host->shouldReceive('getRequestIfMatch')->andReturn('a');
         $host->shouldReceive('getRequestIfNoneMatch')->andReturn('b');
         $host->shouldReceive('getAbsoluteRequestUri')->andReturn($url);
-        $host->shouldReceive('getRequestAccept')->andReturn(null);
+        $host->shouldReceive('getRequestAccept')->andReturn('*/*');
         $host->shouldReceive('getQueryStringItem')->andReturn(null);
         $host->shouldReceive('setResponseStatusCode')->withAnyArgs()->andReturnNull()->never();
         $host->shouldReceive('setResponseContentType')->withAnyArgs()->andReturnNull()->never();
@@ -1563,7 +1563,7 @@ class BaseServiceNewTest extends TestCase
         $host->shouldReceive('getRequestIfMatch')->andReturn('a');
         $host->shouldReceive('getRequestIfNoneMatch')->andReturn('b');
         $host->shouldReceive('getAbsoluteRequestUri')->andReturn($url);
-        $host->shouldReceive('getRequestAccept')->andReturn(null);
+        $host->shouldReceive('getRequestAccept')->andReturn('*/*');
         $host->shouldReceive('getQueryStringItem')->andReturn(null);
         $host->shouldReceive('setResponseStatusCode')->withAnyArgs()->andReturnNull()->never();
         $host->shouldReceive('setResponseContentType')->withAnyArgs()->andReturnNull()->never();
@@ -1635,7 +1635,7 @@ class BaseServiceNewTest extends TestCase
         $host->shouldReceive('getRequestIfMatch')->andReturn('a');
         $host->shouldReceive('getRequestIfNoneMatch')->andReturn('b');
         $host->shouldReceive('getAbsoluteRequestUri')->andReturn($url);
-        $host->shouldReceive('getRequestAccept')->andReturn(null);
+        $host->shouldReceive('getRequestAccept')->andReturn('*/*');
         $host->shouldReceive('getQueryStringItem')->andReturn(null);
         $host->shouldReceive('setResponseStatusCode')->withAnyArgs()->andReturnNull()->never();
         $host->shouldReceive('setResponseContentType')->withAnyArgs()->andReturnNull()->never();
@@ -1704,7 +1704,7 @@ class BaseServiceNewTest extends TestCase
         $host->shouldReceive('getRequestIfMatch')->andReturn('a');
         $host->shouldReceive('getRequestIfNoneMatch')->andReturn('b');
         $host->shouldReceive('getAbsoluteRequestUri')->andReturn($url);
-        $host->shouldReceive('getRequestAccept')->andReturn(null);
+        $host->shouldReceive('getRequestAccept')->andReturn('*/*');
         $host->shouldReceive('getQueryStringItem')->andReturn(null);
         $host->shouldReceive('setResponseStatusCode')->withAnyArgs()->andReturnNull()->never();
         $host->shouldReceive('setResponseContentType')->withAnyArgs()->andReturnNull()->never();
@@ -1775,7 +1775,7 @@ class BaseServiceNewTest extends TestCase
         $host->shouldReceive('getRequestIfMatch')->andReturn('a');
         $host->shouldReceive('getRequestIfNoneMatch')->andReturn('b');
         $host->shouldReceive('getAbsoluteRequestUri')->andReturn($url);
-        $host->shouldReceive('getRequestAccept')->andReturn(null);
+        $host->shouldReceive('getRequestAccept')->andReturn('*/*');
         $host->shouldReceive('getQueryStringItem')->andReturn(null);
         $host->shouldReceive('setResponseStatusCode')->withAnyArgs()->andReturnNull()->never();
         $host->shouldReceive('setResponseContentType')->withAnyArgs()->andReturnNull()->never();
@@ -1846,7 +1846,7 @@ class BaseServiceNewTest extends TestCase
         $host->shouldReceive('getRequestIfMatch')->andReturn('a');
         $host->shouldReceive('getRequestIfNoneMatch')->andReturn('b');
         $host->shouldReceive('getAbsoluteRequestUri')->andReturn($url);
-        $host->shouldReceive('getRequestAccept')->andReturn(null);
+        $host->shouldReceive('getRequestAccept')->andReturn('*/*');
         $host->shouldReceive('getQueryStringItem')->andReturn(null);
         $host->shouldReceive('setResponseStatusCode')->withAnyArgs()->andReturnNull()->never();
         $host->shouldReceive('setResponseContentType')->withAnyArgs()->andReturnNull()->never();
