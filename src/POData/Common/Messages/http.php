@@ -84,7 +84,7 @@ trait http
 
     /**
      * Format a message to show error when the uri that look like pointing to
-     * MLE but actaully it is not.
+     * MLE but actually it is not.
      *
      * @param string $uri Url pointing to MLE
      *

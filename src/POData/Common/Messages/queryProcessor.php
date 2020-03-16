@@ -11,7 +11,7 @@ namespace POData\Common\Messages;
 trait queryProcessor
 {
     /**
-     * Message to show error when query prcocessor found
+     * Message to show error when query processor found
      * invalid value for $format option.
      *
      * @return string The message

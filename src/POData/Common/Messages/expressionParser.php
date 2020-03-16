@@ -131,7 +131,7 @@ trait expressionParser
      *
      * @param string $property       The resourceset property used in query
      * @param string $parentProperty The parent resource of property
-     * @param int    $pos            Postion at which resource set has been used
+     * @param int    $pos            Position at which resource set has been used
      *
      * @return string The formatted message
      */
