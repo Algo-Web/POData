@@ -26,10 +26,10 @@ class HttpProcessUtility
      * @return string|null       One of exactContentType or inexactContentType
      */
     public static function selectRequiredMimeType(
-        $acceptTypesText,
-        $exactContentTypes,
+        ?string $acceptTypesText,
+        array $exactContentTypes,
         $inexactContentType
-    ) {
+    ): ?string {
         $selectedContentType   = null;
         $selectedMatchingParts = -1;
         $selectedQualityValue  = 0;

@@ -464,11 +464,6 @@ class HttpProcessUtilityTest extends TestCase
         $this->assertEquals($expectedCode, $actualCode);
     }
 
-    public function testSelectRequiredMimeTypeWithAllParmsNull()
-    {
-        $this->assertNull(HttpProcessUtility::selectRequiredMimeType(null, null, null));
-    }
-
     public function testSelectRequiredMimeTypeWithMalformedAcceptTypes()
     {
         $expected     = 'Media type is unspecified.';
@@ -479,7 +474,7 @@ class HttpProcessUtilityTest extends TestCase
         $acceptTypesText = 'blahblah';
 
         try {
-            HttpProcessUtility::selectRequiredMimeType($acceptTypesText, null, null);
+            HttpProcessUtility::selectRequiredMimeType($acceptTypesText, [], null);
         } catch (HttpHeaderFailure $e) {
             $actual     = $e->getMessage();
             $actualCode = $e->getStatusCode();
@@ -487,22 +482,6 @@ class HttpProcessUtilityTest extends TestCase
         $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
         $this->assertEquals($expectedCode, $actualCode);
-    }
-
-    public function testSelectRequiredMimeTypeWithOnlyAcceptTypes()
-    {
-        $expected = 'Invalid argument supplied for foreach()';
-        $actual   = null;
-
-        $acceptTypesText =  MimeTypes::MIME_APPLICATION_ATOM;
-
-        try {
-            HttpProcessUtility::selectRequiredMimeType($acceptTypesText, null, null);
-        } catch (\Exception $e) {
-            $actual = $e->getMessage();
-        }
-        $this->assertNotNull($actual);
-        $this->assertEquals($expected, $actual);
     }
 
     public function testSelectRequiredMimeTypeWithAcceptTypesAndEmptyExactTypes()
