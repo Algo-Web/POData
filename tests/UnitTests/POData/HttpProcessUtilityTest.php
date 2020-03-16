@@ -480,6 +480,26 @@ class HttpProcessUtilityTest extends TestCase
         $this->assertEquals($expectedCode, $actualCode);
     }
 
+    public function testSelectRequiredMimeTypeWithNullAcceptTypes()
+    {
+        $expected     = 'Unsupported media type requested.';
+        $expectedCode = 415;
+        $actual       = null;
+        $actualCode   = null;
+
+        $acceptTypesText = null;
+
+        try {
+            HttpProcessUtility::selectRequiredMimeType($acceptTypesText, [], null);
+        } catch (HttpHeaderFailure $e) {
+            $actual     = $e->getMessage();
+            $actualCode = $e->getStatusCode();
+        }
+        $this->assertNotNull($actual);
+        $this->assertEquals($expected, $actual);
+        $this->assertEquals($expectedCode, $actualCode);
+    }
+
     public function testSelectRequiredMimeTypeWithAcceptTypesAndEmptyExactTypes()
     {
         $expected = 'Unsupported media type requested.';
@@ -554,5 +574,15 @@ class HttpProcessUtilityTest extends TestCase
         $expected = 'NAME';
         $actual = HttpProcessUtility::headerToServerKey($input);
         $this->assertEquals($expected, $actual);
+    }
+
+    public function testMimeTypesFromAcceptHeadersWithoutSemicolons()
+    {
+        $text = '*/*&@#$@%';
+
+        $this->expectException(HttpHeaderFailure::class);
+        $this->expectExceptionMessage('Media type requires a \';\' character before a parameter definition.');
+
+        HttpProcessUtility::mimeTypesFromAcceptHeaders($text);
     }
 }

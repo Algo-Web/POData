@@ -38,10 +38,7 @@ class HttpProcessUtility
         $foundExactMatch       = false;
 
         if (null === $acceptTypesText) {
-            throw new HttpHeaderFailure(
-                Messages::unsupportedMediaType(),
-                415
-            );
+            throw new HttpHeaderFailure(Messages::unsupportedMediaType(), 415);
         }
 
         $acceptTypes = self::mimeTypesFromAcceptHeaders($acceptTypesText);
@@ -84,10 +81,7 @@ class HttpProcessUtility
         }
 
         if (!$acceptable && !$acceptTypesEmpty) {
-            throw new HttpHeaderFailure(
-                Messages::unsupportedMediaType(),
-                415
-            );
+            throw new HttpHeaderFailure(Messages::unsupportedMediaType(), 415);
         }
 
         if ($acceptTypesEmpty) {
@@ -475,7 +469,7 @@ class HttpProcessUtility
                 }
             }
 
-            $qualityValue = $qualityValue *= $adjustFactor;
+            $qualityValue *= $adjustFactor;
             if ($qualityValue > 1000) {
                 // Too high of a value in qvalue.
                 throw new HttpHeaderFailure(
