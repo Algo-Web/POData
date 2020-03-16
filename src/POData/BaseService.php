@@ -107,7 +107,7 @@ abstract class BaseService implements IRequestHandler, IService
      *
      * @return IObjectSerialiser
      */
-    public function getObjectSerialiser()
+    public function getObjectSerialiser(): IObjectSerialiser
     {
         assert(null != $this->objectSerialiser);
 
@@ -135,7 +135,7 @@ abstract class BaseService implements IRequestHandler, IService
      *
      * @return IServiceConfiguration
      */
-    public function getConfiguration()
+    public function getConfiguration(): IServiceConfiguration
     {
         assert(null != $this->config);
 
@@ -149,7 +149,7 @@ abstract class BaseService implements IRequestHandler, IService
      *
      * @return ProvidersWrapper
      */
-    public function getProvidersWrapper()
+    public function getProvidersWrapper(): ProvidersWrapper
     {
         return $this->providersWrapper;
     }
@@ -169,7 +169,7 @@ abstract class BaseService implements IRequestHandler, IService
      *
      * @return ServiceHost
      */
-    public function getHost()
+    public function getHost(): ServiceHost
     {
         assert(null != $this->serviceHost);
 
@@ -181,7 +181,7 @@ abstract class BaseService implements IRequestHandler, IService
      *
      * @param ServiceHost $serviceHost The data service host instance
      */
-    public function setHost(ServiceHost $serviceHost)
+    public function setHost(ServiceHost $serviceHost): void
     {
         $this->serviceHost = $serviceHost;
     }
@@ -193,7 +193,7 @@ abstract class BaseService implements IRequestHandler, IService
      *
      * @return IOperationContext
      */
-    public function getOperationContext()
+    public function getOperationContext(): IOperationContext
     {
         return $this->getHost()->getOperationContext();
     }
@@ -204,7 +204,7 @@ abstract class BaseService implements IRequestHandler, IService
      *
      * @return StreamProviderWrapper
      */
-    public function getStreamProvider()
+    public function getStreamProvider(): StreamProviderWrapper
     {
         if (null === $this->streamProvider) {
             $this->streamProvider = new StreamProviderWrapper();
@@ -322,7 +322,7 @@ abstract class BaseService implements IRequestHandler, IService
      *
      * @return ODataWriterRegistry
      */
-    public function getODataWriterRegistry()
+    public function getODataWriterRegistry(): ODataWriterRegistry
     {
         assert(null != $this->writerRegistry);
 
@@ -330,11 +330,11 @@ abstract class BaseService implements IRequestHandler, IService
     }
 
     /**
-     * Returns the ODataWriterRegistry to use when writing the response to a service document or resource request.
+     * Returns the ODataReaderRegistry to use when writing the response to a service document or resource request.
      *
      * @return ODataReaderRegistry
      */
-    public function getODataReaderRegistry()
+    public function getODataReaderRegistry(): ODataReaderRegistry
     {
         assert(null != $this->writerRegistry);
 
@@ -405,6 +405,7 @@ abstract class BaseService implements IRequestHandler, IService
             $registry->register(new JsonLightODataWriter(JsonLightMetadataLevel::FULL(), $serviceURI));
         }
     }
+
     public function registerReaders()
     {
         $registry = $this->getODataReaderRegistry();
@@ -526,7 +527,11 @@ abstract class BaseService implements IRequestHandler, IService
                     }
                     // handle entry resource
                     $needToSerializeResponse = true;
-                    $eTag                    = $this->compareETag($result, $targetResourceType, $needToSerializeResponse);
+                    $eTag                    = $this->compareETag(
+                        $result,
+                        $targetResourceType,
+                        $needToSerializeResponse
+                    );
                     if ($needToSerializeResponse) {
                         if (null === $result || null === $result->results) {
                             // In the query 'Orders(1245)/Customer', the targeted
@@ -618,7 +623,7 @@ abstract class BaseService implements IRequestHandler, IService
     public function getResponseContentType(
         RequestDescription $request,
         IUriProcessor $uriProcessor
-    ) {
+    ): ?string {
         $baseMimeTypes = [
             MimeTypes::MIME_APPLICATION_JSON,
             MimeTypes::MIME_APPLICATION_JSON_FULL_META,
@@ -773,7 +778,7 @@ abstract class BaseService implements IRequestHandler, IService
         &$entryObject,
         ResourceType &$resourceType,
         &$needToSerializeResponse
-    ) {
+    ): ?string {
         $needToSerializeResponse = true;
         $eTag                    = null;
         $ifMatch                 = $this->getHost()->getRequestIfMatch();
@@ -867,7 +872,7 @@ abstract class BaseService implements IRequestHandler, IService
      *                                   for use in a URI) there are etag properties, NULL if
      *                                   there is no etag property
      */
-    protected function getETagForEntry(&$entryObject, ResourceType &$resourceType)
+    protected function getETagForEntry(&$entryObject, ResourceType &$resourceType): ?string
     {
         $eTag  = null;
         $comma = null;

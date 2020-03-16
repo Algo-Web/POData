@@ -95,11 +95,11 @@ class BaseServiceDummy extends BaseServiceTestWrapper
         &$entryObject,
         ResourceType &$resourceType,
         &$needToSerializeResponse
-    ) {
+    ): ?string {
         return parent::compareETag($entryObject, $resourceType, $needToSerializeResponse);
     }
 
-    public function getETagForEntry(&$entryObject, ResourceType &$resourceType)
+    public function getETagForEntry(&$entryObject, ResourceType &$resourceType): ?string
     {
         return parent::getETagForEntry($entryObject, $resourceType);
     }

@@ -10,6 +10,10 @@ use POData\ObjectModel\ODataFeed;
 use POData\ObjectModel\ODataLink;
 use POData\ObjectModel\ODataTitle;
 
+/**
+ * Class FeedProcessor
+ * @package POData\Readers\Atom\Processors
+ */
 class FeedProcessor extends BaseNodeHandler
 {
 
@@ -26,6 +30,11 @@ class FeedProcessor extends BaseNodeHandler
         $this->oDataFeed = new ODataFeed();
     }
 
+    /**
+     * @param $tagNamespace
+     * @param $tagName
+     * @param $attributes
+     */
     public function handleStartNode($tagNamespace, $tagName, $attributes)
     {
         assert(
@@ -40,6 +49,10 @@ class FeedProcessor extends BaseNodeHandler
             $this->oDataFeed->id = $this->popCharData();
         });
     }
+
+    /**
+     * @param $attributes
+     */
     public function handleStartAtomTitle($attributes)
     {
         $this->titleType = $this->arrayKeyOrDefault(
@@ -59,9 +72,16 @@ class FeedProcessor extends BaseNodeHandler
         });
     }
 
+    /**
+     * @param $attributes
+     */
     public function handleStartAtomLink($attributes)
     {
-        $rel                      = $this->arrayKeyOrDefault($attributes, ODataConstants::ATOM_LINK_RELATION_ATTRIBUTE_NAME, '');
+        $rel                      = $this->arrayKeyOrDefault(
+            $attributes,
+            ODataConstants::ATOM_LINK_RELATION_ATTRIBUTE_NAME,
+            ''
+        );
         $prop                     = $rel === ODataConstants::ATOM_SELF_RELATION_ATTRIBUTE_VALUE ? 'selfLink' : 'nextPageLink';
         $this->oDataFeed->{$prop} = new ODataLink(
             $this->arrayKeyOrDefault($attributes, ODataConstants::ATOM_LINK_RELATION_ATTRIBUTE_NAME, ''),
@@ -79,12 +99,19 @@ class FeedProcessor extends BaseNodeHandler
         });
     }
 
+    /**
+     * @param $objectModel
+     * @return mixed
+     */
     public function handleChildComplete($objectModel)
     {
         //assert($objectModel instanceof ODataEntry);
         $this->oDataFeed->entries[] = $objectModel;
     }
 
+    /**
+     * @return ODataFeed
+     */
     public function getObjetModelObject()
     {
         return $this->oDataFeed;

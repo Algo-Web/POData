@@ -146,7 +146,7 @@ class PropertyAccessExpression extends AbstractExpression
 
     /**
      * Function to create a nullable expression subtree for checking the
-     * nullablilty of parent (and current poperty optionally) properties.
+     * nullability of parent (and current property optionally) properties.
      *
      * @param bool $includeMe Boolean flag indicating whether to include null check for this property along with parents
      *

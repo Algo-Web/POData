@@ -270,7 +270,7 @@ class ODataConstants
     //XML namespace for data service links.
     const ODATA_RELATED_NAMESPACE = 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/';
 
-    //XML Namespace for Assocation links.
+    //XML Namespace for Association links.
     const ODATA_ASSOCIATION_NAMESPACE = 'http://schemas.microsoft.com/ado/2007/08/dataservices/relatedlinks/';
 
     //ATOM Scheme Namespace For DataWeb.
@@ -379,7 +379,8 @@ class ODataConstants
     const ATOM_EDIT_MEDIA_RELATION_ATTRIBUTE_VALUE = 'edit-media';
 
     // Atom link relation attribute value for media Resource links.
-    const ATOM_MEDIA_RESOURCE_RELATION_ATTRIBUTE_VALUE = 'http://schemas.microsoft.com/ado/2007/08/dataservices/mediaresource/';
+    const ATOM_MEDIA_RESOURCE_RELATION_ATTRIBUTE_VALUE =
+        'http://schemas.microsoft.com/ado/2007/08/dataservices/mediaresource/';
 
     // Atom attribute which indicates the null value for the element.
     const ATOM_NULL_ATTRIBUTE_NAME = 'null';

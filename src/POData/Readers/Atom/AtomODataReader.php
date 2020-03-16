@@ -15,6 +15,10 @@ use POData\Readers\Atom\Processors\FeedProcessor;
 use POData\Readers\IODataReader;
 use SplStack;
 
+/**
+ * Class AtomODataReader
+ * @package POData\Readers\Atom
+ */
 class AtomODataReader implements IODataReader
 {
     /**
@@ -47,12 +51,20 @@ class AtomODataReader implements IODataReader
         xml_parser_free($this->parser);
     }
 
+    /**
+     * @param $data
+     * @return mixed|ODataEntry|ODataFeed
+     */
     public function read($data)
     {
         xml_parse($this->parser, $data, true);
         return $this->objectModel;
     }
 
+    /**
+     * @param $parser
+     * @param $data
+     */
     public function characterData($parser, $data)
     {
         if ($this->stack->isEmpty()) {
@@ -61,6 +73,11 @@ class AtomODataReader implements IODataReader
         $this->stack->top()->handleCharacterData($data);
     }
 
+    /**
+     * @param $parser
+     * @param $tag
+     * @param $attributes
+     */
     public function tagOpen($parser, $tag, $attributes)
     {
         switch (strtolower($tag)) {
@@ -79,6 +96,10 @@ class AtomODataReader implements IODataReader
         }
     }
 
+    /**
+     * @param $parser
+     * @param $tag
+     */
     public function tagClose($parser, $tag)
     {
         switch (strtolower($tag)) {
@@ -100,6 +121,11 @@ class AtomODataReader implements IODataReader
         }
     }
 
+    /**
+     * @param \POData\Common\Version $responseVersion
+     * @param $contentType
+     * @return bool|mixed
+     */
     public function canHandle(\POData\Common\Version $responseVersion, $contentType)
     {
         return MimeTypes::MIME_APPLICATION_ATOM == $contentType || MimeTypes::MIME_APPLICATION_XML === $contentType;

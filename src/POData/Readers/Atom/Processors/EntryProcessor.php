@@ -15,6 +15,10 @@ use POData\ObjectModel\ODataTitle;
 use POData\Readers\Atom\Processors\Entry\LinkProcessor;
 use POData\Readers\Atom\Processors\Entry\PropertyProcessor;
 
+/**
+ * Class EntryProcessor
+ * @package POData\Readers\Atom\Processors
+ */
 class EntryProcessor extends BaseNodeHandler
 {
     private $oDataEntry;
@@ -31,6 +35,11 @@ class EntryProcessor extends BaseNodeHandler
         $this->oDataEntry->isMediaLinkEntry = false;
     }
 
+    /**
+     * @param $tagNamespace
+     * @param $tagName
+     * @param $attributes
+     */
     public function handleStartNode($tagNamespace, $tagName, $attributes)
     {
         if (strtolower($tagNamespace) !== strtolower(ODataConstants::ATOM_NAMESPACE)) {
@@ -40,6 +49,10 @@ class EntryProcessor extends BaseNodeHandler
         parent::handleStartNode($tagNamespace, $tagName, $attributes);
     }
 
+    /**
+     * @param $tagNamespace
+     * @param $tagName
+     */
     public function handleEndNode($tagNamespace, $tagName)
     {
         if (strtolower($tagNamespace) !== strtolower(ODataConstants::ATOM_NAMESPACE)) {
@@ -56,6 +69,9 @@ class EntryProcessor extends BaseNodeHandler
         });
     }
 
+    /**
+     * @param $attributes
+     */
     protected function handleStartAtomTitle($attributes)
     {
         $titleType = $this->arrayKeyOrDefault(
@@ -81,6 +97,9 @@ class EntryProcessor extends BaseNodeHandler
         });
     }
 
+    /**
+     * @param $attributes
+     */
     protected function handleStartAtomLink($attributes)
     {
         $this->subProcessor = $linkProcessor = new LinkProcessor($attributes);
@@ -90,6 +109,9 @@ class EntryProcessor extends BaseNodeHandler
         });
     }
 
+    /**
+     * @param $attributes
+     */
     protected function handleStartAtomCategory($attributes)
     {
         $odataCategory = new ODataCategory(
@@ -104,6 +126,9 @@ class EntryProcessor extends BaseNodeHandler
         $this->enqueueEnd($this->doNothing());
     }
 
+    /**
+     * @param $attributes
+     */
     protected function handleStartAtomContent($attributes)
     {
         $this->subProcessor       = new PropertyProcessor();
@@ -127,16 +152,26 @@ class EntryProcessor extends BaseNodeHandler
         $this->enqueueEnd($this->doNothing());
     }
 
+    /**
+     * @param $objectModel
+     * @return mixed
+     */
     public function handleChildComplete($objectModel)
     {
         $this->subProcessor->handleChildComplete($objectModel);
     }
 
+    /**
+     * @return ODataEntry
+     */
     public function getObjetModelObject()
     {
         return $this->oDataEntry;
     }
 
+    /**
+     * @param $characters
+     */
     public function handleCharacterData($characters)
     {
         if (null === $this->subProcessor) {
@@ -161,6 +196,9 @@ class EntryProcessor extends BaseNodeHandler
         }
     }
 
+    /**
+     * @param ODataLink $link
+     */
     private function handleODataLink(ODataLink $link)
     {
         if ($link->name === ODataConstants::ATOM_EDIT_RELATION_ATTRIBUTE_VALUE) {
@@ -170,6 +208,9 @@ class EntryProcessor extends BaseNodeHandler
         }
     }
 
+    /**
+     * @param ODataMediaLink $link
+     */
     private function handleODataMediaLink(ODataMediaLink $link)
     {
         if ($link->name === ODataConstants::ATOM_EDIT_MEDIA_RELATION_ATTRIBUTE_VALUE) {

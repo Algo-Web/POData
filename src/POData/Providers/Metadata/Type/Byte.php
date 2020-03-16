@@ -81,7 +81,7 @@ class Byte implements IType
 
     /**
      * Converts the given string value to byte type.
-     * Note: This function will not perfrom any conversion.
+     * Note: This function will not perform any conversion.
      *
      * @param string $stringValue string value to convert
      *

@@ -295,17 +295,17 @@ class ExpressionParser
             || $this->getCurrentToken()->identifierIs(/* @scrutinizer ignore-type */ODataConstants::KEYWORD_DIVIDE)
             || $this->getCurrentToken()->identifierIs(/* @scrutinizer ignore-type */ODataConstants::KEYWORD_MODULO)
         ) {
-            $multiplicativeToken = clone $this->getCurrentToken();
+            $multiplyToken = clone $this->getCurrentToken();
             $this->getLexer()->nextToken();
             $right        = $this->parseUnary();
             $opReturnType = FunctionDescription::verifyAndPromoteArithmeticOpArguments(
-                $multiplicativeToken,
+                $multiplyToken,
                 $left,
                 $right
             );
-            if ($multiplicativeToken->identifierIs(/* @scrutinizer ignore-type */ODataConstants::KEYWORD_MULTIPLY)) {
+            if ($multiplyToken->identifierIs(/* @scrutinizer ignore-type */ODataConstants::KEYWORD_MULTIPLY)) {
                 $left = new ArithmeticExpression($left, $right, ExpressionType::MULTIPLY(), $opReturnType);
-            } elseif ($multiplicativeToken->identifierIs(/* @scrutinizer ignore-type */ODataConstants::KEYWORD_DIVIDE)) {
+            } elseif ($multiplyToken->identifierIs(/* @scrutinizer ignore-type */ODataConstants::KEYWORD_DIVIDE)) {
                 $left = new ArithmeticExpression($left, $right, ExpressionType::DIVIDE(), $opReturnType);
             } else {
                 $left = new ArithmeticExpression($left, $right, ExpressionType::MODULO(), $opReturnType);

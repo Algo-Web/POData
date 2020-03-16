@@ -111,7 +111,7 @@ class Char implements IType
     }
 
     /**
-     * Checks a character is whilespace.
+     * Checks a character is whitespace.
      *
      * @param char|string $char character to check
      *

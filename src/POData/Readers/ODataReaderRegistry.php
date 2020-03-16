@@ -8,6 +8,10 @@ namespace POData\Readers;
 use POData\Common\Version;
 use POData\Writers\IODataWriter;
 
+/**
+ * Class ODataReaderRegistry
+ * @package POData\Readers
+ */
 class ODataReaderRegistry
 {
     /** @var IODataReader[] */

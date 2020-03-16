@@ -73,8 +73,8 @@ class ExpressionParser2 extends ExpressionParser
      * @param ResourceType        $resourceType       The resource type in which
      * @param IExpressionProvider $expressionProvider Implementation of IExpressionProvider
      *
-     * @throws ODataException                         If any error occurs while parsing the odata expression or building the
-     *                                                php/custom expression
+     * @throws ODataException                         If any error occurs while parsing the odata expression
+     *                                                or building the php/custom expression
      * @throws \POData\Common\NotImplementedException
      * @throws \ReflectionException
      *

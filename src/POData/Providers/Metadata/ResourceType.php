@@ -140,7 +140,7 @@ abstract class ResourceType
 
     /**
      * Whether the resource type described by this class instance has named streams
-     * Note: This has been intialised with null, later in hasNamedStreams method,
+     * Note: This has been initialised with null, later in hasNamedStreams method,
      * this flag will be set to boolean value.
      *
      * @var bool
@@ -731,7 +731,8 @@ abstract class ResourceType
                     }
                 }
 
-                if ($resourceProperty->isKindOf(/* @scrutinizer ignore-type */ResourcePropertyKind::BAG) || $hasBagInComplex) {
+                if ($resourceProperty->isKindOf(/* @scrutinizer ignore-type */ResourcePropertyKind::BAG) ||
+                    $hasBagInComplex) {
                     $this->hasBagProperty = true;
                     break;
                 }
@@ -785,7 +786,7 @@ abstract class ResourceType
     /**
      * Get predefined ResourceType for a primitive type.
      *
-     * @param EdmPrimitiveType $typeCode Typecode of primitive type
+     * @param EdmPrimitiveType $typeCode Type code of primitive type
      *
      * @throws InvalidArgumentException
      *

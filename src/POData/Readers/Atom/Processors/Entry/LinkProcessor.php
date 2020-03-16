@@ -13,6 +13,10 @@ use POData\ObjectModel\ODataLink;
 use POData\ObjectModel\ODataMediaLink;
 use POData\Readers\Atom\Processors\BaseNodeHandler;
 
+/**
+ * Class LinkProcessor
+ * @package POData\Readers\Atom\Processors\Entry
+ */
 class LinkProcessor extends BaseNodeHandler
 {
     /**
@@ -20,6 +24,10 @@ class LinkProcessor extends BaseNodeHandler
      */
     private $link;
 
+    /**
+     * LinkProcessor constructor.
+     * @param $attributes
+     */
     public function __construct($attributes)
     {
         switch ($this->arrayKeyOrDefault($attributes, ODataConstants::ATOM_LINK_RELATION_ATTRIBUTE_NAME, null)) {
@@ -42,6 +50,11 @@ class LinkProcessor extends BaseNodeHandler
         );
     }
 
+    /**
+     * @param $tagNamespace
+     * @param $tagName
+     * @param $attributes
+     */
     public function handleStartNode($tagNamespace, $tagName, $attributes)
     {
         //The only sub notes that will exist will be the inline ones before we process the feed or entity.
@@ -49,6 +62,10 @@ class LinkProcessor extends BaseNodeHandler
         assert($tagName === strtolower(ODataConstants::ATOM_INLINE_ELEMENT_NAME));
     }
 
+    /**
+     * @param $tagNamespace
+     * @param $tagName
+     */
     public function handleEndNode($tagNamespace, $tagName)
     {
         //The only sub notes that will exist will be the inline ones before we process the feed or entity.
@@ -56,6 +73,10 @@ class LinkProcessor extends BaseNodeHandler
         assert($tagName === strtolower(ODataConstants::ATOM_INLINE_ELEMENT_NAME));
     }
 
+    /**
+     * @param $objectModel
+     * @return mixed
+     */
     public function handleChildComplete($objectModel)
     {
         assert(!$this->link instanceof ODataMediaLink);

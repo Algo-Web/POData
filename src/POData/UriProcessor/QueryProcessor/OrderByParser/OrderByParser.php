@@ -157,7 +157,7 @@ class OrderByParser
 
     /**
      * Build 'OrderBy Tree' from the given orderby path segments, also build
-     * comparsion function for each path segment.
+     * comparison function for each path segment.
      *
      * @param array(array) &$orderByPathSegments Collection of orderby path segments,
      *                                           this is passed by reference

@@ -66,7 +66,7 @@ class BaseServiceNewTest extends TestCase
         $foo = m::mock(BaseServiceDummy::class)->makePartial();
         $foo->shouldReceive('getMetadataProvider')->andReturn('foobar');
 
-        $expected = 'IService.getMetdataProvider returns invalid object.';
+        $expected = 'IService.getMetadataProvider returns invalid object.';
         $actual   = null;
 
         try {

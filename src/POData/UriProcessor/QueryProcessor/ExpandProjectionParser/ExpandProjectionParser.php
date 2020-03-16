@@ -103,13 +103,13 @@ class ExpandProjectionParser
     public static function parseExpandAndSelectClause(
         ResourceSetWrapper $resourceSetWrapper,
         ResourceType $resourceType,
-        $internalOrderInfo,
-        $skipCount,
-        $takeCount,
-        $expand,
-        $select,
+        ?InternalOrderByInfo $internalOrderInfo,
+        ?int $skipCount,
+        ?int $takeCount,
+        ?string $expand,
+        ?string $select,
         ProvidersWrapper $providerWrapper
-    ) {
+    ): RootProjectionNode {
         $parser                     = new self($providerWrapper);
         $parser->rootProjectionNode = new RootProjectionNode(
             $resourceSetWrapper,
@@ -136,7 +136,7 @@ class ExpandProjectionParser
      * @throws \POData\Common\InvalidOperationException
      * @throws \ReflectionException
      */
-    private function parseExpand($expand)
+    private function parseExpand(?string $expand): void
     {
         if (null !== $expand) {
             $pathSegments = $this->readExpandOrSelect($expand, false);
@@ -158,7 +158,7 @@ class ExpandProjectionParser
      * @throws ODataException If any error occurs while reading expand clause
      *                        or applying selection to projection tree
      */
-    private function parseSelect($select)
+    private function parseSelect(?string $select): void
     {
         if (null === $select) {
             $this->rootProjectionNode->markSubtreeAsSelected();
@@ -182,7 +182,7 @@ class ExpandProjectionParser
      * @throws \POData\Common\InvalidOperationException
      * @throws \ReflectionException
      */
-    private function buildProjectionTree($expandPathSegments)
+    private function buildProjectionTree(array $expandPathSegments): void
     {
         foreach ($expandPathSegments as $expandSubPathSegments) {
             $currentNode = $this->rootProjectionNode;
@@ -287,7 +287,7 @@ class ExpandProjectionParser
      * @throws ODataException If any error occurs while processing select
      *                        path segments
      */
-    private function applySelectionToProjectionTree($selectPathSegments)
+    private function applySelectionToProjectionTree(array $selectPathSegments)
     {
         foreach ($selectPathSegments as $selectSubPathSegments) {
             $currentNode  = $this->rootProjectionNode;
@@ -333,14 +333,18 @@ class ExpandProjectionParser
                                 $selectSubPathSegment
                             )
                         );
-                    } elseif ($resourceProperty->isKindOf(/* @scrutinizer ignore-type */ResourcePropertyKind::PRIMITIVE)) {
+                    } elseif ($resourceProperty->isKindOf(
+                    /* @scrutinizer ignore-type */ResourcePropertyKind::PRIMITIVE
+                    )) {
                         throw ODataException::createBadRequestError(
                             Messages::expandProjectionParserPrimitivePropertyUsedAsNavigationProperty(
                                 $currentResourceType->getFullName(),
                                 $selectSubPathSegment
                             )
                         );
-                    } elseif ($resourceProperty->isKindOf(/* @scrutinizer ignore-type */ResourcePropertyKind::COMPLEX_TYPE)) {
+                    } elseif ($resourceProperty->isKindOf(
+                        /* @scrutinizer ignore-type */ResourcePropertyKind::COMPLEX_TYPE
+                    )) {
                         throw ODataException::createBadRequestError(
                             Messages::expandProjectionParserComplexPropertyAsInnerSelectSegment(
                                 $currentResourceType->getFullName(),
@@ -390,7 +394,7 @@ class ExpandProjectionParser
      * @throws ODataException
      * @return array<array>   An array of 'PathSegment's, each of which is array of 'SubPathSegment's
      */
-    private function readExpandOrSelect($value, $isSelect)
+    private function readExpandOrSelect(string $value, bool $isSelect): array
     {
         $pathSegments = [];
         $lexer        = new ExpressionLexer($value);
@@ -429,7 +433,7 @@ class ExpandProjectionParser
     /**
      * @return ProvidersWrapper
      */
-    public function getProviderWrapper()
+    public function getProviderWrapper(): ProvidersWrapper
     {
         return $this->providerWrapper;
     }

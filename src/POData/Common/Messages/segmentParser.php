@@ -54,7 +54,7 @@ trait segmentParser
     }
 
     /**
-     * Format a message to show error when a segment otherthan
+     * Format a message to show error when a segment other than
      * $value is followed by primitive segment.
      *
      * @param string $segment                  The segment follows

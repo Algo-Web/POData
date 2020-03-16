@@ -101,7 +101,7 @@ trait orderByInfo
 
     /**
      * Format a message to show error when found a resource set reference
-     * property in the oriderby clause.
+     * property in the orderby clause.
      *
      * @param string $propertyName The name of resource set reference property
      * @param string $definedType  Defined type

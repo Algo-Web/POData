@@ -97,7 +97,7 @@ trait streamProviderWrapper
     }
 
     /**
-     * Message to show error when IServiceProvider.GetService implementation returns invaild object when request for
+     * Message to show error when IServiceProvider.GetService implementation returns invalid object when request for
      * IStreamProvider implementation.
      *
      * @return string The message
@@ -108,7 +108,7 @@ trait streamProviderWrapper
     }
 
     /**
-     * Message to show error when IServiceProvider.GetService implementation returns invaild object when request for
+     * Message to show error when IServiceProvider.GetService implementation returns invalid object when request for
      * IStreamProvider2 implementation.
      *
      * @return string The message
