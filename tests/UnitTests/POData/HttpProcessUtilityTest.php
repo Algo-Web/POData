@@ -276,8 +276,7 @@ class HttpProcessUtilityTest extends TestCase
     {
         $qualText  = '0.9 ';
         $qualDex   = 0;
-        $qualValue = 0;
-        HttpProcessUtility::readQualityValue($qualText, $qualDex, $qualValue);
+        $qualValue = HttpProcessUtility::readQualityValue($qualText, $qualDex);
 
         $this->assertEquals(900, $qualValue);
     }
@@ -286,8 +285,7 @@ class HttpProcessUtilityTest extends TestCase
     {
         $qualText  = '0.81 ';
         $qualDex   = 0;
-        $qualValue = 0;
-        HttpProcessUtility::readQualityValue($qualText, $qualDex, $qualValue);
+        $qualValue = HttpProcessUtility::readQualityValue($qualText, $qualDex);
 
         $this->assertEquals(810, $qualValue);
     }
@@ -296,8 +294,7 @@ class HttpProcessUtilityTest extends TestCase
     {
         $qualText  = "0.729\t";
         $qualDex   = 0;
-        $qualValue = 0;
-        HttpProcessUtility::readQualityValue($qualText, $qualDex, $qualValue);
+        $qualValue = HttpProcessUtility::readQualityValue($qualText, $qualDex);
 
         $this->assertEquals(729, $qualValue);
     }
@@ -306,8 +303,7 @@ class HttpProcessUtilityTest extends TestCase
     {
         $qualText  = '0.6561';
         $qualDex   = 0;
-        $qualValue = 0;
-        HttpProcessUtility::readQualityValue($qualText, $qualDex, $qualValue);
+        $qualValue = HttpProcessUtility::readQualityValue($qualText, $qualDex);
 
         $this->assertEquals(656, $qualValue);
     }
@@ -464,11 +460,6 @@ class HttpProcessUtilityTest extends TestCase
         $this->assertEquals($expectedCode, $actualCode);
     }
 
-    public function testSelectRequiredMimeTypeWithAllParmsNull()
-    {
-        $this->assertNull(HttpProcessUtility::selectRequiredMimeType(null, null, null));
-    }
-
     public function testSelectRequiredMimeTypeWithMalformedAcceptTypes()
     {
         $expected     = 'Media type is unspecified.';
@@ -479,7 +470,7 @@ class HttpProcessUtilityTest extends TestCase
         $acceptTypesText = 'blahblah';
 
         try {
-            HttpProcessUtility::selectRequiredMimeType($acceptTypesText, null, null);
+            HttpProcessUtility::selectRequiredMimeType($acceptTypesText, [], null);
         } catch (HttpHeaderFailure $e) {
             $actual     = $e->getMessage();
             $actualCode = $e->getStatusCode();
@@ -489,20 +480,24 @@ class HttpProcessUtilityTest extends TestCase
         $this->assertEquals($expectedCode, $actualCode);
     }
 
-    public function testSelectRequiredMimeTypeWithOnlyAcceptTypes()
+    public function testSelectRequiredMimeTypeWithNullAcceptTypes()
     {
-        $expected = 'Invalid argument supplied for foreach()';
-        $actual   = null;
+        $expected     = 'Unsupported media type requested.';
+        $expectedCode = 415;
+        $actual       = null;
+        $actualCode   = null;
 
-        $acceptTypesText =  MimeTypes::MIME_APPLICATION_ATOM;
+        $acceptTypesText = null;
 
         try {
-            HttpProcessUtility::selectRequiredMimeType($acceptTypesText, null, null);
-        } catch (\Exception $e) {
-            $actual = $e->getMessage();
+            HttpProcessUtility::selectRequiredMimeType($acceptTypesText, [], null);
+        } catch (HttpHeaderFailure $e) {
+            $actual     = $e->getMessage();
+            $actualCode = $e->getStatusCode();
         }
         $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
+        $this->assertEquals($expectedCode, $actualCode);
     }
 
     public function testSelectRequiredMimeTypeWithAcceptTypesAndEmptyExactTypes()
@@ -563,5 +558,31 @@ class HttpProcessUtilityTest extends TestCase
         $this->expectExceptionMessage(Messages::httpProcessUtilityMediaTypeMissingValue());
 
         HttpProcessUtility::readMediaTypeParameter($text, $textIndex, $parms);
+    }
+
+    public function testIsHttpElementSeparator()
+    {
+        $this->assertTrue(HttpProcessUtility::isHttpElementSeparator(','));
+        $this->assertTrue(HttpProcessUtility::isHttpElementSeparator(' '));
+        $this->assertTrue(HttpProcessUtility::isHttpElementSeparator('\t'));
+        $this->assertFalse(HttpProcessUtility::isHttpElementSeparator('n'));
+    }
+
+    public function testNonHttpHeaderName()
+    {
+        $input = 'name';
+        $expected = 'NAME';
+        $actual = HttpProcessUtility::headerToServerKey($input);
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testMimeTypesFromAcceptHeadersWithoutSemicolons()
+    {
+        $text = '*/*&@#$@%';
+
+        $this->expectException(HttpHeaderFailure::class);
+        $this->expectExceptionMessage('Media type requires a \';\' character before a parameter definition.');
+
+        HttpProcessUtility::mimeTypesFromAcceptHeaders($text);
     }
 }

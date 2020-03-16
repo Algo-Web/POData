@@ -2320,6 +2320,7 @@ class UriProcessorMockeryTest extends TestCase
             'QueryString'           => null,
             'DataServiceVersion'    => new Version(1, 0),
             'MaxDataServiceVersion' => new Version(3, 0),
+            'RequestAccept'         => '*/*'
         ];
 
         $queryResult          = new QueryResult();

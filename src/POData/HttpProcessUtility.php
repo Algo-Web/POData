@@ -26,10 +26,10 @@ class HttpProcessUtility
      * @return string|null       One of exactContentType or inexactContentType
      */
     public static function selectRequiredMimeType(
-        $acceptTypesText,
-        $exactContentTypes,
+        ?string $acceptTypesText,
+        array $exactContentTypes,
         $inexactContentType
-    ) {
+    ): ?string {
         $selectedContentType   = null;
         $selectedMatchingParts = -1;
         $selectedQualityValue  = 0;
@@ -37,52 +37,51 @@ class HttpProcessUtility
         $acceptTypesEmpty      = true;
         $foundExactMatch       = false;
 
-        if (null !== $acceptTypesText) {
-            $acceptTypes = self::mimeTypesFromAcceptHeaders($acceptTypesText);
-            foreach ($acceptTypes as $acceptType) {
-                $acceptTypesEmpty = false;
-                foreach ($exactContentTypes as $exactContentType) {
-                    if (strcasecmp($acceptType->getMimeType(), $exactContentType) == 0) {
-                        $selectedContentType  = $exactContentType;
-                        $selectedQualityValue = $acceptType->getQualityValue();
-                        $acceptable           = $selectedQualityValue != 0;
-                        $foundExactMatch      = true;
-                        break;
-                    }
-                }
+        if (null === $acceptTypesText) {
+            throw new HttpHeaderFailure(Messages::unsupportedMediaType(), 415);
+        }
 
-                if ($foundExactMatch) {
+        $acceptTypes = self::mimeTypesFromAcceptHeaders($acceptTypesText);
+        foreach ($acceptTypes as $acceptType) {
+            $acceptTypesEmpty = false;
+            foreach ($exactContentTypes as $exactContentType) {
+                if (0 == strcasecmp($acceptType->getMimeType(), $exactContentType)) {
+                    $selectedContentType = $exactContentType;
+                    $selectedQualityValue = $acceptType->getQualityValue();
+                    $acceptable = 0 != $selectedQualityValue;
+                    $foundExactMatch = true;
                     break;
                 }
+            }
 
-                $matchingParts = $acceptType->getMatchingRating($inexactContentType);
-                if ($matchingParts < 0) {
-                    continue;
-                }
+            if ($foundExactMatch) {
+                break;
+            }
 
-                if ($matchingParts > $selectedMatchingParts) {
-                    // A more specific type wins.
-                    $selectedContentType   = $inexactContentType;
-                    $selectedMatchingParts = $matchingParts;
-                    $selectedQualityValue  = $acceptType->getQualityValue();
-                    $acceptable            = $selectedQualityValue != 0;
-                } elseif ($matchingParts == $selectedMatchingParts) {
-                    // A type with a higher q-value wins.
-                    $candidateQualityValue = $acceptType->getQualityValue();
-                    if ($candidateQualityValue > $selectedQualityValue) {
-                        $selectedContentType  = $inexactContentType;
-                        $selectedQualityValue = $candidateQualityValue;
-                        $acceptable           = $selectedQualityValue != 0;
-                    }
+            $matchingParts = $acceptType->getMatchingRating($inexactContentType);
+            if ($matchingParts < 0) {
+                continue;
+            }
+
+            $candidateQualityValue = $acceptType->getQualityValue();
+            if ($matchingParts > $selectedMatchingParts) {
+                // A more specific type wins.
+                $selectedContentType = $inexactContentType;
+                $selectedMatchingParts = $matchingParts;
+                $selectedQualityValue = $candidateQualityValue;
+                $acceptable = 0 != $selectedQualityValue;
+            } elseif ($matchingParts == $selectedMatchingParts) {
+                // A type with a higher q-value wins.
+                if ($candidateQualityValue > $selectedQualityValue) {
+                    $selectedContentType = $inexactContentType;
+                    $selectedQualityValue = $candidateQualityValue;
+                    $acceptable = 0 != $selectedQualityValue;
                 }
             }
         }
 
         if (!$acceptable && !$acceptTypesEmpty) {
-            throw new HttpHeaderFailure(
-                Messages::unsupportedMediaType(),
-                415
-            );
+            throw new HttpHeaderFailure(Messages::unsupportedMediaType(), 415);
         }
 
         if ($acceptTypesEmpty) {
@@ -102,7 +101,7 @@ class HttpProcessUtility
      *
      * @return string|null The best MIME type for the client
      */
-    public static function selectMimeType($acceptTypesText, array $availableTypes)
+    public static function selectMimeType(string $acceptTypesText, array $availableTypes): ?string
     {
         $selectedContentType     = null;
         $selectedMatchingParts   = -1;
@@ -110,39 +109,38 @@ class HttpProcessUtility
         $selectedPreferenceIndex = PHP_INT_MAX;
         $acceptable              = false;
         $acceptTypesEmpty        = true;
-        if (null !== $acceptTypesText) {
-            $acceptTypes  = self::mimeTypesFromAcceptHeaders($acceptTypesText);
-            $numAvailable = count($availableTypes);
-            foreach ($acceptTypes as $acceptType) {
-                $acceptTypesEmpty = false;
-                for ($i = 0; $i < $numAvailable; ++$i) {
-                    $availableType = $availableTypes[$i];
-                    $matchRating   = $acceptType->getMatchingRating($availableType);
-                    if ($matchRating < 0) {
-                        continue;
-                    }
 
-                    if ($matchRating > $selectedMatchingParts) {
-                        // A more specific type wins.
+        $acceptTypes  = self::mimeTypesFromAcceptHeaders($acceptTypesText);
+        $numAvailable = count($availableTypes);
+        foreach ($acceptTypes as $acceptType) {
+            $acceptTypesEmpty = false;
+            for ($i = 0; $i < $numAvailable; ++$i) {
+                $availableType = $availableTypes[$i];
+                $matchRating   = $acceptType->getMatchingRating($availableType);
+                if (0 > $matchRating) {
+                    continue;
+                }
+
+                $candidateQualityValue = $acceptType->getQualityValue();
+                if ($matchRating > $selectedMatchingParts) {
+                    // A more specific type wins.
+                    $selectedContentType     = $availableType;
+                    $selectedMatchingParts   = $matchRating;
+                    $selectedQualityValue    = $candidateQualityValue;
+                    $selectedPreferenceIndex = $i;
+                    $acceptable              = 0 != $selectedQualityValue;
+                } elseif ($matchRating == $selectedMatchingParts) {
+                    // A type with a higher q-value wins.
+                    if ($candidateQualityValue > $selectedQualityValue) {
                         $selectedContentType     = $availableType;
-                        $selectedMatchingParts   = $matchRating;
-                        $selectedQualityValue    = $acceptType->getQualityValue();
+                        $selectedQualityValue    = $candidateQualityValue;
                         $selectedPreferenceIndex = $i;
-                        $acceptable              = $selectedQualityValue != 0;
-                    } elseif ($matchRating == $selectedMatchingParts) {
-                        // A type with a higher q-value wins.
-                        $candidateQualityValue = $acceptType->getQualityValue();
-                        if ($candidateQualityValue > $selectedQualityValue) {
+                        $acceptable              = 0 != $selectedQualityValue;
+                    } elseif ($candidateQualityValue == $selectedQualityValue) {
+                        // A type that is earlier in the availableTypes array wins.
+                        if ($i < $selectedPreferenceIndex) {
                             $selectedContentType     = $availableType;
-                            $selectedQualityValue    = $candidateQualityValue;
                             $selectedPreferenceIndex = $i;
-                            $acceptable              = $selectedQualityValue != 0;
-                        } elseif ($candidateQualityValue == $selectedQualityValue) {
-                            // A type that is earlier in the availableTypes array wins.
-                            if ($i < $selectedPreferenceIndex) {
-                                $selectedContentType     = $availableType;
-                                $selectedPreferenceIndex = $i;
-                            }
                         }
                     }
                 }
@@ -167,7 +165,7 @@ class HttpProcessUtility
      *
      * @return MediaType[] Array of media (MIME) type description
      */
-    public static function mimeTypesFromAcceptHeaders($text)
+    public static function mimeTypesFromAcceptHeaders(string $text): array
     {
         $mediaTypes = [];
         $textIndex  = 0;
@@ -177,13 +175,13 @@ class HttpProcessUtility
             self::readMediaTypeAndSubtype($text, $textIndex, $type, $subType);
 
             $parameters = [];
-            while (!self::skipWhiteSpace($text, $textIndex)) {
-                if ($text[$textIndex] == ',') {
+            while (!self::skipWhitespace($text, $textIndex)) {
+                if (',' == $text[$textIndex]) {
                     ++$textIndex;
                     break;
                 }
 
-                if ($text[$textIndex] != ';') {
+                if (';' != $text[$textIndex]) {
                     throw new HttpHeaderFailure(
                         Messages::httpProcessUtilityMediaTypeRequiresSemicolonBeforeParameter(),
                         400
@@ -213,7 +211,7 @@ class HttpProcessUtility
      *
      * @return bool true if the end of the string was reached, false otherwise
      */
-    public static function skipWhiteSpace($text, &$textIndex)
+    public static function skipWhiteSpace(string $text, int &$textIndex): bool
     {
         $textLen = strlen(strval($text));
         while (($textIndex < $textLen) && Char::isWhiteSpace($text[$textIndex])) {
@@ -234,11 +232,11 @@ class HttpProcessUtility
      * @throws HttpHeaderFailure If failed to read type and sub-type
      */
     public static function readMediaTypeAndSubtype(
-        $text,
-        &$textIndex,
+        string $text,
+        int &$textIndex,
         &$type,
         &$subType
-    ) {
+    ): void {
         $textStart = $textIndex;
         if (self::readToken($text, $textIndex)) {
             throw new HttpHeaderFailure(
@@ -247,7 +245,7 @@ class HttpProcessUtility
             );
         }
 
-        if ($text[$textIndex] != '/') {
+        if ('/' != $text[$textIndex]) {
             throw new HttpHeaderFailure(
                 Messages::httpProcessUtilityMediaTypeRequiresSlash(),
                 400
@@ -277,7 +275,7 @@ class HttpProcessUtility
      *
      * @return bool true if the end of the text was reached; false otherwise
      */
-    public static function readToken($text, &$textIndex)
+    public static function readToken(string $text, int &$textIndex): bool
     {
         $textLen = strlen($text);
         while (($textIndex < $textLen) && self::isHttpTokenChar($text[$textIndex])) {
@@ -296,10 +294,9 @@ class HttpProcessUtility
      * @return bool True if the given character is a valid HTTP token
      *              character, False otherwise
      */
-    public static function isHttpTokenChar($char)
+    public static function isHttpTokenChar(string $char): bool
     {
-        return ord($char) < 126 && ord($char) > 31
-            && !self::isHttpSeparator($char);
+        return 126 > ord($char) && 31 < ord($char) && !self::isHttpSeparator($char);
     }
 
     /**
@@ -310,7 +307,7 @@ class HttpProcessUtility
      * @return bool True if the given character is a valid HTTP separator
      *              character, False otherwise
      */
-    public static function isHttpSeparator($char)
+    public static function isHttpSeparator(string $char): bool
     {
         return
             $char == '(' || $char == ')' || $char == '<' || $char == '>' ||
@@ -329,7 +326,7 @@ class HttpProcessUtility
      *
      * @throws HttpHeaderFailure If found parameter value missing
      */
-    public static function readMediaTypeParameter($text, &$textIndex, &$parameters)
+    public static function readMediaTypeParameter(string $text, int &$textIndex, array &$parameters)
     {
         $textStart = $textIndex;
         if (self::readToken($text, $textIndex)) {
@@ -340,7 +337,7 @@ class HttpProcessUtility
         }
 
         $parameterName = substr($text, $textStart, $textIndex - $textStart);
-        if ($text[$textIndex] != '=') {
+        if ('=' != $text[$textIndex]) {
             throw new HttpHeaderFailure(
                 Messages::httpProcessUtilityMediaTypeMissingValue(),
                 400
@@ -366,15 +363,15 @@ class HttpProcessUtility
      * @return string String representing the value of the $parameterName parameter
      */
     public static function readQuotedParameterValue(
-        $parameterName,
-        $text,
-        &$textIndex
-    ) {
+        string $parameterName,
+        string $text,
+        int &$textIndex
+    ): ?string {
         $parameterValue = [];
         $textLen        = strlen($text);
         $valueIsQuoted  = false;
         if ($textIndex < $textLen) {
-            if ($text[$textIndex] == '"') {
+            if ('"' == $text[$textIndex]) {
                 ++$textIndex;
                 $valueIsQuoted = true;
             }
@@ -383,7 +380,7 @@ class HttpProcessUtility
         while ($textIndex < $textLen) {
             $currentChar = $text[$textIndex];
 
-            if ($currentChar == '\\' || $currentChar == '"') {
+            if ('\\' == $currentChar || '"' == $currentChar) {
                 if (!$valueIsQuoted) {
                     throw new HttpHeaderFailure(
                         Messages::httpProcessUtilityEscapeCharWithoutQuotes(
@@ -396,7 +393,7 @@ class HttpProcessUtility
                 ++$textIndex;
 
                 // End of quoted parameter value.
-                if ($currentChar == '"') {
+                if ('"' == $currentChar) {
                     $valueIsQuoted = false;
                     break;
                 }
@@ -434,17 +431,18 @@ class HttpProcessUtility
      *
      * @param string $text          Text to read qvalue from
      * @param int    &$textIndex    Index into text where the qvalue starts
-     * @param int    &$qualityValue After the method executes, the normalized qvalue
      *
-     * @throws HttpHeaderFailure If any error occurred while reading and processing
-     *                           the quality factor
+     * @throws HttpHeaderFailure    If any error occurred while reading and processing
+     *                              the quality factor
+     *
+     * @return int                  The normalised qvalue
      */
-    public static function readQualityValue($text, &$textIndex, &$qualityValue)
+    public static function readQualityValue(string $text, int &$textIndex): int
     {
         $digit = $text[$textIndex++];
-        if ($digit == '0') {
+        if ('0' == $digit) {
             $qualityValue = 0;
-        } elseif ($digit == '1') {
+        } elseif ('1' == $digit) {
             $qualityValue = 1;
         } else {
             throw new HttpHeaderFailure(
@@ -454,14 +452,14 @@ class HttpProcessUtility
         }
 
         $textLen = strlen($text);
-        if ($textIndex < $textLen && $text[$textIndex] == '.') {
+        if ($textIndex < $textLen && '.' == $text[$textIndex]) {
             ++$textIndex;
 
             $adjustFactor = 1000;
-            while ($adjustFactor > 1 && $textIndex < $textLen) {
+            while (1 < $adjustFactor && $textIndex < $textLen) {
                 $c         = $text[$textIndex];
                 $charValue = self::digitToInt32($c);
-                if ($charValue >= 0) {
+                if (0 <= $charValue) {
                     ++$textIndex;
                     $adjustFactor /= 10;
                     $qualityValue *= 10;
@@ -471,7 +469,7 @@ class HttpProcessUtility
                 }
             }
 
-            $qualityValue = $qualityValue *= $adjustFactor;
+            $qualityValue *= $adjustFactor;
             if ($qualityValue > 1000) {
                 // Too high of a value in qvalue.
                 throw new HttpHeaderFailure(
@@ -482,6 +480,8 @@ class HttpProcessUtility
         } else {
             $qualityValue *= 1000;
         }
+
+        return $qualityValue;
     }
 
     /**
@@ -493,9 +493,9 @@ class HttpProcessUtility
      *
      * @return int The Int32 value for $c, or -1 if it is an element separator
      */
-    public static function digitToInt32($c)
+    public static function digitToInt32(string $c): int
     {
-        if ($c >= '0' && $c <= '9') {
+        if ('0' <= $c && '9' >= $c) {
             return intval($c);
         } else {
             if (self::isHttpElementSeparator($c)) {
@@ -518,9 +518,9 @@ class HttpProcessUtility
      * @return bool true if c is a valid character for separating elements;
      *              false otherwise
      */
-    public static function isHttpElementSeparator($c)
+    public static function isHttpElementSeparator(string $c): bool
     {
-        return $c == ',' || $c == ' ' || $c == '\t';
+        return ',' == $c || ' ' == $c || '\t' == $c;
     }
 
     /**
@@ -529,7 +529,7 @@ class HttpProcessUtility
      * @param  string $headerName Name of header
      * @return string
      */
-    public static function headerToServerKey($headerName)
+    public static function headerToServerKey(string $headerName): string
     {
         $name = strtoupper(str_replace('-', '_', $headerName));
         switch ($name) {

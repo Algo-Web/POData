@@ -162,11 +162,9 @@ class MediaType
             foreach ($parameter as $key => $value) {
                 if (strcasecmp($key, 'q') === 0) {
                     $textIndex = 0;
-                    $result    = '';
-                    HttpProcessUtility::readQualityValue(
+                    $result    = HttpProcessUtility::readQualityValue(
                         $value,
-                        $textIndex,
-                        $result
+                        $textIndex
                     );
 
                     return $result;

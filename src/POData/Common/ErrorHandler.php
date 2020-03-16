@@ -24,7 +24,7 @@ class ErrorHandler
      */
     public static function handleException(\Exception $exception, IService $service)
     {
-        $acceptTypesText     = $service->getHost()->getRequestAccept();
+        $acceptTypesText     = $service->getHost()->getRequestAccept() ?? '';
         try {
             $responseContentType = HttpProcessUtility::selectMimeType(
                 $acceptTypesText,
