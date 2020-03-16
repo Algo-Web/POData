@@ -66,15 +66,15 @@ class HttpProcessUtility
                 continue;
             }
 
+            $candidateQualityValue = $acceptType->getQualityValue();
             if ($matchingParts > $selectedMatchingParts) {
                 // A more specific type wins.
                 $selectedContentType = $inexactContentType;
                 $selectedMatchingParts = $matchingParts;
-                $selectedQualityValue = $acceptType->getQualityValue();
+                $selectedQualityValue = $candidateQualityValue;
                 $acceptable = 0 != $selectedQualityValue;
             } elseif ($matchingParts == $selectedMatchingParts) {
                 // A type with a higher q-value wins.
-                $candidateQualityValue = $acceptType->getQualityValue();
                 if ($candidateQualityValue > $selectedQualityValue) {
                     $selectedContentType = $inexactContentType;
                     $selectedQualityValue = $candidateQualityValue;
@@ -127,16 +127,16 @@ class HttpProcessUtility
                     continue;
                 }
 
+                $candidateQualityValue = $acceptType->getQualityValue();
                 if ($matchRating > $selectedMatchingParts) {
                     // A more specific type wins.
                     $selectedContentType     = $availableType;
                     $selectedMatchingParts   = $matchRating;
-                    $selectedQualityValue    = $acceptType->getQualityValue();
+                    $selectedQualityValue    = $candidateQualityValue;
                     $selectedPreferenceIndex = $i;
                     $acceptable              = 0 != $selectedQualityValue;
                 } elseif ($matchRating == $selectedMatchingParts) {
                     // A type with a higher q-value wins.
-                    $candidateQualityValue = $acceptType->getQualityValue();
                     if ($candidateQualityValue > $selectedQualityValue) {
                         $selectedContentType     = $availableType;
                         $selectedQualityValue    = $candidateQualityValue;
