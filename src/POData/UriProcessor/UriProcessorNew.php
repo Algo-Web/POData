@@ -407,8 +407,8 @@ class UriProcessorNew implements IUriProcessor
                     } else {
                         throw ODataException::createInternalServerError('AdapterIndicatedLinkNotAttached');
                     }
-                    foreach ($segments as $segment) {
-                        $segment->setResult(null);
+                    foreach ($segments as $innerSegment) {
+                        $innerSegment->setResult(null);
                     }
                     return;
                 }
