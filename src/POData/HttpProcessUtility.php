@@ -110,39 +110,38 @@ class HttpProcessUtility
         $selectedPreferenceIndex = PHP_INT_MAX;
         $acceptable              = false;
         $acceptTypesEmpty        = true;
-        if (null !== $acceptTypesText) {
-            $acceptTypes  = self::mimeTypesFromAcceptHeaders($acceptTypesText);
-            $numAvailable = count($availableTypes);
-            foreach ($acceptTypes as $acceptType) {
-                $acceptTypesEmpty = false;
-                for ($i = 0; $i < $numAvailable; ++$i) {
-                    $availableType = $availableTypes[$i];
-                    $matchRating   = $acceptType->getMatchingRating($availableType);
-                    if (0 > $matchRating) {
-                        continue;
-                    }
 
-                    if ($matchRating > $selectedMatchingParts) {
-                        // A more specific type wins.
+        $acceptTypes  = self::mimeTypesFromAcceptHeaders($acceptTypesText);
+        $numAvailable = count($availableTypes);
+        foreach ($acceptTypes as $acceptType) {
+            $acceptTypesEmpty = false;
+            for ($i = 0; $i < $numAvailable; ++$i) {
+                $availableType = $availableTypes[$i];
+                $matchRating   = $acceptType->getMatchingRating($availableType);
+                if (0 > $matchRating) {
+                    continue;
+                }
+
+                if ($matchRating > $selectedMatchingParts) {
+                    // A more specific type wins.
+                    $selectedContentType     = $availableType;
+                    $selectedMatchingParts   = $matchRating;
+                    $selectedQualityValue    = $acceptType->getQualityValue();
+                    $selectedPreferenceIndex = $i;
+                    $acceptable              = 0 != $selectedQualityValue;
+                } elseif ($matchRating == $selectedMatchingParts) {
+                    // A type with a higher q-value wins.
+                    $candidateQualityValue = $acceptType->getQualityValue();
+                    if ($candidateQualityValue > $selectedQualityValue) {
                         $selectedContentType     = $availableType;
-                        $selectedMatchingParts   = $matchRating;
-                        $selectedQualityValue    = $acceptType->getQualityValue();
+                        $selectedQualityValue    = $candidateQualityValue;
                         $selectedPreferenceIndex = $i;
                         $acceptable              = 0 != $selectedQualityValue;
-                    } elseif ($matchRating == $selectedMatchingParts) {
-                        // A type with a higher q-value wins.
-                        $candidateQualityValue = $acceptType->getQualityValue();
-                        if ($candidateQualityValue > $selectedQualityValue) {
+                    } elseif ($candidateQualityValue == $selectedQualityValue) {
+                        // A type that is earlier in the availableTypes array wins.
+                        if ($i < $selectedPreferenceIndex) {
                             $selectedContentType     = $availableType;
-                            $selectedQualityValue    = $candidateQualityValue;
                             $selectedPreferenceIndex = $i;
-                            $acceptable              = 0 != $selectedQualityValue;
-                        } elseif ($candidateQualityValue == $selectedQualityValue) {
-                            // A type that is earlier in the availableTypes array wins.
-                            if ($i < $selectedPreferenceIndex) {
-                                $selectedContentType     = $availableType;
-                                $selectedPreferenceIndex = $i;
-                            }
                         }
                     }
                 }
