@@ -37,43 +37,48 @@ class HttpProcessUtility
         $acceptTypesEmpty      = true;
         $foundExactMatch       = false;
 
-        if (null !== $acceptTypesText) {
-            $acceptTypes = self::mimeTypesFromAcceptHeaders($acceptTypesText);
-            foreach ($acceptTypes as $acceptType) {
-                $acceptTypesEmpty = false;
-                foreach ($exactContentTypes as $exactContentType) {
-                    if (strcasecmp($acceptType->getMimeType(), $exactContentType) == 0) {
-                        $selectedContentType  = $exactContentType;
-                        $selectedQualityValue = $acceptType->getQualityValue();
-                        $acceptable           = $selectedQualityValue != 0;
-                        $foundExactMatch      = true;
-                        break;
-                    }
-                }
+        if (null === $acceptTypesText) {
+            throw new HttpHeaderFailure(
+                Messages::unsupportedMediaType(),
+                415
+            );
+        }
 
-                if ($foundExactMatch) {
+        $acceptTypes = self::mimeTypesFromAcceptHeaders($acceptTypesText);
+        foreach ($acceptTypes as $acceptType) {
+            $acceptTypesEmpty = false;
+            foreach ($exactContentTypes as $exactContentType) {
+                if (0 == strcasecmp($acceptType->getMimeType(), $exactContentType)) {
+                    $selectedContentType = $exactContentType;
+                    $selectedQualityValue = $acceptType->getQualityValue();
+                    $acceptable = 0 != $selectedQualityValue;
+                    $foundExactMatch = true;
                     break;
                 }
+            }
 
-                $matchingParts = $acceptType->getMatchingRating($inexactContentType);
-                if ($matchingParts < 0) {
-                    continue;
-                }
+            if ($foundExactMatch) {
+                break;
+            }
 
-                if ($matchingParts > $selectedMatchingParts) {
-                    // A more specific type wins.
-                    $selectedContentType   = $inexactContentType;
-                    $selectedMatchingParts = $matchingParts;
-                    $selectedQualityValue  = $acceptType->getQualityValue();
-                    $acceptable            = $selectedQualityValue != 0;
-                } elseif ($matchingParts == $selectedMatchingParts) {
-                    // A type with a higher q-value wins.
-                    $candidateQualityValue = $acceptType->getQualityValue();
-                    if ($candidateQualityValue > $selectedQualityValue) {
-                        $selectedContentType  = $inexactContentType;
-                        $selectedQualityValue = $candidateQualityValue;
-                        $acceptable           = $selectedQualityValue != 0;
-                    }
+            $matchingParts = $acceptType->getMatchingRating($inexactContentType);
+            if ($matchingParts < 0) {
+                continue;
+            }
+
+            if ($matchingParts > $selectedMatchingParts) {
+                // A more specific type wins.
+                $selectedContentType = $inexactContentType;
+                $selectedMatchingParts = $matchingParts;
+                $selectedQualityValue = $acceptType->getQualityValue();
+                $acceptable = 0 != $selectedQualityValue;
+            } elseif ($matchingParts == $selectedMatchingParts) {
+                // A type with a higher q-value wins.
+                $candidateQualityValue = $acceptType->getQualityValue();
+                if ($candidateQualityValue > $selectedQualityValue) {
+                    $selectedContentType = $inexactContentType;
+                    $selectedQualityValue = $candidateQualityValue;
+                    $acceptable = 0 != $selectedQualityValue;
                 }
             }
         }
