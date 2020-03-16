@@ -167,7 +167,7 @@ class HttpProcessUtility
      *
      * @return MediaType[] Array of media (MIME) type description
      */
-    public static function mimeTypesFromAcceptHeaders($text)
+    public static function mimeTypesFromAcceptHeaders(string $text): array
     {
         $mediaTypes = [];
         $textIndex  = 0;
@@ -213,7 +213,7 @@ class HttpProcessUtility
      *
      * @return bool true if the end of the string was reached, false otherwise
      */
-    public static function skipWhiteSpace($text, &$textIndex)
+    public static function skipWhiteSpace(string $text, int &$textIndex): bool
     {
         $textLen = strlen(strval($text));
         while (($textIndex < $textLen) && Char::isWhiteSpace($text[$textIndex])) {
@@ -234,11 +234,11 @@ class HttpProcessUtility
      * @throws HttpHeaderFailure If failed to read type and sub-type
      */
     public static function readMediaTypeAndSubtype(
-        $text,
-        &$textIndex,
+        string $text,
+        int &$textIndex,
         &$type,
         &$subType
-    ) {
+    ): void {
         $textStart = $textIndex;
         if (self::readToken($text, $textIndex)) {
             throw new HttpHeaderFailure(
@@ -277,7 +277,7 @@ class HttpProcessUtility
      *
      * @return bool true if the end of the text was reached; false otherwise
      */
-    public static function readToken($text, &$textIndex)
+    public static function readToken(string $text, int &$textIndex): bool
     {
         $textLen = strlen($text);
         while (($textIndex < $textLen) && self::isHttpTokenChar($text[$textIndex])) {
@@ -296,7 +296,7 @@ class HttpProcessUtility
      * @return bool True if the given character is a valid HTTP token
      *              character, False otherwise
      */
-    public static function isHttpTokenChar($char)
+    public static function isHttpTokenChar(string $char): bool
     {
         return 126 > ord($char) && 31 < ord($char) && !self::isHttpSeparator($char);
     }
@@ -309,7 +309,7 @@ class HttpProcessUtility
      * @return bool True if the given character is a valid HTTP separator
      *              character, False otherwise
      */
-    public static function isHttpSeparator($char)
+    public static function isHttpSeparator(string $char): bool
     {
         return
             $char == '(' || $char == ')' || $char == '<' || $char == '>' ||
@@ -328,7 +328,7 @@ class HttpProcessUtility
      *
      * @throws HttpHeaderFailure If found parameter value missing
      */
-    public static function readMediaTypeParameter($text, &$textIndex, &$parameters)
+    public static function readMediaTypeParameter(string $text, int &$textIndex, array &$parameters)
     {
         $textStart = $textIndex;
         if (self::readToken($text, $textIndex)) {
@@ -365,10 +365,10 @@ class HttpProcessUtility
      * @return string String representing the value of the $parameterName parameter
      */
     public static function readQuotedParameterValue(
-        $parameterName,
-        $text,
-        &$textIndex
-    ) {
+        string $parameterName,
+        string $text,
+        int &$textIndex
+    ): ?string {
         $parameterValue = [];
         $textLen        = strlen($text);
         $valueIsQuoted  = false;
@@ -438,7 +438,7 @@ class HttpProcessUtility
      * @throws HttpHeaderFailure If any error occurred while reading and processing
      *                           the quality factor
      */
-    public static function readQualityValue($text, &$textIndex, &$qualityValue)
+    public static function readQualityValue(string $text, int &$textIndex, &$qualityValue)
     {
         $digit = $text[$textIndex++];
         if ('0' == $digit) {
@@ -492,7 +492,7 @@ class HttpProcessUtility
      *
      * @return int The Int32 value for $c, or -1 if it is an element separator
      */
-    public static function digitToInt32($c)
+    public static function digitToInt32(string $c): int
     {
         if ('0' <= $c && '9' >= $c) {
             return intval($c);
@@ -517,7 +517,7 @@ class HttpProcessUtility
      * @return bool true if c is a valid character for separating elements;
      *              false otherwise
      */
-    public static function isHttpElementSeparator($c)
+    public static function isHttpElementSeparator(string $c): bool
     {
         return ',' == $c || ' ' == $c || '\t' == $c;
     }
@@ -528,7 +528,7 @@ class HttpProcessUtility
      * @param  string $headerName Name of header
      * @return string
      */
-    public static function headerToServerKey($headerName)
+    public static function headerToServerKey(string $headerName): string
     {
         $name = strtoupper(str_replace('-', '_', $headerName));
         switch ($name) {
