@@ -137,7 +137,7 @@ class AtomODataWriter implements IODataWriter
     }
 
     /**
-     * Begin write odata links.
+     * Begin write OData links.
      *
      * @param ODataURLCollection $urls Object of ODataUrlCollection to start writing collection of url
      *

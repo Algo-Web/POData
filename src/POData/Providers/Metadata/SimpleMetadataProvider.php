@@ -30,8 +30,8 @@ class SimpleMetadataProvider implements IMetadataProvider
     private $baseTypes      = [];
 
     /**
-     * @param string $containerName container name for the datasource
-     * @param string $namespaceName namespace for the datasource
+     * @param string $containerName container name for the data source
+     * @param string $namespaceName namespace for the data source
      */
     public function __construct($containerName, $namespaceName)
     {
@@ -156,7 +156,7 @@ class SimpleMetadataProvider implements IMetadataProvider
     }
 
     /**
-     * get a singelton based on the specified singleton name.
+     * get a singleton based on the specified singleton name.
      *
      * @param string $name Name of the resource set
      *
@@ -173,7 +173,7 @@ class SimpleMetadataProvider implements IMetadataProvider
     /**
      * get a resource set based on the specified resource association set name.
      *
-     * @param string $name Name of the resource assocation set
+     * @param string $name Name of the resource association set
      *
      * @return ResourceAssociationSet|null resource association set with the given name if found else NULL
      */

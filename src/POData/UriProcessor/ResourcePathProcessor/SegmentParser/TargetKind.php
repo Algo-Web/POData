@@ -99,7 +99,7 @@ class TargetKind extends Enum
     protected const BAG = 12;
 
     /**
-     * A singleton (parameterless function wrapper).
+     * A singleton (parameter-less function wrapper).
      */
     protected const SINGLETON = 13;
 }

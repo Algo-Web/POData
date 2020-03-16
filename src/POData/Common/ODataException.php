@@ -92,7 +92,7 @@ class ODataException extends \Exception
 
     /**
      * Creates an instance of ODataException when a
-     * resouce not found in the data source.
+     * resource not found in the data source.
      *
      * @param string $message The error message
      *
@@ -117,7 +117,7 @@ class ODataException extends \Exception
     }
 
     /**
-     * Creates an instance of ODataException when requestor tries to
+     * Creates an instance of ODataException when requester tries to
      * access a resource which is forbidden.
      *
      * @return ODataException
@@ -140,7 +140,7 @@ class ODataException extends \Exception
     }
 
     /**
-     * Creates a new exception when requestor ask for a service facility
+     * Creates a new exception when requester ask for a service facility
      * which is not implemented by this library.
      *
      * @param string $message Error message for this exception
@@ -153,7 +153,7 @@ class ODataException extends \Exception
     }
 
     /**
-     * Creates an instance of ODataException when requestor to
+     * Creates an instance of ODataException when requester to
      * set value which is not allowed.
      *
      * @param string $message Error message for this exception

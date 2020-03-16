@@ -232,7 +232,7 @@ class InternalSkipTokenInfo
     }
 
     /**
-     * Build nextpage link from the given object which will be the last object
+     * Build next-page link from the given object which will be the last object
      * in the page.
      *
      * @param mixed $lastObject Entity instance to build next page link from

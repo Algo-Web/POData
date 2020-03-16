@@ -270,7 +270,7 @@ class ODataConstants
     //XML namespace for data service links.
     const ODATA_RELATED_NAMESPACE = 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/';
 
-    //XML Namespace for Assocation links.
+    //XML Namespace for Association links.
     const ODATA_ASSOCIATION_NAMESPACE = 'http://schemas.microsoft.com/ado/2007/08/dataservices/relatedlinks/';
 
     //ATOM Scheme Namespace For DataWeb.
