@@ -433,12 +433,13 @@ class HttpProcessUtility
      *
      * @param string $text          Text to read qvalue from
      * @param int    &$textIndex    Index into text where the qvalue starts
-     * @param int    &$qualityValue After the method executes, the normalized qvalue
      *
-     * @throws HttpHeaderFailure If any error occurred while reading and processing
-     *                           the quality factor
+     * @throws HttpHeaderFailure    If any error occurred while reading and processing
+     *                              the quality factor
+     *
+     * @return int                  The normalised qvalue
      */
-    public static function readQualityValue(string $text, int &$textIndex, &$qualityValue)
+    public static function readQualityValue(string $text, int &$textIndex): int
     {
         $digit = $text[$textIndex++];
         if ('0' == $digit) {
@@ -481,6 +482,8 @@ class HttpProcessUtility
         } else {
             $qualityValue *= 1000;
         }
+
+        return $qualityValue;
     }
 
     /**

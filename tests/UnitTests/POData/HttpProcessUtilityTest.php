@@ -276,8 +276,7 @@ class HttpProcessUtilityTest extends TestCase
     {
         $qualText  = '0.9 ';
         $qualDex   = 0;
-        $qualValue = 0;
-        HttpProcessUtility::readQualityValue($qualText, $qualDex, $qualValue);
+        $qualValue = HttpProcessUtility::readQualityValue($qualText, $qualDex);
 
         $this->assertEquals(900, $qualValue);
     }
@@ -286,8 +285,7 @@ class HttpProcessUtilityTest extends TestCase
     {
         $qualText  = '0.81 ';
         $qualDex   = 0;
-        $qualValue = 0;
-        HttpProcessUtility::readQualityValue($qualText, $qualDex, $qualValue);
+        $qualValue = HttpProcessUtility::readQualityValue($qualText, $qualDex);
 
         $this->assertEquals(810, $qualValue);
     }
@@ -296,8 +294,7 @@ class HttpProcessUtilityTest extends TestCase
     {
         $qualText  = "0.729\t";
         $qualDex   = 0;
-        $qualValue = 0;
-        HttpProcessUtility::readQualityValue($qualText, $qualDex, $qualValue);
+        $qualValue = HttpProcessUtility::readQualityValue($qualText, $qualDex);
 
         $this->assertEquals(729, $qualValue);
     }
@@ -306,8 +303,7 @@ class HttpProcessUtilityTest extends TestCase
     {
         $qualText  = '0.6561';
         $qualDex   = 0;
-        $qualValue = 0;
-        HttpProcessUtility::readQualityValue($qualText, $qualDex, $qualValue);
+        $qualValue = HttpProcessUtility::readQualityValue($qualText, $qualDex);
 
         $this->assertEquals(656, $qualValue);
     }
