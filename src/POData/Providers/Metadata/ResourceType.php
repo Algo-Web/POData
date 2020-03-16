@@ -731,7 +731,8 @@ abstract class ResourceType
                     }
                 }
 
-                if ($resourceProperty->isKindOf(/* @scrutinizer ignore-type */ResourcePropertyKind::BAG) || $hasBagInComplex) {
+                if ($resourceProperty->isKindOf(/* @scrutinizer ignore-type */ResourcePropertyKind::BAG) ||
+                    $hasBagInComplex) {
                     $this->hasBagProperty = true;
                     break;
                 }

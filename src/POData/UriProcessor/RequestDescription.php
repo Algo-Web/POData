@@ -224,7 +224,8 @@ class RequestDescription
     private $readerRegistry;
 
     /**
-     * @param  SegmentDescriptor[]                              $segmentDescriptors Description of segments in the resource path
+     * @param  SegmentDescriptor[]                              $segmentDescriptors Description of segments
+     *                                                                              in the resource path
      * @param  Url                                              $requestUri
      * @param  Version                                          $serviceMaxVersion
      * @param  string|null                                      $requestVersion

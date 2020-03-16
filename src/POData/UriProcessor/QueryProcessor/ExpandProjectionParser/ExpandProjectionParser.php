@@ -333,14 +333,18 @@ class ExpandProjectionParser
                                 $selectSubPathSegment
                             )
                         );
-                    } elseif ($resourceProperty->isKindOf(/* @scrutinizer ignore-type */ResourcePropertyKind::PRIMITIVE)) {
+                    } elseif ($resourceProperty->isKindOf(
+                    /* @scrutinizer ignore-type */ResourcePropertyKind::PRIMITIVE
+                    )) {
                         throw ODataException::createBadRequestError(
                             Messages::expandProjectionParserPrimitivePropertyUsedAsNavigationProperty(
                                 $currentResourceType->getFullName(),
                                 $selectSubPathSegment
                             )
                         );
-                    } elseif ($resourceProperty->isKindOf(/* @scrutinizer ignore-type */ResourcePropertyKind::COMPLEX_TYPE)) {
+                    } elseif ($resourceProperty->isKindOf(
+                        /* @scrutinizer ignore-type */ResourcePropertyKind::COMPLEX_TYPE
+                    )) {
                         throw ODataException::createBadRequestError(
                             Messages::expandProjectionParserComplexPropertyAsInnerSelectSegment(
                                 $currentResourceType->getFullName(),

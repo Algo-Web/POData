@@ -33,8 +33,7 @@ class PropertyProcessor extends BaseNodeHandler
 
     public function handleStartNode($tagNamespace, $tagName, $attributes)
     {
-        if (
-            strtolower($tagNamespace) === strtolower(ODataConstants::ODATA_METADATA_NAMESPACE) &&
+        if (strtolower($tagNamespace) === strtolower(ODataConstants::ODATA_METADATA_NAMESPACE) &&
             strtolower($tagName) === strtolower((ODataConstants::ATOM_PROPERTIES_ELEMENT_NAME))
         ) {
             return ;
@@ -56,8 +55,7 @@ class PropertyProcessor extends BaseNodeHandler
 
     public function handleEndNode($tagNamespace, $tagName)
     {
-        if (
-            strtolower($tagNamespace) === strtolower(ODataConstants::ODATA_METADATA_NAMESPACE) &&
+        if (strtolower($tagNamespace) === strtolower(ODataConstants::ODATA_METADATA_NAMESPACE) &&
             strtolower($tagName) === strtolower((ODataConstants::ATOM_PROPERTIES_ELEMENT_NAME))
         ) {
             return ;

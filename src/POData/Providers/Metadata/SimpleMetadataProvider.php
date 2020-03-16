@@ -493,7 +493,11 @@ class SimpleMetadataProvider implements IMetadataProvider
             $kind = $kind | ResourcePropertyKind::ETAG;
         }
 
-        $resourceProperty = new ResourceProperty($name, null, /* @scrutinizer ignore-type */$kind, $primitiveResourceType);
+        $resourceProperty = new ResourceProperty(
+            $name,
+            null, /* @scrutinizer ignore-type */$kind,
+            $primitiveResourceType
+        );
         $resourceType->addProperty($resourceProperty);
         if (array_key_exists($resourceType->getFullName(), $this->oDataEntityMap)) {
             $this->metadataManager->addPropertyToEntityType(
@@ -580,8 +584,13 @@ class SimpleMetadataProvider implements IMetadataProvider
      * @throws InvalidOperationException
      * @throws \ReflectionException
      */
-    public function addETagProperty($resourceType, $name, EdmPrimitiveType $typeCode, $defaultValue = null, $nullable = false)
-    {
+    public function addETagProperty(
+        $resourceType,
+        $name,
+        EdmPrimitiveType $typeCode,
+        $defaultValue = null,
+        $nullable = false
+    ) {
         $this->addPrimitivePropertyInternal(
             $resourceType,
             $name,
