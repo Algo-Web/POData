@@ -129,7 +129,7 @@ class ResourceProperty
      */
     public function getKind(): ResourcePropertyKind
     {
-        return ($this->kind);
+        return $this->kind;
     }
 
     /**

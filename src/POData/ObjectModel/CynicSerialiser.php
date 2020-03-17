@@ -201,7 +201,7 @@ class CynicSerialiser implements IObjectSerialiser
         $links = [];
         foreach ($relProp as $prop) {
             $nuLink   = new ODataLink();
-            $propKind = new ResourcePropertyKind($prop->getKind());
+            $propKind = $prop->getKind();
 
             assert(
                 ResourcePropertyKind::RESOURCESET_REFERENCE() == $propKind

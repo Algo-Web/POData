@@ -301,8 +301,7 @@ class SegmentParser
             } else {
                 $current->setTargetResourceType($projectedProperty->getResourceType());
                 $rawKind = $projectedProperty->getKind();
-                $rawKind = ($rawKind instanceof ResourcePropertyKind) ? $rawKind->getValue() : $rawKind;
-                $current->setSingleResult($rawKind != ResourcePropertyKind::RESOURCESET_REFERENCE);
+                $current->setSingleResult($rawKind != ResourcePropertyKind::RESOURCESET_REFERENCE());
                 if ($previousKind == TargetKind::LINK()
                     && $projectedProperty->getTypeKind() != ResourceTypeKind::ENTITY()
                 ) {
@@ -313,7 +312,7 @@ class SegmentParser
                     );
                 }
 
-                switch ($rawKind) {
+                switch ($rawKind->getValue()) {
                     case ResourcePropertyKind::COMPLEX_TYPE:
                         $current->setTargetKind(TargetKind::COMPLEX_OBJECT());
                         break;
