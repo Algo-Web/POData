@@ -201,7 +201,7 @@ class CynicSerialiser implements IObjectSerialiser
         $links = [];
         foreach ($relProp as $prop) {
             $nuLink   = new ODataLink();
-            $propKind = $prop->getKind();
+            $propKind = new ResourcePropertyKind($prop->getKind());
 
             assert(
                 ResourcePropertyKind::RESOURCESET_REFERENCE() == $propKind
@@ -848,11 +848,11 @@ class CynicSerialiser implements IObjectSerialiser
     }
 
     /**
-     * @param QueryResult      $entryObject
-     * @param ResourceProperty $prop
-     * @param $nuLink
-     * @param $propKind
-     * @param  string                    $propName
+     * @param QueryResult                $entryObject
+     * @param ResourceProperty           $prop
+     * @param ODataLink                  $nuLink
+     * @param ResourcePropertyKind       $propKind
+     * @param string                     $propName
      * @throws InvalidOperationException
      * @throws ODataException
      * @throws \ReflectionException
@@ -860,9 +860,9 @@ class CynicSerialiser implements IObjectSerialiser
     private function expandNavigationProperty(
         QueryResult $entryObject,
         ResourceProperty $prop,
-        $nuLink,
-        $propKind,
-        $propName
+        ODataLink $nuLink,
+        ResourcePropertyKind $propKind,
+        string $propName
     ) {
         $nextName             = $prop->getResourceType()->getName();
         $nuLink->isExpanded   = true;
