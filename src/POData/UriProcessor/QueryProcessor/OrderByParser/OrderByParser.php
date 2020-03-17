@@ -315,12 +315,7 @@ class OrderByParser
                             $resourceType->setPropertyValue($currentObject, $resourceProperty->getName(), $object);
                             $currentObject = $object;
                         } catch (\ReflectionException $reflectionException) {
-                            throw ODataException::createInternalServerError(
-                                Messages::orderByParserFailedToAccessOrInitializeProperty(
-                                    $resourceProperty->getName(),
-                                    $resourceType->getName()
-                                )
-                            );
+                            $this->throwBadAccessOrInitException($resourceProperty, $resourceType);
                         }
                     } elseif ($resourceProperty->getKind() == ResourcePropertyKind::COMPLEX_TYPE()) {
                         $node = new OrderByNode($orderBySubPathSegment, $resourceProperty, null);
@@ -333,12 +328,7 @@ class OrderByParser
                             $resourceType->setPropertyValue($currentObject, $resourceProperty->getName(), $object);
                             $currentObject = $object;
                         } catch (\ReflectionException $reflectionException) {
-                            throw ODataException::createInternalServerError(
-                                Messages::orderByParserFailedToAccessOrInitializeProperty(
-                                    $resourceProperty->getName(),
-                                    $resourceType->getName()
-                                )
-                            );
+                            $this->throwBadAccessOrInitException($resourceProperty, $resourceType);
                         }
                     }
 
@@ -347,12 +337,7 @@ class OrderByParser
                     try {
                         $currentObject = ReflectionHandler::getProperty($currentObject, $resourceProperty->getName());
                     } catch (\ReflectionException $reflectionException) {
-                        throw ODataException::createInternalServerError(
-                            Messages::orderByParserFailedToAccessOrInitializeProperty(
-                                $resourceProperty->getName(),
-                                $resourceType->getName()
-                            )
-                        );
+                        $this->throwBadAccessOrInitException($resourceProperty, $resourceType);
                     }
 
                     if ($node instanceof OrderByLeafNode) {
@@ -505,5 +490,22 @@ class OrderByParser
         if (!$condition) {
             throw ODataException::createInternalServerError(Messages::orderByParserUnExpectedState());
         }
+    }
+
+    /**
+     * @param ResourceProperty $resourceProperty
+     * @param ResourceType $resourceType
+     * @throws ODataException
+     */
+    private function throwBadAccessOrInitException(
+        ResourceProperty $resourceProperty,
+        ResourceType $resourceType
+    ): void {
+        throw ODataException::createInternalServerError(
+            Messages::orderByParserFailedToAccessOrInitializeProperty(
+                $resourceProperty->getName(),
+                $resourceType->getName()
+            )
+        );
     }
 }
