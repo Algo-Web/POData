@@ -376,7 +376,7 @@ abstract class ResourceType
             }
         }
 
-        if ($property->isKindOf(/* @scrutinizer ignore-type */ResourcePropertyKind::KEY)) {
+        if ($property->isKindOf(ResourcePropertyKind::KEY())) {
             if (ResourceTypeKind::ENTITY() != $this->resourceTypeKind) {
                 throw new InvalidOperationException(
                     Messages::resourceTypeKeyPropertiesOnlyOnEntityTypes()
@@ -393,7 +393,7 @@ abstract class ResourceType
             }
         }
 
-        if ($property->isKindOf(/* @scrutinizer ignore-type */ResourcePropertyKind::ETAG)
+        if ($property->isKindOf(ResourcePropertyKind::ETAG())
             && (ResourceTypeKind::ENTITY() != $this->resourceTypeKind)
         ) {
             throw new InvalidOperationException(
@@ -463,7 +463,7 @@ abstract class ResourceType
             }
 
             foreach ($baseType->propertiesDeclaredOnThisType as $propertyName => $resourceProperty) {
-                if ($resourceProperty->isKindOf(/* @scrutinizer ignore-type */ResourcePropertyKind::KEY)) {
+                if ($resourceProperty->isKindOf(ResourcePropertyKind::KEY())) {
                     $this->keyProperties[$propertyName] = $resourceProperty;
                 }
             }
@@ -481,7 +481,7 @@ abstract class ResourceType
     {
         if (empty($this->eTagProperties)) {
             foreach ($this->getAllProperties() as $propertyName => $resourceProperty) {
-                if ($resourceProperty->isKindOf(/* @scrutinizer ignore-type */ResourcePropertyKind::ETAG)) {
+                if ($resourceProperty->isKindOf(ResourcePropertyKind::ETAG())) {
                     $this->eTagProperties[$propertyName] = $resourceProperty;
                 }
             }
@@ -682,7 +682,7 @@ abstract class ResourceType
         } else {
             foreach ($this->propertiesDeclaredOnThisType as $resourceProperty) {
                 $hasBagInComplex = false;
-                if ($resourceProperty->isKindOf(/* @scrutinizer ignore-type */ResourcePropertyKind::COMPLEX_TYPE)) {
+                if ($resourceProperty->isKindOf(ResourcePropertyKind::COMPLEX_TYPE())) {
                     //We can say current ResourceType ("this")
                     //is contains a bag property if:
                     //1. It contain a property of kind bag.
@@ -731,7 +731,7 @@ abstract class ResourceType
                     }
                 }
 
-                if ($resourceProperty->isKindOf(/* @scrutinizer ignore-type */ResourcePropertyKind::BAG) ||
+                if ($resourceProperty->isKindOf(ResourcePropertyKind::BAG()) ||
                     $hasBagInComplex) {
                     $this->hasBagProperty = true;
                     break;

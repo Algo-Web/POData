@@ -7,6 +7,7 @@ namespace POData\UriProcessor\QueryProcessor\OrderByParser;
 use InvalidArgumentException;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceSetWrapper;
+use POData\Providers\Metadata\ResourceType;
 
 /**
  * Class OrderByNode.

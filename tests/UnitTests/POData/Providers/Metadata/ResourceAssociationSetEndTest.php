@@ -74,7 +74,7 @@ class ResourceAssociationSetEndTest extends TestCase
     {
         $property = m::mock(ResourceProperty::class);
         $property->shouldReceive('getName')->andReturn('property');
-        $property->shouldReceive('getKind')->andReturn(ResourcePropertyKind::RESOURCE_REFERENCE);
+        $property->shouldReceive('getKind')->andReturn(ResourcePropertyKind::RESOURCE_REFERENCE());
 
         $base = m::mock(ResourceEntityType::class);
         $base->shouldReceive('isAbstract')->andReturn(true);
@@ -101,7 +101,7 @@ class ResourceAssociationSetEndTest extends TestCase
     {
         $property = m::mock(ResourceProperty::class);
         $property->shouldReceive('getName')->andReturn('property');
-        $property->shouldReceive('getKind')->andReturn(ResourcePropertyKind::RESOURCE_REFERENCE);
+        $property->shouldReceive('getKind')->andReturn(ResourcePropertyKind::RESOURCE_REFERENCE());
         $expected = 'TypeWithNoName';
 
         $base = m::mock(ResourceEntityType::class);
@@ -123,7 +123,7 @@ class ResourceAssociationSetEndTest extends TestCase
     {
         $property = m::mock(ResourceProperty::class);
         $property->shouldReceive('getName')->andReturn('property');
-        $property->shouldReceive('getKind')->andReturn(ResourcePropertyKind::RESOURCE_REFERENCE);
+        $property->shouldReceive('getKind')->andReturn(ResourcePropertyKind::RESOURCE_REFERENCE());
         $expected = 'TypeWithNoName';
 
         $concrete = m::mock(ResourceEntityType::class);

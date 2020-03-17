@@ -17,6 +17,7 @@ use POData\OperationContext\IOperationContext;
 use POData\OperationContext\ServiceHost;
 use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\Metadata\ResourceProperty;
+use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\Providers\ProvidersWrapper;
 use POData\Readers\Atom\AtomODataReader;
 use POData\Readers\ODataReaderRegistry;
@@ -148,7 +149,7 @@ class ProcessTest extends TestCase
     public function testBadResourcePropertyKindOnRelatedResourceGet()
     {
         $property = m::mock(ResourceProperty::class);
-        $property->shouldReceive('getKind')->andReturnNull();
+        $property->shouldReceive('getKind')->andReturn(new ResourcePropertyKind(0));
 
         $segment = m::mock(SegmentDescriptor::class);
         $segment->shouldReceive('getTargetKind')->andReturn(TargetKind::RESOURCE());

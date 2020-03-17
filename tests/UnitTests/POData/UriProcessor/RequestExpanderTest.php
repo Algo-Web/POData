@@ -127,7 +127,7 @@ class RequestExpanderTest extends TestCase
         $node->shouldReceive('getChildNodes')->andReturn([])->never();
 
         $resProperty = m::mock(ResourceProperty::class);
-        $resProperty->shouldReceive('getKind')->andReturn(ResourcePropertyKind::RESOURCE_REFERENCE);
+        $resProperty->shouldReceive('getKind')->andReturn(ResourcePropertyKind::RESOURCE_REFERENCE());
         $resProperty->shouldReceive('getName')->andReturn('resourceProperty');
 
         $type = m::mock(ResourceType::class);
@@ -193,7 +193,7 @@ class RequestExpanderTest extends TestCase
         $node->shouldReceive('getChildNodes')->andReturn([])->never();
 
         $resProperty = m::mock(ResourceProperty::class);
-        $resProperty->shouldReceive('getKind')->andReturn(ResourcePropertyKind::RESOURCESET_REFERENCE);
+        $resProperty->shouldReceive('getKind')->andReturn(ResourcePropertyKind::RESOURCESET_REFERENCE());
         $resProperty->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::ENTITY());
         $resProperty->shouldReceive('getName')->andReturn('resourceProperty');
 
@@ -230,7 +230,7 @@ class RequestExpanderTest extends TestCase
         $resource->results = null;
 
         $resProperty = m::mock(ResourceProperty::class);
-        $resProperty->shouldReceive('getKind')->andReturn(ResourcePropertyKind::RESOURCESET_REFERENCE);
+        $resProperty->shouldReceive('getKind')->andReturn(ResourcePropertyKind::RESOURCESET_REFERENCE());
         $resProperty->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::ENTITY());
         $resProperty->shouldReceive('getName')->andReturn('resourceProperty');
 
@@ -281,7 +281,7 @@ class RequestExpanderTest extends TestCase
         $resource->results = ['foo', 'bar'];
 
         $resProperty = m::mock(ResourceProperty::class);
-        $resProperty->shouldReceive('getKind')->andReturn(ResourcePropertyKind::RESOURCESET_REFERENCE);
+        $resProperty->shouldReceive('getKind')->andReturn(ResourcePropertyKind::RESOURCESET_REFERENCE());
         $resProperty->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::ENTITY());
         $resProperty->shouldReceive('getName')->andReturn('resourceProperty');
 
@@ -353,7 +353,7 @@ class RequestExpanderTest extends TestCase
         $type->shouldReceive('setPropertyValue')->withAnyArgs()->andReturnNull()->once();
 
         $resProperty = m::mock(ResourceProperty::class);
-        $resProperty->shouldReceive('getKind')->andReturn(ResourcePropertyKind::RESOURCESET_REFERENCE);
+        $resProperty->shouldReceive('getKind')->andReturn(ResourcePropertyKind::RESOURCESET_REFERENCE());
         $resProperty->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::COMPLEX());
         $resProperty->shouldReceive('getName')->andReturn('resourceProperty');
 

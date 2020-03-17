@@ -72,6 +72,8 @@ class ResourceProperty
             );
         }
 
+        $kind = is_int($kind) ? new ResourcePropertyKind($kind) : $kind;
+
         if (!$this->isResourceKindValidForPropertyKind($kind, $propertyResourceType->getResourceTypeKind())) {
             throw new InvalidArgumentException(
                 Messages::resourcePropertyPropertyKindAndResourceTypeKindMismatch(
@@ -94,9 +96,10 @@ class ResourceProperty
      *
      * @return bool
      */
-    public function isKindOf($kind)
+    public function isKindOf(ResourcePropertyKind $kind): bool
     {
-        return ($this->kind & $kind) == $kind;
+        return ($this->getKind()->getValue()
+                & $kind->getValue()) == $kind->getValue();
     }
 
     /**
@@ -124,9 +127,9 @@ class ResourceProperty
      *
      * @return ResourcePropertyKind
      */
-    public function getKind()
+    public function getKind(): ResourcePropertyKind
     {
-        return $this->kind;
+        return ($this->kind);
     }
 
     /**
@@ -173,9 +176,9 @@ class ResourceProperty
      *
      * @return bool
      */
-    public static function sIsKindOf($kind1, $kind2)
+    public static function sIsKindOf(ResourcePropertyKind $kind1, ResourcePropertyKind $kind2)
     {
-        return ($kind1 & $kind2) == $kind2;
+        return ($kind1->getValue() & $kind2->getValue()) == $kind2->getValue();
     }
 
     /**
@@ -226,22 +229,22 @@ class ResourceProperty
      * @return bool True if resource type kind and property kind matches
      *              otherwise false
      */
-    private function isResourceKindValidForPropertyKind($pKind, ResourceTypeKind $rKind)
+    private function isResourceKindValidForPropertyKind(ResourcePropertyKind $pKind, ResourceTypeKind $rKind)
     {
-        if (self::sIsKindOf($pKind, /* @scrutinizer ignore-type */ResourcePropertyKind::PRIMITIVE)
+        if (self::sIsKindOf($pKind, ResourcePropertyKind::PRIMITIVE())
             && $rKind != ResourceTypeKind::PRIMITIVE()
         ) {
             return false;
         }
 
-        if (self::sIsKindOf($pKind, /* @scrutinizer ignore-type */ResourcePropertyKind::COMPLEX_TYPE)
+        if (self::sIsKindOf($pKind, ResourcePropertyKind::COMPLEX_TYPE())
             && $rKind != ResourceTypeKind::COMPLEX()
         ) {
             return false;
         }
 
-        if ((self::sIsKindOf($pKind, /* @scrutinizer ignore-type */ResourcePropertyKind::RESOURCE_REFERENCE)
-            || self::sIsKindOf($pKind, /* @scrutinizer ignore-type */ResourcePropertyKind::RESOURCESET_REFERENCE))
+        if ((self::sIsKindOf($pKind, ResourcePropertyKind::RESOURCE_REFERENCE())
+            || self::sIsKindOf($pKind, ResourcePropertyKind::RESOURCESET_REFERENCE()))
             && $rKind != ResourceTypeKind::ENTITY()
         ) {
             return false;

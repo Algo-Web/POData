@@ -234,7 +234,7 @@ class NorthWindDSExpressionProvider4 implements IExpressionProvider
             } while ($parent != null);
 
             $resourceProperty = $parent2->getResourceProperty();
-            if ($resourceProperty->isKindOf(ResourcePropertyKind::RESOURCE_REFERENCE)) {
+            if ($resourceProperty->isKindOf(ResourcePropertyKind::RESOURCE_REFERENCE())) {
                 // Orders?$filter=Customer/CustomerID eq 'ALFKI'
                 throw new NotImplementedException(
                     'This implementation not supports Resource reference in the filter',
@@ -262,8 +262,8 @@ class NorthWindDSExpressionProvider4 implements IExpressionProvider
         } else {
             // This is a first level property access
             $resourceProperty = $parent->getResourceProperty();
-            if ($resourceProperty->isKindOf(ResourcePropertyKind::COMPLEX_TYPE)
-                || $resourceProperty->isKindOf(ResourcePropertyKind::RESOURCE_REFERENCE)) {
+            if ($resourceProperty->isKindOf(ResourcePropertyKind::COMPLEX_TYPE())
+                || $resourceProperty->isKindOf(ResourcePropertyKind::RESOURCE_REFERENCE())) {
                 // Customers?$filter=Address eq null
                 // Orders?$filter=Customer ne null
                 // First level property access to a complex or resource reference

@@ -335,8 +335,8 @@ class ResourceClassesTest extends TestCase
         $customerResType->addProperty($customerIDPrimProperty);
         $customerResType->addProperty($customerNamePrimProperty);
         $customerResType->addProperty($ratingPrimProperty);
-        $this->assertTrue($customerIDPrimProperty->isKindOf(ResourcePropertyKind::KEY));
-        $this->assertTrue($customerIDPrimProperty->isKindOf(ResourcePropertyKind::PRIMITIVE));
+        $this->assertTrue($customerIDPrimProperty->isKindOf(ResourcePropertyKind::KEY()));
+        $this->assertTrue($customerIDPrimProperty->isKindOf(ResourcePropertyKind::PRIMITIVE()));
 
         $customerReferenceSetProperty = new ResourceProperty(
             'Customers',
@@ -345,11 +345,11 @@ class ResourceClassesTest extends TestCase
             $customerResType
         );
         $this->assertEquals($customerReferenceSetProperty->getName(), 'Customers');
-        $this->assertEquals($customerReferenceSetProperty->getKind(), ResourcePropertyKind::RESOURCESET_REFERENCE);
+        $this->assertEquals($customerReferenceSetProperty->getKind(), ResourcePropertyKind::RESOURCESET_REFERENCE());
         $this->assertEquals($customerReferenceSetProperty->getInstanceType() instanceof \ReflectionClass, true);
         $this->assertEquals($customerReferenceSetProperty->getResourceType()->getName(), 'Customer');
         $this->assertEquals($customerReferenceSetProperty->getTypeKind(), ResourceTypeKind::ENTITY());
-        $this->assertFalse($customerReferenceSetProperty->isKindOf(ResourcePropertyKind::RESOURCE_REFERENCE));
+        $this->assertFalse($customerReferenceSetProperty->isKindOf(ResourcePropertyKind::RESOURCE_REFERENCE()));
     }
 
     /**
