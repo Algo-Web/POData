@@ -16,7 +16,7 @@ class ResourcePropertyTest extends TestCase
 {
     public function testConstructorEmptyNameThrowsException()
     {
-        $kind     = ResourcePropertyKind::BAG;
+        $kind     = ResourcePropertyKind::BAG();
         $type     = m::mock(ResourceType::class);
         $name     = '';
         $mimeName = 'mime';
@@ -34,7 +34,7 @@ class ResourcePropertyTest extends TestCase
 
     public function testConstructorNameWithLeadingUnderscoreThrowsException()
     {
-        $kind     = ResourcePropertyKind::BAG;
+        $kind     = ResourcePropertyKind::BAG();
         $type     = m::mock(ResourceType::class);
         $name     = '_name';
         $mimeName = 'mime';
@@ -54,7 +54,7 @@ class ResourcePropertyTest extends TestCase
     {
         $name     = 'name';
         $mimeName = 'foo';
-        $kind     = ResourcePropertyKind::RESOURCE_REFERENCE;
+        $kind     = ResourcePropertyKind::RESOURCE_REFERENCE();
         $entKind  = ResourceTypeKind::ENTITY();
         $type     = m::mock(ResourceType::class);
         $type->shouldReceive('getResourceTypeKind')->andReturn($entKind);
@@ -67,7 +67,7 @@ class ResourcePropertyTest extends TestCase
     {
         $name     = 'name';
         $mimeName = 'foo';
-        $kind     = ResourcePropertyKind::PRIMITIVE;
+        $kind     = ResourcePropertyKind::PRIMITIVE();
         $entKind  = ResourceTypeKind::ENTITY();
         $type     = m::mock(ResourceType::class);
         $type->shouldReceive('getResourceTypeKind')->andReturn($entKind);
@@ -87,7 +87,7 @@ class ResourcePropertyTest extends TestCase
     {
         $name     = 'name';
         $mimeName = 'foo';
-        $kind     = ResourcePropertyKind::RESOURCE_REFERENCE;
+        $kind     = ResourcePropertyKind::RESOURCE_REFERENCE();
         $entKind  = ResourceTypeKind::PRIMITIVE();
         $type     = m::mock(ResourceType::class);
         $type->shouldReceive('getResourceTypeKind')->andReturn($entKind);

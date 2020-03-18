@@ -58,14 +58,13 @@ class ResourceProperty
      *
      * @throws InvalidArgumentException
      */
-    public function __construct(string $name, ?string $mimeType, $kind, ResourceType $propertyResourceType)
+    public function __construct(string $name, ?string $mimeType, ResourcePropertyKind $kind, ResourceType $propertyResourceType)
     {
         if (!$this->isValidPropertyName($name)) {
             throw new InvalidArgumentException(
                 'Property name violates OData specification.'
             );
         }
-        $kind = is_int($kind) ? new ResourcePropertyKind($kind) : $kind;
 
         if (!ResourceProperty::isValidResourcePropertyKind($kind)) {
             throw new InvalidArgumentException(
@@ -232,7 +231,6 @@ class ResourceProperty
         ResourcePropertyKind $pKind,
         ResourceTypeKind $rKind
     ): bool {
-
         if (self::sIsKindOf($pKind, ResourcePropertyKind::PRIMITIVE())
             && $rKind != ResourceTypeKind::PRIMITIVE()
         ) {

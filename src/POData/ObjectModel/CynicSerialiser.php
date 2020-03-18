@@ -645,7 +645,7 @@ class CynicSerialiser implements IObjectSerialiser
             $internalProperty       = new ODataProperty();
             $internalProperty->name = $propName;
             $raw                    = $result->{$propName};
-            if (static::isMatchPrimitive(/* @scrutinizer ignore-type */$resourceKind)) {
+            if (static::isMatchPrimitive($resourceKind)) {
                 $iType = $prop->getInstanceType();
                 if (!$iType instanceof IType) {
                     throw new InvalidOperationException(get_class($iType));
@@ -678,7 +678,7 @@ class CynicSerialiser implements IObjectSerialiser
     /**
      * Check whether to expand a navigation property or not.
      *
-     * @param string $navigationPropertyName Name of naviagtion property in question
+     * @param string $navigationPropertyName Name of navigation property in question
      *
      * @throws InvalidOperationException
      * @return bool                      True if the given navigation should be expanded, otherwise false

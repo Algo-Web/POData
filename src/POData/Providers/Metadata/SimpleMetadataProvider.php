@@ -493,10 +493,12 @@ class SimpleMetadataProvider implements IMetadataProvider
             $kind = $kind | ResourcePropertyKind::ETAG;
         }
 
+        $kind = new ResourcePropertyKind($kind);
+
         $resourceProperty = new ResourceProperty(
             $name,
             null,
-            /* @scrutinizer ignore-type */$kind,
+            $kind,
             $primitiveResourceType
         );
         $resourceType->addProperty($resourceProperty);
@@ -1014,10 +1016,11 @@ class SimpleMetadataProvider implements IMetadataProvider
             $kind = $kind | ResourcePropertyKind::BAG;
         }
 
+        $kind = new ResourcePropertyKind($kind);
+
         $resourceProperty = new ResourceProperty(
             $name,
             null,
-            /* @scrutinizer ignore-type */
             $kind,
             $complexResourceType
         );
