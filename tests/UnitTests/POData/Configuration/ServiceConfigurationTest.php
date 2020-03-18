@@ -118,7 +118,7 @@ class ServiceConfigurationTest extends TestCase
         $this->dataServiceConfiguration->setEntitySetAccessRule('Customers', EntitySetRights::READ_ALL);
         $this->assertEquals(
             $this->dataServiceConfiguration->getEntitySetAccessRule($customersResourceSet),
-            EntitySetRights::READ_ALL
+            EntitySetRights::READ_ALL()
         );
 
         try {

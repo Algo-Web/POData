@@ -197,7 +197,7 @@ class ProvidersWrapperTest extends TestCase
         //Indicate the resource set is visible
         $mockConfig = m::mock(ServiceConfiguration::class)->makePartial();
         $mockConfig->shouldReceive('getEntitySetAccessRule')->withArgs([$this->mockResourceSet])
-            ->andReturn(EntitySetRights::READ_SINGLE);
+            ->andReturn(EntitySetRights::READ_SINGLE());
         $this->mockServiceConfig = $mockConfig;
 
         $wrapper = $this->getMockedWrapper();
@@ -223,7 +223,7 @@ class ProvidersWrapperTest extends TestCase
 
         //Indicate the resource set is NOT visible
         $this->mockServiceConfig->shouldReceive('getEntitySetAccessRule')->withArgs([$this->mockResourceSet])
-            ->andReturn(EntitySetRights::NONE);
+            ->andReturn(EntitySetRights::NONE());
 
         $wrapper = $this->getMockedWrapper();
 
@@ -335,7 +335,7 @@ class ProvidersWrapperTest extends TestCase
         $this->mockResourceSet2->shouldReceive('getResourceType')->andReturn($this->mockResourceType2);
 
         //Indicate the resource set is visible
-        $this->mockServiceConfig->shouldReceive('getEntitySetAccessRule')->andReturn(EntitySetRights::READ_SINGLE);
+        $this->mockServiceConfig->shouldReceive('getEntitySetAccessRule')->andReturn(EntitySetRights::READ_SINGLE());
 
         $this->mockMetadataProvider->shouldReceive('getResourceAssociationSet')
             ->withArgs([$this->mockResourceSet, $this->mockResourceType, $this->mockResourceProperty])
@@ -382,11 +382,11 @@ class ProvidersWrapperTest extends TestCase
 
         //Indicate the resource set is visible
         $this->mockServiceConfig->shouldReceive('getEntitySetAccessRule')
-            ->withArgs([$this->mockResourceSet])->andReturn(EntitySetRights::READ_SINGLE);
+            ->withArgs([$this->mockResourceSet])->andReturn(EntitySetRights::READ_SINGLE());
 
         //Indicate the resource set is not visible
         $this->mockServiceConfig->shouldReceive('getEntitySetAccessRule')
-            ->withArgs([$this->mockResourceSet2])->andReturn(EntitySetRights::NONE);
+            ->withArgs([$this->mockResourceSet2])->andReturn(EntitySetRights::NONE());
 
         $this->mockMetadataProvider->shouldReceive('getResourceAssociationSet')
             ->withArgs([$this->mockResourceSet, $this->mockResourceType, $this->mockResourceProperty])
@@ -425,7 +425,7 @@ class ProvidersWrapperTest extends TestCase
         $this->mockResourceSet->shouldReceive('getResourceType')->andReturn($this->mockResourceType);
         $this->mockServiceConfig->shouldReceive('getEntitySetAccessRule')
             ->withArgs([$this->mockResourceSet])
-            ->andReturn(EntitySetRights::READ_SINGLE);
+            ->andReturn(EntitySetRights::READ_SINGLE());
 
         $wrapper = $this->getMockedWrapper();
 
@@ -451,7 +451,7 @@ class ProvidersWrapperTest extends TestCase
         $this->mockResourceSet->shouldReceive('getName')->andReturn($fakeName);
         $this->mockServiceConfig->shouldReceive('getEntitySetAccessRule')
             ->withArgs([$this->mockResourceSet])
-            ->andReturn(EntitySetRights::READ_SINGLE);
+            ->andReturn(EntitySetRights::READ_SINGLE());
 
         $wrapper = $this->getMockedWrapper();
 
@@ -478,10 +478,10 @@ class ProvidersWrapperTest extends TestCase
         $this->mockResourceSet2->shouldReceive('getResourceType')->andReturn($this->mockResourceType2);
         $this->mockServiceConfig->shouldReceive('getEntitySetAccessRule')
             ->withArgs([$this->mockResourceSet])
-            ->andReturn(EntitySetRights::NONE);
+            ->andReturn(EntitySetRights::NONE());
         $this->mockServiceConfig->shouldReceive('getEntitySetAccessRule')
             ->withArgs([$this->mockResourceSet2])
-            ->andReturn(EntitySetRights::READ_SINGLE);
+            ->andReturn(EntitySetRights::READ_SINGLE());
 
         $wrapper = $this->getMockedWrapper();
 

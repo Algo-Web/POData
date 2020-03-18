@@ -26,7 +26,7 @@ class ResourceSetWrapperTest extends TestCase
         $set->shouldReceive('getResourceType')->andReturn($type);
         $config = m::mock(ServiceConfiguration::class);
         $config->shouldReceive('getEntitySetPageSize')->andReturn(200);
-        $config->shouldReceive('getEntitySetAccessRule')->andReturnNull();
+        $config->shouldReceive('getEntitySetAccessRule')->andReturn(EntitySetRights::ALL());
 
         $derived = m::mock(ResourceType::class);
         $derived->shouldReceive('hasNamedStream')->andReturn(true)->once();
@@ -43,10 +43,10 @@ class ResourceSetWrapperTest extends TestCase
         $set    = m::mock(ResourceSet::class);
         $config = m::mock(ServiceConfiguration::class);
         $config->shouldReceive('getEntitySetPageSize')->andReturn(200);
-        $config->shouldReceive('getEntitySetAccessRule')->andReturnNull();
+        $config->shouldReceive('getEntitySetAccessRule')->andReturn(EntitySetRights::NONE());
 
         $foo = new ResourceSetWrapper($set, $config);
-        $this->assertNull($foo->getResourceSetRights());
+        $this->assertEquals(0, $foo->getResourceSetRights()->getValue());
     }
 
     public function testHasBagPropertyYes()
@@ -58,7 +58,7 @@ class ResourceSetWrapperTest extends TestCase
         $set->shouldReceive('getResourceType')->andReturn($type);
         $config = m::mock(ServiceConfiguration::class);
         $config->shouldReceive('getEntitySetPageSize')->andReturn(200);
-        $config->shouldReceive('getEntitySetAccessRule')->andReturnNull();
+        $config->shouldReceive('getEntitySetAccessRule')->andReturn(EntitySetRights::ALL());
 
         $derived = m::mock(ResourceType::class);
         $derived->shouldReceive('hasBagProperty')->andReturn(true)->once();

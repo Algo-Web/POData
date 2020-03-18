@@ -29,7 +29,7 @@ class ExpandTest extends TestCase
         $northWindMetadata = NorthWindMetadata::Create();
         $queryProvider     = new NorthWindQueryProvider();
         $configuration     = new ServiceConfiguration($northWindMetadata);
-        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
+        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL());
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
             $queryProvider, //IDataServiceQueryProvider implementation (set to null)
@@ -77,7 +77,7 @@ class ExpandTest extends TestCase
         $northWindMetadata = NorthWindMetadata::Create();
         $queryProvider     = new NorthWindQueryProvider();
         $configuration     = new ServiceConfiguration($northWindMetadata);
-        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
+        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL());
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
             $queryProvider, //IDataServiceQueryProvider implementation (set to null)
@@ -131,7 +131,7 @@ class ExpandTest extends TestCase
         $northWindMetadata = NorthWindMetadata::Create();
         $queryProvider     = new NorthWindQueryProvider();
         $configuration     = new ServiceConfiguration($northWindMetadata);
-        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
+        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL());
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
             $queryProvider, //IDataServiceQueryProvider implementation (set to null)
@@ -175,7 +175,7 @@ class ExpandTest extends TestCase
         $northWindMetadata = NorthWindMetadata::Create();
         $queryProvider     = new NorthWindQueryProvider();
         $configuration     = new ServiceConfiguration($northWindMetadata);
-        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
+        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL());
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
             $queryProvider, //IDataServiceQueryProvider implementation (set to null)
@@ -209,7 +209,7 @@ class ExpandTest extends TestCase
         $northWindMetadata = NorthWindMetadata::Create();
         $queryProvider     = new NorthWindQueryProvider();
         $configuration     = new ServiceConfiguration($northWindMetadata);
-        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
+        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL());
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
             $queryProvider, //IDataServiceQueryProvider implementation (set to null)
@@ -270,7 +270,7 @@ class ExpandTest extends TestCase
         $northWindMetadata = NorthWindMetadata::Create();
         $queryProvider     = new NorthWindQueryProvider();
         $configuration     = new ServiceConfiguration($northWindMetadata);
-        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
+        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL());
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
             $queryProvider, //IDataServiceQueryProvider implementation (set to null)
@@ -329,7 +329,7 @@ class ExpandTest extends TestCase
         $northWindMetadata = NorthWindMetadata::Create();
         $queryProvider     = new NorthWindQueryProvider();
         $configuration     = new ServiceConfiguration($northWindMetadata);
-        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
+        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL());
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
             $queryProvider, //IDataServiceQueryProvider implementation (set to null)
@@ -364,7 +364,7 @@ class ExpandTest extends TestCase
         $northWindMetadata = NorthWindMetadata::Create();
         $queryProvider     = new NorthWindQueryProvider();
         $configuration     = new ServiceConfiguration($northWindMetadata);
-        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
+        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL());
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
             $queryProvider, //IDataServiceQueryProvider implementation (set to null)
@@ -459,7 +459,7 @@ class ExpandTest extends TestCase
         $northWindMetadata = NorthWindMetadata::Create();
         $queryProvider     = new NorthWindQueryProvider();
         $configuration     = new ServiceConfiguration($northWindMetadata);
-        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
+        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL());
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
             $queryProvider, //IDataServiceQueryProvider implementation (set to null)
@@ -515,8 +515,8 @@ class ExpandTest extends TestCase
         $queryProvider     = new NorthWindQueryProvider();
         $configuration     = new ServiceConfiguration($northWindMetadata);
         //Make 'Customers' and 'Orders' visible, make 'Order_Details' invisible
-        $configuration->setEntitySetAccessRule('Customers', EntitySetRights::ALL);
-        $configuration->setEntitySetAccessRule('Orders', EntitySetRights::ALL);
+        $configuration->setEntitySetAccessRule('Customers', EntitySetRights::ALL());
+        $configuration->setEntitySetAccessRule('Orders', EntitySetRights::ALL());
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
             $queryProvider, //IDataServiceQueryProvider implementation (set to null)

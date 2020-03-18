@@ -227,7 +227,7 @@ class ServiceConfiguration implements IServiceConfiguration
      *
      * @return EntitySetRights
      */
-    public function getEntitySetAccessRule(ResourceSet $resourceSet)
+    public function getEntitySetAccessRule(ResourceSet $resourceSet): EntitySetRights
     {
         if (!array_key_exists($resourceSet->getName(), $this->resourceRights)) {
             return $this->defaultResourceSetRight;
@@ -251,6 +251,7 @@ class ServiceConfiguration implements IServiceConfiguration
             $msg = Messages::configurationRightsAreNotInRange('$rights', 'setEntitySetAccessRule');
             throw new \InvalidArgumentException($msg);
         }
+        $rights = new EntitySetRights($rights);
 
         if (strcmp($name, '*') === 0) {
             $this->defaultResourceSetRight = $rights;

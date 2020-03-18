@@ -83,7 +83,7 @@ interface IServiceConfiguration
      *
      * @return EntitySetRights
      */
-    public function getEntitySetAccessRule(ResourceSet $resourceSet);
+    public function getEntitySetAccessRule(ResourceSet $resourceSet): EntitySetRights;
 
     /**
      * sets the access rights on the specified resource set.
