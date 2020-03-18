@@ -244,7 +244,7 @@ class ServiceConfiguration implements IServiceConfiguration
      *
      * @throws \InvalidArgumentException when the entity set rights are not known or the resource set is not known
      */
-    public function setEntitySetAccessRule($name, $rights)
+    public function setEntitySetAccessRule(string $name, $rights)
     {
         $rights = $rights instanceof EntitySetRights ? $rights->getValue() : $rights;
         if ($rights < EntitySetRights::NONE || $rights > EntitySetRights::ALL) {
