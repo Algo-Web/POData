@@ -88,7 +88,7 @@ class ResourceSetWrapper extends ResourceSet
      *
      * @return EntitySetRights
      */
-    public function getResourceSetRights()
+    public function getResourceSetRights(): EntitySetRights
     {
         return $this->resourceSetRights;
     }
