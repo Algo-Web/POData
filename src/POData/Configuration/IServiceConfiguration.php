@@ -94,7 +94,7 @@ interface IServiceConfiguration
      * @throws \InvalidArgumentException when the entity set rights are not known or the resource set is not known
      * @return void
      */
-    public function setEntitySetAccessRule(string $name, $rights);
+    public function setEntitySetAccessRule(string $name, EntitySetRights $rights): void;
 
     /**
      * Gets the maximum page size for an entity set resource.

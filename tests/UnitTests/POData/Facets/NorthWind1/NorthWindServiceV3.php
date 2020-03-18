@@ -27,7 +27,7 @@ class NorthWindServiceV3 extends BaseServiceTestWrapper
     public function initialize(IServiceConfiguration $config)
     {
         $config->setEntitySetPageSize('*', 5);
-        $config->setEntitySetAccessRule('*', EntitySetRights::ALL);
+        $config->setEntitySetAccessRule('*', EntitySetRights::ALL());
         $config->setAcceptCountRequests(true);
         //Disable projection request for testing purpose
         $config->setAcceptProjectionRequests(false);

@@ -31,7 +31,7 @@ class SegmentParserTest extends TestCase
         parent::setUp();
         $this->_metadataProvider     = NorthWindMetadata::Create();
         $this->_serviceConfiguration = new ServiceConfiguration($this->_metadataProvider);
-        $this->_serviceConfiguration->setEntitySetAccessRule('*', EntitySetRights::ALL);
+        $this->_serviceConfiguration->setEntitySetAccessRule('*', EntitySetRights::ALL());
 
         $this->mockQueryProvider = m::mock('POData\Providers\Query\IQueryProvider');
 
@@ -182,7 +182,7 @@ class SegmentParserTest extends TestCase
         $metadataProvider     = NorthWindMetadata::Create();
         $serviceConfiguration = new ServiceConfiguration($metadataProvider);
         //HIDING ALL RESOURCE SET
-        $serviceConfiguration->setEntitySetAccessRule('*', EntitySetRights::NONE);
+        $serviceConfiguration->setEntitySetAccessRule('*', EntitySetRights::NONE());
         $providersWrapper = new ProvidersWrapper($metadataProvider, $this->mockQueryProvider, $serviceConfiguration, false);
         $segments         = ["Employees('AF123')"];
 
@@ -686,8 +686,8 @@ class SegmentParserTest extends TestCase
         //Creates a provider wrapper for NorthWind service with 'Orders' entity set as invisible
         $metadataProvider     = NorthWindMetadata::Create();
         $serviceConfiguration = new ServiceConfiguration($this->_metadataProvider);
-        $serviceConfiguration->setEntitySetAccessRule('Customers', EntitySetRights::READ_ALL);
-        $serviceConfiguration->setEntitySetAccessRule('Orders', EntitySetRights::NONE);
+        $serviceConfiguration->setEntitySetAccessRule('Customers', EntitySetRights::READ_ALL());
+        $serviceConfiguration->setEntitySetAccessRule('Orders', EntitySetRights::NONE());
         $providersWrapper = new ProvidersWrapper(
             $metadataProvider,
             $this->mockQueryProvider,

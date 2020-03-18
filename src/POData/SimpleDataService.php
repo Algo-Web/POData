@@ -74,7 +74,7 @@ class SimpleDataService extends BaseService implements IService
     public function initialize(IServiceConfiguration $config)
     {
         $config->setEntitySetPageSize('*', $this->maxPageSize);
-        $config->setEntitySetAccessRule('*', /* @scrutinizer ignore-type */EntitySetRights::ALL);
+        $config->setEntitySetAccessRule('*', EntitySetRights::ALL());
         $config->setAcceptCountRequests(true);
         $config->setAcceptProjectionRequests(true);
     }
@@ -118,6 +118,6 @@ class SimpleDataService extends BaseService implements IService
      */
     public function initializeService(IServiceConfiguration $config)
     {
-        $config->setEntitySetAccessRule('*', /* @scrutinizer ignore-type */EntitySetRights::ALL);
+        $config->setEntitySetAccessRule('*', EntitySetRights::ALL());
     }
 }

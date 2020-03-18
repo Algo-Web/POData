@@ -106,7 +106,7 @@ class ServiceConfigurationTest extends TestCase
         );
 
         try {
-            $this->dataServiceConfiguration->setEntitySetAccessRule('Customers', EntitySetRights::ALL + 1);
+            $this->dataServiceConfiguration->setEntitySetAccessRule('Customers', new EntitySetRights(EntitySetRights::ALL + 1));
             $this->fail('An expected InvalidOperationException for \'page size and max result per collection mutual exclusion\' was not thrown for month');
         } catch (\InvalidArgumentException $exception) {
             $this->assertEquals(
@@ -115,7 +115,7 @@ class ServiceConfigurationTest extends TestCase
             );
         }
 
-        $this->dataServiceConfiguration->setEntitySetAccessRule('Customers', EntitySetRights::READ_ALL);
+        $this->dataServiceConfiguration->setEntitySetAccessRule('Customers', EntitySetRights::READ_ALL());
         $this->assertEquals(
             $this->dataServiceConfiguration->getEntitySetAccessRule($customersResourceSet),
             EntitySetRights::READ_ALL()
@@ -124,7 +124,7 @@ class ServiceConfigurationTest extends TestCase
         try {
             $this->dataServiceConfiguration->setEntitySetAccessRule(
                 'NonExistEntitySet',
-                EntitySetRights::READ_MULTIPLE
+                EntitySetRights::READ_MULTIPLE()
             );
             $this->fail('An expected InvalidArgumentException for \'non-exist entity set name\' was not thrown for month');
         } catch (\InvalidArgumentException $exception) {

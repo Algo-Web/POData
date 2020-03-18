@@ -30,7 +30,7 @@ class SelectTest extends TestCase
         $northWindMetadata = NorthWindMetadata::Create();
         $queryProvider     = new NorthWindQueryProvider();
         $configuration     = new ServiceConfiguration($northWindMetadata);
-        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
+        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL());
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
             $queryProvider, //IDataServiceQueryProvider implementation (set to null)
@@ -72,7 +72,7 @@ class SelectTest extends TestCase
         $northWindMetadata = NorthWindMetadata::Create();
         $queryProvider     = new NorthWindQueryProvider();
         $configuration     = new ServiceConfiguration($northWindMetadata);
-        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
+        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL());
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
             $queryProvider, //IDataServiceQueryProvider implementation (set to null)
@@ -154,7 +154,7 @@ class SelectTest extends TestCase
         $northWindMetadata = NorthWindMetadata::Create();
         $queryProvider     = new NorthWindQueryProvider();
         $configuration     = new ServiceConfiguration($northWindMetadata);
-        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
+        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL());
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
             $queryProvider, //IDataServiceQueryProvider implementation (set to null)
@@ -197,7 +197,7 @@ class SelectTest extends TestCase
         $northWindMetadata = NorthWindMetadata::Create();
         $queryProvider     = new NorthWindQueryProvider();
         $configuration     = new ServiceConfiguration($northWindMetadata);
-        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
+        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL());
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
             $queryProvider, //IDataServiceQueryProvider implementation (set to null)
@@ -265,7 +265,7 @@ class SelectTest extends TestCase
         $northWindMetadata = NorthWindMetadata::Create();
         $queryProvider     = new NorthWindQueryProvider();
         $configuration     = new ServiceConfiguration($northWindMetadata);
-        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
+        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL());
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
             $queryProvider, //IDataServiceQueryProvider implementation (set to null)
@@ -341,7 +341,7 @@ class SelectTest extends TestCase
         $northWindMetadata = NorthWindMetadata::Create();
         $queryProvider     = new NorthWindQueryProvider();
         $configuration     = new ServiceConfiguration($northWindMetadata);
-        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
+        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL());
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
             $queryProvider, //IDataServiceQueryProvider implementation (set to null)
@@ -451,7 +451,7 @@ class SelectTest extends TestCase
         $northWindMetadata = NorthWindMetadata::Create();
         $queryProvider     = new NorthWindQueryProvider();
         $configuration     = new ServiceConfiguration($northWindMetadata);
-        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
+        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL());
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
             $queryProvider, //IDataServiceQueryProvider implementation (set to null)
@@ -504,7 +504,7 @@ class SelectTest extends TestCase
         $northWindMetadata = NorthWindMetadata::Create();
         $queryProvider     = new NorthWindQueryProvider();
         $configuration     = new ServiceConfiguration($northWindMetadata);
-        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
+        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL());
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
             $queryProvider, //IDataServiceQueryProvider implementation (set to null)
@@ -590,7 +590,7 @@ class SelectTest extends TestCase
         $northWindMetadata = NorthWindMetadata::Create();
         $queryProvider     = new NorthWindQueryProvider();
         $configuration     = new ServiceConfiguration($northWindMetadata);
-        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
+        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL());
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
             $queryProvider, //IDataServiceQueryProvider implementation (set to null)

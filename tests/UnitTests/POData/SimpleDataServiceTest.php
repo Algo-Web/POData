@@ -79,7 +79,10 @@ class SimpleDataServiceTest extends TestCase
         $service = m::mock(ServiceHost::class);
 
         $config = m::mock(IServiceConfiguration::class);
-        $config->shouldReceive('setEntitySetAccessRule')->withArgs(['*', EntitySetRights::ALL])->once();
+        $config->shouldReceive('setEntitySetAccessRule')
+            ->withArgs(['*', m::on(function (EntitySetRights $arg) {
+                return EntitySetRights::ALL == $arg->getValue();
+            })])->once();
 
         $foo = new SimpleDataService($db, $meta, $service, $cereal);
         $foo->initializeService($config);
