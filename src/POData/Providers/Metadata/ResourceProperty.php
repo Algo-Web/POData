@@ -106,7 +106,7 @@ class ResourceProperty
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -116,7 +116,7 @@ class ResourceProperty
      *
      * @return string
      */
-    public function getMIMEType()
+    public function getMIMEType(): string
     {
         return $this->mimeType;
     }
@@ -136,7 +136,7 @@ class ResourceProperty
      *
      * @return ResourceType
      */
-    public function getResourceType()
+    public function getResourceType(): ResourceType
     {
         return $this->propertyResourceType;
     }
@@ -146,7 +146,7 @@ class ResourceProperty
      *
      * @return ResourceTypeKind
      */
-    public function getTypeKind()
+    public function getTypeKind(): ResourceTypeKind
     {
         return $this->propertyResourceType->getResourceTypeKind();
     }
@@ -175,7 +175,7 @@ class ResourceProperty
      *
      * @return bool
      */
-    public static function sIsKindOf(ResourcePropertyKind $kind1, ResourcePropertyKind $kind2)
+    public static function sIsKindOf(ResourcePropertyKind $kind1, ResourcePropertyKind $kind2): bool
     {
         return ($kind1->getValue() & $kind2->getValue()) == $kind2->getValue();
     }
@@ -187,7 +187,7 @@ class ResourceProperty
      *
      * @return bool
      */
-    private function isValidPropertyName($name)
+    private function isValidPropertyName($name): bool
     {
         if (!isset($name) || !is_string($name) || empty($name)) {
             return false;
@@ -206,7 +206,7 @@ class ResourceProperty
      *
      * @return bool
      */
-    public static function isValidResourcePropertyKind($kind)
+    public static function isValidResourcePropertyKind(ResourcePropertyKind $kind): bool
     {
         return
             !($kind != ResourcePropertyKind::RESOURCE_REFERENCE() &&
@@ -228,7 +228,7 @@ class ResourceProperty
      * @return bool True if resource type kind and property kind matches
      *              otherwise false
      */
-    private function isResourceKindValidForPropertyKind(ResourcePropertyKind $pKind, ResourceTypeKind $rKind)
+    private function isResourceKindValidForPropertyKind(ResourcePropertyKind $pKind, ResourceTypeKind $rKind): bool
     {
         if (self::sIsKindOf($pKind, ResourcePropertyKind::PRIMITIVE())
             && $rKind != ResourceTypeKind::PRIMITIVE()
