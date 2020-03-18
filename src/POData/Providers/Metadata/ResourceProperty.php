@@ -52,13 +52,13 @@ class ResourceProperty
 
     /**
      * @param string               $name                 Name of the property
-     * @param string               $mimeType             Mime type of the property
+     * @param string|null          $mimeType             Mime type of the property
      * @param ResourcePropertyKind $kind                 The kind of property
      * @param ResourceType         $propertyResourceType ResourceType of the property
      *
      * @throws InvalidArgumentException
      */
-    public function __construct($name, $mimeType, $kind, ResourceType $propertyResourceType)
+    public function __construct(string $name, ?string $mimeType, $kind, ResourceType $propertyResourceType)
     {
         if (!$this->isValidPropertyName($name)) {
             throw new InvalidArgumentException(

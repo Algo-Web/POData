@@ -495,7 +495,8 @@ class SimpleMetadataProvider implements IMetadataProvider
 
         $resourceProperty = new ResourceProperty(
             $name,
-            null, /* @scrutinizer ignore-type */$kind,
+            null,
+            /* @scrutinizer ignore-type */$kind,
             $primitiveResourceType
         );
         $resourceType->addProperty($resourceProperty);
