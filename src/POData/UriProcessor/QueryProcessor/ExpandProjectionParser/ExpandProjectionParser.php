@@ -229,11 +229,7 @@ class ExpandProjectionParser
                     );
                 }
 
-                $singleResult
-                    = $resourceProperty->isKindOf(
-                    /* @scrutinizer ignore-type */
-                        ResourcePropertyKind::RESOURCE_REFERENCE
-                    );
+                $singleResult = $resourceProperty->isKindOf(ResourcePropertyKind::RESOURCE_REFERENCE());
                 $resourceSetWrapper->checkResourceSetRightsForRead($singleResult);
                 $pageSize            = $resourceSetWrapper->getResourceSetPageSize();
                 $internalOrderByInfo = null;
@@ -326,33 +322,29 @@ class ExpandProjectionParser
                 }
 
                 if (!$isLastSegment) {
-                    if ($resourceProperty->isKindOf(/* @scrutinizer ignore-type */ResourcePropertyKind::BAG)) {
+                    if ($resourceProperty->isKindOf(ResourcePropertyKind::BAG())) {
                         throw ODataException::createBadRequestError(
                             Messages::expandProjectionParserBagPropertyAsInnerSelectSegment(
                                 $currentResourceType->getFullName(),
                                 $selectSubPathSegment
                             )
                         );
-                    } elseif ($resourceProperty->isKindOf(
-                    /* @scrutinizer ignore-type */ResourcePropertyKind::PRIMITIVE
-                    )) {
+                    } elseif ($resourceProperty->isKindOf(ResourcePropertyKind::PRIMITIVE())) {
                         throw ODataException::createBadRequestError(
                             Messages::expandProjectionParserPrimitivePropertyUsedAsNavigationProperty(
                                 $currentResourceType->getFullName(),
                                 $selectSubPathSegment
                             )
                         );
-                    } elseif ($resourceProperty->isKindOf(
-                        /* @scrutinizer ignore-type */ResourcePropertyKind::COMPLEX_TYPE
-                    )) {
+                    } elseif ($resourceProperty->isKindOf(ResourcePropertyKind::COMPLEX_TYPE())) {
                         throw ODataException::createBadRequestError(
                             Messages::expandProjectionParserComplexPropertyAsInnerSelectSegment(
                                 $currentResourceType->getFullName(),
                                 $selectSubPathSegment
                             )
                         );
-                    } elseif ($resourceProperty->getKind() != ResourcePropertyKind::RESOURCE_REFERENCE
-                              && $resourceProperty->getKind() != ResourcePropertyKind::RESOURCESET_REFERENCE) {
+                    } elseif ($resourceProperty->getKind() != ResourcePropertyKind::RESOURCE_REFERENCE()
+                              && $resourceProperty->getKind() != ResourcePropertyKind::RESOURCESET_REFERENCE()) {
                         throw ODataException::createInternalServerError(
                             Messages::expandProjectionParserUnexpectedPropertyType()
                         );

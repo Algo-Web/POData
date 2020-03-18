@@ -561,10 +561,11 @@ class UriProcessorNew implements IUriProcessor
     private function executeGetResourceRelated(SegmentDescriptor $segment, $eagerList)
     {
         $projectedProperty     = $segment->getProjectedProperty();
-        $projectedPropertyKind = null !== $projectedProperty ? $projectedProperty->getKind() : 0;
+        $projectedPropertyKind = null !== $projectedProperty ? $projectedProperty->getKind() :
+                                 new ResourcePropertyKind(0);
         $queryResult           = null;
         switch ($projectedPropertyKind) {
-            case ResourcePropertyKind::RESOURCE_REFERENCE:
+            case ResourcePropertyKind::RESOURCE_REFERENCE():
                 $queryResult = $this->getProviders()->getRelatedResourceReference(
                     $segment->getPrevious()->getTargetResourceSetWrapper(),
                     $segment->getPrevious()->getResult(),
@@ -572,7 +573,7 @@ class UriProcessorNew implements IUriProcessor
                     $projectedProperty
                 );
                 break;
-            case ResourcePropertyKind::RESOURCESET_REFERENCE:
+            case ResourcePropertyKind::RESOURCESET_REFERENCE():
                 if ($segment->isSingleResult()) {
                     $queryResult = $this->getProviders()->getResourceFromRelatedResourceSet(
                         $segment->getPrevious()->getTargetResourceSetWrapper(),

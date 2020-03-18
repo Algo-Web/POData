@@ -147,7 +147,7 @@ class RequestExpander
         $expandedProjectionNodes = $this->getExpandedProjectionNodes();
         foreach ($expandedProjectionNodes as $expandedProjectionNode) {
             $resourceType = $expandedProjectionNode->getResourceType();
-            $isCollection = ResourcePropertyKind::RESOURCESET_REFERENCE
+            $isCollection = ResourcePropertyKind::RESOURCESET_REFERENCE()
                             == $expandedProjectionNode->getResourceProperty()->getKind();
             $expandedPropertyName = $expandedProjectionNode->getResourceProperty()->getName();
 

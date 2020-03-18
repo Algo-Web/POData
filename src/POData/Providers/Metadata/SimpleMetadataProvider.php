@@ -493,9 +493,12 @@ class SimpleMetadataProvider implements IMetadataProvider
             $kind = $kind | ResourcePropertyKind::ETAG;
         }
 
+        $kind = new ResourcePropertyKind($kind);
+
         $resourceProperty = new ResourceProperty(
             $name,
-            null, /* @scrutinizer ignore-type */$kind,
+            null,
+            $kind,
             $primitiveResourceType
         );
         $resourceType->addProperty($resourceProperty);
@@ -666,12 +669,12 @@ class SimpleMetadataProvider implements IMetadataProvider
         // verify resource property types are what we expect them to be
         $sourceResourceKind = $sourceResourceType->resolveProperty($sourceProperty)->getKind();
         assert(
-            ResourcePropertyKind::RESOURCE_REFERENCE == $sourceResourceKind,
+            ResourcePropertyKind::RESOURCE_REFERENCE() == $sourceResourceKind,
             '1 side of 1:N relationship not pointing to resource reference'
         );
         $targetResourceKind = $targetResourceType->resolveProperty($targetProperty)->getKind();
         assert(
-            ResourcePropertyKind::RESOURCESET_REFERENCE == $targetResourceKind,
+            ResourcePropertyKind::RESOURCESET_REFERENCE() == $targetResourceKind,
             'N side of 1:N relationship not pointing to resource set reference'
         );
     }
@@ -714,8 +717,8 @@ class SimpleMetadataProvider implements IMetadataProvider
         assert(in_array($resourceMult, $allowedMult), 'Supplied multiplicity ' . $resourceMult . ' not valid');
 
         $resourcePropertyKind = ('*' == $resourceMult)
-            ? ResourcePropertyKind::RESOURCESET_REFERENCE
-            : ResourcePropertyKind::RESOURCE_REFERENCE;
+            ? ResourcePropertyKind::RESOURCESET_REFERENCE()
+            : ResourcePropertyKind::RESOURCE_REFERENCE();
         $targetResourceType     = $targetResourceSet->getResourceType();
         $sourceResourceProperty = new ResourceProperty($name, null, $resourcePropertyKind, $targetResourceType);
         $sourceResourceType->addProperty($sourceResourceProperty);
@@ -823,11 +826,11 @@ class SimpleMetadataProvider implements IMetadataProvider
             return;
         }
         $sourceKind = ('*' == $sourceMultiplicity)
-            ? ResourcePropertyKind::RESOURCESET_REFERENCE
-            : ResourcePropertyKind::RESOURCE_REFERENCE;
+            ? ResourcePropertyKind::RESOURCESET_REFERENCE()
+            : ResourcePropertyKind::RESOURCE_REFERENCE();
         $targetKind = ('*' == $targetMultiplicity)
-            ? ResourcePropertyKind::RESOURCESET_REFERENCE
-            : ResourcePropertyKind::RESOURCE_REFERENCE;
+            ? ResourcePropertyKind::RESOURCESET_REFERENCE()
+            : ResourcePropertyKind::RESOURCE_REFERENCE();
 
         $sourceResourceProperty = new ResourceProperty($sourceProperty, null, $targetKind, $targetResourceType);
         assert(
@@ -926,12 +929,12 @@ class SimpleMetadataProvider implements IMetadataProvider
         // verify resource property types are what we expect them to be
         $sourceResourceKind = $sourceResourceType->resolveProperty($sourceProperty)->getKind();
         assert(
-            ResourcePropertyKind::RESOURCESET_REFERENCE == $sourceResourceKind,
+            ResourcePropertyKind::RESOURCESET_REFERENCE() == $sourceResourceKind,
             'M side of M:N relationship not pointing to resource set reference'
         );
         $targetResourceKind = $targetResourceType->resolveProperty($targetProperty)->getKind();
         assert(
-            ResourcePropertyKind::RESOURCESET_REFERENCE == $targetResourceKind,
+            ResourcePropertyKind::RESOURCESET_REFERENCE() == $targetResourceKind,
             'N side of M:N relationship not pointing to resource set reference'
         );
     }
@@ -965,12 +968,12 @@ class SimpleMetadataProvider implements IMetadataProvider
         // verify resource property types are what we expect them to be
         $sourceResourceKind = $sourceResourceType->resolveProperty($sourceProperty)->getKind();
         assert(
-            ResourcePropertyKind::RESOURCE_REFERENCE == $sourceResourceKind,
+            ResourcePropertyKind::RESOURCE_REFERENCE() == $sourceResourceKind,
             '1 side of 1:1 relationship not pointing to resource reference'
         );
         $targetResourceKind = $targetResourceType->resolveProperty($targetProperty)->getKind();
         assert(
-            ResourcePropertyKind::RESOURCE_REFERENCE == $targetResourceKind,
+            ResourcePropertyKind::RESOURCE_REFERENCE() == $targetResourceKind,
             '0..1 side of 1:1 relationship not pointing to resource reference'
         );
     }
@@ -1013,10 +1016,11 @@ class SimpleMetadataProvider implements IMetadataProvider
             $kind = $kind | ResourcePropertyKind::BAG;
         }
 
+        $kind = new ResourcePropertyKind($kind);
+
         $resourceProperty = new ResourceProperty(
             $name,
             null,
-            /* @scrutinizer ignore-type */
             $kind,
             $complexResourceType
         );

@@ -300,7 +300,8 @@ class SegmentParser
                 }
             } else {
                 $current->setTargetResourceType($projectedProperty->getResourceType());
-                $current->setSingleResult($projectedProperty->getKind() != ResourcePropertyKind::RESOURCESET_REFERENCE);
+                $rawKind = $projectedProperty->getKind();
+                $current->setSingleResult($rawKind != ResourcePropertyKind::RESOURCESET_REFERENCE());
                 if ($previousKind == TargetKind::LINK()
                     && $projectedProperty->getTypeKind() != ResourceTypeKind::ENTITY()
                 ) {
@@ -311,7 +312,7 @@ class SegmentParser
                     );
                 }
 
-                switch ($projectedProperty->getKind()) {
+                switch ($rawKind->getValue()) {
                     case ResourcePropertyKind::COMPLEX_TYPE:
                         $current->setTargetKind(TargetKind::COMPLEX_OBJECT());
                         break;
@@ -336,7 +337,7 @@ class SegmentParser
                         $current->setTargetResourceSetWrapper($resourceSetWrapper);
                         break;
                     default:
-                        if (!$projectedProperty->isKindOf(/* @scrutinizer ignore-type */ResourcePropertyKind::PRIMITIVE)) {
+                        if (!$projectedProperty->isKindOf(ResourcePropertyKind::PRIMITIVE())) {
                             throw ODataException::createInternalServerError(
                                 Messages::segmentParserUnExpectedPropertyKind('Primitive')
                             );

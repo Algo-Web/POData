@@ -204,12 +204,12 @@ class CynicSerialiser implements IObjectSerialiser
             $propKind = $prop->getKind();
 
             assert(
-                ResourcePropertyKind::RESOURCESET_REFERENCE == $propKind
-                || ResourcePropertyKind::RESOURCE_REFERENCE == $propKind,
+                ResourcePropertyKind::RESOURCESET_REFERENCE() == $propKind
+                || ResourcePropertyKind::RESOURCE_REFERENCE() == $propKind,
                 '$propKind != ResourcePropertyKind::RESOURCESET_REFERENCE &&'
                 . ' $propKind != ResourcePropertyKind::RESOURCE_REFERENCE'
             );
-            $propTail             = ResourcePropertyKind::RESOURCE_REFERENCE == $propKind ? 'entry' : 'feed';
+            $propTail             = ResourcePropertyKind::RESOURCE_REFERENCE() == $propKind ? 'entry' : 'feed';
             $nuLink->isCollection = 'feed' === $propTail;
             $propType             = 'application/atom+xml;type=' . $propTail;
             $propName             = $prop->getName();
@@ -645,7 +645,7 @@ class CynicSerialiser implements IObjectSerialiser
             $internalProperty       = new ODataProperty();
             $internalProperty->name = $propName;
             $raw                    = $result->{$propName};
-            if (static::isMatchPrimitive(/* @scrutinizer ignore-type */$resourceKind)) {
+            if (static::isMatchPrimitive($resourceKind)) {
                 $iType = $prop->getInstanceType();
                 if (!$iType instanceof IType) {
                     throw new InvalidOperationException(get_class($iType));
@@ -660,7 +660,7 @@ class CynicSerialiser implements IObjectSerialiser
                 if (null !== $raw) {
                     $internalProperty->value = $this->primitiveToString($rType, $raw);
                 }
-            } elseif (ResourcePropertyKind::COMPLEX_TYPE == $resourceKind) {
+            } elseif (ResourcePropertyKind::COMPLEX_TYPE() == $resourceKind) {
                 $rType                      = $prop->getResourceType();
                 $internalProperty->typeName = $rType->getFullName();
                 if (null !== $raw) {
@@ -678,7 +678,7 @@ class CynicSerialiser implements IObjectSerialiser
     /**
      * Check whether to expand a navigation property or not.
      *
-     * @param string $navigationPropertyName Name of naviagtion property in question
+     * @param string $navigationPropertyName Name of navigation property in question
      *
      * @throws InvalidOperationException
      * @return bool                      True if the given navigation should be expanded, otherwise false
@@ -848,11 +848,11 @@ class CynicSerialiser implements IObjectSerialiser
     }
 
     /**
-     * @param QueryResult      $entryObject
-     * @param ResourceProperty $prop
-     * @param $nuLink
-     * @param $propKind
-     * @param  string                    $propName
+     * @param QueryResult                $entryObject
+     * @param ResourceProperty           $prop
+     * @param ODataLink                  $nuLink
+     * @param ResourcePropertyKind       $propKind
+     * @param string                     $propName
      * @throws InvalidOperationException
      * @throws ODataException
      * @throws \ReflectionException
@@ -860,14 +860,14 @@ class CynicSerialiser implements IObjectSerialiser
     private function expandNavigationProperty(
         QueryResult $entryObject,
         ResourceProperty $prop,
-        $nuLink,
-        $propKind,
-        $propName
+        ODataLink $nuLink,
+        ResourcePropertyKind $propKind,
+        string $propName
     ) {
         $nextName             = $prop->getResourceType()->getName();
         $nuLink->isExpanded   = true;
         $value                = $entryObject->results->{$propName};
-        $isCollection         = ResourcePropertyKind::RESOURCESET_REFERENCE == $propKind;
+        $isCollection         = ResourcePropertyKind::RESOURCESET_REFERENCE() == $propKind;
         $nuLink->isCollection = $isCollection;
         $nullResult           = null === $value;
         $object               = (is_object($value));
@@ -1033,7 +1033,7 @@ class CynicSerialiser implements IObjectSerialiser
                 continue;
             }
             $result            = $entryObject->{$corn};
-            $isBag             = $flake->isKindOf(/* @scrutinizer ignore-type */ResourcePropertyKind::BAG);
+            $isBag             = $flake->isKindOf(ResourcePropertyKind::BAG());
             $typePrepend       = $isBag ? 'Collection(' : '';
             $typeAppend        = $isBag ? ')' : '';
             $nonNull           = null !== $result;
@@ -1101,18 +1101,19 @@ class CynicSerialiser implements IObjectSerialiser
     /**
      * Is the supplied resourceKind representing a primitive value?
      *
-     * @param  int  $resourceKind
+     * @param  int|ResourcePropertyKind  $resourceKind
      * @return bool
      */
-    public static function isMatchPrimitive($resourceKind)
+    public static function isMatchPrimitive($resourceKind): bool
     {
-        if (16 > $resourceKind) {
+        $value = $resourceKind instanceof ResourcePropertyKind ? $resourceKind->getValue() : $resourceKind;
+        if (16 > $value) {
             return false;
         }
-        if (28 < $resourceKind) {
+        if (28 < $value) {
             return false;
         }
 
-        return 0 == ($resourceKind % 4);
+        return 0 == ($value % 4);
     }
 }

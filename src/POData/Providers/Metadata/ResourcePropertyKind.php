@@ -4,11 +4,23 @@ declare(strict_types=1);
 
 namespace POData\Providers\Metadata;
 
+use Cruxinator\BitMask\BitMask;
+
 /**
  * Class ResourcePropertyKind.
+ * @method static KEY()
+ * @method static ETAG()
+ * @method static COMPLEX_TYPE()
+ * @method static BAG()
+ * @method static PRIMITIVE()
+ * @method static RESOURCE_REFERENCE()
+ * @method static RESOURCESET_REFERENCE()
+ * @method static NONE()
  */
-class ResourcePropertyKind
+class ResourcePropertyKind extends BitMask
 {
+    const NONE = 0;
+
     /**
      * A bag of primitive or complex types.
      */

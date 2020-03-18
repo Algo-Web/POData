@@ -177,3 +177,8 @@ tools:
 build_failure_conditions:
   - 'elements.rating(<= F).new.exists'
   - 'issues.severity(>= CRITICAL).new.exists'
+
+build:
+  dependencies:
+    before:
+      - composer remove --dev pcov/clobber --no-update

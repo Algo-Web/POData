@@ -512,7 +512,7 @@ class ExpressionParser
             );
         }
 
-        if (intval($resourceProperty->getKind()) == ResourcePropertyKind::RESOURCESET_REFERENCE) {
+        if (($resourceProperty->getKind()) == ResourcePropertyKind::RESOURCESET_REFERENCE()) {
             throw ODataException::createSyntaxError(
                 Messages::expressionParserEntityCollectionNotAllowedInFilter(
                     $resourceProperty->getName(),

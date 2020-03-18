@@ -269,7 +269,7 @@ class UriProcessorNewTest extends TestCase
         $resourceSet     = m::mock(ResourceSet::class);
         $resourceWrapper = m::mock(ResourceSetWrapper::class);
 
-        $propKind = ResourcePropertyKind::RESOURCE_REFERENCE;
+        $propKind = ResourcePropertyKind::RESOURCE_REFERENCE();
 
         $property = m::mock(ResourceProperty::class)->makePartial();
         $property->shouldReceive('getKind')->andReturn($propKind);

@@ -54,6 +54,10 @@ class ObjectModelSerializerTest extends TestCase
     private $mockStreamWrapper;
     private $mockMeta;
 
+    /**
+     * @return ObjectModelSerializer
+     * @throws \POData\Common\UrlFormatException
+     */
     public function Construct()
     {
         $AbsoluteServiceURL      = new \POData\Common\Url('http://192.168.2.1/abm-master/public/odata.svc');
@@ -344,8 +348,12 @@ class ObjectModelSerializerTest extends TestCase
         $this->mockService->shouldReceive('getConfiguration->getEntitySetPageSize')->andReturn(200);
 
         $property = m::mock(ResourceProperty::class);
-        $property->shouldReceive('getKind')->andReturn(ResourcePropertyKind::RESOURCESET_REFERENCE);
+        $property->shouldReceive('getKind')->andReturn(ResourcePropertyKind::RESOURCESET_REFERENCE());
         $property->shouldReceive('getName')->andReturn('name');
+        $property->shouldReceive('isKindOf')->with(m::on(function (ResourcePropertyKind $arg) {
+            return ResourcePropertyKind::RESOURCESET_REFERENCE == $arg->getValue();
+        }))->andReturn(true);
+        $property->shouldReceive('isKindOf')->andReturn(false);
 
         $rSet = m::mock(ResourceSet::class);
         $rSet->shouldReceive('getName')->andReturn('foobars');
@@ -359,13 +367,19 @@ class ObjectModelSerializerTest extends TestCase
         $rProp->shouldReceive('getName')->andReturn('name');
         $rProp->shouldReceive('getInstanceType')->andReturn($itype);
         $rProp->shouldReceive('getResourceType')->andReturn($primType);
-        $rProp->shouldReceive('isKindOf')->withArgs([ResourcePropertyKind::BAG])->andReturn(false);
+        $rProp->shouldReceive('isKindOf')->with(m::on(function (ResourcePropertyKind $arg) {
+            return ResourcePropertyKind::BAG == $arg->getValue();
+        }))->andReturn(false);
+        $rProp->shouldReceive('getKind')->andReturn(ResourcePropertyKind::PRIMITIVE());
 
-        $tProp = m::mock(ResourceProperty::class);
+        $tProp = m::mock(ResourceProperty::class)->makePartial();
         $tProp->shouldReceive('getName')->andReturn('type');
         $tProp->shouldReceive('getInstanceType')->andReturn($itype);
         $tProp->shouldReceive('getResourceType')->andReturn($primType);
-        $tProp->shouldReceive('isKindOf')->withArgs([ResourcePropertyKind::BAG])->andReturn(false);
+        $tProp->shouldReceive('isKindOf')->with(m::on(function (ResourcePropertyKind $arg) {
+            return ResourcePropertyKind::BAG == $arg->getValue();
+        }))->andReturn(false);
+        $tProp->shouldReceive('getKind')->andReturn(ResourcePropertyKind::PRIMITIVE());
 
         $resourceSet = m::mock(ResourceSetWrapper::class);
         $resourceSet->shouldReceive('getName')->andReturn('names');
@@ -675,7 +689,7 @@ class ObjectModelSerializerTest extends TestCase
         $propType->shouldReceive('getInstanceType')->andReturn($iType);
 
         $resProperty = m::mock(ResourceProperty::class);
-        $resProperty->shouldReceive('getKind')->andReturn(24);
+        $resProperty->shouldReceive('getKind')->andReturn(new ResourcePropertyKind(24));
         $resProperty->shouldReceive('getName')->andReturn('name');
         $resProperty->shouldReceive('getInstanceType')->andReturn($iType);
         $resProperty->shouldReceive('getResourceType')->andReturn($propType);

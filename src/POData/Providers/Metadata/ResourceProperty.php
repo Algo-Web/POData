@@ -52,13 +52,13 @@ class ResourceProperty
 
     /**
      * @param string               $name                 Name of the property
-     * @param string               $mimeType             Mime type of the property
+     * @param string|null          $mimeType             Mime type of the property
      * @param ResourcePropertyKind $kind                 The kind of property
      * @param ResourceType         $propertyResourceType ResourceType of the property
      *
      * @throws InvalidArgumentException
      */
-    public function __construct($name, $mimeType, $kind, ResourceType $propertyResourceType)
+    public function __construct(string $name, ?string $mimeType, ResourcePropertyKind $kind, ResourceType $propertyResourceType)
     {
         if (!$this->isValidPropertyName($name)) {
             throw new InvalidArgumentException(
@@ -66,13 +66,13 @@ class ResourceProperty
             );
         }
 
-        if (!$this->isValidResourcePropertyKind($kind)) {
+        if (!ResourceProperty::isValidResourcePropertyKind($kind)) {
             throw new InvalidArgumentException(
                 Messages::resourcePropertyInvalidKindParameter('$kind')
             );
         }
 
-        if (!$this->isResourceKindValidForPropertyKind($kind, $propertyResourceType->getResourceTypeKind())) {
+        if (!ResourceProperty::isResourceKindValidForPropertyKind($kind, $propertyResourceType->getResourceTypeKind())) {
             throw new InvalidArgumentException(
                 Messages::resourcePropertyPropertyKindAndResourceTypeKindMismatch(
                     '$kind',
@@ -94,9 +94,10 @@ class ResourceProperty
      *
      * @return bool
      */
-    public function isKindOf($kind)
+    public function isKindOf(ResourcePropertyKind $kind): bool
     {
-        return ($this->kind & $kind) == $kind;
+        return ($this->getKind()->getValue()
+                & $kind->getValue()) == $kind->getValue();
     }
 
     /**
@@ -104,7 +105,7 @@ class ResourceProperty
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -114,7 +115,7 @@ class ResourceProperty
      *
      * @return string
      */
-    public function getMIMEType()
+    public function getMIMEType(): string
     {
         return $this->mimeType;
     }
@@ -124,7 +125,7 @@ class ResourceProperty
      *
      * @return ResourcePropertyKind
      */
-    public function getKind()
+    public function getKind(): ResourcePropertyKind
     {
         return $this->kind;
     }
@@ -134,7 +135,7 @@ class ResourceProperty
      *
      * @return ResourceType
      */
-    public function getResourceType()
+    public function getResourceType(): ResourceType
     {
         return $this->propertyResourceType;
     }
@@ -144,7 +145,7 @@ class ResourceProperty
      *
      * @return ResourceTypeKind
      */
-    public function getTypeKind()
+    public function getTypeKind(): ResourceTypeKind
     {
         return $this->propertyResourceType->getResourceTypeKind();
     }
@@ -161,7 +162,7 @@ class ResourceProperty
     public function getInstanceType()
     {
         $type = $this->propertyResourceType->getInstanceType();
-        assert($type instanceof IType == static::sIsKindOf($this->getKind(), ResourcePropertyKind::PRIMITIVE));
+        assert($type instanceof IType == static::sIsKindOf($this->getKind(), ResourcePropertyKind::PRIMITIVE()));
         return $type;
     }
 
@@ -173,9 +174,9 @@ class ResourceProperty
      *
      * @return bool
      */
-    public static function sIsKindOf($kind1, $kind2)
+    public static function sIsKindOf(ResourcePropertyKind $kind1, ResourcePropertyKind $kind2): bool
     {
-        return ($kind1 & $kind2) == $kind2;
+        return ($kind1->getValue() & $kind2->getValue()) == $kind2->getValue();
     }
 
     /**
@@ -185,7 +186,7 @@ class ResourceProperty
      *
      * @return bool
      */
-    private function isValidPropertyName($name)
+    private function isValidPropertyName($name): bool
     {
         if (!isset($name) || !is_string($name) || empty($name)) {
             return false;
@@ -204,17 +205,17 @@ class ResourceProperty
      *
      * @return bool
      */
-    private function isValidResourcePropertyKind($kind)
+    public static function isValidResourcePropertyKind(ResourcePropertyKind $kind): bool
     {
         return
-            !($kind != ResourcePropertyKind::RESOURCE_REFERENCE &&
-            $kind != ResourcePropertyKind::RESOURCESET_REFERENCE &&
-            $kind != ResourcePropertyKind::COMPLEX_TYPE &&
-            ($kind != (ResourcePropertyKind::COMPLEX_TYPE | ResourcePropertyKind::BAG)) &&
-            $kind != ResourcePropertyKind::PRIMITIVE &&
-            ($kind != (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::BAG)) &&
-            ($kind != (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::KEY)) &&
-            ($kind != (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::ETAG)));
+            !($kind != ResourcePropertyKind::RESOURCE_REFERENCE() &&
+            $kind != ResourcePropertyKind::RESOURCESET_REFERENCE() &&
+            $kind != ResourcePropertyKind::COMPLEX_TYPE() &&
+            ($kind->getValue() != (ResourcePropertyKind::COMPLEX_TYPE | ResourcePropertyKind::BAG)) &&
+            $kind != ResourcePropertyKind::PRIMITIVE() &&
+            ($kind->getValue() != (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::BAG)) &&
+            ($kind->getValue() != (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::KEY)) &&
+            ($kind->getValue() != (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::ETAG)));
     }
 
     /**
@@ -226,22 +227,24 @@ class ResourceProperty
      * @return bool True if resource type kind and property kind matches
      *              otherwise false
      */
-    private function isResourceKindValidForPropertyKind($pKind, ResourceTypeKind $rKind)
-    {
-        if (self::sIsKindOf($pKind, /* @scrutinizer ignore-type */ResourcePropertyKind::PRIMITIVE)
+    public static function isResourceKindValidForPropertyKind(
+        ResourcePropertyKind $pKind,
+        ResourceTypeKind $rKind
+    ): bool {
+        if (self::sIsKindOf($pKind, ResourcePropertyKind::PRIMITIVE())
             && $rKind != ResourceTypeKind::PRIMITIVE()
         ) {
             return false;
         }
 
-        if (self::sIsKindOf($pKind, /* @scrutinizer ignore-type */ResourcePropertyKind::COMPLEX_TYPE)
+        if (self::sIsKindOf($pKind, ResourcePropertyKind::COMPLEX_TYPE())
             && $rKind != ResourceTypeKind::COMPLEX()
         ) {
             return false;
         }
 
-        if ((self::sIsKindOf($pKind, /* @scrutinizer ignore-type */ResourcePropertyKind::RESOURCE_REFERENCE)
-            || self::sIsKindOf($pKind, /* @scrutinizer ignore-type */ResourcePropertyKind::RESOURCESET_REFERENCE))
+        if ((self::sIsKindOf($pKind, ResourcePropertyKind::RESOURCE_REFERENCE())
+            || self::sIsKindOf($pKind, ResourcePropertyKind::RESOURCESET_REFERENCE()))
             && $rKind != ResourceTypeKind::ENTITY()
         ) {
             return false;

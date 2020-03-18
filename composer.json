@@ -24,7 +24,8 @@
   ],
   "minimum-stability": "dev",
   "require": {
-    "myclabs/php-enum": "1.2.0",
+    "myclabs/php-enum": "^1.2.0",
+    "cruxinator/php-bitmask": "dev-master",
     "php": "^7.1",
     "illuminate/http": ">=5.1|^6.0",
     "nesbot/carbon": "^1.0|^2.0",

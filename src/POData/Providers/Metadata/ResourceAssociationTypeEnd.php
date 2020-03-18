@@ -143,7 +143,7 @@ class ResourceAssociationTypeEnd
     public function getMultiplicity()
     {
         if (null !== $this->fromProperty
-            && $this->fromProperty->getKind() == ResourcePropertyKind::RESOURCE_REFERENCE
+            && $this->fromProperty->getKind() == ResourcePropertyKind::RESOURCE_REFERENCE()
         ) {
             return ODataConstants::ZERO_OR_ONE;
         }
