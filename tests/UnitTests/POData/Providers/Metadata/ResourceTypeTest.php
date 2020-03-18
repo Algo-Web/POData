@@ -385,4 +385,55 @@ class ResourceTypeTest extends TestCase
         $actualFullName   = $type->getFullName();
         $this->assertEquals($expectedFullName, $actualFullName);
     }
+
+    /**
+     * @return array
+     */
+    public function propertyTypeMatchProvider(): array
+    {
+        $result = [];
+        $result[] = [2, 1, true];
+        $result[] = [2, 2, false];
+        $result[] = [2, 3, false];
+        $result[] = [3, 1, true];
+        $result[] = [3, 2, false];
+        $result[] = [3, 3, false];
+        $result[] = [16, 1, false];
+        $result[] = [16, 2, false];
+        $result[] = [16, 3, true];
+        $result[] = [17, 1, false];
+        $result[] = [17, 2, false];
+        $result[] = [17, 3, true];
+        $result[] = [20, 1, false];
+        $result[] = [20, 2, false];
+        $result[] = [20, 3, true];
+        $result[] = [24, 1, false];
+        $result[] = [24, 2, false];
+        $result[] = [24, 3, true];
+        $result[] = [32, 1, false];
+        $result[] = [32, 2, true];
+        $result[] = [32, 3, false];
+        $result[] = [64, 1, false];
+        $result[] = [64, 2, true];
+        $result[] = [64, 3, false];
+        return $result;
+    }
+
+    /**
+     * @dataProvider propertyTypeMatchProvider
+     *
+     * @param int $propKind
+     * @param int $typeKind
+     * @param bool $expected
+     */
+    public function testisResourceKindValidForPropertyKind(int $propKind, int $typeKind, bool $expected)
+    {
+        $resourcePropKind = new ResourcePropertyKind($propKind);
+        $resourceTypeKind = new ResourceTypeKind($typeKind);
+
+        $actual = ResourceProperty::isResourceKindValidForPropertyKind($resourcePropKind, $resourceTypeKind);
+
+        $this->assertNotNull($expected);
+        $this->assertEquals($expected, $actual);
+    }
 }

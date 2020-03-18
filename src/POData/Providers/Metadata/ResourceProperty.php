@@ -73,7 +73,7 @@ class ResourceProperty
             );
         }
 
-        if (!$this->isResourceKindValidForPropertyKind($kind, $propertyResourceType->getResourceTypeKind())) {
+        if (!ResourceProperty::isResourceKindValidForPropertyKind($kind, $propertyResourceType->getResourceTypeKind())) {
             throw new InvalidArgumentException(
                 Messages::resourcePropertyPropertyKindAndResourceTypeKindMismatch(
                     '$kind',
@@ -228,8 +228,11 @@ class ResourceProperty
      * @return bool True if resource type kind and property kind matches
      *              otherwise false
      */
-    private function isResourceKindValidForPropertyKind(ResourcePropertyKind $pKind, ResourceTypeKind $rKind): bool
-    {
+    public static function isResourceKindValidForPropertyKind(
+        ResourcePropertyKind $pKind,
+        ResourceTypeKind $rKind
+    ): bool {
+
         if (self::sIsKindOf($pKind, ResourcePropertyKind::PRIMITIVE())
             && $rKind != ResourceTypeKind::PRIMITIVE()
         ) {
