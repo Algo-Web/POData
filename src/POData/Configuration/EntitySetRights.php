@@ -4,10 +4,16 @@ declare(strict_types=1);
 
 namespace POData\Configuration;
 
+use Cruxinator\BitMask\BitMask;
+
 /**
  * Class EntitySetRights Enumeration to describe the rights granted on a entity set (resource set).
+ * @method static ALL()
+ * @method static READ_ALL()
+ * @method static READ_MULTIPLE()
+ * @method static NONE()
  */
-class EntitySetRights
+class EntitySetRights extends BitMask
 {
     /**
      * Specifies no rights on this entity set.
