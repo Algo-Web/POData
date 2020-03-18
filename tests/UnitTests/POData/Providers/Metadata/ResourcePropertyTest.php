@@ -138,4 +138,51 @@ class ResourcePropertyTest extends TestCase
         }
         $this->assertEquals($expected, $actual);
     }
+
+    /**
+     * @return array
+     */
+    public function validResourcePropertyKindProvider(): array
+    {
+        $result = [];
+
+        $result[] = [1, false];
+        $result[] = [2, true];
+        $result[] = [3, true];
+        $result[] = [4, false];
+        $result[] = [6, false];
+        $result[] = [7, false];
+        $result[] = [8, false];
+        $result[] = [9, false];
+        $result[] = [10, false];
+        $result[] = [11, false];
+        $result[] = [12, false];
+        $result[] = [13, false];
+        $result[] = [14, false];
+        $result[] = [15, false];
+        $result[] = [16, true];
+        $result[] = [17, true];
+        $result[] = [18, false];
+        $result[] = [19, false];
+        $result[] = [20, true];
+        $result[] = [24, true];
+        $result[] = [28, false];
+        $result[] = [32, true];
+        $result[] = [64, true];
+
+        return $result;
+    }
+
+    /**
+     * @dataProvider validResourcePropertyKindProvider
+     *
+     * @param int $kind
+     * @param bool $expected
+     */
+    public function testIsValidResourcePropertyKind(int $kind, bool $expected)
+    {
+        $actual = ResourceProperty::isValidResourcePropertyKind($kind);
+
+        $this->assertEquals($expected, $actual);
+    }
 }

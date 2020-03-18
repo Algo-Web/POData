@@ -66,7 +66,7 @@ class ResourceProperty
             );
         }
 
-        if (!$this->isValidResourcePropertyKind($kind)) {
+        if (!ResourceProperty::isValidResourcePropertyKind($kind)) {
             throw new InvalidArgumentException(
                 Messages::resourcePropertyInvalidKindParameter('$kind')
             );
@@ -204,7 +204,7 @@ class ResourceProperty
      *
      * @return bool
      */
-    private function isValidResourcePropertyKind($kind)
+    public static function isValidResourcePropertyKind($kind)
     {
         return
             !($kind != ResourcePropertyKind::RESOURCE_REFERENCE &&
