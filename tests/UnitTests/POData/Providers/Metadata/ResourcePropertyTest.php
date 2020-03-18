@@ -181,7 +181,7 @@ class ResourcePropertyTest extends TestCase
      */
     public function testIsValidResourcePropertyKind(int $kind, bool $expected)
     {
-        $actual = ResourceProperty::isValidResourcePropertyKind($kind);
+        $actual = ResourceProperty::isValidResourcePropertyKind(new ResourcePropertyKind($kind));
 
         $this->assertEquals($expected, $actual);
     }

@@ -65,14 +65,13 @@ class ResourceProperty
                 'Property name violates OData specification.'
             );
         }
+        $kind = is_int($kind) ? new ResourcePropertyKind($kind) : $kind;
 
         if (!ResourceProperty::isValidResourcePropertyKind($kind)) {
             throw new InvalidArgumentException(
                 Messages::resourcePropertyInvalidKindParameter('$kind')
             );
         }
-
-        $kind = is_int($kind) ? new ResourcePropertyKind($kind) : $kind;
 
         if (!$this->isResourceKindValidForPropertyKind($kind, $propertyResourceType->getResourceTypeKind())) {
             throw new InvalidArgumentException(
@@ -164,7 +163,7 @@ class ResourceProperty
     public function getInstanceType()
     {
         $type = $this->propertyResourceType->getInstanceType();
-        assert($type instanceof IType == static::sIsKindOf($this->getKind(), ResourcePropertyKind::PRIMITIVE));
+        assert($type instanceof IType == static::sIsKindOf($this->getKind(), ResourcePropertyKind::PRIMITIVE()));
         return $type;
     }
 
@@ -210,14 +209,14 @@ class ResourceProperty
     public static function isValidResourcePropertyKind($kind)
     {
         return
-            !($kind != ResourcePropertyKind::RESOURCE_REFERENCE &&
-            $kind != ResourcePropertyKind::RESOURCESET_REFERENCE &&
-            $kind != ResourcePropertyKind::COMPLEX_TYPE &&
-            ($kind != (ResourcePropertyKind::COMPLEX_TYPE | ResourcePropertyKind::BAG)) &&
-            $kind != ResourcePropertyKind::PRIMITIVE &&
-            ($kind != (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::BAG)) &&
-            ($kind != (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::KEY)) &&
-            ($kind != (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::ETAG)));
+            !($kind != ResourcePropertyKind::RESOURCE_REFERENCE() &&
+            $kind != ResourcePropertyKind::RESOURCESET_REFERENCE() &&
+            $kind != ResourcePropertyKind::COMPLEX_TYPE() &&
+            ($kind->getValue() != (ResourcePropertyKind::COMPLEX_TYPE | ResourcePropertyKind::BAG)) &&
+            $kind != ResourcePropertyKind::PRIMITIVE() &&
+            ($kind->getValue() != (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::BAG)) &&
+            ($kind->getValue() != (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::KEY)) &&
+            ($kind->getValue() != (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::ETAG)));
     }
 
     /**
