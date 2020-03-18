@@ -110,7 +110,10 @@ class ResourceSetWrapper extends ResourceSet
      */
     public function isVisible()
     {
-        return $this->resourceSetRights != EntitySetRights::NONE;
+        $raw = $this->resourceSetRights instanceof EntitySetRights ?
+            $this->resourceSetRights->getValue() :
+            $this->resourceSetRights;
+        return $raw != EntitySetRights::NONE;
     }
 
     /**
@@ -179,9 +182,12 @@ class ResourceSetWrapper extends ResourceSet
      *
      * @throws ODataException exception if access to this resource set is forbidden
      */
-    public function checkResourceSetRights($requiredRights)
+    public function checkResourceSetRights(EntitySetRights $requiredRights): void
     {
-        if (($this->resourceSetRights & $requiredRights) == 0) {
+        $raw = $this->resourceSetRights instanceof EntitySetRights ?
+            $this->resourceSetRights->getValue() :
+            $this->resourceSetRights;
+        if (($raw & $requiredRights->getValue()) == 0) {
             throw ODataException::createForbiddenError();
         }
     }
@@ -197,7 +203,7 @@ class ResourceSetWrapper extends ResourceSet
     {
         $this->checkResourceSetRights(
             $singleResult ?
-            EntitySetRights::READ_SINGLE : EntitySetRights::READ_MULTIPLE
+            EntitySetRights::READ_SINGLE() : EntitySetRights::READ_MULTIPLE()
         );
     }
 }

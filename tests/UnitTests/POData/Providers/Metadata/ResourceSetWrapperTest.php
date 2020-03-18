@@ -75,7 +75,7 @@ class ResourceSetWrapperTest extends TestCase
         $set    = m::mock(ResourceSet::class);
         $config = m::mock(ServiceConfiguration::class);
         $config->shouldReceive('getEntitySetPageSize')->andReturn(200);
-        $config->shouldReceive('getEntitySetAccessRule')->andReturn(EntitySetRights::NONE);
+        $config->shouldReceive('getEntitySetAccessRule')->andReturn(EntitySetRights::NONE());
 
         $foo = new ResourceSetWrapper($set, $config);
 
@@ -83,7 +83,7 @@ class ResourceSetWrapperTest extends TestCase
         $actual   = null;
 
         try {
-            $foo->checkResourceSetRights(EntitySetRights::ALL);
+            $foo->checkResourceSetRights(EntitySetRights::ALL());
         } catch (ODataException $e) {
             $actual = $e->getMessage();
         }

@@ -106,7 +106,7 @@ class ServiceConfiguration implements IServiceConfiguration
         $this->maxExpandDepth          = PHP_INT_MAX;
         $this->maxResultsPerCollection = PHP_INT_MAX;
         $this->provider                = $metadataProvider;
-        $this->defaultResourceSetRight = EntitySetRights::NONE;
+        $this->defaultResourceSetRight = EntitySetRights::NONE();
         $this->defaultPageSize         = 0;
         $this->resourceRights          = [];
         $this->pageSizes               = [];
@@ -246,6 +246,7 @@ class ServiceConfiguration implements IServiceConfiguration
      */
     public function setEntitySetAccessRule($name, $rights)
     {
+        $rights = $rights instanceof EntitySetRights ? $rights->getValue() : $rights;
         if ($rights < EntitySetRights::NONE || $rights > EntitySetRights::ALL) {
             $msg = Messages::configurationRightsAreNotInRange('$rights', 'setEntitySetAccessRule');
             throw new \InvalidArgumentException($msg);

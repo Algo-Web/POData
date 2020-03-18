@@ -12,6 +12,7 @@ use Cruxinator\BitMask\BitMask;
  * @method static READ_ALL()
  * @method static READ_MULTIPLE()
  * @method static NONE()
+ * @method static READ_SINGLE()
  */
 class EntitySetRights extends BitMask
 {

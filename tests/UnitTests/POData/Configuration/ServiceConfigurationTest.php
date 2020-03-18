@@ -102,7 +102,7 @@ class ServiceConfigurationTest extends TestCase
         $this->assertNotNull($customersResourceSet);
         $this->AssertEquals(
             $this->dataServiceConfiguration->getEntitySetAccessRule($customersResourceSet),
-            EntitySetRights::NONE
+            EntitySetRights::NONE()
         );
 
         try {
