@@ -88,7 +88,7 @@ class ResourceSetWrapper extends ResourceSet
      *
      * @return EntitySetRights
      */
-    public function getResourceSetRights()
+    public function getResourceSetRights(): EntitySetRights
     {
         return $this->resourceSetRights;
     }
@@ -108,9 +108,9 @@ class ResourceSetWrapper extends ResourceSet
      *
      * @return bool
      */
-    public function isVisible()
+    public function isVisible(): bool
     {
-        return $this->resourceSetRights != EntitySetRights::NONE;
+        return $this->resourceSetRights != EntitySetRights::NONE();
     }
 
     /**
@@ -179,9 +179,9 @@ class ResourceSetWrapper extends ResourceSet
      *
      * @throws ODataException exception if access to this resource set is forbidden
      */
-    public function checkResourceSetRights($requiredRights)
+    public function checkResourceSetRights(EntitySetRights $requiredRights): void
     {
-        if (($this->resourceSetRights & $requiredRights) == 0) {
+        if (($this->resourceSetRights->getValue() & $requiredRights->getValue()) == 0) {
             throw ODataException::createForbiddenError();
         }
     }
@@ -197,7 +197,7 @@ class ResourceSetWrapper extends ResourceSet
     {
         $this->checkResourceSetRights(
             $singleResult ?
-            EntitySetRights::READ_SINGLE : EntitySetRights::READ_MULTIPLE
+            EntitySetRights::READ_SINGLE() : EntitySetRights::READ_MULTIPLE()
         );
     }
 }

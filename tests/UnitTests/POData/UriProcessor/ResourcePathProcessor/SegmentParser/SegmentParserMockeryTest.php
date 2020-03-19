@@ -38,7 +38,7 @@ class SegmentParserMockeryTest extends TestCase
     {
         $this->metadataProvider     = $meta;
         $this->serviceConfiguration = new ServiceConfiguration($this->metadataProvider);
-        $this->serviceConfiguration->setEntitySetAccessRule('*', EntitySetRights::ALL);
+        $this->serviceConfiguration->setEntitySetAccessRule('*', EntitySetRights::ALL());
 
         $this->mockQueryProvider = m::mock('POData\Providers\Query\IQueryProvider');
 

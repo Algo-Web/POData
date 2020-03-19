@@ -58,7 +58,7 @@ class OrderByParserTest extends TestCase
     {
         $northWindMetadata = NorthWindMetadata::Create();
         $configuration     = new ServiceConfiguration($northWindMetadata);
-        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
+        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL());
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
             $this->mockQueryProvider,
@@ -88,7 +88,7 @@ class OrderByParserTest extends TestCase
     {
         $northWindMetadata = NorthWindMetadata::Create();
         $configuration     = new ServiceConfiguration($northWindMetadata);
-        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
+        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL());
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
             $this->mockQueryProvider,
@@ -133,7 +133,7 @@ class OrderByParserTest extends TestCase
     {
         $northWindMetadata = NorthWindMetadata::Create();
         $configuration     = new ServiceConfiguration($northWindMetadata);
-        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
+        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL());
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
             $this->mockQueryProvider,
@@ -162,7 +162,7 @@ class OrderByParserTest extends TestCase
     {
         $northWindMetadata = NorthWindMetadata::Create();
         $configuration     = new ServiceConfiguration($northWindMetadata);
-        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
+        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL());
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
             $this->mockQueryProvider,
@@ -206,7 +206,7 @@ class OrderByParserTest extends TestCase
     {
         $northWindMetadata = NorthWindMetadata::Create();
         $configuration     = new ServiceConfiguration($northWindMetadata);
-        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
+        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL());
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
             $this->mockQueryProvider,
@@ -317,7 +317,7 @@ class OrderByParserTest extends TestCase
     {
         $northWindMetadata = NorthWindMetadata::Create();
         $configuration     = new ServiceConfiguration($northWindMetadata);
-        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
+        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL());
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
             $this->mockQueryProvider,
@@ -344,7 +344,7 @@ class OrderByParserTest extends TestCase
     {
         $northWindMetadata = NorthWindMetadata::Create();
         $configuration     = new ServiceConfiguration($northWindMetadata);
-        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
+        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL());
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
             $this->mockQueryProvider,
@@ -418,7 +418,7 @@ class OrderByParserTest extends TestCase
         $northWindMetadata = NorthWindMetadata::Create();
         $configuration     = new ServiceConfiguration($northWindMetadata);
         //Make 'Orders' visible, make 'Customers' invisible
-        $configuration->setEntitySetAccessRule('Orders', EntitySetRights::ALL);
+        $configuration->setEntitySetAccessRule('Orders', EntitySetRights::ALL());
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
             $this->mockQueryProvider,
@@ -449,7 +449,7 @@ class OrderByParserTest extends TestCase
     {
         $northWindMetadata = NorthWindMetadata::Create();
         $configuration     = new ServiceConfiguration($northWindMetadata);
-        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
+        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL());
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
             $this->mockQueryProvider,
@@ -646,7 +646,7 @@ class OrderByParserTest extends TestCase
     {
         $northWindMetadata = NorthWindMetadata::Create();
         $configuration     = new ServiceConfiguration($northWindMetadata);
-        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
+        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL());
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
             $this->mockQueryProvider,

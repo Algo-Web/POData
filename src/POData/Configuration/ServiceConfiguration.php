@@ -106,7 +106,7 @@ class ServiceConfiguration implements IServiceConfiguration
         $this->maxExpandDepth          = PHP_INT_MAX;
         $this->maxResultsPerCollection = PHP_INT_MAX;
         $this->provider                = $metadataProvider;
-        $this->defaultResourceSetRight = EntitySetRights::NONE;
+        $this->defaultResourceSetRight = EntitySetRights::NONE();
         $this->defaultPageSize         = 0;
         $this->resourceRights          = [];
         $this->pageSizes               = [];
@@ -227,7 +227,7 @@ class ServiceConfiguration implements IServiceConfiguration
      *
      * @return EntitySetRights
      */
-    public function getEntitySetAccessRule(ResourceSet $resourceSet)
+    public function getEntitySetAccessRule(ResourceSet $resourceSet): EntitySetRights
     {
         if (!array_key_exists($resourceSet->getName(), $this->resourceRights)) {
             return $this->defaultResourceSetRight;
@@ -244,9 +244,9 @@ class ServiceConfiguration implements IServiceConfiguration
      *
      * @throws \InvalidArgumentException when the entity set rights are not known or the resource set is not known
      */
-    public function setEntitySetAccessRule($name, $rights)
+    public function setEntitySetAccessRule(string $name, EntitySetRights $rights): void
     {
-        if ($rights < EntitySetRights::NONE || $rights > EntitySetRights::ALL) {
+        if ($rights->getValue() < EntitySetRights::NONE || $rights->getValue() > EntitySetRights::ALL) {
             $msg = Messages::configurationRightsAreNotInRange('$rights', 'setEntitySetAccessRule');
             throw new \InvalidArgumentException($msg);
         }

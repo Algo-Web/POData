@@ -43,7 +43,7 @@ class SkipTokenParserTest extends TestCase
     {
         $northWindMetadata = NorthWindMetadata::Create();
         $configuration     = new ServiceConfiguration($northWindMetadata);
-        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
+        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL());
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
             $this->mockQueryProvider,
@@ -76,7 +76,7 @@ class SkipTokenParserTest extends TestCase
     {
         $northWindMetadata = NorthWindMetadata::Create();
         $configuration     = new ServiceConfiguration($northWindMetadata);
-        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
+        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL());
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
             $this->mockQueryProvider,
@@ -132,7 +132,7 @@ class SkipTokenParserTest extends TestCase
     {
         $northWindMetadata = NorthWindMetadata::Create();
         $configuration     = new ServiceConfiguration($northWindMetadata);
-        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
+        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL());
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
             $this->mockQueryProvider,
@@ -176,7 +176,7 @@ class SkipTokenParserTest extends TestCase
     {
         $northWindMetadata = NorthWindMetadata::Create();
         $configuration     = new ServiceConfiguration($northWindMetadata);
-        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
+        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL());
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
             $this->mockQueryProvider,
@@ -228,7 +228,7 @@ class SkipTokenParserTest extends TestCase
     {
         $northWindMetadata = NorthWindMetadata::Create();
         $configuration     = new ServiceConfiguration($northWindMetadata);
-        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
+        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL());
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
             $this->mockQueryProvider,
@@ -271,7 +271,7 @@ class SkipTokenParserTest extends TestCase
     {
         $northWindMetadata = NorthWindMetadata::Create();
         $configuration     = new ServiceConfiguration($northWindMetadata);
-        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
+        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL());
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
             $this->mockQueryProvider,
@@ -312,7 +312,7 @@ class SkipTokenParserTest extends TestCase
     {
         $northWindMetadata = NorthWindMetadata::Create();
         $configuration     = new ServiceConfiguration($northWindMetadata);
-        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
+        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL());
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
             $this->mockQueryProvider,
@@ -347,7 +347,7 @@ class SkipTokenParserTest extends TestCase
     {
         $northWindMetadata = NorthWindMetadata::Create();
         $configuration     = new ServiceConfiguration($northWindMetadata);
-        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
+        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL());
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
             $this->mockQueryProvider,
@@ -390,7 +390,7 @@ class SkipTokenParserTest extends TestCase
     {
         $northWindMetadata = NorthWindMetadata::Create();
         $configuration     = new ServiceConfiguration($northWindMetadata);
-        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
+        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL());
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
             $this->mockQueryProvider,
@@ -427,7 +427,7 @@ class SkipTokenParserTest extends TestCase
     {
         $northWindMetadata = NorthWindMetadata::Create();
         $configuration     = new ServiceConfiguration($northWindMetadata);
-        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
+        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL());
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
             $this->mockQueryProvider,
@@ -460,7 +460,7 @@ class SkipTokenParserTest extends TestCase
     {
         $northWindMetadata = NorthWindMetadata::Create();
         $configuration     = new ServiceConfiguration($northWindMetadata);
-        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL);
+        $configuration->setEntitySetAccessRule('*', EntitySetRights::ALL());
         $providersWrapper = new ProvidersWrapper(
             $northWindMetadata, //IMetadataProvider implementation
             $this->mockQueryProvider,

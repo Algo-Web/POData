@@ -37,7 +37,7 @@ class WordPressDataService extends BaseService
     public function initialize(IServiceConfiguration $config)
     {
         $config->setEntitySetPageSize('*', 5);
-        $config->setEntitySetAccessRule('*', EntitySetRights::ALL);
+        $config->setEntitySetAccessRule('*', EntitySetRights::ALL());
         $config->setAcceptCountRequests(true);
         $config->setAcceptProjectionRequests(true);
         $config->setMaxDataServiceVersion(ProtocolVersion::V3());
