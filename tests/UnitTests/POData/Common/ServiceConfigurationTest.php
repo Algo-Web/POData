@@ -33,6 +33,22 @@ class ServiceConfigurationTest extends TestCase
         $this->assertEquals(0, $foo->getEntitySetPageSize($resource));
     }
 
+    public function testEntitySetNegativePageSizeBlowsUpWithInvalidArgumentException()
+    {
+        $resource = m::mock(ResourceSet::class);
+        $resource->shouldReceive('getName')->andReturn('entity');
+
+        $meta = m::mock(IMetadataProvider::class);
+        $meta->shouldReceive('resolveResourceSet')->andReturn(true);
+
+        $foo = new ServiceConfiguration($meta);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The argument to the function setEntitySetPageSize should be non-negative, negative value \'-1\' passed');
+
+        $foo->setEntitySetPageSize('entity', -1);
+    }
+
     public function testValidateETagHeaderRoundTrip()
     {
         $meta = m::mock(IMetadataProvider::class);
