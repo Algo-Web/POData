@@ -52,23 +52,33 @@ class IncomingRequest implements IHTTPRequest
     private $queryOptionsCount;
 
     /**
+     * The raw query string.
+     *
+     * @var string|null;
+     */
+    private $queryString = null;
+
+    /**
      * Initialize a new instance of IHTTPRequest.
      *
      * @param HttpRequestMethod|null $method
      * @param array $queryOptions
      * @param array $queryOptionsCount
      * @param array $headers
+     * @param string|null $queryString
      */
     public function __construct(
         HTTPRequestMethod $method = null,
         array $queryOptions = [],
         array $queryOptionsCount = [],
-        array $headers = []
+        array $headers = [],
+        string $queryString = null
     ) {
         $this->method            = $method ?? new HTTPRequestMethod($_SERVER['REQUEST_METHOD']);
         $this->queryOptions      = $queryOptions;
         $this->queryOptionsCount = $queryOptionsCount;
         $this->headers           = $headers;
+        $this->queryString       = $queryString;
     }
 
     /**
@@ -177,11 +187,14 @@ class IncomingRequest implements IHTTPRequest
      */
     private function getQueryString(): string
     {
-        if (array_key_exists(ODataConstants::HTTPREQUEST_QUERY_STRING, $_SERVER)) {
-            return utf8_decode(trim($_SERVER[ODataConstants::HTTPREQUEST_QUERY_STRING]));
-        } else {
-            return '';
+        if (null === $this->queryString) {
+            if (array_key_exists(ODataConstants::HTTPREQUEST_QUERY_STRING, $_SERVER)) {
+                $this->queryString = utf8_decode(trim($_SERVER[ODataConstants::HTTPREQUEST_QUERY_STRING]));
+            } else {
+                $this->queryString = '';
+            }
         }
+        return $this->queryString;
     }
 
     /**
