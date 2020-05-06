@@ -54,7 +54,7 @@ class IncomingRequest implements IHTTPRequest
     /**
      * The raw query string.
      *
-     * @var string|null|bool;
+     * @var string|null;
      */
     private $queryString = null;
 
