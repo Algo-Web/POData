@@ -19,7 +19,7 @@ interface IServiceConfiguration
      *
      * @return int
      */
-    public function getMaxExpandCount();
+    public function getMaxExpandCount(): int;
 
     /**
      * Sets maximum number of segments to be expanded allowed in a request.
@@ -27,14 +27,14 @@ interface IServiceConfiguration
      * @param  int  $maxExpandCount Maximum number of segments to be expanded
      * @return void
      */
-    public function setMaxExpandCount($maxExpandCount);
+    public function setMaxExpandCount(int $maxExpandCount): void;
 
     /**
      * Gets the maximum number of segments in a single $expand path.
      *
      * @return int
      */
-    public function getMaxExpandDepth();
+    public function getMaxExpandDepth(): int;
 
     /**
      * Sets the maximum number of segments in a single $expand path.
@@ -42,7 +42,7 @@ interface IServiceConfiguration
      * @param  int  $maxExpandDepth Maximum number of segments in a single $expand path
      * @return void
      */
-    public function setMaxExpandDepth($maxExpandDepth);
+    public function setMaxExpandDepth(int $maxExpandDepth): void;
 
     /**
      * Gets maximum number of elements in each returned collection
@@ -50,7 +50,7 @@ interface IServiceConfiguration
      *
      * @return int
      */
-    public function getMaxResultsPerCollection();
+    public function getMaxResultsPerCollection(): int;
 
     /**
      * Sets maximum number of elements in each returned collection
@@ -59,14 +59,14 @@ interface IServiceConfiguration
      * @param  int  $maxResultPerCollection Maximum number of elements in returned collection
      * @return void
      */
-    public function setMaxResultsPerCollection($maxResultPerCollection);
+    public function setMaxResultsPerCollection(int $maxResultPerCollection): void;
 
     /**
      * Gets whether verbose errors should be used by default.
      *
      * @return bool
      */
-    public function getUseVerboseErrors();
+    public function getUseVerboseErrors(): bool;
 
     /**
      * Sets whether verbose errors should be used by default.
@@ -74,7 +74,7 @@ interface IServiceConfiguration
      * @param  bool $useVerboseError true to enable verbose error else false
      * @return void
      */
-    public function setUseVerboseErrors($useVerboseError);
+    public function setUseVerboseErrors(bool $useVerboseError): void;
 
     /**
      * gets the access rights on the specified resource set.
@@ -103,7 +103,7 @@ interface IServiceConfiguration
      *
      * @return int
      */
-    public function getEntitySetPageSize(ResourceSet $resourceSet);
+    public function getEntitySetPageSize(ResourceSet $resourceSet): int ;
 
     /**
      * Sets the maximum page size for an entity set resource.
@@ -117,7 +117,7 @@ interface IServiceConfiguration
      * @throws \InvalidArgumentException
      * @return void
      */
-    public function setEntitySetPageSize($name, $pageSize);
+    public function setEntitySetPageSize(string $name, int $pageSize): void;
 
     /**
      * Gets whether requests with the $count path segment or the $inlinecount query
@@ -125,7 +125,7 @@ interface IServiceConfiguration
      *
      * @return bool
      */
-    public function getAcceptCountRequests();
+    public function getAcceptCountRequests(): bool;
 
     /**
      * Sets whether requests with the $count path segment or the $inlinecount
@@ -134,14 +134,14 @@ interface IServiceConfiguration
      * @param  bool $acceptCountRequest true to accept count request, false to not
      * @return void
      */
-    public function setAcceptCountRequests($acceptCountRequest);
+    public function setAcceptCountRequests(bool $acceptCountRequest): void;
 
     /**
      * Gets whether projection requests ($select) should be accepted.
      *
      * @return bool
      */
-    public function getAcceptProjectionRequests();
+    public function getAcceptProjectionRequests(): bool;
 
     /**
      * Sets whether projection requests ($select) should be accepted.
@@ -149,14 +149,14 @@ interface IServiceConfiguration
      * @param  bool $acceptProjectionRequest true to accept projection request, false to not
      * @return void
      */
-    public function setAcceptProjectionRequests($acceptProjectionRequest);
+    public function setAcceptProjectionRequests(bool $acceptProjectionRequest): void;
 
     /**
      * Gets Maximum version of the response sent by server.
      *
      * @return Version
      */
-    public function getMaxDataServiceVersion();
+    public function getMaxDataServiceVersion(): Version;
 
     /**
      * Sets Maximum version of the response sent by server.
@@ -172,7 +172,7 @@ interface IServiceConfiguration
      * @param  bool $validate True if ETag needs to validated, false otherwise
      * @return void
      */
-    public function setValidateETagHeader($validate);
+    public function setValidateETagHeader(bool $validate): void;
 
     /**
      * Gets whether to validate the ETag or not.
@@ -183,5 +183,19 @@ interface IServiceConfiguration
      *              in the response even though the requested resource
      *              support ETag
      */
-    public function getValidateETagHeader();
+    public function getValidateETagHeader(): bool;
+
+    /**
+     * Gets the value to be used for line endings.
+     *
+     * @return string the value to append at the end of lines.
+     */
+    public function getLineEndings(): string;
+
+    /**
+     * Gets whether to format the output as human readable or single line.
+     *
+     * @return bool True if output should be formatted for human readability.
+     */
+    public function getPrettyOutput(): bool;
 }

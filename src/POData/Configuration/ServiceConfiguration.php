@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace POData\Configuration;
 
+use InvalidArgumentException;
 use POData\Common\InvalidOperationException;
 use POData\Common\Messages;
 use POData\Common\Version;
@@ -124,7 +125,7 @@ class ServiceConfiguration implements IServiceConfiguration
      *
      * @return int
      */
-    public function getMaxExpandCount()
+    public function getMaxExpandCount(): int
     {
         return $this->maxExpandCount;
     }
@@ -134,7 +135,7 @@ class ServiceConfiguration implements IServiceConfiguration
      *
      * @param int $maxExpandCount Maximum number of segments to be expanded
      */
-    public function setMaxExpandCount($maxExpandCount)
+    public function setMaxExpandCount(int $maxExpandCount): void
     {
         $this->maxExpandCount = $this->checkIntegerNonNegativeParameter(
             $maxExpandCount,
@@ -157,7 +158,7 @@ class ServiceConfiguration implements IServiceConfiguration
      *
      * @param int $maxExpandDepth Maximum number of segments in a single $expand path
      */
-    public function setMaxExpandDepth($maxExpandDepth): void
+    public function setMaxExpandDepth(int $maxExpandDepth): void
     {
         $this->maxExpandDepth = $this->checkIntegerNonNegativeParameter(
             $maxExpandDepth,
@@ -171,7 +172,7 @@ class ServiceConfiguration implements IServiceConfiguration
      *
      * @return int
      */
-    public function getMaxResultsPerCollection()
+    public function getMaxResultsPerCollection(): int
     {
         return $this->maxResultsPerCollection;
     }
@@ -185,7 +186,7 @@ class ServiceConfiguration implements IServiceConfiguration
      *
      * @throws InvalidOperationException
      */
-    public function setMaxResultsPerCollection($maxResultPerCollection)
+    public function setMaxResultsPerCollection(int $maxResultPerCollection): void
     {
         if ($this->isPageSizeDefined()) {
             throw new InvalidOperationException(
@@ -204,7 +205,7 @@ class ServiceConfiguration implements IServiceConfiguration
      *
      * @return bool
      */
-    public function getUseVerboseErrors()
+    public function getUseVerboseErrors(): bool
     {
         return $this->useVerboseErrors;
     }
@@ -214,7 +215,7 @@ class ServiceConfiguration implements IServiceConfiguration
      *
      * @param bool $useVerboseError true to enable verbose error else false
      */
-    public function setUseVerboseErrors($useVerboseError)
+    public function setUseVerboseErrors(bool $useVerboseError): void
     {
         $this->useVerboseErrors = $useVerboseError;
     }
@@ -242,20 +243,20 @@ class ServiceConfiguration implements IServiceConfiguration
      * @param string          $name   Name of resource set to set; '*' to indicate all
      * @param EntitySetRights $rights Rights to be granted to this resource
      *
-     * @throws \InvalidArgumentException when the entity set rights are not known or the resource set is not known
+     * @throws InvalidArgumentException when the entity set rights are not known or the resource set is not known
      */
     public function setEntitySetAccessRule(string $name, EntitySetRights $rights): void
     {
         if ($rights->getValue() < EntitySetRights::NONE || $rights->getValue() > EntitySetRights::ALL) {
             $msg = Messages::configurationRightsAreNotInRange('$rights', 'setEntitySetAccessRule');
-            throw new \InvalidArgumentException($msg);
+            throw new InvalidArgumentException($msg);
         }
 
         if (strcmp($name, '*') === 0) {
             $this->defaultResourceSetRight = $rights;
         } else {
             if (!$this->provider->resolveResourceSet($name)) {
-                throw new \InvalidArgumentException(
+                throw new InvalidArgumentException(
                     Messages::configurationResourceSetNameNotFound($name)
                 );
             }
@@ -271,10 +272,10 @@ class ServiceConfiguration implements IServiceConfiguration
      *
      * @return int
      */
-    public function getEntitySetPageSize(ResourceSet $resourceSet)
+    public function getEntitySetPageSize(ResourceSet $resourceSet): int
     {
         if (!array_key_exists($resourceSet->getName(), $this->pageSizes)) {
-            return $this->defaultPageSize;
+            return $this->defaultPageSize ?? 0; // TODO: defaultPageSize should never be null. it is inisalized in constructor. why is this requied?
         }
 
         return $this->pageSizes[$resourceSet->getName()];
@@ -287,9 +288,9 @@ class ServiceConfiguration implements IServiceConfiguration
      * @param int    $pageSize Page size for the entity set resource specified in name
      *
      * @throws InvalidOperationException
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
-    public function setEntitySetPageSize($name, $pageSize)
+    public function setEntitySetPageSize(string $name, int $pageSize): void
     {
         $checkPageSize = $this->checkIntegerNonNegativeParameter(
             $pageSize,
@@ -310,7 +311,7 @@ class ServiceConfiguration implements IServiceConfiguration
             $this->defaultPageSize = $checkPageSize;
         } else {
             if (!$this->provider->resolveResourceSet($name)) {
-                throw new \InvalidArgumentException(
+                throw new InvalidArgumentException(
                     Messages::configurationResourceSetNameNotFound($name)
                 );
             }
@@ -324,7 +325,7 @@ class ServiceConfiguration implements IServiceConfiguration
      *
      * @return bool
      */
-    public function getAcceptCountRequests()
+    public function getAcceptCountRequests(): bool
     {
         return $this->acceptCountRequest;
     }
@@ -336,7 +337,7 @@ class ServiceConfiguration implements IServiceConfiguration
      * @param bool $acceptCountRequest true to accept count request,
      *                                 false to not
      */
-    public function setAcceptCountRequests($acceptCountRequest)
+    public function setAcceptCountRequests(bool $acceptCountRequest): void
     {
         $this->acceptCountRequest = $acceptCountRequest;
     }
@@ -346,7 +347,7 @@ class ServiceConfiguration implements IServiceConfiguration
      *
      * @return bool
      */
-    public function getAcceptProjectionRequests()
+    public function getAcceptProjectionRequests(): bool
     {
         return $this->acceptProjectionRequest;
     }
@@ -357,7 +358,7 @@ class ServiceConfiguration implements IServiceConfiguration
      * @param bool $acceptProjectionRequest true to accept projection
      *                                      request, false to not
      */
-    public function setAcceptProjectionRequests($acceptProjectionRequest)
+    public function setAcceptProjectionRequests(bool $acceptProjectionRequest): void
     {
         $this->acceptProjectionRequest = $acceptProjectionRequest;
     }
@@ -367,7 +368,7 @@ class ServiceConfiguration implements IServiceConfiguration
      *
      * @return Version
      */
-    public function getMaxDataServiceVersion()
+    public function getMaxDataServiceVersion():Version
     {
         switch ($this->maxVersion) {
             case ProtocolVersion::V1():
@@ -387,7 +388,7 @@ class ServiceConfiguration implements IServiceConfiguration
      *
      * @param ProtocolVersion $version The version to set
      */
-    public function setMaxDataServiceVersion(ProtocolVersion $version)
+    public function setMaxDataServiceVersion(ProtocolVersion $version): void
     {
         $this->maxVersion = $version;
     }
@@ -397,7 +398,7 @@ class ServiceConfiguration implements IServiceConfiguration
      *
      * @param bool $validate True if ETag needs to validated, false otherwise
      */
-    public function setValidateETagHeader($validate)
+    public function setValidateETagHeader(bool $validate): void
     {
         $this->validateETagHeader = $validate;
     }
@@ -411,7 +412,7 @@ class ServiceConfiguration implements IServiceConfiguration
      *              in the response even though the requested resource
      *              support ETag
      */
-    public function getValidateETagHeader()
+    public function getValidateETagHeader(): bool
     {
         return $this->validateETagHeader;
     }
@@ -422,14 +423,14 @@ class ServiceConfiguration implements IServiceConfiguration
      * @param int    $value        The value of parameter to check
      * @param string $functionName The name of the function that receives above value
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      *
      * @return int
      */
     private function checkIntegerNonNegativeParameter(int $value, string $functionName): int
     {
         if ($value < 0) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 Messages::commonArgumentShouldBeNonNegative($value, $functionName)
             );
         }
@@ -445,5 +446,25 @@ class ServiceConfiguration implements IServiceConfiguration
     private function isPageSizeDefined()
     {
         return count($this->pageSizes) > 0 || $this->defaultPageSize > 0;
+    }
+
+    /**
+     * Gets the value to be used for line endings.
+     *
+     * @return string the value to append at the end of lines.
+     */
+    public function getLineEndings(): string
+    {
+        return PHP_EOL;
+    }
+
+    /**
+     * Gets whether to format the output as human readable or single line.
+     *
+     * @return bool True if output should be formatted for human readability.
+     */
+    public function getPrettyOutput(): bool
+    {
+        return true;
     }
 }
