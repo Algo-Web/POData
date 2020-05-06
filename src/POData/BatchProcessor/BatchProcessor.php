@@ -79,7 +79,7 @@ class BatchProcessor
             $response .= $splitter;
             $response .= $workingObject->getResponse() . "\r\n";
         }
-        $response .= trim($splitter) . "--\r\n";
+        $response .= trim($splitter) . '--' . $this->service->getConfiguration()->getLineEndings();
         return $response;
     }
 

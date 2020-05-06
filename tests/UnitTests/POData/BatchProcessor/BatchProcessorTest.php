@@ -14,6 +14,7 @@ use POData\Common\HttpStatus;
 use POData\Common\MimeTypes;
 use POData\Common\ODataConstants;
 use POData\Common\ODataException;
+use POData\Configuration\ServiceConfiguration;
 use POData\IService;
 use POData\OperationContext\IOperationContext;
 use POData\OperationContext\ServiceHost;
@@ -88,6 +89,8 @@ Host: host
 
         $host = m::mock(ServiceHost::class);
         $host->shouldReceive('getRequestContentType')->andReturn($contentLine)->atLeast(1);
+        $host->shouldReceive('getConfiguration')->andReturn(new ServiceConfiguration(null))->atLeast(1);
+
         $service = m::mock(BaseService::class);
         $service->shouldReceive('getHost')->andReturn($host)->once();
         $request = m::mock(RequestDescription::class);
@@ -222,6 +225,8 @@ Host: host
         $resp->shouldReceive('getResponse')->andReturn(PHP_EOL . 'response' . PHP_EOL);
 
         $service = m::mock(BaseService::class);
+        $service->shouldReceive('getConfiguration')->andReturn(new ServiceConfiguration(null))->atLeast(1);
+
         $request = m::mock(RequestDescription::class);
 
         $foo = new BatchProcessorDummy($service, $request);

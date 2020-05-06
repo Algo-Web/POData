@@ -14,6 +14,7 @@ use POData\Common\HttpStatus;
 use POData\Common\MimeTypes;
 use POData\Common\ODataConstants;
 use POData\Common\ODataException;
+use POData\Configuration\ServiceConfiguration;
 use POData\IService;
 use POData\OperationContext\IHTTPRequest;
 use POData\OperationContext\IOperationContext;
@@ -29,6 +30,8 @@ class ChangeSetParserTest extends TestCase
     public function testGetters()
     {
         $service = m::mock(BaseService::class);
+        $service->shouldReceive('getConfiguration')->andReturn(new ServiceConfiguration(null))->atLeast(1);
+
         $body    = 'body';
 
         $foo = new QueryParser($service, $body);
@@ -41,6 +44,8 @@ class ChangeSetParserTest extends TestCase
     public function testHandleData()
     {
         $service = m::mock(BaseService::class);
+        $service->shouldReceive('getConfiguration')->andReturn(new ServiceConfiguration(null))->atLeast(1);
+
         $body    = ' 
 Content-Type: multipart/mixed; boundary=changeset_77162fcd-b8da-41ac-a9f8-9357efbbd621 
 Content-Length: ###       
@@ -114,6 +119,8 @@ Content-Length: ###
     public function testHandleDataWithContentID()
     {
         $service = m::mock(BaseService::class);
+        $service->shouldReceive('getConfiguration')->andReturn(new ServiceConfiguration(null))->atLeast(1);
+
         $body    = ' 
 Content-Type: multipart/mixed; boundary=changeset_77162fcd-b8da-41ac-a9f8-9357efbbd621 
 Content-Length: ###       
@@ -189,6 +196,8 @@ Content-ID: 2
     public function testHandleDataWithMalformedHeaderLine()
     {
         $service = m::mock(BaseService::class);
+        $service->shouldReceive('getConfiguration')->andReturn(new ServiceConfiguration(null))->atLeast(1);
+
         $body    = ' 
 Content-Type: multipart/mixed; boundary=changeset_77162fcd-b8da-41ac-a9f8-9357efbbd621 
 Content-Length: ###       
@@ -226,7 +235,9 @@ Content-Length: ###
 
         $foo = m::mock(ChangeSetParser::class)->makePartial();
         $foo->shouldReceive('getData')->andReturn('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.', $bigPayload);
-
+        $service = m::mock(BaseService::class);
+        $service->shouldReceive('getConfiguration')->andReturn(new ServiceConfiguration(null))->atLeast(1);
+        $foo->shouldReceive('getService')->andReturn($service);
         $expected = 'how did we end up with more than 3 stages??';
         $actual   = null;
         try {
@@ -267,6 +278,11 @@ X-Swedish-Chef: bork bork bork!
 
 Stream II: ELECTRIC BOOGALOO--
 ';
+        $service = m::mock(BaseService::class);
+        $service->shouldReceive('getConfiguration')->andReturn(new ServiceConfiguration(null))->atLeast(1);
+
+
+        $foo->shouldReceive('getService')->andReturn($service);
 
         $actual = $foo->getResponse();
         $this->assertTrue(false !== stripos($actual, 'Content-Type: application/http'));
@@ -358,6 +374,7 @@ Stream II: ELECTRIC BOOGALOO--
     public function testProcessSubRequest()
     {
         $service = m::mock(BaseService::class);
+        $service->shouldReceive('getConfiguration')->andReturn(new ServiceConfiguration(null))->atLeast(1);
         $service->shouldReceive('setHost')->andReturnNull()->atLeast(1);
         $service->shouldReceive('handleRequest')->andReturnNull()->atLeast(1);
         $body    = 'foo';

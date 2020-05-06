@@ -128,6 +128,10 @@ class ServiceConfiguration implements IServiceConfiguration
         $this->maxVersion = ProtocolVersion::V3(); //We default to the highest version
 
         $this->validateETagHeader = true;
+        // basically display errors has a development value of on and a production value of off. so if not specified
+        // use that
+        $this->prettyPrint = in_array(strtolower(ini_get('display_errors')), array('1', 'on', 'true'));
+        $this->eol = PHP_EOL;
     }
 
     /**

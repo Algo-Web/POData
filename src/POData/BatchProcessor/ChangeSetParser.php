@@ -76,32 +76,43 @@ class ChangeSetParser implements IBatchParser
     public function getResponse()
     {
         $response = '';
-        $splitter = false === $this->changeSetBoundary ? '' : '--' . $this->changeSetBoundary . "\r\n";
+        $splitter = false === $this->changeSetBoundary ?
+            '' :
+            '--' . $this->changeSetBoundary . $this->getService()->getConfiguration()->getLineEndings();
         $raw      = $this->getRawRequests();
         foreach ($raw as $contentID => &$workingObject) {
             $headers = $workingObject->Response->getHeaders();
             $response .= $splitter;
 
-            $response .= 'Content-Type: application/http' . "\r\n";
-            $response .= 'Content-Transfer-Encoding: binary' . "\r\n";
-            $response .= "\r\n";
-            $response .= 'HTTP/1.1 ' . $headers['Status'] . "\r\n";
-            $response .= 'Content-ID: ' . $contentID . "\r\n";
+            $response .= 'Content-Type: application/http' . $this->getService()->getConfiguration()->getLineEndings();
+            $response .= 'Content-Transfer-Encoding: binary' . $this->getService()->getConfiguration()->getLineEndings();
+            $response .= $this->getService()->getConfiguration()->getLineEndings();
+            $response .= 'HTTP/1.1 ' . $headers['Status'] . $this->getService()->getConfiguration()->getLineEndings();
+            $response .= 'Content-ID: ' . $contentID . $this->getService()->getConfiguration()->getLineEndings();
 
             foreach ($headers as $headerName => $headerValue) {
                 if (null !== $headerValue) {
-                    $response .= $headerName . ': ' . $headerValue . "\r\n";
+                    $response .= $headerName . ': ' . $headerValue . $this->getService()->getConfiguration()->getLineEndings();
                 }
             }
-            $response .= "\r\n";
+            $response .= $this->getService()->getConfiguration()->getLineEndings();
             $response .= $workingObject->Response->getStream();
         }
         $response .= trim($splitter);
-        $response .= false === $this->changeSetBoundary ? "\r\n" : "--\r\n";
-        $response = 'Content-Length: ' . strlen($response) . "\r\n\r\n" . $response;
+        $response .= false === $this->changeSetBoundary ?
+            $this->getService()->getConfiguration()->getLineEndings() :
+            '--' . $this->getService()->getConfiguration()->getLineEndings();
+        $response = 'Content-Length: ' .
+            strlen($response) .
+            $this->getService()->getConfiguration()->getLineEndings() .
+            $this->getService()->getConfiguration()->getLineEndings() .
+            $response;
         $response = false === $this->changeSetBoundary ?
             $response :
-            'Content-Type: multipart/mixed; boundary=' . $this->changeSetBoundary . "\r\n" . $response;
+            'Content-Type: multipart/mixed; boundary=' .
+            $this->changeSetBoundary .
+            $this->getService()->getConfiguration()->getLineEndings() .
+            $response;
         return $response;
     }
 
@@ -110,7 +121,7 @@ class ChangeSetParser implements IBatchParser
      */
     public function handleData()
     {
-        $firstLine               = trim(strtok($this->getData(), "\n"));
+        $firstLine               = trim(strtok($this->getData(), $this->getService()->getConfiguration()->getLineEndings()));// with trim matches both crlf and lf
         $this->changeSetBoundary = substr($firstLine, 40);
 
         $prefix  = 'HTTP_';
@@ -125,7 +136,7 @@ class ChangeSetParser implements IBatchParser
             $stage               = 0;
             $gotRequestPathParts = false;
             $match               = trim($match);
-            $lines               = explode(PHP_EOL, $match);
+            $lines               = explode($this->getService()->getConfiguration()->getLineEndings(), $match);
 
             $requestPathParts = [];
             $serverParts      = [];
