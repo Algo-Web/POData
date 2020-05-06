@@ -52,14 +52,23 @@ class IncomingRequest implements IHTTPRequest
     private $queryOptionsCount;
 
     /**
-     * Initialize a new instance of IncomingWebRequestContext.
+     * Initialize a new instance of IHTTPRequest.
+     *
+     * @param HttpRequestMethod|null $method
+     * @param array $queryOptions
+     * @param array $queryOptionsCount
+     * @param array $headers
      */
-    public function __construct()
-    {
-        $this->method            = new HTTPRequestMethod($_SERVER['REQUEST_METHOD']);
-        $this->queryOptions      = [];
-        $this->queryOptionsCount = [];
-        $this->headers           = [];
+    public function __construct(
+        HTTPRequestMethod $method = null,
+        array $queryOptions = [],
+        array $queryOptionsCount = [],
+        array $headers = []
+    ) {
+        $this->method            = $method ?? new HTTPRequestMethod($_SERVER['REQUEST_METHOD']);
+        $this->queryOptions      = $queryOptions;
+        $this->queryOptionsCount = $queryOptionsCount;
+        $this->headers           = $headers;
     }
 
     /**
