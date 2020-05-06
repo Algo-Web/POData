@@ -406,7 +406,7 @@ class SerialiserWriteComplexTest extends SerialiserTestBase
     private function setUpDataServiceDeps($request)
     {
         $op   = new OperationContextAdapter($request);
-        $host = new ServiceHost($op, $request);
+        $host = new ServiceHost($op);
 
         $meta  = NorthWindMetadata::Create();
         $query = m::mock(IQueryProvider::class);

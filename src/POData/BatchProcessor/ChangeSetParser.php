@@ -237,7 +237,7 @@ class ChangeSetParser implements IBatchParser
     protected function processSubRequest(&$workingObject)
     {
         $newContext = new IlluminateOperationContext($workingObject->Request);
-        $newHost    = new ServiceHost($newContext, $workingObject->Request);
+        $newHost    = new ServiceHost($newContext);
 
         $this->getService()->setHost($newHost);
         $this->getService()->handleRequest();

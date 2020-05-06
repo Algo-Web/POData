@@ -60,7 +60,7 @@ class ServiceHostTestFake extends ServiceHost
             $request->headers->add([ODataConstants::HTTPREQUEST_HEADER_ACCEPT => $this->hostInfo['RequestAccept']]);
         }
 
-        parent::__construct(new IlluminateOperationContext($request), $request);
+        parent::__construct(new IlluminateOperationContext($request));
 
         if (array_key_exists('AbsoluteServiceUri', $this->hostInfo)) {
             $this->setServiceUri($this->hostInfo['AbsoluteServiceUri']->getUrlAsString());

@@ -85,12 +85,10 @@ class ServiceHost
      *
      * Currently we are forcing the input request to be of type
      * \Illuminate\Http\Request but in the future we could make this more flexible if needed
-     * @param Request $incomingRequest
-     *
      * @throws ODataException
      * @throws UrlFormatException
      */
-    public function __construct(IOperationContext $context, Request $incomingRequest)
+    public function __construct(IOperationContext $context)
     {
         $this->operationContext = $context;
 

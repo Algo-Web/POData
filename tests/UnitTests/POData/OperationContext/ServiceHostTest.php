@@ -152,7 +152,7 @@ class ServiceHostTest extends TestCase
 
         $context = new IlluminateOperationContext($request);
 
-        $host = new ServiceHost($context, $request);
+        $host = new ServiceHost($context);
 
         try {
             $host->validateQueryParameters();
@@ -175,7 +175,7 @@ class ServiceHostTest extends TestCase
 
         $context = new IlluminateOperationContext($request);
 
-        $host = new ServiceHost($context, $request);
+        $host = new ServiceHost($context);
 
         try {
             $host->validateQueryParameters();
@@ -194,7 +194,7 @@ class ServiceHostTest extends TestCase
 
         $context = new IlluminateOperationContext($request);
 
-        $host = new ServiceHost($context, $request);
+        $host = new ServiceHost($context);
 
         $expected = 'etag';
         $host->setResponseETag('etag');
@@ -214,7 +214,7 @@ class ServiceHostTest extends TestCase
 
         $context = new IlluminateOperationContext($request);
 
-        $host = new ServiceHost($context, $request);
+        $host = new ServiceHost($context);
 
         try {
             $host->setResponseStatusCode(600);
@@ -237,7 +237,7 @@ class ServiceHostTest extends TestCase
 
         $context = new IlluminateOperationContext($request);
 
-        $host = new ServiceHost($context, $request);
+        $host = new ServiceHost($context);
 
         try {
             $host->setResponseStatusCode(99);
@@ -257,7 +257,7 @@ class ServiceHostTest extends TestCase
 
         $context = new IlluminateOperationContext($request);
 
-        $host = new ServiceHost($context, $request);
+        $host = new ServiceHost($context);
 
         $host->addResponseHeader('STOP!', 'Hammer time!');
         $result = $host->getResponseHeaders();
@@ -274,7 +274,7 @@ class ServiceHostTest extends TestCase
 
         $context = new IlluminateOperationContext($request);
 
-        $host = new ServiceHost($context, $request);
+        $host = new ServiceHost($context);
         $host->setResponseStatusDescription('OK');
         $result = $host->getResponseHeaders();
         $this->assertTrue(isset($result['StatusDesc']));
@@ -291,7 +291,7 @@ class ServiceHostTest extends TestCase
         $context = new IlluminateOperationContext($request);
         $stream  = 'stream';
 
-        $host = new ServiceHost($context, $request);
+        $host = new ServiceHost($context);
         $host->setResponseStream($stream);
         $actual = $context->outgoingResponse()->getStream();
         $this->assertEquals($stream, $actual);
@@ -307,7 +307,7 @@ class ServiceHostTest extends TestCase
         $context  = new IlluminateOperationContext($request);
         $location = 'location';
 
-        $host = new ServiceHost($context, $request);
+        $host = new ServiceHost($context);
         $host->setResponseLocation($location);
         $result = $host->getResponseHeaders();
         $this->assertTrue(isset($result['Location']));
@@ -327,7 +327,7 @@ class ServiceHostTest extends TestCase
         $context = new IlluminateOperationContext($request);
 
         try {
-            $host = new ServiceHost($context, $request);
+            $host = new ServiceHost($context);
         } catch (\Exception $e) {
             $actual = $e->getMessage();
         }
@@ -347,7 +347,7 @@ class ServiceHostTest extends TestCase
 
         $context = new IlluminateOperationContext($request);
 
-        $host = new ServiceHost($context, $request);
+        $host = new ServiceHost($context);
 
         try {
             $host->setResponseContentLength('abc');
@@ -367,7 +367,7 @@ class ServiceHostTest extends TestCase
 
         $context = new IlluminateOperationContext($request);
 
-        $host = new ServiceHost($context, $request);
+        $host = new ServiceHost($context);
         $host->setResponseContentLength('42');
         $result = $host->getResponseHeaders();
         $this->assertTrue(isset($result['Content-Length']));
@@ -386,7 +386,7 @@ class ServiceHostTest extends TestCase
 
         $context = new IlluminateOperationContext($request);
 
-        $host   = new ServiceHost($context, $request);
+        $host   = new ServiceHost($context);
         $actual = $host->getRequestContentType();
         $this->assertEquals($expected, $actual);
     }
@@ -404,7 +404,7 @@ class ServiceHostTest extends TestCase
 
         $context = new IlluminateOperationContext($request);
 
-        $host   = new ServiceHost($context, $request);
+        $host   = new ServiceHost($context);
         $actual = $host->getRequestAcceptCharSet();
         $this->assertEquals($expected, $actual);
     }
@@ -420,7 +420,7 @@ class ServiceHostTest extends TestCase
 
         $context = new IlluminateOperationContext($request);
 
-        $host   = new ServiceHost($context, $request);
+        $host   = new ServiceHost($context);
         $actual = $host->getAbsoluteRequestUriAsString();
         $this->assertEquals($expected, $actual);
     }
@@ -453,7 +453,7 @@ class ServiceHostTest extends TestCase
 
         $context = new IlluminateOperationContext($request);
 
-        $host   = new ServiceHost($context, $request);
+        $host   = new ServiceHost($context);
         $actual = $host->getAbsoluteServiceUriAsString();
         $this->assertEquals($expected, $actual);
     }
@@ -470,7 +470,7 @@ class ServiceHostTest extends TestCase
 
         $context = new IlluminateOperationContext($request);
 
-        $host = new ServiceHost($context, $request);
+        $host = new ServiceHost($context);
 
         try {
             $host->validateQueryParameters();
@@ -494,7 +494,7 @@ class ServiceHostTest extends TestCase
 
         $context = new IlluminateOperationContext($request);
 
-        $host = new ServiceHost($context, $request);
+        $host = new ServiceHost($context);
 
         try {
             $host->validateQueryParameters();
@@ -517,7 +517,7 @@ class ServiceHostTest extends TestCase
 
         $context = new IlluminateOperationContext($request);
 
-        $host = new ServiceHost($context, $request);
+        $host = new ServiceHost($context);
 
         try {
             $host->validateQueryParameters();
