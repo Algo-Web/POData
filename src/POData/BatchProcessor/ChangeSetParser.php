@@ -6,8 +6,10 @@ namespace POData\BatchProcessor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use POData\BaseService;
+use POData\OperationContext\HTTPRequestMethod;
 use POData\OperationContext\ServiceHost;
 use POData\OperationContext\Web\Illuminate\IlluminateOperationContext;
+use POData\OperationContext\Web\IncomingRequest;
 
 /**
  * Class ChangeSetParser.
@@ -198,7 +200,13 @@ class ChangeSetParser implements IBatchParser
                 'RequestURL' => $requestPathParts[1],
                 'ServerParams' => $serverParts,
                 'Content' => $content,
-                'Request' => null,
+                'Request' => new IncomingRequest(
+                    new HTTPRequestMethod($requestPathParts[0]),
+                    [],
+                    [],
+                    $serverParts,
+                    null
+                ),
                 'Response' => null
             ];
         }

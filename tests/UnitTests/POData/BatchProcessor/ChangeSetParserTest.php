@@ -16,6 +16,7 @@ use POData\Common\MimeTypes;
 use POData\Common\ODataConstants;
 use POData\Common\ODataException;
 use POData\IService;
+use POData\OperationContext\IHTTPRequest;
 use POData\OperationContext\IOperationContext;
 use POData\OperationContext\ServiceHost;
 use POData\OperationContext\Web\OutgoingResponse;
@@ -100,6 +101,12 @@ Content-Length: ###
         $this->assertEquals(2, count($result));
         $this->assertTrue(array_key_exists(-1, $result));
         $this->assertTrue(array_key_exists(-2, $result));
+        $this->assertTrue($result[-1]->Request instanceof IHTTPRequest);
+        $this->assertTrue($result[-2]->Request instanceof IHTTPRequest);
+        // For moment, confirming that Request values are instances of IHTTPRequest is enough, so we can null them out
+        // before proceeding to equality check
+        $result[-1]->Request = null;
+        $result[-2]->Request = null;
         $this->assertEquals($first, $result[-1]);
         $this->assertEquals($second, $result[-2]);
     }
@@ -169,6 +176,12 @@ Content-ID: 2
         $this->assertEquals(2, count($result));
         $this->assertTrue(array_key_exists(-1, $result));
         $this->assertTrue(array_key_exists(2, $result));
+        $this->assertTrue($result[-1]->Request instanceof IHTTPRequest);
+        $this->assertTrue($result[2]->Request instanceof IHTTPRequest);
+        // For moment, confirming that Request values are instances of IHTTPRequest is enough, so we can null them out
+        // before proceeding to equality check
+        $result[-1]->Request = null;
+        $result[2]->Request = null;
         $this->assertEquals($first, $result[-1]);
         $this->assertEquals($second, $result[2]);
     }
