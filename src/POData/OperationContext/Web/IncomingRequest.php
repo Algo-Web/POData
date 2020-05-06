@@ -26,7 +26,7 @@ class IncomingRequest implements IHTTPRequest
     /**
      * The incoming url in raw format.
      *
-     * @var string
+     * @var string|null
      */
     private $rawUrl = null;
 
@@ -74,6 +74,7 @@ class IncomingRequest implements IHTTPRequest
      * @param array $headers
      * @param string|null $queryString
      * @param string|null $rawInput
+     * @param string|null $rawUrl
      */
     public function __construct(
         HTTPRequestMethod $method = null,
@@ -81,7 +82,8 @@ class IncomingRequest implements IHTTPRequest
         array $queryOptionsCount = [],
         array $headers = [],
         string $queryString = null,
-        string $rawInput = null
+        string $rawInput = null,
+        string $rawUrl = null
     ) {
         $this->method            = $method ?? new HTTPRequestMethod($_SERVER['REQUEST_METHOD']);
         $this->queryOptions      = $queryOptions;
@@ -89,6 +91,7 @@ class IncomingRequest implements IHTTPRequest
         $this->headers           = $headers;
         $this->queryString       = $queryString;
         $this->rawInput          = $rawInput;
+        $this->rawUrl            = $rawUrl;
     }
 
     /**
