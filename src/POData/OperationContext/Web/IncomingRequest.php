@@ -54,9 +54,16 @@ class IncomingRequest implements IHTTPRequest
     /**
      * The raw query string.
      *
-     * @var string|null;
+     * @var string|null|bool;
      */
     private $queryString = null;
+
+    /**
+     * The raw input.
+     *
+     * @var string|null;
+     */
+    private $rawInput = null;
 
     /**
      * Initialize a new instance of IHTTPRequest.
@@ -66,19 +73,22 @@ class IncomingRequest implements IHTTPRequest
      * @param array $queryOptionsCount
      * @param array $headers
      * @param string|null $queryString
+     * @param string|null $rawInput
      */
     public function __construct(
         HTTPRequestMethod $method = null,
         array $queryOptions = [],
         array $queryOptionsCount = [],
         array $headers = [],
-        string $queryString = null
+        string $queryString = null,
+        string $rawInput = null
     ) {
         $this->method            = $method ?? new HTTPRequestMethod($_SERVER['REQUEST_METHOD']);
         $this->queryOptions      = $queryOptions;
         $this->queryOptionsCount = $queryOptionsCount;
         $this->headers           = $headers;
         $this->queryString       = $queryString;
+        $this->rawInput          = $rawInput;
     }
 
     /**
@@ -239,10 +249,13 @@ class IncomingRequest implements IHTTPRequest
     }
 
     /**
-     * @return false|mixed|string|null
+     * @return string|null
      */
-    public function getAllInput()
+    public function getAllInput(): ?string
     {
-        return file_get_contents('php://input');
+        if (null === $this->rawInput) {
+            $this->rawInput = file_get_contents('php://input');
+        }
+        return $this->rawInput;
     }
 }
