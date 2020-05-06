@@ -19,6 +19,7 @@ use POData\IService;
 use POData\OperationContext\IHTTPRequest;
 use POData\OperationContext\IOperationContext;
 use POData\OperationContext\ServiceHost;
+use POData\OperationContext\Web\IncomingRequest;
 use POData\OperationContext\Web\OutgoingResponse;
 use POData\UriProcessor\RequestDescription;
 use UnitTests\POData\BatchProcessor\ChangeSetParserDummy;
@@ -361,9 +362,9 @@ Stream II: ELECTRIC BOOGALOO--
         $service->shouldReceive('setHost')->andReturnNull()->atLeast(1);
         $service->shouldReceive('handleRequest')->andReturnNull()->atLeast(1);
         $body    = 'foo';
-        $request = m::mock(Request::class);
+        $request = m::mock(IncomingRequest::class);
         $request->shouldReceive('getMethod')->andReturn('POST');
-        $request->shouldReceive('fullUrl')->andReturn('http://localhost/service.svc/Customers');
+        $request->shouldReceive('getRawUrl')->andReturn('http://localhost/service.svc/Customers');
 
         $first = (object) [
             'RequestVerb' => 'POST',

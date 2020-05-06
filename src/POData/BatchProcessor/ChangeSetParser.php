@@ -7,8 +7,8 @@ use Illuminate\Support\Str;
 use POData\BaseService;
 use POData\OperationContext\HTTPRequestMethod;
 use POData\OperationContext\ServiceHost;
-use POData\OperationContext\Web\Illuminate\IlluminateOperationContext;
 use POData\OperationContext\Web\IncomingRequest;
+use POData\OperationContext\Web\WebOperationContext;
 
 /**
  * Class ChangeSetParser.
@@ -236,7 +236,7 @@ class ChangeSetParser implements IBatchParser
      */
     protected function processSubRequest(&$workingObject)
     {
-        $newContext = new IlluminateOperationContext($workingObject->Request);
+        $newContext = new WebOperationContext($workingObject->Request);
         $newHost    = new ServiceHost($newContext);
 
         $this->getService()->setHost($newHost);
