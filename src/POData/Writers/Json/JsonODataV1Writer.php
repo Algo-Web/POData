@@ -8,6 +8,7 @@ use POData\Common\MimeTypes;
 use POData\Common\ODataConstants;
 use POData\Common\ODataException;
 use POData\Common\Version;
+use POData\Configuration\ServiceConfiguration;
 use POData\ObjectModel\ODataBagContent;
 use POData\ObjectModel\ODataCategory;
 use POData\ObjectModel\ODataEntry;
@@ -35,9 +36,9 @@ class JsonODataV1Writer implements IODataWriter
     /**
      * Constructs and initializes the Json output writer.
      */
-    public function __construct()
+    public function __construct(string $eol, bool $prettyPrint)
     {
-        $this->writer = new JsonWriter('');
+        $this->writer = new JsonWriter('', $eol, $prettyPrint);
     }
 
     /**
@@ -423,9 +424,9 @@ class JsonODataV1Writer implements IODataWriter
      * @throws \Exception
      * @return string
      */
-    public static function serializeException(ODataException $exception)
+    public static function serializeException(ODataException $exception, ServiceConfiguration $config)
     {
-        $writer = new JsonWriter('');
+        $writer = new JsonWriter('', $config->getLineEndings(), $config->getPrettyOutput());
         // Wrapper for error.
         $writer
             ->startObjectScope()

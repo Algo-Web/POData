@@ -40,7 +40,7 @@ class RequestDescriptionJsonTest extends TestCase
 }';
         $payload = $this->generateODataEntry();
 
-        $jsonWriter = new JsonODataV1Writer();
+        $jsonWriter = new JsonODataV1Writer(PHP_EOL, true);
         $actual     = $jsonWriter->write($payload)->getOutput();
         $this->assertJsonStringEqualsJsonString($expected, $actual);
     }
@@ -56,7 +56,7 @@ class RequestDescriptionJsonTest extends TestCase
 }';
         $payload = $this->generateODataEntry();
 
-        $jsonWriter = new JsonODataV2Writer();
+        $jsonWriter = new JsonODataV2Writer(PHP_EOL, true);
         $actual     = $jsonWriter->write($payload)->getOutput();
         $this->assertJsonStringEqualsJsonString($expected, $actual);
     }
@@ -68,7 +68,7 @@ class RequestDescriptionJsonTest extends TestCase
 }';
         $payload = $this->generateODataEntry();
 
-        $jsonWriter = new JsonLightODataWriter(JsonLightMetadataLevel::FULL(), 'http://localhost/odata.svc');
+        $jsonWriter = new JsonLightODataWriter(PHP_EOL, true, JsonLightMetadataLevel::FULL(), 'http://localhost/odata.svc');
         $actual     = $jsonWriter->write($payload)->getOutput();
         $this->assertJsonStringEqualsJsonString($expected, $actual);
     }
@@ -80,7 +80,7 @@ class RequestDescriptionJsonTest extends TestCase
 }';
         $payload = $this->generateODataEntry();
 
-        $jsonWriter = new JsonLightODataWriter(JsonLightMetadataLevel::MINIMAL(), 'http://localhost/odata.svc');
+        $jsonWriter = new JsonLightODataWriter(PHP_EOL, true, JsonLightMetadataLevel::MINIMAL(), 'http://localhost/odata.svc');
         $actual     = $jsonWriter->write($payload)->getOutput();
         $this->assertJsonStringEqualsJsonString($expected, $actual);
     }
@@ -92,7 +92,7 @@ class RequestDescriptionJsonTest extends TestCase
 }';
         $payload = $this->generateODataEntry();
 
-        $jsonWriter = new JsonLightODataWriter(JsonLightMetadataLevel::NONE(), 'http://localhost/odata.svc');
+        $jsonWriter = new JsonLightODataWriter(PHP_EOL, true, JsonLightMetadataLevel::NONE(), 'http://localhost/odata.svc');
         $actual     = $jsonWriter->write($payload)->getOutput();
         $this->assertJsonStringEqualsJsonString($expected, $actual);
     }

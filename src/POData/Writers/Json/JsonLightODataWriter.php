@@ -41,14 +41,14 @@ class JsonLightODataWriter extends JsonODataV2Writer
      *
      * @throws \Exception
      */
-    public function __construct(JsonLightMetadataLevel $metadataLevel, $absoluteServiceUri)
+    public function __construct(string $eol, bool $prettyPrint, JsonLightMetadataLevel $metadataLevel = null, $absoluteServiceUri = '')
     {
         if (strlen($absoluteServiceUri) == 0) {
             throw new \Exception('absoluteServiceUri must not be empty or null');
         }
         $this->baseUri = $absoluteServiceUri;
 
-        $this->writer        = new JsonWriter('');
+        $this->writer        = new JsonWriter('', $eol, $prettyPrint);
         $this->urlKey        = ODataConstants::JSON_URL_STRING;
         $this->dataArrayName = ODataConstants::JSON_LIGHT_VALUE_NAME;
         $this->rowCountName  = ODataConstants::JSON_LIGHT_ROWCOUNT_STRING;

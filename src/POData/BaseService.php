@@ -399,17 +399,54 @@ abstract class BaseService implements IRequestHandler, IService
         $serviceURI     = $this->getHost()->getAbsoluteServiceUri()->getUrlAsString();
 
         //We always register the v1 stuff
-        $registry->register(new JsonODataV1Writer());
-        $registry->register(new AtomODataWriter($serviceURI));
+        $registry->register(
+            new JsonODataV1Writer(
+                $this->getConfiguration()->getLineEndings(),
+                $this->getConfiguration()->getPrettyOutput()
+            )
+        );
+        $registry->register(
+            new AtomODataWriter(
+                $this->getConfiguration()->getLineEndings(),
+                $this->getConfiguration()->getPrettyOutput(),
+                $serviceURI
+            )
+        );
 
         if (-1 < $serviceVersion->compare(Version::v2())) {
-            $registry->register(new JsonODataV2Writer());
+            $registry->register(
+                new JsonODataV2Writer(
+                    $this->getConfiguration()->getLineEndings(),
+                    $this->getConfiguration()->getPrettyOutput()
+                )
+            );
         }
 
         if (-1 < $serviceVersion->compare(Version::v3())) {
-            $registry->register(new JsonLightODataWriter(JsonLightMetadataLevel::NONE(), $serviceURI));
-            $registry->register(new JsonLightODataWriter(JsonLightMetadataLevel::MINIMAL(), $serviceURI));
-            $registry->register(new JsonLightODataWriter(JsonLightMetadataLevel::FULL(), $serviceURI));
+            $registry->register(
+                new JsonLightODataWriter(
+                    $this->getConfiguration()->getLineEndings(),
+                    $this->getConfiguration()->getPrettyOutput(),
+                    JsonLightMetadataLevel::NONE(),
+                    $serviceURI
+                )
+            );
+            $registry->register(
+                new JsonLightODataWriter(
+                    $this->getConfiguration()->getLineEndings(),
+                    $this->getConfiguration()->getPrettyOutput(),
+                    JsonLightMetadataLevel::MINIMAL(),
+                    $serviceURI
+                )
+            );
+            $registry->register(
+                new JsonLightODataWriter(
+                    $this->getConfiguration()->getLineEndings(),
+                    $this->getConfiguration()->getPrettyOutput(),
+                    JsonLightMetadataLevel::FULL(),
+                    $serviceURI
+                )
+            );
         }
     }
 

@@ -61,7 +61,7 @@ class ExecutePostTest extends TestCase
         $host->shouldReceive('getQueryStringItem')->andReturn(null);
         $host->shouldReceive('getRequestContentType')->andReturn(ODataConstants::FORMAT_ATOM)->atLeast(2);
 
-        $writer                          = new AtomODataWriter($baseUrl->getUrlAsString());
+        $writer                          = new AtomODataWriter(PHP_EOL, true, $baseUrl->getUrlAsString());
         $requestPayload                  = new ODataEntry();
         $requestPayload->type            = new ODataCategory('Customer');
         $requestPayload->propertyContent = new ODataPropertyContent();

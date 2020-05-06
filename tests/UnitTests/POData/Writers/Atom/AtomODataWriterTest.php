@@ -10,6 +10,7 @@ use POData\Common\MimeTypes;
 use POData\Common\ODataConstants;
 use POData\Common\ODataException;
 use POData\Common\Version;
+use POData\Configuration\ServiceConfiguration;
 use POData\ObjectModel\ODataBagContent;
 use POData\ObjectModel\ODataCategory;
 use POData\ObjectModel\ODataEntry;
@@ -62,7 +63,7 @@ class AtomODataWriterTest extends TestCase
         $url      = new ODataURL();
         $url->url = 'http://www.odata.org/developers/protocols/atom-format';
 
-        $writer = new AtomODataWriter('http://localhost/NorthWind.svc');
+        $writer = new AtomODataWriter(PHP_EOL, true, 'http://localhost/NorthWind.svc');
         $result = $writer->write($url);
         $this->assertSame($writer, $result);
 
@@ -96,7 +97,7 @@ class AtomODataWriterTest extends TestCase
         $urls->nextPageLink = $nextPageLink;
         $urls->count        = 10;
 
-        $writer = new AtomODataWriter('http://localhost/NorthWind.svc');
+        $writer = new AtomODataWriter(PHP_EOL, true, 'http://localhost/NorthWind.svc');
         $result = $writer->write($urls);
         $this->assertSame($writer, $result);
 
@@ -242,7 +243,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
             $entry1,
         ];
 
-        $writer = new AtomODataWriter('http://localhost/NorthWind.svc');
+        $writer = new AtomODataWriter(PHP_EOL, true, 'http://localhost/NorthWind.svc');
         $result = $writer->write($feed);
         $this->assertSame($writer, $result);
 
@@ -341,7 +342,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $entry1->propertyContent = $propCont;
         $entry1->type            = new ODataCategory('');
 
-        $writer = new AtomODataWriter('http://localhost/NorthWind.svc');
+        $writer = new AtomODataWriter(PHP_EOL, true, 'http://localhost/NorthWind.svc');
         $result = $writer->write($entry1);
         $this->assertSame($writer, $result);
 
@@ -627,7 +628,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $entry1->propertyContent = $propCont;
         $entry1->type            = new ODataCategory('');
 
-        $writer = new AtomODataWriter('http://localhost/NorthWind.svc');
+        $writer = new AtomODataWriter(PHP_EOL, true, 'http://localhost/NorthWind.svc');
         $result = $writer->write($entry1);
         $this->assertSame($writer, $result);
 
@@ -830,7 +831,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $entry->propertyContent = $propCont;
         $entry->type            = new ODataCategory('');
 
-        $writer = new AtomODataWriter('http://localhost/NorthWind.svc');
+        $writer = new AtomODataWriter(PHP_EOL, true, 'http://localhost/NorthWind.svc');
         $result = $writer->write($entry);
         $this->assertSame($writer, $result);
 
@@ -907,7 +908,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $propCont             = new ODataPropertyContent();
         $propCont->properties = [$prop];
 
-        $writer = new AtomODataWriter('http://localhost/NorthWind.svc');
+        $writer = new AtomODataWriter(PHP_EOL, true, 'http://localhost/NorthWind.svc');
         $result = $writer->write($propCont);
         $this->assertSame($writer, $result);
 
@@ -951,7 +952,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">56</d:C
         $propCont             = new ODataPropertyContent();
         $propCont->properties = [$prop];
 
-        $writer = new AtomODataWriter('http://localhost/NorthWind.svc');
+        $writer = new AtomODataWriter(PHP_EOL, true, 'http://localhost/NorthWind.svc');
         $result = $writer->write($propCont);
         $this->assertSame($writer, $result);
 
@@ -1062,7 +1063,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $entry->type            = new ODataCategory('SampleModel.Customer');
         $entry->propertyContent = $entryPropContent;
 
-        $writer = new AtomODataWriter('http://localhost/NorthWind.svc');
+        $writer = new AtomODataWriter(PHP_EOL, true, 'http://localhost/NorthWind.svc');
         $result = $writer->write($entry);
         $this->assertSame($writer, $result);
 
@@ -1129,7 +1130,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $propCont             = new ODataPropertyContent();
         $propCont->properties = [$odataProperty];
 
-        $writer = new AtomODataWriter('http://localhost/NorthWind.svc');
+        $writer = new AtomODataWriter(PHP_EOL, true, 'http://localhost/NorthWind.svc');
         $result = $writer->write($propCont);
         $this->assertSame($writer, $result);
 
@@ -1160,7 +1161,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 
         $fakeBaseURL = 'http://some/place/some/where/' . uniqid();
 
-        $writer = new AtomODataWriter($fakeBaseURL);
+        $writer = new AtomODataWriter(PHP_EOL, true, $fakeBaseURL);
         $actual = $writer->writeServiceDocument($this->mockProvider)->getOutput();
 
         $expected = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<service xml:base=\"{$fakeBaseURL}/\" xmlns:atom=\"http://www.w3.org/2005/Atom\" xmlns=\"http://www.w3.org/2007/app\">\n <workspace>\n  <atom:title>Default</atom:title>\n </workspace>\n</service>\n";
@@ -1187,7 +1188,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 
         $fakeBaseURL = 'http://some/place/some/where/' . uniqid();
 
-        $writer = new AtomODataWriter($fakeBaseURL);
+        $writer = new AtomODataWriter(PHP_EOL, true, $fakeBaseURL);
         $actual = $writer->writeServiceDocument($this->mockProvider)->getOutput();
 
         $expected = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<service xml:base=\"{$fakeBaseURL}/\" xmlns:atom=\"http://www.w3.org/2005/Atom\" xmlns=\"http://www.w3.org/2007/app\">\n <workspace>\n  <atom:title>Default</atom:title>\n  <collection href=\"Name 1\">\n   <atom:title>Name 1</atom:title>\n  </collection>\n  <collection href=\"XML escaped stuff &quot; ' &lt;&gt; &amp; ?\">\n   <atom:title>XML escaped stuff &quot; ' &lt;&gt; &amp; ?</atom:title>\n  </collection>\n </workspace>\n</service>\n";
@@ -1204,7 +1205,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
      */
     public function testCanHandle($id, $version, $contentType, $expected)
     {
-        $writer = new AtomODataWriter('http://yahoo.com/some.svc');
+        $writer = new AtomODataWriter(PHP_EOL, true, 'http://yahoo.com/some.svc');
 
         $actual = $writer->canHandle($version, $contentType);
 
@@ -1239,7 +1240,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
  <message>message</message>
 </error>
 ';
-        $actual = AtomODataWriter::serializeException($foo);
+        $actual = AtomODataWriter::serializeException($foo, new ServiceConfiguration(null));
         $this->assertXmlStringEqualsXmlString($expected, $actual);
     }
 
@@ -1269,7 +1270,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $wrapper->shouldReceive('getResourceSets')->andReturn([$set]);
         $wrapper->shouldReceive('getSingletons')->andReturn([$single]);
 
-        $foo = new AtomODataWriter('http://localhost/odata.svc');
+        $foo = new AtomODataWriter(PHP_EOL, true, 'http://localhost/odata.svc');
         $foo->writeServiceDocument($wrapper);
 
         $actual = $foo->xmlWriter->outputMemory(true);
@@ -1281,7 +1282,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $type  = 'Edm.DateTime';
         $value = '2000-01-01 00:00:00';
 
-        $foo      = new AtomODataWriterDummy('http://localhost/odata.svc');
+        $foo      = new AtomODataWriterDummy(PHP_EOL, true, 'http://localhost/odata.svc');
         $expected = '2000-01-01T00:00:00';
         $actual   = $foo->beforeWriteValue($value, $type);
         $this->assertEquals($expected, $actual);
@@ -1291,7 +1292,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
     {
         $property = m::mock(ODataProperty::class)->makePartial();
 
-        $foo = new AtomODataWriterDummy('http://localhost/odata.svc');
+        $foo = new AtomODataWriterDummy(PHP_EOL, true, 'http://localhost/odata.svc');
         $foo->writeNullValue($property);
 
         $expected = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . PHP_EOL;
@@ -1310,7 +1311,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $entry->mediaLink        = $media;
         $entry->type             = $type;
 
-        $foo = new AtomODataWriterDummy('http://localhost/odata.svc');
+        $foo = new AtomODataWriterDummy(PHP_EOL, true, 'http://localhost/odata.svc');
         $foo->preWriteProperties($entry);
 
         $expected = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . PHP_EOL;
@@ -1335,7 +1336,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $entry->editLink         = 'edit';
         $entry->title            = new ODataTitle('');
 
-        $foo = new AtomODataWriterDummy('http://localhost/odata.svc');
+        $foo = new AtomODataWriterDummy(PHP_EOL, true, 'http://localhost/odata.svc');
         $foo->writeBeginEntry($entry, false);
 
         $expectedStart = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . PHP_EOL;
@@ -1367,7 +1368,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $link->type  = 'linkType';
         $link->title = 'Title';
 
-        $foo = new AtomODataWriterDummy('http://localhost/odata.svc');
+        $foo = new AtomODataWriterDummy(PHP_EOL, true, 'http://localhost/odata.svc');
         $foo->writeLinkNode($link, false);
 
         $expected = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . PHP_EOL;
@@ -1381,7 +1382,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $entry                  = new ODataEntry();
         $entry->resourceSetName = 'Foobars';
 
-        $foo = new AtomODataWriterDummy('http://localhost/odata.svc');
+        $foo = new AtomODataWriterDummy(PHP_EOL, true, 'http://localhost/odata.svc');
 
         $actual   = $foo->write($entry)->getOutput();
         $expected = '<link rel="edit" title="" href=""/>';
@@ -1400,7 +1401,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $feed->selfLink->title = 'Feed Title';
         $feed->selfLink->url   = 'feedID';
 
-        $foo      = new AtomODataWriterDummy('http://localhost/odata.svc');
+        $foo      = new AtomODataWriterDummy(PHP_EOL, true, 'http://localhost/odata.svc');
         $expected = '<link rel="self" title="Feed Title" href="feedID"/>';
         $actual   = $foo->write($feed)->getOutput();
         $this->assertTrue(false !== strpos($actual, $expected));

@@ -81,8 +81,8 @@ class SimpleDataService extends BaseService implements IService
         return $config;
     }
 
-    public function initialize(IServiceConfiguration $config){
-
+    public function initialize(IServiceConfiguration $config)
+    {
     }
 
     /**
