@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace UnitTests\POData\Common;
 
-use Illuminate\Http\Request;
 use Mockery as m;
 use POData\BaseService;
 use POData\BatchProcessor\BatchProcessor;
