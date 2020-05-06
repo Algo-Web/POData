@@ -89,9 +89,9 @@ Host: host
 
         $host = m::mock(ServiceHost::class);
         $host->shouldReceive('getRequestContentType')->andReturn($contentLine)->atLeast(1);
-        $host->shouldReceive('getConfiguration')->andReturn(new ServiceConfiguration(null))->atLeast(1);
 
         $service = m::mock(BaseService::class);
+        $service->shouldReceive('getConfiguration')->andReturn(new ServiceConfiguration(null))->atLeast(1);
         $service->shouldReceive('getHost')->andReturn($host)->once();
         $request = m::mock(RequestDescription::class);
         $request->shouldReceive('getData')->andReturn($rawData)->atLeast(1);
@@ -169,8 +169,10 @@ Host: host
         $secondQuery->shouldReceive('process')->andReturnNull()->once();
 
         $host = m::mock(ServiceHost::class);
+
         $host->shouldReceive('getRequestContentType')->andReturn($contentLine)->atLeast(1);
         $service = m::mock(BaseService::class);
+        $service->shouldReceive('getConfiguration')->andReturn(new ServiceConfiguration(null))->atLeast(1);
         $service->shouldReceive('getHost')->andReturn($host)->once();
         $request = m::mock(RequestDescription::class);
         $request->shouldReceive('getData')->andReturn([$rawData])->atLeast(1);

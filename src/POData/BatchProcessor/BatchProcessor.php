@@ -47,7 +47,7 @@ class BatchProcessor
         }
 
         $this->data          = trim($rawData);
-        $this->data          = preg_replace('~\r\n?~', "\n", $this->data);
+        $this->data          = preg_replace('~\r\n?~', $this->getService()->getConfiguration()->getLineEndings(), $this->data);
         $this->batchBoundary = substr($contentType, 26);
 
         $matches = explode('--' . $this->batchBoundary, $this->data);
@@ -56,7 +56,7 @@ class BatchProcessor
             if ('' === $match || '--' === $match) {
                 continue;
             }
-            $header                      = explode("\n\n", $match)[0];
+            $header                      = explode($this->getService()->getConfiguration()->getLineEndings(), $match)[0];
             $isChangeset                 = false === strpos($header, 'Content-Type: application/http');
             $this->changeSetProcessors[] = $this->getParser($this->getService(), $match, $isChangeset);
         }
@@ -73,13 +73,13 @@ class BatchProcessor
     public function getResponse()
     {
         $response = '';
-        $splitter =  '--' . $this->batchBoundary . "\r\n";
+        $splitter =  '--' . $this->batchBoundary . $this->getService()->getConfiguration()->getLineEndings();
         $raw      = $this->changeSetProcessors;
         foreach ($raw as $contentID => &$workingObject) {
             $response .= $splitter;
-            $response .= $workingObject->getResponse() . "\r\n";
+            $response .= $workingObject->getResponse() . $this->getService()->getConfiguration()->getLineEndings();
         }
-        $response .= trim($splitter) . '--' . $this->service->getConfiguration()->getLineEndings();
+        $response .= trim($splitter) . '--' . $this->getService()->getConfiguration()->getLineEndings();
         return $response;
     }
 
