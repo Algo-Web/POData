@@ -145,10 +145,8 @@ class ServiceHostTest extends TestCase
                     . ' \'$\' character but is not recognized.';
         $actual = null;
 
-        $request = m::mock(Request::class);
-        $request->shouldReceive('getMethod')->andReturn('GET');
+        $request = $this->setUpBaseRequest();
         $request->shouldReceive('all')->andReturn(['$impostorKey' => 'value']);
-        $request->shouldReceive('fullUrl')->andReturn('http://localhost/odata.svc');
 
         $context = new IlluminateOperationContext($request);
 
@@ -168,10 +166,8 @@ class ServiceHostTest extends TestCase
         $expected = 'Query parameter \'$skip\' is specified, but it should be specified with value.';
         $actual   = null;
 
-        $request = m::mock(Request::class);
-        $request->shouldReceive('getMethod')->andReturn('GET');
+        $request = $this->setUpBaseRequest();
         $request->shouldReceive('all')->andReturn(['$top' => 'value', '$skip' => '']);
-        $request->shouldReceive('fullUrl')->andReturn('http://localhost/odata.svc');
 
         $context = new IlluminateOperationContext($request);
 
@@ -188,9 +184,7 @@ class ServiceHostTest extends TestCase
 
     public function testResponseETagRoundTrip()
     {
-        $request = m::mock(Request::class);
-        $request->shouldReceive('getMethod')->andReturn('GET');
-        $request->shouldReceive('fullUrl')->andReturn('http://localhost/odata.svc');
+        $request = $this->setUpBaseRequest();
 
         $context = new IlluminateOperationContext($request);
 
@@ -207,10 +201,8 @@ class ServiceHostTest extends TestCase
         $expected = 'Invalid status code: 600';
         $actual   = null;
 
-        $request = m::mock(Request::class);
-        $request->shouldReceive('getMethod')->andReturn('GET');
+        $request = $this->setUpBaseRequest();
         $request->shouldReceive('all')->andReturn(['$top' => 'value', '$skip' => '']);
-        $request->shouldReceive('fullUrl')->andReturn('http://localhost/odata.svc');
 
         $context = new IlluminateOperationContext($request);
 
@@ -230,10 +222,8 @@ class ServiceHostTest extends TestCase
         $expected = 'Invalid status code: 99';
         $actual   = null;
 
-        $request = m::mock(Request::class);
-        $request->shouldReceive('getMethod')->andReturn('GET');
+        $request = $this->setUpBaseRequest();
         $request->shouldReceive('all')->andReturn(['$top' => 'value', '$skip' => '']);
-        $request->shouldReceive('fullUrl')->andReturn('http://localhost/odata.svc');
 
         $context = new IlluminateOperationContext($request);
 
@@ -250,10 +240,8 @@ class ServiceHostTest extends TestCase
 
     public function testAddHeaderAndGetHeader()
     {
-        $request = m::mock(Request::class);
-        $request->shouldReceive('getMethod')->andReturn('GET');
+        $request = $this->setUpBaseRequest();
         $request->shouldReceive('all')->andReturn(['$top' => 'value', '$skip' => '']);
-        $request->shouldReceive('fullUrl')->andReturn('http://localhost/odata.svc');
 
         $context = new IlluminateOperationContext($request);
 
@@ -267,10 +255,8 @@ class ServiceHostTest extends TestCase
 
     public function testSetResponseStatusDescription()
     {
-        $request = m::mock(Request::class);
-        $request->shouldReceive('getMethod')->andReturn('GET');
+        $request = $this->setUpBaseRequest();
         $request->shouldReceive('all')->andReturn(['$top' => 'value', '$skip' => '']);
-        $request->shouldReceive('fullUrl')->andReturn('http://localhost/odata.svc');
 
         $context = new IlluminateOperationContext($request);
 
@@ -283,10 +269,8 @@ class ServiceHostTest extends TestCase
 
     public function testSetResponseStream()
     {
-        $request = m::mock(Request::class);
-        $request->shouldReceive('getMethod')->andReturn('GET');
+        $request = $this->setUpBaseRequest();
         $request->shouldReceive('all')->andReturn(['$top' => 'value', '$skip' => '']);
-        $request->shouldReceive('fullUrl')->andReturn('http://localhost/odata.svc');
 
         $context = new IlluminateOperationContext($request);
         $stream  = 'stream';
@@ -299,10 +283,8 @@ class ServiceHostTest extends TestCase
 
     public function testSetResponseLocation()
     {
-        $request = m::mock(Request::class);
-        $request->shouldReceive('getMethod')->andReturn('GET');
+        $request = $this->setUpBaseRequest();
         $request->shouldReceive('all')->andReturn(['$top' => 'value', '$skip' => '']);
-        $request->shouldReceive('fullUrl')->andReturn('http://localhost/odata.svc');
 
         $context  = new IlluminateOperationContext($request);
         $location = 'location';
@@ -321,8 +303,8 @@ class ServiceHostTest extends TestCase
 
         $request = m::mock(Request::class);
         $request->shouldReceive('getMethod')->andReturn('GET');
-        $request->shouldReceive('all')->andReturn(['$top' => 'value', '$skip' => '']);
         $request->shouldReceive('fullUrl')->andReturn('BORK BORK BORK!');
+        $request->shouldReceive('all')->andReturn(['$top' => 'value', '$skip' => '']);
 
         $context = new IlluminateOperationContext($request);
 
@@ -340,10 +322,8 @@ class ServiceHostTest extends TestCase
         $expected = 'ContentLength: abc is invalid';
         $actual   = null;
 
-        $request = m::mock(Request::class);
-        $request->shouldReceive('getMethod')->andReturn('GET');
+        $request = $this->setUpBaseRequest();
         $request->shouldReceive('all')->andReturn(['$top' => 'value', '$skip' => '']);
-        $request->shouldReceive('fullUrl')->andReturn('http://localhost/odata.svc');
 
         $context = new IlluminateOperationContext($request);
 
@@ -360,10 +340,8 @@ class ServiceHostTest extends TestCase
 
     public function testSetGoodResponseLength()
     {
-        $request = m::mock(Request::class);
-        $request->shouldReceive('getMethod')->andReturn('GET');
+        $request = $this->setUpBaseRequest();
         $request->shouldReceive('all')->andReturn(['$top' => 'value', '$skip' => '']);
-        $request->shouldReceive('fullUrl')->andReturn('http://localhost/odata.svc');
 
         $context = new IlluminateOperationContext($request);
 
@@ -378,10 +356,8 @@ class ServiceHostTest extends TestCase
     {
         $expected = 'foo';
 
-        $request = m::mock(Request::class);
-        $request->shouldReceive('getMethod')->andReturn('GET');
+        $request = $this->setUpBaseRequest();
         $request->shouldReceive('all')->andReturn(['$top' => 'value', '$skip' => '']);
-        $request->shouldReceive('fullUrl')->andReturn('http://localhost/odata.svc');
         $request->shouldReceive('header')->withArgs([ODataConstants::HTTP_CONTENTTYPE])->andReturn('foo');
 
         $context = new IlluminateOperationContext($request);
@@ -395,10 +371,8 @@ class ServiceHostTest extends TestCase
     {
         $expected = 'foo';
 
-        $request = m::mock(Request::class);
-        $request->shouldReceive('getMethod')->andReturn('GET');
+        $request = $this->setUpBaseRequest();
         $request->shouldReceive('all')->andReturn(['$top' => 'value', '$skip' => '']);
-        $request->shouldReceive('fullUrl')->andReturn('http://localhost/odata.svc');
         $request->shouldReceive('header')->withArgs([ODataConstants::HTTPREQUEST_HEADER_ACCEPT_CHARSET])
             ->andReturn('foo');
 
@@ -413,10 +387,8 @@ class ServiceHostTest extends TestCase
     {
         $expected = 'http://localhost/odata.svc/$metadata';
 
-        $request = m::mock(Request::class);
-        $request->shouldReceive('getMethod')->andReturn('GET');
+        $request = $this->setUpMetadataRequest();
         $request->shouldReceive('all')->andReturn(['$top' => 'value', '$skip' => '']);
-        $request->shouldReceive('fullUrl')->andReturn('http://localhost/odata.svc/$metadata');
 
         $context = new IlluminateOperationContext($request);
 
@@ -446,10 +418,8 @@ class ServiceHostTest extends TestCase
     {
         $expected = 'http://localhost/odata.svc';
 
-        $request = m::mock(Request::class);
-        $request->shouldReceive('getMethod')->andReturn('GET');
+        $request = $this->setUpMetadataRequest();
         $request->shouldReceive('all')->andReturn([['$top' => 'value'], ['$skip' => '']]);
-        $request->shouldReceive('fullUrl')->andReturn('http://localhost/odata.svc/$metadata');
 
         $context = new IlluminateOperationContext($request);
 
@@ -463,10 +433,8 @@ class ServiceHostTest extends TestCase
         $expected = 'Query parameter \'$top\' is specified, but it should be specified exactly once.';
         $actual   = null;
 
-        $request = m::mock(Request::class);
-        $request->shouldReceive('getMethod')->andReturn('GET');
+        $request = $this->setUpMetadataRequest();
         $request->shouldReceive('all')->andReturn([['$top' => 'value'], ['$top' => '']]);
-        $request->shouldReceive('fullUrl')->andReturn('http://localhost/odata.svc/$metadata');
 
         $context = new IlluminateOperationContext($request);
 
@@ -487,10 +455,8 @@ class ServiceHostTest extends TestCase
                     . ' but is not recognized.';
         $actual = null;
 
-        $request = m::mock(Request::class);
-        $request->shouldReceive('getMethod')->andReturn('GET');
+        $request = $this->setUpMetadataRequest();
         $request->shouldReceive('all')->andReturn([['' => '$value']]);
-        $request->shouldReceive('fullUrl')->andReturn('http://localhost/odata.svc/$metadata');
 
         $context = new IlluminateOperationContext($request);
 
@@ -510,10 +476,8 @@ class ServiceHostTest extends TestCase
         $expected = 'Query parameter \'$orderby\' is specified, but it should be specified with value.';
         $actual   = null;
 
-        $request = m::mock(Request::class);
-        $request->shouldReceive('getMethod')->andReturn('GET');
+        $request = $this->setUpMetadataRequest();
         $request->shouldReceive('all')->andReturn([['' => ODataConstants::HTTPQUERY_STRING_ORDERBY]]);
-        $request->shouldReceive('fullUrl')->andReturn('http://localhost/odata.svc/$metadata');
 
         $context = new IlluminateOperationContext($request);
 
@@ -534,10 +498,8 @@ class ServiceHostTest extends TestCase
                     . ' not be query or fragment in the base service uri)';
         $actual = null;
 
-        $request = m::mock(Request::class);
-        $request->shouldReceive('getMethod')->andReturn('GET');
+        $request = $this->setUpMetadataRequest();
         $request->shouldReceive('all')->andReturn([['' => ODataConstants::HTTPQUERY_STRING_ORDERBY]]);
-        $request->shouldReceive('fullUrl')->andReturn('http://localhost/odata.svc/$metadata');
 
         $context = new IlluminateOperationContext($request);
 
@@ -558,10 +520,8 @@ class ServiceHostTest extends TestCase
                     . ' not be query or fragment in the base service uri)';
         $actual = null;
 
-        $request = m::mock(Request::class);
-        $request->shouldReceive('getMethod')->andReturn('GET');
+        $request = $this->setUpMetadataRequest();
         $request->shouldReceive('all')->andReturn([['' => ODataConstants::HTTPQUERY_STRING_ORDERBY]]);
-        $request->shouldReceive('fullUrl')->andReturn('http://localhost/odata.svc/$metadata');
 
         $context = new IlluminateOperationContext($request);
 
@@ -582,10 +542,8 @@ class ServiceHostTest extends TestCase
                     . ' on the configured relative uri /public/odata.svc';
         $actual = null;
 
-        $request = m::mock(Request::class);
-        $request->shouldReceive('getMethod')->andReturn('GET');
+        $request = $this->setUpMetadataRequest();
         $request->shouldReceive('all')->andReturn([[ODataConstants::HTTPQUERY_STRING_ORDERBY => '']]);
-        $request->shouldReceive('fullUrl')->andReturn('http://localhost/odata.svc/$metadata');
 
         $context = new IlluminateOperationContext($request);
 
@@ -609,8 +567,8 @@ class ServiceHostTest extends TestCase
 
         $request = m::mock(Request::class);
         $request->shouldReceive('getMethod')->andReturn('GET');
-        $request->shouldReceive('all')->andReturn([[ODataConstants::HTTPQUERY_STRING_ORDERBY => '']]);
         $request->shouldReceive('fullUrl')->andReturn('http://localhost/private/odata.svc');
+        $request->shouldReceive('all')->andReturn([[ODataConstants::HTTPQUERY_STRING_ORDERBY => '']]);
 
         $context = new IlluminateOperationContext($request);
 
@@ -633,8 +591,8 @@ class ServiceHostTest extends TestCase
 
         $request = m::mock(Request::class);
         $request->shouldReceive('getMethod')->andReturn('GET');
-        $request->shouldReceive('all')->andReturn([[ODataConstants::HTTPQUERY_STRING_ORDERBY => '']]);
         $request->shouldReceive('fullUrl')->andReturn('http://localhost:81/private/odata.svc');
+        $request->shouldReceive('all')->andReturn([[ODataConstants::HTTPQUERY_STRING_ORDERBY => '']]);
 
         $context = new IlluminateOperationContext($request);
 
@@ -654,8 +612,8 @@ class ServiceHostTest extends TestCase
 
         $request = m::mock(Request::class);
         $request->shouldReceive('getMethod')->andReturn('GET');
-        $request->shouldReceive('all')->andReturn([[ODataConstants::HTTPQUERY_STRING_ORDERBY => '']]);
         $request->shouldReceive('fullUrl')->andReturn('https://localhost:445/private/odata.svc');
+        $request->shouldReceive('all')->andReturn([[ODataConstants::HTTPQUERY_STRING_ORDERBY => '']]);
 
         $context = new IlluminateOperationContext($request);
 
@@ -666,5 +624,27 @@ class ServiceHostTest extends TestCase
         $actual = $host->getAbsoluteServiceUriAsString();
 
         $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * @return Request|m\LegacyMockInterface|m\MockInterface
+     */
+    private function setUpBaseRequest()
+    {
+        $request = m::mock(Request::class);
+        $request->shouldReceive('getMethod')->andReturn('GET');
+        $request->shouldReceive('fullUrl')->andReturn('http://localhost/odata.svc');
+        return $request;
+    }
+
+    /**
+     * @return Request|m\LegacyMockInterface|m\MockInterface
+     */
+    private function setUpMetadataRequest()
+    {
+        $request = m::mock(Request::class);
+        $request->shouldReceive('getMethod')->andReturn('GET');
+        $request->shouldReceive('fullUrl')->andReturn('http://localhost/odata.svc/$metadata');
+        return $request;
     }
 }
