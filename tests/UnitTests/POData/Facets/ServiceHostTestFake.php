@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use POData\Common\ODataConstants;
 use POData\HttpProcessUtility;
 use POData\OperationContext\ServiceHost;
+use POData\OperationContext\Web\Illuminate\IlluminateOperationContext;
 
 class ServiceHostTestFake extends ServiceHost
 {
@@ -59,7 +60,7 @@ class ServiceHostTestFake extends ServiceHost
             $request->headers->add([ODataConstants::HTTPREQUEST_HEADER_ACCEPT => $this->hostInfo['RequestAccept']]);
         }
 
-        parent::__construct(null, $request);
+        parent::__construct(new IlluminateOperationContext($request), $request);
 
         if (array_key_exists('AbsoluteServiceUri', $this->hostInfo)) {
             $this->setServiceUri($this->hostInfo['AbsoluteServiceUri']->getUrlAsString());

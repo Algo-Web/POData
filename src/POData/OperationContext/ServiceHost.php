@@ -90,13 +90,9 @@ class ServiceHost
      * @throws ODataException
      * @throws UrlFormatException
      */
-    public function __construct(IOperationContext $context = null, Request $incomingRequest)
+    public function __construct(IOperationContext $context, Request $incomingRequest)
     {
-        if (null === $context) {
-            $this->operationContext = new IlluminateOperationContext($incomingRequest);
-        } else {
-            $this->operationContext = $context;
-        }
+        $this->operationContext = $context;
 
         // getAbsoluteRequestUri can throw UrlFormatException
         // let Dispatcher handle it
