@@ -132,7 +132,7 @@ abstract class BaseService implements IRequestHandler, IService
         } else {
             $serialiser = new ObjectModelSerializer($this, null);
         }
-        $this->config           = $config ?? new ServiceConfiguration($metaProvider);
+        $this->config           = $config ?? $this->initializeDefaultConfig(new ServiceConfiguration($metaProvider));
         $this->objectSerialiser = $serialiser;
     }
 
@@ -911,5 +911,10 @@ abstract class BaseService implements IRequestHandler, IService
             return rtrim($eTag, ',');
         }
         return null;
+    }
+
+    protected function initializeDefaultConfig(IServiceConfiguration $config)
+    {
+        return $config;
     }
 }
