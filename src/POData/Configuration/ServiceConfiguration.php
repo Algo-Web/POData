@@ -96,6 +96,16 @@ class ServiceConfiguration implements IServiceConfiguration
     private $validateETagHeader;
 
     /**
+     * @var string value to be used as line terminators.
+     */
+    private $eol;
+
+    /**
+     * @var bool value to indicate if output should be printed human readable.
+     */
+    private $prettyPrint;
+
+    /**
      * Construct a new instance of ServiceConfiguration.
      *
      * @param IMetadataProvider|null $metadataProvider The metadata
@@ -455,7 +465,7 @@ class ServiceConfiguration implements IServiceConfiguration
      */
     public function getLineEndings(): string
     {
-        return PHP_EOL;
+        return $this->eol;
     }
 
     /**
@@ -465,6 +475,26 @@ class ServiceConfiguration implements IServiceConfiguration
      */
     public function getPrettyOutput(): bool
     {
-        return true;
+        return $this->prettyPrint;
+    }
+
+    /**
+     * Sets the characters that represent line endings.
+     *
+     * @param string $eol the characters that should be used for line endings.
+     */
+    public function setLineEndings(string $eol): void
+    {
+        $this->eol = $eol;
+    }
+
+    /**
+     * Sets if output should be well formatted for human review
+     *
+     * @param bool $on True if output should be well formatted.
+     */
+    public function setPrettyOutput(bool $on): void
+    {
+        $this->prettyPrint = $on;
     }
 }
