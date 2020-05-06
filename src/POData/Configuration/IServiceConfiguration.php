@@ -188,12 +188,12 @@ interface IServiceConfiguration
     /**
      * Gets the value to be used for line endings.
      *
-     * @return string the value to append at the end of lines.
+     * @return string the value to append at the end of lines
      */
     public function getLineEndings(): string;
 
     /**
-     * Gets whether to format the output as human readable or single line.
+     * Gets whether to format the output as human readable or single line
      *
      * @return bool True if output should be formatted for human readability.
      */

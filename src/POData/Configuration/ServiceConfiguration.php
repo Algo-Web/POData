@@ -96,7 +96,7 @@ class ServiceConfiguration implements IServiceConfiguration
     private $validateETagHeader;
 
     /**
-     * @var string value to be used as line terminators.
+     * @var string value to be used as line terminator.
      */
     private $eol;
 
@@ -131,7 +131,7 @@ class ServiceConfiguration implements IServiceConfiguration
         // basically display errors has a development value of on and a production value of off. so if not specified
         // use that
         $this->prettyPrint = in_array(strtolower(ini_get('display_errors')), array('1', 'on', 'true'));
-        $this->eol = PHP_EOL;
+        $this->eol         = PHP_EOL;
     }
 
     /**
@@ -382,7 +382,7 @@ class ServiceConfiguration implements IServiceConfiguration
      *
      * @return Version
      */
-    public function getMaxDataServiceVersion():Version
+    public function getMaxDataServiceVersion(): Version
     {
         switch ($this->maxVersion) {
             case ProtocolVersion::V1():
@@ -465,7 +465,7 @@ class ServiceConfiguration implements IServiceConfiguration
     /**
      * Gets the value to be used for line endings.
      *
-     * @return string the value to append at the end of lines.
+     * @return string the value to append at the end of lines
      */
     public function getLineEndings(): string
     {
@@ -485,7 +485,7 @@ class ServiceConfiguration implements IServiceConfiguration
     /**
      * Sets the characters that represent line endings.
      *
-     * @param string $eol the characters that should be used for line endings.
+     * @param string $eol the characters that should be used for line endings
      */
     public function setLineEndings(string $eol): void
     {
@@ -495,7 +495,7 @@ class ServiceConfiguration implements IServiceConfiguration
     /**
      * Sets if output should be well formatted for human review
      *
-     * @param bool $on True if output should be well formatted.
+     * @param bool $on True if output should be well formatted
      */
     public function setPrettyOutput(bool $on): void
     {
