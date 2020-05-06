@@ -16,7 +16,7 @@ use POData\Readers\IODataReader;
 use SplStack;
 
 /**
- * Class AtomODataReader
+ * Class AtomODataReader.
  * @package POData\Readers\Atom
  */
 class AtomODataReader implements IODataReader

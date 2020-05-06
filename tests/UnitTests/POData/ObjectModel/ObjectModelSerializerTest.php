@@ -55,8 +55,8 @@ class ObjectModelSerializerTest extends TestCase
     private $mockMeta;
 
     /**
-     * @return ObjectModelSerializer
      * @throws \POData\Common\UrlFormatException
+     * @return ObjectModelSerializer
      */
     public function Construct()
     {

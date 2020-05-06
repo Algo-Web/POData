@@ -140,7 +140,7 @@ class ResourcePropertyTest extends TestCase
     /**
      * @dataProvider validResourcePropertyKindProvider
      *
-     * @param int $kind
+     * @param int  $kind
      * @param bool $expected
      */
     public function testIsValidResourcePropertyKind(int $kind, bool $expected)

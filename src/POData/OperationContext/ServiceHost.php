@@ -670,7 +670,7 @@ class ServiceHost
     }
 
     /**
-     * @param string $headerType
+     * @param  string      $headerType
      * @return null|string
      */
     private function getRequestHeader(string $headerType): ?string

@@ -87,9 +87,9 @@ class ODataEntryTest extends TestCase
     {
         $link1 = new ODataMediaLink('edit', null, null, 'Bitz', '', 'edit');
 
-        $foo = new ODataEntry();
+        $foo                   = new ODataEntry();
         $foo->isMediaLinkEntry = true;
-        $foo->mediaLink = $link1;
+        $foo->mediaLink        = $link1;
 
         $res = $foo->getAtomContent();
         $this->assertEquals('Bitz', $res->type);
@@ -200,7 +200,7 @@ class ODataEntryTest extends TestCase
     {
         $property = new ODataProperty();
 
-        $content = new ODataPropertyContent();
+        $content               = new ODataPropertyContent();
         $content->properties[] = $property;
 
         $foo = new ODataEntry();

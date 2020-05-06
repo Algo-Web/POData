@@ -672,9 +672,9 @@ class ResourceClassesTest extends TestCase
             $meta
         );
 
-        $intResourceType     = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::INT32());
+        $intResourceType        = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::INT32());
         $kind                   = new ResourcePropertyKind(ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::KEY);
-        $orderIDPrimProperty = new ResourceProperty(
+        $orderIDPrimProperty    = new ResourceProperty(
             'OrderID',
             null,
             $kind,

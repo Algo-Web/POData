@@ -46,10 +46,10 @@ class HttpProcessUtility
             $acceptTypesEmpty = false;
             foreach ($exactContentTypes as $exactContentType) {
                 if (0 == strcasecmp($acceptType->getMimeType(), $exactContentType)) {
-                    $selectedContentType = $exactContentType;
+                    $selectedContentType  = $exactContentType;
                     $selectedQualityValue = $acceptType->getQualityValue();
-                    $acceptable = 0 != $selectedQualityValue;
-                    $foundExactMatch = true;
+                    $acceptable           = 0 != $selectedQualityValue;
+                    $foundExactMatch      = true;
                     break;
                 }
             }
@@ -66,16 +66,16 @@ class HttpProcessUtility
             $candidateQualityValue = $acceptType->getQualityValue();
             if ($matchingParts > $selectedMatchingParts) {
                 // A more specific type wins.
-                $selectedContentType = $inexactContentType;
+                $selectedContentType   = $inexactContentType;
                 $selectedMatchingParts = $matchingParts;
-                $selectedQualityValue = $candidateQualityValue;
-                $acceptable = 0 != $selectedQualityValue;
+                $selectedQualityValue  = $candidateQualityValue;
+                $acceptable            = 0 != $selectedQualityValue;
             } elseif ($matchingParts == $selectedMatchingParts) {
                 // A type with a higher q-value wins.
                 if ($candidateQualityValue > $selectedQualityValue) {
-                    $selectedContentType = $inexactContentType;
+                    $selectedContentType  = $inexactContentType;
                     $selectedQualityValue = $candidateQualityValue;
-                    $acceptable = 0 != $selectedQualityValue;
+                    $acceptable           = 0 != $selectedQualityValue;
                 }
             }
         }
@@ -429,13 +429,13 @@ class HttpProcessUtility
      * Reads the numeric part of a quality value substring, normalizing it to 0-1000.
      * rather than the standard 0.000-1.000 ranges.
      *
-     * @param string $text          Text to read qvalue from
-     * @param int    &$textIndex    Index into text where the qvalue starts
+     * @param string $text       Text to read qvalue from
+     * @param int    &$textIndex Index into text where the qvalue starts
      *
-     * @throws HttpHeaderFailure    If any error occurred while reading and processing
-     *                              the quality factor
+     * @throws HttpHeaderFailure If any error occurred while reading and processing
+     *                           the quality factor
      *
-     * @return int                  The normalised qvalue
+     * @return int The normalised qvalue
      */
     public static function readQualityValue(string $text, int &$textIndex): int
     {
