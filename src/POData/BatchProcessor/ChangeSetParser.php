@@ -3,7 +3,6 @@
 declare(strict_types=1);
 namespace POData\BatchProcessor;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use POData\BaseService;
 use POData\OperationContext\HTTPRequestMethod;
@@ -59,15 +58,6 @@ class ChangeSetParser implements IBatchParser
                 $workingObject->RequestURL = str_replace('$' . $lookupID, $location, $workingObject->RequestURL);
             }
 
-            $workingObject->Request = Request::create(
-                $workingObject->RequestURL,
-                $workingObject->RequestVerb,
-                [],
-                [],
-                [],
-                $workingObject->ServerParams,
-                $workingObject->Content
-            );
             $this->processSubRequest($workingObject);
             if ('GET' != $workingObject->RequestVerb && !Str::contains($workingObject->RequestURL, '/$links/')) {
                 if (null === $workingObject->Response->getHeaders()['Location']) {
@@ -195,6 +185,7 @@ class ChangeSetParser implements IBatchParser
             if ($contentIDinit == $contentID) {
                 $contentIDinit--;
             }
+
             $this->rawRequests[$contentID] = (object)[
                 'RequestVerb' => $requestPathParts[0],
                 'RequestURL' => $requestPathParts[1],
@@ -205,7 +196,9 @@ class ChangeSetParser implements IBatchParser
                     [],
                     [],
                     $serverParts,
-                    null
+                    null,
+                    $content,
+                    $requestPathParts[1]
                 ),
                 'Response' => null
             ];
