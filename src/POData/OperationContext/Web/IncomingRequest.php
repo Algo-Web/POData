@@ -21,7 +21,7 @@ class IncomingRequest implements IHTTPRequest
      *
      * @var array
      */
-    private $headers;
+    private $headers = [];
 
     /**
      * The incoming url in raw format.
@@ -42,14 +42,14 @@ class IncomingRequest implements IHTTPRequest
      *
      * @var array(string, string);
      */
-    private $queryOptions;
+    private $queryOptions = [];
 
     /**
      * A collection that represents mapping between query option and its count.
      *
      * @var array(string, int)
      */
-    private $queryOptionsCount;
+    private $queryOptionsCount = [];
 
     /**
      * The raw query string.
@@ -157,15 +157,17 @@ class IncomingRequest implements IHTTPRequest
     public function getRawUrl(): string
     {
         if (null === $this->rawUrl) {
-            if (false === stripos($_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL], 'HTTPS')) {
+            $rawProtocol = $_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL] ?? '';
+            if (false === stripos($rawProtocol, 'HTTPS')) {
                 $this->rawUrl = ODataConstants::HTTPREQUEST_PROTOCOL_HTTP;
             } else {
                 $this->rawUrl = ODataConstants::HTTPREQUEST_PROTOCOL_HTTPS;
             }
 
-            $this->rawUrl .= '://' .
-                             $_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)];
-            $this->rawUrl .= utf8_decode(urldecode($_SERVER[ODataConstants::HTTPREQUEST_URI]));
+            $rawHost = $_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)] ?? '';
+            $rawUri = $_SERVER[ODataConstants::HTTPREQUEST_URI] ?? '';
+            $this->rawUrl .= '://' . $rawHost;
+            $this->rawUrl .= utf8_decode(urldecode($rawUri));
         }
 
         return $this->rawUrl;

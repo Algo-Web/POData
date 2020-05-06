@@ -14,7 +14,8 @@ use POData\ObjectModel\ODataProperty;
 use POData\ObjectModel\ODataPropertyContent;
 use POData\ObjectModel\ODataTitle;
 use POData\OperationContext\ServiceHost;
-use POData\OperationContext\Web\Illuminate\IlluminateOperationContext as OperationContextAdapter;
+use POData\OperationContext\Web\IncomingRequest;
+use POData\OperationContext\Web\WebOperationContext as OperationContextAdapter;
 use POData\Providers\ProvidersWrapper;
 use POData\Providers\Query\IQueryProvider;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
@@ -29,10 +30,9 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
         $known = Carbon::create(2017, 1, 1, 0, 0, 0, 'UTC');
         Carbon::setTestNow($known);
 
-        $request = $this->setUpRequest();
-        $request->setMethod('POST');
+        $request = $this->setUpRequest('POST');
         $request->shouldReceive('prepareRequestUri')->andReturn('/odata.svc/Customers');
-        $request->shouldReceive('fullUrl')->andReturn('http://localhost/odata.svc/Customers');
+        $request->shouldReceive('getRawUrl')->andReturn('http://localhost/odata.svc/Customers');
 
         list($host, $meta, $prov) = $this->setUpDataServiceDeps($request);
 
@@ -87,10 +87,9 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
         $known = Carbon::create(2017, 1, 1, 0, 0, 0, 'UTC');
         Carbon::setTestNow($known);
 
-        $request = $this->setUpRequest();
-        $request->setMethod('PUT');
+        $request = $this->setUpRequest('PUT');
         $request->shouldReceive('prepareRequestUri')->andReturn('/odata.svc/Customers');
-        $request->shouldReceive('fullUrl')->andReturn('http://localhost/odata.svc/Customers');
+        $request->shouldReceive('getRawUrl')->andReturn('http://localhost/odata.svc/Customers');
 
         list($host, $meta, $prov) = $this->setUpDataServiceDeps($request);
 
@@ -146,10 +145,9 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
         $known = Carbon::create(2017, 1, 1, 0, 0, 0, 'UTC');
         Carbon::setTestNow($known);
 
-        $request = $this->setUpRequest();
-        $request->setMethod('POST');
+        $request = $this->setUpRequest('POST');
         $request->shouldReceive('prepareRequestUri')->andReturn('/odata.svc/Orders');
-        $request->shouldReceive('fullUrl')->andReturn('http://localhost/odata.svc/Orders');
+        $request->shouldReceive('getRawUrl')->andReturn('http://localhost/odata.svc/Orders');
 
         list($host, $meta, $prov) = $this->setUpDataServiceDeps($request);
 
@@ -233,10 +231,9 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
         $known = Carbon::create(2017, 1, 1, 0, 0, 0, 'UTC');
         Carbon::setTestNow($known);
 
-        $request = $this->setUpRequest();
-        $request->setMethod('POST');
+        $request = $this->setUpRequest('POST');
         $request->shouldReceive('prepareRequestUri')->andReturn('/odata.svc/Orders');
-        $request->shouldReceive('fullUrl')->andReturn('http://localhost/odata.svc/Orders');
+        $request->shouldReceive('getRawUrl')->andReturn('http://localhost/odata.svc/Orders');
 
         list($host, $meta, $prov) = $this->setUpDataServiceDeps($request);
 
@@ -349,10 +346,9 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
         $known = Carbon::create(2017, 1, 1, 0, 0, 0, 'UTC');
         Carbon::setTestNow($known);
 
-        $request = $this->setUpRequest();
-        $request->setMethod('PUT');
+        $request = $this->setUpRequest('PUT');
         $request->shouldReceive('prepareRequestUri')->andReturn('/odata.svc/Orders(OrderID=1)');
-        $request->shouldReceive('fullUrl')->andReturn('http://localhost/odata.svc/Orders(OrderID=1)');
+        $request->shouldReceive('getRawUrl')->andReturn('http://localhost/odata.svc/Orders(OrderID=1)');
 
         list($host, $meta, $prov) = $this->setUpDataServiceDeps($request);
 
@@ -464,10 +460,9 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
         $known = Carbon::create(2017, 1, 1, 0, 0, 0, 'UTC');
         Carbon::setTestNow($known);
 
-        $request = $this->setUpRequest();
-        $request->setMethod('PUT');
+        $request = $this->setUpRequest('PUT');
         $request->shouldReceive('prepareRequestUri')->andReturn('/odata.svc/Orders(OrderID=1)');
-        $request->shouldReceive('fullUrl')->andReturn('http://localhost/odata.svc/Orders(OrderID=1)');
+        $request->shouldReceive('getRawUrl')->andReturn('http://localhost/odata.svc/Orders(OrderID=1)');
 
         list($host, $meta, $prov) = $this->setUpDataServiceDeps($request);
 
