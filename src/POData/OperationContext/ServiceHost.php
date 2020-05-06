@@ -422,7 +422,7 @@ class ServiceHost
     public function getRequestAccept(): ?string
     {
         $headerType = ODataConstants::HTTPREQUEST_HEADER_ACCEPT;
-        return $this->getRequestHeader($headerType);
+        return $this->getRequestHeader($headerType) ?? '*/*';
     }
 
     /**

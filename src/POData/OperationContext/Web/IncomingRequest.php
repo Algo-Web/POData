@@ -202,7 +202,8 @@ class IncomingRequest implements IHTTPRequest
     {
         if (null === $this->queryString) {
             if (array_key_exists(ODataConstants::HTTPREQUEST_QUERY_STRING, $_SERVER)) {
-                $this->queryString = utf8_decode(trim($_SERVER[ODataConstants::HTTPREQUEST_QUERY_STRING]));
+                $rawString = $_SERVER[ODataConstants::HTTPREQUEST_QUERY_STRING] ?? '';
+                $this->queryString = utf8_decode(trim($rawString));
             } else {
                 $this->queryString = '';
             }
