@@ -6,14 +6,15 @@ namespace POData;
 
 use POData\BatchProcessor\BatchProcessor;
 use POData\Common\ErrorHandler;
+use POData\Common\HttpHeaderFailure;
 use POData\Common\HttpStatus;
 use POData\Common\InvalidOperationException;
 use POData\Common\Messages;
 use POData\Common\MimeTypes;
-use POData\Common\NotImplementedException;
 use POData\Common\ODataConstants;
 use POData\Common\ODataException;
 use POData\Common\ReflectionHandler;
+use POData\Common\UrlFormatException;
 use POData\Common\Version;
 use POData\Configuration\IServiceConfiguration;
 use POData\Configuration\ServiceConfiguration;
@@ -117,14 +118,21 @@ abstract class BaseService implements IRequestHandler, IService
     /**
      * BaseService constructor.
      * @param IObjectSerialiser|null $serialiser
+     * @param IMetadataProvider|null $metaProvider
+     * @param IServiceConfiguration|null $config
+     * @throws \Exception
      */
-    protected function __construct(IObjectSerialiser $serialiser = null)
-    {
+    protected function __construct(
+        IObjectSerialiser $serialiser = null,
+        IMetadataProvider $metaProvider = null,
+        IServiceConfiguration $config = null
+    ) {
         if (null != $serialiser) {
             $serialiser->setService($this);
         } else {
             $serialiser = new ObjectModelSerializer($this, null);
         }
+        $this->config           = $config ?? new ServiceConfiguration($metaProvider);
         $this->objectSerialiser = $serialiser;
     }
 
@@ -364,7 +372,6 @@ abstract class BaseService implements IRequestHandler, IService
             throw ODataException::createInternalServerError(Messages::providersWrapperNull());
         }
 
-        $this->config           = new ServiceConfiguration($metadataProvider);
         $this->providersWrapper = new ProvidersWrapper(
             $metadataProvider,
             $queryProvider,
@@ -517,7 +524,7 @@ abstract class BaseService implements IRequestHandler, IService
                         $odataModelInstance = $objectModelSerializer->writeUrlElement($result);
                     }
                 } elseif (TargetKind::RESOURCE() == $requestTargetKind
-                          || TargetKind::SINGLETON() == $requestTargetKind) {
+                    || TargetKind::SINGLETON() == $requestTargetKind) {
                     if (null !== $this->getHost()->getRequestIfMatch()
                         && null !== $this->getHost()->getRequestIfNoneMatch()
                     ) {

@@ -97,10 +97,10 @@ class ServiceConfiguration implements IServiceConfiguration
     /**
      * Construct a new instance of ServiceConfiguration.
      *
-     * @param IMetadataProvider $metadataProvider The metadata
-     *                                            provider for the OData service
+     * @param IMetadataProvider|null $metadataProvider The metadata
+     *                                                 provider for the OData service
      */
-    public function __construct(IMetadataProvider $metadataProvider)
+    public function __construct(?IMetadataProvider $metadataProvider)
     {
         $this->maxExpandCount          = PHP_INT_MAX;
         $this->maxExpandDepth          = PHP_INT_MAX;
