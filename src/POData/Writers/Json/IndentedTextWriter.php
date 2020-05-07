@@ -48,10 +48,10 @@ class IndentedTextWriter
      */
     public function __construct($writer, string $eol, bool $prettyPrint)
     {
-        $this->result = $writer;
-        $this->eol = $prettyPrint ? $eol : '';
+        $this->result      = $writer;
+        $this->eol         = $prettyPrint ? $eol : '';
         $this->prettyPrint = $prettyPrint;
-        $this->tabString = $prettyPrint ? '    ' : '';
+        $this->tabString   = $prettyPrint ? '    ' : '';
     }
 
     /**

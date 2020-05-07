@@ -109,7 +109,7 @@ trait resourceType
     /**
      * Format a message to show error for duplication of resource property on resource type.
      *
-     * @param string $propertyName The property name
+     * @param string $propertyName     The property name
      * @param string $resourceTypeName The resource type name
      *
      * @return string The formatted message
@@ -155,7 +155,7 @@ trait resourceType
      * Format a message to show error for
      * duplication of named stream property on resource type.
      *
-     * @param string $namedStreamName The named stream name
+     * @param string $namedStreamName  The named stream name
      * @param string $resourceTypeName The resource Property
      *
      * @return string The formatted message

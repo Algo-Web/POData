@@ -48,7 +48,7 @@ trait orderByInfo
      * property in orderby path.
      *
      * @param string $resourceTypeName The name of resource type
-     * @param string $propertyName Sub path segment, that comes after the
+     * @param string $propertyName     Sub path segment, that comes after the
      *                                 segment of type  $resourceTypeName
      *
      * @return string The formatted message
@@ -104,7 +104,7 @@ trait orderByInfo
      * property in the orderby clause.
      *
      * @param string $propertyName The name of resource set reference property
-     * @param string $definedType Defined type
+     * @param string $definedType  Defined type
      *
      * @return string The formatted message
      */
@@ -177,7 +177,7 @@ trait orderByInfo
      * Format a message to show error when orderby parser failed to
      * access some of the properties of dummy object.
      *
-     * @param string $propertyName Property name
+     * @param string $propertyName     Property name
      * @param string $parentObjectName Parent object name
      *
      * @return string The formatted message

@@ -80,18 +80,18 @@ class ExpressionParser
     /**
      * Construct a new instance of ExpressionParser.
      *
-     * @param string $text The expression to parse
-     * @param ResourceType $resourceType The resource type of the resource targeted by the resource path
-     * @param bool $isPHPExpressionProvider
+     * @param string       $text                    The expression to parse
+     * @param ResourceType $resourceType            The resource type of the resource targeted by the resource path
+     * @param bool         $isPHPExpressionProvider
      *
      * TODO Expression parser should not depend on the fact that end user is implementing IExpressionProvider or not
      * @throws ODataException
      */
     public function __construct($text, ResourceType $resourceType, $isPHPExpressionProvider)
     {
-        $this->lexer = new ExpressionLexer($text);
-        $this->resourceType = $resourceType;
-        $this->isPHPExpressionProvider = $isPHPExpressionProvider;
+        $this->lexer                            = new ExpressionLexer($text);
+        $this->resourceType                     = $resourceType;
+        $this->isPHPExpressionProvider          = $isPHPExpressionProvider;
         $this->hasLevel2PropertyInTheExpression = false;
     }
 
@@ -108,22 +108,22 @@ class ExpressionParser
     /**
      * Resets parser with new expression string.
      *
-     * @param string $text Reset the expression to parse
+     * @param  string         $text Reset the expression to parse
      * @throws ODataException
      */
     public function resetParser($text)
     {
-        $this->lexer = new ExpressionLexer($text);
+        $this->lexer          = new ExpressionLexer($text);
         $this->recursionDepth = 0;
     }
 
     /**
      * Parse the expression in filter option.
      *
-     * @return AbstractExpression
      * @throws ODataException
      * @throws ReflectionException
      * @throws NotImplementedException
+     * @return AbstractExpression
      */
     public function parseFilter()
     {
@@ -133,10 +133,10 @@ class ExpressionParser
     /**
      * Start parsing the expression.
      *
-     * @return AbstractExpression
      * @throws ODataException
      * @throws ReflectionException
      * @throws NotImplementedException
+     * @return AbstractExpression
      */
     private function parseExpression()
     {
@@ -164,10 +164,10 @@ class ExpressionParser
     /**
      * Parse logical or (or).
      *
-     * @return AbstractExpression
      * @throws ODataException
      * @throws ReflectionException
      * @throws NotImplementedException
+     * @return AbstractExpression
      */
     private function parseLogicalOr()
     {
@@ -193,10 +193,10 @@ class ExpressionParser
     /**
      * Parse logical and (and).
      *
-     * @return AbstractExpression
      * @throws ODataException
      * @throws ReflectionException
      * @throws NotImplementedException
+     * @return AbstractExpression
      */
     private function parseLogicalAnd()
     {
@@ -218,10 +218,10 @@ class ExpressionParser
     /**
      * Parse comparison operation (eq, ne, gt, ge, lt, le).
      *
-     * @return AbstractExpression
      * @throws ODataException
      * @throws ReflectionException
      * @throws NotImplementedException
+     * @return AbstractExpression
      */
     private function parseComparison()
     {
@@ -231,7 +231,7 @@ class ExpressionParser
             $comparisonToken = clone $this->getCurrentToken();
             $this->getLexer()->nextToken();
             $right = $this->parseAdditive();
-            $left = self::generateComparisonExpression(
+            $left  = self::generateComparisonExpression(
                 $left,
                 $right,
                 $comparisonToken,
@@ -247,10 +247,10 @@ class ExpressionParser
     /**
      * Parse additive operation (add, sub).
      *
-     * @return AbstractExpression
      * @throws ODataException
      * @throws ReflectionException
      * @throws NotImplementedException
+     * @return AbstractExpression
      */
     private function parseAdditive()
     {
@@ -260,7 +260,7 @@ class ExpressionParser
             || $this->getCurrentToken()->identifierIs(/* @scrutinizer ignore-type */ ODataConstants::KEYWORD_SUB)) {
             $additiveToken = clone $this->getCurrentToken();
             $this->getLexer()->nextToken();
-            $right = $this->parseMultiplicative();
+            $right        = $this->parseMultiplicative();
             $opReturnType = FunctionDescription::verifyAndPromoteArithmeticOpArguments($additiveToken, $left, $right);
             if ($additiveToken->identifierIs(/* @scrutinizer ignore-type */ ODataConstants::KEYWORD_ADD)) {
                 $left = new ArithmeticExpression($left, $right, ExpressionType::ADD(), $opReturnType);
@@ -277,10 +277,10 @@ class ExpressionParser
     /**
      * Parse multiplicative operators (mul, div, mod).
      *
-     * @return AbstractExpression
      * @throws ODataException
      * @throws ReflectionException
      * @throws NotImplementedException
+     * @return AbstractExpression
      */
     private function parseMultiplicative()
     {
@@ -292,7 +292,7 @@ class ExpressionParser
         ) {
             $multiplyToken = clone $this->getCurrentToken();
             $this->getLexer()->nextToken();
-            $right = $this->parseUnary();
+            $right        = $this->parseUnary();
             $opReturnType = FunctionDescription::verifyAndPromoteArithmeticOpArguments(
                 $multiplyToken,
                 $left,
@@ -315,10 +315,10 @@ class ExpressionParser
     /**
      * Parse unary operator (- ,not).
      *
-     * @return AbstractExpression
      * @throws ODataException
      * @throws ReflectionException
      * @throws NotImplementedException
+     * @return AbstractExpression
      */
     private function parseUnary()
     {
@@ -332,8 +332,8 @@ class ExpressionParser
             if ($op->getId() == ExpressionTokenId::MINUS()
                 && (ExpressionLexer::isNumeric($this->getCurrentToken()->getId()))
             ) {
-                $numberLiteral = $this->getCurrentToken();
-                $numberLiteral->Text = '-' . $numberLiteral->Text;
+                $numberLiteral           = $this->getCurrentToken();
+                $numberLiteral->Text     = '-' . $numberLiteral->Text;
                 $numberLiteral->Position = $op->Position;
                 $this->setCurrentToken($numberLiteral);
                 $this->recurseLeave();
@@ -400,10 +400,10 @@ class ExpressionParser
     /**
      * Start parsing the primary.
      *
-     * @return AbstractExpression
      * @throws ODataException
      * @throws ReflectionException
      * @throws NotImplementedException
+     * @return AbstractExpression
      */
     private function parsePrimary()
     {
@@ -426,10 +426,10 @@ class ExpressionParser
     /**
      * Parse primary tokens [literals, identifiers (e.g. function call), open param for sub expressions].
      *
-     * @return AbstractExpression
      * @throws NotImplementedException
      * @throws ReflectionException
      * @throws ODataException
+     * @return AbstractExpression
      */
     private function parsePrimaryStart()
     {
@@ -473,14 +473,13 @@ class ExpressionParser
      *
      * @param IType $targetType Expected type of the current literal
      *
-     * @return ConstantExpression
      * @throws ODataException
-     *
+     * @return ConstantExpression
      */
     private function parseTypedLiteral(IType $targetType)
     {
         $literal = $this->getLexer()->getCurrentToken()->Text;
-        $outVal = null;
+        $outVal  = null;
         if (!$targetType->validate($literal, $outVal)) {
             throw ODataException::createSyntaxError(
                 Messages::expressionParserUnrecognizedLiteral(
@@ -500,8 +499,8 @@ class ExpressionParser
     /**
      * Parse null literal.
      *
-     * @return ConstantExpression
      * @throws ODataException
+     * @return ConstantExpression
      */
     private function parseNullLiteral()
     {
@@ -513,10 +512,10 @@ class ExpressionParser
     /**
      * Parse an identifier.
      *
-     * @return FunctionCallExpression|PropertyAccessExpression
      * @throws NotImplementedException
      * @throws ReflectionException
      * @throws ODataException
+     * @return FunctionCallExpression|PropertyAccessExpression
      */
     private function parseIdentifier()
     {
@@ -549,19 +548,18 @@ class ExpressionParser
     /**
      * Try to parse an identifier which is followed by an open bracket as an astoria URI function call.
      *
-     * @return FunctionCallExpression
      * @throws NotImplementedException
      * @throws ReflectionException
-     *
      * @throws ODataException
+     * @return FunctionCallExpression
      */
     private function parseIdentifierAsFunction()
     {
         $functionToken = clone $this->getCurrentToken();
-        $functions = FunctionDescription::verifyFunctionExists($functionToken);
+        $functions     = FunctionDescription::verifyFunctionExists($functionToken);
         $this->getLexer()->nextToken();
         $paramExpressions = $this->parseArgumentList();
-        $function = FunctionDescription::verifyFunctionCallOpArguments(
+        $function         = FunctionDescription::verifyFunctionCallOpArguments(
             $functions,
             $paramExpressions,
             $functionToken
@@ -573,10 +571,10 @@ class ExpressionParser
     /**
      * Start parsing argument list of a function-call.
      *
-     * @return array<AbstractExpression>
      * @throws NotImplementedException
      * @throws ReflectionException
      * @throws ODataException
+     * @return array<AbstractExpression>
      */
     private function parseArgumentList()
     {
@@ -599,10 +597,10 @@ class ExpressionParser
     /**
      * Parse arguments of a function-call.
      *
-     * @return array<AbstractExpression>
      * @throws NotImplementedException
      * @throws ReflectionException
      * @throws ODataException
+     * @return array<AbstractExpression>
      */
     private function parseArguments()
     {
@@ -624,10 +622,9 @@ class ExpressionParser
      *
      * @param PropertyAccessExpression|null $parentExpression Parent expression
      *
-     * @return PropertyAccessExpression
      * @throws ReflectionException
-     *
      * @throws ODataException
+     * @return PropertyAccessExpression
      */
     private function parsePropertyAccess(PropertyAccessExpression $parentExpression = null)
     {
@@ -635,7 +632,7 @@ class ExpressionParser
         if (null === $parentExpression) {
             $parentResourceType = $this->resourceType;
         } else {
-            $parentResourceType = $parentExpression->getResourceType();
+            $parentResourceType                     = $parentExpression->getResourceType();
             $this->hasLevel2PropertyInTheExpression = true;
         }
 
@@ -669,10 +666,10 @@ class ExpressionParser
     /**
      * Parse Sub expression.
      *
-     * @return AbstractExpression
      * @throws NotImplementedException
      * @throws ReflectionException
      * @throws ODataException
+     * @return AbstractExpression
      */
     private function parseParenExpression()
     {
@@ -694,13 +691,13 @@ class ExpressionParser
     /**
      * Generates Comparison Expression.
      *
-     * @param AbstractExpression $left The LHS expression
-     * @param AbstractExpression $right The RHS expression
-     * @param ExpressionToken $expressionToken The comparison expression token
-     * @param bool $isPHPExpressionProvider
+     * @param AbstractExpression $left                    The LHS expression
+     * @param AbstractExpression $right                   The RHS expression
+     * @param ExpressionToken    $expressionToken         The comparison expression token
+     * @param bool               $isPHPExpressionProvider
      *
-     * @return FunctionCallExpression|UnaryExpression|RelationalExpression
      * @throws ODataException
+     * @return FunctionCallExpression|UnaryExpression|RelationalExpression
      */
     private static function generateComparisonExpression($left, $right, $expressionToken, $isPHPExpressionProvider)
     {
@@ -717,29 +714,29 @@ class ExpressionParser
         $string = new StringType();
         if ($left->typeIs($string) && $right->typeIs($string)) {
             $strcmpFunctions = FunctionDescription::stringComparisonFunctions();
-            $left = new FunctionCallExpression($strcmpFunctions[0], [$left, $right]);
-            $right = new ConstantExpression(0, new Int32());
+            $left            = new FunctionCallExpression($strcmpFunctions[0], [$left, $right]);
+            $right           = new ConstantExpression(0, new Int32());
         }
 
         $dateTime = new DateTime();
         if ($left->typeIs($dateTime) && $right->typeIs($dateTime)) {
             $dateTimeCmpFunctions = FunctionDescription::dateTimeComparisonFunctions();
-            $left = new FunctionCallExpression($dateTimeCmpFunctions[0], [$left, $right]);
-            $right = new ConstantExpression(0, new Int32());
+            $left                 = new FunctionCallExpression($dateTimeCmpFunctions[0], [$left, $right]);
+            $right                = new ConstantExpression(0, new Int32());
         }
 
         $guid = new Guid();
         if ($left->typeIs($guid) && $right->typeIs($guid)) {
             $guidEqualityFunctions = FunctionDescription::guidEqualityFunctions();
-            $left = new FunctionCallExpression($guidEqualityFunctions[0], [$left, $right]);
-            $right = new ConstantExpression(true, new Boolean());
+            $left                  = new FunctionCallExpression($guidEqualityFunctions[0], [$left, $right]);
+            $right                 = new ConstantExpression(true, new Boolean());
         }
 
         $binary = new Binary();
         if ($left->typeIs($binary) && $right->typeIs($binary)) {
             $binaryEqualityFunctions = FunctionDescription::binaryEqualityFunctions();
-            $left = new FunctionCallExpression($binaryEqualityFunctions[0], [$left, $right]);
-            $right = new ConstantExpression(true, new Boolean());
+            $left                    = new FunctionCallExpression($binaryEqualityFunctions[0], [$left, $right]);
+            $right                   = new ConstantExpression(true, new Boolean());
         }
 
         $null = new Null1();
@@ -775,7 +772,7 @@ class ExpressionParser
             //                       |- args => {CustomerID}
 
             if ($isPHPExpressionProvider) {
-                $arg = $left->typeIs($null) ? $right : $left;
+                $arg                       = $left->typeIs($null) ? $right : $left;
                 $isNullFunctionDescription = new FunctionDescription('is_null', new Boolean(), [$arg->getType()]);
                 switch ($expressionToken->Text) {
                     case ODataConstants::KEYWORD_EQUAL:

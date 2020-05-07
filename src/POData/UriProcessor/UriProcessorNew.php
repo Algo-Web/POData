@@ -86,7 +86,7 @@ class UriProcessorNew implements IUriProcessor
     /**
      * Constructs a new instance of UriProcessor.
      *
-     * @param IService $service Reference to the data service instance
+     * @param  IService                  $service Reference to the data service instance
      * @throws InvalidOperationException
      * @throws ODataException
      * @throws UrlFormatException
@@ -94,16 +94,16 @@ class UriProcessorNew implements IUriProcessor
      */
     private function __construct(IService $service)
     {
-        $this->service = $service;
+        $this->service   = $service;
         $this->providers = $service->getProvidersWrapper();
-        $this->request = ResourcePathProcessor::process($service);
-        $this->expander = new RequestExpander(
+        $this->request   = ResourcePathProcessor::process($service);
+        $this->expander  = new RequestExpander(
             $this->getRequest(),
             $this->getService(),
             $this->getProviders()
         );
         $this->getRequest()->setUriProcessor($this);
-        $this->cereal = new ModelDeserialiser();
+        $this->cereal            = new ModelDeserialiser();
         $this->cynicDeserialiser = new CynicDeserialiser(
             $service->getMetadataProvider(),
             $service->getProvidersWrapper()
@@ -145,12 +145,12 @@ class UriProcessorNew implements IUriProcessor
      *
      * @param IService $service Reference to the data service instance
      *
-     * @return IUriProcessor
      * @throws ODataException
      * @throws NotImplementedException
      * @throws ReflectionException
      * @throws UrlFormatException
      * @throws InvalidOperationException
+     * @return IUriProcessor
      */
     public static function process(IService $service)
     {
@@ -186,7 +186,7 @@ class UriProcessorNew implements IUriProcessor
             throw new InvalidOperationException('!($service instanceof IService)');
         }
         $context = $service->getOperationContext();
-        $method = $context->incomingRequest()->getMethod();
+        $method  = $context->incomingRequest()->getMethod();
 
         switch ($method) {
             case HTTPRequestMethod::GET():
@@ -221,8 +221,8 @@ class UriProcessorNew implements IUriProcessor
      */
     protected function executeGet()
     {
-        $segments = $this->getRequest()->getSegments();
-        $root = $this->getRequest()->getRootProjectionNode();
+        $segments  = $this->getRequest()->getSegments();
+        $root      = $this->getRequest()->getRootProjectionNode();
         $eagerLoad = (null === $root) ? [] : $root->getEagerLoadList();
 
         foreach ($segments as $segment) {
@@ -286,8 +286,8 @@ class UriProcessorNew implements IUriProcessor
     /**
      * Query for a resource set pointed by the given segment descriptor and update the descriptor with the result.
      *
-     * @param SegmentDescriptor $segment Describes the resource set to query
-     * @param array|null $eagerLoad
+     * @param  SegmentDescriptor         $segment   Describes the resource set to query
+     * @param  array|null                $eagerLoad
      * @throws InvalidOperationException
      * @throws ODataException
      * @throws ReflectionException
@@ -302,11 +302,11 @@ class UriProcessorNew implements IUriProcessor
 
             $segment->setResult($entityInstance);
         } else {
-            $eagerLoad = (null !== $eagerLoad) ? $eagerLoad : [];
-            $skip = (null == $this->getRequest()) ? 0 : $this->getRequest()->getSkipCount();
-            $skip = (null === $skip) ? 0 : $skip;
-            $skipToken = $this->getRequest()->getInternalSkipTokenInfo();
-            $skipToken = (null != $skipToken) ? $skipToken->getSkipTokenInfo() : null;
+            $eagerLoad   = (null !== $eagerLoad) ? $eagerLoad : [];
+            $skip        = (null == $this->getRequest()) ? 0 : $this->getRequest()->getSkipCount();
+            $skip        = (null === $skip) ? 0 : $skip;
+            $skipToken   = $this->getRequest()->getInternalSkipTokenInfo();
+            $skipToken   = (null != $skipToken) ? $skipToken->getSkipTokenInfo() : null;
             $queryResult = $this->getProviders()->getResourceSet(
                 $this->getRequest()->queryType,
                 $segment->getTargetResourceSetWrapper(),
@@ -322,8 +322,8 @@ class UriProcessorNew implements IUriProcessor
     }
 
     /**
-     * @param SegmentDescriptor $segment
-     * @param array $eagerList
+     * @param  SegmentDescriptor         $segment
+     * @param  array                     $eagerList
      * @throws InvalidOperationException
      * @throws ODataException
      * @throws ReflectionException
@@ -346,12 +346,12 @@ class UriProcessorNew implements IUriProcessor
     }
 
     /**
-     * @param SegmentDescriptor $segment
-     * @param array $eagerList
-     * @return null|object|QueryResult
+     * @param  SegmentDescriptor         $segment
+     * @param  array                     $eagerList
      * @throws ODataException
      * @throws ReflectionException
      * @throws InvalidOperationException
+     * @return null|object|QueryResult
      */
     private function executeGetResourceDirect(SegmentDescriptor $segment, array $eagerList)
     {
@@ -362,10 +362,10 @@ class UriProcessorNew implements IUriProcessor
                 $eagerList
             );
         } else {
-            $skip = $this->getRequest()->getSkipCount();
-            $skip = (null === $skip) ? 0 : $skip;
-            $skipToken = $this->getRequest()->getInternalSkipTokenInfo();
-            $skipToken = (null != $skipToken) ? $skipToken->getSkipTokenInfo() : null;
+            $skip        = $this->getRequest()->getSkipCount();
+            $skip        = (null === $skip) ? 0 : $skip;
+            $skipToken   = $this->getRequest()->getInternalSkipTokenInfo();
+            $skipToken   = (null != $skipToken) ? $skipToken->getSkipTokenInfo() : null;
             $queryResult = $this->getProviders()->getResourceSet(
                 $this->getRequest()->queryType,
                 $segment->getTargetResourceSetWrapper(),
@@ -383,14 +383,14 @@ class UriProcessorNew implements IUriProcessor
     /**
      * @param SegmentDescriptor $segment
      * @param $eagerList
-     * @return null|object|QueryResult
      * @throws ODataException
      * @throws ReflectionException
      * @throws InvalidOperationException
+     * @return null|object|QueryResult
      */
     private function executeGetResourceRelated(SegmentDescriptor $segment, $eagerList)
     {
-        $projectedProperty = $segment->getProjectedProperty();
+        $projectedProperty     = $segment->getProjectedProperty();
         $projectedPropertyKind = null !== $projectedProperty ? $projectedProperty->getKind() :
             new ResourcePropertyKind(0);
         $queryResult = null;
@@ -413,8 +413,8 @@ class UriProcessorNew implements IUriProcessor
                         $segment->getKeyDescriptor()
                     );
                 } else {
-                    $skipToken = $this->getRequest()->getInternalSkipTokenInfo();
-                    $skipToken = (null !== $skipToken) ? $skipToken->getSkipTokenInfo() : null;
+                    $skipToken   = $this->getRequest()->getInternalSkipTokenInfo();
+                    $skipToken   = (null !== $skipToken) ? $skipToken->getSkipTokenInfo() : null;
                     $queryResult = $this->getProviders()->getRelatedResourceSet(
                         $this->getRequest()->queryType,
                         $segment->getPrevious()->getTargetResourceSetWrapper(),
@@ -437,7 +437,7 @@ class UriProcessorNew implements IUriProcessor
     }
 
     /**
-     * @param SegmentDescriptor $segment
+     * @param  SegmentDescriptor $segment
      * @throws ODataException
      */
     private function checkResourceExistsByIdentifier(SegmentDescriptor $segment)
@@ -462,7 +462,7 @@ class UriProcessorNew implements IUriProcessor
     /**
      * Applies the query options to the resource(s) retrieved from the data source.
      *
-     * @param SegmentDescriptor $segment The descriptor which holds resource(s) on which query options to be applied
+     * @param  SegmentDescriptor $segment The descriptor which holds resource(s) on which query options to be applied
      * @throws ODataException
      */
     private function applyQueryOptions(SegmentDescriptor $segment)
@@ -502,8 +502,8 @@ class UriProcessorNew implements IUriProcessor
      *
      * @param array $result
      *
-     * @return array
      * @throws ODataException
+     * @return array
      */
     private function performPaging(array $result)
     {
@@ -517,11 +517,11 @@ class UriProcessorNew implements IUriProcessor
         $internalSkipTokenInfo = $this->getRequest()->getInternalSkipTokenInfo();
         if (null !== $internalSkipTokenInfo) {
             $matchingIndex = $internalSkipTokenInfo->getIndexOfFirstEntryInTheNextPage($result);
-            $result = array_slice($result, $matchingIndex);
+            $result        = array_slice($result, $matchingIndex);
         }
         //Apply $top and $skip option
         if (!empty($result)) {
-            $top = $this->getRequest()->getTopCount();
+            $top  = $this->getRequest()->getTopCount();
             $skip = $this->getRequest()->getSkipCount();
             if (null === $skip) {
                 $skip = 0;
@@ -538,9 +538,9 @@ class UriProcessorNew implements IUriProcessor
      */
     protected function executeDelete()
     {
-        $segment = $this->getFinalEffectiveSegment();
+        $segment       = $this->getFinalEffectiveSegment();
         $requestMethod = $this->getService()->getOperationContext()->incomingRequest()->getMethod();
-        $resourceSet = $segment->getTargetResourceSetWrapper();
+        $resourceSet   = $segment->getTargetResourceSetWrapper();
         $keyDescriptor = $segment->getKeyDescriptor();
 
         $this->checkUriValidForSuppliedVerb($resourceSet, $keyDescriptor, $requestMethod);
@@ -589,9 +589,9 @@ class UriProcessorNew implements IUriProcessor
      */
     protected function executePut()
     {
-        $segment = $this->getFinalEffectiveSegment();
+        $segment       = $this->getFinalEffectiveSegment();
         $requestMethod = $this->getService()->getOperationContext()->incomingRequest()->getMethod();
-        $resourceSet = null !== $segment ? $segment->getTargetResourceSetWrapper() : null;
+        $resourceSet   = null !== $segment ? $segment->getTargetResourceSetWrapper() : null;
         $keyDescriptor = null !== $segment ? $segment->getKeyDescriptor() : null;
 
         $this->checkUriValidForSuppliedVerb($resourceSet, $keyDescriptor, $requestMethod);
@@ -641,7 +641,7 @@ class UriProcessorNew implements IUriProcessor
      */
     protected function executePost()
     {
-        $segments = $this->getRequest()->getSegments();
+        $segments      = $this->getRequest()->getSegments();
         $requestMethod = $this->getService()->getOperationContext()->incomingRequest()->getMethod();
 
         foreach ($segments as $segment) {
@@ -657,11 +657,11 @@ class UriProcessorNew implements IUriProcessor
                 $payload = $this->getRequest()->getData();
                 if ($payload instanceof ODataURL) {
                     $this->executeGet();
-                    $masterModel = $this->getRequest()->getSegments()[0]->getResult();
-                    $masterResourceSet = $this->getRequest()->getSegments()[0]->getTargetResourceSetWrapper();
-                    $masterNavProperty = $this->getRequest()->getLastSegment()->getIdentifier();
-                    $slaveModelUri = new Url($payload->url);
-                    $host = $this->getService()->getHost();
+                    $masterModel        = $this->getRequest()->getSegments()[0]->getResult();
+                    $masterResourceSet  = $this->getRequest()->getSegments()[0]->getTargetResourceSetWrapper();
+                    $masterNavProperty  = $this->getRequest()->getLastSegment()->getIdentifier();
+                    $slaveModelUri      = new Url($payload->url);
+                    $host               = $this->getService()->getHost();
                     $absoluteServiceUri = $host->getAbsoluteServiceUri();
                     $requestUriSegments = array_slice(
                         $slaveModelUri->getSegments(),
@@ -673,9 +673,9 @@ class UriProcessorNew implements IUriProcessor
                         true
                     );
                     $this->executeGetResource($newSegments[0]);
-                    $slaveModel = $newSegments[0]->getResult();
+                    $slaveModel       = $newSegments[0]->getResult();
                     $slaveResourceSet = $newSegments[0]->getTargetResourceSetWrapper();
-                    $linkAdded = $this->getProviders()
+                    $linkAdded        = $this->getProviders()
                         ->hookSingleModel(
                             $masterResourceSet,
                             $masterModel,
@@ -707,14 +707,14 @@ class UriProcessorNew implements IUriProcessor
                 }
                 $this->getService()->getHost()->setResponseStatusCode(HttpStatus::CODE_CREATED);
                 $queryResult = $this->getCynicDeserialiser()->processPayload($payload);
-                $keyID = $payload->id;
+                $keyID       = $payload->id;
                 if (!$keyID instanceof KeyDescriptor) {
                     throw new InvalidOperationException(get_class($keyID));
                 }
 
-                $locationUrl = $keyID->generateRelativeUri($resourceSet->getResourceSet());
+                $locationUrl        = $keyID->generateRelativeUri($resourceSet->getResourceSet());
                 $absoluteServiceUri = $this->getService()->getHost()->getAbsoluteServiceUri()->getUrlAsString();
-                $location = rtrim($absoluteServiceUri, '/') . '/' . $locationUrl;
+                $location           = rtrim($absoluteServiceUri, '/') . '/' . $locationUrl;
                 $this->getService()->getHost()->setResponseLocation($location);
                 $segment->setResult($queryResult);
             }

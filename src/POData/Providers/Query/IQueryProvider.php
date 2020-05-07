@@ -38,14 +38,14 @@ interface IQueryProvider
      * IE: http://host/EntitySet
      *  http://host/EntitySet?$skip=10&$top=5&filter=Prop gt Value.
      *
-     * @param QueryType $queryType Is this is a query for a count, entities, or entities-with-count
-     * @param ResourceSet $resourceSet The entity set containing the entities to fetch
-     * @param FilterInfo|null $filterInfo The $filter parameter of the OData query.  NULL if none specified
-     * @param null|InternalOrderByInfo $orderBy sorted order if we want to get the data in some specific order
-     * @param int|null $top number of records which need to be retrieved
-     * @param int|null $skip number of records which need to be skipped
-     * @param SkipTokenInfo|null $skipToken value indicating what records to skip
-     * @param string[]|null $eagerLoad array of relations to eager load
+     * @param QueryType                $queryType   Is this is a query for a count, entities, or entities-with-count
+     * @param ResourceSet              $resourceSet The entity set containing the entities to fetch
+     * @param FilterInfo|null          $filterInfo  The $filter parameter of the OData query.  NULL if none specified
+     * @param null|InternalOrderByInfo $orderBy     sorted order if we want to get the data in some specific order
+     * @param int|null                 $top         number of records which need to be retrieved
+     * @param int|null                 $skip        number of records which need to be skipped
+     * @param SkipTokenInfo|null       $skipToken   value indicating what records to skip
+     * @param string[]|null            $eagerLoad   array of relations to eager load
      *
      * @return QueryResult
      */
@@ -65,9 +65,9 @@ interface IQueryProvider
      * IE: http://host/EntitySet(1L)
      * http://host/EntitySet(KeyA=2L,KeyB='someValue').
      *
-     * @param ResourceSet $resourceSet The entity set containing the entity to fetch
+     * @param ResourceSet   $resourceSet   The entity set containing the entity to fetch
      * @param KeyDescriptor $keyDescriptor The key identifying the entity to fetch
-     * @param string[]|null $eagerLoad array of relations to eager load
+     * @param string[]|null $eagerLoad     array of relations to eager load
      *
      * @return object|null Returns entity instance if found, else null
      */
@@ -82,16 +82,16 @@ interface IQueryProvider
      * IE: http://host/EntitySet(1L)/NavigationPropertyToCollection
      * http://host/EntitySet?$expand=NavigationPropertyToCollection.
      *
-     * @param QueryType $queryType Is this is a query for a count, entities, or entities-with-count
-     * @param ResourceSet $sourceResourceSet The entity set containing the source entity
-     * @param object $sourceEntityInstance The source entity instance
-     * @param ResourceSet $targetResourceSet The resource set pointed to by the navigation property
-     * @param ResourceProperty $targetProperty The navigation property to retrieve
-     * @param FilterInfo|null $filter The $filter parameter of the OData query.  NULL if none specified
-     * @param mixed|null $orderBy sorted order if we want to get the data in some specific order
-     * @param int|null $top number of records which need to be retrieved
-     * @param int|null $skip number of records which need to be skipped
-     * @param SkipTokenInfo|null $skipToken value indicating what records to skip
+     * @param QueryType          $queryType            Is this is a query for a count, entities, or entities-with-count
+     * @param ResourceSet        $sourceResourceSet    The entity set containing the source entity
+     * @param object             $sourceEntityInstance The source entity instance
+     * @param ResourceSet        $targetResourceSet    The resource set pointed to by the navigation property
+     * @param ResourceProperty   $targetProperty       The navigation property to retrieve
+     * @param FilterInfo|null    $filter               The $filter parameter of the OData query.  NULL if none specified
+     * @param mixed|null         $orderBy              sorted order if we want to get the data in some specific order
+     * @param int|null           $top                  number of records which need to be retrieved
+     * @param int|null           $skip                 number of records which need to be skipped
+     * @param SkipTokenInfo|null $skipToken            value indicating what records to skip
      *
      * @return QueryResult
      */
@@ -112,11 +112,11 @@ interface IQueryProvider
      * Gets a related entity instance from an entity set identified by a key
      * IE: http://host/EntitySet(1L)/NavigationPropertyToCollection(33).
      *
-     * @param ResourceSet $sourceResourceSet The entity set containing the source entity
-     * @param object $sourceEntityInstance The source entity instance
-     * @param ResourceSet $targetResourceSet The entity set containing the entity to fetch
-     * @param ResourceProperty $targetProperty The metadata of the target property
-     * @param KeyDescriptor $keyDescriptor The key identifying the entity to fetch
+     * @param ResourceSet      $sourceResourceSet    The entity set containing the source entity
+     * @param object           $sourceEntityInstance The source entity instance
+     * @param ResourceSet      $targetResourceSet    The entity set containing the entity to fetch
+     * @param ResourceProperty $targetProperty       The metadata of the target property
+     * @param KeyDescriptor    $keyDescriptor        The key identifying the entity to fetch
      *
      * @return object|null Returns entity instance if found, else null
      */
@@ -133,10 +133,10 @@ interface IQueryProvider
      * IE: http://host/EntitySet(1L)/NavigationPropertyToSingleEntity
      * http://host/EntitySet?$expand=NavigationPropertyToSingleEntity.
      *
-     * @param ResourceSet $sourceResourceSet The entity set containing the source entity
-     * @param object $sourceEntityInstance The source entity instance
-     * @param ResourceSet $targetResourceSet The entity set pointed to by the navigation property
-     * @param ResourceProperty $targetProperty The navigation property to fetch
+     * @param ResourceSet      $sourceResourceSet    The entity set containing the source entity
+     * @param object           $sourceEntityInstance The source entity instance
+     * @param ResourceSet      $targetResourceSet    The entity set pointed to by the navigation property
+     * @param ResourceProperty $targetProperty       The navigation property to fetch
      *
      * @return object|null The related resource if found, else null
      */
@@ -150,11 +150,11 @@ interface IQueryProvider
     /**
      * Updates a resource.
      *
-     * @param ResourceSet $sourceResourceSet The entity set containing the source entity
-     * @param object $sourceEntityInstance The source entity instance
-     * @param KeyDescriptor $keyDescriptor The key identifying the entity to fetch
-     * @param object $data the New data for the entity instance
-     * @param bool $shouldUpdate Should undefined values be updated or reset to default
+     * @param ResourceSet   $sourceResourceSet    The entity set containing the source entity
+     * @param object        $sourceEntityInstance The source entity instance
+     * @param KeyDescriptor $keyDescriptor        The key identifying the entity to fetch
+     * @param object        $data                 the New data for the entity instance
+     * @param bool          $shouldUpdate         Should undefined values be updated or reset to default
      *
      * @return object|null the new resource value if it is assignable, or throw exception for null
      */
@@ -169,8 +169,8 @@ interface IQueryProvider
     /**
      * Puts an entity instance to entity set identified by a key.
      *
-     * @param ResourceSet $sourceresourceSet The entity set containing the entity to update
-     * @param KeyDescriptor $keyDescriptor The key identifying the entity to update
+     * @param ResourceSet   $sourceresourceSet The entity set containing the entity to update
+     * @param KeyDescriptor $keyDescriptor     The key identifying the entity to update
      * @param $data
      *
      * @return bool|null Returns result of executing query
@@ -184,7 +184,7 @@ interface IQueryProvider
     /**
      * Delete resource from a resource set.
      * @param ResourceSet $sourceResourceSet
-     * @param object $sourceEntityInstance
+     * @param object      $sourceEntityInstance
      *
      * @return bool true if resources successfully deleted, otherwise false
      */
@@ -197,7 +197,7 @@ interface IQueryProvider
      * Create a new resource in a resource set.
      * @param ResourceSet $sourceresourceSet The entity set containing the entity to fetch
      * @param object|null $keyDescriptor
-     * @param object $data the New data for the entity instance
+     * @param object      $data              the New data for the entity instance
      *
      * @return object|null returns the newly created model if successful, or null if model creation failed
      */
@@ -210,7 +210,7 @@ interface IQueryProvider
     /**
      * Create multiple new resources in a resource set.
      * @param ResourceSet $sourceResourceSet The entity set containing the entity to fetch
-     * @param object[] $data The new data for the entity instance
+     * @param object[]    $data              The new data for the entity instance
      *
      * @return object[]|null returns the newly created model if successful, or null if model creation failed
      */
@@ -222,11 +222,11 @@ interface IQueryProvider
     /**
      * Updates a group of resources in a resource set.
      *
-     * @param ResourceSet $sourceResourceSet The entity set containing the source entity
-     * @param object $sourceEntityInstance The source entity instance
-     * @param KeyDescriptor[] $keyDescriptor The key identifying the entity to fetch
-     * @param object[] $data The new data for the entity instances
-     * @param bool $shouldUpdate Should undefined values be updated or reset to default
+     * @param ResourceSet     $sourceResourceSet    The entity set containing the source entity
+     * @param object          $sourceEntityInstance The source entity instance
+     * @param KeyDescriptor[] $keyDescriptor        The key identifying the entity to fetch
+     * @param object[]        $data                 The new data for the entity instances
+     * @param bool            $shouldUpdate         Should undefined values be updated or reset to default
      *
      * @return object[]|null the new resource value if it is assignable, or throw exception for null
      */
@@ -242,9 +242,9 @@ interface IQueryProvider
      * Attaches child model to parent model.
      *
      * @param ResourceSet $sourceResourceSet
-     * @param object $sourceEntityInstance
+     * @param object      $sourceEntityInstance
      * @param ResourceSet $targetResourceSet
-     * @param object $targetEntityInstance
+     * @param object      $targetEntityInstance
      * @param $navPropName
      *
      * @return bool
@@ -261,9 +261,9 @@ interface IQueryProvider
      * Removes child model from parent model.
      *
      * @param ResourceSet $sourceResourceSet
-     * @param object $sourceEntityInstance
+     * @param object      $sourceEntityInstance
      * @param ResourceSet $targetResourceSet
-     * @param object $targetEntityInstance
+     * @param object      $targetEntityInstance
      * @param $navPropName
      *
      * @return bool
@@ -279,7 +279,7 @@ interface IQueryProvider
     /**
      * Start database transaction.
      *
-     * @param bool $isBulk Is this transaction inside a batch request?
+     * @param  bool $isBulk Is this transaction inside a batch request?
      * @return void
      */
     public function startTransaction($isBulk = false);

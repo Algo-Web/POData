@@ -55,7 +55,7 @@ class Guid implements IType
      * Validate a value in Astoria uri is in a format for this type
      * Note: implementation of IType::validate.
      *
-     * @param string $value The value to validate
+     * @param string $value     The value to validate
      * @param string &$outValue The stripped form of $value that can be
      *                          used in PHP expressions
      *
@@ -91,8 +91,8 @@ class Guid implements IType
     /**
      * Validates guid.
      *
-     * @param string $guid The guid to validate
-     * @param bool $withQuotes Whether the above guid have quote as delimiter
+     * @param string $guid       The guid to validate
+     * @param bool   $withQuotes Whether the above guid have quote as delimiter
      *
      * @return bool
      */

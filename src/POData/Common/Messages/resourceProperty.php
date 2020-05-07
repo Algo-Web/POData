@@ -27,15 +27,14 @@ trait resourceProperty
      * Format a message to show error when ResourcePropertyKind and ResourceType's ResourceTypeKind mismatches.
      *
      * @param string $resourcePropertyKindArgName The ResourcePropertyKind argument name
-     * @param string $resourceTypeArgName The ResourceType argument name
+     * @param string $resourceTypeArgName         The ResourceType argument name
      *
      * @return string The formatted message
      */
     public static function resourcePropertyPropertyKindAndResourceTypeKindMismatch(
         $resourcePropertyKindArgName,
         $resourceTypeArgName
-    )
-    {
+    ) {
         return 'The \'' . $resourcePropertyKindArgName . '\' parameter does not match with the type of the resource'
             . ' type in parameter \'' . $resourceTypeArgName . '\'';
     }

@@ -64,21 +64,21 @@ class ODataMediaLink
     /**
      * Constructor for initializing attributes.
      *
-     * @param string $name Name for media link
-     * @param string $editLink EditLink for media content
-     * @param string $srcLink source link for media content
-     * @param string $contentType Mime type for Media content
-     * @param string|null $eTag eTag for media content
-     * @param null|mixed $rel
+     * @param string      $name        Name for media link
+     * @param string      $editLink    EditLink for media content
+     * @param string      $srcLink     source link for media content
+     * @param string      $contentType Mime type for Media content
+     * @param string|null $eTag        eTag for media content
+     * @param null|mixed  $rel
      */
     public function __construct($name, $editLink, $srcLink, $contentType, $eTag = null, $rel = null)
     {
         $this->contentType = $contentType;
-        $this->editLink = $editLink;
-        $this->eTag = $eTag;
-        $this->name = $name;
-        $this->srcLink = $srcLink;
-        $this->rel = (null !== $rel) ? $rel :
+        $this->editLink    = $editLink;
+        $this->eTag        = $eTag;
+        $this->name        = $name;
+        $this->srcLink     = $srcLink;
+        $this->rel         = (null !== $rel) ? $rel :
             ODataConstants::ATOM_MEDIA_RESOURCE_RELATION_ATTRIBUTE_VALUE . $name;
     }
 }

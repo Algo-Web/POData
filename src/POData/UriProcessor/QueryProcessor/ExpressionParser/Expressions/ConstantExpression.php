@@ -22,13 +22,13 @@ class ConstantExpression extends AbstractExpression
      * Create new instance of ConstantExpression.
      *
      * @param string|bool $value The constant value
-     * @param IType $type The expression node type
+     * @param IType       $type  The expression node type
      */
     public function __construct($value, $type)
     {
-        $this->value = $value;
+        $this->value    = $value;
         $this->nodeType = ExpressionType::CONSTANT();
-        $this->type = $type;
+        $this->type     = $type;
     }
 
     /**

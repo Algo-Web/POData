@@ -69,12 +69,12 @@ class IncomingRequest implements IHTTPRequest
      * Initialize a new instance of IHTTPRequest.
      *
      * @param HttpRequestMethod|null $method
-     * @param array $queryOptions
-     * @param array $queryOptionsCount
-     * @param array $headers
-     * @param string|null $queryString
-     * @param string|null $rawInput
-     * @param string|null $rawUrl
+     * @param array                  $queryOptions
+     * @param array                  $queryOptionsCount
+     * @param array                  $headers
+     * @param string|null            $queryString
+     * @param string|null            $rawInput
+     * @param string|null            $rawUrl
      */
     public function __construct(
         HTTPRequestMethod $method = null,
@@ -84,15 +84,14 @@ class IncomingRequest implements IHTTPRequest
         string $queryString = null,
         string $rawInput = null,
         string $rawUrl = null
-    )
-    {
-        $this->method = $method ?? new HTTPRequestMethod($_SERVER['REQUEST_METHOD']);
-        $this->queryOptions = $queryOptions;
+    ) {
+        $this->method            = $method ?? new HTTPRequestMethod($_SERVER['REQUEST_METHOD']);
+        $this->queryOptions      = $queryOptions;
         $this->queryOptionsCount = $queryOptionsCount;
-        $this->headers = $headers;
-        $this->queryString = $queryString;
-        $this->rawInput = $rawInput;
-        $this->rawUrl = $rawUrl;
+        $this->headers           = $headers;
+        $this->queryString       = $queryString;
+        $this->rawInput          = $rawInput;
+        $this->rawUrl            = $rawUrl;
     }
 
     /**
@@ -111,7 +110,7 @@ class IncomingRequest implements IHTTPRequest
             }
 
             $rawHost = $_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)] ?? '';
-            $rawUri = $_SERVER[ODataConstants::HTTPREQUEST_URI] ?? '';
+            $rawUri  = $_SERVER[ODataConstants::HTTPREQUEST_URI] ?? '';
             $this->rawUrl .= '://' . $rawHost;
             $this->rawUrl .= utf8_decode(urldecode($rawUri));
         }
@@ -186,7 +185,7 @@ class IncomingRequest implements IHTTPRequest
                     || (0 === strpos($key, 'SERVER_'))
                     || (0 === strpos($key, 'CONTENT_'))
                 ) {
-                    $trimmedValue = trim(strval($value));
+                    $trimmedValue        = trim(strval($value));
                     $this->headers[$key] = isset($trimmedValue) ? $trimmedValue : null;
                 }
             }
@@ -203,15 +202,15 @@ class IncomingRequest implements IHTTPRequest
     public function getQueryParameters(): array
     {
         if (0 == count($this->queryOptions)) {
-            $queryString = $this->getQueryString();
+            $queryString        = $this->getQueryString();
             $this->queryOptions = [];
 
             foreach (explode('&', $queryString) as $queryOptionAsString) {
                 $queryOptionAsString = trim($queryOptionAsString);
                 if (!empty($queryOptionAsString)) {
-                    $result = explode('=', $queryOptionAsString, 2);
+                    $result         = explode('=', $queryOptionAsString, 2);
                     $isNamedOptions = 2 == count($result);
-                    $rawUrl = rawurldecode($result[0]);
+                    $rawUrl         = rawurldecode($result[0]);
                     if ($isNamedOptions) {
                         $this->queryOptions[] = [$rawUrl => trim(rawurldecode($result[1]))];
                     } else {
@@ -234,7 +233,7 @@ class IncomingRequest implements IHTTPRequest
     {
         if (null === $this->queryString) {
             if (array_key_exists(ODataConstants::HTTPREQUEST_QUERY_STRING, $_SERVER)) {
-                $rawString = $_SERVER[ODataConstants::HTTPREQUEST_QUERY_STRING] ?? '';
+                $rawString         = $_SERVER[ODataConstants::HTTPREQUEST_QUERY_STRING] ?? '';
                 $this->queryString = utf8_decode(trim($rawString));
             } else {
                 $this->queryString = '';

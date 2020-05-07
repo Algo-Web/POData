@@ -27,7 +27,7 @@ trait resourceAssociationSet
      * Format a message when a property is used as
      * navigation property of a resource type which is actually not.
      *
-     * @param string $propertyName Property
+     * @param string $propertyName     Property
      * @param string $resourceTypeName Resource type
      *
      * @return string The formatted message
@@ -43,15 +43,14 @@ trait resourceAssociationSet
      * not assignable to resource set.
      *
      * @param string $resourceTypeName Resource type
-     * @param string $resourceSetName Resource set name
+     * @param string $resourceSetName  Resource set name
      *
      * @return string The formatted message
      */
     public static function resourceAssociationSetEndResourceTypeMustBeAssignableToResourceSet(
         $resourceTypeName,
         $resourceSetName
-    )
-    {
+    ) {
         return 'The resource type ' . $resourceTypeName . ' must be assignable to the resource set ' .
             $resourceSetName . '.';
     }

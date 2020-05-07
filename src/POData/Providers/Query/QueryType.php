@@ -13,14 +13,14 @@ use MyCLabs\Enum\Enum;
  */
 class QueryType extends Enum
 {
-    protected const ENTITIES = 'ENTITIES';
-    protected const COUNT = 'COUNT';
+    protected const ENTITIES            = 'ENTITIES';
+    protected const COUNT               = 'COUNT';
     protected const ENTITIES_WITH_COUNT = 'ENTITIES_WITH_COUNT';
 
     /**
      * Check if supplied query type covers entities.
      *
-     * @param QueryType $queryType
+     * @param  QueryType $queryType
      * @return bool
      */
     public static function hasEntities(QueryType $queryType)
@@ -31,7 +31,7 @@ class QueryType extends Enum
     /**
      * Check if supplied query type covers record counts.
      *
-     * @param QueryType $queryType
+     * @param  QueryType $queryType
      * @return bool
      */
     public static function hasCount(QueryType $queryType)

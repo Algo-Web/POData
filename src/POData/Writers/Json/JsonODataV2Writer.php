@@ -37,7 +37,7 @@ class JsonODataV2Writer extends JsonODataV1Writer
      * Determines if the given writer is capable of writing the response or not.
      *
      * @param Version $responseVersion the OData version of the response
-     * @param string $contentType the Content Type of the response
+     * @param string  $contentType     the Content Type of the response
      *
      * @return bool true if the writer can handle the response, false otherwise
      */
@@ -62,8 +62,8 @@ class JsonODataV2Writer extends JsonODataV1Writer
      *
      * @param ODataURL|ODataURLCollection|ODataPropertyContent|ODataFeed|ODataEntry $model Object of requested content
      *
-     * @return JsonODataV2Writer
      * @throws Exception
+     * @return JsonODataV2Writer
      */
     public function write($model)
     {
@@ -104,8 +104,8 @@ class JsonODataV2Writer extends JsonODataV1Writer
      *
      * @param ODataURLCollection $urls url collection to write
      *
-     * @return JsonODataV2Writer
      * @throws Exception
+     * @return JsonODataV2Writer
      */
     public function writeUrlCollection(ODataURLCollection $urls)
     {
@@ -130,8 +130,8 @@ class JsonODataV2Writer extends JsonODataV1Writer
      *
      * @param int $count Row count value
      *
-     * @return JsonODataV2Writer
      * @throws Exception
+     * @return JsonODataV2Writer
      */
     protected function writeRowCount($count)
     {
@@ -148,8 +148,8 @@ class JsonODataV2Writer extends JsonODataV1Writer
      *
      * @param ODataLink|null $nextPageLinkUri Uri for next page link
      *
-     * @return JsonODataV2Writer
      * @throws Exception
+     * @return JsonODataV2Writer
      */
     protected function writeNextPageLink(ODataLink $nextPageLinkUri = null)
     {
@@ -166,7 +166,7 @@ class JsonODataV2Writer extends JsonODataV1Writer
     /**
      * Writes the expanded link.
      *
-     * @param ODataLink $link
+     * @param  ODataLink $link
      * @throws Exception
      */
     protected function writeExpandedLink(ODataLink $link)

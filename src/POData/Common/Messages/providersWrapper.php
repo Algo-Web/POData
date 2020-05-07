@@ -99,8 +99,8 @@ trait providersWrapper
      * Format a message to show error when IDSMP::getResourceSet
      * returns inconsistent instance of ResourceSet.
      *
-     * @param string $resourceSetName Name of the resource set
-     * @param string $resourceTypeName Name of the resource type
+     * @param string $resourceSetName      Name of the resource set
+     * @param string $resourceTypeName     Name of the resource type
      * @param string $resourcePropertyName Name of the navigation property
      *
      * @return string The formatted message
@@ -109,8 +109,7 @@ trait providersWrapper
         $resourceSetName,
         $resourceTypeName,
         $resourcePropertyName
-    )
-    {
+    ) {
         return 'IDSMP::GetResourceSet returns invalid instance of ResourceSet when invoked with params' .
             ' {ResourceSet with name ' . $resourceSetName . ', ResourceType with name ' . $resourceTypeName
             . ', ResourceProperty with name ' . $resourcePropertyName . '}.';
@@ -121,7 +120,7 @@ trait providersWrapper
      * returns an instance which is not an instance of expected entity instance.
      *
      * @param string $entityTypeName The name of expected entity type
-     * @param string $methodName Method name
+     * @param string $methodName     Method name
      *
      * @return string The formatted message
      */
